@@ -21,13 +21,13 @@ typedef struct {
     byte rawKey;
 } Key;
 
-#define KEY_FLAGS       B000000
-#define CTRL_HELD       B000001
-#define ALT_HELD        B000010
-#define SHIFT_HELD      B000100
-#define GUI_HELD        B001000
-#define SWITCH_TO_LAYER B010000
-#define MOMENTARY_LAYER B100000
+#define KEY_FLAGS       B0000000
+#define CTRL_HELD       B0000001
+#define ALT_HELD        B0000010
+#define SHIFT_HELD      B0000100
+#define GUI_HELD        B0001000
+#define SWITCH_TO_LAYER B0010000
+#define MOMENTARY       B1000000
 
 #define LAYER_0     0
 #define LAYER_1     1
@@ -328,7 +328,7 @@ typedef struct {
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define Key_NextKeymapMomentary (Key){ KEY_FLAGS | MOMENTARY_LAYER, LAYER_1 }
+#define Key_NextKeymapMomentary (Key){ KEY_FLAGS | MOMENTARY, LAYER_1 }
 
 
 

@@ -113,10 +113,16 @@ void scan_matrix() {
 		for (int col = 0; col < COLS; col++) {
 			//If we see an electrical connection on I->J,
 			currentMatrix[row][col] = !digitalRead(colPins[col]);
-			// while we're inspecting the electrical matrix, we look to see if the key being held is a firmware level metakey, so we can act on it, lest we only discover that we should be looking at a seconary keymap halfway through the matrix scan
+			// while we're inspecting the electrical matrix, we look 
+            // to see if the key being held is a firmware level 
+            // metakey, so we can act on it, lest we only discover 
+            // that we should be looking at a seconary keymap halfway through the matrix scan
 
 			if (previousMatrix[row][col] != currentMatrix[row][col]) {
-				if (keymaps[current_keymap][row][col].flags & MOMENTARY_LAYER ){
+
+                Key currentKey = keymaps[current_keymap][row][col];
+
+				if (currentKey.flags & MOMENTARY ){
 					if (currentMatrix[row][col]) {
 						current_keymap++;
 					} else {
