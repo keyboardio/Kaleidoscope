@@ -139,32 +139,37 @@ void send_key_event() {
         for (int col = 0; col < COLS; col++) {
             int x = 0;
             int y = 0;
-            if (keymaps[current_keymap][row][col].flags & MOUSE_KEY ) {
-                if (keymaps[current_keymap][row][col].rawKey & MOUSE_UP) {
+            byte switchState = matrixState[row][col];
+            Key mappedKey = keymaps[current_keymap][row][col];
+            if (mappedKey.flags & MOUSE_KEY ) {
+            
+
+              if (key_is_pressed(switchState)){
+                if (mappedKey.rawKey & MOUSE_UP) {
                     y--;
                 }
-                if (keymaps[current_keymap][row][col].rawKey & MOUSE_DN) {
+                if (mappedKey.rawKey & MOUSE_DN) {
                     y++;
                 }
-                if (keymaps[current_keymap][row][col].rawKey & MOUSE_L) {
+                if (mappedKey.rawKey & MOUSE_L) {
                     x--;
                 }
 
-                if (keymaps[current_keymap][row][col].rawKey & MOUSE_R) {
+                if (mappedKey.rawKey & MOUSE_R) {
                     x++;
                 }
                 Mouse.move(x, y, 0);
 
+                }
 
+            } else {
 
-
+            if (key_toggled_on (switchState)){
+                Keyboard.press(mappedKey.rawKey);
             }
-
-            if (key_toggled_on (matrixState[row][col])) {
-                Keyboard.press(keymaps[current_keymap][row][col].rawKey);
+            else if (key_toggled_off (switchState)) {
+                Keyboard.release(mappedKey.rawKey);
             }
-            else if (key_toggled_off (matrixState[row][col])) {
-                Keyboard.release(keymaps[current_keymap][row][col].rawKey);
             }
         }
     }
