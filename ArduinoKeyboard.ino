@@ -62,193 +62,216 @@ static const Key keymaps[LAYERS][ROWS][COLS] = {
 };
 
 
-void reset_matrix() {
-  for (int col = 0; col < COLS; col++) {
-    for (int row = 0; row < ROWS; row++) {
-      matrixState[row][col] <<= 1;
-    }
-  }
-}
-
-void send_key_event() {
-  //for every newly pressed button, figure out what logical key it is and send a key down event
-  // for every newly released button, figure out what logical key it is and send a key up event
-
-    // TODO:switch to sending raw HID packets
-  for (int row = 0; row < ROWS; row++) {
-
-    for (int col = 0; col < COLS; col++) {
-      if (key_toggled_on (matrixState[row][col])) {
-        Keyboard.press(keymaps[current_keymap][row][col].rawKey);
-      }
-      else if (key_toggled_off (matrixState[row][col])) {
-        Keyboard.release(keymaps[current_keymap][row][col].rawKey);
-      }
-    }
-  }
-}
-
 boolean key_was_pressed (byte keyState) {
-  if ( byte((keyState >> 4)) ^ B00001111 ){
-    return false; 
-  } 
-  else {
-    return true;
-  }
+    if ( byte((keyState >> 4)) ^ B00001111 ) {
+        return false;
+    }
+    else {
+        return true;
+    }
 
 }
 
 boolean key_was_not_pressed (byte keyState) {
-  if ( byte((keyState >> 4)) ^ B00000000 ){
-    return false; 
-  } 
-  else {
-    return true;
-  }
+    if ( byte((keyState >> 4)) ^ B00000000 ) {
+        return false;
+    }
+    else {
+        return true;
+    }
 
 }
 
+boolean key_is_pressed (byte keyState) {
+
+    if ( byte((keyState << 4)) ^ B11110000 ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+boolean key_is_not_pressed (byte keyState) {
+
+    if ( byte((keyState << 4)) ^ B00000000 ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 
 boolean key_toggled_on(byte keyState) {
-  if (key_is_pressed(keyState) && ( key_was_not_pressed(keyState))) {
-    return true; 
-  } 
-  else {
-    return false;
-  }
+    if (key_is_pressed(keyState) && ( key_was_not_pressed(keyState))) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
 boolean key_toggled_off(byte keyState) {
-  if (key_was_pressed(keyState) && key_is_not_pressed(keyState)) {
-    return true; 
-  } 
-  else {
-    return false;
-  }
+    if (key_was_pressed(keyState) && key_is_not_pressed(keyState)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
-boolean key_is_pressed (byte keyState) {
-  
-  if ( byte((keyState << 4)) ^ B11110000 ){
-    return false; 
-  } 
-  else {
-    return true;
-  }
+void reset_matrix() {
+    for (int col = 0; col < COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            matrixState[row][col] <<= 1;
+        }
+    }
 }
-boolean key_is_not_pressed (byte keyState) {
-  
-  if ( byte((keyState << 4)) ^ B00000000 ){
-    return false; 
-  } 
-  else {
-    return true;
-  }
+
+void send_key_event() {
+    //for every newly pressed button, figure out what logical key it is and send a key down event
+    // for every newly released button, figure out what logical key it is and send a key up event
+
+    // TODO:switch to sending raw HID packets
+    for (int row = 0; row < ROWS; row++) {
+
+        for (int col = 0; col < COLS; col++) {
+            int x = 0;
+            int y = 0;
+            if (keymaps[current_keymap][row][col].flags & MOUSE_KEY ) {
+                if (keymaps[current_keymap][row][col].rawKey & MOUSE_UP) {
+                    y--;
+                }
+                if (keymaps[current_keymap][row][col].rawKey & MOUSE_DN) {
+                    y++;
+                }
+                if (keymaps[current_keymap][row][col].rawKey & MOUSE_L) {
+                    x--;
+                }
+
+                if (keymaps[current_keymap][row][col].rawKey & MOUSE_R) {
+                    x++;
+                }
+                Mouse.move(x, y, 0);
+
+
+
+
+            }
+
+            if (key_toggled_on (matrixState[row][col])) {
+                Keyboard.press(keymaps[current_keymap][row][col].rawKey);
+            }
+            else if (key_toggled_off (matrixState[row][col])) {
+                Keyboard.release(keymaps[current_keymap][row][col].rawKey);
+            }
+        }
+    }
 }
+
 
 void setup_matrix() {
-  //set up the row pins as outputs
-  for (int row = 0; row < ROWS; row++) {
-    pinMode(rowPins[row], OUTPUT);
-    digitalWrite(rowPins[row], HIGH);
-  }
-
-  for (int col = 0; col < COLS; col++) {
-    pinMode(colPins[col], INPUT);
-    digitalWrite(colPins[col], HIGH);
-    //drive em high by default s it seems to be more reliable than driving em low
-
-  }
-  //blank out the matrix.
-  for (int col = 0; col < COLS; col++) {
+    //set up the row pins as outputs
     for (int row = 0; row < ROWS; row++) {
-      matrixState[row][col] = 0;
+        pinMode(rowPins[row], OUTPUT);
+        digitalWrite(rowPins[row], HIGH);
     }
-  }
+
+    for (int col = 0; col < COLS; col++) {
+        pinMode(colPins[col], INPUT);
+        digitalWrite(colPins[col], HIGH);
+        //drive em high by default s it seems to be more reliable than driving em low
+
+    }
+    //blank out the matrix.
+    for (int col = 0; col < COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            matrixState[row][col] = 0;
+        }
+    }
 
 }
 
 void scan_matrix() {
-  //scan the keyboard matrix looking for connections
-  for (int row = 0; row < ROWS; row++) {
-    digitalWrite(rowPins[row], LOW);
-    for (int col = 0; col < COLS; col++) {
-      //If we see an electrical connection on I->J,
+    //scan the Keyboard matrix looking for connections
+    for (int row = 0; row < ROWS; row++) {
+        digitalWrite(rowPins[row], LOW);
+        for (int col = 0; col < COLS; col++) {
+            //If we see an electrical connection on I->J,
 
-      if (digitalRead(colPins[col])) {
-        matrixState[row][col] |= 0; // noop. just here for clarity
-      } 
-      else {
-        matrixState[row][col] |= 1; // noop. just here for clarity
-      }
-      // while we're inspecting the electrical matrix, we look 
-      // to see if the key being held is a firmware level 
-      // metakey, so we can act on it, lest we only discover 
-      // that we should be looking at a seconary keymap halfway through the matrix scan
+            if (digitalRead(colPins[col])) {
+                matrixState[row][col] |= 0; // noop. just here for clarity
+            }
+            else {
+                matrixState[row][col] |= 1; // noop. just here for clarity
+            }
+            // while we're inspecting the electrical matrix, we look
+            // to see if the Key being held is a firmware level
+            // metakey, so we can act on it, lest we only discover
+            // that we should be looking at a seconary Keymap halfway through the matrix scan
 
 
 
-      if (       keymaps[current_keymap][row][col].flags & MOMENTARY ) {
+            if (       keymaps[current_keymap][row][col].flags & MOMENTARY ) {
 
-        if (key_toggled_on(matrixState[row][col])  ){
-          current_keymap++;
+                if (key_toggled_on(matrixState[row][col])  ) {
+                    current_keymap++;
+                }
+                else if (key_toggled_off(matrixState[row][col]) ) {
+                    current_keymap--;
+                }
+            }
+
+            // guard  against layer overflow
+            if (current_keymap >= LAYERS) {
+                current_keymap = 0;
+            }
+            else if (current_keymap < 0) {
+                current_keymap = LAYERS - 1;
+            }
         }
-        else if (key_toggled_off(matrixState[row][col]) ){
-          current_keymap--;
-        }
-      }
-
-      // guard  against layer overflow
-      if (current_keymap >= LAYERS) {
-        current_keymap = 0;
-      } 
-      else if (current_keymap < 0) {
-        current_keymap = LAYERS - 1;
-      }
+        digitalWrite(rowPins[row], HIGH);
     }
-    digitalWrite(rowPins[row], HIGH);
-  }
 }
 
 
 void report_matrix() {
-  if (counter++ %100 == 0 ) {
-    for (int row = 0; row < ROWS; row++) {
-      for (int col = 0; col < COLS; col++) {
-        Serial.print(matrixState[row][col],HEX);
-        Serial.print(", ");
+    if (counter++ %100 == 0 ) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                Serial.print(matrixState[row][col],HEX);
+                Serial.print(", ");
 
-      }
-      Serial.println("");
+            }
+            Serial.println("");
+        }
+        Serial.println("");
     }
-    Serial.println("");
-  }
 }
 
 void report(int row, int col, boolean value) {
-  Serial.print("Detected a change on ");
-  Serial.print(col);
-  Serial.print(" ");
-  Serial.print(row);
-  Serial.print(" to ");
-  Serial.print(value);
-  Serial.println(".");
+    Serial.print("Detected a change on ");
+    Serial.print(col);
+    Serial.print(" ");
+    Serial.print(row);
+    Serial.print(" to ");
+    Serial.print(value);
+    Serial.println(".");
 }
 
 
 void setup() {
-  Keyboard.begin();
-
-  Serial.begin(115200);
-  setup_matrix();
+    Keyboard.begin();
+    Mouse.begin();
+    Serial.begin(115200);
+    setup_matrix();
 }
 
 void loop() {
-  scan_matrix();
-  //    report_matrix();
-  send_key_event();
-  reset_matrix();
+    scan_matrix();
+    //    report_matrix();
+    send_key_event();
+    reset_matrix();
 }
 
