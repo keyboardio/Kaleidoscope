@@ -27,7 +27,15 @@ typedef struct {
 #define SHIFT_HELD      B0000100
 #define GUI_HELD        B0001000
 #define SWITCH_TO_LAYER B0010000
-#define MOMENTARY       B1000000
+#define MOMENTARY       B0100000
+#define MOUSE_KEY       B1000000
+
+
+#define MOUSE_UP       B0001
+#define MOUSE_DN     B0010
+#define MOUSE_L     B0100
+#define MOUSE_R    B1000
+
 
 #define LAYER_0     0
 #define LAYER_1     1
@@ -41,33 +49,53 @@ typedef struct {
 
 #define NoKey (Key){ KEY_FLAGS,0 }
 
-#define Key_LeftCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+#define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+
+
+
+#define mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
+#define mouseUp    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP }
+#define mouseUpR  (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_R }
+#define mouseL    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_L }
+#define mouseR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_R }
+#define mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  } 
+#define mouseDn    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN }
+#define mouseDnR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_R  }
+#define mouseScrollUp
+#define mouseScrollDn
+#define mouseScrollL
+#define mouseScrollR
+#define mouseBtnL    (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+#define mouseBtnM  (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+#define mouseBtnR    (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+
+
 
 #define KEY_LEFT_CTRL 0x80
-#define Key_LeftCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+#define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
 #define KEY_LEFT_SHIFT 0x81
-#define Key_LeftShift (Key){ KEY_FLAGS, KEY_LEFT_SHIFT }
+#define Key_LShift (Key){ KEY_FLAGS, KEY_LEFT_SHIFT }
 #define KEY_LEFT_ALT 0x82
-#define Key_LeftAlt (Key){ KEY_FLAGS, KEY_LEFT_ALT }
+#define Key_LAlt (Key){ KEY_FLAGS, KEY_LEFT_ALT }
 #define KEY_LEFT_GUI 0x83
-#define Key_LeftGUI (Key){ KEY_FLAGS, KEY_LEFT_GUI }
+#define Key_LGUI (Key){ KEY_FLAGS, KEY_LEFT_GUI }
 #define KEY_RIGHT_CTRL 0x84
-#define Key_RightCtrl (Key){ KEY_FLAGS, KEY_RIGHT_CTRL }
+#define Key_RCtrl (Key){ KEY_FLAGS, KEY_RIGHT_CTRL }
 #define KEY_RIGHT_SHIFT 0x85
-#define Key_RightShift (Key){ KEY_FLAGS, KEY_RIGHT_SHIFT }
+#define Key_RShift (Key){ KEY_FLAGS, KEY_RIGHT_SHIFT }
 #define KEY_RIGHT_ALT 0x86
-#define Key_RightAlt (Key){ KEY_FLAGS, KEY_RIGHT_ALT }
+#define Key_RAlt (Key){ KEY_FLAGS, KEY_RIGHT_ALT }
 #define KEY_RIGHT_GUI 0x87
-#define Key_RightGUI (Key){ KEY_FLAGS, KEY_RIGHT_GUI }
+#define Key_RGUI (Key){ KEY_FLAGS, KEY_RIGHT_GUI }
 
 #define KEY_UP_ARROW 0xDA
 #define Key_UpArrow (Key){ KEY_FLAGS, KEY_UP_ARROW }
 #define KEY_DOWN_ARROW 0xD9
-#define Key_DownArrow (Key){ KEY_FLAGS, KEY_DOWN_ARROW }
+#define Key_DnArrow (Key){ KEY_FLAGS, KEY_DOWN_ARROW }
 #define KEY_LEFT_ARROW 0xD8
-#define Key_LeftArrow (Key){ KEY_FLAGS, KEY_LEFT_ARROW }
+#define Key_LArrow (Key){ KEY_FLAGS, KEY_LEFT_ARROW }
 #define KEY_RIGHT_ARROW 0xD7
-#define Key_RightArrow (Key){ KEY_FLAGS, KEY_RIGHT_ARROW }
+#define Key_RArrow (Key){ KEY_FLAGS, KEY_RIGHT_ARROW }
 #define KEY_RETURN 0xB0
 #define Key_Return (Key){ KEY_FLAGS, KEY_RETURN }
 #define KEY_ESC 0xB1
@@ -83,7 +111,7 @@ typedef struct {
 #define KEY_PAGE_UP 0xD3
 #define Key_PageUp (Key){ KEY_FLAGS, KEY_PAGE_UP }
 #define KEY_PAGE_DOWN 0xD6
-#define Key_PageDown (Key){ KEY_FLAGS, KEY_PAGE_DOWN }
+#define Key_PageDn (Key){ KEY_FLAGS, KEY_PAGE_DOWN }
 #define KEY_HOME 0xD2
 #define Key_Home (Key){ KEY_FLAGS, KEY_HOME }
 #define KEY_END 0xD5
@@ -199,11 +227,23 @@ typedef struct {
 #define KEY_EQUALS '='
 #define Key_Equals (Key){ KEY_FLAGS, KEY_EQUALS }
 #define KEY_LEFT_BRACKET '['
-#define Key_LeftBracket (Key){ KEY_FLAGS, KEY_LEFT_BRACKET }
+#define Key_LBracket (Key){ KEY_FLAGS, KEY_LEFT_BRACKET }
 #define KEY_RIGHT_BRACKET ']'
-#define Key_RightBracket (Key){ KEY_FLAGS, KEY_RIGHT_BRACKET }
+#define Key_RBracket (Key){ KEY_FLAGS, KEY_RIGHT_BRACKET }
 #define KEY_BACKSLASH '\\'
 #define Key_Backslash (Key){ KEY_FLAGS, KEY_BACKSLASH }
+#define KEY_PIPE '|'
+#define Key_Pipe (Key){ KEY_FLAGS, KEY_PIPE }
+
+#define KEY_LEFT_SQUARE_BRACKET '['
+#define Key_LSquareBracket (Key){ KEY_FLAGS, KEY_LEFT_SQUARE_BRACKET }
+#define KEY_RIGHT_SQUARE_BRACKET ']'
+#define Key_RSquareBracket (Key){ KEY_FLAGS, KEY_RIGHT_SQUARE_BRACKET }
+#define KEY_LEFT_CURLY_BRACKET '{'
+#define Key_LCurlyBracket (Key){ KEY_FLAGS, KEY_LEFT_CURLY_BRACKET }
+#define KEY_RIGHT_CURLY_BRACKET '}'
+#define Key_RCurlyBracket (Key){ KEY_FLAGS, KEY_RIGHT_CURLY_BRACKET }
+
 #define KEY_SEMICOLON ';'
 #define Key_Semicolon (Key){ KEY_FLAGS, KEY_SEMICOLON }
 #define KEY_QUOTE '\''
@@ -269,14 +309,14 @@ typedef struct {
 #define KEY_HELP 0xfb
 #define Key_Help (Key){ KEY_FLAGS, KEY_HELP }
 #define KEY_BACKLIGHT_DOWN 0xF1
-#define Key_BacklightDown (Key){ KEY_FLAGS, KEY_BACKLIGHT_DOWN }
+#define Key_BacklightDn (Key){ KEY_FLAGS, KEY_BACKLIGHT_DOWN }
 #define KEY_BACKLIGHT_UP 0xF2
 #define Key_BacklightUp (Key){ KEY_FLAGS, KEY_BACKLIGHT_UP }
 #define NO_KEY false
 #define KEY_RIGHT_FN2 0xfe
-#define Key_RightFN2 (Key){ KEY_FLAGS, KEY_RIGHT_FN2 }
+#define Key_RFN2 (Key){ KEY_FLAGS, KEY_RIGHT_FN2 }
 #define KEY_LEFT_FN2 0xff
-#define Key_LeftFN2 (Key){ KEY_FLAGS, KEY_LEFT_FN2 }
+#define Key_LFN2 (Key){ KEY_FLAGS, KEY_LEFT_FN2 }
 
 /*
 
@@ -328,7 +368,7 @@ typedef struct {
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define Key_NextKeymapMomentary (Key){ KEY_FLAGS | MOMENTARY, LAYER_1 }
+#define NextKeymap (Key){ KEY_FLAGS | MOMENTARY, LAYER_1 }
 
 
 
