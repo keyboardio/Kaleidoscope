@@ -368,7 +368,7 @@ typedef struct {
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define NextKeymap (Key){ KEY_FLAGS | MOMENTARY, LAYER_1 }
+#define NextKeymap (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
 
 
 

@@ -21,7 +21,8 @@ byte		matrixState[ROWS][COLS];
 long counter = 0;
 static const int LAYERS = 2;
 
-int current_keymap = 0;
+int current_layer = 0;
+int previous_keymap = 0;
 
 static const Key keymaps[LAYERS][ROWS][COLS] = {
     {
@@ -83,7 +84,7 @@ boolean key_is_not_pressed (byte keyState) {
 }
 
 boolean key_toggled_on(byte keyState) {
-    if (key_is_pressed(keyState) && ( key_was_not_pressed(keyState))) {
+    if (key_is_pressed(keyState) &&  key_was_not_pressed(keyState)) {
         return true;
     }
     else {
@@ -110,7 +111,7 @@ void reset_matrix() {
     }
 }
 
-void send_key_event() {
+void send_key_events(int layer) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
@@ -121,7 +122,7 @@ void send_key_event() {
             int x = 0;
             int y = 0;
             byte switchState = matrixState[row][col];
-            Key mappedKey = keymaps[current_keymap][row][col];
+            Key mappedKey = keymaps[layer][row][col];
             if (mappedKey.flags & MOUSE_KEY ) {
             
 
@@ -180,6 +181,9 @@ void setup_matrix() {
 }
 
 void scan_matrix() {
+
+    int active_layer = current_layer;
+
     //scan the Keyboard matrix looking for connections
     for (int row = 0; row < ROWS; row++) {
         digitalWrite(rowPins[row], LOW);
@@ -199,26 +203,16 @@ void scan_matrix() {
 
 
 
-            if (       keymaps[current_keymap][row][col].flags & MOMENTARY ) {
+            if (! (keymaps[current_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) { // this logic sucks. there is a better way TODO this
 
-                if (key_toggled_on(matrixState[row][col])  ) {
-                    current_keymap++;
+                if (key_is_pressed(matrixState[row][col])) {
+                  active_layer = keymaps[current_layer][row][col].rawKey;
                 }
-                else if (key_toggled_off(matrixState[row][col]) ) {
-                    current_keymap--;
-                }
-            }
-
-            // guard  against layer overflow
-            if (current_keymap >= LAYERS) {
-                current_keymap = 0;
-            }
-            else if (current_keymap < 0) {
-                current_keymap = LAYERS - 1;
             }
         }
         digitalWrite(rowPins[row], HIGH);
     }
+    send_key_events(active_layer);
 }
 
 
@@ -257,7 +251,6 @@ void setup() {
 void loop() {
     scan_matrix();
     //    report_matrix();
-    send_key_event();
     reset_matrix();
 }
 
