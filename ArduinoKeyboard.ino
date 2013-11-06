@@ -15,14 +15,22 @@ static const int ROWS = 5;
 static int colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 static int rowPins[ROWS] = { A2, A3, A4, A5, 15 };
 
-byte		matrixState[ROWS][COLS];
+byte matrixState[ROWS][COLS];
+
+// if we're sticking to boot protocol, these could all be 6 + mods
+// but *mumble*
+//
 
 
-long counter = 0;
+#define KEYS_HELD_BUFFER 12
+byte charsBeingReported[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
+byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
+
+
+long reporting_counter = 0;
 static const int LAYERS = 2;
-
 int current_layer = 0;
-int previous_keymap = 0;
+
 
 static const Key keymaps[LAYERS][ROWS][COLS] = {
     {
@@ -43,6 +51,45 @@ static const Key keymaps[LAYERS][ROWS][COLS] = {
 
 };
 
+
+void release_keys_not_being_pressed() {
+
+    // we use charsReportedLastTime to figure out what we might not be holding anymore and can now release. this is destructive to charsReportedLastTime
+
+    for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        // for each key we were holding as of the end of the last cycle
+        // see if we're still holding it
+        // if we're not, call an explicit Release
+
+            if (charsReportedLastTime[i] != 0x00) {
+                // if there _was_ a character in this slot, go check the 
+                // currently held characters
+        for (int j=0; j<KEYS_HELD_BUFFER; j++) {
+            if (charsReportedLastTime[i] == charsBeingReported[j]) {
+                // if's still held, we don't need to do anything.
+                charsReportedLastTime[i] = 0x00;
+                break;
+            }
+            }
+
+        }
+    }
+    for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        if (charsReportedLastTime[i] != 0x00) {
+            Keyboard.release(charsReportedLastTime[i]);
+        }
+    }
+}
+
+void record_key_being_pressed(byte character) {
+    for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        // todo - deal with overflowing the 12 key buffer here
+        if (charsBeingReported[i] == 0x00) {
+            charsBeingReported[i] = character;
+            break;
+        }
+    }
+}
 
 boolean key_was_pressed (byte keyState) {
     if ( byte((keyState >> 4)) ^ B00001111 ) {
@@ -109,6 +156,10 @@ void reset_matrix() {
             matrixState[row][col] <<= 1;
         }
     }
+    for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        charsReportedLastTime[i] = charsBeingReported[i];
+        charsBeingReported[i] = 0x00;
+    }
 }
 
 void send_key_events(int layer) {
@@ -124,38 +175,42 @@ void send_key_events(int layer) {
             byte switchState = matrixState[row][col];
             Key mappedKey = keymaps[layer][row][col];
             if (mappedKey.flags & MOUSE_KEY ) {
-            
 
-              if (key_is_pressed(switchState)){
-                if (mappedKey.rawKey & MOUSE_UP) {
-                    y--;
-                }
-                if (mappedKey.rawKey & MOUSE_DN) {
-                    y++;
-                }
-                if (mappedKey.rawKey & MOUSE_L) {
-                    x--;
-                }
 
-                if (mappedKey.rawKey & MOUSE_R) {
-                    x++;
-                }
-                Mouse.move(x, y, 0);
+                if (key_is_pressed(switchState)) {
+                    if (mappedKey.rawKey & MOUSE_UP) {
+                        y--;
+                    }
+                    if (mappedKey.rawKey & MOUSE_DN) {
+                        y++;
+                    }
+                    if (mappedKey.rawKey & MOUSE_L) {
+                        x--;
+                    }
+
+                    if (mappedKey.rawKey & MOUSE_R) {
+                        x++;
+                    }
+                    Mouse.move(x, y, 0);
 
                 }
 
             } else {
-
-            if (key_toggled_on (switchState)){
-                Keyboard.press(mappedKey.rawKey);
-            }
-            else if (key_toggled_off (switchState)) {
-                Keyboard.release(mappedKey.rawKey);
-            }
+                if (key_is_pressed(switchState)) {
+                    record_key_being_pressed(mappedKey.rawKey);
+                    if (key_toggled_on (switchState)) {
+                        Keyboard.press(mappedKey.rawKey);
+                    } 
+                }
+                else if (key_toggled_off (switchState)) {
+                    Keyboard.release(mappedKey.rawKey);
+                }
             }
         }
     }
+    release_keys_not_being_pressed();
 }
+
 
 
 void setup_matrix() {
@@ -206,7 +261,7 @@ void scan_matrix() {
             if (! (keymaps[active_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) { // this logic sucks. there is a better way TODO this
 
                 if (key_is_pressed(matrixState[row][col])) {
-                  active_layer = keymaps[current_layer][row][col].rawKey;
+                    active_layer = keymaps[current_layer][row][col].rawKey;
                 }
             }
         }
@@ -217,7 +272,7 @@ void scan_matrix() {
 
 
 void report_matrix() {
-    if (counter++ %100 == 0 ) {
+    if (reporting_counter++ %100 == 0 ) {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 Serial.print(matrixState[row][col],HEX);
