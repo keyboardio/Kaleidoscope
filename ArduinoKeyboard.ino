@@ -203,7 +203,7 @@ void scan_matrix() {
 
 
 
-            if (! (keymaps[current_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) { // this logic sucks. there is a better way TODO this
+            if (! (keymaps[active_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) { // this logic sucks. there is a better way TODO this
 
                 if (key_is_pressed(matrixState[row][col])) {
                   active_layer = keymaps[current_layer][row][col].rawKey;
