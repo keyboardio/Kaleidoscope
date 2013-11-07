@@ -21,15 +21,15 @@ typedef struct {
     byte rawKey;
 } Key;
 
-#define KEY_FLAGS       B0000000
-#define CTRL_HELD       B0000001
-#define ALT_HELD        B0000010
-#define SHIFT_HELD      B0000100
-#define GUI_HELD        B0001000
-#define SWITCH_TO_LAYER B0010000
-#define MOMENTARY       B0100000
-#define MOUSE_KEY       B1000000
-
+#define KEY_FLAGS       B00000000
+#define CTRL_HELD       B00000001
+#define ALT_HELD        B00000010
+#define SHIFT_HELD      B00000100
+#define GUI_HELD        B00001000
+#define SWITCH_TO_LAYER B00010000
+#define MOMENTARY       B00100000
+#define MOUSE_KEY       B01000000
+#define SYNTHETIC_KEY   B10000000
 
 #define MOUSE_UP       B0001
 #define MOUSE_DN     B0010
@@ -49,7 +49,6 @@ typedef struct {
 
 #define NoKey (Key){ KEY_FLAGS,0 }
 
-#define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
 
 
 
@@ -65,12 +64,16 @@ typedef struct {
 #define mouseScrollDn
 #define mouseScrollL
 #define mouseScrollR
-#define mouseBtnL    (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
-#define mouseBtnM  (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
-#define mouseBtnR    (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
+#define KEY_MOUSE_BTN_L 0x01 // Synthetic key
+#define KEY_MOUSE_BTN_M 0x04 // Synthetic key
+#define KEY_MOUSE_BTN_R 0x02 // Synthetic key
+#define mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_L }
+#define mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC_KEY , KEY_MOUSE_BTN_M }
+#define mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_R }
 
 
 
+#define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
 #define KEY_LEFT_CTRL 0x80
 #define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }
 #define KEY_LEFT_SHIFT 0x81
@@ -324,11 +327,6 @@ typedef struct {
 #define KEY_WTF 0xF7
 #define Key_Wtf (Key){ KEY_FLAGS, KEY_WTF }
 
-#define xx 0xF8
-#define Key_Xx (Key){ KEY_FLAGS, xx }
-#define xxx 0xF9
-#define Key_Xxx (Key){ KEY_FLAGS, xxx }
-#define xxxx 0xFA
 #define Key_Xxxx (Key){ KEY_FLAGS, xxxx }
 #define xxxxx 0xFE
 #define Key_Xxxxx (Key){ KEY_FLAGS, xxxxx }
