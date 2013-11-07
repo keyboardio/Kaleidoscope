@@ -61,15 +61,15 @@ void release_keys_not_being_pressed() {
         // see if we're still holding it
         // if we're not, call an explicit Release
 
-            if (charsReportedLastTime[i] != 0x00) {
-                // if there _was_ a character in this slot, go check the 
-                // currently held characters
-        for (int j=0; j<KEYS_HELD_BUFFER; j++) {
-            if (charsReportedLastTime[i] == charsBeingReported[j]) {
-                // if's still held, we don't need to do anything.
-                charsReportedLastTime[i] = 0x00;
-                break;
-            }
+        if (charsReportedLastTime[i] != 0x00) {
+            // if there _was_ a character in this slot, go check the
+            // currently held characters
+            for (int j=0; j<KEYS_HELD_BUFFER; j++) {
+                if (charsReportedLastTime[i] == charsBeingReported[j]) {
+                    // if's still held, we don't need to do anything.
+                    charsReportedLastTime[i] = 0x00;
+                    break;
+                }
             }
 
         }
@@ -200,7 +200,7 @@ void send_key_events(int layer) {
                     record_key_being_pressed(mappedKey.rawKey);
                     if (key_toggled_on (switchState)) {
                         Keyboard.press(mappedKey.rawKey);
-                    } 
+                    }
                 }
                 else if (key_toggled_off (switchState)) {
                     Keyboard.release(mappedKey.rawKey);
