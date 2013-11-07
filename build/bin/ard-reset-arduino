@@ -3,8 +3,9 @@
 # where <DEVICE> is typically some /dev/ttyfoobar
 import sys
 import serial
+import time
 ser = serial.Serial()
 ser.port=sys.argv[2]
 ser.baudrate=1200
 ser.open(); ser.close()
-
+time.sleep(2)
