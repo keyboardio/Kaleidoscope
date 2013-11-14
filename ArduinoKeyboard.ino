@@ -5,7 +5,22 @@
 // All Rights Reserved. (To be licensed under an opensource license
 // before the release of the keyboard.io model 01
 
+
+/**
+ *  TODO:
+
+    add mouse acceleration/deceleration
+    add mouse inertia
+    add series-of-character macros
+    add series of keystroke macros
+    use a lower-level USB API 
+ *
+**/
+
+
 #include <stdio.h>
+#include <math.h>   
+
 
 
 
@@ -30,6 +45,8 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 long reporting_counter = 0;
 static const int LAYERS = 2;
 int current_layer = 0;
+int mouseActiveForCycles = 0;
+
 
 
 static const Key keymaps[LAYERS][ROWS][COLS] = {
@@ -166,35 +183,36 @@ void send_key_events(int layer) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
+
     // TODO:switch to sending raw HID packets
+
+
+    bool mouseActiveThisCycle = false; 
+            int x = 0;
+            int y = 0;
+
     for (int row = 0; row < ROWS; row++) {
 
         for (int col = 0; col < COLS; col++) {
-            int x = 0;
-            int y = 0;
             byte switchState = matrixState[row][col];
             Key mappedKey = keymaps[layer][row][col];
             if (mappedKey.flags & MOUSE_KEY ) {
-
-
                 if (key_is_pressed(switchState)) {
+                    mouseActiveThisCycle = true;
                     if (mappedKey.rawKey & MOUSE_UP) {
-                        y--;
+                        y-=1;
                     }
                     if (mappedKey.rawKey & MOUSE_DN) {
-                        y++;
+                        y+= 1;
                     }
                     if (mappedKey.rawKey & MOUSE_L) {
-                        x--;
+                        x-= 1;
                     }
 
                     if (mappedKey.rawKey & MOUSE_R) {
-                        x++;
+                        x+= 1 ;
                     }
-                    Mouse.move(x, y, 0);
-
                 }
-
             } else if (mappedKey.flags & SYNTHETIC_KEY) {
                 if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
                     if (key_toggled_on (switchState)) {
@@ -217,6 +235,20 @@ void send_key_events(int layer) {
             }
         }
     }
+    if (mouseActiveThisCycle) {
+            if(mouseActiveForCycles<=60) {
+            mouseActiveForCycles++;
+            }
+            int accel =
+          //  int(log10(double( mouseActiveForCycles)))/
+            int(mouseActiveForCycles/20)+1;
+            
+            ;
+
+                    Mouse.move(x*accel, y*accel, 0);
+    } else {
+        mouseActiveForCycles=0;
+        }
     release_keys_not_being_pressed();
 }
 
