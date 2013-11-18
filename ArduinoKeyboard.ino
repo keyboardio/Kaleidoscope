@@ -236,12 +236,12 @@ void send_key_events(int layer) {
         }
     }
     if (mouseActiveThisCycle) {
-            if(mouseActiveForCycles<=60) {
+            if(mouseActiveForCycles<=2400) {
             mouseActiveForCycles++;
             }
             int accel =
           //  int(log10(double( mouseActiveForCycles)))/
-            int(mouseActiveForCycles/20)+1;
+            int(mouseActiveForCycles/600)+1;
             
             ;
 
