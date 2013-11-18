@@ -46,7 +46,8 @@ long reporting_counter = 0;
 static const int LAYERS = 2;
 int current_layer = 0;
 int mouseActiveForCycles = 0;
-
+float carriedOverX =0;
+float carriedOverY =0;
 
 
 static const Key keymaps[LAYERS][ROWS][COLS] = {
@@ -178,6 +179,15 @@ void reset_matrix() {
         charsBeingReported[i] = 0x00;
     }
 }
+double mouse_accel (double cycles) {
+    double accel = atan((cycles/10)-12);
+    accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
+    accel = accel *0.85;
+	if (accel<0.85) {
+		accel =0.85;
+	}
+    return accel;
+}
 
 void send_key_events(int layer) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
@@ -236,22 +246,36 @@ void send_key_events(int layer) {
         }
     }
     if (mouseActiveThisCycle) {
-            if(mouseActiveForCycles<=2400) {
-            mouseActiveForCycles++;
-            }
-            int accel =
-          //  int(log10(double( mouseActiveForCycles)))/
-            int(mouseActiveForCycles/600)+1;
-            
-            ;
+        mouseActiveForCycles++;
+        double accel = (double) mouse_accel(mouseActiveForCycles);
+        float moveX=0;
+        float moveY=0;
+        if (x>0) {
+            moveX = (x*accel) + carriedOverX;
+            carriedOverX = moveX - floor(moveX);
+        }
+        else if(x<0) {
+            moveX = (x*accel) - carriedOverX;
+            carriedOverX = ceil(moveX) - moveX;
+        }
 
-                    Mouse.move(x*accel, y*accel, 0);
+        if (y >0) {
+            moveY = (y*accel) + carriedOverY;
+            carriedOverY = moveY - floor(moveY);
+        } else if (y<0) {
+            moveY = (y*accel) - carriedOverY;
+            carriedOverY = ceil(moveY) - moveY;
+        }
+	Serial.print('cycles: ');
+	Serial.print(mouseActiveForCycles);
+	Serial.print("Accel: ");
+	Serial.print(accel); Serial.print("	moveX is "); Serial.print(moveX); Serial.print(" moveY is "); Serial.print(moveY); Serial.print(" carriedoverx is "); Serial.print(carriedOverX); Serial.print(" carriedOverY is "); Serial.println(carriedOverY);
+        Mouse.move(moveX,moveY, 0);
     } else {
         mouseActiveForCycles=0;
-        }
+    }
     release_keys_not_being_pressed();
 }
-
 
 
 void setup_matrix() {
