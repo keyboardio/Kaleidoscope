@@ -22,15 +22,17 @@
 
 
 
+
+
 //#define DEBUG_SERIAL false
 
-static const int COLS = 14;
-static const int ROWS = 5;
-static const int LAYERS = 2;
+#define COLS 14
+#define ROWS 5
+#define LAYERS 6
 
 
-static int colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-static int rowPins[ROWS] = { A2, A3, A4, A5, 15 };
+static const int colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+static const int rowPins[ROWS] = { A2, A3, A4, A5, 15 };
 
 byte matrixState[ROWS][COLS];
 
