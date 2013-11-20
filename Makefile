@@ -7,4 +7,4 @@ ARDUINO_LIBS =
 include build/arduino-mk/Arduino.mk
 
 astyle:
-	astyle --style=linux ArduinoKeyboard.ino ArduinoKeyboard.h
+	astyle --style=linux ArduinoKeyboard.ino *.h
