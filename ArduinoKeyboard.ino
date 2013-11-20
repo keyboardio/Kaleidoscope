@@ -68,7 +68,6 @@ static const Key keymaps[LAYERS][ROWS][COLS] = {
 
 };
 
-
 void release_keys_not_being_pressed()
 {
 
@@ -133,63 +132,9 @@ double mouse_accel (double cycles)
         return accel;
 }
 
-void send_key_events(int layer)
-{
-        //for every newly pressed button, figure out what logical key it is and send a key down event
-        // for every newly released button, figure out what logical key it is and send a key up event
+void handle_mouse_movement( int x, int y) {
 
-
-        // TODO:switch to sending raw HID packets
-
-
-        bool mouseActiveThisCycle = false;
-        int x = 0;
-        int y = 0;
-
-        for (int row = 0; row < ROWS; row++) {
-
-                for (int col = 0; col < COLS; col++) {
-                        byte switchState = matrixState[row][col];
-                        Key mappedKey = keymaps[layer][row][col];
-                        if (mappedKey.flags & MOUSE_KEY ) {
-                                if (key_is_pressed(switchState)) {
-                                        mouseActiveThisCycle = true;
-                                        if (mappedKey.rawKey & MOUSE_UP) {
-                                                y-=1;
-                                        }
-                                        if (mappedKey.rawKey & MOUSE_DN) {
-                                                y+= 1;
-                                        }
-                                        if (mappedKey.rawKey & MOUSE_L) {
-                                                x-= 1;
-                                        }
-
-                                        if (mappedKey.rawKey & MOUSE_R) {
-                                                x+= 1 ;
-                                        }
-                                }
-                        } else if (mappedKey.flags & SYNTHETIC_KEY) {
-                                if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
-                                        if (key_toggled_on (switchState)) {
-                                                Mouse.press(mappedKey.rawKey);
-                                        } else if (key_is_pressed(switchState)) {
-                                        } else if (Mouse.isPressed(mappedKey.rawKey) ) {
-                                                Mouse.release(mappedKey.rawKey);
-                                        }
-                                }
-                        } else {
-                                if (key_is_pressed(switchState)) {
-                                        record_key_being_pressed(mappedKey.rawKey);
-                                        if (key_toggled_on (switchState)) {
-                                                Keyboard.press(mappedKey.rawKey);
-                                        }
-                                } else if (key_toggled_off (switchState)) {
-                                        Keyboard.release(mappedKey.rawKey);
-                                }
-                        }
-                }
-        }
-        if (mouseActiveThisCycle) {
+        if (x!=0 && y!=0) {
                 mouseActiveForCycles++;
                 double accel = (double) mouse_accel(mouseActiveForCycles);
                 float moveX=0;
@@ -226,8 +171,67 @@ void send_key_events(int layer)
         } else {
                 mouseActiveForCycles=0;
         }
+
+}
+
+void send_key_events(int layer)
+{
+        //for every newly pressed button, figure out what logical key it is and send a key down event
+        // for every newly released button, figure out what logical key it is and send a key up event
+
+
+        // TODO:switch to sending raw HID packets
+
+
+        int x = 0;
+        int y = 0;
+
+        for (int row = 0; row < ROWS; row++) {
+
+                for (int col = 0; col < COLS; col++) {
+                        byte switchState = matrixState[row][col];
+                        Key mappedKey = keymaps[layer][row][col];
+                        if (mappedKey.flags & MOUSE_KEY ) {
+                                if (key_is_pressed(switchState)) {
+                                        if (mappedKey.rawKey & MOUSE_UP) {
+                                                y-=1;
+                                        }
+                                        if (mappedKey.rawKey & MOUSE_DN) {
+                                                y+= 1;
+                                        }
+                                        if (mappedKey.rawKey & MOUSE_L) {
+                                                x-= 1;
+                                        }
+
+                                        if (mappedKey.rawKey & MOUSE_R) {
+                                                x+= 1 ;
+                                        }
+                                }
+                        } else if (mappedKey.flags & SYNTHETIC_KEY) {
+                                if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
+                                        if (key_toggled_on (switchState)) {
+                                                Mouse.press(mappedKey.rawKey);
+                                        } else if (key_is_pressed(switchState)) {
+                                        } else if (Mouse.isPressed(mappedKey.rawKey) ) {
+                                                Mouse.release(mappedKey.rawKey);
+                                        }
+                                }
+                        } else {
+                                if (key_is_pressed(switchState)) {
+                                        record_key_being_pressed(mappedKey.rawKey);
+                                        if (key_toggled_on (switchState)) {
+                                                Keyboard.press(mappedKey.rawKey);
+                                        }
+                                } else if (key_toggled_off (switchState)) {
+                                        Keyboard.release(mappedKey.rawKey);
+                                }
+                        }
+                }
+        }
+	handle_mouse_movement(x,y);
         release_keys_not_being_pressed();
 }
+
 
 
 void setup_matrix()
