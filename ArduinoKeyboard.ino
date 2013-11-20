@@ -45,7 +45,7 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 long reporting_counter = 0;
 static const int LAYERS = 2;
 int current_layer = 0;
-int mouseActiveForCycles = 0;
+double mouseActiveForCycles = 0;
 float carriedOverX =0;
 float carriedOverY =0;
 
@@ -180,11 +180,11 @@ void reset_matrix() {
     }
 }
 double mouse_accel (double cycles) {
-    double accel = atan((cycles/10)-12);
+    double accel = atan((cycles/25)-5);
     accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
     accel = accel *0.85;
-	if (accel<0.85) {
-		accel =0.85;
+	if (accel<0.25) {
+		accel =0.25;
 	}
     return accel;
 }
@@ -266,8 +266,9 @@ void send_key_events(int layer) {
             moveY = (y*accel) - carriedOverY;
             carriedOverY = ceil(moveY) - moveY;
         }
-	Serial.print('cycles: ');
-	Serial.print(mouseActiveForCycles);
+	Serial.println();
+	Serial.print("cycles: ");
+	Serial.println(mouseActiveForCycles);
 	Serial.print("Accel: ");
 	Serial.print(accel); Serial.print("	moveX is "); Serial.print(moveX); Serial.print(" moveY is "); Serial.print(moveY); Serial.print(" carriedoverx is "); Serial.print(carriedOverX); Serial.print(" carriedOverY is "); Serial.println(carriedOverY);
         Mouse.move(moveX,moveY, 0);
