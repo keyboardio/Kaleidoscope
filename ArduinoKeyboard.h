@@ -15,6 +15,10 @@ extern "C" {
 #endif
 
 //add your function definitions for the project KeyboardIO here
+typedef struct {
+        byte flags;
+        byte rawKey;
+} Key;
 
 
 #include "key_defs.h"
