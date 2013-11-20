@@ -13,13 +13,13 @@
     add mouse inertia
     add series-of-character macros
     add series of keystroke macros
-    use a lower-level USB API 
+    use a lower-level USB API
  *
 **/
 
 
 #include <stdio.h>
-#include <math.h>   
+#include <math.h>
 
 
 
@@ -197,9 +197,9 @@ void send_key_events(int layer) {
     // TODO:switch to sending raw HID packets
 
 
-    bool mouseActiveThisCycle = false; 
-            int x = 0;
-            int y = 0;
+    bool mouseActiveThisCycle = false;
+    int x = 0;
+    int y = 0;
 
     for (int row = 0; row < ROWS; row++) {
 
