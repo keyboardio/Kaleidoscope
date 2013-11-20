@@ -132,7 +132,8 @@ double mouse_accel (double cycles)
         return accel;
 }
 
-void handle_mouse_movement( int x, int y) {
+void handle_mouse_movement( int x, int y)
+{
 
         if (x!=0 && y!=0) {
                 mouseActiveForCycles++;
@@ -228,7 +229,7 @@ void send_key_events(int layer)
                         }
                 }
         }
-	handle_mouse_movement(x,y);
+        handle_mouse_movement(x,y);
         release_keys_not_being_pressed();
 }
 
