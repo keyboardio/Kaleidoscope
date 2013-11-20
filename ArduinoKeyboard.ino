@@ -22,6 +22,7 @@
 
 
 
+//#define DEBUG_SERIAL false
 
 static const int COLS = 14;
 static const int ROWS = 5;
@@ -140,6 +141,7 @@ void handle_mouse_movement( int x, int y)
                         moveY = (y*accel) - carriedOverY;
                         carriedOverY = ceil(moveY) - moveY;
                 }
+#ifdef DEBUG_SERIAL
                 Serial.println();
                 Serial.print("cycles: ");
                 Serial.println(mouseActiveForCycles);
@@ -153,6 +155,7 @@ void handle_mouse_movement( int x, int y)
                 Serial.print(carriedOverX);
                 Serial.print(" carriedOverY is ");
                 Serial.println(carriedOverY);
+#endif
                 Mouse.move(moveX,moveY, 0);
         } else {
                 mouseActiveForCycles=0;
@@ -281,6 +284,7 @@ void scan_matrix()
 
 void report_matrix()
 {
+#ifdef DEBUG_SERIAL
         if (reporting_counter++ %100 == 0 ) {
                 for (int row = 0; row < ROWS; row++) {
                         for (int col = 0; col < COLS; col++) {
@@ -292,10 +296,12 @@ void report_matrix()
                 }
                 Serial.println("");
         }
+#endif
 }
 
 void report(int row, int col, boolean value)
 {
+#ifdef DEBUG_SERIAL
         Serial.print("Detected a change on ");
         Serial.print(col);
         Serial.print(" ");
@@ -303,6 +309,7 @@ void report(int row, int col, boolean value)
         Serial.print(" to ");
         Serial.print(value);
         Serial.println(".");
+#endif
 }
 
 
@@ -310,7 +317,9 @@ void setup()
 {
         Keyboard.begin();
         Mouse.begin();
+#ifdef DEBUG_SERIAL
         Serial.begin(115200);
+#endif
         setup_matrix();
 }
 
