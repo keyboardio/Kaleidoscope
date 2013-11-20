@@ -8,8 +8,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void loop();
-void setup();
+        void loop();
+        void setup();
 #ifdef __cplusplus
 } // extern "C"
 #endif
@@ -17,8 +17,8 @@ void setup();
 //add your function definitions for the project KeyboardIO here
 
 typedef struct {
-    byte flags;
-    byte rawKey;
+        byte flags;
+        byte rawKey;
 } Key;
 
 #define KEY_FLAGS       B00000000
@@ -57,7 +57,7 @@ typedef struct {
 #define mouseUpR  (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_R }
 #define mouseL    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_L }
 #define mouseR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_R }
-#define mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  } 
+#define mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  }
 #define mouseDn    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN }
 #define mouseDnR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_R  }
 #define mouseScrollUp
