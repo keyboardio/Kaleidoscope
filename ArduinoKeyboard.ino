@@ -120,10 +120,10 @@ double mouse_accel (double cycles)
         return accel;
 }
 
-void handle_mouse_movement( byte x, byte y)
+void handle_mouse_movement( char x, char y)
 {
 
-        if (x!=0 && y!=0) {
+        if (x!=0 || y!=0) {
                 mouseActiveForCycles++;
                 double accel = (double) mouse_accel(mouseActiveForCycles);
                 float moveX=0;
@@ -173,9 +173,9 @@ void send_key_events(byte layer)
 
         // TODO:switch to sending raw HID packets
 
-
-        byte x = 0;
-        byte y = 0;
+	// really, these are signed small ints
+        char x = 0;
+        char y = 0;
 
         for (byte row = 0; row < ROWS; row++) {
 
