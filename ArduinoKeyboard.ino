@@ -31,8 +31,8 @@
 #define LAYERS 6
 
 
-static const int colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-static const int rowPins[ROWS] = { A2, A3, A4, A5, 15 };
+static const byte colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+static const byte rowPins[ROWS] = { A2, A3, A4, A5, 15 };
 
 byte matrixState[ROWS][COLS];
 
@@ -47,7 +47,7 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 
 
 long reporting_counter = 0;
-int current_layer = 0;
+byte current_layer = 0;
 double mouseActiveForCycles = 0;
 float carriedOverX =0;
 float carriedOverY =0;
@@ -61,7 +61,7 @@ void release_keys_not_being_pressed()
 
         // we use charsReportedLastTime to figure out what we might not be holding anymore and can now release. this is destructive to charsReportedLastTime
 
-        for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        for (byte i=0; i<KEYS_HELD_BUFFER; i++) {
                 // for each key we were holding as of the end of the last cycle
                 // see if we're still holding it
                 // if we're not, call an explicit Release
@@ -69,7 +69,7 @@ void release_keys_not_being_pressed()
                 if (charsReportedLastTime[i] != 0x00) {
                         // if there _was_ a character in this slot, go check the
                         // currently held characters
-                        for (int j=0; j<KEYS_HELD_BUFFER; j++) {
+                        for (byte j=0; j<KEYS_HELD_BUFFER; j++) {
                                 if (charsReportedLastTime[i] == charsBeingReported[j]) {
                                         // if's still held, we don't need to do anything.
                                         charsReportedLastTime[i] = 0x00;
@@ -79,7 +79,7 @@ void release_keys_not_being_pressed()
 
                 }
         }
-        for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        for (byte i=0; i<KEYS_HELD_BUFFER; i++) {
                 if (charsReportedLastTime[i] != 0x00) {
                         Keyboard.release(charsReportedLastTime[i]);
                 }
@@ -88,7 +88,7 @@ void release_keys_not_being_pressed()
 
 void record_key_being_pressed(byte character)
 {
-        for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        for (byte i=0; i<KEYS_HELD_BUFFER; i++) {
                 // todo - deal with overflowing the 12 key buffer here
                 if (charsBeingReported[i] == 0x00) {
                         charsBeingReported[i] = character;
@@ -99,12 +99,12 @@ void record_key_being_pressed(byte character)
 
 void reset_matrix()
 {
-        for (int col = 0; col < COLS; col++) {
-                for (int row = 0; row < ROWS; row++) {
+        for (byte col = 0; col < COLS; col++) {
+                for (byte row = 0; row < ROWS; row++) {
                         matrixState[row][col] <<= 1;
                 }
         }
-        for (int i=0; i<KEYS_HELD_BUFFER; i++) {
+        for (byte i=0; i<KEYS_HELD_BUFFER; i++) {
                 charsReportedLastTime[i] = charsBeingReported[i];
                 charsBeingReported[i] = 0x00;
         }
@@ -120,7 +120,7 @@ double mouse_accel (double cycles)
         return accel;
 }
 
-void handle_mouse_movement( int x, int y)
+void handle_mouse_movement( byte x, byte y)
 {
 
         if (x!=0 && y!=0) {
@@ -165,7 +165,7 @@ void handle_mouse_movement( int x, int y)
 
 }
 
-void send_key_events(int layer)
+void send_key_events(byte layer)
 {
         //for every newly pressed button, figure out what logical key it is and send a key down event
         // for every newly released button, figure out what logical key it is and send a key up event
@@ -174,12 +174,12 @@ void send_key_events(int layer)
         // TODO:switch to sending raw HID packets
 
 
-        int x = 0;
-        int y = 0;
+        byte x = 0;
+        byte y = 0;
 
-        for (int row = 0; row < ROWS; row++) {
+        for (byte row = 0; row < ROWS; row++) {
 
-                for (int col = 0; col < COLS; col++) {
+                for (byte col = 0; col < COLS; col++) {
                         byte switchState = matrixState[row][col];
                         Key mappedKey = keymaps[layer][row][col];
                         if (mappedKey.flags & MOUSE_KEY ) {
@@ -228,20 +228,20 @@ void send_key_events(int layer)
 void setup_matrix()
 {
         //set up the row pins as outputs
-        for (int row = 0; row < ROWS; row++) {
+        for (byte row = 0; row < ROWS; row++) {
                 pinMode(rowPins[row], OUTPUT);
                 digitalWrite(rowPins[row], HIGH);
         }
 
-        for (int col = 0; col < COLS; col++) {
+        for (byte col = 0; col < COLS; col++) {
                 pinMode(colPins[col], INPUT);
                 digitalWrite(colPins[col], HIGH);
                 //drive em high by default s it seems to be more reliable than driving em low
 
         }
         //blank out the matrix.
-        for (int col = 0; col < COLS; col++) {
-                for (int row = 0; row < ROWS; row++) {
+        for (byte col = 0; col < COLS; col++) {
+                for (byte row = 0; row < ROWS; row++) {
                         matrixState[row][col] = 0;
                 }
         }
@@ -251,12 +251,12 @@ void setup_matrix()
 void scan_matrix()
 {
 
-        int active_layer = current_layer;
+        byte active_layer = current_layer;
 
         //scan the Keyboard matrix looking for connections
-        for (int row = 0; row < ROWS; row++) {
+        for (byte row = 0; row < ROWS; row++) {
                 digitalWrite(rowPins[row], LOW);
-                for (int col = 0; col < COLS; col++) {
+                for (byte col = 0; col < COLS; col++) {
                         //If we see an electrical connection on I->J,
 
                         if (digitalRead(colPins[col])) {
@@ -288,8 +288,8 @@ void report_matrix()
 {
 #ifdef DEBUG_SERIAL
         if (reporting_counter++ %100 == 0 ) {
-                for (int row = 0; row < ROWS; row++) {
-                        for (int col = 0; col < COLS; col++) {
+                for (byte row = 0; row < ROWS; row++) {
+                        for (byte col = 0; col < COLS; col++) {
                                 Serial.print(matrixState[row][col],HEX);
                                 Serial.print(", ");
 
@@ -301,7 +301,7 @@ void report_matrix()
 #endif
 }
 
-void report(int row, int col, boolean value)
+void report(byte row, byte col, boolean value)
 {
 #ifdef DEBUG_SERIAL
         Serial.print("Detected a change on ");
