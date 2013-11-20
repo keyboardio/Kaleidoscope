@@ -111,7 +111,7 @@ void reset_matrix()
 }
 double mouse_accel (double cycles)
 {
-        double accel = atan((cycles/25)-5);
+        double accel = atan((cycles/50)-5);
         accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
         accel = accel *0.85;
         if (accel<0.25) {
