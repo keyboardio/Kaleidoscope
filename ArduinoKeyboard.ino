@@ -199,7 +199,14 @@ void send_key_events(byte layer)
                                         }
                                 }
                         } else if (mappedKey.flags & SYNTHETIC_KEY) {
-                                if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
+				if(mappedKey.flags & IS_MACRO) {
+                                        if (key_toggled_on (switchState)) {
+						if (mappedKey.rawKey == 1) {
+							Keyboard.print("Keyboard.IO keyboard driver v0.00");			
+						}
+					}
+				}
+                                else if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
                                         if (key_toggled_on (switchState)) {
                                                 Mouse.press(mappedKey.rawKey);
                                         } else if (key_is_pressed(switchState)) {

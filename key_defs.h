@@ -8,6 +8,9 @@
 #define MOUSE_KEY       B01000000
 #define SYNTHETIC_KEY   B10000000
 
+// we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
+#define IS_MACRO       B00000001
+
 #define MOUSE_UP       B0001
 #define MOUSE_DN     B0010
 #define MOUSE_L     B0100
@@ -26,7 +29,7 @@
 
 #define NoKey (Key){ KEY_FLAGS,0 }
 
-
+#define macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
 
 
 #define mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
