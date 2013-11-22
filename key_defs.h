@@ -27,29 +27,30 @@
 #define LAYER_7     7
 
 
-#define NoKey (Key){ KEY_FLAGS,0 }
+#define Key_NoKey (Key){ KEY_FLAGS,0 }
+#define Key_skip (Key){ KEY_FLAGS,0 }
 
-#define macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
+#define Key_macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
 
 
-#define mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
-#define mouseUp    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP }
-#define mouseUpR  (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_R }
-#define mouseL    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_L }
-#define mouseR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_R }
-#define mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  }
-#define mouseDn    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN }
-#define mouseDnR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_R  }
-#define mouseScrollUp
-#define mouseScrollDn
-#define mouseScrollL
-#define mouseScrollR
+#define Key_mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
+#define Key_mouseUp    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP }
+#define Key_mouseUpR  (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_R }
+#define Key_mouseL    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_L }
+#define Key_mouseR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_R }
+#define Key_mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  }
+#define Key_mouseDn    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN }
+#define Key_mouseDnR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_R  }
+#define Key_mouseScrollUp
+#define Key_mouseScrollDn
+#define Key_mouseScrollL
+#define Key_mouseScrollR
 #define KEY_MOUSE_BTN_L 0x01 // Synthetic key
 #define KEY_MOUSE_BTN_M 0x04 // Synthetic key
 #define KEY_MOUSE_BTN_R 0x02 // Synthetic key
-#define mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_L }
-#define mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC_KEY , KEY_MOUSE_BTN_M }
-#define mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_R }
+#define Key_mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_L }
+#define Key_mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC_KEY , KEY_MOUSE_BTN_M }
+#define Key_mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_R }
 
 
 
@@ -346,5 +347,5 @@
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define NextKeymap (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
+#define Key_NextKeymap (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
 

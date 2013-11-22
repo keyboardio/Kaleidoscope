@@ -8,3 +8,6 @@ include build/arduino-mk/Arduino.mk
 
 astyle:
 	astyle --style=linux ArduinoKeyboard.ino *.h
+
+generate-keymaps:
+	find layout -type f -name \*.conf |xargs perl generate-keymaps.pl < 
