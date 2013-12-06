@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <EEPROM.h>
 
 
 
@@ -54,6 +55,25 @@ float carriedOverY =0;
 
 
 #include "keymaps.h"
+
+#define EEPROM_LAYER_LOCATION 0
+
+void save_current_layer(byte layer) {
+    Serial.print("telling eeprom thinks we're on layer ");
+    Serial.println(layer);
+    EEPROM.write(EEPROM_LAYER_LOCATION, layer);
+}
+
+byte load_current_layer() {
+    byte layer =  EEPROM.read(EEPROM_LAYER_LOCATION);
+    Serial.print("eeprom thinks we're on layer ");
+    Serial.println(layer);
+    if (layer >= LAYERS ) {
+        return 0; // undefined positions get saved as 255
+    }
+   return layer;
+}
+
 
 
 void release_keys_not_being_pressed()
@@ -282,8 +302,14 @@ void scan_matrix()
 
                                 if (key_is_pressed(matrixState[row][col])) {
                                         active_layer = keymaps[current_layer][row][col].rawKey;
-                                }
+                                } }
+                        else if (! (keymaps[active_layer][row][col].flags ^ (  SWITCH_TO_LAYER))) { // switch layer and stay there
+                                if (key_toggled_on(matrixState[row][col])) {
+                    current_layer = active_layer =  keymaps[current_layer][row][col].rawKey;
+                    save_current_layer(current_layer); 
                         }
+                    }
+
                 }
                 digitalWrite(rowPins[row], HIGH);
         }
@@ -330,6 +356,7 @@ void setup()
         Serial.begin(115200);
 #endif
         setup_matrix();
+        current_layer = load_current_layer();
 }
 
 void loop()

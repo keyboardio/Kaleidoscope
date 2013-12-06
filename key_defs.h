@@ -347,5 +347,16 @@
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define Key_NextKeymap (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
+#define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_0 }
+#define Key_Keymap1 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_1 }
+#define Key_Keymap2 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_2 }
+#define Key_Keymap3 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_3 }
+#define Key_Keymap4 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_4 }
+#define Key_Keymap5 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_5 }
+#define Key_Keymap0_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_0 }
+#define Key_Keymap1_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
+#define Key_Keymap2_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_2 }
+#define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_3 }
+#define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_4 }
+#define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_5 }
 
