@@ -3,4 +3,4 @@ skip 	1 2 3 4 5  skip 	skip   6 7 8 9 0 skip
 `       Q D R W B  skip     skip   J F U P ; =
 PageUp  A S H T G  Tab      Return Y N E O I '
 PageDn 	Z X M C V  Esc  	Keymap2  K L , . / -
-LGUI Backspace LShift LCtrl Keymap1_Momentary skip skip skip skip  Keymap1_Momentary RCtrl RShift Space  RAlt 
+LGUI Backspace LShift LCtrl KeymapNext_Momentary skip skip skip skip  KeymapNext_Momentary RCtrl RShift Space  RAlt 

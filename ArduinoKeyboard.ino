@@ -29,7 +29,6 @@
 
 #define COLS 14
 #define ROWS 5
-#define LAYERS 6
 
 
 static const byte colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
@@ -298,17 +297,27 @@ void scan_matrix()
 
 
 
-                        if (! (keymaps[active_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) { // this logic sucks. there is a better way TODO this
-
+                        // this logic sucks. there is a better way TODO this
+                        if (! (keymaps[active_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) {
                                 if (key_is_pressed(matrixState[row][col])) {
-                                        active_layer = keymaps[current_layer][row][col].rawKey;
-                                } }
-                        else if (! (keymaps[active_layer][row][col].flags ^ (  SWITCH_TO_LAYER))) { // switch layer and stay there
-                                if (key_toggled_on(matrixState[row][col])) {
-                    current_layer = active_layer =  keymaps[current_layer][row][col].rawKey;
-                    save_current_layer(current_layer); 
+
+                                    
+                                        if ( keymaps[current_layer][row][col].rawKey == LAYER_NEXT) {
+                                            active_layer++;
+                                        } else if ( keymaps[current_layer][row][col].rawKey == LAYER_PREVIOUS) {
+                                            active_layer--;
+                                        } else {
+                                            active_layer = keymaps[current_layer][row][col].rawKey;
+                                        }
+                                } 
                         }
-                    }
+                        else if (! (keymaps[active_layer][row][col].flags ^ (  SWITCH_TO_LAYER))) { 
+                        // switch layer and stay there
+                                if (key_toggled_on(matrixState[row][col])) {
+                                    current_layer = active_layer =  keymaps[current_layer][row][col].rawKey;
+                                    save_current_layer(current_layer); 
+                                }
+                        }
 
                 }
                 digitalWrite(rowPins[row], HIGH);

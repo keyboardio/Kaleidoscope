@@ -27,6 +27,11 @@
 #define LAYER_7     7
 
 
+
+#define LAYER_PREVIOUS  253
+#define LAYER_NEXT      254
+
+
 #define Key_NoKey (Key){ KEY_FLAGS,0 }
 #define Key_skip (Key){ KEY_FLAGS,0 }
 
@@ -359,4 +364,9 @@
 #define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_3 }
 #define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_4 }
 #define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_5 }
+
+#define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_NEXT }
+#define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_PREVIOUS }
+
+
 
