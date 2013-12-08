@@ -1,0 +1,6 @@
+#NAME: MALTRON
+skip 	1 2 3 4 5  skip 	skip    6 7 8 9 0 skip  
+` 	    Q P Y C B  skip 	skip    V M U Z L =
+PageUp 	A N I S F  Tab  	Return  D T H O R '
+PageDn 	, . J G /  Esc  	Keymap2 ; W K - X [
+LGUI E LShift Backspace Keymap5_Momentary skip  skip skip skip  Keymap5_Momentary RCtrl RShift Space  RAlt 

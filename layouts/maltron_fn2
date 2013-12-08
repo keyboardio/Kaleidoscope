@@ -1,0 +1,6 @@
+#NAME: MALTRON_FN2
+skip 	F1 F2 F3 F4 F5  skip 	skip   F6 F7 F8 F9 F10 skip  
+` 	macroKey1  mouseBtnL mouseBtnM mouseBtnR T  NoKey     NoKey  { } [ ] P =
+PageUp  mouseL 	   mouseUp   mouseDn   mouseR 	 G  Tab       Return LArrow DnArrow  UpArrow RArrow ; '
+PageDn  Keymap2  	   mouseBtnL mouseBtnM mouseBtnR \  Esc       Enter  |      M , . \  ]
+LGUI Backspace LShift LCtrl NoKey skip  skip skip skip  NoKey RCtrl RShift Space  RAlt 
