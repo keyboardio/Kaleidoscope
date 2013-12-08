@@ -1,0 +1,6 @@
+#NAME: WORKMAN_FN2
+skip 	1 2 3 4 5  skip 	skip   6 7 8 9 0 skip  
+` 	macroKey1  mouseBtnL mouseBtnM mouseBtnR NoKey  NoKey     NoKey  { } [ ] NoKey =
+PageUp  mouseL 	   mouseUp   mouseDn   mouseR 	 NoKey  Tab       Return LArrow DnArrow  UpArrow RArrow ; '
+PageDn  Keymap0  	   mouseBtnL mouseBtnM mouseBtnR NoKey  Esc       Enter  |      NoKey , . \  -
+LGUI Backspace LShift LCtrl NoKey skip  skip skip skip  NoKey RCtrl RShift Space  RAlt 
