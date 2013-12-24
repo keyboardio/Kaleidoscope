@@ -31,8 +31,11 @@
 #define ROWS 5
 
 
-static const byte colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-static const byte rowPins[ROWS] = { A2, A3, A4, A5, 15 };
+static const byte colPins[COLS] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, A0 };
+static const byte rowPins[ROWS] = { A5, A4, A3, A2, A1 };
+
+//#static const byte colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+//#static const byte rowPins[ROWS] = { A2, A3, A4, A5, 15 };
 
 byte matrixState[ROWS][COLS];
 
@@ -359,12 +362,13 @@ void report(byte row, byte col, boolean value)
 
 void setup()
 {
+        Serial.begin(115200);
         Keyboard.begin();
         Mouse.begin();
-#ifdef DEBUG_SERIAL
-        Serial.begin(115200);
-#endif
+//#ifdef DEBUG_SERIAL
+//#endif
         setup_matrix();
+        Serial.println("loaded the matrix");
         current_layer = load_current_layer();
 }
 

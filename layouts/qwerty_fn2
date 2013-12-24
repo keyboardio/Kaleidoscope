@@ -1,6 +1,6 @@
 #NAME: QWERTY_FN2
 skip 	1 2 3 4 5  skip 	skip   6 7 8 9 0 skip  
-` 	macroKey1  mouseBtnL mouseBtnM mouseBtnR T  NoKey     NoKey  { } [ ] P =
+Tab 	macroKey1  mouseBtnL mouseBtnM mouseBtnR T  NoKey     NoKey  { } [ ] P =
 PageUp  mouseL 	   mouseUp   mouseDn   mouseR 	 G  Tab       Return LArrow DnArrow  UpArrow RArrow ; '
 PageDn  Keymap2  	   mouseBtnL mouseBtnM mouseBtnR B  Esc       Enter  |      M , . \  -
-LGUI Backspace LShift LCtrl NoKey skip  skip skip skip  NoKey RCtrl RShift Space  RAlt 
+LGUI Backspace LShift LCtrl NoKey skip  skip skip skip  NoKey RCtrl RShift Space  RAlt
