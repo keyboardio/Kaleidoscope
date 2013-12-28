@@ -1,5 +1,5 @@
 #NAME: COLEMAK_FN2
-skip 	1 2 3 4 5  skip 	skip   6 7 8 9 0 skip  
+skip 	F1 F2 F3 F4 F5  skip 	skip   F6 F7 F8 F9 F10 skip  
 ` 	macroKey1  mouseBtnL mouseBtnM mouseBtnR NoKey  NoKey     NoKey  { } [ ] NoKey =
 PageUp  mouseL 	   mouseUp   mouseDn   mouseR 	 NoKey  Tab       Return LArrow DnArrow  UpArrow RArrow ; '
 PageDn  Keymap0  	   mouseBtnL mouseBtnM mouseBtnR NoKey  Esc       Enter  |      NoKey , . \  -
