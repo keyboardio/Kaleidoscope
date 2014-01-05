@@ -10,6 +10,9 @@
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_MACRO       B00000001
+#define IS_SYSCTL      B00000010
+#define IS_CONSUMER    B00000100
+
 
 #define MOUSE_UP       B0001
 #define MOUSE_DN     B0010
@@ -57,6 +60,10 @@
 #define Key_mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC_KEY , KEY_MOUSE_BTN_M }
 #define Key_mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_R }
 
+
+
+#define Key_sleep (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_SYSCTL,  SYSTEM_CONTROL_SLEEP }
+#define Key_volumeUp (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER,  CONSUMER_CONTROL_VOLUME_UP}
 
 
 #define Key_LCtrl (Key){ KEY_FLAGS, KEY_LEFT_CTRL }

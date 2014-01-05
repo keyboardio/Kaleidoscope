@@ -223,6 +223,16 @@ void send_key_events(byte layer)
                     }
                 }
             } else if (mappedKey.flags & SYNTHETIC_KEY) {
+                if(mappedKey.flags & IS_CONSUMER) {
+                    if (key_toggled_on (switchState)) {
+                        Keyboard.consumerControl(mappedKey.rawKey);
+                    } 
+                }
+                if(mappedKey.flags & IS_SYSCTL) {
+                    if (key_toggled_on (switchState)) {
+                        Keyboard.systemControl(mappedKey.rawKey);
+                    } 
+                }
                 if(mappedKey.flags & IS_MACRO) {
                     if (key_toggled_on (switchState)) {
                         if (mappedKey.rawKey == 1) {

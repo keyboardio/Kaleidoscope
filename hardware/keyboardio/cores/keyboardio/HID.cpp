@@ -51,6 +51,7 @@ Keyboard_ Keyboard;
 #define HID_REPORTID_SYSTEMCONTROL (4)
 #define HID_REPORTID_MOUSE_ABS (5)
 #define HID_REPORTID_CONSUMERCONTROL (6)
+
 extern const u8 _hidReportDescriptor[] PROGMEM;
 const u8 _hidReportDescriptor[] = {
     
@@ -377,90 +378,7 @@ bool Mouse_::isPressed(uint8_t b)
 }
 
 
-//================================================================================
-//================================================================================
-// ConsumerControl
-ConsumerControl_::ConsumerControl_(void)
-{
-}
 
-void ConsumerControl_::begin(void) 
-{
-}
-
-void ConsumerControl_::end(void) 
-{
-}
-
-void ConsumerControl_::sendReport(u8 cmd, u8 val)
-{
-    u8 data[2] = {cmd, val};
-	HID_SendReport(2,data,2);
-}
-
-void ConsumerControl_::mute (void){
-    sendReport(0x01, 0);
-}
-void ConsumerControl_::volumeUp (void)
-{
- sendReport(0x02, 0);
-}
-void ConsumerControl_::volumeDown (void)
-{
- sendReport(0x03, 0);
-}
-void ConsumerControl_::playPause (void)
-{
- sendReport(0x04, 0);
-}
-void ConsumerControl_::stop (void)
-{
- sendReport(0x05, 0);
-}
-void ConsumerControl_::previousTrack (void)
-{
- sendReport(0x06, 0);
-}
-void ConsumerControl_::nextTrack (void)
-{
- sendReport(0x07, 0);
-}
-void ConsumerControl_::mail (void)
-{
- sendReport(0x08, 0);
-}
-void ConsumerControl_::calculator (void)
-{
- sendReport(0x09, 0);
-}
-void ConsumerControl_::wwwSearch (void)
-{
- sendReport(0x0a, 0);
-}
-void ConsumerControl_::wwwHome (void)
-{
- sendReport(0x0b, 0);
-}
-void ConsumerControl_::wwwFavorites (void)
-{
- sendReport(0x0c, 0);
-}
-void ConsumerControl_::wwwRefresh (void)
-{
- sendReport(0x0d, 0);
-}
-void ConsumerControl_::wwwStop (void)
-{
- sendReport(0x0e, 0);
-}
-void ConsumerControl_::wwwForward (void)
-{
- sendReport(0x0f, 0);
-}
-void ConsumerControl_::wwwBack (void)
-{
- sendReport(0x10, 0);
-}
 
 //================================================================================
 //================================================================================
@@ -698,6 +616,39 @@ size_t Keyboard_::systemControl(uint8_t k)
 		return 0;
 	}
 }
+
+// Consumer Control
+//  k is one of the CONSUMER_CONTROL defines which come from the HID usage table "Consumer Devices Page (0x0c)"
+// in "HID Usage Tables" (HUT1_12v2.pdf)
+size_t Keyboard_::consumerControl(uint8_t k) 
+{
+	if(k <= 16)
+	{
+		u16 mask = 0;
+		u8 m[2];
+
+		if(k > 0)
+		{
+			mask = 1 << (k - 1);
+		}
+
+		m[0] = LSB(mask);
+		m[1] = MSB(mask);
+		HID_SendReport(HID_REPORTID_CONSUMERCONTROL,m,sizeof(m));
+
+		// these are all OSCs, so send a clear to make it possible to send it again later
+		m[0] = 0;
+		m[1] = 0;
+		HID_SendReport(HID_REPORTID_CONSUMERCONTROL,m,sizeof(m));
+		return 1;
+	}
+	else
+	{
+		setWriteError();
+		return 0;
+	}
+}
+
 
 // release() takes the specified key out of the persistent key report and
 // sends the report.  This tells the OS the key is no longer pressed and that

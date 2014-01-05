@@ -141,6 +141,31 @@ extern Mouse_ Mouse;
 #define SYSTEM_CONTROL_DISPLAY_TOGGLE_INT_EXT 15
 #define SYSTEM_CONTROL_DISPLAY_SWAP           16
 
+
+// Consumer Control values for Keyboard_::systemControl()
+//  these defines come from the HID usage table "Consumer Device Page (0x0c)"
+//  in the USB standard document "HID Usage Tables" (HUT1_12v2.pdf)
+//  Currently this list contains only OSC (one shot control) values,
+//  the implementation of systemControl will have to be changed when
+//  adding OOC or RTC values.
+
+#define CONSUMER_CONTROL_VOLUME_MUTE        1
+#define CONSUMER_CONTROL_VOLUME_UP          2
+#define CONSUMER_CONTROL_VOLUME_DOWN        3
+#define CONSUMER_CONTROL_PLAY_PAUSE         4
+#define CONSUMER_CONTROL_STOP               5
+#define CONSUMER_CONTROL_PREV_TRACK         6
+#define CONSUMER_CONTROL_NEXT_TRACK         7
+#define CONSUMER_CONTROL_MAIL               8
+#define CONSUMER_CONTROL_CALCULATOR         9
+#define CONSUMER_CONTROL_WWW_SEARCH        10
+#define CONSUMER_CONTROL_WWW_HOME          11
+#define CONSUMER_CONTROL_WWW_FAVORITES     12
+#define CONSUMER_CONTROL_WWW_REFRESH       13
+#define CONSUMER_CONTROL_WWW_STOP          14
+#define CONSUMER_CONTROL_WWW_FORWARD       15
+#define CONSUMER_CONTROL_WWW_BACK          16
+
 //	Low level key report: up to 6 keys and shift, ctrl etc at once
 typedef struct
 {
@@ -163,41 +188,9 @@ public:
 	virtual size_t release(uint8_t k);
 	virtual void releaseAll(void);
 	virtual size_t systemControl(uint8_t k);
+	virtual size_t consumerControl(uint8_t k);
 };
 extern Keyboard_ Keyboard;
-
-
-//================================================================================
-//================================================================================
-
-class ConsumerControl_
-{
-private: 
-	void sendReport(uint8_t cmd, uint8_t val);
-public:
-	ConsumerControl_(void);
-	void begin(void);
-	void end(void);
-	void mute (void);
-	void volumeUp (void);
-	void volumeDown (void);
-	void playPause (void);
-	void stop (void);
-	void previousTrack (void);
-	void nextTrack (void);
-	void mail (void);
-	void calculator (void);
-	void wwwSearch (void);
-	void wwwHome (void);
-	void wwwFavorites (void);
-	void wwwRefresh (void);
-	void wwwStop (void);
-	void wwwForward (void);
-	void wwwBack (void);
-};
-
-extern ConsumerControl_ ConsumerControl;
-
 
 //================================================================================
 //================================================================================
