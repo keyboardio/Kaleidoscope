@@ -140,31 +140,30 @@ extern Keyboard_ Keyboard;
 //================================================================================
 //================================================================================
 
-class ConsumerControl_ {
-    private: 
-        void sendReport(uint8_t cmd, uint8_t val);
-    public:
-        ConsumerControl_(void);
-        void begin(void);
-        void end(void);
-        void mute (void);
-            void volumeUp (void);
-                void volumeDown (void);
-                void playPause (void);
-                void stop (void);
-                void previousTrack (void);
-                void nextTrack (void);
-                void mail (void);
-                void calculator (void);
-                void wwwSearch (void);
-                void wwwHome (void);
-                void wwwFavorites (void);
-                void wwwRefresh (void);
-                void wwwStop (void);
-                void wwwForward (void);
-                void wwwBack (void);
-
-
+class ConsumerControl_
+{
+private: 
+	void sendReport(uint8_t cmd, uint8_t val);
+public:
+	ConsumerControl_(void);
+	void begin(void);
+	void end(void);
+	void mute (void);
+	void volumeUp (void);
+	void volumeDown (void);
+	void playPause (void);
+	void stop (void);
+	void previousTrack (void);
+	void nextTrack (void);
+	void mail (void);
+	void calculator (void);
+	void wwwSearch (void);
+	void wwwHome (void);
+	void wwwFavorites (void);
+	void wwwRefresh (void);
+	void wwwStop (void);
+	void wwwForward (void);
+	void wwwBack (void);
 };
 
 extern ConsumerControl_ ConsumerControl;

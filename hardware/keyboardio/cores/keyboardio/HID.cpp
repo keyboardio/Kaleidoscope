@@ -128,44 +128,44 @@ const u8 _hidReportDescriptor[] = {
 	0xC0					// end collection
 #endif
 
-0x05, 0x0c, // USAGE_PAGE (Consumer Devices) 
- 0x09, 0x01, // USAGE (Consumer Control) 
- 0xa1, 0x01, // COLLECTION (Application) 
- 0x85, 0x04, // REPORT_ID (4) 
- 0x15, 0x00, // LOGICAL_MINIMUM (0) 
- 0x25, 0x01, // LOGICAL_MAXIMUM (1) 
- 0x75, 0x01, // REPORT_SIZE (1) 
- 0x95, 0x10, // REPORT_COUNT (16) 
- 0x09, 0xe2, // USAGE (Mute) 0x01 
- 0x09, 0xe9, // USAGE (Volume Up) 0x02 
- 0x09, 0xea, // USAGE (Volume Down) 0x03 
- 0x09, 0xcd, // USAGE (Play/Pause) 0x04 
- 0x09, 0xb7, // USAGE (Stop) 0x05 
- 0x09, 0xb6, // USAGE (Scan Previous Track) 0x06 
- 0x09, 0xb5, // USAGE (Scan Next Track) 0x07 
- 0x0a, 0x8a, 0x01, // USAGE (Mail) 0x08 
- 0x0a, 0x92, 0x01, // USAGE (Calculator) 0x09 
- 0x0a, 0x21, 0x02, // USAGE (www search) 0x0a 
- 0x0a, 0x23, 0x02, // USAGE (www home) 0x0b 
- 0x0a, 0x2a, 0x02, // USAGE (www favorites) 0x0c 
- 0x0a, 0x27, 0x02, // USAGE (www refresh) 0x0d
- 0x0a, 0x26, 0x02, // USAGE (www stop) 0x0e 
- 0x0a, 0x25, 0x02, // USAGE (www forward) 0x0f 
- 0x0a, 0x24, 0x02, // USAGE (www back) 0x10 
- 0x81, 0x62, // INPUT (Data,Var,Abs,NPrf,Null) 
- 0xc0, 
-// System Control Descriptor 
- 0x05, 0x01, /* Usage Page (Generic Desktop) */ 
- 0x09, 0x80, /* Usage (System Control) */ 
- 0xA1, 0x01, /* Collection (Application) */ 
- 0x85, 0x04, /* Report ID 0x05 [SYSTEM CTRL] */ 
- 0x19, 0x82, /* Usage minimum (System Sleep) */ 
- 0x29, 0x83, /* Usage maximum (System Wake up) */ 
- 0x95, 0x02, /* Report count (2) */ 
- 0x81, 0x06, /*Input (data, variable, relative, Preferred) */ 
- 0x95, 0x06, /* Report count (6) */ 
- 0x81, 0x01, /*Input (Constant) */ 
- 0xC0, /*End Collection */ 
+	0x05, 0x0c,			// USAGE_PAGE (Consumer Devices) 
+	 0x09, 0x01,			// USAGE (Consumer Control) 
+	 0xa1, 0x01,			// COLLECTION (Application) 
+	 0x85, 0x04,			// REPORT_ID (4) 
+	 0x15, 0x00,			// LOGICAL_MINIMUM (0) 
+	 0x25, 0x01,			// LOGICAL_MAXIMUM (1) 
+	 0x75, 0x01,			// REPORT_SIZE (1) 
+	 0x95, 0x10,			// REPORT_COUNT (16) 
+	 0x09, 0xe2,			// USAGE (Mute) 0x01 
+	 0x09, 0xe9,			// USAGE (Volume Up) 0x02 
+	 0x09, 0xea,			// USAGE (Volume Down) 0x03 
+	 0x09, 0xcd,			// USAGE (Play/Pause) 0x04 
+	 0x09, 0xb7,			// USAGE (Stop) 0x05 
+	 0x09, 0xb6,			// USAGE (Scan Previous Track) 0x06 
+	 0x09, 0xb5,			// USAGE (Scan Next Track) 0x07 
+	 0x0a, 0x8a, 0x01,		// USAGE (Mail) 0x08 
+	 0x0a, 0x92, 0x01,		// USAGE (Calculator) 0x09 
+	 0x0a, 0x21, 0x02,		// USAGE (www search) 0x0a 
+	 0x0a, 0x23, 0x02,		// USAGE (www home) 0x0b 
+	 0x0a, 0x2a, 0x02,		// USAGE (www favorites) 0x0c 
+	 0x0a, 0x27, 0x02,		// USAGE (www refresh) 0x0d
+	 0x0a, 0x26, 0x02,		// USAGE (www stop) 0x0e 
+	 0x0a, 0x25, 0x02,		// USAGE (www forward) 0x0f 
+	 0x0a, 0x24, 0x02,		// USAGE (www back) 0x10 
+	 0x81, 0x62,			// INPUT (Data,Var,Abs,NPrf,Null) 
+	 0xc0, 
+	// System Control Descriptor 
+	 0x05, 0x01, /* Usage Page (Generic Desktop) */ 
+	 0x09, 0x80, /* Usage (System Control) */ 
+	 0xA1, 0x01, /* Collection (Application) */ 
+	 0x85, 0x04, /* Report ID 0x05 [SYSTEM CTRL] */ 
+	 0x19, 0x82, /* Usage minimum (System Sleep) */ 
+	 0x29, 0x83, /* Usage maximum (System Wake up) */ 
+	 0x95, 0x02, /* Report count (2) */ 
+	 0x81, 0x06, /*Input (data, variable, relative, Preferred) */ 
+	 0x95, 0x06, /* Report count (6) */ 
+	 0x81, 0x01, /*Input (Constant) */ 
+	 0xC0, /*End Collection */ 
 };
 
 extern const HIDDescriptor _hidInterface PROGMEM;
@@ -323,35 +323,65 @@ void ConsumerControl_::mute (void){
     sendReport(0x01, 0);
 }
 void ConsumerControl_::volumeUp (void)
-{ sendReport(0x02, 0); }
+{
+ sendReport(0x02, 0);
+}
 void ConsumerControl_::volumeDown (void)
-{ sendReport(0x03, 0); }
+{
+ sendReport(0x03, 0);
+}
 void ConsumerControl_::playPause (void)
-{ sendReport(0x04, 0); }
+{
+ sendReport(0x04, 0);
+}
 void ConsumerControl_::stop (void)
-{ sendReport(0x05, 0); }
+{
+ sendReport(0x05, 0);
+}
 void ConsumerControl_::previousTrack (void)
-{ sendReport(0x06, 0); }
+{
+ sendReport(0x06, 0);
+}
 void ConsumerControl_::nextTrack (void)
-{ sendReport(0x07, 0); }
+{
+ sendReport(0x07, 0);
+}
 void ConsumerControl_::mail (void)
-{ sendReport(0x08, 0); }
+{
+ sendReport(0x08, 0);
+}
 void ConsumerControl_::calculator (void)
-{ sendReport(0x09, 0); }
+{
+ sendReport(0x09, 0);
+}
 void ConsumerControl_::wwwSearch (void)
-{ sendReport(0x0a, 0); }
+{
+ sendReport(0x0a, 0);
+}
 void ConsumerControl_::wwwHome (void)
-{ sendReport(0x0b, 0); }
+{
+ sendReport(0x0b, 0);
+}
 void ConsumerControl_::wwwFavorites (void)
-{ sendReport(0x0c, 0); }
+{
+ sendReport(0x0c, 0);
+}
 void ConsumerControl_::wwwRefresh (void)
-{ sendReport(0x0d, 0); }
+{
+ sendReport(0x0d, 0);
+}
 void ConsumerControl_::wwwStop (void)
-{ sendReport(0x0e, 0); }
+{
+ sendReport(0x0e, 0);
+}
 void ConsumerControl_::wwwForward (void)
-{ sendReport(0x0f, 0); }
+{
+ sendReport(0x0f, 0);
+}
 void ConsumerControl_::wwwBack (void)
-{ sendReport(0x10, 0); }
+{
+ sendReport(0x10, 0);
+}
 
 //================================================================================
 //================================================================================
