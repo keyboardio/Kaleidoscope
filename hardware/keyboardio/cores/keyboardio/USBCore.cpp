@@ -45,6 +45,7 @@ extern const u16 STRING_IPRODUCT[] PROGMEM;
 extern const u16 STRING_IMANUFACTURER[] PROGMEM;
 extern const DeviceDescriptor USB_DeviceDescriptor PROGMEM;
 extern const DeviceDescriptor USB_DeviceDescriptorA PROGMEM;
+int usbMaxPower = 500;
 
 const u16 STRING_LANGUAGE[2] = {
 	(3<<8) | (2+2),
