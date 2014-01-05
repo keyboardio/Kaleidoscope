@@ -10,4 +10,5 @@ astyle:
 	astyle --style=linux ArduinoKeyboard.ino *.h
 
 generate-keymaps:
-	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % > ../layouts-generated/%.h' )
+	-rm layouts-generated.h
+	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../layouts-generated.h' )
