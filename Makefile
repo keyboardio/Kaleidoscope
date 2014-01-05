@@ -1,9 +1,11 @@
 # Arduino Make file. Refer to https://github.com/sudar/Arduino-Makefile
 
-BOARD_TAG    = micro
+BOARD_TAG    = keyboardio
+#BOARD_TAG    = micro
 MONITOR_PORT = /dev/cu.usbmodem*
 ARDUINO_LIBS = 
-
+ARDUINO_CORE_PATH = $(HOME)/Documents/Arduino/hardware/keyboardio/cores/keyboardio
+ALTERNATE_CORE = keyboardio
 include build/arduino-mk/Arduino.mk
 
 astyle:
