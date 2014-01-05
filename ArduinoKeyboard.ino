@@ -228,12 +228,12 @@ void send_key_events(byte layer)
                         Keyboard.consumerControl(mappedKey.rawKey);
                     } 
                 }
-                if(mappedKey.flags & IS_SYSCTL) {
+                else if(mappedKey.flags & IS_SYSCTL) {
                     if (key_toggled_on (switchState)) {
                         Keyboard.systemControl(mappedKey.rawKey);
                     } 
                 }
-                if(mappedKey.flags & IS_MACRO) {
+               else  if(mappedKey.flags & IS_MACRO) {
                     if (key_toggled_on (switchState)) {
                         if (mappedKey.rawKey == 1) {
                             Keyboard.print("Keyboard.IO keyboard driver v0.00");
