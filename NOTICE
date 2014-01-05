@@ -1,0 +1,13 @@
+The Keyboard.IO keyboard driver is Copyright 2013-2014 Jesse Vincent.
+
+The Keyboard.IO keyboard driver is licensed under the terms of the Apache License 2.0.
+
+
+The hardware/keyboardio subdirectory contains a modified version
+of the hardware/arduino/ sourced from
+https://github.com/arduino/Arduino/tree/master/hardware/arduino.
+That content is licensed under the terms of LGPLv2.1.
+
+
+
+
