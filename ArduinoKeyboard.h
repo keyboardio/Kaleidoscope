@@ -24,7 +24,6 @@ typedef struct {
 #include "key_defs.h"
 
 
-
 boolean key_was_pressed (byte keyState)
 {
     if ( byte((keyState >> 4)) ^ B00001111 ) {

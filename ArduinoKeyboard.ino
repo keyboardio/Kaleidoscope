@@ -23,7 +23,6 @@
 
 
 
-
 extern int usbMaxPower;
 
 //#define DEBUG_SERIAL false
