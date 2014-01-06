@@ -58,3 +58,19 @@
 	{Key_PageDn, Key_Keymap0, Key_mouseBtnL, Key_mouseBtnM, Key_mouseBtnR, Key_NoKey, Key_Esc, Key_Enter, Key_Pipe, Key_NoKey, Key_Comma, Key_Period, Key_Backslash, Key_Minus},\
 	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_NoKey, Key_skip, Key_skip, Key_skip, Key_skip, Key_NoKey, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
+#define LAYERS 8
+static const Key keymaps[LAYERS][ROWS][COLS] = {
+	KEYMAP_QWERTY
+	KEYMAP_QWERTY_FN2
+    KEYMAP_COLEMAK
+    KEYMAP_COLEMAK_FN2
+    KEYMAP_DVORAK
+    KEYMAP_DVORAK_FN2
+    KEYMAP_WORKMAN
+    KEYMAP_WORKMAN_FN2
+
+
+
+
+};
+

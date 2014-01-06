@@ -1,4 +1,3 @@
-#include "layouts-generated.h"
 #define LAYERS 8
 static const Key keymaps[LAYERS][ROWS][COLS] = {
 	KEYMAP_QWERTY

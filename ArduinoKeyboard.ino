@@ -57,7 +57,7 @@ float carriedOverX =0;
 float carriedOverY =0;
 
 
-#include "keymaps.h"
+#include "keymaps_generated.h"
 
 #define EEPROM_LAYER_LOCATION 0
 
