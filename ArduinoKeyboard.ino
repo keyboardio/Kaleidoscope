@@ -186,7 +186,7 @@ void send_key_events(byte layer)
   handle_mouse_movement(x, y);
   release_keys_not_being_pressed();
 }
-void setup_matrix()
+void setup_pins()
 {
   //set up the row pins as outputs
   for (byte row = 0; row < ROWS; row++) {
@@ -200,6 +200,10 @@ void setup_matrix()
     //drive em high by default s it seems to be more reliable than driving em low
 
   }
+}
+
+void setup_matrix()
+{
   //blank out the matrix.
   for (byte col = 0; col < COLS; col++) {
     for (byte row = 0; row < ROWS; row++) {
@@ -269,6 +273,7 @@ void setup()
   //#ifdef DEBUG_SERIAL
   //#endif
   setup_matrix();
+  setup_pins();
   Serial.println("loaded the matrix");
   current_layer = load_current_layer();
 }
