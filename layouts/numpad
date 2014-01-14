@@ -1,0 +1,6 @@
+#NAME: NUMPAD
+skip 	skip skip skip skip skip skip 	skip        skip 7 8 9 * skip  
+skip    skip skip skip skip skip skip 	skip        skip 4 5 6 - %
+PageUp 	skip skip skip skip skip Tab  	Return      skip 1 2 3 + =
+PageDn 	skip skip skip skip skip Esc  	Keymap1     skip 0 , . ENTER skip
+LGUI Backspace LShift LCtrl KeymapNext_Momentary skip  skip skip skip  KeymapNext_Momentary RCtrl RShift Space  RAlt
