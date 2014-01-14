@@ -470,7 +470,7 @@ else
     endif
 
     ifndef BOARDS_TXT
-        BOARDS_TXT  = $(ARDUINO_DIR)/hardware/arduino/boards.txt
+        BOARDS_TXT  = $(ARDUINO_DIR)/hardware/arduino/avr/boards.txt
         $(call show_config_variable,BOARDS_TXT,[COMPUTED],(from ARDUINO_DIR))
     else
         $(call show_config_variable,BOARDS_TXT,[USER])

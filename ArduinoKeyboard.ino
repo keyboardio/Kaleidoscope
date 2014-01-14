@@ -23,7 +23,7 @@
 
 
 
-extern int usbMaxPower;
+//extern int usbMaxPower;
 
 //#define DEBUG_SERIAL false
 
@@ -372,7 +372,7 @@ void report(byte row, byte col, boolean value)
 
 void setup()
 {
-    usbMaxPower = 100;
+    //usbMaxPower = 100;
     Serial.begin(115200);
     Keyboard.begin();
     Mouse.begin();
