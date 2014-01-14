@@ -117,7 +117,9 @@ void reset_matrix()
                             Keyboard.print("Keyboard.IO keyboard driver v0.00");
                         }
                     }
-                } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L || mappedKey.rawKey == KEY_MOUSE_BTN_M|| mappedKey.rawKey == KEY_MOUSE_BTN_R) {
+                } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L 
+                        || mappedKey.rawKey == KEY_MOUSE_BTN_M
+                        || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
                     if (key_toggled_on (switchState)) {
                         Mouse.press(mappedKey.rawKey);
                     } else if (key_is_pressed(switchState)) {
@@ -184,9 +186,6 @@ void send_key_events(byte layer)
     handle_mouse_movement(x,y);
     release_keys_not_being_pressed();
 }
-
-
-
 void setup_matrix()
 {
     //set up the row pins as outputs
