@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <EEPROM.h>
 
 
 
@@ -29,6 +28,7 @@
 
 #define COLS 14
 #define ROWS 5
+#define EEPROM_LAYER_LOCATION 0
 
 
 static const byte colPins[COLS] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, A0 };
@@ -57,28 +57,7 @@ float carriedOverY =0;
 
 
 #include "keymaps_generated.h"
-
-#define EEPROM_LAYER_LOCATION 0
-
-void save_current_layer(byte layer)
-{
-    Serial.print("telling eeprom thinks we're on layer ");
-    Serial.println(layer);
-    EEPROM.write(EEPROM_LAYER_LOCATION, layer);
-}
-
-byte load_current_layer()
-{
-    byte layer =  EEPROM.read(EEPROM_LAYER_LOCATION);
-    Serial.print("eeprom thinks we're on layer ");
-    Serial.println(layer);
-    if (layer >= LAYERS ) {
-        return 0; // undefined positions get saved as 255
-    }
-    return layer;
-}
-
-
+#include "KeyboardEEPROM.h"
 
 void release_keys_not_being_pressed()
 {
