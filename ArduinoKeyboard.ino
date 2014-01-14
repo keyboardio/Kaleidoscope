@@ -98,40 +98,9 @@ void reset_matrix()
 }
 
 
-void send_key_events(byte layer)
-{
-    //for every newly pressed button, figure out what logical key it is and send a key down event
-    // for every newly released button, figure out what logical key it is and send a key up event
 
 
-    // TODO:switch to sending raw HID packets
-
-    // really, these are signed small ints
-    char x = 0;
-    char y = 0;
-
-    for (byte row = 0; row < ROWS; row++) {
-
-        for (byte col = 0; col < COLS; col++) {
-            byte switchState = matrixState[row][col];
-            Key mappedKey = keymaps[layer][row][col];
-            if (mappedKey.flags & MOUSE_KEY ) {
-                if (key_is_pressed(switchState)) {
-                    if (mappedKey.rawKey & MOUSE_UP) {
-                        y-=1;
-                    }
-                    if (mappedKey.rawKey & MOUSE_DN) {
-                        y+= 1;
-                    }
-                    if (mappedKey.rawKey & MOUSE_L) {
-                        x-= 1;
-                    }
-
-                    if (mappedKey.rawKey & MOUSE_R) {
-                        x+= 1 ;
-                    }
-                }
-            } else if (mappedKey.flags & SYNTHETIC_KEY) {
+            void handle_synthetic_key_press(byte switchState,Key mappedKey) {
                 if(mappedKey.flags & IS_CONSUMER) {
                     if (key_toggled_on (switchState)) {
                         Keyboard.consumerControl(mappedKey.rawKey);
@@ -156,7 +125,51 @@ void send_key_events(byte layer)
                         Mouse.release(mappedKey.rawKey);
                     }
                 }
-            } else {
+            }
+void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y) {
+
+                if (key_is_pressed(switchState)) {
+                    if (mappedKey.rawKey & MOUSE_UP) {
+                        y-=1;
+                    }
+                    if (mappedKey.rawKey & MOUSE_DN) {
+                        y+= 1;
+                    }
+                    if (mappedKey.rawKey & MOUSE_L) {
+                        x-= 1;
+                    }
+
+                    if (mappedKey.rawKey & MOUSE_R) {
+                        x+= 1 ;
+                    }
+                }
+                }
+
+void send_key_events(byte layer)
+{
+    //for every newly pressed button, figure out what logical key it is and send a key down event
+    // for every newly released button, figure out what logical key it is and send a key up event
+
+
+    // TODO:switch to sending raw HID packets
+
+    // really, these are signed small ints
+    char x = 0;
+    char y = 0;
+
+    for (byte row = 0; row < ROWS; row++) {
+
+        for (byte col = 0; col < COLS; col++) {
+            byte switchState = matrixState[row][col];
+            Key mappedKey = keymaps[layer][row][col];
+            if (mappedKey.flags & MOUSE_KEY ) {
+                handle_mouse_key_press(matrixState[row][col], keymaps[layer][row][col],x,y);
+
+
+            } else if (mappedKey.flags & SYNTHETIC_KEY) {
+                handle_synthetic_key_press(matrixState[row][col], keymaps[layer][row][col]);
+            } 
+            else {
                 if (key_is_pressed(switchState)) {
                     record_key_being_pressed(mappedKey.rawKey);
                     if (key_toggled_on (switchState)) {
