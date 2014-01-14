@@ -20,44 +20,28 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "KeyboardConfig.h"
+#include "keymaps_generated.h"
+#include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
 
-
+#include "KeyboardEEPROM.h"
+#include "KeyboardMouse.h"
+#include "KeyboardDebugging.h"
 //extern int usbMaxPower;
 
-//#define DEBUG_SERIAL false
 
-#define COLS 14
-#define ROWS 5
-#define EEPROM_LAYER_LOCATION 0
-
-
-static const byte colPins[COLS] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, A0 };
-static const byte rowPins[ROWS] = { A5, A4, A3, A2, A1 };
-
-//#static const byte colPins[COLS] = { 16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-//#static const byte rowPins[ROWS] = { A2, A3, A4, A5, 15 };
 
 byte matrixState[ROWS][COLS];
 
-// if we're sticking to boot protocol, these could all be 6 + mods
-// but *mumble*
-//
 
-
-#define KEYS_HELD_BUFFER 12
 byte charsBeingReported[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
 byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
 
 
 long reporting_counter = 0;
 byte current_layer = 0;
-double mouseActiveForCycles = 0;
-float carriedOverX =0;
-float carriedOverY =0;
 
 
-#include "keymaps_generated.h"
-#include "KeyboardEEPROM.h"
 
 void release_keys_not_being_pressed()
 {
@@ -112,61 +96,7 @@ void reset_matrix()
         charsBeingReported[i] = 0x00;
     }
 }
-double mouse_accel (double cycles)
-{
-    double accel = atan((cycles/50)-5);
-    accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
-    accel = accel *0.85;
-    if (accel<0.25) {
-        accel =0.25;
-    }
-    return accel;
-}
 
-void handle_mouse_movement( char x, char y)
-{
-
-    if (x!=0 || y!=0) {
-        mouseActiveForCycles++;
-        double accel = (double) mouse_accel(mouseActiveForCycles);
-        float moveX=0;
-        float moveY=0;
-        if (x>0) {
-            moveX = (x*accel) + carriedOverX;
-            carriedOverX = moveX - floor(moveX);
-        } else if(x<0) {
-            moveX = (x*accel) - carriedOverX;
-            carriedOverX = ceil(moveX) - moveX;
-        }
-
-        if (y >0) {
-            moveY = (y*accel) + carriedOverY;
-            carriedOverY = moveY - floor(moveY);
-        } else if (y<0) {
-            moveY = (y*accel) - carriedOverY;
-            carriedOverY = ceil(moveY) - moveY;
-        }
-#ifdef DEBUG_SERIAL
-        Serial.println();
-        Serial.print("cycles: ");
-        Serial.println(mouseActiveForCycles);
-        Serial.print("Accel: ");
-        Serial.print(accel);
-        Serial.print("	moveX is ");
-        Serial.print(moveX);
-        Serial.print(" moveY is ");
-        Serial.print(moveY);
-        Serial.print(" carriedoverx is ");
-        Serial.print(carriedOverX);
-        Serial.print(" carriedOverY is ");
-        Serial.println(carriedOverY);
-#endif
-        Mouse.move(moveX,moveY, 0);
-    } else {
-        mouseActiveForCycles=0;
-    }
-
-}
 
 void send_key_events(byte layer)
 {
@@ -315,37 +245,6 @@ void scan_matrix()
         digitalWrite(rowPins[row], HIGH);
     }
     send_key_events(active_layer);
-}
-
-
-void report_matrix()
-{
-#ifdef DEBUG_SERIAL
-    if (reporting_counter++ %100 == 0 ) {
-        for (byte row = 0; row < ROWS; row++) {
-            for (byte col = 0; col < COLS; col++) {
-                Serial.print(matrixState[row][col],HEX);
-                Serial.print(", ");
-
-            }
-            Serial.println("");
-        }
-        Serial.println("");
-    }
-#endif
-}
-
-void report(byte row, byte col, boolean value)
-{
-#ifdef DEBUG_SERIAL
-    Serial.print("Detected a change on ");
-    Serial.print(col);
-    Serial.print(" ");
-    Serial.print(row);
-    Serial.print(" to ");
-    Serial.print(value);
-    Serial.println(".");
-#endif
 }
 
 
