@@ -40,6 +40,7 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 
 long reporting_counter = 0;
 byte current_layer = 0;
+byte active_layer = 0;
 
 
 
@@ -216,7 +217,7 @@ void setup_matrix()
 void scan_matrix()
 {
 
-  byte active_layer = current_layer;
+  active_layer = current_layer;
 
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < ROWS; row++) {
@@ -260,7 +261,6 @@ void scan_matrix()
     }
     digitalWrite(rowPins[row], HIGH);
   }
-  send_key_events(active_layer);
 }
 
 
@@ -276,12 +276,13 @@ void setup()
   setup_pins();
   Serial.println("loaded the matrix");
   current_layer = load_current_layer();
+  active_layer = current_layer;
 }
 
 void loop()
 {
   scan_matrix();
-  //    report_matrix();
+  send_key_events(active_layer);
   reset_matrix();
 }
 
