@@ -42,6 +42,9 @@ long reporting_counter = 0;
 byte current_layer = 0;
 byte active_layer = 0;
 
+double mouseActiveForCycles = 0;
+float carriedOverX = 0;
+float carriedOverY = 0;
 
 
 void release_keys_not_being_pressed()
@@ -295,4 +298,194 @@ void loop()
   send_key_events(active_layer);
   reset_matrix();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// switch debouncing and status
+//
+//
+
+
+boolean key_was_pressed (byte keyState)
+{
+  if ( byte((keyState >> 4)) ^ B00001111 ) {
+    return false;
+  } else {
+    return true;
+  }
+
+}
+
+boolean key_was_not_pressed (byte keyState)
+{
+  if ( byte((keyState >> 4)) ^ B00000000 ) {
+    return false;
+  } else {
+    return true;
+  }
+
+}
+
+boolean key_is_pressed (byte keyState)
+{
+
+  if ( byte((keyState << 4)) ^ B11110000 ) {
+    return false;
+  } else {
+    return true;
+  }
+}
+boolean key_is_not_pressed (byte keyState)
+{
+
+  if ( byte((keyState << 4)) ^ B00000000 ) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+boolean key_toggled_on(byte keyState)
+{
+  if (key_is_pressed(keyState) &&  key_was_not_pressed(keyState)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+boolean key_toggled_off(byte keyState)
+{
+  if (key_was_pressed(keyState) && key_is_not_pressed(keyState)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+
+void save_current_layer(byte layer)
+{
+  EEPROM.write(EEPROM_LAYER_LOCATION, layer);
+}
+
+byte load_current_layer()
+{
+  byte layer =  EEPROM.read(EEPROM_LAYER_LOCATION);
+  if (layer >= LAYERS ) {
+    return 0; // undefined positions get saved as 255
+  }
+  return layer;
+}
+
+
+
+
+// Debugging Reporting
+//
+
+void report_matrix()
+{
+#ifdef DEBUG_SERIAL
+  if (reporting_counter++ % 100 == 0 ) {
+    for (byte row = 0; row < ROWS; row++) {
+      for (byte col = 0; col < COLS; col++) {
+        Serial.print(matrixState[row][col], HEX);
+        Serial.print(", ");
+
+      }
+      Serial.println("");
+    }
+    Serial.println("");
+  }
+#endif
+}
+
+void report(byte row, byte col, boolean value)
+{
+#ifdef DEBUG_SERIAL
+  Serial.print("Detected a change on ");
+  Serial.print(col);
+  Serial.print(" ");
+  Serial.print(row);
+  Serial.print(" to ");
+  Serial.print(value);
+  Serial.println(".");
+#endif
+}
+
+
+// Mouse-related methods
+// 
+//
+
+
+double mouse_accel (double cycles)
+{
+  double accel = atan((cycles / 50) - 5);
+  accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
+  accel = accel * 0.85;
+  if (accel < 0.25) {
+    accel = 0.25;
+  }
+  return accel;
+}
+
+void handle_mouse_movement( char x, char y)
+{
+
+  if (x != 0 || y != 0) {
+    mouseActiveForCycles++;
+    double accel = (double) mouse_accel(mouseActiveForCycles);
+    float moveX = 0;
+    float moveY = 0;
+    if (x > 0) {
+      moveX = (x * accel) + carriedOverX;
+      carriedOverX = moveX - floor(moveX);
+    } else if (x < 0) {
+      moveX = (x * accel) - carriedOverX;
+      carriedOverX = ceil(moveX) - moveX;
+    }
+
+    if (y > 0) {
+      moveY = (y * accel) + carriedOverY;
+      carriedOverY = moveY - floor(moveY);
+    } else if (y < 0) {
+      moveY = (y * accel) - carriedOverY;
+      carriedOverY = ceil(moveY) - moveY;
+    }
+#ifdef DEBUG_SERIAL
+    Serial.println();
+    Serial.print("cycles: ");
+    Serial.println(mouseActiveForCycles);
+    Serial.print("Accel: ");
+    Serial.print(accel);
+    Serial.print("	moveX is ");
+    Serial.print(moveX);
+    Serial.print(" moveY is ");
+    Serial.print(moveY);
+    Serial.print(" carriedoverx is ");
+    Serial.print(carriedOverX);
+    Serial.print(" carriedOverY is ");
+    Serial.println(carriedOverY);
+#endif
+    Mouse.move(moveX, moveY, 0);
+  } else {
+    mouseActiveForCycles = 0;
+  }
+
+}
+
 

@@ -2,7 +2,7 @@
 #define KeyboardIO_H_
 #include "Arduino.h"
 //add your includes for the project KeyboardIO here
-
+#include <EEPROM.h>
 
 //end of add your includes here
 #ifdef __cplusplus
@@ -24,66 +24,29 @@ typedef struct {
 #include "key_defs.h"
 
 
-boolean key_was_pressed (byte keyState)
-{
-  if ( byte((keyState >> 4)) ^ B00001111 ) {
-    return false;
-  } else {
-    return true;
-  }
-
-}
-
-boolean key_was_not_pressed (byte keyState)
-{
-  if ( byte((keyState >> 4)) ^ B00000000 ) {
-    return false;
-  } else {
-    return true;
-  }
-
-}
-
-boolean key_is_pressed (byte keyState)
-{
-
-  if ( byte((keyState << 4)) ^ B11110000 ) {
-    return false;
-  } else {
-    return true;
-  }
-}
-boolean key_is_not_pressed (byte keyState)
-{
-
-  if ( byte((keyState << 4)) ^ B00000000 ) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-boolean key_toggled_on(byte keyState)
-{
-  if (key_is_pressed(keyState) &&  key_was_not_pressed(keyState)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+// Switch status and debouncing
+boolean key_was_pressed (byte keyState);
+boolean key_was_not_pressed (byte keyState);
+boolean key_is_pressed (byte keyState);
+boolean key_is_not_pressed (byte keyState);
+boolean key_toggled_off(byte keyState);
+boolean key_toggled_on(byte keyState);
 
 
-boolean key_toggled_off(byte keyState)
-{
-  if (key_was_pressed(keyState) && key_is_not_pressed(keyState)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+// EEPROM related 
+void save_current_layer(byte layer);
+byte load_current_layer();
 
 
+// Keyboard debugging
+void report(byte row, byte col, boolean value);
+void report_matrix();
 
+
+// Mouse-related methods
+
+double mouse_accel (double cycles);
+void handle_mouse_movement( char x, char y);
 
 //Do not add code below this line
 #endif /* KeyboardIO_H_ */
