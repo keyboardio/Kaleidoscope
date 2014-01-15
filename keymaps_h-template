@@ -1,6 +1,6 @@
-#define LAYERS 8
+#define KEYMAPS 8
 // This is a total waste. we should only ever include any given keymap once
-static const Key keymaps[LAYERS][ROWS][COLS] = {
+static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY
 	KEYMAP_GENERIC_FN2
     KEYMAP_COLEMAK

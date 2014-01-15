@@ -2,7 +2,7 @@
 
 #define COLS 14
 #define ROWS 5
-#define EEPROM_LAYER_LOCATION 0
+#define EEPROM_KEYMAP_LOCATION 0
 
 
 static const byte colPins[COLS] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, A0 };

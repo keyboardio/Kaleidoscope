@@ -3,7 +3,7 @@
 #define ALT_HELD        B00000010
 #define SHIFT_HELD      B00000100
 #define GUI_HELD        B00001000
-#define SWITCH_TO_LAYER B00010000
+#define SWITCH_TO_KEYMAP B00010000
 #define MOMENTARY       B00100000
 #define MOUSE_KEY       B01000000
 #define SYNTHETIC_KEY   B10000000
@@ -20,19 +20,19 @@
 #define MOUSE_R    B1000
 
 
-#define LAYER_0     0
-#define LAYER_1     1
-#define LAYER_2     2
-#define LAYER_3     3
-#define LAYER_4     4
-#define LAYER_5     5
-#define LAYER_6     6
-#define LAYER_7     7
+#define KEYMAP_0     0
+#define KEYMAP_1     1
+#define KEYMAP_2     2
+#define KEYMAP_3     3
+#define KEYMAP_4     4
+#define KEYMAP_5     5
+#define KEYMAP_6     6
+#define KEYMAP_7     7
 
 
 
-#define LAYER_PREVIOUS  253
-#define LAYER_NEXT      254
+#define KEYMAP_PREVIOUS  253
+#define KEYMAP_NEXT      254
 
 
 #define Key_NoKey (Key){ KEY_FLAGS,0 }
@@ -392,21 +392,21 @@
 
 
 #define META_NEXT_KEYMAP_MOMENTARY 0xFF
-#define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_0 }
-#define Key_Keymap1 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_1 }
-#define Key_Keymap2 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_2 }
-#define Key_Keymap3 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_3 }
-#define Key_Keymap4 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_4 }
-#define Key_Keymap5 (Key){ KEY_FLAGS | SWITCH_TO_LAYER , LAYER_5 }
-#define Key_Keymap0_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_0 }
-#define Key_Keymap1_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_1 }
-#define Key_Keymap2_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_2 }
-#define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_3 }
-#define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_4 }
-#define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_5 }
+#define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_0 }
+#define Key_Keymap1 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_1 }
+#define Key_Keymap2 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_2 }
+#define Key_Keymap3 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_3 }
+#define Key_Keymap4 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_4 }
+#define Key_Keymap5 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_5 }
+#define Key_Keymap0_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_0 }
+#define Key_Keymap1_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_1 }
+#define Key_Keymap2_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_2 }
+#define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_3 }
+#define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_4 }
+#define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_5 }
 
-#define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_NEXT }
-#define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SWITCH_TO_LAYER | MOMENTARY, LAYER_PREVIOUS }
+#define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_NEXT }
+#define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_PREVIOUS }
 
 
 

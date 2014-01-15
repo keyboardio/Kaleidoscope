@@ -36,8 +36,8 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 
 
 long reporting_counter = 0;
-byte current_layer = 0;
-byte active_layer = 0;
+byte primary_keymap = 0;
+byte active_keymap = 0;
 
 double mouseActiveForCycles = 0;
 float carriedOverX = 0;
@@ -64,34 +64,34 @@ void reset_matrix()
 
 
 
-void set_keymap_layer(Key keymapEntry, byte matrixStateEntry) {
-  if (keymapEntry.flags & SWITCH_TO_LAYER) {
+void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry) {
+  if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
 
     // this logic sucks. there is a better way TODO this
-    if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) {
+    if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
       if (key_is_pressed(matrixStateEntry)) {
 
 
-        if ( keymapEntry.rawKey == LAYER_NEXT) {
-          active_layer++;
-        } else if ( keymapEntry.rawKey == LAYER_PREVIOUS) {
-          active_layer--;
+        if ( keymapEntry.rawKey == KEYMAP_NEXT) {
+          active_keymap++;
+        } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
+          active_keymap--;
         } else {
-          active_layer = keymapEntry.rawKey;
+          active_keymap = keymapEntry.rawKey;
         }
       }
-    } else if (! (keymapEntry.flags ^ (  SWITCH_TO_LAYER))) {
-      // switch layer and stay there
+    } else if (! (keymapEntry.flags ^ (  SWITCH_TO_KEYMAP))) {
+      // switch keymap and stay there
       if (key_toggled_on(matrixStateEntry)) {
-        current_layer = active_layer =  keymapEntry.rawKey;
-        save_current_layer(current_layer);
+        primary_keymap = active_keymap =  keymapEntry.rawKey;
+        save_primary_keymap(primary_keymap);
       }
     }
   }
 }
 void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry) {
 
-  set_keymap_layer(keymapEntry, matrixStateEntry);
+  set_keymap_keymap(keymapEntry, matrixStateEntry);
 
 }
 
@@ -116,7 +116,7 @@ void scan_matrix()
       // that we should be looking at a seconary Keymap halfway through the matrix scan
 
 
-      handle_immediate_action_during_matrix_scan(keymaps[active_layer][row][col], matrixState[row][col]);
+      handle_immediate_action_during_matrix_scan(keymaps[active_keymap][row][col], matrixState[row][col]);
 
     }
     digitalWrite(rowPins[row], HIGH);
@@ -132,13 +132,13 @@ void setup()
   Mouse.begin();
   setup_matrix();
   setup_pins();
-  current_layer = load_current_layer();
-  active_layer = current_layer;
+  primary_keymap = load_primary_keymap();
+  active_keymap = primary_keymap;
 }
 
 void loop()
 {
-  active_layer = current_layer;
+  active_keymap = primary_keymap;
   scan_matrix();
   send_key_events();
   reset_matrix();
@@ -221,18 +221,18 @@ boolean key_toggled_off(byte keyState)
 
 
 
-void save_current_layer(byte layer)
+void save_primary_keymap(byte keymap)
 {
-  EEPROM.write(EEPROM_LAYER_LOCATION, layer);
+  EEPROM.write(EEPROM_KEYMAP_LOCATION, keymap);
 }
 
-byte load_current_layer()
+byte load_primary_keymap()
 {
-  byte layer =  EEPROM.read(EEPROM_LAYER_LOCATION);
-  if (layer >= LAYERS ) {
+  byte keymap =  EEPROM.read(EEPROM_KEYMAP_LOCATION);
+  if (keymap >= KEYMAPS ) {
     return 0; // undefined positions get saved as 255
   }
-  return layer;
+  return keymap;
 }
 
 
@@ -452,13 +452,13 @@ void send_key_events()
 
     for (byte col = 0; col < COLS; col++) {
       byte switchState = matrixState[row][col];
-      Key mappedKey = keymaps[active_layer][row][col];
+      Key mappedKey = keymaps[active_keymap][row][col];
       if (mappedKey.flags & MOUSE_KEY ) {
-        handle_mouse_key_press(matrixState[row][col], keymaps[active_layer][row][col], x, y);
+        handle_mouse_key_press(matrixState[row][col], keymaps[active_keymap][row][col], x, y);
 
 
       } else if (mappedKey.flags & SYNTHETIC_KEY) {
-        handle_synthetic_key_press(matrixState[row][col], keymaps[active_layer][row][col]);
+        handle_synthetic_key_press(matrixState[row][col], keymaps[active_keymap][row][col]);
       }
       else {
         if (key_is_pressed(switchState)) {

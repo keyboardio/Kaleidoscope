@@ -34,8 +34,8 @@ boolean key_toggled_on(byte keyState);
 
 
 // EEPROM related 
-void save_current_layer(byte layer);
-byte load_current_layer();
+void save_primary_keymap(byte keymap);
+byte load_primary_keymap();
 
 
 // Keyboard debugging
@@ -49,7 +49,7 @@ double mouse_accel (double cycles);
 void handle_mouse_movement( char x, char y);
 
 
-// hardware layer interaction
+// hardware keymap interaction
 void setup_pins();
 void scan_matrix();
 
@@ -59,7 +59,7 @@ void reset_matrix();
 void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry);
 
 // keymaps
-void set_keymap_layer(Key keymapEntry, byte matrixStateEntry);
+void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry);
 
 // sending events to the computer
 void record_key_being_pressed(byte character);
