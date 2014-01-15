@@ -48,5 +48,30 @@ void report_matrix();
 double mouse_accel (double cycles);
 void handle_mouse_movement( char x, char y);
 
+
+// hardware layer interaction
+void setup_pins();
+void scan_matrix();
+
+// key matrix
+void setup_matrix();
+void reset_matrix();
+void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry);
+
+// keymaps
+void set_keymap_layer(Key keymapEntry, byte matrixStateEntry);
+
+// sending events to the computer
+void record_key_being_pressed(byte character);
+void release_keys_not_being_pressed();
+void reset_key_report();
+void handle_synthetic_key_press(byte switchState, Key mappedKey);
+void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
+void send_key_events();
+
+
+
+
+
 //Do not add code below this line
 #endif /* KeyboardIO_H_ */
