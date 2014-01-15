@@ -214,6 +214,36 @@ void setup_matrix()
 
 }
 
+void set_keymap_layer(Key keymapEntry, byte matrixStateEntry) {
+  if (keymapEntry.flags & SWITCH_TO_LAYER) {
+
+    // this logic sucks. there is a better way TODO this
+    if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) {
+      if (key_is_pressed(matrixStateEntry)) {
+
+
+        if ( keymapEntry.rawKey == LAYER_NEXT) {
+          active_layer++;
+        } else if ( keymapEntry.rawKey == LAYER_PREVIOUS) {
+          active_layer--;
+        } else {
+          active_layer = keymapEntry.rawKey;
+        }
+      }
+    } else if (! (keymapEntry.flags ^ (  SWITCH_TO_LAYER))) {
+      // switch layer and stay there
+      if (key_toggled_on(matrixStateEntry)) {
+        current_layer = active_layer =  keymapEntry.rawKey;
+        save_current_layer(current_layer);
+      }
+    }
+  }
+}
+void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry) {
+
+  set_keymap_layer(keymapEntry, matrixStateEntry);
+
+}
 void scan_matrix()
 {
 
@@ -236,27 +266,7 @@ void scan_matrix()
       // that we should be looking at a seconary Keymap halfway through the matrix scan
 
 
-
-      // this logic sucks. there is a better way TODO this
-      if (! (keymaps[active_layer][row][col].flags ^ ( MOMENTARY | SWITCH_TO_LAYER))) {
-        if (key_is_pressed(matrixState[row][col])) {
-
-
-          if ( keymaps[current_layer][row][col].rawKey == LAYER_NEXT) {
-            active_layer++;
-          } else if ( keymaps[current_layer][row][col].rawKey == LAYER_PREVIOUS) {
-            active_layer--;
-          } else {
-            active_layer = keymaps[current_layer][row][col].rawKey;
-          }
-        }
-      } else if (! (keymaps[active_layer][row][col].flags ^ (  SWITCH_TO_LAYER))) {
-        // switch layer and stay there
-        if (key_toggled_on(matrixState[row][col])) {
-          current_layer = active_layer =  keymaps[current_layer][row][col].rawKey;
-          save_current_layer(current_layer);
-        }
-      }
+      handle_immediate_action_during_matrix_scan(keymaps[active_layer][row][col], matrixState[row][col]);
 
     }
     digitalWrite(rowPins[row], HIGH);
