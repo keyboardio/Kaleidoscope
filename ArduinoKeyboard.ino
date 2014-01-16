@@ -273,9 +273,82 @@ void report(byte row, byte col, boolean value)
 
 
 // Mouse-related methods
-// 
+//
 //
 
+
+
+int last_x;
+int last_y;
+
+
+int abs_left = -32767;
+int abs_right = 32767;
+int abs_bottom = -32767;
+int abs_top = 32767;
+
+int section_top;
+int section_bottom;
+int section_left;
+int section_right;
+void begin_warping() {
+  section_left = abs_left;
+  section_right = abs_right;
+  section_top = abs_top;
+  section_bottom = abs_bottom;
+
+}
+boolean is_warping = false;
+void warp_mouse(Key ninth) {
+
+  // 1 2 3
+  // 4 5 6
+  // 7 8 9
+
+  if (is_warping == false) {
+    is_warping = true;
+    begin_warping();
+  }
+
+
+  int next_width = (section_right - section_left) / 3;
+  int next_height = (section_bottom - section_top) / 3;
+  Keyboard.print("warping - the next width is ");
+  Keyboard.print(next_width);
+  Keyboard.print("warping - the next height is ");
+  Keyboard.print(next_height);
+
+  if (ninth.rawKey * MOUSE_END_WARP) {
+    is_warping = false;
+  }
+
+  if (ninth.rawKey & MOUSE_UP) {
+  Keyboard.print(" - up ");
+    section_bottom = section_top + next_height;
+  } else if (ninth.rawKey & MOUSE_DN) {
+  Keyboard.print(" - down ");
+    section_top = section_bottom - next_width;
+  } else {
+  Keyboard.print(" - vcenter ");
+    section_top = section_top + next_height;
+    section_bottom = section_bottom - next_height;
+  }
+
+  if (ninth.rawKey & MOUSE_L) {
+    section_right = section_left + next_width;
+  Keyboard.print(" - left ");
+
+  } else if (ninth.rawKey & MOUSE_R) {
+    section_left = section_right - next_width;
+  Keyboard.print(" - right ");
+  } else  {
+    section_left = section_left + next_width;
+    section_right = section_right - next_width;
+  Keyboard.print(" - center horizontal ");
+  }
+
+  Mouse.moveAbs(section_left + (section_right - section_left / 2),  section_top + (section_bottom - section_top) / 2, 0);
+}
 
 double mouse_accel (double cycles)
 {
@@ -453,12 +526,18 @@ void send_key_events()
     for (byte col = 0; col < COLS; col++) {
       byte switchState = matrixState[row][col];
       Key mappedKey = keymaps[active_keymap][row][col];
-      if (mappedKey.flags & MOUSE_KEY ) {
-        handle_mouse_key_press(matrixState[row][col], keymaps[active_keymap][row][col], x, y);
 
+      if (mappedKey.flags & MOUSE_KEY ) {
+        if (mappedKey.rawKey & MOUSE_WARP) {
+          if (key_toggled_on(switchState)) {
+            warp_mouse(mappedKey);
+          }
+        } else {
+          handle_mouse_key_press(switchState, mappedKey, x, y);
+        }
 
       } else if (mappedKey.flags & SYNTHETIC_KEY) {
-        handle_synthetic_key_press(matrixState[row][col], keymaps[active_keymap][row][col]);
+        handle_synthetic_key_press(switchState, mappedKey);
       }
       else {
         if (key_is_pressed(switchState)) {

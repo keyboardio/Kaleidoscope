@@ -14,11 +14,13 @@
 #define IS_CONSUMER    B00000100
 
 
-#define MOUSE_UP       B0001
-#define MOUSE_DN     B0010
-#define MOUSE_L     B0100
-#define MOUSE_R    B1000
-
+#define MOUSE_UP            B0000001
+#define MOUSE_DN            B0000010
+#define MOUSE_L             B0000100
+#define MOUSE_R             B0001000
+#define MOUSE_CENTER        B0010000
+#define MOUSE_WARP          B0100000
+#define MOUSE_END_WARP      B1000000
 
 #define KEYMAP_0     0
 #define KEYMAP_1     1
@@ -39,6 +41,19 @@
 #define Key_skip (Key){ KEY_FLAGS,0 }
 
 #define Key_macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
+
+
+#define Key_mouseWarp1   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_L }
+#define Key_mouseWarp2   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP }
+#define Key_mouseWarp3   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
+#define Key_mouseWarp4   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_L }
+#define Key_mouseWarp5   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP }
+#define Key_mouseWarp6   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP | MOUSE_R }
+#define Key_mouseWarp7   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
+#define Key_mouseWarp8   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN }
+#define Key_mouseWarp9   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
+#define Key_mouseWarp0   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
+
 
 
 #define Key_mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
