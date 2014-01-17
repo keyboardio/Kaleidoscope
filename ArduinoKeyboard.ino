@@ -64,14 +64,11 @@ void reset_matrix()
 
 
 
-void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry) {
+void set_keymap(Key keymapEntry, byte matrixStateEntry) {
   if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
-
     // this logic sucks. there is a better way TODO this
     if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
       if (key_is_pressed(matrixStateEntry)) {
-
-
         if ( keymapEntry.rawKey == KEYMAP_NEXT) {
           active_keymap++;
         } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
@@ -83,22 +80,17 @@ void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry) {
     } else if (! (keymapEntry.flags ^ (  SWITCH_TO_KEYMAP))) {
       // switch keymap and stay there
       if (key_toggled_on(matrixStateEntry)) {
-        primary_keymap = active_keymap =  keymapEntry.rawKey;
+        active_keymap = primary_keymap = keymapEntry.rawKey;
         save_primary_keymap(primary_keymap);
+        Serial.print("keymap is now:");
+        Serial.print(active_keymap);
       }
     }
   }
 }
-void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry) {
-
-  set_keymap_keymap(keymapEntry, matrixStateEntry);
-
-}
 
 void scan_matrix()
 {
-
-
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < ROWS; row++) {
     digitalWrite(rowPins[row], LOW);
@@ -113,10 +105,11 @@ void scan_matrix()
       // while we're inspecting the electrical matrix, we look
       // to see if the Key being held is a firmware level
       // metakey, so we can act on it, lest we only discover
-      // that we should be looking at a seconary Keymap halfway through the matrix scan
+      // that we should be looking at a seconary Keymap halfway
+      // through the matrix scan
 
 
-      handle_immediate_action_during_matrix_scan(keymaps[active_keymap][row][col], matrixState[row][col]);
+      set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
 
     }
     digitalWrite(rowPins[row], HIGH);
@@ -133,7 +126,6 @@ void setup()
   setup_matrix();
   setup_pins();
   primary_keymap = load_primary_keymap();
-  active_keymap = primary_keymap;
 }
 
 void loop()
@@ -142,6 +134,7 @@ void loop()
   scan_matrix();
   send_key_events();
   reset_matrix();
+  reset_key_report();
 }
 
 
@@ -281,73 +274,123 @@ void report(byte row, byte col, boolean value)
 int last_x;
 int last_y;
 
+// apparently, the mac discards 15% of the value space for mouse movement.
+// need to test this on other platforms
+//
 
-int abs_left = -32767;
-int abs_right = 32767;
-int abs_bottom = -32767;
-int abs_top = 32767;
+int abs_left = -27852; //-32767;
+int abs_right = 27852;//32767;
+int abs_bottom = 27852; //32767;
+int abs_top = -27852; //-32767;
 
-int section_top;
-int section_bottom;
-int section_left;
-int section_right;
+long section_top;
+long section_bottom;
+long section_left;
+long section_right;
+boolean is_warping = false;
+
 void begin_warping() {
   section_left = abs_left;
   section_right = abs_right;
   section_top = abs_top;
   section_bottom = abs_bottom;
+  Serial.print ("just reset the warp");
+    is_warping = true;
+
 
 }
-boolean is_warping = false;
+
 void warp_mouse(Key ninth) {
 
   // 1 2 3
   // 4 5 6
   // 7 8 9
 
-  if (is_warping == false) {
-    is_warping = true;
+
+  if (!is_warping) {
     begin_warping();
-  }
+    }
 
+  long next_width = (section_right - section_left) / 3;
+  long next_height = (section_bottom - section_top) / 3;
 
-  int next_width = (section_right - section_left) / 3;
-  int next_height = (section_bottom - section_top) / 3;
-  Keyboard.print("warping - the next width is ");
-  Keyboard.print(next_width);
-  Keyboard.print("warping - the next height is ");
-  Keyboard.print(next_height);
-
-  if (ninth.rawKey * MOUSE_END_WARP) {
+    
+  if (next_width <=1 || ninth.rawKey & MOUSE_END_WARP) {
+  Serial.print ("done warping");
     is_warping = false;
+    return;
   }
+
+
+  Serial.print("Left: ");
+  Serial.print(section_left);
+  Serial.print("Right: ");
+  Serial.print(section_right);
+  Serial.print("top: ");
+  Serial.print(section_top);
+  Serial.print("bottom: ");
+  Serial.print(section_bottom);
+  Serial.print("\nwarping - the next width is ");
+  Serial.print(next_width);
+  Serial.print("\nwarping - the next height is ");
+  Serial.print(next_height);
+
 
   if (ninth.rawKey & MOUSE_UP) {
-  Keyboard.print(" - up ");
+    Serial.print(" - up ");
     section_bottom = section_top + next_height;
   } else if (ninth.rawKey & MOUSE_DN) {
-  Keyboard.print(" - down ");
-    section_top = section_bottom - next_width;
+    Serial.print(" - down ");
+    section_top = section_bottom - next_height;
   } else {
-  Keyboard.print(" - vcenter ");
+    Serial.print(" - vcenter ");
     section_top = section_top + next_height;
     section_bottom = section_bottom - next_height;
   }
 
   if (ninth.rawKey & MOUSE_L) {
     section_right = section_left + next_width;
-  Keyboard.print(" - left ");
+    Serial.print(" - left ");
 
   } else if (ninth.rawKey & MOUSE_R) {
     section_left = section_right - next_width;
-  Keyboard.print(" - right ");
+    Serial.print(" - right ");
   } else  {
     section_left = section_left + next_width;
     section_right = section_right - next_width;
-  Keyboard.print(" - center horizontal ");
+    Serial.print(" - center horizontal ");
   }
 
-  Mouse.moveAbs(section_left + (section_right - section_left / 2),  section_top + (section_bottom - section_top) / 2, 0);
+  Serial.print("\nMoving to ");
+  Serial.print(section_left + next_width/ 2);
+  Serial.print(",");
+  Serial.print(section_top + next_height / 2);
+  Serial.print("That should be half way between ");
+  Serial.print(section_left);
+  Serial.print(",");
+  Serial.print(section_top);
+  Serial.print(" and ");
+  Serial.print(section_right);
+  Serial.print(",");
+  Serial.print(section_bottom);
+  Serial.print("\n");
+  Mouse.moveAbs(section_left, section_top,0);
+  delay(150);
+  Mouse.moveAbs(section_right, section_top,0);
+  delay(150);
+  Mouse.moveAbs(section_right, section_bottom,0);
+  delay(150);
+  Mouse.moveAbs(section_left, section_bottom,0);
+  delay(150);
+  int16_t gotox = section_left + next_width / 2;
+  int16_t gotoy = section_top + next_height / 2;
+  Serial.print("Going to ");
+  Serial.print(gotox);
+  Serial.print(", ");
+  Serial.print(gotoy);
+  Serial.print("\n");
+  Mouse.moveAbs(gotox,gotoy,0);
+  Mouse.moveAbs(gotox,gotoy,0);
 }
 
 double mouse_accel (double cycles)
@@ -412,8 +455,8 @@ void handle_mouse_movement( char x, char y)
 //
 void release_keys_not_being_pressed()
 {
-  // we use charsReportedLastTime to figure out what we might 
-  // not be holding anymore and can now release. this is 
+  // we use charsReportedLastTime to figure out what we might
+  // not be holding anymore and can now release. this is
   // destructive to charsReportedLastTime
 
   for (byte i = 0; i < KEYS_HELD_BUFFER; i++) {
@@ -476,7 +519,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   else  if (mappedKey.flags & IS_MACRO) {
     if (key_toggled_on (switchState)) {
       if (mappedKey.rawKey == 1) {
-        Keyboard.print("Keyboard.IO keyboard driver v0.00");
+        Serial.print("Keyboard.IO keyboard driver v0.00");
       }
     }
   } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L

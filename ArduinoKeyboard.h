@@ -33,7 +33,7 @@ boolean key_toggled_off(byte keyState);
 boolean key_toggled_on(byte keyState);
 
 
-// EEPROM related 
+// EEPROM related
 void save_primary_keymap(byte keymap);
 byte load_primary_keymap();
 

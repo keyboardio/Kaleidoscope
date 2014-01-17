@@ -2,5 +2,5 @@
 skip 	skip skip skip skip skip skip 	skip        skip 7 8 9 skip skip  
 skip    skip skip mouseWarp1 mouseWarp2 mouseWarp3 skip 	skip        skip 4 5 6 - skip
 PageUp 	skip skip mouseWarp4 mouseWarp5 mouseWarp6 Tab  	Return      skip 1 2 3 skip =
-PageDn 	skip skip mouseWarp7 mouseWarp8 mouseWarp9 Esc  	Keymap1     skip 0 , . Enter skip
+PageDn 	skip skip mouseWarp7 mouseWarp8 mouseWarp9 mouseWarp0  	Enter     skip 0 , . Enter skip
 LGUI Backspace LShift LCtrl KeymapNext_Momentary skip  skip skip skip  KeymapNext_Momentary RCtrl RShift Space  RAlt
