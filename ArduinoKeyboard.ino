@@ -278,24 +278,39 @@ int last_y;
 // need to test this on other platforms
 //
 
-int abs_left = -27852; //-32767;
-int abs_right = 27852;//32767;
-int abs_bottom = 27852; //32767;
-int abs_top = -27852; //-32767;
+#define HALF_WIDTH 16384
+#define HALF_HEIGHT 16384
 
-long section_top;
-long section_bottom;
-long section_left;
-long section_right;
+
+void _transform_and_move_abs(int x, int y) {
+     Serial.print("Moving to ");
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.print(y);
+  Serial.print("\n");
+   Mouse.moveAbs(x,y,0); 
+}
+
+
+int abs_left = 0;
+int abs_right = 32767;
+int abs_top = 0; 
+int abs_bottom =32767;
+
+int next_width;
+int next_height;
+int section_top;
+int section_left;
 boolean is_warping = false;
 
 void begin_warping() {
   section_left = abs_left;
-  section_right = abs_right;
   section_top = abs_top;
-  section_bottom = abs_bottom;
+  next_width = abs_right;
+  next_height = abs_bottom;
   Serial.print ("just reset the warp");
     is_warping = true;
+   
 
 
 }
@@ -307,61 +322,63 @@ void warp_mouse(Key ninth) {
   // 7 8 9
 
 
-  if (!is_warping) {
+  if (is_warping == false) {
     begin_warping();
     }
 
-  long next_width = (section_right - section_left) / 3;
-  long next_height = (section_bottom - section_top) / 3;
+
 
     
-  if (next_width <=1 || ninth.rawKey & MOUSE_END_WARP) {
-  Serial.print ("done warping");
+  if ( ninth.rawKey & MOUSE_END_WARP) {
+     Serial.print ("done warping");
+
     is_warping = false;
     return;
   }
 
 
-  Serial.print("Left: ");
+  Serial.print("Current box: ");
   Serial.print(section_left);
-  Serial.print("Right: ");
-  Serial.print(section_right);
-  Serial.print("top: ");
+  Serial.print(",");
   Serial.print(section_top);
-  Serial.print("bottom: ");
-  Serial.print(section_bottom);
-  Serial.print("\nwarping - the next width is ");
-  Serial.print(next_width);
-  Serial.print("\nwarping - the next height is ");
-  Serial.print(next_height);
+  Serial.print(" to: ");
+  Serial.print(section_left+next_width);
+  Serial.print(",");
+  Serial.print(section_top+next_height);
+  
 
+  next_width = next_width / 3;
+  next_height = next_height/3;
+
+
+
+  Serial.print("\nwarping - the next box size is ");
+  Serial.print(next_width);
+  Serial.print(", ");
+  Serial.print(next_height);
+  Serial.print("\n");
 
   if (ninth.rawKey & MOUSE_UP) {
     Serial.print(" - up ");
-    section_bottom = section_top + next_height;
   } else if (ninth.rawKey & MOUSE_DN) {
     Serial.print(" - down ");
-    section_top = section_bottom - next_height;
+    section_top  = section_top + (next_height * 2);
   } else {
     Serial.print(" - vcenter ");
-    section_top = section_top + next_height;
-    section_bottom = section_bottom - next_height;
+    section_top  = section_top + next_height;
   }
 
   if (ninth.rawKey & MOUSE_L) {
-    section_right = section_left + next_width;
     Serial.print(" - left ");
-
   } else if (ninth.rawKey & MOUSE_R) {
-    section_left = section_right - next_width;
     Serial.print(" - right ");
+    section_left  = section_left + (next_width * 2);
   } else  {
-    section_left = section_left + next_width;
-    section_right = section_right - next_width;
     Serial.print(" - center horizontal ");
+    section_left  = section_left + next_width;
   }
 
-  Serial.print("\nMoving to ");
+  Serial.print("\nShould end up at ");
   Serial.print(section_left + next_width/ 2);
   Serial.print(",");
   Serial.print(section_top + next_height / 2);
@@ -370,28 +387,25 @@ void warp_mouse(Key ninth) {
   Serial.print(",");
   Serial.print(section_top);
   Serial.print(" and ");
-  Serial.print(section_right);
+  Serial.print(section_left + next_width);
   Serial.print(",");
-  Serial.print(section_bottom);
+  Serial.print(section_top+next_height);
   Serial.print("\n");
-  Mouse.moveAbs(section_left, section_top,0);
+  _transform_and_move_abs(section_left, section_top);
   delay(150);
-  Mouse.moveAbs(section_right, section_top,0);
+  _transform_and_move_abs(section_left+next_width, section_top);
   delay(150);
-  Mouse.moveAbs(section_right, section_bottom,0);
+_transform_and_move_abs(section_left+next_width, section_top+next_height);
   delay(150);
-  Mouse.moveAbs(section_left, section_bottom,0);
+  _transform_and_move_abs(section_left, section_top+next_height);
   delay(150);
-  int16_t gotox = section_left + next_width / 2;
-  int16_t gotoy = section_top + next_height / 2;
-  Serial.print("Going to ");
-  Serial.print(gotox);
-  Serial.print(", ");
-  Serial.print(gotoy);
-  Serial.print("\n");
-  Mouse.moveAbs(gotox,gotoy,0);
-  Mouse.moveAbs(gotox,gotoy,0);
+
+  _transform_and_move_abs(
+   section_left + next_width / 2,
+   section_top + next_height / 2
+  );
 }
+
 
 double mouse_accel (double cycles)
 {
