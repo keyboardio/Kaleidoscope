@@ -43,16 +43,11 @@
 #define Key_macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
 
 
-#define Key_mouseWarp1   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_L }
-#define Key_mouseWarp2   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP }
-#define Key_mouseWarp3   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
-#define Key_mouseWarp4   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_L }
-#define Key_mouseWarp5   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP }
-#define Key_mouseWarp6   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP | MOUSE_R }
-#define Key_mouseWarp7   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
-#define Key_mouseWarp8   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN }
-#define Key_mouseWarp9   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
-#define Key_mouseWarp0   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
+#define Key_mouseWarpNW   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_L }
+#define Key_mouseWarpNE   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
+#define Key_mouseWarpSW   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
+#define Key_mouseWarpSE   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
+#define Key_mouseWarpEnd   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
 
 
 
