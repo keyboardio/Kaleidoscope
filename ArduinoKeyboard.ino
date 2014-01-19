@@ -288,16 +288,12 @@ void _transform_and_move_abs(int x, int y) {
   Serial.print(", ");
   Serial.print(y);
   Serial.print("\n");
-  x = x * 0.85 + 32767 * 0.07;
-  y = y * 0.85 + 32767 * 0.07;
-   Mouse.moveAbs(x,y,0); 
+   Mouse.moveAbs(x,y); 
 }
 
 
 int abs_left = 0;
-int abs_right = 32767;
-int abs_top = 0; 
-int abs_bottom = 32767;
+int abs_top = 0;
 
 int next_width;
 int next_height;
@@ -308,34 +304,26 @@ boolean is_warping = false;
 void begin_warping() {
   section_left = abs_left;
   section_top = abs_top;
-  next_width = abs_right;
-  next_height = abs_bottom;
+  next_width = 32767;
+  next_height = 32767;
   Serial.print ("just reset the warp");
-    is_warping = true;
-   
-
-
+  is_warping = true;
 }
 
 void warp_mouse(Key ninth) {
-
-  // 1 2 
-  // 3 4
-
-
   if (is_warping == false) {
     begin_warping();
     }
 
 
-
-    
   if ( ninth.rawKey & MOUSE_END_WARP) {
      Serial.print ("done warping");
 
     is_warping = false;
     return;
   }
+  next_width = next_width / 2;
+  next_height = next_height/2;
 
 
   Serial.print("Current box: ");
@@ -348,8 +336,6 @@ void warp_mouse(Key ninth) {
   Serial.print(section_top+next_height);
   
 
-  next_width = next_width / 2;
-  next_height = next_height/2;
 
 
 
