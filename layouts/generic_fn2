@@ -1,6 +1,6 @@
 #NAME: GENERIC_FN2
-skip 	F1         F2        F3        F4           F5          skip 	  skip   F6         F7          F8          F9           F10           skip  
-Tab 	macroKey1  mouseBtnL mouseBtnM mouseBtnR    volumeUp    NoKey     NoKey  {          }           [           ]            BacklightUp   sleep
-Home    mouseL 	   mouseUp   mouseDn   mouseR 	    volumeDown  Tab       Return LArrow     DnArrow     UpArrow     RArrow       BacklightDn   skip 
-End     Z          X         C         V            volumeMute  Esc       Enter  |          prevTrack   playPause   nextTrack    \             -
-LGUI    Delete     LShift    LCtrl     NoKey        skip        skip      skip   skip       NoKey       RCtrl       RShift       Space         RAlt
+skip 	F1         F2        F3        F4             F5            NoKey       NoKey     F6         F7          F8          F9         F10           skip  
+Tab 	mouseBtnM  mouseUp   skip      mouseWarpNW    mouseWarpNE   NoKey       NoKey     {          }           [           ]          BacklightUp   sleep
+Home    mouseL 	   mouseDn   mouseR    mouseWarpSW    mouseWarpSE   nextTrack   playPause LArrow     DnArrow     UpArrow     RArrow     BacklightDn   F11
+End     Z          X         C         V              mouseWarpEnd  prevTrack   Enter     volumeMute volumeDown  volumeUp    skip       \             |
+LGUI    mouseBtnL  LShift    LCtrl     NoKey          skip          NoKey       NoKey     skip       NoKey       RCtrl       RShift     mouseBtnR     RAlt

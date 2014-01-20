@@ -10,11 +10,11 @@
 	{Key_PageDn, Key_Slash, Key_Semicolon, Key_Q, Key_J, Key_K, Key_Esc, Key_Keymap2, Key_X, Key_B, Key_M, Key_W, Key_V, Key_Z},\
 	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
-#define KEYMAP_GENERIC_FN2 { /* Generated keymap for GENERIC_FN2 */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_skip, Key_skip, Key_F6, Key_F7, Key_F8, Key_F9, Key_F10, Key_skip},\
-	{Key_Tab, Key_macroKey1, Key_mouseBtnL, Key_mouseBtnM, Key_mouseBtnR, Key_volumeUp, Key_NoKey, Key_NoKey, Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_BacklightUp, Key_sleep},\
-	{Key_Home, Key_mouseL, Key_mouseUp, Key_mouseDn, Key_mouseR, Key_volumeDown, Key_Tab, Key_Return, Key_LArrow, Key_DnArrow, Key_UpArrow, Key_RArrow, Key_BacklightDn, Key_skip},\
-	{Key_End, Key_Z, Key_X, Key_C, Key_V, Key_volumeMute, Key_Esc, Key_Enter, Key_Pipe, Key_prevTrack, Key_playPause, Key_nextTrack, Key_Backslash, Key_Minus},\
-	{Key_LGUI, Key_Delete, Key_LShift, Key_LCtrl, Key_NoKey, Key_skip, Key_skip, Key_skip, Key_skip, Key_NoKey, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
+#define KEYMAP_GENERIC_FN2 { /* Generated keymap for GENERIC_FN2 */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_NoKey, Key_NoKey, Key_F6, Key_F7, Key_F8, Key_F9, Key_F10, Key_skip},\
+	{Key_Tab, Key_mouseBtnM, Key_mouseUp, Key_skip, Key_mouseWarpNW, Key_mouseWarpNE, Key_NoKey, Key_NoKey, Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_BacklightUp, Key_sleep},\
+	{Key_Home, Key_mouseL, Key_mouseDn, Key_mouseR, Key_mouseWarpSW, Key_mouseWarpSE, Key_nextTrack, Key_playPause, Key_LArrow, Key_DnArrow, Key_UpArrow, Key_RArrow, Key_BacklightDn, Key_F11},\
+	{Key_End, Key_Z, Key_X, Key_C, Key_V, Key_mouseWarpEnd, Key_prevTrack, Key_Enter, Key_volumeMute, Key_volumeDown, Key_volumeUp, Key_skip, Key_Backslash, Key_Pipe},\
+	{Key_LGUI, Key_mouseBtnL, Key_LShift, Key_LCtrl, Key_NoKey, Key_skip, Key_NoKey, Key_NoKey, Key_skip, Key_NoKey, Key_RCtrl, Key_RShift, Key_mouseBtnR, Key_RAlt},\
 },
 #define KEYMAP_MALTRON { /* Generated keymap for MALTRON */ 	{Key_skip, Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_skip},\
 	{Key_Backtick, Key_Q, Key_P, Key_Y, Key_C, Key_B, Key_skip, Key_skip, Key_V, Key_M, Key_U, Key_Z, Key_L, Key_Equals},\
