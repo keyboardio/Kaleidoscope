@@ -306,8 +306,11 @@ void begin_warping() {
   section_top = abs_top;
   next_width = 32767;
   next_height = 32767;
-  Serial.print ("just reset the warp");
   is_warping = true;
+}
+
+void end_warping() {
+    is_warping= false;
 }
 
 void warp_mouse(Key ninth) {
@@ -317,9 +320,7 @@ void warp_mouse(Key ninth) {
 
 
   if ( ninth.rawKey & MOUSE_END_WARP) {
-     Serial.print ("done warping");
-
-    is_warping = false;
+     end_warping();
     return;
   }
   next_width = next_width / 2;
@@ -437,6 +438,9 @@ void handle_mouse_movement( char x, char y)
     Serial.print(" carriedOverY is ");
     Serial.println(carriedOverY);
 #endif
+
+    end_warping();
+
     Mouse.move(moveX, moveY, 0);
   } else {
     mouseActiveForCycles = 0;
@@ -448,6 +452,7 @@ void handle_mouse_movement( char x, char y)
 //
 // Key Reports
 //
+
 void release_keys_not_being_pressed()
 {
   // we use charsReportedLastTime to figure out what we might
