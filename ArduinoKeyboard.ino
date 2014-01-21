@@ -270,6 +270,90 @@ void report(byte row, byte col, boolean value)
 //
 
 
+ void _draw_warp_section(long x_origin, long y_origin, long x_end, long y_end, int tracing_scale) {
+
+    if ( x_origin != x_end )   { // it's a horizontal line
+
+        if (x_origin > x_end)  { // right to left
+//            tracing_scale =  (x_origin-x_end) /100;
+            for (long x = x_origin ; x>= x_end; x=x-tracing_scale) {
+                Mouse.moveAbs(x,y_origin);
+            }
+
+        } else { // left to right
+  //         tracing_scale =  (x_end-x_origin) /100;
+            for (long x = x_origin ; x<= x_end; x=x+tracing_scale) {
+                Mouse.moveAbs(x,y_origin);
+            }
+
+        }
+
+    } else { // it's a vertical line
+    
+        if (y_origin > y_end)  { // bottom to top
+    //       tracing_scale =  (y_origin-y_end) /100;
+            for (long y = y_origin ; y>= y_end; y=y-tracing_scale) {
+                Mouse.moveAbs(x_origin,y);
+            }
+
+        } else { // top to bottom
+      //     tracing_scale =  (y_end-y_origin) /100;
+            for (long y = y_origin ; y<= y_end; y=y+tracing_scale) {
+                Mouse.moveAbs(x_origin, y);
+            }
+
+        }
+
+    
+    
+    }
+}
+
+#define CLOVER_TRACE_SCALE 50
+
+void _warp_clover(long left, long top, long height, long width) {
+    long x_center = left + width/2;
+    long y_center = top + height/2;
+    long right = left + width;
+    long bottom = top + height;
+    _draw_warp_section(x_center, y_center, left, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section(left, y_center, left,top, CLOVER_TRACE_SCALE);
+    _draw_warp_section(left, top , x_center,top, CLOVER_TRACE_SCALE);
+    _draw_warp_section( x_center,top, x_center, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section(x_center, y_center, x_center, bottom, CLOVER_TRACE_SCALE);
+    _draw_warp_section( x_center, bottom, right, bottom, CLOVER_TRACE_SCALE);
+    _draw_warp_section( right, bottom, right, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section( right, y_center, x_center, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section( x_center, y_center, left, y_center, CLOVER_TRACE_SCALE);
+    
+    _draw_warp_section( left,y_center,left, bottom, CLOVER_TRACE_SCALE);
+    _draw_warp_section(left, bottom, x_center, bottom, CLOVER_TRACE_SCALE);
+    _draw_warp_section(  x_center, bottom, x_center, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section(  x_center, y_center, x_center,top, CLOVER_TRACE_SCALE);
+    _draw_warp_section(  x_center,top, right, top, CLOVER_TRACE_SCALE);
+    _draw_warp_section(  right, top, right, y_center, CLOVER_TRACE_SCALE);
+    _draw_warp_section(   right, y_center, x_center, y_center, CLOVER_TRACE_SCALE);
+
+
+
+}
+
+
+void _warp_cross(long left, long top, long height, long width) {
+    long x_center = left + width/2;
+    long y_center = top + height/2;
+    long right = left + width;
+    long bottom = top + height;
+
+    _draw_warp_section(x_center, y_center, x_center, top,40);
+    _draw_warp_section(x_center, top, x_center, bottom,40);
+    _draw_warp_section( x_center, bottom, x_center, y_center,40);
+    _draw_warp_section( x_center, y_center,left,y_center,40);
+    _draw_warp_section(left, y_center,  right, y_center,40);
+    _draw_warp_section(right, y_center,  x_center, y_center,40);
+}
+
+
 
 int last_x;
 int last_y;
@@ -281,15 +365,6 @@ int last_y;
 #define HALF_WIDTH 16384
 #define HALF_HEIGHT 16384
 
-
-void _transform_and_move_abs(int x, int y) {
-     Serial.print("Moving to ");
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.print(y);
-  Serial.print("\n");
-   Mouse.moveAbs(x,y); 
-}
 
 
 int abs_left = 0;
@@ -323,6 +398,8 @@ void warp_mouse(Key ninth) {
      end_warping();
     return;
   }
+
+
   next_width = next_width / 2;
   next_height = next_height/2;
 
@@ -373,19 +450,12 @@ void warp_mouse(Key ninth) {
   Serial.print(",");
   Serial.print(section_top+next_height);
   Serial.print("\n");
-  _transform_and_move_abs(section_left, section_top);
-  delay(150);
-  _transform_and_move_abs(section_left+next_width, section_top);
-  delay(150);
-_transform_and_move_abs(section_left+next_width, section_top+next_height);
-  delay(150);
-  _transform_and_move_abs(section_left, section_top+next_height);
-  delay(150);
+    // the cloverleaf
 
-  _transform_and_move_abs(
-   section_left + next_width / 2,
-   section_top + next_height / 2
-  );
+    _warp_cross(section_left, section_top, next_height,next_width);
+
+
+
 }
 
 
