@@ -3,4 +3,4 @@ skip 	F1         F2        F3        F4             F5            NoKey       No
 Tab 	mouseBtnM  mouseUp   skip      mouseWarpNW    mouseWarpNE   NoKey       NoKey     {          }           [           ]          BacklightUp   sleep
 Home    mouseL 	   mouseDn   mouseR    mouseWarpSW    mouseWarpSE   nextTrack   playPause LArrow     DnArrow     UpArrow     RArrow     BacklightDn   F11
 End     Z          X         C         V              mouseWarpEnd  prevTrack   Enter     volumeMute volumeDown  volumeUp    skip       \             |
-LCtrl mouseBtnL LShift LGUI NoKey skip  skip skip skip  NoKey RAlt RShift mouseBtnR  RCtrl
+LCtrl Delete mouseBtnL LGUI NoKey skip  skip skip skip  NoKey RAlt mouseBtnR Return RCtrl

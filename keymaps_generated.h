@@ -14,7 +14,7 @@
 	{Key_Tab, Key_mouseBtnM, Key_mouseUp, Key_skip, Key_mouseWarpNW, Key_mouseWarpNE, Key_NoKey, Key_NoKey, Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_BacklightUp, Key_sleep},\
 	{Key_Home, Key_mouseL, Key_mouseDn, Key_mouseR, Key_mouseWarpSW, Key_mouseWarpSE, Key_nextTrack, Key_playPause, Key_LArrow, Key_DnArrow, Key_UpArrow, Key_RArrow, Key_BacklightDn, Key_F11},\
 	{Key_End, Key_Z, Key_X, Key_C, Key_V, Key_mouseWarpEnd, Key_prevTrack, Key_Enter, Key_volumeMute, Key_volumeDown, Key_volumeUp, Key_skip, Key_Backslash, Key_Pipe},\
-	{Key_LCtrl, Key_mouseBtnL, Key_LShift, Key_LGUI, Key_NoKey, Key_skip, Key_skip, Key_skip, Key_skip, Key_NoKey, Key_RAlt, Key_RShift, Key_mouseBtnR, Key_RCtrl},\
+	{Key_LCtrl, Key_Delete, Key_mouseBtnL, Key_LGUI, Key_NoKey, Key_skip, Key_skip, Key_skip, Key_skip, Key_NoKey, Key_RAlt, Key_mouseBtnR, Key_Return, Key_RCtrl},\
 },
 #define KEYMAP_MALTRON { /* Generated keymap for MALTRON */ 	{Key_skip, Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_skip},\
 	{Key_Backtick, Key_Q, Key_P, Key_Y, Key_C, Key_B, Key_skip, Key_skip, Key_V, Key_M, Key_U, Key_Z, Key_L, Key_Equals},\
@@ -45,10 +45,10 @@
 static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY
 	KEYMAP_GENERIC_FN2
-	KEYMAP_COLEMAK
 	KEYMAP_NUMPAD
     KEYMAP_DVORAK
 	KEYMAP_GENERIC_FN2
+	KEYMAP_COLEMAK
     KEYMAP_WORKMAN
 	KEYMAP_GENERIC_FN2
 

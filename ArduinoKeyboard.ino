@@ -28,7 +28,7 @@
 
 
 
-byte matrixState[ROWS][COLS];
+ byte matrixState[ROWS][COLS];
 
 
 byte charsBeingReported[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
