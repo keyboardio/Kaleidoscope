@@ -277,13 +277,13 @@ void report(byte row, byte col, boolean value)
         if (x_origin > x_end)  { // right to left
 //            tracing_scale =  (x_origin-x_end) /100;
             for (long x = x_origin ; x>= x_end; x=x-tracing_scale) {
-                Mouse.moveAbs(x,y_origin);
+                Mouse.moveAbsolute(x,y_origin);
             }
 
         } else { // left to right
   //         tracing_scale =  (x_end-x_origin) /100;
             for (long x = x_origin ; x<= x_end; x=x+tracing_scale) {
-                Mouse.moveAbs(x,y_origin);
+                Mouse.moveAbsolute(x,y_origin);
             }
 
         }
@@ -293,13 +293,13 @@ void report(byte row, byte col, boolean value)
         if (y_origin > y_end)  { // bottom to top
     //       tracing_scale =  (y_origin-y_end) /100;
             for (long y = y_origin ; y>= y_end; y=y-tracing_scale) {
-                Mouse.moveAbs(x_origin,y);
+                Mouse.moveAbsolute(x_origin,y);
             }
 
         } else { // top to bottom
       //     tracing_scale =  (y_end-y_origin) /100;
             for (long y = y_origin ; y<= y_end; y=y+tracing_scale) {
-                Mouse.moveAbs(x_origin, y);
+                Mouse.moveAbsolute(x_origin, y);
             }
 
         }
