@@ -595,6 +595,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L
              || mappedKey.rawKey == KEY_MOUSE_BTN_M
              || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
+    end_warping();
     if (key_toggled_on (switchState)) {
       Mouse.press(mappedKey.rawKey);
     } else if (key_is_pressed(switchState)) {
