@@ -25,7 +25,7 @@
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
 
 //extern int usbMaxPower;
-
+#define DEBUG_SERIAL 1
 
 
  byte matrixState[ROWS][COLS];
@@ -101,6 +101,10 @@ void scan_matrix()
         matrixState[row][col] |= 0; // noop. just here for clarity
       } else {
         matrixState[row][col] |= 1; // noop. just here for clarity
+        Serial.write("Got one! - ");
+        Serial.write(row);
+        Serial.write(" -- ");
+        Serial.println(col);
       }
       // while we're inspecting the electrical matrix, we look
       // to see if the Key being held is a firmware level
@@ -120,12 +124,14 @@ void scan_matrix()
 void setup()
 {
   //usbMaxPower = 100;
+  delay(2500);
   Serial.begin(115200);
   Keyboard.begin();
   Mouse.begin();
   setup_matrix();
   setup_pins();
   primary_keymap = load_primary_keymap();
+  Serial.println("HELLO");
 }
 
 void loop()

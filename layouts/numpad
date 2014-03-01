@@ -1,6 +1,6 @@
 #NAME: NUMPAD
-skip 	skip skip skip skip skip skip 	skip        skip 7 8 9 skip skip  
-skip    skip skip mouseWarpNW mouseWarpNE skip skip 	skip        skip 4 5 6 - skip
-PageUp 	skip skip mouseWarpSW mouseWarpSE skip Tab  	Return      skip 1 2 3 Keymap0 =
-PageDn 	skip skip skip skip skip mouseWarpEnd  	Keymap0     skip 0 , . Enter skip
-LGUI Backspace LShift LCtrl skip skip  skip skip skip  skip RCtrl RShift Space  RAlt
+skip 	skip        skip    skip        skip        skip skip   skip     skip Keypad7  Keypad8   Keypad9   KeypadMinus     skip  
+skip    skip        skip    skip        skip        skip skip   skip     skip Keypad4  Keypad5   Keypad6   KeypadPlus        skip
+PageUp 	skip        skip    skip        skip        skip Tab    Return   skip Keypad1  Keypad2   Keypad3   Equals 
+PageDn 	skip        skip    skip        skip        skip Esc	Keymap0  skip Keypad0  KeypadDot KeypadMultiply      KeypadSlash    Enter
+LGUI    Backspace   LShift  LCtrl       skip        skip skip   skip     skip skip  RCtrl RShift Space    RAlt
