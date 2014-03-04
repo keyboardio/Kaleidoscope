@@ -8,7 +8,6 @@
 /**
  *  TODO:
 
-    add mouse acceleration/deceleration
     add mouse inertia
     add series-of-character macros
     add series of keystroke macros
@@ -465,13 +464,24 @@ void warp_mouse(Key ninth) {
 }
 
 
+// we want the whole s curve, not just the bit 
+// that's usually above the x and y axes;
+#define ATAN_LIMIT 1.57079633
+#define ACCELERATION_FLOOR 0.25
+#define ACCELERATION_MULTIPLIER 5
+#define  ACCELERATION_RUNWAY 5
+// Climb speed is how fast we get to max speed
+// 1 is "instant"
+// 0.05 is just right
+// 0.001 is insanely slow
+
+#define ACCELERATION_CLIMB_SPEED  0.05
+
 double mouse_accel (double cycles)
 {
-  double accel = atan((cycles / 50) - 5);
-  accel += 1.5707963267944; // we want the whole s curve, not just the bit that's usually above the x and y axes;
-  accel = accel * 0.85;
-  if (accel < 0.25) {
-    accel = 0.25;
+  double accel = (atan((cycles * ACCELERATION_CLIMB_SPEED)-ACCELERATION_RUNWAY) + ATAN_LIMIT) * ACCELERATION_MULTIPLIER;
+  if (accel < ACCELERATION_FLOOR) {
+    accel = ACCELERATION_FLOOR;
   }
   return accel;
 }
@@ -601,9 +611,9 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L
              || mappedKey.rawKey == KEY_MOUSE_BTN_M
              || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
-    end_warping();
     if (key_toggled_on (switchState)) {
       Mouse.press(mappedKey.rawKey);
+      end_warping();
     } else if (key_is_pressed(switchState)) {
     } else if (Mouse.isPressed(mappedKey.rawKey) ) {
       Mouse.release(mappedKey.rawKey);
