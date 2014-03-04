@@ -1,13 +1,13 @@
 #define KEYMAP_COLEMAK { /* Generated keymap for COLEMAK */ 	{Key_skip, Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_skip},\
 	{Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_G, Key_skip, Key_skip, Key_J, Key_L, Key_U, Key_Y, Key_Semicolon, Key_Equals},\
 	{Key_PageUp, Key_A, Key_R, Key_S, Key_T, Key_D, Key_Tab, Key_Return, Key_H, Key_N, Key_E, Key_I, Key_O, Key_Quote},\
-	{Key_PageDn, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, Key_Keymap0, Key_K, Key_M, Key_Comma, Key_Period, Key_Slash, Key_Minus},\
-	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
+	{Key_PageDn, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, Key_Keymap2, Key_K, Key_M, Key_Comma, Key_Period, Key_Slash, Key_Minus},\
+	{Key_LCtrl, Key_Backspace, Key_LShift, Key_LGUI, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RAlt, Key_RShift, Key_Space, Key_RCtrl},\
 },
 #define KEYMAP_DVORAK { /* Generated keymap for DVORAK */ 	{Key_skip, Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_skip},\
 	{Key_Backtick, Key_Quote, Key_Comma, Key_Period, Key_P, Key_Y, Key_skip, Key_skip, Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash},\
 	{Key_PageUp, Key_A, Key_O, Key_E, Key_U, Key_I, Key_Tab, Key_Return, Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus},\
-	{Key_PageDn, Key_Semicolon, Key_Q, Key_J, Key_K, Key_X, Key_Esc, Key_Keymap0, Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals},\
+	{Key_PageDn, Key_Semicolon, Key_Q, Key_J, Key_K, Key_X, Key_Esc, Key_Keymap2, Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals},\
 	{Key_LCtrl, Key_Backspace, Key_LShift, Key_LGUI, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RAlt, Key_RShift, Key_Space, Key_RCtrl},\
 },
 #define KEYMAP_GENERIC_FN2 { /* Generated keymap for GENERIC_FN2 */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_NoKey, Key_NoKey, Key_F6, Key_F7, Key_F8, Key_F9, Key_F10, Key_skip},\
@@ -46,9 +46,9 @@ static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY
 	KEYMAP_GENERIC_FN2
 	KEYMAP_NUMPAD
-    KEYMAP_DVORAK
-	KEYMAP_GENERIC_FN2
 	KEYMAP_COLEMAK
+	KEYMAP_GENERIC_FN2
+    KEYMAP_DVORAK
     KEYMAP_WORKMAN
 	KEYMAP_GENERIC_FN2
 
