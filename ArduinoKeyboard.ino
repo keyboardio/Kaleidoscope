@@ -24,7 +24,7 @@
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
 
 //extern int usbMaxPower;
-#define DEBUG_SERIAL 1
+#define DEBUG_SERIAL 0
 
 
  byte matrixState[ROWS][COLS];
@@ -81,8 +81,10 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
       if (key_toggled_on(matrixStateEntry)) {
         active_keymap = primary_keymap = keymapEntry.rawKey;
         save_primary_keymap(primary_keymap);
+#ifdef DEBUG_SERIAL
         Serial.print("keymap is now:");
         Serial.print(active_keymap);
+#endif
       }
     }
   }
@@ -100,10 +102,6 @@ void scan_matrix()
         matrixState[row][col] |= 0; // noop. just here for clarity
       } else {
         matrixState[row][col] |= 1; // noop. just here for clarity
-        Serial.write("Got one! - ");
-        Serial.write(row);
-        Serial.write(" -- ");
-        Serial.println(col);
       }
       // while we're inspecting the electrical matrix, we look
       // to see if the Key being held is a firmware level
@@ -124,13 +122,11 @@ void setup()
 {
   //usbMaxPower = 100;
   delay(2500);
-  Serial.begin(115200);
   Keyboard.begin();
   Mouse.begin();
   setup_matrix();
   setup_pins();
   primary_keymap = load_primary_keymap();
-  Serial.println("HELLO");
 }
 
 void loop()
@@ -408,7 +404,7 @@ void warp_mouse(Key ninth) {
   next_width = next_width / 2;
   next_height = next_height/2;
 
-
+#ifdef DEBUG_SERIAL
   Serial.print("Current box: ");
   Serial.print(section_left);
   Serial.print(",");
@@ -421,27 +417,28 @@ void warp_mouse(Key ninth) {
 
 
 
-
   Serial.print("\nwarping - the next box size is ");
   Serial.print(next_width);
   Serial.print(", ");
   Serial.print(next_height);
   Serial.print("\n");
+#endif
 
   if (ninth.rawKey & MOUSE_UP) {
-    Serial.print(" - up ");
+//    Serial.print(" - up ");
   } else if (ninth.rawKey & MOUSE_DN) {
-    Serial.print(" - down ");
+ //   Serial.print(" - down ");
     section_top  = section_top + next_height;
   }
 
   if (ninth.rawKey & MOUSE_L) {
-    Serial.print(" - left ");
+  //  Serial.print(" - left ");
   } else if (ninth.rawKey & MOUSE_R) {
-    Serial.print(" - right ");
+   // Serial.print(" - right ");
     section_left  = section_left + next_width;
   }
 
+#ifdef DEBUG_SERIAL
   Serial.print("\nShould end up at ");
   Serial.print(section_left + next_width/ 2);
   Serial.print(",");
@@ -455,6 +452,9 @@ void warp_mouse(Key ninth) {
   Serial.print(",");
   Serial.print(section_top+next_height);
   Serial.print("\n");
+
+#endif
+
     // the cloverleaf
 
     _warp_cross(section_left, section_top, next_height,next_width);
