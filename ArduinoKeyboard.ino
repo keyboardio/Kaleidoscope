@@ -354,6 +354,12 @@ void _warp_cross(long left, long top, long height, long width) {
     _draw_warp_section(right, y_center,  x_center, y_center,40);
 }
 
+void _warp_jump(long left, long top, long height, long width) {
+    long x_center = left + width/2;
+    long y_center = top + height/2;
+                Mouse.moveAbsolute(x_center,y_center);
+}
+
 
 
 int last_x;
@@ -457,9 +463,9 @@ void warp_mouse(Key ninth) {
 
     // the cloverleaf
 
-    _warp_cross(section_left, section_top, next_height,next_width);
+//    _warp_cross(section_left, section_top, next_height,next_width);
 
-
+    _warp_jump(section_left, section_top, next_height,next_width);
 
 }
 
