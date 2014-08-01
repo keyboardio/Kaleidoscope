@@ -2,7 +2,7 @@
 
 #BOARD_TAG    = keyboardio
 BOARD    = micro
-PORT =  /dev/cu.usbmodem1411
+PORT =  /dev/cu.usbmodem1421
 ARDUINO_LIBS = 
 #ARDUINO_CORE_PATH = hardware/keyboardio/cores/keyboardio
 #ALTERNATE_CORE = keyboardio
