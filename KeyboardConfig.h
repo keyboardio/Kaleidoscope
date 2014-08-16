@@ -23,26 +23,25 @@ static const byte rowPins[ROWS] = { A1,A2,A3,A4,A5};
 
 #ifdef MODEL00piersjesse
 #define COLS 16
-#define ROWS 5
+#define ROWS 4
 
 static const byte colPins[COLS] = { 
-
-   5,
-   4,
-   2,
-   3,
-   1,
-   9,
-   0,
-    MISO,
-    SCK,
     MOSI,
-   6,
-   7,
+    SCK,
+    1,
+    0,
+    2,
+    3,
+    4,
+    9,
     8,
-    A6,
+    5,
+    6,
+    7,
+    MISO,
+    12,
     A5,
-    A4,
+    A4
 
 };
 static const byte rowPins[ROWS] = { A0, A1,A2,A3 };
