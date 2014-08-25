@@ -126,11 +126,18 @@ void setup()
   Mouse.begin();
   setup_matrix();
   setup_pins();
+  Serial.begin(9600);
   primary_keymap = load_primary_keymap();
 }
 
+String myApp;
+
 void loop()
 {
+  if(Serial.available()) {
+   myApp = Serial.readString(); 
+   myApp.trim();
+  }
   active_keymap = primary_keymap;
   scan_matrix();
   send_key_events();
@@ -676,6 +683,14 @@ void send_key_events()
         handle_synthetic_key_press(switchState, mappedKey);
       }
       else {
+        if (String("Slack") == myApp) {
+            if (key_is_pressed(switchState)) {
+                record_key_being_pressed(mappedKey.rawKey);
+            if (key_toggled_on (switchState)) {
+                Keyboard.print("Never gonna give you up!");
+            }
+            }
+        } else {
         if (key_is_pressed(switchState)) {
           record_key_being_pressed(mappedKey.rawKey);
           if (key_toggled_on (switchState)) {
@@ -683,6 +698,7 @@ void send_key_events()
           }
         } else if (key_toggled_off (switchState)) {
           Keyboard.release(mappedKey.rawKey);
+        }
         }
       }
     }
