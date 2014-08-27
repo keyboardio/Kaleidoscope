@@ -234,7 +234,6 @@ void setup()
    wdt_disable();
 
   //usbMaxPower = 100;
-  delay(2500);
   Keyboard.begin();
   Mouse.begin();
   setup_command_mode();
