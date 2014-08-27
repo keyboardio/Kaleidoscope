@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <avr/wdt.h>
 
 #include "KeyboardConfig.h"
 #include "keymaps_generated.h"
@@ -117,13 +118,126 @@ void scan_matrix()
   }
 }
 
+// Command mode
+//
+
+
+void command_reboot_bootloader() {
+    Keyboard.println("Rebooting to bootloader");
+    Serial.end();
+
+
+    // Set the magic bits to get a Caterina-based device
+    // to reboot into the bootloader and stay there, rather
+    // than run move onward 
+    //
+    // These values are the same as those defined in
+    // Caterina.c
+    
+    uint16_t bootKey = 0x7777;
+    uint16_t *const bootKeyPtr = (uint16_t *)0x0800;
+
+    // Stash the magic key
+    *bootKeyPtr = bootKey;
+
+    // Set a watchdog timer
+    wdt_enable(WDTO_120MS);
+
+    while(1) {} // This infinite loop ensures nothing else
+                // happens before the watchdog reboots us
+}
+void command_plugh() {
+     commandMode = !commandMode;
+    if (commandMode) {
+        Keyboard.println("");
+        Keyboard.println("Entering command mode!");
+
+    } else {
+        Keyboard.println("Leaving command mode!");
+        Keyboard.println("");
+        }
+  }
+
+void setup_command_mode() {
+    commandBufferSize=0;
+    commandMode = false;
+    commandPromptPrinted = false;
+}
+boolean command_ends_in_return() {
+  if (
+  commandBuffer[commandBufferSize-1] == KEY_ENTER ||
+  commandBuffer[commandBufferSize-1] == KEY_RETURN ) {
+  return true;
+  } else {
+  return false;
+  }
+}
+
+boolean is_command_buffer(byte* myCommand) {
+    if (!command_ends_in_return()) {
+    return false;
+    }
+    int i = 0;
+    do {
+        if (commandBuffer[i] != myCommand[i]) {
+            return false;
+        }
+    } while (myCommand[++i] != NULL);
+    return true;
+}
+
+
+void process_command_buffer(){
+  if (!command_ends_in_return()) {
+  return;
+  }
+
+
+
+  // This is the only command we might want to execute when 
+  // we're not in command mode, as it's the only way to toggle 
+  // command mode on
+  static byte cmd_plugh[] = {KEY_P,KEY_L,KEY_U,KEY_G,KEY_H,NULL};
+  if (is_command_buffer(cmd_plugh)) {
+     command_plugh();
+  }
+
+  // if we've toggled command mode off, get out of here.
+  if (!commandMode) {
+    commandBufferSize=0;
+    return; 
+  }
+  
+    // Handle all the other commands here
+    static byte cmd_reboot_bootloader[] = { KEY_B, KEY_O, KEY_O, KEY_T, KEY_L, KEY_O, KEY_A, KEY_D, KEY_E, KEY_R, NULL};
+    static byte cmd_version[] = { KEY_V, KEY_E, KEY_R, KEY_S, KEY_I, KEY_O, KEY_N, NULL};
+
+    if(is_command_buffer(cmd_reboot_bootloader)) {
+        command_reboot_bootloader();
+    } else if (is_command_buffer(cmd_version)) {
+        Keyboard.println("");
+        Keyboard.print("This is Keyboardio Firmware ");
+        Keyboard.println(VERSION);
+    }
+
+
+   if (!commandPromptPrinted ){
+    Keyboard.print(">>> ");
+    commandPromptPrinted = true;
+    commandBufferSize=0;
+  }
+}
+
 
 void setup()
 {
+   wdt_disable();
+
   //usbMaxPower = 100;
   delay(2500);
   Keyboard.begin();
   Mouse.begin();
+  setup_command_mode();
   setup_matrix();
   setup_pins();
   Serial.begin(9600);
@@ -709,6 +823,18 @@ void send_key_events()
 
 void press_key(Key mappedKey) {
     Keyboard.press(mappedKey.rawKey);
+    if (commandBufferSize>=31){ 
+        commandBufferSize=0;
+    }
+    commandBuffer[commandBufferSize++]=mappedKey.rawKey;
+
+
+    if( mappedKey.rawKey == KEY_ENTER  ||
+    mappedKey.rawKey == KEY_RETURN ) {
+        commandPromptPrinted=false;
+        process_command_buffer();
+        commandBufferSize=0;
+    }
 }
 
 void release_key(Key mappedKey){

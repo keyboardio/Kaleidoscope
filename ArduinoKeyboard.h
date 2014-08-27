@@ -23,6 +23,10 @@ typedef struct {
 
 #include "key_defs.h"
 
+byte commandBuffer[32];
+int commandBufferSize;
+bool commandMode;
+bool commandPromptPrinted;
 
 // Switch status and debouncing
 boolean key_was_pressed (byte keyState);
@@ -32,6 +36,9 @@ boolean key_is_not_pressed (byte keyState);
 boolean key_toggled_off(byte keyState);
 boolean key_toggled_on(byte keyState);
 
+
+// Console related 
+void process_command_buffer();
 
 // EEPROM related
 void save_primary_keymap(byte keymap);
