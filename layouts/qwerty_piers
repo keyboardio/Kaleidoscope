@@ -1,0 +1,5 @@
+#NAME: QWERTY_PIERS
+skip    1 2 3 4 5  skip                 LCtrl  RCtrl 	    skip                  6 7 8 9 0 skip  
+`       Q W E R T  Tab  	            Backspace Space    Return                 Y U I O P =
+PageUp 	A S D F G  Esc                  LShift RShift	    Keymap2_Momentary     H J K L ; '
+PageDn 	Z X C V B  KeymapNext_Momentary LGUI   RAlt 	    KeymapNext_Momentary  N M , . / -
