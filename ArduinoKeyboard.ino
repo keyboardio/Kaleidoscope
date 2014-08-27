@@ -694,10 +694,10 @@ void send_key_events()
         if (key_is_pressed(switchState)) {
           record_key_being_pressed(mappedKey.rawKey);
           if (key_toggled_on (switchState)) {
-            Keyboard.press(mappedKey.rawKey);
+            press_key(mappedKey);
           }
         } else if (key_toggled_off (switchState)) {
-          Keyboard.release(mappedKey.rawKey);
+            release_key(mappedKey);
         }
         }
       }
@@ -705,6 +705,14 @@ void send_key_events()
   }
   handle_mouse_movement(x, y);
   release_keys_not_being_pressed();
+}
+
+void press_key(Key mappedKey) {
+    Keyboard.press(mappedKey.rawKey);
+}
+
+void release_key(Key mappedKey){
+     Keyboard.release(mappedKey.rawKey);
 }
 
 
