@@ -352,6 +352,13 @@ ifdef EXT_C_FLAGS
 endif
 
 # Add extracted variable to compiler flags.
+#
+
+
+ifdef GIT_VERSION
+    EXTRA_FLAGS += -DVERSION=\"$(GIT_VERSION)\"
+endif
+
 ifdef BUILD_BOARD
     EXTRA_FLAGS += -DARDUINO_$(BUILD_BOARD)
 endif

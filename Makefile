@@ -6,7 +6,9 @@ PORT =  /dev/cu.usbmodem1421
 ARDUINO_LIBS = 
 #ARDUINO_CORE_PATH = hardware/keyboardio/cores/keyboardio
 #ALTERNATE_CORE = keyboardio
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 include _Makefile.Master
+
 
 astyle:
 	astyle --style=linux ArduinoKeyboard.ino *.h
