@@ -100,9 +100,9 @@ void scan_matrix()
       //If we see an electrical connection on I->J,
 
       if (digitalRead(colPins[col])) {
-        matrixState[row][col] |= 0; // noop. just here for clarity
+        matrixState[row][col] |= 0; 
       } else {
-        matrixState[row][col] |= 1; // noop. just here for clarity
+        matrixState[row][col] |= 1; 
       }
       // while we're inspecting the electrical matrix, we look
       // to see if the Key being held is a firmware level
