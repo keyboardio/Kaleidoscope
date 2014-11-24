@@ -2,7 +2,7 @@
 
 #define EEPROM_KEYMAP_LOCATION 0
 
-#define MODEL00piersjesse true
+#define MODEL01keytest true
 
 #ifdef MODEL00
 #define COLS 14
@@ -42,6 +42,33 @@ static const byte colPins[COLS] = {
     12,
     A5,
     A4
+
+};
+static const byte rowPins[ROWS] = { A0, A1,A2,A3 };
+
+#endif
+
+#ifdef MODEL01keytest
+#define COLS 16
+#define ROWS 4
+
+static const byte colPins[COLS] = { 
+    1,
+    2,
+    3,
+    4,
+    5, 
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    SCK,
+    MISO,
+    A5,
+    A4,
 
 };
 static const byte rowPins[ROWS] = { A0, A1,A2,A3 };
