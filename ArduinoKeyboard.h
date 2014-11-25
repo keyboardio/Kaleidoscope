@@ -15,26 +15,39 @@ void setup();
 #endif
 
 //add your function definitions for the project KeyboardIO here
-typedef struct {
-  byte flags;
-  byte rawKey;
-} Key;
 
 
+#include <stdio.h>
+#include <math.h>
+#include <avr/wdt.h>
 #include "key_defs.h"
+#include "KeyboardConfig.h"
+
+#include "keymaps_generated.h"
+#include "debouncing.h"
+
+
+//extern int usbMaxPower;
+#define DEBUG_SERIAL 0
+
+
+ byte matrixState[ROWS][COLS];
+
+
+byte charsBeingReported[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
+byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
+
+
+long reporting_counter = 0;
+byte primary_keymap = 0;
+byte active_keymap = 0;
+
+
 
 byte commandBuffer[32];
 int commandBufferSize;
 bool commandMode;
 bool commandPromptPrinted;
-
-// Switch status and debouncing
-boolean key_was_pressed (byte keyState);
-boolean key_was_not_pressed (byte keyState);
-boolean key_is_pressed (byte keyState);
-boolean key_is_not_pressed (byte keyState);
-boolean key_toggled_off(byte keyState);
-boolean key_toggled_on(byte keyState);
 
 
 // Console related 
@@ -82,6 +95,9 @@ void press_key(Key mappedKey);
 void release_key(Key mappedKey);
 
 
+#ifndef VERSION
+#define VERSION "locally-built"
+#endif
 
 //Do not add code below this line
 #endif /* KeyboardIO_H_ */

@@ -1,3 +1,10 @@
+typedef struct {
+  byte flags;
+  byte rawKey;
+} Key;
+
+
+
 #define KEY_FLAGS       B00000000
 #define CTRL_HELD       B00000001
 #define ALT_HELD        B00000010
