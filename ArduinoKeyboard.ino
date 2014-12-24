@@ -18,6 +18,7 @@
 
 #include "ArduinoKeyboard.h"
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
+#include <digitalWriteFast.h>
 
 void setup_matrix()
 {
@@ -70,11 +71,11 @@ void scan_matrix()
 {
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < ROWS; row++) {
-    digitalWrite(rowPins[row], LOW);
+    digitalWriteFast(rowPins[row], LOW);
     for (byte col = 0; col < COLS; col++) {
       //If we see an electrical connection on I->J,
 
-      if (digitalRead(colPins[col])) {
+      if (digitalReadFast(colPins[col])) {
         matrixState[row][col] |= 0; 
       } else {
         matrixState[row][col] |= 1; 
@@ -89,7 +90,7 @@ void scan_matrix()
       set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
 
     }
-    digitalWrite(rowPins[row], HIGH);
+    digitalWriteFast(rowPins[row], HIGH);
   }
 }
 
@@ -468,12 +469,12 @@ void setup_pins()
   //set up the row pins as outputs
   for (byte row = 0; row < ROWS; row++) {
     pinMode(rowPins[row], OUTPUT);
-    digitalWrite(rowPins[row], HIGH);
+    digitalWriteFast(rowPins[row], HIGH);
   }
 
   for (byte col = 0; col < COLS; col++) {
     pinMode(colPins[col], INPUT);
-    digitalWrite(colPins[col], HIGH);
+    digitalWriteFast(colPins[col], HIGH);
     //drive em high by default s it seems to be more reliable than driving em low
 
   }
