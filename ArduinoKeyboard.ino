@@ -18,7 +18,6 @@
 
 #include "ArduinoKeyboard.h"
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
-#include "debouncing.h"
 
 void setup_matrix()
 {
