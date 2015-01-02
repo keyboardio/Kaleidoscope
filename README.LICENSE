@@ -1,0 +1,11 @@
+It is our intent to license the ArduinoKeyboard firmware under 
+the Apache2 license...eventually. Right now, we have GPLv2 code in
+the firmware (specifically, the WS2812 LED driver code).
+
+GPLv2 is incompatible with Apache2, so we have no choice but to provide you a license to this firmware under the terms of Version 2 of the GNU GPL. 
+
+It is our intent to be able to license this source code under the terms of the Apache 2 license once we find a suitable replacement for the WS2812 library.
+
+Jesse Vincent
+<jesse@keyboard.io>
+January 2, 2015
