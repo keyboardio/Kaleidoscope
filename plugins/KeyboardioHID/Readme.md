@@ -44,6 +44,8 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 * [HoodLoader2](https://github.com/NicoHood/HoodLoader2) is a BootLoader for the 16u2 that let's you use it as standalone MCU with the same USB-Core.
 * [HoodLoader1](https://github.com/NicoHood/HoodLoader) is a 16u2 firmware that filters special HW Serial signals from the main MCU and sends HID signals to the USB Host.
 
+See the [wiki](https://github.com/NicoHood/HID/wiki/Features) for more information about features etc.
+
 
 Download
 ========
@@ -105,6 +107,7 @@ Version History
 * used HID_KeyboardReport_Data_t now in Keyboard API
 * Arduino as ISP fix for 328
 * Upload verification on USB hubs fix for HL2.0.4
+* No USB workaround for Leonardo integrated into variants
 
 2.1 Release (28.01.2015)
 * Reworked the whole USB-Core from scratch
