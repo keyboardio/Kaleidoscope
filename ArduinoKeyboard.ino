@@ -466,12 +466,19 @@ void release_key(Key mappedKey){
 // Hardware initialization
 void setup_pins()
 {
+  setup_output_pins();
+
+  setup_input_pins();
+}
+
+void setup_output_pins() {
   //set up the row pins as outputs
   for (byte row = 0; row < ROWS; row++) {
     pinMode(rowPins[row], OUTPUT);
     digitalWriteFast(rowPins[row], HIGH);
   }
-
+}
+void setup_input_pins {
   for (byte col = 0; col < COLS; col++) {
     pinMode(colPins[col], INPUT);
     digitalWriteFast(colPins[col], HIGH);
