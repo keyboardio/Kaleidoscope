@@ -1,8 +1,7 @@
-#define KEYMAPS 2
+#define KEYMAPS 1
 // This is a total waste. we should only ever include any given keymap once
 static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY_PIERS
-	KEYMAP_GENERIC_FN2
 
 
 

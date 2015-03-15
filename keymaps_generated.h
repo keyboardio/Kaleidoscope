@@ -38,17 +38,22 @@
 	{Key_PageUp, Key_A, Key_S, Key_D, Key_F, Key_G, Key_Tab, Key_LGUI, Key_RAlt, Key_Return, Key_H, Key_J, Key_K, Key_L, Key_Semicolon, Key_Quote},\
 	{Key_PageDn, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, Key_RShift, Key_RShift, Key_skip, Key_N, Key_M, Key_Comma, Key_Period, Key_Slash, Key_Minus},\
 },
+#define KEYMAP_SYMMETRIC60_QWERTY { /* Generated keymap for SYMMETRIC60_QWERTY */ 	{Key_Esc, Key_1, Key_2, Key_3, Key_4, Key_5, Key_Minus, Key_Equals, Key_6, Key_7, Key_8, Key_9, Key_0, Key_Backspace},\
+	{Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_LSquareBracket, Key_RSquareBracket, Key_Y, Key_U, Key_I, Key_O, Key_P, Key_Backslash},\
+	{Key_LCtrl, Key_A, Key_S, Key_D, Key_F, Key_G, Key_Return, Key_H, Key_J, Key_K, Key_L, Key_Semicolon, Key_Quote},\
+	{Key_LShift, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Tab, Key_KeymapNext_Momentary, Key_N, Key_M, Key_Comma, Key_Period, Key_Slash, Key_RShift},\
+	{Key_LCtrl, Key_LAlt, Key_LGUI, Key_Backspace, Key_Backspace, Key_KeymapNext_Momentary, Key_Space, Key_Space, Key_RGUI, Key_RAlt, Key_RCtrl},\
+},
 #define KEYMAP_WORKMAN { /* Generated keymap for WORKMAN */ 	{Key_skip, Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_skip},\
 	{Key_Backtick, Key_Q, Key_D, Key_R, Key_W, Key_B, Key_skip, Key_skip, Key_J, Key_F, Key_U, Key_P, Key_Semicolon, Key_Equals},\
 	{Key_PageUp, Key_A, Key_S, Key_H, Key_T, Key_G, Key_Tab, Key_Return, Key_Y, Key_N, Key_E, Key_O, Key_I, Key_Quote},\
 	{Key_PageDn, Key_Z, Key_X, Key_M, Key_C, Key_V, Key_Esc, Key_Keymap0, Key_K, Key_L, Key_Comma, Key_Period, Key_Slash, Key_Minus},\
 	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
-#define KEYMAPS 2
+#define KEYMAPS 1
 // This is a total waste. we should only ever include any given keymap once
 static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY_PIERS
-	KEYMAP_GENERIC_FN2
 
 
 
