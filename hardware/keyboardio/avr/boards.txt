@@ -9,6 +9,7 @@ keyboardio.bootloader.extended_fuses=0xcb
 keyboardio.bootloader.path=caterina
 keyboardio.bootloader.file=Caterina-keyboardio.hex
 keyboardio.bootloader.unlock_bits=0x3F
+keyboardio.bootloader.tool=avrdude
 keyboardio.bootloader.lock_bits=0x2F
 keyboardio.build.mcu=atmega32u4
 keyboardio.build.f_cpu=16000000L
@@ -17,21 +18,34 @@ keyboardio.build.pid=0x8037
 keyboardio.build.core=keyboardio
 keyboardio.build.variant=model00
 
+symmetric60.build.board=AVR_MICRO
 symmetric60.name=Keyboardio Symmetric 60
+
+
+symmetric60.upload.tool=avrdude
 symmetric60.upload.protocol=avr109
 symmetric60.upload.maximum_size=28672
+symmetric60.upload.maximum_data_size=2560
 symmetric60.upload.speed=57600
 symmetric60.upload.disable_flushing=true
+symmetric60.upload.use_1200bps_touch=true
+symmetric60.upload.wait_for_upload_port=true
+
+symmetric60.bootloader.tool=avrdude
 symmetric60.bootloader.low_fuses=0xff
 symmetric60.bootloader.high_fuses=0xd8
 symmetric60.bootloader.extended_fuses=0xcb
-symmetric60.bootloader.path=caterina
-symmetric60.bootloader.file=Caterina-symmetric60.hex
+symmetric60.bootloader.file=caterina/Caterina-Micro.hex
 symmetric60.bootloader.unlock_bits=0x3F
 symmetric60.bootloader.lock_bits=0x2F
+
 symmetric60.build.mcu=atmega32u4
 symmetric60.build.f_cpu=16000000L
 symmetric60.build.vid=0x2341
 symmetric60.build.pid=0x8037
+symmetric60.build.usb_product="Keyboardio Symmetric60"
+symmetric60.build.board=AVR_MICRO
 symmetric60.build.core=keyboardio
 symmetric60.build.variant=symmetric60
+symmetric60.build.extra_flags={build.usb_flags}
+

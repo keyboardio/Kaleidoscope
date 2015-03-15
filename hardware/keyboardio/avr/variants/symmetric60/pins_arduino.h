@@ -93,15 +93,15 @@
 #define NUM_DIGITAL_PINS  30
 #define NUM_ANALOG_INPUTS 12
 
-#define TXLED0                  PORTD &= ~(1<<5)
-#define TXLED1                  PORTD |= (1<<5)
-#define RXLED0                  PORTB &= ~(1<<0)
-#define RXLED1                  PORTB |= (1<<0)
-#define TX_RX_LED_INIT  DDRD |= (1<<5), DDRB |= (1<<0), TXLED0, RXLED0
+#define TXLED0            
+#define TXLED1     
+#define RXLED0      
+#define RXLED1        
+#define TX_RX_LED_INIT  
 
 #define SDA 2
 #define SCL 3
-#define LED_BUILTIN 13
+#define LED_BUILTIN
 
 // Map SPI port to 'new' pins D14..D17
 #define SS   17
@@ -219,9 +219,9 @@ const uint8_t PROGMEM digital_pin_to_port_PGM[] = {
 	PE, // D7 - PE6
 	
 	PB, // D8 - PB4
-	PB,	// D9 - PB5
+	PB,	// D9 - PB5 // this is a change by jesse for the sym60
 	PB, // D10 - PB6
-	PB,	// D11 - PB7
+	PD,	// D11 - PB7 -- changed to D5
 	PD, // D12 - PD6
 	PC, // D13 - PC7
 	
@@ -258,7 +258,7 @@ const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
 	_BV(4), // D8 - PB4
 	_BV(5),	// D9 - PB5
 	_BV(6), // D10 - PB6
-	_BV(7),	// D11 - PB7
+	_BV(5),	// D11 - PB7
 	_BV(6), // D12 - PD6
 	_BV(7), // D13 - PC7
 	
