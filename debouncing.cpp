@@ -6,7 +6,7 @@
 
 boolean key_was_pressed (byte keyState)
 {
-  if ( byte((keyState >> 4)) ^ B00001111 ) {
+  if ( byte((keyState >> 7)) ^ B00000001 ) {
     return false;
   } else {
     return true;
@@ -16,18 +16,16 @@ boolean key_was_pressed (byte keyState)
 
 boolean key_was_not_pressed (byte keyState)
 {
-  if ( byte((keyState >> 4)) ^ B00000000 ) {
-    return false;
-  } else {
-    return true;
-  }
+  
+  return !key_was_pressed(keyState);
+  
 
 }
 
 boolean key_is_pressed (byte keyState)
 {
 
-  if ( byte((keyState << 4)) ^ B11110000 ) {
+  if ( byte((keyState << 7)) ^ B10000000 ) {
     return false;
   } else {
     return true;
@@ -35,12 +33,8 @@ boolean key_is_pressed (byte keyState)
 }
 boolean key_is_not_pressed (byte keyState)
 {
+  return(!key_is_pressed(keyState));
 
-  if ( byte((keyState << 4)) ^ B00000000 ) {
-    return false;
-  } else {
-    return true;
-  }
 }
 
 boolean key_toggled_on(byte keyState)

@@ -3,22 +3,34 @@
 // Copyright 2013 Jesse Vincent <jesse@fsck.com>
 // All Rights Reserved. (To be licensed under an opensource license
 // before the release of the keyboard.io model 01
-
+#define DEBUG_SERIAL false
 
 /**
  *  TODO:
+TEST
+TEST2
+#left IO Expander found at 0x00
 
     add mouse inertia
     add series-of-character macros
     add series of keystroke macros
     use a lower-level USB API
- *
-**/
 
-
+*/
 #include "ArduinoKeyboard.h"
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
-#include <digitalWriteFast.h>
+#include "digitalWriteFast.h"
+#include <Wire.h>
+#include "sx1509_library.h"
+
+
+
+const byte LEFT_SX1509_ADDRESS = 0x70;  // SX1509 I2C address (10)
+const byte RIGHT_SX1509_ADDRESS = 0x71;  // SX1509 I2C address (11)
+sx1509Class leftsx1509(LEFT_SX1509_ADDRESS);
+sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
+
+
 
 void setup_matrix()
 {
@@ -33,7 +45,6 @@ void reset_matrix()
 {
   for (byte col = 0; col < COLS; col++) {
     for (byte row = 0; row < ROWS; row++) {
-      matrixState[row][col] <<= 1;
     }
   }
 }
@@ -70,16 +81,33 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
 void scan_matrix()
 {
   //scan the Keyboard matrix looking for connections
-  for (byte row = 0; row < ROWS; row++) {
-    digitalWriteFast(rowPins[row], LOW);
-    for (byte col = 0; col < COLS; col++) {
+  for (byte row = 0; row < LEFT_ROWS; row++) {
+    leftsx1509.rawWritePin(left_rowpins[row], LOW);
+    rightsx1509.rawWritePin(right_rowpins[row], LOW);
+
+
+    for (byte col = 0; col < LEFT_COLS; col++) {
       //If we see an electrical connection on I->J,
 
-      if (digitalReadFast(colPins[col])) {
-        matrixState[row][col] |= 0; 
+      matrixState[row][col] <<= 1;
+
+      matrixState[row][(COLS-1)-col] <<= 1;
+
+      if (leftsx1509.rawReadPin(left_colpins[col])) {
+        matrixState[row][col] |= 0;
       } else {
-        matrixState[row][col] |= 1; 
+        matrixState[row][col] |= 1;
       }
+
+
+
+      if (rightsx1509.rawReadPin(right_colpins[col])) {
+        matrixState[row][(COLS - 1) - col] |= 0;
+      } else {
+        matrixState[row][(COLS - 1) - col] |= 1;
+      }
+
+
       // while we're inspecting the electrical matrix, we look
       // to see if the Key being held is a firmware level
       // metakey, so we can act on it, lest we only discover
@@ -87,10 +115,14 @@ void scan_matrix()
       // through the matrix scan
 
 
-      set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
+  //    set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
+    //  set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
+
 
     }
-    digitalWriteFast(rowPins[row], HIGH);
+    leftsx1509.rawWritePin(left_rowpins[row], HIGH);
+
+    rightsx1509.rawWritePin(right_rowpins[row], HIGH);
   }
 }
 
@@ -99,124 +131,127 @@ void scan_matrix()
 
 
 void command_reboot_bootloader() {
-    Keyboard.println("Rebooting to bootloader");
-    Serial.end();
+  Keyboard.println("Rebooting to bootloader");
+  Serial.end();
 
 
-    // Set the magic bits to get a Caterina-based device
-    // to reboot into the bootloader and stay there, rather
-    // than run move onward 
-    //
-    // These values are the same as those defined in
-    // Caterina.c
-    
-    uint16_t bootKey = 0x7777;
-    uint16_t *const bootKeyPtr = (uint16_t *)0x0800;
+  // Set the magic bits to get a Caterina-based device
+  // to reboot into the bootloader and stay there, rather
+  // than run move onward
+  //
+  // These values are the same as those defined in
+  // Caterina.c
 
-    // Stash the magic key
-    *bootKeyPtr = bootKey;
+  uint16_t bootKey = 0x7777;
+  uint16_t *const bootKeyPtr = (uint16_t *)0x0800;
 
-    // Set a watchdog timer
-    wdt_enable(WDTO_120MS);
+  // Stash the magic key
+  *bootKeyPtr = bootKey;
 
-    while(1) {} // This infinite loop ensures nothing else
-                // happens before the watchdog reboots us
+  // Set a watchdog timer
+  wdt_enable(WDTO_120MS);
+
+  while (1) {} // This infinite loop ensures nothing else
+  // happens before the watchdog reboots us
 }
 
 void command_plugh() {
-     commandMode = !commandMode;
-    if (commandMode) {
-        Keyboard.println("");
-        Keyboard.println("Entering command mode!");
+  commandMode = !commandMode;
+  if (commandMode) {
+    Keyboard.println("");
+    Keyboard.println("Entering command mode!");
 
-    } else {
-        Keyboard.println("Leaving command mode!");
-        Keyboard.println("");
-        }
+  } else {
+    Keyboard.println("Leaving command mode!");
+    Keyboard.println("");
   }
+}
 
 void setup_command_mode() {
-    commandBufferSize=0;
-    commandMode = false;
-    commandPromptPrinted = false;
+  commandBufferSize = 0;
+  commandMode = false;
+  commandPromptPrinted = false;
 }
 boolean command_ends_in_return() {
   if (
-  commandBuffer[commandBufferSize-1] == KEY_ENTER ||
-  commandBuffer[commandBufferSize-1] == KEY_RETURN ) {
-  return true;
+    commandBuffer[commandBufferSize - 1] == KEY_ENTER ||
+    commandBuffer[commandBufferSize - 1] == KEY_RETURN ) {
+    return true;
   } else {
-  return false;
+    return false;
   }
 }
 
 boolean is_command_buffer(byte* myCommand) {
-    if (!command_ends_in_return()) {
+  if (!command_ends_in_return()) {
     return false;
+  }
+  int i = 0;
+  do {
+    if (commandBuffer[i] != myCommand[i]) {
+      return false;
     }
-    int i = 0;
-    do {
-        if (commandBuffer[i] != myCommand[i]) {
-            return false;
-        }
-    } while (myCommand[++i] != NULL);
-    return true;
+  } while (myCommand[++i] != NULL);
+  return true;
 }
 
 
-void process_command_buffer(){
+void process_command_buffer() {
   if (!command_ends_in_return()) {
-  return;
+    return;
   }
 
 
 
-  // This is the only command we might want to execute when 
-  // we're not in command mode, as it's the only way to toggle 
+  // This is the only command we might want to execute when
+  // we're not in command mode, as it's the only way to toggle
   // command mode on
-  static byte cmd_plugh[] = {KEY_P,KEY_L,KEY_U,KEY_G,KEY_H,NULL};
+  static byte cmd_plugh[] = {KEY_P, KEY_L, KEY_U, KEY_G, KEY_H, NULL};
   if (is_command_buffer(cmd_plugh)) {
-     command_plugh();
+    command_plugh();
   }
 
   // if we've toggled command mode off, get out of here.
   if (!commandMode) {
-    commandBufferSize=0;
-    return; 
+    commandBufferSize = 0;
+    return;
   }
-  
-    // Handle all the other commands here
-    static byte cmd_reboot_bootloader[] = { KEY_B, KEY_O, KEY_O, KEY_T, KEY_L, KEY_O, KEY_A, KEY_D, KEY_E, KEY_R, NULL};
-    static byte cmd_version[] = { KEY_V, KEY_E, KEY_R, KEY_S, KEY_I, KEY_O, KEY_N, NULL};
 
-    if(is_command_buffer(cmd_reboot_bootloader)) {
-        command_reboot_bootloader();
-    } else if (is_command_buffer(cmd_version)) {
-        Keyboard.println("");
-        Keyboard.print("This is Keyboardio Firmware ");
-        Keyboard.println(VERSION);
-    }
+  // Handle all the other commands here
+  static byte cmd_reboot_bootloader[] = { KEY_B, KEY_O, KEY_O, KEY_T, KEY_L, KEY_O, KEY_A, KEY_D, KEY_E, KEY_R, NULL};
+  static byte cmd_version[] = { KEY_V, KEY_E, KEY_R, KEY_S, KEY_I, KEY_O, KEY_N, NULL};
+
+  if (is_command_buffer(cmd_reboot_bootloader)) {
+    command_reboot_bootloader();
+  } else if (is_command_buffer(cmd_version)) {
+    Keyboard.println("");
+    Keyboard.print("This is Keyboardio Firmware ");
+    Keyboard.println(VERSION);
+  }
 
 
-   if (!commandPromptPrinted ){
+  if (!commandPromptPrinted ) {
     Keyboard.print(">>> ");
     commandPromptPrinted = true;
-    commandBufferSize=0;
+    commandBufferSize = 0;
   }
 }
 
 
 void setup()
 {
-   wdt_disable();
-
+  wdt_disable();
+  delay(5000);
+  Serial.begin(9600);
   //usbMaxPower = 100;
   Keyboard.begin();
   Mouse.begin();
+  setup_leds();
+  update_leds();
   setup_command_mode();
   setup_matrix();
   setup_pins();
-  Serial.begin(9600);
+
   primary_keymap = load_primary_keymap();
 }
 
@@ -224,14 +259,13 @@ String myApp;
 
 void loop()
 {
-  if(Serial.available()) {
-   myApp = Serial.readString(); 
-   myApp.trim();
-  }
+  // if(Serial.available()) {
+  // myApp = Serial.readString();
+  // myApp.trim();
+  // }
   active_keymap = primary_keymap;
   scan_matrix();
   send_key_events();
-  reset_matrix();
   reset_key_report();
 }
 
@@ -348,10 +382,9 @@ void record_key_being_pressed(byte character)
 
 void reset_key_report()
 {
-  for (byte i = 0; i < KEYS_HELD_BUFFER; i++) {
-    charsReportedLastTime[i] = charsBeingReported[i];
-    charsBeingReported[i] = 0x00;
-  }
+    memcpy( charsReportedLastTime,charsBeingReported, KEYS_HELD_BUFFER);
+    memset(charsBeingReported,0,KEYS_HELD_BUFFER);
+    
 }
 
 
@@ -419,21 +452,21 @@ void send_key_events()
       }
       else {
         if (String("Slack") == myApp) {
-            if (key_is_pressed(switchState)) {
-                record_key_being_pressed(mappedKey.rawKey);
+          if (key_is_pressed(switchState)) {
+            record_key_being_pressed(mappedKey.rawKey);
             if (key_toggled_on (switchState)) {
-                Keyboard.print("Never gonna give you up!");
+              Keyboard.print("Never gonna give you up!");
             }
-            }
-        } else {
-        if (key_is_pressed(switchState)) {
-          record_key_being_pressed(mappedKey.rawKey);
-          if (key_toggled_on (switchState)) {
-            press_key(mappedKey);
           }
-        } else if (key_toggled_off (switchState)) {
+        } else {
+          if (key_is_pressed(switchState)) {
+            record_key_being_pressed(mappedKey.rawKey);
+            if (key_toggled_on (switchState)) {
+              press_key(mappedKey);
+            }
+          } else if (key_toggled_off (switchState)) {
             release_key(mappedKey);
-        }
+          }
         }
       }
     }
@@ -443,47 +476,71 @@ void send_key_events()
 }
 
 void press_key(Key mappedKey) {
-    Keyboard.press(mappedKey.rawKey);
-    if (commandBufferSize>=31){ 
-        commandBufferSize=0;
-    }
-    commandBuffer[commandBufferSize++]=mappedKey.rawKey;
+  Keyboard.press(mappedKey.rawKey);
+  if (commandBufferSize >= 31) {
+    commandBufferSize = 0;
+  }
+  commandBuffer[commandBufferSize++] = mappedKey.rawKey;
 
 
-    if( mappedKey.rawKey == KEY_ENTER  ||
-    mappedKey.rawKey == KEY_RETURN ) {
-        commandPromptPrinted=false;
-        process_command_buffer();
-        commandBufferSize=0;
-    }
-}
-
-void release_key(Key mappedKey){
-     Keyboard.release(mappedKey.rawKey);
-}
-
-
-// Hardware initialization
-void setup_pins()
-{
-  setup_output_pins();
-
-  setup_input_pins();
-}
-
-void setup_output_pins() {
-  //set up the row pins as outputs
-  for (byte row = 0; row < ROWS; row++) {
-    pinMode(rowPins[row], OUTPUT);
-    digitalWriteFast(rowPins[row], HIGH);
+  if ( mappedKey.rawKey == KEY_ENTER  ||
+       mappedKey.rawKey == KEY_RETURN ) {
+    commandPromptPrinted = false;
+    process_command_buffer();
+    commandBufferSize = 0;
   }
 }
-void setup_input_pins {
-  for (byte col = 0; col < COLS; col++) {
-    pinMode(colPins[col], INPUT);
-    digitalWriteFast(colPins[col], HIGH);
-    //drive em high by default s it seems to be more reliable than driving em low
+
+void release_key(Key mappedKey) {
+  Keyboard.release(mappedKey.rawKey);
+}
+
+
+
+void make_input(sx1509Class sx1509, int pin) {
+  sx1509.pinDir(pin, INPUT);  // Set SX1509 pin 1 as an input
+  sx1509.writePin(pin, HIGH);  // Activate pull-up
+
+
+}
+
+void make_output(sx1509Class sx1509, int pin) {
+  sx1509.pinDir(pin, OUTPUT);
+  sx1509.writePin(pin, HIGH);
+
+}
+
+
+void setup_pins() {
+  if (rightsx1509.init()) { // init ok
+
+    for (int i = 0; i < RIGHT_ROWS; i++) {
+      make_output(rightsx1509, right_rowpins[i]);
+    }
+
+    for (int j = 0; j < RIGHT_COLS; j++) {
+      make_input(rightsx1509, right_colpins[j]);
+    }
+
 
   }
+
+  if (leftsx1509.init()) { // init ok
+
+
+    for (int i = 0; i < LEFT_ROWS; i++) {
+      make_output(leftsx1509, left_rowpins[i]);
+    }
+
+    for (int j = 0; j < LEFT_COLS; j++) {
+      make_input(leftsx1509, left_colpins[j]);
+    }
+
+
+  }
+
+
+
+
 }
 

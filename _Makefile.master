@@ -700,4 +700,4 @@ upload_monitor : upload monitor
 
 upmonitor: upload_monitor
 
--include $(wildcard $(BUILD_DIR)/.*.dep))
+#-include $(wildcard $(BUILD_DIR)/.*.dep))

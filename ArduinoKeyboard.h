@@ -1,6 +1,6 @@
 #ifndef KeyboardIO_H_
 #define KeyboardIO_H_
-#include "Arduino.h"
+#include <Arduino.h>
 //add your includes for the project KeyboardIO here
 #include <EEPROM.h>
 
@@ -25,14 +25,13 @@ void setup();
 
 #include "keymaps_generated.h"
 #include "debouncing.h"
-
+#include "led_control.h"
 
 //extern int usbMaxPower;
 #define DEBUG_SERIAL 0
 
 
- byte matrixState[ROWS][COLS];
-
+byte matrixState[ROWS][COLS];
 
 byte charsBeingReported[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
 byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys we might conceivably be holding down
@@ -73,6 +72,8 @@ void warp_mouse(Key key);
 
 // hardware keymap interaction
 void setup_pins();
+void setup_input_pins();
+void setup_output_pins();
 void scan_matrix();
 
 // key matrix
