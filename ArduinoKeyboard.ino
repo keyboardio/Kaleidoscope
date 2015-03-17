@@ -293,18 +293,6 @@ void loop()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 void save_primary_keymap(byte keymap)
 {
   EEPROM.write(EEPROM_KEYMAP_LOCATION, keymap);
