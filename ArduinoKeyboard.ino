@@ -77,6 +77,8 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
 
 void scan_matrix()
 {
+  x=0;
+  y=0;
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < LEFT_ROWS; row++) {
     TS("Scanning row ")
@@ -143,6 +145,7 @@ void scan_matrix()
     Keyboard.sendCurrentReport();
     TS("clearing internal key report")
     reset_key_report();
+    handle_mouse_movement(x, y);
 }
 
 // Command mode
@@ -470,6 +473,7 @@ void send_key_event(byte row, byte col)
             release_key(mappedKey);
           }
         
+      }
       }
 }
 

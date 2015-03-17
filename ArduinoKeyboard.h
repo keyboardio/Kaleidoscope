@@ -33,6 +33,8 @@ void setup();
 //extern int usbMaxPower;
 #define DEBUG_SERIAL 0
 
+char x;
+char y;
 
 byte matrixState[ROWS][COLS];
 
