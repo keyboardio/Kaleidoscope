@@ -517,8 +517,8 @@ unsigned int sx1509Class::readWord(byte registerAddress)
 
 	Wire.beginTransmission(deviceAddress);
 	Wire.write(registerAddress);
-	Wire.endTransmission();
-	Wire.requestFrom(deviceAddress, (byte) 2);
+	Wire.endTransmission(true);
+	Wire.requestFrom(deviceAddress, (uint8_t) 2, (uint8_t)true);
 
 	while ((Wire.available() < 2) && (timeout != 0))
 		timeout--;
