@@ -86,10 +86,20 @@ void scan_matrix()
 {
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < LEFT_ROWS; row++) {
-    leftsx1509.rawWritePin(left_rowpins[row], LOW);
-    rightsx1509.rawWritePin(right_rowpins[row], LOW);
+    TS("Scanning row ")
+    if (left_initted) {
+        leftsx1509.updatePinState(left_rowpins[row], LOW);
+        leftsx1509.sendPinStates();
+        leftsx1509.fetchPinStates();
+    }
+    if (right_initted) {
+      rightsx1509.updatePinState(right_rowpins[row], LOW);
+        rightsx1509.sendPinStates();
+          rightsx1509.fetchPinStates();
 
+    }
 
+    
     for (byte col = 0; col < LEFT_COLS; col++) {
       TS("Scanning col")
       //If we see an electrical connection on I->J,
@@ -98,17 +108,15 @@ void scan_matrix()
 
       matrixState[row][(COLS-1)-col] <<= 1;
 
-      if (leftsx1509.rawReadPin(left_colpins[col])) {
       TS("Reading left pin")
+      if (left_initted && leftsx1509.readPrefetchedPin(left_colpins[col])) {
         matrixState[row][col] |= 0;
       } else {
         matrixState[row][col] |= 1;
       }
 
-
-
-      if (rightsx1509.rawReadPin(right_colpins[col])) {
       TS("Reading right pin")
+      if (right_initted && rightsx1509.readPrefetchedPin(right_colpins[col])) {
         matrixState[row][(COLS - 1) - col] |= 0;
       } else {
         matrixState[row][(COLS - 1) - col] |= 1;
@@ -127,10 +135,16 @@ void scan_matrix()
 
 
     }
-    leftsx1509.rawWritePin(left_rowpins[row], HIGH);
-
-    rightsx1509.rawWritePin(right_rowpins[row], HIGH);
+    TS("clearing output pins")
+    if (left_initted)
+      leftsx1509.updatePinState(left_rowpins[row], HIGH);
+    if (right_initted)
+      rightsx1509.updatePinState(right_rowpins[row], HIGH);
   }
+    TS("Releasing keys not being pressed")
+    release_keys_not_being_pressed();
+    TS("Sending key report");
+    Keyboard.sendCurrentReport();
 }
 
 // Command mode
@@ -258,6 +272,7 @@ void setup()
   setup_command_mode();
   setup_matrix();
   setup_pins();
+        rightsx1509.fetchPinStates();
 
   primary_keymap = load_primary_keymap();
 }
