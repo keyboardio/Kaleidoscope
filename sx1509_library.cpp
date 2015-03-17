@@ -468,9 +468,8 @@ byte sx1509Class::readByte(byte registerAddress)
 	if (timeout == 0)
 		return 0;
 
-	readValue = Wire.read();
+	return Wire.read();
 
-	return readValue;
 }
 
 // readWord(byte registerAddress)
@@ -480,8 +479,6 @@ byte sx1509Class::readByte(byte registerAddress)
 //		- The lsb of the return value will contain the value read from registerAddress + 1
 unsigned int sx1509Class::readWord(byte registerAddress)
 {
-	unsigned int readValue;
-	unsigned int msb, lsb;
 	unsigned int timeout = RECEIVE_TIMEOUT_VALUE * 2;
 
 	Wire.beginTransmission(deviceAddress);
@@ -495,11 +492,7 @@ unsigned int sx1509Class::readWord(byte registerAddress)
 	if (timeout == 0)
 		return 0;
 	
-	msb = (Wire.read() & 0x00FF) << 8;
-	lsb = (Wire.read() & 0x00FF);
-	readValue = msb | lsb;
-
-	return readValue;
+	return  ((Wire.read() & 0x00FF) << 8 | (Wire.read() & 0x00FF));
 }
 
 // readBytes(byte firstRegisterAddress, byte * destination, byte length)
