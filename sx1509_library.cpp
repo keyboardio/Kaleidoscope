@@ -152,6 +152,34 @@ byte sx1509Class::rawReadPin(byte pin)
 		return (readWord(REG_DATA_B) & (1<<pin));
 }
 
+
+
+void sx1509Class::fetchPinStates() {
+    pinData = readWord(REG_DATA_B);  
+    
+}
+void sx1509Class::sendPinStates() {
+   writeWord(REG_DATA_B,pinData);  
+    
+}
+
+
+
+byte sx1509Class::readPrefetchedPin(byte pin) {
+   return (pinData & (1 << pin)); 
+}
+
+void sx1509Class::updatePinState(byte pin, byte highLow)
+{
+		if (highLow)	
+                    pinData =  pinData | (1 <<pin);
+		else
+		    pinData = pinData & ~(1<<pin);
+}
+
+
+
+
 byte sx1509Class::readPin(byte pin)
 {
 	

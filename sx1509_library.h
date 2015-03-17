@@ -44,6 +44,9 @@ private:	// These private functions are not available to Arduino sketches.
 			// If you need to read or write directly to registers, consider
 			// putting the writeByte, readByte functions in the public section
 	uint8_t deviceAddress; // I2C Address of SX1509
+
+        unsigned int pinData; // used for the keyboardio hacks to do fewer i2c calls
+
 // Pin definitions:
 	byte pinInterrupt;
 	byte pinOscillator;
@@ -134,7 +137,11 @@ public:
 // -----------------------------------------------------------------------------
 	byte readPin(byte pin);
 	byte rawReadPin(byte pin);
-	
+	void fetchPinStates(void);
+        void sendPinStates(void);
+        byte readPrefetchedPin(byte pin);
+        void updatePinState(byte pin, byte highLow);
+
 // -----------------------------------------------------------------------------
 // ledDriverInit(byte pin, byte freq, bool log): This function initializes LED 
 //		driving on a pin. It must be called if you want to use the pwm or blink 
