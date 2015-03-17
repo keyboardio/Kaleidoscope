@@ -330,7 +330,7 @@ public:
 //		- ClkX = fOSC / (2^(RegMisc[6:4] -1))
 //		- This value defaults to 1.
 // -----------------------------------------------------------------------------
-	void configClock(byte oscSource = 2, byte oscPinFunction = 0, 
+	void configClock(byte oscSource = INTERNAL_CLOCK, byte oscPinFunction = 0, 
 					 byte oscFreqOut = 0, byte oscDivider = 1);
 };
 
