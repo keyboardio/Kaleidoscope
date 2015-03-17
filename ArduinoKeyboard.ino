@@ -30,6 +30,7 @@ const byte RIGHT_SX1509_ADDRESS = 0x71;  // SX1509 I2C address (11)
 sx1509Class leftsx1509(LEFT_SX1509_ADDRESS);
 sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
 
+#define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
 
 void setup_matrix()
@@ -87,6 +88,7 @@ void scan_matrix()
 
 
     for (byte col = 0; col < LEFT_COLS; col++) {
+      TS("Scanning col")
       //If we see an electrical connection on I->J,
 
       matrixState[row][col] <<= 1;
@@ -94,6 +96,7 @@ void scan_matrix()
       matrixState[row][(COLS-1)-col] <<= 1;
 
       if (leftsx1509.rawReadPin(left_colpins[col])) {
+      TS("Reading left pin")
         matrixState[row][col] |= 0;
       } else {
         matrixState[row][col] |= 1;
@@ -102,6 +105,7 @@ void scan_matrix()
 
 
       if (rightsx1509.rawReadPin(right_colpins[col])) {
+      TS("Reading right pin")
         matrixState[row][(COLS - 1) - col] |= 0;
       } else {
         matrixState[row][(COLS - 1) - col] |= 1;
@@ -263,6 +267,8 @@ void loop()
   // myApp = Serial.readString();
   // myApp.trim();
   // }
+  TS("A noop takes...")
+  TS("about to scan the matrix")
   active_keymap = primary_keymap;
   scan_matrix();
   send_key_events();
