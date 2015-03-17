@@ -26,6 +26,9 @@ void setup();
 #include "keymaps_generated.h"
 #include "debouncing.h"
 #include "led_control.h"
+#include "digitalWriteFast.h"
+#include <Wire.h>
+#include "sx1509_library.h"
 
 //extern int usbMaxPower;
 #define DEBUG_SERIAL 0
@@ -95,6 +98,7 @@ void send_key_events();
 void press_key(Key mappedKey);
 void release_key(Key mappedKey);
 
+int setup_sx1509(sx1509Class sx1509, int colpins[], int rowpins[]);
 
 #ifndef VERSION
 #define VERSION "locally-built"

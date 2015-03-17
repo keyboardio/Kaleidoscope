@@ -30,6 +30,9 @@ const byte RIGHT_SX1509_ADDRESS = 0x71;  // SX1509 I2C address (11)
 sx1509Class leftsx1509(LEFT_SX1509_ADDRESS);
 sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
 
+  int right_initted = 0;
+  int left_initted =0;
+
 #define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
 
@@ -518,35 +521,54 @@ void make_output(sx1509Class sx1509, int pin) {
 
 
 void setup_pins() {
-  if (rightsx1509.init()) { // init ok
-
-    for (int i = 0; i < RIGHT_ROWS; i++) {
-      make_output(rightsx1509, right_rowpins[i]);
-    }
-
-    for (int j = 0; j < RIGHT_COLS; j++) {
-      make_input(rightsx1509, right_colpins[j]);
-    }
+  right_initted= setup_sx1509(rightsx1509, right_colpins, right_rowpins);
+  left_initted= setup_sx1509(leftsx1509, left_colpins, left_rowpins);
+  
+}
 
 
+int setup_sx1509 (sx1509Class sx1509, int colpins[], int rowpins[]) {
+  byte initted;
+  
+   for(int counter = 0; counter< 10;counter++) {
+     initted = sx1509.init();
+     
+    if (initted)
+        break; 
   }
 
-  if (leftsx1509.init()) { // init ok
+  if (initted) { // init ok
+  // In order to use the keypad, the clock must first be
+  // configured. We can call configureClock() with the default
+  // parameters (2MHz internal oscillator, no clock in/out).
+  sx1509.configClock();
 
+
+  
+   // the debounceConfig function sets the debounce time. This
+  //  function's parameter should be a 3-bit value. 
+  // 0: 0.5ms * 2MHz/fOSC
+  // 1: 1ms * 2MHz/fOSC
+  // 2: 2ms * 2MHz/fOSC
+  // 3: 4ms * 2MHz/fOSC
+  // 4: 8ms * 2MHz/fOSC
+  // 5: 16ms * 2MHz/fOSC
+  // 6: 32ms * 2MHz/fOSC
+  // 7: 64ms * 2MHz/fOSC
+  sx1509.debounceConfig(4);  // maximum debuonce time
+  
 
     for (int i = 0; i < LEFT_ROWS; i++) {
-      make_output(leftsx1509, left_rowpins[i]);
+      make_output(sx1509, rowpins[i]);
     }
 
     for (int j = 0; j < LEFT_COLS; j++) {
-      make_input(leftsx1509, left_colpins[j]);
+      make_input(sx1509, colpins[j]);
+      sx1509.debounceEnable(colpins[j]);
     }
 
 
   }
-
-
-
+  return initted;
 
 }
-
