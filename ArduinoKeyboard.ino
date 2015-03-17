@@ -45,14 +45,6 @@ void setup_matrix()
     }
   }
 }
-void reset_matrix()
-{
-  for (byte col = 0; col < COLS; col++) {
-    for (byte row = 0; row < ROWS; row++) {
-    }
-  }
-}
-
 
 
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
