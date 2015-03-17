@@ -140,6 +140,8 @@ void scan_matrix()
     release_keys_not_being_pressed();
     TS("Sending key report");
     Keyboard.sendCurrentReport();
+    TS("clearing internal key report")
+    reset_key_report();
 }
 
 // Command mode
@@ -284,7 +286,6 @@ void loop()
   TS("about to scan the matrix")
   active_keymap = primary_keymap;
   scan_matrix();
-  reset_key_report();
   TS("updating LEDs");
   update_leds();
 }
