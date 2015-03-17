@@ -122,9 +122,8 @@ void scan_matrix()
       // through the matrix scan
 
 
-  //    set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
-    //  set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
-
+      set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
+      set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
       TS("calling send_key_event")
       send_key_event(row, col);
       if(right_initted) 
