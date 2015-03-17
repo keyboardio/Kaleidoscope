@@ -285,6 +285,8 @@ void loop()
   active_keymap = primary_keymap;
   scan_matrix();
   reset_key_report();
+  TS("updating LEDs");
+  update_leds();
 }
 
 
