@@ -378,11 +378,8 @@ void release_keys_not_being_pressed()
           break;
         }
       }
-    }
-  }
-  for (byte i = 0; i < KEYS_HELD_BUFFER; i++) {
-    if (charsReportedLastTime[i] != 0x00) {
       Keyboard.release(charsReportedLastTime[i]);
+
     }
   }
 }
