@@ -488,7 +488,6 @@ void sx1509Class::configClock(byte oscSource, byte oscPinFunction, byte oscFreqO
 //		- Currently returns 0 if communication has timed out
 byte sx1509Class::readByte(byte registerAddress)
 {
-	byte readValue;
 	unsigned int timeout = RECEIVE_TIMEOUT_VALUE;
 
 	Wire.beginTransmission(deviceAddress);
