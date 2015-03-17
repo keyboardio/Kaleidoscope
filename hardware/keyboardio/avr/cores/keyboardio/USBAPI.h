@@ -233,6 +233,7 @@ public:
 	virtual void releaseAll(void);
 	virtual size_t systemControl(uint8_t k);
     virtual size_t consumerControl(uint8_t k);
+    void sendCurrentReport(void);
 };
 extern Keyboard_ Keyboard;
 

@@ -554,7 +554,6 @@ uint8_t USBPutChar(uint8_t c);
     if (!addKeycodeToReport(k)) {
         return 0;
     }
-	sendReport(&_keyReport);
  }
 
  size_t Keyboard_::addKeycodeToReport(uint8_t k)
@@ -700,7 +699,6 @@ size_t Keyboard_::releaseKeycode(uint8_t k)
 	if (!removeKeycodeFromReport(k)) {
 		return 0;
 	}
-	sendReport(&_keyReport);
 }
 
 size_t Keyboard_::removeKeycodeFromReport(uint8_t k)
@@ -781,6 +779,10 @@ size_t Keyboard_::release(uint8_t k)
 void Keyboard_::releaseAll(void)
 {
     memset(&_keyReport, 0x00, sizeof(_keyReport));
+    sendCurrentReport();
+}
+
+void Keyboard_::sendCurrentReport(void) {
 	sendReport(&_keyReport);
 }
 
