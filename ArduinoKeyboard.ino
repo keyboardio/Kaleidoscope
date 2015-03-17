@@ -255,7 +255,7 @@ void setup()
 {
   wdt_disable();
   delay(5000);
-  Serial.begin(9600);
+  Serial.begin(115200);
   //usbMaxPower = 100;
   Keyboard.begin();
   Mouse.begin();
