@@ -38,6 +38,7 @@ sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
 
 void setup_matrix()
 {
+  reset_key_report();
   //blank out the matrix.
   for (byte col = 0; col < COLS; col++) {
     for (byte row = 0; row < ROWS; row++) {
