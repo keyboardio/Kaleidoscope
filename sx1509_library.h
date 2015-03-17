@@ -43,7 +43,7 @@ class sx1509Class
 private:	// These private functions are not available to Arduino sketches.
 			// If you need to read or write directly to registers, consider
 			// putting the writeByte, readByte functions in the public section
-	byte deviceAddress; // I2C Address of SX1509
+	uint8_t deviceAddress; // I2C Address of SX1509
 // Pin definitions:
 	byte pinInterrupt;
 	byte pinOscillator;

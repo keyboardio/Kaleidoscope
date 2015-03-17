@@ -31,7 +31,7 @@
 sx1509Class::sx1509Class(byte address, byte resetPin, byte interruptPin, byte oscillatorPin)
 {
 	// Store the received parameters into member variables
-	deviceAddress =  address;
+	deviceAddress =  (uint8_t)address;
 	pinInterrupt = interruptPin;
 	pinOscillator = oscillatorPin;
 	pinReset = resetPin;
