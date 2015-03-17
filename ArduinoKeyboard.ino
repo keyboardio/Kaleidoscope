@@ -30,8 +30,8 @@ const byte RIGHT_SX1509_ADDRESS = 0x71;  // SX1509 I2C address (11)
 sx1509Class leftsx1509(LEFT_SX1509_ADDRESS);
 sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
 
-  int right_initted = 0;
-  int left_initted =0;
+int right_initted = 0;
+int left_initted = 0;
 
 #define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
@@ -77,31 +77,31 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
 
 void scan_matrix()
 {
-  x=0;
-  y=0;
+  x = 0;
+  y = 0;
   //scan the Keyboard matrix looking for connections
   for (byte row = 0; row < LEFT_ROWS; row++) {
     TS("Scanning row ")
     if (left_initted) {
-        leftsx1509.updatePinState(left_rowpins[row], LOW);
-        leftsx1509.sendPinStates();
-        leftsx1509.fetchPinStates();
+      leftsx1509.updatePinState(left_rowpins[row], LOW);
+      leftsx1509.sendPinStates();
+      leftsx1509.fetchPinStates();
     }
     if (right_initted) {
       rightsx1509.updatePinState(right_rowpins[row], LOW);
-        rightsx1509.sendPinStates();
-          rightsx1509.fetchPinStates();
+      rightsx1509.sendPinStates();
+      rightsx1509.fetchPinStates();
 
     }
 
-    
+
     for (byte col = 0; col < LEFT_COLS; col++) {
       TS("Scanning col")
       //If we see an electrical connection on I->J,
 
       matrixState[row][col] <<= 1;
 
-      matrixState[row][(COLS-1)-col] <<= 1;
+      matrixState[row][(COLS - 1) - col] <<= 1;
 
       TS("Reading left pin")
       if (left_initted && leftsx1509.readPrefetchedPin(left_colpins[col])) {
@@ -129,8 +129,8 @@ void scan_matrix()
       set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
       TS("calling send_key_event")
       send_key_event(row, col);
-      if(right_initted) 
-        send_key_event(row, (COLS-1)-col);
+      if (right_initted)
+        send_key_event(row, (COLS - 1) - col);
 
     }
     TS("clearing output pins")
@@ -139,13 +139,13 @@ void scan_matrix()
     if (right_initted)
       rightsx1509.updatePinState(right_rowpins[row], HIGH);
   }
-    TS("Releasing keys not being pressed")
-    release_keys_not_being_pressed();
-    TS("Sending key report");
-    Keyboard.sendCurrentReport();
-    TS("clearing internal key report")
-    reset_key_report();
-    handle_mouse_movement(x, y);
+  TS("Releasing keys not being pressed")
+  release_keys_not_being_pressed();
+  TS("Sending key report");
+  Keyboard.sendCurrentReport();
+  TS("clearing internal key report")
+  reset_key_report();
+  handle_mouse_movement(x, y);
 }
 
 // Command mode
@@ -273,7 +273,7 @@ void setup()
   setup_command_mode();
   setup_matrix();
   setup_pins();
-        rightsx1509.fetchPinStates();
+  rightsx1509.fetchPinStates();
 
   primary_keymap = load_primary_keymap();
 }
@@ -392,9 +392,9 @@ void record_key_being_pressed(byte character)
 
 void reset_key_report()
 {
-    memcpy( charsReportedLastTime,charsBeingReported, KEYS_HELD_BUFFER);
-    memset(charsBeingReported,0,KEYS_HELD_BUFFER);
-    
+  memcpy( charsReportedLastTime, charsBeingReported, KEYS_HELD_BUFFER);
+  memset(charsBeingReported, 0, KEYS_HELD_BUFFER);
+
 }
 
 
@@ -439,42 +439,42 @@ void send_key_event(byte row, byte col)
   // TODO:switch to sending raw HID packets
 
   // really, these are signed small ints
-  
-      byte switchState = matrixState[row][col];
-      Key mappedKey = keymaps[active_keymap][row][col];
 
-      if (mappedKey.flags & MOUSE_KEY ) {
-        if (mappedKey.rawKey & MOUSE_WARP) {
-          if (key_toggled_on(switchState)) {
-            warp_mouse(mappedKey);
-          }
-        } else {
-          handle_mouse_key_press(switchState, mappedKey, x, y);
+  byte switchState = matrixState[row][col];
+  Key mappedKey = keymaps[active_keymap][row][col];
+
+  if (mappedKey.flags & MOUSE_KEY ) {
+    if (mappedKey.rawKey & MOUSE_WARP) {
+      if (key_toggled_on(switchState)) {
+        warp_mouse(mappedKey);
+      }
+    } else {
+      handle_mouse_key_press(switchState, mappedKey, x, y);
+    }
+
+  } else if (mappedKey.flags & SYNTHETIC_KEY) {
+    handle_synthetic_key_press(switchState, mappedKey);
+  }
+  else {
+    if (String("Slack") == myApp) {
+      if (key_is_pressed(switchState)) {
+        record_key_being_pressed(mappedKey.rawKey);
+        if (key_toggled_on (switchState)) {
+          Keyboard.print("Never gonna give you up!");
         }
+      }
+    } else {
+      if (key_is_pressed(switchState)) {
+        record_key_being_pressed(mappedKey.rawKey);
+        if (key_toggled_on (switchState)) {
+          press_key(mappedKey);
+        }
+      } else if (key_toggled_off (switchState)) {
+        release_key(mappedKey);
+      }
 
-      } else if (mappedKey.flags & SYNTHETIC_KEY) {
-        handle_synthetic_key_press(switchState, mappedKey);
-      }
-      else {
-        if (String("Slack") == myApp) {
-          if (key_is_pressed(switchState)) {
-            record_key_being_pressed(mappedKey.rawKey);
-            if (key_toggled_on (switchState)) {
-              Keyboard.print("Never gonna give you up!");
-            }
-          }
-        } else {
-          if (key_is_pressed(switchState)) {
-            record_key_being_pressed(mappedKey.rawKey);
-            if (key_toggled_on (switchState)) {
-              press_key(mappedKey);
-            }
-          } else if (key_toggled_off (switchState)) {
-            release_key(mappedKey);
-          }
-        
-      }
-      }
+    }
+  }
 }
 
 void press_key(Key mappedKey) {
@@ -514,42 +514,42 @@ void make_output(sx1509Class sx1509, int pin) {
 
 
 void setup_pins() {
-  right_initted= setup_sx1509(rightsx1509, right_colpins, right_rowpins);
-  left_initted= setup_sx1509(leftsx1509, left_colpins, left_rowpins);
-  
+  right_initted = setup_sx1509(rightsx1509, right_colpins, right_rowpins);
+  left_initted = setup_sx1509(leftsx1509, left_colpins, left_rowpins);
+
 }
 
 
 int setup_sx1509 (sx1509Class sx1509, int colpins[], int rowpins[]) {
   byte initted;
-  
-   for(int counter = 0; counter< 10;counter++) {
-     initted = sx1509.init();
-     
+
+  for (int counter = 0; counter < 10; counter++) {
+    initted = sx1509.init();
+
     if (initted)
-        break; 
+      break;
   }
 
   if (initted) { // init ok
-  // In order to use the keypad, the clock must first be
-  // configured. We can call configureClock() with the default
-  // parameters (2MHz internal oscillator, no clock in/out).
-  sx1509.configClock();
+    // In order to use the keypad, the clock must first be
+    // configured. We can call configureClock() with the default
+    // parameters (2MHz internal oscillator, no clock in/out).
+    sx1509.configClock();
 
 
-  
-   // the debounceConfig function sets the debounce time. This
-  //  function's parameter should be a 3-bit value. 
-  // 0: 0.5ms * 2MHz/fOSC
-  // 1: 1ms * 2MHz/fOSC
-  // 2: 2ms * 2MHz/fOSC
-  // 3: 4ms * 2MHz/fOSC
-  // 4: 8ms * 2MHz/fOSC
-  // 5: 16ms * 2MHz/fOSC
-  // 6: 32ms * 2MHz/fOSC
-  // 7: 64ms * 2MHz/fOSC
-  sx1509.debounceConfig(4);  // maximum debuonce time
-  
+
+    // the debounceConfig function sets the debounce time. This
+    //  function's parameter should be a 3-bit value.
+    // 0: 0.5ms * 2MHz/fOSC
+    // 1: 1ms * 2MHz/fOSC
+    // 2: 2ms * 2MHz/fOSC
+    // 3: 4ms * 2MHz/fOSC
+    // 4: 8ms * 2MHz/fOSC
+    // 5: 16ms * 2MHz/fOSC
+    // 6: 32ms * 2MHz/fOSC
+    // 7: 64ms * 2MHz/fOSC
+    sx1509.debounceConfig(4);  // maximum debuonce time
+
 
     for (int i = 0; i < LEFT_ROWS; i++) {
       make_output(sx1509, rowpins[i]);
