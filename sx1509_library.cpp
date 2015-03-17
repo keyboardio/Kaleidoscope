@@ -371,9 +371,15 @@ void sx1509Class::debounceConfig(byte configValue)
 
 void sx1509Class::debounceEnable(byte pin)
 {
-	unsigned int debounceEnable = readWord(REG_DEBOUNCE_ENABLE_B);
-	debounceEnable |= (1<<pin);
-	writeWord(REG_DEBOUNCE_ENABLE_B, debounceEnable);
+    if (pin<8) { 
+	    unsigned int debounceEnable = readWord(REG_DEBOUNCE_ENABLE_A);
+	    debounceEnable |= (1<<pin);
+	    writeWord(REG_DEBOUNCE_ENABLE_A, debounceEnable);
+    } else {
+	    unsigned int debounceEnable = readWord(REG_DEBOUNCE_ENABLE_B);
+	    debounceEnable |= (1<<pin);
+	    writeWord(REG_DEBOUNCE_ENABLE_B, debounceEnable);
+    }
 }
 
 void sx1509Class::enableInterrupt(byte pin, byte riseFall)
