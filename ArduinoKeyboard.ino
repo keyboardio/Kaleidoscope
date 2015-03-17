@@ -125,6 +125,10 @@ void scan_matrix()
   //    set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
     //  set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
 
+      TS("calling send_key_event")
+      send_key_event(row, col);
+      if(right_initted) 
+        send_key_event(row, (COLS-1)-col);
 
     }
     TS("clearing output pins")
@@ -281,7 +285,6 @@ void loop()
   TS("about to scan the matrix")
   active_keymap = primary_keymap;
   scan_matrix();
-  send_key_events();
   reset_key_report();
 }
 
@@ -436,7 +439,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   }
 }
 
-void send_key_events()
+void send_key_event(byte row, byte col)
 {
   //for every newly pressed button, figure out what logical key it is and send a key down event
   // for every newly released button, figure out what logical key it is and send a key up event
@@ -445,12 +448,7 @@ void send_key_events()
   // TODO:switch to sending raw HID packets
 
   // really, these are signed small ints
-  char x = 0;
-  char y = 0;
-
-  for (byte row = 0; row < ROWS; row++) {
-
-    for (byte col = 0; col < COLS; col++) {
+  
       byte switchState = matrixState[row][col];
       Key mappedKey = keymaps[active_keymap][row][col];
 
@@ -483,12 +481,8 @@ void send_key_events()
           } else if (key_toggled_off (switchState)) {
             release_key(mappedKey);
           }
-        }
+        
       }
-    }
-  }
-  handle_mouse_movement(x, y);
-  release_keys_not_being_pressed();
 }
 
 void press_key(Key mappedKey) {
