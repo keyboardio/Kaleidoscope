@@ -56,7 +56,7 @@ VID = 0x2341
 # official Leonardo PID
 # PID = 0x0036
 # official Micro PID
-PID = 0x0037
+PID = 0x0036
 # official Esplora PID
 # PID = 0x003C
 
