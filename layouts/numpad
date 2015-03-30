@@ -1,6 +1,5 @@
 #NAME: NUMPAD
-skip 	skip        skip    skip        skip        skip skip   skip     skip Keypad7  Keypad8   Keypad9   KeypadMinus     skip  
-skip    skip        skip    skip        skip        skip skip   skip     skip Keypad4  Keypad5   Keypad6   KeypadPlus        skip
-PageUp 	skip        skip    skip        skip        skip Tab    Return   skip Keypad1  Keypad2   Keypad3   Equals 
-PageDn 	skip        skip    skip        skip        skip Esc	Keymap0  skip Keypad0  KeypadDot KeypadMultiply      KeypadSlash    Enter
-LGUI    Backspace   LShift  LCtrl       skip        skip skip   skip     skip skip  RCtrl RShift Space    RAlt
+LEDEffectNext   1 2 3 4 5  skip                 LCtrl       RCtrl 	  skip                  6 Keypad7 Keypad8   Keypad9         KeypadMinus Keymap0
+`               Q W E R T  Keymap1_Momentary    Backspace   Space     Keymap1_Momentary     Y Keypad4 Keypad5   Keypad6         KeypadPlus  =
+PageUp 	        A S D F G  Tab                  LGUI        RAlt	  Return                H Keypad1 Keypad2   Keypad3         Equals      '
+PageDn 	        Z X C V B  Esc                  LShift      RShift 	   skip                 N Keypad0 KeypadDot KeypadMultiply  KeypadSlash Enter 
