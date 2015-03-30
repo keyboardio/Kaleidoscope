@@ -405,6 +405,14 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
       Keyboard.consumerControl(mappedKey.rawKey);
     }
   }
+  
+  else if (mappedKey.flags & IS_INTERNAL) {
+        if (key_toggled_on (switchState)) {
+          if (mappedKey.rawKey == LED_TOGGLE) {
+             next_led_mode(); 
+          }
+        }
+  }
   else if (mappedKey.flags & IS_SYSCTL) {
     if (key_toggled_on (switchState)) {
       Keyboard.systemControl(mappedKey.rawKey);

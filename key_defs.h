@@ -19,6 +19,12 @@ typedef struct {
 #define IS_MACRO       B00000001
 #define IS_SYSCTL      B00000010
 #define IS_CONSUMER    B00000100
+#define IS_INTERNAL    B00001000
+
+
+// IS_INTERNAL key table:
+
+#define LED_TOGGLE 1
 
 
 #define MOUSE_UP            B0000001
@@ -425,5 +431,9 @@ typedef struct {
 #define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_NEXT }
 #define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_PREVIOUS }
 
+
+
+
+#define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC_KEY | IS_INTERNAL, LED_TOGGLE }
 
 
