@@ -28,10 +28,23 @@ void setup_leds();
 void update_leds();
 void set_all_leds_to(cRGB color);
 
-
+void set_led_mode(int mode);
+void next_led_mode();
 
 byte key_to_led(byte row, byte col);
 void set_key_color(byte row, byte col);
 cRGB get_key_color(byte row, byte col);
+
+void led_effect_breathe_init();
+void led_effect_rainbow_init();
+void led_effect_chase_init();
+void led_effect_steady_init();
+void led_Effect_heatmap_init();
+
+void led_effect_breathe_update();
+void led_effect_rainbow_update();
+void led_effect_chase_update();
+void led_effect_steady_update();
+void led_Effect_heatmap_update();
 
 #endif

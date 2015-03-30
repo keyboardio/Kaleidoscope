@@ -22,7 +22,7 @@ x from 0 - 255 : y = round(pow( 2.0, x+64/40.0) - 1)
 */
 
 // uncomment this line if you use HSV is many projects
-// #define USE_HSV
+#define USE_HSV
 
 #ifdef USE_HSV
 const byte dim_curve[] = {
