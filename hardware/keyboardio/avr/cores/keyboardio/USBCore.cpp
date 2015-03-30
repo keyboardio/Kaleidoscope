@@ -60,7 +60,7 @@ const u8 STRING_PRODUCT[] PROGMEM = USB_PRODUCT;
 #  if defined(USB_MANUFACTURER)
 #    undef USB_MANUFACTURER
 #  endif
-#  define USB_MANUFACTURER "Arduino LLC"
+#  define USB_MANUFACTURER "Keyboardio - Temp"
 #elif USB_VID == 0x1b4f
 #  if defined(USB_MANUFACTURER)
 #    undef USB_MANUFACTURER
