@@ -193,12 +193,8 @@ const USB_Descriptor_String_t ProductString =
 {
 	.Header                 = {.Size = USB_STRING_LEN(16), .Type = DTYPE_String},
 
-	#if DEVICE_PID == 0x0036
+	#if DEVICE_PID == 0x2300
 	.UnicodeString          = L"Keyboardio Boot " 
-	#elif DEVICE_PID == 0x0037
-	.UnicodeString			= L"Keyboardio Boot "
-	#elif DEVICE_PID == 0x003C
-	.UnicodeString			= L"Arduino Esplora "
 	#else
 	.UnicodeString			= L"USB IO board    "
 	#endif
@@ -208,7 +204,7 @@ const USB_Descriptor_String_t ManufNameString =
 {
 	.Header					= {.Size = USB_STRING_LEN(11), .Type = DTYPE_String},
 	
-	#if DEVICE_VID == 0x2341
+	#if DEVICE_VID == 0x1209
 	.UnicodeString			= L"Keyboardio "
 	#else
 	.UnicodeString			= L"Unknown    "

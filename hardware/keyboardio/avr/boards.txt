@@ -23,10 +23,8 @@ keyboardio.build.variant=model00
 
 
 model01.name=Keyboardio model01
-model01.vid.0=0x2341
-model01.pid.0=0x0036
-model01.vid.1=0x2341
-model01.pid.1=0x8036
+model01.vid.0=0x1209
+model01.pid.0=0x2301
 model01.upload.tool=avrdude
 model01.upload.protocol=avr109
 model01.upload.maximum_size=28672
@@ -46,8 +44,8 @@ model01.bootloader.lock_bits=0x2F
 
 model01.build.mcu=atmega32u4
 model01.build.f_cpu=16000000L
-model01.build.vid=0x2341
-model01.build.pid=0x8036
+model01.build.vid=0x1209
+model01.build.pid=0x2301
 model01.build.usb_product="Keyboardio model01"
 model01.build.core=keyboardio
 model01.build.variant=model01
