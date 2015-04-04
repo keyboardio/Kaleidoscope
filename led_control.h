@@ -2,13 +2,14 @@
 #define LED_CONTROL_H
 
 #include "WS2812.h"
-#define LED_MODES 6
+#define LED_MODES 7
 #define LED_MODE_OFF 0
 #define LED_MODE_STEADY 1
 #define LED_MODE_BREATHE 2
 #define LED_MODE_RAINBOW 3
-#define LED_MODE_HEATMAP 4
-#define LED_MODE_CHASE 5
+#define LED_MODE_RAINBOW_WAVE 4
+#define LED_MODE_HEATMAP 5
+#define LED_MODE_CHASE 6
 
 #define LED_DATA_PIN  4
 
@@ -43,6 +44,7 @@ void led_Effect_heatmap_init();
 
 void led_effect_breathe_update();
 void led_effect_rainbow_update();
+void led_effect_rainbow_wave_update();
 void led_effect_chase_update();
 void led_effect_steady_update();
 void led_Effect_heatmap_update();
