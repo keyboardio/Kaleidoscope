@@ -4,7 +4,9 @@ keyboardio.upload.maximum_size=28672
 keyboardio.upload.speed=57600
 keyboardio.upload.disable_flushing=true
 keyboardio.bootloader.low_fuses=0xff
-keyboardio.bootloader.high_fuses=0xd8
+#keyboardio.bootloader.high_fuses=0xd8
+# change from the arduino standard to skip the bootloader on boot
+keyboardio.bootloader.high_fuses=0xd9
 keyboardio.bootloader.extended_fuses=0xcb
 keyboardio.bootloader.path=caterina
 keyboardio.bootloader.file=Caterina-keyboardio.hex
