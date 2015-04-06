@@ -56,11 +56,11 @@ const u16 STRING_LANGUAGE[2] = {
 
 const u8 STRING_PRODUCT[] PROGMEM = USB_PRODUCT;
 
-#if USB_VID == 0x2341
+#if USB_VID == 0x1209
 #  if defined(USB_MANUFACTURER)
 #    undef USB_MANUFACTURER
 #  endif
-#  define USB_MANUFACTURER "Keyboardio - Temp"
+#  define USB_MANUFACTURER "Keyboardio"
 #elif USB_VID == 0x1b4f
 #  if defined(USB_MANUFACTURER)
 #    undef USB_MANUFACTURER

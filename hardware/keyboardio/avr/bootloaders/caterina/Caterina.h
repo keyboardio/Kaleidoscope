@@ -69,17 +69,10 @@
 		#define TX_LED_OFF()		PORTC &= ~(1<<7)
 		#define TX_LED_ON()		PORTC |= (1<<7)
 		#define L_LED_TOGGLE()	PORTD ^= (1<<5)
-		#if DEVICE_PID == 0x0037	// polarity of the RX and TX LEDs is reversed on the Micro
-			#define TX_LED_OFF()	PORTD &= ~(1<<5)
-			#define TX_LED_ON()		PORTD |= (1<<5)
-			#define RX_LED_OFF()	PORTB &= ~(1<<0)
-			#define RX_LED_ON()		PORTB |= (1<<0)			
-		#else 
 			#define L_LED_OFF()	PORTD |= (1<<5)
 			#define L_LED_ON()		PORTD &= ~(1<<5)
 			#define RX_LED_OFF()	PORTB |= (1<<0)
 			#define RX_LED_ON()		PORTB &= ~(1<<0)
-		#endif
 
 	/* Type Defines: */
 		/** Type define for a non-returning pointer to the start of the loaded application in flash memory. */
