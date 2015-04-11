@@ -11,6 +11,7 @@
 #define LED_MODE_HEATMAP 5
 #define LED_MODE_CHASE 6
 
+#define LED_SPECIAL_MODE_NUMLOCK 100
 #define LED_DATA_PIN  4
 
 #define LED_COUNT 64
@@ -26,7 +27,7 @@ static const int key_led_map[4][16] =
 
 
 void setup_leds();
-void update_leds();
+void update_leds(int numlock_enabled);
 void set_all_leds_to(cRGB color);
 
 void set_led_mode(int mode);
@@ -36,6 +37,7 @@ byte key_to_led(byte row, byte col);
 void set_key_color(byte row, byte col);
 cRGB get_key_color(byte row, byte col);
 
+void led_compute_breath();
 void led_effect_breathe_init();
 void led_effect_rainbow_init();
 void led_effect_chase_init();
@@ -47,6 +49,8 @@ void led_effect_rainbow_update();
 void led_effect_rainbow_wave_update();
 void led_effect_chase_update();
 void led_effect_steady_update();
-void led_Effect_heatmap_update();
+void led_effect_heatmap_update();
+void led_effect_numlock_update();
+
 
 #endif

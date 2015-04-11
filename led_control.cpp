@@ -7,6 +7,7 @@ WS2812 LED(LED_COUNT);
 
 int led_mode;
 int last_led_mode;
+int stored_led_mode;
 int pos = 0;
 cRGB led_off;
 
@@ -16,7 +17,7 @@ cRGB led_off;
 cRGB led_steady;
 cRGB led_blue;
 cRGB led_dark_blue;
-
+cRGB led_bright_red;
 
 cRGB led_breathe;
 
@@ -55,6 +56,10 @@ void setup_leds() {
   led_dark_blue.r = 0;
   led_dark_blue.g = 0;
   led_dark_blue.b = 127;
+
+  led_bright_red.r=255;
+  led_bright_red.g=0;
+  led_bright_red.b=0;
 
 
 
@@ -116,7 +121,20 @@ void set_led_mode(int mode) {
 
 
 
-void update_leds() {
+void update_leds(int numlock_enabled) {
+    if (numlock_enabled) {
+        if (led_mode != LED_SPECIAL_MODE_NUMLOCK) {
+            stored_led_mode = led_mode;
+        }
+        led_mode = LED_SPECIAL_MODE_NUMLOCK;
+    }
+    if (!numlock_enabled && 
+        led_mode == LED_SPECIAL_MODE_NUMLOCK 
+        ) {
+        led_mode = stored_led_mode;
+        }
+
+
   if (led_mode != last_led_mode) {
     initialize_led_mode(led_mode);
   }
@@ -132,21 +150,32 @@ void update_leds() {
     led_effect_chase_update();
   } else if (led_mode == LED_MODE_STEADY) {
     led_effect_steady_update();
-    
-  
+  } else if (led_mode == LED_SPECIAL_MODE_NUMLOCK) {
+    led_effect_numlock_update();
+
   }
 
   last_led_mode = led_mode;
 }
 
 
+void led_effect_numlock_update() {
 
+  for (int i = 0; i < 44; i++) {
+    LED.set_crgb_at(i, led_off);
+  }
+  for (int i = 44; i < LED_COUNT; i++) {
+    LED.set_crgb_at(i, led_bright_red);
+  }
+    led_compute_breath();
+    LED.set_crgb_at(60, led_breathe); // make numlock breathe
+    LED.sync();
+}
   void led_effect_steady_update() {
     LED.sync();
     }
 
-
-void led_effect_breathe_update() {
+void led_compute_breath() {
   // algorithm from http://sean.voisen.org/blog/2011/10/breathing-led-with-arduino/
   breathe_brightness =  (exp(sin(millis()/2000.0*PI)) - 0.36787944)*108.0;
   // change the brightness for next time through the loop:
@@ -159,6 +188,10 @@ void led_effect_breathe_update() {
 
 
   led_breathe.SetHSV(200, 255, breathe_brightness);
+}
+
+void led_effect_breathe_update() {
+  led_compute_breath();
   set_all_leds_to(led_breathe);
   LED.sync();
 }

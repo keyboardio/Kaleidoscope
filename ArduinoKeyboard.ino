@@ -274,13 +274,13 @@ void setup()
   Keyboard.begin();
   Mouse.begin();
   setup_leds();
-  update_leds();
+  update_leds(0);
   setup_command_mode();
   setup_matrix();
   setup_pins();
   rightsx1509.fetchPinStates();
 
-  primary_keymap = load_primary_keymap();
+  temporary_keymap = primary_keymap = load_primary_keymap();
 }
 
 String myApp;
@@ -295,7 +295,7 @@ void loop()
   TS("about to scan the matrix")
   scan_matrix();
   TS("updating LEDs");
-  update_leds();
+  update_leds(temporary_keymap == NUMPAD_KEYMAP);
 }
 
 

@@ -49,7 +49,7 @@
 	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
 #define KEYMAPS 3
-// This is a total waste. we should only ever include any given keymap once
+#define NUMPAD_KEYMAP 2
 static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY
 	KEYMAP_GENERIC_FN2
