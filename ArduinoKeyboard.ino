@@ -52,23 +52,31 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
   if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
     // this logic sucks. there is a better way TODO this
     if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
-      if (key_is_pressed(matrixStateEntry)) {
+      if (key_toggled_on(matrixStateEntry)) {
         if ( keymapEntry.rawKey == KEYMAP_NEXT) {
-          active_keymap++;
+          temporary_keymap++;
         } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
-          active_keymap--;
+          temporary_keymap--;
         } else {
-          active_keymap = keymapEntry.rawKey;
+          temporary_keymap = keymapEntry.rawKey;
         }
       }
+      if (key_toggled_off(matrixStateEntry)) {
+
+          temporary_keymap = primary_keymap;
+        
+      }
+
+
+
     } else if (! (keymapEntry.flags ^ (  SWITCH_TO_KEYMAP))) {
       // switch keymap and stay there
       if (key_toggled_on(matrixStateEntry)) {
-        active_keymap = primary_keymap = keymapEntry.rawKey;
+        temporary_keymap = primary_keymap = keymapEntry.rawKey;
         save_primary_keymap(primary_keymap);
 #ifdef DEBUG_SERIAL
         Serial.print("keymap is now:");
-        Serial.print(active_keymap);
+        Serial.print(temporary_keymap);
 #endif
       }
     }
@@ -125,8 +133,6 @@ void scan_matrix()
       // through the matrix scan
 
 
-      set_keymap(keymaps[active_keymap][row][col], matrixState[row][col]);
-      set_keymap(keymaps[active_keymap][row][(COLS - 1) - col], matrixState[row][(COLS - 1) - col]);
       TS("calling send_key_event")
       send_key_event(row, col);
       if (right_initted)
@@ -287,7 +293,6 @@ void loop()
   // }
   TS("A noop takes...")
   TS("about to scan the matrix")
-  active_keymap = primary_keymap;
   scan_matrix();
   TS("updating LEDs");
   update_leds();
@@ -448,7 +453,9 @@ void send_key_event(byte row, byte col)
   // really, these are signed small ints
 
   byte switchState = matrixState[row][col];
-  Key mappedKey = keymaps[active_keymap][row][col];
+  Key mappedKey = keymaps[temporary_keymap][row][col];
+
+  set_keymap(keymaps[primary_keymap][row][col], switchState);
 
   if (mappedKey.flags & MOUSE_KEY ) {
     if (mappedKey.rawKey & MOUSE_WARP) {

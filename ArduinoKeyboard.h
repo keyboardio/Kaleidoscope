@@ -44,7 +44,7 @@ byte charsReportedLastTime[KEYS_HELD_BUFFER]; // A bit vector for the 256 keys w
 
 long reporting_counter = 0;
 byte primary_keymap = 0;
-byte active_keymap = 0;
+byte temporary_keymap = 0;
 
 
 
