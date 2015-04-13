@@ -9,7 +9,6 @@ THIRD_PARTY_HARDWARE=hardware/keyboardio/avr
 #ALTERNATE_CORE = keyboardio
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 include ./_Makefile.Master
-include ./blank
 astyle:
 	astyle --style=linux ArduinoKeyboard.ino *.h
 
