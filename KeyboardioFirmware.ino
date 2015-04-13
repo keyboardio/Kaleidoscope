@@ -1,15 +1,10 @@
-// Do not remove the include below
-#include "ArduinoKeyboard.h"
-// Copyright 2013 Jesse Vincent <jesse@fsck.com>
-// All Rights Reserved. (To be licensed under an opensource license
-// before the release of the keyboard.io model 01
+// Copyright 2015 Keyboardio, inc. <jesse@keyboard.io>
+// See "LICENSE" for license details
+
 #define DEBUG_SERIAL false
 
 /**
  *  TODO:
-TEST
-TEST2
-#left IO Expander found at 0x00
 
     add mouse inertia
     add series-of-character macros
