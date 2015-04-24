@@ -231,7 +231,7 @@ void led_effect_rainbow_update() {
   rainbow.SetHSV(rainbow_hue, rainbow_saturation, rainbow_value);
 
   rainbow_hue += rainbow_steps;
-  if (rainbow_hue > 360)          {
+  if (rainbow_hue >= 360)          {
     rainbow_hue %= 360;
   }
   set_all_leds_to(rainbow);
@@ -253,7 +253,7 @@ void led_effect_rainbow_wave_update() {
   for (int i = 0; i < LED_COUNT; i++) {
     
     int key_hue = rainbow_hue +16*(i/4);
-      if (key_hue > 360)          {
+      if (key_hue >= 360)          {
     key_hue %= 360;
     }
   rainbow.SetHSV(key_hue, rainbow_saturation, rainbow_value);
@@ -263,7 +263,7 @@ void led_effect_rainbow_wave_update() {
 
   }
   rainbow_hue += rainbow_wave_steps;
-  if (rainbow_hue > 360)          {
+  if (rainbow_hue >= 360)          {
     rainbow_hue %= 360;
     }
   LED.sync();
