@@ -58,7 +58,7 @@ static bool RunBootloader = true;
 
 
 /* Bootloader timeout timer */
-#define TIMEOUT_PERIOD	8000
+#define TIMEOUT_PERIOD	2000
 uint16_t Timeout = 0;
 
 uint16_t bootKey = 0x7777;
