@@ -1,7 +1,7 @@
 # Arduino Make file. Refer to https://github.com/sudar/Arduino-Makefile
 
 #BOARD_TAG    = keyboardio
-BOARD    = symmetric60
+BOARD    = model01
 PORT =  /dev/cu.usbmodem1421
 ARDUINO_LIBS = 
 THIRD_PARTY_HARDWARE=hardware/keyboardio/avr
