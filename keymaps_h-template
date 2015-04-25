@@ -4,9 +4,5 @@ static const Key keymaps[KEYMAPS][ROWS][COLS] = {
 	KEYMAP_QWERTY
 	KEYMAP_GENERIC_FN2
     KEYMAP_NUMPAD
-
-
-
-
 };
 
