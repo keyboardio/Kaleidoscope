@@ -269,8 +269,8 @@ void setup()
   Keyboard.begin();
   Mouse.begin();
   setup_leds();
-  update_leds(0);
-  setup_command_mode();
+led_bootup();
+setup_command_mode();
   setup_matrix();
   setup_pins();
   rightsx1509.fetchPinStates();

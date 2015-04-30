@@ -66,7 +66,6 @@ void setup_leds() {
 
   LED.setOutput(LED_DATA_PIN);
   LED.setColorOrderGRB();  // Uncomment for RGB color order
-  led_mode = LED_MODE_RAINBOW_WAVE;
 }
 
 byte key_to_led(byte row, byte col) {
@@ -269,4 +268,34 @@ void led_effect_rainbow_wave_update() {
   LED.sync();
 }
 
+void led_bootup() {
+    set_all_leds_to(led_off);
 
+    led_type_letter(LED_K);
+    led_type_letter(LED_E);
+    led_type_letter(LED_Y);
+    led_type_letter(LED_B);
+    led_type_letter(LED_O);
+    led_type_letter(LED_A);
+    led_type_letter(LED_R);
+    led_type_letter(LED_D);
+    led_type_letter(LED_I);
+    led_type_letter(LED_O);
+    led_type_letter(LED_SPACE);
+    led_type_letter(LED_0);
+    led_type_letter(LED_PERIOD);
+    led_type_letter(LED_9);
+     led_mode = LED_MODE_RAINBOW_WAVE;
+
+
+}
+
+void led_type_letter(int letter) {
+    LED.set_crgb_at(letter,led_bright_red);
+  LED.sync();
+  delay(400);
+    LED.set_crgb_at(letter,led_off);
+  LED.sync();
+  delay(30);
+
+}
