@@ -308,7 +308,7 @@ byte load_primary_keymap()
   if (keymap >= KEYMAPS ) {
     return 0; // undefined positions get saved as 255
   }
-  return keymap;
+return 0; //  return keymap;
 }
 
 
