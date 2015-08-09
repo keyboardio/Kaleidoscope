@@ -1,11 +1,7 @@
-Arduino HID Project 2.3
+Arduino HID Project 2.4
 =======================
 
 ![Header Picture](header.jpg)
-
-##IDE 1.6.6 compatible library is [now available here.](https://github.com/NicoHood/HID/tree/dev_2_4)
-Install it as library, not as hardware file. IDE 1.6.6 introduced pluggable HID where you
-dont need to patch the whole Arduino-Core anymore.
 
 This project went through a lot of phases and has now reached a new Arduino USB-Core
 with a lot of new functions like extended HID. It also supports HoodLoader1+2.
@@ -101,12 +97,10 @@ improve keywords.txt
 Version History
 ===============
 ```
-2.3 Release (xx.xx.2015)
-* Updated Libraries
-* Updated Arduino Core
-* Added Minor Consumer definitions
-* Fixed platforms.txt
-* SERIAL_RX_BUFFER_SIZE reverted to 16 (TODO add -D to build option)
+2.4 Release (xx.xx.2015)
+* Added Arduino IDE 1.6.6 compatibility with Pluggable HID
+* Changed USB-Core into a simple library, only possible with Pluggable HID
+* Removed HID presets (like mouse + keyboard + consumer + system)
 
 2.2 Release (12.04.2015)
 * added experimental, not finished nor documented HID-Bridge between 16u2 and 328/2560
