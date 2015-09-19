@@ -48,10 +48,12 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 * Mega (with HoodLoader2)
 * Leonardo
 * (Pro)Micro
-* Any other 8u2/16u/at90usb162/32u2/32u4 compatible board
+* Any other 8u2/16u2/at90usb8/162/32u2/32u4 compatible board
 
 **Supported HID devices:**
 * Keyboard with Leds out (modifiers + 6 keys pressed at the same time)
+* Teensy Keyboard with different keyboard layouts (german, french and many more)
+* BootKeyboard protocol for Improved/Teensy Keyboard (works under BIOS)
 * NKRO Keyboard with Leds out (press up to 113 keys at the same time)
 * Mouse (5 buttons, move, wheel)
 * Absolute Mouse
@@ -124,6 +126,7 @@ Version History
 * Added HID out report in general (RAW HID preparation)
 * Added a few key definitions
 * Uses .alinkage custom IDE option
+* Added BootKeyboard support (BIOS compatibility)
 
 2.3 Release (xx.xx.2015) (never released)
 * Updated Libraries
