@@ -43,6 +43,21 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 * [HoodLoader2](https://github.com/NicoHood/HoodLoader2) is a BootLoader for the 16u2 that let's you use it as standalone MCU with the same USB-Core.
 * [HoodLoader1](https://github.com/NicoHood/HoodLoader) is a 16u2 firmware that filters special HW Serial signals from the main MCU and sends HID signals to the USB Host.
 
+**Supported Arduinos (IDE 1.6.6 or higher!):**
+* Uno (with HoodLoader2)
+* Mega (with HoodLoader2)
+* Leonardo
+* (Pro)Micro
+* Any other 8u2/16u/at90usb162/32u2/32u4 compatible board
+
+**Supported HID devices:**
+* Keyboard ~~with Leds out (modifiers + 6 keys pressed at the same time)~~
+* Mouse (5 buttons, move, wheel)
+* Absolute Mouse
+* Consumer/Media Keys (4 keys for music player, web browser and more)
+* System Key (for PC standby/shutdown)
+* Gamepad (32 buttons, 4 16bit axis, 2 8bit axis, 2 D-Pads)
+
 See the [wiki](https://github.com/NicoHood/HID/wiki/Features) for more information about features etc.
 
 
@@ -101,6 +116,13 @@ Version History
 * Added Arduino IDE 1.6.6 compatibility with Pluggable HID
 * Changed USB-Core into a simple library, only possible with Pluggable HID
 * Removed HID presets (like mouse + keyboard + consumer + system)
+
+2.3 Release (xx.xx.2015) (never released)
+* Updated Libraries
+* Updated Arduino Core
+* Added Minor Consumer definitions
+* Fixed platforms.txt
+* SERIAL_RX_BUFFER_SIZE reverted to 16 (TODO add -D to build option)
 
 2.2 Release (12.04.2015)
 * added experimental, not finished nor documented HID-Bridge between 16u2 and 328/2560
