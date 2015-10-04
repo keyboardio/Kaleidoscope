@@ -479,6 +479,9 @@ void send_key_event(byte row, byte col)
 }
 
 void press_key(Key mappedKey) {
+  if (mappedKey.flags & SHIFT_HELD) {
+     Keyboard.press(Key_LShift.rawKey); 
+  }
   Keyboard.press(mappedKey.rawKey);
   if (commandBufferSize >= 31) {
     commandBufferSize = 0;
@@ -495,6 +498,10 @@ void press_key(Key mappedKey) {
 }
 
 void release_key(Key mappedKey) {
+    if (mappedKey.flags & SHIFT_HELD) {
+     Keyboard.release(Key_LShift.rawKey); 
+  }
+
   Keyboard.release(mappedKey.rawKey);
 }
 

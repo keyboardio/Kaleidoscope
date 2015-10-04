@@ -306,6 +306,11 @@ typedef struct {
 #define KEY_SLASH '/'
 #define Key_Slash (Key){ KEY_FLAGS, KEY_SLASH }
 
+
+#define Key_LEFT_PAREN (Key) { KEY_FLAGS|SHIFT_HELD, KEY_9 }
+#define Key_RIGHT_PAREN (Key){ KEY_FLAGS|SHIFT_HELD, KEY_0 }
+
+
 #define KEY_KEYPAD_CLEAR 0xDB
 #define Key_KeypadClear (Key){ KEY_FLAGS, KEY_KEYPAD_CLEAR }
 #define KEY_KEYPAD_SLASH 0xDC
