@@ -465,14 +465,6 @@ void send_key_event(byte row, byte col)
     handle_synthetic_key_press(switchState, mappedKey);
   }
   else {
-    if (String("Slack") == myApp) {
-      if (key_is_pressed(switchState)) {
-        record_key_being_pressed(mappedKey.rawKey);
-        if (key_toggled_on (switchState)) {
-          Keyboard.print("Never gonna give you up!");
-        }
-      }
-    } else {
       if (key_is_pressed(switchState)) {
         record_key_being_pressed(mappedKey.rawKey);
         if (key_toggled_on (switchState)) {
@@ -482,7 +474,7 @@ void send_key_event(byte row, byte col)
         release_key(mappedKey);
       }
 
-    }
+    
   }
 }
 
