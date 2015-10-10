@@ -44,8 +44,8 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 * [HoodLoader1](https://github.com/NicoHood/HoodLoader) is a 16u2 firmware that filters special HW Serial signals from the main MCU and sends HID signals to the USB Host.
 
 **Supported Arduinos (IDE 1.6.6 or higher!):**
-* Uno (with HoodLoader2)
-* Mega (with HoodLoader2)
+* Uno (with [HoodLoader2](https://github.com/NicoHood/HoodLoader2))
+* Mega (with [HoodLoader2](https://github.com/NicoHood/HoodLoader2))
 * Leonardo
 * (Pro)Micro
 * Any other 8u2/16u2/at90usb8/162/32u2/32u4 compatible board
