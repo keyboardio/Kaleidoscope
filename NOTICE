@@ -1,6 +1,4 @@
-The Keyboard.IO keyboard driver is Copyright 2013-2014 Jesse Vincent.
-
-The Keyboard.IO keyboard driver is licensed under the terms of the Apache License 2.0.
+The Keyboardio keyboard driver is Copyright 2013-2015 Jesse Vincent.
 
 
 The hardware/keyboardio subdirectory contains a modified version
