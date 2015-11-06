@@ -66,22 +66,6 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 
 See the [wiki](https://github.com/NicoHood/HID/wiki/Features) for more information about features etc.
 
-
-Download
-========
-
-You have 3 versions you can download:
-* The master includes all fixes to the current stable release. Download it by clicking download at the right.
-You might need to get the latest hourly build of the Arduino IDE to use the current master.
-Use the [online Wiki](https://github.com/NicoHood/HID/wiki) to get the newest documentation.
-* Download an offline version in [releases](https://github.com/NicoHood/HID/releases).
-It's a snapshot of the current stable release but might have missed some updates that the current master branch has included.
-This also includes an offline version of the wiki. Offline versions will be available after some time when the official release is out.
-* Select [branch 'dev'](https://github.com/NicoHood/HID/tree/dev) to test the bleeding edge of this software.
-It might not work at all or has a lot of debugging stuff in it. An hourly IDE build is highly suggested.
-If the dev version gets near to a new release a big banner will be placed at the top.
-
-
 Wiki
 ====
 
@@ -101,12 +85,11 @@ www.nicohood.de
 Version History
 ===============
 ```
-2.4 Release (xx.xx.2015)
+2.4 Release (06.11.2015)
 * Added Arduino IDE 1.6.6 compatibility with Pluggable HID
 * Improved Pluggable HID (see Arduyuino changelog for my improvements)
 * Changed USB-Core into a simple library, only made possible with Pluggable HID
 * Removed HID presets in boards menu (like mouse + keyboard + consumer + system)
-* Added Teensy Keyboard
 * Added NKRO Keyboard
 * Added Led report for Keyboard
 * Added 1 Linux consumer key for keyboard
@@ -118,8 +101,7 @@ Version History
 * Improved and updated examples
 * A lot of other minor and major fixes I missed to mention.
 
-
-2.3 Release (xx.xx.2015) (never released)
+2.3 Release (never released)
 * Updated Libraries
 * Updated Arduino Core
 * Added Minor Consumer definitions
