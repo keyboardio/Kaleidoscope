@@ -49,6 +49,7 @@ The API (syntax/usage) of the HID Project is always the same for each solution, 
 * Leonardo
 * (Pro)Micro
 * Any other 8u2/16u2/at90usb8/162/32u2/32u4 compatible board
+* No SAM/ARM support (Due, Zero etc)
 
 **Supported HID devices:**
 * Keyboard with Leds out (modifiers + 6 keys pressed at the same time)
