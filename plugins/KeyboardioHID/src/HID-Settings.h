@@ -108,3 +108,10 @@ THE SOFTWARE.
 #ifndef HID_REPORTID_TEENSY_KEYBOARD
 #define HID_REPORTID_TEENSY_KEYBOARD 9
 #endif
+
+
+// Nico has submitted these definitions upstream, but they're not merged yet
+// HID Request Type HID1.11 Page 51 7.2.1 Get_Report Request
+#define HID_REPORT_TYPE_INPUT   1
+#define HID_REPORT_TYPE_OUTPUT  2
+#define HID_REPORT_TYPE_FEATURE 3
