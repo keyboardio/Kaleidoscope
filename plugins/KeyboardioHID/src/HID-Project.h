@@ -40,19 +40,14 @@ THE SOFTWARE.
 
 
 // Include all HID libraries (.a linkage required to work) properly
-#include "SingleReport/SingleAbsoluteMouse.h"
-#include "MultiReport/AbsoluteMouse.h"
 #include "SingleReport/BootMouse.h"
-#include "MultiReport/ImprovedMouse.h"
-#include "SingleReport/SingleConsumer.h"
-#include "MultiReport/Consumer.h"
-#include "SingleReport/SingleGamepad.h"
-#include "MultiReport/Gamepad.h"
-#include "SingleReport/SingleSystem.h"
-#include "MultiReport/System.h"
 #include "SingleReport/RawHID.h"
 #include "SingleReport/BootKeyboard.h"
+#include "MultiReport/AbsoluteMouse.h"
+#include "MultiReport/ImprovedMouse.h"
+#include "MultiReport/Consumer.h"
+#include "MultiReport/Gamepad.h"
+#include "MultiReport/System.h"
 #include "MultiReport/ImprovedKeyboard.h"
-#include "SingleReport/SingleNKROKeyboard.h"
 #include "MultiReport/NKROKeyboard.h"
 
