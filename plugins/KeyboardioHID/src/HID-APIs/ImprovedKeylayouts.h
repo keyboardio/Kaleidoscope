@@ -24,10 +24,6 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#if !defined(LAYOUT_US_ENGLISH)
-#error This API does not support non US english layouts.
-#endif
-
 // Hut1_12v2.pdf
 enum KeyboardKeycode : uint8_t {
 	KEY_RESERVED		=  0,
