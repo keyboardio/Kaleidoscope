@@ -105,10 +105,6 @@ THE SOFTWARE.
 #define HID_REPORTID_NKRO_KEYBOARD 8
 #endif
 
-#ifndef HID_REPORTID_TEENSY_KEYBOARD
-#define HID_REPORTID_TEENSY_KEYBOARD 9
-#endif
-
 
 // Nico has submitted these definitions upstream, but they're not merged yet
 // HID Request Type HID1.11 Page 51 7.2.1 Get_Report Request

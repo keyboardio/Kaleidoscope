@@ -35,6 +35,10 @@ THE SOFTWARE.
 #error HID Project can only be used with an USB MCU.
 #endif
 
+
+
+
+
 // Include all HID libraries (.a linkage required to work) properly
 #include "SingleReport/SingleAbsoluteMouse.h"
 #include "MultiReport/AbsoluteMouse.h"
@@ -51,7 +55,4 @@ THE SOFTWARE.
 #include "MultiReport/ImprovedKeyboard.h"
 #include "SingleReport/SingleNKROKeyboard.h"
 #include "MultiReport/NKROKeyboard.h"
-
-// Include Teensy HID afterwards to overwrite key definitions if used
-// TODO include Teensy API if non english keyboard layout was used
 
