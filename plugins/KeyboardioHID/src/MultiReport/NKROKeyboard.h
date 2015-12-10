@@ -28,15 +28,43 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/NKROKeyboardAPI.h"
+
+#include "../HID-APIs/KeyboardAPI.h"
+
+// Max value for USB EP_SIZE 16
+// +1 reportID, +1 modifier, +1 custom key
+#define NKRO_KEY_COUNT (8*13)
+
+typedef union{
+	// Modifier + keymap + 1 custom key
+	uint8_t whole8[];
+	uint16_t whole16[];
+	uint32_t whole32[];
+	struct{
+		uint8_t modifiers;
+		uint8_t keys[NKRO_KEY_COUNT / 8];
+		uint8_t key;
+	};
+	uint8_t allkeys[2 + NKRO_KEY_COUNT / 8];
+} HID_NKROKeyboardReport_Data_t;
 
 
-class NKROKeyboard_ : public NKROKeyboardAPI
+
+class NKROKeyboard_ : public KeyboardAPI
 {
 public:
     NKROKeyboard_(void);
+  // Implement adding/removing key functions
+  inline virtual size_t removeAll(void) override;
 
-    virtual int send(void) final;
+  // Needs to be implemented in a lower level
+  virtual int send(void) = 0;
+protected:
+  HID_NKROKeyboardReport_Data_t _keyReport;
+
+private:
+  inline virtual size_t set(KeyboardKeycode k, bool s) override;
+
 };
 extern NKROKeyboard_ NKROKeyboard;
 
