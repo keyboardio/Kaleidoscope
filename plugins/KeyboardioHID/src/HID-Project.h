@@ -40,7 +40,6 @@ THE SOFTWARE.
 
 
 // Include all HID libraries (.a linkage required to work) properly
-#include "SingleReport/BootMouse.h"
 #include "SingleReport/RawHID.h"
 #include "SingleReport/BootKeyboard.h"
 #include "MultiReport/AbsoluteMouse.h"
