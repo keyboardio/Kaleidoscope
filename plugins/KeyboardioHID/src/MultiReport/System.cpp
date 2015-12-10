@@ -48,6 +48,38 @@ System_::System_(void)
 	HID().AppendDescriptor(&node);
 }
 
+void System_::begin(void){
+	// release all buttons
+	end();
+}
+
+void System_::end(void){
+	SystemKeycode _report = HID_SYSTEM_UNASSIGNED;
+	SendReport(&_report, sizeof(_report));
+}
+
+void System_::write(SystemKeycode s){
+	press(s);
+	release();
+}
+
+void System_::release(void){
+	begin();
+}
+
+void System_::releaseAll(void){
+	begin();
+}
+
+void System_::press(SystemKeycode s){
+#ifdef USBCON
+	if (s == SYSTEM_WAKE_UP)
+		USBDevice.wakeupHost();
+	else
+#endif
+		SendReport(&s, sizeof(s));
+}
+
 
 void System_::SendReport(void* data, int length)
 {
@@ -55,4 +87,17 @@ void System_::SendReport(void* data, int length)
 }
 
 System_ System;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
