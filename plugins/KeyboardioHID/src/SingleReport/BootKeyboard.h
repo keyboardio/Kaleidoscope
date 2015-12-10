@@ -28,13 +28,52 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/BootKeyboardAPI.h"
+#include "../HID-APIs/KeyboardAPI.h"
+#include "../HID-APIs/ConsumerAPI.h"
 
 
-class BootKeyboard_ : public PluggableUSBModule, public BootKeyboardAPI
+typedef union{
+	// Low level key report: up to 6 keys and shift, ctrl etc at once
+	uint8_t whole8[];
+	uint16_t whole16[];
+	uint32_t whole32[];
+	struct{
+		uint8_t modifiers;
+		uint8_t reserved;
+		KeyboardKeycode keycodes[6];
+	};
+	uint8_t keys[8];
+} HID_KeyboardReport_Data_t;
+
+
+class BootKeyboard_ : public PluggableUSBModule, public KeyboardAPI
 {
 public:
     BootKeyboard_(void);
+
+  // Add special consumer key API for the reserved byte
+  inline size_t write(ConsumerKeycode k);
+  inline size_t press(ConsumerKeycode k);
+  inline size_t release(ConsumerKeycode k);
+  inline size_t add(ConsumerKeycode k);
+  inline size_t remove(ConsumerKeycode k);
+
+  // Also use the base class functions
+  // http://en.cppreference.com/w/cpp/language/using_declaration
+  using KeyboardAPI::write;
+  using KeyboardAPI::press;
+  using KeyboardAPI::release;
+  using KeyboardAPI::add;
+  using KeyboardAPI::remove;
+
+  // Implement adding/removing key functions
+  inline virtual size_t removeAll(void) override;
+
+  // Needs to be implemented in a lower level
+  virtual int send(void) = 0;
+
+
+
     uint8_t getLeds(void);
     uint8_t getProtocol(void);
     void wakeupHost(void);
@@ -67,6 +106,8 @@ public:
     virtual int send(void) final;
 
 protected:
+    HID_KeyboardReport_Data_t _keyReport;
+
     // Implementation of the PUSBListNode
     int getInterface(uint8_t* interfaceCount);
     int getDescriptor(USBSetup& setup);
@@ -80,6 +121,8 @@ protected:
     
     uint8_t* featureReport;
     int featureLength;
+private:
+  inline virtual size_t set(KeyboardKeycode k, bool s) override;
 };
 extern BootKeyboard_ BootKeyboard;
 
