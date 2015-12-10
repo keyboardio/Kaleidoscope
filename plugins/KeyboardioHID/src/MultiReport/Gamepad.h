@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/GamepadAPI.h"
 
 // Dpad directions
 #define GAMEPAD_DPAD_CENTERED 0

@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/ConsumerAPI.h"
 
 enum ConsumerKeycode : uint16_t {
 	// Some keys might only work with linux
