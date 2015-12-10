@@ -47,6 +47,46 @@ Consumer_::Consumer_(void)
 	HID().AppendDescriptor(&node);
 }
 
+void Consumer_::begin(void) {
+	// release all buttons
+	end();
+}
+
+void Consumer_::end(void) {
+	memset(&_report, 0, sizeof(_report));
+	SendReport(&_report, sizeof(_report));
+}
+
+void Consumer_::write(ConsumerKeycode m) {
+	press(m);
+	release(m);
+}
+
+void Consumer_::press(ConsumerKeycode m) {
+	// search for a free spot
+	for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
+		if (_report.keys[i] == HID_CONSUMER_UNASSIGNED) {
+			_report.keys[i] = m;
+			break;
+		}
+	}
+	SendReport(&_report, sizeof(_report));
+}
+
+void Consumer_::release(ConsumerKeycode m) {
+	// search and release the keypress
+	for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
+		if (_report.keys[i] == m) {
+			_report.keys[i] = HID_CONSUMER_UNASSIGNED;
+			// no break to delete multiple keys
+		}
+	}
+	SendReport(&_report, sizeof(_report));
+}
+
+void Consumer_::releaseAll(void) {
+	end();
+}
 
 void Consumer_::SendReport(void* data, int length)
 {
@@ -54,4 +94,6 @@ void Consumer_::SendReport(void* data, int length)
 }
 
 Consumer_ Consumer;
+
+
 
