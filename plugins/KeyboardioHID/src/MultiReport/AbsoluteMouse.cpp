@@ -102,7 +102,6 @@ int16_t AbsoluteMouse_::qadd16(int16_t base, int16_t increment) {
 	return base;
 }
 
-AbsoluteMouse_::AbsoluteMouseAPI(void): 
 xAxis(0), yAxis(0), _buttons(0)
 {
 	// Empty
