@@ -69,8 +69,7 @@ public:
   // Implement adding/removing key functions
   inline virtual size_t removeAll(void) override;
 
-  // Needs to be implemented in a lower level
-  virtual int send(void) = 0;
+   int send(void);
 
 
 
@@ -103,7 +102,6 @@ public:
         featureLength |= 0x8000;
     }
     
-    virtual int send(void) final;
 
 protected:
     HID_KeyboardReport_Data_t _keyReport;
