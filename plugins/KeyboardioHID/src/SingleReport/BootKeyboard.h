@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "../HID-APIs/KeyboardAPI.h"
-#include "../HID-APIs/ConsumerAPI.h"
 
 
 typedef union{
@@ -50,13 +49,6 @@ class BootKeyboard_ : public PluggableUSBModule, public KeyboardAPI
 {
 public:
     BootKeyboard_(void);
-
-  // Add special consumer key API for the reserved byte
-  inline size_t write(ConsumerKeycode k);
-  inline size_t press(ConsumerKeycode k);
-  inline size_t release(ConsumerKeycode k);
-  inline size_t add(ConsumerKeycode k);
-  inline size_t remove(ConsumerKeycode k);
 
   // Also use the base class functions
   // http://en.cppreference.com/w/cpp/language/using_declaration

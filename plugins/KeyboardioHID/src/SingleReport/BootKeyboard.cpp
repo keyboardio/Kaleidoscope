@@ -40,6 +40,7 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
     0x81, 0x02,                      /*   INPUT (Data,Var,Abs) */
 
     /* Reserved byte, used for consumer reports, only works with linux */
+    /* NOT CURRENTLY USED BY THIS IMPLEMENTATION */
 	0x05, 0x0C,             		 /*   Usage Page (Consumer) */
     0x95, 0x01,                      /*   REPORT_COUNT (1) */
     0x75, 0x08,                      /*   REPORT_SIZE (8) */
@@ -258,68 +259,6 @@ size_t BootKeyboard_::removeAll(void)
 		_keyReport.keys[i] = 0x00;
 	}
 	return ret;
-}
-
-
-size_t BootKeyboard_::write(ConsumerKeycode k)
-{
-	// Press and release key (if press was successfull)
-	auto ret = press(k);
-	if(ret){
-		release(k);
-	}
-	return ret;
-}
-
-
-size_t BootKeyboard_::press(ConsumerKeycode k)
-{
-	// Press key and send report to host
-	auto ret = add(k);
-	if(ret){
-		send();
-	}
-	return ret;
-}
-
-
-size_t BootKeyboard_::release(ConsumerKeycode k) 
-{
-	// Release key and send report to host
-	auto ret = remove(k);
-	if(ret){
-		send();
-	}
-	return ret;
-}
-
-
-size_t BootKeyboard_::add(ConsumerKeycode k) 
-{
-	// No 2 byte keys are supported
-	if(k > 0xFF){
-		setWriteError();
-		return 0;
-	}
-	
-	// Place the key inside the reserved keyreport position.
-	// This does not work on Windows.
-	_keyReport.reserved = k;
-	return 1;
-}
-
-
-size_t BootKeyboard_::remove(ConsumerKeycode k) 
-{
-	// No 2 byte keys are supported
-	if(k > 0xFF){
-		return 0;
-	}
-	
-	// Always release the key, to make it simpler releasing a consumer key
-	// without releasing all other normal keyboard keys.
-	_keyReport.reserved = HID_CONSUMER_UNASSIGNED;
-	return 1;
 }
 
 BootKeyboard_ BootKeyboard;
