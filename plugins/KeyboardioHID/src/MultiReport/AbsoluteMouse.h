@@ -28,16 +28,64 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/AbsoluteMouseAPI.h"
+
+#define MOUSE_LEFT		(1 << 0)
+#define MOUSE_RIGHT		(1 << 1)
+#define MOUSE_MIDDLE	(1 << 2)
+#define MOUSE_PREV		(1 << 3)
+#define MOUSE_NEXT		(1 << 4)
+// actually this mouse report has 8 buttons (for smaller descriptor)
+// but the last 3 wont do anything from what I tested
+#define MOUSE_ALL (MOUSE_LEFT | MOUSE_RIGHT | MOUSE_MIDDLE | MOUSE_PREV | MOUSE_NEXT)
 
 
-class AbsoluteMouse_ : public AbsoluteMouseAPI
+
+typedef union{
+	// Absolute mouse report: 8 buttons, 2 absolute axis, wheel
+	uint8_t whole8[];
+	uint16_t whole16[];
+	uint32_t whole32[];
+	struct{
+		uint8_t buttons;
+		int16_t xAxis;
+		int16_t yAxis;
+		int8_t wheel;
+	};
+} HID_MouseAbsoluteReport_Data_t;
+
+class AbsoluteMouse_ 
 {
 public:
     AbsoluteMouse_(void);
 
 protected: 
     virtual inline void SendReport(void* data, int length) override;
+	int16_t xAxis;
+	int16_t yAxis;
+	uint8_t _buttons;
+	inline void buttons(uint8_t b);
+
+	inline int16_t qadd16(int16_t base, int16_t increment);
+
+public:
+	AbsoluteMouse_(void);
+	inline void begin(void);
+	inline void end(void);
+
+	inline void click(uint8_t b = MOUSE_LEFT);
+	inline void moveTo(int x, int y, signed char wheel = 0);
+	inline void move(int x, int y, signed char wheel = 0);
+	inline void press(uint8_t b = MOUSE_LEFT);
+	inline void release(uint8_t b = MOUSE_LEFT);
+	inline bool isPressed(uint8_t b = MOUSE_LEFT);
+	
+	// Sending is public in the base class for advanced users.
+	virtual void SendReport(void* data, int length) = 0;
+
+
+
 };
+
+
 extern AbsoluteMouse_ AbsoluteMouse;
 
