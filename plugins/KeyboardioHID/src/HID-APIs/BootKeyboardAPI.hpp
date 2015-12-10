@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 
-size_t DefaultKeyboardAPI::set(KeyboardKeycode k, bool s) 
+size_t BootKeyboardAPI::set(KeyboardKeycode k, bool s) 
 {
 	// It's a modifier key
 	if(k >= KEY_LEFT_CTRL && k <= KEY_RIGHT_GUI)
@@ -66,7 +66,7 @@ size_t DefaultKeyboardAPI::set(KeyboardKeycode k, bool s)
 	return 0;
 }
 
-size_t DefaultKeyboardAPI::removeAll(void)
+size_t BootKeyboardAPI::removeAll(void)
 {
 	// Release all keys
 	size_t ret = 0;
@@ -82,7 +82,7 @@ size_t DefaultKeyboardAPI::removeAll(void)
 }
 
 
-size_t DefaultKeyboardAPI::write(ConsumerKeycode k)
+size_t BootKeyboardAPI::write(ConsumerKeycode k)
 {
 	// Press and release key (if press was successfull)
 	auto ret = press(k);
@@ -93,7 +93,7 @@ size_t DefaultKeyboardAPI::write(ConsumerKeycode k)
 }
 
 
-size_t DefaultKeyboardAPI::press(ConsumerKeycode k)
+size_t BootKeyboardAPI::press(ConsumerKeycode k)
 {
 	// Press key and send report to host
 	auto ret = add(k);
@@ -104,7 +104,7 @@ size_t DefaultKeyboardAPI::press(ConsumerKeycode k)
 }
 
 
-size_t DefaultKeyboardAPI::release(ConsumerKeycode k) 
+size_t BootKeyboardAPI::release(ConsumerKeycode k) 
 {
 	// Release key and send report to host
 	auto ret = remove(k);
@@ -115,7 +115,7 @@ size_t DefaultKeyboardAPI::release(ConsumerKeycode k)
 }
 
 
-size_t DefaultKeyboardAPI::add(ConsumerKeycode k) 
+size_t BootKeyboardAPI::add(ConsumerKeycode k) 
 {
 	// No 2 byte keys are supported
 	if(k > 0xFF){
@@ -130,7 +130,7 @@ size_t DefaultKeyboardAPI::add(ConsumerKeycode k)
 }
 
 
-size_t DefaultKeyboardAPI::remove(ConsumerKeycode k) 
+size_t BootKeyboardAPI::remove(ConsumerKeycode k) 
 {
 	// No 2 byte keys are supported
 	if(k > 0xFF){

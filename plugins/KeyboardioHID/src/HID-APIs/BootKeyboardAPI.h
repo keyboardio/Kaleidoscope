@@ -41,7 +41,7 @@ typedef union{
 } HID_KeyboardReport_Data_t;
 
 
-class DefaultKeyboardAPI : public KeyboardAPI
+class BootKeyboardAPI : public KeyboardAPI
 {
 public:
   // Add special consumer key API for the reserved byte
@@ -73,5 +73,5 @@ private:
 };
 
 // Implementation is inline
-#include "DefaultKeyboardAPI.hpp"
+#include "BootKeyboardAPI.hpp"
 

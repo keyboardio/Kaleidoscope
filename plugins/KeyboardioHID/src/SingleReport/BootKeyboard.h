@@ -28,10 +28,10 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/DefaultKeyboardAPI.h"
+#include "../HID-APIs/BootKeyboardAPI.h"
 
 
-class BootKeyboard_ : public PluggableUSBModule, public DefaultKeyboardAPI
+class BootKeyboard_ : public PluggableUSBModule, public BootKeyboardAPI
 {
 public:
     BootKeyboard_(void);
