@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../HID-APIs/KeyboardAPI.h"
+#include "../KeyboardCore/KeyboardAPI.h"
 
 
 typedef union{

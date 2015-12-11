@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 
-#include "../HID-APIs/KeyboardAPI.h"
+#include "../KeyboardCore/KeyboardAPI.h"
 
 // Max value for USB EP_SIZE 16
 // +1 reportID, +1 modifier, +1 custom key
