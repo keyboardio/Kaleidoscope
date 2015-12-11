@@ -55,7 +55,7 @@ class NKROKeyboard_ : public KeyboardAPI
 public:
     NKROKeyboard_(void);
   // Implement adding/removing key functions
-  inline virtual size_t removeAll(void) override;
+  inline virtual size_t releaseAll(void) override;
 
   // Needs to be implemented in a lower level
   virtual int send(void) = 0;

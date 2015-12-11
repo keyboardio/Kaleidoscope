@@ -13,8 +13,6 @@
 begin	KEYWORD2
 end	KEYWORD2
 press	KEYWORD2
-add	KEYWORD2
-remove	KEYWORD2
 release	KEYWORD2
 releaseAll	KEYWORD2
 

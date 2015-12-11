@@ -124,7 +124,8 @@ size_t NKROKeyboard_::set(KeyboardKeycode k, bool s)
 	return 0;
 }
 
-size_t NKROKeyboard_::removeAll(void)
+// TODO: replace this with a mmap interface
+size_t NKROKeyboard_::releaseAll(void)
 {
 	// Release all keys
 	size_t ret = 0;

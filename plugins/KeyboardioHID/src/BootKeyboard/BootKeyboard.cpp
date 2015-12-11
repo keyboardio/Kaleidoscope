@@ -246,7 +246,7 @@ size_t BootKeyboard_::set(KeyboardKeycode k, bool s)
 	return 0;
 }
 
-size_t BootKeyboard_::removeAll(void)
+void BootKeyboard_::releaseAll(void)
 {
 	// Release all keys
 	size_t ret = 0;
