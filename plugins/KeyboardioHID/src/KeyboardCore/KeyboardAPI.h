@@ -47,13 +47,6 @@ public:
   inline void begin(void);
   inline void end(void);
   
-  // Raw Keycode API functions
-  inline size_t write(KeyboardKeycode k);
-  inline size_t press(KeyboardKeycode k);
-  inline size_t release(KeyboardKeycode k);
-  inline size_t remove(KeyboardKeycode k);
-  inline size_t add(KeyboardKeycode k);
-  inline size_t releaseAll(void);
   //press(uint8_t key, uint8_t modifier) TODO variadic template
   
   // Print API functions
