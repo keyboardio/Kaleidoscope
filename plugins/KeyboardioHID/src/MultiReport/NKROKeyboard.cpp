@@ -68,6 +68,24 @@ NKROKeyboard_::NKROKeyboard_(void)
 	HID().AppendDescriptor(&node);
 }
 
+void NKROKeyboard_::begin(void)
+{
+        // Force API to send a clean report.
+        // This is important for and HID bridge where the receiver stays on,
+        // while the sender is resetted.
+        releaseAll();
+        sendReport();
+}
+
+
+void NKROKeyboard_::end(void)
+{
+        releaseAll();
+        sendReport();
+}
+
+
+
 int NKROKeyboard_::sendReport(void)
 {
 	return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
