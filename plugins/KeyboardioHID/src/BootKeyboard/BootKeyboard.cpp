@@ -220,6 +220,12 @@ void BootKeyboard_::wakeupHost(void){
 }
 
 
+// press() adds the specified key (printing, non-printing, or modifier)
+ // to the persistent key report and sends the report.  Because of the way 
+ // USB HID works, the host acts like the key remains pressed until we 
+ // call release(), releaseAll(), or otherwise clear the report and resend.
+
+
  bool BootKeyboard_::press(uint8_t k)
  {
  	uint8_t done = 0;
@@ -256,7 +262,9 @@ void BootKeyboard_::wakeupHost(void){
  }
 
 
-
+// release() takes the specified key out of the persistent key report and
+// sends the report.  This tells the OS the key is no longer pressed and that
+// it shouldn't be repeated any more.
 
 bool BootKeyboard_::release(uint8_t k)
 {
