@@ -308,13 +308,6 @@ bool BootKeyboard_::release(uint8_t k)
 	return 1;
 }
 
-
-
-
-
-
-
-
 void BootKeyboard_::releaseAll(void)
 {
     memset(&_keyReport, 0x00, sizeof(_keyReport));
