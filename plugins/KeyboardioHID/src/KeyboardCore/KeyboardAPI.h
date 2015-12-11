@@ -65,7 +65,7 @@ public:
 
   // Needs to be implemented in a lower level
   virtual size_t removeAll(void) = 0;
-  virtual int send(void) = 0;
+  virtual int sendReport(void) = 0;
 
 private:
   virtual size_t set(KeyboardKeycode k, bool s) = 0;

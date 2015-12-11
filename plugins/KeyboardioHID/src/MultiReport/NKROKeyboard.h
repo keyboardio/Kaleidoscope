@@ -57,8 +57,7 @@ public:
   // Implement adding/removing key functions
   inline virtual size_t releaseAll(void) override;
 
-  // Needs to be implemented in a lower level
-  virtual int send(void) = 0;
+  virtual int sendReport(void) = 0;
 protected:
   HID_NKROKeyboardReport_Data_t _keyReport;
 

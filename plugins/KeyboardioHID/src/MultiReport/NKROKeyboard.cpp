@@ -68,7 +68,7 @@ NKROKeyboard_::NKROKeyboard_(void)
 	HID().AppendDescriptor(&node);
 }
 
-int NKROKeyboard_::send(void)
+int NKROKeyboard_::sendReport(void)
 {
 	return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
