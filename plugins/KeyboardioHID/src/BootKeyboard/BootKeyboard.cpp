@@ -105,6 +105,25 @@ int BootKeyboard_::getDescriptor(USBSetup& setup)
 	return USB_SendControl(TRANSFER_PGM, _hidReportDescriptorKeyboard, sizeof(_hidReportDescriptorKeyboard));
 }
 
+
+void BootKeyboard_::begin(void)
+{
+	// Force API to send a clean report.
+	// This is important for and HID bridge where the receiver stays on,
+	// while the sender is resetted.
+	releaseAll();
+	sendReport();
+}
+
+
+void BootKeyboard_::end(void)
+{
+	releaseAll();
+	sendReport();
+}
+
+
+
 bool BootKeyboard_::setup(USBSetup& setup)
 {
 	if (pluggedInterface != setup.wIndex) {
@@ -192,7 +211,7 @@ uint8_t BootKeyboard_::getProtocol(void){
     return protocol;
 }
 
-int BootKeyboard_::send(void){
+int BootKeyboard_::sendReport(void){
 	return USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
 }
 
@@ -201,64 +220,97 @@ void BootKeyboard_::wakeupHost(void){
 }
 
 
-
-
-
-
-size_t BootKeyboard_::set(KeyboardKeycode k, bool s) 
-{
-	// It's a modifier key
-	if(k >= KEY_LEFT_CTRL && k <= KEY_RIGHT_GUI)
-	{
-		// Convert key into bitfield (0 - 7)
-		k = KeyboardKeycode(uint8_t(k) - uint8_t(KEY_LEFT_CTRL));
-		if(s){
-			_keyReport.modifiers = (1 << k);
-		}
-		else{
-			_keyReport.modifiers &= ~(1 << k);
-		}
-		return 1;
-	}
-	// Its a normal key
-	else{
-		// Add k to the key report only if it's not already present
-		// and if there is an empty slot. Remove the first available key.
+ bool BootKeyboard_::press(uint8_t k)
+ {
+ 	uint8_t done = 0;
+ 	
+ 	if ((k >= HID_KEYBOARD_LEFT_CONTROL) && (k <= HID_KEYBOARD_RIGHT_GUI)) {
+ 		// it's a modifier key
+ 		_keyReport.modifiers |= (0x01 << (k - HID_KEYBOARD_LEFT_CONTROL));
+ 	} else {
+ 		// it's some other key:
+ 		// Add k to the key report only if it's not already present
+ 		// and if there is an empty slot.
 		for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++)
-		{
-			auto key = _keyReport.keycodes[i];
-			
-			// Is key already in the list or did we found an empty slot?
-			if (s && (key == uint8_t(k) || key == KEY_RESERVED)) {
-				_keyReport.keycodes[i] = k;
-				return 1;
-			}
-			
-			// Test the key report to see if k is present. Clear it if it exists.
-			if (!s && (key == k)) {
-				_keyReport.keycodes[i] = KEY_RESERVED;
-				return 1;
+        {
+ 			if (_keyReport.keys[i] != k) { // is k already in list?
+ 				if (0 == _keyReport.keys[i]) { // have we found an empty slot?
+ 					_keyReport.keys[i] = k;
+ 					done = 1;
+ 					break;
+ 				}
+ 			} else {
+ 				done = 1;
+ 				break;
+ 			}
+ 		}
+ 		// use separate variable to check if slot was found
+ 		// for style reasons - we do not know how the compiler
+ 		// handles the for() index when it leaves the loop
+ 		if (0 == done) {
+ 			setWriteError();
+ 			return 0;
+ 		}
+ 	}
+ 	return 1;
+ }
+
+
+
+
+bool BootKeyboard_::release(uint8_t k)
+{
+	uint8_t i;
+	uint8_t count;
+	
+	if ((k >= HID_KEYBOARD_LEFT_CONTROL) && (k <= HID_KEYBOARD_RIGHT_GUI)) {
+		// it's a modifier key
+		_keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_LEFT_CONTROL)));
+	} else {
+		// it's some other key:
+		// Test the key report to see if k is present.  Clear it if it exists.
+		// Check all positions in case the key is present more than once (which it shouldn't be)
+		for (i = 0; i < sizeof(_keyReport.keycodes); i++)
+        {
+            if (_keyReport.keys[i] == k) {
+				_keyReport.keys[i] = 0;
 			}
 		}
-	}
+		
+		// finally rearrange the keys list so that the free (= 0x00) are at the
+		// end of the keys list - some implementations stop for keys at the
+		// first occurence of an 0x00 in the keys list
+		// so (0x00)(0x01)(0x00)(0x03)(0x02)(0x00) becomes 
+		//    (0x01)(0x03)(0x02)(0x00)(0x00)(0x00)
+		count = 0; // holds the number of zeros we've found
+		i = 0;
+		while ((i + count) < sizeof(_keyReport.keycodes)) {
+			if (0 == _keyReport.keys[i]) {
+				count++; // one more zero
+				for (uint8_t j = i; j < sizeof(_keyReport.keycodes)-count; j++) {
+					_keyReport.keys[j] = _keyReport.keys[j+1];
+				}
+				_keyReport.keys[sizeof(_keyReport.keycodes)-count] = 0;
+			} else {
+				i++; // one more non-zero
+			}
+		}
+	}		
 	
-	// No empty/pressed key was found
-	return 0;
+	return 1;
 }
+
+
+
+
+
+
+
 
 void BootKeyboard_::releaseAll(void)
 {
-	// Release all keys
-	size_t ret = 0;
-	for (uint8_t i = 0; i < sizeof(_keyReport.keys); i++)
-	{
-		// Is a key in the list or did we found an empty slot?
-		if(_keyReport.keys[i]){
-			ret++;
-		}
-		_keyReport.keys[i] = 0x00;
-	}
-	return ret;
+    memset(&_keyReport, 0x00, sizeof(_keyReport));
 }
+
 
 BootKeyboard_ BootKeyboard;

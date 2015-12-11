@@ -49,19 +49,11 @@ class BootKeyboard_ : public PluggableUSBModule, public KeyboardAPI
 {
 public:
     BootKeyboard_(void);
+  size_t press(uint8_t);
+  size_t release(uint8_t);
+  size_t releaseAll(void);
 
-  // Also use the base class functions
-  // http://en.cppreference.com/w/cpp/language/using_declaration
-  using KeyboardAPI::write;
-  using KeyboardAPI::press;
-  using KeyboardAPI::release;
-  using KeyboardAPI::add;
-  using KeyboardAPI::remove;
-
-  // Implement adding/removing key functions
-  inline virtual size_t removeAll(void) override;
-
-   int send(void);
+   int sendReport(void);
 
 
 
