@@ -45,7 +45,7 @@ typedef union{
 } HID_KeyboardReport_Data_t;
 
 
-class BootKeyboard_ : public PluggableUSBModule, public KeyboardAPI
+class BootKeyboard_ : public PluggableUSBModule
 {
 public:
     BootKeyboard_(void);
@@ -103,8 +103,6 @@ protected:
     
     uint8_t* featureReport;
     int featureLength;
-private:
-  inline virtual size_t set(KeyboardKeycode k, bool s) override;
 };
 extern BootKeyboard_ BootKeyboard;
 
