@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 
-#include "../KeyboardCore/KeyboardAPI.h"
+#include "../KeyboardCore/HIDTables.h"
 
 // Max value for USB EP_SIZE 16
 // +1 reportID, +1 modifier, +1 custom key
@@ -50,13 +50,16 @@ typedef union{
 
 
 
-class NKROKeyboard_ : public KeyboardAPI
+class NKROKeyboard_ 
 {
 public:
     NKROKeyboard_(void);
-  // Implement adding/removing key functions
-  inline virtual size_t releaseAll(void) override;
-
+  inline void begin(void);
+  inline void end(void);
+  
+  inline size_t press(uint8_t k);
+  inline size_t release(uint8_t k);
+  inline size_t releaseAll(void);
   virtual int sendReport(void) = 0;
 protected:
   HID_NKROKeyboardReport_Data_t _keyReport;
