@@ -254,7 +254,6 @@ void BootKeyboard_::wakeupHost(void){
  		// for style reasons - we do not know how the compiler
  		// handles the for() index when it leaves the loop
  		if (0 == done) {
- 			setWriteError();
  			return 0;
  		}
  	}
