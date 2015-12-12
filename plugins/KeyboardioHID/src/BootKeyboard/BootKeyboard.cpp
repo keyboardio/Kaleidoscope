@@ -265,7 +265,7 @@ void BootKeyboard_::wakeupHost(void){
 // sends the report.  This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
 
-bool BootKeyboard_::release(uint8_t k)
+size_t BootKeyboard_::release(uint8_t k)
 {
 	uint8_t i;
 	uint8_t count;
@@ -307,7 +307,7 @@ bool BootKeyboard_::release(uint8_t k)
 	return 1;
 }
 
-void BootKeyboard_::releaseAll(void)
+size_t BootKeyboard_::releaseAll(void)
 {
     memset(&_keyReport, 0x00, sizeof(_keyReport));
 }
