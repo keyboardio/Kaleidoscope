@@ -58,7 +58,7 @@ void System_::end(void){
 	SendReport(&_report, sizeof(_report));
 }
 
-void System_::write(SystemKeycode s){
+void System_::write(uint8_t s){
 	press(s);
 	release();
 }
@@ -71,12 +71,10 @@ void System_::releaseAll(void){
 	begin();
 }
 
-void System_::press(SystemKeycode s){
-#ifdef USBCON
-	if (s == SYSTEM_WAKE_UP)
+void System_::press(uint8_t s){
+	if (s == HID_SYSTEM_WAKE_UP) 
 		USBDevice.wakeupHost();
 	else
-#endif
 		SendReport(&s, sizeof(s));
 }
 
