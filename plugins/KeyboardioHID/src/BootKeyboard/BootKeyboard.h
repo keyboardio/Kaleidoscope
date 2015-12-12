@@ -51,6 +51,7 @@ class BootKeyboard_ : public PluggableUSBModule
 public:
     BootKeyboard_(void);
   size_t press(uint8_t);
+    size_t write(uint8_t);
   size_t release(uint8_t);
   size_t releaseAll(void);
 

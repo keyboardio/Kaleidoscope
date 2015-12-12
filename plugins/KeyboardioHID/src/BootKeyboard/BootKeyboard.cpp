@@ -307,6 +307,14 @@ size_t BootKeyboard_::release(uint8_t k)
 	return 1;
 }
 
+
+size_t BootKeyboard_::write(uint8_t keycode) {
+    press(keycode);
+    sendReport();
+    release(keycode);
+    sendReport();
+}
+
 size_t BootKeyboard_::releaseAll(void)
 {
     memset(&_keyReport, 0x00, sizeof(_keyReport));
