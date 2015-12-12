@@ -1,5 +1,5 @@
 #ifndef __HIDTables__
-#define HID___HIDTables__
+#define __HIDTables__
 
 
 // These mappings were extracted and transcribed from 
