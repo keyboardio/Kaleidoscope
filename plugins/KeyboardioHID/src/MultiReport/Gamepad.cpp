@@ -79,76 +79,76 @@ Gamepad_::Gamepad_(void)
 }
 
 
-void Gamepad_begin(void){
+void Gamepad_::begin(void){
 	// release all buttons
 	end();
 }
 
-void Gamepad_end(void){
+void Gamepad_::end(void){
 	memset(&_report, 0x00, sizeof(_report));
 	SendReport(&_report, sizeof(_report));
 }
 
-void Gamepad_write(void){ 
+void Gamepad_::write(void){ 
 	SendReport(&_report, sizeof(_report)); 
 }
 
 
-void Gamepad_press(uint8_t b){ 
+void Gamepad_::press(uint8_t b){ 
 	_report.buttons |= (uint32_t)1 << (b - 1); 
 }
 
 
-void Gamepad_release(uint8_t b){ 
+void Gamepad_::release(uint8_t b){ 
 	_report.buttons &= ~((uint32_t)1 << (b - 1)); 
 }
 
 
-void Gamepad_releaseAll(void){ 
+void Gamepad_::releaseAll(void){ 
 	memset(&_report, 0x00, sizeof(_report)); 
 }
 
-void Gamepad_buttons(uint32_t b){ 
+void Gamepad_::buttons(uint32_t b){ 
 	_report.buttons = b; 
 }
 
 
-void Gamepad_xAxis(int16_t a){ 
+void Gamepad_::xAxis(int16_t a){ 
 	_report.xAxis = a; 
 }
 
 
-void Gamepad_yAxis(int16_t a){ 
+void Gamepad_::yAxis(int16_t a){ 
 	_report.yAxis = a; 
 }
 
 
-void Gamepad_zAxis(int8_t a){ 
+void Gamepad_::zAxis(int8_t a){ 
 	_report.zAxis = a; 
 }
 
 
-void Gamepad_rxAxis(int16_t a){ 
+void Gamepad_::rxAxis(int16_t a){ 
 	_report.rxAxis = a; 
 }
 
 
-void Gamepad_ryAxis(int16_t a){ 
+void Gamepad_::ryAxis(int16_t a){ 
 	_report.ryAxis = a; 
 }
 
 
-void Gamepad_rzAxis(int8_t a){ 
+void Gamepad_::rzAxis(int8_t a){ 
 	_report.rzAxis = a; 
 }
 
 
-void Gamepad_dPad1(int8_t d){ 
+void Gamepad_::dPad1(int8_t d){ 
 	_report.dPad1 = d; 
 }
 
 
-void Gamepad_dPad2(int8_t d){ 
+void Gamepad_::dPad2(int8_t d){ 
 	_report.dPad2 = d; 
 }
 
