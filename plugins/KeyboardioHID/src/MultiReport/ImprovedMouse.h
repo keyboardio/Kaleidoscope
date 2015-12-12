@@ -64,8 +64,7 @@ public:
   inline void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
   inline bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
   
-  // Sending is public in the base class for advanced users.
-  virtual void SendReport(void* data, int length) = 0;
+  inline void SendReport(void* data, int length);
 
 protected: 
   uint8_t _buttons;

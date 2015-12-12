@@ -59,7 +59,6 @@ public:
     AbsoluteMouse_(void);
 
 protected: 
-    virtual inline void SendReport(void* data, int length) override;
 	int16_t xAxis;
 	int16_t yAxis;
 	uint8_t _buttons;
@@ -80,7 +79,7 @@ public:
 	inline bool isPressed(uint8_t b = MOUSE_LEFT);
 	
 	// Sending is public in the base class for advanced users.
-	virtual void SendReport(void* data, int length) = 0;
+	inline void SendReport(void* data, int length);
 
 
 
