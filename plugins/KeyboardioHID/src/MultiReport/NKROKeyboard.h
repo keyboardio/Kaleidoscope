@@ -61,7 +61,7 @@ public:
   inline size_t press(uint8_t k);
   inline size_t release(uint8_t k);
   inline size_t releaseAll(void);
-  virtual int sendReport(void) = 0;
+  inline int sendReport(void);
 protected:
   HID_NKROKeyboardReport_Data_t _keyReport;
 
