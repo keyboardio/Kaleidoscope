@@ -64,9 +64,6 @@ public:
 protected:
   HID_NKROKeyboardReport_Data_t _keyReport;
 
-private:
-  inline virtual size_t set(KeyboardKeycode k, bool s) override;
-
 };
 extern NKROKeyboard_ NKROKeyboard;
 
