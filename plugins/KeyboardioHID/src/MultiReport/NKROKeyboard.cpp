@@ -91,7 +91,7 @@ int NKROKeyboard_::sendReport(void)
 	return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
 
-size_t NKROKeyboard_::press(KeyboardKeycode k)
+size_t NKROKeyboard_::press(uint8_t k)
 {
 	// Press keymap key
 	if (k < NKRO_KEY_COUNT){

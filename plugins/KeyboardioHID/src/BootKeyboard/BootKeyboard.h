@@ -40,7 +40,7 @@ typedef union{
 	struct{
 		uint8_t modifiers;
 		uint8_t reserved;
-		KeyboardKeycode keycodes[6];
+		uint8_t keycodes[6];
 	};
 	uint8_t keys[8];
 } HID_KeyboardReport_Data_t;
