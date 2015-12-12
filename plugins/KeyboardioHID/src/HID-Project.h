@@ -46,5 +46,5 @@ THE SOFTWARE.
 #include "MultiReport/ConsumerControl.h"
 #include "MultiReport/Gamepad.h"
 #include "MultiReport/SystemControl.h"
-#include "MultiReport/NKROKeyboard.h"
+#include "MultiReport/Keyboard.h"
 

@@ -21,9 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "NKROKeyboard.h"
+#include "Keyboard.h"
 
-static const uint8_t _hidMultiReportDescriptorNKROKeyboard[] PROGMEM = {
+static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
     //  NKRO Keyboard
     0x05, 0x01,                      /* USAGE_PAGE (Generic Desktop)	  47 */
     0x09, 0x06,                      /* USAGE (Keyboard) */
@@ -62,12 +62,12 @@ static const uint8_t _hidMultiReportDescriptorNKROKeyboard[] PROGMEM = {
     0xC0						     /*   End Collection */
 };
 
-NKROKeyboard_::NKROKeyboard_(void) {
-    static HIDSubDescriptor node(_hidMultiReportDescriptorNKROKeyboard, sizeof(_hidMultiReportDescriptorNKROKeyboard));
+Keyboard_::Keyboard_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorKeyboard, sizeof(_hidMultiReportDescriptorKeyboard));
     HID().AppendDescriptor(&node);
 }
 
-void NKROKeyboard_::begin(void) {
+void Keyboard_::begin(void) {
     // Force API to send a clean report.
     // This is important for and HID bridge where the receiver stays on,
     // while the sender is resetted.
@@ -76,18 +76,18 @@ void NKROKeyboard_::begin(void) {
 }
 
 
-void NKROKeyboard_::end(void) {
+void Keyboard_::end(void) {
     releaseAll();
     sendReport();
 }
 
 
 
-int NKROKeyboard_::sendReport(void) {
+int Keyboard_::sendReport(void) {
     return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
 
-size_t NKROKeyboard_::press(uint8_t k) {
+size_t Keyboard_::press(uint8_t k) {
     // Press keymap key
     if (k < NKRO_KEY_COUNT) {
         uint8_t bit = 1 << (uint8_t(k) % 8);
@@ -120,7 +120,7 @@ size_t NKROKeyboard_::press(uint8_t k) {
     return 0;
 }
 
-size_t NKROKeyboard_::release(uint8_t k) {
+size_t Keyboard_::release(uint8_t k) {
     // Press keymap key
     if (k < NKRO_KEY_COUNT) {
         uint8_t bit = 1 << (uint8_t(k) % 8);
@@ -154,7 +154,7 @@ size_t NKROKeyboard_::release(uint8_t k) {
 }
 
 // TODO: replace this with a mmap interface
-size_t NKROKeyboard_::releaseAll(void) {
+size_t Keyboard_::releaseAll(void) {
     // Release all keys
     size_t ret = 0;
     for (uint8_t i = 0; i < sizeof(_keyReport.allkeys); i++) {
@@ -173,7 +173,7 @@ size_t NKROKeyboard_::releaseAll(void) {
 
 
 
-size_t NKROKeyboard_::write(uint8_t k) {
+size_t Keyboard_::write(uint8_t k) {
     if(k >= sizeof(_asciimap)) // Ignore invalid input
         return 0;
 
@@ -190,5 +190,5 @@ size_t NKROKeyboard_::write(uint8_t k) {
 
 
 
-NKROKeyboard_ NKROKeyboard;
+Keyboard_ Keyboard;
 

@@ -48,13 +48,13 @@ typedef union {
         uint8_t key;
     };
     uint8_t allkeys[2 + NKRO_KEY_COUNT / 8];
-} HID_NKROKeyboardReport_Data_t;
+} HID_KeyboardReport_Data_t;
 
 
 
-class NKROKeyboard_ : public Print {
+class Keyboard_ : public Print {
   public:
-    NKROKeyboard_(void);
+    Keyboard_(void);
     void begin(void);
     void end(void);
 
@@ -65,8 +65,8 @@ class NKROKeyboard_ : public Print {
     size_t write(uint8_t k);
 
   protected:
-    HID_NKROKeyboardReport_Data_t _keyReport;
+    HID_KeyboardReport_Data_t _keyReport;
 
 };
-extern NKROKeyboard_ NKROKeyboard;
+extern Keyboard_ Keyboard;
 

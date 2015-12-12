@@ -2,7 +2,7 @@
   Copyright (c) 2014-2015 NicoHood
   See the readme for credit to other people.
 
-  NKROKeyboard example
+  NKRO Keyboard example
 
   Press a button to hold a lot of keys at the same time.
   NKRO can push 113 keys at the same time,
@@ -23,7 +23,7 @@ void setup() {
   pinMode(pinButton, INPUT_PULLUP);
 
   // Sends a clean report to the host. This is important on any Arduino type.
-  NKROKeyboard.begin();
+  Keyboard.begin();
 }
 
 void loop() {
@@ -34,17 +34,17 @@ void loop() {
     // Do not press to many at once or some OS will have problems.
     // Note that the resulting pressed order might differ,
     // because all keys are pressed at the same time.
-    NKROKeyboard.addKeyToReport('0');
-    NKROKeyboard.addKeyToReport('1');
-    NKROKeyboard.addKeyToReport('2');
-    NKROKeyboard.addKeyToReport('3');
-    NKROKeyboard.addKeyToReport('4');
-    NKROKeyboard.addKeyToReport('5');
-    NKROKeyboard.addKeyToReport('6');
-    NKROKeyboard.addKeyToReport('7');
-    NKROKeyboard.addKeyToReport('8');
-    NKROKeyboard.addKeyToReport('9');
-    NKROKeyboard.send_now();
+    NKROKeyboard.press(KEY_0);
+    NKROKeyboard.press(KEY_1);
+    NKROKeyboard.press(KEY_2);
+    NKROKeyboard.press(KEY_3);
+    NKROKeyboard.press(KEY_4);
+    NKROKeyboard.press(KEY_5);
+    NKROKeyboard.press(KEY_6);
+    NKROKeyboard.press(KEY_7);
+    NKROKeyboard.press(KEY_8);
+    NKROKeyboard.press(KEY_9);
+    NKROKeyboard.sendReport();
 
     // Release all keys and hit enter
     NKROKeyboard.releaseAll();
