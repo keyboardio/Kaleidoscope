@@ -102,11 +102,6 @@ int16_t AbsoluteMouse_::qadd16(int16_t base, int16_t increment) {
 	return base;
 }
 
-xAxis(0), yAxis(0), _buttons(0)
-{
-	// Empty
-}
-
 void AbsoluteMouse_::begin(void){
 	// release all buttons
 	end();
