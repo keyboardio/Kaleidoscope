@@ -226,7 +226,7 @@ void BootKeyboard_::wakeupHost(void){
  // call release(), releaseAll(), or otherwise clear the report and resend.
 
 
- bool BootKeyboard_::press(uint8_t k)
+ size_t BootKeyboard_::press(uint8_t k)
  {
  	uint8_t done = 0;
  	
