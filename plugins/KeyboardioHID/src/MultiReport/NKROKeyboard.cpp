@@ -116,7 +116,7 @@ size_t NKROKeyboard_::press(uint8_t k)
 		auto key = _keyReport.key;
 		
 		// Is key already in the list or did we found an empty slot?
-		if ((key == uint8_t(k) || key == KEY_RESERVED)) {
+		if ((key == uint8_t(k) || key == 0x00)) {
 			_keyReport.key = k;
 			return 1;
 		}
@@ -152,7 +152,7 @@ size_t NKROKeyboard_::release(KeyboardKeycode k)
 		
 		// Test the key report to see if k is present. Clear it if it exists.
 		if (key == k) {
-			_keyReport.key = KEY_RESERVED;
+			_keyReport.key = 0x00;
 			return 1;
 		}
 	}
