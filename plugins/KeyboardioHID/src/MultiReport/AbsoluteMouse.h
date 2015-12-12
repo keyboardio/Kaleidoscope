@@ -56,17 +56,6 @@ typedef union{
 class AbsoluteMouse_ 
 {
 public:
-    AbsoluteMouse_(void);
-
-protected: 
-	int16_t xAxis;
-	int16_t yAxis;
-	uint8_t _buttons;
-	inline void buttons(uint8_t b);
-
-	inline int16_t qadd16(int16_t base, int16_t increment);
-
-public:
 	AbsoluteMouse_(void);
 	inline void begin(void);
 	inline void end(void);
@@ -80,6 +69,14 @@ public:
 	
 	// Sending is public in the base class for advanced users.
 	inline void SendReport(void* data, int length);
+
+protected: 
+	int16_t xAxis;
+	int16_t yAxis;
+	uint8_t _buttons;
+	inline void buttons(uint8_t b);
+
+	inline int16_t qadd16(int16_t base, int16_t increment);
 
 
 
