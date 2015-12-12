@@ -30,36 +30,35 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 
 typedef union {
-	// Every usable Consumer key possible, up to 4 keys presses possible
-	uint8_t whole8[];
-	uint16_t whole16[];
-	uint32_t whole32[];
-	uint16_t keys[4];
-	struct {
-		uint16_t key1;
-		uint16_t key2;
-		uint16_t key3;
-		uint16_t key4;
-	};
+    // Every usable Consumer key possible, up to 4 keys presses possible
+    uint8_t whole8[];
+    uint16_t whole16[];
+    uint32_t whole32[];
+    uint16_t keys[4];
+    struct {
+        uint16_t key1;
+        uint16_t key2;
+        uint16_t key3;
+        uint16_t key4;
+    };
 } HID_ConsumerControlReport_Data_t;
 
 
-class Consumer_
-{
-public:
+class Consumer_ {
+  public:
     Consumer_(void);
-	inline void begin(void);
-	inline void end(void);
-	inline void write(uint16_t m);
-	inline void press(uint16_t m);
-	inline void release(uint16_t m);
-	inline void releaseAll(void);
-	
-	// Sending is public in the base class for advanced users.
-	void SendReport(void* data, int length);
+    inline void begin(void);
+    inline void end(void);
+    inline void write(uint16_t m);
+    inline void press(uint16_t m);
+    inline void release(uint16_t m);
+    inline void releaseAll(void);
+
+    // Sending is public in the base class for advanced users.
+    void SendReport(void* data, int length);
 
 
-protected: 
-	HID_ConsumerControlReport_Data_t _report;
+  protected:
+    HID_ConsumerControlReport_Data_t _report;
 };
 extern Consumer_ Consumer;

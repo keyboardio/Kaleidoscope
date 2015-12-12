@@ -38,36 +38,35 @@ THE SOFTWARE.
 // but the last 3 wont do anything from what I tested
 #define MOUSE_ALL (MOUSE_LEFT | MOUSE_RIGHT | MOUSE_MIDDLE | MOUSE_PREV | MOUSE_NEXT)
 
-typedef union{
-	// Mouse report: 8 buttons, position, wheel
-	uint8_t whole8[];
-	uint16_t whole16[];
-	uint32_t whole32[];
-	struct{
-		uint8_t buttons;
-		int8_t xAxis;
-		int8_t yAxis;
-		int8_t wheel;
-	};
+typedef union {
+    // Mouse report: 8 buttons, position, wheel
+    uint8_t whole8[];
+    uint16_t whole16[];
+    uint32_t whole32[];
+    struct {
+        uint8_t buttons;
+        int8_t xAxis;
+        int8_t yAxis;
+        int8_t wheel;
+    };
 } HID_MouseReport_Data_t;
 
 
-class Mouse_ 
-{
-public:
+class Mouse_ {
+  public:
     Mouse_(void);
-  inline void begin(void);
-  inline void end(void);
-  inline void click(uint8_t b = MOUSE_LEFT);
-  inline void move(signed char x, signed char y, signed char wheel = 0); 
-  inline void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
-  inline void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
-  inline bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
-  
-  inline void SendReport(void* data, int length);
+    inline void begin(void);
+    inline void end(void);
+    inline void click(uint8_t b = MOUSE_LEFT);
+    inline void move(signed char x, signed char y, signed char wheel = 0);
+    inline void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
+    inline void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
+    inline bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
 
-protected: 
-  uint8_t _buttons;
-  inline void buttons(uint8_t b);
+    inline void SendReport(void* data, int length);
+
+  protected:
+    uint8_t _buttons;
+    inline void buttons(uint8_t b);
 };
 extern Mouse_ Mouse;

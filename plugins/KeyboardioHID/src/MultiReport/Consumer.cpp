@@ -25,72 +25,70 @@ THE SOFTWARE.
 
 
 static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
-	/* Consumer Control (Sound/Media keys) */
-	0x05, 0x0C,									/* usage page (consumer device) */
-	0x09, 0x01, 								/* usage -- consumer control */
-	0xA1, 0x01, 								/* collection (application) */
-	0x85, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
-	/* 4 Media Keys */
-	0x15, 0x00, 								/* logical minimum */
-	0x26, 0xFF, 0x03, 							/* logical maximum (3ff) */
-	0x19, 0x00, 								/* usage minimum (0) */
-	0x2A, 0xFF, 0x03, 							/* usage maximum (3ff) */
-	0x95, 0x04, 								/* report count (4) */
-	0x75, 0x10, 								/* report size (16) */
-	0x81, 0x00, 								/* input */
-	0xC0 /* end collection */
+    /* Consumer Control (Sound/Media keys) */
+    0x05, 0x0C,									/* usage page (consumer device) */
+    0x09, 0x01, 								/* usage -- consumer control */
+    0xA1, 0x01, 								/* collection (application) */
+    0x85, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
+    /* 4 Media Keys */
+    0x15, 0x00, 								/* logical minimum */
+    0x26, 0xFF, 0x03, 							/* logical maximum (3ff) */
+    0x19, 0x00, 								/* usage minimum (0) */
+    0x2A, 0xFF, 0x03, 							/* usage maximum (3ff) */
+    0x95, 0x04, 								/* report count (4) */
+    0x75, 0x10, 								/* report size (16) */
+    0x81, 0x00, 								/* input */
+    0xC0 /* end collection */
 };
 
-Consumer_::Consumer_(void) 
-{
-	static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
-	HID().AppendDescriptor(&node);
+Consumer_::Consumer_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
+    HID().AppendDescriptor(&node);
 }
 
 void Consumer_::begin(void) {
-	// release all buttons
-	end();
+    // release all buttons
+    end();
 }
 
 void Consumer_::end(void) {
-	memset(&_report, 0, sizeof(_report));
-	SendReport(&_report, sizeof(_report));
+    memset(&_report, 0, sizeof(_report));
+    SendReport(&_report, sizeof(_report));
 }
 
 void Consumer_::write(uint16_t m) {
-	press(m);
-	release(m);
+    press(m);
+    release(m);
 }
 
 void Consumer_::press(uint16_t m) {
-	// search for a free spot
-	for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-		if (_report.keys[i] == 0x00) {
-			_report.keys[i] = m;
-			break;
-		}
-	}
-	SendReport(&_report, sizeof(_report));
+    // search for a free spot
+    for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
+        if (_report.keys[i] == 0x00) {
+            _report.keys[i] = m;
+            break;
+        }
+    }
+    SendReport(&_report, sizeof(_report));
 }
 
 void Consumer_::release(uint16_t m) {
-	// search and release the keypress
-	for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-		if (_report.keys[i] == m) {
-			_report.keys[i] = 0x00;
-			// no break to delete multiple keys
-		}
-	}
-	SendReport(&_report, sizeof(_report));
+    // search and release the keypress
+    for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
+        if (_report.keys[i] == m) {
+            _report.keys[i] = 0x00;
+            // no break to delete multiple keys
+        }
+    }
+    SendReport(&_report, sizeof(_report));
 }
 
 void Consumer_::releaseAll(void) {
-	end();
+    end();
 }
 
-void Consumer_::SendReport(void* data, int length)
-{
-	HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
+void Consumer_::SendReport(void* data, int length) {
+    HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
 }
 
 Consumer_ Consumer;

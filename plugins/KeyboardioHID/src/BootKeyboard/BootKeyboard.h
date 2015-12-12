@@ -32,79 +32,78 @@ THE SOFTWARE.
 #include "HIDAliases.h"
 
 
-typedef union{
-	// Low level key report: up to 6 keys and shift, ctrl etc at once
-	uint8_t whole8[];
-	uint16_t whole16[];
-	uint32_t whole32[];
-	struct{
-		uint8_t modifiers;
-		uint8_t reserved;
-		uint8_t keycodes[6];
-	};
-	uint8_t keys[8];
+typedef union {
+    // Low level key report: up to 6 keys and shift, ctrl etc at once
+    uint8_t whole8[];
+    uint16_t whole16[];
+    uint32_t whole32[];
+    struct {
+        uint8_t modifiers;
+        uint8_t reserved;
+        uint8_t keycodes[6];
+    };
+    uint8_t keys[8];
 } HID_KeyboardReport_Data_t;
 
 
-class BootKeyboard_ : public PluggableUSBModule
-{
-public:
+class BootKeyboard_ : public PluggableUSBModule {
+  public:
     BootKeyboard_(void);
-  size_t press(uint8_t);
-     void begin(void);
-      void end(void);
+    size_t press(uint8_t);
+    void begin(void);
+    void end(void);
     size_t write(uint8_t);
-  size_t release(uint8_t);
-  size_t releaseAll(void);
+    size_t release(uint8_t);
+    size_t releaseAll(void);
 
-   int sendReport(void);
+    int sendReport(void);
 
 
 
     uint8_t getLeds(void);
     uint8_t getProtocol(void);
     void wakeupHost(void);
-    
-    void setFeatureReport(void* report, int length){
-        if(length > 0){
+
+    void setFeatureReport(void* report, int length) {
+        if(length > 0) {
             featureReport = (uint8_t*)report;
             featureLength = length;
-            
+
             // Disable feature report by default
             disableFeatureReport();
         }
     }
-    
-    int availableFeatureReport(void){
-        if(featureLength < 0){
+
+    int availableFeatureReport(void) {
+        if(featureLength < 0) {
             return featureLength & ~0x8000;
         }
         return 0;
     }
-    
-    void enableFeatureReport(void){
+
+    void enableFeatureReport(void) {
         featureLength &= ~0x8000;
     }
-    
-    void disableFeatureReport(void){
+
+    void disableFeatureReport(void) {
         featureLength |= 0x8000;
     }
-    
 
-protected:
+
+  protected:
     HID_KeyboardReport_Data_t _keyReport;
 
     // Implementation of the PUSBListNode
     int getInterface(uint8_t* interfaceCount);
     int getDescriptor(USBSetup& setup);
     bool setup(USBSetup& setup);
-    
+
     uint8_t epType[1];
     uint8_t protocol;
     uint8_t idle;
-    
+
     uint8_t leds;
-    
+
     uint8_t* featureReport;
     int featureLength;
 };

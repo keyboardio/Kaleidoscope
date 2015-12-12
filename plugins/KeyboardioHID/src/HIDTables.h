@@ -2,21 +2,21 @@
 #define __HIDTables__
 
 
-// These mappings were extracted and transcribed from 
+// These mappings were extracted and transcribed from
 // http://www.usb.org_SLASH_developers_SLASH_devclass_docs_SLASH_Hut1_12v2.pdf
 //
-// In most cases, I've preserved the "official" USB Implementers forum 
+// In most cases, I've preserved the "official" USB Implementers forum
 // "Usage Name", though I've standardized some abbreviations and spacing
-// that were inconsistent in the original specification. Non alpha-numeric 
+// that were inconsistent in the original specification. Non alpha-numeric
 // characters in symbol names were converted into those characters' names.
 //
 // To match Arduino code style, all hid usage names are fully upper case.
 //
 // Not every HID usage listed in this file is currently supported by Arduino
-// In particular, any System Control or Consumer Control entry that doesn't 
+// In particular, any System Control or Consumer Control entry that doesn't
 // have a comment indicating that it's "HID type OSC" will require additional
 // code in the Arduino core to work.
-// 
+//
 // Non-working usages are listed here in the interest of not having to manually
 // convert more usage names each and every time our HID stack gets a little bit
 // better.

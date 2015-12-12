@@ -25,63 +25,61 @@ THE SOFTWARE.
 
 
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
-	//TODO limit to system keys only?
-	/*  System Control (Power Down, Sleep, Wakeup, ...) */
-	0x05, 0x01,								/* USAGE_PAGE (Generic Desktop) */
-	0x09, 0x80,								/* USAGE (System Control) */
-	0xa1, 0x01, 							/* COLLECTION (Application) */
-	0x85, HID_REPORTID_SYSTEMCONTROL,		/* REPORT_ID */
-	/* 1 system key */
-	0x15, 0x00, 							/* LOGICAL_MINIMUM (0) */
-	0x26, 0xff, 0x00, 						/* LOGICAL_MAXIMUM (255) */
-	0x19, 0x00, 							/* USAGE_MINIMUM (Undefined) */
-	0x29, 0xff, 							/* USAGE_MAXIMUM (System Menu Down) */
-	0x95, 0x01, 							/* REPORT_COUNT (1) */
-	0x75, 0x08, 							/* REPORT_SIZE (8) */
-	0x81, 0x00, 							/* INPUT (Data,Ary,Abs) */
-	0xc0 									/* END_COLLECTION */
+    //TODO limit to system keys only?
+    /*  System Control (Power Down, Sleep, Wakeup, ...) */
+    0x05, 0x01,								/* USAGE_PAGE (Generic Desktop) */
+    0x09, 0x80,								/* USAGE (System Control) */
+    0xa1, 0x01, 							/* COLLECTION (Application) */
+    0x85, HID_REPORTID_SYSTEMCONTROL,		/* REPORT_ID */
+    /* 1 system key */
+    0x15, 0x00, 							/* LOGICAL_MINIMUM (0) */
+    0x26, 0xff, 0x00, 						/* LOGICAL_MAXIMUM (255) */
+    0x19, 0x00, 							/* USAGE_MINIMUM (Undefined) */
+    0x29, 0xff, 							/* USAGE_MAXIMUM (System Menu Down) */
+    0x95, 0x01, 							/* REPORT_COUNT (1) */
+    0x75, 0x08, 							/* REPORT_SIZE (8) */
+    0x81, 0x00, 							/* INPUT (Data,Ary,Abs) */
+    0xc0 									/* END_COLLECTION */
 };
 
-System_::System_(void) 
-{
-	static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
-	HID().AppendDescriptor(&node);
+System_::System_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
+    HID().AppendDescriptor(&node);
 }
 
-void System_::begin(void){
-	// release all buttons
-	end();
+void System_::begin(void) {
+    // release all buttons
+    end();
 }
 
-void System_::end(void){
-	uint8_t _report = 0x00;
-	SendReport(&_report, sizeof(_report));
+void System_::end(void) {
+    uint8_t _report = 0x00;
+    SendReport(&_report, sizeof(_report));
 }
 
-void System_::write(uint8_t s){
-	press(s);
-	release();
+void System_::write(uint8_t s) {
+    press(s);
+    release();
 }
 
-void System_::release(void){
-	begin();
+void System_::release(void) {
+    begin();
 }
 
-void System_::releaseAll(void){
-	begin();
+void System_::releaseAll(void) {
+    begin();
 }
 
-void System_::press(uint8_t s){
-	if (s == HID_SYSTEM_WAKE_UP) 
-		USBDevice.wakeupHost();
-	else
-		SendReport(&s, sizeof(s));
+void System_::press(uint8_t s) {
+    if (s == HID_SYSTEM_WAKE_UP)
+        USBDevice.wakeupHost();
+    else
+        SendReport(&s, sizeof(s));
 }
 
 
-void System_::SendReport(void* data, int length)
-{
-	HID().SendReport(HID_REPORTID_SYSTEMCONTROL, data, length);
+void System_::SendReport(void* data, int length) {
+    HID().SendReport(HID_REPORTID_SYSTEMCONTROL, data, length);
 }
 
 System_ System;

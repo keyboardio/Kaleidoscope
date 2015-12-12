@@ -25,13 +25,13 @@ THE SOFTWARE.
 
 
 static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
-	/*  Mouse absolute */
+    /*  Mouse absolute */
     0x05, 0x01,                      /* USAGE_PAGE (Generic Desktop)	  54 */
     0x09, 0x02,                      /* USAGE (Mouse) */
     0xA1, 0x01,                      /* COLLECTION (Application) */
     0x85, HID_REPORTID_MOUSE_ABSOLUTE,	/*     REPORT_ID */
 
-	/* 8 Buttons */
+    /* 8 Buttons */
     0x05, 0x09,                      /*     USAGE_PAGE (Button) */
     0x19, 0x01,                      /*     USAGE_MINIMUM (Button 1) */
     0x29, 0x08,                      /*     USAGE_MAXIMUM (Button 8) */
@@ -41,17 +41,17 @@ static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     0x75, 0x01,                      /*     REPORT_SIZE (1) */
     0x81, 0x02,                      /*     INPUT (Data,Var,Abs) */
 
-	/* X, Y */
+    /* X, Y */
     0x05, 0x01,                      /*     USAGE_PAGE (Generic Desktop) */
     0x09, 0x30,                      /*     USAGE (X) */
     0x09, 0x31,                      /*     USAGE (Y) */
-	0x16, 0x00, 0x80,				 /* 	Logical Minimum (-32768) */
-	0x26, 0xFF, 0x7F,				 /* 	Logical Maximum (32767) */
-	0x75, 0x10,						 /* 	Report Size (16), */
-	0x95, 0x02,						 /* 	Report Count (2), */
-	0x81, 0x02,						 /* 	Input (Data, Variable, Absolute) */
+    0x16, 0x00, 0x80,				 /* 	Logical Minimum (-32768) */
+    0x26, 0xFF, 0x7F,				 /* 	Logical Maximum (32767) */
+    0x75, 0x10,						 /* 	Report Size (16), */
+    0x95, 0x02,						 /* 	Report Count (2), */
+    0x81, 0x02,						 /* 	Input (Data, Variable, Absolute) */
 
-	/* Wheel */
+    /* Wheel */
     0x09, 0x38,                      /*     USAGE (Wheel) */
     0x15, 0x81,                      /*     LOGICAL_MINIMUM (-127) */
     0x25, 0x7f,                      /*     LOGICAL_MAXIMUM (127) */
@@ -59,96 +59,93 @@ static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     0x95, 0x01,                      /*     REPORT_COUNT (1) */
     0x81, 0x06,                      /*     INPUT (Data,Var,Rel) */
 
-	/* End */
-    0xc0                            /* END_COLLECTION */ 
+    /* End */
+    0xc0                            /* END_COLLECTION */
 };
 
-AbsoluteMouse_::AbsoluteMouse_(void) 
-{
-	static HIDSubDescriptor node(_hidMultiReportDescriptorAbsoluteMouse, sizeof(_hidMultiReportDescriptorAbsoluteMouse));
-	HID().AppendDescriptor(&node);
+AbsoluteMouse_::AbsoluteMouse_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorAbsoluteMouse, sizeof(_hidMultiReportDescriptorAbsoluteMouse));
+    HID().AppendDescriptor(&node);
 }
 
 
-void AbsoluteMouse_::SendReport(void* data, int length)
-{
-	HID().SendReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length);
+void AbsoluteMouse_::SendReport(void* data, int length) {
+    HID().SendReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length);
 }
 
 
-void AbsoluteMouse_::buttons(uint8_t b){
-	if (b != _buttons){
-		_buttons = b;
-		moveTo(xAxis, yAxis, 0);
-	}
+void AbsoluteMouse_::buttons(uint8_t b) {
+    if (b != _buttons) {
+        _buttons = b;
+        moveTo(xAxis, yAxis, 0);
+    }
 }
 
 int16_t AbsoluteMouse_::qadd16(int16_t base, int16_t increment) {
-	// Separate between subtracting and adding  
-	if (increment < 0) {
-		// Subtracting more would cause an undefined overflow
- 		if ((int16_t)0x8000 - increment > base)
-  			base = 0x8000;
-		else
-  			base += increment;
-	}
-	else {
-		// Adding more would cause an undefined overflow
-		if ((int16_t)0x7FFF - increment < base)
-  			base = 0x7FFF;
-		else
-  			base += increment;
-	}
-	return base;
+    // Separate between subtracting and adding
+    if (increment < 0) {
+        // Subtracting more would cause an undefined overflow
+        if ((int16_t)0x8000 - increment > base)
+            base = 0x8000;
+        else
+            base += increment;
+    } else {
+        // Adding more would cause an undefined overflow
+        if ((int16_t)0x7FFF - increment < base)
+            base = 0x7FFF;
+        else
+            base += increment;
+    }
+    return base;
 }
 
-void AbsoluteMouse_::begin(void){
-	// release all buttons
-	end();
+void AbsoluteMouse_::begin(void) {
+    // release all buttons
+    end();
 }
 
-void AbsoluteMouse_::end(void){
-	_buttons = 0;
-	moveTo(xAxis, yAxis, 0);
+void AbsoluteMouse_::end(void) {
+    _buttons = 0;
+    moveTo(xAxis, yAxis, 0);
 }
 
-void AbsoluteMouse_::click(uint8_t b){
-	_buttons = b;
-	moveTo(xAxis, yAxis, 0);
-	_buttons = 0;
-	moveTo(xAxis, yAxis, 0);
+void AbsoluteMouse_::click(uint8_t b) {
+    _buttons = b;
+    moveTo(xAxis, yAxis, 0);
+    _buttons = 0;
+    moveTo(xAxis, yAxis, 0);
 }
 
-void AbsoluteMouse_::moveTo(int x, int y, signed char wheel){
-	xAxis = x;
-	yAxis = y;
-	HID_MouseAbsoluteReport_Data_t report;
-	report.buttons = _buttons;
-	report.xAxis = x;
-	report.yAxis = y;
-	report.wheel = wheel;
-	SendReport(&report, sizeof(report));
+void AbsoluteMouse_::moveTo(int x, int y, signed char wheel) {
+    xAxis = x;
+    yAxis = y;
+    HID_MouseAbsoluteReport_Data_t report;
+    report.buttons = _buttons;
+    report.xAxis = x;
+    report.yAxis = y;
+    report.wheel = wheel;
+    SendReport(&report, sizeof(report));
 }
 
-void AbsoluteMouse_::move(int x, int y, signed char wheel){
-	moveTo(qadd16(xAxis, x), qadd16(yAxis, y), wheel);
+void AbsoluteMouse_::move(int x, int y, signed char wheel) {
+    moveTo(qadd16(xAxis, x), qadd16(yAxis, y), wheel);
 }
 
-void AbsoluteMouse_::press(uint8_t b){
-	// press LEFT by default
-	buttons(_buttons | b);
+void AbsoluteMouse_::press(uint8_t b) {
+    // press LEFT by default
+    buttons(_buttons | b);
 }
 
-void AbsoluteMouse_::release(uint8_t b){
-	// release LEFT by default
-	buttons(_buttons & ~b);
+void AbsoluteMouse_::release(uint8_t b) {
+    // release LEFT by default
+    buttons(_buttons & ~b);
 }
 
-bool AbsoluteMouse_::isPressed(uint8_t b){
-	// check LEFT by default
-	if ((b & _buttons) > 0)
-		return true;
-	return false;
+bool AbsoluteMouse_::isPressed(uint8_t b) {
+    // check LEFT by default
+    if ((b & _buttons) > 0)
+        return true;
+    return false;
 }
 
 

@@ -30,27 +30,26 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 #include "HIDTables.h"
 
-typedef union{
-	// Every usable system control key possible
-	uint8_t whole8[];
-	uint8_t key;
+typedef union {
+    // Every usable system control key possible
+    uint8_t whole8[];
+    uint8_t key;
 } HID_SystemControlReport_Data_t;
 
 
-class System_ 
-{
-public:
-	inline void begin(void);
-	inline void end(void);
-	inline void write(uint8_t s);
-	inline void press(uint8_t s);
-	inline void release(void);
-	inline void releaseAll(void);
-	inline void SendReport(void* data, int length);
-	
+class System_ {
+  public:
+    inline void begin(void);
+    inline void end(void);
+    inline void write(uint8_t s);
+    inline void press(uint8_t s);
+    inline void release(void);
+    inline void releaseAll(void);
+    inline void SendReport(void* data, int length);
+
     System_(void);
 
-protected: 
+  protected:
 };
 
 
