@@ -37,7 +37,7 @@ typedef union {
 } HID_SystemControlReport_Data_t;
 
 
-class System_ {
+class SystemControl_ {
   public:
     inline void begin(void);
     inline void end(void);
@@ -47,12 +47,12 @@ class System_ {
     inline void releaseAll(void);
     inline void SendReport(void* data, int length);
 
-    System_(void);
+    SystemControl_(void);
 
   protected:
 };
 
 
 
-extern System_ System;
+extern SystemControl_ SystemControl;
 

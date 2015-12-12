@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "System.h"
+#include "SystemControl.h"
 
 
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
@@ -42,35 +42,35 @@ static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
     0xc0 									/* END_COLLECTION */
 };
 
-System_::System_(void) {
+SystemControl_::SystemControl_(void) {
     static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
     HID().AppendDescriptor(&node);
 }
 
-void System_::begin(void) {
+void SystemControl_::begin(void) {
     // release all buttons
     end();
 }
 
-void System_::end(void) {
+void SystemControl_::end(void) {
     uint8_t _report = 0x00;
     SendReport(&_report, sizeof(_report));
 }
 
-void System_::write(uint8_t s) {
+void SystemControl_::write(uint8_t s) {
     press(s);
     release();
 }
 
-void System_::release(void) {
+void SystemControl_::release(void) {
     begin();
 }
 
-void System_::releaseAll(void) {
+void SystemControl_::releaseAll(void) {
     begin();
 }
 
-void System_::press(uint8_t s) {
+void SystemControl_::press(uint8_t s) {
     if (s == HID_SYSTEM_WAKE_UP)
         USBDevice.wakeupHost();
     else
@@ -78,11 +78,11 @@ void System_::press(uint8_t s) {
 }
 
 
-void System_::SendReport(void* data, int length) {
+void SystemControl_::SendReport(void* data, int length) {
     HID().SendReport(HID_REPORTID_SYSTEMCONTROL, data, length);
 }
 
-System_ System;
+SystemControl_ SystemControl;
 
 
 
