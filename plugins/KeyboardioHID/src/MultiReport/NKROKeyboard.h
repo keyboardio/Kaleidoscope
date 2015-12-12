@@ -55,13 +55,13 @@ typedef union {
 class NKROKeyboard_ : public Print {
   public:
     NKROKeyboard_(void);
-    inline void begin(void);
-    inline void end(void);
+    void begin(void);
+    void end(void);
 
-    inline size_t press(uint8_t k);
-    inline size_t release(uint8_t k);
-    inline size_t releaseAll(void);
-    inline int sendReport(void);
+    size_t press(uint8_t k);
+    size_t release(uint8_t k);
+    size_t releaseAll(void);
+    int sendReport(void);
     size_t write(uint8_t k);
 
   protected:
