@@ -230,9 +230,9 @@ void BootKeyboard_::wakeupHost(void){
  {
  	uint8_t done = 0;
  	
- 	if ((k >= HID_KEYBOARD_LEFT_CONTROL) && (k <= HID_KEYBOARD_RIGHT_GUI)) {
+ 	if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
  		// it's a modifier key
- 		_keyReport.modifiers |= (0x01 << (k - HID_KEYBOARD_LEFT_CONTROL));
+ 		_keyReport.modifiers |= (0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER));
  	} else {
  		// it's some other key:
  		// Add k to the key report only if it's not already present
@@ -271,7 +271,7 @@ bool BootKeyboard_::release(uint8_t k)
 	uint8_t i;
 	uint8_t count;
 	
-	if ((k >= HID_KEYBOARD_LEFT_CONTROL) && (k <= HID_KEYBOARD_RIGHT_GUI)) {
+	if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
 		// it's a modifier key
 		_keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_LEFT_CONTROL)));
 	} else {

@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 
 #include "HIDTables.h"
+#include "HIDAliases.h"
 
 // Max value for USB EP_SIZE 16
 // +1 reportID, +1 modifier, +1 custom key

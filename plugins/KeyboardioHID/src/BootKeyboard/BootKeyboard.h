@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "HIDTables.h"
+#include "HIDAliases.h"
 
 
 typedef union{

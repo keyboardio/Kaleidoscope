@@ -101,10 +101,10 @@ size_t NKROKeyboard_::press(KeyboardKeycode k)
 	}
 
 	// It's a modifier key
-	else if(k >= KEY_LEFT_CTRL && k <= KEY_RIGHT_GUI)
+	else if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER)
 	{
 		// Convert key into bitfield (0 - 7)
-		k = KeyboardKeycode(uint8_t(k) - uint8_t(KEY_LEFT_CTRL));
+		k = uint8_t(k) - uint8_t(HID_KEYBOARD_FIRST_MODIFIER); 
 		_keyReport.modifiers = (1 << k);
 		return 1;
 	}
@@ -136,10 +136,10 @@ size_t NKROKeyboard_::release(KeyboardKeycode k)
 	}
 
 	// It's a modifier key
-	else if(k >= KEY_LEFT_CTRL && k <= KEY_RIGHT_GUI)
+	else if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER)
 	{
 		// Convert key into bitfield (0 - 7)
-		k = KeyboardKeycode(uint8_t(k) - uint8_t(KEY_LEFT_CTRL));
+		k = k - HID_KEYBOARD_FIRST_MODIFIER;
 		_keyReport.modifiers &= ~(1 << k);
 		return 1;
 	}
