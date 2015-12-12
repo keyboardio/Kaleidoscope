@@ -91,17 +91,12 @@ int NKROKeyboard_::sendReport(void)
 	return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
 
-size_t NKROKeyboard_::set(KeyboardKeycode k, bool s) 
+size_t NKROKeyboard_::press(KeyboardKeycode k)
 {
 	// Press keymap key
 	if (k < NKRO_KEY_COUNT){
 		uint8_t bit = 1 << (uint8_t(k) % 8);
-		if(s){
-			_keyReport.keys[k / 8] |= bit;
-		}
-		else{
-			_keyReport.keys[k / 8] &= ~bit;
-		}
+		_keyReport.keys[k / 8] |= bit;
 		return 1;
 	}
 
@@ -110,12 +105,7 @@ size_t NKROKeyboard_::set(KeyboardKeycode k, bool s)
 	{
 		// Convert key into bitfield (0 - 7)
 		k = KeyboardKeycode(uint8_t(k) - uint8_t(KEY_LEFT_CTRL));
-		if(s){
-			_keyReport.modifiers = (1 << k);
-		}
-		else{
-			_keyReport.modifiers &= ~(1 << k);
-		}
+		_keyReport.modifiers = (1 << k);
 		return 1;
 	}
 	
@@ -126,13 +116,42 @@ size_t NKROKeyboard_::set(KeyboardKeycode k, bool s)
 		auto key = _keyReport.key;
 		
 		// Is key already in the list or did we found an empty slot?
-		if (s && (key == uint8_t(k) || key == KEY_RESERVED)) {
+		if ((key == uint8_t(k) || key == KEY_RESERVED)) {
 			_keyReport.key = k;
 			return 1;
 		}
+	}
+	
+	// No empty/pressed key was found
+	return 0;
+}
+
+size_t NKROKeyboard_::release(KeyboardKeycode k)
+{
+	// Press keymap key
+	if (k < NKRO_KEY_COUNT){
+		uint8_t bit = 1 << (uint8_t(k) % 8);
+		_keyReport.keys[k / 8] &= ~bit;
+		return 1;
+	}
+
+	// It's a modifier key
+	else if(k >= KEY_LEFT_CTRL && k <= KEY_RIGHT_GUI)
+	{
+		// Convert key into bitfield (0 - 7)
+		k = KeyboardKeycode(uint8_t(k) - uint8_t(KEY_LEFT_CTRL));
+		_keyReport.modifiers &= ~(1 << k);
+		return 1;
+	}
+	
+	// Its a custom key (outside our keymap)
+	else{
+		// Add k to the key report only if it's not already present
+		// and if there is an empty slot. Remove the first available key.
+		auto key = _keyReport.key;
 		
 		// Test the key report to see if k is present. Clear it if it exists.
-		if (!s && (key == k)) {
+		if (key == k) {
 			_keyReport.key = KEY_RESERVED;
 			return 1;
 		}
