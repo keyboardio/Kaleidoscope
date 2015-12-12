@@ -54,7 +54,7 @@ void System_::begin(void){
 }
 
 void System_::end(void){
-	SystemKeycode _report = HID_SYSTEM_UNASSIGNED;
+	uint8_t _report = 0x00;
 	SendReport(&_report, sizeof(_report));
 }
 
