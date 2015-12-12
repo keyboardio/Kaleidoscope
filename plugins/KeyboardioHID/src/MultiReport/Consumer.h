@@ -56,7 +56,7 @@ public:
 	inline void releaseAll(void);
 	
 	// Sending is public in the base class for advanced users.
-	virtual void SendReport(void* data, int length) = 0;
+	void SendReport(void* data, int length);
 
 
 protected: 
