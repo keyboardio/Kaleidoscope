@@ -126,7 +126,7 @@ size_t NKROKeyboard_::press(uint8_t k)
 	return 0;
 }
 
-size_t NKROKeyboard_::release(KeyboardKeycode k)
+size_t NKROKeyboard_::release(uint8_t k)
 {
 	// Press keymap key
 	if (k < NKRO_KEY_COUNT){
