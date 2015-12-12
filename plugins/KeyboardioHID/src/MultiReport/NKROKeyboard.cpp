@@ -171,5 +171,24 @@ size_t NKROKeyboard_::releaseAll(void) {
     return ret;
 }
 
+
+
+size_t NKROKeyboard_::write(uint8_t k) {
+    if(k >= sizeof(_asciimap)) // Ignore invalid input
+        return 0;
+
+    // Read key from ascii lookup table
+    k = pgm_read_byte(_asciimap + k);
+
+    if(k & SHIFT)
+        press(HID_KEYBOARD_LEFT_SHIFT);
+    press(k & ~SHIFT);
+    sendReport();
+    releaseAll();
+    sendReport();
+}
+
+
+
 NKROKeyboard_ NKROKeyboard;
 

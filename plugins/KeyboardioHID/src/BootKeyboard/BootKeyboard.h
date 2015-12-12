@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 #include "HIDTables.h"
 #include "HIDAliases.h"
-
+#include "ASCIIMap.h"
 
 typedef union {
     // Low level key report: up to 6 keys and shift, ctrl etc at once

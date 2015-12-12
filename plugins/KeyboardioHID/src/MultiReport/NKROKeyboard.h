@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 #include "HIDTables.h"
 #include "HIDAliases.h"
+#include "ASCIIMap.h"
 
 // Max value for USB EP_SIZE 16
 // +1 reportID, +1 modifier, +1 custom key
@@ -61,6 +62,8 @@ class NKROKeyboard_ {
     inline size_t release(uint8_t k);
     inline size_t releaseAll(void);
     inline int sendReport(void);
+    size_t write(uint8_t k);
+
   protected:
     HID_NKROKeyboardReport_Data_t _keyReport;
 
