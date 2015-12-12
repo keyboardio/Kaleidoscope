@@ -46,7 +46,7 @@ public:
 	inline void press(uint8_t s);
 	inline void release(void);
 	inline void releaseAll(void);
-	virtual void SendReport(void* data, int length) = 0;
+	inline void SendReport(void* data, int length);
 	
     System_(void);
 
