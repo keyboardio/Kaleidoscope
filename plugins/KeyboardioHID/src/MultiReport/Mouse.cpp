@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "ImprovedMouse.h"
+#include "Mouse.h"
 
 
 static const uint8_t _hidMultiReportDescriptorMouse[] PROGMEM = {
