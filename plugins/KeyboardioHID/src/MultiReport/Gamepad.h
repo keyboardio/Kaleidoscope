@@ -99,7 +99,7 @@ typedef union {
 	};
 } HID_GamepadReport_Data_t;
 
-class Gamepad_ : public GamepadAPI
+class Gamepad_
 {
 public:
     Gamepad_(void);
@@ -121,8 +121,7 @@ public:
 	inline void dPad1(int8_t d);
 	inline void dPad2(int8_t d);
 	
-	// Sending is public in the base class for advanced users.
-	virtual void SendReport(void* data, int length) = 0;
+	inline void SendReport(void* data, int length);
 protected:
 	HID_GamepadReport_Data_t _report;
 };
