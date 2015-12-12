@@ -46,7 +46,7 @@ typedef union {
 } HID_KeyboardReport_Data_t;
 
 
-class BootKeyboard_ : public PluggableUSBModule {
+class BootKeyboard_ : public Print, PluggableUSBModule {
   public:
     BootKeyboard_(void);
     size_t press(uint8_t);

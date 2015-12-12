@@ -52,7 +52,7 @@ typedef union {
 
 
 
-class NKROKeyboard_ {
+class NKROKeyboard_ : public Print {
   public:
     NKROKeyboard_(void);
     inline void begin(void);
