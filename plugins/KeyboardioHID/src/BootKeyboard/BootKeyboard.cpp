@@ -239,9 +239,9 @@ void BootKeyboard_::wakeupHost(void){
  		// and if there is an empty slot.
 		for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++)
         {
- 			if (_keyReport.keys[i] != k) { // is k already in list?
- 				if (0 == _keyReport.keys[i]) { // have we found an empty slot?
- 					_keyReport.keys[i] = k;
+ 			if (_keyReport.keycodes[i] != k) { // is k already in list?
+ 				if (0 == _keyReport.keycodes[i]) { // have we found an empty slot?
+ 					_keyReport.keycodes[i] = k;
  					done = 1;
  					break;
  				}
@@ -279,8 +279,8 @@ size_t BootKeyboard_::release(uint8_t k)
 		// Check all positions in case the key is present more than once (which it shouldn't be)
 		for (i = 0; i < sizeof(_keyReport.keycodes); i++)
         {
-            if (_keyReport.keys[i] == k) {
-				_keyReport.keys[i] = 0;
+            if (_keyReport.keycodes[i] == k) {
+				_keyReport.keycodes[i] = 0;
 			}
 		}
 		
@@ -292,12 +292,12 @@ size_t BootKeyboard_::release(uint8_t k)
 		count = 0; // holds the number of zeros we've found
 		i = 0;
 		while ((i + count) < sizeof(_keyReport.keycodes)) {
-			if (0 == _keyReport.keys[i]) {
+			if (0 == _keyReport.keycodes[i]) {
 				count++; // one more zero
 				for (uint8_t j = i; j < sizeof(_keyReport.keycodes)-count; j++) {
-					_keyReport.keys[j] = _keyReport.keys[j+1];
+					_keyReport.keycodes[j] = _keyReport.keycodes[j+1];
 				}
-				_keyReport.keys[sizeof(_keyReport.keycodes)-count] = 0;
+				_keyReport.keycodes[sizeof(_keyReport.keycodes)-count] = 0;
 			} else {
 				i++; // one more non-zero
 			}
