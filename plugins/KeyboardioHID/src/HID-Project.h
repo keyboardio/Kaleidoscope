@@ -36,7 +36,7 @@ THE SOFTWARE.
 #endif
 
 
-
+#include "LEDs.h"
 
 
 // Include all HID libraries (.a linkage required to work) properly
