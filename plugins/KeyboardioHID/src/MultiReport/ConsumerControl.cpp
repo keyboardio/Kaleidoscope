@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "Consumer.h"
+#include "ConsumerControl.h"
 
 
 static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
@@ -41,27 +41,27 @@ static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
     0xC0 /* end collection */
 };
 
-Consumer_::Consumer_(void) {
+ConsumerControl_::ConsumerControl_(void) {
     static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
     HID().AppendDescriptor(&node);
 }
 
-void Consumer_::begin(void) {
+void ConsumerControl_::begin(void) {
     // release all buttons
     end();
 }
 
-void Consumer_::end(void) {
+void ConsumerControl_::end(void) {
     memset(&_report, 0, sizeof(_report));
     SendReport(&_report, sizeof(_report));
 }
 
-void Consumer_::write(uint16_t m) {
+void ConsumerControl_::write(uint16_t m) {
     press(m);
     release(m);
 }
 
-void Consumer_::press(uint16_t m) {
+void ConsumerControl_::press(uint16_t m) {
     // search for a free spot
     for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
         if (_report.keys[i] == 0x00) {
@@ -72,7 +72,7 @@ void Consumer_::press(uint16_t m) {
     SendReport(&_report, sizeof(_report));
 }
 
-void Consumer_::release(uint16_t m) {
+void ConsumerControl_::release(uint16_t m) {
     // search and release the keypress
     for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
         if (_report.keys[i] == m) {
@@ -83,15 +83,15 @@ void Consumer_::release(uint16_t m) {
     SendReport(&_report, sizeof(_report));
 }
 
-void Consumer_::releaseAll(void) {
+void ConsumerControl_::releaseAll(void) {
     end();
 }
 
-void Consumer_::SendReport(void* data, int length) {
+void ConsumerControl_::SendReport(void* data, int length) {
     HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
 }
 
-Consumer_ Consumer;
+ConsumerControl_ ConsumerControl;
 
 
 

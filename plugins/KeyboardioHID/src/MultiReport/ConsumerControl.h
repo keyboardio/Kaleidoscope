@@ -44,9 +44,9 @@ typedef union {
 } HID_ConsumerControlReport_Data_t;
 
 
-class Consumer_ {
+class ConsumerControl_ {
   public:
-    Consumer_(void);
+    ConsumerControl_(void);
     inline void begin(void);
     inline void end(void);
     inline void write(uint16_t m);
@@ -61,4 +61,4 @@ class Consumer_ {
   protected:
     HID_ConsumerControlReport_Data_t _report;
 };
-extern Consumer_ Consumer;
+extern ConsumerControl_ ConsumerControl;

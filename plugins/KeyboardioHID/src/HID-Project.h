@@ -43,7 +43,7 @@ THE SOFTWARE.
 #include "BootKeyboard/BootKeyboard.h"
 #include "MultiReport/AbsoluteMouse.h"
 #include "MultiReport/Mouse.h"
-#include "MultiReport/Consumer.h"
+#include "MultiReport/ConsumerControl.h"
 #include "MultiReport/Gamepad.h"
 #include "MultiReport/System.h"
 #include "MultiReport/NKROKeyboard.h"
