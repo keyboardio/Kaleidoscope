@@ -70,6 +70,7 @@
 // Keyboard HID mappings
 
 //  Reserved (no_event_indicated)	0x00
+#define HID_KEYBOARD_NO_EVENT 0x00
 #define HID_KEYBOARD_ERROR_ROLLOVER	0x01
 #define HID_KEYBOARD_POST_FAIL	0x02
 #define HID_KEYBOARD_ERROR_UNDEFINED	0x03
