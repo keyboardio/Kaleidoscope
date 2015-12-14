@@ -130,7 +130,7 @@ int Keyboard_::sendReport(void) {
 }
 
 size_t Keyboard_::press(uint8_t k) {
-    // Press keymap key
+    // If the key is in the range of 'printable' keys 
     if (k <= HID_KEYPAD_HEXADECIMAL ) {
         uint8_t bit = 1 << (uint8_t(k) % 8);
         _keyReport.keys[k / 8] |= bit;
@@ -140,7 +140,7 @@ size_t Keyboard_::press(uint8_t k) {
     // It's a modifier key
     else if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
         // Convert key into bitfield (0 - 7)
-        k = uint8_t(k) - uint8_t(HID_KEYBOARD_FIRST_MODIFIER);
+        k = k - HID_KEYBOARD_FIRST_MODIFIER;
         _keyReport.modifiers = (1 << k);
         return 1;
     }
@@ -150,9 +150,9 @@ size_t Keyboard_::press(uint8_t k) {
 }
 
 size_t Keyboard_::release(uint8_t k) {
-    // Press keymap key
+    // If we're releasing a printable key
     if (k <= HID_KEYPAD_HEXADECIMAL) {
-        uint8_t bit = 1 << (uint8_t(k) % 8);
+        uint8_t bit = 1 << (k % 8);
         _keyReport.keys[k / 8] &= ~bit;
         return 1;
     }
