@@ -43,7 +43,7 @@ typedef union {
         uint8_t keycodes[6];
     };
     uint8_t keys[8];
-} HID_KeyboardReport_Data_t;
+} HID_BootKeyboardReport_Data_t;
 
 
 class BootKeyboard_ : public Print, PluggableUSBModule {
@@ -91,7 +91,7 @@ class BootKeyboard_ : public Print, PluggableUSBModule {
 
 
   protected:
-    HID_KeyboardReport_Data_t _keyReport;
+    HID_BootKeyboardReport_Data_t _keyReport;
 
     // Implementation of the PUSBListNode
     int getInterface(uint8_t* interfaceCount);
