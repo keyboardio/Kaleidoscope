@@ -22,23 +22,23 @@ THE SOFTWARE.
 */
 
 #include "ConsumerControl.h"
-
+#include "DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
     /* Consumer Control (Sound/Media keys) */
-    0x05, 0x0C,									/* usage page (consumer device) */
-    0x09, 0x01, 								/* usage -- consumer control */
-    0xA1, 0x01, 								/* collection (application) */
-    0x85, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
+    _USAGE_PAGE, 0x0C,									/* usage page (consumer device) */
+    _USAGE, 0x01, 								/* usage -- consumer control */
+    _COLLECTION, _APPLICATION, 								/* collection (application) */
+    _REPORT_ID, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
     /* 4 Media Keys */
-    0x15, 0x00, 								/* logical minimum */
-    0x26, 0xFF, 0x03, 							/* logical maximum (3ff) */
-    0x19, 0x00, 								/* usage minimum (0) */
-    0x2A, 0xFF, 0x03, 							/* usage maximum (3ff) */
-    0x95, 0x04, 								/* report count (4) */
-    0x75, 0x10, 								/* report size (16) */
-    0x81, 0x00, 								/* input */
-    0xC0 /* end collection */
+    _LOGICAL_MINIMUM, 0x00, 								/* logical minimum */
+    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x03, 							/* logical maximum (3ff) */
+    _USAGE_MINIMUM, 0x00, 								/* usage minimum (0) */
+    _MULTIBYTE(_USAGE_MAXIMUM), 0xFF, 0x03, 							/* usage maximum (3ff) */
+    _REPORT_COUNT, 0x04, 								/* report count (4) */
+    _REPORT_SIZE, 0x10, 								/* report size (16) */
+    _INPUT, 0x00, 								/* input */
+    _END_COLLECTION /* end collection */
 };
 
 ConsumerControl_::ConsumerControl_(void) {

@@ -22,24 +22,24 @@ THE SOFTWARE.
 */
 
 #include "SystemControl.h"
-
+#include "DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
     //TODO limit to system keys only?
     /*  System Control (Power Down, Sleep, Wakeup, ...) */
-    0x05, 0x01,								/* USAGE_PAGE (Generic Desktop) */
-    0x09, 0x80,								/* USAGE (System Control) */
-    0xa1, 0x01, 							/* COLLECTION (Application) */
-    0x85, HID_REPORTID_SYSTEMCONTROL,		/* REPORT_ID */
+    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,								/* USAGE_PAGE (Generic Desktop) */
+    _USAGE, 0x80,								/* USAGE (System Control) */
+    _COLLECTION, _APPLICATION, 							/* COLLECTION (Application) */
+    _REPORT_ID, HID_REPORTID_SYSTEMCONTROL,		/* REPORT_ID */
     /* 1 system key */
-    0x15, 0x00, 							/* LOGICAL_MINIMUM (0) */
-    0x26, 0xff, 0x00, 						/* LOGICAL_MAXIMUM (255) */
-    0x19, 0x00, 							/* USAGE_MINIMUM (Undefined) */
-    0x29, 0xff, 							/* USAGE_MAXIMUM (System Menu Down) */
-    0x95, 0x01, 							/* REPORT_COUNT (1) */
-    0x75, 0x08, 							/* REPORT_SIZE (8) */
-    0x81, 0x00, 							/* INPUT (Data,Ary,Abs) */
-    0xc0 									/* END_COLLECTION */
+    _LOGICAL_MINIMUM, 0x00, 							/* LOGICAL_MINIMUM (0) */
+    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xff, 0x00, 						/* LOGICAL_MAXIMUM (255) */
+    _USAGE_MINIMUM, 0x00, 							/* USAGE_MINIMUM (Undefined) */
+    _USAGE_MAXIMUM, 0xff, 							/* USAGE_MAXIMUM (System Menu Down) */
+    _REPORT_COUNT, 0x01, 							/* REPORT_COUNT (1) */
+    _REPORT_SIZE, 0x08, 							/* REPORT_SIZE (8) */
+    _INPUT, (_DATA|_ARRAY|_ABSOLUTE), 							/* INPUT (Data,Ary,Abs) */
+    _END_COLLECTION 									/* END_COLLECTION */
 };
 
 SystemControl_::SystemControl_(void) {
