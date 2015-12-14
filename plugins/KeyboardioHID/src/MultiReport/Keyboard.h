@@ -50,7 +50,6 @@ typedef union {
     struct {
         uint8_t modifiers;
         uint8_t keys[NKRO_KEY_COUNT / 8];
-        uint8_t key;
     };
     uint8_t allkeys[2 + NKRO_KEY_COUNT / 8];
 } HID_KeyboardReport_Data_t;

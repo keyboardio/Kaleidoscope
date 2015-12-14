@@ -24,6 +24,8 @@ THE SOFTWARE.
 #include "Keyboard.h"
 #include "DescriptorPrimitives.h"
 
+// USB Code not within 4-49 (0x4-0x31), 51-155 (0x33-0x9B), 157-164 (0x9D-0xA4),
+// 176-221 (0xB0-0xDD) or 224-231 (0xE0-0xE7) NKRO Mode
 static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
     //  NKRO Keyboard
     _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)	  47 */
@@ -50,14 +52,6 @@ static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
     _REPORT_COUNT, NKRO_KEY_COUNT,			/*   Report Count (104) */
     _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),	/*   Input (Data, Variable, Absolute) */
 
-    /* 1 Custom Keyboard key */
-    _REPORT_COUNT, 0x01,                                        /*   REPORT_COUNT (1) */
-    _REPORT_SIZE, 0x08,                                         /*   REPORT_SIZE (8) */
-    _LOGICAL_MINIMUM, HID_KEYBOARD_NO_EVENT,                    /*   LOGICAL_MINIMUM (0) */
-    _MULTIBYTE(_LOGICAL_MAXIMUM), HID_KEYBOARD_RIGHT_GUI, 0x00, /*   LOGICAL_MAXIMUM (231) */
-    _USAGE_MINIMUM, HID_KEYBOARD_NO_EVENT,                      /*   USAGE_MINIMUM (Reserved (no event indicated)) */
-    _USAGE_MAXIMUM, HID_KEYBOARD_RIGHT_GUI,    /*   USAGE_MAXIMUM (Keyboard Right GUI) */
-    _INPUT, (_DATA|_ARRAY|_ABSOLUTE),          /*   INPUT (Data,Ary,Abs) */
 
     /* End */
     _END_COLLECTION						     /*   End Collection */
@@ -104,19 +98,6 @@ size_t Keyboard_::press(uint8_t k) {
         return 1;
     }
 
-    // Its a custom key (outside our keymap)
-    else {
-        // Add k to the key report only if it's not already present
-        // and if there is an empty slot. Remove the first available key.
-        auto key = _keyReport.key;
-
-        // Is key already in the list or did we found an empty slot?
-        if ((key == uint8_t(k) || key == 0x00)) {
-            _keyReport.key = k;
-            return 1;
-        }
-    }
-
     // No empty/pressed key was found
     return 0;
 }
@@ -135,19 +116,6 @@ size_t Keyboard_::release(uint8_t k) {
         k = k - HID_KEYBOARD_FIRST_MODIFIER;
         _keyReport.modifiers &= ~(1 << k);
         return 1;
-    }
-
-    // Its a custom key (outside our keymap)
-    else {
-        // Add k to the key report only if it's not already present
-        // and if there is an empty slot. Remove the first available key.
-        auto key = _keyReport.key;
-
-        // Test the key report to see if k is present. Clear it if it exists.
-        if (key == k) {
-            _keyReport.key = 0x00;
-            return 1;
-        }
     }
 
     // No empty/pressed key was found
