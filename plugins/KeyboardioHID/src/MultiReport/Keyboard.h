@@ -33,25 +33,18 @@ THE SOFTWARE.
 #include "HIDAliases.h"
 #include "ASCIIMap.h"
 
-// We have a max USB_EP_SIZE of 64 on the 32u4. The previous implementation
-// was built around the assumption that it needed to work on simpler, more
-// resource constrained MCUs, so it was careful to fit everything into a 16 byte
-// endpoint size. As we improve our implementation, we can bump it up a bit.
-
-// Put another way, this comment is now incorrect:  Max value for USB EP_SIZE 16
-// +1 reportID, +1 modifier, +1 custom key
-#define NKRO_KEY_COUNT (8*13)
+#define KEY_BYTES 28
 
 typedef union {
-    // Modifier + keymap + 1 custom key
+    // Modifiers + keymap 
     uint8_t whole8[];
     uint16_t whole16[];
     uint32_t whole32[];
     struct {
         uint8_t modifiers;
-        uint8_t keys[NKRO_KEY_COUNT / 8];
+        uint8_t keys[KEY_BYTES ];
     };
-    uint8_t allkeys[2 + NKRO_KEY_COUNT / 8];
+    uint8_t allkeys[1 + KEY_BYTES];
 } HID_KeyboardReport_Data_t;
 
 
