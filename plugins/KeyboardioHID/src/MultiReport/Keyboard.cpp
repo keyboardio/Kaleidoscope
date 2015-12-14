@@ -169,22 +169,9 @@ size_t Keyboard_::release(uint8_t k) {
     return 0;
 }
 
-// TODO: replace this with a mmap interface
 size_t Keyboard_::releaseAll(void) {
     // Release all keys
-    size_t ret = 0;
-    for (uint8_t i = 0; i < sizeof(_keyReport.allkeys); i++) {
-        // Is a key in the list or did we found an empty slot?
-        auto bits = _keyReport.allkeys[i];
-        do {
-            if(bits & 0x01) {
-                ret++;
-            }
-            bits >>=1;
-        } while(bits);
-        _keyReport.allkeys[i] = 0x00;
-    }
-    return ret;
+    memset(&_keyReport.allkeys, 0x00, sizeof(_keyReport.allkeys));
 }
 
 
