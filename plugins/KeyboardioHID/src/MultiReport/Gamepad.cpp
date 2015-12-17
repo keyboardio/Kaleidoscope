@@ -22,54 +22,55 @@ THE SOFTWARE.
 */
 
 #include "Gamepad.h"
-
+#include "DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorGamepad[] PROGMEM = {
     /* Gamepad with 32 buttons and 6 axis*/
-    0x05, 0x01,							/* USAGE_PAGE (Generic Desktop) */
-    0x09, 0x04,							/* USAGE (Joystick) */
-    0xa1, 0x01,							/* COLLECTION (Application) */
-    0x85, HID_REPORTID_GAMEPAD,			/*   REPORT_ID */
+    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,							/* USAGE_PAGE (Generic Desktop) */
+    _USAGE, _USAGE_JOYSTICK,							/* USAGE (Joystick) */
+    _COLLECTION, _APPLICATION,							/* COLLECTION (Application) */
+    _REPORT_ID, HID_REPORTID_GAMEPAD,			/*   REPORT_ID */
     /* 32 Buttons */
-    0x05, 0x09,							/*   USAGE_PAGE (Button) */
-    0x19, 0x01,							/*   USAGE_MINIMUM (Button 1) */
-    0x29, 0x20,							/*   USAGE_MAXIMUM (Button 32) */
-    0x15, 0x00,							/*   LOGICAL_MINIMUM (0) */
-    0x25, 0x01,							/*   LOGICAL_MAXIMUM (1) */
-    0x75, 0x01,							/*   REPORT_SIZE (1) */
-    0x95, 0x20,							/*   REPORT_COUNT (32) */
-    0x81, 0x02,							/*   INPUT (Data,Var,Abs) */
+    _USAGE_PAGE, _PAGE_BUTTON,							/*   USAGE_PAGE (Button) */
+    _USAGE_MINIMUM, 0x01,							/*   USAGE_MINIMUM (Button 1) */
+    _USAGE_MAXIMUM, 0x20,							/*   USAGE_MAXIMUM (Button 32) */
+    _LOGICAL_MINIMUM, 0x00,							/*   _LOGICAL_MINIMUM (0) */
+    _LOGICAL_MAXIMUM, 0x01,							/*   _LOGICAL_MAXIMUM (1) */
+    _REPORT_SIZE, 0x01,							/*   REPORT_SIZE (1) */
+    _REPORT_COUNT, 0x20,							/*   REPORT_COUNT (32) */
+    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),							/*   INPUT (Data,Var,Abs) */
     /* 4 16bit Axis */
-    0x05, 0x01,							/*   USAGE_PAGE (Generic Desktop) */
-    0xa1, 0x00,							/*   COLLECTION (Physical) */
-    0x09, 0x30,							/*     USAGE (X) */
-    0x09, 0x31,							/*     USAGE (Y) */
-    0x09, 0x33,							/*     USAGE (Rx) */
-    0x09, 0x34,							/*     USAGE (Ry) */
-    0x16, 0x00, 0x80,					/*     LOGICAL_MINIMUM (-32768) */
-    0x26, 0xFF, 0x7F,					/*     LOGICAL_MAXIMUM (32767) */
-    0x75, 0x10,							/*     REPORT_SIZE (16) */
-    0x95, 0x04,							/*     REPORT_COUNT (4) */
-    0x81, 0x02,							/*     INPUT (Data,Var,Abs) */
+    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,							/*   USAGE_PAGE (Generic Desktop) */
+    _COLLECTION, _PHYSICAL,							/*   COLLECTION (Physical) */
+    _USAGE, 0x30,							/*     USAGE (X) */
+    _USAGE, 0x31,							/*     USAGE (Y) */
+    _USAGE, 0x33,							/*     USAGE (Rx) */
+    _USAGE, 0x34,							/*     USAGE (Ry) */
+    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x80,					/*     _LOGICAL_MINIMUM (-32768) */
+    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x7F,					/*     _LOGICAL_MAXIMUM (32767) */
+    _REPORT_SIZE, 0x10,							/*     REPORT_SIZE (16) */
+    _REPORT_COUNT, 0x04,							/*     REPORT_COUNT (4) */
+    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),							/*     INPUT (Data,Var,Abs) */
     /* 2 8bit Axis */
-    0x09, 0x32,							/*     USAGE (Z) */
-    0x09, 0x35,							/*     USAGE (Rz) */
-    0x15, 0x80,							/*     LOGICAL_MINIMUM (-128) */
-    0x25, 0x7F,							/*     LOGICAL_MAXIMUM (127) */
-    0x75, 0x08,							/*     REPORT_SIZE (8) */
-    0x95, 0x02,							/*     REPORT_COUNT (2) */
-    0x81, 0x02,							/*     INPUT (Data,Var,Abs) */
-    0xc0,								/*   END_COLLECTION */
+    _USAGE, 0x32,							/*     USAGE (Z) */
+    _USAGE, 0x35,							/*     USAGE (Rz) */
+    _LOGICAL_MINIMUM, 0x80,							/*     _LOGICAL_MINIMUM (-128) */
+    _LOGICAL_MAXIMUM, 0x7F,							/*     _LOGICAL_MAXIMUM (127) */
+    _REPORT_SIZE, 0x08,							/*     REPORT_SIZE (8) */
+    _REPORT_COUNT, 0x02,							/*     REPORT_COUNT (2) */
+    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),							/*     INPUT (Data,Var,Abs) */
+    _END_COLLECTION,								/*   END_COLLECTION */
+
     /* 2 Hat Switches */
-    0x05, 0x01,							/*   USAGE_PAGE (Generic Desktop) */
-    0x09, 0x39,							/*   USAGE (Hat switch) */
-    0x09, 0x39,							/*   USAGE (Hat switch) */
-    0x15, 0x01,							/*   LOGICAL_MINIMUM (1) */
-    0x25, 0x08,							/*   LOGICAL_MAXIMUM (8) */
-    0x95, 0x02,							/*   REPORT_COUNT (2) */
-    0x75, 0x04,							/*   REPORT_SIZE (4) */
-    0x81, 0x02,							/*   INPUT (Data,Var,Abs) */
-    0xc0								/* END_COLLECTION */
+    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,							/*   USAGE_PAGE (Generic Desktop) */
+    _USAGE, 0x39,							/*   USAGE (Hat switch) */
+    _USAGE, 0x39,							/*   USAGE (Hat switch) */
+    _LOGICAL_MINIMUM, 0x01,							/*   _LOGICAL_MINIMUM (1) */
+    _LOGICAL_MAXIMUM, 0x08,							/*   _LOGICAL_MAXIMUM (8) */
+    _REPORT_COUNT, 0x02,							/*   REPORT_COUNT (2) */
+    _REPORT_SIZE, 0x04,							/*   REPORT_SIZE (4) */
+    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),							/*   INPUT (Data,Var,Abs) */
+    _END_COLLECTION								/* END_COLLECTION */
 };
 
 Gamepad_::Gamepad_(void) {
