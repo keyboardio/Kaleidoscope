@@ -63,7 +63,7 @@
 // Collection types
 
 
-#define _PHYSYICAL    0x00  // (group of axes) 
+#define _PHYSICAL    0x00  // (group of axes) 
 #define _APPLICATION  0x01  // (mouse, keyboard) 
 #define _LOGICAL      0x02// (interrelated data) 
 #define _REPORT       0x03
