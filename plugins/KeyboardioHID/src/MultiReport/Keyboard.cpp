@@ -141,7 +141,7 @@ size_t Keyboard_::press(uint8_t k) {
     else if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
         // Convert key into bitfield (0 - 7)
         k = k - HID_KEYBOARD_FIRST_MODIFIER;
-        _keyReport.modifiers = (1 << k);
+        _keyReport.modifiers |= (1 << k);
         return 1;
     }
 
