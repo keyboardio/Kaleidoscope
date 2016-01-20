@@ -39,13 +39,13 @@ typedef union {
 
 class SystemControl_ {
   public:
-    inline void begin(void);
-    inline void end(void);
-    inline void write(uint8_t s);
-    inline void press(uint8_t s);
-    inline void release(void);
-    inline void releaseAll(void);
-    inline void SendReport(void* data, int length);
+    void begin(void);
+    void end(void);
+    void write(uint8_t s);
+    void press(uint8_t s);
+    void release(void);
+    void releaseAll(void);
+    void SendReport(void* data, int length);
 
     SystemControl_(void);
 

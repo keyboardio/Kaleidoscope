@@ -47,12 +47,12 @@ typedef union {
 class ConsumerControl_ {
   public:
     ConsumerControl_(void);
-    inline void begin(void);
-    inline void end(void);
-    inline void write(uint16_t m);
-    inline void press(uint16_t m);
-    inline void release(uint16_t m);
-    inline void releaseAll(void);
+    void begin(void);
+    void end(void);
+    void write(uint16_t m);
+    void press(uint16_t m);
+    void release(uint16_t m);
+    void releaseAll(void);
 
     // Sending is public in the base class for advanced users.
     void SendReport(void* data, int length);

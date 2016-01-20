@@ -56,26 +56,26 @@ typedef union {
 class AbsoluteMouse_ {
   public:
     AbsoluteMouse_(void);
-    inline void begin(void);
-    inline void end(void);
+    void begin(void);
+    void end(void);
 
-    inline void click(uint8_t b = MOUSE_LEFT);
-    inline void moveTo(int x, int y, signed char wheel = 0);
-    inline void move(int x, int y, signed char wheel = 0);
-    inline void press(uint8_t b = MOUSE_LEFT);
-    inline void release(uint8_t b = MOUSE_LEFT);
-    inline bool isPressed(uint8_t b = MOUSE_LEFT);
+    void click(uint8_t b = MOUSE_LEFT);
+    void moveTo(int x, int y, signed char wheel = 0);
+    void move(int x, int y, signed char wheel = 0);
+    void press(uint8_t b = MOUSE_LEFT);
+    void release(uint8_t b = MOUSE_LEFT);
+    bool isPressed(uint8_t b = MOUSE_LEFT);
 
     // Sending is public in the base class for advanced users.
-    inline void SendReport(void* data, int length);
+    void SendReport(void* data, int length);
 
   protected:
     int16_t xAxis;
     int16_t yAxis;
     uint8_t _buttons;
-    inline void buttons(uint8_t b);
+    void buttons(uint8_t b);
 
-    inline int16_t qadd16(int16_t base, int16_t increment);
+    int16_t qadd16(int16_t base, int16_t increment);
 
 
 

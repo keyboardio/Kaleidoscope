@@ -103,24 +103,24 @@ class Gamepad_ {
   public:
     Gamepad_(void);
 
-    inline void begin(void);
-    inline void end(void);
-    inline void write(void);
-    inline void press(uint8_t b);
-    inline void release(uint8_t b);
-    inline void releaseAll(void);
+    void begin(void);
+    void end(void);
+    void write(void);
+    void press(uint8_t b);
+    void release(uint8_t b);
+    void releaseAll(void);
 
-    inline void buttons(uint32_t b);
-    inline void xAxis(int16_t a);
-    inline void yAxis(int16_t a);
-    inline void zAxis(int8_t a);
-    inline void rxAxis(int16_t a);
-    inline void ryAxis(int16_t a);
-    inline void rzAxis(int8_t a);
-    inline void dPad1(int8_t d);
-    inline void dPad2(int8_t d);
+    void buttons(uint32_t b);
+    void xAxis(int16_t a);
+    void yAxis(int16_t a);
+    void zAxis(int8_t a);
+    void rxAxis(int16_t a);
+    void ryAxis(int16_t a);
+    void rzAxis(int8_t a);
+    void dPad1(int8_t d);
+    void dPad2(int8_t d);
 
-    inline void SendReport(void* data, int length);
+    void SendReport(void* data, int length);
   protected:
     HID_GamepadReport_Data_t _report;
 };

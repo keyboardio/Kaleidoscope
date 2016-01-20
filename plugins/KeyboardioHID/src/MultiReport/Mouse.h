@@ -55,18 +55,18 @@ typedef union {
 class Mouse_ {
   public:
     Mouse_(void);
-    inline void begin(void);
-    inline void end(void);
-    inline void click(uint8_t b = MOUSE_LEFT);
-    inline void move(signed char x, signed char y, signed char wheel = 0);
-    inline void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
-    inline void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
-    inline bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
+    void begin(void);
+    void end(void);
+    void click(uint8_t b = MOUSE_LEFT);
+    void move(signed char x, signed char y, signed char wheel = 0);
+    void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
+    void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
+    bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
 
-    inline void SendReport(void* data, int length);
+    void SendReport(void* data, int length);
 
   protected:
     uint8_t _buttons;
-    inline void buttons(uint8_t b);
+    void buttons(uint8_t b);
 };
 extern Mouse_ Mouse;
