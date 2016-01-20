@@ -40,7 +40,6 @@ THE SOFTWARE.
 
 
 // Include all HID libraries (.a linkage required to work) properly
-#include "BootKeyboard/BootKeyboard.h"
 #include "MultiReport/AbsoluteMouse.h"
 #include "MultiReport/Mouse.h"
 #include "MultiReport/ConsumerControl.h"
@@ -48,3 +47,4 @@ THE SOFTWARE.
 #include "MultiReport/SystemControl.h"
 #include "MultiReport/Keyboard.h"
 
+#include "BootKeyboard/BootKeyboard.h"
