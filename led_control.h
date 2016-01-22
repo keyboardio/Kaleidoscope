@@ -48,7 +48,7 @@ static const int key_led_map[4][16] =
 #define LED_4 19
 #define LED_5 20
 #define LED_T 21
-#define LED_6 22
+#define LED_REC_MACRO 22
 #define LED_B 23
 #define LED_ESC 24
 #define LED_TAB 25
