@@ -88,9 +88,6 @@ void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStat
 void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry);
 
 // sending events to the computer
-void record_key_being_pressed(byte character);
-void release_keys_not_being_pressed();
-void reset_key_report();
 void handle_synthetic_key_press(byte switchState, Key mappedKey);
 void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
 void send_key_events();

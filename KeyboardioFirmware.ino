@@ -33,7 +33,6 @@ int left_initted = 0;
 
 
 void setup_matrix() {
-    reset_key_report();
     //blank out the matrix.
     for (byte col = 0; col < COLS; col++) {
         for (byte row = 0; row < ROWS; row++) {
@@ -139,12 +138,8 @@ void scan_matrix() {
         if (right_initted)
             rightsx1509.updatePinState(right_rowpins[row], HIGH);
     }
-    TS("Releasing keys not being pressed")
-    release_keys_not_being_pressed();
     TS("Sending key report");
     Keyboard.sendReport();
-    TS("clearing internal key report")
-    reset_key_report();
     handle_mouse_movement(x, y);
 }
 
@@ -340,52 +335,6 @@ void report(byte row, byte col, boolean value) {
 #endif
 }
 
-//
-// Key Reports
-//
-
-void release_keys_not_being_pressed() {
-    // we use charsReportedLastTime to figure out what we might
-    // not be holding anymore and can now release. this is
-    // destructive to charsReportedLastTime
-
-    for (byte i = 0; i < KEYS_HELD_BUFFER; i++) {
-        // for each key we were holding as of the end of the last cycle
-        // see if we're still holding it
-        // if we're not, call an explicit Release
-
-        if (charsReportedLastTime[i] != 0x00) {
-            // if there _was_ a character in this slot, go check the
-            // currently held characters
-            for (byte j = 0; j < KEYS_HELD_BUFFER; j++) {
-                if (charsReportedLastTime[i] == charsBeingReported[j]) {
-                    // if's still held, we don't need to do anything.
-                    charsReportedLastTime[i] = 0x00;
-                    break;
-                }
-            }
-            Keyboard.release(charsReportedLastTime[i]);
-
-        }
-    }
-}
-
-void record_key_being_pressed(byte character) {
-    for (byte i = 0; i < KEYS_HELD_BUFFER; i++) {
-        // todo - deal with overflowing the 12 key buffer here
-        if (charsBeingReported[i] == 0x00) {
-            charsBeingReported[i] = character;
-            break;
-        }
-    }
-}
-
-void reset_key_report() {
-    memcpy( charsReportedLastTime, charsBeingReported, KEYS_HELD_BUFFER);
-    memset(charsBeingReported, 0, KEYS_HELD_BUFFER);
-
-}
-
 
 // Sending events to the usb host
 
@@ -452,7 +401,6 @@ void send_key_event(byte row, byte col) {
         handle_synthetic_key_press(switchState, mappedKey);
     } else {
         if (key_is_pressed(switchState)) {
-            record_key_being_pressed(mappedKey.rawKey);
             if (key_toggled_on (switchState)) {
                 press_key(mappedKey);
             }
