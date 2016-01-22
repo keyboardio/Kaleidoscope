@@ -28,7 +28,7 @@ void setup();
 #include "led_control.h"
 #include "digitalWriteFast.h"
 #include <Wire.h>
-#include "sx1509_library.h"
+#include "KeyboardioSX1509.h"
 
 //extern int usbMaxPower;
 #define DEBUG_SERIAL 0

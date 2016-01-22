@@ -16,7 +16,7 @@
 #include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
 #include "digitalWriteFast.h"
 #include <Wire.h>
-#include "sx1509_library.h"
+#include "KeyboardioSX1509.h"
 
 
 
