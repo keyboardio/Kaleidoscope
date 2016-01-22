@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include "HIDTables.h"
 #include "HIDAliases.h"
 typedef struct {

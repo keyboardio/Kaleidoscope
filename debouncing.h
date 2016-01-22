@@ -1,6 +1,4 @@
-#ifndef debouncing_h
-#define debouncing_h
-
+#pragma once
 // switch debouncing and status
 
 
@@ -10,5 +8,3 @@ boolean key_is_pressed (byte keyState);
 boolean key_is_not_pressed (byte keyState);
 boolean key_toggled_on(byte keyState);
 boolean key_toggled_off(byte keyState);
-
-#endif

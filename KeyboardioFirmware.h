@@ -1,5 +1,5 @@
-#ifndef KeyboardIO_H_
-#define KeyboardIO_H_
+#pragma once
+
 #include <Arduino.h>
 //add your includes for the project KeyboardIO here
 #include <EEPROM.h>
@@ -101,5 +101,3 @@ int setup_sx1509(sx1509Class sx1509, int colpins[], int rowpins[]);
 #define VERSION "locally-built"
 #endif
 
-//Do not add code below this line
-#endif /* KeyboardIO_H_ */

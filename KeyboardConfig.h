@@ -1,6 +1,4 @@
-//#define DEBUG_SERIAL false
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
+#pragma once
 
 #include "WS2812.h"
 #define EEPROM_KEYMAP_LOCATION 0
@@ -44,11 +42,3 @@ int right_rowpins[]= {8,9,10,11};
 
 #endif
 
-
-
-// if we're sticking to boot protocol, these could all be 6 + mods
-// but *mumble*
-
-#define KEYS_HELD_BUFFER 12
-
-#endif

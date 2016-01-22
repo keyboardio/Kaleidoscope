@@ -1,5 +1,6 @@
-#ifndef LED_CONTROL_H
-#define LED_CONTROL_H
+
+#pragma once
+
 
 #include "WS2812.h"
 #define LED_MODES 7
@@ -118,4 +119,3 @@ void led_effect_numlock_update();
 void led_bootup();
 void led_type_letter(int letter);
 
-#endif
