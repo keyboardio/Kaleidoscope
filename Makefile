@@ -2,20 +2,29 @@
 
 #BOARD_TAG    = keyboardio
 BOARD    = model01
-PORT =  /dev/cu.usbmodem1421
+DEVICE_PORT =  /dev/cu.usbmodemHIDO1
+DEVICE_PORT_BOOTLOADER = /dev/cu.usbmodem1421
 ARDUINO_LIBS = 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 
 ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
-
+ARDUINO_TOOLS_PATH=$(ARDUINO_PATH)/hardware/tools
 FQBN=arduino:avr:leonardo
-BUILD_PATH=./build
-ABS_BUILD_PATH=`cd "$(BUILD_PATH)"; pwd` 
-
+BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
+OUTPUT_PATH=./output
 ARDUINO_LOCAL_LIB_PATH=~/Documents/Arduino/libraries
 ARDUINO_IDE_VERSION=100607
 
 SKETCH=KeyboardioFirmware.ino
+
+
+
+HEXFILE_NAME=$(SKETCH)-$(GIT_VERSION).hex
+HEXFILE_PATH=$(OUTPUT_PATH)/$(HEXFILE_NAME)
+
+
+
+
 
 astyle:
 		find . -type f -name \*.cpp |xargs -n 1 astyle --style=google
@@ -27,18 +36,27 @@ generate-keymaps:
 	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../keymaps_generated.h' )
 	cat keymaps_h-template >> keymaps_generated.h
 
-compile:
-	-mkdir $(ABS_BUILD_PATH)
+dirs:
+	mkdir -p $(OUTPUT_PATH)
+
+compile: dirs
 	$(ARDUINO_PATH)/arduino-builder \
 		-hardware $(ARDUINO_PATH)/hardware \
-		-tools $(ARDUINO_PATH)/hardware/tools \
+		-tools $(ARDUINO_TOOLS_PATH) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
 		-verbose \
-		-build-path $(ABS_BUILD_PATH) \
+		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
 		$(SKETCH)
+	cp $(BUILD_PATH)/$(SKETCH).hex $(HEXFILE_PATH);
 
-clean:
-	rm -rf ./build/* # This should be BUILD_PATH, but without a decent guard, unsetting BUILD_PATH could wipe out /
+
+reset-device: 
+	stty -f $(DEVICE_PORT) 1200 ;
+
+flash: compile reset-device
+	sleep 3
+	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude -C/Applications/Arduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega32u4 -cavr109 -P$(DEVICE_PORT_BOOTLOADER) -b57600 -D -Uflash:w:$(HEXFILE_PATH):i 
+
