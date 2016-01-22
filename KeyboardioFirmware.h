@@ -53,7 +53,7 @@ bool commandMode;
 bool commandPromptPrinted;
 
 
-// Console related 
+// Console related
 void process_command_buffer();
 
 // EEPROM related

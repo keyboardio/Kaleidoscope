@@ -11,7 +11,7 @@
 void _warp_jump(long left, long top, long height, long width) {
     long x_center = left + width/2;
     long y_center = top + height/2;
-                AbsoluteMouse.moveTo(x_center,y_center);
+    AbsoluteMouse.moveTo(x_center,y_center);
 }
 
 
@@ -38,11 +38,11 @@ int section_left;
 boolean is_warping = false;
 
 void begin_warping() {
-  section_left = abs_left;
-  section_top = abs_top;
-  next_width = 32767;
-  next_height = 32767;
-  is_warping = true;
+    section_left = abs_left;
+    section_top = abs_top;
+    next_width = 32767;
+    next_height = 32767;
+    is_warping = true;
 }
 
 void end_warping() {
@@ -50,40 +50,40 @@ void end_warping() {
 }
 
 void warp_mouse(Key ninth) {
-  if (is_warping == false) {
-    begin_warping();
+    if (is_warping == false) {
+        begin_warping();
     }
 
 
-  if ( ninth.rawKey & MOUSE_END_WARP) {
-     end_warping();
-    return;
-  }
+    if ( ninth.rawKey & MOUSE_END_WARP) {
+        end_warping();
+        return;
+    }
 
 
-  next_width = next_width / 2;
-  next_height = next_height/2;
+    next_width = next_width / 2;
+    next_height = next_height/2;
 
-  if (ninth.rawKey & MOUSE_UP) {
+    if (ninth.rawKey & MOUSE_UP) {
 //    Serial.print(" - up ");
-  } else if (ninth.rawKey & MOUSE_DN) {
- //   Serial.print(" - down ");
-    section_top  = section_top + next_height;
-  }
+    } else if (ninth.rawKey & MOUSE_DN) {
+//   Serial.print(" - down ");
+        section_top  = section_top + next_height;
+    }
 
-  if (ninth.rawKey & MOUSE_L) {
-  //  Serial.print(" - left ");
-  } else if (ninth.rawKey & MOUSE_R) {
-   // Serial.print(" - right ");
-    section_left  = section_left + next_width;
-  }
+    if (ninth.rawKey & MOUSE_L) {
+        //  Serial.print(" - left ");
+    } else if (ninth.rawKey & MOUSE_R) {
+        // Serial.print(" - right ");
+        section_left  = section_left + next_width;
+    }
 
     _warp_jump(section_left, section_top, next_height,next_width);
 
 }
 
 
-// we want the whole s curve, not just the bit 
+// we want the whole s curve, not just the bit
 // that's usually above the x and y axes;
 #define ATAN_LIMIT 1.57079633
 #define ACCELERATION_FLOOR 0.25
@@ -96,64 +96,62 @@ void warp_mouse(Key ninth) {
 
 #define ACCELERATION_CLIMB_SPEED  0.05
 
-double mouse_accel (double cycles)
-{
-  double accel = (atan((cycles * ACCELERATION_CLIMB_SPEED)-ACCELERATION_RUNWAY) + ATAN_LIMIT) * ACCELERATION_MULTIPLIER;
-  if (accel < ACCELERATION_FLOOR) {
-    accel = ACCELERATION_FLOOR;
-  }
-  return accel;
+double mouse_accel (double cycles) {
+    double accel = (atan((cycles * ACCELERATION_CLIMB_SPEED)-ACCELERATION_RUNWAY) + ATAN_LIMIT) * ACCELERATION_MULTIPLIER;
+    if (accel < ACCELERATION_FLOOR) {
+        accel = ACCELERATION_FLOOR;
+    }
+    return accel;
 }
 
-void handle_mouse_movement( char x, char y)
-{
+void handle_mouse_movement( char x, char y) {
 
-  if (x != 0 || y != 0) {
-    mouseActiveForCycles++;
-    double accel = (double) mouse_accel(mouseActiveForCycles);
-    float moveX = 0;
-    float moveY = 0;
-    if (x > 0) {
-      moveX = (x * accel) + carriedOverX;
-      carriedOverX = moveX - floor(moveX);
-    } else if (x < 0) {
-      moveX = (x * accel) - carriedOverX;
-      carriedOverX = ceil(moveX) - moveX;
+    if (x != 0 || y != 0) {
+        mouseActiveForCycles++;
+        double accel = (double) mouse_accel(mouseActiveForCycles);
+        float moveX = 0;
+        float moveY = 0;
+        if (x > 0) {
+            moveX = (x * accel) + carriedOverX;
+            carriedOverX = moveX - floor(moveX);
+        } else if (x < 0) {
+            moveX = (x * accel) - carriedOverX;
+            carriedOverX = ceil(moveX) - moveX;
+        }
+
+        if (y > 0) {
+            moveY = (y * accel) + carriedOverY;
+            carriedOverY = moveY - floor(moveY);
+        } else if (y < 0) {
+            moveY = (y * accel) - carriedOverY;
+            carriedOverY = ceil(moveY) - moveY;
+        }
+        end_warping();
+
+        Mouse.move(moveX, moveY, 0);
+    } else {
+        mouseActiveForCycles = 0;
     }
-
-    if (y > 0) {
-      moveY = (y * accel) + carriedOverY;
-      carriedOverY = moveY - floor(moveY);
-    } else if (y < 0) {
-      moveY = (y * accel) - carriedOverY;
-      carriedOverY = ceil(moveY) - moveY;
-    }
-    end_warping();
-
-    Mouse.move(moveX, moveY, 0);
-  } else {
-    mouseActiveForCycles = 0;
-  }
 
 }
 
 
 void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y) {
 
-  if (key_is_pressed(switchState)) {
-    if (mappedKey.rawKey & MOUSE_UP) {
-      y -= 1;
-    }
-    if (mappedKey.rawKey & MOUSE_DN) {
-      y += 1;
-    }
-    if (mappedKey.rawKey & MOUSE_L) {
-      x -= 1;
-    }
+    if (key_is_pressed(switchState)) {
+        if (mappedKey.rawKey & MOUSE_UP) {
+            y -= 1;
+        }
+        if (mappedKey.rawKey & MOUSE_DN) {
+            y += 1;
+        }
+        if (mappedKey.rawKey & MOUSE_L) {
+            x -= 1;
+        }
 
-    if (mappedKey.rawKey & MOUSE_R) {
-      x += 1 ;
+        if (mappedKey.rawKey & MOUSE_R) {
+            x += 1 ;
+        }
     }
-  }
 }
 
