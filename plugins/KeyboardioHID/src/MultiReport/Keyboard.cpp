@@ -189,6 +189,7 @@ size_t Keyboard_::write(uint8_t k) {
     sendReport();
     releaseAll();
     sendReport();
+    return 1;
 }
 
 

@@ -317,6 +317,7 @@ size_t BootKeyboard_::write(uint8_t k) {
     sendReport();
     releaseAll();
     sendReport();
+    return 1;
 }
 
 BootKeyboard_ BootKeyboard;
