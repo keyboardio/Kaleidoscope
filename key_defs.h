@@ -137,7 +137,7 @@ typedef struct {
 #define Key_DnArrow (Key){ KEY_FLAGS, HID_KEYBOARD_DOWN_ARROW }
 #define Key_LArrow (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_ARROW  }
 #define Key_RArrow (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_ARROW}
-#define Key_Return (Key){ KEY_FLAGS, KEY_RETURN }
+#define Key_Return (Key){ KEY_FLAGS, HID_KEYBOARD_RETURN }
 #define Key_Esc (Key){ KEY_FLAGS, KEY_ESC }
 #define Key_Backspace (Key){ KEY_FLAGS, KEY_BACKSPACE }
 #define Key_Tab (Key){ KEY_FLAGS, KEY_TAB }

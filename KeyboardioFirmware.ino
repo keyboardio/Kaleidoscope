@@ -208,7 +208,7 @@ boolean is_command_buffer(byte* myCommand) {
         if (commandBuffer[i] != myCommand[i]) {
             return false;
         }
-    } while (myCommand[++i] != NULL);
+    } while (myCommand[++i] != 0x00);
     return true;
 }
 
@@ -223,7 +223,7 @@ void process_command_buffer() {
     // This is the only command we might want to execute when
     // we're not in command mode, as it's the only way to toggle
     // command mode on
-    static byte cmd_plugh[] = {KEY_P, KEY_L, KEY_U, KEY_G, KEY_H, NULL};
+    static byte cmd_plugh[] = {KEY_P, KEY_L, KEY_U, KEY_G, KEY_H, 0x00};
     if (is_command_buffer(cmd_plugh)) {
         command_plugh();
     }
@@ -235,8 +235,8 @@ void process_command_buffer() {
     }
 
     // Handle all the other commands here
-    static byte cmd_reboot_bootloader[] = { KEY_B, KEY_O, KEY_O, KEY_T, KEY_L, KEY_O, KEY_A, KEY_D, KEY_E, KEY_R, NULL};
-    static byte cmd_version[] = { KEY_V, KEY_E, KEY_R, KEY_S, KEY_I, KEY_O, KEY_N, NULL};
+    static byte cmd_reboot_bootloader[] = { KEY_B, KEY_O, KEY_O, KEY_T, KEY_L, KEY_O, KEY_A, KEY_D, KEY_E, KEY_R, 0x00};
+    static byte cmd_version[] = { KEY_V, KEY_E, KEY_R, KEY_S, KEY_I, KEY_O, KEY_N, 0x00};
 
     if (is_command_buffer(cmd_reboot_bootloader)) {
         command_reboot_bootloader();
