@@ -89,7 +89,6 @@ void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
 void send_key_events();
 void send_key_event(byte row, byte col);
 void press_key(Key mappedKey);
-void release_key(Key mappedKey);
 
 int setup_sx1509(sx1509Class sx1509, int colpins[], int rowpins[]);
 

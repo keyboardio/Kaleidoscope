@@ -140,6 +140,7 @@ void scan_matrix() {
     }
     TS("Sending key report");
     Keyboard.sendReport();
+    Keyboard.releaseAll();
     handle_mouse_movement(x, y);
 }
 
@@ -401,11 +402,7 @@ void send_key_event(byte row, byte col) {
         handle_synthetic_key_press(switchState, mappedKey);
     } else {
         if (key_is_pressed(switchState)) {
-            if (key_toggled_on (switchState)) {
                 press_key(mappedKey);
-            }
-        } else if (key_toggled_off (switchState)) {
-            release_key(mappedKey);
         }
 
 
@@ -430,16 +427,6 @@ void press_key(Key mappedKey) {
         commandBufferSize = 0;
     }
 }
-
-void release_key(Key mappedKey) {
-    if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.release(Key_LShift.rawKey);
-    }
-
-    Keyboard.release(mappedKey.rawKey);
-}
-
-
 
 void make_input(sx1509Class sx1509, int pin) {
     sx1509.pinDir(pin, INPUT);  // Set SX1509 pin 1 as an input
