@@ -6,11 +6,12 @@
 #include "key_defs.h"
 #include "mouse_movement.h"
 #include "debouncing.h"
+#include "HID-Project.h"
 
 void _warp_jump(long left, long top, long height, long width) {
     long x_center = left + width/2;
     long y_center = top + height/2;
-                Mouse.moveAbsolute(x_center,y_center);
+                AbsoluteMouse.moveTo(x_center,y_center);
 }
 
 

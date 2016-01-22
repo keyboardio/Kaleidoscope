@@ -17,6 +17,8 @@
 #include "digitalWriteFast.h"
 #include <Wire.h>
 #include "KeyboardioSX1509.h"
+#include "HID-Project.h"
+
 
 
 
@@ -143,7 +145,7 @@ void scan_matrix()
   TS("Releasing keys not being pressed")
   release_keys_not_being_pressed();
   TS("Sending key report");
-  Keyboard.sendCurrentReport();
+  Keyboard.sendReport();
   TS("clearing internal key report")
   reset_key_report();
   handle_mouse_movement(x, y);
@@ -402,7 +404,7 @@ void reset_key_report()
 void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   if (mappedKey.flags & IS_CONSUMER) {
     if (key_toggled_on (switchState)) {
-      Keyboard.consumerControl(mappedKey.rawKey);
+      ConsumerControl.press(mappedKey.rawKey);
     }
   }
   
@@ -415,7 +417,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
   }
   else if (mappedKey.flags & IS_SYSCTL) {
     if (key_toggled_on (switchState)) {
-      Keyboard.systemControl(mappedKey.rawKey);
+      SystemControl.press(mappedKey.rawKey);
     }
   }
   else  if (mappedKey.flags & IS_MACRO) {
