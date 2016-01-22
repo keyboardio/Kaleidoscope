@@ -402,7 +402,7 @@ void send_key_event(byte row, byte col) {
         handle_synthetic_key_press(switchState, mappedKey);
     } else {
         if (key_is_pressed(switchState)) {
-                press_key(mappedKey);
+            press_key(mappedKey);
         }
 
 
