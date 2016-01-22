@@ -31,7 +31,6 @@ void setup();
 #include "KeyboardioSX1509.h"
 
 //extern int usbMaxPower;
-#define DEBUG_SERIAL 0
 
 char x;
 char y;
