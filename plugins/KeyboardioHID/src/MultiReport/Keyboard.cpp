@@ -169,7 +169,7 @@ size_t Keyboard_::release(uint8_t k) {
     return 0;
 }
 
-size_t Keyboard_::releaseAll(void) {
+void Keyboard_::releaseAll(void) {
     // Release all keys
     memset(&_keyReport.allkeys, 0x00, sizeof(_keyReport.allkeys));
 }

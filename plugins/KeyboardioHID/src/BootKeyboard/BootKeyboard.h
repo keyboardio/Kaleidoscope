@@ -54,7 +54,7 @@ class BootKeyboard_ : public Print, PluggableUSBModule {
     void end(void);
     size_t write(uint8_t);
     size_t release(uint8_t);
-    size_t releaseAll(void);
+    void releaseAll(void);
 
     int sendReport(void);
 

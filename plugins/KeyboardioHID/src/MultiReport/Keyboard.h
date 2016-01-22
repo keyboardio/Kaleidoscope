@@ -57,7 +57,7 @@ class Keyboard_ : public Print {
 
     size_t press(uint8_t k);
     size_t release(uint8_t k);
-    size_t releaseAll(void);
+    void  releaseAll(void);
     int sendReport(void);
     size_t write(uint8_t k);
 

@@ -300,7 +300,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 }
 
 
-size_t BootKeyboard_::releaseAll(void) {
+void BootKeyboard_::releaseAll(void) {
     memset(&_keyReport.keys, 0x00, sizeof(_keyReport.keys));
 }
 
