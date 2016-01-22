@@ -16,8 +16,6 @@ void _warp_jump(long left, long top, long height, long width) {
 
 
 
-int last_x;
-int last_y;
 
 // apparently, the mac discards 15% of the value space for mouse movement.
 // need to test this on other platforms
