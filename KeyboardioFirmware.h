@@ -26,7 +26,6 @@ void setup();
 #include "keymaps_generated.h"
 #include "debouncing.h"
 #include "led_control.h"
-#include "digitalWriteFast.h"
 #include <Wire.h>
 #include "KeyboardioSX1509.h"
 
