@@ -102,8 +102,7 @@ void set_all_leds_to(cRGB color) {
 
 
 void next_led_mode() {
-    led_mode++;
-    if (led_mode >= LED_MODES) {
+    if (led_mode++ >= LED_MODES) {
         led_mode = 0;
     }
 }
