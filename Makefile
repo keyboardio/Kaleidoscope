@@ -2,6 +2,8 @@
 
 #BOARD_TAG    = keyboardio
 BOARD    = model01
+MCU 		= atmega32u4
+
 DEVICE_PORT =  /dev/cu.usbmodemHIDO1
 DEVICE_PORT_BOOTLOADER = /dev/cu.usbmodem1421
 ARDUINO_LIBS = 
@@ -19,8 +21,7 @@ SKETCH=KeyboardioFirmware.ino
 
 
 
-HEXFILE_NAME=$(SKETCH)-$(GIT_VERSION).hex
-HEXFILE_PATH=$(OUTPUT_PATH)/$(HEXFILE_NAME)
+OUTPUT_FILE_PREFIX=$(SKETCH)-$(GIT_VERSION)
 
 
 
@@ -39,6 +40,8 @@ generate-keymaps:
 dirs:
 	mkdir -p $(OUTPUT_PATH)
 
+build: compile size
+
 compile: dirs
 	$(ARDUINO_PATH)/arduino-builder \
 		-hardware $(ARDUINO_PATH)/hardware \
@@ -50,13 +53,16 @@ compile: dirs
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
 		$(SKETCH)
-	cp $(BUILD_PATH)/$(SKETCH).hex $(HEXFILE_PATH);
+	cp $(BUILD_PATH)/$(SKETCH).hex $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
+	cp $(BUILD_PATH)/$(SKETCH).elf $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 
+size:
+	avr-size -C --mcu=$(MCU) $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 
 reset-device: 
 	stty -f $(DEVICE_PORT) 1200 ;
 
 flash: compile reset-device
 	sleep 3
-	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude -C/Applications/Arduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega32u4 -cavr109 -P$(DEVICE_PORT_BOOTLOADER) -b57600 -D -Uflash:w:$(HEXFILE_PATH):i 
+	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude -C/Applications/Arduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -p$(MCU) -cavr109 -P$(DEVICE_PORT_BOOTLOADER) -b57600 -D -Uflash:w:$(HEXFILE_PATH):i 
 
