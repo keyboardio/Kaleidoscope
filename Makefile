@@ -23,6 +23,8 @@ SKETCH=KeyboardioFirmware.ino
 
 OUTPUT_FILE_PREFIX=$(SKETCH)-$(GIT_VERSION)
 
+HEX_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
+ELF_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 
 
 
@@ -53,16 +55,24 @@ compile: dirs
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
 		$(SKETCH)
-	cp $(BUILD_PATH)/$(SKETCH).hex $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
-	cp $(BUILD_PATH)/$(SKETCH).elf $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
+	cp $(BUILD_PATH)/$(SKETCH).hex $(HEX_FILE_PATH)
+	cp $(BUILD_PATH)/$(SKETCH).elf $(ELF_FILE_PATH)
 
-size:
-	avr-size -C --mcu=$(MCU) $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
+size: compile
+	avr-size -C --mcu=$(MCU) $(ELF_FILE_PATH)
 
 reset-device: 
 	stty -f $(DEVICE_PORT) 1200 ;
 
 flash: compile reset-device
 	sleep 3
-	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude -C/Applications/Arduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -p$(MCU) -cavr109 -P$(DEVICE_PORT_BOOTLOADER) -b57600 -D -Uflash:w:$(HEXFILE_PATH):i 
+	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude \
+		-C$(ARDUINO_TOOLS_PATH)/avr/etc/avrdude.conf \
+		-v \
+		-p$(MCU) \
+		-cavr109 \
+		-P$(DEVICE_PORT_BOOTLOADER) \
+		-b57600 \
+		-D \
+		-Uflash:w:$(HEX_FILE_PATH):i 
 
