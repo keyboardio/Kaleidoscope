@@ -35,6 +35,7 @@ char x;
 char y;
 
 byte matrixState[ROWS][COLS];
+static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
 long reporting_counter = 0;
 byte primary_keymap = 0;

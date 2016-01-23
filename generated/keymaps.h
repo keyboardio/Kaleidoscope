@@ -57,11 +57,3 @@
 	{Key_PageDn, Key_Z, Key_X, Key_M, Key_C, Key_V, Key_Esc, Key_Keymap0, Key_K, Key_L, Key_Comma, Key_Period, Key_Slash, Key_Minus},\
 	{Key_LGUI, Key_Backspace, Key_LShift, Key_LCtrl, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
-#define KEYMAPS 3
-#define NUMPAD_KEYMAP 2
-static const Key keymaps[KEYMAPS][ROWS][COLS] = {
-	KEYMAP_QWERTY
-	KEYMAP_GENERIC_FN2
-    KEYMAP_NUMPAD
-};
-

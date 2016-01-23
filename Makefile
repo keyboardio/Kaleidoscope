@@ -37,7 +37,6 @@ astyle:
 generate-keymaps:
 	-rm generated/keymaps.h
 	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../generated/keymaps.h' )
-	cat keymaps_h-template >> generated/keymaps.h
 
 dirs:
 	mkdir -p $(OUTPUT_PATH)

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "WS2812.h"
+#include "generated/keymaps.h"
+
 #define EEPROM_KEYMAP_LOCATION 0
 
 #define MODEL01 true
@@ -38,6 +40,9 @@ int right_rowpins[]= {8,9,10,11};
 
 #define COLS 16
 #define ROWS 4
+#define KEYMAPS 3
+#define NUMPAD_KEYMAP 2
+#define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
 
 #endif
