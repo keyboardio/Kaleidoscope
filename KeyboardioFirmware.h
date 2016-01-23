@@ -23,7 +23,7 @@ void setup();
 #include "key_defs.h"
 #include "KeyboardConfig.h"
 
-#include "keymaps_generated.h"
+#include "generated/keymaps.h"
 #include "debouncing.h"
 #include "led_control.h"
 #include <Wire.h>
