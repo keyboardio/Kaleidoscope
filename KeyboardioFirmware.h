@@ -57,10 +57,6 @@ void save_primary_keymap(byte keymap);
 byte load_primary_keymap();
 
 
-// Keyboard debugging
-void report(byte row, byte col, boolean value);
-void report_matrix();
-
 
 // Mouse-related methods
 
