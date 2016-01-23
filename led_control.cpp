@@ -293,9 +293,9 @@ void led_bootup() {
 void led_type_letter(int letter) {
     LED.set_crgb_at(letter,led_bright_red);
     LED.sync();
-    delay(400);
+    delay(250);
     LED.set_crgb_at(letter,led_off);
     LED.sync();
-    delay(30);
+    delay(10);
 
 }
