@@ -52,18 +52,12 @@ void setup_leds() {
     led_blue.r = 0;
     led_blue.g = 0;
     led_blue.b = 255;
-
     led_dark_blue.r = 0;
     led_dark_blue.g = 0;
     led_dark_blue.b = 127;
-
     led_bright_red.r=255;
     led_bright_red.g=0;
     led_bright_red.b=0;
-
-
-
-
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
@@ -97,7 +91,6 @@ void set_all_leds_to(cRGB color) {
     for (int i = 0; i < LED_COUNT; i++) {
         LED.set_crgb_at(i, color);
     }
-
 }
 
 
@@ -109,7 +102,6 @@ void next_led_mode() {
 
 void set_led_mode(int mode) {
     led_mode = mode;
-
 }
 
 
@@ -154,7 +146,6 @@ void update_leds(int numlock_enabled) {
 
 
 void led_effect_numlock_update() {
-
     for (int i = 0; i < 44; i++) {
         LED.set_crgb_at(i, led_off);
     }
@@ -165,6 +156,7 @@ void led_effect_numlock_update() {
     LED.set_crgb_at(60, led_breathe); // make numlock breathe
     LED.sync();
 }
+
 void led_effect_steady_update() {
     LED.sync();
 }
@@ -190,8 +182,7 @@ void led_effect_breathe_update() {
     LED.sync();
 }
 
-void
-led_effect_chase_update() {
+void led_effect_chase_update() {
     if (current_chase_counter++ < chase_threshold) {
         return;
     }
@@ -203,7 +194,6 @@ led_effect_chase_update() {
     if (pos > LED_COUNT || pos < 0) {
         chase_pixels = -chase_pixels;
         pos += chase_pixels;
-
     }
     LED.set_crgb_at(pos, led_blue);
     LED.sync();
@@ -216,16 +206,12 @@ led_effect_chase_update() {
 
 
 void led_effect_rainbow_update() {
-
-
     if (rainbow_current_ticks++ < rainbow_ticks) {
         return;
     } else {
         rainbow_current_ticks = 0;
     }
-
     rainbow.SetHSV(rainbow_hue, rainbow_saturation, rainbow_value);
-
     rainbow_hue += rainbow_steps;
     if (rainbow_hue >= 360)          {
         rainbow_hue %= 360;
@@ -239,26 +225,19 @@ void led_effect_rainbow_update() {
 
 
 void led_effect_rainbow_wave_update() {
-
-
     if (rainbow_current_ticks++ < rainbow_wave_ticks) {
         return;
     } else {
         rainbow_current_ticks = 0;
     }
 
-
     for (int i = 0; i < LED_COUNT; i++) {
-
         int key_hue = rainbow_hue +16*(i/4);
         if (key_hue >= 360)          {
             key_hue %= 360;
         }
         rainbow.SetHSV(key_hue, rainbow_saturation, rainbow_value);
         LED.set_crgb_at(i,rainbow);
-
-
-
     }
     rainbow_hue += rainbow_wave_steps;
     if (rainbow_hue >= 360)          {
