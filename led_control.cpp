@@ -68,16 +68,12 @@ void setup_leds() {
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
 
-byte key_to_led(byte row, byte col) {
-    return key_led_map[row][col];
-}
-
 void set_key_color(byte row, byte col, cRGB color) {
-    LED.set_crgb_at(key_to_led(row, col), color);
+    LED.set_crgb_at(key_led_map[row][col], color);
 }
 
 cRGB get_key_color(byte row, byte col) {
-    return LED.get_crgb_at(key_to_led(row, col));
+    return LED.get_crgb_at(key_led_map[row][col]);
 }
 
 

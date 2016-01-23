@@ -98,7 +98,6 @@ void set_all_leds_to(cRGB color);
 void set_led_mode(int mode);
 void next_led_mode();
 
-byte key_to_led(byte row, byte col);
 void set_key_color(byte row, byte col, cRGB color);
 cRGB get_key_color(byte row, byte col);
 
