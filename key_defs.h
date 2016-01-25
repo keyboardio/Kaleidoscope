@@ -17,7 +17,6 @@ typedef struct {
 #define GUI_HELD        B00001000
 #define SWITCH_TO_KEYMAP B00010000
 #define MOMENTARY       B00100000
-#define MOUSE_KEY       B01000000
 #define SYNTHETIC_KEY   B10000000
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
@@ -25,6 +24,7 @@ typedef struct {
 #define IS_SYSCTL      B00000010
 #define IS_CONSUMER    B00000100
 #define IS_INTERNAL    B00001000
+#define IS_MOUSE_KEY   B00010000
 
 
 // IS_INTERNAL key table:
@@ -61,22 +61,22 @@ typedef struct {
 #define Key_macroKey1 (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MACRO, 1}
 
 
-#define Key_mouseWarpNW   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_L }
-#define Key_mouseWarpNE   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
-#define Key_mouseWarpSW   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
-#define Key_mouseWarpSE   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
-#define Key_mouseWarpEnd   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
+#define Key_mouseWarpNW   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_L }
+#define Key_mouseWarpNE   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
+#define Key_mouseWarpSW   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
+#define Key_mouseWarpSE   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
+#define Key_mouseWarpEnd   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
 
 
 
-#define Key_mouseUpL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_L }
-#define Key_mouseUp    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP }
-#define Key_mouseUpR  (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_UP | MOUSE_R }
-#define Key_mouseL    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_L }
-#define Key_mouseR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_R }
-#define Key_mouseDnL   (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_L  }
-#define Key_mouseDn    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN }
-#define Key_mouseDnR    (Key){ KEY_FLAGS|MOUSE_KEY, MOUSE_DN | MOUSE_R  }
+#define Key_mouseUpL   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_UP | MOUSE_L }
+#define Key_mouseUp    (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_UP }
+#define Key_mouseUpR  (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_UP | MOUSE_R }
+#define Key_mouseL    (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_L }
+#define Key_mouseR    (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_R }
+#define Key_mouseDnL   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_DN | MOUSE_L  }
+#define Key_mouseDn    (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_DN }
+#define Key_mouseDnR    (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_DN | MOUSE_R  }
 #define Key_mouseScrollUp
 #define Key_mouseScrollDn
 #define Key_mouseScrollL

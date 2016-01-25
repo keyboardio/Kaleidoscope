@@ -216,6 +216,15 @@ byte load_primary_keymap() {
 // Sending events to the usb host
 
 void handle_synthetic_key_press(byte switchState, Key mappedKey) {
+    if (mappedKey.flags & IS_MOUSE_KEY ) {
+        if (mappedKey.rawKey & MOUSE_WARP) {
+            if (key_toggled_on(switchState)) {
+                warp_mouse(mappedKey);
+            }
+        } else {
+            handle_mouse_key_press(switchState, mappedKey, x, y);
+        }
+        }
     if (mappedKey.flags & IS_CONSUMER) {
         if (key_toggled_on (switchState)) {
             ConsumerControl.press(mappedKey.rawKey);
@@ -265,16 +274,8 @@ void send_key_event(byte row, byte col) {
 
     set_keymap(keymaps[primary_keymap][row][col], switchState);
 
-    if (mappedKey.flags & MOUSE_KEY ) {
-        if (mappedKey.rawKey & MOUSE_WARP) {
-            if (key_toggled_on(switchState)) {
-                warp_mouse(mappedKey);
-            }
-        } else {
-            handle_mouse_key_press(switchState, mappedKey, x, y);
-        }
 
-    } else if (mappedKey.flags & SYNTHETIC_KEY) {
+    if (mappedKey.flags & SYNTHETIC_KEY) {
         handle_synthetic_key_press(switchState, mappedKey);
     } else {
         if (key_is_pressed(switchState)) {
