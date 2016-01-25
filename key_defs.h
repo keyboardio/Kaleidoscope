@@ -2,7 +2,6 @@
 
 
 #include "HIDTables.h"
-#include "HIDAliases.h"
 typedef struct {
     int8_t flags;
     int8_t rawKey;
@@ -119,10 +118,6 @@ typedef struct {
 #define Key_nextTrack (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, HID_CONSUMER_SCAN_NEXT_TRACK}
 #define Key_Eject (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, HID_CONSUMER_EJECT}
 
-//#define Key_Cut (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, CONSUMER_CONTROL_AC_CUT }
-//#define Key_Copy (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, CONSUMER_CONTROL_AC_COPY}
-//#define Key_Paste (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, CONSUMER_CONTROL_AC_PASTE}
-//#define Key_Undo (Key) {KEY_FLAGS | SYNTHETIC_KEY|IS_CONSUMER, CONSUMER_CONTROL_AC_UNDO }
 
 #define Key_LCtrl (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_CONTROL }
 #define Key_LShift (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_SHIFT }
@@ -138,18 +133,18 @@ typedef struct {
 #define Key_LArrow (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_ARROW  }
 #define Key_RArrow (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_ARROW}
 #define Key_Return (Key){ KEY_FLAGS, HID_KEYBOARD_RETURN }
-#define Key_Esc (Key){ KEY_FLAGS, KEY_ESC }
-#define Key_Backspace (Key){ KEY_FLAGS, KEY_BACKSPACE }
-#define Key_Tab (Key){ KEY_FLAGS, KEY_TAB }
-#define Key_Insert (Key){ KEY_FLAGS, KEY_INSERT }
-#define Key_Delete (Key){ KEY_FLAGS, HID_KEYBOARD_DELETE }
-#define Key_PageUp (Key){ KEY_FLAGS, KEY_PGUP }
-#define Key_PageDn (Key){ KEY_FLAGS, KEY_PGDN }
-#define Key_Home (Key){ KEY_FLAGS, KEY_HOME }
-#define Key_End (Key){ KEY_FLAGS, KEY_END }
+#define Key_Esc (Key){ KEY_FLAGS, HID_KEYBOARD_ESCAPE }
+#define Key_Backspace (Key){ KEY_FLAGS, HID_KEYBOARD_DELETE }
+#define Key_Tab (Key){ KEY_FLAGS, HID_KEYBOARD_TAB }
+#define Key_Insert (Key){ KEY_FLAGS, HID_KEYBOARD_INSERT }
+#define Key_Delete (Key){ KEY_FLAGS, HID_KEYBOARD_DELETE_FORWARD }
+#define Key_PageUp (Key){ KEY_FLAGS, HID_KEYBOARD_PAGE_UP }
+#define Key_PageDn (Key){ KEY_FLAGS, HID_KEYBOARD_PAGE_DOWN }
+#define Key_Home (Key){ KEY_FLAGS, HID_KEYBOARD_HOME }
+#define Key_End (Key){ KEY_FLAGS, HID_KEYBOARD_END }
 
 
-#define Key_CapsLock (Key){ KEY_FLAGS, KEY_CAPS_LOCK }
+#define Key_CapsLock (Key){ KEY_FLAGS, HID_KEYBOARD_CAPS_LOCK }
 
 #define Key_F1 (Key){ KEY_FLAGS, HID_KEYBOARD_F1 }
 #define Key_F2 (Key){ KEY_FLAGS, HID_KEYBOARD_F2 }
@@ -216,26 +211,26 @@ typedef struct {
 #define Key_Y (Key){ KEY_FLAGS, HID_KEYBOARD_Y_AND_Y }
 #define Key_Z (Key){ KEY_FLAGS, HID_KEYBOARD_Z_AND_Z }
 
-#define Key_Backtick (Key){ KEY_FLAGS, KEY_GRAVE }
-#define Key_Minus (Key){ KEY_FLAGS, KEY_MINUS }
-#define Key_Equals (Key){ KEY_FLAGS, KEY_EQUALS }
-#define Key_LBracket (Key){ KEY_FLAGS, KEY_LEFT_BRACKET }
-#define Key_RBracket (Key){ KEY_FLAGS, KEY_RIGHT_BRACKET }
-#define Key_Backslash (Key){ KEY_FLAGS, KEY_BACKSLASH }
+#define Key_Backtick (Key){ KEY_FLAGS, HID_KEYBOARD_GRAVE_ACCENT_AND_TILDE }
+#define Key_Minus (Key){ KEY_FLAGS, HID_KEYBOARD_MINUS_AND_UNDERSCORE }
+#define Key_Equals (Key){ KEY_FLAGS, HID_KEYBOARD_EQUALS_AND_PLUS }
+#define Key_LBracket (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
+#define Key_RBracket (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
+#define Key_Backslash (Key){ KEY_FLAGS, HID_KEYBOARD_BACKSLASH_AND_PIPE }
 #define Key_Pipe (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_BACKSLASH_AND_PIPE }
-#define Key_LSquareBracket (Key){ KEY_FLAGS, KEY_L_BRACKET }
-#define Key_RSquareBracket (Key){ KEY_FLAGS, KEY_R_BRACKET }
-#define Key_LCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, KEY_L_BRACKET }
-#define Key_RCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, KEY_R_BRACKET }
-#define Key_Semicolon (Key){ KEY_FLAGS, KEY_SEMICOLON }
-#define Key_Quote (Key){ KEY_FLAGS, KEY_QUOTE }
-#define Key_Comma (Key){ KEY_FLAGS, KEY_COMMA }
-#define Key_Period (Key){ KEY_FLAGS, KEY_PERIOD }
-#define Key_Space (Key){ KEY_FLAGS, KEY_SPACE }
-#define Key_Slash (Key){ KEY_FLAGS, KEY_SLASH }
+#define Key_LSquareBracket (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
+#define Key_RSquareBracket (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
+#define Key_LCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
+#define Key_RCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
+#define Key_Semicolon (Key){ KEY_FLAGS, HID_KEYBOARD_SEMICOLON_AND_COLON }
+#define Key_Quote (Key){ KEY_FLAGS, HID_KEYBOARD_QUOTE_AND_DOUBLEQUOTE }
+#define Key_Comma (Key){ KEY_FLAGS, HID_KEYBOARD_COMMA_AND_LESS_THAN }
+#define Key_Period (Key){ KEY_FLAGS, HID_KEYBOARD_PERIOD_AND_GREATER_THAN }
+#define Key_Space (Key){ KEY_FLAGS, HID_KEYBOARD_SPACEBAR}
+#define Key_Slash (Key){ KEY_FLAGS, HID_KEYBOARD_SLASH_AND_QUESTION_MARK }
 
-#define Key_LEFT_PAREN (Key) { KEY_FLAGS|SHIFT_HELD, KEY_9 }
-#define Key_RIGHT_PAREN (Key){ KEY_FLAGS|SHIFT_HELD, KEY_0 }
+#define Key_LEFT_PAREN (Key) { KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_9_AND_LEFT_PAREN }
+#define Key_RIGHT_PAREN (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_0_AND_RIGHT_PAREN }
 
 
 #define Key_KeypadClear (Key){ KEY_FLAGS, HID_KEYPAD_CLEAR }
@@ -255,14 +250,8 @@ typedef struct {
 #define Key_Keypad9 (Key){ KEY_FLAGS, HID_KEYPAD_9_AND_PAGE_UP }
 #define Key_Keypad0 (Key){ KEY_FLAGS, HID_KEYPAD_0_AND_INSERT }
 #define Key_KeypadDot (Key){ KEY_FLAGS, HID_KEYPAD_PERIOD_AND_DELETE }
-#define Key_DanishDollar (Key){ KEY_FLAGS, KEY_DANISH_DOLLAR }
-#define Key_PcApplciation (Key){ KEY_FLAGS, KEY_PC_APPLCIATION }
-#define Key_F13 (Key){ KEY_FLAGS, KEY_F13 }
-#define Key_F16 (Key){ KEY_FLAGS, KEY_F16 }
-#define Key_F17 (Key){ KEY_FLAGS, KEY_F17 }
-#define Key_F18 (Key){ KEY_FLAGS, KEY_F18 }
-#define Key_F19 (Key){ KEY_FLAGS, KEY_F19 }
-#define Key_Help (Key){ KEY_FLAGS, KEY_HELP }
+#define Key_PcApplciation (Key){ KEY_FLAGS, HID_KEYBOARD_APPLICATION }
+#define Key_Help (Key){ KEY_FLAGS, HID_KEYBOARD_HELP }
 #define KEY_BACKLIGHT_DOWN 0xF1
 #define KEY_BACKLIGHT_UP 0xF2
 #define Key_BacklightDn (Key){ KEY_FLAGS, KEY_BACKLIGHT_DOWN }
@@ -272,7 +261,10 @@ typedef struct {
 #define KEY_LEFT_FN2 0xff
 #define Key_LFN2 (Key){ KEY_FLAGS, KEY_LEFT_FN2 }
 
-#define Key_Undo (Key){ KEY_FLAGS, KEY_UNDO }
+#define Key_Undo (Key){ KEY_FLAGS, HID_KEYBOARD_UNDO }
+#define Key_Cut (Key){ KEY_FLAGS, HID_KEYBOARD_CUT }
+#define Key_Copy (Key){ KEY_FLAGS, HID_KEYBOARD_COPY }
+#define Key_Paste (Key){ KEY_FLAGS, HID_KEYBOARD_PASTE }
 
 
 #define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_0 }
