@@ -43,14 +43,6 @@ byte temporary_keymap = 0;
 
 
 
-byte commandBuffer[32];
-int commandBufferSize;
-bool commandMode;
-bool commandPromptPrinted;
-
-
-// Console related
-void process_command_buffer();
 
 // EEPROM related
 void save_primary_keymap(byte keymap);
@@ -65,6 +57,10 @@ void handle_mouse_movement( char x, char y);
 void begin_warping();
 void end_warping();
 void warp_mouse(Key key);
+
+//internals
+void reboot_bootloader();
+
 
 // hardware keymap interaction
 void setup_pins();
