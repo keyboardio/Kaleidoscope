@@ -10,14 +10,14 @@ typedef struct {
 
 
 
-#define KEY_FLAGS       B00000000
-#define CTRL_HELD       B00000001
-#define ALT_HELD        B00000010
-#define SHIFT_HELD      B00000100
-#define GUI_HELD        B00001000
-#define SWITCH_TO_KEYMAP B00010000
-#define MOMENTARY       B00100000
-#define SYNTHETIC_KEY   B10000000
+#define KEY_FLAGS         B00000000
+#define CTRL_HELD         B00000001
+#define ALT_HELD          B00000010
+#define SHIFT_HELD        B00000100
+#define GUI_HELD          B00001000
+#define SWITCH_TO_KEYMAP  B00010000
+#define MOMENTARY         B00100000
+#define SYNTHETIC_KEY     B10000000
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_MACRO       B00000001
