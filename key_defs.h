@@ -4,8 +4,8 @@
 #include "HIDTables.h"
 #include "HIDAliases.h"
 typedef struct {
-    byte flags;
-    byte rawKey;
+    int8_t flags;
+    int8_t rawKey;
 } Key;
 
 
