@@ -16,7 +16,7 @@ BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
 OUTPUT_PATH=./output
 ARDUINO_LOCAL_LIB_PATH=~/Documents/Arduino/libraries
 ARDUINO_IDE_VERSION=100607
-
+VERBOSE= #-verbose
 SKETCH=KeyboardioFirmware.ino
 
 
@@ -50,7 +50,7 @@ compile: dirs
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
-		-verbose \
+		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
 		$(SKETCH)
