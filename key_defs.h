@@ -261,7 +261,6 @@ typedef struct {
 #define Key_Undo (Key){ KEY_FLAGS, KEY_UNDO }
 
 
-#define META_NEXT_KEYMAP_MOMENTARY 0xFF
 #define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_0 }
 #define Key_Keymap1 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_1 }
 #define Key_Keymap2 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_2 }
