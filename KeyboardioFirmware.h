@@ -28,7 +28,7 @@ void setup();
 #include "led_control.h"
 #include <Wire.h>
 #include "KeyboardioSX1509.h"
-
+#include "mouse_movement.h"
 //extern uint8_t usbMaxPower;
 
 char x;
@@ -48,14 +48,6 @@ void save_primary_keymap(byte keymap);
 byte load_primary_keymap();
 
 
-
-// Mouse-related methods
-
-double mouse_accel (double cycles);
-void handle_mouse_movement( char x, char y);
-void begin_warping();
-void end_warping();
-void warp_mouse(Key key);
 
 //internals
 void reboot_bootloader();
@@ -77,7 +69,6 @@ void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry);
 
 // sending events to the computer
 void handle_synthetic_key_press(byte switchState, Key mappedKey);
-void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
 void send_key_events();
 void send_key_event(byte row, byte col);
 void press_key(Key mappedKey);

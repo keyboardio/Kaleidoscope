@@ -1,11 +1,16 @@
 
 #pragma once
 
+// Mouse-related 'public' API methods
 
-// Warping
-double mouseActiveForCycles = 0;
-float carriedOverX = 0;
-float carriedOverY = 0;
+double mouse_accel (double cycles);
+void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
+void handle_mouse_movement( char x, char y);
+void begin_warping();
+void end_warping();
+void warp_mouse(Key key);
+
+
 
 
 // apparently, the mac discards 15% of the value space for mouse movement.
@@ -15,18 +20,7 @@ float carriedOverY = 0;
 #define HALF_HEIGHT 16384
 
 
-
-int abs_left = 0;
-int abs_top = 0;
-
-int next_width;
-int next_height;
-int section_top;
-int section_left;
-boolean is_warping = false;
-
-
-// Mouse acceleration 
+// Mouse acceleration
 
 // we want the whole s curve, not just the bit
 // that's usually above the x and y axes;

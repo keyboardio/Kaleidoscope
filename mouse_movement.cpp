@@ -4,9 +4,25 @@
 //
 #include "Arduino.h"
 #include "key_defs.h"
-#include "mouse_movement.h"
 #include "debouncing.h"
 #include "HID-Project.h"
+#include "mouse_movement.h"
+
+
+// Warping
+static double mouseActiveForCycles = 0;
+static float carriedOverX = 0;
+static float carriedOverY = 0;
+
+
+static int abs_left = 0;
+static int abs_top = 0;
+static int next_width;
+static int next_height;
+static int section_top;
+static int section_left;
+static boolean is_warping = false;
+
 
 void _warp_jump(long left, long top, long height, long width) {
     long x_center = left + width/2;
