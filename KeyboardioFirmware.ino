@@ -31,14 +31,10 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
                 }
             }
             if (key_toggled_off(matrixStateEntry)) {
-
                 temporary_keymap = primary_keymap;
-
             }
 
-
-
-        } else if (! (keymapEntry.flags ^ (  SWITCH_TO_KEYMAP))) {
+        } else if (! (keymapEntry.flags ^ ( SWITCH_TO_KEYMAP ))) {
             // switch keymap and stay there
             if (key_toggled_on(matrixStateEntry)) {
                 temporary_keymap = primary_keymap = keymapEntry.rawKey;
@@ -55,16 +51,10 @@ void scan_matrix() {
     for (byte row = 0; row < LEFT_ROWS; row++) {
         implementation_scan_row(row);
 
-
         for (byte col = 0; col < LEFT_COLS; col++) {
             TS("Scanning col")
             matrixState[row][col] = implementation_scan_left_col(row,col,matrixState[row][col]);
             matrixState[row][(COLS - 1) - col] = implementation_scan_right_col(row,col,matrixState[row][(COLS - 1) - col]);
-            // while we're inspecting the electrical matrix, we look
-            // to see if the Key being held is a firmware level
-            // metakey, so we can act on it, lest we only discover
-            // that we should be looking at a seconary Keymap halfway
-            // through the matrix scan
 
             TS("calling send_key_event")
             send_key_event(row, col);
@@ -108,9 +98,6 @@ void loop() {
 }
 
 
-
-
-
 // Sending events to the usb host
 
 void handle_synthetic_key_press(byte switchState, Key mappedKey) {
@@ -128,7 +115,6 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
             ConsumerControl.press(mappedKey.rawKey);
         }
     }
-
     else if (mappedKey.flags & IS_INTERNAL) {
         if (key_toggled_on (switchState)) {
             if (mappedKey.rawKey == LED_TOGGLE) {
@@ -162,16 +148,11 @@ void send_key_event(byte row, byte col) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-
-    // TODO:switch to sending raw HID packets
-
     // really, these are signed small ints
 
     byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
-
     set_keymap(keymaps[primary_keymap][row][col], switchState);
-
 
     if (mappedKey.flags & SYNTHETIC_KEY) {
         handle_synthetic_key_press(switchState, mappedKey);
@@ -179,8 +160,6 @@ void send_key_event(byte row, byte col) {
         if (key_is_pressed(switchState)) {
             press_key(mappedKey);
         }
-
-
     }
 }
 
