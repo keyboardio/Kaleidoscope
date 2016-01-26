@@ -64,18 +64,6 @@ void warp_mouse(Key quadrant) {
 }
 
 
-// we want the whole s curve, not just the bit
-// that's usually above the x and y axes;
-#define ATAN_LIMIT 1.57079633
-#define ACCELERATION_FLOOR 0.25
-#define ACCELERATION_MULTIPLIER 5
-#define  ACCELERATION_RUNWAY 5
-// Climb speed is how fast we get to max speed
-// 1 is "instant"
-// 0.05 is just right
-// 0.001 is insanely slow
-
-#define ACCELERATION_CLIMB_SPEED  0.05
 
 double mouse_accel (double cycles) {
     double accel = (atan((cycles * ACCELERATION_CLIMB_SPEED)-ACCELERATION_RUNWAY) + ATAN_LIMIT) * ACCELERATION_MULTIPLIER;
