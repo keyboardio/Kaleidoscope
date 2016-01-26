@@ -3,8 +3,8 @@
 
 #include "HIDTables.h"
 typedef struct {
-    int8_t flags;
-    int8_t rawKey;
+    uint8_t flags;
+    uint8_t rawKey;
 } Key;
 
 

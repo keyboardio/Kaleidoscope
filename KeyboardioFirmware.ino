@@ -293,14 +293,14 @@ void press_key(Key mappedKey) {
     Keyboard.press(mappedKey.rawKey);
 }
 
-void make_input(sx1509Class sx1509, int pin) {
+void make_input(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, INPUT);  // Set SX1509 pin 1 as an input
     sx1509.writePin(pin, HIGH);  // Activate pull-up
 
 
 }
 
-void make_output(sx1509Class sx1509, int pin) {
+void make_output(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, OUTPUT);
     sx1509.writePin(pin, HIGH);
 
@@ -314,7 +314,7 @@ void setup_pins() {
 }
 
 
-int setup_sx1509 (sx1509Class sx1509, int colpins[], int rowpins[]) {
+int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
     byte initted;
 
     for (int counter = 0; counter < 10; counter++) {

@@ -29,15 +29,14 @@ void setup();
 #include <Wire.h>
 #include "KeyboardioSX1509.h"
 
-//extern int usbMaxPower;
+//extern uint8_t usbMaxPower;
 
 char x;
 char y;
 
-byte matrixState[ROWS][COLS];
+uint8_t matrixState[ROWS][COLS];
 static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
-long reporting_counter = 0;
 byte primary_keymap = 0;
 byte temporary_keymap = 0;
 
@@ -83,7 +82,7 @@ void send_key_events();
 void send_key_event(byte row, byte col);
 void press_key(Key mappedKey);
 
-int setup_sx1509(sx1509Class sx1509, int colpins[], int rowpins[]);
+int setup_sx1509(sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
 #ifndef VERSION
 #define VERSION "locally-built"
