@@ -2,6 +2,7 @@
 
 #include "generated/keymaps.h"
 #include "WS2812.h"
+#include "KeyboardioSX1509.h"
 
 #define EEPROM_KEYMAP_LOCATION 0
 
@@ -26,7 +27,15 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 #define NUMPAD_KEYMAP 2
 #define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
-
+void implementation_scan_row(byte row);
+void implementation_finish_scanning_row(byte row); 
+uint8_t implementation_scan_right_col(byte row, byte col, uint8_t state);
+uint8_t implementation_scan_left_col(byte row, byte col, uint8_t state);
+void implementation_pins_setup();
+void make_input(sx1509Class sx1509, uint8_t pin) ;
+void make_output(sx1509Class sx1509, uint8_t pin) ;
+boolean implementation_right_hand_connected(void);
+int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
 
 #define LED_DATA_PIN  4
