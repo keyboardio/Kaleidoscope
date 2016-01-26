@@ -109,7 +109,6 @@ void setup() {
     temporary_keymap = primary_keymap = load_primary_keymap();
 }
 
-String myApp;
 
 void loop() {
     TS("A noop takes...")
