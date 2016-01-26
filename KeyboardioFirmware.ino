@@ -112,10 +112,6 @@ void setup() {
 String myApp;
 
 void loop() {
-    // if(Serial.available()) {
-    // myApp = Serial.readString();
-    // myApp.trim();
-    // }
     TS("A noop takes...")
     TS("about to scan the matrix")
     scan_matrix();
