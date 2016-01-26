@@ -70,7 +70,6 @@ void send_key_events();
 void handle_key_event(byte row, byte col);
 void press_key(Key mappedKey);
 
-int setup_sx1509(sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
 #ifndef VERSION
 #define VERSION "locally-built"
