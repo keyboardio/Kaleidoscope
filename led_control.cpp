@@ -5,37 +5,36 @@ WS2812 LED(LED_COUNT);
 
 #define USE_HSV
 
-uint8_t led_mode;
-uint8_t last_led_mode;
-uint8_t stored_led_mode;
-uint8_t pos = 0;
+static uint8_t led_mode;
+static uint8_t last_led_mode;
+static uint8_t stored_led_mode;
+static uint8_t pos = 0;
 
-cRGB led_off;
-cRGB led_steady;
-cRGB led_blue;
-cRGB led_dark_blue;
-cRGB led_bright_red;
-cRGB led_breathe;
-cRGB rainbow;
+static cRGB led_off;
+static cRGB led_steady;
+static cRGB led_blue;
+static cRGB led_dark_blue;
+static cRGB led_bright_red;
+static cRGB led_breathe;
+static cRGB rainbow;
 
 
-uint8_t rainbow_hue = 0;   //stores 0 to 614
-uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
-uint8_t rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
+static uint8_t rainbow_hue = 0;   //stores 0 to 614
+static uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
+static uint8_t rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
 
-byte rainbow_saturation = 255;
-byte rainbow_value = 190;
+static byte rainbow_saturation = 255;
+static byte rainbow_value = 190;
 
-long rainbow_wave_ticks = 1; //delays between update
-long rainbow_ticks = 5; //delays between update
-long rainbow_current_ticks =0;
-uint8_t breathe_brightness = 0;    // how bright the LED is
-uint8_t breathe_fadeAmount = 1;    // how many pouint8_ts to fade the LED by
+static long rainbow_wave_ticks = 1; //delays between update
+static long rainbow_ticks = 5; //delays between update
+static long rainbow_current_ticks =0;
+static uint8_t breathe_brightness = 0;    // how bright the LED is
+static uint8_t breathe_fadeAmount = 1;    // how many pouint8_ts to fade the LED by
 
-uint8_t chase_pixels = 1;
-uint8_t chase_threshold = 6;
-uint8_t current_chase_counter = 0;
-
+static uint8_t chase_pixels = 1;
+static uint8_t chase_threshold = 6;
+static uint8_t current_chase_counter = 0;
 // End RGB stuff
 
 void setup_leds() {
