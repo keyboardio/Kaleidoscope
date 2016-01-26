@@ -1,6 +1,7 @@
 #pragma once
 
 #include "generated/keymaps.h"
+#include "WS2812.h"
 
 #define EEPROM_KEYMAP_LOCATION 0
 
@@ -40,6 +41,13 @@ static const uint8_t key_led_map[4][16] = {
 };
 
 
+void implementation_setup_leds();
+
+void implementation_led_set_crgb_at(byte row, byte col, cRGB color);
+
+cRGB implementation_get_key_color(byte row, byte col);
+void implementation_led_set_crgb_at(uint8_t i, cRGB crgb);
+void implementation_led_sync();
 
 #define LED_PGDN 0
 #define LED_PGUP 1

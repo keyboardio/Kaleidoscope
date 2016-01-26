@@ -1,9 +1,4 @@
-#include <Arduino.h>
 #include "led_control.h"
-
-WS2812 LED(LED_COUNT);
-
-#define USE_HSV
 
 static uint8_t led_mode;
 static uint8_t last_led_mode;
@@ -38,16 +33,16 @@ static uint8_t current_chase_counter = 0;
 // End RGB stuff
 
 void setup_leds() {
-    LED.setOutput(LED_DATA_PIN);
-    LED.setColorOrderGRB();  // Uncomment for RGB color order
+    implementation_setup_leds();
+
 }
 
 void set_key_color(byte row, byte col, cRGB color) {
-    LED.set_crgb_at(key_led_map[row][col], color);
+    implementation_led_set_crgb_at(row, col, color);
 }
 
 cRGB get_key_color(byte row, byte col) {
-    return LED.get_crgb_at(key_led_map[row][col]);
+    return implementation_get_key_color(row, col);
 }
 
 
@@ -69,7 +64,7 @@ void initialize_led_mode(uint8_t mode) {
 
 void set_all_leds_to(cRGB color) {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
-        LED.set_crgb_at(i, color);
+        implementation_led_set_crgb_at(i, color);
     }
 }
 
@@ -125,20 +120,21 @@ void update_leds(uint8_t numlock_enabled) {
 }
 
 
+
 void led_effect_numlock_update() {
     for (uint8_t i = 0; i < 44; i++) {
-        LED.set_crgb_at(i, led_off);
+        implementation_led_set_crgb_at(i, led_off);
     }
     for (uint8_t i = 44; i < LED_COUNT; i++) {
-        LED.set_crgb_at(i, led_bright_red);
+        implementation_led_set_crgb_at(i, led_bright_red);
     }
     led_compute_breath();
-    LED.set_crgb_at(60, led_breathe); // make numlock breathe
-    LED.sync();
+    implementation_led_set_crgb_at(60, led_breathe); // make numlock breathe
+    implementation_led_sync();
 }
 
 void led_effect_steady_update() {
-    LED.sync();
+    implementation_led_sync();
 }
 
 void led_compute_breath() {
@@ -159,7 +155,7 @@ void led_compute_breath() {
 void led_effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
-    LED.sync();
+    implementation_led_sync();
 }
 
 void led_effect_chase_update() {
@@ -167,23 +163,17 @@ void led_effect_chase_update() {
         return;
     }
     current_chase_counter = 0;
-    LED.set_crgb_at(pos - chase_pixels, led_off);
-    LED.set_crgb_at(pos, led_dark_blue);
+    implementation_led_set_crgb_at(pos - chase_pixels, led_off);
+    implementation_led_set_crgb_at(pos, led_dark_blue);
 
     pos += chase_pixels;
     if (pos > LED_COUNT || pos < 0) {
         chase_pixels = -chase_pixels;
         pos += chase_pixels;
     }
-    LED.set_crgb_at(pos, led_blue);
-    LED.sync();
+    implementation_led_set_crgb_at(pos, led_blue);
+    implementation_led_sync();
 }
-
-
-
-
-
-
 
 void led_effect_rainbow_update() {
     if (rainbow_current_ticks++ < rainbow_ticks) {
@@ -197,12 +187,8 @@ void led_effect_rainbow_update() {
         rainbow_hue %= 360;
     }
     set_all_leds_to(rainbow);
-    LED.sync();
+    implementation_led_sync();
 }
-
-
-
-
 
 void led_effect_rainbow_wave_update() {
     if (rainbow_current_ticks++ < rainbow_wave_ticks) {
@@ -217,13 +203,13 @@ void led_effect_rainbow_wave_update() {
             key_hue %= 360;
         }
         SetHSV(rainbow,key_hue, rainbow_saturation, rainbow_value);
-        LED.set_crgb_at(i,rainbow);
+        implementation_led_set_crgb_at(i,rainbow);
     }
     rainbow_hue += rainbow_wave_steps;
     if (rainbow_hue >= 360)          {
         rainbow_hue %= 360;
     }
-    LED.sync();
+    implementation_led_sync();
 }
 
 void led_bootup() {
@@ -249,11 +235,11 @@ void led_bootup() {
 }
 
 void led_type_letter(uint8_t letter) {
-    LED.set_crgb_at(letter,led_bright_red);
-    LED.sync();
+    implementation_led_set_crgb_at(letter,led_bright_red);
+    implementation_led_sync();
     delay(250);
-    LED.set_crgb_at(letter,led_off);
-    LED.sync();
+    implementation_led_set_crgb_at(letter,led_off);
+    implementation_led_sync();
     delay(10);
 
 }

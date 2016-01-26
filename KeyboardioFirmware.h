@@ -17,16 +17,15 @@ void setup();
 //add your function definitions for the project KeyboardIO here
 
 
+#include <Wire.h>
 #include <stdio.h>
 #include <math.h>
 #include <avr/wdt.h>
 #include "key_defs.h"
 #include "KeyboardConfig.h"
-
+#include "led_control.h"
 #include "generated/keymaps.h"
 #include "debouncing.h"
-#include "led_control.h"
-#include <Wire.h>
 #include "KeyboardioSX1509.h"
 #include "mouse_movement.h"
 //extern uint8_t usbMaxPower;

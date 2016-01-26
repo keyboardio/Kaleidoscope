@@ -1,6 +1,7 @@
-
 #pragma once
-#include "WS2812.h"
+
+#include <Arduino.h>
+#include "cRGB.h"
 #include "KeyboardConfig.h"
 
 #define LED_MODES 7
