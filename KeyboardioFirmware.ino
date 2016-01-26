@@ -78,7 +78,7 @@ void scan_matrix() {
 
             TS("calling send_key_event")
             send_key_event(row, col);
-        
+
             if (implementation_right_hand_connected()) {
                 send_key_event(row, (COLS - 1) - col);
             }

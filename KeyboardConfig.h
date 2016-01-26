@@ -28,7 +28,7 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 #define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
 void implementation_scan_row(byte row);
-void implementation_finish_scanning_row(byte row); 
+void implementation_finish_scanning_row(byte row);
 uint8_t implementation_scan_right_col(byte row, byte col, uint8_t state);
 uint8_t implementation_scan_left_col(byte row, byte col, uint8_t state);
 void implementation_pins_setup();
