@@ -19,11 +19,6 @@
 
 
 
-
-
-
-
-
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
     if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
         // this logic sucks. there is a better way TODO this
@@ -65,11 +60,8 @@ void scan_matrix() {
 
         for (byte col = 0; col < LEFT_COLS; col++) {
             TS("Scanning col")
-
-
             matrixState[row][col] = implementation_scan_left_col(row,col,matrixState[row][col]);
             matrixState[row][(COLS - 1) - col] = implementation_scan_right_col(row,col,matrixState[row][(COLS - 1) - col]);
-
             // while we're inspecting the electrical matrix, we look
             // to see if the Key being held is a firmware level
             // metakey, so we can act on it, lest we only discover
@@ -94,7 +86,6 @@ void scan_matrix() {
 
 // Command mode
 //
-
 
 void setup() {
     wdt_disable();
