@@ -2,5 +2,8 @@
 #include <EEPROM.h>
 #include "KeyboardConfig.h"
 
-void save_primary_keymap(byte keymap);
-byte load_primary_keymap();
+class KeyboardStorage {
+    public:
+        byte load_primary_keymap();
+        void save_primary_keymap(byte keymap);
+};

@@ -30,6 +30,7 @@ void setup();
 #include "debouncing.h"
 #include "KeyboardioSX1509.h"
 #include "mouse_movement.h"
+#include "storage.h"
 //extern uint8_t usbMaxPower;
 
 char x;
