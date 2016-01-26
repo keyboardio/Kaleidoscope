@@ -81,7 +81,7 @@ void setup() {
     //usbMaxPower = 100;
     Keyboard.begin();
     Mouse.begin();
-    setup_leds();
+    implementation_setup_leds();
     led_bootup();
     implementation_pins_setup();
 

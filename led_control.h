@@ -15,7 +15,6 @@
 
 #define LED_SPECIAL_MODE_NUMLOCK 100
 
-void setup_leds();
 void update_leds(uint8_t numlock_enabled);
 void set_all_leds_to(cRGB color);
 

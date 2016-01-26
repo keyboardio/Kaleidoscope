@@ -32,10 +32,6 @@ static uint8_t chase_threshold = 6;
 static uint8_t current_chase_counter = 0;
 // End RGB stuff
 
-void setup_leds() {
-    implementation_setup_leds();
-
-}
 
 void set_key_color(byte row, byte col, cRGB color) {
     implementation_led_set_crgb_at(row, col, color);
