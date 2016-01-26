@@ -30,13 +30,13 @@ void end_warping() {
     is_warping= false;
 }
 
-void warp_mouse(Key ninth) {
+void warp_mouse(Key quadrant) {
     if (is_warping == false) {
         begin_warping();
     }
 
 
-    if ( ninth.rawKey & MOUSE_END_WARP) {
+    if ( quadrant.rawKey & MOUSE_END_WARP) {
         end_warping();
         return;
     }
@@ -45,16 +45,16 @@ void warp_mouse(Key ninth) {
     next_width = next_width / 2;
     next_height = next_height/2;
 
-    if (ninth.rawKey & MOUSE_UP) {
+    if (quadrant.rawKey & MOUSE_UP) {
 //    Serial.print(" - up ");
-    } else if (ninth.rawKey & MOUSE_DN) {
+    } else if (quadrant.rawKey & MOUSE_DN) {
 //   Serial.print(" - down ");
         section_top  = section_top + next_height;
     }
 
-    if (ninth.rawKey & MOUSE_L) {
+    if (quadrant.rawKey & MOUSE_L) {
         //  Serial.print(" - left ");
-    } else if (ninth.rawKey & MOUSE_R) {
+    } else if (quadrant.rawKey & MOUSE_R) {
         // Serial.print(" - right ");
         section_left  = section_left + next_width;
     }
