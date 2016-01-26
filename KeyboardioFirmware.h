@@ -16,6 +16,7 @@ void setup();
 
 //add your function definitions for the project KeyboardIO here
 
+#define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
 #include <Wire.h>
 #include <stdio.h>

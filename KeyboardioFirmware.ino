@@ -29,7 +29,6 @@ sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
 int right_initted = 0;
 int left_initted = 0;
 
-#define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
 
 void setup_matrix() {
