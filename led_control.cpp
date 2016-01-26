@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "led_control.h"
-cRGB value;
+
 WS2812 LED(LED_COUNT);
 
 #define USE_HSV
@@ -10,11 +10,11 @@ static uint8_t last_led_mode;
 static uint8_t stored_led_mode;
 static uint8_t pos = 0;
 
-static cRGB led_off;
-static cRGB led_steady;
-static cRGB led_blue;
-static cRGB led_dark_blue;
-static cRGB led_bright_red;
+static cRGB led_off = { .r = 0, .g = 0, .b = 0 };
+static cRGB led_steady = { .r = 0, .g = 255, .b = 0};
+static cRGB led_blue = { .r = 0, .g = 0, .b = 255 };
+static cRGB led_dark_blue = { .r = 0, .g = 0, .b = 127 };
+static cRGB led_bright_red = { .r = 255, .g = 0, .b = 0};
 static cRGB led_breathe;
 static cRGB rainbow;
 
@@ -38,21 +38,6 @@ static uint8_t current_chase_counter = 0;
 // End RGB stuff
 
 void setup_leds() {
-    led_off.r = 0;
-    led_off.g = 0;
-    led_off.b = 0;
-    led_steady.r = 0;
-    led_steady.g = 255;
-    led_steady.b = 0;
-    led_blue.r = 0;
-    led_blue.g = 0;
-    led_blue.b = 255;
-    led_dark_blue.r = 0;
-    led_dark_blue.g = 0;
-    led_dark_blue.b = 127;
-    led_bright_red.r=255;
-    led_bright_red.g=0;
-    led_bright_red.b=0;
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
@@ -168,7 +153,7 @@ void led_compute_breath() {
     }
 
 
-    led_breathe.SetHSV(200, 255, breathe_brightness);
+    SetHSV(led_breathe,200, 255, breathe_brightness);
 }
 
 void led_effect_breathe_update() {
@@ -206,7 +191,7 @@ void led_effect_rainbow_update() {
     } else {
         rainbow_current_ticks = 0;
     }
-    rainbow.SetHSV(rainbow_hue, rainbow_saturation, rainbow_value);
+    SetHSV(rainbow,rainbow_hue, rainbow_saturation, rainbow_value);
     rainbow_hue += rainbow_steps;
     if (rainbow_hue >= 360)          {
         rainbow_hue %= 360;
@@ -231,7 +216,7 @@ void led_effect_rainbow_wave_update() {
         if (key_hue >= 360)          {
             key_hue %= 360;
         }
-        rainbow.SetHSV(key_hue, rainbow_saturation, rainbow_value);
+        SetHSV(rainbow,key_hue, rainbow_saturation, rainbow_value);
         LED.set_crgb_at(i,rainbow);
     }
     rainbow_hue += rainbow_wave_steps;
@@ -271,4 +256,60 @@ void led_type_letter(uint8_t letter) {
     LED.sync();
     delay(10);
 
+}
+
+
+void SetHSV(cRGB crgb, int hue, byte sat, byte val) {
+    /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
+    The dim_curve is used only on brightness/value and on saturation (inverted).
+    This looks the most natural.
+    */
+
+    int base;
+
+    if (sat == 0) { // Acromatic color (gray). Hue doesn't mind.
+        crgb.r = val;
+        crgb.g = val;
+        crgb.b = val;
+    } else  {
+        base = ((255 - sat) * val) >> 8;
+
+        switch (hue / 60) {
+        case 0:
+            crgb.r = val;
+            crgb.g = (((val - base)*hue) / 60) + base;
+            crgb.b = base;
+            break;
+
+        case 1:
+            crgb.r = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            crgb.g = val;
+            crgb.b = base;
+            break;
+
+        case 2:
+            crgb.r = base;
+            crgb.g = val;
+            crgb.b = (((val - base)*(hue % 60)) / 60) + base;
+            break;
+
+        case 3:
+            crgb.r = base;
+            crgb.g = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            crgb.b = val;
+            break;
+
+        case 4:
+            crgb.r = (((val - base)*(hue % 60)) / 60) + base;
+            crgb.g = base;
+            crgb.b = val;
+            break;
+
+        case 5:
+            crgb.r = val;
+            crgb.g = base;
+            crgb.b = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            break;
+        }
+    }
 }

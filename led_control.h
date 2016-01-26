@@ -40,4 +40,5 @@ void led_effect_heatmap_update();
 void led_effect_numlock_update();
 void led_bootup();
 void led_type_letter(uint8_t letter);
+void SetHSV(cRGB crgb, int hue, byte sat, byte val);
 
