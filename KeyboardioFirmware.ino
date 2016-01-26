@@ -3,19 +3,8 @@
 
 #define DEBUG_SERIAL false
 
-/**
- *  TODO:
-
-    add mouse inertia
-    add series-of-character macros
-    add series of keystroke macros
-    use a lower-level USB API
-
-*/
 #include "KeyboardioFirmware.h"
 #include "HID-Project.h"
-
-
 
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
     if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
