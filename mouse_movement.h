@@ -16,8 +16,8 @@ void warp_mouse(Key key);
 // apparently, the mac discards 15% of the value space for mouse movement.
 // need to test this on other platforms
 
-#define HALF_WIDTH 16384
-#define HALF_HEIGHT 16384
+#define MAX_WARP_WIDTH 32767
+#define MAX_WARP_HEIGHT 32767
 
 
 // Mouse acceleration

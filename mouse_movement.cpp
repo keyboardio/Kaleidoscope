@@ -37,8 +37,8 @@ void _warp_jump(long left, long top, long height, long width) {
 void begin_warping() {
     section_left = abs_left;
     section_top = abs_top;
-    next_width = 32767;
-    next_height = 32767;
+    next_width = MAX_WARP_WIDTH;
+    next_height = MAX_WARP_HEIGHT;
     is_warping = true;
 }
 
