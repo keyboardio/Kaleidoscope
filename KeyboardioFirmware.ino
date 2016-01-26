@@ -13,8 +13,6 @@
 
 */
 #include "KeyboardioFirmware.h"
-#include <EEPROM.h>  // Don't need this for CLI compilation, but do need it in the IDE
-#include <Wire.h>
 #include "HID-Project.h"
 
 
