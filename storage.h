@@ -4,6 +4,6 @@
 
 class KeyboardStorage {
     public:
-        byte load_primary_keymap();
-        void save_primary_keymap(byte keymap);
+        uint8_t load_primary_keymap();
+        void save_primary_keymap(uint8_t keymap);
 };
