@@ -224,7 +224,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
         } else {
             handle_mouse_key_press(switchState, mappedKey, x, y);
         }
-        }
+    }
     if (mappedKey.flags & IS_CONSUMER) {
         if (key_toggled_on (switchState)) {
             ConsumerControl.press(mappedKey.rawKey);
