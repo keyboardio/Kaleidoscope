@@ -56,11 +56,11 @@ void scan_matrix() {
             matrixState[row][col] = implementation_scan_left_col(row,col,matrixState[row][col]);
             matrixState[row][(COLS - 1) - col] = implementation_scan_right_col(row,col,matrixState[row][(COLS - 1) - col]);
 
-            TS("calling send_key_event")
-            send_key_event(row, col);
+            TS("calling handle_key_event")
+            handle_key_event(row, col);
 
             if (implementation_right_hand_connected()) {
-                send_key_event(row, (COLS - 1) - col);
+                handle_key_event(row, (COLS - 1) - col);
             }
         }
         TS("clearing output pins")
@@ -144,7 +144,7 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
     }
 }
 
-void send_key_event(byte row, byte col) {
+void handle_key_event(byte row, byte col) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
