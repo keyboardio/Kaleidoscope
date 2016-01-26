@@ -35,7 +35,7 @@ void setup();
 char x;
 char y;
 
-uint8_t matrixState[ROWS][COLS];
+uint8_t matrixState[ROWS][COLS] = {0};
 static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
 byte primary_keymap = 0;
@@ -58,7 +58,6 @@ void setup_output_pins();
 void scan_matrix();
 
 // key matrix
-void setup_matrix();
 void reset_matrix();
 void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry);
 

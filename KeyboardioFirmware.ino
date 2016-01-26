@@ -31,15 +31,6 @@ int left_initted = 0;
 
 
 
-void setup_matrix() {
-    //blank out the matrix.
-    for (byte col = 0; col < COLS; col++) {
-        for (byte row = 0; row < ROWS; row++) {
-            matrixState[row][col] = 0;
-        }
-    }
-}
-
 
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
     if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
@@ -151,7 +142,6 @@ void setup() {
     Mouse.begin();
     setup_leds();
     led_bootup();
-    setup_matrix();
     setup_pins();
     rightsx1509.fetchPinStates();
 
