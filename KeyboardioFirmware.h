@@ -39,9 +39,6 @@ char y;
 uint8_t matrixState[ROWS][COLS] = {0};
 static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
-// EEPROM related
-void save_primary_keymap(byte keymap);
-byte load_primary_keymap();
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
