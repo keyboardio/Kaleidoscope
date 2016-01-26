@@ -98,8 +98,8 @@ void set_all_leds_to(cRGB color);
 void set_led_mode(uint8_t mode);
 void next_led_mode();
 
-void set_key_color(byte row, byte col, cRGB color);
-cRGB get_key_color(byte row, byte col);
+void set_key_color(uint8_t row, uint8_t col, cRGB color);
+cRGB get_key_color(uint8_t row, uint8_t col);
 
 void led_compute_breath();
 void led_effect_breathe_init();

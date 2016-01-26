@@ -9,19 +9,19 @@ uint8_t led_mode;
 uint8_t last_led_mode;
 uint8_t stored_led_mode;
 uint8_t pos = 0;
+
 cRGB led_off;
 cRGB led_steady;
 cRGB led_blue;
 cRGB led_dark_blue;
 cRGB led_bright_red;
-
 cRGB led_breathe;
-
-// Begin RGB Stuff
 cRGB rainbow;
+
+
 uint8_t rainbow_hue = 0;   //stores 0 to 614
-byte rainbow_steps = 1; //number of hues we skip in a 360 range per update
-byte rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
+uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
+uint8_t rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
 
 byte rainbow_saturation = 255;
 byte rainbow_value = 190;
