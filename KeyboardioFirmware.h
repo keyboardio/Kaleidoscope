@@ -21,6 +21,7 @@ void setup();
 #include <stdio.h>
 #include <math.h>
 #include <avr/wdt.h>
+
 #include "key_defs.h"
 #include "KeyboardConfig.h"
 #include "led_control.h"
@@ -47,9 +48,6 @@ void save_primary_keymap(byte keymap);
 byte load_primary_keymap();
 
 
-
-//internals
-void reboot_bootloader();
 
 
 // hardware keymap interaction
