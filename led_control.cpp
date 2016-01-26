@@ -5,15 +5,11 @@ WS2812 LED(LED_COUNT);
 
 #define USE_HSV
 
-int led_mode;
-int last_led_mode;
-int stored_led_mode;
-int pos = 0;
+uint8_t led_mode;
+uint8_t last_led_mode;
+uint8_t stored_led_mode;
+uint8_t pos = 0;
 cRGB led_off;
-
-
-
-
 cRGB led_steady;
 cRGB led_blue;
 cRGB led_dark_blue;
@@ -23,7 +19,7 @@ cRGB led_breathe;
 
 // Begin RGB Stuff
 cRGB rainbow;
-int rainbow_hue = 0;   //stores 0 to 614
+uint8_t rainbow_hue = 0;   //stores 0 to 614
 byte rainbow_steps = 1; //number of hues we skip in a 360 range per update
 byte rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
 
@@ -33,12 +29,12 @@ byte rainbow_value = 190;
 long rainbow_wave_ticks = 1; //delays between update
 long rainbow_ticks = 5; //delays between update
 long rainbow_current_ticks =0;
-int breathe_brightness = 0;    // how bright the LED is
-int breathe_fadeAmount = 1;    // how many points to fade the LED by
+uint8_t breathe_brightness = 0;    // how bright the LED is
+uint8_t breathe_fadeAmount = 1;    // how many pouint8_ts to fade the LED by
 
-int chase_pixels = 1;
-int chase_threshold = 6;
-int current_chase_counter = 0;
+uint8_t chase_pixels = 1;
+uint8_t chase_threshold = 6;
+uint8_t current_chase_counter = 0;
 
 // End RGB stuff
 
@@ -72,7 +68,7 @@ cRGB get_key_color(byte row, byte col) {
 
 
 
-void initialize_led_mode(int mode) {
+void initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);
     if (mode == LED_MODE_OFF) {
         //        set_all_leds_to(led_off);
@@ -88,7 +84,7 @@ void initialize_led_mode(int mode) {
 }
 
 void set_all_leds_to(cRGB color) {
-    for (int i = 0; i < LED_COUNT; i++) {
+    for (uint8_t i = 0; i < LED_COUNT; i++) {
         LED.set_crgb_at(i, color);
     }
 }
@@ -100,14 +96,14 @@ void next_led_mode() {
     }
 }
 
-void set_led_mode(int mode) {
+void set_led_mode(uint8_t mode) {
     led_mode = mode;
 }
 
 
 
 
-void update_leds(int numlock_enabled) {
+void update_leds(uint8_t numlock_enabled) {
     if (numlock_enabled) {
         if (led_mode != LED_SPECIAL_MODE_NUMLOCK) {
             stored_led_mode = led_mode;
@@ -146,10 +142,10 @@ void update_leds(int numlock_enabled) {
 
 
 void led_effect_numlock_update() {
-    for (int i = 0; i < 44; i++) {
+    for (uint8_t i = 0; i < 44; i++) {
         LED.set_crgb_at(i, led_off);
     }
-    for (int i = 44; i < LED_COUNT; i++) {
+    for (uint8_t i = 44; i < LED_COUNT; i++) {
         LED.set_crgb_at(i, led_bright_red);
     }
     led_compute_breath();
@@ -231,8 +227,8 @@ void led_effect_rainbow_wave_update() {
         rainbow_current_ticks = 0;
     }
 
-    for (int i = 0; i < LED_COUNT; i++) {
-        int key_hue = rainbow_hue +16*(i/4);
+    for (uint8_t i = 0; i < LED_COUNT; i++) {
+        uint8_t key_hue = rainbow_hue +16*(i/4);
         if (key_hue >= 360)          {
             key_hue %= 360;
         }
@@ -268,7 +264,7 @@ void led_bootup() {
 
 }
 
-void led_type_letter(int letter) {
+void led_type_letter(uint8_t letter) {
     LED.set_crgb_at(letter,led_bright_red);
     LED.sync();
     delay(250);

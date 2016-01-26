@@ -92,10 +92,10 @@ static const uint8_t key_led_map[4][16] = {
 #define LED_MINUS 63
 
 void setup_leds();
-void update_leds(int numlock_enabled);
+void update_leds(uint8_t numlock_enabled);
 void set_all_leds_to(cRGB color);
 
-void set_led_mode(int mode);
+void set_led_mode(uint8_t mode);
 void next_led_mode();
 
 void set_key_color(byte row, byte col, cRGB color);
@@ -116,5 +116,5 @@ void led_effect_steady_update();
 void led_effect_heatmap_update();
 void led_effect_numlock_update();
 void led_bootup();
-void led_type_letter(int letter);
+void led_type_letter(uint8_t letter);
 
