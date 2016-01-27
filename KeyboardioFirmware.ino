@@ -33,7 +33,7 @@ void setup() {
     wdt_disable();
     Keyboard.begin();
     Mouse.begin();
-    implementation_setup_leds();
+    implementation_leds_setup();
     LEDs.led_bootup();
     implementation_pins_setup();
 
@@ -102,6 +102,7 @@ void handle_key_event(byte row, byte col) {
 
     byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
+
     if (keymaps[primary_keymap][row][col].flags & SWITCH_TO_KEYMAP) {
         handle_keymap_key_event(switchState, keymaps[primary_keymap][row][col]);
     }

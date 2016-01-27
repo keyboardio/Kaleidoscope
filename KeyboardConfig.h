@@ -50,7 +50,7 @@ static const uint8_t key_led_map[4][16] = {
 };
 
 
-void implementation_setup_leds();
+void implementation_leds_setup();
 
 void implementation_led_set_crgb_at(byte row, byte col, cRGB color);
 

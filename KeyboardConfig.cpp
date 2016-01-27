@@ -13,7 +13,7 @@ static int left_initted = 0;
 
 WS2812 LED(LED_COUNT);
 
-void implementation_setup_leds() {
+void implementation_leds_setup() {
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
