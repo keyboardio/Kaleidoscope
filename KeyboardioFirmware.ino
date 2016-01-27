@@ -49,8 +49,6 @@ void loop() {
 }
 
 
-// Sending events to the usb host
-
 void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY ) {
         if (mappedKey.rawKey & MOUSE_WARP) {
