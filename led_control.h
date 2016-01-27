@@ -25,18 +25,18 @@ class LEDControl {
     void set_led_mode(uint8_t mode);
 
   private:
-     uint8_t led_mode;
-     uint8_t last_led_mode;
-     uint8_t stored_led_mode;
+    uint8_t led_mode;
+    uint8_t last_led_mode;
+    uint8_t stored_led_mode;
     static uint8_t pos;
 
-     cRGB led_off = { .r = 0, .g = 0, .b = 0 };
-     cRGB led_steady = { .r = 0, .g = 255, .b = 0};
-     cRGB led_blue = { .r = 0, .g = 0, .b = 255 };
-     cRGB led_dark_blue = { .r = 0, .g = 0, .b = 127 };
-     cRGB led_bright_red = { .r = 255, .g = 0, .b = 0};
-     cRGB led_breathe;
-     cRGB rainbow;
+    cRGB led_off = { .r = 0, .g = 0, .b = 0 };
+    cRGB led_steady = { .r = 0, .g = 255, .b = 0};
+    cRGB led_blue = { .r = 0, .g = 0, .b = 255 };
+    cRGB led_dark_blue = { .r = 0, .g = 0, .b = 127 };
+    cRGB led_bright_red = { .r = 255, .g = 0, .b = 0};
+    cRGB led_breathe;
+    cRGB rainbow;
 
 
     static uint8_t rainbow_hue;   //stores 0 to 614
