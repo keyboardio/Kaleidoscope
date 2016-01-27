@@ -15,21 +15,24 @@
 
 #define LED_SPECIAL_MODE_NUMLOCK 100
 
-void update_leds(uint8_t numlock_enabled);
-void set_all_leds_to(cRGB color);
 
+class LEDControl {
+    public: 
+        void next_led_mode();
+        void led_bootup();
+        void update_leds(uint8_t numlock_enabled);
+        void led_type_letter(uint8_t letter);
 void set_led_mode(uint8_t mode);
-void next_led_mode();
 
+    private:
 void set_key_color(uint8_t row, uint8_t col, cRGB color);
 cRGB get_key_color(uint8_t row, uint8_t col);
-
 void led_compute_breath();
 void led_effect_breathe_init();
 void led_effect_rainbow_init();
 void led_effect_chase_init();
 void led_effect_steady_init();
-void led_Effect_heatmap_init();
+void led_effect_heatmap_init();
 
 void led_effect_breathe_update();
 void led_effect_rainbow_update();
@@ -38,7 +41,9 @@ void led_effect_chase_update();
 void led_effect_steady_update();
 void led_effect_heatmap_update();
 void led_effect_numlock_update();
-void led_bootup();
-void led_type_letter(uint8_t letter);
+void set_all_leds_to(cRGB color);
 void SetHSV(cRGB crgb, int hue, byte sat, byte val);
+void initialize_led_mode(uint8_t mode);
+};
+
 

@@ -33,17 +33,17 @@ static uint8_t current_chase_counter = 0;
 // End RGB stuff
 
 
-void set_key_color(byte row, byte col, cRGB color) {
+void LEDControl::set_key_color(byte row, byte col, cRGB color) {
     implementation_led_set_crgb_at(row, col, color);
 }
 
-cRGB get_key_color(byte row, byte col) {
+cRGB LEDControl::get_key_color(byte row, byte col) {
     return implementation_get_key_color(row, col);
 }
 
 
 
-void initialize_led_mode(uint8_t mode) {
+void LEDControl::initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);
     if (mode == LED_MODE_OFF) {
         //        set_all_leds_to(led_off);
@@ -58,27 +58,27 @@ void initialize_led_mode(uint8_t mode) {
     }
 }
 
-void set_all_leds_to(cRGB color) {
+void LEDControl::set_all_leds_to(cRGB color) {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
         implementation_led_set_crgb_at(i, color);
     }
 }
 
 
-void next_led_mode() {
+void LEDControl::next_led_mode() {
     if (led_mode++ >= LED_MODES) {
         led_mode = 0;
     }
 }
 
-void set_led_mode(uint8_t mode) {
+void LEDControl::set_led_mode(uint8_t mode) {
     led_mode = mode;
 }
 
 
 
 
-void update_leds(uint8_t numlock_enabled) {
+void LEDControl::update_leds(uint8_t numlock_enabled) {
     if (numlock_enabled) {
         if (led_mode != LED_SPECIAL_MODE_NUMLOCK) {
             stored_led_mode = led_mode;
@@ -117,7 +117,7 @@ void update_leds(uint8_t numlock_enabled) {
 
 
 
-void led_effect_numlock_update() {
+void LEDControl::led_effect_numlock_update() {
     for (uint8_t i = 0; i < 44; i++) {
         implementation_led_set_crgb_at(i, led_off);
     }
@@ -129,11 +129,11 @@ void led_effect_numlock_update() {
     implementation_led_sync();
 }
 
-void led_effect_steady_update() {
+void LEDControl::led_effect_steady_update() {
     implementation_led_sync();
 }
 
-void led_compute_breath() {
+void LEDControl::led_compute_breath() {
     // algorithm from http://sean.voisen.org/blog/2011/10/breathing-led-with-arduino/
     breathe_brightness =  (exp(sin(millis()/2000.0*PI)) - 0.36787944)*108.0;
     // change the brightness for next time through the loop:
@@ -148,13 +148,13 @@ void led_compute_breath() {
     SetHSV(led_breathe,200, 255, breathe_brightness);
 }
 
-void led_effect_breathe_update() {
+void LEDControl::led_effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
     implementation_led_sync();
 }
 
-void led_effect_chase_update() {
+void LEDControl::led_effect_chase_update() {
     if (current_chase_counter++ < chase_threshold) {
         return;
     }
@@ -171,7 +171,7 @@ void led_effect_chase_update() {
     implementation_led_sync();
 }
 
-void led_effect_rainbow_update() {
+void LEDControl::led_effect_rainbow_update() {
     if (rainbow_current_ticks++ < rainbow_ticks) {
         return;
     } else {
@@ -186,7 +186,7 @@ void led_effect_rainbow_update() {
     implementation_led_sync();
 }
 
-void led_effect_rainbow_wave_update() {
+void LEDControl::led_effect_rainbow_wave_update() {
     if (rainbow_current_ticks++ < rainbow_wave_ticks) {
         return;
     } else {
@@ -208,7 +208,7 @@ void led_effect_rainbow_wave_update() {
     implementation_led_sync();
 }
 
-void led_bootup() {
+void LEDControl::led_bootup() {
     set_all_leds_to(led_off);
 
     led_type_letter(LED_K);
@@ -230,7 +230,7 @@ void led_bootup() {
 
 }
 
-void led_type_letter(uint8_t letter) {
+void LEDControl::led_type_letter(uint8_t letter) {
     implementation_led_set_crgb_at(letter,led_bright_red);
     implementation_led_sync();
     delay(250);
@@ -240,11 +240,12 @@ void led_type_letter(uint8_t letter) {
 
 }
 
-
-void SetHSV(cRGB crgb, int hue, byte sat, byte val) {
+/* SetHSV from light_ws2812. Their source was:
+ * getRGB() function based on <http://www.codeproject.com/miscctrl/CPicker.asp>
+ * dim_curve idea by Jims
+ * */
+void LEDControl::SetHSV(cRGB crgb, int hue, byte sat, byte val) {
     /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
-    The dim_curve is used only on brightness/value and on saturation (inverted).
-    This looks the most natural.
     */
 
     int base;
