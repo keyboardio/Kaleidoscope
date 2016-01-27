@@ -30,7 +30,6 @@ void setup();
 #include "debouncing.h"
 #include "mouse_movement.h"
 #include "storage.h"
-//extern uint8_t usbMaxPower;
 
 char x;
 char y;
@@ -41,35 +40,13 @@ static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
-
-
-
-// hardware keymap interaction
-void setup_pins();
-void setup_input_pins();
-void setup_output_pins();
 void scan_matrix();
-
-// key matrix
-void reset_matrix();
-
-
-
-
 
 // sending events to the computer
 void handle_synthetic_key_event(byte switchState, Key mappedKey);
 void handle_key_event(byte row, byte col);
 void press_key(Key mappedKey);
 void handle_keymap_key_event(byte switchState, Key keymapEntry);
-
-
-
-
-
-
-
-
 
 #ifndef VERSION
 #define VERSION "locally-built"
