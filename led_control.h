@@ -18,7 +18,7 @@
 
 class LEDControl {
   public:
-    void next_led_mode();
+    void next_mode();
     void boot_animation();
     void update_leds(uint8_t current_keymap);
     void type_letter(uint8_t letter);

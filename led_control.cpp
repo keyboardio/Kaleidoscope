@@ -42,7 +42,7 @@ void LEDControl::set_all_leds_to(cRGB color) {
 }
 
 
-void LEDControl::next_led_mode() {
+void LEDControl::next_mode() {
     if (led_mode++ >= LED_MODES) {
         led_mode = 0;
     }
