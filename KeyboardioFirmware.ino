@@ -46,7 +46,7 @@ void loop() {
     x = 0;
     y = 0;
     scan_matrix();
-    LEDs.update_leds(temporary_keymap == NUMPAD_KEYMAP);
+    LEDs.update_leds(temporary_keymap);
     Keyboard.sendReport();
     Keyboard.releaseAll();
     handle_mouse_movement(x, y);

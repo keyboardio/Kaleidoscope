@@ -55,14 +55,14 @@ void LEDControl::set_led_mode(uint8_t mode) {
 
 
 
-void LEDControl::update_leds(uint8_t numlock_enabled) {
-    if (numlock_enabled) {
+void LEDControl::update_leds(uint8_t current_keymap) {
+    if (current_keymap == NUMPAD_KEYMAP) {
         if (led_mode != LED_SPECIAL_MODE_NUMLOCK) {
             stored_led_mode = led_mode;
         }
         led_mode = LED_SPECIAL_MODE_NUMLOCK;
     }
-    if (!numlock_enabled &&
+    if (current_keymap != NUMPAD_KEYMAP &&
             led_mode == LED_SPECIAL_MODE_NUMLOCK
        ) {
         led_mode = stored_led_mode;

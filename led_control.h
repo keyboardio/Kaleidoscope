@@ -20,7 +20,7 @@ class LEDControl {
   public:
     void next_led_mode();
     void led_bootup();
-    void update_leds(uint8_t numlock_enabled);
+    void update_leds(uint8_t current_keymap);
     void led_type_letter(uint8_t letter);
     void set_led_mode(uint8_t mode);
 
