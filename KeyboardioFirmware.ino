@@ -132,9 +132,7 @@ void press_key(Key mappedKey) {
 
 
 void handle_keymap_key_event(byte switchState, Key keymapEntry) {
-    // this logic sucks. there is a better way TODO this
-    
-    if (! (keymapEntry.flags ^  MOMENTARY ))) {
+    if (keymapEntry.flags & MOMENTARY ) {
         if (key_toggled_on(switchState)) {
             if ( keymapEntry.rawKey == KEYMAP_NEXT) {
                 temporary_keymap++;
