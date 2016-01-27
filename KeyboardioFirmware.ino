@@ -11,7 +11,6 @@ LEDControl BlinkyLights;
 
 
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
-    if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
         // this logic sucks. there is a better way TODO this
         if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
             if (key_toggled_on(matrixStateEntry)) {
@@ -34,7 +33,6 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
                 Storage.save_primary_keymap(primary_keymap);
             }
         }
-    }
 }
 
 void scan_matrix() {
@@ -138,8 +136,9 @@ void handle_key_event(byte row, byte col) {
 
     byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
-    set_keymap(keymaps[primary_keymap][row][col], switchState);
-
+    if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
+        set_keymap(keymaps[primary_keymap][row][col], switchState);
+    }
     if (mappedKey.flags & SYNTHETIC_KEY) {
         handle_synthetic_key_press(switchState, mappedKey);
     } else {
