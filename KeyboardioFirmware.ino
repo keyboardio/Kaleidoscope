@@ -60,8 +60,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
         } else {
             handle_mouse_key_event(switchState, mappedKey);
         }
-    }
-    if (mappedKey.flags & IS_CONSUMER) {
+    } else if (mappedKey.flags & IS_CONSUMER) {
         if (key_toggled_on (switchState)) {
             ConsumerControl.press(mappedKey.rawKey);
         }
