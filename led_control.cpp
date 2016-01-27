@@ -185,7 +185,7 @@ void LEDControl::effect_rainbow_wave_update() {
     implementation_led_sync();
 }
 
-void LEDControl::led_bootup() {
+void LEDControl::boot_animation() {
     set_all_leds_to(led_off);
 
     led_type_letter(LED_K);

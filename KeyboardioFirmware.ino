@@ -34,7 +34,7 @@ void setup() {
     Keyboard.begin();
     Mouse.begin();
     implementation_leds_setup();
-    LEDs.led_bootup();
+    LEDs.boot_animation();
     implementation_pins_setup();
 
     temporary_keymap = primary_keymap = Storage.load_primary_keymap();
