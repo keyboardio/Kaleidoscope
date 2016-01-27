@@ -10,30 +10,6 @@ KeyboardStorage Storage;
 LEDControl BlinkyLights;
 
 
-void set_keymap(Key keymapEntry, byte matrixStateEntry) {
-    // this logic sucks. there is a better way TODO this
-    if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
-        if (key_toggled_on(matrixStateEntry)) {
-            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
-                temporary_keymap++;
-            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
-                temporary_keymap--;
-            } else {
-                temporary_keymap = keymapEntry.rawKey;
-            }
-        }
-        if (key_toggled_off(matrixStateEntry)) {
-            temporary_keymap = primary_keymap;
-        }
-
-    } else if (! (keymapEntry.flags ^ ( SWITCH_TO_KEYMAP ))) {
-        // switch keymap and stay there
-        if (key_toggled_on(matrixStateEntry)) {
-            temporary_keymap = primary_keymap = keymapEntry.rawKey;
-            Storage.save_primary_keymap(primary_keymap);
-        }
-    }
-}
 
 void scan_matrix() {
     x = 0;
@@ -156,3 +132,27 @@ void press_key(Key mappedKey) {
 }
 
 
+void set_keymap(Key keymapEntry, byte matrixStateEntry) {
+    // this logic sucks. there is a better way TODO this
+    if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
+        if (key_toggled_on(matrixStateEntry)) {
+            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
+                temporary_keymap++;
+            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
+                temporary_keymap--;
+            } else {
+                temporary_keymap = keymapEntry.rawKey;
+            }
+        }
+        if (key_toggled_off(matrixStateEntry)) {
+            temporary_keymap = primary_keymap;
+        }
+
+    } else if (! (keymapEntry.flags ^ ( SWITCH_TO_KEYMAP ))) {
+        // switch keymap and stay there
+        if (key_toggled_on(matrixStateEntry)) {
+            temporary_keymap = primary_keymap = keymapEntry.rawKey;
+            Storage.save_primary_keymap(primary_keymap);
+        }
+    }
+}
