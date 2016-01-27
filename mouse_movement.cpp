@@ -121,21 +121,3 @@ void move_mouse( int8_t x, int8_t y) {
 }
 
 
-void handle_mouse_key_press(byte switchState, Key mappedKey) {
-    if (key_is_pressed(switchState)) {
-        if (mappedKey.rawKey & MOUSE_UP) {
-            move_mouse(0,-1);
-        }
-        if (mappedKey.rawKey & MOUSE_DN) {
-            move_mouse(0,1);
-        }
-        if (mappedKey.rawKey & MOUSE_L) {
-            move_mouse(-1,0);
-        }
-
-        if (mappedKey.rawKey & MOUSE_R) {
-            move_mouse(1,0);
-        }
-    }
-}
-

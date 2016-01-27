@@ -4,7 +4,6 @@
 // Mouse-related 'public' API methods
 
 double mouse_accel (double cycles);
-void handle_mouse_key_press(byte switchState, Key mappedKey);
 void move_mouse( int8_t x, int8_t y);
 void begin_warping();
 void end_warping();

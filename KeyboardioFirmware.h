@@ -44,6 +44,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey);
 void handle_key_event(byte row, byte col);
 void press_key(Key mappedKey);
 void handle_keymap_key_event(byte switchState, Key keymapEntry);
+void handle_mouse_key_event(byte switchState, Key mappedKey);
 
 #ifndef VERSION
 #define VERSION "locally-built"

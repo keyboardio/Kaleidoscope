@@ -58,7 +58,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
                 warp_mouse(mappedKey);
             }
         } else {
-            handle_mouse_key_press(switchState, mappedKey);
+            handle_mouse_key_event(switchState, mappedKey);
         }
     }
     if (mappedKey.flags & IS_CONSUMER) {
@@ -156,3 +156,21 @@ void handle_keymap_key_event(byte switchState, Key keymapEntry) {
         }
     }
 }
+
+void handle_mouse_key_event(byte switchState, Key mappedKey) {
+    if (key_is_pressed(switchState)) {
+        if (mappedKey.rawKey & MOUSE_UP) {
+            move_mouse(0,-1);
+        }
+        if (mappedKey.rawKey & MOUSE_DN) {
+            move_mouse(0,1);
+        }
+        if (mappedKey.rawKey & MOUSE_L) {
+            move_mouse(-1,0);
+        }
+        if (mappedKey.rawKey & MOUSE_R) {
+            move_mouse(1,0);
+        }
+    }
+}
+
