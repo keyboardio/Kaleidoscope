@@ -75,17 +75,17 @@ void LEDControl::update_leds(uint8_t numlock_enabled) {
     if (led_mode == LED_MODE_OFF) {
     } else if (led_mode == LED_MODE_HEATMAP) {
     } else if (led_mode == LED_MODE_BREATHE) {
-        led_effect_breathe_update();
+        effect_breathe_update();
     } else if (led_mode == LED_MODE_RAINBOW) {
-        led_effect_rainbow_update();
+        effect_rainbow_update();
     } else if (led_mode == LED_MODE_RAINBOW_WAVE) {
-        led_effect_rainbow_wave_update();
+        effect_rainbow_wave_update();
     } else if (led_mode == LED_MODE_CHASE) {
-        led_effect_chase_update();
+        effect_chase_update();
     } else if (led_mode == LED_MODE_STEADY) {
-        led_effect_steady_update();
+        effect_steady_update();
     } else if (led_mode == LED_SPECIAL_MODE_NUMLOCK) {
-        led_effect_numlock_update();
+        effect_numlock_update();
 
     }
 
@@ -94,7 +94,7 @@ void LEDControl::update_leds(uint8_t numlock_enabled) {
 
 
 
-void LEDControl::led_effect_numlock_update() {
+void LEDControl::effect_numlock_update() {
     for (uint8_t i = 0; i < 44; i++) {
         implementation_led_set_crgb_at(i, led_off);
     }
@@ -106,7 +106,7 @@ void LEDControl::led_effect_numlock_update() {
     implementation_led_sync();
 }
 
-void LEDControl::led_effect_steady_update() {
+void LEDControl::effect_steady_update() {
     implementation_led_sync();
 }
 
@@ -125,13 +125,13 @@ void LEDControl::led_compute_breath() {
     SetHSV(led_breathe,200, 255, breathe_brightness);
 }
 
-void LEDControl::led_effect_breathe_update() {
+void LEDControl::effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
     implementation_led_sync();
 }
 
-void LEDControl::led_effect_chase_update() {
+void LEDControl::effect_chase_update() {
     if (current_chase_counter++ < chase_threshold) {
         return;
     }
@@ -148,7 +148,7 @@ void LEDControl::led_effect_chase_update() {
     implementation_led_sync();
 }
 
-void LEDControl::led_effect_rainbow_update() {
+void LEDControl::effect_rainbow_update() {
     if (rainbow_current_ticks++ < rainbow_ticks) {
         return;
     } else {
@@ -163,7 +163,7 @@ void LEDControl::led_effect_rainbow_update() {
     implementation_led_sync();
 }
 
-void LEDControl::led_effect_rainbow_wave_update() {
+void LEDControl::effect_rainbow_wave_update() {
     if (rainbow_current_ticks++ < rainbow_wave_ticks) {
         return;
     } else {
