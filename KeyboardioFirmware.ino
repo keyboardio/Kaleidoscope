@@ -35,14 +35,9 @@ void scan_matrix() {
     handle_mouse_movement(x, y);
 }
 
-// Command mode
-//
-
 void setup() {
     wdt_disable();
     Serial.begin(115200);
-    //usbMaxPower = 100;
-
     Keyboard.begin();
     Mouse.begin();
     implementation_setup_leds();
