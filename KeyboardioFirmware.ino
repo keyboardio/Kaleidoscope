@@ -12,8 +12,6 @@ LEDControl BlinkyLights;
 
 
 void scan_matrix() {
-    x = 0;
-    y = 0;
     //scan the Keyboard matrix looking for connections
     for (byte row = 0; row < LEFT_ROWS; row++) {
         implementation_scan_row(row);
@@ -30,9 +28,6 @@ void scan_matrix() {
         }
         implementation_finish_scanning_row(row);
     }
-    Keyboard.sendReport();
-    Keyboard.releaseAll();
-    handle_mouse_movement(x, y);
 }
 
 void setup() {
@@ -48,8 +43,13 @@ void setup() {
 
 
 void loop() {
+    x = 0;
+    y = 0;
     scan_matrix();
     BlinkyLights.update_leds(temporary_keymap == NUMPAD_KEYMAP);
+    Keyboard.sendReport();
+    Keyboard.releaseAll();
+    handle_mouse_movement(x, y);
 }
 
 
