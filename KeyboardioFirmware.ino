@@ -37,7 +37,6 @@ void scan_matrix() {
 
 void setup() {
     wdt_disable();
-    Serial.begin(115200);
     Keyboard.begin();
     Mouse.begin();
     implementation_setup_leds();
