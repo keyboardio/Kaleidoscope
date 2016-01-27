@@ -29,8 +29,8 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 
 void implementation_scan_row(byte row);
 void implementation_finish_scanning_row(byte row);
-uint8_t implementation_scan_right_col(byte row, byte col, uint8_t state);
-uint8_t implementation_scan_left_col(byte row, byte col, uint8_t state);
+void implementation_scan_right_col(byte row, byte col, uint8_t *state);
+void implementation_scan_left_col(byte row, byte col, uint8_t *state);
 void implementation_pins_setup();
 void make_input(sx1509Class sx1509, uint8_t pin) ;
 void make_output(sx1509Class sx1509, uint8_t pin) ;

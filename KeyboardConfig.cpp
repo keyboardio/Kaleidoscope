@@ -54,35 +54,33 @@ void implementation_finish_scanning_row(byte row) {
         rightsx1509.updatePinState(right_rowpins[row], HIGH);
 }
 
-uint8_t implementation_scan_left_col(byte row, byte col,uint8_t state) {
+void implementation_scan_left_col(byte row, byte col,uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
 
-    state <<= 1;
+    *state <<= 1;
 
     if (left_initted && leftsx1509.readPrefetchedPin(left_colpins[col])) {
-        state |= 0;
+        *state |= 0;
     } else {
-        state |= 1;
+        *state |= 1;
     }
-    return state;
 }
 
-uint8_t implementation_scan_right_col(byte row, byte col, uint8_t state) {
+void implementation_scan_right_col(byte row, byte col, uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
-    state <<= 1;
+    *state <<= 1;
 
 
     if (right_initted && rightsx1509.readPrefetchedPin(right_colpins[col])) {
-        state |= 0;
+        *state |= 0;
     } else {
-        state |= 1;
+        *state |= 1;
     }
 
-    return state;
 }
 
 

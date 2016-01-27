@@ -17,8 +17,8 @@ void scan_matrix() {
         implementation_scan_row(row);
 
         for (byte col = 0; col < LEFT_COLS; col++) {
-            matrixState[row][col] = implementation_scan_left_col(row,col,matrixState[row][col]);
-            matrixState[row][(COLS - 1) - col] = implementation_scan_right_col(row,col,matrixState[row][(COLS - 1) - col]);
+            implementation_scan_left_col(row,col,&matrixState[row][col]);
+            implementation_scan_right_col(row,col,&matrixState[row][(COLS - 1) - col]);
 
             handle_key_event(row, col);
 
