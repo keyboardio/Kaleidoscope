@@ -188,26 +188,26 @@ void LEDControl::effect_rainbow_wave_update() {
 void LEDControl::boot_animation() {
     set_all_leds_to(led_off);
 
-    led_type_letter(LED_K);
-    led_type_letter(LED_E);
-    led_type_letter(LED_Y);
-    led_type_letter(LED_B);
-    led_type_letter(LED_O);
-    led_type_letter(LED_A);
-    led_type_letter(LED_R);
-    led_type_letter(LED_D);
-    led_type_letter(LED_I);
-    led_type_letter(LED_O);
-    led_type_letter(LED_SPACE);
-    led_type_letter(LED_0);
-    led_type_letter(LED_PERIOD);
-    led_type_letter(LED_9);
+    type_letter(LED_K);
+    type_letter(LED_E);
+    type_letter(LED_Y);
+    type_letter(LED_B);
+    type_letter(LED_O);
+    type_letter(LED_A);
+    type_letter(LED_R);
+    type_letter(LED_D);
+    type_letter(LED_I);
+    type_letter(LED_O);
+    type_letter(LED_SPACE);
+    type_letter(LED_0);
+    type_letter(LED_PERIOD);
+    type_letter(LED_9);
     led_mode = LED_MODE_RAINBOW_WAVE;
 
 
 }
 
-void LEDControl::led_type_letter(uint8_t letter) {
+void LEDControl::type_letter(uint8_t letter) {
     implementation_led_set_crgb_at(letter,led_bright_red);
     implementation_led_sync();
     delay(250);
