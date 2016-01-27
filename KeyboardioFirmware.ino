@@ -45,7 +45,7 @@ void loop() {
     scan_matrix();
     Keyboard.sendReport();
     Keyboard.releaseAll();
-    LEDs.update_leds(temporary_keymap);
+    LEDs.update(temporary_keymap);
 }
 
 
