@@ -23,28 +23,22 @@ void setup();
 #include <math.h>
 #include <avr/wdt.h>
 
-#include "key_defs.h"
 #include "KeyboardConfig.h"
-#include "led_control.h"
 #include "generated/keymaps.h"
-#include "matrix_state.h"
-#include "mouse_movement.h"
-#include "storage.h"
+#include "key_events.h"
 
-uint8_t matrixState[ROWS][COLS] = {0};
-static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
-uint8_t primary_keymap = 0;
-uint8_t temporary_keymap = 0;
+extern uint8_t matrixState[ROWS][COLS];
+extern const Key keymaps[KEYMAPS][ROWS][COLS];
+extern uint8_t primary_keymap;
+extern uint8_t temporary_keymap;
+
+extern KeyboardStorage Storage;
+extern LEDControl LEDs;
+
+
 
 void scan_matrix();
-
-// sending events to the computer
-void handle_synthetic_key_event(byte switchState, Key mappedKey);
-void handle_key_event(byte row, byte col);
-void press_key(Key mappedKey);
-void handle_keymap_key_event(byte switchState, Key keymapEntry);
-void handle_mouse_key_event(byte switchState, Key mappedKey);
 
 #ifndef VERSION
 #define VERSION "locally-built"
