@@ -49,7 +49,7 @@ void loop() {
     LEDs.update_leds(temporary_keymap);
     Keyboard.sendReport();
     Keyboard.releaseAll();
-    handle_mouse_movement(x, y);
+    move_mouse(x, y);
 }
 
 

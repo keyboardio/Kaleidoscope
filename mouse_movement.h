@@ -5,7 +5,7 @@
 
 double mouse_accel (double cycles);
 void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y);
-void handle_mouse_movement( char x, char y);
+void move_mouse( char x, char y);
 void begin_warping();
 void end_warping();
 void warp_mouse(Key key);

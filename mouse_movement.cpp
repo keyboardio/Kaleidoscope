@@ -89,7 +89,7 @@ double mouse_accel (double cycles) {
     return accel;
 }
 
-void handle_mouse_movement( char x, char y) {
+void move_mouse( char x, char y) {
 
     if (x != 0 || y != 0) {
         mouseActiveForCycles++;
