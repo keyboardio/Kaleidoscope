@@ -1,37 +1,14 @@
 #include "led_control.h"
 
-static uint8_t led_mode;
-static uint8_t last_led_mode;
-static uint8_t stored_led_mode;
-static uint8_t pos = 0;
-
-static cRGB led_off = { .r = 0, .g = 0, .b = 0 };
-static cRGB led_steady = { .r = 0, .g = 255, .b = 0};
-static cRGB led_blue = { .r = 0, .g = 0, .b = 255 };
-static cRGB led_dark_blue = { .r = 0, .g = 0, .b = 127 };
-static cRGB led_bright_red = { .r = 255, .g = 0, .b = 0};
-static cRGB led_breathe;
-static cRGB rainbow;
-
-
-static uint8_t rainbow_hue = 0;   //stores 0 to 614
-static uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
-static uint8_t rainbow_wave_steps =1; //number of hues we skip in a 360 range per update
-
-static byte rainbow_saturation = 255;
-static byte rainbow_value = 190;
-
-static long rainbow_wave_ticks = 1; //delays between update
-static long rainbow_ticks = 5; //delays between update
-static long rainbow_current_ticks =0;
-static uint8_t breathe_brightness = 0;    // how bright the LED is
-static uint8_t breathe_fadeAmount = 1;    // how many pouint8_ts to fade the LED by
-
-static uint8_t chase_pixels = 1;
-static uint8_t chase_threshold = 6;
-static uint8_t current_chase_counter = 0;
-// End RGB stuff
-
+uint8_t LEDControl::pos= 0;
+uint8_t LEDControl::rainbow_hue=0;
+uint8_t LEDControl::rainbow_steps = 1;
+uint8_t LEDControl::rainbow_wave_steps=1;
+long LEDControl::rainbow_current_ticks =0;
+uint8_t LEDControl::breathe_brightness=0;
+uint8_t LEDControl::breathe_fadeAmount=1;
+uint8_t LEDControl::chase_pixels= 1;
+uint8_t LEDControl::current_chase_counter = 0;
 
 void LEDControl::set_key_color(byte row, byte col, cRGB color) {
     implementation_led_set_crgb_at(row, col, color);
