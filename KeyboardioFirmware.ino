@@ -45,21 +45,17 @@ void scan_matrix() {
         implementation_scan_row(row);
 
         for (byte col = 0; col < LEFT_COLS; col++) {
-            TS("Scanning col")
             matrixState[row][col] = implementation_scan_left_col(row,col,matrixState[row][col]);
             matrixState[row][(COLS - 1) - col] = implementation_scan_right_col(row,col,matrixState[row][(COLS - 1) - col]);
 
-            TS("calling handle_key_event")
             handle_key_event(row, col);
 
             if (implementation_right_hand_connected()) {
                 handle_key_event(row, (COLS - 1) - col);
             }
         }
-        TS("clearing output pins")
         implementation_finish_scanning_row(row);
     }
-    TS("Sending key report");
     Keyboard.sendReport();
     Keyboard.releaseAll();
     handle_mouse_movement(x, y);
@@ -84,10 +80,7 @@ void setup() {
 
 
 void loop() {
-    TS("A noop takes...")
-    TS("about to scan the matrix")
     scan_matrix();
-    TS("updating LEDs");
     BlinkyLights.update_leds(temporary_keymap == NUMPAD_KEYMAP);
 }
 
