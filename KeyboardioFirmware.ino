@@ -55,7 +55,7 @@ void loop() {
 
 // Sending events to the usb host
 
-void handle_synthetic_key_press(byte switchState, Key mappedKey) {
+void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY ) {
         if (mappedKey.rawKey & MOUSE_WARP) {
             if (key_toggled_on(switchState)) {
@@ -107,10 +107,10 @@ void handle_key_event(byte row, byte col) {
     byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
     if (keymaps[primary_keymap][row][col].flags & SWITCH_TO_KEYMAP) {
-        set_keymap(keymaps[primary_keymap][row][col], switchState);
+        handle_keymap_key_event(switchState, keymaps[primary_keymap][row][col]);
     }
     if (mappedKey.flags & SYNTHETIC_KEY) {
-        handle_synthetic_key_press(switchState, mappedKey);
+        handle_synthetic_key_event(switchState, mappedKey);
     } else {
         if (key_is_pressed(switchState)) {
             press_key(mappedKey);
@@ -126,10 +126,10 @@ void press_key(Key mappedKey) {
 }
 
 
-void set_keymap(Key keymapEntry, byte matrixStateEntry) {
+void handle_keymap_key_event(byte switchState, Key keymapEntry) {
     // this logic sucks. there is a better way TODO this
     if (! (keymapEntry.flags ^ ( MOMENTARY | SWITCH_TO_KEYMAP))) {
-        if (key_toggled_on(matrixStateEntry)) {
+        if (key_toggled_on(switchState)) {
             if ( keymapEntry.rawKey == KEYMAP_NEXT) {
                 temporary_keymap++;
             } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
@@ -138,13 +138,13 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
                 temporary_keymap = keymapEntry.rawKey;
             }
         }
-        if (key_toggled_off(matrixStateEntry)) {
+        if (key_toggled_off(switchState)) {
             temporary_keymap = primary_keymap;
         }
 
     } else if (! (keymapEntry.flags ^ ( SWITCH_TO_KEYMAP ))) {
         // switch keymap and stay there
-        if (key_toggled_on(matrixStateEntry)) {
+        if (key_toggled_on(switchState)) {
             temporary_keymap = primary_keymap = keymapEntry.rawKey;
             Storage.save_primary_keymap(primary_keymap);
         }

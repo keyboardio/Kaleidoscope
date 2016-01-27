@@ -58,10 +58,10 @@ void reset_matrix();
 
 
 // sending events to the computer
-void handle_synthetic_key_press(byte switchState, Key mappedKey);
+void handle_synthetic_key_event(byte switchState, Key mappedKey);
 void handle_key_event(byte row, byte col);
 void press_key(Key mappedKey);
-void set_keymap(Key keymapEntry, byte matrixStateEntry);
+void handle_keymap_key_event(byte switchState, Key keymapEntry);
 
 
 
