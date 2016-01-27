@@ -5,6 +5,10 @@
 
 #include "KeyboardioFirmware.h"
 #include "HID-Project.h"
+    
+KeyboardStorage Storage;    
+LEDControl BlinkyLights;
+
 
 void set_keymap(Key keymapEntry, byte matrixStateEntry) {
     if (keymapEntry.flags & SWITCH_TO_KEYMAP) {
@@ -27,7 +31,7 @@ void set_keymap(Key keymapEntry, byte matrixStateEntry) {
             // switch keymap and stay there
             if (key_toggled_on(matrixStateEntry)) {
                 temporary_keymap = primary_keymap = keymapEntry.rawKey;
-                save_primary_keymap(primary_keymap);
+                Storage.save_primary_keymap(primary_keymap);
             }
         }
     }
@@ -68,13 +72,14 @@ void setup() {
     wdt_disable();
     Serial.begin(115200);
     //usbMaxPower = 100;
+
     Keyboard.begin();
     Mouse.begin();
     implementation_setup_leds();
-    led_bootup();
+    BlinkyLights.led_bootup();
     implementation_pins_setup();
 
-    temporary_keymap = primary_keymap = load_primary_keymap();
+    temporary_keymap = primary_keymap = Storage.load_primary_keymap();
 }
 
 
@@ -83,7 +88,7 @@ void loop() {
     TS("about to scan the matrix")
     scan_matrix();
     TS("updating LEDs");
-    update_leds(temporary_keymap == NUMPAD_KEYMAP);
+    BlinkyLights.update_leds(temporary_keymap == NUMPAD_KEYMAP);
 }
 
 
@@ -103,11 +108,10 @@ void handle_synthetic_key_press(byte switchState, Key mappedKey) {
         if (key_toggled_on (switchState)) {
             ConsumerControl.press(mappedKey.rawKey);
         }
-    }
-    else if (mappedKey.flags & IS_INTERNAL) {
+    } else if (mappedKey.flags & IS_INTERNAL) {
         if (key_toggled_on (switchState)) {
             if (mappedKey.rawKey == LED_TOGGLE) {
-                next_led_mode();
+                BlinkyLights.next_led_mode();
             }
         }
     } else if (mappedKey.flags & IS_SYSCTL) {
