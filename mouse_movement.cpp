@@ -89,7 +89,7 @@ double mouse_accel (double cycles) {
     return accel;
 }
 
-void move_mouse( char x, char y) {
+void move_mouse( int8_t x, int8_t y) {
 
     if (x != 0 || y != 0) {
         mouseActiveForCycles++;
@@ -121,21 +121,20 @@ void move_mouse( char x, char y) {
 }
 
 
-void handle_mouse_key_press(byte switchState, Key mappedKey, char &x, char &y) {
-
+void handle_mouse_key_press(byte switchState, Key mappedKey) {
     if (key_is_pressed(switchState)) {
         if (mappedKey.rawKey & MOUSE_UP) {
-            y -= 1;
+            move_mouse(0,-1);
         }
         if (mappedKey.rawKey & MOUSE_DN) {
-            y += 1;
+            move_mouse(0,1);
         }
         if (mappedKey.rawKey & MOUSE_L) {
-            x -= 1;
+            move_mouse(-1,0);
         }
 
         if (mappedKey.rawKey & MOUSE_R) {
-            x += 1 ;
+            move_mouse(1,0);
         }
     }
 }

@@ -43,13 +43,10 @@ void setup() {
 
 
 void loop() {
-    x = 0;
-    y = 0;
     scan_matrix();
-    LEDs.update_leds(temporary_keymap);
     Keyboard.sendReport();
     Keyboard.releaseAll();
-    move_mouse(x, y);
+    LEDs.update_leds(temporary_keymap);
 }
 
 
@@ -62,7 +59,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
                 warp_mouse(mappedKey);
             }
         } else {
-            handle_mouse_key_press(switchState, mappedKey, x, y);
+            handle_mouse_key_press(switchState, mappedKey);
         }
     }
     if (mappedKey.flags & IS_CONSUMER) {

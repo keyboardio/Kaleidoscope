@@ -31,9 +31,6 @@ void setup();
 #include "mouse_movement.h"
 #include "storage.h"
 
-char x;
-char y;
-
 uint8_t matrixState[ROWS][COLS] = {0};
 static const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
