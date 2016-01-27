@@ -48,7 +48,7 @@ void LEDControl::next_led_mode() {
     }
 }
 
-void LEDControl::set_led_mode(uint8_t mode) {
+void LEDControl::set_mode(uint8_t mode) {
     led_mode = mode;
 }
 
