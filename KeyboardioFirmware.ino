@@ -18,11 +18,10 @@ void scan_matrix() {
 
         for (byte col = 0; col < LEFT_COLS; col++) {
             implementation_scan_left_col(row,col,&matrixState[row][col]);
-            implementation_scan_right_col(row,col,&matrixState[row][(COLS - 1) - col]);
-
             handle_key_event(row, col);
 
             if (implementation_right_hand_connected()) {
+                implementation_scan_right_col(row,col,&matrixState[row][(COLS - 1) - col]);
                 handle_key_event(row, (COLS - 1) - col);
             }
         }
