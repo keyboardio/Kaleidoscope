@@ -28,7 +28,6 @@ void setup();
 #include "led_control.h"
 #include "generated/keymaps.h"
 #include "debouncing.h"
-#include "KeyboardioSX1509.h"
 #include "mouse_movement.h"
 #include "storage.h"
 //extern uint8_t usbMaxPower;
@@ -53,16 +52,23 @@ void scan_matrix();
 
 // key matrix
 void reset_matrix();
-void handle_immediate_action_during_matrix_scan(Key keymapEntry, byte matrixStateEntry);
 
-// keymaps
-void set_keymap_keymap(Key keymapEntry, byte matrixStateEntry);
+
+
+
 
 // sending events to the computer
 void handle_synthetic_key_press(byte switchState, Key mappedKey);
-void send_key_events();
 void handle_key_event(byte row, byte col);
 void press_key(Key mappedKey);
+void set_keymap(Key keymapEntry, byte matrixStateEntry);
+
+
+
+
+
+
+
 
 
 #ifndef VERSION
