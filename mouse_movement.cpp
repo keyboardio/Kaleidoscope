@@ -2,10 +2,6 @@
 // Mouse-related methods
 //
 //
-#include "Arduino.h"
-#include "key_defs.h"
-#include "debouncing.h"
-#include "HID-Project.h"
 #include "mouse_movement.h"
 
 

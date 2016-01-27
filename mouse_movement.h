@@ -1,6 +1,10 @@
 
 #pragma once
 
+#include "Arduino.h"
+#include "key_defs.h"
+#include "matrix_state.h"
+#include "HID-Project.h"
 // Mouse-related 'public' API methods
 
 double mouse_accel (double cycles);

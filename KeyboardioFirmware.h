@@ -27,7 +27,7 @@ void setup();
 #include "KeyboardConfig.h"
 #include "led_control.h"
 #include "generated/keymaps.h"
-#include "debouncing.h"
+#include "matrix_state.h"
 #include "mouse_movement.h"
 #include "storage.h"
 
