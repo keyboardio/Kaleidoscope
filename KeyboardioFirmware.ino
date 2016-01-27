@@ -7,7 +7,7 @@
 #include "HID-Project.h"
 
 KeyboardStorage Storage;
-LEDControl BlinkyLights;
+LEDControl LEDs;
 
 
 
@@ -35,7 +35,7 @@ void setup() {
     Keyboard.begin();
     Mouse.begin();
     implementation_setup_leds();
-    BlinkyLights.led_bootup();
+    LEDs.led_bootup();
     implementation_pins_setup();
 
     temporary_keymap = primary_keymap = Storage.load_primary_keymap();
@@ -46,7 +46,7 @@ void loop() {
     x = 0;
     y = 0;
     scan_matrix();
-    BlinkyLights.update_leds(temporary_keymap == NUMPAD_KEYMAP);
+    LEDs.update_leds(temporary_keymap == NUMPAD_KEYMAP);
     Keyboard.sendReport();
     Keyboard.releaseAll();
     handle_mouse_movement(x, y);
@@ -72,7 +72,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     } else if (mappedKey.flags & IS_INTERNAL) {
         if (key_toggled_on (switchState)) {
             if (mappedKey.rawKey == LED_TOGGLE) {
-                BlinkyLights.next_led_mode();
+                LEDs.next_led_mode();
             }
         }
     } else if (mappedKey.flags & IS_SYSCTL) {
