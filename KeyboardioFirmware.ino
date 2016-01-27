@@ -119,6 +119,15 @@ void press_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
         Keyboard.press(Key_LShift.rawKey);
     }
+    if (mappedKey.flags & CTRL_HELD) {
+        Keyboard.press(Key_LCtrl.rawKey);
+    }
+    if (mappedKey.flags & ALT_HELD) {
+        Keyboard.press(Key_RAlt.rawKey);
+    }
+    if (mappedKey.flags & GUI_HELD) {
+        Keyboard.press(Key_LGUI.rawKey);
+    }
     Keyboard.press(mappedKey.rawKey);
 }
 
