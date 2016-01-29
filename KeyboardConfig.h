@@ -4,6 +4,7 @@
 #include "WS2812.h"
 #include "KeyboardioSX1509.h"
 
+#define USE_HSV_CURVE 1
 #define EEPROM_KEYMAP_LOCATION 0
 
 

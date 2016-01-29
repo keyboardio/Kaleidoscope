@@ -122,7 +122,7 @@ void LEDControl::led_compute_breath() {
     }
 
 
-    SetHSV(led_breathe,200, 255, breathe_brightness);
+    led_breathe.SetHSV(200, 255, breathe_brightness);
 }
 
 void LEDControl::effect_breathe_update() {
@@ -154,7 +154,7 @@ void LEDControl::effect_rainbow_update() {
     } else {
         rainbow_current_ticks = 0;
     }
-    SetHSV(rainbow,rainbow_hue, rainbow_saturation, rainbow_value);
+    rainbow.SetHSV(rainbow_hue, rainbow_saturation, rainbow_value);
     rainbow_hue += rainbow_steps;
     if (rainbow_hue >= 360)          {
         rainbow_hue %= 360;
@@ -175,7 +175,7 @@ void LEDControl::effect_rainbow_wave_update() {
         if (key_hue >= 360)          {
             key_hue %= 360;
         }
-        SetHSV(rainbow,key_hue, rainbow_saturation, rainbow_value);
+        rainbow.SetHSV(key_hue, rainbow_saturation, rainbow_value);
         implementation_led_set_crgb_at(i,rainbow);
     }
     rainbow_hue += rainbow_wave_steps;
@@ -221,54 +221,54 @@ void LEDControl::type_letter(uint8_t letter) {
  * getRGB() function based on <http://www.codeproject.com/miscctrl/CPicker.asp>
  * dim_curve idea by Jims
  * */
-void LEDControl::SetHSV(cRGB crgb, int hue, byte sat, byte val) {
+void LEDControl::SetHSV(cRGB *crgb, int hue, byte sat, byte val) {
     /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
     */
 
     int base;
 
     if (sat == 0) { // Acromatic color (gray). Hue doesn't mind.
-        crgb.r = val;
-        crgb.g = val;
-        crgb.b = val;
+        crgb->r = val;
+        crgb->g = val;
+        crgb->b = val;
     } else  {
         base = ((255 - sat) * val) >> 8;
 
         switch (hue / 60) {
         case 0:
-            crgb.r = val;
-            crgb.g = (((val - base)*hue) / 60) + base;
-            crgb.b = base;
+            crgb->r = val;
+            crgb->g = (((val - base)*hue) / 60) + base;
+            crgb->b = base;
             break;
 
         case 1:
-            crgb.r = (((val - base)*(60 - (hue % 60))) / 60) + base;
-            crgb.g = val;
-            crgb.b = base;
+            crgb->r = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            crgb->g = val;
+            crgb->b = base;
             break;
 
         case 2:
-            crgb.r = base;
-            crgb.g = val;
-            crgb.b = (((val - base)*(hue % 60)) / 60) + base;
+            crgb->r = base;
+            crgb->g = val;
+            crgb->b = (((val - base)*(hue % 60)) / 60) + base;
             break;
 
         case 3:
-            crgb.r = base;
-            crgb.g = (((val - base)*(60 - (hue % 60))) / 60) + base;
-            crgb.b = val;
+            crgb->r = base;
+            crgb->g = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            crgb->b = val;
             break;
 
         case 4:
-            crgb.r = (((val - base)*(hue % 60)) / 60) + base;
-            crgb.g = base;
-            crgb.b = val;
+            crgb->r = (((val - base)*(hue % 60)) / 60) + base;
+            crgb->g = base;
+            crgb->b = val;
             break;
 
         case 5:
-            crgb.r = val;
-            crgb.g = base;
-            crgb.b = (((val - base)*(60 - (hue % 60))) / 60) + base;
+            crgb->r = val;
+            crgb->g = base;
+            crgb->b = (((val - base)*(60 - (hue % 60))) / 60) + base;
             break;
         }
     }
