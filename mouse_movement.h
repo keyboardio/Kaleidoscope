@@ -5,13 +5,14 @@
 #include "key_defs.h"
 #include "matrix_state.h"
 #include "HID-Project.h"
+
 // Mouse-related 'public' API methods
 
 double mouse_accel (double cycles);
 void move_mouse( int8_t x, int8_t y);
 void begin_warping();
 void end_warping();
-void warp_mouse(Key key);
+void warp_mouse(uint8_t quadrant);
 
 
 

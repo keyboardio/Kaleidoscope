@@ -7,7 +7,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY ) {
         if (mappedKey.rawKey & MOUSE_WARP) {
             if (key_toggled_on(switchState)) {
-                warp_mouse(mappedKey);
+                warp_mouse(mappedKey.rawKey);
             }
         } else {
             handle_mouse_key_event(switchState, mappedKey);
