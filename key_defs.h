@@ -37,7 +37,7 @@ typedef struct {
 #define MOUSE_R             B0001000
 #define MOUSE_CENTER        B0010000
 #define MOUSE_WARP          B0100000
-#define MOUSE_END_WARP      B1000000
+#define MOUSE_WARP_END      B1000000
 
 #define KEYMAP_0     0
 #define KEYMAP_1     1
@@ -64,7 +64,7 @@ typedef struct {
 #define Key_mouseWarpNE   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_UP | MOUSE_R }
 #define Key_mouseWarpSW   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_L }
 #define Key_mouseWarpSE   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_DN | MOUSE_R }
-#define Key_mouseWarpEnd   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_END_WARP}
+#define Key_mouseWarpEnd   (Key){ KEY_FLAGS|SYNTHETIC_KEY|IS_MOUSE_KEY, MOUSE_WARP| MOUSE_WARP_END}
 
 
 
