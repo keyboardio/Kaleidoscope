@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 #include "key_defs.h"
-#include "matrix_state.h"
+#include "keyswitch_state.h"
 #include "MouseWrapper.h"
 #include "LEDControl.h"
 #include "Storage.h"
