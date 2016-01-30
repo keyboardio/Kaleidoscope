@@ -57,7 +57,7 @@ void handle_key_event(byte row, byte col) {
     if (mappedKey.flags & SYNTHETIC_KEY) {
         handle_synthetic_key_event(switchState, mappedKey);
     } else if (key_is_pressed(switchState)) {
-            press_key(mappedKey);
+        press_key(mappedKey);
     }
 }
 

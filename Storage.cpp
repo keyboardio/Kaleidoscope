@@ -10,7 +10,7 @@ void Storage_::save_primary_keymap(uint8_t keymap) {
 
 uint8_t Storage_::load_primary_keymap(uint8_t keymap_count) {
     uint8_t keymap =  EEPROM.read(EEPROM_KEYMAP_LOCATION);
-    if (keymap >= keymap_count) { 
+    if (keymap >= keymap_count) {
         return 0; // undefined positions get saved as 255
     }
     return 0; //  return keymap;
