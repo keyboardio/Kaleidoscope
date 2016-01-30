@@ -42,13 +42,13 @@ void end_warping() {
     is_warping= false;
 }
 
-void warp_mouse(uint8_t quadrant) {
+void warp_mouse(uint8_t warp_cmd) {
     if (is_warping == false) {
         begin_warping();
     }
 
 
-    if ( quadrant & MOUSE_END_WARP) {
+    if ( warp_cmd & WARP_END) {
         end_warping();
         return;
     }
@@ -57,16 +57,16 @@ void warp_mouse(uint8_t quadrant) {
     next_width = next_width / 2;
     next_height = next_height/2;
 
-    if (quadrant & MOUSE_UP) {
+    if (warp_cmd & WARP_UP) {
 //    Serial.print(" - up ");
-    } else if (quadrant & MOUSE_DN) {
+    } else if (warp_cmd & WARP_DOWN) {
 //   Serial.print(" - down ");
         section_top  = section_top + next_height;
     }
 
-    if (quadrant & MOUSE_L) {
+    if (warp_cmd & WARP_LEFT) {
         //  Serial.print(" - left ");
-    } else if (quadrant & MOUSE_R) {
+    } else if (warp_cmd & WARP_RIGHT) {
         // Serial.print(" - right ");
         section_left  = section_left + next_width;
     }

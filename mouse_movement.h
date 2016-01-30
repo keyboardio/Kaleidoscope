@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Arduino.h"
-#include "key_defs.h"
 #include "matrix_state.h"
 #include "HID-Project.h"
 
@@ -12,8 +11,16 @@ double mouse_accel (double cycles);
 void move_mouse( int8_t x, int8_t y);
 void begin_warping();
 void end_warping();
-void warp_mouse(uint8_t quadrant);
+void warp_mouse(uint8_t warp_cmd);
 
+
+// Warping commands
+
+#define WARP_END 1
+#define WARP_UP 2
+#define WARP_DOWN 4
+#define WARP_LEFT 8
+#define WARP_RIGHT 16
 
 
 

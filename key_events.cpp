@@ -7,7 +7,11 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY ) {
         if (mappedKey.rawKey & MOUSE_WARP) {
             if (key_toggled_on(switchState)) {
-                warp_mouse(mappedKey.rawKey);
+                // we don't pass in the left and up values because those are the
+                // default, "no-op" conditionals
+                warp_mouse( (mappedKey.rawKey & MOUSE_WARP_END ? WARP_END : 0x00) |
+                            (mappedKey.rawKey & MOUSE_DN ? WARP_DOWN : 0x00) |
+                            (mappedKey.rawKey & MOUSE_R ? WARP_RIGHT : 0x00) );
             }
         } else {
             handle_mouse_key_event(switchState, mappedKey);
