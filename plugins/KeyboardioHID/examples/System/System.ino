@@ -10,7 +10,7 @@
   https://github.com/NicoHood/HID/wiki/System-API
 */
 
-#include "HID-Project.h"
+#include "KeyboardioHID.h"
 
 const int pinLed = LED_BUILTIN;
 const int pinButtonS = 2;

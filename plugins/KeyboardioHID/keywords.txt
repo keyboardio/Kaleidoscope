@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For HID-Project
+# Syntax Coloring Map For KeyboardioHID
 #######################################
 
 #######################################

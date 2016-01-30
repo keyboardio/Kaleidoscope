@@ -13,7 +13,7 @@
   https://github.com/NicoHood/HID/wiki/Keyboard-API#nkro-keyboard
 */
 
-#include "HID-Project.h"
+#include "KeyboardioHID.h"
 
 const int pinLed = LED_BUILTIN;
 const int pinButton = 2;

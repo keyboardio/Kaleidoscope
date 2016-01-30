@@ -13,7 +13,7 @@
   https://github.com/NicoHood/HID/wiki/Mouse-API
 */
 
-#include "HID-Project.h"
+#include "KeyboardioHID.h"
 
 const int pinLed = LED_BUILTIN;
 const int pinButtonClick = 2;
