@@ -1,19 +1,7 @@
-
 #pragma once
 
 #include "Arduino.h"
-#include "matrix_state.h"
 #include "HID-Project.h"
-
-// Mouse-related 'public' API methods
-
-double mouse_accel (double cycles);
-void move_mouse( int8_t x, int8_t y);
-void begin_warping();
-void end_warping();
-void warp_mouse(uint8_t warp_cmd);
-void press_button(uint8_t button);
-void release_button(uint8_t button);
 
 // Buttons
 
@@ -38,6 +26,8 @@ void release_button(uint8_t button);
 #define MAX_WARP_WIDTH 32767
 #define MAX_WARP_HEIGHT 32767
 
+#define WARP_ABS_TOP 0
+#define WARP_ABS_LEFT 0
 
 // Mouse acceleration
 
@@ -53,3 +43,32 @@ void release_button(uint8_t button);
 // 0.001 is insanely slow
 
 #define ACCELERATION_CLIMB_SPEED  0.05
+
+
+class MouseWrapper_ {
+  public:
+    MouseWrapper_(void);
+    void move( int8_t x, int8_t y);
+    void warp(uint8_t warp_cmd);
+    void press_button(uint8_t button);
+    void release_button(uint8_t button);
+
+  private:
+    double mouseActiveForCycles = 0;
+    float carriedOverX = 0;
+    float carriedOverY = 0;
+
+
+    int next_width;
+    int next_height;
+    int section_top;
+    int section_left;
+    boolean is_warping = false;
+
+    double acceleration (double cycles);
+    void begin_warping();
+    void end_warping();
+    void warp_jump(long left, long top, long height, long width);
+
+};
+extern MouseWrapper_ MouseWrapper;

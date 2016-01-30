@@ -1,17 +1,14 @@
 #include "key_events.h"
 
-
-
-
 void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY ) {
         if (mappedKey.rawKey & MOUSE_WARP) {
             if (key_toggled_on(switchState)) {
                 // we don't pass in the left and up values because those are the
                 // default, "no-op" conditionals
-                warp_mouse( (mappedKey.rawKey & MOUSE_WARP_END ? WARP_END : 0x00) |
-                            (mappedKey.rawKey & MOUSE_DOWN ? WARP_DOWN : 0x00) |
-                            (mappedKey.rawKey & MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
+                MouseWrapper.warp( (mappedKey.rawKey & MOUSE_WARP_END ? WARP_END : 0x00) |
+                                   (mappedKey.rawKey & MOUSE_DOWN ? WARP_DOWN : 0x00) |
+                                   (mappedKey.rawKey & MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
             }
         } else {
             handle_mouse_key_event(switchState, mappedKey);
@@ -40,13 +37,13 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
                || mappedKey.rawKey == KEY_MOUSE_BTN_M
                || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
         if (key_toggled_on (switchState)) {
-            press_button(
+            MouseWrapper.press_button(
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
 
         } else if (key_toggled_off(switchState)) {
-            release_button(
+            MouseWrapper.release_button(
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
@@ -119,16 +116,16 @@ void handle_keymap_key_event(byte switchState, Key keymapEntry) {
 void handle_mouse_key_event(byte switchState, Key mappedKey) {
     if (key_is_pressed(switchState)) {
         if (mappedKey.rawKey & MOUSE_UP) {
-            move_mouse(0,-1);
+            MouseWrapper.move(0,-1);
         }
         if (mappedKey.rawKey & MOUSE_DOWN) {
-            move_mouse(0,1);
+            MouseWrapper.move(0,1);
         }
         if (mappedKey.rawKey & MOUSE_LEFT) {
-            move_mouse(-1,0);
+            MouseWrapper.move(-1,0);
         }
         if (mappedKey.rawKey & MOUSE_RIGHT) {
-            move_mouse(1,0);
+            MouseWrapper.move(1,0);
         }
     }
 }
