@@ -48,8 +48,6 @@ void handle_key_event(byte row, byte col) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-    // really, these are signed small ints
-
     byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
 
