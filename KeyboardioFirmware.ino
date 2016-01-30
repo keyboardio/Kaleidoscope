@@ -4,7 +4,7 @@
 #define DEBUG_SERIAL false
 
 #include "KeyboardioFirmware.h"
-#include "HID-Project.h"
+#include "KeyboardioHID.h"
 
 
 uint8_t matrixState[ROWS][COLS] = {0};
