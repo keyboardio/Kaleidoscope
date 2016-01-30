@@ -27,16 +27,32 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 #define NUMPAD_KEYMAP 2
 #define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
-void implementation_scan_row(byte row);
-void implementation_finish_scanning_row(byte row);
-void implementation_scan_right_col(byte row, byte col, uint8_t *state);
-void implementation_scan_left_col(byte row, byte col, uint8_t *state);
-void implementation_pins_setup();
+
+class KeyboardHardware_ {
+public:
+    KeyboardHardware_(void);
+void led_sync(void);
+void led_set_crgb_at(byte row, byte col, cRGB color);
+void led_set_crgb_at(uint8_t i, cRGB crgb);
+cRGB get_key_color(byte row, byte col);
+
+
+void scan_row(byte row);
+void finish_scanning_row(byte row);
+void scan_right_col(byte row, byte col, uint8_t *state);
+void scan_left_col(byte row, byte col, uint8_t *state);
+void pins_setup();
+boolean right_hand_connected(void);
+void leds_setup();
+
+
+private:
+
 void make_input(sx1509Class sx1509, uint8_t pin) ;
 void make_output(sx1509Class sx1509, uint8_t pin) ;
-boolean implementation_right_hand_connected(void);
 int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
+};
 
 #define LED_DATA_PIN  4
 
@@ -49,14 +65,6 @@ static const uint8_t key_led_map[4][16] = {
     {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
 };
 
-
-void implementation_leds_setup();
-
-void implementation_led_set_crgb_at(byte row, byte col, cRGB color);
-
-cRGB implementation_get_key_color(byte row, byte col);
-void implementation_led_set_crgb_at(uint8_t i, cRGB crgb);
-void implementation_led_sync();
 
 #define LED_PGDN 0
 #define LED_PGUP 1
@@ -122,3 +130,6 @@ void implementation_led_sync();
 #define LED_EQUALS 61
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
+
+
+extern KeyboardHardware_ KeyboardHardware;

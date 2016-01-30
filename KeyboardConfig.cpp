@@ -13,28 +13,32 @@ static int left_initted = 0;
 
 WS2812 LED(LED_COUNT);
 
-void implementation_leds_setup() {
+KeyboardHardware_::KeyboardHardware_(void) {
+
+}
+
+void KeyboardHardware_::leds_setup() {
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
 
-void implementation_led_set_crgb_at(byte row, byte col, cRGB color) {
+void KeyboardHardware_::led_set_crgb_at(byte row, byte col, cRGB color) {
     LED.set_crgb_at(key_led_map[row][col], color);
 }
 
-cRGB implementation_get_key_color(byte row, byte col) {
+cRGB KeyboardHardware_::get_key_color(byte row, byte col) {
     return LED.get_crgb_at(key_led_map[row][col]);
 }
 
-void implementation_led_set_crgb_at(uint8_t i, cRGB crgb) {
+void KeyboardHardware_::led_set_crgb_at(uint8_t i, cRGB crgb) {
     LED.set_crgb_at(i, crgb);
 }
 
-void implementation_led_sync() {
+void KeyboardHardware_::led_sync() {
     LED.sync();
 }
 
-void implementation_scan_row(byte row) {
+void KeyboardHardware_::scan_row(byte row) {
     if (left_initted) {
         leftsx1509.updatePinState(left_rowpins[row], LOW);
         leftsx1509.sendPinStates();
@@ -47,14 +51,14 @@ void implementation_scan_row(byte row) {
 
     }
 }
-void implementation_finish_scanning_row(byte row) {
+void KeyboardHardware_::finish_scanning_row(byte row) {
     if (left_initted)
         leftsx1509.updatePinState(left_rowpins[row], HIGH);
     if (right_initted)
         rightsx1509.updatePinState(right_rowpins[row], HIGH);
 }
 
-void implementation_scan_left_col(byte row, byte col,uint8_t *state) {
+void KeyboardHardware_::scan_left_col(byte row, byte col,uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
@@ -68,7 +72,7 @@ void implementation_scan_left_col(byte row, byte col,uint8_t *state) {
     }
 }
 
-void implementation_scan_right_col(byte row, byte col, uint8_t *state) {
+void KeyboardHardware_::scan_right_col(byte row, byte col, uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
@@ -86,7 +90,7 @@ void implementation_scan_right_col(byte row, byte col, uint8_t *state) {
 
 
 
-boolean implementation_right_hand_connected(void) {
+boolean KeyboardHardware_::right_hand_connected(void) {
     if (right_initted) {
         return true;
     } else {
@@ -94,24 +98,24 @@ boolean implementation_right_hand_connected(void) {
     }
 }
 
-void implementation_pins_setup() {
+void KeyboardHardware_::pins_setup() {
     right_initted = setup_sx1509(rightsx1509, right_colpins, right_rowpins);
     left_initted = setup_sx1509(leftsx1509, left_colpins, left_rowpins);
     rightsx1509.fetchPinStates();
 }
 
 
-void make_input(sx1509Class sx1509, uint8_t pin) {
+void KeyboardHardware_::make_input(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, INPUT);  // Set SX1509 pin 1 as an input
     sx1509.writePin(pin, HIGH);  // Activate pull-up
 }
 
-void make_output(sx1509Class sx1509, uint8_t pin) {
+void KeyboardHardware_::make_output(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, OUTPUT);
     sx1509.writePin(pin, HIGH);
 }
 
-int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
+int KeyboardHardware_::setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
     byte initted;
 
     for (int counter = 0; counter < 10; counter++) {
@@ -147,3 +151,5 @@ int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
     return initted;
 
 }
+
+KeyboardHardware_ KeyboardHardware;
