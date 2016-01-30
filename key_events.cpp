@@ -10,8 +10,8 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
                 // we don't pass in the left and up values because those are the
                 // default, "no-op" conditionals
                 warp_mouse( (mappedKey.rawKey & MOUSE_WARP_END ? WARP_END : 0x00) |
-                            (mappedKey.rawKey & MOUSE_DN ? WARP_DOWN : 0x00) |
-                            (mappedKey.rawKey & MOUSE_R ? WARP_RIGHT : 0x00) );
+                            (mappedKey.rawKey & MOUSE_DOWN ? WARP_DOWN : 0x00) |
+                            (mappedKey.rawKey & MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
             }
         } else {
             handle_mouse_key_event(switchState, mappedKey);
@@ -116,13 +116,13 @@ void handle_mouse_key_event(byte switchState, Key mappedKey) {
         if (mappedKey.rawKey & MOUSE_UP) {
             move_mouse(0,-1);
         }
-        if (mappedKey.rawKey & MOUSE_DN) {
+        if (mappedKey.rawKey & MOUSE_DOWN) {
             move_mouse(0,1);
         }
-        if (mappedKey.rawKey & MOUSE_L) {
+        if (mappedKey.rawKey & MOUSE_LEFT) {
             move_mouse(-1,0);
         }
-        if (mappedKey.rawKey & MOUSE_R) {
+        if (mappedKey.rawKey & MOUSE_RIGHT) {
             move_mouse(1,0);
         }
     }
