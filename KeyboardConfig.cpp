@@ -3,15 +3,11 @@
 #include "KeyboardConfig.h"
 
 
-const byte LEFT_SX1509_ADDRESS = 0x70;  // SX1509 I2C address (10)
-const byte RIGHT_SX1509_ADDRESS = 0x71;  // SX1509 I2C address (11)
-sx1509Class leftsx1509(LEFT_SX1509_ADDRESS);
-sx1509Class rightsx1509(RIGHT_SX1509_ADDRESS);
+sx1509Class KeyboardHardware_::leftsx1509(LEFT_SX1509_ADDRESS);
+sx1509Class KeyboardHardware_::rightsx1509(RIGHT_SX1509_ADDRESS);
 
-static int right_initted = 0;
-static int left_initted = 0;
 
-WS2812 LED(LED_COUNT);
+WS2812 KeyboardHardware_::LED(LED_COUNT);
 
 KeyboardHardware_::KeyboardHardware_(void) {
 

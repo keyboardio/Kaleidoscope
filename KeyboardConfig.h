@@ -6,6 +6,10 @@
 
 #define USE_HSV_CURVE 1
 
+// SX1509 I2C address (10)
+#define LEFT_SX1509_ADDRESS  0x70
+// SX1509 I2C address (11)
+#define RIGHT_SX1509_ADDRESS 0x71
 
 #define RIGHT_COLS 8
 #define RIGHT_ROWS 4
@@ -29,28 +33,33 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 
 
 class KeyboardHardware_ {
-public:
+  public:
     KeyboardHardware_(void);
-void led_sync(void);
-void led_set_crgb_at(byte row, byte col, cRGB color);
-void led_set_crgb_at(uint8_t i, cRGB crgb);
-cRGB get_key_color(byte row, byte col);
+    void led_sync(void);
+    void led_set_crgb_at(byte row, byte col, cRGB color);
+    void led_set_crgb_at(uint8_t i, cRGB crgb);
+    cRGB get_key_color(byte row, byte col);
 
 
-void scan_row(byte row);
-void finish_scanning_row(byte row);
-void scan_right_col(byte row, byte col, uint8_t *state);
-void scan_left_col(byte row, byte col, uint8_t *state);
-void pins_setup();
-boolean right_hand_connected(void);
-void leds_setup();
+    void scan_row(byte row);
+    void finish_scanning_row(byte row);
+    void scan_right_col(byte row, byte col, uint8_t *state);
+    void scan_left_col(byte row, byte col, uint8_t *state);
+    void pins_setup();
+    boolean right_hand_connected(void);
+    void leds_setup();
 
 
-private:
+  private:
+    static    sx1509Class leftsx1509;
+    static    sx1509Class rightsx1509;
+    static WS2812 LED;
+    int right_initted = 0;
+    int left_initted = 0;
 
-void make_input(sx1509Class sx1509, uint8_t pin) ;
-void make_output(sx1509Class sx1509, uint8_t pin) ;
-int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
+    void make_input(sx1509Class sx1509, uint8_t pin) ;
+    void make_output(sx1509Class sx1509, uint8_t pin) ;
+    int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
 };
 
