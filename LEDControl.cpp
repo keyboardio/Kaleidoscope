@@ -1,14 +1,5 @@
-#include "led_control.h"
+#include "LEDControl.h"
 
-uint8_t LEDControl_::pos= 0;
-uint8_t LEDControl_::rainbow_hue=0;
-uint8_t LEDControl_::rainbow_steps = 1;
-uint8_t LEDControl_::rainbow_wave_steps=1;
-long LEDControl_::rainbow_current_ticks =0;
-uint8_t LEDControl_::breathe_brightness=0;
-uint8_t LEDControl_::breathe_fadeAmount=1;
-uint8_t LEDControl_::chase_pixels= 1;
-uint8_t LEDControl_::current_chase_counter = 0;
 
 
 

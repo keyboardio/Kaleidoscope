@@ -29,7 +29,10 @@ class LEDControl_ {
     uint8_t led_mode;
     uint8_t last_led_mode;
     uint8_t stored_led_mode;
-    static uint8_t pos;
+    uint8_t pos = 0;
+
+
+
 
     cRGB led_off = { .r = 0, .g = 0, .b = 0 };
     cRGB led_steady = { .r = 0, .g = 255, .b = 0};
@@ -40,22 +43,22 @@ class LEDControl_ {
     cRGB rainbow;
 
 
-    static uint8_t rainbow_hue;   //stores 0 to 614
+    uint8_t rainbow_hue = 0;   //stores 0 to 614
 
-    static uint8_t rainbow_steps; //number of hues we skip in a 360 range per update
-    static uint8_t rainbow_wave_steps; //number of hues we skip in a 360 range per update
+    static const uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
+    static const uint8_t rainbow_wave_steps=1; //number of hues we skip in a 360 range per update
 
     static const byte rainbow_saturation = 255;
     static const byte rainbow_value = 190;
 
     static const long rainbow_wave_ticks = 1; //delays between update
     static const long rainbow_ticks = 5; //delays between update
-    static long rainbow_current_ticks;
+    long rainbow_current_ticks=0;
 
-    static uint8_t breathe_brightness;    // how bright the LED is
-    static uint8_t breathe_fadeAmount;    // how many points to fade the LED by
-    static uint8_t chase_pixels;
-    static uint8_t current_chase_counter;
+    uint8_t breathe_brightness = 0;    // how bright the LED is
+    int8_t breathe_fadeAmount=1;    // how many points to fade the LED by (can be negative)
+    int8_t chase_pixels =1; //negative values when it's going backwar
+    uint8_t current_chase_counter = 0;
     static const uint8_t chase_threshold = 6;
 // End RGB stuff
     void set_key_color(uint8_t row, uint8_t col, cRGB color);

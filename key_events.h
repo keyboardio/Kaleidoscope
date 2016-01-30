@@ -4,7 +4,7 @@
 #include "key_defs.h"
 #include "matrix_state.h"
 #include "MouseWrapper.h"
-#include "led_control.h"
+#include "LEDControl.h"
 #include "storage.h"
 
 
