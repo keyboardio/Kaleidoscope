@@ -13,8 +13,6 @@ extern const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
-extern KeyboardStorage Storage;
-
 // sending events to the computer
 void handle_synthetic_key_event(byte switchState, Key mappedKey);
 void handle_key_event(byte row, byte col);

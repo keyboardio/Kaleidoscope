@@ -12,9 +12,6 @@ const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
-KeyboardStorage Storage;
-
-
 
 void scan_matrix() {
     //scan the Keyboard matrix looking for connections

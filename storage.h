@@ -4,8 +4,11 @@
 #include <EEPROM.h>
 #include "KeyboardConfig.h"
 
-class KeyboardStorage {
+class Storage_ {
   public:
-    uint8_t load_primary_keymap();
+    Storage_(void);
+    uint8_t load_primary_keymap(void);
     void save_primary_keymap(uint8_t keymap);
 };
+
+extern Storage_ Storage;
