@@ -32,9 +32,9 @@ typedef struct {
 
 
 #define MOUSE_UP            B0000001
-#define MOUSE_DOWN            B0000010
-#define MOUSE_LEFT             B0000100
-#define MOUSE_RIGHT             B0001000
+#define MOUSE_DOWN          B0000010
+#define MOUSE_LEFT          B0000100
+#define MOUSE_RIGHT         B0001000
 #define MOUSE_CENTER        B0010000
 #define MOUSE_WARP          B0100000
 #define MOUSE_WARP_END      B1000000

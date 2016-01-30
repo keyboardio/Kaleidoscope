@@ -41,15 +41,15 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
                || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
         if (key_toggled_on (switchState)) {
             press_button(
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
 
         } else if (key_toggled_off(switchState)) {
-            release_button( 
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
-                    (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
+            release_button(
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
         }
     }
 }

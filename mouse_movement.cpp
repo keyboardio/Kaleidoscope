@@ -21,13 +21,13 @@ static boolean is_warping = false;
 
 
 void press_button(uint8_t button) {
-            Mouse.press(button);
-            end_warping();
+    Mouse.press(button);
+    end_warping();
 
-} 
+}
 
 void release_button(uint8_t button) {
-            Mouse.release(button);
+    Mouse.release(button);
 }
 
 
