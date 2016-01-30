@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-//add your includes for the project KeyboardIO here
-#include <EEPROM.h>
 
 //end of add your includes here
 #ifdef __cplusplus

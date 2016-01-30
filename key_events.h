@@ -5,8 +5,7 @@
 #include "matrix_state.h"
 #include "MouseWrapper.h"
 #include "LEDControl.h"
-#include "storage.h"
-
+#include "Storage.h"
 
 extern uint8_t matrixState[ROWS][COLS];
 extern const Key keymaps[KEYMAPS][ROWS][COLS];

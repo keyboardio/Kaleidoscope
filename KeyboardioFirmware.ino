@@ -39,7 +39,7 @@ void setup() {
     LEDControl.boot_animation();
     implementation_pins_setup();
 
-    temporary_keymap = primary_keymap = Storage.load_primary_keymap();
+    temporary_keymap = primary_keymap = Storage.load_primary_keymap(KEYMAPS);
 }
 
 
