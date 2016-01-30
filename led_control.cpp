@@ -1,26 +1,33 @@
 #include "led_control.h"
 
-uint8_t LEDControl::pos= 0;
-uint8_t LEDControl::rainbow_hue=0;
-uint8_t LEDControl::rainbow_steps = 1;
-uint8_t LEDControl::rainbow_wave_steps=1;
-long LEDControl::rainbow_current_ticks =0;
-uint8_t LEDControl::breathe_brightness=0;
-uint8_t LEDControl::breathe_fadeAmount=1;
-uint8_t LEDControl::chase_pixels= 1;
-uint8_t LEDControl::current_chase_counter = 0;
+uint8_t LEDControl_::pos= 0;
+uint8_t LEDControl_::rainbow_hue=0;
+uint8_t LEDControl_::rainbow_steps = 1;
+uint8_t LEDControl_::rainbow_wave_steps=1;
+long LEDControl_::rainbow_current_ticks =0;
+uint8_t LEDControl_::breathe_brightness=0;
+uint8_t LEDControl_::breathe_fadeAmount=1;
+uint8_t LEDControl_::chase_pixels= 1;
+uint8_t LEDControl_::current_chase_counter = 0;
 
-void LEDControl::set_key_color(byte row, byte col, cRGB color) {
+
+
+
+
+LEDControl_::LEDControl_(void) {
+
+}
+
+
+void LEDControl_::set_key_color(byte row, byte col, cRGB color) {
     implementation_led_set_crgb_at(row, col, color);
 }
 
-cRGB LEDControl::get_key_color(byte row, byte col) {
+cRGB LEDControl_::get_key_color(byte row, byte col) {
     return implementation_get_key_color(row, col);
 }
 
-
-
-void LEDControl::initialize_led_mode(uint8_t mode) {
+void LEDControl_::initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);
     if (mode == LED_MODE_OFF) {
         //        set_all_leds_to(led_off);
@@ -35,27 +42,27 @@ void LEDControl::initialize_led_mode(uint8_t mode) {
     }
 }
 
-void LEDControl::set_all_leds_to(cRGB color) {
+void LEDControl_::set_all_leds_to(cRGB color) {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
         implementation_led_set_crgb_at(i, color);
     }
 }
 
 
-void LEDControl::next_mode() {
+void LEDControl_::next_mode() {
     if (led_mode++ >= LED_MODES) {
         led_mode = 0;
     }
 }
 
-void LEDControl::set_mode(uint8_t mode) {
+void LEDControl_::set_mode(uint8_t mode) {
     led_mode = mode;
 }
 
 
 
 
-void LEDControl::update(uint8_t current_keymap) {
+void LEDControl_::update(uint8_t current_keymap) {
     if (current_keymap == NUMPAD_KEYMAP) {
         if (led_mode != LED_SPECIAL_MODE_NUMLOCK) {
             stored_led_mode = led_mode;
@@ -94,7 +101,7 @@ void LEDControl::update(uint8_t current_keymap) {
 
 
 
-void LEDControl::effect_numlock_update() {
+void LEDControl_::effect_numlock_update() {
     for (uint8_t i = 0; i < 44; i++) {
         implementation_led_set_crgb_at(i, led_off);
     }
@@ -106,11 +113,11 @@ void LEDControl::effect_numlock_update() {
     implementation_led_sync();
 }
 
-void LEDControl::effect_steady_update() {
+void LEDControl_::effect_steady_update() {
     implementation_led_sync();
 }
 
-void LEDControl::led_compute_breath() {
+void LEDControl_::led_compute_breath() {
     // algorithm from http://sean.voisen.org/blog/2011/10/breathing-led-with-arduino/
     breathe_brightness =  (exp(sin(millis()/2000.0*PI)) - 0.36787944)*108.0;
     // change the brightness for next time through the loop:
@@ -125,13 +132,13 @@ void LEDControl::led_compute_breath() {
     led_breathe.SetHSV(200, 255, breathe_brightness);
 }
 
-void LEDControl::effect_breathe_update() {
+void LEDControl_::effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
     implementation_led_sync();
 }
 
-void LEDControl::effect_chase_update() {
+void LEDControl_::effect_chase_update() {
     if (current_chase_counter++ < chase_threshold) {
         return;
     }
@@ -148,7 +155,7 @@ void LEDControl::effect_chase_update() {
     implementation_led_sync();
 }
 
-void LEDControl::effect_rainbow_update() {
+void LEDControl_::effect_rainbow_update() {
     if (rainbow_current_ticks++ < rainbow_ticks) {
         return;
     } else {
@@ -163,7 +170,7 @@ void LEDControl::effect_rainbow_update() {
     implementation_led_sync();
 }
 
-void LEDControl::effect_rainbow_wave_update() {
+void LEDControl_::effect_rainbow_wave_update() {
     if (rainbow_current_ticks++ < rainbow_wave_ticks) {
         return;
     } else {
@@ -185,7 +192,7 @@ void LEDControl::effect_rainbow_wave_update() {
     implementation_led_sync();
 }
 
-void LEDControl::boot_animation() {
+void LEDControl_::boot_animation() {
     set_all_leds_to(led_off);
 
     type_letter(LED_K);
@@ -207,7 +214,7 @@ void LEDControl::boot_animation() {
 
 }
 
-void LEDControl::type_letter(uint8_t letter) {
+void LEDControl_::type_letter(uint8_t letter) {
     implementation_led_set_crgb_at(letter,led_bright_red);
     implementation_led_sync();
     delay(250);
@@ -221,7 +228,7 @@ void LEDControl::type_letter(uint8_t letter) {
  * getRGB() function based on <http://www.codeproject.com/miscctrl/CPicker.asp>
  * dim_curve idea by Jims
  * */
-void LEDControl::SetHSV(cRGB *crgb, int hue, byte sat, byte val) {
+void LEDControl_::SetHSV(cRGB *crgb, int hue, byte sat, byte val) {
     /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
     */
 
@@ -273,3 +280,5 @@ void LEDControl::SetHSV(cRGB *crgb, int hue, byte sat, byte val) {
         }
     }
 }
+
+LEDControl_ LEDControl;

@@ -20,7 +20,7 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     } else if (mappedKey.flags & IS_INTERNAL) {
         if (key_toggled_on (switchState)) {
             if (mappedKey.rawKey == LED_TOGGLE) {
-                LEDs.next_mode();
+                LEDControl.next_mode();
             }
         }
     } else if (mappedKey.flags & IS_SYSCTL) {

@@ -13,7 +13,6 @@ uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
 KeyboardStorage Storage;
-LEDControl LEDs;
 
 
 
@@ -40,7 +39,7 @@ void setup() {
     Keyboard.begin();
     Mouse.begin();
     implementation_leds_setup();
-    LEDs.boot_animation();
+    LEDControl.boot_animation();
     implementation_pins_setup();
 
     temporary_keymap = primary_keymap = Storage.load_primary_keymap();
@@ -51,7 +50,7 @@ void loop() {
     scan_matrix();
     Keyboard.sendReport();
     Keyboard.releaseAll();
-    LEDs.update(temporary_keymap);
+    LEDControl.update(temporary_keymap);
 }
 
 

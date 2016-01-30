@@ -16,8 +16,9 @@
 #define LED_SPECIAL_MODE_NUMLOCK 100
 
 
-class LEDControl {
+class LEDControl_ {
   public:
+    LEDControl_(void);
     void next_mode();
     void boot_animation();
     void update(uint8_t current_keymap);
@@ -78,4 +79,4 @@ class LEDControl {
     void initialize_led_mode(uint8_t mode);
 };
 
-
+extern LEDControl_ LEDControl;

@@ -14,7 +14,6 @@ extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
 extern KeyboardStorage Storage;
-extern LEDControl LEDs;
 
 // sending events to the computer
 void handle_synthetic_key_event(byte switchState, Key mappedKey);
