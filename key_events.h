@@ -3,7 +3,7 @@
 
 #include "key_defs.h"
 #include "matrix_state.h"
-#include "mouse_movement.h"
+#include "MouseWrapper.h"
 #include "led_control.h"
 #include "storage.h"
 

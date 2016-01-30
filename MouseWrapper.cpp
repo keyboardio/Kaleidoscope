@@ -2,7 +2,7 @@
 // Mouse-related methods
 //
 //
-#include "mouse_movement.h"
+#include "MouseWrapper.h"
 
 
 // Warping
