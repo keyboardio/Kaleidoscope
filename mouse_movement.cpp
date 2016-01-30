@@ -20,6 +20,17 @@ static int section_left;
 static boolean is_warping = false;
 
 
+void press_button(uint8_t button) {
+            Mouse.press(button);
+            end_warping();
+
+} 
+
+void release_button(uint8_t button) {
+            Mouse.release(button);
+}
+
+
 void _warp_jump(long left, long top, long height, long width) {
     long x_center = left + width/2;
     long y_center = top + height/2;

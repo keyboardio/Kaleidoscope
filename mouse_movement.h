@@ -12,6 +12,14 @@ void move_mouse( int8_t x, int8_t y);
 void begin_warping();
 void end_warping();
 void warp_mouse(uint8_t warp_cmd);
+void press_button(uint8_t button);
+void release_button(uint8_t button);
+
+// Buttons
+
+#define MOUSE_BUTTON_LEFT    0x01
+#define MOUSE_BUTTON_MIDDLE  0x02
+#define MOUSE_BUTTON_RIGHT   0x04
 
 
 // Warping commands
