@@ -32,9 +32,9 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 #define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
 
-class KeyboardHardware_ {
+class Model01Beta_ {
   public:
-    KeyboardHardware_(void);
+    Model01Beta_(void);
     void led_sync(void);
     void led_set_crgb_at(byte row, byte col, cRGB color);
     void led_set_crgb_at(uint8_t i, cRGB crgb);
@@ -140,4 +140,4 @@ static const uint8_t key_led_map[4][16] = {
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
 
-extern KeyboardHardware_ KeyboardHardware;
+extern Model01Beta_ KeyboardHardware;
