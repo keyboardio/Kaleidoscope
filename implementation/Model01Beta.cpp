@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "WS2812.h"
-#include "KeyboardConfig.h"
+#include "Model01Beta.h"
 
 
 sx1509Class KeyboardHardware_::leftsx1509(LEFT_SX1509_ADDRESS);
