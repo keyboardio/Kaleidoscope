@@ -17,6 +17,7 @@ void setup() {
     wdt_disable();
     Keyboard.begin();
     Mouse.begin();
+    AbsoluteMouse.begin();
     KeyboardHardware.leds_setup();
     KeyboardHardware.pins_setup();
     LEDControl.boot_animation();
