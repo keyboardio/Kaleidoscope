@@ -5,7 +5,7 @@ BOARD    = model01
 MCU 		= atmega32u4
 
 DEVICE_PORT =  /dev/cu.usbmodemHIDO1
-DEVICE_PORT_BOOTLOADER = /dev/cu.usbmodem1421
+DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14?1`
 ARDUINO_LIBS = 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 
