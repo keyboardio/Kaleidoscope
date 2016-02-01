@@ -1,7 +1,7 @@
 #include "key_events.h"
 
 void handle_synthetic_key_event(byte switchState, Key mappedKey) {
-    if (mappedKey.flags & IS_MOUSE_KEY & ! (mappedKey.rawKey & MOUSE_WARP )) {
+    if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & MOUSE_WARP) ) {
         handle_mouse_key_event(switchState, mappedKey);
     } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L
                || mappedKey.rawKey == KEY_MOUSE_BTN_M
