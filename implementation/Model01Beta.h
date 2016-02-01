@@ -19,7 +19,6 @@
 #define LEFT_COLS 8
 #define LEFT_ROWS 4
 
-//class Model01Beta_;
 
 class Model01Beta_ {
   public:
@@ -136,4 +135,4 @@ class Model01Beta_ {
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
 
-extern Model01Beta_ KeyboardHardware;
+
