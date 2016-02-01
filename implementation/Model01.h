@@ -105,4 +105,3 @@ class Model01_ {
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
 
-extern Model01_ KeyboardHardware;
