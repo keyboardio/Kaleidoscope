@@ -31,8 +31,6 @@ extern const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
-
-
 #ifndef VERSION
 #define VERSION "locally-built"
 #endif
