@@ -18,15 +18,12 @@
 #define LEFT_COLS 8
 #define LEFT_ROWS 4
 
-
-
-
+//class Model01Beta_;
 
 class Model01Beta_ {
   public:
     Model01Beta_(void);
     void led_sync(void);
-    void led_set_crgb_at(byte row, byte col, cRGB color);
     void led_set_crgb_at(uint8_t i, cRGB crgb);
     cRGB get_key_color(byte row, byte col);
 

@@ -61,8 +61,6 @@ class LEDControl_ {
     uint8_t current_chase_counter = 0;
     static const uint8_t chase_threshold = 6;
 // End RGB stuff
-    void set_key_color(uint8_t row, uint8_t col, cRGB color);
-    cRGB get_key_color(uint8_t row, uint8_t col);
     void led_compute_breath();
     void effect_breathe_init();
     void effect_rainbow_init();

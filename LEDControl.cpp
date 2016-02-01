@@ -1,22 +1,9 @@
 #include "LEDControl.h"
 
-
-
-
-
-
 LEDControl_::LEDControl_(void) {
 
 }
 
-
-void LEDControl_::set_key_color(byte row, byte col, cRGB color) {
-    KeyboardHardware.led_set_crgb_at(row, col, color);
-}
-
-cRGB LEDControl_::get_key_color(byte row, byte col) {
-    return KeyboardHardware.get_key_color(row, col);
-}
 
 void LEDControl_::initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);

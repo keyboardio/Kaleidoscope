@@ -22,10 +22,6 @@ void Model01Beta_::leds_setup() {
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
 
-void Model01Beta_::led_set_crgb_at(byte row, byte col, cRGB color) {
-    LED.set_crgb_at(key_led_map[row][col], color);
-}
-
 cRGB Model01Beta_::get_key_color(byte row, byte col) {
     return LED.get_crgb_at(key_led_map[row][col]);
 }
