@@ -20,9 +20,9 @@
 #define LEFT_ROWS 4
 
 
-class Model01Beta_ {
+class Model01Beta {
   public:
-    Model01Beta_(void);
+    Model01Beta(void);
     void led_sync(void);
     void led_set_crgb_at(uint8_t i, cRGB crgb);
     cRGB get_key_color(byte row, byte col);

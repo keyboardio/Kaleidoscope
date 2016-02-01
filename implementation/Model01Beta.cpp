@@ -1,41 +1,41 @@
 #include "Model01Beta.h"
 
 
-sx1509Class Model01Beta_::leftsx1509(LEFT_SX1509_ADDRESS);
-sx1509Class Model01Beta_::rightsx1509(RIGHT_SX1509_ADDRESS);
+sx1509Class Model01Beta::leftsx1509(LEFT_SX1509_ADDRESS);
+sx1509Class Model01Beta::rightsx1509(RIGHT_SX1509_ADDRESS);
 
 
-WS2812 Model01Beta_::LED(LED_COUNT);
+WS2812 Model01Beta::LED(LED_COUNT);
 
-Model01Beta_::Model01Beta_(void) {
+Model01Beta::Model01Beta(void) {
 
 }
 
-void Model01Beta_::setup(void) {
+void Model01Beta::setup(void) {
     pins_setup();
     leds_setup();
 }
-void Model01Beta_::leds_setup() {
+void Model01Beta::leds_setup() {
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order
 }
 
-cRGB Model01Beta_::get_key_color(byte row, byte col) {
+cRGB Model01Beta::get_key_color(byte row, byte col) {
     return LED.get_crgb_at(key_led_map[row][col]);
 }
 
-void Model01Beta_::led_set_crgb_at(uint8_t i, cRGB crgb) {
+void Model01Beta::led_set_crgb_at(uint8_t i, cRGB crgb) {
     LED.set_crgb_at(i, crgb);
 }
 
-void Model01Beta_::led_sync() {
+void Model01Beta::led_sync() {
     LED.sync();
 }
 
 
 
 
-void Model01Beta_::scan_matrix() {
+void Model01Beta::scan_matrix() {
     //scan the Keyboard matrix looking for connections
     for (byte row = 0; row < LEFT_ROWS; row++) {
         scan_row(row);
@@ -59,7 +59,7 @@ void Model01Beta_::scan_matrix() {
 
 
 
-void Model01Beta_::scan_row(byte row) {
+void Model01Beta::scan_row(byte row) {
     if (left_initted) {
         leftsx1509.updatePinState(left_rowpins[row], LOW);
         leftsx1509.sendPinStates();
@@ -72,14 +72,14 @@ void Model01Beta_::scan_row(byte row) {
 
     }
 }
-void Model01Beta_::finish_scanning_row(byte row) {
+void Model01Beta::finish_scanning_row(byte row) {
     if (left_initted)
         leftsx1509.updatePinState(left_rowpins[row], HIGH);
     if (right_initted)
         rightsx1509.updatePinState(right_rowpins[row], HIGH);
 }
 
-void Model01Beta_::scan_left_col(byte row, byte col,uint8_t *state) {
+void Model01Beta::scan_left_col(byte row, byte col,uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
@@ -93,7 +93,7 @@ void Model01Beta_::scan_left_col(byte row, byte col,uint8_t *state) {
     }
 }
 
-void Model01Beta_::scan_right_col(byte row, byte col, uint8_t *state) {
+void Model01Beta::scan_right_col(byte row, byte col, uint8_t *state) {
 
     //If we see an electrical connection on I->J,
 
@@ -111,7 +111,7 @@ void Model01Beta_::scan_right_col(byte row, byte col, uint8_t *state) {
 
 
 
-boolean Model01Beta_::right_hand_connected(void) {
+boolean Model01Beta::right_hand_connected(void) {
     if (right_initted) {
         return true;
     } else {
@@ -119,24 +119,24 @@ boolean Model01Beta_::right_hand_connected(void) {
     }
 }
 
-void Model01Beta_::pins_setup() {
+void Model01Beta::pins_setup() {
     right_initted = setup_sx1509(rightsx1509, right_colpins, right_rowpins);
     left_initted = setup_sx1509(leftsx1509, left_colpins, left_rowpins);
     rightsx1509.fetchPinStates();
 }
 
 
-void Model01Beta_::make_input(sx1509Class sx1509, uint8_t pin) {
+void Model01Beta::make_input(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, INPUT);  // Set SX1509 pin 1 as an input
     sx1509.writePin(pin, HIGH);  // Activate pull-up
 }
 
-void Model01Beta_::make_output(sx1509Class sx1509, uint8_t pin) {
+void Model01Beta::make_output(sx1509Class sx1509, uint8_t pin) {
     sx1509.pinDir(pin, OUTPUT);
     sx1509.writePin(pin, HIGH);
 }
 
-int Model01Beta_::setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
+int Model01Beta::setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]) {
     byte initted;
 
     for (int counter = 0; counter < 10; counter++) {

@@ -1,6 +1,10 @@
 #pragma once 
 
-#include "implementation/Model01Beta.h"
+
+#define HARDWARE_IMPLEMENTATION Model01
+#define HARDWARE_IMPLEMENTATION_HEADER "implementation/Model01.h"
+
+#include HARDWARE_IMPLEMENTATION_HEADER
 
 
 // These global proxy functions are a cheap hack to avoid 
