@@ -60,7 +60,7 @@ class AbsoluteMouse_ {
     void end(void);
 
     void click(uint8_t b = MOUSE_LEFT);
-    void moveTo(int x, int y, signed char wheel = 0);
+    void moveTo(int16_t x, int16_t y, signed char wheel = 0);
     void move(int x, int y, signed char wheel = 0);
     void press(uint8_t b = MOUSE_LEFT);
     void release(uint8_t b = MOUSE_LEFT);

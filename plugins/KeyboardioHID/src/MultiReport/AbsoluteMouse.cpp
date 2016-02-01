@@ -116,7 +116,7 @@ void AbsoluteMouse_::click(uint8_t b) {
     moveTo(xAxis, yAxis, 0);
 }
 
-void AbsoluteMouse_::moveTo(int x, int y, signed char wheel) {
+void AbsoluteMouse_::moveTo(int16_t x, int16_t y, signed char wheel) {
     xAxis = x;
     yAxis = y;
     HID_MouseAbsoluteReport_Data_t report;
