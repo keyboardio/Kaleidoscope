@@ -28,7 +28,16 @@ typedef struct {
 
 // IS_INTERNAL key table:
 
-#define LED_TOGGLE 1
+#define LED_TOGGLE  0x01 // Synthetic, internal
+
+
+// Synthetic, not internal
+#define KEY_MOUSE_BTN_L 0x01 // Synthetic key
+#define KEY_MOUSE_BTN_M 0x04 // Synthetic key
+#define KEY_MOUSE_BTN_R 0x02 // Synthetic key
+
+
+
 
 
 #define KEY_MOUSE_UP            B0000001
@@ -80,9 +89,6 @@ typedef struct {
 #define Key_mouseScrollDn
 #define Key_mouseScrollL
 #define Key_mouseScrollR
-#define KEY_MOUSE_BTN_L 0x01 // Synthetic key
-#define KEY_MOUSE_BTN_M 0x04 // Synthetic key
-#define KEY_MOUSE_BTN_R 0x02 // Synthetic key
 #define Key_mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_L }
 #define Key_mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC_KEY , KEY_MOUSE_BTN_M }
 #define Key_mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC_KEY, KEY_MOUSE_BTN_R }

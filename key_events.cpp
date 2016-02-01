@@ -3,9 +3,10 @@
 void handle_synthetic_key_event(byte switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(switchState, mappedKey);
-    } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L
+    } else if (! (mappedKey.flags & IS_INTERNAL)
+          && (mappedKey.rawKey == KEY_MOUSE_BTN_L
                || mappedKey.rawKey == KEY_MOUSE_BTN_M
-               || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
+               || mappedKey.rawKey == KEY_MOUSE_BTN_R)) {
         if (key_toggled_on (switchState)) {
             MouseWrapper.press_button(
                 (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  KEY_MOUSE_BUTTON_LEFT   : 0x00) |
