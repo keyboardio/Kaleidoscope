@@ -1,0 +1,7 @@
+#pragma once
+
+#define COLS 16
+#define ROWS 4
+#define KEYMAPS 3
+#define NUMPAD_KEYMAP 2
+#define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
