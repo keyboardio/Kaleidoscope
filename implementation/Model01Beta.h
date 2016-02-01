@@ -18,13 +18,6 @@
 #define LEFT_COLS 8
 #define LEFT_ROWS 4
 
-static uint8_t left_colpins[]= {7,6,5,4,3,2,1,0};
-static uint8_t left_rowpins[]= {8,9,10,11};
-
-static uint8_t right_colpins[]= {0,1,2,3,4,5,6,7};
-static uint8_t right_rowpins[]= {8,9,10,11};
-
-
 
 
 
@@ -48,6 +41,19 @@ class Model01Beta_ {
     int right_initted = 0;
     int left_initted = 0;
 
+    uint8_t left_colpins[LEFT_COLS]= {7,6,5,4,3,2,1,0};
+    uint8_t left_rowpins[LEFT_ROWS]= {8,9,10,11};
+
+    uint8_t right_colpins[RIGHT_COLS]= {0,1,2,3,4,5,6,7};
+    uint8_t right_rowpins[RIGHT_ROWS]= {8,9,10,11};
+
+
+    static constexpr uint8_t key_led_map[4][16] = {
+        {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
+        {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
+        {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
+        {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
+    };
     boolean right_hand_connected(void);
     void pins_setup();
     void leds_setup();
@@ -65,12 +71,6 @@ class Model01Beta_ {
 
 #define LED_COUNT 64
 
-static const uint8_t key_led_map[4][16] = {
-    {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
-    {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
-    {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
-    {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
-};
 
 
 #define LED_PGDN 0
