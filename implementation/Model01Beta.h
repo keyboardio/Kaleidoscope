@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Arduino.h>
 #include "../keymaps.h"
 #include "../generated/keymaps.h"
 #include "WS2812.h"

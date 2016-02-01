@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#include "WS2812.h"
 #include "Model01Beta.h"
 
 
