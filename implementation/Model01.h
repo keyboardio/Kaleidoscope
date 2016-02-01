@@ -1,35 +1,16 @@
 #pragma once
 
+#include "../keymaps.h"
 #include "../generated/keymaps.h"
-#include "WS2812.h"
-#include "KeyboardioSX1509.h"
+#include "../key_events.h"
 
-#define USE_HSV_CURVE 1
-
-// SX1509 I2C address (10)
-#define LEFT_SX1509_ADDRESS  0x70
-// SX1509 I2C address (11)
-#define RIGHT_SX1509_ADDRESS 0x71
 
 #define RIGHT_COLS 8
 #define RIGHT_ROWS 4
 #define LEFT_COLS 8
 #define LEFT_ROWS 4
 
-static uint8_t left_colpins[]= {7,6,5,4,3,2,1,0};
-static uint8_t left_rowpins[]= {8,9,10,11};
 
-static uint8_t right_colpins[]= {0,1,2,3,4,5,6,7};
-static uint8_t right_rowpins[]= {8,9,10,11};
-
-
-
-
-#define COLS 16
-#define ROWS 4
-#define KEYMAPS 3
-#define NUMPAD_KEYMAP 2
-#define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
 
 class Model01_ {
@@ -40,39 +21,23 @@ class Model01_ {
     void led_set_crgb_at(uint8_t i, cRGB crgb);
     cRGB get_key_color(byte row, byte col);
 
-
-    void scan_row(byte row);
-    void finish_scanning_row(byte row);
-    void scan_right_col(byte row, byte col, uint8_t *state);
-    void scan_left_col(byte row, byte col, uint8_t *state);
-    void pins_setup();
-    boolean right_hand_connected(void);
-    void leds_setup();
+    void scan_matrix(void);
+    void setup();
 
 
   private:
-    static    sx1509Class leftsx1509;
-    static    sx1509Class rightsx1509;
-    static WS2812 LED;
-    int right_initted = 0;
-    int left_initted = 0;
+    static constexpr uint8_t key_led_map[4][16] = {
+        {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
+        {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
+        {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
+        {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
+    };
 
-    void make_input(sx1509Class sx1509, uint8_t pin) ;
-    void make_output(sx1509Class sx1509, uint8_t pin) ;
-    int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);
 
 };
 
-#define LED_DATA_PIN  4
 
 #define LED_COUNT 64
-
-static const uint8_t key_led_map[4][16] = {
-    {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
-    {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
-    {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
-    {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
-};
 
 
 #define LED_PGDN 0
