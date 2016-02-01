@@ -43,7 +43,7 @@ class LEDControl_ {
     cRGB rainbow;
 
 
-    uint8_t rainbow_hue = 0;   //stores 0 to 614
+    uint16_t rainbow_hue = 0;   //stores 0 to 614
 
     static const uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
     static const uint8_t rainbow_wave_steps=1; //number of hues we skip in a 360 range per update

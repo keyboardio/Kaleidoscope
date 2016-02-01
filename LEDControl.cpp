@@ -169,7 +169,7 @@ void LEDControl_::effect_rainbow_wave_update() {
     }
 
     for (uint8_t i = 0; i < LED_COUNT; i++) {
-        uint8_t key_hue = rainbow_hue +16*(i/4);
+        uint16_t key_hue = rainbow_hue +16*(i/4);
         if (key_hue >= 360)          {
             key_hue %= 360;
         }
