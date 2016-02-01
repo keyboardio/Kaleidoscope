@@ -45,8 +45,8 @@ static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,                      /*     USAGE_PAGE (Generic Desktop) */
     _USAGE, 0x30,                      /*     USAGE (X) */
     _USAGE, 0x31,                      /*     USAGE (Y) */
-    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x81,				 /* 	Logical Minimum (-32767) */
-    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x7F,				 /* 	Logical Maximum (32767) */
+    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x00,				 /* 	Logical Minimum (0) */
+    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x7f,				 /* 	Logical Maximum (32767) */
     _REPORT_SIZE, 0x10,						 /* 	Report Size (16), */
     _REPORT_COUNT, 0x02,						 /* 	Report Count (2), */
     _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),						 /* 	Input (Data, Variable, Absolute) */
@@ -116,7 +116,7 @@ void AbsoluteMouse_::click(uint8_t b) {
     moveTo(xAxis, yAxis, 0);
 }
 
-void AbsoluteMouse_::moveTo(int16_t x, int16_t y, signed char wheel) {
+void AbsoluteMouse_::moveTo(uint16_t x, uint16_t y, signed char wheel) {
     xAxis = x;
     yAxis = y;
     HID_MouseAbsoluteReport_Data_t report;

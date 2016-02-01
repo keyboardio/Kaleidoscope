@@ -47,8 +47,8 @@ typedef union {
     uint32_t whole32[];
     struct {
         uint8_t buttons;
-        int16_t xAxis;
-        int16_t yAxis;
+        uint16_t xAxis;
+        uint16_t yAxis;
         int8_t wheel;
     };
 } HID_MouseAbsoluteReport_Data_t;
@@ -60,7 +60,7 @@ class AbsoluteMouse_ {
     void end(void);
 
     void click(uint8_t b = MOUSE_LEFT);
-    void moveTo(int16_t x, int16_t y, signed char wheel = 0);
+    void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
     void move(int x, int y, signed char wheel = 0);
     void press(uint8_t b = MOUSE_LEFT);
     void release(uint8_t b = MOUSE_LEFT);
@@ -70,8 +70,8 @@ class AbsoluteMouse_ {
     void SendReport(void* data, int length);
 
   protected:
-    int16_t xAxis;
-    int16_t yAxis;
+    uint16_t xAxis;
+    uint16_t yAxis;
     uint8_t _buttons;
     void buttons(uint8_t b);
 
