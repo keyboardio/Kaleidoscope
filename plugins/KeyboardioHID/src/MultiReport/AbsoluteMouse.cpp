@@ -45,7 +45,7 @@ static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,                      /*     USAGE_PAGE (Generic Desktop) */
     _USAGE, 0x30,                      /*     USAGE (X) */
     _USAGE, 0x31,                      /*     USAGE (Y) */
-    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x80,				 /* 	Logical Minimum (-32768) */
+    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x81,				 /* 	Logical Minimum (-32767) */
     _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x7F,				 /* 	Logical Maximum (32767) */
     _REPORT_SIZE, 0x10,						 /* 	Report Size (16), */
     _REPORT_COUNT, 0x02,						 /* 	Report Count (2), */
