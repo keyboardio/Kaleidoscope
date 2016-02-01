@@ -13,6 +13,10 @@ Model01Beta_::Model01Beta_(void) {
 
 }
 
+void Model01Beta_::setup(void) {
+    pins_setup();
+    leds_setup();
+}
 void Model01Beta_::leds_setup() {
     LED.setOutput(LED_DATA_PIN);
     LED.setColorOrderGRB();  // Uncomment for RGB color order

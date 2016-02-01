@@ -18,8 +18,7 @@ void setup() {
     Keyboard.begin();
     Mouse.begin();
     AbsoluteMouse.begin();
-    KeyboardHardware.leds_setup();
-    KeyboardHardware.pins_setup();
+    KeyboardHardware.setup();
     LEDControl.boot_animation();
 
     temporary_keymap = primary_keymap = Storage.load_primary_keymap(KEYMAPS);

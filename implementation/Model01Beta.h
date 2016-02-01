@@ -38,9 +38,7 @@ class Model01Beta_ {
     cRGB get_key_color(byte row, byte col);
 
     void scan_matrix(void);
-
-    void pins_setup();
-    void leds_setup();
+    void setup();
 
 
   private:
@@ -51,6 +49,8 @@ class Model01Beta_ {
     int left_initted = 0;
 
     boolean right_hand_connected(void);
+    void pins_setup();
+    void leds_setup();
     void scan_row(byte row);
     void finish_scanning_row(byte row);
     void scan_right_col(byte row, byte col, uint8_t *state);
