@@ -51,7 +51,7 @@ class LEDControl_ {
     static const byte rainbow_saturation = 255;
     static const byte rainbow_value = 255;
 
-    static const long rainbow_wave_ticks = 1; //delays between update
+    static const long rainbow_wave_ticks = 0; //delays between update
     static const long rainbow_ticks = 5; //delays between update
     long rainbow_current_ticks=0;
 
