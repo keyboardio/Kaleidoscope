@@ -25,9 +25,9 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
         if (mappedKey.rawKey & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
             // we don't pass in the left and up values because those are the
             // default, "no-op" conditionals
-            MouseWrapper.warp( (mappedKey.rawKey & KEY_MOUSE_WARP_END ? WARP_END : 0x00) |
-                               (mappedKey.rawKey & KEY_MOUSE_DOWN ? WARP_DOWN : 0x00) |
-                               (mappedKey.rawKey & KEY_MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
+            MouseWrapper.warp( ((mappedKey.rawKey & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
+                               ((mappedKey.rawKey & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
+                               ((mappedKey.rawKey & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00) );
         } else if (mappedKey.flags & IS_CONSUMER) {
             ConsumerControl.press(mappedKey.rawKey);
         } else if (mappedKey.flags & IS_INTERNAL) {

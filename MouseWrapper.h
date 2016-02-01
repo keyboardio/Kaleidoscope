@@ -59,10 +59,10 @@ class MouseWrapper_ {
     float carriedOverY = 0;
 
 
-    uint16_t next_width;
-    uint16_t next_height;
-    uint16_t section_top;
-    uint16_t section_left;
+    uint16_t next_width = 0;
+    uint16_t next_height = 0;
+    uint16_t section_top = 0;
+    uint16_t section_left = 0;
     boolean is_warping = false;
 
     double acceleration (double cycles);

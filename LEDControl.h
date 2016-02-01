@@ -26,9 +26,9 @@ class LEDControl_ {
     void set_mode(uint8_t mode);
 
   private:
-    uint8_t led_mode;
-    uint8_t last_led_mode;
-    uint8_t stored_led_mode;
+    uint8_t led_mode = 0;
+    uint8_t last_led_mode = 0;
+    uint8_t stored_led_mode = 0;
     uint8_t pos = 0;
 
 
