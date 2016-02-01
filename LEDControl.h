@@ -78,7 +78,6 @@ class LEDControl_ {
     void effect_heatmap_update();
     void effect_numlock_update();
     void set_all_leds_to(cRGB color);
-    void SetHSV(cRGB *crgb, int hue, byte sat, byte val);
     void initialize_led_mode(uint8_t mode);
 };
 
