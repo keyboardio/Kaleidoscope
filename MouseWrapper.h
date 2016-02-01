@@ -5,9 +5,9 @@
 
 // Buttons
 
-#define MOUSE_BUTTON_LEFT    0x01
-#define MOUSE_BUTTON_MIDDLE  0x02
-#define MOUSE_BUTTON_RIGHT   0x04
+#define KEY_MOUSE_BUTTON_LEFT    0x01
+#define KEY_MOUSE_BUTTON_MIDDLE  0x02
+#define KEY_MOUSE_BUTTON_RIGHT   0x04
 
 
 // Warping commands

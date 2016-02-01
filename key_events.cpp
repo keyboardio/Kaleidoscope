@@ -1,33 +1,32 @@
 #include "key_events.h"
 
 void handle_synthetic_key_event(byte switchState, Key mappedKey) {
-    if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & MOUSE_WARP) ) {
+    if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(switchState, mappedKey);
     } else if (mappedKey.rawKey == KEY_MOUSE_BTN_L
                || mappedKey.rawKey == KEY_MOUSE_BTN_M
                || mappedKey.rawKey == KEY_MOUSE_BTN_R) {
         if (key_toggled_on (switchState)) {
             MouseWrapper.press_button(
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
-
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  KEY_MOUSE_BUTTON_LEFT   : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  KEY_MOUSE_BUTTON_MIDDLE : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  KEY_MOUSE_BUTTON_RIGHT  : 0x00) );
         } else if (key_toggled_off(switchState)) {
             MouseWrapper.release_button(
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  MOUSE_BUTTON_LEFT   : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  MOUSE_BUTTON_MIDDLE : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  MOUSE_BUTTON_RIGHT  : 0x00) );
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  KEY_MOUSE_BUTTON_LEFT   : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  KEY_MOUSE_BUTTON_MIDDLE : 0x00) |
+                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  KEY_MOUSE_BUTTON_RIGHT  : 0x00) );
         }
     }
 
 
     else if (key_toggled_on(switchState)) {
-        if (mappedKey.rawKey & MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
+        if (mappedKey.rawKey & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
             // we don't pass in the left and up values because those are the
             // default, "no-op" conditionals
-            MouseWrapper.warp( (mappedKey.rawKey & MOUSE_WARP_END ? WARP_END : 0x00) |
-                               (mappedKey.rawKey & MOUSE_DOWN ? WARP_DOWN : 0x00) |
-                               (mappedKey.rawKey & MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
+            MouseWrapper.warp( (mappedKey.rawKey & KEY_MOUSE_WARP_END ? WARP_END : 0x00) |
+                               (mappedKey.rawKey & KEY_MOUSE_DOWN ? WARP_DOWN : 0x00) |
+                               (mappedKey.rawKey & KEY_MOUSE_RIGHT ? WARP_RIGHT : 0x00) );
         } else if (mappedKey.flags & IS_CONSUMER) {
             ConsumerControl.press(mappedKey.rawKey);
         } else if (mappedKey.flags & IS_INTERNAL) {
@@ -102,16 +101,16 @@ void handle_keymap_key_event(byte switchState, Key keymapEntry) {
 
 void handle_mouse_key_event(byte switchState, Key mappedKey) {
     if (key_is_pressed(switchState)) {
-        if (mappedKey.rawKey & MOUSE_UP) {
+        if (mappedKey.rawKey & KEY_MOUSE_UP) {
             MouseWrapper.move(0,-1);
         }
-        if (mappedKey.rawKey & MOUSE_DOWN) {
+        if (mappedKey.rawKey & KEY_MOUSE_DOWN) {
             MouseWrapper.move(0,1);
         }
-        if (mappedKey.rawKey & MOUSE_LEFT) {
+        if (mappedKey.rawKey & KEY_MOUSE_LEFT) {
             MouseWrapper.move(-1,0);
         }
-        if (mappedKey.rawKey & MOUSE_RIGHT) {
+        if (mappedKey.rawKey & KEY_MOUSE_RIGHT) {
             MouseWrapper.move(1,0);
         }
     }
