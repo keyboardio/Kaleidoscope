@@ -35,7 +35,7 @@ void LEDControl_::initialize_led_mode(uint8_t mode) {
 
 void LEDControl_::set_all_leds_to(cRGB color) {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
-        KeyboardHardware.led_set_crgb_at(i, color);
+        led_set_crgb_at(i, color);
     }
 }
 
@@ -94,18 +94,18 @@ void LEDControl_::update(uint8_t current_keymap) {
 
 void LEDControl_::effect_numlock_update() {
     for (uint8_t i = 0; i < 44; i++) {
-        KeyboardHardware.led_set_crgb_at(i, led_off);
+        led_set_crgb_at(i, led_off);
     }
     for (uint8_t i = 44; i < LED_COUNT; i++) {
-        KeyboardHardware.led_set_crgb_at(i, led_bright_red);
+        led_set_crgb_at(i, led_bright_red);
     }
     led_compute_breath();
-    KeyboardHardware.led_set_crgb_at(60, led_breathe); // make numlock breathe
-    KeyboardHardware.led_sync();
+    led_set_crgb_at(60, led_breathe); // make numlock breathe
+    led_sync();
 }
 
 void LEDControl_::effect_steady_update() {
-    KeyboardHardware.led_sync();
+    led_sync();
 }
 
 void LEDControl_::led_compute_breath() {
@@ -126,7 +126,7 @@ void LEDControl_::led_compute_breath() {
 void LEDControl_::effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
-    KeyboardHardware.led_sync();
+    led_sync();
 }
 
 void LEDControl_::effect_chase_update() {
@@ -134,16 +134,16 @@ void LEDControl_::effect_chase_update() {
         return;
     }
     current_chase_counter = 0;
-    KeyboardHardware.led_set_crgb_at(pos - chase_pixels, led_off);
-    KeyboardHardware.led_set_crgb_at(pos, led_dark_blue);
+    led_set_crgb_at(pos - chase_pixels, led_off);
+    led_set_crgb_at(pos, led_dark_blue);
 
     pos += chase_pixels;
     if (pos > LED_COUNT || pos < 0) {
         chase_pixels = -chase_pixels;
         pos += chase_pixels;
     }
-    KeyboardHardware.led_set_crgb_at(pos, led_blue);
-    KeyboardHardware.led_sync();
+    led_set_crgb_at(pos, led_blue);
+    led_sync();
 }
 
 void LEDControl_::effect_rainbow_update() {
@@ -158,7 +158,7 @@ void LEDControl_::effect_rainbow_update() {
         rainbow_hue %= 360;
     }
     set_all_leds_to(rainbow);
-    KeyboardHardware.led_sync();
+    led_sync();
 }
 
 void LEDControl_::effect_rainbow_wave_update() {
@@ -174,13 +174,13 @@ void LEDControl_::effect_rainbow_wave_update() {
             key_hue %= 360;
         }
         rainbow.SetHSV(key_hue, rainbow_saturation, rainbow_value);
-        KeyboardHardware.led_set_crgb_at(i,rainbow);
+        led_set_crgb_at(i,rainbow);
     }
     rainbow_hue += rainbow_wave_steps;
     if (rainbow_hue >= 360)          {
         rainbow_hue %= 360;
     }
-    KeyboardHardware.led_sync();
+    led_sync();
 }
 
 void LEDControl_::boot_animation() {
@@ -206,11 +206,11 @@ void LEDControl_::boot_animation() {
 }
 
 void LEDControl_::type_letter(uint8_t letter) {
-    KeyboardHardware.led_set_crgb_at(letter,led_bright_red);
-    KeyboardHardware.led_sync();
+    led_set_crgb_at(letter,led_bright_red);
+    led_sync();
     delay(250);
-    KeyboardHardware.led_set_crgb_at(letter,led_off);
-    KeyboardHardware.led_sync();
+    led_set_crgb_at(letter,led_off);
+    led_sync();
     delay(10);
 
 }
