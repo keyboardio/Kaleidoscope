@@ -34,6 +34,33 @@ void Model01Beta_::led_sync() {
     LED.sync();
 }
 
+
+
+
+void Model01Beta_::scan_matrix() {
+    //scan the Keyboard matrix looking for connections
+    for (byte row = 0; row < LEFT_ROWS; row++) {
+        KeyboardHardware.scan_row(row);
+
+        for (byte col = 0; col < LEFT_COLS; col++) {
+            KeyboardHardware.scan_left_col(row,col,&matrixState[row][col]);
+            handle_key_event(row, col);
+
+            if (KeyboardHardware.right_hand_connected()) {
+                KeyboardHardware.scan_right_col(row,col,&matrixState[row][(COLS - 1) - col]);
+                handle_key_event(row, (COLS - 1) - col);
+            }
+        }
+        KeyboardHardware.finish_scanning_row(row);
+    }
+}
+
+
+
+
+
+
+
 void Model01Beta_::scan_row(byte row) {
     if (left_initted) {
         leftsx1509.updatePinState(left_rowpins[row], LOW);

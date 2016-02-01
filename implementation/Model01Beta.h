@@ -1,8 +1,10 @@
 #pragma once
 
+#include "../keymaps.h"
 #include "../generated/keymaps.h"
 #include "WS2812.h"
 #include "KeyboardioSX1509.h"
+#include "../key_events.h"
 
 #define USE_HSV_CURVE 1
 
@@ -25,11 +27,6 @@ static uint8_t right_rowpins[]= {8,9,10,11};
 
 
 
-#define COLS 16
-#define ROWS 4
-#define KEYMAPS 3
-#define NUMPAD_KEYMAP 2
-#define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
 
 class Model01Beta_ {
@@ -40,13 +37,9 @@ class Model01Beta_ {
     void led_set_crgb_at(uint8_t i, cRGB crgb);
     cRGB get_key_color(byte row, byte col);
 
+    void scan_matrix(void);
 
-    void scan_row(byte row);
-    void finish_scanning_row(byte row);
-    void scan_right_col(byte row, byte col, uint8_t *state);
-    void scan_left_col(byte row, byte col, uint8_t *state);
     void pins_setup();
-    boolean right_hand_connected(void);
     void leds_setup();
 
 
@@ -57,6 +50,11 @@ class Model01Beta_ {
     int right_initted = 0;
     int left_initted = 0;
 
+    boolean right_hand_connected(void);
+    void scan_row(byte row);
+    void finish_scanning_row(byte row);
+    void scan_right_col(byte row, byte col, uint8_t *state);
+    void scan_left_col(byte row, byte col, uint8_t *state);
     void make_input(sx1509Class sx1509, uint8_t pin) ;
     void make_output(sx1509Class sx1509, uint8_t pin) ;
     int setup_sx1509 (sx1509Class sx1509, uint8_t colpins[], uint8_t rowpins[]);

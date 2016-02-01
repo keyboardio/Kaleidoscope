@@ -32,7 +32,6 @@ extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
 
-void scan_matrix();
 
 #ifndef VERSION
 #define VERSION "locally-built"
