@@ -44,10 +44,10 @@ void loop() {
   if (!digitalRead(pinButtonCenter)) {
     digitalWrite(pinLed, HIGH);
 
-    // Move to coordinate (16bit unsigned, 0 - 65535)
+    // Move to coordinate (16bit signed, -32768 - 32767)
     // Moving to the same position twice will not work!
     // X and Y start in the upper left corner.
-    AbsoluteMouse.moveTo(32767,32767);
+    AbsoluteMouse.moveTo(0, 0);
 
     // Simple debounce
     delay(300);
@@ -58,7 +58,7 @@ void loop() {
     digitalWrite(pinLed, HIGH);
 
     // Move relative to last coordinate
-    AbsoluteMouse.move(33767, 33767);
+    AbsoluteMouse.move(1000, 1000);
 
     // Simple debounce
     delay(300);
