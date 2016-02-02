@@ -4,7 +4,6 @@
 
 
 #include "../keymaps.h"
-#include "../generated/keymaps.h"
 #include "../key_events.h"
 
 

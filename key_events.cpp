@@ -1,6 +1,6 @@
 #include "key_events.h"
 
-void handle_synthetic_key_event(byte switchState, Key mappedKey) {
+void handle_synthetic_key_event(uint8_t switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(switchState, mappedKey);
     } else if (! (mappedKey.flags & IS_INTERNAL)
@@ -44,19 +44,18 @@ void handle_synthetic_key_event(byte switchState, Key mappedKey) {
 
     }
 }
-void handle_key_event(byte row, byte col) {
+void handle_key_event(byte row, byte col, uint8_t *switchState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-    byte switchState = matrixState[row][col];
     Key mappedKey = keymaps[temporary_keymap][row][col];
 
     if (keymaps[primary_keymap][row][col].flags & SWITCH_TO_KEYMAP) {
-        handle_keymap_key_event(switchState, keymaps[primary_keymap][row][col]);
+        handle_keymap_key_event(*switchState, keymaps[primary_keymap][row][col]);
     }
     if (mappedKey.flags & SYNTHETIC_KEY) {
-        handle_synthetic_key_event(switchState, mappedKey);
-    } else if (key_is_pressed(switchState)) {
+        handle_synthetic_key_event(*switchState, mappedKey);
+    } else if (key_is_pressed(*switchState)) {
         press_key(mappedKey);
     }
 }
@@ -78,7 +77,7 @@ void press_key(Key mappedKey) {
 }
 
 
-void handle_keymap_key_event(byte switchState, Key keymapEntry) {
+void handle_keymap_key_event(uint8_t switchState, Key keymapEntry) {
     if (keymapEntry.flags & MOMENTARY ) {
         if (key_toggled_on(switchState)) {
             if ( keymapEntry.rawKey == KEYMAP_NEXT) {
@@ -100,7 +99,7 @@ void handle_keymap_key_event(byte switchState, Key keymapEntry) {
     }
 }
 
-void handle_mouse_key_event(byte switchState, Key mappedKey) {
+void handle_mouse_key_event(uint8_t switchState, Key mappedKey) {
     if (key_is_pressed(switchState)) {
         if (mappedKey.rawKey & KEY_MOUSE_UP) {
             MouseWrapper.move(0,-1);

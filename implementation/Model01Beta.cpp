@@ -42,11 +42,11 @@ void Model01Beta::scan_matrix() {
 
         for (byte col = 0; col < LEFT_COLS; col++) {
             scan_left_col(row,col,&matrixState[row][col]);
-            handle_key_event(row, col);
+            handle_key_event(row, col, &matrixState[row][col]);
 
             if (right_hand_connected()) {
                 scan_right_col(row,col,&matrixState[row][(COLS - 1) - col]);
-                handle_key_event(row, (COLS - 1) - col);
+                handle_key_event(row, (COLS - 1) - col, &matrixState[row][(COLS - 1) - col]);
             }
         }
         finish_scanning_row(row);
