@@ -30,7 +30,7 @@ class LEDControl_ {
     uint8_t last_led_mode = 0;
     uint8_t stored_led_mode = 0;
     uint8_t pos = 0;
-
+    void hsv_to_rgb(cRGB *cRGB, uint16_t h, uint16_t s, uint16_t v);
 
 
 
