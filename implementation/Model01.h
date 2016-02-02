@@ -1,5 +1,8 @@
 #pragma once
 
+#define HARDWARE_IMPLEMENTATION Model01
+
+
 #include "../keymaps.h"
 #include "../generated/keymaps.h"
 #include "../key_events.h"
@@ -13,9 +16,9 @@
 
 
 
-class Model01_ {
+class Model01 {
   public:
-    Model01_(void);
+    Model01(void);
     void led_sync(void);
     void led_set_crgb_at(byte row, byte col, cRGB color);
     void led_set_crgb_at(uint8_t i, cRGB crgb);

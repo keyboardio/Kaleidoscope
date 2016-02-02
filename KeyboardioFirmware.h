@@ -25,6 +25,7 @@ void setup();
 #include "generated/keymaps.h"
 #include "key_events.h"
 
+extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 extern uint8_t matrixState[ROWS][COLS];
 extern const Key keymaps[KEYMAPS][ROWS][COLS];

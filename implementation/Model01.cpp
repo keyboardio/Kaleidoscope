@@ -2,28 +2,28 @@
 #include "WS2812.h"
 #include "Model01.h"
 
-Model01_::Model01_(void) {
+Model01::Model01(void) {
 
 }
 
-void Model01_::setup(void) {
+void Model01::setup(void) {
 }
 
 
-void Model01_::led_set_crgb_at(byte row, byte col, cRGB color) {
+void Model01::led_set_crgb_at(byte row, byte col, cRGB color) {
 }
 
-cRGB Model01_::get_key_color(byte row, byte col) {
+cRGB Model01::get_key_color(byte row, byte col) {
 }
 
-void Model01_::led_set_crgb_at(uint8_t i, cRGB crgb) {
+void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
 }
 
-void Model01_::led_sync() {
+void Model01::led_sync() {
 }
 
 
-void Model01_::scan_matrix() {
+void Model01::scan_matrix() {
     //scan the Keyboard matrix looking for connections
     for (byte row = 0; row < LEFT_ROWS; row++) {
 

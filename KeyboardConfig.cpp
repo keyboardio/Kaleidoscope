@@ -1,6 +1,6 @@
 #include "KeyboardConfig.h"
 
-Model01Beta_ KeyboardHardware;
+HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 // These global proxy functions are a cheap hack to avoid 
  void led_set_crgb_at(uint8_t i, cRGB crgb) {

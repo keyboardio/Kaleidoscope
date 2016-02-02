@@ -7,6 +7,10 @@
 #include "KeyboardioSX1509.h"
 #include "../key_events.h"
 
+
+
+#define HARDWARE_IMPLEMENTATION Model01Beta
+
 #define USE_HSV_CURVE 1
 
 // SX1509 I2C address (10)
@@ -19,11 +23,10 @@
 #define LEFT_COLS 8
 #define LEFT_ROWS 4
 
-//class Model01Beta_;
 
-class Model01Beta_ {
+class Model01Beta {
   public:
-    Model01Beta_(void);
+    Model01Beta(void);
     void led_sync(void);
     void led_set_crgb_at(uint8_t i, cRGB crgb);
     cRGB get_key_color(byte row, byte col);
@@ -136,4 +139,4 @@ class Model01Beta_ {
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
 
-extern Model01Beta_ KeyboardHardware;
+
