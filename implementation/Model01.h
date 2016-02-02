@@ -1,17 +1,15 @@
 #pragma once
 
-#define HARDWARE_IMPLEMENTATION Model01
+#include <Arduino.h>
 
+#define HARDWARE_IMPLEMENTATION Model01
+#include "KeyboardioScanner.h"
+#include <Wire.h>
 
 #include "../keymaps.h"
 #include "../key_events.h"
 
 
-
-#define RIGHT_COLS 8
-#define RIGHT_ROWS 4
-#define LEFT_COLS 8
-#define LEFT_ROWS 4
 
 
 
@@ -29,6 +27,9 @@ class Model01 {
 
 
   private:
+   static  KeyboardioScanner leftHand;
+   static KeyboardioScanner rightHand;
+
     static constexpr uint8_t key_led_map[4][16] = {
         {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
         {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
