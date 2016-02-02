@@ -7,6 +7,10 @@
 #include "KeyboardioSX1509.h"
 #include "../key_events.h"
 
+
+
+#define HARDWARE_IMPLEMENTATION Model01Beta
+
 #define USE_HSV_CURVE 1
 
 // SX1509 I2C address (10)
