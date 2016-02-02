@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include "../keymaps.h"
-#include "../generated/keymaps.h"
 #include "WS2812.h"
 #include "KeyboardioSX1509.h"
 #include "../key_events.h"
@@ -41,7 +40,7 @@ class Model01Beta {
     static WS2812 LED;
     int right_initted = 0;
     int left_initted = 0;
-
+    uint8_t matrixState[ROWS][COLS] = {{0}};
     uint8_t left_colpins[LEFT_COLS]= {7,6,5,4,3,2,1,0};
     uint8_t left_rowpins[LEFT_ROWS]= {8,9,10,11};
 

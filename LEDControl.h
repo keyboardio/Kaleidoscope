@@ -32,16 +32,13 @@ class LEDControl_ {
     uint8_t pos = 0;
     void hsv_to_rgb(cRGB *cRGB, uint16_t h, uint16_t s, uint16_t v);
 
-
-
-    cRGB led_off = { .r = 0, .g = 0, .b = 0 };
-    cRGB led_steady = { .r = 0, .g = 255, .b = 0};
-    cRGB led_blue = { .r = 0, .g = 0, .b = 255 };
-    cRGB led_dark_blue = { .r = 0, .g = 0, .b = 127 };
-    cRGB led_bright_red = { .r = 255, .g = 0, .b = 0};
+    cRGB led_off;
+    cRGB led_steady;
+    cRGB led_blue;
+    cRGB led_dark_blue;
+    cRGB led_bright_red;
     cRGB led_breathe;
     cRGB rainbow;
-
 
     uint16_t rainbow_hue = 0;   //stores 0 to 614
 

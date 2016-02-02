@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "WS2812.h"
 #include "Model01.h"
 
 Model01::Model01(void) {
@@ -24,12 +23,13 @@ void Model01::led_sync() {
 
 
 void Model01::scan_matrix() {
+    uint8_t key_data;
     //scan the Keyboard matrix looking for connections
     for (byte row = 0; row < LEFT_ROWS; row++) {
 
         for (byte col = 0; col < LEFT_COLS; col++) {
-            handle_key_event(row, col);
-            handle_key_event(row, (COLS - 1) - col);
+            handle_key_event(row, col, &key_data);
+            handle_key_event(row, (COLS - 1) - col, &key_data);
         }
     }
 }
