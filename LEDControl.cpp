@@ -1,6 +1,23 @@
 #include "LEDControl.h"
 
+
+
 LEDControl_::LEDControl_(void) {
+     led_off.r = 0;
+     led_off.g = 0;
+     led_off.b = 0;
+     led_steady.r = 0;
+     led_steady.g = 255;
+     led_steady.b = 0;
+     led_blue.r = 0;
+     led_blue.g = 0;
+     led_blue.b = 255;
+     led_dark_blue.r = 0;
+     led_dark_blue.g = 0;
+     led_dark_blue .b = 127;
+     led_bright_red.r = 255;
+     led_bright_red.g = 0;
+     led_bright_red.b = 0;
 
 }
 
@@ -107,7 +124,7 @@ void LEDControl_::led_compute_breath() {
     }
 
 
-    led_breathe.SetHSV(200, 255, breathe_brightness);
+    hsv_to_rgb(&led_breathe,200, 255, breathe_brightness);
 }
 
 void LEDControl_::effect_breathe_update() {
