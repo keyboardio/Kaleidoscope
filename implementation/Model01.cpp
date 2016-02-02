@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "WS2812.h"
 #include "Model01.h"
 
 Model01::Model01(void) {
