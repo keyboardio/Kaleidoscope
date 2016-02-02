@@ -6,6 +6,8 @@
 #include "MouseWrapper.h"
 #include "LEDControl.h"
 #include "Storage.h"
+#include "keymaps.h"
+#include "generated/keymaps.h"
 
 extern const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;

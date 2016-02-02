@@ -7,7 +7,6 @@
 #include "KeyboardioHID.h"
 
 
-const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 

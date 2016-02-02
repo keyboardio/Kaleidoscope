@@ -1,5 +1,7 @@
 #include "key_events.h"
 
+const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
+
 void handle_synthetic_key_event(uint8_t switchState, Key mappedKey) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(switchState, mappedKey);
