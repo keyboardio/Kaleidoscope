@@ -2,7 +2,7 @@ language: c
 before_install:
   - pushd ..
   - ls -la
-  - sh -c 'if [ ! -d arduino-1.6.7 ]; then wget -v http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xvf arduino-1.6.7-linux64.tar.xz; fi'
+  - sh -c 'if [ ! -d arduino-1.6.7/arduino-builder ]; then rm -rf arduino-1.6.7 && wget -v http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xvf arduino-1.6.7-linux64.tar.xz; fi'
   - popd
 install:
   - mkdir ../libs
