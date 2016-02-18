@@ -1,8 +1,7 @@
 language: c
 before_install:
-  - pushd ..
-  - wget http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz
-  - tar xf arduino-1.6.7-linux64.tar.xz
+  - pushd $HOME
+  - if [ ! -d arduino-1.6.7 ]; then wget http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xf arduino-1.6.7-linux64.tar.xz; fi
   - popd
 install:
   - mkdir ../libs
@@ -13,11 +12,12 @@ install:
   - git clone https://github.com/keyboardio/KeyboardioSX1509.git
   - popd
 script:
-  - make compile size ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
+  - make compile size ARDUINO_PATH=$HOME/arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
 notifications:
   email:
     on_success: change
     on_failure: change
 cache:
-  directories:
-    ../arduino-1.6.7
+  - ccache
+  - directories:
+    - $HOME/arduino-1.6.7
