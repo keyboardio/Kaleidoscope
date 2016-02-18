@@ -1,7 +1,7 @@
 language: c
 before_install:
   - pushd ..
-  - if [ ! -d arduino-1.6.7 ]; then wget -v http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xvf arduino-1.6.7-linux64.tar.xz; fi
+  - sh -c 'if [ ! -d arduino-1.6.7 ]; then wget -v http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xvf arduino-1.6.7-linux64.tar.xz; fi'
   - popd
 install:
   - mkdir ../libs
@@ -18,6 +18,6 @@ notifications:
     on_success: change
     on_failure: change
 cache:
-  - ccache
-  - directories:
+  ccache: true
+  directories:
     - ../arduino-1.6.7
