@@ -1,18 +1,19 @@
 language: c
 before_install:
-  - pushd ..
-  - sh -c 'if [ ! -d arduino-1.6.7/arduino-builder ]; then rm -rf arduino-1.6.7 && wget  http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz && tar xf arduino-1.6.7-linux64.tar.xz; fi'
-  - popd
+- pushd ..
+- sh -c 'if [ ! -d arduino-1.6.7/arduino-builder ]; then rm -rf arduino-1.6.7 && wget  http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz
+  && tar xf arduino-1.6.7-linux64.tar.xz; fi'
+- popd
 install:
-  - mkdir ../libs
-  - pushd ../libs
-  - git clone https://github.com/keyboardio/KeyboardioScanner.git
-  - git clone https://github.com/keyboardio/KeyboardioWS2812.git
-  - git clone https://github.com/keyboardio/HID.git
-  - git clone https://github.com/keyboardio/KeyboardioSX1509.git
-  - popd
+- mkdir ../libs
+- pushd ../libs
+- git clone https://github.com/keyboardio/KeyboardioScanner.git
+- git clone https://github.com/keyboardio/KeyboardioWS2812.git
+- git clone https://github.com/keyboardio/HID.git
+- git clone https://github.com/keyboardio/KeyboardioSX1509.git
+- popd
 script:
-  - make compile size ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
+- make compile size ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
 notifications:
   email:
     on_success: change
