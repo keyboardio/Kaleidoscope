@@ -19,5 +19,3 @@ notifications:
     on_failure: change
 cache:
   ccache: true
-  directories:
-    - ../arduino-1.6.7
