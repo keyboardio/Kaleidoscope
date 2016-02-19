@@ -15,6 +15,13 @@ install:
 script:
 - make compile size ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
 notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#keyboardio"
+    use_notice: true
+    skip_join: true
+    template:
+      - "%{repository_name}/%{branch} %{commit} by %{author}: %{commit_subject} %{build_url} %{message}" 
   email:
     on_success: change
     on_failure: change
