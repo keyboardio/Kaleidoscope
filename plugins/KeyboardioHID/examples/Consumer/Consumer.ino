@@ -27,7 +27,7 @@ void loop() {
     digitalWrite(pinLed, HIGH);
 
     // See HID Project documentation for more Consumer keys
-    ConsumerControl.write(MEDIA_PLAY_PAUSE);
+    ConsumerControl.write(HID_CONSUMER_PLAY_SLASH_PAUSE);
 
     // Simple debounce
     delay(300);

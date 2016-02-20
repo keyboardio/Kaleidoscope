@@ -34,21 +34,21 @@ void loop() {
     // Do not press to many at once or some OS will have problems.
     // Note that the resulting pressed order might differ,
     // because all keys are pressed at the same time.
-    NKROKeyboard.press(KEY_0);
-    NKROKeyboard.press(KEY_1);
-    NKROKeyboard.press(KEY_2);
-    NKROKeyboard.press(KEY_3);
-    NKROKeyboard.press(KEY_4);
-    NKROKeyboard.press(KEY_5);
-    NKROKeyboard.press(KEY_6);
-    NKROKeyboard.press(KEY_7);
-    NKROKeyboard.press(KEY_8);
-    NKROKeyboard.press(KEY_9);
-    NKROKeyboard.sendReport();
+    Keyboard.press(KEY_0);
+    Keyboard.press(KEY_1);
+    Keyboard.press(KEY_2);
+    Keyboard.press(KEY_3);
+    Keyboard.press(KEY_4);
+    Keyboard.press(KEY_5);
+    Keyboard.press(KEY_6);
+    Keyboard.press(KEY_7);
+    Keyboard.press(KEY_8);
+    Keyboard.press(KEY_9);
+    Keyboard.sendReport();
 
     // Release all keys and hit enter
-    NKROKeyboard.releaseAll();
-    NKROKeyboard.println();
+    Keyboard.releaseAll();
+    Keyboard.println();
 
     // Simple debounce
     delay(300);

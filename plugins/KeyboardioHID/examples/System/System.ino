@@ -31,8 +31,8 @@ void loop() {
     digitalWrite(pinLed, HIGH);
 
     // Puts PC into sleep mode/shuts it down
-    SystemControl.write(SYSTEM_SLEEP);
-    //SystemControl.write(SYSTEM_POWER_DOWN);
+    SystemControl.write(HID_SYSTEM_SLEEP);
+    //SystemControl.write(HID_SYSTEM_POWER_DOWN);
 
     // Simple debounce
     delay(300);
@@ -44,7 +44,7 @@ void loop() {
 
     // Try to wake up the PC
     // This might fail on some PCs/Laptops where USB wakeup is not supported
-    SystemControl.write(SYSTEM_WAKE_UP);
+    SystemControl.write(HID_SYSTEM_WAKE_UP);
 
     // Simple debounce
     delay(300);
