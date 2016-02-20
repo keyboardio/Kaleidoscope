@@ -5,14 +5,14 @@ before_install:
 - tar xf arduino-1.6.7-linux64.tar.xz
 - popd
 script:
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Consumer/Consumer.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Gamepad/Gamepad.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Keyboard/BootKeyboard/BootKeyboard.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Keyboard/KeyboardLed/KeyboardLed.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Keyboard/NKRO/NKRO.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Mouse/AbsoluteMouse/AbsoluteMouse.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/Mouse/ImprovedMouse/ImprovedMouse.ino
-- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=. SKETCH=examples/System/System.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Consumer/Consumer.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Gamepad/Gamepad.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Keyboard/BootKeyboard/BootKeyboard.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Keyboard/KeyboardLed/KeyboardLed.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Keyboard/NKRO/NKRO.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Mouse/AbsoluteMouse/AbsoluteMouse.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/Mouse/ImprovedMouse/ImprovedMouse.ino
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=.. SKETCH=examples/System/System.ino
 
 notifications:
   irc:
