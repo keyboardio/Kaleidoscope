@@ -32,6 +32,7 @@ ${EXAMPLES_HEX}: %.hex:
 		-tools $(ARDUINO_TOOLS_PATH) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
+		-libraries $(ARDUINO_PATH)/libraries \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
 		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
