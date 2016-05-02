@@ -1,6 +1,6 @@
 #include "Model01.h"
-    KeyboardioScanner Model01::leftHand(0);
-    KeyboardioScanner Model01::rightHand(3);
+KeyboardioScanner Model01::leftHand(0);
+KeyboardioScanner Model01::rightHand(3);
 
 Model01::Model01(void) {
 

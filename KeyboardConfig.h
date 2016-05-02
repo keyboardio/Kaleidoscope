@@ -1,11 +1,11 @@
-#pragma once 
+#pragma once
 
 
 
 #include "implementation/Model01Beta.h"
 
 
-// These global proxy functions are a cheap hack to avoid 
+// These global proxy functions are a cheap hack to avoid
 // a circular dependency between the keyboard hardware class
 // and the 'userspace' LED implementation. If my C++ were stronger, there woudl
 // certainly be a better way -JV 2016-02-01

@@ -27,8 +27,8 @@ class Model01 {
 
 
   private:
-   static  KeyboardioScanner leftHand;
-   static KeyboardioScanner rightHand;
+    static  KeyboardioScanner leftHand;
+    static KeyboardioScanner rightHand;
 
     static constexpr uint8_t key_led_map[4][16] = {
         {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},

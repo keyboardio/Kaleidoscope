@@ -3,21 +3,21 @@
 
 
 LEDControl_::LEDControl_(void) {
-     led_off.r = 0;
-     led_off.g = 0;
-     led_off.b = 0;
-     led_steady.r = 0;
-     led_steady.g = 255;
-     led_steady.b = 0;
-     led_blue.r = 0;
-     led_blue.g = 0;
-     led_blue.b = 255;
-     led_dark_blue.r = 0;
-     led_dark_blue.g = 0;
-     led_dark_blue .b = 127;
-     led_bright_red.r = 255;
-     led_bright_red.g = 0;
-     led_bright_red.b = 0;
+    led_off.r = 0;
+    led_off.g = 0;
+    led_off.b = 0;
+    led_steady.r = 0;
+    led_steady.g = 255;
+    led_steady.b = 0;
+    led_blue.r = 0;
+    led_blue.g = 0;
+    led_blue.b = 255;
+    led_dark_blue.r = 0;
+    led_dark_blue.g = 0;
+    led_dark_blue .b = 127;
+    led_bright_red.r = 255;
+    led_bright_red.g = 0;
+    led_bright_red.b = 0;
 
 }
 
@@ -222,42 +222,60 @@ void LEDControl_::type_letter(uint8_t letter) {
 
 // From http://web.mit.edu/storborg/Public/hsvtorgb.c - talk to Scott about licensing
 void LEDControl_::hsv_to_rgb(cRGB *cRGB, uint16_t h, uint16_t s, uint16_t v)  {
-/* HSV to RGB conversion function with only integer
- * math */
+    /* HSV to RGB conversion function with only integer
+     * math */
     uint16_t region, fpart, p, q, t;
-    
+
     if(s == 0) {
         /* color is grayscale */
         cRGB->r = cRGB->g = cRGB->b = v;
         return;
     }
-    
+
     /* make hue 0-5 */
     region = h / 43;
     /* find remainder part, make it from 0-255 */
     fpart = (h - (region * 43)) * 6;
-    
+
     /* calculate temp vars, doing integer multiplication */
     p = (v * (255 - s)) >> 8;
     q = (v * (255 - ((s * fpart) >> 8))) >> 8;
     t = (v * (255 - ((s * (255 - fpart)) >> 8))) >> 8;
-        
+
     /* assign temp vars based on color cone region */
     switch(region) {
-        case 0:
-            cRGB->r = v; cRGB->g = t; cRGB->b = p; break;
-        case 1:
-            cRGB->r = q; cRGB->g = v; cRGB->b = p; break;
-        case 2:
-            cRGB->r = p; cRGB->g = v; cRGB->b = t; break;
-        case 3:
-            cRGB->r = p; cRGB->g = q; cRGB->b = v; break;
-        case 4:
-            cRGB->r = t; cRGB->g = p; cRGB->b = v; break;
-        default:
-            cRGB->r = v; cRGB->g = p; cRGB->b = q; break;
+    case 0:
+        cRGB->r = v;
+        cRGB->g = t;
+        cRGB->b = p;
+        break;
+    case 1:
+        cRGB->r = q;
+        cRGB->g = v;
+        cRGB->b = p;
+        break;
+    case 2:
+        cRGB->r = p;
+        cRGB->g = v;
+        cRGB->b = t;
+        break;
+    case 3:
+        cRGB->r = p;
+        cRGB->g = q;
+        cRGB->b = v;
+        break;
+    case 4:
+        cRGB->r = t;
+        cRGB->g = p;
+        cRGB->b = v;
+        break;
+    default:
+        cRGB->r = v;
+        cRGB->g = p;
+        cRGB->b = q;
+        break;
     }
-    
+
     return;
 }
 
