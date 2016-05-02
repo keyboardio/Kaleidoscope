@@ -2,7 +2,7 @@
 
 
 
-#include "implementation/Model01Beta.h"
+#include "implementation/Model01.h"
 
 
 // These global proxy functions are a cheap hack to avoid
