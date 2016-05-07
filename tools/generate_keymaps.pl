@@ -18,7 +18,7 @@ for my $line (@data) {
 	push @map, join(', ', map{ 'Key_'.lookup($_).'' } @keys);
 }
 
-print "#define KEYMAP_$name { /* Generated keymap for $name */ ";
+print "#define KEYMAP_$name { /* Generated keymap for $name */ \n";
 for my $line (@map) {
 	print "\t{". $line ."},\\\n";
 }
