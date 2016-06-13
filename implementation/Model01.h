@@ -24,11 +24,16 @@ class Model01 {
 
     void scan_matrix(void);
     void setup();
-
+    void enable_high_power_leds(void);
+    void enable_scanner_power(void);
 
   private:
-    static  KeyboardioScanner leftHand;
+    static KeyboardioScanner leftHand;
     static KeyboardioScanner rightHand;
+    keydata_t leftHandState;
+    keydata_t rightHandState;
+    keydata_t previousLeftHandState;
+    keydata_t previousRightHandState;
 
     static constexpr uint8_t key_led_map[4][16] = {
         {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
