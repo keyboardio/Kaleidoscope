@@ -24,9 +24,9 @@ void setup() {
 
 void loop() {
     KeyboardHardware.scan_matrix();
+    LEDControl.update(temporary_keymap);
     Keyboard.sendReport();
     Keyboard.releaseAll();
-    LEDControl.update(temporary_keymap);
 }
 
 
