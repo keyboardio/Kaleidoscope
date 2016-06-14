@@ -95,10 +95,7 @@ void Model01::scan_matrix() {
                              bitRead(rightHandState.all, keynum),
                              bitRead(previousRightHandState.all, keynum)
                             );
-            }
         }
-
-
-
+    }
     //scan the Keyboard matrix looking for connections
 }
