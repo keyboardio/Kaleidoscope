@@ -48,22 +48,14 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
 }
 
 void Model01::led_sync() {
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   rightHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
-   leftHand.sendLEDData();
+    rightHand.sendLEDData();
+    rightHand.sendLEDData();
+    rightHand.sendLEDData();
+    rightHand.sendLEDData();
+    leftHand.sendLEDData();
+    leftHand.sendLEDData();
+    leftHand.sendLEDData();
+    leftHand.sendLEDData();
 
 }
 
