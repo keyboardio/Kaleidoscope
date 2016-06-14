@@ -86,13 +86,11 @@ void Model01::scan_matrix() {
 
             uint8_t keynum = (col*4+row);
 
-            debug_key_event(leftHandState, previousLeftHandState,keynum, row, col);
             handle_key_event(row, col,
                              bitRead(leftHandState.all, keynum),
                              bitRead(previousLeftHandState.all, keynum)
                             );
 
-            debug_key_event(rightHandState, previousRightHandState,keynum, row,col);
             handle_key_event(row, (8+ col),
                              bitRead(rightHandState.all, keynum),
                              bitRead(previousRightHandState.all, keynum)
