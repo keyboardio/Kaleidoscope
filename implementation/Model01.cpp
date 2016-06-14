@@ -39,10 +39,10 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
       leftHand.ledData.leds[i] = crgb;
       //    controller2.ledData.leds[i] = color;
 
-    
-  } else {
-    rightHand.ledData.leds[i-32] = crgb;
-  }
+
+    } else {
+        rightHand.ledData.leds[i-32] = crgb;
+    }
 
 
 }
@@ -68,19 +68,19 @@ void Model01::led_sync() {
 }
 
 void debug_key_event(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
-            if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum )) {
-            Serial.print("Looking at row ");
-            Serial.print(row);
-            Serial.print(", col ");
-            Serial.print(col);
-            Serial.print(" key # ");
-            Serial.print(keynum);
-            Serial.print(" ");
-            Serial.print(bitRead(previousState.all, keynum));
-            Serial.print(" -> ");
-            Serial.print(bitRead(state.all, keynum ));
-            Serial.println();
-            }
+    if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum )) {
+        Serial.print("Looking at row ");
+        Serial.print(row);
+        Serial.print(", col ");
+        Serial.print(col);
+        Serial.print(" key # ");
+        Serial.print(keynum);
+        Serial.print(" ");
+        Serial.print(bitRead(previousState.all, keynum));
+        Serial.print(" -> ");
+        Serial.print(bitRead(state.all, keynum ));
+        Serial.println();
+    }
 }
 void Model01::scan_matrix() {
     previousLeftHandState = leftHandState;
