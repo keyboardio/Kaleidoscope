@@ -26,7 +26,8 @@ void Model01::setup(void) {
     // boot up, to make it easier to rescue things
     // in case of power draw issues.
     enable_high_power_leds();
-
+    leftHandState.all = 0;
+    rightHandState.all = 0;
 
     Wire.begin();
     TWBR=12;
