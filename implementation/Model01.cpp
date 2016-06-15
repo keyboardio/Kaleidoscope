@@ -37,8 +37,11 @@ void Model01::setup(void) {
 void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
     if(i<32) {
         leftHand.ledData.leds[i] = crgb;
-    } else {
+    } else if (i<64) {
         rightHand.ledData.leds[i-32] = crgb;
+    } else {
+        // TODO how do we want to handle debugging assertions about crazy user
+        // code that would overwrite other memory?
     }
 }
 
