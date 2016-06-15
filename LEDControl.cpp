@@ -14,10 +14,13 @@ LEDControl_::LEDControl_(void) {
     led_blue.b = 255;
     led_dark_blue.r = 0;
     led_dark_blue.g = 0;
-    led_dark_blue .b = 127;
-    led_bright_red.r = 255;
-    led_bright_red.g = 0;
-    led_bright_red.b = 0;
+    led_dark_blue.b = 127;
+    led_red.r = 255;
+    led_red.g = 0;
+    led_red.b = 0;
+    led_dark_red.r = 127;
+    led_dark_red.g = 0;
+    led_dark_red.b = 0;
 
 }
 
@@ -101,7 +104,7 @@ void LEDControl_::effect_numlock_update() {
         led_set_crgb_at(i, led_off);
     }
     for (uint8_t i = 44; i < LED_COUNT; i++) {
-        led_set_crgb_at(i, led_bright_red);
+        led_set_crgb_at(i, led_red);
     }
     led_compute_breath();
     led_set_crgb_at(60, led_breathe); // make numlock breathe
@@ -138,15 +141,15 @@ void LEDControl_::effect_chase_update() {
         return;
     }
     current_chase_counter = 0;
-    led_set_crgb_at(pos - chase_pixels, led_off);
-    led_set_crgb_at(pos, led_dark_blue);
+    led_set_crgb_at(pos - (chase_sign* chase_pixels), led_off);
+    led_set_crgb_at(pos, led_off);
 
-    pos += chase_pixels;
-    if (pos > LED_COUNT || pos < 0) {
-        chase_pixels = -chase_pixels;
-        pos += chase_pixels;
+    pos += chase_sign;
+    if (pos >= LED_COUNT || pos <= 0) {
+        chase_sign = -chase_sign;
     }
     led_set_crgb_at(pos, led_blue);
+    led_set_crgb_at(pos - (chase_sign * chase_pixels), led_red);
     led_sync();
 }
 
@@ -210,7 +213,7 @@ void LEDControl_::boot_animation() {
 }
 
 void LEDControl_::type_letter(uint8_t letter) {
-    led_set_crgb_at(letter,led_bright_red);
+    led_set_crgb_at(letter,led_red);
     led_sync();
     delay(250);
     led_set_crgb_at(letter,led_off);
