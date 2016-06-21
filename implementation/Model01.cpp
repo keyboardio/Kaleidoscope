@@ -45,6 +45,14 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
     }
 }
 
+cRGB Model01::led_get_crgb_at(uint8_t i) {
+    if(i<32) {
+        return leftHand.ledData.leds[i];
+    } else if (i<64) {
+        return rightHand.ledData.leds[i-32] ;
+    }
+}
+
 void Model01::led_sync() {
     rightHand.sendLEDData();
     rightHand.sendLEDData();

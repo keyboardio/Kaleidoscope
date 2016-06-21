@@ -20,6 +20,7 @@ class Model01 {
     void led_sync(void);
     void led_set_crgb_at(byte row, byte col, cRGB color);
     void led_set_crgb_at(uint8_t i, cRGB crgb);
+    cRGB led_get_crgb_at(uint8_t i);
     cRGB get_key_color(byte row, byte col);
 
     void scan_matrix(void);
