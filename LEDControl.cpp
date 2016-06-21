@@ -94,6 +94,7 @@ void LEDControl_::update(uint8_t current_keymap) {
 
     }
 
+    led_sync();
     last_led_mode = led_mode;
 }
 
@@ -108,11 +109,9 @@ void LEDControl_::effect_numlock_update() {
     }
     led_compute_breath();
     led_set_crgb_at(60, led_breathe); // make numlock breathe
-    led_sync();
 }
 
 void LEDControl_::effect_steady_update() {
-    led_sync();
 }
 
 void LEDControl_::led_compute_breath() {
@@ -133,7 +132,6 @@ void LEDControl_::led_compute_breath() {
 void LEDControl_::effect_breathe_update() {
     led_compute_breath();
     set_all_leds_to(led_breathe);
-    led_sync();
 }
 
 void LEDControl_::effect_chase_update() {
@@ -150,7 +148,6 @@ void LEDControl_::effect_chase_update() {
     }
     led_set_crgb_at(pos, led_blue);
     led_set_crgb_at(pos - (chase_sign * chase_pixels), led_red);
-    led_sync();
 }
 
 void LEDControl_::effect_rainbow_update() {
@@ -165,7 +162,6 @@ void LEDControl_::effect_rainbow_update() {
         rainbow_hue %= 255;
     }
     set_all_leds_to(rainbow);
-    led_sync();
 }
 
 void LEDControl_::effect_rainbow_wave_update() {
@@ -187,7 +183,6 @@ void LEDControl_::effect_rainbow_wave_update() {
     if (rainbow_hue >= 255)          {
         rainbow_hue %= 255;
     }
-    led_sync();
 }
 
 void LEDControl_::boot_animation() {
