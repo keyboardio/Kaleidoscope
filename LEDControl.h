@@ -36,7 +36,8 @@ class LEDControl_ {
     cRGB led_steady;
     cRGB led_blue;
     cRGB led_dark_blue;
-    cRGB led_bright_red;
+    cRGB led_red;
+    cRGB led_dark_red;
     cRGB led_breathe;
     cRGB rainbow;
 
@@ -54,9 +55,10 @@ class LEDControl_ {
 
     uint8_t breathe_brightness = 0;    // how bright the LED is
     int8_t breathe_fadeAmount=1;    // how many points to fade the LED by (can be negative)
-    int8_t chase_pixels =1; //negative values when it's going backwar
+    int8_t chase_sign =1; //negative values when it's going backwar
+    uint8_t chase_pixels=5;
     uint8_t current_chase_counter = 0;
-    static const uint8_t chase_threshold = 6;
+    static const uint8_t chase_threshold = 20;
 // End RGB stuff
     void led_compute_breath();
     void effect_breathe_init();

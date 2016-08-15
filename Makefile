@@ -62,7 +62,7 @@ size: compile
 	$(ARDUINO_TOOLS_PATH)/avr/bin/avr-size -C --mcu=$(MCU) $(ELF_FILE_PATH)
 
 reset-device: 
-	stty -f $(DEVICE_PORT) 1200 ;
+	-stty -f $(DEVICE_PORT) 1200 ;
 
 flash: compile reset-device
 	sleep 3
