@@ -2,6 +2,18 @@ We're in the midst of refactoring our really bad prototype firmware into a more 
 
 Right now, the code is really ugly. It'll be nicer soon. Please don't judge us too harshly.
 
+
+# Getting Started
+
+Once you have a git checkout, you'll need to pull in the libraries we 
+depend on. To do that:
+
+$ cd KeyboardioFirmware
+$ git submodule init
+$ git submodule update
+$ cd source
+$ make
+
 <3 jesse
 
 [![Build
