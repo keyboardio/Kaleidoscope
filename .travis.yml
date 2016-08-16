@@ -8,7 +8,9 @@ install:
 - git submodule sync --recursive
 - git submodule update --init --recursive
 script:
-- make compile size ARDUINO_PATH=../arduino-1.6.7
+- pushd source
+- make ARDUINO_PATH=../arduino-1.6.7
+- popd
 notifications:
   irc:
     channels:
