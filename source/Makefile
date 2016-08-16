@@ -5,12 +5,12 @@ BOARD    = model01
 MCU 		= atmega32u4
 
 DEVICE_PORT :=  `ls /dev/cu.usbmodemHID??`
-DEVICE_PORT :=  `ls /dev/cu.usbmodem1A12411`
-DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem1A12411`
+DEVICE_PORT :=  `ls /dev/cu.usbmodem14?1`
+DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14?1`
 ARDUINO_LIBS = 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 
-ARDUINO_PATH=~/Applications/Arduino.app/Contents/Java/
+ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
 ARDUINO_TOOLS_PATH=$(ARDUINO_PATH)/hardware/tools
 FQBN=arduino:avr:leonardo
 BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
