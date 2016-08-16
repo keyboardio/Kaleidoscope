@@ -8,11 +8,13 @@ Right now, the code is really ugly. It'll be nicer soon. Please don't judge us t
 Once you have a git checkout, you'll need to pull in the libraries we 
 depend on. To do that:
 
+```
 $ cd KeyboardioFirmware
-$ git submodule init
-$ git submodule update
+$ git submodule sync --recursive
+$ git submodule update --init --recursive
 $ cd source
 $ make
+```
 
 <3 jesse
 
