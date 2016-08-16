@@ -5,15 +5,10 @@ before_install:
 - tar xf arduino-1.6.7-linux64.tar.xz
 - popd
 install:
-- mkdir ../libs
-- pushd ../libs
-- git clone https://github.com/keyboardio/KeyboardioScanner.git
-- git clone https://github.com/keyboardio/KeyboardioWS2812.git
-- git clone https://github.com/keyboardio/HID.git
-- git clone https://github.com/keyboardio/KeyboardioSX1509.git
-- popd
+- git submodule sync --recursive
+- git submodule update --init --recursive
 script:
-- make compile size ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../libs
+- make compile size ARDUINO_PATH=../arduino-1.6.7
 notifications:
   irc:
     channels:
