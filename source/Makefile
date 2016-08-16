@@ -14,8 +14,8 @@ ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
 ARDUINO_TOOLS_PATH=$(ARDUINO_PATH)/hardware/tools
 FQBN=arduino:avr:leonardo
 BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
-OUTPUT_PATH=./output
-ARDUINO_LOCAL_LIB_PATH=~/Documents/Arduino/libraries
+OUTPUT_PATH=../output
+ARDUINO_LOCAL_LIB_PATH=../libraries
 ARDUINO_IDE_VERSION=100607
 VERBOSE= #-verbose
 SKETCH=KeyboardioFirmware.ino
@@ -28,7 +28,8 @@ HEX_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
 ELF_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 
 
-
+# default action for `make` is `build`
+build: compile size
 
 astyle:
 		find . -type f -name \*.cpp |xargs -n 1 astyle --style=google
@@ -41,8 +42,6 @@ generate-keymaps:
 
 dirs:
 	mkdir -p $(OUTPUT_PATH)
-
-build: compile size
 
 compile: dirs
 	$(ARDUINO_PATH)/arduino-builder \
