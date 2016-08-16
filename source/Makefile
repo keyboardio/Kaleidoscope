@@ -28,7 +28,8 @@ HEX_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
 ELF_FILE_PATH=$(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 
 
-
+# default action for `make` is `build`
+build: compile size
 
 astyle:
 		find . -type f -name \*.cpp |xargs -n 1 astyle --style=google
@@ -41,8 +42,6 @@ generate-keymaps:
 
 dirs:
 	mkdir -p $(OUTPUT_PATH)
-
-build: compile size
 
 compile: dirs
 	$(ARDUINO_PATH)/arduino-builder \
