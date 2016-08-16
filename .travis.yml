@@ -9,7 +9,7 @@ install:
 - git submodule update --init --recursive
 script:
 - pushd source
-- make ARDUINO_PATH=../arduino-1.6.7
+- make ARDUINO_PATH=../../arduino-1.6.7
 - popd
 notifications:
   irc:
