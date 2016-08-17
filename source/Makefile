@@ -4,9 +4,8 @@
 BOARD    = model01
 MCU 		= atmega32u4
 
-DEVICE_PORT :=  `ls /dev/cu.usbmodemHID??`
-DEVICE_PORT :=  `ls /dev/cu.usbmodem14?1`
-DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14?1`
+DEVICE_PORT :=  `ls /dev/cu.usbmodemHID?? /dev/cu.usbmodem14*`
+DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14*`
 ARDUINO_LIBS = 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 
@@ -61,7 +60,7 @@ size: compile
 	$(ARDUINO_TOOLS_PATH)/avr/bin/avr-size -C --mcu=$(MCU) $(ELF_FILE_PATH)
 
 reset-device: 
-	-stty -f $(DEVICE_PORT) 1200 ;
+	stty -f $(DEVICE_PORT) 1200 ;
 
 flash: compile reset-device
 	sleep 3
