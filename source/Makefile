@@ -74,3 +74,13 @@ flash: compile reset-device
 		-D \
 		-Uflash:w:$(HEX_FILE_PATH):i 
 
+program:
+	$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude \
+		-C$(ARDUINO_TOOLS_PATH)/avr/etc/avrdude.conf \
+		-v \
+		-p$(MCU) \
+		-cusbtiny \
+		-D \
+		-B 1 \
+		-Uflash:w:$(HEX_FILE_PATH):i 
+
