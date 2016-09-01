@@ -49,8 +49,8 @@ class LEDControl_ {
     static const byte rainbow_saturation = 255;
     static const byte rainbow_value = 255;
 
-    static const long rainbow_wave_ticks = 10; //delays between update
-    static const long rainbow_ticks = 5; //delays between update
+    static const long rainbow_wave_ticks = 1; //delays between update
+    static const long rainbow_ticks = 0; //delays between update
     long rainbow_current_ticks=0;
 
     uint8_t breathe_brightness = 0;    // how bright the LED is
