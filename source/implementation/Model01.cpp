@@ -98,14 +98,14 @@ void Model01::scan_matrix() {
     for (byte row = 0; row < 4; row++) {
         for (byte col = 0; col < 8; col++) {
 
-            uint8_t keynum = (col*4+row);
+            uint8_t keynum = (row*8)+(col);
 
-            handle_key_event(row, col,
+            handle_key_event(row, 7-col,
                              bitRead(leftHandState.all, keynum),
                              bitRead(previousLeftHandState.all, keynum)
                             );
 
-            handle_key_event(row, (8+ col),
+            handle_key_event(row, (15- col),
                              bitRead(rightHandState.all, keynum),
                              bitRead(previousRightHandState.all, keynum)
                             );
