@@ -202,7 +202,7 @@ void LEDControl_::boot_animation() {
     type_letter(LED_0);
     type_letter(LED_PERIOD);
     type_letter(LED_9);
-    led_mode = LED_MODE_RAINBOW_WAVE;
+    led_mode = LED_MODE_RAINBOW;
 
 
 }
