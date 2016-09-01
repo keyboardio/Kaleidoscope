@@ -30,7 +30,7 @@ void Model01::setup(void) {
     rightHandState.all = 0;
 
     Wire.begin();
-    TWBR=12;
+    TWBR=12; // This is 400mhz, which is the fastest we can drive the ATTiny
 }
 
 
