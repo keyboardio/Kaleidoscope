@@ -11,12 +11,12 @@ GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always)
 
 ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
 ARDUINO_TOOLS_PATH=$(ARDUINO_PATH)/hardware/tools
-FQBN=arduino:avr:leonardo
+FQBN=keyboardio:avr:model01
 BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
-OUTPUT_PATH=../output
-ARDUINO_LOCAL_LIB_PATH=../libraries
+OUTPUT_PATH=./output
+ARDUINO_LOCAL_LIB_PATH=$(HOME)/Documents/Arduino
 ARDUINO_IDE_VERSION=100607
-VERBOSE= #-verbose
+VERBOSE= -verbose
 SKETCH=KeyboardioFirmware.ino
 
 
@@ -45,6 +45,7 @@ dirs:
 compile: dirs
 	$(ARDUINO_PATH)/arduino-builder \
 		-hardware $(ARDUINO_PATH)/hardware \
+		-hardware $(ARDUINO_LOCAL_LIB_PATH)/hardware \
 		-tools $(ARDUINO_TOOLS_PATH) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \

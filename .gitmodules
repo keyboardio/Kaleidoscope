@@ -1,6 +1,0 @@
-[submodule "libraries/KeyboardioScanner"]
-	path = libraries/KeyboardioScanner
-	url = https://github.com/keyboardio/KeyboardioScanner.git
-[submodule "libraries/HID"]
-	path = libraries/HID
-	url = https://github.com/keyboardio/HID.git

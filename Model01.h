@@ -6,8 +6,8 @@
 #include "KeyboardioScanner.h"
 #include <Wire.h>
 
-#include "../keymaps.h"
-#include "../key_events.h"
+#include "keymaps.h"
+#include "key_events.h"
 
 
 
