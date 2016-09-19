@@ -1,10 +1,5 @@
-The Keyboardio keyboard driver is Copyright 2013-2015 Jesse Vincent.
+The Keyboardio keyboard driver is Copyright 2013-2016 Jesse Vincent.
 
-
-The hardware/keyboardio subdirectory contains a modified version
-of the hardware/arduino/ sourced from
-https://github.com/arduino/Arduino/tree/master/hardware/arduino.
-That content is licensed under the terms of LGPLv2.1.
 
 
 
