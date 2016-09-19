@@ -58,7 +58,7 @@ compile: dirs
 		$(SKETCH)
 	@cp $(BUILD_PATH)/$(SKETCH).hex $(HEX_FILE_PATH)
 	@cp $(BUILD_PATH)/$(SKETCH).elf $(ELF_FILE_PATH)
-	@echo "Firmware is available at $(HEX_FILE_PATH)
+	@echo "Firmware is available at $(HEX_FILE_PATH)"
 	@echo "Have fun!\n"
 
 size: compile
