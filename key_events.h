@@ -6,7 +6,7 @@
 #include "MouseWrapper.h"
 #include "LEDControl.h"
 #include "Storage.h"
-#include "keymaps.h"
+#include "keymap_metadata.h"
 #include "generated/keymaps.h"
 
 extern const Key keymaps[KEYMAPS][ROWS][COLS];
