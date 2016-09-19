@@ -1,8 +1,8 @@
 language: c
 before_install:
 - pushd ..
-- wget http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz
-- tar xf arduino-1.6.7-linux64.tar.xz
+- wget http://downloads.arduino.cc/arduino-1.6.11-linux64.tar.xz
+- tar xf arduino-1.6.11-linux64.tar.xz
 - popd
 install:
 - pushd ..
@@ -13,7 +13,7 @@ install:
 - git submodule update --init --recursive
 - popd
 script:
-- make ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=../arduino-local
+- make ARDUINO_PATH=../arduino-1.6.11 ARDUINO_LOCAL_LIB_PATH=../arduino-local
 notifications:
   irc:
     channels:
