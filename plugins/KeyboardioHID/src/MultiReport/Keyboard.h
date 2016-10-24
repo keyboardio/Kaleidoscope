@@ -64,6 +64,8 @@ class Keyboard_ : public Print {
   protected:
     HID_KeyboardReport_Data_t _keyReport;
 
+  private:
+    using Print::write;
 };
 extern Keyboard_ Keyboard;
 

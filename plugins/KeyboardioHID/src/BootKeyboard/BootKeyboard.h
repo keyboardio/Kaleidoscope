@@ -106,6 +106,9 @@ class BootKeyboard_ : public Print, PluggableUSBModule {
 
     uint8_t* featureReport;
     int featureLength;
+
+  private:
+    using Print::write;
 };
 extern BootKeyboard_ BootKeyboard;
 
