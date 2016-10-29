@@ -129,6 +129,14 @@ int Keyboard_::sendReport(void) {
     return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
 
+boolean Keyboard_::isModifierActive(uint8_t k) {
+  if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    k = k - HID_KEYBOARD_FIRST_MODIFIER;
+    return !!(_keyReport.modifiers & (1 << k));
+  }
+  return false;
+}
+
 size_t Keyboard_::press(uint8_t k) {
     // If the key is in the range of 'printable' keys 
     if (k <= HID_KEYPAD_HEXADECIMAL ) {

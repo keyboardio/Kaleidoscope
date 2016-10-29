@@ -61,6 +61,8 @@ class Keyboard_ : public Print {
     int sendReport(void);
     size_t write(uint8_t k);
 
+    boolean isModifierActive(uint8_t k);
+
   protected:
     HID_KeyboardReport_Data_t _keyReport;
 
