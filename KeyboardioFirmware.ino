@@ -1,4 +1,4 @@
-// Copyright 2015 Keyboardio, inc. <jesse@keyboard.io>
+// Copyright 2016 Keyboardio, inc. <jesse@keyboard.io>
 // See "LICENSE" for license details
 
 #define DEBUG_SERIAL false
