@@ -2,9 +2,12 @@
 
 
 #include "HIDTables.h"
-typedef struct {
+typedef union {
+  struct {
     uint8_t flags;
     uint8_t rawKey;
+  };
+  uint16_t keyCode;
 } Key;
 
 
@@ -295,3 +298,4 @@ typedef struct {
 #define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC_KEY | IS_INTERNAL, LED_TOGGLE }
 
 
+#define Key_OSM_LCtrl (Key) { .keyCode = OSM(LCTL) }
