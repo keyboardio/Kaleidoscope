@@ -3,6 +3,13 @@
 const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
 void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t previousState) {
+    if (key_toggled_on(currentState,previousState)) {
+        if (akelaIF.register_code (&akelaIF.hid, &akelaIF.keyMap, mappedKey.keyCode))
+            return;
+    } else if (key_toggled_off(currentState,previousState)) {
+        if (akelaIF.unregister_code (&akelaIF.hid, &akelaIF.keyMap, mappedKey.keyCode))
+            return;
+    }
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(mappedKey, currentState, previousState);
     } else if (! (mappedKey.flags & IS_INTERNAL)

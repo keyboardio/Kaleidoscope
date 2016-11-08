@@ -52,6 +52,7 @@ compile: dirs
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
+		-libraries $(ARDUINO_LOCAL_LIB_PATH)/Akela/lib \
 		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \

@@ -8,6 +8,7 @@ install:
 - pushd ..
 - mkdir -p arduino-local/hardware/keyboardio
 - git clone https://github.com/keyboardio/Arduino-Boards arduino-local/hardware/keyboardio/avr
+- git clone https://github.com/algernon/Akela arduino-local/Akela
 - cd arduino-local/hardware/keyboardio/avr
 - git submodule sync --recursive
 - git submodule update --init --recursive
