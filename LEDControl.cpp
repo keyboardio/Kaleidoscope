@@ -27,16 +27,27 @@ LEDControl_::LEDControl_(void) {
 
 void LEDControl_::initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);
-    if (mode == LED_MODE_OFF) {
-        //        set_all_leds_to(led_off);
-    } else if (mode == LED_MODE_HEATMAP) {
-    } else if (mode == LED_MODE_BREATHE) {
+    switch (LED_MODE_OFF) {
 
-    } else if (mode == LED_MODE_RAINBOW) {
-    } else if (mode == LED_MODE_RAINBOW_WAVE) {
-    } else if (mode == LED_MODE_CHASE) {
-    } else if (mode == LED_MODE_STEADY) {
+    case LED_MODE_OFF:
+        break;
+
+    case  LED_MODE_HEATMAP:
+        break;
+    case  LED_MODE_BREATHE:
+        break;
+
+    case  LED_MODE_RAINBOW:
+        break;
+    case  LED_MODE_RAINBOW_WAVE:
+        break;
+    case  LED_MODE_CHASE:
+        break;
+    case  LED_MODE_STEADY:
         set_all_leds_to(led_steady);
+        break;
+    default:
+        break;
     }
 }
 
@@ -77,21 +88,32 @@ void LEDControl_::update(uint8_t current_keymap) {
     if (led_mode != last_led_mode) {
         initialize_led_mode(led_mode);
     }
-    if (led_mode == LED_MODE_OFF) {
-    } else if (led_mode == LED_MODE_HEATMAP) {
-    } else if (led_mode == LED_MODE_BREATHE) {
-        effect_breathe_update();
-    } else if (led_mode == LED_MODE_RAINBOW) {
-        effect_rainbow_update();
-    } else if (led_mode == LED_MODE_RAINBOW_WAVE) {
-        effect_rainbow_wave_update();
-    } else if (led_mode == LED_MODE_CHASE) {
-        effect_chase_update();
-    } else if (led_mode == LED_MODE_STEADY) {
-        effect_steady_update();
-    } else if (led_mode == LED_SPECIAL_MODE_NUMLOCK) {
-        effect_numlock_update();
+    switch (led_mode) {
 
+    case LED_MODE_OFF:
+        break;
+    case  LED_MODE_HEATMAP:
+        break;
+    case  LED_MODE_BREATHE:
+        effect_breathe_update();
+        break;
+    case  LED_MODE_RAINBOW:
+        effect_rainbow_update();
+        break;
+    case  LED_MODE_RAINBOW_WAVE:
+        effect_rainbow_wave_update();
+        break;
+    case  LED_MODE_CHASE:
+        effect_chase_update();
+        break;
+    case  LED_MODE_STEADY:
+        effect_steady_update();
+        break;
+    case  LED_SPECIAL_MODE_NUMLOCK:
+        effect_numlock_update();
+        break;
+    default:
+        break;
     }
 
     led_sync();
