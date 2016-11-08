@@ -47,7 +47,7 @@ class LEDControl_ {
     static const uint8_t rainbow_wave_steps=1; //number of hues we skip in a 360 range per update
 
     static const byte rainbow_saturation = 255;
-    static const byte rainbow_value = 255;
+    static const byte rainbow_value = 50;
 
     static const long rainbow_wave_ticks = 10; //delays between update
     static const long rainbow_ticks = 10; //delays between update
