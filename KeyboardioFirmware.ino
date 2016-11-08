@@ -23,6 +23,7 @@ void setup() {
 
 
 void loop() {
+    akelaIF.loop (&akelaIF.hid, &akelaIF.keyMap);
     KeyboardHardware.scan_matrix();
     LEDControl.update(temporary_keymap);
     Keyboard.sendReport();

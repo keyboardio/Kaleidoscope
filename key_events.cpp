@@ -1,7 +1,4 @@
 #include "key_events.h"
-#include "AkelaWrapper.h"
-
-static Keyboardio::AkelaInterface akelaIF;
 
 const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
 
