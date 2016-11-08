@@ -12,6 +12,7 @@ uint8_t temporary_keymap = 0;
 
 void setup() {
     wdt_disable();
+    delay(100);
     Keyboard.begin();
     Mouse.begin();
     AbsoluteMouse.begin();
