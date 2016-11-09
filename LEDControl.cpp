@@ -27,12 +27,33 @@ LEDControl_::LEDControl_(void) {
 
 void LEDControl_::initialize_led_mode(uint8_t mode) {
     set_all_leds_to(led_off);
-    switch (LED_MODE_OFF) {
 
-    case LED_MODE_OFF:
+    switch (mode) {
+
+    case LED_MODE_RED:
+        set_all_leds_to(100,0,0) ;
+        break;
+    case LED_MODE_ORANGE:
+        set_all_leds_to(100,30,0) ;
+        break;
+    case LED_MODE_YELLOW:
+        set_all_leds_to(90,70,0) ;
         break;
 
-    case  LED_MODE_HEATMAP:
+    case LED_MODE_GREEN:
+        set_all_leds_to(0,200,0) ;
+        break;
+
+    case LED_MODE_BLUE:
+        set_all_leds_to(0,30,160) ;
+        break;
+    case LED_MODE_INDIGO:
+        set_all_leds_to(0,0,200) ;
+        break;
+    case LED_MODE_VIOLET:
+        set_all_leds_to(100,0,120) ;
+        break;
+    case LED_MODE_OFF:
         break;
     case  LED_MODE_BREATHE:
         break;
@@ -42,9 +63,6 @@ void LEDControl_::initialize_led_mode(uint8_t mode) {
     case  LED_MODE_RAINBOW_WAVE:
         break;
     case  LED_MODE_CHASE:
-        break;
-    case  LED_MODE_STEADY:
-        set_all_leds_to(led_steady);
         break;
     default:
         break;
@@ -99,8 +117,6 @@ void LEDControl_::update(uint8_t current_keymap) {
 
     case LED_MODE_OFF:
         break;
-    case  LED_MODE_HEATMAP:
-        break;
     case  LED_MODE_BREATHE:
         effect_breathe_update();
         break;
@@ -112,9 +128,6 @@ void LEDControl_::update(uint8_t current_keymap) {
         break;
     case  LED_MODE_CHASE:
         effect_chase_update();
-        break;
-    case  LED_MODE_STEADY:
-        effect_steady_update();
         break;
     case  LED_SPECIAL_MODE_NUMLOCK:
         effect_numlock_update();
@@ -140,8 +153,6 @@ void LEDControl_::effect_numlock_update() {
     led_set_crgb_at(60, led_breathe); // make numlock breathe
 }
 
-void LEDControl_::effect_steady_update() {
-}
 
 void LEDControl_::led_compute_breath() {
     // algorithm from http://sean.voisen.org/blog/2011/10/breathing-led-with-arduino/

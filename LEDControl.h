@@ -4,14 +4,25 @@
 #include "KeyboardConfig.h"
 
 
-#define LED_MODES 7
+#define LED_MODES 12
 #define LED_MODE_OFF 0
-#define LED_MODE_STEADY 1
-#define LED_MODE_BREATHE 2
-#define LED_MODE_RAINBOW 3
-#define LED_MODE_RAINBOW_WAVE 4
-#define LED_MODE_HEATMAP 5
-#define LED_MODE_CHASE 6
+
+#define LED_MODE_RED 1
+#define LED_MODE_ORANGE 2
+#define LED_MODE_YELLOW 3
+#define LED_MODE_GREEN 4
+#define LED_MODE_BLUE 5
+#define LED_MODE_INDIGO 6
+#define LED_MODE_VIOLET 7
+
+
+#define LED_MODE_BREATHE 8
+#define LED_MODE_RAINBOW 9
+#define LED_MODE_RAINBOW_WAVE 10
+#define LED_MODE_CHASE 11
+
+
+
 
 #define LED_SPECIAL_MODE_NUMLOCK 100
 
