@@ -1,6 +1,6 @@
 #include "key_events.h"
 
-const Key keymaps[KEYMAPS][ROWS][COLS] = { KEYMAP_LIST };
+static const Key keymaps[KEYMAPS][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
 void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t previousState) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
@@ -50,10 +50,12 @@ void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previous
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-    Key mappedKey = keymaps[temporary_keymap][row][col];
-
-    if (keymaps[primary_keymap][row][col].flags & SWITCH_TO_KEYMAP) {
-        handle_keymap_key_event(keymaps[primary_keymap][row][col], currentState, previousState);
+   Key mappedKey;
+   mappedKey.raw=  pgm_read_word(&(keymaps[temporary_keymap][row][col]));
+   Key baseKey;
+   baseKey.raw=    pgm_read_word(&(keymaps[primary_keymap][row][col]));
+    if (baseKey.flags & SWITCH_TO_KEYMAP) {
+        handle_keymap_key_event(baseKey, currentState, previousState);
     } else if (mappedKey.flags & SYNTHETIC_KEY) {
         handle_synthetic_key_event( mappedKey, currentState, previousState);
     } else if (key_is_pressed(currentState, previousState)) {

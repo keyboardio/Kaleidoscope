@@ -9,7 +9,7 @@
 #include "keymap_metadata.h"
 #include "generated/keymaps.h"
 
-extern const Key keymaps[KEYMAPS][ROWS][COLS];
+//static const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
