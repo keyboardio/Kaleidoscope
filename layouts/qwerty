@@ -1,5 +1,5 @@
 #NAME: QWERTY
-LEDEffectNext   1 2 3 4 5  skip                 LCtrl  RCtrl 	  skip                  6 7 8 9 0 Keymap2
+skip  		1 2 3 4 5  LEDEffectNext        LCtrl  RCtrl 	  skip                  6 7 8 9 0 Keymap2
 `               Q W E R T  Tab                  Backspace Space   KeymapNext_Momentary  Y U I O P =
 PageUp 	        A S D F G  Esc                  LGUI    RAlt	  Enter                H J K L ; '
 PageDn 	        Z X C V B  KeymapNext_Momentary LShift  RShift 	  skip                  N M , . / -
