@@ -51,6 +51,13 @@ void LEDControl_::initialize_led_mode(uint8_t mode) {
     }
 }
 
+void LEDControl_::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
+    cRGB color;
+    color.r=r;
+    color.g=g;
+    color.b=b;
+    set_all_leds_to(color);
+}
 void LEDControl_::set_all_leds_to(cRGB color) {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
         led_set_crgb_at(i, color);
