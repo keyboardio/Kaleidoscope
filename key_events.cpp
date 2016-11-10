@@ -46,9 +46,19 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
 
     }
 }
+
+__attribute__((weak))
+bool handle_user_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+  return false;
+}
+
 void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
+
+    if (handle_user_key_event(row, col, currentState, previousState)) {
+        return;
+    }
 
    Key mappedKey;
    mappedKey.raw=  pgm_read_word(&(keymaps[temporary_keymap][row][col]));
