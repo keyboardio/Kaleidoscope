@@ -52,6 +52,14 @@ bool handle_user_key_event(byte row, byte col, uint8_t currentState, uint8_t pre
   return false;
 }
 
+Key lookup_key(byte keymap, byte row, byte col) {
+    Key mappedKey;
+
+    mappedKey.raw = pgm_read_word(&(keymaps[keymap][row][col]));
+
+    return mappedKey;
+}
+
 void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
@@ -60,10 +68,9 @@ void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previous
         return;
     }
 
-   Key mappedKey;
-   mappedKey.raw=  pgm_read_word(&(keymaps[temporary_keymap][row][col]));
-   Key baseKey;
-   baseKey.raw=    pgm_read_word(&(keymaps[primary_keymap][row][col]));
+    Key mappedKey = lookup_key(temporary_keymap, row, col);
+    Key baseKey   = lookup_key(primary_keymap, row, col);
+
     if (baseKey.flags & SWITCH_TO_KEYMAP) {
         handle_keymap_key_event(baseKey, currentState, previousState);
     } else if (mappedKey.flags & SYNTHETIC_KEY) {
