@@ -10,6 +10,11 @@
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
+bool handle_user_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+  //Serial.print ("user_key_event");
+  return false;
+}
+
 void setup() {
     wdt_disable();
     delay(100);
