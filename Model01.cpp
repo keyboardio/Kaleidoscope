@@ -83,7 +83,10 @@ void debug_key_event(keydata_t state, keydata_t previousState, uint8_t keynum, u
         Serial.println();
     }
 }
-void Model01::scan_matrix() {
+
+
+void Model01::read_matrix() {
+    //scan the Keyboard matrix looking for connections
     previousLeftHandState = leftHandState;
     previousRightHandState = rightHandState;
 
@@ -94,7 +97,11 @@ void Model01::scan_matrix() {
     if (rightHand.readKeys()) {
         rightHandState = rightHand.getKeyData();
     }
+}
 
+
+
+void Model01::act_on_matrix_scan() {
     for (byte row = 0; row < 4; row++) {
         for (byte col = 0; col < 8; col++) {
 
@@ -111,5 +118,10 @@ void Model01::scan_matrix() {
                             );
         }
     }
-    //scan the Keyboard matrix looking for connections
+}
+
+
+void Model01::scan_matrix() {
+    read_matrix();
+    act_on_matrix_scan();
 }
