@@ -48,19 +48,10 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
 }
 
 __attribute__((weak))
-bool handle_user_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
-  return false;
-}
-
-static custom_handler_t customHandler = handle_user_key_event;
-
-void set_custom_handler(custom_handler_t f) {
-  customHandler = f;
-}
-
-custom_handler_t get_custom_handler() {
-  return customHandler;
-}
+custom_handler_t eventHandlers[] = {
+  handle_key_event_default,
+  (custom_handler_t) NULL
+};
 
 Key lookup_key(byte keymap, byte row, byte col) {
     Key mappedKey;
@@ -71,12 +62,16 @@ Key lookup_key(byte keymap, byte row, byte col) {
 }
 
 void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+    for (byte i = 0; eventHandlers[i] != NULL; i++) {
+      custom_handler_t handler = eventHandlers[i];
+      if ((*handler)(row, col, currentState, previousState))
+          return;
+    }
+}
+
+bool handle_key_event_default(byte row, byte col, uint8_t currentState, uint8_t previousState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
-
-    if ((*customHandler)(row, col, currentState, previousState)) {
-        return;
-    }
 
     Key mappedKey = lookup_key(temporary_keymap, row, col);
     Key baseKey   = lookup_key(primary_keymap, row, col);
@@ -88,6 +83,7 @@ void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previous
     } else if (key_is_pressed(currentState, previousState)) {
         press_key(mappedKey);
     }
+    return true;
 }
 
 void press_key(Key mappedKey) {
