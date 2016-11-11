@@ -52,6 +52,16 @@ bool handle_user_key_event(byte row, byte col, uint8_t currentState, uint8_t pre
   return false;
 }
 
+static custom_handler_t customHandler = handle_user_key_event;
+
+void set_custom_handler(custom_handler_t f) {
+  customHandler = f;
+}
+
+custom_handler_t get_custom_handler() {
+  return customHandler;
+}
+
 Key lookup_key(byte keymap, byte row, byte col) {
     Key mappedKey;
 
@@ -64,7 +74,7 @@ void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previous
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-    if (handle_user_key_event(row, col, currentState, previousState)) {
+    if ((*customHandler)(row, col, currentState, previousState)) {
         return;
     }
 
