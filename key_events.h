@@ -13,6 +13,11 @@
 extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
 
+typedef bool (*custom_handler_t)(byte row, byte col, uint8_t currentState, uint8_t previousState);
+
+void set_custom_handler(custom_handler_t f);
+custom_handler_t get_custom_handler();
+
 // sending events to the computer
 void handle_synthetic_key_event( Key mappedKey, uint8_t currentState, uint8_t previousState);
 void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState);
