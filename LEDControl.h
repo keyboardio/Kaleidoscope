@@ -35,6 +35,8 @@ class LEDControl_ {
     void update(uint8_t current_keymap);
     void type_letter(uint8_t letter);
     void set_mode(uint8_t mode);
+    void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
+    void effect_rainbow_update();
 
   private:
     uint8_t led_mode = 0;
@@ -79,14 +81,12 @@ class LEDControl_ {
     void effect_heatmap_init();
 
     void effect_breathe_update();
-    void effect_rainbow_update();
     void effect_rainbow_wave_update();
     void effect_chase_update();
     void effect_steady_update();
     void effect_heatmap_update();
     void effect_numlock_update();
     void set_all_leds_to(cRGB color);
-    void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
     void initialize_led_mode(uint8_t mode);
 };
 
