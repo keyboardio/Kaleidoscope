@@ -10,15 +10,9 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
                    || mappedKey.rawKey == KEY_MOUSE_BTN_M
                    || mappedKey.rawKey == KEY_MOUSE_BTN_R)) {
         if (key_toggled_on(currentState, previousState)) {
-            MouseWrapper.press_button(
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  KEY_MOUSE_BUTTON_LEFT   : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  KEY_MOUSE_BUTTON_MIDDLE : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  KEY_MOUSE_BUTTON_RIGHT  : 0x00) );
+            MouseWrapper.press_button(mappedKey.rawKey);
         } else if (key_toggled_off(currentState, previousState)) {
-            MouseWrapper.release_button(
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_L ?  KEY_MOUSE_BUTTON_LEFT   : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_M ?  KEY_MOUSE_BUTTON_MIDDLE : 0x00) |
-                (mappedKey.rawKey ==  KEY_MOUSE_BTN_R ?  KEY_MOUSE_BUTTON_RIGHT  : 0x00) );
+            MouseWrapper.release_button(mappedKey.rawKey);
         }
     }
 

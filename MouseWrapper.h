@@ -3,13 +3,6 @@
 #include "Arduino.h"
 #include "KeyboardioHID.h"
 
-// Buttons
-
-#define KEY_MOUSE_BUTTON_LEFT    0x01
-#define KEY_MOUSE_BUTTON_MIDDLE  0x02
-#define KEY_MOUSE_BUTTON_RIGHT   0x04
-
-
 // Warping commands
 
 #define WARP_END 1
