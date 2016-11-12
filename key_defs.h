@@ -5,8 +5,8 @@
 typedef union {
 
     struct {
-    	uint8_t flags;
-    	uint8_t rawKey;
+        uint8_t flags;
+        uint8_t rawKey;
     };
     uint16_t raw;
 } Key;

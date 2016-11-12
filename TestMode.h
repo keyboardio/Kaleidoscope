@@ -1,11 +1,11 @@
 class TestMode_ {
-	public:
+  public:
 
-		void start();
+    void start();
 
-	private:
+  private:
 
-		void TestLEDs();
-		void TestKeys();
-		void TestOneKey();		
+    void TestLEDs();
+    void TestKeys();
+    void TestOneKey();
 };
