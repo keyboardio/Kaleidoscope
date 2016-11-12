@@ -38,8 +38,8 @@ astyle:
 		find . -type f -name \*.h |xargs -n 1 astyle --style=google
 
 generate-keymaps:
-	-rm generated/keymaps.h
-	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../generated/keymaps.h' )
+	-rm src/generated/keymaps.h
+	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../src/generated/keymaps.h' )
 
 dirs:
 	mkdir -p $(OUTPUT_PATH)
@@ -52,10 +52,11 @@ compile: dirs
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
+		-libraries . \
 		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
-		$(SKETCH)
+		examples/KeyboardioFirmware/$(SKETCH)
 	@cp $(BUILD_PATH)/$(SKETCH).hex $(HEX_FILE_PATH)
 	@cp $(BUILD_PATH)/$(SKETCH).elf $(ELF_FILE_PATH)
 	@echo "Firmware is available at $(HEX_FILE_PATH)"
