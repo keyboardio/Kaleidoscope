@@ -41,8 +41,7 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
     }
 }
 
-__attribute__((weak))
-custom_handler_t eventHandlers[] = {
+custom_handler_t eventHandlers[HOOK_MAX] = {
     handle_key_event_default,
     (custom_handler_t) NULL
 };
@@ -56,7 +55,7 @@ Key lookup_key(byte keymap, byte row, byte col) {
 }
 
 void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
-    for (byte i = 0; eventHandlers[i] != NULL; i++) {
+    for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
         custom_handler_t handler = eventHandlers[i];
         if ((*handler)(row, col, currentState, previousState))
             return;
