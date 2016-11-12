@@ -34,3 +34,12 @@ extern uint8_t temporary_keymap;
 #define VERSION "locally-built"
 #endif
 
+class Keyboardio_ {
+  public:
+    Keyboardio_(void);
+
+    void setup(void);
+    void loop(void);
+};
+
+static Keyboardio_ Keyboardio;
