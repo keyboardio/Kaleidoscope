@@ -93,7 +93,10 @@ void press_key(Key mappedKey) {
     if (mappedKey.flags & CTRL_HELD) {
         Keyboard.press(Key_LCtrl.rawKey);
     }
-    if (mappedKey.flags & ALT_HELD) {
+    if (mappedKey.flags & LALT_HELD) {
+        Keyboard.press(Key_LAlt.rawKey);
+    }
+    if (mappedKey.flags & RALT_HELD) {
         Keyboard.press(Key_RAlt.rawKey);
     }
     if (mappedKey.flags & GUI_HELD) {
