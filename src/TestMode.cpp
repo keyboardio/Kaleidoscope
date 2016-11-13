@@ -1,6 +1,9 @@
 #include "KeyboardioFirmware.h"
 #include "TestMode.h"
 
+TestMode_::TestMode_(void) {
+}
+
 void TestMode_::TestLEDs(void) {
     // make all LEDs dim red
     LEDControl.set_all_leds_to(50,0,0);
@@ -47,3 +50,19 @@ void TestMode_::TestLEDs(void) {
     // as you hit each key a second time, set it to green
     // as you hit each key a third time, set it to off
 }
+
+
+
+void TestMode_::TestMatrix () {
+    KeyboardHardware.read_matrix();
+
+}
+
+void TestMode_::setup() {
+    eventHandlers[0] = handle_key_event_test;
+}
+bool handle_key_event_test(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+    Serial.write(row);
+}
+
+TestMode_ TestMode;
