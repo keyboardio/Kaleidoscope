@@ -16,12 +16,12 @@ typedef union {
 #define KEY_FLAGS         B00000000
 #define CTRL_HELD         B00000001
 #define LALT_HELD         B00000010
-#define RALT_HELD         B00000010
+#define RALT_HELD         B00000100
 #define SHIFT_HELD        B00001000
 #define GUI_HELD          B00010000
 #define SWITCH_TO_KEYMAP  B00100000
 #define MOMENTARY         B01000000
-#define SYNTHETIC     B10000000
+#define SYNTHETIC         B10000000
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_MACRO       B00000001
