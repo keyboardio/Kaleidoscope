@@ -8,6 +8,8 @@ DEVICE_PORT_BOOTLOADER := `ls /dev/ttyACM*`
 ARDUINO_PATH=/usr/local/arduino
 ARDUINO_LOCAL_LIB_PATH=$(HOME)/Arduino
 
+MD5 = md5sum
+
 RESET_BOARD=stty -F $(DEVICE_PORT) 1200
 
 ifeq ($(uname_S),Darwin)
@@ -21,6 +23,9 @@ DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14*`
 
 ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
 ARDUINO_LOCAL_LIB_PATH=$(HOME)/Documents/Arduino
+
+MD5 = md5
+
 RESET_BOARD=stty -f $(DEVICE_PORT) 1200
 
 endif
@@ -110,7 +115,7 @@ size: compile
 hex-with-bootloader: compile
 	@cat $(HEX_FILE_PATH) | awk '/^:00000001FF/ == 0' > $(HEX_FILE_WITH_BOOTLOADER_PATH)
 	@echo "Using $(BOOTLOADER_PATH)"
-	@md5 $(BOOTLOADER_PATH)
+	@$(MD5) $(BOOTLOADER_PATH)
 	@cat $(BOOTLOADER_PATH) >> $(HEX_FILE_WITH_BOOTLOADER_PATH)
 	@echo "Combined firmware and bootloader are now at $(HEX_FILE_WITH_BOOTLOADER_PATH)"
 	@echo "Make sure you have the bootloader version you expect."
