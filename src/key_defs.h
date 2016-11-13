@@ -26,9 +26,9 @@ typedef union {
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_MACRO       B00000001
 #define IS_SYSCTL      B00000010
-#define IS_CONSUMER    B00000011
-#define IS_INTERNAL    B00000100
-#define IS_MOUSE_KEY   B00000101
+#define IS_CONSUMER    B00000100
+#define IS_INTERNAL    B00001000
+#define IS_MOUSE_KEY   B00010000
 
 
 // IS_INTERNAL key table:
