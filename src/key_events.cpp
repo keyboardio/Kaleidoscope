@@ -71,7 +71,7 @@ bool handle_key_event_default(byte row, byte col, uint8_t currentState, uint8_t 
 
     if (baseKey.flags & SWITCH_TO_KEYMAP) {
         handle_keymap_key_event(baseKey, currentState, previousState);
-    } else if (mappedKey.flags & SYNTHETIC_KEY) {
+    } else if (mappedKey.flags & SYNTHETIC) {
         handle_synthetic_key_event( mappedKey, currentState, previousState);
     } else if (key_is_pressed(currentState, previousState)) {
         press_key(mappedKey);
