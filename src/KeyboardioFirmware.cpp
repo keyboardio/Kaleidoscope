@@ -5,6 +5,7 @@ Keyboardio_::Keyboardio_(void) {
 
 void
 Keyboardio_::setup(void) {
+    event_handler_hook_add (handle_key_event_default);
     wdt_disable();
     delay(100);
     Keyboard.begin();
