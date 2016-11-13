@@ -199,7 +199,7 @@ void LEDControl_::effect_rainbow_update() {
     hsv_to_rgb( &rainbow, rainbow_hue, rainbow_saturation, rainbow_value);
     rainbow_hue += rainbow_steps;
     if (rainbow_hue >= 255)          {
-        rainbow_hue %= 255;
+        rainbow_hue -= 255;
     }
     set_all_leds_to(rainbow);
 }
@@ -214,14 +214,14 @@ void LEDControl_::effect_rainbow_wave_update() {
     for (uint8_t i = 0; i < LED_COUNT; i++) {
         uint16_t key_hue = rainbow_hue +16*(i/4);
         if (key_hue >= 255)          {
-            key_hue %= 255;
+            key_hue -= 255;
         }
         hsv_to_rgb(&rainbow, key_hue, rainbow_saturation, rainbow_value);
         led_set_crgb_at(i,rainbow);
     }
     rainbow_hue += rainbow_wave_steps;
     if (rainbow_hue >= 255)          {
-        rainbow_hue %= 255;
+        rainbow_hue -= 255;
     }
 }
 
@@ -271,9 +271,9 @@ void LEDControl_::hsv_to_rgb(cRGB *cRGB, uint16_t h, uint16_t s, uint16_t v)  {
     }
 
     /* make hue 0-5 */
-    region = h / 43;
+    region = (h *6) >> 8;
     /* find remainder part, make it from 0-255 */
-    fpart = (h - (region * 43)) * 6;
+    fpart = (h*6) - (region <<8);
 
     /* calculate temp vars, doing integer multiplication */
     p = (v * (255 - s)) >> 8;
