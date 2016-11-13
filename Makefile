@@ -8,6 +8,7 @@ DEVICE_PORT_BOOTLOADER := `ls /dev/ttyACM*`
 ARDUINO_PATH=/usr/local/arduino
 ARDUINO_LOCAL_LIB_PATH=$(HOME)/Arduino
 
+RESET_BOARD=stty -F $(DEVICE_PORT) 1200
 
 ifeq ($(uname_S),Darwin)
 
@@ -20,6 +21,7 @@ DEVICE_PORT_BOOTLOADER := `ls /dev/cu.usbmodem14*`
 
 ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
 ARDUINO_LOCAL_LIB_PATH=$(HOME)/Documents/Arduino
+RESET_BOARD=stty -f $(DEVICE_PORT) 1200
 
 endif
 
@@ -115,7 +117,7 @@ hex-with-bootloader: compile
 	@echo "\n\nAnd TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE\n\n"
 
 reset-device: 
-	stty -f $(DEVICE_PORT) 1200 ;
+	$(RESET_BOARD)
 
 flash: compile reset-device
 	sleep 3
