@@ -69,7 +69,8 @@ bool handle_key_event_default(byte row, byte col, uint8_t currentState, uint8_t 
     Key mappedKey = lookup_key(temporary_keymap, row, col);
     Key baseKey   = lookup_key(primary_keymap, row, col);
 
-    if (baseKey.flags & SWITCH_TO_KEYMAP) {
+    if ((baseKey.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))
+      || (baseKey.flags == (SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY))) {
         handle_keymap_key_event(baseKey, currentState, previousState);
     } else if (mappedKey.flags & SYNTHETIC) {
         handle_synthetic_key_event( mappedKey, currentState, previousState);
@@ -100,7 +101,7 @@ void press_key(Key mappedKey) {
 
 
 void handle_keymap_key_event(Key keymapEntry, uint8_t currentState, uint8_t previousState) {
-    if (keymapEntry.flags & MOMENTARY ) {
+    if (keymapEntry.flags == (SYNTHETIC| SWITCH_TO_KEYMAP_MOMENTARY )) {
         if (key_toggled_on(currentState, previousState)) {
             if ( keymapEntry.rawKey == KEYMAP_NEXT) {
                 temporary_keymap++;

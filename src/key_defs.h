@@ -19,16 +19,16 @@ typedef union {
 #define RALT_HELD         B00000100
 #define SHIFT_HELD        B00001000
 #define GUI_HELD          B00010000
-#define SWITCH_TO_KEYMAP  B00100000
-#define MOMENTARY         B01000000
 #define SYNTHETIC         B10000000
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_MACRO       B00000001
-#define IS_SYSCTL      B00000010
-#define IS_CONSUMER    B00000100
-#define IS_INTERNAL    B00001000
-#define IS_MOUSE_KEY   B00010000
+#define IS_MACRO         B00000001
+#define IS_SYSCTL        B00000010
+#define IS_CONSUMER      B00000100
+#define IS_INTERNAL      B00001000
+#define IS_MOUSE_KEY     		   B00010000
+#define SWITCH_TO_KEYMAP 		   B00100000
+#define SWITCH_TO_KEYMAP_MOMENTARY         B01000000
 
 
 // IS_INTERNAL key table:
@@ -278,21 +278,21 @@ typedef union {
 #define Key_Paste (Key){ KEY_FLAGS, HID_KEYBOARD_PASTE }
 
 
-#define Key_Keymap0 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_0 }
-#define Key_Keymap1 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_1 }
-#define Key_Keymap2 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_2 }
-#define Key_Keymap3 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_3 }
-#define Key_Keymap4 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_4 }
-#define Key_Keymap5 (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP , KEYMAP_5 }
-#define Key_Keymap0_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_0 }
-#define Key_Keymap1_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_1 }
-#define Key_Keymap2_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_2 }
-#define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_3 }
-#define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_4 }
-#define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_5 }
+#define Key_Keymap0 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_0 }
+#define Key_Keymap1 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_1 }
+#define Key_Keymap2 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_2 }
+#define Key_Keymap3 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_3 }
+#define Key_Keymap4 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_4 }
+#define Key_Keymap5 (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP , KEYMAP_5 }
+#define Key_Keymap0_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_0 }
+#define Key_Keymap1_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_1 }
+#define Key_Keymap2_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_2 }
+#define Key_Keymap3_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_3 }
+#define Key_Keymap4_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_4 }
+#define Key_Keymap5_Momentary (Key){ KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_5 }
 
-#define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_NEXT }
-#define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SWITCH_TO_KEYMAP | MOMENTARY, KEYMAP_PREVIOUS }
+#define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_NEXT }
+#define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP_MOMENTARY, KEYMAP_PREVIOUS }
 
 
 
