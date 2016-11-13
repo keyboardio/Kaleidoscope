@@ -3,9 +3,11 @@
 static const Key keymaps[KEYMAPS][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
 void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t previousState) {
-    if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
+    if ( (mappedKey.flags ==  SYNTHETIC_KEY| IS_MOUSE_KEY )
+
+            && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(mappedKey, currentState, previousState);
-    } else if (! (mappedKey.flags & IS_INTERNAL)
+    } else if (! (mappedKey.flags == SYNTHETIC_KEY| IS_INTERNAL)
                && (mappedKey.rawKey == KEY_MOUSE_BTN_L
                    || mappedKey.rawKey == KEY_MOUSE_BTN_M
                    || mappedKey.rawKey == KEY_MOUSE_BTN_R)) {
@@ -18,21 +20,22 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
 
 
     else if (key_toggled_on(currentState,previousState)) {
-        if (mappedKey.rawKey & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
+        if ( (mappedKey.flags == SYNTHETIC_KEY| IS_MOUSE_KEY)
+                && mappedKey.rawKey & KEY_MOUSE_WARP ) {
             // we don't pass in the left and up values because those are the
             // default, "no-op" conditionals
             MouseWrapper.warp( ((mappedKey.rawKey & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
                                ((mappedKey.rawKey & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
                                ((mappedKey.rawKey & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00) );
-        } else if (mappedKey.flags & IS_CONSUMER) {
+        } else if (mappedKey.flags == SYNTHETIC_KEY| IS_CONSUMER) {
             ConsumerControl.press(mappedKey.rawKey);
-        } else if (mappedKey.flags & IS_INTERNAL) {
+        } else if (mappedKey.flags == SYNTHETIC_KEY| IS_INTERNAL) {
             if (mappedKey.rawKey == LED_TOGGLE) {
                 LEDControl.next_mode();
             }
-        } else if (mappedKey.flags & IS_SYSCTL) {
+        } else if (mappedKey.flags == SYNTHETIC_KEY| IS_SYSCTL) {
             SystemControl.press(mappedKey.rawKey);
-        } else  if (mappedKey.flags & IS_MACRO) {
+        } else  if (mappedKey.flags == SYNTHETIC_KEY| IS_MACRO) {
             if (mappedKey.rawKey == 1) {
                 Serial.print("Keyboard.IO keyboard driver v0.00");
             }
