@@ -41,10 +41,7 @@ void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t pre
     }
 }
 
-custom_handler_t eventHandlers[HOOK_MAX] = {
-    handle_key_event_default,
-    (custom_handler_t) NULL
-};
+custom_handler_t eventHandlers[HOOK_MAX] = {NULL};
 
 Key lookup_key(byte keymap, byte row, byte col) {
     Key mappedKey;
