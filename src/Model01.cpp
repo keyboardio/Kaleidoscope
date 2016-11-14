@@ -7,16 +7,26 @@ Model01::Model01(void) {
 }
 
 void Model01::enable_scanner_power(void) {
-    pinMode(13, OUTPUT);
-    digitalWrite(13, HIGH);
+    // PC7
+    //pinMode(13, OUTPUT);
+    //digitalWrite(13, HIGH);
+    // Turn on power to the LED net
+    DDRC |= _BV(7);
+    PORTC |= _BV(7);
+
 }
 
 // This lets the keyboard pull up to 1.6 amps from
 // the host. That violates the USB spec. But it sure
 // is pretty looking
 void Model01::enable_high_power_leds(void) {
-    pinMode(7, OUTPUT);
-    digitalWrite(7, LOW);
+    // PE6
+    //    pinMode(7, OUTPUT);
+//    digitalWrite(7, LOW);
+
+    DDRE |= _BV(6);
+    DDRE &= ~_BV(6); // Turn the ATTiny back on
+
 }
 
 void Model01::setup(void) {
