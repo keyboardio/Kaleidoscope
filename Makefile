@@ -38,6 +38,7 @@ AVRDUDE_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude
 AVRDUDE_CONF_PATH=$(ARDUINO_TOOLS_PATH)/avr/etc/avrdude.conf
 AVR_SIZE_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avr-size
 AVR_NM_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avr-nm
+AVR_OBJDUMP_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avr-objdump
 
 
 
@@ -115,6 +116,8 @@ size: compile
 size-map: compile
 	$(AVR_NM_PATH) --size-sort -C -r $(ELF_FILE_PATH)
 
+decompile: compile
+	$(AVR_OBJDUMP_PATH) -d $(ELF_FILE_PATH)
 
 hex-with-bootloader: compile
 	@cat $(HEX_FILE_PATH) | awk '/^:00000001FF/ == 0' > $(HEX_FILE_WITH_BOOTLOADER_PATH)
