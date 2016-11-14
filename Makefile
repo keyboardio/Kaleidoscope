@@ -37,6 +37,7 @@ ARDUINO_BUILDER_PATH=$(ARDUINO_PATH)/arduino-builder
 AVRDUDE_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avrdude
 AVRDUDE_CONF_PATH=$(ARDUINO_TOOLS_PATH)/avr/etc/avrdude.conf
 AVR_SIZE_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avr-size
+AVR_NM_PATH=$(ARDUINO_TOOLS_PATH)/avr/bin/avr-nm
 
 
 
@@ -110,6 +111,9 @@ compile: dirs
 
 size: compile
 	$(AVR_SIZE_PATH) -C --mcu=$(MCU) $(ELF_FILE_PATH)
+
+size-map: compile
+	$(AVR_NM_PATH) --size-sort -C -r $(ELF_FILE_PATH)
 
 
 hex-with-bootloader: compile
