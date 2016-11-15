@@ -22,7 +22,6 @@ void setup();
 #include <avr/wdt.h>
 
 #include "KeyboardConfig.h"
-#include "generated/keymaps.h"
 #include "key_events.h"
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
@@ -38,7 +37,7 @@ class Keyboardio_ {
   public:
     Keyboardio_(void);
 
-    void setup(void);
+    void setup(const byte keymap_count, const byte numpad_layer);
     void loop(void);
 };
 

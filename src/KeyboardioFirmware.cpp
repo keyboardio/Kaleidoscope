@@ -1,10 +1,12 @@
 #include "KeyboardioFirmware.h"
 
+byte NUMPAD_KEYMAP = 0;
+
 Keyboardio_::Keyboardio_(void) {
 }
 
 void
-Keyboardio_::setup(void) {
+Keyboardio_::setup(const byte keymap_count, const byte numpad_layer) {
     event_handler_hook_add (handle_key_event_default);
     wdt_disable();
     delay(100);
@@ -14,7 +16,8 @@ Keyboardio_::setup(void) {
     KeyboardHardware.setup();
     LEDControl.boot_animation();
 
-    temporary_keymap = primary_keymap = Storage.load_primary_keymap(KEYMAPS);
+    NUMPAD_KEYMAP = numpad_layer;
+    temporary_keymap = primary_keymap = Storage.load_primary_keymap(keymap_count);
 }
 
 custom_loop_t loopHooks[HOOK_MAX] = {NULL};

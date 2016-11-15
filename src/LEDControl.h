@@ -91,3 +91,5 @@ class LEDControl_ {
 };
 
 extern LEDControl_ LEDControl;
+
+extern byte NUMPAD_KEYMAP;
