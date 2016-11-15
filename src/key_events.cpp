@@ -1,7 +1,5 @@
 #include "key_events.h"
 
-static const Key keymaps[KEYMAPS][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
-
 void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t previousState) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(mappedKey, currentState, previousState);

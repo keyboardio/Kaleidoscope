@@ -7,12 +7,12 @@
 #include "LEDControl.h"
 #include "Storage.h"
 #include "keymap_metadata.h"
-#include "generated/keymaps.h"
 #include "hooks.h"
 
 //static const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
 extern uint8_t temporary_keymap;
+extern const Key keymaps[][ROWS][COLS];
 
 // sending events to the computer
 void handle_synthetic_key_event( Key mappedKey, uint8_t currentState, uint8_t previousState);
