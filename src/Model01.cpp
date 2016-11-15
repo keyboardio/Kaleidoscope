@@ -107,12 +107,12 @@ void Model01::act_on_matrix_scan() {
 
             uint8_t keynum = (row*8)+(col);
 
-            handle_key_event(row, 7-col,
+            handle_key_event(Key_NoKey, row, 7-col,
                              bitRead(leftHandState.all, keynum),
                              bitRead(previousLeftHandState.all, keynum)
                             );
 
-            handle_key_event(row, (15- col),
+            handle_key_event(Key_NoKey, row, (15- col),
                              bitRead(rightHandState.all, keynum),
                              bitRead(previousRightHandState.all, keynum)
                             );
