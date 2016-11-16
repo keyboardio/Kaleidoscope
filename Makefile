@@ -86,8 +86,8 @@ astyle:
 		find . -type f -name \*.h |xargs -n 1 astyle --style=google
 
 generate-keymaps:
-	-rm src/generated/keymaps.h
-	cd layouts && ( find . -type f |xargs -n 1 -I % sh -c 'perl ../tools/generate_keymaps.pl < % >> ../src/generated/keymaps.h' )
+	-rm examples/KeyboardioFirmware/generated/keymaps.h
+	cd examples/KeyboardioFirmware/layouts && ( find . -type f | sort | xargs -n 1 -I % sh -c 'perl ../../../tools/generate_keymaps.pl < % >> ../generated/keymaps.h' )
 
 dirs:
 	mkdir -p $(OUTPUT_PATH)

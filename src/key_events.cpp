@@ -1,7 +1,5 @@
 #include "key_events.h"
 
-static const Key keymaps[KEYMAPS][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
-
 void handle_synthetic_key_event(Key mappedKey, uint8_t currentState, uint8_t previousState) {
     if (mappedKey.flags & IS_MOUSE_KEY && !( mappedKey.rawKey & KEY_MOUSE_WARP) ) {
         handle_mouse_key_event(mappedKey, currentState, previousState);
@@ -51,19 +49,21 @@ Key lookup_key(byte keymap, byte row, byte col) {
     return mappedKey;
 }
 
-void handle_key_event(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+void handle_key_event(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState) {
     for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
         custom_handler_t handler = eventHandlers[i];
-        if ((*handler)(row, col, currentState, previousState))
+        if ((*handler)(mappedKey, row, col, currentState, previousState))
             return;
     }
 }
 
-bool handle_key_event_default(byte row, byte col, uint8_t currentState, uint8_t previousState) {
+bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
-    Key mappedKey = lookup_key(temporary_keymap, row, col);
+    if (mappedKey.raw == Key_NoKey.raw) {
+      mappedKey = lookup_key(temporary_keymap, row, col);
+    }
     Key baseKey   = lookup_key(primary_keymap, row, col);
 
     if ((baseKey.flags & SWITCH_TO_KEYMAP

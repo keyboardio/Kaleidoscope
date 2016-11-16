@@ -48,7 +48,7 @@ class Model01 {
 
 };
 
-#define SCANBIT(row,col) (1 << (row * 8 + (7 - col)))
+#define SCANBIT(row,col) ((uint32_t)1 << (row * 8 + (7 - col)))
 
 #define R0C0  SCANBIT(0, 0)
 #define R0C1  SCANBIT(0, 1)
