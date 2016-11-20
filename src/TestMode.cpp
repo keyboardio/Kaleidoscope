@@ -1,5 +1,8 @@
 #include "KeyboardioFirmware.h"
 #include "TestMode.h"
+#include "LED-RainbowEffect.h"
+
+static LEDRainbowEffect testRainbowEffect;
 
 TestMode_::TestMode_(void) {
 }
@@ -39,7 +42,7 @@ void TestMode_::TestLEDs(void) {
     delay(1000);
     // rainbow for 10 seconds
     for(auto i=0; i<10000; i++ ) {
-        LEDControl.effect_rainbow_update();
+        testRainbowEffect.update();
         led_sync();
         delay(1);
     }
