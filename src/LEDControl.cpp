@@ -1,5 +1,10 @@
 #include "LEDControl.h"
 
+void
+LEDMode::activate (void) {
+  LEDControl.activate (this);
+}
+
 LEDControl_::LEDControl_(void) {
   memset (modes, 0, LED_MAX_MODES * sizeof (modes[0]));
 }
@@ -52,6 +57,14 @@ LEDControl_::set_mode (uint8_t mode) {
 uint8_t
 LEDControl_::get_mode (void) {
   return mode;
+}
+
+void
+LEDControl_::activate (LEDMode *mode) {
+  for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
+    if (modes[i] == mode)
+      return set_mode(i);
+  }
 }
 
 int8_t
