@@ -1,27 +1,31 @@
 #include "hooks.h"
 
 void
-event_handler_hook_add (custom_handler_t hook) {
-    byte i;
-
-    for (i = 0; i < HOOK_MAX && eventHandlers[i] != NULL; i++) {
+event_handler_hook_replace (custom_handler_t oldHook, custom_handler_t newHook) {
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (eventHandlers[i] == oldHook) {
+            eventHandlers[i] = newHook;
+            return;
+        }
     }
+}
 
-    if (i == HOOK_MAX)
-        return;
+void
+event_handler_hook_add (custom_handler_t hook) {
+    event_handler_hook_replace ((custom_handler_t)NULL, hook);
+}
 
-    eventHandlers[i] = hook;
+void
+loop_hook_replace (custom_loop_t oldHook, custom_loop_t newHook) {
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (loopHooks[i] == oldHook) {
+            loopHooks[i] = newHook;
+            return;
+        }
+    }
 }
 
 void
 loop_hook_add (custom_loop_t hook) {
-    byte i;
-
-    for (i = 0; i < HOOK_MAX && loopHooks[i] != NULL; i++) {
-    }
-
-    if (i == HOOK_MAX)
-        return;
-
-    loopHooks[i] = hook;
+    loop_hook_replace ((custom_loop_t)NULL, hook);
 }
