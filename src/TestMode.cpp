@@ -63,6 +63,7 @@ void TestMode_::setup() {
 }
 bool handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState) {
     Serial.write(row);
+    return false;
 }
 
 TestMode_ TestMode;
