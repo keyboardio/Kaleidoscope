@@ -10,6 +10,7 @@ class LEDMode {
   virtual void setup (void) {};
   virtual void init (void) {};
   virtual void update (void) {};
+  virtual void activate (void);
 };
 
 class LEDControl_ {
@@ -25,6 +26,8 @@ class LEDControl_ {
 
     void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
     void set_all_leds_to(cRGB color);
+
+    void activate (LEDMode *mode);
 
  private:
     LEDMode *modes[LED_MAX_MODES];
