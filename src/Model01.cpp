@@ -2,6 +2,13 @@
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
 
+static constexpr uint8_t key_led_map[4][16] = {
+  {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
+  {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
+  {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
+  {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
+};
+
 Model01::Model01(void) {
 
 }
@@ -53,6 +60,10 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
         // TODO how do we want to handle debugging assertions about crazy user
         // code that would overwrite other memory?
     }
+}
+
+void Model01::led_set_crgb_at(byte row, byte col, cRGB color) {
+    led_set_crgb_at(key_led_map[row][col], color);
 }
 
 cRGB Model01::led_get_crgb_at(uint8_t i) {

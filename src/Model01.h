@@ -37,15 +37,6 @@ class Model01 {
   private:
     static KeyboardioScanner leftHand;
     static KeyboardioScanner rightHand;
-
-    static constexpr uint8_t key_led_map[4][16] = {
-        {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
-        {2,5,10,13,18,21,31,28,     35,32,42,45,50,53,58,61},
-        {1,6,9,14, 17,22,25,29,     34,38,41,46,49,54,57,62},
-        {0,7,8,15,16,23,24,30,      33,39,40,47,48,55,56,63},
-    };
-
-
 };
 
 #define SCANBIT(row,col) ((uint32_t)1 << (row * 8 + (7 - col)))
