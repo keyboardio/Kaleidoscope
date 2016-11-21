@@ -1,24 +1,21 @@
 #include "KeyboardioFirmware.h"
 
-byte NUMPAD_KEYMAP = 0;
-
 Keyboardio_::Keyboardio_(void) {
     memset(eventHandlers, 0, HOOK_MAX * sizeof(custom_handler_t));
     memset(loopHooks, 0, HOOK_MAX * sizeof(custom_handler_t));
 }
 
 void
-Keyboardio_::setup(const byte keymap_count, const byte numpad_layer) {
-    event_handler_hook_add(handle_key_event_default);
+Keyboardio_::setup(const byte keymap_count) {
+    event_handler_hook_add (handle_key_event_default);
     wdt_disable();
     delay(100);
     Keyboard.begin();
     Mouse.begin();
     AbsoluteMouse.begin();
     KeyboardHardware.setup();
-    LEDControl.boot_animation();
+    LEDControl.setup();
 
-    NUMPAD_KEYMAP = numpad_layer;
     temporary_keymap = primary_keymap = Storage.load_primary_keymap(keymap_count);
 }
 
@@ -32,7 +29,7 @@ Keyboardio_::loop(void) {
     }
 
     KeyboardHardware.scan_matrix();
-    LEDControl.update(temporary_keymap);
+    LEDControl.update();
     Keyboard.sendReport();
     Keyboard.releaseAll();
 }
