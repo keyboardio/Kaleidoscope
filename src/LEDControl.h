@@ -3,93 +3,32 @@
 #include <Arduino.h>
 #include "KeyboardConfig.h"
 
+#define LED_MAX_MODES 24
 
-#define LED_MODES 12
-#define LED_MODE_OFF 0
-
-#define LED_MODE_RED 1
-#define LED_MODE_ORANGE 2
-#define LED_MODE_YELLOW 3
-#define LED_MODE_GREEN 4
-#define LED_MODE_BLUE 5
-#define LED_MODE_INDIGO 6
-#define LED_MODE_VIOLET 7
-
-
-#define LED_MODE_BREATHE 8
-#define LED_MODE_RAINBOW 9
-#define LED_MODE_RAINBOW_WAVE 10
-#define LED_MODE_CHASE 11
-
-
-
-
-#define LED_SPECIAL_MODE_NUMLOCK 100
-
+class LEDMode {
+ public:
+  virtual void setup (void) {};
+  virtual void init (void) {};
+  virtual void update (void) {};
+};
 
 class LEDControl_ {
   public:
     LEDControl_(void);
-    void next_mode();
-    void boot_animation();
-    void update(uint8_t current_keymap);
-    void type_letter(uint8_t letter);
+    void next_mode(void);
+    void setup(void);
+    void update(void);
     void set_mode(uint8_t mode);
+    uint8_t get_mode();
+
+    int8_t mode_add (LEDMode *mode);
+
     void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
-    void effect_rainbow_update();
-
-  private:
-    uint8_t led_mode = 0;
-    uint8_t last_led_mode = 0;
-    uint8_t stored_led_mode = 0;
-    uint8_t pos = 0;
-    void hsv_to_rgb(cRGB *cRGB, uint16_t h, uint16_t s, uint16_t v);
-
-    cRGB led_off;
-    cRGB led_steady;
-    cRGB led_blue;
-    cRGB led_dark_blue;
-    cRGB led_red;
-    cRGB led_dark_red;
-    cRGB led_breathe;
-    cRGB rainbow;
-
-    uint16_t rainbow_hue = 0;   //stores 0 to 614
-
-    static const uint8_t rainbow_steps = 1; //number of hues we skip in a 360 range per update
-    static const uint8_t rainbow_wave_steps=1; //number of hues we skip in a 360 range per update
-
-    static const byte rainbow_saturation = 255;
-    static const byte rainbow_value = 50;
-
-    static const long rainbow_wave_ticks = 10; //delays between update
-    static const long rainbow_ticks = 10; //delays between update
-    long rainbow_current_ticks=0;
-
-    uint8_t breathe_brightness = 0;    // how bright the LED is
-    int8_t breathe_fadeAmount=1;    // how many points to fade the LED by (can be negative)
-    int8_t chase_sign =1; //negative values when it's going backwar
-    uint8_t chase_pixels=5;
-    uint8_t current_chase_counter = 0;
-    static const uint8_t chase_threshold = 20;
-// End RGB stuff
-    void led_compute_breath();
-    void effect_breathe_init();
-    void effect_rainbow_init();
-    void effect_chase_init();
-    void effect_steady_init();
-    void effect_heatmap_init();
-
-    void effect_breathe_update();
-    void effect_rainbow_wave_update();
-    void effect_chase_update();
-    void effect_steady_update();
-    void effect_heatmap_update();
-    void effect_numlock_update();
     void set_all_leds_to(cRGB color);
-    void initialize_led_mode(uint8_t mode);
+
+ private:
+    LEDMode *modes[LED_MAX_MODES];
+    uint8_t previousMode, mode;
 };
 
 extern LEDControl_ LEDControl;
-
-extern byte NUMPAD_KEYMAP;

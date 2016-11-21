@@ -37,7 +37,7 @@ class Keyboardio_ {
   public:
     Keyboardio_(void);
 
-    void setup(const byte keymap_count, const byte numpad_layer);
+    void setup(const byte keymap_count);
     void loop(void);
 };
 
