@@ -25,7 +25,7 @@ void Model01::enable_high_power_leds(void) {
 //    digitalWrite(7, LOW);
 
     DDRE |= _BV(6);
-    DDRE &= ~_BV(6); // Turn the ATTiny back on
+    PORTE &= ~_BV(6);
 
 }
 
