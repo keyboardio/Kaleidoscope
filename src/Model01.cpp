@@ -60,6 +60,8 @@ cRGB Model01::led_get_crgb_at(uint8_t i) {
         return leftHand.ledData.leds[i];
     } else if (i<64) {
         return rightHand.ledData.leds[i-32] ;
+    } else {
+        return {0, 0, 0};
     }
 }
 
