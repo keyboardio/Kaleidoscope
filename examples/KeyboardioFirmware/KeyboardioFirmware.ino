@@ -8,6 +8,7 @@
 #include "generated/keymaps.h"
 
 #include "BootAnimation.h"
+#include "LED-Off.h"
 #include "LED-SolidColor.h"
 #include "LED-Numlock.h"
 #include "LED-BreatheEffect.h"
@@ -23,6 +24,7 @@ uint8_t temporary_keymap = 0;
 
 const Key keymaps[][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
+static LEDOff LEDSOff;
 static LEDSolidColor solidRed (100, 0, 0);
 static LEDSolidColor solidOrange (100, 30, 0);
 static LEDSolidColor solidYellow (90, 70, 0);
