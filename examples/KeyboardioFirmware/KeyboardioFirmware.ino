@@ -7,7 +7,7 @@
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
-#include "LED-BootAnimation.h"
+#include "BootAnimation.h"
 #include "LED-SolidColor.h"
 #include "LED-Numlock.h"
 #include "LED-BreatheEffect.h"
@@ -23,7 +23,6 @@ uint8_t temporary_keymap = 0;
 
 const Key keymaps[][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
-static LEDBootAnimation bootAnimation;
 static LEDSolidColor solidRed (100, 0, 0);
 static LEDSolidColor solidOrange (100, 30, 0);
 static LEDSolidColor solidYellow (90, 70, 0);
@@ -41,6 +40,7 @@ static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
 void setup() {
     Keyboardio.setup(KEYMAPS);
+    bootAnimation();
 }
 
 

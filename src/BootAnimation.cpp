@@ -1,4 +1,5 @@
-#include "LED-BootAnimation.h"
+#include "BootAnimation.h"
+#include "KeyboardConfig.h"
 
 static void
 type_letter(uint8_t letter) {
@@ -10,12 +11,8 @@ type_letter(uint8_t letter) {
   delay(10);
 }
 
-LEDBootAnimation::LEDBootAnimation (void) {
-  LEDControl.mode_add (this);
-}
-
 void
-LEDBootAnimation::setup (void) {
+bootAnimation (void) {
   LEDControl.set_all_leds_to(0, 0, 0);
 
   type_letter(LED_K);
