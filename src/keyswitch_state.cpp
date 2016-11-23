@@ -1,6 +1,7 @@
 #include "keyswitch_state.h"
 // switch debouncing and status
 
+#define PRESSED B00000001
 
 boolean key_was_pressed (byte keyState) {
     if ( keyState & B00001000 || keyState & B00000100) {
@@ -11,7 +12,7 @@ boolean key_was_pressed (byte keyState) {
 }
 
 boolean key_was_pressed (uint8_t currentState, uint8_t previousState) {
-    if (previousState & B00000001) {
+    if (previousState & PRESSED) {
         return true;
     } else {
         return false;
@@ -27,7 +28,7 @@ boolean key_is_pressed (byte keyState) {
 }
 
 boolean key_is_pressed (uint8_t currentState, uint8_t previousState) {
-    if (currentState & B00000001) {
+    if (currentState & PRESSED) {
         return true;
     } else {
         return false;
@@ -43,7 +44,7 @@ boolean key_toggled_on(byte keyState) {
 }
 
 boolean key_toggled_on (uint8_t currentState, uint8_t previousState) {
-    if ((currentState & B00000001) && ! (previousState & B00000001) ) {
+    if ((currentState & PRESSED) && ! (previousState & PRESSED) ) {
         return true;
     } else {
         return false;
@@ -60,7 +61,7 @@ boolean key_toggled_off(byte keyState) {
 }
 
 boolean key_toggled_off (uint8_t currentState, uint8_t previousState) {
-    if ((previousState & B00000001) && ! (currentState & B00000001) ) {
+    if ((previousState & PRESSED) && ! (currentState & PRESSED) ) {
         return true;
     } else {
         return false;
