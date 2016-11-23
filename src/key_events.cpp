@@ -30,7 +30,7 @@ Key lookup_key(byte keymap, byte row, byte col) {
 }
 
 void handle_key_event(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState) {
-    if (mappedKey.raw == Key_NoKey.raw) {
+    if (!(currentState & INJECTED)) {
         mappedKey = lookup_key(temporary_keymap, row, col);
     }
     for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
@@ -45,7 +45,7 @@ bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t current
     // for every newly released button, figure out what logical key it is and send a key up event
 
     Key baseKey = Key_NoKey;
-    if (mappedKey.raw == Key_NoKey.raw) {
+    if (!(currentState & INJECTED)) {
       baseKey = lookup_key(primary_keymap, row, col);
     }
 
