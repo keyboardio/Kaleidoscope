@@ -11,8 +11,6 @@ Keyboardio_::setup(const byte keymap_count) {
     wdt_disable();
     delay(100);
     Keyboard.begin();
-    Mouse.begin();
-    AbsoluteMouse.begin();
     KeyboardHardware.setup();
     LEDControl.setup();
 

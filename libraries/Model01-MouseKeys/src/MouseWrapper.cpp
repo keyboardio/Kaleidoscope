@@ -7,6 +7,7 @@
 
 MouseWrapper_::MouseWrapper_(void) {
     Mouse.begin();
+    AbsoluteMouse.begin();
 }
 
 void MouseWrapper_::press_button(uint8_t button) {
