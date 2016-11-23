@@ -11,7 +11,7 @@ boolean key_was_pressed (byte keyState) {
 }
 
 boolean key_was_pressed (uint8_t currentState, uint8_t previousState) {
-    if (previousState) {
+    if (previousState & B00000001) {
         return true;
     } else {
         return false;
@@ -27,7 +27,7 @@ boolean key_is_pressed (byte keyState) {
 }
 
 boolean key_is_pressed (uint8_t currentState, uint8_t previousState) {
-    if (currentState) {
+    if (currentState & B00000001) {
         return true;
     } else {
         return false;
@@ -43,7 +43,7 @@ boolean key_toggled_on(byte keyState) {
 }
 
 boolean key_toggled_on (uint8_t currentState, uint8_t previousState) {
-    if (currentState && ! previousState ) {
+    if ((currentState & B00000001) && ! (previousState & B00000001) ) {
         return true;
     } else {
         return false;
@@ -60,7 +60,7 @@ boolean key_toggled_off(byte keyState) {
 }
 
 boolean key_toggled_off (uint8_t currentState, uint8_t previousState) {
-    if (previousState && ! currentState ) {
+    if ((previousState & B00000001) && ! (currentState & B00000001) ) {
         return true;
     } else {
         return false;

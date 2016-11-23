@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+#define INJECTED B10000000
 
 boolean key_was_pressed (byte keyState);
 boolean key_is_pressed (byte keyState);
