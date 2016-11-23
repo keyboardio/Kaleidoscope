@@ -1,4 +1,8 @@
-#include "LED-BootAnimation.h"
+#include "BootAnimation.h"
+#include "KeyboardConfig.h"
+#include "EEPROM.h"
+
+#define EEPROM_BOOT_ANIMATION_LOCATION 1
 
 static void
 type_letter(uint8_t letter) {
@@ -10,12 +14,11 @@ type_letter(uint8_t letter) {
   delay(10);
 }
 
-LEDBootAnimation::LEDBootAnimation (void) {
-  LEDControl.mode_add (this);
-}
-
 void
-LEDBootAnimation::setup (void) {
+bootAnimation (void) {
+  if (EEPROM.read (EEPROM_BOOT_ANIMATION_LOCATION))
+    return;
+
   LEDControl.set_all_leds_to(0, 0, 0);
 
   type_letter(LED_K);
@@ -32,4 +35,6 @@ LEDBootAnimation::setup (void) {
   type_letter(LED_0);
   type_letter(LED_PERIOD);
   type_letter(LED_9);
+
+  EEPROM.update (EEPROM_BOOT_ANIMATION_LOCATION, 1);
 }
