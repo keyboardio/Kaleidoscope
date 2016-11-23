@@ -1,5 +1,8 @@
 #include "BootAnimation.h"
 #include "KeyboardConfig.h"
+#include "EEPROM.h"
+
+#define EEPROM_BOOT_ANIMATION_LOCATION 1
 
 static void
 type_letter(uint8_t letter) {
@@ -13,6 +16,9 @@ type_letter(uint8_t letter) {
 
 void
 bootAnimation (void) {
+  if (EEPROM.read (EEPROM_BOOT_ANIMATION_LOCATION))
+    return;
+
   LEDControl.set_all_leds_to(0, 0, 0);
 
   type_letter(LED_K);
@@ -29,4 +35,6 @@ bootAnimation (void) {
   type_letter(LED_0);
   type_letter(LED_PERIOD);
   type_letter(LED_9);
+
+  EEPROM.update (EEPROM_BOOT_ANIMATION_LOCATION, 1);
 }
