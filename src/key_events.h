@@ -43,12 +43,12 @@ extern const Key keymaps[][ROWS][COLS];
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handle_key_event(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState);
+void handle_key_event(Key mappedKey, byte row, byte col, uint8_t state);
 
 // Internal use
-void handle_synthetic_key_event( Key mappedKey, uint8_t currentState, uint8_t previousState);
+void handle_synthetic_key_event( Key mappedKey, uint8_t state);
 void press_key(Key mappedKey);
-void handle_keymap_key_event(Key keymapEntry, uint8_t currentState, uint8_t previousState);
-bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState);
+void handle_keymap_key_event(Key keymapEntry, uint8_t state);
+bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t state);
 
 Key lookup_key(byte keymap, byte row, byte col);
