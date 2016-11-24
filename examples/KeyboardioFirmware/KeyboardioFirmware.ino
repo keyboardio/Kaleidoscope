@@ -4,7 +4,7 @@
 
 #define DEBUG_SERIAL false
 
-#include "MouseKeys.h"
+#include "Keyboardio-MouseKeys.h"
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
