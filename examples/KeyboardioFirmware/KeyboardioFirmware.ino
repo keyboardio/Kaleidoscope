@@ -19,7 +19,6 @@
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
 
-#define KEYMAPS 3
 #define NUMPAD_KEYMAP 2
 #define KEYMAP_LIST KEYMAP_QWERTY KEYMAP_GENERIC_FN2 KEYMAP_NUMPAD
 
@@ -42,7 +41,7 @@ static LEDChaseEffect chaseEffect;
 static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
 void setup() {
-    Keyboardio.setup(KEYMAPS);
+    Keyboardio.setup(KEYMAP_SIZE);
     bootAnimation();
 }
 
