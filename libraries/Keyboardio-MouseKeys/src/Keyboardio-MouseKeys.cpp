@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "MouseKeys.h"
+#include "Keyboardio-MouseKeys.h"
 #include "MouseWrapper.h"
 #include "KeyboardioFirmware.h"
 
