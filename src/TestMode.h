@@ -15,4 +15,4 @@ class TestMode_ {
 
 extern TestMode_ TestMode;
 
-bool handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t state);
+bool handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t keyState);

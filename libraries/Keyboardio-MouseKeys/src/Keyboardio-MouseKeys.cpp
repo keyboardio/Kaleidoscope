@@ -4,8 +4,8 @@
 #include "MouseWrapper.h"
 #include "KeyboardioFirmware.h"
 
-static void handle_mouse_key_event(Key mappedKey, uint8_t state) {
-    if (!key_is_pressed(state))
+static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
+    if (!key_is_pressed(keyState))
         return;
 
     if (mappedKey.rawKey & KEY_MOUSE_UP) {
@@ -22,14 +22,14 @@ static void handle_mouse_key_event(Key mappedKey, uint8_t state) {
     }
 }
 
-static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t state) {
+static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (! (mappedKey.flags & IS_INTERNAL)
             && (mappedKey.rawKey == KEY_MOUSE_BTN_L
                 || mappedKey.rawKey == KEY_MOUSE_BTN_M
                 || mappedKey.rawKey == KEY_MOUSE_BTN_R)) {
-        if (key_toggled_on(state)) {
+        if (key_toggled_on(keyState)) {
             MouseWrapper.press_button(mappedKey.rawKey);
-        } else if (key_toggled_off(state)) {
+        } else if (key_toggled_off(keyState)) {
             MouseWrapper.release_button(mappedKey.rawKey);
         }
         return true;
@@ -39,8 +39,8 @@ static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t state) {
         return false;
 
     if (!(mappedKey.rawKey & KEY_MOUSE_WARP)) {
-        handle_mouse_key_event(mappedKey, state);
-    } else if (key_toggled_on(state)) {
+        handle_mouse_key_event(mappedKey, keyState);
+    } else if (key_toggled_on(keyState)) {
         if (mappedKey.rawKey & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
             // we don't pass in the left and up values because those are the
             // default, "no-op" conditionals
