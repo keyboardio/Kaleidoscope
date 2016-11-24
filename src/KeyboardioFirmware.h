@@ -33,6 +33,8 @@ extern uint8_t temporary_keymap;
 #define VERSION "locally-built"
 #endif
 
+#define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
+
 class Keyboardio_ {
   public:
     Keyboardio_(void);
