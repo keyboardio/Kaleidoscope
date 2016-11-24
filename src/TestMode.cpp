@@ -64,7 +64,7 @@ void TestMode_::TestMatrix () {
 void TestMode_::setup() {
     eventHandlers[0] = handle_key_event_test;
 }
-bool handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState) {
+bool handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t keyState) {
     Serial.write(row);
     return false;
 }

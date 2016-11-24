@@ -130,15 +130,14 @@ void Model01::act_on_matrix_scan() {
 
             uint8_t keynum = (row*8)+(col);
 
-            handle_key_event(Key_NoKey, row, 7-col,
-                             bitRead(leftHandState.all, keynum),
-                             bitRead(previousLeftHandState.all, keynum)
-                            );
+            uint8_t keyState = (bitRead(previousLeftHandState.all, keynum) << 0) |
+              (bitRead(leftHandState.all, keynum) << 1);
+            handle_key_event(Key_NoKey, row, 7-col, keyState);
 
-            handle_key_event(Key_NoKey, row, (15- col),
-                             bitRead(rightHandState.all, keynum),
-                             bitRead(previousRightHandState.all, keynum)
-                            );
+            keyState = (bitRead(previousRightHandState.all, keynum) << 0) |
+              (bitRead(rightHandState.all, keynum) << 1);
+
+            handle_key_event(Key_NoKey, row, (15- col), keyState);
         }
     }
 }

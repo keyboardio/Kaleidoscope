@@ -39,14 +39,16 @@ extern const Key keymaps[][ROWS][COLS];
  * For this reason, the handle_key_event receives four arguments: the mapped key
  * (or Key_NoKey if we do not want to override what is in the keymap), the row
  * and column of the key, so we can look up the code for it, and the current and
- * previous state of the key, so we can determine what the event is.
+ * previous state of the key, so we can determine what the event is. The
+ * currentState may be flagged INJECTED, which signals that the event was
+ * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handle_key_event(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState);
+void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState);
 
 // Internal use
-void handle_synthetic_key_event( Key mappedKey, uint8_t currentState, uint8_t previousState);
+void handle_synthetic_key_event( Key mappedKey, uint8_t keyState);
 void press_key(Key mappedKey);
-void handle_keymap_key_event(Key keymapEntry, uint8_t currentState, uint8_t previousState);
-bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t currentState, uint8_t previousState);
+void handle_keymap_key_event(Key keymapEntry, uint8_t keyState);
+bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyState);
 
 Key lookup_key(byte keymap, byte row, byte col);

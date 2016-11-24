@@ -3,13 +3,11 @@
 
 #include <Arduino.h>
 
+#define INJECTED    B10000000
+#define IS_PRESSED  B00000010
+#define WAS_PRESSED B00000001
 
-boolean key_was_pressed (byte keyState);
-boolean key_is_pressed (byte keyState);
-boolean key_toggled_on(byte keyState);
-boolean key_toggled_off(byte keyState);
-
-boolean key_was_pressed (uint8_t currentState, uint8_t previousState);
-boolean key_is_pressed (uint8_t currentState, uint8_t previousState);
-boolean key_toggled_on(uint8_t currentState, uint8_t previousState);
-boolean key_toggled_off(uint8_t currentState, uint8_t previousState);
+#define key_was_pressed(keyState) (keyState & WAS_PRESSED)
+#define key_is_pressed(keyState)  (keyState & IS_PRESSED)
+#define key_toggled_on(keyState)  (key_is_pressed(keyState) && ! key_was_pressed(keyState))
+#define key_toggled_off(keyState) (key_was_pressed(keyState) && ! key_is_pressed(keyState))
