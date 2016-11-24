@@ -100,6 +100,7 @@ compile: dirs
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
+		-libraries libraries/ \
 		-libraries . \
 		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
