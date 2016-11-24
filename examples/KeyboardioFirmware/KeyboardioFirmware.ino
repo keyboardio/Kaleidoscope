@@ -8,7 +8,6 @@
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
-#include "BootAnimation.h"
 #include "LED-Off.h"
 #include "LED-SolidColor.h"
 #include "LED-Numlock.h"
@@ -42,7 +41,6 @@ static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
 void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
-    bootAnimation();
 }
 
 
