@@ -1,5 +1,5 @@
 #NAME: GENERIC_FN2
-skip   F1        F2        F3      F4           F5            NoKey     LCtrl       RCtrl       NoKey      F6          F7        F8          F9           Keymap0      skip  
+skip   F1        F2        F3      F4           F5            NoKey     LCtrl       RCtrl       NoKey      F6          F7        F8          F9           Trans        skip  
 Tab    mouseBtnM mouseUp   skip    mouseWarpNW  mouseWarpNE   NoKey     mouseBtnL   mouseBtnR   NoKey      playPause   {         }           [            ]        sleep
 Home   mouseL 	 mouseDn   mouseR  mouseWarpSW  mouseWarpSE   nextTrack LGUI        RAlt        Delete     LArrow      DnArrow   UpArrow     RArrow       F11      F12
-End    Z         X         C       V            mouseWarpEnd  skip      LShift      RShift      skip       volumeDown  volumeUp  BacklightDn BacklightUp  \        |
+End    Z         X         C       V            mouseWarpEnd  Trans     LShift      RShift      Trans      volumeDown  volumeUp  BacklightDn BacklightUp  \        |

@@ -9,9 +9,6 @@
 #include "keymap_metadata.h"
 #include "hooks.h"
 
-//static const Key keymaps[KEYMAPS][ROWS][COLS];
-extern uint8_t primary_keymap;
-extern uint8_t temporary_keymap;
 extern const Key keymaps[][ROWS][COLS];
 
 // sending events to the computer
@@ -48,5 +45,3 @@ void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState);
 // Internal use
 void press_key(Key mappedKey);
 void release_key(Key mappedKey);
-
-Key lookup_key(byte keymap, byte row, byte col);
