@@ -8,6 +8,7 @@
 #include "Storage.h"
 #include "keymap_metadata.h"
 #include "hooks.h"
+#include "Macros.h"
 
 //static const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
@@ -44,8 +45,6 @@ extern const Key keymaps[][ROWS][COLS];
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
 void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState);
-
-void macroAction(uint8_t macroIndex, uint8_t keyState);
 
 // Internal use
 void handle_synthetic_key_event( Key mappedKey, uint8_t keyState);

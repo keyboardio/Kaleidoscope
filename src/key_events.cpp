@@ -1,16 +1,6 @@
 #include "key_events.h"
 
-__attribute__((weak))
-void
-macroAction(uint8_t macroIndex, uint8_t keyState) {
-}
-
 void handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
-    if (mappedKey.flags & IS_MACRO) {
-        macroAction(mappedKey.rawKey, keyState);
-        return;
-    }
-
     if (!key_toggled_on(keyState))
         return;
 
