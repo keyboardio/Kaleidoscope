@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Arduino.h>
-#include "key_defs.h"
+#include <KeyboardioFirmware.h>
 
 #define IS_MACRO       B00000001
 

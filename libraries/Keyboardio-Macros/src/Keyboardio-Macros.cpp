@@ -1,5 +1,4 @@
-#include "Macros.h"
-#include "hooks.h"
+#include "Keyboardio-Macros.h"
 
 __attribute__((weak))
 void

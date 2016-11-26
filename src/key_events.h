@@ -8,7 +8,6 @@
 #include "Storage.h"
 #include "keymap_metadata.h"
 #include "hooks.h"
-#include "Macros.h"
 
 //static const Key keymaps[KEYMAPS][ROWS][COLS];
 extern uint8_t primary_keymap;
