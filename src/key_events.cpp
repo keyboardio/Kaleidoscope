@@ -1,21 +1,27 @@
 #include "key_events.h"
 
-void handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
-    if (key_toggled_on(keyState)) {
-        if (mappedKey.flags & IS_CONSUMER) {
-            ConsumerControl.press(mappedKey.rawKey);
-        } else if (mappedKey.flags & IS_INTERNAL) {
-            if (mappedKey.rawKey == LED_TOGGLE) {
-                LEDControl.next_mode();
-            }
-        } else if (mappedKey.flags & IS_SYSCTL) {
-            SystemControl.press(mappedKey.rawKey);
-        } else  if (mappedKey.flags & IS_MACRO) {
-            if (mappedKey.rawKey == 1) {
-                Serial.print("Keyboard.IO keyboard driver v0.00");
-            }
-        }
+__attribute__((weak))
+void
+macroAction(uint8_t macroIndex, uint8_t keyState) {
+}
 
+void handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
+    if (mappedKey.flags & IS_MACRO) {
+        macroAction(mappedKey.rawKey, keyState);
+        return;
+    }
+
+    if (!key_toggled_on(keyState))
+        return;
+
+    if (mappedKey.flags & IS_CONSUMER) {
+        ConsumerControl.press(mappedKey.rawKey);
+    } else if (mappedKey.flags & IS_INTERNAL) {
+        if (mappedKey.rawKey == LED_TOGGLE) {
+            LEDControl.next_mode();
+        }
+    } else if (mappedKey.flags & IS_SYSCTL) {
+        SystemControl.press(mappedKey.rawKey);
     }
 }
 

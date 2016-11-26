@@ -45,6 +45,8 @@ extern const Key keymaps[][ROWS][COLS];
  */
 void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState);
 
+void macroAction(uint8_t macroIndex, uint8_t keyState);
+
 // Internal use
 void handle_synthetic_key_event( Key mappedKey, uint8_t keyState);
 void press_key(Key mappedKey);

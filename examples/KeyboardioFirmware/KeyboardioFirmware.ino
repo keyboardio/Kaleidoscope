@@ -39,6 +39,12 @@ static LEDChaseEffect chaseEffect;
 
 static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
+void macroAction(uint8_t macroIndex, uint8_t keyState) {
+    if (macroIndex == 1 && key_toggled_on(keyState)) {
+        Serial.print("Keyboard.IO keyboard driver v0.00");
+    }
+}
+
 void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
 }
