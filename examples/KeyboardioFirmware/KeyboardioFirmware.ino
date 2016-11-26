@@ -40,10 +40,17 @@ static LEDChaseEffect chaseEffect;
 
 static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
-void macroAction(uint8_t macroIndex, uint8_t keyState) {
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     if (macroIndex == 1 && key_toggled_on(keyState)) {
         Serial.print("Keyboard.IO keyboard driver v0.00");
+        return MACRO(I(25),
+                     D(LShift), T(M), U(LShift), T(O), T(D), T(E), T(L),
+                     T(Space),
+                     W(100),
+                     T(0), T(1),
+                     END);
     }
+    return MACRO_NONE;
 }
 
 void setup() {
