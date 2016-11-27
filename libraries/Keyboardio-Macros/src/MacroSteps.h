@@ -16,7 +16,7 @@ typedef uint8_t macro_t;
 
 #define I(n) MACRO_ACTION_STEP_INTERVAL, n
 #define W(n) MACRO_ACTION_STEP_WAIT, n
-#define D(k) MACRO_ACTION_STEP_KEYDOWN, (Key_ ## k).raw
-#define U(k) MACRO_ACTION_STEP_KEYUP, (Key_ ## k).raw
+#define D(k) MACRO_ACTION_STEP_KEYDOWN, (Key_ ## k).flags, (Key_ ## k).rawKey
+#define U(k) MACRO_ACTION_STEP_KEYUP, (Key_ ## k).flags, (Key_ ## k).rawKey
 #define T(k) D(k), U(k)
 #define END  MACRO_ACTION_END
