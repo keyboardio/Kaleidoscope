@@ -48,6 +48,7 @@ void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState);
 // Internal use
 void handle_synthetic_key_event( Key mappedKey, uint8_t keyState);
 void press_key(Key mappedKey);
+void release_key(Key mappedKey);
 void handle_keymap_key_event(Key keymapEntry, uint8_t keyState);
 bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyState);
 
