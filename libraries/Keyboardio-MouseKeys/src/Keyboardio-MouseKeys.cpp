@@ -56,5 +56,3 @@ static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState)
 MouseKeys_::MouseKeys_(void) {
     event_handler_hook_add (handleMouseKeys);
 }
-
-MouseKeys_ MouseKeys;
