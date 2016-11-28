@@ -10,7 +10,7 @@ ARDUINO_LOCAL_LIB_PATH=$(HOME)/Arduino
 
 MD5 = md5sum
 
-RESET_BOARD=stty -F $(DEVICE_PORT) 1200
+RESET_BOARD=stty -F $(DEVICE_PORT) 1200 hupcl
 
 ifeq ($(uname_S),Darwin)
 
