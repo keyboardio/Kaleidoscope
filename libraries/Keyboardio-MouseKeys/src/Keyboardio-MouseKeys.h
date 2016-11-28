@@ -7,4 +7,4 @@ class MouseKeys_ {
     MouseKeys_ (void);
 };
 
-extern MouseKeys_ MouseKeys;
+static MouseKeys_ MouseKeys;
