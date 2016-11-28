@@ -22,7 +22,6 @@ typedef union {
 #define SYNTHETIC         B10000000
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_MACRO         B00000001
 #define IS_SYSCTL        B00000010
 #define IS_CONSUMER      B00000100
 #define IS_INTERNAL      B00001000
@@ -51,8 +50,6 @@ typedef union {
 
 #define Key_NoKey (Key){ KEY_FLAGS,0 }
 #define Key_skip (Key){ KEY_FLAGS,0 }
-
-#define Key_macroKey1 (Key){ KEY_FLAGS|SYNTHETIC|IS_MACRO, 1}
 
 
 #define Key_powerDown (Key) {KEY_FLAGS | SYNTHETIC|IS_SYSCTL,HID_SYSTEM_POWER_DOWN }

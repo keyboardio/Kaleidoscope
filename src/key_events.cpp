@@ -1,21 +1,17 @@
 #include "key_events.h"
 
 void handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
-    if (key_toggled_on(keyState)) {
-        if (mappedKey.flags & IS_CONSUMER) {
-            ConsumerControl.press(mappedKey.rawKey);
-        } else if (mappedKey.flags & IS_INTERNAL) {
-            if (mappedKey.rawKey == LED_TOGGLE) {
-                LEDControl.next_mode();
-            }
-        } else if (mappedKey.flags & IS_SYSCTL) {
-            SystemControl.press(mappedKey.rawKey);
-        } else  if (mappedKey.flags & IS_MACRO) {
-            if (mappedKey.rawKey == 1) {
-                Serial.print("Keyboard.IO keyboard driver v0.00");
-            }
-        }
+    if (!key_toggled_on(keyState))
+        return;
 
+    if (mappedKey.flags & IS_CONSUMER) {
+        ConsumerControl.press(mappedKey.rawKey);
+    } else if (mappedKey.flags & IS_INTERNAL) {
+        if (mappedKey.rawKey == LED_TOGGLE) {
+            LEDControl.next_mode();
+        }
+    } else if (mappedKey.flags & IS_SYSCTL) {
+        SystemControl.press(mappedKey.rawKey);
     }
 }
 
@@ -56,6 +52,8 @@ bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyStat
         handle_synthetic_key_event( mappedKey, keyState);
     } else if (key_is_pressed(keyState)) {
         press_key(mappedKey);
+    } else if (key_toggled_off(keyState) && (keyState & INJECTED)) {
+        release_key(mappedKey);
     }
     return true;
 }
@@ -77,6 +75,26 @@ void press_key(Key mappedKey) {
         Keyboard.press(Key_LGUI.rawKey);
     }
     Keyboard.press(mappedKey.rawKey);
+}
+
+
+void release_key(Key mappedKey) {
+    if (mappedKey.flags & SHIFT_HELD) {
+        Keyboard.release(Key_LShift.rawKey);
+    }
+    if (mappedKey.flags & CTRL_HELD) {
+        Keyboard.release(Key_LCtrl.rawKey);
+    }
+    if (mappedKey.flags & LALT_HELD) {
+        Keyboard.release(Key_LAlt.rawKey);
+    }
+    if (mappedKey.flags & RALT_HELD) {
+        Keyboard.release(Key_RAlt.rawKey);
+    }
+    if (mappedKey.flags & GUI_HELD) {
+        Keyboard.release(Key_LGUI.rawKey);
+    }
+    Keyboard.release(mappedKey.rawKey);
 }
 
 
