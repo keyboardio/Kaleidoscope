@@ -14,4 +14,4 @@ class Macros_ {
     void play(const macro_t *macro_p);
 };
 
-extern Macros_ Macros;
+static Macros_ Macros;
