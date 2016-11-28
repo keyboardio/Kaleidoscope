@@ -1,5 +1,6 @@
 #pragma once
 
+#include "KeyboardioFirmware.h"
 #include "MouseKeyDefs.h"
 
 class MouseKeys_ {

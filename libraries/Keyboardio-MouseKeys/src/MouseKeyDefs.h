@@ -1,7 +1,5 @@
 #pragma once
 
-#include "key_defs.h"
-
 #define IS_MOUSE_KEY     		   B00010000
 
 // Synthetic, not internal
