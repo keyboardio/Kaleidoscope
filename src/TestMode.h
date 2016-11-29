@@ -5,12 +5,13 @@ class TestMode_ {
   public:
     TestMode_(void);
     void setup();
+    void loop();
 
+  private:
     void TestLEDs();
     void TestKeys();
     void TestMatrix();
     void TestOneKey();
-  private:
 };
 
 extern TestMode_ TestMode;
