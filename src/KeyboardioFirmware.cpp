@@ -21,14 +21,14 @@ custom_loop_t loopHooks[HOOK_MAX];
 
 void
 Keyboardio_::loop(void) {
-    for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-        custom_loop_t hook = loopHooks[i];
-        (*hook)();
-    }
-
     KeyboardHardware.scan_matrix();
     LEDControl.update();
     Keyboard.sendReport();
     Keyboard.releaseAll();
+
+    for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
+      custom_loop_t hook = loopHooks[i];
+      (*hook)();
+    }
 }
 
