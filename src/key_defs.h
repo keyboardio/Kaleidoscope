@@ -249,4 +249,8 @@ typedef union {
 
 #define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC | IS_INTERNAL, LED_TOGGLE }
 
-
+#define LCTRL(k)  (Key) { k.flags | CTRL_HELD, k.rawKey }
+#define LALT(k)   (Key) { k.flags | LALT_HELD, k.rawKey }
+#define RALT(k)   (Key) { k.flags | RALT_HELD, k.rawKey }
+#define LSHIFT(k) (Key) { k.flags | SHIFT_HELD, k.rawKey }
+#define LGUI(k)   (Key) { k.flags | GUI_HELD, k.rawKey }
