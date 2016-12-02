@@ -21,6 +21,12 @@ typedef union {
 #define GUI_HELD          B00010000
 #define SYNTHETIC         B10000000
 
+#define LCTRL(k)  ((Key) { k.flags | CTRL_HELD, k.rawKey })
+#define LALT(k)   ((Key) { k.flags | LALT_HELD, k.rawKey })
+#define RALT(k)   ((Key) { k.flags | RALT_HELD, k.rawKey })
+#define LSHIFT(k) ((Key) { k.flags | SHIFT_HELD, k.rawKey })
+#define LGUI(k)   ((Key) { k.flags | GUI_HELD, k.rawKey })
+
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL        B00000010
 #define IS_CONSUMER      B00000100
@@ -178,11 +184,11 @@ typedef union {
 #define Key_LBracket (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
 #define Key_RBracket (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
 #define Key_Backslash (Key){ KEY_FLAGS, HID_KEYBOARD_BACKSLASH_AND_PIPE }
-#define Key_Pipe (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_BACKSLASH_AND_PIPE }
+#define Key_Pipe LSHIFT(Key_Backslash)
 #define Key_LSquareBracket (Key){ KEY_FLAGS, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
 #define Key_RSquareBracket (Key){ KEY_FLAGS, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
-#define Key_LCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE }
-#define Key_RCurlyBracket (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE }
+#define Key_LCurlyBracket LSHIFT(Key_LSquareBracket)
+#define Key_RCurlyBracket LSHIFT(Key_RSquareBracket)
 #define Key_Semicolon (Key){ KEY_FLAGS, HID_KEYBOARD_SEMICOLON_AND_COLON }
 #define Key_Quote (Key){ KEY_FLAGS, HID_KEYBOARD_QUOTE_AND_DOUBLEQUOTE }
 #define Key_Comma (Key){ KEY_FLAGS, HID_KEYBOARD_COMMA_AND_LESS_THAN }
@@ -190,8 +196,8 @@ typedef union {
 #define Key_Space (Key){ KEY_FLAGS, HID_KEYBOARD_SPACEBAR}
 #define Key_Slash (Key){ KEY_FLAGS, HID_KEYBOARD_SLASH_AND_QUESTION_MARK }
 
-#define Key_LEFT_PAREN (Key) { KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_9_AND_LEFT_PAREN }
-#define Key_RIGHT_PAREN (Key){ KEY_FLAGS|SHIFT_HELD, HID_KEYBOARD_0_AND_RIGHT_PAREN }
+#define Key_LEFT_PAREN LSHIFT(Key_9)
+#define Key_RIGHT_PAREN LSHIFT(Key_0)
 
 
 #define Key_KeypadClear (Key){ KEY_FLAGS, HID_KEYPAD_CLEAR }
@@ -248,9 +254,3 @@ typedef union {
 
 
 #define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC | IS_INTERNAL, LED_TOGGLE }
-
-#define LCTRL(k)  (Key) { k.flags | CTRL_HELD, k.rawKey }
-#define LALT(k)   (Key) { k.flags | LALT_HELD, k.rawKey }
-#define RALT(k)   (Key) { k.flags | RALT_HELD, k.rawKey }
-#define LSHIFT(k) (Key) { k.flags | SHIFT_HELD, k.rawKey }
-#define LGUI(k)   (Key) { k.flags | GUI_HELD, k.rawKey }
