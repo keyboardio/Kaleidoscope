@@ -15,7 +15,7 @@ for my $line (@data) {
 	}
 
 	my @keys = split(/\s+/, $line);
-	push @map, join(', ', map{ 'Key_'.lookup($_).'' } @keys);
+	push @map, join(', ', map{ ''.lookup($_).'' } @keys);
 }
 
 print "#define KEYMAP_$name { /* Generated keymap for $name */ ";
@@ -27,23 +27,24 @@ print "},\n";
 sub lookup {
 
 my %table = (
-'{' => 'LCurlyBracket',
-'}' => 'RCurlyBracket',
-'['=> 'LSquareBracket',
-']'=> 'RSquareBracket',
-'|'=> 'Pipe',
-'\\' => 'Backslash',
+'{' => 'Key_LCurlyBracket',
+'}' => 'Key_RCurlyBracket',
+'['=> 'Key_LSquareBracket',
+']'=> 'Key_RSquareBracket',
+'|'=> 'Key_Pipe',
+'\\' => 'Key_Backslash',
 
-	';' => 'Semicolon',
-	',' => 'Comma',
-	'.' => 'Period',
-	'/' => 'Slash',
-	"'" => 'Quote',
-	'`' => 'Backtick',
-	'-' => 'Minus',
-	'=' => 'Equals');
+	';' => 'Key_Semicolon',
+	',' => 'Key_Comma',
+	'.' => 'Key_Period',
+	'/' => 'Key_Slash',
+	"'" => 'Key_Quote',
+	'`' => 'Key_Backtick',
+	'-' => 'Key_Minus',
+	'=' => 'Key_Equals');
 
-	my $x = shift;
-	return $x unless defined $table{$x};
+  my $x = shift;
+  return $x if $x =~ /\(.*\)/;
+	return 'Key_'.$x unless defined $table{$x};
 	return $table{$x};
 }
