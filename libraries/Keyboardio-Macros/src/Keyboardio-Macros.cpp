@@ -55,5 +55,11 @@ static bool handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState
 }
 
 Macros_::Macros_ (void) {
+}
+
+void
+Macros_::begin (void) {
     event_handler_hook_add (handleMacroEvent);
 }
+
+Macros_ Macros;

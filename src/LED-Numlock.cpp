@@ -7,11 +7,15 @@ static uint8_t us;
 
 LEDNumlock::LEDNumlock (uint8_t numpadIdx) {
   numpadIndex = numpadIdx;
-  us = LEDControl.mode_add (this);
-  loop_hook_add (this->loopHook);
 
   breathState.brightness = 0;
   breathState.fadeAmount = 1;
+}
+
+void
+LEDNumlock::begin (void) {
+  us = LEDControl.mode_add (this);
+  loop_hook_add (this->loopHook);
 }
 
 void

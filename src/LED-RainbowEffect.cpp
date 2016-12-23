@@ -1,11 +1,10 @@
 #include "LED-RainbowEffect.h"
 
-LEDRainbowEffect::LEDRainbowEffect (void) {
-  LEDControl.mode_add (this);
+LEDRainbowEffect_::LEDRainbowEffect_ (void) {
 }
 
 void
-LEDRainbowEffect::update (void) {
+LEDRainbowEffect_::update (void) {
   if (rainbow_current_ticks++ < rainbow_ticks) {
     return;
   } else {
@@ -21,14 +20,15 @@ LEDRainbowEffect::update (void) {
   LEDControl.set_all_leds_to(rainbow);
 }
 
+LEDRainbowEffect_ LEDRainbowEffect;
+
 // ---------
 
-LEDRainbowWaveEffect::LEDRainbowWaveEffect (void) {
-  LEDControl.mode_add (this);
+LEDRainbowWaveEffect_::LEDRainbowWaveEffect_ (void) {
 }
 
 void
-LEDRainbowWaveEffect::update (void) {
+LEDRainbowWaveEffect_::update (void) {
   if (rainbow_current_ticks++ < rainbow_wave_ticks) {
     return;
   } else {
@@ -48,3 +48,5 @@ LEDRainbowWaveEffect::update (void) {
     rainbow_hue -= 255;
   }
 }
+
+LEDRainbowWaveEffect_ LEDRainbowWaveEffect;

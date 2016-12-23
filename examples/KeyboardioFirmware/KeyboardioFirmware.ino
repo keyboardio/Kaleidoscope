@@ -24,7 +24,6 @@ uint8_t temporary_keymap = 0;
 
 const Key keymaps[][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
-static LEDOff LEDSOff;
 static LEDSolidColor solidRed (100, 0, 0);
 static LEDSolidColor solidOrange (100, 30, 0);
 static LEDSolidColor solidYellow (90, 70, 0);
@@ -32,11 +31,6 @@ static LEDSolidColor solidGreen (0, 200, 0);
 static LEDSolidColor solidBlue (0, 30, 200);
 static LEDSolidColor solidIndigo (0, 0, 200);
 static LEDSolidColor solidViolet (100, 0, 120);
-
-static LEDBreatheEffect breatheEffect;
-static LEDRainbowEffect rainbowEffect;
-static LEDRainbowWaveEffect rainbowWaveEffect;
-static LEDChaseEffect chaseEffect;
 
 static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
 
@@ -54,7 +48,16 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
+    Keyboardio.use(&LEDOff,
+                   &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
+                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &numLockEffect,
+
+                   &Macros,
+                   &MouseKeys,
+                   NULL);
+
     Keyboardio.setup(KEYMAP_SIZE);
+    LEDOff.activate();
 }
 
 

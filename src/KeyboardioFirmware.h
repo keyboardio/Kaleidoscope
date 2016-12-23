@@ -23,6 +23,7 @@ void setup();
 
 #include "KeyboardConfig.h"
 #include "key_events.h"
+#include "plugin.h"
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
@@ -41,6 +42,7 @@ class Keyboardio_ {
 
     void setup(const byte keymap_count);
     void loop(void);
+    void use(KeyboardioPlugin *plugin, ...);
 };
 
 static Keyboardio_ Keyboardio;

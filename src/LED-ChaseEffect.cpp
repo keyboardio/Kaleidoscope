@@ -1,11 +1,10 @@
 #include "LED-ChaseEffect.h"
 
-LEDChaseEffect::LEDChaseEffect (void) {
-  LEDControl.mode_add (this);
+LEDChaseEffect_::LEDChaseEffect_ (void) {
 }
 
 void
-LEDChaseEffect::update (void) {
+LEDChaseEffect_::update (void) {
   if (current_chase_counter++ < chase_threshold) {
     return;
   }
@@ -20,3 +19,5 @@ LEDChaseEffect::update (void) {
   led_set_crgb_at(pos, {0, 0, 255});
   led_set_crgb_at(pos - (chase_sign * chase_pixels), {255, 0, 0});
 }
+
+LEDChaseEffect_ LEDChaseEffect;
