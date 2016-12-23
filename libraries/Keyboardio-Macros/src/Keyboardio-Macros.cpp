@@ -45,8 +45,11 @@ void Macros_::play(const macro_t *macro_p) {
 }
 
 static bool handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (!(mappedKey.flags & (SYNTHETIC|IS_MACRO)) || (mappedKey.flags & IS_INTERNAL))
+    if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
         return false;
+
+    if (!key_toggled_on(keyState))
+      return true;
 
     const macro_t *m = macroAction(mappedKey.rawKey, keyState);
 
