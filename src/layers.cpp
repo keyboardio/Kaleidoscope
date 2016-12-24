@@ -6,22 +6,24 @@ static uint32_t LayerState;
 
 static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
     if (keymapEntry.rawKey >= MOMENTARY_OFFSET) {
+        uint8_t target = keymapEntry.rawKey - MOMENTARY_OFFSET;
+
         if (key_toggled_on(keyState)) {
-            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
+            if ( target == KEYMAP_NEXT) {
                 Layer.next();
-            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
+            } else if ( target == KEYMAP_PREVIOUS) {
                 Layer.previous();
             } else {
-                Layer.on(keymapEntry.rawKey - MOMENTARY_OFFSET);
+                Layer.on(target);
             }
         }
         if (key_toggled_off(keyState)) {
-            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
+            if ( target == KEYMAP_NEXT) {
                 Layer.previous();
-            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
+            } else if ( target == KEYMAP_PREVIOUS) {
                 Layer.next();
             } else {
-                Layer.off(keymapEntry.rawKey - MOMENTARY_OFFSET);
+                Layer.off(target);
             }
         }
 
