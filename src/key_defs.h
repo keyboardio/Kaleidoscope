@@ -19,7 +19,8 @@ typedef union {
 #define RALT_HELD         B00000100
 #define SHIFT_HELD        B00001000
 #define GUI_HELD          B00010000
-#define SYNTHETIC         B10000000
+#define SYNTHETIC         B01000000
+#define RESERVED          B10000000
 
 #define LCTRL(k)  ((Key) { k.flags | CTRL_HELD, k.rawKey })
 #define LALT(k)   ((Key) { k.flags | LALT_HELD, k.rawKey })
@@ -28,16 +29,15 @@ typedef union {
 #define LGUI(k)   ((Key) { k.flags | GUI_HELD, k.rawKey })
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_SYSCTL        B00000010
-#define IS_CONSUMER      B00000100
-#define IS_INTERNAL      B00001000
-#define SWITCH_TO_KEYMAP 		   B00100000
-#define SWITCH_TO_KEYMAP_MOMENTARY         B01000000
-
+#define IS_SYSCTL                  B00000001
+#define IS_CONSUMER                B00000010
+#define SWITCH_TO_KEYMAP 		       B00000100
+#define SWITCH_TO_KEYMAP_MOMENTARY B00001000
+#define IS_INTERNAL                B00010000
 
 // IS_INTERNAL key table:
 
-#define LED_TOGGLE  0x01 // Synthetic, internal
+#define LED_TOGGLE   B00000001 // Synthetic, internal
 
 
 #define KEYMAP_0     0
@@ -253,4 +253,4 @@ typedef union {
 
 
 
-#define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC | IS_INTERNAL, LED_TOGGLE }
+#define Key_LEDEffectNext (Key) { KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE, 0 }

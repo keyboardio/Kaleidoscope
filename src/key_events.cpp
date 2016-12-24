@@ -1,18 +1,53 @@
 #include "key_events.h"
 
-void handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
-    if (!key_toggled_on(keyState))
-        return;
-
-    if (mappedKey.flags & IS_CONSUMER) {
-        ConsumerControl.press(mappedKey.rawKey);
-    } else if (mappedKey.flags & IS_INTERNAL) {
-        if (mappedKey.rawKey == LED_TOGGLE) {
-            LEDControl.next_mode();
+static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
+    if (keymapEntry.flags & SWITCH_TO_KEYMAP_MOMENTARY ) {
+        if (key_toggled_on(keyState)) {
+            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
+                temporary_keymap++;
+            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
+                temporary_keymap--;
+            } else {
+                temporary_keymap = keymapEntry.rawKey;
+            }
         }
+        if (key_toggled_off(keyState)) {
+            temporary_keymap = primary_keymap;
+        }
+
+        // switch keymap and stay there
+    } else if (key_toggled_on(keyState)) {
+        temporary_keymap = primary_keymap = keymapEntry.rawKey;
+        Storage.save_primary_keymap(primary_keymap);
+    }
+}
+
+static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
+    if (mappedKey.flags & RESERVED)
+        return false;
+
+    if (!(mappedKey.flags & SYNTHETIC))
+        return false;
+
+    if (!key_toggled_on(keyState))
+        return true;
+
+    if (mappedKey.flags & IS_INTERNAL) {
+        if (mappedKey.flags & LED_TOGGLE) {
+            LEDControl.next_mode();
+        } else {
+            return false;
+        }
+    } else if (mappedKey.flags & IS_CONSUMER) {
+        ConsumerControl.press(mappedKey.rawKey);
     } else if (mappedKey.flags & IS_SYSCTL) {
         SystemControl.press(mappedKey.rawKey);
+    } else if (mappedKey.flags & SWITCH_TO_KEYMAP ||
+               mappedKey.flags & SWITCH_TO_KEYMAP_MOMENTARY) {
+        // Should not happen, handled elsewhere.
     }
+
+    return true;
 }
 
 custom_handler_t eventHandlers[HOOK_MAX];
@@ -95,27 +130,4 @@ void release_key(Key mappedKey) {
         Keyboard.release(Key_LGUI.rawKey);
     }
     Keyboard.release(mappedKey.rawKey);
-}
-
-
-void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
-    if (keymapEntry.flags & SWITCH_TO_KEYMAP_MOMENTARY ) {
-        if (key_toggled_on(keyState)) {
-            if ( keymapEntry.rawKey == KEYMAP_NEXT) {
-                temporary_keymap++;
-            } else if ( keymapEntry.rawKey == KEYMAP_PREVIOUS) {
-                temporary_keymap--;
-            } else {
-                temporary_keymap = keymapEntry.rawKey;
-            }
-        }
-        if (key_toggled_off(keyState)) {
-            temporary_keymap = primary_keymap;
-        }
-
-        // switch keymap and stay there
-    } else if (key_toggled_on(keyState)) {
-        temporary_keymap = primary_keymap = keymapEntry.rawKey;
-        Storage.save_primary_keymap(primary_keymap);
-    }
 }

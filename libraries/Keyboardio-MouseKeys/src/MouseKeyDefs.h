@@ -1,6 +1,6 @@
 #pragma once
 
-#define IS_MOUSE_KEY     		   B00010000
+#define IS_MOUSE_KEY     		   B00000010
 
 // Synthetic, not internal
 #define KEY_MOUSE_BTN_L 0x01 // Synthetic key
