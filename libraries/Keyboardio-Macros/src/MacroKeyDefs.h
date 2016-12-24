@@ -1,6 +1,6 @@
 #pragma once
 
-#define IS_MACRO       B00000100
+#define IS_MACRO       B00100000
 
 #define M(n)           (Key){ KEY_FLAGS|SYNTHETIC|IS_MACRO, n}
 #define Key_macroKey1  M(1)
