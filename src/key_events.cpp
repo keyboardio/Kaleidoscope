@@ -60,18 +60,7 @@ Key lookup_key(byte keymap, byte row, byte col) {
     return mappedKey;
 }
 
-void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (!(keyState & INJECTED)) {
-        mappedKey = lookup_key(temporary_keymap, row, col);
-    }
-    for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
-        custom_handler_t handler = eventHandlers[i];
-        if ((*handler)(mappedKey, row, col, keyState))
-            return;
-    }
-}
-
-bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
     // for every newly released button, figure out what logical key it is and send a key up event
 
@@ -130,4 +119,16 @@ void release_key(Key mappedKey) {
         Keyboard.release(Key_LGUI.rawKey);
     }
     Keyboard.release(mappedKey.rawKey);
+}
+
+void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
+    if (!(keyState & INJECTED)) {
+        mappedKey = lookup_key(temporary_keymap, row, col);
+    }
+    for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
+        custom_handler_t handler = eventHandlers[i];
+        if ((*handler)(mappedKey, row, col, keyState))
+            return;
+    }
+    handle_key_event_default(mappedKey, row, col, keyState);
 }
