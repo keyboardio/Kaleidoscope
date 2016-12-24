@@ -1,5 +1,5 @@
 #NAME: NUMPAD
-Trans  Trans Trans Trans Trans Trans  Trans                Trans       Trans 	Trans              Trans Keypad7 Keypad8   Keypad9         KeypadMinus Trans
-Trans  Trans Trans Trans Trans Trans  Keymap1_Momentary    Trans       Trans  Keymap1_Momentary  Trans Keypad4 Keypad5   Keypad6         KeypadPlus  Trans
-Trans  Trans Trans Trans Trans Trans  Trans                Trans       Trans  Trans              Trans Keypad1 Keypad2   Keypad3         Equals      '
-Trans  Trans Trans Trans Trans Trans  Trans                Trans       Trans  Trans              Trans Keypad0 KeypadDot KeypadMultiply  KeypadSlash Enter 
+___  ___ ___ ___ ___ ___  _________________  ___       ___ 	_________________ ___ Keypad7 Keypad8   Keypad9         KeypadMinus ___
+___  ___ ___ ___ ___ ___  Keymap1_Momentary  ___       ___  Keymap1_Momentary ___ Keypad4 Keypad5   Keypad6         KeypadPlus  ___
+___  ___ ___ ___ ___ ___  _________________  ___       ___  _________________ ___ Keypad1 Keypad2   Keypad3         Equals      '
+___  ___ ___ ___ ___ ___  _________________  ___       ___  _________________ ___ Keypad0 KeypadDot KeypadMultiply  KeypadSlash Enter

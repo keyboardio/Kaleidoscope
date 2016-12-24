@@ -10,10 +10,10 @@
 	{Key_PageDn, Key_Semicolon, Key_Q, Key_J, Key_K, Key_X, Key_Esc, Key_Keymap2, Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals},\
 	{Key_LCtrl, Key_Backspace, Key_LShift, Key_LGUI, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RAlt, Key_RShift, Key_Space, Key_RCtrl},\
 },
-#define KEYMAP_GENERIC_FN2 { /* Generated keymap for GENERIC_FN2 */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_NoKey, Key_LCtrl, Key_RCtrl, Key_NoKey, Key_F6, Key_F7, Key_F8, Key_F9, Key_Trans, Key_skip},\
-	{Key_Tab, Key_mouseBtnM, Key_mouseUp, Key_skip, Key_mouseWarpNW, Key_mouseWarpNE, Key_NoKey, Key_mouseBtnL, Key_mouseBtnR, Key_NoKey, Key_playPause, Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_sleep},\
+#define KEYMAP_GENERIC_FN2 { /* Generated keymap for GENERIC_FN2 */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, XXX, Key_LCtrl, Key_RCtrl, XXX, Key_F6, Key_F7, Key_F8, Key_F9, ___, Key_skip},\
+	{Key_Tab, Key_mouseBtnM, Key_mouseUp, Key_skip, Key_mouseWarpNW, Key_mouseWarpNE, XXX, Key_mouseBtnL, Key_mouseBtnR, XXX, Key_playPause, Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_sleep},\
 	{Key_Home, Key_mouseL, Key_mouseDn, Key_mouseR, Key_mouseWarpSW, Key_mouseWarpSE, Key_nextTrack, Key_LGUI, Key_RAlt, Key_Delete, Key_LArrow, Key_DnArrow, Key_UpArrow, Key_RArrow, Key_F11, Key_F12},\
-	{Key_End, Key_Z, Key_X, Key_C, Key_V, Key_mouseWarpEnd, Key_Trans, Key_LShift, Key_RShift, Key_Trans, Key_volumeDown, Key_volumeUp, Key_BacklightDn, Key_BacklightUp, Key_Backslash, Key_Pipe},\
+	{Key_End, Key_Z, Key_X, Key_C, Key_V, Key_mouseWarpEnd, ___, Key_LShift, Key_RShift, ___, Key_volumeDown, Key_volumeUp, Key_BacklightDn, Key_BacklightUp, Key_Backslash, Key_Pipe},\
 },
 #define KEYMAP_GENERIC_FN2_MOO { /* Generated keymap for GENERIC_FN2_MOO */ 	{Key_skip, Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_NoKey, Key_LCtrl, Key_RCtrl, Key_NoKey, Key_F6, Key_F7, Key_F8, Key_F9, Key_Keymap0, Key_skip},\
 	{Key_Tab, Key_mouseBtnM, Key_mouseUp, Key_skip, Key_mouseWarpNW, Key_mouseWarpNE, Key_NoKey, Key_mouseBtnL, Key_mouseBtnR, Key_NoKey, Key_playPause, Key_LCurlyBracket, Key_RCurlyBracket, Key_LEFT_PAREN, Key_RIGHT_PAREN, Key_sleep},\
@@ -26,10 +26,10 @@
 	{Key_PageDn, Key_Comma, Key_Period, Key_J, Key_G, Key_Slash, Key_Esc, Key_Keymap2, Key_Semicolon, Key_W, Key_K, Key_Minus, Key_X, Key_LSquareBracket},\
 	{Key_LGUI, Key_E, Key_LShift, Key_Backspace, Key_KeymapNext_Momentary, Key_skip, Key_skip, Key_skip, Key_skip, Key_KeymapNext_Momentary, Key_RCtrl, Key_RShift, Key_Space, Key_RAlt},\
 },
-#define KEYMAP_NUMPAD { /* Generated keymap for NUMPAD */ 	{Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Keypad7, Key_Keypad8, Key_Keypad9, Key_KeypadMinus, Key_Trans},\
-	{Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Keymap1_Momentary, Key_Trans, Key_Trans, Key_Keymap1_Momentary, Key_Trans, Key_Keypad4, Key_Keypad5, Key_Keypad6, Key_KeypadPlus, Key_Trans},\
-	{Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Keypad1, Key_Keypad2, Key_Keypad3, Key_Equals, Key_Quote},\
-	{Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Trans, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadSlash, Key_Enter},\
+#define KEYMAP_NUMPAD { /* Generated keymap for NUMPAD */ 	{___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, Key_Keypad7, Key_Keypad8, Key_Keypad9, Key_KeypadMinus, ___},\
+	{___, ___, ___, ___, ___, ___, Key_Keymap1_Momentary, ___, ___, Key_Keymap1_Momentary, ___, Key_Keypad4, Key_Keypad5, Key_Keypad6, Key_KeypadPlus, ___},\
+	{___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, Key_Keypad1, Key_Keypad2, Key_Keypad3, Key_Equals, Key_Quote},\
+	{___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadSlash, Key_Enter},\
 },
 #define KEYMAP_QWERTY { /* Generated keymap for QWERTY */ 	{Key_LEDEffectNext, Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext, Key_LCtrl, Key_RCtrl, Key_skip, Key_6, Key_7, Key_8, Key_9, Key_0, Key_Keymap2},\
 	{Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab, Key_Backspace, Key_Space, Key_Enter, Key_Y, Key_U, Key_I, Key_O, Key_P, Key_Equals},\
