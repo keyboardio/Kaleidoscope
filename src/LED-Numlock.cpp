@@ -40,7 +40,10 @@ LEDNumlock::update (void) {
 }
 
 void
-LEDNumlock::loopHook (void) {
+LEDNumlock::loopHook (bool postClear) {
+    if (!postClear)
+        return;
+
     if (Layer.isOn (numpadIndex)) {
         if (storedLEDMode != us) {
             storedLEDMode = LEDControl.get_mode ();

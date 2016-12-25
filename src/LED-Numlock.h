@@ -13,7 +13,7 @@ class LEDNumlock : LEDMode {
   virtual void setup (void) final;
 
  private:
-  static void loopHook (void);
+  static void loopHook (bool postClear);
 
   BreathState breathState;
 };
