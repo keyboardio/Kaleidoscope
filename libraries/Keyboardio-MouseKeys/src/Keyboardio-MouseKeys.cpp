@@ -22,9 +22,9 @@ static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
     }
 }
 
-static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static Key handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
-        return false;
+        return mappedKey;
 
     if (mappedKey.rawKey & KEY_MOUSE_BUTTON) {
         uint8_t button = mappedKey.rawKey & ~KEY_MOUSE_BUTTON;
@@ -46,7 +46,7 @@ static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState)
         }
     }
 
-    return true;
+    return Key_NoKey;
 }
 
 MouseKeys_::MouseKeys_(void) {

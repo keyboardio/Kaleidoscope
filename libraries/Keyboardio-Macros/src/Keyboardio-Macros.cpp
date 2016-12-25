@@ -44,17 +44,17 @@ void Macros_::play(const macro_t *macro_p) {
     }
 }
 
-static bool handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
-        return false;
+        return mappedKey;
 
     if (!key_toggled_on(keyState))
-      return true;
+      return Key_NoKey;
 
     const macro_t *m = macroAction(mappedKey.rawKey, keyState);
 
     Macros.play(m);
-    return true;
+    return Key_NoKey;
 }
 
 Macros_::Macros_ (void) {
