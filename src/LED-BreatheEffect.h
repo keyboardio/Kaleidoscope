@@ -3,12 +3,14 @@
 #include "LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDBreatheEffect : LEDMode {
+class LEDBreatheEffect_ : LEDMode {
  public:
-  LEDBreatheEffect (void);
+  LEDBreatheEffect_ (void);
 
   virtual void update (void) final;
 
  private:
   BreathState state;
 };
+
+extern LEDBreatheEffect_ LEDBreatheEffect;

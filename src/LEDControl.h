@@ -2,11 +2,13 @@
 
 #include <Arduino.h>
 #include "KeyboardConfig.h"
+#include "plugin.h"
 
 #define LED_MAX_MODES 24
 
-class LEDMode {
+class LEDMode : public KeyboardioPlugin {
  public:
+  virtual void begin (void);
   virtual void setup (void) {};
   virtual void init (void) {};
   virtual void update (void) {};

@@ -5,6 +5,11 @@ LEDMode::activate (void) {
   LEDControl.activate (this);
 }
 
+void
+LEDMode::begin(void) {
+  LEDControl.mode_add(this);
+}
+
 LEDControl_::LEDControl_(void) {
   memset (modes, 0, LED_MAX_MODES * sizeof (modes[0]));
 }

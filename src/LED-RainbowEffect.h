@@ -3,9 +3,9 @@
 #include "LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDRainbowEffect : LEDMode {
+class LEDRainbowEffect_ : LEDMode {
  public:
-  LEDRainbowEffect (void);
+  LEDRainbowEffect_ (void);
 
   virtual void update (void) final;
 
@@ -21,9 +21,11 @@ class LEDRainbowEffect : LEDMode {
 
 };
 
-class LEDRainbowWaveEffect : LEDMode {
+extern LEDRainbowEffect_ LEDRainbowEffect;
+
+class LEDRainbowWaveEffect_ : LEDMode {
  public:
-  LEDRainbowWaveEffect (void);
+  LEDRainbowWaveEffect_ (void);
 
   virtual void update (void) final;
 
@@ -37,3 +39,5 @@ class LEDRainbowWaveEffect : LEDMode {
   static const byte rainbow_saturation = 255;
   static const byte rainbow_value = 50;
 };
+
+extern LEDRainbowWaveEffect_ LEDRainbowWaveEffect;

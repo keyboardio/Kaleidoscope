@@ -23,22 +23,18 @@ static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
 }
 
 static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (! (mappedKey.flags & IS_INTERNAL)
-            && (mappedKey.rawKey == KEY_MOUSE_BTN_L
-                || mappedKey.rawKey == KEY_MOUSE_BTN_M
-                || mappedKey.rawKey == KEY_MOUSE_BTN_R)) {
-        if (key_toggled_on(keyState)) {
-            MouseWrapper.press_button(mappedKey.rawKey);
-        } else if (key_toggled_off(keyState)) {
-            MouseWrapper.release_button(mappedKey.rawKey);
-        }
-        return true;
-    }
-
-    if (!(mappedKey.flags & IS_MOUSE_KEY))
+    if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
         return false;
 
-    if (!(mappedKey.rawKey & KEY_MOUSE_WARP)) {
+    if (mappedKey.rawKey & KEY_MOUSE_BUTTON) {
+        uint8_t button = mappedKey.rawKey & ~KEY_MOUSE_BUTTON;
+
+        if (key_toggled_on(keyState)) {
+            MouseWrapper.press_button(button);
+        } else if (key_toggled_off(keyState)) {
+            MouseWrapper.release_button(button);
+        }
+    } else if (!(mappedKey.rawKey & KEY_MOUSE_WARP)) {
         handle_mouse_key_event(mappedKey, keyState);
     } else if (key_toggled_on(keyState)) {
         if (mappedKey.rawKey & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
@@ -54,5 +50,11 @@ static bool handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState)
 }
 
 MouseKeys_::MouseKeys_(void) {
+}
+
+void
+MouseKeys_::begin (void) {
     event_handler_hook_add (handleMouseKeys);
 }
+
+MouseKeys_ MouseKeys;

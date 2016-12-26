@@ -1,4 +1,5 @@
 #include "KeyboardioFirmware.h"
+#include <stdarg.h>
 
 Keyboardio_::Keyboardio_(void) {
     memset(eventHandlers, 0, HOOK_MAX * sizeof(custom_handler_t));
@@ -7,14 +8,14 @@ Keyboardio_::Keyboardio_(void) {
 
 void
 Keyboardio_::setup(const byte keymap_count) {
-    event_handler_hook_add (handle_key_event_default);
     wdt_disable();
     delay(100);
     Keyboard.begin();
     KeyboardHardware.setup();
     LEDControl.setup();
+    Layer.begin();
 
-    temporary_keymap = primary_keymap = Storage.load_primary_keymap(keymap_count);
+    Layer.defaultLayer (Storage.load_primary_keymap (keymap_count));
 }
 
 custom_loop_t loopHooks[HOOK_MAX];
@@ -32,3 +33,15 @@ Keyboardio_::loop(void) {
     }
 }
 
+void
+Keyboardio_::use(KeyboardioPlugin *plugin, ...) {
+    va_list ap;
+    KeyboardioPlugin *p;
+
+    plugin->begin();
+    va_start(ap, plugin);
+    while ((p = va_arg(ap, KeyboardioPlugin*)) != NULL) {
+      p->begin();
+    };
+    va_end(ap);
+}

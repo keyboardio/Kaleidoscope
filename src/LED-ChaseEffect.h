@@ -3,9 +3,9 @@
 #include "LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDChaseEffect : LEDMode {
+class LEDChaseEffect_ : LEDMode {
  public:
-  LEDChaseEffect (void);
+  LEDChaseEffect_ (void);
 
   virtual void update (void) final;
 
@@ -16,3 +16,5 @@ class LEDChaseEffect : LEDMode {
   uint8_t current_chase_counter = 0;
   static const uint8_t chase_threshold = 20;
 };
+
+extern LEDChaseEffect_ LEDChaseEffect;

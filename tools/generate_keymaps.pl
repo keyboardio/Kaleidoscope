@@ -41,10 +41,15 @@ my %table = (
 	"'" => 'Key_Quote',
 	'`' => 'Key_Backtick',
 	'-' => 'Key_Minus',
-	'=' => 'Key_Equals');
+	'=' => 'Key_Equals',
+	'___' => '___',
+	'XXX' => 'XXX');
 
   my $x = shift;
   return $x if $x =~ /\(.*\)/;
+  return '___' if ($x =~ /_{2,}/);
+  return 'XXX' if ($x =~ /X{2,}/);
+
 	return 'Key_'.$x unless defined $table{$x};
 	return $table{$x};
 }

@@ -2,7 +2,9 @@
 
 #include "LEDControl.h"
 
-class LEDOff : LEDMode {
+class LEDOff_ : public LEDMode {
  public:
-  LEDOff (void) { LEDControl.mode_add (this); };
+  LEDOff_ (void) { };
 };
+
+extern LEDOff_ LEDOff;

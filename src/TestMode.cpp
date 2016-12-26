@@ -2,8 +2,6 @@
 #include "TestMode.h"
 #include "LED-RainbowEffect.h"
 
-static LEDRainbowEffect testRainbowEffect;
-
 cRGB red;
 cRGB blue;
 
@@ -47,7 +45,7 @@ void TestMode_::TestLEDs(void) {
     delay(LED_TEST_DELAY);
     // rainbow for 10 seconds
     for(auto i=0; i<1000; i++ ) {
-        testRainbowEffect.update();
+        LEDRainbowEffect.update();
         led_sync();
     }
     // set all the keys to red

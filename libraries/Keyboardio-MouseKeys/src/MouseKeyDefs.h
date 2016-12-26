@@ -5,14 +5,14 @@
 // Synthetic, not internal
 #define KEY_MOUSE_BTN_L 0x01 // Synthetic key
 #define KEY_MOUSE_BTN_M 0x02 // Synthetic key
-#define KEY_MOUSE_BTN_R 0x04 // Synthetic key
+#define KEY_MOUSE_BTN_R 0x03 // Synthetic key
 
 
 #define KEY_MOUSE_UP            B0000001
 #define KEY_MOUSE_DOWN          B0000010
 #define KEY_MOUSE_LEFT          B0000100
 #define KEY_MOUSE_RIGHT         B0001000
-#define KEY_MOUSE_CENTER        B0010000
+#define KEY_MOUSE_BUTTON        B0010000
 #define KEY_MOUSE_WARP          B0100000
 #define KEY_MOUSE_WARP_END      B1000000
 
@@ -36,6 +36,6 @@
 #define Key_mouseScrollDn
 #define Key_mouseScrollL
 #define Key_mouseScrollR
-#define Key_mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC, KEY_MOUSE_BTN_L }
-#define Key_mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC, KEY_MOUSE_BTN_M }
-#define Key_mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC, KEY_MOUSE_BTN_R }
+#define Key_mouseBtnL    (Key){ KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY, KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_L }
+#define Key_mouseBtnM    (Key){ KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY, KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_M }
+#define Key_mouseBtnR    (Key){ KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY, KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_R }
