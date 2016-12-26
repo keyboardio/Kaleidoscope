@@ -11,6 +11,7 @@ LEDMode::begin(void) {
 }
 
 LEDControl_::LEDControl_(void) {
+  mode = previousMode = 0;
   memset (modes, 0, LED_MAX_MODES * sizeof (modes[0]));
 }
 
@@ -43,10 +44,12 @@ void
 LEDControl_::update (void) {
   if (previousMode != mode) {
     set_all_leds_to ({0, 0, 0});
-    (modes[mode]->init) ();
+    if (modes[mode])
+      (modes[mode]->init) ();
   }
 
-  (modes[mode]->update) ();
+  if (modes[mode])
+    (modes[mode]->update) ();
 
   led_sync ();
 
@@ -54,9 +57,9 @@ LEDControl_::update (void) {
 }
 
 void
-LEDControl_::set_mode (uint8_t mode) {
-  if (mode < LED_MAX_MODES)
-    this->mode = mode;
+LEDControl_::set_mode (uint8_t mode_) {
+  if (mode_ < LED_MAX_MODES)
+    mode = mode;
 }
 
 uint8_t
