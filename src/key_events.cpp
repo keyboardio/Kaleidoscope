@@ -89,7 +89,8 @@ void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
     }
     for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
         custom_handler_t handler = eventHandlers[i];
-        if ((*handler)(mappedKey, row, col, keyState))
+        mappedKey = (*handler)(mappedKey, row, col, keyState);
+        if (mappedKey.raw == Key_NoKey.raw)
             return;
     }
     handle_key_event_default(mappedKey, row, col, keyState);

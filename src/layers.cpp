@@ -33,13 +33,13 @@ static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
     }
 }
 
-static bool
+static Key
 layerEventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
-        return false;
+        return mappedKey;
 
     handle_keymap_key_event(mappedKey, keyState);
-    return true;
+    return Key_NoKey;
 }
 
 Layer_::Layer_ (void) {
