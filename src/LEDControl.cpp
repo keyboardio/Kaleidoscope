@@ -59,7 +59,7 @@ LEDControl_::update (void) {
 void
 LEDControl_::set_mode (uint8_t mode_) {
   if (mode_ < LED_MAX_MODES)
-    mode = mode;
+    mode = mode_;
 }
 
 uint8_t
