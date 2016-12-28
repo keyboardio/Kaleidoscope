@@ -5,8 +5,8 @@ uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 
 DEVICE_PORT := `ls /dev/ttyACM*`
 DEVICE_PORT_BOOTLOADER := `ls /dev/ttyACM*`
-ARDUINO_PATH=/usr/local/arduino
-ARDUINO_LOCAL_LIB_PATH=$(HOME)/Arduino
+ARDUINO_PATH?=/usr/local/arduino
+ARDUINO_LOCAL_LIB_PATH?=$(HOME)/Arduino
 
 MD5 = md5sum
 
