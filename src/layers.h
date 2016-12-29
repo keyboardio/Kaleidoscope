@@ -4,11 +4,9 @@
 #include "key_defs.h"
 #include "plugin.h"
 
-class Layer_ : public KeyboardioPlugin {
+class Layer_ {
   public:
     Layer_(void);
-
-    virtual void begin(void) final;
 
     static Key lookup(byte row, byte col);
     static void on(uint8_t layer);
@@ -25,6 +23,8 @@ class Layer_ : public KeyboardioPlugin {
     static uint8_t defaultLayer(void);
 
     static uint32_t getLayerState(void);
+
+    static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 
 extern Layer_ Layer;

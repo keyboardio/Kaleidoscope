@@ -13,7 +13,6 @@ Keyboardio_::setup(const byte keymap_count) {
     Keyboard.begin();
     KeyboardHardware.setup();
     LEDControl.setup();
-    Layer.begin();
 
     Layer.defaultLayer (Storage.load_primary_keymap (keymap_count));
 }
