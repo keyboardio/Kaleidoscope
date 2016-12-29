@@ -40,7 +40,7 @@ class Keyboardio_ {
 
     void setup(const byte keymap_count);
     void loop(void);
-    void use(KeyboardioPlugin *plugin, ...);
+    void use(KeyboardioPlugin *plugin, ...) __attribute__((sentinel));
 };
 
 static Keyboardio_ Keyboardio;
