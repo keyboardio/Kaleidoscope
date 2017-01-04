@@ -2,13 +2,26 @@
 
 
 #include "HIDTables.h"
-typedef union {
+typedef union Key_ {
 
     struct {
         uint8_t flags;
         uint8_t rawKey;
     };
     uint16_t raw;
+
+    inline bool operator==(uint16_t rhs) { return this->raw == rhs; };
+    inline bool operator==(const Key_ rhs) { return this->raw == rhs.raw; };
+    inline Key_& operator=(uint16_t raw) { this->raw = raw; return *this; };
+    inline bool operator!=(const Key_& rhs) { return !(*this == rhs); };
+    inline bool operator>=(uint16_t raw) { return this->raw >= raw; };
+    inline bool operator<=(uint16_t raw) { return this->raw <= raw; };
+    inline bool operator>(uint16_t raw) { return this->raw > raw; };
+    inline bool operator<(uint16_t raw) { return this->raw < raw; };
+    inline bool operator>=(const Key_& other) { return this->raw >= other.raw; };
+    inline bool operator<=(const Key_& other) { return this->raw <= other.raw; };
+    inline bool operator>(const Key_& other) { return this->raw > other.raw; };
+    inline bool operator<(const Key_& other) { return this->raw < other.raw; };
 } Key;
 
 
