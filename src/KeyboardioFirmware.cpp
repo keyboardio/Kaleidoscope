@@ -53,3 +53,5 @@ Keyboardio_::use(KeyboardioPlugin *plugin, ...) {
     };
     va_end(ap);
 }
+
+Keyboardio_ Keyboardio;
