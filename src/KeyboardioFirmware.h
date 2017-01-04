@@ -43,4 +43,4 @@ class Keyboardio_ {
     void use(KeyboardioPlugin *plugin, ...) __attribute__((sentinel));
 };
 
-static Keyboardio_ Keyboardio;
+extern Keyboardio_ Keyboardio;
