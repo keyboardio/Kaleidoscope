@@ -5,8 +5,8 @@ static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
 static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
-    if (keymapEntry.rawKey >= MOMENTARY_OFFSET) {
-        uint8_t target = keymapEntry.rawKey - MOMENTARY_OFFSET;
+    if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
+        uint8_t target = keymapEntry.keyCode - MOMENTARY_OFFSET;
 
         if (key_toggled_on(keyState)) {
             if ( target == KEYMAP_NEXT) {
@@ -29,7 +29,7 @@ static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
 
         // switch keymap and stay there
     } else if (key_toggled_on(keyState)) {
-        Layer.on (keymapEntry.rawKey);
+        Layer.on (keymapEntry.keyCode);
     }
 }
 

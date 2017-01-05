@@ -18,9 +18,9 @@ static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
             return false;
         }
     } else if (mappedKey.flags & IS_CONSUMER) {
-        ConsumerControl.press(mappedKey.rawKey);
+        ConsumerControl.press(mappedKey.keyCode);
     } else if (mappedKey.flags & IS_SYSCTL) {
-        SystemControl.press(mappedKey.rawKey);
+        SystemControl.press(mappedKey.keyCode);
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
     }
@@ -46,41 +46,41 @@ static bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t 
 
 void press_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.press(Key_LShift.rawKey);
+        Keyboard.press(Key_LShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.press(Key_LCtrl.rawKey);
+        Keyboard.press(Key_LCtrl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.press(Key_LAlt.rawKey);
+        Keyboard.press(Key_LAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.press(Key_RAlt.rawKey);
+        Keyboard.press(Key_RAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.press(Key_LGUI.rawKey);
+        Keyboard.press(Key_LGUI.keyCode);
     }
-    Keyboard.press(mappedKey.rawKey);
+    Keyboard.press(mappedKey.keyCode);
 }
 
 
 void release_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.release(Key_LShift.rawKey);
+        Keyboard.release(Key_LShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.release(Key_LCtrl.rawKey);
+        Keyboard.release(Key_LCtrl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.release(Key_LAlt.rawKey);
+        Keyboard.release(Key_LAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.release(Key_RAlt.rawKey);
+        Keyboard.release(Key_RAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.release(Key_LGUI.rawKey);
+        Keyboard.release(Key_LGUI.keyCode);
     }
-    Keyboard.release(mappedKey.rawKey);
+    Keyboard.release(mappedKey.keyCode);
 }
 
 void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {

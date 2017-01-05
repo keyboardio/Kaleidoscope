@@ -25,13 +25,13 @@ void Macros_::play(const macro_t *macro_p) {
         }
         case MACRO_ACTION_STEP_KEYDOWN:
             key.flags = pgm_read_byte(macro_p++);
-            key.rawKey = pgm_read_byte(macro_p++);
+            key.keyCode = pgm_read_byte(macro_p++);
             handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
             Keyboard.sendReport();
             break;
         case MACRO_ACTION_STEP_KEYUP:
             key.flags = pgm_read_byte(macro_p++);
-            key.rawKey = pgm_read_byte(macro_p++);
+            key.keyCode = pgm_read_byte(macro_p++);
             handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
             Keyboard.sendReport();
             break;
@@ -51,7 +51,7 @@ static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState)
     if (!key_toggled_on(keyState))
       return Key_NoKey;
 
-    const macro_t *m = macroAction(mappedKey.rawKey, keyState);
+    const macro_t *m = macroAction(mappedKey.keyCode, keyState);
 
     Macros.play(m);
     return Key_NoKey;
