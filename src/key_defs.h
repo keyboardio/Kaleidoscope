@@ -6,7 +6,7 @@ typedef union {
 
     struct {
         uint8_t flags;
-        uint8_t rawKey;
+        uint8_t keyCode;
     };
     uint16_t raw;
 } Key;
@@ -22,11 +22,11 @@ typedef union {
 #define SYNTHETIC         B01000000
 #define RESERVED          B10000000
 
-#define LCTRL(k)  ((Key) { k.flags | CTRL_HELD, k.rawKey })
-#define LALT(k)   ((Key) { k.flags | LALT_HELD, k.rawKey })
-#define RALT(k)   ((Key) { k.flags | RALT_HELD, k.rawKey })
-#define LSHIFT(k) ((Key) { k.flags | SHIFT_HELD, k.rawKey })
-#define LGUI(k)   ((Key) { k.flags | GUI_HELD, k.rawKey })
+#define LCTRL(k)  ((Key) { k.flags | CTRL_HELD, k.keyCode })
+#define LALT(k)   ((Key) { k.flags | LALT_HELD, k.keyCode })
+#define RALT(k)   ((Key) { k.flags | RALT_HELD, k.keyCode })
+#define LSHIFT(k) ((Key) { k.flags | SHIFT_HELD, k.keyCode })
+#define LGUI(k)   ((Key) { k.flags | GUI_HELD, k.keyCode })
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
