@@ -51,8 +51,6 @@ LEDControl_::update (void) {
   if (modes[mode])
     (modes[mode]->update) ();
 
-  led_sync ();
-
   previousMode = mode;
 }
 
