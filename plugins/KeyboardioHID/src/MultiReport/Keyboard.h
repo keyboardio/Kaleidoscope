@@ -37,9 +37,6 @@ THE SOFTWARE.
 
 typedef union {
     // Modifiers + keymap 
-    uint8_t whole8[];
-    uint16_t whole16[];
-    uint32_t whole32[];
     struct {
         uint8_t modifiers;
         uint8_t keys[KEY_BYTES ];

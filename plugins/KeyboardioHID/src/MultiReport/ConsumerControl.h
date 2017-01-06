@@ -31,9 +31,6 @@ THE SOFTWARE.
 
 typedef union {
     // Every usable Consumer key possible, up to 4 keys presses possible
-    uint8_t whole8[];
-    uint16_t whole16[];
-    uint32_t whole32[];
     uint16_t keys[4];
     struct {
         uint16_t key1;
