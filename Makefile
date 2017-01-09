@@ -55,6 +55,15 @@ SKETCH=KeyboardioFirmware.ino
 BOOTLOADER_PATH = $(ARDUINO_LOCAL_LIB_PATH)/hardware/keyboardio/avr/bootloaders/caterina/Caterina.hex
 VERBOSE= #-verbose
 
+ARDUINO_TOOLS_PARAM = -tools $(ARDUINO_TOOLS_PATH)
+ifeq ($(ARDUINO_TOOLS_PATH),)
+	ARDUINO_TOOLS_PARAM =
+endif
+
+ifdef AVR_GCC_PREFIX
+	ARDUINO_AVR_GCC_PREFIX_PREF = -prefs "runtime.tools.avr-gcc.path=$(AVR_GCC_PREFIX)"
+endif
+
 #
 #
 # Build
@@ -96,7 +105,7 @@ compile: dirs
 	$(ARDUINO_BUILDER_PATH) \
 		-hardware $(ARDUINO_PATH)/hardware \
 		-hardware $(ARDUINO_LOCAL_LIB_PATH)/hardware \
-		-tools $(ARDUINO_TOOLS_PATH) \
+		$(ARDUINO_TOOLS_PARAM) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
 		-libraries $(ARDUINO_LOCAL_LIB_PATH) \
@@ -105,6 +114,7 @@ compile: dirs
 		$(VERBOSE) \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \
+		$(ARDUINO_AVR_GCC_PREFIX_PREF) \
 		examples/KeyboardioFirmware/$(SKETCH)
 	@cp $(BUILD_PATH)/$(SKETCH).hex $(HEX_FILE_PATH)
 	@cp $(BUILD_PATH)/$(SKETCH).elf $(ELF_FILE_PATH)
