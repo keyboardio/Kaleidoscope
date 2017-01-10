@@ -39,6 +39,8 @@ Keyboardio_::loop(void) {
       custom_loop_t hook = loopHooks[i];
       (*hook)(true);
     }
+
+    led_sync ();
 }
 
 void
