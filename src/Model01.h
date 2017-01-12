@@ -4,7 +4,6 @@
 
 #define HARDWARE_IMPLEMENTATION Model01
 #include "KeyboardioScanner.h"
-#include <Wire.h>
 
 #include "keymap_metadata.h"
 #include "key_events.h"

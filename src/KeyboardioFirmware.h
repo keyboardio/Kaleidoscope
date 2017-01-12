@@ -16,7 +16,6 @@ void setup();
 
 #define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
-#include <Wire.h>
 #include <stdio.h>
 #include <math.h>
 #include <avr/wdt.h>
