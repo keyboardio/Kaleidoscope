@@ -10,7 +10,6 @@ class LEDBreatheEffect_ : LEDMode {
   virtual void update (void) final;
 
  private:
-  BreathState state;
 };
 
 extern LEDBreatheEffect_ LEDBreatheEffect;

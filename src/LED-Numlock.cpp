@@ -8,9 +8,6 @@ static uint8_t us;
 
 LEDNumlock::LEDNumlock (uint8_t numpadIdx) {
     numpadIndex = numpadIdx;
-
-    breathState.brightness = 0;
-    breathState.fadeAmount = 1;
 }
 
 void
@@ -35,7 +32,7 @@ LEDNumlock::update (void) {
         led_set_crgb_at(i, {255, 0, 0});
     }
 
-    cRGB color = breath_compute (&breathState);
+    cRGB color = breath_compute ();
     led_set_crgb_at (60, color);
 }
 

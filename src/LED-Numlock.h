@@ -14,6 +14,4 @@ class LEDNumlock : LEDMode {
 
  private:
   static void loopHook (bool postClear);
-
-  BreathState breathState;
 };

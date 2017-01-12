@@ -1,7 +1,7 @@
 #include "LEDUtils.h"
 
 cRGB
-breath_compute (BreathState *state) {
+breath_compute () {
 
     // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
     // Eventually, we should consider just using FastLED
@@ -16,9 +16,9 @@ breath_compute (BreathState *state) {
     uint8_t ii = (i*i)>>8;
     uint8_t iii = (ii*i)>>8;
 
-    state->brightness =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + 2;
+    i =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + 2;
 
-  return hsv_to_rgb(200, 255, state->brightness);
+  return hsv_to_rgb(200, 255, i);
 }
 
 
