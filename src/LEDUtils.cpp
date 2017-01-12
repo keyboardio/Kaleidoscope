@@ -2,18 +2,26 @@
 
 cRGB
 breath_compute (BreathState *state) {
-  // algorithm from http://sean.voisen.org/blog/2011/10/breathing-led-with-arduino/
-  state->brightness =  (exp(sin(millis()/2000.0*PI)) - 0.36787944)*108.0;
-  // change the brightness for next time through the loop:
-  //state->brightness = state->brightness + state->fadeAmount;
 
-  // reverse the direction of the fading at the ends of the fade:
-  if (state->brightness == 0 || state->brightness == 150) {
-    state->fadeAmount = -state->fadeAmount ;
-  }
+    // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
+    // Eventually, we should consider just using FastLED
+
+    uint8_t i = millis()/12; 
+
+    if( i & 0x80) {
+        i = 255 - i;
+    }
+
+    i = i << 1;
+    uint8_t ii = (i*i)>>8;
+    uint8_t iii = (ii*i)>>8;
+
+    state->brightness =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + 2;
 
   return hsv_to_rgb(200, 255, state->brightness);
 }
+
+
 
 // From http://web.mit.edu/storborg/Public/hsvtorgb.c - talk to Scott about licensing
 cRGB
