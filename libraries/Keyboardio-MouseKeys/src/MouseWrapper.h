@@ -50,7 +50,7 @@ class MouseWrapper_ {
     uint8_t acceleration (uint8_t cycles);
     void begin_warping();
     void end_warping();
-    void warp_jump(long left, long top, long height, long width);
+    void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 
 };
 extern MouseWrapper_ MouseWrapper;

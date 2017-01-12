@@ -21,9 +21,9 @@ void MouseWrapper_::release_button(uint8_t button) {
 }
 
 
-void MouseWrapper_::warp_jump(long left, long top, long height, long width) {
-    long x_center = left + width/2;
-    long y_center = top + height/2;
+void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
+    uint16_t x_center = left + width/2;
+    uint16_t y_center = top + height/2;
     AbsoluteMouse.moveTo(x_center,y_center);
 }
 
