@@ -5,19 +5,27 @@
 #include "KeyboardioFirmware.h"
 
 static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
+    if (key_toggled_off(keyState)) {
+	    if (mappedKey.keyCode & KEY_MOUSE_UP || mappedKey.keyCode & KEY_MOUSE_DOWN) {
+		MouseWrapper.mouseActiveForCyclesY=0;
+	    }
+	    if (mappedKey.keyCode & KEY_MOUSE_LEFT || mappedKey.keyCode & KEY_MOUSE_RIGHT) {
+		MouseWrapper.mouseActiveForCyclesX=0;
+	    } 
+    }
+
     if (!key_is_pressed(keyState))
         return;
 
     if (mappedKey.keyCode & KEY_MOUSE_UP) {
         MouseWrapper.move(0,-1);
-    }
-    if (mappedKey.keyCode & KEY_MOUSE_DOWN) {
+    } else if (mappedKey.keyCode & KEY_MOUSE_DOWN) {
         MouseWrapper.move(0,1);
     }
+
     if (mappedKey.keyCode & KEY_MOUSE_LEFT) {
         MouseWrapper.move(-1,0);
-    }
-    if (mappedKey.keyCode & KEY_MOUSE_RIGHT) {
+    } else if (mappedKey.keyCode & KEY_MOUSE_RIGHT) {
         MouseWrapper.move(1,0);
     }
 }

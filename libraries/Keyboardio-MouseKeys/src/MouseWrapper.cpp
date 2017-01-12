@@ -77,43 +77,43 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
 }
 
 
+// cubic wave function based on code from FastLED
+uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
+    uint8_t i = cycles;
 
-double MouseWrapper_::acceleration (double cycles) {
-    double accel = (atan((cycles * ACCELERATION_CLIMB_SPEED)-ACCELERATION_RUNWAY) + ATAN_LIMIT) * ACCELERATION_MULTIPLIER;
-    if (accel < ACCELERATION_FLOOR) {
-        accel = ACCELERATION_FLOOR;
+    if( i & 0x80) {
+        i = 255 - i;
     }
-    return accel;
+
+    i = i << 1;
+
+    uint8_t ii = (i*i) >> 8;
+    uint8_t iii = (ii*i) >> 8;
+
+    i =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + ACCELERATION_FLOOR;
+
+    if ( i > ACCELERATION_CEIL) {
+	i = ACCELERATION_CEIL;
+    }
+    return i;
 }
 
+
 void MouseWrapper_::move( int8_t x, int8_t y) {
-
-    if (x != 0 || y != 0) {
-        mouseActiveForCycles++;
-        double accel = (double) acceleration(mouseActiveForCycles);
-        float moveX = 0;
-        float moveY = 0;
-        if (x > 0) {
-            moveX = (x * accel) + carriedOverX;
-            carriedOverX = moveX - floor(moveX);
-        } else if (x < 0) {
-            moveX = (x * accel) - carriedOverX;
-            carriedOverX = ceil(moveX) - moveX;
-        }
-
-        if (y > 0) {
-            moveY = (y * accel) + carriedOverY;
-            carriedOverY = moveY - floor(moveY);
-        } else if (y < 0) {
-            moveY = (y * accel) - carriedOverY;
-            carriedOverY = ceil(moveY) - moveY;
-        }
-        end_warping();
-
-        Mouse.move(moveX, moveY, 0);
-    } else {
-        mouseActiveForCycles = 0;
+    int16_t moveX =0;
+    int16_t moveY = 0;
+    if (x != 0 ) {
+    	if (mouseActiveForCyclesX < 255) { mouseActiveForCyclesX++;}
+        moveX = (x * acceleration(mouseActiveForCyclesX));
     }
+    if (y != 0) {
+    	if (mouseActiveForCyclesY < 255) { mouseActiveForCyclesY++;}
+        moveY = (y * acceleration(mouseActiveForCyclesY));
+
+    }
+	
+        end_warping();
+        Mouse.move(moveX, moveY, 0);
 
 }
 

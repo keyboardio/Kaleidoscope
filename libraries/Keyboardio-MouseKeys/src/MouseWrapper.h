@@ -26,16 +26,8 @@
 
 // we want the whole s curve, not just the bit
 // that's usually above the x and y axes;
-#define ATAN_LIMIT 1.57079633
-#define ACCELERATION_FLOOR 0.25
-#define ACCELERATION_MULTIPLIER 5
-#define  ACCELERATION_RUNWAY 5
-// Climb speed is how fast we get to max speed
-// 1 is "instant"
-// 0.05 is just right
-// 0.001 is insanely slow
-
-#define ACCELERATION_CLIMB_SPEED  0.05
+#define ACCELERATION_FLOOR 2
+#define ACCELERATION_CEIL 50
 
 
 class MouseWrapper_ {
@@ -45,20 +37,17 @@ class MouseWrapper_ {
     void warp(uint8_t warp_cmd);
     void press_button(uint8_t button);
     void release_button(uint8_t button);
+    uint8_t mouseActiveForCyclesX = 0;
+    uint8_t mouseActiveForCyclesY = 0;
 
   private:
-    double mouseActiveForCycles = 0;
-    float carriedOverX = 0;
-    float carriedOverY = 0;
-
-
     uint16_t next_width = 0;
     uint16_t next_height = 0;
     uint16_t section_top = 0;
     uint16_t section_left = 0;
     boolean is_warping = false;
 
-    double acceleration (double cycles);
+    uint8_t acceleration (uint8_t cycles);
     void begin_warping();
     void end_warping();
     void warp_jump(long left, long top, long height, long width);
