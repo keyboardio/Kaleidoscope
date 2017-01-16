@@ -1,5 +1,11 @@
 # Akela-SpaceCadet
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 [Space Cadet][space-cadet] Shift is a way to make it more convenient to input
 parens - those `(` and `)` things -, symbols that a lot of programming languages
 use frequently. If you are working with Lisp, you are using these all the time.
