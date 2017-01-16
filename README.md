@@ -1,5 +1,11 @@
 # Akela-LEDEffects
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 The `LEDEffects` plugin provides a selection of LED effects, each of them fairly
 simple, simple enough to not need a plugin of their own. 
 
