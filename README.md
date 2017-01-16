@@ -1,5 +1,11 @@
 # Akela-ShapeShifter
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 `ShapeShifter` is a plugin that makes it considerably easier to change what
 symbol is input when a key is pressed together with `Shift`. If one wants to
 rearrange the symbols on the number row for example, without modifying the
