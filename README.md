@@ -1,5 +1,11 @@
 # Akela-OneShot
 
+![status][st:experimental]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 One-shots are a new kind of behaviour for your standard modifier and momentary
 layer keys: instead of having to hold them while pressing other keys, they can
 be tapped and released, and will remain active until any other key is pressed.
