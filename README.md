@@ -1,5 +1,11 @@
 # Akela-MagicCombo
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 The `MagicCombo` extension provides a way to perform custom actions when a
 particular set of keys are held down together. The functionality assigned to
 these keys are not changed, and the custom action triggers as long as all keys
