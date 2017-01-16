@@ -1,5 +1,11 @@
 # Akela-Heatmap
 
+![status][st:broken]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 The `Heatmap` plugin provides a LED effect, that displays a heatmap on the
 keyboard. The LEDs under each key will have a color according to how much use
 they see. Fewer used keys will have deep blue colors, that gradually turns
