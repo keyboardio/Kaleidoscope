@@ -1,5 +1,11 @@
 # Akela-Leader
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 Leader keys are a kind of key where when they are tapped, all following keys are
 swallowed, until the plugin finds a matching sequence in the dictionary, it
 times out, or fails to find any possibilities. When a sequence is found, the
