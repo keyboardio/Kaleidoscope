@@ -1,5 +1,11 @@
 # Akela-HostOS
 
+![status][st:stable]
+
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+
 The `HostOS` extension is not all that useful in itself, rather, it is a
 building block other plugins and extensions can use to not repeat the same
 guesswork and logic. Its primary purpose is to help either detect, or keep track
