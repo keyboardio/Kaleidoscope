@@ -133,4 +133,4 @@ particularly useful:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-TapDance/blob/master/examples/TapDance/TapDance.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-TapDance/blob/master/examples/TapDance/TapDance.ino
