@@ -81,4 +81,4 @@ the overrideable `magicComboActions` function:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
