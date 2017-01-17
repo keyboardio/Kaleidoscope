@@ -19,7 +19,7 @@ information can then be reused by other plugins.
 See the [Unicode][plugin:unicode] extension for an example about how to use
 `HostOS` in practice.
 
- [plugin:unicode]: https://github.com/Akela-Plugins/Akela-Unicode
+ [plugin:unicode]: https://github.com/keyboardio/Akela-Unicode
 
 ## Using the extension
 
@@ -69,4 +69,4 @@ The extension provides the following methods on the `HostOS` singleton:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the extension.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-HostOS/blob/master/examples/HostOS/HostOS.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-HostOS/blob/master/examples/HostOS/HostOS.ino
