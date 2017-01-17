@@ -105,4 +105,4 @@ functionality.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-Unicode/blob/master/examples/Unicode/Unicode.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-Unicode/blob/master/examples/Unicode/Unicode.ino
