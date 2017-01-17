@@ -121,4 +121,4 @@ modifiers and one-shot layer keys. It has the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-OneShot/blob/master/examples/OneShot/OneShot.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-OneShot/blob/master/examples/OneShot/OneShot.ino
