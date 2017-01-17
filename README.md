@@ -72,4 +72,4 @@ The plugin provides the `ShapeShifter` object, with the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-ShapeShifter/blob/master/examples/ShapeShifter/ShapeShifter.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-ShapeShifter/blob/master/examples/ShapeShifter/ShapeShifter.ino
