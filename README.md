@@ -67,4 +67,4 @@ The plugin provides a single method on each of the included effect objects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-LEDEffects/blob/master/examples/LEDEffects/LEDEffects.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-LEDEffects/blob/master/examples/LEDEffects/LEDEffects.ino
