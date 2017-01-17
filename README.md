@@ -77,4 +77,4 @@ void setup () {
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino
