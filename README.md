@@ -96,4 +96,4 @@ method explained below.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/Akela-Plugins/Akela-Cycle/blob/master/examples/Cycle/Cycle.ino
+ [plugin:example]: https://github.com/keyboardio/Akela-Cycle/blob/master/examples/Cycle/Cycle.ino
