@@ -129,6 +129,8 @@ namespace Akela {
 
         onZeroStart = false;
       }
+
+      delay (5);
     }
   }
 
