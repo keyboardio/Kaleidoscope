@@ -190,9 +190,6 @@ namespace Akela {
 
     if (key_is_pressed (keyState)) {
       saveAsPrevious (mappedKey);
-    }
-
-    if (key_toggled_off (keyState)) {
       shouldCancel = true;
     }
 
@@ -204,7 +201,7 @@ namespace Akela {
     if (!State)
       return;
 
-    if (!postClear) {
+    if (postClear) {
       if (Timer < TimeOut)
         Timer++;
 
