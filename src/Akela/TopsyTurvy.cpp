@@ -83,13 +83,16 @@ namespace Akela {
     // invert the shift state
 
     if (!topsyTurvyModState) {
-      Keyboard.press (Key_LShift.keyCode);
+      if (key_is_pressed (keyState))
+        Keyboard.press (Key_LShift.keyCode);
       handle_key_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
-      Keyboard.release (Key_LShift.keyCode);
+      if (key_toggled_off (keyState))
+        Keyboard.release (Key_LShift.keyCode);
     } else {
       Keyboard.release (Key_LShift.keyCode);
       Keyboard.release (Key_RShift.keyCode);
+      Keyboard.sendReport ();
       handle_key_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
 
