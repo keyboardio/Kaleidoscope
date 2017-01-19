@@ -31,7 +31,6 @@ namespace Akela {
   void
   TopsyTurvy::begin (void) {
     event_handler_hook_add (this->eventHandlerHook);
-    loop_hook_add (this->loopHook);
   }
 
   void
@@ -42,31 +41,16 @@ namespace Akela {
   void
   TopsyTurvy::on (void) {
     event_handler_hook_replace (this->noOpHook, this->eventHandlerHook);
-    loop_hook_replace (this->noOpLoopHook, this->loopHook);
   }
 
   void
   TopsyTurvy::off (void) {
     event_handler_hook_replace (this->eventHandlerHook, this->noOpHook);
-    loop_hook_replace (this->loopHook, this->noOpLoopHook);
   }
 
   Key
   TopsyTurvy::noOpHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     return mappedKey;
-  }
-
-  void
-  TopsyTurvy::noOpLoopHook (bool postClear) {
-  }
-
-  void
-  TopsyTurvy::loopHook (bool postClear) {
-    if (postClear)
-      return;
-
-    bitWrite (topsyTurvyModState, 0, Keyboard.isModifierActive (Key_LShift.keyCode));
-    bitWrite (topsyTurvyModState, 1, Keyboard.isModifierActive (Key_RShift.keyCode));
   }
 
   Key
@@ -76,6 +60,11 @@ namespace Akela {
 
     if (!topsyTurvyList)
       return mappedKey;
+
+    if (mappedKey.raw == Key_LShift.raw)
+      bitWrite (topsyTurvyModState, 0, key_is_pressed (keyState));
+    if (mappedKey.raw == Key_RShift.raw)
+      bitWrite (topsyTurvyModState, 1, key_is_pressed (keyState));
 
     if (!key_is_pressed (keyState) && !key_was_pressed (keyState))
       return mappedKey;

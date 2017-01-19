@@ -38,9 +38,6 @@ namespace Akela {
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static Key noOpHook (Key, byte row, byte col, uint8_t keyState);
-
-    static void loopHook (bool postClear);
-    static void noOpLoopHook (bool postClear);
   };
 };
 
