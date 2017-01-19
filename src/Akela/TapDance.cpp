@@ -23,7 +23,7 @@ using namespace Akela::Ranges;
 namespace Akela {
   // --- state ---
   uint16_t TapDance::timer;
-  uint16_t TapDance::timeOut = DEFAULT_TIMEOUT;
+  uint16_t TapDance::timeOut = 5;
   uint8_t TapDance::tapCount[32];
   uint32_t TapDance::pressedState;
   uint32_t TapDance::triggeredState;
