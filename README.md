@@ -1,6 +1,6 @@
 # Akela-TopsyTurvy
 
-![status][st:experimental]
+![status][st:stable]
 
  [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
  [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
