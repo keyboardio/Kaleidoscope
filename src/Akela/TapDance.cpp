@@ -108,7 +108,7 @@ namespace Akela {
   void
   TapDance::actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]) {
     if (tapCount > maxKeys)
-      return;
+      tapCount = maxKeys;
 
     Key key;
     key.raw = pgm_read_word (&(tapKeys[tapCount - 1].raw));
