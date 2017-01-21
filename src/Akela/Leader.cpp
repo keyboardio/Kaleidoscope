@@ -30,6 +30,9 @@ namespace Akela {
 
   // --- helpers ---
 
+#define PARTIAL_MATCH -1
+#define NO_MATCH -2
+
 #define isLeader(k) (k.raw >= LEAD_FIRST && k.raw <= LEAD_LAST)
 #define isActive() (sequence[0].raw != Key_NoKey.raw)
 
@@ -60,10 +63,12 @@ namespace Akela {
       seqKey.raw = pgm_read_word (&(dictionary[seqIndex].sequence[sequencePos + 1].raw));
       if (seqKey.raw == Key_NoKey.raw) {
         return seqIndex;
+      } else {
+        return PARTIAL_MATCH;
       }
     }
 
-    return -1;
+    return NO_MATCH;
   }
 
   // --- api ---
@@ -136,21 +141,19 @@ namespace Akela {
       sequence[sequencePos].raw = mappedKey.raw;
       actionIndex = lookup ();
 
-      if (actionIndex < 0) {
-        // No match, abort and pass it through.
-        reset ();
-        return mappedKey;
-      }
-      return Key_NoKey;
+      if (actionIndex >= 0)
+        return Key_NoKey;
     } else if (key_is_pressed (keyState)) {
       // held, no need for anything here.
       return Key_NoKey;
     }
 
-    if (actionIndex < 0) {
-      // No match, abort and pass it through.
+    if (actionIndex == NO_MATCH) {
       reset ();
       return mappedKey;
+    }
+    if (actionIndex == PARTIAL_MATCH) {
+      return Key_NoKey;
     }
 
     action_t leaderAction = (action_t) pgm_read_ptr (&(dictionary[actionIndex].action));
