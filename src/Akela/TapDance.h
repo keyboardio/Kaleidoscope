@@ -52,6 +52,8 @@ namespace Akela {
     static uint32_t pressedState;
     static uint32_t triggeredState;
     static Key lastTapDanceKey;
+    static byte lastTapDanceRow;
+    static byte lastTapDanceCol;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
@@ -63,6 +65,6 @@ namespace Akela {
   };
 };
 
-void tapDanceAction (uint8_t tapDanceIndex, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction);
+void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction);
 
 extern Akela::TapDance TapDance;

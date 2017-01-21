@@ -118,7 +118,7 @@ particularly useful:
 > The `tapCount` and `tapDanceActions` parameters should be the same as the
 > similarly named parameters of the `tapDanceAction` function.
 
-### `tapDanceAction(tapDanceIndex, tapCount, tapDanceAction)`
+### `tapDanceAction(tapDanceIndex, row, col, tapCount, tapDanceAction)`
 
 > The heart of the tap-dance plugin is the handler method. This is called every
 > time any kind of tap-dance action is to be performed. See the
@@ -126,7 +126,8 @@ particularly useful:
 > how this function is called.
 >
 > The `tapDanceIndex` and `tapCount` parameters help us choose which action to
-> perform.
+> perform. The `row` and `col` parameters tell us where the tap-dance key is on
+> the keyboard.
 
 ## Further reading
 
