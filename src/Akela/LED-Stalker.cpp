@@ -20,10 +20,15 @@
 
 namespace Akela {
   namespace LEDEffects {
-    cRGB StalkerEffect::highlightColor = (cRGB) {64, 128, 128};
     uint8_t StalkerEffect::map[ROWS][COLS];
+    StalkerEffect::ColorComputer *StalkerEffect::colorComputer;
 
     StalkerEffect::StalkerEffect (void) {
+    }
+
+    void
+    StalkerEffect::configure (ColorComputer *colorComputer_) {
+      colorComputer = colorComputer_;
     }
 
     void
@@ -32,12 +37,7 @@ namespace Akela {
       loop_hook_add (loopHook);
     }
 
-    void
-    StalkerEffect::configure (const cRGB highlightColor_) {
-      highlightColor = highlightColor_;
-    }
-
-    Key
+     Key
     StalkerEffect::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
       if (row >= ROWS || col >= COLS)
         return mappedKey;
@@ -53,18 +53,13 @@ namespace Akela {
       if (postClear)
         return;
 
-      float mb = highlightColor.b / 255.0;
-      float mg = highlightColor.g / 255.0;
-      float mr = highlightColor.r / 255.0;
+      if (!colorComputer)
+        return;
 
       for (byte r = 0; r < ROWS; r++) {
         for (byte c = 0; c < COLS; c++) {
-          cRGB color = {(uint8_t)min(map[r][c] * mb, 255),
-                        (uint8_t)min(map[r][c] * mg, 255),
-                        (uint8_t)min(map[r][c] * mr, 255)};
-
           if (map[r][c])
-            led_set_crgb_at (r, c, color);
+            led_set_crgb_at (r, c, colorComputer->compute (map[r][c]));
 
           if (map[r][c] >= 0xf0)
             map[r][c]--;
@@ -77,6 +72,50 @@ namespace Akela {
         }
       }
     }
+
+    namespace Stalker {
+
+      // Haunt
+      float Haunt::mb;
+      float Haunt::mg;
+      float Haunt::mr;
+
+      Haunt::Haunt (const cRGB highlightColor) {
+        mb = highlightColor.b / 255.0;
+        mg = highlightColor.g / 255.0;
+        mr = highlightColor.r / 255.0;
+      }
+
+      cRGB
+      Haunt::compute (uint8_t step) {
+        cRGB color = {(uint8_t)min(step * mb, 255),
+                      (uint8_t)min(step * mg, 255),
+                      (uint8_t)min(step * mr, 255)};
+
+        return color;
+      }
+
+      // BlazingTrail
+      BlazingTrail::BlazingTrail (...) {
+      }
+
+      cRGB
+      BlazingTrail::compute (uint8_t step) {
+        cRGB color;
+
+        color.b = 0;
+        color.r = step;
+
+        if (step >= 0xf0) {
+        } else if (step >= 0x80) {
+          color.g = 0xa0 - step / 2;
+        } else
+          color.g = step;
+
+        return color;
+      }
+
+    };
 
   };
 };

@@ -18,22 +18,53 @@
 
 #include <Akela-Core.h>
 
+#define STALKER(n, ...) (({static Akela::LEDEffects::Stalker::n _effect (__VA_ARGS__); &_effect;}))
+
 namespace Akela {
   namespace LEDEffects {
     class StalkerEffect : public KeyboardioPlugin {
     public:
+      class ColorComputer {
+      public:
+        virtual cRGB compute (uint8_t step) = 0;
+      };
+
       StalkerEffect (void);
 
-      static void configure (const cRGB highlightColor);
       virtual void begin (void) final;
+      static void configure (ColorComputer *colorComputer);
 
     private:
-      static cRGB highlightColor;
+      static ColorComputer *colorComputer;
       static uint8_t map[ROWS][COLS];
 
       static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
       static void loopHook (bool postClear);
     };
+
+    namespace Stalker {
+
+      class Haunt : public StalkerEffect::ColorComputer {
+      public:
+        Haunt (const cRGB highlightColor);
+        Haunt (void) : Haunt ({0x40, 0x80, 0x80}) {};
+        Haunt (void *) : Haunt () {};
+
+        virtual cRGB compute (uint8_t step) final;
+
+      private:
+        static float mr, mg, mb;
+      };
+
+      class BlazingTrail : public StalkerEffect::ColorComputer {
+      public:
+        BlazingTrail (...);
+
+        virtual cRGB compute (uint8_t step) final;
+      };
+
+    };
+
   };
 };
 
