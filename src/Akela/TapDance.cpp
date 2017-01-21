@@ -130,11 +130,6 @@ namespace Akela {
     }
   }
 
-  void
-  TapDance::inject (Key key, uint8_t keyState) {
-    eventHandlerHook (key, 255, 255, keyState);
-  }
-
   // --- hooks ---
 
   Key

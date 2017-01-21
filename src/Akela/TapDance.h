@@ -45,8 +45,6 @@ namespace Akela {
 
     void actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
 
-    void inject (Key key, uint8_t keyState);
-
   private:
     static uint16_t timer;
     static uint16_t timeOut;
