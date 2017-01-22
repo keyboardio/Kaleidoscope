@@ -31,3 +31,10 @@ The plugin only makes sense when using one-shot keys.
 ## Plugin methods
 
 The plugin provides the `EscapeOneShot` object, which has no public methods.
+
+## Further reading
+
+Starting from the [example][plugin:example] is the recommended way of getting
+started with the plugin.
+
+ [plugin:example]: https://github.com/keyboardio/Akela-Escape-OneShot/blob/master/examples/Escape-OneShot/Escape-OneShot.ino
