@@ -61,3 +61,10 @@ The plugin provides the following effects:
 ### `BlazingTrail()`
 
 > A blazing trail of fire will follow our fingers!
+
+## Further reading
+
+Starting from the [example][plugin:example] is the recommended way of getting
+started with the plugin.
+
+ [plugin:example]: https://github.com/keyboardio/Akela-LED-Stalker/blob/master/examples/LED-Stalker/LED-Stalker.ino
