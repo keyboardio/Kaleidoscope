@@ -40,3 +40,10 @@ method:
 
 > Set the color to use for highlighting the modifiers. If unset, will use the
 > default white color.
+
+## Further reading
+
+Starting from the [example][plugin:example] is the recommended way of getting
+started with the plugin.
+
+ [plugin:example]: https://github.com/keyboardio/Akela-LED-ActiveModColor/blob/master/examples/LED-ActiveModColor/LED-ActiveModColor.ino
