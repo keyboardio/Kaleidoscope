@@ -22,8 +22,6 @@ void setup () {
 
   StalkerEffect.configure (STALKER (Haunt, {0xff, 0, 0}));
   Keyboardio.use (&StalkerEffect, NULL);
-  
-  StalkerEffect.configure ({0x00, 0xff, 0xff});
 }
 ```
 
