@@ -61,16 +61,19 @@ namespace Akela {
           if (map[r][c])
             led_set_crgb_at (r, c, colorComputer->compute (map[r][c]));
 
+          bool wasZero = (map[r][c] == 0);
+
           if (map[r][c] >= 0xf0)
             map[r][c]--;
           else if (map[r][c] >= 0x40)
             map[r][c] -= 16;
           else if (map[r][c] >= 32)
             map[r][c] -= 32;
-          else {
+          else
             map[r][c] = 0;
+
+          if (!wasZero && !map[r][c])
             led_set_crgb_at (r, c, (cRGB){0, 0, 0});
-          }
         }
       }
     }
