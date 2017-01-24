@@ -55,6 +55,10 @@ find_sketch () {
 flash () {
     . ${ROOT}/tools/settings.sh
 
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
     echo "Press ENTER when ready..."
     read a
 
@@ -65,6 +69,10 @@ flash () {
 
 program () {
     . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
 
     echo "Press ENTER when ready..."
     read a
@@ -79,6 +87,10 @@ program () {
 
 hex_with_bootloader () {
     . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
 
 	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
 	  echo "Using ${BOOTLOADER_PATH}"
@@ -164,6 +176,10 @@ build_all () {
 report_size () {
     . ${ROOT}/tools/settings.sh
 
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
 	  echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
 	  firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
 	  echo
@@ -172,11 +188,19 @@ report_size () {
 size_map () {
     . ${ROOT}/tools/settings.sh
 
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
     "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
 }
 
 decompile () {
     . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "{HEX_FILE_PATH}" ]; then
+        compile
+    fi
 
     "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
 }
