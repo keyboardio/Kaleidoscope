@@ -114,6 +114,10 @@ compile () {
 
     ${compile_HOOKS}
 
+    if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
+        local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
+    fi
+
     ${ARDUINO_BUILDER} \
         -compile \
 		    -hardware "${ARDUINO_PATH}/hardware" \
@@ -121,7 +125,7 @@ compile () {
 		    ${ARDUINO_TOOLS_PARAM} \
 		    -tools "${ARDUINO_PATH}/tools-builder" \
 		    -fqbn "${FQBN}" \
-		    -libraries "${ARDUINO_LOCAL_LIB_PATH}/libraries" \
+        ${local_LIBS} \
 		    -libraries "${BOARD_HARDWARE_PATH}/.." \
         -libraries "${ROOT}" \
 		    ${EXTRA_BUILDER_ARGS} \
