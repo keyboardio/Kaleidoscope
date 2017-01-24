@@ -61,7 +61,9 @@ namespace Akela {
       byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
       handle_key_event (Key_NoKey, row, col, WAS_PRESSED);
-    } else if (timer < timeOut / 3) {
+    }
+
+    if (timer < timeOut / 3) {
       byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
       byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
