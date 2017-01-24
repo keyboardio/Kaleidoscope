@@ -40,6 +40,13 @@ submodule_update () {
 }
 
 find_sketch () {
+    if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
+        . "${SOURCEDIR}/.keyboardio-builder.conf"
+    fi
+
+    SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
+    LIBRARY="${LIBRARY:-${SKETCH}}"
+
     for path in "hardware/keyboardio/avr/libraries/Akela-${LIBRARY}/examples/${SKETCH}" \
                     "examples/${LIBRARY}" \
                     "src"; do
@@ -58,9 +65,46 @@ flash () {
     echo "Press ENTER when ready..."
     read a
 
-    stty -F /dev/ttyACM* 1200 hupcl
+    reset_device
     sleep 3s
-    avrdude -q -q -patmega32u4 -cavr109 -D -P /dev/ttyACM* -b57600 "-Uflash:w:${OUTPUT_PATH}/${SKETCH}-latest.hex:i"
+    avrdude -q -q -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+
+    cd "${SOURCEDIR}"
+}
+
+program () {
+    cd "$(find_sketch)"
+    . ${ROOT}/tools/settings.sh
+
+    echo "Press ENTER when ready..."
+    read a
+
+    avrdude -v \
+		        -p${MCU} \
+		        -cusbtiny \
+		        -D \
+		        -B 1 \
+		        "-Uflash:w:${HEX_FILE_PATH}:i"
+
+    cd "${SOURCEDIR}"
+}
+
+hex_with_bootloader () {
+    cd "$(find_sketch)"
+    . ${ROOT}/tools/settings.sh
+
+	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+	  echo "Using ${BOOTLOADER_PATH}"
+	  ${MD5} ${BOOTLOADER_PATH}
+	  cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    cat <<EOF
+
+Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
+Make sure you have the bootloader version you expect.
+
+And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
+
+EOF
 
     cd "${SOURCEDIR}"
 }
@@ -78,6 +122,8 @@ compile () {
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
 
+    ${compile_HOOKS}
+
     ${ARDUINO_BUILDER} \
         -compile \
 		    -hardware "${ARDUINO_PATH}/hardware" \
@@ -85,7 +131,7 @@ compile () {
 		    ${ARDUINO_TOOLS_PARAM} \
 		    -tools "${ARDUINO_PATH}/tools-builder" \
 		    -fqbn "${FQBN}" \
-		    -libraries "${ROOT}/libraries" \
+		    -libraries "${ARDUINO_LOCAL_LIB_PATH}/libraries" \
 		    -libraries "${BOARD_HARDWARE_PATH}/.." \
         -libraries "${ROOT}" \
 		    ${EXTRA_BUILDER_ARGS} \
@@ -149,11 +195,29 @@ size_map () {
     cd "${SOURCEDIR}"
 }
 
+decompile () {
+    cd "$(find_sketch)"
+    . ${ROOT}/tools/settings.sh
+
+    "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
+
+    cd "${SOURCEDIR}"
+}
+
 clean () {
     cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     rm -rf "${OUTPUT_PATH}"
+
+    cd "${SOURCEDIR}"
+}
+
+reset_device () {
+    cd "$(find_sketch)"
+    . ${ROOT}/tools/settings.sh
+
+    ${RESET_DEVICE}
 
     cd "${SOURCEDIR}"
 }
@@ -184,6 +248,12 @@ Available commands:
   size-map
     Displays the size map for the sketch.
 
+  decomple
+    Decompile the sketch.
+
+  reset-device
+    Reset the device.
+
   flash
     Flashes the firmware using avrdude.
 
@@ -212,10 +282,8 @@ ROOT="$(cd $(dirname $0)/..; pwd)"
 export ROOT
 export SOURCEDIR="$(pwd)"
 
-if [ $# -eq 1 ]; then
-    cmd="$(echo $1 | tr '-' '_')"
-    ${cmd}
-    exit $?
+if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
+    . "${SOURCEDIR}/.keyboardio-builder.conf"
 fi
 
 cmds=""
@@ -237,8 +305,18 @@ done
 
 set -- ${cmds}
 
+if [ $# -eq 1 ]; then
+    cmd="$(echo $1 | tr '-' '_')"
+    ${cmd}
+    exit $?
+fi
+
 SKETCH="$1"
 shift
+
+if [ "${SKETCH}" = "default" ]; then
+    SKETCH="${DEFAULT_SKETCH}"
+fi
 
 cmds=""
 
