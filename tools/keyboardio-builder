@@ -55,7 +55,7 @@ find_sketch () {
 flash () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
@@ -70,7 +70,7 @@ flash () {
 program () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
@@ -88,7 +88,7 @@ program () {
 hex_with_bootloader () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
@@ -176,7 +176,7 @@ build_all () {
 report_size () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
@@ -188,7 +188,7 @@ report_size () {
 size_map () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
@@ -198,7 +198,7 @@ size_map () {
 decompile () {
     . ${ROOT}/tools/settings.sh
 
-    if [ ! -e "{HEX_FILE_PATH}" ]; then
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
