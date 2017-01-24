@@ -11,13 +11,7 @@ firmware_size () {
 
 	PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
 
-	PERCENT=$(cat <<EOF
-scale=2
-${PROGSIZE} / ${MAX_PROG_SIZE} * 100
-EOF
-	)
-
-	PERCENT=$(printf %02.01f $(echo "${PERCENT}" | bc -q))
+  PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
 	echo "${output}" | sed -e "s,\(Program:.*\)(\([0-9\.]*%\) Full),\1(${PERCENT}% Full),"
 }
