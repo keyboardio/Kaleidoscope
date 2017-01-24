@@ -22,8 +22,8 @@ namespace Akela {
   GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghostKeys;
   bool GhostInTheFirmware::isActive;
   uint16_t GhostInTheFirmware::currentPos;
-  uint16_t GhostInTheFirmware::timer;
-  uint16_t GhostInTheFirmware::timeOut;
+  uint8_t GhostInTheFirmware::timer;
+  uint8_t GhostInTheFirmware::timeOut;
 
   GhostInTheFirmware::GhostInTheFirmware (void) {
   }
@@ -49,7 +49,7 @@ namespace Akela {
       return;
 
     if (timeOut == 0) {
-      timeOut = pgm_read_word (&(ghostKeys[currentPos].delay));
+      timeOut = pgm_read_byte (&(ghostKeys[currentPos].delay));
 
       if (timeOut == 0) {
         currentPos = 0;
