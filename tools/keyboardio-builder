@@ -253,6 +253,10 @@ ROOT="$(cd $(dirname $0)/..; pwd)"
 export ROOT
 export SOURCEDIR="$(pwd)"
 
+if [ -e "${HOME}/.keyboardio-builder.conf" ]; then
+    . "${HOME}/.keyboardio-builder.conf"
+fi
+
 if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
     . "${SOURCEDIR}/.keyboardio-builder.conf"
 fi
