@@ -59,7 +59,6 @@ find_sketch () {
 }
 
 flash () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     echo "Press ENTER when ready..."
@@ -68,12 +67,9 @@ flash () {
     reset_device
     sleep 3s
     avrdude -q -q -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
-
-    cd "${SOURCEDIR}"
 }
 
 program () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     echo "Press ENTER when ready..."
@@ -85,12 +81,9 @@ program () {
 		        -D \
 		        -B 1 \
 		        "-Uflash:w:${HEX_FILE_PATH}:i"
-
-    cd "${SOURCEDIR}"
 }
 
 hex_with_bootloader () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
 	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
@@ -105,8 +98,6 @@ Make sure you have the bootloader version you expect.
 And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
 
 EOF
-
-    cd "${SOURCEDIR}"
 }
 
 build () {
@@ -115,7 +106,6 @@ build () {
 }
 
 compile () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     install -d "${OUTPUT_PATH}"
@@ -141,15 +131,13 @@ compile () {
         ${ARDUINO_VERBOSE} \
 		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers" \
 		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-		    "${SKETCH}.ino"
+		    "$(find_sketch)/${SKETCH}.ino"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
     ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 	  rm -rf "${BUILD_PATH}"
-
-    cd "${SOURCEDIR}"
 }
 
 _find_all () {
@@ -176,50 +164,35 @@ build_all () {
 }
 
 report_size () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
 	  echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
 	  firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
 	  echo
-
-    cd "${SOURCEDIR}"
 }
 
 size_map () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
-
-    cd "${SOURCEDIR}"
 }
 
 decompile () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
-
-    cd "${SOURCEDIR}"
 }
 
 clean () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     rm -rf "${OUTPUT_PATH}"
-
-    cd "${SOURCEDIR}"
 }
 
 reset_device () {
-    cd "$(find_sketch)"
     . ${ROOT}/tools/settings.sh
 
     ${RESET_DEVICE}
-
-    cd "${SOURCEDIR}"
 }
 
 usage () {

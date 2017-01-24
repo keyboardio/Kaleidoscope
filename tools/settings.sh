@@ -44,8 +44,8 @@ BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
 OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
 OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
 
-GIT_VERSION="$(git describe --abbrev=4 --dirty --always)"
-LIB_VERSION="$( (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
+LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
 
 OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
 
