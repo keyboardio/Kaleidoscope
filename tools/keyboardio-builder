@@ -108,7 +108,7 @@ EOF
 
 build () {
     compile $@
-    report_size $@
+    size $@
 }
 
 compile () {
@@ -173,7 +173,7 @@ build_all () {
     done
 }
 
-report_size () {
+size () {
     . ${ROOT}/tools/settings.sh
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
@@ -231,7 +231,7 @@ Available commands:
   compile
     Compiles the sketch.
 
-  report-size
+  size
     Reports the size of the compiled sketch.
 
   build
