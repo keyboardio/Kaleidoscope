@@ -35,8 +35,8 @@ namespace Akela {
   // --- helper macros ------
 
 #define isOS(key) (key.raw >= OS_FIRST && key.raw <= OS_LAST)
-#define isModifier(key) (key.keyCode >= Key_LCtrl.raw && key.keyCode <= Key_RGUI.raw && key.flags == 0)
-#define isLayerKey(key) (key.flags & (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
+#define isModifier(key) (key.raw >= Key_LCtrl.raw && key.raw <= Key_RGUI.raw)
+#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
 
 #define isOneShot(idx) (bitRead (State, idx))
 #define setOneShot(idx) (bitWrite (State, idx, 1))
@@ -86,6 +86,14 @@ namespace Akela {
     // If mappedKey is an injected key, we don't fiddle with those.
     if (keyState & INJECTED)
       return mappedKey;
+
+    if (key_toggled_on (keyState)) {
+      Serial.print ("isModifier=");
+      Serial.print (isModifier (mappedKey));
+
+      Serial.print ("; isLayerKey=");
+      Serial.println (isLayerKey (mappedKey));
+    }
 
     if (!isModifier (mappedKey) && !isLayerKey (mappedKey))
       return mappedKey;
