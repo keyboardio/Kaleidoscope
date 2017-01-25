@@ -37,6 +37,8 @@ namespace Akela {
     static void cancel (bool withStickies);
     static void cancel (void) { cancel (false); };
 
+    static bool isModifierActive (Key key);
+
     void inject (Key key, uint8_t keyState);
 
   private:

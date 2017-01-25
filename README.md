@@ -94,6 +94,12 @@ modifiers and one-shot layer keys. It has the following methods:
 > useful for macros that need to fiddle with either modifier or layer state: if
 > one-shots are not active, they need not restore the original state.
 
+### `.isModifierActive(key)`
+
+> Returns if the modifier `key` has a one-shot state active. Use this together
+> with `Keyboard.isModifierActive` to catch cases where a one-shot modifier is
+> active, but not registered yet.
+
 ### `.cancel([withStickies])`
 
 > The `cancel()` method can be used to cancel any pending one-shot effects,

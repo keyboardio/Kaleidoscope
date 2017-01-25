@@ -38,7 +38,7 @@ namespace Akela {
 #define isModifier(key) (key.raw >= Key_LCtrl.raw && key.raw <= Key_RGUI.raw)
 #define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
 
-#define isOneShot(idx) (bitRead (State, idx))
+#define isOneShot(idx) (bitRead (State, (idx)))
 #define setOneShot(idx) (bitWrite (State, idx, 1))
 #define clearOneShot(idx) (bitWrite (State, idx, 0))
 
@@ -256,6 +256,14 @@ namespace Akela {
   bool
   OneShot::isActive (void) {
     return (State && !hasTimedOut () && !shouldCancel);
+  }
+
+  bool
+  OneShot::isModifierActive (Key key) {
+    if (key.raw < Key_LCtrl.raw || key.raw > Key_RGUI.raw)
+      return false;
+
+    return isOneShot (key.keyCode - Key_LCtrl.keyCode);
   }
 
   void
