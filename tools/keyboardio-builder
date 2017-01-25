@@ -1,0 +1,334 @@
+#! /bin/sh
+
+set -e
+
+firmware_size () {
+	## This is a terrible hack, please don't hurt me. - algernon
+
+	MAX_PROG_SIZE=28672
+
+	output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+
+	PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
+
+  PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+
+	echo "${output}" | sed -e "s,\(Program:.*\)(\([0-9\.]*%\) Full),\1(${PERCENT}% Full),"
+}
+
+submodule_update () {
+    cd $(dirname $0)/..
+
+    echo Syncing submodules...
+    git submodule --quiet sync --recursive
+
+    echo Updating submodules...
+    git submodule --quiet update --init --recursive
+
+    echo
+
+    for lib in hardware/keyboardio/avr/libraries/* lib/*; do
+        echo Updating $(basename ${lib})...
+        (cd $lib; git checkout -q master; git pull -q --ff)
+    done
+}
+
+find_sketch () {
+    if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
+        . "${SOURCEDIR}/.keyboardio-builder.conf"
+    fi
+
+    SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
+    LIBRARY="${LIBRARY:-${SKETCH}}"
+
+    for path in "hardware/keyboardio/avr/libraries/Akela-${LIBRARY}/examples/${SKETCH}" \
+                    "examples/${LIBRARY}" \
+                    "src"; do
+        if [ -f "${path}/${SKETCH}.ino" ]; then
+            echo "${path}"
+            return
+        fi
+    done
+    exit 1
+}
+
+flash () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    echo "Press ENTER when ready..."
+    read a
+
+    reset_device
+    sleep 3s
+    avrdude -q -q -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+}
+
+program () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    echo "Press ENTER when ready..."
+    read a
+
+    avrdude -v \
+		        -p${MCU} \
+		        -cusbtiny \
+		        -D \
+		        -B 1 \
+		        "-Uflash:w:${HEX_FILE_PATH}:i"
+}
+
+hex_with_bootloader () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+	  echo "Using ${BOOTLOADER_PATH}"
+	  ${MD5} ${BOOTLOADER_PATH}
+	  cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    cat <<EOF
+
+Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
+Make sure you have the bootloader version you expect.
+
+And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
+
+EOF
+}
+
+build () {
+    compile $@
+    size $@
+}
+
+compile () {
+    . ${ROOT}/tools/settings.sh
+
+    install -d "${OUTPUT_PATH}"
+
+    echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+
+    ${compile_HOOKS}
+
+    if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
+        local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
+    fi
+
+    ${ARDUINO_BUILDER} \
+        -compile \
+		    -hardware "${ARDUINO_PATH}/hardware" \
+		    -hardware "${BOARD_HARDWARE_PATH}" \
+		    ${ARDUINO_TOOLS_PARAM} \
+		    -tools "${ARDUINO_PATH}/tools-builder" \
+		    -fqbn "${FQBN}" \
+        ${local_LIBS} \
+		    -libraries "${BOARD_HARDWARE_PATH}/.." \
+        -libraries "${ROOT}" \
+		    ${EXTRA_BUILDER_ARGS} \
+		    -build-path "${BUILD_PATH}" \
+		    -ide-version "${ARDUINO_IDE_VERSION}" \
+		    -warnings all \
+        ${ARDUINO_VERBOSE} \
+		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers" \
+		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
+		    "$(find_sketch)/${SKETCH}.ino"
+
+    cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
+    cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
+    ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
+    ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+	  rm -rf "${BUILD_PATH}"
+}
+
+_find_all () {
+    for plugin in hardware/keyboardio/avr/libraries/Akela-*/examples/* \
+                      examples/* \
+                      src/*.ino; do
+        if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
+            p="$(basename "${plugin}" .ino)"
+            if [ "${p}" != '*' ]; then
+                echo "${p}"
+            fi
+        fi
+    done | sort
+}
+
+build_all () {
+    plugins="$(_find_all)"
+
+    for plugin in ${plugins}; do
+        export SKETCH="${plugin}"
+        export LIBRARY="${plugin}"
+        (build ${plugin})
+    done
+}
+
+size () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+	  echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
+	  firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
+	  echo
+}
+
+size_map () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
+}
+
+decompile () {
+    . ${ROOT}/tools/settings.sh
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
+}
+
+clean () {
+    . ${ROOT}/tools/settings.sh
+
+    rm -rf "${OUTPUT_PATH}"
+}
+
+reset_device () {
+    . ${ROOT}/tools/settings.sh
+
+    ${RESET_DEVICE}
+}
+
+usage () {
+    cat <<EOF
+Usage: $0 SKETCH commands...
+
+Runs all of the commands in the context of the Sketch.
+
+Available commands:
+
+  help
+    This help screen.
+
+  compile
+    Compiles the sketch.
+
+  size
+    Reports the size of the compiled sketch.
+
+  build
+    Runs compile and report-size.
+
+  clean
+    Cleans up the output directory.
+
+  size-map
+    Displays the size map for the sketch.
+
+  decomple
+    Decompile the sketch.
+
+  reset-device
+    Reset the device.
+
+  flash
+    Flashes the firmware using avrdude.
+
+  build-all
+    Build all Sketches we can find.
+EOF
+}
+
+help () {
+    usage
+}
+
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+## Parse the command-line
+##  - anything that has a =, is an env var
+##  - from the remaining stuff, the first one is the Library/Sketch
+##  - everything else are commands
+##
+##  - if there is only one argument, that's a command
+
+ROOT="$(cd $(dirname $0)/..; pwd)"
+export ROOT
+export SOURCEDIR="$(pwd)"
+
+if [ -e "${HOME}/.keyboardio-builder.conf" ]; then
+    . "${HOME}/.keyboardio-builder.conf"
+fi
+
+if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
+    . "${SOURCEDIR}/.keyboardio-builder.conf"
+fi
+
+cmds=""
+
+## Export vars
+for i in $(seq 1 $#); do
+    v="$1"
+    shift
+
+    case "${v}" in
+        *=*)
+            export ${v}
+            ;;
+        *)
+            cmds="${cmds} ${v}"
+            ;;
+    esac
+done
+
+set -- ${cmds}
+
+if [ $# -eq 1 ]; then
+    cmd="$(echo $1 | tr '-' '_')"
+    ${cmd}
+    exit $?
+fi
+
+SKETCH="$1"
+shift
+
+if [ "${SKETCH}" = "default" ]; then
+    SKETCH="${DEFAULT_SKETCH}"
+fi
+
+cmds=""
+
+for i in $(seq 1 $#); do
+    cmds="${cmds} $(echo $1 | tr '-' '_')"
+    shift
+done
+
+LIBRARY="${SKETCH}"
+
+export SKETCH
+export LIBRARY
+
+for cmd in ${cmds}; do
+    ${cmd}
+done
