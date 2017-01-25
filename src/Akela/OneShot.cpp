@@ -28,6 +28,8 @@ namespace Akela {
   uint32_t OneShot::State = 0;
   uint32_t OneShot::stickyState = 0;
   uint32_t OneShot::pressedState = 0;
+  uint32_t OneShot::leftMask;
+  uint32_t OneShot::rightMask;
   Key OneShot::prevKey;
   bool OneShot::shouldCancel = false;
   bool OneShot::shouldCancelStickies = false;
@@ -127,6 +129,42 @@ namespace Akela {
     injectNormalKey (idx, WAS_PRESSED);
   }
 
+  void
+  OneShot::mask (byte row, byte col) {
+    if (row >= ROWS || col >= COLS)
+      return;
+
+    if (col >= 8) {
+      col = col - 8;
+      rightMask |= SCANBIT (row, col);
+    } else
+      leftMask |= SCANBIT (row, col);
+  }
+
+  void
+  OneShot::unmask (byte row, byte col) {
+    if (row >= ROWS || col >= COLS)
+      return;
+
+    if (col >= 8) {
+      col = col - 8;
+      rightMask &= ~(SCANBIT (row, col));
+    } else
+      leftMask &= ~(SCANBIT (row, col));
+  }
+
+  bool
+  OneShot::isMasked (byte row, byte col) {
+    if (row >= ROWS || col >= COLS)
+      return false;
+
+    if (col >= 8) {
+      col = col - 8;
+      return rightMask & SCANBIT (row, col);
+    } else
+      return leftMask & SCANBIT (row, col);
+  }
+
   Key
   OneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     uint8_t idx;
@@ -135,8 +173,15 @@ namespace Akela {
       return mappedKey;
 
     if (!State) {
-      if (!isOS (mappedKey))
+      if (!isOS (mappedKey)) {
+        if (isMasked (row, col)) {
+          if (key_toggled_off (keyState))
+            unmask (row, col);
+          return Key_NoKey;
+        }
+
         return mappedKey;
+      }
 
       idx = mappedKey.raw - OS_FIRST;
       if (key_toggled_off (keyState)) {
@@ -196,6 +241,7 @@ namespace Akela {
     // ordinary key here, with some event
 
     if (key_is_pressed (keyState)) {
+      mask (row, col);
       saveAsPrevious (mappedKey);
       shouldCancel = true;
     }

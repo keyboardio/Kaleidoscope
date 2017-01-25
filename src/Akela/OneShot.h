@@ -47,6 +47,8 @@ namespace Akela {
     static uint32_t State;
     static uint32_t stickyState;
     static uint32_t pressedState;
+    static uint32_t leftMask;
+    static uint32_t rightMask;
     static Key prevKey;
     static bool shouldCancel;
     static bool shouldCancelStickies;
@@ -54,6 +56,10 @@ namespace Akela {
     static void injectNormalKey (uint8_t idx, uint8_t keyState);
     static void activateOneShot (uint8_t idx);
     static void cancelOneShot (uint8_t idx);
+
+    static void mask (byte row, byte col);
+    static void unmask (byte row, byte col);
+    static bool isMasked (byte row, byte col);
 
     static Key eventHandlerPassthroughHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopNoOpHook (bool postClear);
