@@ -13,7 +13,7 @@ install:
 - git submodule update --init --recursive
 - popd
 script:
-- make ARDUINO_PATH=../arduino-1.6.11 ARDUINO_LOCAL_LIB_PATH=../arduino-local
+- make ARDUINO_PATH=../arduino-1.6.11 ARDUINO_LOCAL_LIB_PATH=../arduino-local build-all
 notifications:
   irc:
     channels:
