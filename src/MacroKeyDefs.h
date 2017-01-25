@@ -2,7 +2,7 @@
 
 #define IS_MACRO       B00100000
 
-#define M(n)           (Key){ KEY_FLAGS|SYNTHETIC|IS_MACRO, n}
+#define M(n)           (Key){ n, KEY_FLAGS|SYNTHETIC|IS_MACRO }
 #define Key_macroKey1  M(1)
 #define Key_macroKey2  M(2)
 #define Key_macroKey3  M(3)
