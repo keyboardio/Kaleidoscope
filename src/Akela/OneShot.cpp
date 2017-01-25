@@ -179,6 +179,13 @@ namespace Akela {
             setSticky (idx);
 
             saveAsPrevious (mappedKey);
+          } else {
+            Timer = 0;
+
+            setOneShot (idx);
+            saveAsPrevious (mappedKey);
+
+            activateOneShot (idx);
           }
         }
       }
