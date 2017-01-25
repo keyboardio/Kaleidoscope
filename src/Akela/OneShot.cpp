@@ -87,14 +87,6 @@ namespace Akela {
     if (keyState & INJECTED)
       return mappedKey;
 
-    if (key_toggled_on (keyState)) {
-      Serial.print ("isModifier=");
-      Serial.print (isModifier (mappedKey));
-
-      Serial.print ("; isLayerKey=");
-      Serial.println (isLayerKey (mappedKey));
-    }
-
     if (!isModifier (mappedKey) && !isLayerKey (mappedKey))
       return mappedKey;
 
