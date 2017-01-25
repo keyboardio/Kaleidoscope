@@ -255,7 +255,7 @@ namespace Akela {
 
   bool
   OneShot::isActive (void) {
-    return (State && !hasTimedOut () && !shouldCancel);
+    return (State && !hasTimedOut ());
   }
 
   bool
