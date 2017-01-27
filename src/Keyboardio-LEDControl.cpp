@@ -123,8 +123,8 @@ LEDControl_::begin (void) {
       (modes[i]->setup)();
   }
 
-  event_handler_hook_add(eventHandler);
-  loop_hook_add(loopHook);
+  event_handler_hook_use(eventHandler);
+  loop_hook_use(loopHook);
 }
 
 Key
