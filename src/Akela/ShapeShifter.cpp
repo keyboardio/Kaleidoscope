@@ -28,8 +28,8 @@ namespace Akela {
 
   void
   ShapeShifter::begin (void) {
-    event_handler_hook_add (this->eventHandlerHook);
-    loop_hook_add (this->loopHook);
+    event_handler_hook_use (this->eventHandlerHook);
+    loop_hook_use (this->loopHook);
   }
 
   void
