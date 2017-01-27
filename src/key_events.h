@@ -4,7 +4,6 @@
 
 #include "key_defs.h"
 #include "keyswitch_state.h"
-#include "LEDControl.h"
 #include "Storage.h"
 #include "keymap_metadata.h"
 #include "hooks.h"

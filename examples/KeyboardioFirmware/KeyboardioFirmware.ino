@@ -6,6 +6,7 @@
 
 #include "Keyboardio-MouseKeys.h"
 #include "Keyboardio-Macros.h"
+#include "Keyboardio-LEDControl.h"
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
@@ -50,7 +51,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
 
-    Keyboardio.use(&LEDOff,
+    Keyboardio.use(&LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
                    &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &numLockEffect,
 

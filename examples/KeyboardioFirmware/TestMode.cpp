@@ -13,40 +13,40 @@ TestMode_::TestMode_(void) {
 void TestMode_::TestLEDs(void) {
     // make all LEDs dim red
     LEDControl.set_all_leds_to(50,0,0);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all LEDs dim blue
     LEDControl.set_all_leds_to(0,50,0);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all LEDs dim green
     LEDControl.set_all_leds_to(0,0,50);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all LEDs dim white
     LEDControl.set_all_leds_to(50,50,50);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all the LEDs bright red
     LEDControl.set_all_leds_to(200,0,0);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all the LEDs bright green
     LEDControl.set_all_leds_to(0,200,0);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all the LEDs bright blue
     LEDControl.set_all_leds_to(0,0,200);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // make all the LEDs bright white (1.6A)
     LEDControl.set_all_leds_to(160,160,160);
-    led_sync();
+    LEDControl.led_sync();
     delay(LED_TEST_DELAY);
     // rainbow for 10 seconds
     for(auto i=0; i<1000; i++ ) {
         LEDRainbowEffect.update();
-        led_sync();
+        LEDControl.led_sync();
     }
     // set all the keys to red
     LEDControl.set_all_leds_to(50,0,0);
@@ -94,7 +94,7 @@ void TestMode_::TestMatrix () {
 		}
         }
     }
-	KeyboardHardware.led_sync();
+	LEDControl.led_sync();
    }
 }
 
