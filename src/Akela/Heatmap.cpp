@@ -69,8 +69,8 @@ namespace Akela {
   void
   Heatmap::begin (void) {
     LEDControl.mode_add (this);
-    event_handler_hook_add (this->eventHook);
-    loop_hook_add (this->loopHook);
+    event_handler_hook_use (this->eventHook);
+    loop_hook_use (this->loopHook);
   }
 
   void
