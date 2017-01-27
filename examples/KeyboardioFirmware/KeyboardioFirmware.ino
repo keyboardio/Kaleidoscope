@@ -11,11 +11,11 @@
 #include "generated/keymaps.h"
 
 #include "LED-Off.h"
-#include "LED-SolidColor.h"
-#include "LED-Numlock.h"
-#include "LED-BreatheEffect.h"
-#include "LED-ChaseEffect.h"
-#include "LED-RainbowEffect.h"
+#include "Keyboardio-LEDEffect-SolidColor.h"
+#include "Keyboardio-LEDEffect-Numlock.h"
+#include "Keyboardio-LEDEffect-Breathe.h"
+#include "Keyboardio-LEDEffect-Chase.h"
+#include "Keyboardio-LEDEffect-Rainbow.h"
 
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
