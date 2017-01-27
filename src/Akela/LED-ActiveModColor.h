@@ -17,6 +17,7 @@
  */
 
 #include <Akela-Core.h>
+#include <Keyboardio-LEDControl.h>
 
 namespace Akela {
   namespace LEDEffects {

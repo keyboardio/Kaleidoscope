@@ -41,7 +41,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 void setup () {
   Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&ActiveModColorEffect, NULL);
+  Keyboardio.use (&LEDControl, &ActiveModColorEffect, NULL);
 
   ActiveModColorEffect.configure ({0x00, 0xff, 0xff});
 }

@@ -54,7 +54,7 @@ namespace Akela {
             continue;
 
           if (Keyboard.isModifierActive (k.keyCode))
-            led_set_crgb_at (r, c, highlightColor);
+            LEDControl.led_set_crgb_at (r, c, highlightColor);
         }
       }
     }
