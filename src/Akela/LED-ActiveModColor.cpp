@@ -27,7 +27,7 @@ namespace Akela {
 
     void
     ActiveModColorEffect::begin (void) {
-      loop_hook_add (loopHook);
+      loop_hook_use (loopHook);
     }
 
     void
