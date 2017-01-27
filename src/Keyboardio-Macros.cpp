@@ -62,7 +62,7 @@ Macros_::Macros_ (void) {
 
 void
 Macros_::begin (void) {
-    event_handler_hook_add (handleMacroEvent);
+    event_handler_hook_use (handleMacroEvent);
 }
 
 Macros_ Macros;
