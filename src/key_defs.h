@@ -129,6 +129,7 @@ typedef union Key_ {
 
 
 #define Key_CapsLock (Key) { HID_KEYBOARD_CAPS_LOCK,  KEY_FLAGS }
+#define Key_NumLock (Key) { HID_KEYPAD_NUM_LOCK_AND_CLEAR, KEY_FLAGS }
 
 #define Key_F1 (Key) { HID_KEYBOARD_F1,  KEY_FLAGS }
 #define Key_F2 (Key) { HID_KEYBOARD_F2,  KEY_FLAGS }
