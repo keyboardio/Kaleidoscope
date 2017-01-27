@@ -32,7 +32,7 @@ namespace Akela {
 
   void
   SpaceCadetShift::begin () {
-    event_handler_hook_add (this->eventHandlerHook);
+    event_handler_hook_use (this->eventHandlerHook);
   }
 
   void
