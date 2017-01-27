@@ -59,7 +59,7 @@ namespace Akela {
       for (byte r = 0; r < ROWS; r++) {
         for (byte c = 0; c < COLS; c++) {
           if (map[r][c])
-            led_set_crgb_at (r, c, colorComputer->compute (map[r][c]));
+            LEDControl.led_set_crgb_at (r, c, colorComputer->compute (map[r][c]));
 
           bool wasZero = (map[r][c] == 0);
 
@@ -73,7 +73,7 @@ namespace Akela {
             map[r][c] = 0;
 
           if (!wasZero && !map[r][c])
-            led_set_crgb_at (r, c, (cRGB){0, 0, 0});
+            LEDControl.led_set_crgb_at (r, c, (cRGB){0, 0, 0});
         }
       }
     }

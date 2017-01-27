@@ -43,7 +43,7 @@ void setup () {
   Keyboardio.setup (KEYMAP_SIZE);
 
   StalkerEffect.configure (STALKER (BlazingTrail, NULL));
-  Keyboardio.use (&StalkerEffect, NULL);
+  Keyboardio.use (&LEDControl, &StalkerEffect, NULL);
 }
 
 void loop () {

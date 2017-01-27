@@ -17,6 +17,7 @@
  */
 
 #include <Akela-Core.h>
+#include <Keyboardio-LEDControl.h>
 
 #define STALKER(n, ...) (({static Akela::LEDEffects::Stalker::n _effect (__VA_ARGS__); &_effect;}))
 
