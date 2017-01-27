@@ -49,11 +49,6 @@ typedef union Key_ {
 
 #define MOMENTARY_OFFSET 42
 
-// IS_INTERNAL key table:
-
-#define LED_TOGGLE   B00000001 // Synthetic, internal
-
-
 #define KEYMAP_0     0
 #define KEYMAP_1     1
 #define KEYMAP_2     2
@@ -267,8 +262,3 @@ typedef union Key_ {
 
 #define Key_KeymapNext_Momentary (Key) {KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP, KEYMAP_NEXT + MOMENTARY_OFFSET }
 #define Key_KeymapPrevious_Momentary (Key) {KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP, KEYMAP_PREVIOUS + MOMENTARY_OFFSET }
-
-
-
-
-#define Key_LEDEffectNext (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE }

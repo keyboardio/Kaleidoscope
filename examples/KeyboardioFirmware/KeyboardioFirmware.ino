@@ -6,15 +6,16 @@
 
 #include "Keyboardio-MouseKeys.h"
 #include "Keyboardio-Macros.h"
+#include "Keyboardio-LEDControl.h"
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
 #include "LED-Off.h"
-#include "LED-SolidColor.h"
-#include "LED-Numlock.h"
-#include "LED-BreatheEffect.h"
-#include "LED-ChaseEffect.h"
-#include "LED-RainbowEffect.h"
+#include "Keyboardio-LEDEffect-SolidColor.h"
+#include "Keyboardio-LEDEffect-Numlock.h"
+#include "Keyboardio-LEDEffect-Breathe.h"
+#include "Keyboardio-LEDEffect-Chase.h"
+#include "Keyboardio-LEDEffect-Rainbow.h"
 
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
@@ -50,7 +51,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
 
-    Keyboardio.use(&LEDOff,
+    Keyboardio.use(&LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
                    &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &numLockEffect,
 

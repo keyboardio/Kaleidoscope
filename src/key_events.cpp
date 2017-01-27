@@ -12,11 +12,7 @@ static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
         return true;
 
     if (mappedKey.flags & IS_INTERNAL) {
-        if (mappedKey.flags & LED_TOGGLE) {
-            LEDControl.next_mode();
-        } else {
-            return false;
-        }
+        return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
         ConsumerControl.press(mappedKey.keyCode);
     } else if (mappedKey.flags & IS_SYSCTL) {

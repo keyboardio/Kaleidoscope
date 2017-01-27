@@ -12,7 +12,6 @@ Keyboardio_::setup(const byte keymap_count) {
     delay(100);
     Keyboard.begin();
     KeyboardHardware.setup();
-    LEDControl.setup();
 
     event_handler_hook_use (NULL);
     loop_hook_use (NULL);
@@ -25,7 +24,6 @@ custom_loop_t loopHooks[HOOK_MAX];
 void
 Keyboardio_::loop(void) {
     KeyboardHardware.scan_matrix();
-    LEDControl.update();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
       custom_loop_t hook = loopHooks[i];
@@ -39,8 +37,6 @@ Keyboardio_::loop(void) {
       custom_loop_t hook = loopHooks[i];
       (*hook)(true);
     }
-
-    led_sync ();
 }
 
 void
