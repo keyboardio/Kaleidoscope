@@ -33,8 +33,8 @@ namespace Akela {
 
     void
     StalkerEffect::begin (void) {
-      event_handler_hook_add (eventHandlerHook);
-      loop_hook_add (loopHook);
+      event_handler_hook_use (eventHandlerHook);
+      loop_hook_use (loopHook);
     }
 
      Key
