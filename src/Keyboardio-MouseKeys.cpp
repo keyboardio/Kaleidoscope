@@ -62,7 +62,7 @@ MouseKeys_::MouseKeys_(void) {
 
 void
 MouseKeys_::begin (void) {
-    event_handler_hook_add (handleMouseKeys);
+    event_handler_hook_use (handleMouseKeys);
 }
 
 MouseKeys_ MouseKeys;
