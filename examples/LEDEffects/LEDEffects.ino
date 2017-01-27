@@ -44,7 +44,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 void setup () {
   Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect, NULL);
+  Keyboardio.use (&LEDControl, &LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect, NULL);
 
   MiamiEffect.activate ();
 }

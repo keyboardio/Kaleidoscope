@@ -41,7 +41,7 @@ namespace Akela {
 
           // Special keys are always modColor
           if (k.flags != 0) {
-            led_set_crgb_at (r, c, modColor);
+            LEDControl.led_set_crgb_at (r, c, modColor);
             continue;
           }
 
@@ -61,7 +61,7 @@ namespace Akela {
             break;
           }
 
-          led_set_crgb_at (r, c, color);
+          LEDControl.led_set_crgb_at (r, c, color);
         }
       }
     }
