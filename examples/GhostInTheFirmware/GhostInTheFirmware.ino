@@ -18,6 +18,7 @@
 
 #include <Akela-GhostInTheFirmware.h>
 #include <Akela-LED-Stalker.h>
+#include <Keyboardio-LEDControl.h>
 #include <Keyboardio-Macros.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -123,7 +124,8 @@ void setup () {
   GhostInTheFirmware.configure (ghostKeys);
   StalkerEffect.configure (STALKER (BlazingTrail, NULL));
 
-  Keyboardio.use (&GhostInTheFirmware, &StalkerEffect, &Macros, NULL);
+  Keyboardio.use (&LEDControl, &GhostInTheFirmware, &StalkerEffect, &Macros,
+                  NULL);
 
 }
 
