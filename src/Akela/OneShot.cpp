@@ -295,8 +295,8 @@ namespace Akela {
 
   void
   OneShot::begin (void) {
-    event_handler_hook_add (eventHandlerHook);
-    loop_hook_add (loopHook);
+    event_handler_hook_use (eventHandlerHook);
+    loop_hook_use (loopHook);
   }
 
   bool
@@ -332,7 +332,7 @@ namespace Akela {
 
   void
   OneShot::enableAuto (void) {
-    event_handler_hook_add (eventHandlerAutoHook);
+    event_handler_hook_use (eventHandlerAutoHook);
   }
 
   void
