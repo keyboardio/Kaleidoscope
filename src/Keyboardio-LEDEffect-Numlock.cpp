@@ -14,7 +14,7 @@ LEDNumlock::LEDNumlock (uint8_t numpadIdx) {
 void
 LEDNumlock::begin (void) {
   us = LEDControl.mode_add (this);
-  loop_hook_add (this->loopHook);
+  loop_hook_use (this->loopHook);
 }
 
 void
