@@ -30,7 +30,7 @@ namespace Akela {
 
   void
   GhostInTheFirmware::begin (void) {
-    loop_hook_add (this->loopHook);
+    loop_hook_use (this->loopHook);
   }
 
   void
