@@ -10,7 +10,7 @@ class LEDNumlock : LEDMode {
   virtual void begin (void) final;
 
   virtual void update (void) final;
-  virtual void setup (void) final;
+  virtual void init (void) final;
 
  private:
   static void loopHook (bool postClear);

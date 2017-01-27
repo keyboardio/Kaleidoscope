@@ -18,9 +18,9 @@ LEDNumlock::begin (void) {
 }
 
 void
-LEDNumlock::setup (void) {
+LEDNumlock::init (void) {
     if (!Layer.isOn (numpadIndex)) {
-        LEDControl.next_mode ();
+        LEDControl.next_mode();
     }
 }
 
@@ -42,15 +42,11 @@ LEDNumlock::loopHook (bool postClear) {
     if (!postClear)
         return;
 
-    if (Layer.isOn (numpadIndex)) {
-        if (storedLEDMode != us) {
+    if (!Layer.isOn (numpadIndex)) {
+        if (LEDControl.get_mode () != us)
             storedLEDMode = LEDControl.get_mode ();
-        }
-        LEDControl.set_mode (us);
-    }
-
-    if (!Layer.isOn (numpadIndex) &&
-            LEDControl.get_mode () == us) {
         LEDControl.set_mode (storedLEDMode);
+    } else {
+        LEDControl.set_mode (us);
     }
 }
