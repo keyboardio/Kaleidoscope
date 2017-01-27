@@ -8,8 +8,6 @@ class LEDBreatheEffect_ : LEDMode {
   LEDBreatheEffect_ (void);
 
   virtual void update (void) final;
-
- private:
 };
 
 extern LEDBreatheEffect_ LEDBreatheEffect;
