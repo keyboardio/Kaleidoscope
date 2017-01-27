@@ -29,7 +29,10 @@ static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
 
         // switch keymap and stay there
     } else if (key_toggled_on(keyState)) {
-        Layer.on (keymapEntry.keyCode);
+        if (Layer.isOn (keymapEntry.keyCode) && keymapEntry.keyCode)
+            Layer.off(keymapEntry.keyCode);
+        else
+            Layer.on(keymapEntry.keyCode);
     }
 }
 
