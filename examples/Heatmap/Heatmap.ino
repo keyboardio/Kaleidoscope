@@ -41,7 +41,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 void setup () {
   Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&HeatmapEffect, NULL);
+  Keyboardio.use (&LEDControl, &HeatmapEffect, NULL);
 
   HeatmapEffect.activate ();
 }

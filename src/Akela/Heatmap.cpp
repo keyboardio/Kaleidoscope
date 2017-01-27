@@ -114,7 +114,7 @@ namespace Akela {
       for (uint8_t c = 0; c < COLS; c++) {
         uint8_t cap = totalKeys || 1;
         float v = float(heatmap[r][c]) / cap;
-        led_set_crgb_at (r, c, computeColor (v));
+        LEDControl.led_set_crgb_at (r, c, computeColor (v));
       }
     }
   }
