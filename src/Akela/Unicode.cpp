@@ -157,7 +157,7 @@ hexToKey (uint8_t hex) {
     m = Key_A.keyCode + (hex - 0xA);
   }
 
-  return { KEY_FLAGS, m};
+  return { m, KEY_FLAGS };
 }
 
 __attribute__((weak))
