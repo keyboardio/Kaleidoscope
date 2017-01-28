@@ -10,6 +10,7 @@ LEDMode::activate (void) {
 
 void
 LEDMode::begin(void) {
+  Keyboardio.use(&LEDControl, NULL);
   LEDControl.mode_add(this);
 }
 
