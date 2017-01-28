@@ -20,15 +20,10 @@ extern custom_handler_t eventHandlers[HOOK_MAX];
  * one copy of the hook. The `event_handler_hook_append` and `loop_hook_append`
  * functions will, on the other hand, just append the hooks, and not care about
  * protection.
- *
- * The `event_handler_hook_add` and `loop_hook_add` functions are deprecated,
- * but for the time being, they are aliases to the `_use` functions, until all
- * plugins have been updated, and the aliases can be removed.
  */
 
 void event_handler_hook_use (custom_handler_t hook);
 void event_handler_hook_append (custom_handler_t hook);
-void event_handler_hook_add (custom_handler_t hook) __attribute__((deprecated));
 void event_handler_hook_replace (custom_handler_t oldHook, custom_handler_t newHook);
 
 typedef void (*custom_loop_t)(bool postClear);
@@ -36,5 +31,4 @@ extern custom_loop_t loopHooks[HOOK_MAX];
 
 void loop_hook_use (custom_loop_t hook);
 void loop_hook_append (custom_loop_t hook);
-void loop_hook_add (custom_loop_t hook) __attribute__((deprecated));
 void loop_hook_replace (custom_loop_t oldHook, custom_loop_t newHook);
