@@ -33,9 +33,11 @@ static LEDSolidColor solidBlue (0, 30, 200);
 static LEDSolidColor solidIndigo (0, 0, 200);
 static LEDSolidColor solidViolet (100, 0, 120);
 
-static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
+const macro_t *macroAction(uint8_t macroIndex, byte row, byte col, uint8_t keyState) {
+    if (macroIndex == 0 && key_toggled_on(keyState)) {
+        return NumLock.toggle (row, col, NUMPAD_KEYMAP);
+    }
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     if (macroIndex == 1 && key_toggled_on(keyState)) {
         Serial.print("Keyboard.IO keyboard driver v0.00");
         return MACRO(I(25),
@@ -53,7 +55,7 @@ void setup() {
 
     Keyboardio.use(&LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
-                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &numLockEffect,
+                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
 
                    &Macros,
                    &MouseKeys,
