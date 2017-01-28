@@ -3,50 +3,63 @@
 #include "KeyboardioFirmware.h"
 #include "layers.h"
 
-static uint8_t numpadIndex;
-static uint8_t storedLEDMode;
-static uint8_t us;
+uint8_t NumLock_::previousLEDMode;
+uint8_t NumLock_::us;
+bool NumLock_::isActive;
+byte NumLock_::row = 255, NumLock_::col = 255;
 
-LEDNumlock::LEDNumlock (uint8_t numpadIdx) {
-    numpadIndex = numpadIdx;
+NumLock_::NumLock_ (void) {
 }
 
 void
-LEDNumlock::begin (void) {
-  us = LEDControl.mode_add (this);
-  loop_hook_use (this->loopHook);
+NumLock_::begin (void) {
+    us = LEDControl.mode_add (this);
 }
 
 void
-LEDNumlock::init (void) {
-    if (!Layer.isOn (numpadIndex)) {
+NumLock_::init (void) {
+    if (!isActive) {
         LEDControl.next_mode();
     }
 }
 
 void
-LEDNumlock::update (void) {
-    for (uint8_t i = 0; i < 44; i++) {
-        LEDControl.led_set_crgb_at(i, {0, 0, 0});
-    }
-    for (uint8_t i = 44; i < LED_COUNT; i++) {
-        LEDControl.led_set_crgb_at(i, {255, 0, 0});
+NumLock_::update (void) {
+    for (uint8_t r = 0; r < ROWS; r++) {
+        for (uint8_t c = 0; c < COLS; c++) {
+            Key k = Layer.lookup (r, c);
+
+            if (k.raw < Key_NumLock.raw || k.raw > Key_KeypadDot.raw)
+                continue;
+
+            LEDControl.led_set_crgb_at(r, c, {255, 0, 0});
+        }
     }
 
-    cRGB color = breath_compute ();
-    LEDControl.led_set_crgb_at (60, color);
-}
-
-void
-LEDNumlock::loopHook (bool postClear) {
-    if (!postClear)
+    if (row > ROWS || col > COLS)
         return;
 
-    if (!Layer.isOn (numpadIndex)) {
-        if (LEDControl.get_mode () != us)
-            storedLEDMode = LEDControl.get_mode ();
-        LEDControl.set_mode (storedLEDMode);
-    } else {
-        LEDControl.set_mode (us);
-    }
+    cRGB color = breath_compute();
+    LEDControl.led_set_crgb_at (row, col, color);
 }
+
+const macro_t *
+NumLock_::toggle (byte row_, byte col_, uint8_t numPadLayer) {
+    row = row_;
+    col = col_;
+
+    if (Layer.isOn (numPadLayer)) {
+        isActive = false;
+        LEDControl.set_mode (previousLEDMode);
+        Layer.off (numPadLayer);
+    } else {
+        isActive = true;
+        previousLEDMode = LEDControl.get_mode ();
+        LEDControl.set_mode (us);
+        Layer.on (numPadLayer);
+    }
+
+    return MACRO(T(NumLock), END);
+}
+
+NumLock_ NumLock;
