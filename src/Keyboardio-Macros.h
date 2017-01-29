@@ -5,7 +5,7 @@
 #include "MacroKeyDefs.h"
 #include "MacroSteps.h"
 
-const macro_t *macroAction(uint8_t macroIndex, byte row, byte col, uint8_t keyState);
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 
 class Macros_ : public KeyboardioPlugin {
   public:
@@ -14,6 +14,8 @@ class Macros_ : public KeyboardioPlugin {
     virtual void begin(void) final;
 
     void play(const macro_t *macro_p);
+
+    static byte row, col;
 };
 
 extern Macros_ Macros;

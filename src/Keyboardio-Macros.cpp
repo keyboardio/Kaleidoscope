@@ -1,9 +1,11 @@
 #include "Keyboardio-Macros.h"
 
 __attribute__((weak))
-const macro_t *macroAction(uint8_t macroIndex, byte row, byte col, uint8_t keyState) {
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     return MACRO_NONE;
 }
+
+byte Macros_::row, Macros_::col;
 
 void Macros_::play(const macro_t *macro_p) {
     macro_t macro = END;
@@ -51,7 +53,9 @@ static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState)
     if (!key_toggled_on(keyState))
       return Key_NoKey;
 
-    const macro_t *m = macroAction(mappedKey.keyCode, row, col, keyState);
+    Macros_::row = row;
+    Macros_::col = col;
+    const macro_t *m = macroAction(mappedKey.keyCode, keyState);
 
     Macros.play(m);
     return Key_NoKey;
