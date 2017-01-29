@@ -33,9 +33,9 @@ static LEDSolidColor solidBlue (0, 30, 200);
 static LEDSolidColor solidIndigo (0, 0, 200);
 static LEDSolidColor solidViolet (100, 0, 120);
 
-const macro_t *macroAction(uint8_t macroIndex, byte row, byte col, uint8_t keyState) {
-    if (macroIndex == 0 && key_toggled_on(keyState)) {
-        return NumLock.toggle (row, col, NUMPAD_KEYMAP);
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
+    if (macroIndex == TOGGLENUMLOCK && key_toggled_on(keyState)) {
+        return NumLock.toggle (Macros.row, Macros.col, NUMPAD_KEYMAP);
     }
 
     if (macroIndex == 1 && key_toggled_on(keyState)) {
