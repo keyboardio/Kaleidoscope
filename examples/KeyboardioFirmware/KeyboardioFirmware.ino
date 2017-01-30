@@ -7,12 +7,12 @@
 #include "Keyboardio-MouseKeys.h"
 #include "Keyboardio-Macros.h"
 #include "Keyboardio-LEDControl.h"
+#include "Keyboardio-Numlock.h"
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
 #include "LED-Off.h"
 #include "Keyboardio-LEDEffect-SolidColor.h"
-#include "Keyboardio-LEDEffect-Numlock.h"
 #include "Keyboardio-LEDEffect-Breathe.h"
 #include "Keyboardio-LEDEffect-Chase.h"
 #include "Keyboardio-LEDEffect-Rainbow.h"
