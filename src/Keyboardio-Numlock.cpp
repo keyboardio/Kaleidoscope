@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDEffect-Numlock.h"
+#include "Keyboardio-Numlock.h"
 #include "LEDUtils.h"
 #include "KeyboardioFirmware.h"
 #include "layers.h"
