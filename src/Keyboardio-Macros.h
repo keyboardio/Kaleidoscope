@@ -14,6 +14,8 @@ class Macros_ : public KeyboardioPlugin {
     virtual void begin(void) final;
 
     void play(const macro_t *macro_p);
+
+    static byte row, col;
 };
 
 extern Macros_ Macros;
