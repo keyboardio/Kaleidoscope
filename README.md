@@ -72,6 +72,16 @@ void setup () {
 > Turns the SpaceCadet Shift behaviour off, making the `Shift` keys work as they
 > did before, without the additional behaviour.
 
+### `.timeOut`
+
+> The number of loop iterations to wait before considering a held key in
+> isolation as its secondary role. That is, we'd have to hold a `Shift` key
+> this long, by itself, to trigger the `Shift` role in itself.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to 40.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting

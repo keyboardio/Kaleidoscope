@@ -22,7 +22,7 @@ namespace Akela {
 
   uint8_t SpaceCadetShift::parenNeeded;
   uint8_t SpaceCadetShift::timer;
-  const uint8_t SpaceCadetShift::timeOut = DEFAULT_TIMEOUT * 2;
+  uint8_t SpaceCadetShift::timeOut = 40;
   Key SpaceCadetShift::leftParen, SpaceCadetShift::rightParen;
 
   SpaceCadetShift::SpaceCadetShift () {
