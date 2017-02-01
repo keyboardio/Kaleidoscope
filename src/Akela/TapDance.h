@@ -42,12 +42,12 @@ namespace Akela {
     TapDance (void);
 
     virtual void begin (void) final;
+    static uint8_t timeOut;
 
     void actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
 
   private:
     static uint16_t timer;
-    static uint16_t timeOut;
     static uint8_t tapCount[32];
     static uint32_t pressedState;
     static uint32_t triggeredState;
