@@ -84,6 +84,16 @@ The plugin provides the `Leader` object, with the following methods:
 > are final actions, where one does not wish to continue the leader sequence
 > further in the hopes of finding a longer match.
 
+### `.timeOut`
+
+> The number of loop iterations to wait before a sequence times out. Once the
+> sequence timed out, if there is a partial match with an action, that will be
+> performed, otherwise the Leader sequence will simply reset.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to 20.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting

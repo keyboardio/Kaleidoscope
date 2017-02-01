@@ -42,6 +42,7 @@ namespace Akela {
 
     static void configure (const dictionary_t dictionary[]);
     static void reset (void);
+    static uint8_t timeOut;
 
     void inject (Key key, uint8_t keyState);
 
@@ -49,7 +50,6 @@ namespace Akela {
     static Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
     static uint8_t sequencePos;
     static uint8_t timer;
-    static uint8_t timeOut;
     static const Leader::dictionary_t *dictionary;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
