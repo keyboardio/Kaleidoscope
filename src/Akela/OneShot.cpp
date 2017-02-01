@@ -25,6 +25,7 @@ namespace Akela {
 
   uint8_t OneShot::Timer = 0;
   uint8_t OneShot::timeOut = 40;
+  uint8_t OneShot::holdTimeOut = 5;
   uint32_t OneShot::State = 0;
   uint32_t OneShot::stickyState = 0;
   uint32_t OneShot::pressedState = 0;
@@ -213,7 +214,7 @@ namespace Akela {
       } else {
         if (key_toggled_off (keyState)) {
           clearPressed (idx);
-          if (hasTimedOut ()) {
+          if (Timer >= holdTimeOut) {
             cancelOneShot (idx);
           }
         }

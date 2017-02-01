@@ -131,6 +131,17 @@ modifiers and one-shot layer keys. It has the following methods:
 >
 > Defaults to 40.
 
+### `.holdTimeOut`
+
+> The number of loop iterations to wait before considering a held one-shot key
+> as intentionally held. In this case, the one-shot effect will not trigger when
+> the key is released. In other words, holding a one-shot key at least this
+> long, and then releasing it, will not trigger the one-shot effect.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to 5.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
