@@ -85,7 +85,7 @@ namespace Akela {
       return mappedKey;
 
     // if the key is not toggled on, return.
-    if (key_toggled_on (keyState))
+    if (!key_toggled_on (keyState))
       return mappedKey;
 
     totalKeys++;
