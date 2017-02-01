@@ -18,10 +18,6 @@
 
 #pragma once
 
-#ifdef ARDUINO_AVR_MODEL01
-#  define AKELA_KEYBOARDIO_MODEL01
-#endif
-
 #include <KeyboardioFirmware.h>
 
 namespace Akela {
