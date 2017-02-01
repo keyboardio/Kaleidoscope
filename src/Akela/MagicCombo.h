@@ -20,8 +20,6 @@
 
 #include <Akela-Core.h>
 
-#define AKELA_MAGICCOMBO_TIMEOUT DEFAULT_TIMEOUT
-
 namespace Akela {
   class MagicCombo : public KeyboardioPlugin {
   public:
@@ -33,12 +31,11 @@ namespace Akela {
 
     virtual void begin (void) final;
 
-    static void configure (const dictionary_t dictionary[], uint8_t timeout);
-    static void configure (const dictionary_t dictionary[]) { configure (dictionary, AKELA_MAGICCOMBO_TIMEOUT); };
+    static void configure (const dictionary_t dictionary[]);
+    static uint8_t minInterval;
 
   private:
     static const dictionary_t *dictionary;
-    static uint8_t timeOut;
     static uint8_t timer;
 
     static void loopHook (bool postClear);

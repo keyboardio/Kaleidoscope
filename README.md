@@ -50,13 +50,16 @@ left and the right halves.
 
 The extension provides a `MagicCombo` singleton object, with the following method:
 
-### `.configure(dictionary[, timeout])`
+### `.configure(dictionary)`
 
-> Configures the extension to use the supplied dictionary, and restrict it to
-> fire at most once every `timeout` cycles.
+> Configures the extension to use the supplied dictionary.
+
+### `.minInterval`
+
+> Restrict the magic action to fire at most once every `minInterval` cycles.
+> Defaults to 10.
 >
-> If the timeout is not specified, it defaults to `DEFAULT_TIMEOUT`, which in
-> turn is 40 cycles.
+> Not strictly a method, it is a variable one can assign a new value to.
 
 ## Overrideable methods
 
