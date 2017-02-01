@@ -25,7 +25,7 @@ namespace Akela {
   static uint16_t updateFrequency = 500;
   static uint16_t loopCount;
 
-  static const float heatColors[][3] = {{0.3, 0.3, 0.3}, {0.3, 1, 0.3}, {1, 1, 0.3}, {1, 0.3, 0.3}};
+  static const float heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
 
   static void
   shiftStats (void) {
