@@ -112,7 +112,7 @@ namespace Akela {
     loopCount = 0;
     for (uint8_t r = 0; r < ROWS; r++) {
       for (uint8_t c = 0; c < COLS; c++) {
-        uint8_t cap = totalKeys || 1;
+        uint8_t cap = max(totalKeys, 1);
         float v = float(heatmap[r][c]) / cap;
         LEDControl.led_set_crgb_at (r, c, computeColor (v));
       }
