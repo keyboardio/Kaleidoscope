@@ -24,7 +24,7 @@ namespace Akela {
   // ---- state ---------
 
   uint8_t OneShot::Timer = 0;
-  uint8_t OneShot::TimeOut = DEFAULT_TIMEOUT;
+  uint8_t OneShot::timeOut = 40;
   uint32_t OneShot::State = 0;
   uint32_t OneShot::stickyState = 0;
   uint32_t OneShot::pressedState = 0;
@@ -57,7 +57,7 @@ namespace Akela {
 
 #define toNormalMod(key, idx) {key.flags = 0; key.keyCode = Key_LCtrl.keyCode + idx;}
 #define toNormalMT(key, idx) { key.raw = Key_NoKey.raw; Layer.on (idx - 8); }
-#define hasTimedOut() (Timer >= TimeOut)
+#define hasTimedOut() (Timer >= timeOut)
 
   // ----- passthrough ------
 
@@ -255,7 +255,7 @@ namespace Akela {
       return;
 
     if (postClear) {
-      if (Timer < TimeOut)
+      if (Timer < timeOut)
         Timer++;
 
       if (hasTimedOut ())

@@ -36,6 +36,7 @@ namespace Akela {
     static bool isActive (void);
     static void cancel (bool withStickies);
     static void cancel (void) { cancel (false); };
+    static uint8_t timeOut;
 
     static bool isModifierActive (Key key);
 
@@ -43,7 +44,6 @@ namespace Akela {
 
   private:
     static uint8_t Timer;
-    static uint8_t TimeOut;
     static uint32_t State;
     static uint32_t stickyState;
     static uint32_t pressedState;

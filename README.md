@@ -122,6 +122,15 @@ modifiers and one-shot layer keys. It has the following methods:
 > momentary layer switchers. As `on()`, this method is idempotent, and can be
 > called at any time, from anywhere.
 
+### `.timeOut`
+
+> The number of loop iterations to wait before timing out and cancelling the
+> one-shot effect, unless interrupted or cancelled before by any other means.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to 40.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
