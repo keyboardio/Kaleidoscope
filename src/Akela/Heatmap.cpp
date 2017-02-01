@@ -60,7 +60,7 @@ namespace Akela {
     uint8_t g = (int)(((heatColors[idx2][1] - heatColors[idx1][1]) * fb + heatColors[idx1][1]) * 255);
     uint8_t b = (int)(((heatColors[idx2][2] - heatColors[idx1][2]) * fb + heatColors[idx1][2]) * 255);
 
-    return {r, g, b};
+    return {b, g, r};
   }
 
   Heatmap::Heatmap (void) {
