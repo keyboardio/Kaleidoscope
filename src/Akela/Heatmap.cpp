@@ -22,7 +22,7 @@ namespace Akela {
   static uint8_t heatmap[ROWS][COLS];
   static uint16_t totalKeys;
   static uint8_t highestCount;
-  static uint16_t updateFrequency = 500;
+  static uint16_t updateFrequency = 50;
   static uint16_t loopCount;
 
   static const float heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
