@@ -11,8 +11,6 @@
 #define WARP_LEFT 8
 #define WARP_RIGHT 16
 
-
-
 // apparently, the mac discards 15% of the value space for mouse movement.
 // need to test this on other platforms
 
@@ -29,28 +27,27 @@
 #define ACCELERATION_FLOOR 2
 #define ACCELERATION_CEIL 50
 
-
 class MouseWrapper_ {
   public:
     MouseWrapper_(void);
-    void move( int8_t x, int8_t y);
-    void warp(uint8_t warp_cmd);
-    void press_button(uint8_t button);
-    void release_button(uint8_t button);
-    uint8_t mouseActiveForCycles = 0;
+
+    static void move(int8_t x, int8_t y);
+    static void warp(uint8_t warp_cmd);
+    static void press_button(uint8_t button);
+    static void release_button(uint8_t button);
+    static uint8_t mouseActiveForCycles;
 
   private:
-    uint16_t next_width = 0;
-    uint16_t next_height = 0;
-    uint16_t section_top = 0;
-    uint16_t section_left = 0;
-    boolean is_warping = false;
+    static uint16_t next_width;
+    static uint16_t next_height;
+    static uint16_t section_top;
+    static uint16_t section_left;
+    static boolean is_warping;
 
-    uint8_t acceleration (uint8_t cycles);
-    void begin_warping();
-    void end_warping();
-    void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
-
+    static uint8_t acceleration(uint8_t cycles);
+    static void begin_warping();
+    static void end_warping();
+    static void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
 
 extern MouseWrapper_ MouseWrapper;

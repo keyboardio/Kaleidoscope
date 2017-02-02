@@ -4,6 +4,13 @@
 //
 #include "MouseWrapper.h"
 
+uint16_t MouseWrapper_::next_width;
+uint16_t MouseWrapper_::next_height;
+uint16_t MouseWrapper_::section_top;
+uint16_t MouseWrapper_::section_left;
+boolean MouseWrapper_::is_warping;
+
+uint8_t MouseWrapper_::mouseActiveForCycles;
 
 MouseWrapper_::MouseWrapper_(void) {
     Mouse.begin();
@@ -20,16 +27,11 @@ void MouseWrapper_::release_button(uint8_t button) {
     Mouse.release(button);
 }
 
-
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
     uint16_t x_center = left + width/2;
     uint16_t y_center = top + height/2;
-    AbsoluteMouse.moveTo(x_center,y_center);
+    AbsoluteMouse.moveTo(x_center, y_center);
 }
-
-
-
-
 
 void MouseWrapper_::begin_warping() {
     section_left = WARP_ABS_LEFT;
@@ -48,14 +50,12 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
         begin_warping();
     }
 
-
-    if ( warp_cmd & WARP_END) {
+    if (warp_cmd & WARP_END) {
         end_warping();
         return;
     }
 
-
-    next_width = next_width / 2;
+    next_width = next_width/2;
     next_height = next_height/2;
 
     if (warp_cmd & WARP_UP) {
@@ -73,9 +73,7 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
     }
 
     warp_jump(section_left, section_top, next_height,next_width);
-
 }
-
 
 // cubic wave function based on code from FastLED
 uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
@@ -92,14 +90,14 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
 
     i =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + ACCELERATION_FLOOR;
 
-    if ( i > ACCELERATION_CEIL) {
-	i = ACCELERATION_CEIL;
+    if (i > ACCELERATION_CEIL) {
+        i = ACCELERATION_CEIL;
     }
     return i;
 }
 
 
-void MouseWrapper_::move( int8_t x, int8_t y) {
+void MouseWrapper_::move(int8_t x, int8_t y) {
     int16_t moveX =0;
     int16_t moveY = 0;
     if (x != 0 ) {
