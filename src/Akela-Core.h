@@ -41,6 +41,7 @@ namespace Akela {
       LEAD_FIRST,
       LEAD_LAST   = LEAD_FIRST + 7,
       CYCLE,
+      SYSTER,
 
       AKELA_SAFE_START,
     };
