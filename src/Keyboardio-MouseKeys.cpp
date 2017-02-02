@@ -17,18 +17,22 @@ void MouseKeys_::loopHook(bool postClear) {
         return;
     }
 
+    int8_t moveX = 0, moveY = 0;
+
     if (MouseWrapper.mouseActiveForCycles < 255)
         MouseWrapper.mouseActiveForCycles++;
 
     if (mouseMoveIntent & KEY_MOUSE_UP)
-        MouseWrapper.move(0, -1);
+        moveY = -1;
     else if (mouseMoveIntent & KEY_MOUSE_DOWN)
-        MouseWrapper.move(0, 1);
+        moveY = 1;
 
     if (mouseMoveIntent & KEY_MOUSE_LEFT)
-        MouseWrapper.move(-1, 0);
+        moveX = -1;
     else if (mouseMoveIntent & KEY_MOUSE_RIGHT)
-        MouseWrapper.move(1, 0);
+        moveX = 1;
+
+    MouseWrapper.move(moveX, moveY);
 }
 
 Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
