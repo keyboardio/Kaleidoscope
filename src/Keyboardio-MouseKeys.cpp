@@ -4,6 +4,25 @@
 #include "MouseWrapper.h"
 #include "KeyboardioFirmware.h"
 
+static uint8_t mouseMoveIntent;
+
+static void loopHook(bool postClear) {
+    if (postClear) {
+        mouseMoveIntent = 0;
+        return;
+    }
+
+    if (mouseMoveIntent & KEY_MOUSE_UP)
+      MouseWrapper.move(0, -1);
+    else if (mouseMoveIntent & KEY_MOUSE_DOWN)
+      MouseWrapper.move(0, 1);
+
+    if (mouseMoveIntent & KEY_MOUSE_LEFT)
+      MouseWrapper.move(-1, 0);
+    else if (mouseMoveIntent & KEY_MOUSE_RIGHT)
+      MouseWrapper.move(1, 0);
+}
+
 static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
     if (key_toggled_off(keyState)) {
 	    if (mappedKey.keyCode & KEY_MOUSE_UP || mappedKey.keyCode & KEY_MOUSE_DOWN) {
@@ -17,17 +36,7 @@ static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
     if (!key_is_pressed(keyState))
         return;
 
-    if (mappedKey.keyCode & KEY_MOUSE_UP) {
-        MouseWrapper.move(0,-1);
-    } else if (mappedKey.keyCode & KEY_MOUSE_DOWN) {
-        MouseWrapper.move(0,1);
-    }
-
-    if (mappedKey.keyCode & KEY_MOUSE_LEFT) {
-        MouseWrapper.move(-1,0);
-    } else if (mappedKey.keyCode & KEY_MOUSE_RIGHT) {
-        MouseWrapper.move(1,0);
-    }
+    mouseMoveIntent |= mappedKey.keyCode;
 }
 
 static Key handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
@@ -63,6 +72,7 @@ MouseKeys_::MouseKeys_(void) {
 void
 MouseKeys_::begin (void) {
     event_handler_hook_use (handleMouseKeys);
+    loop_hook_use (loopHook);
 }
 
 MouseKeys_ MouseKeys;
