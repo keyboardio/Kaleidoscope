@@ -7,12 +7,12 @@
 #include "Keyboardio-MouseKeys.h"
 #include "Keyboardio-Macros.h"
 #include "Keyboardio-LEDControl.h"
+#include "Keyboardio-Numlock.h"
 #include "KeyboardioFirmware.h"
 #include "generated/keymaps.h"
 
 #include "LED-Off.h"
 #include "Keyboardio-LEDEffect-SolidColor.h"
-#include "Keyboardio-LEDEffect-Numlock.h"
 #include "Keyboardio-LEDEffect-Breathe.h"
 #include "Keyboardio-LEDEffect-Chase.h"
 #include "Keyboardio-LEDEffect-Rainbow.h"
@@ -33,9 +33,11 @@ static LEDSolidColor solidBlue (0, 30, 200);
 static LEDSolidColor solidIndigo (0, 0, 200);
 static LEDSolidColor solidViolet (100, 0, 120);
 
-static LEDNumlock numLockEffect (NUMPAD_KEYMAP);
-
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
+    if (macroIndex == TOGGLENUMLOCK && key_toggled_on(keyState)) {
+        return NumLock.toggle (Macros.row, Macros.col, NUMPAD_KEYMAP);
+    }
+
     if (macroIndex == 1 && key_toggled_on(keyState)) {
         Serial.print("Keyboard.IO keyboard driver v0.00");
         return MACRO(I(25),
@@ -53,7 +55,7 @@ void setup() {
 
     Keyboardio.use(&LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
-                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &numLockEffect,
+                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
 
                    &Macros,
                    &MouseKeys,
