@@ -12,27 +12,26 @@ static void loopHook(bool postClear) {
         return;
     }
 
+    if (mouseMoveIntent == 0) {
+        MouseWrapper.mouseActiveForCycles = 0;
+        return;
+    }
+
+    if (MouseWrapper.mouseActiveForCycles < 255)
+        MouseWrapper.mouseActiveForCycles++;
+
     if (mouseMoveIntent & KEY_MOUSE_UP)
-      MouseWrapper.move(0, -1);
+        MouseWrapper.move(0, -1);
     else if (mouseMoveIntent & KEY_MOUSE_DOWN)
-      MouseWrapper.move(0, 1);
+        MouseWrapper.move(0, 1);
 
     if (mouseMoveIntent & KEY_MOUSE_LEFT)
-      MouseWrapper.move(-1, 0);
+        MouseWrapper.move(-1, 0);
     else if (mouseMoveIntent & KEY_MOUSE_RIGHT)
-      MouseWrapper.move(1, 0);
+        MouseWrapper.move(1, 0);
 }
 
 static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
-    if (key_toggled_off(keyState)) {
-	    if (mappedKey.keyCode & KEY_MOUSE_UP || mappedKey.keyCode & KEY_MOUSE_DOWN) {
-		MouseWrapper.mouseActiveForCyclesY=0;
-	    }
-	    if (mappedKey.keyCode & KEY_MOUSE_LEFT || mappedKey.keyCode & KEY_MOUSE_RIGHT) {
-		MouseWrapper.mouseActiveForCyclesX=0;
-	    } 
-    }
-
     if (!key_is_pressed(keyState))
         return;
 

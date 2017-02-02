@@ -37,8 +37,7 @@ class MouseWrapper_ {
     void warp(uint8_t warp_cmd);
     void press_button(uint8_t button);
     void release_button(uint8_t button);
-    uint8_t mouseActiveForCyclesX = 0;
-    uint8_t mouseActiveForCyclesY = 0;
+    uint8_t mouseActiveForCycles = 0;
 
   private:
     uint16_t next_width = 0;
@@ -53,4 +52,5 @@ class MouseWrapper_ {
     void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 
 };
+
 extern MouseWrapper_ MouseWrapper;

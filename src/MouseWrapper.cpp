@@ -103,18 +103,14 @@ void MouseWrapper_::move( int8_t x, int8_t y) {
     int16_t moveX =0;
     int16_t moveY = 0;
     if (x != 0 ) {
-    	if (mouseActiveForCyclesX < 255) { mouseActiveForCyclesX++;}
-        moveX = (x * acceleration(mouseActiveForCyclesX));
+        moveX = (x * acceleration(mouseActiveForCycles));
     }
     if (y != 0) {
-    	if (mouseActiveForCyclesY < 255) { mouseActiveForCyclesY++;}
-        moveY = (y * acceleration(mouseActiveForCyclesY));
-
+        moveY = (y * acceleration(mouseActiveForCycles));
     }
-	
-        end_warping();
-        Mouse.move(moveX, moveY, 0);
 
+    end_warping();
+    Mouse.move(moveX, moveY, 0);
 }
 
 MouseWrapper_ MouseWrapper;
