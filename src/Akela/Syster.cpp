@@ -50,9 +50,6 @@ namespace Akela {
   // --- hooks ---
   Key
   Syster::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (keyState & INJECTED)
-      return mappedKey;
-
     if (!isActive) {
       if (!isSyster (mappedKey))
         return mappedKey;
@@ -63,6 +60,9 @@ namespace Akela {
       }
       return Key_NoKey;
     }
+
+    if (keyState & INJECTED)
+      return mappedKey;
 
     if (isSyster (mappedKey))
       return Key_NoKey;
