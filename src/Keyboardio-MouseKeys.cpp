@@ -4,9 +4,9 @@
 #include "MouseWrapper.h"
 #include "KeyboardioFirmware.h"
 
-static uint8_t mouseMoveIntent;
+uint8_t MouseKeys_::mouseMoveIntent;
 
-static void loopHook(bool postClear) {
+void MouseKeys_::loopHook(bool postClear) {
     if (postClear) {
         mouseMoveIntent = 0;
         return;
@@ -31,14 +31,7 @@ static void loopHook(bool postClear) {
         MouseWrapper.move(1, 0);
 }
 
-static void handle_mouse_key_event(Key mappedKey, uint8_t keyState) {
-    if (!key_is_pressed(keyState))
-        return;
-
-    mouseMoveIntent |= mappedKey.keyCode;
-}
-
-static Key handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
         return mappedKey;
 
@@ -51,7 +44,8 @@ static Key handleMouseKeys(Key mappedKey, byte row, byte col, uint8_t keyState) 
             MouseWrapper.release_button(button);
         }
     } else if (!(mappedKey.keyCode & KEY_MOUSE_WARP)) {
-        handle_mouse_key_event(mappedKey, keyState);
+        if (key_is_pressed(keyState))
+            mouseMoveIntent |= mappedKey.keyCode;
     } else if (key_toggled_on(keyState)) {
         if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
             // we don't pass in the left and up values because those are the
@@ -70,8 +64,8 @@ MouseKeys_::MouseKeys_(void) {
 
 void
 MouseKeys_::begin (void) {
-    event_handler_hook_use (handleMouseKeys);
-    loop_hook_use (loopHook);
+    event_handler_hook_use(eventHandlerHook);
+    loop_hook_use(loopHook);
 }
 
 MouseKeys_ MouseKeys;
