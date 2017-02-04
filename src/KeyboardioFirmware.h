@@ -20,7 +20,7 @@ void setup();
 #include <math.h>
 #include <avr/wdt.h>
 
-#include "KeyboardConfig.h"
+#include KEYBOARDIO_HARDWARE_H
 #include "key_events.h"
 #include "plugin.h"
 #include "layers.h"
