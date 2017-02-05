@@ -25,6 +25,9 @@ class Model01 {
     void enable_scanner_power(void);
     void reboot_bootloader();
 
+    uint8_t load_primary_layer(uint8_t layer_count);
+    void save_primary_layer(uint8_t layer);
+
     keydata_t leftHandState;
     keydata_t rightHandState;
     keydata_t previousLeftHandState;
