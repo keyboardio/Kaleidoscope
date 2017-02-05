@@ -5,8 +5,8 @@
 #define HARDWARE_IMPLEMENTATION Model01
 #include "KeyboardioScanner.h"
 
-//#include "keymap_metadata.h"
-//#include "key_events.h"
+#define COLS 16
+#define ROWS 4
 
 class Model01 {
   public:
