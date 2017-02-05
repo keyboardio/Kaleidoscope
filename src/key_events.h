@@ -2,10 +2,10 @@
 #include <Arduino.h>
 #include "KeyboardioHID.h"
 
+#include KEYBOARDIO_HARDWARE_H
 #include "key_defs.h"
 #include "keyswitch_state.h"
 #include "Storage.h"
-#include "keymap_metadata.h"
 #include "hooks.h"
 
 extern const Key keymaps[][ROWS][COLS];
