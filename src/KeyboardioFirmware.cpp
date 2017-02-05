@@ -16,7 +16,7 @@ Keyboardio_::setup(const byte keymap_count) {
     event_handler_hook_use (NULL);
     loop_hook_use (NULL);
 
-    Layer.defaultLayer (Storage.load_primary_keymap (keymap_count));
+    Layer.defaultLayer (KeyboardHardware.load_primary_layer (keymap_count));
 }
 
 custom_loop_t loopHooks[HOOK_MAX];

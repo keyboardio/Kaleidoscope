@@ -5,7 +5,6 @@
 #include KEYBOARDIO_HARDWARE_H
 #include "key_defs.h"
 #include "keyswitch_state.h"
-#include "Storage.h"
 #include "hooks.h"
 
 extern const Key keymaps[][ROWS][COLS];
