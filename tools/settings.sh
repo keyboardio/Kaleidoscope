@@ -23,7 +23,7 @@ FQBN="keyboardio:avr:model01"
 DEVICE_PORT="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 DEVICE_PORT_BOOTLOADER="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 
-RESET_BOARD="stty -F ${DEVICE_PORT} 1200 hupcl"
+RESET_DEVICE="stty -F ${DEVICE_PORT} 1200 hupcl"
 
 ARDUINO_PATH="${ARDUINO_PATH:-/usr/local/arduino}"
 ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
@@ -81,5 +81,5 @@ if [ "${uname_S}" = "Darwin" ]; then
 
     MD5="md5"
 
-    RESET_BOARD="stty -f ${DEVICE_PORT} 1200"
+    RESET_DEVICE="stty -f ${DEVICE_PORT} 1200"
 fi
