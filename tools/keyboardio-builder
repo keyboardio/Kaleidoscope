@@ -52,17 +52,20 @@ find_sketch () {
     exit 1
 }
 
-flash () {
+prepare_to_flash () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
     echo "Press ENTER when ready..."
     read a
+}
 
+flash () {
+    prepare_to_flash
     reset_device
     sleep 3s
-    flash_over_usb()
+    flash_over_usb
 
 }
 
@@ -71,16 +74,9 @@ flash_over_usb () {
 
 }
 
-
-
-program () {
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-    fi
-
-    echo "Press ENTER when ready..."
-    read a
-    flash_with_programmer()
+program() {
+    prepare_to_flash
+    flash_with_programmer
 }
 
 flash_with_programmer() {
