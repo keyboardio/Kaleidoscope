@@ -55,7 +55,7 @@ void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
 
     Keyboardio.use(&TestMode,
-		   &LEDControl, &LEDOff,
+                   &LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
                    &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
 

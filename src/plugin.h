@@ -1,7 +1,7 @@
 #pragma once
 
 class KeyboardioPlugin {
- public:
-  virtual void begin(void) = 0;
+  public:
+    virtual void begin(void) = 0;
 };
 

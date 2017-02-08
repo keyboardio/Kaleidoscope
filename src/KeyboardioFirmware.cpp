@@ -26,16 +26,16 @@ Keyboardio_::loop(void) {
     KeyboardHardware.scan_matrix();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-      custom_loop_t hook = loopHooks[i];
-      (*hook)(false);
+        custom_loop_t hook = loopHooks[i];
+        (*hook)(false);
     }
 
     Keyboard.sendReport();
     Keyboard.releaseAll();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-      custom_loop_t hook = loopHooks[i];
-      (*hook)(true);
+        custom_loop_t hook = loopHooks[i];
+        (*hook)(true);
     }
 }
 
@@ -47,7 +47,7 @@ Keyboardio_::use(KeyboardioPlugin *plugin, ...) {
     plugin->begin();
     va_start(ap, plugin);
     while ((p = va_arg(ap, KeyboardioPlugin*)) != NULL) {
-      p->begin();
+        p->begin();
     };
     va_end(ap);
 }

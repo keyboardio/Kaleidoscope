@@ -56,7 +56,7 @@ Key Layer_::lookup(byte row, byte col) {
     mappedKey.raw = Key_Transparent.raw;
 
     while (mappedKey.raw == Key_Transparent.raw &&
-           layer >= DefaultLayer) {
+            layer >= DefaultLayer) {
         if (Layer.isOn (layer))
             mappedKey.raw = pgm_read_word(&(keymaps[layer][row][col]));
         layer--;

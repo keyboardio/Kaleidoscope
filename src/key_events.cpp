@@ -91,6 +91,6 @@ void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
     }
     mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
-      return;
+        return;
     handle_key_event_default(mappedKey, row, col, keyState);
 }

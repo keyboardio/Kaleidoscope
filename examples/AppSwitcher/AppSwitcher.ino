@@ -22,41 +22,41 @@
 #include "Macros.h"
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
-  [0] = KEYMAP_STACKED
-  (
-   Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
-   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc,
+    [0] = KEYMAP_STACKED
+    (
+        Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
+        Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+        Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
+        Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc,
 
-   Key_LCtrl, Key_Backspace, Key_LGUI, Key_LShift,
-   M(M_APPSWITCH),
+        Key_LCtrl, Key_Backspace, Key_LGUI, Key_LShift,
+        M(M_APPSWITCH),
 
-   Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
-   Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
-              Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
-   Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
+        Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
+        Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
+        Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+        Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-   Key_RShift, Key_RAlt, Key_Space, Key_RCtrl,
-   M(M_APPCANCEL)
-   ),
+        Key_RShift, Key_RAlt, Key_Space, Key_RCtrl,
+        M(M_APPCANCEL)
+    ),
 };
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
-  case M_APPSWITCH:
-    return macroAppSwitch (keyState);
-  case M_APPCANCEL:
-    return macroAppCancel (keyState);
-  }
-  return MACRO_NONE;
+    switch (macroIndex) {
+    case M_APPSWITCH:
+        return macroAppSwitch (keyState);
+    case M_APPCANCEL:
+        return macroAppCancel (keyState);
+    }
+    return MACRO_NONE;
 }
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&HostOS, &Macros, NULL);
+    Keyboardio.setup (KEYMAP_SIZE);
+    Keyboardio.use (&HostOS, &Macros, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+    Keyboardio.loop ();
 }
