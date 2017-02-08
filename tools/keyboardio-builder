@@ -53,8 +53,6 @@ find_sketch () {
 }
 
 flash () {
-    . ${ROOT}/tools/settings.sh
-
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
@@ -67,9 +65,9 @@ flash () {
     avrdude -q -q -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
-program () {
-    . ${ROOT}/tools/settings.sh
 
+
+program () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
@@ -86,8 +84,6 @@ program () {
 }
 
 hex_with_bootloader () {
-    . ${ROOT}/tools/settings.sh
-
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
@@ -112,8 +108,6 @@ build () {
 }
 
 compile () {
-    . ${ROOT}/tools/settings.sh
-
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
@@ -174,8 +168,6 @@ build_all () {
 }
 
 size () {
-    . ${ROOT}/tools/settings.sh
-
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
@@ -186,8 +178,6 @@ size () {
 }
 
 size_map () {
-    . ${ROOT}/tools/settings.sh
-
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
@@ -196,7 +186,6 @@ size_map () {
 }
 
 decompile () {
-    . ${ROOT}/tools/settings.sh
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
@@ -206,14 +195,10 @@ decompile () {
 }
 
 clean () {
-    . ${ROOT}/tools/settings.sh
-
     rm -rf "${OUTPUT_PATH}"
 }
 
 reset_device () {
-    . ${ROOT}/tools/settings.sh
-
     ${RESET_DEVICE}
 }
 
@@ -284,6 +269,10 @@ fi
 if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
     . "${SOURCEDIR}/.keyboardio-builder.conf"
 fi
+
+
+. ${ROOT}/tools/settings.sh
+
 
 cmds=""
 
