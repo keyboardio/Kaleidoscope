@@ -7,9 +7,6 @@ cRGB blue;
 
 #define LED_TEST_DELAY 2000
 
-uint8_t TestMode_::minInterval = 10;
-uint8_t TestMode_::timer;
-
 TestMode_::TestMode_(void) {
 }
 
@@ -22,17 +19,11 @@ void TestMode_::begin(void) {
 void TestMode_::loopHook (bool postClear) {
     if ( postClear)
       return;
-    if (timer && timer < minInterval)
-      timer++;
     if (KeyboardHardware.leftHandState.all == (R1C3 | R2C1 | R2C4 | R2C7)
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
 	) {
-        if (timer == 0 || timer >= minInterval || minInterval == 0) {
           loop();
-          timer = 1;
         }
-        return;
-      }
 }
 
 void TestMode_::TestLEDs(void) {
