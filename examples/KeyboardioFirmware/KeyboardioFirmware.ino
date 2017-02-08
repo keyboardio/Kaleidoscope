@@ -16,6 +16,7 @@
 #include "Keyboardio-LEDEffect-Breathe.h"
 #include "Keyboardio-LEDEffect-Chase.h"
 #include "Keyboardio-LEDEffect-Rainbow.h"
+#include "Keyboardio-Model01-TestMode.h"
 
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
@@ -53,7 +54,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
     Keyboardio.setup(KEYMAP_SIZE);
 
-    Keyboardio.use(&LEDControl, &LEDOff,
+    Keyboardio.use(&TestMode,
+		   &LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
                    &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
 
