@@ -80,6 +80,10 @@ program () {
 
     echo "Press ENTER when ready..."
     read a
+    flash_with_programmer()
+}
+
+flash_with_programmer() {
 
     avrdude -v \
 		        -p${MCU} \
