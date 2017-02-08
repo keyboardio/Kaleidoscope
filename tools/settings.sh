@@ -16,9 +16,9 @@ if [ -z "${SKETCH}" ] || [ -z "${LIBRARY}" ] || [ -z "${ROOT}" ] || [ -z "${SOUR
     exit 1
 fi
 
-BOARD="model01"
-MCU="atmega32u4"
-FQBN="keyboardio:avr:model01"
+BOARD="${BOARD:-model01}"
+MCU="${MCU:-atmega32u4}"
+FQBN="${FQBN:-keyboardio:avr:${BOARD}}"
 
 DEVICE_PORT="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 DEVICE_PORT_BOOTLOADER="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
