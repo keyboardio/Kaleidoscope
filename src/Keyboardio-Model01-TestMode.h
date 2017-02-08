@@ -4,15 +4,12 @@
 class TestMode_ {
   public:
     TestMode_(void);
-    void setup();
-    static void loop();
     void begin();
 
   private:
-    static void TestLEDs();
-    static void TestKeys();
-    static void TestMatrix();
-    static void TestOneKey();
+    static void run_tests();
+    static void test_leds();
+    static void test_matrix();
     static void loopHook(bool postClear);
 };
 

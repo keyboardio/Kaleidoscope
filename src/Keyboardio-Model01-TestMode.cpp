@@ -12,6 +12,8 @@ TestMode_::TestMode_(void) {
 
 
 void TestMode_::begin(void) {
+red.r=101;
+blue.b=101;
     loop_hook_use (this->loopHook);
 
 }
@@ -26,7 +28,7 @@ void TestMode_::loopHook (bool postClear) {
         }
 }
 
-void TestMode_::TestLEDs(void) {
+void TestMode_::test_leds(void) {
     // make all LEDs dim red
     LEDControl.set_all_leds_to(50,0,0);
     LEDControl.led_sync();
@@ -75,7 +77,7 @@ void TestMode_::TestLEDs(void) {
 
 
 
-void TestMode_::TestMatrix () {
+void TestMode_::test_matrix () {
    while(1) {
    	 KeyboardHardware.read_matrix();
     for (byte row = 0; row < 4; row++) {
@@ -114,15 +116,9 @@ void TestMode_::TestMatrix () {
    }
 }
 
-void TestMode_::setup() {
-red.r=101;
-blue.b=101;
-	TestLEDs();
-
-}
-
-void TestMode_::loop() {
-	TestMatrix();
+void TestMode_::run_tests() {
+	test_leds();
+	test_matrix();
 }
 
 TestMode_ TestMode;
