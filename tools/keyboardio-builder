@@ -62,7 +62,13 @@ flash () {
 
     reset_device
     sleep 3s
+    flash_over_usb()
+
+}
+
+flash_over_usb () {
     avrdude -q -q -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+
 }
 
 
