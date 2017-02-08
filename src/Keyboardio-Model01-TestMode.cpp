@@ -12,20 +12,20 @@ TestMode_::TestMode_(void) {
 
 
 void TestMode_::begin(void) {
-red.r=101;
-blue.b=101;
+    red.r=101;
+    blue.b=101;
     loop_hook_use (this->loopHook);
 
 }
 
 void TestMode_::loopHook (bool postClear) {
     if ( postClear)
-      return;
+        return;
     if (KeyboardHardware.leftHandState.all == (R0C0 | R0C6 | R3C6 )
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
-	) {
-          run_tests();
-        }
+       ) {
+        run_tests();
+    }
 }
 
 void TestMode_::test_leds(void) {
@@ -78,49 +78,49 @@ void TestMode_::test_leds(void) {
 
 
 void TestMode_::test_matrix () {
-   while(1) {
-   	 KeyboardHardware.read_matrix();
-    for (byte row = 0; row < 4; row++) {
-        for (byte col = 0; col < 8; col++) {
+    while(1) {
+        KeyboardHardware.read_matrix();
+        for (byte row = 0; row < 4; row++) {
+            for (byte col = 0; col < 8; col++) {
 
-            uint8_t keynum = (row*8)+(col);
+                uint8_t keynum = (row*8)+(col);
 
-            uint8_t keyState = (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 0) |
-                               (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 1);
+                uint8_t keyState = (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 0) |
+                                   (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 1);
 
-		if(keyState ==3 ) {
-		Serial.print(" Key: ");
-		Serial.print(keynum);
-		Serial.print(" value ");
-		Serial.println(keyState);
-	    		KeyboardHardware.led_set_crgb_at(row, 7-col, red);
-		} else if (keyState ==1) {
-	    		KeyboardHardware.led_set_crgb_at(row,7-col, blue);
-		}
+                if(keyState ==3 ) {
+                    Serial.print(" Key: ");
+                    Serial.print(keynum);
+                    Serial.print(" value ");
+                    Serial.println(keyState);
+                    KeyboardHardware.led_set_crgb_at(row, 7-col, red);
+                } else if (keyState ==1) {
+                    KeyboardHardware.led_set_crgb_at(row,7-col, blue);
+                }
 
-            keyState = (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 0) |
-              	       (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 1);
+                keyState = (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 0) |
+                           (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 1);
 
-		if(keyState ==3 ) {
-		Serial.print(" Key: ");
-		Serial.print(keynum);
-		Serial.print(" value ");
-		Serial.println(keyState);
-	    		KeyboardHardware.led_set_crgb_at(row, 15-col, red);
-		} else if (keyState ==1) {
-	    		KeyboardHardware.led_set_crgb_at(row,15-col, blue);
-		}
+                if(keyState ==3 ) {
+                    Serial.print(" Key: ");
+                    Serial.print(keynum);
+                    Serial.print(" value ");
+                    Serial.println(keyState);
+                    KeyboardHardware.led_set_crgb_at(row, 15-col, red);
+                } else if (keyState ==1) {
+                    KeyboardHardware.led_set_crgb_at(row,15-col, blue);
+                }
+            }
         }
+        LEDControl.led_sync();
     }
-	LEDControl.led_sync();
-   }
 }
 
 void TestMode_::run_tests() {
-Serial.println("Running tests");
-	test_leds();
-	test_matrix();
-Serial.println("Done running tests");
+    Serial.println("Running tests");
+    test_leds();
+    test_matrix();
+    Serial.println("Done running tests");
 }
 
 TestMode_ TestMode;
