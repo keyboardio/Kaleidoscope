@@ -5,13 +5,17 @@ class TestMode_ {
   public:
     TestMode_(void);
     void setup();
-    void loop();
+    static void loop();
+    void begin();
+    static uint8_t minInterval;
 
   private:
-    void TestLEDs();
-    void TestKeys();
-    void TestMatrix();
-    void TestOneKey();
+    static void TestLEDs();
+    static void TestKeys();
+    static void TestMatrix();
+    static void TestOneKey();
+    static uint8_t timer;
+    static void loopHook(bool postClear);
 };
 
 extern TestMode_ TestMode;

@@ -20,11 +20,11 @@ void TestMode_::begin(void) {
 }
 
 void TestMode_::loopHook (bool postClear) {
-    if (!dictionary || postClear)
+    if ( postClear)
       return;
     if (timer && timer < minInterval)
       timer++;
-    if (KeyboardHardware.leftHandState.all == R1C3 | R2C1 | R2C4 | R2C7
+    if (KeyboardHardware.leftHandState.all == (R1C3 | R2C1 | R2C4 | R2C7)
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
 	) {
         if (timer == 0 || timer >= minInterval || minInterval == 0) {
