@@ -21,10 +21,10 @@ blue.b=101;
 void TestMode_::loopHook (bool postClear) {
     if ( postClear)
       return;
-    if (KeyboardHardware.leftHandState.all == (R1C3 | R2C1 | R2C4 | R2C7)
+    if (KeyboardHardware.leftHandState.all == (R0C0 | R0C6 | R3C6 )
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
 	) {
-          loop();
+          run_tests();
         }
 }
 
@@ -117,8 +117,10 @@ void TestMode_::test_matrix () {
 }
 
 void TestMode_::run_tests() {
+Serial.println("Running tests");
 	test_leds();
 	test_matrix();
+Serial.println("Done running tests");
 }
 
 TestMode_ TestMode;

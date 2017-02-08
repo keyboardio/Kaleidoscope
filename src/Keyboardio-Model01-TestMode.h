@@ -1,7 +1,9 @@
 #pragma once
-#include <Arduino.h>
 
-class TestMode_ {
+#include <Arduino.h>
+#include "KeyboardioFirmware.h"
+
+class TestMode_ : public KeyboardioPlugin {
   public:
     TestMode_(void);
     void begin();
