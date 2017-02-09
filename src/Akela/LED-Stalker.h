@@ -34,8 +34,10 @@ namespace Akela {
 
       virtual void begin (void) final;
       static void configure (ColorComputer *colorComputer);
+      static uint16_t stepLength;
 
     private:
+      static uint32_t stepStartTime;
       static ColorComputer *colorComputer;
       static uint8_t map[ROWS][COLS];
 

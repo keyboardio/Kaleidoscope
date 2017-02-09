@@ -41,6 +41,15 @@ method:
 >
 > It is recommended to use the `STALKER` macro to declare the effect itself.
 
+### `.stepLength`
+
+> The length - in milliseconds - of each step of the animation. An animation
+> lasts 256 steps.
+>
+> Not a method itself, but a changeable value.
+>
+> Defaults to 50.
+
 ## Plugin helpers
 
 ### `STALKER(effect, params...)`

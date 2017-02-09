@@ -22,6 +22,8 @@ namespace Akela {
   namespace LEDEffects {
     uint8_t StalkerEffect::map[ROWS][COLS];
     StalkerEffect::ColorComputer *StalkerEffect::colorComputer;
+    uint16_t StalkerEffect::stepLength = 50;
+    uint32_t StalkerEffect::stepStartTime;
 
     StalkerEffect::StalkerEffect (void) {
     }
@@ -35,6 +37,7 @@ namespace Akela {
     StalkerEffect::begin (void) {
       event_handler_hook_use (eventHandlerHook);
       loop_hook_use (loopHook);
+      stepStartTime = millis ();
     }
 
      Key
@@ -42,8 +45,9 @@ namespace Akela {
       if (row >= ROWS || col >= COLS)
         return mappedKey;
 
-      if (key_is_pressed (keyState))
+      if (key_is_pressed (keyState)) {
         map[row][col] = 0xff;
+      }
 
       return mappedKey;
     }
@@ -56,6 +60,8 @@ namespace Akela {
       if (!colorComputer)
         return;
 
+      bool timeOut = (millis () - stepStartTime) >= stepLength;
+
       for (byte r = 0; r < ROWS; r++) {
         for (byte c = 0; c < COLS; c++) {
           if (map[r][c])
@@ -63,19 +69,24 @@ namespace Akela {
 
           bool wasZero = (map[r][c] == 0);
 
-          if (map[r][c] >= 0xf0)
-            map[r][c]--;
-          else if (map[r][c] >= 0x40)
-            map[r][c] -= 16;
-          else if (map[r][c] >= 32)
-            map[r][c] -= 32;
-          else
-            map[r][c] = 0;
+          if (timeOut) {
+            if (map[r][c] >= 0xf0)
+              map[r][c]--;
+            else if (map[r][c] >= 0x40)
+              map[r][c] -= 16;
+            else if (map[r][c] >= 32)
+              map[r][c] -= 32;
+            else
+              map[r][c] = 0;
+          }
 
           if (!wasZero && !map[r][c])
             LEDControl.led_set_crgb_at (r, c, (cRGB){0, 0, 0});
         }
       }
+
+      if (timeOut)
+        stepStartTime = millis ();
     }
 
     namespace Stalker {
