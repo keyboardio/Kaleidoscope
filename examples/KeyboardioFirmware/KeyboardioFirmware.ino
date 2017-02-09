@@ -26,13 +26,13 @@ uint8_t temporary_keymap = 0;
 
 const Key keymaps[][ROWS][COLS] PROGMEM = { KEYMAP_LIST };
 
-static LEDSolidColor solidRed (100, 0, 0);
-static LEDSolidColor solidOrange (100, 30, 0);
-static LEDSolidColor solidYellow (90, 70, 0);
-static LEDSolidColor solidGreen (0, 200, 0);
-static LEDSolidColor solidBlue (0, 30, 200);
-static LEDSolidColor solidIndigo (0, 0, 200);
-static LEDSolidColor solidViolet (100, 0, 120);
+static LEDSolidColor solidRed (60, 0, 0);
+static LEDSolidColor solidOrange (60, 20, 0);
+static LEDSolidColor solidYellow (40, 35, 0);
+static LEDSolidColor solidGreen (0, 100, 0);
+static LEDSolidColor solidBlue (0, 15, 100);
+static LEDSolidColor solidIndigo (0, 0, 100);
+static LEDSolidColor solidViolet (70, 0, 60);
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     if (macroIndex == TOGGLENUMLOCK && key_toggled_on(keyState)) {
