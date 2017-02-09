@@ -70,17 +70,13 @@ void TestMode_::test_leds(void) {
         LEDControl.led_sync();
     }
     // set all the keys to red
-    LEDControl.set_all_leds_to(50,0,0);
-    // make all LEDs dim blue
-    // as you hit each key, set it to blue
-    // as you hit each key a second time, set it to green
-    // as you hit each key a third time, set it to off
 }
 
 
 
 
 void TestMode_::test_matrix () {
+    LEDControl.set_all_leds_to(50,0,0);
     while(1) {
         KeyboardHardware.read_matrix();
         for (byte row = 0; row < 4; row++) {
