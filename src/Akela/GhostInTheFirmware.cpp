@@ -22,8 +22,8 @@ namespace Akela {
   GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghostKeys;
   bool GhostInTheFirmware::isActive;
   uint16_t GhostInTheFirmware::currentPos;
-  uint8_t GhostInTheFirmware::timer;
-  uint8_t GhostInTheFirmware::timeOut;
+  uint32_t GhostInTheFirmware::startTime;
+  uint16_t GhostInTheFirmware::timeOut;
 
   GhostInTheFirmware::GhostInTheFirmware (void) {
   }
@@ -49,32 +49,31 @@ namespace Akela {
       return;
 
     if (timeOut == 0) {
-      timeOut = pgm_read_byte (&(ghostKeys[currentPos].delay));
+      timeOut = pgm_read_word (&(ghostKeys[currentPos].delay));
 
       if (timeOut == 0) {
         currentPos = 0;
         isActive = false;
         return;
       }
-    } else if (timer == timeOut / 3 && timer != 0) {
+    } else if ((millis () - startTime) == timeOut / 3) {
       byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
       byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
       handle_key_event (Key_NoKey, row, col, WAS_PRESSED);
     }
 
-    if (timer < timeOut / 3) {
+    if ((millis () - startTime) < timeOut / 3) {
       byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
       byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
       handle_key_event (Key_NoKey, row, col, IS_PRESSED);
     }
 
-    timer++;
-
-    if (timer > timeOut) {
+    if ((millis () - startTime) > timeOut) {
       currentPos++;
-      timer = timeOut = 0;
+      timeOut = 0;
+      startTime = millis ();
     }
   }
 

@@ -26,7 +26,7 @@ namespace Akela {
     typedef struct {
       byte row;
       byte col;
-      uint8_t delay;
+      uint16_t delay;
     } GhostKey;
 
     GhostInTheFirmware (void);
@@ -39,8 +39,8 @@ namespace Akela {
     static GhostKey *ghostKeys;
     static bool isActive;
     static uint16_t currentPos;
-    static uint8_t timer;
-    static uint8_t timeOut;
+    static uint32_t startTime;
+    static uint16_t timeOut;
 
     static void loopHook (bool postClear);
   };
