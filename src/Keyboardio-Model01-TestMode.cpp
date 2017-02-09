@@ -28,39 +28,42 @@ void TestMode_::loopHook (bool postClear) {
     }
 }
 
+void TestMode_::wait_for_keypress() {
+        delay(25);
+	while (1) { 
+        KeyboardHardware.read_matrix();
+    	if (KeyboardHardware.leftHandState.all ==  R3C6  
+     	    && KeyboardHardware.previousLeftHandState.all == 0 ) {
+		break;
+	}	
+}
+
+}
+
+void TestMode_::set_leds(uint8_t r, uint8_t g, uint8_t b) {
+    LEDControl.set_all_leds_to(r,g,b);
+    LEDControl.led_sync();
+    wait_for_keypress();
+
+}
+
 void TestMode_::test_leds(void) {
     // make all LEDs dim red
-    LEDControl.set_all_leds_to(50,0,0);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(50,0,0);
     // make all LEDs dim blue
-    LEDControl.set_all_leds_to(0,50,0);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(0,50,0);
     // make all LEDs dim green
-    LEDControl.set_all_leds_to(0,0,50);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(0,0,50);
     // make all LEDs dim white
-    LEDControl.set_all_leds_to(50,50,50);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(50,50,50);
     // make all the LEDs bright red
-    LEDControl.set_all_leds_to(200,0,0);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(200,0,0);
     // make all the LEDs bright green
-    LEDControl.set_all_leds_to(0,200,0);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(0,200,0);
     // make all the LEDs bright blue
-    LEDControl.set_all_leds_to(0,0,200);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(0,0,200);
     // make all the LEDs bright white (1.6A)
-    LEDControl.set_all_leds_to(160,160,160);
-    LEDControl.led_sync();
-    delay(LED_TEST_DELAY);
+    set_leds(160,160,160);
     // rainbow for 10 seconds
     for(auto i=0; i<1000; i++ ) {
         LEDRainbowEffect.update();
