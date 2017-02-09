@@ -25,6 +25,9 @@ class Layer_ {
     static uint32_t getLayerState(void);
 
     static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
+
+ private:
+    static uint8_t highestLayer;
 };
 
 extern Layer_ Layer;
