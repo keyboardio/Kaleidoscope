@@ -24,8 +24,8 @@ namespace Akela {
   // --- state ---
   Key Leader::sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
   uint8_t Leader::sequencePos;
-  uint8_t Leader::timer;
-  uint8_t Leader::timeOut = 20;
+  uint32_t Leader::startTime;
+  uint16_t Leader::timeOut = 1000;
   const Leader::dictionary_t *Leader::dictionary;
 
   // --- helpers ---
@@ -89,7 +89,7 @@ namespace Akela {
 
   void
   Leader::reset (void) {
-    timer = 0;
+    startTime = 0;
     sequencePos = 0;
     sequence[0].raw = Key_NoKey.raw;
   }
@@ -119,6 +119,7 @@ namespace Akela {
 
       if (key_toggled_off (keyState)) {
         // not active, but a leader key = start the sequence on key release!
+        startTime = millis ();
         sequencePos = 0;
         sequence[sequencePos].raw = mappedKey.raw;
       }
@@ -137,7 +138,7 @@ namespace Akela {
         return mappedKey;
       }
 
-      timer = 0;
+      startTime = millis ();
       sequence[sequencePos].raw = mappedKey.raw;
       actionIndex = lookup ();
 
@@ -169,10 +170,7 @@ namespace Akela {
     if (!isActive ())
       return;
 
-    if (timer < timeOut)
-     timer++;
-
-    if (timer >= timeOut)
+    if ((millis () - startTime) >= timeOut)
       reset ();
   }
 };

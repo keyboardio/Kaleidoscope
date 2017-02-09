@@ -86,13 +86,13 @@ The plugin provides the `Leader` object, with the following methods:
 
 ### `.timeOut`
 
-> The number of loop iterations to wait before a sequence times out. Once the
+> The number of milliseconds to wait before a sequence times out. Once the
 > sequence timed out, if there is a partial match with an action, that will be
 > performed, otherwise the Leader sequence will simply reset.
 >
 > Not strictly a method, it is a variable one can assign a new value to.
 >
-> Defaults to 20.
+> Defaults to 1000.
 
 ## Further reading
 
