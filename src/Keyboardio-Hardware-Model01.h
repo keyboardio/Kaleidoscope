@@ -25,6 +25,8 @@ class Model01 {
     void enable_scanner_power(void);
     void reboot_bootloader();
 
+    boolean led_power_fault(void);
+
     uint8_t load_primary_layer(uint8_t layer_count);
     void save_primary_layer(uint8_t layer);
 

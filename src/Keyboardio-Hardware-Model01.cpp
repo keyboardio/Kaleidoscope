@@ -34,10 +34,15 @@ void Model01::enable_scanner_power(void) {
 void Model01::enable_high_power_leds(void) {
     // PE6
     //    pinMode(7, OUTPUT);
-//    digitalWrite(7, LOW);
-
+    //    digitalWrite(7, LOW);
     DDRE |= _BV(6);
     PORTE &= ~_BV(6);
+
+   // Set B4, the overcurrent check to an input with an internal pull-up
+   DDRB &= ~_BV(4);	// set bit, input
+   PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
+
+
 
 }
 
@@ -93,6 +98,14 @@ void Model01::led_sync() {
     leftHand.sendLEDData();
     rightHand.sendLEDData();
 
+}
+
+boolean Model01::led_power_fault() {
+	if (PINB & _BV(4)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void debug_key_event(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
