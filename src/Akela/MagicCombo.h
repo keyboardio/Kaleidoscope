@@ -32,11 +32,11 @@ namespace Akela {
     virtual void begin (void) final;
 
     static void configure (const dictionary_t dictionary[]);
-    static uint8_t minInterval;
+    static uint16_t minInterval;
 
   private:
     static const dictionary_t *dictionary;
-    static uint8_t timer;
+    static uint32_t startTime;
 
     static void loopHook (bool postClear);
   };

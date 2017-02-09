@@ -56,8 +56,10 @@ The extension provides a `MagicCombo` singleton object, with the following metho
 
 ### `.minInterval`
 
-> Restrict the magic action to fire at most once every `minInterval` cycles.
-> Defaults to 10.
+> Restrict the magic action to fire at most once every `minInterval`
+> milliseconds.
+>
+> Defaults to 500.
 >
 > Not strictly a method, it is a variable one can assign a new value to.
 

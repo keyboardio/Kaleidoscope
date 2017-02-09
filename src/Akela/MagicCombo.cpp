@@ -21,8 +21,8 @@
 namespace Akela {
 
   const MagicCombo::dictionary_t *MagicCombo::dictionary;
-  uint8_t MagicCombo::minInterval = 10;
-  uint8_t MagicCombo::timer;
+  uint16_t MagicCombo::minInterval = 500;
+  uint32_t MagicCombo::startTime;
 
   MagicCombo::MagicCombo (void) {
   }
@@ -42,9 +42,6 @@ namespace Akela {
     if (!dictionary || postClear)
       return;
 
-    if (timer && timer < minInterval)
-      timer++;
-
     for (byte i = 0;; i++) {
       dictionary_t combo;
 
@@ -56,9 +53,9 @@ namespace Akela {
 
       if (KeyboardHardware.leftHandState.all == combo.leftHand &&
           KeyboardHardware.rightHandState.all == combo.rightHand) {
-        if (timer == 0 || timer >= minInterval || minInterval == 0) {
+        if (startTime == 0 || minInterval == 0 || ((millis () - startTime) >= minInterval)) {
           magicComboActions (i, combo.leftHand, combo.rightHand);
-          timer = 1;
+          startTime = millis ();
         }
         break;
       }
