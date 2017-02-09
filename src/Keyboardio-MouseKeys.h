@@ -8,9 +8,11 @@ class MouseKeys_ : public KeyboardioPlugin {
     MouseKeys_ (void);
 
     virtual void begin(void) final;
+    static uint8_t accelDelay;
 
  private:
     static uint8_t mouseMoveIntent;
+    static uint8_t accelDelayCounter;
 
     static void loopHook(bool postClear);
     static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);

@@ -5,6 +5,8 @@
 #include "KeyboardioFirmware.h"
 
 uint8_t MouseKeys_::mouseMoveIntent;
+uint8_t MouseKeys_::accelDelay;
+uint8_t MouseKeys_::accelDelayCounter;
 
 void MouseKeys_::loopHook(bool postClear) {
     if (postClear) {
@@ -19,8 +21,12 @@ void MouseKeys_::loopHook(bool postClear) {
 
     int8_t moveX = 0, moveY = 0;
 
-    if (MouseWrapper.mouseActiveForCycles < 255)
-        MouseWrapper.mouseActiveForCycles++;
+    if (accelDelayCounter == accelDelay) {
+        if (MouseWrapper.mouseActiveForCycles < 255)
+            MouseWrapper.mouseActiveForCycles++;
+        accelDelayCounter = 0;
+    } else
+        accelDelayCounter++;
 
     if (mouseMoveIntent & KEY_MOUSE_UP)
         moveY = -1;
