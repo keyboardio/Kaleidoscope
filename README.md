@@ -74,13 +74,13 @@ void setup () {
 
 ### `.timeOut`
 
-> The number of loop iterations to wait before considering a held key in
-> isolation as its secondary role. That is, we'd have to hold a `Shift` key
-> this long, by itself, to trigger the `Shift` role in itself.
+> The number of milliseconds to wait before considering a held key in isolation
+> as its secondary role. That is, we'd have to hold a `Shift` key this long, by
+> itself, to trigger the `Shift` role in itself.
 >
 > Not strictly a method, it is a variable one can assign a new value to.
 >
-> Defaults to 40.
+> Defaults to 1000.
 
 ## Further reading
 

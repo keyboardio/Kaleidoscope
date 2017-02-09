@@ -21,8 +21,8 @@
 namespace Akela {
 
   uint8_t SpaceCadetShift::parenNeeded;
-  uint8_t SpaceCadetShift::timer;
-  uint8_t SpaceCadetShift::timeOut = 40;
+  uint32_t SpaceCadetShift::startTime;
+  uint16_t SpaceCadetShift::timeOut = 1000;
   Key SpaceCadetShift::leftParen, SpaceCadetShift::rightParen;
 
   SpaceCadetShift::SpaceCadetShift () {
@@ -67,15 +67,13 @@ namespace Akela {
     if (key_toggled_on (keyState)) {
       if (mappedKey.raw == Key_LShift.raw) { // if it is LShift, remember it
         bitWrite (parenNeeded, 0, 1);
-        if (timer < timeOut)
-          timer++;
+        startTime = millis ();
       } else if (mappedKey.raw == Key_RShift.raw) { // if it is RShift, remember it
         bitWrite (parenNeeded, 1, 1);
-        if (timer < timeOut)
-          timer++;
+        startTime = millis ();
       } else { // if it is something else, we do not need a paren at the end.
         parenNeeded = 0;
-        timer = 0;
+        startTime = 0;
       }
 
       // this is all we need to do on keypress, let the next handler do its thing too.
@@ -87,15 +85,10 @@ namespace Akela {
     if (!parenNeeded)
       return mappedKey;
 
-    // if we did not time out yet, up the timer
-    if (timer < timeOut)
-      timer++;
-
     // if we timed out, that means we need to keep pressing shift, but won't
     // need the parens in the end.
-    if (timer >= timeOut) {
+    if ((millis () - startTime) >= timeOut) {
       parenNeeded = 0;
-      timer = 0;
       return mappedKey;
     }
 
@@ -118,7 +111,6 @@ namespace Akela {
       Keyboard.sendReport ();
 
       parenNeeded = 0;
-      timer = 0;
     }
 
     return mappedKey;

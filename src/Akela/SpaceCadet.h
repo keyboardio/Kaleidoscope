@@ -28,13 +28,13 @@ namespace Akela {
     virtual void begin (void) final;
 
     static void configure (Key left, Key right);
-    static uint8_t timeOut;
+    static uint16_t timeOut;
 
     void on (void);
     void off (void);
   private:
     static uint8_t parenNeeded;
-    static uint8_t timer;
+    static uint32_t startTime;
     static Key leftParen, rightParen;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
