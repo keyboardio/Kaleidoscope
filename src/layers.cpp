@@ -4,6 +4,8 @@
 static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
+uint8_t Layer_::highestLayer;
+
 static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
     if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
         uint8_t target = keymapEntry.keyCode - MOMENTARY_OFFSET;
@@ -51,7 +53,7 @@ Layer_::Layer_ (void) {
 
 Key Layer_::lookup(byte row, byte col) {
     Key mappedKey;
-    int8_t layer = 31;
+    int8_t layer = highestLayer;
 
     mappedKey.raw = Key_Transparent.raw;
 
@@ -80,10 +82,14 @@ void Layer_::move (uint8_t layer) {
 
 void Layer_::on (uint8_t layer) {
     bitSet (LayerState, layer);
+    if (layer > highestLayer)
+        highestLayer = layer;
 }
 
 void Layer_::off (uint8_t layer) {
     bitClear (LayerState, layer);
+    if (layer == highestLayer)
+        highestLayer = top();
 }
 
 boolean Layer_::isOn (uint8_t layer) {
