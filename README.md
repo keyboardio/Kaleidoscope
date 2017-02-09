@@ -124,23 +124,23 @@ modifiers and one-shot layer keys. It has the following methods:
 
 ### `.timeOut`
 
-> The number of loop iterations to wait before timing out and cancelling the
+> The number of milliseconds to wait before timing out and cancelling the
 > one-shot effect, unless interrupted or cancelled before by any other means.
 >
 > Not strictly a method, it is a variable one can assign a new value to.
 >
-> Defaults to 40.
+> Defaults to 2500.
 
 ### `.holdTimeOut`
 
-> The number of loop iterations to wait before considering a held one-shot key
-> as intentionally held. In this case, the one-shot effect will not trigger when
+> The number of milliseconds to wait before considering a held one-shot key as
+> intentionally held. In this case, the one-shot effect will not trigger when
 > the key is released. In other words, holding a one-shot key at least this
 > long, and then releasing it, will not trigger the one-shot effect.
 >
 > Not strictly a method, it is a variable one can assign a new value to.
 >
-> Defaults to 5.
+> Defaults to 200.
 
 ## Further reading
 

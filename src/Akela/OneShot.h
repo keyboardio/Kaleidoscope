@@ -36,15 +36,15 @@ namespace Akela {
     static bool isActive (void);
     static void cancel (bool withStickies);
     static void cancel (void) { cancel (false); };
-    static uint8_t timeOut;
-    static uint8_t holdTimeOut;
+    static uint16_t timeOut;
+    static uint16_t holdTimeOut;
 
     static bool isModifierActive (Key key);
 
     void inject (Key key, uint8_t keyState);
 
   private:
-    static uint8_t Timer;
+    static uint32_t startTime;
     static uint32_t State;
     static uint32_t stickyState;
     static uint32_t pressedState;

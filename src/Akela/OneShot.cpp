@@ -23,9 +23,9 @@ using namespace Akela::Ranges;
 namespace Akela {
   // ---- state ---------
 
-  uint8_t OneShot::Timer = 0;
-  uint8_t OneShot::timeOut = 40;
-  uint8_t OneShot::holdTimeOut = 5;
+  uint32_t OneShot::startTime = 0;
+  uint16_t OneShot::timeOut = 2500;
+  uint16_t OneShot::holdTimeOut = 250;
   uint32_t OneShot::State = 0;
   uint32_t OneShot::stickyState = 0;
   uint32_t OneShot::pressedState = 0;
@@ -58,7 +58,7 @@ namespace Akela {
 
 #define toNormalMod(key, idx) {key.flags = 0; key.keyCode = Key_LCtrl.keyCode + idx;}
 #define toNormalMT(key, idx) { key.raw = Key_NoKey.raw; Layer.on (idx - 8); }
-#define hasTimedOut() (Timer >= timeOut)
+#define hasTimedOut() (millis () - startTime >= timeOut)
 
   // ----- passthrough ------
 
@@ -187,8 +187,8 @@ namespace Akela {
       idx = mappedKey.raw - OS_FIRST;
       if (key_toggled_off (keyState)) {
         clearPressed (idx);
-      } else if (key_toggled_on (keyState)){
-        Timer = 0;
+      } else if (key_toggled_on (keyState)) {
+        startTime = millis ();
         setPressed (idx);
         setOneShot (idx);
         saveAsPrevious (mappedKey);
@@ -214,7 +214,7 @@ namespace Akela {
       } else {
         if (key_toggled_off (keyState)) {
           clearPressed (idx);
-          if (Timer >= holdTimeOut) {
+          if ((millis () - startTime) >= holdTimeOut) {
             cancelOneShot (idx);
           }
         }
@@ -226,7 +226,7 @@ namespace Akela {
 
             saveAsPrevious (mappedKey);
           } else {
-            Timer = 0;
+            startTime = millis ();
 
             setOneShot (idx);
             saveAsPrevious (mappedKey);
@@ -256,9 +256,6 @@ namespace Akela {
       return;
 
     if (postClear) {
-      if (Timer < timeOut)
-        Timer++;
-
       if (hasTimedOut ())
         cancel ();
 
@@ -266,11 +263,9 @@ namespace Akela {
         if (shouldCancel) {
           if (isSticky (i)) {
             if (shouldCancelStickies) {
-              Timer = 0;
               clearSticky (i);
             }
           } else if (isOneShot (i) && !isPressed (i)) {
-            Timer = 0;
             cancelOneShot (i);
           }
         }
