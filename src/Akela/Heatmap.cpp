@@ -19,16 +19,16 @@
 #include <Akela-Heatmap.h>
 
 namespace Akela {
-  static uint8_t heatmap[ROWS][COLS];
-  static uint16_t totalKeys;
-  static uint8_t highestCount;
-  static uint16_t updateFrequency = 50;
-  static uint16_t loopCount;
+  uint8_t Heatmap::heatmap[ROWS][COLS];
+  uint16_t Heatmap::totalKeys;
+  uint8_t Heatmap::highestCount;
+  uint16_t Heatmap::updateFrequency = 50;
+  uint16_t Heatmap::loopCount;
 
-  static const float heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
+  const float Heatmap::heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
 
-  static void
-  shiftStats (void) {
+  void
+  Heatmap::shiftStats (void) {
     highestCount = totalKeys = 0;
     for (uint8_t r = 0; r < ROWS; r++) {
       for (uint8_t c = 0; c < COLS; c++) {
@@ -40,8 +40,8 @@ namespace Akela {
     }
   }
 
-  static cRGB
-  computeColor (float v) {
+  cRGB
+  Heatmap::computeColor (float v) {
     float fb = 0;
     uint8_t idx1, idx2;
 
