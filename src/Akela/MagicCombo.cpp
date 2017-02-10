@@ -18,6 +18,16 @@
 
 #include <Akela-MagicCombo.h>
 
+#if defined(ARDUINO_AVR_MODEL01)
+#define LEFTHANDSTATE  KeyboardHardware.leftHandState
+#define RIGHTHANDSTATE KeyboardHardware.rightHandState
+#endif
+
+#if defined(ARDUINO_AVR_SHORTCUT)
+#define LEFTHANDSTATE  KeyboardHardware.scanner.leftHandState
+#define RIGHTHANDSTATE KeyboardHardware.scanner.rightHandState
+#endif
+
 namespace Akela {
 
   const MagicCombo::dictionary_t *MagicCombo::dictionary;
@@ -51,8 +61,8 @@ namespace Akela {
       if (combo.leftHand == 0 && combo.rightHand == 0)
         break;
 
-      if (KeyboardHardware.leftHandState.all == combo.leftHand &&
-          KeyboardHardware.rightHandState.all == combo.rightHand) {
+      if (LEFTHANDSTATE.all == combo.leftHand &&
+          RIGHTHANDSTATE.all == combo.rightHand) {
         if (startTime == 0 || minInterval == 0 || ((millis () - startTime) >= minInterval)) {
           magicComboActions (i, combo.leftHand, combo.rightHand);
           startTime = millis ();
