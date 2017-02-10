@@ -10,7 +10,7 @@ uint16_t MouseWrapper_::section_top;
 uint16_t MouseWrapper_::section_left;
 boolean MouseWrapper_::is_warping;
 
-uint8_t MouseWrapper_::mouseActiveForCycles;
+uint8_t MouseWrapper_::accelStep;
 
 MouseWrapper_::MouseWrapper_(void) {
     Mouse.begin();
@@ -101,10 +101,10 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
     int16_t moveX =0;
     int16_t moveY = 0;
     if (x != 0 ) {
-        moveX = (x * acceleration(mouseActiveForCycles));
+        moveX = (x * acceleration(accelStep));
     }
     if (y != 0) {
-        moveY = (y * acceleration(mouseActiveForCycles));
+        moveY = (y * acceleration(accelStep));
     }
 
     end_warping();

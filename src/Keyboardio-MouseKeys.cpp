@@ -5,8 +5,15 @@
 #include "KeyboardioFirmware.h"
 
 uint8_t MouseKeys_::mouseMoveIntent;
-uint8_t MouseKeys_::accelDelay;
-uint8_t MouseKeys_::accelDelayCounter;
+
+uint8_t MouseKeys_::speed = 1;
+uint16_t MouseKeys_::speedDelay = 0;
+
+uint8_t MouseKeys_::accelSpeed = 1;
+uint16_t MouseKeys_::accelDelay = 50;
+
+uint32_t MouseKeys_::accelStartTime;
+uint32_t MouseKeys_::startTime;
 
 void MouseKeys_::loopHook(bool postClear) {
     if (postClear) {
@@ -15,28 +22,33 @@ void MouseKeys_::loopHook(bool postClear) {
     }
 
     if (mouseMoveIntent == 0) {
-        MouseWrapper.mouseActiveForCycles = 0;
+        MouseWrapper.accelStep = 0;
+        startTime = 0;
+        accelStartTime = 0;
         return;
     }
 
+    if ((millis() - startTime) < speedDelay)
+        return;
+
+    startTime = millis();
+
     int8_t moveX = 0, moveY = 0;
 
-    if (accelDelayCounter == accelDelay) {
-        if (MouseWrapper.mouseActiveForCycles < 255)
-            MouseWrapper.mouseActiveForCycles++;
-        accelDelayCounter = 0;
-    } else
-        accelDelayCounter++;
+    if ((millis() - accelStartTime) >= (accelDelay * MouseWrapper.accelStep)) {
+        if (MouseWrapper.accelStep < 255 - accelSpeed)
+            MouseWrapper.accelStep += accelSpeed;
+    }
 
     if (mouseMoveIntent & KEY_MOUSE_UP)
-        moveY = -1;
+        moveY = -speed;
     else if (mouseMoveIntent & KEY_MOUSE_DOWN)
-        moveY = 1;
+        moveY = speed;
 
     if (mouseMoveIntent & KEY_MOUSE_LEFT)
-        moveX = -1;
+        moveX = -speed;
     else if (mouseMoveIntent & KEY_MOUSE_RIGHT)
-        moveX = 1;
+        moveX = speed;
 
     MouseWrapper.move(moveX, moveY);
 }
@@ -54,6 +66,12 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
             MouseWrapper.release_button(button);
         }
     } else if (!(mappedKey.keyCode & KEY_MOUSE_WARP)) {
+        if (key_toggled_on(keyState)) {
+            if (!startTime)
+                startTime = millis();
+            if (!accelStartTime)
+                accelStartTime = millis();
+        }
         if (key_is_pressed(keyState))
             mouseMoveIntent |= mappedKey.keyCode;
     } else if (key_toggled_on(keyState)) {
