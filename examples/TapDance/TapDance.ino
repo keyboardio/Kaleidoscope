@@ -43,7 +43,7 @@ static void tapDanceEsc (uint8_t tapDanceIndex, uint8_t tapCount, Akela::TapDanc
   tapDanceActionKeys (tapCount, tapDanceAction, Key_Esc, Key_Tab);
 }
 
-void tapDanceAction (uint8_t tapDanceIndex, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction) {
+void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction) {
   switch (tapDanceIndex) {
   case 0:
     return tapDanceActionKeys (tapCount, tapDanceAction, Key_Tab, Key_Esc);
