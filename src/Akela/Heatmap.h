@@ -36,7 +36,7 @@ namespace Akela {
     static uint16_t totalKeys;
     static uint8_t highestCount;
     static uint16_t updateFrequency;
-    static uint16_t loopCount;
+    static uint32_t startTime;
 
     static const float heatColors[][3];
 

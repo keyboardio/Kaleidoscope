@@ -22,8 +22,8 @@ namespace Akela {
   uint8_t Heatmap::heatmap[ROWS][COLS];
   uint16_t Heatmap::totalKeys;
   uint8_t Heatmap::highestCount;
-  uint16_t Heatmap::updateFrequency = 50;
-  uint16_t Heatmap::loopCount;
+  uint16_t Heatmap::updateFrequency = 500;
+  uint32_t Heatmap::startTime;
 
   const float Heatmap::heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
 
@@ -104,12 +104,11 @@ namespace Akela {
 
   void
   Heatmap::update (void) {
-    loopCount++;
-
-    if (loopCount < updateFrequency)
+    if (startTime && (millis () - startTime) < updateFrequency)
       return;
 
-    loopCount = 0;
+    startTime = millis ();
+
     for (uint8_t r = 0; r < ROWS; r++) {
       for (uint8_t c = 0; c < COLS; c++) {
         uint8_t cap = max(totalKeys, 1);

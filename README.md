@@ -40,15 +40,10 @@ The plugin provides two methods on the `HeatmapEffect` object:
 
 ### `.configure(updateFrequency)`
 
-> Sets up the update frequency of the heatmap. The smaller this value is, the
-> more often the heatmap gets updated, but that comes with a cost: updating the
-> heatmap takes a fairly large amount of computation, and is not fast. Doing it
-> often will considerably slow down the keyboard, and that is rarely a desirable
-> thing.
->
-> Nevertheless, the frequency preferred is a very subjective thing, which is why
-> this function exists. Give it a number, and it will wait that many scan cycles
-> between updates.
+> Sets up the update frequency of the heatmap, to update every `updateFrequency`
+> milliseconds. Updating the heatmap incurs a significant performance penalty,
+> and should not be done too often. Doing it too rarely, on the other hand, make
+> it much less useful. One has to strike a reasonable balance.
 >
 > Defaults to *500*.
 
