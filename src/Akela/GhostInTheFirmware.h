@@ -26,6 +26,7 @@ namespace Akela {
     typedef struct {
       byte row;
       byte col;
+      uint16_t pressTime;
       uint16_t delay;
     } GhostKey;
 
@@ -38,9 +39,11 @@ namespace Akela {
   private:
     static GhostKey *ghostKeys;
     static bool isActive;
+    static bool isPressed;
     static uint16_t currentPos;
     static uint32_t startTime;
-    static uint16_t timeOut;
+    static uint16_t pressTimeOut;
+    static uint16_t delayTimeOut;
 
     static void loopHook (bool postClear);
   };

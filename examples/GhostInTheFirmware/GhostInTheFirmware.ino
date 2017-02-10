@@ -24,23 +24,27 @@
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, M(0),
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
+   ___, ___, ___, ___, ___, ___, M(0),
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
 
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey,
+   ___, ___, ___, ___,
+   ___,
 
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-              Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
 
-   Key_NoKey, Key_NoKey, Key_NoKey, Key_NoKey,
-   Key_NoKey
+   ___, ___, ___, ___,
+   ___
    ),
 };
+
+static Key eventDropper (Key mappedKey, byte row, byte col, uint8_t keyState) {
+  return Key_NoKey;
+}
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == 0 && key_toggled_on (keyState))
@@ -50,75 +54,77 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 static const Akela::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
-  {0, 6, 5},
-  {0, 5, 5},
-  {0, 4, 5},
-  {0, 3, 5},
-  {0, 2, 5},
-  {0, 1, 5},
-  {0, 0, 5},
-  {1, 0, 5},
-  {1, 1, 5},
-  {1, 2, 5},
-  {1, 3, 5},
-  {1, 4, 5},
-  {1, 5, 5},
-  {1, 6, 5},
-  {2, 6, 5},
-  {2, 5, 5},
-  {2, 4, 5},
-  {2, 3, 5},
-  {2, 2, 5},
-  {2, 1, 5},
-  {2, 0, 5},
-  {3, 0, 5},
-  {3, 1, 5},
-  {3, 3, 5},
-  {3, 4, 5},
-  {3, 5, 5},
-  {0, 7, 5},
-  {1, 7, 5},
-  {2, 7, 5},
-  {3, 7, 5},
-  {3, 6, 5},
+  {0, 6, 200, 50},
+  {0, 5, 200, 50},
+  {0, 4, 200, 50},
+  {0, 3, 200, 50},
+  {0, 2, 200, 50},
+  {0, 1, 200, 50},
+  {0, 0, 200, 50},
+  {1, 0, 200, 50},
+  {1, 1, 200, 50},
+  {1, 2, 200, 50},
+  {1, 3, 200, 50},
+  {1, 4, 200, 50},
+  {1, 5, 200, 50},
+  {1, 6, 200, 50},
+  {2, 6, 200, 50},
+  {2, 5, 200, 50},
+  {2, 4, 200, 50},
+  {2, 3, 200, 50},
+  {2, 2, 200, 50},
+  {2, 1, 200, 50},
+  {2, 0, 200, 50},
+  {3, 0, 200, 50},
+  {3, 1, 200, 50},
+  {3, 3, 200, 50},
+  {3, 4, 200, 50},
+  {3, 5, 200, 50},
+  {0, 7, 200, 50},
+  {1, 7, 200, 50},
+  {2, 7, 200, 50},
+  {3, 7, 200, 50},
+  {3, 6, 200, 50},
 
-  {3, 9, 5},
-  {3, 8, 5},
-  {2, 8, 5},
-  {1, 8, 5},
-  {0, 8, 5},
-  {3, 10, 5},
-  {3, 11, 5},
-  {3, 12, 5},
-  {3, 13, 5},
-  {3, 14, 5},
-  {3, 15, 5},
-  {2, 15, 5},
-  {2, 14, 5},
-  {2, 13, 5},
-  {2, 12, 5},
-  {2, 11, 5},
-  {2, 10, 5},
-  {2, 9, 5},
-  {1, 9, 5},
-  {1, 10, 5},
-  {1, 11, 5},
-  {1, 12, 5},
-  {1, 13, 5},
-  {1, 14, 5},
-  {1, 15, 5},
-  {0, 15, 5},
-  {0, 14, 5},
-  {0, 13, 5},
-  {0, 12, 5},
-  {0, 11, 5},
-  {0, 10, 5},
-  {0, 9, 5},
+  {3, 9, 200, 50},
+  {3, 8, 200, 50},
+  {2, 8, 200, 50},
+  {1, 8, 200, 50},
+  {0, 8, 200, 50},
+  {3, 10, 200, 50},
+  {3, 11, 200, 50},
+  {3, 12, 200, 50},
+  {3, 13, 200, 50},
+  {3, 14, 200, 50},
+  {3, 15, 200, 50},
+  {2, 15, 200, 50},
+  {2, 14, 200, 50},
+  {2, 13, 200, 50},
+  {2, 12, 200, 50},
+  {2, 11, 200, 50},
+  {2, 10, 200, 50},
+  {2, 9, 200, 50},
+  {1, 9, 200, 50},
+  {1, 10, 200, 50},
+  {1, 11, 200, 50},
+  {1, 12, 200, 50},
+  {1, 13, 200, 50},
+  {1, 14, 200, 50},
+  {1, 15, 200, 50},
+  {0, 15, 200, 50},
+  {0, 14, 200, 50},
+  {0, 13, 200, 50},
+  {0, 12, 200, 50},
+  {0, 11, 200, 50},
+  {0, 10, 200, 50},
+  {0, 9, 200, 50},
 
-  {0, 0, 0}
+  {0, 0, 0, 0}
 };
 
 void setup () {
+  Serial.begin (9600);
+
   Keyboardio.setup (KEYMAP_SIZE);
 
   GhostInTheFirmware.configure (ghostKeys);
@@ -126,7 +132,7 @@ void setup () {
 
   Keyboardio.use (&LEDControl, &GhostInTheFirmware, &StalkerEffect, &Macros,
                   NULL);
-
+  event_handler_hook_use (eventDropper);
 }
 
 void loop () {

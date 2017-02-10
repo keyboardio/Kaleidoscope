@@ -21,9 +21,11 @@
 namespace Akela {
   GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghostKeys;
   bool GhostInTheFirmware::isActive;
+  bool GhostInTheFirmware::isPressed;
   uint16_t GhostInTheFirmware::currentPos;
   uint32_t GhostInTheFirmware::startTime;
-  uint16_t GhostInTheFirmware::timeOut;
+  uint16_t GhostInTheFirmware::pressTimeOut;
+  uint16_t GhostInTheFirmware::delayTimeOut;
 
   GhostInTheFirmware::GhostInTheFirmware (void) {
   }
@@ -48,32 +50,35 @@ namespace Akela {
     if (postClear || !isActive)
       return;
 
-    if (timeOut == 0) {
-      timeOut = pgm_read_word (&(ghostKeys[currentPos].delay));
+    if (pressTimeOut == 0) {
+      pressTimeOut = pgm_read_word (&(ghostKeys[currentPos].pressTime));
+      delayTimeOut = pgm_read_word (&(ghostKeys[currentPos].delay));
 
-      if (timeOut == 0) {
+      if (pressTimeOut == 0) {
         currentPos = 0;
         isActive = false;
         return;
       }
-    } else if ((millis () - startTime) == timeOut / 3) {
-      byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
-      byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
-
-      handle_key_event (Key_NoKey, row, col, WAS_PRESSED);
-    }
-
-    if ((millis () - startTime) < timeOut / 3) {
-      byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
-      byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
-
-      handle_key_event (Key_NoKey, row, col, IS_PRESSED);
-    }
-
-    if ((millis () - startTime) > timeOut) {
-      currentPos++;
-      timeOut = 0;
+      isPressed = true;
       startTime = millis ();
+    } else {
+      if (isPressed && ((millis () - startTime) > pressTimeOut)) {
+        isPressed = false;
+        startTime = millis ();
+
+        byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
+        byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
+
+        handle_key_event (Key_NoKey, row, col, WAS_PRESSED);
+      } else if (isPressed) {
+        byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
+        byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
+
+        handle_key_event (Key_NoKey, row, col, IS_PRESSED);
+      } else if ((millis () - startTime) > delayTimeOut) {
+        currentPos++;
+        pressTimeOut = 0;
+      }
     }
   }
 

@@ -12,14 +12,16 @@ plugin allows one to inject events at various delays, by telling it which keys
 to press. Unlike macros, these press keys at given positions, as if they were
 pressed by someone typing on it - the firmware will not see the difference.
 
-Given a sequence (with delays), the plugin will walk through it once activated,
-and hold the key for about a third of the delay amount, then release it.
+Given a sequence (with press- and delay times), the plugin will walk through it
+once activated, and hold the key for the specified amount, release it, and move
+on to the next after the delay time.
 
 ## Using the plugin
 
 To use the plugin, one needs to include the header, and configure it with a list
-of key coordinates and a delay triplet. One also needs a way to trigger starting
-the sequence, and a macro is the most convenient way for that.
+of key coordinates, a press time, and a delay time quartett. One also needs a
+way to trigger starting the sequence, and a macro is the most convenient way for
+that.
 
 ```c++
 #include <Akela-GhostInTheFirmware.h>
@@ -33,7 +35,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 static const Akela::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
-  {0, 0, 10},
+  {0, 0, 200, 50},
   {0, 0, 0}
 };
 
@@ -55,9 +57,13 @@ method:
 
 ### `.configure(sequence)`
 
-> Set the sequence of keys to press. Each element is a triplet of `row`,
-> `column`, and a `delay`. Each of these will be pressed in different cycles,
-> unlike macros which play back within a single cycle.
+> Set the sequence of keys to press. Each element is a quartett of `row`,
+> `column`, a `pressTime`, and a `delay`. Each of these will be pressed in
+> different cycles, unlike macros which play back within a single cycle.
+>
+> The key at `row`, `column` will be held for `pressTime` milliseconds, and
+> after an additional `delay` milliseconds, the plugin will move on to the next
+> entry in the sequence.
 >
 > The sequence *MUST* reside in `PROGMEM`.
 
