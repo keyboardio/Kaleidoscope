@@ -4,6 +4,7 @@
 
 #define EEPROM_BOOT_ANIMATION_LOCATION 1
 
+#ifdef ARDUINO_AVR_MODEL01
 static void
 type_letter(uint8_t letter) {
   LEDControl.led_set_crgb_at(letter, {255, 0, 0});
@@ -13,14 +14,15 @@ type_letter(uint8_t letter) {
   LEDControl.led_sync();
   delay(10);
 }
+#endif
 
 void
 bootAnimation (void) {
+#ifdef ARDUINO_AVR_MODEL01
   if (EEPROM.read (EEPROM_BOOT_ANIMATION_LOCATION))
     return;
 
   LEDControl.set_all_leds_to(0, 0, 0);
-
   type_letter(LED_K);
   type_letter(LED_E);
   type_letter(LED_Y);
@@ -37,4 +39,5 @@ bootAnimation (void) {
   type_letter(LED_9);
 
   EEPROM.update (EEPROM_BOOT_ANIMATION_LOCATION, 1);
+#endif
 }
