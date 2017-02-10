@@ -22,8 +22,8 @@ using namespace Akela::Ranges;
 
 namespace Akela {
   // --- state ---
-  uint16_t TapDance::timer;
-  uint8_t TapDance::timeOut = 5;
+  uint32_t TapDance::startTime;
+  uint16_t TapDance::timeOut = 200;
   uint8_t TapDance::tapCount[32];
   uint32_t TapDance::pressedState;
   uint32_t TapDance::triggeredState;
@@ -47,7 +47,7 @@ namespace Akela {
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Interrupt);
     bitWrite (triggeredState, idx, 1);
 
-    timer = 0;
+    startTime = millis ();
 
     if (bitRead (pressedState, idx))
       return;
@@ -58,6 +58,8 @@ namespace Akela {
   void
   TapDance::timeout (void) {
     uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
+
+    startTime = 0;
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
     bitWrite (triggeredState, idx, 1);
@@ -74,7 +76,7 @@ namespace Akela {
   TapDance::release (uint8_t tapDanceIndex) {
     tapDanceAction (tapDanceIndex, lastTapDanceRow, lastTapDanceCol, tapCount[tapDanceIndex], Release);
 
-    timer = 0;
+    startTime = 0;
     tapCount[tapDanceIndex] = 0;
     lastTapDanceKey.raw = Key_NoKey.raw;
 
@@ -88,7 +90,7 @@ namespace Akela {
     uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
 
     tapCount[idx]++;
-    timer = 0;
+    startTime = millis ();
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Tap);
 
@@ -211,10 +213,7 @@ namespace Akela {
     if (!isActive ())
       return;
 
-    if (timer < timeOut)
-      timer++;
-
-    if (timer >= timeOut)
+    if (startTime && (millis () - startTime) >= timeOut)
       timeout();
   }
 };
