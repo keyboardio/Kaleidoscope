@@ -169,7 +169,7 @@ build_all () {
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
         export LIBRARY="${plugin}"
-        (build ${plugin})
+        $0 ${plugin} build
     done
 }
 
