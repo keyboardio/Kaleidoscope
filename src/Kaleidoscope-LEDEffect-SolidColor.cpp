@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDEffect-SolidColor.h"
+#include "Kaleidoscope-LEDEffect-SolidColor.h"
 
 LEDSolidColor::LEDSolidColor (uint8_t r, uint8_t g, uint8_t b) {
   this->r = r;
