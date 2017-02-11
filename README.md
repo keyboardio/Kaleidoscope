@@ -1,4 +1,4 @@
-# Akela-Syster
+# Kaleidoscope-Syster
 
 ![status][st:experimental]
 
@@ -21,21 +21,22 @@ To use the plugin, one needs to include the header, and set up a function that
 will handle the symbol actions:
 
 ```c++
-#include <Akela-Syster.h>
-#include <Akela-Unicode.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Syster.h>
+#include <Kaleidoscope-Unicode.h>
 
-void systerAction (Akela::Syster::action_t action, const char *symbol) {
+void systerAction (KaleidoscopePlugins::Syster::action_t action, const char *symbol) {
   switch (action) {
-  case Akela::Syster::StartAction:
+  case KaleidoscopePlugins::Syster::StartAction:
     Unicode.type (0x2328);
     break;
-  case Akela::Syster::EndAction:
+  case KaleidoscopePlugins::Syster::EndAction:
     handle_key_event (Key_Backspace, 255, 255, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     handle_key_event (Key_Backspace, 255, 255, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     break;
-  case Akela::Syster::SymbolAction:
+  case KaleidoscopePlugins::Syster::SymbolAction:
     Serial.print ("systerAction: symbol=");
     Serial.println (symbol);
     if (strcmp (symbol, "coffee") == 0) {
@@ -48,8 +49,8 @@ void systerAction (Akela::Syster::action_t action, const char *symbol) {
 void setup () {
   Serial.begin (9600);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&Unicode, &Syster, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&Unicode, &Syster, NULL);
 }
 ```
 
@@ -66,18 +67,20 @@ methods outside of the object, however, that can be overridden:
 > Called whenever an action needs to be taken, which can happen in three cases:
 
 > First, when the `Syster` key is pressed, and the alternate processing starts.
-> In this case, `action` will be set to `Akela::Syster::StartAction`, and
-> `symbol` will be `NULL`. This function can be used to do some setup to make it
-> more obvious that the Syster input mode is active, such as sending a Unicode
-> symbol to the host, or lighting up LEDs, or anything else we'd like.
+> In this case, `action` will be set to
+> `KaleidoscopePlugins::Syster::StartAction`, and `symbol` will be `NULL`. This
+> function can be used to do some setup to make it more obvious that the Syster
+> input mode is active, such as sending a Unicode symbol to the host, or
+> lighting up LEDs, or anything else we'd like.
 >
 > Second, when the sequence is finished with a `Space`. In this case, `action`
-> will be set to `Akela::Syster::EndAction`, and `symbol` will be `NULL`. This
-> can be used to undo anything that the start action did, if need be.
+> will be set to `KaleidoscopePlugins::Syster::EndAction`, and `symbol` will be
+> `NULL`. This can be used to undo anything that the start action did, if need
+> be.
 >
 > Third, when the action for the symbol should be made. In this case, `action`
-> is set to `Akela::Syster::SymbolAction`, and `symbol` will be a C string. It
-> is up to us, what we do with this information, how we handle it.
+> is set to `KaleidoscopePlugins::Syster::SymbolAction`, and `symbol` will be a
+> C string. It is up to us, what we do with this information, how we handle it.
 
 ### `keyToChar(key)`
 
@@ -90,4 +93,4 @@ methods outside of the object, however, that can be overridden:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Syster/blob/master/examples/Syster/Syster.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Syster/blob/master/examples/Syster/Syster.ino

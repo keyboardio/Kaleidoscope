@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Syster -- Symbolic input system
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,15 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
 
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
-#define SYSTER (Key){ .raw = Akela::Ranges::SYSTER }
+#define SYSTER (Key){ .raw = KaleidoscopePlugins::Ranges::SYSTER }
 
-namespace Akela {
-  class Syster : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class Syster : public KaleidoscopePlugin {
   public:
     typedef enum {
       StartAction,
@@ -48,6 +49,6 @@ namespace Akela {
 };
 
 const char keyToChar (Key key);
-void systerAction (Akela::Syster::action_t action, const char *symbol);
+void systerAction (KaleidoscopePlugins::Syster::action_t action, const char *symbol);
 
-extern Akela::Syster Syster;
+extern KaleidoscopePlugins::Syster Syster;
