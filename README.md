@@ -1,5 +1,5 @@
-# Keyboardio-LEDEffect-Rainbow
+# Kaleidoscope-LEDEffect-Rainbow
 
-This is a plugin for [KeyboardioFirmware][fw], adding some Rainbow LED effects.
+This is a plugin for [Kaleidoscope][fw], adding some Rainbow LED effects.
 
- [fw]: https://github.com/keyboardio/KeyboardioFirmware
+ [fw]: https://github.com/keyboardio/Kaleidoscope

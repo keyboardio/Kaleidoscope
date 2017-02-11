@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDEffect-Rainbow.h"
+#include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 LEDRainbowEffect_::LEDRainbowEffect_ (void) {
 }
