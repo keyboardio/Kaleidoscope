@@ -1,4 +1,4 @@
-# Akela-TopsyTurvy
+# Kaleidoscope-TopsyTurvy
 
 ![status][st:stable]
 
@@ -17,7 +17,8 @@ To use the plugin, one needs to include the header, create a list, and configure
 the provided `TopsyTurvy` object to use the dictionary:
 
 ```c++
-#include <Akela-TopsyTurvy.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-TopsyTurvy.h>
 
 static const Key topsyTurvyList[] PROGMEM = {
   Key_1, Key_2, Key_3, Key_4, Key_5,
@@ -28,8 +29,8 @@ static const Key topsyTurvyList[] PROGMEM = {
 void setup () {
   TopsyTurvy.configure (topsyTurvyList);
   
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&TopsyTurvy, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&TopsyTurvy, NULL);
 }
 ```
 
@@ -59,4 +60,4 @@ The plugin provides the `TopsyTurvy` object, with the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-TopsyTurvy/blob/master/examples/TopsyTurvy/TopsyTurvy.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-TopsyTurvy/blob/master/examples/TopsyTurvy/TopsyTurvy.ino

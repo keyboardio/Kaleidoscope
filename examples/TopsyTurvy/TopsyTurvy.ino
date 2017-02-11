@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-TopsyTurvy -- Turn the effect of Shift upside down for certain keys
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-TopsyTurvy.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-TopsyTurvy.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -48,10 +49,10 @@ static const Key topsyTurvyList[] PROGMEM = {
 void setup () {
   TopsyTurvy.configure (topsyTurvyList);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&TopsyTurvy, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&TopsyTurvy, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }
