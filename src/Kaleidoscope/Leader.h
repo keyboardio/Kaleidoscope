@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Leader -- VIM-style leader keys
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,18 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
 
 #define LEADER_MAX_SEQUENCE_LENGTH 16
 
-#define LEAD(n) (Key){ .raw = Akela::Ranges::LEAD_FIRST + n }
+#define LEAD(n) (Key){ .raw = KaleidoscopePlugins::Ranges::LEAD_FIRST + n }
 
 #define LEADER_SEQ(...) { __VA_ARGS__, Key_NoKey }
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
 
-namespace Akela {
-  class Leader : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class Leader : public KaleidoscopePlugin {
   public:
     typedef void (*action_t) (uint8_t seqIndex);
     typedef struct {
@@ -58,4 +59,4 @@ namespace Akela {
   };
 };
 
-extern Akela::Leader Leader;
+extern KaleidoscopePlugins::Leader Leader;

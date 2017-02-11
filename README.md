@@ -1,4 +1,4 @@
-# Akela-Leader
+# Kaleidoscope-Leader
 
 ![status][st:stable]
 
@@ -34,7 +34,8 @@ create a dictionary, and configure the provided `Leader` object to use the
 dictionary:
 
 ```c++
-#include <Akela-Leader.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Leader.h>
 
 static void leaderA (void) {
   Serial.println ("leaderA");
@@ -44,7 +45,7 @@ static void leaderTX (void) {
   Serial.println ("leaderTX");
 }
 
-static const Akela::Leader::dictionary_t leaderDictionary PROGMEM = LEADER_DICT
+static const KaleidoscopePlugins::Leader::dictionary_t leaderDictionary PROGMEM = LEADER_DICT
   (
     {LEADER_SEQ (LEAD (0), Key_A), leaderA},
     {LEADER_SEQ (LEAD (0), Key_T, Key_X), leaderTX}
@@ -55,8 +56,8 @@ void setup () {
 
   Leader.configure (leaderDictionary);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&Leader, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&Leader, NULL);
 }
 ```
 
@@ -74,7 +75,7 @@ The plugin provides the `Leader` object, with the following methods:
 ### `.configure(dictionary)`
 
 > Tells `Leader` to use the specified dictionary. The dictionary is an array of
-> `Akela::Leader::dictionary_t` elements. Each element is made up of two
+> `Kaleidoscope::Leader::dictionary_t` elements. Each element is made up of two
 > elements, the first being a list of keys, the second an action to perform when
 > the sequence is found.
 
@@ -99,4 +100,4 @@ The plugin provides the `Leader` object, with the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Leader/blob/master/examples/Leader/Leader.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Leader/blob/master/examples/Leader/Leader.ino

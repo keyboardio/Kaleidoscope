@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Leader -- VIM-style leader keys
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-Leader.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Leader.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -47,7 +48,7 @@ static void leaderTestAA (uint8_t seqIndex) {
   Serial.println (F("leaderTestAA"));
 }
 
-static const Akela::Leader::dictionary_t leaderDictionary[] PROGMEM = LEADER_DICT
+static const KaleidoscopePlugins::Leader::dictionary_t leaderDictionary[] PROGMEM = LEADER_DICT
   (
    {LEADER_SEQ(LEAD(0), Key_A), leaderTestA},
    {LEADER_SEQ(LEAD(0), Key_A, Key_A), leaderTestAA}
@@ -58,10 +59,10 @@ void setup () {
 
   Leader.configure (leaderDictionary);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&Leader, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&Leader, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }
