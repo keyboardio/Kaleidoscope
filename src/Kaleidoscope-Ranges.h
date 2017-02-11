@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Ranges -- Common ranges, used by a number of Kaleidoscope plugins.
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,10 @@
 
 #pragma once
 
-#include <KeyboardioFirmware.h>
-
-namespace Akela {
+namespace KaleidoscopePlugins {
   namespace Ranges {
     enum {
-      AKELA_FIRST = 0xc000,
+      KALEIDOSCOPE_FIRST = 0xc000,
       OS_FIRST,
       OSM_FIRST   = OS_FIRST,
       OSM_LAST    = OSM_FIRST + 7,
@@ -43,7 +41,7 @@ namespace Akela {
       CYCLE,
       SYSTER,
 
-      AKELA_SAFE_START,
+      KALEIDOSCOPE_SAFE_START,
     };
   };
 };

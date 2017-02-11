@@ -1,4 +1,4 @@
-# Akela-Core
+# Kaleidoscope-Ranges
 
-This is the core of all Akela plugins, a set of functions, helpers and ranges
-common to all plugins. It should not be used directly.
+This plugin contains the ranges used by a number of Kaleidoscope plugins. Mostly
+useful for developers, but a dependency of other plugins, too.
