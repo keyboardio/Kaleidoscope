@@ -1,4 +1,4 @@
-#include <KeyboardioFirmware.h>
+#include <Kaleidoscope.h>
 #include <avr/wdt.h>
 #include <EEPROM.h>
 
