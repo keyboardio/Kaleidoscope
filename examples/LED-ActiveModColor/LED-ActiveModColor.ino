@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-LED-ActiveModColor.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LED-ActiveModColor.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -40,12 +41,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&LEDControl, &ActiveModColorEffect, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&LEDControl, &ActiveModColorEffect, NULL);
 
   ActiveModColorEffect.configure ({0x00, 0xff, 0xff});
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

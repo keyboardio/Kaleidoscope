@@ -1,4 +1,4 @@
-# Akela-LED-ActiveModColor
+# Kaleidoscope-LED-ActiveModColor
 
 ![status][st:experimental]
 
@@ -16,18 +16,19 @@ To use the plugin, one needs to include the header, and activate the effect. It
 is also possible to use a custom color instead of the white default.
 
 ```c++
-#include <Akela-LED-ActiveModColor.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LED-ActiveModColor.h>
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 
-  Keyboardio.use (&ActiveModColorEffect, NULL);
+  Kaleidoscope.use (&ActiveModColorEffect, NULL);
   
   ActiveModColorEffect.configure ({0x00, 0xff, 0xff});
 }
 ```
 
-It is recommended to place the activation (the `Keyboardio.use` call) of the
+It is recommended to place the activation (the `Kaleidoscope.use` call) of the
 plugin last, so that it can reliably override any other plugins that may work
 with the LEDs, and apply the highlight over those.
 
@@ -46,4 +47,4 @@ method:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-LED-ActiveModColor/blob/master/examples/LED-ActiveModColor/LED-ActiveModColor.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-ActiveModColor/blob/master/examples/LED-ActiveModColor/LED-ActiveModColor.ino

@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 
-#include <Akela/LED-ActiveModColor.h>
+namespace KaleidoscopePlugins {
+  namespace LEDEffects {
+    class ActiveModColorEffect : public KaleidoscopePlugin {
+    public:
+      ActiveModColorEffect (void);
+
+      static void configure (const cRGB highlightColor);
+      virtual void begin (void) final;
+
+    private:
+      static cRGB highlightColor;
+      static void loopHook (bool postClear);
+    };
+  };
+};
+
+extern KaleidoscopePlugins::LEDEffects::ActiveModColorEffect ActiveModColorEffect;
