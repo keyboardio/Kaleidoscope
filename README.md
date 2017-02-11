@@ -1,4 +1,4 @@
-# Akela-LED-Stalker
+# Kaleidoscope-LED-Stalker
 
 ![status][st:experimental]
 
@@ -15,17 +15,18 @@ trail of ghostly white lights, or a blazing trail of fire.
 To use the plugin, one needs to include the header, and select the effect.
 
 ```c++
-#include <Akela-LED-Stalker.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LED-Stalker.h>
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 
   StalkerEffect.configure (STALKER (Haunt, {0xff, 0, 0}));
-  Keyboardio.use (&StalkerEffect, NULL);
+  Kaleidoscope.use (&StalkerEffect, NULL);
 }
 ```
 
-It is recommended to place the activation of the plugin (the `Keyboardio.use`
+It is recommended to place the activation of the plugin (the `Kaleidoscope.use`
 call) as early as possible, so the plugin can catch all relevant key presses.
 The configuration can happen at any time, but using the `STALKER` macro is
 highly recommended.
@@ -76,4 +77,4 @@ The plugin provides the following effects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-LED-Stalker/blob/master/examples/LED-Stalker/LED-Stalker.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Stalker/blob/master/examples/LED-Stalker/LED-Stalker.ino

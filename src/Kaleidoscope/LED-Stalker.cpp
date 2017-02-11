@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-LED-Stalker -- Stalk keys pressed by lighting up and fading back the LED under them
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-LED-Stalker.h>
+#include <Kaleidoscope-LED-Stalker.h>
 
-namespace Akela {
+namespace KaleidoscopePlugins {
   namespace LEDEffects {
     uint8_t StalkerEffect::map[ROWS][COLS];
     StalkerEffect::ColorComputer *StalkerEffect::colorComputer;
@@ -136,4 +136,4 @@ namespace Akela {
   };
 };
 
-Akela::LEDEffects::StalkerEffect StalkerEffect;
+KaleidoscopePlugins::LEDEffects::StalkerEffect StalkerEffect;
