@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-ShapeShifter -- Change the shifted symbols on any key of your choice
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
 
-namespace Akela {
-  class ShapeShifter : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class ShapeShifter : public KaleidoscopePlugin {
   public:
     typedef struct {
       Key original, replacement;
@@ -48,4 +48,4 @@ namespace Akela {
   };
 };
 
-extern Akela::ShapeShifter ShapeShifter;
+extern KaleidoscopePlugins::ShapeShifter ShapeShifter;

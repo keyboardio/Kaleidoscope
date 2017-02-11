@@ -1,4 +1,4 @@
-# Akela-ShapeShifter
+# Kaleidoscope-ShapeShifter
 
 ![status][st:stable]
 
@@ -22,9 +22,10 @@ To use the plugin, one needs to include the header, create a dictionary, and
 configure the provided `ShapeShifter` object to use the dictionary:
 
 ```c++
-#include <Akela-ShapeShifter.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-ShapeShifter.h>
 
-static const Akela::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = {
+static const KaleidoscopePlugins::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = {
  {Key_1, Key_4},
  {Key_4, Key_1},
  {Key_NoKey, Key_NoKey},
@@ -33,8 +34,8 @@ static const Akela::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = 
 void setup () {
   ShapeShifter.configure (shapeShiftDictionary);
   
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&ShapeShifter, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&ShapeShifter, NULL);
 }
 ```
 
@@ -49,9 +50,9 @@ The plugin provides the `ShapeShifter` object, with the following methods:
 ### `.configure(dictionary)`
 
 > Tells `ShapeShifter` to use the specified dictionary. The dictionary is an
-> array of `Akela::ShapeShifter::dictionary_t` elements, which is just a very
-> verbose way of saying that its a pair of keys. The first one is the one to
-> replace, and the other is to replace it with.
+> array of `KaleidoscopePlugins::ShapeShifter::dictionary_t` elements, which is
+> just a very verbose way of saying that its a pair of keys. The first one is
+> the one to replace, and the other is to replace it with.
 >
 > Be aware that the replacement key will be pressed with `Shift` held, so do
 > keep that in mind!
@@ -72,4 +73,4 @@ The plugin provides the `ShapeShifter` object, with the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-ShapeShifter/blob/master/examples/ShapeShifter/ShapeShifter.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-ShapeShifter/blob/master/examples/ShapeShifter/ShapeShifter.ino

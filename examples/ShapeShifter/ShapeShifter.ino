@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-ShapeShifter -- Change the shifted symbols on any key of your choice
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-ShapeShifter.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-ShapeShifter.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -39,7 +40,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ),
 };
 
-static const Akela::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = {
+static const KaleidoscopePlugins::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = {
   {Key_1, Key_2},
   {Key_2, Key_1},
   {Key_NoKey, Key_NoKey},
@@ -48,10 +49,10 @@ static const Akela::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = 
 void setup () {
   ShapeShifter.configure (shapeShiftDictionary);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&ShapeShifter, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&ShapeShifter, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }
