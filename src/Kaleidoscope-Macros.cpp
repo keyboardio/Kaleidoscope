@@ -1,4 +1,4 @@
-#include "Keyboardio-Macros.h"
+#include "Kaleidoscope-Macros.h"
 
 __attribute__((weak))
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {

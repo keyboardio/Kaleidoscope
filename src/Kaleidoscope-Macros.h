@@ -1,13 +1,13 @@
 #pragma once
 
-#include <KeyboardioFirmware.h>
+#include <Kaleidoscope.h>
 
 #include "MacroKeyDefs.h"
 #include "MacroSteps.h"
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 
-class Macros_ : public KeyboardioPlugin {
+class Macros_ : public KaleidoscopePlugin {
   public:
     Macros_(void);
 
