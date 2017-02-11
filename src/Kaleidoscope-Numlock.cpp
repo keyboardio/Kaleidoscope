@@ -1,6 +1,6 @@
-#include "Keyboardio-Numlock.h"
+#include "Kaleidoscope-Numlock.h"
 #include "LEDUtils.h"
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope.h"
 #include "layers.h"
 
 uint8_t NumLock_::previousLEDMode;

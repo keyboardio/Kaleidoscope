@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Keyboardio-LEDControl.h"
-#include "Keyboardio-Macros.h"
+#include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-Macros.h"
 #include "LEDUtils.h"
 
 #define TOGGLENUMLOCK 0
