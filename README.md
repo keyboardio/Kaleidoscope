@@ -1,4 +1,4 @@
-# Akela-Heatmap
+# Kaleidoscope-Heatmap
 
 ![status][st:experimental]
 
@@ -20,11 +20,12 @@ The plugin comes with reasonable defaults pre-configured, all one needs to do is
 include the header, and make sure the plugin is in use:
 
 ```c++
-#include <Akela-Heatmap.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Heatmap.h>
 
 void setup (void) {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&HeatmapEffect, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&HeatmapEffect, NULL);
 }
 ```
 
@@ -58,4 +59,4 @@ The plugin provides two methods on the `HeatmapEffect` object:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Heatmap/blob/master/examples/Heatmap/Heatmap.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Heatmap/blob/master/examples/Heatmap/Heatmap.ino

@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Heatmap -- Heatmap LED effect for Kaleidoscope.
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-Heatmap.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Heatmap.h>
 
-namespace Akela {
+namespace KaleidoscopePlugins {
   uint8_t Heatmap::heatmap[ROWS][COLS];
   uint16_t Heatmap::totalKeys;
   uint8_t Heatmap::highestCount;
@@ -119,4 +120,4 @@ namespace Akela {
   }
 };
 
-Akela::Heatmap HeatmapEffect;
+KaleidoscopePlugins::Heatmap HeatmapEffect;
