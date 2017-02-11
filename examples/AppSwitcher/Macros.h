@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Keyboardio Example
+ * AppSwitcher -- A Kaleidoscope Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <Keyboardio-Macros.h>
+#include <Kaleidoscope-Macros.h>
 
 enum {
     M_APPSWITCH,

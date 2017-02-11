@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Keyboardio Example
+ * AppSwitcher -- A Kaleidoscope Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,13 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#define AKELA_HOSTOS_GUESSER 1
+#define KALEIDOSCOPE_HOSTOS_GUESSER 1
 
-#include <Akela-HostOS.h>
+#include <Kaleidoscope-HostOS.h>
 
 #include "Macros.h"
 
-using namespace Akela::HostOS;
+using namespace KaleidoscopePlugins::HostOS;
 
 static bool appSwitchActive = false;
 

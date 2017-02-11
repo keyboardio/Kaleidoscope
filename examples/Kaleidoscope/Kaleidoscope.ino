@@ -4,19 +4,19 @@
 
 #define DEBUG_SERIAL false
 
-#include "Keyboardio-MouseKeys.h"
-#include "Keyboardio-Macros.h"
-#include "Keyboardio-LEDControl.h"
-#include "Keyboardio-Numlock.h"
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope-MouseKeys.h"
+#include "Kaleidoscope-Macros.h"
+#include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-Numlock.h"
+#include "Kaleidoscope.h"
 #include "generated/keymaps.h"
 
 #include "LED-Off.h"
-#include "Keyboardio-LEDEffect-SolidColor.h"
-#include "Keyboardio-LEDEffect-Breathe.h"
-#include "Keyboardio-LEDEffect-Chase.h"
-#include "Keyboardio-LEDEffect-Rainbow.h"
-#include "Keyboardio-Model01-TestMode.h"
+#include "Kaleidoscope-LEDEffect-SolidColor.h"
+#include "Kaleidoscope-LEDEffect-Breathe.h"
+#include "Kaleidoscope-LEDEffect-Chase.h"
+#include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include "Kaleidoscope-Model01-TestMode.h"
 
 uint8_t primary_keymap = 0;
 uint8_t temporary_keymap = 0;
@@ -52,21 +52,21 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
-    Keyboardio.setup(KEYMAP_SIZE);
+    Kaleidoscope.setup(KEYMAP_SIZE);
 
-    Keyboardio.use(&TestMode,
-                   &LEDControl, &LEDOff,
-                   &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
-                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
+    Kaleidoscope.use(&TestMode,
+                     &LEDControl, &LEDOff,
+                     &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
+                     &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
 
-                   &Macros,
-                   &MouseKeys,
-                   NULL);
+                     &Macros,
+                     &MouseKeys,
+                     NULL);
 
     LEDOff.activate();
 }
 
 
 void loop() {
-    Keyboardio.loop();
+    Kaleidoscope.loop();
 }

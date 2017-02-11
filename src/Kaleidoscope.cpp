@@ -1,13 +1,13 @@
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope.h"
 #include <stdarg.h>
 
-Keyboardio_::Keyboardio_(void) {
+Kaleidoscope_::Kaleidoscope_(void) {
     memset(eventHandlers, 0, HOOK_MAX * sizeof(custom_handler_t));
     memset(loopHooks, 0, HOOK_MAX * sizeof(custom_handler_t));
 }
 
 void
-Keyboardio_::setup(const byte keymap_count) {
+Kaleidoscope_::setup(const byte keymap_count) {
     wdt_disable();
     delay(100);
     Keyboard.begin();
@@ -22,7 +22,7 @@ Keyboardio_::setup(const byte keymap_count) {
 custom_loop_t loopHooks[HOOK_MAX];
 
 void
-Keyboardio_::loop(void) {
+Kaleidoscope_::loop(void) {
     KeyboardHardware.scan_matrix();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
@@ -40,16 +40,16 @@ Keyboardio_::loop(void) {
 }
 
 void
-Keyboardio_::use(KeyboardioPlugin *plugin, ...) {
+Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
     va_list ap;
-    KeyboardioPlugin *p;
+    KaleidoscopePlugin *p;
 
     plugin->begin();
     va_start(ap, plugin);
-    while ((p = va_arg(ap, KeyboardioPlugin*)) != NULL) {
+    while ((p = va_arg(ap, KaleidoscopePlugin*)) != NULL) {
         p->begin();
     };
     va_end(ap);
 }
 
-Keyboardio_ Keyboardio;
+Kaleidoscope_ Kaleidoscope;
