@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Escape-OneShot -- Turn ESC into a key that cancels OneShots, if active.
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-OneShot.h>
-#include <Akela-Escape-OneShot.h>
+#pragma once
 
-namespace Akela {
-
-  EscapeOneShot::EscapeOneShot (void) {
-  }
-
-  void
-  EscapeOneShot::begin (void) {
-    event_handler_hook_use (eventHandlerHook);
-  }
-
-  Key
-  EscapeOneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (mappedKey.raw != Key_Esc.raw ||
-        (keyState & INJECTED) ||
-        !key_toggled_on (keyState))
-      return mappedKey;
-
-    if (!OneShot::isActive ())
-      return mappedKey;
-
-    OneShot::cancel ();
-
-    return Key_NoKey;
-  }
-};
-
-Akela::EscapeOneShot EscapeOneShot;
+#include <Kaleidoscope/Escape-OneShot.h>

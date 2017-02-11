@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Escape-OneShot -- Turn ESC into a key that cancels OneShots, if active.
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
 
-namespace Akela {
-  class EscapeOneShot : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class EscapeOneShot : public KaleidoscopePlugin {
   public:
     EscapeOneShot (void);
 
@@ -30,4 +30,4 @@ namespace Akela {
   };
 };
 
-extern Akela::EscapeOneShot EscapeOneShot;
+extern KaleidoscopePlugins::EscapeOneShot EscapeOneShot;

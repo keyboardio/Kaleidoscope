@@ -1,4 +1,4 @@
-# Akela-Escape-OneShot
+# Kaleidoscope-Escape-OneShot
 
 ![status][st:stable]
 
@@ -16,13 +16,14 @@ To use the plugin, one needs to include the header, and activate it. No further
 configuration is necessary.
 
 ```c++
-#include <Akela-OneShot.h>
-#include <Akela-Escape-OneShot.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-OneShot.h>
+#include <Kaleidoscope-Escape-OneShot.h>
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 
-  Keyboardio.use (&OneShot, &EscapeOneShot, NULL);
+  Kaleidoscope.use (&OneShot, &EscapeOneShot, NULL);
 }
 ```
 
@@ -37,4 +38,4 @@ The plugin provides the `EscapeOneShot` object, which has no public methods.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Escape-OneShot/blob/master/examples/Escape-OneShot/Escape-OneShot.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Escape-OneShot/blob/master/examples/Escape-OneShot/Escape-OneShot.ino
