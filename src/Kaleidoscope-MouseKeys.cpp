@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#include "Keyboardio-MouseKeys.h"
+#include "Kaleidoscope-MouseKeys.h"
 #include "MouseWrapper.h"
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope.h"
 
 uint8_t MouseKeys_::mouseMoveIntent;
 

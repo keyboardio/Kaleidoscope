@@ -1,9 +1,9 @@
 #pragma once
 
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope.h"
 #include "MouseKeyDefs.h"
 
-class MouseKeys_ : public KeyboardioPlugin {
+class MouseKeys_ : public KaleidoscopePlugin {
   public:
     MouseKeys_ (void);
 
