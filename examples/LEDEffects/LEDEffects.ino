@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-LEDEffects -- An assorted collection of LED effects for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-LEDEffects.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDEffects.h>
 
 #include "LED-Off.h"
 
@@ -43,12 +44,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&LEDControl, &LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&LEDControl, &LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect, NULL);
 
   MiamiEffect.activate ();
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

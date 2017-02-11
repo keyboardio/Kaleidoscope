@@ -1,4 +1,4 @@
-# Akela-TriColor
+# Kaleidoscope-TriColor
 
 ![status][st:stable]
 
@@ -10,7 +10,7 @@ The `TriColor` effect extension is a part of
 the [`LEDEffects`][plugin:ledeffects] library, not a stand-alone base library of
 its own. It is used to implement the effects in that library.
 
- [plugin:ledeffects]: https://github/keyboardio/Akela-LEDEffects
+ [plugin:ledeffects]: https://github/keyboardio/Kaleidoscope-LEDEffects
 
 It is a class that can be used to create LED effects that all follow a similar
 pattern: alphas and similar in one color; modifiers, special keys, and half the
@@ -24,16 +24,16 @@ Because the extension is part of the [`LEDEffects`][plugin:ledeffects] library,
 we need to include that header:
 
 ```c++
-#include <Akela-LEDEffects.h>
+#include <Kaleidoscope-LEDEffects.h>
 ```
 
 Then, we simply create a new instance of the `TriColor` class, with appropriate
 colors set for the constructor:
 
 ```c++
-Akela::LEDEffects::TriColor BlackAndWhiteEffect ((cRGB){0x00, 0x00, 0x00},
-                                                 (cRGB){0xff, 0xff, 0xff},
-                                                 (cRGB){0x80, 0x80, 0x80});
+KaleidoscopePlugins::LEDEffects::TriColor BlackAndWhiteEffect ((cRGB){0x00, 0x00, 0x00},
+                                                               (cRGB){0xff, 0xff, 0xff},
+                                                               (cRGB){0x80, 0x80, 0x80});
 ```
 
 The first argument is the base color, the second is for modifiers and special

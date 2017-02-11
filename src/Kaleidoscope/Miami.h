@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-LEDEffects -- An assorted collection of LED effects for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include <Akela-Core.h>
-#include <Akela/TriColor.h>
+#include <Kaleidoscope/TriColor.h>
 
-extern Akela::LEDEffects::TriColor JukeboxEffect;
-extern Akela::LEDEffects::TriColor JukeboxAlternateEffect;
+extern KaleidoscopePlugins::LEDEffects::TriColor MiamiEffect;

@@ -1,4 +1,4 @@
-# Akela-LEDEffects
+# Kaleidoscope-LEDEffects
 
 ![status][st:stable]
 
@@ -17,10 +17,11 @@ does not enable anything by default, and we will have to selectively enable the
 effects we are interested in.
 
 ```c++
-#include <Akela-LEDEffects.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDEffects.h>
 ```
 
-Then, in the `setup()` method of our Sketch, we will call `Keyboardio.use()`,
+Then, in the `setup()` method of our Sketch, we will call `Kaleidoscope.use()`,
 with the selected effect objects.
 
 ## Included effects
@@ -67,4 +68,4 @@ The plugin provides a single method on each of the included effect objects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-LEDEffects/blob/master/examples/LEDEffects/LEDEffects.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LEDEffects/blob/master/examples/LEDEffects/LEDEffects.ino
