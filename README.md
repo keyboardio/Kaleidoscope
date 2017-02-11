@@ -1,4 +1,4 @@
-# Akela-Unicode
+# Kaleidoscope-Unicode
 
 ![status][st:stable]
 
@@ -16,15 +16,16 @@ codepoints.
 ## Using the extension
 
 Using the extension is as simple as including the header, registering it with
-`Keyboardio.use()`, and then using any of the methods provided by the `Unicode`
+`Kaleidoscope.use()`, and then using any of the methods provided by the `Unicode`
 singleton object.
 
 ```c++
-#include <Akela-Unicode.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Unicode.h>
 
 void setup (void) {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&Unicode, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&Unicode, NULL);
   
   Unicode.type (0x2328);
 }
@@ -80,14 +81,14 @@ functionality.
 
 ### `unicodeCustomStart()`
 
-> If the host OS type is set to `Akela::HostOS::Custom`, then this function will
+> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
 > be called whenever the [`.start()`](#start) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed to enter unicode input mode.
 
 ### `unicodeCustomInput()`
 
-> If the host OS type is set to `Akela::HostOS::Custom`, then this function will
+> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
 > be called whenever the [`.input()`](#input) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed while inputting the hex code itself (such as holding additional
@@ -95,7 +96,7 @@ functionality.
 
 ### `unicodeCustomEnd()`
 
-> If the host OS type is set to `Akela::HostOS::Custom`, then this function will
+> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
 > be called whenever the [`.end()`](#end) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed to leave unicode input mode.
@@ -105,4 +106,4 @@ functionality.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Unicode/blob/master/examples/Unicode/Unicode.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Unicode/blob/master/examples/Unicode/Unicode.ino

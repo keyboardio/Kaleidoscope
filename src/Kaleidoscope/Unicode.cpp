@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Unicode -- Unicode input helpers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-Unicode.h>
+#include <Kaleidoscope-Unicode.h>
 
-namespace Akela {
+namespace KaleidoscopePlugins {
 
   Unicode::Unicode (void) {
   }
@@ -175,4 +175,4 @@ void
 unicodeCustomInput (void) {
 }
 
-Akela::Unicode Unicode;
+KaleidoscopePlugins::Unicode Unicode;

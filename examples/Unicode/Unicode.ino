@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Unicode -- Unicode input helpers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define AKELA_HOSTOS_GUESSER 1
+#define KALEIDOSCOPE_HOSTOS_GUESSER 1
 
-#include <Akela-Unicode.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Unicode.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -42,12 +43,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&Unicode, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&Unicode, NULL);
 
   Unicode.type (0x2328);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

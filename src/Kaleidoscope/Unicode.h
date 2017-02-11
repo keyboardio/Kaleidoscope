@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Unicode -- Unicode input helpers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,29 @@
 
 #pragma once
 
-#include <Akela/Unicode.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-HostOS.h>
+
+namespace KaleidoscopePlugins {
+  class Unicode : public KaleidoscopePlugin {
+  public:
+    Unicode (void);
+
+    virtual void begin (void) final;
+
+    static void start (void);
+    static void input (void);
+    static void end (void);
+
+    static void type (uint32_t unicode);
+    static void typeCode (uint32_t unicode);
+  };
+};
+
+Key hexToKey (uint8_t hex);
+
+void unicodeCustomStart (void);
+void unicodeCustomEnd (void);
+void unicodeCustomInput (void);
+
+extern KaleidoscopePlugins::Unicode Unicode;
