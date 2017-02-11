@@ -1,5 +1,0 @@
-#NAME: QWERTY_MOO
-LEDEffectNext   1 2 3 4 5  skip                 LCtrl       RCtrl 	  skip                  6 7 8 9 0 Keymap2
-`               Q W E R T  KeymapNext_Momentary Backspace   Space   KeymapNext_Momentary  Y U I O P =
-\   	        A S D F G  Tab                  LShift      RShift	  Return                H J K L ; '
-PageDn 	        Z X C V B  Esc                  LGUI        RAlt 	  skip                  N M , . / -
