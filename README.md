@@ -1,4 +1,4 @@
-# Akela-HostOS
+# Kaleidoscope-HostOS
 
 ![status][st:stable]
 
@@ -19,35 +19,36 @@ information can then be reused by other plugins.
 See the [Unicode][plugin:unicode] extension for an example about how to use
 `HostOS` in practice.
 
- [plugin:unicode]: https://github.com/keyboardio/Akela-Unicode
+ [plugin:unicode]: https://github.com/keyboardio/Kaleidoscope-Unicode
 
 ## Using the extension
 
 The extension provides a `HostOS` singleton object. It can either be a simple
 one without auto-detection (the default), or one that will try to detect the
 Host OS, using the [FingerprintUSBHost][fprdetect] library. To enable
-auto-detection, `AKELA_HOSTOS_GUESSER` must be defined before including the
-`HostOS` library header.
+auto-detection, `KALEIDOSCOPE_HOSTOS_GUESSER` must be defined before including
+the `HostOS` library header.
 
  [fprdetect]: https://github.com/keyboardio/FingerprintUSBHost
 
 ```c++
-#define AKELA_HOSTOS_GUESSER 1
+#define KALEIDOSCOPE_HOSTOS_GUESSER 1
 
-#include <Akela-HostOS.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-HostOS.h>
 
 void someFunction (void) {
-  if (HostOS.os() == Akela::HostOS::LINUX) {
+  if (HostOS.os() == Kaleidoscope::HostOS::LINUX) {
     // do something linux-y
   }
-  if (HostOS.os() == Akela::HostOS::OSX) {
+  if (HostOS.os() == Kaleidoscope::HostOS::OSX) {
     // do something OSX-y
   }
 }
 
 void setup (void) {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&HostOS);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&HostOS);
 }
 ```
 
@@ -69,4 +70,4 @@ The extension provides the following methods on the `HostOS` singleton:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the extension.
 
- [plugin:example]: https://github.com/keyboardio/Akela-HostOS/blob/master/examples/HostOS/HostOS.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-HostOS/blob/master/examples/HostOS/HostOS.ino

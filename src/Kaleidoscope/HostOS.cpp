@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,37 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela/HostOS-Guesser.h>
+#include <Kaleidoscope/HostOS.h>
 
-#include <FingerprintUSBHost.h>
+#include <EEPROM.h>
 
-namespace Akela {
+#define EEPROM_HOSTOS_TYPE_LOCATION 2
+
+namespace KaleidoscopePlugins {
   namespace HostOS {
-    Guesser::Guesser (void) {
+    void
+    Base::begin (void) {
+      if (isConfigured)
+        return;
+
+      isConfigured = true;
+
+      if (osType != AUTO) {
+        return;
+      }
+
+      if ((osType = (Type)EEPROM.read (EEPROM_HOSTOS_TYPE_LOCATION)) != AUTO)
+        return;
+
+      autoDetect ();
+    }
+
+    HostOS::Type
+    Base::os (void) {
+      if (osType == AUTO)
+        autoDetect ();
+
+      return osType;
     }
 
     void
-    Guesser::autoDetect (void) {
-      Serial.begin (9600);
-
-      delay (15000);
-
-      switch (FingerprintUSBHost.guessHostOS ()) {
-      case GuessedHost::WINDOWS:
-        osType = WINDOWS;
-        break;
-      case GuessedHost::LINUX:
-        osType = LINUX;
-        break;
-      case GuessedHost::MACOS:
-        osType = OSX;
-        break;
-      default:
-        osType = OTHER;
-        break;
-      }
+    Base::os (HostOS::Type osType_) {
+      osType = osType_;
+      EEPROM.update (EEPROM_HOSTOS_TYPE_LOCATION, osType);
     }
   };
 };
-
-Akela::HostOS::Guesser HostOS;

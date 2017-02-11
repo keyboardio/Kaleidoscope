@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-HostOS.h>
+#include <Kaleidoscope-HostOS.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -42,13 +42,13 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 void setup () {
   Serial.begin (9600);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&HostOS, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&HostOS, NULL);
 
   Serial.print ("Host OS id is: ");
   Serial.println (HostOS.os (), DEC);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

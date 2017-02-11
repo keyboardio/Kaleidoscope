@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela/HostOS-Tracker.h>
+#pragma once
 
-Akela::HostOS::Tracker HostOS;
+#include <Kaleidoscope/HostOS.h>
+
+namespace KaleidoscopePlugins {
+  namespace HostOS {
+    class Tracker : public Base {
+    public:
+      Tracker (void) {};
+
+    protected:
+      virtual void autoDetect (void) final {};
+    };
+  };
+};

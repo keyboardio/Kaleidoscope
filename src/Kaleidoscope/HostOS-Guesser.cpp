@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,34 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <Kaleidoscope/HostOS-Guesser.h>
 
-#include <Akela-Core.h>
+#include <FingerprintUSBHost.h>
 
-namespace Akela {
+namespace KaleidoscopePlugins {
   namespace HostOS {
-    typedef enum {
-      LINUX,
-      OSX,
-      WINDOWS,
-      OTHER,
+    Guesser::Guesser (void) {
+    }
 
-      AUTO = 0xff,
-    } Type;
+    void
+    Guesser::autoDetect (void) {
+      Serial.begin (9600);
 
-    class Base : public KeyboardioPlugin {
-    public:
-      virtual void begin (void) final;
+      delay (15000);
 
-      Type os (void);
-      void os (Type osType);
-
-    protected:
-      virtual void autoDetect (void) = 0;
-      Type osType;
-
-    private:
-      bool isConfigured = false;
-    };
+      switch (FingerprintUSBHost.guessHostOS ()) {
+      case GuessedHost::WINDOWS:
+        osType = WINDOWS;
+        break;
+      case GuessedHost::LINUX:
+        osType = LINUX;
+        break;
+      case GuessedHost::MACOS:
+        osType = OSX;
+        break;
+      default:
+        osType = OTHER;
+        break;
+      }
+    }
   };
 };
+
+KaleidoscopePlugins::HostOS::Guesser HostOS;
