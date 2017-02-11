@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDEffect-Chase.h"
+#include "Kaleidoscope-LEDEffect-Chase.h"
 
 LEDChaseEffect_::LEDChaseEffect_ (void) {
 }

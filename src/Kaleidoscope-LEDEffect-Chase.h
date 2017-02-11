@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Keyboardio-LEDControl.h"
+#include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
 class LEDChaseEffect_ : LEDMode {
