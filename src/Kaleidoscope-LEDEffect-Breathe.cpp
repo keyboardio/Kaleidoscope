@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDEffect-Breathe.h"
+#include "Kaleidoscope-LEDEffect-Breathe.h"
 
 LEDBreatheEffect_::LEDBreatheEffect_ (void) {
 }

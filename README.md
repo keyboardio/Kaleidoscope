@@ -1,5 +1,5 @@
-# Keyboardio-LEDEffect-Breathe
+# Kaleidoscope-LEDEffect-Breathe
 
-This is a plugin for [KeyboardioFirmware][fw], adding a breathe LED effect.
+This is a plugin for [Kaleidoscope][fw], adding a breathe LED effect.
 
- [fw]: https://github.com/keyboardio/KeyboardioFirmware
+ [fw]: https://github.com/keyboardio/Kaleidoscope
