@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-TapDance -- Tap-dance keys
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-TapDance.h>
+#include <Kaleidoscope-TapDance.h>
 
-using namespace Akela::Ranges;
+using namespace KaleidoscopePlugins::Ranges;
 
-namespace Akela {
+namespace KaleidoscopePlugins {
   // --- state ---
   uint32_t TapDance::startTime;
   uint16_t TapDance::timeOut = 200;
@@ -220,7 +220,7 @@ namespace Akela {
 
 __attribute__((weak))
 void
-tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction) {
+tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
 }
 
-Akela::TapDance TapDance;
+KaleidoscopePlugins::TapDance TapDance;

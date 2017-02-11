@@ -1,4 +1,4 @@
-# Akela-TapDance
+# Kaleidoscope-TapDance
 
 ![status][st:stable]
 
@@ -40,20 +40,22 @@ This is to preserve the order of keys pressed.
 
 In both of these cases, the [`tapDanceAction`][tdaction] will be called, with
 `tapDanceIndex` set to the index of the tap-dance action (as set in the keymap),
-the `tapCount`, and `tapDanceAction` set to either `Akela::TapDance::Interrupt`,
-or `Akela::TapDance::Timeout`. If we continue holding the key, then as long as
-it is held, the same function will be called with `tapDanceAction` set to
-`Akela::TapDance::Hold`. When the key is released, after either an `Interrupt`
-or `Timeout` action was triggered, the function will be called with
-`tapDanceAction` set to `Akela::TapDance::Release`.
+the `tapCount`, and `tapDanceAction` set to either
+`KaleidoscopePlugins::TapDance::Interrupt`, or
+`KaleidoscopePlugins::TapDance::Timeout`. If we continue holding the key, then
+as long as it is held, the same function will be called with `tapDanceAction`
+set to `KaleidoscopePlugins::TapDance::Hold`. When the key is released, after
+either an `Interrupt` or `Timeout` action was triggered, the function will be
+called with `tapDanceAction` set to `KaleidoscopePlugins::TapDance::Release`.
 
 These actions allow us to create sophisticated tap-dance setups, where one can
 tap a key twice and hold it, and have it repeat, for example.
 
 There is one additional value the `tapDanceAction` parameter can take:
-`Akela::TapDance::Tap`. It is called with this argument for each and every tap,
-even if no action is to be triggered yet. This is so that we can have a way to
-do some side-effects, like light up LEDs to show progress, and so on.
+`KaleidoscopePlugins::TapDance::Tap`. It is called with this argument for each
+and every tap, even if no action is to be triggered yet. This is so that we can
+have a way to do some side-effects, like light up LEDs to show progress, and so
+on.
 
 ## Using the plugin
 
@@ -63,14 +65,15 @@ to implement the [`tapDanceAction`][tdaction] function that gets called each
 time an action is to be performed.
 
 ```c++
-#include <Akela-TapDance.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-TapDance.h>
 
 // Somewhere in the keymap:
 TD(0)
 
 // later in the Sketch:
 void tapDanceAction (uint8_t tapDanceIndex, uint8_t tapCount, 
-                     Akela::TapDance::ActionType tapDanceAction) {
+                     KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
   switch (tapDanceIndex) {
   case 0:
     return tapDanceActionKeys (tapCount, tapDanceAction,
@@ -79,8 +82,8 @@ void tapDanceAction (uint8_t tapDanceIndex, uint8_t tapCount,
 }
 
 void setup (void) {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&TapDance, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&TapDance, NULL);
 }
 ```
 
@@ -143,4 +146,4 @@ method only:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-TapDance/blob/master/examples/TapDance/TapDance.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-TapDance/blob/master/examples/TapDance/TapDance.ino

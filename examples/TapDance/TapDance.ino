@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-TapDance -- Tap-dance keys
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-TapDance.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-TapDance.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -39,11 +40,11 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ),
 };
 
-static void tapDanceEsc (uint8_t tapDanceIndex, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction) {
+static void tapDanceEsc (uint8_t tapDanceIndex, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
   tapDanceActionKeys (tapCount, tapDanceAction, Key_Esc, Key_Tab);
 }
 
-void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, Akela::TapDance::ActionType tapDanceAction) {
+void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
   switch (tapDanceIndex) {
   case 0:
     return tapDanceActionKeys (tapCount, tapDanceAction, Key_Tab, Key_Esc);
@@ -53,10 +54,10 @@ void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount
 }
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&TapDance, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&TapDance, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }
