@@ -1,5 +1,5 @@
 #include "BootAnimation.h"
-#include "Keyboardio-LEDControl.h"
+#include "Kaleidoscope-LEDControl.h"
 #include "EEPROM.h"
 
 #define EEPROM_BOOT_ANIMATION_LOCATION 1

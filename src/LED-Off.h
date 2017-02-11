@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Keyboardio-LEDControl.h"
+#include "Kaleidoscope-LEDControl.h"
 
 class LEDOff_ : public LEDMode {
  public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <KeyboardioFirmware.h>
+#include <Kaleidoscope.h>
 
 #define LED_MAX_MODES 24
 
@@ -8,7 +8,7 @@
 
 #define Key_LEDEffectNext (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE }
 
-class LEDMode : public KeyboardioPlugin {
+class LEDMode : public KaleidoscopePlugin {
  public:
   virtual void begin (void);
   virtual void setup (void) {};
@@ -17,7 +17,7 @@ class LEDMode : public KeyboardioPlugin {
   virtual void activate (void);
 };
 
-class LEDControl_ : public KeyboardioPlugin {
+class LEDControl_ : public KaleidoscopePlugin {
   public:
     LEDControl_(void);
 

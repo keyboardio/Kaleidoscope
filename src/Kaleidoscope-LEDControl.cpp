@@ -1,4 +1,4 @@
-#include "Keyboardio-LEDControl.h"
+#include "Kaleidoscope-LEDControl.h"
 
 LEDMode *LEDControl_::modes[LED_MAX_MODES];
 uint8_t LEDControl_::previousMode, LEDControl_::mode;
@@ -10,7 +10,7 @@ LEDMode::activate (void) {
 
 void
 LEDMode::begin(void) {
-  Keyboardio.use(&LEDControl, NULL);
+  Kaleidoscope.use(&LEDControl, NULL);
   LEDControl.mode_add(this);
 }
 
