@@ -1,4 +1,4 @@
-# Akela-Cycle
+# Kaleidoscope-Cycle
 
 ![status][st:stable]
 
@@ -24,7 +24,7 @@ each time the cycling key triggers.
  [cycleaction]: #cycleactionpreviouskey-cyclecount
 
 ```c++
-#include <Akela-Cycle.h>
+#include <Kaleidoscope-Cycle.h>
 
 // Somewhere in the keymap:
 Key_Cycle
@@ -37,9 +37,9 @@ void cycleAction (Key previousKey, uint8_t cycleCount) {
 }
 
 void setup (void) {
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
   
-  Keyboardio.use (&Cycle, NULL);
+  Kaleidoscope.use (&Cycle, NULL);
 }
 ```
 
@@ -96,4 +96,4 @@ method explained below.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-Cycle/blob/master/examples/Cycle/Cycle.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Cycle/blob/master/examples/Cycle/Cycle.ino

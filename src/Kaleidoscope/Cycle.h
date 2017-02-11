@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,17 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope-Ranges.h>
 
-#define Key_Cycle (Key){ .raw = Akela::Ranges::CYCLE }
+#define Key_Cycle (Key){ .raw = KaleidoscopePlugins::Ranges::CYCLE }
 
 #define cycleThrough(...) ({                                \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };     \
       Cycle.replace (sizeof (__k) / sizeof (Key), &__k[0]); \
     })
 
-namespace Akela {
-  class Cycle : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class Cycle : public KaleidoscopePlugin {
   public:
     Cycle (void);
 
@@ -47,4 +47,4 @@ namespace Akela {
 
 void cycleAction (Key previousKey, uint8_t cycleCount);
 
-extern Akela::Cycle Cycle;
+extern KaleidoscopePlugins::Cycle Cycle;
