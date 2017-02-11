@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-OneShot -- One-shot modifiers and layers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,13 +18,14 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
 
-#define OSM(kc) (Key) {.raw = Akela::Ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LCtrl.keyCode}
-#define OSL(n) (Key) {.raw = Akela::Ranges::OSL_FIRST + n}
+#define OSM(kc) (Key) {.raw = KaleidoscopePlugins::Ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LCtrl.keyCode}
+#define OSL(n) (Key) {.raw = KaleidoscopePlugins::Ranges::OSL_FIRST + n}
 
-namespace Akela {
-  class OneShot : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class OneShot : public KaleidoscopePlugin {
   public:
     OneShot (void);
 
@@ -71,4 +72,4 @@ namespace Akela {
   };
 };
 
-extern Akela::OneShot OneShot;
+extern KaleidoscopePlugins::OneShot OneShot;

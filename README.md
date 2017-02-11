@@ -1,4 +1,4 @@
-# Akela-OneShot
+# Kaleidoscope-OneShot
 
 ![status][st:stable]
 
@@ -29,27 +29,29 @@ There are two major ways in which the plugin can be used: one is to turn
 existing modifiers or momentary layer toggles into one-shot keys:
 
 ```c++
-#include <Akela-OneShot.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-OneShot.h>
 
 void setup () {
   OneShot.enableAuto ();
   
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&OneShot, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&OneShot, NULL);
 }
 ```
 
 The other is to explicitly mark keys as one-shot in the keymap:
 
 ```c++
-#include <Akela-OneShot.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-OneShot.h>
 
 // somewhere in the keymap...
 OSM(LCtrl), OSL(_FN)
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&OneShot, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&OneShot, NULL);
 }
 ```
 
@@ -68,7 +70,7 @@ There are two macros the plugin provides:
 > Takes a layer number as argument, and sets up the key to act as a one-shot
 > layer key.
 >
-> Please note that while `KeyboardioFirmware` supports more, one-shot layers are
+> Please note that while `KaleidoscopeFirmware` supports more, one-shot layers are
 > limited to 24 layers only.
 
 ## Plugin methods
@@ -83,7 +85,7 @@ modifiers and one-shot layer keys. It has the following methods:
 > injects a modifier or a momentary layer switch key, those will be left alone,
 > as-is.
 >
-> This **must** be called before any `Keyboardio.use()` call in the `setup()`
+> This **must** be called before any `Kaleidoscope.use()` call in the `setup()`
 > method of your Sketch.
 
 ### `.isActive()`
@@ -147,4 +149,4 @@ modifiers and one-shot layer keys. It has the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-OneShot/blob/master/examples/OneShot/OneShot.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-OneShot/blob/master/examples/OneShot/OneShot.ino

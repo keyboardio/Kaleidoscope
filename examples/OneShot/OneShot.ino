@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-OneShot -- One-shot modifiers and layers
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-OneShot.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-OneShot.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -62,10 +63,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 void setup () {
   OneShot.enableAuto ();
 
-  Keyboardio.use (&OneShot, NULL);
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&OneShot, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }
