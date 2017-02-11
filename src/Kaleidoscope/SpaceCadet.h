@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-SpaceCadet -- Space Cadet Shift
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,28 @@
 
 #pragma once
 
-#include <Akela/SpaceCadet.h>
+#include <Kaleidoscope.h>
+
+namespace KaleidoscopePlugins {
+  class SpaceCadetShift : public KaleidoscopePlugin {
+  public:
+    SpaceCadetShift (void);
+
+    virtual void begin (void) final;
+
+    static void configure (Key left, Key right);
+    static uint16_t timeOut;
+
+    void on (void);
+    void off (void);
+  private:
+    static uint8_t parenNeeded;
+    static uint32_t startTime;
+    static Key leftParen, rightParen;
+
+    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+    static Key noOpHook (Key, byte row, byte col, uint8_t keyState);
+  };
+};
+
+extern KaleidoscopePlugins::SpaceCadetShift SpaceCadetShift;

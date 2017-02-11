@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-SpaceCadet -- Space Cadet Shift
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-SpaceCadet.h>
+#include <Kaleidoscope-SpaceCadet.h>
 
-namespace Akela {
+namespace KaleidoscopePlugins {
 
   uint8_t SpaceCadetShift::parenNeeded;
   uint32_t SpaceCadetShift::startTime;
@@ -118,4 +118,4 @@ namespace Akela {
 
 };
 
-Akela::SpaceCadetShift SpaceCadetShift;
+KaleidoscopePlugins::SpaceCadetShift SpaceCadetShift;

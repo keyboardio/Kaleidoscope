@@ -1,4 +1,4 @@
-# Akela-SpaceCadet
+# Kaleidoscope-SpaceCadet
 
 ![status][st:stable]
 
@@ -30,11 +30,12 @@ Using the plugin with its defaults is as simple as including the header, and
 enabling the plugin:
 
 ```c++
-#include <Akela-SpaceCadet.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-SpaceCadet.h>
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&SpaceCadetShift, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&SpaceCadetShift, NULL);
 }
 ```
 
@@ -59,7 +60,7 @@ The plugin has a number of methods available on the `SpaceCadetShift` object:
 ```c++
 void setup () {
   SpaceCadetShift.configure(Key_8, Key_9);
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 }
 ```
 
@@ -87,4 +88,4 @@ void setup () {
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino
