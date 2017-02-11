@@ -1,4 +1,4 @@
-# Akela-GhostInTheFirmware
+# Kaleidoscope-GhostInTheFirmware
 
 ![status][st:experimental]
 
@@ -24,8 +24,9 @@ way to trigger starting the sequence, and a macro is the most convenient way for
 that.
 
 ```c++
-#include <Akela-GhostInTheFirmware.h>
-#include <Keyboardio-Macros.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-GhostInTheFirmware.h>
+#include <Kaleidoscope-Macros.h>
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == 0 && key_toggled_on (keyState))
@@ -34,16 +35,16 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-static const Akela::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
+static const KaleidoscopePlugins::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
   {0, 0, 200, 50},
   {0, 0, 0}
 };
 
 void setup () {
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 
   GhostInTheFirmware.configure (ghostKeys);
-  Keyboardio.use (&GhostInTheFirmware, &Macros, NULL);
+  Kaleidoscope.use (&GhostInTheFirmware, &Macros, NULL);
 }
 ```
 
@@ -76,4 +77,4 @@ method:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-GhostInTheFirmware/blob/master/examples/GhostInTheFirmware/GhostInTheFirmware.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-GhostInTheFirmware/blob/master/examples/GhostInTheFirmware/GhostInTheFirmware.ino

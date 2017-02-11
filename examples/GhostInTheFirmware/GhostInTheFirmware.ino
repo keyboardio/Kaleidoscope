@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-GhostInTheFirmware -- Let the keyboard write for you!
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-GhostInTheFirmware.h>
-#include <Akela-LED-Stalker.h>
-#include <Keyboardio-LEDControl.h>
-#include <Keyboardio-Macros.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-GhostInTheFirmware.h>
+#include <Kaleidoscope-LED-Stalker.h>
+#include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-Macros.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -53,7 +54,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-static const Akela::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
+static const KaleidoscopePlugins::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
   {0, 6, 200, 50},
   {0, 5, 200, 50},
   {0, 4, 200, 50},
@@ -125,16 +126,16 @@ static const Akela::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
 void setup () {
   Serial.begin (9600);
 
-  Keyboardio.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup (KEYMAP_SIZE);
 
   GhostInTheFirmware.configure (ghostKeys);
   StalkerEffect.configure (STALKER (BlazingTrail, NULL));
 
-  Keyboardio.use (&LEDControl, &GhostInTheFirmware, &StalkerEffect, &Macros,
-                  NULL);
+  Kaleidoscope.use (&LEDControl, &GhostInTheFirmware, &StalkerEffect, &Macros,
+                    NULL);
   event_handler_hook_use (eventDropper);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-GhostInTheFirmware -- Let the keyboard write for you!
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
 
-namespace Akela {
-  class GhostInTheFirmware : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class GhostInTheFirmware : public KaleidoscopePlugin {
   public:
     typedef struct {
       byte row;
@@ -50,4 +50,4 @@ namespace Akela {
 
 };
 
-extern Akela::GhostInTheFirmware GhostInTheFirmware;
+extern KaleidoscopePlugins::GhostInTheFirmware GhostInTheFirmware;
