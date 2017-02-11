@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-MagicCombo -- Magic combo framework
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <Akela-Core.h>
+#include <Kaleidoscope.h>
 
-namespace Akela {
-  class MagicCombo : public KeyboardioPlugin {
+namespace KaleidoscopePlugins {
+  class MagicCombo : public KaleidoscopePlugin {
   public:
     typedef struct {
       uint32_t leftHand, rightHand;
@@ -44,4 +44,4 @@ namespace Akela {
 
 void magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand);
 
-extern Akela::MagicCombo MagicCombo;
+extern KaleidoscopePlugins::MagicCombo MagicCombo;

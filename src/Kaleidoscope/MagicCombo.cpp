@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-MagicCombo -- Magic combo framework
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-MagicCombo.h>
+#include <Kaleidoscope-MagicCombo.h>
 
 #if defined(ARDUINO_AVR_MODEL01)
 #define LEFTHANDSTATE  KeyboardHardware.leftHandState
@@ -28,7 +28,7 @@
 #define RIGHTHANDSTATE KeyboardHardware.scanner.rightHandState
 #endif
 
-namespace Akela {
+namespace KaleidoscopePlugins {
 
   const MagicCombo::dictionary_t *MagicCombo::dictionary;
   uint16_t MagicCombo::minInterval = 500;
@@ -79,4 +79,4 @@ void
 magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
 }
 
-Akela::MagicCombo MagicCombo;
+KaleidoscopePlugins::MagicCombo MagicCombo;

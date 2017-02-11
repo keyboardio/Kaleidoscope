@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-MagicCombo -- Magic combo framework
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Akela/MagicCombo.h>
+#include <Kaleidoscope/MagicCombo.h>

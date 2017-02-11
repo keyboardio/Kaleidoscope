@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Akela -- Animated Keyboardio Extension Library for Anything
+ * Kaleidoscope-MagicCombo -- Magic combo framework
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Akela-MagicCombo.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-MagicCombo.h>
 
 void magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
   switch (comboIndex) {
@@ -26,7 +27,7 @@ void magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHan
   }
 }
 
-static const Akela::MagicCombo::dictionary_t dictionary[] PROGMEM = {
+static const KaleidoscopePlugins::MagicCombo::dictionary_t dictionary[] PROGMEM = {
   {R1C3 | R2C1 | R2C4 | R2C7, // left hand,
    R0C11 | R1C12 | R2C14      //right hand
   },
@@ -59,10 +60,10 @@ void setup () {
 
   MagicCombo.configure (dictionary);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&MagicCombo, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&MagicCombo, NULL);
 }
 
 void loop () {
-  Keyboardio.loop ();
+  Kaleidoscope.loop ();
 }

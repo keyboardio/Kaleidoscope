@@ -1,4 +1,4 @@
-# Akela-MagicCombo
+# Kaleidoscope-MagicCombo
 
 ![status][st:stable]
 
@@ -19,9 +19,10 @@ To use the extension, we must include the header, create a dictionary, and
 configure the plugin to use it:
 
 ```c++
-#include <Akela-MagicCombo.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-MagicCombo.h>
 
-static const Akela::MagicCombo::dictionary_t dictionary[] PROGMEM = {
+static const KaleidoscopePlugins::MagicCombo::dictionary_t dictionary[] PROGMEM = {
   {R1C3 | R2C1 | R2C4 | R2C7, // left hand,
    R0C11 | R1C12 | R2C14      //right hand
   },
@@ -31,8 +32,8 @@ static const Akela::MagicCombo::dictionary_t dictionary[] PROGMEM = {
 void setup (void) {
   MagicCombo.configure (dictionary);
 
-  Keyboardio.setup (KEYMAP_SIZE);
-  Keyboardio.use (&MagicCombo, NULL);
+  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.use (&MagicCombo, NULL);
 }
 ```
 
@@ -41,7 +42,7 @@ element in the array has two fields: the left hand state, and the right hand
 state upon which to trigger the custom action. Both of these are bit fields,
 each bit set tells the extension that the key with that index must be held for
 the action to trigger. It is recommended to use the `RxCy` macros of the core
-`KeyboardioFirmware`, and *or* them together to form a bitfield.
+`KaleidoscopeFirmware`, and *or* them together to form a bitfield.
 
 The dictionary **must** end with an element containing zero values for both the
 left and the right halves.
@@ -86,4 +87,4 @@ the overrideable `magicComboActions` function:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Akela-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
