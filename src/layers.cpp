@@ -64,7 +64,7 @@ Layer_::mergeLayers(void) {
         for (uint8_t c = 0; c < COLS; c++) {
             int8_t layer = highestLayer;
 
-            while (layer >= DefaultLayer) {
+            while (layer > DefaultLayer) {
                 if (Layer.isOn (layer)) {
                     Key mappedKey;
 
