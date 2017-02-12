@@ -1,5 +1,0 @@
-#NAME: GENERIC_FN2
-skip   F1        F2        F3      F4           F5            XXXXXXXXX LCtrl       RCtrl       XXXXXX     F6          F7        F8          F9           ___      skip
-Tab    mouseBtnM mouseUp   skip    mouseWarpNW  mouseWarpNE   XXXXXXXXX mouseBtnL   mouseBtnR   XXXXXX     playPause   {         }           [            ]        sleep
-Home   mouseL 	 mouseDn   mouseR  mouseWarpSW  mouseWarpSE   nextTrack LGUI        RAlt        Delete     LArrow      DnArrow   UpArrow     RArrow       F11      F12
-End    Z         X         C       V            mouseWarpEnd  _________ LShift      RShift      ______     volumeDown  volumeUp  BacklightDn BacklightUp  \        |
