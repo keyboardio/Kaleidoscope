@@ -57,6 +57,9 @@ Layer_::mergeLayers(void) {
 
     memset (keyMap, DefaultLayer, ROWS * COLS);
 
+    if (LayerState == (uint32_t)(1 << DefaultLayer))
+        return;
+
     for (uint8_t r = 0; r < ROWS; r++) {
         for (uint8_t c = 0; c < COLS; c++) {
             int8_t layer = highestLayer;
