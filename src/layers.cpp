@@ -5,6 +5,7 @@ static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
 uint8_t Layer_::highestLayer;
+uint8_t Layer_::keyMap[ROWS][COLS];
 
 static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
     if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
@@ -51,18 +52,39 @@ Layer_::Layer_ (void) {
     defaultLayer (0);
 }
 
-Key Layer_::lookup(byte row, byte col) {
-    Key mappedKey;
-    int8_t layer = highestLayer;
+void
+Layer_::mergeLayers(void) {
 
-    mappedKey.raw = Key_Transparent.raw;
+    memset (keyMap, DefaultLayer, ROWS * COLS);
 
-    while (mappedKey.raw == Key_Transparent.raw &&
-            layer >= DefaultLayer) {
-        if (Layer.isOn (layer))
-            mappedKey.raw = pgm_read_word(&(keymaps[layer][row][col]));
-        layer--;
+    if (LayerState == (uint32_t)(1 << DefaultLayer))
+        return;
+
+    for (uint8_t r = 0; r < ROWS; r++) {
+        for (uint8_t c = 0; c < COLS; c++) {
+            int8_t layer = highestLayer;
+
+            while (layer > DefaultLayer) {
+                if (Layer.isOn (layer)) {
+                    Key mappedKey;
+
+                    mappedKey.raw = pgm_read_word(&(keymaps[layer][r][c]));
+
+                    if (mappedKey != Key_Transparent) {
+                        keyMap[r][c] = layer;
+                        break;
+                    }
+                }
+                layer--;
+            }
+        }
     }
+}
+
+Key Layer_::lookup(byte row, byte col) {
+    uint8_t layer = keyMap[row][col];
+    Key mappedKey;
+    mappedKey.raw = pgm_read_word(&(keymaps[layer][row][col]));
 
     return mappedKey;
 }
@@ -84,12 +106,14 @@ void Layer_::on (uint8_t layer) {
     bitSet (LayerState, layer);
     if (layer > highestLayer)
         highestLayer = layer;
+    mergeLayers();
 }
 
 void Layer_::off (uint8_t layer) {
     bitClear (LayerState, layer);
     if (layer == highestLayer)
         highestLayer = top();
+    mergeLayers();
 }
 
 boolean Layer_::isOn (uint8_t layer) {

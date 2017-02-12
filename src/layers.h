@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "key_defs.h"
 #include "plugin.h"
+#include KALEIDOSCOPE_HARDWARE_H
 
 class Layer_ {
   public:
@@ -28,6 +29,9 @@ class Layer_ {
 
  private:
     static uint8_t highestLayer;
+    static uint8_t keyMap[ROWS][COLS];
+
+    static void mergeLayers(void);
 };
 
 extern Layer_ Layer;
