@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include "KeyboardioFirmware.h"
+#include "Kaleidoscope.h"
 
-class TestMode_ : public KeyboardioPlugin {
+class TestMode_ : public KaleidoscopePlugin {
   public:
     TestMode_(void);
     void begin();

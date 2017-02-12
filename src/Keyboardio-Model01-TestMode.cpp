@@ -1,6 +1,6 @@
-#include "KeyboardioFirmware.h"
-#include "Keyboardio-Model01-TestMode.h"
-#include "Keyboardio-LEDEffect-Rainbow.h"
+#include "Kaleidoscope.h"
+#include "Kaleidoscope-Model01-TestMode.h"
+#include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 cRGB red;
 cRGB blue;
