@@ -7,4 +7,4 @@ astyle:
 		find . -type f -name \*.h |xargs -n 1 astyle --style=google
 
 %:
-	@tools/keyboardio-builder $@
+	@tools/kaleidoscope-builder $@

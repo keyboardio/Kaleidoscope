@@ -17,14 +17,14 @@ firmware_size () {
 }
 
 find_sketch () {
-    if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
-        . "${SOURCEDIR}/.keyboardio-builder.conf"
+    if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
+        . "${SOURCEDIR}/.kaleidoscope-builder.conf"
     fi
 
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
     LIBRARY="${LIBRARY:-${SKETCH}}"
 
-    for path in "hardware/keyboardio/avr/libraries/Akela-${LIBRARY}/examples/${SKETCH}" \
+    for path in "hardware/keyboardio/avr/libraries/Kaleidoscope-${LIBRARY}/examples/${SKETCH}" \
                     "examples/${LIBRARY}" \
                     "src"; do
         if [ -f "${path}/${SKETCH}.ino" ]; then
@@ -134,7 +134,7 @@ compile () {
 }
 
 _find_all () {
-    for plugin in hardware/keyboardio/avr/libraries/Akela-*/examples/* \
+    for plugin in hardware/keyboardio/avr/libraries/Kaleidoscope-*/examples/* \
                       examples/* \
                       src/*.ino; do
         if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
@@ -251,12 +251,12 @@ ROOT="$(cd $(dirname $0)/..; pwd)"
 export ROOT
 export SOURCEDIR="$(pwd)"
 
-if [ -e "${HOME}/.keyboardio-builder.conf" ]; then
-    . "${HOME}/.keyboardio-builder.conf"
+if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
+    . "${HOME}/.kaleidoscope-builder.conf"
 fi
 
-if [ -e "${SOURCEDIR}/.keyboardio-builder.conf" ]; then
-    . "${SOURCEDIR}/.keyboardio-builder.conf"
+if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
+    . "${SOURCEDIR}/.kaleidoscope-builder.conf"
 fi
 
 

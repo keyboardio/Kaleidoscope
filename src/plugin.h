@@ -1,6 +1,6 @@
 #pragma once
 
-class KeyboardioPlugin {
+class KaleidoscopePlugin {
   public:
     virtual void begin(void) = 0;
 };

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "KeyboardioHID.h"
 
-#include KEYBOARDIO_HARDWARE_H
+#include KALEIDOSCOPE_HARDWARE_H
 #include "key_defs.h"
 #include "keyswitch_state.h"
 #include "hooks.h"

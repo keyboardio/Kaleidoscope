@@ -20,7 +20,7 @@ void setup();
 #include <math.h>
 #include <avr/wdt.h>
 
-#include KEYBOARDIO_HARDWARE_H
+#include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
 #include "plugin.h"
 #include "layers.h"
@@ -33,13 +33,13 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
 
-class Keyboardio_ {
+class Kaleidoscope_ {
   public:
-    Keyboardio_(void);
+    Kaleidoscope_(void);
 
     void setup(const byte keymap_count);
     void loop(void);
-    void use(KeyboardioPlugin *plugin, ...) __attribute__((sentinel));
+    void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
 };
 
-extern Keyboardio_ Keyboardio;
+extern Kaleidoscope_ Kaleidoscope;

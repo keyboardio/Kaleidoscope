@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Keyboardio Example
+ * AppSwitcher -- A Kaleidoscope Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Akela-HostOS.h"
+#include "Kaleidoscope.h"
+#include "Kaleidoscope-HostOS.h"
 
 #include "Macros.h"
 
@@ -56,10 +57,10 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup () {
-    Keyboardio.setup (KEYMAP_SIZE);
-    Keyboardio.use (&HostOS, &Macros, NULL);
+    Kaleidoscope.setup (KEYMAP_SIZE);
+    Kaleidoscope.use (&HostOS, &Macros, NULL);
 }
 
 void loop () {
-    Keyboardio.loop ();
+    Kaleidoscope.loop ();
 }
