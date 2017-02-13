@@ -1,5 +1,4 @@
-#include "key_events.h"
-#include "layers.h"
+#include "Kaleidoscope.h"
 
 static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
     if (mappedKey.flags & RESERVED)
@@ -23,8 +22,6 @@ static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
 
     return true;
 }
-
-custom_handler_t eventHandlers[HOOK_MAX];
 
 static bool handle_key_event_default(Key mappedKey, byte row, byte col, uint8_t keyState) {
     //for every newly pressed button, figure out what logical key it is and send a key down event
@@ -83,8 +80,8 @@ void handle_key_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (!(keyState & INJECTED)) {
         mappedKey = Layer.lookup(row, col);
     }
-    for (byte i = 0; eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
-        custom_handler_t handler = eventHandlers[i];
+    for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
+        Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
         mappedKey = (*handler)(mappedKey, row, col, keyState);
         if (mappedKey.raw == Key_NoKey.raw)
             return;
