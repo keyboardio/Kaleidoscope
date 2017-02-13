@@ -1,5 +1,4 @@
-#include "layers.h"
-#include "key_events.h"
+#include "Kaleidoscope.h"
 
 static uint8_t DefaultLayer;
 static uint32_t LayerState;
