@@ -22,7 +22,6 @@ void setup();
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
-#include "plugin.h"
 #include "layers.h"
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
@@ -32,6 +31,11 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #endif
 
 #define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
+
+class KaleidoscopePlugin {
+ public:
+  virtual void begin(void) = 0;
+};
 
 class Kaleidoscope_ {
   public:

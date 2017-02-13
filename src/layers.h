@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include "key_defs.h"
-#include "plugin.h"
 #include KALEIDOSCOPE_HARDWARE_H
 
 class Layer_ {
