@@ -31,7 +31,6 @@ namespace KaleidoscopePlugins {
       virtual void update (void) final;
 
     private:
-      uint32_t previousLayerState;
       cRGB baseColor;
       cRGB modColor;
       cRGB escColor;
