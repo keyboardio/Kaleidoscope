@@ -14,6 +14,9 @@ Kaleidoscope_::setup(const byte keymap_count) {
     Keyboard.begin();
     KeyboardHardware.setup();
 
+    // A workaround, so that the compiler does not optimize this out...
+    handle_key_event (Key_NoKey, 255, 255, 0);
+
     Layer.defaultLayer (KeyboardHardware.load_primary_layer (keymap_count));
 }
 
