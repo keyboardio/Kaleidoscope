@@ -1,9 +1,10 @@
 #include "Kaleidoscope.h"
 #include <stdarg.h>
 
+Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
+Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
+
 Kaleidoscope_::Kaleidoscope_(void) {
-    memset(eventHandlers, 0, HOOK_MAX * sizeof(custom_handler_t));
-    memset(loopHooks, 0, HOOK_MAX * sizeof(custom_handler_t));
 }
 
 void
@@ -13,20 +14,18 @@ Kaleidoscope_::setup(const byte keymap_count) {
     Keyboard.begin();
     KeyboardHardware.setup();
 
-    event_handler_hook_use (NULL);
-    loop_hook_use (NULL);
+    // A workaround, so that the compiler does not optimize this out...
+    handle_key_event (Key_NoKey, 255, 255, 0);
 
     Layer.defaultLayer (KeyboardHardware.load_primary_layer (keymap_count));
 }
-
-custom_loop_t loopHooks[HOOK_MAX];
 
 void
 Kaleidoscope_::loop(void) {
     KeyboardHardware.scan_matrix();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-        custom_loop_t hook = loopHooks[i];
+        loopHook hook = loopHooks[i];
         (*hook)(false);
     }
 
@@ -34,7 +33,7 @@ Kaleidoscope_::loop(void) {
     Keyboard.releaseAll();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-        custom_loop_t hook = loopHooks[i];
+        loopHook hook = loopHooks[i];
         (*hook)(true);
     }
 }
@@ -50,6 +49,54 @@ Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
         p->begin();
     };
     va_end(ap);
+}
+
+void
+Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (eventHandlers[i] == oldHook) {
+      eventHandlers[i] = newHook;
+      return;
+    }
+  }
+}
+
+void
+Kaleidoscope_::appendEventHandlerHook (eventHandlerHook hook) {
+  replaceEventHandlerHook((eventHandlerHook)NULL, hook);
+}
+
+void
+Kaleidoscope_::useEventHandlerHook (eventHandlerHook hook) {
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (eventHandlers[i] == hook)
+      return;
+  }
+  appendEventHandlerHook(hook);
+}
+
+void
+Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (loopHooks[i] == oldHook) {
+      loopHooks[i] = newHook;
+      return;
+    }
+  }
+}
+
+void
+Kaleidoscope_::appendLoopHook(loopHook hook) {
+  replaceLoopHook((loopHook)NULL, hook);
+}
+
+void
+Kaleidoscope_::useLoopHook(loopHook hook) {
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (loopHooks[i] == hook)
+      return;
+  }
+  appendLoopHook (hook);
 }
 
 Kaleidoscope_ Kaleidoscope;
