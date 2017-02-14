@@ -1,7 +1,6 @@
-We're in the midst of refactoring our really bad prototype firmware into a more reasonable production firmware.
+# Kaleidoscope
 
-Right now, the code is really ugly. It'll be nicer soon. Please don't judge us too harshly.
-
+Flexible firmware for Arduino-powered keyboards
 
 # Getting Started
 
@@ -14,7 +13,7 @@ Setup the Arduino IDE on your system. Make sure you install at least version 1.6
 * On Linux, follow the instructions [on the wiki](https://github.com/keyboardio/Kaleidoscope/wiki/Arduino-Setup-Linux).
 * On macOS, install using [homebrew](http://brew.sh/) [cask](https://caskroom.github.io/) with `brew cask install arduino` or download the application from [the official website](https://www.arduino.cc/en/Main/Software) and move it to your `/Applications` folder.
 
-## Install the Keyboardio Hardware Definitions
+## Install the Kaleidoscope Hardware Definitions
 
 ```sh
 # you'll need to know your arduino sketchbook directory
@@ -29,8 +28,8 @@ cd $HOME/kaleidoscope
 # then clone the hardware definitions
 git clone --recursive https://github.com/keyboardio/Arduino-Boards.git
 # and make them available to the arduino environment
-mkdir -p $SKETCHBOOK_DIR/hardware/keyboardio
-ln -s $HOME/keyboardio/Arduino-Boards $SKETCHBOOK_DIR/hardware/keyboardio/avr
+mkdir -p $SKETCHBOOK_DIR/hardware/kaleidoscope
+ln -s $HOME/kaleidoscope/Arduino-Boards $SKETCHBOOK_DIR/hardware/kaleidoscope/avr
 ```
 
 ## Clone and Build the Kaleidoscope Firmware
