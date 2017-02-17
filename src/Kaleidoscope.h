@@ -34,6 +34,24 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
 
+/*
+ * The `USE_PLUGINS()` macro is a clever hack, to make it seem like
+ * `Kaleidoscope.use()` is type-safe. It pushes its arguments into an
+ * appropriately typed array, so anything that does not fit the criteria, will
+ * trigger a compiler error.
+ *
+ * It then never uses the array, and passes the plugins over to
+ * `Kaleidoscope.use`, adding the trailing `NULL`, making it even easier to use.
+ *
+ * Since the array this macro creates is never used, the compiler will optimize
+ * it out fully. As such, by using this macro, we incur neither any size
+ * penalties, nor any run-time penalties. Everything happens at compile-time.
+ */
+#define USE_PLUGINS(plugins...) ({                              \
+          static KaleidoscopePlugin *__p[] = {plugins, NULL};   \
+          Kaleidoscope.use(plugins, NULL);                      \
+        })
+
 class KaleidoscopePlugin {
  public:
   virtual void begin(void) = 0;
