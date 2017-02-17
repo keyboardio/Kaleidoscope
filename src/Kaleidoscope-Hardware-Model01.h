@@ -8,6 +8,8 @@
 #define COLS 16
 #define ROWS 4
 
+#define CRGB(r,g,b) (cRGB){b, g, r}
+
 class Model01 {
   public:
     Model01(void);
