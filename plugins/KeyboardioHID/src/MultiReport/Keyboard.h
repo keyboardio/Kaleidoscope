@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "HIDTables.h"
 #include "HIDAliases.h"
-#include "ASCIIMap.h"
 
 #define KEY_BYTES 28
 
@@ -46,7 +45,7 @@ typedef union {
 
 
 
-class Keyboard_ : public Print {
+class Keyboard_ {
   public:
     Keyboard_(void);
     void begin(void);
@@ -56,15 +55,11 @@ class Keyboard_ : public Print {
     size_t release(uint8_t k);
     void  releaseAll(void);
     int sendReport(void);
-    size_t write(uint8_t k);
 
     boolean isModifierActive(uint8_t k);
 
   protected:
     HID_KeyboardReport_Data_t _keyReport;
-
-  private:
-    using Print::write;
 };
 extern Keyboard_ Keyboard;
 

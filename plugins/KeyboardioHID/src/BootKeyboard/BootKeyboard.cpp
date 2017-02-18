@@ -304,20 +304,4 @@ void BootKeyboard_::releaseAll(void) {
     memset(&_keyReport.keys, 0x00, sizeof(_keyReport.keys));
 }
 
-size_t BootKeyboard_::write(uint8_t k) {
-    if(k >= sizeof(_asciimap)) // Ignore invalid input
-        return 0;
-
-    // Read key from ascii lookup table
-    k = pgm_read_byte(_asciimap + k);
-
-    if(k & SHIFT)
-        press(HID_KEYBOARD_LEFT_SHIFT);
-    press(k & ~SHIFT);
-    sendReport();
-    releaseAll();
-    sendReport();
-    return 1;
-}
-
 BootKeyboard_ BootKeyboard;

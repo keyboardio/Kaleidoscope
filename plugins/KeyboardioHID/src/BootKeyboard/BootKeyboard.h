@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 #include "HIDTables.h"
 #include "HIDAliases.h"
-#include "ASCIIMap.h"
 
 typedef union {
     // Low level key report: up to 6 keys and shift, ctrl etc at once
@@ -43,13 +42,12 @@ typedef union {
 } HID_BootKeyboardReport_Data_t;
 
 
-class BootKeyboard_ : public Print, PluggableUSBModule {
+class BootKeyboard_ : public PluggableUSBModule {
   public:
     BootKeyboard_(void);
     size_t press(uint8_t);
     void begin(void);
     void end(void);
-    size_t write(uint8_t);
     size_t release(uint8_t);
     void releaseAll(void);
 
@@ -103,9 +101,6 @@ class BootKeyboard_ : public Print, PluggableUSBModule {
 
     uint8_t* featureReport;
     int featureLength;
-
-  private:
-    using Print::write;
 };
 extern BootKeyboard_ BootKeyboard;
 
