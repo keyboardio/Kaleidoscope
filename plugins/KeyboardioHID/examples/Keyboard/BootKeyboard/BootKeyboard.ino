@@ -35,7 +35,10 @@ void loop() {
 
   // Trigger caps lock manually via button
   if (!digitalRead(pinButton)) {
-    BootKeyboard.write(KEY_ENTER);
+    BootKeyboard.press(KEY_ENTER);
+    BootKeyboard.sendReport();
+    BootKeyboard.releaseAll();
+    BootKeyboard.sendReport();
 
     // Simple debounce
     delay(300);
