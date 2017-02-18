@@ -48,7 +48,10 @@ void loop() {
 
     // Release all keys and hit enter
     Keyboard.releaseAll();
-    Keyboard.println();
+    Keyboard.press(KEY_ENTER);
+    Keyboard.sendReport();
+    Keyboard.releaseAll();
+    Keyboard.sendReport();
 
     // Simple debounce
     delay(300);
