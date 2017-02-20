@@ -17,9 +17,6 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 #include "Kaleidoscope-Model01-TestMode.h"
 
-uint8_t primary_keymap = 0;
-uint8_t temporary_keymap = 0;
-
 #define NUMPAD_KEYMAP 2
 
 #define COLEMAK KEYMAP ( \
