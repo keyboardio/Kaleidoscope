@@ -4,6 +4,7 @@
 
 cRGB red;
 cRGB blue;
+cRGB green;
 
 #define LED_TEST_DELAY 2000
 
@@ -14,6 +15,7 @@ TestMode_::TestMode_(void) {
 void TestMode_::begin(void) {
     red.r=101;
     blue.b=101;
+    green.g=101;
     loop_hook_use (this->loopHook);
 
 }
@@ -95,7 +97,7 @@ void TestMode_::test_matrix () {
                     Serial.print(keynum);
                     Serial.print(" value ");
                     Serial.println(keyState);
-                    KeyboardHardware.led_set_crgb_at(row, 7-col, red);
+                    KeyboardHardware.led_set_crgb_at(row, 7-col, green);
                 } else if (keyState ==1) {
                     KeyboardHardware.led_set_crgb_at(row,7-col, blue);
                 }
@@ -108,7 +110,7 @@ void TestMode_::test_matrix () {
                     Serial.print(keynum);
                     Serial.print(" value ");
                     Serial.println(keyState);
-                    KeyboardHardware.led_set_crgb_at(row, 15-col, red);
+                    KeyboardHardware.led_set_crgb_at(row, 15-col, green);
                 } else if (keyState ==1) {
                     KeyboardHardware.led_set_crgb_at(row,15-col, blue);
                 }
