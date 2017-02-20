@@ -13,9 +13,9 @@ static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
     if (mappedKey.flags & IS_INTERNAL) {
         return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
-        ConsumerControl.press(mappedKey.keyCode);
+        ConsumerControl.write(mappedKey.keyCode);
     } else if (mappedKey.flags & IS_SYSCTL) {
-        SystemControl.press(mappedKey.keyCode);
+        SystemControl.write(mappedKey.keyCode);
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
     }
