@@ -2,6 +2,8 @@
 
 LEDMode *LEDControl_::modes[LED_MAX_MODES];
 uint8_t LEDControl_::previousMode, LEDControl_::mode;
+uint16_t LEDControl_::syncDelay = 16;
+uint32_t LEDControl_::syncTimer;
 
 void
 LEDMode::activate (void) {
@@ -126,6 +128,8 @@ LEDControl_::begin (void) {
 
   event_handler_hook_use(eventHandler);
   loop_hook_use(loopHook);
+
+  syncTimer = millis();
 }
 
 Key
@@ -144,7 +148,10 @@ LEDControl_::loopHook (bool postClear) {
   if (postClear)
     return;
 
-  led_sync();
+  if (millis() - syncTimer >= syncDelay) {
+    led_sync();
+    syncTimer = millis();
+  }
   update();
 }
 
