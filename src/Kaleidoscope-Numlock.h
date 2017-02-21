@@ -7,7 +7,7 @@
 #define TOGGLENUMLOCK 0
 #define Key_ToggleNumlock M(TOGGLENUMLOCK)
 
-class NumLock_ : LEDMode {
+class NumLock_ : public LEDMode {
  public:
   NumLock_ (void);
 
