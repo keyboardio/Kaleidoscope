@@ -3,7 +3,7 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDRainbowEffect_ : LEDMode {
+class LEDRainbowEffect_ : public LEDMode {
  public:
   LEDRainbowEffect_ (void);
 
@@ -23,7 +23,7 @@ class LEDRainbowEffect_ : LEDMode {
 
 extern LEDRainbowEffect_ LEDRainbowEffect;
 
-class LEDRainbowWaveEffect_ : LEDMode {
+class LEDRainbowWaveEffect_ : public LEDMode {
  public:
   LEDRainbowWaveEffect_ (void);
 
