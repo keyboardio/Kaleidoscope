@@ -3,6 +3,7 @@
 
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
+bool Model01::isLEDChanged;
 
 static constexpr uint8_t key_led_map[4][16] = {
   {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
@@ -59,8 +60,14 @@ void Model01::setup(void) {
 
 void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
     if(i<32) {
+        cRGB oldColor = led_get_crgb_at(i);
+        isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
+
         leftHand.ledData.leds[i] = crgb;
     } else if (i<64) {
+        cRGB oldColor = led_get_crgb_at(i);
+        isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
+
         rightHand.ledData.leds[i-32] = crgb;
     } else {
         // TODO how do we want to handle debugging assertions about crazy user
@@ -83,8 +90,8 @@ cRGB Model01::led_get_crgb_at(uint8_t i) {
 }
 
 void Model01::led_sync() {
-    leftHand.sendLEDData();
-    rightHand.sendLEDData();
+    if (!isLEDChanged)
+        return;
 
     leftHand.sendLEDData();
     rightHand.sendLEDData();
@@ -95,6 +102,10 @@ void Model01::led_sync() {
     leftHand.sendLEDData();
     rightHand.sendLEDData();
 
+    leftHand.sendLEDData();
+    rightHand.sendLEDData();
+
+    isLEDChanged = false;
 }
 
 boolean Model01::led_power_fault() {
