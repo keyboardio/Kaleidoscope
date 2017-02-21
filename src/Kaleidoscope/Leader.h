@@ -50,7 +50,7 @@ namespace KaleidoscopePlugins {
   private:
     static Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
     static uint8_t sequencePos;
-    static uint32_t startTime;
+    static uint32_t endTime;
     static const Leader::dictionary_t *dictionary;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);

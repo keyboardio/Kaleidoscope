@@ -24,7 +24,7 @@ namespace KaleidoscopePlugins {
   // --- state ---
   Key Leader::sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
   uint8_t Leader::sequencePos;
-  uint32_t Leader::startTime;
+  uint32_t Leader::endTime;
   uint16_t Leader::timeOut = 1000;
   const Leader::dictionary_t *Leader::dictionary;
 
@@ -89,7 +89,6 @@ namespace KaleidoscopePlugins {
 
   void
   Leader::reset (void) {
-    startTime = 0;
     sequencePos = 0;
     sequence[0].raw = Key_NoKey.raw;
   }
@@ -119,7 +118,7 @@ namespace KaleidoscopePlugins {
 
       if (key_toggled_off (keyState)) {
         // not active, but a leader key = start the sequence on key release!
-        startTime = millis ();
+        endTime = millis () + timeOut;
         sequencePos = 0;
         sequence[sequencePos].raw = mappedKey.raw;
       }
@@ -138,7 +137,7 @@ namespace KaleidoscopePlugins {
         return mappedKey;
       }
 
-      startTime = millis ();
+      endTime = millis () + timeOut;
       sequence[sequencePos].raw = mappedKey.raw;
       actionIndex = lookup ();
 
@@ -170,7 +169,7 @@ namespace KaleidoscopePlugins {
     if (!isActive ())
       return;
 
-    if ((millis () - startTime) >= timeOut)
+    if (millis () >= endTime)
       reset ();
   }
 };
