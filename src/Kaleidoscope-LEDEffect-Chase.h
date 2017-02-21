@@ -3,7 +3,7 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDChaseEffect_ : LEDMode {
+class LEDChaseEffect_ : public LEDMode {
  public:
   LEDChaseEffect_ (void);
 
