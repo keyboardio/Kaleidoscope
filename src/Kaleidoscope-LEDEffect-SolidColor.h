@@ -2,7 +2,7 @@
 
 #include "Kaleidoscope-LEDControl.h"
 
-class LEDSolidColor : LEDMode {
+class LEDSolidColor : public LEDMode {
  public:
   LEDSolidColor (uint8_t r, uint8_t g, uint8_t b);
 
