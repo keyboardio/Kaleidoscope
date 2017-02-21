@@ -36,7 +36,7 @@ namespace KaleidoscopePlugins {
 
   private:
     static const dictionary_t *dictionary;
-    static uint32_t startTime;
+    static uint32_t endTime;
 
     static void loopHook (bool postClear);
   };

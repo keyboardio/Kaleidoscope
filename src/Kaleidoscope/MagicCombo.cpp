@@ -32,7 +32,7 @@ namespace KaleidoscopePlugins {
 
   const MagicCombo::dictionary_t *MagicCombo::dictionary;
   uint16_t MagicCombo::minInterval = 500;
-  uint32_t MagicCombo::startTime;
+  uint32_t MagicCombo::endTime;
 
   MagicCombo::MagicCombo (void) {
   }
@@ -63,9 +63,9 @@ namespace KaleidoscopePlugins {
 
       if (LEFTHANDSTATE.all == combo.leftHand &&
           RIGHTHANDSTATE.all == combo.rightHand) {
-        if (startTime == 0 || minInterval == 0 || ((millis () - startTime) >= minInterval)) {
+        if (millis () >= endTime) {
           magicComboActions (i, combo.leftHand, combo.rightHand);
-          startTime = millis ();
+          endTime = millis () + minInterval;
         }
         break;
       }
