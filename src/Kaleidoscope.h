@@ -61,7 +61,8 @@ class Kaleidoscope_ {
   public:
     Kaleidoscope_(void);
 
-    void setup(const byte keymap_count);
+    void setup(const byte keymap_count) { setup(); };
+    void setup(void);
     void loop(void);
     void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
 
