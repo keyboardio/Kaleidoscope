@@ -23,8 +23,8 @@ namespace KaleidoscopePlugins {
   uint8_t Heatmap::heatmap[ROWS][COLS];
   uint16_t Heatmap::totalKeys;
   uint8_t Heatmap::highestCount;
-  uint16_t Heatmap::updateFrequency = 500;
-  uint32_t Heatmap::startTime;
+  uint16_t Heatmap::updateDelay = 500;
+  uint32_t Heatmap::endTime;
 
   const float Heatmap::heatColors[][3] = {{0.0, 0.0, 0.0}, {0.1, 1, 0.1}, {1, 1, 0.1}, {1, 0.1, 0.1}};
 
@@ -74,11 +74,6 @@ namespace KaleidoscopePlugins {
     loop_hook_use (this->loopHook);
   }
 
-  void
-  Heatmap::configure (uint16_t updateFreq) {
-    updateFrequency = updateFreq;
-  }
-
   Key
   Heatmap::eventHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     // if it is a synthetic key, skip it.
@@ -105,10 +100,10 @@ namespace KaleidoscopePlugins {
 
   void
   Heatmap::update (void) {
-    if (startTime && (millis () - startTime) < updateFrequency)
+    if (endTime && (millis () > endTime))
       return;
 
-    startTime = millis ();
+    endTime = millis () + updateDelay;
 
     for (uint8_t r = 0; r < ROWS; r++) {
       for (uint8_t c = 0; c < COLS; c++) {

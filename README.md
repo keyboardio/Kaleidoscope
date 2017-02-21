@@ -39,20 +39,22 @@ is highly recommended.
 
 The plugin provides two methods on the `HeatmapEffect` object:
 
-### `.configure(updateFrequency)`
-
-> Sets up the update frequency of the heatmap, to update every `updateFrequency`
-> milliseconds. Updating the heatmap incurs a significant performance penalty,
-> and should not be done too often. Doing it too rarely, on the other hand, make
-> it much less useful. One has to strike a reasonable balance.
->
-> Defaults to *500*.
-
 ### `.activate()`
 
 > When called, immediately activates the Heatmap effect. Mostly useful in the
 > `setup()` method of the Sketch, or in macros that are meant to switch to the
 > heatmap effect, no matter where we are in the list.
+
+### `.timeOut`
+
+> The number of milliseconds to wait between updating the heatmap. Updating the
+> heatmap incurs a significant performance penalty, and should not be done too
+> often. Doing it too rarely, on the other hand, make it much less useful. One
+> has to strike a reasonable balance.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to *500*.
 
 ## Further reading
 

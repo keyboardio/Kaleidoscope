@@ -28,15 +28,14 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
-    static void configure (uint16_t updateFrequency);
+    static uint16_t updateDelay;
 
     virtual void update (void) final;
   private:
     static uint8_t heatmap[ROWS][COLS];
     static uint16_t totalKeys;
     static uint8_t highestCount;
-    static uint16_t updateFrequency;
-    static uint32_t startTime;
+    static uint32_t endTime;
 
     static const float heatColors[][3];
 
