@@ -16,8 +16,8 @@ class MouseKeys_ : public KaleidoscopePlugin {
 
  private:
     static uint8_t mouseMoveIntent;
-    static uint32_t startTime;
-    static uint32_t accelStartTime;
+    static uint32_t endTime;
+    static uint32_t accelEndTime;
 
     static void loopHook(bool postClear);
     static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);

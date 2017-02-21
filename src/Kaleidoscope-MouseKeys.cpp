@@ -12,8 +12,8 @@ uint16_t MouseKeys_::speedDelay = 0;
 uint8_t MouseKeys_::accelSpeed = 1;
 uint16_t MouseKeys_::accelDelay = 50;
 
-uint32_t MouseKeys_::accelStartTime;
-uint32_t MouseKeys_::startTime;
+uint32_t MouseKeys_::accelEndTime;
+uint32_t MouseKeys_::endTime;
 
 void MouseKeys_::loopHook(bool postClear) {
     if (postClear) {
@@ -23,19 +23,19 @@ void MouseKeys_::loopHook(bool postClear) {
 
     if (mouseMoveIntent == 0) {
         MouseWrapper.accelStep = 0;
-        startTime = 0;
-        accelStartTime = 0;
+        endTime = 0;
+        accelEndTime = 0;
         return;
     }
 
-    if ((millis() - startTime) < speedDelay)
-        return;
+    if (millis() < endTime)
+      return;
 
-    startTime = millis();
+    endTime = millis() + speedDelay;
 
     int8_t moveX = 0, moveY = 0;
 
-    if ((millis() - accelStartTime) >= (accelDelay * MouseWrapper.accelStep)) {
+    if (millis() >= accelEndTime) {
         if (MouseWrapper.accelStep < 255 - accelSpeed)
             MouseWrapper.accelStep += accelSpeed;
     }
@@ -67,10 +67,8 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
         }
     } else if (!(mappedKey.keyCode & KEY_MOUSE_WARP)) {
         if (key_toggled_on(keyState)) {
-            if (!startTime)
-                startTime = millis();
-            if (!accelStartTime)
-                accelStartTime = millis();
+            endTime = millis() + speedDelay;
+            accelEndTime = millis() + accelDelay;
         }
         if (key_is_pressed(keyState))
             mouseMoveIntent |= mappedKey.keyCode;
