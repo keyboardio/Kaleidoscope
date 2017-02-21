@@ -5,6 +5,7 @@ static uint32_t LayerState;
 
 uint8_t Layer_::highestLayer;
 uint8_t Layer_::keyMap[ROWS][COLS];
+Key (*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
 static void handle_keymap_key_event(Key keymapEntry, uint8_t keyState) {
     if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
@@ -51,6 +52,15 @@ Layer_::Layer_ (void) {
     defaultLayer (0);
 }
 
+Key
+Layer_::getKeyFromPROGMEM (uint8_t layer, byte row, byte col) {
+    Key key;
+
+    key.raw = pgm_read_word(&(keymaps[layer][row][col]));
+
+    return key;
+}
+
 void
 Layer_::mergeLayers(void) {
 
@@ -65,9 +75,7 @@ Layer_::mergeLayers(void) {
 
             while (layer > DefaultLayer) {
                 if (Layer.isOn (layer)) {
-                    Key mappedKey;
-
-                    mappedKey.raw = pgm_read_word(&(keymaps[layer][r][c]));
+                    Key mappedKey = (*getKey)(layer, r, c);
 
                     if (mappedKey != Key_Transparent) {
                         keyMap[r][c] = layer;
@@ -82,10 +90,8 @@ Layer_::mergeLayers(void) {
 
 Key Layer_::lookup(byte row, byte col) {
     uint8_t layer = keyMap[row][col];
-    Key mappedKey;
-    mappedKey.raw = pgm_read_word(&(keymaps[layer][row][col]));
 
-    return mappedKey;
+    return (*getKey)(layer, row, col);
 }
 
 uint8_t Layer_::top (void) {
