@@ -22,7 +22,7 @@ using namespace KaleidoscopePlugins::Ranges;
 
 namespace KaleidoscopePlugins {
   // --- state ---
-  uint32_t TapDance::startTime;
+  uint32_t TapDance::endTime;
   uint16_t TapDance::timeOut = 200;
   uint8_t TapDance::tapCount[32];
   uint32_t TapDance::pressedState;
@@ -47,7 +47,7 @@ namespace KaleidoscopePlugins {
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Interrupt);
     bitWrite (triggeredState, idx, 1);
 
-    startTime = millis ();
+    endTime = 0;
 
     if (bitRead (pressedState, idx))
       return;
@@ -59,7 +59,7 @@ namespace KaleidoscopePlugins {
   TapDance::timeout (void) {
     uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
 
-    startTime = 0;
+    endTime = 0;
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
     bitWrite (triggeredState, idx, 1);
@@ -76,7 +76,7 @@ namespace KaleidoscopePlugins {
   TapDance::release (uint8_t tapDanceIndex) {
     tapDanceAction (tapDanceIndex, lastTapDanceRow, lastTapDanceCol, tapCount[tapDanceIndex], Release);
 
-    startTime = 0;
+    endTime = 0;
     tapCount[tapDanceIndex] = 0;
     lastTapDanceKey.raw = Key_NoKey.raw;
 
@@ -90,7 +90,7 @@ namespace KaleidoscopePlugins {
     uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
 
     tapCount[idx]++;
-    startTime = millis ();
+    endTime = millis () + timeOut;
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Tap);
 
@@ -213,7 +213,7 @@ namespace KaleidoscopePlugins {
     if (!isActive ())
       return;
 
-    if (startTime && (millis () - startTime) >= timeOut)
+    if (endTime && millis () > endTime)
       timeout();
   }
 };

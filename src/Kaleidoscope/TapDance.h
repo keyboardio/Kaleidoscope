@@ -48,7 +48,7 @@ namespace KaleidoscopePlugins {
     void actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
 
   private:
-    static uint32_t startTime;
+    static uint32_t endTime;
     static uint8_t tapCount[32];
     static uint32_t pressedState;
     static uint32_t triggeredState;
