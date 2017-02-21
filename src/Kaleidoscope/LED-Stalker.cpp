@@ -23,7 +23,7 @@ namespace KaleidoscopePlugins {
     uint8_t StalkerEffect::map[ROWS][COLS];
     StalkerEffect::ColorComputer *StalkerEffect::colorComputer;
     uint16_t StalkerEffect::stepLength = 50;
-    uint32_t StalkerEffect::stepStartTime;
+    uint32_t StalkerEffect::stepEndTime;
 
     StalkerEffect::StalkerEffect (void) {
     }
@@ -37,7 +37,6 @@ namespace KaleidoscopePlugins {
     StalkerEffect::begin (void) {
       event_handler_hook_use (eventHandlerHook);
       loop_hook_use (loopHook);
-      stepStartTime = millis ();
     }
 
      Key
@@ -60,7 +59,7 @@ namespace KaleidoscopePlugins {
       if (!colorComputer)
         return;
 
-      bool timeOut = (millis () - stepStartTime) >= stepLength;
+      bool timeOut = millis () >= stepEndTime;
 
       for (byte r = 0; r < ROWS; r++) {
         for (byte c = 0; c < COLS; c++) {
@@ -86,7 +85,7 @@ namespace KaleidoscopePlugins {
       }
 
       if (timeOut)
-        stepStartTime = millis ();
+        stepEndTime = millis () + stepLength;
     }
 
     namespace Stalker {

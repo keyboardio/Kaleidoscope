@@ -37,7 +37,7 @@ namespace KaleidoscopePlugins {
       static uint16_t stepLength;
 
     private:
-      static uint32_t stepStartTime;
+      static uint32_t stepEndTime;
       static ColorComputer *colorComputer;
       static uint8_t map[ROWS][COLS];
 
