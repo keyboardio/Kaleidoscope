@@ -129,7 +129,7 @@ LEDControl_::begin (void) {
   event_handler_hook_use(eventHandler);
   loop_hook_use(loopHook);
 
-  syncTimer = millis();
+  syncTimer = millis() + syncDelay;
 }
 
 Key
@@ -148,9 +148,9 @@ LEDControl_::loopHook (bool postClear) {
   if (postClear)
     return;
 
-  if (millis() - syncTimer >= syncDelay) {
+  if (millis() > syncTimer) {
     led_sync();
-    syncTimer = millis();
+    syncTimer = millis() + syncDelay;
   }
   update();
 }
