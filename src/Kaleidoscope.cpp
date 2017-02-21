@@ -8,7 +8,7 @@ Kaleidoscope_::Kaleidoscope_(void) {
 }
 
 void
-Kaleidoscope_::setup(const byte keymap_count) {
+Kaleidoscope_::setup(void) {
     wdt_disable();
     delay(100);
     Keyboard.begin();
@@ -16,8 +16,6 @@ Kaleidoscope_::setup(const byte keymap_count) {
 
     // A workaround, so that the compiler does not optimize this out...
     handle_key_event (Key_NoKey, 255, 255, 0);
-
-    Layer.defaultLayer (KeyboardHardware.load_primary_layer (keymap_count));
 }
 
 void
