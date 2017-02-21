@@ -29,9 +29,6 @@ class Model01 {
 
     boolean led_power_fault(void);
 
-    uint8_t load_primary_layer(uint8_t layer_count);
-    void save_primary_layer(uint8_t layer);
-
     keydata_t leftHandState;
     keydata_t rightHandState;
     keydata_t previousLeftHandState;

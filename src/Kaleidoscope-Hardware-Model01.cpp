@@ -1,8 +1,5 @@
 #include <Kaleidoscope.h>
 #include <avr/wdt.h>
-#include <EEPROM.h>
-
-#define EEPROM_LAYER_LOCATION 0
 
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
@@ -184,18 +181,6 @@ void Model01::reboot_bootloader() {
 
     while (1) {} // This infinite loop ensures nothing else
     // happens before the watchdog reboots us
-}
-
-void Model01::save_primary_layer(uint8_t layer) {
-    EEPROM.write(EEPROM_LAYER_LOCATION, layer);
-}
-
-uint8_t Model01::load_primary_layer(uint8_t layer_count) {
-    uint8_t layer =  EEPROM.read(EEPROM_LAYER_LOCATION);
-    if (layer >= layer_count) {
-        return 0; // undefined positions get saved as 255
-    }
-    return 0; //  return keymap;
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
