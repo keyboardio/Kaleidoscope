@@ -41,7 +41,10 @@ class LEDControl_ : public KaleidoscopePlugin {
 
     static void activate (LEDMode *mode);
 
+    static uint16_t syncDelay;
+
  private:
+    static uint32_t syncTimer;
     static LEDMode *modes[LED_MAX_MODES];
     static uint8_t previousMode, mode;
 
