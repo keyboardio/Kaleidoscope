@@ -1,6 +1,9 @@
 # Kaleidoscope-Heatmap
 
-![status][st:experimental]
+![status][st:experimental] [![Build Status][travis:image]][travis:status]
+
+ [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap.svg?branch=master
+ [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap
 
  [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
  [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
