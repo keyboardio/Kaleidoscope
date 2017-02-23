@@ -50,9 +50,6 @@ static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState)
     if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
         return mappedKey;
 
-    if (!key_toggled_on(keyState))
-      return Key_NoKey;
-
     Macros_::row = row;
     Macros_::col = col;
     const macro_t *m = macroAction(mappedKey.keyCode, keyState);
