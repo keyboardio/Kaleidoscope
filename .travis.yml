@@ -1,0 +1,19 @@
+language: cpp
+dist: trusty
+sudo: required
+os:
+  - linux
+before_install:
+  - pushd ..
+  - wget http://downloads.arduino.cc/arduino-1.6.11-linux64.tar.xz
+  - tar xf arduino-1.6.11-linux64.tar.xz
+  - popd
+install:
+  - git clone --recurse-submodules https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
+  - ln -s $(pwd) hardware/keyboardio/avr/libraries/Kaleidoscope-EEPROM-Settings
+script:
+  - export DEFAULT_SKETCH=$(cd examples; basename *)
+  - export ARDUINO_PATH=$(pwd)/../arduino-1.6.11
+  - export BOARD_HARDWARE_PATH=$(pwd)/hardware
+  - export EXTRA_BUILDER_ARGS="-libraries ."
+  - hardware/keyboardio/avr/libraries/Kaleidoscope/tools/kaleidoscope-builder build
