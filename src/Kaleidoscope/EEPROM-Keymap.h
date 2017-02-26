@@ -55,6 +55,8 @@ namespace KaleidoscopePlugins {
   private:
     static uint16_t keymapBase;
     static uint8_t maxLayers;
+
+    static void updateKey (uint16_t basePos, Key key);
   };
 };
 

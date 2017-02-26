@@ -58,6 +58,12 @@ namespace KaleidoscopePlugins {
     return keymapBase;
   }
 
+  void
+  EEPROMKeymap::updateKey (uint16_t basePos, Key key) {
+    EEPROM.update (keymapBase + basePos * 2, key.flags);
+    EEPROM.update (keymapBase + basePos * 2 + 1, key.keyCode);
+  }
+
   bool
   EEPROMKeymap::focusKeymap (const char *command) {
     enum {
@@ -89,11 +95,12 @@ namespace KaleidoscopePlugins {
       {
         uint16_t i = 0;
         while ((Serial.peek () != '\n') && (i < ROWS * COLS * maxLayers)) {
-          uint8_t flags = Serial.parseInt ();
-          uint8_t keyCode = Serial.parseInt ();
-          uint16_t pos = i * 2;
-          EEPROM.update (keymapBase + pos, flags);
-          EEPROM.update (keymapBase + pos + 1, keyCode);
+          Key key;
+
+          key.flags = Serial.parseInt ();
+          key.keyCode = Serial.parseInt ();
+          updateKey (i, key);
+
           i++;
         }
         break;
@@ -149,13 +156,12 @@ namespace KaleidoscopePlugins {
         uint8_t layer = Serial.parseInt ();
         uint8_t row = Serial.parseInt ();
         uint8_t col = Serial.parseInt ();
-        uint8_t flags = Serial.parseInt ();
-        uint8_t keyCode = Serial.parseInt ();
+        Key key;
+        key.flags = Serial.parseInt ();
+        key.keyCode = Serial.parseInt ();
 
-        uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col) * 2;
-
-        EEPROM.update (keymapBase + pos, flags);
-        EEPROM.update (keymapBase + pos + 1, keyCode);
+        uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
+        updateKey (pos, key);
 
         break;
       }
@@ -167,10 +173,9 @@ namespace KaleidoscopePlugins {
         for (uint8_t row = 0; row < ROWS; row++) {
           for (uint8_t col = 0; col < COLS; col++) {
             Key k = Layer.getKeyFromPROGMEM (layer, row, col);
-            uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col) * 2;
+            uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
 
-            EEPROM.update (keymapBase + pos, k.flags);
-            EEPROM.update (keymapBase + pos + 1, k.keyCode);
+            updateKey (pos, k);
           }
         }
 
