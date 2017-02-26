@@ -117,6 +117,7 @@ compile () {
         ${local_LIBS} \
 		    -libraries "${BOARD_HARDWARE_PATH}/.." \
         -libraries "${ROOT}" \
+        -libraries "." \
 		    ${EXTRA_BUILDER_ARGS} \
 		    -build-path "${BUILD_PATH}" \
 		    -ide-version "${ARDUINO_IDE_VERSION}" \
