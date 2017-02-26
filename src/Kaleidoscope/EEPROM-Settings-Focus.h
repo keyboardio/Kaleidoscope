@@ -18,5 +18,16 @@
 
 #pragma once
 
-#include <Kaleidoscope/EEPROM-Settings.h>
-#include <Kaleidoscope/EEPROM-Settings-Focus.h>
+#include <Kaleidoscope.h>
+
+namespace FocusHooks {
+  bool settings (const char *command);
+};
+
+#define FOCUS_HOOK_SETTINGS FOCUS_HOOK(FocusHooks::settings,            \
+                                       "settings.valid?\n"              \
+                                       "---------------\n"              \
+                                       "Return whether the EEPROM settings are valid, or not.\n\n" \
+                                       "settings.version\n"             \
+                                       "----------------\n"             \
+                                       "Return the version of the EEPROM settings.")

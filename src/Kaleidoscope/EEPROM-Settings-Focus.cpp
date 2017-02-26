@@ -16,7 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <Kaleidoscope-EEPROM-Settings.h>
 
-#include <Kaleidoscope/EEPROM-Settings.h>
-#include <Kaleidoscope/EEPROM-Settings-Focus.h>
+namespace FocusHooks {
+  bool settings (const char *command) {
+    enum {
+      ISVALID,
+      GETVERSION,
+    } subCommand;
+
+    if (strncmp_P (command, PSTR ("settings."), 9) != 0)
+      return false;
+
+    if (strcmp_P (command + 9, PSTR ("valid?")) == 0)
+      subCommand = ISVALID;
+    else if (strcmp_P (command + 9, PSTR ("version")) == 0)
+      subCommand = GETVERSION;
+    else
+      return false;
+
+    switch (subCommand) {
+    case ISVALID:
+      Serial.println (EEPROMSettings.isValid () ? F("yes") : F("no"));
+      break;
+    case GETVERSION:
+      Serial.println (EEPROMSettings.version ());
+      break;
+    }
+
+    Serial.read ();
+
+    return true;
+  }
+};
