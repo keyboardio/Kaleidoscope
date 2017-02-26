@@ -142,7 +142,7 @@ namespace KaleidoscopePlugins {
               Serial.print (k.keyCode);
 
               if (col < COLS - 1)
-                Serial.print (F("  "));
+                Serial.print (F(" | "));
             }
             Serial.println ();
           }
