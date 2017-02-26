@@ -19,25 +19,25 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 
-#define FOCUS_CMD_KEYMAP FOCUS_COMMAND(EEPROMKeymap.focusKeymap,        \
-                                       "keymap.dump\n"                  \
-                                       "-----------\n"                  \
-                                       "Dumps the keymap from EEPROM.\n\n" \
-                                       "keymap.upload <flag keyCode>...\n" \
-                                       "-------------------------------\n" \
-                                       "Uploads a new keymap to EEPROM." \
-                                       "Starts at layer 0, row 0, column 0, " \
-                                       "and continues as long as there is data on the line.\n\n" \
-                                       "keymap.setPos layer row column flag keyCode\n" \
-                                       "-------------------------------------------\n" \
-                                       "Sets the key at the specified `layer`, `row`, and `column` " \
-                                       "to the key with `flag`, and `keyCode` properties.\n\n" \
-                                       "keymap.getPos layer row column\n" \
-                                       "------------------------------\n" \
-                                       "Dump the key at `layer`, `row`, and `column`.\n\n" \
-                                       "keymap.transfer layer\n" \
-                                       "---------------------\n" \
-                                       "Transfers the `layer` from PROGMEM to EEPROM.")
+#define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap,          \
+                                     "keymap.dump\n"                    \
+                                     "-----------\n"                    \
+                                     "Dumps the keymap from EEPROM.\n\n" \
+                                     "keymap.upload <flag keyCode>...\n" \
+                                     "-------------------------------\n" \
+                                     "Uploads a new keymap to EEPROM."  \
+                                     "Starts at layer 0, row 0, column 0, " \
+                                     "and continues as long as there is data on the line.\n\n" \
+                                     "keymap.setPos layer row column flag keyCode\n" \
+                                     "-------------------------------------------\n" \
+                                     "Sets the key at the specified `layer`, `row`, and `column` " \
+                                     "to the key with `flag`, and `keyCode` properties.\n\n" \
+                                     "keymap.getPos layer row column\n" \
+                                     "------------------------------\n" \
+                                     "Dump the key at `layer`, `row`, and `column`.\n\n" \
+                                     "keymap.transfer layer\n"          \
+                                     "---------------------\n"          \
+                                     "Transfers the `layer` from PROGMEM to EEPROM.")
 
 namespace KaleidoscopePlugins {
   class EEPROMKeymap : public KaleidoscopePlugin {
