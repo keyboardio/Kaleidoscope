@@ -35,11 +35,15 @@ namespace KaleidoscopePlugins {
     static uint16_t endOfSettings (void);
     static void update (void);
     static bool isValid (void);
+    static void invalidate (void);
+    static uint8_t version (void);
+    static void version (uint8_t ver);
 
   private:
     static bool _isValid;
     static struct settings {
       char magic[2];
+      uint8_t version;
       uint16_t endOfSettings;
     } settings;
   };

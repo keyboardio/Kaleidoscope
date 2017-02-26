@@ -55,8 +55,25 @@ namespace KaleidoscopePlugins {
   }
 
   void
+  EEPROMSettings::invalidate (void) {
+    _isValid = false;
+  }
+
+  void
   EEPROMSettings::update (void) {
     EEPROM.put (0, settings);
+    _isValid = true;
+  }
+
+  uint8_t
+  EEPROMSettings::version (void) {
+    return settings.version;
+  }
+
+  void
+  EEPROMSettings::version (uint8_t ver) {
+    settings.version = ver;
+    update ();
   }
 };
 
