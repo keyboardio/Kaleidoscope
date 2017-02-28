@@ -1,6 +1,6 @@
 # Kaleidoscope-HostOS
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+![status][st:broken] [![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS
