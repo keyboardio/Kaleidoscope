@@ -37,6 +37,8 @@ namespace KaleidoscopePlugins {
     static uint8_t maxLayers;
 
     static void updateKey (uint16_t basePos, Key key);
+    static Key parseKey (void);
+    static void printKey (Key key);
   };
 };
 

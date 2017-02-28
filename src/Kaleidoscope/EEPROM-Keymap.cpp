@@ -64,6 +64,32 @@ namespace KaleidoscopePlugins {
     EEPROM.update (keymapBase + basePos * 2 + 1, key.keyCode);
   }
 
+  Key
+  EEPROMKeymap::parseKey (void) {
+    Key key;
+
+    key.flags = Serial.parseInt ();
+    key.keyCode = Serial.parseInt ();
+
+    return key;
+  }
+
+  void
+  EEPROMKeymap::printKey (Key k) {
+    if (k.flags < 10)
+      Serial.print (F(" "));
+    if (k.flags < 100)
+      Serial.print (F(" "));
+    Serial.print (k.flags);
+    Serial.print (F(" "));
+
+    if (k.keyCode < 10)
+      Serial.print (F(" "));
+    if (k.keyCode < 100)
+      Serial.print (F(" "));
+    Serial.print (k.keyCode);
+  }
+
   bool
   EEPROMKeymap::focusKeymap (const char *command) {
     enum {
@@ -95,12 +121,7 @@ namespace KaleidoscopePlugins {
       {
         uint16_t i = 0;
         while ((Serial.peek () != '\n') && (i < ROWS * COLS * maxLayers)) {
-          Key key;
-
-          key.flags = Serial.parseInt ();
-          key.keyCode = Serial.parseInt ();
-          updateKey (i, key);
-
+          updateKey (i, parseKey ());
           i++;
         }
         break;
@@ -114,9 +135,7 @@ namespace KaleidoscopePlugins {
 
         Key k = getKey (layer, row, col);
 
-        Serial.print (k.flags);
-        Serial.print (F(" "));
-        Serial.println (k.keyCode);
+        printKey (k);
 
         break;
       }
@@ -128,18 +147,7 @@ namespace KaleidoscopePlugins {
             for (uint8_t col = 0; col < COLS; col++) {
               Key k = getKey (layer, row, col);
 
-              if (k.flags < 10)
-                Serial.print (F(" "));
-              if (k.flags < 100)
-                Serial.print (F(" "));
-              Serial.print (k.flags);
-              Serial.print (F(" "));
-
-              if (k.keyCode < 10)
-                Serial.print (F(" "));
-              if (k.keyCode < 100)
-                Serial.print (F(" "));
-              Serial.print (k.keyCode);
+              printKey (k);
 
               if (col < COLS - 1)
                 Serial.print (F(" | "));
@@ -156,12 +164,9 @@ namespace KaleidoscopePlugins {
         uint8_t layer = Serial.parseInt ();
         uint8_t row = Serial.parseInt ();
         uint8_t col = Serial.parseInt ();
-        Key key;
-        key.flags = Serial.parseInt ();
-        key.keyCode = Serial.parseInt ();
 
         uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
-        updateKey (pos, key);
+        updateKey (pos, parseKey ());
 
         break;
       }
