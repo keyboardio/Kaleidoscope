@@ -17,10 +17,6 @@ firmware_size () {
 }
 
 find_sketch () {
-    if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
-        . "${SOURCEDIR}/.kaleidoscope-builder.conf"
-    fi
-
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
     LIBRARY="${LIBRARY:-${SKETCH}}"
 
