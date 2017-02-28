@@ -261,7 +261,7 @@ if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
 fi
 
 
-. ${ROOT}/tools/settings.sh
+. ${ROOT}/tools/kaleidoscope-builder.conf
 
 
 cmds=""
