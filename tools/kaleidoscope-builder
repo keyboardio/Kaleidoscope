@@ -22,7 +22,8 @@ find_sketch () {
 
     for path in "hardware/keyboardio/avr/libraries/Kaleidoscope-${LIBRARY}/examples/${SKETCH}" \
                     "examples/${LIBRARY}" \
-                    "src"; do
+                    "src" \
+		    "."; do
         if [ -f "${path}/${SKETCH}.ino" ]; then
             echo "${path}"
             return
