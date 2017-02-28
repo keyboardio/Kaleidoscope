@@ -20,10 +20,38 @@ BOARD="${BOARD:-model01}"
 MCU="${MCU:-atmega32u4}"
 FQBN="${FQBN:-keyboardio:avr:${BOARD}}"
 
+
+
+########
+######## Host OS specific commands
+########
+
+
+## Platform-specific overrides
+# Shamelessly stolen from git's Makefile
+uname_S=$(uname -s 2>/dev/null || echo not)
+
+
+
 DEVICE_PORT="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 DEVICE_PORT_BOOTLOADER="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 
 RESET_DEVICE="stty -F ${DEVICE_PORT} 1200 hupcl"
+MD5="md5sum"
+
+
+if [ "${uname_S}" = "Darwin" ]; then
+    DEVICE_PORT="$(ls /dev/cu.usbmodemHID?? /dev/cu.usbmodem14* 2> /dev/null || echo '')"
+    DEVICE_PORT_BOOTLOADER="$(ls /dev/cu.usbmodem14* 2> /dev/null || echo '')"
+    RESET_DEVICE="stty -f ${DEVICE_PORT} 1200"
+
+
+    ARDUINO_PATH="${ARDUINO_PATH:-/Applications/Arduino.app/Contents/Java/}"
+    ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Documents/Arduino}"
+
+    MD5="md5"
+
+fi
 
 ARDUINO_PATH="${ARDUINO_PATH:-/usr/local/arduino}"
 ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
@@ -38,7 +66,6 @@ AVR_SIZE="${AVR_SIZE:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-size}"
 AVR_NM="${AVR_NM:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-nm}"
 AVR_OBJDUMP="${AVR_OBJDUMP:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-objdump}"
 
-MD5="md5sum"
 
 BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
 OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
@@ -68,18 +95,3 @@ else
     ARDUINO_VERBOSE="-quiet"
 fi
 
-## Platform-specific overrides
-# Shamelessly stolen from git's Makefile
-uname_S=$(uname -s 2>/dev/null || echo not)
-
-if [ "${uname_S}" = "Darwin" ]; then
-    DEVICE_PORT="$(ls /dev/cu.usbmodemHID?? /dev/cu.usbmodem14*)"
-    DEVICE_PORT_BOOTLOADER="$(ls /dev/cu.usbmodem14*)"
-
-    ARDUINO_PATH="/Applications/Arduino.app/Contents/Java/"
-    ARDUINO_LOCAL_LIB_PATH="${HOME}/Documents/Arduino"
-
-    MD5="md5"
-
-    RESET_DEVICE="stty -f ${DEVICE_PORT} 1200"
-fi
