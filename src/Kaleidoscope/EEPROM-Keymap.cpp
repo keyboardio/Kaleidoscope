@@ -94,8 +94,6 @@ namespace KaleidoscopePlugins {
   EEPROMKeymap::focusKeymap (const char *command) {
     enum {
       UPLOAD,
-      GETPOS,
-      SETPOS,
       DUMP,
       TRANSFER,
     } subCommand;
@@ -109,10 +107,6 @@ namespace KaleidoscopePlugins {
       subCommand = DUMP;
     else if (strcmp_P (command + 7, PSTR ("transfer")) == 0)
       subCommand = TRANSFER;
-    else if (strcmp_P (command + 7, PSTR ("getPos")) == 0)
-      subCommand = GETPOS;
-    else if (strcmp_P (command + 7, PSTR ("setPos")) == 0)
-      subCommand = SETPOS;
     else
       return false;
 
@@ -124,19 +118,6 @@ namespace KaleidoscopePlugins {
           updateKey (i, parseKey ());
           i++;
         }
-        break;
-      }
-
-    case GETPOS:
-      {
-        uint8_t layer = Serial.parseInt ();
-        uint8_t row = Serial.parseInt ();
-        uint8_t col = Serial.parseInt ();
-
-        Key k = getKey (layer, row, col);
-
-        printKey (k);
-
         break;
       }
 
@@ -156,18 +137,6 @@ namespace KaleidoscopePlugins {
           }
           Serial.println ();
         }
-        break;
-      }
-
-    case SETPOS:
-      {
-        uint8_t layer = Serial.parseInt ();
-        uint8_t row = Serial.parseInt ();
-        uint8_t col = Serial.parseInt ();
-
-        uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
-        updateKey (pos, parseKey ());
-
         break;
       }
 
