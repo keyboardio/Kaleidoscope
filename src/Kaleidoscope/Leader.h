@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define LEADER_MAX_SEQUENCE_LENGTH 16
+#define LEADER_MAX_SEQUENCE_LENGTH 4
 
 #define LEAD(n) (Key){ .raw = KaleidoscopePlugins::Ranges::LEAD_FIRST + n }
 
