@@ -260,6 +260,10 @@ if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
     . "${SOURCEDIR}/.kaleidoscope-builder.conf"
 fi
 
+if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
+    . "${SOURCEDIR}/kaleidoscope-builder.conf"
+fi
+
 
 . ${ROOT}/tools/kaleidoscope-builder.conf
 
