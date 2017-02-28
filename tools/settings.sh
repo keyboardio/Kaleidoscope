@@ -16,6 +16,13 @@ if [ -z "${SKETCH}" ] || [ -z "${LIBRARY}" ] || [ -z "${ROOT}" ] || [ -z "${SOUR
     exit 1
 fi
 
+
+########
+######## Keyboard hardware definitions
+########
+
+
+
 BOARD="${BOARD:-model01}"
 MCU="${MCU:-atmega32u4}"
 FQBN="${FQBN:-keyboardio:avr:${BOARD}}"
@@ -35,7 +42,6 @@ uname_S=$(uname -s 2>/dev/null || echo not)
 
 DEVICE_PORT="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
 DEVICE_PORT_BOOTLOADER="$(ls /dev/ttyACM* 2>/dev/null || echo '')"
-
 RESET_DEVICE="stty -F ${DEVICE_PORT} 1200 hupcl"
 MD5="md5sum"
 
@@ -53,32 +59,58 @@ if [ "${uname_S}" = "Darwin" ]; then
 
 fi
 
+
+
+######
+###### Arduino tools configuration
+######
+
 ARDUINO_PATH="${ARDUINO_PATH:-/usr/local/arduino}"
 ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
 ARDUINO_TOOLS_PATH="${ARDUINO_TOOLS_PATH:-${ARDUINO_PATH}/hardware/tools}"
 ARDUINO_BUILDER="${ARDUINO_BUILDER:-${ARDUINO_PATH}/arduino-builder}"
 ARDUINO_IDE_VERSION="100607"
 
-BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH:-${ARDUINO_LOCAL_LIB_PATH}/hardware}"
-BOOTLOADER_PATH="${BOARD_HARDWARE_PATH}/keyboardio/avr/bootloaders/caterina/Caterina.hex"
+######
+###### Executable paths
+######
 
 AVR_SIZE="${AVR_SIZE:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-size}"
 AVR_NM="${AVR_NM:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-nm}"
 AVR_OBJDUMP="${AVR_OBJDUMP:-${ARDUINO_TOOLS_PATH}/avr/bin/avr-objdump}"
 
 
+######
+###### Source files and dependencies
+######
+
+
+BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH:-${ARDUINO_LOCAL_LIB_PATH}/hardware}"
+BOOTLOADER_PATH="${BOARD_HARDWARE_PATH}/keyboardio/avr/bootloaders/caterina/Caterina.hex"
+
+
+######
+###### Build and output configuration
+######
+
+GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
+LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+
 BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
 OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
 OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
 
-GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
-LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
 
 OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
 
 HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
 HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
 ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
+
+
+
+
+
 
 ARDUINO_TOOLS_PARAM="-tools ${ARDUINO_TOOLS_PATH}"
 if [ -z "${ARDUINO_TOOLS_PATH}" ]; then
