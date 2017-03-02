@@ -20,7 +20,7 @@
 
 namespace KaleidoscopePlugins {
   namespace LEDEffects {
-    uint16_t AlphaSquareEffect::length = 200;
+    uint16_t AlphaSquareEffect::length = 1000;
     uint32_t AlphaSquareEffect::endTimeLeft, AlphaSquareEffect::endTimeRight;
     Key AlphaSquareEffect::lastKeyLeft, AlphaSquareEffect::lastKeyRight;
 
