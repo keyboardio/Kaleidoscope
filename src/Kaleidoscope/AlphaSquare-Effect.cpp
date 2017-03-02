@@ -57,16 +57,20 @@ namespace KaleidoscopePlugins {
         return key;
 
       uint8_t displayCol = 2;
+      Key prevKey = lastKeyLeft;
 
       if (col < COLS / 2) {
         lastKeyLeft = key;
         endTimeLeft = millis () + length;
       } else {
+        prevKey = lastKeyRight;
         lastKeyRight = key;
         endTimeRight = millis () + length;
         displayCol = 10;
       }
 
+      if (prevKey != key)
+        ::AlphaSquare.clear (prevKey, displayCol);
       ::AlphaSquare.display (key, displayCol);
       return key;
     }
