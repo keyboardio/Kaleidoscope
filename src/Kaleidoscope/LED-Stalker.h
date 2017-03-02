@@ -33,6 +33,7 @@ namespace KaleidoscopePlugins {
       StalkerEffect (void);
 
       virtual void begin (void) final;
+      virtual void init (void) final;
       virtual void update (void) final;
 
       static void configure (ColorComputer *colorComputer);

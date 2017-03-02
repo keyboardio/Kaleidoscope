@@ -39,6 +39,11 @@ namespace KaleidoscopePlugins {
       LEDMode::begin ();
     }
 
+    void
+    StalkerEffect::init (void) {
+      memset (map, 0, sizeof (map));
+    }
+
      Key
     StalkerEffect::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
       if (row >= ROWS || col >= COLS)
