@@ -23,9 +23,9 @@ the `display` method.
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup ();
 
-  Kaleidoscope.use (&AlphaSquare, NULL);
+  USE_PLUGINS (&AlphaSquare);
   
   AlphaSquare.display (Key_A);
 }
@@ -38,16 +38,19 @@ The plugin provides the `AlphaSquare` object, which has the following methods:
 ### `.display(key)`
 ### `.display(key, row, col)`
 ### `.display(key, col)`
+### `.display(key, row, col, color)`
 
-> Display the symbol for `key` at the given row or column. If `row` is omitted,
-> the first row - `0` is assumed. If the column is omitted too, then the third -
-> `2` - column is used by default.
+> Display the symbol for `key` at the given row or column, with pixels set to
+> the specified `color`. If `row` is omitted, the first row - `0` is assumed. If
+> the column is omitted too, then the third - `2` - column is used by default.
+> If the `color` is omitted, the plugin will use the global `.color` property.
 >
 > The plugin can display the English alphabet, and the numbers from 0 to 9.
 
 ### `.display(symbol)`
 ### `.display(symbol, row, col)`
 ### `.display(symbol, col)`
+### `.display(symbol, row, col, color)`
 
 > Almost the same as the previous function, but instead of a key, it expects a
 > 4x4 bitmap.

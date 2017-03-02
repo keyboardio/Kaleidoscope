@@ -178,29 +178,39 @@ namespace KaleidoscopePlugins {
   }
 
   void
-  AlphaSquare::display (Key key, uint8_t row, uint8_t col) {
+  AlphaSquare::display (Key key, uint8_t row, uint8_t col, cRGB keyColor) {
     if (key < Key_A || key > Key_0)
       return;
 
     uint8_t index = key.keyCode - Key_A.keyCode;
     uint16_t symbol = pgm_read_word (&alphabet[index]);
 
-    display (symbol, row, col);
+    display (symbol, row, col, keyColor);
   }
 
   void
-  AlphaSquare::display (uint16_t symbol, uint8_t row, uint8_t col) {
+  AlphaSquare::display (Key key, uint8_t row, uint8_t col) {
+    display (key, row, col, color);
+  }
+
+  void
+  AlphaSquare::display (uint16_t symbol, uint8_t row, uint8_t col, cRGB keyColor) {
     for (uint8_t r = 0; r < 4; r++) {
       for (uint8_t c = 0; c < 4; c++) {
         uint8_t pixel = bitRead (symbol, r * 4 + c);
         if (!pixel)
           continue;
 
-        LEDControl.led_set_crgb_at (row + r, col + c, color);
+        LEDControl.led_set_crgb_at (row + r, col + c, keyColor);
       }
     }
 
     LEDControl.led_sync ();
+  }
+
+  void
+  AlphaSquare::display (uint16_t symbol, uint8_t row, uint8_t col) {
+    display (symbol, row, col, color);
   }
 };
 

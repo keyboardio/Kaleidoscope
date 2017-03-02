@@ -39,10 +39,12 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
+    static void display (Key key, uint8_t row, uint8_t col, cRGB keyColor);
     static void display (Key key, uint8_t row, uint8_t col);
     static void display (Key key) { display (key, 0, 2); };
     static void display (Key key, uint8_t col) { display (key, 0, col); };
 
+    static void display (uint16_t symbol, uint8_t row, uint8_t col, cRGB keyColor);
     static void display (uint16_t symbol, uint8_t row, uint8_t col);
     static void display (uint16_t symbol) { display (symbol, 0, 2); };
     static void display (uint16_t symbol, uint8_t col) { display (symbol, 0, col); };
