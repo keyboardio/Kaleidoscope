@@ -30,10 +30,10 @@ void setup () {
 }
 ```
 
-It is recommended to place the activation of the plugin (the `Kaleidoscope.use`
-call) as early as possible, so the plugin can catch all relevant key presses.
-The configuration can happen at any time, but using the `STALKER` macro is
-highly recommended.
+It is recommended to place the activation of the plugin (the `USE_PLUGINS` call)
+as early as possible, so the plugin can catch all relevant key presses. The
+configuration can happen at any time, but using the `STALKER` macro is highly
+recommended.
 
 ## Plugin methods
 
