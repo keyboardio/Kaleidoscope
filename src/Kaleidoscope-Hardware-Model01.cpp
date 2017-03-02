@@ -3,7 +3,7 @@
 
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
-bool Model01::isLEDChanged;
+bool Model01::isLEDChanged = true;
 
 static constexpr uint8_t key_led_map[4][16] = {
   {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
