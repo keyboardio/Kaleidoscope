@@ -40,7 +40,7 @@ namespace KaleidoscopePlugins {
         endTimeLeft = 0;
       }
       if (endTimeRight && millis () > endTimeRight) {
-        ::AlphaSquare.clear (lastKeyRight);
+        ::AlphaSquare.clear (lastKeyRight, 10);
         endTimeRight = 0;
       }
     }
