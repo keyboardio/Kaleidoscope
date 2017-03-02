@@ -22,10 +22,11 @@ To use the plugin, one needs to include the header, and select the effect.
 #include <Kaleidoscope-LED-Stalker.h>
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup ();
 
   StalkerEffect.configure (STALKER (Haunt, {0xff, 0, 0}));
-  Kaleidoscope.use (&StalkerEffect, NULL);
+  USE_PLUGINS (&StalkerEffect);
+  StalkerEffect.activate ();
 }
 ```
 

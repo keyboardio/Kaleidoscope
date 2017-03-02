@@ -36,7 +36,7 @@ namespace KaleidoscopePlugins {
     void
     StalkerEffect::begin (void) {
       event_handler_hook_use (eventHandlerHook);
-      loop_hook_use (loopHook);
+      LEDMode::begin ();
     }
 
      Key
@@ -52,10 +52,7 @@ namespace KaleidoscopePlugins {
     }
 
     void
-    StalkerEffect::loopHook (bool postClear) {
-      if (postClear)
-        return;
-
+    StalkerEffect::update (void) {
       if (!colorComputer)
         return;
 

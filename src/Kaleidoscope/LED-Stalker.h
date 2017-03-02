@@ -23,7 +23,7 @@
 
 namespace KaleidoscopePlugins {
   namespace LEDEffects {
-    class StalkerEffect : public KaleidoscopePlugin {
+    class StalkerEffect : public LEDMode {
     public:
       class ColorComputer {
       public:
@@ -33,6 +33,8 @@ namespace KaleidoscopePlugins {
       StalkerEffect (void);
 
       virtual void begin (void) final;
+      virtual void update (void) final;
+
       static void configure (ColorComputer *colorComputer);
       static uint16_t stepLength;
 
@@ -42,7 +44,6 @@ namespace KaleidoscopePlugins {
       static uint8_t map[ROWS][COLS];
 
       static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-      static void loopHook (bool postClear);
     };
 
     namespace Stalker {

@@ -41,10 +41,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup ();
 
   StalkerEffect.configure (STALKER (BlazingTrail, NULL));
-  Kaleidoscope.use (&LEDControl, &StalkerEffect, NULL);
+  USE_PLUGINS (&StalkerEffect);
+
+  StalkerEffect.activate ();
 }
 
 void loop () {
