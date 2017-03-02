@@ -55,6 +55,13 @@ The plugin provides the `AlphaSquare` object, which has the following methods:
 > Almost the same as the previous function, but instead of a key, it expects a
 > 4x4 bitmap.
 
+### `.clear(key)`, `.clear(symbol)`
+### `.clear(key, col)`, `.clear(symbol, col)`
+### `.clear(key, col, row)`, `.clear(symbol, col, row)`
+
+> Just like the `.display()` counterparts, except these clear the symbol, by
+> turning the LED pixels it is made up from, off.
+
 ### `.color`
 
 > The color to use to draw the pixels.
