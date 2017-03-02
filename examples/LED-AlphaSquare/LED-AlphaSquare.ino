@@ -75,9 +75,9 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup ();
 
-  Kaleidoscope.use (&LEDControl, &AlphaSquare, &Macros, NULL);
+  USE_PLUGINS (&AlphaSquare, &AlphaSquareEffect, &Macros);
   AlphaSquare.color = { 0xcb, 0xc0, 0xff };
 }
 
