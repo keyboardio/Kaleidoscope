@@ -23,6 +23,7 @@ namespace KaleidoscopePlugins {
     uint16_t AlphaSquareEffect::length = 1000;
     uint32_t AlphaSquareEffect::endTimeLeft, AlphaSquareEffect::endTimeRight;
     Key AlphaSquareEffect::lastKeyLeft, AlphaSquareEffect::lastKeyRight;
+    uint8_t AlphaSquareEffect::us;
 
     AlphaSquareEffect::AlphaSquareEffect (void) {
     }
@@ -30,7 +31,8 @@ namespace KaleidoscopePlugins {
     void
     AlphaSquareEffect::begin (void) {
       Kaleidoscope.useEventHandlerHook (eventHandlerHook);
-      LEDMode::begin ();
+      Kaleidoscope.use (&LEDControl, NULL);
+      us = LEDControl.mode_add (this);
     }
 
     void
@@ -47,6 +49,9 @@ namespace KaleidoscopePlugins {
 
     Key
     AlphaSquareEffect::eventHandlerHook (Key key, byte row, byte col, uint8_t keyState) {
+      if (LEDControl.get_mode () != us)
+        return key;
+
       if (keyState & INJECTED)
         return key;
 

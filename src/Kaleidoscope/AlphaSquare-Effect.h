@@ -34,6 +34,7 @@ namespace KaleidoscopePlugins {
     private:
       static uint32_t endTimeLeft, endTimeRight;
       static Key lastKeyLeft, lastKeyRight;
+      static uint8_t us;
 
       static Key eventHandlerHook (Key key, uint8_t row, uint8_t col, uint8_t keyState);
     };
