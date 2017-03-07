@@ -29,15 +29,11 @@ namespace KaleidoscopePlugins {
 
     static void configure (const Key topsyTurvyList[]);
 
-    void on (void);
-    void off (void);
-
   private:
     static const Key *topsyTurvyList;
     static uint8_t topsyTurvyModState;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static Key noOpHook (Key, byte row, byte col, uint8_t keyState);
   };
 };
 

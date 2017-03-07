@@ -32,8 +32,8 @@ static const Key topsyTurvyList[] PROGMEM = {
 void setup () {
   TopsyTurvy.configure (topsyTurvyList);
   
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&TopsyTurvy, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&TopsyTurvy);
 }
 ```
 
@@ -47,16 +47,6 @@ The plugin provides the `TopsyTurvy` object, with the following methods:
 ### `.configure(list)`
 
 > Tells `TopsyTurvy` to use the specified list of keys.
-
-### `.on()`
-
-> Turns the shift-inversion functionality on.
-
-### `.off()`
-
-> Turns the shift-inversion functionality off. In this case, no transformations
-> will be applied, and even if keys pressed appear in the list, they will be
-> ignored until the plugin is turned back on.
 
 ## Further reading
 

@@ -49,8 +49,8 @@ static const Key topsyTurvyList[] PROGMEM = {
 void setup () {
   TopsyTurvy.configure (topsyTurvyList);
 
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&TopsyTurvy, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&TopsyTurvy);
 }
 
 void loop () {

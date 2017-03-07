@@ -38,21 +38,6 @@ namespace KaleidoscopePlugins {
     topsyTurvyList = (const Key *)list;
   }
 
-  void
-  TopsyTurvy::on (void) {
-    event_handler_hook_replace (this->noOpHook, this->eventHandlerHook);
-  }
-
-  void
-  TopsyTurvy::off (void) {
-    event_handler_hook_replace (this->eventHandlerHook, this->noOpHook);
-  }
-
-  Key
-  TopsyTurvy::noOpHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    return mappedKey;
-  }
-
   Key
   TopsyTurvy::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (keyState & TOPSYTURVY)
