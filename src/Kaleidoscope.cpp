@@ -106,4 +106,16 @@ Kaleidoscope_::appendHook(listItem<loopHook> *newNode) {
     appendHook(&loopHookRootNode, newNode);
 }
 
+void
+Kaleidoscope_::prependHook(listItem<eventHandlerHook> *newNode) {
+    newNode->next = eventHandlerRootNode;
+    eventHandlerRootNode = newNode;
+}
+
+void
+Kaleidoscope_::prependHook(listItem<loopHook> *newNode) {
+    newNode->next = loopHookRootNode;
+    loopHookRootNode = newNode;
+}
+
 Kaleidoscope_ Kaleidoscope;

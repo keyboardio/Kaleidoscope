@@ -94,6 +94,8 @@ class Kaleidoscope_ {
     static void appendHook(listItem<loopHook> *newNode);
     static void useHook(listItem<eventHandlerHook> *newNode);
     static void useHook(listItem<loopHook> *newNode);
+    static void prependHook(listItem<eventHandlerHook> *newNode);
+    static void prependHook(listItem<loopHook> *newNode);
 
   private:
     template<typename T> static void appendHook(T **rootNode, T *newNode);
@@ -114,6 +116,11 @@ extern Kaleidoscope_ Kaleidoscope;
         eventHandlerHookNode = {&hook, NULL};                            \
       Kaleidoscope.appendHook(&eventHandlerHookNode);                 \
   }
+#define event_handler_hook_prepend(hook) {                            \
+      static Kaleidoscope_::listItem<Kaleidoscope_::eventHandlerHook> \
+        eventHandlerHookNode = {&hook, NULL};                            \
+      Kaleidoscope.prependHook(&eventHandlerHookNode);                \
+  }
 
 #define loop_hook_use(hook) {                                 \
       static Kaleidoscope_::listItem<Kaleidoscope_::loopHook> \
@@ -124,4 +131,9 @@ extern Kaleidoscope_ Kaleidoscope;
       static Kaleidoscope_::listItem<Kaleidoscope_::loopHook>  \
         loopHookNode = {&hook, NULL};                             \
       Kaleidoscope.appendHook(&loopHookNode);                  \
+  }
+#define loop_hook_prepend(hook) {                             \
+      static Kaleidoscope_::listItem<Kaleidoscope_::loopHook> \
+        loopHookNode = {&hook, NULL};                            \
+      Kaleidoscope.prependHook(&loopHookNode);                \
   }
