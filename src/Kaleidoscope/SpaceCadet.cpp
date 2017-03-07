@@ -41,21 +41,6 @@ namespace KaleidoscopePlugins {
     rightParen = right;
   }
 
-  void
-  SpaceCadetShift::on (void) {
-    event_handler_hook_replace (this->noOpHook, this->eventHandlerHook);
-  }
-
-  void
-  SpaceCadetShift::off (void) {
-    event_handler_hook_replace (this->eventHandlerHook, this->noOpHook);
-  }
-
-  Key
-  SpaceCadetShift::noOpHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    return mappedKey;
-  }
-
   Key
   SpaceCadetShift::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     // If nothing happened, bail out fast.

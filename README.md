@@ -37,8 +37,8 @@ enabling the plugin:
 #include <Kaleidoscope-SpaceCadet.h>
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&SpaceCadetShift, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&SpaceCadetShift);
 }
 ```
 
@@ -63,18 +63,9 @@ The plugin has a number of methods available on the `SpaceCadetShift` object:
 ```c++
 void setup () {
   SpaceCadetShift.configure(Key_8, Key_9);
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  Kaleidoscope.setup ();
 }
 ```
-
-### `.on()`
-
-> This method turns the SpaceCadet Shift behaviour on, if it was turned off.
-
-### `.off()`
-
-> Turns the SpaceCadet Shift behaviour off, making the `Shift` keys work as they
-> did before, without the additional behaviour.
 
 ### `.timeOut`
 

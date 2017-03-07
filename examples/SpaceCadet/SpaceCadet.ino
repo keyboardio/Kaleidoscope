@@ -41,8 +41,8 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&SpaceCadetShift, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&SpaceCadetShift);
 }
 
 void loop () {

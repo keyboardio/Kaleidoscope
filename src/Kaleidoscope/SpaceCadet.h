@@ -30,15 +30,12 @@ namespace KaleidoscopePlugins {
     static void configure (Key left, Key right);
     static uint16_t timeOut;
 
-    void on (void);
-    void off (void);
   private:
     static uint8_t parenNeeded;
     static uint32_t startTime;
     static Key leftParen, rightParen;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static Key noOpHook (Key, byte row, byte col, uint8_t keyState);
   };
 };
 
