@@ -24,8 +24,6 @@ void setup();
 #include "key_events.h"
 #include "layers.h"
 
-#define HOOK_MAX 64
-
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #ifndef VERSION
@@ -53,20 +51,32 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
         })
 
 class KaleidoscopePlugin {
- public:
-  virtual void begin(void) = 0;
+  public:
+    virtual void begin(void) = 0;
 };
 
 class Kaleidoscope_ {
   public:
     Kaleidoscope_(void);
 
-    void setup(const byte keymap_count) { setup(); };
+    void setup(const byte keymap_count) {
+        setup();
+    };
     void setup(void);
     void loop(void);
     void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
 
     // ---- hooks ----
+    typedef Key (*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
+    typedef void (*loopHook)(bool postClear);
+
+    template<typename T> struct listItem {
+        T hook;
+        listItem<T> *next;
+    };
+
+    static listItem<eventHandlerHook> *eventHandlerRootNode;
+    static listItem<loopHook> *loopHookRootNode;
 
     /*
      * In most cases, one only wants a single copy of a hook. On the other hand,
@@ -75,38 +85,43 @@ class Kaleidoscope_ {
      * plugins too. In case the end-user calls the same setup function, we'd end up
      * with hooks registered multiple times.
      *
-     * To avoid this, protection against double-registration has been introduced.
-     * The `event_handler_hook_use` and `loop_hook_use` functions will only allow
-     * one copy of the hook. The `event_handler_hook_append` and `loop_hook_append`
-     * functions will, on the other hand, just append the hooks, and not care about
-     * protection.
+     * To avoid this, protection against double-registration has been
+     * introduced. The `useHook` functions will only allow one copy of the hook.
+     * The `appendHook` functions will, on the other hand, just append the
+     * hooks, and not care about protection.
      */
-    typedef Key (*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
-    static eventHandlerHook eventHandlers[HOOK_MAX];
+    static void appendHook(listItem<eventHandlerHook> *newNode);
+    static void appendHook(listItem<loopHook> *newNode);
+    static void useHook(listItem<eventHandlerHook> *newNode);
+    static void useHook(listItem<loopHook> *newNode);
 
-    static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
-    static void appendEventHandlerHook(eventHandlerHook hook);
-    static void useEventHandlerHook(eventHandlerHook hook);
+  private:
+    template<typename T> static void appendHook(T **rootNode, T *newNode);
+    template<typename T> static void useHook(T **rootNode, T *newNode);
 
-    typedef void (*loopHook)(bool postClear);
-    static loopHook loopHooks[HOOK_MAX];
-
-    static void replaceLoopHook(loopHook oldHook, loopHook newHook);
-    static void appendLoopHook(loopHook hook);
-    static void useLoopHook(loopHook hook);
-
- private:
     static void runLoopHooks(bool postClear);
 };
 
 extern Kaleidoscope_ Kaleidoscope;
 
-/* -- DEPRECATED aliases; remove them when there are no more users. -- */
+#define event_handler_hook_use(hook) {                                \
+      static Kaleidoscope_::listItem<Kaleidoscope_::eventHandlerHook> \
+        eventHandlerHookNode = {&hook, NULL};                            \
+      Kaleidoscope.useHook(&eventHandlerHookNode);                    \
+  }
+#define event_handler_hook_append(hook) {                             \
+      static Kaleidoscope_::listItem<Kaleidoscope_::eventHandlerHook> \
+        eventHandlerHookNode = {&hook, NULL};                            \
+      Kaleidoscope.appendHook(&eventHandlerHookNode);                 \
+  }
 
-#define event_handler_hook_use(hook) Kaleidoscope.useEventHandlerHook(hook);
-#define event_handler_hook_append(hook) Kaleidoscope.appendEventHandlerHook(hook)
-#define event_handler_hook_replace(oldHook, newHook) Kaleidoscope.replaceEventHandlerHook(oldHook, newHook)
-
-#define loop_hook_use(hook) Kaleidoscope.useLoopHook(hook)
-#define loop_hook_append(hook) Kaleidoscope.appendLoopHook(hook)
-#define loop_hook_replace(oldHook, newHook) Kaleidoscope.replaceLoopHook(oldHook, newHook)
+#define loop_hook_use(hook) {                                 \
+      static Kaleidoscope_::listItem<Kaleidoscope_::loopHook> \
+        loopHookNode = {&hook, NULL};                            \
+      Kaleidoscope.useHook(&loopHookNode);                    \
+  }
+#define loop_hook_append(hook) {                               \
+      static Kaleidoscope_::listItem<Kaleidoscope_::loopHook>  \
+        loopHookNode = {&hook, NULL};                             \
+      Kaleidoscope.appendHook(&loopHookNode);                  \
+  }

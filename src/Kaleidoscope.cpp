@@ -1,8 +1,8 @@
 #include "Kaleidoscope.h"
 #include <stdarg.h>
 
-Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
-Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
+Kaleidoscope_::listItem<Kaleidoscope_::eventHandlerHook> *Kaleidoscope_::eventHandlerRootNode;
+Kaleidoscope_::listItem<Kaleidoscope_::loopHook> *Kaleidoscope_::loopHookRootNode;
 
 Kaleidoscope_::Kaleidoscope_(void) {
 }
@@ -20,10 +20,12 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::runLoopHooks (bool postClear) {
-  for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-    loopHook hook = loopHooks[i];
-    (*hook)(postClear);
-  }
+    auto *node = loopHookRootNode;
+
+    while (node) {
+        (*(node->hook))(postClear);
+        node = node->next;
+    }
 }
 
 void
@@ -51,52 +53,57 @@ Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
     va_end(ap);
 }
 
-void
-Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == oldHook) {
-      eventHandlers[i] = newHook;
-      return;
+template<typename T>
+void Kaleidoscope_::appendHook(T **rootNode, T *newNode) {
+    if (!*rootNode) {
+        *rootNode = newNode;
+        return;
     }
-  }
-}
 
-void
-Kaleidoscope_::appendEventHandlerHook (eventHandlerHook hook) {
-  replaceEventHandlerHook((eventHandlerHook)NULL, hook);
-}
+    T *node = *rootNode;
 
-void
-Kaleidoscope_::useEventHandlerHook (eventHandlerHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == hook)
-      return;
-  }
-  appendEventHandlerHook(hook);
-}
-
-void
-Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == oldHook) {
-      loopHooks[i] = newHook;
-      return;
+    while (node->next) {
+        node = node->next;
     }
-  }
+    node->next = newNode;
+}
+
+template<typename T>
+void
+Kaleidoscope_::useHook(T **rootNode, T *newNode) {
+    if (!*rootNode) {
+        *rootNode = newNode;
+        return;
+    }
+
+    T *node = *rootNode;
+
+    while (node->next) {
+        if (node->hook == newNode->hook)
+            return;
+        node = node->next;
+    }
+    node->next = newNode;
 }
 
 void
-Kaleidoscope_::appendLoopHook(loopHook hook) {
-  replaceLoopHook((loopHook)NULL, hook);
+Kaleidoscope_::useHook(listItem<eventHandlerHook> *newNode) {
+    useHook(&eventHandlerRootNode, newNode);
 }
 
 void
-Kaleidoscope_::useLoopHook(loopHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == hook)
-      return;
-  }
-  appendLoopHook (hook);
+Kaleidoscope_::useHook(listItem<loopHook> *newNode) {
+    useHook(&loopHookRootNode, newNode);
+}
+
+void
+Kaleidoscope_::appendHook(listItem<eventHandlerHook> *newNode) {
+    appendHook(&eventHandlerRootNode, newNode);
+}
+
+void
+Kaleidoscope_::appendHook(listItem<loopHook> *newNode) {
+    appendHook(&loopHookRootNode, newNode);
 }
 
 Kaleidoscope_ Kaleidoscope;
