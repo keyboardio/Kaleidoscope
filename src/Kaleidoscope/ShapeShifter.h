@@ -33,18 +33,12 @@ namespace KaleidoscopePlugins {
 
     static void configure (const dictionary_t dictionary[]);
 
-    void on (void);
-    void off (void);
-
   private:
     static const dictionary_t *dictionary;
     static bool modActive;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static Key noOpHook (Key, byte row, byte col, uint8_t keyState);
-
     static void loopHook (bool postClear);
-    static void noOpLoopHook (bool postClear);
   };
 };
 

@@ -37,8 +37,8 @@ static const KaleidoscopePlugins::ShapeShifter::dictionary_t shapeShiftDictionar
 void setup () {
   ShapeShifter.configure (shapeShiftDictionary);
   
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&ShapeShifter, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&ShapeShifter);
 }
 ```
 
@@ -59,17 +59,6 @@ The plugin provides the `ShapeShifter` object, with the following methods:
 >
 > Be aware that the replacement key will be pressed with `Shift` held, so do
 > keep that in mind!
-
-### `.on()`
-
-> Turns the shape shifting functionality on. Requires that the plugin
-> be [configured](#configuredictionary) first.
-
-### `.off()`
-
-> Turns the shape shifting functionality off. In this case, no transformations
-> will be applied, and even if symbols appear in the dictionary, they will be
-> ignored until the plugin is turned back on.
 
 ## Further reading
 

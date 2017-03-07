@@ -38,27 +38,6 @@ namespace KaleidoscopePlugins {
   }
 
   void
-  ShapeShifter::on (void) {
-    event_handler_hook_replace (this->noOpHook, this->eventHandlerHook);
-    loop_hook_replace (this->noOpLoopHook, this->loopHook);
-  }
-
-  void
-  ShapeShifter::off (void) {
-    event_handler_hook_replace (this->eventHandlerHook, this->noOpHook);
-    loop_hook_replace (this->loopHook, this->noOpLoopHook);
-  }
-
-  Key
-  ShapeShifter::noOpHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    return mappedKey;
-  }
-
-  void
-  ShapeShifter::noOpLoopHook (bool postClear) {
-  }
-
-  void
   ShapeShifter::loopHook (bool postClear) {
     if (postClear)
       return;

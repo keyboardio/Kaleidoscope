@@ -49,8 +49,8 @@ static const KaleidoscopePlugins::ShapeShifter::dictionary_t shapeShiftDictionar
 void setup () {
   ShapeShifter.configure (shapeShiftDictionary);
 
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&ShapeShifter, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&ShapeShifter);
 }
 
 void loop () {
