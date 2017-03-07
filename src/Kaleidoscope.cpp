@@ -19,21 +19,23 @@ Kaleidoscope_::setup(void) {
 }
 
 void
+Kaleidoscope_::runLoopHooks (bool postClear) {
+  for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
+    loopHook hook = loopHooks[i];
+    (*hook)(postClear);
+  }
+}
+
+void
 Kaleidoscope_::loop(void) {
     KeyboardHardware.scan_matrix();
 
-    for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-        loopHook hook = loopHooks[i];
-        (*hook)(false);
-    }
+    runLoopHooks(false);
 
     Keyboard.sendReport();
     Keyboard.releaseAll();
 
-    for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
-        loopHook hook = loopHooks[i];
-        (*hook)(true);
-    }
+    runLoopHooks(true);
 }
 
 void

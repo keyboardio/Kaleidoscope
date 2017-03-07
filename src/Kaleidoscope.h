@@ -94,6 +94,9 @@ class Kaleidoscope_ {
     static void replaceLoopHook(loopHook oldHook, loopHook newHook);
     static void appendLoopHook(loopHook hook);
     static void useLoopHook(loopHook hook);
+
+ private:
+    static void runLoopHooks(bool postClear);
 };
 
 extern Kaleidoscope_ Kaleidoscope;
