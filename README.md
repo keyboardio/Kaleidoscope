@@ -28,22 +28,8 @@ active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
 
 ## Using the plugin
 
-There are two major ways in which the plugin can be used: one is to turn
-existing modifiers or momentary layer toggles into one-shot keys:
-
-```c++
-#include <Kaleidoscope.h>
-#include <Kaleidoscope-OneShot.h>
-
-void setup () {
-  OneShot.enableAuto ();
-  
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&OneShot, NULL);
-}
-```
-
-The other is to explicitly mark keys as one-shot in the keymap:
+After adding one-shot keys to the keymap, all one needs to do, is enable the
+plugin:
 
 ```c++
 #include <Kaleidoscope.h>
@@ -53,8 +39,8 @@ The other is to explicitly mark keys as one-shot in the keymap:
 OSM(LCtrl), OSL(_FN)
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&OneShot, NULL);
+  Kaleidoscope.setup ();
+  USE_PLUGINS (&OneShot);
 }
 ```
 
@@ -81,16 +67,6 @@ There are two macros the plugin provides:
 The plugin provides one object, `OneShot`, which implements both one-shot
 modifiers and one-shot layer keys. It has the following methods:
 
-### `.enableAuto()`
-
-> Automatically turns modifiers and momentary layer switches into their one-shot
-> variant. It will only turn keys on the keymap into one-shots: if any macro
-> injects a modifier or a momentary layer switch key, those will be left alone,
-> as-is.
->
-> This **must** be called before any `Kaleidoscope.use()` call in the `setup()`
-> method of your Sketch.
-
 ### `.isActive()`
 
 > Returns if any one-shot key is in flight. This makes it possible to
@@ -114,18 +90,6 @@ modifiers and one-shot layer keys. It has the following methods:
 > The optional `withStickies` argument, if set to `true`, will also cancel
 > sticky one-shot effects. If omitted, it defaults to `false`, and not canceling
 > stickies.
-
-### `.on()`
-
-> Turns the one-shot behaviour on. This method is idempotent, you can call it
-> any number of times, at any time.
-
-### `.off()`
-
-> The counterpart of the `on()` method, this turns off one-shot behaviour.
-> Modifiers will act as normal modifiers, and one-shot layer keys will act as
-> momentary layer switchers. As `on()`, this method is idempotent, and can be
-> called at any time, from anywhere.
 
 ### `.timeOut`
 

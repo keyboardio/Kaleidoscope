@@ -31,9 +31,6 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
-    static void on (void);
-    static void off (void);
-    static void enableAuto (void);
     static bool isActive (void);
     static void cancel (bool withStickies);
     static void cancel (void) { cancel (false); };
@@ -63,10 +60,6 @@ namespace KaleidoscopePlugins {
     static void unmask (byte row, byte col);
     static bool isMasked (byte row, byte col);
 
-    static Key eventHandlerPassthroughHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopNoOpHook (bool postClear);
-
-    static Key eventHandlerAutoHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
   };

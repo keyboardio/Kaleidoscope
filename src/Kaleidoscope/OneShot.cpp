@@ -56,54 +56,9 @@ namespace KaleidoscopePlugins {
 #define isSameAsPrevious(key) (key.raw == prevKey.raw)
 #define saveAsPrevious(key) prevKey.raw = key.raw
 
-#define toNormalMod(key, idx) {key.flags = 0; key.keyCode = Key_LCtrl.keyCode + idx;}
-#define toNormalMT(key, idx) { key.raw = Key_NoKey.raw; Layer.on (idx - 8); }
 #define hasTimedOut() (millis () - startTime >= timeOut)
 
-  // ----- passthrough ------
-
-  Key
-  OneShot::eventHandlerPassthroughHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (!isOS (mappedKey))
-      return mappedKey;
-
-    uint8_t idx = mappedKey.raw - OS_FIRST;
-
-    if (idx >= 8) {
-      toNormalMT (mappedKey, idx);
-    } else {
-      toNormalMod (mappedKey, idx);
-    }
-
-    return mappedKey;
-  }
-
-  void
-  OneShot::loopNoOpHook (bool postClear) {
-  }
-
   // ---- OneShot stuff ----
-
-  Key
-  OneShot::eventHandlerAutoHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    // If mappedKey is an injected key, we don't fiddle with those.
-    if (keyState & INJECTED)
-      return mappedKey;
-
-    if (!isModifier (mappedKey) && !isLayerKey (mappedKey))
-      return mappedKey;
-
-    if (isModifier (mappedKey)) {
-      uint8_t idx = mappedKey.keyCode - Key_LCtrl.keyCode;
-
-      return (Key){.raw = OSM_FIRST + idx};
-    } else {
-      uint8_t idx = mappedKey.keyCode - MOMENTARY_OFFSET;
-
-      return (Key){.raw = OSL_FIRST + idx};
-    }
-  }
-
   void
   OneShot::injectNormalKey (uint8_t idx, uint8_t keyState) {
     Key key;
@@ -312,23 +267,6 @@ namespace KaleidoscopePlugins {
   OneShot::cancel (bool withStickies) {
     shouldCancel = true;
     shouldCancelStickies = withStickies;
-  }
-
-  void
-  OneShot::on (void) {
-    event_handler_hook_replace (eventHandlerPassthroughHook, eventHandlerHook);
-    loop_hook_replace (loopNoOpHook, loopHook);
-  }
-
-  void
-  OneShot::off (void) {
-    event_handler_hook_replace (eventHandlerHook, eventHandlerPassthroughHook);
-    loop_hook_replace (loopHook, loopNoOpHook);
-  }
-
-  void
-  OneShot::enableAuto (void) {
-    event_handler_hook_use (eventHandlerAutoHook);
   }
 
   void
