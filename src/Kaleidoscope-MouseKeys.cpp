@@ -12,8 +12,24 @@ uint16_t MouseKeys_::speedDelay = 0;
 uint8_t MouseKeys_::accelSpeed = 1;
 uint16_t MouseKeys_::accelDelay = 50;
 
+uint8_t MouseKeys_::wheelSpeed = 1;
+uint16_t MouseKeys_::wheelDelay = 50;
+
 uint32_t MouseKeys_::accelEndTime;
 uint32_t MouseKeys_::endTime;
+uint32_t MouseKeys_::wheelEndTime;
+
+void MouseKeys_::scrollWheel(uint8_t keyCode) {
+    if (millis() < wheelEndTime)
+        return;
+
+    wheelEndTime = millis() + wheelDelay;
+
+    if (keyCode & KEY_MOUSE_UP)
+        Mouse.move(0, 0, wheelSpeed);
+    else if (keyCode & KEY_MOUSE_DOWN)
+        Mouse.move(0, 0, -wheelSpeed);
+}
 
 void MouseKeys_::loopHook(bool postClear) {
     if (postClear) {
@@ -69,9 +85,15 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
         if (key_toggled_on(keyState)) {
             endTime = millis() + speedDelay;
             accelEndTime = millis() + accelDelay;
+            wheelEndTime = 0;
         }
-        if (key_is_pressed(keyState))
-            mouseMoveIntent |= mappedKey.keyCode;
+        if (key_is_pressed(keyState)) {
+            if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {
+                scrollWheel (mappedKey.keyCode);
+            }
+            else
+                mouseMoveIntent |= mappedKey.keyCode;
+        }
     } else if (key_toggled_on(keyState)) {
         if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
             // we don't pass in the left and up values because those are the

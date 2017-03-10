@@ -15,6 +15,7 @@
 #define KEY_MOUSE_BUTTON        B0010000
 #define KEY_MOUSE_WARP          B0100000
 #define KEY_MOUSE_WARP_END      B0010000
+#define KEY_MOUSE_WHEEL         B1000000
 
 
 #define Key_mouseWarpNW   (Key) { KEY_MOUSE_WARP| KEY_MOUSE_UP | KEY_MOUSE_LEFT, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
@@ -32,8 +33,8 @@
 #define Key_mouseDnL      (Key) { KEY_MOUSE_DOWN | KEY_MOUSE_LEFT, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
 #define Key_mouseDn       (Key) { KEY_MOUSE_DOWN, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
 #define Key_mouseDnR      (Key) { KEY_MOUSE_DOWN | KEY_MOUSE_RIGHT, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
-#define Key_mouseScrollUp
-#define Key_mouseScrollDn
+#define Key_mouseScrollUp (Key) { KEY_MOUSE_WHEEL | KEY_MOUSE_UP, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
+#define Key_mouseScrollDn (Key) { KEY_MOUSE_WHEEL | KEY_MOUSE_DOWN, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
 #define Key_mouseScrollL
 #define Key_mouseScrollR
 #define Key_mouseBtnL     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_L, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }
