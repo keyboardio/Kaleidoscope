@@ -57,7 +57,7 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
         return mappedKey;
 
-    if (mappedKey.keyCode & KEY_MOUSE_BUTTON) {
+    if (mappedKey.keyCode & KEY_MOUSE_BUTTON && !(mappedKey.keyCode & KEY_MOUSE_WARP)) {
         uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
 
         if (key_toggled_on(keyState)) {
