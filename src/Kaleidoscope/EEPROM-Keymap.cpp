@@ -123,7 +123,7 @@ namespace KaleidoscopePlugins {
 
     case DUMP:
       {
-        for (uint8_t layer = 0; layer < 4; layer++) {
+        for (uint8_t layer = 0; layer < maxLayers; layer++) {
           for (uint8_t row = 0; row < ROWS; row++) {
             for (uint8_t col = 0; col < COLS; col++) {
               Key k = getKey (layer, row, col);
