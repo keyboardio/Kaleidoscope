@@ -7,15 +7,18 @@ static bool handle_synthetic_key_event(Key mappedKey, uint8_t keyState) {
     if (!(mappedKey.flags & SYNTHETIC))
         return false;
 
-    if (!key_toggled_on(keyState))
-        return true;
-
     if (mappedKey.flags & IS_INTERNAL) {
         return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
-        ConsumerControl.write(mappedKey.keyCode);
+      if (key_is_pressed(keyState))
+        ConsumerControl.press(mappedKey.keyCode);
+      else if (key_was_pressed(keyState))
+        ConsumerControl.release(mappedKey.keyCode);
     } else if (mappedKey.flags & IS_SYSCTL) {
-        SystemControl.write(mappedKey.keyCode);
+      if (key_is_pressed(keyState))
+        SystemControl.press(mappedKey.keyCode);
+      else if (key_was_pressed(keyState))
+        SystemControl.release();
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
     }
