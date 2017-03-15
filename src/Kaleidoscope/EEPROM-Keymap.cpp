@@ -29,10 +29,12 @@ namespace KaleidoscopePlugins {
   void
   EEPROMKeymap::begin (void) {
     USE_PLUGINS (&::EEPROMSettings);
+  }
 
-    uint16_t layerSize = ROWS * COLS * 2;
-    maxLayers = (E2END - ::EEPROMSettings.endOfSettings ()) / layerSize;
-    keymapBase = ::EEPROMSettings.endOfSettings () + 1;
+  void
+  EEPROMKeymap::reserveSpace (uint8_t layers) {
+    maxLayers = layers;
+    keymapBase = ::EEPROMSettings.requestSlice (maxLayers * ROWS * COLS * 2);
   }
 
   Key

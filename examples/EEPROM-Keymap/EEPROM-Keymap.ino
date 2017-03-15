@@ -48,11 +48,15 @@ void setup () {
 
   USE_PLUGINS (&EEPROMKeymap, &Focus);
 
+  Focus.addHook (FOCUS_HOOK_SETTINGS);
   Focus.addHook (FOCUS_HOOK_KEYMAP);
   Focus.addHook (FOCUS_HOOK_HELP);
   Focus.addHook (FOCUS_HOOK_VERSION);
 
   Layer.getKey = EEPROMKeymap.getKey;
+
+  EEPROMKeymap.reserveSpace (2);
+  EEPROMSettings.seal ();
 }
 
 void loop () {

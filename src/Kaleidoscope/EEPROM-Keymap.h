@@ -28,8 +28,11 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
-    static Key getKey (uint8_t layer, byte row, byte col);
+    static void reserveSpace (uint8_t layers);
     static uint16_t base (void);
+
+    static Key getKey (uint8_t layer, byte row, byte col);
+
     static bool focusKeymap (const char *command);
 
   private:
