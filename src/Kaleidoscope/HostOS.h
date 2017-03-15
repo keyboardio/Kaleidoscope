@@ -43,6 +43,7 @@ namespace KaleidoscopePlugins {
       Type osType;
 
     private:
+      uint16_t eepromSlice;
       bool isConfigured = false;
     };
   };

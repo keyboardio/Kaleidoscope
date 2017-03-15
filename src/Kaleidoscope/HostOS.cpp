@@ -17,10 +17,9 @@
  */
 
 #include <Kaleidoscope/HostOS.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 
 #include <EEPROM.h>
-
-#define EEPROM_HOSTOS_TYPE_LOCATION 2
 
 namespace KaleidoscopePlugins {
   namespace HostOS {
@@ -29,13 +28,15 @@ namespace KaleidoscopePlugins {
       if (isConfigured)
         return;
 
+      eepromSlice = ::EEPROMSettings.requestSlice (sizeof (osType));
+
       isConfigured = true;
 
       if (osType != AUTO) {
         return;
       }
 
-      if ((osType = (Type)EEPROM.read (EEPROM_HOSTOS_TYPE_LOCATION)) != AUTO)
+      if ((osType = (Type)EEPROM.read (eepromSlice)) != AUTO)
         return;
 
       autoDetect ();
@@ -52,7 +53,7 @@ namespace KaleidoscopePlugins {
     void
     Base::os (HostOS::Type osType_) {
       osType = osType_;
-      EEPROM.update (EEPROM_HOSTOS_TYPE_LOCATION, osType);
+      EEPROM.update (eepromSlice, osType);
     }
   };
 };
