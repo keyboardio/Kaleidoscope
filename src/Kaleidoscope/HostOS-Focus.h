@@ -19,5 +19,18 @@
 #pragma once
 
 #include <Kaleidoscope/HostOS-Base.h>
-#include <Kaleidoscope/HostOS-Guesser.h>
-#include <Kaleidoscope/HostOS-Focus.h>
+
+namespace KaleidoscopePlugins {
+  namespace HostOS {
+    bool Focus (const char *command);
+  };
+};
+
+#define FOCUS_HOOK_HOSTOS                                       \
+  FOCUS_HOOK(KaleidoscopePlugins::HostOS::Focus,                \
+             "hostos.type\n"                                    \
+             "-----------\n"                                    \
+             "Display the OS type, as known to the plugin.\n\n" \
+             "hostos.set type\n"                                \
+             "---------------\n"                                \
+             "Set the OS type.")
