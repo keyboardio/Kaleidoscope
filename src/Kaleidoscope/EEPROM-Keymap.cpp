@@ -47,9 +47,6 @@ namespace KaleidoscopePlugins {
     key.flags = EEPROM.read (keymapBase + pos);
     key.keyCode = EEPROM.read (keymapBase + pos + 1);
 
-    if (key.raw == 0xffff)
-      return Key_NoKey;
-
     return key;
   }
 
