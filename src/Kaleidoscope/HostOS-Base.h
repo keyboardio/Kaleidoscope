@@ -48,3 +48,5 @@ namespace KaleidoscopePlugins {
     };
   };
 };
+
+extern KaleidoscopePlugins::HostOS::Base HostOS;

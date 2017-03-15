@@ -20,5 +20,3 @@
 
 #include <Kaleidoscope/HostOS-Base.h>
 #include <Kaleidoscope/HostOS-Guesser.h>
-
-extern KaleidoscopePlugins::HostOS::Base HostOS;
