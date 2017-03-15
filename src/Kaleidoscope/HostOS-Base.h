@@ -18,16 +18,33 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS.h>
+#include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
   namespace HostOS {
-    class Tracker : public Base {
+    typedef enum {
+      LINUX,
+      OSX,
+      WINDOWS,
+      OTHER,
+
+      AUTO = 0xff,
+    } Type;
+
+    class Base : public KaleidoscopePlugin {
     public:
-      Tracker (void) {};
+      virtual void begin (void) final;
+
+      Type os (void);
+      void os (Type osType);
 
     protected:
-      virtual void autoDetect (void) final {};
+      virtual void autoDetect (void) {};
+      Type osType;
+
+    private:
+      uint16_t eepromSlice;
+      bool isConfigured = false;
     };
   };
 };

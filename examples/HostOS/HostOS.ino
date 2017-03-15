@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-HostOS.h>
+#include <Kaleidoscope/HostOS-select.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED

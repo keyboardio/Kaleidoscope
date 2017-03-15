@@ -39,6 +39,7 @@ the `HostOS` library header.
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostOS.h>
+#include <Kaleidoscope/HostOS-select.h>
 
 void someFunction (void) {
   if (HostOS.os() == Kaleidoscope::HostOS::LINUX) {
@@ -54,6 +55,9 @@ void setup (void) {
   Kaleidoscope.use (&HostOS);
 }
 ```
+
+To be able to choose between the two variants, one must also include the
+`Kaleidoscope/HostOS-select.h` header.
 
 ## Extension methods
 

@@ -18,12 +18,7 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS.h>
-#include <Kaleidoscope/HostOS-Tracker.h>
+#include <Kaleidoscope/HostOS-Base.h>
 #include <Kaleidoscope/HostOS-Guesser.h>
 
-#ifdef KALEIDOSCOPE_HOSTOS_GUESSER
-extern KaleidoscopePlugins::HostOS::Guesser HostOS;
-#else
-extern KaleidoscopePlugins::HostOS::Tracker HostOS;
-#endif
+extern KaleidoscopePlugins::HostOS::Base HostOS;

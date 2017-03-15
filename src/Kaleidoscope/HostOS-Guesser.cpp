@@ -48,5 +48,3 @@ namespace KaleidoscopePlugins {
     }
   };
 };
-
-KaleidoscopePlugins::HostOS::Guesser HostOS;

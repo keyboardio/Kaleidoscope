@@ -16,35 +16,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <Kaleidoscope/HostOS-Base.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 
-#include <Kaleidoscope.h>
+#include <EEPROM.h>
 
 namespace KaleidoscopePlugins {
   namespace HostOS {
-    typedef enum {
-      LINUX,
-      OSX,
-      WINDOWS,
-      OTHER,
+    void
+    Base::begin (void) {
+      if (isConfigured)
+        return;
 
-      AUTO = 0xff,
-    } Type;
+      eepromSlice = ::EEPROMSettings.requestSlice (sizeof (osType));
 
-    class Base : public KaleidoscopePlugin {
-    public:
-      virtual void begin (void) final;
+      isConfigured = true;
 
-      Type os (void);
-      void os (Type osType);
+      if (osType != AUTO) {
+        return;
+      }
 
-    protected:
-      virtual void autoDetect (void) = 0;
-      Type osType;
+      if ((osType = (Type)EEPROM.read (eepromSlice)) != AUTO)
+        return;
 
-    private:
-      uint16_t eepromSlice;
-      bool isConfigured = false;
-    };
+      autoDetect ();
+    }
+
+    HostOS::Type
+    Base::os (void) {
+      if (osType == AUTO)
+        autoDetect ();
+
+      return osType;
+    }
+
+    void
+    Base::os (HostOS::Type osType_) {
+      osType = osType_;
+      EEPROM.update (eepromSlice, osType);
+    }
   };
 };

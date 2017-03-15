@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS.h>
+#include <Kaleidoscope/HostOS-Base.h>
 
 namespace KaleidoscopePlugins {
   namespace HostOS {

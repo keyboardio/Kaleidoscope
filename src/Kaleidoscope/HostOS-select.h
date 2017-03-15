@@ -16,6 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope/HostOS-Tracker.h>
+#pragma once
 
-KaleidoscopePlugins::HostOS::Tracker HostOS;
+#include <Kaleidoscope/HostOS-Base.h>
+#include <Kaleidoscope/HostOS-Guesser.h>
+
+#if KALEIDOSCOPE_HOSTOS_GUESSER
+KaleidoscopePlugins::HostOS::Base HostOS = KaleidoscopePlugins::HostOS::Guesser();
+#else
+KaleidoscopePlugins::HostOS::Base HostOS;
+#endif
