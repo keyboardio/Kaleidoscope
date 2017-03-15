@@ -17,12 +17,14 @@
  */
 
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include "crc.h"
 
 namespace FocusHooks {
   bool settings (const char *command) {
     enum {
       ISVALID,
       GETVERSION,
+      CRC,
     } subCommand;
 
     if (strncmp_P (command, PSTR ("settings."), 9) != 0)
@@ -32,6 +34,8 @@ namespace FocusHooks {
       subCommand = ISVALID;
     else if (strcmp_P (command + 9, PSTR ("version")) == 0)
       subCommand = GETVERSION;
+    else if (strcmp_P (command + 9, PSTR ("crc")) == 0)
+      subCommand = CRC;
     else
       return false;
 
@@ -41,6 +45,10 @@ namespace FocusHooks {
       break;
     case GETVERSION:
       Serial.println (EEPROMSettings.version ());
+    case CRC:
+      Serial.print (::CRC.crc, HEX);
+      Serial.print (F("/"));
+      Serial.println (EEPROMSettings.crc (), HEX);
       break;
     }
 

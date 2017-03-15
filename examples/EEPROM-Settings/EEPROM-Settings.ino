@@ -50,8 +50,9 @@ void setup () {
   while (!Serial) {
   }
 
-  Serial.println (EEPROMSettings.isValid () ? "valid EEPROM settings" : "invalid EEPROM settings");
-  Serial.println (EEPROMSettings.endOfSettings ());
+  Serial.println (EEPROMSettings.isValid () ? F("valid EEPROM settings") : F("invalid EEPROM settings"));
+  Serial.println (EEPROMSettings.crc (), HEX);
+  Serial.println (EEPROMSettings.version ());
 }
 
 void loop () {

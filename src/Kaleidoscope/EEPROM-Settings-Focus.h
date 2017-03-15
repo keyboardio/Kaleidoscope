@@ -30,4 +30,7 @@ namespace FocusHooks {
                                        "Return whether the EEPROM settings are valid, or not.\n\n" \
                                        "settings.version\n"             \
                                        "----------------\n"             \
-                                       "Return the version of the EEPROM settings.")
+                                       "Return the version of the EEPROM settings.\n\n" \
+                                       "settings.crc\n"                 \
+                                       "------------\n"                 \
+                                       "Return the CRC of the settings.")

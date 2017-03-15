@@ -17,41 +17,64 @@
  */
 
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include "crc.h"
 
 namespace KaleidoscopePlugins {
   struct EEPROMSettings::settings EEPROMSettings::settings;
   bool EEPROMSettings::_isValid;
+  bool EEPROMSettings::sealed;
+  uint16_t EEPROMSettings::nextStart = sizeof (EEPROMSettings::settings);
 
   EEPROMSettings::EEPROMSettings (void) {
   }
 
   void
   EEPROMSettings::begin (void) {
-    _isValid = true;
     EEPROM.get (0, settings);
-
-    if (settings.magic[0] != 'K' || settings.magic[1] != 'S') {
-      settings.magic[0] = 'K';
-      settings.magic[1] = 'S';
-      settings.endOfSettings = EEPROM_SETTINGS_RESERVED - 1;
-
-      return update ();
-    }
-
-    if (settings.endOfSettings != EEPROM_SETTINGS_RESERVED - 1)
-      _isValid = false;
-  }
-
-  uint16_t
-  EEPROMSettings::endOfSettings (void) {
-    if (!isValid ())
-      return 0;
-    return settings.endOfSettings;
   }
 
   bool
   EEPROMSettings::isValid (void) {
     return _isValid;
+  }
+
+  uint16_t
+  EEPROMSettings::crc (void) {
+    if (sealed)
+      return settings.crc;
+    return 0;
+  }
+
+  void
+  EEPROMSettings::seal (void) {
+    sealed = true;
+
+    CRC.finalize ();
+
+    if (settings.magic[0] != 'K' || settings.magic[1] != 'S') {
+      settings.magic[0] = 'K';
+      settings.magic[1] = 'S';
+      settings.version = 0;
+      settings.crc = CRC.crc;
+
+      return update ();
+    }
+
+    if (settings.crc != CRC.crc)
+      _isValid = false;
+  }
+
+  uint16_t
+  EEPROMSettings::requestSlice (uint16_t size) {
+    if (sealed)
+      return 0;
+
+    uint16_t start = nextStart;
+    nextStart += size;
+
+    CRC.update ((const void *)&size, sizeof (size));
+
+    return start;
   }
 
   void
@@ -61,6 +84,8 @@ namespace KaleidoscopePlugins {
 
   void
   EEPROMSettings::update (void) {
+    settings.crc = CRC.crc;
+
     EEPROM.put (0, settings);
     _isValid = true;
   }
