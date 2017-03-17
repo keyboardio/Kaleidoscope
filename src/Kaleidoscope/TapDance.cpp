@@ -27,6 +27,7 @@ namespace KaleidoscopePlugins {
   uint8_t TapDance::tapCount[16];
   uint16_t TapDance::pressedState;
   uint16_t TapDance::triggeredState;
+  uint16_t TapDance::releaseNextState;
   Key TapDance::lastTapDanceKey;
   byte TapDance::lastTapDanceRow;
   byte TapDance::lastTapDanceCol;
@@ -72,14 +73,12 @@ namespace KaleidoscopePlugins {
 
   Key
   TapDance::release (uint8_t tapDanceIndex) {
-    tapDanceAction (tapDanceIndex, lastTapDanceRow, lastTapDanceCol, tapCount[tapDanceIndex], Release);
-
     endTime = 0;
-    tapCount[tapDanceIndex] = 0;
     lastTapDanceKey.raw = Key_NoKey.raw;
 
     bitClear (pressedState, tapDanceIndex);
     bitClear (triggeredState, tapDanceIndex);
+    bitWrite (releaseNextState, tapDanceIndex, 1);
     return Key_NoKey;
   }
 
@@ -207,6 +206,15 @@ namespace KaleidoscopePlugins {
   TapDance::loopHook (bool postClear) {
     if (!postClear)
       return;
+
+    for (uint8_t i = 0; i < 16; i++) {
+      if (!bitRead (releaseNextState, i))
+        continue;
+
+      tapDanceAction (i, lastTapDanceRow, lastTapDanceCol, tapCount[i], Release);
+      tapCount[i] = 0;
+      bitClear (releaseNextState, i);
+    }
 
     if (!isActive ())
       return;
