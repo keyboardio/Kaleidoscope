@@ -23,28 +23,14 @@ namespace KaleidoscopePlugins {
   namespace HostOS {
     bool
     Focus (const char *command) {
-      enum {
-        GET,
-        SET,
-      } subCommand;
-
-      if (strncmp_P (command, PSTR ("hostos."), 7) != 0)
-        return false;
-      if (strcmp_P (command + 7, PSTR ("type")) == 0)
-        subCommand = GET;
-      else if (strcmp_P (command + 7, PSTR ("set")) == 0)
-        subCommand = SET;
-      else
+      if (strcmp_P (command, PSTR ("hostos.type")) != 0)
         return false;
 
-      switch (subCommand) {
-      case GET:
+      if (Serial.peek () == '\n') {
         Serial.println (::HostOS.os ());
-        break;
-      case SET:
+      } else {
         uint8_t os = Serial.parseInt ();
         ::HostOS.os ((KaleidoscopePlugins::HostOS::Type) os);
-        break;
       }
 
       Serial.read ();
