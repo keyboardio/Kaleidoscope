@@ -42,10 +42,17 @@ namespace KaleidoscopePlugins {
     void inject (Key key, uint8_t keyState);
 
   private:
+    typedef union {
+      struct {
+        uint8_t mods;
+        uint8_t layers;
+      };
+      uint16_t all;
+    } state_t;
     static uint32_t startTime;
-    static uint16_t State;
-    static uint16_t stickyState;
-    static uint16_t pressedState;
+    static state_t State;
+    static state_t stickyState;
+    static state_t pressedState;
     static uint32_t leftMask;
     static uint32_t rightMask;
     static Key prevKey;
