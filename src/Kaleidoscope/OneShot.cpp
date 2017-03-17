@@ -26,9 +26,9 @@ namespace KaleidoscopePlugins {
   uint32_t OneShot::startTime = 0;
   uint16_t OneShot::timeOut = 2500;
   uint16_t OneShot::holdTimeOut = 250;
-  uint32_t OneShot::State = 0;
-  uint32_t OneShot::stickyState = 0;
-  uint32_t OneShot::pressedState = 0;
+  OneShot::state_t OneShot::State;
+  OneShot::state_t OneShot::stickyState;
+  OneShot::state_t OneShot::pressedState;
   uint32_t OneShot::leftMask;
   uint32_t OneShot::rightMask;
   Key OneShot::prevKey;
@@ -41,17 +41,17 @@ namespace KaleidoscopePlugins {
 #define isModifier(key) (key.raw >= Key_LCtrl.raw && key.raw <= Key_RGUI.raw)
 #define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
 
-#define isOneShot(idx) (bitRead (State, (idx)))
-#define setOneShot(idx) (bitWrite (State, idx, 1))
-#define clearOneShot(idx) (bitWrite (State, idx, 0))
+#define isOneShot(idx) (bitRead (State.all, (idx)))
+#define setOneShot(idx) (bitWrite (State.all, idx, 1))
+#define clearOneShot(idx) (bitWrite (State.all, idx, 0))
 
-#define isSticky(idx) (bitRead (stickyState, idx))
-#define setSticky(idx) (bitWrite (stickyState, idx, 1))
-#define clearSticky(idx) bitWrite (stickyState, idx, 0)
+#define isSticky(idx) (bitRead (stickyState.all, idx))
+#define setSticky(idx) (bitWrite (stickyState.all, idx, 1))
+#define clearSticky(idx) bitWrite (stickyState.all, idx, 0)
 
-#define setPressed(idx) bitWrite(pressedState, idx, 1)
-#define clearPressed(idx) bitWrite(pressedState, idx, 0)
-#define isPressed(idx) bitRead (pressedState, idx)
+#define setPressed(idx) bitWrite(pressedState.all, idx, 1)
+#define clearPressed(idx) bitWrite(pressedState.all, idx, 0)
+#define isPressed(idx) bitRead (pressedState.all, idx)
 
 #define isSameAsPrevious(key) (key.raw == prevKey.raw)
 #define saveAsPrevious(key) prevKey.raw = key.raw
@@ -128,7 +128,7 @@ namespace KaleidoscopePlugins {
     if (keyState & INJECTED)
       return mappedKey;
 
-    if (!State) {
+    if (!State.all) {
       if (!isOS (mappedKey)) {
         if (isMasked (row, col)) {
           if (key_toggled_off (keyState))
@@ -207,7 +207,7 @@ namespace KaleidoscopePlugins {
 
   void
   OneShot::loopHook (bool postClear) {
-    if (!State)
+    if (!State.all)
       return;
 
     if (postClear) {
@@ -252,7 +252,7 @@ namespace KaleidoscopePlugins {
 
   bool
   OneShot::isActive (void) {
-    return (State && !hasTimedOut ());
+    return (State.all && !hasTimedOut ());
   }
 
   bool
