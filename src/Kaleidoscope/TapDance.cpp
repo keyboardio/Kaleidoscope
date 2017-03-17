@@ -24,9 +24,9 @@ namespace KaleidoscopePlugins {
   // --- state ---
   uint32_t TapDance::endTime;
   uint16_t TapDance::timeOut = 200;
-  uint8_t TapDance::tapCount[32];
-  uint32_t TapDance::pressedState;
-  uint32_t TapDance::triggeredState;
+  uint8_t TapDance::tapCount[16];
+  uint16_t TapDance::pressedState;
+  uint16_t TapDance::triggeredState;
   Key TapDance::lastTapDanceKey;
   byte TapDance::lastTapDanceRow;
   byte TapDance::lastTapDanceCol;

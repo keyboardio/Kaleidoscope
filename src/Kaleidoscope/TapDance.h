@@ -49,9 +49,9 @@ namespace KaleidoscopePlugins {
 
   private:
     static uint32_t endTime;
-    static uint8_t tapCount[32];
-    static uint32_t pressedState;
-    static uint32_t triggeredState;
+    static uint8_t tapCount[16];
+    static uint16_t pressedState;
+    static uint16_t triggeredState;
     static Key lastTapDanceKey;
     static byte lastTapDanceRow;
     static byte lastTapDanceCol;
