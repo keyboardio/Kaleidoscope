@@ -56,4 +56,41 @@ namespace FocusHooks {
 
     return true;
   }
+
+  bool eeprom (const char *command) {
+    enum {
+      DUMP,
+      UPLOAD,
+    } subCommand;
+
+    if (strcmp_P (command, PSTR ("eeprom.dump")) == 0)
+      subCommand = DUMP;
+    else if (strcmp_P (command, PSTR ("eeprom.upload")) == 0)
+      subCommand = UPLOAD;
+    else
+      return false;
+
+    switch (subCommand) {
+    case DUMP:
+      for (uint16_t i = 0; i < EEPROM.length (); i++) {
+        uint8_t d = EEPROM[i];
+        if (d < 16)
+          Serial.print (0);
+        Serial.print (d, HEX);
+        Serial.print (F(" "));
+        if ((i + 1) % 32 == 0)
+          Serial.println ();
+      }
+      break;
+    case UPLOAD:
+      for (uint16_t i = 0; i < EEPROM.length (); i++) {
+        uint8_t d = Serial.parseInt ();
+        EEPROM.update (i, d);
+      }
+      break;
+    }
+
+    Serial.read ();
+    return true;
+  }
 };

@@ -22,6 +22,7 @@
 
 namespace FocusHooks {
   bool settings (const char *command);
+  bool eeprom (const char *command);
 };
 
 #define FOCUS_HOOK_SETTINGS FOCUS_HOOK(FocusHooks::settings,            \
@@ -34,3 +35,11 @@ namespace FocusHooks {
                                        "settings.crc\n"                 \
                                        "------------\n"                 \
                                        "Return the CRC of the settings.")
+
+#define FOCUS_HOOK_EEPROM FOCUS_HOOK(FocusHooks::eeprom,                \
+                                     "eeprom.dump\n"                    \
+                                     "-----------\n"                    \
+                                     "Dump the contents of EEPROM.\n\n" \
+                                     "eeprom.upload BYTES...\n"         \
+                                     "----------------------\n"         \
+                                     "Upload `BYTES` to EEPROM.")
