@@ -19,5 +19,13 @@
 #pragma once
 
 #include <Kaleidoscope/LED-AlphaSquare.h>
-#include <Kaleidoscope/AlphaSquare-Effect.h>
-#include <Kaleidoscope/AlphaSquare-Symbols.h>
+
+namespace KaleidoscopePlugins {
+  namespace AlphaSquareSymbols {
+    /* λ */
+    static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
+                                              0, 1, 0, 0,
+                                              0, 1, 1, 0,
+                                              1, 0, 0, 1);
+  };
+};
