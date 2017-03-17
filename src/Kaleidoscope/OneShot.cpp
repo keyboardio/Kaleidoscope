@@ -26,9 +26,9 @@ namespace KaleidoscopePlugins {
   uint32_t OneShot::startTime = 0;
   uint16_t OneShot::timeOut = 2500;
   uint16_t OneShot::holdTimeOut = 250;
-  uint32_t OneShot::State = 0;
-  uint32_t OneShot::stickyState = 0;
-  uint32_t OneShot::pressedState = 0;
+  uint16_t OneShot::State = 0;
+  uint16_t OneShot::stickyState = 0;
+  uint16_t OneShot::pressedState = 0;
   uint32_t OneShot::leftMask;
   uint32_t OneShot::rightMask;
   Key OneShot::prevKey;

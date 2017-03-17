@@ -43,9 +43,9 @@ namespace KaleidoscopePlugins {
 
   private:
     static uint32_t startTime;
-    static uint32_t State;
-    static uint32_t stickyState;
-    static uint32_t pressedState;
+    static uint16_t State;
+    static uint16_t stickyState;
+    static uint16_t pressedState;
     static uint32_t leftMask;
     static uint32_t rightMask;
     static Key prevKey;
