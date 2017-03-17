@@ -59,8 +59,6 @@ namespace KaleidoscopePlugins {
   TapDance::timeout (void) {
     uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
 
-    endTime = 0;
-
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
     bitWrite (triggeredState, idx, 1);
 
