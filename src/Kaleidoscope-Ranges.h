@@ -32,7 +32,7 @@ namespace KaleidoscopePlugins {
       DUM_FIRST   = DU_FIRST,
       DUM_LAST    = DUM_FIRST + (8 << 8),
       DUL_FIRST,
-      DUL_LAST    = DUL_FIRST + (24 << 8),
+      DUL_LAST    = DUL_FIRST + (8 << 8),
       DU_LAST     = DUL_LAST,
       TD_FIRST,
       TD_LAST     = TD_FIRST + 15,
