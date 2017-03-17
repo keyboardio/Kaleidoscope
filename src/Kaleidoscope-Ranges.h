@@ -26,7 +26,7 @@ namespace KaleidoscopePlugins {
       OSM_FIRST   = OS_FIRST,
       OSM_LAST    = OSM_FIRST + 7,
       OSL_FIRST,
-      OSL_LAST    = OSL_FIRST + 23,
+      OSL_LAST    = OSL_FIRST + 7,
       OS_LAST     = OSL_LAST,
       DU_FIRST,
       DUM_FIRST   = DU_FIRST,
