@@ -56,9 +56,8 @@ namespace KaleidoscopePlugins {
         Haunt (void *) : Haunt () {};
 
         virtual cRGB compute (uint8_t step) final;
-
       private:
-        static float mr, mg, mb;
+        static cRGB highlightColor;
       };
 
       class BlazingTrail : public StalkerEffect::ColorComputer {

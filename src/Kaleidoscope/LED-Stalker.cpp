@@ -92,22 +92,18 @@ namespace KaleidoscopePlugins {
 
     namespace Stalker {
 
-      // Haunt
-      float Haunt::mb;
-      float Haunt::mg;
-      float Haunt::mr;
+      cRGB Haunt::highlightColor;
 
-      Haunt::Haunt (const cRGB highlightColor) {
-        mb = highlightColor.b / 255.0;
-        mg = highlightColor.g / 255.0;
-        mr = highlightColor.r / 255.0;
+      // Haunt
+      Haunt::Haunt (const cRGB highlightColor_) {
+        highlightColor = highlightColor_;
       }
 
       cRGB
       Haunt::compute (uint8_t step) {
-        cRGB color = {(uint8_t)min(step * mb, 255),
-                      (uint8_t)min(step * mg, 255),
-                      (uint8_t)min(step * mr, 255)};
+        cRGB color = CRGB((uint8_t)min(step * highlightColor.r / 255, 255),
+                          (uint8_t)min(step * highlightColor.g / 255, 255),
+                          (uint8_t)min(step * highlightColor.b / 255, 255));
 
         return color;
       }
