@@ -18,6 +18,7 @@
 
 #include <Kaleidoscope-EEPROM-Colormap.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-Focus.h>
 #include <EEPROM.h>
 
 namespace KaleidoscopePlugins {
@@ -100,14 +101,10 @@ namespace KaleidoscopePlugins {
             cRGB color;
 
             EEPROM.get (paletteBase + i * sizeof (color), color);
-            Serial.print (color.r);
-            Serial.print (F(" "));
-            Serial.print (color.g);
-            Serial.print (F(" "));
-            Serial.print (color.b);
+            ::Focus.printColor (color);
 
             if (i < 14)
-              Serial.print (F(" | "));
+              ::Focus.printSeparator ();
           }
           Serial.println ();
           break;
@@ -139,10 +136,10 @@ namespace KaleidoscopePlugins {
 
                 indexes = EEPROM.read (mapBase + loc);
 
-                Serial.print (indexes >> 4);
-                Serial.print (F(" | "));
-                Serial.print (indexes & ~0xf0);
-                Serial.print (F(" | "));
+                ::Focus.printNumber (indexes >> 4);
+                ::Focus.printSeparator ();
+                ::Focus.printNumber (indexes & ~0xf0);
+                ::Focus.printSeparator ();
               }
               Serial.println ();
             }
@@ -150,6 +147,7 @@ namespace KaleidoscopePlugins {
           }
           break;
         }
+
         uint16_t maxIndex = (maxLayers * ROWS * COLS) / 2;
 
         uint8_t loc = 0;
