@@ -163,7 +163,6 @@ namespace KaleidoscopePlugins {
       }
     }
 
-    Serial.read ();
     return true;
   }
 
