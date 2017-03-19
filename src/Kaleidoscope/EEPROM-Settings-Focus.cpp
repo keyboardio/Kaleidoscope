@@ -54,8 +54,6 @@ namespace FocusHooks {
       break;
     }
 
-    Serial.read ();
-
     return true;
   }
 
@@ -90,7 +88,6 @@ namespace FocusHooks {
       break;
     }
 
-    Serial.read ();
     return true;
   }
 };
