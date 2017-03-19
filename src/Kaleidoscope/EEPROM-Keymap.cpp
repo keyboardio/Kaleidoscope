@@ -18,6 +18,7 @@
 
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
+#include <Kaleidoscope-Focus.h>
 
 namespace KaleidoscopePlugins {
   uint16_t EEPROMKeymap::keymapBase;
@@ -75,18 +76,9 @@ namespace KaleidoscopePlugins {
 
   void
   EEPROMKeymap::printKey (Key k) {
-    if (k.flags < 10)
-      Serial.print (F(" "));
-    if (k.flags < 100)
-      Serial.print (F(" "));
-    Serial.print (k.flags);
-    Serial.print (F(" "));
-
-    if (k.keyCode < 10)
-      Serial.print (F(" "));
-    if (k.keyCode < 100)
-      Serial.print (F(" "));
-    Serial.print (k.keyCode);
+    ::Focus.printNumber (k.flags);
+    ::Focus.printSpace ();
+    ::Focus.printNumber (k.keyCode);
   }
 
   bool
