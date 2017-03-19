@@ -113,7 +113,8 @@ namespace KaleidoscopePlugins {
           break;
         }
 
-        for (uint8_t i = 0; i < 15; i++) {
+        uint8_t i = 0;
+        while (i < 15 && Serial.peek() != '\n') {
           cRGB color;
 
           color.r = Serial.parseInt ();
@@ -121,6 +122,7 @@ namespace KaleidoscopePlugins {
           color.b = Serial.parseInt ();
 
           EEPROM.put (paletteBase + i * sizeof (color), color);
+          i++;
         }
 
         break;
@@ -146,30 +148,20 @@ namespace KaleidoscopePlugins {
             }
             Serial.println ();
           }
-        } else {
-          for (uint8_t layer = 0; layer < maxLayers; layer++) {
-            if (Serial.peek () == '\n')
-              break;
-            for (uint8_t row = 0; row < ROWS; row++) {
-              if (Serial.peek () == '\n')
-                break;
-
-              for (uint8_t col = 0; col < COLS / 2; col++) {
-                if (Serial.peek () == '\n')
-                  break;
-
-                uint16_t loc = (layer * ROWS * COLS / 2 + row * COLS / 2 + col);
-
-                uint8_t idx1 = Serial.parseInt ();
-                uint8_t idx2 = Serial.parseInt ();
-                uint8_t indexes = (idx1 << 4) + idx2;
-
-                EEPROM.update (mapBase + loc, indexes);
-              }
-            }
-          }
+          break;
         }
+        uint16_t maxIndex = (maxLayers * ROWS * COLS) / 2;
 
+        uint8_t loc = 0;
+        while ((Serial.peek () != '\n') && (loc < maxIndex)) {
+          uint8_t idx1 = Serial.parseInt ();
+          uint8_t idx2 = Serial.parseInt ();
+          uint8_t indexes = (idx1 << 4) + idx2;
+
+          EEPROM.update (mapBase + loc , indexes);
+          loc++;
+        }
+        break;
       }
     }
 
