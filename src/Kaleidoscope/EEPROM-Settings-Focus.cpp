@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-Focus.h>
 #include "crc.h"
 
 namespace FocusHooks {
@@ -41,7 +42,8 @@ namespace FocusHooks {
 
     switch (subCommand) {
     case ISVALID:
-      Serial.println (EEPROMSettings.isValid () ? F("yes") : F("no"));
+      Focus.printBool (EEPROMSettings.isValid ());
+      Serial.println ();
       break;
     case GETVERSION:
       Serial.println (EEPROMSettings.version ());
@@ -74,10 +76,8 @@ namespace FocusHooks {
     case DUMP:
       for (uint16_t i = 0; i < EEPROM.length (); i++) {
         uint8_t d = EEPROM[i];
-        if (d < 16)
-          Serial.print (0);
-        Serial.print (d, HEX);
-        Serial.print (F(" "));
+        Focus.printNumber (d);
+        Focus.printSpace ();
         if ((i + 1) % 32 == 0)
           Serial.println ();
       }
