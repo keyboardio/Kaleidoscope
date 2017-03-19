@@ -86,7 +86,6 @@ namespace KaleidoscopePlugins {
     enum {
       UPLOAD,
       DUMP,
-      TRANSFER,
     } subCommand;
 
     if (strncmp_P (command, PSTR ("keymap."), 7) != 0)
@@ -96,8 +95,6 @@ namespace KaleidoscopePlugins {
       subCommand = UPLOAD;
     else if (strcmp_P (command + 7, PSTR ("dump")) == 0)
       subCommand = DUMP;
-    else if (strcmp_P (command + 7, PSTR ("transfer")) == 0)
-      subCommand = TRANSFER;
     else
       return false;
 
@@ -131,22 +128,25 @@ namespace KaleidoscopePlugins {
         break;
       }
 
-    case TRANSFER:
-      {
-        uint8_t layer = Serial.parseInt ();
+    }
 
-        for (uint8_t row = 0; row < ROWS; row++) {
-          for (uint8_t col = 0; col < COLS; col++) {
-            Key k = Layer.getKeyFromPROGMEM (layer, row, col);
-            uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
+    return true;
+  }
 
-            updateKey (pos, k);
-          }
-        }
+  bool
+  EEPROMKeymap::focusKeymapTransfer (const char *command) {
+    if (strcmp_P (command, PSTR ("keymap.transfer")) != 0)
+      return false;
 
-        break;
+    uint8_t layer = Serial.parseInt ();
+
+    for (uint8_t row = 0; row < ROWS; row++) {
+      for (uint8_t col = 0; col < COLS; col++) {
+        Key k = Layer.getKeyFromPROGMEM (layer, row, col);
+        uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
+
+        updateKey (pos, k);
       }
-
     }
 
     return true;

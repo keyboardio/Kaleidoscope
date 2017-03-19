@@ -50,6 +50,7 @@ void setup () {
 
   Focus.addHook (FOCUS_HOOK_SETTINGS);
   Focus.addHook (FOCUS_HOOK_KEYMAP);
+  Focus.addHook (FOCUS_HOOK_KEYMAP_TRANSFER);
   Focus.addHook (FOCUS_HOOK_HELP);
   Focus.addHook (FOCUS_HOOK_VERSION);
 
