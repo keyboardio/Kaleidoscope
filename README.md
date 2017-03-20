@@ -111,6 +111,10 @@ modifiers and one-shot layer keys. It has the following methods:
 >
 > Defaults to 200.
 
+## Dependencies
+
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
