@@ -76,6 +76,10 @@ The plugin provides the following effects:
 
 > A blazing trail of fire will follow our fingers!
 
+## Dependencies
+
+* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
