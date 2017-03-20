@@ -144,6 +144,10 @@ method only:
 > perform. The `row` and `col` parameters tell us where the tap-dance key is on
 > the keyboard.
 
+## Dependencies
+
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
