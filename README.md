@@ -94,6 +94,10 @@ method explained below.
 > expected - action is to call `cycleThrough()` with a different sequence for
 > each key we want to use together with the cycling key.
 
+## Dependencies
+
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
