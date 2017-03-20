@@ -91,6 +91,10 @@ methods outside of the object, however, that can be overridden:
 > the default implementation is sufficient. When using something else, you may
 > have to reimplement this function.
 
+## Dependencies
+
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
