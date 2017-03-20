@@ -104,6 +104,10 @@ functionality.
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed to leave unicode input mode.
 
+## Dependencies
+
+* [Kaleidoscope-HostOS](https://github.com/keyboardio/Kaleidoscope-HostOS)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
