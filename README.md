@@ -51,6 +51,11 @@ The extension provides an `EEPROMColormapEffect` singleton object, with a single
 
 > Tells the extension to reserve space in EEPROM for up to `maxLayers` layers.
 
+## Dependencies
+
+* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
+* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
