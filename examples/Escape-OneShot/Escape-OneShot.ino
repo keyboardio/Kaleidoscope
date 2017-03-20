@@ -62,8 +62,6 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-  OneShot.enableAuto ();
-
   Kaleidoscope.use (&OneShot, &EscapeOneShot, NULL);
   Kaleidoscope.setup (KEYMAP_SIZE);
 }
