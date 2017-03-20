@@ -59,6 +59,10 @@ The plugin provides two methods on the `HeatmapEffect` object:
 >
 > Defaults to *500*.
 
+## Dependencies
+
+* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
