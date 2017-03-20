@@ -34,6 +34,11 @@ The plugin provides the `EEPROMKeymap` object, which has the following methods:
 
 **TODO**
 
+## Dependencies
+
+* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
+* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
