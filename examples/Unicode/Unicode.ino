@@ -19,6 +19,8 @@
 #define KALEIDOSCOPE_HOSTOS_GUESSER 1
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-HostOS.h>
+#include <Kaleidoscope/HostOS-select.h>
 #include <Kaleidoscope-Unicode.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -44,7 +46,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 void setup () {
   Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&Unicode, NULL);
+  Kaleidoscope.use (&HostOS, &Unicode, NULL);
 
   Unicode.type (0x2328);
 }
