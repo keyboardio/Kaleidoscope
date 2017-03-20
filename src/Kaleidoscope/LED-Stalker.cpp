@@ -116,6 +116,7 @@ namespace KaleidoscopePlugins {
       BlazingTrail::compute (uint8_t step) {
         cRGB color;
 
+        color.g = 0;
         color.b = 0;
         color.r = step;
 
