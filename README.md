@@ -36,6 +36,10 @@ The plugin only makes sense when using one-shot keys.
 
 The plugin provides the `EscapeOneShot` object, which has no public methods.
 
+## Dependencies
+
+* [Kaleidoscope-OneShot](https://github.com/keyboardio/Kaleidoscope-OneShot)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
