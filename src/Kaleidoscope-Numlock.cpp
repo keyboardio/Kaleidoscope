@@ -7,6 +7,8 @@ uint8_t NumLock_::previousLEDMode;
 uint8_t NumLock_::us;
 bool NumLock_::isActive;
 byte NumLock_::row = 255, NumLock_::col = 255;
+cRGB numpad_color;
+
 
 NumLock_::NumLock_ (void) {
 }
@@ -14,6 +16,7 @@ NumLock_::NumLock_ (void) {
 void
 NumLock_::begin (void) {
     us = LEDControl.mode_add (this);
+    numpad_color.r=255;
 }
 
 void
@@ -32,7 +35,7 @@ NumLock_::update (void) {
             if (k.raw < Key_NumLock.raw || k.raw > Key_KeypadDot.raw)
                 continue;
 
-            LEDControl.led_set_crgb_at(r, c, {255, 0, 0});
+            LEDControl.led_set_crgb_at(r, c, numpad_color);
         }
     }
 
