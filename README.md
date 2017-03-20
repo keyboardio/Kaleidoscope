@@ -34,6 +34,10 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 
 **TODO**
 
+## Dependencies
+
+* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
