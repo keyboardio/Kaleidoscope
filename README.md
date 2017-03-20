@@ -78,6 +78,10 @@ The plugin provides the `AlphaSquare` object, which has the following methods:
 > values, a 4x4 square of zeroes and ones. Zeroes are transparent pixels, ones
 > will be colored.
 
+## Dependencies
+
+* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
