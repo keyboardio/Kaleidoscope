@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-LED-Stalker.h>
+#include <LEDUtils.h>
 
 namespace KaleidoscopePlugins {
   namespace LEDEffects {
@@ -65,20 +66,15 @@ namespace KaleidoscopePlugins {
 
       for (byte r = 0; r < ROWS; r++) {
         for (byte c = 0; c < COLS; c++) {
-          if (map[r][c])
-            LEDControl.led_set_crgb_at (r, c, colorComputer->compute (map[r][c]));
+          uint8_t step = map[r][c];
+          if (step) {
+            LEDControl.led_set_crgb_at (r, c, colorComputer->compute (&step));
+          }
 
           bool wasZero = (map[r][c] == 0);
 
           if (timeOut) {
-            if (map[r][c] >= 0xf0)
-              map[r][c]--;
-            else if (map[r][c] >= 0x40)
-              map[r][c] -= 16;
-            else if (map[r][c] >= 32)
-              map[r][c] -= 32;
-            else
-              map[r][c] = 0;
+            map[r][c] = step;
           }
 
           if (!wasZero && !map[r][c])
@@ -100,10 +96,19 @@ namespace KaleidoscopePlugins {
       }
 
       cRGB
-      Haunt::compute (uint8_t step) {
-        cRGB color = CRGB((uint8_t)min(step * highlightColor.r / 255, 255),
-                          (uint8_t)min(step * highlightColor.g / 255, 255),
-                          (uint8_t)min(step * highlightColor.b / 255, 255));
+      Haunt::compute (uint8_t *step) {
+        cRGB color = CRGB((uint8_t)min(*step * highlightColor.r / 255, 255),
+                          (uint8_t)min(*step * highlightColor.g / 255, 255),
+                          (uint8_t)min(*step * highlightColor.b / 255, 255));
+
+        if (*step >= 0xf0)
+          *step -= 1;
+        else if (*step >= 0x40)
+          *step -= 16;
+        else if (*step >= 32)
+          *step -= 32;
+        else
+          *step = 0;
 
         return color;
       }
@@ -113,18 +118,27 @@ namespace KaleidoscopePlugins {
       }
 
       cRGB
-      BlazingTrail::compute (uint8_t step) {
+      BlazingTrail::compute (uint8_t *step) {
         cRGB color;
 
-        color.g = 0;
-        color.b = 0;
-        color.r = step;
+        if (*step >= 0xff - 30) {
+          color = hsv_to_rgb (0xff - *step, 255, 255);
+        }
+        else {
+          color = hsv_to_rgb (30, 255, 255);
 
-        if (step >= 0xf0) {
-        } else if (step >= 0x80) {
-          color.g = 0xa0 - step / 2;
-        } else
-          color.g = step;
+          color.r = min(*step * color.r / 255, 255);
+          color.g = min(*step * color.g / 255, 255);
+        }
+
+        if (*step >= 0xf0 - 30)
+          *step -= 1;
+        else if (*step >= 0x40)
+          *step -= 16;
+        else if (*step >= 32)
+          *step -= 32;
+        else
+          *step = 0;
 
         return color;
       }
