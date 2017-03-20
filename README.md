@@ -66,6 +66,10 @@ The plugin provides a single method on each of the included effect objects:
 > method of the Sketch, or in macros that are meant to switch to the selected
 > effect, no matter where we are in the list.
 
+## Dependencies
+
+* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
