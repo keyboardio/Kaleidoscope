@@ -45,6 +45,11 @@ method:
 > Set the color to use for highlighting the modifiers. If unset, will use the
 > default white color.
 
+## Dependencies
+
+* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
