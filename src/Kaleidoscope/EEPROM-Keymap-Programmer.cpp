@@ -33,11 +33,17 @@ namespace KaleidoscopePlugins {
 
   void
   EEPROMKeymapProgrammer::nextState (void) {
-    state++;
-
-    if (state == END) {
-      EEPROMKeymap.updateKey (updatePosition, newKey);
+    switch (state) {
+    case INACTIVE:
+      state = WAIT_FOR_KEY;
+      break;
+    case WAIT_FOR_KEY:
+      state = WAIT_FOR_CODE;
+      break;
+    case WAIT_FOR_CODE:
+      ::EEPROMKeymap.updateKey (updatePosition, newKey);
       cancel ();
+      break;
     }
   }
 
@@ -50,7 +56,7 @@ namespace KaleidoscopePlugins {
 
   Key
   EEPROMKeymapProgrammer::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (state == INACTIVE || state == END)
+    if (state == INACTIVE)
       return mappedKey;
 
     if (state == WAIT_FOR_KEY) {

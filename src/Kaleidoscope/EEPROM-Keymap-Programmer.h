@@ -38,7 +38,6 @@ namespace KaleidoscopePlugins {
       INACTIVE,
       WAIT_FOR_KEY,
       WAIT_FOR_CODE,
-      END
     } state_t;
     static state_t state;
 
