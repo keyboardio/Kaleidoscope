@@ -60,9 +60,12 @@ namespace KaleidoscopePlugins {
       return mappedKey;
 
     if (state == WAIT_FOR_KEY) {
-      if (key_toggled_off (keyState)) {
+      if (key_toggled_on (keyState)) {
         updatePosition = Layer.top () * ROWS * COLS + row * COLS + col;
-        nextState ();
+      }
+      if (key_toggled_off (keyState)) {
+        if ((uint16_t)(Layer.top () * ROWS * COLS + row * COLS + col) == updatePosition)
+          nextState ();
       }
       return Key_NoKey;
     }
