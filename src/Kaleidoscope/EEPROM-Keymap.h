@@ -36,11 +36,12 @@ namespace KaleidoscopePlugins {
     static bool focusKeymap (const char *command);
     static bool focusKeymapTransfer (const char *command);
 
+    static void updateKey (uint16_t basePos, Key key);
+
   private:
     static uint16_t keymapBase;
     static uint8_t maxLayers;
 
-    static void updateKey (uint16_t basePos, Key key);
     static Key parseKey (void);
     static void printKey (Key key);
   };
