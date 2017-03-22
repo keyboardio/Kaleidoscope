@@ -53,6 +53,16 @@ namespace KaleidoscopePlugins {
     return key;
   }
 
+  Key
+  EEPROMKeymap::getKeyOverride (uint8_t layer, byte row, byte col) {
+    Key key;
+
+    key = getKey (layer, row, col);
+    if (key == Key_Transparent)
+      key = Layer.getKeyFromPROGMEM (layer, row, col);
+    return key;
+  }
+
   uint16_t
   EEPROMKeymap::base (void) {
     return keymapBase;

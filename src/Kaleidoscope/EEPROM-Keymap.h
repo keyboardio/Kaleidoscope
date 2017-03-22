@@ -32,6 +32,7 @@ namespace KaleidoscopePlugins {
     static uint16_t base (void);
 
     static Key getKey (uint8_t layer, byte row, byte col);
+    static Key getKeyOverride (uint8_t layer, byte row, byte col);
 
     static bool focusKeymap (const char *command);
     static bool focusKeymapTransfer (const char *command);

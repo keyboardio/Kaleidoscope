@@ -54,9 +54,9 @@ void setup () {
   Focus.addHook (FOCUS_HOOK_HELP);
   Focus.addHook (FOCUS_HOOK_VERSION);
 
-  Layer.getKey = EEPROMKeymap.getKey;
+  Layer.getKey = EEPROMKeymap.getKeyOverride;
 
-  EEPROMKeymap.reserveSpace (2);
+  EEPROMKeymap.reserveSpace (1);
   EEPROMSettings.seal ();
 }
 
