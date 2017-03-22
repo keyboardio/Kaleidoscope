@@ -21,7 +21,7 @@
 namespace KaleidoscopePlugins {
   uint16_t EEPROMKeymapProgrammer::updatePosition;
   EEPROMKeymapProgrammer::state_t EEPROMKeymapProgrammer::state;
-  EEPROMKeymapProgrammer::mode_t EEPROMKeymapProgrammer::programmerMode;
+  EEPROMKeymapProgrammer::mode_t EEPROMKeymapProgrammer::mode;
   Key EEPROMKeymapProgrammer::newKey;
 
   EEPROMKeymapProgrammer::EEPROMKeymapProgrammer (void) {
@@ -33,18 +33,13 @@ namespace KaleidoscopePlugins {
   }
 
   void
-  EEPROMKeymapProgrammer::mode (mode_t programmerMode_) {
-    programmerMode = programmerMode_;
-  }
-
-  void
   EEPROMKeymapProgrammer::nextState (void) {
     switch (state) {
     case INACTIVE:
       state = WAIT_FOR_KEY;
       break;
     case WAIT_FOR_KEY:
-      if (programmerMode == CODE)
+      if (mode == CODE)
         state = WAIT_FOR_CODE;
       else
         state = WAIT_FOR_SOURCE_KEY;

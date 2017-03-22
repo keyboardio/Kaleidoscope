@@ -28,17 +28,16 @@ namespace KaleidoscopePlugins {
       CODE,
       COPY,
     } mode_t;
+    static mode_t mode;
 
     EEPROMKeymapProgrammer (void);
 
     virtual void begin (void) final;
 
-    static void mode (mode_t programmerMode);
     static void nextState (void);
     static void cancel (void);
 
   private:
-    static mode_t programmerMode;
     typedef enum {
       INACTIVE,
       WAIT_FOR_KEY,
