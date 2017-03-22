@@ -20,8 +20,9 @@
 
 namespace KaleidoscopePlugins {
   uint16_t EEPROMKeymapProgrammer::updatePosition;
-  Key EEPROMKeymapProgrammer::newKey;
   EEPROMKeymapProgrammer::state_t EEPROMKeymapProgrammer::state;
+  EEPROMKeymapProgrammer::mode_t EEPROMKeymapProgrammer::programmerMode;
+  Key EEPROMKeymapProgrammer::newKey;
 
   EEPROMKeymapProgrammer::EEPROMKeymapProgrammer (void) {
   }
@@ -32,15 +33,24 @@ namespace KaleidoscopePlugins {
   }
 
   void
+  EEPROMKeymapProgrammer::mode (mode_t programmerMode_) {
+    programmerMode = programmerMode_;
+  }
+
+  void
   EEPROMKeymapProgrammer::nextState (void) {
     switch (state) {
     case INACTIVE:
       state = WAIT_FOR_KEY;
       break;
     case WAIT_FOR_KEY:
-      state = WAIT_FOR_CODE;
+      if (programmerMode == CODE)
+        state = WAIT_FOR_CODE;
+      else
+        state = WAIT_FOR_SOURCE_KEY;
       break;
     case WAIT_FOR_CODE:
+    case WAIT_FOR_SOURCE_KEY:
       ::EEPROMKeymap.updateKey (updatePosition, newKey);
       cancel ();
       break;
@@ -65,6 +75,17 @@ namespace KaleidoscopePlugins {
       }
       if (key_toggled_off (keyState)) {
         if ((uint16_t)(Layer.top () * ROWS * COLS + row * COLS + col) == updatePosition)
+          nextState ();
+      }
+      return Key_NoKey;
+    }
+
+    if (state == WAIT_FOR_SOURCE_KEY) {
+      if (key_toggled_on (keyState)) {
+        newKey = Layer.getKeyFromPROGMEM (Layer.top (), row, col);
+      }
+      if (key_toggled_off (keyState)) {
+        if (newKey == Layer.getKeyFromPROGMEM (Layer.top (), row, col))
           nextState ();
       }
       return Key_NoKey;

@@ -24,22 +24,31 @@
 namespace KaleidoscopePlugins {
   class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
   public:
+    typedef enum {
+      CODE,
+      COPY,
+    } mode_t;
+
     EEPROMKeymapProgrammer (void);
 
     virtual void begin (void) final;
 
+    static void mode (mode_t programmerMode);
     static void nextState (void);
     static void cancel (void);
 
   private:
-    static uint16_t updatePosition; // layer, row, col
-    static Key newKey;
+    static mode_t programmerMode;
     typedef enum {
       INACTIVE,
       WAIT_FOR_KEY,
       WAIT_FOR_CODE,
+      WAIT_FOR_SOURCE_KEY,
     } state_t;
     static state_t state;
+
+    static uint16_t updatePosition; // layer, row, col
+    static Key newKey;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
   };
