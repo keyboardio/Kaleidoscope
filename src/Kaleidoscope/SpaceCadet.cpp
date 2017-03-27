@@ -91,8 +91,8 @@ namespace KaleidoscopePlugins {
       if (bitRead (parenNeeded, 1))
         paren = rightParen;
 
-      handle_key_event (mappedKey, row, col, IS_PRESSED | INJECTED);
-      handle_key_event (paren, row, col, IS_PRESSED | INJECTED);
+      handle_keyswitch_event (mappedKey, row, col, IS_PRESSED | INJECTED);
+      handle_keyswitch_event (paren, row, col, IS_PRESSED | INJECTED);
       Keyboard.sendReport ();
 
       parenNeeded = 0;
