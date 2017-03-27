@@ -7,7 +7,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 
 byte Macros_::row, Macros_::col;
 
-static void readAndPlay (const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
+static void readKeyCodeAndPlay (const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
     Key key;
     key.flags = flags;
     key.keyCode = pgm_read_byte(macro_p++);
@@ -42,25 +42,25 @@ void Macros_::play(const macro_t *macro_p) {
         }
         case MACRO_ACTION_STEP_KEYDOWN:
             flags = pgm_read_byte(macro_p++);
-            readAndPlay (macro_p++, flags, IS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, flags, IS_PRESSED);
             break;
         case MACRO_ACTION_STEP_KEYUP:
             flags = pgm_read_byte(macro_p++);
-            readAndPlay (macro_p++, flags, WAS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, flags, WAS_PRESSED);
             break;
         case MACRO_ACTION_STEP_TAP:
             flags = pgm_read_byte(macro_p++);
-            readAndPlay (macro_p++, flags, IS_PRESSED | WAS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, flags, IS_PRESSED | WAS_PRESSED);
             break;
 
         case MACRO_ACTION_STEP_KEYCODEDOWN:
-            readAndPlay (macro_p++, 0, IS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, 0, IS_PRESSED);
             break;
         case MACRO_ACTION_STEP_KEYCODEUP:
-            readAndPlay (macro_p++, 0, WAS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, 0, WAS_PRESSED);
             break;
         case MACRO_ACTION_STEP_TAPCODE:
-            readAndPlay (macro_p++, 0, IS_PRESSED | WAS_PRESSED);
+            readKeyCodeAndPlay (macro_p++, 0, IS_PRESSED | WAS_PRESSED);
             break;
 
         case END:
