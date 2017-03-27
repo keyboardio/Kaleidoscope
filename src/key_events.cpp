@@ -83,12 +83,16 @@ void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState)
     if (!(keyState & INJECTED)) {
         mappedKey = Layer.lookup(row, col);
     }
-    for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
-        Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
-        mappedKey = (*handler)(mappedKey, row, col, keyState);
-        if (mappedKey.raw == Key_NoKey.raw)
+
+    auto *node = Kaleidoscope.eventHandlerRootNode;
+
+    while (node) {
+        mappedKey = (*(node->hook))(mappedKey, row, col, keyState);
+        if (mappedKey == Key_NoKey)
             return;
+        node = node->next;
     }
+
     mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
         return;
