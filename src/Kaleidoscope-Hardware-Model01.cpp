@@ -141,7 +141,7 @@ boolean Model01::led_power_fault() {
 	}
 }
 
-void debug_key_event(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
+void debug_keyswitch_event(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
     if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum )) {
         Serial.print("Looking at row ");
         Serial.print(row);
@@ -182,12 +182,12 @@ void Model01::act_on_matrix_scan() {
 
             uint8_t keyState = (bitRead(previousLeftHandState.all, keynum) << 0) |
               (bitRead(leftHandState.all, keynum) << 1);
-            handle_key_event(Key_NoKey, row, 7-col, keyState);
+            handle_keyswitch_event(Key_NoKey, row, 7-col, keyState);
 
             keyState = (bitRead(previousRightHandState.all, keynum) << 0) |
               (bitRead(rightHandState.all, keynum) << 1);
 
-            handle_key_event(Key_NoKey, row, (15- col), keyState);
+            handle_keyswitch_event(Key_NoKey, row, (15- col), keyState);
         }
     }
 }
