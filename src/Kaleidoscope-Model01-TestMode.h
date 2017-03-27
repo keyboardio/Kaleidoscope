@@ -19,4 +19,4 @@ class TestMode_ : public KaleidoscopePlugin {
 
 extern TestMode_ TestMode;
 
-Key handle_key_event_test(Key mappedKey, byte row, byte col, uint8_t keyState);
+Key handle_keyswitch_event_test(Key mappedKey, byte row, byte col, uint8_t keyState);
