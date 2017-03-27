@@ -43,6 +43,8 @@ class LEDControl_ : public KaleidoscopePlugin {
 
     static uint16_t syncDelay;
 
+    static bool focusHook (const char *command);
+
  private:
     static uint32_t syncTimer;
     static LEDMode *modes[LED_MAX_MODES];
@@ -53,3 +55,8 @@ class LEDControl_ : public KaleidoscopePlugin {
 };
 
 extern LEDControl_ LEDControl;
+
+#define FOCUS_HOOK_LEDCONTROL FOCUS_HOOK (LEDControl.focusHook, \
+                                          "led.at\n"            \
+                                          "led.setAll\n"        \
+                                          "led.mode")

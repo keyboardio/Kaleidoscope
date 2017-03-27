@@ -1,4 +1,5 @@
 #include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-Focus.h"
 
 LEDMode *LEDControl_::modes[LED_MAX_MODES];
 uint8_t LEDControl_::previousMode, LEDControl_::mode;
@@ -153,6 +154,81 @@ LEDControl_::loopHook (bool postClear) {
     syncTimer = millis() + syncDelay;
   }
   update();
+}
+
+bool
+LEDControl_::focusHook (const char *command) {
+  enum {
+    SETALL,
+    MODE,
+    AT
+  } subCommand;
+
+  if (strncmp_P (command, PSTR ("led."), 4) != 0)
+    return false;
+  if (strcmp_P (command + 4, PSTR ("at")) == 0)
+    subCommand = AT;
+  else if (strcmp_P (command + 4, PSTR ("setAll")) == 0)
+    subCommand = SETALL;
+  else if (strcmp_P (command + 4, PSTR ("mode")) == 0)
+    subCommand = MODE;
+  else
+    return false;
+
+  switch (subCommand) {
+  case AT:
+    {
+      uint8_t idx = Serial.parseInt ();
+
+      if (Serial.peek () == '\n') {
+        cRGB c = LEDControl.led_get_crgb_at (idx);
+
+        Focus.printColor (c);
+        Serial.println ();
+      } else {
+        cRGB c;
+
+        c.r = Serial.parseInt ();
+        c.g = Serial.parseInt ();
+        c.b = Serial.parseInt ();
+
+        LEDControl.led_set_crgb_at (idx, c);
+      }
+      break;
+    }
+  case SETALL:
+    {
+      cRGB c;
+
+      c.r = Serial.parseInt ();
+      c.g = Serial.parseInt ();
+      c.b = Serial.parseInt ();
+
+      LEDControl.set_all_leds_to (c);
+
+      break;
+    }
+  case MODE:
+    {
+      char peek = Serial.peek ();
+      if (peek == '\n') {
+        Serial.println (LEDControl.get_mode ());
+      } else if (peek == 'n') {
+        LEDControl.next_mode ();
+        Serial.read ();
+      } else if (peek == 'p') {
+        // TODO
+        Serial.read ();
+      } else {
+        uint8_t mode = Serial.parseInt ();
+
+        LEDControl.set_mode (mode);
+      }
+      break;
+    }
+  }
+
+  return true;
 }
 
 LEDControl_ LEDControl;
