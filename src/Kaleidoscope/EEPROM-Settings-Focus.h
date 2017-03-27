@@ -27,19 +27,9 @@ namespace FocusHooks {
 
 #define FOCUS_HOOK_SETTINGS FOCUS_HOOK(FocusHooks::settings,            \
                                        "settings.valid?\n"              \
-                                       "---------------\n"              \
-                                       "Return whether the EEPROM settings are valid, or not.\n\n" \
                                        "settings.version\n"             \
-                                       "----------------\n"             \
-                                       "Return the version of the EEPROM settings.\n\n" \
-                                       "settings.crc\n"                 \
-                                       "------------\n"                 \
-                                       "Return the CRC of the settings.")
+                                       "settings.crc")
 
 #define FOCUS_HOOK_EEPROM FOCUS_HOOK(FocusHooks::eeprom,                \
                                      "eeprom.dump\n"                    \
-                                     "-----------\n"                    \
-                                     "Dump the contents of EEPROM.\n\n" \
-                                     "eeprom.upload BYTES...\n"         \
-                                     "----------------------\n"         \
-                                     "Upload `BYTES` to EEPROM.")
+                                     "eeprom.upload")
