@@ -45,6 +45,28 @@ void Macros_::play(const macro_t *macro_p) {
             handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
             Keyboard.sendReport();
             break;
+
+        case MACRO_ACTION_STEP_KEYCODEDOWN:
+            key.flags = 0;
+            key.keyCode = pgm_read_byte(macro_p++);
+            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
+            Keyboard.sendReport();
+            break;
+        case MACRO_ACTION_STEP_KEYCODEUP:
+            key.flags = 0;
+            key.keyCode = pgm_read_byte(macro_p++);
+            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
+            Keyboard.sendReport();
+            break;
+        case MACRO_ACTION_STEP_TAPCODE:
+            key.flags = 0;
+            key.keyCode = pgm_read_byte(macro_p++);
+            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
+            Keyboard.sendReport();
+            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
+            Keyboard.sendReport();
+            break;
+
         case END:
         default:
             return;
