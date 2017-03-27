@@ -94,9 +94,16 @@ class Kaleidoscope_ {
     static void replaceLoopHook(loopHook oldHook, loopHook newHook);
     static void appendLoopHook(loopHook hook);
     static void useLoopHook(loopHook hook);
+
+    static bool focusHook(const char *command);
 };
 
 extern Kaleidoscope_ Kaleidoscope;
+
+#define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \
+                                           "layer.on\n"             \
+                                           "layer.off\n"            \
+                                           "layer.getState")
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
