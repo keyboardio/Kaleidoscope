@@ -7,6 +7,7 @@ typedef enum {
     MACRO_ACTION_STEP_WAIT,
     MACRO_ACTION_STEP_KEYDOWN,
     MACRO_ACTION_STEP_KEYUP,
+    MACRO_ACTION_STEP_TAP
 } MacroActionStepType;
 
 typedef uint8_t macro_t;
@@ -21,6 +22,6 @@ typedef uint8_t macro_t;
 #define D(k)  Dr(Key_ ## k)
 #define Ur(k) MACRO_ACTION_STEP_KEYUP, (k).flags, (k).keyCode
 #define U(k)  Ur(Key_ ## k)
-#define Tr(k) Dr(k), Ur(k)
-#define T(k)  D(k), U(k)
+#define Tr(k) MACRO_ACTION_STEP_TAP, (k).flags, (k).keyCode
+#define T(k)  Tr(Key_ ## k)
 #define END   MACRO_ACTION_END
