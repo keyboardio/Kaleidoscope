@@ -70,7 +70,7 @@ namespace KaleidoscopePlugins {
     if (!topsyTurvyModState) {
       if (key_is_pressed (keyState))
         Keyboard.press (Key_LShift.keyCode);
-      handle_key_event (mappedKey, row, col, keyState | TOPSYTURVY);
+      handle_keyswitch_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
       if (key_toggled_off (keyState))
         Keyboard.release (Key_LShift.keyCode);
@@ -78,7 +78,7 @@ namespace KaleidoscopePlugins {
       Keyboard.release (Key_LShift.keyCode);
       Keyboard.release (Key_RShift.keyCode);
       Keyboard.sendReport ();
-      handle_key_event (mappedKey, row, col, keyState | TOPSYTURVY);
+      handle_keyswitch_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
 
       if (bitRead (topsyTurvyModState, 0))
