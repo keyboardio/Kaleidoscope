@@ -8,6 +8,8 @@
 
 extern const Key keymaps[][ROWS][COLS];
 
+#define UNKNOWN_KEYSWITCH_LOCATION 255,255
+
 // sending events to the computer
 /* The event handling starts with the Scanner calling handle_key_event() for
  * every key in the matrix, and it is the task of this method to figure out what
