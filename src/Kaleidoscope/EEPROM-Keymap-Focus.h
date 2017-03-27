@@ -23,16 +23,8 @@
 
 #define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap,          \
                                      "keymap.dump\n"                    \
-                                     "-----------\n"                    \
-                                     "Dumps the keymap from EEPROM.\n\n" \
-                                     "keymap.upload <flag keyCode>...\n" \
-                                     "-------------------------------\n" \
-                                     "Uploads a new keymap to EEPROM."  \
-                                     "Starts at layer 0, row 0, column 0, " \
-                                     "and continues as long as there is data on the line.")
+                                     "keymap.upload")
 
 
 #define FOCUS_HOOK_KEYMAP_TRANSFER FOCUS_HOOK(EEPROMKeymap.focusKeymapTransfer, \
-                                              "keymap.transfer layer\n" \
-                                              "---------------------\n" \
-                                              "Transfers the `layer` from PROGMEM to EEPROM.")
+                                              "keymap.transfer layer")
