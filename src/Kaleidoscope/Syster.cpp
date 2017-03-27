@@ -73,9 +73,9 @@ namespace KaleidoscopePlugins {
     if (key_toggled_off (keyState)) {
       if (mappedKey == Key_Space) {
         for (uint8_t i = 0; i <= symbolPos; i++) {
-          handle_key_event (Key_Backspace, 255, 255, IS_PRESSED | INJECTED);
+          handle_keyswitch_event (Key_Backspace, 255, 255, IS_PRESSED | INJECTED);
           Keyboard.sendReport ();
-          handle_key_event (Key_Backspace, 255, 255, WAS_PRESSED | INJECTED);
+          handle_keyswitch_event (Key_Backspace, 255, 255, WAS_PRESSED | INJECTED);
           Keyboard.sendReport ();
         }
 
