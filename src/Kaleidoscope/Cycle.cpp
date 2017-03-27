@@ -42,14 +42,14 @@ namespace KaleidoscopePlugins {
 
   void
   Cycle::replace (Key key) {
-    handle_key_event (Key_Backspace, 255, 255, IS_PRESSED | INJECTED);
+    handle_keyswitch_event (Key_Backspace, 255, 255, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
-    handle_key_event (Key_Backspace, 255, 255, WAS_PRESSED | INJECTED);
+    handle_keyswitch_event (Key_Backspace, 255, 255, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
 
-    handle_key_event (key, 255, 255, IS_PRESSED | INJECTED);
+    handle_keyswitch_event (key, 255, 255, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
-    handle_key_event (key, 255, 255, WAS_PRESSED | INJECTED);
+    handle_keyswitch_event (key, 255, 255, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
   }
 
