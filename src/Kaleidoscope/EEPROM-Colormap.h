@@ -42,10 +42,6 @@ namespace KaleidoscopePlugins {
 
 extern KaleidoscopePlugins::EEPROMColormapEffect EEPROMColormapEffect;
 
-#define FOCUS_HOOK_COLORMAP FOCUS_HOOK(EEPROMColormapEffect.focusHook,   \
-                                       "colormap.palette [<R G B>...]\n" \
-                                       "-----------------------------\n" \
-                                       "Display or set the palette. Limited to 15 colors.\n\n" \
-                                       "colormap.map [index ...]\n"      \
-                                       "------------------------\n"      \
-                                       "Display or set the color map.")
+#define FOCUS_HOOK_COLORMAP FOCUS_HOOK(EEPROMColormapEffect.focusHook,  \
+                                       "colormap.palette\n"             \
+                                       "colormap.map")
