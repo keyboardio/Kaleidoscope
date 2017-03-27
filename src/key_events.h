@@ -8,6 +8,9 @@
 
 extern const Key keymaps[][ROWS][COLS];
 
+
+// Code can use this macro on injected key events to signal that
+// the event isn't tied to a specific physical keyswitch
 #define UNKNOWN_KEYSWITCH_LOCATION 255,255
 
 // sending events to the computer
