@@ -70,12 +70,12 @@ namespace KaleidoscopePlugins {
         byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
         byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
-        handle_key_event (Key_NoKey, row, col, WAS_PRESSED);
+        handle_keyswitch_event (Key_NoKey, row, col, WAS_PRESSED);
       } else if (isPressed) {
         byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
         byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
 
-        handle_key_event (Key_NoKey, row, col, IS_PRESSED);
+        handle_keyswitch_event (Key_NoKey, row, col, IS_PRESSED);
       } else if ((millis () - startTime) > delayTimeOut) {
         currentPos++;
         pressTimeOut = 0;
