@@ -26,9 +26,5 @@ namespace KaleidoscopePlugins {
   };
 };
 
-#define FOCUS_HOOK_HOSTOS                                       \
-  FOCUS_HOOK(KaleidoscopePlugins::HostOS::Focus,                \
-             "hostos.type [TYPE]\n"                             \
-             "------------------\n"                             \
-             "Set the OS type to `TYPE`; or display the "       \
-             "type, when called without arguments.")
+#define FOCUS_HOOK_HOSTOS \
+  FOCUS_HOOK(KaleidoscopePlugins::HostOS::Focus, "hostos.type")
