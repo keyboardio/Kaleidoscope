@@ -71,7 +71,7 @@ namespace KaleidoscopePlugins {
       key.keyCode = MOMENTARY_OFFSET + idx - 8;
     }
 
-    handle_keyswitch_event (key, 255, 255, keyState | INJECTED);
+    handle_keyswitch_event (key, UNKNOWN_KEYSWITCH_LOCATION, keyState | INJECTED);
   }
 
   void
