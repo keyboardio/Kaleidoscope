@@ -119,14 +119,14 @@ namespace KaleidoscopePlugins {
       break;
     case Interrupt:
     case Timeout:
-      handle_key_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | INJECTED);
+      handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | INJECTED);
       break;
     case Hold:
-      handle_key_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | WAS_PRESSED | INJECTED);
+      handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | WAS_PRESSED | INJECTED);
       break;
     case Release:
       Keyboard.sendReport ();
-      handle_key_event (key, lastTapDanceRow, lastTapDanceCol, WAS_PRESSED | INJECTED);
+      handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, WAS_PRESSED | INJECTED);
       break;
     }
   }
