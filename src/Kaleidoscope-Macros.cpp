@@ -7,10 +7,25 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 
 byte Macros_::row, Macros_::col;
 
+static void readAndPlay (const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
+    Key key;
+    key.flags = flags;
+    key.keyCode = pgm_read_byte(macro_p++);
+
+    if (keyStates & IS_PRESSED) {
+        handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
+        Keyboard.sendReport();
+    }
+    if (keyStates & WAS_PRESSED) {
+        handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
+        Keyboard.sendReport();
+    }
+}
+
 void Macros_::play(const macro_t *macro_p) {
     macro_t macro = END;
     uint8_t interval = 0;
-    Key key;
+    uint8_t flags;
 
     if (!macro_p)
         return;
@@ -26,45 +41,26 @@ void Macros_::play(const macro_t *macro_p) {
             break;
         }
         case MACRO_ACTION_STEP_KEYDOWN:
-            key.flags = pgm_read_byte(macro_p++);
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            flags = pgm_read_byte(macro_p++);
+            readAndPlay (macro_p++, flags, IS_PRESSED);
             break;
         case MACRO_ACTION_STEP_KEYUP:
-            key.flags = pgm_read_byte(macro_p++);
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            flags = pgm_read_byte(macro_p++);
+            readAndPlay (macro_p++, flags, WAS_PRESSED);
             break;
         case MACRO_ACTION_STEP_TAP:
-            key.flags = pgm_read_byte(macro_p++);
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
-            Keyboard.sendReport();
-            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            flags = pgm_read_byte(macro_p++);
+            readAndPlay (macro_p++, flags, IS_PRESSED | WAS_PRESSED);
             break;
 
         case MACRO_ACTION_STEP_KEYCODEDOWN:
-            key.flags = 0;
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            readAndPlay (macro_p++, 0, IS_PRESSED);
             break;
         case MACRO_ACTION_STEP_KEYCODEUP:
-            key.flags = 0;
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            readAndPlay (macro_p++, 0, WAS_PRESSED);
             break;
         case MACRO_ACTION_STEP_TAPCODE:
-            key.flags = 0;
-            key.keyCode = pgm_read_byte(macro_p++);
-            handle_key_event(key, 255, 255, IS_PRESSED | INJECTED);
-            Keyboard.sendReport();
-            handle_key_event(key, 255, 255, WAS_PRESSED | INJECTED);
-            Keyboard.sendReport();
+            readAndPlay (macro_p++, 0, IS_PRESSED | WAS_PRESSED);
             break;
 
         case END:
