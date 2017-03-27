@@ -15,7 +15,7 @@ Kaleidoscope_::setup(void) {
     KeyboardHardware.setup();
 
     // A workaround, so that the compiler does not optimize this out...
-    handle_key_event (Key_NoKey, 255, 255, 0);
+    handle_keyswitch_event (Key_NoKey, 255, 255, 0);
 }
 
 void
