@@ -47,6 +47,7 @@ namespace FocusHooks {
       break;
     case GETVERSION:
       Serial.println (EEPROMSettings.version ());
+      break;
     case CRC:
       Serial.print (::CRC.crc, HEX);
       Serial.print (F("/"));
