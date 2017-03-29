@@ -37,6 +37,7 @@ namespace KaleidoscopePlugins {
     static uint16_t requestSlice (uint16_t size);
     static void seal (void);
     static uint16_t crc (void);
+    static uint16_t used (void);
 
   private:
     static uint16_t nextStart;

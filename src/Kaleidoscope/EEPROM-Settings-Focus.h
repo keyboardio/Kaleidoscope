@@ -31,5 +31,6 @@ namespace FocusHooks {
                                        "settings.crc")
 
 #define FOCUS_HOOK_EEPROM FOCUS_HOOK(FocusHooks::eeprom,                \
+                                     "eeprom.free\n"                    \
                                      "eeprom.dump\n"                    \
                                      "eeprom.upload")

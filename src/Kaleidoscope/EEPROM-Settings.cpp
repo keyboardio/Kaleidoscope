@@ -82,6 +82,11 @@ namespace KaleidoscopePlugins {
     _isValid = false;
   }
 
+  uint16_t
+  EEPROMSettings::used (void) {
+    return nextStart;
+  }
+
   void
   EEPROMSettings::update (void) {
     settings.crc = CRC.crc;

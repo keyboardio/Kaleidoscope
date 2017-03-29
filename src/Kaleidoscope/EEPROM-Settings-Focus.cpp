@@ -60,6 +60,7 @@ namespace FocusHooks {
 
   bool eeprom (const char *command) {
     enum {
+      FREE,
       DUMP,
       UPLOAD,
     } subCommand;
@@ -68,6 +69,8 @@ namespace FocusHooks {
       subCommand = DUMP;
     else if (strcmp_P (command, PSTR ("eeprom.upload")) == 0)
       subCommand = UPLOAD;
+    else if (strcmp_P (command, PSTR ("eeprom.free")) == 0)
+      subCommand = FREE;
     else
       return false;
 
@@ -86,6 +89,9 @@ namespace FocusHooks {
         uint8_t d = Serial.parseInt ();
         EEPROM.update (i, d);
       }
+      break;
+    case FREE:
+      Serial.println (EEPROM.length () - EEPROMSettings.used ());
       break;
     }
 
