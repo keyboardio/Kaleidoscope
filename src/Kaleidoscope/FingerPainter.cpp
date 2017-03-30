@@ -24,6 +24,7 @@ namespace KaleidoscopePlugins {
   uint16_t FingerPainter::paletteBase;
   uint16_t FingerPainter::colorBase;
   bool FingerPainter::editMode;
+  const cRGB *FingerPainter::defaultPalette;
 
   FingerPainter::FingerPainter (void) {
   }
@@ -127,6 +128,17 @@ namespace KaleidoscopePlugins {
       }
 
       Serial.println ();
+      return true;
+    }
+
+    if (Serial.peek() == 'd') {
+      Serial.read ();
+      if (!defaultPalette)
+        return true;
+
+      for (uint8_t i = 0; i < 16; i++) {
+        EEPROM.put (paletteBase + i * sizeof (cRGB), defaultPalette[i]);
+      }
       return true;
     }
 

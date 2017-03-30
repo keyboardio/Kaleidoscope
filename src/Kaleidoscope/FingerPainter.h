@@ -33,6 +33,8 @@ namespace KaleidoscopePlugins {
     static void toggleEdit (void);
     static bool focusHook (const char *command);
 
+    static const cRGB *defaultPalette;
+
   private:
     static uint16_t paletteBase;
     static uint16_t colorBase;
@@ -48,3 +50,23 @@ extern KaleidoscopePlugins::FingerPainter FingerPainter;
 #define FOCUS_HOOK_FINGERPAINTER FOCUS_HOOK(FingerPainter.focusHook,  \
                                             "fingerpainter.palette\n" \
                                             "fingerpainter.toggle")
+
+#define FINGERPAINTER_PALETTE_EGA (const cRGB[]) { \
+      CRGB (0x00, 0x00, 0x00),                     \
+      CRGB (0x00, 0x00, 0xaa),                     \
+      CRGB (0x00, 0xaa, 0x00),                     \
+      CRGB (0x00, 0xaa, 0xaa),                     \
+      CRGB (0xaa, 0x00, 0x00),                     \
+      CRGB (0xaa, 0x00, 0xaa),                     \
+      CRGB (0xaa, 0x55, 0x00),                     \
+      CRGB (0xaa, 0xaa, 0xaa),                     \
+                                                   \
+      CRGB (0x55, 0x55, 0x55),                     \
+      CRGB (0x55, 0x55, 0xff),                     \
+      CRGB (0x55, 0xff, 0x55),                     \
+      CRGB (0x55, 0xff, 0xff),                     \
+      CRGB (0xff, 0x55, 0x55),                     \
+      CRGB (0xff, 0x55, 0xff),                     \
+      CRGB (0xff, 0xff, 0x55),                     \
+      CRGB (0xff, 0xff, 0xff)                      \
+  }
