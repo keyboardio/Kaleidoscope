@@ -22,7 +22,7 @@
 #include <Kaleidoscope-FingerPainter.h>
 #include <Kaleidoscope-Macros.h>
 
-#include "LEDOff.h"
+#include "LED-Off.h"
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -61,6 +61,7 @@ void setup () {
   USE_PLUGINS (&LEDOff, &EEPROMSettings, &FingerPainter, &Macros);
 
   FingerPainter.configure ();
+  FingerPainter.defaultPalette = FINGERPAINTER_PALETTE_EGA;
 
   EEPROMSettings.seal ();
 
