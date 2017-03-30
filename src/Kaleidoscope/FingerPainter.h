@@ -71,3 +71,22 @@ extern KaleidoscopePlugins::FingerPainter FingerPainter;
       CRGB (0xff, 0xff, 0x55),                     \
       CRGB (0xff, 0xff, 0xff)                      \
   }
+
+#define FINGERPAINTER_PALETTE_PASTEL (const cRGB[]) { \
+      CRGB (0, 0, 0),                                 \
+      CRGB (230, 119, 107),                           \
+      CRGB (229, 154, 67),                            \
+      CRGB (242, 228, 110),                           \
+      CRGB (155, 243, 150),                           \
+      CRGB (150, 221, 243),                           \
+      CRGB (255, 255, 255),                           \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+      CRGB (0, 0, 0),                                 \
+  }

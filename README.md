@@ -46,3 +46,12 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
   [plugin:example]: https://github.com/keyboardio/Kaleidoscope-FingerPainter/blob/master/examples/FingerPainter/FingerPainter.ino
+
+## Notice
+
+While the code is under the GPL-3, the `FINGERPAINTER_PALETTE_PASTEL` palette
+was created by [Conache][conache], and is under a [CC-BY-SA][license:cc-by-sa]
+license.
+
+ [conache]: http://www.colourlovers.com/lover/Conache/loveNote
+ [license:cc-by-sa]: http://creativecommons.org/licenses/by-sa/3.0/
