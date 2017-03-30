@@ -49,7 +49,8 @@ extern KaleidoscopePlugins::FingerPainter FingerPainter;
 
 #define FOCUS_HOOK_FINGERPAINTER FOCUS_HOOK(FingerPainter.focusHook,  \
                                             "fingerpainter.palette\n" \
-                                            "fingerpainter.toggle")
+                                            "fingerpainter.toggle\n"  \
+                                            "fingerpainter.clear")
 
 #define FINGERPAINTER_PALETTE_EGA (const cRGB[]) { \
       CRGB (0x00, 0x00, 0x00),                     \

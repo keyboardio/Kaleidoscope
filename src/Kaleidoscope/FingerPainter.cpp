@@ -104,6 +104,7 @@ namespace KaleidoscopePlugins {
     enum {
       PALETTE,
       TOGGLE,
+      CLEAR,
     } subCommand;
 
     if (strncmp_P (command, PSTR ("fingerpainter."), 14) != 0)
@@ -113,12 +114,21 @@ namespace KaleidoscopePlugins {
       subCommand = PALETTE;
     else if (strcmp_P (command + 14, PSTR ("toggle")) == 0)
       subCommand = TOGGLE;
+    else if (strcmp_P (command + 14, PSTR ("clear")) == 0)
+      subCommand = CLEAR;
     else
       return false;
 
     if (subCommand == TOGGLE) {
       ::FingerPainter.activate ();
       toggleEdit ();
+      return true;
+    }
+
+    if (subCommand == CLEAR) {
+      for (uint16_t i = 0; i < ROWS * COLS; i++) {
+        EEPROM.update (colorBase + i, 0);
+      }
       return true;
     }
 
