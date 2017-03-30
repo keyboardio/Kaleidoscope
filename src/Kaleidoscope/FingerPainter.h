@@ -46,4 +46,5 @@ namespace KaleidoscopePlugins {
 extern KaleidoscopePlugins::FingerPainter FingerPainter;
 
 #define FOCUS_HOOK_FINGERPAINTER FOCUS_HOOK(FingerPainter.focusHook,  \
-                                            "fingerpainter.palette")
+                                            "fingerpainter.palette\n" \
+                                            "fingerpainter.toggle")

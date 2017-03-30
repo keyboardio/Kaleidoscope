@@ -94,8 +94,26 @@ namespace KaleidoscopePlugins {
 
   bool
   FingerPainter::focusHook (const char *command) {
-    if (strcmp_P (command, PSTR ("fingerpainter.palette")) != 0)
+    enum {
+      PALETTE,
+      TOGGLE,
+    } subCommand;
+
+    if (strncmp_P (command, PSTR ("fingerpainter."), 14) != 0)
       return false;
+
+    if (strcmp_P (command + 14, PSTR ("palette")) == 0)
+      subCommand = PALETTE;
+    else if (strcmp_P (command + 14, PSTR ("toggle")) == 0)
+      subCommand = TOGGLE;
+    else
+      return false;
+
+    if (subCommand == TOGGLE) {
+      ::FingerPainter.activate ();
+      toggleEdit ();
+      return true;
+    }
 
     if (Serial.peek () == '\n') {
       for (uint8_t i = 0; i < 16; i++) {
