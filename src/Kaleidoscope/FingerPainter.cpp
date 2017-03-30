@@ -81,12 +81,18 @@ namespace KaleidoscopePlugins {
     if (!key_toggled_on (keyState))
       return Key_NoKey;
 
+    cRGB oldColor, newColor;
+
     uint16_t location = row * COLS + col;
     uint8_t colorIndex = EEPROM.read (colorBase + location);
     if (colorIndex == 255)
       colorIndex = 0;
+    EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), oldColor);
     colorIndex++;
     if (colorIndex > 15)
+      colorIndex = 0;
+    EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), newColor);
+    if (memcmp (&oldColor, &newColor, sizeof (cRGB)) == 0)
       colorIndex = 0;
     EEPROM.update (colorBase + location, colorIndex);
 
