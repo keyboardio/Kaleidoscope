@@ -60,6 +60,8 @@ namespace KaleidoscopePlugins {
       lockStartTime = 0;
       leftHandKeys = rightHandKeys = 0;
       sessionStartTime = millis ();
+
+      TypingBreak (false);
     }
 
     // Any other case, we are not locked yet! (or we just unlocked)
@@ -75,12 +77,14 @@ namespace KaleidoscopePlugins {
     // If we have a limit on the left hand, and we reached it, lock up!
     if (settings.leftHandMaxKeys && leftHandKeys >= settings.leftHandMaxKeys) {
       lockStartTime = millis ();
+      TypingBreak (true);
       return Key_NoKey;
     }
 
     // If we have a limit on the right hand, and we reached it, lock up!
     if (settings.rightHandMaxKeys && rightHandKeys >= settings.rightHandMaxKeys) {
       lockStartTime = millis ();
+      TypingBreak (true);
       return Key_NoKey;
     }
 
@@ -89,6 +93,7 @@ namespace KaleidoscopePlugins {
       if (millis () - sessionStartTime >= settings.lockTimeOut) {
         // Yeah, it is.
         lockStartTime = millis ();
+        TypingBreak (true);
         return Key_NoKey;
       }
     }
@@ -191,3 +196,8 @@ namespace KaleidoscopePlugins {
 };
 
 KaleidoscopePlugins::TypingBreaks TypingBreaks;
+
+__attribute__((weak))
+void
+TypingBreak (bool isLocked) {
+}

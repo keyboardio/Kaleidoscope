@@ -55,6 +55,8 @@ namespace KaleidoscopePlugins {
 
 extern KaleidoscopePlugins::TypingBreaks TypingBreaks;
 
+void TypingBreak (bool isLocked);
+
 #define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
                                            "typingbreaks.idleTimeLimit\n" \
                                            "typingbreaks.lockTimeOut\n"   \
