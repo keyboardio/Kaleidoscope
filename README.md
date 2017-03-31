@@ -41,27 +41,27 @@ void setup (void) {
 The plugin provides a single object, `TypingBreaks`, with the following
 properties. All times are in milliseconds.
 
-### `.idleTimeLimit`
+### `.settings.idleTimeLimit`
 
 > The amount of time that can pass between two pressed keys, before the plugin
 > considers it a new session, and starts all timers and counters over.
 >
 > Defaults to 10000 (10 seconds).
 
-### `.lockTimeOut`
+### `.settings.lockTimeOut`
 
 > The length of the session, after which the keyboard will be locked.
 >
 > Defaults to 2700000 (45 minutes).
 
-### `.lockLength`
+### `.settings.lockLength`
 
 > The length until the keyboard lock is held. Any key pressed while the lock is
 > active, will be discarded.
 >
 > Defaults to 300000 (15 minutes).
 
-### `.leftHandMaxKeys`
+### `.settings.leftHandMaxKeys`
 
 > It is possible to lock the keyboard after a number of keys pressed, too. If
 > this happens sooner than the timeout, the keyboard will still be locked.
@@ -70,7 +70,7 @@ properties. All times are in milliseconds.
 >
 > Defaults to 0 (off).
 
-### `.rightHandMaxKeys`
+### `.settings.rightHandMaxKeys`
 
 > It is possible to lock the keyboard after a number of keys pressed, too. If
 > this happens sooner than the timeout, the keyboard will still be locked.

@@ -20,11 +20,11 @@
 
 namespace KaleidoscopePlugins {
 
-  uint32_t TypingBreaks::idleTimeLimit = 10000; // 10s
-  uint32_t TypingBreaks::lockTimeOut = 2700000; // 45m
-  uint32_t TypingBreaks::lockLength = 300000; // 5m
-  uint16_t TypingBreaks::leftHandMaxKeys;
-  uint16_t TypingBreaks::rightHandMaxKeys;
+  uint32_t TypingBreaks::settings::idleTimeLimit = 10000; // 10s
+  uint32_t TypingBreaks::settings::lockTimeOut = 2700000; // 45m
+  uint32_t TypingBreaks::settings::lockLength = 300000; // 5m
+  uint16_t TypingBreaks::settings::leftHandMaxKeys;
+  uint16_t TypingBreaks::settings::rightHandMaxKeys;
 
   uint32_t TypingBreaks::sessionStartTime;
   uint32_t TypingBreaks::lastKeyTime;
@@ -43,13 +43,13 @@ namespace KaleidoscopePlugins {
   Key
   TypingBreaks::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     // If we are locked, and didn't time out yet, no key has to be pressed.
-    if (lockStartTime && (millis () - lockStartTime <= lockLength))
+    if (lockStartTime && (millis () - lockStartTime <= settings.lockLength))
       return Key_NoKey;
 
     // If we are locked...
     if (lockStartTime) {
       // ...and the lock has not expired yet
-      if (millis () - lockStartTime <= lockLength)
+      if (millis () - lockStartTime <= settings.lockLength)
         return Key_NoKey; // remain locked
 
       // ...otherwise clear the lock
@@ -61,7 +61,7 @@ namespace KaleidoscopePlugins {
     // Any other case, we are not locked yet! (or we just unlocked)
 
     // Are we still in the same session?
-    if (lastKeyTime && (millis () - lastKeyTime) >= idleTimeLimit) {
+    if (lastKeyTime && (millis () - lastKeyTime) >= settings.idleTimeLimit) {
       // No, we are not. Clear timers and start over.
       lockStartTime = 0;
       leftHandKeys = rightHandKeys = 0;
@@ -69,20 +69,20 @@ namespace KaleidoscopePlugins {
     }
 
     // If we have a limit on the left hand, and we reached it, lock up!
-    if (leftHandMaxKeys && leftHandKeys >= leftHandMaxKeys) {
+    if (settings.leftHandMaxKeys && leftHandKeys >= settings.leftHandMaxKeys) {
       lockStartTime = millis ();
       return Key_NoKey;
     }
 
     // If we have a limit on the right hand, and we reached it, lock up!
-    if (rightHandMaxKeys && rightHandKeys >= rightHandMaxKeys) {
+    if (settings.rightHandMaxKeys && rightHandKeys >= settings.rightHandMaxKeys) {
       lockStartTime = millis ();
       return Key_NoKey;
     }
 
-    if (lockTimeOut) {
+    if (settings.lockTimeOut) {
       // Is the session longer than lockTimeOut?
-      if (millis () - sessionStartTime >= lockTimeOut) {
+      if (millis () - sessionStartTime >= settings.lockTimeOut) {
         // Yeah, it is.
         lockStartTime = millis ();
         return Key_NoKey;

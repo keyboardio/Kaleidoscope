@@ -27,11 +27,13 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
-    static uint32_t idleTimeLimit;
-    static uint32_t lockTimeOut;
-    static uint32_t lockLength;
-    static uint16_t leftHandMaxKeys;
-    static uint16_t rightHandMaxKeys;
+    static struct settings {
+      static uint32_t idleTimeLimit;
+      static uint32_t lockTimeOut;
+      static uint32_t lockLength;
+      static uint16_t leftHandMaxKeys;
+      static uint16_t rightHandMaxKeys;
+    } settings;
 
   private:
     static uint32_t sessionStartTime;
