@@ -21,21 +21,13 @@
 #include <Kaleidoscope-Focus.h>
 
 namespace KaleidoscopePlugins {
-#if 0
-  uint32_t TypingBreaks::settings::idleTimeLimit = 10000; // 10s
-  uint32_t TypingBreaks::settings::lockTimeOut = 2700000; // 45m
-  uint32_t TypingBreaks::settings::lockLength = 300000; // 5m
-  uint16_t TypingBreaks::settings::leftHandMaxKeys;
-  uint16_t TypingBreaks::settings::rightHandMaxKeys;
-#else
   TypingBreaks::settings_t TypingBreaks::settings = {
-    .idleTimeLimit = 10000,
-    .lockTimeOut = 2700000,
-    .lockLength = 300000,
+    .idleTimeLimit = 10000, // 10s
+    .lockTimeOut = 2700000, // 45m
+    .lockLength = 300000,   //  5m
     .leftHandMaxKeys = 0,
     .rightHandMaxKeys = 0
   };
-#endif
 
   uint32_t TypingBreaks::sessionStartTime;
   uint32_t TypingBreaks::lastKeyTime;
