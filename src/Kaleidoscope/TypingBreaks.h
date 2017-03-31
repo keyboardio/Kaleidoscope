@@ -27,13 +27,18 @@ namespace KaleidoscopePlugins {
 
     virtual void begin (void) final;
 
-    static struct settings {
-      static uint32_t idleTimeLimit;
-      static uint32_t lockTimeOut;
-      static uint32_t lockLength;
-      static uint16_t leftHandMaxKeys;
-      static uint16_t rightHandMaxKeys;
-    } settings;
+    static void enableEEPROM (void);
+    static bool focusHook (const char *command);
+
+    typedef struct settings_t {
+      uint32_t idleTimeLimit;
+      uint32_t lockTimeOut;
+      uint32_t lockLength;
+      uint16_t leftHandMaxKeys;
+      uint16_t rightHandMaxKeys;
+    } settings_t;
+
+    static settings_t settings;
 
   private:
     static uint32_t sessionStartTime;
@@ -42,8 +47,17 @@ namespace KaleidoscopePlugins {
     static uint16_t leftHandKeys;
     static uint16_t rightHandKeys;
 
+    static uint16_t settingsBase;
+
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
   };
 };
 
 extern KaleidoscopePlugins::TypingBreaks TypingBreaks;
+
+#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
+                                           "typingbreaks.idleTimeLimit\n" \
+                                           "typingbreaks.lockTimeOut\n"   \
+                                           "typingbreaks.lockLength\n"    \
+                                           "typingbreaks.leftMaxKeys\n"   \
+                                           "typingbreaks.rightMaxKeys")
