@@ -127,14 +127,11 @@ namespace KaleidoscopePlugins {
               Key k = getKey (layer, row, col);
 
               printKey (k);
-
-              if (col < COLS - 1)
-                Serial.print (F(" | "));
+              ::Focus.printSpace ();
             }
-            Serial.println ();
           }
-          Serial.println ();
         }
+        Serial.println ();
         break;
       }
 
