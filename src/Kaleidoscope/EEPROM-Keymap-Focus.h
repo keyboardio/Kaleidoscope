@@ -21,10 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope/EEPROM-Keymap.h>
 
-#define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap,          \
-                                     "keymap.dump\n"                    \
-                                     "keymap.upload")
-
+#define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap, "keymap.map")
 
 #define FOCUS_HOOK_KEYMAP_TRANSFER FOCUS_HOOK(EEPROMKeymap.focusKeymapTransfer, \
                                               "keymap.transfer layer")

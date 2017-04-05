@@ -93,48 +93,27 @@ namespace KaleidoscopePlugins {
 
   bool
   EEPROMKeymap::focusKeymap (const char *command) {
-    enum {
-      UPLOAD,
-      DUMP,
-    } subCommand;
-
-    if (strncmp_P (command, PSTR ("keymap."), 7) != 0)
+    if (strcmp_P (command, PSTR ("keymap.map")) != 0)
       return false;
 
-    if (strcmp_P (command + 7, PSTR ("upload")) == 0)
-      subCommand = UPLOAD;
-    else if (strcmp_P (command + 7, PSTR ("dump")) == 0)
-      subCommand = DUMP;
-    else
-      return false;
+    if (Serial.peek () == '\n') {
+      for (uint8_t layer = 0; layer < maxLayers; layer++) {
+        for (uint8_t row = 0; row < ROWS; row++) {
+          for (uint8_t col = 0; col < COLS; col++) {
+            Key k = getKey (layer, row, col);
 
-    switch (subCommand) {
-    case UPLOAD:
-      {
-        uint16_t i = 0;
-        while ((Serial.peek () != '\n') && (i < ROWS * COLS * maxLayers)) {
-          updateKey (i, parseKey ());
-          i++;
-        }
-        break;
-      }
-
-    case DUMP:
-      {
-        for (uint8_t layer = 0; layer < maxLayers; layer++) {
-          for (uint8_t row = 0; row < ROWS; row++) {
-            for (uint8_t col = 0; col < COLS; col++) {
-              Key k = getKey (layer, row, col);
-
-              printKey (k);
-              ::Focus.printSpace ();
-            }
+            printKey (k);
+            ::Focus.printSpace ();
           }
         }
-        Serial.println ();
-        break;
       }
-
+      Serial.println ();
+    } else {
+      uint16_t i = 0;
+      while ((Serial.peek () != '\n') && (i < ROWS * COLS * maxLayers)) {
+        updateKey (i, parseKey ());
+        i++;
+      }
     }
 
     return true;
