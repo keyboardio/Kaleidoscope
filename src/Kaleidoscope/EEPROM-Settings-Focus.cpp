@@ -81,7 +81,7 @@ namespace FocusHooks {
         }
         Serial.println ();
       } else {
-        for (uint16_t i = 0; i < EEPROM.length (); i++) {
+        for (uint16_t i = 0; i < EEPROM.length () && Serial.peek () != '\n'; i++) {
           uint8_t d = Serial.parseInt ();
           EEPROM.update (i, d);
         }
