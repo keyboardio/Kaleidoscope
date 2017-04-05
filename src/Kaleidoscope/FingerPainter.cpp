@@ -138,9 +138,7 @@ namespace KaleidoscopePlugins {
 
         EEPROM.get (paletteBase + i * sizeof (color), color);
         ::Focus.printColor (color);
-
-        if (i < 15)
-          ::Focus.printSeparator ();
+        ::Focus.printSpace ();
       }
 
       Serial.println ();
