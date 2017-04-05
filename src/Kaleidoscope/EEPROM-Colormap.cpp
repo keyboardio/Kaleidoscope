@@ -102,9 +102,7 @@ namespace KaleidoscopePlugins {
 
             EEPROM.get (paletteBase + i * sizeof (color), color);
             ::Focus.printColor (color);
-
-            if (i < 14)
-              ::Focus.printSeparator ();
+            ::Focus.printSpace ();
           }
           Serial.println ();
           break;
@@ -137,14 +135,13 @@ namespace KaleidoscopePlugins {
                 indexes = EEPROM.read (mapBase + loc);
 
                 ::Focus.printNumber (indexes >> 4);
-                ::Focus.printSeparator ();
+                ::Focus.printSpace ();
                 ::Focus.printNumber (indexes & ~0xf0);
-                ::Focus.printSeparator ();
+                ::Focus.printSpace ();
               }
-              Serial.println ();
             }
-            Serial.println ();
           }
+          Serial.println ();
           break;
         }
 
