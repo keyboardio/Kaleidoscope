@@ -80,8 +80,6 @@ namespace FocusHooks {
         uint8_t d = EEPROM[i];
         Focus.printNumber (d);
         Focus.printSpace ();
-        if ((i + 1) % 32 == 0)
-          Serial.println ();
       }
       break;
     case UPLOAD:
