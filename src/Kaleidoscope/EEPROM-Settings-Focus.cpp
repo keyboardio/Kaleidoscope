@@ -60,34 +60,35 @@ namespace FocusHooks {
 
   bool eeprom (const char *command) {
     enum {
+      CONTENTS,
       FREE,
-      DUMP,
-      UPLOAD,
     } subCommand;
 
-    if (strcmp_P (command, PSTR ("eeprom.dump")) == 0)
-      subCommand = DUMP;
-    else if (strcmp_P (command, PSTR ("eeprom.upload")) == 0)
-      subCommand = UPLOAD;
+    if (strcmp_P (command, PSTR ("eeprom.contents")) == 0)
+      subCommand = CONTENTS;
     else if (strcmp_P (command, PSTR ("eeprom.free")) == 0)
       subCommand = FREE;
     else
       return false;
 
     switch (subCommand) {
-    case DUMP:
-      for (uint16_t i = 0; i < EEPROM.length (); i++) {
-        uint8_t d = EEPROM[i];
-        Focus.printNumber (d);
-        Focus.printSpace ();
+    case CONTENTS: {
+      if (Serial.peek () == '\n') {
+        for (uint16_t i = 0; i < EEPROM.length (); i++) {
+          uint8_t d = EEPROM[i];
+          Focus.printNumber (d);
+          Focus.printSpace ();
+        }
+        Serial.println ();
+      } else {
+        for (uint16_t i = 0; i < EEPROM.length (); i++) {
+          uint8_t d = Serial.parseInt ();
+          EEPROM.update (i, d);
+        }
       }
+
       break;
-    case UPLOAD:
-      for (uint16_t i = 0; i < EEPROM.length (); i++) {
-        uint8_t d = Serial.parseInt ();
-        EEPROM.update (i, d);
-      }
-      break;
+    }
     case FREE:
       Serial.println (EEPROM.length () - EEPROMSettings.used ());
       break;
