@@ -78,17 +78,14 @@ namespace KaleidoscopePlugins {
   EEPROMKeymap::parseKey (void) {
     Key key;
 
-    key.flags = Serial.parseInt ();
-    key.keyCode = Serial.parseInt ();
+    key.raw  = Serial.parseInt ();
 
     return key;
   }
 
   void
   EEPROMKeymap::printKey (Key k) {
-    ::Focus.printNumber (k.flags);
-    ::Focus.printSpace ();
-    ::Focus.printNumber (k.keyCode);
+    ::Focus.printNumber (k.raw);
   }
 
   bool
