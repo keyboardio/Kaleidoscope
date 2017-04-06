@@ -9,22 +9,52 @@
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-TODO
+To be able to reliably store persistent configuration in `EEPROM`, we need to be
+able to split up the available space for plugins to use. We also want to make
+sure that we notice when the `EEPROM` contents and the firmware are out of sync.
+This plugin provides the tools to do that.
+
+It does not guard against errors, it merely provides the means to discover them,
+and let the firmware Sketch handle the case in whatever way it finds reasonable.
+It's a building block, and not much else. All Kaleidoscope plugins that need to
+store data in `EEPROM` are encouraged to make use of this library.
 
 ## Using the plugin
 
-TODO
+There are a few steps one needs to take to use the plugin: we must first
+register it, then either let other plugins request slices of `EEPROM`, or do so
+ourselves. And finally, seal it, to signal that we are done setting up. At that
+point, we can verify whether the contents of the `EEPROM` agree with our
+firmware.
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
+
+static uint16_t settingsBase;
+static struct {
+  bool someSettingFlag;
+} testSettings;
 
 void setup () {
   Kaleidoscope.setup ();
   
   USE_PLUGINS (&EEPROMSettings);
 
-  // TODO
+  /* Use other plugins that make use of the EEPROM */
+  
+  settingsBase = EEPROMSettings.requestSlice (sizeof (testSettings));
+  
+  EEPROMSettings.seal ();
+  
+  if (!EEPROMSettings.isValid ()) {
+    // Handle the case where the settings are out of sync...
+    // Flash LEDs, for example.
+    
+    return;
+  }
+  
+  EEPROM.get (settingsBase, testSettings);
 }
 ```
 
@@ -32,7 +62,66 @@ void setup () {
 
 The plugin provides the `EEPROMSettings` object, which has the following methods:
 
-**TODO**
+### `cycleThrough(keys...)`
+
+> Cycles through all the possibilities given in `keys` (starting from the
+> beginning once it reached the end). This should be used from
+> the [`cycleAction`][cycleaction] function, once it is determined what sequence
+> to cycle through.
+
+### `update()`
+
+> Updates the `EEPROM` header with the current status quo, including the version
+> and the CRC checksum.
+>
+> This should be called when upgrading from one version to another, or when
+> fixing up an out-of-sync case.
+
+### `isValid()`
+
+> Returns whether the `EEPROM` header is valid, that is, if it has the expected
+> CRC checksum.
+>
+> Should only be called after calling `seal()`.
+
+### `invalidate()`
+
+> Invalidates the `EEPROM` header. Use when the version does not match what the
+> firmware would expect. This signals to other plugins that the contents of
+> `EEPROM` should not be trusted.
+
+### `version([newVersion])`
+
+> Sets or returns the version of the `EEPROM` layout. This is purely for use by
+> the firmware, so it can attempt to upgrade the contents, if need be, or alert
+> the user in there's a mismatch. Plugins do not use this property.
+>
+> Should only be called after calling `seal()`.
+
+### `requestSlice(size)`
+
+> Requests a slice of the `EEPROM`, and returns the starting address (or 0 on
+> error, including when the request arrived after sealing the layout).
+>
+> Should only be called **before** calling `seal()`.
+
+### `seal()`
+
+> Seal the `EEPROM` layout, so no new slices can be requested. The CRC checksum
+> is considered final at this time, and the `isValid()`, `crc()`, `used()` and
+> `version()` methods can be used from this point onwards.
+
+### `crc()`
+
+> Returns the CRC checksum of the layout. Should only be used after calling
+> `seal()`.
+
+### `used()`
+
+> Returns the amount of space requested so far.
+>
+> Should only be used after calling `seal()`.
+
 
 ## Dependencies
 
