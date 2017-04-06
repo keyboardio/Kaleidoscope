@@ -122,10 +122,17 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 >
 > Should only be used after calling `seal()`.
 
+## Focus Hooks
+
+The plugin provides two [Focus][focus] hooks: `FOCUS_HOOK_SETTINGS`, and
+`FOCUS_HOOK_EEPROM`, that register commands that allow one to work with the
+settings, and with the contents of the `EEPROM` through Focus.
+
+ [focus]: https://github.com/keyboardio/Kaleidoscope-Focus
 
 ## Dependencies
 
-* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-Focus][focus]
 
 ## Further reading
 
