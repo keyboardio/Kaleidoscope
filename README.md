@@ -62,13 +62,6 @@ void setup () {
 
 The plugin provides the `EEPROMSettings` object, which has the following methods:
 
-### `cycleThrough(keys...)`
-
-> Cycles through all the possibilities given in `keys` (starting from the
-> beginning once it reached the end). This should be used from
-> the [`cycleAction`][cycleaction] function, once it is determined what sequence
-> to cycle through.
-
 ### `update()`
 
 > Updates the `EEPROM` header with the current status quo, including the version
