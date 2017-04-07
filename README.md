@@ -62,6 +62,19 @@ void setup () {
 
 The plugin provides the `EEPROMSettings` object, which has the following methods:
 
+### `requestSlice(size)`
+
+> Requests a slice of the `EEPROM`, and returns the starting address (or 0 on
+> error, including when the request arrived after sealing the layout).
+>
+> Should only be called **before** calling `seal()`.
+
+### `seal()`
+
+> Seal the `EEPROM` layout, so no new slices can be requested. The CRC checksum
+> is considered final at this time, and the `isValid()`, `crc()`, `used()` and
+> `version()` methods can be used from this point onwards.
+
 ### `update()`
 
 > Updates the `EEPROM` header with the current status quo, including the version
@@ -90,19 +103,6 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > the user in there's a mismatch. Plugins do not use this property.
 >
 > Should only be called after calling `seal()`.
-
-### `requestSlice(size)`
-
-> Requests a slice of the `EEPROM`, and returns the starting address (or 0 on
-> error, including when the request arrived after sealing the layout).
->
-> Should only be called **before** calling `seal()`.
-
-### `seal()`
-
-> Seal the `EEPROM` layout, so no new slices can be requested. The CRC checksum
-> is considered final at this time, and the `isValid()`, `crc()`, `used()` and
-> `version()` methods can be used from this point onwards.
 
 ### `crc()`
 
