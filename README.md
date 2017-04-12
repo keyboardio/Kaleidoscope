@@ -51,7 +51,10 @@ started with the plugin.
 
 While the code is under the GPL-3, the `FINGERPAINTER_PALETTE_PASTEL` palette
 was created by [Conache][conache], and is under a [CC-BY-SA][license:cc-by-sa]
-license.
+license; the `FINGERPAINTER_PALETTE_SOLARIZED` palette was created
+by [Ethan Schoonover][solarized], and is under the [MIT][license:mit] license.
 
+ [solarized]: http://ethanschoonover.com/solarized
  [conache]: http://www.colourlovers.com/lover/Conache/loveNote
  [license:cc-by-sa]: http://creativecommons.org/licenses/by-sa/3.0/
+ [license:mit]: https://github.com/altercation/solarized/blob/master/LICENSE

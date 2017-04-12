@@ -90,3 +90,22 @@ extern KaleidoscopePlugins::FingerPainter FingerPainter;
       CRGB (0, 0, 0),                                 \
       CRGB (0, 0, 0),                                 \
   }
+
+#define FINGERPAINTER_PALETTE_SOLARIZED (const cRGB[]) { \
+      CRGB (0, 0, 0),                                    \
+      CRGB (181, 137, 0),                                \
+      CRGB (203, 75, 22),                                \
+      CRGB (220, 50, 47),                                \
+      CRGB (211, 54, 130),                               \
+      CRGB (108, 113, 196),                              \
+      CRGB (38, 139, 210),                               \
+      CRGB (42, 161, 152),                               \
+      CRGB (133, 153, 0),                                \
+      CRGB (238, 232, 213),                              \
+      CRGB (0, 0, 0),                                    \
+      CRGB (0, 0, 0),                                    \
+      CRGB (0, 0, 0),                                    \
+      CRGB (0, 0, 0),                                    \
+      CRGB (0, 0, 0),                                    \
+      CRGB (0, 0, 0),                                    \
+  }
