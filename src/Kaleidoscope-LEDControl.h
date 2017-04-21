@@ -59,4 +59,5 @@ extern LEDControl_ LEDControl;
 #define FOCUS_HOOK_LEDCONTROL FOCUS_HOOK (LEDControl.focusHook, \
                                           "led.at\n"            \
                                           "led.setAll\n"        \
+                                          "led.theme\n"         \
                                           "led.mode")

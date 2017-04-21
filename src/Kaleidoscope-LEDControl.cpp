@@ -161,7 +161,8 @@ LEDControl_::focusHook (const char *command) {
   enum {
     SETALL,
     MODE,
-    AT
+    AT,
+    THEME,
   } subCommand;
 
   if (strncmp_P (command, PSTR ("led."), 4) != 0)
@@ -172,6 +173,8 @@ LEDControl_::focusHook (const char *command) {
     subCommand = SETALL;
   else if (strcmp_P (command + 4, PSTR ("mode")) == 0)
     subCommand = MODE;
+  else if (strcmp_P (command + 4, PSTR ("theme")) == 0)
+    subCommand = THEME;
   else
     return false;
 
@@ -223,6 +226,32 @@ LEDControl_::focusHook (const char *command) {
         uint8_t mode = Serial.parseInt ();
 
         LEDControl.set_mode (mode);
+      }
+      break;
+    }
+  case THEME:
+    {
+      if (Serial.peek () == '\n') {
+        for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
+          cRGB c = LEDControl.led_get_crgb_at (idx);
+
+          Focus.printColor (c);
+          Focus.printSpace ();
+        }
+        Serial.println ();
+        break;
+      }
+
+      uint8_t idx = 0;
+      while (idx < LED_COUNT && Serial.peek() != '\n') {
+        cRGB color;
+
+        color.r = Serial.parseInt ();
+        color.g = Serial.parseInt ();
+        color.b = Serial.parseInt ();
+
+        LEDControl.led_set_crgb_at (idx, color);
+        idx++;
       }
       break;
     }
