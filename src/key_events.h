@@ -1,6 +1,8 @@
 #pragma once
 #include <Arduino.h>
+#ifdef USBCON
 #include "KeyboardioHID.h"
+#endif
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_defs.h"
