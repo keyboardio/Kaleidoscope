@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#ifdef USBCON
+#if defined(USBCON) && !defined(CORE_TEENSY)
 #include "KeyboardioHID.h"
 #endif
 
