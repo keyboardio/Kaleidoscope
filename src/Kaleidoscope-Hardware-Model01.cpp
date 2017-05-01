@@ -64,6 +64,8 @@ void Model01::enable_high_power_leds(void) {
 }
 
 void Model01::setup(void) {
+    wdt_disable();
+    delay(100);
     enable_scanner_power();
 
     // Consider not doing this until 30s after keyboard
