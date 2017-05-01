@@ -18,7 +18,9 @@ void setup();
 
 #include <stdio.h>
 #include <math.h>
+#ifdef __AVR__
 #include <avr/wdt.h>
+#endif
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"

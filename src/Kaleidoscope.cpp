@@ -9,7 +9,9 @@ Kaleidoscope_::Kaleidoscope_(void) {
 
 void
 Kaleidoscope_::setup(void) {
+#ifdef __AVR__
     wdt_disable();
+#endif
     delay(100);
     Keyboard.begin();
     KeyboardHardware.setup();
