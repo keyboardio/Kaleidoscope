@@ -186,7 +186,7 @@ LEDControl_::focusHook (const char *command) {
       if (Serial.peek () == '\n') {
         cRGB c = LEDControl.led_get_crgb_at (idx);
 
-        Focus.printColor (c);
+        Focus.printColor (c.r, c.g, c.b);
         Serial.println ();
       } else {
         cRGB c;
@@ -235,7 +235,7 @@ LEDControl_::focusHook (const char *command) {
         for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
           cRGB c = LEDControl.led_get_crgb_at (idx);
 
-          Focus.printColor (c);
+          Focus.printColor (c.r, c.g, c.b);
           Focus.printSpace ();
         }
         Serial.println ();
