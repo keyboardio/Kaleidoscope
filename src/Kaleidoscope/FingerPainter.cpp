@@ -137,7 +137,7 @@ namespace KaleidoscopePlugins {
         cRGB color;
 
         EEPROM.get (paletteBase + i * sizeof (color), color);
-        ::Focus.printColor (color);
+        ::Focus.printColor (color.r, color.g, color.b);
         ::Focus.printSpace ();
       }
 
