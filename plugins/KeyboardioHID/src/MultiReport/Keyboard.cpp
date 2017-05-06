@@ -91,7 +91,7 @@ static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
     D_LOGICAL_MINIMUM, 0x00,
     D_LOGICAL_MAXIMUM, 0x01,
     D_REPORT_SIZE, 0x01,
-    D_REPORT_COUNT, (HID_KEYPAD_HEXADECIMAL - HID_KEYBOARD_PRIOR )  +1 ,
+    D_REPORT_COUNT, (HID_KEYPAD_HEXADECIMAL - HID_KEYBOARD_PRIOR )  +1,
     D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
 
@@ -130,11 +130,11 @@ int Keyboard_::sendReport(void) {
 }
 
 boolean Keyboard_::isModifierActive(uint8_t k) {
-  if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
-    k = k - HID_KEYBOARD_FIRST_MODIFIER;
-    return !!(_keyReport.modifiers & (1 << k));
-  }
-  return false;
+    if(k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+        k = k - HID_KEYBOARD_FIRST_MODIFIER;
+        return !!(_keyReport.modifiers & (1 << k));
+    }
+    return false;
 }
 
 size_t Keyboard_::press(uint8_t k) {

@@ -35,7 +35,7 @@ THE SOFTWARE.
 #define KEY_BYTES 28
 
 typedef union {
-    // Modifiers + keymap 
+    // Modifiers + keymap
     struct {
         uint8_t modifiers;
         uint8_t keys[KEY_BYTES ];
