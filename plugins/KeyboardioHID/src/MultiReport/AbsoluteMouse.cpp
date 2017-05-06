@@ -26,41 +26,41 @@ THE SOFTWARE.
 
 static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     /*  Mouse absolute */
-    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,                      /* USAGE_PAGE (Generic Desktop)	  54 */
-    _USAGE, _USAGE_MOUSE,                      /* USAGE (Mouse) */
-    _COLLECTION, _APPLICATION,                      /* COLLECTION (Application) */
-    _REPORT_ID, HID_REPORTID_MOUSE_ABSOLUTE,	/*     REPORT_ID */
+    D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,                      /* USAGE_PAGE (Generic Desktop)	  54 */
+    D_USAGE, D_USAGE_MOUSE,                      /* USAGE (Mouse) */
+    D_COLLECTION, D_APPLICATION,                      /* COLLECTION (Application) */
+    D_REPORT_ID, HID_REPORTID_MOUSE_ABSOLUTE,	/*     REPORT_ID */
 
     /* 8 Buttons */
-    _USAGE_PAGE, _PAGE_BUTTON,                      /*     USAGE_PAGE (Button) */
-    _USAGE_MINIMUM, 0x01,                      /*     USAGE_MINIMUM (Button 1) */
-    _USAGE_MAXIMUM, 0x08,                      /*     USAGE_MAXIMUM (Button 8) */
-    _LOGICAL_MINIMUM, 0x00,                      /*     LOGICAL_MINIMUM (0) */
-    _LOGICAL_MAXIMUM, 0x01,                      /*     LOGICAL_MAXIMUM (1) */
-    _REPORT_COUNT, 0x08,                      /*     REPORT_COUNT (8) */
-    _REPORT_SIZE, 0x01,                      /*     REPORT_SIZE (1) */
-    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),
+    D_USAGE_PAGE, D_PAGE_BUTTON,                      /*     USAGE_PAGE (Button) */
+    D_USAGE_MINIMUM, 0x01,                      /*     USAGE_MINIMUM (Button 1) */
+    D_USAGE_MAXIMUM, 0x08,                      /*     USAGE_MAXIMUM (Button 8) */
+    D_LOGICAL_MINIMUM, 0x00,                      /*     LOGICAL_MINIMUM (0) */
+    D_LOGICAL_MAXIMUM, 0x01,                      /*     LOGICAL_MAXIMUM (1) */
+    D_REPORT_COUNT, 0x08,                      /*     REPORT_COUNT (8) */
+    D_REPORT_SIZE, 0x01,                      /*     REPORT_SIZE (1) */
+    D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
     /* X, Y */
-    _USAGE_PAGE, _PAGE_GENERIC_DESKTOP,                      /*     USAGE_PAGE (Generic Desktop) */
-    _USAGE, 0x30,                      /*     USAGE (X) */
-    _USAGE, 0x31,                      /*     USAGE (Y) */
-    _MULTIBYTE(_LOGICAL_MINIMUM), 0x00, 0x00,				 /* 	Logical Minimum (0) */
-    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x7f,				 /* 	Logical Maximum (32767) */
-    _REPORT_SIZE, 0x10,						 /* 	Report Size (16), */
-    _REPORT_COUNT, 0x02,						 /* 	Report Count (2), */
-    _INPUT, (_DATA|_VARIABLE|_ABSOLUTE),						 /* 	Input (Data, Variable, Absolute) */
+    D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,                      /*     USAGE_PAGE (Generic Desktop) */
+    D_USAGE, 0x30,                      /*     USAGE (X) */
+    D_USAGE, 0x31,                      /*     USAGE (Y) */
+    D_MULTIBYTE(D_LOGICAL_MINIMUM), 0x00, 0x00,				 /* 	Logical Minimum (0) */
+    D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x7f,				 /* 	Logical Maximum (32767) */
+    D_REPORT_SIZE, 0x10,						 /* 	Report Size (16), */
+    D_REPORT_COUNT, 0x02,						 /* 	Report Count (2), */
+    D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),						 /* 	Input (Data, Variable, Absolute) */
 
     /* Wheel */
-    _USAGE, 0x38,                      /*     USAGE (Wheel) */
-    _LOGICAL_MINIMUM, 0x81,                      /*     LOGICAL_MINIMUM (-127) */
-    _LOGICAL_MAXIMUM, 0x7f,                      /*     LOGICAL_MAXIMUM (127) */
-    _REPORT_SIZE, 0x08,                      /*     REPORT_SIZE (8) */
-    _REPORT_COUNT, 0x01,                      /*     REPORT_COUNT (1) */
-    _INPUT, (_DATA|_VARIABLE|_RELATIVE),
+    D_USAGE, 0x38,                      /*     USAGE (Wheel) */
+    D_LOGICAL_MINIMUM, 0x81,                      /*     LOGICAL_MINIMUM (-127) */
+    D_LOGICAL_MAXIMUM, 0x7f,                      /*     LOGICAL_MAXIMUM (127) */
+    D_REPORT_SIZE, 0x08,                      /*     REPORT_SIZE (8) */
+    D_REPORT_COUNT, 0x01,                      /*     REPORT_COUNT (1) */
+    D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
 
     /* End */
-    _END_COLLECTION
+    D_END_COLLECTION
 };
 
 AbsoluteMouse_::AbsoluteMouse_(void) {
@@ -150,4 +150,3 @@ bool AbsoluteMouse_::isPressed(uint8_t b) {
 
 
 AbsoluteMouse_ AbsoluteMouse;
-

@@ -26,19 +26,19 @@ THE SOFTWARE.
 
 static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
     /* Consumer Control (Sound/Media keys) */
-    _USAGE_PAGE, 0x0C,									/* usage page (consumer device) */
-    _USAGE, 0x01, 								/* usage -- consumer control */
-    _COLLECTION, _APPLICATION, 								/* collection (application) */
-    _REPORT_ID, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
+    D_USAGE_PAGE, 0x0C,									/* usage page (consumer device) */
+    D_USAGE, 0x01, 								/* usage -- consumer control */
+    D_COLLECTION, D_APPLICATION, 								/* collection (application) */
+    D_REPORT_ID, HID_REPORTID_CONSUMERCONTROL, 		/* report id */
     /* 4 Media Keys */
-    _LOGICAL_MINIMUM, 0x00, 								/* logical minimum */
-    _MULTIBYTE(_LOGICAL_MAXIMUM), 0xFF, 0x03, 							/* logical maximum (3ff) */
-    _USAGE_MINIMUM, 0x00, 								/* usage minimum (0) */
-    _MULTIBYTE(_USAGE_MAXIMUM), 0xFF, 0x03, 							/* usage maximum (3ff) */
-    _REPORT_COUNT, 0x04, 								/* report count (4) */
-    _REPORT_SIZE, 0x10, 								/* report size (16) */
-    _INPUT, 0x00, 								/* input */
-    _END_COLLECTION /* end collection */
+    D_LOGICAL_MINIMUM, 0x00, 								/* logical minimum */
+    D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x03, 							/* logical maximum (3ff) */
+    D_USAGE_MINIMUM, 0x00, 								/* usage minimum (0) */
+    D_MULTIBYTE(D_USAGE_MAXIMUM), 0xFF, 0x03, 							/* usage maximum (3ff) */
+    D_REPORT_COUNT, 0x04, 								/* report count (4) */
+    D_REPORT_SIZE, 0x10, 								/* report size (16) */
+    D_INPUT, 0x00, 								/* input */
+    D_END_COLLECTION /* end collection */
 };
 
 ConsumerControl_::ConsumerControl_(void) {
@@ -92,6 +92,3 @@ void ConsumerControl_::SendReport(void* data, int length) {
 }
 
 ConsumerControl_ ConsumerControl;
-
-
-
