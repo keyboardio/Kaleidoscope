@@ -88,7 +88,7 @@ namespace KaleidoscopePlugins {
 
     // WAIT_FOR_CODE state
 
-    if (mappedKey < KEY_1 || mappedKey > KEY_0)
+    if (mappedKey < Key_1 || mappedKey > Key_0)
       return mappedKey;
 
     if (!key_toggled_on (keyState))
