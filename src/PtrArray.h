@@ -38,4 +38,17 @@ public:
       func(data_[i]);
     }
   }
+
+  /** Apply pointer-to-member to each non-null element,
+   * passing the supplied list of arguments.
+   *
+   * eg:  array.call(&T::foo, 123)
+   * will invoke t->foo(123) for each t in the array.
+   */
+  template <typename Func, typename... Args>
+  void call(Func &&func, Args&&... args) {
+    for (uint8_t i = 0; i < Size && data_[i] != NULL; ++i) {
+      (data_[i]->*func)(args...);
+    }
+  }
 };

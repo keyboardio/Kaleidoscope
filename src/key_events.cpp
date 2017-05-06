@@ -11,27 +11,23 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
         return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
       if (key_is_pressed(keyState)) {
-        EventDispatcher::eventDispatchers().apply([&mappedKey](
-            EventDispatcher *disp) {
-          disp->consumerPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+        EventDispatcher::eventDispatchers().call(
+            &EventDispatcher::consumerPress, Kaleidoscope.connectionMask,
+            mappedKey.keyCode);
       } else if (key_was_pressed(keyState)) {
-        EventDispatcher::eventDispatchers().apply([&mappedKey](
-            EventDispatcher *disp) {
-          disp->consumerRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+        EventDispatcher::eventDispatchers().call(
+            &EventDispatcher::consumerRelease, Kaleidoscope.connectionMask,
+            mappedKey.keyCode);
       }
     } else if (mappedKey.flags & IS_SYSCTL) {
       if (key_is_pressed(keyState)) {
-        EventDispatcher::eventDispatchers().apply([&mappedKey](
-            EventDispatcher *disp) {
-          disp->systemPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+        EventDispatcher::eventDispatchers().call(&EventDispatcher::systemPress,
+                                                 Kaleidoscope.connectionMask,
+                                                 mappedKey.keyCode);
       } else if (key_was_pressed(keyState)) {
-        EventDispatcher::eventDispatchers().apply([&mappedKey](
-            EventDispatcher *disp) {
-          disp->systemRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+        EventDispatcher::eventDispatchers().call(
+            &EventDispatcher::systemRelease, Kaleidoscope.connectionMask,
+            mappedKey.keyCode);
       }
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
@@ -56,67 +52,65 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
 
 void press_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyPress(Kaleidoscope.connectionMask, Key_LShift.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyPress(Kaleidoscope.connectionMask, Key_LCtrl.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LCtrl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyPress(Kaleidoscope.connectionMask, Key_LAlt.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyPress(Kaleidoscope.connectionMask, Key_RAlt.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                               Kaleidoscope.connectionMask,
+                                               Key_RAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyPress(Kaleidoscope.connectionMask, Key_LGUI.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LGUI.keyCode);
     }
-    EventDispatcher::eventDispatchers().apply(
-        [&mappedKey](EventDispatcher *disp) {
-          disp->keyPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+                                             Kaleidoscope.connectionMask,
+                                             mappedKey.keyCode);
 }
 
 
 void release_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyRelease(Kaleidoscope.connectionMask, Key_LShift.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyRelease(Kaleidoscope.connectionMask, Key_LCtrl.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LCtrl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyRelease(Kaleidoscope.connectionMask, Key_LAlt.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyRelease(Kaleidoscope.connectionMask, Key_RAlt.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                               Kaleidoscope.connectionMask,
+                                               Key_RAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-        disp->keyRelease(Kaleidoscope.connectionMask, Key_LGUI.keyCode);
-      });
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                               Kaleidoscope.connectionMask,
+                                               Key_LGUI.keyCode);
     }
-    EventDispatcher::eventDispatchers().apply(
-        [&mappedKey](EventDispatcher *disp) {
-          disp->keyRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
-        });
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+                                             Kaleidoscope.connectionMask,
+                                             mappedKey.keyCode);
 }
 
 void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
@@ -136,7 +130,6 @@ void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState)
 }
 
 void send_keyboard_report() {
-  EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
-    disp->keySendReport(Kaleidoscope.connectionMask);
-  });
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
+                                           Kaleidoscope.connectionMask);
 }

@@ -20,8 +20,7 @@ Kaleidoscope_::setup(void) {
     defaultHIDDispatcher.begin();
 #endif
 
-    EventDispatcher::eventDispatchers().apply(
-        [](EventDispatcher *disp) { disp->begin(); });
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::begin);
 
     // A workaround, so that the compiler does not optimize this out...
     handle_keyswitch_event (Key_NoKey, 255, 255, 0);
@@ -33,8 +32,8 @@ Kaleidoscope_::loop(void) {
     // it only happens once per second or ideally is triggered
     // by connectivity changes.
     connectionMask = 0;
-    EventDispatcher::eventDispatchers().apply([=](
-        EventDispatcher *disp) { disp->queryConnectionTypes(connectionMask); });
+    EventDispatcher::eventDispatchers().call(
+        &EventDispatcher::queryConnectionTypes, connectionMask);
 
     KeyboardHardware.scan_matrix();
 
@@ -43,10 +42,10 @@ Kaleidoscope_::loop(void) {
         (*hook)(false);
     }
 
-    EventDispatcher::eventDispatchers().apply([=](EventDispatcher *disp) {
-      disp->keySendReport(connectionMask);
-      disp->keyReleaseAll(connectionMask);
-    });
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
+                                             connectionMask);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyReleaseAll,
+                                             connectionMask);
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
         loopHook hook = loopHooks[i];
