@@ -10,7 +10,18 @@ Kaleidoscope_::Kaleidoscope_(void) {
 void
 Kaleidoscope_::setup(void) {
     KeyboardHardware.setup();
-    Keyboard.begin();
+#ifndef HARDWARE_EVENT_DISPATCHER
+    /** KALEIDOSCOPE_HARDWARE_H is expected to define HARDWARE_EVENT_DISPATCHER
+     * if it has registered a dispatcher.  The goal is to remove this once
+     * all of the hardware implementations have been updated to register
+     * their dispatchers.
+     * The purpose of this block is to ensure that the default implementation
+     * is linked in, as it is otherwise unreferenced. */
+    defaultHIDDispatcher.begin();
+#endif
+
+    EventDispatcher::eventDispatchers().apply(
+        [](EventDispatcher *disp) { disp->begin(); });
 
     // A workaround, so that the compiler does not optimize this out...
     handle_keyswitch_event (Key_NoKey, 255, 255, 0);
@@ -18,6 +29,13 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::loop(void) {
+    // Re-probe available endpoints.  We could adjust this so that
+    // it only happens once per second or ideally is triggered
+    // by connectivity changes.
+    connectionMask = 0;
+    EventDispatcher::eventDispatchers().apply([=](
+        EventDispatcher *disp) { disp->queryConnectionTypes(connectionMask); });
+
     KeyboardHardware.scan_matrix();
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
@@ -25,8 +43,10 @@ Kaleidoscope_::loop(void) {
         (*hook)(false);
     }
 
-    Keyboard.sendReport();
-    Keyboard.releaseAll();
+    EventDispatcher::eventDispatchers().apply([=](EventDispatcher *disp) {
+      disp->keySendReport(connectionMask);
+      disp->keyReleaseAll(connectionMask);
+    });
 
     for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
         loopHook hook = loopHooks[i];

@@ -10,15 +10,29 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
     if (mappedKey.flags & IS_INTERNAL) {
         return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
-      if (key_is_pressed(keyState))
-        ConsumerControl.press(mappedKey.keyCode);
-      else if (key_was_pressed(keyState))
-        ConsumerControl.release(mappedKey.keyCode);
+      if (key_is_pressed(keyState)) {
+        EventDispatcher::eventDispatchers().apply([&mappedKey](
+            EventDispatcher *disp) {
+          disp->consumerPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
+      } else if (key_was_pressed(keyState)) {
+        EventDispatcher::eventDispatchers().apply([&mappedKey](
+            EventDispatcher *disp) {
+          disp->consumerRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
+      }
     } else if (mappedKey.flags & IS_SYSCTL) {
-      if (key_is_pressed(keyState))
-        SystemControl.press(mappedKey.keyCode);
-      else if (key_was_pressed(keyState))
-        SystemControl.release();
+      if (key_is_pressed(keyState)) {
+        EventDispatcher::eventDispatchers().apply([&mappedKey](
+            EventDispatcher *disp) {
+          disp->systemPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
+      } else if (key_was_pressed(keyState)) {
+        EventDispatcher::eventDispatchers().apply([&mappedKey](
+            EventDispatcher *disp) {
+          disp->systemRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
+      }
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
     }
@@ -42,41 +56,67 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
 
 void press_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.press(Key_LShift.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyPress(Kaleidoscope.connectionMask, Key_LShift.keyCode);
+      });
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.press(Key_LCtrl.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyPress(Kaleidoscope.connectionMask, Key_LCtrl.keyCode);
+      });
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.press(Key_LAlt.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyPress(Kaleidoscope.connectionMask, Key_LAlt.keyCode);
+      });
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.press(Key_RAlt.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyPress(Kaleidoscope.connectionMask, Key_RAlt.keyCode);
+      });
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.press(Key_LGUI.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyPress(Kaleidoscope.connectionMask, Key_LGUI.keyCode);
+      });
     }
-    Keyboard.press(mappedKey.keyCode);
+    EventDispatcher::eventDispatchers().apply(
+        [&mappedKey](EventDispatcher *disp) {
+          disp->keyPress(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
 }
 
 
 void release_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.release(Key_LShift.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyRelease(Kaleidoscope.connectionMask, Key_LShift.keyCode);
+      });
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.release(Key_LCtrl.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyRelease(Kaleidoscope.connectionMask, Key_LCtrl.keyCode);
+      });
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.release(Key_LAlt.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyRelease(Kaleidoscope.connectionMask, Key_LAlt.keyCode);
+      });
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.release(Key_RAlt.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyRelease(Kaleidoscope.connectionMask, Key_RAlt.keyCode);
+      });
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.release(Key_LGUI.keyCode);
+      EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+        disp->keyRelease(Kaleidoscope.connectionMask, Key_LGUI.keyCode);
+      });
     }
-    Keyboard.release(mappedKey.keyCode);
+    EventDispatcher::eventDispatchers().apply(
+        [&mappedKey](EventDispatcher *disp) {
+          disp->keyRelease(Kaleidoscope.connectionMask, mappedKey.keyCode);
+        });
 }
 
 void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
@@ -93,4 +133,10 @@ void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState)
     if (mappedKey.raw == Key_NoKey.raw)
         return;
     handle_keyswitch_event_default(mappedKey, row, col, keyState);
+}
+
+void send_keyboard_report() {
+  EventDispatcher::eventDispatchers().apply([](EventDispatcher *disp) {
+    disp->keySendReport(Kaleidoscope.connectionMask);
+  });
 }
