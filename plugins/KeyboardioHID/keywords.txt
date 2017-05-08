@@ -73,4 +73,4 @@ AbsoluteMouse	KEYWORD1
 HID_BOOT_PROTOCOL	LITERAL1
 HID_REPORT_PROTOCOL	LITERAL1
 
-#TODO add key definitions like KEY_ENTER
+#TODO add key definitions like HID_KEYBOARD_ENTER

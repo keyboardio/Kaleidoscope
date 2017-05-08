@@ -35,7 +35,7 @@ void loop() {
 
   // Trigger caps lock manually via button
   if (!digitalRead(pinButton)) {
-    BootKeyboard.press(KEY_ENTER);
+    BootKeyboard.press(HID_KEYBOARD_ENTER);
     BootKeyboard.sendReport();
     BootKeyboard.releaseAll();
     BootKeyboard.sendReport();

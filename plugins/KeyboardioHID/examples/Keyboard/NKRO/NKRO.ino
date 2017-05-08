@@ -31,24 +31,24 @@ void loop() {
   if (!digitalRead(pinButton)) {
     digitalWrite(pinLed, HIGH);
 
-    // Do not press to many at once or some OS will have problems.
+    // Do not press too many at once or some OS will have problems.
     // Note that the resulting pressed order might differ,
     // because all keys are pressed at the same time.
-    Keyboard.press(KEY_0);
-    Keyboard.press(KEY_1);
-    Keyboard.press(KEY_2);
-    Keyboard.press(KEY_3);
-    Keyboard.press(KEY_4);
-    Keyboard.press(KEY_5);
-    Keyboard.press(KEY_6);
-    Keyboard.press(KEY_7);
-    Keyboard.press(KEY_8);
-    Keyboard.press(KEY_9);
+    Keyboard.press(HID_KEYBOARD_0_AND_RIGHT_PAREN);
+    Keyboard.press(HID_KEYBOARD_1_AND_EXCLAMATION_POINT);
+    Keyboard.press(HID_KEYBOARD_2_AND_AT);
+    Keyboard.press(HID_KEYBOARD_3_AND_POUND);
+    Keyboard.press(HID_KEYBOARD_4_AND_DOLLAR);
+    Keyboard.press(HID_KEYBOARD_5_AND_PERCENT);
+    Keyboard.press(HID_KEYBOARD_6_AND_CARAT);
+    Keyboard.press(HID_KEYBOARD_7_AND_AMPERSAND);
+    Keyboard.press(HID_KEYBOARD_8_AND_ASTERISK);
+    Keyboard.press(HID_KEYBOARD_9_AND_LEFT_PAREN);
     Keyboard.sendReport();
 
     // Release all keys and hit enter
     Keyboard.releaseAll();
-    Keyboard.press(KEY_ENTER);
+    Keyboard.press(HID_KEYBOARD_ENTER);
     Keyboard.sendReport();
     Keyboard.releaseAll();
     Keyboard.sendReport();
