@@ -147,7 +147,7 @@ typedef union Key_ {
 #define Key_Home (Key) { HID_KEYBOARD_HOME,  KEY_FLAGS }
 #define Key_End (Key) { HID_KEYBOARD_END,  KEY_FLAGS }
 
-
+#define Key_PrtScr (Key) { HID_KEYBOARD_PRINTSCREEN, KEY_FLAGS }
 #define Key_CapsLock (Key) { HID_KEYBOARD_CAPS_LOCK,  KEY_FLAGS }
 #define Key_NumLock (Key) { HID_KEYPAD_NUM_LOCK_AND_CLEAR, KEY_FLAGS }
 
