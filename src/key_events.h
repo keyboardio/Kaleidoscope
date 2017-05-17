@@ -1,10 +1,17 @@
 #pragma once
 #include <Arduino.h>
-#if defined(USBCON) && !defined(CORE_TEENSY)
-#include "KeyboardioHID.h"
+#include "EventDispatcher.h"
+#include KALEIDOSCOPE_HARDWARE_H
+
+/** KALEIDOSCOPE_HARDWARE_H is expected to define HARDWARE_EVENT_DISPATCHER
+ * if it has registered a dispatcher.  The goal is to remove this once
+ * all of the hardware implementations have been updated to register
+ * their dispatchers. */
+#ifndef HARDWARE_EVENT_DISPATCHER
+#include "HIDEventDispatcher.h"
+extern HIDEventDispatcher defaultHIDDispatcher;
 #endif
 
-#include KALEIDOSCOPE_HARDWARE_H
 #include "key_defs.h"
 #include "keyswitch_state.h"
 
@@ -45,6 +52,9 @@ extern const Key keymaps[][ROWS][COLS];
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
 void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState);
+
+/** Flushes any pending regular key switch events and sends them out */
+void send_keyboard_report();
 
 // Internal use
 void press_key(Key mappedKey);

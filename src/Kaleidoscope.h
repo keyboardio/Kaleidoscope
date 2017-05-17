@@ -95,6 +95,8 @@ class Kaleidoscope_ {
     static void useLoopHook(loopHook hook);
 
     static bool focusHook(const char *command);
+
+    uint8_t connectionMask{0};
 };
 
 extern Kaleidoscope_ Kaleidoscope;
