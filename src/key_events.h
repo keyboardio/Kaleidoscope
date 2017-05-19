@@ -1,8 +1,5 @@
 #pragma once
 #include <Arduino.h>
-#if defined(USBCON) && !defined(CORE_TEENSY)
-#include "KeyboardioHID.h"
-#endif
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_defs.h"
