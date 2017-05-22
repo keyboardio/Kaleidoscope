@@ -41,7 +41,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 static void tapDanceEsc (uint8_t tapDanceIndex, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
-  tapDanceActionKeys (tapCount, tapDanceAction, Key_Esc, Key_Tab);
+  tapDanceActionKeys (tapCount, tapDanceAction, Key_Escape, Key_Tab);
 }
 
 void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
