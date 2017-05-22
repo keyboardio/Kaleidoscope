@@ -79,9 +79,9 @@ namespace KaleidoscopePlugins {
   Unicode::end (void) {
     switch (::HostOS.os ()) {
     case HostOS::LINUX:
-      Keyboard.press (Key_SpaceBar.keyCode);
+      Keyboard.press (Key_Spacebar.keyCode);
       Keyboard.sendReport ();
-      Keyboard.release (Key_SpaceBar.keyCode);
+      Keyboard.release (Key_Spacebar.keyCode);
       Keyboard.sendReport ();
       break;
     case HostOS::WINDOWS:
