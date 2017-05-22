@@ -43,14 +43,14 @@ namespace KaleidoscopePlugins {
 
           switch (k.keyCode) {
           case Key_A.keyCode ... Key_0.keyCode:
-          case Key_Space.keyCode:
-          case Key_Minus.keyCode ... Key_Slash.keyCode:
+          case Key_Spacebar.keyCode:
+          case Key_KeypadSubtract.keyCode ... Key_KeypadDivide.keyCode:
           case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
           case Key_F1.keyCode ... Key_F4.keyCode:
           case Key_F9.keyCode ... Key_F12.keyCode:
             color = baseColor;
             break;
-          case Key_Esc.keyCode:
+          case Key_Escape.keyCode:
             color = escColor;
             break;
           }
