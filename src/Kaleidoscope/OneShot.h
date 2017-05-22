@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define OSM(kc) (Key) {.raw = KaleidoscopePlugins::Ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LCtrl.keyCode}
+#define OSM(kc) (Key) {.raw = KaleidoscopePlugins::Ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode}
 #define OSL(n) (Key) {.raw = KaleidoscopePlugins::Ranges::OSL_FIRST + n}
 
 namespace KaleidoscopePlugins {

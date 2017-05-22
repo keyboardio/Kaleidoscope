@@ -36,7 +36,7 @@ plugin:
 #include <Kaleidoscope-OneShot.h>
 
 // somewhere in the keymap...
-OSM(LCtrl), OSL(_FN)
+OSM(LeftControl), OSL(_FN)
 
 void setup () {
   Kaleidoscope.setup ();

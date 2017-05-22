@@ -25,9 +25,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc,
+   Key_PageDown,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
 
-   OSM(LCtrl), Key_Backspace, OSM(LGUI), Key_LShift,
+   OSM(LeftControl), Key_Backspace, OSM(LeftGui), Key_LeftShift,
    Key_Keymap1_Momentary,
 
    Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
@@ -35,7 +35,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
               Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
    Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-   Key_RShift, OSM(RAlt), Key_Space, OSM(RCtrl),
+   Key_RightShift, OSM(RoghtAlt), Key_Spacebar, OSM(RightControl),
    OSL(1)
    ),
 
@@ -49,10 +49,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ___, ___, ___, ___,
    ___,
 
-   ___, ___,         ___,         ___,        ___,        ___, ___,
-   ___, ___,         ___,         ___,        ___,        ___, ___,
-        Key_UpArrow, Key_DnArrow, Key_LArrow, Key_RArrow, ___, ___,
-   ___, ___,         ___,         ___,        ___,        ___, ___,
+   ___, ___,         ___,         ___,        ___,        		___, ___,
+   ___, ___,         ___,         ___,        ___,        		___, ___,
+        Key_UpArrow, Key_DownArrow, Key_LeftArrow, Key_RightArrow, 	___, ___,
+   ___, ___,         ___,         ___,        ___,       		 ___, ___,
 
    ___, ___, ___, ___,
    ___

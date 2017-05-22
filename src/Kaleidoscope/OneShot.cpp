@@ -38,7 +38,7 @@ namespace KaleidoscopePlugins {
   // --- helper macros ------
 
 #define isOS(key) (key.raw >= OS_FIRST && key.raw <= OS_LAST)
-#define isModifier(key) (key.raw >= Key_LCtrl.raw && key.raw <= Key_RGUI.raw)
+#define isModifier(key) (key.raw >= Key_LeftControl.raw && key.raw <= Key_RightGui.raw)
 #define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
 
 #define isOneShot(idx) (bitRead (State.all, (idx)))
@@ -64,8 +64,8 @@ namespace KaleidoscopePlugins {
     Key key;
 
     if (idx < 8) {
-      key.flags = Key_LCtrl.flags;
-      key.keyCode = Key_LCtrl.keyCode + idx;
+      key.flags = Key_LeftControl.flags;
+      key.keyCode = Key_LeftControl.keyCode + idx;
     } else {
       key.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
       key.keyCode = MOMENTARY_OFFSET + idx - 8;
@@ -257,10 +257,10 @@ namespace KaleidoscopePlugins {
 
   bool
   OneShot::isModifierActive (Key key) {
-    if (key.raw < Key_LCtrl.raw || key.raw > Key_RGUI.raw)
+    if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
       return false;
 
-    return isOneShot (key.keyCode - Key_LCtrl.keyCode);
+    return isOneShot (key.keyCode - Key_LeftControl.keyCode);
   }
 
   void
