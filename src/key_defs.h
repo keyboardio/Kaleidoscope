@@ -117,10 +117,10 @@ typedef union Key_ {
 
 
 
-#define Key_LEFT_PAREN LSHIFT(Key_9)
-#define Key_RIGHT_PAREN LSHIFT(Key_0)
-#define Key_LCurlyBracket LSHIFT(Key_LSquareBracket)
-#define Key_RCurlyBracket LSHIFT(Key_RSquareBracket)
+#define Key_LeftParen LSHIFT(Key_9)
+#define Key_RightParen LSHIFT(Key_0)
+#define Key_LeftCurlyBracket LSHIFT(Key_LeftBracket)
+#define Key_RightCurlyBracket LSHIFT(Key_RightBracket)
 
 #define Key_Pipe LSHIFT(Key_Backslash)
 
@@ -128,7 +128,7 @@ typedef union Key_ {
 
 #define KEY_BACKLIGHT_DOWN 0xF1
 #define KEY_BACKLIGHT_UP 0xF2
-#define Key_BacklightDn (Key) { KEY_BACKLIGHT_DOWN,  KEY_FLAGS }
+#define Key_BacklightDown (Key) { KEY_BACKLIGHT_DOWN,  KEY_FLAGS }
 #define Key_BacklightUp (Key) { KEY_BACKLIGHT_UP,  KEY_FLAGS }
 #define KEY_RIGHT_FN2 0xfe
 #define Key_RFN2 (Key) { KEY_RIGHT_FN2,  KEY_FLAGS }

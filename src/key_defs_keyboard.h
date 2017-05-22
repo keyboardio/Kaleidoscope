@@ -45,24 +45,13 @@
 #define Key_0 (Key) { HID_KEYBOARD_0_AND_RIGHT_PAREN, KEY_FLAGS }	
 #define Key_Enter (Key) { HID_KEYBOARD_ENTER, KEY_FLAGS }		 // (MARKED AS ENTER_SLASH_RETURN)
 #define Key_Escape (Key) { HID_KEYBOARD_ESCAPE, KEY_FLAGS }	
-
-#define Key_Esc Key_Escape
-
 #define Key_Backspace (Key) { HID_KEYBOARD_DELETE, KEY_FLAGS }		// (BACKSPACE)
 #define Key_Tab (Key) { HID_KEYBOARD_TAB, KEY_FLAGS }	
 #define Key_Spacebar (Key) { HID_KEYBOARD_SPACEBAR, KEY_FLAGS }	
-#define Key_Space Key_Spacebar
-
 #define Key_Minus (Key) { HID_KEYBOARD_MINUS_AND_UNDERSCORE, KEY_FLAGS } // (UNDERSCORE)
 #define Key_Equals (Key) { HID_KEYBOARD_EQUALS_AND_PLUS, KEY_FLAGS }	
 #define Key_LeftBracket (Key) { HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE, KEY_FLAGS }	
-#define Key_LSquareBracket Key_LeftBracket
-#define Key_LBracket Key_LeftBracket
-
 #define Key_RightBracket (Key) { HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE, KEY_FLAGS }	
-#define Key_RSquareBracket Key_RightBracket
-#define Key_RBracket Key_RightBracket
-
 #define Key_Backslash (Key) { HID_KEYBOARD_BACKSLASH_AND_PIPE, KEY_FLAGS }	
 #define Key_NonUsPound (Key) { HID_KEYBOARD_NON_US_POUND_AND_TILDE, KEY_FLAGS }	
 #define Key_Semicolon (Key) { HID_KEYBOARD_SEMICOLON_AND_COLON, KEY_FLAGS }	
@@ -85,8 +74,6 @@
 #define Key_F11 (Key) { HID_KEYBOARD_F11, KEY_FLAGS }	
 #define Key_F12 (Key) { HID_KEYBOARD_F12, KEY_FLAGS }	
 #define Key_Printscreen (Key) { HID_KEYBOARD_PRINTSCREEN, KEY_FLAGS }	
-#define Key_PrtScr Key_PrintScreen
-
 #define Key_ScrollLock (Key) { HID_KEYBOARD_SCROLL_LOCK, KEY_FLAGS }	
 #define Key_Pause (Key) { HID_KEYBOARD_PAUSE, KEY_FLAGS }	
 #define Key_Insert (Key) { HID_KEYBOARD_INSERT, KEY_FLAGS }	
@@ -95,31 +82,15 @@
 #define Key_Delete (Key) { HID_KEYBOARD_DELETE_FORWARD, KEY_FLAGS }	
 #define Key_End (Key) { HID_KEYBOARD_END, KEY_FLAGS }	
 #define Key_PageDown (Key) { HID_KEYBOARD_PAGE_DOWN, KEY_FLAGS }	
-#define Key_PageDn Key_PageDown
-
 #define Key_RightArrow (Key) { HID_KEYBOARD_RIGHT_ARROW, KEY_FLAGS }	
-#define Key_RArrow Key_RightArrow
-
 #define Key_LeftArrow (Key) { HID_KEYBOARD_LEFT_ARROW, KEY_FLAGS }	
-#define Key_LArrow Key_LeftArrow
-
 #define Key_DownArrow (Key) { HID_KEYBOARD_DOWN_ARROW, KEY_FLAGS }	
-#define Key_DnArrow Key_DownARrow
-
-
 #define Key_UpArrow (Key) { HID_KEYBOARD_UP_ARROW, KEY_FLAGS }	
 #define Key_KeypadNumLock (Key) { HID_KEYPAD_NUM_LOCK_AND_CLEAR, KEY_FLAGS }	
-#define Key_NumLock Key_NumpadNumLock
 #define Key_KeypadDivide (Key) { HID_KEYPAD_DIVIDE, KEY_FLAGS }	
-#define Key_KeypadSlash Key_KeypadDivide
-
 #define Key_KeypadMultiply (Key) { HID_KEYPAD_MULTIPLY, KEY_FLAGS }	
 #define Key_KeypadSubtract (Key) { HID_KEYPAD_SUBTRACT, KEY_FLAGS }	
-#define Key_KeypadMinus Key_KeypadSubtract
-
 #define Key_KeypadAdd (Key) { HID_KEYPAD_ADD, KEY_FLAGS }	
-#define Key_KeypadPlus Key_KeypadAdd
-
 #define Key_KeypadEnter (Key) { HID_KEYPAD_ENTER, KEY_FLAGS }	
 #define Key_Keypad1 (Key) { HID_KEYPAD_1_AND_END, KEY_FLAGS }	
 #define Key_Keypad2 (Key) { HID_KEYPAD_2_AND_DOWN_ARROW, KEY_FLAGS }	
@@ -246,27 +217,12 @@
 #define Key_KeypadHexadecimal (Key) { HID_KEYPAD_HEXADECIMAL, KEY_FLAGS }	
 
 #define Key_LeftControl (Key) { HID_KEYBOARD_LEFT_CONTROL, KEY_FLAGS }	
-#define Key_LCtrl Key_LeftControl
-
 #define Key_LeftShift (Key) { HID_KEYBOARD_LEFT_SHIFT, KEY_FLAGS }	
-#define Key_LShift Key_LeftShift
-
 #define Key_LeftAlt (Key) { HID_KEYBOARD_LEFT_ALT, KEY_FLAGS }	
-#define Key_LAlt Key_LeftAlt
-
 #define Key_LeftGui (Key) { HID_KEYBOARD_LEFT_GUI, KEY_FLAGS }	
-#define Key_LGUI Key_LeftGui
-
 #define Key_RightControl (Key) { HID_KEYBOARD_RIGHT_CONTROL, KEY_FLAGS }	
-#define Key_RCtrl Key_RightControl
-
 #define Key_RightShift (Key) { HID_KEYBOARD_RIGHT_SHIFT, KEY_FLAGS }	
-#define Key_RShift Key_RightShift
-
 #define Key_RightAlt (Key) { HID_KEYBOARD_RIGHT_ALT, KEY_FLAGS }	
-#define Key_RAlt Key_RightAlt
-
 #define Key_RightGui (Key) { HID_KEYBOARD_RIGHT_GUI, KEY_FLAGS }	
-#define Key_RGUI Key_RightGui
 
 
