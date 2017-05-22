@@ -42,7 +42,7 @@ namespace KaleidoscopePlugins {
     if (postClear)
       return;
 
-    modActive = Keyboard.isModifierActive (Key_LShift.keyCode) ||
+    modActive = Keyboard.isModifierActive (Key_LeftShift.keyCode) ||
       Keyboard.isModifierActive (Key_RShift.keyCode);
   }
 
