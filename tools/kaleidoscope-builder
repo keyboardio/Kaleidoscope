@@ -95,6 +95,8 @@ build () {
 }
 
 compile () {
+    build_version
+    build_filenames
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
