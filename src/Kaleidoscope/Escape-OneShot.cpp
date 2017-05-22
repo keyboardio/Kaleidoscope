@@ -32,7 +32,7 @@ namespace KaleidoscopePlugins {
 
   Key
   EscapeOneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (mappedKey.raw != Key_Esc.raw ||
+    if (mappedKey.raw != Key_Escape.raw ||
         (keyState & INJECTED) ||
         !key_toggled_on (keyState))
       return mappedKey;
