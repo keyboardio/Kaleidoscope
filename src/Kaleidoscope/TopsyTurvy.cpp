@@ -46,9 +46,9 @@ namespace KaleidoscopePlugins {
     if (!topsyTurvyList)
       return mappedKey;
 
-    if (mappedKey.raw == Key_LShift.raw)
+    if (mappedKey.raw == Key_LeftShift.raw)
       bitWrite (topsyTurvyModState, 0, key_is_pressed (keyState));
-    if (mappedKey.raw == Key_RShift.raw)
+    if (mappedKey.raw == Key_RightShift.raw)
       bitWrite (topsyTurvyModState, 1, key_is_pressed (keyState));
 
     if (!key_is_pressed (keyState) && !key_was_pressed (keyState))
@@ -69,22 +69,22 @@ namespace KaleidoscopePlugins {
 
     if (!topsyTurvyModState) {
       if (key_is_pressed (keyState))
-        Keyboard.press (Key_LShift.keyCode);
+        Keyboard.press (Key_LeftShift.keyCode);
       handle_keyswitch_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
       if (key_toggled_off (keyState))
-        Keyboard.release (Key_LShift.keyCode);
+        Keyboard.release (Key_LeftShift.keyCode);
     } else {
-      Keyboard.release (Key_LShift.keyCode);
-      Keyboard.release (Key_RShift.keyCode);
+      Keyboard.release (Key_LeftShift.keyCode);
+      Keyboard.release (Key_RightShift.keyCode);
       Keyboard.sendReport ();
       handle_keyswitch_event (mappedKey, row, col, keyState | TOPSYTURVY);
       Keyboard.sendReport ();
 
       if (bitRead (topsyTurvyModState, 0))
-        Keyboard.press (Key_LShift.keyCode);
+        Keyboard.press (Key_LeftShift.keyCode);
       if (bitRead (topsyTurvyModState, 1))
-        Keyboard.press (Key_RShift.keyCode);
+        Keyboard.press (Key_RightShift.keyCode);
     }
 
     return Key_NoKey;
