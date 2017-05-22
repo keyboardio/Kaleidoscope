@@ -35,7 +35,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
               Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
    Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-   Key_RightShift, OSM(RoghtAlt), Key_Spacebar, OSM(RightControl),
+   Key_RightShift, OSM(RightAlt), Key_Spacebar, OSM(RightControl),
    OSL(1)
    ),
 
