@@ -28,10 +28,10 @@ using namespace KaleidoscopePlugins::HostOS;
 static bool appSwitchActive = false;
 
 const macro_t *macroAppSwitch (uint8_t keyState) {
-    Key mod = Key_LAlt;
+    Key mod = Key_LeftAlt;
 
     if (HostOS.os () == OSX)
-        mod = Key_LGUI;
+        mod = Key_LeftGui;
 
     // Key was just pressed, or is being held
     if (key_is_pressed(keyState)) {
