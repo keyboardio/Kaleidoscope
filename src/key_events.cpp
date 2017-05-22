@@ -42,19 +42,19 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
 
 void press_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.press(Key_LShift.keyCode);
+        Keyboard.press(Key_LeftShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.press(Key_LCtrl.keyCode);
+        Keyboard.press(Key_LeftControl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.press(Key_LAlt.keyCode);
+        Keyboard.press(Key_LeftAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.press(Key_RAlt.keyCode);
+        Keyboard.press(Key_RightAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.press(Key_LGUI.keyCode);
+        Keyboard.press(Key_LeftGui.keyCode);
     }
     Keyboard.press(mappedKey.keyCode);
 }
@@ -62,19 +62,19 @@ void press_key(Key mappedKey) {
 
 void release_key(Key mappedKey) {
     if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.release(Key_LShift.keyCode);
+        Keyboard.release(Key_LeftShift.keyCode);
     }
     if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.release(Key_LCtrl.keyCode);
+        Keyboard.release(Key_LeftControl.keyCode);
     }
     if (mappedKey.flags & LALT_HELD) {
-        Keyboard.release(Key_LAlt.keyCode);
+        Keyboard.release(Key_LeftAlt.keyCode);
     }
     if (mappedKey.flags & RALT_HELD) {
-        Keyboard.release(Key_RAlt.keyCode);
+        Keyboard.release(Key_RightAlt.keyCode);
     }
     if (mappedKey.flags & GUI_HELD) {
-        Keyboard.release(Key_LGUI.keyCode);
+        Keyboard.release(Key_LeftGui.keyCode);
     }
     Keyboard.release(mappedKey.keyCode);
 }
