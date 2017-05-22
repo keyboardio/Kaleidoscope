@@ -32,7 +32,7 @@ NumLock_::update (void) {
         for (uint8_t c = 0; c < COLS; c++) {
             Key k = Layer.lookup (r, c);
 
-            if (k.raw < Key_NumLock.raw || k.raw > Key_KeypadDot.raw)
+            if (k.raw < Key_KeypadNumLock.raw || k.raw > Key_KeypadDot.raw)
                 continue;
 
             LEDControl.led_set_crgb_at(r, c, numpad_color);
@@ -62,7 +62,7 @@ NumLock_::toggle (byte row_, byte col_, uint8_t numPadLayer) {
         Layer.on (numPadLayer);
     }
 
-    return MACRO(T(NumLock), END);
+    return MACRO(T(KeypadNumLock), END);
 }
 
 NumLock_ NumLock;
