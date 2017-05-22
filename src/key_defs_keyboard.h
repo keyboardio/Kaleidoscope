@@ -73,7 +73,7 @@
 #define Key_F10 (Key) { HID_KEYBOARD_F10, KEY_FLAGS }	
 #define Key_F11 (Key) { HID_KEYBOARD_F11, KEY_FLAGS }	
 #define Key_F12 (Key) { HID_KEYBOARD_F12, KEY_FLAGS }	
-#define Key_Printscreen (Key) { HID_KEYBOARD_PRINTSCREEN, KEY_FLAGS }	
+#define Key_PrintScreen (Key) { HID_KEYBOARD_PRINTSCREEN, KEY_FLAGS }	
 #define Key_ScrollLock (Key) { HID_KEYBOARD_SCROLL_LOCK, KEY_FLAGS }	
 #define Key_Pause (Key) { HID_KEYBOARD_PAUSE, KEY_FLAGS }	
 #define Key_Insert (Key) { HID_KEYBOARD_INSERT, KEY_FLAGS }	
