@@ -7,6 +7,8 @@
 #include "key_defs_sysctl.h"
 #include "key_defs_consumerctl.h"
 
+#include "KeyboardioHID.h"
+
 
 typedef union Key_ {
 
