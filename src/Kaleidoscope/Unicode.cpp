@@ -32,19 +32,19 @@ namespace KaleidoscopePlugins {
   Unicode::start (void) {
     switch (::HostOS.os ()) {
     case HostOS::LINUX:
-      Keyboard.press (Key_LCtrl.keyCode);
-      Keyboard.press (Key_LShift.keyCode);
+      Keyboard.press (Key_LeftControl.keyCode);
+      Keyboard.press (Key_LeftShift.keyCode);
       Keyboard.press (Key_U.keyCode);
       Keyboard.sendReport ();
-      Keyboard.release (Key_LCtrl.keyCode);
-      Keyboard.release (Key_LShift.keyCode);
+      Keyboard.release (Key_LeftControl.keyCode);
+      Keyboard.release (Key_LeftShift.keyCode);
       Keyboard.release (Key_U.keyCode);
       Keyboard.sendReport ();
       break;
     case HostOS::WINDOWS:
-      Keyboard.press (Key_RAlt.keyCode);
+      Keyboard.press (Key_RightAlt.keyCode);
       Keyboard.sendReport ();
-      Keyboard.release (Key_RAlt.keyCode);
+      Keyboard.release (Key_RightAlt.keyCode);
       Keyboard.sendReport ();
       Keyboard.press (Key_U.keyCode);
       Keyboard.sendReport ();
@@ -52,7 +52,7 @@ namespace KaleidoscopePlugins {
       Keyboard.sendReport ();
       break;
     case HostOS::OSX:
-      Keyboard.press (Key_LAlt.keyCode);
+      Keyboard.press (Key_LeftAlt.keyCode);
       break;
     default:
       unicodeCustomStart ();
@@ -67,7 +67,7 @@ namespace KaleidoscopePlugins {
     case HostOS::WINDOWS:
       break;
     case HostOS::OSX:
-      Keyboard.press (Key_LAlt.keyCode);
+      Keyboard.press (Key_LeftAlt.keyCode);
       break;
     default:
       unicodeCustomInput ();
@@ -79,15 +79,15 @@ namespace KaleidoscopePlugins {
   Unicode::end (void) {
     switch (::HostOS.os ()) {
     case HostOS::LINUX:
-      Keyboard.press (Key_Space.keyCode);
+      Keyboard.press (Key_SpaceBar.keyCode);
       Keyboard.sendReport ();
-      Keyboard.release (Key_Space.keyCode);
+      Keyboard.release (Key_SpaceBar.keyCode);
       Keyboard.sendReport ();
       break;
     case HostOS::WINDOWS:
       break;
     case HostOS::OSX:
-      Keyboard.release (Key_LAlt.keyCode);
+      Keyboard.release (Key_LeftAlt.keyCode);
       Keyboard.sendReport ();
       break;
     default:
