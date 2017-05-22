@@ -50,10 +50,10 @@ namespace KaleidoscopePlugins {
 
     // If a key has been just toggled on...
     if (key_toggled_on (keyState)) {
-      if (mappedKey.raw == Key_LShift.raw) { // if it is LShift, remember it
+      if (mappedKey.raw == Key_LeftShift.raw) { // if it is LShift, remember it
         bitWrite (parenNeeded, 0, 1);
         startTime = millis ();
-      } else if (mappedKey.raw == Key_RShift.raw) { // if it is RShift, remember it
+      } else if (mappedKey.raw == Key_RightShift.raw) { // if it is RShift, remember it
         bitWrite (parenNeeded, 1, 1);
         startTime = millis ();
       } else { // if it is something else, we do not need a paren at the end.
