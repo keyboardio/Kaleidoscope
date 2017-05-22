@@ -32,7 +32,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
    Key_PageDown,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
 
-   Key_LeftCtrl, Key_Backspace, Key_LeftGUI, Key_LeftShift,
+   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
    M(M_APPSWITCH),
 
    Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
@@ -40,7 +40,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
               Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
    Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-   Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,
+   Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    M(M_APPCANCEL)
    ),
 };

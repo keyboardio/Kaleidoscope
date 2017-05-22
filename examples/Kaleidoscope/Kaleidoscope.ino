@@ -24,7 +24,7 @@
 	Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_G, Key_Tab, 		Key_Enter, Key_J, Key_L, Key_U,     Key_Y,      Key_Semicolon, Key_Equals, \
 	Key_PageUp,   Key_A, Key_R, Key_S, Key_T, Key_D,                     		   Key_H, Key_N, Key_E,     Key_I,      Key_O,         Key_Quote, \
 	Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, 		___,       Key_K, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,\
-	                    Key_LeftCtrl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,\
+	                    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 			                             Key_Keymap1_Momentary, 	Key_Keymap1_Momentary,\
 )
 
@@ -33,7 +33,7 @@
 	Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab, 		Key_Enter, Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash, \
 	Key_PageUp,   Key_A, 	     Key_O,     Key_E, 	    Key_U, Key_I, 				   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus, \
 	Key_PageDn,   Key_Semicolon, Key_Q,     Key_J, 	    Key_K, Key_X, Key_Esc, 		___, 	   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals, \
-	                    Key_LeftCtrl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,\
+	                    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 					      		  Key_KeymapNext_Momentary, 		Key_KeymapNext_Momentary \
 )
 
@@ -42,14 +42,14 @@
 	Key_Tab,  Key_mouseBtnM, Key_mouseUp, ___,        Key_mouseWarpNW, Key_mouseWarpNE, Key_nextTrack, 	 \
 	Key_Home, Key_mouseL,    Key_mouseDn, Key_mouseR, Key_mouseWarpSW, Key_mouseWarpSE, \
 	Key_End,  Key_Z,         Key_X,       Key_C,      Key_V,           Key_mouseWarpEnd, ___,    \
-							Key_LeftCtrl, Key_mouseBtnL, Key_LeftGui, Key_LeftShift,		\
+							Key_LeftControl, Key_mouseBtnL, Key_LeftGui, Key_LeftShift,		\
 					      				      ___,\
 \
 	XXX,        Key_F6,         Key_F7,            Key_F8, 		  Key_F9,	      ___, 		  ___,\
 	Key_Delete, Key_playPause,  Key_LCurlyBracket, Key_RCurlyBracket, Key_LSquareBracket, Key_RSquareBracket, Key_sleep,\
 		    Key_LArrow,     Key_DnArrow,       Key_UpArrow, 	  Key_RArrow, 	      Key_F11, 	          Key_F12,\
 	___,        Key_volumeDown, Key_volumeUp,      Key_BacklightDn,   Key_BacklightUp,    Key_Backslash,      Key_Pipe,\
-	Key_RightShift, Key_RightAlt, Key_mouseBtnR, Key_RightCtrl,\
+	Key_RightShift, Key_RightAlt, Key_mouseBtnR, Key_RightControl,\
 	___\
 )
 
@@ -69,7 +69,7 @@
 	___, ___, ___, ___, ___, ___, ___,   		        ___, ___, Key_Keypad4, Key_Keypad5,   Key_Keypad6,        Key_KeypadPlus,  ___, \
 	___, ___, ___, ___, ___, ___,                 	             ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,      Key_Quote, \
 	___, ___, ___, ___, ___, ___, ___,                      ___, ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadSlash, Key_Enter, \
-       Key_LeftCtrl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,\
+       Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 			         Key_Keymap1_Momentary, 	Key_Keymap1_Momentary \
 )
 
@@ -78,7 +78,7 @@
 	Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab, 	  	Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals, \
 	Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,  		     		   Key_H, Key_J, Key_K,     Key_L, 	Key_Semicolon, Key_Quote, \
 	Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, 		___,       Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus, \
-       		Key_LeftCtrl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,\
+       		Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
 )
 
@@ -87,7 +87,7 @@
 	Key_Backtick, Key_Q, Key_D, Key_R, Key_W, Key_B, Key_Tab, 		Key_Enter,  Key_J, Key_F, Key_U, Key_P, Key_Semicolon, Key_Equals, \
 	Key_PageUp,   Key_A, Key_S, Key_H, Key_T, Key_G,  		  		    Key_Y, Key_N, Key_E, Key_O, Key_I, Key_Quote, \
 	Key_PageDn,   Key_Z, Key_X, Key_M, Key_C, Key_V, Key_Esc, 		___, 	    Key_K, Key_L, Key_Comma, Key_Period, Key_Slash, Key_Minus, \
-       		Key_LeftCtrl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightCtrl,\
+       		Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
 )
 
