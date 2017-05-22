@@ -48,10 +48,10 @@ namespace KaleidoscopePlugins {
           if (k.raw >= KaleidoscopePlugins::Ranges::OSM_FIRST && k.raw <= KaleidoscopePlugins::Ranges::OSM_LAST) {
             uint8_t idx = k.raw - KaleidoscopePlugins::Ranges::OSM_FIRST;
             k.flags = 0;
-            k.keyCode = Key_LCtrl.keyCode + idx;
+            k.keyCode = Key_LeftControl.keyCode + idx;
           }
 
-          if (k.raw < Key_LCtrl.raw || k.raw > Key_RGUI.raw)
+          if (k.raw < Key_LeftControl.raw || k.raw > Key_RightGui.raw)
             continue;
 
           if (Keyboard.isModifierActive (k.keyCode))
