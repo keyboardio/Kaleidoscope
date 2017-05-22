@@ -1,4 +1,5 @@
 #include <Kaleidoscope.h>
+#include <KeyboardioHID.h>
 #include <avr/wdt.h>
 
 KeyboardioScanner Model01::leftHand(0);
