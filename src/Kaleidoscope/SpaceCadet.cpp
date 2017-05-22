@@ -80,8 +80,8 @@ namespace KaleidoscopePlugins {
     // if we have a state, but the key in question is not either of the shifts,
     // return. This can happen when another key is released, and that should not
     // interrupt us.
-    if (mappedKey.raw != Key_LShift.raw &&
-        mappedKey.raw != Key_RShift.raw)
+    if (mappedKey.raw != Key_LeftShift.raw &&
+        mappedKey.raw != Key_RightShift.raw)
       return mappedKey;
 
     // if a key toggled off (and that must be one of the shifts at this point),
