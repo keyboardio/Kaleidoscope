@@ -19,23 +19,6 @@
 
 #define NUMPAD_KEYMAP 2
 
-#define COLEMAK KEYMAP ( \
-	___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext, 	___,       Key_6, Key_7, Key_8,     Key_9,      Key_0, 	       Key_ToggleNumlock, \
-	Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_G, Key_Tab, 		Key_Enter, Key_J, Key_L, Key_U,     Key_Y,      Key_Semicolon, Key_Equals, \
-	Key_PageUp,   Key_A, Key_R, Key_S, Key_T, Key_D,                     		   Key_H, Key_N, Key_E,     Key_I,      Key_O,         Key_Quote, \
-	Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, 		___,       Key_K, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,\
-	                    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
-			                             Key_Keymap1_Momentary, 	Key_Keymap1_Momentary,\
-)
-
-#define DVORAK KEYMAP ( \
-	___, 	      Key_1, 	     Key_2,     Key_3, 	    Key_4, Key_5, Key_LEDEffectNext, 	___,       Key_6, Key_7, Key_8, Key_9, Key_0, Key_ToggleNumlock, \
-	Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab, 		Key_Enter, Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash, \
-	Key_PageUp,   Key_A, 	     Key_O,     Key_E, 	    Key_U, Key_I, 				   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus, \
-	Key_PageDn,   Key_Semicolon, Key_Q,     Key_J, 	    Key_K, Key_X, Key_Esc, 		___, 	   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals, \
-	                    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
-					      		  Key_KeymapNext_Momentary, 		Key_KeymapNext_Momentary \
-)
 
 #define GENERIC_FN2  KEYMAP_STACKED ( \
  	___,      Key_F1,        Key_F2,      Key_F3,     Key_F4,          Key_F5,          XXX,  	  \
@@ -55,14 +38,6 @@
 
 
 
-#define MALTRON KEYMAP ( \
- 	___, 	      Key_1, 	 Key_2,      Key_3, Key_4, Key_5,     Key_LEDEffectNext,	___,       Key_6,         Key_7, Key_8, Key_9,     Key_0, Key_ToggleNumlock, \
-	Key_Backtick, Key_Q, 	 Key_P,      Key_Y, Key_C, Key_B,     Key_Tab, 			Key_Enter, Key_V, 	  Key_M, Key_U, Key_Z,     Key_L, Key_Equals, \
-	Key_PageUp,   Key_A, 	 Key_N,      Key_I, Key_S, Key_F, 				           Key_D, 	  Key_T, Key_H, Key_O,     Key_R, Key_Quote, \
-	Key_PageDn,   Key_Comma, Key_Period, Key_J, Key_G, Key_Slash, Key_Esc, 			___, 	   Key_Semicolon, Key_W, Key_K, Key_Minus, Key_X, Key_LSquareBracket, \
-			Key_E, Key_Backspace, Key_LGUI, Key_LShift,		Key_RShift, Key_RAlt, Key_Space, Key_RCtrl, \
-					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
-)
 
 #define NUMPAD KEYMAP  (\
  	___, ___, ___, ___, ___, ___, ___,  		        ___, ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadMinus, ___, \
@@ -78,15 +53,6 @@
 	Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab, 	  	Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals, \
 	Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,  		     		   Key_H, Key_J, Key_K,     Key_L, 	Key_Semicolon, Key_Quote, \
 	Key_PageDn,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Esc, 		___,       Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus, \
-       		Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
-					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
-)
-
-#define WORKMAN KEYMAP  ( \
-	___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,	___,	    Key_6, Key_7, Key_8, Key_9, Key_0, Key_ToggleNumlock, \
-	Key_Backtick, Key_Q, Key_D, Key_R, Key_W, Key_B, Key_Tab, 		Key_Enter,  Key_J, Key_F, Key_U, Key_P, Key_Semicolon, Key_Equals, \
-	Key_PageUp,   Key_A, Key_S, Key_H, Key_T, Key_G,  		  		    Key_Y, Key_N, Key_E, Key_O, Key_I, Key_Quote, \
-	Key_PageDn,   Key_Z, Key_X, Key_M, Key_C, Key_V, Key_Esc, 		___, 	    Key_K, Key_L, Key_Comma, Key_Period, Key_Slash, Key_Minus, \
        		Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,	Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,\
 					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
 )
