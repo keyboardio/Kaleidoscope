@@ -22,16 +22,16 @@
 
 #define GENERIC_FN2  KEYMAP_STACKED ( \
  	___,      Key_F1,        Key_F2,      Key_F3,     Key_F4,          Key_F5,          XXX,  	  \
-	Key_Tab,  Key_mouseBtnM, Key_mouseUp, ___,        Key_mouseWarpNW, Key_mouseWarpNE, Key_Consumer_ScanNextTrack, \
+	Key_Tab,  Key_mouseBtnM, Key_mouseUp, ___,        Key_mouseWarpNW, Key_mouseWarpNE, Consumer_ScanNextTrack, \
 	Key_Home, Key_mouseL,    Key_mouseDn, Key_mouseR, Key_mouseWarpSW, Key_mouseWarpSE, \
 	Key_End,  Key_Z,         Key_X,       Key_C,      Key_V,           Key_mouseWarpEnd, ___,    \
 							Key_LeftControl, Key_mouseBtnL, Key_LeftGui, Key_LeftShift,		\
 					      				      ___,\
 \
 	XXX,        Key_F6,         Key_F7,            Key_F8, 		  Key_F9,	      ___, 		  ___,\
-	Key_Delete, Key_Consumer_PlaySlashPause,  Key_LeftCurlyBracket, Key_RightCurlyBracket, Key_LeftBracket, Key_RightBracket, Key_System_Sleep,\
+	Key_Delete, Consumer_PlaySlashPause,  Key_LeftCurlyBracket, Key_RightCurlyBracket, Key_LeftBracket, Key_RightBracket, System_Sleep,\
 		    Key_LeftArrow,     Key_DownArrow,       Key_UpArrow, 	  Key_RightArrow, 	      Key_F11, 	          Key_F12,\
-	___,        Key_Consumer_VolumeDecrement, Key_Consumer_VolumeIncrement,   Key_BacklightDown,   Key_BacklightUp,    Key_Backslash,      Key_Pipe,\
+	___,        Consumer_VolumeDecrement, Consumer_VolumeIncrement,   Key_BacklightDown,   Key_BacklightUp,    Key_Backslash,      Key_Pipe,\
 	Key_RightShift, Key_RightAlt, Key_mouseBtnR, Key_RightControl,\
 	___\
 )
