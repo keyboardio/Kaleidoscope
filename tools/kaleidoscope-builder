@@ -24,8 +24,7 @@ find_sketch () {
         exit 1
     fi
 
-    for path in "hardware/keyboardio/avr/libraries/Kaleidoscope-${LIBRARY}/examples/${SKETCH}" \
-                    "examples/${LIBRARY}" \
+    for path in "examples/${LIBRARY}" \
                     "src" \
 		    "."; do
         if [ -f "${path}/${SKETCH}.ino" ]; then
@@ -139,8 +138,7 @@ compile () {
 }
 
 _find_all () {
-    for plugin in hardware/keyboardio/avr/libraries/Kaleidoscope-*/examples/* \
-                      examples/* \
+    for plugin in examples/* \
                       src/*.ino; do
         if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
