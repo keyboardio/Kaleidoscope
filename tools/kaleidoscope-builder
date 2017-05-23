@@ -19,6 +19,10 @@ firmware_size () {
 find_sketch () {
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
     LIBRARY="${LIBRARY:-${SKETCH}}"
+    if [ -z "${SKETCH}" ] || [ -z "${LIBRARY}" ] || [ -z "${ROOT}" ] || [ -z "${SOURCEDIR}" ]; then
+        echo "SKETCH, LIBRARY, SOURCEDIR, and ROOT need to be set before including this file!" >&2
+        exit 1
+    fi
 
     for path in "hardware/keyboardio/avr/libraries/Kaleidoscope-${LIBRARY}/examples/${SKETCH}" \
                     "examples/${LIBRARY}" \
@@ -95,6 +99,8 @@ build () {
 }
 
 compile () {
+    build_version
+    build_filenames
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
