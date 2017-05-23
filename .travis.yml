@@ -9,6 +9,4 @@ before_install:
 install:
   - git clone --recurse-submodules https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
 script:
-  - export ARDUINO_PATH=$(pwd)/arduino-1.6.11
-  - export BOARD_HARDWARE_PATH=$(pwd)/hardware
-  - make build-all
+  - make build-all BOARD_HARDWARE_PATH=$(pwd)/hardware ARDUINO_PATH=$(pwd)/arduino-1.6.11
