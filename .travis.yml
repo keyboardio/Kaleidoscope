@@ -5,4 +5,4 @@ os:
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
 script:
-  - make travis-test ARDUINO_PATH=$(shell pwd)/arduino BOARD_HARDWARE_PATH=$(shell pwd)/hardware
+  - make travis-test ARDUINO_PATH=$(pwd)/arduino BOARD_HARDWARE_PATH=$(pwd)/hardware
