@@ -138,7 +138,8 @@ compile () {
 }
 
 _find_all () {
-    for plugin in examples/* \
+    for plugin in ./*.ino \
+	    	   examples/* \
                       src/*.ino; do
         if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
