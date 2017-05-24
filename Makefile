@@ -1,10 +1,12 @@
-# default action for `make` is `build`
-build:
+# This stub makefile for a Kaleidoscope plugin pulls in 
+# all targets from the Kaleidoscope-Plugin library
 
-astyle:
-		find . -type f -name \*.cpp |xargs -n 1 astyle --style=google
-		find . -type f -name \*.ino |xargs -n 1 astyle --style=google
-		find . -type f -name \*.h |xargs -n 1 astyle --style=google
+MAKEFILE_PREFIX=keyboardio/avr/libraries/Kaleidoscope-Plugin/build
+UNAME_S := $(shell uname -s)
 
-%:
-	@tools/kaleidoscope-builder $@
+BOARD_HARDWARE_PATH ?= $(HOME)/Arduino/hardware
+ifeq ($(UNAME_S),Darwin)
+BOARD_HARDWARE_PATH ?= $(HOME)/Library/Arduino/hardware
+endif
+
+include $(BOARD_HARDWARE_PATH)/$(MAKEFILE_PREFIX)/*.mk
