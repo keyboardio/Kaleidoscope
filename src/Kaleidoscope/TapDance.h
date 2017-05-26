@@ -30,14 +30,14 @@
     })
 
 namespace KaleidoscopePlugins {
-  class TapDance : public KaleidoscopePlugin {
+class TapDance : public KaleidoscopePlugin {
   public:
     typedef enum {
-      Tap,
-      Hold,
-      Interrupt,
-      Timeout,
-      Release,
+        Tap,
+        Hold,
+        Interrupt,
+        Timeout,
+        Release,
     } ActionType;
 
     TapDance (void);
@@ -64,7 +64,7 @@ namespace KaleidoscopePlugins {
     static void interrupt (void);
     static void timeout (void);
     static Key release (uint8_t tapDanceIndex);
-  };
+};
 };
 
 void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction);
