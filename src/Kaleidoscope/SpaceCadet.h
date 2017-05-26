@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class SpaceCadetShift : public KaleidoscopePlugin {
+class SpaceCadetShift : public KaleidoscopePlugin {
   public:
     SpaceCadetShift (void);
 
@@ -36,7 +36,7 @@ namespace KaleidoscopePlugins {
     static Key leftParen, rightParen;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 extern KaleidoscopePlugins::SpaceCadetShift SpaceCadetShift;
