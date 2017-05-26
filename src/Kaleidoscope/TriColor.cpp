@@ -19,45 +19,45 @@
 #include <Kaleidoscope-LEDEffects.h>
 
 namespace KaleidoscopePlugins {
-  namespace LEDEffects {
+namespace LEDEffects {
 
-    TriColor::TriColor (cRGB baseColor, cRGB modColor, cRGB escColor) {
-      this->baseColor = baseColor;
-      this->modColor = modColor;
-      this->escColor = escColor;
-    }
+TriColor::TriColor (cRGB baseColor, cRGB modColor, cRGB escColor) {
+    this->baseColor = baseColor;
+    this->modColor = modColor;
+    this->escColor = escColor;
+}
 
-    void
-    TriColor::update (void) {
-      for (uint8_t r = 0; r < ROWS; r++) {
+void
+TriColor::update (void) {
+    for (uint8_t r = 0; r < ROWS; r++) {
         for (uint8_t c = 0; c < COLS; c++) {
-          Key k = Layer.lookup (r, c);
+            Key k = Layer.lookup (r, c);
 
-          // Special keys are always modColor
-          if (k.flags != 0) {
-            LEDControl.led_set_crgb_at (r, c, modColor);
-            continue;
-          }
+            // Special keys are always modColor
+            if (k.flags != 0) {
+                LEDControl.led_set_crgb_at (r, c, modColor);
+                continue;
+            }
 
-          cRGB color = modColor;
+            cRGB color = modColor;
 
-          switch (k.keyCode) {
-          case Key_A.keyCode ... Key_0.keyCode:
-          case Key_Spacebar.keyCode:
-          case Key_KeypadSubtract.keyCode ... Key_KeypadDivide.keyCode:
-          case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
-          case Key_F1.keyCode ... Key_F4.keyCode:
-          case Key_F9.keyCode ... Key_F12.keyCode:
-            color = baseColor;
-            break;
-          case Key_Escape.keyCode:
-            color = escColor;
-            break;
-          }
+            switch (k.keyCode) {
+            case Key_A.keyCode ... Key_0.keyCode:
+            case Key_Spacebar.keyCode:
+            case Key_KeypadSubtract.keyCode ... Key_KeypadDivide.keyCode:
+            case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
+            case Key_F1.keyCode ... Key_F4.keyCode:
+            case Key_F9.keyCode ... Key_F12.keyCode:
+                color = baseColor;
+                break;
+            case Key_Escape.keyCode:
+                color = escColor;
+                break;
+            }
 
-          LEDControl.led_set_crgb_at (r, c, color);
+            LEDControl.led_set_crgb_at (r, c, color);
         }
-      }
     }
-  };
+}
+};
 };
