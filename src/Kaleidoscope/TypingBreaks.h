@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class TypingBreaks : public KaleidoscopePlugin {
+class TypingBreaks : public KaleidoscopePlugin {
   public:
     TypingBreaks (void);
 
@@ -31,11 +31,11 @@ namespace KaleidoscopePlugins {
     static bool focusHook (const char *command);
 
     typedef struct settings_t {
-      uint32_t idleTimeLimit;
-      uint32_t lockTimeOut;
-      uint32_t lockLength;
-      uint16_t leftHandMaxKeys;
-      uint16_t rightHandMaxKeys;
+        uint32_t idleTimeLimit;
+        uint32_t lockTimeOut;
+        uint32_t lockLength;
+        uint16_t leftHandMaxKeys;
+        uint16_t rightHandMaxKeys;
     } settings_t;
 
     static settings_t settings;
@@ -50,7 +50,7 @@ namespace KaleidoscopePlugins {
     static uint16_t settingsBase;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 extern KaleidoscopePlugins::TypingBreaks TypingBreaks;
