@@ -21,32 +21,32 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  namespace HostOS {
-    typedef enum {
-      LINUX,
-      OSX,
-      WINDOWS,
-      OTHER,
+namespace HostOS {
+typedef enum {
+    LINUX,
+    OSX,
+    WINDOWS,
+    OTHER,
 
-      AUTO = 0xff,
-    } Type;
+    AUTO = 0xff,
+} Type;
 
-    class Base : public KaleidoscopePlugin {
-    public:
-      virtual void begin (void) final;
+class Base : public KaleidoscopePlugin {
+  public:
+    virtual void begin (void) final;
 
-      Type os (void);
-      void os (Type osType);
+    Type os (void);
+    void os (Type osType);
 
-    protected:
-      virtual void autoDetect (void) {};
-      Type osType;
+  protected:
+    virtual void autoDetect (void) {};
+    Type osType;
 
-    private:
-      uint16_t eepromSlice;
-      bool isConfigured = false;
-    };
-  };
+  private:
+    uint16_t eepromSlice;
+    bool isConfigured = false;
+};
+};
 };
 
 extern KaleidoscopePlugins::HostOS::Base HostOS;

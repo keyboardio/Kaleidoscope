@@ -21,9 +21,9 @@
 #include <Kaleidoscope/HostOS-Base.h>
 
 namespace KaleidoscopePlugins {
-  namespace HostOS {
-    bool Focus (const char *command);
-  };
+namespace HostOS {
+bool Focus (const char *command);
+};
 };
 
 #define FOCUS_HOOK_HOSTOS \
