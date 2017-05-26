@@ -26,12 +26,12 @@
 #define SYSTER (Key){ .raw = KaleidoscopePlugins::Ranges::SYSTER }
 
 namespace KaleidoscopePlugins {
-  class Syster : public KaleidoscopePlugin {
+class Syster : public KaleidoscopePlugin {
   public:
     typedef enum {
-      StartAction,
-      EndAction,
-      SymbolAction
+        StartAction,
+        EndAction,
+        SymbolAction
     } action_t;
 
     Syster (void);
@@ -45,7 +45,7 @@ namespace KaleidoscopePlugins {
     static bool isActive;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 const char keyToChar (Key key);
