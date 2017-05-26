@@ -22,7 +22,7 @@
 #include <Kaleidoscope-HostOS.h>
 
 namespace KaleidoscopePlugins {
-  class Unicode : public KaleidoscopePlugin {
+class Unicode : public KaleidoscopePlugin {
   public:
     Unicode (void);
 
@@ -34,7 +34,7 @@ namespace KaleidoscopePlugins {
 
     static void type (uint32_t unicode);
     static void typeCode (uint32_t unicode);
-  };
+};
 };
 
 Key hexToKey (uint8_t hex);
