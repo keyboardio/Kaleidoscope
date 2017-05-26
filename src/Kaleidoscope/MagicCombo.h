@@ -21,10 +21,10 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class MagicCombo : public KaleidoscopePlugin {
+class MagicCombo : public KaleidoscopePlugin {
   public:
     typedef struct {
-      uint32_t leftHand, rightHand;
+        uint32_t leftHand, rightHand;
     } dictionary_t;
 
     MagicCombo (void);
@@ -39,7 +39,7 @@ namespace KaleidoscopePlugins {
     static uint32_t endTime;
 
     static void loopHook (bool postClear);
-  };
+};
 };
 
 void magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand);

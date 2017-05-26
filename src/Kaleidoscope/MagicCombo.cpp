@@ -30,47 +30,47 @@
 
 namespace KaleidoscopePlugins {
 
-  const MagicCombo::dictionary_t *MagicCombo::dictionary;
-  uint16_t MagicCombo::minInterval = 500;
-  uint32_t MagicCombo::endTime;
+const MagicCombo::dictionary_t *MagicCombo::dictionary;
+uint16_t MagicCombo::minInterval = 500;
+uint32_t MagicCombo::endTime;
 
-  MagicCombo::MagicCombo (void) {
-  }
+MagicCombo::MagicCombo (void) {
+}
 
-  void
-  MagicCombo::begin (void) {
+void
+MagicCombo::begin (void) {
     loop_hook_use (this->loopHook);
-  }
+}
 
-  void
-  MagicCombo::configure (const MagicCombo::dictionary_t dictionary_[]) {
+void
+MagicCombo::configure (const MagicCombo::dictionary_t dictionary_[]) {
     dictionary = (dictionary_t *)dictionary_;
-  }
+}
 
-  void
-  MagicCombo::loopHook (bool postClear) {
+void
+MagicCombo::loopHook (bool postClear) {
     if (!dictionary || postClear)
-      return;
+        return;
 
     for (byte i = 0;; i++) {
-      dictionary_t combo;
+        dictionary_t combo;
 
-      combo.leftHand = pgm_read_dword (&(dictionary[i].leftHand));
-      combo.rightHand = pgm_read_dword (&(dictionary[i].rightHand));
+        combo.leftHand = pgm_read_dword (&(dictionary[i].leftHand));
+        combo.rightHand = pgm_read_dword (&(dictionary[i].rightHand));
 
-      if (combo.leftHand == 0 && combo.rightHand == 0)
-        break;
+        if (combo.leftHand == 0 && combo.rightHand == 0)
+            break;
 
-      if (LEFTHANDSTATE.all == combo.leftHand &&
-          RIGHTHANDSTATE.all == combo.rightHand) {
-        if (millis () >= endTime) {
-          magicComboActions (i, combo.leftHand, combo.rightHand);
-          endTime = millis () + minInterval;
+        if (LEFTHANDSTATE.all == combo.leftHand &&
+                RIGHTHANDSTATE.all == combo.rightHand) {
+            if (millis () >= endTime) {
+                magicComboActions (i, combo.leftHand, combo.rightHand);
+                endTime = millis () + minInterval;
+            }
+            break;
         }
-        break;
-      }
     }
-  }
+}
 
 };
 
