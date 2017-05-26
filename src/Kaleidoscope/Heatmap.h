@@ -22,7 +22,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace KaleidoscopePlugins {
-  class Heatmap : public LEDMode {
+class Heatmap : public LEDMode {
   public:
     Heatmap (void);
 
@@ -44,7 +44,7 @@ namespace KaleidoscopePlugins {
 
     static Key eventHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
-  };
+};
 };
 
 extern KaleidoscopePlugins::Heatmap HeatmapEffect;
