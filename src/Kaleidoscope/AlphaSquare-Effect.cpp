@@ -19,67 +19,67 @@
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
 namespace KaleidoscopePlugins {
-  namespace LEDEffects {
-    uint16_t AlphaSquareEffect::length = 1000;
-    uint32_t AlphaSquareEffect::endTimeLeft, AlphaSquareEffect::endTimeRight;
-    Key AlphaSquareEffect::lastKeyLeft, AlphaSquareEffect::lastKeyRight;
-    uint8_t AlphaSquareEffect::us;
+namespace LEDEffects {
+uint16_t AlphaSquareEffect::length = 1000;
+uint32_t AlphaSquareEffect::endTimeLeft, AlphaSquareEffect::endTimeRight;
+Key AlphaSquareEffect::lastKeyLeft, AlphaSquareEffect::lastKeyRight;
+uint8_t AlphaSquareEffect::us;
 
-    AlphaSquareEffect::AlphaSquareEffect (void) {
-    }
+AlphaSquareEffect::AlphaSquareEffect (void) {
+}
 
-    void
-    AlphaSquareEffect::begin (void) {
-      Kaleidoscope.useEventHandlerHook (eventHandlerHook);
-      Kaleidoscope.use (&LEDControl, NULL);
-      us = LEDControl.mode_add (this);
-    }
+void
+AlphaSquareEffect::begin (void) {
+    Kaleidoscope.useEventHandlerHook (eventHandlerHook);
+    Kaleidoscope.use (&LEDControl, NULL);
+    us = LEDControl.mode_add (this);
+}
 
-    void
-    AlphaSquareEffect::update (void) {
-      if (endTimeLeft && millis () > endTimeLeft) {
+void
+AlphaSquareEffect::update (void) {
+    if (endTimeLeft && millis () > endTimeLeft) {
         ::AlphaSquare.clear (lastKeyLeft);
         endTimeLeft = 0;
-      }
-      if (endTimeRight && millis () > endTimeRight) {
+    }
+    if (endTimeRight && millis () > endTimeRight) {
         ::AlphaSquare.clear (lastKeyRight, 10);
         endTimeRight = 0;
-      }
     }
+}
 
-    Key
-    AlphaSquareEffect::eventHandlerHook (Key key, byte row, byte col, uint8_t keyState) {
-      if (LEDControl.get_mode () != us)
+Key
+AlphaSquareEffect::eventHandlerHook (Key key, byte row, byte col, uint8_t keyState) {
+    if (LEDControl.get_mode () != us)
         return key;
 
-      if (keyState & INJECTED)
+    if (keyState & INJECTED)
         return key;
 
-      if (key < Key_A || key > Key_0)
+    if (key < Key_A || key > Key_0)
         return key;
 
-      if (!key_is_pressed (keyState))
+    if (!key_is_pressed (keyState))
         return key;
 
-      uint8_t displayCol = 2;
-      Key prevKey = lastKeyLeft;
+    uint8_t displayCol = 2;
+    Key prevKey = lastKeyLeft;
 
-      if (col < COLS / 2) {
+    if (col < COLS / 2) {
         lastKeyLeft = key;
         endTimeLeft = millis () + length;
-      } else {
+    } else {
         prevKey = lastKeyRight;
         lastKeyRight = key;
         endTimeRight = millis () + length;
         displayCol = 10;
-      }
-
-      if (prevKey != key)
-        ::AlphaSquare.clear (prevKey, displayCol);
-      ::AlphaSquare.display (key, displayCol);
-      return key;
     }
-  };
+
+    if (prevKey != key)
+        ::AlphaSquare.clear (prevKey, displayCol);
+    ::AlphaSquare.display (key, displayCol);
+    return key;
+}
+};
 };
 
 KaleidoscopePlugins::LEDEffects::AlphaSquareEffect AlphaSquareEffect;
