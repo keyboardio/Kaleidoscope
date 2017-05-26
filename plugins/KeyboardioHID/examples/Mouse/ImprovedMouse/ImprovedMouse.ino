@@ -21,49 +21,49 @@ const int pinButtonMove = 3;
 const int pinButtonScroll = 4;
 
 void setup() {
-  // Prepare led + buttons
-  pinMode(pinLed, OUTPUT);
-  pinMode(pinButtonClick, INPUT_PULLUP);
-  pinMode(pinButtonMove, INPUT_PULLUP);
-  pinMode(pinButtonScroll, INPUT_PULLUP);
+    // Prepare led + buttons
+    pinMode(pinLed, OUTPUT);
+    pinMode(pinButtonClick, INPUT_PULLUP);
+    pinMode(pinButtonMove, INPUT_PULLUP);
+    pinMode(pinButtonScroll, INPUT_PULLUP);
 
-  // Sends a clean report to the host. This is important on any Arduino type.
-  Mouse.begin();
+    // Sends a clean report to the host. This is important on any Arduino type.
+    Mouse.begin();
 }
 
 void loop() {
-  if (!digitalRead(pinButtonClick)) {
-    digitalWrite(pinLed, HIGH);
+    if (!digitalRead(pinButtonClick)) {
+        digitalWrite(pinLed, HIGH);
 
-    // Same use as the official library, pretty much self explaining
-    Mouse.click();
-    //Mouse.click(MOUSE_RIGHT);
+        // Same use as the official library, pretty much self explaining
+        Mouse.click();
+        //Mouse.click(MOUSE_RIGHT);
 
-    // Simple debounce
-    delay(300);
-    digitalWrite(pinLed, LOW);
-  }
+        // Simple debounce
+        delay(300);
+        digitalWrite(pinLed, LOW);
+    }
 
-  if (!digitalRead(pinButtonMove)) {
-    digitalWrite(pinLed, HIGH);
+    if (!digitalRead(pinButtonMove)) {
+        digitalWrite(pinLed, HIGH);
 
-    // Same use as the official library, pretty much self explaining
-    Mouse.move(100, 0);
+        // Same use as the official library, pretty much self explaining
+        Mouse.move(100, 0);
 
-    // Simple debounce
-    delay(300);
-    digitalWrite(pinLed, LOW);
-  }
+        // Simple debounce
+        delay(300);
+        digitalWrite(pinLed, LOW);
+    }
 
-  if (!digitalRead(pinButtonScroll)) {
-    digitalWrite(pinLed, HIGH);
+    if (!digitalRead(pinButtonScroll)) {
+        digitalWrite(pinLed, HIGH);
 
-    // Scroll down a bit, make sure the value is high enough
-    Mouse.move(0, 0, 160);
+        // Scroll down a bit, make sure the value is high enough
+        Mouse.move(0, 0, 160);
 
-    // simple debounce
-    delay(300);
-    digitalWrite(pinLed, LOW);
-  }
+        // simple debounce
+        delay(300);
+        digitalWrite(pinLed, LOW);
+    }
 }
 
