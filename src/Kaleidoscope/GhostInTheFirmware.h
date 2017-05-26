@@ -21,13 +21,13 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class GhostInTheFirmware : public KaleidoscopePlugin {
+class GhostInTheFirmware : public KaleidoscopePlugin {
   public:
     typedef struct {
-      byte row;
-      byte col;
-      uint16_t pressTime;
-      uint16_t delay;
+        byte row;
+        byte col;
+        uint16_t pressTime;
+        uint16_t delay;
     } GhostKey;
 
     GhostInTheFirmware (void);
@@ -46,7 +46,7 @@ namespace KaleidoscopePlugins {
     static uint16_t delayTimeOut;
 
     static void loopHook (bool postClear);
-  };
+};
 
 };
 
