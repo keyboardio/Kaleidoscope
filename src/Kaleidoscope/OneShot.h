@@ -25,7 +25,7 @@
 #define OSL(n) (Key) {.raw = KaleidoscopePlugins::Ranges::OSL_FIRST + n}
 
 namespace KaleidoscopePlugins {
-  class OneShot : public KaleidoscopePlugin {
+class OneShot : public KaleidoscopePlugin {
   public:
     OneShot (void);
 
@@ -33,7 +33,9 @@ namespace KaleidoscopePlugins {
 
     static bool isActive (void);
     static void cancel (bool withStickies);
-    static void cancel (void) { cancel (false); };
+    static void cancel (void) {
+        cancel (false);
+    };
     static uint16_t timeOut;
     static uint16_t holdTimeOut;
 
@@ -43,11 +45,11 @@ namespace KaleidoscopePlugins {
 
   private:
     typedef union {
-      struct {
-        uint8_t mods;
-        uint8_t layers;
-      };
-      uint16_t all;
+        struct {
+            uint8_t mods;
+            uint8_t layers;
+        };
+        uint16_t all;
     } state_t;
     static uint32_t startTime;
     static state_t State;
@@ -69,7 +71,7 @@ namespace KaleidoscopePlugins {
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
-  };
+};
 };
 
 extern KaleidoscopePlugins::OneShot OneShot;
