@@ -22,11 +22,11 @@
 #include <Kaleidoscope-EEPROM-Keymap.h>
 
 namespace KaleidoscopePlugins {
-  class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
+class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
   public:
     typedef enum {
-      CODE,
-      COPY,
+        CODE,
+        COPY,
     } mode_t;
     static mode_t mode;
 
@@ -39,10 +39,10 @@ namespace KaleidoscopePlugins {
 
   private:
     typedef enum {
-      INACTIVE,
-      WAIT_FOR_KEY,
-      WAIT_FOR_CODE,
-      WAIT_FOR_SOURCE_KEY,
+        INACTIVE,
+        WAIT_FOR_KEY,
+        WAIT_FOR_CODE,
+        WAIT_FOR_SOURCE_KEY,
     } state_t;
     static state_t state;
 
@@ -50,7 +50,7 @@ namespace KaleidoscopePlugins {
     static Key newKey;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 extern KaleidoscopePlugins::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
