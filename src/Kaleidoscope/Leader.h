@@ -29,12 +29,12 @@
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
 
 namespace KaleidoscopePlugins {
-  class Leader : public KaleidoscopePlugin {
+class Leader : public KaleidoscopePlugin {
   public:
     typedef void (*action_t) (uint8_t seqIndex);
     typedef struct {
-      Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
-      action_t action;
+        Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
+        action_t action;
     } dictionary_t;
 
     Leader (void);
@@ -56,7 +56,7 @@ namespace KaleidoscopePlugins {
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
     static int8_t lookup (void);
-  };
+};
 };
 
 extern KaleidoscopePlugins::Leader Leader;
