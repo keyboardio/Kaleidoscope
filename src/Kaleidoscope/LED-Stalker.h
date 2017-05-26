@@ -22,54 +22,56 @@
 #define STALKER(n, ...) (({static KaleidoscopePlugins::LEDEffects::Stalker::n _effect (__VA_ARGS__); &_effect;}))
 
 namespace KaleidoscopePlugins {
-  namespace LEDEffects {
-    class StalkerEffect : public LEDMode {
-    public:
-      class ColorComputer {
+namespace LEDEffects {
+class StalkerEffect : public LEDMode {
+  public:
+    class ColorComputer {
       public:
         virtual cRGB compute (uint8_t *step) = 0;
-      };
-
-      StalkerEffect (void);
-
-      virtual void begin (void) final;
-      virtual void init (void) final;
-      virtual void update (void) final;
-
-      static void configure (ColorComputer *colorComputer);
-      static uint16_t stepLength;
-
-    private:
-      static uint32_t stepEndTime;
-      static ColorComputer *colorComputer;
-      static uint8_t map[ROWS][COLS];
-
-      static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     };
 
-    namespace Stalker {
+    StalkerEffect (void);
 
-      class Haunt : public StalkerEffect::ColorComputer {
-      public:
-        Haunt (const cRGB highlightColor);
-        Haunt (void) : Haunt ({0x40, 0x80, 0x80}) {};
-        Haunt (void *) : Haunt () {};
+    virtual void begin (void) final;
+    virtual void init (void) final;
+    virtual void update (void) final;
 
-        virtual cRGB compute (uint8_t *step) final;
-      private:
-        static cRGB highlightColor;
-      };
+    static void configure (ColorComputer *colorComputer);
+    static uint16_t stepLength;
 
-      class BlazingTrail : public StalkerEffect::ColorComputer {
-      public:
-        BlazingTrail (...);
+  private:
+    static uint32_t stepEndTime;
+    static ColorComputer *colorComputer;
+    static uint8_t map[ROWS][COLS];
 
-        virtual cRGB compute (uint8_t *step) final;
-      };
+    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+};
 
-    };
+namespace Stalker {
 
-  };
+class Haunt : public StalkerEffect::ColorComputer {
+  public:
+    Haunt (const cRGB highlightColor);
+    Haunt (void) : Haunt ( {
+        0x40, 0x80, 0x80
+    }) {};
+    Haunt (void *) : Haunt () {};
+
+    virtual cRGB compute (uint8_t *step) final;
+  private:
+    static cRGB highlightColor;
+};
+
+class BlazingTrail : public StalkerEffect::ColorComputer {
+  public:
+    BlazingTrail (...);
+
+    virtual cRGB compute (uint8_t *step) final;
+};
+
+};
+
+};
 };
 
 extern KaleidoscopePlugins::LEDEffects::StalkerEffect StalkerEffect;
