@@ -22,7 +22,7 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 
 namespace KaleidoscopePlugins {
-  class EEPROMKeymap : public KaleidoscopePlugin {
+class EEPROMKeymap : public KaleidoscopePlugin {
   public:
     EEPROMKeymap (void);
 
@@ -45,7 +45,7 @@ namespace KaleidoscopePlugins {
 
     static Key parseKey (void);
     static void printKey (Key key);
-  };
+};
 };
 
 extern KaleidoscopePlugins::EEPROMKeymap EEPROMKeymap;
