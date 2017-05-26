@@ -57,13 +57,13 @@
 					      Key_KeymapNext_Momentary, 	Key_KeymapNext_Momentary \
 )
 
-const Key keymaps[][ROWS][COLS] PROGMEM = { 
-	QWERTY, 
-	GENERIC_FN2,
-	NUMPAD
+const Key keymaps[][ROWS][COLS] PROGMEM = {
+    QWERTY,
+    GENERIC_FN2,
+    NUMPAD
 
 
- };
+};
 
 static LEDSolidColor solidRed (60, 0, 0);
 static LEDSolidColor solidOrange (60, 20, 0);

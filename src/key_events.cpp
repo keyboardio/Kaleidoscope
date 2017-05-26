@@ -10,15 +10,15 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
     if (mappedKey.flags & IS_INTERNAL) {
         return false;
     } else if (mappedKey.flags & IS_CONSUMER) {
-      if (key_is_pressed(keyState))
-        ConsumerControl.press(mappedKey.keyCode);
-      else if (key_was_pressed(keyState))
-        ConsumerControl.release(mappedKey.keyCode);
+        if (key_is_pressed(keyState))
+            ConsumerControl.press(mappedKey.keyCode);
+        else if (key_was_pressed(keyState))
+            ConsumerControl.release(mappedKey.keyCode);
     } else if (mappedKey.flags & IS_SYSCTL) {
-      if (key_is_pressed(keyState))
-        SystemControl.press(mappedKey.keyCode);
-      else if (key_was_pressed(keyState))
-        SystemControl.release();
+        if (key_is_pressed(keyState))
+            SystemControl.press(mappedKey.keyCode);
+        else if (key_was_pressed(keyState))
+            SystemControl.release();
     } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
         // Should not happen, handled elsewhere.
     }

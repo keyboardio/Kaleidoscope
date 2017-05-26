@@ -49,93 +49,91 @@ Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
 
 void
 Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == oldHook) {
-      eventHandlers[i] = newHook;
-      return;
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (eventHandlers[i] == oldHook) {
+            eventHandlers[i] = newHook;
+            return;
+        }
     }
-  }
 }
 
 void
 Kaleidoscope_::appendEventHandlerHook (eventHandlerHook hook) {
-  replaceEventHandlerHook((eventHandlerHook)NULL, hook);
+    replaceEventHandlerHook((eventHandlerHook)NULL, hook);
 }
 
 void
 Kaleidoscope_::useEventHandlerHook (eventHandlerHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == hook)
-      return;
-  }
-  appendEventHandlerHook(hook);
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (eventHandlers[i] == hook)
+            return;
+    }
+    appendEventHandlerHook(hook);
 }
 
 void
 Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == oldHook) {
-      loopHooks[i] = newHook;
-      return;
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (loopHooks[i] == oldHook) {
+            loopHooks[i] = newHook;
+            return;
+        }
     }
-  }
 }
 
 void
 Kaleidoscope_::appendLoopHook(loopHook hook) {
-  replaceLoopHook((loopHook)NULL, hook);
+    replaceLoopHook((loopHook)NULL, hook);
 }
 
 void
 Kaleidoscope_::useLoopHook(loopHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == hook)
-      return;
-  }
-  appendLoopHook (hook);
+    for (byte i = 0; i < HOOK_MAX; i++) {
+        if (loopHooks[i] == hook)
+            return;
+    }
+    appendLoopHook (hook);
 }
 
 bool
 Kaleidoscope_::focusHook(const char *command) {
-  enum {
-    ON,
-    OFF,
-    GETSTATE,
-  } subCommand;
+    enum {
+        ON,
+        OFF,
+        GETSTATE,
+    } subCommand;
 
-  if (strncmp_P(command, PSTR("layer."), 6) != 0)
-    return false;
+    if (strncmp_P(command, PSTR("layer."), 6) != 0)
+        return false;
 
-  if (strcmp_P (command + 6, PSTR("on")) == 0)
-    subCommand = ON;
-  else if (strcmp_P(command + 6, PSTR("off")) == 0)
-    subCommand = OFF;
-  else if (strcmp_P(command + 6, PSTR("getState")) == 0)
-    subCommand = GETSTATE;
-  else
-    return false;
+    if (strcmp_P (command + 6, PSTR("on")) == 0)
+        subCommand = ON;
+    else if (strcmp_P(command + 6, PSTR("off")) == 0)
+        subCommand = OFF;
+    else if (strcmp_P(command + 6, PSTR("getState")) == 0)
+        subCommand = GETSTATE;
+    else
+        return false;
 
-  switch (subCommand) {
-  case ON:
-    {
-      uint8_t layer = Serial.parseInt();
-      Layer.on(layer);
-      break;
+    switch (subCommand) {
+    case ON: {
+        uint8_t layer = Serial.parseInt();
+        Layer.on(layer);
+        break;
     }
 
-  case OFF:
-    {
-      uint8_t layer = Serial.parseInt();
-      Layer.off(layer);
-      break;
+    case OFF: {
+        uint8_t layer = Serial.parseInt();
+        Layer.off(layer);
+        break;
     }
 
-  case GETSTATE:
-    Serial.println(Layer.getLayerState(), BIN);
-    break;
-  }
+    case GETSTATE:
+        Serial.println(Layer.getLayerState(), BIN);
+        break;
+    }
 
-  return true;
+    return true;
 }
 
 Kaleidoscope_ Kaleidoscope;

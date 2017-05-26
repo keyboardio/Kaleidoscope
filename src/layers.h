@@ -30,7 +30,7 @@ class Layer_ {
 
     static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
 
- private:
+  private:
     static uint8_t highestLayer;
     static uint8_t keyMap[ROWS][COLS];
 

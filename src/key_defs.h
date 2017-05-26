@@ -87,7 +87,7 @@ typedef union Key_ {
 */
 
 #define HID_TYPE_CL    B00000000
-#define HID_TYPE_LC    B00000100	
+#define HID_TYPE_LC    B00000100
 #define HID_TYPE_NARY  B00001000
 #define HID_TYPE_OOC   B00001100
 #define HID_TYPE_OSC   B00010000
