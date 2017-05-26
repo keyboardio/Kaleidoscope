@@ -21,7 +21,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace KaleidoscopePlugins {
-  class EEPROMColormapEffect : public LEDMode {
+class EEPROMColormapEffect : public LEDMode {
   public:
     static const uint8_t Transparent = 15;
 
@@ -37,7 +37,7 @@ namespace KaleidoscopePlugins {
     static uint8_t maxLayers;
     static uint16_t paletteBase;
     static uint16_t mapBase;
-  };
+};
 };
 
 extern KaleidoscopePlugins::EEPROMColormapEffect EEPROMColormapEffect;
