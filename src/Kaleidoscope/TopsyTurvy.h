@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class TopsyTurvy: public KaleidoscopePlugin {
+class TopsyTurvy: public KaleidoscopePlugin {
   public:
     TopsyTurvy (void);
 
@@ -34,7 +34,7 @@ namespace KaleidoscopePlugins {
     static uint8_t topsyTurvyModState;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 extern KaleidoscopePlugins::TopsyTurvy TopsyTurvy;
