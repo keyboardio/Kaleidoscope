@@ -22,7 +22,7 @@
 #include <EEPROM.h>
 
 namespace KaleidoscopePlugins {
-  class EEPROMSettings : public KaleidoscopePlugin {
+class EEPROMSettings : public KaleidoscopePlugin {
   public:
     EEPROMSettings (void);
 
@@ -45,11 +45,11 @@ namespace KaleidoscopePlugins {
     static bool sealed;
 
     static struct settings {
-      char magic[2];
-      uint8_t version;
-      uint16_t crc;
+        char magic[2];
+        uint8_t version;
+        uint16_t crc;
     } settings;
-  };
+};
 };
 
 extern KaleidoscopePlugins::EEPROMSettings EEPROMSettings;

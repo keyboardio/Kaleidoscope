@@ -31,41 +31,40 @@
 
 void
 CRC_::reflect (uint8_t len) {
-  uint8_t i;
-  uint16_t newCRC;
+    uint8_t i;
+    uint16_t newCRC;
 
-  newCRC = crc & 0x01;
-  for (i = 1; i < len; i++) {
-    crc >>= 1;
-    newCRC = (newCRC << 1) | (crc & 0x01);
-  }
+    newCRC = crc & 0x01;
+    for (i = 1; i < len; i++) {
+        crc >>= 1;
+        newCRC = (newCRC << 1) | (crc & 0x01);
+    }
 
-  crc = newCRC;
+    crc = newCRC;
 }
 
 void
-CRC_::update (const void *data, uint8_t len)
-{
-  const uint8_t *d = (const uint8_t *)data;
-  uint8_t i;
-  bool bit;
-  uint8_t c;
+CRC_::update (const void *data, uint8_t len) {
+    const uint8_t *d = (const uint8_t *)data;
+    uint8_t i;
+    bool bit;
+    uint8_t c;
 
-  while (len--) {
-    c = *d++;
-    for (i = 0x01; i & 0xff; i <<= 1) {
-      bit = crc & 0x8000;
-      if (c & i) {
-        bit = !bit;
-      }
-      crc <<= 1;
-      if (bit) {
-        crc ^= 0x8005;
-      }
+    while (len--) {
+        c = *d++;
+        for (i = 0x01; i & 0xff; i <<= 1) {
+            bit = crc & 0x8000;
+            if (c & i) {
+                bit = !bit;
+            }
+            crc <<= 1;
+            if (bit) {
+                crc ^= 0x8005;
+            }
+        }
+        crc &= 0xffff;
     }
     crc &= 0xffff;
-  }
-  crc &= 0xffff;
 }
 
 CRC_ CRC;
