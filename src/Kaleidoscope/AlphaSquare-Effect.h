@@ -24,14 +24,14 @@
 namespace KaleidoscopePlugins {
 namespace LEDEffects {
 class AlphaSquareEffect : public LEDMode {
-public:
+  public:
     AlphaSquareEffect (void);
 
     virtual void begin (void) final;
     virtual void update (void) final;
 
     static uint16_t length;
-private:
+  private:
     static uint32_t endTimeLeft, endTimeRight;
     static Key lastKeyLeft, lastKeyRight;
     static uint8_t us;

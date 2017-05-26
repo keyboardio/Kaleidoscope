@@ -36,7 +36,7 @@
 
 namespace KaleidoscopePlugins {
 class AlphaSquare : public KaleidoscopePlugin {
-public:
+  public:
     AlphaSquare (void);
 
     virtual void begin (void) final;
