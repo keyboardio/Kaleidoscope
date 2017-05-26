@@ -28,7 +28,7 @@
     })
 
 namespace KaleidoscopePlugins {
-  class Cycle : public KaleidoscopePlugin {
+class Cycle : public KaleidoscopePlugin {
   public:
     Cycle (void);
 
@@ -42,7 +42,7 @@ namespace KaleidoscopePlugins {
     static uint8_t cycleCount;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 void cycleAction (Key previousKey, uint8_t cycleCount);

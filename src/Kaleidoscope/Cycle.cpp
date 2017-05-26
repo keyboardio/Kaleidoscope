@@ -22,26 +22,26 @@
 using namespace KaleidoscopePlugins::Ranges;
 
 namespace KaleidoscopePlugins {
-  // --- state ---
-  Key Cycle::lastNonCycleKey;
-  uint8_t Cycle::cycleCount;
+// --- state ---
+Key Cycle::lastNonCycleKey;
+uint8_t Cycle::cycleCount;
 
-  // --- helpers ---
+// --- helpers ---
 
 #define isCycle(k) (k.raw == CYCLE)
 
-  // --- api ---
+// --- api ---
 
-  Cycle::Cycle (void) {
-  }
+Cycle::Cycle (void) {
+}
 
-  void
-  Cycle::begin (void) {
+void
+Cycle::begin (void) {
     event_handler_hook_use (this->eventHandlerHook);
-  }
+}
 
-  void
-  Cycle::replace (Key key) {
+void
+Cycle::replace (Key key) {
     handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
@@ -51,45 +51,45 @@ namespace KaleidoscopePlugins {
     Keyboard.sendReport ();
     handle_keyswitch_event (key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
-  }
+}
 
-  void
-  Cycle::replace (uint8_t cycleSize, const Key cycleSteps[]) {
+void
+Cycle::replace (uint8_t cycleSize, const Key cycleSteps[]) {
     uint8_t idx = cycleCount % cycleSize;
     Key key;
 
     key.raw = pgm_read_word (cycleSteps + idx);
     replace (key);
-  }
+}
 
-  // --- hooks ---
+// --- hooks ---
 
-  Key
-  Cycle::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key
+Cycle::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (keyState & INJECTED)
-      return mappedKey;
+        return mappedKey;
 
     if (!key_is_pressed (keyState) && !key_was_pressed (keyState)) {
-      if (isCycle (mappedKey))
-        return Key_NoKey;
-      return mappedKey;
+        if (isCycle (mappedKey))
+            return Key_NoKey;
+        return mappedKey;
     }
 
     if (!isCycle (mappedKey)) {
-      if (key_toggled_on (keyState)) {
-        lastNonCycleKey.raw = mappedKey.raw;
-        cycleCount = 0;
-      }
-      return mappedKey;
+        if (key_toggled_on (keyState)) {
+            lastNonCycleKey.raw = mappedKey.raw;
+            cycleCount = 0;
+        }
+        return mappedKey;
     }
 
     if (!key_toggled_off (keyState))
-      return Key_NoKey;
+        return Key_NoKey;
 
     cycleCount++;
     cycleAction (lastNonCycleKey, cycleCount);
     return Key_NoKey;
-  }
+}
 };
 
 __attribute__((weak))
