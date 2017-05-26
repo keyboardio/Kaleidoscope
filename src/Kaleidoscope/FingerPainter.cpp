@@ -21,155 +21,155 @@
 #include <Kaleidoscope-Focus.h>
 
 namespace KaleidoscopePlugins {
-  uint16_t FingerPainter::paletteBase;
-  uint16_t FingerPainter::colorBase;
-  bool FingerPainter::editMode;
-  const cRGB *FingerPainter::defaultPalette;
+uint16_t FingerPainter::paletteBase;
+uint16_t FingerPainter::colorBase;
+bool FingerPainter::editMode;
+const cRGB *FingerPainter::defaultPalette;
 
-  FingerPainter::FingerPainter (void) {
-  }
+FingerPainter::FingerPainter (void) {
+}
 
-  void
-  FingerPainter::begin (void) {
+void
+FingerPainter::begin (void) {
     LEDMode::begin ();
     event_handler_hook_use (eventHandlerHook);
-  }
+}
 
-  void
-  FingerPainter::configure (void) {
+void
+FingerPainter::configure (void) {
     paletteBase = ::EEPROMSettings.requestSlice (16 * sizeof (cRGB));
     colorBase = ::EEPROMSettings.requestSlice (ROWS * COLS);
-  }
+}
 
-  cRGB
-  FingerPainter::lookupColor (uint8_t row, uint8_t column) {
+cRGB
+FingerPainter::lookupColor (uint8_t row, uint8_t column) {
     uint16_t location = row * COLS + column;
     uint8_t colorIndex = EEPROM.read (colorBase + location);
 
     if (colorIndex == 0xff)
-      colorIndex = 0;
+        colorIndex = 0;
 
     cRGB color;
     EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), color);
 
     return color;
-  }
+}
 
-  void
-  FingerPainter::update (void) {
+void
+FingerPainter::update (void) {
     for (uint8_t r = 0; r < ROWS; r++) {
-      for (uint8_t c = 0; c < COLS; c++) {
-        cRGB color = lookupColor (r, c);
-        LEDControl.led_set_crgb_at (r, c, color);
-      }
+        for (uint8_t c = 0; c < COLS; c++) {
+            cRGB color = lookupColor (r, c);
+            LEDControl.led_set_crgb_at (r, c, color);
+        }
     }
-  }
+}
 
-  void
-  FingerPainter::toggleEdit (void) {
+void
+FingerPainter::toggleEdit (void) {
     editMode = !editMode;
-  }
+}
 
-  Key
-  FingerPainter::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key
+FingerPainter::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (!editMode)
-      return mappedKey;
+        return mappedKey;
 
     if (row >= ROWS || col >= COLS)
-      return Key_NoKey;
+        return Key_NoKey;
 
     if (!key_toggled_on (keyState))
-      return Key_NoKey;
+        return Key_NoKey;
 
     cRGB oldColor, newColor;
 
     uint16_t location = row * COLS + col;
     uint8_t colorIndex = EEPROM.read (colorBase + location);
     if (colorIndex == 255)
-      colorIndex = 0;
+        colorIndex = 0;
     EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), oldColor);
     colorIndex++;
     if (colorIndex > 15)
-      colorIndex = 0;
+        colorIndex = 0;
     EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), newColor);
     if (memcmp (&oldColor, &newColor, sizeof (cRGB)) == 0)
-      colorIndex = 0;
+        colorIndex = 0;
     EEPROM.update (colorBase + location, colorIndex);
 
     return Key_NoKey;
-  }
+}
 
-  bool
-  FingerPainter::focusHook (const char *command) {
+bool
+FingerPainter::focusHook (const char *command) {
     enum {
-      PALETTE,
-      TOGGLE,
-      CLEAR,
+        PALETTE,
+        TOGGLE,
+        CLEAR,
     } subCommand;
 
     if (strncmp_P (command, PSTR ("fingerpainter."), 14) != 0)
-      return false;
+        return false;
 
     if (strcmp_P (command + 14, PSTR ("palette")) == 0)
-      subCommand = PALETTE;
+        subCommand = PALETTE;
     else if (strcmp_P (command + 14, PSTR ("toggle")) == 0)
-      subCommand = TOGGLE;
+        subCommand = TOGGLE;
     else if (strcmp_P (command + 14, PSTR ("clear")) == 0)
-      subCommand = CLEAR;
+        subCommand = CLEAR;
     else
-      return false;
+        return false;
 
     if (subCommand == TOGGLE) {
-      ::FingerPainter.activate ();
-      toggleEdit ();
-      return true;
+        ::FingerPainter.activate ();
+        toggleEdit ();
+        return true;
     }
 
     if (subCommand == CLEAR) {
-      for (uint16_t i = 0; i < ROWS * COLS; i++) {
-        EEPROM.update (colorBase + i, 0);
-      }
-      return true;
+        for (uint16_t i = 0; i < ROWS * COLS; i++) {
+            EEPROM.update (colorBase + i, 0);
+        }
+        return true;
     }
 
     if (Serial.peek () == '\n') {
-      for (uint8_t i = 0; i < 16; i++) {
-        cRGB color;
+        for (uint8_t i = 0; i < 16; i++) {
+            cRGB color;
 
-        EEPROM.get (paletteBase + i * sizeof (color), color);
-        ::Focus.printColor (color.r, color.g, color.b);
-        ::Focus.printSpace ();
-      }
+            EEPROM.get (paletteBase + i * sizeof (color), color);
+            ::Focus.printColor (color.r, color.g, color.b);
+            ::Focus.printSpace ();
+        }
 
-      Serial.println ();
-      return true;
+        Serial.println ();
+        return true;
     }
 
     if (Serial.peek() == 'd') {
-      Serial.read ();
-      if (!defaultPalette)
-        return true;
+        Serial.read ();
+        if (!defaultPalette)
+            return true;
 
-      for (uint8_t i = 0; i < 16; i++) {
-        EEPROM.put (paletteBase + i * sizeof (cRGB), defaultPalette[i]);
-      }
-      return true;
+        for (uint8_t i = 0; i < 16; i++) {
+            EEPROM.put (paletteBase + i * sizeof (cRGB), defaultPalette[i]);
+        }
+        return true;
     }
 
     uint8_t i = 0;
     while (i < 16 && Serial.peek() != '\n') {
-      cRGB color;
+        cRGB color;
 
-      color.r = Serial.parseInt ();
-      color.g = Serial.parseInt ();
-      color.b = Serial.parseInt ();
+        color.r = Serial.parseInt ();
+        color.g = Serial.parseInt ();
+        color.b = Serial.parseInt ();
 
-      EEPROM.put (paletteBase + i * sizeof (color), color);
-      i++;
+        EEPROM.put (paletteBase + i * sizeof (color), color);
+        i++;
     }
 
     return true;
-  }
+}
 };
 
 KaleidoscopePlugins::FingerPainter FingerPainter;

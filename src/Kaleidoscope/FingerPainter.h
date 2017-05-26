@@ -22,7 +22,7 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 
 namespace KaleidoscopePlugins {
-  class FingerPainter : public LEDMode {
+class FingerPainter : public LEDMode {
   public:
     FingerPainter (void);
 
@@ -42,7 +42,7 @@ namespace KaleidoscopePlugins {
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static cRGB lookupColor (uint8_t row, uint8_t column);
-  };
+};
 };
 
 extern KaleidoscopePlugins::FingerPainter FingerPainter;
