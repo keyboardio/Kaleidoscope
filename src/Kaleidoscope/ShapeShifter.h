@@ -21,10 +21,10 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class ShapeShifter : public KaleidoscopePlugin {
+class ShapeShifter : public KaleidoscopePlugin {
   public:
     typedef struct {
-      Key original, replacement;
+        Key original, replacement;
     } dictionary_t;
 
     ShapeShifter (void);
@@ -39,7 +39,7 @@ namespace KaleidoscopePlugins {
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
     static void loopHook (bool postClear);
-  };
+};
 };
 
 extern KaleidoscopePlugins::ShapeShifter ShapeShifter;

@@ -20,61 +20,61 @@
 
 namespace KaleidoscopePlugins {
 
-  const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
-  bool ShapeShifter::modActive;
+const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
+bool ShapeShifter::modActive;
 
-  ShapeShifter::ShapeShifter (void) {
-  }
+ShapeShifter::ShapeShifter (void) {
+}
 
-  void
-  ShapeShifter::begin (void) {
+void
+ShapeShifter::begin (void) {
     event_handler_hook_use (this->eventHandlerHook);
     loop_hook_use (this->loopHook);
-  }
+}
 
-  void
-  ShapeShifter::configure (const dictionary_t dictionary_[]) {
+void
+ShapeShifter::configure (const dictionary_t dictionary_[]) {
     dictionary = (const dictionary_t *)dictionary_;
-  }
+}
 
-  void
-  ShapeShifter::loopHook (bool postClear) {
+void
+ShapeShifter::loopHook (bool postClear) {
     if (postClear)
-      return;
+        return;
 
     modActive = Keyboard.isModifierActive (Key_LeftShift.keyCode) ||
-      Keyboard.isModifierActive (Key_RightShift.keyCode);
-  }
+                Keyboard.isModifierActive (Key_RightShift.keyCode);
+}
 
-  Key
-  ShapeShifter::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key
+ShapeShifter::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (!dictionary)
-      return mappedKey;
+        return mappedKey;
 
     // If Shift is not active, bail out early.
     if (!modActive)
-      return mappedKey;
+        return mappedKey;
 
     Key orig, repl;
 
     // Try to find the current key in the dictionary
     uint8_t i = 0;
     do {
-      orig.raw = pgm_read_word (&(dictionary[i].original.raw));
-      i++;
+        orig.raw = pgm_read_word (&(dictionary[i].original.raw));
+        i++;
     } while (orig.raw != Key_NoKey.raw &&
              orig.raw != mappedKey.raw);
     i--;
 
     // If not found, bail out.
     if (orig.raw == Key_NoKey.raw)
-      return mappedKey;
+        return mappedKey;
 
     repl.raw = pgm_read_word (&(dictionary[i].replacement.raw));
 
     // If found, handle the alternate key instead
     return repl;
-  }
+}
 
 };
 
