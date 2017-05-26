@@ -19,7 +19,7 @@
 #include <Kaleidoscope.h>
 
 namespace KaleidoscopePlugins {
-  class EscapeOneShot : public KaleidoscopePlugin {
+class EscapeOneShot : public KaleidoscopePlugin {
   public:
     EscapeOneShot (void);
 
@@ -27,7 +27,7 @@ namespace KaleidoscopePlugins {
 
   private:
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-  };
+};
 };
 
 extern KaleidoscopePlugins::EscapeOneShot EscapeOneShot;

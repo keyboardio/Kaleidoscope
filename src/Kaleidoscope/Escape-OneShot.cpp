@@ -22,28 +22,28 @@
 
 namespace KaleidoscopePlugins {
 
-  EscapeOneShot::EscapeOneShot (void) {
-  }
+EscapeOneShot::EscapeOneShot (void) {
+}
 
-  void
-  EscapeOneShot::begin (void) {
+void
+EscapeOneShot::begin (void) {
     event_handler_hook_use (eventHandlerHook);
-  }
+}
 
-  Key
-  EscapeOneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key
+EscapeOneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.raw != Key_Escape.raw ||
-        (keyState & INJECTED) ||
-        !key_toggled_on (keyState))
-      return mappedKey;
+            (keyState & INJECTED) ||
+            !key_toggled_on (keyState))
+        return mappedKey;
 
     if (!OneShot::isActive ())
-      return mappedKey;
+        return mappedKey;
 
     OneShot::cancel ();
 
     return Key_NoKey;
-  }
+}
 };
 
 KaleidoscopePlugins::EscapeOneShot EscapeOneShot;
