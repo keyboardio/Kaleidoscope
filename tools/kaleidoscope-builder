@@ -126,7 +126,7 @@ compile () {
 		    -ide-version "${ARDUINO_IDE_VERSION}" \
 		    -warnings all \
         ${ARDUINO_VERBOSE} \
-		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers" \
+		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS}" \
 		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
 		    "$(find_sketch)/${SKETCH}.ino"
 
