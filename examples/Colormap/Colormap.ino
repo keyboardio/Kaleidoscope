@@ -17,7 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-EEPROM-Colormap.h>
+#include <Kaleidoscope-Colormap.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
     [0] = KEYMAP_STACKED
@@ -41,11 +41,11 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-    Kaleidoscope.use (&EEPROMColormapEffect, NULL);
+    Kaleidoscope.use (&ColormapEffect, NULL);
 
     Kaleidoscope.setup ();
-    EEPROMColormapEffect.configure (1);
-    EEPROMColormapEffect.activate ();
+    ColormapEffect.configure (1);
+    ColormapEffect.activate ();
 }
 
 void loop () {

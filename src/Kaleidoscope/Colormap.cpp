@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-EEPROM-Colormap -- Per-layer colormap effect
- * Copyright (C) 2017  Gergely Nagy
+ * Kaleidoscope-Colormap -- Per-layer colormap effect
+ * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-EEPROM-Colormap.h>
+#include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Focus.h>
 #include <EEPROM.h>
 
 namespace KaleidoscopePlugins {
 
-uint16_t EEPROMColormapEffect::mapBase;
-uint8_t EEPROMColormapEffect::maxLayers;
+uint16_t ColormapEffect::mapBase;
+uint8_t ColormapEffect::maxLayers;
 
-EEPROMColormapEffect::EEPROMColormapEffect (void) {
+ColormapEffect::ColormapEffect (void) {
 }
 
 void
-EEPROMColormapEffect::configure (uint8_t maxLayers_) {
+ColormapEffect::configure (uint8_t maxLayers_) {
     USE_PLUGINS (&::EEPROMSettings, &::LEDPaletteTheme);
 
     maxLayers = maxLayers_;
@@ -38,7 +38,7 @@ EEPROMColormapEffect::configure (uint8_t maxLayers_) {
 }
 
 void
-EEPROMColormapEffect::update (void) {
+ColormapEffect::update (void) {
     for (uint8_t l = 0; l < 32; l++) {
         if (!Layer.isOn (l))
             continue;
@@ -48,10 +48,10 @@ EEPROMColormapEffect::update (void) {
 }
 
 bool
-EEPROMColormapEffect::focusHook (const char *command) {
-  return ::LEDPaletteTheme.themeFocusHandler (command, PSTR("colormap.map"), mapBase, maxLayers);
+ColormapEffect::focusHook (const char *command) {
+    return ::LEDPaletteTheme.themeFocusHandler (command, PSTR("colormap.map"), mapBase, maxLayers);
 }
 
 };
 
-KaleidoscopePlugins::EEPROMColormapEffect EEPROMColormapEffect;
+KaleidoscopePlugins::ColormapEffect ColormapEffect;

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-EEPROM-Colormap -- Per-layer colormap effect
- * Copyright (C) 2017  Gergely Nagy
+ * Kaleidoscope-Colormap -- Per-layer colormap effect
+ * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 namespace KaleidoscopePlugins {
-class EEPROMColormapEffect : public LEDMode {
+class ColormapEffect : public LEDMode {
   public:
-    EEPROMColormapEffect (void);
+    ColormapEffect (void);
 
     virtual void update (void) final;
     void configure (uint8_t maxLayers);
@@ -37,7 +37,7 @@ class EEPROMColormapEffect : public LEDMode {
 };
 };
 
-extern KaleidoscopePlugins::EEPROMColormapEffect EEPROMColormapEffect;
+extern KaleidoscopePlugins::ColormapEffect ColormapEffect;
 
-#define FOCUS_HOOK_COLORMAP FOCUS_HOOK(EEPROMColormapEffect.focusHook,  \
+#define FOCUS_HOOK_COLORMAP FOCUS_HOOK(ColormapEffect.focusHook,  \
                                        "colormap.map")
