@@ -82,6 +82,10 @@ void Model01::led_set_crgb_at(byte row, byte col, cRGB color) {
     led_set_crgb_at(key_led_map[row][col], color);
 }
 
+uint8_t Model01::get_led_index(byte row, byte col) {
+    return key_led_map[row][col];
+}
+
 cRGB Model01::led_get_crgb_at(uint8_t i) {
     if(i<32) {
         return leftHand.ledData.leds[i];
