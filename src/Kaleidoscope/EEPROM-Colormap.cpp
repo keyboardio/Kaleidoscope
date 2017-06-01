@@ -23,7 +23,6 @@
 
 namespace KaleidoscopePlugins {
 
-uint16_t EEPROMColormapEffect::paletteBase;
 uint16_t EEPROMColormapEffect::mapBase;
 uint8_t EEPROMColormapEffect::maxLayers;
 
@@ -32,11 +31,10 @@ EEPROMColormapEffect::EEPROMColormapEffect (void) {
 
 void
 EEPROMColormapEffect::configure (uint8_t maxLayers_) {
-    USE_PLUGINS (&::EEPROMSettings);
+    USE_PLUGINS (&::EEPROMSettings, &::LEDPaletteTheme);
 
     maxLayers = maxLayers_;
-    paletteBase = ::EEPROMSettings.requestSlice (15 * sizeof (cRGB));
-    mapBase = ::EEPROMSettings.requestSlice (maxLayers * ROWS * COLS / 2);
+    mapBase = ::LEDPaletteTheme.reserveThemes (maxLayers);
 }
 
 void
@@ -45,120 +43,13 @@ EEPROMColormapEffect::update (void) {
         if (!Layer.isOn (l))
             continue;
 
-        for (uint8_t r = 0; r < ROWS; r++) {
-            for (uint8_t c = 0; c < COLS; c++) {
-                cRGB color;
-
-                if (!lookupColor (l, r, c, &color))
-                    continue;
-
-                LEDControl.led_set_crgb_at (r, c, color);
-            }
-        }
+        ::LEDPaletteTheme.update (mapBase, l);
     }
-}
-
-const bool
-EEPROMColormapEffect::lookupColor (uint8_t layer, uint8_t row, uint8_t column, cRGB *color) {
-    uint8_t colorIndex;
-    uint16_t mapIndex = (layer * ROWS * COLS / 2 + row * COLS / 2 + column / 2);
-
-    colorIndex = EEPROM.read (mapBase + mapIndex);
-    if (column % 2)
-        colorIndex &= ~0xf0;
-    else
-        colorIndex >>= 4;
-
-    if (colorIndex == Transparent)
-        return false;
-
-    EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), *color);
-
-    return true;
 }
 
 bool
 EEPROMColormapEffect::focusHook (const char *command) {
-    enum {
-        PALETTE,
-        MAP,
-    } subCommand;
-
-    if (strncmp_P (command, PSTR ("colormap."), 9) != 0)
-        return false;
-    if (strcmp_P (command + 9, PSTR ("palette")) == 0)
-        subCommand = PALETTE;
-    else if (strcmp_P (command + 9, PSTR ("map")) == 0)
-        subCommand = MAP;
-    else
-        return false;
-
-    switch (subCommand) {
-    case PALETTE: {
-        if (Serial.peek () == '\n') {
-            for (uint8_t i = 0; i < 15; i++) {
-                cRGB color;
-
-                EEPROM.get (paletteBase + i * sizeof (color), color);
-                ::Focus.printColor (color.r, color.g, color.b);
-                ::Focus.printSpace ();
-            }
-            Serial.println ();
-            break;
-        }
-
-        uint8_t i = 0;
-        while (i < 15 && Serial.peek() != '\n') {
-            cRGB color;
-
-            color.r = Serial.parseInt ();
-            color.g = Serial.parseInt ();
-            color.b = Serial.parseInt ();
-
-            EEPROM.put (paletteBase + i * sizeof (color), color);
-            i++;
-        }
-
-        break;
-    }
-
-    case MAP: {
-        if (Serial.peek () == '\n') {
-            for (uint8_t layer = 0; layer < maxLayers; layer++) {
-                for (uint8_t row = 0; row < ROWS; row++) {
-                    for (uint8_t col = 0; col < COLS / 2; col++) {
-                        uint8_t indexes;
-                        uint16_t loc = (layer * ROWS * COLS / 2 + row * COLS / 2 + col);
-
-                        indexes = EEPROM.read (mapBase + loc);
-
-                        ::Focus.printNumber (indexes >> 4);
-                        ::Focus.printSpace ();
-                        ::Focus.printNumber (indexes & ~0xf0);
-                        ::Focus.printSpace ();
-                    }
-                }
-            }
-            Serial.println ();
-            break;
-        }
-
-        uint16_t maxIndex = (maxLayers * ROWS * COLS) / 2;
-
-        uint8_t loc = 0;
-        while ((Serial.peek () != '\n') && (loc < maxIndex)) {
-            uint8_t idx1 = Serial.parseInt ();
-            uint8_t idx2 = Serial.parseInt ();
-            uint8_t indexes = (idx1 << 4) + idx2;
-
-            EEPROM.update (mapBase + loc, indexes);
-            loc++;
-        }
-        break;
-    }
-    }
-
-    return true;
+  return ::LEDPaletteTheme.themeFocusHandler (command, PSTR("colormap.map"), mapBase, maxLayers);
 }
 
 };

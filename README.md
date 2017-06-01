@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Colormap.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Colormap
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `EEPROM-ColorMap` extension provides an easier way to set up a different -
 static - color map per-layer. This means that we can set up a map of colors for
@@ -29,19 +29,19 @@ and it will do the rest.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Colormap.h>
 #include <Kaleidoscope-Focus.h>
 
-
 void setup (void) {
-
   Kaleidoscope.setup ();
   USE_PLUGINS (&EEPROMColormapEffect, &Focus);
   
   EEPROMColormapEffect.configure (1);
+  Focus.addHook (FOCUS_HOOK_LEDPALETTETHEME);
   Focus.addHook (FOCUS_HOOK_COLORMAP);
 }
-``` 
+```
 
 ## Extension methods
 
@@ -55,6 +55,7 @@ The extension provides an `EEPROMColormapEffect` singleton object, with a single
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
 * [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-LED-Palette-Theme](https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme)
 
 ## Further reading
 

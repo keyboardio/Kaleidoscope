@@ -19,23 +19,20 @@
 #pragma once
 
 #include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-LED-Palette-Theme.h>
 
 namespace KaleidoscopePlugins {
 class EEPROMColormapEffect : public LEDMode {
   public:
-    static const uint8_t Transparent = 15;
-
     EEPROMColormapEffect (void);
 
     virtual void update (void) final;
     void configure (uint8_t maxLayers);
 
-    virtual const bool lookupColor (uint8_t layer, uint8_t row, uint8_t column, cRGB *color) final;
     static bool focusHook (const char *command);
 
   private:
     static uint8_t maxLayers;
-    static uint16_t paletteBase;
     static uint16_t mapBase;
 };
 };
@@ -43,5 +40,4 @@ class EEPROMColormapEffect : public LEDMode {
 extern KaleidoscopePlugins::EEPROMColormapEffect EEPROMColormapEffect;
 
 #define FOCUS_HOOK_COLORMAP FOCUS_HOOK(EEPROMColormapEffect.focusHook,  \
-                                       "colormap.palette\n"             \
                                        "colormap.map")
