@@ -20,6 +20,7 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-Focus.h>
 
 namespace Example {
 class TestLEDMode : public LEDMode {
@@ -78,7 +79,8 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup () {
-    Kaleidoscope.use (&LEDPaletteTheme, &TestLEDMode, &EEPROMSettings, NULL);
+    Serial.begin (9600);
+    Kaleidoscope.use (&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings, NULL);
     Kaleidoscope.setup ();
 
     EEPROMSettings.seal ();
