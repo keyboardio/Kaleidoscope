@@ -56,8 +56,8 @@ LEDPaletteTheme::update (uint16_t themeBase, uint8_t theme) {
     }
 }
 
-const bool
-LEDPaletteTheme::lookupColor (uint16_t mapBase, uint16_t loc, cRGB *color) {
+const uint8_t
+LEDPaletteTheme::lookupColorIndex (uint16_t mapBase, uint16_t loc) {
     uint8_t colorIndex;
 
     colorIndex = EEPROM.read (mapBase + loc / 2);
@@ -66,12 +66,42 @@ LEDPaletteTheme::lookupColor (uint16_t mapBase, uint16_t loc, cRGB *color) {
     else
         colorIndex >>= 4;
 
+    return colorIndex;
+}
+
+const bool
+LEDPaletteTheme::lookupColor (uint16_t mapBase, uint16_t loc, cRGB *color) {
+    uint8_t colorIndex = lookupColorIndex (mapBase, loc);
+
     if (colorIndex == transparentIndex)
         return false;
 
     EEPROM.get (paletteBase + colorIndex * sizeof (cRGB), *color);
 
     return true;
+}
+
+const cRGB
+LEDPaletteTheme::lookupColor (uint8_t index) {
+    cRGB color;
+
+    EEPROM.get (paletteBase + index * sizeof (cRGB), color);
+    return color;
+}
+
+void
+LEDPaletteTheme::updateColor (uint16_t mapBase, uint16_t loc, uint8_t index) {
+    uint8_t indexes;
+
+    indexes = EEPROM.read (mapBase + loc / 2);
+    if (loc % 2) {
+        uint8_t other = indexes >> 4;
+        indexes = (other << 4) + index;
+    } else {
+        uint8_t other = indexes & ~0xf0;
+        indexes = (index << 4) + other;
+    }
+    EEPROM.update (mapBase + loc / 2, indexes);
 }
 
 bool
