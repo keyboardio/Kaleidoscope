@@ -34,7 +34,7 @@ LEDPaletteTheme::begin (void) {
     USE_PLUGINS (&::EEPROMSettings);
 
     if (!paletteBase)
-      paletteBase = ::EEPROMSettings.requestSlice (16 * sizeof (cRGB));
+        paletteBase = ::EEPROMSettings.requestSlice (16 * sizeof (cRGB));
 }
 
 uint16_t
