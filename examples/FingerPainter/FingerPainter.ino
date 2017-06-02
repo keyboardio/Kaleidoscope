@@ -60,9 +60,6 @@ void setup () {
 
     USE_PLUGINS (&LEDOff, &EEPROMSettings, &FingerPainter, &Macros);
 
-    FingerPainter.configure ();
-    FingerPainter.defaultPalette = FINGERPAINTER_PALETTE_EGA;
-
     EEPROMSettings.seal ();
 
     FingerPainter.activate ();
