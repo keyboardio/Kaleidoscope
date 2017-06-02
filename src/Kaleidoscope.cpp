@@ -43,7 +43,7 @@ Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
     va_start(ap, plugin);
     while ((p = va_arg(ap, KaleidoscopePlugin*)) != NULL) {
         p->begin();
-    };
+    }
     va_end(ap);
 }
 
