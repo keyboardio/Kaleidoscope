@@ -1605,15 +1605,14 @@ apply to operator overloading as well.</p>
 <h3 id="Access_Control">Access Control</h3>
 
 <div class="summary">
+	<p><b>TODO</b>: This guidance isn't quite right for embedded, where accessors often add too much overhead.</p>
 <p> Make data members <code>private</code>, unless they are
 <code>static const</code> (and follow the <a href="#Constant_Names">
-naming convention for constants</a>). For technical
-reasons, we allow data members of a test fixture class to
-be <code>protected</code> when using
+naming convention for constants</a>). 
+<strike>For technical reasons, we allow data members of a test fixture class to
+be <code>protected</code> when using <a href="https://github.com/google/googletest">Google Test</a>).</strike>
 
-
-<a href="https://github.com/google/googletest">Google
-Test</a>).</p>
+</p>
 </div>
 
 <h3 id="Declaration_Order">Declaration Order</h3>
