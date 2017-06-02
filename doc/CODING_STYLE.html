@@ -3937,8 +3937,17 @@ guide, the following C++11 features may not be used:</p>
 <h3 id="Nonstandard_Extensions">Nonstandard Extensions</h3>
 
 <div class="summary">
+	<p>GCC Extensions to C++ may be used where they improve readability, performance or compiled code size.</p>
+</div>
+
+<strike>
+
+<div class="summary">
 <p>Nonstandard extensions to C++ may not be used unless otherwise specified.</p>
 </div>
+</strike>
+
+
 <div class="stylebody">
 <div class="definition">
 <p>Compilers support various extensions that are not part of standard C++. Such
@@ -3974,12 +3983,20 @@ guide, the following C++11 features may not be used:</p>
 </div>
 
 <div class="decision">
-<p>Do not use nonstandard extensions. You may use portability wrappers that
+	<strike>
+	<p>Do not use nonstandard extensions. You may use portability wrappers that
   are implemented using nonstandard extensions, so long as those wrappers
   
   are provided by a designated project-wide
   portability header.</p>
+	</strike>
+
+	<p>Use GCC extensions where necessary<p>
+
 </div>
+
+</strike>
+
 </div> 
 
 <h3 id="Aliases">Aliases</h3>
