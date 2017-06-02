@@ -10207,3 +10207,131 @@ OK, enough writing about writing code; the code itself is much more interesting.
 </div>
 
 </div>
+
+
+
+
+
+
+# Content to integrate into the guide above
+
+From @algernon:
+
+# [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
+
+One of the selling points of this guide is that we use the formatting anyway, and it is a thorough guide, covering pretty much all aspects of the code. However, it has a number of issues too, which prevents us from using it as-is.
+
+First of all, it is written with traditional x86-64 libraries and applications in mind, where you control the build system, and so on. This can be easily seen when it talks about [names and order of includes](https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes). We can't name our things like that, because of limitation of the Arduino build system: we can't use `#include <Kaleidoscope/LED/Theme/Something.h>`, or `#include <Kaleidoscope/OneShot.h>`, because Arduino won't find the libraries then. We may be able to build a tool on top of it that would, but then we'd lose the ability to use the Arduino IDE.
+
+The guide discourages static members too (though allows them), along with globals - while we build heavily on those to conserve space, to be friendlier to the end-user, among other things.
+
+The aim of Google's style guide is to make the code better organized, and more understandable for other developers. Our aim is to make the code easier to use for the novice user, for whom their firmware may be the first program they ever create.
+
+## Existing differences
+
+The list below is a collection of issues where our code differs from the recommendation, and where adapting to the guide is not immediately an obvious win. There are other cases where our code differs which I don't list, when adapting to the guide is a no-brainer.
+
+* The guide mandates [lowercase namespace names](https://google.github.io/styleguide/cppguide.html#Namespace_Names), while we (my plugins, mostly) use CamelCase. Lowercase makes sense, making it clear that a namespace is not a class, though.
+* We use `#pragma once` instead of [`#define` guards](https://google.github.io/styleguide/cppguide.html#The__define_Guard), but that accomplishes the same thing. Nevertheless, we should use one or the other, so we'd either have to switch, or augment the guide with a note.
+* We use preprocessor macros a lot, while the guide [discourages them](https://google.github.io/styleguide/cppguide.html#Preprocessor_Macros).
+* We use plenty of non-standard language extensions, while the guide [does not allow them](https://google.github.io/styleguide/cppguide.html#Nonstandard_Extensions). We don't need to care much about portability, because we'll be using GCC anyway. (Or perhaps Clang, which pretty much supports all the same extensions, as far as we are concerned)
+* Our naming rules differ: the guide [suggests](https://google.github.io/styleguide/cppguide.html#General_Naming_Rules) snake_case for variables, for example. It also uses [lowercase names for files](https://google.github.io/styleguide/cppguide.html#File_Names). These all stem from the same goal of not using CamelCase by default, it seems. Mind you, reserving CamelCase for classes, and snake_case for variables is not a terrible idea... It does go against Arduino practices as far as I see, though. Even when it comes to CamelCase, Arduino usually goes for `fooBar` for functions, while Google would use `FooBar`. I think the Arduino convention is better here, to distinguish between member functions and classes.
+
+## Things not covered
+
+The guide does not cover naming, in a sense that it only controls how names should look, and does not impose a naming convention otherwise. As in, it does not tell whether to use `addHook` or `hookAdd` (or rather, `AddHook` or `HookAdd`).
+
+## Summary
+
+There are differences between the usual Arduino way, and between Google's guide, but not too much. It feels like we could opt for following Google's guide, with a few exceptions added to cover our use-cases.
+
+---
+I looked at a few other guides, but a lot of them are old, or far less comprehensive than Google's one, so my suggestion would be to go with that, with the following exceptions, to be applied on top of it, overriding when in conflict:
+
+### File layout conventions
+
+* We are targeting modern Arduino, and as such, libraries should follow the [rev2.1](https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification) layout and library specification.
+* The main include header must have the same name as the library, and must be in the `src/` directory, as required by Arduino.
+  + As we can't namespace public headers, their names should be prefixed with `Kaleidoscope-`.
+  + Following Arduino conventions, library names are `CamelCase` - with the first letter being a capital letter too. Dashes may be used to denote namespaceing.
+
+### Headers
+
+* We are using `#pragma once` include guards in all public headers, not `#define` guards.
+* Pre-processor macros are valid, and useful constructs, use them for helping the end-user define data structures, or static data to be stored in `PROGMEM`, where dynamic initialization is not an option.
+
+### Non-standard features
+
+* As our target compiler is GCC, use of non-standard extensions, such as compound statements is allowed, though not recommended, unless necessary for optimization purposes. Do it only if you must.
+
+### Naming & organizing things
+
+* Namespaces should be lowercase, and preferably contain no underscores - not top-level namespaces, anyway.
+* Class names are `CamelCase`, with the first letter being capital too.
+* Data members in classes are `snake_case`, with an underscore at the end if they are not public.
+* Function members are `camelCase`, with the first letter being lowercase.
+  + Accessors may be `snake_case`, but prefer making the data member public, if it is of a simple type. (For performance and size considerations).
+  + Function members should have their verb part first, so `addHook` instead of `hookAdd`. Group with namespaces, if need be, otherwise arrange functions that belong together, together, separate from the rest (in source code).
+  + Do not repeat the class or namespace in the member names.
+* Variables are `snake_case`, like data members, unless they are global instances of various classes, in which case they are `CamelCase`.
+* It is recommended to put the class in a namespace, and when declaring the global, use the same name, but outside of the namespace. For example: `extern Kaleidoscope::Plugin::OneShot OneShot`.
+
+### Indentation and visual style
+
+* Follow the `make astyle` recommendations, and the Google Style Guide.
+
+
+For context, some of the reasoning behind my proposal:
+
+* File conventions is pretty much what we have now. It is Arduino-compatible, and there's nothing wrong with it. It's just current practice codified.
+* Headers & non-standard features similarly.
+
+### Naming things
+
+I think lower-case namespace names make sense, as a way to differentiate classes, global objects, and namespaces. At the moment, `Kaleidoscope` is a global object, `KaleidoscopePlugins` is a namespace, and this is confusing. `kaledioscope::Keyboard`, or `kaleidoscope::Kaleidoscope` as the class is clearer than `Kaleidoscope_`, and we can still have a global `Kaleidoscope` object, because the namespace would be `kaleidoscope`.
+
+Thus:
+
+```c++
+namespace kaleidoscope {
+  class Kaleidoscope {
+  public:
+    uint16_t some_variable;
+
+    Kaleidoscope ();
+
+    void addSomething (...);
+    void removeSomething (...);
+
+    SomeComplexType foo_bar(); // getter
+    void foo_bar(SomeComplexType v); // setter
+
+  private:
+    SomeComplexType foo_bar_;
+  };
+};
+
+extern kaleidoscope::Kaleidoscope Kaleidoscope;
+```
+
+This would allow us to get rid of the ugly `KaleidoscopePlugin` namespace. Using namespaces in general would make a lot of code look much nicer. They are not a big thing in the Arduino world, as far as I see, but they are great tools for clarity.
+
+The above code demonstrates all the various ways to name things, and how they make it clearer what is what:
+
+* All classes are namespaced, so start with a `namespace::` prefix when used.
+* Classes are always namespaced, and are `CamelCase`.
+* All global objects are `CamelCase`. Whether a symbol is a class or an instance is not immediately clear from the name, but the position makes it easy to figure out. As our focus is on the end-user who will rarely - if ever - have to care about classes, and works with objects most of the time, this is fine, and as such, we do not need a more visible distinction.
+* Data members are `snake_case`, and have a trailing underscore when not public.
+* Data members are public, if setters/getters would be simple assignments or returns, and when access to them from outside is required.
+* Function members are `camelCase`, and start with a verb, different from class and global object names that start with a capital letter.
+  + Except setter/getter methods, which follow the data member naming convention.
+
+Due to size constraints, and with the goal of being easier for the novice user to get started, we use a lot of global objects, and prefer to avoid inheritance in user-facing APIs. The goal is that the end-user will not have to subclass anything, and that building on top of existing plugins is possible by composing them, as opposed to deriving from them.
+
+-- from @obra:
+
+11:42 <@obra> https://google.github.io/styleguide/cppguide.html#Inline_Functions - Our version of that is going 
+              to be more along the lines of "explicitly inline functions when it saves compiled space. For the 
+              most part, the compiler will do the right thing without hinting. It is sometimes acceptable to 
+              force a function to not be inlined using the GCC extension void __attribute__ ((noinline)) foo() "
+
