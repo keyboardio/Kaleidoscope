@@ -225,16 +225,20 @@ possible.</p>
 <h3 id="The__define_Guard">The #define Guard</h3>
 
 <div class="summary">
+	<p>All header files should have <code>#pragma once</code> guards to prevent multiple inclusion.</p>
+
+	<strike>
 <p>All header files should have <code>#define</code> guards to
 prevent multiple inclusion. The format of the symbol name
 should be
 <code><i>&lt;PROJECT&gt;</i>_<i>&lt;PATH&gt;</i>_<i>&lt;FILE&gt;</i>_H_</code>.</p>
+	</strike>
 </div> 
 
 <div class="stylebody">
 
 
-
+	<strike>
 <p>To guarantee uniqueness, they should
 be based on the full path in a project's source tree. For
 example, the file <code>foo/src/bar/baz.h</code> in
@@ -250,7 +254,7 @@ guard:</p>
 </pre>
 
 
-
+	</strike>
 
 </div> 
 
