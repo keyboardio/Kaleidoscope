@@ -1,5 +1,4 @@
-#ifndef __HIDTables__
-#define __HIDTables__
+#pragma once
 
 
 // These mappings were extracted and transcribed from
@@ -674,5 +673,3 @@
 #define HID_CONSUMER_AC_SPLIT	0x29A	// HID type SEL
 #define HID_CONSUMER_AC_DISTRIBUTE_HORIZONTALLY	0x29B	// HID type SEL
 #define HID_CONSUMER_AC_DISTRIBUTE_VERTICALLY	0x29C	// HID type SEL
-
-#endif // __HIDTables__
