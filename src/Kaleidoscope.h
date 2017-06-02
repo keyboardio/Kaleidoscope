@@ -62,7 +62,7 @@ class Kaleidoscope_ {
 
     void setup(const byte keymap_count) {
         setup();
-    };
+    }
     void setup(void);
     void loop(void);
     void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
