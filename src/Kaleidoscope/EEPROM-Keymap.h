@@ -21,31 +21,32 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class EEPROMKeymap : public KaleidoscopePlugin {
-  public:
-    EEPROMKeymap (void);
+ public:
+  EEPROMKeymap(void);
 
-    virtual void begin (void) final;
+  static void max_layers(uint8_t max);
 
-    static void reserveSpace (uint8_t layers);
-    static uint16_t base (void);
+  void begin(void) final;
 
-    static Key getKey (uint8_t layer, byte row, byte col);
-    static Key getKeyOverride (uint8_t layer, byte row, byte col);
+  static uint16_t keymap_base(void);
 
-    static bool focusKeymap (const char *command);
-    static bool focusKeymapTransfer (const char *command);
+  static Key getKey(uint8_t layer, byte row, byte col);
+  static Key getKeyOverride(uint8_t layer, byte row, byte col);
 
-    static void updateKey (uint16_t basePos, Key key);
+  static bool focusKeymap(const char *command);
+  static bool focusKeymapTransfer(const char *command);
 
-  private:
-    static uint16_t keymapBase;
-    static uint8_t maxLayers;
+  static void updateKey(uint16_t base_pos, Key key);
 
-    static Key parseKey (void);
-    static void printKey (Key key);
+ private:
+  static uint16_t keymap_base_;
+  static uint8_t max_layers_;
+
+  static Key parseKey(void);
+  static void printKey(Key key);
 };
 };
 
-extern KaleidoscopePlugins::EEPROMKeymap EEPROMKeymap;
+extern kaleidoscope::EEPROMKeymap EEPROMKeymap;
