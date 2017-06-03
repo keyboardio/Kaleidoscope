@@ -18,8 +18,6 @@
 
 #include <Kaleidoscope-TapDance.h>
 
-using KaleidoscopePlugins::Ranges;
-
 namespace KaleidoscopePlugins {
 // --- state ---
 uint32_t TapDance::endTime;
@@ -34,7 +32,7 @@ byte TapDance::lastTapDanceCol;
 
 // --- helpers ---
 
-#define isTapDance(k) (k.raw >= TD_FIRST && k.raw <= TD_LAST)
+#define isTapDance(k) (k.raw >= Ranges::TD_FIRST && k.raw <= Ranges::TD_LAST)
 #define isInSeq(k) (lastTapDanceKey.raw == k.raw)
 #define stillHeld(idx) (tapCount[idx])
 #define isActive() (lastTapDanceKey.raw != Key_NoKey.raw)
@@ -43,7 +41,7 @@ byte TapDance::lastTapDanceCol;
 
 void
 TapDance::interrupt (void) {
-    uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
+    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Interrupt);
     bitWrite (triggeredState, idx, 1);
@@ -58,7 +56,7 @@ TapDance::interrupt (void) {
 
 void
 TapDance::timeout (void) {
-    uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
+    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
     tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
     bitWrite (triggeredState, idx, 1);
@@ -84,7 +82,7 @@ TapDance::release (uint8_t tapDanceIndex) {
 
 Key
 TapDance::tap (void) {
-    uint8_t idx = lastTapDanceKey.raw - TD_FIRST;
+    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
     tapCount[idx]++;
     endTime = millis () + timeOut;
@@ -154,7 +152,7 @@ TapDance::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState)
         return mappedKey;
     }
 
-    uint8_t tapDanceIndex = mappedKey.raw - TD_FIRST;
+    uint8_t tapDanceIndex = mappedKey.raw - Ranges::TD_FIRST;
 
     if (key_toggled_off (keyState))
         bitClear (pressedState, tapDanceIndex);
