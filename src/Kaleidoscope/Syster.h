@@ -27,28 +27,28 @@
 
 namespace KaleidoscopePlugins {
 class Syster : public KaleidoscopePlugin {
-  public:
-    typedef enum {
-        StartAction,
-        EndAction,
-        SymbolAction
-    } action_t;
+ public:
+  typedef enum {
+    StartAction,
+    EndAction,
+    SymbolAction
+  } action_t;
 
-    Syster (void);
+  Syster(void);
 
-    void begin (void) final;
-    static void reset (void);
+  void begin(void) final;
+  static void reset(void);
 
-  private:
-    static char symbol[SYSTER_MAX_SYMBOL_LENGTH + 1];
-    static uint8_t symbolPos;
-    static bool isActive;
+ private:
+  static char symbol[SYSTER_MAX_SYMBOL_LENGTH + 1];
+  static uint8_t symbolPos;
+  static bool isActive;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 };
 
-const char keyToChar (Key key);
-void systerAction (KaleidoscopePlugins::Syster::action_t action, const char *symbol);
+const char keyToChar(Key key);
+void systerAction(KaleidoscopePlugins::Syster::action_t action, const char *symbol);
 
 extern KaleidoscopePlugins::Syster Syster;
