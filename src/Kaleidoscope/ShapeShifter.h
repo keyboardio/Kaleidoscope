@@ -22,23 +22,23 @@
 
 namespace KaleidoscopePlugins {
 class ShapeShifter : public KaleidoscopePlugin {
-  public:
-    typedef struct {
-        Key original, replacement;
-    } dictionary_t;
+ public:
+  typedef struct {
+    Key original, replacement;
+  } dictionary_t;
 
-    ShapeShifter (void);
+  ShapeShifter(void);
 
-    virtual void begin (void) final;
+  void begin(void) final;
 
-    static void configure (const dictionary_t dictionary[]);
+  static void configure(const dictionary_t dictionary[]);
 
-  private:
-    static const dictionary_t *dictionary;
-    static bool modActive;
+ private:
+  static const dictionary_t *dictionary;
+  static bool modActive;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopHook (bool postClear);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static void loopHook(bool postClear);
 };
 };
 
