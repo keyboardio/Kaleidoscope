@@ -140,7 +140,7 @@ Unicode::type (uint32_t unicode) {
     typeCode (unicode);
     end ();
 }
-};
+} // namespace KaleidoscopePlugins
 
 __attribute__((weak))
 Key
