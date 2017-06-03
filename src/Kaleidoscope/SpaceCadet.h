@@ -25,7 +25,7 @@ class SpaceCadetShift : public KaleidoscopePlugin {
   public:
     SpaceCadetShift (void);
 
-    virtual void begin (void) final;
+    void begin (void) final;
 
     static void configure (Key left, Key right);
     static uint16_t timeOut;
