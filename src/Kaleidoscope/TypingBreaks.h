@@ -50,7 +50,7 @@ class TypingBreaks : public KaleidoscopePlugin {
     static uint16_t settingsBase;
 
     static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-} 
+}
 } // namespace KaleidoscopePlugins
 
 extern KaleidoscopePlugins::TypingBreaks TypingBreaks;
