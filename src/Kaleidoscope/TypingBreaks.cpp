@@ -193,7 +193,7 @@ TypingBreaks::focusHook (const char *command) {
     EEPROM.put (settingsBase, settings);
     return true;
 }
-};
+} // namespace KaleidoscopePlugins
 
 KaleidoscopePlugins::TypingBreaks TypingBreaks;
 
