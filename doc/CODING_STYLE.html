@@ -608,9 +608,9 @@ namespace mynamespace {
 // All declarations are within the namespace scope.
 // Notice the lack of indentation.
 class MyClass {
- public:
-  ...
-  void Foo();
+  public:
+   ...
+   void Foo();
 };
 
 }  // namespace mynamespace
@@ -770,9 +770,9 @@ void Function2();
 <p>instead of</p>
 <pre class="badcode">namespace myproject {
 class FooBar {
- public:
-  static void Function1();
-  static void Function2();
+  public:
+   static void Function1();
+   static void Function2();
 };
 }  // namespace myproject
 </pre>
@@ -1199,12 +1199,12 @@ other code, and to document that your class is copyable and/or cheaply movable
 if that's an API guarantee.</p>
 
 <pre class="badcode">class Foo {
- public:
-  Foo(Foo&amp;&amp; other) : field_(other.field) {}
-  // Bad, defines only move constructor, but not operator=.
-
- private:
-  Field field_;
+  public:
+   Foo(Foo&amp;&amp; other) : field_(other.field) {}
+   // Bad, defines only move constructor, but not operator=.
+ 
+  private:
+   Field field_;
 };
 </pre>
 
@@ -1788,9 +1788,9 @@ string&amp;</code> and overload it with another that
 takes <code>const char*</code>.</p>
 
 <pre>class MyClass {
- public:
-  void Analyze(const string &amp;text);
-  void Analyze(const char *text, size_t textlen);
+  public:
+   void Analyze(const string &amp;text);
+   void Analyze(const char *text, size_t textlen);
 };
 </pre>
 </div>
@@ -3118,10 +3118,10 @@ For example, avoid patterns like:</p>
 <pre class="badcode">class WOMBAT_TYPE(Foo) {
   // ...
 
- public:
-  EXPAND_PUBLIC_WOMBAT_API(Foo)
-
-  EXPAND_WOMBAT_COMPARISONS(Foo, ==, &lt;)
+  public:
+   EXPAND_PUBLIC_WOMBAT_API(Foo)
+ 
+   EXPAND_WOMBAT_COMPARISONS(Foo, ==, &lt;)
 };
 </pre>
 
@@ -3384,16 +3384,16 @@ that take <code>std::initializer_list&lt;T&gt;</code>, which is automatically
 created from <i>braced-init-list</i>:</p>
 
 <pre>class MyType {
- public:
-  // std::initializer_list references the underlying init list.
-  // It should be passed by value.
-  MyType(std::initializer_list&lt;int&gt; init_list) {
-    for (int i : init_list) append(i);
-  }
-  MyType&amp; operator=(std::initializer_list&lt;int&gt; init_list) {
-    clear();
-    for (int i : init_list) append(i);
-  }
+  public:
+   // std::initializer_list references the underlying init list.
+   // It should be passed by value.
+   MyType(std::initializer_list&lt;int&gt; init_list) {
+     for (int i : init_list) append(i);
+   }
+   MyType&amp; operator=(std::initializer_list&lt;int&gt; init_list) {
+     clear();
+     for (int i : init_list) append(i);
+   }
 };
 MyType m{2, 3, 5, 7};
 </pre>
@@ -3406,9 +3406,9 @@ constructors of data types, even if they do not have
 // Calls ordinary constructor as long as MyOtherType has no
 // std::initializer_list constructor.
 class MyOtherType {
- public:
-  explicit MyOtherType(string);
-  MyOtherType(int, string);
+  public:
+   explicit MyOtherType(string);
+   MyOtherType(int, string);
 };
 MyOtherType m = {1, "b"};
 // If the constructor is explicit, you can't use the "= {}" form.
@@ -5209,11 +5209,11 @@ not fit on a single line as you would wrap arguments in a
 <p>Unused parameters that are obvious from context may be omitted:</p>
 
 <pre>class Foo {
- public:
-  Foo(Foo&amp;&amp;);
-  Foo(const Foo&amp;);
-  Foo&amp; operator=(Foo&amp;&amp;);
-  Foo&amp; operator=(const Foo&amp;);
+  public:
+   Foo(Foo&amp;&amp;);
+   Foo(const Foo&amp;);
+   Foo&amp; operator=(Foo&amp;&amp;);
+   Foo&amp; operator=(const Foo&amp;);
 };
 </pre>
 
@@ -5221,13 +5221,13 @@ not fit on a single line as you would wrap arguments in a
 name in the function definition:</p>
 
 <pre>class Shape {
- public:
-  virtual void Rotate(double radians) = 0;
+  public:
+   virtual void Rotate(double radians) = 0;
 };
 
 class Circle : public Shape {
- public:
-  void Rotate(double radians) override;
+  public:
+   void Rotate(double radians) override;
 };
 
 void Circle::Rotate(double /*radians*/) {}
@@ -5782,7 +5782,7 @@ beginning of the line.</p>
 
 <div class="summary">
 <p>Sections in <code>public</code>, <code>protected</code> and
-<code>private</code> order, each indented one space.</p>
+<code>private</code> order, each indented two spaces.</p>
 </div>
 
 <div class="stylebody">
@@ -5793,23 +5793,23 @@ Comments</a> for a discussion of what comments are
 needed) is:</p>
 
 <pre>class MyClass : public OtherClass {
- public:      // Note the 1 space indent!
-  MyClass();  // Regular 2 space indent.
-  explicit MyClass(int var);
-  ~MyClass() {}
-
-  void SomeFunction();
-  void SomeFunctionThatDoesNothing() {
-  }
-
-  void set_some_var(int var) { some_var_ = var; }
-  int some_var() const { return some_var_; }
-
- private:
-  bool SomeInternalFunction();
-
-  int some_var_;
-  int some_other_var_;
+  public:      // Note the 1 space indent!
+   MyClass();  // Regular 2 space indent.
+   explicit MyClass(int var);
+   ~MyClass() {}
+ 
+   void SomeFunction();
+   void SomeFunctionThatDoesNothing() {
+   }
+ 
+   void set_some_var(int var) { some_var_ = var; }
+   int some_var() const { return some_var_; }
+ 
+  private:
+   bool SomeInternalFunction();
+ 
+   int some_var_;
+   int some_other_var_;
 };
 </pre>
 
@@ -5821,7 +5821,7 @@ needed) is:</p>
 
   <li>The <code>public:</code>, <code>protected:</code>,
   and <code>private:</code> keywords should be indented
-  one space.</li>
+  two spaces.</li>
 
   <li>Except for the first instance, these keywords
   should be preceded by a blank line. This rule is
@@ -5942,12 +5942,12 @@ int x[] = {0};
 
 // Spaces around the colon in inheritance and initializer lists.
 class Foo : public Bar {
- public:
-  // For inline function implementations, put spaces between the braces
-  // and the implementation itself.
-  Foo(int b) : Bar(), baz_(b) {}  // No spaces inside empty braces.
-  void Reset() { baz_ = 0; }  // Spaces separating braces from implementation.
-  ...
+  public:
+   // For inline function implementations, put spaces between the braces
+   // and the implementation itself.
+   Foo(int b) : Bar(), baz_(b) {}  // No spaces inside empty braces.
+   void Reset() { baz_ = 0; }  // Spaces separating braces from implementation.
+   ...
 </pre>
 
 <p>Adding trailing whitespace can cause extra work for
