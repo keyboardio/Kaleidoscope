@@ -34,7 +34,7 @@ class Unicode : public KaleidoscopePlugin {
 
     static void type (uint32_t unicode);
     static void typeCode (uint32_t unicode);
-};
+}
 };
 
 Key hexToKey (uint8_t hex);
