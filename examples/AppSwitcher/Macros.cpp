@@ -27,31 +27,31 @@ using namespace KaleidoscopePlugins::HostOS;
 
 static bool appSwitchActive = false;
 
-const macro_t *macroAppSwitch (uint8_t keyState) {
-    Key mod = Key_LeftAlt;
+const macro_t *macroAppSwitch(uint8_t keyState) {
+  Key mod = Key_LeftAlt;
 
-    if (HostOS.os () == OSX)
-        mod = Key_LeftGui;
+  if (HostOS.os() == OSX)
+    mod = Key_LeftGui;
 
-    // Key was just pressed, or is being held
-    if (key_is_pressed(keyState)) {
-        return MACRO(Dr(mod), D(Tab), END);
-    }
-    // Key was just released
-    if (key_toggled_off(keyState)) {
-        return MACRO(U(Tab), Dr(mod), END);
-    }
-    // Key is not pressed, and was not just released.
-    // if appSwitchActive is true, we continue holding Alt.
-    if (appSwitchActive) {
-        return MACRO(Dr(mod), END);
-    }
-    // otherwise we do nothing
-    return MACRO_NONE;
+  // Key was just pressed, or is being held
+  if (key_is_pressed(keyState)) {
+    return MACRO(Dr(mod), D(Tab), END);
+  }
+  // Key was just released
+  if (key_toggled_off(keyState)) {
+    return MACRO(U(Tab), Dr(mod), END);
+  }
+  // Key is not pressed, and was not just released.
+  // if appSwitchActive is true, we continue holding Alt.
+  if (appSwitchActive) {
+    return MACRO(Dr(mod), END);
+  }
+  // otherwise we do nothing
+  return MACRO_NONE;
 }
 
-const macro_t *macroAppCancel (uint8_t keyState) {
-    if (key_toggled_on (keyState))
-        appSwitchActive = false;
-    return MACRO_NONE;
+const macro_t *macroAppCancel(uint8_t keyState) {
+  if (key_toggled_on(keyState))
+    appSwitchActive = false;
+  return MACRO_NONE;
 }

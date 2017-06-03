@@ -48,20 +48,20 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-    switch (macroIndex) {
-    case M_APPSWITCH:
-        return macroAppSwitch (keyState);
-    case M_APPCANCEL:
-        return macroAppCancel (keyState);
-    }
-    return MACRO_NONE;
+  switch (macroIndex) {
+  case M_APPSWITCH:
+    return macroAppSwitch(keyState);
+  case M_APPCANCEL:
+    return macroAppCancel(keyState);
+  }
+  return MACRO_NONE;
 }
 
-void setup () {
-    Kaleidoscope.setup (KEYMAP_SIZE);
-    Kaleidoscope.use (&HostOS, &Macros, NULL);
+void setup() {
+  Kaleidoscope.setup(KEYMAP_SIZE);
+  Kaleidoscope.use(&HostOS, &Macros, NULL);
 }
 
-void loop () {
-    Kaleidoscope.loop ();
+void loop() {
+  Kaleidoscope.loop();
 }

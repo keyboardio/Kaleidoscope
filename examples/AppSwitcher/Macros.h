@@ -22,9 +22,9 @@
 #include <Kaleidoscope-Macros.h>
 
 enum {
-    M_APPSWITCH,
-    M_APPCANCEL,
+  M_APPSWITCH,
+  M_APPCANCEL,
 };
 
-const macro_t *macroAppSwitch (uint8_t keyState);
-const macro_t *macroAppCancel (uint8_t keyState);
+const macro_t *macroAppSwitch(uint8_t keyState);
+const macro_t *macroAppCancel(uint8_t keyState);

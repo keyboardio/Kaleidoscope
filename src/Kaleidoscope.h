@@ -52,51 +52,51 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
         })
 
 class KaleidoscopePlugin {
-  public:
-    virtual void begin(void) = 0;
+ public:
+  virtual void begin(void) = 0;
 };
 
 class Kaleidoscope_ {
-  public:
-    Kaleidoscope_(void);
+ public:
+  Kaleidoscope_(void);
 
-    void setup(const byte keymap_count) {
-        setup();
-    }
-    void setup(void);
-    void loop(void);
-    void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
+  void setup(const byte keymap_count) {
+    setup();
+  }
+  void setup(void);
+  void loop(void);
+  void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
 
-    // ---- hooks ----
+  // ---- hooks ----
 
-    /*
-     * In most cases, one only wants a single copy of a hook. On the other hand,
-     * plugins that depend on other plugins, may want to make it easier for the
-     * end-user to use the plugin, and call the setup function of the dependent
-     * plugins too. In case the end-user calls the same setup function, we'd end up
-     * with hooks registered multiple times.
-     *
-     * To avoid this, protection against double-registration has been introduced.
-     * The `event_handler_hook_use` and `loop_hook_use` functions will only allow
-     * one copy of the hook. The `event_handler_hook_append` and `loop_hook_append`
-     * functions will, on the other hand, just append the hooks, and not care about
-     * protection.
-     */
-    typedef Key (*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
-    static eventHandlerHook eventHandlers[HOOK_MAX];
+  /*
+   * In most cases, one only wants a single copy of a hook. On the other hand,
+   * plugins that depend on other plugins, may want to make it easier for the
+   * end-user to use the plugin, and call the setup function of the dependent
+   * plugins too. In case the end-user calls the same setup function, we'd end up
+   * with hooks registered multiple times.
+   *
+   * To avoid this, protection against double-registration has been introduced.
+   * The `event_handler_hook_use` and `loop_hook_use` functions will only allow
+   * one copy of the hook. The `event_handler_hook_append` and `loop_hook_append`
+   * functions will, on the other hand, just append the hooks, and not care about
+   * protection.
+   */
+  typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static eventHandlerHook eventHandlers[HOOK_MAX];
 
-    static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
-    static void appendEventHandlerHook(eventHandlerHook hook);
-    static void useEventHandlerHook(eventHandlerHook hook);
+  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
+  static void appendEventHandlerHook(eventHandlerHook hook);
+  static void useEventHandlerHook(eventHandlerHook hook);
 
-    typedef void (*loopHook)(bool postClear);
-    static loopHook loopHooks[HOOK_MAX];
+  typedef void (*loopHook)(bool postClear);
+  static loopHook loopHooks[HOOK_MAX];
 
-    static void replaceLoopHook(loopHook oldHook, loopHook newHook);
-    static void appendLoopHook(loopHook hook);
-    static void useLoopHook(loopHook hook);
+  static void replaceLoopHook(loopHook oldHook, loopHook newHook);
+  static void appendLoopHook(loopHook hook);
+  static void useLoopHook(loopHook hook);
 
-    static bool focusHook(const char *command);
+  static bool focusHook(const char *command);
 };
 
 extern Kaleidoscope_ Kaleidoscope;

@@ -1,96 +1,96 @@
 #include "Kaleidoscope.h"
 
 static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
-    if (mappedKey.flags & RESERVED)
-        return false;
+  if (mappedKey.flags & RESERVED)
+    return false;
 
-    if (!(mappedKey.flags & SYNTHETIC))
-        return false;
+  if (!(mappedKey.flags & SYNTHETIC))
+    return false;
 
-    if (mappedKey.flags & IS_INTERNAL) {
-        return false;
-    } else if (mappedKey.flags & IS_CONSUMER) {
-        if (key_is_pressed(keyState))
-            ConsumerControl.press(mappedKey.keyCode);
-        else if (key_was_pressed(keyState))
-            ConsumerControl.release(mappedKey.keyCode);
-    } else if (mappedKey.flags & IS_SYSCTL) {
-        if (key_is_pressed(keyState))
-            SystemControl.press(mappedKey.keyCode);
-        else if (key_was_pressed(keyState))
-            SystemControl.release();
-    } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
-        // Should not happen, handled elsewhere.
-    }
+  if (mappedKey.flags & IS_INTERNAL) {
+    return false;
+  } else if (mappedKey.flags & IS_CONSUMER) {
+    if (key_is_pressed(keyState))
+      ConsumerControl.press(mappedKey.keyCode);
+    else if (key_was_pressed(keyState))
+      ConsumerControl.release(mappedKey.keyCode);
+  } else if (mappedKey.flags & IS_SYSCTL) {
+    if (key_is_pressed(keyState))
+      SystemControl.press(mappedKey.keyCode);
+    else if (key_was_pressed(keyState))
+      SystemControl.release();
+  } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
+    // Should not happen, handled elsewhere.
+  }
 
-    return true;
+  return true;
 }
 
 static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, uint8_t keyState) {
-    //for every newly pressed button, figure out what logical key it is and send a key down event
-    // for every newly released button, figure out what logical key it is and send a key up event
+  //for every newly pressed button, figure out what logical key it is and send a key down event
+  // for every newly released button, figure out what logical key it is and send a key up event
 
-    if (mappedKey.flags & SYNTHETIC) {
-        handle_synthetic_keyswitch_event( mappedKey, keyState);
-    } else if (key_is_pressed(keyState)) {
-        press_key(mappedKey);
-    } else if (key_toggled_off(keyState) && (keyState & INJECTED)) {
-        release_key(mappedKey);
-    }
-    return true;
+  if (mappedKey.flags & SYNTHETIC) {
+    handle_synthetic_keyswitch_event(mappedKey, keyState);
+  } else if (key_is_pressed(keyState)) {
+    press_key(mappedKey);
+  } else if (key_toggled_off(keyState) && (keyState & INJECTED)) {
+    release_key(mappedKey);
+  }
+  return true;
 }
 
 void press_key(Key mappedKey) {
-    if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.press(Key_LeftShift.keyCode);
-    }
-    if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.press(Key_LeftControl.keyCode);
-    }
-    if (mappedKey.flags & LALT_HELD) {
-        Keyboard.press(Key_LeftAlt.keyCode);
-    }
-    if (mappedKey.flags & RALT_HELD) {
-        Keyboard.press(Key_RightAlt.keyCode);
-    }
-    if (mappedKey.flags & GUI_HELD) {
-        Keyboard.press(Key_LeftGui.keyCode);
-    }
-    Keyboard.press(mappedKey.keyCode);
+  if (mappedKey.flags & SHIFT_HELD) {
+    Keyboard.press(Key_LeftShift.keyCode);
+  }
+  if (mappedKey.flags & CTRL_HELD) {
+    Keyboard.press(Key_LeftControl.keyCode);
+  }
+  if (mappedKey.flags & LALT_HELD) {
+    Keyboard.press(Key_LeftAlt.keyCode);
+  }
+  if (mappedKey.flags & RALT_HELD) {
+    Keyboard.press(Key_RightAlt.keyCode);
+  }
+  if (mappedKey.flags & GUI_HELD) {
+    Keyboard.press(Key_LeftGui.keyCode);
+  }
+  Keyboard.press(mappedKey.keyCode);
 }
 
 
 void release_key(Key mappedKey) {
-    if (mappedKey.flags & SHIFT_HELD) {
-        Keyboard.release(Key_LeftShift.keyCode);
-    }
-    if (mappedKey.flags & CTRL_HELD) {
-        Keyboard.release(Key_LeftControl.keyCode);
-    }
-    if (mappedKey.flags & LALT_HELD) {
-        Keyboard.release(Key_LeftAlt.keyCode);
-    }
-    if (mappedKey.flags & RALT_HELD) {
-        Keyboard.release(Key_RightAlt.keyCode);
-    }
-    if (mappedKey.flags & GUI_HELD) {
-        Keyboard.release(Key_LeftGui.keyCode);
-    }
-    Keyboard.release(mappedKey.keyCode);
+  if (mappedKey.flags & SHIFT_HELD) {
+    Keyboard.release(Key_LeftShift.keyCode);
+  }
+  if (mappedKey.flags & CTRL_HELD) {
+    Keyboard.release(Key_LeftControl.keyCode);
+  }
+  if (mappedKey.flags & LALT_HELD) {
+    Keyboard.release(Key_LeftAlt.keyCode);
+  }
+  if (mappedKey.flags & RALT_HELD) {
+    Keyboard.release(Key_RightAlt.keyCode);
+  }
+  if (mappedKey.flags & GUI_HELD) {
+    Keyboard.release(Key_LeftGui.keyCode);
+  }
+  Keyboard.release(mappedKey.keyCode);
 }
 
 void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (!(keyState & INJECTED)) {
-        mappedKey = Layer.lookup(row, col);
-    }
-    for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
-        Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
-        mappedKey = (*handler)(mappedKey, row, col, keyState);
-        if (mappedKey.raw == Key_NoKey.raw)
-            return;
-    }
-    mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
+  if (!(keyState & INJECTED)) {
+    mappedKey = Layer.lookup(row, col);
+  }
+  for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
+    Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
+    mappedKey = (*handler)(mappedKey, row, col, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
-        return;
-    handle_keyswitch_event_default(mappedKey, row, col, keyState);
+      return;
+  }
+  mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
+  if (mappedKey.raw == Key_NoKey.raw)
+    return;
+  handle_keyswitch_event_default(mappedKey, row, col, keyState);
 }
