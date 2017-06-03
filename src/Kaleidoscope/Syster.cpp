@@ -18,7 +18,7 @@
 
 #include <Kaleidoscope-Syster.h>
 
-using KaleidoscopePlugins::Ranges;
+using namespace KaleidoscopePlugins::Ranges;
 
 namespace KaleidoscopePlugins {
 // --- state ---
