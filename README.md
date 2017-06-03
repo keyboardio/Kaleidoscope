@@ -32,12 +32,12 @@ register the `Focus` hooks, and it will do the rest.
 #include <Kaleidoscope-Focus.h>
 
 void setup(void) {
-    Kaleidoscope.setup();
-    USE_PLUGINS(&ColormapEffect, &Focus);
+  Kaleidoscope.setup();
+  USE_PLUGINS(&ColormapEffect, &Focus);
   
-    ColormapEffect.max_layers(1);
-    Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
-    Focus.addHook(FOCUS_HOOK_COLORMAP);
+  ColormapEffect.max_layers(1);
+  Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
+  Focus.addHook(FOCUS_HOOK_COLORMAP);
 }
 ```
 

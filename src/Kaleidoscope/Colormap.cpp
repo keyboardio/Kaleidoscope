@@ -33,31 +33,31 @@ ColormapEffect::ColormapEffect(void) {
 }
 
 void ColormapEffect::begin(void) {
-    LEDMode::begin();
+  LEDMode::begin();
 
-    USE_PLUGINS(&::EEPROMSettings, &::LEDPaletteTheme);
+  USE_PLUGINS(&::EEPROMSettings, &::LEDPaletteTheme);
 }
 
 void ColormapEffect::max_layers(uint8_t max_) {
-    if (map_base_ != 0)
-        return;
+  if (map_base_ != 0)
+    return;
 
-    max_layers_ = max_;
-    map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
+  max_layers_ = max_;
+  map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
 }
 
 void ColormapEffect::update(void) {
-    for (uint8_t l = 0; l < 32; l++) {
-        if (!Layer.isOn(l))
-            continue;
+  for (uint8_t l = 0; l < 32; l++) {
+    if (!Layer.isOn(l))
+      continue;
 
-        ::LEDPaletteTheme.update(map_base_, l);
-    }
+    ::LEDPaletteTheme.update(map_base_, l);
+  }
 }
 
 bool ColormapEffect::focusHook(const char *command) {
-    return ::LEDPaletteTheme.themeFocusHandler(command, PSTR("colormap.map"),
-            map_base_, max_layers_);
+  return ::LEDPaletteTheme.themeFocusHandler(command, PSTR("colormap.map"),
+         map_base_, max_layers_);
 }
 
 }
