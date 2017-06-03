@@ -21,23 +21,25 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class ColormapEffect : public LEDMode {
   public:
-    ColormapEffect (void);
+    ColormapEffect(void);
 
-    virtual void update (void) final;
-    void configure (uint8_t maxLayers);
+    void begin(void) final;
+    void update(void) final;
 
-    static bool focusHook (const char *command);
+    void max_layers(uint8_t max_);
+
+    static bool focusHook(const char *command);
 
   private:
-    static uint8_t maxLayers;
-    static uint16_t mapBase;
+    static uint8_t max_layers_;
+    static uint16_t map_base_;
 };
-};
+} // namespace kaleidoscope
 
-extern KaleidoscopePlugins::ColormapEffect ColormapEffect;
+extern kaleidoscope::ColormapEffect ColormapEffect;
 
 #define FOCUS_HOOK_COLORMAP FOCUS_HOOK(ColormapEffect.focusHook,  \
                                        "colormap.map")

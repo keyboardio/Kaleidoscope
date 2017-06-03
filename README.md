@@ -12,34 +12,32 @@
 The `Colormap` extension provides an easier way to set up a different - static -
 color map per-layer. This means that we can set up a map of colors for each key,
 on a per-layer basis, and whenever a layer becomes active, the color map for
-that layer is applied on top of everything else. The extension supports
-transparent colors, to make things easier.
-
-Both the palette and the color map is stored in EEPROM, and the palette is
-limited to 15 colors (with the 16th being the transparent color). The plugin can
-work together with the [Focus][plugin:focus] plugin, to make it easier to update
-the palette or the color map itself.
+that layer is applied on top of everything else. Colors are picked from a
+15-color palette (or 16, if we disable transparency), provided by
+the [LED-Palette-Theme][plugin:l-p-t] plugin. The color map is stored in
+`EEPROM`, and can be easily changed via the [Focus][plugin:focus] plugin, which
+also provides palette editing capabilities.
 
  [plugin:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [plugin:l-p-t]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme
 
 ## Using the extension
 
 To use the extension, include the header, tell it the number of layers you have,
-and it will do the rest.
+register the `Focus` hooks, and it will do the rest.
 
 ```c++
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-Focus.h>
 
-void setup (void) {
-  Kaleidoscope.setup ();
-  USE_PLUGINS (&ColormapEffect, &Focus);
+void setup(void) {
+    Kaleidoscope.setup();
+    USE_PLUGINS(&ColormapEffect, &Focus);
   
-  ColormapEffect.configure (1);
-  Focus.addHook (FOCUS_HOOK_LEDPALETTETHEME);
-  Focus.addHook (FOCUS_HOOK_COLORMAP);
+    ColormapEffect.max_layers(1);
+    Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
+    Focus.addHook(FOCUS_HOOK_COLORMAP);
 }
 ```
 
@@ -47,9 +45,10 @@ void setup (void) {
 
 The extension provides an `ColormapEffect` singleton object, with a single method:
 
-### `.configure(maxLayers)`
+### `.max_layers(max)`
 
-> Tells the extension to reserve space in EEPROM for up to `maxLayers` layers.
+> Tells the extension to reserve space in EEPROM for up to `max` layers. Can
+> only be called once, any subsequent call will be a no-op.
 
 ## Dependencies
 

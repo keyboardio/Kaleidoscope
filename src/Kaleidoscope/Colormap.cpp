@@ -16,42 +16,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include <Kaleidoscope-Colormap.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
+
 #include <EEPROM.h>
 
-namespace KaleidoscopePlugins {
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-Focus.h>
 
-uint16_t ColormapEffect::mapBase;
-uint8_t ColormapEffect::maxLayers;
+namespace kaleidoscope {
 
-ColormapEffect::ColormapEffect (void) {
+uint16_t ColormapEffect::map_base_;
+uint8_t ColormapEffect::max_layers_;
+
+ColormapEffect::ColormapEffect(void) {
 }
 
 void
-ColormapEffect::configure (uint8_t maxLayers_) {
-    USE_PLUGINS (&::EEPROMSettings, &::LEDPaletteTheme);
+ColormapEffect::begin(void) {
+    LEDMode::begin();
 
-    maxLayers = maxLayers_;
-    mapBase = ::LEDPaletteTheme.reserveThemes (maxLayers);
+    USE_PLUGINS(&::EEPROMSettings, &::LEDPaletteTheme);
 }
 
 void
-ColormapEffect::update (void) {
+ColormapEffect::max_layers(uint8_t max_) {
+    if (map_base_ != 0)
+        return;
+
+    max_layers_ = max_;
+    map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
+}
+
+void
+ColormapEffect::update(void) {
     for (uint8_t l = 0; l < 32; l++) {
-        if (!Layer.isOn (l))
+        if (!Layer.isOn(l))
             continue;
 
-        ::LEDPaletteTheme.update (mapBase, l);
+        ::LEDPaletteTheme.update(map_base_, l);
     }
 }
 
 bool
-ColormapEffect::focusHook (const char *command) {
-    return ::LEDPaletteTheme.themeFocusHandler (command, PSTR("colormap.map"), mapBase, maxLayers);
+ColormapEffect::focusHook(const char *command) {
+    return ::LEDPaletteTheme.themeFocusHandler(command, PSTR("colormap.map"), map_base_, max_layers_);
 }
 
-};
+} // namespace kaleidoscope
 
-KaleidoscopePlugins::ColormapEffect ColormapEffect;
+kaleidoscope::ColormapEffect ColormapEffect;
