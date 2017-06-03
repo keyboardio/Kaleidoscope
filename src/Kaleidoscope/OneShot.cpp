@@ -60,218 +60,221 @@ bool OneShot::shouldCancelStickies = false;
 
 // ---- OneShot stuff ----
 void
-OneShot::injectNormalKey (uint8_t idx, uint8_t keyState) {
-    Key key;
+OneShot::injectNormalKey(uint8_t idx, uint8_t keyState) {
+  Key key;
 
-    if (idx < 8) {
-        key.flags = Key_LeftControl.flags;
-        key.keyCode = Key_LeftControl.keyCode + idx;
-    } else {
-        key.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
-        key.keyCode = MOMENTARY_OFFSET + idx - 8;
-    }
+  if (idx < 8) {
+    key.flags = Key_LeftControl.flags;
+    key.keyCode = Key_LeftControl.keyCode + idx;
+  } else {
+    key.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
+    key.keyCode = MOMENTARY_OFFSET + idx - 8;
+  }
 
-    handle_keyswitch_event (key, UNKNOWN_KEYSWITCH_LOCATION, keyState | INJECTED);
+  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, keyState | INJECTED);
 }
 
 void
-OneShot::activateOneShot (uint8_t idx) {
-    injectNormalKey (idx, IS_PRESSED);
+OneShot::activateOneShot(uint8_t idx) {
+  injectNormalKey(idx, IS_PRESSED);
 }
 
 void
-OneShot::cancelOneShot (uint8_t idx) {
-    clearOneShot (idx);
-    injectNormalKey (idx, WAS_PRESSED);
+OneShot::cancelOneShot(uint8_t idx) {
+  clearOneShot(idx);
+  injectNormalKey(idx, WAS_PRESSED);
 }
 
 void
-OneShot::mask (byte row, byte col) {
-    if (row >= ROWS || col >= COLS)
-        return;
+OneShot::mask(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return;
 
-    if (col >= 8) {
-        col = col - 8;
-        rightMask |= SCANBIT (row, col);
-    } else
-        leftMask |= SCANBIT (row, col);
+  if (col >= 8) {
+    col = col - 8;
+    rightMask |= SCANBIT(row, col);
+  } else {
+    leftMask |= SCANBIT(row, col);
+  }
 }
 
 void
-OneShot::unmask (byte row, byte col) {
-    if (row >= ROWS || col >= COLS)
-        return;
+OneShot::unmask(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return;
 
-    if (col >= 8) {
-        col = col - 8;
-        rightMask &= ~(SCANBIT (row, col));
-    } else
-        leftMask &= ~(SCANBIT (row, col));
+  if (col >= 8) {
+    col = col - 8;
+    rightMask &= ~(SCANBIT(row, col));
+  } else {
+    leftMask &= ~(SCANBIT(row, col));
+  }
 }
 
 bool
-OneShot::isMasked (byte row, byte col) {
-    if (row >= ROWS || col >= COLS)
-        return false;
+OneShot::isMasked(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return false;
 
-    if (col >= 8) {
-        col = col - 8;
-        return rightMask & SCANBIT (row, col);
-    } else
-        return leftMask & SCANBIT (row, col);
+  if (col >= 8) {
+    col = col - 8;
+    return rightMask & SCANBIT(row, col);
+  } else {
+    return leftMask & SCANBIT(row, col);
+  }
 }
 
 Key
-OneShot::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    uint8_t idx;
+OneShot::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+  uint8_t idx;
 
-    if (keyState & INJECTED)
-        return mappedKey;
-
-    if (!State.all) {
-        if (!isOS (mappedKey)) {
-            if (isMasked (row, col)) {
-                if (key_toggled_off (keyState))
-                    unmask (row, col);
-                return Key_NoKey;
-            }
-
-            return mappedKey;
-        }
-
-        idx = mappedKey.raw - OS_FIRST;
-        if (key_toggled_off (keyState)) {
-            clearPressed (idx);
-        } else if (key_toggled_on (keyState)) {
-            startTime = millis ();
-            setPressed (idx);
-            setOneShot (idx);
-            saveAsPrevious (mappedKey);
-
-            activateOneShot (idx);
-        }
-
-        return Key_NoKey;
-    }
-
-    if (!key_is_pressed (keyState) && !key_was_pressed (keyState))
-        return mappedKey;
-
-    if (isOS (mappedKey)) {
-        idx = mappedKey.raw - OS_FIRST;
-
-        if (isSticky (idx)) {
-            if (key_toggled_on (keyState)) { // maybe on _off instead?
-                saveAsPrevious (mappedKey);
-                clearSticky (idx);
-                cancelOneShot (idx);
-            }
-        } else {
-            if (key_toggled_off (keyState)) {
-                clearPressed (idx);
-                if ((millis () - startTime) >= holdTimeOut) {
-                    cancelOneShot (idx);
-                }
-            }
-
-            if (key_toggled_on (keyState)) {
-                setPressed (idx);
-                if (isSameAsPrevious (mappedKey)) {
-                    setSticky (idx);
-
-                    saveAsPrevious (mappedKey);
-                } else {
-                    startTime = millis ();
-
-                    setOneShot (idx);
-                    saveAsPrevious (mappedKey);
-
-                    activateOneShot (idx);
-                }
-            }
-        }
-
-        return Key_NoKey;
-    }
-
-    // ordinary key here, with some event
-
-    if (key_is_pressed (keyState)) {
-        mask (row, col);
-        saveAsPrevious (mappedKey);
-        shouldCancel = true;
-    }
-
+  if (keyState & INJECTED)
     return mappedKey;
+
+  if (!State.all) {
+    if (!isOS(mappedKey)) {
+      if (isMasked(row, col)) {
+        if (key_toggled_off(keyState))
+          unmask(row, col);
+        return Key_NoKey;
+      }
+
+      return mappedKey;
+    }
+
+    idx = mappedKey.raw - OS_FIRST;
+    if (key_toggled_off(keyState)) {
+      clearPressed(idx);
+    } else if (key_toggled_on(keyState)) {
+      startTime = millis();
+      setPressed(idx);
+      setOneShot(idx);
+      saveAsPrevious(mappedKey);
+
+      activateOneShot(idx);
+    }
+
+    return Key_NoKey;
+  }
+
+  if (!key_is_pressed(keyState) && !key_was_pressed(keyState))
+    return mappedKey;
+
+  if (isOS(mappedKey)) {
+    idx = mappedKey.raw - OS_FIRST;
+
+    if (isSticky(idx)) {
+      if (key_toggled_on(keyState)) {  // maybe on _off instead?
+        saveAsPrevious(mappedKey);
+        clearSticky(idx);
+        cancelOneShot(idx);
+      }
+    } else {
+      if (key_toggled_off(keyState)) {
+        clearPressed(idx);
+        if ((millis() - startTime) >= holdTimeOut) {
+          cancelOneShot(idx);
+        }
+      }
+
+      if (key_toggled_on(keyState)) {
+        setPressed(idx);
+        if (isSameAsPrevious(mappedKey)) {
+          setSticky(idx);
+
+          saveAsPrevious(mappedKey);
+        } else {
+          startTime = millis();
+
+          setOneShot(idx);
+          saveAsPrevious(mappedKey);
+
+          activateOneShot(idx);
+        }
+      }
+    }
+
+    return Key_NoKey;
+  }
+
+  // ordinary key here, with some event
+
+  if (key_is_pressed(keyState)) {
+    mask(row, col);
+    saveAsPrevious(mappedKey);
+    shouldCancel = true;
+  }
+
+  return mappedKey;
 }
 
 void
-OneShot::loopHook (bool postClear) {
-    if (!State.all)
-        return;
+OneShot::loopHook(bool postClear) {
+  if (!State.all)
+    return;
 
-    if (postClear) {
-        if (hasTimedOut ())
-            cancel ();
+  if (postClear) {
+    if (hasTimedOut())
+      cancel();
 
-        for (uint8_t i = 0; i < 32; i++) {
-            if (shouldCancel) {
-                if (isSticky (i)) {
-                    if (shouldCancelStickies) {
-                        clearSticky (i);
-                    }
-                } else if (isOneShot (i) && !isPressed (i)) {
-                    cancelOneShot (i);
-                }
-            }
+    for (uint8_t i = 0; i < 32; i++) {
+      if (shouldCancel) {
+        if (isSticky(i)) {
+          if (shouldCancelStickies) {
+            clearSticky(i);
+          }
+        } else if (isOneShot(i) && !isPressed(i)) {
+          cancelOneShot(i);
         }
-
-        if (shouldCancel) {
-            shouldCancel = false;
-            shouldCancelStickies = false;
-        }
-    } else {
-        for (uint8_t i = 0; i < 8; i++) {
-            if (isOneShot (i)) {
-                activateOneShot (i);
-            }
-        }
+      }
     }
+
+    if (shouldCancel) {
+      shouldCancel = false;
+      shouldCancelStickies = false;
+    }
+  } else {
+    for (uint8_t i = 0; i < 8; i++) {
+      if (isOneShot(i)) {
+        activateOneShot(i);
+      }
+    }
+  }
 }
 
 // --- glue code ---
 
-OneShot::OneShot (void) {
+OneShot::OneShot(void) {
 }
 
 void
-OneShot::begin (void) {
-    event_handler_hook_use (eventHandlerHook);
-    loop_hook_use (loopHook);
+OneShot::begin(void) {
+  event_handler_hook_use(eventHandlerHook);
+  loop_hook_use(loopHook);
 }
 
 bool
-OneShot::isActive (void) {
-    return (State.all && !hasTimedOut ());
+OneShot::isActive(void) {
+  return (State.all && !hasTimedOut());
 }
 
 bool
-OneShot::isModifierActive (Key key) {
-    if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
-        return false;
+OneShot::isModifierActive(Key key) {
+  if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
+    return false;
 
-    return isOneShot (key.keyCode - Key_LeftControl.keyCode);
+  return isOneShot(key.keyCode - Key_LeftControl.keyCode);
 }
 
 void
-OneShot::cancel (bool withStickies) {
-    shouldCancel = true;
-    shouldCancelStickies = withStickies;
+OneShot::cancel(bool withStickies) {
+  shouldCancel = true;
+  shouldCancelStickies = withStickies;
 }
 
 void
-OneShot::inject (Key key, uint8_t keyState) {
-    eventHandlerHook (key, 255, 255, keyState);
+OneShot::inject(Key key, uint8_t keyState) {
+  eventHandlerHook(key, 255, 255, keyState);
 }
 
 };

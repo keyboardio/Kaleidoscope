@@ -26,51 +26,51 @@
 
 namespace KaleidoscopePlugins {
 class OneShot : public KaleidoscopePlugin {
-  public:
-    OneShot (void);
+ public:
+  OneShot(void);
 
-    virtual void begin (void) final;
+  void begin(void) final;
 
-    static bool isActive (void);
-    static void cancel (bool withStickies);
-    static void cancel (void) {
-        cancel (false);
+  static bool isActive(void);
+  static void cancel(bool withStickies);
+  static void cancel(void) {
+    cancel(false);
+  }
+  static uint16_t timeOut;
+  static uint16_t holdTimeOut;
+
+  static bool isModifierActive(Key key);
+
+  void inject(Key key, uint8_t keyState);
+
+ private:
+  typedef union {
+    struct {
+      uint8_t mods;
+      uint8_t layers;
     };
-    static uint16_t timeOut;
-    static uint16_t holdTimeOut;
+    uint16_t all;
+  } state_t;
+  static uint32_t startTime;
+  static state_t State;
+  static state_t stickyState;
+  static state_t pressedState;
+  static uint32_t leftMask;
+  static uint32_t rightMask;
+  static Key prevKey;
+  static bool shouldCancel;
+  static bool shouldCancelStickies;
 
-    static bool isModifierActive (Key key);
+  static void injectNormalKey(uint8_t idx, uint8_t keyState);
+  static void activateOneShot(uint8_t idx);
+  static void cancelOneShot(uint8_t idx);
 
-    void inject (Key key, uint8_t keyState);
+  static void mask(byte row, byte col);
+  static void unmask(byte row, byte col);
+  static bool isMasked(byte row, byte col);
 
-  private:
-    typedef union {
-        struct {
-            uint8_t mods;
-            uint8_t layers;
-        };
-        uint16_t all;
-    } state_t;
-    static uint32_t startTime;
-    static state_t State;
-    static state_t stickyState;
-    static state_t pressedState;
-    static uint32_t leftMask;
-    static uint32_t rightMask;
-    static Key prevKey;
-    static bool shouldCancel;
-    static bool shouldCancelStickies;
-
-    static void injectNormalKey (uint8_t idx, uint8_t keyState);
-    static void activateOneShot (uint8_t idx);
-    static void cancelOneShot (uint8_t idx);
-
-    static void mask (byte row, byte col);
-    static void unmask (byte row, byte col);
-    static bool isMasked (byte row, byte col);
-
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopHook (bool postClear);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static void loopHook(bool postClear);
 };
 };
 
