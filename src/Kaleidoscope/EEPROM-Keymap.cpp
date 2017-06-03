@@ -88,7 +88,7 @@ bool EEPROMKeymap::focusKeymap(const char *command) {
     for (uint8_t layer = 0; layer < max_layers_; layer++) {
       for (uint8_t row = 0; row < ROWS; row++) {
         for (uint8_t col = 0; col < COLS; col++) {
-          Key k = getKey(layer, row, col);
+          Key k = Layer.getKey(layer, row, col);
 
           printKey(k);
           ::Focus.printSpace();
