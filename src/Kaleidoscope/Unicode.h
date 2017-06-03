@@ -23,24 +23,24 @@
 
 namespace KaleidoscopePlugins {
 class Unicode : public KaleidoscopePlugin {
-  public:
-    Unicode (void);
+ public:
+  Unicode(void);
 
-    void begin (void) final;
+  void begin(void) final;
 
-    static void start (void);
-    static void input (void);
-    static void end (void);
+  static void start(void);
+  static void input(void);
+  static void end(void);
 
-    static void type (uint32_t unicode);
-    static void typeCode (uint32_t unicode);
+  static void type(uint32_t unicode);
+  static void typeCode(uint32_t unicode);
 }
-} // namespace KaleidoscopePlugins
+}  // namespace KaleidoscopePlugins
 
-Key hexToKey (uint8_t hex);
+Key hexToKey(uint8_t hex);
 
-void unicodeCustomStart (void);
-void unicodeCustomEnd (void);
-void unicodeCustomInput (void);
+void unicodeCustomStart(void);
+void unicodeCustomEnd(void);
+void unicodeCustomInput(void);
 
 extern KaleidoscopePlugins::Unicode Unicode;
