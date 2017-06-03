@@ -5,39 +5,115 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Keymap-Programmer.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Keymap-Programmer
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-TODO
+Inspired by a similar feature on other keyboards, the `EEPROM-Keymap-Programmer`
+plugin implements an on-device keymap re-arrangement / re-coding system. There
+are two modes of operation: in one, we need to press a key we want to change,
+then another to copy from. In the other, we press a key to change, and then
+input a key code (terminated by any non-number key).
+
+## The two modes of operation
+
+It is worth looking at the two separately, to better understand how they work,
+and what they accomplish:
+
+### Copy mode
+
+In `COPY` mode, the plugin will use both the built-in, default keymap, and the
+override stored in `EEPROM`. When we select a key to override, we need to tap
+another, which will be used as the source. The source key's code will be looked
+up from the built-in keymap. For example, lets say we want to swap `A` and `B`
+for some odd reason. We can do this by triggering the keymap programmer mode,
+then tapping `A` to select it as the destination, then `B` as the source. The
+plugin will look up the keycode in the built-in keymap for the key in `B`'s
+location, and replace the location of `A` in the override with it. Next, we
+press the `B` key to select it as the destination, and we press the key that
+used to be `A` (but is now `B` too) to select it as a source. Because source
+keys are looked up in the built-in keymap, the plugin will find it is `A`.
+
+Obviously, this method only works if we have a built-in keymap, and it does not
+support copying from another layer. It is merely a way to rearrange simple
+things, like alphanumerics.
+
+### Code mode
+
+In `CODE` mode, instead of selecting a source key, we need to enter a code:
+press numbers to input the code, and any non-number key to end the sequence.
+Thus, when entering keymap programmer mode, and selecting, say, the `A` key,
+then tapping `5 SPACE` will set the key to `B` (which has the keycode of `5`).
+
+This allows us to use keycodes not present on the built-in keymap, at the
+expense of having to know the keycode, and allowing no mistakes.
 
 ## Using the plugin
 
-TODO
+Adding the functionality of the plugin to a Sketch is easier the usage explained
+above, though it requires that the [EEPROM-Keymap][plugin:eeprom-keymap] plugin
+is also used, and set up appropriately.
+
+Once the prerequisites are dealt with, all we need to do is to use the plugin,
+and find a way to trigger entering the keymap programmer mode. One such way is
+to use a macro, as in the example below:
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
 #include <Kaleidoscope-EEPROM-Keymap-Programmer.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-Macros.h>
 
-void setup () {
-  Kaleidoscope.setup ();
-  
-  USE_PLUGINS (&EEPROMKeymapProgrammer, &EEPROMKeymap);
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
+  if (macroIndex == 0 && key_toggled_off(keyState)) {
+    EEPROMKeymapProgrammer.nextState();
+  }
 
-  // TODO
+  return MACRO_NONE;
+}
+
+void setup() {
+  USE_PLUGINS(&EEPROMKeymapProgrammer, &EEPROMKeymap, &Macros);
+
+  Kaleidoscope.setup();
+
+  Layer.getKey = EEPROMKeymap.getKey;
+
+  EEPROMKeymap.max_layers(1);
+  EEPROMSettings.seal();
 }
 ```
+
+The plugin should be used as early as possible, otherwise other plugins that
+hook into the event system may start processing events before the programmer can
+take over.
 
 ## Plugin methods
 
 The plugin provides the `EEPROMKeymapProgrammer` object, which has the following methods:
 
-**TODO**
+### `.nextState()`
+
+> Puts the programmer into the next appropriate state. When the programmer is
+> inactive, this activates it. One usually does not have to call this function
+> in any other case.
+
+### `.mode`
+
+> The mode to use for editing: either
+> `kaleidoscope::EEPROMKeymapProgrammer::COPY`, or
+> `kaleidoscope::EEPROMKeymapProgrammer::CODE`.
+>
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> Defaults to `kaleidoscope::EEPROMKeymapProgrammer::CODE`.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Keymap](https://github.com/keyboardio/Kaleidoscope-EEPROM-Keymap)
+* [Kaleidoscope-EEPROM-Keymap][plugin:eeprom-keymap]
+
+  [plugin:eeprom-keymap]: https://github.com/keyboardio/Kaleidoscope-EEPROM-Keymap
 
 ## Further reading
 
