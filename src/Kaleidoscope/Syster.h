@@ -36,7 +36,7 @@ class Syster : public KaleidoscopePlugin {
 
     Syster (void);
 
-    virtual void begin (void) final;
+    void begin (void) final;
     static void reset (void);
 
   private:
