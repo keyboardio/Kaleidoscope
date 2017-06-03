@@ -30,19 +30,19 @@
 
 namespace kaleidoscope {
 class Cycle : public KaleidoscopePlugin {
-  public:
-    Cycle(void);
+ public:
+  Cycle(void);
 
-    void begin(void) final;
+  void begin(void) final;
 
-    static void replace(Key key);
-    static void replace(uint8_t cycle_size, const Key cycle_steps[]);
+  static void replace(Key key);
+  static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
-  private:
-    static Key last_non_cycle_key_;
-    static uint8_t cycle_count_;
+ private:
+  static Key last_non_cycle_key_;
+  static uint8_t cycle_count_;
 
-    static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 

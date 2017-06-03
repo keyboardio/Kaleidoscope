@@ -34,55 +34,55 @@ Cycle::Cycle(void) {
 }
 
 void Cycle::begin(void) {
-    event_handler_hook_use(eventHandlerHook);
+  event_handler_hook_use(eventHandlerHook);
 }
 
 void Cycle::replace(Key key) {
-    handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
-    handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+  handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  Keyboard.sendReport();
+  handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  Keyboard.sendReport();
 
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  Keyboard.sendReport();
+  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  Keyboard.sendReport();
 }
 
 void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
-    uint8_t idx = cycle_count_ % cycle_size;
-    Key key;
+  uint8_t idx = cycle_count_ % cycle_size;
+  Key key;
 
-    key.raw = pgm_read_word(cycle_steps + idx);
-    replace(key);
+  key.raw = pgm_read_word(cycle_steps + idx);
+  replace(key);
 }
 
 // --- hooks ---
 
 Key Cycle::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-    if (key_state & INJECTED)
-        return mapped_key;
+  if (key_state & INJECTED)
+    return mapped_key;
 
-    if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
-        if (isCycle(mapped_key))
-            return Key_NoKey;
-        return mapped_key;
+  if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
+    if (isCycle(mapped_key))
+      return Key_NoKey;
+    return mapped_key;
+  }
+
+  if (!isCycle(mapped_key)) {
+    if (key_toggled_on(key_state)) {
+      last_non_cycle_key_.raw = mapped_key.raw;
+      cycle_count_ = 0;
     }
+    return mapped_key;
+  }
 
-    if (!isCycle(mapped_key)) {
-        if (key_toggled_on(key_state)) {
-            last_non_cycle_key_.raw = mapped_key.raw;
-            cycle_count_ = 0;
-        }
-        return mapped_key;
-    }
-
-    if (!key_toggled_off(key_state))
-        return Key_NoKey;
-
-    ++cycle_count_;
-    cycleAction(last_non_cycle_key_, cycle_count_);
+  if (!key_toggled_off(key_state))
     return Key_NoKey;
+
+  ++cycle_count_;
+  cycleAction(last_non_cycle_key_, cycle_count_);
+  return Key_NoKey;
 }
 };
 
