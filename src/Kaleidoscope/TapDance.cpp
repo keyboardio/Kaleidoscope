@@ -18,7 +18,7 @@
 
 #include <Kaleidoscope-TapDance.h>
 
-using namespace KaleidoscopePlugins::Ranges;
+using KaleidoscopePlugins::Ranges;
 
 namespace KaleidoscopePlugins {
 // --- state ---
@@ -222,7 +222,7 @@ TapDance::loopHook (bool postClear) {
     if (endTime && millis () > endTime)
         timeout();
 }
-};
+} // namespace KaleidoscopePlugins
 
 __attribute__((weak))
 void

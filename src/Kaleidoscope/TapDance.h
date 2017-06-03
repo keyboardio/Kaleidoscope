@@ -42,7 +42,7 @@ class TapDance : public KaleidoscopePlugin {
 
     TapDance (void);
 
-    virtual void begin (void) final;
+    void begin (void) final;
     static uint16_t timeOut;
 
     void actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
@@ -64,8 +64,8 @@ class TapDance : public KaleidoscopePlugin {
     static void interrupt (void);
     static void timeout (void);
     static Key release (uint8_t tapDanceIndex);
-};
-};
+}
+} // namespace KaleidoscopePlugins
 
 void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction);
 
