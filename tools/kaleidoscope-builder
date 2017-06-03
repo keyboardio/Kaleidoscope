@@ -117,10 +117,10 @@ compile () {
 		    ${ARDUINO_TOOLS_PARAM} \
 		    -tools "${ARDUINO_PATH}/tools-builder" \
 		    -fqbn "${FQBN}" \
-        ${local_LIBS} \
+        	    -libraries "." \
+                    -libraries "${ROOT}" \
 		    -libraries "${BOARD_HARDWARE_PATH}/.." \
-        -libraries "${ROOT}" \
-        -libraries "." \
+        	    ${local_LIBS} \
 		    ${EXTRA_BUILDER_ARGS} \
 		    -build-path "${BUILD_PATH}" \
 		    -ide-version "${ARDUINO_IDE_VERSION}" \
