@@ -26,7 +26,7 @@ class Unicode : public KaleidoscopePlugin {
   public:
     Unicode (void);
 
-    virtual void begin (void) final;
+    void begin (void) final;
 
     static void start (void);
     static void input (void);
