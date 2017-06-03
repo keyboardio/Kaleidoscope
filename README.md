@@ -50,6 +50,20 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 > Tells the extension to reserve space in EEPROM for up to `max` layers. Can
 > only be called once, any subsequent call will be a no-op.
 
+## Focus commands
+
+The plugin provides a single `Focus` hook, `FOCUS_HOOK_COLORMAP`, implementing
+the following command:
+
+### `colormap.map`
+
+> Without arguments, prints the color map: palette indexes for all layers.
+>
+> With arguments, updates the color map with new indexes. One does not need to
+> give the full map, the plugin will process as many arguments as available, and
+> ignore anything past the last key on the last layer (as set by the
+> `.max_layers()` method).
+
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
