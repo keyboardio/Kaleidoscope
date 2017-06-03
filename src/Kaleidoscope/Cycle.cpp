@@ -19,82 +19,75 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Cycle.h>
 
-using namespace KaleidoscopePlugins::Ranges;
-
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 // --- state ---
-Key Cycle::lastNonCycleKey;
-uint8_t Cycle::cycleCount;
+Key Cycle::last_non_cycle_key_;
+uint8_t Cycle::cycle_count_;
 
 // --- helpers ---
 
-#define isCycle(k) (k.raw == CYCLE)
+#define isCycle(k) (k.raw == KaleidoscopePlugins::Ranges::CYCLE)
 
 // --- api ---
 
-Cycle::Cycle (void) {
+Cycle::Cycle(void) {
 }
 
-void
-Cycle::begin (void) {
-    event_handler_hook_use (this->eventHandlerHook);
+void Cycle::begin(void) {
+    event_handler_hook_use(eventHandlerHook);
 }
 
-void
-Cycle::replace (Key key) {
-    handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
-    handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
+void Cycle::replace(Key key) {
+    handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    Keyboard.sendReport();
+    handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    Keyboard.sendReport();
 
-    handle_keyswitch_event (key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
-    handle_keyswitch_event (key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
+    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    Keyboard.sendReport();
+    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    Keyboard.sendReport();
 }
 
-void
-Cycle::replace (uint8_t cycleSize, const Key cycleSteps[]) {
-    uint8_t idx = cycleCount % cycleSize;
+void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
+    uint8_t idx = cycle_count_ % cycle_size;
     Key key;
 
-    key.raw = pgm_read_word (cycleSteps + idx);
-    replace (key);
+    key.raw = pgm_read_word(cycle_steps + idx);
+    replace(key);
 }
 
 // --- hooks ---
 
-Key
-Cycle::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (keyState & INJECTED)
-        return mappedKey;
+Key Cycle::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+    if (key_state & INJECTED)
+        return mapped_key;
 
-    if (!key_is_pressed (keyState) && !key_was_pressed (keyState)) {
-        if (isCycle (mappedKey))
+    if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
+        if (isCycle(mapped_key))
             return Key_NoKey;
-        return mappedKey;
+        return mapped_key;
     }
 
-    if (!isCycle (mappedKey)) {
-        if (key_toggled_on (keyState)) {
-            lastNonCycleKey.raw = mappedKey.raw;
-            cycleCount = 0;
+    if (!isCycle(mapped_key)) {
+        if (key_toggled_on(key_state)) {
+            last_non_cycle_key_.raw = mapped_key.raw;
+            cycle_count_ = 0;
         }
-        return mappedKey;
+        return mapped_key;
     }
 
-    if (!key_toggled_off (keyState))
+    if (!key_toggled_off(key_state))
         return Key_NoKey;
 
-    cycleCount++;
-    cycleAction (lastNonCycleKey, cycleCount);
+    ++cycle_count_;
+    cycleAction(last_non_cycle_key_, cycle_count_);
     return Key_NoKey;
 }
 };
 
 __attribute__((weak))
-void
-cycleAction (Key previousKey, uint8_t cycleCount) {
+void cycleAction(Key previous_key, uint8_t cycle_count) {
 }
 
-KaleidoscopePlugins::Cycle Cycle;
+kaleidoscope::Cycle Cycle;

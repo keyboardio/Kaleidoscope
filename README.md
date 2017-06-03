@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Cycle.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Cycle
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 If you ever wanted a key that works like keys on old cell phones, when you press
 a key and it cycles through a number of options in a sequence, then the cycling
@@ -33,16 +33,15 @@ each time the cycling key triggers.
 Key_Cycle
 
 // later in the Sketch:
-void cycleAction (Key previousKey, uint8_t cycleCount) {
-  if (previousKey.raw == Key_A.raw) {
+void cycleAction(Key previous_key, uint8_t cycle_count) {
+  if (previous_key.raw == Key_A.raw) {
     cycleThrough (Key_B, Key_C, Key_D);
   }
 }
 
-void setup (void) {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  
-  Kaleidoscope.use (&Cycle, NULL);
+void setup(void) {
+  USE_PLUGINS(&Cycle);
+  Kaleidoscope.setup();
 }
 ```
 
@@ -83,7 +82,7 @@ method explained below.
 
 ## Overrideable methods
 
-### `cycleAction(previousKey, cycleCount)`
+### `cycleAction(previous_key, cycle_count)`
 
 > The heart and soul of the plugin, that must be defined in the Sketch. It will
 > be called whenever the cycling key triggers, and the two arguments are the

@@ -18,33 +18,34 @@
 
 #pragma once
 
+#include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define Key_Cycle (Key){ .raw = KaleidoscopePlugins::Ranges::CYCLE }
+#define Key_Cycle ((Key) { .raw = KaleidoscopePlugins::Ranges::CYCLE })
 
 #define cycleThrough(...) ({                                \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };     \
-      Cycle.replace (sizeof (__k) / sizeof (Key), &__k[0]); \
+      Cycle.replace(sizeof(__k) / sizeof(Key), &__k[0]); \
     })
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class Cycle : public KaleidoscopePlugin {
   public:
-    Cycle (void);
+    Cycle(void);
 
-    virtual void begin (void) final;
+    void begin(void) final;
 
-    static void replace (Key key);
-    static void replace (uint8_t cycleSize, const Key cycleSteps[]);
+    static void replace(Key key);
+    static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
   private:
-    static Key lastNonCycleKey;
-    static uint8_t cycleCount;
+    static Key last_non_cycle_key_;
+    static uint8_t cycle_count_;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+    static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
-void cycleAction (Key previousKey, uint8_t cycleCount);
+void cycleAction(Key previous_key, uint8_t cycle_count);
 
-extern KaleidoscopePlugins::Cycle Cycle;
+extern kaleidoscope::Cycle Cycle;
