@@ -21,36 +21,36 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
-  public:
-    typedef enum {
-        CODE,
-        COPY,
-    } mode_t;
-    static mode_t mode;
+ public:
+  typedef enum {
+    CODE,
+    COPY,
+  } mode_t;
+  static mode_t mode;
 
-    EEPROMKeymapProgrammer (void);
+  EEPROMKeymapProgrammer(void);
 
-    virtual void begin (void) final;
+  void begin(void) final;
 
-    static void nextState (void);
-    static void cancel (void);
+  static void nextState(void);
+  static void cancel(void);
 
-  private:
-    typedef enum {
-        INACTIVE,
-        WAIT_FOR_KEY,
-        WAIT_FOR_CODE,
-        WAIT_FOR_SOURCE_KEY,
-    } state_t;
-    static state_t state;
+ private:
+  typedef enum {
+    INACTIVE,
+    WAIT_FOR_KEY,
+    WAIT_FOR_CODE,
+    WAIT_FOR_SOURCE_KEY,
+  } state_t;
+  static state_t state_;
 
-    static uint16_t updatePosition; // layer, row, col
-    static Key newKey;
+  static uint16_t update_position_;  // layer, row, col
+  static Key new_key_;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
-};
+}
 
-extern KaleidoscopePlugins::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
+extern kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
