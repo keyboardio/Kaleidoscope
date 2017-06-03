@@ -37,7 +37,7 @@ class ColormapEffect : public LEDMode {
     static uint8_t max_layers_;
     static uint16_t map_base_;
 };
-} // namespace kaleidoscope
+}
 
 extern kaleidoscope::ColormapEffect ColormapEffect;
 

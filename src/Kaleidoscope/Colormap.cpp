@@ -60,9 +60,10 @@ ColormapEffect::update(void) {
 
 bool
 ColormapEffect::focusHook(const char *command) {
-    return ::LEDPaletteTheme.themeFocusHandler(command, PSTR("colormap.map"), map_base_, max_layers_);
+    return ::LEDPaletteTheme.themeFocusHandler(command, PSTR("colormap.map"),
+            map_base_, max_layers_);
 }
 
-} // namespace kaleidoscope
+}
 
 kaleidoscope::ColormapEffect ColormapEffect;
