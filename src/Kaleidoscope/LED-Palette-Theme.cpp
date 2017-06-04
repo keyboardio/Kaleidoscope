@@ -21,91 +21,82 @@
 #include <Kaleidoscope-Focus.h>
 #include <EEPROM.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
-uint16_t LEDPaletteTheme::paletteBase;
-uint8_t LEDPaletteTheme::transparentIndex = 15;
+uint16_t LEDPaletteTheme::palette_base_;
+uint8_t LEDPaletteTheme::transparent_index = 15;
 
 LEDPaletteTheme::LEDPaletteTheme(void) {
 }
 
-void
-LEDPaletteTheme::begin(void) {
+void LEDPaletteTheme::begin(void) {
   USE_PLUGINS(&::EEPROMSettings);
 
-  if (!paletteBase)
-    paletteBase = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
+  if (!palette_base_)
+    palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
 }
 
-uint16_t
-LEDPaletteTheme::reserveThemes(uint8_t maxThemes) {
-  return ::EEPROMSettings.requestSlice(maxThemes * ROWS * COLS / 2);
+uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
+  return ::EEPROMSettings.requestSlice(max_themes * ROWS * COLS / 2);
 }
 
-void
-LEDPaletteTheme::update(uint16_t themeBase, uint8_t theme) {
-  uint16_t mapBase = themeBase + (theme * ROWS * COLS / 2);
-  for (uint16_t loc = 0; loc < ROWS * COLS; loc++) {
+void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
+  uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
+  for (uint16_t pos = 0; pos < ROWS * COLS; pos++) {
     cRGB color;
 
-    if (!lookupColor(mapBase, loc, &color))
+    if (!lookupColorAtPosition(theme_base, pos, &color))
       continue;
 
-    LEDControl.led_set_crgb_at(loc, color);
-
+    LEDControl.led_set_crgb_at(pos, color);
   }
 }
 
-const uint8_t
-LEDPaletteTheme::lookupColorIndex(uint16_t mapBase, uint16_t loc) {
-  uint8_t colorIndex;
+const uint8_t LEDPaletteTheme::lookupColorIndexAtPosition(uint16_t map_base, uint16_t position) {
+  uint8_t color_index;
 
-  colorIndex = EEPROM.read(mapBase + loc / 2);
-  if (loc % 2)
-    colorIndex &= ~0xf0;
+  color_index = EEPROM.read(map_base + position / 2);
+  if (position % 2)
+    color_index &= ~0xf0;
   else
-    colorIndex >>= 4;
+    color_index >>= 4;
 
-  return colorIndex;
+  return color_index;
 }
 
-const bool
-LEDPaletteTheme::lookupColor(uint16_t mapBase, uint16_t loc, cRGB *color) {
-  uint8_t colorIndex = lookupColorIndex(mapBase, loc);
+const bool LEDPaletteTheme::lookupColorAtPosition(uint16_t map_base, uint16_t position, cRGB *color) {
+  uint8_t color_index = lookupColorIndexAtPosition(map_base, position);
 
-  if (colorIndex == transparentIndex)
+  if (color_index == transparent_index)
     return false;
 
-  EEPROM.get(paletteBase + colorIndex * sizeof(cRGB), *color);
+  *color = lookupPaletteColor(color_index);
 
   return true;
 }
 
-const cRGB
-LEDPaletteTheme::lookupColor(uint8_t index) {
+const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {
   cRGB color;
 
-  EEPROM.get(paletteBase + index * sizeof(cRGB), color);
+  EEPROM.get(palette_base_ + color_index * sizeof(cRGB), color);
   return color;
 }
 
-void
-LEDPaletteTheme::updateColor(uint16_t mapBase, uint16_t loc, uint8_t index) {
+void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t position, uint8_t color_index) {
   uint8_t indexes;
 
-  indexes = EEPROM.read(mapBase + loc / 2);
-  if (loc % 2) {
+  indexes = EEPROM.read(map_base + position / 2);
+  if (position % 2) {
     uint8_t other = indexes >> 4;
-    indexes = (other << 4) + index;
+    indexes = (other << 4) + color_index;
   } else {
     uint8_t other = indexes & ~0xf0;
-    indexes = (index << 4) + other;
+    indexes = (color_index << 4) + other;
   }
-  EEPROM.update(mapBase + loc / 2, indexes);
+  EEPROM.update(map_base + position / 2, indexes);
 }
 
-bool
-LEDPaletteTheme::paletteFocusHook(const char *command) {
+bool LEDPaletteTheme::paletteFocusHook(const char *command) {
   if (strcmp_P(command, PSTR("palette")) != 0)
     return false;
 
@@ -113,7 +104,7 @@ LEDPaletteTheme::paletteFocusHook(const char *command) {
     for (uint8_t i = 0; i < 16; i++) {
       cRGB color;
 
-      EEPROM.get(paletteBase + i * sizeof(color), color);
+      EEPROM.get(palette_base_ + i * sizeof(color), color);
       ::Focus.printColor(color.r, color.g, color.b);
       ::Focus.printSpace();
     }
@@ -129,24 +120,23 @@ LEDPaletteTheme::paletteFocusHook(const char *command) {
     color.g = Serial.parseInt();
     color.b = Serial.parseInt();
 
-    EEPROM.put(paletteBase + i * sizeof(color), color);
+    EEPROM.put(palette_base_ + i * sizeof(color), color);
     i++;
   }
 
   return true;
 }
 
-bool
-LEDPaletteTheme::themeFocusHandler(const char *command, const char *expectedCommand,
-                                   uint16_t themeBase, uint8_t maxThemes) {
-  if (strcmp_P(command, expectedCommand) != 0)
+bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expected_command,
+                                        uint16_t theme_base, uint8_t max_themes) {
+  if (strcmp_P(command, expected_command) != 0)
     return false;
 
-  uint16_t maxIndex = (maxThemes * ROWS * COLS) / 2;
+  uint16_t max_index = (max_themes * ROWS * COLS) / 2;
 
   if (Serial.peek() == '\n') {
-    for (uint16_t loc = 0; loc < maxIndex; loc++) {
-      uint8_t indexes = EEPROM.read(themeBase + loc);
+    for (uint16_t pos = 0; pos < max_index; pos++) {
+      uint8_t indexes = EEPROM.read(theme_base + pos);
 
       ::Focus.printNumber(indexes >> 4);
       ::Focus.printSpace();
@@ -157,20 +147,20 @@ LEDPaletteTheme::themeFocusHandler(const char *command, const char *expectedComm
     return true;
   }
 
-  uint16_t loc = 0;
+  uint16_t pos = 0;
 
-  while ((Serial.peek() != '\n') && (loc < maxIndex)) {
+  while ((Serial.peek() != '\n') && (pos < max_index)) {
     uint8_t idx1 = Serial.parseInt();
     uint8_t idx2 = Serial.parseInt();
     uint8_t indexes = (idx1 << 4) + idx2;
 
-    EEPROM.update(themeBase + loc, indexes);
-    loc++;
+    EEPROM.update(theme_base + pos, indexes);
+    pos++;
   }
 
   return true;
 }
 
-};
+}
 
-KaleidoscopePlugins::LEDPaletteTheme LEDPaletteTheme;
+kaleidoscope::LEDPaletteTheme LEDPaletteTheme;

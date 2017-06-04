@@ -21,33 +21,36 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class LEDPaletteTheme : public KaleidoscopePlugin {
  public:
   LEDPaletteTheme(void);
 
   void begin(void) final;
 
-  static uint16_t reserveThemes(uint8_t maxThemes);
-  static void update(uint16_t themeBase, uint8_t theme);
+  static uint16_t reserveThemes(uint8_t max_themes);
+  static void updateHandler(uint16_t theme_base, uint8_t theme);
 
-  static const uint8_t lookupColorIndex(uint16_t mapBase, uint16_t loc);
-  static const cRGB lookupColor(uint8_t index);
-  static const bool lookupColor(uint16_t mapBase, uint16_t loc, cRGB *color);
-  static void updateColor(uint16_t mapBase, uint16_t loc, uint8_t index);
+  static const uint8_t lookupColorIndexAtPosition(uint16_t theme_base, uint16_t position);
+  static const bool lookupColorAtPosition(uint16_t theme_base, uint16_t position, cRGB *color);
+  static void updateColorIndexAtPosition(uint16_t theme_base, uint16_t position, uint8_t color_index);
+
+  static const cRGB lookupPaletteColor(uint8_t palette_index);
 
   static bool paletteFocusHook(const char *command);
-  static bool themeFocusHandler(const char *command, const char *expectedCommand,
-                                uint16_t themeBase, uint8_t maxThemes);
+  static bool themeFocusHandler(const char *command, const char *expected_command,
+                                uint16_t theme_base, uint8_t max_themes);
 
-  static uint8_t transparentIndex;
+  static uint8_t transparent_index;
 
  private:
-  static uint16_t paletteBase;
-};
+  static uint16_t palette_base_;
 };
 
-extern KaleidoscopePlugins::LEDPaletteTheme LEDPaletteTheme;
+}
+
+extern kaleidoscope::LEDPaletteTheme LEDPaletteTheme;
 
 #define FOCUS_HOOK_LEDPALETTETHEME                                      \
   FOCUS_HOOK(LEDPaletteTheme.paletteFocusHook,                          \

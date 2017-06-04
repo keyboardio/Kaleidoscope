@@ -22,7 +22,8 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Focus.h>
 
-namespace Example {
+namespace example {
+
 class TestLEDMode : public LEDMode {
  public:
   TestLEDMode() {}
@@ -32,30 +33,30 @@ class TestLEDMode : public LEDMode {
   static bool focusHook(const char *command);
 
  private:
-  static uint16_t mapBase;
+  static uint16_t map_base_;
 };
 
-uint16_t TestLEDMode::mapBase;
+uint16_t TestLEDMode::map_base_;
 
 void
 TestLEDMode::begin(void) {
   LEDMode::begin();
-  mapBase = LEDPaletteTheme.reserveThemes(1);
+  map_base_ = LEDPaletteTheme.reserveThemes(1);
 }
 
 void
 TestLEDMode::update(void) {
-  LEDPaletteTheme.update(mapBase, 0);
+  LEDPaletteTheme.updateHandler(map_base_, 0);
 }
 
 bool
 TestLEDMode::focusHook(const char *command) {
-  return LEDPaletteTheme.themeFocusHandler(command, PSTR("testLedMode.map"),
-         mapBase, 1);
+  return LEDPaletteTheme.themeFocusHandler(command, PSTR("testLedMode.map"), map_base_, 1);
 }
-};
 
-Example::TestLEDMode TestLEDMode;
+}
+
+example::TestLEDMode TestLEDMode;
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -74,13 +75,14 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_NoKey
-  ),
+    Key_NoKey),
 };
 
 void setup() {
   Serial.begin(9600);
-  Kaleidoscope.use(&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings, NULL);
+
+  USE_PLUGINS(&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings);
+
   Kaleidoscope.setup();
 
   EEPROMSettings.seal();
