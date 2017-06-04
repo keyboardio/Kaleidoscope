@@ -9,14 +9,14 @@
 
 class NumLock_ : public LEDMode {
  public:
-  NumLock_ (void);
+  NumLock_(void);
 
-  virtual void begin (void) final;
+  virtual void begin(void) final;
 
-  virtual void update (void) final;
-  virtual void init (void) final;
+  virtual void update(void) final;
+  virtual void init(void) final;
 
-  static const macro_t *toggle (byte row, byte col, uint8_t numPadLayer);
+  static const macro_t *toggle(byte row, byte col, uint8_t numPadLayer);
 
  private:
   static uint8_t previousLEDMode;
