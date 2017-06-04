@@ -38,8 +38,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_skip
-  ),
+    Key_skip),
 };
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
@@ -72,12 +71,14 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     LEDControl.set_all_leds_to(0, 0, 0);
     LEDControl.led_sync();
     delay(100);
+
     for (uint8_t step = 0; step <= 0xf0; step += 8) {
       AlphaSquare.color = { step, step, step };
       AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 2);
       AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 10);
       delay(10);
     }
+
     for (uint8_t step = 0xff; step >= 8; step -= 8) {
       AlphaSquare.color = { step, step, step };
       AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 2);
@@ -85,8 +86,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       delay(10);
     }
     delay(100);
-
   }
+
   LEDControl.set_all_leds_to(0, 0, 0);
 
   return MACRO_NONE;

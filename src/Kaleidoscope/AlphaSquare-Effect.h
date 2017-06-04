@@ -27,8 +27,8 @@ class AlphaSquareEffect : public LEDMode {
  public:
   AlphaSquareEffect(void);
 
-  virtual void begin(void) final;
-  virtual void update(void) final;
+  void begin(void) final;
+  void update(void) final;
 
   static uint16_t length;
  private:
