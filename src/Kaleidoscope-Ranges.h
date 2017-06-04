@@ -19,29 +19,29 @@
 #pragma once
 
 namespace KaleidoscopePlugins {
-  namespace Ranges {
-    enum {
-      KALEIDOSCOPE_FIRST = 0xc000,
-      OS_FIRST,
-      OSM_FIRST   = OS_FIRST,
-      OSM_LAST    = OSM_FIRST + 7,
-      OSL_FIRST,
-      OSL_LAST    = OSL_FIRST + 7,
-      OS_LAST     = OSL_LAST,
-      DU_FIRST,
-      DUM_FIRST   = DU_FIRST,
-      DUM_LAST    = DUM_FIRST + (8 << 8),
-      DUL_FIRST,
-      DUL_LAST    = DUL_FIRST + (8 << 8),
-      DU_LAST     = DUL_LAST,
-      TD_FIRST,
-      TD_LAST     = TD_FIRST + 15,
-      LEAD_FIRST,
-      LEAD_LAST   = LEAD_FIRST + 7,
-      CYCLE,
-      SYSTER,
+namespace Ranges {
+enum {
+  KALEIDOSCOPE_FIRST = 0xc000,
+  OS_FIRST,
+  OSM_FIRST   = OS_FIRST,
+  OSM_LAST    = OSM_FIRST + 7,
+  OSL_FIRST,
+  OSL_LAST    = OSL_FIRST + 7,
+  OS_LAST     = OSL_LAST,
+  DU_FIRST,
+  DUM_FIRST   = DU_FIRST,
+  DUM_LAST    = DUM_FIRST + (8 << 8),
+  DUL_FIRST,
+  DUL_LAST    = DUL_FIRST + (8 << 8),
+  DU_LAST     = DUL_LAST,
+  TD_FIRST,
+  TD_LAST     = TD_FIRST + 15,
+  LEAD_FIRST,
+  LEAD_LAST   = LEAD_FIRST + 7,
+  CYCLE,
+  SYSTER,
 
-      KALEIDOSCOPE_SAFE_START,
-    };
-  };
+  KALEIDOSCOPE_SAFE_START,
+};
+};
 };
