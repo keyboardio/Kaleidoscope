@@ -41,7 +41,7 @@ void FingerPainter::begin(void) {
 }
 
 void FingerPainter::update(void) {
-  ::LEDPaletteTheme.update(color_base_, 0);
+  ::LEDPaletteTheme.updateHandler(color_base_, 0);
 }
 
 void FingerPainter::toggle(void) {
@@ -58,12 +58,12 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
   if (row >= ROWS || col >= COLS)
     return Key_NoKey;
 
-  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndex(color_base_, KeyboardHardware.get_led_index(row, col));
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.get_led_index(row, col));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
   bool turn_around = false;
-  cRGB old_color = ::LEDPaletteTheme.lookupColor(color_index), new_color = old_color;
+  cRGB old_color = ::LEDPaletteTheme.lookupPaletteColor(color_index), new_color = old_color;
   while (memcmp(&old_color, &new_color, sizeof(cRGB)) == 0) {
     color_index++;
     if (color_index > 15) {
@@ -72,10 +72,10 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
         break;
       turn_around = true;
     }
-    new_color = ::LEDPaletteTheme.lookupColor(color_index);
+    new_color = ::LEDPaletteTheme.lookupPaletteColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColor(color_base_, KeyboardHardware.get_led_index(row, col), color_index);
+  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.get_led_index(row, col), color_index);
 
   return Key_NoKey;
 }
