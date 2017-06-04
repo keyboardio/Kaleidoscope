@@ -4,16 +4,16 @@
 
 #define LED_MAX_MODES 24
 
-#define LED_TOGGLE   B00000001 // Synthetic, internal
+#define LED_TOGGLE   B00000001  // Synthetic, internal
 
 #define Key_LEDEffectNext (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE }
 
 class LEDMode : public KaleidoscopePlugin {
  public:
   virtual void begin(void);
-  virtual void setup(void) {};
-  virtual void init(void) {};
-  virtual void update(void) {};
+  virtual void setup(void) {}
+  virtual void init(void) {}
+  virtual void update(void) {}
   virtual void activate(void);
 };
 
@@ -21,7 +21,7 @@ class LEDControl_ : public KaleidoscopePlugin {
  public:
   LEDControl_(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static void next_mode(void);
   static void setup(void);

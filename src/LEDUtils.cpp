@@ -2,7 +2,6 @@
 
 cRGB
 breath_compute() {
-
   // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
   // Eventually, we should consider just using FastLED
 

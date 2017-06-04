@@ -85,9 +85,9 @@ LEDControl_::mode_add(LEDMode *mode) {
 void
 LEDControl_::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
   cRGB color;
-  color.r=r;
-  color.g=g;
-  color.b=b;
+  color.r = r;
+  color.g = g;
+  color.b = b;
   set_all_leds_to(color);
 }
 
@@ -217,7 +217,7 @@ LEDControl_::focusHook(const char *command) {
       LEDControl.next_mode();
       Serial.read();
     } else if (peek == 'p') {
-      // TODO
+      // TODO(algernon)
       Serial.read();
     } else {
       uint8_t mode = Serial.parseInt();
