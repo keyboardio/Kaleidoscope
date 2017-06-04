@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 #include <EEPROM.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class EEPROMSettings : public KaleidoscopePlugin {
  public:
   EEPROMSettings(void);
@@ -40,16 +40,16 @@ class EEPROMSettings : public KaleidoscopePlugin {
   static uint16_t used(void);
 
  private:
-  static uint16_t nextStart;
-  static bool _isValid;
-  static bool sealed;
+  static uint16_t next_start_;
+  static bool is_valid_;
+  static bool sealed_;
 
   static struct settings {
     char magic[2];
     uint8_t version;
     uint16_t crc;
-  } settings;
+  } settings_;
 };
 };
 
-extern KaleidoscopePlugins::EEPROMSettings EEPROMSettings;
+extern kaleidoscope::EEPROMSettings EEPROMSettings;

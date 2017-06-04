@@ -37,24 +37,24 @@ static struct {
 } testSettings;
 
 void setup () {
-  Kaleidoscope.setup ();
+  Kaleidoscope.setup();
   
-  USE_PLUGINS (&EEPROMSettings);
+  USE_PLUGINS(&EEPROMSettings);
 
   /* Use other plugins that make use of the EEPROM */
   
-  settingsBase = EEPROMSettings.requestSlice (sizeof (testSettings));
+  settingsBase = EEPROMSettings.requestSlice(sizeof(testSettings));
   
-  EEPROMSettings.seal ();
+  EEPROMSettings.seal();
   
-  if (!EEPROMSettings.isValid ()) {
+  if (!EEPROMSettings.isValid()) {
     // Handle the case where the settings are out of sync...
     // Flash LEDs, for example.
     
     return;
   }
   
-  EEPROM.get (settingsBase, testSettings);
+  EEPROM.get(settingsBase, testSettings);
 }
 ```
 
@@ -115,13 +115,40 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 >
 > Should only be used after calling `seal()`.
 
-## Focus Hooks
+## Focus commands
 
 The plugin provides two [Focus][focus] hooks: `FOCUS_HOOK_SETTINGS`, and
 `FOCUS_HOOK_EEPROM`, that register commands that allow one to work with the
 settings, and with the contents of the `EEPROM` through Focus.
 
  [focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ 
+These provide the following `Focus` commands:
+
+### `settings.crc`
+
+> Returns the actual, and the expected checksum of the settings.
+
+### `settings.valid?`
+
+> Returns either `true` or `false`, depending on whether the sealed settings are
+> to be considered valid or not.
+
+### `settings.version`
+
+> Returns the (user-set) version of the settings.
+
+### `eeprom.contents`
+
+> Without argument, displays the full contents of the `EEPROM`, including the
+> settings header.
+>
+> With arguments, the command updates as much of the `EEPROM` as arguments are
+> provided. It will discard any unnecessary arguments.
+
+### `eeprom.free`
+
+> Returns the amount of free bytes in `EEPROM`.
 
 ## Dependencies
 
