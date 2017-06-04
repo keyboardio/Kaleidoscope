@@ -22,26 +22,26 @@
 
 namespace KaleidoscopePlugins {
 class MagicCombo : public KaleidoscopePlugin {
-  public:
-    typedef struct {
-        uint32_t leftHand, rightHand;
-    } dictionary_t;
+ public:
+  typedef struct {
+    uint32_t leftHand, rightHand;
+  } dictionary_t;
 
-    MagicCombo (void);
+  MagicCombo(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-    static void configure (const dictionary_t dictionary[]);
-    static uint16_t minInterval;
+  static void configure(const dictionary_t dictionary[]);
+  static uint16_t minInterval;
 
-  private:
-    static const dictionary_t *dictionary;
-    static uint32_t endTime;
+ private:
+  static const dictionary_t *dictionary;
+  static uint32_t endTime;
 
-    static void loopHook (bool postClear);
+  static void loopHook(bool postClear);
 };
 };
 
-void magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand);
+void magicComboActions(uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand);
 
 extern KaleidoscopePlugins::MagicCombo MagicCombo;

@@ -34,49 +34,49 @@ const MagicCombo::dictionary_t *MagicCombo::dictionary;
 uint16_t MagicCombo::minInterval = 500;
 uint32_t MagicCombo::endTime;
 
-MagicCombo::MagicCombo (void) {
+MagicCombo::MagicCombo(void) {
 }
 
 void
-MagicCombo::begin (void) {
-    loop_hook_use (this->loopHook);
+MagicCombo::begin(void) {
+  loop_hook_use(this->loopHook);
 }
 
 void
-MagicCombo::configure (const MagicCombo::dictionary_t dictionary_[]) {
-    dictionary = (dictionary_t *)dictionary_;
+MagicCombo::configure(const MagicCombo::dictionary_t dictionary_[]) {
+  dictionary = (dictionary_t *)dictionary_;
 }
 
 void
-MagicCombo::loopHook (bool postClear) {
-    if (!dictionary || postClear)
-        return;
+MagicCombo::loopHook(bool postClear) {
+  if (!dictionary || postClear)
+    return;
 
-    for (byte i = 0;; i++) {
-        dictionary_t combo;
+  for (byte i = 0;; i++) {
+    dictionary_t combo;
 
-        combo.leftHand = pgm_read_dword (&(dictionary[i].leftHand));
-        combo.rightHand = pgm_read_dword (&(dictionary[i].rightHand));
+    combo.leftHand = pgm_read_dword(&(dictionary[i].leftHand));
+    combo.rightHand = pgm_read_dword(&(dictionary[i].rightHand));
 
-        if (combo.leftHand == 0 && combo.rightHand == 0)
-            break;
+    if (combo.leftHand == 0 && combo.rightHand == 0)
+      break;
 
-        if (LEFTHANDSTATE.all == combo.leftHand &&
-                RIGHTHANDSTATE.all == combo.rightHand) {
-            if (millis () >= endTime) {
-                magicComboActions (i, combo.leftHand, combo.rightHand);
-                endTime = millis () + minInterval;
-            }
-            break;
-        }
+    if (LEFTHANDSTATE.all == combo.leftHand &&
+        RIGHTHANDSTATE.all == combo.rightHand) {
+      if (millis() >= endTime) {
+        magicComboActions(i, combo.leftHand, combo.rightHand);
+        endTime = millis() + minInterval;
+      }
+      break;
     }
+  }
 }
 
 };
 
 __attribute__((weak))
 void
-magicComboActions (uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
+magicComboActions(uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
 }
 
 KaleidoscopePlugins::MagicCombo MagicCombo;
