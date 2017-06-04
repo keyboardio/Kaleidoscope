@@ -18,14 +18,15 @@
 
 #include <Kaleidoscope-Leader.h>
 
-using namespace KaleidoscopePlugins::Ranges;
+namespace kaleidoscope {
 
-namespace KaleidoscopePlugins {
+namespace Ranges = KaleidoscopePlugins::Ranges;
+
 // --- state ---
-Key Leader::sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
-uint8_t Leader::sequencePos;
-uint32_t Leader::endTime;
-uint16_t Leader::timeOut = 1000;
+Key Leader::sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
+uint8_t Leader::sequence_pos_;
+uint32_t Leader::end_time_;
+uint16_t Leader::time_out = 1000;
 const Leader::dictionary_t *Leader::dictionary;
 
 // --- helpers ---
@@ -33,25 +34,24 @@ const Leader::dictionary_t *Leader::dictionary;
 #define PARTIAL_MATCH -1
 #define NO_MATCH -2
 
-#define isLeader(k) (k.raw >= LEAD_FIRST && k.raw <= LEAD_LAST)
-#define isActive() (sequence[0].raw != Key_NoKey.raw)
+#define isLeader(k) (k.raw >= Ranges::LEAD_FIRST && k.raw <= Ranges::LEAD_LAST)
+#define isActive() (sequence_[0].raw != Key_NoKey.raw)
 
 // --- actions ---
-int8_t
-Leader::lookup(void) {
+int8_t Leader::lookup(void) {
   bool match;
 
-  for (uint8_t seqIndex = 0; ; seqIndex++) {
+  for (uint8_t seq_index = 0; ; seq_index++) {
     match = true;
 
-    if (pgm_read_word(&(dictionary[seqIndex].sequence[0].raw)) == Key_NoKey.raw)
+    if (pgm_read_word(&(dictionary[seq_index].sequence[0].raw)) == Key_NoKey.raw)
       break;
 
-    Key seqKey;
-    for (uint8_t i = 0; i <= sequencePos; i++) {
-      seqKey.raw = pgm_read_word(&(dictionary[seqIndex].sequence[i].raw));
+    Key seq_key;
+    for (uint8_t i = 0; i <= sequence_pos_; i++) {
+      seq_key.raw = pgm_read_word(&(dictionary[seq_index].sequence[i].raw));
 
-      if (sequence[i].raw != seqKey.raw) {
+      if (sequence_[i].raw != seq_key.raw) {
         match = false;
         break;
       }
@@ -60,9 +60,9 @@ Leader::lookup(void) {
     if (!match)
       continue;
 
-    seqKey.raw = pgm_read_word(&(dictionary[seqIndex].sequence[sequencePos + 1].raw));
-    if (seqKey.raw == Key_NoKey.raw) {
-      return seqIndex;
+    seq_key.raw = pgm_read_word(&(dictionary[seq_index].sequence[sequence_pos_ + 1].raw));
+    if (seq_key.raw == Key_NoKey.raw) {
+      return seq_index;
     } else {
       return PARTIAL_MATCH;
     }
@@ -76,51 +76,42 @@ Leader::lookup(void) {
 Leader::Leader(void) {
 }
 
-void
-Leader::begin(void) {
-  event_handler_hook_use(this->eventHandlerHook);
-  loop_hook_use(this->loopHook);
+void Leader::begin(void) {
+  event_handler_hook_use(eventHandlerHook);
+  loop_hook_use(loopHook);
 }
 
-void
-Leader::configure(const Leader::dictionary_t dictionary_[]) {
-  dictionary = dictionary_;
+void Leader::reset(void) {
+  sequence_pos_ = 0;
+  sequence_[0].raw = Key_NoKey.raw;
 }
 
-void
-Leader::reset(void) {
-  sequencePos = 0;
-  sequence[0].raw = Key_NoKey.raw;
-}
-
-void
-Leader::inject(Key key, uint8_t keyState) {
-  eventHandlerHook(key, 255, 255, keyState);
+void Leader::inject(Key key, uint8_t key_state) {
+  eventHandlerHook(key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
 }
 
 // --- hooks ---
-Key
-Leader::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (keyState & INJECTED)
-    return mappedKey;
+Key Leader::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  if (key_state & INJECTED)
+    return mapped_key;
 
-  if (!key_is_pressed(keyState) && !key_was_pressed(keyState)) {
-    if (isLeader(mappedKey))
+  if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
+    if (isLeader(mapped_key))
       return Key_NoKey;
-    return mappedKey;
+    return mapped_key;
   }
 
-  if (!isActive() && !isLeader(mappedKey))
-    return mappedKey;
+  if (!isActive() && !isLeader(mapped_key))
+    return mapped_key;
 
   if (!isActive()) {
     // Must be a leader key!
 
-    if (key_toggled_off(keyState)) {
+    if (key_toggled_off(key_state)) {
       // not active, but a leader key = start the sequence on key release!
-      endTime = millis() + timeOut;
-      sequencePos = 0;
-      sequence[sequencePos].raw = mappedKey.raw;
+      end_time_ = millis() + time_out;
+      sequence_pos_ = 0;
+      sequence_[sequence_pos_].raw = mapped_key.raw;
     }
 
     // If the sequence was not active yet, ignore the key.
@@ -128,50 +119,50 @@ Leader::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
   }
 
   // active
-  int8_t actionIndex = lookup();
+  int8_t action_index = lookup();
 
-  if (key_toggled_on(keyState)) {
-    sequencePos++;
-    if (sequencePos > LEADER_MAX_SEQUENCE_LENGTH) {
+  if (key_toggled_on(key_state)) {
+    sequence_pos_++;
+    if (sequence_pos_ > LEADER_MAX_SEQUENCE_LENGTH) {
       reset();
-      return mappedKey;
+      return mapped_key;
     }
 
-    endTime = millis() + timeOut;
-    sequence[sequencePos].raw = mappedKey.raw;
-    actionIndex = lookup();
+    end_time_ = millis() + time_out;
+    sequence_[sequence_pos_].raw = mapped_key.raw;
+    action_index = lookup();
 
-    if (actionIndex >= 0)
+    if (action_index >= 0)
       return Key_NoKey;
-  } else if (key_is_pressed(keyState)) {
+  } else if (key_is_pressed(key_state)) {
     // held, no need for anything here.
     return Key_NoKey;
   }
 
-  if (actionIndex == NO_MATCH) {
+  if (action_index == NO_MATCH) {
     reset();
-    return mappedKey;
+    return mapped_key;
   }
-  if (actionIndex == PARTIAL_MATCH) {
+  if (action_index == PARTIAL_MATCH) {
     return Key_NoKey;
   }
 
-  action_t leaderAction = (action_t) pgm_read_ptr(&(dictionary[actionIndex].action));
-  (*leaderAction)(actionIndex);
+  action_t leaderAction = (action_t) pgm_read_ptr(&(dictionary[action_index].action));
+  (*leaderAction)(action_index);
   return Key_NoKey;
 }
 
-void
-Leader::loopHook(bool postClear) {
-  if (!postClear)
+void Leader::loopHook(bool is_post_clear) {
+  if (!is_post_clear)
     return;
 
   if (!isActive())
     return;
 
-  if (millis() >= endTime)
+  if (millis() >= end_time_)
     reset();
 }
-};
 
-KaleidoscopePlugins::Leader Leader;
+}
+
+kaleidoscope::Leader Leader;

@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Leader.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Leader
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Leader keys are a kind of key where when they are tapped, all following keys are
 swallowed, until the plugin finds a matching sequence in the dictionary, it
@@ -40,27 +40,26 @@ dictionary:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Leader.h>
 
-static void leaderA (void) {
-  Serial.println ("leaderA");
+static void leaderA() {
+  Serial.println("leaderA");
 }
 
-static void leaderTX (void) {
-  Serial.println ("leaderTX");
+static void leaderTX() {
+  Serial.println("leaderTX");
 }
 
-static const KaleidoscopePlugins::Leader::dictionary_t leaderDictionary PROGMEM = LEADER_DICT
-  (
-    {LEADER_SEQ (LEAD (0), Key_A), leaderA},
-    {LEADER_SEQ (LEAD (0), Key_T, Key_X), leaderTX}
-  );
+static const kaleidoscope::Leader::dictionary_t leader_dictionary PROGMEM = 
+  LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderA},
+              {LEADER_SEQ(LEAD(0), Key_T, Key_X), leaderTX});
 
-void setup () {
-  Serial.begin (9600);
-
-  Leader.configure (leaderDictionary);
-
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&Leader, NULL);
+void setup() {
+  Serial.begin(9600);
+  
+  USE_PLUGINS(&Leader);
+  
+  Kaleidoscope.setup();
+  
+  Leader.dictionary = leader_dictionary;
 }
 ```
 
@@ -75,12 +74,16 @@ changes key behaviour! Failing to do so may result in unpredictable behaviour.
 
 The plugin provides the `Leader` object, with the following methods:
 
-### `.configure(dictionary)`
+### `.dictionary`
 
 > Tells `Leader` to use the specified dictionary. The dictionary is an array of
-> `Kaleidoscope::Leader::dictionary_t` elements. Each element is made up of two
+> `kaleidoscope::Leader::dictionary_t` elements. Each element is made up of two
 > elements, the first being a list of keys, the second an action to perform when
 > the sequence is found.
+
+> Not strictly a method, it is a variable one can assign a new value to.
+>
+> The dictionary *MUST* reside in `PROGMEM`.
 
 ### `.reset()`
 
@@ -88,7 +91,7 @@ The plugin provides the `Leader` object, with the following methods:
 > are final actions, where one does not wish to continue the leader sequence
 > further in the hopes of finding a longer match.
 
-### `.timeOut`
+### `.time_out`
 
 > The number of milliseconds to wait before a sequence times out. Once the
 > sequence timed out, if there is a partial match with an action, that will be

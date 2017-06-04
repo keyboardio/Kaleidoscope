@@ -23,40 +23,41 @@
 
 #define LEADER_MAX_SEQUENCE_LENGTH 4
 
-#define LEAD(n) (Key){ .raw = KaleidoscopePlugins::Ranges::LEAD_FIRST + n }
+#define LEAD(n) (Key) { .raw = KaleidoscopePlugins::Ranges::LEAD_FIRST + n }
 
 #define LEADER_SEQ(...) { __VA_ARGS__, Key_NoKey }
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class Leader : public KaleidoscopePlugin {
  public:
-  typedef void (*action_t)(uint8_t seqIndex);
+  typedef void (*action_t)(uint8_t seq_index);
   typedef struct {
     Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
     action_t action;
   } dictionary_t;
 
   Leader(void);
+  static const dictionary_t *dictionary;
 
   void begin(void) final;
 
-  static void configure(const dictionary_t dictionary[]);
   static void reset(void);
-  static uint16_t timeOut;
+  static uint16_t time_out;
 
-  void inject(Key key, uint8_t keyState);
+  void inject(Key key, uint8_t key_state);
 
  private:
-  static Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
-  static uint8_t sequencePos;
-  static uint32_t endTime;
-  static const Leader::dictionary_t *dictionary;
+  static Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
+  static uint8_t sequence_pos_;
+  static uint32_t end_time_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
   static int8_t lookup(void);
 };
-};
 
-extern KaleidoscopePlugins::Leader Leader;
+}
+
+extern kaleidoscope::Leader Leader;
