@@ -43,7 +43,7 @@ TriColor::update(void) {
       switch (k.keyCode) {
       case Key_A.keyCode ... Key_0.keyCode:
       case Key_Spacebar.keyCode:
-      case Key_KeypadSubtract.keyCode ... Key_KeypadDivide.keyCode:
+      case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
       case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
       case Key_F1.keyCode ... Key_F4.keyCode:
       case Key_F9.keyCode ... Key_F12.keyCode:
