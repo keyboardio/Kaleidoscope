@@ -22,44 +22,44 @@
 namespace KaleidoscopePlugins {
 namespace LEDEffects {
 cRGB ActiveModColorEffect::highlightColor = (cRGB) {
-    0xff, 0xff, 0xff
+  0xff, 0xff, 0xff
 };
 
-ActiveModColorEffect::ActiveModColorEffect (void) {
+ActiveModColorEffect::ActiveModColorEffect(void) {
 }
 
 void
-ActiveModColorEffect::begin (void) {
-    loop_hook_use (loopHook);
+ActiveModColorEffect::begin(void) {
+  loop_hook_use(loopHook);
 }
 
 void
-ActiveModColorEffect::configure (const cRGB highlightColor_) {
-    highlightColor = highlightColor_;
+ActiveModColorEffect::configure(const cRGB highlightColor_) {
+  highlightColor = highlightColor_;
 }
 
 void
-ActiveModColorEffect::loopHook (bool postClear) {
-    if (postClear)
-        return;
+ActiveModColorEffect::loopHook(bool postClear) {
+  if (postClear)
+    return;
 
-    for (byte r = 0; r < ROWS; r++) {
-        for (byte c = 0; c < COLS; c++) {
-            Key k = Layer.lookup (r, c);
+  for (byte r = 0; r < ROWS; r++) {
+    for (byte c = 0; c < COLS; c++) {
+      Key k = Layer.lookup(r, c);
 
-            if (k.raw >= KaleidoscopePlugins::Ranges::OSM_FIRST && k.raw <= KaleidoscopePlugins::Ranges::OSM_LAST) {
-                uint8_t idx = k.raw - KaleidoscopePlugins::Ranges::OSM_FIRST;
-                k.flags = 0;
-                k.keyCode = Key_LeftControl.keyCode + idx;
-            }
+      if (k.raw >= KaleidoscopePlugins::Ranges::OSM_FIRST && k.raw <= KaleidoscopePlugins::Ranges::OSM_LAST) {
+        uint8_t idx = k.raw - KaleidoscopePlugins::Ranges::OSM_FIRST;
+        k.flags = 0;
+        k.keyCode = Key_LeftControl.keyCode + idx;
+      }
 
-            if (k.raw < Key_LeftControl.raw || k.raw > Key_RightGui.raw)
-                continue;
+      if (k.raw < Key_LeftControl.raw || k.raw > Key_RightGui.raw)
+        continue;
 
-            if (Keyboard.isModifierActive (k.keyCode))
-                LEDControl.led_set_crgb_at (r, c, highlightColor);
-        }
+      if (Keyboard.isModifierActive(k.keyCode))
+        LEDControl.led_set_crgb_at(r, c, highlightColor);
     }
+  }
 }
 
 };

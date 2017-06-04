@@ -22,15 +22,15 @@
 namespace KaleidoscopePlugins {
 namespace LEDEffects {
 class ActiveModColorEffect : public KaleidoscopePlugin {
-  public:
-    ActiveModColorEffect (void);
+ public:
+  ActiveModColorEffect(void);
 
-    static void configure (const cRGB highlightColor);
-    virtual void begin (void) final;
+  static void configure(const cRGB highlightColor);
+  virtual void begin(void) final;
 
-  private:
-    static cRGB highlightColor;
-    static void loopHook (bool postClear);
+ private:
+  static cRGB highlightColor;
+  static void loopHook(bool postClear);
 };
 };
 };
