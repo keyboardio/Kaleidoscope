@@ -27,8 +27,8 @@ void MouseWrapper_::release_button(uint8_t button) {
 }
 
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
-  uint16_t x_center = left + width/2;
-  uint16_t y_center = top + height/2;
+  uint16_t x_center = left + width / 2;
+  uint16_t y_center = top + height / 2;
   AbsoluteMouse.moveTo(x_center, y_center);
 }
 
@@ -41,7 +41,7 @@ void MouseWrapper_::begin_warping() {
 }
 
 void MouseWrapper_::end_warping() {
-  is_warping= false;
+  is_warping = false;
 }
 
 void MouseWrapper_::warp(uint8_t warp_cmd) {
@@ -54,8 +54,8 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
     return;
   }
 
-  next_width = next_width/2;
-  next_height = next_height/2;
+  next_width = next_width / 2;
+  next_height = next_height / 2;
 
   if (warp_cmd & WARP_UP) {
 //    Serial.print(" - up ");
@@ -71,7 +71,7 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
     section_left  = section_left + next_width;
   }
 
-  warp_jump(section_left, section_top, next_height,next_width);
+  warp_jump(section_left, section_top, next_height, next_width);
 }
 
 // cubic wave function based on code from FastLED
@@ -84,8 +84,8 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
 
   i = i << 1;
 
-  uint8_t ii = (i*i) >> 8;
-  uint8_t iii = (ii*i) >> 8;
+  uint8_t ii = (i * i) >> 8;
+  uint8_t iii = (ii * i) >> 8;
 
   i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + ACCELERATION_FLOOR;
 
@@ -97,7 +97,7 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
 
 
 void MouseWrapper_::move(int8_t x, int8_t y) {
-  int16_t moveX =0;
+  int16_t moveX = 0;
   int16_t moveY = 0;
   if (x != 0) {
     moveX = (x * acceleration(accelStep));

@@ -7,7 +7,7 @@ class MouseKeys_ : public KaleidoscopePlugin {
  public:
   MouseKeys_(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static uint8_t speed;
   static uint16_t speedDelay;
