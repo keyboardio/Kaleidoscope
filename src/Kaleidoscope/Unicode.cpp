@@ -18,7 +18,7 @@
 
 #include <Kaleidoscope-Unicode.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
 Unicode::Unicode(void) {
 }
@@ -29,7 +29,7 @@ void Unicode::begin(void) {
 
 void Unicode::start(void) {
   switch (::HostOS.os()) {
-  case HostOS::LINUX:
+  case hostos::LINUX:
     Keyboard.press(Key_LeftControl.keyCode);
     Keyboard.press(Key_LeftShift.keyCode);
     Keyboard.press(Key_U.keyCode);
@@ -39,7 +39,7 @@ void Unicode::start(void) {
     Keyboard.release(Key_U.keyCode);
     Keyboard.sendReport();
     break;
-  case HostOS::WINDOWS:
+  case hostos::WINDOWS:
     Keyboard.press(Key_RightAlt.keyCode);
     Keyboard.sendReport();
     Keyboard.release(Key_RightAlt.keyCode);
@@ -49,7 +49,7 @@ void Unicode::start(void) {
     Keyboard.release(Key_U.keyCode);
     Keyboard.sendReport();
     break;
-  case HostOS::OSX:
+  case hostos::OSX:
     Keyboard.press(Key_LeftAlt.keyCode);
     break;
   default:
@@ -60,10 +60,10 @@ void Unicode::start(void) {
 
 void Unicode::input(void) {
   switch (::HostOS.os()) {
-  case HostOS::LINUX:
-  case HostOS::WINDOWS:
+  case hostos::LINUX:
+  case hostos::WINDOWS:
     break;
-  case HostOS::OSX:
+  case hostos::OSX:
     Keyboard.press(Key_LeftAlt.keyCode);
     break;
   default:
@@ -74,15 +74,15 @@ void Unicode::input(void) {
 
 void Unicode::end(void) {
   switch (::HostOS.os()) {
-  case HostOS::LINUX:
+  case hostos::LINUX:
     Keyboard.press(Key_Spacebar.keyCode);
     Keyboard.sendReport();
     Keyboard.release(Key_Spacebar.keyCode);
     Keyboard.sendReport();
     break;
-  case HostOS::WINDOWS:
+  case hostos::WINDOWS:
     break;
-  case HostOS::OSX:
+  case hostos::OSX:
     Keyboard.release(Key_LeftAlt.keyCode);
     Keyboard.sendReport();
     break;
@@ -93,14 +93,14 @@ void Unicode::end(void) {
 }
 
 void Unicode::typeCode(uint32_t unicode) {
-  bool onZeroStart = true;
+  bool on_zero_start = true;
   for (int8_t i = 7; i >= 0; i--) {
     if (i <= 3) {
-      onZeroStart = false;
+      on_zero_start = false;
     }
     uint8_t digit = ((unicode >> (i * 4)) & 0xF);
     if (digit == 0) {
-      if (onZeroStart == false) {
+      if (on_zero_start == false) {
         Key key = hexToKey(digit);
         input();
         Keyboard.press(key.keyCode);
@@ -117,7 +117,7 @@ void Unicode::typeCode(uint32_t unicode) {
       input();
       Keyboard.release(key.keyCode);
       Keyboard.sendReport();
-      onZeroStart = false;
+      on_zero_start = false;
     }
     delay(5);
   }
@@ -128,7 +128,8 @@ void Unicode::type(uint32_t unicode) {
   typeCode(unicode);
   end();
 }
-}  // namespace KaleidoscopePlugins
+
+}
 
 __attribute__((weak)) Key hexToKey(uint8_t hex) {
   uint8_t m;
@@ -152,4 +153,4 @@ __attribute__((weak)) void unicodeCustomEnd(void) {
 __attribute__((weak)) void unicodeCustomInput(void) {
 }
 
-KaleidoscopePlugins::Unicode Unicode;
+kaleidoscope::Unicode Unicode;

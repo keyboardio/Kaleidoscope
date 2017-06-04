@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Unicode.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Unicode
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `Unicode` extension makes it easier to write plugins that input Unicode
 symbols on the host. Because inputting Unicode varies from OS to OS, this helper
@@ -26,11 +26,11 @@ singleton object.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Unicode.h>
 
-void setup (void) {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&Unicode, NULL);
+void setup() {
+  USE_PLUGINS(&Unicode);
+  Kaleidoscope.setup();
   
-  Unicode.type (0x2328);
+  Unicode.type(0x2328);
 }
 ```
 
@@ -84,14 +84,14 @@ functionality.
 
 ### `unicodeCustomStart()`
 
-> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
+> If the host OS type is set to `kaleidoscope::hostos::Custom`, then this function will
 > be called whenever the [`.start()`](#start) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed to enter unicode input mode.
 
 ### `unicodeCustomInput()`
 
-> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
+> If the host OS type is set to `kaleidoscope::hostos::Custom`, then this function will
 > be called whenever the [`.input()`](#input) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed while inputting the hex code itself (such as holding additional
@@ -99,7 +99,7 @@ functionality.
 
 ### `unicodeCustomEnd()`
 
-> If the host OS type is set to `Kaleidoscope::HostOS::Custom`, then this function will
+> If the host OS type is set to `kaleidoscope::hostos::Custom`, then this function will
 > be called whenever the [`.end()`](#end) method is called. The default
 > implementation does nothing, and should be overridden to implement the custom
 > magic needed to leave unicode input mode.

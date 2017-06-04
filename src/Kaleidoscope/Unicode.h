@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostOS.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class Unicode : public KaleidoscopePlugin {
  public:
   Unicode(void);
@@ -43,4 +43,4 @@ void unicodeCustomStart(void);
 void unicodeCustomEnd(void);
 void unicodeCustomInput(void);
 
-extern KaleidoscopePlugins::Unicode Unicode;
+extern kaleidoscope::Unicode Unicode;

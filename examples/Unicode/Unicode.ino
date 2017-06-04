@@ -44,8 +44,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&HostOS, &Unicode, NULL);
+  USE_PLUGINS(&Unicode);
+
+  Kaleidoscope.setup();
+
   Unicode.type(0x2328);
 }
 
