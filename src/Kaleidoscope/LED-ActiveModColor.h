@@ -26,7 +26,7 @@ class ActiveModColorEffect : public KaleidoscopePlugin {
   ActiveModColorEffect(void);
 
   static void configure(const cRGB highlightColor);
-  virtual void begin(void) final;
+  void begin(void) final;
 
  private:
   static cRGB highlightColor;
