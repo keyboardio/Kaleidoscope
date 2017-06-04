@@ -8,14 +8,14 @@
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 
 class Macros_ : public KaleidoscopePlugin {
-  public:
-    Macros_(void);
+ public:
+  Macros_(void);
 
-    virtual void begin(void) final;
+  virtual void begin(void) final;
 
-    void play(const macro_t *macro_p);
+  void play(const macro_t *macro_p);
 
-    static byte row, col;
+  static byte row, col;
 };
 
 extern Macros_ Macros;
