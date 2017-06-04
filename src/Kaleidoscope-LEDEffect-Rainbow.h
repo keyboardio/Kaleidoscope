@@ -5,9 +5,9 @@
 
 class LEDRainbowEffect_ : public LEDMode {
  public:
-  LEDRainbowEffect_ (void);
+  LEDRainbowEffect_(void);
 
-  virtual void update (void) final;
+  virtual void update(void) final;
 
  private:
   uint16_t rainbow_hue = 0;   //stores 0 to 614
@@ -25,9 +25,9 @@ extern LEDRainbowEffect_ LEDRainbowEffect;
 
 class LEDRainbowWaveEffect_ : public LEDMode {
  public:
-  LEDRainbowWaveEffect_ (void);
+  LEDRainbowWaveEffect_(void);
 
-  virtual void update (void) final;
+  virtual void update(void) final;
 
  private:
   uint16_t rainbow_hue = 0;   //stores 0 to 614

@@ -1,10 +1,10 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
-LEDRainbowEffect_::LEDRainbowEffect_ (void) {
+LEDRainbowEffect_::LEDRainbowEffect_(void) {
 }
 
 void
-LEDRainbowEffect_::update (void) {
+LEDRainbowEffect_::update(void) {
   if (rainbow_current_ticks++ < rainbow_ticks) {
     return;
   } else {
@@ -24,11 +24,11 @@ LEDRainbowEffect_ LEDRainbowEffect;
 
 // ---------
 
-LEDRainbowWaveEffect_::LEDRainbowWaveEffect_ (void) {
+LEDRainbowWaveEffect_::LEDRainbowWaveEffect_(void) {
 }
 
 void
-LEDRainbowWaveEffect_::update (void) {
+LEDRainbowWaveEffect_::update(void) {
   if (rainbow_current_ticks++ < rainbow_wave_ticks) {
     return;
   } else {
@@ -41,7 +41,7 @@ LEDRainbowWaveEffect_::update (void) {
       key_hue -= 255;
     }
     cRGB rainbow = hsv_to_rgb(key_hue, rainbow_saturation, rainbow_value);
-    LEDControl.led_set_crgb_at (i, rainbow);
+    LEDControl.led_set_crgb_at(i, rainbow);
   }
   rainbow_hue += rainbow_wave_steps;
   if (rainbow_hue >= 255) {
