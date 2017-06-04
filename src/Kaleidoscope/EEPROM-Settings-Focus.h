@@ -36,6 +36,6 @@ bool eepromFocusHook(const char *command);
    "settings.crc")
 
 #define FOCUS_HOOK_EEPROM FOCUS_HOOK                                    \
-  (kalediscope::eeprom_settings::eepromFocusHook,                       \
+  (kaleidoscope::eeprom_settings::eepromFocusHook,                      \
    "eeprom.free\n"                                                      \
    "eeprom.contents")
