@@ -40,7 +40,7 @@ class CRC_ {
   void update(const void *data, uint8_t len);
   void finalize(void) {
     reflect(16);
-  };
+  }
   void reflect(uint8_t len);
 };
 
