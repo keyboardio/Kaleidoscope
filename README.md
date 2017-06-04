@@ -9,7 +9,9 @@
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-TODO
+A common base for plugins that want to provide themes, or theme-related
+capabilities, using a 15+1 color palette. In other words, this is for plugin
+authors primarily.
 
 ## Using the plugin
 
@@ -20,10 +22,10 @@ TODO
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
-void setup () {
-  Kaleidoscope.setup ();
-  
-  USE_PLUGINS (&EEPROMSettings, &LEDPaletteTheme);
+void setup() {
+  USE_PLUGINS(&EEPROMSettings, &LEDPaletteTheme);
+
+  Kaleidoscope.setup();
 
   // TODO
 }
