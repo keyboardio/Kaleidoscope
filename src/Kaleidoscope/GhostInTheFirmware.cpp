@@ -28,59 +28,59 @@ uint32_t GhostInTheFirmware::startTime;
 uint16_t GhostInTheFirmware::pressTimeOut;
 uint16_t GhostInTheFirmware::delayTimeOut;
 
-GhostInTheFirmware::GhostInTheFirmware (void) {
+GhostInTheFirmware::GhostInTheFirmware(void) {
 }
 
 void
-GhostInTheFirmware::begin (void) {
-    loop_hook_use (this->loopHook);
+GhostInTheFirmware::begin(void) {
+  loop_hook_use(this->loopHook);
 }
 
 void
-GhostInTheFirmware::activate (void) {
-    isActive = true;
+GhostInTheFirmware::activate(void) {
+  isActive = true;
 }
 
 void
-GhostInTheFirmware::configure (const GhostKey ghostKeys_[]) {
-    ghostKeys = (GhostKey *)ghostKeys_;
+GhostInTheFirmware::configure(const GhostKey ghostKeys_[]) {
+  ghostKeys = (GhostKey *)ghostKeys_;
 }
 
 void
-GhostInTheFirmware::loopHook (bool postClear) {
-    if (postClear || !isActive)
-        return;
+GhostInTheFirmware::loopHook(bool postClear) {
+  if (postClear || !isActive)
+    return;
+
+  if (pressTimeOut == 0) {
+    pressTimeOut = pgm_read_word(&(ghostKeys[currentPos].pressTime));
+    delayTimeOut = pgm_read_word(&(ghostKeys[currentPos].delay));
 
     if (pressTimeOut == 0) {
-        pressTimeOut = pgm_read_word (&(ghostKeys[currentPos].pressTime));
-        delayTimeOut = pgm_read_word (&(ghostKeys[currentPos].delay));
-
-        if (pressTimeOut == 0) {
-            currentPos = 0;
-            isActive = false;
-            return;
-        }
-        isPressed = true;
-        startTime = millis ();
-    } else {
-        if (isPressed && ((millis () - startTime) > pressTimeOut)) {
-            isPressed = false;
-            startTime = millis ();
-
-            byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
-            byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
-
-            handle_keyswitch_event (Key_NoKey, row, col, WAS_PRESSED);
-        } else if (isPressed) {
-            byte row = pgm_read_byte (&(ghostKeys[currentPos].row));
-            byte col = pgm_read_byte (&(ghostKeys[currentPos].col));
-
-            handle_keyswitch_event (Key_NoKey, row, col, IS_PRESSED);
-        } else if ((millis () - startTime) > delayTimeOut) {
-            currentPos++;
-            pressTimeOut = 0;
-        }
+      currentPos = 0;
+      isActive = false;
+      return;
     }
+    isPressed = true;
+    startTime = millis();
+  } else {
+    if (isPressed && ((millis() - startTime) > pressTimeOut)) {
+      isPressed = false;
+      startTime = millis();
+
+      byte row = pgm_read_byte(&(ghostKeys[currentPos].row));
+      byte col = pgm_read_byte(&(ghostKeys[currentPos].col));
+
+      handle_keyswitch_event(Key_NoKey, row, col, WAS_PRESSED);
+    } else if (isPressed) {
+      byte row = pgm_read_byte(&(ghostKeys[currentPos].row));
+      byte col = pgm_read_byte(&(ghostKeys[currentPos].col));
+
+      handle_keyswitch_event(Key_NoKey, row, col, IS_PRESSED);
+    } else if ((millis() - startTime) > delayTimeOut) {
+      currentPos++;
+      pressTimeOut = 0;
+    }
+  }
 }
 
 };

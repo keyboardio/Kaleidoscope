@@ -22,30 +22,30 @@
 
 namespace KaleidoscopePlugins {
 class GhostInTheFirmware : public KaleidoscopePlugin {
-  public:
-    typedef struct {
-        byte row;
-        byte col;
-        uint16_t pressTime;
-        uint16_t delay;
-    } GhostKey;
+ public:
+  typedef struct {
+    byte row;
+    byte col;
+    uint16_t pressTime;
+    uint16_t delay;
+  } GhostKey;
 
-    GhostInTheFirmware (void);
+  GhostInTheFirmware(void);
 
-    virtual void begin (void) final;
-    static void configure (const GhostKey ghostKeys[]);
-    static void activate (void);
+  virtual void begin(void) final;
+  static void configure(const GhostKey ghostKeys[]);
+  static void activate(void);
 
-  private:
-    static GhostKey *ghostKeys;
-    static bool isActive;
-    static bool isPressed;
-    static uint16_t currentPos;
-    static uint32_t startTime;
-    static uint16_t pressTimeOut;
-    static uint16_t delayTimeOut;
+ private:
+  static GhostKey *ghostKeys;
+  static bool isActive;
+  static bool isPressed;
+  static uint16_t currentPos;
+  static uint32_t startTime;
+  static uint16_t pressTimeOut;
+  static uint16_t delayTimeOut;
 
-    static void loopHook (bool postClear);
+  static void loopHook(bool postClear);
 };
 
 };
