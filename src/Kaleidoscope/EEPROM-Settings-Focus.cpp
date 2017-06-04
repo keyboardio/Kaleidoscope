@@ -21,26 +21,27 @@
 #include "crc.h"
 
 namespace FocusHooks {
+
 bool settings(const char *command) {
   enum {
     ISVALID,
     GETVERSION,
     CRC,
-  } subCommand;
+  } sub_command;
 
   if (strncmp_P(command, PSTR("settings."), 9) != 0)
     return false;
 
   if (strcmp_P(command + 9, PSTR("valid?")) == 0)
-    subCommand = ISVALID;
+    sub_command = ISVALID;
   else if (strcmp_P(command + 9, PSTR("version")) == 0)
-    subCommand = GETVERSION;
+    sub_command = GETVERSION;
   else if (strcmp_P(command + 9, PSTR("crc")) == 0)
-    subCommand = CRC;
+    sub_command = CRC;
   else
     return false;
 
-  switch (subCommand) {
+  switch (sub_command) {
   case ISVALID:
     Focus.printBool(EEPROMSettings.isValid());
     Serial.println();
@@ -62,16 +63,16 @@ bool eeprom(const char *command) {
   enum {
     CONTENTS,
     FREE,
-  } subCommand;
+  } sub_command;
 
   if (strcmp_P(command, PSTR("eeprom.contents")) == 0)
-    subCommand = CONTENTS;
+    sub_command = CONTENTS;
   else if (strcmp_P(command, PSTR("eeprom.free")) == 0)
-    subCommand = FREE;
+    sub_command = FREE;
   else
     return false;
 
-  switch (subCommand) {
+  switch (sub_command) {
   case CONTENTS: {
     if (Serial.peek() == '\n') {
       for (uint16_t i = 0; i < EEPROM.length(); i++) {
@@ -96,4 +97,5 @@ bool eeprom(const char *command) {
 
   return true;
 }
-};
+
+}
