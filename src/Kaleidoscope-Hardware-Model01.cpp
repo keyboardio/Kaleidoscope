@@ -7,10 +7,10 @@ KeyboardioScanner Model01::rightHand(3);
 bool Model01::isLEDChanged = true;
 
 static constexpr uint8_t key_led_map[4][16] = {
-  {3,4,11,12,19,20,26,27,     36,37,43,44,51,52,59,60},
-  {2,5,10,13,18,21,25,28,     35,38,42,45,50,53,58,61},
-  {1,6, 9,14,17,22,24,29,     34,39,41,46,49,54,57,62},
-  {0,7, 8,15,16,23,31,30,     33,32,40,47,48,55,56,63},
+  {3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60},
+  {2, 5, 10, 13, 18, 21, 25, 28,     35, 38, 42, 45, 50, 53, 58, 61},
+  {1, 6, 9, 14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62},
+  {0, 7, 8, 15, 16, 23, 31, 30,     33, 32, 40, 47, 48, 55, 56, 63},
 };
 
 Model01::Model01(void) {
@@ -57,21 +57,21 @@ void Model01::setup(void) {
   leftHandState.all = 0;
   rightHandState.all = 0;
 
-  TWBR=12; // This is 400mhz, which is the fastest we can drive the ATTiny
+  TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
 }
 
 
 void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
-  if (i<32) {
+  if (i < 32) {
     cRGB oldColor = led_get_crgb_at(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
     leftHand.ledData.leds[i] = crgb;
-  } else if (i<64) {
+  } else if (i < 64) {
     cRGB oldColor = led_get_crgb_at(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
-    rightHand.ledData.leds[i-32] = crgb;
+    rightHand.ledData.leds[i - 32] = crgb;
   } else {
     // TODO how do we want to handle debugging assertions about crazy user
     // code that would overwrite other memory?
@@ -87,10 +87,10 @@ uint8_t Model01::get_led_index(byte row, byte col) {
 }
 
 cRGB Model01::led_get_crgb_at(uint8_t i) {
-  if (i<32) {
+  if (i < 32) {
     return leftHand.ledData.leds[i];
-  } else if (i<64) {
-    return rightHand.ledData.leds[i-32] ;
+  } else if (i < 64) {
+    return rightHand.ledData.leds[i - 32] ;
   } else {
     return {0, 0, 0};
   }
@@ -160,16 +160,16 @@ void Model01::act_on_matrix_scan() {
   for (byte row = 0; row < 4; row++) {
     for (byte col = 0; col < 8; col++) {
 
-      uint8_t keynum = (row*8)+(col);
+      uint8_t keynum = (row * 8) + (col);
 
       uint8_t keyState = (bitRead(previousLeftHandState.all, keynum) << 0) |
                          (bitRead(leftHandState.all, keynum) << 1);
-      handle_keyswitch_event(Key_NoKey, row, 7-col, keyState);
+      handle_keyswitch_event(Key_NoKey, row, 7 - col, keyState);
 
       keyState = (bitRead(previousRightHandState.all, keynum) << 0) |
                  (bitRead(rightHandState.all, keynum) << 1);
 
-      handle_keyswitch_event(Key_NoKey, row, (15- col), keyState);
+      handle_keyswitch_event(Key_NoKey, row, (15 - col), keyState);
     }
   }
 }
