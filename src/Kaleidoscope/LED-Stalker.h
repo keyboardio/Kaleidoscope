@@ -24,49 +24,49 @@
 namespace KaleidoscopePlugins {
 namespace LEDEffects {
 class StalkerEffect : public LEDMode {
-  public:
-    class ColorComputer {
-      public:
-        virtual cRGB compute (uint8_t *step) = 0;
-    };
+ public:
+  class ColorComputer {
+   public:
+    virtual cRGB compute(uint8_t *step) = 0;
+  };
 
-    StalkerEffect (void);
+  StalkerEffect(void);
 
-    virtual void begin (void) final;
-    virtual void init (void) final;
-    virtual void update (void) final;
+  virtual void begin(void) final;
+  virtual void init(void) final;
+  virtual void update(void) final;
 
-    static void configure (ColorComputer *colorComputer);
-    static uint16_t stepLength;
+  static void configure(ColorComputer *colorComputer);
+  static uint16_t stepLength;
 
-  private:
-    static uint32_t stepEndTime;
-    static ColorComputer *colorComputer;
-    static uint8_t map[ROWS][COLS];
+ private:
+  static uint32_t stepEndTime;
+  static ColorComputer *colorComputer;
+  static uint8_t map[ROWS][COLS];
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 
 namespace Stalker {
 
 class Haunt : public StalkerEffect::ColorComputer {
-  public:
-    Haunt (const cRGB highlightColor);
-    Haunt (void) : Haunt ( {
-        0x40, 0x80, 0x80
-    }) {};
-    Haunt (void *) : Haunt () {};
+ public:
+  Haunt(const cRGB highlightColor);
+  Haunt(void) : Haunt( {
+    0x40, 0x80, 0x80
+  }) {};
+  Haunt(void *) : Haunt() {};
 
-    virtual cRGB compute (uint8_t *step) final;
-  private:
-    static cRGB highlightColor;
+  virtual cRGB compute(uint8_t *step) final;
+ private:
+  static cRGB highlightColor;
 };
 
 class BlazingTrail : public StalkerEffect::ColorComputer {
-  public:
-    BlazingTrail (...);
+ public:
+  BlazingTrail(...);
 
-    virtual cRGB compute (uint8_t *step) final;
+  virtual cRGB compute(uint8_t *step) final;
 };
 
 };
