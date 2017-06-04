@@ -17,30 +17,30 @@ const int pinLed = LED_BUILTIN;
 const int pinButton = 2;
 
 void setup() {
-    pinMode(pinLed, OUTPUT);
-    pinMode(pinButton, INPUT_PULLUP);
+  pinMode(pinLed, OUTPUT);
+  pinMode(pinButton, INPUT_PULLUP);
 
-    // Sends a clean report to the host. This is important on any Arduino type.
-    BootKeyboard.begin();
+  // Sends a clean report to the host. This is important on any Arduino type.
+  BootKeyboard.begin();
 }
 
 
 void loop() {
-    // Light led if keyboard uses the boot protocol (normally while in bios)
-    // Keep in mind that on a 16u2 and Arduino Micro HIGH and LOW for TX/RX Leds are inverted.
-    if (BootKeyboard.getProtocol() == HID_BOOT_PROTOCOL)
-        digitalWrite(pinLed, HIGH);
-    else
-        digitalWrite(pinLed, LOW);
+  // Light led if keyboard uses the boot protocol (normally while in bios)
+  // Keep in mind that on a 16u2 and Arduino Micro HIGH and LOW for TX/RX Leds are inverted.
+  if (BootKeyboard.getProtocol() == HID_BOOT_PROTOCOL)
+    digitalWrite(pinLed, HIGH);
+  else
+    digitalWrite(pinLed, LOW);
 
-    // Trigger caps lock manually via button
-    if (!digitalRead(pinButton)) {
-        BootKeyboard.press(HID_KEYBOARD_ENTER);
-        BootKeyboard.sendReport();
-        BootKeyboard.releaseAll();
-        BootKeyboard.sendReport();
+  // Trigger caps lock manually via button
+  if (!digitalRead(pinButton)) {
+    BootKeyboard.press(HID_KEYBOARD_ENTER);
+    BootKeyboard.sendReport();
+    BootKeyboard.releaseAll();
+    BootKeyboard.sendReport();
 
-        // Simple debounce
-        delay(300);
-    }
+    // Simple debounce
+    delay(300);
+  }
 }

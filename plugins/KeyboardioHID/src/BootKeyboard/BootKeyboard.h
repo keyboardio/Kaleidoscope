@@ -32,75 +32,75 @@ THE SOFTWARE.
 #include "HIDAliases.h"
 
 typedef union {
-    // Low level key report: up to 6 keys and shift, ctrl etc at once
-    struct {
-        uint8_t modifiers;
-        uint8_t reserved;
-        uint8_t keycodes[6];
-    };
-    uint8_t keys[8];
+  // Low level key report: up to 6 keys and shift, ctrl etc at once
+  struct {
+    uint8_t modifiers;
+    uint8_t reserved;
+    uint8_t keycodes[6];
+  };
+  uint8_t keys[8];
 } HID_BootKeyboardReport_Data_t;
 
 
 class BootKeyboard_ : public PluggableUSBModule {
-  public:
-    BootKeyboard_(void);
-    size_t press(uint8_t);
-    void begin(void);
-    void end(void);
-    size_t release(uint8_t);
-    void releaseAll(void);
+ public:
+  BootKeyboard_(void);
+  size_t press(uint8_t);
+  void begin(void);
+  void end(void);
+  size_t release(uint8_t);
+  void releaseAll(void);
 
-    int sendReport(void);
+  int sendReport(void);
 
 
 
-    uint8_t getLeds(void);
-    uint8_t getProtocol(void);
-    void wakeupHost(void);
+  uint8_t getLeds(void);
+  uint8_t getProtocol(void);
+  void wakeupHost(void);
 
-    void setFeatureReport(void* report, int length) {
-        if(length > 0) {
-            featureReport = (uint8_t*)report;
-            featureLength = length;
+  void setFeatureReport(void* report, int length) {
+    if (length > 0) {
+      featureReport = (uint8_t*)report;
+      featureLength = length;
 
-            // Disable feature report by default
-            disableFeatureReport();
-        }
+      // Disable feature report by default
+      disableFeatureReport();
     }
+  }
 
-    int availableFeatureReport(void) {
-        if(featureLength < 0) {
-            return featureLength & ~0x8000;
-        }
-        return 0;
+  int availableFeatureReport(void) {
+    if (featureLength < 0) {
+      return featureLength & ~0x8000;
     }
+    return 0;
+  }
 
-    void enableFeatureReport(void) {
-        featureLength &= ~0x8000;
-    }
+  void enableFeatureReport(void) {
+    featureLength &= ~0x8000;
+  }
 
-    void disableFeatureReport(void) {
-        featureLength |= 0x8000;
-    }
+  void disableFeatureReport(void) {
+    featureLength |= 0x8000;
+  }
 
 
-  protected:
-    HID_BootKeyboardReport_Data_t _keyReport;
+ protected:
+  HID_BootKeyboardReport_Data_t _keyReport;
 
-    // Implementation of the PUSBListNode
-    int getInterface(uint8_t* interfaceCount);
-    int getDescriptor(USBSetup& setup);
-    bool setup(USBSetup& setup);
+  // Implementation of the PUSBListNode
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
 
-    uint8_t epType[1];
-    uint8_t protocol;
-    uint8_t idle;
+  uint8_t epType[1];
+  uint8_t protocol;
+  uint8_t idle;
 
-    uint8_t leds;
+  uint8_t leds;
 
-    uint8_t* featureReport;
-    int featureLength;
+  uint8_t* featureReport;
+  int featureLength;
 };
 extern BootKeyboard_ BootKeyboard;
 

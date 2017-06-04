@@ -31,38 +31,38 @@ THE SOFTWARE.
 #include "MouseButtons.h"
 
 typedef union {
-    // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
-    struct {
-        uint8_t buttons;
-        uint16_t xAxis;
-        uint16_t yAxis;
-        int8_t wheel;
-    };
+  // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
+  struct {
+    uint8_t buttons;
+    uint16_t xAxis;
+    uint16_t yAxis;
+    int8_t wheel;
+  };
 } HID_MouseAbsoluteReport_Data_t;
 
 class AbsoluteMouse_ {
-  public:
-    AbsoluteMouse_(void);
-    void begin(void);
-    void end(void);
+ public:
+  AbsoluteMouse_(void);
+  void begin(void);
+  void end(void);
 
-    void click(uint8_t b = MOUSE_LEFT);
-    void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
-    void move(int x, int y, signed char wheel = 0);
-    void press(uint8_t b = MOUSE_LEFT);
-    void release(uint8_t b = MOUSE_LEFT);
-    bool isPressed(uint8_t b = MOUSE_LEFT);
+  void click(uint8_t b = MOUSE_LEFT);
+  void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
+  void move(int x, int y, signed char wheel = 0);
+  void press(uint8_t b = MOUSE_LEFT);
+  void release(uint8_t b = MOUSE_LEFT);
+  bool isPressed(uint8_t b = MOUSE_LEFT);
 
-    // Sending is public in the base class for advanced users.
-    void SendReport(void* data, int length);
+  // Sending is public in the base class for advanced users.
+  void SendReport(void* data, int length);
 
-  protected:
-    uint16_t xAxis;
-    uint16_t yAxis;
-    uint8_t _buttons;
-    void buttons(uint8_t b);
+ protected:
+  uint16_t xAxis;
+  uint16_t yAxis;
+  uint8_t _buttons;
+  void buttons(uint8_t b);
 
-    int16_t qadd16(int16_t base, int16_t increment);
+  int16_t qadd16(int16_t base, int16_t increment);
 
 
 

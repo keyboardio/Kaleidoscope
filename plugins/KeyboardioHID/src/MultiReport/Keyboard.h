@@ -35,31 +35,31 @@ THE SOFTWARE.
 #define KEY_BYTES 28
 
 typedef union {
-    // Modifiers + keymap
-    struct {
-        uint8_t modifiers;
-        uint8_t keys[KEY_BYTES ];
-    };
-    uint8_t allkeys[1 + KEY_BYTES];
+  // Modifiers + keymap
+  struct {
+    uint8_t modifiers;
+    uint8_t keys[KEY_BYTES ];
+  };
+  uint8_t allkeys[1 + KEY_BYTES];
 } HID_KeyboardReport_Data_t;
 
 
 
 class Keyboard_ {
-  public:
-    Keyboard_(void);
-    void begin(void);
-    void end(void);
+ public:
+  Keyboard_(void);
+  void begin(void);
+  void end(void);
 
-    size_t press(uint8_t k);
-    size_t release(uint8_t k);
-    void  releaseAll(void);
-    int sendReport(void);
+  size_t press(uint8_t k);
+  size_t release(uint8_t k);
+  void  releaseAll(void);
+  int sendReport(void);
 
-    boolean isModifierActive(uint8_t k);
+  boolean isModifierActive(uint8_t k);
 
-  protected:
-    HID_KeyboardReport_Data_t _keyReport;
+ protected:
+  HID_KeyboardReport_Data_t _keyReport;
 };
 extern Keyboard_ Keyboard;
 
