@@ -36,15 +36,15 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_skip
-  ),
+    Key_skip),
 };
 
 void setup() {
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&LEDControl, &ActiveModColorEffect, NULL);
+  USE_PLUGINS(&ActiveModColorEffect);
 
-  ActiveModColorEffect.configure({0x00, 0xff, 0xff});
+  Kaleidoscope.setup();
+
+  ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
 }
 
 void loop() {

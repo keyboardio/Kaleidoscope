@@ -16,23 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
 class ActiveModColorEffect : public KaleidoscopePlugin {
  public:
   ActiveModColorEffect(void);
 
-  static void configure(const cRGB highlightColor);
   void begin(void) final;
 
- private:
-  static cRGB highlightColor;
-  static void loopHook(bool postClear);
-};
-};
-};
+  static cRGB highlight_color;
 
-extern KaleidoscopePlugins::LEDEffects::ActiveModColorEffect ActiveModColorEffect;
+ private:
+  static void loopHook(bool is_post_clear);
+};
+}
+
+extern kaleidoscope::ActiveModColorEffect ActiveModColorEffect;

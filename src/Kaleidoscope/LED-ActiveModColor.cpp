@@ -19,28 +19,21 @@
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-Ranges.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
-cRGB ActiveModColorEffect::highlightColor = (cRGB) {
+namespace kaleidoscope {
+
+cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
 };
 
 ActiveModColorEffect::ActiveModColorEffect(void) {
 }
 
-void
-ActiveModColorEffect::begin(void) {
+void ActiveModColorEffect::begin(void) {
   loop_hook_use(loopHook);
 }
 
-void
-ActiveModColorEffect::configure(const cRGB highlightColor_) {
-  highlightColor = highlightColor_;
-}
-
-void
-ActiveModColorEffect::loopHook(bool postClear) {
-  if (postClear)
+void ActiveModColorEffect::loopHook(bool is_post_clear) {
+  if (is_post_clear)
     return;
 
   for (byte r = 0; r < ROWS; r++) {
@@ -57,12 +50,11 @@ ActiveModColorEffect::loopHook(bool postClear) {
         continue;
 
       if (Keyboard.isModifierActive(k.keyCode))
-        LEDControl.led_set_crgb_at(r, c, highlightColor);
+        LEDControl.led_set_crgb_at(r, c, highlight_color);
     }
   }
 }
 
-};
-};
+}
 
-KaleidoscopePlugins::LEDEffects::ActiveModColorEffect ActiveModColorEffect;
+kaleidoscope::ActiveModColorEffect ActiveModColorEffect;
