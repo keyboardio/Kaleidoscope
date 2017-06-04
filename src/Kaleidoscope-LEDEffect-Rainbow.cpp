@@ -36,7 +36,7 @@ LEDRainbowWaveEffect_::update(void) {
   }
 
   for (uint8_t i = 0; i < LED_COUNT; i++) {
-    uint16_t key_hue = rainbow_hue +16*(i/4);
+    uint16_t key_hue = rainbow_hue + 16 * (i / 4);
     if (key_hue >= 255)          {
       key_hue -= 255;
     }
