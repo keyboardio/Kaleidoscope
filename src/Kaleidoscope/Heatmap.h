@@ -26,7 +26,7 @@ class Heatmap : public LEDMode {
  public:
   Heatmap(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static uint16_t updateDelay;
 
