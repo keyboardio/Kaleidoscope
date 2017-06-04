@@ -116,7 +116,7 @@ bool EEPROMKeymap::focusKeymapTransfer(const char *command) {
   for (uint8_t row = 0; row < ROWS; row++) {
     for (uint8_t col = 0; col < COLS; col++) {
       Key k = Layer.getKeyFromPROGMEM(layer, row, col);
-      uint16_t pos =((layer * ROWS * COLS) + (row * COLS) + col);
+      uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
 
       updateKey(pos, k);
     }
