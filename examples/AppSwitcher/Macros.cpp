@@ -23,14 +23,14 @@
 
 #include "Macros.h"
 
-using namespace KaleidoscopePlugins::HostOS;
+namespace H = kaleidoscope::hostos;
 
 static bool appSwitchActive = false;
 
 const macro_t *macroAppSwitch(uint8_t keyState) {
   Key mod = Key_LeftAlt;
 
-  if (HostOS.os() == OSX)
+  if (HostOS.os() == H::OSX)
     mod = Key_LeftGui;
 
   // Key was just pressed, or is being held
