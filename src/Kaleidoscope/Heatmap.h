@@ -23,27 +23,27 @@
 
 namespace KaleidoscopePlugins {
 class Heatmap : public LEDMode {
-  public:
-    Heatmap (void);
+ public:
+  Heatmap(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-    static uint16_t updateDelay;
+  static uint16_t updateDelay;
 
-    virtual void update (void) final;
-  private:
-    static uint8_t heatmap[ROWS][COLS];
-    static uint16_t totalKeys;
-    static uint8_t highestCount;
-    static uint32_t endTime;
+  virtual void update(void) final;
+ private:
+  static uint8_t heatmap[ROWS][COLS];
+  static uint16_t totalKeys;
+  static uint8_t highestCount;
+  static uint32_t endTime;
 
-    static const float heatColors[][3];
+  static const float heatColors[][3];
 
-    static void shiftStats (void);
-    static cRGB computeColor (float v);
+  static void shiftStats(void);
+  static cRGB computeColor(float v);
 
-    static Key eventHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopHook (bool postClear);
+  static Key eventHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static void loopHook(bool postClear);
 };
 };
 
