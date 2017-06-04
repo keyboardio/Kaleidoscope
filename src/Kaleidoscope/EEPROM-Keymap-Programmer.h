@@ -34,6 +34,7 @@ class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
 
   void begin(void) final;
 
+  static void activate(void) { nextState(); }
   static void nextState(void);
   static void cancel(void);
 

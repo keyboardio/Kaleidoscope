@@ -67,7 +67,7 @@ to use a macro, as in the example below:
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == 0 && key_toggled_off(keyState)) {
-    EEPROMKeymapProgrammer.nextState();
+    EEPROMKeymapProgrammer.activate();
   }
 
   return MACRO_NONE;
@@ -93,11 +93,10 @@ take over.
 
 The plugin provides the `EEPROMKeymapProgrammer` object, which has the following methods:
 
-### `.nextState()`
+### `.activate()`
 
-> Puts the programmer into the next appropriate state. When the programmer is
-> inactive, this activates it. One usually does not have to call this function
-> in any other case.
+> Activates the keymap programmer. This is the function one needs to call from -
+> say - a macro, to enter the edit state.
 
 ### `.mode`
 
