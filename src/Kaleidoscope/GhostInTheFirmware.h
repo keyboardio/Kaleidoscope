@@ -20,7 +20,7 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class GhostInTheFirmware : public KaleidoscopePlugin {
  public:
   typedef struct {
@@ -29,25 +29,23 @@ class GhostInTheFirmware : public KaleidoscopePlugin {
     uint16_t pressTime;
     uint16_t delay;
   } GhostKey;
+  static const GhostKey *ghost_keys;
 
   GhostInTheFirmware(void);
 
   void begin(void) final;
-  static void configure(const GhostKey ghostKeys[]);
   static void activate(void);
 
  private:
-  static GhostKey *ghostKeys;
-  static bool isActive;
-  static bool isPressed;
-  static uint16_t currentPos;
-  static uint32_t startTime;
-  static uint16_t pressTimeOut;
-  static uint16_t delayTimeOut;
+  static bool is_active_;
+  static bool is_pressed_;
+  static uint16_t current_pos_;
+  static uint32_t start_time_;
+  static uint16_t press_timeout_;
+  static uint16_t delay_timeout_;
 
   static void loopHook(bool postClear);
 };
+}
 
-};
-
-extern KaleidoscopePlugins::GhostInTheFirmware GhostInTheFirmware;
+extern kaleidoscope::GhostInTheFirmware GhostInTheFirmware;

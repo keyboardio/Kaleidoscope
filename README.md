@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-GhostInTheFirmware.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-GhostInTheFirmware
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Born out of the desire to demo LED effects on the keyboard without having to
 touch it by hand (which would obstruct the video), the `GhostInTheFirmware`
@@ -31,23 +31,24 @@ that.
 #include <Kaleidoscope-GhostInTheFirmware.h>
 #include <Kaleidoscope-Macros.h>
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 0 && key_toggled_on (keyState))
-    GhostInTheFirmware.activate ();
+const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
+  if (macro_index == 0 && key_toggled_on(key_state))
+    GhostInTheFirmware.activate();
 
   return MACRO_NONE;
 }
 
-static const KaleidoscopePlugins::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
+static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
   {0, 0, 200, 50},
   {0, 0, 0}
 };
 
-void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+void setup() {
+  USE_PLUGINS(&GhostInTheFirmware, &Macros);
 
-  GhostInTheFirmware.configure (ghostKeys);
-  Kaleidoscope.use (&GhostInTheFirmware, &Macros, NULL);
+  Kaleidoscope.setup ();
+
+  GhostInTheFirmware.ghost_keys = ghost_keys;
 }
 ```
 
@@ -57,23 +58,26 @@ hence the macro.
 ## Plugin methods
 
 The plugin provides the `GhostInTheFirmware` object, which has the following
-method:
+methods:
 
-### `.configure(sequence)`
+### `.activate()`
 
-> Set the sequence of keys to press. Each element is a quartett of `row`,
-> `column`, a `pressTime`, and a `delay`. Each of these will be pressed in
-> different cycles, unlike macros which play back within a single cycle.
+> Start playing back the sequence. Best called from a macro.
+
+### `.ghost_keys`
+
+> Set the sequence of keys to press, by assigning a sequence to this variable.
+> Each element is a quartett of `row`, `column`, a `pressTime`, and a `delay`.
+> Each of these will be pressed in different cycles, unlike macros which play
+> back within a single cycle.
 >
 > The key at `row`, `column` will be held for `pressTime` milliseconds, and
 > after an additional `delay` milliseconds, the plugin will move on to the next
 > entry in the sequence.
 >
+> Not strictly a method, it is a variable one can assign a new value to.
+>
 > The sequence *MUST* reside in `PROGMEM`.
-
-### `.activate()`
-
-> Start playing back the sequence. Best called from a macro.
 
 ## Further reading
 

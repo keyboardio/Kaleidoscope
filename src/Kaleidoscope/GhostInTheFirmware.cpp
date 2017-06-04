@@ -19,70 +19,62 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-GhostInTheFirmware.h>
 
-namespace KaleidoscopePlugins {
-GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghostKeys;
-bool GhostInTheFirmware::isActive;
-bool GhostInTheFirmware::isPressed;
-uint16_t GhostInTheFirmware::currentPos;
-uint32_t GhostInTheFirmware::startTime;
-uint16_t GhostInTheFirmware::pressTimeOut;
-uint16_t GhostInTheFirmware::delayTimeOut;
+namespace kaleidoscope {
+const GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghost_keys;
+bool GhostInTheFirmware::is_active_;
+bool GhostInTheFirmware::is_pressed_;
+uint16_t GhostInTheFirmware::current_pos_;
+uint32_t GhostInTheFirmware::start_time_;
+uint16_t GhostInTheFirmware::press_timeout_;
+uint16_t GhostInTheFirmware::delay_timeout_;
 
 GhostInTheFirmware::GhostInTheFirmware(void) {
 }
 
-void
-GhostInTheFirmware::begin(void) {
+void GhostInTheFirmware::begin(void) {
   loop_hook_use(this->loopHook);
 }
 
-void
-GhostInTheFirmware::activate(void) {
-  isActive = true;
+void GhostInTheFirmware::activate(void) {
+  is_active_ = true;
 }
 
-void
-GhostInTheFirmware::configure(const GhostKey ghostKeys_[]) {
-  ghostKeys = (GhostKey *)ghostKeys_;
-}
-
-void
-GhostInTheFirmware::loopHook(bool postClear) {
-  if (postClear || !isActive)
+void GhostInTheFirmware::loopHook(bool postClear) {
+  if (postClear || !is_active_)
     return;
 
-  if (pressTimeOut == 0) {
-    pressTimeOut = pgm_read_word(&(ghostKeys[currentPos].pressTime));
-    delayTimeOut = pgm_read_word(&(ghostKeys[currentPos].delay));
+  if (press_timeout_ == 0) {
+    press_timeout_ = pgm_read_word(&(ghost_keys[current_pos_].pressTime));
+    delay_timeout_ = pgm_read_word(&(ghost_keys[current_pos_].delay));
 
-    if (pressTimeOut == 0) {
-      currentPos = 0;
-      isActive = false;
+    if (press_timeout_ == 0) {
+      current_pos_ = 0;
+      is_active_ = false;
       return;
     }
-    isPressed = true;
-    startTime = millis();
+    is_pressed_ = true;
+    start_time_ = millis();
   } else {
-    if (isPressed && ((millis() - startTime) > pressTimeOut)) {
-      isPressed = false;
-      startTime = millis();
+    if (is_pressed_ && ((millis() - start_time_) > press_timeout_)) {
+      is_pressed_ = false;
+      start_time_ = millis();
 
-      byte row = pgm_read_byte(&(ghostKeys[currentPos].row));
-      byte col = pgm_read_byte(&(ghostKeys[currentPos].col));
+      byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
+      byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
       handle_keyswitch_event(Key_NoKey, row, col, WAS_PRESSED);
-    } else if (isPressed) {
-      byte row = pgm_read_byte(&(ghostKeys[currentPos].row));
-      byte col = pgm_read_byte(&(ghostKeys[currentPos].col));
+    } else if (is_pressed_) {
+      byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
+      byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
       handle_keyswitch_event(Key_NoKey, row, col, IS_PRESSED);
-    } else if ((millis() - startTime) > delayTimeOut) {
-      currentPos++;
-      pressTimeOut = 0;
+    } else if ((millis() - start_time_) > delay_timeout_) {
+      current_pos_++;
+      press_timeout_ = 0;
     }
   }
 }
 
 };
 
-KaleidoscopePlugins::GhostInTheFirmware GhostInTheFirmware;
+kaleidoscope::GhostInTheFirmware GhostInTheFirmware;

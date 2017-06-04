@@ -19,42 +19,39 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-GhostInTheFirmware.h>
 #include <Kaleidoscope-LED-Stalker.h>
-#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-Macros.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
-  (
-    ___, ___, ___, ___, ___, ___, M(0),
-    ___, ___, ___, ___, ___, ___, ___,
-    ___, ___, ___, ___, ___, ___,
-    ___, ___, ___, ___, ___, ___, ___,
+  (___, ___, ___, ___, ___, ___, M(0),
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
 
-    ___, ___, ___, ___,
-    ___,
+   ___, ___, ___, ___,
+   ___,
 
-    ___, ___, ___, ___, ___, ___, ___,
-    ___, ___, ___, ___, ___, ___, ___,
-    ___, ___, ___, ___, ___, ___,
-    ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
 
-    ___, ___, ___, ___,
-    ___
-  ),
+   ___, ___, ___, ___,
+   ___),
 };
 
-static Key eventDropper(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static Key eventDropper(Key, byte, byte, uint8_t) {
   return Key_NoKey;
 }
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 0 && key_toggled_on(keyState))
+const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
+  if (macro_index == 0 && key_toggled_on(key_state))
     GhostInTheFirmware.activate();
 
   return MACRO_NONE;
 }
 
-static const KaleidoscopePlugins::GhostInTheFirmware::GhostKey ghostKeys[] PROGMEM = {
+static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
   {0, 6, 200, 50},
   {0, 5, 200, 50},
   {0, 4, 200, 50},
@@ -124,16 +121,14 @@ static const KaleidoscopePlugins::GhostInTheFirmware::GhostKey ghostKeys[] PROGM
 };
 
 void setup() {
-  Serial.begin(9600);
+  USE_PLUGINS(&GhostInTheFirmware, &StalkerEffect, &Macros);
 
-  Kaleidoscope.setup(KEYMAP_SIZE);
-
-  GhostInTheFirmware.configure(ghostKeys);
   StalkerEffect.configure(STALKER(BlazingTrail, NULL));
+  GhostInTheFirmware.ghost_keys = ghost_keys;
 
-  Kaleidoscope.use(&LEDControl, &GhostInTheFirmware, &StalkerEffect, &Macros,
-                   NULL);
   event_handler_hook_use(eventDropper);
+
+  Kaleidoscope.setup();
 }
 
 void loop() {
