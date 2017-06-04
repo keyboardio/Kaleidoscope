@@ -26,7 +26,7 @@ class EEPROMSettings : public KaleidoscopePlugin {
  public:
   EEPROMSettings(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static void update(void);
   static bool isValid(void);
