@@ -21,30 +21,29 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class Heatmap : public LEDMode {
  public:
   Heatmap(void);
 
+  static uint16_t update_delay;
+
   void begin(void) final;
-
-  static uint16_t updateDelay;
-
-  virtual void update(void) final;
+  void update(void) final;
  private:
-  static uint8_t heatmap[ROWS][COLS];
-  static uint16_t totalKeys;
-  static uint8_t highestCount;
-  static uint32_t endTime;
+  static uint8_t heatmap_[ROWS][COLS];
+  static uint16_t total_keys_;
+  static uint8_t highest_count_;
+  static uint32_t end_time_;
 
-  static const float heatColors[][3];
+  static const float heat_colors_[][3];
 
   static void shiftStats(void);
   static cRGB computeColor(float v);
 
-  static Key eventHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
+  static Key eventHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
 };
-};
+}
 
-extern KaleidoscopePlugins::Heatmap HeatmapEffect;
+extern kaleidoscope::Heatmap HeatmapEffect;

@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `Heatmap` plugin provides a LED effect, that displays a heatmap on the
 keyboard. The LEDs under each key will have a color according to how much use
@@ -26,9 +26,10 @@ include the header, and make sure the plugin is in use:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Heatmap.h>
 
-void setup (void) {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&HeatmapEffect, NULL);
+void setup() {
+  USE_PLUGINS(&HeatmapEffect);
+
+  Kaleidoscope.setup ();
 }
 ```
 
@@ -48,7 +49,7 @@ The plugin provides two methods on the `HeatmapEffect` object:
 > `setup()` method of the Sketch, or in macros that are meant to switch to the
 > heatmap effect, no matter where we are in the list.
 
-### `.timeOut`
+### `.update_delay`
 
 > The number of milliseconds to wait between updating the heatmap. Updating the
 > heatmap incurs a significant performance penalty, and should not be done too
