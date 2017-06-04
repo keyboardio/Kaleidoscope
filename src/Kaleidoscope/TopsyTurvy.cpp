@@ -90,6 +90,6 @@ TopsyTurvy::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState
   return Key_NoKey;
 }
 
-} // namespace KaleidoscopePlugins
+}  // namespace KaleidoscopePlugins
 
 KaleidoscopePlugins::TopsyTurvy TopsyTurvy;

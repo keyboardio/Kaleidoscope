@@ -36,8 +36,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_skip
-  ),
+    Key_skip),
 };
 
 static const Key topsyTurvyList[] PROGMEM = {
