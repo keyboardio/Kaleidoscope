@@ -32,7 +32,7 @@ class StalkerEffect : public LEDMode {
 
   StalkerEffect(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
   virtual void init(void) final;
   virtual void update(void) final;
 
