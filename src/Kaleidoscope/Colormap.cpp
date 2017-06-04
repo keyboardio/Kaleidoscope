@@ -51,7 +51,7 @@ void ColormapEffect::update(void) {
     if (!Layer.isOn(l))
       continue;
 
-    ::LEDPaletteTheme.update(map_base_, l);
+    ::LEDPaletteTheme.updateHandler(map_base_, l);
   }
 }
 
