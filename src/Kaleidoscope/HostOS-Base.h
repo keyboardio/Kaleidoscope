@@ -39,7 +39,7 @@ class Base : public KaleidoscopePlugin {
   Type os(void);
   void os(Type new_os);
 
-  bool focusHook(const char *command);
+  static bool focusHook(const char *command);
 
  protected:
   virtual void autoDetect(void) {}

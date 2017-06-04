@@ -59,10 +59,10 @@ bool Base::focusHook(const char *command) {
     return false;
 
   if (Serial.peek() == '\n') {
-    Serial.println(os_);
+    Serial.println(::HostOS.os());
   } else {
     uint8_t new_os = Serial.parseInt();
-    os((Type) new_os);
+    ::HostOS.os((Type) new_os);
   }
 
   Serial.read();
