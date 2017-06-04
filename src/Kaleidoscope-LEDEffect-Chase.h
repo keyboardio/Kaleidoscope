@@ -5,9 +5,9 @@
 
 class LEDChaseEffect_ : public LEDMode {
  public:
-  LEDChaseEffect_ (void);
+  LEDChaseEffect_(void);
 
-  virtual void update (void) final;
+  virtual void update(void) final;
 
  private:
   uint8_t pos = 0;
