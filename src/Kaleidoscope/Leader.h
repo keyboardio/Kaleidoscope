@@ -30,32 +30,32 @@
 
 namespace KaleidoscopePlugins {
 class Leader : public KaleidoscopePlugin {
-  public:
-    typedef void (*action_t) (uint8_t seqIndex);
-    typedef struct {
-        Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
-        action_t action;
-    } dictionary_t;
+ public:
+  typedef void (*action_t)(uint8_t seqIndex);
+  typedef struct {
+    Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
+    action_t action;
+  } dictionary_t;
 
-    Leader (void);
+  Leader(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-    static void configure (const dictionary_t dictionary[]);
-    static void reset (void);
-    static uint16_t timeOut;
+  static void configure(const dictionary_t dictionary[]);
+  static void reset(void);
+  static uint16_t timeOut;
 
-    void inject (Key key, uint8_t keyState);
+  void inject(Key key, uint8_t keyState);
 
-  private:
-    static Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
-    static uint8_t sequencePos;
-    static uint32_t endTime;
-    static const Leader::dictionary_t *dictionary;
+ private:
+  static Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
+  static uint8_t sequencePos;
+  static uint32_t endTime;
+  static const Leader::dictionary_t *dictionary;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopHook (bool postClear);
-    static int8_t lookup (void);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static void loopHook(bool postClear);
+  static int8_t lookup(void);
 };
 };
 
