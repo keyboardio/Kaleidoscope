@@ -24,36 +24,36 @@
 namespace KaleidoscopePlugins {
 namespace HostOS {
 void
-Base::begin (void) {
-    if (isConfigured)
-        return;
+Base::begin(void) {
+  if (isConfigured)
+    return;
 
-    eepromSlice = ::EEPROMSettings.requestSlice (sizeof (osType));
+  eepromSlice = ::EEPROMSettings.requestSlice(sizeof(osType));
 
-    isConfigured = true;
+  isConfigured = true;
 
-    if (osType != AUTO) {
-        return;
-    }
+  if (osType != AUTO) {
+    return;
+  }
 
-    if ((osType = (Type)EEPROM.read (eepromSlice)) != AUTO)
-        return;
+  if ((osType = (Type)EEPROM.read(eepromSlice)) != AUTO)
+    return;
 
-    autoDetect ();
+  autoDetect();
 }
 
 HostOS::Type
-Base::os (void) {
-    if (osType == AUTO)
-        autoDetect ();
+Base::os(void) {
+  if (osType == AUTO)
+    autoDetect();
 
-    return osType;
+  return osType;
 }
 
 void
-Base::os (HostOS::Type osType_) {
-    osType = osType_;
-    EEPROM.update (eepromSlice, osType);
+Base::os(HostOS::Type osType_) {
+  osType = osType_;
+  EEPROM.update(eepromSlice, osType);
 }
 };
 };

@@ -23,11 +23,11 @@
 namespace KaleidoscopePlugins {
 namespace HostOS {
 class Guesser : public Base {
-  public:
-    Guesser (void);
+ public:
+  Guesser(void);
 
-  protected:
-    virtual void autoDetect (void) final;
+ protected:
+  virtual void autoDetect(void) final;
 };
 }
 };

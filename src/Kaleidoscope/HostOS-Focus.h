@@ -22,7 +22,7 @@
 
 namespace KaleidoscopePlugins {
 namespace HostOS {
-bool Focus (const char *command);
+bool Focus(const char *command);
 };
 };
 

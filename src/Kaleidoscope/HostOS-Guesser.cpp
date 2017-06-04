@@ -22,29 +22,29 @@
 
 namespace KaleidoscopePlugins {
 namespace HostOS {
-Guesser::Guesser (void) {
+Guesser::Guesser(void) {
 }
 
 void
-Guesser::autoDetect (void) {
-    Serial.begin (9600);
+Guesser::autoDetect(void) {
+  Serial.begin(9600);
 
-    delay (15000);
+  delay(15000);
 
-    switch (FingerprintUSBHost.guessHostOS ()) {
-    case GuessedHost::WINDOWS:
-        osType = WINDOWS;
-        break;
-    case GuessedHost::LINUX:
-        osType = LINUX;
-        break;
-    case GuessedHost::MACOS:
-        osType = OSX;
-        break;
-    default:
-        osType = OTHER;
-        break;
-    }
+  switch (FingerprintUSBHost.guessHostOS()) {
+  case GuessedHost::WINDOWS:
+    osType = WINDOWS;
+    break;
+  case GuessedHost::LINUX:
+    osType = LINUX;
+    break;
+  case GuessedHost::MACOS:
+    osType = OSX;
+    break;
+  default:
+    osType = OTHER;
+    break;
+  }
 }
 };
 };

@@ -22,19 +22,19 @@
 namespace KaleidoscopePlugins {
 namespace HostOS {
 bool
-Focus (const char *command) {
-    if (strcmp_P (command, PSTR ("hostos.type")) != 0)
-        return false;
+Focus(const char *command) {
+  if (strcmp_P(command, PSTR("hostos.type")) != 0)
+    return false;
 
-    if (Serial.peek () == '\n') {
-        Serial.println (::HostOS.os ());
-    } else {
-        uint8_t os = Serial.parseInt ();
-        ::HostOS.os ((KaleidoscopePlugins::HostOS::Type) os);
-    }
+  if (Serial.peek() == '\n') {
+    Serial.println(::HostOS.os());
+  } else {
+    uint8_t os = Serial.parseInt();
+    ::HostOS.os((KaleidoscopePlugins::HostOS::Type) os);
+  }
 
-    Serial.read ();
-    return true;
+  Serial.read();
+  return true;
 }
 }
 }
