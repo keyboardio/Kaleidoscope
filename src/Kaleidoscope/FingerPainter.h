@@ -25,7 +25,7 @@ class FingerPainter : public LEDMode {
  public:
   FingerPainter(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
   virtual void update(void) final;
 
   static void toggleEdit(void);
