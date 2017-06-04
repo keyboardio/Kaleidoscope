@@ -23,27 +23,27 @@
 
 namespace KaleidoscopePlugins {
 class LEDPaletteTheme : public KaleidoscopePlugin {
-  public:
-    LEDPaletteTheme (void);
+ public:
+  LEDPaletteTheme(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-    static uint16_t reserveThemes (uint8_t maxThemes);
-    static void update (uint16_t themeBase, uint8_t theme);
+  static uint16_t reserveThemes(uint8_t maxThemes);
+  static void update(uint16_t themeBase, uint8_t theme);
 
-    static const uint8_t lookupColorIndex (uint16_t mapBase, uint16_t loc);
-    static const cRGB lookupColor (uint8_t index);
-    static const bool lookupColor (uint16_t mapBase, uint16_t loc, cRGB *color);
-    static void updateColor (uint16_t mapBase, uint16_t loc, uint8_t index);
+  static const uint8_t lookupColorIndex(uint16_t mapBase, uint16_t loc);
+  static const cRGB lookupColor(uint8_t index);
+  static const bool lookupColor(uint16_t mapBase, uint16_t loc, cRGB *color);
+  static void updateColor(uint16_t mapBase, uint16_t loc, uint8_t index);
 
-    static bool paletteFocusHook (const char *command);
-    static bool themeFocusHandler (const char *command, const char *expectedCommand,
-                                   uint16_t themeBase, uint8_t maxThemes);
+  static bool paletteFocusHook(const char *command);
+  static bool themeFocusHandler(const char *command, const char *expectedCommand,
+                                uint16_t themeBase, uint8_t maxThemes);
 
-    static uint8_t transparentIndex;
+  static uint8_t transparentIndex;
 
-  private:
-    static uint16_t paletteBase;
+ private:
+  static uint16_t paletteBase;
 };
 };
 
