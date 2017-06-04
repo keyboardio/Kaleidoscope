@@ -16,7 +16,7 @@ NumLock_::NumLock_(void) {
 void
 NumLock_::begin(void) {
   us = LEDControl.mode_add(this);
-  numpad_color.r=255;
+  numpad_color.r = 255;
 }
 
 void
