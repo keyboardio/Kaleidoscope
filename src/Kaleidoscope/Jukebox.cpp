@@ -18,22 +18,10 @@
 
 #include <Kaleidoscope-LEDEffects.h>
 
-KaleidoscopePlugins::LEDEffects::TriColor JukeboxEffect((cRGB) {
-  0xc8, 0xe8, 0xee
-} /* TM */,
-(cRGB) {
-  0xc3, 0xee, 0x8c
-} /* VCO */,
-(cRGB) {
-  0x21, 0x38, 0xd7
-} /* RN */);
+kaleidoscope::TriColor JukeboxEffect(CRGB(0xc8, 0xe8, 0xee),   /* TM */
+                                     CRGB(0xc3, 0xee, 0x8c),   /* VCO */
+                                     CRGB(0x21, 0x38, 0xd7));  /* RN */
 
-KaleidoscopePlugins::LEDEffects::TriColor JukeboxAlternateEffect((cRGB) {
-  0xc8, 0xe8, 0xee
-} /* TM */,
-(cRGB) {
-  0x21, 0x38, 0xd7
-} /* RN */,
-(cRGB) {
-  0xc3, 0xee, 0x8c
-} /* VCO */);
+kaleidoscope::TriColor JukeboxAlternateEffect(CRGB(0xc8, 0xe8, 0xee),   /* TM */
+                                              CRGB(0x21, 0x38, 0xd7),   /* RN */
+                                              CRGB(0xc3, 0xee, 0x8c));  /* VCO */

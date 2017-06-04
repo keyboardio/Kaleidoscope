@@ -20,4 +20,4 @@
 
 #include <Kaleidoscope/TriColor.h>
 
-extern KaleidoscopePlugins::LEDEffects::TriColor MiamiEffect;
+extern kaleidoscope::TriColor MiamiEffect;

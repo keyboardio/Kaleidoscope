@@ -18,13 +18,12 @@
 
 #include <Kaleidoscope-LEDEffects.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
 
-TriColor::TriColor(cRGB baseColor, cRGB modColor, cRGB escColor) {
-  this->baseColor = baseColor;
-  this->modColor = modColor;
-  this->escColor = escColor;
+TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
+  base_color_ = base_color;
+  mod_color_ = mod_color;
+  esc_color_ = esc_color;
 }
 
 void
@@ -33,13 +32,13 @@ TriColor::update(void) {
     for (uint8_t c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
 
-      // Special keys are always modColor
+      // Special keys are always mod_color
       if (k.flags != 0) {
-        LEDControl.led_set_crgb_at(r, c, modColor);
+        LEDControl.led_set_crgb_at(r, c, mod_color_);
         continue;
       }
 
-      cRGB color = modColor;
+      cRGB color = mod_color_;
 
       switch (k.keyCode) {
       case Key_A.keyCode ... Key_0.keyCode:
@@ -48,10 +47,10 @@ TriColor::update(void) {
       case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
       case Key_F1.keyCode ... Key_F4.keyCode:
       case Key_F9.keyCode ... Key_F12.keyCode:
-        color = baseColor;
+        color = base_color_;
         break;
       case Key_Escape.keyCode:
-        color = escColor;
+        color = esc_color_;
         break;
       }
 
@@ -59,5 +58,5 @@ TriColor::update(void) {
     }
   }
 }
-};
-};
+
+}

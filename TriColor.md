@@ -2,9 +2,9 @@
 
 ![status][st:stable]
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `TriColor` effect extension is a part of
 the [`LEDEffects`][plugin:ledeffects] library, not a stand-alone base library of
@@ -31,9 +31,9 @@ Then, we simply create a new instance of the `TriColor` class, with appropriate
 colors set for the constructor:
 
 ```c++
-KaleidoscopePlugins::LEDEffects::TriColor BlackAndWhiteEffect ((cRGB){0x00, 0x00, 0x00},
-                                                               (cRGB){0xff, 0xff, 0xff},
-                                                               (cRGB){0x80, 0x80, 0x80});
+kaleidoscope::TriColor BlackAndWhiteEffect (CRGB(0x00, 0x00, 0x00),
+                                            CRGB(0xff, 0xff, 0xff),
+                                            CRGB(0x80, 0x80, 0x80));
 ```
 
 The first argument is the base color, the second is for modifiers and special

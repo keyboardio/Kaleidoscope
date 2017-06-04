@@ -5,27 +5,29 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffects.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffects
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `LEDEffects` plugin provides a selection of LED effects, each of them fairly
 simple, simple enough to not need a plugin of their own. 
 
 ## Using the plugin
 
-Because of containing a number of different effects, and not wanting to force
-all of them on the user, the plugin behaves differently than most others: it
-does not enable anything by default, and we will have to selectively enable the
-effects we are interested in.
+There are a number of different effects included in the package, all of them are
+available once including the header, and one's free to choose any number of
+them.
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDEffects.h>
-```
 
-Then, in the `setup()` method of our Sketch, we will call `Kaleidoscope.use()`,
-with the selected effect objects.
+void setup(void) {
+  USE_PLUGINS(&JukeBoxEffect);
+
+  Kaleidoscope.setup();
+}
+```
 
 ## Included effects
 
@@ -43,7 +45,7 @@ Alphas, punctuation, numbers, the space bar, the numbers and the dot on the
 keypad, and half the function keys will be in a cyan-ish color, the rest in
 magenta.
 
-### `JukeBoxEffect`
+### `JukeboxEffect`
 
 Applies a color effect to the keyboard, inspired by the JukeBox keyset:
 
@@ -53,7 +55,7 @@ Alphas, punctuation, numbers, the space bar, the numbers and the dot on the
 keypad, and half the function keys will be in a beige-ish color, the rest in
 light green, except for the `Esc` key, which will be in red.
 
-An alternative color scheme exists under the `JukeBoxAlternateEffect` name,
+An alternative color scheme exists under the `JukeboxAlternateEffect` name,
 where the light green and red colors are swapped.
 
 ## Plugin methods

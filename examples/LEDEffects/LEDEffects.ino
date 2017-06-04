@@ -39,14 +39,14 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_NoKey
-  ),
+    Key_NoKey),
 };
 
 
 void setup() {
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&LEDControl, &LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect, NULL);
+  USE_PLUGINS(&LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect);
+
+  Kaleidoscope.setup();
 
   MiamiEffect.activate();
 }

@@ -20,5 +20,5 @@
 
 #include <Kaleidoscope/TriColor.h>
 
-extern KaleidoscopePlugins::LEDEffects::TriColor JukeboxEffect;
-extern KaleidoscopePlugins::LEDEffects::TriColor JukeboxAlternateEffect;
+extern kaleidoscope::TriColor JukeboxEffect;
+extern kaleidoscope::TriColor JukeboxAlternateEffect;

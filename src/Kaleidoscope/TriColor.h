@@ -21,19 +21,17 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
 class TriColor : public LEDMode {
  public:
-  TriColor(cRGB baseColor, cRGB modColor, cRGB escColor);
-  TriColor(cRGB baseColor, cRGB modColor) : TriColor(baseColor, modColor, modColor) {};
+  TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);
+  TriColor(cRGB base_color, cRGB mod_color) : TriColor(base_color, mod_color, mod_color) {};
 
   virtual void update(void) final;
 
  private:
-  cRGB baseColor;
-  cRGB modColor;
-  cRGB escColor;
+  cRGB base_color_;
+  cRGB mod_color_;
+  cRGB esc_color_;
 };
-};
-};
+}
