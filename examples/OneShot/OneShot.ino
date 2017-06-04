@@ -36,8 +36,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, OSM(RightAlt), Key_Spacebar, OSM(RightControl),
-    OSL(1)
-  ),
+    OSL(1)),
 
   [1] = KEYMAP_STACKED
   (
@@ -49,15 +48,13 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     ___, ___, ___, ___,
     ___,
 
-    ___, ___,         ___,         ___,        ___,            	___, ___,
-    ___, ___,         ___,         ___,        ___,            	___, ___,
+    ___, ___,         ___,         ___,        ___,                ___, ___,
+    ___, ___,         ___,         ___,        ___,                ___, ___,
     Key_UpArrow, Key_DownArrow, Key_LeftArrow, Key_RightArrow,     ___, ___,
-    ___, ___,         ___,         ___,        ___,           	 ___, ___,
+    ___, ___,         ___,         ___,        ___,                ___, ___,
 
     ___, ___, ___, ___,
-    ___
-  ),
-
+    ___),
 };
 
 void setup() {
