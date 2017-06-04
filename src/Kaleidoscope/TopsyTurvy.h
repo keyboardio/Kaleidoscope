@@ -34,7 +34,7 @@ class TopsyTurvy: public KaleidoscopePlugin {
   static uint8_t topsyTurvyModState;
 
   static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-}
+};
 } // namespace KaleidoscopePlugins
 
 extern KaleidoscopePlugins::TopsyTurvy TopsyTurvy;
