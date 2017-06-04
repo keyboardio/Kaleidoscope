@@ -33,7 +33,7 @@ typedef enum {
 
 class Base : public KaleidoscopePlugin {
  public:
-  virtual void begin(void) final;
+  void begin(void) final;
 
   Type os(void);
   void os(Type osType);
