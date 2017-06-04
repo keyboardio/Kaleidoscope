@@ -5,9 +5,9 @@
 
 class LEDBreatheEffect_ : public LEDMode {
  public:
-  LEDBreatheEffect_ (void);
+  LEDBreatheEffect_(void);
 
-  virtual void update (void) final;
+  virtual void update(void) final;
 };
 
 extern LEDBreatheEffect_ LEDBreatheEffect;
