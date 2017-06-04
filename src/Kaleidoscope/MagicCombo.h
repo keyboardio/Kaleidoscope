@@ -29,7 +29,7 @@ class MagicCombo : public KaleidoscopePlugin {
 
   MagicCombo(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static void configure(const dictionary_t dictionary[]);
   static uint16_t minInterval;
