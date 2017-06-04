@@ -25,9 +25,9 @@
 namespace Example {
 class TestLEDMode : public LEDMode {
  public:
-  TestLEDMode() {};
-  virtual void begin(void) final;
-  virtual void update(void) final;
+  TestLEDMode() {}
+  void begin(void) final;
+  void update(void) final;
 
   static bool focusHook(const char *command);
 

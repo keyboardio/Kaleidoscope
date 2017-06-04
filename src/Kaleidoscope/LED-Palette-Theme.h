@@ -26,7 +26,7 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
  public:
   LEDPaletteTheme(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static uint16_t reserveThemes(uint8_t maxThemes);
   static void update(uint16_t themeBase, uint8_t theme);
