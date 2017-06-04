@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `HostOS` extension is not all that useful in itself, rather, it is a
 building block other plugins and extensions can use to not repeat the same
@@ -41,18 +41,19 @@ the `HostOS` library header.
 #include <Kaleidoscope-HostOS.h>
 #include <Kaleidoscope/HostOS-select.h>
 
-void someFunction (void) {
-  if (HostOS.os() == Kaleidoscope::HostOS::LINUX) {
+void someFunction(void) {
+  if (HostOS.os() == kaleidoscope::HostOS::LINUX) {
     // do something linux-y
   }
-  if (HostOS.os() == Kaleidoscope::HostOS::OSX) {
+  if (HostOS.os() == kaleidoscope::HostOS::OSX) {
     // do something OSX-y
   }
 }
 
-void setup (void) {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&HostOS);
+void setup(void) {
+  USE_PLUGINS(&HostOS);
+
+  Kaleidoscope.setup ();
 }
 ```
 

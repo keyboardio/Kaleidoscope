@@ -21,39 +21,53 @@
 
 #include <EEPROM.h>
 
-namespace KaleidoscopePlugins {
-namespace HostOS {
-void
-Base::begin(void) {
-  if (isConfigured)
+namespace kaleidoscope {
+namespace hostos {
+
+void Base::begin(void) {
+  if (is_configured_)
     return;
 
-  eepromSlice = ::EEPROMSettings.requestSlice(sizeof(osType));
+  eeprom_slice_ = ::EEPROMSettings.requestSlice(sizeof(os_));
 
-  isConfigured = true;
+  is_configured_ = true;
 
-  if (osType != AUTO) {
+  if (os_ != AUTO) {
     return;
   }
 
-  if ((osType = (Type)EEPROM.read(eepromSlice)) != AUTO)
+  if ((os_ = (Type)EEPROM.read(eeprom_slice_)) != AUTO)
     return;
 
   autoDetect();
 }
 
-HostOS::Type
-Base::os(void) {
-  if (osType == AUTO)
+Type Base::os(void) {
+  if (os_ == AUTO)
     autoDetect();
 
-  return osType;
+  return os_;
 }
 
-void
-Base::os(HostOS::Type osType_) {
-  osType = osType_;
-  EEPROM.update(eepromSlice, osType);
+void Base::os(Type new_os) {
+  os_ = new_os;
+  EEPROM.update(eeprom_slice_, os_);
 }
-};
-};
+
+bool Base::focusHook(const char *command) {
+  if (strcmp_P(command, PSTR("hostos.type")) != 0)
+    return false;
+
+  if (Serial.peek() == '\n') {
+    Serial.println(os_);
+  } else {
+    uint8_t new_os = Serial.parseInt();
+    os((Type) new_os);
+  }
+
+  Serial.read();
+  return true;
+}
+
+}
+}

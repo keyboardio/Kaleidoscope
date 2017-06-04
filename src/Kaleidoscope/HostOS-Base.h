@@ -20,8 +20,9 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
-namespace HostOS {
+namespace kaleidoscope {
+namespace hostos {
+
 typedef enum {
   LINUX,
   OSX,
@@ -36,17 +37,22 @@ class Base : public KaleidoscopePlugin {
   void begin(void) final;
 
   Type os(void);
-  void os(Type osType);
+  void os(Type new_os);
+
+  bool focusHook(const char *command);
 
  protected:
-  virtual void autoDetect(void) {};
-  Type osType;
+  virtual void autoDetect(void) {}
+  Type os_;
 
  private:
-  uint16_t eepromSlice;
-  bool isConfigured = false;
-};
-};
+  uint16_t eeprom_slice_;
+  bool is_configured_ = false;
 };
 
-extern KaleidoscopePlugins::HostOS::Base HostOS;
+}
+}
+
+extern kaleidoscope::hostos::Base HostOS;
+
+#define FOCUS_HOOK_HOSTOS FOCUS_HOOK(HostOS.focusHook, "hostos.type")

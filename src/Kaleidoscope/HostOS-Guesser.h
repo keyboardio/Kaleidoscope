@@ -20,14 +20,16 @@
 
 #include <Kaleidoscope/HostOS-Base.h>
 
-namespace KaleidoscopePlugins {
-namespace HostOS {
+namespace kaleidoscope {
+namespace hostos {
+
 class Guesser : public Base {
  public:
   Guesser(void);
 
  protected:
-  virtual void autoDetect(void) final;
+  void autoDetect(void) final;
 };
+
 }
-};
+}

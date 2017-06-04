@@ -22,7 +22,7 @@
 #include <Kaleidoscope/HostOS-Guesser.h>
 
 #if KALEIDOSCOPE_HOSTOS_GUESSER
-KaleidoscopePlugins::HostOS::Base HostOS = KaleidoscopePlugins::HostOS::Guesser();
+kaleidoscope::hostos::Base HostOS = kaleidoscope::hostos::Guesser();
 #else
-KaleidoscopePlugins::HostOS::Base HostOS;
+kaleidoscope::hostos::Base HostOS;
 #endif

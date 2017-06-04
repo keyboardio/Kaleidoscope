@@ -20,4 +20,3 @@
 
 #include <Kaleidoscope/HostOS-Base.h>
 #include <Kaleidoscope/HostOS-Guesser.h>
-#include <Kaleidoscope/HostOS-Focus.h>

@@ -20,31 +20,32 @@
 
 #include <FingerprintUSBHost.h>
 
-namespace KaleidoscopePlugins {
-namespace HostOS {
+namespace kaleidoscope {
+namespace hostos {
+
 Guesser::Guesser(void) {
 }
 
-void
-Guesser::autoDetect(void) {
+void Guesser::autoDetect(void) {
   Serial.begin(9600);
 
   delay(15000);
 
   switch (FingerprintUSBHost.guessHostOS()) {
   case GuessedHost::WINDOWS:
-    osType = WINDOWS;
+    os_ = WINDOWS;
     break;
   case GuessedHost::LINUX:
-    osType = LINUX;
+    os_ = LINUX;
     break;
   case GuessedHost::MACOS:
-    osType = OSX;
+    os_ = OSX;
     break;
   default:
-    osType = OTHER;
+    os_ = OTHER;
     break;
   }
 }
-};
-};
+
+}
+}
