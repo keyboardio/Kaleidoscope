@@ -37,11 +37,11 @@ static struct {
 } testSettings;
 
 void setup () {
-  Kaleidoscope.setup();
-  
   USE_PLUGINS(&EEPROMSettings);
 
   /* Use other plugins that make use of the EEPROM */
+  
+  Kaleidoscope.setup();
   
   settingsBase = EEPROMSettings.requestSlice(sizeof(testSettings));
   
