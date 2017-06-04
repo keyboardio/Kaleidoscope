@@ -90,8 +90,9 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     if (key_is_pressed(keyState)) {
       if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {
         scrollWheel(mappedKey.keyCode);
-      } else
+      } else {
         mouseMoveIntent |= mappedKey.keyCode;
+      }
     }
   } else if (key_toggled_on(keyState)) {
     if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {

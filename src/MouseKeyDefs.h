@@ -1,11 +1,11 @@
 #pragma once
 
-#define IS_MOUSE_KEY     		   B00010000
+#define IS_MOUSE_KEY             B00010000
 
 // Synthetic, not internal
-#define KEY_MOUSE_BTN_L 0x01 // Synthetic key
-#define KEY_MOUSE_BTN_M 0x02 // Synthetic key
-#define KEY_MOUSE_BTN_R 0x03 // Synthetic key
+#define KEY_MOUSE_BTN_L 0x01  // Synthetic key
+#define KEY_MOUSE_BTN_M 0x02  // Synthetic key
+#define KEY_MOUSE_BTN_R 0x03  // Synthetic key
 
 
 #define KEY_MOUSE_UP            B0000001

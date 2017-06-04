@@ -20,7 +20,6 @@ MouseWrapper_::MouseWrapper_(void) {
 void MouseWrapper_::press_button(uint8_t button) {
   Mouse.press(button);
   end_warping();
-
 }
 
 void MouseWrapper_::release_button(uint8_t button) {
