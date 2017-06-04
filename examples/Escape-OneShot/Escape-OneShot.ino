@@ -62,8 +62,8 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  Kaleidoscope.use(&OneShot, &EscapeOneShot, NULL);
-  Kaleidoscope.setup(KEYMAP_SIZE);
+  USE_PLUGINS(&OneShot, &EscapeOneShot);
+  Kaleidoscope.setup();
 }
 
 void loop() {

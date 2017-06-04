@@ -16,9 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class EscapeOneShot : public KaleidoscopePlugin {
  public:
   EscapeOneShot(void);
@@ -26,8 +28,8 @@ class EscapeOneShot : public KaleidoscopePlugin {
   void begin(void) final;
 
  private:
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
-};
+}
 
-extern KaleidoscopePlugins::EscapeOneShot EscapeOneShot;
+extern kaleidoscope::EscapeOneShot EscapeOneShot;

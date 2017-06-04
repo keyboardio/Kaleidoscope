@@ -20,30 +20,29 @@
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
 EscapeOneShot::EscapeOneShot(void) {
 }
 
-void
-EscapeOneShot::begin(void) {
+void EscapeOneShot::begin(void) {
   event_handler_hook_use(eventHandlerHook);
 }
 
-Key
-EscapeOneShot::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (mappedKey.raw != Key_Escape.raw ||
-      (keyState & INJECTED) ||
-      !key_toggled_on(keyState))
-    return mappedKey;
+Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  if (mapped_key.raw != Key_Escape.raw ||
+      (key_state & INJECTED) ||
+      !key_toggled_on(key_state))
+    return mapped_key;
 
-  if (!OneShot::isActive())
-    return mappedKey;
+  if (!OneShot.isActive())
+    return mapped_key;
 
-  OneShot::cancel();
+  OneShot.cancel();
 
   return Key_NoKey;
 }
-};
 
-KaleidoscopePlugins::EscapeOneShot EscapeOneShot;
+}
+
+kaleidoscope::EscapeOneShot EscapeOneShot;

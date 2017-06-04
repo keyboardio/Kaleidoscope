@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Escape-OneShot.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Escape-OneShot
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Turn the `Esc` key into a special key, that can cancel any active `OneShot`
 effect - or act as the normal `Esc` key if none are active. For those times when
@@ -24,9 +24,9 @@ configuration is necessary.
 #include <Kaleidoscope-Escape-OneShot.h>
 
 void setup () {
-  Kaleidoscope.setup (KEYMAP_SIZE);
+  USE_PLUGINS(&OneShot, &EscapeOneShot);
 
-  Kaleidoscope.use (&OneShot, &EscapeOneShot, NULL);
+  Kaleidoscope.setup ();
 }
 ```
 
