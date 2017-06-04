@@ -20,9 +20,10 @@
 #include <Kaleidoscope-Focus.h>
 #include "crc.h"
 
-namespace FocusHooks {
+namespace kaleidoscope {
+namespace eeprom_settings {
 
-bool settings(const char *command) {
+bool settingsFocusHook(const char *command) {
   enum {
     ISVALID,
     GETVERSION,
@@ -43,23 +44,23 @@ bool settings(const char *command) {
 
   switch (sub_command) {
   case ISVALID:
-    Focus.printBool(EEPROMSettings.isValid());
+    Focus.printBool(::EEPROMSettings.isValid());
     Serial.println();
     break;
   case GETVERSION:
-    Serial.println(EEPROMSettings.version());
+    Serial.println(::EEPROMSettings.version());
     break;
   case CRC:
     Serial.print(::CRC.crc, HEX);
     Serial.print(F("/"));
-    Serial.println(EEPROMSettings.crc(), HEX);
+    Serial.println(::EEPROMSettings.crc(), HEX);
     break;
   }
 
   return true;
 }
 
-bool eeprom(const char *command) {
+bool eepromFocusHook(const char *command) {
   enum {
     CONTENTS,
     FREE,
@@ -91,11 +92,13 @@ bool eeprom(const char *command) {
     break;
   }
   case FREE:
-    Serial.println(EEPROM.length() - EEPROMSettings.used());
+    Serial.println(EEPROM.length() - ::EEPROMSettings.used());
     break;
   }
 
   return true;
+}
+
 }
 
 }

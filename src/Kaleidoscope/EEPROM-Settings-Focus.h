@@ -20,16 +20,22 @@
 
 #include <Kaleidoscope.h>
 
-namespace FocusHooks {
-bool settings(const char *command);
-bool eeprom(const char *command);
-};
+namespace kaleidoscope {
+namespace eeprom_settings {
 
-#define FOCUS_HOOK_SETTINGS FOCUS_HOOK(FocusHooks::settings,            \
-                                       "settings.valid?\n"              \
-                                       "settings.version\n"             \
-                                       "settings.crc")
+bool settingsFocusHook(const char *command);
+bool eepromFocusHook(const char *command);
 
-#define FOCUS_HOOK_EEPROM FOCUS_HOOK(FocusHooks::eeprom,                \
-                                     "eeprom.free\n"                    \
-                                     "eeprom.contents")
+}
+}
+
+#define FOCUS_HOOK_SETTINGS FOCUS_HOOK                                  \
+  (kaleidoscope::eeprom_settings::settingsFocusHook,                    \
+   "settings.valid?\n"                                                  \
+   "settings.version\n"                                                 \
+   "settings.crc")
+
+#define FOCUS_HOOK_EEPROM FOCUS_HOOK                                    \
+  (kalediscope::eeprom_settings::eepromFocusHook,                       \
+   "eeprom.free\n"                                                      \
+   "eeprom.contents")
