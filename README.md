@@ -108,6 +108,15 @@ The plugin provides the `EEPROMKeymapProgrammer` object, which has the following
 >
 > Defaults to `kaleidoscope::EEPROMKeymapProgrammer::CODE`.
 
+## Focus commands
+
+The plugin provides a single `Focus` hook: `FOCUS_HOOK_KEYMAP_PROGRAMMER`, which
+in turn provides the following command:
+
+### `keymap.toggleProgrammer`
+
+> Toggles the programmer mode on or off.
+
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Keymap][plugin:eeprom-keymap]

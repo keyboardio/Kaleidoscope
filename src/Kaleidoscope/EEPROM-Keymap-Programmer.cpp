@@ -101,6 +101,18 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
   return Key_NoKey;
 }
 
+bool EEPROMKeymapProgrammer::focusHook(const char *command) {
+  if (strcmp_P(command, PSTR("keymap.toggleProgrammer")) != 0)
+    return false;
+
+  if (state_ == INACTIVE)
+    activate();
+  else
+    cancel();
+
+  return true;
+}
+
 }
 
 kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
