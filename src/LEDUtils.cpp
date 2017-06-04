@@ -1,22 +1,22 @@
 #include "LEDUtils.h"
 
 cRGB
-breath_compute () {
+breath_compute() {
 
-    // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
-    // Eventually, we should consider just using FastLED
+  // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
+  // Eventually, we should consider just using FastLED
 
-    uint8_t i = (uint16_t)millis()/12; 
+  uint8_t i = (uint16_t)millis()/12;
 
-    if( i & 0x80) {
-        i = 255 - i;
-    }
+  if (i & 0x80) {
+    i = 255 - i;
+  }
 
-    i = i << 1;
-    uint8_t ii = (i*i)>>8;
-    uint8_t iii = (ii*i)>>8;
+  i = i << 1;
+  uint8_t ii = (i*i)>>8;
+  uint8_t iii = (ii*i)>>8;
 
-    i =  (( (3 * (uint16_t)(ii)) - ( 2 * (uint16_t)(iii))) / 2) + 2;
+  i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 2;
 
   return hsv_to_rgb(200, 255, i);
 }
@@ -32,7 +32,7 @@ hsv_to_rgb(uint16_t h, uint16_t s, uint16_t v) {
    * math */
   uint16_t region, fpart, p, q, t;
 
-  if(s == 0) {
+  if (s == 0) {
     /* color is grayscale */
     color.r = color.g = color.b = v;
     return color;
@@ -49,7 +49,7 @@ hsv_to_rgb(uint16_t h, uint16_t s, uint16_t v) {
   t = (v * (255 - ((s * (255 - fpart)) >> 8))) >> 8;
 
   /* assign temp vars based on color cone region */
-  switch(region) {
+  switch (region) {
   case 0:
     color.r = v;
     color.g = t;

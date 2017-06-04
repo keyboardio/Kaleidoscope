@@ -17,9 +17,9 @@ type_letter(uint8_t letter) {
 #endif
 
 void
-bootAnimation (void) {
+bootAnimation(void) {
 #ifdef ARDUINO_AVR_MODEL01
-  if (EEPROM.read (EEPROM_BOOT_ANIMATION_LOCATION))
+  if (EEPROM.read(EEPROM_BOOT_ANIMATION_LOCATION))
     return;
 
   LEDControl.set_all_leds_to(0, 0, 0);
@@ -38,6 +38,6 @@ bootAnimation (void) {
   type_letter(LED_PERIOD);
   type_letter(LED_9);
 
-  EEPROM.update (EEPROM_BOOT_ANIMATION_LOCATION, 1);
+  EEPROM.update(EEPROM_BOOT_ANIMATION_LOCATION, 1);
 #endif
 }

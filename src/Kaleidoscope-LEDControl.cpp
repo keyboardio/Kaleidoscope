@@ -7,8 +7,8 @@ uint16_t LEDControl_::syncDelay = 16;
 uint32_t LEDControl_::syncTimer;
 
 void
-LEDMode::activate (void) {
-  LEDControl.activate (this);
+LEDMode::activate(void) {
+  LEDControl.activate(this);
 }
 
 void
@@ -19,11 +19,11 @@ LEDMode::begin(void) {
 
 LEDControl_::LEDControl_(void) {
   mode = previousMode = 0;
-  memset (modes, 0, LED_MAX_MODES * sizeof (modes[0]));
+  memset(modes, 0, LED_MAX_MODES * sizeof(modes[0]));
 }
 
 void
-LEDControl_::next_mode (void) {
+LEDControl_::next_mode(void) {
   mode++;
 
   if (mode >= LED_MAX_MODES) {
@@ -38,32 +38,32 @@ LEDControl_::next_mode (void) {
 }
 
 void
-LEDControl_::update (void) {
+LEDControl_::update(void) {
   if (previousMode != mode) {
-    set_all_leds_to ({0, 0, 0});
+    set_all_leds_to({0, 0, 0});
     if (modes[mode])
-      (modes[mode]->init) ();
+      (modes[mode]->init)();
   }
 
   if (modes[mode])
-    (modes[mode]->update) ();
+    (modes[mode]->update)();
 
   previousMode = mode;
 }
 
 void
-LEDControl_::set_mode (uint8_t mode_) {
+LEDControl_::set_mode(uint8_t mode_) {
   if (mode_ < LED_MAX_MODES)
     mode = mode_;
 }
 
 uint8_t
-LEDControl_::get_mode (void) {
+LEDControl_::get_mode(void) {
   return mode;
 }
 
 void
-LEDControl_::activate (LEDMode *mode) {
+LEDControl_::activate(LEDMode *mode) {
   for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
     if (modes[i] == mode)
       return set_mode(i);
@@ -71,7 +71,7 @@ LEDControl_::activate (LEDMode *mode) {
 }
 
 int8_t
-LEDControl_::mode_add (LEDMode *mode) {
+LEDControl_::mode_add(LEDMode *mode) {
   for (int i = 0; i < LED_MAX_MODES; i++) {
     if (modes[i])
       continue;
@@ -119,8 +119,8 @@ LEDControl_::led_sync(void) {
 }
 
 void
-LEDControl_::begin (void) {
-  set_all_leds_to ({0, 0, 0});
+LEDControl_::begin(void) {
+  set_all_leds_to({0, 0, 0});
 
   for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
     if (modes[i])
@@ -134,7 +134,7 @@ LEDControl_::begin (void) {
 }
 
 Key
-LEDControl_::eventHandler (Key mappedKey, byte row, byte col, uint8_t keyState) {
+LEDControl_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return mappedKey;
 
@@ -145,7 +145,7 @@ LEDControl_::eventHandler (Key mappedKey, byte row, byte col, uint8_t keyState) 
 }
 
 void
-LEDControl_::loopHook (bool postClear) {
+LEDControl_::loopHook(bool postClear) {
   if (postClear)
     return;
 
@@ -157,7 +157,7 @@ LEDControl_::loopHook (bool postClear) {
 }
 
 bool
-LEDControl_::focusHook (const char *command) {
+LEDControl_::focusHook(const char *command) {
   enum {
     SETALL,
     MODE,
@@ -165,96 +165,92 @@ LEDControl_::focusHook (const char *command) {
     THEME,
   } subCommand;
 
-  if (strncmp_P (command, PSTR ("led."), 4) != 0)
+  if (strncmp_P(command, PSTR("led."), 4) != 0)
     return false;
-  if (strcmp_P (command + 4, PSTR ("at")) == 0)
+  if (strcmp_P(command + 4, PSTR("at")) == 0)
     subCommand = AT;
-  else if (strcmp_P (command + 4, PSTR ("setAll")) == 0)
+  else if (strcmp_P(command + 4, PSTR("setAll")) == 0)
     subCommand = SETALL;
-  else if (strcmp_P (command + 4, PSTR ("mode")) == 0)
+  else if (strcmp_P(command + 4, PSTR("mode")) == 0)
     subCommand = MODE;
-  else if (strcmp_P (command + 4, PSTR ("theme")) == 0)
+  else if (strcmp_P(command + 4, PSTR("theme")) == 0)
     subCommand = THEME;
   else
     return false;
 
   switch (subCommand) {
-  case AT:
-    {
-      uint8_t idx = Serial.parseInt ();
+  case AT: {
+    uint8_t idx = Serial.parseInt();
 
-      if (Serial.peek () == '\n') {
-        cRGB c = LEDControl.led_get_crgb_at (idx);
+    if (Serial.peek() == '\n') {
+      cRGB c = LEDControl.led_get_crgb_at(idx);
 
-        Focus.printColor (c.r, c.g, c.b);
-        Serial.println ();
-      } else {
-        cRGB c;
-
-        c.r = Serial.parseInt ();
-        c.g = Serial.parseInt ();
-        c.b = Serial.parseInt ();
-
-        LEDControl.led_set_crgb_at (idx, c);
-      }
-      break;
-    }
-  case SETALL:
-    {
+      Focus.printColor(c.r, c.g, c.b);
+      Serial.println();
+    } else {
       cRGB c;
 
-      c.r = Serial.parseInt ();
-      c.g = Serial.parseInt ();
-      c.b = Serial.parseInt ();
+      c.r = Serial.parseInt();
+      c.g = Serial.parseInt();
+      c.b = Serial.parseInt();
 
-      LEDControl.set_all_leds_to (c);
+      LEDControl.led_set_crgb_at(idx, c);
+    }
+    break;
+  }
+  case SETALL: {
+    cRGB c;
 
+    c.r = Serial.parseInt();
+    c.g = Serial.parseInt();
+    c.b = Serial.parseInt();
+
+    LEDControl.set_all_leds_to(c);
+
+    break;
+  }
+  case MODE: {
+    char peek = Serial.peek();
+    if (peek == '\n') {
+      Serial.println(LEDControl.get_mode());
+    } else if (peek == 'n') {
+      LEDControl.next_mode();
+      Serial.read();
+    } else if (peek == 'p') {
+      // TODO
+      Serial.read();
+    } else {
+      uint8_t mode = Serial.parseInt();
+
+      LEDControl.set_mode(mode);
+    }
+    break;
+  }
+  case THEME: {
+    if (Serial.peek() == '\n') {
+      for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
+        cRGB c = LEDControl.led_get_crgb_at(idx);
+
+        Focus.printColor(c.r, c.g, c.b);
+        Focus.printSpace();
+      }
+      Serial.println();
       break;
     }
-  case MODE:
-    {
-      char peek = Serial.peek ();
-      if (peek == '\n') {
-        Serial.println (LEDControl.get_mode ());
-      } else if (peek == 'n') {
-        LEDControl.next_mode ();
-        Serial.read ();
-      } else if (peek == 'p') {
-        // TODO
-        Serial.read ();
-      } else {
-        uint8_t mode = Serial.parseInt ();
 
-        LEDControl.set_mode (mode);
-      }
-      break;
+    uint8_t idx = 0;
+    while (idx < LED_COUNT && Serial.peek() != '\n') {
+      cRGB color;
+
+      color.r = Serial.parseInt();
+      color.g = Serial.parseInt();
+      color.b = Serial.parseInt();
+
+      LEDControl.led_set_crgb_at(idx, color);
+      idx++;
     }
-  case THEME:
-    {
-      if (Serial.peek () == '\n') {
-        for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
-          cRGB c = LEDControl.led_get_crgb_at (idx);
-
-          Focus.printColor (c.r, c.g, c.b);
-          Focus.printSpace ();
-        }
-        Serial.println ();
-        break;
-      }
-
-      uint8_t idx = 0;
-      while (idx < LED_COUNT && Serial.peek() != '\n') {
-        cRGB color;
-
-        color.r = Serial.parseInt ();
-        color.g = Serial.parseInt ();
-        color.b = Serial.parseInt ();
-
-        LEDControl.led_set_crgb_at (idx, color);
-        idx++;
-      }
-      break;
-    }
+    break;
+  }
   }
 
   return true;
