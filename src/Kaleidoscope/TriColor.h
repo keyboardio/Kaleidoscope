@@ -24,16 +24,16 @@
 namespace KaleidoscopePlugins {
 namespace LEDEffects {
 class TriColor : public LEDMode {
-  public:
-    TriColor (cRGB baseColor, cRGB modColor, cRGB escColor);
-    TriColor (cRGB baseColor, cRGB modColor) : TriColor (baseColor, modColor, modColor) {};
+ public:
+  TriColor(cRGB baseColor, cRGB modColor, cRGB escColor);
+  TriColor(cRGB baseColor, cRGB modColor) : TriColor(baseColor, modColor, modColor) {};
 
-    virtual void update (void) final;
+  virtual void update(void) final;
 
-  private:
-    cRGB baseColor;
-    cRGB modColor;
-    cRGB escColor;
+ private:
+  cRGB baseColor;
+  cRGB modColor;
+  cRGB escColor;
 };
 };
 };
