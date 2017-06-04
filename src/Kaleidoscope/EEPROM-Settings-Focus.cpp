@@ -44,7 +44,7 @@ bool settingsFocusHook(const char *command) {
 
   switch (sub_command) {
   case ISVALID:
-    Focus.printBool(::EEPROMSettings.isValid());
+    ::Focus.printBool(::EEPROMSettings.isValid());
     Serial.println();
     break;
   case GETVERSION:
@@ -78,8 +78,8 @@ bool eepromFocusHook(const char *command) {
     if (Serial.peek() == '\n') {
       for (uint16_t i = 0; i < EEPROM.length(); i++) {
         uint8_t d = EEPROM[i];
-        Focus.printNumber(d);
-        Focus.printSpace();
+        ::Focus.printNumber(d);
+        ::Focus.printSpace();
       }
       Serial.println();
     } else {
