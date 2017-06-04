@@ -41,11 +41,11 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip),
 };
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (!key_toggled_on(keyState))
+const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
+  if (!key_toggled_on(key_state))
     return MACRO_NONE;
 
-  if (macroIndex == 0) {
+  if (macro_index == 0) {
     for (uint8_t i = Key_A.keyCode; i <= Key_0.keyCode; i++) {
       LEDControl.set_all_leds_to(0, 0, 0);
       LEDControl.led_sync();
@@ -74,15 +74,15 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 
     for (uint8_t step = 0; step <= 0xf0; step += 8) {
       AlphaSquare.color = { step, step, step };
-      AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 2);
-      AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 10);
+      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 2);
+      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 10);
       delay(10);
     }
 
     for (uint8_t step = 0xff; step >= 8; step -= 8) {
       AlphaSquare.color = { step, step, step };
-      AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 2);
-      AlphaSquare.display(KaleidoscopePlugins::AlphaSquareSymbols::Lambda, 10);
+      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 2);
+      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 10);
       delay(10);
     }
     delay(100);
@@ -94,9 +94,10 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
+  USE_PLUGINS(&AlphaSquare, &AlphaSquareEffect, &Macros);
+
   Kaleidoscope.setup();
 
-  USE_PLUGINS(&AlphaSquare, &AlphaSquareEffect, &Macros);
   AlphaSquare.color = { 0xcb, 0xc0, 0xff };
 }
 

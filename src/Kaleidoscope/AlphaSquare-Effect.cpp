@@ -18,12 +18,12 @@
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
+
 uint16_t AlphaSquareEffect::length = 1000;
-uint32_t AlphaSquareEffect::endTimeLeft, AlphaSquareEffect::endTimeRight;
-Key AlphaSquareEffect::lastKeyLeft, AlphaSquareEffect::lastKeyRight;
-uint8_t AlphaSquareEffect::us;
+uint32_t AlphaSquareEffect::end_time_left_, AlphaSquareEffect::end_time_right_;
+Key AlphaSquareEffect::last_key_left_, AlphaSquareEffect::last_key_right_;
+uint8_t AlphaSquareEffect::us_;
 
 AlphaSquareEffect::AlphaSquareEffect(void) {
 }
@@ -32,54 +32,54 @@ void
 AlphaSquareEffect::begin(void) {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
   Kaleidoscope.use(&LEDControl, NULL);
-  us = LEDControl.mode_add(this);
+  us_ = LEDControl.mode_add(this);
 }
 
 void
 AlphaSquareEffect::update(void) {
-  if (endTimeLeft && millis() > endTimeLeft) {
-    ::AlphaSquare.clear(lastKeyLeft);
-    endTimeLeft = 0;
+  if (end_time_left_ && millis() > end_time_left_) {
+    ::AlphaSquare.clear(last_key_left_);
+    end_time_left_ = 0;
   }
-  if (endTimeRight && millis() > endTimeRight) {
-    ::AlphaSquare.clear(lastKeyRight, 10);
-    endTimeRight = 0;
+  if (end_time_right_ && millis() > end_time_right_) {
+    ::AlphaSquare.clear(last_key_right_, 10);
+    end_time_right_ = 0;
   }
 }
 
 Key
-AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t keyState) {
-  if (LEDControl.get_mode() != us)
+AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
+  if (LEDControl.get_mode() != us_)
     return key;
 
-  if (keyState & INJECTED)
+  if (key_state & INJECTED)
     return key;
 
   if (key < Key_A || key > Key_0)
     return key;
 
-  if (!key_is_pressed(keyState))
+  if (!key_is_pressed(key_state))
     return key;
 
-  uint8_t displayCol = 2;
-  Key prevKey = lastKeyLeft;
+  uint8_t display_col = 2;
+  Key prev_key = last_key_left_;
 
   if (col < COLS / 2) {
-    lastKeyLeft = key;
-    endTimeLeft = millis() + length;
+    last_key_left_ = key;
+    end_time_left_ = millis() + length;
   } else {
-    prevKey = lastKeyRight;
-    lastKeyRight = key;
-    endTimeRight = millis() + length;
-    displayCol = 10;
+    prev_key = last_key_right_;
+    last_key_right_ = key;
+    end_time_right_ = millis() + length;
+    display_col = 10;
   }
 
-  if (prevKey != key)
-    ::AlphaSquare.clear(prevKey, displayCol);
-  ::AlphaSquare.display(key, displayCol);
+  if (prev_key != key)
+    ::AlphaSquare.clear(prev_key, display_col);
+  ::AlphaSquare.display(key, display_col);
   return key;
 }
-};
-};
 
-KaleidoscopePlugins::LEDEffects::AlphaSquareEffect AlphaSquareEffect;
+}
+
+kaleidoscope::AlphaSquareEffect AlphaSquareEffect;

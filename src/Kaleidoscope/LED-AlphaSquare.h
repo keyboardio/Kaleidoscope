@@ -32,14 +32,14 @@
               p20 <<  8 | p21 <<  9 | p22 << 10 | p23 << 11 |     \
               p30 << 12 | p31 << 13 | p32 << 14 | p33 << 15 )
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class AlphaSquare : public KaleidoscopePlugin {
  public:
   AlphaSquare(void);
 
   void begin(void) final;
 
-  static void display(Key key, uint8_t row, uint8_t col, cRGB keyColor);
+  static void display(Key key, uint8_t row, uint8_t col, cRGB key_color);
   static void display(Key key, uint8_t row, uint8_t col);
   static void display(Key key) {
     display(key, 0, 2);
@@ -48,7 +48,7 @@ class AlphaSquare : public KaleidoscopePlugin {
     display(key, 0, col);
   }
 
-  static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB keyColor);
+  static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color);
   static void display(uint16_t symbol, uint8_t row, uint8_t col);
   static void display(uint16_t symbol) {
     display(symbol, 0, 2);
@@ -79,6 +79,7 @@ class AlphaSquare : public KaleidoscopePlugin {
 
   static cRGB color;
 };
-};
 
-extern KaleidoscopePlugins::AlphaSquare AlphaSquare;
+}
+
+extern kaleidoscope::AlphaSquare AlphaSquare;

@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-AlphaSquare.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-AlphaSquare
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 An alphabet for your per-key LEDs, `AlphaSquare` provides a way to display 4x4
 "pixel" symbols on your keyboard. With this building block, one can build some
@@ -22,11 +22,11 @@ the `display` method.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
-void setup () {
-  Kaleidoscope.setup ();
-
-  USE_PLUGINS (&AlphaSquare);
+void setup() {
+  USE_PLUGINS(&AlphaSquare);
   
+  Kaleidoscope.setup();
+
   AlphaSquare.display (Key_A);
 }
 ```
@@ -77,6 +77,16 @@ The plugin provides the `AlphaSquare` object, which has the following methods:
 > A helper macro, which can be used to set up custom bitmaps. It expects 16
 > values, a 4x4 square of zeroes and ones. Zeroes are transparent pixels, ones
 > will be colored.
+
+## Extra symbols
+
+There is a growing number of extra symbols available in the
+`kaleidoscope::alpha_square::symbols` namespace. Ok, growing may have been an
+exaggeration, there is only one as of this writing:
+
+### `Lambda`
+
+> A lambda (`λ`) symbol.
 
 ## Dependencies
 

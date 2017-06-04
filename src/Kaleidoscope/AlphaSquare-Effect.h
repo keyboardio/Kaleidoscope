@@ -21,8 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
 class AlphaSquareEffect : public LEDMode {
  public:
   AlphaSquareEffect(void);
@@ -32,13 +31,12 @@ class AlphaSquareEffect : public LEDMode {
 
   static uint16_t length;
  private:
-  static uint32_t endTimeLeft, endTimeRight;
-  static Key lastKeyLeft, lastKeyRight;
-  static uint8_t us;
+  static uint32_t end_time_left_, end_time_right_;
+  static Key last_key_left_, last_key_right_;
+  static uint8_t us_;
 
-  static Key eventHandlerHook(Key key, uint8_t row, uint8_t col, uint8_t keyState);
+  static Key eventHandlerHook(Key key, uint8_t row, uint8_t col, uint8_t key_state);
 };
-};
-};
+}
 
-extern KaleidoscopePlugins::LEDEffects::AlphaSquareEffect AlphaSquareEffect;
+extern kaleidoscope::AlphaSquareEffect AlphaSquareEffect;

@@ -18,7 +18,7 @@
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
 static const uint16_t alphabet[] PROGMEM = {
   SYM4x4(1, 1, 1, 1,
@@ -173,45 +173,41 @@ cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 AlphaSquare::AlphaSquare(void) {
 }
 
-void
-AlphaSquare::begin(void) {
+void AlphaSquare::begin(void) {
 }
 
-void
-AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB keyColor) {
+void AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
   if (key < Key_A || key > Key_0)
     return;
 
   uint8_t index = key.keyCode - Key_A.keyCode;
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
-  display(symbol, row, col, keyColor);
+  display(symbol, row, col, key_color);
 }
 
-void
-AlphaSquare::display(Key key, uint8_t row, uint8_t col) {
+void AlphaSquare::display(Key key, uint8_t row, uint8_t col) {
   display(key, row, col, color);
 }
 
-void
-AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB keyColor) {
+void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
   for (uint8_t r = 0; r < 4; r++) {
     for (uint8_t c = 0; c < 4; c++) {
       uint8_t pixel = bitRead(symbol, r * 4 + c);
       if (!pixel)
         continue;
 
-      LEDControl.led_set_crgb_at(row + r, col + c, keyColor);
+      LEDControl.led_set_crgb_at(row + r, col + c, key_color);
     }
   }
 
   LEDControl.led_sync();
 }
 
-void
-AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {
+void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {
   display(symbol, row, col, color);
 }
-};
 
-KaleidoscopePlugins::AlphaSquare AlphaSquare;
+}
+
+kaleidoscope::AlphaSquare AlphaSquare;
