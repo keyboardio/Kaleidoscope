@@ -32,7 +32,7 @@ class GhostInTheFirmware : public KaleidoscopePlugin {
 
   GhostInTheFirmware(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
   static void configure(const GhostKey ghostKeys[]);
   static void activate(void);
 
