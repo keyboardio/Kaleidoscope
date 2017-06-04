@@ -22,20 +22,20 @@
 
 namespace KaleidoscopePlugins {
 class FingerPainter : public LEDMode {
-  public:
-    FingerPainter (void);
+ public:
+  FingerPainter(void);
 
-    virtual void begin (void) final;
-    virtual void update (void) final;
+  virtual void begin(void) final;
+  virtual void update(void) final;
 
-    static void toggleEdit (void);
-    static bool focusHook (const char *command);
+  static void toggleEdit(void);
+  static bool focusHook(const char *command);
 
-  private:
-    static uint16_t colorBase;
-    static bool editMode;
+ private:
+  static uint16_t colorBase;
+  static bool editMode;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 };
 

@@ -28,90 +28,90 @@ namespace KaleidoscopePlugins {
 uint16_t FingerPainter::colorBase;
 bool FingerPainter::editMode;
 
-FingerPainter::FingerPainter (void) {
+FingerPainter::FingerPainter(void) {
 }
 
 void
-FingerPainter::begin (void) {
-    USE_PLUGINS (&::LEDPaletteTheme);
+FingerPainter::begin(void) {
+  USE_PLUGINS(&::LEDPaletteTheme);
 
-    LEDMode::begin ();
-    event_handler_hook_use (eventHandlerHook);
+  LEDMode::begin();
+  event_handler_hook_use(eventHandlerHook);
 
-    colorBase = ::LEDPaletteTheme.reserveThemes (1);
+  colorBase = ::LEDPaletteTheme.reserveThemes(1);
 }
 
 void
-FingerPainter::update (void) {
-    ::LEDPaletteTheme.update (colorBase, 0);
+FingerPainter::update(void) {
+  ::LEDPaletteTheme.update(colorBase, 0);
 }
 
 void
-FingerPainter::toggleEdit (void) {
-    editMode = !editMode;
+FingerPainter::toggleEdit(void) {
+  editMode = !editMode;
 }
 
 Key
-FingerPainter::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (!editMode)
-        return mappedKey;
+FingerPainter::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+  if (!editMode)
+    return mappedKey;
 
-    if (!key_toggled_on (keyState))
-        return Key_NoKey;
-
-    if (row >= ROWS || col >= COLS)
-        return Key_NoKey;
-
-    uint8_t colorIndex = ::LEDPaletteTheme.lookupColorIndex (colorBase, KeyboardHardware.get_led_index (row, col));
-
-    // Find the next color in the palette that is different.
-    // But do not loop forever!
-    bool turnAround = false;
-    cRGB oldColor = ::LEDPaletteTheme.lookupColor (colorIndex), newColor = oldColor;
-    while (memcmp (&oldColor, &newColor, sizeof (cRGB)) == 0) {
-        colorIndex++;
-        if (colorIndex > 15) {
-            colorIndex = 0;
-            if (turnAround)
-                break;
-            turnAround = true;
-        }
-        newColor = ::LEDPaletteTheme.lookupColor (colorIndex);
-    }
-
-    ::LEDPaletteTheme.updateColor (colorBase, KeyboardHardware.get_led_index (row, col), colorIndex);
-
+  if (!key_toggled_on(keyState))
     return Key_NoKey;
+
+  if (row >= ROWS || col >= COLS)
+    return Key_NoKey;
+
+  uint8_t colorIndex = ::LEDPaletteTheme.lookupColorIndex(colorBase, KeyboardHardware.get_led_index(row, col));
+
+  // Find the next color in the palette that is different.
+  // But do not loop forever!
+  bool turnAround = false;
+  cRGB oldColor = ::LEDPaletteTheme.lookupColor(colorIndex), newColor = oldColor;
+  while (memcmp(&oldColor, &newColor, sizeof(cRGB)) == 0) {
+    colorIndex++;
+    if (colorIndex > 15) {
+      colorIndex = 0;
+      if (turnAround)
+        break;
+      turnAround = true;
+    }
+    newColor = ::LEDPaletteTheme.lookupColor(colorIndex);
+  }
+
+  ::LEDPaletteTheme.updateColor(colorBase, KeyboardHardware.get_led_index(row, col), colorIndex);
+
+  return Key_NoKey;
 }
 
 bool
-FingerPainter::focusHook (const char *command) {
-    enum {
-        TOGGLE,
-        CLEAR,
-    } subCommand;
+FingerPainter::focusHook(const char *command) {
+  enum {
+    TOGGLE,
+    CLEAR,
+  } subCommand;
 
-    if (strncmp_P (command, PSTR ("fingerpainter."), 14) != 0)
-        return false;
+  if (strncmp_P(command, PSTR("fingerpainter."), 14) != 0)
+    return false;
 
-    if (strcmp_P (command + 14, PSTR ("toggle")) == 0)
-        subCommand = TOGGLE;
-    else if (strcmp_P (command + 14, PSTR ("clear")) == 0)
-        subCommand = CLEAR;
-    else
-        return false;
+  if (strcmp_P(command + 14, PSTR("toggle")) == 0)
+    subCommand = TOGGLE;
+  else if (strcmp_P(command + 14, PSTR("clear")) == 0)
+    subCommand = CLEAR;
+  else
+    return false;
 
-    if (subCommand == CLEAR) {
-        for (uint16_t i = 0; i < ROWS * COLS / 2; i++) {
-            EEPROM.update (colorBase + i, 0);
-        }
-        return true;
+  if (subCommand == CLEAR) {
+    for (uint16_t i = 0; i < ROWS * COLS / 2; i++) {
+      EEPROM.update(colorBase + i, 0);
     }
-
-    ::FingerPainter.activate ();
-    toggleEdit ();
-
     return true;
+  }
+
+  ::FingerPainter.activate();
+  toggleEdit();
+
+  return true;
 }
 };
 
