@@ -11,7 +11,7 @@ class Macros_ : public KaleidoscopePlugin {
  public:
   Macros_(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   void play(const macro_t *macro_p);
 
