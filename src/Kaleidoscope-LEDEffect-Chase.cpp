@@ -9,7 +9,7 @@ LEDChaseEffect_::update(void) {
     return;
   }
   current_chase_counter = 0;
-  LEDControl.led_set_crgb_at(pos - (chase_sign* chase_pixels), {0, 0, 0});
+  LEDControl.led_set_crgb_at(pos - (chase_sign * chase_pixels), {0, 0, 0});
   LEDControl.led_set_crgb_at(pos, {0, 0, 0});
 
   pos += chase_sign;
