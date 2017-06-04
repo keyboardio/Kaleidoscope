@@ -40,191 +40,191 @@ byte TapDance::lastTapDanceCol;
 // --- actions ---
 
 void
-TapDance::interrupt (void) {
-    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
+TapDance::interrupt(void) {
+  uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
-    tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Interrupt);
-    bitWrite (triggeredState, idx, 1);
+  tapDanceAction(idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Interrupt);
+  bitWrite(triggeredState, idx, 1);
 
-    endTime = 0;
+  endTime = 0;
 
-    if (bitRead (pressedState, idx))
-        return;
+  if (bitRead(pressedState, idx))
+    return;
 
-    release (idx);
+  release(idx);
 }
 
 void
-TapDance::timeout (void) {
-    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
+TapDance::timeout(void) {
+  uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
-    tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
-    bitWrite (triggeredState, idx, 1);
+  tapDanceAction(idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Timeout);
+  bitWrite(triggeredState, idx, 1);
 
-    if (bitRead (pressedState, idx))
-        return;
+  if (bitRead(pressedState, idx))
+    return;
 
-    lastTapDanceKey.raw = Key_NoKey.raw;
+  lastTapDanceKey.raw = Key_NoKey.raw;
 
-    release (idx);
+  release(idx);
 }
 
 Key
-TapDance::release (uint8_t tapDanceIndex) {
-    endTime = 0;
-    lastTapDanceKey.raw = Key_NoKey.raw;
+TapDance::release(uint8_t tapDanceIndex) {
+  endTime = 0;
+  lastTapDanceKey.raw = Key_NoKey.raw;
 
-    bitClear (pressedState, tapDanceIndex);
-    bitClear (triggeredState, tapDanceIndex);
-    bitWrite (releaseNextState, tapDanceIndex, 1);
-    return Key_NoKey;
+  bitClear(pressedState, tapDanceIndex);
+  bitClear(triggeredState, tapDanceIndex);
+  bitWrite(releaseNextState, tapDanceIndex, 1);
+  return Key_NoKey;
 }
 
 Key
-TapDance::tap (void) {
-    uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
+TapDance::tap(void) {
+  uint8_t idx = lastTapDanceKey.raw - Ranges::TD_FIRST;
 
-    tapCount[idx]++;
-    endTime = millis () + timeOut;
+  tapCount[idx]++;
+  endTime = millis() + timeOut;
 
-    tapDanceAction (idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Tap);
+  tapDanceAction(idx, lastTapDanceRow, lastTapDanceCol, tapCount[idx], Tap);
 
-    return Key_NoKey;
+  return Key_NoKey;
 }
 
 // --- api ---
 
-TapDance::TapDance (void) {
-    lastTapDanceKey.raw = Key_NoKey.raw;
+TapDance::TapDance(void) {
+  lastTapDanceKey.raw = Key_NoKey.raw;
 }
 
 void
-TapDance::begin (void) {
-    event_handler_hook_use (this->eventHandlerHook);
-    loop_hook_use (this->loopHook);
+TapDance::begin(void) {
+  event_handler_hook_use(this->eventHandlerHook);
+  loop_hook_use(this->loopHook);
 }
 
 void
-TapDance::actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]) {
-    if (tapCount > maxKeys)
-        tapCount = maxKeys;
+TapDance::actionKeys(uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]) {
+  if (tapCount > maxKeys)
+    tapCount = maxKeys;
 
-    Key key;
-    key.raw = pgm_read_word (&(tapKeys[tapCount - 1].raw));
+  Key key;
+  key.raw = pgm_read_word(&(tapKeys[tapCount - 1].raw));
 
-    switch (tapDanceAction) {
-    case Tap:
-        break;
-    case Interrupt:
-    case Timeout:
-        handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | INJECTED);
-        break;
-    case Hold:
-        handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | WAS_PRESSED | INJECTED);
-        break;
-    case Release:
-        Keyboard.sendReport ();
-        handle_keyswitch_event (key, lastTapDanceRow, lastTapDanceCol, WAS_PRESSED | INJECTED);
-        break;
-    }
+  switch (tapDanceAction) {
+  case Tap:
+    break;
+  case Interrupt:
+  case Timeout:
+    handle_keyswitch_event(key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | INJECTED);
+    break;
+  case Hold:
+    handle_keyswitch_event(key, lastTapDanceRow, lastTapDanceCol, IS_PRESSED | WAS_PRESSED | INJECTED);
+    break;
+  case Release:
+    Keyboard.sendReport();
+    handle_keyswitch_event(key, lastTapDanceRow, lastTapDanceCol, WAS_PRESSED | INJECTED);
+    break;
+  }
 }
 
 // --- hooks ---
 
 Key
-TapDance::eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState) {
-    if (keyState & INJECTED)
-        return mappedKey;
+TapDance::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+  if (keyState & INJECTED)
+    return mappedKey;
 
-    if (!key_is_pressed (keyState) && !key_was_pressed (keyState)) {
-        if (isTapDance (mappedKey))
-            return Key_NoKey;
-        return mappedKey;
-    }
+  if (!key_is_pressed(keyState) && !key_was_pressed(keyState)) {
+    if (isTapDance(mappedKey))
+      return Key_NoKey;
+    return mappedKey;
+  }
 
-    if (!isTapDance (mappedKey)) {
-        if (!isActive ())
-            return mappedKey;
+  if (!isTapDance(mappedKey)) {
+    if (!isActive())
+      return mappedKey;
 
-        if (key_toggled_on (keyState))
-            interrupt ();
+    if (key_toggled_on(keyState))
+      interrupt();
 
-        return mappedKey;
-    }
+    return mappedKey;
+  }
 
-    uint8_t tapDanceIndex = mappedKey.raw - Ranges::TD_FIRST;
+  uint8_t tapDanceIndex = mappedKey.raw - Ranges::TD_FIRST;
 
-    if (key_toggled_off (keyState))
-        bitClear (pressedState, tapDanceIndex);
+  if (key_toggled_off(keyState))
+    bitClear(pressedState, tapDanceIndex);
 
-    if (!isInSeq (mappedKey)) {
-        if (!isActive ()) {
-            if (bitRead (triggeredState, tapDanceIndex)) {
-                if (key_toggled_off (keyState))
-                    return release (tapDanceIndex);
-                return Key_NoKey;
-            }
+  if (!isInSeq(mappedKey)) {
+    if (!isActive()) {
+      if (bitRead(triggeredState, tapDanceIndex)) {
+        if (key_toggled_off(keyState))
+          return release(tapDanceIndex);
+        return Key_NoKey;
+      }
 
-            lastTapDanceKey.raw = mappedKey.raw;
-            lastTapDanceRow = row;
-            lastTapDanceCol = col;
-            return tap ();
-        } else {
-            if (key_toggled_off (keyState) && stillHeld (tapDanceIndex)) {
-                return release (tapDanceIndex);
-            }
+      lastTapDanceKey.raw = mappedKey.raw;
+      lastTapDanceRow = row;
+      lastTapDanceCol = col;
+      return tap();
+    } else {
+      if (key_toggled_off(keyState) && stillHeld(tapDanceIndex)) {
+        return release(tapDanceIndex);
+      }
 
-            if (!key_toggled_on (keyState))
-                return Key_NoKey;
-
-            interrupt ();
-        }
-    }
-
-    // in sequence
-
-    if (key_toggled_off (keyState))
+      if (!key_toggled_on(keyState))
         return Key_NoKey;
 
-    lastTapDanceKey.raw = mappedKey.raw;
-    lastTapDanceRow = row;
-    lastTapDanceCol = col;
-    bitSet (pressedState, tapDanceIndex);
+      interrupt();
+    }
+  }
 
-    if (key_toggled_on (keyState))
-        return tap ();
+  // in sequence
 
-    if (bitRead (triggeredState, tapDanceIndex))
-        tapDanceAction (tapDanceIndex, row, col, tapCount[tapDanceIndex], Hold);
-
+  if (key_toggled_off(keyState))
     return Key_NoKey;
+
+  lastTapDanceKey.raw = mappedKey.raw;
+  lastTapDanceRow = row;
+  lastTapDanceCol = col;
+  bitSet(pressedState, tapDanceIndex);
+
+  if (key_toggled_on(keyState))
+    return tap();
+
+  if (bitRead(triggeredState, tapDanceIndex))
+    tapDanceAction(tapDanceIndex, row, col, tapCount[tapDanceIndex], Hold);
+
+  return Key_NoKey;
 }
 
 void
-TapDance::loopHook (bool postClear) {
-    if (!postClear)
-        return;
+TapDance::loopHook(bool postClear) {
+  if (!postClear)
+    return;
 
-    for (uint8_t i = 0; i < 16; i++) {
-        if (!bitRead (releaseNextState, i))
-            continue;
+  for (uint8_t i = 0; i < 16; i++) {
+    if (!bitRead(releaseNextState, i))
+      continue;
 
-        tapDanceAction (i, lastTapDanceRow, lastTapDanceCol, tapCount[i], Release);
-        tapCount[i] = 0;
-        bitClear (releaseNextState, i);
-    }
+    tapDanceAction(i, lastTapDanceRow, lastTapDanceCol, tapCount[i], Release);
+    tapCount[i] = 0;
+    bitClear(releaseNextState, i);
+  }
 
-    if (!isActive ())
-        return;
+  if (!isActive())
+    return;
 
-    if (endTime && millis () > endTime)
-        timeout();
+  if (endTime && millis() > endTime)
+    timeout();
 }
 } // namespace KaleidoscopePlugins
 
 __attribute__((weak))
 void
-tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
+tapDanceAction(uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
 }
 
 KaleidoscopePlugins::TapDance TapDance;

@@ -31,42 +31,42 @@
 
 namespace KaleidoscopePlugins {
 class TapDance : public KaleidoscopePlugin {
-  public:
-    typedef enum {
-        Tap,
-        Hold,
-        Interrupt,
-        Timeout,
-        Release,
-    } ActionType;
+ public:
+  typedef enum {
+    Tap,
+    Hold,
+    Interrupt,
+    Timeout,
+    Release,
+  } ActionType;
 
-    TapDance (void);
+  TapDance(void);
 
-    void begin (void) final;
-    static uint16_t timeOut;
+  void begin(void) final;
+  static uint16_t timeOut;
 
-    void actionKeys (uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
+  void actionKeys(uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
 
-  private:
-    static uint32_t endTime;
-    static uint8_t tapCount[16];
-    static uint16_t pressedState;
-    static uint16_t triggeredState;
-    static uint16_t releaseNextState;
-    static Key lastTapDanceKey;
-    static byte lastTapDanceRow;
-    static byte lastTapDanceCol;
+ private:
+  static uint32_t endTime;
+  static uint8_t tapCount[16];
+  static uint16_t pressedState;
+  static uint16_t triggeredState;
+  static uint16_t releaseNextState;
+  static Key lastTapDanceKey;
+  static byte lastTapDanceRow;
+  static byte lastTapDanceCol;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
-    static void loopHook (bool postClear);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static void loopHook(bool postClear);
 
-    static Key tap (void);
-    static void interrupt (void);
-    static void timeout (void);
-    static Key release (uint8_t tapDanceIndex);
+  static Key tap(void);
+  static void interrupt(void);
+  static void timeout(void);
+  static Key release(uint8_t tapDanceIndex);
 };
 } // namespace KaleidoscopePlugins
 
-void tapDanceAction (uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction);
+void tapDanceAction(uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction);
 
 extern KaleidoscopePlugins::TapDance TapDance;
