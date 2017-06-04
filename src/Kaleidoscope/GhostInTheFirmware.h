@@ -44,7 +44,7 @@ class GhostInTheFirmware : public KaleidoscopePlugin {
   static uint16_t press_timeout_;
   static uint16_t delay_timeout_;
 
-  static void loopHook(bool postClear);
+  static void loopHook(bool is_post_clear);
 };
 }
 

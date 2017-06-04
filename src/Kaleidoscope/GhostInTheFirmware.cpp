@@ -39,8 +39,8 @@ void GhostInTheFirmware::activate(void) {
   is_active_ = true;
 }
 
-void GhostInTheFirmware::loopHook(bool postClear) {
-  if (postClear || !is_active_)
+void GhostInTheFirmware::loopHook(bool is_post_clear) {
+  if (is_post_clear || !is_active_)
     return;
 
   if (press_timeout_ == 0) {
