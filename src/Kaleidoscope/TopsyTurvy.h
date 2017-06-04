@@ -22,18 +22,18 @@
 
 namespace KaleidoscopePlugins {
 class TopsyTurvy: public KaleidoscopePlugin {
-  public:
-    TopsyTurvy (void);
+ public:
+  TopsyTurvy(void);
 
-    void begin (void) final;
+  void begin(void) final;
 
-    static void configure (const Key topsyTurvyList[]);
+  static void configure(const Key topsyTurvyList[]);
 
-  private:
-    static const Key *topsyTurvyList;
-    static uint8_t topsyTurvyModState;
+ private:
+  static const Key *topsyTurvyList;
+  static uint8_t topsyTurvyModState;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 }
 } // namespace KaleidoscopePlugins
 
