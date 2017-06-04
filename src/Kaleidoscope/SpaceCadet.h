@@ -22,20 +22,20 @@
 
 namespace KaleidoscopePlugins {
 class SpaceCadetShift : public KaleidoscopePlugin {
-  public:
-    SpaceCadetShift (void);
+ public:
+  SpaceCadetShift(void);
 
-    void begin (void) final;
+  void begin(void) final;
 
-    static void configure (Key left, Key right);
-    static uint16_t timeOut;
+  static void configure(Key left, Key right);
+  static uint16_t timeOut;
 
-  private:
-    static uint8_t parenNeeded;
-    static uint32_t startTime;
-    static Key leftParen, rightParen;
+ private:
+  static uint8_t parenNeeded;
+  static uint32_t startTime;
+  static Key leftParen, rightParen;
 
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 };
 
