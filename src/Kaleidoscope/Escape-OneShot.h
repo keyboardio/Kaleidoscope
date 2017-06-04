@@ -20,13 +20,13 @@
 
 namespace KaleidoscopePlugins {
 class EscapeOneShot : public KaleidoscopePlugin {
-  public:
-    EscapeOneShot (void);
+ public:
+  EscapeOneShot(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-  private:
-    static Key eventHandlerHook (Key mappedKey, byte row, byte col, uint8_t keyState);
+ private:
+  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 };
 
