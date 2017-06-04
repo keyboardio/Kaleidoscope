@@ -23,87 +23,87 @@ namespace KaleidoscopePlugins {
 struct EEPROMSettings::settings EEPROMSettings::settings;
 bool EEPROMSettings::_isValid;
 bool EEPROMSettings::sealed;
-uint16_t EEPROMSettings::nextStart = sizeof (EEPROMSettings::settings);
+uint16_t EEPROMSettings::nextStart = sizeof(EEPROMSettings::settings);
 
-EEPROMSettings::EEPROMSettings (void) {
+EEPROMSettings::EEPROMSettings(void) {
 }
 
 void
-EEPROMSettings::begin (void) {
-    EEPROM.get (0, settings);
+EEPROMSettings::begin(void) {
+  EEPROM.get(0, settings);
 }
 
 bool
-EEPROMSettings::isValid (void) {
-    return _isValid;
+EEPROMSettings::isValid(void) {
+  return _isValid;
 }
 
 uint16_t
-EEPROMSettings::crc (void) {
-    if (sealed)
-        return settings.crc;
-    return 0;
+EEPROMSettings::crc(void) {
+  if (sealed)
+    return settings.crc;
+  return 0;
 }
 
 void
-EEPROMSettings::seal (void) {
-    sealed = true;
+EEPROMSettings::seal(void) {
+  sealed = true;
 
-    CRC.finalize ();
+  CRC.finalize();
 
-    if (settings.magic[0] != 'K' || settings.magic[1] != 'S') {
-        settings.magic[0] = 'K';
-        settings.magic[1] = 'S';
-        settings.version = 0;
-        settings.crc = CRC.crc;
+  if (settings.magic[0] != 'K' || settings.magic[1] != 'S') {
+    settings.magic[0] = 'K';
+    settings.magic[1] = 'S';
+    settings.version = 0;
+    settings.crc = CRC.crc;
 
-        return update ();
-    }
+    return update();
+  }
 
-    if (settings.crc != CRC.crc)
-        _isValid = false;
-}
-
-uint16_t
-EEPROMSettings::requestSlice (uint16_t size) {
-    if (sealed)
-        return 0;
-
-    uint16_t start = nextStart;
-    nextStart += size;
-
-    CRC.update ((const void *)&size, sizeof (size));
-
-    return start;
-}
-
-void
-EEPROMSettings::invalidate (void) {
+  if (settings.crc != CRC.crc)
     _isValid = false;
 }
 
 uint16_t
-EEPROMSettings::used (void) {
-    return nextStart;
+EEPROMSettings::requestSlice(uint16_t size) {
+  if (sealed)
+    return 0;
+
+  uint16_t start = nextStart;
+  nextStart += size;
+
+  CRC.update((const void *)&size, sizeof(size));
+
+  return start;
 }
 
 void
-EEPROMSettings::update (void) {
-    settings.crc = CRC.crc;
+EEPROMSettings::invalidate(void) {
+  _isValid = false;
+}
 
-    EEPROM.put (0, settings);
-    _isValid = true;
+uint16_t
+EEPROMSettings::used(void) {
+  return nextStart;
+}
+
+void
+EEPROMSettings::update(void) {
+  settings.crc = CRC.crc;
+
+  EEPROM.put(0, settings);
+  _isValid = true;
 }
 
 uint8_t
-EEPROMSettings::version (void) {
-    return settings.version;
+EEPROMSettings::version(void) {
+  return settings.version;
 }
 
 void
-EEPROMSettings::version (uint8_t ver) {
-    settings.version = ver;
-    update ();
+EEPROMSettings::version(uint8_t ver) {
+  settings.version = ver;
+  update();
 }
 };
 

@@ -23,32 +23,32 @@
 
 namespace KaleidoscopePlugins {
 class EEPROMSettings : public KaleidoscopePlugin {
-  public:
-    EEPROMSettings (void);
+ public:
+  EEPROMSettings(void);
 
-    virtual void begin (void) final;
+  virtual void begin(void) final;
 
-    static void update (void);
-    static bool isValid (void);
-    static void invalidate (void);
-    static uint8_t version (void);
-    static void version (uint8_t ver);
+  static void update(void);
+  static bool isValid(void);
+  static void invalidate(void);
+  static uint8_t version(void);
+  static void version(uint8_t ver);
 
-    static uint16_t requestSlice (uint16_t size);
-    static void seal (void);
-    static uint16_t crc (void);
-    static uint16_t used (void);
+  static uint16_t requestSlice(uint16_t size);
+  static void seal(void);
+  static uint16_t crc(void);
+  static uint16_t used(void);
 
-  private:
-    static uint16_t nextStart;
-    static bool _isValid;
-    static bool sealed;
+ private:
+  static uint16_t nextStart;
+  static bool _isValid;
+  static bool sealed;
 
-    static struct settings {
-        char magic[2];
-        uint8_t version;
-        uint16_t crc;
-    } settings;
+  static struct settings {
+    char magic[2];
+    uint8_t version;
+    uint16_t crc;
+  } settings;
 };
 };
 

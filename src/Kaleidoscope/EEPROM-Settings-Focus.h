@@ -21,8 +21,8 @@
 #include <Kaleidoscope.h>
 
 namespace FocusHooks {
-bool settings (const char *command);
-bool eeprom (const char *command);
+bool settings(const char *command);
+bool eeprom(const char *command);
 };
 
 #define FOCUS_HOOK_SETTINGS FOCUS_HOOK(FocusHooks::settings,            \
