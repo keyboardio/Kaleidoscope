@@ -39,7 +39,7 @@ class Leader : public KaleidoscopePlugin {
 
   Leader(void);
 
-  virtual void begin(void) final;
+  void begin(void) final;
 
   static void configure(const dictionary_t dictionary[]);
   static void reset(void);
