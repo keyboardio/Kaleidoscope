@@ -11,34 +11,34 @@
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 class Model01 {
-  public:
-    Model01(void);
-    void led_sync(void);
-    void led_set_crgb_at(byte row, byte col, cRGB color);
-    void led_set_crgb_at(uint8_t i, cRGB crgb);
-    cRGB led_get_crgb_at(uint8_t i);
-    cRGB get_key_color(byte row, byte col);
-    uint8_t get_led_index(byte row, byte col);
+ public:
+  Model01(void);
+  void led_sync(void);
+  void led_set_crgb_at(byte row, byte col, cRGB color);
+  void led_set_crgb_at(uint8_t i, cRGB crgb);
+  cRGB led_get_crgb_at(uint8_t i);
+  cRGB get_key_color(byte row, byte col);
+  uint8_t get_led_index(byte row, byte col);
 
-    void scan_matrix(void);
-    void read_matrix(void);
-    void act_on_matrix_scan(void);
-    void setup();
-    void enable_high_power_leds(void);
-    void enable_scanner_power(void);
-    void reboot_bootloader();
+  void scan_matrix(void);
+  void read_matrix(void);
+  void act_on_matrix_scan(void);
+  void setup();
+  void enable_high_power_leds(void);
+  void enable_scanner_power(void);
+  void reboot_bootloader();
 
-    boolean led_power_fault(void);
+  boolean led_power_fault(void);
 
-    keydata_t leftHandState;
-    keydata_t rightHandState;
-    keydata_t previousLeftHandState;
-    keydata_t previousRightHandState;
+  keydata_t leftHandState;
+  keydata_t rightHandState;
+  keydata_t previousLeftHandState;
+  keydata_t previousRightHandState;
 
-  private:
-    static bool isLEDChanged;
-    static KeyboardioScanner leftHand;
-    static KeyboardioScanner rightHand;
+ private:
+  static bool isLEDChanged;
+  static KeyboardioScanner leftHand;
+  static KeyboardioScanner rightHand;
 };
 
 #define SCANBIT(row,col) ((uint32_t)1 << (row * 8 + (7 - col)))
