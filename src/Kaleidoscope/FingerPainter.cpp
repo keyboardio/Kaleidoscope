@@ -23,96 +23,92 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
-uint16_t FingerPainter::colorBase;
-bool FingerPainter::editMode;
+uint16_t FingerPainter::color_base_;
+bool FingerPainter::edit_mode_;
 
 FingerPainter::FingerPainter(void) {
 }
 
-void
-FingerPainter::begin(void) {
+void FingerPainter::begin(void) {
   USE_PLUGINS(&::LEDPaletteTheme);
 
   LEDMode::begin();
   event_handler_hook_use(eventHandlerHook);
 
-  colorBase = ::LEDPaletteTheme.reserveThemes(1);
+  color_base_ = ::LEDPaletteTheme.reserveThemes(1);
 }
 
-void
-FingerPainter::update(void) {
-  ::LEDPaletteTheme.update(colorBase, 0);
+void FingerPainter::update(void) {
+  ::LEDPaletteTheme.update(color_base_, 0);
 }
 
-void
-FingerPainter::toggleEdit(void) {
-  editMode = !editMode;
+void FingerPainter::toggle(void) {
+  edit_mode_ = !edit_mode_;
 }
 
-Key
-FingerPainter::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (!editMode)
-    return mappedKey;
+Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  if (!edit_mode_)
+    return mapped_key;
 
-  if (!key_toggled_on(keyState))
+  if (!key_toggled_on(key_state))
     return Key_NoKey;
 
   if (row >= ROWS || col >= COLS)
     return Key_NoKey;
 
-  uint8_t colorIndex = ::LEDPaletteTheme.lookupColorIndex(colorBase, KeyboardHardware.get_led_index(row, col));
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndex(color_base_, KeyboardHardware.get_led_index(row, col));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
-  bool turnAround = false;
-  cRGB oldColor = ::LEDPaletteTheme.lookupColor(colorIndex), newColor = oldColor;
-  while (memcmp(&oldColor, &newColor, sizeof(cRGB)) == 0) {
-    colorIndex++;
-    if (colorIndex > 15) {
-      colorIndex = 0;
-      if (turnAround)
+  bool turn_around = false;
+  cRGB old_color = ::LEDPaletteTheme.lookupColor(color_index), new_color = old_color;
+  while (memcmp(&old_color, &new_color, sizeof(cRGB)) == 0) {
+    color_index++;
+    if (color_index > 15) {
+      color_index = 0;
+      if (turn_around)
         break;
-      turnAround = true;
+      turn_around = true;
     }
-    newColor = ::LEDPaletteTheme.lookupColor(colorIndex);
+    new_color = ::LEDPaletteTheme.lookupColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColor(colorBase, KeyboardHardware.get_led_index(row, col), colorIndex);
+  ::LEDPaletteTheme.updateColor(color_base_, KeyboardHardware.get_led_index(row, col), color_index);
 
   return Key_NoKey;
 }
 
-bool
-FingerPainter::focusHook(const char *command) {
+bool FingerPainter::focusHook(const char *command) {
   enum {
     TOGGLE,
     CLEAR,
-  } subCommand;
+  } sub_command;
 
   if (strncmp_P(command, PSTR("fingerpainter."), 14) != 0)
     return false;
 
   if (strcmp_P(command + 14, PSTR("toggle")) == 0)
-    subCommand = TOGGLE;
+    sub_command = TOGGLE;
   else if (strcmp_P(command + 14, PSTR("clear")) == 0)
-    subCommand = CLEAR;
+    sub_command = CLEAR;
   else
     return false;
 
-  if (subCommand == CLEAR) {
+  if (sub_command == CLEAR) {
     for (uint16_t i = 0; i < ROWS * COLS / 2; i++) {
-      EEPROM.update(colorBase + i, 0);
+      EEPROM.update(color_base_ + i, 0);
     }
     return true;
   }
 
   ::FingerPainter.activate();
-  toggleEdit();
+  toggle();
 
   return true;
 }
-};
 
-KaleidoscopePlugins::FingerPainter FingerPainter;
+}
+
+kaleidoscope::FingerPainter FingerPainter;

@@ -9,37 +9,61 @@
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-TODO
+The `FingerPainter` plugin provides an elaborate `LED` mode, in which one's able
+to paint with their fingers: when edit mode is toggled on, keys will - instead
+of performing their normal function - cycle through the global palette - as
+provided by the [LED-Palette-Theme][plugin:l-p-t] plugin -, one by one for each tap.
+
+This allows us to edit the theme with the keyboard only, without any special
+software (except to toggle edit mode on and off).
 
 ## Using the plugin
 
-TODO
+To use the plugin, just include the header, add it to the list of used plugins,
+and register the `Focus` hooks:
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FingerPainter.h>
+#include <Kaleidoscope-Focus.h>
 
-void setup () {
-  Kaleidoscope.setup ();
+void setup() {
+  USE_PLUGINS(&EEPROMSettings, &FingerPainter, &Focus);
+
+  Kaleidoscope.setup();
+
+  EEPROMSettings.seal();
   
-  USE_PLUGINS (&EEPROMSettings, &FingerPainter);
-
-  // TODO
+  Focus.addHook(FOCUS_HOOK_FINGERPAINTER);
 }
 ```
 
 ## Plugin methods
 
-The plugin provides the `FingerPainter` object, which has the following methods:
+The plugin provides the `FingerPainter` object, which provides no public methods.
 
-**TODO**
+## Focus commands
+
+The plugin provides a single `Focus` hook: `FOCUS_HOOK_FINGERPAINTER`, which
+in turn provides the following commands:
+
+### `fingerpainter.clear`
+
+> Clears the canvas, so that one can start a new painting.
+
+### `fingerpainter.toggle`
+
+> Toggles the painting mode on and off.
 
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-LED-Palette-Theme](https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme)
+* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-LED-Palette-Theme][plugin:l-p-t]
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+
+  [plugin:l-p-t]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme
 
 ## Further reading
 

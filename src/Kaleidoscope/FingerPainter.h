@@ -20,26 +20,26 @@
 
 #include <Kaleidoscope-LEDControl.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class FingerPainter : public LEDMode {
  public:
   FingerPainter(void);
 
   void begin(void) final;
-  virtual void update(void) final;
+  void update(void) final;
 
-  static void toggleEdit(void);
+  static void toggle(void);
   static bool focusHook(const char *command);
 
  private:
-  static uint16_t colorBase;
-  static bool editMode;
+  static uint16_t color_base_;
+  static bool edit_mode_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
-extern KaleidoscopePlugins::FingerPainter FingerPainter;
+extern kaleidoscope::FingerPainter FingerPainter;
 
 #define FOCUS_HOOK_FINGERPAINTER FOCUS_HOOK(FingerPainter.focusHook,  \
                                             "fingerpainter.toggle\n"  \
