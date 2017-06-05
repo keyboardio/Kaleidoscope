@@ -36,26 +36,26 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    TD(1)
-  ),
+    TD(1)),
 };
 
-static void tapDanceEsc(uint8_t tapDanceIndex, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
-  tapDanceActionKeys(tapCount, tapDanceAction, Key_Escape, Key_Tab);
+static void tapDanceEsc(uint8_t tap_dance_index, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
+  tap_dance_actionKeys(tap_count, tap_dance_action, Key_Escape, Key_Tab);
 }
 
-void tapDanceAction(uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
-  switch (tapDanceIndex) {
+void tap_dance_action(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
+  switch (tap_dance_index) {
   case 0:
-    return tapDanceActionKeys(tapCount, tapDanceAction, Key_Tab, Key_Escape);
+    return tap_dance_actionKeys(tap_count, tap_dance_action, Key_Tab, Key_Escape);
   case 1:
-    return tapDanceEsc(tapDanceIndex, tapCount, tapDanceAction);
+    return tapDanceEsc(tap_dance_index, tap_count, tap_dance_action);
   }
 }
 
 void setup() {
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&TapDance, NULL);
+  USE_PLUGINS(&TapDance);
+
+  Kaleidoscope.setup();
 }
 
 void loop() {

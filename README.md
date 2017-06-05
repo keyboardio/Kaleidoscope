@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-TapDance.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-TapDance
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Tap-dance keys are general purpose, multi-use keys, which trigger a different
 action based on the number of times they were tapped in sequence. As an example
@@ -44,21 +44,20 @@ This is to preserve the order of keys pressed.
 In both of these cases, the [`tapDanceAction`][tdaction] will be called, with
 `tapDanceIndex` set to the index of the tap-dance action (as set in the keymap),
 the `tapCount`, and `tapDanceAction` set to either
-`KaleidoscopePlugins::TapDance::Interrupt`, or
-`KaleidoscopePlugins::TapDance::Timeout`. If we continue holding the key, then
-as long as it is held, the same function will be called with `tapDanceAction`
-set to `KaleidoscopePlugins::TapDance::Hold`. When the key is released, after
-either an `Interrupt` or `Timeout` action was triggered, the function will be
-called with `tapDanceAction` set to `KaleidoscopePlugins::TapDance::Release`.
+`kaleidoscope::TapDance::Interrupt`, or `kaleidoscope::TapDance::Timeout`. If we
+continue holding the key, then as long as it is held, the same function will be
+called with `tapDanceAction` set to `kaleidoscope::TapDance::Hold`. When the key
+is released, after either an `Interrupt` or `Timeout` action was triggered, the
+function will be called with `tapDanceAction` set to
+`kaleidoscope::TapDance::Release`.
 
 These actions allow us to create sophisticated tap-dance setups, where one can
 tap a key twice and hold it, and have it repeat, for example.
 
 There is one additional value the `tapDanceAction` parameter can take:
-`KaleidoscopePlugins::TapDance::Tap`. It is called with this argument for each
-and every tap, even if no action is to be triggered yet. This is so that we can
-have a way to do some side-effects, like light up LEDs to show progress, and so
-on.
+`kaleidoscope::TapDance::Tap`. It is called with this argument for each and
+every tap, even if no action is to be triggered yet. This is so that we can have
+a way to do some side-effects, like light up LEDs to show progress, and so on.
 
 ## Using the plugin
 
@@ -75,18 +74,19 @@ time an action is to be performed.
 TD(0)
 
 // later in the Sketch:
-void tapDanceAction (uint8_t tapDanceIndex, uint8_t tapCount, 
-                     KaleidoscopePlugins::TapDance::ActionType tapDanceAction) {
-  switch (tapDanceIndex) {
+void tapDanceAction(uint8_t tap_dance_index, uint8_t tap_count, 
+                    kaleidoscope::TapDance::ActionType tap_dance_action) {
+  switch (tap_dance_index) {
   case 0:
-    return tapDanceActionKeys (tapCount, tapDanceAction,
-                               Key_nextTrack, Key_prevTrack);
+    return tapDanceActionKeys(tap_count, tap_dance_action,
+                              Consumer_ScanNextTrack, Consumer_ScanPreviousTrack);
   }
 }
 
-void setup (void) {
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&TapDance, NULL);
+void setup() {
+  USE_PLUGINS(&TapDance);
+  
+  Kaleidoscope.setup ();
 }
 ```
 
@@ -98,8 +98,8 @@ void setup (void) {
 > implementation for the `id` index within the [`tapDanceActions`][tdactions]
 > function.
 >
-> The `id` parameter here is what will be used as `tapDanceIndex` in the handler
-> function.
+> The `id` parameter here is what will be used as `tap_dance_index` in the
+> handler function.
 
  [tdaction]: #tapdanceactiontapdanceindex-tapcount-tapdanceaction
 
@@ -109,17 +109,15 @@ The plugin provides a `TapDance` object, but to implement the actions, we need
 to define a function ([`tapDanceAction`][tdaction]) outside of the object. A
 handler, of sorts. Nevertheless, the plugin provides one macro that is
 particularly useful: `tapDanceActionKeys`. Apart from that, it provides one
-method only:
+property only:
 
-### `.timeOut`
+### `.time_out`
 
 > The number of loop iterations to wait before a tap-dance sequence times out.
 > Once the sequence timed out, the action for it will trigger, even without an
 > interruptor. Defaults to 5, and the timer resets with every tap of the same
 
-> Not strictly a method, it is a variable one can assign a new value to.
-
-### `tapDanceActionKeys(tapCount, tapDanceAction, keys...)`
+### `tapDanceActionKeys(tap_count, tap_dance_action, keys...)`
 
 > Sets up an action where for each subsequent tap, a different key will be
 > chosen from the list of keys supplied in the `keys...` argument.
@@ -130,19 +128,19 @@ method only:
 > When all our actions are just different keys, this is a very handy macro to
 > use.
 >
-> The `tapCount` and `tapDanceActions` parameters should be the same as the
+> The `tap_count` and `tap_dance_actions` parameters should be the same as the
 > similarly named parameters of the `tapDanceAction` function.
 
-### `tapDanceAction(tapDanceIndex, row, col, tapCount, tapDanceAction)`
+### `tapDanceAction(tap_dance_index, row, col, tap_count, tap_dance_action)`
 
 > The heart of the tap-dance plugin is the handler method. This is called every
 > time any kind of tap-dance action is to be performed. See the
 > *[How does it work?](#how-does-it-work)* section for details about when and
 > how this function is called.
 >
-> The `tapDanceIndex` and `tapCount` parameters help us choose which action to
-> perform. The `row` and `col` parameters tell us where the tap-dance key is on
-> the keyboard.
+> The `tap_dance_index` and `tap_count` parameters help us choose which action
+> to perform. The `row` and `col` parameters tell us where the tap-dance key is
+> on the keyboard.
 
 ## Dependencies
 

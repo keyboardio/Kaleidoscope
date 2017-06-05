@@ -21,15 +21,15 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define TD(n) (Key){.raw = KaleidoscopePlugins::Ranges::TD_FIRST + n }
+#define TD(n) (Key) {.raw = kaleidoscope::ranges::TD_FIRST + n }
 
-#define tapDanceActionKeys(tapCount, tapDanceAction, ...) ({            \
+#define tap_dance_actionKeys(tap_count, tap_dance_action, ...) ({       \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };                 \
-      TapDance.actionKeys (tapCount, tapDanceAction,                    \
-                           sizeof (__k) / sizeof (Key), &__k[0]);       \
+      TapDance.actionKeys(tap_count, tap_dance_action,                  \
+                          sizeof (__k) / sizeof (Key), &__k[0]);        \
     })
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 class TapDance : public KaleidoscopePlugin {
  public:
   typedef enum {
@@ -43,30 +43,32 @@ class TapDance : public KaleidoscopePlugin {
   TapDance(void);
 
   void begin(void) final;
-  static uint16_t timeOut;
+  static uint16_t time_out;
 
-  void actionKeys(uint8_t tapCount, ActionType tapDanceAction, uint8_t maxKeys, const Key tapKeys[]);
+  void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
  private:
-  static uint32_t endTime;
-  static uint8_t tapCount[16];
-  static uint16_t pressedState;
-  static uint16_t triggeredState;
-  static uint16_t releaseNextState;
-  static Key lastTapDanceKey;
-  static byte lastTapDanceRow;
-  static byte lastTapDanceCol;
+  static uint32_t end_time_;
+  static uint8_t tap_count_[16];
+  static uint16_t pressed_state_;
+  static uint16_t triggered_state_;
+  static uint16_t release_next_state_;
+  static Key last_tap_dance_key_;
+  static byte last_tap_dance_row_;
+  static byte last_tap_dance_col_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
 
   static Key tap(void);
   static void interrupt(void);
   static void timeout(void);
-  static Key release(uint8_t tapDanceIndex);
+  static Key release(uint8_t tap_dance_index);
 };
-} // namespace KaleidoscopePlugins
 
-void tapDanceAction(uint8_t tapDanceIndex, byte row, byte col, uint8_t tapCount, KaleidoscopePlugins::TapDance::ActionType tapDanceAction);
+}
 
-extern KaleidoscopePlugins::TapDance TapDance;
+void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+                    kaleidoscope::TapDance::ActionType tap_dance_action);
+
+extern kaleidoscope::TapDance TapDance;
