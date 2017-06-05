@@ -23,7 +23,7 @@
 
 #define TD(n) (Key) {.raw = kaleidoscope::ranges::TD_FIRST + n }
 
-#define tap_dance_actionKeys(tap_count, tap_dance_action, ...) ({       \
+#define tapDanceActionKeys(tap_count, tap_dance_action, ...) ({         \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };                 \
       TapDance.actionKeys(tap_count, tap_dance_action,                  \
                           sizeof (__k) / sizeof (Key), &__k[0]);        \
