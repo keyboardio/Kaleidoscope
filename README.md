@@ -33,7 +33,8 @@ void setup() {
 
 ## Plugin methods
 
-The plugin provides the `AlphaSquare` object, which has the following methods:
+The plugin provides the `AlphaSquare` object, which has the following methods
+and properties:
 
 ### `.display(key)`
 ### `.display(key, row, col)`
@@ -65,8 +66,6 @@ The plugin provides the `AlphaSquare` object, which has the following methods:
 ### `.color`
 
 > The color to use to draw the pixels.
->
-> Not a method itself, but a changeable value.
 >
 > Defaults to { 0x80, 0x80, 0x80 }.
 
