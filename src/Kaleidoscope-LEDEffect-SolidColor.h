@@ -6,7 +6,7 @@ class LEDSolidColor : public LEDMode {
  public:
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b);
 
-  virtual void init(void) final;
+  void init(void) final;
 
  private:
   uint8_t r, g, b;
