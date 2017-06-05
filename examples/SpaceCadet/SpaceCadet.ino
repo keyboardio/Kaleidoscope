@@ -40,8 +40,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  Kaleidoscope.setup();
   USE_PLUGINS(&SpaceCadetShift);
+
+  Kaleidoscope.setup();
 }
 
 void loop() {

@@ -20,23 +20,23 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class SpaceCadetShift : public KaleidoscopePlugin {
  public:
   SpaceCadetShift(void);
 
   void begin(void) final;
 
-  static void configure(Key left, Key right);
-  static uint16_t timeOut;
+  static uint16_t time_out;
+  static Key opening_paren, closing_paren;
 
  private:
-  static uint8_t parenNeeded;
-  static uint32_t startTime;
-  static Key leftParen, rightParen;
+  static uint8_t paren_needed_;
+  static uint32_t start_time_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
-extern KaleidoscopePlugins::SpaceCadetShift SpaceCadetShift;
+extern kaleidoscope::SpaceCadetShift SpaceCadetShift;

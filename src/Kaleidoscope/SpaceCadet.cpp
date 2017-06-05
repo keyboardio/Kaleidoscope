@@ -18,89 +18,79 @@
 
 #include <Kaleidoscope-SpaceCadet.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
-uint8_t SpaceCadetShift::parenNeeded;
-uint32_t SpaceCadetShift::startTime;
-uint16_t SpaceCadetShift::timeOut = 1000;
-Key SpaceCadetShift::leftParen, SpaceCadetShift::rightParen;
+uint8_t SpaceCadetShift::paren_needed_;
+uint32_t SpaceCadetShift::start_time_;
+uint16_t SpaceCadetShift::time_out = 1000;
+Key SpaceCadetShift::opening_paren = Key_9, SpaceCadetShift::closing_paren = Key_0;
 
 SpaceCadetShift::SpaceCadetShift() {
-  leftParen.raw = Key_9.raw;
-  rightParen.raw = Key_0.raw;
 }
 
-void
-SpaceCadetShift::begin() {
-  event_handler_hook_use(this->eventHandlerHook);
+void SpaceCadetShift::begin() {
+  event_handler_hook_use(eventHandlerHook);
 }
 
-void
-SpaceCadetShift::configure(Key left, Key right) {
-  leftParen = left;
-  rightParen = right;
-}
-
-Key
-SpaceCadetShift::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key SpaceCadetShift::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // If nothing happened, bail out fast.
-  if (!key_is_pressed(keyState) && !key_was_pressed(keyState)) {
-    return mappedKey;
+  if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
+    return mapped_key;
   }
 
   // If a key has been just toggled on...
-  if (key_toggled_on(keyState)) {
-    if (mappedKey.raw == Key_LeftShift.raw) {  // if it is LShift, remember it
-      bitWrite(parenNeeded, 0, 1);
-      startTime = millis();
-    } else if (mappedKey.raw == Key_RightShift.raw) {  // if it is RShift, remember it
-      bitWrite(parenNeeded, 1, 1);
-      startTime = millis();
+  if (key_toggled_on(key_state)) {
+    if (mapped_key.raw == Key_LeftShift.raw) {  // if it is LShift, remember it
+      bitWrite(paren_needed_, 0, 1);
+      start_time_ = millis();
+    } else if (mapped_key.raw == Key_RightShift.raw) {  // if it is RShift, remember it
+      bitWrite(paren_needed_, 1, 1);
+      start_time_ = millis();
     } else {  // if it is something else, we do not need a paren at the end.
-      parenNeeded = 0;
-      startTime = 0;
+      paren_needed_ = 0;
+      start_time_ = 0;
     }
 
     // this is all we need to do on keypress, let the next handler do its thing too.
-    return mappedKey;
+    return mapped_key;
   }
 
   // if the state is empty, that means that either the shifts weren't pressed,
   // or we used another key in the interim. in both cases, nothing special to do.
-  if (!parenNeeded)
-    return mappedKey;
+  if (!paren_needed_)
+    return mapped_key;
 
   // if we timed out, that means we need to keep pressing shift, but won't
   // need the parens in the end.
-  if ((millis() - startTime) >= timeOut) {
-    parenNeeded = 0;
-    return mappedKey;
+  if ((millis() - start_time_) >= time_out) {
+    paren_needed_ = 0;
+    return mapped_key;
   }
 
   // if we have a state, but the key in question is not either of the shifts,
   // return. This can happen when another key is released, and that should not
   // interrupt us.
-  if (mappedKey.raw != Key_LeftShift.raw &&
-      mappedKey.raw != Key_RightShift.raw)
-    return mappedKey;
+  if (mapped_key.raw != Key_LeftShift.raw &&
+      mapped_key.raw != Key_RightShift.raw)
+    return mapped_key;
 
   // if a key toggled off (and that must be one of the shifts at this point),
   // send the parens too (if we were interrupted, we bailed out earlier).
-  if (key_toggled_off(keyState)) {
-    Key paren = leftParen;
-    if (bitRead(parenNeeded, 1))
-      paren = rightParen;
+  if (key_toggled_off(key_state)) {
+    Key paren = opening_paren;
+    if (bitRead(paren_needed_, 1))
+      paren = closing_paren;
 
-    handle_keyswitch_event(mappedKey, row, col, IS_PRESSED | INJECTED);
+    handle_keyswitch_event(mapped_key, row, col, IS_PRESSED | INJECTED);
     handle_keyswitch_event(paren, row, col, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
 
-    parenNeeded = 0;
+    paren_needed_ = 0;
   }
 
-  return mappedKey;
+  return mapped_key;
 }
 
-};
+}
 
-KaleidoscopePlugins::SpaceCadetShift SpaceCadetShift;
+kaleidoscope::SpaceCadetShift SpaceCadetShift;

@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-SpaceCadet.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-SpaceCadet
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 [Space Cadet][space-cadet] Shift is a way to make it more convenient to input
 parens - those `(` and `)` things -, symbols that a lot of programming languages
@@ -36,44 +36,39 @@ enabling the plugin:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-SpaceCadet.h>
 
-void setup () {
-  Kaleidoscope.setup ();
-  USE_PLUGINS (&SpaceCadetShift);
+void setup() {
+  USE_PLUGINS(&SpaceCadetShift);
+
+  Kaleidoscope.setup();
 }
 ```
 
 This assumes a US QWERTY layout on the host computer, and will use the `9` and
 `0` keys for the left and right parens, respectively. To change these keys, use
-the [`.configure()`](#configureleft-right) method outlined below.
+the `.opening_paren` and `.closing_paren` properties outlined below.
 
 ## Plugin methods
 
-The plugin has a number of methods available on the `SpaceCadetShift` object:
+The plugin provides the `SpaceCadetShift` object, with the following methods and
+properties:
 
-### `.configure(left, right)`
+### `.opening_paren`
 
-> Used to change the configuration of the plugin, namely, the keys used for the
-> left and right parens. These keys will be pressed with `Shift` held, and
-> should result in the opening and closing parens.
+> Set this property to the key that - when shifted - will result in an opening paren.
 >
-> As an example, assuming a Hungarian QWERTZ layout where the parens are not on
-> `9` and `0`, we can use the following little snippet in the `setup` method of
-> our Sketch:
+> Defaults to `Key_9`.
 
-```c++
-void setup () {
-  SpaceCadetShift.configure(Key_8, Key_9);
-  Kaleidoscope.setup ();
-}
-```
+### `.closing_paren`
 
-### `.timeOut`
-
-> The number of milliseconds to wait before considering a held key in isolation
-> as its secondary role. That is, we'd have to hold a `Shift` key this long, by
-> itself, to trigger the `Shift` role in itself.
+> Set this property to the key that - when shifted - will result in a closing paren.
 >
-> Not strictly a method, it is a variable one can assign a new value to.
+> Defaults to `Key_0`.
+
+### `.time_out`
+
+> Set this property to the number of milliseconds to wait before considering a
+> held key in isolation as its secondary role. That is, we'd have to hold a
+> `Shift` key this long, by itself, to trigger the `Shift` role in itself.
 >
 > Defaults to 1000.
 
