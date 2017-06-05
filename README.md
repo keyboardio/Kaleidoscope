@@ -38,13 +38,11 @@ LEDs, and apply the highlight over those.
 ## Plugin methods
 
 The plugin provides the `ActiveModColorEffect` object, which has the following
-method:
+property:
 
 ### `.highlight_color`
 
 > The color to use for highlighting the modifiers. Defaults to a white color.
->
-> Not strictly a method, it is a variable one can assign a new value to.
 
 ## Dependencies
 
