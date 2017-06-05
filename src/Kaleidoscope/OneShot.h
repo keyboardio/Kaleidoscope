@@ -21,10 +21,11 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define OSM(kc) (Key) {.raw = KaleidoscopePlugins::Ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode}
-#define OSL(n) (Key) {.raw = KaleidoscopePlugins::Ranges::OSL_FIRST + n}
+#define OSM(kc) (Key) {.raw = kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode}
+#define OSL(n) (Key) {.raw = kaleidoscope::ranges::OSL_FIRST + n}
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class OneShot : public KaleidoscopePlugin {
  public:
   OneShot(void);
@@ -32,16 +33,16 @@ class OneShot : public KaleidoscopePlugin {
   void begin(void) final;
 
   static bool isActive(void);
-  static void cancel(bool withStickies);
+  static void cancel(bool with_stickies);
   static void cancel(void) {
     cancel(false);
   }
-  static uint16_t timeOut;
-  static uint16_t holdTimeOut;
+  static uint16_t time_out;
+  static uint16_t hold_time_out;
 
   static bool isModifierActive(Key key);
 
-  void inject(Key key, uint8_t keyState);
+  void inject(Key key, uint8_t key_state);
 
  private:
   typedef union {
@@ -51,17 +52,17 @@ class OneShot : public KaleidoscopePlugin {
     };
     uint16_t all;
   } state_t;
-  static uint32_t startTime;
-  static state_t State;
-  static state_t stickyState;
-  static state_t pressedState;
-  static uint32_t leftMask;
-  static uint32_t rightMask;
-  static Key prevKey;
-  static bool shouldCancel;
-  static bool shouldCancelStickies;
+  static uint32_t start_time_;
+  static state_t state_;
+  static state_t sticky_state_;
+  static state_t pressed_state_;
+  static uint32_t left_mask_;
+  static uint32_t right_mask_;
+  static Key prev_key_;
+  static bool should_cancel_;
+  static bool should_cancel_stickies_;
 
-  static void injectNormalKey(uint8_t idx, uint8_t keyState);
+  static void injectNormalKey(uint8_t idx, uint8_t key_state);
   static void activateOneShot(uint8_t idx);
   static void cancelOneShot(uint8_t idx);
 
@@ -69,9 +70,10 @@ class OneShot : public KaleidoscopePlugin {
   static void unmask(byte row, byte col);
   static bool isMasked(byte row, byte col);
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
-};
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
 };
 
-extern KaleidoscopePlugins::OneShot OneShot;
+}
+
+extern kaleidoscope::OneShot OneShot;

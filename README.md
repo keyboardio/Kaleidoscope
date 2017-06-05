@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-OneShot.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-OneShot
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 One-shots are a new kind of behaviour for your standard modifier and momentary
 layer keys: instead of having to hold them while pressing other keys, they can
@@ -38,9 +38,10 @@ plugin:
 // somewhere in the keymap...
 OSM(LeftControl), OSL(_FN)
 
-void setup () {
-  Kaleidoscope.setup ();
-  USE_PLUGINS (&OneShot);
+void setup() {
+  USE_PLUGINS(&OneShot);
+
+  Kaleidoscope.setup();
 }
 ```
 
@@ -65,7 +66,7 @@ There are two macros the plugin provides:
 ## Plugin methods
 
 The plugin provides one object, `OneShot`, which implements both one-shot
-modifiers and one-shot layer keys. It has the following methods:
+modifiers and one-shot layer keys. It has the following methods and properties:
 
 ### `.isActive()`
 
@@ -81,33 +82,31 @@ modifiers and one-shot layer keys. It has the following methods:
 > with `Keyboard.isModifierActive` to catch cases where a one-shot modifier is
 > active, but not registered yet.
 
-### `.cancel([withStickies])`
+### `.cancel([with_stickies])`
 
 > The `cancel()` method can be used to cancel any pending one-shot effects,
 > useful when one changed their minds, and does not wish to wait for the
 > timeout.
 >
-> The optional `withStickies` argument, if set to `true`, will also cancel
+> The optional `with_stickies` argument, if set to `true`, will also cancel
 > sticky one-shot effects. If omitted, it defaults to `false`, and not canceling
 > stickies.
 
-### `.timeOut`
+### `.time_out`
 
-> The number of milliseconds to wait before timing out and cancelling the
-> one-shot effect, unless interrupted or cancelled before by any other means.
->
-> Not strictly a method, it is a variable one can assign a new value to.
+> Set this property to the number of milliseconds to wait before timing out and
+> cancelling the one-shot effect (unless interrupted or cancelled before by any
+> other means).
 >
 > Defaults to 2500.
 
-### `.holdTimeOut`
+### `.hold_time_out`
 
-> The number of milliseconds to wait before considering a held one-shot key as
-> intentionally held. In this case, the one-shot effect will not trigger when
-> the key is released. In other words, holding a one-shot key at least this
-> long, and then releasing it, will not trigger the one-shot effect.
->
-> Not strictly a method, it is a variable one can assign a new value to.
+> Set this property to the number of milliseconds to wait before considering a
+> held one-shot key as intentionally held. In this case, the one-shot effect
+> will not trigger when the key is released. In other words, holding a one-shot
+> key at least this long, and then releasing it, will not trigger the one-shot
+> effect.
 >
 > Defaults to 200.
 

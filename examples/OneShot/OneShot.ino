@@ -58,9 +58,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  Kaleidoscope.setup();
-
   USE_PLUGINS(&OneShot);
+
+  Kaleidoscope.setup();
 }
 
 void loop() {
