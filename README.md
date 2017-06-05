@@ -19,7 +19,7 @@ codepoints.
 ## Using the extension
 
 Using the extension is as simple as including the header, registering it with
-`Kaleidoscope.use()`, and then using any of the methods provided by the `Unicode`
+`USE_PLUGINS()`, and then using any of the methods provided by the `Unicode`
 singleton object.
 
 ```c++
@@ -40,19 +40,19 @@ The extension provides a number of methods on the `Unicode` object, but also has
 symbols that can be [overridden](#overrideable-methods), to add custom
 functionality.
 
-### `.type(codePoint)`
+### `.type(code_point)`
 
 > Starts the Unicode input method using the [`.start()`](#start) method, inputs
-> the `codePoint` using [`.typeCode()`](#typeCode), and finishes up with
+> the `code_point` using [`.typeCode()`](#typeCode), and finishes up with
 > the [`.end()`](#end) method. For each hexadecimal digit sent to the host,
 > the [`.input()`](#input) method will also be called.
 >
 > This method is most useful when one knows the code point of the Unicode symbol
 > to enter ahead of time, when the code point does not depend on anything else.
 
-### `.typeCode(codePoint)`
+### `.typeCode(code_point)`
 
-> Inputs the hex codes for `codePoint`, and the hex codes only. Use when the
+> Inputs the hex codes for `code_point`, and the hex codes only. Use when the
 > input method is to be started and ended separately.
 >
 > For example, a macro that starts Unicode input, and switches to a layer full
@@ -75,7 +75,7 @@ functionality.
 
 ## Overrideable methods
 
-### `hexToKey(hexDigit)`
+### `hexToKey(hex_digit)`
 
 > A function that returns a `Key` struct, given a 8-bit hex digit. For most
 > uses, the built-in version of this function is sufficient, but if the keymap
