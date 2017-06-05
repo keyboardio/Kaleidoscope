@@ -123,7 +123,7 @@ static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
 void setup() {
   USE_PLUGINS(&GhostInTheFirmware, &StalkerEffect, &Macros);
 
-  StalkerEffect.configure(STALKER(BlazingTrail, NULL));
+  StalkerEffect.variant = STALKER(BlazingTrail);
   GhostInTheFirmware.ghost_keys = ghost_keys;
 
   event_handler_hook_use(eventDropper);
