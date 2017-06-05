@@ -39,22 +39,18 @@ recommended.
 ## Plugin methods
 
 The plugin provides the `StalkerEffect` object, which has the following
-method:
+properties:
 
 ### `.variant`
 
 > Set the effect to use with the plugin. See below for a list.
 >
 > It is recommended to use the `STALKER` macro to declare the effect itself.
->
-> Not a method itself, but a changeable value.
 
 ### `.stepLength`
 
 > The length - in milliseconds - of each step of the animation. An animation
 > lasts 256 steps.
->
-> Not a method itself, but a changeable value.
 >
 > Defaults to 50.
 
