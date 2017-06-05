@@ -19,18 +19,18 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-MagicCombo.h>
 
-void magicComboActions(uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
-  switch (comboIndex) {
+void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand) {
+  switch (combo_index) {
   case 0:
     Serial.println("It's a kind of magic!");
     break;
   }
 }
 
-static const KaleidoscopePlugins::MagicCombo::dictionary_t dictionary[] PROGMEM = {
+static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
   {
-    R1C3 | R2C1 | R2C4 | R2C7, // left hand,
-    R0C11 | R1C12 | R2C14      //right hand
+    R1C3 | R2C1 | R2C4 | R2C7,  // left hand,
+    R0C11 | R1C12 | R2C14       // right hand
   },
   {0, 0}
 };
@@ -53,17 +53,17 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_NoKey
-  ),
+    Key_NoKey),
 };
 
 void setup() {
   Serial.begin(9600);
 
-  MagicCombo.configure(dictionary);
+  USE_PLUGINS(&MagicCombo);
 
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&MagicCombo, NULL);
+  Kaleidoscope.setup();
+
+  MagicCombo.magic_combos = magic_combos;
 }
 
 void loop() {

@@ -28,44 +28,37 @@
 #define RIGHTHANDSTATE KeyboardHardware.scanner.rightHandState
 #endif
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
-const MagicCombo::dictionary_t *MagicCombo::dictionary;
-uint16_t MagicCombo::minInterval = 500;
-uint32_t MagicCombo::endTime;
+const MagicCombo::combo_t *MagicCombo::magic_combos;
+uint16_t MagicCombo::min_interval = 500;
+uint32_t MagicCombo::end_time_;
 
 MagicCombo::MagicCombo(void) {
 }
 
-void
-MagicCombo::begin(void) {
-  loop_hook_use(this->loopHook);
+void MagicCombo::begin(void) {
+  loop_hook_use(loopHook);
 }
 
-void
-MagicCombo::configure(const MagicCombo::dictionary_t dictionary_[]) {
-  dictionary = (dictionary_t *)dictionary_;
-}
-
-void
-MagicCombo::loopHook(bool postClear) {
-  if (!dictionary || postClear)
+void MagicCombo::loopHook(bool is_post_clear) {
+  if (!magic_combos || is_post_clear)
     return;
 
   for (byte i = 0;; i++) {
-    dictionary_t combo;
+    combo_t combo;
 
-    combo.leftHand = pgm_read_dword(&(dictionary[i].leftHand));
-    combo.rightHand = pgm_read_dword(&(dictionary[i].rightHand));
+    combo.left_hand = pgm_read_dword(&(magic_combos[i].left_hand));
+    combo.right_hand = pgm_read_dword(&(magic_combos[i].right_hand));
 
-    if (combo.leftHand == 0 && combo.rightHand == 0)
+    if (combo.left_hand == 0 && combo.right_hand == 0)
       break;
 
-    if (LEFTHANDSTATE.all == combo.leftHand &&
-        RIGHTHANDSTATE.all == combo.rightHand) {
-      if (millis() >= endTime) {
-        magicComboActions(i, combo.leftHand, combo.rightHand);
-        endTime = millis() + minInterval;
+    if (LEFTHANDSTATE.all == combo.left_hand &&
+        RIGHTHANDSTATE.all == combo.right_hand) {
+      if (millis() >= end_time_) {
+        magicComboActions(i, combo.left_hand, combo.right_hand);
+        end_time_ = millis() + min_interval;
       }
       break;
     }
@@ -74,9 +67,7 @@ MagicCombo::loopHook(bool postClear) {
 
 };
 
-__attribute__((weak))
-void
-magicComboActions(uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand) {
+__attribute__((weak)) void magicComboActions(uint8_t comboIndex, uint32_t left_hand, uint32_t right_hand) {
 }
 
-KaleidoscopePlugins::MagicCombo MagicCombo;
+kaleidoscope::MagicCombo MagicCombo;

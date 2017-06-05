@@ -20,28 +20,29 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class MagicCombo : public KaleidoscopePlugin {
  public:
   typedef struct {
-    uint32_t leftHand, rightHand;
-  } dictionary_t;
+    uint32_t left_hand, right_hand;
+  } combo_t;
 
   MagicCombo(void);
 
   void begin(void) final;
 
-  static void configure(const dictionary_t dictionary[]);
-  static uint16_t minInterval;
+  static const combo_t *magic_combos;
+  static uint16_t min_interval;
 
  private:
-  static const dictionary_t *dictionary;
-  static uint32_t endTime;
+  static uint32_t end_time_;
 
-  static void loopHook(bool postClear);
-};
+  static void loopHook(bool is_post_clear);
 };
 
-void magicComboActions(uint8_t comboIndex, uint32_t leftHand, uint32_t rightHand);
+}
 
-extern KaleidoscopePlugins::MagicCombo MagicCombo;
+void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand);
+
+extern kaleidoscope::MagicCombo MagicCombo;
