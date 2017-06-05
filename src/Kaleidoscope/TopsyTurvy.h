@@ -20,21 +20,21 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class TopsyTurvy: public KaleidoscopePlugin {
  public:
   TopsyTurvy(void);
 
   void begin(void) final;
 
-  static void configure(const Key topsyTurvyList[]);
-
+  static const Key *key_list;
  private:
-  static const Key *topsyTurvyList;
-  static uint8_t topsyTurvyModState;
+  static uint8_t mod_state_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
-}  // namespace KaleidoscopePlugins
 
-extern KaleidoscopePlugins::TopsyTurvy TopsyTurvy;
+}
+
+extern kaleidoscope::TopsyTurvy TopsyTurvy;

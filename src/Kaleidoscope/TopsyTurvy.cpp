@@ -20,76 +20,69 @@
 
 #define TOPSYTURVY 0b01000000
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
-const Key *TopsyTurvy::topsyTurvyList = NULL;
-uint8_t TopsyTurvy::topsyTurvyModState;
+const Key *TopsyTurvy::key_list = NULL;
+uint8_t TopsyTurvy::mod_state_;
 
 TopsyTurvy::TopsyTurvy(void) {
 }
 
-void
-TopsyTurvy::begin(void) {
-  event_handler_hook_use(this->eventHandlerHook);
+void TopsyTurvy::begin(void) {
+  event_handler_hook_use(eventHandlerHook);
 }
 
-void
-TopsyTurvy::configure(const Key list[]) {
-  topsyTurvyList = (const Key *)list;
-}
+Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  if (key_state & TOPSYTURVY)
+    return mapped_key;
 
-Key
-TopsyTurvy::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (keyState & TOPSYTURVY)
-    return mappedKey;
+  if (!key_list)
+    return mapped_key;
 
-  if (!topsyTurvyList)
-    return mappedKey;
+  if (mapped_key.raw == Key_LeftShift.raw)
+    bitWrite(mod_state_, 0, key_is_pressed(key_state));
+  if (mapped_key.raw == Key_RightShift.raw)
+    bitWrite(mod_state_, 1, key_is_pressed(key_state));
 
-  if (mappedKey.raw == Key_LeftShift.raw)
-    bitWrite(topsyTurvyModState, 0, key_is_pressed(keyState));
-  if (mappedKey.raw == Key_RightShift.raw)
-    bitWrite(topsyTurvyModState, 1, key_is_pressed(keyState));
-
-  if (!key_is_pressed(keyState) && !key_was_pressed(keyState))
-    return mappedKey;
+  if (!key_is_pressed(key_state) && !key_was_pressed(key_state))
+    return mapped_key;
 
   uint8_t idx = 0;
   Key newKey;
 
   do {
-    newKey.raw = pgm_read_word(&(topsyTurvyList[idx].raw));
+    newKey.raw = pgm_read_word(&(key_list[idx].raw));
     idx++;
-  } while (newKey.raw != mappedKey.raw && newKey.raw != Key_NoKey.raw);
+  } while (newKey.raw != mapped_key.raw && newKey.raw != Key_NoKey.raw);
 
   if (newKey.raw == Key_NoKey.raw)
-    return mappedKey;
+    return mapped_key;
 
   // invert the shift state
 
-  if (!topsyTurvyModState) {
-    if (key_is_pressed(keyState))
+  if (!mod_state_) {
+    if (key_is_pressed(key_state))
       Keyboard.press(Key_LeftShift.keyCode);
-    handle_keyswitch_event(mappedKey, row, col, keyState | TOPSYTURVY);
+    handle_keyswitch_event(mapped_key, row, col, key_state | TOPSYTURVY);
     Keyboard.sendReport();
-    if (key_toggled_off(keyState))
+    if (key_toggled_off(key_state))
       Keyboard.release(Key_LeftShift.keyCode);
   } else {
     Keyboard.release(Key_LeftShift.keyCode);
     Keyboard.release(Key_RightShift.keyCode);
     Keyboard.sendReport();
-    handle_keyswitch_event(mappedKey, row, col, keyState | TOPSYTURVY);
+    handle_keyswitch_event(mapped_key, row, col, key_state | TOPSYTURVY);
     Keyboard.sendReport();
 
-    if (bitRead(topsyTurvyModState, 0))
+    if (bitRead(mod_state_, 0))
       Keyboard.press(Key_LeftShift.keyCode);
-    if (bitRead(topsyTurvyModState, 1))
+    if (bitRead(mod_state_, 1))
       Keyboard.press(Key_RightShift.keyCode);
   }
 
   return Key_NoKey;
 }
 
-}  // namespace KaleidoscopePlugins
+}
 
-KaleidoscopePlugins::TopsyTurvy TopsyTurvy;
+kaleidoscope::TopsyTurvy TopsyTurvy;

@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-TopsyTurvy.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-TopsyTurvy
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 `TopsyTurvy` is a plugin that inverts the behaviour of the `Shift` key for some
 selected keys. That is, if configured so, it will input `!` when pressing the
@@ -23,17 +23,18 @@ the provided `TopsyTurvy` object to use the dictionary:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-TopsyTurvy.h>
 
-static const Key topsyTurvyList[] PROGMEM = {
+static const Key topsy_turvy_list[] PROGMEM = {
   Key_1, Key_2, Key_3, Key_4, Key_5,
   Key_6, Key_7, Key_8, Key_9, Key_0,
   Key_NoKey
 };
 
 void setup () {
-  TopsyTurvy.configure (topsyTurvyList);
-  
-  Kaleidoscope.setup ();
   USE_PLUGINS (&TopsyTurvy);
+
+  Kaleidoscope.setup ();
+
+  TopsyTurvy.key_list = topsy_turvy_list;
 }
 ```
 
@@ -42,11 +43,12 @@ in `PROGMEM`.
 
 ## Plugin methods
 
-The plugin provides the `TopsyTurvy` object, with the following methods:
+The plugin provides the `TopsyTurvy` object, with the following property:
 
-### `.configure(list)`
+### `.key_list`
 
-> Tells `TopsyTurvy` to use the specified list of keys.
+> Set this property to the list of `Key`s `TopsyTurvy` should invert the `Shift`
+> behaviour for.
 
 ## Further reading
 

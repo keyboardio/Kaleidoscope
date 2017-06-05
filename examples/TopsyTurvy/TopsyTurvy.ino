@@ -39,17 +39,18 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip),
 };
 
-static const Key topsyTurvyList[] PROGMEM = {
+static const Key topsy_turvy_list[] PROGMEM = {
   Key_1, Key_2, Key_3, Key_4, Key_5,
   Key_6, Key_7, Key_8, Key_9, Key_0,
   Key_NoKey
 };
 
 void setup() {
-  TopsyTurvy.configure(topsyTurvyList);
+  USE_PLUGINS(&TopsyTurvy);
 
   Kaleidoscope.setup();
-  USE_PLUGINS(&TopsyTurvy);
+
+  TopsyTurvy.key_list = topsy_turvy_list;
 }
 
 void loop() {
