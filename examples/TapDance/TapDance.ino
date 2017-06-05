@@ -40,13 +40,13 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 static void tapDanceEsc(uint8_t tap_dance_index, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
-  tap_dance_actionKeys(tap_count, tap_dance_action, Key_Escape, Key_Tab);
+  tapDanceActionKeys(tap_count, tap_dance_action, Key_Escape, Key_Tab);
 }
 
-void tap_dance_action(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
+void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
-    return tap_dance_actionKeys(tap_count, tap_dance_action, Key_Tab, Key_Escape);
+    return tapDanceActionKeys(tap_count, tap_dance_action, Key_Tab, Key_Escape);
   case 1:
     return tapDanceEsc(tap_dance_index, tap_count, tap_dance_action);
   }
