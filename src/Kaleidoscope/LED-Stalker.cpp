@@ -19,89 +19,79 @@
 #include <Kaleidoscope-LED-Stalker.h>
 #include <LEDUtils.h>
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
-uint8_t StalkerEffect::map[ROWS][COLS];
-StalkerEffect::ColorComputer *StalkerEffect::colorComputer;
-uint16_t StalkerEffect::stepLength = 50;
-uint32_t StalkerEffect::stepEndTime;
+namespace kaleidoscope {
+
+uint8_t StalkerEffect::map_[ROWS][COLS];
+StalkerEffect::ColorComputer *StalkerEffect::variant;
+uint16_t StalkerEffect::step_length = 50;
+uint32_t StalkerEffect::step_end_time_;
 
 StalkerEffect::StalkerEffect(void) {
 }
 
-void
-StalkerEffect::configure(ColorComputer *colorComputer_) {
-  colorComputer = colorComputer_;
-}
-
-void
-StalkerEffect::begin(void) {
+void StalkerEffect::begin(void) {
   event_handler_hook_use(eventHandlerHook);
   LEDMode::begin();
 }
 
-void
-StalkerEffect::init(void) {
-  memset(map, 0, sizeof(map));
+void StalkerEffect::init(void) {
+  memset(map_, 0, sizeof(map_));
 }
 
-Key
-StalkerEffect::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key StalkerEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (row >= ROWS || col >= COLS)
-    return mappedKey;
+    return mapped_key;
 
-  if (key_is_pressed(keyState)) {
-    map[row][col] = 0xff;
+  if (key_is_pressed(key_state)) {
+    map_[row][col] = 0xff;
   }
 
-  return mappedKey;
+  return mapped_key;
 }
 
-void
-StalkerEffect::update(void) {
-  if (!colorComputer)
+void StalkerEffect::update(void) {
+  if (!variant)
     return;
 
-  bool timeOut = millis() >= stepEndTime;
+  bool time_out = millis() >= step_end_time_;
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
-      uint8_t step = map[r][c];
+      uint8_t step = map_[r][c];
       if (step) {
-        LEDControl.led_set_crgb_at(r, c, colorComputer->compute(&step));
+        LEDControl.led_set_crgb_at(r, c, variant->compute(&step));
       }
 
-      bool wasZero = (map[r][c] == 0);
+      bool was_zero = (map_[r][c] == 0);
 
-      if (timeOut) {
-        map[r][c] = step;
+      if (time_out) {
+        map_[r][c] = step;
       }
 
-      if (!wasZero && !map[r][c])
+      if (!was_zero && !map_[r][c])
         LEDControl.led_set_crgb_at(r, c, (cRGB) {
         0, 0, 0
       });
     }
   }
 
-  if (timeOut)
-    stepEndTime = millis() + stepLength;
+  if (time_out)
+    step_end_time_ = millis() + step_length;
 }
 
-namespace Stalker {
+namespace stalker {
 
-cRGB Haunt::highlightColor;
+cRGB Haunt::highlight_color_;
 
 // Haunt
-Haunt::Haunt(const cRGB highlightColor_) {
-  highlightColor = highlightColor_;
+Haunt::Haunt(const cRGB highlight_color) {
+  highlight_color_ = highlight_color;
 }
 
-cRGB
-Haunt::compute(uint8_t *step) {
-  cRGB color = CRGB((uint8_t)min(*step * highlightColor.r / 255, 255),
-                    (uint8_t)min(*step * highlightColor.g / 255, 255),
-                    (uint8_t)min(*step * highlightColor.b / 255, 255));
+cRGB Haunt::compute(uint8_t *step) {
+  cRGB color = CRGB((uint8_t)min(*step * highlight_color_.r / 255, 255),
+                    (uint8_t)min(*step * highlight_color_.g / 255, 255),
+                    (uint8_t)min(*step * highlight_color_.b / 255, 255));
 
   if (*step >= 0xf0)
     *step -= 1;
@@ -116,11 +106,10 @@ Haunt::compute(uint8_t *step) {
 }
 
 // BlazingTrail
-BlazingTrail::BlazingTrail(...) {
+BlazingTrail::BlazingTrail(void) {
 }
 
-cRGB
-BlazingTrail::compute(uint8_t *step) {
+cRGB BlazingTrail::compute(uint8_t *step) {
   cRGB color;
 
   if (*step >= 0xff - 30) {
@@ -144,9 +133,8 @@ BlazingTrail::compute(uint8_t *step) {
   return color;
 }
 
-};
+}
 
-};
-};
+}
 
-KaleidoscopePlugins::LEDEffects::StalkerEffect StalkerEffect;
+kaleidoscope::StalkerEffect StalkerEffect;

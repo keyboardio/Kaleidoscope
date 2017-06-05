@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-#define STALKER(n, ...) (({static KaleidoscopePlugins::LEDEffects::Stalker::n _effect (__VA_ARGS__); &_effect;}))
+#define STALKER(v, ...) ({static kaleidoscope::stalker::v _effect __VA_ARGS__; &_effect;})
 
-namespace KaleidoscopePlugins {
-namespace LEDEffects {
+namespace kaleidoscope {
 class StalkerEffect : public LEDMode {
  public:
   class ColorComputer {
@@ -33,45 +34,39 @@ class StalkerEffect : public LEDMode {
   StalkerEffect(void);
 
   void begin(void) final;
-  virtual void init(void) final;
-  virtual void update(void) final;
+  void init(void) final;
+  void update(void) final;
 
-  static void configure(ColorComputer *colorComputer);
-  static uint16_t stepLength;
+  static ColorComputer *variant;
+  static uint16_t step_length;
 
  private:
-  static uint32_t stepEndTime;
-  static ColorComputer *colorComputer;
-  static uint8_t map[ROWS][COLS];
+  static uint32_t step_end_time_;
+  static uint8_t map_[ROWS][COLS];
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
-namespace Stalker {
+namespace stalker {
 
 class Haunt : public StalkerEffect::ColorComputer {
  public:
-  Haunt(const cRGB highlightColor);
-  Haunt(void) : Haunt( {
-    0x40, 0x80, 0x80
-  }) {};
-  Haunt(void *) : Haunt() {};
+  explicit Haunt(const cRGB highlight_color);
+  Haunt(void) : Haunt(CRGB(0x40, 0x80, 0x80)) {}
 
-  virtual cRGB compute(uint8_t *step) final;
+  cRGB compute(uint8_t *step) final;
  private:
-  static cRGB highlightColor;
+  static cRGB highlight_color_;
 };
 
 class BlazingTrail : public StalkerEffect::ColorComputer {
  public:
-  BlazingTrail(...);
+  BlazingTrail(void);
 
-  virtual cRGB compute(uint8_t *step) final;
+  cRGB compute(uint8_t *step) final;
 };
 
-};
+}
+}
 
-};
-};
-
-extern KaleidoscopePlugins::LEDEffects::StalkerEffect StalkerEffect;
+extern kaleidoscope::StalkerEffect StalkerEffect;

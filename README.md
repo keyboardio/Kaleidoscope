@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `StalkerEffect` plugin provides an interesting new typing experience: the
 LEDs light up as you tap keys, and play one of the selected effects: a haunting
@@ -21,12 +21,13 @@ To use the plugin, one needs to include the header, and select the effect.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LED-Stalker.h>
 
-void setup () {
-  Kaleidoscope.setup ();
+void setup (){
+  USE_PLUGINS(&StalkerEffect);
 
-  StalkerEffect.configure (STALKER (Haunt, {0xff, 0, 0}));
-  USE_PLUGINS (&StalkerEffect);
-  StalkerEffect.activate ();
+  Kaleidoscope.setup();
+
+  StalkerEffect.variant = STALKER(Haunt, (CRGB(0, 128, 0)));
+  StalkerEffect.activate();
 }
 ```
 
@@ -40,11 +41,13 @@ recommended.
 The plugin provides the `StalkerEffect` object, which has the following
 method:
 
-### `.configure(effect)`
+### `.variant`
 
 > Set the effect to use with the plugin. See below for a list.
 >
 > It is recommended to use the `STALKER` macro to declare the effect itself.
+>
+> Not a method itself, but a changeable value.
 
 ### `.stepLength`
 
@@ -57,11 +60,11 @@ method:
 
 ## Plugin helpers
 
-### `STALKER(effect, params...)`
+### `STALKER(effect, params)`
 
-> Returns an effect, to be used by the `.configure` method of the
+> Returns an effect, to be used to assign a value the `.variant` property of the
 > `StalkerEffect` object. Any arguments given to the macro, are also passed on
-> to the effect. If the effect takes no arguments, use `NULL`.
+> to the effect. If the effect takes no arguments, use an empty `params` list.
 
 ## Plugin effects
 

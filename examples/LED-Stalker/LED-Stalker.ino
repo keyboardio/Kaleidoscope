@@ -20,7 +20,6 @@
 #include <Kaleidoscope-LED-Stalker.h>
 #include "LED-Off.h"
 
-
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (
@@ -38,16 +37,15 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    Key_NoKey
-  ),
+    Key_NoKey),
 };
 
 void setup() {
-  Kaleidoscope.setup();
-
-  StalkerEffect.configure(STALKER(BlazingTrail, NULL));
   USE_PLUGINS(&LEDOff, &StalkerEffect);
 
+  Kaleidoscope.setup();
+
+  StalkerEffect.variant = STALKER(BlazingTrail);
   StalkerEffect.activate();
 }
 
