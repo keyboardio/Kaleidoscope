@@ -72,16 +72,14 @@ changes key behaviour! Failing to do so may result in unpredictable behaviour.
 
 ## Plugin methods
 
-The plugin provides the `Leader` object, with the following methods:
+The plugin provides the `Leader` object, with the following methods and properties:
 
 ### `.dictionary`
 
-> Tells `Leader` to use the specified dictionary. The dictionary is an array of
-> `kaleidoscope::Leader::dictionary_t` elements. Each element is made up of two
-> elements, the first being a list of keys, the second an action to perform when
-> the sequence is found.
-
-> Not strictly a method, it is a variable one can assign a new value to.
+> Set this property to the dictionary `Leader` should use. The dictionary is an
+> array of `kaleidoscope::Leader::dictionary_t` elements. Each element is made
+> up of two elements, the first being a list of keys, the second an action to
+> perform when the sequence is found.i
 >
 > The dictionary *MUST* reside in `PROGMEM`.
 
@@ -96,8 +94,6 @@ The plugin provides the `Leader` object, with the following methods:
 > The number of milliseconds to wait before a sequence times out. Once the
 > sequence timed out, if there is a partial match with an action, that will be
 > performed, otherwise the Leader sequence will simply reset.
->
-> Not strictly a method, it is a variable one can assign a new value to.
 >
 > Defaults to 1000.
 
