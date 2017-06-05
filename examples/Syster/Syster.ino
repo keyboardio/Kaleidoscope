@@ -39,22 +39,21 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-    SYSTER
-  ),
+    SYSTER),
 };
 
-void systerAction(KaleidoscopePlugins::Syster::action_t action, const char *symbol) {
+void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
   switch (action) {
-  case KaleidoscopePlugins::Syster::StartAction:
+  case kaleidoscope::Syster::StartAction:
     Unicode.type(0x2328);
     break;
-  case KaleidoscopePlugins::Syster::EndAction:
+  case kaleidoscope::Syster::EndAction:
     handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
     handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport();
     break;
-  case KaleidoscopePlugins::Syster::SymbolAction:
+  case kaleidoscope::Syster::SymbolAction:
     Serial.print("systerAction: symbol=");
     Serial.println(symbol);
     if (strcmp(symbol, "coffee") == 0) {
@@ -65,8 +64,9 @@ void systerAction(KaleidoscopePlugins::Syster::action_t action, const char *symb
 }
 
 void setup() {
-  Kaleidoscope.setup(KEYMAP_SIZE);
-  Kaleidoscope.use(&Unicode, &Syster, NULL);
+  USE_PLUGINS(&Unicode, &Syster);
+
+  Kaleidoscope.setup();
 }
 
 void loop() {

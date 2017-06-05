@@ -18,61 +18,58 @@
 
 #include <Kaleidoscope-Syster.h>
 
-using namespace KaleidoscopePlugins::Ranges;
+#undef SYSTER
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 // --- state ---
-char Syster::symbol[SYSTER_MAX_SYMBOL_LENGTH + 1];
-uint8_t Syster::symbolPos;
-bool Syster::isActive;
+char Syster::symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
+uint8_t Syster::symbol_pos_;
+bool Syster::is_active_;
 
 // --- helpers ---
-
-#define isSyster(k) (k == SYSTER)
+#define isSyster(k) (k == kaleidoscope::ranges::SYSTER)
 
 // --- api ---
 
 Syster::Syster(void) {
 }
 
-void
-Syster::begin(void) {
-  event_handler_hook_use(this->eventHandlerHook);
+void Syster::begin(void) {
+  event_handler_hook_use(eventHandlerHook);
 }
 
-void
-Syster::reset(void) {
-  symbolPos = 0;
-  symbol[0] = 0;
-  isActive = false;
+void Syster::reset(void) {
+  symbol_pos_ = 0;
+  symbol_[0] = 0;
+  is_active_ = false;
 }
 
 // --- hooks ---
-Key
-Syster::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (!isActive) {
-    if (!isSyster(mappedKey))
-      return mappedKey;
+Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  if (!is_active_) {
+    if (!isSyster(mapped_key))
+      return mapped_key;
 
-    if (key_toggled_on(keyState)) {
-      isActive = true;
+    if (key_toggled_on(key_state)) {
+      is_active_ = true;
       systerAction(StartAction, NULL);
     }
     return Key_NoKey;
   }
 
-  if (keyState & INJECTED)
-    return mappedKey;
+  if (key_state & INJECTED)
+    return mapped_key;
 
-  if (isSyster(mappedKey))
+  if (isSyster(mapped_key))
     return Key_NoKey;
 
-  if (mappedKey == Key_Backspace && symbolPos == 0)
+  if (mapped_key == Key_Backspace && symbol_pos_ == 0)
     return Key_NoKey;
 
-  if (key_toggled_off(keyState)) {
-    if (mappedKey == Key_Spacebar) {
-      for (uint8_t i = 0; i <= symbolPos; i++) {
+  if (key_toggled_off(key_state)) {
+    if (mapped_key == Key_Spacebar) {
+      for (uint8_t i = 0; i <= symbol_pos_; i++) {
         handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
         Keyboard.sendReport();
         handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
@@ -81,32 +78,31 @@ Syster::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
 
       systerAction(EndAction, NULL);
 
-      symbol[symbolPos] = 0;
-      systerAction(SymbolAction, symbol);
+      symbol_[symbol_pos_] = 0;
+      systerAction(SymbolAction, symbol_);
       reset();
 
       return Key_NoKey;
     }
   }
 
-  if (key_toggled_on(keyState)) {
-    if (mappedKey == Key_Backspace) {
-      if (symbolPos > 0)
-        symbolPos--;
+  if (key_toggled_on(key_state)) {
+    if (mapped_key == Key_Backspace) {
+      if (symbol_pos_ > 0)
+        symbol_pos_--;
     } else {
-      const char c = keyToChar(mappedKey);
+      const char c = keyToChar(mapped_key);
       if (c)
-        symbol[symbolPos++] = c;
+        symbol_[symbol_pos_++] = c;
     }
   }
 
-  return mappedKey;
+  return mapped_key;
 }
-};
 
-__attribute__((weak))
-const char
-keyToChar(Key key) {
+}
+
+__attribute__((weak)) const char keyToChar(Key key) {
   if (key.flags != 0)
     return 0;
 
@@ -120,9 +116,7 @@ keyToChar(Key key) {
   return 0;
 }
 
-__attribute__((weak))
-void
-systerAction(KaleidoscopePlugins::Syster::action_t action, const char *symbol) {
+__attribute__((weak)) void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
 }
 
-KaleidoscopePlugins::Syster Syster;
+kaleidoscope::Syster Syster;

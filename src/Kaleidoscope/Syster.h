@@ -23,9 +23,10 @@
 
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
-#define SYSTER (Key){ .raw = KaleidoscopePlugins::Ranges::SYSTER }
+#define SYSTER ((Key) { .raw = kaleidoscope::ranges::SYSTER })
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class Syster : public KaleidoscopePlugin {
  public:
   typedef enum {
@@ -40,15 +41,15 @@ class Syster : public KaleidoscopePlugin {
   static void reset(void);
 
  private:
-  static char symbol[SYSTER_MAX_SYMBOL_LENGTH + 1];
-  static uint8_t symbolPos;
-  static bool isActive;
+  static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
+  static uint8_t symbol_pos_;
+  static bool is_active_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
 const char keyToChar(Key key);
-void systerAction(KaleidoscopePlugins::Syster::action_t action, const char *symbol);
+void systerAction(kaleidoscope::Syster::action_t action, const char *symbol);
 
-extern KaleidoscopePlugins::Syster Syster;
+extern kaleidoscope::Syster Syster;

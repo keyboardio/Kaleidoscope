@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Syster.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Syster
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Syster is a way to input symbols in a different way: instead of macros, Leader
 sequences or the like, we trigger the special input mode, and enter the symbol's
@@ -28,18 +28,18 @@ will handle the symbol actions:
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
 
-void systerAction (KaleidoscopePlugins::Syster::action_t action, const char *symbol) {
+void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
   switch (action) {
-  case KaleidoscopePlugins::Syster::StartAction:
+  case kaleidoscope::Syster::StartAction:
     Unicode.type (0x2328);
     break;
-  case KaleidoscopePlugins::Syster::EndAction:
+  case kaleidoscope::Syster::EndAction:
     handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     break;
-  case KaleidoscopePlugins::Syster::SymbolAction:
+  case kaleidoscope::Syster::SymbolAction:
     Serial.print ("systerAction: symbol=");
     Serial.println (symbol);
     if (strcmp (symbol, "coffee") == 0) {
@@ -49,11 +49,12 @@ void systerAction (KaleidoscopePlugins::Syster::action_t action, const char *sym
   }
 }
 
-void setup () {
-  Serial.begin (9600);
+void setup() {
+  Serial.begin(9600);
+  
+  USE_PLUGINS(&Unicode, &Syster);
 
-  Kaleidoscope.setup (KEYMAP_SIZE);
-  Kaleidoscope.use (&Unicode, &Syster, NULL);
+  Kaleidoscope.setup ();
 }
 ```
 
@@ -70,20 +71,18 @@ methods outside of the object, however, that can be overridden:
 > Called whenever an action needs to be taken, which can happen in three cases:
 
 > First, when the `Syster` key is pressed, and the alternate processing starts.
-> In this case, `action` will be set to
-> `KaleidoscopePlugins::Syster::StartAction`, and `symbol` will be `NULL`. This
-> function can be used to do some setup to make it more obvious that the Syster
-> input mode is active, such as sending a Unicode symbol to the host, or
-> lighting up LEDs, or anything else we'd like.
+> In this case, `action` will be set to `kaleidoscope::Syster::StartAction`, and
+> `symbol` will be `NULL`. This function can be used to do some setup to make it
+> more obvious that the Syster input mode is active, such as sending a Unicode
+> symbol to the host, or lighting up LEDs, or anything else we'd like.
 >
 > Second, when the sequence is finished with a `Space`. In this case, `action`
-> will be set to `KaleidoscopePlugins::Syster::EndAction`, and `symbol` will be
-> `NULL`. This can be used to undo anything that the start action did, if need
-> be.
+> will be set to `kaleidoscope::Syster::EndAction`, and `symbol` will be `NULL`.
+> This can be used to undo anything that the start action did, if need be.
 >
 > Third, when the action for the symbol should be made. In this case, `action`
-> is set to `KaleidoscopePlugins::Syster::SymbolAction`, and `symbol` will be a
-> C string. It is up to us, what we do with this information, how we handle it.
+> is set to `kaleidoscope::Syster::SymbolAction`, and `symbol` will be a C
+> string. It is up to us, what we do with this information, how we handle it.
 
 ### `keyToChar(key)`
 
