@@ -1,8 +1,5 @@
 #include "BootAnimation.h"
 #include "Kaleidoscope-LEDControl.h"
-#include "EEPROM.h"
-
-#define EEPROM_BOOT_ANIMATION_LOCATION 1
 
 #ifdef ARDUINO_AVR_MODEL01
 static void
@@ -19,9 +16,6 @@ type_letter(uint8_t letter) {
 void
 bootAnimation(void) {
 #ifdef ARDUINO_AVR_MODEL01
-  if (EEPROM.read(EEPROM_BOOT_ANIMATION_LOCATION))
-    return;
-
   LEDControl.set_all_leds_to(0, 0, 0);
   type_letter(LED_K);
   type_letter(LED_E);
@@ -37,7 +31,5 @@ bootAnimation(void) {
   type_letter(LED_0);
   type_letter(LED_PERIOD);
   type_letter(LED_9);
-
-  EEPROM.update(EEPROM_BOOT_ANIMATION_LOCATION, 1);
 #endif
 }
