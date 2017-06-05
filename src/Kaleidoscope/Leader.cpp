@@ -20,8 +20,6 @@
 
 namespace kaleidoscope {
 
-namespace Ranges = KaleidoscopePlugins::Ranges;
-
 // --- state ---
 Key Leader::sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
 uint8_t Leader::sequence_pos_;
@@ -34,7 +32,7 @@ const Leader::dictionary_t *Leader::dictionary;
 #define PARTIAL_MATCH -1
 #define NO_MATCH -2
 
-#define isLeader(k) (k.raw >= Ranges::LEAD_FIRST && k.raw <= Ranges::LEAD_LAST)
+#define isLeader(k) (k.raw >= ranges::LEAD_FIRST && k.raw <= ranges::LEAD_LAST)
 #define isActive() (sequence_[0].raw != Key_NoKey.raw)
 
 // --- actions ---

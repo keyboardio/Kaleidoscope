@@ -23,7 +23,7 @@
 
 #define LEADER_MAX_SEQUENCE_LENGTH 4
 
-#define LEAD(n) (Key) { .raw = KaleidoscopePlugins::Ranges::LEAD_FIRST + n }
+#define LEAD(n) (Key) { .raw = kaleidoscope::ranges::LEAD_FIRST + n }
 
 #define LEADER_SEQ(...) { __VA_ARGS__, Key_NoKey }
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
