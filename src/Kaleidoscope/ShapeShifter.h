@@ -20,7 +20,8 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class ShapeShifter : public KaleidoscopePlugin {
  public:
   typedef struct {
@@ -31,15 +32,14 @@ class ShapeShifter : public KaleidoscopePlugin {
 
   void begin(void) final;
 
-  static void configure(const dictionary_t dictionary[]);
-
- private:
   static const dictionary_t *dictionary;
-  static bool modActive;
+ private:
+  static bool mod_active_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
-};
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
 };
 
-extern KaleidoscopePlugins::ShapeShifter ShapeShifter;
+}
+
+extern kaleidoscope::ShapeShifter ShapeShifter;

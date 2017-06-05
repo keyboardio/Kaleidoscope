@@ -18,42 +18,35 @@
 
 #include <Kaleidoscope-ShapeShifter.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
 
 const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
-bool ShapeShifter::modActive;
+bool ShapeShifter::mod_active_;
 
 ShapeShifter::ShapeShifter(void) {
 }
 
-void
-ShapeShifter::begin(void) {
-  event_handler_hook_use(this->eventHandlerHook);
-  loop_hook_use(this->loopHook);
+void ShapeShifter::begin(void) {
+  event_handler_hook_use(eventHandlerHook);
+  loop_hook_use(loopHook);
 }
 
-void
-ShapeShifter::configure(const dictionary_t dictionary_[]) {
-  dictionary = (const dictionary_t *)dictionary_;
-}
-
-void
-ShapeShifter::loopHook(bool postClear) {
-  if (postClear)
+void ShapeShifter::loopHook(bool is_post_clear) {
+  if (is_post_clear)
     return;
 
-  modActive = Keyboard.isModifierActive(Key_LeftShift.keyCode) ||
-              Keyboard.isModifierActive(Key_RightShift.keyCode);
+  mod_active_ = Keyboard.isModifierActive(Key_LeftShift.keyCode) ||
+                Keyboard.isModifierActive(Key_RightShift.keyCode);
 }
 
 Key
-ShapeShifter::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+ShapeShifter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (!dictionary)
-    return mappedKey;
+    return mapped_key;
 
   // If Shift is not active, bail out early.
-  if (!modActive)
-    return mappedKey;
+  if (!mod_active_)
+    return mapped_key;
 
   Key orig, repl;
 
@@ -63,12 +56,12 @@ ShapeShifter::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keySta
     orig.raw = pgm_read_word(&(dictionary[i].original.raw));
     i++;
   } while (orig.raw != Key_NoKey.raw &&
-           orig.raw != mappedKey.raw);
+           orig.raw != mapped_key.raw);
   i--;
 
   // If not found, bail out.
   if (orig.raw == Key_NoKey.raw)
-    return mappedKey;
+    return mapped_key;
 
   repl.raw = pgm_read_word(&(dictionary[i].replacement.raw));
 
@@ -76,6 +69,6 @@ ShapeShifter::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keySta
   return repl;
 }
 
-};
+}
 
-KaleidoscopePlugins::ShapeShifter ShapeShifter;
+kaleidoscope::ShapeShifter ShapeShifter;

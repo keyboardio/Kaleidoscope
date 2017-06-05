@@ -5,9 +5,9 @@
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-ShapeShifter.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-ShapeShifter
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.png?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.png?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.png?style=flat&colorA=dfb317&colorB=494e52
+ [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
+ [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
+ [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 `ShapeShifter` is a plugin that makes it considerably easier to change what
 symbol is input when a key is pressed together with `Shift`. If one wants to
@@ -28,17 +28,18 @@ configure the provided `ShapeShifter` object to use the dictionary:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-ShapeShifter.h>
 
-static const KaleidoscopePlugins::ShapeShifter::dictionary_t shapeShiftDictionary[] PROGMEM = {
+static const kaleidoscope::ShapeShifter::dictionary_t shape_shift_dictionary[] PROGMEM = {
  {Key_1, Key_4},
  {Key_4, Key_1},
  {Key_NoKey, Key_NoKey},
 };
 
-void setup () {
-  ShapeShifter.configure (shapeShiftDictionary);
+void setup() {
+  USE_PLUGINS(&ShapeShifter);
+
+  Kaleidoscope.setup();
   
-  Kaleidoscope.setup ();
-  USE_PLUGINS (&ShapeShifter);
+  ShapeShifter.dictionary = shape_shift_dictionary;
 }
 ```
 
@@ -48,12 +49,13 @@ Key_NoKey}` pair, and **must** reside in `PROGMEM`.
 
 ## Plugin methods
 
-The plugin provides the `ShapeShifter` object, with the following methods:
+The plugin provides the `ShapeShifter` object, with the following methods and
+properties:
 
-### `.configure(dictionary)`
+### `.dictionary`
 
-> Tells `ShapeShifter` to use the specified dictionary. The dictionary is an
-> array of `KaleidoscopePlugins::ShapeShifter::dictionary_t` elements, which is
+> Set this property to the dictionary `ShapeShifter` should use. The dictionary
+> is an array of `kaleidoscope::ShapeShifter::dictionary_t` elements, which is
 > just a very verbose way of saying that its a pair of keys. The first one is
 > the one to replace, and the other is to replace it with.
 >
