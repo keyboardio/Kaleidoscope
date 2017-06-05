@@ -31,8 +31,9 @@ the box, without any further configuration:
 #include <Kaleidoscope-TypingBreaks.h>
 
 void setup (void) {
-  Kaleidoscope.setup ();
   USE_PLUGINS (&TypingBreaks);
+
+  Kaleidoscope.setup ();
 }
 ```
 
@@ -41,27 +42,27 @@ void setup (void) {
 The plugin provides a single object, `TypingBreaks`, with the following
 properties. All times are in milliseconds.
 
-### `.settings.idleTimeLimit`
+### `.settings.idle_time_limit`
 
 > The amount of time that can pass between two pressed keys, before the plugin
 > considers it a new session, and starts all timers and counters over.
 >
 > Defaults to 10000 (10 seconds).
 
-### `.settings.lockTimeOut`
+### `.settings.lock_time_out`
 
 > The length of the session, after which the keyboard will be locked.
 >
 > Defaults to 2700000 (45 minutes).
 
-### `.settings.lockLength`
+### `.settings.lock_length`
 
 > The length until the keyboard lock is held. Any key pressed while the lock is
 > active, will be discarded.
 >
 > Defaults to 300000 (15 minutes).
 
-### `.settings.leftHandMaxKeys`
+### `.settings.left_hand_max_keys`
 
 > It is possible to lock the keyboard after a number of keys pressed, too. If
 > this happens sooner than the timeout, the keyboard will still be locked.
@@ -70,7 +71,7 @@ properties. All times are in milliseconds.
 >
 > Defaults to 0 (off).
 
-### `.settings.rightHandMaxKeys`
+### `.settings.right_hand_max_keys`
 
 > It is possible to lock the keyboard after a number of keys pressed, too. If
 > this happens sooner than the timeout, the keyboard will still be locked.

@@ -20,7 +20,8 @@
 
 #include <Kaleidoscope.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 class TypingBreaks : public KaleidoscopePlugin {
  public:
   TypingBreaks(void);
@@ -31,31 +32,32 @@ class TypingBreaks : public KaleidoscopePlugin {
   static bool focusHook(const char *command);
 
   typedef struct settings_t {
-    uint32_t idleTimeLimit;
-    uint32_t lockTimeOut;
-    uint32_t lockLength;
-    uint16_t leftHandMaxKeys;
-    uint16_t rightHandMaxKeys;
+    uint32_t idle_time_limit;
+    uint32_t lock_time_out;
+    uint32_t lock_length;
+    uint16_t left_hand_max_keys;
+    uint16_t right_hand_max_keys;
   } settings_t;
 
   static settings_t settings;
 
  private:
-  static uint32_t sessionStartTime;
-  static uint32_t lockStartTime;
-  static uint32_t lastKeyTime;
-  static uint16_t leftHandKeys;
-  static uint16_t rightHandKeys;
+  static uint32_t session_start_time_;
+  static uint32_t lock_start_time_;
+  static uint32_t last_key_time_;
+  static uint16_t left_hand_keys_;
+  static uint16_t right_hand_keys_;
 
-  static uint16_t settingsBase;
+  static uint16_t settings_base_;
 
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
+
 }
 
-extern KaleidoscopePlugins::TypingBreaks TypingBreaks;
+extern kaleidoscope::TypingBreaks TypingBreaks;
 
-void TypingBreak(bool isLocked);
+void TypingBreak(bool is_locked);
 
 #define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
                                            "typingbreaks.idleTimeLimit\n" \

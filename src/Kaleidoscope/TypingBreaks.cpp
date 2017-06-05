@@ -20,46 +20,45 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Focus.h>
 
-namespace KaleidoscopePlugins {
+namespace kaleidoscope {
+
 TypingBreaks::settings_t TypingBreaks::settings = {
-  .idleTimeLimit = 10000,  //  10s
-  .lockTimeOut = 2700000,  //  45m
-  .lockLength = 300000,    //   5m
-  .leftHandMaxKeys = 0,
-  .rightHandMaxKeys = 0
+  .idle_time_limit = 10000,  //  10s
+  .lock_time_out = 2700000,  //  45m
+  .lock_length = 300000,    //   5m
+  .left_hand_max_keys = 0,
+  .right_hand_max_keys = 0
 };
 
-uint32_t TypingBreaks::sessionStartTime;
-uint32_t TypingBreaks::lastKeyTime;
-uint32_t TypingBreaks::lockStartTime;
-uint16_t TypingBreaks::leftHandKeys;
-uint16_t TypingBreaks::rightHandKeys;
-uint16_t TypingBreaks::settingsBase;
+uint32_t TypingBreaks::session_start_time_;
+uint32_t TypingBreaks::last_key_time_;
+uint32_t TypingBreaks::lock_start_time_;
+uint16_t TypingBreaks::left_hand_keys_;
+uint16_t TypingBreaks::right_hand_keys_;
+uint16_t TypingBreaks::settings_base_;
 
 TypingBreaks::TypingBreaks(void) {
 }
 
-void
-TypingBreaks::begin(void) {
+void TypingBreaks::begin(void) {
   event_handler_hook_use(this->eventHandlerHook);
 }
 
-Key
-TypingBreaks::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // If we are locked, and didn't time out yet, no key has to be pressed.
-  if (lockStartTime && (millis() - lockStartTime <= settings.lockLength))
+  if (lock_start_time_ && (millis() - lock_start_time_ <= settings.lock_length))
     return Key_NoKey;
 
   // If we are locked...
-  if (lockStartTime) {
+  if (lock_start_time_) {
     // ...and the lock has not expired yet
-    if (millis() - lockStartTime <= settings.lockLength)
+    if (millis() - lock_start_time_ <= settings.lock_length)
       return Key_NoKey;  // remain locked
 
     // ...otherwise clear the lock
-    lockStartTime = 0;
-    leftHandKeys = rightHandKeys = 0;
-    sessionStartTime = millis();
+    lock_start_time_ = 0;
+    left_hand_keys_ = right_hand_keys_ = 0;
+    session_start_time_ = millis();
 
     TypingBreak(false);
   }
@@ -67,32 +66,32 @@ TypingBreaks::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keySta
   // Any other case, we are not locked yet! (or we just unlocked)
 
   // Are we still in the same session?
-  if (lastKeyTime && (millis() - lastKeyTime) >= settings.idleTimeLimit) {
+  if (last_key_time_ && (millis() - last_key_time_) >= settings.idle_time_limit) {
     // No, we are not. Clear timers and start over.
-    lockStartTime = 0;
-    leftHandKeys = rightHandKeys = 0;
-    sessionStartTime = millis();
+    lock_start_time_ = 0;
+    left_hand_keys_ = right_hand_keys_ = 0;
+    session_start_time_ = millis();
   }
 
   // If we have a limit on the left hand, and we reached it, lock up!
-  if (settings.leftHandMaxKeys && leftHandKeys >= settings.leftHandMaxKeys) {
-    lockStartTime = millis();
+  if (settings.left_hand_max_keys && left_hand_keys_ >= settings.left_hand_max_keys) {
+    lock_start_time_ = millis();
     TypingBreak(true);
     return Key_NoKey;
   }
 
   // If we have a limit on the right hand, and we reached it, lock up!
-  if (settings.rightHandMaxKeys && rightHandKeys >= settings.rightHandMaxKeys) {
-    lockStartTime = millis();
+  if (settings.right_hand_max_keys && right_hand_keys_ >= settings.right_hand_max_keys) {
+    lock_start_time_ = millis();
     TypingBreak(true);
     return Key_NoKey;
   }
 
-  if (settings.lockTimeOut) {
-    // Is the session longer than lockTimeOut?
-    if (millis() - sessionStartTime >= settings.lockTimeOut) {
+  if (settings.lock_time_out) {
+    // Is the session longer than lock_time_out?
+    if (millis() - session_start_time_ >= settings.lock_time_out) {
       // Yeah, it is.
-      lockStartTime = millis();
+      lock_start_time_ = millis();
       TypingBreak(true);
       return Key_NoKey;
     }
@@ -101,34 +100,32 @@ TypingBreaks::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keySta
   // So it seems we did not need to lock up. In this case, lets increase key
   // counters if need be.
 
-  if (key_toggled_on(keyState)) {
+  if (key_toggled_on(key_state)) {
     if (col <= COLS / 2)
-      leftHandKeys++;
+      left_hand_keys_++;
     else
-      rightHandKeys++;
-    lastKeyTime = millis();
+      right_hand_keys_++;
+    last_key_time_ = millis();
   }
 
-  return mappedKey;
+  return mapped_key;
 }
 
-void
-TypingBreaks::enableEEPROM(void) {
-  settingsBase = ::EEPROMSettings.requestSlice(sizeof(settings));
+void TypingBreaks::enableEEPROM(void) {
+  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
 
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
-  uint32_t idleTime;
-  EEPROM.get(settingsBase, idleTime);
-  if (idleTime == 0xffffffff) {
-    EEPROM.put(settingsBase, settings);
+  uint32_t idle_time;
+  EEPROM.get(settings_base_, idle_time);
+  if (idle_time == 0xffffffff) {
+    EEPROM.put(settings_base_, settings);
   }
 
-  EEPROM.get(settingsBase, settings);
+  EEPROM.get(settings_base_, settings);
 }
 
-bool
-TypingBreaks::focusHook(const char *command) {
+bool TypingBreaks::focusHook(const char *command) {
   enum {
     IDLE_TIME_LIMIT,
     LOCK_TIMEOUT,
@@ -155,49 +152,47 @@ TypingBreaks::focusHook(const char *command) {
   switch (subCommand) {
   case IDLE_TIME_LIMIT:
     if (Serial.peek() == '\n') {
-      Serial.println(settings.idleTimeLimit);
+      Serial.println(settings.idle_time_limit);
     } else {
-      settings.idleTimeLimit = Serial.parseInt();
+      settings.idle_time_limit = Serial.parseInt();
     }
     break;
   case LOCK_TIMEOUT:
     if (Serial.peek() == '\n') {
-      Serial.println(settings.lockTimeOut);
+      Serial.println(settings.lock_time_out);
     } else {
-      settings.lockTimeOut = Serial.parseInt();
+      settings.lock_time_out = Serial.parseInt();
     }
     break;
   case LOCK_LENGTH:
     if (Serial.peek() == '\n') {
-      Serial.println(settings.lockLength);
+      Serial.println(settings.lock_length);
     } else {
-      settings.lockLength = Serial.parseInt();
+      settings.lock_length = Serial.parseInt();
     }
     break;
   case LEFT_MAX:
     if (Serial.peek() == '\n') {
-      Serial.println(settings.leftHandMaxKeys);
+      Serial.println(settings.left_hand_max_keys);
     } else {
-      settings.leftHandMaxKeys = Serial.parseInt();
+      settings.left_hand_max_keys = Serial.parseInt();
     }
     break;
   case RIGHT_MAX:
     if (Serial.peek() == '\n') {
-      Serial.println(settings.rightHandMaxKeys);
+      Serial.println(settings.right_hand_max_keys);
     } else {
-      settings.rightHandMaxKeys = Serial.parseInt();
+      settings.right_hand_max_keys = Serial.parseInt();
     }
     break;
   }
 
-  EEPROM.put(settingsBase, settings);
+  EEPROM.put(settings_base_, settings);
   return true;
 }
 }
 
-KaleidoscopePlugins::TypingBreaks TypingBreaks;
+kaleidoscope::TypingBreaks TypingBreaks;
 
-__attribute__((weak))
-void
-TypingBreak(bool isLocked) {
+__attribute__((weak)) void TypingBreak(bool isLocked) {
 }
