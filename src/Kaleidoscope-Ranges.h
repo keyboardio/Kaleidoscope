@@ -18,8 +18,9 @@
 
 #pragma once
 
-namespace KaleidoscopePlugins {
-namespace Ranges {
+namespace kaleidoscope {
+namespace ranges {
+
 enum {
   KALEIDOSCOPE_FIRST = 0xc000,
   OS_FIRST,
@@ -43,5 +44,6 @@ enum {
 
   KALEIDOSCOPE_SAFE_START,
 };
-};
-};
+
+}
+}
