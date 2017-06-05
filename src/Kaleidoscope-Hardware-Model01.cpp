@@ -73,7 +73,8 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
 
     rightHand.ledData.leds[i - 32] = crgb;
   } else {
-    // TODO how do we want to handle debugging assertions about crazy user
+    // TODO(anyone):
+    // how do we want to handle debugging assertions about crazy user
     // code that would overwrite other memory?
   }
 }
