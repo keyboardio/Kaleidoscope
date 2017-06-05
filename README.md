@@ -91,7 +91,8 @@ take over.
 
 ## Plugin methods
 
-The plugin provides the `EEPROMKeymapProgrammer` object, which has the following methods:
+The plugin provides the `EEPROMKeymapProgrammer` object, which has the following
+methods and properties:
 
 ### `.activate()`
 
@@ -100,11 +101,9 @@ The plugin provides the `EEPROMKeymapProgrammer` object, which has the following
 
 ### `.mode`
 
-> The mode to use for editing: either
+> Set this property to the mode to use for editing: either
 > `kaleidoscope::EEPROMKeymapProgrammer::COPY`, or
 > `kaleidoscope::EEPROMKeymapProgrammer::CODE`.
->
-> Not strictly a method, it is a variable one can assign a new value to.
 >
 > Defaults to `kaleidoscope::EEPROMKeymapProgrammer::CODE`.
 
