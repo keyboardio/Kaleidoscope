@@ -58,7 +58,7 @@ hence the macro.
 ## Plugin methods
 
 The plugin provides the `GhostInTheFirmware` object, which has the following
-methods:
+methods and properties:
 
 ### `.activate()`
 
@@ -66,16 +66,14 @@ methods:
 
 ### `.ghost_keys`
 
-> Set the sequence of keys to press, by assigning a sequence to this variable.
-> Each element is a quartett of `row`, `column`, a `pressTime`, and a `delay`.
-> Each of these will be pressed in different cycles, unlike macros which play
-> back within a single cycle.
+> Set this property to the sequence of keys to press, by assigning a sequence to
+> this variable. Each element is a quartett of `row`, `column`, a `pressTime`,
+> and a `delay`. Each of these will be pressed in different cycles, unlike
+> macros which play back within a single cycle.
 >
 > The key at `row`, `column` will be held for `pressTime` milliseconds, and
 > after an additional `delay` milliseconds, the plugin will move on to the next
 > entry in the sequence.
->
-> Not strictly a method, it is a variable one can assign a new value to.
 >
 > The sequence *MUST* reside in `PROGMEM`.
 
