@@ -40,8 +40,8 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
 
-      if (k.raw >= KaleidoscopePlugins::Ranges::OSM_FIRST && k.raw <= KaleidoscopePlugins::Ranges::OSM_LAST) {
-        uint8_t idx = k.raw - KaleidoscopePlugins::Ranges::OSM_FIRST;
+      if (k.raw >= ranges::OSM_FIRST && k.raw <= ranges::OSM_LAST) {
+        uint8_t idx = k.raw - ranges::OSM_FIRST;
         k.flags = 0;
         k.keyCode = Key_LeftControl.keyCode + idx;
       }
