@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define Key_Cycle ((Key) { .raw = KaleidoscopePlugins::Ranges::CYCLE })
+#define Key_Cycle ((Key) { .raw = kaleidoscope::ranges::CYCLE })
 
 #define cycleThrough(...) ({                                \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };     \

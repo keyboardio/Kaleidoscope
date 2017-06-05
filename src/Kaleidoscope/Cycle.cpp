@@ -26,7 +26,7 @@ uint8_t Cycle::cycle_count_;
 
 // --- helpers ---
 
-#define isCycle(k) (k.raw == KaleidoscopePlugins::Ranges::CYCLE)
+#define isCycle(k) (k.raw == kaleidoscope::ranges::CYCLE)
 
 // --- api ---
 
