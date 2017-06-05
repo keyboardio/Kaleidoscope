@@ -190,7 +190,7 @@ void Model01::reboot_bootloader() {
   // Caterina.c
 
   uint16_t bootKey = 0x7777;
-  uint16_t *const bootKeyPtr = (uint16_t *)0x0800;
+  uint16_t *const bootKeyPtr = reinterpret_cast<uint16_t *>(0x0800);
 
   // Stash the magic key
   *bootKeyPtr = bootKey;
