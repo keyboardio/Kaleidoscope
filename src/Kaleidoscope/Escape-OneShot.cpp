@@ -35,10 +35,10 @@ Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
       !key_toggled_on(key_state))
     return mapped_key;
 
-  if (!OneShot.isActive())
+  if (!::OneShot.isActive())
     return mapped_key;
 
-  OneShot.cancel();
+  ::OneShot.cancel();
 
   return Key_NoKey;
 }
