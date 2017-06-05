@@ -50,16 +50,16 @@ There are two macros the plugin provides:
 
 ### `OSM(mod)`
 
-> A macro that takes a single argument, the name of the modifier: `LCtrl`,
-> `LShift`, `LAlt`, `LGUI` or their right-side variant. When marked up with this
-> macro, the modifier will act as a one-shot modifier.
+> A macro that takes a single argument, the name of the modifier: `LeftCtrl`,
+> `LeftShift`, `LeftAlt`, `LeftGUI` or their right-side variant. When marked up
+> with this macro, the modifier will act as a one-shot modifier.
 
 ### `OSL(layer)`
 
 > Takes a layer number as argument, and sets up the key to act as a one-shot
 > layer key.
 >
-> Please note that while `KaleidoscopeFirmware` supports more, one-shot layers are
+> Please note that while `Kaleidoscope` supports more, one-shot layers are
 > limited to 24 layers only.
 
 ## Plugin methods
