@@ -41,7 +41,8 @@ is highly recommended.
 
 ## Plugin methods
 
-The plugin provides two methods on the `HeatmapEffect` object:
+The plugin provides a `HeatmapEffect` object, which has the following methods
+and properties:
 
 ### `.activate()`
 
@@ -55,8 +56,6 @@ The plugin provides two methods on the `HeatmapEffect` object:
 > heatmap incurs a significant performance penalty, and should not be done too
 > often. Doing it too rarely, on the other hand, make it much less useful. One
 > has to strike a reasonable balance.
->
-> Not strictly a method, it is a variable one can assign a new value to.
 >
 > Defaults to *500*.
 
