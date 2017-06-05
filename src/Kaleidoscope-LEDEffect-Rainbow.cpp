@@ -3,8 +3,7 @@
 LEDRainbowEffect_::LEDRainbowEffect_(void) {
 }
 
-void
-LEDRainbowEffect_::update(void) {
+void LEDRainbowEffect_::update(void) {
   if (rainbow_current_ticks++ < rainbow_ticks) {
     return;
   } else {
@@ -27,8 +26,7 @@ LEDRainbowEffect_ LEDRainbowEffect;
 LEDRainbowWaveEffect_::LEDRainbowWaveEffect_(void) {
 }
 
-void
-LEDRainbowWaveEffect_::update(void) {
+void LEDRainbowWaveEffect_::update(void) {
   if (rainbow_current_ticks++ < rainbow_wave_ticks) {
     return;
   } else {
