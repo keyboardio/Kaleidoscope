@@ -80,6 +80,32 @@ properties. All times are in milliseconds.
 >
 > Defaults to 0 (off).
 
+## Focus commands
+
+The plugin provides a single `Focus` hook, `FOCUS_HOOK_TYPINGBREAKS`, which in
+turn make a few commands available. All of these return the respective setting's
+value when called without arguments, or set them if called with some.
+
+### `typingbreaks.idleTimeLimit [limit]`
+
+> Get or set the `.settings.idle_time_limit` property.
+
+### `typingbreaks.lockTimeOut [time_out]`
+
+> Get or set the `.settings.lock_time_out` property.
+
+### `typingbreaks.lockLength [length]`
+
+> Get or set the `.settings.lock_length` property.
+
+### `typingbreaks.leftMaxKeys [max]`
+
+> Get or set the `.settings.left_hand_max_keys` property.
+
+### `typingbreaks.rightMaxKeys [max]`
+
+> Get or set the `.settings.right_hand_max_keys` property.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
