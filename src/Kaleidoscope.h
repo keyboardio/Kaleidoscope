@@ -50,6 +50,7 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
           static KaleidoscopePlugin *__p[] = {plugins, NULL};   \
           Kaleidoscope.use(plugins, NULL);                      \
         })
+#define USE_PLUGIN(plugin) (plugin)->begin()
 
 class KaleidoscopePlugin {
  public:
