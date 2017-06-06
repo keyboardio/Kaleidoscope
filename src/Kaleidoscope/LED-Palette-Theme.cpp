@@ -42,10 +42,11 @@ uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
 
 void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
+
   for (uint16_t pos = 0; pos < ROWS * COLS; pos++) {
     cRGB color;
 
-    if (!lookupColorAtPosition(theme_base, pos, &color))
+    if (!lookupColorAtPosition(map_base, pos, &color))
       continue;
 
     LEDControl.led_set_crgb_at(pos, color);
