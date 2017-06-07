@@ -35,19 +35,6 @@ Kaleidoscope_::loop(void) {
 }
 
 void
-Kaleidoscope_::use(KaleidoscopePlugin *plugin, ...) {
-  va_list ap;
-  KaleidoscopePlugin *p;
-
-  plugin->begin();
-  va_start(ap, plugin);
-  while ((p = va_arg(ap, KaleidoscopePlugin*)) != NULL) {
-    p->begin();
-  }
-  va_end(ap);
-}
-
-void
 Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (eventHandlers[i] == oldHook) {

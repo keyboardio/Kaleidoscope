@@ -33,23 +33,7 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
 
-/*
- * The `USE_PLUGINS()` macro is a clever hack, to make it seem like
- * `Kaleidoscope.use()` is type-safe. It pushes its arguments into an
- * appropriately typed array, so anything that does not fit the criteria, will
- * trigger a compiler error.
- *
- * It then never uses the array, and passes the plugins over to
- * `Kaleidoscope.use`, adding the trailing `NULL`, making it even easier to use.
- *
- * Since the array this macro creates is never used, the compiler will optimize
- * it out fully. As such, by using this macro, we incur neither any size
- * penalties, nor any run-time penalties. Everything happens at compile-time.
- */
-#define USE_PLUGINS(plugins...) ({                              \
-          static KaleidoscopePlugin *__p[] = {plugins, NULL};   \
-          Kaleidoscope.use(plugins, NULL);                      \
-        })
+#define USE_PLUGINS(plugins...) Kaleidoscope.use(plugins)
 
 class KaleidoscopePlugin {
  public:
@@ -65,7 +49,34 @@ class Kaleidoscope_ {
   }
   void setup(void);
   void loop(void);
-  void use(KaleidoscopePlugin *plugin, ...) __attribute__((sentinel));
+
+  // ---- Kaleidoscope.use() ----
+
+  // First, we have the zero-argument version, which will satisfy the tail case.
+  inline void use() {
+  }
+
+  // Then, the one-argument version, that gives us type safety for a single
+  // plugin.
+  inline void use(KaleidoscopePlugin *p) {
+    p->begin();
+  }
+
+  // We have a no-op with a int argument, as a temporary hack until we remove
+  // the last instance of a NULL-terminated Kaleidoscope.use() call.
+  inline void use(int) {
+  }
+
+  // And the magic is in the last one, a template. The first parameter is
+  // matched out by the compiler, and passed to one of the functions above. The
+  // rest of the parameter pack (which may be an empty set in a recursive case),
+  // are passed back to either ourselves, or the zero-argument version a few
+  // lines above.
+  template <typename... Plugins>
+  void use(KaleidoscopePlugin *first, Plugins&&... plugins) {
+    use(first);
+    use(plugins...);
+  }
 
   // ---- hooks ----
 
