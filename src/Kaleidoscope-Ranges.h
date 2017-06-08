@@ -41,6 +41,8 @@ enum {
   LEAD_LAST   = LEAD_FIRST + 7,
   CYCLE,
   SYSTER,
+  TT_FIRST,
+  TT_LAST     = TT_FIRST + 255,
 
   KALEIDOSCOPE_SAFE_START,
 };
