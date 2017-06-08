@@ -32,8 +32,10 @@ class TopsyTurvy: public KaleidoscopePlugin {
   void begin(void) final;
  private:
   static uint8_t mod_state_;
+  static bool is_active_;
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void loopHook(bool is_post_clear);
 };
 
 }
