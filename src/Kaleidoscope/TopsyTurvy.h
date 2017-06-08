@@ -19,6 +19,9 @@
 #pragma once
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
+
+#define TOPSY(k) (Key) { .raw = kaleidoscope::ranges::TT_FIRST + (Key_ ## k).keyCode }
 
 namespace kaleidoscope {
 
@@ -27,8 +30,6 @@ class TopsyTurvy: public KaleidoscopePlugin {
   TopsyTurvy(void);
 
   void begin(void) final;
-
-  static const Key *key_list;
  private:
   static uint8_t mod_state_;
 

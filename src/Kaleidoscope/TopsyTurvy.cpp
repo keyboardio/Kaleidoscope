@@ -22,7 +22,6 @@
 
 namespace kaleidoscope {
 
-const Key *TopsyTurvy::key_list = NULL;
 uint8_t TopsyTurvy::mod_state_;
 
 TopsyTurvy::TopsyTurvy(void) {
@@ -36,9 +35,6 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (key_state & TOPSYTURVY)
     return mapped_key;
 
-  if (!key_list)
-    return mapped_key;
-
   if (mapped_key.raw == Key_LeftShift.raw)
     bitWrite(mod_state_, 0, key_is_pressed(key_state));
   if (mapped_key.raw == Key_RightShift.raw)
@@ -47,15 +43,11 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (!key_is_pressed(key_state) && !key_was_pressed(key_state))
     return mapped_key;
 
-  uint8_t idx = 0;
-  Key newKey;
+  if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
+    return mapped_key;
 
-  do {
-    newKey.raw = pgm_read_word(&(key_list[idx].raw));
-    idx++;
-  } while (newKey.raw != mapped_key.raw && newKey.raw != Key_NoKey.raw);
-
-  if (newKey.raw == Key_NoKey.raw)
+  Key new_key = {.raw = mapped_key.raw - ranges::TT_FIRST};
+  if (new_key.raw == Key_NoKey.raw)
     return mapped_key;
 
   // invert the shift state
@@ -63,7 +55,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (!mod_state_) {
     if (key_is_pressed(key_state))
       Keyboard.press(Key_LeftShift.keyCode);
-    handle_keyswitch_event(mapped_key, row, col, key_state | TOPSYTURVY);
+    handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
     if (key_toggled_off(key_state))
       Keyboard.release(Key_LeftShift.keyCode);
@@ -71,7 +63,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     Keyboard.release(Key_LeftShift.keyCode);
     Keyboard.release(Key_RightShift.keyCode);
     Keyboard.sendReport();
-    handle_keyswitch_event(mapped_key, row, col, key_state | TOPSYTURVY);
+    handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
 
     if (bitRead(mod_state_, 0))

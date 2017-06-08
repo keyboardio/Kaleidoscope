@@ -16,39 +16,41 @@ original `1` symbol.
 
 ## Using the plugin
 
-To use the plugin, one needs to include the header, create a list, and configure
-the provided `TopsyTurvy` object to use the dictionary:
+To use the plugin, one needs to include the header, mark keys to apply plugin
+effects to, and use the plugin:
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-TopsyTurvy.h>
 
-static const Key topsy_turvy_list[] PROGMEM = {
-  Key_1, Key_2, Key_3, Key_4, Key_5,
-  Key_6, Key_7, Key_8, Key_9, Key_0,
-  Key_NoKey
-};
+// In the keymap:
+TOPSY(1), TOPSY(2), TOPSY(3)
 
 void setup () {
   USE_PLUGINS (&TopsyTurvy);
 
   Kaleidoscope.setup ();
-
-  TopsyTurvy.key_list = topsy_turvy_list;
 }
 ```
 
-The list of keys **must** be terminated with a `Key_NoKey`, and **must** reside
-in `PROGMEM`.
+## Keymap markup
+
+There is only one macro that the plugin provides, which one can use in keymap definitions:
+
+### `TOPSY(key)`
+
+> Mark the specified `key` (without the `Key_` prefix!) for TopsyTurvy, and swap
+> the effect of `Shift` when the key is used. One can have any number of
+> topsy-turvy keys on a keymap.
+>
+> The keys must be plain old keys, modifiers or anything other augmentation
+> cannot be applied.
+
+The plugin provides a number of macros one can use in keymap definitions:
 
 ## Plugin methods
 
-The plugin provides the `TopsyTurvy` object, with the following property:
-
-### `.key_list`
-
-> Set this property to the list of `Key`s `TopsyTurvy` should invert the `Shift`
-> behaviour for.
+The plugin provides the `TopsyTurvy` object, without any public methods or properties.
 
 ## Further reading
 
