@@ -23,14 +23,13 @@
 namespace kaleidoscope {
 
 uint8_t TopsyTurvy::mod_state_;
-bool TopsyTurvy::is_active_;
+uint8_t TopsyTurvy::last_pressed_position_;
 
 TopsyTurvy::TopsyTurvy(void) {
 }
 
 void TopsyTurvy::begin(void) {
   event_handler_hook_use(eventHandlerHook);
-  loop_hook_use(loopHook);
 }
 
 Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
@@ -48,10 +47,12 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
     return mapped_key;
 
-  if (is_active_)
-    return Key_NoKey;
-
-  is_active_ = true;
+  if (key_toggled_on(key_state))
+    last_pressed_position_ = row * COLS + col;
+  else {
+    if (last_pressed_position_ != row * COLS + col)
+      return Key_NoKey;
+  }
 
   Key new_key = {.raw = mapped_key.raw - ranges::TT_FIRST};
   if (new_key.raw == Key_NoKey.raw)
@@ -80,10 +81,6 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   }
 
   return Key_NoKey;
-}
-
-void TopsyTurvy::loopHook(bool is_post_clear) {
-  is_active_ = false;
 }
 
 }
