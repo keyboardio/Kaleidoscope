@@ -47,9 +47,9 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
     return mapped_key;
 
-  if (key_toggled_on(key_state))
+  if (key_toggled_on(key_state)) {
     last_pressed_position_ = row * COLS + col;
-  else {
+  } else {
     if (last_pressed_position_ != row * COLS + col)
       return Key_NoKey;
   }
