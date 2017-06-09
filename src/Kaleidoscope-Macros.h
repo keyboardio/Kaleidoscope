@@ -14,6 +14,7 @@ class Macros_ : public KaleidoscopePlugin {
   void begin(void) final;
 
   void play(const macro_t *macro_p);
+  void type(const char *string);
 
   static byte row, col;
 };
