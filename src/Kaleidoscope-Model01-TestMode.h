@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "Kaleidoscope.h"
 
+#define TEST_MODE_KEY_COMBO (R0C0 | R0C6 | R3C6)
+
 class TestMode_ : public KaleidoscopePlugin {
  public:
   TestMode_(void);

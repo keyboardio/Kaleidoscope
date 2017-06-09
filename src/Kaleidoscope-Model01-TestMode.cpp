@@ -6,8 +6,6 @@ cRGB red;
 cRGB blue;
 cRGB green;
 
-#define LED_TEST_DELAY 2000
-
 TestMode_::TestMode_(void) {
 }
 
@@ -23,7 +21,7 @@ void TestMode_::begin(void) {
 void TestMode_::loopHook(bool postClear) {
   if (postClear)
     return;
-  if (KeyboardHardware.leftHandState.all == (R0C0 | R0C6 | R3C6)
+  if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
      ) {
     run_tests();
@@ -81,7 +79,7 @@ void TestMode_::test_matrix() {
   LEDControl.set_all_leds_to(50, 0, 0);
   while (1) {
     KeyboardHardware.read_matrix();
-    if (KeyboardHardware.leftHandState.all == (R0C0 | R0C6 | R3C6)) {
+    if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
       break;
     }
     for (byte row = 0; row < 4; row++) {
