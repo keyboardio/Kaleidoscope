@@ -17,156 +17,50 @@
  */
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
+#include <Kaleidoscope/LED-AlphaSquare-4x4.h>
 
 namespace kaleidoscope {
 
 static const uint16_t alphabet[] PROGMEM = {
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 1,
-         1, 0, 0, 1),  // A
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 1, 1,
-         1, 1, 0, 1,
-         1, 1, 1, 1),  // B
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 0,
-         1, 0, 0, 0,
-         1, 1, 1, 1),  // C
-  SYM4x4(1, 1, 1, 0,
-         1, 0, 0, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 0),  // D
-  SYM4x4(1, 1, 1, 1,
-         1, 1, 0, 0,
-         1, 0, 0, 0,
-         1, 1, 1, 1),  // E
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 0,
-         1, 1, 1, 0,
-         1, 0, 0, 0),  // F
-  SYM4x4(1, 1, 1, 0,
-         1, 0, 0, 0,
-         1, 0, 0, 1,
-         1, 1, 1, 1),  // G
-  SYM4x4(1, 0, 0, 1,
-         1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 0, 0, 1),  // H
-  SYM4x4(1, 1, 1, 1,
-         0, 1, 1, 0,
-         0, 1, 1, 0,
-         1, 1, 1, 1),  // I
-  SYM4x4(1, 1, 1, 1,
-         0, 0, 0, 1,
-         1, 0, 0, 1,
-         0, 1, 1, 0),  // J
-  SYM4x4(1, 0, 0, 1,
-         1, 1, 0, 0,
-         1, 1, 0, 0,
-         1, 0, 1, 1),  // K
-  SYM4x4(1, 0, 0, 0,
-         1, 0, 0, 0,
-         1, 0, 0, 0,
-         1, 1, 1, 1),  // L
-  SYM4x4(1, 0, 1, 1,
-         1, 1, 1, 1,
-         1, 1, 0, 1,
-         1, 0, 0, 1),  // M
-  SYM4x4(1, 0, 0, 1,
-         1, 1, 0, 1,
-         1, 0, 1, 1,
-         1, 0, 0, 1),  // N
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 1),  // O
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 1,
-         1, 0, 0, 0),  // P
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 0, 1, 1,
-         1, 1, 1, 1),  // Q
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 0,
-         1, 0, 1, 1),  // R
-  SYM4x4(1, 1, 1, 1,
-         1, 1, 0, 0,
-         0, 0, 1, 1,
-         1, 1, 1, 1),  // S
-  SYM4x4(1, 1, 1, 1,
-         0, 1, 1, 0,
-         0, 1, 1, 0,
-         0, 1, 1, 0),  // T
-  SYM4x4(1, 0, 0, 1,
-         1, 0, 0, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 1),  // U
-  SYM4x4(1, 0, 0, 1,
-         1, 0, 0, 1,
-         1, 0, 0, 1,
-         0, 1, 1, 0),  // V
-  SYM4x4(1, 0, 0, 1,
-         1, 0, 1, 1,
-         1, 1, 1, 1,
-         1, 0, 1, 1),  // W
-  SYM4x4(1, 0, 0, 1,
-         0, 1, 1, 0,
-         0, 1, 1, 0,
-         1, 0, 0, 1),  // X
-  SYM4x4(1, 0, 0, 1,
-         1, 1, 1, 1,
-         0, 1, 1, 0,
-         0, 1, 1, 0),  // Y
-  SYM4x4(1, 1, 1, 1,
-         0, 0, 1, 1,
-         1, 1, 0, 0,
-         1, 1, 1, 1),  // Z
-  // ---------------------
-  SYM4x4(0, 1, 1, 0,
-         1, 0, 1, 0,
-         0, 0, 1, 0,
-         1, 1, 1, 1),  // 1
-  SYM4x4(0, 1, 1, 0,
-         1, 0, 0, 1,
-         0, 0, 1, 0,
-         1, 1, 0, 1),  // 2
-  SYM4x4(1, 1, 1, 1,
-         0, 0, 1, 1,
-         0, 0, 0, 1,
-         1, 1, 1, 1),  // 3
-  SYM4x4(1, 0, 0, 1,
-         1, 1, 1, 1,
-         0, 0, 0, 1,
-         0, 0, 0, 1),  // 4
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 0,
-         0, 1, 1, 1,
-         1, 1, 1, 1),  // 5
-  SYM4x4(0, 1, 1, 0,
-         1, 0, 0, 0,
-         1, 1, 1, 1,
-         1, 1, 1, 1),  // 6
-  SYM4x4(1, 1, 1, 1,
-         0, 0, 0, 1,
-         0, 0, 1, 0,
-         0, 1, 0, 0),  // 7
-  SYM4x4(1, 1, 1, 0,
-         1, 0, 1, 1,
-         1, 1, 0, 1,
-         0, 1, 1, 1),  // 8
-  SYM4x4(1, 1, 1, 1,
-         1, 0, 0, 1,
-         1, 1, 1, 1,
-         0, 0, 0, 1),  // 9
-  SYM4x4(0, 1, 1, 0,
-         1, 0, 0, 1,
-         1, 0, 0, 1,
-         0, 1, 1, 0),  // 0
+  ALPHASQUARE_SYMBOL_A,
+  ALPHASQUARE_SYMBOL_B,
+  ALPHASQUARE_SYMBOL_C,
+  ALPHASQUARE_SYMBOL_D,
+  ALPHASQUARE_SYMBOL_E,
+  ALPHASQUARE_SYMBOL_F,
+  ALPHASQUARE_SYMBOL_G,
+  ALPHASQUARE_SYMBOL_H,
+  ALPHASQUARE_SYMBOL_I,
+  ALPHASQUARE_SYMBOL_J,
+  ALPHASQUARE_SYMBOL_K,
+  ALPHASQUARE_SYMBOL_L,
+  ALPHASQUARE_SYMBOL_M,
+  ALPHASQUARE_SYMBOL_N,
+  ALPHASQUARE_SYMBOL_O,
+  ALPHASQUARE_SYMBOL_P,
+  ALPHASQUARE_SYMBOL_Q,
+  ALPHASQUARE_SYMBOL_R,
+  ALPHASQUARE_SYMBOL_S,
+  ALPHASQUARE_SYMBOL_T,
+  ALPHASQUARE_SYMBOL_U,
+  ALPHASQUARE_SYMBOL_V,
+  ALPHASQUARE_SYMBOL_W,
+  ALPHASQUARE_SYMBOL_X,
+  ALPHASQUARE_SYMBOL_Y,
+  ALPHASQUARE_SYMBOL_Z,
+  ALPHASQUARE_SYMBOL_0,
+  ALPHASQUARE_SYMBOL_1,
+  ALPHASQUARE_SYMBOL_2,
+  ALPHASQUARE_SYMBOL_3,
+  ALPHASQUARE_SYMBOL_4,
+  ALPHASQUARE_SYMBOL_5,
+  ALPHASQUARE_SYMBOL_6,
+  ALPHASQUARE_SYMBOL_7,
+  ALPHASQUARE_SYMBOL_8,
+  ALPHASQUARE_SYMBOL_9,
+  ALPHASQUARE_SYMBOL_0
 };
+
 
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
