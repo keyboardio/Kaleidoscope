@@ -1,4 +1,4 @@
- * Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
+ * Kaleidoscope-LED-AlphaSquare -- 3x4 pixel LED alphabet
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
