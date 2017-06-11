@@ -1,4 +1,4 @@
- * Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
+/* Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#pragma once
 
 #ifndef KALEIDOSCOPE_LED_FONT
 #define KALEIDOSCOPE_LED_FONT
