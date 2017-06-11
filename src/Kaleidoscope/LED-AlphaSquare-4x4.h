@@ -23,147 +23,147 @@
 #define ALPHASQUARE_SYMBOL_A  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 1, 1, 1, \
-                                     1, 0, 0, 1)   
+                                     1, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_B  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 1, 1, \
                                      1, 1, 0, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_C  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 0, \
                                      1, 0, 0, 0, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_D  SYM4x4(1, 1, 1, 0, \
                                      1, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     1, 1, 1, 0)   
+                                     1, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_E  SYM4x4(1, 1, 1, 1, \
                                      1, 1, 0, 0, \
                                      1, 0, 0, 0, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_F  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 0, \
                                      1, 1, 1, 0, \
-                                     1, 0, 0, 0)   
+                                     1, 0, 0, 0)
 #define ALPHASQUARE_SYMBOL_G  SYM4x4(1, 1, 1, 0, \
                                      1, 0, 0, 0, \
                                      1, 0, 0, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_H  SYM4x4(1, 0, 0, 1, \
                                      1, 1, 1, 1, \
                                      1, 0, 0, 1, \
-                                     1, 0, 0, 1)   
+                                     1, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_I  SYM4x4(1, 1, 1, 1, \
                                      0, 1, 1, 0, \
                                      0, 1, 1, 0, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_J  SYM4x4(1, 1, 1, 1, \
                                      0, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     0, 1, 1, 0)   
+                                     0, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_K  SYM4x4(1, 0, 0, 1, \
                                      1, 1, 0, 0, \
                                      1, 1, 0, 0, \
-                                     1, 0, 1, 1)   
+                                     1, 0, 1, 1)
 #define ALPHASQUARE_SYMBOL_L  SYM4x4(1, 0, 0, 0, \
                                      1, 0, 0, 0, \
                                      1, 0, 0, 0, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_M  SYM4x4(1, 0, 1, 1, \
                                      1, 1, 1, 1, \
                                      1, 1, 0, 1, \
-                                     1, 0, 0, 1)   
+                                     1, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_N  SYM4x4(1, 0, 0, 1, \
                                      1, 1, 0, 1, \
                                      1, 0, 1, 1, \
-                                     1, 0, 0, 1)   
+                                     1, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_O  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_P  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 1, 1, 1, \
-                                     1, 0, 0, 0)   
+                                     1, 0, 0, 0)
 #define ALPHASQUARE_SYMBOL_Q  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 0, 1, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_R  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 1, 1, 0, \
-                                     1, 0, 1, 1)   
+                                     1, 0, 1, 1)
 #define ALPHASQUARE_SYMBOL_S  SYM4x4(1, 1, 1, 1, \
                                      1, 1, 0, 0, \
                                      0, 0, 1, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_T  SYM4x4(1, 1, 1, 1, \
                                      0, 1, 1, 0, \
                                      0, 1, 1, 0, \
-                                     0, 1, 1, 0)   
+                                     0, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_U  SYM4x4(1, 0, 0, 1, \
                                      1, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_V  SYM4x4(1, 0, 0, 1, \
                                      1, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     0, 1, 1, 0)   
+                                     0, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_W  SYM4x4(1, 0, 0, 1, \
                                      1, 0, 1, 1, \
                                      1, 1, 1, 1, \
-                                     1, 0, 1, 1)   
+                                     1, 0, 1, 1)
 #define ALPHASQUARE_SYMBOL_X  SYM4x4(1, 0, 0, 1, \
                                      0, 1, 1, 0, \
                                      0, 1, 1, 0, \
-                                     1, 0, 0, 1)   
+                                     1, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_Y  SYM4x4(1, 0, 0, 1, \
                                      1, 1, 1, 1, \
                                      0, 1, 1, 0, \
-                                     0, 1, 1, 0)   
+                                     0, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_Z  SYM4x4(1, 1, 1, 1, \
                                      0, 0, 1, 1, \
                                      1, 1, 0, 0, \
-                                     1, 1, 1, 1)   
-  // ---------------------
+                                     1, 1, 1, 1)
+// ---------------------
 #define ALPHASQUARE_SYMBOL_1  SYM4x4(0, 1, 1, 0, \
                                      1, 0, 1, 0, \
                                      0, 0, 1, 0, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_2  SYM4x4(0, 1, 1, 0, \
                                      1, 0, 0, 1, \
                                      0, 0, 1, 0, \
-                                     1, 1, 0, 1)   
+                                     1, 1, 0, 1)
 #define ALPHASQUARE_SYMBOL_3  SYM4x4(1, 1, 1, 1, \
                                      0, 0, 1, 1, \
                                      0, 0, 0, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_4  SYM4x4(1, 0, 0, 1, \
                                      1, 1, 1, 1, \
                                      0, 0, 0, 1, \
-                                     0, 0, 0, 1)   
+                                     0, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_5  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 0, \
                                      0, 1, 1, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_6  SYM4x4(0, 1, 1, 0, \
                                      1, 0, 0, 0, \
                                      1, 1, 1, 1, \
-                                     1, 1, 1, 1)   
+                                     1, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_7  SYM4x4(1, 1, 1, 1, \
                                      0, 0, 0, 1, \
                                      0, 0, 1, 0, \
-                                     0, 1, 0, 0)   
+                                     0, 1, 0, 0)
 #define ALPHASQUARE_SYMBOL_8  SYM4x4(1, 1, 1, 0, \
                                      1, 0, 1, 1, \
                                      1, 1, 0, 1, \
-                                     0, 1, 1, 1)   
+                                     0, 1, 1, 1)
 #define ALPHASQUARE_SYMBOL_9  SYM4x4(1, 1, 1, 1, \
                                      1, 0, 0, 1, \
                                      1, 1, 1, 1, \
-                                     0, 0, 0, 1)   
+                                     0, 0, 0, 1)
 #define ALPHASQUARE_SYMBOL_0  SYM4x4(0, 1, 1, 0, \
                                      1, 0, 0, 1, \
                                      1, 0, 0, 1, \
-                                     0, 1, 1, 0)   
+                                     0, 1, 1, 0)
 
 #endif
