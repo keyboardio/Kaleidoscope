@@ -19,6 +19,10 @@ void LEDRainbowEffect_::update(void) {
   LEDControl.set_all_leds_to(rainbow);
 }
 
+void LEDRainbowEffect_::brightness(byte brightness) {
+   rainbow.value=brighness;
+}
+
 LEDRainbowEffect_ LEDRainbowEffect;
 
 // ---------
@@ -45,6 +49,10 @@ void LEDRainbowWaveEffect_::update(void) {
   if (rainbow_hue >= 255) {
     rainbow_hue -= 255;
   }
+}
+
+void LEDRainbowWaveEffect_::brightness(byte brightness) {
+   rainbow.value=brighness;
 }
 
 LEDRainbowWaveEffect_ LEDRainbowWaveEffect;

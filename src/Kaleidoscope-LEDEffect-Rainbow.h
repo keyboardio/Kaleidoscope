@@ -7,6 +7,7 @@ class LEDRainbowEffect_ : public LEDMode {
  public:
   LEDRainbowEffect_(void);
 
+  void brightness(byte);
   void update(void) final;
 
  private:
@@ -27,6 +28,7 @@ class LEDRainbowWaveEffect_ : public LEDMode {
  public:
   LEDRainbowWaveEffect_(void);
 
+  void brightness(byte);
   void update(void) final;
 
  private:
