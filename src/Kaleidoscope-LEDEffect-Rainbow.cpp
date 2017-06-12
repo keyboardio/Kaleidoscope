@@ -20,7 +20,7 @@ void LEDRainbowEffect_::update(void) {
 }
 
 void LEDRainbowEffect_::brightness(byte brightness) {
-  rainbow_value=brightness;
+  rainbow_value = brightness;
 }
 
 LEDRainbowEffect_ LEDRainbowEffect;
@@ -52,7 +52,7 @@ void LEDRainbowWaveEffect_::update(void) {
 }
 
 void LEDRainbowWaveEffect_::brightness(byte brightness) {
-  rainbow_value=brightness;
+  rainbow_value = brightness;
 }
 
 LEDRainbowWaveEffect_ LEDRainbowWaveEffect;
