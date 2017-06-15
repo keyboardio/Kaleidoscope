@@ -39,7 +39,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&ColormapEffect);
+  Kaleidoscope.use(&ColormapEffect);
 
   Kaleidoscope.setup();
   ColormapEffect.max_layers(1);

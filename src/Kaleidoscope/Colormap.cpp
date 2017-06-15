@@ -35,7 +35,7 @@ ColormapEffect::ColormapEffect(void) {
 void ColormapEffect::begin(void) {
   LEDMode::begin();
 
-  USE_PLUGINS(&::EEPROMSettings, &::LEDPaletteTheme);
+  Kaleidoscope.use(&::EEPROMSettings, &::LEDPaletteTheme);
 }
 
 void ColormapEffect::max_layers(uint8_t max_) {
