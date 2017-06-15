@@ -42,7 +42,7 @@ We can then update the keymap via [Focus][plugin:focus].
 
 void setup() {
   Serial.begin(9600);
-  USE_PLUGINS(&EEPROMKeymap, &Focus);
+  Kaleidoscope.use(&EEPROMKeymap, &Focus);
   
   Kaleidoscope.setup();
   

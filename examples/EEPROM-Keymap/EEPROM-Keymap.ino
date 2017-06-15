@@ -42,7 +42,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 void setup() {
   Serial.begin(9600);
 
-  USE_PLUGINS(&EEPROMKeymap, &Focus);
+  Kaleidoscope.use(&EEPROMKeymap, &Focus);
 
   Kaleidoscope.setup();
 

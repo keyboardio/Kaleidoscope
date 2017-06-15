@@ -28,7 +28,7 @@ EEPROMKeymap::EEPROMKeymap(void) {
 }
 
 void EEPROMKeymap::begin(void) {
-  USE_PLUGINS(&::EEPROMSettings);
+  Kaleidoscope.use(&::EEPROMSettings);
 }
 
 void EEPROMKeymap::max_layers(uint8_t max) {
