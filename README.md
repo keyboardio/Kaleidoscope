@@ -1,6 +1,6 @@
 # Kaleidoscope-Colormap
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+![status][st:stable] [![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Colormap.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Colormap
