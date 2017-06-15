@@ -51,6 +51,8 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
 
       if (Keyboard.isModifierActive(k.keyCode))
         LEDControl.led_set_crgb_at(r, c, highlight_color);
+      else
+        LEDControl.led_set_crgb_at(r, c, CRGB(0, 0, 0));
     }
   }
 }
