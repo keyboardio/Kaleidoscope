@@ -51,7 +51,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
                      T(0), T(1) );
   case MACRO_HELLO:
     if (keyToggledOn(keyState)) {
-      Macros.type(PSTR("Hello world!"));
+      return Macros.type(PSTR("Hello world!"));
     }
     break;
   case MACRO_SPECIAL:

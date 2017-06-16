@@ -161,7 +161,7 @@ Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
   return key;
 }
 
-void Macros_::type(const char *string) {
+const macro_t *Macros_::type(const char *string) {
   while (true) {
     uint8_t ascii_code = pgm_read_byte(string++);
     if (!ascii_code)
@@ -177,6 +177,8 @@ void Macros_::type(const char *string) {
     playMacroKeyswitchEvent(key, WAS_PRESSED);
 
   }
+
+  return MACRO_NONE;
 }
 
 static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
