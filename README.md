@@ -15,8 +15,8 @@ sweet animations, or just show off - the possibilities are almost endless!
 
 ## Using the plugin
 
-To use the plugin, one needs to include the header, and one way or another, call
-the `display` method.
+To use the plugin, one needs to include the header, `use` the plugin,
+and, one way or another, call the `display` method.
 
 ```c++
 #include <Kaleidoscope.h>
@@ -37,37 +37,40 @@ The plugin provides the `AlphaSquare` object, which has the following methods
 and properties:
 
 ### `.display(key)`
-### `.display(key, row, col)`
 ### `.display(key, col)`
+### `.display(key, row, col)`
 ### `.display(key, row, col, color)`
 
 > Display the symbol for `key` at the given row or column, with pixels set to
 > the specified `color`. If `row` is omitted, the first row - `0` is assumed. If
-> the column is omitted too, then the third - `2` - column is used by default.
+> the column is omitted, then the third column - `2` - is used.
 > If the `color` is omitted, the plugin will use the global `.color` property.
 >
-> The plugin can display the English alphabet, and the numbers from 0 to 9.
+> The plugin can display the English alphabet and the numbers from 0 to 9.
 
 ### `.display(symbol)`
-### `.display(symbol, row, col)`
 ### `.display(symbol, col)`
+### `.display(symbol, row, col)`
 ### `.display(symbol, row, col, color)`
 
-> Almost the same as the previous function, but instead of a key, it expects a
-> 4x4 bitmap.
+> As the previous function, but instead of a key, it expects a 4x4 bitmap in 
+> the form of a 16-bit unsigned integer, where the low bit is the top-right 
+> corner, the second-lowest bit is to the right of that, and so on.
+>
+> The `SYM4x4` macro can be used to simplify creating these bitmaps.
 
 ### `.clear(key)`, `.clear(symbol)`
 ### `.clear(key, col)`, `.clear(symbol, col)`
 ### `.clear(key, col, row)`, `.clear(symbol, col, row)`
 
 > Just like the `.display()` counterparts, except these clear the symbol, by
-> turning the LED pixels it is made up from, off.
+> turning the LED pixels it is made up from off.
 
 ### `.color`
 
 > The color to use to draw the pixels.
 >
-> Defaults to { 0x80, 0x80, 0x80 }.
+> Defaults to `{ 0x80, 0x80, 0x80 }` (light gray).
 
 ## Plugin helpers
 
@@ -79,7 +82,7 @@ and properties:
 
 ## Extra symbols
 
-There is a growing number of extra symbols available in the
+There is a growing number of pre-defined symbols available in the
 `kaleidoscope::alpha_square::symbols` namespace. Ok, growing may have been an
 exaggeration, there is only one as of this writing:
 
