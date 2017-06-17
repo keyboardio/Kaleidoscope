@@ -68,7 +68,8 @@ The plugin provides the following effects:
 ### `Haunt([color])`
 
 > A ghostly haunt effect, that trails the key taps with a ghostly white color
-> (or any other color, if specified).
+> (or any other color, if specified). Use the `CRGB(r,g,b)` macro to specify the
+> color, if you want something else than the ghostly white.
 
 ### `BlazingTrail()`
 
