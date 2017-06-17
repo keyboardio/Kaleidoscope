@@ -9,10 +9,10 @@
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-Macros are a standard feature on many keyboards, and Kaleidoscope-powered ones
+Macros are a standard feature on many keyboards and Kaleidoscope-powered ones
 are no exceptions. Macros are a way to have a single key-press do a whole lot of
 things under the hood: conventionally, macros play back a key sequence, but with
-Kaleidoscope, there are many more we can do. Nevertheless, playing back a
+Kaleidoscope, there is much more we can do. Nevertheless, playing back a
 sequence of events is still the primary use of macros.
 
 Playing back a sequence means that when we press a macro key, we can have it
@@ -21,7 +21,7 @@ complicated shortcut - the possibilities are endless!
 
 ## Using the plugin
 
-To use the plugin, we need to include the header, make sure we use the plugin,
+To use the plugin, we need to include the header, make sure we `use` the plugin,
 place macros on the keymap, and create a special handler function
 (`macroAction`) that will tell the plugin what shall happen when macro keys are
 pressed. It is best illustrated with an example:
@@ -109,7 +109,7 @@ The plugin provides a `Macros` object, with the following methods and properties
 ### `.row`, `.col`
 
 > The `row` and `col` properties describe the physical position a macro was
-> triggered from - if it was triggered by a key, that is. The playback functions
+> triggered from if it was triggered by a key. The playback functions
 > do not use these properties, but they are available, would one want to create
 > a macro that needs to know which key triggered it.
 
