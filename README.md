@@ -15,15 +15,16 @@ sweet animations, or just show off - the possibilities are almost endless!
 
 ## Using the plugin
 
-To use the plugin, one needs to include the header, `use` the plugin,
-and, one way or another, call the `display` method.
+To use the plugin, one needs to include the header in their Sketch, tell the
+firmware to `use` the plugin, and one way or another, call the `display` method.
+This can be done from a macro, or via the `AlphaSquareEffect` LED mode.
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
 void setup() {
-  USE_PLUGINS(&AlphaSquare);
+  Kaleidoscope.use(&AlphaSquare, &AlphaSquareEffect);
   
   Kaleidoscope.setup();
 
@@ -33,8 +34,9 @@ void setup() {
 
 ## Plugin methods
 
-The plugin provides the `AlphaSquare` object, which has the following methods
-and properties:
+The plugin provides the `AlphaSquare` object, which has its methods and
+properties listed below, and an `AlphaSquareEffect` LED mode, which has no
+methods or properties other than those provided by all LED modes.
 
 ### `.display(key)`
 ### `.display(key, col)`
@@ -46,7 +48,11 @@ and properties:
 > the column is omitted, then the third column - `2` - is used.
 > If the `color` is omitted, the plugin will use the global `.color` property.
 >
-> The plugin can display the English alphabet and the numbers from 0 to 9.
+> The plugin can display the English alphabet, and the numbers from 0 to 9. The
+> symbol will be drawn with the top-left corner at the given position.
+>
+> Please consult the appropriate hardware library of your keyboard to see how
+> keys are laid out in rows and columns.
 
 ### `.display(symbol)`
 ### `.display(symbol, col)`
