@@ -41,7 +41,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&LEDOff, &StalkerEffect);
+  Kaleidoscope.use(&LEDOff, &StalkerEffect);
 
   Kaleidoscope.setup();
 

@@ -22,7 +22,7 @@ To use the plugin, one needs to include the header and select the effect.
 #include <Kaleidoscope-LED-Stalker.h>
 
 void setup (){
-  USE_PLUGINS(&StalkerEffect);
+  Kaleidoscope.use(&StalkerEffect);
 
   Kaleidoscope.setup();
 
