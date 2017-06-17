@@ -10,12 +10,12 @@
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `StalkerEffect` plugin provides an interesting new typing experience: the
-LEDs light up as you tap keys, and play one of the selected effects: a haunting
+LEDs light up as you tap keys and play one of the selected effects: a haunting
 trail of ghostly white lights, or a blazing trail of fire.
 
 ## Using the plugin
 
-To use the plugin, one needs to include the header, and select the effect.
+To use the plugin, one needs to include the header and select the effect.
 
 ```c++
 #include <Kaleidoscope.h>
@@ -33,8 +33,7 @@ void setup (){
 
 It is recommended to place the activation of the plugin (the `USE_PLUGINS` call)
 as early as possible, so the plugin can catch all relevant key presses. The
-configuration can happen at any time, but using the `STALKER` macro is highly
-recommended.
+configuration can happen at any time and should use the `STALKER` macro to do so.
 
 ## Plugin methods
 
@@ -59,7 +58,7 @@ properties:
 ### `STALKER(effect, params)`
 
 > Returns an effect, to be used to assign a value the `.variant` property of the
-> `StalkerEffect` object. Any arguments given to the macro, are also passed on
+> `StalkerEffect` object. Any arguments given to the macro are passed on
 > to the effect. If the effect takes no arguments, use an empty `params` list.
 
 ## Plugin effects
