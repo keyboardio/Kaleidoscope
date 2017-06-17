@@ -21,8 +21,8 @@ complicated shortcut - the possibilities are endless!
 
 ## Using the plugin
 
-To use the plugin, we need to include the header, make sure we `use` the plugin,
-place macros on the keymap, and create a special handler function
+To use the plugin, we need to include the header, tell the firmware to `use` the
+plugin, place macros on the keymap, and create a special handler function
 (`macroAction`) that will tell the plugin what shall happen when macro keys are
 pressed. It is best illustrated with an example:
 
@@ -112,6 +112,9 @@ The plugin provides a `Macros` object, with the following methods and properties
 > triggered from if it was triggered by a key. The playback functions
 > do not use these properties, but they are available, would one want to create
 > a macro that needs to know which key triggered it.
+>
+> When the macro was not triggered by a key the value of these properties are
+> unspecified.
 
 ## Macro helpers
 
