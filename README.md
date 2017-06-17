@@ -22,9 +22,9 @@ match one's desired behaviour.
 
 ## Using the plugin
 
-To use the plugin, simply include the header, make sure the `MouseKeys` object
-is properly used, and place mouse keys on your keymap. It is best illustrated
-with an example:
+To use the plugin, simply include the header in your Sketch, tell the firmware
+to use the `MouseKeys` object, and place mouse keys on your keymap. It is best
+illustrated with an example:
 
 ```c++
 #include <Kaleidoscope.h>
@@ -52,7 +52,8 @@ The simplest set of keys are the mouse cursor movement keys. These move the
 cursor one direction or the other, with speed and acceleration factored in. When
 a mouse cursor movement key is held down, it will move `.speed` pixels each
 `.speedDelay` milliseconds without acceleration. But when `.accelSpeed` is
-non-zero (and it is not zero by default), the speed will increase by
+non-zero (and it is not zero by default,
+see [below](#accelspeed-and-acceldelay)), the speed will increase by
 `.accelSpeed` every `.accelDelay` milliseconds. Thus, unless configured
 otherwise, holding a direction will move that way at increasing speed.
 
