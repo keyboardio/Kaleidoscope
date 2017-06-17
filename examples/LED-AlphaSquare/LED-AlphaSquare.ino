@@ -94,7 +94,7 @@ const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
 }
 
 void setup() {
-  USE_PLUGINS(&AlphaSquare, &AlphaSquareEffect, &Macros);
+  Kaleidoscope.use(&AlphaSquare, &AlphaSquareEffect, &Macros);
 
   Kaleidoscope.setup();
 

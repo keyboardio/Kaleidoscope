@@ -31,7 +31,7 @@ AlphaSquareEffect::AlphaSquareEffect(void) {
 void
 AlphaSquareEffect::begin(void) {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.use(&LEDControl, NULL);
+  Kaleidoscope.use(&LEDControl);
   us_ = LEDControl.mode_add(this);
 }
 
