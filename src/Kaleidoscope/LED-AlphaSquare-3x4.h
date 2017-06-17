@@ -128,7 +128,7 @@
 // ---------------------
 #define ALPHASQUARE_SYMBOL_1  SYM4x4(1, 1, 0, 0, \
                                      0, 1, 0, 0, \
-                                     0, 1, 0, 0,
+                                     0, 1, 0, 0, \
                                      1, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_2  SYM4x4(1, 1, 0, 0, \
                                      0, 0, 1, 0, \
@@ -136,7 +136,7 @@
                                      1, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_3  SYM4x4(1, 1, 1, 0, \
                                      0, 1, 1, 0, \
-                                     0, 0, 1, 0,  \
+                                     0, 0, 1, 0, \
                                      1, 1, 1, 0)
 #define ALPHASQUARE_SYMBOL_4  SYM4x4(1, 0, 1, 0, \
                                      1, 1, 1, 0, \
