@@ -138,6 +138,11 @@ need to define them in a special way, using the `MACRO` helper (or its
 > That is, the macro will not be performed when the key is released, or held, or
 > not pressed at all.
 >
+> Use this over `MACRO()` when you only want to perform an action when the key
+> actuates, and no action should be taken when it is held, released, or when it
+> is not pressed at all. For a lot of macros that emit a sequence without any
+> other side effects, `MACRODOWN()` is usually the better choice.
+>
 > Can only be used from the `macroAction()` overrideable method.
 
 ## `MACRO` steps
