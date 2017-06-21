@@ -1,7 +1,8 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Model01-TestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
-
+#include <avr/io.h>
+#include <avr/wdt.h>
 cRGB red;
 cRGB blue;
 cRGB green;
@@ -110,8 +111,15 @@ void TestMode_::test_matrix() {
   }
 }
 
+void TestMode_::toggle_programming_leds_on() {
+  PORTD |= (1<<5);
+  PORTB |= (1<<0);
+}
+
 void TestMode_::run_tests() {
   //  Serial.println("Running tests");
+  toggle_programming_leds_on();
+
   test_leds();
   test_matrix();
   //  Serial.println("Done running tests");
