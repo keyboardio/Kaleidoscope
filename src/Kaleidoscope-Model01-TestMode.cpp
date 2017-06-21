@@ -108,8 +108,8 @@ void TestMode_::test_matrix() {
 }
 
 void TestMode_::toggle_programming_leds_on() {
-  PORTD |= (1<<5);
-  PORTB |= (1<<0);
+  PORTD |= (1 << 5);
+  PORTB |= (1 << 0);
 }
 
 void TestMode_::run_tests() {
