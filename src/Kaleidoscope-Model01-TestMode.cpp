@@ -16,7 +16,6 @@ void TestMode_::begin(void) {
   blue.b = 201;
   green.g = 201;
   loop_hook_use(this->loopHook);
-
 }
 
 void TestMode_::loopHook(bool postClear) {
@@ -38,14 +37,12 @@ void TestMode_::wait_for_keypress() {
       break;
     }
   }
-
 }
 
 void TestMode_::set_leds(uint8_t r, uint8_t g, uint8_t b) {
   LEDControl.set_all_leds_to(r, g, b);
   LEDControl.led_sync();
   wait_for_keypress();
-
 }
 
 void TestMode_::test_leds(void) {
@@ -77,7 +74,6 @@ void TestMode_::test_matrix() {
     }
     for (byte row = 0; row < 4; row++) {
       for (byte col = 0; col < 8; col++) {
-
         uint8_t keynum = (row * 8) + (col);
 
         uint8_t keyState = (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 0) |
