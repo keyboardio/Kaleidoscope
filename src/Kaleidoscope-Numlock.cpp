@@ -43,6 +43,7 @@ const macro_t *NumLock_::toggle(byte row_, byte col_, uint8_t numPadLayer) {
 
   if (Layer.isOn(numPadLayer)) {
     Layer.off(numPadLayer);
+    LEDControl.init_mode();
   } else {
     Layer.on(numPadLayer);
   }
