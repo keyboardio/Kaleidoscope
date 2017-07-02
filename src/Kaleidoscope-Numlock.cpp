@@ -3,10 +3,9 @@
 #include "Kaleidoscope.h"
 #include "layers.h"
 
-bool NumLock_::isActive;
 byte NumLock_::row = 255, NumLock_::col = 255;
+uint8_t NumLock_::numPadLayer;
 cRGB numpad_color = CRGB(255, 0, 0);
-
 
 NumLock_::NumLock_(void) {
 }
@@ -16,7 +15,7 @@ void NumLock_::begin(void) {
 }
 
 void NumLock_::loopHook(bool postClear) {
-  if (!postClear || !isActive)
+  if (!postClear || !Layer.isOn(numPadLayer))
     return;
 
   for (uint8_t r = 0; r < ROWS; r++) {
@@ -37,9 +36,9 @@ void NumLock_::loopHook(bool postClear) {
   LEDControl.led_set_crgb_at(row, col, color);
 }
 
-const macro_t *NumLock_::toggle(byte row_, byte col_, uint8_t numPadLayer) {
-  row = row_;
-  col = col_;
+const macro_t *NumLock_::toggle() {
+  row = Macros.row;
+  col = Macros.col;
 
   if (Layer.isOn(numPadLayer)) {
     Layer.off(numPadLayer);
@@ -47,7 +46,6 @@ const macro_t *NumLock_::toggle(byte row_, byte col_, uint8_t numPadLayer) {
   } else {
     Layer.on(numPadLayer);
   }
-  isActive = Layer.isOn(numPadLayer);
 
   return MACRO(T(KeypadNumLock), END);
 }
