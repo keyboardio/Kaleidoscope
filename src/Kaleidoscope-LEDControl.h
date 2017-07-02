@@ -28,6 +28,7 @@ class LEDControl_ : public KaleidoscopePlugin {
   static void update(void);
   static void set_mode(uint8_t mode);
   static uint8_t get_mode();
+  static void init_mode(void);
 
   static int8_t mode_add(LEDMode *mode);
 
