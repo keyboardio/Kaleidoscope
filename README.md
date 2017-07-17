@@ -15,12 +15,12 @@ name. Once finished, we hit `Space`, and this plugin will do the rest: delete
 everything we typed, look up an action for the entered symbol, and execute that.
 
 There are a number of ways this can be useful, but the easiest showcase is
-symbolic Unicode input: `SYSTER coffee SPACE` turns into `☕`, witch just a
+symbolic Unicode input: `SYSTER coffee SPACE` turns into `☕`, with just a
 little code.
 
 ## Using the plugin
 
-To use the plugin, one needs to include the header, and set up a function that
+To use the plugin, one needs to include the header and set up a function that
 will handle the symbol actions:
 
 ```c++
@@ -70,14 +70,14 @@ methods outside of the object, however, that can be overridden:
 
 > Called whenever an action needs to be taken, which can happen in three cases:
 
-> First, when the `Syster` key is pressed, and the alternate processing starts.
+> First, when the `Syster` key is pressed and the alternate processing starts.
 > In this case, `action` will be set to `kaleidoscope::Syster::StartAction`, and
 > `symbol` will be `NULL`. This function can be used to do some setup to make it
 > more obvious that the Syster input mode is active, such as sending a Unicode
 > symbol to the host, or lighting up LEDs, or anything else we'd like.
 >
 > Second, when the sequence is finished with a `Space`. In this case, `action`
-> will be set to `kaleidoscope::Syster::EndAction`, and `symbol` will be `NULL`.
+> will be set to `kaleidoscope::Syster::EndAction` and `symbol` will be `NULL`.
 > This can be used to undo anything that the start action did, if need be.
 >
 > Third, when the action for the symbol should be made. In this case, `action`
