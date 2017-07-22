@@ -18,7 +18,7 @@ typedef enum {
 typedef uint8_t macro_t;
 
 #define MACRO_NONE 0
-#define MACRO(...) ({static const macro_t __m[] PROGMEM = { __VA_ARGS__ }; &__m[0]; })
+#define MACRO(...) ({static const macro_t __m[] PROGMEM = { __VA_ARGS__, MACRO_ACTION_END }; &__m[0]; })
 #define MACRODOWN(...) (key_toggled_on(keyState) ? MACRO(__VA_ARGS__) : MACRO_NONE)
 
 #define I(n)  MACRO_ACTION_STEP_INTERVAL, n

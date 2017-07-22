@@ -48,8 +48,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
                      D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
                      T(Spacebar),
                      W(100),
-                     T(0), T(1),
-                     END);
+                     T(0), T(1) );
   case MACRO_HELLO:
     if (key_toggled_on(keyState)) {
       Macros.type(PSTR("Hello world!"));
@@ -128,8 +127,10 @@ need to define them in a special way, using the `MACRO` helper (or its
 > Defines a macro, that is built up from `steps` (explained below). The plugin
 > will iterate through the sequence, and re-play the steps in order.
 >
-> The sequence must end with the `END` step, otherwise the playback will not be
-> able to stop, and will have unpredictable behaviour.
+> Note: In older versions of the Macros plugin, the sequence of steps had to end
+> with a special step called END.  This is no longer required.  Existing macros
+> that end with END will still work correctly, but new code should not use END;
+> usage of END is deprecated.
 
 ### `MACRODOWN(steps...)`
 
@@ -147,7 +148,7 @@ need to define them in a special way, using the `MACRO` helper (or its
 
 ## `MACRO` steps
 
-Macro steps can be divided into three groups:
+Macro steps can be divided into two groups:
 
 ### Delays
 
@@ -162,19 +163,13 @@ Macro steps can be divided into three groups:
 Key event steps have two variants: one that prefixes its argument with `Key_`,
 and one that does not. The latter are the `Dr`, `Ur`, and `Tr` variants. In most
 cases, one is likely to use normal keys for the steps, so the `D`, `U`, and `T`
-steps apply the `Key_` prefix. This allows us to write `MACRO(T(X), END)`
-instead of `MACRO(Tr(Key_X), END)` - making the macro definition shorter, and
+steps apply the `Key_` prefix. This allows us to write `MACRO(T(X))`
+instead of `MACRO(Tr(Key_X))` - making the macro definition shorter, and
 more readable.
 
 * `D(key)`, `Dr(key)`: Simulates a key being pressed (pushed down).
 * `U(key)`, `Ur(key)`: Simulates a key being released (going up).
 * `T(key)`, `Tr(key)`: Simulates a key being tapped (pressed first, then released).
-
-### The End
-
-* `END`: Signals the end of the macro. Anything past this step will be ignored.
-  But without this step, the plugin will continue trying to play the macro
-  further, and have unpredictable results.
 
 ## Overrideable methods
 
