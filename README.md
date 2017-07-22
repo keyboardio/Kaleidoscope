@@ -28,8 +28,8 @@ cd $HOME/kaleidoscope
 # then clone the hardware definitions
 git clone --recursive https://github.com/keyboardio/Arduino-Boards.git
 # and make them available to the arduino environment
-mkdir -p $SKETCHBOOK_DIR/hardware/kaleidoscope
-ln -s $HOME/kaleidoscope/Arduino-Boards $SKETCHBOOK_DIR/hardware/kaleidoscope/avr
+mkdir -p $SKETCHBOOK_DIR/hardware/keyboardio
+ln -s $HOME/kaleidoscope/Arduino-Boards $SKETCHBOOK_DIR/hardware/keyboardio/avr
 ```
 
 ## Clone and Build the Kaleidoscope Firmware
