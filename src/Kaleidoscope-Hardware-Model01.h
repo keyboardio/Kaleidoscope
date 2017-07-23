@@ -135,7 +135,7 @@ class Model01 {
 #define LED_4 19
 #define LED_5 20
 #define LED_T 21
-#define LED_REC_MACRO 22
+#define LED_G 22
 #define LED_B 23
 #define LED_ESC 24
 #define LED_TAB 25
