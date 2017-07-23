@@ -23,7 +23,7 @@ static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t ke
 }
 
 void Macros_::play(const macro_t *macro_p) {
-  macro_t macro = END;
+  macro_t macro = MACRO_ACTION_END;
   uint8_t interval = 0;
   uint8_t flags;
 
@@ -63,7 +63,7 @@ void Macros_::play(const macro_t *macro_p) {
       readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED | WAS_PRESSED);
       break;
 
-    case END:
+    case MACRO_ACTION_END:
     default:
       return;
     }
