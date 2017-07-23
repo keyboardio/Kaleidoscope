@@ -75,7 +75,7 @@ static LEDSolidColor solidViolet(70, 0, 60);
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == TOGGLENUMLOCK && key_toggled_on(keyState)) {
-    return NumLock.toggle(Macros.row, Macros.col, NUMPAD_KEYMAP);
+    return NumLock.toggle();
   }
 
   if (macroIndex == 1 && key_toggled_on(keyState)) {
@@ -101,7 +101,7 @@ void setup() {
                    &Macros,
                    &MouseKeys,
                    NULL);
-
+  NumLock.numPadLayer = NUMPAD_KEYMAP;
   LEDOff.activate();
 }
 
