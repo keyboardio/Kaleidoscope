@@ -116,7 +116,7 @@ class Model01 {
 #define LED_PGDN 0
 #define LED_PGUP 1
 #define LED_BACKTICK 2
-#define LED_LED 3
+#define LED_PROG 3
 #define LED_1 4
 #define LED_Q 5
 #define LED_A 6
@@ -139,7 +139,7 @@ class Model01 {
 #define LED_B 23
 #define LED_ESC 24
 #define LED_TAB 25
-#define LED_REC 26
+#define LED_LED 26
 #define LED_L_FN 27
 #define LED_L_CTRL 28
 #define LED_DEL 29
