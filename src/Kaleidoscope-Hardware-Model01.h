@@ -20,9 +20,9 @@ class Model01 {
   cRGB getKeyColor(byte row, byte col);
   uint8_t getLedIndex(byte row, byte col);
 
-  void scan_matrix(void);
-  void read_matrix(void);
-  void act_on_matrix_scan(void);
+  void scanMatrix(void);
+  void readMatrix(void);
+  void actOnMatrixScan(void);
   void setup();
   void enable_high_power_leds(void);
   void enable_scanner_power(void);

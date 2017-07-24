@@ -141,7 +141,7 @@ void debug_keyswitch_event(keydata_t state, keydata_t previousState, uint8_t key
 }
 
 
-void Model01::read_matrix() {
+void Model01::readMatrix() {
   //scan the Keyboard matrix looking for connections
   previousLeftHandState = leftHandState;
   previousRightHandState = rightHandState;
@@ -157,7 +157,7 @@ void Model01::read_matrix() {
 
 
 
-void Model01::act_on_matrix_scan() {
+void Model01::actOnMatrixScan() {
   for (byte row = 0; row < 4; row++) {
     for (byte col = 0; col < 8; col++) {
 
@@ -176,9 +176,9 @@ void Model01::act_on_matrix_scan() {
 }
 
 
-void Model01::scan_matrix() {
-  read_matrix();
-  act_on_matrix_scan();
+void Model01::scanMatrix() {
+  readMatrix();
+  actOnMatrixScan();
 }
 
 void Model01::reboot_bootloader() {
