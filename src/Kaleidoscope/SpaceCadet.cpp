@@ -81,8 +81,8 @@ Key SpaceCadetShift::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_
     if (bitRead(paren_needed_, 1))
       paren = closing_paren;
 
-    handle_keyswitch_event(mapped_key, row, col, IS_PRESSED | INJECTED);
-    handle_keyswitch_event(paren, row, col, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(mapped_key, row, col, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(paren, row, col, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
 
     paren_needed_ = 0;
