@@ -45,4 +45,4 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
 
 // Internal use
 void press_key(Key mappedKey);
-void release_key(Key mappedKey);
+void releaseKey(Key mappedKey);

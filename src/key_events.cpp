@@ -35,7 +35,7 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
   } else if (keyIsPressed(keyState)) {
     press_key(mappedKey);
   } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
-    release_key(mappedKey);
+    releaseKey(mappedKey);
   }
   return true;
 }
@@ -60,7 +60,7 @@ void press_key(Key mappedKey) {
 }
 
 
-void release_key(Key mappedKey) {
+void releaseKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
     Keyboard.release(Key_LeftShift.keyCode);
   }
