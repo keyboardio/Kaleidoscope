@@ -47,7 +47,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
     return mapped_key;
 
-  if (key_toggled_on(key_state)) {
+  if (keyToggledOn(key_state)) {
     last_pressed_position_ = row * COLS + col;
   } else {
     if (last_pressed_position_ != row * COLS + col)
@@ -65,7 +65,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
       Keyboard.press(Key_LeftShift.keyCode);
     handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
-    if (key_toggled_off(key_state))
+    if (keyToggledOff(key_state))
       Keyboard.release(Key_LeftShift.keyCode);
   } else {
     Keyboard.release(Key_LeftShift.keyCode);
