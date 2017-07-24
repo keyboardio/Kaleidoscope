@@ -49,7 +49,7 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
     if (!lookupColorAtPosition(map_base, pos, &color))
       continue;
 
-    LEDControl.led_set_crgb_at(pos, color);
+    LEDControl.setCrgbAt(pos, color);
   }
 }
 
