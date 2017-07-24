@@ -63,7 +63,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   if (!mod_state_) {
     if (keyIsPressed(key_state))
       Keyboard.press(Key_LeftShift.keyCode);
-    handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
+    handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
     if (keyToggledOff(key_state))
       Keyboard.release(Key_LeftShift.keyCode);
@@ -71,7 +71,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     Keyboard.release(Key_LeftShift.keyCode);
     Keyboard.release(Key_RightShift.keyCode);
     Keyboard.sendReport();
-    handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
+    handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
 
     if (bitRead(mod_state_, 0))
