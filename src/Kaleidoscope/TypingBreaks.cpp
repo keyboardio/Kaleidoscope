@@ -100,7 +100,7 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
   // So it seems we did not need to lock up. In this case, lets increase key
   // counters if need be.
 
-  if (key_toggled_on(key_state)) {
+  if (keyToggledOn(key_state)) {
     if (col <= COLS / 2)
       left_hand_keys_++;
     else
