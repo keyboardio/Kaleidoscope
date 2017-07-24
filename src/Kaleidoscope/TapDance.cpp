@@ -129,7 +129,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
   if (key_state & INJECTED)
     return mapped_key;
 
-  if (!key_is_pressed(key_state) && !key_was_pressed(key_state)) {
+  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
     if (isTapDance(mapped_key))
       return Key_NoKey;
     return mapped_key;
