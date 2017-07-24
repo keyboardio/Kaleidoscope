@@ -51,7 +51,7 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
     if (!isSyster(mapped_key))
       return mapped_key;
 
-    if (key_toggled_on(key_state)) {
+    if (keyToggledOn(key_state)) {
       is_active_ = true;
       systerAction(StartAction, NULL);
     }
@@ -67,7 +67,7 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
   if (mapped_key == Key_Backspace && symbol_pos_ == 0)
     return Key_NoKey;
 
-  if (key_toggled_off(key_state)) {
+  if (keyToggledOff(key_state)) {
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
         handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
@@ -86,7 +86,7 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
     }
   }
 
-  if (key_toggled_on(key_state)) {
+  if (keyToggledOn(key_state)) {
     if (mapped_key == Key_Backspace) {
       if (symbol_pos_ > 0)
         symbol_pos_--;
