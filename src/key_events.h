@@ -44,5 +44,5 @@ extern const Key keymaps[][ROWS][COLS];
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
 
 // Internal use
-void press_key(Key mappedKey);
+void pressKey(Key mappedKey);
 void releaseKey(Key mappedKey);

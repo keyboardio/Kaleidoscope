@@ -33,14 +33,14 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
   if (mappedKey.flags & SYNTHETIC) {
     handleSyntheticKeyswitchEvent(mappedKey, keyState);
   } else if (keyIsPressed(keyState)) {
-    press_key(mappedKey);
+    pressKey(mappedKey);
   } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
     releaseKey(mappedKey);
   }
   return true;
 }
 
-void press_key(Key mappedKey) {
+void pressKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
     Keyboard.press(Key_LeftShift.keyCode);
   }
