@@ -70,9 +70,9 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
   if (keyToggledOff(key_state)) {
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
-        handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+        handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
         Keyboard.sendReport();
-        handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+        handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
         Keyboard.sendReport();
       }
 

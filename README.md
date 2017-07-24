@@ -34,9 +34,9 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
     Unicode.type (0x2328);
     break;
   case kaleidoscope::Syster::EndAction:
-    handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport ();
-    handle_keyswitch_event (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport ();
     break;
   case kaleidoscope::Syster::SymbolAction:
