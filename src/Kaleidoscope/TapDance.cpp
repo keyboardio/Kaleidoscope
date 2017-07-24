@@ -139,7 +139,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
     if (!isActive())
       return mapped_key;
 
-    if (key_toggled_on(key_state))
+    if (keyToggledOn(key_state))
       interrupt();
 
     return mapped_key;
@@ -147,13 +147,13 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
 
   uint8_t tap_dance_index = mapped_key.raw - ranges::TD_FIRST;
 
-  if (key_toggled_off(key_state))
+  if (keyToggledOff(key_state))
     bitClear(pressed_state_, tap_dance_index);
 
   if (!isInSeq(mapped_key)) {
     if (!isActive()) {
       if (bitRead(triggered_state_, tap_dance_index)) {
-        if (key_toggled_off(key_state))
+        if (keyToggledOff(key_state))
           return release(tap_dance_index);
         return Key_NoKey;
       }
@@ -163,11 +163,11 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
       last_tap_dance_col_ = col;
       return tap();
     } else {
-      if (key_toggled_off(key_state) && stillHeld(tap_dance_index)) {
+      if (keyToggledOff(key_state) && stillHeld(tap_dance_index)) {
         return release(tap_dance_index);
       }
 
-      if (!key_toggled_on(key_state))
+      if (!keyToggledOn(key_state))
         return Key_NoKey;
 
       interrupt();
@@ -176,7 +176,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
 
   // in sequence
 
-  if (key_toggled_off(key_state))
+  if (keyToggledOff(key_state))
     return Key_NoKey;
 
   last_tap_dance_key_.raw = mapped_key.raw;
@@ -184,7 +184,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
   last_tap_dance_col_ = col;
   bitSet(pressed_state_, tap_dance_index);
 
-  if (key_toggled_on(key_state))
+  if (keyToggledOn(key_state))
     return tap();
 
   if (bitRead(triggered_state_, tap_dance_index))
