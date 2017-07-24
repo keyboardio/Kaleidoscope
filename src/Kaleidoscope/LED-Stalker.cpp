@@ -59,7 +59,7 @@ void StalkerEffect::update(void) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t step = map_[r][c];
       if (step) {
-        LEDControl.led_set_crgb_at(r, c, variant->compute(&step));
+        LEDControl.setCrgbAt(r, c, variant->compute(&step));
       }
 
       bool was_zero = (map_[r][c] == 0);
@@ -69,7 +69,7 @@ void StalkerEffect::update(void) {
       }
 
       if (!was_zero && !map_[r][c])
-        LEDControl.led_set_crgb_at(r, c, (cRGB) {
+        LEDControl.setCrgbAt(r, c, (cRGB) {
         0, 0, 0
       });
     }
@@ -113,9 +113,9 @@ cRGB BlazingTrail::compute(uint8_t *step) {
   cRGB color;
 
   if (*step >= 0xff - 30) {
-    color = hsv_to_rgb(0xff - *step, 255, 255);
+    color = hsvToRgb(0xff - *step, 255, 255);
   } else {
-    color = hsv_to_rgb(30, 255, 255);
+    color = hsvToRgb(30, 255, 255);
 
     color.r = min(*step * color.r / 255, 255);
     color.g = min(*step * color.g / 255, 255);
