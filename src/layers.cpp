@@ -11,7 +11,7 @@ static void handle_keymap_keyswitch_event(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
     uint8_t target = keymapEntry.keyCode - MOMENTARY_OFFSET;
 
-    if (key_toggled_on(keyState)) {
+    if (keyToggledOn(keyState)) {
       if (target == KEYMAP_NEXT) {
         Layer.next();
       } else if (target == KEYMAP_PREVIOUS) {
@@ -20,7 +20,7 @@ static void handle_keymap_keyswitch_event(Key keymapEntry, uint8_t keyState) {
         Layer.on(target);
       }
     }
-    if (key_toggled_off(keyState)) {
+    if (keyToggledOff(keyState)) {
       if (target == KEYMAP_NEXT) {
         Layer.previous();
       } else if (target == KEYMAP_PREVIOUS) {
@@ -31,7 +31,7 @@ static void handle_keymap_keyswitch_event(Key keymapEntry, uint8_t keyState) {
     }
 
     // switch keymap and stay there
-  } else if (key_toggled_on(keyState)) {
+  } else if (keyToggledOn(keyState)) {
     if (Layer.isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
       Layer.off(keymapEntry.keyCode);
     else

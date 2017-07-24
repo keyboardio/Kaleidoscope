@@ -74,11 +74,11 @@ static LEDSolidColor solidIndigo(0, 0, 100);
 static LEDSolidColor solidViolet(70, 0, 60);
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == TOGGLENUMLOCK && key_toggled_on(keyState)) {
+  if (macroIndex == TOGGLENUMLOCK && keyToggledOn(keyState)) {
     return NumLock.toggle();
   }
 
-  if (macroIndex == 1 && key_toggled_on(keyState)) {
+  if (macroIndex == 1 && keyToggledOn(keyState)) {
     Serial.print("Keyboard.IO keyboard driver v0.00");
     return MACRO(I(25),
                  D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),

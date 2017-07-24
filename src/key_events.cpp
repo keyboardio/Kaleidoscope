@@ -34,7 +34,7 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
     handle_synthetic_keyswitch_event(mappedKey, keyState);
   } else if (key_is_pressed(keyState)) {
     press_key(mappedKey);
-  } else if (key_toggled_off(keyState) && (keyState & INJECTED)) {
+  } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
     release_key(mappedKey);
   }
   return true;

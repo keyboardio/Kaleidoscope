@@ -38,7 +38,7 @@ const macro_t *macroAppSwitch(uint8_t keyState) {
     return MACRO(Dr(mod), D(Tab), END);
   }
   // Key was just released
-  if (key_toggled_off(keyState)) {
+  if (keyToggledOff(keyState)) {
     return MACRO(U(Tab), Dr(mod), END);
   }
   // Key is not pressed, and was not just released.
@@ -51,7 +51,7 @@ const macro_t *macroAppSwitch(uint8_t keyState) {
 }
 
 const macro_t *macroAppCancel(uint8_t keyState) {
-  if (key_toggled_on(keyState))
+  if (keyToggledOn(keyState))
     appSwitchActive = false;
   return MACRO_NONE;
 }
