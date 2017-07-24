@@ -62,12 +62,12 @@ void GhostInTheFirmware::loopHook(bool is_post_clear) {
       byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
-      handle_keyswitch_event(Key_NoKey, row, col, WAS_PRESSED);
+      handleKeyswitchEvent(Key_NoKey, row, col, WAS_PRESSED);
     } else if (is_pressed_) {
       byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
-      handle_keyswitch_event(Key_NoKey, row, col, IS_PRESSED);
+      handleKeyswitchEvent(Key_NoKey, row, col, IS_PRESSED);
     } else if ((millis() - start_time_) > delay_timeout_) {
       current_pos_++;
       press_timeout_ = 0;
