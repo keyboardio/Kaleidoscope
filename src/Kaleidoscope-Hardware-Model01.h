@@ -13,12 +13,12 @@
 class Model01 {
  public:
   Model01(void);
-  void led_sync(void);
-  void led_set_crgb_at(byte row, byte col, cRGB color);
-  void led_set_crgb_at(uint8_t i, cRGB crgb);
-  cRGB led_get_crgb_at(uint8_t i);
+  void syncLeds(void);
+  void setCrgbAt(byte row, byte col, cRGB color);
+  void setCrgbAt(uint8_t i, cRGB crgb);
+  cRGB getCrgbAt(uint8_t i);
   cRGB get_key_color(byte row, byte col);
-  uint8_t get_led_index(byte row, byte col);
+  uint8_t getLedIndex(byte row, byte col);
 
   void scan_matrix(void);
   void read_matrix(void);
@@ -28,7 +28,7 @@ class Model01 {
   void enable_scanner_power(void);
   void reboot_bootloader();
 
-  boolean led_power_fault(void);
+  boolean ledPowerFault(void);
 
   keydata_t leftHandState;
   keydata_t rightHandState;

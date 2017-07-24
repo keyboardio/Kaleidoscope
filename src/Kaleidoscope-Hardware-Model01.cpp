@@ -61,14 +61,14 @@ void Model01::setup(void) {
 }
 
 
-void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
+void Model01::setCrgbAt(uint8_t i, cRGB crgb) {
   if (i < 32) {
-    cRGB oldColor = led_get_crgb_at(i);
+    cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
     leftHand.ledData.leds[i] = crgb;
   } else if (i < 64) {
-    cRGB oldColor = led_get_crgb_at(i);
+    cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
     rightHand.ledData.leds[i - 32] = crgb;
@@ -79,15 +79,15 @@ void Model01::led_set_crgb_at(uint8_t i, cRGB crgb) {
   }
 }
 
-void Model01::led_set_crgb_at(byte row, byte col, cRGB color) {
-  led_set_crgb_at(key_led_map[row][col], color);
+void Model01::setCrgbAt(byte row, byte col, cRGB color) {
+  setCrgbAt(key_led_map[row][col], color);
 }
 
-uint8_t Model01::get_led_index(byte row, byte col) {
+uint8_t Model01::getLedIndex(byte row, byte col) {
   return key_led_map[row][col];
 }
 
-cRGB Model01::led_get_crgb_at(uint8_t i) {
+cRGB Model01::getCrgbAt(uint8_t i) {
   if (i < 32) {
     return leftHand.ledData.leds[i];
   } else if (i < 64) {
@@ -97,7 +97,7 @@ cRGB Model01::led_get_crgb_at(uint8_t i) {
   }
 }
 
-void Model01::led_sync() {
+void Model01::syncLeds() {
   if (!isLEDChanged)
     return;
 
@@ -116,7 +116,7 @@ void Model01::led_sync() {
   isLEDChanged = false;
 }
 
-boolean Model01::led_power_fault() {
+boolean Model01::ledPowerFault() {
   if (PINB & _BV(4)) {
     return true;
   } else {
