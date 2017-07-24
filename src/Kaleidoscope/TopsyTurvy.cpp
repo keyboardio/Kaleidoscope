@@ -37,11 +37,11 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     return mapped_key;
 
   if (mapped_key.raw == Key_LeftShift.raw)
-    bitWrite(mod_state_, 0, key_is_pressed(key_state));
+    bitWrite(mod_state_, 0, keyIsPressed(key_state));
   if (mapped_key.raw == Key_RightShift.raw)
-    bitWrite(mod_state_, 1, key_is_pressed(key_state));
+    bitWrite(mod_state_, 1, keyIsPressed(key_state));
 
-  if (!key_is_pressed(key_state) && !key_was_pressed(key_state))
+  if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
     return mapped_key;
 
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
@@ -61,7 +61,7 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   // invert the shift state
 
   if (!mod_state_) {
-    if (key_is_pressed(key_state))
+    if (keyIsPressed(key_state))
       Keyboard.press(Key_LeftShift.keyCode);
     handle_keyswitch_event(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
     Keyboard.sendReport();
