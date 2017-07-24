@@ -34,7 +34,7 @@ TriColor::update(void) {
 
       // Special keys are always mod_color
       if (k.flags != 0) {
-        LEDControl.led_set_crgb_at(r, c, mod_color_);
+        LEDControl.setCrgbAt(r, c, mod_color_);
         continue;
       }
 
@@ -54,7 +54,7 @@ TriColor::update(void) {
         break;
       }
 
-      LEDControl.led_set_crgb_at(r, c, color);
+      LEDControl.setCrgbAt(r, c, color);
     }
   }
 }
