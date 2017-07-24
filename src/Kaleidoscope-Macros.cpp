@@ -12,11 +12,11 @@ static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t ke
   key.flags = flags;
   key.keyCode = pgm_read_byte(macro_p++);
 
-  if (keyStates & IS_PRESSED) {
+  if (keyIsPressed(keyStates)) {
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
   }
-  if (keyStates & WAS_PRESSED) {
+  if (keyWasPressed(keyStates)) {
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport();
   }
