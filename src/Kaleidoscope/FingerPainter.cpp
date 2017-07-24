@@ -52,7 +52,7 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
   if (!edit_mode_)
     return mapped_key;
 
-  if (!key_toggled_on(key_state))
+  if (!keyToggledOn(key_state))
     return Key_NoKey;
 
   if (row >= ROWS || col >= COLS)
