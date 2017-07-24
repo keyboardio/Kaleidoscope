@@ -105,7 +105,7 @@ Key Leader::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
   if (!isActive()) {
     // Must be a leader key!
 
-    if (key_toggled_off(key_state)) {
+    if (keyToggledOff(key_state)) {
       // not active, but a leader key = start the sequence on key release!
       end_time_ = millis() + time_out;
       sequence_pos_ = 0;
@@ -119,7 +119,7 @@ Key Leader::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
   // active
   int8_t action_index = lookup();
 
-  if (key_toggled_on(key_state)) {
+  if (keyToggledOn(key_state)) {
     sequence_pos_++;
     if (sequence_pos_ > LEADER_MAX_SEQUENCE_LENGTH) {
       reset();
