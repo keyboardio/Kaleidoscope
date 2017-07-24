@@ -126,7 +126,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
   if (!state_.all) {
     if (!isOS(mapped_key)) {
       if (isMasked(row, col)) {
-        if (key_toggled_off(key_state))
+        if (keyToggledOff(key_state))
           unmask(row, col);
         return Key_NoKey;
       }
@@ -135,9 +135,9 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     }
 
     idx = mapped_key.raw - ranges::OS_FIRST;
-    if (key_toggled_off(key_state)) {
+    if (keyToggledOff(key_state)) {
       clearPressed(idx);
-    } else if (key_toggled_on(key_state)) {
+    } else if (keyToggledOn(key_state)) {
       start_time_ = millis();
       setPressed(idx);
       setOneShot(idx);
@@ -156,20 +156,20 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     idx = mapped_key.raw - ranges::OS_FIRST;
 
     if (isSticky(idx)) {
-      if (key_toggled_on(key_state)) {  // maybe on _off instead?
+      if (keyToggledOn(key_state)) {  // maybe on _off instead?
         saveAsPrevious(mapped_key);
         clearSticky(idx);
         cancelOneShot(idx);
       }
     } else {
-      if (key_toggled_off(key_state)) {
+      if (keyToggledOff(key_state)) {
         clearPressed(idx);
         if ((millis() - start_time_) >= hold_time_out) {
           cancelOneShot(idx);
         }
       }
 
-      if (key_toggled_on(key_state)) {
+      if (keyToggledOn(key_state)) {
         setPressed(idx);
         if (isSameAsPrevious(mapped_key)) {
           setSticky(idx);
