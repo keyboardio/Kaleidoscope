@@ -25,7 +25,7 @@ void NumLock_::loopHook(bool postClear) {
       if (k.raw < Key_KeypadNumLock.raw || k.raw > Key_KeypadDot.raw)
         continue;
 
-      LEDControl.led_set_crgb_at(r, c, numpad_color);
+      LEDControl.setCrgbAt(r, c, numpad_color);
     }
   }
 
@@ -33,7 +33,7 @@ void NumLock_::loopHook(bool postClear) {
     return;
 
   cRGB color = breath_compute();
-  LEDControl.led_set_crgb_at(row, col, color);
+  LEDControl.setCrgbAt(row, col, color);
 }
 
 const macro_t *NumLock_::toggle() {
