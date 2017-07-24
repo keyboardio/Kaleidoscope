@@ -32,7 +32,7 @@ that.
 #include <Kaleidoscope-Macros.h>
 
 const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
-  if (macro_index == 0 && key_toggled_on(key_state))
+  if (macro_index == 0 && keyToggledOn(key_state))
     GhostInTheFirmware.activate();
 
   return MACRO_NONE;
