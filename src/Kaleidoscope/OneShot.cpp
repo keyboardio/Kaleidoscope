@@ -149,7 +149,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     return Key_NoKey;
   }
 
-  if (!key_is_pressed(key_state) && !key_was_pressed(key_state))
+  if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
     return mapped_key;
 
   if (isOS(mapped_key)) {
@@ -191,7 +191,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
   // ordinary key here, with some event
 
-  if (key_is_pressed(key_state)) {
+  if (keyIsPressed(key_state)) {
     mask(row, col);
     saveAsPrevious(mapped_key);
     should_cancel_ = true;
