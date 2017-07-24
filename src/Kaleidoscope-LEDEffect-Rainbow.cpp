@@ -10,7 +10,7 @@ void LEDRainbowEffect_::update(void) {
     rainbow_current_ticks = 0;
   }
 
-  cRGB rainbow = hsv_to_rgb(rainbow_hue, rainbow_saturation, rainbow_value);
+  cRGB rainbow = hsvToRgb(rainbow_hue, rainbow_saturation, rainbow_value);
 
   rainbow_hue += rainbow_steps;
   if (rainbow_hue >= 255) {
@@ -42,8 +42,8 @@ void LEDRainbowWaveEffect_::update(void) {
     if (key_hue >= 255)          {
       key_hue -= 255;
     }
-    cRGB rainbow = hsv_to_rgb(key_hue, rainbow_saturation, rainbow_value);
-    LEDControl.led_set_crgb_at(i, rainbow);
+    cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, rainbow_value);
+    LEDControl.setCrgbAt(i, rainbow);
   }
   rainbow_hue += rainbow_wave_steps;
   if (rainbow_hue >= 255) {
