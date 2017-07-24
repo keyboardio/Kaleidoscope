@@ -58,7 +58,7 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
   if (row >= ROWS || col >= COLS)
     return Key_NoKey;
 
-  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.get_led_index(row, col));
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
@@ -75,7 +75,7 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
     new_color = ::LEDPaletteTheme.lookupPaletteColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.get_led_index(row, col), color_index);
+  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col), color_index);
 
   return Key_NoKey;
 }
