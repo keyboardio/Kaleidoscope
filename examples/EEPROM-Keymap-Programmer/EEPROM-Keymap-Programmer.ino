@@ -42,7 +42,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 0 && key_toggled_off(keyState)) {
+  if (macroIndex == 0 && keyToggledOff(keyState)) {
     EEPROMKeymapProgrammer.activate();
   }
 

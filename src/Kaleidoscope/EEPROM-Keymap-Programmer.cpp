@@ -61,10 +61,10 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
     return mapped_key;
 
   if (state_ == WAIT_FOR_KEY) {
-    if (key_toggled_on(key_state)) {
+    if (keyToggledOn(key_state)) {
       update_position_ = Layer.top() * ROWS * COLS + row * COLS + col;
     }
-    if (key_toggled_off(key_state)) {
+    if (keyToggledOff(key_state)) {
       if ((uint16_t)(Layer.top() * ROWS * COLS + row * COLS + col) == update_position_)
         nextState();
     }
@@ -72,10 +72,10 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
   }
 
   if (state_ == WAIT_FOR_SOURCE_KEY) {
-    if (key_toggled_on(key_state)) {
+    if (keyToggledOn(key_state)) {
       new_key_ = Layer.getKeyFromPROGMEM(Layer.top(), row, col);
     }
-    if (key_toggled_off(key_state)) {
+    if (keyToggledOff(key_state)) {
       if (new_key_ == Layer.getKeyFromPROGMEM(Layer.top(), row, col))
         nextState();
     }
@@ -87,7 +87,7 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
   if (mapped_key < Key_1 || mapped_key > Key_0)
     return mapped_key;
 
-  if (!key_toggled_on(key_state))
+  if (!keyToggledOn(key_state))
     return Key_NoKey;
 
   uint8_t n;

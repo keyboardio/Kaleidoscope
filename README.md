@@ -66,7 +66,7 @@ to use a macro, as in the example below:
 #include <Kaleidoscope-Macros.h>
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 0 && key_toggled_off(keyState)) {
+  if (macroIndex == 0 && keyToggledOff(keyState)) {
     EEPROMKeymapProgrammer.activate();
   }
 
