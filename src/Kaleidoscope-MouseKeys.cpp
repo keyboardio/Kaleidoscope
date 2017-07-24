@@ -76,25 +76,25 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
   if (mappedKey.keyCode & KEY_MOUSE_BUTTON && !(mappedKey.keyCode & KEY_MOUSE_WARP)) {
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
 
-    if (key_toggled_on(keyState)) {
+    if (keyToggledOn(keyState)) {
       MouseWrapper.press_button(button);
-    } else if (key_toggled_off(keyState)) {
+    } else if (keyToggledOff(keyState)) {
       MouseWrapper.release_button(button);
     }
   } else if (!(mappedKey.keyCode & KEY_MOUSE_WARP)) {
-    if (key_toggled_on(keyState)) {
+    if (keyToggledOn(keyState)) {
       endTime = millis() + speedDelay;
       accelEndTime = millis() + accelDelay;
       wheelEndTime = 0;
     }
-    if (key_is_pressed(keyState)) {
+    if (keyIsPressed(keyState)) {
       if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {
         scrollWheel(mappedKey.keyCode);
       } else {
         mouseMoveIntent |= mappedKey.keyCode;
       }
     }
-  } else if (key_toggled_on(keyState)) {
+  } else if (keyToggledOn(keyState)) {
     if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
       // we don't pass in the left and up values because those are the
       // default, "no-op" conditionals
