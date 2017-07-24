@@ -106,7 +106,7 @@ Heatmap::update(void) {
     for (uint8_t c = 0; c < COLS; c++) {
       uint8_t cap = max(total_keys_, 1);
       float v = static_cast<float>(heatmap_[r][c]) / cap;
-      LEDControl.led_set_crgb_at(r, c, computeColor(v));
+      LEDControl.setCrgbAt(r, c, computeColor(v));
     }
   }
 }
