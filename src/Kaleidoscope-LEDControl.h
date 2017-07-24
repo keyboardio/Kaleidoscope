@@ -32,10 +32,10 @@ class LEDControl_ : public KaleidoscopePlugin {
 
   static int8_t mode_add(LEDMode *mode);
 
-  static void led_set_crgb_at(uint8_t i, cRGB crgb);
-  static void led_set_crgb_at(byte row, byte col, cRGB color);
-  static cRGB led_get_crgb_at(uint8_t i);
-  static void led_sync(void);
+  static void setCrgbAt(uint8_t i, cRGB crgb);
+  static void setCrgbAt(byte row, byte col, cRGB color);
+  static cRGB getCrgbAt(uint8_t i);
+  static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
   static void set_all_leds_to(cRGB color);

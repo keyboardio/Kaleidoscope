@@ -17,14 +17,14 @@ breath_compute() {
 
   i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 2;
 
-  return hsv_to_rgb(200, 255, i);
+  return hsvToRgb(200, 255, i);
 }
 
 
 
 // From http://web.mit.edu/storborg/Public/hsvtorgb.c - talk to Scott about licensing
 cRGB
-hsv_to_rgb(uint16_t h, uint16_t s, uint16_t v) {
+hsvToRgb(uint16_t h, uint16_t s, uint16_t v) {
   cRGB color;
 
   /* HSV to RGB conversion function with only integer

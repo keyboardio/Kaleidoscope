@@ -100,28 +100,28 @@ LEDControl_::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 void
 LEDControl_::set_all_leds_to(cRGB color) {
   for (uint8_t i = 0; i < LED_COUNT; i++) {
-    led_set_crgb_at(i, color);
+    setCrgbAt(i, color);
   }
 }
 
 void
-LEDControl_::led_set_crgb_at(uint8_t i, cRGB crgb) {
-  KeyboardHardware.led_set_crgb_at(i, crgb);
+LEDControl_::setCrgbAt(uint8_t i, cRGB crgb) {
+  KeyboardHardware.setCrgbAt(i, crgb);
 }
 
 void
-LEDControl_::led_set_crgb_at(byte row, byte col, cRGB color) {
-  KeyboardHardware.led_set_crgb_at(row, col, color);
+LEDControl_::setCrgbAt(byte row, byte col, cRGB color) {
+  KeyboardHardware.setCrgbAt(row, col, color);
 }
 
 cRGB
-LEDControl_::led_get_crgb_at(uint8_t i) {
-  return KeyboardHardware.led_get_crgb_at(i);
+LEDControl_::getCrgbAt(uint8_t i) {
+  return KeyboardHardware.getCrgbAt(i);
 }
 
 void
-LEDControl_::led_sync(void) {
-  KeyboardHardware.led_sync();
+LEDControl_::syncLeds(void) {
+  KeyboardHardware.syncLeds();
 }
 
 void
@@ -156,7 +156,7 @@ LEDControl_::loopHook(bool postClear) {
     return;
 
   if (millis() > syncTimer) {
-    led_sync();
+    syncLeds();
     syncTimer = millis() + syncDelay;
   }
   update();
@@ -189,7 +189,7 @@ LEDControl_::focusHook(const char *command) {
     uint8_t idx = Serial.parseInt();
 
     if (Serial.peek() == '\n') {
-      cRGB c = LEDControl.led_get_crgb_at(idx);
+      cRGB c = LEDControl.getCrgbAt(idx);
 
       Focus.printColor(c.r, c.g, c.b);
       Serial.println();
@@ -200,7 +200,7 @@ LEDControl_::focusHook(const char *command) {
       c.g = Serial.parseInt();
       c.b = Serial.parseInt();
 
-      LEDControl.led_set_crgb_at(idx, c);
+      LEDControl.setCrgbAt(idx, c);
     }
     break;
   }
@@ -235,7 +235,7 @@ LEDControl_::focusHook(const char *command) {
   case THEME: {
     if (Serial.peek() == '\n') {
       for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
-        cRGB c = LEDControl.led_get_crgb_at(idx);
+        cRGB c = LEDControl.getCrgbAt(idx);
 
         Focus.printColor(c.r, c.g, c.b);
         Focus.printSpace();
@@ -252,7 +252,7 @@ LEDControl_::focusHook(const char *command) {
       color.g = Serial.parseInt();
       color.b = Serial.parseInt();
 
-      LEDControl.led_set_crgb_at(idx, color);
+      LEDControl.setCrgbAt(idx, color);
       idx++;
     }
     break;

@@ -4,11 +4,11 @@
 #ifdef ARDUINO_AVR_MODEL01
 static void
 type_letter(uint8_t letter) {
-  LEDControl.led_set_crgb_at(letter, {255, 0, 0});
-  LEDControl.led_sync();
+  LEDControl.setCrgbAt(letter, {255, 0, 0});
+  LEDControl.syncLeds();
   delay(250);
-  LEDControl.led_set_crgb_at(letter, {0, 0, 0});
-  LEDControl.led_sync();
+  LEDControl.setCrgbAt(letter, {0, 0, 0});
+  LEDControl.syncLeds();
   delay(10);
 }
 #endif
