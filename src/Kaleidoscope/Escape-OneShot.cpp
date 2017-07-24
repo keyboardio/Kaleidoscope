@@ -32,7 +32,7 @@ void EscapeOneShot::begin(void) {
 Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (mapped_key.raw != Key_Escape.raw ||
       (key_state & INJECTED) ||
-      !key_toggled_on(key_state))
+      !keyToggledOn(key_state))
     return mapped_key;
 
   if (!::OneShot.isActive())
