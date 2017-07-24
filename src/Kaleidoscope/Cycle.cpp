@@ -38,14 +38,14 @@ void Cycle::begin(void) {
 }
 
 void Cycle::replace(Key key) {
-  handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
   Keyboard.sendReport();
-  handle_keyswitch_event(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
   Keyboard.sendReport();
 
-  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
   Keyboard.sendReport();
-  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
   Keyboard.sendReport();
 }
 
