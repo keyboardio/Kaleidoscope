@@ -70,14 +70,14 @@ Key Cycle::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_stat
   }
 
   if (!isCycle(mapped_key)) {
-    if (key_toggled_on(key_state)) {
+    if (keyToggledOn(key_state)) {
       last_non_cycle_key_.raw = mapped_key.raw;
       cycle_count_ = 0;
     }
     return mapped_key;
   }
 
-  if (!key_toggled_off(key_state))
+  if (!keyToggledOff(key_state))
     return Key_NoKey;
 
   ++cycle_count_;
