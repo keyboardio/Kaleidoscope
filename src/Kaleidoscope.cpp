@@ -18,7 +18,7 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::loop(void) {
-  KeyboardHardware.scan_matrix();
+  KeyboardHardware.scanMatrix();
 
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
