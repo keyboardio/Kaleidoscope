@@ -39,7 +39,7 @@ Key SpaceCadetShift::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_
   }
 
   // If a key has been just toggled on...
-  if (key_toggled_on(key_state)) {
+  if (keyToggledOn(key_state)) {
     if (mapped_key.raw == Key_LeftShift.raw) {  // if it is LShift, remember it
       bitWrite(paren_needed_, 0, 1);
       start_time_ = millis();
@@ -76,7 +76,7 @@ Key SpaceCadetShift::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_
 
   // if a key toggled off (and that must be one of the shifts at this point),
   // send the parens too (if we were interrupted, we bailed out earlier).
-  if (key_toggled_off(key_state)) {
+  if (keyToggledOff(key_state)) {
     Key paren = opening_paren;
     if (bitRead(paren_needed_, 1))
       paren = closing_paren;
