@@ -17,7 +17,7 @@ Model01::Model01(void) {
 
 }
 
-void Model01::enable_scanner_power(void) {
+void Model01::enableScannerPower(void) {
   // PC7
   //pinMode(13, OUTPUT);
   //digitalWrite(13, HIGH);
@@ -30,7 +30,7 @@ void Model01::enable_scanner_power(void) {
 // This lets the keyboard pull up to 1.6 amps from
 // the host. That violates the USB spec. But it sure
 // is pretty looking
-void Model01::enable_high_power_leds(void) {
+void Model01::enableHighPowerLeds(void) {
   // PE6
   //    pinMode(7, OUTPUT);
   //    digitalWrite(7, LOW);
@@ -48,12 +48,12 @@ void Model01::enable_high_power_leds(void) {
 void Model01::setup(void) {
   wdt_disable();
   delay(100);
-  enable_scanner_power();
+  enableScannerPower();
 
   // Consider not doing this until 30s after keyboard
   // boot up, to make it easier to rescue things
   // in case of power draw issues.
-  enable_high_power_leds();
+  enableHighPowerLeds();
   leftHandState.all = 0;
   rightHandState.all = 0;
 
@@ -124,7 +124,7 @@ boolean Model01::ledPowerFault() {
   }
 }
 
-void debug_keyswitch_event(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
+void debugKeyswitchEvent(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
   if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum)) {
     Serial.print("Looking at row ");
     Serial.print(row);
@@ -181,7 +181,7 @@ void Model01::scanMatrix() {
   actOnMatrixScan();
 }
 
-void Model01::reboot_bootloader() {
+void Model01::rebootBootloader() {
   // Set the magic bits to get a Caterina-based device
   // to reboot into the bootloader and stay there, rather
   // than run move onward

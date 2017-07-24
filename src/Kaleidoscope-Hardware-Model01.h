@@ -24,9 +24,9 @@ class Model01 {
   void readMatrix(void);
   void actOnMatrixScan(void);
   void setup();
-  void enable_high_power_leds(void);
-  void enable_scanner_power(void);
-  void reboot_bootloader();
+  void enableHighPowerLeds(void);
+  void enableScannerPower(void);
+  void rebootBootloader();
 
   boolean ledPowerFault(void);
 
