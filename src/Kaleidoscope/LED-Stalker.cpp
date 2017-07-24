@@ -42,7 +42,7 @@ Key StalkerEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
   if (row >= ROWS || col >= COLS)
     return mapped_key;
 
-  if (key_is_pressed(key_state)) {
+  if (keyIsPressed(key_state)) {
     map_[row][col] = 0xff;
   }
 
