@@ -144,7 +144,7 @@ LEDControl_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return mappedKey;
 
-  if (key_toggled_on(keyState))
+  if (keyToggledOn(keyState))
     LEDControl.next_mode();
 
   return Key_NoKey;
