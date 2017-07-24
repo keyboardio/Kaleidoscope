@@ -41,7 +41,7 @@ void TestMode_::wait_for_keypress() {
 
 void TestMode_::set_leds(uint8_t r, uint8_t g, uint8_t b) {
   LEDControl.set_all_leds_to(r, g, b);
-  LEDControl.led_sync();
+  LEDControl.syncLeds();
   wait_for_keypress();
 }
 
@@ -57,7 +57,7 @@ void TestMode_::test_leds(void) {
   // rainbow for 10 seconds
   for (auto i = 0; i < 1000; i++) {
     LEDRainbowEffect.update();
-    LEDControl.led_sync();
+    LEDControl.syncLeds();
   }
   // set all the keys to red
 }
@@ -84,9 +84,9 @@ void TestMode_::test_matrix() {
           //  Serial.print(keynum);
           //  Serial.print(" value ");
           //  Serial.println(keyState);
-          KeyboardHardware.led_set_crgb_at(row, 7 - col, green);
+          KeyboardHardware.setCrgbAt(row, 7 - col, green);
         } else if (keyState == 1) {
-          KeyboardHardware.led_set_crgb_at(row, 7 - col, blue);
+          KeyboardHardware.setCrgbAt(row, 7 - col, blue);
         }
 
         keyState = (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 0) |
@@ -97,13 +97,13 @@ void TestMode_::test_matrix() {
           //  Serial.print(keynum);
           //  Serial.print(" value ");
           //  Serial.println(keyState);
-          KeyboardHardware.led_set_crgb_at(row, 15 - col, green);
+          KeyboardHardware.setCrgbAt(row, 15 - col, green);
         } else if (keyState == 1) {
-          KeyboardHardware.led_set_crgb_at(row, 15 - col, blue);
+          KeyboardHardware.setCrgbAt(row, 15 - col, blue);
         }
       }
     }
-    LEDControl.led_sync();
+    LEDControl.syncLeds();
   }
 }
 
