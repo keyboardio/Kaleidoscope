@@ -1,6 +1,6 @@
 #include "Kaleidoscope.h"
 
-static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
+static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & RESERVED)
     return false;
 
@@ -26,12 +26,12 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
   return true;
 }
 
-static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8_t keyState) {
   //for every newly pressed button, figure out what logical key it is and send a key down event
   // for every newly released button, figure out what logical key it is and send a key up event
 
   if (mappedKey.flags & SYNTHETIC) {
-    handle_synthetic_keyswitch_event(mappedKey, keyState);
+    handleSyntheticKeyswitchEvent(mappedKey, keyState);
   } else if (keyIsPressed(keyState)) {
     press_key(mappedKey);
   } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
@@ -79,7 +79,7 @@ void release_key(Key mappedKey) {
   Keyboard.release(mappedKey.keyCode);
 }
 
-void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
+void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (!(keyState & INJECTED)) {
     mappedKey = Layer.lookup(row, col);
   }
@@ -92,5 +92,5 @@ void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState)
   mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
   if (mappedKey.raw == Key_NoKey.raw)
     return;
-  handle_keyswitch_event_default(mappedKey, row, col, keyState);
+  handleKeyswitchEventDefault(mappedKey, row, col, keyState);
 }

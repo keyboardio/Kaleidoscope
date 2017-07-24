@@ -13,7 +13,7 @@ Kaleidoscope_::setup(void) {
   Keyboard.begin();
 
   // A workaround, so that the compiler does not optimize this out...
-  handle_keyswitch_event(Key_NoKey, 255, 255, 0);
+  handleKeyswitchEvent(Key_NoKey, 255, 255, 0);
 }
 
 void

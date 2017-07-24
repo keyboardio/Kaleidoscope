@@ -7,7 +7,7 @@ uint8_t Layer_::highestLayer;
 uint8_t Layer_::keyMap[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
-static void handle_keymap_keyswitch_event(Key keymapEntry, uint8_t keyState) {
+static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
     uint8_t target = keymapEntry.keyCode - MOMENTARY_OFFSET;
 
@@ -44,7 +44,7 @@ Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
-  handle_keymap_keyswitch_event(mappedKey, keyState);
+  handleKeymapKeyswitchEvent(mappedKey, keyState);
   return Key_NoKey;
 }
 
