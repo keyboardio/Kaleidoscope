@@ -15,7 +15,7 @@ class TestMode_ : public KaleidoscopePlugin {
   static void test_leds();
   static void testMatrix();
   static void toggle_programming_leds_on();
-  static void wait_for_keypress();
+  static void waitForKeypress();
   static void loopHook(bool postClear);
   static void set_leds(uint8_t r, uint8_t g, uint8_t b);
 };

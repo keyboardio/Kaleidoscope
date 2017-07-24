@@ -28,7 +28,7 @@ void TestMode_::loopHook(bool postClear) {
   }
 }
 
-void TestMode_::wait_for_keypress() {
+void TestMode_::waitForKeypress() {
   delay(25);
   while (1) {
     KeyboardHardware.readMatrix();
@@ -42,7 +42,7 @@ void TestMode_::wait_for_keypress() {
 void TestMode_::set_leds(uint8_t r, uint8_t g, uint8_t b) {
   LEDControl.set_all_leds_to(r, g, b);
   LEDControl.syncLeds();
-  wait_for_keypress();
+  waitForKeypress();
 }
 
 void TestMode_::test_leds(void) {
