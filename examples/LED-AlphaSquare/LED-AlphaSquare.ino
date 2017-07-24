@@ -42,7 +42,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
-  if (!key_toggled_on(key_state))
+  if (!keyToggledOn(key_state))
     return MACRO_NONE;
 
   if (macro_index == 0) {
