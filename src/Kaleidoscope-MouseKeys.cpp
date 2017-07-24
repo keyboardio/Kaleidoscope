@@ -77,7 +77,7 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
 
     if (keyToggledOn(keyState)) {
-      MouseWrapper.press_button(button);
+      MouseWrapper.pressButton(button);
     } else if (keyToggledOff(keyState)) {
       MouseWrapper.release_button(button);
     }

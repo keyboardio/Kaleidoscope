@@ -17,7 +17,7 @@ MouseWrapper_::MouseWrapper_(void) {
   AbsoluteMouse.begin();
 }
 
-void MouseWrapper_::press_button(uint8_t button) {
+void MouseWrapper_::pressButton(uint8_t button) {
   Mouse.press(button);
   end_warping();
 }
