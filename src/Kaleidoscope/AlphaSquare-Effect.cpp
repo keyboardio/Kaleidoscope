@@ -58,7 +58,7 @@ AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t key_sta
   if (key < Key_A || key > Key_0)
     return key;
 
-  if (!key_is_pressed(key_state))
+  if (!keyIsPressed(key_state))
     return key;
 
   uint8_t display_col = 2;
