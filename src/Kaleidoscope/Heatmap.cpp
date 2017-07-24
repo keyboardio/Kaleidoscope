@@ -78,7 +78,7 @@ Key Heatmap::eventHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
     return mapped_key;
 
   // if the key is not toggled on, return.
-  if (!key_toggled_on(key_state))
+  if (!keyToggledOn(key_state))
     return mapped_key;
 
   total_keys_++;
