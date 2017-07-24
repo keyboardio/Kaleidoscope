@@ -10,14 +10,14 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & IS_INTERNAL) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
-    if (key_is_pressed(keyState))
+    if (keyIsPressed(keyState))
       ConsumerControl.press(mappedKey.keyCode);
-    else if (key_was_pressed(keyState))
+    else if (keyWasPressed(keyState))
       ConsumerControl.release(mappedKey.keyCode);
   } else if (mappedKey.flags & IS_SYSCTL) {
-    if (key_is_pressed(keyState))
+    if (keyIsPressed(keyState))
       SystemControl.press(mappedKey.keyCode);
-    else if (key_was_pressed(keyState))
+    else if (keyWasPressed(keyState))
       SystemControl.release();
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
@@ -32,7 +32,7 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
 
   if (mappedKey.flags & SYNTHETIC) {
     handle_synthetic_keyswitch_event(mappedKey, keyState);
-  } else if (key_is_pressed(keyState)) {
+  } else if (keyIsPressed(keyState)) {
     press_key(mappedKey);
   } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
     release_key(mappedKey);

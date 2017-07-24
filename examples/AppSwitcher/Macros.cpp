@@ -34,7 +34,7 @@ const macro_t *macroAppSwitch(uint8_t keyState) {
     mod = Key_LeftGui;
 
   // Key was just pressed, or is being held
-  if (key_is_pressed(keyState)) {
+  if (keyIsPressed(keyState)) {
     return MACRO(Dr(mod), D(Tab), END);
   }
   // Key was just released
