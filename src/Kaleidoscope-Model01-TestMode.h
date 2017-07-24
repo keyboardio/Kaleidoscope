@@ -13,7 +13,7 @@ class TestMode_ : public KaleidoscopePlugin {
  private:
   static void run_tests();
   static void test_leds();
-  static void test_matrix();
+  static void testMatrix();
   static void toggle_programming_leds_on();
   static void wait_for_keypress();
   static void loopHook(bool postClear);

@@ -31,7 +31,7 @@ void TestMode_::loopHook(bool postClear) {
 void TestMode_::wait_for_keypress() {
   delay(25);
   while (1) {
-    KeyboardHardware.read_matrix();
+    KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all ==  R3C6
         && KeyboardHardware.previousLeftHandState.all == 0) {
       break;
@@ -65,10 +65,10 @@ void TestMode_::test_leds(void) {
 
 
 
-void TestMode_::test_matrix() {
+void TestMode_::testMatrix() {
   LEDControl.set_all_leds_to(200, 0, 0);
   while (1) {
-    KeyboardHardware.read_matrix();
+    KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
       break;
     }
@@ -117,7 +117,7 @@ void TestMode_::run_tests() {
   toggle_programming_leds_on();
 
   test_leds();
-  test_matrix();
+  testMatrix();
   //  Serial.println("Done running tests");
 }
 
