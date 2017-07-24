@@ -165,12 +165,12 @@ void Model01::act_on_matrix_scan() {
 
       uint8_t keyState = (bitRead(previousLeftHandState.all, keynum) << 0) |
                          (bitRead(leftHandState.all, keynum) << 1);
-      handle_keyswitch_event(Key_NoKey, row, 7 - col, keyState);
+      handleKeyswitchEvent(Key_NoKey, row, 7 - col, keyState);
 
       keyState = (bitRead(previousRightHandState.all, keynum) << 0) |
                  (bitRead(rightHandState.all, keynum) << 1);
 
-      handle_keyswitch_event(Key_NoKey, row, (15 - col), keyState);
+      handleKeyswitchEvent(Key_NoKey, row, (15 - col), keyState);
     }
   }
 }
