@@ -13,11 +13,11 @@ static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t ke
   key.keyCode = pgm_read_byte(macro_p++);
 
   if (keyStates & IS_PRESSED) {
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
   }
   if (keyStates & WAS_PRESSED) {
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport();
   }
 }
@@ -162,9 +162,9 @@ void Macros_::type(const char *string) {
     if (key.raw == Key_NoKey.raw)
       continue;
 
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     Keyboard.sendReport();
-    handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     Keyboard.sendReport();
   }
 }
