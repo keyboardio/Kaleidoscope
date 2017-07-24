@@ -69,7 +69,7 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = MOMENTARY_OFFSET + idx - 8;
   }
 
-  handle_keyswitch_event(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
 }
 
 void OneShot::activateOneShot(uint8_t idx) {
