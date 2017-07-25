@@ -26,9 +26,9 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
   wheelEndTime = millis() + wheelDelay;
 
   if (keyCode & KEY_MOUSE_UP)
-    Mouse.move(0, 0, wheelSpeed);
+    kaleidoscope::hid::moveMouse(0, 0, wheelSpeed);
   else if (keyCode & KEY_MOUSE_DOWN)
-    Mouse.move(0, 0, -wheelSpeed);
+    kaleidoscope::hid::moveMouse(0, 0, -wheelSpeed);
 }
 
 void MouseKeys_::loopHook(bool postClear) {

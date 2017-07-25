@@ -3,6 +3,7 @@
 //
 //
 #include "MouseWrapper.h"
+#include "kaleidoscope/hid.h"
 
 uint16_t MouseWrapper_::next_width;
 uint16_t MouseWrapper_::next_height;
@@ -13,23 +14,23 @@ boolean MouseWrapper_::is_warping;
 uint8_t MouseWrapper_::accelStep;
 
 MouseWrapper_::MouseWrapper_(void) {
-  Mouse.begin();
-  AbsoluteMouse.begin();
+	kaleidoscope::hid::initializeMouse();
+	kaleidoscope::hid::initializeAbsoluteMouse();
 }
 
 void MouseWrapper_::pressButton(uint8_t button) {
-  Mouse.press(button);
+	kaleidoscope::hid::pressMouseButtons(button);
   end_warping();
 }
 
 void MouseWrapper_::release_button(uint8_t button) {
-  Mouse.release(button);
+	kaleidoscope::hid::releaseMouseButtons(button);
 }
 
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
   uint16_t y_center = top + height / 2;
-  AbsoluteMouse.moveTo(x_center, y_center);
+  kaleidoscope::hid::moveAbsoluteMouseTo(x_center, y_center, 0);
 }
 
 void MouseWrapper_::begin_warping() {
@@ -107,7 +108,7 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
   }
 
   end_warping();
-  Mouse.move(moveX, moveY, 0);
+  kaleidoscope::hid::moveMouse(moveX, moveY, 0);
 }
 
 MouseWrapper_ MouseWrapper;
