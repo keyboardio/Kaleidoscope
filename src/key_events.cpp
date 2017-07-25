@@ -64,32 +64,32 @@ void initializeKeyboard() {
   Keyboard.begin();
 }
 
-void pressKeyRaw(Key mappedKey) {
+void pressRawKey(Key mappedKey) {
   Keyboard.press(mappedKey.keyCode);
 
 }
 
 void pressKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    pressKeyRaw(Key_LeftShift);
+    pressRawKey(Key_LeftShift);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    pressKeyRaw(Key_LeftControl);
+    pressRawKey(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-    pressKeyRaw(Key_LeftAlt);
+    pressRawKey(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-    pressKeyRaw(Key_RightAlt);
+    pressRawKey(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-    pressKeyRaw(Key_LeftGui);
+    pressRawKey(Key_LeftGui);
   }
 
-  pressKeyRaw(mappedKey);
+  pressRawKey(mappedKey);
 }
 
-void releaseKeyRaw(Key mappedKey) {
+void releaseRawKey(Key mappedKey) {
   Keyboard.release(mappedKey.keyCode);
 
 }
@@ -100,21 +100,21 @@ void releaseAllKeys() {
 
 void releaseKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    releaseKeyRaw(Key_LeftShift);
+    releaseRawKey(Key_LeftShift);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    releaseKeyRaw(Key_LeftControl);
+    releaseRawKey(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-    releaseKeyRaw(Key_LeftAlt);
+    releaseRawKey(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-    releaseKeyRaw(Key_RightAlt);
+    releaseRawKey(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-    releaseKeyRaw(Key_LeftGui);
+    releaseRawKey(Key_LeftGui);
   }
-  releaseKeyRaw(mappedKey);
+  releaseRawKey(mappedKey);
 }
 
 boolean isModifierKeyActive(Key mappedKey) {
@@ -151,9 +151,7 @@ void releaseSystemControl(Key mappedKey) {
 }
 
 
-/** Mouse events
- * See above for commentary on connectionMask. */
-
+// Mouse events
 
 void initializeMouse() {
   Mouse.begin();
@@ -175,8 +173,7 @@ void releaseMouseButtons(uint8_t buttons) {
   Mouse.release(buttons);
 }
 
-/** Absolute mouse (grapahics tablet) events
- * See above for commentary on connectionMask. */
+/** Absolute mouse (grapahics tablet) events */
 
 void initializeAbsoluteMouse() {
   AbsoluteMouse.begin();
