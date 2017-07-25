@@ -51,8 +51,8 @@ void initializeKeyboard();
 void pressKey(Key mappedKey);
 void releaseKey(Key mappedKey);
 void releaseAllKeys();
-void pressKeyRaw(Key mappedKey);
-void releaseKeyRaw(Key mappedKey);
+void pressRawKey(Key mappedKey);
+void releaseRawKey(Key mappedKey);
 /** Flushes any pending regular key switch events and sends them out */
 void sendKeyboardReport();
 
