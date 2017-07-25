@@ -56,6 +56,8 @@ void releaseKeyRaw(Key mappedKey);
 /** Flushes any pending regular key switch events and sends them out */
 void sendKeyboardReport();
 
+boolean isModifierKeyActive(Key mappedKey);
+
 void initializeConsumerControl();
 
 void pressConsumer(Key mappedKey);

@@ -117,7 +117,9 @@ void releaseKey(Key mappedKey) {
   releaseKeyRaw(mappedKey);
 }
 
-
+boolean isModifierKeyActive(Key mappedKey) {
+  return Keyboard.isModifierActive(mappedKey.keyCode);
+}
 
 void sendKeyboardReport() {
   Keyboard.sendReport();
