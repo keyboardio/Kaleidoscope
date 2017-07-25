@@ -60,13 +60,13 @@ boolean isModifierKeyActive(Key mappedKey);
 
 void initializeConsumerControl();
 
-void pressConsumer(Key mappedKey);
-void releaseConsumer(Key mappedKey);
+void pressConsumerControl(Key mappedKey);
+void releaseConsumerControl(Key mappedKey);
 
 void initializeSystemControl();
 
-void pressSystem(Key mappedKey);
-void releaseSystem(Key mappedKey);
+void pressSystemControl(Key mappedKey);
+void releaseSystemControl(Key mappedKey);
 
 void initializeMouse();
 

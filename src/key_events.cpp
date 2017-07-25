@@ -12,15 +12,15 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
     if (keyIsPressed(keyState)) {
-      pressConsumer(mappedKey);
+      pressConsumerControl(mappedKey);
     } else if (keyWasPressed(keyState)) {
-      releaseConsumer(mappedKey);
+      releaseConsumerControl(mappedKey);
     }
   } else if (mappedKey.flags & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
-      pressSystem(mappedKey);
+      pressSystemControl(mappedKey);
     } else if (keyWasPressed(keyState)) {
-      releaseSystem(mappedKey);
+      releaseSystemControl(mappedKey);
     }
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
@@ -129,11 +129,11 @@ void initializeConsumerControl() {
   ConsumerControl.begin();
 }
 
-void pressConsumer(Key mappedKey) {
+void pressConsumerControl(Key mappedKey) {
   ConsumerControl.press(mappedKey.keyCode);
 }
 
-void releaseConsumer(Key mappedKey) {
+void releaseConsumerControl(Key mappedKey) {
   ConsumerControl.release(mappedKey.keyCode);
 }
 
@@ -142,11 +142,11 @@ void initializeSystemControl() {
   SystemControl.begin();
 }
 
-void pressSystem(Key mappedKey) {
+void pressSystemControl(Key mappedKey) {
   SystemControl.press(mappedKey.keyCode);
 }
 
-void releaseSystem(Key mappedKey) {
+void releaseSystemControl(Key mappedKey) {
   SystemControl.release();
 }
 
