@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-Syster.h>
+#include <kaleidoscope/hid.h>
 
 #undef SYSTER
 
@@ -71,9 +72,9 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
         handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-        Keyboard.sendReport();
+        hid::sendKeyboardReport();
         handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-        Keyboard.sendReport();
+        hid::sendKeyboardReport();
       }
 
       systerAction(EndAction, NULL);

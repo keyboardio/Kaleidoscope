@@ -21,6 +21,7 @@
 #include <Kaleidoscope/HostOS-select.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
+#include <kaleidoscope/hid.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -49,9 +50,9 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
     break;
   case kaleidoscope::Syster::EndAction:
     handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
     handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
     break;
   case kaleidoscope::Syster::SymbolAction:
     Serial.print("systerAction: symbol=");

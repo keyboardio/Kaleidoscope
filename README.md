@@ -27,6 +27,7 @@ will handle the symbol actions:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
+#include <kaleidoscope/hid.h>
 
 void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
   switch (action) {
@@ -35,9 +36,9 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
     break;
   case kaleidoscope::Syster::EndAction:
     handleKeyswitchEvent (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
+    kaleidoscope::hid::sendKeyboardReport ();
     handleKeyswitchEvent (Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport ();
+    kaleidoscope::hid::sendKeyboardReport ();
     break;
   case kaleidoscope::Syster::SymbolAction:
     Serial.print ("systerAction: symbol=");
