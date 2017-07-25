@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-ShapeShifter.h>
+#include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
 
@@ -35,8 +36,8 @@ void ShapeShifter::loopHook(bool is_post_clear) {
   if (is_post_clear)
     return;
 
-  mod_active_ = Keyboard.isModifierActive(Key_LeftShift.keyCode) ||
-                Keyboard.isModifierActive(Key_RightShift.keyCode);
+  mod_active_ = hid::isModifierKeyActive(Key_LeftShift) ||
+                hid::isModifierKeyActive(Key_RightShift);
 }
 
 Key
