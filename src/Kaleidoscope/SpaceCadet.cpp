@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-SpaceCadet.h>
+#include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
 
@@ -83,7 +84,7 @@ Key SpaceCadetShift::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_
 
     handleKeyswitchEvent(mapped_key, row, col, IS_PRESSED | INJECTED);
     handleKeyswitchEvent(paren, row, col, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    hid::sendKeyboardReport();
 
     paren_needed_ = 0;
   }
