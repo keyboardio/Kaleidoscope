@@ -59,6 +59,11 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   handleKeyswitchEventDefault(mappedKey, row, col, keyState);
 }
 
+
+void initializeKeyboard() {
+  Keyboard.begin();
+}
+
 void pressKeyRaw(Key mappedKey) {
   Keyboard.press(mappedKey.keyCode);
 
@@ -114,9 +119,12 @@ void releaseKey(Key mappedKey) {
 
 
 
-
 void sendKeyboardReport() {
   Keyboard.sendReport();
+}
+
+void initializeConsumerControl() {
+  ConsumerControl.begin();
 }
 
 void pressConsumer(Key mappedKey) {
@@ -125,6 +133,11 @@ void pressConsumer(Key mappedKey) {
 
 void releaseConsumer(Key mappedKey) {
   ConsumerControl.release(mappedKey.keyCode);
+}
+
+
+void initializeSystemControl() {
+  SystemControl.begin();
 }
 
 void pressSystem(Key mappedKey) {
@@ -139,6 +152,10 @@ void releaseSystem(Key mappedKey) {
 /** Mouse events
  * See above for commentary on connectionMask. */
 
+
+void initializeMouse() {
+  Mouse.begin();
+}
 
 void moveMouse(signed char x, signed char y, signed char wheel) {
   Mouse.move(x, y, wheel);
@@ -158,6 +175,10 @@ void releaseMouseButtons(uint8_t buttons) {
 
 /** Absolute mouse (grapahics tablet) events
  * See above for commentary on connectionMask. */
+
+void initializeAbsoluteMouse() {
+  AbsoluteMouse.begin();
+}
 
 void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) {
   AbsoluteMouse.move(x, y, wheel);
