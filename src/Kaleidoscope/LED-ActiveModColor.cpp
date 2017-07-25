@@ -18,6 +18,7 @@
 
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-Ranges.h>
+#include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
 
@@ -49,7 +50,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
       if (k.raw < Key_LeftControl.raw || k.raw > Key_RightGui.raw)
         continue;
 
-      if (Keyboard.isModifierActive(k.keyCode))
+      if (hid::isModifierKeyActive(k))
         LEDControl.setCrgbAt(r, c, highlight_color);
     }
   }
