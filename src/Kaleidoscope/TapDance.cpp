@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-TapDance.h>
+#include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
 
@@ -117,7 +118,7 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
     handleKeyswitchEvent(key, last_tap_dance_row_, last_tap_dance_col_, IS_PRESSED | WAS_PRESSED | INJECTED);
     break;
   case Release:
-    Keyboard.sendReport();
+    hid::sendKeyboardReport();
     handleKeyswitchEvent(key, last_tap_dance_row_, last_tap_dance_col_, WAS_PRESSED | INJECTED);
     break;
   }
