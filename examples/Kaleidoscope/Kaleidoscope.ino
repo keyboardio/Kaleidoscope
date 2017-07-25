@@ -84,8 +84,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
                  D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
                  T(Spacebar),
                  W(100),
-                 T(0), T(1),
-                 END);
+                 T(0), T(1));
   }
   return MACRO_NONE;
 }

@@ -35,16 +35,16 @@ const macro_t *macroAppSwitch(uint8_t keyState) {
 
   // Key was just pressed, or is being held
   if (keyIsPressed(keyState)) {
-    return MACRO(Dr(mod), D(Tab), END);
+    return MACRO(Dr(mod), D(Tab));
   }
   // Key was just released
   if (keyToggledOff(keyState)) {
-    return MACRO(U(Tab), Dr(mod), END);
+    return MACRO(U(Tab), Dr(mod));
   }
   // Key is not pressed, and was not just released.
   // if appSwitchActive is true, we continue holding Alt.
   if (appSwitchActive) {
-    return MACRO(Dr(mod), END);
+    return MACRO(Dr(mod));
   }
   // otherwise we do nothing
   return MACRO_NONE;
