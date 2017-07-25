@@ -18,6 +18,7 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Cycle.h>
+#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 // --- state ---
@@ -39,14 +40,14 @@ void Cycle::begin(void) {
 
 void Cycle::replace(Key key) {
   handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-  Keyboard.sendReport();
+  hid::sendKeyboardReport();
   handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-  Keyboard.sendReport();
+  hid::sendKeyboardReport();
 
   handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-  Keyboard.sendReport();
+  hid::sendKeyboardReport();
   handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-  Keyboard.sendReport();
+  hid::sendKeyboardReport();
 }
 
 void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
