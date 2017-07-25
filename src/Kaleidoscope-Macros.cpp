@@ -1,4 +1,5 @@
 #include "Kaleidoscope-Macros.h"
+#include "kaleidoscope/hid.h"
 
 __attribute__((weak))
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
@@ -14,11 +15,11 @@ static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t ke
 
   if (keyIsPressed(keyStates)) {
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
   }
   if (keyWasPressed(keyStates)) {
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
   }
 }
 
@@ -163,9 +164,9 @@ void Macros_::type(const char *string) {
       continue;
 
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
     handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    Keyboard.sendReport();
+    kaleidoscope::hid::sendKeyboardReport();
   }
 }
 
