@@ -14,17 +14,17 @@ boolean MouseWrapper_::is_warping;
 uint8_t MouseWrapper_::accelStep;
 
 MouseWrapper_::MouseWrapper_(void) {
-	kaleidoscope::hid::initializeMouse();
-	kaleidoscope::hid::initializeAbsoluteMouse();
+  kaleidoscope::hid::initializeMouse();
+  kaleidoscope::hid::initializeAbsoluteMouse();
 }
 
 void MouseWrapper_::pressButton(uint8_t button) {
-	kaleidoscope::hid::pressMouseButtons(button);
+  kaleidoscope::hid::pressMouseButtons(button);
   end_warping();
 }
 
 void MouseWrapper_::release_button(uint8_t button) {
-	kaleidoscope::hid::releaseMouseButtons(button);
+  kaleidoscope::hid::releaseMouseButtons(button);
 }
 
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
