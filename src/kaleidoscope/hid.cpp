@@ -1,6 +1,8 @@
-#include "Kaleidoscope.h"
+#include "hid.h"
+#include "KeyboardioHID.h"
 
-namespace kaleidoscope::hid {
+namespace kaleidoscope {
+namespace hid {
 void initializeKeyboard() {
   Keyboard.begin();
 }
@@ -139,4 +141,5 @@ void releaseAbsoluteMouseButtons(uint8_t buttons) {
   AbsoluteMouse.release(buttons);
 }
 
+}
 };
