@@ -25,8 +25,8 @@ Kaleidoscope_::loop(void) {
     (*hook)(false);
   }
 
-  Keyboard.sendReport();
-  Keyboard.releaseAll();
+  sendKeyboardReport();
+  releaseAllKeys();
 
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];

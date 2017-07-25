@@ -1,5 +1,6 @@
 #include "Kaleidoscope.h"
 
+
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & RESERVED)
     return false;
@@ -10,15 +11,17 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & IS_INTERNAL) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
-    if (keyIsPressed(keyState))
-      ConsumerControl.press(mappedKey.keyCode);
-    else if (keyWasPressed(keyState))
-      ConsumerControl.release(mappedKey.keyCode);
+    if (keyIsPressed(keyState)) {
+      pressConsumer(mappedKey);
+    } else if (keyWasPressed(keyState)) {
+      releaseConsumer(mappedKey);
+    }
   } else if (mappedKey.flags & IS_SYSCTL) {
-    if (keyIsPressed(keyState))
-      SystemControl.press(mappedKey.keyCode);
-    else if (keyWasPressed(keyState))
-      SystemControl.release();
+    if (keyIsPressed(keyState)) {
+      pressSystem(mappedKey);
+    } else if (keyWasPressed(keyState)) {
+      releaseSystem(mappedKey);
+    }
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
   }
@@ -40,45 +43,6 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
   return true;
 }
 
-void pressKey(Key mappedKey) {
-  if (mappedKey.flags & SHIFT_HELD) {
-    Keyboard.press(Key_LeftShift.keyCode);
-  }
-  if (mappedKey.flags & CTRL_HELD) {
-    Keyboard.press(Key_LeftControl.keyCode);
-  }
-  if (mappedKey.flags & LALT_HELD) {
-    Keyboard.press(Key_LeftAlt.keyCode);
-  }
-  if (mappedKey.flags & RALT_HELD) {
-    Keyboard.press(Key_RightAlt.keyCode);
-  }
-  if (mappedKey.flags & GUI_HELD) {
-    Keyboard.press(Key_LeftGui.keyCode);
-  }
-  Keyboard.press(mappedKey.keyCode);
-}
-
-
-void releaseKey(Key mappedKey) {
-  if (mappedKey.flags & SHIFT_HELD) {
-    Keyboard.release(Key_LeftShift.keyCode);
-  }
-  if (mappedKey.flags & CTRL_HELD) {
-    Keyboard.release(Key_LeftControl.keyCode);
-  }
-  if (mappedKey.flags & LALT_HELD) {
-    Keyboard.release(Key_LeftAlt.keyCode);
-  }
-  if (mappedKey.flags & RALT_HELD) {
-    Keyboard.release(Key_RightAlt.keyCode);
-  }
-  if (mappedKey.flags & GUI_HELD) {
-    Keyboard.release(Key_LeftGui.keyCode);
-  }
-  Keyboard.release(mappedKey.keyCode);
-}
-
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (!(keyState & INJECTED)) {
     mappedKey = Layer.lookup(row, col);
@@ -93,4 +57,123 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.raw == Key_NoKey.raw)
     return;
   handleKeyswitchEventDefault(mappedKey, row, col, keyState);
+}
+
+void pressKeyRaw(Key mappedKey) {
+  Keyboard.press(mappedKey.keyCode);
+
+}
+
+void pressKey(Key mappedKey) {
+  if (mappedKey.flags & SHIFT_HELD) {
+    pressKeyRaw(Key_LeftShift);
+  }
+  if (mappedKey.flags & CTRL_HELD) {
+    pressKeyRaw(Key_LeftControl);
+  }
+  if (mappedKey.flags & LALT_HELD) {
+    pressKeyRaw(Key_LeftAlt);
+  }
+  if (mappedKey.flags & RALT_HELD) {
+    pressKeyRaw(Key_RightAlt);
+  }
+  if (mappedKey.flags & GUI_HELD) {
+    pressKeyRaw(Key_LeftGui);
+  }
+
+  pressKeyRaw(mappedKey);
+}
+
+void releaseKeyRaw(Key mappedKey) {
+  Keyboard.release(mappedKey.keyCode);
+
+}
+
+void releaseAllKeys() {
+  Keyboard.releaseAll();
+}
+
+void releaseKey(Key mappedKey) {
+  if (mappedKey.flags & SHIFT_HELD) {
+    releaseKeyRaw(Key_LeftShift);
+  }
+  if (mappedKey.flags & CTRL_HELD) {
+    releaseKeyRaw(Key_LeftControl);
+  }
+  if (mappedKey.flags & LALT_HELD) {
+    releaseKeyRaw(Key_LeftAlt);
+  }
+  if (mappedKey.flags & RALT_HELD) {
+    releaseKeyRaw(Key_RightAlt);
+  }
+  if (mappedKey.flags & GUI_HELD) {
+    releaseKeyRaw(Key_LeftGui);
+  }
+  releaseKeyRaw(mappedKey);
+}
+
+
+
+
+void sendKeyboardReport() {
+  Keyboard.sendReport();
+}
+
+void pressConsumer(Key mappedKey) {
+  ConsumerControl.press(mappedKey.keyCode);
+}
+
+void releaseConsumer(Key mappedKey) {
+  ConsumerControl.release(mappedKey.keyCode);
+}
+
+void pressSystem(Key mappedKey) {
+  SystemControl.press(mappedKey.keyCode);
+}
+
+void releaseSystem(Key mappedKey) {
+  SystemControl.release();
+}
+
+
+/** Mouse events
+ * See above for commentary on connectionMask. */
+
+
+void moveMouse(signed char x, signed char y, signed char wheel) {
+  Mouse.move(x, y, wheel);
+}
+
+void clickMouseButtons(uint8_t buttons) {
+  Mouse.click(buttons);
+}
+
+void pressMouseButtons(uint8_t buttons) {
+  Mouse.press(buttons);
+}
+
+void releaseMouseButtons(uint8_t buttons) {
+  Mouse.release(buttons);
+}
+
+/** Absolute mouse (grapahics tablet) events
+ * See above for commentary on connectionMask. */
+
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) {
+  AbsoluteMouse.move(x, y, wheel);
+}
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel) {
+  AbsoluteMouse.moveTo(x, y, wheel);
+}
+
+void clickAbsoluteMouseButtons(uint8_t buttons) {
+  AbsoluteMouse.click(buttons);
+}
+
+void pressAbsoluteMouseButtons(uint8_t buttons) {
+  AbsoluteMouse.press(buttons);
+}
+
+void releaseAbsoluteMouseButtons(uint8_t buttons) {
+  AbsoluteMouse.release(buttons);
 }

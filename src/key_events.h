@@ -43,6 +43,30 @@ extern const Key keymaps[][ROWS][COLS];
  */
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
 
-// Internal use
+/** Flushes any pending regular key switch events and sends them out */
+void sendKeyboardReport();
+
+// A facade on top of our HID implementation
 void pressKey(Key mappedKey);
 void releaseKey(Key mappedKey);
+void releaseAllKeys();
+void pressKeyRaw(Key mappedKey);
+void releaseKeyRaw(Key mappedKey);
+
+void pressConsumer(Key mappedKey);
+void releaseConsumer(Key mappedKey);
+
+void pressSystem(Key mappedKey);
+void releaseSystem(Key mappedKey);
+
+void moveMouse(signed char x, signed char y, signed char wheel);
+void clickMouseButtons(uint8_t buttons);
+void pressMouseButtons(uint8_t buttons);
+void releaseMouseButtons(uint8_t buttons);
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
+void clickAbsoluteMouseButtons(uint8_t buttons);
+void pressAbsoluteMouseButtons(uint8_t buttons);
+void releaseAbsoluteMouseButtons(uint8_t buttons);
+
+
