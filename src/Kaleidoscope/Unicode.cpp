@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-Unicode.h>
+#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 
@@ -30,27 +31,27 @@ void Unicode::begin(void) {
 void Unicode::start(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
-    Keyboard.press(Key_LeftControl.keyCode);
-    Keyboard.press(Key_LeftShift.keyCode);
-    Keyboard.press(Key_U.keyCode);
-    Keyboard.sendReport();
-    Keyboard.release(Key_LeftControl.keyCode);
-    Keyboard.release(Key_LeftShift.keyCode);
-    Keyboard.release(Key_U.keyCode);
-    Keyboard.sendReport();
+    hid::pressRawKey(Key_LeftControl);
+    hid::pressRawKey(Key_LeftShift);
+    hid::pressRawKey(Key_U);
+    hid::sendKeyboardReport();
+    hid::releaseRawKey(Key_LeftControl);
+    hid::releaseRawKey(Key_LeftShift);
+    hid::releaseRawKey(Key_U);
+    hid::sendKeyboardReport();
     break;
   case hostos::WINDOWS:
-    Keyboard.press(Key_RightAlt.keyCode);
-    Keyboard.sendReport();
-    Keyboard.release(Key_RightAlt.keyCode);
-    Keyboard.sendReport();
-    Keyboard.press(Key_U.keyCode);
-    Keyboard.sendReport();
-    Keyboard.release(Key_U.keyCode);
-    Keyboard.sendReport();
+    hid::pressRawKey(Key_RightAlt);
+    hid::sendKeyboardReport();
+    hid::releaseRawKey(Key_RightAlt);
+    hid::sendKeyboardReport();
+    hid::pressRawKey(Key_U);
+    hid::sendKeyboardReport();
+    hid::releaseRawKey(Key_U);
+    hid::sendKeyboardReport();
     break;
   case hostos::OSX:
-    Keyboard.press(Key_LeftAlt.keyCode);
+    hid::pressRawKey(Key_LeftAlt);
     break;
   default:
     unicodeCustomStart();
@@ -64,7 +65,7 @@ void Unicode::input(void) {
   case hostos::WINDOWS:
     break;
   case hostos::OSX:
-    Keyboard.press(Key_LeftAlt.keyCode);
+    hid::pressRawKey(Key_LeftAlt);
     break;
   default:
     unicodeCustomInput();
@@ -75,16 +76,16 @@ void Unicode::input(void) {
 void Unicode::end(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
-    Keyboard.press(Key_Spacebar.keyCode);
-    Keyboard.sendReport();
-    Keyboard.release(Key_Spacebar.keyCode);
-    Keyboard.sendReport();
+    hid::pressRawKey(Key_Spacebar);
+    hid::sendKeyboardReport();
+    hid::releaseRawKey(Key_Spacebar);
+    hid::sendKeyboardReport();
     break;
   case hostos::WINDOWS:
     break;
   case hostos::OSX:
-    Keyboard.release(Key_LeftAlt.keyCode);
-    Keyboard.sendReport();
+    hid::releaseRawKey(Key_LeftAlt);
+    hid::sendKeyboardReport();
     break;
   default:
     unicodeCustomEnd();
@@ -103,20 +104,20 @@ void Unicode::typeCode(uint32_t unicode) {
       if (on_zero_start == false) {
         Key key = hexToKey(digit);
         input();
-        Keyboard.press(key.keyCode);
-        Keyboard.sendReport();
+        hid::pressRawKey(key);
+        hid::sendKeyboardReport();
         input();
-        Keyboard.release(key.keyCode);
-        Keyboard.sendReport();
+        hid::releaseRawKey(key);
+        hid::sendKeyboardReport();
       }
     } else {
       Key key = hexToKey(digit);
       input();
-      Keyboard.press(key.keyCode);
-      Keyboard.sendReport();
+      hid::pressRawKey(key);
+      hid::sendKeyboardReport();
       input();
-      Keyboard.release(key.keyCode);
-      Keyboard.sendReport();
+      hid::releaseRawKey(key);
+      hid::sendKeyboardReport();
       on_zero_start = false;
     }
     delay(5);
