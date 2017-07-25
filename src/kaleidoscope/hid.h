@@ -1,7 +1,9 @@
 #pragma once
 #include <Arduino.h>
+#include "key_defs.h"
 
-namespace kaleidoscope::hid {
+namespace kaleidoscope {
+namespace hid {
 
 // A facade on top of our HID implementation
 
@@ -42,4 +44,5 @@ void clickAbsoluteMouseButtons(uint8_t buttons);
 void pressAbsoluteMouseButtons(uint8_t buttons);
 void releaseAbsoluteMouseButtons(uint8_t buttons);
 
+}
 };

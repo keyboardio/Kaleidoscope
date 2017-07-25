@@ -19,8 +19,10 @@ void setup();
 #include <stdio.h>
 #include <math.h>
 
+
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
+#include "kaleidoscope/hid.h"
 #include "layers.h"
 
 #define HOOK_MAX 64
