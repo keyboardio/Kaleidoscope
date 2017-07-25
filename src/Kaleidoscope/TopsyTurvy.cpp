@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope-TopsyTurvy.h>
+#include "kaleidoscope/hid.h"
 
 #define TOPSYTURVY 0b01000000
 
@@ -62,22 +63,22 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
 
   if (!mod_state_) {
     if (keyIsPressed(key_state))
-      Keyboard.press(Key_LeftShift.keyCode);
+      hid::pressRawKey(Key_LeftShift);
     handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
-    Keyboard.sendReport();
+    hid::sendKeyboardReport();
     if (keyToggledOff(key_state))
-      Keyboard.release(Key_LeftShift.keyCode);
+      hid::releaseRawKey(Key_LeftShift);
   } else {
-    Keyboard.release(Key_LeftShift.keyCode);
-    Keyboard.release(Key_RightShift.keyCode);
-    Keyboard.sendReport();
+    hid::releaseRawKey(Key_LeftShift);
+    hid::releaseRawKey(Key_RightShift);
+    hid::sendKeyboardReport();
     handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
-    Keyboard.sendReport();
+    hid::sendKeyboardReport();
 
     if (bitRead(mod_state_, 0))
-      Keyboard.press(Key_LeftShift.keyCode);
+      hid::pressRawKey(Key_LeftShift);
     if (bitRead(mod_state_, 1))
-      Keyboard.press(Key_RightShift.keyCode);
+      hid::pressRawKey(Key_RightShift);
   }
 
   return Key_NoKey;
