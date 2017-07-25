@@ -1,12 +1,13 @@
-# This stub makefile for a Kaleidoscope plugin pulls in
+# This stub makefile for a Kaleidoscope plugin pulls in 
 # all targets from the Kaleidoscope-Plugin library
 
 MAKEFILE_PREFIX=keyboardio/avr/libraries/Kaleidoscope-Plugin/build
 UNAME_S := $(shell uname -s)
 
-BOARD_HARDWARE_PATH ?= $(HOME)/Arduino/hardware
 ifeq ($(UNAME_S),Darwin)
-BOARD_HARDWARE_PATH ?= $(HOME)/Library/Arduino/hardware
+BOARD_HARDWARE_PATH ?= $(HOME)/Documents/Arduino/hardware
+else
+BOARD_HARDWARE_PATH ?= $(HOME)/Arduino/hardware
 endif
 
-include $(BOARD_HARDWARE_PATH)/$(MAKEFILE_PREFIX)/*.mk
+include $(BOARD_HARDWARE_PATH)/$(MAKEFILE_PREFIX)/rules.mk
