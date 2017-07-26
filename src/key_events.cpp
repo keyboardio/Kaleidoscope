@@ -12,14 +12,14 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
     if (keyIsPressed(keyState)) {
-      kaleidoscope::hid::pressConsumerControl(mappedKey);
     } else if (keyWasPressed(keyState)) {
+      kaleidoscope::hid::pressConsumerControl(mappedKey);
       kaleidoscope::hid::releaseConsumerControl(mappedKey);
     }
   } else if (mappedKey.flags & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
-      kaleidoscope::hid::pressSystemControl(mappedKey);
     } else if (keyWasPressed(keyState)) {
+      kaleidoscope::hid::pressSystemControl(mappedKey);
       kaleidoscope::hid::releaseSystemControl(mappedKey);
     }
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
