@@ -60,6 +60,9 @@ class Keyboard_ {
 
  protected:
   HID_KeyboardReport_Data_t _keyReport;
+  HID_KeyboardReport_Data_t _lastKeyReport;
+ private:
+  int sendReportUnchecked(void);
 };
 extern Keyboard_ Keyboard;
 

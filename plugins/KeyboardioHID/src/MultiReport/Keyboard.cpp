@@ -114,19 +114,32 @@ void Keyboard_::begin(void) {
   // This is important for and HID bridge where the receiver stays on,
   // while the sender is resetted.
   releaseAll();
-  sendReport();
+  sendReportUnchecked();
 }
 
 
 void Keyboard_::end(void) {
   releaseAll();
-  sendReport();
+  sendReportUnchecked();
+}
+
+int Keyboard_::sendReportUnchecked(void) {
+    return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
 }
 
 
-
 int Keyboard_::sendReport(void) {
-  return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &_keyReport, sizeof(_keyReport));
+  // If the last report is different than the current report, then we need to send a report.
+  // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
+  // if sendReport is called in a tight loop.
+
+  if (memcmp(_lastKeyReport.allkeys, _keyReport.allkeys, sizeof(_keyReport))) {
+    // if the two reports are different, send a report
+    int returnCode = sendReportUnchecked();
+    memcpy(_lastKeyReport.allkeys, _keyReport.allkeys, sizeof(_keyReport));
+    return returnCode;
+  }
+  return -1;
 }
 
 boolean Keyboard_::isModifierActive(uint8_t k) {
