@@ -12,10 +12,11 @@
 #define KEY_MOUSE_DOWN          B0000010
 #define KEY_MOUSE_LEFT          B0000100
 #define KEY_MOUSE_RIGHT         B0001000
-#define KEY_MOUSE_BUTTON        B0010000
+#define KEY_MOUSE_WHEEL         B0010000
 #define KEY_MOUSE_WARP          B0100000
-#define KEY_MOUSE_WARP_END      B0010000
-#define KEY_MOUSE_WHEEL         B1000000
+#define KEY_MOUSE_WARP_END      B1000000
+// all buttons end warp. also, we're out of bits
+#define KEY_MOUSE_BUTTON        B1000000
 
 
 #define Key_mouseWarpNW   (Key) { KEY_MOUSE_WARP| KEY_MOUSE_UP | KEY_MOUSE_LEFT, KEY_FLAGS|SYNTHETIC|IS_MOUSE_KEY }
