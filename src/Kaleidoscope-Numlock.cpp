@@ -21,8 +21,9 @@ void NumLock_::loopHook(bool postClear) {
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
+      Key layer_key = Layer.getKey(numPadLayer, r, c);
 
-      if (k.raw < Key_KeypadNumLock.raw || k.raw > Key_KeypadDot.raw)
+      if ((k != layer_key) || ((k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) && !(k.flags & RESERVED)))
         continue;
 
       LEDControl.setCrgbAt(r, c, numpad_color);
