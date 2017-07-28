@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "PluggableUSB.h"
 #include "HID.h"
 #include "HID-Settings.h"
-#include "MouseButtons.h"
+#include "../MouseButtons.h"
 
 typedef union {
   // Mouse report: 8 buttons, position, wheel
