@@ -6,7 +6,7 @@ MCU 		= atmega32u4
 
 ARDUINO_LIBS = 
 
-ARDUINO_PATH=/Applications/Arduino.app/Contents/Java/
+ARDUINO_PATH ?= /Applications/Arduino.app/Contents/Java/
 ARDUINO_TOOLS_PATH=$(ARDUINO_PATH)/hardware/tools
 FQBN=arduino:avr:leonardo
 BUILD_PATH := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
