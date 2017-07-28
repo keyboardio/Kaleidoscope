@@ -14,6 +14,9 @@ boolean MouseWrapper_::is_warping;
 uint8_t MouseWrapper_::accelStep;
 
 MouseWrapper_::MouseWrapper_(void) {
+}
+
+void MouseWrapper_::begin(void) {
   kaleidoscope::hid::initializeMouse();
   kaleidoscope::hid::initializeAbsoluteMouse();
 }
