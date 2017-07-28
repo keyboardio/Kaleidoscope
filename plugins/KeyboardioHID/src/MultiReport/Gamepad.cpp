@@ -86,11 +86,11 @@ void Gamepad_::begin(void) {
 
 void Gamepad_::end(void) {
   memset(&_report, 0x00, sizeof(_report));
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 void Gamepad_::write(void) {
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 

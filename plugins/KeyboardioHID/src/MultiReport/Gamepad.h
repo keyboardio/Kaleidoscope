@@ -117,7 +117,7 @@ class Gamepad_ {
   void dPad1(int8_t d);
   void dPad2(int8_t d);
 
-  void SendReport(void* data, int length);
+  void sendReport(void* data, int length);
  protected:
   HID_GamepadReport_Data_t _report;
 };

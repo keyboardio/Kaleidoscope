@@ -52,7 +52,7 @@ class ConsumerControl_ {
   void releaseAll(void);
 
   // Sending is public in the base class for advanced users.
-  void SendReport(void* data, int length);
+  void sendReport(void* data, int length);
 
 
  protected:

@@ -53,7 +53,7 @@ void ConsumerControl_::begin(void) {
 
 void ConsumerControl_::end(void) {
   memset(&_report, 0, sizeof(_report));
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 void ConsumerControl_::write(uint16_t m) {
@@ -69,7 +69,7 @@ void ConsumerControl_::press(uint16_t m) {
       break;
     }
   }
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 void ConsumerControl_::release(uint16_t m) {
@@ -80,7 +80,7 @@ void ConsumerControl_::release(uint16_t m) {
       // no break to delete multiple keys
     }
   }
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 void ConsumerControl_::releaseAll(void) {

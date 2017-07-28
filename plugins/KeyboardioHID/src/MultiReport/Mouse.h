@@ -52,7 +52,7 @@ class Mouse_ {
   void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
   bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
 
-  void SendReport(void* data, int length);
+  void sendReport(void* data, int length);
 
  protected:
   uint8_t _buttons;

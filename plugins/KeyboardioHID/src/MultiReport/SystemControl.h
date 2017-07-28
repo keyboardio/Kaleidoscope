@@ -44,7 +44,7 @@ class SystemControl_ {
   void press(uint8_t s);
   void release(void);
   void releaseAll(void);
-  void SendReport(void* data, int length);
+  void sendReport(void* data, int length);
 
   SystemControl_(void);
 

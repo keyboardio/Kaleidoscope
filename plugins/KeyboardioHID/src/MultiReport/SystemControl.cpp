@@ -54,7 +54,7 @@ void SystemControl_::begin(void) {
 
 void SystemControl_::end(void) {
   uint8_t _report = 0x00;
-  SendReport(&_report, sizeof(_report));
+  sendReport(&_report, sizeof(_report));
 }
 
 void SystemControl_::write(uint8_t s) {
@@ -74,7 +74,7 @@ void SystemControl_::press(uint8_t s) {
   if (s == HID_SYSTEM_WAKE_UP)
     USBDevice.wakeupHost();
   else
-    SendReport(&s, sizeof(s));
+    sendReport(&s, sizeof(s));
 }
 
 

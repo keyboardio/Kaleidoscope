@@ -76,7 +76,7 @@ void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char wheel) {
   report.xAxis = x;
   report.yAxis = y;
   report.wheel = wheel;
-  SendReport(&report, sizeof(report));
+  sendReport(&report, sizeof(report));
 }
 
 void AbsoluteMouseAPI::move(int x, int y, signed char wheel) {

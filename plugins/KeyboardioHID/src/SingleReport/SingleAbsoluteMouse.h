@@ -48,7 +48,7 @@ protected:
     uint8_t protocol;
     uint8_t idle;
     
-    virtual inline void SendReport(void* data, int length) override;
+    virtual inline void sendReport(void* data, int length) override;
 };
 extern SingleAbsoluteMouse_ SingleAbsoluteMouse;
 

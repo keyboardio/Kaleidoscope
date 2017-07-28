@@ -84,7 +84,7 @@ void Mouse_::move(signed char x, signed char y, signed char wheel) {
   report.xAxis = x;
   report.yAxis = y;
   report.wheel = wheel;
-  SendReport(&report, sizeof(report));
+  sendReport(&report, sizeof(report));
 }
 
 void Mouse_::buttons(uint8_t b) {
