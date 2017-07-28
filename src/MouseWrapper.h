@@ -31,6 +31,7 @@ class MouseWrapper_ {
  public:
   MouseWrapper_(void);
 
+  static void begin(void);
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
   static void pressButton(uint8_t button);
