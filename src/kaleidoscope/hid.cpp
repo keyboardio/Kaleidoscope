@@ -116,29 +116,29 @@ void releaseMouseButtons(uint8_t buttons) {
   Mouse.release(buttons);
 }
 
-/** Absolute mouse (grapahics tablet) events */
+/** SingleAbsolute mouse (grapahics tablet) events */
 
 void initializeAbsoluteMouse() {
-  AbsoluteMouse.begin();
+  SingleAbsoluteMouse.begin();
 }
 
 void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) {
-  AbsoluteMouse.move(x, y, wheel);
+  SingleAbsoluteMouse.move(x, y, wheel);
 }
 void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel) {
-  AbsoluteMouse.moveTo(x, y, wheel);
+  SingleAbsoluteMouse.moveTo(x, y, wheel);
 }
 
 void clickAbsoluteMouseButtons(uint8_t buttons) {
-  AbsoluteMouse.click(buttons);
+  SingleAbsoluteMouse.click(buttons);
 }
 
 void pressAbsoluteMouseButtons(uint8_t buttons) {
-  AbsoluteMouse.press(buttons);
+  SingleAbsoluteMouse.press(buttons);
 }
 
 void releaseAbsoluteMouseButtons(uint8_t buttons) {
-  AbsoluteMouse.release(buttons);
+  SingleAbsoluteMouse.release(buttons);
 }
 
 }
