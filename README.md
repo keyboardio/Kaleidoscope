@@ -1,6 +1,8 @@
 # Kaleidoscope
 
-Flexible firmware for Arduino-powered keyboards
+Flexible firmware for Arduino-powered keyboards.
+
+This package contains the "core" of Kaleidoscope and an example firmware "Sketch."  If you're looking for the firmware for the Keyboardio Model 01, you should start with https://github.com/keyboardio/Model01-Firmware
 
 # Getting Started
 
