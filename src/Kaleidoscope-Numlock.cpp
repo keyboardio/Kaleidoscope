@@ -23,7 +23,7 @@ void NumLock_::loopHook(bool postClear) {
       Key k = Layer.lookup(r, c);
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
-      if ((k != layer_key))
+      if ((k != layer_key) || ((k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) && !(k.flags & RESERVED)))
         continue;
 
       LEDControl.setCrgbAt(r, c, numpad_color);
