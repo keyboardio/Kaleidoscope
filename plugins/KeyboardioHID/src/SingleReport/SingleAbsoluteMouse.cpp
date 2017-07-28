@@ -107,7 +107,7 @@ bool SingleAbsoluteMouse_::setup(USBSetup& setup)
 	return false;
 }
 
-void SingleAbsoluteMouse_::SendReport(void* data, int length)
+void SingleAbsoluteMouse_::sendReport(void* data, int length)
 {
 	USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, length);
 }

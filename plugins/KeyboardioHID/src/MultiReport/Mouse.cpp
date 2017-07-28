@@ -109,7 +109,7 @@ bool Mouse_::isPressed(uint8_t b) {
 }
 
 
-void Mouse_::SendReport(void* data, int length) {
+void Mouse_::sendReport(void* data, int length) {
   HID().SendReport(HID_REPORTID_MOUSE, data, length);
 }
 

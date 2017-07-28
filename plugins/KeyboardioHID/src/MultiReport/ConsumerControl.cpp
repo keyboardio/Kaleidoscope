@@ -87,7 +87,7 @@ void ConsumerControl_::releaseAll(void) {
   end();
 }
 
-void ConsumerControl_::SendReport(void* data, int length) {
+void ConsumerControl_::sendReport(void* data, int length) {
   HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
 }
 
