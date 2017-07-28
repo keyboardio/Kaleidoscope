@@ -47,4 +47,6 @@ THE SOFTWARE.
 #include "MultiReport/SystemControl.h"
 #include "MultiReport/Keyboard.h"
 
+#include "SingleReport/SingleAbsoluteMouse.h"
+
 #include "BootKeyboard/BootKeyboard.h"
