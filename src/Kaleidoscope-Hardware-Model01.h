@@ -30,6 +30,11 @@ class Model01 {
 
   boolean ledPowerFault(void);
 
+  void maskKey(byte row, byte col);
+  void unMaskKey(byte row, byte col);
+  bool isKeyMasked(byte row, byte col);
+  void maskHeldKeys(void);
+
   keydata_t leftHandState;
   keydata_t rightHandState;
   keydata_t previousLeftHandState;
@@ -39,6 +44,9 @@ class Model01 {
   static bool isLEDChanged;
   static KeyboardioScanner leftHand;
   static KeyboardioScanner rightHand;
+
+  static uint32_t leftHandMask;
+  static uint32_t rightHandMask;
 };
 
 #define SCANBIT(row,col) ((uint32_t)1 << (row * 8 + (7 - col)))
