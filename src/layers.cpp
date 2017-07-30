@@ -28,6 +28,8 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       } else {
         Layer.off(target);
       }
+
+      KeyboardHardware.maskHeldKeys();
     }
 
     // switch keymap and stay there
