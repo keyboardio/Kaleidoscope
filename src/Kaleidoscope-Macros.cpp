@@ -8,18 +8,21 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 
 byte Macros_::row, Macros_::col;
 
+void playMacroKeyswitchEvent(Key key, uint8_t flags) {
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | flags);
+  kaleidoscope::hid::sendKeyboardReport();
+}
+
 static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
   Key key;
   key.flags = flags;
   key.keyCode = pgm_read_byte(macro_p++);
 
   if (keyIsPressed(keyStates)) {
-    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
+    playMacroKeyswitchEvent(key, IS_PRESSED);
   }
   if (keyWasPressed(keyStates)) {
-    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
+    playMacroKeyswitchEvent(key, WAS_PRESSED);
   }
 }
 
@@ -165,15 +168,14 @@ void Macros_::type(const char *string) {
       break;
 
     Key key = lookupAsciiCode(ascii_code);
-    
+
 
     if (key.raw == Key_NoKey.raw)
       continue;
 
-    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
-    handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
+    playMacroKeyswitchEvent(key, IS_PRESSED);
+    playMacroKeyswitchEvent(key, WAS_PRESSED);
+
   }
 }
 
