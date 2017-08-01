@@ -47,7 +47,7 @@ void ColormapEffect::max_layers(uint8_t max_) {
 }
 
 void ColormapEffect::update(void) {
-  for (uint8_t l = 0; l < 32; l++) {
+  for (uint8_t l = 0; l < max_layers_; l++) {
     if (!Layer.isOn(l))
       continue;
 
