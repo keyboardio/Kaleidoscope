@@ -115,12 +115,8 @@ static const Key ascii_to_key_map[] PROGMEM = {
   LSHIFT(Key_Backtick),
 };
 
-void Macros_::type(const char *string) {
-  while (true) {
-    uint8_t ascii_code = pgm_read_byte(string++);
-    if (!ascii_code)
-      break;
 
+Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
     Key key = Key_NoKey;
 
     switch (ascii_code) {
@@ -159,6 +155,17 @@ void Macros_::type(const char *string) {
       key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29]);
       break;
     }
+    return key;
+}
+
+void Macros_::type(const char *string) {
+  while (true) {
+    uint8_t ascii_code = pgm_read_byte(string++);
+    if (!ascii_code)
+      break;
+
+    Key key = lookupAsciiCode(ascii_code);
+    
 
     if (key.raw == Key_NoKey.raw)
       continue;

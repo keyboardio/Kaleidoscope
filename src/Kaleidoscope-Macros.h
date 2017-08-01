@@ -17,6 +17,9 @@ class Macros_ : public KaleidoscopePlugin {
   void type(const char *string);
 
   static byte row, col;
+
+ private:
+   Key lookupAsciiCode(uint8_t ascii_code);
 };
 
 extern Macros_ Macros;
