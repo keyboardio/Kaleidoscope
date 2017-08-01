@@ -120,45 +120,45 @@ static const Key ascii_to_key_map[] PROGMEM = {
 
 
 Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
-    Key key = Key_NoKey;
+  Key key = Key_NoKey;
 
-    switch (ascii_code) {
-    case 0x08 ... 0x09:
-      key.keyCode = Key_Backspace.keyCode + ascii_code - 0x08;
-      break;
-    case 0x0A:
-      key.keyCode = Key_Enter.keyCode;
-      break;
-    case 0x1B:
-      key.keyCode = Key_Escape.keyCode;
-      break;
-    case 0x20:
-      key.keyCode = Key_Spacebar.keyCode;
-      break;
-    case 0x21 ... 0x30:
-      key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x21]);
-      break;
-    case 0x31 ... 0x39:
-      key.keyCode = Key_1.keyCode + ascii_code - 0x31;
-      break;
-    case 0x3A ... 0x40:
-      key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x3A + 16]);
-      break;
-    case 0x41 ... 0x5A:
-      key.flags = SHIFT_HELD;
-      key.keyCode = Key_A.keyCode + ascii_code - 0x41;
-      break;
-    case 0x5B ... 0x5F:
-      key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23]);
-      break;
-    case 0x61 ... 0x7A:
-      key.keyCode = Key_A.keyCode + ascii_code - 0x61;
-      break;
-    case 0x7B ... 0x7E:
-      key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29]);
-      break;
-    }
-    return key;
+  switch (ascii_code) {
+  case 0x08 ... 0x09:
+    key.keyCode = Key_Backspace.keyCode + ascii_code - 0x08;
+    break;
+  case 0x0A:
+    key.keyCode = Key_Enter.keyCode;
+    break;
+  case 0x1B:
+    key.keyCode = Key_Escape.keyCode;
+    break;
+  case 0x20:
+    key.keyCode = Key_Spacebar.keyCode;
+    break;
+  case 0x21 ... 0x30:
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x21]);
+    break;
+  case 0x31 ... 0x39:
+    key.keyCode = Key_1.keyCode + ascii_code - 0x31;
+    break;
+  case 0x3A ... 0x40:
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x3A + 16]);
+    break;
+  case 0x41 ... 0x5A:
+    key.flags = SHIFT_HELD;
+    key.keyCode = Key_A.keyCode + ascii_code - 0x41;
+    break;
+  case 0x5B ... 0x5F:
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23]);
+    break;
+  case 0x61 ... 0x7A:
+    key.keyCode = Key_A.keyCode + ascii_code - 0x61;
+    break;
+  case 0x7B ... 0x7E:
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29]);
+    break;
+  }
+  return key;
 }
 
 void Macros_::type(const char *string) {

@@ -19,7 +19,7 @@ class Macros_ : public KaleidoscopePlugin {
   static byte row, col;
 
  private:
-   Key lookupAsciiCode(uint8_t ascii_code);
+  Key lookupAsciiCode(uint8_t ascii_code);
 };
 
 extern Macros_ Macros;
