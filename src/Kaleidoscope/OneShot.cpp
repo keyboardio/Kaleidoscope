@@ -28,8 +28,6 @@ uint16_t OneShot::hold_time_out = 250;
 OneShot::state_t OneShot::state_;
 OneShot::state_t OneShot::sticky_state_;
 OneShot::state_t OneShot::pressed_state_;
-uint32_t OneShot::left_mask_;
-uint32_t OneShot::right_mask_;
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
@@ -81,42 +79,6 @@ void OneShot::cancelOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED);
 }
 
-void OneShot::mask(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return;
-
-  if (col >= 8) {
-    col = col - 8;
-    right_mask_ |= SCANBIT(row, col);
-  } else {
-    left_mask_ |= SCANBIT(row, col);
-  }
-}
-
-void OneShot::unmask(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return;
-
-  if (col >= 8) {
-    col = col - 8;
-    right_mask_ &= ~(SCANBIT(row, col));
-  } else {
-    left_mask_ &= ~(SCANBIT(row, col));
-  }
-}
-
-bool OneShot::isMasked(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return false;
-
-  if (col >= 8) {
-    col = col - 8;
-    return right_mask_ & SCANBIT(row, col);
-  } else {
-    return left_mask_ & SCANBIT(row, col);
-  }
-}
-
 Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   uint8_t idx;
 
@@ -125,9 +87,9 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
   if (!state_.all) {
     if (!isOS(mapped_key)) {
-      if (isMasked(row, col)) {
+      if (KeyboardHardware.isKeyMasked(row, col)) {
         if (keyToggledOff(key_state))
-          unmask(row, col);
+          KeyboardHardware.unMaskKey(row, col);
         return Key_NoKey;
       }
 
@@ -192,7 +154,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
   // ordinary key here, with some event
 
   if (keyIsPressed(key_state)) {
-    mask(row, col);
+    KeyboardHardware.maskKey(row, col);
     saveAsPrevious(mapped_key);
     should_cancel_ = true;
   }

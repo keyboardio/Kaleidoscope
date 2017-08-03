@@ -56,8 +56,6 @@ class OneShot : public KaleidoscopePlugin {
   static state_t state_;
   static state_t sticky_state_;
   static state_t pressed_state_;
-  static uint32_t left_mask_;
-  static uint32_t right_mask_;
   static Key prev_key_;
   static bool should_cancel_;
   static bool should_cancel_stickies_;
@@ -65,10 +63,6 @@ class OneShot : public KaleidoscopePlugin {
   static void injectNormalKey(uint8_t idx, uint8_t key_state);
   static void activateOneShot(uint8_t idx);
   static void cancelOneShot(uint8_t idx);
-
-  static void mask(byte row, byte col);
-  static void unmask(byte row, byte col);
-  static bool isMasked(byte row, byte col);
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void loopHook(bool is_post_clear);
