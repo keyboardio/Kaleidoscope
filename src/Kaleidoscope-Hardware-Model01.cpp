@@ -5,6 +5,8 @@
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
 bool Model01::isLEDChanged = true;
+uint32_t Model01::leftHandMask;
+uint32_t Model01::rightHandMask;
 
 static constexpr uint8_t key_led_map[4][16] = {
   {3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60},
@@ -200,6 +202,44 @@ void Model01::rebootBootloader() {
 
   while (1) {} // This infinite loop ensures nothing else
   // happens before the watchdog reboots us
+}
+
+void Model01::maskKey(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return;
+
+  if (col >= 8) {
+    rightHandMask |= SCANBIT(row, col - 8);
+  } else {
+    leftHandMask |= SCANBIT(row, col);
+  }
+}
+
+void Model01::unMaskKey(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return;
+
+  if (col >= 8) {
+    rightHandMask &= ~(SCANBIT(row, col - 8));
+  } else {
+    leftHandMask &= ~(SCANBIT(row, col));
+  }
+}
+
+bool Model01::isKeyMasked(byte row, byte col) {
+  if (row >= ROWS || col >= COLS)
+    return false;
+
+  if (col >= 8) {
+    return rightHandMask & SCANBIT(row, col - 8);
+  } else {
+    return leftHandMask & SCANBIT(row, col);
+  }
+}
+
+void Model01::maskHeldKeys(void) {
+  rightHandMask = rightHandState.all;
+  leftHandMask = leftHandState.all;
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
