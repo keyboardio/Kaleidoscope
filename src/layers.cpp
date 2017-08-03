@@ -28,6 +28,23 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       } else {
         Layer.off(target);
       }
+
+      /*
+       * When toggling a layer off, we mask all keys still held. Masked keys
+       * will be ignored until released and pressed again (see
+       * `handleKeyswitchEvent` in key_events.cpp).
+       *
+       * We do this because when holding a momentary layer switch key, then
+       * pressing and holding some others, they will fire as keys on the
+       * momentary layer. But if we release the momentary layer switch key
+       * before releasing the others, they will continue firing, but from
+       * another layer. When typing fast, it may easily happen that we end up in
+       * a situation where the layer key releases first (in the same scan cycle,
+       * but handled first), and it will emit a key from the wrong layer. So we
+       * ignore held keys after releasing a layer key, until they are pressed
+       * again, to avoid the aforementioned issue.
+       */
+      KeyboardHardware.maskHeldKeys();
     }
 
     // switch keymap and stay there

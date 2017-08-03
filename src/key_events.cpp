@@ -47,6 +47,21 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (!(keyState & INJECTED)) {
     mappedKey = Layer.lookup(row, col);
   }
+
+  /* If the key we are dealing with is masked, ignore it until it is released.
+   * When releasing it, clear the mask, so future key events can be handled
+   * appropriately.
+   *
+   * See layers.cpp for an example that masks keys, and the reason why it does
+   * so.
+   */
+  if (KeyboardHardware.isKeyMasked(row, col)) {
+    if (keyToggledOff(keyState)) {
+      KeyboardHardware.unMaskKey(row, col);
+    }
+    return;
+  }
+
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
     mappedKey = (*handler)(mappedKey, row, col, keyState);
