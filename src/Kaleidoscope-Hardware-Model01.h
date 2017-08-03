@@ -30,6 +30,15 @@ class Model01 {
 
   boolean ledPowerFault(void);
 
+  /* Key masking
+   * -----------
+   *
+   * There are situations when one wants to ignore key events for a while, and
+   * mask them out. These functions help do that. In isolation, they do nothing,
+   * plugins and the core firmware is expected to make use of these.
+   *
+   * See `handleKeyswitchEvent` in the Kaleidoscope sources for a use-case.
+   */
   void maskKey(byte row, byte col);
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
