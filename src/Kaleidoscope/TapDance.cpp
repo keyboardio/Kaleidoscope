@@ -41,13 +41,17 @@ byte TapDance::last_tap_dance_col_;
 
 // --- actions ---
 
-void TapDance::interrupt(void) {
+void TapDance::interrupt(byte row, byte col) {
   uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
 
   tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, tap_count_[idx], Interrupt);
   bitWrite(triggered_state_, idx, 1);
 
   end_time_ = 0;
+
+  KeyboardHardware.maskKey(row, col);
+  kaleidoscope::hid::sendKeyboardReport();
+  kaleidoscope::hid::releaseAllKeys();
 
   if (bitRead(pressed_state_, idx))
     return;
@@ -133,6 +137,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
   if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
     if (isTapDance(mapped_key))
       return Key_NoKey;
+
     return mapped_key;
   }
 
@@ -141,8 +146,12 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
       return mapped_key;
 
     if (keyToggledOn(key_state))
-      interrupt();
+      interrupt(row, col);
 
+    if (KeyboardHardware.isKeyMasked(row, col)) {
+      KeyboardHardware.unMaskKey(row, col);
+      return Key_NoKey;
+    }
     return mapped_key;
   }
 
@@ -171,7 +180,7 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
       if (!keyToggledOn(key_state))
         return Key_NoKey;
 
-      interrupt();
+      interrupt(row, col);
     }
   }
 

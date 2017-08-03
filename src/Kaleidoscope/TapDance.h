@@ -61,7 +61,7 @@ class TapDance : public KaleidoscopePlugin {
   static void loopHook(bool is_post_clear);
 
   static Key tap(void);
-  static void interrupt(void);
+  static void interrupt(byte row, byte col);
   static void timeout(void);
   static Key release(uint8_t tap_dance_index);
 };
