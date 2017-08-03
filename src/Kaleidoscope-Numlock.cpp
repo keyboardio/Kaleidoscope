@@ -6,6 +6,7 @@
 byte NumLock_::row = 255, NumLock_::col = 255;
 uint8_t NumLock_::numPadLayer;
 cRGB numpad_color = CRGB(255, 0, 0);
+cRGB off_color = CRGB(0, 0, 0);
 
 NumLock_::NumLock_(void) {
 }
@@ -23,10 +24,11 @@ void NumLock_::loopHook(bool postClear) {
       Key k = Layer.lookup(r, c);
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
-      if ((k != layer_key) || (k.flags != KEY_FLAGS))
-        continue;
-
-      LEDControl.setCrgbAt(r, c, numpad_color);
+      if ((k != layer_key) || (k.flags != KEY_FLAGS)) {
+        LEDControl.setCrgbAt(r, c, off_color);
+      } else {
+        LEDControl.setCrgbAt(r, c, numpad_color);
+      }
     }
   }
 
