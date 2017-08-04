@@ -170,19 +170,23 @@ void OneShot::loopHook(bool is_post_clear) {
     if (hasTimedOut())
       cancel();
 
+    bool is_cancelled = false;
+
     for (uint8_t i = 0; i < 32; i++) {
       if (should_cancel_) {
         if (isSticky(i)) {
           if (should_cancel_stickies_) {
+            is_cancelled = true;
             clearSticky(i);
           }
         } else if (isOneShot(i) && !isPressed(i)) {
+          is_cancelled = true;
           cancelOneShot(i);
         }
       }
     }
 
-    if (should_cancel_) {
+    if (is_cancelled) {
       should_cancel_ = false;
       should_cancel_stickies_ = false;
     }
