@@ -88,7 +88,7 @@ namespace steno {
       NB,
       NC,
       ZR,
-      END,
+      END   = ZR,
     };
   }
 }
