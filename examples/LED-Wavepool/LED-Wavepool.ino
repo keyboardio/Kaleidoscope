@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-LED-Stalker -- Stalk keys pressed by lighting up and fading back the LED under them
- * Copyright (C) 2017  Gergely Nagy
+ * Kaleidoscope-LED-Wavepool
+ * Copyright (C) 2017 Selene Scriven
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-LED-Stalker.h>
+#include <Kaleidoscope-LED-Wavepool.h>
 #include "LED-Off.h"
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -41,12 +41,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  Kaleidoscope.use(&LEDOff, &StalkerEffect);
+  Kaleidoscope.use(&LEDOff, &WavepoolEffect);
 
   Kaleidoscope.setup();
 
-  StalkerEffect.variant = STALKER(BlazingTrail);
-  StalkerEffect.activate();
+  WavepoolEffect.variant = WAVEPOOL(BlazingTrail);
+  WavepoolEffect.activate();
 }
 
 void loop() {

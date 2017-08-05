@@ -1,15 +1,15 @@
-# Kaleidoscope-LED-Stalker
+# Kaleidoscope-LED-Wavepool
 
 ![status][st:experimental] [![Build Status][travis:image]][travis:status]
 
- [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker.svg?branch=master
- [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker
+ [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Wavepool.svg?branch=master
+ [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Wavepool
 
  [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-The `StalkerEffect` plugin provides an interesting new typing experience: the
+The `WavepoolEffect` plugin provides an interesting new typing experience: the
 LEDs light up as you tap keys and play one of the selected effects: a haunting
 trail of ghostly white lights, or a blazing trail of fire.
 
@@ -19,32 +19,32 @@ To use the plugin, one needs to include the header and select the effect.
 
 ```c++
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-LED-Stalker.h>
+#include <Kaleidoscope-LED-Wavepool.h>
 
 void setup (){
-  Kaleidoscope.use(&StalkerEffect);
+  Kaleidoscope.use(&WavepoolEffect);
 
   Kaleidoscope.setup();
 
-  StalkerEffect.variant = STALKER(Haunt, (CRGB(0, 128, 0)));
-  StalkerEffect.activate();
+  WavepoolEffect.variant = WAVEPOOL(Haunt, (CRGB(0, 128, 0)));
+  WavepoolEffect.activate();
 }
 ```
 
 It is recommended to place the activation of the plugin (the `USE_PLUGINS` call)
 as early as possible, so the plugin can catch all relevant key presses. The
-configuration can happen at any time and should use the `STALKER` macro to do so.
+configuration can happen at any time and should use the `WAVEPOOL` macro to do so.
 
 ## Plugin methods
 
-The plugin provides the `StalkerEffect` object, which has the following
+The plugin provides the `WavepoolEffect` object, which has the following
 properties:
 
 ### `.variant`
 
 > Set the effect to use with the plugin. See below for a list.
 >
-> It is recommended to use the `STALKER` macro to declare the effect itself.
+> It is recommended to use the `WAVEPOOL` macro to declare the effect itself.
 
 ### `.stepLength`
 
@@ -55,10 +55,10 @@ properties:
 
 ## Plugin helpers
 
-### `STALKER(effect, params)`
+### `WAVEPOOL(effect, params)`
 
 > Returns an effect, to be used to assign a value the `.variant` property of the
-> `StalkerEffect` object. Any arguments given to the macro are passed on
+> `WavepoolEffect` object. Any arguments given to the macro are passed on
 > to the effect. If the effect takes no arguments, use an empty `params` list.
 
 ## Plugin effects
@@ -84,4 +84,4 @@ The plugin provides the following effects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Stalker/blob/master/examples/LED-Stalker/LED-Stalker.ino
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Wavepool/blob/master/examples/LED-Wavepool/LED-Wavepool.ino
