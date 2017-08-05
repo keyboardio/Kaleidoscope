@@ -177,7 +177,7 @@ void WavepoolEffect::update(void) {
       // with hue wobbling according to height map
       color = hsvToRgb(current_hue + (uint16_t)value + (uint16_t)value,
                        0xff - intensity,
-                       (intensity*5)/3);
+                       intensity*2);
 
       LEDControl.setCrgbAt(r, c, color);
     }
