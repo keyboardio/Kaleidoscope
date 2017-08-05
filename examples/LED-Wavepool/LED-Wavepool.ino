@@ -45,7 +45,6 @@ void setup() {
 
   Kaleidoscope.setup();
 
-  WavepoolEffect.variant = WAVEPOOL(BlazingTrail);
   WavepoolEffect.activate();
 }
 
