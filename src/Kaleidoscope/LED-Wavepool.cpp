@@ -23,9 +23,6 @@ namespace kaleidoscope {
 
 int8_t WavepoolEffect::map_[2][WP_WID*WP_HGT];
 uint8_t WavepoolEffect::page = 0;
-WavepoolEffect::ColorComputer *WavepoolEffect::variant;
-uint16_t WavepoolEffect::step_length = 50;
-uint32_t WavepoolEffect::step_end_time_;
 uint8_t WavepoolEffect::frames_since_event = 0;
 uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
      0,  1,  2,  3,  4,  5,  6,    9, 10, 11, 12, 13, 14, 15,
@@ -111,27 +108,12 @@ void WavepoolEffect::update(void) {
     for (uint8_t x = 0; x < WP_WID; x++) {
       uint8_t offset = (y*WP_WID) + x;
 
-      /*
-      int8_t value;
-      int8_t offsets[] = { -WP_WID, WP_WID, -1, 1, };
-      if (y==0) offsets[0] = 0;
-      else if (y==WP_HGT-1) offsets[1] = 0;
-      if (x==0) offsets[2] = 0;
-      else if (x==WP_WID-1) offsets[3] = 0;
-
-      value = ((oldpg[offset + offsets[0]]
-               +oldpg[offset + offsets[1]]
-               +oldpg[offset + offsets[2]]
-               +oldpg[offset + offsets[3]]
-               ) >> 1)
-               - newpg[offset];
-      */
-
       int16_t value;
       int8_t offsets[] = { -WP_WID,    WP_WID,  -1, 1,
                            -WP_WID-1, -WP_WID+1,
                             WP_WID-1,  WP_WID+1
                          };
+      // don't wrap around edges or go out of bounds
       if (y==0) {
           offsets[0] = 0;
           offsets[4] = 0;
@@ -164,10 +146,6 @@ void WavepoolEffect::update(void) {
                ) >> 2)
                - newpg[offset];
 
-      //value = oldpg[offset];
-      //if (value > 0) value --;
-      //oldpg[offset] = value;
-      //newpg[offset] = value;
       newpg[offset] = value - (value >> 3);
     }
   }
@@ -176,110 +154,26 @@ void WavepoolEffect::update(void) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t offset = (r*COLS) + c;
       int8_t value = oldpg[rc2pos[offset]];
-      uint8_t step;
-      /*
-      if (value < 0) step = 0;
-      else step = value;
-      step <<= 1;
-      */
-      //step = value;
-      //LEDControl.setCrgbAt(r, c, CRGB(step,step,step));
 
       cRGB color;
-
       uint16_t intensity;
+
+      // intensity = abs(value) * 2
       if (value >= 0) intensity = value * 2;
       else intensity = (-value) * 2;
+      // color starts white but gets dimmer and more saturated as it fades,
+      // with hue wobbling according to height map
       color = hsvToRgb(current_hue + (uint16_t)value + (uint16_t)value,
                        0xff - intensity,
                        (intensity*5)/3);
 
       LEDControl.setCrgbAt(r, c, color);
-      //LEDControl.setCrgbAt(r, c, variant->compute(&step));
-      /*
-      if (offset == (now & 63)) {
-          LEDControl.setCrgbAt(r, c, CRGB(100,100,100));
-      } else {
-          LEDControl.setCrgbAt(r, c, CRGB(0,0,0));
-      }
-      */
     }
   }
 
+  // swap pages every frame
   page ^= 1;
 
-}
-
-namespace wavepool {
-
-cRGB Haunt::highlight_color_;
-
-// Haunt
-Haunt::Haunt(const cRGB highlight_color) {
-  highlight_color_ = highlight_color;
-}
-
-cRGB Haunt::compute(uint8_t *step) {
-  cRGB color = CRGB((uint8_t)min(*step * highlight_color_.r / 255, 255),
-                    (uint8_t)min(*step * highlight_color_.g / 255, 255),
-                    (uint8_t)min(*step * highlight_color_.b / 255, 255));
-
-  if (*step >= 0xf0)
-    *step -= 1;
-  else if (*step >= 0x40)
-    *step -= 16;
-  else if (*step >= 32)
-    *step -= 32;
-  else
-    *step = 0;
-
-  return color;
-}
-
-// BlazingTrail
-BlazingTrail::BlazingTrail(void) {
-}
-
-cRGB BlazingTrail::compute(uint8_t *step) {
-  cRGB color;
-
-  if (*step >= 0xff - 30) {
-    color = hsvToRgb(0xff - *step, 255, 255);
-  } else {
-    color = hsvToRgb(30, 255, 255);
-
-    color.r = min(*step * color.r / 255, 255);
-    color.g = min(*step * color.g / 255, 255);
-  }
-
-  if (*step >= 0xf0 - 30)
-    *step -= 1;
-  else if (*step >= 0x40)
-    *step -= 16;
-  else if (*step >= 32)
-    *step -= 32;
-  else
-    *step = 0;
-
-  return color;
-}
-
-// Rainbow
-Rainbow::Rainbow(void) {
-}
-
-cRGB Rainbow::compute(uint8_t *step) {
-  cRGB color;
-
-  uint8_t intensity;
-  if ((*step) <= 127) intensity = (*step) * 2;
-  else intensity = (255 - (*step)) * 2;
-  color = hsvToRgb(intensity,
-                   0xff - intensity,
-                   intensity);
-
-  return color;
-}
 }
 
 }

@@ -40,12 +40,8 @@ class WavepoolEffect : public LEDMode {
   void init(void) final;
   void update(void) final;
 
-  static ColorComputer *variant;
-  static uint16_t step_length;
-
  private:
   static uint8_t frames_since_event;
-  static uint32_t step_end_time_;
   static int8_t map_[2][WP_WID*WP_HGT];
   static uint8_t page;
   static uint8_t positions[WP_HGT*WP_WID];
@@ -54,33 +50,6 @@ class WavepoolEffect : public LEDMode {
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
-namespace wavepool {
-
-class Haunt : public WavepoolEffect::ColorComputer {
- public:
-  explicit Haunt(const cRGB highlight_color);
-  Haunt(void) : Haunt(CRGB(0x40, 0x80, 0x80)) {}
-
-  cRGB compute(uint8_t *step) final;
- private:
-  static cRGB highlight_color_;
-};
-
-class BlazingTrail : public WavepoolEffect::ColorComputer {
- public:
-  BlazingTrail(void);
-
-  cRGB compute(uint8_t *step) final;
-};
-
-class Rainbow : public WavepoolEffect::ColorComputer {
- public:
-  Rainbow(void);
-
-  cRGB compute(uint8_t *step) final;
-};
-
-}
 }
 
 extern kaleidoscope::WavepoolEffect WavepoolEffect;
