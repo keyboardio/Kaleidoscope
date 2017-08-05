@@ -58,8 +58,9 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (KeyboardHardware.isKeyMasked(row, col)) {
     if (keyToggledOff(keyState)) {
       KeyboardHardware.unMaskKey(row, col);
+    } else {
+      return;
     }
-    return;
   }
 
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
