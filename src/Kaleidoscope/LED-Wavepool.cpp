@@ -24,6 +24,8 @@ namespace kaleidoscope {
 int8_t WavepoolEffect::map_[2][WP_WID*WP_HGT];
 uint8_t WavepoolEffect::page = 0;
 uint8_t WavepoolEffect::frames_since_event = 0;
+/* unused
+// map geometric space (14x5) into native keyboard coordinates (16x4)
 uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
      0,  1,  2,  3,  4,  5,  6,    9, 10, 11, 12, 13, 14, 15,
     16, 17, 18, 19, 20, 21, 64,   64, 26, 27, 28, 29, 30, 31,
@@ -31,11 +33,13 @@ uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
     48, 49, 50, 51, 52, 53, 37,   40, 58, 59, 60, 61, 62, 63,
     64, 64,  7, 23, 39, 55, 54,   57, 56, 40, 24,  8, 64, 64,
 };
+*/
+// map native keyboard coordinates (16x4) into geometric space (14x5)
 uint8_t WavepoolEffect::rc2pos[ROWS*COLS] = {
-     0,  1,  2,  3,  4,  5,  6,    58, 67,    7,  8,  9, 10, 11, 12, 13,
-    14, 15, 16, 17, 18, 19, 34,    59, 66,   35, 22, 23, 24, 25, 26, 27,
-    28, 29, 30, 31, 32, 33, 48,    60, 65,   49, 36, 37, 38, 39, 40, 41,
-    42, 43, 44, 45, 46, 47,     62,61,63,64,     50, 51, 52, 53, 54, 55,
+     0,  1,  2,  3,  4,  5,  6,    59, 66,    7,  8,  9, 10, 11, 12, 13,
+    14, 15, 16, 17, 18, 19, 34,    60, 65,   35, 22, 23, 24, 25, 26, 27,
+    28, 29, 30, 31, 32, 33, 48,    61, 64,   49, 36, 37, 38, 39, 40, 41,
+    42, 43, 44, 45, 46, 47,     58,62, 63,67,    50, 51, 52, 53, 54, 55,
 };
 
 WavepoolEffect::WavepoolEffect(void) {
@@ -90,10 +94,15 @@ void WavepoolEffect::update(void) {
   int8_t *oldpg = &map_[page][0];
 
   // rain a bit while idle
-  if ((frames_since_event & 0x1f) == 0x1f) {
+  static uint8_t frames_till_next_drop = 20;
+  if (frames_since_event >= frames_till_next_drop) {
+      frames_till_next_drop = rand() & 0x3f;
+      frames_since_event = 0;
+
       uint8_t x = rand() % WP_WID;
       uint8_t y = rand() % WP_HGT;
       uint8_t rainspot = (y*WP_WID) + x;
+
       oldpg[rainspot] = 0x7f;
       if (y > 0) oldpg[rainspot-WP_WID] = 0x50;
       if (y < (WP_HGT-1)) oldpg[rainspot+WP_WID] = 0x50;
@@ -102,6 +111,7 @@ void WavepoolEffect::update(void) {
   }
 
   // calculate water movement
+  // (originally skipped edges, but this keyboard is too small for that)
   //for (uint8_t y = 1; y < WP_HGT-1; y++) {
   //  for (uint8_t x = 1; x < WP_WID-1; x++) {
   for (uint8_t y = 0; y < WP_HGT; y++) {
@@ -109,7 +119,8 @@ void WavepoolEffect::update(void) {
       uint8_t offset = (y*WP_WID) + x;
 
       int16_t value;
-      int8_t offsets[] = { -WP_WID,    WP_WID,  -1, 1,
+      int8_t offsets[] = { -WP_WID,    WP_WID,
+                                  -1,         1,
                            -WP_WID-1, -WP_WID+1,
                             WP_WID-1,  WP_WID+1
                          };
@@ -150,6 +161,7 @@ void WavepoolEffect::update(void) {
     }
   }
 
+  // draw the water on the keys
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t offset = (r*COLS) + c;

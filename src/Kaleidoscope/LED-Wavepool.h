@@ -44,7 +44,7 @@ class WavepoolEffect : public LEDMode {
   static uint8_t frames_since_event;
   static int8_t map_[2][WP_WID*WP_HGT];
   static uint8_t page;
-  static uint8_t positions[WP_HGT*WP_WID];
+  //static uint8_t positions[WP_HGT*WP_WID];  // unused
   static uint8_t rc2pos[ROWS*COLS];
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
