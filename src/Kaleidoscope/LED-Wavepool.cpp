@@ -116,23 +116,23 @@ void WavepoolEffect::update(void) {
       // don't wrap around edges or go out of bounds
       if (y==0) {
           offsets[0] = 0;
-          offsets[4] = 0;
-          offsets[5] = 0;
+          offsets[4] += WP_WID;
+          offsets[5] += WP_WID;
           }
       else if (y==WP_HGT-1) {
           offsets[1] = 0;
-          offsets[6] = 0;
-          offsets[7] = 0;
+          offsets[6] -= WP_WID;
+          offsets[7] -= WP_WID;
           }
       if (x==0) {
           offsets[2] = 0;
-          offsets[4] = 0;
-          offsets[6] = 0;
+          offsets[4] += 1;
+          offsets[6] += 1;
           }
       else if (x==WP_WID-1) {
           offsets[3] = 0;
-          offsets[5] = 0;
-          offsets[7] = 0;
+          offsets[5] -= 1;
+          offsets[7] -= 1;
           }
 
       value = ((oldpg[offset + offsets[0]]
