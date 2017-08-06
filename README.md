@@ -25,6 +25,7 @@ void setup (){
 
   Kaleidoscope.setup();
 
+  WavepoolEffect.idle_timeout = 5000;  // 5 seconds
   WavepoolEffect.activate();
 }
 ```
@@ -36,6 +37,15 @@ as early as possible, so the plugin can catch all relevant key presses.
 
 The plugin provides the `WavepoolEffect` object, which has the following
 properties:
+
+### `.idle_timeout`
+
+> When to keys are being pressed, light will periodically splash across
+> the keyboard.  This value sets the delay in ms before that starts.
+>
+> To disable the idle animation entirely, set this to 0.
+>
+> Default is 5000 (5 seconds).
 
 ## Dependencies
 

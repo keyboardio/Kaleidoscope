@@ -21,31 +21,27 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-#define WAVEPOOL(v, ...) ({static kaleidoscope::wavepool::v _effect __VA_ARGS__; &_effect;})
-
 #define WP_WID 14
 #define WP_HGT 5
 
 namespace kaleidoscope {
 class WavepoolEffect : public LEDMode {
  public:
-  class ColorComputer {
-   public:
-    virtual cRGB compute(uint8_t *step) = 0;
-  };
-
   WavepoolEffect(void);
 
   void begin(void) final;
   void init(void) final;
   void update(void) final;
 
+  // ms before idle animation starts after last keypress
+  static uint16_t idle_timeout;
+
  private:
   static uint8_t frames_since_event;
-  static int8_t map_[2][WP_WID*WP_HGT];
+  static int8_t surface[2][WP_WID*WP_HGT];
   static uint8_t page;
-  //static uint8_t positions[WP_HGT*WP_WID];  // unused
-  static uint8_t rc2pos[ROWS*COLS];
+  //static PROGMEM const uint8_t positions[WP_HGT*WP_WID];  // unused
+  static PROGMEM const uint8_t rc2pos[ROWS*COLS];
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };

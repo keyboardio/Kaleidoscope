@@ -21,12 +21,13 @@
 
 namespace kaleidoscope {
 
-int8_t WavepoolEffect::map_[2][WP_WID*WP_HGT];
+int8_t WavepoolEffect::surface[2][WP_WID*WP_HGT];
 uint8_t WavepoolEffect::page = 0;
 uint8_t WavepoolEffect::frames_since_event = 0;
+uint16_t WavepoolEffect::idle_timeout = 5000;  // 5 seconds
 /* unused
 // map geometric space (14x5) into native keyboard coordinates (16x4)
-uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
+PROGMEM const uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
      0,  1,  2,  3,  4,  5,  6,    9, 10, 11, 12, 13, 14, 15,
     16, 17, 18, 19, 20, 21, 64,   64, 26, 27, 28, 29, 30, 31,
     32, 33, 34, 35, 36, 37, 22,   25, 42, 43, 44, 45, 46, 47,
@@ -35,7 +36,7 @@ uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
 };
 */
 // map native keyboard coordinates (16x4) into geometric space (14x5)
-uint8_t WavepoolEffect::rc2pos[ROWS*COLS] = {
+PROGMEM const uint8_t WavepoolEffect::rc2pos[ROWS*COLS] = {
      0,  1,  2,  3,  4,  5,  6,    59, 66,    7,  8,  9, 10, 11, 12, 13,
     14, 15, 16, 17, 18, 19, 34,    60, 65,   35, 22, 23, 24, 25, 26, 27,
     28, 29, 30, 31, 32, 33, 48,    61, 64,   49, 36, 37, 38, 39, 40, 41,
@@ -51,7 +52,7 @@ void WavepoolEffect::begin(void) {
 }
 
 void WavepoolEffect::init(void) {
-  memset(map_, 0, sizeof(map_));
+  memset(surface, 0, sizeof(surface));
 }
 
 Key WavepoolEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
@@ -60,7 +61,7 @@ Key WavepoolEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t
 
   if (keyIsPressed(key_state)) {
     uint8_t offset = (row*COLS)+col;
-    map_[page][rc2pos[offset]] = 0x7f;
+    surface[page][pgm_read_byte(rc2pos + offset)] = 0x7f;
     frames_since_event = 0;
   }
 
@@ -90,24 +91,26 @@ void WavepoolEffect::update(void) {
   frames_since_event ++;
 
   // needs two pages of height map to do the calculations
-  int8_t *newpg = &map_[page^1][0];
-  int8_t *oldpg = &map_[page][0];
+  int8_t *newpg = &surface[page^1][0];
+  int8_t *oldpg = &surface[page][0];
 
   // rain a bit while idle
-  static uint8_t frames_till_next_drop = 20;
-  if (frames_since_event >= frames_till_next_drop) {
-      frames_till_next_drop = rand() & 0x3f;
-      frames_since_event = 0;
+  static uint8_t frames_till_next_drop = 0;
+  if (idle_timeout > 0) {
+    if (frames_since_event >= (frames_till_next_drop + (idle_timeout >> 6))) {
+        frames_till_next_drop = rand() & 0x3f;
+        frames_since_event = idle_timeout >> 6;
 
-      uint8_t x = rand() % WP_WID;
-      uint8_t y = rand() % WP_HGT;
-      uint8_t rainspot = (y*WP_WID) + x;
+        uint8_t x = rand() % WP_WID;
+        uint8_t y = rand() % WP_HGT;
+        uint8_t rainspot = (y*WP_WID) + x;
 
-      oldpg[rainspot] = 0x7f;
-      if (y > 0) oldpg[rainspot-WP_WID] = 0x50;
-      if (y < (WP_HGT-1)) oldpg[rainspot+WP_WID] = 0x50;
-      if (x > 0) oldpg[rainspot-1] = 0x50;
-      if (x < (WP_WID-1)) oldpg[rainspot+1] = 0x50;
+        oldpg[rainspot] = 0x7f;
+        if (y > 0) oldpg[rainspot-WP_WID] = 0x50;
+        if (y < (WP_HGT-1)) oldpg[rainspot+WP_WID] = 0x50;
+        if (x > 0) oldpg[rainspot-1] = 0x50;
+        if (x < (WP_WID-1)) oldpg[rainspot+1] = 0x50;
+    }
   }
 
   // calculate water movement
@@ -165,7 +168,7 @@ void WavepoolEffect::update(void) {
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t offset = (r*COLS) + c;
-      int8_t value = oldpg[rc2pos[offset]];
+      int8_t value = oldpg[pgm_read_byte(rc2pos+offset)];
 
       cRGB color;
       uint16_t intensity;
