@@ -27,7 +27,7 @@ namespace kaleidoscope {
 namespace steno {
 class GeminiPR : public KaleidoscopePlugin {
  public:
-  GeminiPR(void) {};
+  GeminiPR(void) {}
 
   void begin(void);
 
