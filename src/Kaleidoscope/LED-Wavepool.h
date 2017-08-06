@@ -44,6 +44,7 @@ class WavepoolEffect : public LEDMode {
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void raindrop(uint8_t x, uint8_t y, int8_t *page);
+  static uint8_t wp_rand();
 };
 
 }

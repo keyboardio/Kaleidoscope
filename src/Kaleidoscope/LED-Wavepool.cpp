@@ -21,6 +21,8 @@
 
 namespace kaleidoscope {
 
+#define MS_PER_FRAME_POW2 6  // one frame every 64 ms
+
 int8_t WavepoolEffect::surface[2][WP_WID*WP_HGT];
 uint8_t WavepoolEffect::page = 0;
 uint8_t WavepoolEffect::frames_since_event = 0;
@@ -74,11 +76,19 @@ void WavepoolEffect::raindrop(uint8_t x, uint8_t y, int8_t *page) {
   if (x < (WP_WID-1)) page[rainspot+1] = 0x60;
 }
 
+// this is a lot smaller than the standard library's rand(),
+// and still looks random-ish
+uint8_t WavepoolEffect::wp_rand() {
+    static uint16_t offset = 0x400;
+    offset = ((offset + 1) & 0x4fff) | 0x400;
+    return (millis()>>MS_PER_FRAME_POW2) + pgm_read_byte(offset);
+}
+
 void WavepoolEffect::update(void) {
 
   // limit the frame rate; one frame every 64 ms
   static uint8_t prev_time = 0;
-  uint8_t now = (millis()>>6) % 0xff;
+  uint8_t now = (millis()>>MS_PER_FRAME_POW2) % 0xff;
   if (now != prev_time) {
       prev_time = now;
   } else {
@@ -88,9 +98,6 @@ void WavepoolEffect::update(void) {
   // rotate the colors over time
   // (side note: it's weird that this is a 16-bit int instead of 8-bit,
   //  but that's what the library function wants)
-  //static uint16_t current_hue = 0;
-  //current_hue ++;
-  //current_hue &= 0xff;
   static uint8_t current_hue = 0;
   current_hue ++;
 
@@ -110,12 +117,14 @@ void WavepoolEffect::update(void) {
       raindrop(prev_x, prev_y, oldpg);
       prev_x = prev_y = -1;
     }
-    if (frames_since_event >= (frames_till_next_drop + (idle_timeout >> 6))) {
-        frames_till_next_drop = 4 + (rand() & 0x3f);
-        frames_since_event = idle_timeout >> 6;
+    if (frames_since_event
+            >= (frames_till_next_drop
+                + (idle_timeout >> MS_PER_FRAME_POW2))) {
+        frames_till_next_drop = 4 + (wp_rand() & 0x3f);
+        frames_since_event = idle_timeout >> MS_PER_FRAME_POW2;
 
-        uint8_t x = rand() % WP_WID;
-        uint8_t y = rand() % WP_HGT;
+        uint8_t x = wp_rand() % WP_WID;
+        uint8_t y = wp_rand() % WP_HGT;
         raindrop(x, y, oldpg);
 
         prev_x = x;
@@ -159,17 +168,13 @@ void WavepoolEffect::update(void) {
           offsets[7] -= 1;
           }
 
-      value = ((oldpg[offset + offsets[0]]
-               +oldpg[offset + offsets[1]]
-               +oldpg[offset + offsets[2]]
-               +oldpg[offset + offsets[3]]
-               +oldpg[offset + offsets[4]]
-               +oldpg[offset + offsets[5]]
-               +oldpg[offset + offsets[6]]
-               +oldpg[offset + offsets[7]]
-               ) >> 2)
-               - newpg[offset];
+      // add up all samples, divide, subtract prev frame's center
+      int8_t *p;
+      for(p=offsets, value=0; p<offsets+8; p++)
+          value += oldpg[offset + (*p)];
+      value = (value >> 2) - newpg[offset];
 
+      // reduce intensity gradually over time
       newpg[offset] = value - (value >> 3);
     }
   }
@@ -178,22 +183,17 @@ void WavepoolEffect::update(void) {
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t offset = (r*COLS) + c;
-      int8_t value = oldpg[pgm_read_byte(rc2pos+offset)];
+      int8_t height = oldpg[pgm_read_byte(rc2pos+offset)];
 
-      uint16_t intensity;
-      intensity = abs(value) * 2;
-      if (intensity > 254) intensity = 254;
+      uint8_t intensity = abs(height) * 2;
 
       // color starts white but gets dimmer and more saturated as it fades,
       // with hue wobbling according to height map
-      int16_t hue = current_hue;
-      hue = hue + value + (value>>1);
-      hue = hue & 0xff;
+      int16_t hue = (current_hue + height + (height>>1)) & 0xff;
 
-      cRGB color;
-      color = hsvToRgb(hue,
-                       0xff - intensity,
-                       intensity*2);
+      cRGB color = hsvToRgb(hue,
+                            0xff - intensity,
+                            ((uint16_t)intensity)*2);
 
       LEDControl.setCrgbAt(r, c, color);
     }
