@@ -64,6 +64,16 @@ Key WavepoolEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t
   return mapped_key;
 }
 
+void WavepoolEffect::raindrop(uint8_t x, uint8_t y, int8_t *page) {
+  uint8_t rainspot = (y*WP_WID) + x;
+
+  page[rainspot] = 0x7f;
+  if (y > 0) page[rainspot-WP_WID] = 0x60;
+  if (y < (WP_HGT-1)) page[rainspot+WP_WID] = 0x60;
+  if (x > 0) page[rainspot-1] = 0x60;
+  if (x < (WP_WID-1)) page[rainspot+1] = 0x60;
+}
+
 void WavepoolEffect::update(void) {
 
   // limit the frame rate; one frame every 64 ms
@@ -92,20 +102,24 @@ void WavepoolEffect::update(void) {
 
   // rain a bit while idle
   static uint8_t frames_till_next_drop = 0;
+  static int8_t prev_x = -1;
+  static int8_t prev_y = -1;
   if (idle_timeout > 0) {
+    // repeat previous raindrop to give it a slightly better effect
+    if (prev_x >= 0) {
+      raindrop(prev_x, prev_y, oldpg);
+      prev_x = prev_y = -1;
+    }
     if (frames_since_event >= (frames_till_next_drop + (idle_timeout >> 6))) {
-        frames_till_next_drop = rand() & 0x3f;
+        frames_till_next_drop = 4 + (rand() & 0x3f);
         frames_since_event = idle_timeout >> 6;
 
         uint8_t x = rand() % WP_WID;
         uint8_t y = rand() % WP_HGT;
-        uint8_t rainspot = (y*WP_WID) + x;
+        raindrop(x, y, oldpg);
 
-        oldpg[rainspot] = 0x7f;
-        if (y > 0) oldpg[rainspot-WP_WID] = 0x50;
-        if (y < (WP_HGT-1)) oldpg[rainspot+WP_WID] = 0x50;
-        if (x > 0) oldpg[rainspot-1] = 0x50;
-        if (x < (WP_WID-1)) oldpg[rainspot+1] = 0x50;
+        prev_x = x;
+        prev_y = y;
     }
   }
 
