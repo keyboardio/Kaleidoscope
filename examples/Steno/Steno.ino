@@ -32,28 +32,28 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
    Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
-              Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+   Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
    Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_Keymap1),
 
   [1] = KEYMAP_STACKED
-  ( XXX    ,XXX   ,XXX   ,XXX   ,XXX   ,XXX    ,S(N6)
-   ,XXX    ,S(N1) ,S(N2) ,S(N3) ,S(N4) ,S(N5)  ,S(ST1)
-   ,S(FN)  ,S(S1) ,S(TL) ,S(PL) ,S(HL) ,S(ST1)
-   ,S(PWR) ,S(S2) ,S(KL) ,S(WL) ,S(RL) ,S(ST2) ,S(ST2)
+  (XXX,    XXX,   XXX,   XXX,   XXX,   XXX,   S(N6),
+   XXX,    S(N1), S(N2), S(N3), S(N4), S(N5), S(ST1),
+   S(FN),  S(S1), S(TL), S(PL), S(HL), S(ST1),
+   S(PWR), S(S2), S(KL), S(WL), S(RL), S(ST2), S(ST2),
 
-   ,S(RE1) ,XXX   ,S(A)  ,S(O)
-   ,___
+   S(RE1), XXX, S(A), S(O),
+   ___,
 
-   ,S(N7)  ,XXX    ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
-   ,S(ST3) ,S(N8)  ,S(N9) ,S(NA) ,S(NB) ,S(NC) ,XXX
-           ,S(ST3) ,S(FR) ,S(PR) ,S(LR) ,S(TR) ,S(DR)
-   ,S(ST4) ,S(ST4) ,S(RR) ,S(BR) ,S(GR) ,S(SR) ,S(ZR)
+   S(N7),  XXX,    XXX,   XXX,   XXX,   XXX,   XXX,
+   S(ST3), S(N8),  S(N9), S(NA), S(NB), S(NC), XXX,
+   S(ST3), S(FR),  S(PR), S(LR), S(TR), S(DR),
+   S(ST4), S(ST4), S(RR), S(BR), S(GR), S(SR), S(ZR),
 
-   ,S(E)   ,S(U)   ,XXX   ,S(RE2)
-   ,___),
+   S(E), S(U), XXX, S(RE2),
+   ___),
 };
 
 void setup() {

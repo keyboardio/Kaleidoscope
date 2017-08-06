@@ -25,72 +25,72 @@
 
 namespace kaleidoscope {
 namespace steno {
-  class GeminiPR : public KaleidoscopePlugin {
-  public:
-    GeminiPR(void) {};
+class GeminiPR : public KaleidoscopePlugin {
+ public:
+  GeminiPR(void) {};
 
-    void begin(void);
+  void begin(void);
 
-  private:
-    static uint8_t keys_held_;
-    static uint8_t state_[6];
+ private:
+  static uint8_t keys_held_;
+  static uint8_t state_[6];
 
-    static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  };
+  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+};
 
-  namespace geminipr {
-    enum {
-      START = kaleidoscope::ranges::STENO_START,
-      FN    = START,
-      NUM,
-      N1    = NUM,
-      N2,
-      N3,
-      N4,
-      N5,
-      N6,
-      SL,
-      S1    = SL,
-      S2,
-      TL,
-      KL,
-      PL,
-      WL,
-      HL,
-      RL,
-      A,
-      O,
-      STR,
-      ST1   = STR,
-      ST2,
-      RES1,
-      RE1   = RES1,
-      RES2,
-      RE2   = RES2,
-      PWR,
-      ST3,
-      ST4,
-      E,
-      U,
-      FR,
-      RR,
-      PR,
-      BR,
-      LR,
-      GR,
-      TR,
-      SR,
-      DR,
-      N7,
-      N8,
-      N9,
-      NA,
-      NB,
-      NC,
-      ZR,
-      END   = ZR,
-    };
-  }
+namespace geminipr {
+enum {
+  START = kaleidoscope::ranges::STENO_START,
+  FN    = START,
+  NUM,
+  N1    = NUM,
+  N2,
+  N3,
+  N4,
+  N5,
+  N6,
+  SL,
+  S1    = SL,
+  S2,
+  TL,
+  KL,
+  PL,
+  WL,
+  HL,
+  RL,
+  A,
+  O,
+  STR,
+  ST1   = STR,
+  ST2,
+  RES1,
+  RE1   = RES1,
+  RES2,
+  RE2   = RES2,
+  PWR,
+  ST3,
+  ST4,
+  E,
+  U,
+  FR,
+  RR,
+  PR,
+  BR,
+  LR,
+  GR,
+  TR,
+  SR,
+  DR,
+  N7,
+  N8,
+  N9,
+  NA,
+  NB,
+  NC,
+  ZR,
+  END   = ZR,
+};
+}
 }
 }
 
