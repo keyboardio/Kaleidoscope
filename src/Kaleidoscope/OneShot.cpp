@@ -93,15 +93,15 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
     if (keyToggledOff(key_state)) {
       clearPressed(idx);
+
+      if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST) {
+        should_mask_on_interrupt_ = true;
+      }
     } else if (keyToggledOn(key_state)) {
       start_time_ = millis();
       setPressed(idx);
       setOneShot(idx);
       saveAsPrevious(mapped_key);
-
-      if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST) {
-        should_mask_on_interrupt_ = true;
-      }
 
       activateOneShot(idx);
     }
