@@ -40,7 +40,7 @@ namespace steno {
 
   namespace geminipr {
     enum {
-      START = kaleidoscope::ranges::KALEIDOSCOPE_SAFE_START,
+      START = kaleidoscope::ranges::STENO_START,
       FN    = START,
       NUM,
       N1    = NUM,
