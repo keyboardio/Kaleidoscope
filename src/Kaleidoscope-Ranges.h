@@ -22,7 +22,8 @@ namespace kaleidoscope {
 namespace ranges {
 
 enum {
-  KALEIDOSCOPE_FIRST = 0xc000,
+  FIRST       = 0xc000,
+  KALEIDOSCOPE_FIRST = FIRST,
   OS_FIRST,
   OSM_FIRST   = OS_FIRST,
   OSM_LAST    = OSM_FIRST + 7,
@@ -46,7 +47,8 @@ enum {
   STENO_FIRST,
   STENO_LAST  = STENO_FIRST + 42,
 
-  KALEIDOSCOPE_SAFE_START,
+  SAFE_START,
+  KALEIDOSCOPE_SAFE_START = SAFE_START
 };
 
 }
