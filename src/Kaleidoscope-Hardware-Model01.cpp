@@ -5,8 +5,8 @@
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
 bool Model01::isLEDChanged = true;
-uint8_t Model01::leftHandMask[4];
-uint8_t Model01::rightHandMask[4];
+keydata_t Model01::leftHandMask;
+keydata_t Model01::rightHandMask;
 
 static constexpr uint8_t key_led_map[4][16] = {
   {3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60},
@@ -209,9 +209,9 @@ void Model01::maskKey(byte row, byte col) {
     return;
 
   if (col >= 8) {
-    rightHandMask[row] |= 1 << (7 - (col - 8));
+    rightHandMask.rows[row] |= 1 << (7 - (col - 8));
   } else {
-    leftHandMask[row] |= 1 << (7 - col);
+    leftHandMask.rows[row] |= 1 << (7 - col);
   }
 }
 
@@ -220,9 +220,9 @@ void Model01::unMaskKey(byte row, byte col) {
     return;
 
   if (col >= 8) {
-    rightHandMask[row] &= ~(1 << (7 - (col - 8)));
+    rightHandMask.rows[row] &= ~(1 << (7 - (col - 8)));
   } else {
-    leftHandMask[row] &= ~(1 << (7 - col));
+    leftHandMask.rows[row] &= ~(1 << (7 - col));
   }
 }
 
@@ -231,15 +231,15 @@ bool Model01::isKeyMasked(byte row, byte col) {
     return false;
 
   if (col >= 8) {
-    return rightHandMask[row] & (1 << (7 - (col - 8)));
+    return rightHandMask.rows[row] & (1 << (7 - (col - 8)));
   } else {
-    return leftHandMask[row] & (1 << (7 - col));
+    return leftHandMask.rows[row] & (1 << (7 - col));
   }
 }
 
 void Model01::maskHeldKeys(void) {
-  memcpy(leftHandMask, leftHandState.rows, sizeof(leftHandMask));
-  memcpy(rightHandMask, rightHandState.rows, sizeof(rightHandMask));
+  memcpy(leftHandMask.rows, leftHandState.rows, sizeof(leftHandMask));
+  memcpy(rightHandMask.rows, rightHandState.rows, sizeof(rightHandMask));
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
