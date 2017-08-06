@@ -45,6 +45,7 @@ void setup() {
 
   Kaleidoscope.setup();
 
+  WavepoolEffect.idle_timeout = 5000;  // 5 seconds
   WavepoolEffect.activate();
 }
 
