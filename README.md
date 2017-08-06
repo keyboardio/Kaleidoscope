@@ -56,4 +56,4 @@ properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Wavepool/blob/master/examples/LED-Wavepool/LED-Wavepool.ino
+ [plugin:example]: https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool/blob/master/examples/LED-Wavepool/LED-Wavepool.ino
