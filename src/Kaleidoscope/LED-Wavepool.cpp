@@ -166,15 +166,18 @@ void WavepoolEffect::update(void) {
       uint8_t offset = (r*COLS) + c;
       int8_t value = oldpg[pgm_read_byte(rc2pos+offset)];
 
-      cRGB color;
       uint16_t intensity;
+      intensity = abs(value) * 2;
+      if (intensity > 254) intensity = 254;
 
-      // intensity = abs(value) * 2
-      if (value >= 0) intensity = value * 2;
-      else intensity = (-value) * 2;
       // color starts white but gets dimmer and more saturated as it fades,
       // with hue wobbling according to height map
-      color = hsvToRgb(current_hue + (uint16_t)value + (uint16_t)value,
+      int16_t hue = current_hue;
+      hue = hue + value + (value>>1);
+      hue = hue & 0xff;
+
+      cRGB color;
+      color = hsvToRgb(hue,
                        0xff - intensity,
                        intensity*2);
 
