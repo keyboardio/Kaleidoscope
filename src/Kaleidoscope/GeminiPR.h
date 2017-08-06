@@ -40,7 +40,7 @@ class GeminiPR : public KaleidoscopePlugin {
 
 namespace geminipr {
 enum {
-  START = kaleidoscope::ranges::STENO_START,
+  START = kaleidoscope::ranges::STENO_FIRST,
   FN    = START,
   NUM,
   N1    = NUM,
