@@ -51,10 +51,6 @@ void WavepoolEffect::begin(void) {
   LEDMode::begin();
 }
 
-void WavepoolEffect::init(void) {
-  memset(surface, 0, sizeof(surface));
-}
-
 Key WavepoolEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (row >= ROWS || col >= COLS)
     return mapped_key;

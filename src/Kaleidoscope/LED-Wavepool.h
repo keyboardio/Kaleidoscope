@@ -30,7 +30,6 @@ class WavepoolEffect : public LEDMode {
   WavepoolEffect(void);
 
   void begin(void) final;
-  void init(void) final;
   void update(void) final;
 
   // ms before idle animation starts after last keypress
