@@ -87,12 +87,6 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
   if (!state_.all) {
     if (!isOS(mapped_key)) {
-      if (KeyboardHardware.isKeyMasked(row, col)) {
-        if (keyToggledOff(key_state))
-          KeyboardHardware.unMaskKey(row, col);
-        return Key_NoKey;
-      }
-
       return mapped_key;
     }
 
