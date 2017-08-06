@@ -209,9 +209,9 @@ void Model01::maskKey(byte row, byte col) {
     return;
 
   if (col >= 8) {
-    rightHandMask[row] |= 1 << (col - 8);
+    rightHandMask[row] |= 1 << (7 - (col - 8));
   } else {
-    leftHandMask[row] |= 1 << (col);
+    leftHandMask[row] |= 1 << (7 - col);
   }
 }
 
@@ -220,9 +220,9 @@ void Model01::unMaskKey(byte row, byte col) {
     return;
 
   if (col >= 8) {
-    rightHandMask[row] &= ~(1 << (col - 8));
+    rightHandMask[row] &= ~(1 << (7 - (col - 8)));
   } else {
-    leftHandMask[row] &= ~(1 << col);
+    leftHandMask[row] &= ~(1 << (7 - col));
   }
 }
 
@@ -231,21 +231,15 @@ bool Model01::isKeyMasked(byte row, byte col) {
     return false;
 
   if (col >= 8) {
-    return rightHandMask[row] & (1 << (col - 8));
+    return rightHandMask[row] & (1 << (7 - (col - 8)));
   } else {
-    return leftHandMask[row] & (1 << col);
+    return leftHandMask[row] & (1 << (7 - col));
   }
 }
 
 void Model01::maskHeldKeys(void) {
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS / 2; col++) {
-      if (leftHandState.all & SCANBIT(row, col))
-        leftHandMask[row] |= 1 << col;
-      if (rightHandState.all & SCANBIT(row, col))
-        rightHandMask[row] |= 1 << col;
-    }
-  }
+  memcpy(leftHandMask, leftHandState.rows, sizeof(leftHandMask));
+  memcpy(rightHandMask, rightHandState.rows, sizeof(rightHandMask));
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
