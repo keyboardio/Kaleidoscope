@@ -54,8 +54,8 @@ class Model01 {
   static KeyboardioScanner leftHand;
   static KeyboardioScanner rightHand;
 
-  static uint32_t leftHandMask;
-  static uint32_t rightHandMask;
+  static uint8_t leftHandMask[4];
+  static uint8_t rightHandMask[4];
 };
 
 #define SCANBIT(row,col) ((uint32_t)1 << ((row) * 8 + (7 - (col))))
