@@ -81,7 +81,7 @@ void OneShot::cancelOneShot(uint8_t idx) {
 }
 
 Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  uint8_t idx;
+  uint8_t idx = mapped_key.raw - ranges::OS_FIRST;
 
   if (key_state & INJECTED)
     return mapped_key;
@@ -91,7 +91,6 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
       return mapped_key;
     }
 
-    idx = mapped_key.raw - ranges::OS_FIRST;
     if (keyToggledOff(key_state)) {
       clearPressed(idx);
     } else if (keyToggledOn(key_state)) {
@@ -114,8 +113,6 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     return mapped_key;
 
   if (isOS(mapped_key)) {
-    idx = mapped_key.raw - ranges::OS_FIRST;
-
     if (isSticky(idx)) {
       if (keyToggledOn(key_state)) {  // maybe on _off instead?
         saveAsPrevious(mapped_key);
