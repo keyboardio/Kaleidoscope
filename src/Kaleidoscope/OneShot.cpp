@@ -31,6 +31,7 @@ OneShot::state_t OneShot::pressed_state_;
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
+bool OneShot::should_mask_on_interrupt_ = false;
 
 // --- helper macros ------
 
@@ -99,6 +100,10 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
       setOneShot(idx);
       saveAsPrevious(mapped_key);
 
+      if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST) {
+        should_mask_on_interrupt_ = true;
+      }
+
       activateOneShot(idx);
     }
 
@@ -148,7 +153,8 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
   // ordinary key here, with some event
 
   if (keyIsPressed(key_state)) {
-    KeyboardHardware.maskKey(row, col);
+    if (should_mask_on_interrupt_)
+      KeyboardHardware.maskKey(row, col);
     saveAsPrevious(mapped_key);
     should_cancel_ = true;
   }
@@ -183,6 +189,7 @@ void OneShot::loopHook(bool is_post_clear) {
     if (is_cancelled) {
       should_cancel_ = false;
       should_cancel_stickies_ = false;
+      should_mask_on_interrupt_ = false;
     }
   } else {
     for (uint8_t i = 0; i < 8; i++) {

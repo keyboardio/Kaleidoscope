@@ -59,6 +59,7 @@ class OneShot : public KaleidoscopePlugin {
   static Key prev_key_;
   static bool should_cancel_;
   static bool should_cancel_stickies_;
+  static bool should_mask_on_interrupt_;
 
   static void injectNormalKey(uint8_t idx, uint8_t key_state);
   static void activateOneShot(uint8_t idx);
