@@ -6,7 +6,7 @@ static uint32_t LayerState;
 uint8_t Layer_::highestLayer;
 Key Layer_::keyMap[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
-bool Layer_::repeat_first_press = false;
+bool Layer_::repeat_first_press = true;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
