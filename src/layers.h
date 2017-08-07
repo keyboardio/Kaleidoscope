@@ -30,11 +30,13 @@ class Layer_ {
 
   static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
 
+  static void updateKeyCache(byte row, byte col);
+
+  static bool repeat_first_press;
+
  private:
   static uint8_t highestLayer;
   static uint8_t keyMap[ROWS][COLS];
-
-  static void mergeLayers(void);
 };
 
 Key layer_getKey(uint8_t layer, uint8_t r, uint8_t c);

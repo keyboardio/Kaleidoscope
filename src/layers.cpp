@@ -6,6 +6,7 @@ static uint32_t LayerState;
 uint8_t Layer_::highestLayer;
 uint8_t Layer_::keyMap[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+bool Layer_::repeat_first_press = false;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
@@ -44,7 +45,8 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        * ignore held keys after releasing a layer key, until they are pressed
        * again, to avoid the aforementioned issue.
        */
-      KeyboardHardware.maskHeldKeys();
+      if (!Layer.repeat_first_press)
+        KeyboardHardware.maskHeldKeys();
     }
 
     // switch keymap and stay there
@@ -79,27 +81,16 @@ Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
 }
 
 void
-Layer_::mergeLayers(void) {
+Layer_::updateKeyCache(byte row, byte col) {
+  int8_t layer = highestLayer;
 
-  memset(keyMap, DefaultLayer, ROWS * COLS);
+  for (layer = highestLayer; layer >= DefaultLayer; layer--) {
+    if (Layer.isOn(layer)) {
+      Key mappedKey = (*getKey)(layer, row, col);
 
-  if (LayerState == (uint32_t)(1 << DefaultLayer))
-    return;
-
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      int8_t layer = highestLayer;
-
-      while (layer > DefaultLayer) {
-        if (Layer.isOn(layer)) {
-          Key mappedKey = (*getKey)(layer, r, c);
-
-          if (mappedKey != Key_Transparent) {
-            keyMap[r][c] = layer;
-            break;
-          }
-        }
-        layer--;
+      if (mappedKey != Key_Transparent) {
+        keyMap[row][col] = layer;
+        break;
       }
     }
   }
@@ -128,14 +119,12 @@ void Layer_::on(uint8_t layer) {
   bitSet(LayerState, layer);
   if (layer > highestLayer)
     highestLayer = layer;
-  mergeLayers();
 }
 
 void Layer_::off(uint8_t layer) {
   bitClear(LayerState, layer);
   if (layer == highestLayer)
     highestLayer = top();
-  mergeLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {

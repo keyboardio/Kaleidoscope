@@ -44,9 +44,8 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
 }
 
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  if (!(keyState & INJECTED)) {
-    mappedKey = Layer.lookup(row, col);
-  }
+  if (keyToggledOn(keyState) || keyToggledOff(keyState))
+    Layer.updateKeyCache(row, col);
 
   /* If the key we are dealing with is masked, ignore it until it is released.
    * When releasing it, clear the mask, so future key events can be handled
@@ -61,6 +60,10 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
     } else {
       return;
     }
+  }
+
+  if (!(keyState & INJECTED)) {
+    mappedKey = Layer.lookup(row, col);
   }
 
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
