@@ -4,7 +4,7 @@ static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
 uint8_t Layer_::highestLayer;
-uint8_t Layer_::keyMap[ROWS][COLS];
+Key Layer_::keyMap[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 bool Layer_::repeat_first_press = false;
 
@@ -89,17 +89,11 @@ Layer_::updateKeyCache(byte row, byte col) {
       Key mappedKey = (*getKey)(layer, row, col);
 
       if (mappedKey != Key_Transparent) {
-        keyMap[row][col] = layer;
+        keyMap[row][col] = mappedKey;
         break;
       }
     }
   }
-}
-
-Key Layer_::lookup(byte row, byte col) {
-  uint8_t layer = keyMap[row][col];
-
-  return (*getKey)(layer, row, col);
 }
 
 uint8_t Layer_::top(void) {
