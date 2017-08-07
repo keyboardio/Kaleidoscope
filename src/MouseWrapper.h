@@ -22,11 +22,6 @@
 
 // Mouse acceleration
 
-// we want the whole s curve, not just the bit
-// that's usually above the x and y axes;
-#define ACCELERATION_FLOOR 2
-#define ACCELERATION_CEIL 50
-
 class MouseWrapper_ {
  public:
   MouseWrapper_(void);
@@ -37,6 +32,7 @@ class MouseWrapper_ {
   static void pressButton(uint8_t button);
   static void release_button(uint8_t button);
   static uint8_t accelStep;
+  static uint8_t speedLimit;
 
  private:
   static uint16_t next_width;
