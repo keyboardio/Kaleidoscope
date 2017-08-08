@@ -34,8 +34,6 @@ class Layer_ {
 
   static void updateKeyCache(byte row, byte col);
 
-  static bool repeat_first_press;
-
  private:
   static uint8_t highestLayer;
   static Key keyMap[ROWS][COLS];
