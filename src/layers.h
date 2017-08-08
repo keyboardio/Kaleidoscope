@@ -10,7 +10,7 @@ class Layer_ {
 
   static Key lookup(byte row, byte col) {
     return keyMap[row][col];
-  };
+  }
   static void on(uint8_t layer);
   static void off(uint8_t layer);
   static void move(uint8_t layer);
