@@ -116,7 +116,7 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
 
   end_warping();
   // move by whole pixels, not subpixels
-  kaleidoscope::hid::moveMouse(moveX>>4, moveY>>4, 0);
+  kaleidoscope::hid::moveMouse(moveX >> 4, moveY >> 4, 0);
   // save leftover subpixel movements for later
   remainderX = moveX & 0x0f;
   remainderY = moveY & 0x0f;
