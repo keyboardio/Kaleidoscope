@@ -7,10 +7,10 @@
 uint8_t MouseKeys_::mouseMoveIntent;
 
 uint8_t MouseKeys_::speed = 1;
-uint16_t MouseKeys_::speedDelay = 0;
+uint16_t MouseKeys_::speedDelay = 1;
 
 uint8_t MouseKeys_::accelSpeed = 1;
-uint16_t MouseKeys_::accelDelay = 50;
+uint16_t MouseKeys_::accelDelay = 64;
 
 uint8_t MouseKeys_::wheelSpeed = 1;
 uint16_t MouseKeys_::wheelDelay = 50;

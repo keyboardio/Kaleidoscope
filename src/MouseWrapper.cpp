@@ -12,6 +12,7 @@ uint16_t MouseWrapper_::section_left;
 boolean MouseWrapper_::is_warping;
 
 uint8_t MouseWrapper_::accelStep;
+uint8_t MouseWrapper_::speedLimit = 127;
 
 MouseWrapper_::MouseWrapper_(void) {
 }
@@ -79,23 +80,20 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
 }
 
 // cubic wave function based on code from FastLED
+// produces a shape similar to a sine curve from 0 to 255
+// (slow growth at 0, fast growth in the middle, slow growth at 255)
+// http://www.wolframalpha.com/input/?i=((3((x)**2)%2F256)+-+((2((x)(x)(x%2F256))%2F256)))+%2B+1
 uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
-  uint8_t i = cycles;
+  uint16_t i = cycles;
 
-  if (i & 0x80) {
-    i = 255 - i;
-  }
+  uint16_t ii = (i * i) >> 8;
+  uint16_t iii = (ii * i) >> 8;
 
-  i = i << 1;
+  i = ((3 * ii) - (2 * iii)) + 1;
 
-  uint8_t ii = (i * i) >> 8;
-  uint8_t iii = (ii * i) >> 8;
+  // Just in case (may go up to 256 at peak)
+  if (i > 255) i = 255;
 
-  i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + ACCELERATION_FLOOR;
-
-  if (i > ACCELERATION_CEIL) {
-    i = ACCELERATION_CEIL;
-  }
   return i;
 }
 
@@ -103,15 +101,25 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
 void MouseWrapper_::move(int8_t x, int8_t y) {
   int16_t moveX = 0;
   int16_t moveY = 0;
+  static int8_t remainderX = 0;
+  static int8_t remainderY = 0;
   if (x != 0) {
-    moveX = (x * acceleration(accelStep));
+    moveX = remainderX + (x * acceleration(accelStep));
+    if (moveX > (int16_t)speedLimit) moveX = speedLimit;
+    else if (moveX < -(int16_t)speedLimit) moveX = -speedLimit;
   }
   if (y != 0) {
-    moveY = (y * acceleration(accelStep));
+    moveY = remainderY + (y * acceleration(accelStep));
+    if (moveY > (int16_t)speedLimit) moveY = speedLimit;
+    else if (moveY < -(int16_t)speedLimit) moveY = -speedLimit;
   }
 
   end_warping();
-  kaleidoscope::hid::moveMouse(moveX, moveY, 0);
+  // move by whole pixels, not subpixels
+  kaleidoscope::hid::moveMouse(moveX >> 4, moveY >> 4, 0);
+  // save leftover subpixel movements for later
+  remainderX = moveX & 0x0f;
+  remainderY = moveY & 0x0f;
 }
 
 MouseWrapper_ MouseWrapper;
