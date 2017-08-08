@@ -84,6 +84,9 @@ void
 Layer_::updateKeyCache(byte row, byte col) {
   int8_t layer = highestLayer;
 
+  if (row >= ROWS || col >= COLS)
+    return;
+
   for (layer = highestLayer; layer >= DefaultLayer; layer--) {
     if (Layer.isOn(layer)) {
       Key mappedKey = (*getKey)(layer, row, col);
