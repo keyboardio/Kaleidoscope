@@ -30,7 +30,7 @@ ActiveModColorEffect::ActiveModColorEffect(void) {
 }
 
 void ActiveModColorEffect::begin(void) {
-  loop_hook_use(loopHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 bool ActiveModColorEffect::isModifierActive(Key key) {
