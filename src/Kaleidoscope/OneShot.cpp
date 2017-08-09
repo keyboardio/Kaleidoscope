@@ -124,6 +124,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
         clearPressed(idx);
         if ((millis() - start_time_) >= hold_time_out) {
           cancelOneShot(idx);
+          should_cancel_ = false;
         }
       }
 
