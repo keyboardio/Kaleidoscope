@@ -46,6 +46,23 @@ bool ActiveModColorEffect::isModifierActive(Key key) {
   return hid::isModifierKeyActive(key);
 }
 
+bool ActiveModColorEffect::isLayerKeyActive(Key key) {
+  uint8_t layer = 255;
+
+  if (key.raw >= ranges::OSL_FIRST && key.raw <= ranges::OSL_LAST) {
+    layer = key.raw - ranges::OSL_FIRST;
+  } else if (key.flags & (SYNTHETIC | SWITCH_TO_KEYMAP)) {
+    layer = key.keyCode;
+    if (layer >= MOMENTARY_OFFSET)
+      layer -= MOMENTARY_OFFSET;
+  }
+
+  if (layer == 255)
+    return false;
+
+  return Layer.isOn(layer);
+}
+
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
   if (is_post_clear)
     return;
@@ -54,7 +71,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
 
-      if (isModifierActive(k))
+      if (isModifierActive(k) || isLayerKeyActive(k))
         LEDControl.setCrgbAt(r, c, highlight_color);
     }
   }

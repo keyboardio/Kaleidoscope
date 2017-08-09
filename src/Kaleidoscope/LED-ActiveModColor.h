@@ -32,6 +32,7 @@ class ActiveModColorEffect : public KaleidoscopePlugin {
 
  private:
   static bool isModifierActive(Key key);
+  static bool isLayerKeyActive(Key key);
   static void loopHook(bool is_post_clear);
 };
 }
