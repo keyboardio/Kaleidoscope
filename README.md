@@ -11,7 +11,9 @@
 
 With this plugin, any active modifier on the keyboard will have the LED under it
 highlighted. No matter how the modifier got activated (a key press, a macro,
-anything else), the coloring will apply.
+anything else), the coloring will apply. Layer keys, be them layer toggles,
+momentary switches, or one-shot layer keys count as modifiers as far as the
+plugin is concerned.
 
 ## Using the plugin
 
@@ -23,19 +25,19 @@ is also possible to use a custom color instead of the white default.
 #include <Kaleidoscope-LED-ActiveModColor.h>
 
 void setup () {
-  USE_PLUGINS(&ActiveModColorEffect);
-  
+  Kaleidoscope.use(&ActiveModColorEffect);
+
   Kaleidoscope.setup ();
-  
+
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
 }
 ```
 
-It is recommended to place the activation (the `USE_PLUGINS` call) of the plugin
-last, so that it can reliably override any other plugins that may work with the
-LEDs, and apply the highlight over those.
+It is recommended to place the activation (the `Kaleidoscope.use` call) of the
+plugin last, so that it can reliably override any other plugins that may work
+with the LEDs, and apply the highlight over those.
 
-## Plugin methods
+## Plugin properties
 
 The plugin provides the `ActiveModColorEffect` object, which has the following
 property:
