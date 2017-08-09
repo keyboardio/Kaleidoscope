@@ -33,7 +33,7 @@ void ActiveModColorEffect::begin(void) {
   loop_hook_use(loopHook);
 }
 
-bool ActiveModColorEffect::isModifier(Key key) {
+bool ActiveModColorEffect::isModifierActive(Key key) {
   if (key.raw >= ranges::OSM_FIRST && key.raw <= ranges::OSM_LAST) {
     uint8_t idx = key.raw - ranges::OSM_FIRST;
     key.flags = 0;
@@ -43,7 +43,7 @@ bool ActiveModColorEffect::isModifier(Key key) {
   if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
     return false;
 
-  return true;
+  return hid::isModifierKeyActive(key);
 }
 
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
@@ -54,7 +54,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
 
-      if (isModifier(k) && hid::isModifierKeyActive(k))
+      if (isModifierActive(k))
         LEDControl.setCrgbAt(r, c, highlight_color);
     }
   }
