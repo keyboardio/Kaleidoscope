@@ -33,6 +33,19 @@ void ActiveModColorEffect::begin(void) {
   loop_hook_use(loopHook);
 }
 
+bool ActiveModColorEffect::isModifier(Key key) {
+  if (key.raw >= ranges::OSM_FIRST && key.raw <= ranges::OSM_LAST) {
+    uint8_t idx = key.raw - ranges::OSM_FIRST;
+    key.flags = 0;
+    key.keyCode = Key_LeftControl.keyCode + idx;
+  }
+
+  if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
+    return false;
+
+  return true;
+}
+
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
   if (is_post_clear)
     return;
@@ -41,13 +54,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
 
-      if (k.raw >= ranges::OSM_FIRST && k.raw <= ranges::OSM_LAST) {
-        uint8_t idx = k.raw - ranges::OSM_FIRST;
-        k.flags = 0;
-        k.keyCode = Key_LeftControl.keyCode + idx;
-      }
-
-      if (k.raw < Key_LeftControl.raw || k.raw > Key_RightGui.raw)
+      if (!isModifier(k))
         continue;
 
       if (hid::isModifierKeyActive(k))
