@@ -51,8 +51,7 @@ bool ActiveModColorEffect::isLayerKeyActive(Key key) {
 
   if (key.raw >= ranges::OSL_FIRST && key.raw <= ranges::OSL_LAST) {
     layer = key.raw - ranges::OSL_FIRST;
-  } else if ((key.flags & (SYNTHETIC | SWITCH_TO_KEYMAP)) &&
-             !(key.flags & RESERVED)) {
+  } else if (key.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
     layer = key.keyCode;
     if (layer >= MOMENTARY_OFFSET)
       layer -= MOMENTARY_OFFSET;
