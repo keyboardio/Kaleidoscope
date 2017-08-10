@@ -41,7 +41,7 @@ plugin:
 OSM(LeftControl), OSL(_FN)
 
 void setup() {
-  USE_PLUGINS(&OneShot);
+  Kaleidoscope.use(&OneShot);
 
   Kaleidoscope.setup();
 }
@@ -68,7 +68,7 @@ There are two macros the plugin provides:
 ## Plugin methods
 
 The plugin provides one object, `OneShot`, which implements both one-shot
-modifiers and one-shot layer keys. It has the following methods and properties:
+modifiers and one-shot layer keys. It has the following methods:
 
 ### `.isActive()`
 
@@ -93,6 +93,11 @@ modifiers and one-shot layer keys. It has the following methods and properties:
 > The optional `with_stickies` argument, if set to `true`, will also cancel
 > sticky one-shot effects. If omitted, it defaults to `false`, and not canceling
 > stickies.
+
+## Plugin properties
+
+Along with the methods listed above, the `OneShot` object has the following
+properties too:
 
 ### `.time_out`
 
