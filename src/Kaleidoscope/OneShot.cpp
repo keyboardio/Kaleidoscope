@@ -25,6 +25,7 @@ namespace kaleidoscope {
 uint32_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
+bool OneShot::double_tap_sticky = true;
 OneShot::state_t OneShot::state_;
 OneShot::state_t OneShot::sticky_state_;
 OneShot::state_t OneShot::pressed_state_;
@@ -130,7 +131,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
       if (keyToggledOn(key_state)) {
         setPressed(idx);
-        if (isSameAsPrevious(mapped_key)) {
+        if (isSameAsPrevious(mapped_key) && double_tap_sticky) {
           setSticky(idx);
 
           saveAsPrevious(mapped_key);

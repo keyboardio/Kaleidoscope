@@ -20,7 +20,8 @@ still act as normal when held, that behaviour is not lost.
 Furthermore, if a one-shot key is tapped two times in quick succession, it
 becomes sticky, and remains active until disabled with a third tap. This can be
 useful when one needs to input a number of keys with the modifier or layer
-active, and still does not wish to hold the key down.
+active, and still does not wish to hold the key down. If this feature is
+undesirable, unset the `OneShot.double_tap_sticky` property (see later).
 
 To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain
 active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
@@ -48,7 +49,7 @@ void setup() {
 
 ## Keymap markup
 
-There are two macros the plugin provides: 
+There are two macros the plugin provides:
 
 ### `OSM(mod)`
 
@@ -110,6 +111,15 @@ modifiers and one-shot layer keys. It has the following methods and properties:
 > effect.
 >
 > Defaults to 200.
+
+### `.double_tap_sticky`
+
+> Set this boolean property to make the plugin treat a double-tap of a one-shot
+> key as making it sticky until a third tap. Setting it to `false` disables this
+> behaviour, in which case double-tapping a one-shot modifier will just restart
+> the timer.
+>
+> Defaults to `true`.
 
 ## Dependencies
 
