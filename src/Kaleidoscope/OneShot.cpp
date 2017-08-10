@@ -205,8 +205,8 @@ OneShot::OneShot(void) {
 }
 
 void OneShot::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
-  loop_hook_use(loopHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 bool OneShot::isActive(void) {
