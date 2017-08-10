@@ -17,7 +17,6 @@ class Model01 {
   void setCrgbAt(byte row, byte col, cRGB color);
   void setCrgbAt(uint8_t i, cRGB crgb);
   cRGB getCrgbAt(uint8_t i);
-  cRGB getKeyColor(byte row, byte col);
   uint8_t getLedIndex(byte row, byte col);
 
   void scanMatrix(void);
