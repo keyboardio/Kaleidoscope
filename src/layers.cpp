@@ -106,6 +106,9 @@ void Layer_::on(uint8_t layer) {
   bitSet(LayerState, layer);
   if (layer > highestLayer)
     highestLayer = layer;
+
+  // Update the key cache, so that if anything depends on knowing the active
+  // layout, the layout will be in sync.
   updateKeyCache();
 }
 
@@ -113,6 +116,9 @@ void Layer_::off(uint8_t layer) {
   bitClear(LayerState, layer);
   if (layer == highestLayer)
     highestLayer = top();
+
+  // Update the key cache, so that if anything depends on knowing the active
+  // layout, the layout will be in sync.
   updateKeyCache();
 }
 

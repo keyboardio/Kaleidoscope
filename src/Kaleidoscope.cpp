@@ -14,6 +14,8 @@ Kaleidoscope_::setup(void) {
 
   // A workaround, so that the compiler does not optimize this out...
   handleKeyswitchEvent(Key_NoKey, 255, 255, 0);
+
+  // Update the key cache, so we start with a non-empty state.
   Layer.updateKeyCache();
 }
 
