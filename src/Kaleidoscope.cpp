@@ -14,7 +14,7 @@ Kaleidoscope_::setup(void) {
 
   // A workaround, so that the compiler does not optimize handleKeyswitchEvent out...
   // This is a no-op, but tricks the compiler into not being too helpful
-  // TODO: figure out how to hint the compiler in a more reasonable way
+  // TODO(anyone): figure out how to hint the compiler in a more reasonable way
   handleKeyswitchEvent(Key_NoKey, 255, 255, 0);
 
   // Update the keymap cache, so we start with a non-empty state.
