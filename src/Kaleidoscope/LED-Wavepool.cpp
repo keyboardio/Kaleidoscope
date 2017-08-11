@@ -21,22 +21,15 @@
 
 namespace kaleidoscope {
 
-#define MS_PER_FRAME_POW2 6  // one frame every 64 ms
+#define INTERPOLATE  // smoother, slower animation
+#define MS_PER_FRAME 40  // 40 = 25 fps
+#define FRAMES_PER_DROP 120  // max time between raindrops during idle animation
 
 int8_t WavepoolEffect::surface[2][WP_WID*WP_HGT];
 uint8_t WavepoolEffect::page = 0;
 uint8_t WavepoolEffect::frames_since_event = 0;
 uint16_t WavepoolEffect::idle_timeout = 5000;  // 5 seconds
-/* unused
-// map geometric space (14x5) into native keyboard coordinates (16x4)
-PROGMEM const uint8_t WavepoolEffect::positions[WP_HGT*WP_WID] = {
-     0,  1,  2,  3,  4,  5,  6,    9, 10, 11, 12, 13, 14, 15,
-    16, 17, 18, 19, 20, 21, 64,   64, 26, 27, 28, 29, 30, 31,
-    32, 33, 34, 35, 36, 37, 22,   25, 42, 43, 44, 45, 46, 47,
-    48, 49, 50, 51, 52, 53, 37,   40, 58, 59, 60, 61, 62, 63,
-    64, 64,  7, 23, 39, 55, 54,   57, 56, 40, 24,  8, 64, 64,
-};
-*/
+
 // map native keyboard coordinates (16x4) into geometric space (14x5)
 PROGMEM const uint8_t WavepoolEffect::rc2pos[ROWS*COLS] = {
      0,  1,  2,  3,  4,  5,  6,    59, 66,    7,  8,  9, 10, 11, 12, 13,
@@ -81,14 +74,14 @@ void WavepoolEffect::raindrop(uint8_t x, uint8_t y, int8_t *page) {
 uint8_t WavepoolEffect::wp_rand() {
     static uint16_t offset = 0x400;
     offset = ((offset + 1) & 0x4fff) | 0x400;
-    return (millis()>>MS_PER_FRAME_POW2) + pgm_read_byte(offset);
+    return (millis()/MS_PER_FRAME) + pgm_read_byte(offset);
 }
 
 void WavepoolEffect::update(void) {
 
   // limit the frame rate; one frame every 64 ms
   static uint8_t prev_time = 0;
-  uint8_t now = (millis()>>MS_PER_FRAME_POW2) % 0xff;
+  uint8_t now = millis() / MS_PER_FRAME;
   if (now != prev_time) {
       prev_time = now;
   } else {
@@ -111,7 +104,14 @@ void WavepoolEffect::update(void) {
   static uint8_t frames_till_next_drop = 0;
   static int8_t prev_x = -1;
   static int8_t prev_y = -1;
+  #ifdef INTERPOLATE
+  // even frames: water movement and page flipping
+  // odd frames: raindrops and tweening
+  // (this arrangement seems to look best overall)
+  if (((now & 1)) && (idle_timeout > 0)) {
+  #else
   if (idle_timeout > 0) {
+  #endif
     // repeat previous raindrop to give it a slightly better effect
     if (prev_x >= 0) {
       raindrop(prev_x, prev_y, oldpg);
@@ -119,9 +119,9 @@ void WavepoolEffect::update(void) {
     }
     if (frames_since_event
             >= (frames_till_next_drop
-                + (idle_timeout >> MS_PER_FRAME_POW2))) {
-        frames_till_next_drop = 4 + (wp_rand() & 0x3f);
-        frames_since_event = idle_timeout >> MS_PER_FRAME_POW2;
+                + (idle_timeout / MS_PER_FRAME))) {
+        frames_till_next_drop = 4 + (wp_rand() % FRAMES_PER_DROP);
+        frames_since_event = idle_timeout / MS_PER_FRAME;
 
         uint8_t x = wp_rand() % WP_WID;
         uint8_t y = wp_rand() % WP_HGT;
@@ -136,6 +136,9 @@ void WavepoolEffect::update(void) {
   // (originally skipped edges, but this keyboard is too small for that)
   //for (uint8_t y = 1; y < WP_HGT-1; y++) {
   //  for (uint8_t x = 1; x < WP_WID-1; x++) {
+  #ifdef INTERPOLATE
+  if (!(now & 1)) {  // even frames only
+  #endif
   for (uint8_t y = 0; y < WP_HGT; y++) {
     for (uint8_t x = 0; x < WP_WID; x++) {
       uint8_t offset = (y*WP_WID) + x;
@@ -178,12 +181,21 @@ void WavepoolEffect::update(void) {
       newpg[offset] = value - (value >> 3);
     }
   }
+  #ifdef INTERPOLATE
+  }
+  #endif
 
   // draw the water on the keys
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t offset = (r*COLS) + c;
       int8_t height = oldpg[pgm_read_byte(rc2pos+offset)];
+      #ifdef INTERPOLATE
+      if (now & 1) {  // odd frames only
+          // average height with other frame
+          height = ((int16_t)height + newpg[pgm_read_byte(rc2pos+offset)]) >> 1;
+      }
+      #endif
 
       uint8_t intensity = abs(height) * 2;
 
@@ -199,8 +211,13 @@ void WavepoolEffect::update(void) {
     }
   }
 
+  #ifdef INTERPOLATE
+  // swap pages every other frame
+  if (!(now & 1)) page ^= 1;
+  #else
   // swap pages every frame
   page ^= 1;
+  #endif
 
 }
 
