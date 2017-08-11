@@ -62,7 +62,7 @@ Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
 }
 
 void
-Layer_::updateKeyCache(byte row, byte col) {
+Layer_::updateKeymapCache(byte row, byte col) {
   int8_t layer = highestLayer;
 
   if (row >= ROWS || col >= COLS)
@@ -81,10 +81,10 @@ Layer_::updateKeyCache(byte row, byte col) {
 }
 
 void
-Layer_::updateKeyCache(void) {
+Layer_::updateKeymapCache(void) {
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
-      updateKeyCache(row, col);
+      updateKeymapCache(row, col);
     }
   }
 }
@@ -109,7 +109,7 @@ void Layer_::on(uint8_t layer) {
 
   // Update the key cache, so that if anything depends on knowing the active
   // layout, the layout will be in sync.
-  updateKeyCache();
+  updateKeymapCache();
 }
 
 void Layer_::off(uint8_t layer) {
@@ -119,7 +119,7 @@ void Layer_::off(uint8_t layer) {
 
   // Update the key cache, so that if anything depends on knowing the active
   // layout, the layout will be in sync.
-  updateKeyCache();
+  updateKeymapCache();
 }
 
 boolean Layer_::isOn(uint8_t layer) {

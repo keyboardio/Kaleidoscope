@@ -32,8 +32,8 @@ class Layer_ {
 
   static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
 
-  static void updateKeyCache(byte row, byte col);
-  static void updateKeyCache(void);
+  static void updateKeymapCache(byte row, byte col);
+  static void updateKeymapCache(void);
 
  private:
   static uint8_t highestLayer;
