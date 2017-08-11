@@ -80,6 +80,15 @@ Layer_::updateKeyCache(byte row, byte col) {
   }
 }
 
+void
+Layer_::updateKeyCache(void) {
+  for (byte row = 0; row < ROWS; row++) {
+    for (byte col = 0; col < COLS; col++) {
+      updateKeyCache(row, col);
+    }
+  }
+}
+
 uint8_t Layer_::top(void) {
   for (int8_t i = 31; i >= 0; i--) {
     if (bitRead(LayerState, i))
@@ -97,12 +106,20 @@ void Layer_::on(uint8_t layer) {
   bitSet(LayerState, layer);
   if (layer > highestLayer)
     highestLayer = layer;
+
+  // Update the key cache, so that if anything depends on knowing the active
+  // layout, the layout will be in sync.
+  updateKeyCache();
 }
 
 void Layer_::off(uint8_t layer) {
   bitClear(LayerState, layer);
   if (layer == highestLayer)
     highestLayer = top();
+
+  // Update the key cache, so that if anything depends on knowing the active
+  // layout, the layout will be in sync.
+  updateKeyCache();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
