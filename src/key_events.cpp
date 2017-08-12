@@ -44,8 +44,10 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
 }
 
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+  /* If a key had an on or off event, we update the effective keymap cache. See
+   * layers.h for an explanation about the different caches we have. */
   if (keyToggledOn(keyState) || keyToggledOff(keyState))
-    Layer.updateKeymapCache(row, col);
+    Layer.updateEffectiveKeymapCache(row, col);
 
   /* If the key we are dealing with is masked, ignore it until it is released.
    * When releasing it, clear the mask, so future key events can be handled
