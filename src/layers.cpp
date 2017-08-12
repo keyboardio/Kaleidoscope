@@ -103,23 +103,29 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
+  bool wasOn = isOn(layer);
+
   bitSet(LayerState, layer);
   if (layer > highestLayer)
     highestLayer = layer;
 
   // Update the key cache, so that if anything depends on knowing the active
   // layout, the layout will be in sync.
-  updateKeymapCache();
+  if (!wasOn)
+    updateKeymapCache();
 }
 
 void Layer_::off(uint8_t layer) {
+  bool wasOn = isOn(layer);
+
   bitClear(LayerState, layer);
   if (layer == highestLayer)
     highestLayer = top();
 
   // Update the key cache, so that if anything depends on knowing the active
   // layout, the layout will be in sync.
-  updateKeymapCache();
+  if (wasOn)
+    updateKeymapCache();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
