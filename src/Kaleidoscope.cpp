@@ -18,7 +18,7 @@ Kaleidoscope_::setup(void) {
   handleKeyswitchEvent(Key_NoKey, 255, 255, 0);
 
   // Update the keymap cache, so we start with a non-empty state.
-  Layer.updateKeymapCache();
+  Layer.updateActiveLayers();
 }
 
 void

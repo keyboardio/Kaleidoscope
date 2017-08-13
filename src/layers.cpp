@@ -4,7 +4,8 @@ static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
 uint8_t Layer_::highestLayer;
-Key Layer_::keyMap[ROWS][COLS];
+Key Layer_::liveCompositeKeymap[ROWS][COLS];
+uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -62,29 +63,29 @@ Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
 }
 
 void
-Layer_::updateKeymapCache(byte row, byte col) {
-  int8_t layer = highestLayer;
-
-  if (row >= ROWS || col >= COLS)
-    return;
-
-  for (layer = highestLayer; layer >= DefaultLayer; layer--) {
-    if (Layer.isOn(layer)) {
-      Key mappedKey = (*getKey)(layer, row, col);
-
-      if (mappedKey != Key_Transparent) {
-        keyMap[row][col] = mappedKey;
-        break;
-      }
-    }
-  }
+Layer_::updateLiveCompositeKeymap(byte row, byte col) {
+  int8_t layer = activeLayers[row][col];
+  liveCompositeKeymap[row][col] = (*getKey)(layer, row, col);
 }
 
 void
-Layer_::updateKeymapCache(void) {
+Layer_::updateActiveLayers(void) {
+  memset(activeLayers, DefaultLayer, ROWS * COLS);
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
-      updateKeymapCache(row, col);
+      int8_t layer = highestLayer;
+
+      while (layer > DefaultLayer) {
+        if (Layer.isOn(layer)) {
+          Key mappedKey = (*getKey)(layer, row, col);
+
+          if (mappedKey != Key_Transparent) {
+            activeLayers[row][col] = layer;
+            break;
+          }
+        }
+        layer--;
+      }
     }
   }
 }
@@ -103,23 +104,29 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
+  bool wasOn = isOn(layer);
+
   bitSet(LayerState, layer);
   if (layer > highestLayer)
     highestLayer = layer;
 
-  // Update the key cache, so that if anything depends on knowing the active
-  // layout, the layout will be in sync.
-  updateKeymapCache();
+  /* If the layer did turn on, update the keymap cache. See layers.h for an
+   * explanation about the caches we have. */
+  if (!wasOn)
+    updateActiveLayers();
 }
 
 void Layer_::off(uint8_t layer) {
+  bool wasOn = isOn(layer);
+
   bitClear(LayerState, layer);
   if (layer == highestLayer)
     highestLayer = top();
 
-  // Update the key cache, so that if anything depends on knowing the active
-  // layout, the layout will be in sync.
-  updateKeymapCache();
+  /* If the layer did turn off, update the keymap cache. See layers.h for an
+   * explanation about the caches we have. */
+  if (wasOn)
+    updateActiveLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
