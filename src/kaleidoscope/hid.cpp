@@ -12,21 +12,25 @@ void pressRawKey(Key mappedKey) {
 
 }
 
+void _pressModifierKey(Key mappedKey) {
+  pressRawKey(mappedKey);
+}
+
 void pressKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    pressRawKey(Key_LeftShift);
+    _pressModifierKey(Key_LeftShift);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    pressRawKey(Key_LeftControl);
+    _pressModifierKey(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-    pressRawKey(Key_LeftAlt);
+    _pressModifierKey(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-    pressRawKey(Key_RightAlt);
+    _pressModifierKey(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-    pressRawKey(Key_LeftGui);
+    _pressModifierKey(Key_LeftGui);
   }
 
   pressRawKey(mappedKey);
