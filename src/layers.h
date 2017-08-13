@@ -35,12 +35,12 @@ class Layer_ {
    *
    * Thus, if we are curious about what a given key will do, use `lookup`. If we
    * are curious what the active layer state describes the key as, use
-   * `lookupUncached`.
+   * `lookupOnActiveLayer`.
    */
   static Key lookup(byte row, byte col) {
     return liveCompositeKeymap[row][col];
   }
-  static Key lookupUncached(byte row, byte col) {
+  static Key lookupOnActiveLayer(byte row, byte col) {
     uint8_t layer = activeLayers[row][col];
     return (*getKey)(layer, row, col);
   }
