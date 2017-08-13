@@ -18,6 +18,7 @@ void releaseRawKey(Key mappedKey);
 void sendKeyboardReport();
 
 boolean isModifierKeyActive(Key mappedKey);
+boolean wasModifierKeyActive(Key mappedKey);
 
 void initializeConsumerControl();
 

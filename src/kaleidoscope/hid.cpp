@@ -64,6 +64,11 @@ boolean isModifierKeyActive(Key mappedKey) {
   return Keyboard.isModifierActive(mappedKey.keyCode);
 }
 
+boolean wasModifierKeyActive(Key mappedKey) {
+  return Keyboard.wasModifierActive(mappedKey.keyCode);
+}
+
+
 void sendKeyboardReport() {
   Keyboard.sendReport();
 }
