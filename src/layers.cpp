@@ -4,8 +4,8 @@ static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
 uint8_t Layer_::highestLayer;
-Key Layer_::effectiveKeymapCache[ROWS][COLS];
-uint8_t Layer_::keymapCache[ROWS][COLS];
+Key Layer_::liveCompositeKeymap[ROWS][COLS];
+uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -63,14 +63,14 @@ Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
 }
 
 void
-Layer_::updateEffectiveKeymapCache(byte row, byte col) {
-  int8_t layer = keymapCache[row][col];
-  effectiveKeymapCache[row][col] = (*getKey)(layer, row, col);
+Layer_::updateLiveCompositeKeymap(byte row, byte col) {
+  int8_t layer = activeLayers[row][col];
+  liveCompositeKeymap[row][col] = (*getKey)(layer, row, col);
 }
 
 void
-Layer_::updateKeymapCache(void) {
-  memset(keymapCache, DefaultLayer, ROWS * COLS);
+Layer_::updateActiveLayers(void) {
+  memset(activeLayers, DefaultLayer, ROWS * COLS);
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
       int8_t layer = highestLayer;
@@ -80,7 +80,7 @@ Layer_::updateKeymapCache(void) {
           Key mappedKey = (*getKey)(layer, row, col);
 
           if (mappedKey != Key_Transparent) {
-            keymapCache[row][col] = layer;
+            activeLayers[row][col] = layer;
             break;
           }
         }
@@ -113,7 +113,7 @@ void Layer_::on(uint8_t layer) {
   /* If the layer did turn on, update the keymap cache. See layers.h for an
    * explanation about the caches we have. */
   if (!wasOn)
-    updateKeymapCache();
+    updateActiveLayers();
 }
 
 void Layer_::off(uint8_t layer) {
@@ -126,7 +126,7 @@ void Layer_::off(uint8_t layer) {
   /* If the layer did turn off, update the keymap cache. See layers.h for an
    * explanation about the caches we have. */
   if (wasOn)
-    updateKeymapCache();
+    updateActiveLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
