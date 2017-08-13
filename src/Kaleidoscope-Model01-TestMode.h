@@ -11,6 +11,11 @@ class TestMode_ : public KaleidoscopePlugin {
   void begin();
 
  private:
+  typedef struct {
+    uint8_t scan_map;
+    uint8_t scan_count;
+  } chatter_test_state_t;
+
   static void run_tests();
   static void test_leds();
   static void testMatrix();
@@ -18,6 +23,8 @@ class TestMode_ : public KaleidoscopePlugin {
   static void waitForKeypress();
   static void loopHook(bool postClear);
   static void set_leds(uint8_t r, uint8_t g, uint8_t b);
+
+  static chatter_test_state_t chatter_test_state_[ROWS][COLS];
 };
 
 extern TestMode_ TestMode;
