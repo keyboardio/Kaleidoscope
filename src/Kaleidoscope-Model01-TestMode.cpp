@@ -3,9 +3,16 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 #include <avr/io.h>
 #include <avr/wdt.h>
+
+#define SERIAL_DEBUG 0
+
 cRGB red;
 cRGB blue;
 cRGB green;
+cRGB white;
+
+
+TestMode_::chatter_test_state_t TestMode_::chatter_test_state_[ROWS][COLS];
 
 TestMode_::TestMode_(void) {
 }
@@ -15,6 +22,9 @@ void TestMode_::begin(void) {
   red.r = 201;
   blue.b = 201;
   green.g = 201;
+  white.r = 160;
+  white.g = 160;
+  white.b = 160;
   loop_hook_use(this->loopHook);
 }
 
@@ -67,6 +77,7 @@ void TestMode_::test_leds(void) {
 
 void TestMode_::testMatrix() {
   LEDControl.set_all_leds_to(200, 0, 0);
+  memset(chatter_test_state_, 0, sizeof(chatter_test_state_));
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
@@ -79,6 +90,17 @@ void TestMode_::testMatrix() {
         uint8_t keyState = (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 0) |
                            (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 1);
 
+        if (keyState == 2 && chatter_test_state_[row][col].scan_count < 8) {
+          bitSet(chatter_test_state_[row][col].scan_map,
+                 chatter_test_state_[row][col].scan_count);
+        }
+
+        if (chatter_test_state_[row][col].scan_map != 0 &&
+            chatter_test_state_[row][col].scan_count < 8) {
+          chatter_test_state_[row][col].scan_count++;
+        }
+
+
         if (keyState == 3) {
           //  Serial.print(" Key: ");
           //  Serial.print(keynum);
@@ -86,11 +108,43 @@ void TestMode_::testMatrix() {
           //  Serial.println(keyState);
           KeyboardHardware.setCrgbAt(row, 7 - col, green);
         } else if (keyState == 1) {
-          KeyboardHardware.setCrgbAt(row, 7 - col, blue);
+          bitSet(chatter_test_state_[row][col].scan_map,
+                 chatter_test_state_[row][col].scan_count);
+
+          uint8_t toggle_count = 0;
+          for (uint8_t i = 1; i < 8; i++) {
+            if (bitRead(chatter_test_state_[row][col].scan_map, i - 1) == 1 &&
+                bitRead(chatter_test_state_[row][col].scan_map, i) == 0)
+              toggle_count++;
+          }
+#if SERIAL_DEBUG
+          Serial.print(" key: ");
+          Serial.print(keynum);
+          Serial.print(" toggle_count: ");
+          Serial.print(toggle_count);
+          Serial.print(" state#: ");
+          Serial.print(chatter_test_state_[row][col].scan_count);
+          Serial.print(" state: ");
+          Serial.println(chatter_test_state_[row][col].scan_map, BIN);
+#endif
+          if (toggle_count > 2)
+            KeyboardHardware.setCrgbAt(row, 7 - col, white);
+          else
+            KeyboardHardware.setCrgbAt(row, 7 - col, blue);
         }
 
         keyState = (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 0) |
                    (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 1);
+
+        if (keyState == 2 && chatter_test_state_[row][col + 8].scan_count < 8) {
+          bitSet(chatter_test_state_[row][col + 8].scan_map,
+                 chatter_test_state_[row][col + 8].scan_count);
+        }
+
+        if (chatter_test_state_[row][col + 8].scan_map != 0 &&
+            chatter_test_state_[row][col + 8].scan_count < 8) {
+          chatter_test_state_[row][col + 8].scan_count++;
+        }
 
         if (keyState == 3) {
           //  Serial.print(" Key: ");
@@ -99,7 +153,29 @@ void TestMode_::testMatrix() {
           //  Serial.println(keyState);
           KeyboardHardware.setCrgbAt(row, 15 - col, green);
         } else if (keyState == 1) {
-          KeyboardHardware.setCrgbAt(row, 15 - col, blue);
+          bitSet(chatter_test_state_[row][col + 8].scan_map,
+                 chatter_test_state_[row][col + 8].scan_count);
+
+          uint8_t toggle_count = 0;
+          for (uint8_t i = 1; i < 8; i++) {
+            if (bitRead(chatter_test_state_[row][col + 8].scan_map, i - 1) == 1 &&
+                bitRead(chatter_test_state_[row][col + 8].scan_map, i) == 0)
+              toggle_count++;
+          }
+#if SERIAL_DEBUG
+          Serial.print(" key: ");
+          Serial.print(keynum);
+          Serial.print(" toggle_count: ");
+          Serial.print(toggle_count);
+          Serial.print(" state#: ");
+          Serial.print(chatter_test_state_[row][col + 8].scan_count);
+          Serial.print(" state: ");
+          Serial.println(chatter_test_state_[row][col + 8].scan_map, BIN);
+#endif
+          if (toggle_count > 2)
+            KeyboardHardware.setCrgbAt(row, 15 - col, white);
+          else
+            KeyboardHardware.setCrgbAt(row, 15 - col, blue);
         }
       }
     }
