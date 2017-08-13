@@ -21,7 +21,7 @@ void NumLock_::loopHook(bool postClear) {
 
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookup(r, c);
+      Key k = Layer.lookupOnActiveLayer(r, c);
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
       if ((k != layer_key) || (k.flags != KEY_FLAGS)) {
