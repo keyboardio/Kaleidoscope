@@ -28,6 +28,20 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
 
     default:
+      /* The default case is when we are switching to a layer by its number, and
+       * is a bit more complicated than switching there when the key toggles on,
+       * and away when it toggles off.
+       *
+       * We want to handle the case where we have more than one momentary layer
+       * key on our keymap that point to the same target layer, and we hold
+       * both, and release one. In this case, the layer should remain active,
+       * because the second momentary key is still held.
+       *
+       * To do this, we turn the layer back on if the switcher key is still
+       * held, not only when it toggles on. So when one of them is released,
+       * that does turn the layer off, but with the other still being held, the
+       * layer will toggle back on in the same cycle.
+       */
       if (keyIsPressed(keyState)) {
         if (!Layer.isOn(target))
           Layer.on(target);
