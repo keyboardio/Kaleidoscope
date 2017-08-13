@@ -15,9 +15,9 @@ breath_compute() {
   uint8_t ii = (i * i) >> 8;
   uint8_t iii = (ii * i) >> 8;
 
-  i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 2;
+  i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
-  return hsvToRgb(200, 255, i);
+  return hsvToRgb(170, 255, i);
 }
 
 
