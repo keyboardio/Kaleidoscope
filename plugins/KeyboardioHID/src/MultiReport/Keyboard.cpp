@@ -152,7 +152,7 @@ boolean Keyboard_::isModifierActive(uint8_t k) {
 
 size_t Keyboard_::press(uint8_t k) {
   // If the key is in the range of 'printable' keys
-  if (k <= HID_KEYPAD_HEXADECIMAL) {
+  if (k <= HID_LAST_KEY) {
     uint8_t bit = 1 << (uint8_t(k) % 8);
     _keyReport.keys[k / 8] |= bit;
     return 1;
@@ -172,7 +172,7 @@ size_t Keyboard_::press(uint8_t k) {
 
 size_t Keyboard_::release(uint8_t k) {
   // If we're releasing a printable key
-  if (k <= HID_KEYPAD_HEXADECIMAL) {
+  if (k <= HID_LAST_KEY) {
     uint8_t bit = 1 << (k % 8);
     _keyReport.keys[k / 8] &= ~bit;
     return 1;
