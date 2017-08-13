@@ -57,6 +57,7 @@ class Keyboard_ {
   int sendReport(void);
 
   boolean isModifierActive(uint8_t k);
+  boolean wasModifierActive(uint8_t k);
 
  protected:
   HID_KeyboardReport_Data_t _keyReport;

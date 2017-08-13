@@ -142,10 +142,24 @@ int Keyboard_::sendReport(void) {
   return -1;
 }
 
+/* Returns true if the modifer key passed in will be sent during this key report
+ * Returns false in all other cases
+ * */
 boolean Keyboard_::isModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
     return !!(_keyReport.modifiers & (1 << k));
+  }
+  return false;
+}
+
+/* Returns true if the modifer key passed in was being sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean Keyboard_::wasModifierActive(uint8_t k) {
+  if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    k = k - HID_KEYBOARD_FIRST_MODIFIER;
+    return !!(_lastKeyReport.modifiers & (1 << k));
   }
   return false;
 }
