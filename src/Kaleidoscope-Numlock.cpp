@@ -45,6 +45,9 @@ const macro_t *NumLock_::toggle() {
 
   if (Layer.isOn(numPadLayer)) {
     Layer.off(numPadLayer);
+    // Reset all LEDs to off to hopefully give the previous LED effect
+    // a better starting state
+    LEDControl.set_all_leds_to({0, 0, 0});
     LEDControl.init_mode();
   } else {
     Layer.on(numPadLayer);
