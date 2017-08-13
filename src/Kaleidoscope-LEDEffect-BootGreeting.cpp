@@ -21,32 +21,32 @@
 
 namespace kaleidoscope {
 
-  bool BootGreetingEffect::done_;
+bool BootGreetingEffect::done_;
 
-  void BootGreetingEffect::begin (void) {
-    Kaleidoscope.useLoopHook(loopHook);
+void BootGreetingEffect::begin(void) {
+  Kaleidoscope.useLoopHook(loopHook);
+}
+
+void BootGreetingEffect::loopHook(const bool post_clear) {
+  if (!post_clear || done_)
+    return;
+
+  if (millis() > 10000) {
+    done_ = true;
+    return;
   }
 
-  void BootGreetingEffect::loopHook(const bool post_clear) {
-    if (!post_clear || done_)
-      return;
+  for (uint8_t r = 0; r < ROWS; r++) {
+    for (uint8_t c = 0; c < COLS; c++) {
+      Key k = Layer.lookupOnActiveLayer(r, c);
 
-    if (millis() > 10000) {
-      done_ = true;
-      return;
-    }
-
-    for (uint8_t r = 0; r < ROWS; r++) {
-      for (uint8_t c = 0; c < COLS; c++) {
-        Key k = Layer.lookupOnActiveLayer(r, c);
-
-        if (k == Key_LEDEffectNext) {
-          cRGB color = breath_compute();
-          LEDControl.setCrgbAt(r, c, color);
-        }
+      if (k == Key_LEDEffectNext) {
+        cRGB color = breath_compute();
+        LEDControl.setCrgbAt(r, c, color);
       }
     }
   }
+}
 }
 
 kaleidoscope::BootGreetingEffect BootGreetingEffect;
