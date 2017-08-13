@@ -23,7 +23,7 @@
 namespace kaleidoscope {
 class BootGreetingEffect : public KaleidoscopePlugin {
  public:
-  BootGreetingEffect(void) {};
+  BootGreetingEffect(void) {}
 
   void begin(void) final;
 
