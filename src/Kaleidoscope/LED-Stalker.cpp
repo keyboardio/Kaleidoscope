@@ -62,13 +62,11 @@ void StalkerEffect::update(void) {
         LEDControl.setCrgbAt(r, c, variant->compute(&step));
       }
 
-      bool was_zero = (map_[r][c] == 0);
-
       if (time_out) {
         map_[r][c] = step;
       }
 
-      if (!was_zero && !map_[r][c])
+      if (!map_[r][c])
         LEDControl.setCrgbAt(r, c, (cRGB) {
         0, 0, 0
       });
