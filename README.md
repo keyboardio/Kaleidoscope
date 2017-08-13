@@ -21,7 +21,7 @@ To use the plugin, include the header, and tell `Kaleidoscope` to use the plugin
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
 void setup() {
-  Kaleidoscope.use(&BootGreeting, &LEDOff);
+  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
 
   Kaleidoscope.setup();
 }
