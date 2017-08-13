@@ -14,6 +14,21 @@ void pressRawKey(Key mappedKey) {
 
 void _pressModifierKey(Key mappedKey) {
   pressRawKey(mappedKey);
+
+  /* On at least ChromeOS 51-60, first sending a "press shift" key event in the same report
+   * as the key report for some shifted keys causes the shift event to be missed.
+   *
+   * Specifically, Shift + [ in the same key report do not genereate a {
+   *
+   * This workaround causes an extra key report to be sent to toggle on the modifier key
+   * before sending the key event we're trying to modify as part of a key report
+   *
+   * I (Jesse) don't believe we need a similar workaround for toggling the modifer _off_
+   */
+
+  if (!wasModifierKeyActive(mappedKey)) {
+    sendKeyboardReport();
+  }
 }
 
 void pressKey(Key mappedKey) {
