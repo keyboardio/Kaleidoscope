@@ -20,6 +20,11 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       } else {
         Layer.on(target);
       }
+    } else if (keyIsPressed(keyState) &&
+               target != KEYMAP_NEXT &&
+               target != KEYMAP_PREVIOUS) {
+      if (!Layer.isOn(target))
+        Layer.on(target);
     }
     if (keyToggledOff(keyState)) {
       if (target == KEYMAP_NEXT) {
