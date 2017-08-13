@@ -18,7 +18,7 @@ class Layer_ {
    * Then, we have the `liveCompositeKeymap`, because to have layer behaviours
    * we want, that is, if you hold a key on a layer, release the layer key but
    * continue holding the other, we want for the layered keycode to continue
-   * repeating. 
+   * repeating.
    *
    * At the same time, we want other keys to not be affected by the
    * now-turned-off layer. So we update the keycode in the cache on-demand, when
