@@ -31,7 +31,7 @@ void BootGreetingEffect::loopHook(const bool post_clear) {
   if (!post_clear || done_)
     return;
 
-  if (millis() > 10000) {
+  if (millis() > 9200) {
     done_ = true;
     return;
   }
