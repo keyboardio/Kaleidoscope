@@ -48,9 +48,8 @@ PROGMEM const uint8_t WavepoolEffect::rc2pos[ROWS*COLS] = {
 WavepoolEffect::WavepoolEffect(void) {
 }
 
-void WavepoolEffect::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
-  LEDMode::begin();
+void WavepoolEffect::setup(void) {
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 Key WavepoolEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
@@ -195,7 +194,7 @@ void WavepoolEffect::update(void) {
                             0xff - intensity,
                             ((uint16_t)intensity)*2);
 
-      LEDControl.setCrgbAt(r, c, color);
+      ::LEDControl.setCrgbAt(r, c, color);
     }
   }
 
