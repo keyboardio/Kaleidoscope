@@ -31,6 +31,7 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
 
   static uint16_t reserveThemes(uint8_t max_themes);
   static void updateHandler(uint16_t theme_base, uint8_t theme);
+  static void refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col);
 
   static const uint8_t lookupColorIndexAtPosition(uint16_t theme_base, uint16_t position);
   static const bool lookupColorAtPosition(uint16_t theme_base, uint16_t position, cRGB *color);
