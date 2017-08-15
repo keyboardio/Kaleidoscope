@@ -31,14 +31,15 @@ class StalkerEffect : public LEDMode {
     virtual cRGB compute(uint8_t *step) = 0;
   };
 
-  StalkerEffect(void);
-
-  void begin(void) final;
-  void init(void) final;
-  void update(void) final;
+  StalkerEffect(void) {}
 
   static ColorComputer *variant;
   static uint16_t step_length;
+
+ protected:
+  void setup(void) final;
+  void onActivate(void) final;
+  void update(void) final;
 
  private:
   static uint32_t step_end_time_;
