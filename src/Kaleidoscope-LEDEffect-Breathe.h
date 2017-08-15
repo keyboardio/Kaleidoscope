@@ -3,11 +3,14 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDBreatheEffect_ : public LEDMode {
+namespace kaleidoscope {
+class LEDBreatheEffect : public LEDMode {
  public:
-  LEDBreatheEffect_(void);
+  LEDBreatheEffect(void) {}
 
+ protected:
   void update(void) final;
 };
+}
 
-extern LEDBreatheEffect_ LEDBreatheEffect;
+extern kaleidoscope::LEDBreatheEffect LEDBreatheEffect;
