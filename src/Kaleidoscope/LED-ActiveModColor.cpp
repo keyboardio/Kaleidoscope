@@ -79,7 +79,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
       if (!is_mod && !is_layer)  // Neither mod, nor layer key
         continue;
 
-      if (is_mod == 2 || is_mod == 2)
+      if (is_mod == 2 || is_layer == 2)
         ::LEDControl.setCrgbAt(r, c, highlight_color);
       else
         ::LEDControl.refreshAt(r, c);
