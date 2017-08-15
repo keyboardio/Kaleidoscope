@@ -27,6 +27,7 @@ class TriColor : public LEDMode {
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);
   TriColor(cRGB base_color, cRGB mod_color) : TriColor(base_color, mod_color, mod_color) {}
 
+ protected:
   void update(void) final;
 
  private:

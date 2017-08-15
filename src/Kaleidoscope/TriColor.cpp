@@ -26,8 +26,7 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   esc_color_ = esc_color;
 }
 
-void
-TriColor::update(void) {
+void TriColor::update(void) {
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
       Key k = Layer.lookup(r, c);
