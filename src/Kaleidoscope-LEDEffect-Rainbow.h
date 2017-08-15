@@ -3,9 +3,10 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDRainbowEffect_ : public LEDMode {
+namespace kaleidoscope {
+class LEDRainbowEffect : public LEDMode {
  public:
-  LEDRainbowEffect_(void);
+  LEDRainbowEffect(void) {}
 
   void brightness(byte);
   void update(void) final;
@@ -21,11 +22,10 @@ class LEDRainbowEffect_ : public LEDMode {
   byte rainbow_value = 50;
 };
 
-extern LEDRainbowEffect_ LEDRainbowEffect;
 
-class LEDRainbowWaveEffect_ : public LEDMode {
+class LEDRainbowWaveEffect : public LEDMode {
  public:
-  LEDRainbowWaveEffect_(void);
+  LEDRainbowWaveEffect(void) {}
 
   void brightness(byte);
   void update(void) final;
@@ -40,5 +40,7 @@ class LEDRainbowWaveEffect_ : public LEDMode {
   byte rainbow_saturation = 255;
   byte rainbow_value = 50;
 };
+}
 
-extern LEDRainbowWaveEffect_ LEDRainbowWaveEffect;
+extern kaleidoscope::LEDRainbowEffect LEDRainbowEffect;
+extern kaleidoscope::LEDRainbowWaveEffect LEDRainbowWaveEffect;
