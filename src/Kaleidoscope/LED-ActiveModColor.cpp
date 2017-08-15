@@ -69,7 +69,7 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
-      Key k = Layer.lookup(r, c);
+      Key k = Layer.lookupOnActiveLayer(r, c);
 
       if (isModifierActive(k) || isLayerKeyActive(k))
         LEDControl.setCrgbAt(r, c, highlight_color);
