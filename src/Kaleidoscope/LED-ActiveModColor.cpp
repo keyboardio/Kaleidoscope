@@ -26,14 +26,11 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
 };
 
-ActiveModColorEffect::ActiveModColorEffect(void) {
-}
-
 void ActiveModColorEffect::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
 }
 
-bool ActiveModColorEffect::isModifierActive(Key key) {
+uint8_t ActiveModColorEffect::isModifierKeyActive(Key key) {
   if (key.raw >= ranges::OSM_FIRST && key.raw <= ranges::OSM_LAST) {
     uint8_t idx = key.raw - ranges::OSM_FIRST;
     key.flags = 0;
@@ -41,12 +38,15 @@ bool ActiveModColorEffect::isModifierActive(Key key) {
   }
 
   if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
-    return false;
+    return 0;
 
-  return hid::isModifierKeyActive(key);
+  if (hid::isModifierKeyActive(key))
+    return 2;
+  else
+    return 1;
 }
 
-bool ActiveModColorEffect::isLayerKeyActive(Key key) {
+uint8_t ActiveModColorEffect::isLayerKeyActive(Key key) {
   uint8_t layer = 255;
 
   if (key.raw >= ranges::OSL_FIRST && key.raw <= ranges::OSL_LAST) {
@@ -58,9 +58,12 @@ bool ActiveModColorEffect::isLayerKeyActive(Key key) {
   }
 
   if (layer == 255)
-    return false;
+    return 0;
 
-  return Layer.isOn(layer);
+  if (Layer.isOn(layer))
+    return 2;
+  else
+    return 1;
 }
 
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
@@ -70,9 +73,16 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);
+      uint8_t is_mod = isModifierKeyActive(k);
+      uint8_t is_layer = isLayerKeyActive(k);
 
-      if (isModifierActive(k) || isLayerKeyActive(k))
-        LEDControl.setCrgbAt(r, c, highlight_color);
+      if (!is_mod && !is_layer)  // Neither mod, nor layer key
+        continue;
+
+      if (is_mod == 2 || is_mod == 2)
+        ::LEDControl.setCrgbAt(r, c, highlight_color);
+      else
+        ::LEDControl.refreshAt(r, c);
     }
   }
 }
