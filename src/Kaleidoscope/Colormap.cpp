@@ -29,12 +29,7 @@ namespace kaleidoscope {
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
 
-ColormapEffect::ColormapEffect(void) {
-}
-
-void ColormapEffect::begin(void) {
-  LEDMode::begin();
-
+void ColormapEffect::setup(void) {
   Kaleidoscope.use(&::EEPROMSettings, &::LEDPaletteTheme);
 }
 
@@ -52,6 +47,15 @@ void ColormapEffect::update(void) {
       continue;
 
     ::LEDPaletteTheme.updateHandler(map_base_, l);
+  }
+}
+
+void ColormapEffect::refreshAt(byte row, byte col) {
+  for (uint8_t l = 0; l < max_layers_; l++) {
+    if (!Layer.isOn(l))
+      continue;
+
+    ::LEDPaletteTheme.refreshAt(map_base_, l, row, col);
   }
 }
 
