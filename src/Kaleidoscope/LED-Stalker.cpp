@@ -26,15 +26,11 @@ StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
 uint32_t StalkerEffect::step_end_time_;
 
-StalkerEffect::StalkerEffect(void) {
+void StalkerEffect::setup(void) {
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
-void StalkerEffect::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
-  LEDMode::begin();
-}
-
-void StalkerEffect::init(void) {
+void StalkerEffect::onActivate(void) {
   memset(map_, 0, sizeof(map_));
 }
 
@@ -59,7 +55,7 @@ void StalkerEffect::update(void) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t step = map_[r][c];
       if (step) {
-        LEDControl.setCrgbAt(r, c, variant->compute(&step));
+        ::LEDControl.setCrgbAt(r, c, variant->compute(&step));
       }
 
       if (time_out) {
@@ -67,7 +63,7 @@ void StalkerEffect::update(void) {
       }
 
       if (!map_[r][c])
-        LEDControl.setCrgbAt(r, c, (cRGB) {
+        ::LEDControl.setCrgbAt(r, c, (cRGB) {
         0, 0, 0
       });
     }
