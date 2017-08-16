@@ -49,7 +49,7 @@ property:
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
-* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+* [Kaleidoscope-OneShot](https://github.com/keyboardio/Kaleidoscope-OneShot)
 
 ## Further reading
 

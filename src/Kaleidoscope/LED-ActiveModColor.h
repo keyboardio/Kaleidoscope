@@ -31,8 +31,6 @@ class ActiveModColorEffect : public KaleidoscopePlugin {
   static cRGB highlight_color;
 
  private:
-  static uint8_t isModifierKeyActive(Key key);
-  static uint8_t isLayerKeyActive(Key key);
   static void loopHook(bool is_post_clear);
 };
 }
