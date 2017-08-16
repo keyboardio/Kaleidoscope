@@ -9,7 +9,7 @@
 
 class NumLock_ : public KaleidoscopePlugin {
  public:
-  NumLock_(void);
+  NumLock_(void) {}
 
   void begin(void) final;
 

@@ -6,13 +6,9 @@
 byte NumLock_::row = 255, NumLock_::col = 255;
 uint8_t NumLock_::numPadLayer;
 cRGB numpad_color = CRGB(255, 0, 0);
-cRGB off_color = CRGB(0, 0, 0);
-
-NumLock_::NumLock_(void) {
-}
 
 void NumLock_::begin(void) {
-  loop_hook_use(loopHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 void NumLock_::loopHook(bool postClear) {
@@ -25,7 +21,7 @@ void NumLock_::loopHook(bool postClear) {
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
       if ((k != layer_key) || (k.flags != KEY_FLAGS)) {
-        LEDControl.setCrgbAt(r, c, off_color);
+        LEDControl.refreshAt(r, c);
       } else {
         LEDControl.setCrgbAt(r, c, numpad_color);
       }
@@ -45,10 +41,7 @@ const macro_t *NumLock_::toggle() {
 
   if (Layer.isOn(numPadLayer)) {
     Layer.off(numPadLayer);
-    // Reset all LEDs to off to hopefully give the previous LED effect
-    // a better starting state
-    LEDControl.set_all_leds_to({0, 0, 0});
-    LEDControl.init_mode();
+    LEDControl.set_mode(LEDControl.get_mode_index());
   } else {
     Layer.on(numPadLayer);
   }
