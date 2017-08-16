@@ -3,10 +3,12 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "LEDUtils.h"
 
-class LEDChaseEffect_ : public LEDMode {
+namespace kaleidoscope {
+class LEDChaseEffect : public LEDMode {
  public:
-  LEDChaseEffect_(void);
+  LEDChaseEffect(void) {}
 
+ protected:
   void update(void) final;
 
  private:
@@ -16,5 +18,6 @@ class LEDChaseEffect_ : public LEDMode {
   uint8_t current_chase_counter = 0;
   static const uint8_t chase_threshold = 20;
 };
+}
 
-extern LEDChaseEffect_ LEDChaseEffect;
+extern kaleidoscope::LEDChaseEffect LEDChaseEffect;
