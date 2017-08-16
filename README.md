@@ -27,7 +27,7 @@ include the header, and make sure the plugin is in use:
 #include <Kaleidoscope-Heatmap.h>
 
 void setup() {
-  USE_PLUGINS(&HeatmapEffect);
+  Kaleidoscope.use(&HeatmapEffect);
 
   Kaleidoscope.setup ();
 }

@@ -40,7 +40,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&HeatmapEffect);
+  Kaleidoscope.use(&HeatmapEffect);
 
   Kaleidoscope.setup();
 
