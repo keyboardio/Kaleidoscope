@@ -90,11 +90,11 @@ void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_co
       if (!pixel)
         continue;
 
-      LEDControl.setCrgbAt(row + r, col + c, key_color);
+      ::LEDControl.setCrgbAt(row + r, col + c, key_color);
     }
   }
 
-  LEDControl.syncLeds();
+  ::LEDControl.syncLeds();
 }
 
 void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {

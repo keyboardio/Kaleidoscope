@@ -23,20 +23,12 @@ namespace kaleidoscope {
 uint16_t AlphaSquareEffect::length = 1000;
 uint32_t AlphaSquareEffect::end_time_left_, AlphaSquareEffect::end_time_right_;
 Key AlphaSquareEffect::last_key_left_, AlphaSquareEffect::last_key_right_;
-uint8_t AlphaSquareEffect::us_;
 
-AlphaSquareEffect::AlphaSquareEffect(void) {
-}
-
-void
-AlphaSquareEffect::begin(void) {
+void AlphaSquareEffect::setup(void) {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.use(&LEDControl);
-  us_ = LEDControl.mode_add(this);
 }
 
-void
-AlphaSquareEffect::update(void) {
+void AlphaSquareEffect::update(void) {
   if (end_time_left_ && millis() > end_time_left_) {
     ::AlphaSquare.clear(last_key_left_);
     end_time_left_ = 0;
@@ -47,9 +39,8 @@ AlphaSquareEffect::update(void) {
   }
 }
 
-Key
-AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
-  if (LEDControl.get_mode() != us_)
+Key AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
+  if (::LEDControl.get_mode() != &::AlphaSquareEffect)
     return key;
 
   if (key_state & INJECTED)
