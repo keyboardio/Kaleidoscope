@@ -28,8 +28,10 @@ class Heatmap : public LEDMode {
 
   static uint16_t update_delay;
 
-  void begin(void) final;
+ protected:
+  void setup(void) final;
   void update(void) final;
+
  private:
   static uint8_t heatmap_[ROWS][COLS];
   static uint16_t total_keys_;

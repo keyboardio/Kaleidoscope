@@ -66,10 +66,9 @@ cRGB Heatmap::computeColor(float v) {
 Heatmap::Heatmap(void) {
 }
 
-void Heatmap::begin(void) {
-  LEDControl.mode_add(this);
-  event_handler_hook_use(eventHook);
-  loop_hook_use(loopHook);
+void Heatmap::setup(void) {
+  Kaleidoscope.useEventHandlerHook(eventHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 Key Heatmap::eventHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
@@ -106,7 +105,7 @@ Heatmap::update(void) {
     for (uint8_t c = 0; c < COLS; c++) {
       uint8_t cap = max(total_keys_, 1);
       float v = static_cast<float>(heatmap_[r][c]) / cap;
-      LEDControl.setCrgbAt(r, c, computeColor(v));
+      ::LEDControl.setCrgbAt(r, c, computeColor(v));
     }
   }
 }
