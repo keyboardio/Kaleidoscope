@@ -24,14 +24,16 @@
 namespace kaleidoscope {
 class ColormapEffect : public LEDMode {
  public:
-  ColormapEffect(void);
-
-  void begin(void) final;
-  void update(void) final;
+  ColormapEffect(void) {}
 
   void max_layers(uint8_t max_);
 
   static bool focusHook(const char *command);
+
+ protected:
+  void setup(void) final;
+  void update(void) final;
+  void refreshAt(byte row, byte col) final;
 
  private:
   static uint8_t max_layers_;
