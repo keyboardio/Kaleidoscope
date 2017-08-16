@@ -36,7 +36,7 @@ bool OneShot::should_mask_on_interrupt_ = false;
 
 // --- helper macros ------
 
-#define isOS(key) (key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST)
+#define isOneShotKey(key) (key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST)
 #define isModifier(key) (key.raw >= Key_LeftControl.raw && key.raw <= Key_RightGui.raw)
 #define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
 
@@ -88,7 +88,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     return mapped_key;
 
   if (!state_.all) {
-    if (!isOS(mapped_key)) {
+    if (!isOneShotKey(mapped_key)) {
       return mapped_key;
     }
 
@@ -113,7 +113,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
   if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
     return mapped_key;
 
-  if (isOS(mapped_key)) {
+  if (isOneShotKey(mapped_key)) {
     if (isSticky(idx)) {
       if (keyToggledOn(key_state)) {  // maybe on _off instead?
         saveAsPrevious(mapped_key);
