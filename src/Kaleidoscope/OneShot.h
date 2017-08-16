@@ -36,6 +36,10 @@ class OneShot : public KaleidoscopePlugin {
     return (key.raw >= kaleidoscope::ranges::OS_FIRST && key.raw <= kaleidoscope::ranges::OS_LAST);
   }
   static bool isActive(void);
+  static bool isActive(Key key) {
+    uint8_t idx = key.raw - ranges::OS_FIRST;
+    return bitRead(state_.all, idx); //&& !hasTimedOut();
+  }
   static void cancel(bool with_stickies);
   static void cancel(void) {
     cancel(false);
