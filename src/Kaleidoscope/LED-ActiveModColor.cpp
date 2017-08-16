@@ -17,7 +17,7 @@
  */
 
 #include <Kaleidoscope-LED-ActiveModColor.h>
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-OneShot.h>
 #include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
@@ -26,41 +26,8 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
 };
 
-ActiveModColorEffect::ActiveModColorEffect(void) {
-}
-
 void ActiveModColorEffect::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
-}
-
-bool ActiveModColorEffect::isModifierActive(Key key) {
-  if (key.raw >= ranges::OSM_FIRST && key.raw <= ranges::OSM_LAST) {
-    uint8_t idx = key.raw - ranges::OSM_FIRST;
-    key.flags = 0;
-    key.keyCode = Key_LeftControl.keyCode + idx;
-  }
-
-  if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
-    return false;
-
-  return hid::isModifierKeyActive(key);
-}
-
-bool ActiveModColorEffect::isLayerKeyActive(Key key) {
-  uint8_t layer = 255;
-
-  if (key.raw >= ranges::OSL_FIRST && key.raw <= ranges::OSL_LAST) {
-    layer = key.raw - ranges::OSL_FIRST;
-  } else if (key.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
-    layer = key.keyCode;
-    if (layer >= MOMENTARY_OFFSET)
-      layer -= MOMENTARY_OFFSET;
-  }
-
-  if (layer == 255)
-    return false;
-
-  return Layer.isOn(layer);
 }
 
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
@@ -71,8 +38,26 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);
 
-      if (isModifierActive(k) || isLayerKeyActive(k))
-        LEDControl.setCrgbAt(r, c, highlight_color);
+      if (::OneShot.isOneShotKey(k)) {
+        if (::OneShot.isActive(k))
+          ::LEDControl.setCrgbAt(r, c, highlight_color);
+        else
+          ::LEDControl.refreshAt(r, c);
+      } else if (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) {
+        if (hid::isModifierKeyActive(k))
+          ::LEDControl.setCrgbAt(r, c, highlight_color);
+        else
+          ::LEDControl.refreshAt(r, c);
+      } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
+        uint8_t layer = k.keyCode;
+        if (layer >= MOMENTARY_OFFSET)
+          layer -= MOMENTARY_OFFSET;
+
+        if (Layer.isOn(layer))
+          ::LEDControl.setCrgbAt(r, c, highlight_color);
+        else
+          ::LEDControl.refreshAt(r, c);
+      }
     }
   }
 }

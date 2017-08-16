@@ -24,15 +24,13 @@
 namespace kaleidoscope {
 class ActiveModColorEffect : public KaleidoscopePlugin {
  public:
-  ActiveModColorEffect(void);
+  ActiveModColorEffect(void) {}
 
   void begin(void) final;
 
   static cRGB highlight_color;
 
  private:
-  static bool isModifierActive(Key key);
-  static bool isLayerKeyActive(Key key);
   static void loopHook(bool is_post_clear);
 };
 }
