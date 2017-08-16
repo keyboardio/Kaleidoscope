@@ -23,13 +23,15 @@
 namespace kaleidoscope {
 class FingerPainter : public LEDMode {
  public:
-  FingerPainter(void);
-
-  void begin(void) final;
-  void update(void) final;
+  FingerPainter(void) {}
 
   static void toggle(void);
   static bool focusHook(const char *command);
+
+ protected:
+  void setup(void) final;
+  void update(void) final;
+  void refreshAt(byte row, byte col) final;
 
  private:
   static uint16_t color_base_;

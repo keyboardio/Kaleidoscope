@@ -28,20 +28,19 @@ namespace kaleidoscope {
 uint16_t FingerPainter::color_base_;
 bool FingerPainter::edit_mode_;
 
-FingerPainter::FingerPainter(void) {
-}
-
-void FingerPainter::begin(void) {
-  USE_PLUGINS(&::LEDPaletteTheme);
-
-  LEDMode::begin();
-  event_handler_hook_use(eventHandlerHook);
+void FingerPainter::setup(void) {
+  Kaleidoscope.use(&::LEDPaletteTheme);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);
 }
 
 void FingerPainter::update(void) {
   ::LEDPaletteTheme.updateHandler(color_base_, 0);
+}
+
+void FingerPainter::refreshAt(byte row, byte col) {
+  ::LEDPaletteTheme.refreshAt(color_base_, 0, row, col);
 }
 
 void FingerPainter::toggle(void) {
