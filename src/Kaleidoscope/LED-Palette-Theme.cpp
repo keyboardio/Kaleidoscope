@@ -30,7 +30,7 @@ LEDPaletteTheme::LEDPaletteTheme(void) {
 }
 
 void LEDPaletteTheme::begin(void) {
-  USE_PLUGINS(&::EEPROMSettings);
+  Kaleidoscope.use(&::EEPROMSettings);
 
   if (!palette_base_)
     palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
@@ -49,9 +49,22 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
     if (!lookupColorAtPosition(map_base, pos, &color))
       continue;
 
-    LEDControl.setCrgbAt(pos, color);
+    ::LEDControl.setCrgbAt(pos, color);
   }
 }
+
+void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col) {
+  uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
+  uint16_t pos = KeyboardHardware.getLedIndex(row, col);
+
+  cRGB color;
+
+  if (!lookupColorAtPosition(map_base, pos, &color))
+    return;
+
+  ::LEDControl.setCrgbAt(pos, color);
+}
+
 
 const uint8_t LEDPaletteTheme::lookupColorIndexAtPosition(uint16_t map_base, uint16_t position) {
   uint8_t color_index;
