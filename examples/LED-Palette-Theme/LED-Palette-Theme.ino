@@ -27,10 +27,12 @@ namespace example {
 class TestLEDMode : public LEDMode {
  public:
   TestLEDMode() {}
-  void begin(void) final;
-  void update(void) final;
 
   static bool focusHook(const char *command);
+
+ protected:
+  void setup(void) final;
+  void update(void) final;
 
  private:
   static uint16_t map_base_;
@@ -39,8 +41,7 @@ class TestLEDMode : public LEDMode {
 uint16_t TestLEDMode::map_base_;
 
 void
-TestLEDMode::begin(void) {
-  LEDMode::begin();
+TestLEDMode::setup(void) {
   map_base_ = LEDPaletteTheme.reserveThemes(1);
 }
 
