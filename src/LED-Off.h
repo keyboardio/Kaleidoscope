@@ -2,11 +2,15 @@
 
 #include "Kaleidoscope-LEDControl.h"
 
-class LEDOff_ : public LEDMode {
+namespace kaleidoscope {
+class LEDOff : public LEDMode {
  public:
-  LEDOff_(void) { }
+  LEDOff(void) { }
 
-  void update(void) final;
+ protected:
+  void onActivate(void) final;
+  void refreshAt(byte row, byte col) final;
 };
+}
 
-extern LEDOff_ LEDOff;
+extern kaleidoscope::LEDOff LEDOff;

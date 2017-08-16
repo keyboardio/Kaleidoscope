@@ -1,83 +1,77 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-Focus.h"
 
-LEDMode *LEDControl_::modes[LED_MAX_MODES];
-uint8_t LEDControl_::previousMode, LEDControl_::mode;
-uint16_t LEDControl_::syncDelay = 16;
-uint32_t LEDControl_::syncTimer;
+namespace kaleidoscope {
 
-void
-LEDMode::activate(void) {
-  LEDControl.activate(this);
+LEDMode *LEDControl::modes[LED_MAX_MODES];
+uint8_t LEDControl::mode;
+uint16_t LEDControl::syncDelay = 16;
+uint32_t LEDControl::syncTimer;
+
+void LEDMode::activate(void) {
+  ::LEDControl.activate(this);
 }
 
-void
-LEDMode::begin(void) {
-  Kaleidoscope.use(&LEDControl, NULL);
-  LEDControl.mode_add(this);
+void LEDMode::begin(void) {
+  Kaleidoscope.use(&::LEDControl);
+  ::LEDControl.mode_add(this);
+  setup();
 }
 
-LEDControl_::LEDControl_(void) {
-  mode = previousMode = 0;
+LEDControl::LEDControl(void) {
+  mode = 0;
   memset(modes, 0, LED_MAX_MODES * sizeof(modes[0]));
 }
 
-void
-LEDControl_::next_mode(void) {
+void LEDControl::next_mode(void) {
   mode++;
 
-  if (mode >= LED_MAX_MODES) {
-    mode = 0;
-    return;
+  if (mode >= LED_MAX_MODES || !modes[mode]) {
+    return set_mode(0);
   }
 
-  if (modes[mode])
-    return;
-
-  mode = 0;
+  return set_mode(mode);
 }
 
-void
-LEDControl_::update(void) {
-  if (previousMode != mode) {
-    set_all_leds_to({0, 0, 0});
-    if (modes[mode])
-      (modes[mode]->init)();
-  }
-
+#if 0
+void LEDControl::update(void) {
   if (modes[mode])
     (modes[mode]->update)();
-
-  previousMode = mode;
 }
 
-void
-LEDControl_::init_mode(void) {
+void LEDControl::refreshAt(byte row, byte col) {
   if (modes[mode])
-    (modes[mode]->init)();
+    modes[mode]->refreshAt(row, col);
 }
+#endif
 
 void
-LEDControl_::set_mode(uint8_t mode_) {
-  if (mode_ < LED_MAX_MODES)
-    mode = mode_;
+LEDControl::set_mode(uint8_t mode_) {
+  if (mode_ >= LED_MAX_MODES)
+    return;
+
+  set_all_leds_to({0, 0, 0});
+  mode = mode_;
+  if (modes[mode])
+    modes[mode]->onActivate();
 }
 
-uint8_t
-LEDControl_::get_mode(void) {
+uint8_t LEDControl::get_mode_index(void) {
   return mode;
 }
 
-void
-LEDControl_::activate(LEDMode *mode) {
+LEDMode *LEDControl::get_mode(void) {
+  return modes[mode];
+}
+
+void LEDControl::activate(LEDMode *mode) {
   for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
     if (modes[i] == mode)
       return set_mode(i);
   }
 }
 
-int8_t
-LEDControl_::mode_add(LEDMode *mode) {
+int8_t LEDControl::mode_add(LEDMode *mode) {
   for (int i = 0; i < LED_MAX_MODES; i++) {
     if (modes[i])
       continue;
@@ -88,8 +82,7 @@ LEDControl_::mode_add(LEDMode *mode) {
   return -1;
 }
 
-void
-LEDControl_::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
+void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
   cRGB color;
   color.r = r;
   color.g = g;
@@ -97,35 +90,29 @@ LEDControl_::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
   set_all_leds_to(color);
 }
 
-void
-LEDControl_::set_all_leds_to(cRGB color) {
+void LEDControl::set_all_leds_to(cRGB color) {
   for (uint8_t i = 0; i < LED_COUNT; i++) {
     setCrgbAt(i, color);
   }
 }
 
-void
-LEDControl_::setCrgbAt(uint8_t i, cRGB crgb) {
+void LEDControl::setCrgbAt(uint8_t i, cRGB crgb) {
   KeyboardHardware.setCrgbAt(i, crgb);
 }
 
-void
-LEDControl_::setCrgbAt(byte row, byte col, cRGB color) {
+void LEDControl::setCrgbAt(byte row, byte col, cRGB color) {
   KeyboardHardware.setCrgbAt(row, col, color);
 }
 
-cRGB
-LEDControl_::getCrgbAt(uint8_t i) {
+cRGB LEDControl::getCrgbAt(uint8_t i) {
   return KeyboardHardware.getCrgbAt(i);
 }
 
-void
-LEDControl_::syncLeds(void) {
+void LEDControl::syncLeds(void) {
   KeyboardHardware.syncLeds();
 }
 
-void
-LEDControl_::begin(void) {
+void LEDControl::begin(void) {
   set_all_leds_to({0, 0, 0});
 
   for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
@@ -133,25 +120,23 @@ LEDControl_::begin(void) {
       (modes[i]->setup)();
   }
 
-  event_handler_hook_use(eventHandler);
-  loop_hook_use(loopHook);
+  Kaleidoscope.useEventHandlerHook(eventHandler);
+  Kaleidoscope.useLoopHook(loopHook);
 
   syncTimer = millis() + syncDelay;
 }
 
-Key
-LEDControl_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return mappedKey;
 
   if (keyToggledOn(keyState))
-    LEDControl.next_mode();
+    next_mode();
 
   return Key_NoKey;
 }
 
-void
-LEDControl_::loopHook(bool postClear) {
+void LEDControl::loopHook(bool postClear) {
   if (postClear)
     return;
 
@@ -162,8 +147,7 @@ LEDControl_::loopHook(bool postClear) {
   update();
 }
 
-bool
-LEDControl_::focusHook(const char *command) {
+bool LEDControl::focusHook(const char *command) {
   enum {
     SETALL,
     MODE,
@@ -189,9 +173,9 @@ LEDControl_::focusHook(const char *command) {
     uint8_t idx = Serial.parseInt();
 
     if (Serial.peek() == '\n') {
-      cRGB c = LEDControl.getCrgbAt(idx);
+      cRGB c = getCrgbAt(idx);
 
-      Focus.printColor(c.r, c.g, c.b);
+      ::Focus.printColor(c.r, c.g, c.b);
       Serial.println();
     } else {
       cRGB c;
@@ -200,7 +184,7 @@ LEDControl_::focusHook(const char *command) {
       c.g = Serial.parseInt();
       c.b = Serial.parseInt();
 
-      LEDControl.setCrgbAt(idx, c);
+      setCrgbAt(idx, c);
     }
     break;
   }
@@ -211,16 +195,16 @@ LEDControl_::focusHook(const char *command) {
     c.g = Serial.parseInt();
     c.b = Serial.parseInt();
 
-    LEDControl.set_all_leds_to(c);
+    set_all_leds_to(c);
 
     break;
   }
   case MODE: {
     char peek = Serial.peek();
     if (peek == '\n') {
-      Serial.println(LEDControl.get_mode());
+      Serial.println(get_mode_index());
     } else if (peek == 'n') {
-      LEDControl.next_mode();
+      next_mode();
       Serial.read();
     } else if (peek == 'p') {
       // TODO(algernon)
@@ -228,17 +212,17 @@ LEDControl_::focusHook(const char *command) {
     } else {
       uint8_t mode = Serial.parseInt();
 
-      LEDControl.set_mode(mode);
+      set_mode(mode);
     }
     break;
   }
   case THEME: {
     if (Serial.peek() == '\n') {
       for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
-        cRGB c = LEDControl.getCrgbAt(idx);
+        cRGB c = getCrgbAt(idx);
 
-        Focus.printColor(c.r, c.g, c.b);
-        Focus.printSpace();
+        ::Focus.printColor(c.r, c.g, c.b);
+        ::Focus.printSpace();
       }
       Serial.println();
       break;
@@ -252,7 +236,7 @@ LEDControl_::focusHook(const char *command) {
       color.g = Serial.parseInt();
       color.b = Serial.parseInt();
 
-      LEDControl.setCrgbAt(idx, color);
+      setCrgbAt(idx, color);
       idx++;
     }
     break;
@@ -262,4 +246,6 @@ LEDControl_::focusHook(const char *command) {
   return true;
 }
 
-LEDControl_ LEDControl;
+}
+
+kaleidoscope::LEDControl LEDControl;
