@@ -24,14 +24,14 @@
 
 namespace example {
 
-class TestLEDMode : public LEDMode {
+class TestLEDMode : public kaleidoscope::LEDMode {
  public:
   TestLEDMode() {}
 
   static bool focusHook(const char *command);
 
  protected:
-  void setup(void) final;
+  void setup() final;
   void update(void) final;
 
  private:
@@ -41,7 +41,7 @@ class TestLEDMode : public LEDMode {
 uint16_t TestLEDMode::map_base_;
 
 void
-TestLEDMode::setup(void) {
+TestLEDMode::setup() {
   map_base_ = LEDPaletteTheme.reserveThemes(1);
 }
 
