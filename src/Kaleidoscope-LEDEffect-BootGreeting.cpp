@@ -42,7 +42,7 @@ void BootGreetingEffect::loopHook(const bool post_clear) {
 
       if (k == Key_LEDEffectNext) {
         cRGB color = breath_compute();
-        LEDControl.setCrgbAt(r, c, color);
+        ::LEDControl.setCrgbAt(r, c, color);
       }
     }
   }
