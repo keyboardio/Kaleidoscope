@@ -2,12 +2,16 @@
 
 #include "Kaleidoscope-LEDControl.h"
 
+namespace kaleidoscope {
 class LEDSolidColor : public LEDMode {
  public:
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b);
 
-  void init(void) final;
+ protected:
+  void onActivate(void) final;
+  void refreshAt(byte row, byte col) final;
 
  private:
   uint8_t r, g, b;
 };
+}
