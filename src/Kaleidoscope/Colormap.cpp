@@ -43,12 +43,12 @@ void ColormapEffect::max_layers(uint8_t max_) {
 }
 
 void ColormapEffect::onActivate(void) {
-  last_highest_layer_ = Layer.highest();
+  last_highest_layer_ = Layer.top();
   ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
 }
 
 void ColormapEffect::update(void) {
-  if (Layer.highest() == last_highest_layer_)
+  if (Layer.top() == last_highest_layer_)
     return;
 
   onActivate();
