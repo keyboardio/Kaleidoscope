@@ -24,7 +24,7 @@ configuration is necessary.
 #include <Kaleidoscope-Escape-OneShot.h>
 
 void setup () {
-  USE_PLUGINS(&OneShot, &EscapeOneShot);
+  Kaleidoscope.use(&OneShot, &EscapeOneShot);
 
   Kaleidoscope.setup ();
 }

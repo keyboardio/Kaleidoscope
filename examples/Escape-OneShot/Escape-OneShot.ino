@@ -62,7 +62,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&OneShot, &EscapeOneShot);
+  Kaleidoscope.use(&OneShot, &EscapeOneShot);
   Kaleidoscope.setup();
 }
 
