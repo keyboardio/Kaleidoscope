@@ -44,7 +44,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&LEDOff, &EEPROMSettings, &FingerPainter, &Focus);
+  Kaleidoscope.use(&LEDOff, &EEPROMSettings, &FingerPainter, &Focus);
 
   Kaleidoscope.setup();
 

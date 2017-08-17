@@ -29,12 +29,12 @@ and register the `Focus` hooks:
 #include <Kaleidoscope-Focus.h>
 
 void setup() {
-  USE_PLUGINS(&EEPROMSettings, &FingerPainter, &Focus);
+  Kaleidoscope.use(&EEPROMSettings, &FingerPainter, &Focus);
 
   Kaleidoscope.setup();
 
   EEPROMSettings.seal();
-  
+
   Focus.addHook(FOCUS_HOOK_FINGERPAINTER);
 }
 ```
