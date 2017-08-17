@@ -109,12 +109,14 @@ Layer_::updateActiveLayers(void) {
   }
 }
 
-uint8_t Layer_::top(void) {
+void Layer_::updateHighestLayer(void) {
   for (int8_t i = 31; i >= 0; i--) {
-    if (bitRead(LayerState, i))
-      return i;
+    if (bitRead(LayerState, i)) {
+      highestLayer = i;
+      return;
+    }
   }
-  return 0;
+  highestLayer = 0;
 }
 
 void Layer_::move(uint8_t layer) {
@@ -127,7 +129,7 @@ void Layer_::on(uint8_t layer) {
 
   bitSet(LayerState, layer);
   if (layer > highestLayer)
-    highestLayer = layer;
+    updateHighestLayer();
 
   /* If the layer did turn on, update the keymap cache. See layers.h for an
    * explanation about the caches we have. */
@@ -140,7 +142,7 @@ void Layer_::off(uint8_t layer) {
 
   bitClear(LayerState, layer);
   if (layer == highestLayer)
-    highestLayer = top();
+    updateHighestLayer();
 
   /* If the layer did turn off, update the keymap cache. See layers.h for an
    * explanation about the caches we have. */
@@ -153,11 +155,11 @@ boolean Layer_::isOn(uint8_t layer) {
 }
 
 void Layer_::next(void) {
-  on(top() + 1);
+  on(highestLayer + 1);
 }
 
 void Layer_::previous(void) {
-  off(top());
+  off(highestLayer);
 }
 
 void Layer_::defaultLayer(uint8_t layer) {
