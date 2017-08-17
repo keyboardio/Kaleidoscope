@@ -44,12 +44,14 @@ class Layer_ {
     uint8_t layer = activeLayers[row][col];
     return (*getKey)(layer, row, col);
   }
-
   static void on(uint8_t layer);
   static void off(uint8_t layer);
   static void move(uint8_t layer);
 
   static uint8_t top(void);
+  static uint8_t highest(void) {
+    return highestLayer;
+  }
   static void next(void);
   static void previous(void);
 
