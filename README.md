@@ -35,10 +35,10 @@ static const kaleidoscope::ShapeShifter::dictionary_t shape_shift_dictionary[] P
 };
 
 void setup() {
-  USE_PLUGINS(&ShapeShifter);
+  Kaleidoscope.use(&ShapeShifter);
 
   Kaleidoscope.setup();
-  
+
   ShapeShifter.dictionary = shape_shift_dictionary;
 }
 ```
