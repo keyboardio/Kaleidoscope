@@ -52,8 +52,8 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
 
 void setup() {
   Serial.begin(9600);
-  
-  USE_PLUGINS(&Unicode, &Syster);
+
+  Kaleidoscope.use(&Unicode, &Syster);
 
   Kaleidoscope.setup ();
 }

@@ -37,7 +37,7 @@ Syster::Syster(void) {
 }
 
 void Syster::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 void Syster::reset(void) {

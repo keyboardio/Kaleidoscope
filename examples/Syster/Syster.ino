@@ -65,7 +65,7 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
 }
 
 void setup() {
-  USE_PLUGINS(&Unicode, &Syster);
+  Kaleidoscope.use(&Unicode, &Syster);
 
   Kaleidoscope.setup();
 }
