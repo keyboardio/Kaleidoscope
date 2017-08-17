@@ -32,10 +32,12 @@ class ColormapEffect : public LEDMode {
 
  protected:
   void setup(void) final;
+  void onActivate(void) final;
   void update(void) final;
   void refreshAt(byte row, byte col) final;
 
  private:
+  static uint8_t last_highest_layer_;
   static uint8_t max_layers_;
   static uint16_t map_base_;
 };

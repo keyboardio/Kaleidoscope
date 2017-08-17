@@ -28,6 +28,7 @@ namespace kaleidoscope {
 
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
+uint8_t ColormapEffect::last_highest_layer_;
 
 void ColormapEffect::setup(void) {
   Kaleidoscope.use(&::EEPROMSettings, &::LEDPaletteTheme);
@@ -41,22 +42,20 @@ void ColormapEffect::max_layers(uint8_t max_) {
   map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
 }
 
-void ColormapEffect::update(void) {
-  for (uint8_t l = 0; l < max_layers_; l++) {
-    if (!Layer.isOn(l))
-      continue;
+void ColormapEffect::onActivate(void) {
+  last_highest_layer_ = Layer.top();
+  ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
+}
 
-    ::LEDPaletteTheme.updateHandler(map_base_, l);
-  }
+void ColormapEffect::update(void) {
+  if (Layer.top() == last_highest_layer_)
+    return;
+
+  onActivate();
 }
 
 void ColormapEffect::refreshAt(byte row, byte col) {
-  for (uint8_t l = 0; l < max_layers_; l++) {
-    if (!Layer.isOn(l))
-      continue;
-
-    ::LEDPaletteTheme.refreshAt(map_base_, l, row, col);
-  }
+  ::LEDPaletteTheme.refreshAt(map_base_, last_highest_layer_, row, col);
 }
 
 bool ColormapEffect::focusHook(const char *command) {
