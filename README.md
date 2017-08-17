@@ -31,7 +31,9 @@ namespace example {
 class TestLEDMode : public LEDMode {
  public:
   TestLEDMode() {}
-  void begin(void) final;
+
+ protected:
+  void setup(void) final;
   void update(void) final;
 
   static bool focusHook(const char *command);
@@ -42,14 +44,11 @@ class TestLEDMode : public LEDMode {
 
 uint16_t TestLEDMode::map_base_;
 
-void
-TestLEDMode::begin(void) {
-  LEDMode::begin();
+void TestLEDMode::setup(void) {
   map_base_ = LEDPaletteTheme.reserveThemes(1);
 }
 
-void
-TestLEDMode::update(void) {
+void TestLEDMode::update(void) {
   LEDPaletteTheme.updateHandler(map_base_, 0);
 }
 
@@ -65,7 +64,7 @@ example::TestLEDMode TestLEDMode;
 void setup() {
   Serial.begin(9600);
 
-  USE_PLUGINS(&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings);
+  Kaleidoscope.use(&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings);
 
   Kaleidoscope.setup();
 
