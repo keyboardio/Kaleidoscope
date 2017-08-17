@@ -25,7 +25,7 @@ void TestMode_::begin(void) {
   white.r = 160;
   white.g = 160;
   white.b = 160;
-  loop_hook_use(this->loopHook);
+  Kaleidoscope.useLoopHook(this->loopHook);
 }
 
 void TestMode_::loopHook(bool postClear) {
