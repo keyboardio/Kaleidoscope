@@ -25,7 +25,7 @@ namespace kaleidoscope {
 
 class LEDPaletteTheme : public KaleidoscopePlugin {
  public:
-  LEDPaletteTheme(void) {};
+  LEDPaletteTheme(void) {}
 
   void begin(void) final;
 
