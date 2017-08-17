@@ -44,7 +44,7 @@ void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_h
 void setup() {
   Serial.begin(9600);
 
-  USE_PLUGINS(&MagicCombo);
+  Kaleidoscope.use(&MagicCombo);
 
   Kaleidoscope.setup();
 

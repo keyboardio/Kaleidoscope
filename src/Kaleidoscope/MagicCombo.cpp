@@ -38,7 +38,7 @@ MagicCombo::MagicCombo(void) {
 }
 
 void MagicCombo::begin(void) {
-  loop_hook_use(loopHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 void MagicCombo::loopHook(bool is_post_clear) {
