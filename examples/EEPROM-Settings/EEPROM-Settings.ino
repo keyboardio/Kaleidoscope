@@ -43,7 +43,7 @@ void setup() {
 
   Kaleidoscope.setup();
 
-  USE_PLUGINS(&EEPROMSettings);
+  Kaleidoscope.use(&EEPROMSettings);
 
   while (!Serial) {
   }

@@ -37,23 +37,23 @@ static struct {
 } testSettings;
 
 void setup () {
-  USE_PLUGINS(&EEPROMSettings);
+  Kaleidoscope.use(&EEPROMSettings);
 
   /* Use other plugins that make use of the EEPROM */
-  
+
   Kaleidoscope.setup();
-  
+
   settingsBase = EEPROMSettings.requestSlice(sizeof(testSettings));
-  
+
   EEPROMSettings.seal();
-  
+
   if (!EEPROMSettings.isValid()) {
     // Handle the case where the settings are out of sync...
     // Flash LEDs, for example.
-    
+
     return;
   }
-  
+
   EEPROM.get(settingsBase, testSettings);
 }
 ```
@@ -122,7 +122,7 @@ The plugin provides two [Focus][focus] hooks: `FOCUS_HOOK_SETTINGS`, and
 settings, and with the contents of the `EEPROM` through Focus.
 
  [focus]: https://github.com/keyboardio/Kaleidoscope-Focus
- 
+
 These provide the following `Focus` commands:
 
 ### `settings.crc`
