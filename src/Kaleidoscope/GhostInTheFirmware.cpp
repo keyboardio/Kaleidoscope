@@ -32,7 +32,7 @@ GhostInTheFirmware::GhostInTheFirmware(void) {
 }
 
 void GhostInTheFirmware::begin(void) {
-  loop_hook_use(this->loopHook);
+  Kaleidoscope.useLoopHook(this->loopHook);
 }
 
 void GhostInTheFirmware::activate(void) {
