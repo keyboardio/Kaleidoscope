@@ -48,8 +48,7 @@ class Layer_ {
   static void off(uint8_t layer);
   static void move(uint8_t layer);
 
-  static uint8_t top(void);
-  static uint8_t highest(void) {
+  static uint8_t top(void) {
     return highestLayer;
   }
   static void next(void);
@@ -72,6 +71,8 @@ class Layer_ {
   static void updateActiveLayers(void);
 
  private:
+  static void updateHighestLayer(void);
+
   static uint8_t highestLayer;
   static Key liveCompositeKeymap[ROWS][COLS];
   static uint8_t activeLayers[ROWS][COLS];
