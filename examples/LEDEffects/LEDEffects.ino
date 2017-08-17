@@ -44,7 +44,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 
 void setup() {
-  USE_PLUGINS(&LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect);
+  Kaleidoscope.use(&LEDOff, &MiamiEffect, &JukeboxEffect, &JukeboxAlternateEffect);
 
   Kaleidoscope.setup();
 

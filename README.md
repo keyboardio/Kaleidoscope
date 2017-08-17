@@ -10,7 +10,7 @@
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `LEDEffects` plugin provides a selection of LED effects, each of them fairly
-simple, simple enough to not need a plugin of their own. 
+simple, simple enough to not need a plugin of their own.
 
 ## Using the plugin
 
@@ -23,7 +23,7 @@ them.
 #include <Kaleidoscope-LEDEffects.h>
 
 void setup(void) {
-  USE_PLUGINS(&JukeBoxEffect);
+  Kaleidoscope.use(&JukeBoxEffect);
 
   Kaleidoscope.setup();
 }
