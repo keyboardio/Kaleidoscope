@@ -19,17 +19,17 @@ codepoints.
 ## Using the extension
 
 Using the extension is as simple as including the header, registering it with
-`USE_PLUGINS()`, and then using any of the methods provided by the `Unicode`
-singleton object.
+`Kaleidoscope.use()`, and then using any of the methods provided by the
+`Unicode` singleton object.
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Unicode.h>
 
 void setup() {
-  USE_PLUGINS(&Unicode);
+  Kaleidoscope.use(&Unicode);
   Kaleidoscope.setup();
-  
+
   Unicode.type(0x2328);
 }
 ```

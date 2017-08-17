@@ -44,7 +44,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&Unicode);
+  Kaleidoscope.use(&Unicode);
 
   Kaleidoscope.setup();
 
