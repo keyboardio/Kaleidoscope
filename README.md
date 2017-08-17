@@ -31,7 +31,7 @@ the box, without any further configuration:
 #include <Kaleidoscope-TypingBreaks.h>
 
 void setup (void) {
-  USE_PLUGINS (&TypingBreaks);
+  Kaleidoscope.use (&TypingBreaks);
 
   Kaleidoscope.setup ();
 }

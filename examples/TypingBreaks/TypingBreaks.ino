@@ -40,7 +40,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 void setup() {
-  USE_PLUGINS(&TypingBreaks);
+  Kaleidoscope.use(&TypingBreaks);
 
   Kaleidoscope.setup();
 }

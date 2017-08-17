@@ -41,7 +41,7 @@ TypingBreaks::TypingBreaks(void) {
 }
 
 void TypingBreaks::begin(void) {
-  event_handler_hook_use(this->eventHandlerHook);
+  Kaleidoscope.useEventHandlerHook(this->eventHandlerHook);
 }
 
 Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
