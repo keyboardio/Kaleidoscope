@@ -48,17 +48,17 @@ static void leaderTX() {
   Serial.println("leaderTX");
 }
 
-static const kaleidoscope::Leader::dictionary_t leader_dictionary PROGMEM = 
+static const kaleidoscope::Leader::dictionary_t leader_dictionary PROGMEM =
   LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderA},
               {LEADER_SEQ(LEAD(0), Key_T, Key_X), leaderTX});
 
 void setup() {
   Serial.begin(9600);
-  
-  USE_PLUGINS(&Leader);
-  
+
+  Kaleidoscope.use(&Leader);
+
   Kaleidoscope.setup();
-  
+
   Leader.dictionary = leader_dictionary;
 }
 ```

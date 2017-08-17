@@ -51,7 +51,7 @@ LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderTestA},
 {LEADER_SEQ(LEAD(0), Key_A, Key_A), leaderTestAA});
 
 void setup() {
-  USE_PLUGINS(&Leader);
+  Kaleidoscope.use(&Leader);
 
   Kaleidoscope.setup();
 

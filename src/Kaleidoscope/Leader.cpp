@@ -75,8 +75,8 @@ Leader::Leader(void) {
 }
 
 void Leader::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
-  loop_hook_use(loopHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 void Leader::reset(void) {
