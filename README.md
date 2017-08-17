@@ -51,7 +51,7 @@ void someFunction(void) {
 }
 
 void setup(void) {
-  USE_PLUGINS(&HostOS);
+  Kaleidoscope.use(&HostOS);
 
   Kaleidoscope.setup ();
 }
