@@ -198,7 +198,7 @@ Macros_::Macros_(void) {
 
 void
 Macros_::begin(void) {
-  event_handler_hook_use(handleMacroEvent);
+  Kaleidoscope.useEventHandlerHook(handleMacroEvent);
 }
 
 Macros_ Macros;
