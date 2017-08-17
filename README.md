@@ -12,8 +12,7 @@
 The `Colormap` extension provides an easier way to set up a different - static -
 color map per-layer. This means that we can set up a map of colors for each key,
 on a per-layer basis, and whenever a layer becomes active, the color map for
-that layer is applied on top of everything else. Colors are picked from a
-15-color palette (or 16, if we disable transparency), provided by
+that layer is applied. Colors are picked from a 16-color palette, provided by
 the [LED-Palette-Theme][plugin:l-p-t] plugin. The color map is stored in
 `EEPROM`, and can be easily changed via the [Focus][plugin:focus] plugin, which
 also provides palette editing capabilities.
@@ -35,14 +34,14 @@ void setup(void) {
   Kaleidoscope.use(&ColormapEffect, &Focus);
 
   Kaleidoscope.setup();
-  
+
   ColormapEffect.max_layers(1);
   Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
   Focus.addHook(FOCUS_HOOK_COLORMAP);
 }
 ```
 
-## Extension methods
+## Plugin methods
 
 The extension provides an `ColormapEffect` singleton object, with a single method:
 
