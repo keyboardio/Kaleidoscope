@@ -74,7 +74,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
-  USE_PLUGINS(&EEPROMKeymapProgrammer, &EEPROMKeymap, &Macros);
+  Kaleidoscope.use(&EEPROMKeymapProgrammer, &EEPROMKeymap, &Macros);
 
   Kaleidoscope.setup();
 
