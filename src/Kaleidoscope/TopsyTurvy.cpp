@@ -30,7 +30,7 @@ TopsyTurvy::TopsyTurvy(void) {
 }
 
 void TopsyTurvy::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {

@@ -27,7 +27,7 @@ effects to, and use the plugin:
 TOPSY(1), TOPSY(2), TOPSY(3)
 
 void setup () {
-  USE_PLUGINS (&TopsyTurvy);
+  Kaleidoscope.use (&TopsyTurvy);
 
   Kaleidoscope.setup ();
 }
