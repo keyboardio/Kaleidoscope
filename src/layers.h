@@ -75,6 +75,4 @@ class Layer_ {
   static uint8_t activeLayers[ROWS][COLS];
 };
 
-Key layer_getKey(uint8_t layer, uint8_t r, uint8_t c);
-
 extern Layer_ Layer;
