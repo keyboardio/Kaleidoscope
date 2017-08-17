@@ -58,7 +58,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
-  USE_PLUGINS(&HostOS, &Macros);
+  Kaleidoscope.use(&HostOS, &Macros);
 
   Kaleidoscope.setup();
 }
