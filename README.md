@@ -37,7 +37,7 @@ enabling the plugin:
 #include <Kaleidoscope-SpaceCadet.h>
 
 void setup() {
-  USE_PLUGINS(&SpaceCadetShift);
+  Kaleidoscope.use(&SpaceCadetShift);
 
   Kaleidoscope.setup();
 }
