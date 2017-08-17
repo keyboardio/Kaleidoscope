@@ -35,7 +35,7 @@ Cycle::Cycle(void) {
 }
 
 void Cycle::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 void Cycle::replace(Key key) {
