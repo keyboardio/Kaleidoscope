@@ -24,10 +24,6 @@
 namespace kaleidoscope {
 
 uint16_t LEDPaletteTheme::palette_base_;
-uint8_t LEDPaletteTheme::transparent_index = 15;
-
-LEDPaletteTheme::LEDPaletteTheme(void) {
-}
 
 void LEDPaletteTheme::begin(void) {
   Kaleidoscope.use(&::EEPROMSettings);
@@ -44,11 +40,7 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
 
   for (uint16_t pos = 0; pos < ROWS * COLS; pos++) {
-    cRGB color;
-
-    if (!lookupColorAtPosition(map_base, pos, &color))
-      continue;
-
+    cRGB color = lookupColorAtPosition(map_base, pos);
     ::LEDControl.setCrgbAt(pos, color);
   }
 }
@@ -57,11 +49,7 @@ void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, byte row, by
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
   uint16_t pos = KeyboardHardware.getLedIndex(row, col);
 
-  cRGB color;
-
-  if (!lookupColorAtPosition(map_base, pos, &color))
-    return;
-
+  cRGB color = lookupColorAtPosition(map_base, pos);
   ::LEDControl.setCrgbAt(pos, color);
 }
 
@@ -78,15 +66,10 @@ const uint8_t LEDPaletteTheme::lookupColorIndexAtPosition(uint16_t map_base, uin
   return color_index;
 }
 
-const bool LEDPaletteTheme::lookupColorAtPosition(uint16_t map_base, uint16_t position, cRGB *color) {
+const cRGB LEDPaletteTheme::lookupColorAtPosition(uint16_t map_base, uint16_t position) {
   uint8_t color_index = lookupColorIndexAtPosition(map_base, position);
 
-  if (color_index == transparent_index)
-    return false;
-
-  *color = lookupPaletteColor(color_index);
-
-  return true;
+  return lookupPaletteColor(color_index);
 }
 
 const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {

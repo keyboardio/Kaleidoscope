@@ -10,7 +10,7 @@
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 A common base for plugins that want to provide themes, or theme-related
-capabilities, using a 15+1 color palette. In other words, this is for plugin
+capabilities, using a 16 color palette. In other words, this is for plugin
 authors primarily. The primary aim of the plugin is to provide not only a common
 palette, but tools that make it easier to use it too.
 
@@ -111,17 +111,6 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 >
 > The palette can be set via the `palette` focus command, implemented by the
 > `FOCUS_HOOK_LEDPALETTETHEME` hook explained below.
-
-### `.transparent_index`
-
-> The plugin supports transparent colors too: by default, the last color (index
-> 15) is treated as transparent. If a pixel is found to be transparent,
-> `.updateHandler` will not change its color, but leave it as is. This way one
-> can create layers of themes, if so desired.
->
-> This property can be set to a number between 0 and 15 to make that index
-> transparent, or to a number higher than 15 to disable transparency support,
-> and gain another color on the palette.
 
 ## Focus commands
 

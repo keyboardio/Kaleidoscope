@@ -25,7 +25,7 @@ namespace kaleidoscope {
 
 class LEDPaletteTheme : public KaleidoscopePlugin {
  public:
-  LEDPaletteTheme(void);
+  LEDPaletteTheme(void) {};
 
   void begin(void) final;
 
@@ -34,7 +34,7 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
   static void refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col);
 
   static const uint8_t lookupColorIndexAtPosition(uint16_t theme_base, uint16_t position);
-  static const bool lookupColorAtPosition(uint16_t theme_base, uint16_t position, cRGB *color);
+  static const cRGB lookupColorAtPosition(uint16_t theme_base, uint16_t position);
   static void updateColorIndexAtPosition(uint16_t theme_base, uint16_t position, uint8_t color_index);
 
   static const cRGB lookupPaletteColor(uint8_t palette_index);
@@ -42,8 +42,6 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
   static bool paletteFocusHook(const char *command);
   static bool themeFocusHandler(const char *command, const char *expected_command,
                                 uint16_t theme_base, uint8_t max_themes);
-
-  static uint8_t transparent_index;
 
  private:
   static uint16_t palette_base_;
