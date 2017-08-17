@@ -74,7 +74,7 @@ time an action is to be performed.
 TD(0)
 
 // later in the Sketch:
-void tapDanceAction(uint8_t tap_dance_index, uint8_t tap_count, 
+void tapDanceAction(uint8_t tap_dance_index, uint8_t tap_count,
                     kaleidoscope::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
@@ -84,8 +84,8 @@ void tapDanceAction(uint8_t tap_dance_index, uint8_t tap_count,
 }
 
 void setup() {
-  USE_PLUGINS(&TapDance);
-  
+  Kaleidoscope.use(&TapDance);
+
   Kaleidoscope.setup ();
 }
 ```

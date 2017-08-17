@@ -100,8 +100,8 @@ TapDance::TapDance(void) {
 }
 
 void TapDance::begin(void) {
-  event_handler_hook_use(eventHandlerHook);
-  loop_hook_use(loopHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]) {
