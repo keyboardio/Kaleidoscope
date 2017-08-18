@@ -23,7 +23,7 @@ uint32_t CycleTimeReport::next_report_time_;
 uint32_t CycleTimeReport::loop_start_time_;
 uint32_t CycleTimeReport::average_loop_time;
 
-void CycleTimeReport::begin (void) {
+void CycleTimeReport::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
   next_report_time_ = millis() + 1000;
 }
