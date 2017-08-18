@@ -213,6 +213,11 @@ bool OneShot::isActive(void) {
   return (state_.all && !hasTimedOut());
 }
 
+bool OneShot::isActive(Key key) {
+  uint8_t idx = key.raw - ranges::OS_FIRST;
+  return bitRead(state_.all, idx) && !hasTimedOut();
+}
+
 bool OneShot::isModifierActive(Key key) {
   if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
     return false;
