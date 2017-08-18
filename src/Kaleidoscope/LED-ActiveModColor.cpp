@@ -25,7 +25,6 @@ namespace kaleidoscope {
 cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
 };
-bool ActiveModColorEffect::oneshot_only;
 
 void ActiveModColorEffect::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
@@ -33,9 +32,6 @@ void ActiveModColorEffect::begin(void) {
 
 void ActiveModColorEffect::loopHook(bool is_post_clear) {
   if (is_post_clear)
-    return;
-
-  if (oneshot_only && !::OneShot.isActive())
     return;
 
   for (byte r = 0; r < ROWS; r++) {
