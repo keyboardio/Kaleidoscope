@@ -44,7 +44,8 @@ void ColormapEffect::max_layers(uint8_t max_) {
 
 void ColormapEffect::onActivate(void) {
   last_highest_layer_ = Layer.top();
-  ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
+  if (last_highest_layer_ <= max_layers_)
+    ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
 }
 
 void ColormapEffect::update(void) {
@@ -55,7 +56,8 @@ void ColormapEffect::update(void) {
 }
 
 void ColormapEffect::refreshAt(byte row, byte col) {
-  ::LEDPaletteTheme.refreshAt(map_base_, last_highest_layer_, row, col);
+  if (last_highest_layer_ <= max_layers_)
+    ::LEDPaletteTheme.refreshAt(map_base_, last_highest_layer_, row, col);
 }
 
 bool ColormapEffect::focusHook(const char *command) {
