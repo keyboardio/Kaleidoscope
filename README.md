@@ -46,6 +46,15 @@ property:
 
 > The color to use for highlighting the modifiers. Defaults to a white color.
 
+### `.oneshot_only`
+
+> A flag one can set to tell the plugin that they are using one-shot modifiers
+> and layers only. This allows it to take some shortcuts, and optimize
+> performance, at the cost of not highlighting any non-oneshot keys it otherwise
+> would.
+>
+> Defaults to `false`.
+
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)

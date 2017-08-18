@@ -29,6 +29,7 @@ class ActiveModColorEffect : public KaleidoscopePlugin {
   void begin(void) final;
 
   static cRGB highlight_color;
+  static bool oneshot_only;
 
  private:
   static void loopHook(bool is_post_clear);
