@@ -1,0 +1,330 @@
+#! /bin/sh
+
+set -e
+
+firmware_size () {
+	## This is a terrible hack, please don't hurt me. - algernon
+
+	MAX_PROG_SIZE=28672
+
+	output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+
+	PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
+
+  PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+
+	echo "${output}" | sed -e "s,\(Program:.*\)(\([0-9\.]*%\) Full),\1(${PERCENT}% Full),"
+}
+
+find_sketch () {
+    SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
+    LIBRARY="${LIBRARY:-${SKETCH}}"
+    if [ -z "${SKETCH}" ] || [ -z "${LIBRARY}" ] || [ -z "${ROOT}" ] || [ -z "${SOURCEDIR}" ]; then
+        echo "SKETCH, LIBRARY, SOURCEDIR, and ROOT need to be set before including this file!" >&2
+        exit 1
+    fi
+
+    for path in "examples/${LIBRARY}" \
+                    "src" \
+		    "."; do
+        if [ -f "${path}/${SKETCH}.ino" ]; then
+            echo "${path}"
+            return
+        fi
+    done
+    exit 1
+}
+
+prepare_to_flash () {
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    echo "Press ENTER when ready..."
+    read a
+}
+
+flash () {
+    prepare_to_flash
+    reset_device
+    sleep 3s
+    find_bootloader_ports
+    flash_over_usb || flash_over_usb
+
+}
+
+flash_over_usb () {
+    sleep 1s
+    ${AVRDUDE} -q -q -C ${AVRDUDE_CONF} -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+
+}
+
+flash_from_bootloader() {
+	prepare_to_flash
+	find_bootloader_ports
+	flash_over_usb || flash_over_usb
+}
+
+
+program() {
+    prepare_to_flash
+    flash_with_programmer
+}
+
+flash_with_programmer() {
+
+    ${AVRDUDE} -v \
+			-C ${AVRDUDE_CONF} \
+		        -p${MCU} \
+		        -cusbtiny \
+		        -D \
+		        -B 1 \
+		        "-Uflash:w:${HEX_FILE_PATH}:i"
+}
+
+hex_with_bootloader () {
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+	  echo "Using ${BOOTLOADER_PATH}"
+	  ${MD5} ${BOOTLOADER_PATH}
+	  cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    	ln -sf "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    cat <<EOF
+
+Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
+Make sure you have the bootloader version you expect.
+
+And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
+
+EOF
+}
+
+build () {
+    compile $@
+    size $@
+}
+
+compile () {
+    build_version
+    build_filenames
+    install -d "${OUTPUT_PATH}"
+
+    echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+
+    ${compile_HOOKS}
+
+    if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
+        local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
+    fi
+
+    ${ARDUINO_BUILDER} \
+        -compile \
+		    -hardware "${ARDUINO_PATH}/hardware" \
+		    -hardware "${BOARD_HARDWARE_PATH}" \
+		    ${ARDUINO_TOOLS_PARAM} \
+		    -tools "${ARDUINO_PATH}/tools-builder" \
+		    -fqbn "${FQBN}" \
+        	    -libraries "." \
+                    -libraries "${ROOT}" \
+		    -libraries "${BOARD_HARDWARE_PATH}/.." \
+        	    ${local_LIBS} \
+		    ${EXTRA_BUILDER_ARGS} \
+		    -build-path "${BUILD_PATH}" \
+		    -ide-version "${ARDUINO_IDE_VERSION}" \
+		    -warnings all \
+        ${ARDUINO_VERBOSE} \
+		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
+		    "$(find_sketch)/${SKETCH}.ino"
+
+    cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
+    cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
+    ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
+    ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+	  rm -rf "${BUILD_PATH}"
+}
+
+_find_all () {
+    for plugin in ./*.ino \
+	    	   examples/* \
+                      src/*.ino; do
+        if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
+            p="$(basename "${plugin}" .ino)"
+            if [ "${p}" != '*' ]; then
+                echo "${p}"
+            fi
+        fi
+    done | sort
+}
+
+build_all () {
+    plugins="$(_find_all)"
+
+    for plugin in ${plugins}; do
+        export SKETCH="${plugin}"
+        export LIBRARY="${plugin}"
+        $0 ${plugin} build
+    done
+}
+
+size () {
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+	  echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
+	  firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
+	  echo
+}
+
+size_map () {
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
+}
+
+decompile () {
+
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+        compile
+    fi
+
+    "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
+}
+
+clean () {
+    rm -rf "${OUTPUT_PATH}"
+}
+
+reset_device () {
+    ${RESET_DEVICE}
+}
+
+usage () {
+    cat <<EOF
+Usage: $0 SKETCH commands...
+
+Runs all of the commands in the context of the Sketch.
+
+Available commands:
+
+  help
+    This help screen.
+
+  compile
+    Compiles the sketch.
+
+  size
+    Reports the size of the compiled sketch.
+
+  build
+    Runs compile and report-size.
+
+  clean
+    Cleans up the output directory.
+
+  size-map
+    Displays the size map for the sketch.
+
+  decomple
+    Decompile the sketch.
+
+  reset-device
+    Reset the device.
+
+  flash
+    Flashes the firmware using avrdude.
+
+  build-all
+    Build all Sketches we can find.
+EOF
+}
+
+help () {
+    usage
+}
+
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+## Parse the command-line
+##  - anything that has a =, is an env var
+##  - from the remaining stuff, the first one is the Library/Sketch
+##  - everything else are commands
+##
+##  - if there is only one argument, that's a command
+
+ROOT="$(cd $(dirname $0)/..; pwd)"
+export ROOT
+export SOURCEDIR="$(pwd)"
+
+if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
+    . "${HOME}/.kaleidoscope-builder.conf"
+fi
+
+if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
+    . "${SOURCEDIR}/.kaleidoscope-builder.conf"
+fi
+
+if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
+    . "${SOURCEDIR}/kaleidoscope-builder.conf"
+fi
+
+
+. ${ROOT}/etc/kaleidoscope-builder.conf
+
+
+cmds=""
+
+## Export vars
+for i in $(seq 1 $#); do
+    v="$1"
+    shift
+
+    case "${v}" in
+        *=*)
+            export ${v}
+            ;;
+        *)
+            cmds="${cmds} ${v}"
+            ;;
+    esac
+done
+
+set -- ${cmds}
+
+if [ $# -eq 1 ]; then
+    cmd="$(echo $1 | tr '-' '_')"
+    ${cmd}
+    exit $?
+fi
+
+SKETCH="$1"
+shift
+
+if [ "${SKETCH}" = "default" ]; then
+    SKETCH="${DEFAULT_SKETCH}"
+fi
+
+cmds=""
+
+for i in $(seq 1 $#); do
+    cmds="${cmds} $(echo $1 | tr '-' '_')"
+    shift
+done
+
+LIBRARY="${SKETCH}"
+
+export SKETCH
+export LIBRARY
+
+for cmd in ${cmds}; do
+    ${cmd}
+done
