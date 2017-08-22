@@ -15,17 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Modified by Ben Gemperline to support additional keys.
+ * Modified by Ben Gemperline to support additional keys and dynamic
+ * key mappings.
  */
 
 #include <Kaleidoscope-SpaceCadet.h>
 #include <kaleidoscope/hid.h>
-#include <stdint.h>
-#include "SpaceCadet.h"
 
 namespace kaleidoscope {
 
-    //Default constructor
+    //Default, empty constructor
     ModifierKeyMap::ModifierKeyMap(){
     }
 
@@ -47,27 +46,31 @@ namespace kaleidoscope {
     ModifierKeyMap * SpaceCadet::map;
     uint16_t SpaceCadet::time_out = 1000;
 
+    //Empty constructor
     SpaceCadet::SpaceCadet() {
         //By default, we make one with left shift sending left paren, and right shift sending right paren
         static ModifierKeyMap internalMap[] = {
             {Key_LeftShift,Key_LeftParen,250}
             ,{Key_RightShift,Key_RightParen,250}
+            //These may be uncommented, added, or set in the main sketch
             /*,{Key_LeftGui,Key_LeftCurlyBracket,250}
             ,{Key_RightAlt,Key_RightCurlyBracket,250}
             ,{Key_LeftControl,Key_LeftBracket,250}
             ,{Key_RightControl,Key_RightBracket,250}*/
         };
 
+        //Set the variables to our internal map
         map = internalMap;
         map_size = sizeof(internalMap)/sizeof(internalMap[0]);
-        //setMap(internalMap, sizeof(internalMap));
     }
 
+    //Constructor with map and map size
     SpaceCadet::SpaceCadet(ModifierKeyMap * map_, uint8_t map_size_) {
         //Call the initializer
         setMap(map_, map_size_);
     }
 
+    //Void function to reset the modifier map if desired.
     void SpaceCadet::setMap(ModifierKeyMap * map_, uint8_t map_size_){
         //Set the map
         map = map_;
@@ -80,9 +83,7 @@ namespace kaleidoscope {
     }
 
     Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-        //char buffer[50];
 
-        //Serial.print("In eventHandlerHook");
         // If nothing happened, bail out fast.
         if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
             return mapped_key;
@@ -91,37 +92,19 @@ namespace kaleidoscope {
         // If a key has been just toggled on...
         if (keyToggledOn(key_state)) {
 
-            /*
-            sprintf(buffer, "Pressed Key: %u\n", mapped_key.raw );
-            Serial.print(buffer);
-            */
-
             if(map_size > 0) {
-                //This will only set one key, and if it isn't in our map it clears everything for the non-pressed key
+                //This will only set one key, and if it isn't in our map it clears everything 
+                //for the non-pressed key
                 for (uint8_t i = 0; i < map_size; ++i) {
                     if(mapped_key.raw == map[i].input.raw) {
+                        //The keypress was valid and a match.
                         map[i].flagged = true;
                         map[i].start_time = millis();
-                        //There was a valid keypress
-                        /*sprintf(buffer, "Valid Key: %u\n", mapped_key.raw);
-                        Serial.print(buffer);*/
-
                     } else {
+                        //The keypress wasn't a match.
                         map[i].flagged = false;
                         map[i].start_time = 0;
                     }
-
-                    /*
-                    sprintf(buffer, "Key: %u\n", map[i].input.raw);
-                    Serial.print(buffer);
-                    if(map[i].flagged){
-                        Serial.print("Flagged\n");
-                    } else {
-                        Serial.print("Not Flagged\n");
-                    }
-                    sprintf(buffer, "Start Time: %u\n", map[i].start_time);
-                    Serial.print(buffer);
-                     */
                 }
             }
 
@@ -134,8 +117,9 @@ namespace kaleidoscope {
         bool valid_key = false;
         bool pressed_key_was_valid = false;
         uint8_t index = 0;
+        
         if(map_size > 0) {
-            //Look to see if any are flagged
+            //Look to see if any keys in our map  are flagged
             for (uint8_t i = 0; i < map_size; ++i) {
 
                 if (map[i].flagged) {
@@ -147,6 +131,8 @@ namespace kaleidoscope {
                 }
             }
         }
+
+        //If no valid mapped keys were pressed, simply return the keycode
         if (!valid_key) {
             return mapped_key;
         }
@@ -158,30 +144,15 @@ namespace kaleidoscope {
             current_timeout = time_out;
         }
 
-
-
         if ((millis() - map[index].start_time) >= current_timeout) {
-            // if we timed out, that means we need to keep pressing shift, but won't
-            // need the parens in the end.
+            // if we timed out, that means we need to keep pressing the mapped
+            // key, but we won't need to send the alternative key in the end
             map[index].flagged = false;
             map[index].start_time = 0;
             return mapped_key;
         }
 
-        /*
-        sprintf(buffer, "Check Index: %u\n", index );
-        Serial.print(buffer);
-
-        sprintf(buffer, "Current Timeout: %u\n", current_timeout );
-        Serial.print(buffer);
-
-        sprintf(buffer, "Start Time: %u\n", map[index].start_time );
-        Serial.print(buffer);
-
-        Serial.print("Made it past timeout check\n");
-        */
-
-        // if we have a state, but the key in question is not either of the shifts,
+        // If the key that was pressed isn't one of our mapped keys, just 
         // return. This can happen when another key is released, and that should not
         // interrupt us.
 
@@ -189,20 +160,21 @@ namespace kaleidoscope {
             return mapped_key;
         }
 
-        //Serial.print("Made it validity check\n");
-
-
-        // if a key toggled off (and that must be one of the shifts at this point),
-        // send the parens too (if we were interrupted, we bailed out earlier).
+        // if a key toggled off (and that must be one of the mapped keys at this point),
+        // send the alternative key instead (if we were interrupted, we bailed out earlier).
         if (keyToggledOff(key_state)) {
             Key pressed_key = map[index].input;
             Key alternate_key = map[index].output;
 
-            //Don't necessarily need to send the original key
-            //handleKeyswitchEvent(pressed_key, row, col, WAS_PRESSED | INJECTED);
+            //Since we are sending the actual key (no need for shift, etc),
+            //only need to send that key and not the original key. In fact, we
+            //may want to even UNSET the originally pressed key (future
+            //enhanacement?).  This might also mean we don't need to return the
+            //key that was pressed, though I haven't confirmed that.
             handleKeyswitchEvent(alternate_key, row, col, IS_PRESSED | INJECTED);
             hid::sendKeyboardReport();
 
+            //Unflag the key so we don't try this again.
             map[index].flagged = false;
             map[index].start_time = 0;
         }
@@ -212,4 +184,6 @@ namespace kaleidoscope {
 
 }
 
+//Note: since this is more generic, it is now simply SpaceCadet, instead of
+//SpaceCadetShift
 kaleidoscope::SpaceCadet SpaceCadet;
