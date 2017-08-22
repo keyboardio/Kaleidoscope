@@ -21,22 +21,47 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+    //Declarations for the modifier key mapping
+    class ModifierKeyMap {
+        public:
+            //Empty constructor; set the vars separately
+            ModifierKeyMap(void);
+            //Constructor with input and output
+            ModifierKeyMap(Key input_, Key output_);
+             //Constructor with all three set
+            ModifierKeyMap(Key input_, Key output_, uint16_t timeout_);
+            //The key that is pressed
+            Key input;
+            //the key that is sent
+            Key output;
+            //The timeout (default to global timeout)
+            uint16_t timeout = 0;
+            //The flag (set to 0)
+            bool flagged = false;
+            //the start time for this key press
+            uint32_t start_time = 0;
+    };
 
-class SpaceCadetShift : public KaleidoscopePlugin {
- public:
-  SpaceCadetShift(void);
+    //Declaration for the method (implementing KaleidoscopePlugin)
+    class SpaceCadet : public KaleidoscopePlugin {
+        public:
+            //Empty constructor
+            SpaceCadet(void);
 
-  void begin(void) final;
+            //Constructor with mapping
+            SpaceCadet(ModifierKeyMap * map, uint8_t map_size);
 
-  static uint16_t time_out;
-  static Key opening_paren, closing_paren;
+            //Methods
+            void setMap(ModifierKeyMap * map, uint8_t map_size);
+            void begin(void) final;
 
- private:
-  static uint8_t paren_needed_;
-  static uint32_t start_time_;
+            static uint16_t time_out;
 
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+        private:
+            static uint8_t map_size;
+            static ModifierKeyMap * map;
+            static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+    };
 };
-};
 
-extern kaleidoscope::SpaceCadetShift SpaceCadetShift;
+extern kaleidoscope::SpaceCadet SpaceCadet;
