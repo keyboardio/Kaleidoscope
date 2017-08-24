@@ -155,7 +155,6 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   // if a key toggled off (and that must be one of the mapped keys at this point),
   // send the alternative key instead (if we were interrupted, we bailed out earlier).
   if (keyToggledOff(key_state)) {
-    Key pressed_key = map_[index].input;
     Key alternate_key = map_[index].output;
 
     //Since we are sending the actual key (no need for shift, etc),
