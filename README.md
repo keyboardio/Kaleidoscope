@@ -68,15 +68,15 @@ passing a new keymap into the SpaceCadet object, as shown below:
 void setup() {
   Kaleidoscope.use(&SpaceCadet);
 
-  //Set the keymap
+  //Set the keymap with a 250ms timeout per-key
   static kaleidoscope::ModifierKeyMap spacecadetmap[] = {
     {Key_LeftShift, Key_LeftParen, 250}
     ,{Key_RightShift, Key_RightParen, 250}
-    ,{Key_LeftGui,Key_LeftCurlyBracket,250}
-    ,{Key_RightAlt,Key_RightCurlyBracket,250}
-    ,{Key_LeftAlt,Key_RightCurlyBracket,250}
-    ,{Key_LeftControl,Key_LeftBracket,250}
-    ,{Key_RightControl,Key_RightBracket,250}
+    ,{Key_LeftGui, Key_LeftCurlyBracket, 250}
+    ,{Key_RightAlt, Key_RightCurlyBracket, 250}
+    ,{Key_LeftAlt, Key_RightCurlyBracket, 250}
+    ,{Key_LeftControl, Key_LeftBracket, 250}
+    ,{Key_RightControl, Key_RightBracket, 250}
   };
   //Tell SpaceCadet to use the map  
   SpaceCadet.setMap(spacecadetmap, sizeof(spacecadetmap)/sizeof(spacecadetmap[0]));
@@ -123,7 +123,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino
- 
-or 
-
- [plugin:example]: https://github.com/advisoray/Kaleidoscope-SpaceCadet/blob/master/examples/SpaceCadet/SpaceCadet.ino

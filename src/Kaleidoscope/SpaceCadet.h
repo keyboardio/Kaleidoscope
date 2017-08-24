@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-SpaceCadet -- Space Cadet Shift
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
+ * Copyright (C) 2016, 2017  Gergely Nagy, Ben Gemperline
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,9 +48,6 @@ namespace kaleidoscope {
             //Empty constructor
             SpaceCadet(void);
 
-            //Constructor with mapping
-            SpaceCadet(ModifierKeyMap * map, uint8_t map_size);
-
             //Methods
             void setMap(ModifierKeyMap * map, uint8_t map_size);
             void begin(void) final;
@@ -58,8 +55,8 @@ namespace kaleidoscope {
             static uint16_t time_out;
 
         private:
-            static uint8_t map_size;
-            static ModifierKeyMap * map;
+            static uint8_t map_size_;
+            static ModifierKeyMap * map_;
             static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
     };
 };
