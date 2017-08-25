@@ -38,7 +38,7 @@
 
 // Deprecated - Remove once the core has transitioned
 
-#define key_was_pressed(keyState) ((keyState) & WAS_PRESSED)
-#define key_is_pressed(keyState)  ((keyState) & IS_PRESSED)
-#define key_toggled_on(keyState)  (key_is_pressed(keyState) && ! key_was_pressed(keyState))
-#define key_toggled_off(keyState) (key_was_pressed(keyState) && ! key_is_pressed(keyState))
+#define key_was_pressed(keyState) keyWasPressed(keyState)
+#define key_is_pressed(keyState)  keyIsPressed(keyState)
+#define key_toggled_on(keyState)  keyToggledOn(keyState)
+#define key_toggled_off(keyState) keyToggledOff(keyState)
