@@ -21,7 +21,6 @@
 
 namespace kaleidoscope {
 
-
 //Constructor with input and output, and assume default timeout
 SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_) {
   input = input_;
@@ -36,18 +35,25 @@ SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_, uint16_t timeout_) {
 }
 
 //Space Cadet
-KeyBinding * SpaceCadet::map = {
-  //By default, respect the default timeout
-  {Key_LeftShift, Key_LeftParen, 0}
-  , {Key_RightShift, Key_RightParen, 0}
-  //These may be uncommented, added, or set in the main sketch
-  /*,{Key_LeftGui,Key_LeftCurlyBracket, 250}
-  ,{Key_RightAlt,Key_RightCurlyBracket, 250}
-  ,{Key_LeftControl,Key_LeftBracket, 250}
-  ,{Key_RightControl,Key_RightBracket, 250}*/
-  , SPACECADET_MAP_END
-};
+SpaceCadet::KeyBinding * SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 1000;
+
+//Empty Constructor
+SpaceCadet::SpaceCadet() {
+  SpaceCadet::KeyBinding initialmap[] = {
+    //By default, respect the default timeout
+    {Key_LeftShift, Key_LeftParen, 0}
+    , {Key_RightShift, Key_RightParen, 0}
+    //These may be uncommented, added, or set in the main sketch
+    /*,{Key_LeftGui,Key_LeftCurlyBracket, 250}
+    ,{Key_RightAlt,Key_RightCurlyBracket, 250}
+    ,{Key_LeftControl,Key_LeftBracket, 250}
+    ,{Key_RightControl,Key_RightBracket, 250}*/
+    , SPACECADET_MAP_END
+  };
+
+  map = initialmap;
+}
 
 void SpaceCadet::begin() {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);

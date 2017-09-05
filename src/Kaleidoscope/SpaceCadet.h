@@ -21,24 +21,15 @@
 #include <Kaleidoscope.h>
 
 #ifndef SPACECADET_MAP_END
-#define SPACECADET_MAP_END {Key_NoKey, Key_NoKey, 0}
+#define SPACECADET_MAP_END (kaleidoscope::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
 namespace kaleidoscope {
 //Declaration for the method (implementing KaleidoscopePlugin)
 class SpaceCadet : public KaleidoscopePlugin {
  public:
-  //Empty constructor
-  SpaceCadet(void) {}
-
-  //Methods
-  void begin(void) final;
-
-  //Publically accessible variables
-  static uint16_t time_out;  //  The global timeout in milliseconds
-  static KeyBinding * map;  // The map of key bindings
-  
-  //Declarations for the modifier key mapping
+  //Internal Class
+    //Declarations for the modifier key mapping
   class KeyBinding {
    public:
     //Empty constructor; set the vars separately
@@ -58,6 +49,17 @@ class SpaceCadet : public KaleidoscopePlugin {
     //the start time for this key press
     uint32_t start_time = 0;
   };
+
+  //Empty constructor
+  SpaceCadet(void);
+
+  //Methods
+  void begin(void) final;
+
+  //Publically accessible variables
+  static uint16_t time_out;  //  The global timeout in milliseconds
+  static SpaceCadet::KeyBinding * map;  // The map of key bindings 
+
  private:
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
