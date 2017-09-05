@@ -21,54 +21,33 @@
 
 namespace kaleidoscope {
 
-//Default, empty constructor
-ModifierKeyMap::ModifierKeyMap() {
-}
 
 //Constructor with input and output, and assume default timeout
-ModifierKeyMap::ModifierKeyMap(Key input_, Key output_) {
+SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_) {
   input = input_;
   output = output_;
 }
 
 //Constructor with all three set
-ModifierKeyMap::ModifierKeyMap(Key input_, Key output_, uint16_t timeout_) {
+SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_, uint16_t timeout_) {
   input = input_;
   output = output_;
   timeout = timeout_;
 }
 
 //Space Cadet
-uint8_t SpaceCadet::map_size_ = 0;
-ModifierKeyMap * SpaceCadet::map_;
+KeyBinding * SpaceCadet::map = {
+  //By default, respect the default timeout
+  {Key_LeftShift, Key_LeftParen, 0}
+  , {Key_RightShift, Key_RightParen, 0}
+  //These may be uncommented, added, or set in the main sketch
+  /*,{Key_LeftGui,Key_LeftCurlyBracket,250}
+  ,{Key_RightAlt,Key_RightCurlyBracket,250}
+  ,{Key_LeftControl,Key_LeftBracket,250}
+  ,{Key_RightControl,Key_RightBracket,250}*/
+  , SPACECADET_MAP_END
+};
 uint16_t SpaceCadet::time_out = 1000;
-
-//Empty constructor
-SpaceCadet::SpaceCadet() {
-  //By default, we make one with left shift sending left paren, and right shift sending right paren
-  static ModifierKeyMap internalMap[] = {
-    //By default, respect the default timeout
-    {Key_LeftShift, Key_LeftParen, 0}
-    , {Key_RightShift, Key_RightParen, 0}
-    //These may be uncommented, added, or set in the main sketch
-    /*,{Key_LeftGui,Key_LeftCurlyBracket,250}
-    ,{Key_RightAlt,Key_RightCurlyBracket,250}
-    ,{Key_LeftControl,Key_LeftBracket,250}
-    ,{Key_RightControl,Key_RightBracket,250}*/
-  };
-
-  //Set the variables to our internal map
-  map_ = internalMap;
-  map_size_ = sizeof(internalMap) / sizeof(internalMap[0]);
-}
-
-//Void function to reset the modifier map if desired.
-void SpaceCadet::setMap(ModifierKeyMap * map, uint8_t map_size) {
-  //Set the map
-  map_ = map;
-  //set the map size to be the length of the array
-  map_size_ = map_size;
-}
 
 void SpaceCadet::begin() {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
@@ -83,20 +62,27 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
 
   // If a key has been just toggled on...
   if (keyToggledOn(key_state)) {
+    
+    //This will only set one key, and if it isn't in our map it clears everything
+    //for the non-pressed key
+    for (uint8_t i = 0 ;; ++i) {
+      //Check for ending sentinal and exit
+      if(
+        map[i].input.raw == Key_NoKey.raw
+        && map[i].output.raw == Key_NoKey.raw
+        && map[i].timeout == 0
+      ) {
+        break;
+      }
 
-    if (map_size_ > 0) {
-      //This will only set one key, and if it isn't in our map it clears everything
-      //for the non-pressed key
-      for (uint8_t i = 0; i < map_size_; ++i) {
-        if (mapped_key.raw == map_[i].input.raw) {
-          //The keypress was valid and a match.
-          map_[i].flagged = true;
-          map_[i].start_time = millis();
-        } else {
-          //The keypress wasn't a match.
-          map_[i].flagged = false;
-          map_[i].start_time = 0;
-        }
+      if (mapped_key.raw == map[i].input.raw) {
+        //The keypress was valid and a match.
+        map[i].flagged = true;
+        map[i].start_time = millis();
+      } else {
+        //The keypress wasn't a match.
+        map[i].flagged = false;
+        map[i].start_time = 0;
       }
     }
 
@@ -110,19 +96,27 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   bool pressed_key_was_valid = false;
   uint8_t index = 0;
 
-  if (map_size_ > 0) {
-    //Look to see if any keys in our map  are flagged
-    for (uint8_t i = 0; i < map_size_; ++i) {
+  //Look to see if any keys in our map  are flagged
+  for (uint8_t i = 0 ;; ++i) {
 
-      if (map_[i].flagged) {
-        valid_key = true;
-        index = i;
-      }
-      if (map_[i].input.raw == mapped_key.raw) {
-        pressed_key_was_valid = true;
-      }
+    //Check for ending sentinal and exit
+    if(
+      map[i].input.raw == Key_NoKey.raw
+      && map[i].output.raw == Key_NoKey.raw
+      && map[i].timeout == 0
+    ) {
+      break;
+    }
+
+    if (map[i].flagged) {
+      valid_key = true;
+      index = i;
+    }
+    if (map[i].input.raw == mapped_key.raw) {
+      pressed_key_was_valid = true;
     }
   }
+
 
   //If no valid mapped keys were pressed, simply return the keycode
   if (!valid_key) {
@@ -130,17 +124,17 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   }
 
   //use the map index to find the local timeout for this key
-  uint16_t current_timeout = map_[index].timeout;
+  uint16_t current_timeout = map[index].timeout;
   //If that isn't set, use the global timeout setting.
   if (current_timeout == 0) {
     current_timeout = time_out;
   }
 
-  if ((millis() - map_[index].start_time) >= current_timeout) {
+  if ((millis() - map[index].start_time) >= current_timeout) {
     // if we timed out, that means we need to keep pressing the mapped
     // key, but we won't need to send the alternative key in the end
-    map_[index].flagged = false;
-    map_[index].start_time = 0;
+    map[index].flagged = false;
+    map[index].start_time = 0;
     return mapped_key;
   }
 
@@ -155,7 +149,7 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   // if a key toggled off (and that must be one of the mapped keys at this point),
   // send the alternative key instead (if we were interrupted, we bailed out earlier).
   if (keyToggledOff(key_state)) {
-    Key alternate_key = map_[index].output;
+    Key alternate_key = map[index].output;
 
     //Since we are sending the actual key (no need for shift, etc),
     //only need to send that key and not the original key. In fact, we
@@ -166,8 +160,8 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     hid::sendKeyboardReport();
 
     //Unflag the key so we don't try this again.
-    map_[index].flagged = false;
-    map_[index].start_time = 0;
+    map[index].flagged = false;
+    map[index].start_time = 0;
   }
 
   return mapped_key;
@@ -175,6 +169,4 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
 
 }
 
-//Note: since this is more generic, it is now simply SpaceCadet, instead of
-//SpaceCadetShift
 kaleidoscope::SpaceCadet SpaceCadet;
