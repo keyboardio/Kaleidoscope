@@ -28,11 +28,11 @@ select text, for example.
 After getting used to the Space Cadet style of typing, you may wish to enable
 this sort of functionality on other keys, as well.  Fortunately, the Space Cadet
 plugin is configurable and extensible to support adding symbols to other keys,
-as well.  Along with `(` on your left `Shift` key, you with to add other such
-programming mainstays as `{` to your `cmd` key and `[` to your left `Control`
-key (and, of course, the matching bookend symbols on the right).  You can do
-whatever you wish to do, so feel free to experiment with different combinations
-and discover what works best for you!
+as well.  Along with `(` on your left `Shift` key and `)` on your right `Shift` key,
+you may wish to add other programming mainstays such as `{` to your left-side `cmd` key,
+`}` to your right-side `alt` key,  `[` to your left `Control` key, and `]` to your right 
+`Control` key.  You can map the keys in whatever way you may wish to do, so feel free to 
+experiment with different combinations and discover what works best for you!
 
  [space-cadet]: https://en.wikipedia.org/wiki/Space-cadet_keyboard
 
