@@ -20,43 +20,45 @@
 
 #include <Kaleidoscope.h>
 
-namespace kaleidoscope {
-//Declarations for the modifier key mapping
-class ModifierKeyMap {
- public:
-  //Empty constructor; set the vars separately
-  ModifierKeyMap(void);
-  //Constructor with input and output
-  ModifierKeyMap(Key input_, Key output_);
-  //Constructor with all three set
-  ModifierKeyMap(Key input_, Key output_, uint16_t timeout_);
-  //The key that is pressed
-  Key input;
-  //the key that is sent
-  Key output;
-  //The timeout (default to global timeout)
-  uint16_t timeout = 0;
-  //The flag (set to 0)
-  bool flagged = false;
-  //the start time for this key press
-  uint32_t start_time = 0;
-};
+#ifndef SPACECADET_MAP_END
+#define SPACECADET_MAP_END {Key_NoKey, Key_NoKey, 0}
+#endif
 
+namespace kaleidoscope {
 //Declaration for the method (implementing KaleidoscopePlugin)
 class SpaceCadet : public KaleidoscopePlugin {
  public:
   //Empty constructor
-  SpaceCadet(void);
+  SpaceCadet(void) {}
 
   //Methods
-  void setMap(ModifierKeyMap * map, uint8_t map_size);
   void begin(void) final;
 
-  static uint16_t time_out;
-
+  //Publically accessible variables
+  static uint16_t time_out;  //  The global timeout in milliseconds
+  static KeyBinding * map;  // The map of key bindings
+  
+  //Declarations for the modifier key mapping
+  class KeyBinding {
+   public:
+    //Empty constructor; set the vars separately
+    KeyBinding(void) {}
+    //Constructor with input and output
+    KeyBinding(Key input_, Key output_);
+    //Constructor with all three set
+    KeyBinding(Key input_, Key output_, uint16_t timeout_);
+    //The key that is pressed
+    Key input;
+    //the key that is sent
+    Key output;
+    //The timeout (default to global timeout)
+    uint16_t timeout = 0;
+    //The flag (set to 0)
+    bool flagged = false;
+    //the start time for this key press
+    uint32_t start_time = 0;
+  };
  private:
-  static uint8_t map_size_;
-  static ModifierKeyMap * map_;
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
