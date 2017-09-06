@@ -27,7 +27,7 @@ select text, for example.
 
 After getting used to the Space Cadet style of typing, you may wish to enable
 this sort of functionality on other keys, as well.  Fortunately, the Space Cadet
-plugin is configurable and extensible to support adding symbols to other keys.  
+plugin is configurable and extensible to support adding symbols to other keys.
 Along with `(` on your left `Shift` key and `)` on your right `Shift` key,
 you may wish to add other such programming mainstays as `{` to your left-side `cmd` key,
 `}` to your right-side `alt` key,  `[` to your left `Control` key, and `]` to your right 
