@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-SpaceCadet -- Space Cadet Shift
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
+ * Copyright (C) 2016, 2017  Gergely Nagy, Ben Gemperline
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,49 @@
 
 #include <Kaleidoscope.h>
 
+#ifndef SPACECADET_MAP_END
+#define SPACECADET_MAP_END (kaleidoscope::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
+#endif
+
 namespace kaleidoscope {
-
-class SpaceCadetShift : public KaleidoscopePlugin {
+//Declaration for the method (implementing KaleidoscopePlugin)
+class SpaceCadet : public KaleidoscopePlugin {
  public:
-  SpaceCadetShift(void);
+  //Internal Class
+  //Declarations for the modifier key mapping
+  class KeyBinding {
+   public:
+    //Empty constructor; set the vars separately
+    KeyBinding(void) {}
+    //Constructor with input and output
+    KeyBinding(Key input_, Key output_);
+    //Constructor with all three set
+    KeyBinding(Key input_, Key output_, uint16_t timeout_);
+    //The key that is pressed
+    Key input;
+    //the key that is sent
+    Key output;
+    //The timeout (default to global timeout)
+    uint16_t timeout = 0;
+    //The flag (set to 0)
+    bool flagged = false;
+    //the start time for this key press
+    uint32_t start_time = 0;
+  };
 
+  //Empty constructor
+  SpaceCadet(void);
+
+  //Methods
   void begin(void) final;
 
-  static uint16_t time_out;
-  static Key opening_paren, closing_paren;
+  //Publically accessible variables
+  static uint16_t time_out;  //  The global timeout in milliseconds
+  static SpaceCadet::KeyBinding * map;  // The map of key bindings
 
  private:
-  static uint8_t paren_needed_;
-  static uint32_t start_time_;
-
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
-extern kaleidoscope::SpaceCadetShift SpaceCadetShift;
+extern kaleidoscope::SpaceCadet SpaceCadet;
