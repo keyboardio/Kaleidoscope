@@ -45,7 +45,8 @@ void setup() {
 
   //Set the SpaceCadet map
   //Setting is {KeyThatWasPressed, AlternativeKeyToSend, TimeoutInMS}
-  static kaleidoscope::ModifierKeyMap spacecadetmap[] = {
+  //Note: must end with the SPACECADET_MAP_END delimiter
+  static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
     {Key_LeftShift, Key_LeftParen, 250}
     , {Key_RightShift, Key_RightParen, 250}
     , {Key_LeftGui, Key_LeftCurlyBracket, 250}
@@ -53,9 +54,10 @@ void setup() {
     , {Key_LeftAlt, Key_RightCurlyBracket, 250}
     , {Key_LeftControl, Key_LeftBracket, 250}
     , {Key_RightControl, Key_RightBracket, 250}
+    , SPACECADET_MAP_END
   };
-  //Set the map and the number of entries
-  SpaceCadet.setMap(spacecadetmap, sizeof(spacecadetmap) / sizeof(spacecadetmap[0]));
+  //Set the map.
+  SpaceCadet.map = spacecadetmap;
 
   Kaleidoscope.setup();
 }

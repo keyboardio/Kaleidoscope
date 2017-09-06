@@ -27,9 +27,9 @@ select text, for example.
 
 After getting used to the Space Cadet style of typing, you may wish to enable
 this sort of functionality on other keys, as well.  Fortunately, the Space Cadet
-plugin is configurable and extensible to support adding symbols to other keys,
-as well.  Along with `(` on your left `Shift` key and `)` on your right `Shift` key,
-you may wish to add other programming mainstays such as `{` to your left-side `cmd` key,
+plugin is configurable and extensible to support adding symbols to other keys.  
+Along with `(` on your left `Shift` key and `)` on your right `Shift` key,
+you may wish to add other such programming mainstays as `{` to your left-side `cmd` key,
 `}` to your right-side `alt` key,  `[` to your left `Control` key, and `]` to your right 
 `Control` key.  You can map the keys in whatever way you may wish to do, so feel free to 
 experiment with different combinations and discover what works best for you!
@@ -69,17 +69,20 @@ void setup() {
   Kaleidoscope.use(&SpaceCadet);
 
   //Set the keymap with a 250ms timeout per-key
-  static kaleidoscope::ModifierKeyMap spacecadetmap[] = {
+  //Setting is {KeyThatWasPressed, AlternativeKeyToSend, TimeoutInMS}
+  //Note: must end with the SPACECADET_MAP_END delimiter
+  static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
     {Key_LeftShift, Key_LeftParen, 250}
-    ,{Key_RightShift, Key_RightParen, 250}
-    ,{Key_LeftGui, Key_LeftCurlyBracket, 250}
-    ,{Key_RightAlt, Key_RightCurlyBracket, 250}
-    ,{Key_LeftAlt, Key_RightCurlyBracket, 250}
-    ,{Key_LeftControl, Key_LeftBracket, 250}
-    ,{Key_RightControl, Key_RightBracket, 250}
+    , {Key_RightShift, Key_RightParen, 250}
+    , {Key_LeftGui, Key_LeftCurlyBracket, 250}
+    , {Key_RightAlt, Key_RightCurlyBracket, 250}
+    , {Key_LeftAlt, Key_RightCurlyBracket, 250}
+    , {Key_LeftControl, Key_LeftBracket, 250}
+    , {Key_RightControl, Key_RightBracket, 250}
+    , SPACECADET_MAP_END
   };
-  //Tell SpaceCadet to use the map  
-  SpaceCadet.setMap(spacecadetmap, sizeof(spacecadetmap)/sizeof(spacecadetmap[0]));
+  //Set the map.
+  SpaceCadet.map = spacecadetmap;
 
   Kaleidoscope.setup();
 }
@@ -90,16 +93,17 @@ void setup() {
 The plugin provides the `SpaceCadet` object, with the following methods and
 properties:
 
-### `.setMap()`
+### `.map`
 
-> Set the key map.  Takes two arguments: the key map and the number of mappings
-> in the map array.  The key map is an array of `kaleidoscope::ModifierKeyMap`
-> objects, and the size is by default set dynamically by the line
-> `sizeof(spacecadetmap)/sizeof(spacecadetmap[0])`
+> Set the key map.  This takes an array of `kaleidoscope::SpaceCadet::KeyBinding`
+> objects with the special `SPACECADET_MAP_END` sentinal to mark the end of the map.
+> Each KeyBinding object takes, in order, the key that was pressed, the key that
+> should be sent instead, and an optional per-key timeout override
 >
-> Defaults to mapping left `shift` to `(` and right `shift` to `)`.
+> If not explicitly set, defaults to mapping left `shift` to `(` and right `shift`
+> to `)`.
 
-### `kaleidoscope::ModifierKeyMap`
+### `kaleidoscope::SpaceCadet::KeyBinding`
 
 > An object consisting of the key that is pressed, the key that should be sent
 > in its place, and the timeout (in milliseconds) until the key press is
