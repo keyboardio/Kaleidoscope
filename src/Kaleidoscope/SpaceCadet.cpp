@@ -68,18 +68,19 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
 
   // If a key has been just toggled on...
   if (keyToggledOn(key_state)) {
-    
+
     //This will only set one key, and if it isn't in our map it clears everything
     //for the non-pressed key
-    for (uint8_t i = 0 ;; ++i) {
-      //Check for ending sentinal and exit
-      if(
+    //Exit condition is if we reach the sentinal
+    for (
+      uint8_t i = 0 ;
+      !(
         map[i].input.raw == Key_NoKey.raw
         && map[i].output.raw == Key_NoKey.raw
         && map[i].timeout == 0
-      ) {
-        break;
-      }
+      ) ;
+      ++i
+    ) {
 
       if (mapped_key.raw == map[i].input.raw) {
         //The keypress was valid and a match.
@@ -102,17 +103,17 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   bool pressed_key_was_valid = false;
   uint8_t index = 0;
 
-  //Look to see if any keys in our map  are flagged
-  for (uint8_t i = 0 ;; ++i) {
-
-    //Check for ending sentinal and exit
-    if(
+  //Look to see if any keys in our map  are flagged.
+  //Exit condition is if we reach the sentinal
+  for (
+    uint8_t i = 0 ;
+    !(
       map[i].input.raw == Key_NoKey.raw
       && map[i].output.raw == Key_NoKey.raw
       && map[i].timeout == 0
-    ) {
-      break;
-    }
+    ) ;
+    ++i
+  ) {
 
     if (map[i].flagged) {
       valid_key = true;

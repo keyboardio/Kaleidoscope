@@ -29,7 +29,7 @@ namespace kaleidoscope {
 class SpaceCadet : public KaleidoscopePlugin {
  public:
   //Internal Class
-    //Declarations for the modifier key mapping
+  //Declarations for the modifier key mapping
   class KeyBinding {
    public:
     //Empty constructor; set the vars separately
@@ -58,7 +58,7 @@ class SpaceCadet : public KaleidoscopePlugin {
 
   //Publically accessible variables
   static uint16_t time_out;  //  The global timeout in milliseconds
-  static SpaceCadet::KeyBinding * map;  // The map of key bindings 
+  static SpaceCadet::KeyBinding * map;  // The map of key bindings
 
  private:
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
