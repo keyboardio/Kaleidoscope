@@ -3,7 +3,7 @@
 // This file contains aliases for Kaleidoscope's HID key definitions.
 //
 // These aliases are provided as a convenience for end users Our goal is to
-// offer up macros that fit what users guess the macros might be called, while 
+// offer up macros that fit what users guess the macros might be called, while
 // not polluting the main tables of aliases.
 //
 // The first group defined here provide short alternate names for a variety
