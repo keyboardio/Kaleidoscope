@@ -7,6 +7,9 @@
 #include "key_defs_sysctl.h"
 #include "key_defs_consumerctl.h"
 
+#include "key_defs_aliases.h"
+
+
 #include "KeyboardioHID.h"
 
 
@@ -118,13 +121,6 @@ typedef union Key_ {
 
 
 
-
-#define Key_LeftParen LSHIFT(Key_9)
-#define Key_RightParen LSHIFT(Key_0)
-#define Key_LeftCurlyBracket LSHIFT(Key_LeftBracket)
-#define Key_RightCurlyBracket LSHIFT(Key_RightBracket)
-
-#define Key_Pipe LSHIFT(Key_Backslash)
 
 
 
