@@ -59,6 +59,10 @@ class Model01 {
 
 #define SCANBIT(row,col) ((uint32_t)1 << ((row) * 8 + (7 - (col))))
 
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
+
 #define R0C0  SCANBIT(0, 0)
 #define R0C1  SCANBIT(0, 1)
 #define R0C2  SCANBIT(0, 2)
@@ -193,6 +197,9 @@ class Model01 {
 #define LED_EQUALS 61
 #define LED_APOSTROPHE 62
 #define LED_MINUS 63
+
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
+
 
 #define KEYMAP_STACKED(                                                 \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \
