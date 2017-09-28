@@ -1,5 +1,10 @@
 #include "hid.h"
+
+#ifdef ARDUINO_VIRTUAL
+#include "VirtualHID/VirtualHID.h"
+#else
 #include "KeyboardioHID.h"
+#endif
 
 namespace kaleidoscope {
 namespace hid {

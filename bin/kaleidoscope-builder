@@ -3,6 +3,11 @@
 set -e
 
 firmware_size () {
+    if [ "${BOARD}" = "virtual" ]; then
+      echo "[Size not computed for virtual build]"
+      return
+    fi
+
 	## This is a terrible hack, please don't hurt me. - algernon
 
 	MAX_PROG_SIZE=28672
@@ -137,7 +142,6 @@ compile () {
 		    -ide-version "${ARDUINO_IDE_VERSION}" \
 		    -warnings all \
         ${ARDUINO_VERBOSE} \
-		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
 		    "$(find_sketch)/${SKETCH}.ino"
 
