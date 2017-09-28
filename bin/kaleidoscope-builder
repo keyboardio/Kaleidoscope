@@ -32,6 +32,7 @@ find_sketch () {
             return
         fi
     done
+        echo "Couldn't find sketch (.ino file)" >&2
     exit 1
 }
 
