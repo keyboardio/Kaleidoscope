@@ -9,8 +9,11 @@
 
 #include "key_defs_aliases.h"
 
-
+#ifdef ARDUINO_VIRTUAL
+#include "VirtualHID/VirtualHID.h"
+#else
 #include "KeyboardioHID.h"
+#endif
 
 
 typedef union Key_ {
