@@ -31,7 +31,7 @@
 /* keyToggledOff(): This is true if the key is newly not-pressed during this
  *   scan cycle, i.e. is not pressed now but was in the previous scan cycle.
  * Use this for events which should fire exactly once per keypress, on a
- *   "key-down" event.
+ *   "key-up" event.
  */
 #define keyToggledOff(keyState) (keyWasPressed(keyState) && ! keyIsPressed(keyState))
 
