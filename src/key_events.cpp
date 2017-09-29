@@ -44,29 +44,47 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
 }
 
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  /* If a key had an on or off event, we update the live composite keymap. See
-   * layers.h for an explanation about the different caches we have. */
-  if (keyToggledOn(keyState) || keyToggledOff(keyState))
-    Layer.updateLiveCompositeKeymap(row, col);
-
-  /* If the key we are dealing with is masked, ignore it until it is released.
-   * When releasing it, clear the mask, so future key events can be handled
-   * appropriately.
-   *
-   * See layers.cpp for an example that masks keys, and the reason why it does
-   * so.
+  /* These first steps are only done for keypresses that have a real (row,col).
+   * In particular, doing them for keypresses with out-of-bounds (row,col)
+   *   would cause out-of-bounds array accesses in Layer.lookup(),
+   *   Layer.updateLiveCompositeKeymap(), etc.
+   * Perhaps this check should instead be for INJECTED - I'm not clear on
+   *   whether keypresses with out-of-bounds (row,col) are the same as
+   *   keypresses with INJECTED set, or are a superset or a subset of
+   *   INJECTED keypresses.  In any case, the (row,col) test is *safe* in that
+   *   it avoids out-of-bounds accesses, at least in core.  (Can't promise
+   *   anything about event handlers - they may still receive out-of-bounds
+   *   (row,col), and handling that properly is on them.)
    */
-  if (KeyboardHardware.isKeyMasked(row, col)) {
-    if (keyToggledOff(keyState)) {
-      KeyboardHardware.unMaskKey(row, col);
-    } else {
-      return;
-    }
-  }
+  if (row < ROWS && col < COLS) {
 
-  if (!(keyState & INJECTED)) {
-    mappedKey = Layer.lookup(row, col);
-  }
+    /* If a key had an on or off event, we update the live composite keymap. See
+     * layers.h for an explanation about the different caches we have. */
+    if (keyToggledOn(keyState) || keyToggledOff(keyState))
+      Layer.updateLiveCompositeKeymap(row, col);
+
+    /* If the key we are dealing with is masked, ignore it until it is released.
+     * When releasing it, clear the mask, so future key events can be handled
+     * appropriately.
+     *
+     * See layers.cpp for an example that masks keys, and the reason why it does
+     * so.
+     */
+    if (KeyboardHardware.isKeyMasked(row, col)) {
+      if (keyToggledOff(keyState)) {
+        KeyboardHardware.unMaskKey(row, col);
+      } else {
+        return;
+      }
+    }
+
+    if (!(keyState & INJECTED)) {
+      mappedKey = Layer.lookup(row, col);
+    }
+
+  }  // row < ROWS && col < COLS
+
+  // Keypresses with out-of-bounds (row,col) start here in the processing chain
 
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
