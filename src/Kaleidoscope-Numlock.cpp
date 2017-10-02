@@ -9,6 +9,7 @@ cRGB numpad_color = CRGB(255, 0, 0);
 
 void NumLock_::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
+  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 void NumLock_::loopHook(bool postClear) {
@@ -35,9 +36,12 @@ void NumLock_::loopHook(bool postClear) {
   LEDControl.setCrgbAt(row, col, color);
 }
 
-const macro_t *NumLock_::toggle() {
-  row = Macros.row;
-  col = Macros.col;
+Key NumLock_::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
+  if (key != Key_KeypadNumLock)
+    return key;
+
+  if (!key_toggled_on(key_state))
+    return key;
 
   if (Layer.isOn(numPadLayer)) {
     Layer.off(numPadLayer);
@@ -46,7 +50,7 @@ const macro_t *NumLock_::toggle() {
     Layer.on(numPadLayer);
   }
 
-  return MACRO(T(KeypadNumLock), END);
+  return key;
 }
 
 NumLock_ NumLock;
