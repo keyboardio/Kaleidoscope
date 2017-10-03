@@ -31,3 +31,20 @@
 
 #define Key_KeymapNext_Momentary (Key) { KEYMAP_NEXT + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
 #define Key_KeymapPrevious_Momentary (Key) { KEYMAP_PREVIOUS + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+
+
+/** Toggle layer `n` on and off.
+ *
+ * Toggle layer `n` on and off on subsequent key presses, just like
+ * `Key_Keymap0` and friends. `n` can be a number, or an enum value declared
+ * previously.
+ */
+#define ToggleLayer(n) (Key){ n, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+
+/** Momentarily toggle layer `n` until the key is held.
+ *
+ * Toggle layer `n` on for as long as the key is held, and turn it off when
+ * released, just like `Key_Keymap0_Momentary` and friends. `n` can be a
+ * number, or an enum value declared previously.
+ */
+#define MomentaryLayer(n) (Key){ n + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
