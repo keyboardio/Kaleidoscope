@@ -33,18 +33,18 @@
 #define Key_KeymapPrevious_Momentary (Key) { KEYMAP_PREVIOUS + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
 
 
-/** Toggle layer `n` on and off.
+/** Lock/Unlock layer `n`.
  *
- * Toggle layer `n` on and off on subsequent key presses, just like
- * `Key_Keymap0` and friends. `n` can be a number, or an enum value declared
- * previously.
+ * When locking a layer, it will remain active until unlocked explicitly. `n`
+ * can be a number, or an enum value declared previously.
  */
-#define ToggleLayer(n) (Key){ n, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define LockLayer(n) (Key){ n, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define UnlockLayer(n) LockLayer(n)
 
-/** Momentarily toggle layer `n` until the key is held.
+/** Temporarily shift to layer `n`.
  *
- * Toggle layer `n` on for as long as the key is held, and turn it off when
- * released, just like `Key_Keymap0_Momentary` and friends. `n` can be a
- * number, or an enum value declared previously.
+ * Shifts to layer `n` for as long as the key is held. When the key is
+ * released, the layer shifts back too. `n` can be a number, or an enum
+ * value declared previously.
  */
-#define MomentaryLayer(n) (Key){ n + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define ShiftToLayer(n) (Key){ n + MOMENTARY_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
