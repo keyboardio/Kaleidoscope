@@ -134,3 +134,13 @@ Kaleidoscope_::focusHook(const char *command) {
 }
 
 Kaleidoscope_ Kaleidoscope;
+
+/* Deprecated functions */
+
+void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
+  Kaleidoscope.useEventHandlerHook(hook);
+}
+
+void loop_hook_use(Kaleidoscope_::loopHook hook) {
+  Kaleidoscope.useLoopHook(hook);
+}

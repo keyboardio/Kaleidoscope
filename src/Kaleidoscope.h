@@ -121,5 +121,5 @@ extern Kaleidoscope_ Kaleidoscope;
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
-#define event_handler_hook_use(hook) Kaleidoscope.useEventHandlerHook(hook);
-#define loop_hook_use(hook) Kaleidoscope.useLoopHook(hook)
+void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) __attribute__((deprecated));
+void loop_hook_use(Kaleidoscope_::loopHook hook) __attribute__((deprecated));
