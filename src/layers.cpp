@@ -9,8 +9,8 @@ uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
-  if (keymapEntry.keyCode >= MOMENTARY_OFFSET) {
-    uint8_t target = keymapEntry.keyCode - MOMENTARY_OFFSET;
+  if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
+    uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
