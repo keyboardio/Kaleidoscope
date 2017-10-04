@@ -122,9 +122,4 @@ extern Kaleidoscope_ Kaleidoscope;
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
 #define event_handler_hook_use(hook) Kaleidoscope.useEventHandlerHook(hook);
-#define event_handler_hook_append(hook) Kaleidoscope.appendEventHandlerHook(hook)
-#define event_handler_hook_replace(oldHook, newHook) Kaleidoscope.replaceEventHandlerHook(oldHook, newHook)
-
 #define loop_hook_use(hook) Kaleidoscope.useLoopHook(hook)
-#define loop_hook_append(hook) Kaleidoscope.appendLoopHook(hook)
-#define loop_hook_replace(oldHook, newHook) Kaleidoscope.replaceLoopHook(oldHook, newHook)
