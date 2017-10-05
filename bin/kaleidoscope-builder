@@ -126,8 +126,8 @@ compile () {
     fi
 
     ARDUINO_PACKAGES=""
-    if [ -d "${HOME}/.arduino15/packages" ]; then
-	 ARDUINO_PACKAGES="-hardware \"${HOME}/.arduino15/packages\""
+    if [ -d ${ARDUINO_PACKAGE_PATH} ]; then
+	 ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
     ${ARDUINO_BUILDER} \
