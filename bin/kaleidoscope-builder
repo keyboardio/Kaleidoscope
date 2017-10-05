@@ -125,9 +125,14 @@ compile () {
         local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
     fi
 
+    ARDUINO_PACKAGES=""
+    if [ -d "${HOME}/.arduino15/packages" ]; then
+	 ARDUINO_PACKAGES="-hardware \"${HOME}/.arduino15/packages\""
+    fi
+
     ${ARDUINO_BUILDER} \
         -compile \
-		    -hardware "${HOME}/.arduino15/packages" \
+		    ${ARDUINO_PACKAGES} \
 		    -hardware "${ARDUINO_PATH}/hardware" \
 		    -hardware "${BOARD_HARDWARE_PATH}" \
 		    ${ARDUINO_TOOLS_PARAM} \
