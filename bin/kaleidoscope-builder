@@ -119,7 +119,6 @@ compile () {
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
-
     ${compile_HOOKS}
 
     if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
@@ -128,6 +127,7 @@ compile () {
 
     ${ARDUINO_BUILDER} \
         -compile \
+		    -hardware "${HOME}/.arduino15/packages" \
 		    -hardware "${ARDUINO_PATH}/hardware" \
 		    -hardware "${BOARD_HARDWARE_PATH}" \
 		    ${ARDUINO_TOOLS_PARAM} \
