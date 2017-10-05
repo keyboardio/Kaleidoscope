@@ -46,7 +46,8 @@ class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
 
-  void setup(const byte keymap_count) {
+  void setup(const byte keymap_count)
+  __attribute__((deprecated("The keymap_count argument (and the KEYMAP_SIZE macro) are unused, and can be safely removed."))) {
     setup();
   }
   void setup(void);
