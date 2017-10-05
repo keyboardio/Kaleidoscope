@@ -120,6 +120,7 @@ extern Kaleidoscope_ Kaleidoscope;
                                            "layer.getState")
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
-
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) __attribute__((deprecated));
-void loop_hook_use(Kaleidoscope_::loopHook hook) __attribute__((deprecated));
+void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
+__attribute__((deprecated("Use Kaleidoscope.useEventHandlerHook instead")));
+void loop_hook_use(Kaleidoscope_::loopHook hook)
+__attribute__((deprecated("Use Kaleidoscope.useLoopHook instead")));
