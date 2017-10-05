@@ -38,7 +38,7 @@ bool OneShot::should_mask_on_interrupt_ = false;
 
 #define isOneShotKey(key) (key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST)
 #define isModifier(key) (key.raw >= Key_LeftControl.raw && key.raw <= Key_RightGui.raw)
-#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= MOMENTARY_OFFSET && key.keyCode <= MOMENTARY_OFFSET + 23)
+#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= LAYER_SHIFT_OFFSET && key.keyCode <= LAYER_SHIFT_OFFSET + 23)
 
 #define isOneShot(idx) (bitRead (state_.all, (idx)))
 #define setOneShot(idx) (bitWrite (state_.all, idx, 1))
@@ -66,7 +66,7 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = Key_LeftControl.keyCode + idx;
   } else {
     key.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
-    key.keyCode = MOMENTARY_OFFSET + idx - 8;
+    key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
   }
 
   handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
