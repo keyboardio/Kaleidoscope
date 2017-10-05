@@ -37,8 +37,11 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #define USE_PLUGINS(plugins...) Kaleidoscope.use(plugins)
 
+class Kaleidoscope_;
+
 class KaleidoscopePlugin {
- public:
+  friend Kaleidoscope_;
+ protected:
   virtual void begin(void) = 0;
 };
 
