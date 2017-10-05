@@ -33,7 +33,8 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #define VERSION "locally-built"
 #endif
 
-#define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
+const uint8_t KEYMAP_SIZE
+__attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
 #define USE_PLUGINS(plugins...) Kaleidoscope.use(plugins)
 
