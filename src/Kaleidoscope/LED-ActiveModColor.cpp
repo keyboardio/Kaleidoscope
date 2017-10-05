@@ -50,8 +50,8 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
           ::LEDControl.refreshAt(r, c);
       } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
         uint8_t layer = k.keyCode;
-        if (layer >= MOMENTARY_OFFSET)
-          layer -= MOMENTARY_OFFSET;
+        if (layer >= LAYER_SHIFT_OFFSET)
+          layer -= LAYER_SHIFT_OFFSET;
 
         if (Layer.isOn(layer))
           ::LEDControl.setCrgbAt(r, c, highlight_color);
