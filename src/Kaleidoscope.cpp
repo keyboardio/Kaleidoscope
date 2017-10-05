@@ -144,3 +144,14 @@ void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
 void loop_hook_use(Kaleidoscope_::loopHook hook) {
   Kaleidoscope.useLoopHook(hook);
 }
+
+void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...) {
+  va_list ap;
+
+  Kaleidoscope.use(plugin);
+
+  va_start(ap, plugin);
+  while ((plugin = (KaleidoscopePlugin *)va_arg(ap, KaleidoscopePlugin *)) != NULL)
+    Kaleidoscope.use(plugin);
+  va_end(ap);
+}

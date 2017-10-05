@@ -36,8 +36,6 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
-#define USE_PLUGINS(plugins...) Kaleidoscope.use(plugins)
-
 class KaleidoscopePlugin {
  public:
   virtual void begin(void) = 0;
@@ -122,7 +120,13 @@ extern Kaleidoscope_ Kaleidoscope;
                                            "layer.getState")
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
+
 void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
 __attribute__((deprecated("Use Kaleidoscope.useEventHandlerHook instead")));
 void loop_hook_use(Kaleidoscope_::loopHook hook)
 __attribute__((deprecated("Use Kaleidoscope.useLoopHook instead")));
+
+void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...)
+__attribute__((deprecated("Use Kaleidoscope.use(...) instead")));
+
+#define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
