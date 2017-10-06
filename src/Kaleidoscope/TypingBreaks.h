@@ -32,9 +32,9 @@ class TypingBreaks : public KaleidoscopePlugin {
   static bool focusHook(const char *command);
 
   typedef struct settings_t {
-    uint32_t idle_time_limit;
-    uint32_t lock_time_out;
-    uint32_t lock_length;
+    uint16_t idle_time_limit;
+    uint16_t lock_time_out;
+    uint16_t lock_length;
     uint16_t left_hand_max_keys;
     uint16_t right_hand_max_keys;
   } settings_t;

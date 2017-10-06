@@ -23,9 +23,9 @@
 namespace kaleidoscope {
 
 TypingBreaks::settings_t TypingBreaks::settings = {
-  .idle_time_limit = 10000,  //  10s
-  .lock_time_out = 2700000,  //  45m
-  .lock_length = 300000,    //   5m
+  .idle_time_limit = 10,  //  10s
+  .lock_time_out = 2700,  //  45m
+  .lock_length = 300,    //   5m
   .left_hand_max_keys = 0,
   .right_hand_max_keys = 0
 };
@@ -45,14 +45,18 @@ void TypingBreaks::begin(void) {
 }
 
 Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  uint32_t lock_length = settings.lock_length * 1000;
+  uint32_t idle_time_limit = settings.idle_time_limit * 1000;
+  uint32_t lock_time_out = settings.lock_time_out * 1000;
+
   // If we are locked, and didn't time out yet, no key has to be pressed.
-  if (lock_start_time_ && (millis() - lock_start_time_ <= settings.lock_length))
+  if (lock_start_time_ && (millis() - lock_start_time_ <= lock_length))
     return Key_NoKey;
 
   // If we are locked...
   if (lock_start_time_) {
     // ...and the lock has not expired yet
-    if (millis() - lock_start_time_ <= settings.lock_length)
+    if (millis() - lock_start_time_ <= lock_length)
       return Key_NoKey;  // remain locked
 
     // ...otherwise clear the lock
@@ -66,7 +70,7 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
   // Any other case, we are not locked yet! (or we just unlocked)
 
   // Are we still in the same session?
-  if (last_key_time_ && (millis() - last_key_time_) >= settings.idle_time_limit) {
+  if (last_key_time_ && (millis() - last_key_time_) >= idle_time_limit) {
     // No, we are not. Clear timers and start over.
     lock_start_time_ = 0;
     left_hand_keys_ = right_hand_keys_ = 0;
@@ -87,9 +91,9 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
     return Key_NoKey;
   }
 
-  if (settings.lock_time_out) {
+  if (lock_time_out) {
     // Is the session longer than lock_time_out?
-    if (millis() - session_start_time_ >= settings.lock_time_out) {
+    if (millis() - session_start_time_ >= lock_time_out) {
       // Yeah, it is.
       lock_start_time_ = millis();
       TypingBreak(true);
