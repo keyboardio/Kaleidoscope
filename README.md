@@ -60,7 +60,7 @@ properties. All times are in milliseconds.
 > The length until the keyboard lock is held. Any key pressed while the lock is
 > active, will be discarded.
 >
-> Defaults to 300000 (15 minutes).
+> Defaults to 300000 (5 minutes).
 
 ### `.settings.left_hand_max_keys`
 
