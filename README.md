@@ -43,6 +43,8 @@ ln -s $HOME/kaleidoscope/Arduino-Boards $SKETCHBOOK_DIR/hardware/keyboardio/avr
 cd $HOME/kaleidoscope
 # then clone the firmware repository
 git clone https://github.com/keyboardio/Kaleidoscope.git
+# or clone your own fork of the firmware repository
+git clone https://github.com/YOUR-USERNAME/Kaleidoscope.git
 # and build your firmware!
 cd Kaleidoscope
 make
