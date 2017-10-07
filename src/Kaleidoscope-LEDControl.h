@@ -102,6 +102,11 @@ class LEDControl : public KaleidoscopePlugin {
   static void set_mode(uint8_t mode);
   static uint8_t get_mode_index();
   static LEDMode *get_mode();
+  static void reactivate() {
+    set_all_leds_to({0, 0, 0});
+    if (modes[mode])
+      modes[mode]->onActivate();
+  }
 
   static int8_t mode_add(LEDMode *mode);
 
