@@ -38,7 +38,15 @@
 
 // Deprecated - Remove once the core has transitioned
 
-#define key_was_pressed(keyState) keyWasPressed(keyState)
-#define key_is_pressed(keyState)  keyIsPressed(keyState)
-#define key_toggled_on(keyState)  keyToggledOn(keyState)
-#define key_toggled_off(keyState) keyToggledOff(keyState)
+inline uint8_t __attribute__((deprecated("Use keyWasPressed instead"))) key_was_pressed(uint8_t keyState) {
+  return keyWasPressed(keyState);
+}
+inline uint8_t __attribute__((deprecated("Use keyIsPressed instead"))) key_is_pressed(uint8_t keyState) {
+  return keyIsPressed(keyState);
+}
+inline uint8_t __attribute__((deprecated("Use keyToggledOn instead"))) key_toggled_on(uint8_t keyState) {
+  return keyToggledOn(keyState);
+}
+inline uint8_t __attribute__((deprecated("Use keyToggledOff instead"))) key_toggled_off(uint8_t keyState) {
+  return keyToggledOff(keyState);
+}
