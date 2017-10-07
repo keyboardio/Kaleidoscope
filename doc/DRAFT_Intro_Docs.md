@@ -101,7 +101,7 @@ Another thing to be aware of is the prog key. It sends a special signal to the k
 	https://github.com/Lepidopterarium/Chrysalis
 
 
-	<h2>Install Arduino support</h2>
+<h2>Install Arduino support</h2>
 
 The Arduino system has been designed to be accessible to people at all skill levels, and Keyboardio is built on top of the Arduino platform because we share that goal. There are many ways to set up your system to work with the keyboardio firmware. This is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
 
