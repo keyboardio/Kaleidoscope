@@ -86,6 +86,131 @@ Another thing to be aware of is the prog key. It sends a special signal to the k
 
 [comment]:<> (@jesse @algernon are there more limitations that should be documented?)
 
+<h2>Install Arduino support</h2>
+
+The Arduino system has been designed to be accessible to people at all skill levels, and Keyboardio is built on top of the Arduino platform because we share that goal. There are many ways to set up your system to work with the keyboardio firmware. This is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
+
+<h4>Step One: Set up the Arduino IDE</h4>
+
+ 1. Download the Arduino IDE install package from:
+
+ https://www.arduino.cc/en/Main/Software
+
+ 2. Click on your operating system name to download the correct version.
+
+  _**Note:** This tutorial has been written using the Mac version._
+
+ 3. Install the Arduino IDE. On a mac the application is called "Arduino.app". You probably want to put it in your Applications directory. 
+
+<h4>Step Two: Install keyboardio support into the IDE</h4>
+
+ 1. Open the Arduino IDE. It will open a default sketch; just ignore that. (If you close the default sketch window the application will close.)
+
+ 2. Open the “Arduino” menu and click on “Preferences”
+
+ 3. At the bottom of the "Settings" tab is the 'Additional Board Manager URLs` box. Paste this into it:  https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package\_keyboardio\_index.json then click ‘OK’ to close the dialog
+
+ 4. the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
+
+ 5. ‘Keyboardio’ into the search box. You will see an entry that says "keyboardio by Keyboardio" Click on it to select it, and then click ‘Install’. Once the install completes, click "Close".
+
+ 6. the ‘Tools’ menu again, click on ‘Board’ and then click on ‘Keyboardio Model 01’ – You may have to scroll through a long list of other boards to get there.
+
+ 7. in the keyboardio.
+
+ 8. the Tools menu again, and scroll down to "Port > ". Select the Keyboardio. (It may already be seleted.)
+
+<h4>Step Three: Build the default firmware and load it on the Keyboardio</h4>
+
+ 1.  In the “File” menu, click on the “Examples” submenu. Scroll down to ‘Model01-Firmware’
+
+ 2.  While holding down the prog key, click on the right arrow in the sketch window menu bar to compile compile and install.
+
+ The Keyboardio LED's will flash across the board as the firmware is installed, and then the "LED" key will glow blue. 
+
+**Congrats, you've just installed the latest firmware!!**
+
+<h2>Edit A Keymap</h2>
+
+Editing a keymap is core to what the keyboardio is about, and probably one of the first things to try. For this example, let's imagine you want to map ESCAPE to the PROG key in the default keymap, as the QWERTY G-ds intended. 
+
+<h4> Step One: Edit  </h4>
+
+ 1.  Open the Arduino IDE. In the “File” menu, click on the “Examples” submenu. Scroll down to ‘Model01-Firmware’.
+ 
+  There is a lot going on in this file. By all means, read through the code and the comments and get familiar with it if you like. Or you can just breeze past it for now and skip down to the keymaps: 
+
+ 2. Scroll down to this line: 
+ 
+  ```
+  enum { QWERTY, FUNCTION, NUMPAD }; // layers
+  ```
+
+ That's where the keymaps section begins. It tells you that there are three layers: 
+
+   * QWERTY is the default, or zero layer
+   * FUNCTION is layer 1
+   * NUMPAD is layer 2
+ 
+ The QWERTY keymap itself is a little further down, and looks like this: 
+ 
+ ```
+   [QWERTY] = KEYMAP_STACKED
+  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+   Key_Backtick,  Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+   Key_PageUp,    Key_A, Key_S, Key_D, Key_F, Key_G,
+   Key_PageDown,  Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+   ShiftToLayer(FUNCTION),
+
+   M(MACRO_ANY),   Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_KeypadNumLock,
+   Key_Enter,      Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
+                        Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+   Key_RightAlt,   Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
+   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
+   ShiftToLayer(FUNCTION)),
+   ```
+   
+   It's a map of your keyboard's layout. The top block that starts with "(\_\_\_," and ends with "ShiftToLayer(FUNCTION)," is the left half of the keyboardio. that first "\_\_\_," represets the PROG key. It is a transparent key in the keymap, free to be mapped to anything you like. 
+   
+   At the end of the fourth row is "Key\_Escape," which corresponds to the ESC key on your keyboard. That means "Key\_Escape," is the keycode for the ESC key.
+   
+ 3. Replace "\_\_\_," with "Key\_Escape," in the first row, so your keymap now looks like this: 
+   
+    ```
+   [QWERTY] = KEYMAP_STACKED
+  (Key_Escape,   Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+   Key_Backtick,  Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+   Key_PageUp,    Key_A, Key_S, Key_D, Key_F, Key_G,
+   Key_PageDown,  Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+   ShiftToLayer(FUNCTION),
+
+   M(MACRO_ANY),   Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_KeypadNumLock,
+   Key_Enter,      Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
+                        Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+   Key_RightAlt,   Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
+   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
+   ShiftToLayer(FUNCTION)),
+   ```
+ 
+ 4. Save the file.
+
+ 5.   While holding down the prog key, click on the right arrow in the sketch window menu bar to compile compile and install.
+
+ The Keyboardio LED's will flash across the board as the firmware is installed, and then the "LED" key will glow blue. 
+
+ Now when you press the PROG key it will send an ESCAPE to your computer. 
+ 
+ 
+ 
+<h2>Edit LED patterns</h2>
+
+<h2>Ideas to Explore</h2>
+
+<h2>Next Steps</h2>
+
+
 <h2>Other Resources</h2>
 
  * Keyboardio forum:
@@ -99,67 +224,6 @@ Another thing to be aware of is the prog key. It sends a special signal to the k
 
  * Git repository for Calliope, the GUI tool for configuring the keyboardio that is still under development:
 	https://github.com/Lepidopterarium/Chrysalis
-
-
-<h2>Install Arduino support</h2>
-
-The Arduino system has been designed to be accessible to people at all skill levels, and Keyboardio is built on top of the Arduino platform because we share that goal. There are many ways to set up your system to work with the keyboardio firmware. This is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
-
-<h4>Step One: Set up the Arduino IDE</h4>
-
-Download the Arduino IDE install package from:
-
- https://www.arduino.cc/en/Main/Software
-
-Click on your operating system name to download the correct version.
-
-_**Note:** This tutorial has been written using the Mac version._
-
-Install the Arduino IDE. On a mac the application is called "Arduino.app". You probably want to put it in your Applications directory. 
-
-<h4>Step Two: Install keyboardio support into the IDE</h4>
-
-It will open a default sketch; just ignore that. (If you close the default sketch window the application will close.)
-
-Open the “Arduino” menu and click on “Preferences”
-
-At the bottom of the "Settings" tab is the 'Additional Board Manager URLs` box. Paste this into it: 
-
-https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package\_keyboardio\_index.json
-
-and click ‘OK’ to close the dialog
-
-Open the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
-
-Type ‘Keyboardio’ into the search box. You will see an entry that says "keyboardio by Keyboardio" Click on it to select it, and then click ‘Install’. Once the install completes, click "Close".
-
-Open the ‘Tools’ menu again, click on ‘Board’ and then click on ‘Keyboardio Model 01’ – You may have to scroll through a long list of other boards to get there.
-
-Plug in the keyboardio.
-
-Open the Tools menu again, and scroll down to "Port > ". Select the Keyboardio. (It may already be seleted.)
-
-<h4>Step Three: Build the default firmware and load it on the Keyboardio</h4>
-
-Click on the “File” menu, click on the “Examples” submenu. Click on ‘Model01-Firmware’
-
-While holding down the prog key, click on the right arrow in the sketch window menu bar to compile compile and install.
-
-The Keyboardio LED's will flash across the board as the firmware is installed, and then the "LED" key will glow blue. 
-
-Congrats, you've just installed the latest firmware!!
-
-<h2>Edit Keymap</h2>
-
-<h2>Build and Update firmware</h2>
-
-<h2>Edit LED patterns</h2>
-
-<h2>Create Macros</h2>
-
-<h2>Ideas to Explore</h2>
-
-<h2>Next Steps</h2>
 
 <h1>Appendix 1: Default layouts</h1>
 
