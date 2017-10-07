@@ -35,4 +35,4 @@ typedef uint8_t macro_t;
 #define Uc(k) MACRO_ACTION_STEP_KEYCODEUP, (Key_ ## k).keyCode
 #define Tc(k) MACRO_ACTION_STEP_TAPCODE, (Key_ ## k).keyCode
 
-#define END   MACRO_ACTION_END
+__attribute__((deprecated("END is no longer required to end macros"))) const MacroActionStepType END = MACRO_ACTION_END;
