@@ -39,7 +39,7 @@ LEDControl::set_mode(uint8_t mode_) {
     return;
 
   mode = mode_;
-  reactivate();
+  refreshAll();
 }
 
 uint8_t LEDControl::get_mode_index(void) {
