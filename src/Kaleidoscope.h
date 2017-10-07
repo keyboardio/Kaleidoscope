@@ -33,9 +33,8 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #define VERSION "locally-built"
 #endif
 
-#define KEYMAP_SIZE (sizeof(keymaps) / ROWS / COLS / sizeof(Key))
-
-#define USE_PLUGINS(plugins...) Kaleidoscope.use(plugins)
+const uint8_t KEYMAP_SIZE
+__attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
 class KaleidoscopePlugin {
  public:
@@ -46,7 +45,8 @@ class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
 
-  void setup(const byte keymap_count) {
+  void setup(const byte keymap_count)
+  __attribute__((deprecated("The keymap_count argument (and the KEYMAP_SIZE macro) are unused, and can be safely removed."))) {
     setup();
   }
   void setup(void);
@@ -121,5 +121,12 @@ extern Kaleidoscope_ Kaleidoscope;
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) __attribute__((deprecated));
-void loop_hook_use(Kaleidoscope_::loopHook hook) __attribute__((deprecated));
+void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
+__attribute__((deprecated("Use Kaleidoscope.useEventHandlerHook instead")));
+void loop_hook_use(Kaleidoscope_::loopHook hook)
+__attribute__((deprecated("Use Kaleidoscope.useLoopHook instead")));
+
+void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...)
+__attribute__((deprecated("Use Kaleidoscope.use(...) instead")));
+
+#define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
