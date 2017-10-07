@@ -38,10 +38,8 @@ LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= LED_MAX_MODES)
     return;
 
-  set_all_leds_to({0, 0, 0});
   mode = mode_;
-  if (modes[mode])
-    modes[mode]->onActivate();
+  reactivate();
 }
 
 uint8_t LEDControl::get_mode_index(void) {
