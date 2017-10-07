@@ -222,7 +222,7 @@ Editing a keymap is core to what the keyboardio is about, and probably one of th
  * Git repository for Kaleidoscope, which contains all the keyboardio modules:
 	https://github.com/keyboardio/Kaleidoscope
 
- * Git repository for Calliope, the GUI tool for configuring the keyboardio that is still under development:
+ * Git repository for Chrysalis the GUI tool for configuring the keyboardio that is still under development:
 	https://github.com/Lepidopterarium/Chrysalis
 
 <h1>Appendix 1: Default layouts</h1>
