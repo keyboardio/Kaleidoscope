@@ -33,18 +33,6 @@ void LEDControl::next_mode(void) {
   return set_mode(mode);
 }
 
-#if 0
-void LEDControl::update(void) {
-  if (modes[mode])
-    (modes[mode]->update)();
-}
-
-void LEDControl::refreshAt(byte row, byte col) {
-  if (modes[mode])
-    modes[mode]->refreshAt(row, col);
-}
-#endif
-
 void
 LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= LED_MAX_MODES)
