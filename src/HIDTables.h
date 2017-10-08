@@ -2,7 +2,7 @@
 
 
 // These mappings were extracted and transcribed from
-// http://www.usb.org_SLASH_developers_SLASH_devclass_docs_SLASH_Hut1_12v2.pdf
+// http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
 //
 // In most cases, I've preserved the "official" USB Implementers forum
 // "Usage Name", though I've standardized some abbreviations and spacing
