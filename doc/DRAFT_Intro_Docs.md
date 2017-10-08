@@ -84,7 +84,7 @@ If you want to change the shifted character on a key, the change will need to be
 
 Another thing to be aware of is the prog key. It sends a special signal to the keyboardio when you hold it down that allows the firmware to be over-written. 
 
-[comment]:<> (@jesse @algernon are there more limitations that should be documented?)
+<!-- (@jesse @algernon are there more limitations that should be documented?) -->
 
 <h2>Install Arduino support</h2>
 
@@ -108,7 +108,7 @@ The Arduino system has been designed to be accessible to people at all skill lev
 
  2. Open the “Arduino” menu and click on “Preferences”
 
- 3. At the bottom of the "Settings" tab is the 'Additional Board Manager URLs` box. Paste this into it:  https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package\_keyboardio\_index.json then click ‘OK’ to close the dialog
+ 3. At the bottom of the "Settings" tab is the 'Additional Board Manager URLs' box. Paste this into it:  https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json then click ‘OK’ to close the dialog
 
  4. the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
 
@@ -177,7 +177,7 @@ Editing a keymap is core to what the keyboardio is about, and probably one of th
    
  3. Replace "\_\_\_," with "Key\_Escape," in the first row, so your keymap now looks like this: 
    
-    ```
+  ```
    [QWERTY] = KEYMAP_STACKED
   (Key_Escape,   Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
    Key_Backtick,  Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
@@ -192,7 +192,7 @@ Editing a keymap is core to what the keyboardio is about, and probably one of th
    Key_RightAlt,   Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
    Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
    ShiftToLayer(FUNCTION)),
-   ```
+ ```
  
  4. Save the file.
 
