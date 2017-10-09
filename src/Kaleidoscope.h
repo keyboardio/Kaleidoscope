@@ -21,6 +21,7 @@ void setup();
 
 
 #include KALEIDOSCOPE_HARDWARE_H
+#include "Kaleidoscope-Hardware.h"
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
