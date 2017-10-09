@@ -11,6 +11,9 @@ extern const Key keymaps[][ROWS][COLS];
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch
 #define UNKNOWN_KEYSWITCH_LOCATION 255,255
+// Conversely, if an injected event *is* tied to a physical keyswitch and should
+// be resolved by the current keymap, code can use Key_NoKey on the injected event
+// with a real (row, col) location
 
 // sending events to the computer
 /* The event handling starts with the Scanner calling handleKeyswitchEvent() for

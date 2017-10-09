@@ -48,13 +48,18 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
    * In particular, doing them for keypresses with out-of-bounds (row,col)
    *   would cause out-of-bounds array accesses in Layer.lookup(),
    *   Layer.updateLiveCompositeKeymap(), etc.
-   * Perhaps this check should instead be for INJECTED - I'm not clear on
-   *   whether keypresses with out-of-bounds (row,col) are the same as
-   *   keypresses with INJECTED set, or are a superset or a subset of
-   *   INJECTED keypresses.  In any case, the (row,col) test is *safe* in that
-   *   it avoids out-of-bounds accesses, at least in core.  (Can't promise
-   *   anything about event handlers - they may still receive out-of-bounds
-   *   (row,col), and handling that properly is on them.)
+   * Note that many INJECTED keypresses use the UNKNOWN_KEYSWITCH_LOCATION macro
+   *   which gives us row==255, col==255 here.  Therefore, it's legitimate that
+   *   we may have keypresses with out-of-bounds (row, col).
+   * However, some INJECTED keypresses do have valid (row, col) if they are
+   *   injecting an event tied to a physical keyswitch - and we want them to go
+   *   through this lookup.
+   * So we can't just test for INJECTED here, we need to test the row and col
+   *   directly.
+   * Note also that this (row, col) test avoids out-of-bounds accesses in *core*,
+   *   but doesn't guarantee anything about event handlers - event handlers may
+   *   still receive out-of-bounds (row, col), and handling that properly is on
+   *   them.
    */
   if (row < ROWS && col < COLS) {
 
@@ -78,7 +83,11 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
       }
     }
 
-    if (!(keyState & INJECTED)) {
+    /* Convert (row, col) to the correct mappedKey
+     * The condition here means that if mappedKey and (row, col) are both valid,
+     *   the mappedKey wins - we don't re-look-up the mappedKey
+     */
+    if (mappedKey.raw == Key_NoKey.raw) {
       mappedKey = Layer.lookup(row, col);
     }
 
