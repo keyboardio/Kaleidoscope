@@ -34,6 +34,8 @@ void setup (void) {
   Kaleidoscope.use (&TypingBreaks);
 
   Kaleidoscope.setup ();
+
+  TypingBreaks.settings.idle_time_limit = 60;
 }
 ```
 
