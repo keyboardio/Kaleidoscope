@@ -2,17 +2,21 @@
 
 <h2>Introduction</h2>
 
-Welcome to your Keyboardio!
+Welcome to your Keyboardio Model 01!
 
 <h3>Audience</h3>
 
-This document is intended for folks who are new to Arduino programming or perhaps to programming in general, and want a quick tutorial on how to get started customizing your keyboardio. It assumes you are reasonably clever and can follow instructions. It will give you some background on keyboards in general, and the keyboardio in specific, Then it will take you through setting up the Arduino Integrated Development Environment (IDE) on your computer, and finally making simple changes to your firmware.
+This document is intended for folks who are new to Arduino programming or perhaps to programming in general, and want a quick tutorial on how to get started customizing the Model 01. We will give you some background on keyboards in general, the Keyboardio Model 01 in specific, then we will take you through setting up the Arduino customization tools on your computer, and finally walk you through making simple changes to your keyboard's firmware.
 
-When you have worked through this document you will be able to modify the definitions of the keys on your keyboardio, enabling you to do tasks such as swapping BACKSPACE and SPACE. You will also be able to turn on and off the various standard LED pattern modules.
+After you have worked through this document you will be able to modify the definitions of the keys on your Model 01, enabling you to do tasks such as switching layouts, swapping thumb-key placement, and customizing your LED pattern modules.
 
-If you're already familiar with Arduino and/or prefer to work on the command line of your computer I encourage you to look at the Model 01 git repository.
+The Keyboardio teams hopes this start-up guide will be a helpful first step in making your ideal keyboard truly heirloom-grade. We hope you will share your improvements with the community here: 
 
-If you already know how to do this:
+https://community.keyboard.io/
+
+Keyboardio was built for uncompromising typists like you—those who love to experiment, create, perfect, and share inspiration. In our community forum you will find folks both experienced and new to programming. Your questions and triumphs will be welcomed and celebrated. This is a great first-stop for any questions you have about customizing your keyboard.
+
+If you're already familiar with Arduino and/or prefer to work on the command line of your computer we encourage you to look at the Model 01 git repository. If the following commands are familiar territory for you then the rest of this document will be more of a reference for you:
 
 ```
 mkdir -p hardware/keyboardio
@@ -22,17 +26,11 @@ mkdir -p hardware/keyboardio
 git clone --recursive https://github.com/keyboardio/Arduino-Boards.git hardware/keyboardio/avr
 ```
 
-then you will probably find this document tedious. Perhaps glance at the next section that gives an overview of how the firmware is set up for a high level understanding, and the Appendix with keymap definitions may be a useful reference.
-
-This is only a start-up guide. The Keyboardio team hopes you will move on to making bigger and better improvements to your keyboardio, and will share them with the community. There is an active forum full of helpful people here:
-
-https://community.keyboard.io/
-
-where you will find both experienced folks and others who are new to programming. Your questions and triumphs will be welcomed and celebrated if you feel like sharing them, and we sincerely hope you will ask questions if things aren't working for you. Keyboardio was built so people like you can experiment with customizing your environment, and then share what you learn with other folks who will appreciate your work and be inspired by it.
+For our more tech-savvy users the sections for reference will be the high-level Keyboardio Firmware Overview (the next section), and the Appendix with keymap definitions (the final section).
 
 <h3>Keyboardio Firmware Overview</h3>
 
-Keyboards work by receiving your keypresses and translating them into "keycodes".  Those keycodes are passed to your computer's operating system, which can interpret them and turn into characters and control codes. Those characters and codes are passed on to the active application on your computer. Some examples:
+Keyboards work by receiving your keypresses and translating them into "keycodes". Those keycodes are passed to your computer's operating system, which can interpret them and turn into characters and control codes. Those characters and codes are passed on to the active application on your computer. Some examples:
 
  * Press the "A" key while editing a document, and "a" will be inserted where your cursor is currently positioned.
 
@@ -40,7 +38,7 @@ Keyboards work by receiving your keypresses and translating them into "keycodes"
 
  * Press the "up arrow" key, and the cursor will move up a line in the document.
 
-In order to change what happens when you press a key on your keyboardio, you will need to edit the firmware configuration file to change the keycode it sends to your computer's operating system when you press a given key. To say that a bit more succinctly, you will edit a keymap. 
+In order to change what happens when you press a key on your Keyboardio, you will need to edit the firmware configuration file to change the keycode it sends to your computer's operating system when you press a given key. To say that a bit more succinctly, you will edit a keymap. By having this logic on your keyboard itself you can bring your customizations with you from one machine to another.
 
 _**NOTE:** There's an Appendix at the end of this document which lists all the available keycodes, and what they do._
 
@@ -48,47 +46,45 @@ _**NOTE:** There's an Appendix at the end of this document which lists all the a
 
 The keyboardio ships with three keymaps installed: QWERTY, FUNCTION, and NUMPAD. The laminated sheet that came with your keyboard shows the QWERTY layer in black, the FUNCTION layer in blue, and the NUMPAD layer in red. The back side of the sheet has a blank layout you can write on with a grease pencil or a whiteboard marker to represent a changed layout.
 
-The default layer is numbered zero, and the zero-layer that ships on the keyboardio is called "QWERTY". 
+The default layer is numbered zero, and the zero-layer that ships on the Keyboardio is called "QWERTY". 
 
-_**NOTE:** If you want to use a different layout, such as Dvorak and Colemark, you will find those keymaps and instructions to swap out the default layer in an Appendix._ 
+_**NOTE:** If you want to use a different layout, such as Dvorak and Colemak, you will find those keymaps and instructions to swap out the default layer in an Appendix._ 
 
-The next layer up is 1, which is FUNCTION. 2 is NUMPAD. The FUNCTION layer is activated when one of the FN palm keys is held down. NUMPAD gets toggled on and off with the NUM key in the upper right of the right half of the keyboardio.
+Next, Layer 1 is FUNCTION, and Layer 2 is NUMPAD. The FUNCTION layer is activated when one of the FN palm keys is held down. NUMPAD gets toggled on and off with the NUM key in the upper right of the right half of the Model 01.
 
-Imagine the default layer as the base of a stack, and the higher layers as overlays. Keys on the upper layers can be transparent, in which case the default layer "shines through."
+Imagine the default layer as the base of a stack, and the higher layers as overlays. Keys on the upper layers can be transparent, in which case the default layer "shines through." For example: if NUMPAD is toggled on, all the keys on the left half of the keymap (and some keys on the right side) are transparent. If you press a key on the left half, the keycode corresponding to that key on the QWERTY map will be generated, unless you are also holding down function, in which case you'll send the relevant keycode from the FUNCTION keymap.
 
-For example: if NUMPAD is toggled on, all the keys on the left half of the keymap (and some keys on the right side) are transparent. If you press a key on the left half, the keycode corresponding to that key on the QWERTY map will be generated, unless you are also holding down function, in which case you'll send the relevant keycode from the FUNCTION keymap.
+<h4>Commonly Re-mapped Keys</h4>
 
-<h4>Obvious Keys to Re-map</h4>
+The ANY key and BUTTERFLY key were intentionally left without important "jobs" in the layout, leaving convenient "empty" positions on the physical keyboard to play with. 
 
-The ANY key and butterfly key were intentionally left without important "jobs" in the layout, so there are convenient "empty" positions on the physical keyboard to play with. 
+The LED key is another key you may wish to re-map to a less central place on the keyboard, and move something you use more into that spot. For instance, your new LED key could get added to an empty spot in the FUNCTION map.
 
-The LED key is another key you may wish to re-map to a less central place on the keyboard, and move something you use more into that spot. For instance, it could get added to an empty spot in the FUNCTION map.
+Similarly, the PROG key is avaliable. By default it is used to send a special signal to the Model 01 when you hold it down; allowing the firmware to be over-written. Since it's in the familiar place for ESC, many users may wish to change the Layer 0 PROG. 
 
-Similarly, the PROG key is avaliable. It sends a special signal to the keyboardio when you hold it down that allows the firmware to be over-written, but is free for mapping. Since it's in the usual place for ESC, you may wish to make the PROG position in the default keymap an extra ESC key. 
+The eight thumb keycaps were deliberately all made the same shape so they can be easily swapped. This means you can rearrange the locations of these keys in the firmware and physically!
 
-The eight thumb keycaps were deliberately all made the same shape so they can be swapped. If you think you would like to rearrange the locations of these keys, move them in the keymaps and rearrange the keycaps!
-
-<h4> Limitations to Configuring Keyboardio Layout</h4>
+<h4>Limitations to Configuring Keyboardio Layout</h4>
 
 There are some limitations to what the Keyboardio can be configured to do that are related to how keyboards and operating systems work.
 
-Firstly, the operating system has control of what happens when you hold down "shift". It makes sense that pressing "A" generates the character "a", and "shift + A" generates the character "A".
+Firstly, the operating system has control of what happens when you hold down "SHIFT". It makes sense that pressing "A" generates the character "a", and "SHIFT + A" generates the character "A".
 
-What makes less sense is that "shift + 4" will always generate the character "$", no matter where you have the "4" key mapped on the keyboard. It is _possible_ to make "shift + 4" create a character other than "$" in the keyboardio firmware by enabling a plugin called ShapeShifter:
+What makes less sense is that "SHIFT + 4" will always generate the character "$", no matter where you have the "4" key mapped on the keyboard. It is _possible_ to make "SHIFT + 4" create a character other than "$" in the Keyboardio firmware by enabling a plugin called ShapeShifter:
 
 https://github.com/keyboardio/Kaleidoscope-ShapeShifter
 
-But it's probably better to consider that an advanced option, and try a few more straightforward things first. 
+It's probably better to consider that an advanced option, and try a more straightforward approach first. 
 
 If you want to change the shifted character on a key, the change will need to be made in the operating system. Look below for the link to the Keyboardio forum; there are discussions on the forums about how to do that, and friendly folks there who can answer questions.
 
-Another thing to be aware of is the prog key. It sends a special signal to the keyboardio when you hold it down that allows the firmware to be over-written. 
+Another thing to be aware of is the PROG key. It sends a special signal to the Model 01 when you hold it down that allows the firmware to be over-written. 
 
 <!-- (@jesse @algernon are there more limitations that should be documented?) -->
 
 <h2>Install Arduino support</h2>
 
-The Arduino system has been designed to be accessible to people at all skill levels, and Keyboardio is built on top of the Arduino platform because we share that goal. There are many ways to set up your system to work with the keyboardio firmware. This is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
+The Arduino system has been designed to be accessible to people at all skill levels, and Keyboardio is built on top of the Arduino platform because we share that goal. There are many ways to set up your system to work with the Keyboardio firmware, the most typical is to use the Arduino Integrated Development Environment (IDE); an application that gives some visual context to the code you want to send to your Arduino device. This is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
 
 <h4>Step One: Set up the Arduino IDE</h4>
 
@@ -104,15 +100,15 @@ The Arduino system has been designed to be accessible to people at all skill lev
 
 <h4>Step Two: Install keyboardio support into the IDE</h4>
 
- 1. Open the Arduino IDE. It will open a default sketch; just ignore that. (If you close the default sketch window the application will close.)
+ 1. Open the Arduino IDE. It will open a default sketch; just ignore that (if you close the default sketch window the application will close.)
 
  2. Open the “Arduino” menu and click on “Preferences”
 
  3. At the bottom of the "Settings" tab is the 'Additional Board Manager URLs' box. Paste this into it:  https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json then click ‘OK’ to close the dialog
 
- 4. the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
+ 4. Go into the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
 
- 5. ‘Keyboardio’ into the search box. You will see an entry that says "keyboardio by Keyboardio" Click on it to select it, and then click ‘Install’. Once the install completes, click "Close".
+ 5. Enter ‘Keyboardio’ into the search box. You will see an entry that says "keyboardio by Keyboardio" click on it to select it, and then click ‘Install’. Once the install completes, click "Close".
 
  6. the ‘Tools’ menu again, click on ‘Board’ and then click on ‘Keyboardio Model 01’ – You may have to scroll through a long list of other boards to get there.
 
