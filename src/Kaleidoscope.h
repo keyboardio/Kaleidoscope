@@ -40,9 +40,34 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 class Kaleidoscope_;
 
 class KaleidoscopePlugin {
-  friend Kaleidoscope_;
+  friend class Kaleidoscope_;
+
  protected:
-  virtual void begin(void) = 0;
+  /** @deprecated Initial setup function.
+   *  Use \ref initialSetup() instead, and see documentation there.
+   */
+  virtual void begin(void) __attribute__((deprecated("Use initialSetup() instead"))) { };
+
+  /** Initial plugin setup hook.
+   * All plugins are supposed to provide a singleton object, statically
+   * initialized at compile-time (with few exceptions). Because of this, the
+   * order in which they are instantiated is unspecified, and cannot be relied
+   * upon. For this reason, one's expected to explicitly initialize, "use" the
+   * plugins one wishes to, by calling `Kaleidoscope.use()` with a list of plugin
+   * object pointers.
+   *
+   * This function will in turn call the `initialSetup` function of each plugin,
+   * so that they can perform any initial setup they wish, such as registering
+   * event handler or loop hooks. This is the only time this function will be
+   * called. It is intentionally protected, and accessible by the `Kaleidoscope`
+   * class only.
+   *
+   * @TODO: Once the deprecated \ref begin() method is removed, turn this into an
+   * abstract function.
+   */
+  virtual void initialSetup(void) {
+    begin();
+  }
 };
 
 class Kaleidoscope_ {
@@ -64,7 +89,7 @@ class Kaleidoscope_ {
   // Then, the one-argument version, that gives us type safety for a single
   // plugin.
   inline void use(KaleidoscopePlugin *p) {
-    p->begin();
+    p->initialSetup();
   }
 
   // We have a no-op with a int argument, as a temporary hack until we remove
