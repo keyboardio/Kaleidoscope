@@ -40,7 +40,7 @@ Key NumLock_::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
   if (key != Key_KeypadNumLock)
     return key;
 
-  if (!key_toggled_on(key_state))
+  if (!keyToggledOn(key_state))
     return key;
 
   if (Layer.isOn(numPadLayer)) {
