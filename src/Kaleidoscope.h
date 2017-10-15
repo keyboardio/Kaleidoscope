@@ -42,9 +42,9 @@ class KaleidoscopePlugin {
   friend class Kaleidoscope_;
 
  protected:
- /** @deprecated Initial setup function.
-   *  Use \ref initialSetup() instead, and see documentation there.
-   */
+  /** @deprecated Initial setup function.
+    *  Use \ref initialSetup() instead, and see documentation there.
+    */
   virtual void begin(void) __attribute__((deprecated("Use initialSetup() instead"))) { };
 
 
