@@ -58,7 +58,9 @@ state upon which to trigger the custom action. Both of these are bit fields,
 each bit set tells the extension that the key with that index must be held for
 the action to trigger. It is recommended to use the `RxCy` macros of the core
 `KaleidoscopeFirmware`, and *or* them together to form a bitfield.
-See below for a diagram showing how the `RxCy` coordinates coorespond to your keyboad.
+To see how the `RxCy` coordinates correspond to the physical keys of your
+keyboard, you'll have to consult the documentation for the keyboard.
+Below, you can find a diagram showing the layout for the Keyboardio Model 01.
 
 The combo list **must** end with an element containing zero values for both the
 left and the right halves.
