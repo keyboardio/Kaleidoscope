@@ -73,6 +73,15 @@ The extension provides the following methods on the `HostOS` singleton:
 > Sets the type of the host OS, overriding any previous value. The type is then
 > stored in EEPROM for persistence.
 
+## Host OS Values
+
+The OS type (i.e. the return type of `.os()` and the arguments to `.os(type)`) will be one of the following:
+
+   - `kaleidoscope::hostos::LINUX`
+   - `kaleidoscope::hostos::OSX`
+   - `kaleidoscope::hostos::WINDOWS`
+   - `kaleidoscope::hostos::OTHER`
+
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
