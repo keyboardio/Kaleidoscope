@@ -42,10 +42,10 @@ the `HostOS` library header.
 #include <Kaleidoscope/HostOS-select.h>
 
 void someFunction(void) {
-  if (HostOS.os() == kaleidoscope::HostOS::LINUX) {
+  if (HostOS.os() == kaleidoscope::hostos::LINUX) {
     // do something linux-y
   }
-  if (HostOS.os() == kaleidoscope::HostOS::OSX) {
+  if (HostOS.os() == kaleidoscope::hostos::OSX) {
     // do something OSX-y
   }
 }
