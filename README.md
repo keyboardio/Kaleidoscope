@@ -106,6 +106,6 @@ started with the plugin.
 
 `RxCy` coordinates for a Model01:
 
-![rxcy layout][./docs/rc_layout.png]
+![rxcy layout](./docs/rc_layout.png)
 
  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
