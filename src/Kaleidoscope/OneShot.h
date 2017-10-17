@@ -37,6 +37,7 @@ class OneShot : public KaleidoscopePlugin {
   }
   static bool isActive(void);
   static bool isActive(Key key);
+  static bool isSticky(Key key);
   static void cancel(bool with_stickies);
   static void cancel(void) {
     cancel(false);
