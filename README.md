@@ -78,6 +78,10 @@ modifiers and one-shot layer keys. It has the following methods:
 > useful for macros that need to fiddle with either modifier or layer state: if
 > one-shots are not active, they need not restore the original state.
 
+### `.isSticky(key)`
+
+> Returns if the key is currently sticky.
+
 ### `.isModifierActive(key)`
 
 > Returns if the modifier `key` has a one-shot state active. Use this together

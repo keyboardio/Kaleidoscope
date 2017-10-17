@@ -44,7 +44,7 @@ bool OneShot::should_mask_on_interrupt_ = false;
 #define setOneShot(idx) (bitWrite (state_.all, idx, 1))
 #define clearOneShot(idx) (bitWrite (state_.all, idx, 0))
 
-#define isSticky(idx) (bitRead (sticky_state_.all, idx))
+#define isSticky_(idx) (bitRead (sticky_state_.all, idx))
 #define setSticky(idx) (bitWrite (sticky_state_.all, idx, 1))
 #define clearSticky(idx) bitWrite (sticky_state_.all, idx, 0)
 
@@ -114,7 +114,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     return mapped_key;
 
   if (isOneShotKey(mapped_key)) {
-    if (isSticky(idx)) {
+    if (isSticky_(idx)) {
       if (keyToggledOn(key_state)) {  // maybe on _off instead?
         saveAsPrevious(mapped_key);
         clearSticky(idx);
@@ -173,7 +173,7 @@ void OneShot::loopHook(bool is_post_clear) {
 
     for (uint8_t i = 0; i < 32; i++) {
       if (should_cancel_) {
-        if (isSticky(i)) {
+        if (isSticky_(i)) {
           if (should_cancel_stickies_) {
             is_cancelled = true;
             clearSticky(i);
@@ -216,7 +216,13 @@ bool OneShot::isActive(void) {
 bool OneShot::isActive(Key key) {
   uint8_t idx = key.raw - ranges::OS_FIRST;
 
-  return (bitRead(state_.all, idx) && !hasTimedOut()) || (isPressed(idx)) || (isSticky(idx));
+  return (bitRead(state_.all, idx) && !hasTimedOut()) || (isPressed(idx)) || (isSticky_(idx));
+}
+
+bool OneShot::isSticky(Key key) {
+  uint8_t idx = key.raw - ranges::OS_FIRST;
+
+  return (isSticky_(idx));
 }
 
 bool OneShot::isModifierActive(Key key) {
