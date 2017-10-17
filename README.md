@@ -46,6 +46,10 @@ property:
 
 > The color to use for highlighting the modifiers. Defaults to a white color.
 
+### `.sticky_color`
+
+> The color to use for highlighting one-shot modifiers when they are sticky. Defaults to a red color.
+
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
