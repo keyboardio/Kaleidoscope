@@ -26,6 +26,8 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
 };
 
+cRGB ActiveModColorEffect::sticky_color = CRGB(0xff, 0x00, 0x00);
+
 void ActiveModColorEffect::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
 }
@@ -39,7 +41,9 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
       Key k = Layer.lookupOnActiveLayer(r, c);
 
       if (::OneShot.isOneShotKey(k)) {
-        if (::OneShot.isActive(k))
+        if (::OneShot.isSticky(k))
+          ::LEDControl.setCrgbAt(r, c, sticky_color);
+        else if (::OneShot.isActive(k))
           ::LEDControl.setCrgbAt(r, c, highlight_color);
         else
           ::LEDControl.refreshAt(r, c);
