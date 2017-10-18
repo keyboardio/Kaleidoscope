@@ -108,6 +108,12 @@ functionality.
 
 * [Kaleidoscope-HostOS](https://github.com/keyboardio/Kaleidoscope-HostOS)
 
+## Other Configuration
+
+On OS X/macOS, you'll need to change the input method to be "Unicode Hex Input".
+You can do this by going to System Preferences > Keyboard > Input Sources, clicking
+the `+` button, selecting it from the list, then setting it as the active input method.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
