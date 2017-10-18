@@ -30,6 +30,8 @@ class BootGreetingEffect : public KaleidoscopePlugin {
  private:
   static void loopHook(const bool post_clear);
   static bool done_;
+  static byte row_;
+  static byte col_;
 };
 }
 
