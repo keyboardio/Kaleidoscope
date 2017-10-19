@@ -3,7 +3,7 @@
 This plugin contains the ranges used by a number of Kaleidoscope plugins. Mostly
 useful for developers, but a dependency of other plugins, too.
 
-If you're a plugin developer and need to know how you can make keycodes for just your plugin to consume, or are otherwise curious what this is for, read one.
+If you're a plugin developer and need to know how you can make keycodes for just your plugin to consume, or are otherwise curious what this is for, read on.
 
 ## kaleidoscope::ranges enum
 
