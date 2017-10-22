@@ -63,7 +63,7 @@ There are two macros the plugin provides:
 > layer key.
 >
 > Please note that while `Kaleidoscope` supports more, one-shot layers are
-> limited to 24 layers only.
+> limited to 8 layers only.
 
 ## Plugin methods
 
