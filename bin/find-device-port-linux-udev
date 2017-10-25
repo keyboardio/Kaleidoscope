@@ -1,0 +1,33 @@
+#!/usr/bin/env perl 
+
+use warnings;
+use strict;
+my $vid = shift;
+my $pid = shift;
+my $prefix = '/dev/serial/by-id/';
+my @paths= `ls $prefix`;
+my %devices;
+
+for my $path (@paths) {
+	chomp($path);
+	next unless -l $prefix. $path;
+	my @data = `udevadm info -q property --name=${prefix}${path}`;
+	for my $line (@data) {
+	chomp ($line);
+	my ($key,$val) = split(/=/,$line,2);
+		$devices{$path}{$key} = $val;
+	}
+	if (($devices{$path}{'ID_VENDOR_ID'} == $vid) && 
+	   ($devices{$path}{'ID_MODEL_ID'} == $pid) ) {
+
+	   if ($devices{$path}{'ID_MM_CANDIDATE'}) {
+		warn "Yikes. ModemManager wants to pwn your keyboard";
+ 		}		   
+
+	print $devices{$path}{DEVNAME};
+	exit(0);
+   }
+
+
+}
+
