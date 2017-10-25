@@ -2,6 +2,31 @@
 
 set -e
 
+
+######
+###### Build and output configuration
+######
+
+build_version () {
+	GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
+	LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+	
+	BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
+	OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
+	OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
+}
+
+build_filenames () {
+	OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
+	HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
+	HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
+	ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
+}
+
+
+
+
+
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
       echo "[Size not computed for virtual build]"
