@@ -325,6 +325,12 @@ fi
 
 . ${ROOT}/etc/kaleidoscope-builder.conf
 
+if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
+    ARDUINO_VERBOSE="-verbose"
+else
+    ARDUINO_VERBOSE="-quiet"
+fi
+
 
 cmds=""
 
