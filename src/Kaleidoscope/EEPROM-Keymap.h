@@ -36,6 +36,7 @@ class EEPROMKeymap : public KaleidoscopePlugin {
   static Key getKeyOverride(uint8_t layer, byte row, byte col);
 
   static bool focusKeymap(const char *command);
+  static bool focusKeymapLayer(const char *command);
   static bool focusKeymapTransfer(const char *command);
 
   static void updateKey(uint16_t base_pos, Key key);
