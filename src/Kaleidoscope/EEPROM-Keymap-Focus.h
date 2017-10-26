@@ -23,5 +23,8 @@
 
 #define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap, "keymap.map")
 
+#define FOCUS_HOOK_KEYMAP_LAYER FOCUS_HOOK(EEPROMKeymap.focusKeymapLayer, \
+                                           "keymap.layer")
+
 #define FOCUS_HOOK_KEYMAP_TRANSFER FOCUS_HOOK(EEPROMKeymap.focusKeymapTransfer, \
                                               "keymap.transfer")

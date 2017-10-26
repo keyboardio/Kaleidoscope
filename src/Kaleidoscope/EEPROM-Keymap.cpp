@@ -107,6 +107,22 @@ bool EEPROMKeymap::focusKeymap(const char *command) {
   return true;
 }
 
+bool EEPROMKeymap::focusKeymapLayer(const char *command) {
+  if (strcmp_P(command, PSTR("keymap.layer")) != 0) {
+    return false;
+  }
+
+  uint8_t layer = Serial.parseInt();
+  uint16_t keysPerLayer = ROWS * COLS;
+  uint16_t offset = layer * keysPerLayer;
+  for (uint16_t k = 0; (k < keysPerLayer) && (Serial.peek() != '\n'); k++) {
+    updateKey(layer + k, parseKey());
+  }
+
+  return true;
+
+}
+
 bool EEPROMKeymap::focusKeymapTransfer(const char *command) {
   if (strcmp_P(command, PSTR("keymap.transfer")) != 0)
     return false;
