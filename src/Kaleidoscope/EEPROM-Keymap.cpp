@@ -115,8 +115,18 @@ bool EEPROMKeymap::focusKeymapLayer(const char *command) {
   uint8_t layer = Serial.parseInt();
   uint16_t keysPerLayer = ROWS * COLS;
   uint16_t offset = layer * keysPerLayer;
-  for (uint16_t k = 0; (k < keysPerLayer) && (Serial.peek() != '\n'); k++) {
-    updateKey(layer + k, parseKey());
+  if (Serial.peek() == '\n') {
+    for (uint8_t row = 0; row < ROWS; row++) {
+      for (uint8_t col = 0; col < COLS; col++) {
+        Key k = Layer.getKey(layer, row, col);
+        printKey(k);
+        ::Focus.printSpace();
+      }
+    }
+  } else {
+    for (uint16_t k = 0; (k < keysPerLayer) && (Serial.peek() != '\n'); k++) {
+      updateKey(layer + k, parseKey());
+    }
   }
 
   return true;
