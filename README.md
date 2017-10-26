@@ -67,8 +67,8 @@ The plugin provides the `EEPROMKeymap` object, which has the following methods:
 
 ## Focus commands
 
-The plugin provides two `Focus` hooks: `FOCUS_HOOK_KEYMAP`, and
-`FOCUS_HOOK_KEYMAP_TRANSFER`. Together, they make the following commands
+The plugin provides three `Focus` hooks: `FOCUS_HOOK_KEYMAP`, `FOCUS_HOOK_KEYMAP_LAYER`,
+and `FOCUS_HOOK_KEYMAP_TRANSFER`. Together, they make the following commands
 available, respectively:
 
 ### `keymap.map [codes...]`
@@ -80,6 +80,13 @@ available, respectively:
 > keys, on all layers: the command will start from the first key on the first
 > layer, and go on as long as it has input. It will not go past the layer set
 > via the `.max_layers()` method.
+
+### `keymap.layer LAYER [codes...]`
+
+> Without codes, prints the keymap for the given layer (zero-indexed).
+> Prints each key as its raw 16-bit keycode.
+
+> With codes, stores them as the keymap for the given layer.
 
 ### `keymap.transfer LAYER`
 
