@@ -40,7 +40,7 @@ uint16_t SpaceCadet::time_out = 1000;
 
 //Empty Constructor
 SpaceCadet::SpaceCadet() {
-  SpaceCadet::KeyBinding initialmap[] = {
+  static SpaceCadet::KeyBinding initialmap[] = {
     //By default, respect the default timeout
     {Key_LeftShift, Key_LeftParen, 0}
     , {Key_RightShift, Key_RightParen, 0}
