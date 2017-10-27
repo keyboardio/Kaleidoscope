@@ -113,6 +113,9 @@ bool EEPROMKeymap::focusKeymapLayer(const char *command) {
   }
 
   uint8_t layer = Serial.parseInt();
+  if (layer >= max_layers_) {
+    return false;
+  }
   uint16_t keysPerLayer = ROWS * COLS;
   uint16_t offset = layer * keysPerLayer;
   if (Serial.peek() == '\n') {
