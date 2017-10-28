@@ -53,8 +53,8 @@ There are two macros the plugin provides:
 
 ### `OSM(mod)`
 
-> A macro that takes a single argument, the name of the modifier: `LeftCtrl`,
-> `LeftShift`, `LeftAlt`, `LeftGUI` or their right-side variant. When marked up
+> A macro that takes a single argument, the name of the modifier: `LeftControl`,
+> `LeftShift`, `LeftAlt`, `LeftGui` or their right-side variant. When marked up
 > with this macro, the modifier will act as a one-shot modifier.
 
 ### `OSL(layer)`
