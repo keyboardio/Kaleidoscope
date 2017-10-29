@@ -59,6 +59,8 @@ class Keyboard_ {
   boolean isModifierActive(uint8_t k);
   boolean wasModifierActive(uint8_t k);
 
+  uint8_t getLEDs() { return HID().getLEDs(); };
+
  protected:
   HID_KeyboardReport_Data_t _keyReport;
   HID_KeyboardReport_Data_t _lastKeyReport;

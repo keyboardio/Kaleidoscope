@@ -42,9 +42,19 @@ static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
   D_REPORT_COUNT, 0x08,
   D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
+
+	/* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
+  D_USAGE_PAGE, D_PAGE_LEDS,
+  D_USAGE_MINIMUM, 0x01,
+  D_USAGE_MAXIMUM, 0x08,
+  D_REPORT_COUNT, 0x08,
+  D_REPORT_SIZE, 0x01,
+  D_OUTPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+
 // USB Code not within 4-49 (0x4-0x31), 51-155 (0x33-0x9B), 157-164 (0x9D-0xA4),
 // 176-221 (0xB0-0xDD) or 224-231 (0xE0-0xE7) NKRO Mode
   /* NKRO Keyboard */
+  D_USAGE_PAGE, D_PAGE_KEYBOARD,
 
   // Padding 3 bits
   // To skip HID_KEYBOARD_NON_US_POUND_AND_TILDE, which causes
