@@ -16,7 +16,7 @@ void NumLock_::loopHook(bool postClear) {
   if (!postClear)
     return;
 
-  bool numState = !!(Keyboard.getLEDs() & LED_NUM_LOCK);
+  bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
   if (numState != isOn) {
     isOn = numState;
     if (isOn) {
