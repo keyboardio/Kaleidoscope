@@ -14,9 +14,9 @@ class NumLock_ : public KaleidoscopePlugin {
 
  private:
   static void loopHook(const bool postClear);
-  static Key eventHandlerHook(Key key, byte row, byte col, uint8_t key_state);
 
   static byte row, col;
+  static bool isOn;
 };
 
 extern NumLock_ NumLock;

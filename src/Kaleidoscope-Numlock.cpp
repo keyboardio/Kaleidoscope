@@ -5,15 +5,29 @@
 
 byte NumLock_::row = 255, NumLock_::col = 255;
 uint8_t NumLock_::numPadLayer;
+bool NumLock_::isOn;
 cRGB numpad_color = CRGB(255, 0, 0);
 
 void NumLock_::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 void NumLock_::loopHook(bool postClear) {
-  if (!postClear || !Layer.isOn(numPadLayer))
+  if (!postClear)
+    return;
+
+  bool numState = !!(Keyboard.getLEDs() & LED_NUM_LOCK);
+  if (numState != isOn) {
+    isOn = numState;
+    if (isOn) {
+      Layer.on(numPadLayer);
+    } else {
+      Layer.off(numPadLayer);
+      LEDControl.set_mode(LEDControl.get_mode_index());
+    }
+  }
+
+  if (!isOn)
     return;
 
   for (uint8_t r = 0; r < ROWS; r++) {
@@ -34,23 +48,6 @@ void NumLock_::loopHook(bool postClear) {
 
   cRGB color = breath_compute();
   LEDControl.setCrgbAt(row, col, color);
-}
-
-Key NumLock_::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
-  if (key != Key_KeypadNumLock)
-    return key;
-
-  if (!keyToggledOn(key_state))
-    return key;
-
-  if (Layer.isOn(numPadLayer)) {
-    Layer.off(numPadLayer);
-    LEDControl.set_mode(LEDControl.get_mode_index());
-  } else {
-    Layer.on(numPadLayer);
-  }
-
-  return key;
 }
 
 NumLock_ NumLock;
