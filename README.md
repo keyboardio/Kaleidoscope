@@ -26,12 +26,34 @@ comes with important advantages:
   unexpected will happen. Plover will not take over the keys.
 * The `GeminiPR` protocol supports language systems other than English.
 
-All of this comes at a cost, however: the protocol is implemented over the
-virtual serial port, any plugin that wants to use that port too, will run into
+Do note that the `GeminiPR` protocol is implemented over the virtual serial
+port, so any plugin that wants to use that port too, will run into
 conflicts with the Steno plugin. In other words, don't use it together
 with [Focus][k:focus].
 
  [k:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+
+## What is Steno? Why should I use it? How do I learn?
+
+As mentioned above, steno (short for "stenography") is a shorthand, chorded
+input system that allows very fast input - licensed stenographers are required
+to type **225 WPM at 95% accuracy** to get their license.  Although reaching that
+speed typically takes 2-6 years of practice and training, lower speeds
+comparable to or exceeding that of touch typing can reportedly be reached in
+only a few months.
+
+[This talk][stenotalk] (YouTube link) gives a brief introduction to Steno, how
+it works, and why it is cool.
+
+  [stenotalk]: https://youtu.be/Wpv-Qb-dB6g
+
+One recommend way to get started with learning Steno is with [Plover][plover].
+Plover is software for your computer that will interpret the steno input from
+your Model 01 (or other NKRO QWERTY keyboard); it is available for Windows,
+macOS, and Linux.  Plover's [Beginner's Guide][ploverguide] is a great place to
+get started with Steno in general and Plover in particular.
+
+  [ploverguide]: https://github.com/openstenoproject/plover/wiki/Beginner's-Guide:-Get-Started-with-Plover
 
 ## Using the plugin
 
@@ -63,6 +85,9 @@ The provided keys are: `FN`, `N1`, `N2`, `N3`, `N4`, `N5`, `N6`, `S1`, `S2`,
 `TL`, `KL`, `PL`, `WL`, `HL`, `RL`, `A`, `O`, `ST1`, `ST2`, `RE1`, `RE2`, `PWR`,
 `ST3`, `ST4`, `E`, `U`, `FR`, `RR`, `PR`, `BR`, `LR`, `GR`, `TR`, `SR`, `DR`,
 `N7`, `N8`, `N9`, `NA`, `NB`, `NC`, `ZR`.
+
+See the [example][plugin:example] for the default/suggested placements of each
+of these keys.
 
 ## Plugin methods and properties
 
