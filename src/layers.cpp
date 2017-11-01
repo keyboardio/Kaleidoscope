@@ -126,7 +126,8 @@ void Layer_::move(uint8_t layer) {
 
 void Layer_::on(uint8_t layer) {
   // If the target layer was already on, return
-  if (bitRead(LayerState, layer)) return;
+  if (bitRead(LayerState, layer))
+    return;
 
   // Otherwise, turn on its bit in LayerState
   bitSet(LayerState, layer);
@@ -143,7 +144,8 @@ void Layer_::on(uint8_t layer) {
 
 void Layer_::off(uint8_t layer) {
   // If the target layer was already off, return
-  if (bitRead(LayerState, layer)) return;
+  if (bitRead(LayerState, layer))
+    return;
   
   // Turn off its bit in LayerState
   bitClear(LayerState, layer);
