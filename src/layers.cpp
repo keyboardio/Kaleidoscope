@@ -136,7 +136,7 @@ void Layer_::on(uint8_t layer) {
       updateHighestLayer();
 
     // Update the keymap cache (but not liveCompositeKeymap; that gets
-    // updated separately, when keys toggle on or off. See layers.h
+    // updated separately, when keys toggle on or off. See layers.h)
     updateActiveLayers();
   }
 }
@@ -153,7 +153,7 @@ void Layer_::off(uint8_t layer) {
       updateHighestLayer();
 
     // Update the keymap cache (but not liveCompositeKeymap; that gets
-    // updated separately, when keys toggle on or off. See layers.h
+    // updated separately, when keys toggle on or off. See layers.h)
     updateActiveLayers();
   }
 }
