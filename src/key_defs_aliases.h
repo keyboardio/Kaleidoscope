@@ -15,7 +15,7 @@
 #define Key_LCtrl  Key_LeftControl
 #define Key_LShift Key_LeftShift
 #define Key_LAlt Key_LeftAlt
-#define Key_LGuy Key_LeftGui
+#define Key_LGui Key_LeftGui
 #define Key_RBracket  Key_RightBracket
 #define Key_RArrow  Key_RightArrow
 #define Key_RCtrl  Key_RightControl
