@@ -125,37 +125,37 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
-  // If the target layer was off, turn it on:
-  if (!bitRead(LayerState, layer)) {
-    // Turn on its bit in LayerState
-    bitSet(LayerState, layer);
+  // If the target layer was already on, return
+  if (bitRead(LayerState, layer)) return;
 
-    // If the target layer is above the previous highest active layer,
-    // update highestLayer
-    if (layer > highestLayer)
-      updateHighestLayer();
+  // Otherwise, turn on its bit in LayerState
+  bitSet(LayerState, layer);
 
-    // Update the keymap cache (but not liveCompositeKeymap; that gets
-    // updated separately, when keys toggle on or off. See layers.h)
-    updateActiveLayers();
-  }
+  // If the target layer is above the previous highest active layer,
+  // update highestLayer
+  if (layer > highestLayer)
+    updateHighestLayer();
+
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
 void Layer_::off(uint8_t layer) {
-  // If the target layer was on, turn it off:
-  if (bitRead(LayerState, layer)) {
-    // Turn off its bit in LayerState
-    bitClear(LayerState, layer);
+  // If the target layer was already off, return
+  if (bitRead(LayerState, layer)) return;
+  
+  // Turn off its bit in LayerState
+  bitClear(LayerState, layer);
 
-    // If the target layer was the previous highest active layer,
-    // update highestLayer
-    if (layer == highestLayer)
-      updateHighestLayer();
+  // If the target layer was the previous highest active layer,
+  // update highestLayer
+  if (layer == highestLayer)
+    updateHighestLayer();
 
-    // Update the keymap cache (but not liveCompositeKeymap; that gets
-    // updated separately, when keys toggle on or off. See layers.h)
-    updateActiveLayers();
-  }
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
