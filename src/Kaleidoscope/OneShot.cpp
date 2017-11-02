@@ -151,7 +151,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
   // ordinary key here, with some event
 
-  if (keyIsPressed(key_state)) {
+  if (keyIsPressed(key_state) && !isModifier(mapped_key)) {
     if (should_mask_on_interrupt_)
       KeyboardHardware.maskKey(row, col);
     saveAsPrevious(mapped_key);
