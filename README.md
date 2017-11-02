@@ -74,7 +74,7 @@ time an action is to be performed.
 TD(0)
 
 // later in the Sketch:
-void tapDanceAction(uint8_t tap_dance_index, uint8_t tap_count,
+void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
                     kaleidoscope::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
