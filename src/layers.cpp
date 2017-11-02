@@ -146,7 +146,7 @@ void Layer_::off(uint8_t layer) {
   // If the target layer was already off, return
   if (bitRead(LayerState, layer))
     return;
-  
+
   // Turn off its bit in LayerState
   bitClear(LayerState, layer);
 
