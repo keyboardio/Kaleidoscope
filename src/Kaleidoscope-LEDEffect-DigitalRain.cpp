@@ -2,6 +2,11 @@
 #include <stdlib.h>
 
 namespace kaleidoscope {
+	uint8_t LEDDigitalRainEffect::DROP_TICKS = 28;
+	uint8_t LEDDigitalRainEffect::NEW_DROP_PROBABILITY = 18;
+	uint8_t LEDDigitalRainEffect::PURE_GREEN_INTENSITY = 0xd0;
+	uint8_t LEDDigitalRainEffect::MAXIMUM_BRIGHTNESS_BOOST = 0xc0;
+
 	void LEDDigitalRainEffect::update(void) {
 		uint8_t col;
 		uint8_t row;
@@ -55,12 +60,13 @@ namespace kaleidoscope {
 
 		// At high intensities start at light green
 		// but drop off very quickly to full green
-		if (intensity > FULL_GREEN_INTENSITY) {
-			boost = (uint8_t) ((uint16_t) 0xc0 * (intensity - FULL_GREEN_INTENSITY)
-					/ (0xff - FULL_GREEN_INTENSITY));
+		if (intensity > PURE_GREEN_INTENSITY) {
+			boost = (uint8_t) ((uint16_t) MAXIMUM_BRIGHTNESS_BOOST
+					* (intensity - PURE_GREEN_INTENSITY)
+					/ (0xff - PURE_GREEN_INTENSITY));
 			return {boost, 0xff, boost};
 		}
-		return {0, (uint8_t) ((uint16_t) 0xff * intensity / FULL_GREEN_INTENSITY), 0};
+		return {0, (uint8_t) ((uint16_t) 0xff * intensity / PURE_GREEN_INTENSITY), 0};
 	}
 }
 
