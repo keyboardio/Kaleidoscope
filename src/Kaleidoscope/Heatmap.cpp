@@ -96,7 +96,7 @@ Heatmap::loopHook(bool is_post_clear) {
 
 void
 Heatmap::update(void) {
-  if (end_time_ && (millis() > end_time_))
+  if (end_time_ && (millis() < end_time_))
     return;
 
   end_time_ = millis() + update_delay;
