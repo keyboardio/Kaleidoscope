@@ -48,7 +48,7 @@ namespace kaleidoscope {
 	cRGB LEDDigitalRainEffect::getColor(uint8_t intensity) {
 		uint8_t boost;
 
-		// At high intensities start at full white
+		// At high intensities start at light green
 		// but drop off very quickly to full green
 		if (intensity > FULL_GREEN_INTENSITY) {
 			boost = (uint8_t) ((uint16_t) 0xc0 * (intensity - FULL_GREEN_INTENSITY) / (0xff - FULL_GREEN_INTENSITY));
