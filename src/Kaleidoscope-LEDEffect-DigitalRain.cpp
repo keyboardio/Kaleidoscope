@@ -6,15 +6,20 @@ namespace kaleidoscope {
 		uint8_t col;
 		uint8_t row;
 		
-		// Decay intensities
+		// Decay intensities and possibly make new raindrops
 		for (col = 0; col < COLS; col++) {
 			for (row = 0; row < ROWS; row++) {
 				if (row == 0 && drop == 0 && rand() < RAND_MAX / NEW_DROP_PROBABILITY) {
+					// This is the top row, pixels have just fallen,
+					// and we've decided to make a new raindrop in this column
 					map[col][row] = 0xff;
 				} else if (map[col][row] > 0 && map[col][row] < 0xff) {
+					// Pixel is neither full brightness nor totally dark;
+					// decay it
 					map[col][row]--;
 				}
 
+				// Set the colour for this pixel
 				::LEDControl.setCrgbAt(row, col, getColor(map[col][row]));
 			}
 		}
@@ -51,7 +56,8 @@ namespace kaleidoscope {
 		// At high intensities start at light green
 		// but drop off very quickly to full green
 		if (intensity > FULL_GREEN_INTENSITY) {
-			boost = (uint8_t) ((uint16_t) 0xc0 * (intensity - FULL_GREEN_INTENSITY) / (0xff - FULL_GREEN_INTENSITY));
+			boost = (uint8_t) ((uint16_t) 0xc0 * (intensity - FULL_GREEN_INTENSITY)
+					/ (0xff - FULL_GREEN_INTENSITY));
 			return {boost, 0xff, boost};
 		}
 		return {0, (uint8_t) ((uint16_t) 0xff * intensity / FULL_GREEN_INTENSITY), 0};
