@@ -22,9 +22,27 @@
 namespace kaleidoscope {
 
 bool BootGreetingEffect::done_;
+byte BootGreetingEffect::row_;
+byte BootGreetingEffect::col_;
 
 void BootGreetingEffect::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
+
+  // Find the LED key.
+  for (uint8_t r = 0; r < ROWS; r++) {
+    for (uint8_t c = 0; c < COLS; c++) {
+      Key k = Layer.lookupOnActiveLayer(r, c);
+
+      if (k == Key_LEDEffectNext) {
+        row_ = r;
+        col_ = c;
+        return;
+      }
+    }
+  }
+
+  // We didn't find the LED key. Let's just pretend we're "done".
+  done_ = true;
 }
 
 void BootGreetingEffect::loopHook(const bool post_clear) {
@@ -33,19 +51,12 @@ void BootGreetingEffect::loopHook(const bool post_clear) {
 
   if (millis() > 9200) {
     done_ = true;
+    ::LEDControl.refreshAt(row_, col_);
     return;
   }
 
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
-
-      if (k == Key_LEDEffectNext) {
-        cRGB color = breath_compute();
-        ::LEDControl.setCrgbAt(r, c, color);
-      }
-    }
-  }
+  cRGB color = breath_compute();
+  ::LEDControl.setCrgbAt(row_, col_, color);
 }
 }
 
