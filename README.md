@@ -47,7 +47,7 @@ properties:
 >
 > It is recommended to use the `STALKER` macro to declare the effect itself.
 
-### `.stepLength`
+### `.step_length`
 
 > The length - in milliseconds - of each step of the animation. An animation
 > lasts 256 steps.
