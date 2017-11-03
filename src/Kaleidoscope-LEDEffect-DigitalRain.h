@@ -23,7 +23,7 @@ namespace kaleidoscope {
 			static const uint8_t NEW_DROP_PROBABILITY = 18;
 
 			// Intensity at which full green kicks in
-			static const uint8_t FULL_GREEN_INTENSITY = 0xcc;
+			static const uint8_t FULL_GREEN_INTENSITY = 0xd0;
 
 			// Map of intensities for each pixel
 			uint8_t map[16][4] = {{0}};
