@@ -7,8 +7,8 @@ namespace kaleidoscope {
 		uint8_t row;
 		
 		// Decay intensities
-		for (col = 0; col < 16; col++) {
-			for (row = 0; row < 4; row++) {
+		for (col = 0; col < COLS; col++) {
+			for (row = 0; row < ROWS; row++) {
 				if (row == 0 && drop == 0 && rand() < RAND_MAX / NEW_DROP_PROBABILITY) {
 					map[col][row] = 0xff;
 				} else if (map[col][row] > 0 && map[col][row] < 0xff) {
@@ -24,11 +24,11 @@ namespace kaleidoscope {
 			// Reset the drop timer
 			drop = 0;
 
-			for (row = 3; row > 0; row--) {
-				for (col = 0; col < 16; col++) {
+			for (row = ROWS - 1; row > 0; row--) {
+				for (col = 0; col < COLS; col++) {
 					// If this pixel is on the bottom row and bright,
 					// allow it to start decaying
-					if (row == 3 && map[col][row] == 0xff) {
+					if (row == ROWS - 1 && map[col][row] == 0xff) {
 						map[col][row]--;
 					}
 
