@@ -86,12 +86,20 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
 
   // Keypresses with out-of-bounds (row,col) start here in the processing chain
 
+  // Legacy event handlers
+  //
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
     mappedKey = (*handler)(mappedKey, row, col, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
       return;
   }
+  
+  // New event handler interface
+  //
+  if(!Kaleidoscope.hooks_->eventHandlerHook(mappedKey, EventKey{row, col, keyState}))
+     return;
+  
   mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
   if (mappedKey.raw == Key_NoKey.raw)
     return;
