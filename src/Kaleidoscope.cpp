@@ -1,6 +1,8 @@
 #include "Kaleidoscope.h"
 #include <stdarg.h>
 
+namespace kaleidoscope {
+
 Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
 Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
 
@@ -9,6 +11,9 @@ Kaleidoscope_::Kaleidoscope_(void) {
 
 void
 Kaleidoscope_::setup(void) {
+
+  kaleidoscope::Hooks::init();
+
   KeyboardHardware.setup();
   Keyboard.begin();
 
@@ -30,6 +35,8 @@ void
 Kaleidoscope_::loop(void) {
   KeyboardHardware.scanMatrix();
 
+  kaleidoscope::Hooks::preReportHook();
+
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(false);
@@ -42,6 +49,8 @@ Kaleidoscope_::loop(void) {
     loopHook hook = loopHooks[i];
     (*hook)(true);
   }
+
+  kaleidoscope::Hooks::postReportHook();
 }
 
 void
@@ -155,3 +164,7 @@ void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...) {
     Kaleidoscope.use(plugin);
   va_end(ap);
 }
+
+} // namespace kaleidoscope
+
+Kaleidoscope_ Kaleidoscope;
