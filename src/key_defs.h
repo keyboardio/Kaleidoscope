@@ -16,8 +16,9 @@
 #include "KeyboardioHID.h"
 #endif
 
+namespace kaleidoscope {
 
-typedef union Key_ {
+union Key {
 
   struct {
     uint8_t keyCode;
@@ -28,14 +29,14 @@ typedef union Key_ {
   inline bool operator==(uint16_t rhs) {
     return this->raw == rhs;
   }
-  inline bool operator==(const Key_ rhs) {
+  inline bool operator==(const Key rhs) {
     return this->raw == rhs.raw;
   }
-  inline Key_& operator=(uint16_t raw) {
+  inline Key& operator=(uint16_t raw) {
     this->raw = raw;
     return *this;
   }
-  inline bool operator!=(const Key_& rhs) {
+  inline bool operator!=(const Key& rhs) {
     return !(*this == rhs);
   }
   inline bool operator>=(uint16_t raw) {
@@ -50,21 +51,27 @@ typedef union Key_ {
   inline bool operator<(uint16_t raw) {
     return this->raw < raw;
   }
-  inline bool operator>=(const Key_& other) {
+  inline bool operator>=(const Key& other) {
     return this->raw >= other.raw;
   }
-  inline bool operator<=(const Key_& other) {
+  inline bool operator<=(const Key& other) {
     return this->raw <= other.raw;
   }
-  inline bool operator>(const Key_& other) {
+  inline bool operator>(const Key& other) {
     return this->raw > other.raw;
   }
-  inline bool operator<(const Key_& other) {
+  inline bool operator<(const Key& other) {
     return this->raw < other.raw;
   }
-} Key;
+};
 
+} // namespace kaleidoscope
 
+// For compatibility reasons make the Key class also available
+// in global namespace.
+//
+typedef kaleidoscope::Key Key __attribute__((deprecated("class Key in global namespace is deprecated. Please use kaleidoscope::Key instead.")));
+typedef kaleidoscope::Key Key_ __attribute__((deprecated("class Key_ in global namespace is deprecated. Please use kaleidoscope::Key instead.")));
 
 #define KEY_FLAGS         B00000000
 #define CTRL_HELD         B00000001
