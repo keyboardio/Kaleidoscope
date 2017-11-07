@@ -52,6 +52,14 @@ static const uint8_t _hidMultiReportDescriptorMouse[] PROGMEM = {
   D_REPORT_COUNT, 0x03,                      /*     REPORT_COUNT (3) */
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE), /*     INPUT (Data,Var,Rel) */
 
+  /* Horizontal wheel */
+  D_USAGE_PAGE, D_PAGE_CONSUMER, /* USAGE_PAGE (Consumer Device) */
+  D_PAGE_ORDINAL, 0x38, 0x02,
+  D_USAGE_MINIMUM, 0x81,
+  D_USAGE_MAXIMUM, 0x7f,
+  D_REPORT_SIZE, 0x08,
+  D_REPORT_COUNT, 0x01,
+  D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
   /* End */
   D_END_COLLECTION                            /* END_COLLECTION */
 };
@@ -78,12 +86,13 @@ void Mouse_::click(uint8_t b) {
   move(0,0,0);
 }
 
-void Mouse_::move(signed char x, signed char y, signed char wheel) {
+void Mouse_::move(signed char x, signed char y, signed char vWheel, signed char hWheel) {
   HID_MouseReport_Data_t report;
   report.buttons = _buttons;
   report.xAxis = x;
   report.yAxis = y;
-  report.wheel = wheel;
+  report.vWheel = vWheel;
+  report.hWheel = hWheel;
   sendReport(&report, sizeof(report));
 }
 

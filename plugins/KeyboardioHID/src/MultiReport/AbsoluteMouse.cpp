@@ -34,6 +34,7 @@ static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
     DESCRIPTOR_ABS_MOUSE_BUTTONS
     DESCRIPTOR_ABS_MOUSE_XY
     DESCRIPTOR_ABS_MOUSE_WHEEL
+    DESCRIPTOR_ABS_MOUSE_HWHEEL
 
     D_END_COLLECTION 				 /* End */
 };
