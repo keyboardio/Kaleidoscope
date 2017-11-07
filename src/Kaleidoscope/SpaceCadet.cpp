@@ -163,8 +163,8 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     //may want to even UNSET the originally pressed key (future
     //enhanacement?).  This might also mean we don't need to return the
     //key that was pressed, though I haven't confirmed that.
+    handleKeyswitchEvent(mapped_key, row, col, INJECTED);
     handleKeyswitchEvent(alternate_key, row, col, IS_PRESSED | INJECTED);
-    hid::sendKeyboardReport();
 
     //Unflag the key so we don't try this again.
     map[index].flagged = false;
