@@ -32,15 +32,18 @@ void releaseSystemControl(Key mappedKey);
 
 void initializeMouse();
 
-void moveMouse(signed char x, signed char y, signed char vWheel, signed char hWheel);
+void moveMouse(signed char x, signed char y, signed char wheel);
+void moveMouseWithHorizontalWheel(signed char x, signed char y, signed char vWheel, signed char hWheel);
 void clickMouseButtons(uint8_t buttons);
 void pressMouseButtons(uint8_t buttons);
 void releaseMouseButtons(uint8_t buttons);
 
 void initializeAbsoluteMouse();
 
-void moveAbsoluteMouse(signed char x, signed char y, signed char vWheel, signed char hWheel);
-void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char vWheel, signed char hWheel);
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
+void moveAbsoluteMouseWithHorizontalWheel(signed char x, signed char y, signed char vWheel, signed char hWheel);
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
+void moveAbsoluteMouseWithHorizontalWheelTo(uint16_t x, uint16_t y, signed char vWheel, signed char hWheel);
 void clickAbsoluteMouseButtons(uint8_t buttons);
 void pressAbsoluteMouseButtons(uint8_t buttons);
 void releaseAbsoluteMouseButtons(uint8_t buttons);

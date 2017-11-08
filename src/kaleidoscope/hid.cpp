@@ -129,10 +129,15 @@ void initializeMouse() {
   Mouse.begin();
 }
 
-void moveMouse(signed char x, signed char y, signed char vWheel, signed char hWheel) {
-	Mouse.move(x, y, vWheel, hWheel);
+void moveMouse(signed char x, signed char y, signed char wheel) {
+  Mouse.move(x, y, wheel);
+  //moveMouseWithHorizontalWheel(x, y, wheel, 0);
 }
 
+void moveMouseWithHorizontalWheel(signed char x, signed char y, signed char vWheel, signed char hWheel) {
+  Mouse.move(x, y, vWheel, hWheel);
+}
+  
 void clickMouseButtons(uint8_t buttons) {
   Mouse.click(buttons);
 }
@@ -151,10 +156,19 @@ void initializeAbsoluteMouse() {
   SingleAbsoluteMouse.begin();
 }
 
-void moveAbsoluteMouse(signed char x, signed char y, signed char vWheel, signed char hWheel) {
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) {
+  moveAbsoluteMouseWithHorizontalWheel(x, y, wheel, 0);
+}
+
+void moveAbsoluteMouseWithHorizontalWheel(signed char x, signed char y, signed char vWheel, signed char hWheel) {
   SingleAbsoluteMouse.move(x, y, vWheel, hWheel);
 }
-void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char vWheel, signed char hWheel) {
+
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel) {
+  moveAbsoluteMouseWithHorizontalWheelTo(x, y, wheel, 0);
+}
+
+void moveAbsoluteMouseWithHorizontalWheelTo(uint16_t x, uint16_t y, signed char vWheel, signed char hWheel) {
   SingleAbsoluteMouse.moveTo(x, y, vWheel, hWheel);
 }
 
