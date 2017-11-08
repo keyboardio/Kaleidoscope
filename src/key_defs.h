@@ -83,9 +83,9 @@ typedef union Key_ {
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
-#define IS_CONSUMER                B00000010
+#define IS_INTERNAL                B00000010
 #define SWITCH_TO_KEYMAP           B00000100
-#define IS_INTERNAL                B00001000
+#define IS_CONSUMER                B00001000
 
 /* HID types we need to encode in the key flags for system and consumer control hid controls
    Each key can only have one, so we don't need to use a bit vector.

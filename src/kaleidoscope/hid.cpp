@@ -106,11 +106,11 @@ void initializeConsumerControl() {
 }
 
 void pressConsumerControl(Key mappedKey) {
-  ConsumerControl.press(mappedKey.keyCode);
+  ConsumerControl.press(mappedKey.raw & 0x03FF);
 }
 
 void releaseConsumerControl(Key mappedKey) {
-  ConsumerControl.release(mappedKey.keyCode);
+  ConsumerControl.release(mappedKey.raw & 0x03FF);
 }
 
 
