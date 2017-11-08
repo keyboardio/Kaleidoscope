@@ -20,6 +20,8 @@ void sendKeyboardReport();
 boolean isModifierKeyActive(Key mappedKey);
 boolean wasModifierKeyActive(Key mappedKey);
 
+uint8_t getKeyboardLEDs();
+
 void initializeConsumerControl();
 
 void pressConsumerControl(Key mappedKey);
