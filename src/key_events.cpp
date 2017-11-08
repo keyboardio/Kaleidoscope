@@ -94,12 +94,12 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
     if (mappedKey.raw == Key_NoKey.raw)
       return;
   }
-  
+
   // New event handler interface
   //
-  if(!Kaleidoscope.hooks_->eventHandlerHook(mappedKey, EventKey{row, col, keyState}))
-     return;
-  
+  if (!Kaleidoscope.hooks_->eventHandlerHook(mappedKey, EventKey{row, col, keyState}))
+    return;
+
   mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
   if (mappedKey.raw == Key_NoKey.raw)
     return;

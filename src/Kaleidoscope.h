@@ -38,94 +38,94 @@ const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
 struct EventKey {
-   byte row_;
-   byte col_;
-   uint8_t keyState_;
+  byte row_;
+  byte col_;
+  uint8_t keyState_;
 };
 
 class Kaleidoscope_;
 
-// How to add additional hooks
+// A note to maintainers: How to add additional hooks
 //
-// 1) Add an appropriate non-virtual (important!) method 
+// 1) Add an appropriate non-virtual (important!) method
 //       to class KaleidoscopePlugin
-// 2) Add a virtual (important!) method with the same name and call signature 
+// 2) Add a virtual (important!) method with the same name and call signature
 //       to the abstract base class PluginHookAdapter__
-// 3) Add a hook specification to template class PluginHookAdapter 
+// 3) Add a hook specification to template class PluginHookAdapter
 //       via the HOOK_TASK macro
-// 4) Add an implemenation of the hook to template class PluginHookAdapter 
+// 4) Add an implemenation of the hook to template class PluginHookAdapter
 //       that references the name given in HOOK_TASK
 
 // Some words about the design of the plugin interface
 //
-// The HookLoop class implements a compile-time loop over all plugins. 
-// This loop is used to call a non virtual hook method of each plugin. 
-// 
-// The advantage of this approach against a solution with virtual 
+// The HookLoop class implements a compile-time loop over all plugins.
+// This loop is used to call a non virtual hook method of each plugin.
+//
+// The advantage of this approach against a solution with virtual
 // hook methods in classes derived from KaleidoscopePlugin is a significant
 // reduction of virtual function calls and a reduction of the amount of
 // virtual function tables (vtables).
-// 
-// For every hook that is called by the firmware core, only one virtual 
-// method (of PluginHookAdapter) is invoked instead of 
-// one for each plugin and hook. As with this approach plugins derived 
-// from KaleidoscopePlugin are not (dynamically) polymorphic classes 
-// (not featuring virtual methods). Thus, classes do not need virtual tables 
+//
+// For every hook that is called by the firmware core, only one virtual
+// method (of PluginHookAdapter) is invoked instead of
+// one for each plugin and hook. As with this approach plugins derived
+// from KaleidoscopePlugin are not (dynamically) polymorphic classes
+// (not featuring virtual methods). Thus, classes do not need virtual tables
 // and instances no virtual pointers, which, as a consequence,
-// significantly reduces binary size. 
-// 
-// Note: A the time of writing this, the KaleidoscopePlugin is still 
+// significantly reduces binary size.
+//
+// Note: A the time of writing this, the KaleidoscopePlugin is still
 //       featuring a virtual begin() method to support legacy implementations
 //       of plugins.
-//       This means that there is actually still a virtual table generated 
-//       for each plugin class and a vptr resides in every plugin instance. 
+//       This means that there is actually still a virtual table generated
+//       for each plugin class and a vptr resides in every plugin instance.
 //       Those might both vanish when the begin() method would be removed from
 //       KaleidoscopePlugin in future versions of the firmware.
-// 
+//
 // The call to hook methods through PluginHookAdapter and HookLoop
 // is templated to allow for compile time static polymorphisms
-// (hook methods of plugins not beeing virtual). 
-// 
-// ***For non template experts: 
-//       This is somewhat similar to duck typing in scripting languages 
+// (hook methods of plugins not beeing virtual).
+//
+// ***For non template experts:
+//       This is somewhat similar to duck typing in scripting languages
 //       as only the signature of a method counts and not the fact that the class
 //       is actually derived from a base class. Thus, strictly speaking,
-//       plugins do not need to be derived from KaleidoscopePlugin, but 
+//       plugins do not need to be derived from KaleidoscopePlugin, but
 //       only need to an implement equivalent set of hooks.
 //
-// If a plugin implements a method (thereby hiding the equivalent method 
+// If a plugin implements a method (thereby hiding the equivalent method
 // of the plugin base class) the derived plugins's method is called instead
 // of the version of the hook provided by the base class KaleidoscopePlugin.
 // This is possible as the hook method is not invoked via a base class ptr
-// or reference but via a reference to the actual derived plugin class. 
+// or reference but via a reference to the actual derived plugin class.
 //
-// HookLoop::apply() implements a compile time for-each loop 
-// over all plugins. Under the assumption that only some (few) plugins 
-// implement many hook methods and that there is only a limited number  
+// HookLoop::apply() implements a compile time for-each loop
+// over all plugins. Under the assumption that only some (few) plugins
+// implement many hook methods and that there is only a limited number
 // of plugins used in a sketch, this approach is quite efficient both in terms
-// of code size and run-time. This is due to the compiler  
-// optimizing away any calls to hooks that have not been 
-// implemented by plugins because the base class versions of these hooks are 
+// of code size and run-time. This is due to the compiler
+// optimizing away any calls to hooks that have not been
+// implemented by plugins because the base class versions of these hooks are
 // mostly noops which are easy to detect and eliminate by the compiler.
-// 
-// Calling the plugins hook method is finally carried out via the Hook__ template  
-// argument which forwards the call to the hook method to the actual plugin. 
-// 
-// Some hooks such as e.g. the eventHandlerHook require a decision about 
-// whether to continue calling other hook methods after them, or, 
-// if required, to abort the loop. This decision is implemented through a 
-// ContinuationPredicate__, a helper class 
-// whose eval-method generates a boolean return value that is based on the 
-// hooks' return values. If the predicate's result is true, the loop  
-// continues or is aborted otherwise. The eventHandlerHook method's 
-// return value, e.g. signals by itself whether it wants to allow other  
-// eventHandlerHooks to be called after it. 
-// By means of this approach the decision is for most hooks evaluated at 
+//
+// Calling the plugins hook method is finally carried out via the Hook__ template
+// argument which forwards the call to the hook method to the actual plugin.
+//
+// Some hooks such as e.g. the eventHandlerHook require a decision about
+// whether to continue calling other hook methods after them, or,
+// if required, to abort the loop. This decision is implemented through a
+// ContinuationPredicate__, a helper class
+// whose eval-method generates a boolean return value that is based on the
+// hooks' return values. If the predicate's result is true, the loop
+// continues or is aborted otherwise. The eventHandlerHook method's
+// return value, e.g. signals by itself whether it wants to allow other
+// eventHandlerHooks to be called after it.
+// By means of this approach the decision is for most hooks evaluated at
 // compile-time, which e.g. cases the decision to be optimized out
 // for all those hook methods that have a void return value.
 
 class KaleidoscopePlugin {
-   
+
   friend class Kaleidoscope_;
 
  protected:
@@ -144,12 +144,12 @@ class KaleidoscopePlugin {
    * called. It is intentionally protected, and accessible by the `Kaleidoscope`
    * class only.
    */
-  virtual void begin(void) 
-  __attribute__((deprecated("KaleidoscopePlugin.begin() is deprecated. Please implement KaleidoscopePlugin.init() instead.")))
-  { };
-  
-   public:
-  
+  virtual void begin(void)
+  __attribute__((deprecated("KaleidoscopePlugin.begin() is deprecated. Please implement KaleidoscopePlugin.init() instead."))) {
+  };
+
+ public:
+
   // The following callbacks handle the synchronized communication
   // between the Kaleidoscope core and its plugins.
   //
@@ -158,59 +158,68 @@ class KaleidoscopePlugin {
   // Thus, a non-implemented hook causes neither memory consumption nor
   // run-time overhead.
   //
-  // Note: All hook methods in this class are non virtual on purpose as the actual 
-  //       interface between the Kaleidoscope singleton class and the 
+  // Note: All hook methods in this class are non virtual on purpose as the actual
+  //       interface between the Kaleidoscope singleton class and the
   //       plugins is the polymorphic PluginHookAdapter class
-  
-  void init() {}
-  
-  // This handler is supposed to return false if no other handlers are 
+
+  void init() {
+    // By letting the new init method call the legacy
+    // begin() method, we make sure that the old hooking
+    // interface is supported even if KALEIDOSCOPE_INIT_PLUGINS()
+    // and KALEIDOSCOPE_CONNECT_PLUGINS are used to register
+    // a plugin that relies on the legacy begin() method
+    // to initialize itself and register hooks.
+    //
+    this->begin();
+  }
+
+  // This handler is supposed to return false if no other handlers are
   // supposed to be called after it, false otherwise.
   //
-  // The handler is allowed to modify the mappedKey that is therefore 
+  // The handler is allowed to modify the mappedKey that is therefore
   // passed by reference.
   //
   bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) {
-     return true; // Always allow other handlers to continue
+    return true; // Always allow other handlers to continue
   }
-  
+
   void startLoopHook() {}
   void endLoopHook() {}
 };
 
-// The following invoke macros are meant to be used with 
-// KALEIDOSCOPE_CONNECT_PLUGINS in conjunction with the MAP macro 
-// that casts a specific operation on every member of 
+// The following invoke macros are meant to be used with
+// KALEIDOSCOPE_CONNECT_PLUGINS in conjunction with the MAP macro
+// that casts a specific operation on every member of
 // a variadic macro argument list (if present).
 //
 #define INVOKE_HOOK_FOR_PLUGIN(PLUGIN) \
    \
    hook_return_val = Hook__::invoke(PLUGIN, hook_args...); \
    \
-   if(!ContinuationPredicate__::eval(hook_return_val)) { \
+   if (!ContinuationPredicate__::eval(hook_return_val)) { \
       return hook_return_val; \
    }
-   
+
 #define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN) \
    \
    Hook__::invoke(PLUGIN);
 
-// KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked at global scope of 
+// KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked at global scope of
 // the firmware sketch.
-// 
-// Arguments: A list of references to plugin instances that have been 
+//
+// Arguments: A list of references to plugin instances that have been
 //       instanciated at global scope.
 //
-// A note concerning possible future optimizations: 
+// A note concerning possible future optimizations:
 //    In C++17 the loop over all plugins, and calling a hook method
-//    with a given list of arguments can be implemented much more elegant 
-//    without using preprocessor macros. 
+//    with a given list of arguments can be implemented much more elegant
+//    without using preprocessor macros.
 //    The alternative solution would consist in a combination
 //    of std::forward_as_tuple and std::apply to call a function
-//    (the hook method) for every member of a tuple (containing rvalue 
+//    (the hook method) for every member of a tuple (containing rvalue
 //    references to all plugins). Thus, both the list of plugins and
 //    and the hook method call arguments (both variadic) could be wrapped
-//    in rvalue-reference-tuples and be passed to some kind 
+//    in rvalue-reference-tuples and be passed to some kind
 //    of tuple-for-each algorithm.
 //
 #define KALEIDOSCOPE_INIT_PLUGINS(...) \
@@ -243,11 +252,11 @@ class KaleidoscopePlugin {
          MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__) \
       } \
    };
-  
+
 // This macro is supposed to be called at the end of the begin() method
 // of the firmware sketch to connect the plugin hooks.
 //
-// Unfortunately, the c++ standard (until c++17) does not allow for 
+// Unfortunately, the c++ standard (until c++17) does not allow for
 // local class templates, neither for classes that feature template functions.
 // Thus we have to separate initialization and connection of plugins.
 // Otherwise, everything could be called from within the begin() method
@@ -260,22 +269,21 @@ class KaleidoscopePlugin {
 // is used by the Kaleidoscope class and in all other places
 // where hooks are called.
 //
-class PluginHookAdapter__
-{
-   public:
-      
-      virtual void init() {}
-  
-      virtual bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) {
-         return true;
-      }
-      
-      virtual void startLoopHook() {}
-      virtual void endLoopHook() {}
+class PluginHookAdapter__ {
+ public:
+
+  virtual void init() {}
+
+  virtual bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) {
+    return true;
+  }
+
+  virtual void startLoopHook() {}
+  virtual void endLoopHook() {}
 };
 
 // The HOOK_TASK macro defines an auxiliary Hook class (HOOK) that invokes
-// a plugin hook method with a provided set of method arguments. The 
+// a plugin hook method with a provided set of method arguments. The
 // HOOK class is meant to be passed to the PluginLoop in the PluginHookAdapter
 // to forward the call to the hook methods of plugins.
 //
@@ -291,53 +299,52 @@ class PluginHookAdapter__
          return plugin.HOOK_METHOD(hook_args...); \
       } \
    };
-   
+
 // A predicate class that decides on hook-plugin-loop continuation.
 //
 struct ContinueIfHookReturnsTrue {
-   static bool eval(bool val) { 
-      return val;
-   }
+  static bool eval(bool val) {
+    return val;
+  }
 };
 
-// This is the implementation of the PluginHookAdapter__ interface. 
-// It is templated to allow it to adapt itself to the list of plugins 
+// This is the implementation of the PluginHookAdapter__ interface.
+// It is templated to allow it to adapt itself to the list of plugins
 // that is used in the sketch. This information is known at compile time
 // but differs between sketches as part of the firmware configuration.
 //
-// The PluginHookAdapter operates on a PluginLoop__, an 
+// The PluginHookAdapter operates on a PluginLoop__, an
 // interface class that casts Hook classes on all plugins, therby
-// forwaring the actual hook calls. Hook overrides may 
+// forwaring the actual hook calls. Hook overrides may
 // specify ContinuationPredicate__ classes that decide
 // if further hook methods of other plugins are allowed to be called based
 // on the return value of the most recent call to a hook, e.g. a boolean value
 // (see the eventHandlerHook for an example).
 //
 template<typename PluginLoop__>
-class PluginHookAdapter : public PluginHookAdapter__
-{
-   public:
-      
-      HOOK_TASK(InitTask, void, init)
-      void init() final {
-         PluginLoop__::template apply<InitTask>();
-      }
-  
-      HOOK_TASK(EventHandlerHookTask, bool, eventHandlerHook)
-      bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) final {
-         return PluginLoop__::template apply<EventHandlerHookTask, ContinueIfHookReturnsTrue>
-                  (mappedKey, eventKey);
-      }
-   
-      HOOK_TASK(StartLoopHookTask, void, startLoopHook)
-      void startLoopHook() final {
-         PluginLoop__::template apply<StartLoopHookTask>();
-      }
-      
-      HOOK_TASK(EndLoopHookTask, void, endLoopHook)
-      void endLoopHook() final {
-         PluginLoop__::template apply<EndLoopHookTask>();
-      }
+class PluginHookAdapter : public PluginHookAdapter__ {
+ public:
+
+  HOOK_TASK(InitTask, void, init)
+  void init() final {
+    PluginLoop__::template apply<InitTask>();
+  }
+
+  HOOK_TASK(EventHandlerHookTask, bool, eventHandlerHook)
+  bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) final {
+    return PluginLoop__::template apply<EventHandlerHookTask, ContinueIfHookReturnsTrue>
+    (mappedKey, eventKey);
+  }
+
+  HOOK_TASK(StartLoopHookTask, void, startLoopHook)
+  void startLoopHook() final {
+    PluginLoop__::template apply<StartLoopHookTask>();
+  }
+
+  HOOK_TASK(EndLoopHookTask, void, endLoopHook)
+  void endLoopHook() final {
+    PluginLoop__::template apply<EndLoopHookTask>();
+  }
 };
 
 // The Int traits classes allow to determine a suitable integer
@@ -347,13 +354,19 @@ class PluginHookAdapter : public PluginHookAdapter__
 template<typename Dummy__, int Bytes__>
 struct Int {};
 template<typename Dummy__>
-struct Int<Dummy__, 2> { typedef int16_t Type; };
+struct Int<Dummy__, 2> {
+  typedef int16_t Type;
+};
 template<typename Dummy__>
-struct Int<Dummy__, 4> { typedef int32_t Type; };
+struct Int<Dummy__, 4> {
+  typedef int32_t Type;
+};
 template<typename Dummy__>
-struct Int<Dummy__, 8> { typedef int64_t Type; };
+struct Int<Dummy__, 8> {
+  typedef int64_t Type;
+};
 
-// The purpose of the HookAdapterAccessor class is not at all obvious and 
+// The purpose of the HookAdapterAccessor class is not at all obvious and
 // thus requires some explanation.
 //
 // Its task is to reduce the level of indirection between hooks called by the
@@ -361,7 +374,7 @@ struct Int<Dummy__, 8> { typedef int64_t Type; };
 // helps to reduce the number of pointer dereferencing operations for
 // hook methods that are frequently called.
 //
-// To understand how this works, let's look at other options or ideas 
+// To understand how this works, let's look at other options or ideas
 // to connect the firmware core with the plugins:
 //
 // 1) The Kaleidoscope class has a member ptr on PluginHookAdapter__.
@@ -369,87 +382,86 @@ struct Int<Dummy__, 8> { typedef int64_t Type; };
 //       first, before the actual virtual hook methods of PluginHookAdapter__
 //       could be called.
 //
-// 2) The Kaleidoscope class has an instance of an implementation 
+// 2) The Kaleidoscope class has an instance of an implementation
 //       of template PluginHookAdapter.
 //
 //       Theoretically, this would allow to remove one level of indirection
-//       against solution 1) as the virtual 
+//       against solution 1) as the virtual
 //       methods of template PluginHookAdapter could now be called directly.
 //
 //       Practically this is not possible as the Kaleidoscope class
 //       would need to know about the particual instance of PluginHookAdapter<>
-//       with respect to the plugins used in the sketch. This would break 
+//       with respect to the plugins used in the sketch. This would break
 //       modularization as the Kaleidoscope class and all other code
 //       that calls hook methods would need to be joined in one compilation
 //       unit. Something that is very undesirable.
 //
 // The solution provided is a mix of the best of both approaches described,
-// eliminating their deficiencies. Unfortunately, to allow for this to work, 
+// eliminating their deficiencies. Unfortunately, to allow for this to work,
 // we have to rely on some knowledge about compilers.
 //
-// Trick that is used and described here has to be handled with care. 
-// Under the assumption that a class, including all of its base classes, 
-// does neither have non-default constructors nor destructors, it is safe 
+// Trick that is used and described here has to be handled with care.
+// Under the assumption that a class, including all of its base classes,
+// does neither have non-default constructors nor destructors, it is safe
 // to take binary copies as if it were a POD (struct).
 //
 // The PluginHookAdapter__ class is such a class. Its only
 // class inventory consists of the (implementation specific) vptr that
-// is hidden from the user. Binary copying a class derived from 
+// is hidden from the user. Binary copying a class derived from
 // PluginHookAdapter__, thus, only copies the vptr. And
-// that's precicely what we want. Our target is to let the Kaleidoscope class 
+// that's precicely what we want. Our target is to let the Kaleidoscope class
 // have access to a PluginHookAdapter<> instance
 // just if it had a class member of this type. The PluginHookAdapter__
 // member thus becomes a PluginHookAdapter<> in disguise.
 //
-// As the PluginHookAdapter__ is visible to the consumer code, the 
+// As the PluginHookAdapter__ is visible to the consumer code, the
 // additional level of indirection can be optimized away by the compiler.
 //
-class HookAdapterAccessor
-{
-   public:
-      
-      // This inline method generates a temporary instance of 
-      // an instanciated PluginHookAdapter<> template that operates on 
-      // a custom PluginLoop__ provides access to the plugins used in 
-      // the sketch.
-      // Then, it takes a binary copy of the PluginHookAdapter<> instance
-      // which basically copies the vptr to the rawAccessor_ storage.
-      // Hereby, we assume that both the base class PluginHookAdapter__
-      // and the derived PluginHookAdapter<> have identic extension
-      // and memory layout, which holds for all compilers known to the author.
-      // Under the assumption that the size of the vptr and thus the
-      // whole PluginHookAdapter<> object is smaller than the largest
-      // supported integer type, we can rely on a standard compiler generated
-      // assignment rather than using memcpy for the binary copy operation.
-      //
-      template<typename PluginLoop__>
-      void connect() {
-         
-         // Get an appropriate integer type that matches the PluginHookAdapter<>'s
-         // extension.
-         //
-         typedef typename Int<int, sizeof(PluginHookAdapter__)>::Type 
-            IntType;
-            
-         PluginHookAdapter<PluginLoop__> adapter;
-         
-         IntType *source = reinterpret_cast<IntType*>(&adapter);
-         IntType *target = reinterpret_cast<IntType*>(&hook_adapter_);
-            
-         // Copy the instance, i.e. most importantly its vptr
-         //
-         *target = *source;
-      }
-      
-      // This method provides easy access to hook adapter methods
-      //
-      PluginHookAdapter__ *operator->() {
-         return &hook_adapter_;
-      }
-      
-   private:
-   
-      PluginHookAdapter__ hook_adapter_;
+class HookAdapterAccessor {
+ public:
+
+  // This inline method generates a temporary instance of
+  // an instanciated PluginHookAdapter<> template that operates on
+  // a custom PluginLoop__ provides access to the plugins used in
+  // the sketch.
+  // Then, it takes a binary copy of the PluginHookAdapter<> instance
+  // which basically copies the vptr to the rawAccessor_ storage.
+  // Hereby, we assume that both the base class PluginHookAdapter__
+  // and the derived PluginHookAdapter<> have identic extension
+  // and memory layout, which holds for all compilers known to the author.
+  // Under the assumption that the size of the vptr and thus the
+  // whole PluginHookAdapter<> object is smaller than the largest
+  // supported integer type, we can rely on a standard compiler generated
+  // assignment rather than using memcpy for the binary copy operation.
+  //
+  template<typename PluginLoop__>
+  void connect() {
+
+    // Get an appropriate integer type that matches the PluginHookAdapter<>'s
+    // extension.
+    //
+    typedef typename Int<int, sizeof(PluginHookAdapter__)>::Type
+    IntType;
+
+    PluginHookAdapter<PluginLoop__> adapter;
+
+    IntType *source = reinterpret_cast<IntType*>(&adapter);
+    IntType *target = reinterpret_cast<IntType*>(&hook_adapter_);
+
+    // Copy the instance, i.e. most importantly its vptr
+    //
+    *target = *source;
+  }
+
+  // This method provides easy access to hook adapter methods
+  //
+  PluginHookAdapter__ *operator->() {
+    return &hook_adapter_;
+  }
+
+ private:
+
+  PluginHookAdapter__ hook_adapter_;
 };
 
 class Kaleidoscope_ {
@@ -510,32 +522,32 @@ class Kaleidoscope_ {
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
-__attribute__((deprecated("Kaleidoscope::replaceEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
   static void appendEventHandlerHook(eventHandlerHook hook)
-__attribute__((deprecated("Kaleidoscope::appendEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::appendEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
   static void useEventHandlerHook(eventHandlerHook hook)
-__attribute__((deprecated("Kaleidoscope::useEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::useEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
 
   typedef void (*loopHook)(bool postClear);
   static loopHook loopHooks[HOOK_MAX];
 
   static void replaceLoopHook(loopHook oldHook, loopHook newHook)
-__attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
   static void appendLoopHook(loopHook hook)
-__attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
   static void useLoopHook(loopHook hook)
-__attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.endLoopHook(...) instead.")));
 
   static bool focusHook(const char *command);
-  
+
   template<typename PluginLoop__>
   void connectPlugins() {
-     hooks_.connect<PluginLoop__>();
-     hooks_->init();
+    hooks_.connect<PluginLoop__>();
+    hooks_->init();
   }
-  
-public:
-  
+
+ public:
+
   HookAdapterAccessor hooks_;
 };
 
