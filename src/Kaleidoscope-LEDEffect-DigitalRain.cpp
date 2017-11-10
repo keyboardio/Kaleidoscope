@@ -6,6 +6,7 @@ namespace kaleidoscope {
 	uint8_t LEDDigitalRainEffect::NEW_DROP_PROBABILITY = 18;
 	uint8_t LEDDigitalRainEffect::PURE_GREEN_INTENSITY = 0xd0;
 	uint8_t LEDDigitalRainEffect::MAXIMUM_BRIGHTNESS_BOOST = 0xc0;
+	uint8_t LEDDigitalRainEffect::COLOR_CHANNEL = 1;
 
 	void LEDDigitalRainEffect::update(void) {
 		uint8_t col;
@@ -25,7 +26,7 @@ namespace kaleidoscope {
 				}
 
 				// Set the colour for this pixel
-				::LEDControl.setCrgbAt(row, col, getColor(map[col][row]));
+				::LEDControl.setCrgbAt(row, col, getColorFromIntensity(map[col][row]));
 			}
 		}
 
@@ -55,7 +56,7 @@ namespace kaleidoscope {
 		}
 	}
 
-	cRGB LEDDigitalRainEffect::getColor(uint8_t intensity) {
+	cRGB LEDDigitalRainEffect::getColorFromIntensity(uint8_t intensity) {
 		uint8_t boost;
 
 		// At high intensities start at light green
@@ -64,9 +65,18 @@ namespace kaleidoscope {
 			boost = (uint8_t) ((uint16_t) MAXIMUM_BRIGHTNESS_BOOST
 					* (intensity - PURE_GREEN_INTENSITY)
 					/ (0xff - PURE_GREEN_INTENSITY));
-			return {boost, 0xff, boost};
+			return getColorFromComponents(0xff, boost);
 		}
-		return {0, (uint8_t) ((uint16_t) 0xff * intensity / PURE_GREEN_INTENSITY), 0};
+		return getColorFromComponents((uint8_t) ((uint16_t) 0xff * intensity / PURE_GREEN_INTENSITY), 0);
+	}
+
+	cRGB LEDDigitalRainEffect::getColorFromComponents(uint8_t primary, uint8_t secondary) {
+		switch (COLOR_CHANNEL) {
+			case 0: return CRGB(primary, secondary, secondary);
+			case 1: return CRGB(secondary, primary, secondary);
+			case 2: return CRGB(secondary, secondary, primary);
+			default: return CRGB(0, 0, 0);
+		}
 	}
 }
 

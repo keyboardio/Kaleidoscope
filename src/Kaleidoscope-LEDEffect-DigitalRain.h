@@ -44,6 +44,14 @@ namespace kaleidoscope {
 			 */
 			static uint8_t MAXIMUM_BRIGHTNESS_BOOST;
 
+			/**
+			 * Colour channel.
+			 *
+			 * This can be changed to set the colour
+			 * to red (0), green (1), or blue (2).
+			 */
+			static uint8_t COLOR_CHANNEL;
+
 		protected:
 			void update(void) final;
 
@@ -66,7 +74,12 @@ namespace kaleidoscope {
 			/**
 			 * Get colour from intensity.
 			 */
-			cRGB getColor(uint8_t intensity);
+			cRGB getColorFromIntensity(uint8_t intensity);
+
+			/**
+			 * Get colour from primary and secondary components.
+			 */
+			cRGB getColorFromComponents(uint8_t primary, uint8_t secondary);
 	};
 }
 
