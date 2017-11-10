@@ -16,7 +16,7 @@ void setup() {
   Kaleidoscope.use(&LEDDigitalRainEffect);
 
   // Optionally adjust the configuration
-  LEDDigitalRain.DROP_TICKS = 22; // Make the rain fall faster
+  LEDDigitalRainEffect.DROP_TICKS = 22; // Make the rain fall faster
 
   Kaleidoscope.setup();
 }
@@ -24,7 +24,7 @@ void setup() {
 
 ## Plugin methods
 
-The plugin provides the `LEDDigitalRain` object, which has no public methods,
+The plugin provides the `LEDDigitalRainEffect` object, which has no public methods,
 outside of those provided by all LED modes.
 
 ## Configuration
@@ -33,14 +33,14 @@ A few properties are exposed for configuration.
 For their full documentation, see the [header file](src/Kaleidoscope-LEDEffect-DigitalRain.h),
 and for the defaults, see the [implementation file](src/Kaleidoscope-LEDEffect-DigitalRain.cpp).
 
-- `LEDDigitalRain.DROP_TICKS`:
+- `LEDDigitalRainEffect.DROP_TICKS`:
   number of frames before digital raindrops fall one row
-- `LEDDigitalRain.NEW_DROP_PROBABILITY`:
+- `LEDDigitalRainEffect.NEW_DROP_PROBABILITY`:
   inverse probability of a new raindrop appearing at the top of each column,
   each time drops fall
-- `LEDDigitalRain.PURE_GREEN_INTENSITY`:
+- `LEDDigitalRainEffect.PURE_GREEN_INTENSITY`:
   this allows the time ratio of tints vs shades of green to be controlled
-- `LEDDigitalRain.MAXIMUM_BRIGHTNESS_BOOST`:
+- `LEDDigitalRainEffect.MAXIMUM_BRIGHTNESS_BOOST`:
   the maximum lightness of a pixel, above pure green
 
 ## Dependencies
