@@ -237,7 +237,13 @@ clean () {
     rm -rf "${OUTPUT_PATH}"
 }
 
-reset_device () {
+reset_device() {
+	find_device_port
+    	check_device_port
+	reset_device_cmd
+}
+
+check_device_port () {
     if [ -z $DEVICE_PORT ]; then
         echo "Couldn't autodetect the keyboard's serial port."
         echo "If you see this message and your keyboard is connected to your computer,"
@@ -246,9 +252,8 @@ reset_device () {
         echo "Please report this issue at https://github.com/keyboardio/Kaleidoscope";
         exit 0;
     fi
-
-    ${RESET_DEVICE}
 }
+
 
 usage () {
     cat <<EOF
