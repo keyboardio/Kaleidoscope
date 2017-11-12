@@ -125,6 +125,11 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
+  if (layer >= LayerCount) {
+    // Trying to turn on a layer that doesn't exist; abort
+    return;
+  }
+
   bool wasOn = isOn(layer);
 
   bitSet(LayerState, layer);
