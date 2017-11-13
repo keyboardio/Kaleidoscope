@@ -99,7 +99,7 @@ void TestMode_::testMatrix() {
         uint8_t keyState = ((bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 1) |
                            (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 0));
 
-	if ( keyState == TOGGLED_ON || keyState == TOGGLED_OFF ) {
+	if ( keyState == TOGGLED_ON ) {
 		if (cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
           		bitSet(leftBadKeys, keynum);
 		}
@@ -130,7 +130,7 @@ void TestMode_::testMatrix() {
                    (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 0));
 
 
-	if ( keyState == TOGGLED_ON || keyState == TOGGLED_OFF ) {
+	if ( keyState == TOGGLED_ON) { 
 		if (cyclesSinceStateChange[keynum+32] < CHATTER_CYCLE_LIMIT) {
           		bitSet(rightBadKeys, keynum);
 		}
