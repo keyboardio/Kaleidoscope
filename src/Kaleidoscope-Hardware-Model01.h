@@ -23,10 +23,14 @@ class Model01 {
   void readMatrix(void);
   void actOnMatrixScan(void);
   void setup();
-  void enableHighPowerLeds(void);
-  void enableScannerPower(void);
   void rebootBootloader();
 
+
+  /* These public functions are things supported by the Model 01, but
+   * aren't necessarily part of the Kaleidoscope API 
+   */
+  void enableHighPowerLeds(void);
+  void enableScannerPower(void);
   boolean ledPowerFault(void);
 
   /* Key masking
