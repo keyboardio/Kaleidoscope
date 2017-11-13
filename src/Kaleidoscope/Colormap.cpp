@@ -66,10 +66,10 @@ bool ColormapEffect::focusHook(const char *command) {
 }
 
 bool ColormapEffect::focusHookLayerwise(const char *command) {
-  return ::LEDPaletteTheme.themeFocusHandlerLayerwise(command,
-                                                      PSTR("colormap.layer"),
-                                                      map_base_,
-                                                      max_layers_);
+  return ::LEDPaletteTheme.themeLayerFocusHandler(command,
+                                                  PSTR("colormap.layer"),
+                                                  map_base_,
+                                                  max_layers_);
 }
 
 }
