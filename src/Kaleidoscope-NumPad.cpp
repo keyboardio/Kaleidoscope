@@ -27,7 +27,7 @@ void NumPad_::loopHook(bool postClear) {
   cleanupDone = false;
   bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
   if (!numState) {
-    kaleidoscope::hid::pressKey(Key_KeypadNumPad);
+    kaleidoscope::hid::pressKey(Key_KeypadNumLock);
     kaleidoscope::hid::sendKeyboardReport();
   }
 
