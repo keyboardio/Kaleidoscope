@@ -27,7 +27,7 @@ class Model01 {
 
 
   /* These public functions are things supported by the Model 01, but
-   * aren't necessarily part of the Kaleidoscope API 
+   * aren't necessarily part of the Kaleidoscope API
    */
   void enableHighPowerLeds(void);
   void enableScannerPower(void);
