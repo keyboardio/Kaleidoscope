@@ -65,11 +65,6 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
 };
 
-// Calculate the number of layers defined in the "keymaps[]" array
-// above for use elsewhere in Kaleidoscope. Don't remove or modify
-// this line; it's used to prevent reading past the end of the array!
-const uint8_t LayerCount PROGMEM = sizeof(keymaps) / sizeof(*keymaps);
-
 static kaleidoscope::LEDSolidColor solidRed(60, 0, 0);
 static kaleidoscope::LEDSolidColor solidOrange(60, 20, 0);
 static kaleidoscope::LEDSolidColor solidYellow(40, 35, 0);
@@ -109,3 +104,6 @@ void setup() {
 void loop() {
   Kaleidoscope.loop();
 }
+
+// This line should always be at the end of the sketch file
+#include <sketch-trailer.h>
