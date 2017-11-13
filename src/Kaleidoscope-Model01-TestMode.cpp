@@ -8,7 +8,7 @@
 cRGB red;
 cRGB blue;
 cRGB green;
-
+cRGB white;
 
 TestMode_::TestMode_(void) {
 }
@@ -18,6 +18,9 @@ void TestMode_::begin(void) {
   red.r = 201;
   blue.b = 201;
   green.g = 201;
+  white.r = 50;
+  white.g = 50;
+  white.b = 50;
   Kaleidoscope.useLoopHook(this->loopHook);
 }
 
@@ -66,7 +69,12 @@ void TestMode_::test_leds(void) {
 }
 
 
+uint32_t leftBadKeys;
+uint32_t rightBadKeys;
 
+
+uint32_t olderLeftHandState = 0;
+uint32_t olderRightHandState = 0 ;
 
 void TestMode_::testMatrix() {
   LEDControl.set_all_leds_to(200, 0, 0);
@@ -79,26 +87,69 @@ void TestMode_::testMatrix() {
       for (byte col = 0; col < 8; col++) {
         uint8_t keynum = (row * 8) + (col);
 
-        uint8_t keyState = (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 0) |
-                           (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 1);
+        uint8_t keyState = (bitRead(olderLeftHandState, keynum) << 2) |
+                           (bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 1) |
+                           (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 0);
 
-        if (keyState == 3) {
+
+        // If we had chatter in between two reads
+        if (keyState == 2 || keyState == 5) {
+          bitSet(leftBadKeys, keynum);
+        }
+
+
+        // If the key is held down
+        if (keyState == 7) {
           KeyboardHardware.setCrgbAt(row, 7 - col, green);
-        } else if (keyState == 1) {
+        }
+        // If we're seeing chatter right now
+        else if (keyState == 2 || keyState == 5) {
+          KeyboardHardware.setCrgbAt(row, 7 - col, white);
+        }
+
+        // If we triggered chatter detection ever on this key
+        else if (bitRead(leftBadKeys, keynum)) {
+          KeyboardHardware.setCrgbAt(row, 7 - col, red);
+        }
+
+        // If the key was just released
+        else if (keyState == 6) {
           KeyboardHardware.setCrgbAt(row, 7 - col, blue);
         }
 
-        keyState = (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 0) |
-                   (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 1);
 
-        if (keyState == 3) {
+        keyState = (bitRead(olderRightHandState, keynum) << 2) |
+                   (bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 1) |
+                   (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 0);
+
+        // If we had chatter in between two reads
+        if (keyState == 2 || keyState == 5) {
+          bitSet(rightBadKeys, keynum);
+        }
+
+        // If the key is held down
+        if (keyState == 7) {
           KeyboardHardware.setCrgbAt(row, 15 - col, green);
-        } else if (keyState == 1) {
+        }
+        // If we're seeing chatter right now
+        else if (keyState == 2 || keyState == 5) {
+          KeyboardHardware.setCrgbAt(row, 15 - col, white);
+        }
+
+        // If we triggered chatter detection ever on this key
+        else if (bitRead(rightBadKeys, keynum)) {
+          KeyboardHardware.setCrgbAt(row, 15 - col, red);
+        }
+
+        // If the key was just released
+        else if (keyState == 6) {
           KeyboardHardware.setCrgbAt(row, 15 - col, blue);
         }
       }
     }
     LEDControl.syncLeds();
+    olderRightHandState = KeyboardHardware.previousRightHandState.all;
+    olderLeftHandState = KeyboardHardware.previousLeftHandState.all;
   }
 }
 
