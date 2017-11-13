@@ -16,7 +16,7 @@ class NumLock_ : public KaleidoscopePlugin {
   static void loopHook(const bool postClear);
 
   static byte row, col;
-  static bool isOn;
+  static bool cleanupDone;
 };
 
 extern NumLock_ NumLock;
