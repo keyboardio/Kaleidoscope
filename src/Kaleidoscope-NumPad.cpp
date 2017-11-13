@@ -1,18 +1,18 @@
-#include "Kaleidoscope-Numlock.h"
+#include "Kaleidoscope-NumPad.h"
 #include "LEDUtils.h"
 #include "Kaleidoscope.h"
 #include "layers.h"
 
-byte NumLock_::row = 255, NumLock_::col = 255;
-uint8_t NumLock_::numPadLayer;
-bool NumLock_::cleanupDone = true;
+byte NumPad_::row = 255, NumPad_::col = 255;
+uint8_t NumPad_::numPadLayer;
+bool NumPad_::cleanupDone = true;
 cRGB numpad_color = CRGB(255, 0, 0);
 
-void NumLock_::begin(void) {
+void NumPad_::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
 }
 
-void NumLock_::loopHook(bool postClear) {
+void NumPad_::loopHook(bool postClear) {
   if (!postClear)
     return;
 
@@ -27,7 +27,7 @@ void NumLock_::loopHook(bool postClear) {
   cleanupDone = false;
   bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
   if (!numState) {
-    kaleidoscope::hid::pressKey(Key_KeypadNumLock);
+    kaleidoscope::hid::pressKey(Key_KeypadNumPad);
     kaleidoscope::hid::sendKeyboardReport();
   }
 
@@ -58,4 +58,4 @@ void NumLock_::loopHook(bool postClear) {
   LEDControl.setCrgbAt(row, col, color);
 }
 
-NumLock_ NumLock;
+NumPad_ NumPad;

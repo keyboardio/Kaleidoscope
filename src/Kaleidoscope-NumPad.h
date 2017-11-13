@@ -4,9 +4,9 @@
 #include "Kaleidoscope-Macros.h"
 #include "LEDUtils.h"
 
-class NumLock_ : public KaleidoscopePlugin {
+class NumPad_ : public KaleidoscopePlugin {
  public:
-  NumLock_(void) {}
+  NumPad_(void) {}
 
   void begin(void) final;
 
@@ -19,4 +19,4 @@ class NumLock_ : public KaleidoscopePlugin {
   static bool cleanupDone;
 };
 
-extern NumLock_ NumLock;
+extern NumPad_ NumPad;
