@@ -87,6 +87,11 @@ uint32_t cyclesSinceStateChange[64];
 
 void TestMode_::testMatrix() {
   LEDControl.set_all_leds_to(200, 0, 0);
+  // Clear out the key event buffer so we don't get messed up information from
+  // taps during LED test mode.
+  for(auto temp =0; temp<16; temp++) {
+    KeyboardHardware.readMatrix();
+  }
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
