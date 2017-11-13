@@ -28,7 +28,6 @@ void NumPad_::loopHook(bool postClear) {
   bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
   if (!numState) {
     kaleidoscope::hid::pressKey(Key_KeypadNumLock);
-    kaleidoscope::hid::sendKeyboardReport();
   }
 
   LEDControl.set_mode(LEDControl.get_mode_index());
