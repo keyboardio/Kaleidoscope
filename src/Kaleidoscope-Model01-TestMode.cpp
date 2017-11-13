@@ -110,7 +110,8 @@ void TestMode_::toggle_programming_leds_on() {
 void TestMode_::run_tests() {
   //  Serial.println("Running tests");
   toggle_programming_leds_on();
-
+  // Disable debouncing
+  KeyboardHardware.setKeyscanInterval(0);
   test_leds();
   testMatrix();
   //  Serial.println("Done running tests");
