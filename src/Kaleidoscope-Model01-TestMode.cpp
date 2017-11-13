@@ -5,7 +5,7 @@
 #include <avr/wdt.h>
 
 
-#define CHATTER_CYCLE_LIMIT 2
+#define CHATTER_CYCLE_LIMIT 15
 #define TOGGLED_OFF 2
 #define TOGGLED_ON 1
 #define HELD 3 
