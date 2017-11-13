@@ -158,10 +158,8 @@ bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expecte
   return true;
 }
 
-bool LEDPaletteTheme::themeFocusHandlerLayerwise(const char *command,
-                                                 const char *expected_command,
-                                                 uint16_t theme_base,
-                                                 uint8_t max_themes) {
+bool LEDPaletteTheme::themeLayerFocusHandler(const char *command, const char *expected_command,
+    uint16_t theme_base, uint8_t max_themes) {
   if (strcmp_P(command, expected_command) != 0)
     return false;
 
