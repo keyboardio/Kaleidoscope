@@ -65,6 +65,13 @@ bool ColormapEffect::focusHook(const char *command) {
          map_base_, max_layers_);
 }
 
+bool ColormapEffect::focusHookLayerwise(const char *command) {
+  return ::LEDPaletteTheme.themeFocusHandlerLayerwise(command,
+                                                      PSTR("colormap.layer"),
+                                                      map_base_,
+                                                      max_layers_);
+}
+
 }
 
 kaleidoscope::ColormapEffect ColormapEffect;
