@@ -43,6 +43,10 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
   static bool themeFocusHandler(const char *command, const char *expected_command,
                                 uint16_t theme_base, uint8_t max_themes);
 
+  static bool themeFocusHandlerLayerwise(const char *command,
+                                         const char *expected_command,
+                                         uint16_t theme_base,
+                                         uint8_t max_themes);
  private:
   static uint16_t palette_base_;
 };

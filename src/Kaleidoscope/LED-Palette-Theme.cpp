@@ -158,6 +158,46 @@ bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expecte
   return true;
 }
 
+bool LEDPaletteTheme::themeFocusHandlerLayerwise(const char *command,
+                                                 const char *expected_command,
+                                                 uint16_t theme_base,
+                                                 uint8_t max_themes) {
+  if (strcmp_P(command, expected_command) != 0)
+    return false;
+
+  uint16_t count_per_layer = (ROWS * COLS) / 2;
+
+  uint8_t layer = Serial.parseInt();
+
+  uint16_t offset = theme_base + (layer * count_per_layer);
+
+  if (Serial.peek() == '\n') {
+    for (uint16_t pos = 0; pos < count_per_layer; pos++) {
+      uint8_t indexes = EEPROM.read(offset + pos);
+
+      ::Focus.printNumber(indexes >> 4);
+      ::Focus.printSpace();
+      ::Focus.printNumber(indexes & ~0xf0);
+      ::Focus.printSpace();
+    }
+    Serial.println();
+    return true;
+  }
+
+  uint16_t pos = 0;
+
+  while ((Serial.peek() != '\n') && (pos < count_per_layer)) {
+    uint8_t idx1 = Serial.parseInt();
+    uint8_t idx2 = Serial.parseInt();
+    uint8_t indexes = (idx1 << 4) + idx2;
+
+    EEPROM.update(offset + pos, indexes);
+    pos++;
+  }
+
+  return true;
+}
+
 }
 
 kaleidoscope::LEDPaletteTheme LEDPaletteTheme;
