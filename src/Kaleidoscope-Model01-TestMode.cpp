@@ -8,7 +8,7 @@
 #define CHATTER_CYCLE_LIMIT 15
 #define TOGGLED_OFF 2
 #define TOGGLED_ON 1
-#define HELD 3 
+#define HELD 3
 #define RELEASED 0
 
 
@@ -89,7 +89,7 @@ void TestMode_::testMatrix() {
   LEDControl.set_all_leds_to(200, 0, 0);
   // Clear out the key event buffer so we don't get messed up information from
   // taps during LED test mode.
-  for(auto temp =0; temp<16; temp++) {
+  for (auto temp = 0; temp < 16; temp++) {
     KeyboardHardware.readMatrix();
   }
   while (1) {
@@ -102,19 +102,19 @@ void TestMode_::testMatrix() {
         uint8_t keynum = (row * 8) + (col);
 
         uint8_t keyState = ((bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 1) |
-                           (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 0));
+                            (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 0));
 
-	if ( keyState == TOGGLED_ON ) {
-		if (cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
-          		bitSet(leftBadKeys, keynum);
-		}
-		cyclesSinceStateChange[keynum] = 0;
-	} else if (cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
-		cyclesSinceStateChange[keynum]++;
+        if (keyState == TOGGLED_ON) {
+          if (cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
+            bitSet(leftBadKeys, keynum);
+          }
+          cyclesSinceStateChange[keynum] = 0;
+        } else if (cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
+          cyclesSinceStateChange[keynum]++;
 
-	}
+        }
 
-	
+
 
         // If the key is held down
         if (keyState == HELD) {
@@ -132,24 +132,24 @@ void TestMode_::testMatrix() {
 
 
         keyState = ((bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 1) |
-                   (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 0));
+                    (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 0));
 
 
-	if ( keyState == TOGGLED_ON) { 
-		if (cyclesSinceStateChange[keynum+32] < CHATTER_CYCLE_LIMIT) {
-          		bitSet(rightBadKeys, keynum);
-		}
-		cyclesSinceStateChange[keynum+32] = 0;
-	} else if (cyclesSinceStateChange[keynum+32] <= CHATTER_CYCLE_LIMIT)  {
-		cyclesSinceStateChange[keynum+32]++;
-	}
+        if (keyState == TOGGLED_ON) {
+          if (cyclesSinceStateChange[keynum + 32] < CHATTER_CYCLE_LIMIT) {
+            bitSet(rightBadKeys, keynum);
+          }
+          cyclesSinceStateChange[keynum + 32] = 0;
+        } else if (cyclesSinceStateChange[keynum + 32] <= CHATTER_CYCLE_LIMIT)  {
+          cyclesSinceStateChange[keynum + 32]++;
+        }
 
         // If the key is held down
         if (keyState == HELD) {
           KeyboardHardware.setCrgbAt(row, 15 - col, green);
         }
         // If we triggered chatter detection ever on this key
-        else if (bitRead(rightBadKeys, keynum) == 1 ) {
+        else if (bitRead(rightBadKeys, keynum) == 1) {
           KeyboardHardware.setCrgbAt(row, 15 - col, red);
         }
 
