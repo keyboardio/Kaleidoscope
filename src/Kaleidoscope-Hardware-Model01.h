@@ -31,6 +31,7 @@ class Model01 {
    */
   void enableHighPowerLeds(void);
   void enableScannerPower(void);
+  void setKeyscanInterval(uint8_t interval);
   boolean ledPowerFault(void);
 
   /* Key masking

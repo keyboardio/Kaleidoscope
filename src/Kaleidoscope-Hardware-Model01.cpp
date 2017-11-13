@@ -242,4 +242,10 @@ void Model01::maskHeldKeys(void) {
   memcpy(rightHandMask.rows, rightHandState.rows, sizeof(rightHandMask));
 }
 
+
+void Model01::setKeyscanInterval(uint8_t interval) {
+  leftHand.setKeyscanInterval(interval);
+  rightHand.setKeyscanInterval(interval);
+}
+
 HARDWARE_IMPLEMENTATION KeyboardHardware;
