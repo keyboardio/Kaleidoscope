@@ -109,7 +109,7 @@ void TestMode_::testMatrix() {
           		bitSet(leftBadKeys, keynum);
 		}
 		cyclesSinceStateChange[keynum] = 0;
-	} else {
+	} else if (cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
 		cyclesSinceStateChange[keynum]++;
 
 	}
@@ -140,7 +140,7 @@ void TestMode_::testMatrix() {
           		bitSet(rightBadKeys, keynum);
 		}
 		cyclesSinceStateChange[keynum+32] = 0;
-	} else {
+	} else if (cyclesSinceStateChange[keynum+32] <= CHATTER_CYCLE_LIMIT)  {
 		cyclesSinceStateChange[keynum+32]++;
 	}
 
