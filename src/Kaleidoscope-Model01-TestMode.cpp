@@ -5,7 +5,7 @@
 #include <avr/wdt.h>
 
 
-#define CHATTER_CYCLE_LIMIT 15
+#define CHATTER_CYCLE_LIMIT 30
 #define TOGGLED_OFF 2
 #define TOGGLED_ON 1
 #define HELD 3
@@ -175,7 +175,7 @@ void TestMode_::run_tests() {
   //  Serial.println("Running tests");
   toggle_programming_leds_on();
   // Disable debouncing
-  KeyboardHardware.setKeyscanInterval(0);
+  KeyboardHardware.setKeyscanInterval(2);
   test_leds();
   testMatrix();
   //  Serial.println("Done running tests");
