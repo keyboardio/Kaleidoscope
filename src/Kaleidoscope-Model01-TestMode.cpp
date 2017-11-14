@@ -42,7 +42,10 @@ void TestMode_::loopHook(bool postClear) {
 }
 
 void TestMode_::waitForKeypress() {
-  delay(25);
+  for (auto temp = 0; temp < 16; temp++) {
+    KeyboardHardware.readMatrix();
+  }
+  delay(2);
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all ==  R3C6
