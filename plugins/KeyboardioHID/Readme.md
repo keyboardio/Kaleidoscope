@@ -6,7 +6,7 @@ Based on Nico Hood's HID-Project. Please don't contact Nico with issues in this 
 **Supported HID devices:**
 * Boot Keyboard 
 * NKRO Keyboard (press up to 113 keys at the same time)
-* Mouse (5 buttons, move, wheel)
+* Mouse (5 buttons, move, vertical wheel, horizontal wheel)
 * Absolute Mouse
 * Consumer/Media Keys (4 keys for music player, web browser and more)
 * System Key (for PC standby/shutdown)
