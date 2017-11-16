@@ -121,3 +121,6 @@ typedef union Key_ {
 #define Key_RFN2 (Key) { KEY_RIGHT_FN2,  KEY_FLAGS }
 #define KEY_LEFT_FN2 0xff
 #define Key_LFN2 (Key) { KEY_LEFT_FN2,  KEY_FLAGS }
+
+
+#define Key_16bit(code, flags) { .raw = (code) | ((flags) << 8) }
