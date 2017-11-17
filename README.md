@@ -25,7 +25,8 @@ undesirable, unset the `OneShot.double_tap_sticky` property (see later).
 
 To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain
 active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
-`Ctrl+Alt+b`, and `L1, L2, c` is turned into `L1+L2+c`.
+`Ctrl+Alt+b`, and `L1, L2, c` is turned into `L1+L2+c`. Furthermore, modifiers
+and other layer keys do not cancel the one-shot effect, either.
 
 ## Using the plugin
 
