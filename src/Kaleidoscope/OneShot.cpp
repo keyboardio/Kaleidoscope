@@ -153,7 +153,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
   if (keyIsPressed(key_state)) {
     saveAsPrevious(mapped_key);
-    if (!isModifier(mapped_key)) {
+    if (!isModifier(mapped_key) && (mapped_key.flags != (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
       if (should_mask_on_interrupt_)
         KeyboardHardware.maskKey(row, col);
       should_cancel_ = true;
