@@ -64,6 +64,9 @@ The plugin provides the `EEPROMKeymap` object, which has the following methods:
 
 > Tells the extension to reserve space in EEPROM for up to `max` layers. Can
 > only be called once, any subsequent call will be a no-op.
+> This should be set to the number of keymap layers you want to be
+> able to program from EEPROM (probably the number of layers you have
+> defined in your keymap).
 
 ## Focus commands
 
