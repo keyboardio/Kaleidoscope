@@ -115,7 +115,7 @@ cRGB BlazingTrail::compute(uint8_t *step) {
     color.g = min(*step * color.g / 255, 255);
   }
 
-  if (*step >= 0xf0 - 30)
+  if (*step >= 0xff - 30)
     *step -= 1;
   else if (*step >= 0x40)
     *step -= 16;
