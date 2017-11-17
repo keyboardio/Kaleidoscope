@@ -92,6 +92,10 @@ boolean wasModifierKeyActive(Key mappedKey) {
   return Keyboard.wasModifierActive(mappedKey.keyCode);
 }
 
+uint8_t getKeyboardLEDs() {
+  return Keyboard.getLEDs();
+}
+
 
 void sendKeyboardReport() {
   Keyboard.sendReport();

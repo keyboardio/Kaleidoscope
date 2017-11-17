@@ -8,9 +8,7 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (!(mappedKey.flags & SYNTHETIC))
     return false;
 
-  if (mappedKey.flags & IS_INTERNAL) {
-    return false;
-  } else if (mappedKey.flags & IS_CONSUMER) {
+  if (mappedKey.flags & IS_CONSUMER) {
     if (keyIsPressed(keyState)) {
     } else if (keyWasPressed(keyState)) {
       kaleidoscope::hid::pressConsumerControl(mappedKey);
@@ -22,6 +20,8 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
       kaleidoscope::hid::pressSystemControl(mappedKey);
       kaleidoscope::hid::releaseSystemControl(mappedKey);
     }
+  } else if (mappedKey.flags & IS_INTERNAL) {
+    return false;
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
   }
