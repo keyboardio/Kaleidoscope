@@ -54,7 +54,7 @@ Key EEPROMKeymap::getKeyOverride(uint8_t layer, byte row, byte col) {
   Key key;
 
   key = getKey(layer, row, col);
-  if (key == Key_Transparent)
+  if (key == Key_Transparent || layer >= max_layers_)
     key = Layer.getKeyFromPROGMEM(layer, row, col);
   return key;
 }
