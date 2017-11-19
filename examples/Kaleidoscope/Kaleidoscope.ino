@@ -57,13 +57,12 @@
                                               Key_KeymapNext_Momentary,         Key_KeymapNext_Momentary \
 )
 
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+CREATE_KEYMAP(
   QWERTY,
   GENERIC_FN2,
   NUMPAD
+)
 
-
-};
 
 static kaleidoscope::LEDSolidColor solidRed(60, 0, 0);
 static kaleidoscope::LEDSolidColor solidOrange(60, 20, 0);
@@ -104,6 +103,3 @@ void setup() {
 void loop() {
   Kaleidoscope.loop();
 }
-
-// This line should always be at the end of the sketch file
-#include <sketch-trailer.h>

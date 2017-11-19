@@ -4,8 +4,13 @@
 #include "key_defs.h"
 #include KALEIDOSCOPE_HARDWARE_H
 
+#define CREATE_KEYMAP(layers...)				\
+  const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
+  const uint8_t LayerCount = sizeof(keymaps) / sizeof(*keymaps);
+
 // The total number of defined layers in the firmware sketch keymaps[] array
 extern const uint8_t LayerCount;
+
 
 class Layer_ {
  public:

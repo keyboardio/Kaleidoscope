@@ -125,8 +125,8 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
+  // If we're trying to turn on a layer that doesn't exist; abort
   if (layer >= LayerCount) {
-    // Trying to turn on a layer that doesn't exist; abort
     return;
   }
 

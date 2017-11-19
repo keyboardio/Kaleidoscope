@@ -24,7 +24,7 @@
 #include "Macros.h"
 
 /* *INDENT-OFF* */
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+CREATE_KEYMAP(
   [0] = KEYMAP_STACKED
   (
    Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
@@ -43,7 +43,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    M(M_APPCANCEL)
    ),
-};
+	      )
 /* *INDENT-ON* */
 
 
@@ -66,6 +66,3 @@ void setup() {
 void loop() {
   Kaleidoscope.loop();
 }
-
-// This line should always be at the end of the sketch file
-#include <sketch-trailer.h>
