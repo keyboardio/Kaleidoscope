@@ -4,6 +4,9 @@
 #include "key_defs.h"
 #include KALEIDOSCOPE_HARDWARE_H
 
+// Macro for defining the keymap. This should be used in the sketch
+// file (*.ino) to define the keymap[] array that holds the user's
+// layers. It also computes the number of layers in that keymap.
 #define CREATE_KEYMAP(layers...)				\
   const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
   uint8_t LayerCount = sizeof(keymaps) / sizeof(*keymaps);
