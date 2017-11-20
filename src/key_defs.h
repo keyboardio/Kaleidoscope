@@ -128,5 +128,5 @@ typedef union Key_ {
    use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
-#define CONSUMER(key) (key.raw & 0x03FF) 
+#define CONSUMER(key) (key.raw & 0x03FF)
 #define CONSUMER_KEY(code, flags) (Key) { .raw = (code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8) }
