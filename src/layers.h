@@ -22,7 +22,7 @@ class Layer_ {
    *
    * At the same time, we want other keys to not be affected by the
    * now-turned-off layer. So we update the keycode in the cache on-demand, when
-   * the key is pressed or released. (see the top of `handleKeyswitchEvent`).
+   * the key is pressed. (see the top of `handleKeyswitchEvent`).
    *
    * On the other hand, we also have plugins that scan the whole keymap, and do
    * things based on that information, such as highlighting keys that changed
