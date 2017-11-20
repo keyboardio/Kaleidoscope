@@ -123,4 +123,4 @@ typedef union Key_ {
 #define Key_LFN2 (Key) { KEY_LEFT_FN2,  KEY_FLAGS }
 
 
-#define Key_16bit(code, flags) { .raw = (code) | ((flags) << 8) }
+#define CONSUMER_KEY(code, flags) (Key) { .raw = (code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8) }
