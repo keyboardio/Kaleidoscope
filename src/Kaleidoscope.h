@@ -451,7 +451,7 @@ class Kaleidoscope_ {
 
  public:
 
-    PluginHookAdapter__ *hooks_;
+  PluginHookAdapter__ *hooks_;
 };
 
 extern Kaleidoscope_ Kaleidoscope;
