@@ -251,7 +251,9 @@ class KaleidoscopePlugin {
       static auto apply() -> typename Hook__::ReturnValue { \
          MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__) \
       } \
-   };
+   }; \
+   \
+   PluginHookAdapter<HookLoop> hookLoop;
 
 // This macro is supposed to be called at the end of the begin() method
 // of the firmware sketch to connect the plugin hooks.
@@ -263,7 +265,7 @@ class KaleidoscopePlugin {
 // of the firmware sketch.
 //
 #define KALEIDOSCOPE_CONNECT_PLUGINS \
-   Kaleidoscope.connectPlugins<HookLoop>();
+   Kaleidoscope.connectPlugins(&hookLoop);
 
 // This hook adapter base class defines the main interface that
 // is used by the Kaleidoscope class and in all other places
@@ -366,104 +368,6 @@ struct Int<Dummy__, 8> {
   typedef int64_t Type;
 };
 
-// The purpose of the HookAdapterAccessor class is not at all obvious and
-// thus requires some explanation.
-//
-// Its task is to reduce the level of indirection between hooks called by the
-// Kaleidoscope core and the actual hook methods implemented. It thereby
-// helps to reduce the number of pointer dereferencing operations for
-// hook methods that are frequently called.
-//
-// To understand how this works, let's look at other options or ideas
-// to connect the firmware core with the plugins:
-//
-// 1) The Kaleidoscope class has a member ptr on PluginHookAdapter__.
-//       Every call to a hook method would require to dereference this pointer
-//       first, before the actual virtual hook methods of PluginHookAdapter__
-//       could be called.
-//
-// 2) The Kaleidoscope class has an instance of an implementation
-//       of template PluginHookAdapter.
-//
-//       Theoretically, this would allow to remove one level of indirection
-//       against solution 1) as the virtual
-//       methods of template PluginHookAdapter could now be called directly.
-//
-//       Practically this is not possible as the Kaleidoscope class
-//       would need to know about the particual instance of PluginHookAdapter<>
-//       with respect to the plugins used in the sketch. This would break
-//       modularization as the Kaleidoscope class and all other code
-//       that calls hook methods would need to be joined in one compilation
-//       unit. Something that is very undesirable.
-//
-// The solution provided is a mix of the best of both approaches described,
-// eliminating their deficiencies. Unfortunately, to allow for this to work,
-// we have to rely on some knowledge about compilers.
-//
-// Trick that is used and described here has to be handled with care.
-// Under the assumption that a class, including all of its base classes,
-// does neither have non-default constructors nor destructors, it is safe
-// to take binary copies as if it were a POD (struct).
-//
-// The PluginHookAdapter__ class is such a class. Its only
-// class inventory consists of the (implementation specific) vptr that
-// is hidden from the user. Binary copying a class derived from
-// PluginHookAdapter__, thus, only copies the vptr. And
-// that's precicely what we want. Our target is to let the Kaleidoscope class
-// have access to a PluginHookAdapter<> instance
-// just if it had a class member of this type. The PluginHookAdapter__
-// member thus becomes a PluginHookAdapter<> in disguise.
-//
-// As the PluginHookAdapter__ is visible to the consumer code, the
-// additional level of indirection can be optimized away by the compiler.
-//
-class HookAdapterAccessor {
- public:
-
-  // This inline method generates a temporary instance of
-  // an instanciated PluginHookAdapter<> template that operates on
-  // a custom PluginLoop__ provides access to the plugins used in
-  // the sketch.
-  // Then, it takes a binary copy of the PluginHookAdapter<> instance
-  // which basically copies the vptr to the rawAccessor_ storage.
-  // Hereby, we assume that both the base class PluginHookAdapter__
-  // and the derived PluginHookAdapter<> have identic extension
-  // and memory layout, which holds for all compilers known to the author.
-  // Under the assumption that the size of the vptr and thus the
-  // whole PluginHookAdapter<> object is smaller than the largest
-  // supported integer type, we can rely on a standard compiler generated
-  // assignment rather than using memcpy for the binary copy operation.
-  //
-  template<typename PluginLoop__>
-  void connect() {
-
-    // Get an appropriate integer type that matches the PluginHookAdapter<>'s
-    // extension.
-    //
-    typedef typename Int<int, sizeof(PluginHookAdapter__)>::Type
-    IntType;
-
-    PluginHookAdapter<PluginLoop__> adapter;
-
-    IntType *source = reinterpret_cast<IntType*>(&adapter);
-    IntType *target = reinterpret_cast<IntType*>(&hook_adapter_);
-
-    // Copy the instance, i.e. most importantly its vptr
-    //
-    *target = *source;
-  }
-
-  // This method provides easy access to hook adapter methods
-  //
-  PluginHookAdapter__ *operator->() {
-    return &hook_adapter_;
-  }
-
- private:
-
-  PluginHookAdapter__ hook_adapter_;
-};
-
 class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
@@ -540,15 +444,14 @@ class Kaleidoscope_ {
 
   static bool focusHook(const char *command);
 
-  template<typename PluginLoop__>
-  void connectPlugins() {
-    hooks_.connect<PluginLoop__>();
+  void connectPlugins(PluginHookAdapter__ *hooks) {
+    hooks_ = hooks;
     hooks_->init();
   }
 
  public:
 
-  HookAdapterAccessor hooks_;
+    PluginHookAdapter__ *hooks_;
 };
 
 extern Kaleidoscope_ Kaleidoscope;
