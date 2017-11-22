@@ -38,6 +38,8 @@ Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
   if (!::OneShot.isActive())
     return mapped_key;
 
+  KeyboardHardware.maskKey(row, col);
+
   ::OneShot.cancel();
 
   return Key_NoKey;
