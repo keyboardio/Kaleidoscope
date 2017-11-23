@@ -124,6 +124,7 @@ void Layer_::move(uint8_t layer) {
   on(layer);
 }
 
+// Activate a given layer
 void Layer_::on(uint8_t layer) {
   // If the target layer was already on, return
   if (isOn(layer))
@@ -142,6 +143,7 @@ void Layer_::on(uint8_t layer) {
   updateActiveLayers();
 }
 
+// Deactivate a given layer
 void Layer_::off(uint8_t layer) {
   // If the target layer was already off, return
   if (!isOn(layer))
