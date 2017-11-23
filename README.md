@@ -49,7 +49,7 @@ properties. All times are in seconds.
 > The amount of time that can pass between two pressed keys, before the plugin
 > considers it a new session, and starts all timers and counters over.
 >
-> Defaults to 10 seconds.
+> Defaults to 300 seconds (5 minutes).
 
 ### `.settings.lock_time_out`
 
