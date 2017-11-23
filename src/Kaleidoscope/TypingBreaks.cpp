@@ -95,7 +95,7 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
     // Is the session longer than lock_time_out?
     if (millis() - session_start_time_ >= lock_time_out) {
       // Yeah, it is.
-      lock_start_time_ = millis();
+      lock_start_time_ = last_key_time_;
       TypingBreak(true);
       return Key_NoKey;
     }
