@@ -129,6 +129,7 @@ void Layer_::move(uint8_t layer) {
   on(layer);
 }
 
+// Activate a given layer
 void Layer_::on(uint8_t layer) {
   // If we're trying to turn on a layer that doesn't exist, abort (but
   // if the keymap wasn't defined using CREATE_KEYMAP(), proceed anyway
@@ -147,6 +148,7 @@ void Layer_::on(uint8_t layer) {
     updateActiveLayers();
 }
 
+// Deactivate a given layer
 void Layer_::off(uint8_t layer) {
   bool wasOn = isOn(layer);
 
