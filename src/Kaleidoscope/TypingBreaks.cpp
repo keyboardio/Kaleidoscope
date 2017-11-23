@@ -23,7 +23,7 @@
 namespace kaleidoscope {
 
 TypingBreaks::settings_t TypingBreaks::settings = {
-  .idle_time_limit = 10,  //  10s
+  .idle_time_limit = 300, //  5m
   .lock_time_out = 2700,  //  45m
   .lock_length = 300,    //   5m
   .left_hand_max_keys = 0,
