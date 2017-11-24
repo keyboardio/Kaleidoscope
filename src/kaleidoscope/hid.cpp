@@ -151,6 +151,14 @@ void releaseMouseButtons(uint8_t buttons) {
   Mouse.release(buttons);
 }
 
+void releaseAllMouseButtons(void) {
+  Mouse.releaseAll();
+}
+
+void sendMouseReport(void) {
+  Mouse.sendReport();
+}
+
 /** SingleAbsolute mouse (grapahics tablet) events */
 
 void initializeAbsoluteMouse() {
