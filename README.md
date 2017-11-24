@@ -1,4 +1,4 @@
-# Kaleidoscope-Qukey
+# Kaleidoscope-Qukeys
 
 ![status][st:experimental] [![Build Status][travis:image]][travis:status]
 
