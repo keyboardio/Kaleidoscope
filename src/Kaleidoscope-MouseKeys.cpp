@@ -33,6 +33,8 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
 
 void MouseKeys_::loopHook(bool postClear) {
   if (postClear) {
+    kaleidoscope::hid::sendMouseReport();
+    kaleidoscope::hid::releaseAllMouseButtons();
     mouseMoveIntent = 0;
     return;
   }
@@ -76,7 +78,7 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
   if (mappedKey.keyCode & KEY_MOUSE_BUTTON && !(mappedKey.keyCode & KEY_MOUSE_WARP)) {
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
 
-    if (keyToggledOn(keyState)) {
+    if (keyIsPressed(keyState)) {
       MouseWrapper.pressButton(button);
     } else if (keyToggledOff(keyState)) {
       MouseWrapper.release_button(button);
