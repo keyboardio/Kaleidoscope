@@ -54,9 +54,11 @@ class Mouse_ {
   bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
 
   void sendReport(void* data, int length);
+  void sendReport(void);
+
+  void releaseAll(void);
 
  protected:
-  uint8_t _buttons;
-  void buttons(uint8_t b);
+  HID_MouseReport_Data_t report;
 };
 extern Mouse_ Mouse;

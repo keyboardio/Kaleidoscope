@@ -104,51 +104,47 @@ void Mouse_::begin(void) {
 }
 
 void Mouse_::end(void) {
-  _buttons = 0;
-  move(0, 0, 0);
+  releaseAll();
+  sendReport();
 }
 
 void Mouse_::click(uint8_t b) {
-  _buttons = b;
-  move(0,0,0);
-  _buttons = 0;
-  move(0,0,0);
+  press(b);
+  sendReport();
+  release(b);
 }
 
 void Mouse_::move(signed char x, signed char y, signed char vWheel, signed char hWheel) {
-  HID_MouseReport_Data_t report;
-  report.buttons = _buttons;
   report.xAxis = x;
   report.yAxis = y;
   report.vWheel = vWheel;
   report.hWheel = hWheel;
-  sendReport(&report, sizeof(report));
 }
 
-void Mouse_::buttons(uint8_t b) {
-  if (b != _buttons) {
-    _buttons = b;
-    move(0,0,0);
-  }
+void Mouse_::releaseAll(void) {
+  memset(&report, 0, sizeof(report));
 }
 
 void Mouse_::press(uint8_t b) {
-  buttons(_buttons | b);
+  report.buttons |= b;
 }
 
 void Mouse_::release(uint8_t b) {
-  buttons(_buttons & ~b);
+  report.buttons &= ~b;
 }
 
 bool Mouse_::isPressed(uint8_t b) {
-  if ((b & _buttons) > 0)
+  if ((b & report.buttons) > 0)
     return true;
   return false;
 }
 
-
 void Mouse_::sendReport(void* data, int length) {
   HID().SendReport(HID_REPORTID_MOUSE, data, length);
+}
+
+void Mouse_::sendReport(void) {
+  sendReport(&report, sizeof(report));
 }
 
 Mouse_ Mouse;
