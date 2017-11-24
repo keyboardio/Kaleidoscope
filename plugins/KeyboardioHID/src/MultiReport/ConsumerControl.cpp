@@ -69,7 +69,6 @@ void ConsumerControl_::press(uint16_t m) {
       break;
     }
   }
-  sendReport(&_report, sizeof(_report));
 }
 
 void ConsumerControl_::release(uint16_t m) {
@@ -80,15 +79,18 @@ void ConsumerControl_::release(uint16_t m) {
       // no break to delete multiple keys
     }
   }
-  sendReport(&_report, sizeof(_report));
 }
 
 void ConsumerControl_::releaseAll(void) {
-  end();
+  memset(&_report, 0, sizeof(_report));
 }
 
 void ConsumerControl_::sendReport(void* data, int length) {
   HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
+}
+
+void ConsumerControl_::sendReport(void) {
+  sendReport(&_report, sizeof(_report));
 }
 
 ConsumerControl_ ConsumerControl;
