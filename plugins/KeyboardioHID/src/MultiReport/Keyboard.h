@@ -61,7 +61,6 @@ class Keyboard_ {
 
   uint8_t getLEDs() { return HID().getLEDs(); };
 
- protected:
   HID_KeyboardReport_Data_t _keyReport;
   HID_KeyboardReport_Data_t _lastKeyReport;
  private:
