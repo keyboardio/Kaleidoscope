@@ -57,7 +57,7 @@
                                               Key_KeymapNext_Momentary,         Key_KeymapNext_Momentary \
 )
 
-CREATE_KEYMAP(
+KEYMAPS(
   QWERTY,
   GENERIC_FN2,
   NUMPAD
