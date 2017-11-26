@@ -124,30 +124,42 @@ void Layer_::move(uint8_t layer) {
   on(layer);
 }
 
+// Activate a given layer
 void Layer_::on(uint8_t layer) {
-  bool wasOn = isOn(layer);
+  // If the target layer was already on, return
+  if (isOn(layer))
+    return;
 
+  // Otherwise, turn on its bit in LayerState
   bitSet(LayerState, layer);
+
+  // If the target layer is above the previous highest active layer,
+  // update highestLayer
   if (layer > highestLayer)
     updateHighestLayer();
 
-  /* If the layer did turn on, update the keymap cache. See layers.h for an
-   * explanation about the caches we have. */
-  if (!wasOn)
-    updateActiveLayers();
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
+// Deactivate a given layer
 void Layer_::off(uint8_t layer) {
-  bool wasOn = isOn(layer);
+  // If the target layer was already off, return
+  if (!isOn(layer))
+    return;
 
+  // Turn off its bit in LayerState
   bitClear(LayerState, layer);
+
+  // If the target layer was the previous highest active layer,
+  // update highestLayer
   if (layer == highestLayer)
     updateHighestLayer();
 
-  /* If the layer did turn off, update the keymap cache. See layers.h for an
-   * explanation about the caches we have. */
-  if (wasOn)
-    updateActiveLayers();
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
