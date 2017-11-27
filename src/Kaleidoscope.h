@@ -437,7 +437,7 @@ class Kaleidoscope_ {
 
   static void replaceLoopHook(loopHook oldHook, loopHook newHook)
   __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
-  static void apppostReportHook(loopHook hook)
+  static void appendLoopHook(loopHook hook)
   __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
   static void useLoopHook(loopHook hook)
   __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));

@@ -83,7 +83,7 @@ Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
 }
 
 void
-Kaleidoscope_::apppostReportHook(loopHook hook) {
+Kaleidoscope_::appendLoopHook(loopHook hook) {
   replaceLoopHook((loopHook)NULL, hook);
 }
 
@@ -93,7 +93,7 @@ Kaleidoscope_::useLoopHook(loopHook hook) {
     if (loopHooks[i] == hook)
       return;
   }
-  apppostReportHook(hook);
+  appendLoopHook(hook);
 }
 
 bool
