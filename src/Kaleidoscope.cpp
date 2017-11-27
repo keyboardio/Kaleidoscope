@@ -30,7 +30,7 @@ void
 Kaleidoscope_::loop(void) {
   KeyboardHardware.scanMatrix();
 
-  hooks_->startLoopHook();
+  hooks_->preReportHook();
 
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
@@ -45,7 +45,7 @@ Kaleidoscope_::loop(void) {
     (*hook)(true);
   }
 
-  hooks_->endLoopHook();
+  hooks_->postReportHook();
 }
 
 void
@@ -83,7 +83,7 @@ Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
 }
 
 void
-Kaleidoscope_::appendLoopHook(loopHook hook) {
+Kaleidoscope_::apppostReportHook(loopHook hook) {
   replaceLoopHook((loopHook)NULL, hook);
 }
 
@@ -93,7 +93,7 @@ Kaleidoscope_::useLoopHook(loopHook hook) {
     if (loopHooks[i] == hook)
       return;
   }
-  appendLoopHook(hook);
+  apppostReportHook(hook);
 }
 
 bool
