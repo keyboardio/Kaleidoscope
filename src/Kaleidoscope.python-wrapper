@@ -8,7 +8,7 @@ using namespace boost::python;
 BOOST_PYTHON_MODULE(kaleidoscope)
 {
    #define EXPORT_STATIC_METHOD(NAME) \
-      .def(#NAME, &Layer_::NAME)
+      .def(#NAME, &Layer_::NAME).staticmethod(#NAME)
       
     class_<Layer_>("Layer")
       EXPORT_STATIC_METHOD(lookup)
@@ -34,10 +34,10 @@ BOOST_PYTHON_MODULE(kaleidoscope)
       .def("getDefaultLayer", static_cast< 
             uint8_t(*)()
          >(&Layer_::defaultLayer)
-      )
-      .def("getDefaultLayer", static_cast< 
+      ).staticmethod("getDefaultLayer")
+      .def("setDefaultLayer", static_cast< 
             void(*)(uint8_t)
          >(&Layer_::defaultLayer)
-      )
+      ).staticmethod("setDefaultLayer")
     ;
 }
