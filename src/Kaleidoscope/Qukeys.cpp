@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <Kaleidoscope.h>
 #include <Kaleidoscope-Qukeys.h>
 #include <kaleidoscope/hid.h>
 
@@ -35,17 +36,25 @@ Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
   this->state = QUKEY_STATE_UNDETERMINED;
 }
 
-Qukeys::Qukeys() {}
+Qukey * Qukeys::qukeys_;
+uint8_t Qukeys::qukeys_count_ = 0;
+bool Qukeys::active_ = true;
+uint16_t Qukeys::time_limit_ = 200;
+QueueItem Qukeys::key_queue_[QUKEYS_QUEUE_MAX] = {};
+uint8_t Qukeys::key_queue_length_ = 0;
 
-Qukeys::init(Qukey *qukeys, uint8_t qukeys_count) {
-  qukeys_ = qukeys;
-  qukeys_count_ = qukeys_count;
-}
+// Empty constructor; nothing is stored at the instance level
+Qukeys::Qukeys(void) {}
+
+// Qukeys::init(Qukey *qukeys, uint8_t qukeys_count) {
+//   qukeys_ = qukeys;
+//   qukeys_count_ = qukeys_count;
+// }
 
 int8_t Qukeys::lookupQukey(uint8_t key_addr) {
   if (key_addr == QUKEY_UNKNOWN_ADDR)
     return QUKEY_NOT_FOUND;
-  for (int8_t i; i < qukeys_count_; i++) {
+  for (int8_t i = 0; i < qukeys_count_; i++) {
     Qukey qukey = qukeys_[i];
     if (qukey.addr == key_addr) {
       byte row = addr::row(key_addr);
@@ -78,12 +87,12 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 
 // flush a single entry from the head of the queue
 void Qukeys::flushKey(int8_t state) {
-  int8_t qukey_index = Qukeys.lookupQukey(key_addr);
+  int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   if (qukey_index != QUKEY_NOT_FOUND) {
     qukeys_[qukey_index].state = state;
   }
-  byte row = addr::row(key_queue[0].addr);
-  byte col = addr::col(key_queue[0].addr);
+  byte row = addr::row(key_queue_[0].addr);
+  byte col = addr::col(key_queue_[0].addr);
   Key keycode = Key_NoKey;
   if (state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
     keycode = qukeys_[qukey_index].alt_keycode;
@@ -100,7 +109,7 @@ void Qukeys::flushKey(int8_t state) {
   // we can ignore it and don't start an infinite loop. It would be
   // nice if we could use key_state to also indicate which plugin
   // injected the key.
-  handleKeySwitchEvent(keycode, row, col, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(keycode, row, col, IS_PRESSED | INJECTED);
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
 
@@ -122,7 +131,7 @@ void Qukeys::flushQueue(int8_t state, int8_t index) {
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If Qukeys is turned off, continue to next plugin
-  if (!active)
+  if (!active_)
     return mapped_key;
 
   // If the key was injected (from the queue being flushed), continue to next plugin
@@ -135,12 +144,12 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // get key addr & qukey (if any)
   uint8_t key_addr = addr::addr(row, col);
-  int8_t qukey_index = Qukeys.lookupQukey(key_addr);
+  int8_t qukey_index = lookupQukey(key_addr);
 
   // If the key was just pressed:
   if (keyToggledOn(key_state)) {
     // I think I may need to call maskKey() somewhere here, but I'm not sure
-    if (key_queue_length) {
+    if (key_queue_length_) {
       enqueue(key_addr);
     } else {
       if (qukey_index == QUKEY_NOT_FOUND)
@@ -183,7 +192,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   return Key_NoKey;
 }
 
-void preReportHook(void) {
+void Qukeys::preReportHook(void) {
   // If the qukey has been held longer than the time limit, set its
   // state to the alternate keycode and add it to the report
   uint32_t current_time = millis();
@@ -196,7 +205,7 @@ void preReportHook(void) {
   }
 }
 
-void loopHook(bool post_clear) {
+void Qukeys::loopHook(bool post_clear) {
   if (!post_clear)
     return preReportHook();
 }

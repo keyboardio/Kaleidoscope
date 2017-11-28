@@ -72,22 +72,27 @@ class Qukeys : public KaleidoscopePlugin {
  public:
   Qukeys(void);
 
-  static void begin(void) final;
+  //static void init(Qukey *qukeys, uint8_t qukeys_count);
+  void begin(void) final;
   static void activate(void) {
-    active = true;
+    active_ = true;
   }
   static void deactivate(void) {
-    active = false;
+    active_ = false;
   }
   static int8_t lookupQukey(uint8_t key_addr);
+  static void enqueue(uint8_t key_addr);
+  static int8_t searchQueue(uint8_t key_addr);
+  static void flushKey(int8_t state);
+  static void flushQueue(int8_t state, int8_t index);
 
- private:
   static Qukey * qukeys_;
   static uint8_t qukeys_count_;
 
+ private:
   static bool active_;
   static uint16_t time_limit_;
-  static queue_item_t key_queue_[QUKEYS_QUEUE_MAX];
+  static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
@@ -102,6 +107,8 @@ extern kaleidoscope::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
 #define QUKEYS(qukey_defs...)						\
-  static kaleidoscope::Qukey qukeys[] = { qukey_defs... };		\
-  uint8_t qukeys_count = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);	\
-  Qukeys.init(qukeys, qukeys_count);
+  namespace kaleidoscope {						\
+  Qukey qukeys[] = { qukey_defs... };					\
+  uint8_t qukeys_count = sizeof(qukeys) / sizeof(Qukey);		\
+  Qukeys.init(qukeys, qukeys_count);					\
+  }

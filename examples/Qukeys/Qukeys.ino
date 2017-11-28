@@ -23,19 +23,26 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     ___),
 };
 
-
 // Define the Qukeys map
-QUKEYS(
-  Qukey(QWERTY, 2, 1, Key_LeftShift),
-  Qukey(QWERTY, 2, 2, Key_LeftControl),
-  Qukey(QWERTY, 2, 3, Key_LeftAlt),
-  Qukey(QWERTY, 2, 4, Key_LeftGui)
-       )
+// QUKEYS(
+//   Qukey(0, 2, 1, Key_LeftShift),
+//   Qukey(0, 2, 2, Key_LeftControl),
+//   Qukey(0, 2, 3, Key_LeftAlt),
+//   Qukey(0, 2, 4, Key_LeftGui)
+//        )
 
 void setup() {
   // Use Qukeys
   Kaleidoscope.use(&Qukeys);
-  Qukeys.init(qukey_list, qukey_count);
+  //kaleidoscope::Qukeys.init(qukeys, count);
+
+  kaleidoscope::Qukey qukeys[] = {
+    kaleidoscope::Qukey(0, 2, 1, Key_LeftShift),
+    kaleidoscope::Qukey(0, 2, 2, Key_LeftControl)
+  };
+  uint8_t count = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);
+  Qukeys.qukeys_ = qukeys;
+  Qukeys.qukeys_count_ = count;
 
   Kaleidoscope.setup();
 }

@@ -24,15 +24,15 @@
 // coordinates and a single-byte key number (addr). This works as long
 // as the keyboard has fewer than 256 keys.
 namespace kaleidoscope {
-  namespace addr {
-    inline uint8_t row(uint8_t key_addr) {
-      return (key_addr / COLS);
-    }
-    inline uint8_t col(uint8_t key_addr) {
-      return (key_addr % COLS);
-    }
-    inline uint8_t addr(uint8_t row, uint8_t col) {
-      return ((row * COLS) + col);
-    }
-  } // namespace addr {
+namespace addr {
+inline uint8_t row(uint8_t key_addr) {
+  return (key_addr / COLS);
+}
+inline uint8_t col(uint8_t key_addr) {
+  return (key_addr % COLS);
+}
+inline uint8_t addr(uint8_t row, uint8_t col) {
+  return ((row * COLS) + col);
+}
+} // namespace addr {
 } // namespace kaleidoscope {
