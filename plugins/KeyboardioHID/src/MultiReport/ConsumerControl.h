@@ -52,10 +52,13 @@ class ConsumerControl_ {
   void releaseAll(void);
 
   // Sending is public in the base class for advanced users.
-  void sendReport(void* data, int length);
   void sendReport(void);
 
  protected:
   HID_ConsumerControlReport_Data_t _report;
+  HID_ConsumerControlReport_Data_t _lastReport;
+
+ private:
+  void sendReportUnchecked(void);
 };
 extern ConsumerControl_ ConsumerControl;

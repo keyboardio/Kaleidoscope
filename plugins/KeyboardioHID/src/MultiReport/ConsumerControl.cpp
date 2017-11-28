@@ -53,7 +53,7 @@ void ConsumerControl_::begin(void) {
 
 void ConsumerControl_::end(void) {
   memset(&_report, 0, sizeof(_report));
-  sendReport(&_report, sizeof(_report));
+  sendReport();
 }
 
 void ConsumerControl_::write(uint16_t m) {
@@ -85,12 +85,21 @@ void ConsumerControl_::releaseAll(void) {
   memset(&_report, 0, sizeof(_report));
 }
 
-void ConsumerControl_::sendReport(void* data, int length) {
-  HID().SendReport(HID_REPORTID_CONSUMERCONTROL, data, length);
+void ConsumerControl_::sendReportUnchecked(void) {
+  HID().SendReport(HID_REPORTID_CONSUMERCONTROL, &_report, sizeof(_report));
 }
 
 void ConsumerControl_::sendReport(void) {
-  sendReport(&_report, sizeof(_report));
+  // If the last report is different than the current report, then we need to send a report.
+  // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
+  // if sendReport is called in a tight loop.
+
+  // if the previous report is the same, return early without a new report.
+  if (memcmp(&_lastReport, &_report, sizeof(_report)) == 0)
+    return;
+
+  sendReportUnchecked();
+  memcpy(&_lastReport, &_report, sizeof(_report));
 }
 
 ConsumerControl_ ConsumerControl;
