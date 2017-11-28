@@ -19,19 +19,89 @@
 #pragma once
 
 #include <Kaleidoscope.h>
+#include <addr.h>
 
+// Maximum number of qukeys allowed ­ not actually used
+#define QUKEYS_MAX 64
+// Maximum length of the pending queue
+#define QUKEYS_QUEUE_MAX 8
+
+// Maybe it's better to use an enum for these state values?
+#define QUKEY_STATE_UNDETERMINED 0
+#define QUKEY_STATE_PRIMARY 1
+#define QUKEY_STATE_ALTERNATE -1
+
+// Initialization addr value for empty key_queue. This seems to be
+// unnecessary, because we rely on keeping track of the lenght of the
+// queue, anyway.
+#define QUKEY_UNKNOWN_ADDR 0xFF
+// Value to return when no match is found in Qukeys.dict. A successful
+// match returns an index in the array, so this must be negative. Also
+// used for failed search of the key_queue.
+#define QUKEY_NOT_FOUND -1
+// Wildcard value; this matches any layer
+#define QUKEY_ALL_LAYERS -1
 
 namespace kaleidoscope {
 
-class Qukeys : public KaleidoscopePlugin {
+// Data structure for an individual qukey
+struct Qukey {
+ public:
+  Qukey(void) {}
+  Qukey(int8_t layer, byte row, byte col, Key alt_keycode);
 
+  int8_t layer;
+  uint8_t addr;
+  Key alt_keycode;
+  int8_t state;
+};
+
+// Data structure for an entry in the key_queue
+struct QueueItem {
+  uint8_t addr;        // keyswitch coordinates
+  uint32_t flush_time; // time past which a qukey gets flushed
+};
+
+// The plugin itself
+class Qukeys : public KaleidoscopePlugin {
+  // I could use a bitfield to get the state values, but then we'd
+  // have to check the key_queue (there are three states). Or use a
+  // second bitfield for the indeterminite state. Using a bitfield
+  // would enable storing the qukey list in PROGMEM, but I don't know
+  // if the added complexity is worth it.
  public:
   Qukeys(void);
 
-  void begin(void) final;
+  static void begin(void) final;
+  static void activate(void) {
+    active = true;
+  }
+  static void deactivate(void) {
+    active = false;
+  }
+  static int8_t lookupQukey(uint8_t key_addr);
 
  private:
-  
-}
+  static Qukey * qukeys_;
+  static uint8_t qukeys_count_;
 
-}
+  static bool active_;
+  static uint16_t time_limit_;
+  static queue_item_t key_queue_[QUKEYS_QUEUE_MAX];
+  static uint8_t key_queue_length_;
+
+  static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void preReportHook(void);
+  static void postReportHook(void) {}
+  static void loopHook(bool post_clear);
+};
+
+} // namespace kaleidoscope {
+
+extern kaleidoscope::Qukeys Qukeys;
+
+// macro for use in sketch file to simplify definition of qukeys
+#define QUKEYS(qukey_defs...)						\
+  static kaleidoscope::Qukey qukeys[] = { qukey_defs... };		\
+  uint8_t qukeys_count = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);	\
+  Qukeys.init(qukeys, qukeys_count);
