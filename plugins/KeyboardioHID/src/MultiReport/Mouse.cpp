@@ -139,12 +139,21 @@ bool Mouse_::isPressed(uint8_t b) {
   return false;
 }
 
-void Mouse_::sendReport(void* data, int length) {
-  HID().SendReport(HID_REPORTID_MOUSE, data, length);
+void Mouse_::sendReportUnchecked(void) {
+  HID().SendReport(HID_REPORTID_MOUSE, &report, sizeof(report));
 }
 
 void Mouse_::sendReport(void) {
-  sendReport(&report, sizeof(report));
+  // If the last report is different than the current report, then we need to send a report.
+  // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
+  // if sendReport is called in a tight loop.
+
+  // if the two reports are the same, return early without a report
+  if (memcmp(&lastReport, &report, sizeof(report)) == 0)
+    return;
+
+  sendReportUnchecked();
+  memcpy(&lastReport, &report, sizeof(report));
 }
 
 Mouse_ Mouse;
