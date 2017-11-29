@@ -8,6 +8,11 @@ Key Layer_::liveCompositeKeymap[ROWS][COLS];
 uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
+// The total number of defined layers in the firmware sketch keymaps[]
+// array. If the keymap wasn't defined using CREATE_KEYMAP() in the
+// sketch file, layer_count gets the default value of zero.
+uint8_t layer_count __attribute__((weak)) = 0;
+
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
@@ -125,6 +130,11 @@ void Layer_::move(uint8_t layer) {
 }
 
 void Layer_::on(uint8_t layer) {
+  // If we're trying to turn on a layer that doesn't exist, abort (but
+  // if the keymap wasn't defined using CREATE_KEYMAP(), proceed anyway
+  if (layer_count != 0 && layer >= layer_count)
+    return;
+
   bool wasOn = isOn(layer);
 
   bitSet(LayerState, layer);
