@@ -152,8 +152,10 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
     if (key_queue_length_) {
       enqueue(key_addr);
     } else {
+      // If it's not a qukey, proceed:
       if (qukey_index == QUKEY_NOT_FOUND)
         return mapped_key;
+      // Otherwise, queue the qukey:
       enqueue(key_addr);
     }
   }
@@ -173,7 +175,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If the key is not a qukey:
   if (qukey_index == QUKEY_NOT_FOUND) {
-    // If the key was pressed before the keys in the queue:
+    // If the key was pressed before the keys in the queue, proceed:
     if (queue_index == QUKEY_NOT_FOUND) {
       return mapped_key;
     } else {
