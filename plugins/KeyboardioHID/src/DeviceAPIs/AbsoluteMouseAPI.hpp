@@ -23,7 +23,7 @@ THE SOFTWARE.
 
 #pragma once
 
-AbsoluteMouseAPI::AbsoluteMouseAPI(void): xAxis(0), yAxis(0), _buttons(0) { // Empty 
+AbsoluteMouseAPI::AbsoluteMouseAPI(void): xAxis(0), yAxis(0), _buttons(0) { // Empty
 }
 
 void AbsoluteMouseAPI::buttons(uint8_t b) {
@@ -68,20 +68,19 @@ void AbsoluteMouseAPI::click(uint8_t b) {
   moveTo(xAxis, yAxis, 0);
 }
 
-void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char vWheel, signed char hWheel) {
+void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char wheel) {
   xAxis = x;
   yAxis = y;
   HID_MouseAbsoluteReport_Data_t report;
   report.buttons = _buttons;
   report.xAxis = x;
   report.yAxis = y;
-  report.vWheel = vWheel;
-  report.hWheel = hWheel;
+  report.wheel = wheel;
   sendReport(&report, sizeof(report));
 }
 
-void AbsoluteMouseAPI::move(int x, int y, signed char vWheel, signed char hWheel) {
-  moveTo(qadd16(xAxis, x), qadd16(yAxis, y), vWheel, hWheel);
+void AbsoluteMouseAPI::move(int x, int y, signed char wheel) {
+  moveTo(qadd16(xAxis, x), qadd16(yAxis, y), wheel);
 }
 
 void AbsoluteMouseAPI::press(uint8_t b) {

@@ -63,24 +63,13 @@ THE SOFTWARE.
   D_REPORT_COUNT, 0x01,                     /*     REPORT_COUNT (1) */		\
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
 
-#define DESCRIPTOR_ABS_MOUSE_HWHEEL \
-  D_USAGE_PAGE, D_PAGE_CONSUMER, /* USAGE_PAGE (Consumer Device) */ \
-  D_PAGE_ORDINAL, 0x38, 0x02, \
-  D_USAGE_MINIMUM, 0x81, \
-  D_USAGE_MAXIMUM, 0x7f, \
-  D_REPORT_SIZE, 0x08, \
-  D_REPORT_COUNT, 0x01, \
-  D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE), 
- 
-
 typedef union {
     // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
     struct {
         uint8_t buttons;
         uint16_t xAxis;
         uint16_t yAxis;
-        int8_t vWheel;
-        int8_t hWheel;
+        int8_t wheel;
     };
 } HID_MouseAbsoluteReport_Data_t;
 
@@ -91,8 +80,8 @@ class AbsoluteMouseAPI {
     inline void end(void);
 
     inline void click(uint8_t b = MOUSE_LEFT);
-    inline void moveTo(uint16_t x, uint16_t y, signed char vWheel = 0, signed char hWheel = 0);
-    inline void move(int x, int y, signed char vWheel = 0, signed char hWheel = 0);
+    inline void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
+    inline void move(int x, int y, signed char wheel = 0);
     inline void press(uint8_t b = MOUSE_LEFT);
     inline void release(uint8_t b = MOUSE_LEFT);
     inline bool isPressed(uint8_t b = MOUSE_LEFT);
@@ -110,4 +99,3 @@ class AbsoluteMouseAPI {
 };
 
 #include "AbsoluteMouseAPI.hpp"
-
