@@ -83,8 +83,8 @@ class Qukeys : public KaleidoscopePlugin {
   static int8_t lookupQukey(uint8_t key_addr);
   static void enqueue(uint8_t key_addr);
   static int8_t searchQueue(uint8_t key_addr);
-  static void flushKey(int8_t state);
-  static void flushQueue(int8_t state, int8_t index);
+  static void flushKey(int8_t state, uint8_t keyswitch_state);
+  static void flushQueue(int8_t index);
 
   static Qukey * qukeys_;
   static uint8_t qukeys_count_;
@@ -94,6 +94,7 @@ class Qukeys : public KaleidoscopePlugin {
   static uint16_t time_limit_;
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
+  //static uint8_t keyswitch_state[];
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void preReportHook(void);
