@@ -148,9 +148,16 @@ void Mouse_::sendReport(void) {
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
   // if sendReport is called in a tight loop.
 
-  // if the two reports are the same, return early without a report
-  if (memcmp(&lastReport, &report, sizeof(report)) == 0)
-    return;
+  // if the two reports are the same, check if they're empty, and return early
+  // without a report if they are.
+  if (memcmp(&lastReport, &report, sizeof(report)) == 0) {
+    if (0 == report.buttons &&
+        0 == report.xAxis &&
+        0 == report.yAxis &&
+        0 == report.vWheel &&
+        0 == report.hWheel)
+      return;
+  }
 
   sendReportUnchecked();
   memcpy(&lastReport, &report, sizeof(report));
