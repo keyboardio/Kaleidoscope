@@ -5,8 +5,8 @@ before_install:
 - tar xf arduino-1.6.7-linux64.tar.xz
 - popd
 script:
-- git clone https://github.com/keyboardio/Arduino-HID ../Arduino-HID
-- make smoke -libraries lib ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=..
+- git clone https://github.com/keyboardio/Arduino-HID ../HID
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=..
 
 notifications:
   irc:
