@@ -63,6 +63,7 @@ void releaseRawKey(Key mappedKey) {
 
 void releaseAllKeys() {
   Keyboard.releaseAll();
+  ConsumerControl.releaseAll();
 }
 
 void releaseKey(Key mappedKey) {
@@ -99,6 +100,7 @@ uint8_t getKeyboardLEDs() {
 
 void sendKeyboardReport() {
   Keyboard.sendReport();
+  ConsumerControl.sendReport();
 }
 
 void initializeConsumerControl() {
@@ -106,11 +108,11 @@ void initializeConsumerControl() {
 }
 
 void pressConsumerControl(Key mappedKey) {
-  ConsumerControl.press(mappedKey.keyCode);
+  ConsumerControl.press(CONSUMER(mappedKey));
 }
 
 void releaseConsumerControl(Key mappedKey) {
-  ConsumerControl.release(mappedKey.keyCode);
+  ConsumerControl.release(CONSUMER(mappedKey));
 }
 
 

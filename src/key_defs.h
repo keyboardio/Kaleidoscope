@@ -83,9 +83,9 @@ typedef union Key_ {
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
-#define IS_CONSUMER                B00000010
+#define IS_INTERNAL                B00000010
 #define SWITCH_TO_KEYMAP           B00000100
-#define IS_INTERNAL                B00001000
+#define IS_CONSUMER                B00001000
 
 /* HID types we need to encode in the key flags for system and consumer control hid controls
    Each key can only have one, so we don't need to use a bit vector.
@@ -121,3 +121,12 @@ typedef union Key_ {
 #define Key_RFN2 (Key) { KEY_RIGHT_FN2,  KEY_FLAGS }
 #define KEY_LEFT_FN2 0xff
 #define Key_LFN2 (Key) { KEY_LEFT_FN2,  KEY_FLAGS }
+
+
+/* Most Consumer keys are more then 8bit, the highest Consumer hid code
+   uses 10bit. By using the 11bit as flag to indicate a consumer keys was activate we can
+   use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
+   use the CONSUMER(key) macro this will return the 10bit keycode.
+*/
+#define CONSUMER(key) (key.raw & 0x03FF)
+#define CONSUMER_KEY(code, flags) (Key) { .raw = (code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8) }

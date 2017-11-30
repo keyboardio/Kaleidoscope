@@ -8,20 +8,17 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (!(mappedKey.flags & SYNTHETIC))
     return false;
 
-  if (mappedKey.flags & IS_INTERNAL) {
-    return false;
-  } else if (mappedKey.flags & IS_CONSUMER) {
-    if (keyIsPressed(keyState)) {
-    } else if (keyWasPressed(keyState)) {
+  if (mappedKey.flags & IS_CONSUMER) {
+    if (keyIsPressed(keyState))
       kaleidoscope::hid::pressConsumerControl(mappedKey);
-      kaleidoscope::hid::releaseConsumerControl(mappedKey);
-    }
   } else if (mappedKey.flags & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
     } else if (keyWasPressed(keyState)) {
       kaleidoscope::hid::pressSystemControl(mappedKey);
       kaleidoscope::hid::releaseSystemControl(mappedKey);
     }
+  } else if (mappedKey.flags & IS_INTERNAL) {
+    return false;
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
   }
@@ -58,9 +55,9 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
    */
   if (row < ROWS && col < COLS) {
 
-    /* If a key had an on or off event, we update the live composite keymap. See
+    /* If a key had an on event, we update the live composite keymap. See
      * layers.h for an explanation about the different caches we have. */
-    if (keyToggledOn(keyState) || keyToggledOff(keyState))
+    if (keyToggledOn(keyState))
       Layer.updateLiveCompositeKeymap(row, col);
 
     /* If the key we are dealing with is masked, ignore it until it is released.

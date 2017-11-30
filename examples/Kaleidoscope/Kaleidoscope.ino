@@ -57,13 +57,12 @@
                                               Key_KeymapNext_Momentary,         Key_KeymapNext_Momentary \
 )
 
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   QWERTY,
   GENERIC_FN2,
   NUMPAD
+)
 
-
-};
 
 static kaleidoscope::LEDSolidColor solidRed(60, 0, 0);
 static kaleidoscope::LEDSolidColor solidOrange(60, 20, 0);
