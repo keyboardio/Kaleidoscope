@@ -19,6 +19,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Qukeys.h>
 #include <kaleidoscope/hid.h>
+#include <MultiReport/Keyboard.h>
 
 #ifdef ARDUINO_VIRTUAL
 #define debug_print(...) printf(__VA_ARGS__)
@@ -99,11 +100,15 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
   } else {
     keycode = Layer.lookup(row, col);
   }
+
   // Since we're in the middle of the key scan, we don't necessarily
   // have a full HID report, and we don't want to accidentally turn
   // off keys that the scan hasn't reached yet, so we force the
   // current report to be the same as the previous one, then proceed
-  hid::copyPrevKeyboardReport();
+  HID_KeyboardReport_Data_t hid_report;
+  // First, save the current report
+  memcpy(hid_report.allkeys, Keyboard.keyReport.allkeys, sizeof(hid_report));
+  memcpy(Keyboard.keyReport.allkeys, Keyboard.lastKeyReport.allkeys, sizeof(Keyboard.keyReport));
   // Instead of just calling pressKey here, we start processing the
   // key again, as if it was just pressed, and mark it as injected, so
   // we can ignore it and don't start an infinite loop. It would be
@@ -112,11 +117,19 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
   handleKeyswitchEvent(keycode, row, col, IS_PRESSED | INJECTED);
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
+
+  /* I think this is now unnecessary
   // Now for the tricky bit; we need to know if the key was actually
   // released, or if it's still being held. Otherwise, we'll screw up
   // the next call to flushKey().
-  handleKeyswitchEvent(keycode, row, col, keyswitch_state | INJECTED);
-  hid::sendKeyboardReport();
+  if (keyToggledOff(keyswitch_state)) {
+    handleKeyswitchEvent(keycode, row, col, keyswitch_state | INJECTED);
+    hid::sendKeyboardReport();
+  }
+  */
+
+  // Last, we restore the current state of the report
+  memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
   for (byte i = 0; i < key_queue_length_; i++) {
