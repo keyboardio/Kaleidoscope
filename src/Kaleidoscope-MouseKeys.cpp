@@ -29,6 +29,10 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
     kaleidoscope::hid::moveMouse(0, 0, wheelSpeed);
   else if (keyCode & KEY_MOUSE_DOWN)
     kaleidoscope::hid::moveMouse(0, 0, -wheelSpeed);
+  else if (keyCode & KEY_MOUSE_LEFT)
+    kaleidoscope::hid::moveMouse(0, 0, 0, -wheelSpeed);
+  else if (keyCode & KEY_MOUSE_RIGHT)
+    kaleidoscope::hid::moveMouse(0, 0, 0, wheelSpeed);
 }
 
 void MouseKeys_::loopHook(bool postClear) {
