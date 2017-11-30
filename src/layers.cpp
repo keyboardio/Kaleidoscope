@@ -122,7 +122,7 @@ Layer_::updateActiveLayers(void) {
 void Layer_::updateHighestLayer(void) {
   // If layer_count is set, start there, otherwise search from the
   // highest possible layer for the top active layer
-  for (int8_t i = (layer_count - 1); i > defaultLayer; i--) {
+  for (int8_t i = (layer_count - 1); i > DefaultLayer; i--) {
     if (bitRead(LayerState, i)) {
       highestLayer = i;
       return;
@@ -130,7 +130,7 @@ void Layer_::updateHighestLayer(void) {
   }
   // It's not possible to turn off the default layer (see
   // updateActiveLayers()), so if no other layers are active:
-  highestLayer = defaultLayer;
+  highestLayer = DefaultLayer;
 }
 
 void Layer_::move(uint8_t layer) {
