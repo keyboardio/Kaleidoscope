@@ -135,8 +135,8 @@ void initializeMouse() {
   Mouse.begin();
 }
 
-void moveMouse(signed char x, signed char y, signed char wheel) {
-  Mouse.move(x, y, wheel);
+void moveMouse(signed char x, signed char y, signed char vWheel, signed char hWheel) {
+  Mouse.move(x, y, vWheel, hWheel);
 }
 
 void clickMouseButtons(uint8_t buttons) {
