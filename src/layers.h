@@ -11,11 +11,6 @@
   const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
   uint8_t layer_count = sizeof(keymaps) / sizeof(*keymaps);
 
-// The maximum number of layers allowed. `LayerState`, which stores
-// the on/off status of the layers in a bitfield has only 32 bits, and
-// that should be enough for almost any layout.
-#define MAX_LAYERS 32
-
 class Layer_ {
  public:
   Layer_(void);

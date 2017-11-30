@@ -3,6 +3,11 @@
 static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
+// The maximum number of layers allowed. `LayerState`, which stores
+// the on/off status of the layers in a bitfield has only 32 bits, and
+// that should be enough for almost any layout.
+#define MAX_LAYERS sizeof(LayerState) * 8;
+
 uint8_t Layer_::highestLayer;
 Key Layer_::liveCompositeKeymap[ROWS][COLS];
 uint8_t Layer_::activeLayers[ROWS][COLS];
