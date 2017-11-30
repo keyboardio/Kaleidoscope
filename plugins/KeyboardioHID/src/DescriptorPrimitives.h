@@ -14,9 +14,14 @@
 #define D_LOGICAL_MINIMUM 0x15
 #define D_LOGICAL_MAXIMUM 0x25
 
+#define D_PHYSICAL_MINIMUM 0x35
+#define D_PHYSICAL_MAXIMUM 0x45
+
 #define D_REPORT_SIZE 0x75
 #define D_REPORT_COUNT 0x95
 
+#define D_PUSH 0xa4
+#define D_POP 0xb4
 
 // USB HID DCD 1.11 section 6.2.2.4 -  Main items
 //
