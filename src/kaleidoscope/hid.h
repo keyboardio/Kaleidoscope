@@ -34,7 +34,7 @@ void releaseSystemControl(Key mappedKey);
 
 void initializeMouse();
 
-void moveMouse(signed char x, signed char y, signed char wheel);
+void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
 void clickMouseButtons(uint8_t buttons);
 void pressMouseButtons(uint8_t buttons);
 void releaseMouseButtons(uint8_t buttons);
