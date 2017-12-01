@@ -80,6 +80,7 @@ class Qukeys : public KaleidoscopePlugin {
   static void deactivate(void) {
     active_ = false;
   }
+
   static int8_t lookupQukey(uint8_t key_addr);
   static void enqueue(uint8_t key_addr);
   static int8_t searchQueue(uint8_t key_addr);
@@ -108,8 +109,6 @@ extern kaleidoscope::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
 #define QUKEYS(qukey_defs...)						\
-  namespace kaleidoscope {						\
-  Qukey qukeys[] = { qukey_defs... };					\
-  uint8_t qukeys_count = sizeof(qukeys) / sizeof(Qukey);		\
-  Qukeys.init(qukeys, qukeys_count);					\
-  }
+  static kaleidoscope::Qukey qukeys[] = { qukey_defs };			\
+  Qukeys.qukeys_ = qukeys;						\
+  Qukeys.qukeys_count_ = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);
