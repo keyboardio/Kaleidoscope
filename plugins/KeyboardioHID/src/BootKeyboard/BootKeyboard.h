@@ -57,6 +57,7 @@ class BootKeyboard_ : public PluggableUSBModule {
 
   uint8_t getLeds(void);
   uint8_t getProtocol(void);
+  void setProtocol(uint8_t protocol);
   void wakeupHost(void);
 
   void setFeatureReport(void* report, int length) {

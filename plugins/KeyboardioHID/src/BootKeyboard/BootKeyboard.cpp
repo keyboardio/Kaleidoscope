@@ -196,6 +196,10 @@ uint8_t BootKeyboard_::getProtocol(void) {
   return protocol;
 }
 
+void BootKeyboard_::setProtocol(uint8_t protocol) {
+  this->protocol = protocol;
+}
+
 int BootKeyboard_::sendReport(void) {
   if (memcmp(&_lastKeyReport, &_keyReport, sizeof(_keyReport))) {
     // if the two reports are different, send a report
