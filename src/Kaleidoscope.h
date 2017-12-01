@@ -138,6 +138,11 @@ extern Kaleidoscope_ Kaleidoscope;
                                            "layer.off\n"            \
                                            "layer.getState")
 
+#define ENABLE_BOOT_KEYBOARD() {                      \
+  Keyboard.bootKeyboard = &BootKeyboard;              \
+  BootKeyboard.default_protocol = HID_BOOT_PROTOCOL;  \
+}
+
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
 void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
