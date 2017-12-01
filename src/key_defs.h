@@ -66,14 +66,14 @@ typedef union Key_ {
 
 
 
-#define KEY_FLAGS         B00000000
-#define CTRL_HELD         B00000001
-#define LALT_HELD         B00000010
-#define RALT_HELD         B00000100
-#define SHIFT_HELD        B00001000
-#define GUI_HELD          B00010000
-#define SYNTHETIC         B01000000
-#define RESERVED          B10000000
+#define KEY_FLAGS         uint8_t(B00000000)
+#define CTRL_HELD         uint8_t(B00000001)
+#define LALT_HELD         uint8_t(B00000010)
+#define RALT_HELD         uint8_t(B00000100)
+#define SHIFT_HELD        uint8_t(B00001000)
+#define GUI_HELD          uint8_t(B00010000)
+#define SYNTHETIC         uint8_t(B01000000)
+#define RESERVED          uint8_t(B10000000)
 
 #define LCTRL(k)  ((Key) { k.keyCode, k.flags | CTRL_HELD })
 #define LALT(k)   ((Key) { k.keyCode, k.flags | LALT_HELD })
@@ -82,10 +82,10 @@ typedef union Key_ {
 #define LGUI(k)   ((Key) { k.keyCode, k.flags | GUI_HELD })
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_SYSCTL                  B00000001
-#define IS_CONSUMER                B00000010
-#define SWITCH_TO_KEYMAP           B00000100
-#define IS_INTERNAL                B00001000
+#define IS_SYSCTL                  uint8_t(B00000001)
+#define IS_CONSUMER                uint8_t(B00000010)
+#define SWITCH_TO_KEYMAP           uint8_t(B00000100)
+#define IS_INTERNAL                uint8_t(B00001000)
 
 /* HID types we need to encode in the key flags for system and consumer control hid controls
    Each key can only have one, so we don't need to use a bit vector.
@@ -93,18 +93,18 @@ typedef union Key_ {
    We need to keep the bottom two bits clear for defining the keys as sysctl / consumerctl
 */
 
-#define HID_TYPE_CL    B00000000
-#define HID_TYPE_LC    B00000100
-#define HID_TYPE_NARY  B00001000
-#define HID_TYPE_OOC   B00001100
-#define HID_TYPE_OSC   B00010000
-#define HID_TYPE_RTC   B00010100
-#define HID_TYPE_SEL   B00011000
+#define HID_TYPE_CL    uint8_t(B00000000)
+#define HID_TYPE_LC    uint8_t(B00000100)
+#define HID_TYPE_NARY  uint8_t(B00001000)
+#define HID_TYPE_OOC   uint8_t(B00001100)
+#define HID_TYPE_OSC   uint8_t(B00010000)
+#define HID_TYPE_RTC   uint8_t(B00010100)
+#define HID_TYPE_SEL   uint8_t(B00011000)
 
 
 #define Key_NoKey (Key) { 0,  KEY_FLAGS }
 #define Key_skip (Key) { 0,  KEY_FLAGS }
-#define Key_Transparent (Key){ .raw = 0xffff }
+#define Key_Transparent (Key){ .raw = uint16_t(0xffff) }
 #define ___ Key_Transparent
 #define XXX Key_NoKey
 
@@ -113,11 +113,11 @@ typedef union Key_ {
 
 
 
-#define KEY_BACKLIGHT_DOWN 0xF1
-#define KEY_BACKLIGHT_UP 0xF2
+#define KEY_BACKLIGHT_DOWN uint8_t(0xF1)
+#define KEY_BACKLIGHT_UP uint8_t(0xF2)
 #define Key_BacklightDown (Key) { KEY_BACKLIGHT_DOWN,  KEY_FLAGS }
 #define Key_BacklightUp (Key) { KEY_BACKLIGHT_UP,  KEY_FLAGS }
-#define KEY_RIGHT_FN2 0xfe
+#define KEY_RIGHT_FN2 uint8_t(0xfe)
 #define Key_RFN2 (Key) { KEY_RIGHT_FN2,  KEY_FLAGS }
-#define KEY_LEFT_FN2 0xff
+#define KEY_LEFT_FN2 uint8_t(0xff)
 #define Key_LFN2 (Key) { KEY_LEFT_FN2,  KEY_FLAGS }
