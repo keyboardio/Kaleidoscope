@@ -53,7 +53,8 @@ class BootKeyboard_ : public PluggableUSBModule {
 
   int sendReport(void);
 
-
+  boolean isModifierActive(uint8_t k);
+  boolean wasModifierActive(uint8_t k);
 
   uint8_t getLeds(void);
   uint8_t getProtocol(void);
@@ -86,7 +87,7 @@ class BootKeyboard_ : public PluggableUSBModule {
 
 
  protected:
-  HID_BootKeyboardReport_Data_t _keyReport;
+  HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;
 
   // Implementation of the PUSBListNode
   int getInterface(uint8_t* interfaceCount);

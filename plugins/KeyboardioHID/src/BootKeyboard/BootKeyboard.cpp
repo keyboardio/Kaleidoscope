@@ -208,7 +208,13 @@ uint8_t BootKeyboard_::getProtocol(void) {
 }
 
 int BootKeyboard_::sendReport(void) {
-  return USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
+  if (memcmp(&_lastKeyReport, &_keyReport, sizeof(_keyReport))) {
+    // if the two reports are different, send a report
+    int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
+    memcpy(&_lastKeyReport, &_keyReport, sizeof(_keyReport));
+    return returnCode;
+  }
+  return -1;
 }
 
 void BootKeyboard_::wakeupHost(void) {
@@ -302,6 +308,28 @@ size_t BootKeyboard_::release(uint8_t k) {
 
 void BootKeyboard_::releaseAll(void) {
   memset(&_keyReport.keys, 0x00, sizeof(_keyReport.keys));
+}
+
+/* Returns true if the modifer key passed in will be sent during this key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::isModifierActive(uint8_t k) {
+  if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    k = k - HID_KEYBOARD_FIRST_MODIFIER;
+    return !!(_keyReport.modifiers & (1 << k));
+  }
+  return false;
+}
+
+/* Returns true if the modifer key passed in was being sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::wasModifierActive(uint8_t k) {
+  if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    k = k - HID_KEYBOARD_FIRST_MODIFIER;
+    return !!(_lastKeyReport.modifiers & (1 << k));
+  }
+  return false;
 }
 
 BootKeyboard_ BootKeyboard;
