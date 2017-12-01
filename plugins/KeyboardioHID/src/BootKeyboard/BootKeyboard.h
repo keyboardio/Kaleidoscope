@@ -84,6 +84,7 @@ class BootKeyboard_ : public PluggableUSBModule {
     featureLength |= 0x8000;
   }
 
+  uint8_t default_protocol = HID_REPORT_PROTOCOL;
 
  protected:
   HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;

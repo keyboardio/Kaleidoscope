@@ -92,7 +92,7 @@ int BootKeyboard_::getDescriptor(USBSetup& setup) {
 
   // Reset the protocol on reenumeration. Normally the host should not assume the state of the protocol
   // due to the USB specs, but Windows and Linux just assumes its in report mode.
-  protocol = HID_REPORT_PROTOCOL;
+  protocol = default_protocol;
 
   return USB_SendControl(TRANSFER_PGM, _hidReportDescriptorKeyboard, sizeof(_hidReportDescriptorKeyboard));
 }
