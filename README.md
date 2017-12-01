@@ -77,7 +77,9 @@ properties (see below).
 
 * `Key_mouseScrollUp`, `Key_mouseScrollDn`: Scroll the mouse wheel up or down,
   respectively.
-
+* `Key_mouseScrollL`, `Key_mouseScrollR`: Scroll the mouse wheel left or right,
+  respectively.
+  
 ### Buttons
 
 Buttons are even simpler than movement: there is no movement speed, nor
