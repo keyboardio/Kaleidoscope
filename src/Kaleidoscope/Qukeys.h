@@ -80,6 +80,9 @@ class Qukeys : public KaleidoscopePlugin {
   static void deactivate(void) {
     active_ = false;
   }
+  static void toggle(void) {
+    active_ = !active_;
+  }
   static void setTimeout(uint16_t time_limit) {
     time_limit_ = time_limit;
   }
