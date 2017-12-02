@@ -114,7 +114,8 @@ class Qukeys : public KaleidoscopePlugin {
 extern kaleidoscope::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
-#define QUKEYS(qukey_defs...)						\
+#define QUKEYS(qukey_defs...) {						\
   static kaleidoscope::Qukey qukeys[] = { qukey_defs };			\
   Qukeys.qukeys_ = qukeys;						\
-  Qukeys.qukeys_count_ = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);
+  Qukeys.qukeys_count_ = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);	\
+}
