@@ -4,6 +4,8 @@
 #include <Kaleidoscope-Qukeys.h>
 #include <Kaleidoscope-Macros.h>
 
+enum { MACRO_TOGGLE_QUKEYS };
+
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
