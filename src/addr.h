@@ -38,7 +38,7 @@ inline void mask(uint8_t key_addr) {
   KeyboardHardware.maskKey(row(key_addr), col(key_addr));
 }
 inline void unmask(uint8_t key_addr) {
-  KeyboardHardware.maskKey(row(key_addr), col(key_addr));
+  KeyboardHardware.unMaskKey(row(key_addr), col(key_addr));
 }
 } // namespace addr {
 } // namespace kaleidoscope {
