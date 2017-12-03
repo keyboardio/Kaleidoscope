@@ -149,6 +149,13 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
   }
   // After flushing the first key in the queue, maybe the next key should be checked to
   // see if it should also be flushed?
+  // while (key_queue_length_ > 0) {
+  //   // If it's a qukey, stop:
+  //   if ( lookupQukey(key_queue_[0].addr) != QUKEY_NOT_FOUND )
+  //     break;
+  //   // Otherwise, flush the next key from the queue
+  //   flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+  // }
 }
 
 // flushQueue() is called when a key that's in the key_queue is
@@ -243,8 +250,10 @@ void Qukeys::preReportHook(void) {
   // If the qukey has been held longer than the time limit, set its
   // state to the alternate keycode and add it to the report
   uint32_t current_time = millis();
-  for (int8_t i = 0; i < key_queue_length_; i++) {
-    if (current_time > key_queue_[i].flush_time) {
+  while (key_queue_length_ > 0) {
+    if ( lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND ) {
+      flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+    } else if (current_time > key_queue_[0].flush_time) {
       flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
     } else {
       break;
