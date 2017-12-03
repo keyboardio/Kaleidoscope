@@ -30,7 +30,8 @@ KEYMAPS(
 const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
   switch (macro_index) {
   case MACRO_TOGGLE_QUKEYS:
-    Qukeys.toggle();
+    if (keyToggledOn(key_state))
+      Qukeys.toggle();
     break;
   }
   return MACRO_NONE;
