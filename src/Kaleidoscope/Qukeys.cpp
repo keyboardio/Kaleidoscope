@@ -76,6 +76,7 @@ void Qukeys::enqueue(uint8_t key_addr) {
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].flush_time = millis() + time_limit_;
   key_queue_length_++;
+  addr::mask(key_addr);
 }
 
 int8_t Qukeys::searchQueue(uint8_t key_addr) {
@@ -88,6 +89,7 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 
 // flush a single entry from the head of the queue
 void Qukeys::flushKey(int8_t qukey_state, uint8_t keyswitch_state) {
+  addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   if (qukey_index != QUKEY_NOT_FOUND) {
     qukeys_[qukey_index].state = qukey_state;
