@@ -108,6 +108,7 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
   HID_KeyboardReport_Data_t hid_report;
   // First, save the current report
   memcpy(hid_report.allkeys, Keyboard.keyReport.allkeys, sizeof(hid_report));
+  // Next, copy the old report
   memcpy(Keyboard.keyReport.allkeys, Keyboard.lastKeyReport.allkeys, sizeof(Keyboard.keyReport));
   // Instead of just calling pressKey here, we start processing the
   // key again, as if it was just pressed, and mark it as injected, so
@@ -128,8 +129,12 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
   }
   */
 
-  // Last, we restore the current state of the report
+  // Next, we restore the current state of the report
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
+
+  // Last, if the key is still down, add its code back in
+  if ( ! keyToggledOn(keyswitch_state) )
+    handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED | INJECTED);
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
   for (byte i = 0; i < key_queue_length_; i++) {
@@ -142,6 +147,8 @@ void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
       (qukey_index != QUKEY_NOT_FOUND)) {
     qukeys_[qukey_index].state = QUKEY_STATE_UNDETERMINED;
   }
+  // After flushing the first key in the queue, maybe the next key should be checked to
+  // see if it should also be flushed?
 }
 
 // flushQueue() is called when a key that's in the key_queue is
