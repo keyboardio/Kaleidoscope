@@ -87,15 +87,15 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 }
 
 // flush a single entry from the head of the queue
-void Qukeys::flushKey(int8_t state, uint8_t keyswitch_state) {
+void Qukeys::flushKey(int8_t qukey_state, uint8_t keyswitch_state) {
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   if (qukey_index != QUKEY_NOT_FOUND) {
-    qukeys_[qukey_index].state = state;
+    qukeys_[qukey_index].state = qukey_state;
   }
   byte row = addr::row(key_queue_[0].addr);
   byte col = addr::col(key_queue_[0].addr);
   Key keycode = Key_NoKey;
-  if (state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
+  if (qukey_state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
     keycode = qukeys_[qukey_index].alt_keycode;
   } else {
     keycode = Layer.lookup(row, col);
