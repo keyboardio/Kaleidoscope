@@ -105,7 +105,7 @@ class Qukeys : public KaleidoscopePlugin {
   //static uint8_t keyswitch_state[];
 
   // Qukey state bitfield
-  static uint8_t qukey_state_[(TOTAL_KEYS)/8 + ((TOTAL_KEYS)%8 ? 1 : 0)];
+  static uint8_t qukey_state_[(TOTAL_KEYS) / 8 + ((TOTAL_KEYS) % 8 ? 1 : 0)];
   static bool getQukeyState(uint8_t addr) {
     return bitRead(qukey_state_[addr / 8], addr % 8);
   }

@@ -136,7 +136,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
   // Last, if the key is still down, add its code back in
-  if ( ! keyToggledOn(keyswitch_state) )
+  if (! keyToggledOn(keyswitch_state))
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED | INJECTED);
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
@@ -164,11 +164,11 @@ void Qukeys::flushQueue(int8_t index) {
 // Flush all the non-qukey keys from the front of the queue
 void Qukeys::flushQueue(void) {
   // flush keys until we find a qukey:
-  while (key_queue_length_ > 0 && 
-	 lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
+  while (key_queue_length_ > 0 &&
+         lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
   }
-}  
+}
 
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // Uncomment this for debugging, so as not to make flashing difficult
@@ -194,7 +194,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (keyToggledOn(key_state)) {
     // If the queue is empty and the key isn't a qukey, proceed:
     if (key_queue_length_ == 0 &&
-	qukey_index == QUKEY_NOT_FOUND)
+        qukey_index == QUKEY_NOT_FOUND)
       return mapped_key;
     // Otherwise, queue the key and stop processing:
     enqueue(key_addr);
@@ -245,7 +245,7 @@ void Qukeys::preReportHook(void) {
   // state to the alternate keycode and add it to the report
   uint32_t current_time = millis();
   while (key_queue_length_ > 0) {
-    if ( lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND ) {
+    if (lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
       flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     } else if (current_time > key_queue_[0].flush_time) {
       flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
