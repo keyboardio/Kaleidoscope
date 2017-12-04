@@ -21,8 +21,6 @@
 #include <Kaleidoscope.h>
 #include <addr.h>
 
-// Maximum number of qukeys allowed ­ not actually used
-#define QUKEYS_MAX 64
 // Maximum length of the pending queue
 #define QUKEYS_QUEUE_MAX 8
 // Total number of keys on the keyboard (assuming full grid)
@@ -87,13 +85,6 @@ class Qukeys : public KaleidoscopePlugin {
     time_limit_ = time_limit;
   }
 
-  static int8_t lookupQukey(uint8_t key_addr);
-  static void enqueue(uint8_t key_addr);
-  static int8_t searchQueue(uint8_t key_addr);
-  static void flushKey(bool qukey_state, uint8_t keyswitch_state);
-  static void flushQueue(int8_t index);
-  static void flushQueue(void);
-
   static Qukey * qukeys_;
   static uint8_t qukeys_count_;
 
@@ -112,6 +103,13 @@ class Qukeys : public KaleidoscopePlugin {
   static void setQukeyState(uint8_t addr, boolean qukey_state) {
     bitWrite(qukey_state_[addr / 8], addr % 8, qukey_state);
   }
+
+  static int8_t lookupQukey(uint8_t key_addr);
+  static void enqueue(uint8_t key_addr);
+  static int8_t searchQueue(uint8_t key_addr);
+  static void flushKey(bool qukey_state, uint8_t keyswitch_state);
+  static void flushQueue(int8_t index);
+  static void flushQueue(void);
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void preReportHook(void);
