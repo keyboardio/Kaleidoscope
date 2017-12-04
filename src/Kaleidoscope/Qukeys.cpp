@@ -117,16 +117,6 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
 
-  /* I think this is now unnecessary
-  // Now for the tricky bit; we need to know if the key was actually
-  // released, or if it's still being held. Otherwise, we'll screw up
-  // the next call to flushKey().
-  if (keyToggledOff(keyswitch_state)) {
-    handleKeyswitchEvent(keycode, row, col, keyswitch_state | INJECTED);
-    hid::sendKeyboardReport();
-  }
-  */
-
   // Next, we restore the current state of the report
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
@@ -166,8 +156,6 @@ void Qukeys::flushQueue(void) {
 }
 
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  // Uncomment this for debugging, so as not to make flashing difficult
-  //if (row == 0 && col == 0) return mapped_key;
 
   // If Qukeys is turned off, continue to next plugin
   if (!active_)
