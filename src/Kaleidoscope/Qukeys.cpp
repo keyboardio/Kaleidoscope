@@ -36,8 +36,9 @@ Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
   this->alt_keycode = alt_keycode;
 }
 
-Qukey * Qukeys::qukeys_;
-uint8_t Qukeys::qukeys_count_ = 0;
+Qukey * Qukeys::qukeys;
+uint8_t Qukeys::qukeys_count = 0;
+
 bool Qukeys::active_ = true;
 uint16_t Qukeys::time_limit_ = 500;
 QueueItem Qukeys::key_queue_[QUKEYS_QUEUE_MAX] = {};
@@ -51,12 +52,12 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
   if (key_addr == QUKEY_UNKNOWN_ADDR) {
     return QUKEY_NOT_FOUND;
   }
-  for (int8_t i = 0; i < qukeys_count_; i++) {
-    if (qukeys_[i].addr == key_addr) {
+  for (int8_t i = 0; i < qukeys_count; i++) {
+    if (qukeys[i].addr == key_addr) {
       byte row = addr::row(key_addr);
       byte col = addr::col(key_addr);
-      if ((qukeys_[i].layer == QUKEY_ALL_LAYERS) ||
-          (qukeys_[i].layer == Layer.lookupActiveLayer(row, col))) {
+      if ((qukeys[i].layer == QUKEY_ALL_LAYERS) ||
+          (qukeys[i].layer == Layer.lookupActiveLayer(row, col))) {
         return i;
       }
     }
@@ -94,7 +95,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   byte col = addr::col(key_queue_[0].addr);
   Key keycode = Key_NoKey;
   if (qukey_state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
-    keycode = qukeys_[qukey_index].alt_keycode;
+    keycode = qukeys[qukey_index].alt_keycode;
   } else {
     keycode = Layer.lookup(row, col);
   }
@@ -213,7 +214,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // If the qukey is not in the queue, check its state
   if (queue_index == QUKEY_NOT_FOUND) {
     if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-      return qukeys_[qukey_index].alt_keycode;
+      return qukeys[qukey_index].alt_keycode;
     } else { // qukey_state == QUKEY_STATE_PRIMARY
       return mapped_key;
     }

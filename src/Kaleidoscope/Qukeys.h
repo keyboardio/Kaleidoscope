@@ -85,8 +85,8 @@ class Qukeys : public KaleidoscopePlugin {
     time_limit_ = time_limit;
   }
 
-  static Qukey * qukeys_;
-  static uint8_t qukeys_count_;
+  static Qukey * qukeys;
+  static uint8_t qukeys_count;
 
  private:
   static bool active_;
@@ -123,7 +123,7 @@ extern kaleidoscope::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
 #define QUKEYS(qukey_defs...) {						\
-  static kaleidoscope::Qukey qukeys[] = { qukey_defs };			\
-  Qukeys.qukeys_ = qukeys;						\
-  Qukeys.qukeys_count_ = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);	\
+  static kaleidoscope::Qukey qk_table[] = { qukey_defs };		\
+  Qukeys.qukeys = qk_table;						\
+  Qukeys.qukeys_count = sizeof(qk_table) / sizeof(kaleidoscope::Qukey); \
 }
