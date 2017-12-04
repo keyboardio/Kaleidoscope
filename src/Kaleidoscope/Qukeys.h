@@ -21,8 +21,6 @@
 #include <Kaleidoscope.h>
 #include <addr.h>
 
-// Maximum number of qukeys allowed ­ not actually used
-#define QUKEYS_MAX 64
 // Maximum length of the pending queue
 #define QUKEYS_QUEUE_MAX 8
 // Total number of keys on the keyboard (assuming full grid)
@@ -72,7 +70,6 @@ class Qukeys : public KaleidoscopePlugin {
  public:
   Qukeys(void);
 
-  //static void init(Qukey *qukeys, uint8_t qukeys_count);
   void begin(void) final;
   static void activate(void) {
     active_ = true;
@@ -87,30 +84,30 @@ class Qukeys : public KaleidoscopePlugin {
     time_limit_ = time_limit;
   }
 
-  static int8_t lookupQukey(uint8_t key_addr);
-  static void enqueue(uint8_t key_addr);
-  static int8_t searchQueue(uint8_t key_addr);
-  static void flushKey(bool qukey_state, uint8_t keyswitch_state);
-  static void flushQueue(int8_t index);
-
-  static Qukey * qukeys_;
-  static uint8_t qukeys_count_;
+  static Qukey * qukeys;
+  static uint8_t qukeys_count;
 
  private:
   static bool active_;
   static uint16_t time_limit_;
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
-  //static uint8_t keyswitch_state[];
 
   // Qukey state bitfield
-  static uint8_t qukey_state_[(TOTAL_KEYS)/8 + ((TOTAL_KEYS)%8 ? 1 : 0)];
+  static uint8_t qukey_state_[(TOTAL_KEYS) / 8 + ((TOTAL_KEYS) % 8 ? 1 : 0)];
   static bool getQukeyState(uint8_t addr) {
     return bitRead(qukey_state_[addr / 8], addr % 8);
   }
   static void setQukeyState(uint8_t addr, boolean qukey_state) {
     bitWrite(qukey_state_[addr / 8], addr % 8, qukey_state);
   }
+
+  static int8_t lookupQukey(uint8_t key_addr);
+  static void enqueue(uint8_t key_addr);
+  static int8_t searchQueue(uint8_t key_addr);
+  static void flushKey(bool qukey_state, uint8_t keyswitch_state);
+  static void flushQueue(int8_t index);
+  static void flushQueue(void);
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void preReportHook(void);
@@ -124,7 +121,7 @@ extern kaleidoscope::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
 #define QUKEYS(qukey_defs...) {						\
-  static kaleidoscope::Qukey qukeys[] = { qukey_defs };			\
-  Qukeys.qukeys_ = qukeys;						\
-  Qukeys.qukeys_count_ = sizeof(qukeys) / sizeof(kaleidoscope::Qukey);	\
+  static kaleidoscope::Qukey qk_table[] = { qukey_defs };		\
+  Qukeys.qukeys = qk_table;						\
+  Qukeys.qukeys_count = sizeof(qk_table) / sizeof(kaleidoscope::Qukey); \
 }

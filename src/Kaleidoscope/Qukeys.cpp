@@ -36,8 +36,9 @@ Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
   this->alt_keycode = alt_keycode;
 }
 
-Qukey * Qukeys::qukeys_;
-uint8_t Qukeys::qukeys_count_ = 0;
+Qukey * Qukeys::qukeys;
+uint8_t Qukeys::qukeys_count = 0;
+
 bool Qukeys::active_ = true;
 uint16_t Qukeys::time_limit_ = 500;
 QueueItem Qukeys::key_queue_[QUKEYS_QUEUE_MAX] = {};
@@ -47,21 +48,16 @@ byte Qukeys::qukey_state_[] = {};
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
 
-// Qukeys::init(Qukey *qukeys, uint8_t qukeys_count) {
-//   qukeys_ = qukeys;
-//   qukeys_count_ = qukeys_count;
-// }
-
 int8_t Qukeys::lookupQukey(uint8_t key_addr) {
   if (key_addr == QUKEY_UNKNOWN_ADDR) {
     return QUKEY_NOT_FOUND;
   }
-  for (int8_t i = 0; i < qukeys_count_; i++) {
-    if (qukeys_[i].addr == key_addr) {
+  for (int8_t i = 0; i < qukeys_count; i++) {
+    if (qukeys[i].addr == key_addr) {
       byte row = addr::row(key_addr);
       byte col = addr::col(key_addr);
-      if ((qukeys_[i].layer == QUKEY_ALL_LAYERS) ||
-          (qukeys_[i].layer == Layer.lookupActiveLayer(row, col))) {
+      if ((qukeys[i].layer == QUKEY_ALL_LAYERS) ||
+          (qukeys[i].layer == Layer.lookupActiveLayer(row, col))) {
         return i;
       }
     }
@@ -72,6 +68,7 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
 void Qukeys::enqueue(uint8_t key_addr) {
   if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+    flushQueue();
   }
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].flush_time = millis() + time_limit_;
@@ -98,7 +95,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   byte col = addr::col(key_queue_[0].addr);
   Key keycode = Key_NoKey;
   if (qukey_state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
-    keycode = qukeys_[qukey_index].alt_keycode;
+    keycode = qukeys[qukey_index].alt_keycode;
   } else {
     keycode = Layer.lookup(row, col);
   }
@@ -121,21 +118,11 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
 
-  /* I think this is now unnecessary
-  // Now for the tricky bit; we need to know if the key was actually
-  // released, or if it's still being held. Otherwise, we'll screw up
-  // the next call to flushKey().
-  if (keyToggledOff(keyswitch_state)) {
-    handleKeyswitchEvent(keycode, row, col, keyswitch_state | INJECTED);
-    hid::sendKeyboardReport();
-  }
-  */
-
   // Next, we restore the current state of the report
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
   // Last, if the key is still down, add its code back in
-  if ( ! keyToggledOn(keyswitch_state) )
+  if (! keyToggledOn(keyswitch_state))
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED | INJECTED);
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
@@ -143,15 +130,6 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     key_queue_[i] = key_queue_[i + 1];
   }
   key_queue_length_--;
-  // After flushing the first key in the queue, maybe the next key should be checked to
-  // see if it should also be flushed?
-  // while (key_queue_length_ > 0) {
-  //   // If it's a qukey, stop:
-  //   if ( lookupQukey(key_queue_[0].addr) != QUKEY_NOT_FOUND )
-  //     break;
-  //   // Otherwise, flush the next key from the queue
-  //   flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-  // }
 }
 
 // flushQueue() is called when a key that's in the key_queue is
@@ -169,9 +147,16 @@ void Qukeys::flushQueue(int8_t index) {
   flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
 }
 
+// Flush all the non-qukey keys from the front of the queue
+void Qukeys::flushQueue(void) {
+  // flush keys until we find a qukey:
+  while (key_queue_length_ > 0 &&
+         lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
+    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+  }
+}
+
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  // Uncomment this for debugging, so as not to make flashing difficult
-  //if (row == 0 && col == 0) return mapped_key;
 
   // If Qukeys is turned off, continue to next plugin
   if (!active_)
@@ -191,17 +176,13 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If the key was just pressed:
   if (keyToggledOn(key_state)) {
-    // I think I may need to call maskKey() somewhere here, but I'm not sure
-    if (key_queue_length_) {
-      enqueue(key_addr);
-    } else {
-      // If it's not a qukey, proceed:
-      if (qukey_index == QUKEY_NOT_FOUND)
-        return mapped_key;
-      // Otherwise, queue the qukey:
-      enqueue(key_addr);
-      return Key_NoKey; // is this right?
-    }
+    // If the queue is empty and the key isn't a qukey, proceed:
+    if (key_queue_length_ == 0 &&
+        qukey_index == QUKEY_NOT_FOUND)
+      return mapped_key;
+    // Otherwise, queue the key and stop processing:
+    enqueue(key_addr);
+    return Key_NoKey;
   }
 
   // In all other cases, we need to know if the key is queued already
@@ -233,7 +214,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // If the qukey is not in the queue, check its state
   if (queue_index == QUKEY_NOT_FOUND) {
     if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-      return qukeys_[qukey_index].alt_keycode;
+      return qukeys[qukey_index].alt_keycode;
     } else { // qukey_state == QUKEY_STATE_PRIMARY
       return mapped_key;
     }
@@ -248,7 +229,7 @@ void Qukeys::preReportHook(void) {
   // state to the alternate keycode and add it to the report
   uint32_t current_time = millis();
   while (key_queue_length_ > 0) {
-    if ( lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND ) {
+    if (lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
       flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     } else if (current_time > key_queue_[0].flush_time) {
       flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
