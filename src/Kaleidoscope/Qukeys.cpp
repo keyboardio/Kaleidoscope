@@ -191,17 +191,13 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If the key was just pressed:
   if (keyToggledOn(key_state)) {
-    // I think I may need to call maskKey() somewhere here, but I'm not sure
-    if (key_queue_length_) {
-      enqueue(key_addr);
-    } else {
-      // If it's not a qukey, proceed:
-      if (qukey_index == QUKEY_NOT_FOUND)
-        return mapped_key;
-      // Otherwise, queue the qukey:
-      enqueue(key_addr);
-      return Key_NoKey; // is this right?
-    }
+    // If the queue is empty and the key isn't a qukey, proceed:
+    if (key_queue_length_ == 0 &&
+	qukey_index == QUKEY_NOT_FOUND)
+      return mapped_key;
+    // Otherwise, queue the key and stop processing:
+    enqueue(key_addr);
+    return Key_NoKey;
   }
 
   // In all other cases, we need to know if the key is queued already
