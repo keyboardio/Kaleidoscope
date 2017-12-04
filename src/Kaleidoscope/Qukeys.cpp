@@ -34,7 +34,6 @@ Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
   this->layer = layer;
   this->addr = addr::addr(row, col);
   this->alt_keycode = alt_keycode;
-  this->state = QUKEY_STATE_UNDETERMINED;
 }
 
 Qukey * Qukeys::qukeys_;
@@ -43,6 +42,7 @@ bool Qukeys::active_ = true;
 uint16_t Qukeys::time_limit_ = 500;
 QueueItem Qukeys::key_queue_[QUKEYS_QUEUE_MAX] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
+byte Qukeys::qukey_state_[] = {};
 
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
@@ -88,11 +88,11 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 }
 
 // flush a single entry from the head of the queue
-void Qukeys::flushKey(int8_t qukey_state, uint8_t keyswitch_state) {
+void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   if (qukey_index != QUKEY_NOT_FOUND) {
-    qukeys_[qukey_index].state = qukey_state;
+    setQukeyState(key_queue_[0].addr, qukey_state);
   }
   byte row = addr::row(key_queue_[0].addr);
   byte col = addr::col(key_queue_[0].addr);
@@ -143,12 +143,6 @@ void Qukeys::flushKey(int8_t qukey_state, uint8_t keyswitch_state) {
     key_queue_[i] = key_queue_[i + 1];
   }
   key_queue_length_--;
-  // If a qukey was released, reset its state to undetermined. This
-  // probably doesn't hurt, but it's also probably useless:
-  if (!(keyswitch_state & IS_PRESSED) &&
-      (qukey_index != QUKEY_NOT_FOUND)) {
-    qukeys_[qukey_index].state = QUKEY_STATE_UNDETERMINED;
-  }
   // After flushing the first key in the queue, maybe the next key should be checked to
   // see if it should also be flushed?
   // while (key_queue_length_ > 0) {
@@ -206,6 +200,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
         return mapped_key;
       // Otherwise, queue the qukey:
       enqueue(key_addr);
+      return Key_NoKey; // is this right?
     }
   }
 
@@ -216,9 +211,6 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (keyToggledOff(key_state)) {
     // If the key isn't in the key_queue, proceed
     if (queue_index == QUKEY_NOT_FOUND) {
-      // If a qukey that was not in the queue toggles off, reset its state
-      if (qukey_index != QUKEY_NOT_FOUND)
-        qukeys_[qukey_index].state = QUKEY_STATE_UNDETERMINED;
       return mapped_key;
     }
     flushQueue(queue_index);
@@ -238,11 +230,14 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
     }
   }
 
-  // qukeys that have already decided their keycode
-  if (qukeys_[qukey_index].state == QUKEY_STATE_PRIMARY)
-    return mapped_key;
-  if (qukeys_[qukey_index].state == QUKEY_STATE_ALTERNATE)
-    return qukeys_[qukey_index].alt_keycode;
+  // If the qukey is not in the queue, check its state
+  if (queue_index == QUKEY_NOT_FOUND) {
+    if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
+      return qukeys_[qukey_index].alt_keycode;
+    } else { // qukey_state == QUKEY_STATE_PRIMARY
+      return mapped_key;
+    }
+  }
   // else state is undetermined; block. I could check timeouts here,
   // but I'd rather do that in the pre-report hook
   return Key_NoKey;

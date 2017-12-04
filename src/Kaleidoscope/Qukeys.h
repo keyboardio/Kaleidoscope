@@ -25,11 +25,12 @@
 #define QUKEYS_MAX 64
 // Maximum length of the pending queue
 #define QUKEYS_QUEUE_MAX 8
+// Total number of keys on the keyboard (assuming full grid)
+#define TOTAL_KEYS ROWS * COLS
 
-// Maybe it's better to use an enum for these state values?
-#define QUKEY_STATE_UNDETERMINED 0
-#define QUKEY_STATE_PRIMARY 1
-#define QUKEY_STATE_ALTERNATE -1
+// Boolean values for storing qukey state
+#define QUKEY_STATE_PRIMARY false
+#define QUKEY_STATE_ALTERNATE true
 
 // Initialization addr value for empty key_queue. This seems to be
 // unnecessary, because we rely on keeping track of the lenght of the
@@ -53,7 +54,6 @@ struct Qukey {
   int8_t layer;
   uint8_t addr;
   Key alt_keycode;
-  int8_t state;
 };
 
 // Data structure for an entry in the key_queue
@@ -90,7 +90,7 @@ class Qukeys : public KaleidoscopePlugin {
   static int8_t lookupQukey(uint8_t key_addr);
   static void enqueue(uint8_t key_addr);
   static int8_t searchQueue(uint8_t key_addr);
-  static void flushKey(int8_t qukey_state, uint8_t keyswitch_state);
+  static void flushKey(bool qukey_state, uint8_t keyswitch_state);
   static void flushQueue(int8_t index);
 
   static Qukey * qukeys_;
@@ -102,6 +102,15 @@ class Qukeys : public KaleidoscopePlugin {
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
   //static uint8_t keyswitch_state[];
+
+  // Qukey state bitfield
+  static uint8_t qukey_state_[(TOTAL_KEYS)/8 + ((TOTAL_KEYS)%8 ? 1 : 0)];
+  static bool getQukeyState(uint8_t addr) {
+    return bitRead(qukey_state_[addr / 8], addr % 8);
+  }
+  static void setQukeyState(uint8_t addr, boolean qukey_state) {
+    bitWrite(qukey_state_[addr / 8], addr % 8, qukey_state);
+  }
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void preReportHook(void);
