@@ -75,11 +75,11 @@ typedef union Key_ {
 #define SYNTHETIC         uint8_t(B01000000)
 #define RESERVED          uint8_t(B10000000)
 
-#define LCTRL(k)  ((Key) { k.keyCode, k.flags | CTRL_HELD })
-#define LALT(k)   ((Key) { k.keyCode, k.flags | LALT_HELD })
-#define RALT(k)   ((Key) { k.keyCode, k.flags | RALT_HELD })
-#define LSHIFT(k) ((Key) { k.keyCode, k.flags | SHIFT_HELD })
-#define LGUI(k)   ((Key) { k.keyCode, k.flags | GUI_HELD })
+#define LCTRL(k)  ((Key) { k.keyCode, uint8_t(k.flags | CTRL_HELD) })
+#define LALT(k)   ((Key) { k.keyCode, uint8_t(k.flags | LALT_HELD) })
+#define RALT(k)   ((Key) { k.keyCode, uint8_t(k.flags | RALT_HELD) })
+#define LSHIFT(k) ((Key) { k.keyCode, uint8_t(k.flags | SHIFT_HELD) })
+#define LGUI(k)   ((Key) { k.keyCode, uint8_t(k.flags | GUI_HELD) })
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  uint8_t(B00000001)
