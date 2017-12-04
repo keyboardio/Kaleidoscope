@@ -47,11 +47,6 @@ byte Qukeys::qukey_state_[] = {};
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
 
-// Qukeys::init(Qukey *qukeys, uint8_t qukeys_count) {
-//   qukeys_ = qukeys;
-//   qukeys_count_ = qukeys_count;
-// }
-
 int8_t Qukeys::lookupQukey(uint8_t key_addr) {
   if (key_addr == QUKEY_UNKNOWN_ADDR) {
     return QUKEY_NOT_FOUND;
