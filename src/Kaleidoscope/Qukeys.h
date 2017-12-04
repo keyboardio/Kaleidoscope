@@ -70,7 +70,6 @@ class Qukeys : public KaleidoscopePlugin {
  public:
   Qukeys(void);
 
-  //static void init(Qukey *qukeys, uint8_t qukeys_count);
   void begin(void) final;
   static void activate(void) {
     active_ = true;
@@ -93,7 +92,6 @@ class Qukeys : public KaleidoscopePlugin {
   static uint16_t time_limit_;
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
-  //static uint8_t keyswitch_state[];
 
   // Qukey state bitfield
   static uint8_t qukey_state_[(TOTAL_KEYS) / 8 + ((TOTAL_KEYS) % 8 ? 1 : 0)];
