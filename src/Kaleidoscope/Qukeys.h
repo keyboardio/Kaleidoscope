@@ -92,6 +92,7 @@ class Qukeys : public KaleidoscopePlugin {
   static int8_t searchQueue(uint8_t key_addr);
   static void flushKey(bool qukey_state, uint8_t keyswitch_state);
   static void flushQueue(int8_t index);
+  static void flushQueue(void);
 
   static Qukey * qukeys_;
   static uint8_t qukeys_count_;

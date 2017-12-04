@@ -72,6 +72,7 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
 void Qukeys::enqueue(uint8_t key_addr) {
   if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+    flushQueue();
   }
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].flush_time = millis() + time_limit_;
@@ -143,15 +144,6 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     key_queue_[i] = key_queue_[i + 1];
   }
   key_queue_length_--;
-  // After flushing the first key in the queue, maybe the next key should be checked to
-  // see if it should also be flushed?
-  // while (key_queue_length_ > 0) {
-  //   // If it's a qukey, stop:
-  //   if ( lookupQukey(key_queue_[0].addr) != QUKEY_NOT_FOUND )
-  //     break;
-  //   // Otherwise, flush the next key from the queue
-  //   flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-  // }
 }
 
 // flushQueue() is called when a key that's in the key_queue is
@@ -168,6 +160,15 @@ void Qukeys::flushQueue(int8_t index) {
   }
   flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
 }
+
+// Flush all the non-qukey keys from the front of the queue
+void Qukeys::flushQueue(void) {
+  // flush keys until we find a qukey:
+  while (key_queue_length_ > 0 && 
+	 lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
+    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+  }
+}  
 
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // Uncomment this for debugging, so as not to make flashing difficult
