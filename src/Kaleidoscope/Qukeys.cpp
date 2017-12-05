@@ -41,7 +41,7 @@ uint8_t Qukeys::qukeys_count = 0;
 
 bool Qukeys::active_ = true;
 uint16_t Qukeys::time_limit_ = 500;
-QueueItem Qukeys::key_queue_[QUKEYS_QUEUE_MAX] = {};
+QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
 byte Qukeys::qukey_state_[] = {};
 
