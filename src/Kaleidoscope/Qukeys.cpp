@@ -100,6 +100,10 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     keycode = Layer.lookup(row, col);
   }
 
+  // Before calling handleKeyswitchEvent() below, make sure Qukeys knows not to handle
+  // these events:
+  flushing_queue_ = true;
+
   // Since we're in the middle of the key scan, we don't necessarily
   // have a full HID report, and we don't want to accidentally turn
   // off keys that the scan hasn't reached yet, so we force the
@@ -114,7 +118,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // we can ignore it and don't start an infinite loop. It would be
   // nice if we could use key_state to also indicate which plugin
   // injected the key.
-  handleKeyswitchEvent(keycode, row, col, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(keycode, row, col, IS_PRESSED);
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
 
@@ -123,7 +127,10 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
 
   // Last, if the key is still down, add its code back in
   if (! keyToggledOn(keyswitch_state))
-    handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
+
+  // Now that we're done sending the report(s), Qukeys can process events again:
+  flushing_queue_ = true;
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
   for (byte i = 0; i < key_queue_length_; i++) {
@@ -163,7 +170,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
     return mapped_key;
 
   // If the key was injected (from the queue being flushed), continue to next plugin
-  if (key_state & INJECTED)
+  if (flushing_queue_)
     return mapped_key;
 
   // If the key isn't active, and didn't just toggle off, continue to next plugin
