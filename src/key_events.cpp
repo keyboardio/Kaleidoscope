@@ -75,7 +75,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
       }
     }
 
-    if (!(keyState & INJECTED)) {
+    if (mappedKey == Key_NoKey) {
       mappedKey = Layer.lookup(row, col);
     }
 
