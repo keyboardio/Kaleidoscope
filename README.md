@@ -11,159 +11,77 @@
 
 ## Concept
 
-This Kaleidoscope plugin will allow you to overload keys on your
-keyboard so that they produce one keycode (i.e. symbol) when tapped,
-and a different keycode -- most likely a modifier (e.g. `shift` or
-`alt`) when held. There are already two Kaleidoscop plugins that
-provide this same functionality
-([DualUse](https://github.com/keyboardio/Kaleidoscope-DualUse) and
-[SpaceCadet](https://github.com/keyboardio/Kaleidoscope-SpaceCadet)),
-but those plugins were designed primarily to allow you to overload
-keys whose primary function is as a modifier, and use them to produce
-printable keycodes when tapped. The `Qukey` design is different; it's
-meant to overload letter keys that are usually tapped and let you use
-them as alternate modifier keys (though the design is flexible enough
-that any keycode can be the secondary one -- I just haven't thought of
-a realistic use for that yet).
+This Kaleidoscope plugin allows you to overload keys on your keyboard so that they produce
+one keycode (i.e. symbol) when tapped, and a different keycode -- most likely a modifier
+(e.g. `shift` or `alt`) -- when held.
 
-## Design goals
 
-* I want users to be able to type at fast pace on `Qukey`s, without
-  accidentally triggering the secondary function, and preserving the
-  order of input keystrokes.
+## Setup
 
-* I want users to be able to rapidly invoke the secondary function of
-  a `Qukey` without having to wait for a timeout.
+- Clone the module -- In your sketch directory (e.g. `Model01-Firmware/`:
+```
+git submodule add Kaleidoscope-Qukeys https://github.com/gedankenlab/Kaleidoscope-Qukeys.git
+```
+- Include the header file:
+```
+#include <Kaleidoscope-Qukeys.h>
+```
+- Use the plugin in the `setup()` function:
+```
+Kaleidoscope.use(&Qukeys);
+```
+- Define some `Qukeys`:
+```
+QUKEYS(
+  kaleidoscope::Qukey(0, 2, 1, Key_LeftGui),      // A/cmd
+  kaleidoscope::Qukey(0, 2, 2, Key_LeftAlt),      // S/alt
+  kaleidoscope::Qukey(0, 2, 3, Key_LeftControl),  // D/ctrl
+  kaleidoscope::Qukey(0, 2, 4, Key_LeftShift)     // F/shift
+)
+```
 
-* I want `Qukey`s to be useful as modifiers with other input devices
-  (e.g. a mouse), without having to wait a long time for a
-  timeout. I'm guessing that 200ms is acceptable, but not anything
-  longer than that.
+`Qukeys` will work best if it's the first plugin in the `use()` list, because when typing
+overlap occurs, it will (temporarily) mask keys and block them from being processed by
+other plugins. If those other plugins handle the keypress events first, it may not work as
+expected. It doesn't _need_ to be first, but if it's `use()`'d after another plugin that
+handles typing events, especially one that sends extra keyboard HID reports, it is more
+likely to generate errors and out-of-order events.
 
-* I want physical *keys* on the keyboard to be defined independently
-  of each other. I don't want the plugin to act on *keycodes*; simply
-  translating one keycode to another.
 
-## Schrödinger's Key
+## Configuration
 
-The idea is that a `Qukey` will work just like a particle in a
-superposition of quantum states until some event causes the "waveform"
-to "collapse" into just one of the two states. (The name "qukey" is a
-reference to "qubit", a term used in quantum computing.)
+- set timeout
 
-When a `Qukey` is pressed, its state will be indeterminate (like a
-superposition of quantum states); no keycode for that key will be
-transmitted to the host until some other event (or sequence of events)
-causes the state to be decided. Once the state is decided, the `Qukey`
-will stay in that state until the key is released. The possible
-triggers for "collapsing" the state of a `Qukey` are:
+- activate/deactivate `Qukeys`
 
-* Timeout
+- see the
+  [example](https://github.com/gedankenlab/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino)
+  for a way to turn `Qukeys` on and off, using Kaleidoscope-Macros
 
-* Release of the `qukey`
 
-* Press and subsequent release of another key
+## Design & Implementation
 
-### Timeout
+When a `Qukey` is pressed, it doesn't immediately add a corresponding keycode to the HID
+report; it adds that key to a queue, and waits until one of three things happens:
 
-When a `qukey` times out, it falls into its secondary state (probably
-a modifier).The timeout should be fairly short ­ just a bit longer
-than the longest "reasonable" time of a tap, such that you very rarely
-(ideally never) hold a `qukey` long enough to trigger the secondary
-function when intending a tap, but short enough that you don't feel a
-need to wait a while to use it with a mouse.
+1. a time limit is reached
 
-### Release of `qukey`
+2. the `Qukey` is released
 
-If the `qukey` is released before it times out, and before any other
-keys are pressed, it falls into its primary state. This is slightly
-different from the timeout case, because we then add the `qukey`'s
-primary keycode to the HID report when the key toggles off (rather
-than when it toggles on, which is the behaviour of a normal key). It
-will get cleared at the end of the cycle, but there's still no need to
-send any extra HID reports.
+3. a subsequently-pressed key is released
 
-### Interactions with subsequent keys
+Until one of those conditions is met, all subsequent keypresses are simply added to the
+queue, and no new reports are sent to the host. Once a condition is met, the `Qukey` is
+flushed from the queue, and so are any subsequent keypresses (up to, but not including,
+the next `Qukey` that is still pressed).
 
-This is where things get tricky. Because fast typists might have
-multiple keys pressed simultaneously, we need to keep track of a
-sequence of subsequent keypresses, starting with the first `qukey` to
-toggle on. Basically, if any subsequent key is released before a
-`qukey` that was pressed before it, that `qukey` should fall into its
-secondary state (e.g. a modifier).
+Basically, if you hold the `Qukey`, then press and release some other key, you'll get the
+alternate keycode (probably a modifier) for the `Qukey`, even if you don't wait for a
+timeout. If you're typing quickly, and there's some overlap between two keypresses, you
+won't get the alternate keycode, and the keys will be reported in the order that they were
+pressed -- as long as the keys are released in the same order they were pressed.
 
-In order to do this, we need to suppress the output of any subsequent
-keys, as well as the `qukey`. Basically, this means storing a list of
-keys that have been pressed, but which have not affected the report
-yet. This also means that when a key in that list toggles off, every
-`qukey` preceding it in the list has its state decided.
-
-When a subsequent key is released, we now need to send a series of HID
-reports to preserve the order that the keypresses were detected by the
-keyboard. To do that, we add the one keycode at a time to the report
-and send it, until we reach the next `qukey` in the list that has an
-indeterminate state.
-
-The really tricky part is that the key *releases* might come in any
-order, so if we have a sequence that goes like this, we could get into
-trouble:
-
-1. press `qk(A,shift)`
-2. press `B`
-3. press `C`
-4. press `qk(D,ctrl)`
-5. press `space`
-6. release `B`
-
-In this case, `B` is released after the second `qukey` was pressed,
-but I don't think it's actually a problem. Maybe.
-
-We might also send a series of reports when a `qukey` times out, of
-course, but this is much more straightforward.
-
-### Another way to address overlap
-
-An alternative method is to only allow the `qukey` to fall into its
-secondary (modifier) state if there is only one non-`qukey` press
-following. So, in the previous example, once step 3 was reached, the
-`qukey` would become `A`. I don't think this works as well, but it
-would err more on the side of defaulting to the primary key, which
-would mean fewer unintended modifiers while typing, and enforce
-(slightly) more deliberate usage to get the secondary keycode. This
-would make for another interesting possibility, though divergent from
-the idea that I started with ­ the state could change while the key is
-pressed:
-
-1. press `qk(A,shift)`
-2. press `B`
-3. press `C` -> output: `abc`
-4. release `B` -> output: `shift` held?
-
-It wouldn't require any additional data structures, so the algorithm
-to use could be user-configurable.
-
-## Data structures
-
-I want to store a table, indexed by key id (layer, row & column). Each
-entry would be an object containing:
-
-* primary keycode (or `Key` object)
-* secondary keycode (or `Key` object)
-* time limit (set when key toggles on, based on timeout)
-* flags (bitfield ­ maybe useful)
-
-I think I need the flags byte in order to signal which state the
-`qukey` has once its state has collapsed, but maybe I can get away
-with just using the time limit value. I could set that to zero (or
-maybe some other constant?) to signal that the `qukey` is in its
-primary state, and if the state collapses to secondary before the
-timeout, just reset the time limit to `millis()`. Or maybe I never
-need that, because it should only send the primary keycode as a "tap"
-in a single report.
-
-In addition, I need to store a list of keypresses, ideally in
-something like `std::queue`, though I think that's not available to
-Arduino (it looks like someone has written a `QueueArray` library,
-though). This would just be a FIFO buffer of key ids (row & column ­
-maybe layer, too, but that might even be undesirable, because we might
-try to expand `Qukey` to allow layer switching, too).
+The time limit is mainly there so that a `Qukey` can be used as a modifier (in its
+alternate state) with a second input device (e.g. a mouse). It can be quite short (200ms
+is probably short enough) -- as long as your "taps" while typing are shorter than the time
+limit, you won't get any unintended alternate keycodes.
