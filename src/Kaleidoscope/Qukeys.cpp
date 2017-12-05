@@ -44,6 +44,7 @@ uint16_t Qukeys::time_limit_ = 500;
 QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
 byte Qukeys::qukey_state_[] = {};
+bool Qukeys::flushing_queue_ = false;
 
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
@@ -130,7 +131,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
 
   // Now that we're done sending the report(s), Qukeys can process events again:
-  flushing_queue_ = true;
+  flushing_queue_ = false;
 
   // Shift the queue, so key_queue[0] is always the first key that gets processed
   for (byte i = 0; i < key_queue_length_; i++) {
