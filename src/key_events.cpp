@@ -75,7 +75,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
       }
     }
 
-    if (mappedKey == Key_NoKey) {
+    if (mappedKey.raw == Key_NoKey.raw) {
       mappedKey = Layer.lookup(row, col);
     }
 
