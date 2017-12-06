@@ -121,8 +121,8 @@ Layer_::updateActiveLayers(void) {
 
 void Layer_::updateHighestLayer(void) {
   // If layer_count is set, start there, otherwise search from the
-  // highest possible layer for the top active layer
-  for (int8_t i = (layer_count - 1); i > DefaultLayer; i--) {
+  // highest possible layer (MAX_LAYERS) for the top active layer
+  for (byte i = (layer_count - 1); i > DefaultLayer; i--) {
     if (bitRead(LayerState, i)) {
       highestLayer = i;
       return;
