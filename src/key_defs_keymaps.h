@@ -48,4 +48,4 @@ static const uint8_t LAYER_SHIFT_OFFSET = 42;
  * released, the layer shifts back too. `n` can be a number, or an enum
  * value declared previously.
  */
-#define ShiftToLayer(n) (Key){ n + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define ShiftToLayer(n) (Key){ uint8_t(n + LAYER_SHIFT_OFFSET), KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
