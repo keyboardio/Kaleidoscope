@@ -10,15 +10,15 @@ firmware_size () {
 
 	## This is a terrible hack, please don't hurt me. - algernon
 
-	MAX_PROG_SIZE=28672
+    MAX_PROG_SIZE=28672
 
-	output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+    output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
 
-	PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
+    PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
 
-  PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+    PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
-	echo "${output}" | sed -e "s,\(Program:.*\)(\([0-9\.]*%\) Full),\1(${PERCENT}% Full),"
+    echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
 
 find_sketch () {

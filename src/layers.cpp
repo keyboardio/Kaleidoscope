@@ -8,6 +8,11 @@ Key Layer_::liveCompositeKeymap[ROWS][COLS];
 uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
+// The total number of defined layers in the firmware sketch keymaps[]
+// array. If the keymap wasn't defined using CREATE_KEYMAP() in the
+// sketch file, layer_count gets the default value of zero.
+uint8_t layer_count __attribute__((weak)) = 0;
+
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
@@ -124,30 +129,47 @@ void Layer_::move(uint8_t layer) {
   on(layer);
 }
 
+// Activate a given layer
 void Layer_::on(uint8_t layer) {
-  bool wasOn = isOn(layer);
+  // If we're trying to turn on a layer that doesn't exist, abort (but
+  // if the keymap wasn't defined using the KEYMAPS() macro, proceed anyway
+  if (layer_count != 0 && layer >= layer_count)
+    return;
 
+  // If the target layer was already on, return
+  if (isOn(layer))
+    return;
+
+  // Otherwise, turn on its bit in LayerState
   bitSet(LayerState, layer);
+
+  // If the target layer is above the previous highest active layer,
+  // update highestLayer
   if (layer > highestLayer)
     updateHighestLayer();
 
-  /* If the layer did turn on, update the keymap cache. See layers.h for an
-   * explanation about the caches we have. */
-  if (!wasOn)
-    updateActiveLayers();
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
+// Deactivate a given layer
 void Layer_::off(uint8_t layer) {
-  bool wasOn = isOn(layer);
+  // If the target layer was already off, return
+  if (!bitRead(LayerState, layer))
+    return;
 
+  // Turn off its bit in LayerState
   bitClear(LayerState, layer);
+
+  // If the target layer was the previous highest active layer,
+  // update highestLayer
   if (layer == highestLayer)
     updateHighestLayer();
 
-  /* If the layer did turn off, update the keymap cache. See layers.h for an
-   * explanation about the caches we have. */
-  if (wasOn)
-    updateActiveLayers();
+  // Update the keymap cache (but not liveCompositeKeymap; that gets
+  // updated separately, when keys toggle on or off. See layers.h)
+  updateActiveLayers();
 }
 
 boolean Layer_::isOn(uint8_t layer) {
