@@ -1,4 +1,4 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl
 
 use warnings;
 use strict;
@@ -17,17 +17,14 @@ for my $path (@paths) {
 	my ($key,$val) = split(/=/,$line,2);
 		$devices{$path}{$key} = $val;
 	}
-	if (($devices{$path}{'ID_VENDOR_ID'} == $vid) && 
+	if (($devices{$path}{'ID_VENDOR_ID'} == $vid) &&
 	   ($devices{$path}{'ID_MODEL_ID'} == $pid) ) {
 
 	   if ($devices{$path}{'ID_MM_CANDIDATE'}) {
-		warn "Yikes. ModemManager wants to pwn your keyboard";
- 		}		   
+         warn "Yikes. ModemManager wants to pwn your keyboard";
+     }
 
-	print $devices{$path}{DEVNAME};
-	exit(0);
+     print $devices{$path}{DEVNAME};
+     exit(0);
    }
-
-
 }
-
