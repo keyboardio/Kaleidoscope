@@ -40,7 +40,7 @@ Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
 
   KeyboardHardware.maskKey(row, col);
 
-  ::OneShot.cancel();
+  ::OneShot.cancel(true);
 
   return Key_NoKey;
 }
