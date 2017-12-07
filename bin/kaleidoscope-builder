@@ -2,13 +2,33 @@
 
 set -e
 
+######
+###### Build and output configuration
+######
+
+build_version () {
+	GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
+	LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+
+	BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
+	OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
+	OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
+}
+
+build_filenames () {
+	OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
+	HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
+	HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
+	ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
+}
+
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
       echo "[Size not computed for virtual build]"
       return
     fi
 
-	## This is a terrible hack, please don't hurt me. - algernon
+	  ## This is a terrible hack, please don't hurt me. - algernon
 
     MAX_PROG_SIZE=28672
 
@@ -56,13 +76,11 @@ flash () {
     sleep 3s
     find_bootloader_ports
     flash_over_usb || flash_over_usb
-
 }
 
 flash_over_usb () {
     sleep 1s
     ${AVRDUDE} -q -q -C ${AVRDUDE_CONF} -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
-
 }
 
 flash_from_bootloader() {
@@ -71,14 +89,12 @@ flash_from_bootloader() {
 	flash_over_usb || flash_over_usb
 }
 
-
 program() {
     prepare_to_flash
     flash_with_programmer
 }
 
 flash_with_programmer() {
-
     ${AVRDUDE} -v \
 			-C ${AVRDUDE_CONF} \
 		        -p${MCU} \
@@ -127,7 +143,7 @@ compile () {
 
     ARDUINO_PACKAGES=""
     if [ -d ${ARDUINO_PACKAGE_PATH} ]; then
-	 ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
+	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
     ${ARDUINO_BUILDER} \
@@ -212,7 +228,13 @@ clean () {
     rm -rf "${OUTPUT_PATH}"
 }
 
-reset_device () {
+reset_device() {
+    find_device_port
+    check_device_port
+    reset_device_cmd
+}
+
+check_device_port () {
     if [ -z $DEVICE_PORT ]; then
         echo "Couldn't autodetect the keyboard's serial port."
         echo "If you see this message and your keyboard is connected to your computer,"
@@ -221,8 +243,6 @@ reset_device () {
         echo "Please report this issue at https://github.com/keyboardio/Kaleidoscope";
         exit 0;
     fi
-
-    ${RESET_DEVICE}
 }
 
 usage () {
@@ -297,9 +317,13 @@ if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
     . "${SOURCEDIR}/kaleidoscope-builder.conf"
 fi
 
-
 . ${ROOT}/etc/kaleidoscope-builder.conf
 
+if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
+    ARDUINO_VERBOSE="-verbose"
+else
+    ARDUINO_VERBOSE="-quiet"
+fi
 
 cmds=""
 
