@@ -103,7 +103,7 @@ static const Key ascii_to_key_map[] PROGMEM = {
   LSHIFT(Key_Slash),
   LSHIFT(Key_2),
 
-  // 0x5b ... 0x5f
+  // 0x5b ... 0x60
   Key_LeftBracket,
   Key_Backslash,
   Key_RightBracket,
@@ -148,7 +148,7 @@ Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
     key.flags = SHIFT_HELD;
     key.keyCode = Key_A.keyCode + ascii_code - 0x41;
     break;
-  case 0x5B ... 0x5F:
+  case 0x5B ... 0x60:
     key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23]);
     break;
   case 0x61 ... 0x7A:
