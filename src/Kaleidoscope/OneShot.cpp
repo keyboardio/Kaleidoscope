@@ -179,6 +179,8 @@ void OneShot::loopHook(bool is_post_clear) {
           if (should_cancel_stickies_) {
             is_cancelled = true;
             clearSticky(i);
+            cancelOneShot(i);
+            clearPressed(i);
           }
         } else if (isOneShot(i) && !isPressed(i)) {
           is_cancelled = true;
