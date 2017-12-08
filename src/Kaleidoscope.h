@@ -312,7 +312,7 @@ class PluginHookAdapter__ {
 //
 #define HOOK_TASK(HOOK, RET_VAL, HOOK_METHOD) \
 __NN__   \
-__NNL__   struct HOOK {  \
+__NN__   struct HOOK {  \
 __NL__      \
 __NL__      typedef RET_VAL ReturnValue; \
 __NL__      \
