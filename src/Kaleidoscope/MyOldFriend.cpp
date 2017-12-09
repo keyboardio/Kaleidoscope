@@ -39,16 +39,16 @@ void MyOldFriend::toggleLEDs(MyOldFriend::Event event) {
   static uint8_t prev_led_mode = 0;
 
   switch (event) {
-    case Suspend:
-      prev_led_mode = ::LEDControl.get_mode_index();
-      ::LEDOff.activate();
-      break;
-    case Resume:
-      ::LEDControl.set_mode(prev_led_mode);
-      ::LEDControl.refreshAll();
-      break;
-    case Sleep:
-      break;
+  case Suspend:
+    prev_led_mode = ::LEDControl.get_mode_index();
+    ::LEDOff.activate();
+    break;
+  case Resume:
+    ::LEDControl.set_mode(prev_led_mode);
+    ::LEDControl.refreshAll();
+    break;
+  case Sleep:
+    break;
   }
 }
 
