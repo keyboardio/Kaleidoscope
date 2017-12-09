@@ -27,8 +27,8 @@ extern u8 _usbSuspendState;
 
 namespace kaleidoscope {
 
-bool MyOldFriend::wasSuspended = false;
-bool MyOldFriend::initialSuspend = true;
+bool MyOldFriend::was_suspended_ = false;
+bool MyOldFriend::initial_suspend_ = true;
 
 void MyOldFriend::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
@@ -57,19 +57,19 @@ void MyOldFriend::loopHook(bool post_clear) {
     return;
 
   if ((_usbSuspendState & (1 << SUSPI))) {
-    if (!initialSuspend) {
-      if (!wasSuspended) {
-        wasSuspended = true;
+    if (!initial_suspend_) {
+      if (!was_suspended_) {
+        was_suspended_ = true;
         myOldFriendEventHandler(Suspend);
       } else {
         myOldFriendEventHandler(Sleep);
       }
     }
   } else {
-    if (initialSuspend)
-      initialSuspend = false;
-    if (wasSuspended) {
-      wasSuspended = false;
+    if (initial_suspend_)
+      initial_suspend_ = false;
+    if (was_suspended_) {
+      was_suspended_ = false;
       myOldFriendEventHandler(Resume);
     }
   }

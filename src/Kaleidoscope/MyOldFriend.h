@@ -36,8 +36,8 @@ class MyOldFriend : public KaleidoscopePlugin {
   void toggleLEDs(Event event);
 
  private:
-  static bool wasSuspended;
-  static bool initialSuspend;
+  static bool was_suspended_;
+  static bool initial_suspend_;
 
   static void loopHook(bool post_clear);
 };
