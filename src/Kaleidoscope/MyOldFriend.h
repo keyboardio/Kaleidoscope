@@ -33,7 +33,9 @@ class MyOldFriend : public KaleidoscopePlugin {
   MyOldFriend(void) {};
 
   void begin(void) final;
-  void enableWakeup(void) { WakeupKeyboard.begin(); };
+  void enableWakeup(void) {
+    WakeupKeyboard.begin();
+  };
 
   void toggleLEDs(Event event);
 

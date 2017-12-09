@@ -85,7 +85,7 @@ bool WakeupKeyboard_::setup(USBSetup& setup) {
   return false;
 }
 
-void WakeupKeyboard_::begin () {
+void WakeupKeyboard_::begin() {
 }
 
 WakeupKeyboard_ WakeupKeyboard;
