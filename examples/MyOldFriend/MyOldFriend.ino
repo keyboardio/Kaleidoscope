@@ -45,6 +45,8 @@ void setup() {
   Kaleidoscope.setup();
 
   Kaleidoscope.use(&MyOldFriend);
+
+  MyOldFriend.enableWakeup();
 }
 
 void loop() {

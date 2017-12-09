@@ -19,32 +19,20 @@
 #pragma once
 
 #include <Kaleidoscope.h>
-#include "WakeupKeyboard.h"
+#include "PluggableUSB.h"
+#include "HID.h"
 
-namespace kaleidoscope {
-class MyOldFriend : public KaleidoscopePlugin {
+class WakeupKeyboard_ : public PluggableUSBModule, public KaleidoscopePlugin {
  public:
-  typedef enum {
-    Suspend,
-    Sleep,
-    Resume,
-  } Event;
+  WakeupKeyboard_(void);
+  void begin() final;
 
-  MyOldFriend(void) {};
+ protected:
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
 
-  void begin(void) final;
-  void enableWakeup(void) { WakeupKeyboard.begin(); };
-
-  void toggleLEDs(Event event);
-
- private:
-  static bool was_suspended_;
-  static bool initial_suspend_;
-
-  static void loopHook(bool post_clear);
+  uint8_t epType[1];
 };
-}
 
-void myOldFriendEventHandler(kaleidoscope::MyOldFriend::Event event);
-
-extern kaleidoscope::MyOldFriend MyOldFriend;
+extern WakeupKeyboard_ WakeupKeyboard;

@@ -36,6 +36,13 @@ void setup () {
 
 The plugin provides the `MyOldFriend` object, which has the following methods:
 
+### `.enableWakeup()`
+
+> Enables host wakeup support. When enabled, pressing any key on the keyboard
+> will wake the host up.
+>
+> Once enabled, it **cannot** be disabled again.
+
 ### `.toggleLEDs(event)`
 
 > Turns LEDs off on suspend, restores the previous LED mode on resume. This is
