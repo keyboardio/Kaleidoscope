@@ -19,7 +19,6 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-MyOldFriend.h>
 #include <Kaleidoscope-LEDControl.h>
-#include "LED-Off.h"
 
 // This is a terrible hack until Arduino#6964 gets implemented.
 // It makes the `_usbSuspendState` symbol available to us.
@@ -32,19 +31,17 @@ bool MyOldFriend::initial_suspend_ = true;
 
 void MyOldFriend::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
-  Kaleidoscope.use(&::LEDOff);
 }
 
 void MyOldFriend::toggleLEDs(MyOldFriend::Event event) {
-  static uint8_t prev_led_mode = 0;
-
   switch (event) {
   case Suspend:
-    prev_led_mode = ::LEDControl.get_mode_index();
-    ::LEDOff.activate();
+    ::LEDControl.paused = true;
+    ::LEDControl.set_all_leds_to({0, 0, 0});
+    ::LEDControl.syncLeds();
     break;
   case Resume:
-    ::LEDControl.set_mode(prev_led_mode);
+    ::LEDControl.paused = false;
     ::LEDControl.refreshAll();
     break;
   case Sleep:
