@@ -29,11 +29,12 @@ class WavepoolEffect : public LEDMode {
  public:
   WavepoolEffect(void);
 
-  void begin(void) final;
-  void update(void) final;
-
   // ms before idle animation starts after last keypress
   static uint16_t idle_timeout;
+
+ protected:
+  void setup(void) final;
+  void update(void) final;
 
  private:
   static uint8_t frames_since_event;
