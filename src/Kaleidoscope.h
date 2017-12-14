@@ -25,6 +25,7 @@ void setup();
 #include "kaleidoscope/hid.h"
 #include "layers.h"
 #include "preprocessor_macro_map.h"
+#include "hooks.h"
 
 #define HOOK_MAX 64
 
@@ -213,16 +214,16 @@ class KaleidoscopePlugin {
 // that casts a specific operation on every member of
 // a variadic macro argument list (if present).
 //
-#define INVOKE_HOOK_FOR_PLUGIN(PLUGIN) \
-__NN__   \
-__NN__   hook_return_val = Hook__::invoke(PLUGIN, hook_args...); \
-__NL__   \
-__NL__   if (!ContinuationPredicate__::eval(hook_return_val)) { \
-__NL__      return hook_return_val; \
+#define INVOKE_HOOK_FOR_PLUGIN(PLUGIN)                                         \
+__NN__                                                                         \
+__NN__   hook_return_val = Hook__::invoke(PLUGIN, hook_args...);               \
+__NL__                                                                         \
+__NL__   if (!ContinuationPredicate__::eval(hook_return_val)) {                \
+__NL__      return hook_return_val;                                            \
 __NL__   }
 
-#define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN) \
-   \
+#define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN)                              \
+                                                                               \
    Hook__::invoke(PLUGIN);
 
 // KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked at global scope of
@@ -243,37 +244,41 @@ __NL__   }
 //    in rvalue-reference-tuples and be passed to some kind
 //    of tuple-for-each algorithm.
 //
-#define KALEIDOSCOPE_INIT_PLUGINS(...) \
-__NN__   \
-__NN__   struct HookLoop \
-__NL__   { \
-__NL__      template<typename Hook__, /* Invokes the hook method on the plugin */ \
-__NL__               typename ContinuationPredicate__, /* Decides whether to continue with further hooks */\
-__NL__               typename... Args__ /* The hook method call arguments */ \
-__NL__      > \
-__NL__      /* The Hook__ class defines the return value of the hook method as a \
-__NL__         nested typedef. \
-__NL__         To determine the actual return type based on Hook__, we have \
-__NL__         to rely on the trailing-return-type syntax. */ \
-__NL__      static auto apply(Args__&&... hook_args) -> typename Hook__::ReturnValue { \
-__NL__         \
-__NL__         typename Hook__::ReturnValue hook_return_val; \
-__NL__         \
-__NL__         MAP(INVOKE_HOOK_FOR_PLUGIN, __VA_ARGS__) \
-__NL__         \
-__NL__         return hook_return_val; \
-__NL__      } \
-__NL__      \
-__NL__      /* An overloaded empty arguments version of apply to support \
-__NL__         hooks with void arguments */ \
-__NL__      template<typename Hook__, /* Invokes the hook method on the plugin */ \
-__NL__               typename... Args__ /* The hook method call arguments */ \
-__NL__      > \
-__NL__      static auto apply() -> typename Hook__::ReturnValue { \
-__NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__) \
-__NL__      } \
-__NL__   }; \
-__NL__   \
+#define KALEIDOSCOPE_INIT_PLUGINS(...)                                         \
+__NN__                                                                         \
+__NN__   struct HookLoop                                                       \
+__NL__   {                                                                     \
+__NL__      template<typename Hook__, /* Invokes the hook method               \
+__NN__                                   on the plugin */                      \
+__NL__               typename ContinuationPredicate__, /* Decides whether      \
+__NN__                                   to continue with further hooks */     \
+__NL__               typename... Args__ /* The hook method call arguments */   \
+__NL__      >                                                                  \
+__NL__      /* The Hook__ class defines the return value of the hook method    \
+__NL__         as a nested typedef.                                            \
+__NL__         To determine the actual return type based on Hook__, we have    \
+__NL__         to rely on the trailing-return-type syntax. */                  \
+__NL__      static auto apply(Args__&&... hook_args)                           \
+__NL__                              -> typename Hook__::ReturnValue {          \
+__NL__                                                                         \
+__NL__         typename Hook__::ReturnValue hook_return_val;                   \
+__NL__                                                                         \
+__NL__         MAP(INVOKE_HOOK_FOR_PLUGIN, __VA_ARGS__)                        \
+__NL__                                                                         \
+__NL__         return hook_return_val;                                         \
+__NL__      }                                                                  \
+__NL__                                                                         \
+__NL__      /* An overloaded empty arguments version of apply to support       \
+__NL__         hooks with void arguments */                                    \
+__NL__      template<typename Hook__,                                          \
+__NL__                     /* Invokes the hook method on the plugin */         \
+__NL__               typename... Args__ /* The hook method call arguments */   \
+__NL__      >                                                                  \
+__NL__      static auto apply() -> typename Hook__::ReturnValue {              \
+__NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)             \
+__NL__      }                                                                  \
+__NL__   };                                                                    \
+__NL__                                                                         \
 __NL__   PluginHookAdapter<HookLoop> hookLoop;
 
 // This macro is supposed to be called at the end of the begin() method
@@ -285,7 +290,7 @@ __NL__   PluginHookAdapter<HookLoop> hookLoop;
 // Otherwise, everything could be called from within the begin() method
 // of the firmware sketch.
 //
-#define KALEIDOSCOPE_CONNECT_PLUGINS \
+#define KALEIDOSCOPE_CONNECT_PLUGINS                                           \
    Kaleidoscope.connectPlugins(&hookLoop);
 
 // This hook adapter base class defines the main interface that
@@ -305,22 +310,25 @@ class PluginHookAdapter__ {
   virtual void postReportHook() {}
 };
 
+
+
 // The HOOK_TASK macro defines an auxiliary Hook class (HOOK) that invokes
 // a plugin hook method with a provided set of method arguments. The
 // HOOK class is meant to be passed to the PluginLoop in the PluginHookAdapter
 // to forward the call to the hook methods of plugins.
 //
-#define HOOK_TASK(HOOK, RET_VAL, HOOK_METHOD) \
-__NN__   \
-__NN__   struct HOOK {  \
-__NL__      \
-__NL__      typedef RET_VAL ReturnValue; \
-__NL__      \
-__NL__      template<typename Plugin__, typename... Args__> \
-__NL__      static RET_VAL invoke(Plugin__ &plugin, Args__&&... hook_args) \
-__NL__      { \
-__NL__         return plugin.HOOK_METHOD(hook_args...); \
-__NL__      } \
+#define HOOK_TASK(HOOK, RET_VAL, HOOK_METHOD)                                  \
+__NN__                                                                         \
+__NN__   struct HOOK {                                                         \
+__NL__                                                                         \
+__NL__      typedef RET_VAL ReturnValue;                                       \
+__NL__                                                                         \
+__NL__      template<typename Plugin__, typename... Args__>                    \
+__NL__      static RET_VAL invoke(Plugin__ &plugin, Args__&&... hook_args)     \
+__NL__      {                                                                  \
+__NL__         MATCH_HOOK_TYPE(HOOK_METHOD, Plugin__)                          \
+__NL__         return plugin.HOOK_METHOD(hook_args...);                        \
+__NL__      }                                                                  \
 __NL__   };
 
 // A predicate class that decides on hook-plugin-loop continuation.
