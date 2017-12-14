@@ -124,6 +124,7 @@ bool EEPROMKeymap::focusKeymapLayer(const char *command) {
         ::Focus.printSpace();
       }
     }
+    Serial.println();
   } else {
     uint16_t keysPerLayer = ROWS * COLS;
     uint16_t offset = layer * keysPerLayer;
