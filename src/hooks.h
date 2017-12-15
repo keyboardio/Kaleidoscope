@@ -49,6 +49,22 @@ struct HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) co
   static constexpr bool value = true;
 };
 
+// This template is instanciated when something goes wrong. It causes a 
+// compiler error as it does not define a constant 'value'.
+//
+template<typename Plugin__, bool result>
+struct ___________________This_is_the_culprit_plugin_____________________
+{};
+
+// This specialization is instanciated when everything is ok.
+//
+template<typename Plugin__>
+struct ___________________This_is_the_culprit_plugin_____________________
+<Plugin__, true>
+{
+   static constexpr bool value = true;
+};
+
 // The above specialized HookSignaturesMatch plugin class is instanciated
 // based on two types of pointers to the plugin base class hook method and
 // the derived method. If both pointer types and thus the signatures equal,
@@ -58,28 +74,41 @@ struct HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) co
 // causing 'value' to be defined as false.
 
 #define MATCH_HOOK_TYPE(HOOK_METHOD, PLUGIN)                                   \
-__NN__                                                                         \
-__NN__  {                                                                      \
-__NN__    /* Check it the two signatures equal. If not, the                    \
-__NN__    * user has implemented a method with the same name but a             \
-__NN__    * different (wrong) signature.                                       \
-__NN__    */                                                                   \
-__NN__    static_assert(HookSignaturesMatch<                                   \
-__NN__                       decltype(&KaleidoscopePlugin::HOOK_METHOD),       \
-__NN__                       decltype(&PLUGIN::HOOK_METHOD)                    \
-__NN__                  >::value,                                              \
-__NN__     "*****************************************************************" \
-__NN__     "******************** READ THIS CAREFULLY ! **********************" \
-__NN__     "**************************************************************** " \
-__NN__     "The signature of hook \"" #HOOK_METHOD                             \
-__NN__     "\" differs from the base class' hook signature. "                  \
-__NN__     "Please check all the hook methods implemented by your plugins "    \
-__NN__     "and compare them to the respective hook methods of "               \
-__NN__     "base class KaleidscopePlugin. Note: Two function signatures "      \
-__NN__     "equal if all argument types and the method's "                     \
-__NN__     "const qualifier equal. "                                           \
-__NN__     "*****************************************************************" \
-__NN__     "*****************************************************************" \
-__NN__     "*****************************************************************" \
-__NN__    );                                                                   \
-__NN__  }
+__NL__                                                                         \
+__NL__  {                                                                      \
+__NL__    /* Check it the two signatures equal. If not, the                    \
+__NL__    * user has implemented a method with the same name but a             \
+__NL__    * different (wrong) signature.                                       \
+__NL__    */                                                                   \
+__NL__    typedef HookSignaturesMatch<                                         \
+__NL__                       decltype(&KaleidoscopePlugin::HOOK_METHOD),       \
+__NL__                       decltype(&PLUGIN::HOOK_METHOD)                    \
+__NL__                  > Check;                                               \
+__NL__                                                                         \
+__NL__    static_assert(Check::value,                                          \
+__NL__     "*****************************************************************" \
+__NL__     "******************** READ THIS CAREFULLY ! **********************" \
+__NL__     "**************************************************************** " \
+__NL__     "One of your plugins implemented a hook \"" #HOOK_METHOD            \
+__NL__     "\" whose signature differs from the base class' hook signature. "  \
+__NL__     "Please check the compiler messages above or below for an hint "    \
+__NL__     "about which plugin is the culprit. "                               \
+__NL__     "Then check all the hook methods implemented by the plugin "        \
+__NL__     "and compare them to the respective hook methods of "               \
+__NL__     "base class KaleidscopePlugin. Note: Two function signatures "      \
+__NL__     "equal if all argument types and the method's "                     \
+__NL__     "const qualifier equal. "                                           \
+__NL__     "*****************************************************************" \
+__NL__     "*****************************************************************" \
+__NL__     "*****************************************************************" \
+__NL__    );                                                                   \
+__NL__                                                                         \
+__NL__    /* The following construct is necessary enable reporting of the      \
+__NL__     * type of the plugin that implemented a hook with a wrong signature.\
+__NL__     * This is necessary as it is not possible to include any non        \
+__NL__     * literal string constans in the error message of a static_assert.  \
+__NL__     */                                                                  \
+__NL__    constexpr bool dummy =                                               \
+__NL__      ___________________This_is_the_culprit_plugin_____________________ \
+__NL__         <PLUGIN, Check::value>::value;                                  \
+__NL__  }
