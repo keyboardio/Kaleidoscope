@@ -3,15 +3,20 @@
 static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
+// The maximum number of layers allowed. `LayerState`, which stores
+// the on/off status of the layers in a bitfield has only 32 bits, and
+// that should be enough for almost any layout.
+#define MAX_LAYERS sizeof(LayerState) * 8;
+
 uint8_t Layer_::highestLayer;
 Key Layer_::liveCompositeKeymap[ROWS][COLS];
 uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
 
 // The total number of defined layers in the firmware sketch keymaps[]
-// array. If the keymap wasn't defined using CREATE_KEYMAP() in the
-// sketch file, layer_count gets the default value of zero.
-uint8_t layer_count __attribute__((weak)) = 0;
+// array. If the keymap wasn't defined using KEYMAPS(), set it to the
+// highest possible number of layers.
+uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
 static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
@@ -115,13 +120,17 @@ Layer_::updateActiveLayers(void) {
 }
 
 void Layer_::updateHighestLayer(void) {
-  for (int8_t i = 31; i >= 0; i--) {
+  // If layer_count is set, start there, otherwise search from the
+  // highest possible layer (MAX_LAYERS) for the top active layer
+  for (byte i = (layer_count - 1); i > DefaultLayer; i--) {
     if (bitRead(LayerState, i)) {
       highestLayer = i;
       return;
     }
   }
-  highestLayer = 0;
+  // It's not possible to turn off the default layer (see
+  // updateActiveLayers()), so if no other layers are active:
+  highestLayer = DefaultLayer;
 }
 
 void Layer_::move(uint8_t layer) {
@@ -133,7 +142,7 @@ void Layer_::move(uint8_t layer) {
 void Layer_::on(uint8_t layer) {
   // If we're trying to turn on a layer that doesn't exist, abort (but
   // if the keymap wasn't defined using the KEYMAPS() macro, proceed anyway
-  if (layer_count != 0 && layer >= layer_count)
+  if (layer >= layer_count)
     return;
 
   // If the target layer was already on, return
