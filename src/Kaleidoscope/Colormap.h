@@ -41,6 +41,7 @@ class ColormapEffect : public LEDMode {
   static uint8_t last_highest_layer_;
   static uint8_t max_layers_;
   static uint16_t map_base_;
+  static bool dirty_;
 };
 }
 

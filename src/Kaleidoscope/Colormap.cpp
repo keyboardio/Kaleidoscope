@@ -29,6 +29,7 @@ namespace kaleidoscope {
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
 uint8_t ColormapEffect::last_highest_layer_;
+bool ColormapEffect::dirty_ = false;
 
 void ColormapEffect::setup(void) {
   Kaleidoscope.use(&::EEPROMSettings, &::LEDPaletteTheme);
@@ -49,9 +50,10 @@ void ColormapEffect::onActivate(void) {
 }
 
 void ColormapEffect::update(void) {
-  if (Layer.top() == last_highest_layer_)
+  if (Layer.top() == last_highest_layer_ && !dirty_)
     return;
 
+  dirty_ = false;
   onActivate();
 }
 
@@ -66,6 +68,9 @@ bool ColormapEffect::focusHook(const char *command) {
 }
 
 bool ColormapEffect::focusHookLayerwise(const char *command) {
+  // We might set dirty unneccessarily sometimes, if using this hook to read
+  // The usual case for this hook is updating though, so this is probably okay
+  dirty_ = true;
   return ::LEDPaletteTheme.themeLayerFocusHandler(command, PSTR("colormap.layer"),
          map_base_, max_layers_);
 }
