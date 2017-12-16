@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-MyOldFriend -- Host sleep support plugin.
+ * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-MyOldFriend.h>
+#include <Kaleidoscope-HostPowerManagement.h>
 #include <Kaleidoscope-LEDControl.h>
 
 // This is a terrible hack until Arduino#6964 gets implemented.
@@ -26,14 +26,14 @@ extern u8 _usbSuspendState;
 
 namespace kaleidoscope {
 
-bool MyOldFriend::was_suspended_ = false;
-bool MyOldFriend::initial_suspend_ = true;
+bool HostPowerManagement::was_suspended_ = false;
+bool HostPowerManagement::initial_suspend_ = true;
 
-void MyOldFriend::begin(void) {
+void HostPowerManagement::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
 }
 
-void MyOldFriend::toggleLEDs(MyOldFriend::Event event) {
+void HostPowerManagement::toggleLEDs(HostPowerManagement::Event event) {
   switch (event) {
   case Suspend:
     ::LEDControl.paused = true;
@@ -49,7 +49,7 @@ void MyOldFriend::toggleLEDs(MyOldFriend::Event event) {
   }
 }
 
-void MyOldFriend::loopHook(bool post_clear) {
+void HostPowerManagement::loopHook(bool post_clear) {
   if (post_clear)
     return;
 
@@ -57,9 +57,9 @@ void MyOldFriend::loopHook(bool post_clear) {
     if (!initial_suspend_) {
       if (!was_suspended_) {
         was_suspended_ = true;
-        myOldFriendEventHandler(Suspend);
+        hostPowerManagementEventHandler(Suspend);
       } else {
-        myOldFriendEventHandler(Sleep);
+        hostPowerManagementEventHandler(Sleep);
       }
     }
   } else {
@@ -67,15 +67,15 @@ void MyOldFriend::loopHook(bool post_clear) {
       initial_suspend_ = false;
     if (was_suspended_) {
       was_suspended_ = false;
-      myOldFriendEventHandler(Resume);
+      hostPowerManagementEventHandler(Resume);
     }
   }
 }
 
 }
 
-__attribute__((weak)) void myOldFriendEventHandler(kaleidoscope::MyOldFriend::Event event) {
-  MyOldFriend.toggleLEDs(event);
+__attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
+  HostPowerManagement.toggleLEDs(event);
 }
 
-kaleidoscope::MyOldFriend MyOldFriend;
+kaleidoscope::HostPowerManagement HostPowerManagement;

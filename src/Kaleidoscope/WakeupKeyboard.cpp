@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-MyOldFriend -- Host sleep support plugin.
+ * Kaleidoscope-MyOldFriend -- Host power management support plugin.
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ bool WakeupKeyboard_::setup(USBSetup& setup) {
   return false;
 }
 
-void WakeupKeyboard_::begin() {
+void WakeupKeyboard_::begin () {
 }
 
 WakeupKeyboard_ WakeupKeyboard;

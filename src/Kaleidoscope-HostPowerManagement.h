@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-MyOldFriend -- Host sleep support plugin.
+ * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,35 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
-#include "WakeupKeyboard.h"
-
-namespace kaleidoscope {
-class MyOldFriend : public KaleidoscopePlugin {
- public:
-  typedef enum {
-    Suspend,
-    Sleep,
-    Resume,
-  } Event;
-
-  MyOldFriend(void) {};
-
-  void begin(void) final;
-  void enableWakeup(void) {
-    WakeupKeyboard.begin();
-  };
-
-  void toggleLEDs(Event event);
-
- private:
-  static bool was_suspended_;
-  static bool initial_suspend_;
-
-  static void loopHook(bool post_clear);
-};
-}
-
-void myOldFriendEventHandler(kaleidoscope::MyOldFriend::Event event);
-
-extern kaleidoscope::MyOldFriend MyOldFriend;
+#include <Kaleidoscope/HostPowerManagement.h>

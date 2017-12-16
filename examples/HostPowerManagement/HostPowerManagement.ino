@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-MyOldFriend -- Host sleep support plugin.
+ * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
  * Copyright (C) 2017  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-MyOldFriend.h>
+#include <Kaleidoscope-HostPowerManagement.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -44,9 +44,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 void setup() {
   Kaleidoscope.setup();
 
-  Kaleidoscope.use(&MyOldFriend);
+  Kaleidoscope.use(&HostPowerManagement);
 
-  MyOldFriend.enableWakeup();
+  HostPowerManagement.enableWakeup();
 }
 
 void loop() {
