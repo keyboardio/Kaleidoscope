@@ -103,6 +103,9 @@ class LEDControl : public KaleidoscopePlugin {
   static uint8_t get_mode_index();
   static LEDMode *get_mode();
   static void refreshAll() {
+    if (paused)
+      return;
+
     set_all_leds_to({0, 0, 0});
     if (modes[mode])
       modes[mode]->onActivate();
@@ -121,6 +124,7 @@ class LEDControl : public KaleidoscopePlugin {
   static void activate(LEDMode *mode);
 
   static uint16_t syncDelay;
+  static bool paused;
 
   static bool focusHook(const char *command);
 

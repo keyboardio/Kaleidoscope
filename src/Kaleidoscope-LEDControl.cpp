@@ -7,6 +7,7 @@ LEDMode *LEDControl::modes[LED_MAX_MODES];
 uint8_t LEDControl::mode;
 uint16_t LEDControl::syncDelay = 16;
 uint32_t LEDControl::syncTimer;
+bool LEDControl::paused = false;
 
 void LEDMode::activate(void) {
   ::LEDControl.activate(this);
@@ -123,7 +124,7 @@ Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState
 }
 
 void LEDControl::loopHook(bool postClear) {
-  if (postClear)
+  if (postClear || paused)
     return;
 
   if (millis() > syncTimer) {
