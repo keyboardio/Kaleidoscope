@@ -33,22 +33,6 @@ void HostPowerManagement::begin(void) {
   Kaleidoscope.useLoopHook(loopHook);
 }
 
-void HostPowerManagement::toggleLEDs(HostPowerManagement::Event event) {
-  switch (event) {
-  case Suspend:
-    ::LEDControl.paused = true;
-    ::LEDControl.set_all_leds_to({0, 0, 0});
-    ::LEDControl.syncLeds();
-    break;
-  case Resume:
-    ::LEDControl.paused = false;
-    ::LEDControl.refreshAll();
-    break;
-  case Sleep:
-    break;
-  }
-}
-
 void HostPowerManagement::loopHook(bool post_clear) {
   if (post_clear)
     return;
@@ -75,7 +59,6 @@ void HostPowerManagement::loopHook(bool post_clear) {
 }
 
 __attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
-  HostPowerManagement.toggleLEDs(event);
 }
 
 kaleidoscope::HostPowerManagement HostPowerManagement;

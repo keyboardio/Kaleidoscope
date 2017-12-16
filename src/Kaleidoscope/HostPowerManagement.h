@@ -37,8 +37,6 @@ class HostPowerManagement : public KaleidoscopePlugin {
     WakeupKeyboard.begin();
   };
 
-  void toggleLEDs(Event event);
-
  private:
   static bool was_suspended_;
   static bool initial_suspend_;

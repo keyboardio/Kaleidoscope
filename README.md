@@ -10,8 +10,8 @@
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Support performing custom actions whenever the host suspends, resumes, or is
-sleeping. By default, the LEDs will be turned off on suspend, and the previous
-LED mode restored on resume.
+sleeping. Additionally, this plugin provides optional support for the keyboard
+to wake the host up from suspend.
 
 ## Using the plugin
 
@@ -41,11 +41,6 @@ The plugin provides the `HostPowerManagement` object, which has the following me
 >
 > Once enabled, it **cannot** be disabled again.
 
-### `.toggleLEDs(event)`
-
-> Turns LEDs off on suspend, restores the previous LED mode on resume. This is
-> called by `hostPowerManagementEventHandler()` by default.
-
 ## Overrideable methods
 
 ### `hostPowerManagementEventHandler(event)`
@@ -58,12 +53,7 @@ The plugin provides the `HostPowerManagement` object, which has the following me
 > cycle while the host is suspended; `kaleidoscope::HostPowerManagement::Resume` is
 > fired once when the host wakes up.
 >
-> The default implementation calls `HostPowerManagement.toggleLEDs`. When overriding the
-> function, the default is lost.
-
-## Dependencies
-
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+> The default implementation is empty.
 
 ## Further reading
 

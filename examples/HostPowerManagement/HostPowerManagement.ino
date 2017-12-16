@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-HostPowerManagement.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -40,6 +41,22 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
   ),
 
 };
+
+void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
+  switch (event) {
+  case kaleidoscope::HostPowerManagement::Suspend:
+    LEDControl.paused = true;
+    LEDControl.set_all_leds_to({0, 0, 0});
+    LEDControl.syncLeds();
+    break;
+  case kaleidoscope::HostPowerManagement::Resume:
+    LEDControl.paused = false;
+    LEDControl.refreshAll();
+    break;
+  case kaleidoscope::HostPowerManagement::Sleep:
+    break;
+  }
+}
 
 void setup() {
   Kaleidoscope.setup();
