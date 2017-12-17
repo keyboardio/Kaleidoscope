@@ -33,6 +33,32 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #define VERSION "locally-built"
 #endif
 
+/** Kaleidoscope API (major) version.
+ *
+ * The API is guaranteed to be backwards compatible for the entire duration of a
+ * major version. However, breaking changes may come, and result in a major
+ * version bump. To help migration, the `KALEIDOSCOPE_API_VERSION` macro can be
+ * used to check the major version provided by the Kaleidoscope we are compiling
+ * against. This can be used to error out with a helpful message, or change how
+ * the API is used - it is entirely up to the plugin or sketch author. The point
+ * of this macro is to let them easily check the version.
+ */
+#define KALEIDOSCOPE_API_VERSION 1
+
+/** Required Kaleidoscope major version.
+ *
+ * For the sake of convenience, defining `KALEIDOSCOPE_REQUIRED_API_VERSION`
+ * before including `Kaleidoscope.h` itself will result in comparing its value
+ * to `KALEIDOSCOPE_API_VERSION`. If they differ, a helpful error message is
+ * printed.
+ *
+ * Done so that a new API version would result in a helpful error message,
+ * instead of cryptic compile errors.
+ */
+#if defined(KALEIDOSCOPE_REQUIRED_API_VERSION) && (KALEIDOSCOPE_REQUIRED_API_VERSION != KALEIDOSCOPE_API_VERSION)
+#error Kaleidoscope API version mismatch! The plugin or sketch requires a different API version than what is available.
+#endif
+
 const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
