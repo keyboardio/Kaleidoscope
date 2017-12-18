@@ -212,14 +212,20 @@ void Model01::rebootBootloader() {
 // shift a bit starting from the left (B10000000, or 128) by that many places to get
 // there. This is all nice and convenient because the keyboard has 64 keys, in symmetric
 // halves, with eight keys per logical row.
+
+constexpr byte HIGH_BIT = B10000000;
+constexpr byte HAND_BIT = B00001000;
+constexpr byte ROW_BITS = B00110000;
+constexpr byte COL_BITS = B00000111;
+
 void Model01::maskKey(byte row, byte col) {
   if (row >= ROWS || col >= COLS)
     return;
 
-  if (col & 8) {
-    rightHandMask.rows[row] |= (128 >> (col & 7));
+  if (col & HAND_BIT) {
+    rightHandMask.rows[row] |= (HIGH_BIT >> (col & COL_BITS));
   } else {
-    leftHandMask.rows[row] |= (128 >> (col & 7));
+    leftHandMask.rows[row] |= (HIGH_BIT >> (col & COL_BITS));
   }
 }
 
@@ -227,10 +233,10 @@ void Model01::unMaskKey(byte row, byte col) {
   if (row >= ROWS || col >= COLS)
     return;
 
-  if (col & 8) {
-    rightHandMask.rows[row] &= ~(128 >> (col & 7));
+  if (col & HAND_BIT) {
+    rightHandMask.rows[row] &= ~(HIGH_BIT >> (col & COL_BITS));
   } else {
-    leftHandMask.rows[row] &= ~(128 >> (col & 7));
+    leftHandMask.rows[row] &= ~(HIGH_BIT >> (col & COL_BITS));
   }
 }
 
@@ -238,10 +244,10 @@ bool Model01::isKeyMasked(byte row, byte col) {
   if (row >= ROWS || col >= COLS)
     return false;
 
-  if (col & 8) {
-    return rightHandMask.rows[row] & (128 >> (col & 7));
+  if (col & HAND_BIT) {
+    return rightHandMask.rows[row] & (HIGH_BIT >> (col & COL_BITS));
   } else {
-    return leftHandMask.rows[row] & (128 >> (col & 7));
+    return leftHandMask.rows[row] & (HIGH_BIT >> (col & COL_BITS));
   }
 }
 
