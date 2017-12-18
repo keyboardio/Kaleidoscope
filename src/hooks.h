@@ -165,7 +165,6 @@ __NL__      return hook_return_val;                                            \
 __NL__   }
 
 #define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN)                              \
-                                                                               \
    Hook__::invoke(PLUGIN);
 
 class EventKey;
