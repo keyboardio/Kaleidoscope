@@ -25,6 +25,16 @@ typedef union Key_ {
   };
   uint16_t raw;
 
+  Key_() = default;
+
+  constexpr Key_(uint8_t __keyCode, uint8_t __flags)
+    : keyCode(__keyCode), flags(__flags) {
+  }
+
+  constexpr Key_(uint16_t __raw)
+    : raw(__raw) {
+  }
+
   inline bool operator==(uint16_t rhs) {
     return this->raw == rhs;
   }
