@@ -72,7 +72,7 @@ void Qukeys::enqueue(uint8_t key_addr) {
     flushQueue();
   }
   key_queue_[key_queue_length_].addr = key_addr;
-  key_queue_[key_queue_length_].flush_time = millis() + time_limit_;
+  key_queue_[key_queue_length_].start_time = (uint16_t)millis();
   key_queue_length_++;
   addr::mask(key_addr);
 }
@@ -235,11 +235,11 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 void Qukeys::preReportHook(void) {
   // If the qukey has been held longer than the time limit, set its
   // state to the alternate keycode and add it to the report
-  uint32_t current_time = millis();
+  uint16_t current_time = (uint16_t)millis();
   while (key_queue_length_ > 0) {
     if (lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
       flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-    } else if (current_time > key_queue_[0].flush_time) {
+    } else if ((current_time - key_queue_[0].start_time) > time_limit_) {
       flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
     } else {
       break;
@@ -256,7 +256,7 @@ void Qukeys::begin() {
   // initializing the key_queue seems unnecessary, actually
   for (int8_t i = 0; i < QUKEYS_QUEUE_MAX; i++) {
     key_queue_[i].addr = QUKEY_UNKNOWN_ADDR;
-    key_queue_[i].flush_time = 0;
+    key_queue_[i].start_time = 0;
   }
   key_queue_length_ = 0;
 

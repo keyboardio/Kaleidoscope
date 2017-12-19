@@ -57,7 +57,7 @@ struct Qukey {
 // Data structure for an entry in the key_queue
 struct QueueItem {
   uint8_t addr;        // keyswitch coordinates
-  uint32_t flush_time; // time past which a qukey gets flushed
+  uint16_t start_time; // time a queued key was pressed
 };
 
 // The plugin itself
