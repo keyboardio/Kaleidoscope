@@ -28,6 +28,29 @@ active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
 `Ctrl+Alt+b`, and `L1, L2, c` is turned into `L1+L2+c`. Furthermore, modifiers
 and other layer keys do not cancel the one-shot effect, either.
 
+## Using One-Shot Keys
+
+To enter one-shot mode, tap _quickly_ on a one-shot key. The next
+normal (non-one-shot) key you press will have the modifier applied,
+and then the modifier will automatically turn off. If the Shift key is
+a one-shot modifier, then hitting `Shift, a, b` will give you `Ab`,
+_if you hit shift quickly._
+
+Longish keypresses do not activate one-shot mode. If you press `Shift,
+a, b`, as above, but hold the Shift key a bit longer, you'll get `ab`.
+
+To enter sticky mode, _tap twice quickly_ on a one-shot key. The
+modifier will now stay on until you press it again. Continuing the
+`Shift` example, tapping `Shift, Shift` _quickly_ and then `a, b, c,
+Shift, d, e, f` will give you `ABCdef`.
+
+This can be a bit tricky; combining this plugin with
+[LED-ActiveModColor](https://github.com/keyboardio/Kaleidoscope-LED-ActiveModColor)
+will help you understand what state your one-shot is in; when a
+one-shot key is active, it will have a white LED highlight; when
+sticky, a red highlight.
+
+
 ## Using the plugin
 
 After adding one-shot keys to the keymap, all one needs to do, is enable the
