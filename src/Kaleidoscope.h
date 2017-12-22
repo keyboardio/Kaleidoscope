@@ -18,12 +18,16 @@ void setup();
 
 #include <stdio.h>
 #include <math.h>
-
+#include <stdint.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
+#include "preprocessor_macro_map.h"
+#include "hooks.h"
+#include "macro_functions.h"
+#include "plugin.h"
 
 #define HOOK_MAX 64
 
@@ -35,30 +39,6 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
-
-class Kaleidoscope_;
-
-class KaleidoscopePlugin {
-  friend class Kaleidoscope_;
-
- protected:
-
-  /** Initial plugin setup hook.
-   * All plugins are supposed to provide a singleton object, statically
-   * initialized at compile-time (with few exceptions). Because of this, the
-   * order in which they are instantiated is unspecified, and cannot be relied
-   * upon. For this reason, one's expected to explicitly initialize, "use" the
-   * plugins one wishes to, by calling `Kaleidoscope.use()` with a list of plugin
-   * object pointers.
-   *
-   * This function will in turn call the `begin` function of each plugin,
-   * so that they can perform any initial setup they wish, such as registering
-   * event handler or loop hooks. This is the only time this function will be
-   * called. It is intentionally protected, and accessible by the `Kaleidoscope`
-   * class only.
-   */
-  virtual void begin(void) { };
-};
 
 class Kaleidoscope_ {
  public:
@@ -117,18 +97,33 @@ class Kaleidoscope_ {
   typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
-  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
-  static void appendEventHandlerHook(eventHandlerHook hook);
-  static void useEventHandlerHook(eventHandlerHook hook);
+  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
+  __attribute__((deprecated("Kaleidoscope::replaceEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  static void appendEventHandlerHook(eventHandlerHook hook)
+  __attribute__((deprecated("Kaleidoscope::appendEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  static void useEventHandlerHook(eventHandlerHook hook)
+  __attribute__((deprecated("Kaleidoscope::useEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
 
   typedef void (*loopHook)(bool postClear);
   static loopHook loopHooks[HOOK_MAX];
 
-  static void replaceLoopHook(loopHook oldHook, loopHook newHook);
-  static void appendLoopHook(loopHook hook);
-  static void useLoopHook(loopHook hook);
+  static void replaceLoopHook(loopHook oldHook, loopHook newHook)
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
+  static void appendLoopHook(loopHook hook)
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
+  static void useLoopHook(loopHook hook)
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.beginLoopHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
 
   static bool focusHook(const char *command);
+
+  void connectPlugins(PluginHookAdapter__ *hooks) {
+    hooks_ = hooks;
+    hooks_->init();
+  }
+
+ public:
+
+  PluginHookAdapter__ *hooks_;
 };
 
 extern Kaleidoscope_ Kaleidoscope;
