@@ -220,13 +220,17 @@ size_map () {
     "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
 }
 
-decompile () {
+disassembly () {
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
     fi
 
-    "${AVR_OBJDUMP}" -d "${ELF_FILE_PATH}"
+    "${AVR_OBJDUMP}" -C -d "${ELF_FILE_PATH}"
+}
+
+decompile () {
+    disassembly
 }
 
 clean () {
