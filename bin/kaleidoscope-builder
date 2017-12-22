@@ -220,7 +220,7 @@ size_map () {
     "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
 }
 
-disassembly () {
+disassemble () {
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
@@ -230,7 +230,7 @@ disassembly () {
 }
 
 decompile () {
-    disassembly
+    disassemble
 }
 
 clean () {
@@ -280,7 +280,7 @@ Available commands:
   size-map
     Displays the size map for the sketch.
 
-  decomple
+  disassemble
     Decompile the sketch.
 
   reset-device
