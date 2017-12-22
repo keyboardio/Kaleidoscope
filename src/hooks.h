@@ -243,13 +243,13 @@ class PluginHookAdapter : public PluginHookAdapter__ {
     (mappedKey, eventKey);
   }
 
-  HOOK_TASK(preReportHookTask, void, preReportHook)
+  HOOK_TASK(PreReportHookTask, void, preReportHook)
   void preReportHook() final {
-    PluginLoop__::template apply<preReportHookTask>();
+    PluginLoop__::template apply<PreReportHookTask>();
   }
 
-  HOOK_TASK(postReportHookTask, void, postReportHook)
+  HOOK_TASK(PostReportHookTask, void, postReportHook)
   void postReportHook() final {
-    PluginLoop__::template apply<postReportHookTask>();
+    PluginLoop__::template apply<PostReportHookTask>();
   }
 };
