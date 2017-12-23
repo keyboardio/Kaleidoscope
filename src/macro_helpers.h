@@ -6,7 +6,7 @@
 // When you want to check pre-processed code, e.g. for debugging or
 // to understand what's going on, do the following:
 //
-// 1) Add the compiler command line definition 
+// 1) Add the compiler command line definition
 //      -DKALEIDOSCOPE_ENABLE_MACRO_NEWLINE_SUBSTITUTION
 //    This prevents the __NL__ macro being defined below.
 // 2) Generate the preprocessed code (it will contain a lot of __NL__ definitions).
@@ -17,7 +17,7 @@
 //       as pre-processor macros remove all whitespaces at the beginning of lines.
 //       With vim, the command gg=G helps (just type the characters one after
 //       the other).
-// 4) Don't forget to remove the 
+// 4) Don't forget to remove the
 //       -DKALEIDOSCOPE_ENABLE_MACRO_NEWLINE_SUBSTITUTION
 //    from your compiler command line. Else the code won't compile.
 
@@ -33,7 +33,7 @@
 __NL__     "\n***************************************************************" \
 __NL__     "\n******************** READ THIS CAREFULLY! *********************" \
 __NL__     "\n***************************************************************" \
-__NL__     "\n"                                                                
+__NL__     "\n"
 
 #define VERBOSE_STATIC_ASSERT_FOOTER                                           \
 __NL__     "\n"                                                                \
@@ -41,15 +41,15 @@ __NL__     "\n***************************************************************" \
 __NL__     "\n***************************************************************" \
 __NL__     "\n***************************************************************"
 
-// The macro function RESTRICT_ARGS_COUNT can be used to generate more 
-// verbose error messages when users supply an insuitable number of arguments 
+// The macro function RESTRICT_ARGS_COUNT can be used to generate more
+// verbose error messages when users supply an insuitable number of arguments
 // to a macro.
 //
-// For a macro it is used wherever one of the arguments A, B, C might 
+// For a macro it is used wherever one of the arguments A, B, C might
 // be used, e.g.
 //
 #if 0 // This is just so that A_MACRO is not actually defined
-   #define A_MACRO(A, B, C, ...) \
+#define A_MACRO(A, B, C, ...) \
       (void)RESTRICT_ARGS_COUNT(0, 3, A_MACRO, ##__VA_ARGS__); \
       int a = A; \
       int b = B; \
@@ -60,8 +60,8 @@ __NL__     "\n***************************************************************"
 // arguments is used, e.g.
 //
 #if 0 // This is just so that B_MACRO is not actually defined
-   #define B_MACRO(A, B, C, ...)
-      int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
+#define B_MACRO(A, B, C, ...)
+int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
 #endif
 //
 #define RESTRICT_ARGS_COUNT(B,                                                 \
@@ -100,4 +100,3 @@ __NL__   );                                                                    \
 __NL__   }, /* End of dummy lambda, the comma operator's A operand. */         \
 __NL__   B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */             \
 __NL__   )
-  
