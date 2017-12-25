@@ -28,7 +28,7 @@
 #define __NN__
 
 // Some auxiliary macros
-// 
+//
 #define __STRINGIZE(S) #S
 #define STRINGIZE(S) __STRINGIZE(S)
 
@@ -49,10 +49,10 @@ __NL__     "\n***************************************************************" \
 __NL__     "\n"
 
 #define VERBOSE_FILE_INFO                                                      \
-__NL__     "\nFile: " __FILE__                                                 
+__NL__     "\nFile: " __FILE__
 
 #define VERBOSE_LINE_INFO                                                      \
-__NL__     "\nLine: " STRINGIZE(__LINE__)                                      
+__NL__     "\nLine: " STRINGIZE(__LINE__)
 
 // The macro function RESTRICT_ARGS_COUNT can be used to generate more
 // verbose error messages when users supply an insuitable number of arguments
