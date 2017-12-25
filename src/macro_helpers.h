@@ -27,9 +27,15 @@
 
 #define __NN__
 
+// Some auxiliary macros
+// 
+#define __STRINGIZE(S) #S
+#define STRINGIZE(S) __STRINGIZE(S)
+
 // Allow for the creation of verbose messages in static_asserts
 //
 #define VEROSE_STATIC_ASSERT_HEADER                                            \
+__NL__     "\n"                                                                \
 __NL__     "\n***************************************************************" \
 __NL__     "\n******************** READ THIS CAREFULLY! *********************" \
 __NL__     "\n***************************************************************" \
@@ -39,7 +45,14 @@ __NL__     "\n"
 __NL__     "\n"                                                                \
 __NL__     "\n***************************************************************" \
 __NL__     "\n***************************************************************" \
-__NL__     "\n***************************************************************"
+__NL__     "\n***************************************************************" \
+__NL__     "\n"
+
+#define VERBOSE_FILE_INFO                                                      \
+__NL__     "\nFile: " __FILE__                                                 
+
+#define VERBOSE_LINE_INFO                                                      \
+__NL__     "\nLine: " STRINGIZE(__LINE__)                                      
 
 // The macro function RESTRICT_ARGS_COUNT can be used to generate more
 // verbose error messages when users supply an insuitable number of arguments
@@ -79,24 +92,32 @@ __NN__          finally evaluates to.                                          \
 __NN__          Please not that passing B through this macro is a must         \
 __NN__          as we need it for the comma operator to work.                  \
 __NN__         */                                                              \
-__NN__   static_assert(sizeof(const char) == sizeof(/*(const char*[]){*/ #__VA_ARGS__ /*}*/),                    \
-__NN__        /* sizeof((int[]){ __VA_ARGS__ }) evaluates to                   \
-__NN__           non-zero if __VA_ARGS__ is non-empty and zero otherwise.      \
+__NN__   static_assert(sizeof(const char) == sizeof(#__VA_ARGS__ ),            \
+__NN__        /* sizeof(const char) == sizeof(#__VA_ARGS__ ) checks the quoted \
+__NN__           list of additional arguments. If there are none, then the     \
+__NN__           length of #__VA_ARGS__ is a single char as it contains '\0'.  \
+__NN__           This check is not able to find the corner case of a single    \
+__NN__           superfluous comma at the end of the macro arguments as this   \
+__NN__           causes #__VA_ARGS__ being empty (only '\0').                  \
 __NN__         */                                                              \
 __NN__     VEROSE_STATIC_ASSERT_HEADER                                         \
 __NN__                                                                         \
-__NL__     "\nStrange arguments encountered in call to " #ORIGINAL_MACRO "."    \
+__NN__     VERBOSE_FILE_INFO                                                   \
+__NN__     VERBOSE_LINE_INFO                                                   \
+__NL__     "\n"                                                                \
+__NL__     "\nStrange arguments encountered in invocation of " #ORIGINAL_MACRO "."   \
 __NL__     "\n"                                                                \
 __NL__     "\nPlease make sure to pass exactly " #NUM_EXPECTED_ARGS            \
 __NN__                                          " macro arguments to"          \
-__NL__     "\n" #ORIGINAL_MACRO ". Also make sure that there are no dangling"   \
-__NL__     "\ncommas at the end of the argument list. This is the superfluous" \
-__NL__     "\npart at the end of the macro arguments list."                    \
+__NL__     "\n" #ORIGINAL_MACRO ". Also make sure that there are no dangling"  \
+__NL__     "\ncommas at the end of the argument list."                         \
 __NL__     "\n"                                                                \
-__NL__     "\n\'" #__VA_ARGS__ "\'"                                            \
+__NL__     "\nThis is the superfluous part at the end of the macro"            \
+__NL__     "\narguments list: \'" #__VA_ARGS__ "\'"                            \
 __NN__                                                                         \
 __NN__     VERBOSE_STATIC_ASSERT_FOOTER                                        \
 __NL__   );                                                                    \
+__NL__                                                                         \
 __NL__   }, /* End of dummy lambda, the comma operator's A operand. */         \
 __NL__   B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */             \
 __NL__   )
