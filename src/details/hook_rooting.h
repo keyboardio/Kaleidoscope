@@ -14,7 +14,8 @@ namespace kaleidoscope {
 // 2) Add a static method with the same name and call signature
 //       to class kaleidoscope::Hooks.
 // 3) Add an implemenation of the new static method of kaleidoscope::Hooks
-//       introduced in 2) to the end of macro KALEIDOSCOPE_INIT_PLUGINS(...).
+//       introduced in 2) to the end of macro KALEIDOSCOPE_INIT_PLUGINS(...)
+//       and a matching weak implementation to details/hooks.cpp
 
 // Some words about the design of hook rooting:
 //
