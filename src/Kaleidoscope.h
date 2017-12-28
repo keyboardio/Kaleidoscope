@@ -56,7 +56,11 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
  * instead of cryptic compile errors.
  */
 #if defined(KALEIDOSCOPE_REQUIRED_API_VERSION) && (KALEIDOSCOPE_REQUIRED_API_VERSION != KALEIDOSCOPE_API_VERSION)
-#error Kaleidoscope API version mismatch! The plugin or sketch requires a different API version than what is available.
+#define xstr(a) str(a)
+#define str(a) #a
+static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
+              "Kaleidoscope API version mismatch! We have version " xstr(KALEIDOSCOPE_API_VERSION)
+              " available, but version " xstr(KALEIDOSCOPE_REQUIRED_API_VERSION) " is required.");
 #endif
 
 const uint8_t KEYMAP_SIZE
