@@ -7,47 +7,47 @@ namespace hid {
 
 // A facade on top of our HID implementation
 
-void initializeKeyboard();
+extern void initializeKeyboard();
 
-void pressKey(Key mappedKey);
-void releaseKey(Key mappedKey);
-void releaseAllKeys();
-void pressRawKey(Key mappedKey);
-void releaseRawKey(Key mappedKey);
+extern void pressKey(Key mappedKey);
+extern void releaseKey(Key mappedKey);
+extern void releaseAllKeys();
+extern void pressRawKey(Key mappedKey);
+extern void releaseRawKey(Key mappedKey);
 /** Flushes any pending regular key switch events and sends them out */
-void sendKeyboardReport();
+extern void sendKeyboardReport();
 
-boolean isModifierKeyActive(Key mappedKey);
-boolean wasModifierKeyActive(Key mappedKey);
+extern boolean isModifierKeyActive(Key mappedKey);
+extern boolean wasModifierKeyActive(Key mappedKey);
 
-uint8_t getKeyboardLEDs();
+extern uint8_t getKeyboardLEDs();
 
-void initializeConsumerControl();
+extern void initializeConsumerControl();
 
-void pressConsumerControl(Key mappedKey);
-void releaseConsumerControl(Key mappedKey);
+extern void pressConsumerControl(Key mappedKey);
+extern void releaseConsumerControl(Key mappedKey);
 
-void initializeSystemControl();
+extern void initializeSystemControl();
 
-void pressSystemControl(Key mappedKey);
-void releaseSystemControl(Key mappedKey);
+extern void pressSystemControl(Key mappedKey);
+extern void releaseSystemControl(Key mappedKey);
 
-void initializeMouse();
+extern void initializeMouse();
 
-void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
-void clickMouseButtons(uint8_t buttons);
-void pressMouseButtons(uint8_t buttons);
-void releaseMouseButtons(uint8_t buttons);
-void releaseAllMouseButtons(void);
-void sendMouseReport(void);
+extern void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+extern void clickMouseButtons(uint8_t buttons);
+extern void pressMouseButtons(uint8_t buttons);
+extern void releaseMouseButtons(uint8_t buttons);
+extern void releaseAllMouseButtons(void);
+extern void sendMouseReport(void);
 
-void initializeAbsoluteMouse();
+extern void initializeAbsoluteMouse();
 
-void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
-void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
-void clickAbsoluteMouseButtons(uint8_t buttons);
-void pressAbsoluteMouseButtons(uint8_t buttons);
-void releaseAbsoluteMouseButtons(uint8_t buttons);
+extern void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
+extern void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
+extern void clickAbsoluteMouseButtons(uint8_t buttons);
+extern void pressAbsoluteMouseButtons(uint8_t buttons);
+extern void releaseAbsoluteMouseButtons(uint8_t buttons);
 
 }
 };
