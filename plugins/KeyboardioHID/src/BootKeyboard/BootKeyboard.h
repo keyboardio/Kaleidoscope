@@ -58,32 +58,6 @@ class BootKeyboard_ : public PluggableUSBModule {
   uint8_t getLeds(void);
   uint8_t getProtocol(void);
   void setProtocol(uint8_t protocol);
-  void wakeupHost(void);
-
-  void setFeatureReport(void* report, int length) {
-    if (length > 0) {
-      featureReport = (uint8_t*)report;
-      featureLength = length;
-
-      // Disable feature report by default
-      disableFeatureReport();
-    }
-  }
-
-  int availableFeatureReport(void) {
-    if (featureLength < 0) {
-      return featureLength & ~0x8000;
-    }
-    return 0;
-  }
-
-  void enableFeatureReport(void) {
-    featureLength &= ~0x8000;
-  }
-
-  void disableFeatureReport(void) {
-    featureLength |= 0x8000;
-  }
 
   uint8_t default_protocol = HID_REPORT_PROTOCOL;
 
@@ -100,10 +74,5 @@ class BootKeyboard_ : public PluggableUSBModule {
   uint8_t idle;
 
   uint8_t leds;
-
-  uint8_t* featureReport;
-  int featureLength;
 };
 extern BootKeyboard_ BootKeyboard;
-
-

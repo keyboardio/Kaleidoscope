@@ -61,7 +61,7 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   0xc0                            /* END_COLLECTION */
 };
 
-BootKeyboard_::BootKeyboard_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1), leds(0), featureReport(NULL), featureLength(0) {
+BootKeyboard_::BootKeyboard_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1), leds(0) {
   epType[0] = EP_TYPE_INTERRUPT_IN;
   PluggableUSB().plug(this);
 }
@@ -152,23 +152,7 @@ bool BootKeyboard_::setup(USBSetup& setup) {
       // Check if data has the correct length afterwards
       int length = setup.wLength;
 
-      // Feature (set feature report)
-      if (setup.wValueH == HID_REPORT_TYPE_FEATURE) {
-        // No need to check for negative featureLength values,
-        // except the host tries to send more then 32k bytes.
-        // We dont have that much ram anyways.
-        if (length == featureLength) {
-          USB_RecvControl(featureReport, featureLength);
-
-          // Block until data is read (make length negative)
-          disableFeatureReport();
-          return true;
-        }
-        // TODO fake clear data?
-      }
-
-      // Output (set led states)
-      else if (setup.wValueH == HID_REPORT_TYPE_OUTPUT) {
+      if (setup.wValueH == HID_REPORT_TYPE_OUTPUT) {
         if (length == sizeof(leds)) {
           USB_RecvControl(&leds, length);
           return true;
@@ -209,11 +193,6 @@ int BootKeyboard_::sendReport(void) {
   }
   return -1;
 }
-
-void BootKeyboard_::wakeupHost(void) {
-  USBDevice.wakeupHost();
-}
-
 
 // press() adds the specified key (printing, non-printing, or modifier)
 // to the persistent key report and sends the report.  Because of the way
