@@ -18,6 +18,7 @@
  */
 
 #include "Kaleidoscope.h"
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "Kaleidoscope-HostOS.h"
 #include "Kaleidoscope/HostOS-select.h"
 
