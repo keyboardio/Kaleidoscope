@@ -259,9 +259,6 @@ size_t BootKeyboard_::press(uint8_t k) {
 // it shouldn't be repeated any more.
 
 size_t BootKeyboard_::release(uint8_t k) {
-  uint8_t i;
-  uint8_t count;
-
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
     _keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_LAST_MODIFIER)));
@@ -269,29 +266,27 @@ size_t BootKeyboard_::release(uint8_t k) {
     // it's some other key:
     // Test the key report to see if k is present.  Clear it if it exists.
     // Check all positions in case the key is present more than once (which it shouldn't be)
-    for (i = 0; i < sizeof(_keyReport.keycodes); i++) {
+    for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
       if (_keyReport.keycodes[i] == k) {
         _keyReport.keycodes[i] = 0;
       }
     }
 
-    // finally rearrange the keys list so that the free (= 0x00) are at the
+    // rearrange the keys list so that the free (= 0x00) are at the
     // end of the keys list - some implementations stop for keys at the
     // first occurence of an 0x00 in the keys list
     // so (0x00)(0x01)(0x00)(0x03)(0x02)(0x00) becomes
-    //    (0x01)(0x03)(0x02)(0x00)(0x00)(0x00)
-    count = 0; // holds the number of zeros we've found
-    i = 0;
-    while ((i + count) < sizeof(_keyReport.keycodes)) {
-      if (0 == _keyReport.keycodes[i]) {
-        count++; // one more zero
-        for (uint8_t j = i; j < sizeof(_keyReport.keycodes)-count; j++) {
-          _keyReport.keycodes[j] = _keyReport.keycodes[j+1];
-        }
-        _keyReport.keycodes[sizeof(_keyReport.keycodes)-count] = 0;
-      } else {
-        i++; // one more non-zero
+    //    (0x03)(0x02)(0x01)(0x00)(0x00)(0x00)
+    uint8_t current = 0, nextpos = 0;
+
+    while (current < sizeof(_keyReport.keycodes)) {
+      if (_keyReport.keycodes[current]) {
+        uint8_t tmp = _keyReport.keycodes[nextpos];
+        _keyReport.keycodes[nextpos] = _keyReport.keycodes[current];
+        _keyReport.keycodes[current] = tmp;
+        ++nextpos;
       }
+      ++current;
     }
   }
 
