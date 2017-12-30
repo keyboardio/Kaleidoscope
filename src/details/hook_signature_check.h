@@ -19,7 +19,7 @@
 //
 // What we would like to check is the following.
 //
-//    decltype(&KaleidoscopePlugin::fooHookMethod)
+//    decltype(&::kaleidoscope::Plugin::fooHookMethod)
 //              == decltype(&childPlugin::fooHookMethod)
 //
 // Unfortunately, this is not possible with c++(-11) as it does not allow
@@ -83,7 +83,7 @@ __NL__    * user has implemented a method with the same name but a             \
 __NL__    * different (wrong) signature.                                       \
 __NL__    */                                                                   \
 __NL__    typedef HookSignaturesMatch<                                         \
-__NL__                       decltype(&KaleidoscopePlugin::HOOK_METHOD),       \
+__NL__                       decltype(&::kaleidoscope::Plugin::HOOK_METHOD),   \
 __NL__                       decltype(&PLUGIN::HOOK_METHOD)                    \
 __NL__                  > Check;                                               \
 __NL__                                                                         \
@@ -104,7 +104,7 @@ __NL__     "\n      ___________Culprit_Plugin___________."                     \
 __NL__     "\n"                                                                \
 __NL__     "\nThen check all the hook methods implemented by this plugin"      \
 __NL__     "\nand compare them to the respective hook methods of"              \
-__NL__     "\nbase class \"KaleidscopePlugin\"."                               \
+__NL__     "\nbase class \"kaleidoscope::Plugin\"."                            \
 __NL__     "\n"                                                                \
 __NL__     "\nNote: Two method signatures equal if all their argument"         \
 __NL__     "\n      types, the methods' const qualifiers and their"            \

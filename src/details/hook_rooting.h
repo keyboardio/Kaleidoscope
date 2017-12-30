@@ -188,34 +188,34 @@ __NL__   } /* namespace kaleidoscope */
 //
 #define _INVOKE_HOOK_FOR_PLUGIN(PLUGIN)                                        \
 __NN__                                                                         \
-__NN__   hook_return_val = Hook__::invoke(PLUGIN, hook_args...);               \
+__NN__   hook_return_val = HookTask__::invoke(PLUGIN, hook_args...);           \
 __NL__                                                                         \
-__NL__   if (!ContinuationPredicate::eval(hook_return_val)) {                \
+__NL__   if (!ContinuationPredicate::eval(hook_return_val)) {                  \
 __NL__      return hook_return_val;                                            \
 __NL__   }
 
 #define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN)                              \
-   Hook__::invoke(PLUGIN);
+   HookTask__::invoke(PLUGIN);
    
 #define _DEFINE_ORDERED_PLUGINS(CLASS_NAME, ...)                               \
 __NN__   struct CLASS_NAME                                                     \
 __NL__   {                                                                     \
-__NL__      template<typename Hook__, /* Invokes the hook method               \
-__NN__                                   on the plugin */                      \
+__NL__      template<typename HookTask__, /* Invokes the hook method           \
+__NN__                                       on the plugin */                  \
 __NL__               typename... Args__ /* The hook method call arguments */   \
 __NL__      >                                                                  \
-__NL__      /* The Hook__ class defines the return value of the hook method    \
-__NL__         as a nested typedef.                                            \
-__NL__         To determine the actual return type based on Hook__, we have    \
-__NL__         to rely on the trailing-return-type syntax. */                  \
+__NL__      /* The HookTask__ class defines the return value of the hook       \
+__NL__         method as a nested typedef.                                     \
+__NL__         To determine the actual return type based on HookTask__, we     \
+__NL__         have to rely on the trailing-return-type syntax. */             \
 __NL__      static auto apply(Args__&&... hook_args)                           \
-__NL__                              -> typename Hook__::ReturnType {           \
+__NL__                              -> typename HookTask__::ReturnType {       \
 __NL__                                                                         \
-__NL__         typedef typename Hook__::ContinuationPredicate                  \
+__NL__         typedef typename HookTask__::ContinuationPredicate              \
 __NL__            ContinuationPredicate; /* Decides whether                    \
 __NN__                                       to continue with further hooks */ \
 __NL__                                                                         \
-__NL__         typename Hook__::ReturnType hook_return_val;                    \
+__NL__         typename HookTask__::ReturnType hook_return_val;                \
 __NL__                                                                         \
 __NL__         MAP(_INVOKE_HOOK_FOR_PLUGIN, __VA_ARGS__)                       \
 __NL__                                                                         \
@@ -224,13 +224,43 @@ __NL__      }                                                                  \
 __NL__                                                                         \
 __NL__      /* An overloaded empty arguments version of apply to support       \
 __NL__         hooks with void arguments */                                    \
-__NL__      template<typename Hook__,                                          \
+__NL__      template<typename HookTask__,                                      \
 __NL__                     /* Invokes the hook method on the plugin */         \
 __NL__               typename... Args__ /* The hook method call arguments */   \
 __NL__      >                                                                  \
-__NL__      static auto apply() -> typename Hook__::ReturnType {               \
+__NL__      static void apply() {                                              \
 __NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)             \
 __NL__      }                                                                  \
+__NL__   };
+
+#define WRAPPER_PLUGIN(PLUGIN_NAME, ...)                                       \
+__NN__   class PLUGIN_NAME {                                                   \
+__NL__                                                                         \
+__NL__      _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)               \
+__NL__                                                                         \
+__NL__      public:                                                            \
+__NL__                                                                         \
+__NL__         void init() {                                                   \
+__NL__           OrderedPlugins                                                \
+__NL__              ::template apply<::kaleidoscope::HookTask_init>();         \
+__NL__         }                                                               \
+__NL__                                                                         \
+__NL__         bool eventHandlerHook(::kaleidoscope::Key &mappedKey,           \
+__NL__                  const ::kaleidoscope::EventKey &eventKey) {            \
+__NL__           return OrderedPlugins                                         \
+__NL__             ::template apply<::kaleidoscope::HookTask_eventHandlerHook> \
+__NL__                             (mappedKey, eventKey);                      \
+__NL__         }                                                               \
+__NL__                                                                         \
+__NL__         void preReportHook() {                                          \
+__NL__           OrderedPlugins                                                \
+__NL__             ::template apply<::kaleidoscope::HookTask_preReportHook>(); \
+__NL__         }                                                               \
+__NL__                                                                         \
+__NL__         void postReportHook() {                                         \
+__NL__           OrderedPlugins                                                \
+__NL__             ::template apply<::kaleidoscope::HookTask_postReportHook>();\
+__NL__         }                                                               \
 __NL__   };                                                                    \
 
 // KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked in global namespace of
