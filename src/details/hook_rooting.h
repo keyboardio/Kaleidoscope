@@ -143,7 +143,9 @@ struct ContinueIfHookReturnsTrue {
 };
 
 struct AlwaysContinue {
-   constexpr static bool eval(bool val) { return true; }
+  constexpr static bool eval(bool val) {
+    return true;
+  }
 };
 
 _HOOK_TASK(init, ContinueIfHookReturnsTrue) // Defines HookTask_init
@@ -196,7 +198,7 @@ __NL__   }
 
 #define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN)                              \
    HookTask__::invoke(PLUGIN);
-   
+
 #define _DEFINE_ORDERED_PLUGINS(CLASS_NAME, ...)                               \
 __NN__   struct CLASS_NAME                                                     \
 __NL__   {                                                                     \
