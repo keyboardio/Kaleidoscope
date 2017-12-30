@@ -190,32 +190,9 @@ __NL__   }
 
 #define INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(PLUGIN)                              \
    Hook__::invoke(PLUGIN);
-
-// KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked in global namespace of
-// the firmware sketch.
-//
-// Arguments: A list of references to plugin instances that have been
-//       instanciated at global scope.
-//
-// A note concerning possible future optimizations:
-//    In C++17 the loop over all plugins, and calling a hook method
-//    with a given list of arguments can be implemented much more elegant
-//    without using preprocessor macros.
-//    The alternative solution would consist in a combination
-//    of std::forward_as_tuple and std::apply to call a function
-//    (the hook method) for every member of a tuple (containing rvalue
-//    references to all plugins). Thus, both the list of plugins and
-//    and the hook method call arguments (both variadic) could be wrapped
-//    in rvalue-reference-tuples and be passed to some kind
-//    of tuple-for-each algorithm.
-//
-// Note: KALEIDOSCOPE_INIT_PLUGINS(...) must only be invoked in global namespace.
-//
-#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
-__NN__                                                                         \
-__NN__   namespace kaleidoscope {                                              \
-__NN__                                                                         \
-__NN__   struct OrderedPlugins                                                       \
+   
+#define _DEFINE_ORDERED_PLUGINS(CLASS_NAME, ...)                               \
+__NN__   struct CLASS_NAME                                                     \
 __NL__   {                                                                     \
 __NL__      template<typename Hook__, /* Invokes the hook method               \
 __NN__                                   on the plugin */                      \
@@ -247,6 +224,32 @@ __NL__      static auto apply() -> typename Hook__::ReturnType {               \
 __NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)             \
 __NL__      }                                                                  \
 __NL__   };                                                                    \
+
+// KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked in global namespace of
+// the firmware sketch.
+//
+// Arguments: A list of references to plugin instances that have been
+//       instanciated at global scope.
+//
+// A note concerning possible future optimizations:
+//    In C++17 the loop over all plugins, and calling a hook method
+//    with a given list of arguments can be implemented much more elegant
+//    without using preprocessor macros.
+//    The alternative solution would consist in a combination
+//    of std::forward_as_tuple and std::apply to call a function
+//    (the hook method) for every member of a tuple (containing rvalue
+//    references to all plugins). Thus, both the list of plugins and
+//    and the hook method call arguments (both variadic) could be wrapped
+//    in rvalue-reference-tuples and be passed to some kind
+//    of tuple-for-each algorithm.
+//
+// Note: KALEIDOSCOPE_INIT_PLUGINS(...) must only be invoked in global namespace.
+//
+#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
+__NN__                                                                         \
+__NN__   namespace kaleidoscope {                                              \
+__NN__                                                                         \
+__NN__   _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)                  \
 __NL__                                                                         \
 __NL__   } /* namespace kaleidoscope */                                        \
 __NL__                                                                         \
