@@ -108,9 +108,11 @@ struct ReturnTypeTraits<R(T::*)(HookArgs...)> {
 // called in the static functions of kaleidoscope::Hooks to forward the call to
 // the hook methods of all registered plugins.
 //
-#define _HOOK_TASK(HOOK_METHOD)                                                \
+#define _HOOK_TASK(HOOK_METHOD, CONTINUATION_PREDICATE_TYPE)                   \
 __NN__                                                                         \
 __NN__   struct HookTask_##HOOK_METHOD {                                       \
+__NN__                                                                         \
+__NN__      typedef CONTINUATION_PREDICATE_TYPE ContinuationPredicate;         \
 __NL__                                                                         \
 __NN__      /* Use a traits class to determine the return value type of the    \
 __NN__         hook method.                                                    \
@@ -132,13 +134,22 @@ __NL__         return plugin.HOOK_METHOD(hook_args...);                        \
 __NL__      }                                                                  \
 __NL__   };
 
-// A predicate class that decides on hook-plugin-loop continuation.
+// Predicate classes that decides on hook-plugin-loop continuation.
 //
 struct ContinueIfHookReturnsTrue {
   static bool eval(bool val) {
     return val;
   }
 };
+
+struct AlwaysContinue {
+   constexpr static bool eval(bool val) { return true; }
+};
+
+_HOOK_TASK(init, ContinueIfHookReturnsTrue) // Defines HookTask_init
+_HOOK_TASK(eventHandlerHook, AlwaysContinue) // Defines HookTask_eventHandlerHook
+_HOOK_TASK(preReportHook, AlwaysContinue) // Defines HookTask_preReportHook
+_HOOK_TASK(postReportHook, AlwaysContinue) // Defines HookTask_postReportHook
 
 // This macro implements the static hook rooting functions of
 // class kaleidoscope::Hooks based on the registered plugins.
@@ -149,28 +160,23 @@ struct ContinueIfHookReturnsTrue {
 __NN__                                                                         \
 __NN__   namespace kaleidoscope {                                              \
 __NN__                                                                         \
-__NL__   _HOOK_TASK(init) /* Defines HookTask_init */                          \
 __NL__   void Hooks::init() {                                                  \
-__NL__     OrderedPlugins::template apply<HookTask_init>();                          \
+__NL__     OrderedPlugins::template apply<HookTask_init>();                    \
 __NL__   }                                                                     \
 __NL__                                                                         \
-__NL__   _HOOK_TASK(eventHandlerHook) /* Defines HookTask_eventHandlerHook */  \
 __NL__   bool Hooks::eventHandlerHook(Key &mappedKey,                          \
 __NL__                                const EventKey &eventKey) {              \
-__NL__     return OrderedPlugins                                                     \
-__NL__               ::template apply<HookTask_eventHandlerHook,               \
-__NL__                                ContinueIfHookReturnsTrue>               \
+__NL__     return OrderedPlugins                                               \
+__NL__               ::template apply<HookTask_eventHandlerHook>               \
 __NL__                             (mappedKey, eventKey);                      \
 __NL__   }                                                                     \
 __NL__                                                                         \
-__NL__   _HOOK_TASK(preReportHook) /* Defines HookTask_preReportHook */        \
 __NL__   void Hooks::preReportHook() {                                         \
-__NL__     OrderedPlugins::template apply<HookTask_preReportHook>();                 \
+__NL__     OrderedPlugins::template apply<HookTask_preReportHook>();           \
 __NL__   }                                                                     \
 __NL__                                                                         \
-__NL__   _HOOK_TASK(postReportHook) /* Defines HookTask_postReportHook */      \
 __NL__   void Hooks::postReportHook() {                                        \
-__NL__     OrderedPlugins::template apply<HookTask_postReportHook>();                \
+__NL__     OrderedPlugins::template apply<HookTask_postReportHook>();          \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   } /* namespace kaleidoscope */
@@ -184,7 +190,7 @@ __NL__   } /* namespace kaleidoscope */
 __NN__                                                                         \
 __NN__   hook_return_val = Hook__::invoke(PLUGIN, hook_args...);               \
 __NL__                                                                         \
-__NL__   if (!ContinuationPredicate__::eval(hook_return_val)) {                \
+__NL__   if (!ContinuationPredicate::eval(hook_return_val)) {                \
 __NL__      return hook_return_val;                                            \
 __NL__   }
 
@@ -196,8 +202,6 @@ __NN__   struct CLASS_NAME                                                     \
 __NL__   {                                                                     \
 __NL__      template<typename Hook__, /* Invokes the hook method               \
 __NN__                                   on the plugin */                      \
-__NL__               typename ContinuationPredicate__, /* Decides whether      \
-__NN__                                   to continue with further hooks */     \
 __NL__               typename... Args__ /* The hook method call arguments */   \
 __NL__      >                                                                  \
 __NL__      /* The Hook__ class defines the return value of the hook method    \
@@ -206,6 +210,10 @@ __NL__         To determine the actual return type based on Hook__, we have    \
 __NL__         to rely on the trailing-return-type syntax. */                  \
 __NL__      static auto apply(Args__&&... hook_args)                           \
 __NL__                              -> typename Hook__::ReturnType {           \
+__NL__                                                                         \
+__NL__         typedef typename Hook__::ContinuationPredicate                  \
+__NL__            ContinuationPredicate; /* Decides whether                    \
+__NN__                                       to continue with further hooks */ \
 __NL__                                                                         \
 __NL__         typename Hook__::ReturnType hook_return_val;                    \
 __NL__                                                                         \
