@@ -19,7 +19,7 @@ namespace kaleidoscope {
 
 // Some words about the design of hook rooting:
 //
-// The HookLoop class implements a compile-time loop over all plugins.
+// The OrderedPlugins class implements a compile-time loop over all plugins.
 // This loop is used to call a non virtual hook method of each plugin.
 //
 // The advantage of this approach against a solution with virtual
@@ -43,7 +43,7 @@ namespace kaleidoscope {
 //       Those might both vanish when the begin() method would be removed from
 //       kaleidoscope::Plugin in future versions of the firmware.
 //
-// The call to hook methods through kaleidoscope::Hooks and kaleidoscope::HookLoop
+// The call to hook methods through kaleidoscope::Hooks and kaleidoscope::OrderedPlugins
 // is templated to allow for compile time static polymorphisms
 // (hook methods of plugins not beeing virtual).
 //
@@ -63,7 +63,7 @@ namespace kaleidoscope {
 // Thus the compiler can see the actual type of the plugin at the point of
 // the hook method's invocation.
 //
-// HookLoop::apply() implements a compile time for-each loop
+// OrderedPlugins::apply() implements a compile time for-each loop
 // over all plugins. Under the assumption that only some (few) plugins
 // implement a greater number of hook methods and that there is only a limited number
 // of plugins used in a sketch, this approach is quite efficient both in terms
@@ -74,7 +74,7 @@ namespace kaleidoscope {
 //
 // Calling the plugins' hook methods is carried out via a call to
 // one of the static functions of class Hooks. Those functions cast the
-// related hook method on every registered plugin by using the HookLoop helper
+// related hook method on every registered plugin by using the OrderedPlugins helper
 // class.
 //
 // Some hooks such as e.g. the eventHandlerHook require a decision about
@@ -104,7 +104,7 @@ struct ReturnTypeTraits<R(T::*)(HookArgs...)> {
 
 // The _HOOK_TASK macro defines an auxiliary classes HookTask_... that invoke
 // a specific plugin hook method with a provided set of method arguments. The
-// HookTask_... classes are meant to be used by HookLoop's apply function
+// HookTask_... classes are meant to be used by OrderedPlugins's apply function
 // called in the static functions of kaleidoscope::Hooks to forward the call to
 // the hook methods of all registered plugins.
 //
@@ -151,13 +151,13 @@ __NN__   namespace kaleidoscope {                                              \
 __NN__                                                                         \
 __NL__   _HOOK_TASK(init) /* Defines HookTask_init */                          \
 __NL__   void Hooks::init() {                                                  \
-__NL__     HookLoop::template apply<HookTask_init>();                          \
+__NL__     OrderedPlugins::template apply<HookTask_init>();                          \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   _HOOK_TASK(eventHandlerHook) /* Defines HookTask_eventHandlerHook */  \
 __NL__   bool Hooks::eventHandlerHook(Key &mappedKey,                          \
 __NL__                                const EventKey &eventKey) {              \
-__NL__     return HookLoop                                                     \
+__NL__     return OrderedPlugins                                                     \
 __NL__               ::template apply<HookTask_eventHandlerHook,               \
 __NL__                                ContinueIfHookReturnsTrue>               \
 __NL__                             (mappedKey, eventKey);                      \
@@ -165,12 +165,12 @@ __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   _HOOK_TASK(preReportHook) /* Defines HookTask_preReportHook */        \
 __NL__   void Hooks::preReportHook() {                                         \
-__NL__     HookLoop::template apply<HookTask_preReportHook>();                 \
+__NL__     OrderedPlugins::template apply<HookTask_preReportHook>();                 \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   _HOOK_TASK(postReportHook) /* Defines HookTask_postReportHook */      \
 __NL__   void Hooks::postReportHook() {                                        \
-__NL__     HookLoop::template apply<HookTask_postReportHook>();                \
+__NL__     OrderedPlugins::template apply<HookTask_postReportHook>();                \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   } /* namespace kaleidoscope */
@@ -215,7 +215,7 @@ __NL__   }
 __NN__                                                                         \
 __NN__   namespace kaleidoscope {                                              \
 __NN__                                                                         \
-__NN__   struct HookLoop                                                       \
+__NN__   struct OrderedPlugins                                                       \
 __NL__   {                                                                     \
 __NL__      template<typename Hook__, /* Invokes the hook method               \
 __NN__                                   on the plugin */                      \
