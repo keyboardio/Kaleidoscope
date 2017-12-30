@@ -235,8 +235,8 @@ __NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)             \
 __NL__      }                                                                  \
 __NL__   };
 
-#define WRAPPER_PLUGIN(PLUGIN_NAME, ...)                                       \
-__NN__   class PLUGIN_NAME {                                                   \
+#define GROUPED_PLUGINS(GROUP_PLUGIN_NAME, ...)                                \
+__NN__   class GROUP_PLUGIN_NAME {                                                   \
 __NL__                                                                         \
 __NL__      _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)               \
 __NL__                                                                         \
