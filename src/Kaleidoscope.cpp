@@ -10,7 +10,10 @@ Kaleidoscope_::Kaleidoscope_(void) {
 void
 Kaleidoscope_::setup(void) {
   KeyboardHardware.setup();
-  Keyboard.begin();
+
+  kaleidoscope::hid::initializeKeyboard();
+  kaleidoscope::hid::initializeConsumerControl();
+  kaleidoscope::hid::initializeSystemControl();
 
   // A workaround, so that the compiler does not optimize handleKeyswitchEvent out...
   // This is a no-op, but tricks the compiler into not being too helpful
