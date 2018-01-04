@@ -34,6 +34,16 @@ void LEDControl::next_mode(void) {
   return set_mode(mode);
 }
 
+void LEDControl::prev_mode(void) {
+  mode--;
+
+  if (mode >= LED_MAX_MODES || !modes[mode]) {
+    return set_mode(0);
+  }
+
+  return set_mode(mode);
+}
+
 void
 LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= LED_MAX_MODES)

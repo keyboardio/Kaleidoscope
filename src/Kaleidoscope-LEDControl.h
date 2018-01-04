@@ -90,6 +90,7 @@ class LEDControl : public KaleidoscopePlugin {
   void begin(void) final;
 
   static void next_mode(void);
+  static void prev_mode(void);
   static void setup(void);
   static void update(void) {
     if (modes[mode])
