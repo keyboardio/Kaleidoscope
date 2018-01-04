@@ -35,13 +35,15 @@ void LEDControl::next_mode(void) {
 }
 
 void LEDControl::prev_mode(void) {
-  mode--;
-
-  if (mode >= LED_MAX_MODES || !modes[mode]) {
-    return set_mode(0);
+  if (mode == 0) {
+    // wrap around
+    mode = LED_MAX_MODES;
+    // then  count down until reaching a valid mode
+    while (mode > 0 && !modes[mode]) mode--;
+  } else {
+    mode--;
   }
-
-  return set_mode(mode);
+  set_mode(mode);
 }
 
 void
