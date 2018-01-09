@@ -131,7 +131,7 @@ Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState
     return mappedKey;
 
   if (keyToggledOn(keyState)) {
-    if (mappedKey == Key_LEDEffectNext)
+    if (mappedKey.keyCode == 0)
       next_mode();
     else
       prev_mode();
