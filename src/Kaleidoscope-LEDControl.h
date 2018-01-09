@@ -7,6 +7,7 @@
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
 #define Key_LEDEffectNext (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE }
+#define Key_LEDEffectPrevious (Key) { 1,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE }
 
 namespace kaleidoscope {
 /** Base class for LED modes.

@@ -130,8 +130,12 @@ Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return mappedKey;
 
-  if (keyToggledOn(keyState))
-    next_mode();
+  if (keyToggledOn(keyState)) {
+    if (mappedKey == Key_LEDEffectNext)
+      next_mode();
+    else
+      prev_mode();
+  }
 
   return Key_NoKey;
 }
