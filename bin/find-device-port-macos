@@ -1,0 +1,76 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+# ioreg might be more machine-readable than system_profiler, but I haven't been able to
+# get it to produce useful output
+my @output = qx(/usr/sbin/system_profiler SPUSBDataType);
+
+my $parse_state = 0;
+my $device      = {};
+
+LINE: foreach my $line (@output) {
+
+    chomp $line;
+
+    if ( $parse_state == 0 ) {
+        if ( $line =~ m/Model 01/ ) {
+            $parse_state = 1;
+            next LINE;
+        }
+    }
+
+    if ( $parse_state == 1 ) {
+        if ( $line =~ m/^\s*$/ ) {
+            $parse_state = 2;
+            next LINE;
+        }
+    }
+
+    if ( $parse_state == 2 ) {
+        if ( $line =~ m/Serial Number: (.+)$/ ) {
+            $device->{'serial_number'} = $1;
+            next LINE;
+        }
+        if ( $line =~ m/Location ID: (.+)$/ ) {
+            $device->{'location_id'} = $1;
+            next LINE;
+        }
+        if ( $line =~ m/Product ID: (.+)$/ ) {
+            $device->{'product_id'} = $1;
+            next LINE;
+        }
+        if ( $line =~ m/Vendor ID: (.+)$/ ) {
+            $device->{'vendor_id'} = $1;
+            next LINE;
+        }
+        if ( $line =~ m/^\s*$/ ) {
+            last LINE;
+        }
+    }
+
+}
+
+die "Can't find Model 01" if ( $device == {} );
+
+my $serial_port_name = "";
+
+if ( exists( $device->{'serial_number'} ) ) {
+    $serial_port_name = "/dev/cu.usbmodem" . $device->{'serial_number'};
+    if ( -e $serial_port_name ) {
+        print $serial_port_name;
+        exit 0;
+    }
+}
+
+if ( exists( $device->{'location_id'} ) ) {
+    my $loc = substr( $device->{'location_id'}, 2, 4 );
+    $serial_port_name = "/dev/cu.usbmodem" . $loc . 1;
+    if ( -e $serial_port_name ) {
+        print $serial_port_name;
+        exit 0;
+    }
+}
+
+die "Can't find Model 01 serial port name";
