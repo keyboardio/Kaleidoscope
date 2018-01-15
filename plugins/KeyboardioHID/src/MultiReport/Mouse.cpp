@@ -58,6 +58,7 @@ static const uint8_t _hidMultiReportDescriptorMouse[] PROGMEM = {
   D_LOGICAL_MINIMUM, 0x81,                        //     LOGICAL_MINIMUM (-127)
   D_LOGICAL_MAXIMUM, 0x7f,                        //     LOGICAL_MAXIMUM (127)
   D_REPORT_SIZE, 0x08,                            //     REPORT_SIZE (8)
+  D_REPORT_COUNT, 0x01,                           //     REPORT_COUNT (1)
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),        //     INPUT (Data,Var,Rel)
 
   /* End */
