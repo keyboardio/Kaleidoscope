@@ -1,0 +1,14 @@
+dist: trusty
+sudo: false
+os:
+  - linux
+install:
+  - git clone --recursive https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
+script:
+  - make travis-test BOARD_HARDWARE_PATH=$(pwd)/hardware
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+cache:
+  ccache: true

@@ -2,8 +2,8 @@
 
 ![status][st:experimental] [![Build Status][travis:image]][travis:status]
 
- [travis:image]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukey.svg?branch=master
- [travis:status]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukey
+ [travis:image]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukeys.svg?branch=master
+ [travis:status]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukeys
 
  [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
