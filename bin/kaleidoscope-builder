@@ -7,28 +7,28 @@ set -e
 ######
 
 build_version () {
-	GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
-	LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+    GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
+    LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
 
-	BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
-	OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
-	OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
+    BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
+    OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
+    OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
 }
 
 build_filenames () {
-	OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
-	HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
-	HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
-	ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
+    OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
+    HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
+    HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
+    ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
 }
 
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
-      echo "[Size not computed for virtual build]"
-      return
+	echo "[Size not computed for virtual build]"
+	return
     fi
 
-	  ## This is a terrible hack, please don't hurt me. - algernon
+    ## This is a terrible hack, please don't hurt me. - algernon
 
     MAX_PROG_SIZE=28672
 
@@ -57,7 +57,7 @@ find_sketch () {
             return
         fi
     done
-        echo "Couldn't find sketch (.ino file)" >&2
+    echo "Couldn't find sketch (.ino file)" >&2
     exit 1
 }
 
@@ -84,9 +84,9 @@ flash_over_usb () {
 }
 
 flash_from_bootloader() {
-	prepare_to_flash
-	find_bootloader_ports
-	flash_over_usb || flash_over_usb
+    prepare_to_flash
+    find_bootloader_ports
+    flash_over_usb || flash_over_usb
 }
 
 program() {
@@ -96,12 +96,12 @@ program() {
 
 flash_with_programmer() {
     ${AVRDUDE} -v \
-			-C ${AVRDUDE_CONF} \
-		        -p${MCU} \
-		        -cusbtiny \
-		        -D \
-		        -B 1 \
-		        "-Uflash:w:${HEX_FILE_PATH}:i"
+	       -C ${AVRDUDE_CONF} \
+	       -p${MCU} \
+	       -cusbtiny \
+	       -D \
+	       -B 1 \
+	       "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
 hex_with_bootloader () {
@@ -109,11 +109,11 @@ hex_with_bootloader () {
         compile
     fi
 
-	  cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
-	  echo "Using ${BOOTLOADER_PATH}"
-	  ${MD5} ${BOOTLOADER_PATH}
-	  cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
-    	ln -sf "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    echo "Using ${BOOTLOADER_PATH}"
+    ${MD5} ${BOOTLOADER_PATH}
+    cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    ln -sf "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
     cat <<EOF
 
 Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
@@ -143,29 +143,29 @@ compile () {
 
     ARDUINO_PACKAGES=""
     if [ -d ${ARDUINO_PACKAGE_PATH} ]; then
-	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
+	ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
     ${ARDUINO_BUILDER} \
         -compile \
-		    ${ARDUINO_PACKAGES} \
-		    -hardware "${ARDUINO_PATH}/hardware" \
-		    -hardware "${BOARD_HARDWARE_PATH}" \
-		    ${ARDUINO_TOOLS_PARAM} \
-		    -tools "${ARDUINO_PATH}/tools-builder" \
-		    -fqbn "${FQBN}" \
-        	    -libraries "." \
-                    -libraries "${ROOT}" \
-		    -libraries "${BOARD_HARDWARE_PATH}/.." \
-        	    ${local_LIBS} \
-		    ${EXTRA_BUILDER_ARGS} \
-		    -build-path "${BUILD_PATH}" \
-		    -ide-version "${ARDUINO_IDE_VERSION}" \
-		    -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
-		    -warnings all \
+	${ARDUINO_PACKAGES} \
+	-hardware "${ARDUINO_PATH}/hardware" \
+	-hardware "${BOARD_HARDWARE_PATH}" \
+	${ARDUINO_TOOLS_PARAM} \
+	-tools "${ARDUINO_PATH}/tools-builder" \
+	-fqbn "${FQBN}" \
+        -libraries "." \
+        -libraries "${ROOT}" \
+	-libraries "${BOARD_HARDWARE_PATH}/.." \
+        ${local_LIBS} \
+	${EXTRA_BUILDER_ARGS} \
+	-build-path "${BUILD_PATH}" \
+	-ide-version "${ARDUINO_IDE_VERSION}" \
+	-prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	-warnings all \
         ${ARDUINO_VERBOSE} \
-		    ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-		    "$(find_sketch)/${SKETCH}.ino"
+	${ARDUINO_AVR_GCC_PREFIX_PARAM} \
+	"$(find_sketch)/${SKETCH}.ino"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
@@ -173,15 +173,15 @@ compile () {
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
-	  echo "Build artifacts can be found in ${BUILD_PATH}";
+	echo "Build artifacts can be found in ${BUILD_PATH}";
     else
-	  rm -rf "${BUILD_PATH}" 
+	rm -rf "${BUILD_PATH}" 
     fi 
 }
 
 _find_all () {
     for plugin in ./*.ino \
-	    	   examples/* \
+	    	      examples/* \
                       src/*.ino; do
         if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
@@ -207,9 +207,9 @@ size () {
         compile
     fi
 
-	  echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
-	  firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
-	  echo
+    echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
+    firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
+    echo
 }
 
 size_map () {
