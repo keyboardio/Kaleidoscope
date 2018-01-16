@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# Based on listArduinos.pl from https://github.com/todbot/usbSearch (License: MIT)
+# Original (C) 2012, Tod E. Kurt, http://todbot.com/blog/
+# This version by Michael Richters <gedankenexperimenter@gmail.com>
+
 use warnings;
 use strict;
 
