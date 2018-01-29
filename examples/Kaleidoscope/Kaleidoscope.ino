@@ -8,6 +8,7 @@
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-Numlock.h"
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "Kaleidoscope.h"
 
 #include "LED-Off.h"

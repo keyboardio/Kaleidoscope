@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
+
 //end of add your includes here
 #ifdef __cplusplus
 extern "C" {
