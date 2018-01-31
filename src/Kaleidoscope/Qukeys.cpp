@@ -97,8 +97,6 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   Key keycode = Key_NoKey;
   if (qukey_state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
     keycode = qukeys[qukey_index].alt_keycode;
-  } else {
-    keycode = Layer.lookup(row, col);
   }
 
   // Before calling handleKeyswitchEvent() below, make sure Qukeys knows not to handle
@@ -200,10 +198,16 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (keyToggledOff(key_state)) {
     // If the key isn't in the key_queue, proceed
     if (queue_index == QUKEY_NOT_FOUND) {
+      // If a qukey was released while in its alternate state, change its keycode
+      if (qukey_index != QUKEY_NOT_FOUND &&
+          getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
+        return qukeys[qukey_index].alt_keycode;
+      }
       return mapped_key;
     }
     flushQueue(queue_index);
-    return mapped_key;
+    // flushQueue() has already handled this key release
+    return Key_NoKey;
   }
 
   // Otherwise, the key is still pressed
