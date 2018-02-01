@@ -20,6 +20,8 @@
 #include <Kaleidoscope-Qukeys.h>
 #include <kaleidoscope/hid.h>
 #include <MultiReport/Keyboard.h>
+#include <Kaleidoscope-Ranges.h>
+#include <key_defs_keymaps.h>
 
 #ifdef ARDUINO_VIRTUAL
 #define debug_print(...) printf(__VA_ARGS__)
@@ -29,6 +31,39 @@
 
 
 namespace kaleidoscope {
+
+bool isDualUse(Key k) {
+  if (k.raw < ranges::DU_FIRST || k.raw > ranges::DU_LAST)
+    return false;
+  return true;
+}
+
+Key getDualUsePrimaryKey(Key k) {
+  if (k.raw >= ranges::DUM_FIRST && k.raw <= ranges::DUM_LAST) {
+    k.raw -= ranges::DUM_FIRST;
+    k.flags = 0;
+  } else if (k.raw >= ranges::DUL_FIRST && k.raw <= ranges::DUL_LAST) {
+    k.raw -= ranges::DUL_FIRST;
+    k.flags = 0;
+  }
+  return k;
+}
+
+Key getDualUseAlternateKey(Key k) {
+  if (k.raw >= ranges::DUM_FIRST && k.raw <= ranges::DUM_LAST) {
+    k.raw -= ranges::DUM_FIRST;
+    k.raw = (k.raw >> 8) + Key_LeftControl.keyCode;
+  } else if (k.raw >= ranges::DUL_FIRST && k.raw <= ranges::DUL_LAST) {
+    k.raw -= ranges::DUL_FIRST;
+    byte layer = k.flags;
+    // Should be `ShiftToLayer(layer)`, but that gives "narrowing conversion"
+    // warnings that I can't figure out how to resolve
+    k.keyCode = layer + LAYER_SHIFT_OFFSET;
+    k.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
+  }
+  return k;
+}
+
 
 Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
   this->layer = layer;
@@ -89,14 +124,20 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
-  if (qukey_index != QUKEY_NOT_FOUND) {
-    setQukeyState(key_queue_[0].addr, qukey_state);
-  }
+  bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
   byte row = addr::row(key_queue_[0].addr);
   byte col = addr::col(key_queue_[0].addr);
+  bool is_dual_use = isDualUse(Layer.lookup(row, col));
   Key keycode = Key_NoKey;
-  if (qukey_state == QUKEY_STATE_ALTERNATE && qukey_index != QUKEY_NOT_FOUND) {
-    keycode = qukeys[qukey_index].alt_keycode;
+  if (is_qukey || is_dual_use) {
+    setQukeyState(key_queue_[0].addr, qukey_state);
+    if (qukey_state == QUKEY_STATE_ALTERNATE) {
+      if (is_dual_use) {
+        keycode = getDualUseAlternateKey(keycode);
+      } else { // is_qukey
+        keycode = qukeys[qukey_index].alt_keycode;
+      }
+    }
   }
 
   // Before calling handleKeyswitchEvent() below, make sure Qukeys knows not to handle
@@ -125,7 +166,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
   // Last, if the key is still down, add its code back in
-  if (! keyToggledOn(keyswitch_state))
+  if (keyswitch_state | IS_PRESSED)
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
 
   // Now that we're done sending the report(s), Qukeys can process events again:
@@ -166,28 +207,42 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If Qukeys is turned off, continue to next plugin
   if (!active_)
-    return mapped_key;
-
-  // If the key was injected (from the queue being flushed), continue to next plugin
-  if (flushing_queue_)
-    return mapped_key;
-
-  // If the key isn't active, and didn't just toggle off, continue to next plugin
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
-    return mapped_key;
+    return getDualUsePrimaryKey(mapped_key);
 
   // get key addr & qukey (if any)
   uint8_t key_addr = addr::addr(row, col);
   int8_t qukey_index = lookupQukey(key_addr);
 
+  // If the key was injected (from the queue being flushed)
+  if (flushing_queue_) {
+    // If it's a DualUse key, we still need to update its keycode
+    if (isDualUse(mapped_key)) {
+      if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
+        return getDualUseAlternateKey(mapped_key);
+      } else {
+        return getDualUsePrimaryKey(mapped_key);
+      }
+    }
+    // ...otherwise, just continue to the next plugin
+    return mapped_key;
+  }
+
+  // If the key isn't active, and didn't just toggle off, continue to next plugin
+  if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
+    return getDualUsePrimaryKey(mapped_key);
+
   // If the key was just pressed:
   if (keyToggledOn(key_state)) {
     // If the queue is empty and the key isn't a qukey, proceed:
     if (key_queue_length_ == 0 &&
-        qukey_index == QUKEY_NOT_FOUND)
+        ! isDualUse(mapped_key) &&
+        qukey_index == QUKEY_NOT_FOUND) {
       return mapped_key;
+    }
+
     // Otherwise, queue the key and stop processing:
     enqueue(key_addr);
+    // flushQueue() has already handled this key release
     return Key_NoKey;
   }
 
@@ -199,21 +254,25 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
     // If the key isn't in the key_queue, proceed
     if (queue_index == QUKEY_NOT_FOUND) {
       // If a qukey was released while in its alternate state, change its keycode
-      if (qukey_index != QUKEY_NOT_FOUND &&
-          getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-        return qukeys[qukey_index].alt_keycode;
+      if (isDualUse(mapped_key)) {
+        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE)
+          return getDualUseAlternateKey(mapped_key);
+        return getDualUsePrimaryKey(mapped_key);
+      } else if (qukey_index != QUKEY_NOT_FOUND) {
+        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE)
+          return qukeys[qukey_index].alt_keycode;
+        return mapped_key;
       }
-      return mapped_key;
     }
     flushQueue(queue_index);
-    // flushQueue() has already handled this key release
     return Key_NoKey;
   }
 
   // Otherwise, the key is still pressed
 
   // If the key is not a qukey:
-  if (qukey_index == QUKEY_NOT_FOUND) {
+  if (qukey_index == QUKEY_NOT_FOUND &&
+      ! isDualUse(mapped_key)) {
     // If the key was pressed before the keys in the queue, proceed:
     if (queue_index == QUKEY_NOT_FOUND) {
       return mapped_key;
@@ -226,9 +285,11 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   // If the qukey is not in the queue, check its state
   if (queue_index == QUKEY_NOT_FOUND) {
     if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
+      if (isDualUse(mapped_key))
+        return getDualUseAlternateKey(mapped_key);
       return qukeys[qukey_index].alt_keycode;
     } else { // qukey_state == QUKEY_STATE_PRIMARY
-      return mapped_key;
+      return getDualUsePrimaryKey(mapped_key);
     }
   }
   // else state is undetermined; block. I could check timeouts here,
@@ -241,12 +302,18 @@ void Qukeys::preReportHook(void) {
   // state to the alternate keycode and add it to the report
   uint16_t current_time = (uint16_t)millis();
   while (key_queue_length_ > 0) {
-    if (lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
-      flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-    } else if ((current_time - key_queue_[0].start_time) > time_limit_) {
-      flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
+    byte row = addr::row(key_queue_[0].addr);
+    byte col = addr::col(key_queue_[0].addr);
+    Key keycode = Layer.lookup(row, col);
+    bool is_dual_use = isDualUse(keycode);
+    if (lookupQukey(key_queue_[0].addr) != QUKEY_NOT_FOUND || is_dual_use) {
+      if ((current_time - key_queue_[0].start_time) > time_limit_) {
+        flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
+      } else {
+        break;
+      }
     } else {
-      break;
+      flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     }
   }
 }

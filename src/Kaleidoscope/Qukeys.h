@@ -20,6 +20,7 @@
 
 #include <Kaleidoscope.h>
 #include <addr.h>
+#include <Kaleidoscope-Ranges.h>
 
 // Maximum length of the pending queue
 #define QUKEYS_QUEUE_MAX 8
@@ -40,6 +41,16 @@
 #define QUKEY_NOT_FOUND -1
 // Wildcard value; this matches any layer
 #define QUKEY_ALL_LAYERS -1
+
+#define MT(mod, key) (Key) { \
+    .raw = kaleidoscope::ranges::DUM_FIRST + \
+      (((Key_ ## mod).keyCode - Key_LeftControl.keyCode) << 8) + (Key_ ## key).keyCode }
+#define SFT_T(key) MT(LeftShift, key)
+#define CTL_T(key) MT(LeftControl, key)
+#define ALT_T(key) MT(LeftAlt, key)
+#define GUI_T(key) MT(LeftGui, key)
+
+#define LT(layer, key) (Key) { .raw = kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).keyCode }
 
 namespace kaleidoscope {
 

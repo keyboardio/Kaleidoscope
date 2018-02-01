@@ -58,6 +58,15 @@ likely to generate errors and out-of-order events.
   [example](https://github.com/gedankenlab/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino)
   for a way to turn `Qukeys` on and off, using Kaleidoscope-Macros
 
+### DualUse key definitions
+
+In addition to normal `Qukeys` described above, Kaleidoscope-Qukeys also treats
+DualUse keys in the keymap as `Qukeys`. See [the Kaleidoscope-DualUse
+documentation](https://github.com/keyboardio/Kaleidoscope-DualUse#keymap-markup)
+for a thorough description of how to define DualUse keys. This makes `Qukeys` a
+drop-in replacement for the `DualUse` plugin, without the need to edit the
+keymap.
+
 
 ## Design & Implementation
 
