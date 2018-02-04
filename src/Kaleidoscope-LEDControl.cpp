@@ -34,6 +34,19 @@ void LEDControl::next_mode(void) {
   return set_mode(mode);
 }
 
+void LEDControl::prev_mode(void) {
+  if (mode == 0) {
+    // wrap around
+    mode = LED_MAX_MODES - 1;
+    // then  count down until reaching a valid mode
+    while (mode > 0 && !modes[mode]) mode--;
+  } else {
+    mode--;
+  }
+
+  return set_mode(mode);
+}
+
 void
 LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= LED_MAX_MODES)
@@ -117,8 +130,13 @@ Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return mappedKey;
 
-  if (keyToggledOn(keyState))
-    next_mode();
+  if (keyToggledOn(keyState)) {
+    if (mappedKey == Key_LEDEffectNext) {
+      next_mode();
+    } else if (mappedKey == Key_LEDEffectPrevious) {
+      prev_mode();
+    }
+  }
 
   return Key_NoKey;
 }
