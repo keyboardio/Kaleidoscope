@@ -6,6 +6,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
+MacroKeyEvent Macros_::active_macros[];
+byte Macros_::active_macro_count;
 byte Macros_::row, Macros_::col;
 
 void playMacroKeyswitchEvent(Key key, uint8_t flags) {
@@ -181,16 +183,34 @@ const macro_t *Macros_::type(const char *string) {
   return MACRO_NONE;
 }
 
-static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key Macros_::handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
     return mappedKey;
 
-  Macros_::row = row;
-  Macros_::col = col;
-  const macro_t *m = macroAction(mappedKey.keyCode, keyState);
-
-  Macros.play(m);
+  byte key_id = (row * COLS) + col;
+  addActiveMacroKey(mappedKey.keyCode, key_id, keyState);
   return Key_NoKey;
+}
+
+void Macros_::loopHook(bool post_clear) {
+  if (post_clear) {
+    active_macro_count = 0;
+    return;
+  }
+
+  for (byte i = 0; i < active_macro_count; ++i) {
+    if (active_macros[i].key_id == 0xFF) {
+      // i.e. UNKNOWN_KEYSWITCH_LOCATION
+      row = 0xFF;
+      col = 0xFF;
+    } else {
+      row = active_macros[i].key_id / COLS;
+      col = active_macros[i].key_id % COLS;
+    }
+    const macro_t *m = macroAction(active_macros[i].key_code,
+                                   active_macros[i].key_state);
+    Macros.play(m);
+  }
 }
 
 Macros_::Macros_(void) {
@@ -198,7 +218,9 @@ Macros_::Macros_(void) {
 
 void
 Macros_::begin(void) {
+  active_macro_count = 0;
   Kaleidoscope.useEventHandlerHook(handleMacroEvent);
+  Kaleidoscope.useLoopHook(loopHook);
 }
 
 Macros_ Macros;
