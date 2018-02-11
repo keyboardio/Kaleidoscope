@@ -20,7 +20,7 @@ one keycode (i.e. symbol) when tapped, and a different keycode -- most likely a 
 
 - Clone the module -- In your sketch directory (e.g. `Model01-Firmware/`:
 ```
-git submodule add Kaleidoscope-Qukeys https://github.com/gedankenlab/Kaleidoscope-Qukeys.git
+git submodule add https://github.com/gedankenlab/Kaleidoscope-Qukeys.git Kaleidoscope-Qukeys
 ```
 - Include the header file:
 ```
