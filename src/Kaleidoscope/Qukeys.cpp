@@ -263,6 +263,7 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
           return qukeys[qukey_index].alt_keycode;
         return mapped_key;
       }
+      return mapped_key;
     }
     flushQueue(queue_index);
     return Key_NoKey;
