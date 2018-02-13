@@ -46,6 +46,10 @@ void Syster::reset(void) {
   is_active_ = false;
 }
 
+bool Syster::is_active(void) {
+  return is_active_;
+}
+
 // --- hooks ---
 Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   if (!is_active_) {

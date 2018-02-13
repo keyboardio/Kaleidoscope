@@ -40,6 +40,8 @@ class Syster : public KaleidoscopePlugin {
   void begin(void) final;
   static void reset(void);
 
+  bool is_active(void);
+
  private:
   static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
   static uint8_t symbol_pos_;
