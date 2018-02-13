@@ -212,7 +212,7 @@ bool LEDControl::focusHook(const char *command) {
       next_mode();
       Serial.read();
     } else if (peek == 'p') {
-      // TODO(algernon)
+      prev_mode();
       Serial.read();
     } else {
       uint8_t mode = Serial.parseInt();
