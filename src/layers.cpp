@@ -23,49 +23,32 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, byte row, byte col, uin
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
 
-    switch (target) {
-    case KEYMAP_NEXT:
-      if (keyToggledOn(keyState))
-        next();
-      else if (keyToggledOff(keyState))
-        previous();
-      break;
-
-    case KEYMAP_PREVIOUS:
-      if (keyToggledOn(keyState))
-        previous();
-      else if (keyToggledOff(keyState))
-        next();
-      break;
-
-    default:
-      /* The default case is when we are switching to a layer by its number, and
-       * is a bit more complicated than switching there when the key toggles on,
-       * and away when it toggles off.
-       *
-       * We want to handle the case where we have more than one momentary layer
-       * key on our keymap that point to the same target layer, and we hold
-       * both, and release one. In this case, the layer should remain active,
-       * because the second momentary key is still held.
-       *
-       * To do this, we turn the layer back on if the switcher key is still
-       * held, not only when it toggles on. So when one of them is released,
-       * that does turn the layer off, but with the other still being held, the
-       * layer will toggle back on in the same cycle.
-       */
-      if (keyToggledOn(keyState)) {
-        highestLayer = target;
-        updateActiveLayers();
-      } else if (keyIsPressed(keyState)) {
-        if (highestLayer != target) {
-          KeyboardHardware.maskKey(row, col);
-        }
-      } else if (keyToggledOff(keyState)) {
-        updateHighestLayer();
-        updateActiveLayers();
-      }
-      break;
+    // If we're using Key_KeymapNext_Momentary or Key_KeymapPrevious_Momentary, set the
+    // target layer relative to the current highestLayer
+    if (target == KEYMAP_NEXT) {
+      target = highestLayer + 1;
+    } else if (target == KEYMAP_PREVIOUS) {
+      target = highestLayer - 1;
     }
+
+    if (keyToggledOn(keyState)) {
+      // When a layer shift key is pressed, shift to the target layer by updating
+      // highestLayer and the active layers array. This will mask layers above
+      // highestLayer, even if those layers are active.
+      highestLayer = target;
+      updateActiveLayers();
+    } else if (keyIsPressed(keyState)) {
+      // If another layer shift happened while the key was still pressed, that shift takes
+      // precedence, and this key should be ignored until it's pressed again.
+      if (highestLayer != target) {
+        KeyboardHardware.maskKey(row, col);
+      }
+    } else if (keyToggledOff(keyState)) {
+      // When the layer shift is released, restore the normal state of the layer stack.
+      updateHighestLayer();
+      updateActiveLayers();
+    }
+
   } else if (keyToggledOn(keyState)) {
     // switch keymap and stay there
     if (isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
