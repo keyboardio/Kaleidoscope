@@ -79,6 +79,10 @@ flash () {
 }
 
 flash_over_usb () {
+    if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
+        echo 'DEVICE_PORT_BOOTLOADER is empty (did you hold "Prog" to enable bootloader mode?)' >&2
+        return 1
+    fi
     sleep 1s
     ${AVRDUDE} -q -q -C ${AVRDUDE_CONF} -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
