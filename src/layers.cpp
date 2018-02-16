@@ -9,6 +9,7 @@ static uint32_t LayerState;
 #define MAX_LAYERS sizeof(LayerState) * 8;
 
 uint8_t Layer_::highestLayer;
+bool Layer_::shiftOn = false;
 Key Layer_::liveCompositeKeymap[ROWS][COLS];
 uint8_t Layer_::activeLayers[ROWS][COLS];
 Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
@@ -159,7 +160,7 @@ void Layer_::on(uint8_t layer) {
 
   // If the target layer is above the previous highest active layer,
   // update highestLayer
-  if (layer > highestLayer)
+  if (!shiftOn && layer > highestLayer)
     updateHighestLayer();
 
   // Update the keymap cache (but not liveCompositeKeymap; that gets
@@ -178,7 +179,7 @@ void Layer_::off(uint8_t layer) {
 
   // If the target layer was the previous highest active layer,
   // update highestLayer
-  if (layer == highestLayer)
+  if (! shiftOn && layer == highestLayer)
     updateHighestLayer();
 
   // Update the keymap cache (but not liveCompositeKeymap; that gets
