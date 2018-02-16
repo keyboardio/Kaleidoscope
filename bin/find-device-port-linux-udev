@@ -17,8 +17,8 @@ for my $path (@paths) {
         my ( $key, $val ) = split( /=/, $line, 2 );
         $devices{$path}{$key} = $val;
     }
-    if (   ( $devices{$path}{'ID_VENDOR_ID'} == $vid )
-        && ( $devices{$path}{'ID_MODEL_ID'} == $pid ) )
+    if (   ( hex $devices{$path}{'ID_VENDOR_ID'} == hex $vid )
+        && ( hex $devices{$path}{'ID_MODEL_ID'} == hex $pid ) )
     {
 
         if ( $devices{$path}{'ID_MM_CANDIDATE'} ) {
