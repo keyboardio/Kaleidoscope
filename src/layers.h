@@ -83,6 +83,7 @@ class Layer_ {
 
  private:
   static void updateHighestLayer(void);
+  static void handleKeymapKeyswitchEvent(Key keymapEntry, byte row, byte col, uint8_t keyState);
 
   static uint8_t highestLayer;
   static Key liveCompositeKeymap[ROWS][COLS];

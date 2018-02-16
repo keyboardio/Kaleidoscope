@@ -18,23 +18,23 @@ Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGME
 // highest possible number of layers.
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
-static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
+void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, byte row, byte col, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
       if (keyToggledOn(keyState))
-        Layer.next();
+        next();
       else if (keyToggledOff(keyState))
-        Layer.previous();
+        previous();
       break;
 
     case KEYMAP_PREVIOUS:
       if (keyToggledOn(keyState))
-        Layer.previous();
+        previous();
       else if (keyToggledOff(keyState))
-        Layer.next();
+        next();
       break;
 
     default:
@@ -52,20 +52,25 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        * that does turn the layer off, but with the other still being held, the
        * layer will toggle back on in the same cycle.
        */
-      if (keyIsPressed(keyState)) {
-        if (!Layer.isOn(target))
-          Layer.on(target);
+      if (keyToggledOn(keyState)) {
+        highestLayer = target;
+        updateActiveLayers();
+      } else if (keyIsPressed(keyState)) {
+        if (highestLayer != target) {
+          KeyboardHardware.maskKey(row, col);
+        }
       } else if (keyToggledOff(keyState)) {
-        Layer.off(target);
+        updateHighestLayer();
+        updateActiveLayers();
       }
       break;
     }
   } else if (keyToggledOn(keyState)) {
     // switch keymap and stay there
-    if (Layer.isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
-      Layer.off(keymapEntry.keyCode);
+    if (isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
+      off(keymapEntry.keyCode);
     else
-      Layer.on(keymapEntry.keyCode);
+      on(keymapEntry.keyCode);
   }
 }
 
@@ -74,7 +79,7 @@ Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
-  handleKeymapKeyswitchEvent(mappedKey, keyState);
+  handleKeymapKeyswitchEvent(mappedKey, row, col, keyState);
   return Key_NoKey;
 }
 
@@ -105,7 +110,7 @@ Layer_::updateActiveLayers(void) {
       int8_t layer = highestLayer;
 
       while (layer > DefaultLayer) {
-        if (Layer.isOn(layer)) {
+        if (isOn(layer) || layer == highestLayer) {
           Key mappedKey = (*getKey)(layer, row, col);
 
           if (mappedKey != Key_Transparent) {
@@ -113,7 +118,7 @@ Layer_::updateActiveLayers(void) {
             break;
           }
         }
-        layer--;
+        --layer;
       }
     }
   }
