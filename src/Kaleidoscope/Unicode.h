@@ -38,7 +38,7 @@ class Unicode : public KaleidoscopePlugin {
 }
 
 Key hexToKey(uint8_t hex);
-Key hexToKeyWindows(uint8_t hex);
+Key hexToKeysWithNumpad(uint8_t hex);
 
 void unicodeCustomStart(void);
 void unicodeCustomEnd(void);

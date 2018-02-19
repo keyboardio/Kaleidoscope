@@ -60,6 +60,7 @@ void Unicode::start(void) {
 void Unicode::input(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
+    break;
   case hostos::WINDOWS:
   case hostos::OSX:
     hid::pressRawKey(Key_LeftAlt);
@@ -100,7 +101,7 @@ void Unicode::typeCode(uint32_t unicode) {
       if (on_zero_start == false) {
         Key key;
         if (::HostOS.os() == hostos::WINDOWS) {
-          key = hexToKeyWindows(digit);
+          key = hexToKeysWithNumpad(digit);
         }
         else {
           key = hexToKey(digit);
@@ -115,7 +116,7 @@ void Unicode::typeCode(uint32_t unicode) {
     } else {
       Key key;
       if (::HostOS.os() == hostos::WINDOWS) {
-        key = hexToKeyWindows(digit);
+        key = hexToKeysWithNumpad(digit);
       }
       else {
         key = hexToKey(digit);
@@ -153,7 +154,7 @@ __attribute__((weak)) Key hexToKey(uint8_t hex) {
   return { m, KEY_FLAGS };
 }
 
-__attribute__((weak)) Key hexToKeyWindows(uint8_t hex) {
+__attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
   uint8_t m;
   if (hex == 0x0) {
     return Key_Keypad0;
