@@ -34,7 +34,7 @@
 
 // Allow for the creation of verbose messages in static_asserts
 //
-#define VEROSE_STATIC_ASSERT_HEADER                                            \
+#define VERBOSE_STATIC_ASSERT_HEADER                                            \
 __NL__     "\n"                                                                \
 __NL__     "\n***************************************************************" \
 __NL__     "\n******************** READ THIS CAREFULLY! *********************" \
@@ -100,7 +100,7 @@ __NN__           This check is not able to find the corner case of a single    \
 __NN__           superfluous comma at the end of the macro arguments as this   \
 __NN__           causes #__VA_ARGS__ being empty (only '\0').                  \
 __NN__         */                                                              \
-__NN__     VEROSE_STATIC_ASSERT_HEADER                                         \
+__NN__     VERBOSE_STATIC_ASSERT_HEADER                                         \
 __NN__                                                                         \
 __NN__     VERBOSE_FILE_INFO                                                   \
 __NN__     VERBOSE_LINE_INFO                                                   \
