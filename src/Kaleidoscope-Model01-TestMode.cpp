@@ -95,6 +95,9 @@ void TestMode_::testMatrix() {
   for (auto temp = 0; temp < 16; temp++) {
     KeyboardHardware.readMatrix();
   }
+  // Reset bad keys from previous tests.
+  leftBadKeys = 0;
+  rgihtBadKeys = 0;
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
