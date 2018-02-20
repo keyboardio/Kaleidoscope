@@ -17,7 +17,7 @@
 #endif
 
 
-typedef union Key_ {
+union Key {
 
   struct {
     uint8_t keyCode;
@@ -28,14 +28,14 @@ typedef union Key_ {
   inline bool operator==(uint16_t rhs) {
     return this->raw == rhs;
   }
-  inline bool operator==(const Key_ rhs) {
+  inline bool operator==(const Key rhs) {
     return this->raw == rhs.raw;
   }
-  inline Key_& operator=(uint16_t raw) {
+  inline Key& operator=(uint16_t raw) {
     this->raw = raw;
     return *this;
   }
-  inline bool operator!=(const Key_& rhs) {
+  inline bool operator!=(const Key& rhs) {
     return !(*this == rhs);
   }
   inline bool operator>=(uint16_t raw) {
@@ -50,19 +50,19 @@ typedef union Key_ {
   inline bool operator<(uint16_t raw) {
     return this->raw < raw;
   }
-  inline bool operator>=(const Key_& other) {
+  inline bool operator>=(const Key& other) {
     return this->raw >= other.raw;
   }
-  inline bool operator<=(const Key_& other) {
+  inline bool operator<=(const Key& other) {
     return this->raw <= other.raw;
   }
-  inline bool operator>(const Key_& other) {
+  inline bool operator>(const Key& other) {
     return this->raw > other.raw;
   }
-  inline bool operator<(const Key_& other) {
+  inline bool operator<(const Key& other) {
     return this->raw < other.raw;
   }
-} Key;
+};
 
 
 
