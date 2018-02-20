@@ -14,7 +14,7 @@ Pick a directory to work in, you'll need to clone multiple repositories. We'll a
 
 Setup the Arduino IDE on your system. Make sure you install at least version 1.6, since older version may not support all required features.
 
-* On Linux, follow the instructions [on the wiki](https://github.com/keyboardio/Kaleidoscope/wiki/Arduino-Setup-Linux).
+* On Linux, follow the instructions [on the wiki](https://github.com/keyboardio/Kaleidoscope/wiki/Install-Arduino-support-on-Linux).
 * On macOS, install using [homebrew](http://brew.sh/) [cask](https://caskroom.github.io/) with `brew cask install arduino` or download the application from [the official website](https://www.arduino.cc/en/Main/Software) and move it to your `/Applications` folder.
 
 ## Install the Kaleidoscope Hardware Definitions
