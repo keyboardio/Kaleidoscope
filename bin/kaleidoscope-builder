@@ -64,6 +64,7 @@ find_sketch () {
 prepare_to_flash () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
+        size
     fi
 
     echo "Press ENTER when ready..."
