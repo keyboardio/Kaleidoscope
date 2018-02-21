@@ -221,7 +221,7 @@ size_map () {
         compile
     fi
 
-    "${AVR_NM}" --size-sort -C -r -l "${ELF_FILE_PATH}"
+    "${AVR_NM}" --size-sort -C -r -l -t decimal "${ELF_FILE_PATH}"
 }
 
 disassemble () {
