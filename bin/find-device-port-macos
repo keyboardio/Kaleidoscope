@@ -68,15 +68,18 @@ if ( exists( $device->{'serial_number'} ) ) {
     }
     # High Sierra sometimes has a mismatch between the serial number and the device
     # filename. I'm not sure why, but system_profiler has a serial number ending in "E",
-    # whereas the device filename ends in "1". Another possibility is that the device
-    # filename simply always ends in a "1".
-    $serial_port_name =~ s/E$/1/;
+    # whereas the device filename ends in "1". In fact, when I change HID.getShortName()
+    # to return "kbio02", the final character is replaced with a "1", so we should do the
+    # same here.
+    $serial_port_name =~ s/.$/1/;
     if ( -e $serial_port_name ) {
         print $serial_port_name;
         exit 0;
     }
 }
 
+# Here, also, the final character is always a "1", so if macOS ever stops doing that, this
+# will need an update, as well.
 if ( exists( $device->{'location_id'} ) ) {
     my $loc = substr( $device->{'location_id'}, 2, 3 );
     $serial_port_name = "/dev/cu.usbmodem" . $loc . 1;
@@ -89,6 +92,8 @@ if ( exists( $device->{'location_id'} ) ) {
 # If none of the above tests succeeds, just list the directory and see if there are any
 # files that have the device shortname that we expect:
 foreach my $line (qx(ls /dev/cu.usbmodem*)) {
+    # If this script gets used for the Model 02 (or anything else that won't end it "1"),
+    # the line below should probably drop the final character (see above):
     if ( $line =~ m/kbio01/ ) {
 	chomp $line;
 	print $line;
