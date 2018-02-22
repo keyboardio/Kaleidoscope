@@ -21,7 +21,7 @@
 namespace kaleidoscope {
 namespace ranges {
 
-enum {
+enum : uint16_t {
   FIRST       = 0xc000,
   KALEIDOSCOPE_FIRST = FIRST,
   OS_FIRST,
