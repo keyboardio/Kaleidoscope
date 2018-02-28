@@ -24,8 +24,8 @@ build_filenames () {
 
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
-	echo "[Size not computed for virtual build]"
-	return
+        echo "[Size not computed for virtual build]"
+        return
     fi
 
     ## This is a terrible hack, please don't hurt me. - algernon
@@ -34,9 +34,9 @@ firmware_size () {
 
     output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
 
-    PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
+    PROGSIZE="$(echo "${output}" | grep "Program:" | cut -d: -f2 | awk '{print $1}')"
 
-    PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+    PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
     echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
