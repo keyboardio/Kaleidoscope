@@ -239,7 +239,7 @@ decompile () {
 }
 
 clean () {
-    rm -rf "${OUTPUT_PATH}"
+    rm -rf -- "${OUTPUT_PATH}"
 }
 
 reset_device() {
