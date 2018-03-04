@@ -42,7 +42,7 @@ void NumPad_::loopHook(bool postClear) {
         col = c;
       }
 
-      if ((k != layer_key) || (k.flags != KEY_FLAGS)) {
+      if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
         LEDControl.refreshAt(r, c);
       } else {
         LEDControl.setCrgbAt(r, c, numpad_color);
