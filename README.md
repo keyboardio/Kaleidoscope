@@ -40,11 +40,11 @@ dictionary:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Leader.h>
 
-static void leaderA() {
+static void leaderA(uint8_t seq_index) {
   Serial.println("leaderA");
 }
 
-static void leaderTX() {
+static void leaderTX(uint8_t seq_index) {
   Serial.println("leaderTX");
 }
 
