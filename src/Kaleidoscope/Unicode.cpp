@@ -102,8 +102,7 @@ void Unicode::typeCode(uint32_t unicode) {
         Key key;
         if (::HostOS.os() == hostos::WINDOWS) {
           key = hexToKeysWithNumpad(digit);
-        }
-        else {
+        } else {
           key = hexToKey(digit);
         }
         input();
@@ -117,8 +116,7 @@ void Unicode::typeCode(uint32_t unicode) {
       Key key;
       if (::HostOS.os() == hostos::WINDOWS) {
         key = hexToKeysWithNumpad(digit);
-      }
-      else {
+      } else {
         key = hexToKey(digit);
       }
       input();
@@ -163,24 +161,24 @@ __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
     m = Key_Keypad1.keyCode + (hex - 0x1);
   } else {
     switch (hex) {
-        case 0xA:
-            m = Key_A.keyCode;
-            break;
-        case 0xB:
-            m = Key_B.keyCode;
-            break;
-        case 0xC:
-            m = Key_C.keyCode;
-            break;
-        case 0xD:
-            m = Key_D.keyCode;
-            break;
-        case 0xE:
-            m = Key_E.keyCode;
-            break;
-        case 0xF:
-            m = Key_F.keyCode;
-            break;
+    case 0xA:
+      m = Key_A.keyCode;
+      break;
+    case 0xB:
+      m = Key_B.keyCode;
+      break;
+    case 0xC:
+      m = Key_C.keyCode;
+      break;
+    case 0xD:
+      m = Key_D.keyCode;
+      break;
+    case 0xE:
+      m = Key_E.keyCode;
+      break;
+    case 0xF:
+      m = Key_F.keyCode;
+      break;
     }
   }
   return { m, KEY_FLAGS };
