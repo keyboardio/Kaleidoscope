@@ -41,13 +41,11 @@ void Unicode::start(void) {
     hid::sendKeyboardReport();
     break;
   case hostos::WINDOWS:
-    hid::pressRawKey(Key_RightAlt);
+    hid::pressRawKey(Key_LeftAlt);
     hid::sendKeyboardReport();
-    hid::releaseRawKey(Key_RightAlt);
+    hid::pressRawKey(Key_KeypadAdd);
     hid::sendKeyboardReport();
-    hid::pressRawKey(Key_U);
-    hid::sendKeyboardReport();
-    hid::releaseRawKey(Key_U);
+    hid::releaseRawKey(Key_KeypadAdd);
     hid::sendKeyboardReport();
     break;
   case hostos::OSX:
@@ -62,8 +60,8 @@ void Unicode::start(void) {
 void Unicode::input(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
-  case hostos::WINDOWS:
     break;
+  case hostos::WINDOWS:
   case hostos::OSX:
     hid::pressRawKey(Key_LeftAlt);
     break;
@@ -82,7 +80,6 @@ void Unicode::end(void) {
     hid::sendKeyboardReport();
     break;
   case hostos::WINDOWS:
-    break;
   case hostos::OSX:
     hid::releaseRawKey(Key_LeftAlt);
     hid::sendKeyboardReport();
@@ -102,7 +99,12 @@ void Unicode::typeCode(uint32_t unicode) {
     uint8_t digit = ((unicode >> (i * 4)) & 0xF);
     if (digit == 0) {
       if (on_zero_start == false) {
-        Key key = hexToKey(digit);
+        Key key;
+        if (::HostOS.os() == hostos::WINDOWS) {
+          key = hexToKeysWithNumpad(digit);
+        } else {
+          key = hexToKey(digit);
+        }
         input();
         hid::pressRawKey(key);
         hid::sendKeyboardReport();
@@ -111,7 +113,12 @@ void Unicode::typeCode(uint32_t unicode) {
         hid::sendKeyboardReport();
       }
     } else {
-      Key key = hexToKey(digit);
+      Key key;
+      if (::HostOS.os() == hostos::WINDOWS) {
+        key = hexToKeysWithNumpad(digit);
+      } else {
+        key = hexToKey(digit);
+      }
       input();
       hid::pressRawKey(key);
       hid::sendKeyboardReport();
@@ -141,6 +148,38 @@ __attribute__((weak)) Key hexToKey(uint8_t hex) {
     m = Key_1.keyCode + (hex - 0x1);
   } else {
     m = Key_A.keyCode + (hex - 0xA);
+  }
+  return { m, KEY_FLAGS };
+}
+
+__attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
+  uint8_t m;
+  if (hex == 0x0) {
+    return Key_Keypad0;
+  }
+  if (hex < 0xA) {
+    m = Key_Keypad1.keyCode + (hex - 0x1);
+  } else {
+    switch (hex) {
+    case 0xA:
+      m = Key_A.keyCode;
+      break;
+    case 0xB:
+      m = Key_B.keyCode;
+      break;
+    case 0xC:
+      m = Key_C.keyCode;
+      break;
+    case 0xD:
+      m = Key_D.keyCode;
+      break;
+    case 0xE:
+      m = Key_E.keyCode;
+      break;
+    case 0xF:
+      m = Key_F.keyCode;
+      break;
+    }
   }
   return { m, KEY_FLAGS };
 }
