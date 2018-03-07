@@ -179,6 +179,9 @@ __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
     case 0xF:
       m = Key_F.keyCode;
       break;
+    default:
+      m = Key_NoKey.keyCode;
+      break;
     }
   }
   return { m, KEY_FLAGS };
