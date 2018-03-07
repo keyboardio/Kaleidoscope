@@ -68,7 +68,7 @@ prepare_to_flash () {
     fi
 
     echo "Press ENTER when ready..."
-    read a
+    read
 }
 
 flash () {
