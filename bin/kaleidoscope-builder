@@ -114,19 +114,19 @@ hex_with_bootloader () {
         compile
     fi
 
-    cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    awk '/^:00000001FF/ == 0' "${HEX_FILE_PATH}" > "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     echo "Using ${BOOTLOADER_PATH}"
     ${MD5} ${BOOTLOADER_PATH}
-    cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
-    ln -sf "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
-    cat <<EOF
-
-Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
-Make sure you have the bootloader version you expect.
-
-And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
-
-EOF
+    cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
+    ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    cat <<- EOF
+		
+		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
+		Make sure you have the bootloader version you expect.
+		
+		And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
+		
+		EOF
 }
 
 build () {
