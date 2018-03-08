@@ -271,6 +271,26 @@ Please report this issue at https://github.com/keyboardio/Kaleidoscope
 EOF
         exit 1
     fi
+
+    if ! [ -w "$DEVICE_PORT" ]; then
+        cat <<EOF >&2
+
+$DEVICE_PORT is not writable:
+
+  `ls -l $DEVICE_PORT`
+
+You are currently in the following groups:
+
+  `id -Gn`
+
+Please ensure you have followed the instructions on setting up your
+account to be in the right group:
+
+https://github.com/keyboardio/Kaleidoscope/wiki/Install-Arduino-support-on-Linux
+
+EOF
+        exit 1
+    fi
 }
 
 usage () {
