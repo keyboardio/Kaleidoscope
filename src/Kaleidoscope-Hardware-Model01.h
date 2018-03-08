@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #define HARDWARE_IMPLEMENTATION Model01
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
 #define COLS 16
