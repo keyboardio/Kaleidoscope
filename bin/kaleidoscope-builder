@@ -303,34 +303,34 @@ usage () {
 		Available commands:
 		
 		  help
-			This help screen.
+		    his help screen.
 		
 		  compile
-			Compiles the sketch.
+		    Compiles the sketch.
 		
 		  size
-			Reports the size of the compiled sketch.
+		    Reports the size of the compiled sketch.
 		
 		  build
-			Runs compile and report-size.
+		    Runs compile and report-size.
 		
 		  clean
-			Cleans up the output directory.
+		    Cleans up the output directory.
 		
 		  size-map
-			Displays the size map for the sketch.
+		    Displays the size map for the sketch.
 		
 		  disassemble
-			Decompile the sketch.
+		    Decompile the sketch.
 		
 		  reset-device
-			Reset the device.
+		    Reset the device.
 		
 		  flash
-			Flashes the firmware using avrdude.
+		    Flashes the firmware using avrdude.
 		
 		  build-all
-			Build all Sketches we can find.
+		    Build all Sketches we can find.
 		EOF
 }
 
