@@ -2,6 +2,8 @@
 
 use warnings;
 use strict;
+die "Usage: $0 VID PID\n" unless @ARGV == 2;
+
 my $vid    = shift;
 my $pid    = shift;
 my $prefix = '/dev/serial/by-id/';
