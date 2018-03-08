@@ -41,6 +41,7 @@ firmware_size () {
     echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
 
+
 find_sketch () {
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
     LIBRARY="${LIBRARY:-${SKETCH}}"
@@ -294,43 +295,43 @@ EOF
 }
 
 usage () {
-    cat <<EOF
-Usage: $0 SKETCH commands...
-
-Runs all of the commands in the context of the Sketch.
-
-Available commands:
-
-  help
-    This help screen.
-
-  compile
-    Compiles the sketch.
-
-  size
-    Reports the size of the compiled sketch.
-
-  build
-    Runs compile and report-size.
-
-  clean
-    Cleans up the output directory.
-
-  size-map
-    Displays the size map for the sketch.
-
-  disassemble
-    Decompile the sketch.
-
-  reset-device
-    Reset the device.
-
-  flash
-    Flashes the firmware using avrdude.
-
-  build-all
-    Build all Sketches we can find.
-EOF
+    cat <<- EOF
+		Usage: $0 SKETCH commands...
+		
+		Runs all of the commands in the context of the Sketch.
+		
+		Available commands:
+		
+		  help
+			This help screen.
+		
+		  compile
+			Compiles the sketch.
+		
+		  size
+			Reports the size of the compiled sketch.
+		
+		  build
+			Runs compile and report-size.
+		
+		  clean
+			Cleans up the output directory.
+		
+		  size-map
+			Displays the size map for the sketch.
+		
+		  disassemble
+			Decompile the sketch.
+		
+		  reset-device
+			Reset the device.
+		
+		  flash
+			Flashes the firmware using avrdude.
+		
+		  build-all
+			Build all Sketches we can find.
+		EOF
 }
 
 help () {
