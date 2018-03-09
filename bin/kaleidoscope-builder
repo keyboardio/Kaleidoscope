@@ -404,7 +404,7 @@ for i in $(seq 1 $#); do
     case "${v}" in
         *=*)
             # Exporting an expansion is *precisely* what we want here.
-            # shellcheck disable=SC2163
+            # shellcheck disable=SC2086,SC2163
             export ${v}
             ;;
         *)
