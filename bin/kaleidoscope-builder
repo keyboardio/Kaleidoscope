@@ -121,12 +121,12 @@ hex_with_bootloader () {
     cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
     cat <<- EOF
-		
+
 		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
 		Make sure you have the bootloader version you expect.
-		
+
 		And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
-		
+
 		EOF
 }
 
@@ -181,8 +181,8 @@ compile () {
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
 	echo "Build artifacts can be found in ${BUILD_PATH}";
     else
-	rm -rf "${BUILD_PATH}" 
-    fi 
+	rm -rf "${BUILD_PATH}"
+    fi
 }
 
 _find_all () {
@@ -297,38 +297,38 @@ EOF
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
-		
+
 		Runs all of the commands in the context of the Sketch.
-		
+
 		Available commands:
-		
+
 		  help
 		    his help screen.
-		
+
 		  compile
 		    Compiles the sketch.
-		
+
 		  size
 		    Reports the size of the compiled sketch.
-		
+
 		  build
 		    Runs compile and report-size.
-		
+
 		  clean
 		    Cleans up the output directory.
-		
+
 		  size-map
 		    Displays the size map for the sketch.
-		
+
 		  disassemble
 		    Decompile the sketch.
-		
+
 		  reset-device
 		    Reset the device.
-		
+
 		  flash
 		    Flashes the firmware using avrdude.
-		
+
 		  build-all
 		    Build all Sketches we can find.
 		EOF
