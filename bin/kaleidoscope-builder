@@ -303,7 +303,7 @@ usage () {
 		Available commands:
 
 		  help
-		    his help screen.
+		    This help screen.
 
 		  compile
 		    Compiles the sketch.
