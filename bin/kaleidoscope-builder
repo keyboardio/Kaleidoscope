@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -7,10 +7,10 @@ set -e
 ######
 
 build_version () {
-    GIT_VERSION="$(cd $(find_sketch); git describe --abbrev=4 --dirty --always)"
-    LIB_VERSION="$(cd $(find_sketch); (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+    GIT_VERSION="$(cd "$(find_sketch)"; git describe --abbrev=4 --dirty --always)"
+    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= ../../library.properties 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
 
-    BUILD_PATH="${BUILD_PATH:-$(mktemp -d 2>/dev/null || mktemp -d -t 'build')}"
+    BUILD_PATH="${BUILD_PATH:-"$(mktemp -d 2>/dev/null || mktemp -d -t 'build')"}"
     OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
     OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
 }
@@ -24,22 +24,25 @@ build_filenames () {
 
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
-	echo "[Size not computed for virtual build]"
-	return
+        echo "[Size not computed for virtual build]"
+        return
     fi
 
     ## This is a terrible hack, please don't hurt me. - algernon
 
     MAX_PROG_SIZE=28672
 
-    output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+    output="$("$@" | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
 
-    PROGSIZE="$(echo "${output}" | grep Program: | cut -d: -f2 | awk '{print $1}')"
+    PROGSIZE="$(echo "${output}" | grep "Program:" | cut -d: -f2 | awk '{print $1}')"
 
-    PERCENT="$(echo ${PROGSIZE} ${MAX_PROG_SIZE} | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+    PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
+    # we want the sed there, doing with shell builtins would be worse.
+    # shellcheck disable=SC2001
     echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
+
 
 find_sketch () {
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
@@ -68,7 +71,10 @@ prepare_to_flash () {
     fi
 
     echo "Press ENTER when ready..."
-    read a
+
+    # We do not want to permit line continuations here. We just want a newline.
+    # shellcheck disable=SC2162
+    read
 }
 
 flash () {
@@ -85,7 +91,7 @@ flash_over_usb () {
         return 1
     fi
     sleep 1s
-    ${AVRDUDE} -q -q -C ${AVRDUDE_CONF} -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+    ${AVRDUDE} -q -q -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
 flash_from_bootloader() {
@@ -101,8 +107,8 @@ program() {
 
 flash_with_programmer() {
     ${AVRDUDE} -v \
-	       -C ${AVRDUDE_CONF} \
-	       -p${MCU} \
+	       -C "${AVRDUDE_CONF}" \
+	       -p"${MCU}" \
 	       -cusbtiny \
 	       -D \
 	       -B 1 \
@@ -114,24 +120,24 @@ hex_with_bootloader () {
         compile
     fi
 
-    cat ${HEX_FILE_PATH} | awk '/^:00000001FF/ == 0' > ${HEX_FILE_WITH_BOOTLOADER_PATH}
+    awk '/^:00000001FF/ == 0' "${HEX_FILE_PATH}" > "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     echo "Using ${BOOTLOADER_PATH}"
-    ${MD5} ${BOOTLOADER_PATH}
-    cat ${BOOTLOADER_PATH} >> ${HEX_FILE_WITH_BOOTLOADER_PATH}
-    ln -sf "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
-    cat <<EOF
+    ${MD5} "${BOOTLOADER_PATH}"
+    cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
+    ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    cat <<- EOF
 
-Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
-Make sure you have the bootloader version you expect.
+		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
+		Make sure you have the bootloader version you expect.
 
-And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
+		And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
 
-EOF
+		EOF
 }
 
 build () {
-    compile $@
-    size $@
+    compile "$@"
+    size "$@"
 }
 
 compile () {
@@ -140,37 +146,47 @@ compile () {
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+
+    # This is defined in the (optional) user config.
+    # shellcheck disable=SC2154
     ${compile_HOOKS}
 
     if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
+        # shellcheck disable=SC2089
+        # We want literal backslashes here, not arrays.
         local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
     fi
 
     ARDUINO_PACKAGES=""
-    if [ -d ${ARDUINO_PACKAGE_PATH} ]; then
-	ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
+    if [ -d "${ARDUINO_PACKAGE_PATH}" ]; then
+        # shellcheck disable=SC2089
+        # We want literal backslashes here, not arrays.
+	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
+    # SC2091: We do not care if quotes or backslashes are not respected.
+    # SC2086: We want word splitting.
+    # shellcheck disable=SC2086,SC2090
     ${ARDUINO_BUILDER} \
         -compile \
-	${ARDUINO_PACKAGES} \
-	-hardware "${ARDUINO_PATH}/hardware" \
-	-hardware "${BOARD_HARDWARE_PATH}" \
-	${ARDUINO_TOOLS_PARAM} \
-	-tools "${ARDUINO_PATH}/tools-builder" \
-	-fqbn "${FQBN}" \
+	      ${ARDUINO_PACKAGES} \
+	      -hardware "${ARDUINO_PATH}/hardware" \
+	      -hardware "${BOARD_HARDWARE_PATH}" \
+	      ${ARDUINO_TOOLS_PARAM} \
+	      -tools "${ARDUINO_PATH}/tools-builder" \
+	      -fqbn "${FQBN}" \
         -libraries "." \
         -libraries "${ROOT}" \
-	-libraries "${BOARD_HARDWARE_PATH}/.." \
+	      -libraries "${BOARD_HARDWARE_PATH}/.." \
         ${local_LIBS} \
-	${EXTRA_BUILDER_ARGS} \
-	-build-path "${BUILD_PATH}" \
-	-ide-version "${ARDUINO_IDE_VERSION}" \
-	-prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
-	-warnings all \
+	      ${EXTRA_BUILDER_ARGS} \
+	      -build-path "${BUILD_PATH}" \
+	      -ide-version "${ARDUINO_IDE_VERSION}" \
+	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      -warnings all \
         ${ARDUINO_VERBOSE} \
-	${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-	"$(find_sketch)/${SKETCH}.ino"
+	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
+	      "$(find_sketch)/${SKETCH}.ino"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
@@ -178,17 +194,17 @@ compile () {
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
-	echo "Build artifacts can be found in ${BUILD_PATH}";
+	      echo "Build artifacts can be found in ${BUILD_PATH}";
     else
-	rm -rf "${BUILD_PATH}" 
-    fi 
+	      rm -rf "${BUILD_PATH}"
+    fi
 }
 
 _find_all () {
     for plugin in ./*.ino \
-	    	      examples/* \
-                      src/*.ino; do
-        if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
+	    	          examples/* \
+                  src/*.ino; do
+        if [ -d "$(dirname "${plugin}")" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
             if [ "${p}" != '*' ]; then
                 echo "${p}"
@@ -203,7 +219,7 @@ build_all () {
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
         export LIBRARY="${plugin}"
-        $0 ${plugin} build
+        $0 "${plugin}" build
     done
 }
 
@@ -239,7 +255,7 @@ decompile () {
 }
 
 clean () {
-    rm -rf "${OUTPUT_PATH}"
+    rm -rf -- "${OUTPUT_PATH}"
 }
 
 reset_device() {
@@ -277,11 +293,11 @@ EOF
 
 $DEVICE_PORT is not writable:
 
-  `ls -l $DEVICE_PORT`
+  $(ls -l "$DEVICE_PORT")
 
 You are currently in the following groups:
 
-  `id -Gn`
+  $(id -Gn)
 
 Please ensure you have followed the instructions on setting up your
 account to be in the right group:
@@ -294,43 +310,43 @@ EOF
 }
 
 usage () {
-    cat <<EOF
-Usage: $0 SKETCH commands...
+    cat <<- EOF
+		Usage: $0 SKETCH commands...
 
-Runs all of the commands in the context of the Sketch.
+		Runs all of the commands in the context of the Sketch.
 
-Available commands:
+		Available commands:
 
-  help
-    This help screen.
+		  help
+		    This help screen.
 
-  compile
-    Compiles the sketch.
+		  compile
+		    Compiles the sketch.
 
-  size
-    Reports the size of the compiled sketch.
+		  size
+		    Reports the size of the compiled sketch.
 
-  build
-    Runs compile and report-size.
+		  build
+		    Runs compile and report-size.
 
-  clean
-    Cleans up the output directory.
+		  clean
+		    Cleans up the output directory.
 
-  size-map
-    Displays the size map for the sketch.
+		  size-map
+		    Displays the size map for the sketch.
 
-  disassemble
-    Decompile the sketch.
+		  disassemble
+		    Decompile the sketch.
 
-  reset-device
-    Reset the device.
+		  reset-device
+		    Reset the device.
 
-  flash
-    Flashes the firmware using avrdude.
+		  flash
+		    Flashes the firmware using avrdude.
 
-  build-all
-    Build all Sketches we can find.
-EOF
+		  build-all
+		    Build all Sketches we can find.
+		EOF
 }
 
 help () {
@@ -349,23 +365,28 @@ fi
 ##
 ##  - if there is only one argument, that's a command
 
-ROOT="$(cd $(dirname $0)/..; pwd)"
+ROOT="$(cd "$(dirname "$0")"/..; pwd)"
 export ROOT
+# shellcheck disable=SC2155
 export SOURCEDIR="$(pwd)"
 
 if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${HOME}/.kaleidoscope-builder.conf"
 fi
 
 if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${SOURCEDIR}/.kaleidoscope-builder.conf"
 fi
 
 if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${SOURCEDIR}/kaleidoscope-builder.conf"
 fi
 
-. ${ROOT}/etc/kaleidoscope-builder.conf
+# shellcheck disable=SC1090
+. "${ROOT}/etc/kaleidoscope-builder.conf"
 
 if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
     ARDUINO_VERBOSE="-verbose"
@@ -382,6 +403,8 @@ for i in $(seq 1 $#); do
 
     case "${v}" in
         *=*)
+            # Exporting an expansion is *precisely* what we want here.
+            # shellcheck disable=SC2086,SC2163
             export ${v}
             ;;
         *)
@@ -390,10 +413,12 @@ for i in $(seq 1 $#); do
     esac
 done
 
+# Word splitting is desired here.
+# shellcheck disable=SC2086
 set -- ${cmds}
 
 if [ $# -eq 1 ]; then
-    cmd="$(echo $1 | tr '-' '_')"
+    cmd="$(echo "$1" | tr '-' '_')"
     ${cmd}
     exit $?
 fi
@@ -407,8 +432,9 @@ fi
 
 cmds=""
 
+# shellcheck disable=2034
 for i in $(seq 1 $#); do
-    cmds="${cmds} $(echo $1 | tr '-' '_')"
+    cmds="${cmds} $(echo "$1" | tr '-' '_')"
     shift
 done
 
