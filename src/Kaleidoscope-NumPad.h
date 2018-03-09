@@ -17,6 +17,7 @@ class NumPad_ : public KaleidoscopePlugin {
 
   static byte row, col;
   static bool cleanupDone;
+  static bool originalNumLockState;
 };
 
 extern NumPad_ NumPad;
