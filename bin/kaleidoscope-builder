@@ -38,6 +38,8 @@ firmware_size () {
 
     PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
+    # we want the sed there, doing with shell builtins would be worse.
+    # shellcheck disable=SC2001
     echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
 
@@ -69,6 +71,9 @@ prepare_to_flash () {
     fi
 
     echo "Press ENTER when ready..."
+
+    # We do not want to permit line continuations here. We just want a newline.
+    # shellcheck disable=SC2162
     read
 }
 
@@ -141,17 +146,27 @@ compile () {
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+
+    # This is defined in the (optional) user config.
+    # shellcheck disable=SC2154
     ${compile_HOOKS}
 
     if [ -d "${ARDUINO_LOCAL_LIB_PATH}/libraries" ]; then
+        # shellcheck disable=SC2089
+        # We want literal backslashes here, not arrays.
         local_LIBS="-libraries \"${ARDUINO_LOCAL_LIB_PATH}/libraries\""
     fi
 
     ARDUINO_PACKAGES=""
     if [ -d "${ARDUINO_PACKAGE_PATH}" ]; then
+        # shellcheck disable=SC2089
+        # We want literal backslashes here, not arrays.
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
+    # SC2091: We do not care if quotes or backslashes are not respected.
+    # SC2086: We want word splitting.
+    # shellcheck disable=SC2086,SC2090
     ${ARDUINO_BUILDER} \
         -compile \
 	      ${ARDUINO_PACKAGES} \
@@ -352,20 +367,25 @@ fi
 
 ROOT="$(cd "$(dirname "$0")"/..; pwd)"
 export ROOT
+# shellcheck disable=SC2155
 export SOURCEDIR="$(pwd)"
 
 if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${HOME}/.kaleidoscope-builder.conf"
 fi
 
 if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${SOURCEDIR}/.kaleidoscope-builder.conf"
 fi
 
 if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
+    # shellcheck disable=SC1090
     . "${SOURCEDIR}/kaleidoscope-builder.conf"
 fi
 
+# shellcheck disable=SC1090
 . "${ROOT}/etc/kaleidoscope-builder.conf"
 
 if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
@@ -383,6 +403,8 @@ for i in $(seq 1 $#); do
 
     case "${v}" in
         *=*)
+            # Exporting an expansion is *precisely* what we want here.
+            # shellcheck disable=SC2163
             export ${v}
             ;;
         *)
@@ -391,6 +413,8 @@ for i in $(seq 1 $#); do
     esac
 done
 
+# Word splitting is desired here.
+# shellcheck disable=SC2086
 set -- ${cmds}
 
 if [ $# -eq 1 ]; then
@@ -408,6 +432,7 @@ fi
 
 cmds=""
 
+# shellcheck disable=2034
 for i in $(seq 1 $#); do
     cmds="${cmds} $(echo "$1" | tr '-' '_')"
     shift
