@@ -249,13 +249,47 @@ reset_device() {
 }
 
 check_device_port () {
-    if [ -z $DEVICE_PORT ]; then
-        echo "Couldn't autodetect the keyboard's serial port."
-        echo "If you see this message and your keyboard is connected to your computer,"
-        echo "it probably means that our serial port detection logic is buggy or incomplete."
-        echo
-        echo "Please report this issue at https://github.com/keyboardio/Kaleidoscope";
-        exit 0;
+    if [ -z "$DEVICE_PORT" ]; then
+        cat <<EOF >&2
+Couldn't autodetect the keyboard's serial port.
+If you see this message and your keyboard is connected to your computer,
+it probably means that our serial port detection logic is buggy or incomplete.
+
+Please report this issue at https://github.com/keyboardio/Kaleidoscope
+EOF
+        exit 1
+    elif echo "$DEVICE_PORT" | grep -q '[[:space:]]'; then
+        cat <<EOF >&2
+Unexpected whitespace found in detected serial port:
+
+    $DEVICE_PORT
+
+If you see this message, it means that our serial port
+detection logic is buggy or incomplete.
+
+Please report this issue at https://github.com/keyboardio/Kaleidoscope
+EOF
+        exit 1
+    fi
+
+    if ! [ -w "$DEVICE_PORT" ]; then
+        cat <<EOF >&2
+
+$DEVICE_PORT is not writable:
+
+  `ls -l $DEVICE_PORT`
+
+You are currently in the following groups:
+
+  `id -Gn`
+
+Please ensure you have followed the instructions on setting up your
+account to be in the right group:
+
+https://github.com/keyboardio/Kaleidoscope/wiki/Install-Arduino-support-on-Linux
+
+EOF
+        exit 1
     fi
 }
 

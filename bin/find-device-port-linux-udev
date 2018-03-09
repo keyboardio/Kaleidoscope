@@ -2,14 +2,27 @@
 
 use warnings;
 use strict;
+
+use FindBin qw{$Bin};
+
+die "Usage: $0 VID PID\n" unless @ARGV == 2;
+
 my $vid    = shift;
 my $pid    = shift;
 my $prefix = '/dev/serial/by-id/';
 my @paths  = `ls $prefix`;
 my %devices;
 
+sub debug {
+    print STDERR @_;
+}
+
+debug "Looking for USB device with vid=$vid and pid=$pid\n";
+
 for my $path (@paths) {
     chomp($path);
+    debug "Examining $path\n";
+    debug "  not symlink\n" unless -l $prefix . $path;
     next unless -l $prefix . $path;
     my @data = `udevadm info -q property --name=${prefix}${path}`;
     for my $line (@data) {
@@ -17,15 +30,36 @@ for my $path (@paths) {
         my ( $key, $val ) = split( /=/, $line, 2 );
         $devices{$path}{$key} = $val;
     }
-    if (   ( hex $devices{$path}{'ID_VENDOR_ID'} == hex $vid )
-        && ( hex $devices{$path}{'ID_MODEL_ID'} == hex $pid ) )
-    {
-
-        if ( $devices{$path}{'ID_MM_CANDIDATE'} ) {
-            warn "Yikes. ModemManager wants to pwn your keyboard";
-        }
-
-        print $devices{$path}{DEVNAME};
-        exit(0);
+    if ( hex $devices{$path}{'ID_VENDOR_ID'} != hex $vid ) {
+        debug "  ID_VENDOR_ID $devices{$path}{'ID_VENDOR_ID'} != $vid\n";
+        next;
     }
+    if ( hex $devices{$path}{'ID_MODEL_ID'} != hex $pid ) {
+        debug "  ID_MODEL_ID $devices{$path}{'ID_MODEL_ID'} != $pid\n";
+        next;
+    }
+
+    debug "  Found keyboard!\n";
+
+    if ( $devices{$path}{'ID_MM_DEVICE_IGNORE'} ) {
+        debug "  ID_MM_DEVICE_IGNORE is set - good!\n";
+    }
+
+    if ( $devices{$path}{'ID_MM_CANDIDATE'}) {
+      my $rules = "$Bin/../etc/99-kaleidoscope.rules";
+      debug <<EOWARN
+
+WARNING: your udev rules are currently configured to suggest
+that your keyboard is suitable for use by ModemManager.  This
+means that there is a risk of ModemManager interfering.  To avoid
+this, copy
+
+    $rules
+
+to /etc/udev/rules.d
+EOWARN
+    }
+
+    print $devices{$path}{DEVNAME};
+    exit(0);
 }
