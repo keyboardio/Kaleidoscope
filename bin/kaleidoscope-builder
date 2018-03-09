@@ -32,7 +32,7 @@ firmware_size () {
 
     MAX_PROG_SIZE=28672
 
-    output="$($@ | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+    output="$("$@" | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
 
     PROGSIZE="$(echo "${output}" | grep "Program:" | cut -d: -f2 | awk '{print $1}')"
 
@@ -86,7 +86,7 @@ flash_over_usb () {
         return 1
     fi
     sleep 1s
-    ${AVRDUDE} -q -q -C ${AVRDUDE_CONF} -p${MCU} -cavr109 -D -P ${DEVICE_PORT_BOOTLOADER} -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+    ${AVRDUDE} -q -q -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
 flash_from_bootloader() {
@@ -102,8 +102,8 @@ program() {
 
 flash_with_programmer() {
     ${AVRDUDE} -v \
-	       -C ${AVRDUDE_CONF} \
-	       -p${MCU} \
+	       -C "${AVRDUDE_CONF}" \
+	       -p"${MCU}" \
 	       -cusbtiny \
 	       -D \
 	       -B 1 \
@@ -117,7 +117,7 @@ hex_with_bootloader () {
 
     awk '/^:00000001FF/ == 0' "${HEX_FILE_PATH}" > "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     echo "Using ${BOOTLOADER_PATH}"
-    ${MD5} ${BOOTLOADER_PATH}
+    ${MD5} "${BOOTLOADER_PATH}"
     cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
     cat <<- EOF
@@ -131,8 +131,8 @@ hex_with_bootloader () {
 }
 
 build () {
-    compile $@
-    size $@
+    compile "$@"
+    size "$@"
 }
 
 compile () {
@@ -148,30 +148,30 @@ compile () {
     fi
 
     ARDUINO_PACKAGES=""
-    if [ -d ${ARDUINO_PACKAGE_PATH} ]; then
-	ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
+    if [ -d "${ARDUINO_PACKAGE_PATH}" ]; then
+	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
     ${ARDUINO_BUILDER} \
         -compile \
-	${ARDUINO_PACKAGES} \
-	-hardware "${ARDUINO_PATH}/hardware" \
-	-hardware "${BOARD_HARDWARE_PATH}" \
-	${ARDUINO_TOOLS_PARAM} \
-	-tools "${ARDUINO_PATH}/tools-builder" \
-	-fqbn "${FQBN}" \
+	      ${ARDUINO_PACKAGES} \
+	      -hardware "${ARDUINO_PATH}/hardware" \
+	      -hardware "${BOARD_HARDWARE_PATH}" \
+	      ${ARDUINO_TOOLS_PARAM} \
+	      -tools "${ARDUINO_PATH}/tools-builder" \
+	      -fqbn "${FQBN}" \
         -libraries "." \
         -libraries "${ROOT}" \
-	-libraries "${BOARD_HARDWARE_PATH}/.." \
+	      -libraries "${BOARD_HARDWARE_PATH}/.." \
         ${local_LIBS} \
-	${EXTRA_BUILDER_ARGS} \
-	-build-path "${BUILD_PATH}" \
-	-ide-version "${ARDUINO_IDE_VERSION}" \
-	-prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
-	-warnings all \
+	      ${EXTRA_BUILDER_ARGS} \
+	      -build-path "${BUILD_PATH}" \
+	      -ide-version "${ARDUINO_IDE_VERSION}" \
+	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      -warnings all \
         ${ARDUINO_VERBOSE} \
-	${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-	"$(find_sketch)/${SKETCH}.ino"
+	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
+	      "$(find_sketch)/${SKETCH}.ino"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
@@ -179,17 +179,17 @@ compile () {
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
-	echo "Build artifacts can be found in ${BUILD_PATH}";
+	      echo "Build artifacts can be found in ${BUILD_PATH}";
     else
-	rm -rf "${BUILD_PATH}"
+	      rm -rf "${BUILD_PATH}"
     fi
 }
 
 _find_all () {
     for plugin in ./*.ino \
-	    	      examples/* \
-                      src/*.ino; do
-        if [ -d "$(dirname ${plugin})" ] || [ -f "${plugin}" ]; then
+	    	          examples/* \
+                  src/*.ino; do
+        if [ -d "$(dirname "${plugin}")" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
             if [ "${p}" != '*' ]; then
                 echo "${p}"
@@ -204,7 +204,7 @@ build_all () {
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
         export LIBRARY="${plugin}"
-        $0 ${plugin} build
+        $0 "${plugin}" build
     done
 }
 
@@ -278,11 +278,11 @@ EOF
 
 $DEVICE_PORT is not writable:
 
-  `ls -l $DEVICE_PORT`
+  $(ls -l "$DEVICE_PORT")
 
 You are currently in the following groups:
 
-  `id -Gn`
+  $(id -Gn)
 
 Please ensure you have followed the instructions on setting up your
 account to be in the right group:
@@ -350,7 +350,7 @@ fi
 ##
 ##  - if there is only one argument, that's a command
 
-ROOT="$(cd $(dirname $0)/..; pwd)"
+ROOT="$(cd "$(dirname "$0")"/..; pwd)"
 export ROOT
 export SOURCEDIR="$(pwd)"
 
@@ -366,7 +366,7 @@ if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
     . "${SOURCEDIR}/kaleidoscope-builder.conf"
 fi
 
-. ${ROOT}/etc/kaleidoscope-builder.conf
+. "${ROOT}/etc/kaleidoscope-builder.conf"
 
 if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
     ARDUINO_VERBOSE="-verbose"
@@ -394,7 +394,7 @@ done
 set -- ${cmds}
 
 if [ $# -eq 1 ]; then
-    cmd="$(echo $1 | tr '-' '_')"
+    cmd="$(echo "$1" | tr '-' '_')"
     ${cmd}
     exit $?
 fi
@@ -409,7 +409,7 @@ fi
 cmds=""
 
 for i in $(seq 1 $#); do
-    cmds="${cmds} $(echo $1 | tr '-' '_')"
+    cmds="${cmds} $(echo "$1" | tr '-' '_')"
     shift
 done
 
