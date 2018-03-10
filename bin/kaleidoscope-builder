@@ -67,7 +67,7 @@ prepare_to_flash () {
         size
     fi
 
-    echo "Press ENTER when ready..."
+    echo "When ready, hold down PROG. Press ENTER. Keep holding PROG until flash completes..."
     read a
 }
 
