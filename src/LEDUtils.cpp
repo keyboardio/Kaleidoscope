@@ -2,6 +2,16 @@
 
 cRGB
 breath_compute() {
+  return breath_compute(170);
+}
+
+cRGB
+breath_compute(uint8_t hue) {
+  return breath_compute(hue, 255);
+}
+
+cRGB
+breath_compute(uint8_t hue, uint8_t saturation) {
   // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
   // Eventually, we should consider just using FastLED
 
@@ -17,9 +27,10 @@ breath_compute() {
 
   i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
-  return hsvToRgb(170, 255, i);
+  return hsvToRgb(hue, saturation, i);
 }
 
+//For rgb to hsv, might take a look at:  http://web.mit.edu/storborg/Public/hsvtorgb.c
 
 
 // From http://web.mit.edu/storborg/Public/hsvtorgb.c - talk to Scott about licensing
