@@ -157,23 +157,31 @@ void Model01::readMatrix() {
   }
 }
 
-
+void Model01::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
+  if ((colState == colPrevState) && (colState == 0)) {
+    for (byte col = 0; col < 8; col++) {
+      handleKeyswitchEvent(Key_NoKey, row, startPos - col, 0);
+    }
+  } else {
+    for (byte col = 0; col < 8; col++) {
+      uint8_t keyState = (bitRead(colPrevState, col) << 0) |
+                         (bitRead(colState, col) << 1);
+      handleKeyswitchEvent(Key_NoKey, row, startPos - col, keyState);
+    }
+  }
+}
 
 void Model01::actOnMatrixScan() {
   for (byte row = 0; row < 4; row++) {
-    for (byte col = 0; col < 8; col++) {
+    uint8_t colState = leftHandState.rows[row];
+    uint8_t colPrevState = previousLeftHandState.rows[row];
 
-      uint8_t keynum = (row * 8) + (col);
+    actOnHalfRow(row, colState, colPrevState, 7);
 
-      uint8_t keyState = (bitRead(previousLeftHandState.all, keynum) << 0) |
-                         (bitRead(leftHandState.all, keynum) << 1);
-      handleKeyswitchEvent(Key_NoKey, row, 7 - col, keyState);
+    colState = rightHandState.rows[row];
+    colPrevState = previousRightHandState.rows[row];
 
-      keyState = (bitRead(previousRightHandState.all, keynum) << 0) |
-                 (bitRead(rightHandState.all, keynum) << 1);
-
-      handleKeyswitchEvent(Key_NoKey, row, (15 - col), keyState);
-    }
+    actOnHalfRow(row, colState, colPrevState, 15);
   }
 }
 

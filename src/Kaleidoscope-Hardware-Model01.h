@@ -55,6 +55,8 @@ class Model01 {
   keydata_t previousRightHandState;
 
  private:
+  static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
+
   static bool isLEDChanged;
   static KeyboardioScanner leftHand;
   static KeyboardioScanner rightHand;
