@@ -164,24 +164,22 @@ void Model01::actOnHalfRow(byte row, byte colState, byte colPrevState, byte star
     }
   } else {
     for (byte col = 0; col < 8; col++) {
-      uint8_t keyState = (bitRead(colPrevState, col) << 0) |
-                         (bitRead(colState, col) << 1);
+      // Build up the key state for row, col
+      uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
+                          (bitRead(colState,     0) << 1));
       handleKeyswitchEvent(Key_NoKey, row, startPos - col, keyState);
+
+      // Throw away the data we've just used, so we can read the next column
+      colState = colState >> 1;
+      colPrevState = colPrevState >> 1;
     }
   }
 }
 
 void Model01::actOnMatrixScan() {
   for (byte row = 0; row < 4; row++) {
-    uint8_t colState = leftHandState.rows[row];
-    uint8_t colPrevState = previousLeftHandState.rows[row];
-
-    actOnHalfRow(row, colState, colPrevState, 7);
-
-    colState = rightHandState.rows[row];
-    colPrevState = previousRightHandState.rows[row];
-
-    actOnHalfRow(row, colState, colPrevState, 15);
+    actOnHalfRow(row, leftHandState.rows[row], previousLeftHandState.rows[row], 7);
+    actOnHalfRow(row, rightHandState.rows[row], previousRightHandState.rows[row], 15);
   }
 }
 
