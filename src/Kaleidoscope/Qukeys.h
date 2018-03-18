@@ -94,6 +94,9 @@ class Qukeys : public KaleidoscopePlugin {
   static void setTimeout(uint16_t time_limit) {
     time_limit_ = time_limit;
   }
+  static void setReleaseDelay(uint8_t release_delay) {
+    release_delay_ = release_delay;
+  }
 
   static Qukey * qukeys;
   static uint8_t qukeys_count;
@@ -101,6 +104,7 @@ class Qukeys : public KaleidoscopePlugin {
  private:
   static bool active_;
   static uint16_t time_limit_;
+  static uint8_t release_delay_;
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
   static bool flushing_queue_;
@@ -120,6 +124,7 @@ class Qukeys : public KaleidoscopePlugin {
   static void flushKey(bool qukey_state, uint8_t keyswitch_state);
   static void flushQueue(int8_t index);
   static void flushQueue(void);
+  static bool isQukey(uint8_t addr);
 
   static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static void preReportHook(void);

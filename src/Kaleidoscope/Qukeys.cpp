@@ -85,10 +85,13 @@ uint8_t Qukeys::qukeys_count = 0;
 
 bool Qukeys::active_ = true;
 uint16_t Qukeys::time_limit_ = 250;
+uint8_t Qukeys::release_delay_ = 0;
 QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
 byte Qukeys::qukey_state_[] = {};
 bool Qukeys::flushing_queue_ = false;
+
+constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
 
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
@@ -116,7 +119,7 @@ void Qukeys::enqueue(uint8_t key_addr) {
     flushQueue();
   }
   key_queue_[key_queue_length_].addr = key_addr;
-  key_queue_[key_queue_length_].start_time = (uint16_t)millis();
+  key_queue_[key_queue_length_].start_time = millis();
   key_queue_length_++;
   addr::mask(key_addr);
 }
@@ -175,7 +178,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
 
   // Last, if the key is still down, add its code back in
-  if (keyswitch_state | IS_PRESSED)
+  if (keyswitch_state & IS_PRESSED)
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
 
   // Now that we're done sending the report(s), Qukeys can process events again:
@@ -197,20 +200,27 @@ void Qukeys::flushQueue(int8_t index) {
     return;
   for (int8_t i = 0; i < index; i++) {
     if (key_queue_length_ == 0)
-      break;
+      return;
     flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
   }
-  flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
+  if (isQukey(key_queue_[0].addr)) {
+    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+  } else {
+    flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
+  }
 }
 
 // Flush all the non-qukey keys from the front of the queue
 void Qukeys::flushQueue() {
   // flush keys until we find a qukey:
-  while (key_queue_length_ > 0 &&
-         ! isDualUse(key_queue_[0].addr) &&
-         lookupQukey(key_queue_[0].addr) == QUKEY_NOT_FOUND) {
+  while (key_queue_length_ > 0 && !isQukey(key_queue_[0].addr)) {
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
   }
+}
+
+inline
+bool Qukeys::isQukey(uint8_t addr) {
+  return (isDualUse(addr) || lookupQukey(addr) != QUKEY_NOT_FOUND);
 }
 
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
@@ -279,6 +289,14 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
       }
       return mapped_key;
     }
+    // If there's a release delay in effect, the released key is a qukey, and there's at
+    // least one key after it in the queue, delay this key's release event:
+    if (release_delay_ > 0 &&
+        isQukey(key_addr) &&
+        queue_index < (key_queue_length_ - 1)) {
+      key_queue_[queue_index].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
+      return Key_NoKey;
+    }
     flushQueue(queue_index);
     flushQueue();
     return Key_NoKey;
@@ -314,10 +332,23 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 }
 
 void Qukeys::preReportHook(void) {
+
+  uint16_t current_time = millis();
+
+  if (release_delay_ > 0) {
+    int16_t diff_time = key_queue_[0].start_time - current_time;
+    if (diff_time > 0) {
+      int16_t delay_window = QUKEYS_RELEASE_DELAY_OFFSET - release_delay_;
+      if (diff_time < delay_window) {
+        flushKey(QUKEY_STATE_ALTERNATE, WAS_PRESSED);
+        flushQueue();
+      }
+    }
+  }
+
   // If the qukey has been held longer than the time limit, set its
   // state to the alternate keycode and add it to the report
   while (key_queue_length_ > 0) {
-    uint16_t current_time = millis();
     if ((current_time - key_queue_[0].start_time) > time_limit_) {
       flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
       flushQueue();
