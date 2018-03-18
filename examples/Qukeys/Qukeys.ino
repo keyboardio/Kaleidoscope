@@ -71,6 +71,7 @@ void setup() {
     kaleidoscope::Qukey(0, 3, 6, ShiftToLayer(1))   // Q/layer-shift (on `fn`)
   )
   Qukeys.setTimeout(200);
+  Qukeys.setReleaseDelay(20);
 
   // To toggle Qukeys off and on, we use a macro
   Kaleidoscope.use(&Macros);
