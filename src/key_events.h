@@ -17,8 +17,10 @@ extern const Key keymaps[][ROWS][COLS];
 
 // sending events to the computer
 /* The event handling starts with the Scanner calling handleKeyswitchEvent() for
- * every key in the matrix, and it is the task of this method to figure out what
- * to do, it is the main entry point.
+ * every non-idle key in the matrix, and it is the task of this method to figure
+ * out what to do, it is the main entry point. Keys that were off in the
+ * previous scan cycle, and are still off now, are considered idle, and
+ * handleKeyswitchEvent() is *not* called on them.
  *
  * This function will iterate through an array of handler functions, and stop as
  * soon as one of them signals that the event has been handled. To make it
@@ -45,4 +47,3 @@ extern const Key keymaps[][ROWS][COLS];
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
 void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
-
