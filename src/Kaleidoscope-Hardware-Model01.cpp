@@ -158,16 +158,13 @@ void Model01::readMatrix() {
 }
 
 void Model01::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
-  if ((colState == colPrevState) && (colState == 0)) {
-    for (byte col = 0; col < 8; col++) {
-      handleKeyswitchEvent(Key_NoKey, row, startPos - col, 0);
-    }
-  } else {
+  if ((colState != colPrevState) || (colState != 0)) {
     for (byte col = 0; col < 8; col++) {
       // Build up the key state for row, col
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
                           (bitRead(colState,     0) << 1));
-      handleKeyswitchEvent(Key_NoKey, row, startPos - col, keyState);
+      if (keyState)
+        handleKeyswitchEvent(Key_NoKey, row, startPos - col, keyState);
 
       // Throw away the data we've just used, so we can read the next column
       colState = colState >> 1;
