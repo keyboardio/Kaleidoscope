@@ -115,9 +115,13 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
 
 void Qukeys::enqueue(uint8_t key_addr) {
   if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
+    setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     flushQueue();
   }
+  // default to alternate state to stop keys being flushed from the queue before the grace
+  // period timeout
+  setQukeyState(key_addr, QUKEY_STATE_ALTERNATE);
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].start_time = millis();
   key_queue_length_++;
@@ -133,7 +137,7 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 }
 
 // flush a single entry from the head of the queue
-void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
+bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
@@ -142,6 +146,15 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   bool is_dual_use = isDualUse(Layer.lookup(row, col));
   Key keycode = Key_NoKey;
   if (is_qukey || is_dual_use) {
+    if (qukey_state == QUKEY_STATE_PRIMARY &&
+        getQukeyState(key_queue_[0].addr) == QUKEY_STATE_ALTERNATE) {
+      // If there's a release delay in effect, and there's at least one key after it in
+      // the queue, delay this key's release event:
+      if (release_delay_ > 0 && key_queue_length_ > 1) {
+        key_queue_[0].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
+        return false;
+      }
+    }
     setQukeyState(key_queue_[0].addr, qukey_state);
     if (qukey_state == QUKEY_STATE_ALTERNATE) {
       if (is_dual_use) {
@@ -189,6 +202,7 @@ void Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     key_queue_[i] = key_queue_[i + 1];
   }
   key_queue_length_--;
+  return true;
 }
 
 // flushQueue() is called when a key that's in the key_queue is
@@ -214,7 +228,8 @@ void Qukeys::flushQueue(int8_t index) {
 void Qukeys::flushQueue() {
   // flush keys until we find a qukey:
   while (key_queue_length_ > 0 && !isQukey(key_queue_[0].addr)) {
-    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
+    if (flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED) == false)
+      break;
   }
 }
 
@@ -289,14 +304,6 @@ Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
       }
       return mapped_key;
     }
-    // If there's a release delay in effect, the released key is a qukey, and there's at
-    // least one key after it in the queue, delay this key's release event:
-    if (release_delay_ > 0 &&
-        isQukey(key_addr) &&
-        queue_index < (key_queue_length_ - 1)) {
-      key_queue_[queue_index].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
-      return Key_NoKey;
-    }
     flushQueue(queue_index);
     flushQueue();
     return Key_NoKey;
@@ -335,12 +342,13 @@ void Qukeys::preReportHook(void) {
 
   uint16_t current_time = millis();
 
-  if (release_delay_ > 0) {
+  if (release_delay_ > 0 && key_queue_length_ > 0) {
     int16_t diff_time = key_queue_[0].start_time - current_time;
     if (diff_time > 0) {
       int16_t delay_window = QUKEYS_RELEASE_DELAY_OFFSET - release_delay_;
       if (diff_time < delay_window) {
-        flushKey(QUKEY_STATE_ALTERNATE, WAS_PRESSED);
+        setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
+        flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
         flushQueue();
       }
     }
