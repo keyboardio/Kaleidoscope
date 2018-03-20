@@ -215,6 +215,10 @@ void Qukeys::flushQueue() {
 
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
+  // If key_addr is not a physical key, ignore it; some other plugin injected it
+  if (row >= ROWS || col >= COLS)
+    return mapped_key;
+
   // If Qukeys is turned off, continue to next plugin
   if (!active_)
     return getDualUsePrimaryKey(mapped_key);
