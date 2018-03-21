@@ -351,6 +351,7 @@ void Qukeys::preReportHook(void) {
         flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
         flushQueue();
       }
+      return;
     }
   }
 
