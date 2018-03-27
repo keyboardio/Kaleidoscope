@@ -26,7 +26,7 @@ a special function to handle the combos:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-MagicCombo.h>
 
-static const KaleidoscopePlugins::MagicCombo::combo_t magic_combos[] PROGMEM = {
+static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
   {R1C3 | R2C1 | R2C4 | R2C7, // left hand,
    R0C11 | R1C12 | R2C14      //right hand
   },
