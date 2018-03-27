@@ -36,7 +36,7 @@ Key_mouseBtnL, Key_mouseBtnR
 
 void setup() {
   Kaleidoscope.use(&MouseKeys);
-  
+
   Kaleidoscope.setup ();
 }
 ```
@@ -79,7 +79,7 @@ properties (see below).
   respectively.
 * `Key_mouseScrollL`, `Key_mouseScrollR`: Scroll the mouse wheel left or right,
   respectively.
-  
+
 ### Buttons
 
 Buttons are even simpler than movement: there is no movement speed, nor
@@ -99,9 +99,6 @@ quadrant of your screen, then select the north-west quadrant of that, and jump
 to the middle of it.
 
 To stop warping, use any other mouse key, or hit the "warp end" key.
-
-This features works out of the box on Windows and OSX. On Linux, a patch exists,
-but has not been finalised and merged yet.
 
 The warping keys are the following:
 
