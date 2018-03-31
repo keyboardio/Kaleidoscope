@@ -2,6 +2,7 @@
 
 #include "Kaleidoscope.h"
 #include "MouseKeyDefs.h"
+#include "MouseWarpModes.h"
 
 class MouseKeys_ : public KaleidoscopePlugin {
  public:
@@ -15,6 +16,8 @@ class MouseKeys_ : public KaleidoscopePlugin {
   static uint16_t accelDelay;
   static uint8_t wheelSpeed;
   static uint16_t wheelDelay;
+
+  static void setWarpGridSize(uint8_t grid_size);
 
  private:
   static uint8_t mouseMoveIntent;

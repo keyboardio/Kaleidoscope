@@ -19,6 +19,10 @@ uint32_t MouseKeys_::accelEndTime;
 uint32_t MouseKeys_::endTime;
 uint32_t MouseKeys_::wheelEndTime;
 
+void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
+  MouseWrapper.warp_grid_size = grid_size;
+}
+
 void MouseKeys_::scrollWheel(uint8_t keyCode) {
   if (millis() < wheelEndTime)
     return;
@@ -102,10 +106,10 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     }
   } else if (keyToggledOn(keyState)) {
     if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
-      // we don't pass in the left and up values because those are the
-      // default, "no-op" conditionals
       MouseWrapper.warp(((mappedKey.keyCode & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
+                        ((mappedKey.keyCode & KEY_MOUSE_UP) ? WARP_UP : 0x00) |
                         ((mappedKey.keyCode & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
+                        ((mappedKey.keyCode & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00) |
                         ((mappedKey.keyCode & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00));
     }
   }
