@@ -10,7 +10,7 @@ void LEDChaseEffect::update(void) {
   ::LEDControl.setCrgbAt(pos, {0, 0, 0});
 
   pos += chase_sign;
-  if (pos >= LED_COUNT || pos <= 0) {
+  if (pos >= (LED_COUNT - 1) || pos <= 0) {
     chase_sign = -chase_sign;
   }
   ::LEDControl.setCrgbAt(pos, {0, 0, 255});
