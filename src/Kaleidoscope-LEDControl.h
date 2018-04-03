@@ -131,7 +131,7 @@ class LEDControl : public KaleidoscopePlugin {
   static bool focusHook(const char *command);
 
  private:
-  static uint32_t syncTimer;
+  static uint16_t syncTimer;
   static LEDMode *modes[LED_MAX_MODES];
   static uint8_t mode;
 

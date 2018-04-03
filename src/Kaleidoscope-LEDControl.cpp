@@ -6,7 +6,7 @@ namespace kaleidoscope {
 LEDMode *LEDControl::modes[LED_MAX_MODES];
 uint8_t LEDControl::mode;
 uint16_t LEDControl::syncDelay = 16;
-uint32_t LEDControl::syncTimer;
+uint16_t LEDControl::syncTimer;
 bool LEDControl::paused = false;
 
 void LEDMode::activate(void) {
@@ -145,9 +145,10 @@ void LEDControl::loopHook(bool postClear) {
   if (postClear || paused)
     return;
 
-  if (millis() > syncTimer) {
+  uint16_t current_time = millis();
+  if ((current_time - syncTimer) > syncDelay) {
     syncLeds();
-    syncTimer = millis() + syncDelay;
+    syncTimer += syncDelay;
   }
   update();
 }
