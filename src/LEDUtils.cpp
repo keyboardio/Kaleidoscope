@@ -5,7 +5,9 @@ breath_compute() {
   // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
   // Eventually, we should consider just using FastLED
 
-  uint8_t i = (uint16_t)millis() / 12;
+  // We do a bit shift here instead of division to ensure that there's no discontinuity
+  // in the output brightness when the integer overflows.
+  uint8_t i = (uint16_t)millis() >> 4;
 
   if (i & 0x80) {
     i = 255 - i;
