@@ -27,18 +27,17 @@ class Heatmap : public LEDMode {
   Heatmap(void);
 
   static uint16_t update_delay;
+  static const cRGB *heat_colors;
+  static uint8_t heat_colors_length;
 
  protected:
   void setup(void) final;
   void update(void) final;
 
  private:
-  static uint8_t heatmap_[ROWS][COLS];
-  static uint16_t total_keys_;
-  static uint8_t highest_count_;
-  static uint32_t end_time_;
-
-  static const float heat_colors_[][3];
+  static uint16_t heatmap_[ROWS][COLS];
+  static uint16_t highest_;
+  static uint32_t next_heatmap_comp_time_;
 
   static void shiftStats(void);
   static cRGB computeColor(float v);

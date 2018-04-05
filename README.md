@@ -26,18 +26,27 @@ include the header, and make sure the plugin is in use:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Heatmap.h>
 
+static const cRGB heat_colors[] PROGMEM = {
+  {  0,   0,   0}, // black
+  {255,  25,  25}, // blue
+  { 25, 255,  25}, // green
+  { 25,  25, 255}  // red
+};
+
 void setup() {
   Kaleidoscope.use(&HeatmapEffect);
 
   Kaleidoscope.setup ();
+
+  HeatmapEffect.heat_colors = heat_colors;
+  HeatmapEffect.heat_colors_length = 4;
 }
 ```
 
-This sets up the heatmap to update every 500 cycles, which is about 2.5 seconds,
-and is the default. It also registers a new LED effect, which means that if you
-have not set up any other effects, then Heatmap will likely be the default. You
-may not want that, so setting up at least one other LED effect, such as `LEDOff`
-is highly recommended.
+This sets up the heatmap to update every second (by default). It also registers
+a new LED effect, which means that if you have not set up any other effects,
+then Heatmap will likely be the default. You may not want that, so setting up
+at least one other LED effect, such as `LEDOff` is highly recommended.
 
 ## Plugin methods
 
@@ -57,7 +66,24 @@ and properties:
 > often. Doing it too rarely, on the other hand, make it much less useful. One
 > has to strike a reasonable balance.
 >
-> Defaults to *500*.
+> Defaults to *1000*.
+
+### `.heat_colors`
+
+> A cRGB array describing the gradian of colors that will be used, from colder
+> to hoter keys.
+> E.g. with `heat_colors = {{100, 0,  0}, {0, 100,  0}, {0,  0, 100}}`, a key
+> with a temperature of 0.8 (0=coldest, 1=hotest), will end up with a color
+> `{0, 40, 60}`.
+>
+> Defaults to `{{0, 0, 0}, {25, 255, 25}, {25, 255, 255}, {25, 25, 255}}`
+> (black, green, yellow, red)
+
+### `.heat_colors_length`
+
+> Length of the `heat_colors` array.
+>
+> Defaults to *4*
 
 ## Dependencies
 
