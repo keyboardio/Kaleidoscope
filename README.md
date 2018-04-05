@@ -121,6 +121,38 @@ properties:
 >
 > Defaults to 1000.
 
+### `.enable()`
+
+> This method enables the SpaceCadet plugin.  This is useful for interfacing
+> with other plugins or macros, especially where SpaceCadet functionality isn't
+> always desired.  
+>
+> The default behavior is `enabled`.
+
+### `.disable()`
+
+> This method disables the SpaceCadet behavior. This is useful for interfacing
+> with other plugins or macros, especially where SpaceCadet functionality isn't
+> always desired.  
+
+### `.active()`
+
+> This method returns `true` if SpaceCadet is enabled and `false` if SpaceCadet
+> is disabled. This is useful for interfacing with other plugins or macros, 
+> especially where SpaceCadet functionality isn't always desired.
+
+### `Key_SpaceCadetEnable`
+
+> This provides a key for placing on a keymap for enabling the SpaceCadet
+> behavior.  This is only triggered on initial downpress, and does not
+> trigger again if held down or when the key is released.
+
+### `Key_SpaceCadetDisable`
+
+> This provides a key for placing on a keymap for disabling the SpaceCadet
+> behavior. This is only triggered on initial downpress, and does not
+> trigger again if held down or when the key is released.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting

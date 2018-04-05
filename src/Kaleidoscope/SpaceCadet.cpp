@@ -37,6 +37,7 @@ SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_, uint16_t timeout_) {
 //Space Cadet
 SpaceCadet::KeyBinding * SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 1000;
+bool SpaceCadet::disabled = false;
 
 //Empty Constructor
 SpaceCadet::SpaceCadet() {
@@ -55,23 +56,61 @@ SpaceCadet::SpaceCadet() {
   map = initialmap;
 }
 
+//Function to enable SpaceCadet behavior
+void SpaceCadet::enable() {
+  disabled = false;
+}
+
+//Function to disable SpaceCadet behavior
+void SpaceCadet::disable() {
+  disabled = true;
+}
+
+//Function to determine whether SpaceCadet is active (useful for Macros and other plugins)
+bool SpaceCadet::active() {
+  return !disabled;
+}
+
 void SpaceCadet::begin() {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
 }
 
 Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  //Handle our synthetic keys for enabling and disabling functionality
+  if (mapped_key.flags == (SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE)) {
+    //Only fire the activate / deactivate on the initial press (not held or release)
+    if (keyToggledOn(key_state)) {
+      if (mapped_key == Key_SpaceCadetEnable) {
+        enable();
+      } else if (mapped_key == Key_SpaceCadetDisable) {
+        disable();
+      }
+    }
 
-  // If nothing happened, bail out fast.
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
+    //in any case, return NoKey (these don't do anything else)
+    return Key_NoKey;
+  }
+
+  //if SpaceCadet is disabled, this was an injected key, it was NoKey,
+  //or if they key somehow came here without being either pressed or released,
+  //return the mapped key and just get out of here.
+  if (
+    disabled
+    || (key_state & INJECTED)
+    || mapped_key == Key_NoKey
+    || (!keyIsPressed(key_state) && !keyWasPressed(key_state))
+  ) {
     return mapped_key;
   }
 
   // If a key has been just toggled on...
   if (keyToggledOn(key_state)) {
 
-    //This will only set one key, and if it isn't in our map it clears everything
-    //for the non-pressed key
-    //Exit condition is if we reach the sentinal
+    //check to see if we found a valid key. Assume not valid.
+    bool valid_key = false;
+
+    //This will only set one key, and, if it isn't in our map, it clears everything for the non-pressed key
+    //Exit condition is if we reach the special SPACECADET_MAP_END sentinel
     for (
       uint8_t i = 0 ;
       !(
@@ -83,49 +122,76 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     ) {
 
       if (mapped_key.raw == map[i].input.raw) {
-        //The keypress was valid and a match.
+        //The keypress was valid and a match. Mark it as flagged and reset the counter
         map[i].flagged = true;
         map[i].start_time = millis();
+
+        //yes, we found a valid key
+        valid_key = true;
+
       } else {
-        //The keypress wasn't a match.
+        //If the key entry we're looking at was flagged previously, add it to the
+        //report before we do anything else (this handles the situation where we
+        //hit another key after this -- if it's a modifier, we want the modifier
+        //key to be added to the report, for things like ctrl, alt, shift, etc)
+        if (map[i].flagged) {
+          handleKeyswitchEvent(map[i].input, row, col, IS_PRESSED | INJECTED);
+        }
+
+        //The keypress wasn't a match, so we need to mark it as not flagged and
+        //reset the timer for it to disable everything.
         map[i].flagged = false;
         map[i].start_time = 0;
       }
     }
 
-    // this is all we need to do on keypress, let the next handler do its thing too.
+    //If we found a valid key in our map, we don't actually want to send anything.
+    //This gets around an issue in Windows if we map a SpaceCadet function on top
+    //of Alt -- sending Alt by itself activates the menubar.  We don't want to send
+    //anything until we know that we're either sending the alternate key or we
+    //know for sure that we want to send the originally pressed key.
+    if (valid_key) {
+      return Key_NoKey;
+    }
+
+    //this is all we need to do on keypress, let the next handler do its thing too.
+    //This case assumes we weren't a valid key that we were watching, so we don't
+    //need to do anything else.
     return mapped_key;
   }
 
-  // if the state is empty, that means that either the shifts weren't pressed,
+  // if the state is empty, that means that either an activating key wasn't pressed,
   // or we used another key in the interim. in both cases, nothing special to do.
   bool valid_key = false;
   bool pressed_key_was_valid = false;
   uint8_t index = 0;
 
-  //Look to see if any keys in our map  are flagged.
-  //Exit condition is if we reach the sentinal
+  //Look to see if any keys in our map are currently flagged.
+  //Exit condition is if we reach the special SPACECADET_MAP_END sentinel
   for (
     uint8_t i = 0 ;
     !(
       map[i].input.raw == Key_NoKey.raw
       && map[i].output.raw == Key_NoKey.raw
       && map[i].timeout == 0
-    ) ;
+    );
     ++i
   ) {
 
+    //The key we're looking at was previously flagged (so perform action)
     if (map[i].flagged) {
       valid_key = true;
       index = i;
     }
+
+    //the key we're looking at was valid (in the map)
     if (map[i].input.raw == mapped_key.raw) {
       pressed_key_was_valid = true;
     }
   }
 
-
-  //If no valid mapped keys were pressed, simply return the keycode
+  //If no valid mapped keys were pressed, simply return the key that
+  //was originally passed in.
   if (!valid_key) {
     return mapped_key;
   }
@@ -137,18 +203,20 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     current_timeout = time_out;
   }
 
+  //Check to determine if we have surpassed our timeout for holding this key
   if ((millis() - map[index].start_time) >= current_timeout) {
     // if we timed out, that means we need to keep pressing the mapped
     // key, but we won't need to send the alternative key in the end
     map[index].flagged = false;
     map[index].start_time = 0;
+
+    //Just return this key itself (we won't run alternative keys check)
     return mapped_key;
   }
 
   // If the key that was pressed isn't one of our mapped keys, just
   // return. This can happen when another key is released, and that should not
   // interrupt us.
-
   if (!pressed_key_was_valid) {
     return mapped_key;
   }
@@ -159,10 +227,9 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     Key alternate_key = map[index].output;
 
     //Since we are sending the actual key (no need for shift, etc),
-    //only need to send that key and not the original key. In fact, we
-    //may want to even UNSET the originally pressed key (future
-    //enhanacement?).  This might also mean we don't need to return the
-    //key that was pressed, though I haven't confirmed that.
+    //only need to send that key and not the original key.
+
+    //inject our new key
     handleKeyswitchEvent(alternate_key, row, col, IS_PRESSED | INJECTED);
 
     //Unflag the key so we don't try this again.
@@ -170,6 +237,15 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     map[index].start_time = 0;
   }
 
+  //Special case here for if we had a valid key that's continuing to be held.
+  //If it's a valid key, and it's continuing to be held, return NoKey.
+  //This prevents us from accidentally triggering a keypress that we didn't
+  //mean to handle.
+  if (valid_key) {
+    return Key_NoKey;
+  }
+
+  //Finally, as a final sanity check, simply return the passed-in key as-is.
   return mapped_key;
 }
 

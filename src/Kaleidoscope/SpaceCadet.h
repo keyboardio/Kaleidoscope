@@ -24,6 +24,12 @@
 #define SPACECADET_MAP_END (kaleidoscope::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
+#ifndef SPACECADET_TOGGLE
+#define SPACECADET_TOGGLE B00000011  // Synthetic, internal
+#define Key_SpaceCadetEnable (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE }
+#define Key_SpaceCadetDisable (Key) { 1,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE }
+#endif
+
 namespace kaleidoscope {
 //Declaration for the method (implementing KaleidoscopePlugin)
 class SpaceCadet : public KaleidoscopePlugin {
@@ -55,6 +61,9 @@ class SpaceCadet : public KaleidoscopePlugin {
 
   //Methods
   void begin(void) final;
+  static void enable(void);
+  static void disable(void);
+  static bool active(void);
 
   //Publically accessible variables
   static uint16_t time_out;  //  The global timeout in milliseconds
@@ -62,6 +71,7 @@ class SpaceCadet : public KaleidoscopePlugin {
 
  private:
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static bool disabled;
 };
 };
 
