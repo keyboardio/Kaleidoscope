@@ -30,8 +30,8 @@ this sort of functionality on other keys, as well.  Fortunately, the Space Cadet
 plugin is configurable and extensible to support adding symbols to other keys.
 Along with `(` on your left `Shift` key and `)` on your right `Shift` key,
 you may wish to add other such programming mainstays as `{` to your left-side `cmd` key,
-`}` to your right-side `alt` key,  `[` to your left `Control` key, and `]` to your right 
-`Control` key.  You can map the keys in whatever way you may wish to do, so feel free to 
+`}` to your right-side `alt` key,  `[` to your left `Control` key, and `]` to your right
+`Control` key.  You can map the keys in whatever way you may wish to do, so feel free to
 experiment with different combinations and discover what works best for you!
 
  [space-cadet]: https://en.wikipedia.org/wiki/Space-cadet_keyboard
@@ -53,7 +53,7 @@ void setup() {
 ```
 
 This assumes a US QWERTY layout on the host computer, though the plugin sends
-the correct keymap code for each symbol.  Because the mapping is entirely 
+the correct keymap code for each symbol.  Because the mapping is entirely
 configurable, though, you may switch out keys at your leisure.
 
 If you wish to enable additional modifier keys (or disable the default behavior
@@ -108,7 +108,7 @@ properties:
 > An object consisting of the key that is pressed, the key that should be sent
 > in its place, and the timeout (in milliseconds) until the key press is
 > considered to be a "held" key press.  The third parameter, the timeout, is
-> optional and may be set per-key or left out entirely (or set to `0`) to use 
+> optional and may be set per-key or left out entirely (or set to `0`) to use
 > the default timeout value.
 
 ### `.time_out`
@@ -125,7 +125,7 @@ properties:
 
 > This method enables the SpaceCadet plugin.  This is useful for interfacing
 > with other plugins or macros, especially where SpaceCadet functionality isn't
-> always desired.  
+> always desired.
 >
 > The default behavior is `enabled`.
 
@@ -133,12 +133,12 @@ properties:
 
 > This method disables the SpaceCadet behavior. This is useful for interfacing
 > with other plugins or macros, especially where SpaceCadet functionality isn't
-> always desired.  
+> always desired.
 
 ### `.active()`
 
 > This method returns `true` if SpaceCadet is enabled and `false` if SpaceCadet
-> is disabled. This is useful for interfacing with other plugins or macros, 
+> is disabled. This is useful for interfacing with other plugins or macros,
 > especially where SpaceCadet functionality isn't always desired.
 
 ### `Key_SpaceCadetEnable`
@@ -152,6 +152,10 @@ properties:
 > This provides a key for placing on a keymap for disabling the SpaceCadet
 > behavior. This is only triggered on initial downpress, and does not
 > trigger again if held down or when the key is released.
+
+## Dependencies
+
+* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
 
 ## Further reading
 

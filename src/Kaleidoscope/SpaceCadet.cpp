@@ -77,7 +77,8 @@ void SpaceCadet::begin() {
 
 Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
   //Handle our synthetic keys for enabling and disabling functionality
-  if (mapped_key.flags == (SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE)) {
+  if (mapped_key.raw >= kaleidoscope::ranges::SC_FIRST &&
+      mapped_key.raw <= kaleidoscope::ranges::SC_LAST) {
     //Only fire the activate / deactivate on the initial press (not held or release)
     if (keyToggledOn(key_state)) {
       if (mapped_key == Key_SpaceCadetEnable) {

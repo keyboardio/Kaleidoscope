@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
- * Copyright (C) 2016, 2017  Gergely Nagy, Ben Gemperline
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy, Ben Gemperline
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,16 +19,14 @@
 #pragma once
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
 
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END (kaleidoscope::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
-#ifndef SPACECADET_TOGGLE
-#define SPACECADET_TOGGLE B00000011  // Synthetic, internal
-#define Key_SpaceCadetEnable (Key) { 0,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE }
-#define Key_SpaceCadetDisable (Key) { 1,  KEY_FLAGS | SYNTHETIC | IS_INTERNAL | SPACECADET_TOGGLE }
-#endif
+#define Key_SpaceCadetEnable (Key) { .raw = kaleidoscope::ranges::SC_FIRST }
+#define Key_SpaceCadetDisable (Key) { .raw = kaleidoscope::ranges::SC_LAST }
 
 namespace kaleidoscope {
 //Declaration for the method (implementing KaleidoscopePlugin)
