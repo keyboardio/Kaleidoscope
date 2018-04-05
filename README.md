@@ -76,6 +76,10 @@ The plugin provides the following effects:
 
 > A blazing trail of fire will follow our fingers!
 
+### `Rainbow()`
+
+> Leave a rainbow behind, where your fingers has been!
+
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)

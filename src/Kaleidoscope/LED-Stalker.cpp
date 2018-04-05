@@ -127,6 +127,19 @@ cRGB BlazingTrail::compute(uint8_t *step) {
   return color;
 }
 
+// Rainbow
+Rainbow::Rainbow(void) {
+}
+
+cRGB Rainbow::compute(uint8_t *step) {
+  if (*step > 0)
+    *step -= 1;
+  else
+    *step = 0;
+
+  return hsvToRgb(255 - *step, 255, *step);
+}
+
 }
 
 }
