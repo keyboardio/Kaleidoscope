@@ -70,7 +70,7 @@ prepare_to_flash () {
         size
     fi
 
-    echo "Press ENTER when ready..."
+    echo "When ready, hold down PROG, and press ENTER. Keep holding PROG until flashing starts..."
 
     # We do not want to permit line continuations here. We just want a newline.
     # shellcheck disable=SC2162
