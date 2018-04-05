@@ -21,19 +21,37 @@
 
 namespace kaleidoscope {
 
-bool BootGreetingEffect::done_;
+bool BootGreetingEffect::done_ = false;
 byte BootGreetingEffect::row_;
 byte BootGreetingEffect::col_;
+byte BootGreetingEffect::key_row = 255;
+byte BootGreetingEffect::key_col = 255;
+Key BootGreetingEffect::search_key = Key_LEDEffectNext;
+uint8_t BootGreetingEffect::hue = 170;
+uint16_t BootGreetingEffect::start_time = 0;
+uint16_t BootGreetingEffect::timeout = 9200;
+
+BootGreetingEffect::BootGreetingEffect(byte pos_row, byte pos_col) {
+  key_row = pos_row;
+  key_col = pos_col;
+}
 
 void BootGreetingEffect::begin(void) {
+  //Use the loop hook
   Kaleidoscope.useLoopHook(loopHook);
+}
 
+void BootGreetingEffect::findLed(void) {
   // Find the LED key.
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);
 
-      if (k == Key_LEDEffectNext) {
+      if (
+        //If key row and col explicitly set, ignore the search key
+        (k.raw == search_key.raw && key_row == 255 && key_row == 255)
+        || (key_row != 255 && key_col != 255 && key_row == r && key_col == c)
+      ) {
         row_ = r;
         col_ = c;
         return;
@@ -46,16 +64,28 @@ void BootGreetingEffect::begin(void) {
 }
 
 void BootGreetingEffect::loopHook(const bool post_clear) {
-  if (!post_clear || done_)
+  //If already done or we're not in a ready state, bail
+  if (!post_clear || done_) {
     return;
+  }
 
-  if (millis() > 9200) {
+  //If the start time isn't set, set the start time and
+  //find the LEDs.
+  if (start_time == 0) {
+    start_time = millis();
+    findLed();
+    //the first time, don't do anything.
+    return;
+  }
+
+  //Only run for 'timeout' milliseconds
+  if ((millis() - start_time) > timeout) {
     done_ = true;
     ::LEDControl.refreshAt(row_, col_);
     return;
   }
 
-  cRGB color = breath_compute();
+  cRGB color = breath_compute(hue);
   ::LEDControl.setCrgbAt(row_, col_, color);
 }
 }

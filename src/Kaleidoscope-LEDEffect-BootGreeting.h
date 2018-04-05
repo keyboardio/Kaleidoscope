@@ -24,14 +24,22 @@ namespace kaleidoscope {
 class BootGreetingEffect : public KaleidoscopePlugin {
  public:
   BootGreetingEffect(void) {}
+  BootGreetingEffect(byte, byte);
 
   void begin(void) final;
+  static byte key_row;
+  static byte key_col;
+  static Key search_key;
+  static uint8_t hue;
+  static uint16_t timeout;
 
  private:
   static void loopHook(const bool post_clear);
+  static void findLed(void);
   static bool done_;
   static byte row_;
   static byte col_;
+  static uint16_t start_time;
 };
 }
 
