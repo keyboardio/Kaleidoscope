@@ -5,6 +5,7 @@
 #include "MouseWrapper.h"
 #include "kaleidoscope/hid.h"
 
+uint8_t MouseWrapper_::warp_grid_size = MOUSE_WARP_GRID_2X2;
 uint16_t MouseWrapper_::next_width;
 uint16_t MouseWrapper_::next_height;
 uint16_t MouseWrapper_::section_top;
@@ -59,21 +60,29 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
     return;
   }
 
-  next_width = next_width / 2;
-  next_height = next_height / 2;
+  next_width /= warp_grid_size;
+  next_height /= warp_grid_size;
 
-  if (warp_cmd & WARP_UP) {
-//    Serial.print(" - up ");
-  } else if (warp_cmd & WARP_DOWN) {
-//   Serial.print(" - down ");
-    section_top  = section_top + next_height;
+  // WARP_UP + WARP_DOWN means "zoom in" to center sector
+  if (warp_cmd & WARP_UP && warp_cmd & WARP_DOWN) {
+    section_left += next_width;
+    section_top += next_height;
+
+    warp_jump(section_left, section_top, next_height, next_width);
+
+    return;
   }
 
-  if (warp_cmd & WARP_LEFT) {
-    //  Serial.print(" - left ");
-  } else if (warp_cmd & WARP_RIGHT) {
-    // Serial.print(" - right ");
-    section_left  = section_left + next_width;
+  if (warp_cmd & WARP_DOWN) {
+    section_top += next_height * (warp_grid_size - 1);
+  } else if (!(warp_cmd & WARP_UP)) {
+    section_top += next_height;
+  }
+
+  if (warp_cmd & WARP_RIGHT) {
+    section_left += next_width * (warp_grid_size - 1);
+  } else if (!(warp_cmd & WARP_LEFT)) {
+    section_left += next_width;
   }
 
   warp_jump(section_left, section_top, next_height, next_width);

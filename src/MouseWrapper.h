@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Arduino.h"
+#include "MouseWarpModes.h"
 
 // Warping commands
 
@@ -32,6 +33,7 @@ class MouseWrapper_ {
   static void release_button(uint8_t button);
   static uint8_t accelStep;
   static uint8_t speedLimit;
+  static uint8_t warp_grid_size;
 
  private:
   static uint16_t next_width;
