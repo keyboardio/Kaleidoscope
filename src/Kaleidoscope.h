@@ -90,6 +90,13 @@ class KaleidoscopePlugin {
   virtual void begin(void) { };
 };
 
+namespace kaleidoscope {
+enum KeyboardReportSendPolicy {
+  KeyboardReportSendCollective,
+  KeyboardReportSendOnEvent
+};
+}
+
 class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
@@ -100,6 +107,11 @@ class Kaleidoscope_ {
   }
   void setup(void);
   void loop(void);
+
+  void preClearLoopHooks(void);
+  void postClearLoopHooks(void);
+  void processKeyEvents(void);
+  void processLoopHooks(void);
 
   // ---- Kaleidoscope.use() ----
 
@@ -159,6 +171,17 @@ class Kaleidoscope_ {
   static void useLoopHook(loopHook hook);
 
   static bool focusHook(const char *command);
+
+  static void setKeyboardReportSendPolicy(uint8_t policy) {
+    keyboardReportSendPolicy = policy;
+  }
+  static uint8_t getKeyboardReportSendPolicy() {
+    return keyboardReportSendPolicy;
+  }
+
+ private:
+
+  static uint8_t keyboardReportSendPolicy;
 };
 
 extern Kaleidoscope_ Kaleidoscope;
