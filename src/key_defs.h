@@ -25,41 +25,41 @@ typedef union Key_ {
   };
   uint16_t raw;
 
-  inline bool operator==(uint16_t rhs) {
+  inline bool operator==(uint16_t rhs) const {
     return this->raw == rhs;
   }
-  inline bool operator==(const Key_ rhs) {
+  inline bool operator==(const Key_ rhs) const {
     return this->raw == rhs.raw;
   }
   inline Key_& operator=(uint16_t raw) {
     this->raw = raw;
     return *this;
   }
-  inline bool operator!=(const Key_& rhs) {
+  inline bool operator!=(const Key_& rhs) const {
     return !(*this == rhs);
   }
-  inline bool operator>=(uint16_t raw) {
+  inline bool operator>=(uint16_t raw) const {
     return this->raw >= raw;
   }
-  inline bool operator<=(uint16_t raw) {
+  inline bool operator<=(uint16_t raw) const {
     return this->raw <= raw;
   }
-  inline bool operator>(uint16_t raw) {
+  inline bool operator>(uint16_t raw) const {
     return this->raw > raw;
   }
-  inline bool operator<(uint16_t raw) {
+  inline bool operator<(uint16_t raw) const {
     return this->raw < raw;
   }
-  inline bool operator>=(const Key_& other) {
+  inline bool operator>=(const Key_& other) const {
     return this->raw >= other.raw;
   }
-  inline bool operator<=(const Key_& other) {
+  inline bool operator<=(const Key_& other) const {
     return this->raw <= other.raw;
   }
-  inline bool operator>(const Key_& other) {
+  inline bool operator>(const Key_& other) const {
     return this->raw > other.raw;
   }
-  inline bool operator<(const Key_& other) {
+  inline bool operator<(const Key_& other) const {
     return this->raw < other.raw;
   }
 } Key;
