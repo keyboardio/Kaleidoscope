@@ -33,6 +33,7 @@ Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
 bool OneShot::should_mask_on_interrupt_ = false;
+uint8_t OneShot::positions_[16];
 
 // --- helper macros ------
 
@@ -57,9 +58,15 @@ bool OneShot::should_mask_on_interrupt_ = false;
 
 #define hasTimedOut() (millis () - start_time_ >= time_out)
 
+void OneShot::positionToCoords(uint8_t pos, byte *row, byte *col) {
+  *col = pos % COLS;
+  *row = (pos - *col) / COLS;
+}
+
 // ---- OneShot stuff ----
 void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
   Key key;
+  byte row, col;
 
   if (idx < 8) {
     key.flags = Key_LeftControl.flags;
@@ -69,7 +76,8 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
   }
 
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
+  positionToCoords(idx, &row, &col);
+  handleKeyswitchEvent(key, row, col, key_state | INJECTED);
 }
 
 void OneShot::activateOneShot(uint8_t idx) {
@@ -100,6 +108,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
       }
     } else if (keyToggledOn(key_state)) {
       start_time_ = millis();
+      positions_[idx] = row * COLS + col;
       setPressed(idx);
       setOneShot(idx);
       saveAsPrevious(mapped_key);
@@ -138,6 +147,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
         } else {
           start_time_ = millis();
 
+          positions_[idx] = row * COLS + col;
           setOneShot(idx);
           saveAsPrevious(mapped_key);
 
