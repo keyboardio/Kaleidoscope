@@ -241,7 +241,7 @@ bool Qukeys::isQukey(uint8_t addr) {
 Key Qukeys::keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
 
   // If key_addr is not a physical key, ignore it; some other plugin injected it
-  if (row >= ROWS || col >= COLS)
+  if (row >= ROWS || col >= COLS || (key_state & INJECTED) != 0)
     return mapped_key;
 
   // If Qukeys is turned off, continue to next plugin
