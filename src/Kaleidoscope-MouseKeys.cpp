@@ -62,8 +62,10 @@ void MouseKeys_::loopHook(bool postClear) {
   int8_t moveX = 0, moveY = 0;
 
   if (millis() >= accelEndTime) {
-    if (MouseWrapper.accelStep < 255 - accelSpeed)
+    if (MouseWrapper.accelStep < 255 - accelSpeed) {
       MouseWrapper.accelStep += accelSpeed;
+    }
+    accelEndTime = millis() + accelDelay;
   }
 
   if (mouseMoveIntent & KEY_MOUSE_UP)
