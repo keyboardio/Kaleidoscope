@@ -31,6 +31,7 @@ bool kaleidoscope::Redial::shouldRemember(Key mapped_key) {
   return false;
 }
 
+// *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (
@@ -50,6 +51,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_Redial),
 };
+// *INDENT-ON*
 
 void setup() {
   Kaleidoscope.use(&Redial);
