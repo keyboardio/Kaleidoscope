@@ -43,6 +43,7 @@ class OneShot : public KaleidoscopePlugin {
     cancel(false);
   }
   static uint16_t time_out;
+  static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
   static bool double_tap_sticky;
 

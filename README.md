@@ -154,6 +154,18 @@ properties too:
 >
 > Defaults to `true`.
 
+### `.double_tap_time_out`
+
+> Set this property to the number of milliseconds within which a second
+> uninterrupted tap of the same one-shot key will be treated as a sticky-tap.
+> Only takes effect when `.double_tap_sticky` is set.
+>
+>
+> Setting the property to `-1` will make the double-tap timeout use `.time_out`
+> for its calculations.
+>
+> Defaults to -1.
+
 ## Dependencies
 
 * [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
