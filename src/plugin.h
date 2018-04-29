@@ -58,7 +58,7 @@ class Plugin {
   }
 
   // This handler is supposed to return false if no other handlers are
-  // supposed to be called after it, false otherwise.
+  // supposed to be called after it, true otherwise.
   //
   // The handler is allowed to modify the mappedKey that is therefore
   // passed by reference.
