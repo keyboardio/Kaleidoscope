@@ -30,9 +30,7 @@ class Plugin {
    * called. It is intentionally protected, and accessible by the `Kaleidoscope`
    * class only.
    */
-  virtual void begin(void)
-  __attribute__((deprecated("kaleidoscope::Plugin.begin() is deprecated. Please implement kaleidoscope::Plugin.init() instead."))) {
-  };
+  virtual void begin(void) {};
 
  public:
 
