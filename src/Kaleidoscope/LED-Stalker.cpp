@@ -24,7 +24,7 @@ namespace kaleidoscope {
 uint8_t StalkerEffect::map_[ROWS][COLS];
 StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
-uint32_t StalkerEffect::step_end_time_;
+uint16_t StalkerEffect::step_start_time_;
 
 void StalkerEffect::setup(void) {
   Kaleidoscope.useEventHandlerHook(eventHandlerHook);
@@ -49,7 +49,8 @@ void StalkerEffect::update(void) {
   if (!variant)
     return;
 
-  bool time_out = millis() >= step_end_time_;
+  uint16_t now = millis();
+  bool time_out = (now - step_start_time_) > step_length;
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
@@ -70,7 +71,7 @@ void StalkerEffect::update(void) {
   }
 
   if (time_out)
-    step_end_time_ = millis() + step_length;
+    step_start_time_ = now;
 }
 
 namespace stalker {

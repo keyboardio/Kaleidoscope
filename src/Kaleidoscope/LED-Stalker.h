@@ -42,7 +42,7 @@ class StalkerEffect : public LEDMode {
   void update(void) final;
 
  private:
-  static uint32_t step_end_time_;
+  static uint16_t step_start_time_;
   static uint8_t map_[ROWS][COLS];
 
   static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
