@@ -89,6 +89,12 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
 
     if (keyIsPressed(keyState)) {
+      // Reset warp state on initial mouse button key-down only so we can use
+      // warp keys to drag-and-drop:
+      if (keyToggledOn(keyState)) {
+        MouseWrapper.reset_warping();
+      }
+
       MouseWrapper.pressButton(button);
     } else if (keyToggledOff(keyState)) {
       MouseWrapper.release_button(button);

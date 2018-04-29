@@ -29,6 +29,7 @@ class MouseWrapper_ {
   static void begin(void);
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
+  static void reset_warping();
   static void pressButton(uint8_t button);
   static void release_button(uint8_t button);
   static uint8_t accelStep;

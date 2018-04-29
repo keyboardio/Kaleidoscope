@@ -25,11 +25,11 @@ void MouseWrapper_::begin(void) {
 
 void MouseWrapper_::pressButton(uint8_t button) {
   kaleidoscope::hid::pressMouseButtons(button);
-  end_warping();
 }
 
 void MouseWrapper_::release_button(uint8_t button) {
   kaleidoscope::hid::releaseMouseButtons(button);
+  end_warping();
 }
 
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
@@ -48,6 +48,12 @@ void MouseWrapper_::begin_warping() {
 
 void MouseWrapper_::end_warping() {
   is_warping = false;
+}
+
+void MouseWrapper_::reset_warping() {
+  if (is_warping == true) {
+    begin_warping();
+  }
 }
 
 void MouseWrapper_::warp(uint8_t warp_cmd) {
