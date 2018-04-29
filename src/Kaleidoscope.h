@@ -156,12 +156,11 @@ extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
 // For compatibility reasons we enable class Kaleidoscope_ also to be available
 // in global namespace.
 //
-typedef kaleidoscope::Kaleidoscope_  Kaleidoscope_ __attribute__((deprecated("class Kaleidoscope_ in global namespace is deprecated. Please use kaleidoscope::Kaleidoscope_ instead.")));
+typedef kaleidoscope::Kaleidoscope_  Kaleidoscope_;
 
 // For compatibility reasons we enable the global variable Kaleidoscope
 // in global namespace.
 //
-__attribute__((deprecated("Kaleidoscope in global namespace is deprecated. Please use kaleidoscope::Kaleidoscope instead.")))
 extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
 
 #define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \

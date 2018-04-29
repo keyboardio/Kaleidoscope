@@ -70,8 +70,8 @@ union Key {
 // For compatibility reasons make the Key class also available
 // in global namespace.
 //
-typedef kaleidoscope::Key Key __attribute__((deprecated("class Key in global namespace is deprecated. Please use kaleidoscope::Key instead.")));
-typedef kaleidoscope::Key Key_ __attribute__((deprecated("class Key_ in global namespace is deprecated. Please use kaleidoscope::Key instead.")));
+typedef kaleidoscope::Key Key;
+typedef kaleidoscope::Key Key_;
 
 #define KEY_FLAGS         B00000000
 #define CTRL_HELD         B00000001
