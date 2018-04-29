@@ -27,6 +27,9 @@ Kaleidoscope_::setup(void) {
       Layer.updateLiveCompositeKeymap(row, col);
     }
   }
+
+  KeyboardHardware.readMatrix();
+  KeyboardHardware.maskHeldKeys();
 }
 
 void
