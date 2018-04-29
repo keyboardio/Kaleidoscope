@@ -79,10 +79,19 @@ prepare_to_flash () {
 
 flash () {
     prepare_to_flash
+
+    # This is defined in the (optional) user config.
+    # shellcheck disable=SC2154
+    ${preFlash_HOOKS}
+
     reset_device
     sleep 3s
     find_bootloader_ports
     flash_over_usb || flash_over_usb
+
+    # This is defined in the (optional) user config.
+    # shellcheck disable=SC2154
+    ${postFlash_HOOKS}
 }
 
 flash_over_usb () {
