@@ -163,22 +163,22 @@ __NN__                                                                         \
 __NN__   namespace kaleidoscope {                                              \
 __NN__                                                                         \
 __NL__   void Hooks::init() {                                                  \
-__NL__     OrderedPlugins::template apply<HookTask_init>();                    \
+__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>(); \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   bool Hooks::eventHandlerHook(Key &mappedKey,                          \
 __NL__                                const EventKey &eventKey) {              \
-__NL__     return OrderedPlugins                                               \
+__NL__     return kaleidoscope_internal::OrderedPlugins               \
 __NL__               ::template apply<HookTask_eventHandlerHook>               \
 __NL__                             (mappedKey, eventKey);                      \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   void Hooks::preReportHook() {                                         \
-__NL__     OrderedPlugins::template apply<HookTask_preReportHook>();           \
+__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>(); \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   void Hooks::postReportHook() {                                        \
-__NL__     OrderedPlugins::template apply<HookTask_postReportHook>();          \
+__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>(); \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   } /* namespace kaleidoscope */
@@ -287,7 +287,7 @@ __NL__   };                                                                    \
 //
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
 __NN__                                                                         \
-__NN__   namespace kaleidoscope {                                              \
+__NN__   namespace kaleidoscope_internal {                                              \
 __NN__                                                                         \
 __NN__   _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)                  \
 __NL__                                                                         \
