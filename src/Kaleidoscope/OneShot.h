@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ class OneShot : public KaleidoscopePlugin {
   static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
   static bool double_tap_sticky;
+  static bool double_tap_sticky_layers;
 
   static bool isModifierActive(Key key);
 

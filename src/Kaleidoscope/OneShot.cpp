@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
 bool OneShot::double_tap_sticky = true;
+bool OneShot::double_tap_sticky_layers = true;
 OneShot::state_t OneShot::state_;
 OneShot::state_t OneShot::sticky_state_;
 OneShot::state_t OneShot::pressed_state_;
@@ -141,7 +142,16 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
 
       if (keyToggledOn(key_state)) {
         setPressed(idx);
-        if (isSameAsPrevious(mapped_key) && double_tap_sticky) {
+
+        bool set_sticky = false;
+        if (isSameAsPrevious(mapped_key)) {
+          if (mapped_key >= ranges::OSM_FIRST && mapped_key <= ranges::OSM_LAST && double_tap_sticky)
+            set_sticky = true;
+          else if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST && double_tap_sticky_layers)
+            set_sticky = true;
+        }
+
+        if (set_sticky) {
           if ((millis() - start_time_) <= ((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
             setSticky(idx);
 

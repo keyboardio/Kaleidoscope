@@ -154,6 +154,13 @@ properties too:
 >
 > Defaults to `true`.
 
+### `.double_tap_sticky_layers`
+
+> The same as `.double_tap_sticky`, but only applies to layers. The two can be
+> set separately.
+>
+> Defaults to `true`.
+
 ### `.double_tap_time_out`
 
 > Set this property to the number of milliseconds within which a second
