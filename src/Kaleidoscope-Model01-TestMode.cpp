@@ -51,11 +51,11 @@ void TestMode_::set_leds(cRGB color) {
 }
 
 void TestMode_::test_leds(void) {
-  cRGB red = { b:0, g:0, r: 201 } ;
-  cRGB blue = { b:201, g:0, r: 0 } ;
-  cRGB green = { b:0, g:201, r: 0 } ;
-  cRGB white = { b:50, g:50, r: 50 } ;
-  cRGB brightWhite = { b:160, g:160, r: 160 } ;
+  cRGB red = { b: 0, g: 0, r: 201 } ;
+  cRGB blue = { b: 201, g: 0, r: 0 } ;
+  cRGB green = { b: 0, g: 201, r: 0 } ;
+  cRGB white = { b: 50, g: 50, r: 50 } ;
+  cRGB brightWhite = { b: 160, g: 160, r: 160 } ;
 
   // make all the LEDs bright red
   set_leds(red);
@@ -77,9 +77,9 @@ void TestMode_::test_leds(void) {
 
 void TestMode_::handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset) {
 
-  cRGB red = { b:0, g:0, r: 201 } ;
-  cRGB blue = { b:201, g:0, r: 0 } ;
-  cRGB green = { b:0, g:201, r: 0 } ;
+  cRGB red = { b: 0, g: 0, r: 201 } ;
+  cRGB blue = { b: 201, g: 0, r: 0 } ;
+  cRGB green = { b: 0, g: 201, r: 0 } ;
 
   uint8_t keynum = (row * 8) + (col);
 
