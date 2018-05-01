@@ -12,22 +12,12 @@
 #define RELEASED 0
 
 
-cRGB red;
-cRGB blue;
-cRGB green;
-cRGB white;
 
 TestMode_::TestMode_(void) {
 }
 
 
 void TestMode_::begin(void) {
-  red.r = 201;
-  blue.b = 201;
-  green.g = 201;
-  white.r = 50;
-  white.g = 50;
-  white.b = 50;
   Kaleidoscope.useLoopHook(this->loopHook);
 }
 
@@ -42,7 +32,7 @@ void TestMode_::loopHook(bool postClear) {
 }
 
 void TestMode_::waitForKeypress() {
-  for (auto temp = 0; temp < 16; temp++) {
+  for (uint8_t temp = 0; temp < 8; temp++) {
     KeyboardHardware.readMatrix();
   }
   while (1) {
@@ -54,21 +44,27 @@ void TestMode_::waitForKeypress() {
   }
 }
 
-void TestMode_::set_leds(uint8_t r, uint8_t g, uint8_t b) {
-  LEDControl.set_all_leds_to(r, g, b);
+void TestMode_::set_leds(cRGB color) {
+  LEDControl.set_all_leds_to(color);
   LEDControl.syncLeds();
   waitForKeypress();
 }
 
 void TestMode_::test_leds(void) {
+  cRGB red = { b:0, g:0, r: 201 } ;
+  cRGB blue = { b:201, g:0, r: 0 } ;
+  cRGB green = { b:0, g:201, r: 0 } ;
+  cRGB white = { b:50, g:50, r: 50 } ;
+  cRGB brightWhite = { b:160, g:160, r: 160 } ;
+
   // make all the LEDs bright red
-  set_leds(200, 0, 0);
+  set_leds(red);
   // make all the LEDs bright green
-  set_leds(0, 200, 0);
+  set_leds(green);
   // make all the LEDs bright blue
-  set_leds(0, 0, 200);
+  set_leds(blue);
   // make all the LEDs bright white (1.6A)
-  set_leds(160, 160, 160);
+  set_leds(brightWhite);
   // rainbow for 10 seconds
   for (auto i = 0; i < 1000; i++) {
     LEDRainbowEffect.update();
@@ -80,10 +76,15 @@ void TestMode_::test_leds(void) {
 
 
 void TestMode_::handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+
+  cRGB red = { b:0, g:0, r: 201 } ;
+  cRGB blue = { b:201, g:0, r: 0 } ;
+  cRGB green = { b:0, g:201, r: 0 } ;
+
   uint8_t keynum = (row * 8) + (col);
 
   uint8_t keyState = ((bitRead(oldState.all, keynum) << 1) |
-                      (bitRead(newState.all,         keynum) << 0));
+                      (bitRead(newState.all, keynum) << 0));
   if (keyState == TOGGLED_ON) {
     if (side->cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
       bitSet(side->badKeys, keynum);

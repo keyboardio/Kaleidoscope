@@ -25,7 +25,7 @@ class TestMode_ : public KaleidoscopePlugin {
   static void handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset);
   static void waitForKeypress();
   static void loopHook(bool postClear);
-  static void set_leds(uint8_t r, uint8_t g, uint8_t b);
+  static void set_leds(cRGB color);
 };
 
 extern TestMode_ TestMode;
