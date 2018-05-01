@@ -45,7 +45,6 @@ void TestMode_::waitForKeypress() {
   for (auto temp = 0; temp < 16; temp++) {
     KeyboardHardware.readMatrix();
   }
-  delay(2);
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all ==  R3C6
@@ -75,29 +74,52 @@ void TestMode_::test_leds(void) {
     LEDRainbowEffect.update();
     LEDControl.syncLeds();
   }
-  // set all the keys to red
+  waitForKeypress();
 }
 
 
-uint32_t leftBadKeys;
-uint32_t rightBadKeys;
+
+void TestMode_::handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+  uint8_t keynum = (row * 8) + (col);
+
+  uint8_t keyState = ((bitRead(oldState.all, keynum) << 1) |
+                      (bitRead(newState.all,         keynum) << 0));
+  if (keyState == TOGGLED_ON) {
+    if (side->cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
+      bitSet(side->badKeys, keynum);
+    }
+    side->cyclesSinceStateChange[keynum] = 0;
+  } else if (side->cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
+    side->cyclesSinceStateChange[keynum]++;
+  }
 
 
 
-uint32_t cyclesSinceStateChange[64];
+  // If the key is held down
+  if (keyState == HELD) {
+    KeyboardHardware.setCrgbAt(row, col_offset - col, green);
+  }
+  // If we triggered chatter detection ever on this key
+  else if (bitRead(side->badKeys, keynum) == 1) {
+    KeyboardHardware.setCrgbAt(row, col_offset - col, red);
+  }
 
+  // If the key was just released
+  else if (keyState == TOGGLED_OFF) {
+    KeyboardHardware.setCrgbAt(row, col_offset - col, blue);
+  }
+}
 
 
 void TestMode_::testMatrix() {
+  // Reset bad keys from previous tests.
+  side_data_t left = {{0}, 0};
+  side_data_t right = {{0}, 0};
+
+
   LEDControl.set_all_leds_to(200, 0, 0);
   // Clear out the key event buffer so we don't get messed up information from
   // taps during LED test mode.
-  for (auto temp = 0; temp < 16; temp++) {
-    KeyboardHardware.readMatrix();
-  }
-  // Reset bad keys from previous tests.
-  leftBadKeys = 0;
-  rightBadKeys = 0;
   while (1) {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
@@ -105,64 +127,8 @@ void TestMode_::testMatrix() {
     }
     for (byte row = 0; row < 4; row++) {
       for (byte col = 0; col < 8; col++) {
-        uint8_t keynum = (row * 8) + (col);
-
-        uint8_t keyState = ((bitRead(KeyboardHardware.previousLeftHandState.all, keynum) << 1) |
-                            (bitRead(KeyboardHardware.leftHandState.all,         keynum) << 0));
-
-        if (keyState == TOGGLED_ON) {
-          if (cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
-            bitSet(leftBadKeys, keynum);
-          }
-          cyclesSinceStateChange[keynum] = 0;
-        } else if (cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
-          cyclesSinceStateChange[keynum]++;
-
-        }
-
-
-
-        // If the key is held down
-        if (keyState == HELD) {
-          KeyboardHardware.setCrgbAt(row, 7 - col, green);
-        }
-        // If we triggered chatter detection ever on this key
-        else if (bitRead(leftBadKeys, keynum) == 1) {
-          KeyboardHardware.setCrgbAt(row, 7 - col, red);
-        }
-
-        // If the key was just released
-        else if (keyState == TOGGLED_OFF) {
-          KeyboardHardware.setCrgbAt(row, 7 - col, blue);
-        }
-
-
-        keyState = ((bitRead(KeyboardHardware.previousRightHandState.all, keynum) << 1) |
-                    (bitRead(KeyboardHardware.rightHandState.all,         keynum) << 0));
-
-
-        if (keyState == TOGGLED_ON) {
-          if (cyclesSinceStateChange[keynum + 32] < CHATTER_CYCLE_LIMIT) {
-            bitSet(rightBadKeys, keynum);
-          }
-          cyclesSinceStateChange[keynum + 32] = 0;
-        } else if (cyclesSinceStateChange[keynum + 32] <= CHATTER_CYCLE_LIMIT)  {
-          cyclesSinceStateChange[keynum + 32]++;
-        }
-
-        // If the key is held down
-        if (keyState == HELD) {
-          KeyboardHardware.setCrgbAt(row, 15 - col, green);
-        }
-        // If we triggered chatter detection ever on this key
-        else if (bitRead(rightBadKeys, keynum) == 1) {
-          KeyboardHardware.setCrgbAt(row, 15 - col, red);
-        }
-
-        // If the key was just released
-        else if (keyState == TOGGLED_OFF) {
-          KeyboardHardware.setCrgbAt(row, 15 - col, blue);
-        }
+        handleKeyEvent(&left, KeyboardHardware.previousLeftHandState, KeyboardHardware.leftHandState, row, col, 7);
+        handleKeyEvent(&right, KeyboardHardware.previousRightHandState, KeyboardHardware.leftHandState, row, col, 15);
       }
     }
     LEDControl.syncLeds();
