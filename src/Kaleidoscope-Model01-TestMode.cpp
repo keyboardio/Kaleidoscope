@@ -75,7 +75,7 @@ void TestMode_::test_leds(void) {
 
 
 
-void TestMode_::handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+void TestMode_::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
 
   cRGB red = { b: 0, g: 0, r: 201 } ;
   cRGB blue = { b: 201, g: 0, r: 0 } ;
@@ -83,8 +83,8 @@ void TestMode_::handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t 
 
   uint8_t keynum = (row * 8) + (col);
 
-  uint8_t keyState = ((bitRead(oldState.all, keynum) << 1) |
-                      (bitRead(newState.all, keynum) << 0));
+  uint8_t keyState = ((bitRead(oldState->all, keynum) << 1) |
+                      (bitRead(newState->all, keynum) << 0));
   if (keyState == TOGGLED_ON) {
     if (side->cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
       bitSet(side->badKeys, keynum);
@@ -128,8 +128,8 @@ void TestMode_::testMatrix() {
     }
     for (byte row = 0; row < 4; row++) {
       for (byte col = 0; col < 8; col++) {
-        handleKeyEvent(&left, KeyboardHardware.previousLeftHandState, KeyboardHardware.leftHandState, row, col, 7);
-        handleKeyEvent(&right, KeyboardHardware.previousRightHandState, KeyboardHardware.rightHandState, row, col, 15);
+        handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), row, col, 7);
+        handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), row, col, 15);
       }
     }
     LEDControl.syncLeds();

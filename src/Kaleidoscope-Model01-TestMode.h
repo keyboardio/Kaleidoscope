@@ -22,7 +22,7 @@ class TestMode_ : public KaleidoscopePlugin {
   static void test_leds();
   static void testMatrix();
   static void toggle_programming_leds_on();
-  static void handleKeyEvent(side_data_t *side, keydata_t oldState, keydata_t newState, uint8_t row, uint8_t col, uint8_t col_offset);
+  static void handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset);
   static void waitForKeypress();
   static void loopHook(bool postClear);
   static void set_leds(cRGB color);
