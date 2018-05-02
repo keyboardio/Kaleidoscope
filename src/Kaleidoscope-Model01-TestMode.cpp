@@ -129,7 +129,7 @@ void TestMode_::testMatrix() {
     for (byte row = 0; row < 4; row++) {
       for (byte col = 0; col < 8; col++) {
         handleKeyEvent(&left, KeyboardHardware.previousLeftHandState, KeyboardHardware.leftHandState, row, col, 7);
-        handleKeyEvent(&right, KeyboardHardware.previousRightHandState, KeyboardHardware.leftHandState, row, col, 15);
+        handleKeyEvent(&right, KeyboardHardware.previousRightHandState, KeyboardHardware.rightHandState, row, col, 15);
       }
     }
     LEDControl.syncLeds();
