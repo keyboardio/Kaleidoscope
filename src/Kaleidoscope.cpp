@@ -39,7 +39,7 @@ Kaleidoscope_::loop(void) {
 
   kaleidoscope::Hooks::preReportHook();
 
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(false);
@@ -49,7 +49,7 @@ Kaleidoscope_::loop(void) {
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::releaseAllKeys();
 
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(true);
@@ -61,7 +61,7 @@ Kaleidoscope_::loop(void) {
 
 void
 Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (eventHandlers[i] == oldHook) {
       eventHandlers[i] = newHook;
@@ -73,14 +73,14 @@ Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHoo
 
 void
 Kaleidoscope_::appendEventHandlerHook(eventHandlerHook hook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   replaceEventHandlerHook((eventHandlerHook)NULL, hook);
 #endif
 }
 
 void
 Kaleidoscope_::useEventHandlerHook(eventHandlerHook hook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (eventHandlers[i] == hook)
       return;
@@ -91,7 +91,7 @@ Kaleidoscope_::useEventHandlerHook(eventHandlerHook hook) {
 
 void
 Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (loopHooks[i] == oldHook) {
       loopHooks[i] = newHook;
@@ -103,14 +103,14 @@ Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
 
 void
 Kaleidoscope_::appendLoopHook(loopHook hook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   replaceLoopHook((loopHook)NULL, hook);
 #endif
 }
 
 void
 Kaleidoscope_::useLoopHook(loopHook hook) {
-#if !KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (loopHooks[i] == hook)
       return;
@@ -163,7 +163,7 @@ Kaleidoscope_::focusHook(const char *command) {
 Kaleidoscope_ Kaleidoscope;
 
 /* Deprecated functions */
-#ifndef KALEIDOSCOPE_DISABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
   Kaleidoscope.useEventHandlerHook(hook);
 }

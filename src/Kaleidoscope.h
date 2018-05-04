@@ -85,7 +85,7 @@ class Kaleidoscope_ {
 
   // ---- Kaleidoscope.use() ----
 
-#if KALEIDOSCOPE_DISABLE_V1_API
+#if !KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   inline void use(...) {}
 #else
   // First, we have the zero-argument version, which will satisfy the tail case.

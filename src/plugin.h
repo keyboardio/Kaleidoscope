@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+#define KALEIDOSCOPE_ENABLE_V1_PLUGIN_API 1
+#endif
+
 namespace kaleidoscope {
 
 class Kaleidoscope_;
@@ -24,7 +28,7 @@ class Plugin {
    * called. It is intentionally protected, and accessible by the `Kaleidoscope`
    * class only.
    */
-#if KALEIDOSCOPE_DISABLE_V1_API
+#if !KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   void begin() {};
 #else
   virtual void begin() {};
