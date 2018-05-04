@@ -4,12 +4,6 @@ namespace kaleidoscope {
 
 class Kaleidoscope_;
 
-struct EventKey {
-  byte row_;
-  byte col_;
-  uint8_t keyState_;
-};
-
 class Plugin {
 
   friend class Kaleidoscope_;
@@ -61,7 +55,7 @@ class Plugin {
   // The handler is allowed to modify the mappedKey that is therefore
   // passed by reference.
   //
-  bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey) {
+  bool eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return true; // Always allow other handlers to continue
   }
 

@@ -167,10 +167,10 @@ __NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>(
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   bool Hooks::eventHandlerHook(Key &mappedKey,                          \
-__NL__                                const EventKey &eventKey) {              \
-__NL__     return kaleidoscope_internal::OrderedPlugins               \
+__NL__                                byte row, byte col, uint8_t keyState) {  \
+__NL__     return kaleidoscope_internal::OrderedPlugins                        \
 __NL__               ::template apply<HookTask_eventHandlerHook>               \
-__NL__                             (mappedKey, eventKey);                      \
+__NL__                             (mappedKey, row, col, keyState);            \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   void Hooks::preReportHook() {                                         \
@@ -248,10 +248,10 @@ __NL__              ::template apply<::kaleidoscope::HookTask_init>();         \
 __NL__         }                                                               \
 __NL__                                                                         \
 __NL__         bool eventHandlerHook(::kaleidoscope::Key &mappedKey,           \
-__NL__                  const ::kaleidoscope::EventKey &eventKey) {            \
+__NL__                               byte row, byte col, uint8_t keyState) {   \
 __NL__           return OrderedPlugins                                         \
 __NL__             ::template apply<::kaleidoscope::HookTask_eventHandlerHook> \
-__NL__                             (mappedKey, eventKey);                      \
+__NL__                             (mappedKey, row, col, keyState);            \
 __NL__         }                                                               \
 __NL__                                                                         \
 __NL__         void preReportHook() {                                          \

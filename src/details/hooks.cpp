@@ -16,7 +16,7 @@ __attribute__((weak))
 void Hooks::init() {}
 
 __attribute__((weak))
-bool Hooks::eventHandlerHook(Key &mappedKey, const EventKey &eventKey) {
+bool Hooks::eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   return true;
 }
 

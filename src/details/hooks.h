@@ -6,7 +6,6 @@
 #include <Arduino.h>
 
 namespace kaleidoscope {
-class EventKey;
 union Key;
 }
 
@@ -49,7 +48,7 @@ class Hooks {
 
   static void init();
 
-  static bool eventHandlerHook(Key &mappedKey, const EventKey &eventKey);
+  static bool eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
   static void preReportHook();
   static void postReportHook();

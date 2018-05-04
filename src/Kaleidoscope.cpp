@@ -11,7 +11,6 @@ Kaleidoscope_::Kaleidoscope_(void) {
 
 void
 Kaleidoscope_::setup(void) {
-
   kaleidoscope::Hooks::init();
 
   KeyboardHardware.setup();
