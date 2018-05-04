@@ -47,12 +47,10 @@ class Plugin {
   //       plugins is the polymorphic PluginHookAdapter class
 
   void init() {
-    // By letting the new init method call the legacy
-    // begin() method, we make sure that the old hooking
-    // interface is supported even if KALEIDOSCOPE_INIT_PLUGINS()
-    // and KALEIDOSCOPE_CONNECT_PLUGINS are used to register
-    // a plugin that relies on the legacy begin() method
-    // to initialize itself and register hooks.
+    // By letting the new init method call the legacy begin() method, we make
+    // sure that the old hooking interface is supported even if
+    // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
+    // the legacy begin() method to initialize itself and register hooks.
     //
     this->begin();
   }
