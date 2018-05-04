@@ -148,8 +148,8 @@ struct AlwaysContinue {
   }
 };
 
-_HOOK_TASK(init, ContinueIfHookReturnsTrue) // Defines HookTask_init
-_HOOK_TASK(eventHandlerHook, AlwaysContinue) // Defines HookTask_eventHandlerHook
+_HOOK_TASK(init, AlwaysContinue) // Defines HookTask_init
+_HOOK_TASK(eventHandlerHook, ContinueIfHookReturnsTrue) // Defines HookTask_eventHandlerHook
 _HOOK_TASK(preReportHook, AlwaysContinue) // Defines HookTask_preReportHook
 _HOOK_TASK(postReportHook, AlwaysContinue) // Defines HookTask_postReportHook
 
