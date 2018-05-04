@@ -24,7 +24,11 @@ class Plugin {
    * called. It is intentionally protected, and accessible by the `Kaleidoscope`
    * class only.
    */
-  virtual void begin(void) {};
+#if KALEIDOSCOPE_DISABLE_V1_API
+  void begin() {};
+#else
+  virtual void begin() {};
+#endif
 
  public:
 
