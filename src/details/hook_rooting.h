@@ -235,36 +235,6 @@ __NL__         MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)             \
 __NL__      }                                                                  \
 __NL__   };
 
-#define GROUPED_PLUGINS(GROUP_PLUGIN_NAME, ...)                                \
-__NN__   class GROUP_PLUGIN_NAME {                                                   \
-__NL__                                                                         \
-__NL__      _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)               \
-__NL__                                                                         \
-__NL__      public:                                                            \
-__NL__                                                                         \
-__NL__         void init() {                                                   \
-__NL__           OrderedPlugins                                                \
-__NL__              ::template apply<::kaleidoscope::HookTask_init>();         \
-__NL__         }                                                               \
-__NL__                                                                         \
-__NL__         bool eventHandlerHook(::kaleidoscope::Key &mappedKey,           \
-__NL__                               byte row, byte col, uint8_t keyState) {   \
-__NL__           return OrderedPlugins                                         \
-__NL__             ::template apply<::kaleidoscope::HookTask_eventHandlerHook> \
-__NL__                             (mappedKey, row, col, keyState);            \
-__NL__         }                                                               \
-__NL__                                                                         \
-__NL__         void preReportHook() {                                          \
-__NL__           OrderedPlugins                                                \
-__NL__             ::template apply<::kaleidoscope::HookTask_preReportHook>(); \
-__NL__         }                                                               \
-__NL__                                                                         \
-__NL__         void postReportHook() {                                         \
-__NL__           OrderedPlugins                                                \
-__NL__             ::template apply<::kaleidoscope::HookTask_postReportHook>();\
-__NL__         }                                                               \
-__NL__   };                                                                    \
-
 // KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked in global namespace of
 // the firmware sketch.
 //
