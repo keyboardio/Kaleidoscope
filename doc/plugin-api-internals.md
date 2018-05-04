@@ -462,7 +462,7 @@ If we expand the predicate, and simplify the code a bit, as the compiler would,
 we end up with:
 
 ```c++
-static auto apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   bool hook_return_val;
 
   hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
