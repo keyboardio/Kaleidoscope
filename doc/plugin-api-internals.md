@@ -441,8 +441,8 @@ static auto apply(Args__&&... hook_args)
 Which in turn becomes:
 
 ```c++
-static auto apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-  ContinueIfHookReturnsTrue hook_return_val;
+static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  bool hook_return_val;
 
   hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
   if (!ContinueIfHookReturnsTrue::eval(hook_return_val)) {
