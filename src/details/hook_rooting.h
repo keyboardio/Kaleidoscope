@@ -287,7 +287,7 @@ __NL__   };                                                                    \
 //
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
 __NN__                                                                         \
-__NN__   namespace kaleidoscope_internal {                                              \
+__NN__   namespace kaleidoscope_internal {                                     \
 __NN__                                                                         \
 __NN__   _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)                  \
 __NL__                                                                         \
