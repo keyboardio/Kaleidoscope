@@ -46,12 +46,13 @@ class Hooks {
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
 
-  static void init();
+  static void onSetup();
+  static void beforeEachCycle();
 
-  static bool eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  static bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
-  static void preReportHook();
-  static void postReportHook();
+  static void beforeReportingState();
+  static void afterEachCycle();
 };
 
 } // namespace kaleidoscope

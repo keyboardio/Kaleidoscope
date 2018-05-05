@@ -13,17 +13,20 @@ namespace kaleidoscope {
 // during the transition phase.
 
 __attribute__((weak))
-void Hooks::init() {}
+void Hooks::onSetup() {}
 
 __attribute__((weak))
-bool Hooks::eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+void Hooks::beforeEachCycle() {}
+
+__attribute__((weak))
+bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   return true;
 }
 
 __attribute__((weak))
-void Hooks::preReportHook() {}
+void Hooks::beforeReportingState() {}
 
 __attribute__((weak))
-void Hooks::postReportHook() {}
+void Hooks::afterEachCycle() {}
 
 } // namespace kaleidoscope

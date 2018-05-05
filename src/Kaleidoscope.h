@@ -134,21 +134,21 @@ class Kaleidoscope_ {
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
-  __attribute__((deprecated("Kaleidoscope::replaceEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceEventHandlerHook(...) is deprecated. Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
   static void appendEventHandlerHook(eventHandlerHook hook)
-  __attribute__((deprecated("Kaleidoscope::appendEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::appendEventHandlerHook(...) is deprecated. Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
   static void useEventHandlerHook(eventHandlerHook hook)
-  __attribute__((deprecated("Kaleidoscope::useEventHandlerHook(...) is deprecated. Please implement KaleidoscopePlugin.eventHandlerHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::useEventHandlerHook(...) is deprecated. Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
 
   typedef void (*loopHook)(bool postClear);
   static loopHook loopHooks[HOOK_MAX];
 
   static void replaceLoopHook(loopHook oldHook, loopHook newHook)
-  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.preReportHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
   static void appendLoopHook(loopHook hook)
-  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.preReportHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
   static void useLoopHook(loopHook hook)
-  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement KaleidoscopePlugin.preReportHook(...) or KaleidoscopePlugin.postReportHook(...) instead.")));
+  __attribute__((deprecated("Kaleidoscope::replaceLoopHook(...) is deprecated. Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
 
   static bool focusHook(const char *command);
 };

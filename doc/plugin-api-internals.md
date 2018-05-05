@@ -27,26 +27,26 @@ another header, because it belongs to `Kaleidoscope.h`.
 //
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
          namespace kaleidoscope_internal {                                     \
-         _DEFINE_ORDERED_PLUGINS(OrderedPlugins, __VA_ARGS__)                  \
+         _DEFINE_HOOK_POINT(HookPoint, __VA_ARGS__)                            \
          } /* namespace kaleidoscope */                                        \
          _HOOKS_STATIC_METHODS_IMPLEMENTATION
 ```
 
 This is where things get interesting. This macro does two things:
 
- - It creates `kaleidoscope_internal::OrderedPlugins`, a class with a single
-   method, `apply`. This is a templated method, the template argument is the
-   method `apply` will call. Thus, `OrderedPlugins::template apply<foo>` will
-   resolve to a function that calls the `foo` method of each plugin we listed
-   for `KALEIDOSCOPE_INIT_PLUGINS`. We'll see in a bit how this happens.
+ - It creates `kaleidoscope_internal::HookPoint`, a class with a single method,
+   `apply`. This is a templated method, the template argument is the method
+   `apply` will call. Thus, `HookPoint::template apply<foo>` will resolve to a
+   function that calls the `foo` method of each plugin we listed for
+   `KALEIDOSCOPE_INIT_PLUGINS`. We'll see in a bit how this happens.
 
    This is the place where magic happens, where we make it possible to invoke a
    method of a class derived from `kaleidoscope::Plugin`, without that method
    needing to be `virtual`.
 
  - The other part creates overrides for the `Kaleidoscope::Hooks::` family of
-   functions. These are wrappers around `OrderedPlugins::template apply<foo>`.
-   We have these so higher level code would not need to care about the
+   functions. These are wrappers around `HookPoint::template apply<foo>`. We
+   have these so higher level code would not need to care about the
    implementation details, so that it can invoke the hooks as if they were
    ordinary functions.
 
@@ -58,20 +58,21 @@ to explain, and does not lead down another rabbit hole.
 It defines functions like this:
 
 ```c++
-void Hooks::init() {
-  kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>();
+void Hooks::onSetup() {
+  kaleidoscope_internal::HookPoint::template
+     apply<kaleidoscope_internal::PluginMethod_onSetup>();
 }
 ```
 
 The functions it defines are the ones in `kaleidoscope::Hooks`, as defined in
-`details/hooks.h`. These are the functions Kaleidoscope will actually call. All
-of these have a default empty implementation,
+`kaleidoscope/hooks.h`. These are the functions Kaleidoscope will actually call.
+All of these have a default empty implementation,
 `_HOOKS_STATIC_METHODS_IMPLEMENTATION` overrides these defaults.
 
 There is one method here for every hook. When new hooks are added, a wrapper
 shall be added here too.
 
-## `_DEFINE_ORDERED_PLUGINS`
+## `_DEFINE_HOOKPOINT`
 
 This is where the magic continues. The macro will create a class that has an
 `apply` method, with two arities: one without arguments and no returned value;
@@ -79,58 +80,58 @@ and another with some return value and a number of arguments. The template does
 not specify the type of neither the return value, nor the function arguments.
 Both of these will be deduced from the template argument.
 
-To understand how `apply` works, we will first need to dive into `HookTask`.
+To understand how `apply` works, we will first need to dive into `PluginMethod`.
 
-### Intermission: `_HOOK_TASK`
+### Intermission: `_PLUGIN_METHOD`
 
-The macro creates a `HookTask_something` class, with a single method, `invoke`,
-which will call the `something` function. We do this wrapping so we can assert
-that function signatures match. Without this enforcement, we would be able to
-use plugins that have methods with the same name, but different signatures than
-what `kaleidoscope::Plugin` permits, and that would result in all kinds of
-undesired behaviour. The class also has a `ContinuationPredicate` member, a
+The macro creates a `PluginMethod_something` class, with a single method,
+`invoke`, which will call the `something` function. We do this wrapping so we
+can assert that function signatures match. Without this enforcement, we would be
+able to use plugins that have methods with the same name, but different
+signatures than what `kaleidoscope::Plugin` permits, and that would result in
+all kinds of undesired behaviour. The class also has a `shouldAbort` member, a
 struct with a single `eval` method. This will be used later, outside of
-`HookTask` itself.
+`PluginMethod` itself.
 
-The `invoke` method does nothing else but assert on the signature (at compile
+The `call` method does nothing else but assert on the signature (at compile
 time!), and call the appropriate function of the plugin, which was passed to it
-as an argument. Do note that the first argument to `invoke` is the plugin, with
-a templated type. This part is what makes it possible to avoid having to declare
-plugin methods `virtual`. At compile time, whatever type we pass to `invoke` in
+as an argument. Do note that the first argument to `call` is the plugin, with a
+templated type. This part is what makes it possible to avoid having to declare
+plugin methods `virtual`. At compile time, whatever type we pass to `call` in
 its first argument, will be used, so inheritance rules no longer apply, we are
 explicitly specifying the concrete class. This is why we also need the signature
 check, because we can't rely on the type alone.
 
-### OrderedPlugins: apply - the void case
+### HookPoint: apply - the void case
 
 The void case is the easier one: it maps over all the used plugins, and calls
-the appropriate method on them. This is done via `HookTask`: every method is
-wrapped in a `HookTask`, and `apply` calls its `invoke` method. In the void
+the appropriate method on them. This is done via `PluginMethod`: every method is
+wrapped in a `PluginMethod`, and `apply` calls its `call` method. In the void
 case, the main benefit - apart from not having to declare the methods
 `virtual` - is enforced type safety.
 
-### OrderedPlugins: apply - the non-void case
+### HookPoint: apply - the non-void case
 
 The non-void case is more complicated: it has a return type, and arguments too.
 Arguments are easy, we just pass them on as-is. The return type is extracted
 from the template, and a local variable is used to hold it before returning. We
 need this local variable, because invoking plugins in this case may terminate
-early: this is where we use the `ContinuationPredicate` member of `HookTask`:
+early: this is where we use the `shouldAbort` member of `PluginMethod`:
 
 ```c++
-#define _INVOKE_HOOK_FOR_PLUGIN(PLUGIN)                                 \
-  hook_return_val = HookTask__::invoke(PLUGIN, hook_args...);           \
+#define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                   \
+  result = PluginMethod__::call(PLUGIN, hook_args...);                  \
                                                                         \
-  if (!ContinuationPredicate::eval(hook_return_val)) {                  \
-     return hook_return_val;                                            \
+  if (shouldAbort::eval(result)) {                                      \
+     return result;                                                     \
   }
 ```
 
 This is another reason we wrap the method calls in a struct: so we can have a
-continuation predicate associated with them.
+predicate associated with them.
 
-In the end, `apply` will be a series of `_INVOKE_HOOK_FOR_PLUGIN` macros (that
-is what `MAP` basically does, through a series of pre-processor macros).
+In the end, `apply` will be a series of `_CALL_HOOK_FOR_PLUGIN` macros (that is
+what `MAP` basically does, through a series of pre-processor macros).
 
 # An example
 
@@ -139,12 +140,12 @@ Lets assume we have a very simple plugin:
 ```c++
 class ExamplePlugin_ : public kaleidoscope::Plugin {
   ExamplePlugin_() {};
-  void init() { Serial.println("ExamplePlugin::init()"); }
-  void preReportHook() { Serial.println("ExamplePlugin:preReportHook()"); }
-  void postReportHook() { Serial.println("ExamplePlugin::postReportHook()"); }
-  bool eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-    Serial.println("ExamplePlugin:eventHandlerHook");
-    return true;
+  void onSetup() { Serial.println("ExamplePlugin::onSetup()"); }
+  void beforeReportingState() { Serial.println("ExamplePlugin::beforeReportingState()"); }
+  void afterEachCycle() { Serial.println("ExamplePlugin::afterEachCycle()"); }
+  bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    Serial.println("ExamplePlugin::onEvent");
+    return EVENT_CONTINUE;
   }
 };
 
@@ -165,7 +166,7 @@ _KALEIDOSCOPE_INIT_PLUGINS(ExamplePlugin, ExamplePlugin)
 
 ```c++
 namespace kaleidoscope_internal {
-  _DEFINE_ORDERED_PLUGINS(OrderedPlugins, ExamplePlugin, ExamplePlugin)
+  _DEFINE_HOOKPOINT(HookPoint, ExamplePlugin, ExamplePlugin)
 } /* namespace kaleidoscope */
 _HOOKS_STATIC_METHODS_IMPLEMENTATION
 ```
@@ -174,80 +175,92 @@ _HOOKS_STATIC_METHODS_IMPLEMENTATION
 
 ```c++
 namespace kaleidoscope_internal {
-  _DEFINE_ORDERED_PLUGINS(OrderedPlugins, ExamplePlugin, ExamplePlugin)
+  _DEFINE_HOOKPOINT(HookPoint, ExamplePlugin, ExamplePlugin)
 }
 
 namespace kaleidoscope {
-  void Hooks::init() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>();
+  void Hooks::onSetup() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_onSetup>();
   }
 
-  bool Hooks::eventHandlerHook(Key &mappedKey,
-                               byte row, byte col, uint8_t keyState) {
-    return kaleidoscope_internal::OrderedPlugins
-              ::template apply<HookTask_eventHandlerHook>
-                            (mappedKey, row, col, keyState);
+  void Hooks::beforeEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  void Hooks::preReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>();
+  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return kaleidoscope_internal::HookPoint::template
+              apply<kaleidoscope_internal::PluginMethod_onEvent>
+                 (mappedKey, row, col, keyState);
   }
 
-  void Hooks::postReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>();
+  void Hooks::beforeReportingState() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+  }
+
+  void Hooks::afterEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
   }
 }
 ```
 
 Nothing really surprising so far...
 
-### Expanding `_DEFINE_ORDERED_PLUGINS`
+### Expanding `_DEFINE_HOOKPOINT`
 
 ```c++
 namespace kaleidoscope_internal {
-  struct OrderedPlugins
+  struct HookPoint
   {
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename HookTask__::ReturnType {
+                             -> typename PluginMethod__::ReturnType {
 
-        typedef typename HookTask__::ContinuationPredicate
-           ContinuationPredicate;
+        typedef typename PluginMethod__::shouldAbort shouldAbort;
+        typename PluginMethod__::ReturnType result;
 
-        typename HookTask__::ReturnType hook_return_val;
+        MAP(_CALL_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
 
-        MAP(_INVOKE_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
-
-        return hook_return_val;
+        return result;
      }
 
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static void apply() {
-        MAP(INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
+        MAP(_CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
      }
   };
 }
 
 namespace kaleidoscope {
-  void Hooks::init() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>();
+  void Hooks::onSetup() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_onSetup>();
   }
 
-  bool Hooks::eventHandlerHook(Key &mappedKey,
-                               byte row, byte col, uint8_t keyState) {
-    return kaleidoscope_internal::OrderedPlugins
-              ::template apply<HookTask_eventHandlerHook>
-                            (mappedKey, row, col, keyState);
+  void Hooks::beforeEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  void Hooks::preReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>();
+  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return kaleidoscope_internal::HookPoint::template
+              apply<kaleidoscope_internal::PluginMethod_onEvent>
+                 (mappedKey, row, col, keyState);
   }
 
-  void Hooks::postReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>();
+  void Hooks::beforeReportingState() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+  }
+
+  void Hooks::afterEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
   }
 }
 ```
@@ -256,111 +269,121 @@ namespace kaleidoscope {
 
 ```c++
 namespace kaleidoscope_internal {
-  struct OrderedPlugins
+  struct HookPoint
   {
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename HookTask__::ReturnType {
+                             -> typename PluginMethod__::ReturnType {
 
-        typedef typename HookTask__::ContinuationPredicate
-           ContinuationPredicate;
+        typedef typename PluginMethod__::shouldAbort shouldAbort;
+        typename PluginMethod__::ReturnType result;
 
-        typename HookTask__::ReturnType hook_return_val;
+        _CALL_HOOK_FOR_PLUGIN(ExamplePlugin)
+        _CALL_HOOK_FOR_PLUGIN(ExamplePlugin)
 
-        _INVOKE_HOOK_FOR_PLUGIN(ExamplePlugin)
-        _INVOKE_HOOK_FOR_PLUGIN(ExamplePlugin)
-
-        return hook_return_val;
+        return result;
      }
 
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static void apply() {
-        INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(ExamplePlugin)
-        INVOKE_EMPTY_ARGS_HOOK_FOR_PLUGIN(ExamplePlugin)
+        _CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN(ExamplePlugin)
+        _CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN(ExamplePlugin)
      }
   };
 }
 
 namespace kaleidoscope {
-  void Hooks::init() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>();
+  void Hooks::onSetup() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_onSetup>();
   }
 
-  bool Hooks::eventHandlerHook(Key &mappedKey,
-                               byte row, byte col, uint8_t keyState) {
-    return kaleidoscope_internal::OrderedPlugins
-              ::template apply<HookTask_eventHandlerHook>
-                            (mappedKey, row, col, keyState);
+  void Hooks::beforeEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  void Hooks::preReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>();
+  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return kaleidoscope_internal::HookPoint::template
+              apply<kaleidoscope_internal::PluginMethod_onEvent>
+                 (mappedKey, row, col, keyState);
   }
 
-  void Hooks::postReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>();
+  void Hooks::beforeReportingState() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+  }
+
+  void Hooks::afterEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
   }
 }
 ```
 
-### Expanding `INVOKE_*`
+### Expanding `CALL_*`
 
 ```c++
 namespace kaleidoscope_internal {
-  struct OrderedPlugins
+  struct HookPoint
   {
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename HookTask__::ReturnType {
+                             -> typename PluginMethod__::ReturnType {
 
-        typedef typename HookTask__::ContinuationPredicate
-           ContinuationPredicate;
+        typedef typename PluginMethod__::shouldAbort shouldAbort;
+        typename PluginMethod__::ReturnType result;
 
-        typename HookTask__::ReturnType hook_return_val;
-
-        hook_return_val = HookTask__::invoke(ExamplePlugin, hook_args...);
-        if (!ContinuationPredicate::eval(hook_return_val)) {
-          return hook_return_val;
+        result = PluginMethod__::call(ExamplePlugin, hook_args...);
+        if (shouldAbort::eval(hook_return_val)) {
+          return result;
         }
 
-        hook_return_val = HookTask__::invoke(ExamplePlugin, hook_args...);
-        if (!ContinuationPredicate::eval(hook_return_val)) {
-          return hook_return_val;
+        result = PluginMethod__::call(ExamplePlugin, hook_args...);
+        if (shouldAbort::eval(hook_return_val)) {
+          return result;
         }
 
-        return hook_return_val;
+        return result;
      }
 
-     template<typename HookTask__,
+     template<typename PluginMethod__,
               typename... Args__>
      static void apply() {
-        HookTask__::invoke(ExamplePlugin);
-        HookTask__::invoke(ExamplePlugin);
+        PluginMethod__::call(ExamplePlugin);
+        PluginMethod__::call(ExamplePlugin);
      }
   };
 }
 
 namespace kaleidoscope {
-  void Hooks::init() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>();
+  void Hooks::onSetup() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_onSetup>();
   }
 
-  bool Hooks::eventHandlerHook(Key &mappedKey,
-                               byte row, byte col, uint8_t keyState) {
-    return kaleidoscope_internal::OrderedPlugins
-              ::template apply<HookTask_eventHandlerHook>
-                            (mappedKey, row, col, keyState);
+  void Hooks::beforeEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  void Hooks::preReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>();
+  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return kaleidoscope_internal::HookPoint::template
+              apply<kaleidoscope_internal::PluginMethod_onEvent>
+                 (mappedKey, row, col, keyState);
   }
 
-  void Hooks::postReportHook() {
-    kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>();
+  void Hooks::beforeReportingState() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+  }
+
+  void Hooks::afterEachCycle() {
+    kaleidoscope_internal::HookPoint::template
+       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
   }
 }
 ```
@@ -369,72 +392,71 @@ namespace kaleidoscope {
 
 Now that we have the macros expanded, lets see what happens when we call a hook!
 Remember that our entry point is in `Kaleidoscope::Hooks`. We'll first follow
-`Kaleidoscope::Hooks::init()`, then `Kaleidoscope::Hooks::eventHandlerHook`.
+`Kaleidoscope::Hooks::onSetup()`, then `Kaleidoscope::Hooks::onEvent`.
 
 ### `Kaleidoscope::Hooks::init()`
 
-First, we call `kaleidoscope_internal::OrderedPlugins::template
-apply<HookTask_init>()`. Remember that `apply<HookTask_init>` is a templated
-function, so - at compile time - this expands to:
+First, we call `kaleidoscope_internal::HookPoint::template
+apply<PluginMethod_onSetup>()`. Remember that `apply<PluginMethod_onSetup>` is a
+templated function, so - at compile time - this expands to:
 
 ```c++
-static void apply<HookTask_init>() {
-  HookTask_init::invoke(ExamplePlugin);
-  HookTask_init::invoke(ExamplePlugin);
+static void apply<PluginMethod_onSetup>() {
+  PluginMethod_onSetup::call(ExamplePlugin);
+  PluginMethod_onSetup::call(ExamplePlugin);
 }
 ```
 
-And `HookTask_init::invoke` expands to:
+And `PluginMethod_onSetup::call` expands to:
 
 ```c++
-static void invoke(ExamplePlugin_ &plugin) {
-  return plugin.init();
+static void call(ExamplePlugin_ &plugin) {
+  return plugin.onSetup();
 }
 ```
 
-Considering that `HookTask_init` can be inlined, our `apply<HookTask_init>` function is
-effectively this now:
+Considering that `PluginMethod_onSetup` can be inlined, our
+`apply<PluginMethod_onSetup>` function is effectively this now:
 
 ```c++
-static void apply<HookTask_init>() {
-  ExamplePlugin.init();
-  ExamplePlugin.init();
+static void apply<PluginMethod_onSetup>() {
+  ExamplePlugin.onSetup();
+  ExamplePlugin.onSetup();
 }
 ```
 
-Since this can also be inlined, our `Kaleidoscope::Hooks::init` becomes:
+Since this can also be inlined, our `Kaleidoscope::Hooks::onSetup` becomes:
 
 ```c++
-void Hooks::init() {
-  ExamplePlugin.init();
-  ExamplePlugin.init();
+void Hooks::onSetup() {
+  ExamplePlugin.onSetup();
+  ExamplePlugin.onSetup();
 }
 ```
 
-### `Kaleidoscope::Hooks::eventHandlerHook()`
+### `Kaleidoscope::Hooks::onEvent()`
 
-The only difference here is that we expand `apply<HookTask_eventHandlerHook>` differently:
+The only difference here is that we expand `apply<PluginMethod_onEvent>`
+differently:
 
 ```c++
 static auto apply(Args__&&... hook_args)
                         -> typename HookTask__::ReturnType {
 
-   typedef typename HookTask__::ContinuationPredicate
-      ContinuationPredicate;
+   typedef typename PluginMethod__::shouldAbort shouldAbort;
+   typename PluginMethod__::ReturnType result;
 
-   typename HookTask__::ReturnType hook_return_val;
-
-   hook_return_val = HookTask__::invoke(ExamplePlugin, hook_args...);
-   if (!ContinuationPredicate::eval(hook_return_val)) {
-     return hook_return_val;
+   result = PluginMethod__::call(ExamplePlugin, hook_args...);
+   if (shouldAbort::eval(result)) {
+     return result;
    }
 
-   hook_return_val = HookTask__::invoke(ExamplePlugin, hook_args...);
-   if (!ContinuationPredicate::eval(hook_return_val)) {
-     return hook_return_val;
+   result = PluginMethod__::call(ExamplePlugin, hook_args...);
+   if (shouldAbort::eval(result)) {
+     return result;
    }
 
-   return hook_return_val;
+   return result;
 }
 ```
 
@@ -442,19 +464,19 @@ Which in turn becomes:
 
 ```c++
 static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-  bool hook_return_val;
+  bool result;
 
-  hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
-  if (!ContinueIfHookReturnsTrue::eval(hook_return_val)) {
-    return hook_return_val;
+  result = PluginMethod_onEvent::call(ExamplePlugin, mappedKey, row, col, keyState);
+  if (AbortIfFalse::eval(result)) {
+    return result;
   }
 
-  hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
-  if (!ContinueIfHookReturnsTrue::eval(hook_return_val)) {
-    return hook_return_val;
+  result = PluginMethod_onEvent(ExamplePlugin, mappedKey, row, col, keyState);
+  if (AbortIfFalse::eval(result)) {
+    return result;
   }
 
-  return hook_return_val;
+  return result;
 }
 ```
 
@@ -463,19 +485,19 @@ we end up with:
 
 ```c++
 static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-  bool hook_return_val;
+  bool result;
 
-  hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
-  if (!hook_return_val) {
-    return hook_return_val;
+  result = ExamplePlugin.onEvent(mappedKey, row, col, keyState);
+  if (!result) {
+    return result;
   }
 
-  hook_return_val = HookTask_eventHandlerHook(ExamplePlugin, mappedKey, row, col, keyState);
-  if (!hook_return_val) {
-    return hook_return_val;
+  result = ExamplePlugin.onEvent(mappedKey, row, col, keyState);
+  if (!result) {
+    return result;
   }
 
-  return hook_return_val;
+  return result;
 }
 ```
 

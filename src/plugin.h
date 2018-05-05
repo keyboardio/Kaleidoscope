@@ -47,31 +47,38 @@ class Plugin {
   //
   // Note: All hook methods in this class are non virtual on purpose as the actual
   //       interface between the Kaleidoscope singleton class and the
-  //       plugins is the polymorphic PluginHookAdapter class
+  //       plugins is the polymorphic `PluginMethod` class.
 
-  void init() {
-    // By letting the new init method call the legacy begin() method, we make
-    // sure that the old hooking interface is supported even if
+  void onSetup() {
+    // By letting the new `onSetup()` method call the legacy begin() method, we
+    // make sure that the old hooking interface is supported even if
     // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
-    // the legacy begin() method to initialize itself and register hooks.
+    // the legacy `begin()` method to initialize itself and register hooks.
     //
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     this->begin();
 #endif
   }
 
-  // This handler is supposed to return false if no other handlers are
-  // supposed to be called after it, true otherwise.
-  //
-  // The handler is allowed to modify the mappedKey that is therefore
-  // passed by reference.
-  //
-  bool eventHandlerHook(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  // Called at the very start of each cycle, before gathering events, before
+  // doing anything else.
+  void beforeEachCycle() {}
+
+  // Function called for every non-idle key, every cycle, so it can decide what
+  // to do with it. It can modify the key (which is passed by reference for this
+  // reason), and decide whether further handles should be tried. If it returns
+  // true, other handlers will also get a chance to react to the event. If it
+  // returns false, Kaleidoscope will stop processing there.
+  bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return true; // Always allow other handlers to continue
   }
 
-  void preReportHook() {}
-  void postReportHook() {}
+  // Called before reporting our state to the host. This is the last point in a
+  // cycle where a plugin can alter what gets reported to the host.
+  void beforeReportingState() {}
+
+  // Called at the very end of a cycle, after everything's said and done.
+  void afterEachCycle() {}
 };
 
 } // namespace kaleidoscope
