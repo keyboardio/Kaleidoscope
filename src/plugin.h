@@ -28,9 +28,7 @@ class Plugin {
    * called. It is intentionally protected, and accessible by the `Kaleidoscope`
    * class only.
    */
-#if !KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void begin() {};
-#else
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   virtual void begin() {};
 #endif
 
@@ -54,7 +52,9 @@ class Plugin {
     // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
     // the legacy begin() method to initialize itself and register hooks.
     //
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     this->begin();
+#endif
   }
 
   // This handler is supposed to return false if no other handlers are
