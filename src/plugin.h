@@ -14,19 +14,22 @@ class Plugin {
 
  protected:
 
-  /** Initial plugin setup hook.
-   * All plugins are supposed to provide a singleton object, statically
+  /** Legacy plugin setup hook.
+
+   * In version one of the plugin API, `plugin->begin()` was called at
+   * `Kaleidoscope.use()` time, to perform boot-time initialization. We needed
+   * this because plugins are supposed to provide a singleton object, statically
    * initialized at compile-time (with few exceptions). Because of this, the
    * order in which they are instantiated is unspecified, and cannot be relied
    * upon. For this reason, one's expected to explicitly initialize, "use" the
-   * plugins one wishes to, by calling `Kaleidoscope.use()` with a list of plugin
-   * object pointers.
+   * plugins one wishes to, by calling `Kaleidoscope.use()` with a list of
+   * plugin object pointers.
    *
-   * This function will in turn call the `begin` function of each plugin,
-   * so that they can perform any initial setup they wish, such as registering
-   * event handler or loop hooks. This is the only time this function will be
-   * called. It is intentionally protected, and accessible by the `Kaleidoscope`
-   * class only.
+   * This is the only time this function will be called. It is intentionally
+   * protected, and accessible by the `Kaleidoscope` class only.
+   *
+   * Also, this method is deprecated in favour of the V2 API, which you can read
+   * about below.
    */
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   virtual void begin() {};
