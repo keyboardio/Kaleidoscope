@@ -2,10 +2,10 @@
 
 #include "macro_functions.h"
 #include "plugin.h"
-#include "details/hooks.h"
+#include "kaleidoscope/hooks.h"
 #include "hook_signature_check.h"
 
-namespace kaleidoscope {
+namespace kaleidoscope_internal {
 
 // A note to maintainers: How to add additional hooks
 //
@@ -15,7 +15,7 @@ namespace kaleidoscope {
 //       to class kaleidoscope::Hooks.
 // 3) Add an implemenation of the new static method of kaleidoscope::Hooks
 //       introduced in 2) to the end of macro KALEIDOSCOPE_INIT_PLUGINS(...)
-//       and a matching weak implementation to details/hooks.cpp
+//       and a matching weak implementation to kaleidoscope/hooks.cpp
 
 // Some words about the design of hook rooting:
 //
@@ -163,22 +163,25 @@ __NN__                                                                         \
 __NN__   namespace kaleidoscope {                                              \
 __NN__                                                                         \
 __NL__   void Hooks::init() {                                                  \
-__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_init>(); \
+__NL__     kaleidoscope_internal::OrderedPlugins::template                     \
+__NL__        apply<kaleidoscope_internal::HookTask_init>();                   \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   bool Hooks::eventHandlerHook(Key &mappedKey,                          \
 __NL__                                byte row, byte col, uint8_t keyState) {  \
-__NL__     return kaleidoscope_internal::OrderedPlugins                        \
-__NL__               ::template apply<HookTask_eventHandlerHook>               \
+__NL__     return kaleidoscope_internal::OrderedPlugins::template              \
+__NL__               apply<kaleidoscope_internal::HookTask_eventHandlerHook>   \
 __NL__                             (mappedKey, row, col, keyState);            \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   void Hooks::preReportHook() {                                         \
-__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_preReportHook>(); \
+__NL__     kaleidoscope_internal::OrderedPlugins::template                     \
+__NL__        apply<kaleidoscope_internal::HookTask_preReportHook>();          \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   void Hooks::postReportHook() {                                        \
-__NL__     kaleidoscope_internal::OrderedPlugins::template apply<HookTask_postReportHook>(); \
+__NL__     kaleidoscope_internal::OrderedPlugins::template                     \
+__NL__        apply<kaleidoscope_internal::HookTask_postReportHook>();         \
 __NL__   }                                                                     \
 __NL__                                                                         \
 __NL__   } /* namespace kaleidoscope */

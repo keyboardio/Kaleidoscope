@@ -1,4 +1,4 @@
-#include "details/hooks.h"
+#include "kaleidoscope/hooks.h"
 
 namespace kaleidoscope {
 

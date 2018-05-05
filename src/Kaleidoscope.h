@@ -24,8 +24,8 @@ void setup();
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
-#include "details/preprocessor_macro_map.h"
-#include "details/hook_rooting.h"
+#include "kaleidoscope_internal/preprocessor_macro_map.h"
+#include "kaleidoscope_internal/hook_rooting.h"
 #include "macro_functions.h"
 #include "plugin.h"
 

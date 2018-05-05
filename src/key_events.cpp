@@ -1,5 +1,5 @@
 #include "Kaleidoscope.h"
-#include "details/hooks.h"
+#include "kaleidoscope/hooks.h"
 #include "plugin.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
