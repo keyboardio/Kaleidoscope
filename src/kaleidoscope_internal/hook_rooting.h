@@ -187,11 +187,10 @@ __NL__   }                                                                      
 __NL__                                                                           \
 __NL__   } /* namespace kaleidoscope */
 
-// The following invoke macros are meant to be used with
-// KALEIDOSCOPE_CONNECT_PLUGINS in conjunction with the MAP macro
-// (from header "macro_functions.h") that casts a specific operation on
-// every member of a variadic macro argument list (if present).
-//
+// The following call macros are meant to be used with DEFINE_HOOKPOINT in
+// conjunction with the MAP macro (from header "macro_functions.h") that casts a
+// specific operation on every member of a variadic macro argument list (if
+// present).
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                          \
 __NN__                                                                         \
 __NN__   result = PluginMethod__::call(PLUGIN, hook_args...);                  \
