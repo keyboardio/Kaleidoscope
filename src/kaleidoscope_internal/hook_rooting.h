@@ -123,7 +123,7 @@ __NL__      {                                                                  \
 __NN__         /* Assert that hook methods in derived plugins have an          \
 __NN__            call signature.                                              \
 __NN__          */                                                             \
-__NL__         _MATCH_HOOK_TYPE(PLUGIN_METHOD, Plugin__)                       \
+__NL__         _VALIDATE_HOOK_METHOD_SIGNATURE(PLUGIN_METHOD, Plugin__)        \
 __NN__                                                                         \
 __NL__         return plugin.PLUGIN_METHOD(hook_args...);                      \
 __NL__      }                                                                  \

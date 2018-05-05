@@ -75,7 +75,7 @@ struct ___________Culprit_Plugin___________
 // Else the unspecialized version of the template class is instantiated,
 // causing 'value' to be defined as false.
 
-#define _MATCH_HOOK_TYPE(HOOK_METHOD, PLUGIN)                                  \
+#define _VALIDATE_HOOK_METHOD_SIGNATURE(HOOK_METHOD, PLUGIN)                   \
 __NL__                                                                         \
 __NL__  {                                                                      \
 __NL__    /* Check it the two signatures equal. If not, the                    \
