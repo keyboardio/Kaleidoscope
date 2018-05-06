@@ -9,10 +9,7 @@ namespace hid {
 
 extern void initializeKeyboard();
 
-extern bool isPureModifier(Key mappedKey);
-extern void addModFlags(byte flags);
-extern void setModFlagsMask(byte flags);
-extern void pressModFlags(byte flags);
+extern void setLastKeyPress(Key mappedKey);
 
 extern void pressKey(Key mappedKey);
 extern void releaseKey(Key mappedKey);
