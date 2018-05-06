@@ -76,52 +76,44 @@ struct ___________Culprit_Plugin___________
 // causing 'value' to be defined as false.
 
 #define _VALIDATE_HOOK_METHOD_SIGNATURE(HOOK_METHOD, PLUGIN)                   \
-__NL__                                                                         \
-__NL__  {                                                                      \
-__NL__    /* Check it the two signatures equal. If not, the                    \
-__NL__    * user has implemented a method with the same name but a             \
-__NL__    * different (wrong) signature.                                       \
-__NL__    */                                                                   \
-__NL__    typedef HookSignaturesMatch<                                         \
-__NL__                       decltype(&::kaleidoscope::Plugin::HOOK_METHOD),   \
-__NL__                       decltype(&PLUGIN::HOOK_METHOD)                    \
-__NL__                  > Check;                                               \
-__NL__                                                                         \
-__NL__    static_assert(Check::value,                                          \
-__NL__     "\n"                                                                \
-__NL__     "\n***************************************************************" \
-__NL__     "\n******************** READ THIS CAREFULLY! *********************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n"                                                                \
-__NL__     "\nOne of your plugins implemented a hook \"" #HOOK_METHOD "\""     \
-__NL__     "\nwhose signature differs from the base class' hook signature."    \
-__NL__     "\n"                                                                \
-__NL__     "\nPlease check the compiler messages above or below for an hint"   \
-__NL__     "\nabout which plugin is the culprit. It will be marked by the"     \
-__NL__     "\nstring"                                                          \
-__NL__     "\n"                                                                \
-__NL__     "\n      ___________Culprit_Plugin___________."                     \
-__NL__     "\n"                                                                \
-__NL__     "\nThen check all the hook methods implemented by this plugin"      \
-__NL__     "\nand compare them to the respective hook methods of"              \
-__NL__     "\nbase class \"kaleidoscope::Plugin\"."                            \
-__NL__     "\n"                                                                \
-__NL__     "\nNote: Two method signatures equal if all their argument"         \
-__NL__     "\n      types, the methods' const qualifiers and their"            \
-__NL__     "\n      return values equal."                                      \
-__NL__     "\n"                                                                \
-__NL__     "\n***************************************************************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n"                                                                \
-__NL__    );                                                                   \
-__NL__                                                                         \
-__NL__    /* The following construct is necessary enable reporting of the      \
-__NL__     * type of the plugin that implemented a hook with a wrong signature.\
-__NL__     * This is necessary as it is not possible to include any non        \
-__NL__     * literal string constans in the error message of a static_assert.  \
-__NL__     */                                                                  \
-__NL__    constexpr bool dummy =                                               \
-__NL__      ___________Culprit_Plugin___________                               \
-__NL__         <PLUGIN, Check::value>::value;                                  \
-__NL__  }
+{                                                                       __NL__ \
+  /* Check it the two signatures equal. If not, the                     __NL__ \
+  * user has implemented a method with the same name but a              __NL__ \
+  * different (wrong) signature.                                        __NL__ \
+  */                                                                    __NL__ \
+  typedef HookSignaturesMatch<                                          __NL__ \
+                     decltype(&::kaleidoscope::Plugin::HOOK_METHOD),    __NL__ \
+                     decltype(&PLUGIN::HOOK_METHOD)                     __NL__ \
+                > Check;                                                __NL__ \
+                                                                        __NL__ \
+  static_assert(Check::value,                                           __NL__ \
+    VERBOSE_STATIC_ASSERT_HEADER                                        __NL__ \
+   "\nOne of your plugins implemented a hook \"" #HOOK_METHOD "\""      __NL__ \
+   "\nwhose signature differs from the base class' hook signature."     __NL__ \
+   "\n"                                                                 __NL__ \
+   "\nPlease check the compiler messages above or below for an hint"    __NL__ \
+   "\nabout which plugin is the culprit. It will be marked by the"      __NL__ \
+   "\nstring"                                                           __NL__ \
+   "\n"                                                                 __NL__ \
+   "\n      ___________Culprit_Plugin___________."                      __NL__ \
+   "\n"                                                                 __NL__ \
+   "\nThen check all the hook methods implemented by this plugin"       __NL__ \
+   "\nand compare them to the respective hook methods of"               __NL__ \
+   "\nbase class \"kaleidoscope::Plugin\"."                             __NL__ \
+   "\n"                                                                 __NL__ \
+   "\nNote: Two method signatures equal if all their argument"          __NL__ \
+   "\n      types, the methods' const qualifiers and their"             __NL__ \
+   "\n      return values equal."                                       __NL__ \
+   "\n"                                                                 __NL__ \
+    VERBOSE_STATIC_ASSERT_FOOTER                                        __NL__ \
+  );                                                                    __NL__ \
+                                                                        __NL__ \
+  /* The following construct is necessary enable reporting of the       __NL__ \
+   * type of the plugin that implemented a hook with a wrong signature. __NL__ \
+   * This is necessary as it is not possible to include any non         __NL__ \
+   * literal string constans in the error message of a static_assert.   __NL__ \
+   */                                                                   __NL__ \
+  constexpr bool dummy =                                                __NL__ \
+    ___________Culprit_Plugin___________                                __NL__ \
+       <PLUGIN, Check::value>::value;                                   __NL__ \
+}
