@@ -149,43 +149,6 @@ _PLUGIN_METHOD(onEvent, AbortIfFalse)
 _PLUGIN_METHOD(beforeReportingState, AlwaysContinue)
 _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 
-// This macro implements the static hook rooting functions of
-// class kaleidoscope::Hooks based on the registered plugins.
-// It must be invoked in global namespace as it adds namespace kaleidoscope
-// to the Hooks' function implementations.
-//
-#define _HOOKS_STATIC_METHODS_IMPLEMENTATION      \
-namespace kaleidoscope {                                             __NL__ \
-                                                                     __NL__ \
-void Hooks::onSetup() {                                              __NL__ \
-  kaleidoscope_internal::HookPoint::template                         __NL__ \
-  apply<kaleidoscope_internal::PluginMethod_onSetup>();              __NL__ \
-}                                                                    __NL__ \
-                                                                     __NL__ \
-void Hooks::beforeEachCycle() {                                      __NL__ \
-  kaleidoscope_internal::HookPoint::template                         __NL__ \
-  apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();      __NL__ \
-}                                                                    __NL__ \
-                                                                     __NL__ \
-bool Hooks::onEvent(Key &mappedKey, byte row, byte col,              __NL__ \
-                    uint8_t keyState) {                              __NL__ \
-  return kaleidoscope_internal::HookPoint::template                  __NL__ \
-         apply<kaleidoscope_internal::PluginMethod_onEvent>          __NL__ \
-               (mappedKey, row, col, keyState);                      __NL__ \
-}                                                                    __NL__ \
-                                                                     __NL__ \
-void Hooks::beforeReportingState() {                                 __NL__ \
-  kaleidoscope_internal::HookPoint::template                         __NL__ \
-  apply<kaleidoscope_internal::PluginMethod_beforeReportingState>(); __NL__ \
-}                                                                    __NL__ \
-                                                                     __NL__ \
-void Hooks::afterEachCycle() {                                       __NL__ \
-  kaleidoscope_internal::HookPoint::template                         __NL__ \
-  apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();       __NL__ \
-}                                                                    __NL__ \
-                                                                     __NL__ \
-}                                                                    __NL__ \
-
 // The following call macros are meant to be used with DEFINE_HOOKPOINT in
 // conjunction with the MAP macro (from header "macro_functions.h") that casts a
 // specific operation on every member of a variadic macro argument list (if
@@ -245,13 +208,41 @@ void Hooks::afterEachCycle() {                                       __NL__ \
 // Note: KALEIDOSCOPE_INIT_PLUGINS(...) must only be invoked in global namespace.
 //
 
-#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                 \
-   namespace kaleidoscope_internal {                                      __NL__ \
-                                                                          __NL__ \
-   _DEFINE_HOOKPOINT(HookPoint, __VA_ARGS__)                              __NL__ \
-                                                                          __NL__ \
-   }                                                                      __NL__ \
-                                                                          __NL__ \
-   _HOOKS_STATIC_METHODS_IMPLEMENTATION
-
-} // namespace kaleidoscope
+#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
+   namespace kaleidoscope_internal {                                    __NL__ \
+                                                                        __NL__ \
+   _DEFINE_HOOKPOINT(HookPoint, __VA_ARGS__)                            __NL__ \
+                                                                        __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   namespace kaleidoscope {                                             __NL__ \
+                                                                        __NL__ \
+   void Hooks::onSetup() {                                              __NL__ \
+     kaleidoscope_internal::HookPoint::template                         __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_onSetup>();              __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   void Hooks::beforeEachCycle() {                                      __NL__ \
+     kaleidoscope_internal::HookPoint::template                         __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();      __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   bool Hooks::onEvent(Key &mappedKey, byte row, byte col,              __NL__ \
+                       uint8_t keyState) {                              __NL__ \
+     return kaleidoscope_internal::HookPoint::template                  __NL__ \
+            apply<kaleidoscope_internal::PluginMethod_onEvent>          __NL__ \
+                  (mappedKey, row, col, keyState);                      __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   void Hooks::beforeReportingState() {                                 __NL__ \
+     kaleidoscope_internal::HookPoint::template                         __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_beforeReportingState>(); __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   void Hooks::afterEachCycle() {                                       __NL__ \
+     kaleidoscope_internal::HookPoint::template                         __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();       __NL__ \
+   }                                                                    __NL__ \
+                                                                        __NL__ \
+   }
+} // namespace kaleidoscope_internal
