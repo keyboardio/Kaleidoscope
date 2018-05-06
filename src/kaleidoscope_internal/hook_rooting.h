@@ -107,7 +107,7 @@ struct ReturnTypeTraits<R(T::*)(HookArgs...)> {
                                                                           __NL__ \
    struct PluginMethod_##PLUGIN_METHOD {                                  __NL__ \
                                                                           __NL__ \
-      typedef SHOULD_ABORT_TYPE shouldAbort;                              __NL__ \
+      typedef SHOULD_ABORT_TYPE ShouldAbort;                              __NL__ \
                                                                           __NL__ \
       /* Use a traits class to determine the return value type of the     __NL__ \
          hook method.                                                     __NL__ \
@@ -193,7 +193,7 @@ void Hooks::afterEachCycle() {                                       __NL__ \
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                       \
    result = PluginMethod__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
-   if (shouldAbort::eval(result)) {                                  __NL__ \
+   if (ShouldAbort::eval(result)) {                                  __NL__ \
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
@@ -214,8 +214,8 @@ void Hooks::afterEachCycle() {                                       __NL__ \
       static auto apply(Args__&&... hook_args)                            __NL__ \
                               -> typename PluginMethod__::ReturnType {    __NL__ \
                                                                           __NL__ \
-         typedef typename PluginMethod__::shouldAbort                     __NL__ \
-            shouldAbort; /* Decides whether to abort or continue          __NL__ \
+         typedef typename PluginMethod__::ShouldAbort                     __NL__ \
+            ShouldAbort; /* Decides whether to abort or continue          __NL__ \
                             with further hooks */                         __NL__ \
                                                                           __NL__ \
          typename PluginMethod__::ReturnType result;                      __NL__ \
