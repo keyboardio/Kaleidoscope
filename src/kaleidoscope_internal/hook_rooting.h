@@ -1,6 +1,6 @@
 #pragma once
 
-#include "macro_functions.h"
+#include "macro_helpers.h"
 #include "plugin.h"
 #include "kaleidoscope/hooks.h"
 #include "hook_signature_check.h"

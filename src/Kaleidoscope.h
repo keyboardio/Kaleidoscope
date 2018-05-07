@@ -26,7 +26,7 @@ void setup();
 #include "layers.h"
 #include "kaleidoscope_internal/preprocessor_macro_map.h"
 #include "kaleidoscope_internal/hook_rooting.h"
-#include "macro_functions.h"
+#include "macro_helpers.h"
 #include "plugin.h"
 
 #define HOOK_MAX 64

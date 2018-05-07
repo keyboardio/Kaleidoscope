@@ -1,6 +1,6 @@
 #pragma once
 
-#include "macro_functions.h"
+#include "macro_helpers.h"
 #include "plugin.h"
 
 // We use non-virtual methods for hooks. This reduces PROGMEM consumption and
