@@ -1,8 +1,5 @@
 #pragma once
 
-// Arduino.h provides access to the non-standard (Arduino custom)
-// type byte.
-//
 #include <Arduino.h>
 
 namespace kaleidoscope {
