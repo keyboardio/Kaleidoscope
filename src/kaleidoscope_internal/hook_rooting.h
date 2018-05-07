@@ -109,19 +109,16 @@ struct ReturnTypeTraits<R(T::*)(HookArgs...)> {
                                                                           __NL__ \
       typedef SHOULD_ABORT_TYPE ShouldAbort;                              __NL__ \
                                                                           __NL__ \
-      /* Use a traits class to determine the return value type of the     __NL__ \
-         hook method.                                                     __NL__ \
-       */                                                                 __NL__ \
+      /* Determine the return value type of the hook method using a       __NL__ \
+         trait class. */                                                  __NL__ \
       typedef typename ReturnTypeTraits<                                  __NL__ \
                  decltype(&kaleidoscope::Plugin::PLUGIN_METHOD)           __NL__ \
               >::Type  ReturnType;                                        __NL__ \
                                                                           __NL__ \
       template<typename Plugin__, typename... Args__>                     __NL__ \
-      static ReturnType call(Plugin__ &plugin, Args__&&... hook_args)     __NL__ \
-      {                                                                   __NL__ \
-         /* Assert that hook methods in derived plugins have an           __NL__ \
-            call signature.                                               __NL__ \
-          */                                                              __NL__ \
+      static ReturnType call(Plugin__ &plugin, Args__&&... hook_args) {   __NL__ \
+         /* Assert that hook methods in derived plugins have              __NL__ \
+            signatures that match the base class. */                      __NL__ \
          _VALIDATE_HOOK_METHOD_SIGNATURE(PLUGIN_METHOD, Plugin__)         __NL__ \
                                                                           __NL__ \
          return plugin.PLUGIN_METHOD(hook_args...);                       __NL__ \
@@ -148,10 +145,9 @@ _PLUGIN_METHOD(onEvent, AbortIfFalse)
 _PLUGIN_METHOD(beforeReportingState, AlwaysContinue)
 _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 
-// The following call macros are meant to be used with DEFINE_HOOKPOINT in
-// conjunction with the MAP macro (from header "preprocessor_macro_map.h") that casts a
-// specific operation on every member of a variadic macro argument list (if
-// present).
+// The following _CALL macros are used by DEFINE_HOOKPOINT in
+// conjunction with the MAP macro to call the hook method in each listed plugin.
+
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                       \
    result = PluginMethod__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
@@ -165,11 +161,10 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 #define _DEFINE_HOOKPOINT(CLASS_NAME, ...)                                       \
    struct CLASS_NAME                                                      __NL__ \
    {                                                                      __NL__ \
-      /* Invokes the hook method on the plugin with the hook              __NL__ \
-       * method call arguments */                                         __NL__ \
+      /* Call the hook method on the plugin with the hook's  arguments */ __NL__ \
       template<typename PluginMethod__, typename... Args__ >              __NL__ \
-      /* The PluginMethod__ class defines the return value of the hook    __NL__ \
-         method as a nested typedef.                                      __NL__ \
+      /* The PluginMethod__ class defines the hook method's return value  __NL__ \
+         a nested typedef.                                                __NL__ \
          To determine the actual return type based on PluginMethod__, we  __NL__ \
          have to rely on the trailing-return-type syntax. */              __NL__ \
       static auto apply(Args__&&... hook_args)                            __NL__ \
@@ -185,22 +180,21 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
          return result;                                                   __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
-      /* An overloaded empty arguments version of apply to support        __NL__ \
-         hooks with void arguments */                                     __NL__ \
+      /* This version of `apply` is overloaded with empty arguments to    __NL__ \
+         support hooks with void arguments */                             __NL__ \
       template<typename PluginMethod__, typename... Args__>               __NL__ \
       static void apply() {                                               __NL__ \
          MAP(_CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)               __NL__ \
       }                                                                   __NL__ \
    };
 
-// KALEIDOSCOPE_INIT_PLUGINS is meant to be invoked in global namespace of
-// the firmware sketch.
-//
-// Arguments: A list of references to plugin instances that have been
-//       instantiated at global scope.
-//
-// Note: KALEIDOSCOPE_INIT_PLUGINS(...) must only be invoked in global namespace.
-//
+/* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of
+   the firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS
+   here, which actually builds the loops that execute the plugins'
+   implementations of the various hooks.
+   
+   Its arguments are a list of references to plugin instances that have been 
+   instantiated in the global scope.  */
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
    namespace kaleidoscope_internal {                                    __NL__ \
