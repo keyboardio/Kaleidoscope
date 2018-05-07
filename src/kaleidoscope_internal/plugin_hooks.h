@@ -1,3 +1,20 @@
+/*
+ * While this file is mostly pre-processor macros, which are not namespaced, the
+ * vast majority of code these macros generate will live under the
+ * kaleidoscope_internal namespace. That is why this header is here.
+ *
+ * The only exception to this is the _KALEIDOSCOPE_INIT_PLUGINS macro, which
+ * also places a few symbols under the kaleidoscope namespace. But that code is
+ * tightly coupled with the other parts, which are in kaleidoscope_internal. For
+ * this reason, this tight coupling, those parts are in this file too.
+ *
+ * The reason we use an entirely separate namespace is that some plugins have
+ * their classes under the kaleidoscope namespace, and the instances of those
+ * classes in the global namespace, under the same name. In these cases, the
+ * macros herein would resolve to the classes, when we want them to resolve to
+ * instances. To avoid this situation, we put the generated code to an entirely
+ * different namespace.
+ */
 #pragma once
 
 #include "macro_helpers.h"
@@ -233,4 +250,4 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
    }                                                                    __NL__ \
                                                                         __NL__ \
    }
-} // namespace kaleidoscope_internal
+}
