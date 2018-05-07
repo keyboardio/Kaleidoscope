@@ -192,8 +192,8 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
    the firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS
    here, which actually builds the loops that execute the plugins'
    implementations of the various hooks.
-   
-   Its arguments are a list of references to plugin instances that have been 
+
+   Its arguments are a list of references to plugin instances that have been
    instantiated in the global scope.  */
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
