@@ -117,8 +117,7 @@ struct ReturnTypeTraits<R(T::*)(HookArgs...)> {
               >::Type  ReturnType;                                        __NL__ \
                                                                           __NL__ \
       template<typename Plugin__, typename... Args__>                     __NL__ \
-      static ReturnType call(Plugin__ &plugin,                            __NL__ \
-                             Args__&&... hook_args)                       __NL__ \
+      static ReturnType call(Plugin__ &plugin, Args__&&... hook_args)     __NL__ \
       {                                                                   __NL__ \
          /* Assert that hook methods in derived plugins have an           __NL__ \
             call signature.                                               __NL__ \
@@ -166,10 +165,9 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 #define _DEFINE_HOOKPOINT(CLASS_NAME, ...)                                       \
    struct CLASS_NAME                                                      __NL__ \
    {                                                                      __NL__ \
-      template<typename PluginMethod__, /* Invokes the hook method        __NL__ \
-                                           on the plugin */               __NL__ \
-               typename... Args__ /* The hook method call arguments */    __NL__ \
-      >                                                                   __NL__ \
+      /* Invokes the hook method on the plugin with the hook              __NL__ \
+       * method call arguments */                                         __NL__ \
+      template<typename PluginMethod__, typename... Args__ >              __NL__ \
       /* The PluginMethod__ class defines the return value of the hook    __NL__ \
          method as a nested typedef.                                      __NL__ \
          To determine the actual return type based on PluginMethod__, we  __NL__ \
@@ -177,9 +175,8 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
       static auto apply(Args__&&... hook_args)                            __NL__ \
                               -> typename PluginMethod__::ReturnType {    __NL__ \
                                                                           __NL__ \
-         typedef typename PluginMethod__::ShouldAbort                     __NL__ \
-            ShouldAbort; /* Decides whether to abort or continue          __NL__ \
-                            with further hooks */                         __NL__ \
+         /* Should we abort or let later plugins handle this event */     __NL__ \
+         typedef typename PluginMethod__::ShouldAbort ShouldAbort;        __NL__ \
                                                                           __NL__ \
          typename PluginMethod__::ReturnType result;                      __NL__ \
                                                                           __NL__ \
@@ -190,10 +187,7 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
                                                                           __NL__ \
       /* An overloaded empty arguments version of apply to support        __NL__ \
          hooks with void arguments */                                     __NL__ \
-      template<typename PluginMethod__,                                   __NL__ \
-                     /* Invokes the hook method on the plugin */          __NL__ \
-               typename... Args__ /* The hook method call arguments */    __NL__ \
-      >                                                                   __NL__ \
+      template<typename PluginMethod__, typename... Args__>               __NL__ \
       static void apply() {                                               __NL__ \
          MAP(_CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN, __VA_ARGS__)               __NL__ \
       }                                                                   __NL__ \

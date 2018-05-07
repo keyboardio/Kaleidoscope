@@ -30,7 +30,7 @@
 // It defines the bool constant 'value' as true if both signatures
 // considering return value, call argument types and const specification
 // equal. We also allow for future const-hook methods here.
-//
+
 template<typename T1, typename T2>
 struct HookSignaturesMatch {
   static constexpr bool value = false;
@@ -39,14 +39,14 @@ struct HookSignaturesMatch {
 // R: The return value, T1: Type of the first class (plugin),
 // T2: Type of the second class (plugin), HookArgs: Variadic types of
 // plugin hook arguments.
-//
+
 template<typename R, typename T1, typename T2, typename... HookArgs>
 struct HookSignaturesMatch<R(T1::*)(HookArgs...), R(T2::*)(HookArgs...)> {
   static constexpr bool value = true;
 };
 
 // Equivalent to allow for const-hooks, e.g. bool getFooHook() const
-//
+
 template<typename R, typename T1, typename T2, typename... HookArgs>
 struct HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) const> {
   static constexpr bool value = true;
@@ -54,13 +54,13 @@ struct HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) co
 
 // This template is instanciated when something goes wrong. It causes a
 // compiler error as it does not define a constant 'value'.
-//
+
 template<typename Plugin__, bool result>
 struct ___________Culprit_Plugin___________ {
 };
 
 // This specialization is instanciated when everything is ok.
-//
+
 template<typename Plugin__>
 struct ___________Culprit_Plugin___________
   <Plugin__, true> {
