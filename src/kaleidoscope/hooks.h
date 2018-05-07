@@ -11,7 +11,6 @@ union Key;
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.
-//
 class kaleidoscope_;
 extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, byte row, byte col, uint8_t keyState);
 
@@ -31,13 +30,11 @@ class Hooks {
   // The following friend declarations restrict access to
   // the hook routing system.
 
-  // Kaleidoscope_ calls Hooks::init, Hooks::preReportHook
-  // and Hooks::postReportHook.
-  //
+  // Kaleidoscope_ calls Hooks::onSetup, Hooks::beforeReportingState
+  // and Hooks::afterEachCycle.
   friend class Kaleidoscope_;
 
-  // ::handleKeyswitchEvent(...) calls Hooks::eventHandlerHook.
-  //
+  // ::handleKeyswitchEvent(...) calls Hooks::onEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
                                      byte row, byte col, uint8_t keyState);
 
@@ -55,4 +52,4 @@ class Hooks {
   static void afterEachCycle();
 };
 
-} // namespace kaleidoscope
+}
