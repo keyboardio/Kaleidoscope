@@ -149,7 +149,7 @@ _PLUGIN_METHOD(beforeReportingState, AlwaysContinue)
 _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 
 // The following call macros are meant to be used with DEFINE_HOOKPOINT in
-// conjunction with the MAP macro (from header "macro_functions.h") that casts a
+// conjunction with the MAP macro (from header "preprocessor_macro_map.h") that casts a
 // specific operation on every member of a variadic macro argument list (if
 // present).
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                       \
