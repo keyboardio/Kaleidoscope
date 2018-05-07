@@ -186,6 +186,6 @@ __attribute__((deprecated("Use Kaleidoscope.use(...) instead")));
 
 // Use this function macro to register plugins with Kaleidoscope's
 // hooking system. The macro accepts a list of plugin instances that
-// must have been instanciated at global scope.
+// must have been instantiated at global scope.
 //
 #define KALEIDOSCOPE_INIT_PLUGINS(...) _KALEIDOSCOPE_INIT_PLUGINS(__VA_ARGS__)

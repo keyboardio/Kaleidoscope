@@ -52,14 +52,14 @@ struct HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) co
   static constexpr bool value = true;
 };
 
-// This template is instanciated when something goes wrong. It causes a
+// This template is instantiated when something goes wrong. It causes a
 // compiler error as it does not define a constant 'value'.
 
 template<typename Plugin__, bool result>
 struct ___________Culprit_Plugin___________ {
 };
 
-// This specialization is instanciated when everything is ok.
+// This specialization is instantiated when everything is ok.
 
 template<typename Plugin__>
 struct ___________Culprit_Plugin___________
@@ -67,10 +67,10 @@ struct ___________Culprit_Plugin___________
   static constexpr bool value = true;
 };
 
-// The above specialized HookSignaturesMatch plugin class is instanciated
+// The above specialized HookSignaturesMatch plugin class is instantiated
 // based on two types of pointers to the plugin base class hook method and
 // the derived method. If both pointer types and thus the signatures equal,
-// the first or second specialization is instanciated,
+// the first or second specialization is instantiated,
 // leading to its compile time constant 'value' being defined as true.
 // Else the unspecialized version of the template class is instantiated,
 // causing 'value' to be defined as false.

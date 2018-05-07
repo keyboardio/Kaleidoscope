@@ -197,7 +197,7 @@ _PLUGIN_METHOD(afterEachCycle, AlwaysContinue)
 // the firmware sketch.
 //
 // Arguments: A list of references to plugin instances that have been
-//       instanciated at global scope.
+//       instantiated at global scope.
 //
 // Note: KALEIDOSCOPE_INIT_PLUGINS(...) must only be invoked in global namespace.
 //
