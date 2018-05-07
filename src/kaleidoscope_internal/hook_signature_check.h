@@ -7,15 +7,15 @@
 // runtime call overhead, and allows the compiler to a better job
 // removing dead card.
 //
-// The downside is that hook methods in derived plugins are hidden, 
+// The downside is that hook methods in derived plugins are hidden,
 // rather than overridden. Because only virtual methods can be overridden,
 // we can't apply C++'s `override` keyword to hook methods.
 //
 // To make it easier to debug issues with plugins' hook method signatures,
-// the _VALIDATE_HOOK_METHOD_SIGNATURE macro compares a plugin's hook method 
-// signatures with those of the kaleidoscope::Plugin baseclass. If any 
+// the _VALIDATE_HOOK_METHOD_SIGNATURE macro compares a plugin's hook method
+// signatures with those of the kaleidoscope::Plugin baseclass. If any
 // differences are detected, it outputs a compile-time error message.
-// 
+//
 //
 // Ideally, we'd be able to use this (much simpler) code.
 //
@@ -35,9 +35,9 @@ struct HookSignaturesMatch {
   static constexpr bool value = false;
 };
 
-// R: The return value, 
+// R: The return value,
 // T1: Type of the first class (plugin),
-// T2: Type of the second class (plugin), 
+// T2: Type of the second class (plugin),
 // HookArgs: Variadic types of plugin hook arguments.
 
 template<typename R, typename T1, typename T2, typename... HookArgs>
@@ -52,19 +52,19 @@ HookSignaturesMatch<R(T1::*)(HookArgs...) const, R(T2::*)(HookArgs...) const> {
   static constexpr bool value = true;
 };
 
-// This template is instantiated when something goes wrong. 
+// This template is instantiated when something goes wrong.
 // Because it does not define a constant 'value', it triggers a compiler error.
 
 template<typename Plugin__, bool result> struct
   ___________Culprit_Plugin___________ { };
 
 // This specialization is instantiated when everything is ok.
-template<typename Plugin__> struct 
+template<typename Plugin__> struct
   ___________Culprit_Plugin___________ <Plugin__, true> {
   static constexpr bool value = true;
 };
 
-// If the pointer types are the same, the signatures match, causing 
+// If the pointer types are the same, the signatures match, causing
 // the first or second specialization to be instantiated. This makes
 // the causes the compile time constant `value` to be defined as `true`.
 // Otherwise, the unspecialized version of the template class is instantiated
