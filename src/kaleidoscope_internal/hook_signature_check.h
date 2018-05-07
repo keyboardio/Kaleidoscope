@@ -3,9 +3,9 @@
 #include "macro_helpers.h"
 #include "plugin.h"
 
-// We use non-virtual methods for hooks. This reduces PROGMEM consumption,
-// runtime call overhead, and allows the compiler to a better job
-// removing dead card.
+// We use non-virtual methods for hooks. This reduces RAM (and to a smaller
+// extent, PROGMEM) consumption, runtime call overhead, and allows the compiler
+// to a better job removing dead code.
 //
 // The downside is that hook methods in derived plugins are hidden,
 // rather than overridden. Because only virtual methods can be overridden,
