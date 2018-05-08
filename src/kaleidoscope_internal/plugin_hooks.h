@@ -151,41 +151,28 @@ _PLUGIN_METHOD(afterEachCycle, false)
    Its arguments are a list of references to plugin instances that have been
    instantiated in the global scope.  */
 
-#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                        \
-   namespace kaleidoscope_internal {                                    __NL__ \
-                                                                        __NL__ \
-   _DEFINE_HOOKPOINT(HookPoint, __VA_ARGS__)                            __NL__ \
-                                                                        __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
-   namespace kaleidoscope {                                             __NL__ \
-                                                                        __NL__ \
-   Plugin::Result Hooks::onSetup() {                                    __NL__ \
-     return kaleidoscope_internal::HookPoint::template                  __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_onSetup>();              __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
-   Plugin::Result Hooks::beforeEachCycle() {                            __NL__ \
-     return kaleidoscope_internal::HookPoint::template                  __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();      __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
-   Plugin::Result Hooks::onEvent(Key &mappedKey, byte row, byte col,    __NL__ \
-                       uint8_t keyState) {                              __NL__ \
-     return kaleidoscope_internal::HookPoint::template                  __NL__ \
-            apply<kaleidoscope_internal::PluginMethod_onEvent>          __NL__ \
-                  (mappedKey, row, col, keyState);                      __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
-   Plugin::Result Hooks::beforeReportingState() {                       __NL__ \
-     return kaleidoscope_internal::HookPoint::template                  __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_beforeReportingState>(); __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
-   Plugin::Result Hooks::afterEachCycle() {                             __NL__ \
-     return kaleidoscope_internal::HookPoint::template                  __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();       __NL__ \
-   }                                                                    __NL__ \
-                                                                        __NL__ \
+
+#define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,CALL_ARGS) \
+   Plugin::Result Hooks::HOOK(SIGNATURE) {                             __NL__ \
+     return kaleidoscope_internal::HookPoint::template                 __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_HOOK>(CALL_ARGS);       __NL__ \
+   }                                                                   __NL__
+
+
+#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
+   namespace kaleidoscope_internal {                                   __NL__ \
+                                                                       __NL__ \
+   _DEFINE_HOOKPOINT(HookPoint, __VA_ARGS__)                           __NL__ \
+                                                                       __NL__ \
+   }                                                                   __NL__ \
+                                                                       __NL__ \
+   namespace kaleidoscope {                                            __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(onSetup,void, void)                        __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(beforeEachCycle, void, void)               __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(onEvent,                                   __NL__ \
+                (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
+                (mappedKey, row, col, keyState))                       __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(beforeReportingState,void,void)            __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(afterEachCycle,void,void)                  __NL__ \
    }
 }
