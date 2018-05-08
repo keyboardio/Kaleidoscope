@@ -36,6 +36,11 @@ class Plugin {
 #endif
 
  public:
+  enum class Result {
+    OK,
+    EVENT_CONSUMED,
+    ERROR,
+  };
 
   // The following callbacks handle the synchronized communication
   // between the Kaleidoscope core and its plugins.
@@ -49,7 +54,7 @@ class Plugin {
   //       interface between the Kaleidoscope singleton class and the
   //       plugins is the polymorphic `PluginMethod` class.
 
-  void onSetup() {
+  Result onSetup() {
     // By letting the new `onSetup()` method call the legacy begin() method, we
     // make sure that the old hooking interface is supported even if
     // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
@@ -58,27 +63,34 @@ class Plugin {
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     this->begin();
 #endif
+    return Result::OK;
   }
 
   // Called at the very start of each cycle, before gathering events, before
   // doing anything else.
-  void beforeEachCycle() {}
+  Result beforeEachCycle() {
+    return Result::OK;
+  }
 
   // Function called for every non-idle key, every cycle, so it can decide what
   // to do with it. It can modify the key (which is passed by reference for this
   // reason), and decide whether further handles should be tried. If it returns
-  // true, other handlers will also get a chance to react to the event. If it
-  // returns false, Kaleidoscope will stop processing there.
-  bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-    return true; // Always allow other handlers to continue
+  // Result::OK, other handlers will also get a chance to react to the event. If
+  // it returns anything else, Kaleidoscope will stop processing there.
+  Result onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return Result::OK;
   }
 
   // Called before reporting our state to the host. This is the last point in a
   // cycle where a plugin can alter what gets reported to the host.
-  void beforeReportingState() {}
+  Result beforeReportingState() {
+    return Result::OK;
+  }
 
   // Called at the very end of a cycle, after everything's said and done.
-  void afterEachCycle() {}
+  Result afterEachCycle() {
+    return Result::OK;
+  }
 };
 
 } // namespace kaleidoscope

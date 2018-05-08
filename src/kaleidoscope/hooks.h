@@ -6,6 +6,8 @@ namespace kaleidoscope {
 union Key;
 }
 
+#include "plugin.h"
+
 // Forward declaration required to enable friend declarations
 // in class Hooks.
 class kaleidoscope_;
@@ -40,13 +42,13 @@ class Hooks {
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
 
-  static void onSetup();
-  static void beforeEachCycle();
+  static Plugin::Result onSetup();
+  static Plugin::Result beforeEachCycle();
 
-  static bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  static Plugin::Result onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
-  static void beforeReportingState();
-  static void afterEachCycle();
+  static Plugin::Result beforeReportingState();
+  static Plugin::Result afterEachCycle();
 };
 
 }
