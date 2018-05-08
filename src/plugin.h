@@ -40,7 +40,7 @@ class Plugin {
     OK,
     EVENT_CONSUMED,
     ERROR,
-  }
+  };
 
   // The following callbacks handle the synchronized communication
   // between the Kaleidoscope core and its plugins.
