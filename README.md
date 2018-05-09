@@ -17,11 +17,13 @@ over and over again. Playful colors they are.
 To use the plugin, include the header, and tell the firmware to use it:
 
 ```c++
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Chase.h>
 
-void setup() {
-  Kaleidoscope.use(&LEDChaseEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          LEDEffect-Chase);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```
