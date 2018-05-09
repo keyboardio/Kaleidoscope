@@ -34,7 +34,7 @@ class Plugin {
    * about below.
    */
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  virtual void begin() {};
+  virtual void begin() {}
 #endif
 
  public:
