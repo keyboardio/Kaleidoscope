@@ -3,9 +3,9 @@
 namespace kaleidoscope {
 
 enum class EventHandlerResult {
-                               OK,
-                               EVENT_CONSUMED,
-                               ERROR,
+  OK,
+  EVENT_CONSUMED,
+  ERROR,
 };
 
 }
