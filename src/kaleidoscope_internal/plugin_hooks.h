@@ -152,10 +152,10 @@ _PLUGIN_METHOD(afterEachCycle, false)
    instantiated in the global scope.  */
 
 
-#define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,CALL_ARGS) \
-   Plugin::Result Hooks::HOOK(SIGNATURE) {                             __NL__ \
+#define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,...) \
+  Plugin::Result Hooks::HOOK SIGNATURE {                               __NL__ \
      return kaleidoscope_internal::HookPoint::template                 __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_HOOK>(CALL_ARGS);       __NL__ \
+     apply<kaleidoscope_internal::PluginMethod_ ## HOOK>(__VA_ARGS__); __NL__ \
    }                                                                   __NL__
 
 
@@ -167,12 +167,12 @@ _PLUGIN_METHOD(afterEachCycle, false)
    }                                                                   __NL__ \
                                                                        __NL__ \
    namespace kaleidoscope {                                            __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(onSetup,void, void)                        __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(beforeEachCycle, void, void)               __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(onSetup,())                                __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(beforeEachCycle, ())                       __NL__ \
    _DEFINE_HOOKPOINT_METHOD(onEvent,                                   __NL__ \
                 (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
-                (mappedKey, row, col, keyState))                       __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(beforeReportingState,void,void)            __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(afterEachCycle,void,void)                  __NL__ \
+                mappedKey, row, col, keyState)                         __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(beforeReportingState,())                   __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(afterEachCycle,())                         __NL__ \
    }
 }
