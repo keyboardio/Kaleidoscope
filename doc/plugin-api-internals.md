@@ -143,8 +143,8 @@ class ExamplePlugin_ : public kaleidoscope::Plugin {
   void onSetup() { Serial.println("ExamplePlugin::onSetup()"); }
   void beforeReportingState() { Serial.println("ExamplePlugin::beforeReportingState()"); }
   void afterEachCycle() { Serial.println("ExamplePlugin::afterEachCycle()"); }
-  bool onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-    Serial.println("ExamplePlugin::onEvent");
+  bool onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    Serial.println("ExamplePlugin::onKeyswitchEvent");
     return EVENT_CONTINUE;
   }
 };
@@ -189,9 +189,9 @@ namespace kaleidoscope {
        apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onEvent>
+              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
@@ -247,9 +247,9 @@ namespace kaleidoscope {
        apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onEvent>
+              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
@@ -305,9 +305,9 @@ namespace kaleidoscope {
        apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onEvent>
+              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
@@ -370,9 +370,9 @@ namespace kaleidoscope {
        apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
   }
 
-  bool Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onEvent>
+              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
@@ -392,7 +392,7 @@ namespace kaleidoscope {
 
 Now that we have the macros expanded, lets see what happens when we call a hook!
 Remember that our entry point is in `Kaleidoscope::Hooks`. We'll first follow
-`Kaleidoscope::Hooks::onSetup()`, then `Kaleidoscope::Hooks::onEvent`.
+`Kaleidoscope::Hooks::onSetup()`, then `Kaleidoscope::Hooks::onKeyswitchEvent`.
 
 ### `Kaleidoscope::Hooks::init()`
 
@@ -434,9 +434,9 @@ void Hooks::onSetup() {
 }
 ```
 
-### `Kaleidoscope::Hooks::onEvent()`
+### `Kaleidoscope::Hooks::onKeyswitchEvent()`
 
-The only difference here is that we expand `apply<PluginMethod_onEvent>`
+The only difference here is that we expand `apply<PluginMethod_onKeyswitchEvent>`
 differently:
 
 ```c++
@@ -466,12 +466,12 @@ Which in turn becomes:
 static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   bool result;
 
-  result = PluginMethod_onEvent::call(ExamplePlugin, mappedKey, row, col, keyState);
+  result = PluginMethod_onKeyswitchEvent::call(ExamplePlugin, mappedKey, row, col, keyState);
   if (AbortIfFalse::eval(result)) {
     return result;
   }
 
-  result = PluginMethod_onEvent(ExamplePlugin, mappedKey, row, col, keyState);
+  result = PluginMethod_onKeyswitchEvent(ExamplePlugin, mappedKey, row, col, keyState);
   if (AbortIfFalse::eval(result)) {
     return result;
   }
@@ -487,12 +487,12 @@ we end up with:
 static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   bool result;
 
-  result = ExamplePlugin.onEvent(mappedKey, row, col, keyState);
+  result = ExamplePlugin.onKeyswitchEvent(mappedKey, row, col, keyState);
   if (!result) {
     return result;
   }
 
-  result = ExamplePlugin.onEvent(mappedKey, row, col, keyState);
+  result = ExamplePlugin.onKeyswitchEvent(mappedKey, row, col, keyState);
   if (!result) {
     return result;
   }

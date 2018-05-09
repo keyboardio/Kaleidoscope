@@ -77,7 +77,7 @@ class Plugin {
   // reason), and decide whether further handles should be tried. If it returns
   // Result::OK, other handlers will also get a chance to react to the event. If
   // it returns anything else, Kaleidoscope will stop processing there.
-  Result onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  Result onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return Result::OK;
   }
 

@@ -114,7 +114,7 @@ namespace kaleidoscope_internal {
 
 _PLUGIN_METHOD(onSetup, false)
 _PLUGIN_METHOD(beforeEachCycle, false)
-_PLUGIN_METHOD(onEvent, true)
+_PLUGIN_METHOD(onKeyswitchEvent, true)
 _PLUGIN_METHOD(beforeReportingState, false)
 _PLUGIN_METHOD(afterEachCycle, false)
 
@@ -166,7 +166,7 @@ _PLUGIN_METHOD(afterEachCycle, false)
    namespace kaleidoscope {                                            __NL__ \
    _DEFINE_HOOKPOINT_METHOD(onSetup,())                                __NL__ \
    _DEFINE_HOOKPOINT_METHOD(beforeEachCycle, ())                       __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(onEvent,                                   __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(onKeyswitchEvent,                                   __NL__ \
                 (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
                 mappedKey, row, col, keyState)                         __NL__ \
    _DEFINE_HOOKPOINT_METHOD(beforeReportingState,())                   __NL__ \

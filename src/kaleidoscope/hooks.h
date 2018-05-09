@@ -33,7 +33,7 @@ class Hooks {
   // and Hooks::afterEachCycle.
   friend class Kaleidoscope_;
 
-  // ::handleKeyswitchEvent(...) calls Hooks::onEvent.
+  // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
                                      byte row, byte col, uint8_t keyState);
 
@@ -45,7 +45,7 @@ class Hooks {
   static Plugin::Result onSetup();
   static Plugin::Result beforeEachCycle();
 
-  static Plugin::Result onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  static Plugin::Result onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
   static Plugin::Result beforeReportingState();
   static Plugin::Result afterEachCycle();

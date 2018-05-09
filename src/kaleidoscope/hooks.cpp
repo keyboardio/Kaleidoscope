@@ -23,7 +23,7 @@ Plugin::Result Hooks::beforeEachCycle() {
 }
 
 __attribute__((weak))
-Plugin::Result Hooks::onEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+Plugin::Result Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   return Plugin::Result::OK;
 }
 

@@ -134,11 +134,11 @@ class Kaleidoscope_ {
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
-  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
   static void appendEventHandlerHook(eventHandlerHook hook)
-  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
   static void useEventHandlerHook(eventHandlerHook hook)
-  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onEvent(...) instead.")));
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
 
   typedef void (*loopHook)(bool postClear);
   static loopHook loopHooks[HOOK_MAX];
