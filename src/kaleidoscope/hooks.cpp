@@ -13,28 +13,28 @@ namespace kaleidoscope {
 // during the transition phase.
 
 __attribute__((weak))
-Plugin::Result Hooks::onSetup() {
-  return Plugin::Result::OK;
+EventHandlerResult Hooks::onSetup() {
+  return EventHandlerResult::OK;
 }
 
 __attribute__((weak))
-Plugin::Result Hooks::beforeEachCycle() {
-  return Plugin::Result::OK;
+EventHandlerResult Hooks::beforeEachCycle() {
+  return EventHandlerResult::OK;
 }
 
 __attribute__((weak))
-Plugin::Result Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-  return Plugin::Result::OK;
+EventHandlerResult Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  return EventHandlerResult::OK;
 }
 
 __attribute__((weak))
-Plugin::Result Hooks::beforeReportingState() {
-  return Plugin::Result::OK;
+EventHandlerResult Hooks::beforeReportingState() {
+  return EventHandlerResult::OK;
 }
 
 __attribute__((weak))
-Plugin::Result Hooks::afterEachCycle() {
-  return Plugin::Result::OK;
+EventHandlerResult Hooks::afterEachCycle() {
+  return EventHandlerResult::OK;
 }
 
 } // namespace kaleidoscope

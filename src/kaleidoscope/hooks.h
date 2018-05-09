@@ -42,13 +42,13 @@ class Hooks {
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
 
-  static Plugin::Result onSetup();
-  static Plugin::Result beforeEachCycle();
+  static EventHandlerResult onSetup();
+  static EventHandlerResult beforeEachCycle();
 
-  static Plugin::Result onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  static EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
-  static Plugin::Result beforeReportingState();
-  static Plugin::Result afterEachCycle();
+  static EventHandlerResult beforeReportingState();
+  static EventHandlerResult afterEachCycle();
 };
 
 }

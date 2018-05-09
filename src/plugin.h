@@ -1,5 +1,7 @@
 #pragma once
 
+#include "kaleidoscope/eventhandlerresult.h"
+
 #ifndef KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 #define KALEIDOSCOPE_ENABLE_V1_PLUGIN_API 1
 #endif
@@ -36,12 +38,6 @@ class Plugin {
 #endif
 
  public:
-  enum class Result {
-    OK,
-    EVENT_CONSUMED,
-    ERROR,
-  };
-
   // The following callbacks handle the synchronized communication
   // between the Kaleidoscope core and its plugins.
   //
@@ -54,7 +50,7 @@ class Plugin {
   //       interface between the Kaleidoscope singleton class and the
   //       plugins is the polymorphic `EventHandler` class.
 
-  Result onSetup() {
+  EventHandlerResult onSetup() {
     // By letting the new `onSetup()` method call the legacy begin() method, we
     // make sure that the old hooking interface is supported even if
     // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
@@ -63,33 +59,33 @@ class Plugin {
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     this->begin();
 #endif
-    return Result::OK;
+    return EventHandlerResult::OK;
   }
 
   // Called at the very start of each cycle, before gathering events, before
   // doing anything else.
-  Result beforeEachCycle() {
-    return Result::OK;
+  EventHandlerResult beforeEachCycle() {
+    return EventHandlerResult::OK;
   }
 
   // Function called for every non-idle key, every cycle, so it can decide what
   // to do with it. It can modify the key (which is passed by reference for this
   // reason), and decide whether further handles should be tried. If it returns
-  // Result::OK, other handlers will also get a chance to react to the event. If
+  // EventHandlerResult::OK, other handlers will also get a chance to react to the event. If
   // it returns anything else, Kaleidoscope will stop processing there.
-  Result onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-    return Result::OK;
+  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+    return EventHandlerResult::OK;
   }
 
   // Called before reporting our state to the host. This is the last point in a
   // cycle where a plugin can alter what gets reported to the host.
-  Result beforeReportingState() {
-    return Result::OK;
+  EventHandlerResult beforeReportingState() {
+    return EventHandlerResult::OK;
   }
 
   // Called at the very end of a cycle, after everything's said and done.
-  Result afterEachCycle() {
-    return Result::OK;
+  EventHandlerResult afterEachCycle() {
+    return EventHandlerResult::OK;
   }
 };
 

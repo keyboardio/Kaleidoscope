@@ -104,7 +104,7 @@ namespace kaleidoscope_internal {
       }                                                                   __NL__ \
                                                                           __NL__ \
       template<typename Plugin__, typename... Args__>                     __NL__ \
-      static kaleidoscope::Plugin::Result call(Plugin__ &plugin,          __NL__ \
+      static kaleidoscope::EventHandlerResult call(Plugin__ &plugin,          __NL__ \
                                                Args__&&... hook_args) {   __NL__ \
          _VALIDATE_HOOK_METHOD_SIGNATURE(EVENT_HANDLER, Plugin__)         __NL__ \
                                                                           __NL__ \
@@ -125,7 +125,7 @@ _EVENT_HANDLER(afterEachCycle, false)
    result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
    if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
-       result == kaleidoscope::Plugin::Result::EVENT_CONSUMED) {     __NL__ \
+       result == kaleidoscope::EventHandlerResult::EVENT_CONSUMED) {     __NL__ \
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
@@ -134,8 +134,8 @@ _EVENT_HANDLER(afterEachCycle, false)
    {                                                                      __NL__ \
       /* Call the hook method on the plugin with the hook's arguments */  __NL__ \
       template<typename EventHandler__, typename... Args__ >              __NL__ \
-      static kaleidoscope::Plugin::Result apply(Args__&&... hook_args) {  __NL__ \
-         kaleidoscope::Plugin::Result result;                             __NL__ \
+      static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
+         kaleidoscope::EventHandlerResult result;                             __NL__ \
                                                                           __NL__ \
          MAP(_CALL_HOOK_FOR_PLUGIN, __VA_ARGS__)                          __NL__ \
                                                                           __NL__ \
@@ -144,7 +144,7 @@ _EVENT_HANDLER(afterEachCycle, false)
    };
 
 #define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,...) \
-  Plugin::Result Hooks::HOOK SIGNATURE {                               __NL__ \
+  EventHandlerResult Hooks::HOOK SIGNATURE {                               __NL__ \
      return kaleidoscope_internal::HookPoint::template                 __NL__ \
      apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
    }                                                                   __NL__
