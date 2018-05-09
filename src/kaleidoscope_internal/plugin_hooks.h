@@ -143,22 +143,19 @@ _PLUGIN_METHOD(afterEachCycle, false)
       }                                                                   __NL__ \
    };
 
-/* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of
-   the firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS
-   here, which actually builds the loops that execute the plugins'
-   implementations of the various hooks.
-
-   Its arguments are a list of references to plugin instances that have been
-   instantiated in the global scope.  */
-
-
 #define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,...) \
   Plugin::Result Hooks::HOOK SIGNATURE {                               __NL__ \
      return kaleidoscope_internal::HookPoint::template                 __NL__ \
      apply<kaleidoscope_internal::PluginMethod_ ## HOOK>(__VA_ARGS__); __NL__ \
    }                                                                   __NL__
 
+/* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of the
+   firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS here,
+   which actually builds the loops that execute the plugins' implementations of
+   the various hooks.
 
+   Its arguments are a list of references to plugin instances that have been
+   instantiated in the global scope. */
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
    namespace kaleidoscope_internal {                                   __NL__ \
                                                                        __NL__ \
