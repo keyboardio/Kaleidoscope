@@ -26,8 +26,7 @@
  * prior written authorization from the authors.
  */
 
-#ifndef MAP_H_INCLUDED
-#define MAP_H_INCLUDED
+#pragma once
 
 #define EVAL0(...) __VA_ARGS__
 #define EVAL1(...) EVAL0(EVAL0(EVAL0(__VA_ARGS__)))
@@ -66,5 +65,3 @@
  * inserts commas between the results.
  */
 #define MAP_LIST(f, ...) EVAL(MAP_LIST1(f, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
-
-#endif

@@ -71,39 +71,37 @@ template<typename Plugin__> struct
 // and `value` is defined as `false`
 
 #define _VALIDATE_HOOK_METHOD_SIGNATURE(HOOK_METHOD, PLUGIN)                   \
-{                                                                       __NL__ \
-  /* Check if the signatures match. If not, the plugin has implemented  __NL__ \
-  * a method with a hook's name, but a different signature.             __NL__ \
-  */                                                                    __NL__ \
-  typedef HookSignaturesMatch<                                          __NL__ \
-                     decltype(&::kaleidoscope::Plugin::HOOK_METHOD),    __NL__ \
-                     decltype(&PLUGIN::HOOK_METHOD)                     __NL__ \
-                > Check;                                                __NL__ \
-                                                                        __NL__ \
-  static_assert(Check::value,                                           __NL__ \
-    VERBOSE_STATIC_ASSERT_HEADER                                        __NL__ \
-   "\nOne of your plugins implemented the hook \"" #HOOK_METHOD "\","   __NL__ \
-   "\nbut its signature didn't match the base class."                   __NL__ \
-   "\n"                                                                 __NL__ \
-   "\nThe plugin with this issue will be marked in the compiler"        __NL__ \
-   "\noutput with the string:"                                          __NL__ \
-   "\n"                                                                 __NL__ \
-   "\n      ___________Culprit_Plugin___________."                      __NL__ \
-   "\n"                                                                 __NL__ \
-   "\nYou should compare the hook methods implemented in this plugin"   __NL__ \
-   "\nto those in \"kaleidoscope::Plugin\"."                            __NL__ \
-   "\n"                                                                 __NL__ \
-   "\nAll of the hook method's argument types, return values and"       __NL__ \
-   "\nconst qualifiers need to match."                                  __NL__ \
-   "\n"                                                                 __NL__ \
-    VERBOSE_STATIC_ASSERT_FOOTER                                        __NL__ \
-  );                                                                    __NL__ \
-                                                                        __NL__ \
-  /* The following construct is necessary enable reporting of the       __NL__ \
-   * type of a plugin that implements a hook with an incorrect          __NL__ \
-   * because it's not possible to include any non-literal string        __NL__ \
-   * constant in a static_assert error message.                         __NL__ \
-   */                                                                   __NL__ \
-  constexpr bool dummy = ___________Culprit_Plugin___________           __NL__ \
-       <PLUGIN, Check::value>::value;                                   __NL__ \
+{                                                                         __NL__ \
+  /* Check if the signatures match. If not, the plugin has implemented */ __NL__ \
+  /* a method with a hook's name, but a different signature.           */ __NL__ \
+  typedef HookSignaturesMatch<                                            __NL__ \
+                     decltype(&::kaleidoscope::Plugin::HOOK_METHOD),      __NL__ \
+                     decltype(&PLUGIN::HOOK_METHOD)                       __NL__ \
+                > Check;                                                  __NL__ \
+                                                                          __NL__ \
+  static_assert(Check::value,                                             __NL__ \
+    VERBOSE_STATIC_ASSERT_HEADER                                          __NL__ \
+   "\nOne of your plugins implemented the hook \"" #HOOK_METHOD "\","     __NL__ \
+   "\nbut its signature didn't match the base class."                     __NL__ \
+   "\n"                                                                   __NL__ \
+   "\nThe plugin with this issue will be marked in the compiler"          __NL__ \
+   "\noutput with the string:"                                            __NL__ \
+   "\n"                                                                   __NL__ \
+   "\n      ___________Culprit_Plugin___________."                        __NL__ \
+   "\n"                                                                   __NL__ \
+   "\nYou should compare the hook methods implemented in this plugin"     __NL__ \
+   "\nto those in \"kaleidoscope::Plugin\"."                              __NL__ \
+   "\n"                                                                   __NL__ \
+   "\nAll of the hook method's argument types, return values and"         __NL__ \
+   "\nconst qualifiers need to match."                                    __NL__ \
+   "\n"                                                                   __NL__ \
+    VERBOSE_STATIC_ASSERT_FOOTER                                          __NL__ \
+  );                                                                      __NL__ \
+                                                                          __NL__ \
+  /* The following construct is necessary enable reporting of the      */ __NL__ \
+   * type of a plugin that implements a hook with an incorrect         */ __NL__ \
+   * because it's not possible to include any non-literal string       */ __NL__ \
+   * constant in a static_assert error message.                        */ __NL__ \
+  constexpr bool dummy = ___________Culprit_Plugin___________             __NL__ \
+       <PLUGIN, Check::value>::value;                                     __NL__ \
 }
