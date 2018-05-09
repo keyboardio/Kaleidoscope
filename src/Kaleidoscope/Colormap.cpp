@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Colormap -- Per-layer colormap effect
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,6 @@ uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
 uint8_t ColormapEffect::last_highest_layer_;
 bool ColormapEffect::dirty_ = false;
-
-void ColormapEffect::setup(void) {
-  Kaleidoscope.use(&::EEPROMSettings, &::LEDPaletteTheme);
-}
 
 void ColormapEffect::max_layers(uint8_t max_) {
   if (map_base_ != 0)

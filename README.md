@@ -27,17 +27,24 @@ register the `Focus` hooks, and it will do the rest.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-LED-Palette-Theme.h>
+
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          LEDPaletteTheme,
+                          ColormapEffect,
+                          Focus);
 
 void setup(void) {
-  Kaleidoscope.use(&ColormapEffect, &Focus);
-
   Kaleidoscope.setup();
 
   ColormapEffect.max_layers(1);
   Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
   Focus.addHook(FOCUS_HOOK_COLORMAP);
+
+  EEPROMSettings.seal();
 }
 ```
 
