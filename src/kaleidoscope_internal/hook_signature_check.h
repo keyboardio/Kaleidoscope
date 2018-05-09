@@ -99,9 +99,9 @@ template<typename Plugin__> struct
   );                                                                      __NL__ \
                                                                           __NL__ \
   /* The following construct is necessary enable reporting of the      */ __NL__ \
-   * type of a plugin that implements a hook with an incorrect         */ __NL__ \
-   * because it's not possible to include any non-literal string       */ __NL__ \
-   * constant in a static_assert error message.                        */ __NL__ \
+  /* type of a plugin that implements a hook with an incorrect         */ __NL__ \
+  /* because it's not possible to include any non-literal string       */ __NL__ \
+  /* constant in a static_assert error message.                        */ __NL__ \
   constexpr bool dummy = ___________Culprit_Plugin___________             __NL__ \
        <PLUGIN, Check::value>::value;                                     __NL__ \
 }
