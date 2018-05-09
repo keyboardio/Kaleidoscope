@@ -118,10 +118,10 @@ _EVENT_HANDLER(onKeyswitchEvent, true)
 _EVENT_HANDLER(beforeReportingState, false)
 _EVENT_HANDLER(afterEachCycle, false)
 
-// The following _CALL macro is used by _INLINE_EVENT_HANDLERS_FOR_HOOK in
+// This macro is used by _INLINE_EVENT_HANDLERS_FOR_HOOK in
 // conjunction with the MAP macro to call the event handler in each listed
 // plugin.
-#define _CALL_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                              \
+#define _INLINE_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                              \
    result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
    if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
@@ -137,7 +137,7 @@ _EVENT_HANDLER(afterEachCycle, false)
       static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
          kaleidoscope::EventHandlerResult result;                             __NL__ \
                                                                               __NL__ \
-         MAP(_CALL_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                     __NL__ \
+         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                     __NL__ \
                                                                               __NL__ \
          return result;                                                       __NL__ \
       }                                                                       __NL__ \
