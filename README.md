@@ -26,8 +26,9 @@ Using the extension is as simple as including the header, registering it with
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Unicode.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(Unicode);
+
 void setup() {
-  Kaleidoscope.use(&Unicode);
   Kaleidoscope.setup();
 
   Unicode.type(0x2328);
