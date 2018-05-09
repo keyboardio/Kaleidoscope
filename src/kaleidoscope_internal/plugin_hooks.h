@@ -91,13 +91,13 @@ namespace kaleidoscope_internal {
 // static functions of class Hooks. Those functions cast the related hook method
 // on every registered plugin by using the HookPoint helper class.
 
-// The _PLUGIN_METHOD macro defines an auxiliary classes PluginMethod_... that
+// The _EVENT_HANDLER macro defines an auxiliary classes EventHandler_... that
 // invoke a specific plugin hook method with a provided set of method arguments.
-// The PluginMethod_... classes are meant to be used by HookPoint's apply
+// The EventHandler_... classes are meant to be used by HookPoint's apply
 // function called in the static functions of kaleidoscope::Hooks to forward the
 // call to the hook methods of all registered plugins.
-#define _PLUGIN_METHOD(PLUGIN_METHOD, SHOULD_ABORT_ON_CONSUMED_EVENT)            \
-   struct PluginMethod_##PLUGIN_METHOD {                                  __NL__ \
+#define _EVENT_HANDLER(EVENT_HANDLER, SHOULD_ABORT_ON_CONSUMED_EVENT)            \
+   struct EventHandler_##EVENT_HANDLER {                                  __NL__ \
                                                                           __NL__ \
       static bool shouldAbortOnConsumedEvent() {                          __NL__ \
         return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
@@ -106,25 +106,25 @@ namespace kaleidoscope_internal {
       template<typename Plugin__, typename... Args__>                     __NL__ \
       static kaleidoscope::Plugin::Result call(Plugin__ &plugin,          __NL__ \
                                                Args__&&... hook_args) {   __NL__ \
-         _VALIDATE_HOOK_METHOD_SIGNATURE(PLUGIN_METHOD, Plugin__)         __NL__ \
+         _VALIDATE_HOOK_METHOD_SIGNATURE(EVENT_HANDLER, Plugin__)         __NL__ \
                                                                           __NL__ \
-         return plugin.PLUGIN_METHOD(hook_args...);                       __NL__ \
+         return plugin.EVENT_HANDLER(hook_args...);                       __NL__ \
       }                                                                   __NL__ \
 };
 
-_PLUGIN_METHOD(onSetup, false)
-_PLUGIN_METHOD(beforeEachCycle, false)
-_PLUGIN_METHOD(onKeyswitchEvent, true)
-_PLUGIN_METHOD(beforeReportingState, false)
-_PLUGIN_METHOD(afterEachCycle, false)
+_EVENT_HANDLER(onSetup, false)
+_EVENT_HANDLER(beforeEachCycle, false)
+_EVENT_HANDLER(onKeyswitchEvent, true)
+_EVENT_HANDLER(beforeReportingState, false)
+_EVENT_HANDLER(afterEachCycle, false)
 
 // The following _CALL macros are used by DEFINE_HOOKPOINT in
 // conjunction with the MAP macro to call the hook method in each listed plugin.
 
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                       \
-   result = PluginMethod__::call(PLUGIN, hook_args...);              __NL__ \
+   result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
-   if (PluginMethod__::shouldAbortOnConsumedEvent() &&               __NL__ \
+   if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
        result == kaleidoscope::Plugin::Result::EVENT_CONSUMED) {     __NL__ \
       return result;                                                 __NL__ \
    }                                                                 __NL__
@@ -133,7 +133,7 @@ _PLUGIN_METHOD(afterEachCycle, false)
    struct CLASS_NAME                                                      __NL__ \
    {                                                                      __NL__ \
       /* Call the hook method on the plugin with the hook's  arguments */ __NL__ \
-      template<typename PluginMethod__, typename... Args__ >              __NL__ \
+      template<typename EventHandler__, typename... Args__ >              __NL__ \
       static kaleidoscope::Plugin::Result apply(Args__&&... hook_args) {  __NL__ \
          kaleidoscope::Plugin::Result result;                             __NL__ \
                                                                           __NL__ \
@@ -146,7 +146,7 @@ _PLUGIN_METHOD(afterEachCycle, false)
 #define _DEFINE_HOOKPOINT_METHOD(HOOK,SIGNATURE,...) \
   Plugin::Result Hooks::HOOK SIGNATURE {                               __NL__ \
      return kaleidoscope_internal::HookPoint::template                 __NL__ \
-     apply<kaleidoscope_internal::PluginMethod_ ## HOOK>(__VA_ARGS__); __NL__ \
+     apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
    }                                                                   __NL__
 
 /* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of the

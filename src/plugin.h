@@ -52,7 +52,7 @@ class Plugin {
   //
   // Note: All hook methods in this class are non virtual on purpose as the actual
   //       interface between the Kaleidoscope singleton class and the
-  //       plugins is the polymorphic `PluginMethod` class.
+  //       plugins is the polymorphic `EventHandler` class.
 
   Result onSetup() {
     // By letting the new `onSetup()` method call the legacy begin() method, we

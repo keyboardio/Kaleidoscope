@@ -60,7 +60,7 @@ It defines functions like this:
 ```c++
 void Hooks::onSetup() {
   kaleidoscope_internal::HookPoint::template
-     apply<kaleidoscope_internal::PluginMethod_onSetup>();
+     apply<kaleidoscope_internal::EventHandler_onSetup>();
 }
 ```
 
@@ -80,18 +80,18 @@ and another with some return value and a number of arguments. The template does
 not specify the type of neither the return value, nor the function arguments.
 Both of these will be deduced from the template argument.
 
-To understand how `apply` works, we will first need to dive into `PluginMethod`.
+To understand how `apply` works, we will first need to dive into `EventHandler`.
 
-### Intermission: `_PLUGIN_METHOD`
+### Intermission: `_EVENT_HANDLER`
 
-The macro creates a `PluginMethod_something` class, with a single method,
+The macro creates a `EventHandler_something` class, with a single method,
 `invoke`, which will call the `something` function. We do this wrapping so we
 can assert that function signatures match. Without this enforcement, we would be
 able to use plugins that have methods with the same name, but different
 signatures than what `kaleidoscope::Plugin` permits, and that would result in
 all kinds of undesired behaviour. The class also has a `shouldAbort` member, a
 struct with a single `eval` method. This will be used later, outside of
-`PluginMethod` itself.
+`EventHandler` itself.
 
 The `call` method does nothing else but assert on the signature (at compile
 time!), and call the appropriate function of the plugin, which was passed to it
@@ -105,8 +105,8 @@ check, because we can't rely on the type alone.
 ### HookPoint: apply - the void case
 
 The void case is the easier one: it maps over all the used plugins, and calls
-the appropriate method on them. This is done via `PluginMethod`: every method is
-wrapped in a `PluginMethod`, and `apply` calls its `call` method. In the void
+the appropriate method on them. This is done via `EventHandler`: every method is
+wrapped in a `EventHandler`, and `apply` calls its `call` method. In the void
 case, the main benefit - apart from not having to declare the methods
 `virtual` - is enforced type safety.
 
@@ -116,11 +116,11 @@ The non-void case is more complicated: it has a return type, and arguments too.
 Arguments are easy, we just pass them on as-is. The return type is extracted
 from the template, and a local variable is used to hold it before returning. We
 need this local variable, because invoking plugins in this case may terminate
-early: this is where we use the `shouldAbort` member of `PluginMethod`:
+early: this is where we use the `shouldAbort` member of `EventHandler`:
 
 ```c++
 #define _CALL_HOOK_FOR_PLUGIN(PLUGIN)                                   \
-  result = PluginMethod__::call(PLUGIN, hook_args...);                  \
+  result = EventHandler__::call(PLUGIN, hook_args...);                  \
                                                                         \
   if (shouldAbort::eval(result)) {                                      \
      return result;                                                     \
@@ -181,28 +181,28 @@ namespace kaleidoscope_internal {
 namespace kaleidoscope {
   void Hooks::onSetup() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_onSetup>();
+       apply<kaleidoscope_internal::EventHandler_onSetup>();
   }
 
   void Hooks::beforeEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_beforeEachCycle>();
   }
 
   bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
+              apply<kaleidoscope_internal::EventHandler_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
   void Hooks::beforeReportingState() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+       apply<kaleidoscope_internal::EventHandler_beforeReportingState>();
   }
 
   void Hooks::afterEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_afterEachCycle>();
   }
 }
 ```
@@ -215,20 +215,20 @@ Nothing really surprising so far...
 namespace kaleidoscope_internal {
   struct HookPoint
   {
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename PluginMethod__::ReturnType {
+                             -> typename EventHandler__::ReturnType {
 
-        typedef typename PluginMethod__::shouldAbort shouldAbort;
-        typename PluginMethod__::ReturnType result;
+        typedef typename EventHandler__::shouldAbort shouldAbort;
+        typename EventHandler__::ReturnType result;
 
         MAP(_CALL_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
 
         return result;
      }
 
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static void apply() {
         MAP(_CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN, ExamplePlugin, ExamplePlugin)
@@ -239,28 +239,28 @@ namespace kaleidoscope_internal {
 namespace kaleidoscope {
   void Hooks::onSetup() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_onSetup>();
+       apply<kaleidoscope_internal::EventHandler_onSetup>();
   }
 
   void Hooks::beforeEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_beforeEachCycle>();
   }
 
   bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
+              apply<kaleidoscope_internal::EventHandler_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
   void Hooks::beforeReportingState() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+       apply<kaleidoscope_internal::EventHandler_beforeReportingState>();
   }
 
   void Hooks::afterEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_afterEachCycle>();
   }
 }
 ```
@@ -271,13 +271,13 @@ namespace kaleidoscope {
 namespace kaleidoscope_internal {
   struct HookPoint
   {
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename PluginMethod__::ReturnType {
+                             -> typename EventHandler__::ReturnType {
 
-        typedef typename PluginMethod__::shouldAbort shouldAbort;
-        typename PluginMethod__::ReturnType result;
+        typedef typename EventHandler__::shouldAbort shouldAbort;
+        typename EventHandler__::ReturnType result;
 
         _CALL_HOOK_FOR_PLUGIN(ExamplePlugin)
         _CALL_HOOK_FOR_PLUGIN(ExamplePlugin)
@@ -285,7 +285,7 @@ namespace kaleidoscope_internal {
         return result;
      }
 
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static void apply() {
         _CALL_EMPTY_ARGS_HOOK_FOR_PLUGIN(ExamplePlugin)
@@ -297,28 +297,28 @@ namespace kaleidoscope_internal {
 namespace kaleidoscope {
   void Hooks::onSetup() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_onSetup>();
+       apply<kaleidoscope_internal::EventHandler_onSetup>();
   }
 
   void Hooks::beforeEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_beforeEachCycle>();
   }
 
   bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
+              apply<kaleidoscope_internal::EventHandler_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
   void Hooks::beforeReportingState() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+       apply<kaleidoscope_internal::EventHandler_beforeReportingState>();
   }
 
   void Hooks::afterEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_afterEachCycle>();
   }
 }
 ```
@@ -329,20 +329,20 @@ namespace kaleidoscope {
 namespace kaleidoscope_internal {
   struct HookPoint
   {
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static auto apply(Args__&&... hook_args)
-                             -> typename PluginMethod__::ReturnType {
+                             -> typename EventHandler__::ReturnType {
 
-        typedef typename PluginMethod__::shouldAbort shouldAbort;
-        typename PluginMethod__::ReturnType result;
+        typedef typename EventHandler__::shouldAbort shouldAbort;
+        typename EventHandler__::ReturnType result;
 
-        result = PluginMethod__::call(ExamplePlugin, hook_args...);
+        result = EventHandler__::call(ExamplePlugin, hook_args...);
         if (shouldAbort::eval(hook_return_val)) {
           return result;
         }
 
-        result = PluginMethod__::call(ExamplePlugin, hook_args...);
+        result = EventHandler__::call(ExamplePlugin, hook_args...);
         if (shouldAbort::eval(hook_return_val)) {
           return result;
         }
@@ -350,11 +350,11 @@ namespace kaleidoscope_internal {
         return result;
      }
 
-     template<typename PluginMethod__,
+     template<typename EventHandler__,
               typename... Args__>
      static void apply() {
-        PluginMethod__::call(ExamplePlugin);
-        PluginMethod__::call(ExamplePlugin);
+        EventHandler__::call(ExamplePlugin);
+        EventHandler__::call(ExamplePlugin);
      }
   };
 }
@@ -362,28 +362,28 @@ namespace kaleidoscope_internal {
 namespace kaleidoscope {
   void Hooks::onSetup() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_onSetup>();
+       apply<kaleidoscope_internal::EventHandler_onSetup>();
   }
 
   void Hooks::beforeEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_beforeEachCycle>();
   }
 
   bool Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
     return kaleidoscope_internal::HookPoint::template
-              apply<kaleidoscope_internal::PluginMethod_onKeyswitchEvent>
+              apply<kaleidoscope_internal::EventHandler_onKeyswitchEvent>
                  (mappedKey, row, col, keyState);
   }
 
   void Hooks::beforeReportingState() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_beforeReportingState>();
+       apply<kaleidoscope_internal::EventHandler_beforeReportingState>();
   }
 
   void Hooks::afterEachCycle() {
     kaleidoscope_internal::HookPoint::template
-       apply<kaleidoscope_internal::PluginMethod_afterEachCycle>();
+       apply<kaleidoscope_internal::EventHandler_afterEachCycle>();
   }
 }
 ```
@@ -397,17 +397,17 @@ Remember that our entry point is in `Kaleidoscope::Hooks`. We'll first follow
 ### `Kaleidoscope::Hooks::init()`
 
 First, we call `kaleidoscope_internal::HookPoint::template
-apply<PluginMethod_onSetup>()`. Remember that `apply<PluginMethod_onSetup>` is a
+apply<EventHandler_onSetup>()`. Remember that `apply<EventHandler_onSetup>` is a
 templated function, so - at compile time - this expands to:
 
 ```c++
-static void apply<PluginMethod_onSetup>() {
-  PluginMethod_onSetup::call(ExamplePlugin);
-  PluginMethod_onSetup::call(ExamplePlugin);
+static void apply<EventHandler_onSetup>() {
+  EventHandler_onSetup::call(ExamplePlugin);
+  EventHandler_onSetup::call(ExamplePlugin);
 }
 ```
 
-And `PluginMethod_onSetup::call` expands to:
+And `EventHandler_onSetup::call` expands to:
 
 ```c++
 static void call(ExamplePlugin_ &plugin) {
@@ -415,11 +415,11 @@ static void call(ExamplePlugin_ &plugin) {
 }
 ```
 
-Considering that `PluginMethod_onSetup` can be inlined, our
-`apply<PluginMethod_onSetup>` function is effectively this now:
+Considering that `EventHandler_onSetup` can be inlined, our
+`apply<EventHandler_onSetup>` function is effectively this now:
 
 ```c++
-static void apply<PluginMethod_onSetup>() {
+static void apply<EventHandler_onSetup>() {
   ExamplePlugin.onSetup();
   ExamplePlugin.onSetup();
 }
@@ -436,22 +436,22 @@ void Hooks::onSetup() {
 
 ### `Kaleidoscope::Hooks::onKeyswitchEvent()`
 
-The only difference here is that we expand `apply<PluginMethod_onKeyswitchEvent>`
+The only difference here is that we expand `apply<EventHandler_onKeyswitchEvent>`
 differently:
 
 ```c++
 static auto apply(Args__&&... hook_args)
                         -> typename HookTask__::ReturnType {
 
-   typedef typename PluginMethod__::shouldAbort shouldAbort;
-   typename PluginMethod__::ReturnType result;
+   typedef typename EventHandler__::shouldAbort shouldAbort;
+   typename EventHandler__::ReturnType result;
 
-   result = PluginMethod__::call(ExamplePlugin, hook_args...);
+   result = EventHandler__::call(ExamplePlugin, hook_args...);
    if (shouldAbort::eval(result)) {
      return result;
    }
 
-   result = PluginMethod__::call(ExamplePlugin, hook_args...);
+   result = EventHandler__::call(ExamplePlugin, hook_args...);
    if (shouldAbort::eval(result)) {
      return result;
    }
@@ -466,12 +466,12 @@ Which in turn becomes:
 static bool apply(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   bool result;
 
-  result = PluginMethod_onKeyswitchEvent::call(ExamplePlugin, mappedKey, row, col, keyState);
+  result = EventHandler_onKeyswitchEvent::call(ExamplePlugin, mappedKey, row, col, keyState);
   if (AbortIfFalse::eval(result)) {
     return result;
   }
 
-  result = PluginMethod_onKeyswitchEvent(ExamplePlugin, mappedKey, row, col, keyState);
+  result = EventHandler_onKeyswitchEvent(ExamplePlugin, mappedKey, row, col, keyState);
   if (AbortIfFalse::eval(result)) {
     return result;
   }
