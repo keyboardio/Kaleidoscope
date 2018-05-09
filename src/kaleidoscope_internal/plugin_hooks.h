@@ -132,7 +132,7 @@ _EVENT_HANDLER(afterEachCycle, false)
 #define _DEFINE_HOOKPOINT(CLASS_NAME, ...)                            \
    struct CLASS_NAME                                                      __NL__ \
    {                                                                      __NL__ \
-      /* Call the hook method on the plugin with the hook's  arguments */ __NL__ \
+      /* Call the hook method on the plugin with the hook's arguments */  __NL__ \
       template<typename EventHandler__, typename... Args__ >              __NL__ \
       static kaleidoscope::Plugin::Result apply(Args__&&... hook_args) {  __NL__ \
          kaleidoscope::Plugin::Result result;                             __NL__ \
@@ -166,7 +166,7 @@ _EVENT_HANDLER(afterEachCycle, false)
    namespace kaleidoscope {                                            __NL__ \
    _DEFINE_HOOKPOINT_METHOD(onSetup,())                                __NL__ \
    _DEFINE_HOOKPOINT_METHOD(beforeEachCycle, ())                       __NL__ \
-   _DEFINE_HOOKPOINT_METHOD(onKeyswitchEvent,                                   __NL__ \
+   _DEFINE_HOOKPOINT_METHOD(onKeyswitchEvent,                          __NL__ \
                 (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
                 mappedKey, row, col, keyState)                         __NL__ \
    _DEFINE_HOOKPOINT_METHOD(beforeReportingState,())                   __NL__ \
