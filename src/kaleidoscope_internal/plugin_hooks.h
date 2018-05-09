@@ -112,11 +112,6 @@ namespace kaleidoscope_internal {
       }                                                                   __NL__ \
 };
 
-_EVENT_HANDLER(onSetup, false)
-_EVENT_HANDLER(beforeEachCycle, false)
-_EVENT_HANDLER(onKeyswitchEvent, true)
-_EVENT_HANDLER(beforeReportingState, false)
-_EVENT_HANDLER(afterEachCycle, false)
 
 // This macro is used by _INLINE_EVENT_HANDLERS_FOR_HOOK in
 // conjunction with the MAP macro to call the event handler in each listed
@@ -143,11 +138,17 @@ _EVENT_HANDLER(afterEachCycle, false)
       }                                                                       __NL__ \
    };
 
-#define _DEFINE_EVENT_HANDLER(HOOK,SIGNATURE,...)                             \
+#define _DEFINE_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...)                             \
+	namespace kaleidoscope_internal { \
+	_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT) \
+ 	} \
+  \
+   namespace kaleidoscope {                                            __NL__ \
   EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
      return kaleidoscope_internal::EventHandlers::template             __NL__ \
      apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
-   }                                                                   __NL__
+   }                                                                   __NL__ \
+   }
 
 /* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of the
    firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS here,
@@ -163,13 +164,14 @@ _EVENT_HANDLER(afterEachCycle, false)
                                                                        __NL__ \
    }                                                                   __NL__ \
                                                                        __NL__ \
-   namespace kaleidoscope {                                            __NL__ \
-   _DEFINE_EVENT_HANDLER(onSetup,())                                   __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeEachCycle, ())                          __NL__ \
-   _DEFINE_EVENT_HANDLER(onKeyswitchEvent,                             __NL__ \
+   _DEFINE_EVENT_HANDLER(onSetup,false,())                                   __NL__ \
+   _DEFINE_EVENT_HANDLER(beforeEachCycle, false, ())                          __NL__ \
+   _DEFINE_EVENT_HANDLER(onKeyswitchEvent, true,                             __NL__ \
                 (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
                 mappedKey, row, col, keyState)                         __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeReportingState,())                      __NL__ \
-   _DEFINE_EVENT_HANDLER(afterEachCycle,())                            __NL__ \
-   }
+   _DEFINE_EVENT_HANDLER(beforeReportingState,false,())                      __NL__ \
+   _DEFINE_EVENT_HANDLER(afterEachCycle,false,())                            __NL__ \
+
+
+
 }
