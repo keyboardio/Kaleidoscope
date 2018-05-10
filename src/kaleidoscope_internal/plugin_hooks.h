@@ -109,7 +109,7 @@ namespace kaleidoscope_internal {
       static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
          kaleidoscope::EventHandlerResult result;                             __NL__ \
                                                                               __NL__ \
-         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                     __NL__ \
+         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                   __NL__ \
                                                                               __NL__ \
          return result;                                                       __NL__ \
       }                                                                       __NL__ \
@@ -139,11 +139,12 @@ namespace kaleidoscope_internal {
       }                                                                   __NL__ \
     };                                                                    __NL__ \
    } 	                                                                  __NL__ \
-   namespace kaleidoscope {                                            __NL__ \
-  EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
-     return kaleidoscope_internal::EventHandlers::template             __NL__ \
-     apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
-   }                                                                   __NL__ \
+                                                                          __NL__ \
+   namespace kaleidoscope {                                               __NL__ \
+     EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
+        return kaleidoscope_internal::EventHandlers::template             __NL__ \
+        apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
+      }                                                                   __NL__ \
    }
 
 /* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of the
@@ -153,17 +154,19 @@ namespace kaleidoscope_internal {
 
    Its arguments are a list of references to plugin instances that have been
    instantiated in the global scope. */
+
+
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
    namespace kaleidoscope_internal {                                   __NL__ \
      _INLINE_PLUGIN_EVENT_HANDLERS(__VA_ARGS__)                        __NL__ \
    }                                                                   __NL__ \
                                                                        __NL__ \
-   _DEFINE_EVENT_HANDLER(onSetup,false,())                                   __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeEachCycle, false, ())                          __NL__ \
-   _DEFINE_EVENT_HANDLER(onKeyswitchEvent, true,                             __NL__ \
+   _DEFINE_EVENT_HANDLER(onSetup,false,())                             __NL__ \
+   _DEFINE_EVENT_HANDLER(beforeEachCycle, false, ())                   __NL__ \
+   _DEFINE_EVENT_HANDLER(onKeyswitchEvent, true,                       __NL__ \
                 (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
                 mappedKey, row, col, keyState)                         __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeReportingState,false,())                      __NL__ \
-   _DEFINE_EVENT_HANDLER(afterEachCycle,false,())                            __NL__ \
+   _DEFINE_EVENT_HANDLER(beforeReportingState,false,())                __NL__ \
+   _DEFINE_EVENT_HANDLER(afterEachCycle,false,())                      __NL__ \
 
 }
