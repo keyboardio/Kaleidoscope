@@ -1,6 +1,7 @@
 #pragma once
 
 #include "kaleidoscope/eventhandlerresult.h"
+#include "kaleidoscope_internal/event_dispatch.h"
 
 #ifndef KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 #define KALEIDOSCOPE_ENABLE_V1_PLUGIN_API 1
