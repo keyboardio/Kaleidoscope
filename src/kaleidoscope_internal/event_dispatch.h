@@ -1,20 +1,20 @@
 /*
- * While this file is mostly pre-processor macros, which are not namespaced, the
+ * This file contains pre-processor macros, which are not namespaced, the
  * vast majority of code these macros generate will live under the
  * kaleidoscope_internal namespace. That is why this header is here.
  *
  * The only exception to this is the _KALEIDOSCOPE_INIT_PLUGINS macro, which
  * also places a few symbols under the kaleidoscope namespace. But that code is
- * tightly coupled with the other parts, which are in kaleidoscope_internal. For
- * this reason, this tight coupling, those parts are in this file too.
+ * tightly coupled with the other parts, which are in kaleidoscope_internal.
  *
- * The reason we use an entirely separate namespace is that some plugins have
- * their classes under the kaleidoscope namespace, and the instances of those
- * classes in the global namespace, under the same name. In these cases, the
- * macros herein would resolve to the classes, when we want them to resolve to
- * instances. To avoid this situation, we put the generated code to an entirely
- * different namespace.
+ * The reason we use an entirely separate namespace is that
+ * Some plugins' classes are in the kaleidoscope namespace, and the instances
+ * of those classes have the same names as the classes, but in the global
+ * namespace. In these cases, the macros herein would resolve to the classes,
+ * when we want them to resolve to instances. To avoid this, we put the
+ * generated code in an entirely different namespace.
  */
+
 #pragma once
 
 #include "macro_helpers.h"
@@ -34,64 +34,28 @@
 
 // Some words about the design of hook routing:
 //
-// The EventDispatcher class implements a compile-time loop over all plugins. This
-// loop is used to call a non virtual event handler of each plugin.
+// The EventDispatcher class implements a compile-time loop over all plugins, which
+// calls an event handler on each plugin.
 //
-// The advantage of this approach against a solution with virtual event handlers
-// in classes derived from kaleidoscope::Plugin is a significant reduction of
-// virtual function calls and a reduction of the amount of virtual function
-// tables (vtables).
+// Each hook called by the firmware core compiles down to only a single
+// static function call (in class Hooks), rather than one for each plugin.
 //
-// For every handler that is called by the firmware core, only one ordinary
-// function call (a static function of class Hooks) is invoked instead of one
-// for each plugin and handler. Plugins derived from kaleidoscope::Plugin are
-// not (dynamically) polymorphic classes (not featuring virtual methods). Thus,
-// classes do not need virtual tables and instances no virtual pointers, which,
-// as a consequence, significantly reduces binary size.
-//
-// Note: A the time of writing this, the kaleidoscope::Plugin is still
-//       featuring a virtual begin() method to support legacy implementations
-//       of plugins.
-//       This means that there is actually still a virtual table generated
-//       for each plugin class and a vptr resides in every plugin instance.
-//       Those might both vanish when the begin() method would be removed from
-//       kaleidoscope::Plugin in future versions of the firmware.
+// This approach is better than using virtual event handlers in classes
+// derived from kaleidoscope::Plugin because it results in significantly fewer
+// virtual function calls and virtual function tables (vtables).
 //
 // The call to event handlers through kaleidoscope::Hooks and
 // kaleidoscope_internal::EventDispatcher is templated to allow for compile time
-// static polymorphisms (event handlers of plugins not beeing virtual).
+// static polymorphisms (plugins' EventHandlers aren't virtual).
 //
-// This approach is somewhat similar to duck typing in scripting languages like,
-// e.g. Python. Only the signature of a method counts and not the fact that the
-// class is actually derived from a specific base class. Strictly speaking,
-// plugins do not need to be derived from kaleidoscope::Plugin, but only need to
-// implement a set of event handlers whose call signature matches.
+// Technically, plugins don't need to be derived from kaleidoscope::Plugin, but
+// only need to implement a set of event handlers whose call signature match the
+// API definition. This approach is similar to duck typing in scripting languages:
+// The compiler only cares that a method's signature matches, not that the plugin
+// is derived from kaleidoscope::Plugin.
 //
-// If a plugin implements an event handler (thereby hiding the equivalent method
-// of the plugin base class) the derived plugins's method is called instead of
-// the version of the event handler provided by base class kaleidoscope::Plugin.
-// This is possible as the event handler is not invoked via a base class ptr or
-// reference but via a reference to the actual derived plugin class. Thus the
-// compiler can see the actual type of the plugin at the point of the event
-// handler's invocation.
-//
-// EventDispatcher::apply() implements a compile time for-each loop over all
-// plugins. Under the assumption that only some (few) plugins implement a
-// greater number of event handlers and that there is only a limited number of
-// plugins used in a sketch, this approach is quite efficient both in terms of
-// code size and run-time. This is due to the compiler optimizing away any calls
-// to methods that have not been implemented by plugins because the base class
-// versions of these are mostly noops. The latter are easy to detect and
-// eliminate by the compiler.
-//
-// Calling the plugins' event handlers is carried out via a call to one of the
-// static functions of class Hooks. Those functions cast the related event
-// handler on every registered plugin by using the EventDispatcher helper class.
-
-
-// _KALEIDOSCOPE_INIT_PLUGINS executes a MAP over all plugins and uses
-// this macro to call the event handler on each one
-// TODO rephrase
+// Static hook functions inside the Hooks class each use the EventDispatcher
+// helper class to cast an associated EventHandler on each plugin instance.
 
 
 #define _INLINE_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                            \
@@ -146,6 +110,9 @@
 // Its arguments are a list of references to plugin instances that have been
 // instantiated in the global scope.
 
+// EventDispatcher::apply() implements a compile time for-each loop over all
+// plugins. The compiler automatically optimizes away calls to any plugin that
+// doesn't implement an EventHandler for a given hook.
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       __NL__ \
   namespace kaleidoscope_internal {                                           __NL__ \
