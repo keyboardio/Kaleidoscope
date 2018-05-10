@@ -102,19 +102,6 @@ namespace kaleidoscope_internal {
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
-#define _INLINE_PLUGIN_EVENT_HANDLERS(...)                             \
-   struct EventHandlers {                                                     __NL__ \
-      /* Call the event handler on the plugin with the handler's arguments */ __NL__ \
-      template<typename EventHandler__, typename... Args__ >                  __NL__ \
-      static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
-         kaleidoscope::EventHandlerResult result;                             __NL__ \
-                                                                              __NL__ \
-         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                   __NL__ \
-                                                                              __NL__ \
-         return result;                                                       __NL__ \
-      }                                                                       __NL__ \
-   };
-
 // This defines an auxiliary classes EventHandler_... that    
 // invoke a specific plugin event handler with a provided set of method    
 // arguments. The EventHandler_... classes are meant to be used by    
@@ -158,7 +145,17 @@ namespace kaleidoscope_internal {
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
    namespace kaleidoscope_internal {                                   __NL__ \
-     _INLINE_PLUGIN_EVENT_HANDLERS(__VA_ARGS__)                        __NL__ \
+   struct EventHandlers {                                                     __NL__ \
+      /* Call the event handler on the plugin with the handler's arguments */ __NL__ \
+      template<typename EventHandler__, typename... Args__ >                  __NL__ \
+      static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
+         kaleidoscope::EventHandlerResult result;                             __NL__ \
+                                                                              __NL__ \
+         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                   __NL__ \
+                                                                              __NL__ \
+         return result;                                                       __NL__ \
+      }                                                                       __NL__ \
+   }; \
    }                                                                   __NL__ \
                                                                        __NL__ \
    _DEFINE_EVENT_HANDLER(onSetup,false,())                             __NL__ \
