@@ -17,8 +17,7 @@ class EventHandlerBasePlugin {
 
  public:
 
-#define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(                             \
-   HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)     __NL__ \
+#define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)     __NL__ \
                                                                         __NL__ \
   EventHandlerResult HOOK_NAME SIGNATURE {                              __NL__ \
     return EventHandlerResult::OK;                                      __NL__ \
