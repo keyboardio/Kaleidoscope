@@ -7,7 +7,7 @@ union Key;
 }
 
 #include "plugin.h"
-#include "event_dispatch.h"
+#include "kaleidoscope_internal/event_dispatch.h"
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.
