@@ -15,7 +15,7 @@ extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, byte row, byte col
 
 namespace kaleidoscope {
 
-// The reason why the hook rooting entry point functions live within
+// The reason why the hook routing entry point functions live within
 // class Hooks and not directly within a namespace is, that we want
 // to restrict who is allowed to trigger hooks, mainly to prevent
 // user code from calling hook methods.
