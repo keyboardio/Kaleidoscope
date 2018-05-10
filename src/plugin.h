@@ -10,7 +10,26 @@ namespace kaleidoscope {
 
 class Kaleidoscope_;
 
-class Plugin {
+// A base class that implements default noop versions of all event
+// handler methods.
+//
+class EventHandlerBasePlugin {
+
+ public:
+
+#define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(                             \
+   HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)     __NL__ \
+                                                                        __NL__ \
+  EventHandlerResult HOOK_NAME SIGNATURE {                              __NL__ \
+    return EventHandlerResult::OK;                                      __NL__ \
+  }
+
+  _FOR_EACH_EVENT_HANDLER(DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD)
+
+#undef DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD
+};
+
+class Plugin : public EventHandlerBasePlugin {
 
   friend class Kaleidoscope_;
 
@@ -62,31 +81,6 @@ class Plugin {
     return EventHandlerResult::OK;
   }
 
-  // Called at the very start of each cycle, before gathering events, before
-  // doing anything else.
-  EventHandlerResult beforeEachCycle() {
-    return EventHandlerResult::OK;
-  }
-
-  // Function called for every non-idle key, every cycle, so it can decide what
-  // to do with it. It can modify the key (which is passed by reference for this
-  // reason), and decide whether further handles should be tried. If it returns
-  // EventHandlerResult::OK, other handlers will also get a chance to react to the event. If
-  // it returns anything else, Kaleidoscope will stop processing there.
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-    return EventHandlerResult::OK;
-  }
-
-  // Called before reporting our state to the host. This is the last point in a
-  // cycle where a plugin can alter what gets reported to the host.
-  EventHandlerResult beforeReportingState() {
-    return EventHandlerResult::OK;
-  }
-
-  // Called at the very end of a cycle, after everything's said and done.
-  EventHandlerResult afterEachCycle() {
-    return EventHandlerResult::OK;
-  }
 };
 
 } // namespace kaleidoscope

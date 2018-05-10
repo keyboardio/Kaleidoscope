@@ -7,6 +7,7 @@ union Key;
 }
 
 #include "plugin.h"
+#include "event_dispatch.h"
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.
@@ -42,13 +43,14 @@ class Hooks {
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
 
-  static EventHandlerResult onSetup();
-  static EventHandlerResult beforeEachCycle();
+#define DEFINE_WEAK_HOOK_FUNCTION(                                             \
+    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
+                                                                        __NL__ \
+   static EventHandlerResult HOOK_NAME SIGNATURE;
 
-  static EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  _FOR_EACH_EVENT_HANDLER(DEFINE_WEAK_HOOK_FUNCTION)
 
-  static EventHandlerResult beforeReportingState();
-  static EventHandlerResult afterEachCycle();
+#undef DEFINE_WEAK_HOOK_FUNCTION
 };
 
 }
