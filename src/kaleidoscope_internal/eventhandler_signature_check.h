@@ -3,6 +3,25 @@
 #include "macro_helpers.h"
 #include "plugin.h"
 
+
+// *************************************************************************
+// *************************************************************************
+// NOTHING IN THIS HEADER WILL RESULT IN ANY CODE COMPILED INTO KALEIDOSCOPE
+//
+// YOU DO NOT NEED TO LOOK INSIDE THIS FILE IF YOU'RE TRYING TO UNDERSTAND
+// HOW KALEIDOSCOPE WORKS.
+// *************************************************************************
+// *************************************************************************
+
+// This header file implements compile-time method signature verification for
+// plugins' event handlers as the _VALIDATE_EVENT_HANDLER_SIGNATURE macro.
+
+// If the method signatures don't match the API definitions, compilation
+// should fail with a helpful error message.
+
+// *************************************************************************
+// *************************************************************************
+
 // We use non-virtual methods for event handlers. This reduces RAM (and to a
 // smaller extent, PROGMEM) consumption, runtime call overhead, and allows the
 // compiler to a better job removing dead code.
