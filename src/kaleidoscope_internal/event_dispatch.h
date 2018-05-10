@@ -21,16 +21,7 @@
 #include "plugin.h"
 #include "kaleidoscope/hooks.h"
 #include "eventhandler_signature_check.h"
-
-// A note to maintainers: How to add additional hooks
-//
-// 1) Add an appropriate non-virtual (important!) method
-//       to class kaleidoscope::Plugin.
-// 2) Add a static method with the same name and call signature
-//       to class kaleidoscope::Hooks.
-// 3) Add an implemenation of the new static method of kaleidoscope::Hooks
-//       introduced in 2) to the end of macro KALEIDOSCOPE_INIT_PLUGINS(...)
-//       and a matching weak implementation to kaleidoscope/hooks.cpp
+#include "event_handlers.h"
 
 // Some words about the design of hook routing:
 //
@@ -74,7 +65,8 @@
 // set of arguments.
 
 
-#define _REGISTER_EVENT_HANDLER(HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...) \
+#define _REGISTER_EVENT_HANDLER(                                                 \
+    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)      __NL__ \
                                                                           __NL__ \
   namespace kaleidoscope_internal {                                       __NL__ \
                                                                           __NL__ \
@@ -92,14 +84,14 @@
       }                                                                   __NL__ \
     };                                                                    __NL__ \
                                                                           __NL__ \
-   } 	                                                                  __NL__ \
+   } 	                                                                    __NL__ \
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \
      EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
         apply<kaleidoscope_internal::EventHandler_ ## HOOK_NAME>          __NL__ \
-             (__VA_ARGS__);                                               __NL__ \
+             ARGS_LIST;                                                   __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
    }
@@ -131,11 +123,5 @@
   };                                                                          __NL__ \
                                                                               __NL__ \
   }                                                                           __NL__ \
-  _REGISTER_EVENT_HANDLER(onSetup,false,())                                   __NL__ \
-  _REGISTER_EVENT_HANDLER(beforeEachCycle, false, ())                         __NL__ \
-  _REGISTER_EVENT_HANDLER(onKeyswitchEvent, true,                             __NL__ \
-               (Key &mappedKey, byte row, byte col, uint8_t keyState),        __NL__ \
-               mappedKey, row, col, keyState)                                 __NL__ \
-  _REGISTER_EVENT_HANDLER(beforeReportingState,false,())                      __NL__ \
-  _REGISTER_EVENT_HANDLER(afterEachCycle,false,())                            __NL__ \
+  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)
 

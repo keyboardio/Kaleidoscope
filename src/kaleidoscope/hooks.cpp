@@ -12,29 +12,16 @@ namespace kaleidoscope {
 // is not used. This allows legacy sketches to be used
 // during the transition phase.
 
-__attribute__((weak))
-EventHandlerResult Hooks::onSetup() {
-  return EventHandlerResult::OK;
-}
+#define INSTANTIATE_WEAK_HOOK_FUNCTION(                                        \
+    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
+                                                                        __NL__ \
+   __attribute__((weak))                                                __NL__ \
+   EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                              __NL__ \
+      return EventHandlerResult::OK;                                    __NL__ \
+   }
 
-__attribute__((weak))
-EventHandlerResult Hooks::beforeEachCycle() {
-  return EventHandlerResult::OK;
-}
+_FOR_EACH_EVENT_HANDLER(INSTANTIATE_WEAK_HOOK_FUNCTION)
 
-__attribute__((weak))
-EventHandlerResult Hooks::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
-  return EventHandlerResult::OK;
-}
-
-__attribute__((weak))
-EventHandlerResult Hooks::beforeReportingState() {
-  return EventHandlerResult::OK;
-}
-
-__attribute__((weak))
-EventHandlerResult Hooks::afterEachCycle() {
-  return EventHandlerResult::OK;
-}
+#undef INSTANTIATE_WEAK_HOOK_FUNCTION
 
 } // namespace kaleidoscope
