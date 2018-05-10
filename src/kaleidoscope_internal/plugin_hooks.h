@@ -110,11 +110,11 @@
 // set of arguments.
 
 
-#define _REGISTER_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...) \
+#define _REGISTER_EVENT_HANDLER(HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...) \
                                                                           __NL__ \
   namespace kaleidoscope_internal {                                       __NL__ \
                                                                           __NL__ \
-   struct EventHandler_##HOOK {                                           __NL__ \
+   struct EventHandler_##HOOK_NAME {                                      __NL__ \
                                                                           __NL__ \
       static bool shouldAbortOnConsumedEvent() {                          __NL__ \
         return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
@@ -123,8 +123,8 @@
       template<typename Plugin__, typename... Args__>                     __NL__ \
       static kaleidoscope::EventHandlerResult                             __NL__ \
         call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
-         _VALIDATE_EVENT_HANDLER_SIGNATURE(HOOK, Plugin__)                __NL__ \
-         return plugin.HOOK(hook_args...);                                __NL__ \
+         _VALIDATE_EVENT_HANDLER_SIGNATURE(HOOK_NAME, Plugin__)           __NL__ \
+         return plugin.HOOK_NAME(hook_args...);                           __NL__ \
       }                                                                   __NL__ \
     };                                                                    __NL__ \
                                                                           __NL__ \
@@ -132,9 +132,10 @@
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \
-     EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
+     EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
-        apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
+        apply<kaleidoscope_internal::EventHandler_ ## HOOK_NAME>          __NL__ \
+             (__VA_ARGS__);                                               __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
    }
