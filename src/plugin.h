@@ -15,6 +15,19 @@ class Kaleidoscope_;
 // A base class that implements default noop versions of all event
 // handler methods.
 //
+// A note to developers:
+//
+//     The only purpose of class EventHandlerBasePlugin
+//     is to enable the use of _FOR_EACH_EVENT_HANDLER
+//     to define default event handlers. This is currently not possible
+//     inside class Plugin directly as it would collide with
+//     the separate definition of onSetup(). This additional
+//     definition is, however, necessary to support the V1 plugin API.
+//
+//     TODO: As soon as the V1 plugin API is removed from Kaleidoscope,
+//     class EventHandlerBasePlugin can be removed and its content
+//     be moved to class Plugin.
+//
 class EventHandlerBasePlugin {
 
  public:
