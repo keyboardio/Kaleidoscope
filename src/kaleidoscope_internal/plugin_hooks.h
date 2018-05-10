@@ -89,10 +89,13 @@
 // handler on every registered plugin by using the EventHandlers helper class.
 
 
-// This macro is used by _INLINE_EVENT_HANDLERS_FOR_HOOK in
-// conjunction with the MAP macro to call the event handler in each listed
-// plugin.
-#define _INLINE_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                              \
+// _KALEIDOSCOPE_INIT_PLUGINS executes a MAP over all plugins and uses
+// this macro to call the event handler on each one
+// TODO rephrase
+
+
+#define _INLINE_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                            \
+                                                                     __NL__ \
    result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
    if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
@@ -100,12 +103,12 @@
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
-// This defines an auxiliary classes EventHandler_... that    
-// invoke a specific plugin event handler with a provided set of method    
-// arguments. The EventHandler_... classes are meant to be used by    
-// EventHandlers' apply function called in the static functions of    
-// kaleidoscope::Hooks to forward the call to the event handlers of all    
-// registered plugins.    
+
+// This defines an auxiliary class 'EventHandler_Foo' for each hook 'Foo'.
+// Kaleidoscope::Hooks calls the EventHandlers class, which in turn invokes 
+// the event handler method 'Foo' of each registered plugin with a given 
+// set of arguments.
+
 #define _REGISTER_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...)                             \
     namespace kaleidoscope_internal {                                     __NL__ \
                                                                           __NL__ \
@@ -132,13 +135,11 @@
       }                                                                   __NL__ \
    }
 
-/* KALEIDOSCOPE_INIT_PLUGINS should only be invoked in global namespace of the
-   firmware sketch. It turns around and calls _KALEIDOSCOPE_INIT_PLUGINS here,
-   which actually builds the loops that execute the plugins' implementations of
-   the various event handlers.
-
-   Its arguments are a list of references to plugin instances that have been
-   instantiated in the global scope. */
+// _KALEIDOSCOPE_INIT_PLUGINS builds the loops that execute the plugins' 
+// implementations of the various event handlers.
+//
+// Its arguments are a list of references to plugin instances that have been
+// instantiated in the global scope.
 
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
