@@ -124,8 +124,8 @@ namespace kaleidoscope_internal {
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
-#define _INLINE_EVENT_HANDLERS_FOR_HOOK(CLASS_NAME, ...)                             \
-   struct CLASS_NAME                                                          __NL__ \
+#define _INLINE_EVENT_HANDLERS_FOR_HOOK(...)                             \
+   struct EventHandlers                                                          __NL__ \
    {                                                                          __NL__ \
       /* Call the event handler on the plugin with the handler's arguments */ __NL__ \
       template<typename EventHandler__, typename... Args__ >                  __NL__ \
@@ -160,7 +160,7 @@ namespace kaleidoscope_internal {
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
    namespace kaleidoscope_internal {                                   __NL__ \
                                                                        __NL__ \
-   _INLINE_EVENT_HANDLERS_FOR_HOOK(EventHandlers, __VA_ARGS__)         __NL__ \
+   _INLINE_EVENT_HANDLERS_FOR_HOOK(__VA_ARGS__)         __NL__ \
                                                                        __NL__ \
    }                                                                   __NL__ \
                                                                        __NL__ \
@@ -171,7 +171,5 @@ namespace kaleidoscope_internal {
                 mappedKey, row, col, keyState)                         __NL__ \
    _DEFINE_EVENT_HANDLER(beforeReportingState,false,())                      __NL__ \
    _DEFINE_EVENT_HANDLER(afterEachCycle,false,())                            __NL__ \
-
-
 
 }
