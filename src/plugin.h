@@ -18,7 +18,7 @@ class Kaleidoscope_;
 class EventHandlerBasePlugin {
 
  public:
- 
+
 #define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(                             \
     HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
                                                                         __NL__ \
