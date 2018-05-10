@@ -16,6 +16,7 @@ class Plugin {
 
  protected:
 
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   /** Legacy plugin setup hook.
 
    * In version one of the plugin API, `plugin->begin()` was called at
@@ -33,7 +34,6 @@ class Plugin {
    * Also, this method is deprecated in favour of the V2 API, which you can read
    * about below.
    */
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   virtual void begin() {}
 #endif
 
@@ -51,12 +51,12 @@ class Plugin {
   //       plugins is the polymorphic `EventHandler` class.
 
   EventHandlerResult onSetup() {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     // By letting the new `onSetup()` method call the legacy begin() method, we
     // make sure that the old hooking interface is supported even if
     // KALEIDOSCOPE_INIT_PLUGINS() is used to register a plugin that relies on
     // the legacy `begin()` method to initialize itself and register hooks.
     //
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
     this->begin();
 #endif
     return EventHandlerResult::OK;
