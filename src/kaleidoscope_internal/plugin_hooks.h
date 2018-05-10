@@ -102,9 +102,8 @@ namespace kaleidoscope_internal {
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
-#define _INLINE_EVENT_HANDLERS_FOR_HOOK(...)                             \
-   struct EventHandlers                                                          __NL__ \
-   {                                                                          __NL__ \
+#define _INLINE_PLUGIN_EVENT_HANDLERS(...)                             \
+   struct EventHandlers {                                                     __NL__ \
       /* Call the event handler on the plugin with the handler's arguments */ __NL__ \
       template<typename EventHandler__, typename... Args__ >                  __NL__ \
       static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
@@ -156,9 +155,7 @@ namespace kaleidoscope_internal {
    instantiated in the global scope. */
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
    namespace kaleidoscope_internal {                                   __NL__ \
-                                                                       __NL__ \
-   _INLINE_EVENT_HANDLERS_FOR_HOOK(__VA_ARGS__)         __NL__ \
-                                                                       __NL__ \
+     _INLINE_PLUGIN_EVENT_HANDLERS(__VA_ARGS__)                        __NL__ \
    }                                                                   __NL__ \
                                                                        __NL__ \
    _DEFINE_EVENT_HANDLER(onSetup,false,())                                   __NL__ \
