@@ -34,7 +34,7 @@
 
 // Some words about the design of hook routing:
 //
-// The EventHandlers class implements a compile-time loop over all plugins. This
+// The EventDispatcher class implements a compile-time loop over all plugins. This
 // loop is used to call a non virtual event handler of each plugin.
 //
 // The advantage of this approach against a solution with virtual event handlers
@@ -58,7 +58,7 @@
 //       kaleidoscope::Plugin in future versions of the firmware.
 //
 // The call to event handlers through kaleidoscope::Hooks and
-// kaleidoscope_internal::EventHandlers is templated to allow for compile time
+// kaleidoscope_internal::EventDispatcher is templated to allow for compile time
 // static polymorphisms (event handlers of plugins not beeing virtual).
 //
 // This approach is somewhat similar to duck typing in scripting languages like,
@@ -75,7 +75,7 @@
 // compiler can see the actual type of the plugin at the point of the event
 // handler's invocation.
 //
-// EventHandlers::apply() implements a compile time for-each loop over all
+// EventDispatcher::apply() implements a compile time for-each loop over all
 // plugins. Under the assumption that only some (few) plugins implement a
 // greater number of event handlers and that there is only a limited number of
 // plugins used in a sketch, this approach is quite efficient both in terms of
@@ -86,7 +86,7 @@
 //
 // Calling the plugins' event handlers is carried out via a call to one of the
 // static functions of class Hooks. Those functions cast the related event
-// handler on every registered plugin by using the EventHandlers helper class.
+// handler on every registered plugin by using the EventDispatcher helper class.
 
 
 // _KALEIDOSCOPE_INIT_PLUGINS executes a MAP over all plugins and uses
@@ -105,7 +105,7 @@
 
 
 // This defines an auxiliary class 'EventHandler_Foo' for each hook 'Foo'.
-// Kaleidoscope::Hooks calls the EventHandlers class, which in turn invokes
+// Kaleidoscope::Hooks calls the EventDispatcher class, which in turn invokes
 // the event handler method 'Foo' of each registered plugin with a given
 // set of arguments.
 
@@ -133,7 +133,7 @@
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \
      EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
-        return kaleidoscope_internal::EventHandlers::template             __NL__ \
+        return kaleidoscope_internal::EventDispatcher::template           __NL__ \
         apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
@@ -148,9 +148,9 @@
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       __NL__ \
   namespace kaleidoscope_internal {                                           __NL__ \
-  struct EventHandlers {                                                      __NL__ \
+  struct EventDispatcher {                                                    __NL__ \
                                                                               __NL__ \
-    /* Call the event handler on the plugin with the handler's arguments */   __NL__ \
+    /* Call the event handler on each plugin with the handler's arguments */  __NL__ \
     template<typename EventHandler__, typename... Args__ >                    __NL__ \
     static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {    __NL__ \
                                                                               __NL__ \
