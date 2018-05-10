@@ -25,7 +25,7 @@ void setup();
 #include "kaleidoscope/hid.h"
 #include "layers.h"
 #include "macro_map.h"
-#include "kaleidoscope_internal/plugin_hooks.h"
+#include "kaleidoscope_internal/event_dispatch.h"
 #include "macro_helpers.h"
 #include "plugin.h"
 
