@@ -22,8 +22,6 @@
 #include "kaleidoscope/hooks.h"
 #include "eventhandler_signature_check.h"
 
-namespace kaleidoscope_internal {
-
 // A note to maintainers: How to add additional hooks
 //
 // 1) Add an appropriate non-virtual (important!) method
@@ -166,4 +164,3 @@ namespace kaleidoscope_internal {
    _REGISTER_EVENT_HANDLER(beforeReportingState,false,())                       __NL__ \
    _REGISTER_EVENT_HANDLER(afterEachCycle,false,())                             __NL__ \
 
-}
