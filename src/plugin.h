@@ -28,7 +28,7 @@ class EventHandlerBasePlugin {
 
   _FOR_EACH_EVENT_HANDLER(DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD)
 
-#undef 
+#undef DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD
 };
 
 class Plugin : public EventHandlerBasePlugin {
