@@ -105,63 +105,68 @@
 
 
 // This defines an auxiliary class 'EventHandler_Foo' for each hook 'Foo'.
-// Kaleidoscope::Hooks calls the EventHandlers class, which in turn invokes 
-// the event handler method 'Foo' of each registered plugin with a given 
+// Kaleidoscope::Hooks calls the EventHandlers class, which in turn invokes
+// the event handler method 'Foo' of each registered plugin with a given
 // set of arguments.
 
-#define _REGISTER_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...)                             \
-    namespace kaleidoscope_internal {                                     __NL__ \
+
+#define _REGISTER_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...) \
                                                                           __NL__ \
-     struct EventHandler_##HOOK {                                         __NL__ \
+  namespace kaleidoscope_internal {                                       __NL__ \
+                                                                          __NL__ \
+   struct EventHandler_##HOOK {                                           __NL__ \
                                                                           __NL__ \
       static bool shouldAbortOnConsumedEvent() {                          __NL__ \
         return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
       template<typename Plugin__, typename... Args__>                     __NL__ \
-      static kaleidoscope::EventHandlerResult call(Plugin__ &plugin,      __NL__ \
-                                               Args__&&... hook_args) {   __NL__ \
+      static kaleidoscope::EventHandlerResult                             __NL__ \
+        call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
          _VALIDATE_EVENT_HANDLER_SIGNATURE(HOOK, Plugin__)                __NL__ \
-                                                                          __NL__ \
          return plugin.HOOK(hook_args...);                                __NL__ \
       }                                                                   __NL__ \
     };                                                                    __NL__ \
+                                                                          __NL__ \
    } 	                                                                  __NL__ \
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
+                                                                          __NL__ \
      EventHandlerResult Hooks::HOOK SIGNATURE {                           __NL__ \
         return kaleidoscope_internal::EventHandlers::template             __NL__ \
         apply<kaleidoscope_internal::EventHandler_ ## HOOK>(__VA_ARGS__); __NL__ \
       }                                                                   __NL__ \
+                                                                          __NL__ \
    }
 
-// _KALEIDOSCOPE_INIT_PLUGINS builds the loops that execute the plugins' 
+// _KALEIDOSCOPE_INIT_PLUGINS builds the loops that execute the plugins'
 // implementations of the various event handlers.
 //
 // Its arguments are a list of references to plugin instances that have been
 // instantiated in the global scope.
 
 
-#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       \
-   namespace kaleidoscope_internal {                                   __NL__ \
-   struct EventHandlers {                                                     __NL__ \
-      /* Call the event handler on the plugin with the handler's arguments */ __NL__ \
-      template<typename EventHandler__, typename... Args__ >                  __NL__ \
-      static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {  __NL__ \
-         kaleidoscope::EventHandlerResult result;                             __NL__ \
+#define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       __NL__ \
+  namespace kaleidoscope_internal {                                           __NL__ \
+  struct EventHandlers {                                                      __NL__ \
                                                                               __NL__ \
-         MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                   __NL__ \
+    /* Call the event handler on the plugin with the handler's arguments */   __NL__ \
+    template<typename EventHandler__, typename... Args__ >                    __NL__ \
+    static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {    __NL__ \
                                                                               __NL__ \
-         return result;                                                       __NL__ \
-      }                                                                       __NL__ \
-   };                                                                         __NL__ \
-   }                                                                          __NL__ \
+      kaleidoscope::EventHandlerResult result;                                __NL__ \
+      MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                      __NL__ \
                                                                               __NL__ \
-   _REGISTER_EVENT_HANDLER(onSetup,false,())                                    __NL__ \
-   _REGISTER_EVENT_HANDLER(beforeEachCycle, false, ())                          __NL__ \
-   _REGISTER_EVENT_HANDLER(onKeyswitchEvent, true,                              __NL__ \
-                (Key &mappedKey, byte row, byte col, uint8_t keyState),       __NL__ \
-                mappedKey, row, col, keyState)                                __NL__ \
-   _REGISTER_EVENT_HANDLER(beforeReportingState,false,())                       __NL__ \
-   _REGISTER_EVENT_HANDLER(afterEachCycle,false,())                             __NL__ \
+      return result;                                                          __NL__ \
+    }                                                                         __NL__ \
+  };                                                                          __NL__ \
+                                                                              __NL__ \
+  }                                                                           __NL__ \
+  _REGISTER_EVENT_HANDLER(onSetup,false,())                                   __NL__ \
+  _REGISTER_EVENT_HANDLER(beforeEachCycle, false, ())                         __NL__ \
+  _REGISTER_EVENT_HANDLER(onKeyswitchEvent, true,                             __NL__ \
+               (Key &mappedKey, byte row, byte col, uint8_t keyState),        __NL__ \
+               mappedKey, row, col, keyState)                                 __NL__ \
+  _REGISTER_EVENT_HANDLER(beforeReportingState,false,())                      __NL__ \
+  _REGISTER_EVENT_HANDLER(afterEachCycle,false,())                            __NL__ \
 
