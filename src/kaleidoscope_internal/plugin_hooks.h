@@ -32,7 +32,7 @@
 //       introduced in 2) to the end of macro KALEIDOSCOPE_INIT_PLUGINS(...)
 //       and a matching weak implementation to kaleidoscope/hooks.cpp
 
-// Some words about the design of hook rooting:
+// Some words about the design of hook routing:
 //
 // The EventHandlers class implements a compile-time loop over all plugins. This
 // loop is used to call a non virtual event handler of each plugin.
