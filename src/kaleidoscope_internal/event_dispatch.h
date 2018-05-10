@@ -132,8 +132,7 @@
     */                                                                  __NL__ \
    OP(onKeyswitchEvent, true,                                           __NL__ \
                (Key &mappedKey, byte row, byte col, uint8_t keyState),  __NL__ \
-               (mappedKey, row, col, keyState),                         __NL__ \
-                ##__VA_ARGS__)                                          __NL__ \
+               (mappedKey, row, col, keyState), ##__VA_ARGS__)          __NL__ \
                                                                         __NL__ \
    /* Called before reporting our state to the host. This is the        __NL__ \
     * last point in a cycle where a plugin can alter what gets          __NL__ \
