@@ -19,6 +19,8 @@ class EventHandlerBasePlugin {
 
  public:
 
+#if !KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ 
 #define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(                             \
     HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
                                                                         __NL__ \
@@ -29,6 +31,8 @@ class EventHandlerBasePlugin {
   _FOR_EACH_EVENT_HANDLER(DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD)
 
 #undef DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD
+   
+#endif
 };
 
 class Plugin : public EventHandlerBasePlugin {
