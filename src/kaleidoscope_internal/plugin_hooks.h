@@ -150,7 +150,8 @@
   namespace kaleidoscope_internal {                                           __NL__ \
   struct EventDispatcher {                                                    __NL__ \
                                                                               __NL__ \
-    /* Call the event handler on each plugin with the handler's arguments */  __NL__ \
+    /* Iterate through plugins, calling each one's event handler with         __NL__ \
+       the arguments passed to the hook  */                                   __NL__ \
     template<typename EventHandler__, typename... Args__ >                    __NL__ \
     static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {    __NL__ \
                                                                               __NL__ \
