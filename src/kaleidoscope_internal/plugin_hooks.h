@@ -108,7 +108,7 @@ namespace kaleidoscope_internal {
 // EventHandlers' apply function called in the static functions of    
 // kaleidoscope::Hooks to forward the call to the event handlers of all    
 // registered plugins.    
-#define _DEFINE_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...)                             \
+#define _REGISTER_EVENT_HANDLER(HOOK, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE,...)                             \
     namespace kaleidoscope_internal {                                     __NL__ \
                                                                           __NL__ \
      struct EventHandler_##HOOK {                                         __NL__ \
@@ -155,15 +155,15 @@ namespace kaleidoscope_internal {
                                                                               __NL__ \
          return result;                                                       __NL__ \
       }                                                                       __NL__ \
-   }; \
-   }                                                                   __NL__ \
-                                                                       __NL__ \
-   _DEFINE_EVENT_HANDLER(onSetup,false,())                             __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeEachCycle, false, ())                   __NL__ \
-   _DEFINE_EVENT_HANDLER(onKeyswitchEvent, true,                       __NL__ \
-                (Key &mappedKey, byte row, byte col, uint8_t keyState),__NL__ \
-                mappedKey, row, col, keyState)                         __NL__ \
-   _DEFINE_EVENT_HANDLER(beforeReportingState,false,())                __NL__ \
-   _DEFINE_EVENT_HANDLER(afterEachCycle,false,())                      __NL__ \
+   };                                                                         __NL__ \
+   }                                                                          __NL__ \
+                                                                              __NL__ \
+   _REGISTER_EVENT_HANDLER(onSetup,false,())                                    __NL__ \
+   _REGISTER_EVENT_HANDLER(beforeEachCycle, false, ())                          __NL__ \
+   _REGISTER_EVENT_HANDLER(onKeyswitchEvent, true,                              __NL__ \
+                (Key &mappedKey, byte row, byte col, uint8_t keyState),       __NL__ \
+                mappedKey, row, col, keyState)                                __NL__ \
+   _REGISTER_EVENT_HANDLER(beforeReportingState,false,())                       __NL__ \
+   _REGISTER_EVENT_HANDLER(afterEachCycle,false,())                             __NL__ \
 
 }
