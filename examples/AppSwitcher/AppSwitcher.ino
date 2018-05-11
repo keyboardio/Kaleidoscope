@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * AppSwitcher -- A Kaleidoscope Example
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ KEYMAPS(
 )
 /* *INDENT-ON* */
 
-
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   switch (macroIndex) {
   case M_APPSWITCH:
@@ -57,9 +56,10 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-void setup() {
-  Kaleidoscope.use(&HostOS, &Macros);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+                          Macros);
 
+void setup() {
   Kaleidoscope.setup();
 }
 

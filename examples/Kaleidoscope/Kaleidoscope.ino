@@ -84,17 +84,16 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
+KALEIDOSCOPE_INIT_PLUGINS(TestMode,
+                          LEDControl, LEDOff,
+                          solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
+                          LEDBreatheEffect, LEDRainbowEffect, LEDChaseEffect, NumLock,
+                          Macros,
+                          MouseKeys);
+
 void setup() {
   Kaleidoscope.setup();
 
-  Kaleidoscope.use(&TestMode,
-                   &LEDControl, &LEDOff,
-                   &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
-                   &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
-
-                   &Macros,
-                   &MouseKeys,
-                   NULL);
   NumLock.numPadLayer = NUMPAD_KEYMAP;
   LEDOff.activate();
 }
