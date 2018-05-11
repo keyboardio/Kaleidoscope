@@ -112,7 +112,7 @@ void Heatmap::shiftStats(void) {
 }
 
 void Heatmap::resetMap(void) {
-  // this method can be used as a way to work around an existing bug with a single key 
+  // this method can be used as a way to work around an existing bug with a single key
   // getting special attention or if the user just wants a button to reset the map
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
