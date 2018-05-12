@@ -22,10 +22,11 @@ configuration is necessary, unless one wants to perform custom actions.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostPowerManagement.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(HostPowerManagement);
+
 void setup () {
   Kaleidoscope.setup ();
 
-  Kaleidoscope.use(&HostPowerManagement);
   HostPowerManagement.enableWakeup();
 }
 ```
