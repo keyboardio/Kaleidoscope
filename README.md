@@ -24,6 +24,7 @@ include the header, and make sure the plugin is in use:
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-Heatmap.h>
 
 static const cRGB heat_colors[] PROGMEM = {
@@ -32,6 +33,8 @@ static const cRGB heat_colors[] PROGMEM = {
   { 25, 255,  25}, // green
   { 25,  25, 255}  // red
 };
+
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl, HeatmapEffect);
 
 void setup() {
   Kaleidoscope.use(&HeatmapEffect);
