@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-CycleTimeReport -- Scan cycle time reporting
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,34 +23,48 @@ uint32_t CycleTimeReport::next_report_time_;
 uint32_t CycleTimeReport::loop_start_time_;
 uint32_t CycleTimeReport::average_loop_time;
 
-void CycleTimeReport::begin(void) {
-  Kaleidoscope.useLoopHook(loopHook);
+EventHandlerResult CycleTimeReport::onSetup() {
   next_report_time_ = millis() + 1000;
+  return EventHandlerResult::OK;
 }
 
-void CycleTimeReport::loopHook(bool post_clear) {
-  if (!post_clear)
-    return;
+EventHandlerResult CycleTimeReport::beforeEachCycle() {
+  loop_start_time_ = micros();
+  return EventHandlerResult::OK;
+}
 
-  if (loop_start_time_) {
-    uint32_t loop_time = micros() - loop_start_time_;
+EventHandlerResult CycleTimeReport::afterEachCycle() {
+  uint32_t loop_time = micros() - loop_start_time_;
 
-    if (average_loop_time)
-      average_loop_time = (average_loop_time + loop_time) / 2;
-    else
-      average_loop_time = loop_time;
+  if (average_loop_time)
+    average_loop_time = (average_loop_time + loop_time) / 2;
+  else
+    average_loop_time = loop_time;
 
-    if (millis() >= next_report_time_) {
-      cycleTimeReport();
+  if (millis() >= next_report_time_) {
+    cycleTimeReport();
 
-      average_loop_time = 0;
-      next_report_time_ = millis() + 1000;
-    }
-    loop_start_time_ = 0;
-  } else {
-    loop_start_time_ = micros();
+    average_loop_time = 0;
+    next_report_time_ = millis() + 1000;
   }
+
+  return EventHandlerResult::OK;
 }
+
+// Deprecated V1 APIs
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void CycleTimeReport::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void CycleTimeReport::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    ::CycleTimeReport.afterEachCycle();
+  else
+    ::CycleTimeReport.beforeEachCycle();
+}
+#endif
+
 }
 
 __attribute__((weak)) void cycleTimeReport(void) {
