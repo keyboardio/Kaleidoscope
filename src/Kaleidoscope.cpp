@@ -1,6 +1,8 @@
 #include "Kaleidoscope.h"
 #include <stdarg.h>
 
+namespace kaleidoscope {
+
 Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
 Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
 
@@ -9,6 +11,8 @@ Kaleidoscope_::Kaleidoscope_(void) {
 
 void
 Kaleidoscope_::setup(void) {
+  kaleidoscope::Hooks::onSetup();
+
   KeyboardHardware.setup();
 
   kaleidoscope::hid::initializeKeyboard();
@@ -31,68 +35,30 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::loop(void) {
+  kaleidoscope::Hooks::beforeEachCycle();
+
   KeyboardHardware.scanMatrix();
 
+  kaleidoscope::Hooks::beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(false);
   }
+#endif
 
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::releaseAllKeys();
 
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(true);
   }
-}
+#endif
 
-void
-Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == oldHook) {
-      eventHandlers[i] = newHook;
-      return;
-    }
-  }
-}
-
-void
-Kaleidoscope_::appendEventHandlerHook(eventHandlerHook hook) {
-  replaceEventHandlerHook((eventHandlerHook)NULL, hook);
-}
-
-void
-Kaleidoscope_::useEventHandlerHook(eventHandlerHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (eventHandlers[i] == hook)
-      return;
-  }
-  appendEventHandlerHook(hook);
-}
-
-void
-Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == oldHook) {
-      loopHooks[i] = newHook;
-      return;
-    }
-  }
-}
-
-void
-Kaleidoscope_::appendLoopHook(loopHook hook) {
-  replaceLoopHook((loopHook)NULL, hook);
-}
-
-void
-Kaleidoscope_::useLoopHook(loopHook hook) {
-  for (byte i = 0; i < HOOK_MAX; i++) {
-    if (loopHooks[i] == hook)
-      return;
-  }
-  appendLoopHook(hook);
+  kaleidoscope::Hooks::afterEachCycle();
 }
 
 bool
@@ -140,6 +106,73 @@ Kaleidoscope_ Kaleidoscope;
 
 /* Deprecated functions */
 
+/* Disable deprecation warnings for these, we only want to have those at
+ * non-internal call sites. */
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+void
+Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (eventHandlers[i] == oldHook) {
+      eventHandlers[i] = newHook;
+      return;
+    }
+  }
+#endif
+}
+
+void
+Kaleidoscope_::appendEventHandlerHook(eventHandlerHook hook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  replaceEventHandlerHook((eventHandlerHook)NULL, hook);
+#endif
+}
+
+void
+Kaleidoscope_::useEventHandlerHook(eventHandlerHook hook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (eventHandlers[i] == hook)
+      return;
+  }
+  appendEventHandlerHook(hook);
+#endif
+}
+
+void
+Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (loopHooks[i] == oldHook) {
+      loopHooks[i] = newHook;
+      return;
+    }
+  }
+#endif
+}
+
+void
+Kaleidoscope_::appendLoopHook(loopHook hook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  replaceLoopHook((loopHook)NULL, hook);
+#endif
+}
+
+void
+Kaleidoscope_::useLoopHook(loopHook hook) {
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  for (byte i = 0; i < HOOK_MAX; i++) {
+    if (loopHooks[i] == hook)
+      return;
+  }
+  appendLoopHook(hook);
+#endif
+}
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
   Kaleidoscope.useEventHandlerHook(hook);
 }
@@ -148,13 +181,18 @@ void loop_hook_use(Kaleidoscope_::loopHook hook) {
   Kaleidoscope.useLoopHook(hook);
 }
 
-void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...) {
+void __USE_PLUGINS(kaleidoscope::Plugin *plugin, ...) {
   va_list ap;
 
   Kaleidoscope.use(plugin);
 
   va_start(ap, plugin);
-  while ((plugin = (KaleidoscopePlugin *)va_arg(ap, KaleidoscopePlugin *)) != NULL)
+  while ((plugin = (kaleidoscope::Plugin *)va_arg(ap, kaleidoscope::Plugin *)) != NULL)
     Kaleidoscope.use(plugin);
   va_end(ap);
 }
+#endif
+
+#pragma GCC diagnostic pop // restore diagnostic options
+
+} // namespace kaleidoscope

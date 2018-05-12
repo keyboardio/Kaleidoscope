@@ -34,25 +34,25 @@
 
 // Allow for the creation of verbose messages in static_asserts
 //
-#define VERBOSE_STATIC_ASSERT_HEADER                                            \
-__NL__     "\n"                                                                \
-__NL__     "\n***************************************************************" \
-__NL__     "\n******************** READ THIS CAREFULLY! *********************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n"
+#define VERBOSE_STATIC_ASSERT_HEADER                                           \
+   "\n"                                                                 __NL__ \
+   "\n***************************************************************"  __NL__ \
+   "\n******************** READ THIS CAREFULLY! *********************"  __NL__ \
+   "\n***************************************************************"  __NL__ \
+   "\n"
 
 #define VERBOSE_STATIC_ASSERT_FOOTER                                           \
-__NL__     "\n"                                                                \
-__NL__     "\n***************************************************************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n***************************************************************" \
-__NL__     "\n"
+   "\n"                                                                 __NL__ \
+   "\n***************************************************************"  __NL__ \
+   "\n***************************************************************"  __NL__ \
+   "\n***************************************************************"  __NL__ \
+   "\n"
 
 #define VERBOSE_FILE_INFO                                                      \
-__NL__     "\nFile: " __FILE__
+   "\nFile: " __FILE__                                                  __NL__
 
 #define VERBOSE_LINE_INFO                                                      \
-__NL__     "\nLine: " STRINGIZE(__LINE__)
+   "\nLine: " STRINGIZE(__LINE__)                                       __NL__
 
 // The macro function RESTRICT_ARGS_COUNT can be used to generate more
 // verbose error messages when users supply an insuitable number of arguments
@@ -81,43 +81,41 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
                             NUM_EXPECTED_ARGS,                                 \
                             ORIGINAL_MACRO,                                    \
                             ...)                                               \
-__NN__   (                                                                     \
-__NL__   []{ /* Here we are in the body of a dummy lambda function.            \
-__NN__          []{} is, BTW, the shortest way to write a lambda.              \
-__NN__          It is only used to hold the static_assert that cannot be       \
-__NN__          defined directly in the keymap initializer list. By using the  \
-__NN__          comma operator ((A, B) always evaluates to b), we ensure       \
-__NN__          that not the lambda but B is what ASSERT_ARGS_COUNT            \
-__NN__          finally evaluates to.                                          \
-__NN__          Please not that passing B through this macro is a must         \
-__NN__          as we need it for the comma operator to work.                  \
-__NN__         */                                                              \
-__NN__   static_assert(sizeof(const char) == sizeof(#__VA_ARGS__ ),            \
-__NN__        /* sizeof(const char) == sizeof(#__VA_ARGS__ ) checks the quoted \
-__NN__           list of additional arguments. If there are none, then the     \
-__NN__           length of #__VA_ARGS__ is a single char as it contains '\0'.  \
-__NN__           This check is not able to find the corner case of a single    \
-__NN__           superfluous comma at the end of the macro arguments as this   \
-__NN__           causes #__VA_ARGS__ being empty (only '\0').                  \
-__NN__         */                                                              \
-__NN__     VERBOSE_STATIC_ASSERT_HEADER                                         \
-__NN__                                                                         \
-__NN__     VERBOSE_FILE_INFO                                                   \
-__NN__     VERBOSE_LINE_INFO                                                   \
-__NL__     "\n"                                                                \
-__NL__     "\nStrange arguments encountered in invocation of " #ORIGINAL_MACRO "."   \
-__NL__     "\n"                                                                \
-__NL__     "\nPlease make sure to pass exactly " #NUM_EXPECTED_ARGS            \
-__NN__                                          " macro arguments to"          \
-__NL__     "\n" #ORIGINAL_MACRO ". Also make sure that there are no dangling"  \
-__NL__     "\ncommas at the end of the argument list."                         \
-__NL__     "\n"                                                                \
-__NL__     "\nThis is the superfluous part at the end of the macro"            \
-__NL__     "\narguments list: \'" #__VA_ARGS__ "\'"                            \
-__NN__                                                                         \
-__NN__     VERBOSE_STATIC_ASSERT_FOOTER                                        \
-__NL__   );                                                                    \
-__NL__                                                                         \
-__NL__   }, /* End of dummy lambda, the comma operator's A operand. */         \
-__NL__   B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */             \
-__NL__   )
+   (                                                                        __NL__ \
+   []{ /* Here we are in the body of a dummy lambda function.            */ __NL__ \
+       /* []{} is, BTW, the shortest way to write a lambda.              */ __NL__ \
+       /* It is only used to hold the static_assert that cannot be       */ __NL__ \
+       /* defined directly in the keymap initializer list. By using the  */ __NL__ \
+       /* comma operator ((A, B) always evaluates to b), we ensure       */ __NL__ \
+       /* that not the lambda but B is what ASSERT_ARGS_COUNT            */ __NL__ \
+       /* finally evaluates to.                                          */ __NL__ \
+       /* Please not that passing B through this macro is a must         */ __NL__ \
+       /* as we need it for the comma operator to work.                  */ __NL__ \
+   static_assert(sizeof(const char) == sizeof(#__VA_ARGS__ ),               __NL__ \
+        /* sizeof(const char) == sizeof(#__VA_ARGS__ ) checks the quoted */ __NL__ \
+        /* list of additional arguments. If there are none, then the     */ __NL__ \
+        /* length of #__VA_ARGS__ is a single char as it contains '\0'.  */ __NL__ \
+        /* This check is not able to find the corner case of a single    */ __NL__ \
+        /* superfluous comma at the end of the macro arguments as this   */ __NL__ \
+        /* causes #__VA_ARGS__ being empty (only '\0').                  */ __NL__ \
+     VERBOSE_STATIC_ASSERT_HEADER                                           __NL__ \
+                                                                            __NL__ \
+     VERBOSE_FILE_INFO                                                      __NL__ \
+     VERBOSE_LINE_INFO                                                      __NL__ \
+     "\n"                                                                   __NL__ \
+     "\nStrange arguments found in invocation of " #ORIGINAL_MACRO "."      __NL__ \
+     "\n"                                                                   __NL__ \
+     "\nPlease make sure to pass exactly " #NUM_EXPECTED_ARGS               __NL__ \
+                                          " macro arguments to"             __NL__ \
+     "\n" #ORIGINAL_MACRO ". Also make sure that there are no dangling"     __NL__ \
+     "\ncommas at the end of the argument list."                            __NL__ \
+     "\n"                                                                   __NL__ \
+     "\nThis is the superfluous part at the end of the macro"               __NL__ \
+     "\narguments list: \'" #__VA_ARGS__ "\'"                               __NL__ \
+                                                                            __NL__ \
+     VERBOSE_STATIC_ASSERT_FOOTER                                           __NL__ \
+   );                                                                       __NL__ \
+                                                                            __NL__ \
+   }, /* End of dummy lambda, the comma operator's A operand. */            __NL__ \
+   B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */                __NL__ \
+   )

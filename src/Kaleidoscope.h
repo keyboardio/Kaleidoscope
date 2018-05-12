@@ -18,12 +18,16 @@ void setup();
 
 #include <stdio.h>
 #include <math.h>
-
+#include <stdint.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
+#include "macro_map.h"
+#include "kaleidoscope_internal/event_dispatch.h"
+#include "macro_helpers.h"
+#include "plugin.h"
 
 #define HOOK_MAX 64
 
@@ -66,29 +70,7 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
 
-class Kaleidoscope_;
-
-class KaleidoscopePlugin {
-  friend class Kaleidoscope_;
-
- protected:
-
-  /** Initial plugin setup hook.
-   * All plugins are supposed to provide a singleton object, statically
-   * initialized at compile-time (with few exceptions). Because of this, the
-   * order in which they are instantiated is unspecified, and cannot be relied
-   * upon. For this reason, one's expected to explicitly initialize, "use" the
-   * plugins one wishes to, by calling `Kaleidoscope.use()` with a list of plugin
-   * object pointers.
-   *
-   * This function will in turn call the `begin` function of each plugin,
-   * so that they can perform any initial setup they wish, such as registering
-   * event handler or loop hooks. This is the only time this function will be
-   * called. It is intentionally protected, and accessible by the `Kaleidoscope`
-   * class only.
-   */
-  virtual void begin(void) { };
-};
+namespace kaleidoscope {
 
 class Kaleidoscope_ {
  public:
@@ -103,13 +85,39 @@ class Kaleidoscope_ {
 
   // ---- Kaleidoscope.use() ----
 
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+#define DEPRECATED_USE "\n"                                                         \
+    "------------------------------------------------------------------------\n"    \
+    "Your sketch uses Kaleidoscope.use(), an old-style API to initialize\n"         \
+    "plugins. To fix this, you need to modify your .ino sketch file, and\n"         \
+    "replacing the text \"Kaleidoscope.use\" with \"KALEIDOSCOPE_INIT_PLUGINS\",\n" \
+    "then remove the & from all of the plugins inside it, and finally, move\n"      \
+    "it outside of \"setup()\":\n"                                                  \
+    "\n"                                                                            \
+    "If your current sketch looks like this: \n"                                    \
+    "  void setup() {\n"                                                            \
+    "    Kaleidoscope.use(&Plugin1, &Plugin2);\n"                                   \
+    "    Kaleidoscope.setup();\n"                                                   \
+    "  }\n"                                                                         \
+    "\n"                                                                            \
+    "You should change it so that it looks like this:\n"                            \
+    "  KALEIDOSCOPE_INIT_PLUGINS(Plugin1, Plugin2);\n"                              \
+    "  void setup() {\n"                                                            \
+    "    Kaleidoscope.setup();\n"                                                   \
+    "  }\n"                                                                         \
+    "\n"                                                                            \
+    "If this error doesn't make sense to you or you have any trouble, please\n"     \
+    "send a copy of your .ino sketch file to help@keyboard.io and we can\n"         \
+    "help fix it.\n"                                                                \
+    "------------------------------------------------------------------------\n"
+
   // First, we have the zero-argument version, which will satisfy the tail case.
   inline void use() {
   }
 
   // Then, the one-argument version, that gives us type safety for a single
   // plugin.
-  inline void use(KaleidoscopePlugin *p) {
+  inline void __attribute__((deprecated(DEPRECATED_USE))) use(kaleidoscope::Plugin *p) {
     p->begin();
   }
 
@@ -124,10 +132,14 @@ class Kaleidoscope_ {
   // are passed back to either ourselves, or the zero-argument version a few
   // lines above.
   template <typename... Plugins>
-  void use(KaleidoscopePlugin *first, Plugins&&... plugins) {
+  void __attribute__((deprecated(DEPRECATED_USE))) use(kaleidoscope::Plugin *first, Plugins&&... plugins) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     use(first);
     use(plugins...);
+#pragma GCC diagnostic pop
   }
+#endif
 
   // ---- hooks ----
 
@@ -147,21 +159,39 @@ class Kaleidoscope_ {
   typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
-  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
-  static void appendEventHandlerHook(eventHandlerHook hook);
-  static void useEventHandlerHook(eventHandlerHook hook);
+  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
+  static void appendEventHandlerHook(eventHandlerHook hook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
+  static void useEventHandlerHook(eventHandlerHook hook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.onKeyswitchEvent(...) instead.")));
 
   typedef void (*loopHook)(bool postClear);
   static loopHook loopHooks[HOOK_MAX];
 
-  static void replaceLoopHook(loopHook oldHook, loopHook newHook);
-  static void appendLoopHook(loopHook hook);
-  static void useLoopHook(loopHook hook);
+  static void replaceLoopHook(loopHook oldHook, loopHook newHook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
+  static void appendLoopHook(loopHook hook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
+  static void useLoopHook(loopHook hook)
+  __attribute__((deprecated("Please implement kaleidoscope::Plugin.beforeEachCycle(), .beforeReportingState(...) or .afterEachCycle(...) instead.")));
 
   static bool focusHook(const char *command);
 };
 
-extern Kaleidoscope_ Kaleidoscope;
+extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
+
+} // namespace kaleidoscope
+
+// For compatibility reasons we enable class Kaleidoscope_ also to be available
+// in global namespace.
+//
+typedef kaleidoscope::Kaleidoscope_  Kaleidoscope_;
+
+// For compatibility reasons we enable the global variable Kaleidoscope
+// in global namespace.
+//
+using kaleidoscope::Kaleidoscope;
 
 #define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \
                                            "layer.on\n"             \
@@ -170,12 +200,18 @@ extern Kaleidoscope_ Kaleidoscope;
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
 
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
+void event_handler_hook_use(kaleidoscope::Kaleidoscope_::eventHandlerHook hook)
 __attribute__((deprecated("Use Kaleidoscope.useEventHandlerHook instead")));
-void loop_hook_use(Kaleidoscope_::loopHook hook)
+void loop_hook_use(kaleidoscope::Kaleidoscope_::loopHook hook)
 __attribute__((deprecated("Use Kaleidoscope.useLoopHook instead")));
 
-void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...)
+void __USE_PLUGINS(kaleidoscope::Plugin *plugin, ...)
 __attribute__((deprecated("Use Kaleidoscope.use(...) instead")));
 
 #define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
+
+// Use this function macro to register plugins with Kaleidoscope's
+// hooking system. The macro accepts a list of plugin instances that
+// must have been instantiated at global scope.
+//
+#define KALEIDOSCOPE_INIT_PLUGINS(...) _KALEIDOSCOPE_INIT_PLUGINS(__VA_ARGS__)

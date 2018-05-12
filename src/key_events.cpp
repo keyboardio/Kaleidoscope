@@ -1,5 +1,6 @@
 #include "Kaleidoscope.h"
-
+#include "kaleidoscope/hooks.h"
+#include "plugin.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & RESERVED)
@@ -92,12 +93,21 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
 
   // Keypresses with out-of-bounds (row,col) start here in the processing chain
 
+  // Legacy event handlers
+#if KALEIDOSCOPE_ENABLE_V1_API
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
     mappedKey = (*handler)(mappedKey, row, col, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
       return;
   }
+#endif
+
+  // New event handler interface
+  //
+  if (kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, row, col, keyState) != kaleidoscope::EventHandlerResult::OK)
+    return;
+
   mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
   if (mappedKey.raw == Key_NoKey.raw)
     return;
