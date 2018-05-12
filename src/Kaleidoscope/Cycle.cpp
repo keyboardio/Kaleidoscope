@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +31,6 @@ uint8_t Cycle::cycle_count_;
 
 // --- api ---
 
-Cycle::Cycle(void) {
-}
-
-void Cycle::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
 void Cycle::replace(Key key) {
   handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
   hid::sendKeyboardReport();
@@ -60,14 +53,15 @@ void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
 
 // --- hooks ---
 
-Key Cycle::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (key_state & INJECTED)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    if (isCycle(mapped_key))
-      return Key_NoKey;
-    return mapped_key;
+    if (isCycle(mapped_key)) {
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
+    return EventHandlerResult::OK;
   }
 
   if (!isCycle(mapped_key)) {
@@ -75,16 +69,32 @@ Key Cycle::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_stat
       last_non_cycle_key_.raw = mapped_key.raw;
       cycle_count_ = 0;
     }
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
-  if (!keyToggledOff(key_state))
-    return Key_NoKey;
+  if (!keyToggledOff(key_state)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   ++cycle_count_;
   cycleAction(last_non_cycle_key_, cycle_count_);
+  return EventHandlerResult::EVENT_CONSUMED;
+}
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+// Deprecated v1 API
+void Cycle::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key Cycle::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::Cycle.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
   return Key_NoKey;
 }
+#endif
+
 };
 
 __attribute__((weak))

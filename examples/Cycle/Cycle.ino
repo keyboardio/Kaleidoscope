@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,9 +51,9 @@ void cycleAction(Key previous_key, uint8_t cycle_count) {
   }
 }
 
-void setup() {
-  Kaleidoscope.use(&Cycle);
+KALEIDOSCOPE_INIT_PLUGINS(Cycle);
 
+void setup() {
   Kaleidoscope.setup();
 }
 
