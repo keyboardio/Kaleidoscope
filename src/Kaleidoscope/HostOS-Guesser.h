@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ namespace hostos {
 
 class Guesser : public Base {
  public:
-  Guesser(void);
+  Guesser(void) {}
 
  protected:
   void autoDetect(void) final;
