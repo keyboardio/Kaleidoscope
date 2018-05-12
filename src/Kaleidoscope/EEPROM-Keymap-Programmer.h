@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap-Programmer -- On-the-fly reprogrammable keymap.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <Kaleidoscope-EEPROM-Keymap.h>
 
 namespace kaleidoscope {
-class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
+class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
  public:
   typedef enum {
     CODE,
@@ -30,9 +30,7 @@ class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
   } mode_t;
   static mode_t mode;
 
-  EEPROMKeymapProgrammer(void);
-
-  void begin(void) final;
+  EEPROMKeymapProgrammer(void) {}
 
   static void activate(void) {
     nextState();
@@ -41,6 +39,14 @@ class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
   static void cancel(void);
 
   static bool focusHook(const char *command);
+
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   typedef enum {
@@ -53,8 +59,6 @@ class EEPROMKeymapProgrammer : public KaleidoscopePlugin {
 
   static uint16_t update_position_;  // layer, row, col
   static Key new_key_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 }
 
