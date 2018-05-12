@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Settings -- Basic EEPROM settings plugin for Kaleidoscope.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,11 +26,9 @@ bool EEPROMSettings::is_valid_;
 bool EEPROMSettings::sealed_;
 uint16_t EEPROMSettings::next_start_ = sizeof(EEPROMSettings::settings);
 
-EEPROMSettings::EEPROMSettings(void) {
-}
-
-void EEPROMSettings::begin(void) {
+EventHandlerResult EEPROMSettings::onSetup() {
   EEPROM.get(0, settings_);
+  return EventHandlerResult::OK;
 }
 
 bool EEPROMSettings::isValid(void) {
@@ -65,6 +63,9 @@ uint16_t EEPROMSettings::requestSlice(uint16_t size) {
   if (sealed_)
     return 0;
 
+  Serial.print("requestSlice; size=");
+  Serial.println(size);
+
   uint16_t start = next_start_;
   next_start_ += size;
 
@@ -96,6 +97,13 @@ void EEPROMSettings::version(uint8_t ver) {
   settings_.version = ver;
   update();
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void EEPROMSettings::begin() {
+  ::EEPROMSettings.onSetup();
+}
+#endif
 
 }
 
