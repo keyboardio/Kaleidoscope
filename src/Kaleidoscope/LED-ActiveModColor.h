@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,20 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
-class ActiveModColorEffect : public KaleidoscopePlugin {
+class ActiveModColorEffect : public kaleidoscope::Plugin {
  public:
   ActiveModColorEffect(void) {}
-
-  void begin(void) final;
 
   static cRGB highlight_color;
   static cRGB sticky_color;
 
- private:
-  static void loopHook(bool is_post_clear);
+  EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 };
 }
 

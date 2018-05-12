@@ -22,11 +22,13 @@ is also possible to use a custom color instead of the white default.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-ActiveModColor.h>
 
-void setup () {
-  Kaleidoscope.use(&ActiveModColorEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          ActiveModColorEffect);
 
+void setup () {
   Kaleidoscope.setup ();
 
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);

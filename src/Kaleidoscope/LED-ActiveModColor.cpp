@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,7 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
 
 cRGB ActiveModColorEffect::sticky_color = CRGB(0xff, 0x00, 0x00);
 
-void ActiveModColorEffect::begin(void) {
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
-void ActiveModColorEffect::loopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
+EventHandlerResult ActiveModColorEffect::beforeReportingState() {
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);
@@ -64,7 +57,24 @@ void ActiveModColorEffect::loopHook(bool is_post_clear) {
       }
     }
   }
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void ActiveModColorEffect::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void ActiveModColorEffect::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+
+  ::ActiveModColorEffect.beforeReportingState();
+}
+#endif
+
 
 }
 
