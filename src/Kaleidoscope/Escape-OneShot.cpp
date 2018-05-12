@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Escape-OneShot -- Turn ESC into a key that cancels OneShots, if active.
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,28 +22,35 @@
 
 namespace kaleidoscope {
 
-EscapeOneShot::EscapeOneShot(void) {
-}
-
-void EscapeOneShot::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
-Key EscapeOneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (mapped_key.raw != Key_Escape.raw ||
-      (key_state & INJECTED) ||
-      !keyToggledOn(key_state))
-    return mapped_key;
+      (keyState & INJECTED) ||
+      !keyToggledOn(keyState))
+    return EventHandlerResult::OK;
 
   if (!::OneShot.isActive())
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   KeyboardHardware.maskKey(row, col);
 
   ::OneShot.cancel(true);
+  return EventHandlerResult::EVENT_CONSUMED;
+}
 
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void EscapeOneShot::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key EscapeOneShot::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t keyState) {
+  EventHandlerResult r = ::EscapeOneShot.onKeyswitchEvent(mapped_key, row, col, keyState);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
   return Key_NoKey;
 }
+#endif
+
 
 }
 

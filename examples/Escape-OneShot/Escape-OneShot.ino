@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Escape-OneShot -- Turn ESC into a key that cancels OneShots, if active.
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
 
+// *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (
@@ -33,7 +34,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
     Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
     Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
-    Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+               Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, OSM(RightAlt), Key_Spacebar, OSM(RightControl),
@@ -52,17 +53,19 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
     ___, ___,         ___,         	___,        	___,        	___, ___,
     ___, ___,         ___,         	___,        	___,        	___, ___,
-    Key_UpArrow, Key_DownArrow, 	Key_LeftArrow, 	Key_RightArrow, ___, ___,
+         Key_UpArrow, Key_DownArrow, 	Key_LeftArrow, 	Key_RightArrow, ___, ___,
     ___, ___,         ___,         	___,        	___,        	___, ___,
 
     ___, ___, ___, ___,
     ___
   ),
-
 };
+// *INDENT-ON*
+
+KALEIDOSCOPE_INIT_PLUGINS(OneShot,
+                          EscapeOneShot);
 
 void setup() {
-  Kaleidoscope.use(&OneShot, &EscapeOneShot);
   Kaleidoscope.setup();
 }
 
