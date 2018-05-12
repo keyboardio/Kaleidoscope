@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Leader -- VIM-style leader keys
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,41 +71,34 @@ int8_t Leader::lookup(void) {
 
 // --- api ---
 
-Leader::Leader(void) {
-}
-
-void Leader::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
 void Leader::reset(void) {
   sequence_pos_ = 0;
   sequence_[0].raw = Key_NoKey.raw;
 }
 
 void Leader::inject(Key key, uint8_t key_state) {
-  eventHandlerHook(key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
+  onKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
 }
 
 // --- hooks ---
-Key Leader::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  if (key_state & INJECTED)
-    return mapped_key;
+EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+  if (keyState & INJECTED)
+    return EventHandlerResult::OK;
 
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    if (isLeader(mapped_key))
-      return Key_NoKey;
-    return mapped_key;
+  if (!keyIsPressed(keyState) && !keyWasPressed(keyState)) {
+    if (isLeader(mapped_key)) {
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
+    return EventHandlerResult::OK;
   }
 
   if (!isActive() && !isLeader(mapped_key))
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (!isActive()) {
     // Must be a leader key!
 
-    if (keyToggledOff(key_state)) {
+    if (keyToggledOff(keyState)) {
       // not active, but a leader key = start the sequence on key release!
       end_time_ = millis() + time_out;
       sequence_pos_ = 0;
@@ -113,53 +106,76 @@ Key Leader::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
     }
 
     // If the sequence was not active yet, ignore the key.
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // active
   int8_t action_index = lookup();
 
-  if (keyToggledOn(key_state)) {
+  if (keyToggledOn(keyState)) {
     sequence_pos_++;
     if (sequence_pos_ > LEADER_MAX_SEQUENCE_LENGTH) {
       reset();
-      return mapped_key;
+      return EventHandlerResult::OK;
     }
 
     end_time_ = millis() + time_out;
     sequence_[sequence_pos_].raw = mapped_key.raw;
     action_index = lookup();
 
-    if (action_index >= 0)
-      return Key_NoKey;
-  } else if (keyIsPressed(key_state)) {
+    if (action_index >= 0) {
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
+  } else if (keyIsPressed(keyState)) {
     // held, no need for anything here.
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (action_index == NO_MATCH) {
     reset();
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
   if (action_index == PARTIAL_MATCH) {
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   action_t leaderAction = (action_t) pgm_read_ptr(&(dictionary[action_index].action));
   (*leaderAction)(action_index);
-  return Key_NoKey;
+
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-void Leader::loopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-
+EventHandlerResult Leader::afterEachCycle() {
   if (!isActive())
-    return;
+    return EventHandlerResult::OK;
 
   if (millis() >= end_time_)
     reset();
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void Leader::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+Key Leader::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::Leader.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+
+void Leader::legacyLoopHook(bool is_post_clear) {
+  if (!is_post_clear)
+    return;
+
+  ::Leader.afterEachCycle();
+}
+#endif
 
 }
 

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Leader -- VIM-style leader keys
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 
 namespace kaleidoscope {
 
-class Leader : public KaleidoscopePlugin {
+class Leader : public kaleidoscope::Plugin {
  public:
   typedef void (*action_t)(uint8_t seq_index);
   typedef struct {
@@ -38,23 +38,29 @@ class Leader : public KaleidoscopePlugin {
     action_t action;
   } dictionary_t;
 
-  Leader(void);
+  Leader(void) {}
   static const dictionary_t *dictionary;
-
-  void begin(void) final;
 
   static void reset(void);
   static uint16_t time_out;
 
   void inject(Key key, uint8_t key_state);
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult afterEachCycle();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
   static uint8_t sequence_pos_;
   static uint32_t end_time_;
 
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void loopHook(bool is_post_clear);
   static int8_t lookup(void);
 };
 
