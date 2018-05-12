@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-GhostInTheFirmware -- Let the keyboard write for you!
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
-class GhostInTheFirmware : public KaleidoscopePlugin {
+class GhostInTheFirmware : public kaleidoscope::Plugin {
  public:
   typedef struct {
     byte row;
@@ -31,10 +31,17 @@ class GhostInTheFirmware : public KaleidoscopePlugin {
   } GhostKey;
   static const GhostKey *ghost_keys;
 
-  GhostInTheFirmware(void);
+  GhostInTheFirmware(void) {}
 
-  void begin(void) final;
   static void activate(void);
+
+  EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   static bool is_active_;

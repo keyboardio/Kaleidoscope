@@ -28,20 +28,13 @@ uint32_t GhostInTheFirmware::start_time_;
 uint16_t GhostInTheFirmware::press_timeout_;
 uint16_t GhostInTheFirmware::delay_timeout_;
 
-GhostInTheFirmware::GhostInTheFirmware(void) {
-}
-
-void GhostInTheFirmware::begin(void) {
-  Kaleidoscope.useLoopHook(this->loopHook);
-}
-
 void GhostInTheFirmware::activate(void) {
   is_active_ = true;
 }
 
-void GhostInTheFirmware::loopHook(bool is_post_clear) {
-  if (is_post_clear || !is_active_)
-    return;
+EventHandlerResult GhostInTheFirmware::beforeReportingState() {
+  if (!is_active_)
+    return EventHandlerResult::OK;
 
   if (press_timeout_ == 0) {
     press_timeout_ = pgm_read_word(&(ghost_keys[current_pos_].pressTime));
@@ -50,7 +43,7 @@ void GhostInTheFirmware::loopHook(bool is_post_clear) {
     if (press_timeout_ == 0) {
       current_pos_ = 0;
       is_active_ = false;
-      return;
+      return EventHandlerResult::OK;
     }
     is_pressed_ = true;
     start_time_ = millis();
@@ -73,7 +66,23 @@ void GhostInTheFirmware::loopHook(bool is_post_clear) {
       press_timeout_ = 0;
     }
   }
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void GhostInTheFirmware::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void GhostInTheFirmware::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+
+  ::GhostInTheFirmware.beforeReportingState();
+}
+#endif
 
 };
 

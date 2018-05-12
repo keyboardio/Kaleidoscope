@@ -43,9 +43,10 @@ static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
   {0, 0, 0}
 };
 
-void setup() {
-  Kaleidoscope.use(&GhostInTheFirmware, &Macros);
+KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
+                          Macros);
 
+void setup() {
   Kaleidoscope.setup ();
 
   GhostInTheFirmware.ghost_keys = ghost_keys;
