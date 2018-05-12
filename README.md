@@ -24,13 +24,19 @@ and register the `Focus` hooks:
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FingerPainter.h>
 #include <Kaleidoscope-Focus.h>
 
-void setup() {
-  Kaleidoscope.use(&EEPROMSettings, &FingerPainter, &Focus);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          EEPromSettings,
+                          LEDPaletteTheme,
+                          FingerPainter,
+                          Focus);
 
+void setup() {
   Kaleidoscope.setup();
 
   EEPROMSettings.seal();

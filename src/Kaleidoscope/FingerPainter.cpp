@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-FingerPainter -- On-the-fly keyboard painting.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,9 @@ namespace kaleidoscope {
 uint16_t FingerPainter::color_base_;
 bool FingerPainter::edit_mode_;
 
-void FingerPainter::setup(void) {
-  Kaleidoscope.use(&::LEDPaletteTheme);
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-
+EventHandlerResult FingerPainter::onSetup() {
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);
+  return EventHandlerResult::OK;
 }
 
 void FingerPainter::update(void) {
@@ -47,15 +45,16 @@ void FingerPainter::toggle(void) {
   edit_mode_ = !edit_mode_;
 }
 
-Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (!edit_mode_)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
-  if (!keyToggledOn(key_state))
-    return Key_NoKey;
+  if (!keyToggledOn(key_state)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   if (row >= ROWS || col >= COLS)
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
 
   uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col));
 
@@ -76,7 +75,7 @@ Key FingerPainter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t 
 
   ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col), color_index);
 
-  return Key_NoKey;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 bool FingerPainter::focusHook(const char *command) {
@@ -107,6 +106,20 @@ bool FingerPainter::focusHook(const char *command) {
 
   return true;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void FingerPainter::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key FingerPainter::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::FingerPainter.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 
