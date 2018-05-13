@@ -47,7 +47,7 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
  * the API is used - it is entirely up to the plugin or sketch author. The point
  * of this macro is to let them easily check the version.
  */
-#define KALEIDOSCOPE_API_VERSION 1
+#define KALEIDOSCOPE_API_VERSION 2
 
 /** Required Kaleidoscope major version.
  *
