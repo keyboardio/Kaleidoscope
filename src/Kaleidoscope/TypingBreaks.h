@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TypingBreaks -- Enforced typing breaks
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,9 @@
 
 namespace kaleidoscope {
 
-class TypingBreaks : public KaleidoscopePlugin {
+class TypingBreaks : public kaleidoscope::Plugin {
  public:
-  TypingBreaks(void);
-
-  void begin(void) final;
+  TypingBreaks(void) {}
 
   static void enableEEPROM(void);
   static bool focusHook(const char *command);
@@ -41,6 +39,14 @@ class TypingBreaks : public KaleidoscopePlugin {
 
   static settings_t settings;
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
+
  private:
   static uint32_t session_start_time_;
   static uint32_t lock_start_time_;
@@ -49,8 +55,6 @@ class TypingBreaks : public KaleidoscopePlugin {
   static uint16_t right_hand_keys_;
 
   static uint16_t settings_base_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
 }

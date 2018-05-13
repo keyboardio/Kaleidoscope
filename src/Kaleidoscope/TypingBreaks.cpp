@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TypingBreaks -- Enforced typing breaks
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,27 +37,22 @@ uint16_t TypingBreaks::left_hand_keys_;
 uint16_t TypingBreaks::right_hand_keys_;
 uint16_t TypingBreaks::settings_base_;
 
-TypingBreaks::TypingBreaks(void) {
-}
-
-void TypingBreaks::begin(void) {
-  Kaleidoscope.useEventHandlerHook(this->eventHandlerHook);
-}
-
-Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   uint32_t lock_length = settings.lock_length * 1000;
   uint32_t idle_time_limit = settings.idle_time_limit * 1000;
   uint32_t lock_time_out = settings.lock_time_out * 1000;
 
   // If we are locked, and didn't time out yet, no key has to be pressed.
-  if (lock_start_time_ && (millis() - lock_start_time_ <= lock_length))
-    return Key_NoKey;
+  if (lock_start_time_ && (millis() - lock_start_time_ <= lock_length)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   // If we are locked...
   if (lock_start_time_) {
     // ...and the lock has not expired yet
-    if (millis() - lock_start_time_ <= lock_length)
-      return Key_NoKey;  // remain locked
+    if (millis() - lock_start_time_ <= lock_length) {
+      return EventHandlerResult::EVENT_CONSUMED;  // remain locked
+    }
 
     // ...otherwise clear the lock
     lock_start_time_ = 0;
@@ -81,14 +76,14 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
   if (settings.left_hand_max_keys && left_hand_keys_ >= settings.left_hand_max_keys) {
     lock_start_time_ = millis();
     TypingBreak(true);
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // If we have a limit on the right hand, and we reached it, lock up!
   if (settings.right_hand_max_keys && right_hand_keys_ >= settings.right_hand_max_keys) {
     lock_start_time_ = millis();
     TypingBreak(true);
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (lock_time_out) {
@@ -97,7 +92,7 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
       // Yeah, it is.
       lock_start_time_ = last_key_time_;
       TypingBreak(true);
-      return Key_NoKey;
+      return EventHandlerResult::EVENT_CONSUMED;
     }
   }
 
@@ -112,7 +107,7 @@ Key TypingBreaks::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t k
     last_key_time_ = millis();
   }
 
-  return mapped_key;
+  return EventHandlerResult::OK;
 }
 
 void TypingBreaks::enableEEPROM(void) {
@@ -194,6 +189,22 @@ bool TypingBreaks::focusHook(const char *command) {
   EEPROM.put(settings_base_, settings);
   return true;
 }
+
+// Legacy V1 API
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void TypingBreaks::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key TypingBreaks::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::TypingBreaks.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
+
 }
 
 kaleidoscope::TypingBreaks TypingBreaks;
