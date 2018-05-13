@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Syster -- Symbolic input system
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 
 namespace kaleidoscope {
 
-class Syster : public KaleidoscopePlugin {
+class Syster : public kaleidoscope::Plugin {
  public:
   typedef enum {
     StartAction,
@@ -35,19 +35,24 @@ class Syster : public KaleidoscopePlugin {
     SymbolAction
   } action_t;
 
-  Syster(void);
+  Syster(void) {}
 
-  void begin(void) final;
   static void reset(void);
 
   bool is_active(void);
+
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
   static uint8_t symbol_pos_;
   static bool is_active_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 

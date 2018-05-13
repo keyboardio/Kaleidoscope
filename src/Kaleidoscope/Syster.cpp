@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Syster -- Symbolic input system
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,14 +32,6 @@ bool Syster::is_active_;
 #define isSyster(k) (k == kaleidoscope::ranges::SYSTER)
 
 // --- api ---
-
-Syster::Syster(void) {
-}
-
-void Syster::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
 void Syster::reset(void) {
   symbol_pos_ = 0;
   symbol_[0] = 0;
@@ -51,28 +43,30 @@ bool Syster::is_active(void) {
 }
 
 // --- hooks ---
-Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (!is_active_) {
     if (!isSyster(mapped_key))
-      return mapped_key;
+      return EventHandlerResult::OK;
 
-    if (keyToggledOn(key_state)) {
+    if (keyToggledOn(keyState)) {
       is_active_ = true;
       systerAction(StartAction, NULL);
     }
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (key_state & INJECTED)
-    return mapped_key;
+  if (keyState & INJECTED)
+    return EventHandlerResult::OK;
 
-  if (isSyster(mapped_key))
-    return Key_NoKey;
+  if (isSyster(mapped_key)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
-  if (mapped_key == Key_Backspace && symbol_pos_ == 0)
-    return Key_NoKey;
+  if (mapped_key == Key_Backspace && symbol_pos_ == 0) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
-  if (keyToggledOff(key_state)) {
+  if (keyToggledOff(keyState)) {
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
         handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
@@ -87,11 +81,11 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
       systerAction(SymbolAction, symbol_);
       reset();
 
-      return Key_NoKey;
+      return EventHandlerResult::EVENT_CONSUMED;
     }
   }
 
-  if (keyToggledOn(key_state)) {
+  if (keyToggledOn(keyState)) {
     if (mapped_key == Key_Backspace) {
       if (symbol_pos_ > 0)
         symbol_pos_--;
@@ -102,8 +96,23 @@ Key Syster::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_sta
     }
   }
 
-  return mapped_key;
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void Syster::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key Syster::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::Syster.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 
