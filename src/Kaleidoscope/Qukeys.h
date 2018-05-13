@@ -72,7 +72,7 @@ struct QueueItem {
 };
 
 // The plugin itself
-class Qukeys : public KaleidoscopePlugin {
+class Qukeys : public kaleidoscope::Plugin {
   // I could use a bitfield to get the state values, but then we'd
   // have to check the key_queue (there are three states). Or use a
   // second bitfield for the indeterminite state. Using a bitfield
@@ -81,7 +81,6 @@ class Qukeys : public KaleidoscopePlugin {
  public:
   Qukeys(void);
 
-  void begin(void) final;
   static void activate(void) {
     active_ = true;
   }
@@ -100,6 +99,16 @@ class Qukeys : public KaleidoscopePlugin {
 
   static Qukey * qukeys;
   static uint8_t qukeys_count;
+
+  EventHandlerResult onSetup();
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   static bool active_;
@@ -125,11 +134,6 @@ class Qukeys : public KaleidoscopePlugin {
   static void flushQueue(int8_t index);
   static void flushQueue(void);
   static bool isQukey(uint8_t addr);
-
-  static Key keyScanHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void preReportHook(void);
-  static void postReportHook(void) {}
-  static void loopHook(bool post_clear);
 };
 
 } // namespace kaleidoscope {
