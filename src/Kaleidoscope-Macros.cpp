@@ -183,21 +183,23 @@ const macro_t *Macros_::type(const char *string) {
   return MACRO_NONE;
 }
 
-Key Macros_::handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+kaleidoscope::EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
-    return mappedKey;
+    return kaleidoscope::EventHandlerResult::OK;
 
   byte key_id = (row * COLS) + col;
   addActiveMacroKey(mappedKey.keyCode, key_id, keyState);
-  return Key_NoKey;
+
+  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
 }
 
-void Macros_::loopHook(bool post_clear) {
-  if (post_clear) {
-    active_macro_count = 0;
-    return;
-  }
+kaleidoscope::EventHandlerResult Macros_::afterEachCycle() {
+  active_macro_count = 0;
 
+  return kaleidoscope::EventHandlerResult::OK;
+}
+
+kaleidoscope::EventHandlerResult Macros_::beforeReportingState() {
   for (byte i = 0; i < active_macro_count; ++i) {
     if (active_macros[i].key_id == 0xFF) {
       // i.e. UNKNOWN_KEYSWITCH_LOCATION
@@ -211,16 +213,30 @@ void Macros_::loopHook(bool post_clear) {
                                    active_macros[i].key_state);
     Macros.play(m);
   }
+  return kaleidoscope::EventHandlerResult::OK;
 }
 
-Macros_::Macros_(void) {
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void Macros_::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
 }
 
-void
-Macros_::begin(void) {
-  active_macro_count = 0;
-  Kaleidoscope.useEventHandlerHook(handleMacroEvent);
-  Kaleidoscope.useLoopHook(loopHook);
+Key Macros_::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  kaleidoscope::EventHandlerResult r = Macros.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == kaleidoscope::EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
 }
+
+void Macros_::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear) {
+    Macros.afterEachCycle();
+  } else {
+    Macros.beforeReportingState();
+  }
+}
+#endif
 
 Macros_ Macros;

@@ -63,9 +63,9 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
+KALEIDOSCOPE_INIT_PLUGINS(Macros);
+
 void setup() {
-  Kaleidoscope.use(&Macros);
-  
   Kaleidoscope.setup ();
 }
 ```

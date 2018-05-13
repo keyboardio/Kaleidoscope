@@ -17,11 +17,9 @@ struct MacroKeyEvent {
   byte key_state;
 };
 
-class Macros_ : public KaleidoscopePlugin {
+class Macros_ : public kaleidoscope::Plugin {
  public:
-  Macros_(void);
-
-  void begin(void) final;
+  Macros_(void) {}
 
   static MacroKeyEvent active_macros[MAX_CONCURRENT_MACROS];
   static byte active_macro_count;
@@ -35,8 +33,10 @@ class Macros_ : public KaleidoscopePlugin {
     active_macros[active_macro_count].key_state = key_state;
     ++active_macro_count;
   }
-  static Key handleMacroEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool post_clear);
+
+  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  kaleidoscope::EventHandlerResult beforeReportingState();
+  kaleidoscope::EventHandlerResult afterEachCycle();
 
   void play(const macro_t *macro_p);
 
@@ -56,6 +56,13 @@ class Macros_ : public KaleidoscopePlugin {
   }
 
   static byte row, col;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   Key lookupAsciiCode(uint8_t ascii_code);
