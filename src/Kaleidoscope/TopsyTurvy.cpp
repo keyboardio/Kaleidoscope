@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TopsyTurvy -- Turn the effect of Shift upside down for certain keys
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,16 +26,9 @@ namespace kaleidoscope {
 uint8_t TopsyTurvy::mod_state_;
 uint8_t TopsyTurvy::last_pressed_position_;
 
-TopsyTurvy::TopsyTurvy(void) {
-}
-
-void TopsyTurvy::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
-Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (key_state & TOPSYTURVY)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (mapped_key.raw == Key_LeftShift.raw)
     bitWrite(mod_state_, 0, keyIsPressed(key_state));
@@ -43,21 +36,22 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     bitWrite(mod_state_, 1, keyIsPressed(key_state));
 
   if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (keyToggledOn(key_state)) {
     last_pressed_position_ = row * COLS + col;
   } else {
-    if (last_pressed_position_ != row * COLS + col)
-      return Key_NoKey;
+    if (last_pressed_position_ != row * COLS + col) {
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
   }
 
   Key new_key = {.raw = mapped_key.raw - ranges::TT_FIRST};
   if (new_key.raw == Key_NoKey.raw)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   // invert the shift state
 
@@ -81,8 +75,23 @@ Key TopsyTurvy::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
       hid::pressRawKey(Key_RightShift);
   }
 
+  return EventHandlerResult::EVENT_CONSUMED;
+}
+
+// Legacy V1 API
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void TopsyTurvy::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key TopsyTurvy::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::TopsyTurvy.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
   return Key_NoKey;
 }
+#endif
 
 }
 

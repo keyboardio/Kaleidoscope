@@ -1,6 +1,6 @@
 # Kaleidoscope-TopsyTurvy
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+![status][st:experimental] [![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-TopsyTurvy.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-TopsyTurvy
@@ -26,9 +26,9 @@ effects to, and use the plugin:
 // In the keymap:
 TOPSY(1), TOPSY(2), TOPSY(3)
 
-void setup () {
-  Kaleidoscope.use (&TopsyTurvy);
+KALEIDOSCOPE_INIT_PLUGINS(TopsyTurvy);
 
+void setup () {
   Kaleidoscope.setup ();
 }
 ```
