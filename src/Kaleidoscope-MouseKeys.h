@@ -4,11 +4,9 @@
 #include "MouseKeyDefs.h"
 #include "MouseWarpModes.h"
 
-class MouseKeys_ : public KaleidoscopePlugin {
+class MouseKeys_ : public kaleidoscope::Plugin {
  public:
-  MouseKeys_(void);
-
-  void begin(void) final;
+  MouseKeys_(void) {}
 
   static uint8_t speed;
   static uint16_t speedDelay;
@@ -19,6 +17,18 @@ class MouseKeys_ : public KaleidoscopePlugin {
 
   static void setWarpGridSize(uint8_t grid_size);
 
+  kaleidoscope::EventHandlerResult onSetup();
+  kaleidoscope::EventHandlerResult beforeReportingState();
+  kaleidoscope::EventHandlerResult afterEachCycle();
+  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static uint8_t mouseMoveIntent;
   static uint32_t endTime;
@@ -26,8 +36,6 @@ class MouseKeys_ : public KaleidoscopePlugin {
   static uint32_t wheelEndTime;
 
   static void scrollWheel(uint8_t keyCode);
-  static void loopHook(bool postClear);
-  static Key eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState);
 };
 
 extern MouseKeys_ MouseKeys;

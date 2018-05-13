@@ -34,9 +34,9 @@ illustrated with an example:
 Key_mouseUp, Key_mouseDn, Key_mouseL, Key_mouseR,
 Key_mouseBtnL, Key_mouseBtnR
 
-void setup() {
-  Kaleidoscope.use(&MouseKeys);
+KALEIDOSCOPE_INIT_PLUGINS(MouseKeys);
 
+void setup() {
   Kaleidoscope.setup ();
 }
 ```
@@ -121,15 +121,15 @@ As described above, MouseKeys warps the pointer using a grid model that reflects
 locations on the screen. By default, the plugin uses a 2x2 grid. To understand
 how warping works, examine this diagram of a screen split into that 2x2 grid:
 
-    +-----------------------+-----------------------+
+    +-----------------------|-----------------------+
     |           |           |                       |
     |     G     |    tab    |                       |
     |           |           |                       |
-    |-----------+-----------|          tab          |
+    |-----------|-----------|          tab          |
     |           |           |                       |
     |     B     |    esc    |                       |
     |           |           |                       |
-    +-----------------------+-----------------------+
+    +-----------------------|-----------------------+
     |                       |                       |
     |                       |                       |
     |                       |                       |
@@ -137,7 +137,7 @@ how warping works, examine this diagram of a screen split into that 2x2 grid:
     |                       |                       |
     |                       |                       |
     |                       |                       |
-    +-----------------------+-----------------------+
+    +-----------------------|-----------------------+
 
 Each quadrant is labed with a key that, when pressed, moves the mouse pointer
 to the center of that quadrant. With this layout, pressing <kbd>G</kbd> warps
@@ -162,33 +162,33 @@ diagram shows a screen with a key label that warps to each sector. As we can
 see, pressing <kbd>W</kbd> warps the pointer into the top-left sector, and
 pressing <kbd>V</kbd> warps to the bottom-right corner within that sector:
 
-    +-----------------+-----------------+-----------------+
+    +-----------------|-----------------|-----------------+
     |  W  |  E  |  R  |                 |                 |
-    |-----+-----+-----|                 |                 |
+    |-----|-----|-----|                 |                 |
     |  S  |  D  |  F  |        E        |        R        |
-    |-----+-----+-----|                 |                 |
+    |-----|-----|-----|                 |                 |
     |  X  |  C  |  V  |                 |                 |
-    +-----------------+-----------------+-----------------+
+    +-----------------|-----------------|-----------------+
     |                 |                 |                 |
     |                 |                 |                 |
     |        S        |        D        |        F        |
     |                 |                 |                 |
     |                 |                 |                 |
-    +-----------------+-----------------+-----------------+
+    +-----------------|-----------------|-----------------+
     |                 |                 |                 |
     |                 |                 |                 |
     |        X        |        C        |        V        |
     |                 |                 |                 |
     |                 |                 |                 |
-    +-----------------+-----------------+-----------------+
+    +-----------------|-----------------|-----------------+
 
 To use a 3x3 warp grid, we may need to remap some keys. A suggested warp key
 mapping is shown below on the left side of a keyboard with a QWERTY layout:
 
        W | E | R  T      A - End Warping      (Key_mouseWarpEnd)
-      ---+---+---        W - Warp NW Sector   (Key_mouseWarpNW)
+      ---|---|---        W - Warp NW Sector   (Key_mouseWarpNW)
     A  S | D | F  G      E - Warp N Sector    (Key_mouseWarpN)
-      ---+---+---        R - Warp NE Sector   (Key_mouseWarpNE)
+      ---|---|---        R - Warp NE Sector   (Key_mouseWarpNE)
        X | C | V  B      S - Warp E Sector    (Key_mouseWarpE)
                          D - Warp/Zoom Center (Key_mouseWarpIn)
                          F - Warp W Sector    (Key_mouseWarpW)
