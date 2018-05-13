@@ -68,10 +68,10 @@ illustrated with an example:
 // Somewhere in the keymap:
 S(S1), S(S2), etc
 
-void setup() {
-  Kaleidoscope.use(&GeminiPR);
+KALEIDOSCOPE_INIT_PLUGINS(GeminiPR);
 
-  Kaleidoscope.setup ();
+void setup() {
+  Kaleidoscope.setup();
 }
 ```
 

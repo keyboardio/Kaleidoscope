@@ -1,6 +1,6 @@
 /* Kaleidoscope-Steno -- Steno protocols for Kaleidoscope
  * Copyright (C) 2017  Joseph Wasson
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,17 +25,21 @@
 
 namespace kaleidoscope {
 namespace steno {
-class GeminiPR : public KaleidoscopePlugin {
+class GeminiPR : public kaleidoscope::Plugin {
  public:
   GeminiPR(void) {}
 
-  void begin(void);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   static uint8_t keys_held_;
   static uint8_t state_[6];
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
 namespace geminipr {

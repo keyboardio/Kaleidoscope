@@ -1,6 +1,6 @@
 /* Kaleidoscope-Steno -- Steno protocols for Kaleidoscope
  * Copyright (C) 2017  Joseph Wasson
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,21 +24,17 @@ namespace steno {
 uint8_t GeminiPR::keys_held_;
 uint8_t GeminiPR::state_[6];
 
-void GeminiPR::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
-Key GeminiPR::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (mapped_key < geminipr::START ||
       mapped_key > geminipr::END)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
-  if (keyToggledOn(key_state)) {
+  if (keyToggledOn(keyState)) {
     uint8_t key = mapped_key.raw - geminipr::START;
     ++keys_held_;
 
     state_[key / 7] |= 1 << (6 - (key % 7));
-  } else if (keyToggledOff(key_state)) {
+  } else if (keyToggledOff(keyState)) {
     --keys_held_;
 
     if (keys_held_ == 0) {
@@ -48,8 +44,24 @@ Key GeminiPR::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
     }
   }
 
+  return EventHandlerResult::EVENT_CONSUMED;
+}
+
+// Legacy V1 API
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void GeminiPR::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key GeminiPR::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::GeminiPR.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
   return Key_NoKey;
 }
+#endif
+
 }
 }
 
