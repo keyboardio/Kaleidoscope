@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LEDEffect-BootGreeting -- Small greeting at boot time
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,11 +36,6 @@ BootGreetingEffect::BootGreetingEffect(byte pos_row, byte pos_col) {
   key_col = pos_col;
 }
 
-void BootGreetingEffect::begin(void) {
-  //Use the loop hook
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
 void BootGreetingEffect::findLed(void) {
   // Find the LED key.
   for (uint8_t r = 0; r < ROWS; r++) {
@@ -63,10 +58,10 @@ void BootGreetingEffect::findLed(void) {
   done_ = true;
 }
 
-void BootGreetingEffect::loopHook(const bool post_clear) {
+EventHandlerResult BootGreetingEffect::afterEachCycle() {
   //If already done or we're not in a ready state, bail
-  if (!post_clear || done_) {
-    return;
+  if (done_) {
+    return EventHandlerResult::OK;
   }
 
   //If the start time isn't set, set the start time and
@@ -75,19 +70,35 @@ void BootGreetingEffect::loopHook(const bool post_clear) {
     start_time = millis();
     findLed();
     //the first time, don't do anything.
-    return;
+    return EventHandlerResult::OK;
   }
 
   //Only run for 'timeout' milliseconds
   if ((millis() - start_time) > timeout) {
     done_ = true;
     ::LEDControl.refreshAt(row_, col_);
-    return;
+    return EventHandlerResult::OK;
   }
 
   cRGB color = breath_compute(hue);
   ::LEDControl.setCrgbAt(row_, col_, color);
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void BootGreetingEffect::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void BootGreetingEffect::legacyLoopHook(bool is_post_clear) {
+  if (!is_post_clear)
+    return;
+  ::BootGreetingEffect.afterEachCycle();
+}
+#endif
+
 }
 
 kaleidoscope::BootGreetingEffect BootGreetingEffect;
