@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TapDance -- Tap-dance keys
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
     })
 
 namespace kaleidoscope {
-class TapDance : public KaleidoscopePlugin {
+class TapDance : public kaleidoscope::Plugin {
  public:
   typedef enum {
     Tap,
@@ -40,12 +40,21 @@ class TapDance : public KaleidoscopePlugin {
     Release,
   } ActionType;
 
-  TapDance(void);
+  TapDance(void) {}
 
-  void begin(void) final;
   static uint16_t time_out;
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
+
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult afterEachCycle();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   static uint32_t end_time_;
@@ -57,13 +66,10 @@ class TapDance : public KaleidoscopePlugin {
   static byte last_tap_dance_row_;
   static byte last_tap_dance_col_;
 
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void loopHook(bool is_post_clear);
-
-  static Key tap(void);
+  static void tap(void);
   static void interrupt(byte row, byte col);
   static void timeout(void);
-  static Key release(uint8_t tap_dance_index);
+  static void release(uint8_t tap_dance_index);
 };
 
 }

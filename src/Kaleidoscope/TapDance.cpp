@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TapDance -- Tap-dance keys
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,36 +73,25 @@ void TapDance::timeout(void) {
   release(idx);
 }
 
-Key TapDance::release(uint8_t tap_dance_index) {
+void TapDance::release(uint8_t tap_dance_index) {
   end_time_ = 0;
   last_tap_dance_key_.raw = Key_NoKey.raw;
 
   bitClear(pressed_state_, tap_dance_index);
   bitClear(triggered_state_, tap_dance_index);
   bitWrite(release_next_state_, tap_dance_index, 1);
-  return Key_NoKey;
 }
 
-Key TapDance::tap(void) {
+void TapDance::tap(void) {
   uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
 
   tap_count_[idx]++;
   end_time_ = millis() + time_out;
 
   tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, tap_count_[idx], Tap);
-
-  return Key_NoKey;
 }
 
 // --- api ---
-
-TapDance::TapDance(void) {
-}
-
-void TapDance::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.useLoopHook(loopHook);
-}
 
 void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]) {
   if (tap_count > max_keys)
@@ -130,55 +119,63 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
 
 // --- hooks ---
 
-Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  if (key_state & INJECTED)
-    return mapped_key;
+EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+  if (keyState & INJECTED)
+    return EventHandlerResult::OK;
 
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    if (isTapDance(mapped_key))
-      return Key_NoKey;
+  if (!keyIsPressed(keyState) && !keyWasPressed(keyState)) {
+    if (isTapDance(mapped_key)) {
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
 
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   if (!isTapDance(mapped_key)) {
     if (!isActive())
-      return mapped_key;
+      return EventHandlerResult::OK;
 
-    if (keyToggledOn(key_state))
+    if (keyToggledOn(keyState))
       interrupt(row, col);
 
     if (KeyboardHardware.isKeyMasked(row, col)) {
       KeyboardHardware.unMaskKey(row, col);
-      return Key_NoKey;
+      return EventHandlerResult::EVENT_CONSUMED;
     }
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   uint8_t tap_dance_index = mapped_key.raw - ranges::TD_FIRST;
 
-  if (keyToggledOff(key_state))
+  if (keyToggledOff(keyState))
     bitClear(pressed_state_, tap_dance_index);
 
   if (!isInSeq(mapped_key)) {
     if (!isActive()) {
       if (bitRead(triggered_state_, tap_dance_index)) {
-        if (keyToggledOff(key_state))
-          return release(tap_dance_index);
-        return Key_NoKey;
+        if (keyToggledOff(keyState)) {
+          release(tap_dance_index);
+        }
+
+        return EventHandlerResult::EVENT_CONSUMED;
       }
 
       last_tap_dance_key_.raw = mapped_key.raw;
       last_tap_dance_row_ = row;
       last_tap_dance_col_ = col;
-      return tap();
+
+      tap();
+
+      return EventHandlerResult::EVENT_CONSUMED;
     } else {
-      if (keyToggledOff(key_state) && stillHeld(tap_dance_index)) {
-        return release(tap_dance_index);
+      if (keyToggledOff(keyState) && stillHeld(tap_dance_index)) {
+        release(tap_dance_index);
+        return EventHandlerResult::EVENT_CONSUMED;
       }
 
-      if (!keyToggledOn(key_state))
-        return Key_NoKey;
+      if (!keyToggledOn(keyState)) {
+        return EventHandlerResult::EVENT_CONSUMED;
+      }
 
       interrupt(row, col);
     }
@@ -186,28 +183,27 @@ Key TapDance::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
 
   // in sequence
 
-  if (keyToggledOff(key_state))
-    return Key_NoKey;
+  if (keyToggledOff(keyState)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   last_tap_dance_key_.raw = mapped_key.raw;
   last_tap_dance_row_ = row;
   last_tap_dance_col_ = col;
   bitSet(pressed_state_, tap_dance_index);
 
-  if (keyToggledOn(key_state))
-    return tap();
+  if (keyToggledOn(keyState)) {
+    tap();
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   if (bitRead(triggered_state_, tap_dance_index))
     tapDanceAction(tap_dance_index, row, col, tap_count_[tap_dance_index], Hold);
 
-  return Key_NoKey;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-void
-TapDance::loopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-
+EventHandlerResult TapDance::afterEachCycle() {
   for (uint8_t i = 0; i < 16; i++) {
     if (!bitRead(release_next_state_, i))
       continue;
@@ -218,11 +214,36 @@ TapDance::loopHook(bool is_post_clear) {
   }
 
   if (!isActive())
-    return;
+    return EventHandlerResult::OK;
 
   if (end_time_ && millis() > end_time_)
     timeout();
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void TapDance::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+Key TapDance::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::TapDance.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+
+void TapDance::legacyLoopHook(bool is_post_clear) {
+  if (!is_post_clear)
+    return;
+
+  ::TapDance.afterEachCycle();
+}
+#endif
 
 }
 

@@ -83,9 +83,9 @@ void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_cou
   }
 }
 
-void setup() {
-  Kaleidoscope.use(&TapDance);
+KALEIDOSCOPE_INIT_PLUGINS(TapDance);
 
+void setup() {
   Kaleidoscope.setup ();
 }
 ```
