@@ -9,9 +9,9 @@ bool NumPad_::cleanupDone = true;
 bool NumPad_::originalNumLockState = false;
 cRGB numpad_color = CRGB(255, 0, 0);
 
-void NumPad_::begin(void) {
-  Kaleidoscope.useLoopHook(loopHook);
+kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
   originalNumLockState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
+  return kaleidoscope::EventHandlerResult::OK;
 }
 
 static void syncNumlock(bool state) {
@@ -21,10 +21,7 @@ static void syncNumlock(bool state) {
   }
 }
 
-void NumPad_::loopHook(bool postClear) {
-  if (!postClear)
-    return;
-
+kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
     bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
     if (!cleanupDone) {
@@ -38,7 +35,8 @@ void NumPad_::loopHook(bool postClear) {
       }
     }
     originalNumLockState = numState;
-    return;
+
+    return kaleidoscope::EventHandlerResult::OK;
   }
 
   cleanupDone = false;
@@ -65,10 +63,26 @@ void NumPad_::loopHook(bool postClear) {
   }
 
   if (row > ROWS || col > COLS)
-    return;
+    return kaleidoscope::EventHandlerResult::OK;
 
   cRGB color = breath_compute();
   LEDControl.setCrgbAt(row, col, color);
+
+  return kaleidoscope::EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void NumPad_::begin() {
+  onSetup();
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void NumPad_::legacyLoopHook(bool is_post_clear) {
+  if (!is_post_clear)
+    return;
+  NumPad.afterEachCycle();
+}
+#endif
 
 NumPad_ NumPad;
