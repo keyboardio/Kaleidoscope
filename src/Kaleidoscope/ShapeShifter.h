@@ -28,16 +28,22 @@ class ShapeShifter : public KaleidoscopePlugin {
     Key original, replacement;
   } dictionary_t;
 
-  ShapeShifter(void);
-
-  void begin(void) final;
+  ShapeShifter(void) {}
 
   static const dictionary_t *dictionary;
+
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static bool mod_active_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void loopHook(bool is_post_clear);
 };
 
 }
