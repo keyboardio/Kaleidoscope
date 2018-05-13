@@ -23,23 +23,20 @@ namespace kaleidoscope {
 Key Redial::key;
 Key Redial::key_to_redial_;
 
-Key Redial::eventHandlerHook_(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (key == Key_NoKey)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (mapped_key == key) {
-    return key_to_redial_;
+    mapped_key = key_to_redial_;
+    return EventHandlerResult::OK;
   }
 
   if (keyToggledOn(key_state) && shouldRemember(mapped_key)) {
     key_to_redial_ = mapped_key;
   }
 
-  return mapped_key;
-}
-
-void Redial::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook_);
+  return EventHandlerResult::OK;
 }
 
 __attribute__((weak)) bool Redial::shouldRemember(Key mapped_key) {
@@ -50,6 +47,20 @@ __attribute__((weak)) bool Redial::shouldRemember(Key mapped_key) {
 
   return false;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void Redial::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key Redial::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::Redial.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 

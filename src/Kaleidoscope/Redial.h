@@ -24,18 +24,22 @@ namespace kaleidoscope {
 
 class Redial : public KaleidoscopePlugin {
  public:
-  Redial(void) {};
-
-  void begin(void) final;
+  Redial(void) {}
 
   static Key key;
 
   static bool shouldRemember(Key mappedKey);
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
+
  private:
   static Key key_to_redial_;
-
-  static Key eventHandlerHook_(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
 }

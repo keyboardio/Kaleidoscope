@@ -53,11 +53,12 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-void setup() {
-  Kaleidoscope.use(&Redial);
-  Redial.key = Key_Redial;
+KALEIDOSCOPE_INIT_PLUGINS(Redial);
 
+void setup() {
   Kaleidoscope.setup();
+
+  Redial.key = Key_Redial;
 }
 
 void loop() {
