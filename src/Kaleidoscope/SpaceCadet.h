@@ -29,8 +29,8 @@
 #define Key_SpaceCadetDisable (Key) { .raw = kaleidoscope::ranges::SC_LAST }
 
 namespace kaleidoscope {
-//Declaration for the method (implementing KaleidoscopePlugin)
-class SpaceCadet : public KaleidoscopePlugin {
+
+class SpaceCadet : public kaleidoscope::Plugin {
  public:
   //Internal Class
   //Declarations for the modifier key mapping
@@ -54,11 +54,9 @@ class SpaceCadet : public KaleidoscopePlugin {
     uint32_t start_time = 0;
   };
 
-  //Empty constructor
   SpaceCadet(void);
 
   //Methods
-  void begin(void) final;
   static void enable(void);
   static void disable(void);
   static bool active(void);
@@ -67,8 +65,15 @@ class SpaceCadet : public KaleidoscopePlugin {
   static uint16_t time_out;  //  The global timeout in milliseconds
   static SpaceCadet::KeyBinding * map;  // The map of key bindings
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
+
  private:
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
   static bool disabled;
 };
 };

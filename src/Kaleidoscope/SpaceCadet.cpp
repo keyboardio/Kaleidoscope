@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
- * Copyright (C) 2016, 2017  Gergely Nagy, Ben Gemperline
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy, Ben Gemperline
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ SpaceCadet::KeyBinding * SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 1000;
 bool SpaceCadet::disabled = false;
 
-//Empty Constructor
 SpaceCadet::SpaceCadet() {
   static SpaceCadet::KeyBinding initialmap[] = {
     //By default, respect the default timeout
@@ -71,11 +70,7 @@ bool SpaceCadet::active() {
   return !disabled;
 }
 
-void SpaceCadet::begin() {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
-Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   //Handle our synthetic keys for enabling and disabling functionality
   if (mapped_key.raw >= kaleidoscope::ranges::SC_FIRST &&
       mapped_key.raw <= kaleidoscope::ranges::SC_LAST) {
@@ -88,8 +83,7 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
       }
     }
 
-    //in any case, return NoKey (these don't do anything else)
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   //if SpaceCadet is disabled, this was an injected key, it was NoKey,
@@ -101,7 +95,7 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     || mapped_key == Key_NoKey
     || (!keyIsPressed(key_state) && !keyWasPressed(key_state))
   ) {
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   // If a key has been just toggled on...
@@ -152,13 +146,13 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     //anything until we know that we're either sending the alternate key or we
     //know for sure that we want to send the originally pressed key.
     if (valid_key) {
-      return Key_NoKey;
+      return EventHandlerResult::EVENT_CONSUMED;
     }
 
     //this is all we need to do on keypress, let the next handler do its thing too.
     //This case assumes we weren't a valid key that we were watching, so we don't
     //need to do anything else.
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   // if the state is empty, that means that either an activating key wasn't pressed,
@@ -194,7 +188,7 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   //If no valid mapped keys were pressed, simply return the key that
   //was originally passed in.
   if (!valid_key) {
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   //use the map index to find the local timeout for this key
@@ -212,14 +206,14 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
     map[index].start_time = 0;
 
     //Just return this key itself (we won't run alternative keys check)
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   // If the key that was pressed isn't one of our mapped keys, just
   // return. This can happen when another key is released, and that should not
   // interrupt us.
   if (!pressed_key_was_valid) {
-    return mapped_key;
+    return EventHandlerResult::OK;
   }
 
   // if a key toggled off (and that must be one of the mapped keys at this point),
@@ -243,12 +237,26 @@ Key SpaceCadet::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key
   //This prevents us from accidentally triggering a keypress that we didn't
   //mean to handle.
   if (valid_key) {
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   //Finally, as a final sanity check, simply return the passed-in key as-is.
-  return mapped_key;
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void SpaceCadet::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key SpaceCadet::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::SpaceCadet.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 
