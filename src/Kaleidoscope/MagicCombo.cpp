@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-MagicCombo -- Magic combo framework
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,16 +34,9 @@ const MagicCombo::combo_t *MagicCombo::magic_combos;
 uint16_t MagicCombo::min_interval = 500;
 uint32_t MagicCombo::end_time_;
 
-MagicCombo::MagicCombo(void) {
-}
-
-void MagicCombo::begin(void) {
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
-void MagicCombo::loopHook(bool is_post_clear) {
-  if (!magic_combos || is_post_clear)
-    return;
+EventHandlerResult MagicCombo::beforeReportingState() {
+  if (!magic_combos)
+    return EventHandlerResult::OK;
 
   for (byte i = 0;; i++) {
     combo_t combo;
@@ -63,7 +56,22 @@ void MagicCombo::loopHook(bool is_post_clear) {
       break;
     }
   }
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void MagicCombo::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void MagicCombo::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+  ::MagicCombo.beforeReportingState();
+}
+#endif
 
 };
 
