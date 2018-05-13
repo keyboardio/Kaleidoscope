@@ -64,9 +64,9 @@ plugin:
 // somewhere in the keymap...
 OSM(LeftControl), OSL(_FN)
 
-void setup() {
-  Kaleidoscope.use(&OneShot);
+KALEIDOSCOPE_INIT_PLUGINS(OneShot);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```

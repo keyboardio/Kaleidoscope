@@ -78,7 +78,7 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
   }
 
-  positionToCoords(idx, &row, &col);
+  positionToCoords(positions_[idx], &row, &col);
   handleKeyswitchEvent(key, row, col, key_state | INJECTED);
 }
 
@@ -91,24 +91,24 @@ void OneShot::cancelOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED);
 }
 
-Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   uint8_t idx = mapped_key.raw - ranges::OS_FIRST;
 
-  if (key_state & INJECTED)
-    return mapped_key;
+  if (keyState & INJECTED)
+    return EventHandlerResult::OK;
 
   if (!state_.all) {
     if (!isOneShotKey(mapped_key)) {
-      return mapped_key;
+      return EventHandlerResult::OK;
     }
 
-    if (keyToggledOff(key_state)) {
+    if (keyToggledOff(keyState)) {
       clearPressed(idx);
 
       if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST) {
         should_mask_on_interrupt_ = true;
       }
-    } else if (keyToggledOn(key_state)) {
+    } else if (keyToggledOn(keyState)) {
       start_time_ = millis();
       positions_[idx] = row * COLS + col;
       setPressed(idx);
@@ -118,21 +118,21 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
       activateOneShot(idx);
     }
 
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state))
-    return mapped_key;
+  if (!keyIsPressed(keyState) && !keyWasPressed(keyState))
+    return EventHandlerResult::OK;
 
   if (isOneShotKey(mapped_key)) {
     if (isSticky_(idx)) {
-      if (keyToggledOn(key_state)) {  // maybe on _off instead?
+      if (keyToggledOn(keyState)) {  // maybe on _off instead?
         saveAsPrevious(mapped_key);
         clearSticky(idx);
         cancelOneShot(idx);
       }
     } else {
-      if (keyToggledOff(key_state)) {
+      if (keyToggledOff(keyState)) {
         clearPressed(idx);
         if ((millis() - start_time_) >= hold_time_out) {
           cancelOneShot(idx);
@@ -140,7 +140,7 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
         }
       }
 
-      if (keyToggledOn(key_state)) {
+      if (keyToggledOn(keyState)) {
         setPressed(idx);
 
         bool set_sticky = false;
@@ -169,12 +169,12 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
       }
     }
 
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // ordinary key here, with some event
 
-  if (keyIsPressed(key_state)) {
+  if (keyIsPressed(keyState)) {
     saveAsPrevious(mapped_key);
     if (!isModifier(mapped_key) && (mapped_key.flags != (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
       if (should_mask_on_interrupt_)
@@ -183,58 +183,61 @@ Key OneShot::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_st
     }
   }
 
-  return mapped_key;
+  return EventHandlerResult::OK;
 }
 
-void OneShot::loopHook(bool is_post_clear) {
+EventHandlerResult OneShot::beforeReportingState() {
   if (!state_.all)
-    return;
+    return EventHandlerResult::OK;
 
-  if (is_post_clear) {
-    if (hasTimedOut())
-      cancel();
+  for (uint8_t i = 0; i < 8; i++) {
+    if (isOneShot(i)) {
+      activateOneShot(i);
+    }
+  }
 
-    bool is_cancelled = false;
+  return EventHandlerResult::OK;
+}
 
-    for (uint8_t i = 0; i < 32; i++) {
-      if (should_cancel_) {
-        if (isSticky_(i)) {
-          if (should_cancel_stickies_) {
-            is_cancelled = true;
-            clearSticky(i);
-            cancelOneShot(i);
-            clearPressed(i);
-          }
-        } else if (isOneShot(i) && !isPressed(i)) {
+EventHandlerResult OneShot::afterEachCycle() {
+  if (!state_.all)
+    return EventHandlerResult::OK;
+
+  if (hasTimedOut())
+    cancel();
+
+  bool is_cancelled = false;
+
+  for (uint8_t i = 0; i < 32; i++) {
+    if (should_cancel_) {
+      if (isSticky_(i)) {
+        if (should_cancel_stickies_) {
           is_cancelled = true;
+          clearSticky(i);
           cancelOneShot(i);
+          clearPressed(i);
         }
-      }
-    }
-
-    if (is_cancelled) {
-      should_cancel_ = false;
-      should_cancel_stickies_ = false;
-      should_mask_on_interrupt_ = false;
-    }
-  } else {
-    for (uint8_t i = 0; i < 8; i++) {
-      if (isOneShot(i)) {
-        activateOneShot(i);
+      } else if (isOneShot(i) && !isPressed(i)) {
+        is_cancelled = true;
+        cancelOneShot(i);
       }
     }
   }
+
+  if (is_cancelled) {
+    should_cancel_ = false;
+    should_cancel_stickies_ = false;
+    should_mask_on_interrupt_ = false;
+  }
+
+  return EventHandlerResult::OK;
+}
+
+void OneShot::inject(Key mapped_key, uint8_t key_state) {
+  onKeyswitchEvent(mapped_key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
 }
 
 // --- glue code ---
-
-OneShot::OneShot(void) {
-}
-
-void OneShot::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.useLoopHook(loopHook);
-}
 
 bool OneShot::isActive(void) {
   return (state_.all && !hasTimedOut()) || (pressed_state_.all) || (sticky_state_.all);
@@ -264,9 +267,28 @@ void OneShot::cancel(bool with_stickies) {
   should_cancel_stickies_ = with_stickies;
 }
 
-void OneShot::inject(Key key, uint8_t key_state) {
-  eventHandlerHook(key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void OneShot::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
 }
+
+Key OneShot::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::OneShot.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+
+void OneShot::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear) {
+    ::OneShot.afterEachCycle();
+  } else {
+    ::OneShot.beforeReportingState();
+  }
+}
+#endif
 
 }
 
