@@ -13,22 +13,26 @@
 
 
 
-TestMode_::TestMode_(void) {
-}
-
-
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 void TestMode_::begin(void) {
-  Kaleidoscope.useLoopHook(this->loopHook);
+  Kaleidoscope.useLoopHook(this->legacyLoopHook);
 }
 
-void TestMode_::loopHook(bool postClear) {
-  if (postClear)
+void TestMode_::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
     return;
+
+  TestMode.beforeReportingState();
+}
+#endif
+
+kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
   if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO
 //  && KeyboardHardware.rightHandState.all == combo.rightHand
      ) {
     run_tests();
   }
+  return kaleidoscope::EventHandlerResult::OK;
 }
 
 void TestMode_::waitForKeypress() {
