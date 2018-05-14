@@ -63,12 +63,6 @@ static const uint16_t alphabet[] PROGMEM = {
 
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
-AlphaSquare::AlphaSquare(void) {
-}
-
-void AlphaSquare::begin(void) {
-}
-
 void AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
   if (key < Key_A || key > Key_0)
     return;

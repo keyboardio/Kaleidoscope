@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,6 @@ uint16_t AlphaSquareEffect::length = 1000;
 uint32_t AlphaSquareEffect::end_time_left_, AlphaSquareEffect::end_time_right_;
 Key AlphaSquareEffect::last_key_left_, AlphaSquareEffect::last_key_right_;
 
-void AlphaSquareEffect::setup(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
 void AlphaSquareEffect::update(void) {
   if (end_time_left_ && millis() > end_time_left_) {
     ::AlphaSquare.clear(last_key_left_);
@@ -39,37 +35,52 @@ void AlphaSquareEffect::update(void) {
   }
 }
 
-Key AlphaSquareEffect::eventHandlerHook(Key key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (::LEDControl.get_mode() != &::AlphaSquareEffect)
-    return key;
+    return EventHandlerResult::OK;
 
-  if (key_state & INJECTED)
-    return key;
+  if (keyState & INJECTED)
+    return EventHandlerResult::OK;
 
-  if (key < Key_A || key > Key_0)
-    return key;
+  if (mappedKey < Key_A || mappedKey > Key_0)
+    return EventHandlerResult::OK;
 
-  if (!keyIsPressed(key_state))
-    return key;
+  if (!keyIsPressed(keyState))
+    return EventHandlerResult::OK;
 
   uint8_t display_col = 2;
   Key prev_key = last_key_left_;
 
   if (col < COLS / 2) {
-    last_key_left_ = key;
+    last_key_left_ = mappedKey;
     end_time_left_ = millis() + length;
   } else {
     prev_key = last_key_right_;
-    last_key_right_ = key;
+    last_key_right_ = mappedKey;
     end_time_right_ = millis() + length;
     display_col = 10;
   }
 
-  if (prev_key != key)
+  if (prev_key != mappedKey)
     ::AlphaSquare.clear(prev_key, display_col);
-  ::AlphaSquare.display(key, display_col);
-  return key;
+  ::AlphaSquare.display(mappedKey, display_col);
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void AlphaSquareEffect::setup(void) {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key AlphaSquareEffect::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::AlphaSquareEffect.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 

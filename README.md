@@ -21,11 +21,14 @@ This can be done from a macro, or via the `AlphaSquareEffect` LED mode.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          AlphaSquare,
+                          AlphaSquareEffect);
+
 void setup() {
-  Kaleidoscope.use(&AlphaSquare, &AlphaSquareEffect);
-  
   Kaleidoscope.setup();
 
   AlphaSquare.display (Key_A);
@@ -59,8 +62,8 @@ methods or properties other than those provided by all LED modes.
 ### `.display(symbol, row, col)`
 ### `.display(symbol, row, col, color)`
 
-> As the previous function, but instead of a key, it expects a 4x4 bitmap in 
-> the form of a 16-bit unsigned integer, where the low bit is the top-right 
+> As the previous function, but instead of a key, it expects a 4x4 bitmap in
+> the form of a 16-bit unsigned integer, where the low bit is the top-right
 > corner, the second-lowest bit is to the right of that, and so on.
 >
 > The `SYM4x4` macro can be used to simplify creating these bitmaps.

@@ -33,11 +33,9 @@
               p30 << 12 | p31 << 13 | p32 << 14 | p33 << 15 )
 
 namespace kaleidoscope {
-class AlphaSquare : public KaleidoscopePlugin {
+class AlphaSquare : public kaleidoscope::Plugin {
  public:
-  AlphaSquare(void);
-
-  void begin(void) final;
+  AlphaSquare(void) {}
 
   static void display(Key key, uint8_t row, uint8_t col, cRGB key_color);
   static void display(Key key, uint8_t row, uint8_t col);
