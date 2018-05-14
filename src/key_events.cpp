@@ -94,7 +94,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   // Keypresses with out-of-bounds (row,col) start here in the processing chain
 
   // Legacy event handlers
-#if KALEIDOSCOPE_ENABLE_V1_API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
     mappedKey = (*handler)(mappedKey, row, col, keyState);
