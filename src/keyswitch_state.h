@@ -38,15 +38,15 @@
 
 // Deprecated - Remove once the core has transitioned
 
-inline uint8_t __attribute__((deprecated("Use keyWasPressed instead"))) key_was_pressed(uint8_t keyState) {
+inline uint8_t DEPRECATED(USE_INSTEAD("keyWasPressed")) key_was_pressed(uint8_t keyState) {
   return keyWasPressed(keyState);
 }
-inline uint8_t __attribute__((deprecated("Use keyIsPressed instead"))) key_is_pressed(uint8_t keyState) {
+inline uint8_t DEPRECATED(USE_INSTEAD("keyIsPressed")) key_is_pressed(uint8_t keyState) {
   return keyIsPressed(keyState);
 }
-inline uint8_t __attribute__((deprecated("Use keyToggledOn instead"))) key_toggled_on(uint8_t keyState) {
+inline uint8_t DEPRECATED(USE_INSTEAD("keyToggledOn")) key_toggled_on(uint8_t keyState) {
   return keyToggledOn(keyState);
 }
-inline uint8_t __attribute__((deprecated("Use keyToggledOff instead"))) key_toggled_off(uint8_t keyState) {
+inline uint8_t DEPRECATED(USE_INSTEAD("keyToggledOff")) key_toggled_off(uint8_t keyState) {
   return keyToggledOff(keyState);
 }
