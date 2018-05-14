@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Stalker -- Stalk keys pressed by lighting up and fading back the LED under them
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,16 +36,19 @@ class StalkerEffect : public LEDMode {
   static ColorComputer *variant;
   static uint16_t step_length;
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
  protected:
-  void setup(void) final;
   void onActivate(void) final;
   void update(void) final;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void setup(void) final;
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   static uint16_t step_start_time_;
   static uint8_t map_[ROWS][COLS];
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
 namespace stalker {
