@@ -2,6 +2,7 @@
 
 #include "kaleidoscope/event_handler_result.h"
 #include "kaleidoscope_internal/event_dispatch.h"
+#include "kaleidoscope_internal/deprecations.h"
 #include "event_handlers.h"
 
 #ifndef KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
@@ -91,4 +92,4 @@ class Plugin : public EventHandlerBasePlugin {
 
 } // namespace kaleidoscope
 
-typedef kaleidoscope::Plugin KaleidoscopePlugin __attribute__((deprecated("class KaleidoscopePlugin is deprecated. Please derive plugins from kaleidoscope::Plugin instead.")));
+typedef kaleidoscope::Plugin KaleidoscopePlugin DEPRECATED(KALEIDOSCOPEPLUGIN);
