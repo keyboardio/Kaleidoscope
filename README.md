@@ -23,9 +23,10 @@ configuration is necessary.
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
 
-void setup () {
-  Kaleidoscope.use(&OneShot, &EscapeOneShot);
+KALEIDOSCOPE_INIT_PLUGINS(OneShot,
+                          EscapeOneShot);
 
+void setup () {
   Kaleidoscope.setup ();
 }
 ```
