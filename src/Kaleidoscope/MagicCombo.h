@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-MagicCombo -- Magic combo framework
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,23 +22,27 @@
 
 namespace kaleidoscope {
 
-class MagicCombo : public KaleidoscopePlugin {
+class MagicCombo : public kaleidoscope::Plugin {
  public:
   typedef struct {
     uint32_t left_hand, right_hand;
   } combo_t;
 
-  MagicCombo(void);
-
-  void begin(void) final;
+  MagicCombo(void) {}
 
   static const combo_t *magic_combos;
   static uint16_t min_interval;
 
+  EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static uint32_t end_time_;
-
-  static void loopHook(bool is_post_clear);
 };
 
 }
