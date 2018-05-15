@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Colormap -- Per-layer colormap effect
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ class ColormapEffect : public LEDMode {
   static bool focusHookLayerwise(const char *command);
 
  protected:
-  void setup(void) final;
   void onActivate(void) final;
   void update(void) final;
   void refreshAt(byte row, byte col) final;
