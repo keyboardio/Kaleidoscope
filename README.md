@@ -52,10 +52,10 @@ static const kaleidoscope::Leader::dictionary_t leader_dictionary[] PROGMEM =
   LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderA},
               {LEADER_SEQ(LEAD(0), Key_T, Key_X), leaderTX});
 
+KALEIDOSCOPE_INIT_PLUGINS(Leader);
+
 void setup() {
   Serial.begin(9600);
-
-  Kaleidoscope.use(&Leader);
 
   Kaleidoscope.setup();
 
