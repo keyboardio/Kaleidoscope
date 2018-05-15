@@ -13,11 +13,18 @@ void LEDMode::activate(void) {
   ::LEDControl.activate(this);
 }
 
-void LEDMode::begin(void) {
-  Kaleidoscope.use(&::LEDControl);
+kaleidoscope::EventHandlerResult LEDMode::onSetup() {
   ::LEDControl.mode_add(this);
   setup();
+
+  return EventHandlerResult::OK;
 }
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void LEDMode::begin() {
+  onSetup();
+}
+#endif
 
 LEDControl::LEDControl(void) {
   mode = 0;
@@ -112,7 +119,7 @@ void LEDControl::syncLeds(void) {
   KeyboardHardware.syncLeds();
 }
 
-void LEDControl::begin(void) {
+kaleidoscope::EventHandlerResult LEDControl::onSetup() {
   set_all_leds_to({0, 0, 0});
 
   for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
@@ -120,15 +127,14 @@ void LEDControl::begin(void) {
       (modes[i]->setup)();
   }
 
-  Kaleidoscope.useEventHandlerHook(eventHandler);
-  Kaleidoscope.useLoopHook(loopHook);
-
   syncTimer = millis() + syncDelay;
+
+  return EventHandlerResult::OK;
 }
 
-Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
-    return mappedKey;
+    return kaleidoscope::EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {
     if (mappedKey == Key_LEDEffectNext) {
@@ -138,12 +144,12 @@ Key LEDControl::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState
     }
   }
 
-  return Key_NoKey;
+  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
 }
 
-void LEDControl::loopHook(bool postClear) {
-  if (postClear || paused)
-    return;
+kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
+  if (paused)
+    return kaleidoscope::EventHandlerResult::OK;
 
   uint16_t current_time = millis();
   if ((current_time - syncTimer) > syncDelay) {
@@ -151,6 +157,8 @@ void LEDControl::loopHook(bool postClear) {
     syncTimer += syncDelay;
   }
   update();
+
+  return kaleidoscope::EventHandlerResult::OK;
 }
 
 bool LEDControl::focusHook(const char *command) {
@@ -251,6 +259,29 @@ bool LEDControl::focusHook(const char *command) {
 
   return true;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void LEDControl::begin() {
+  ::LEDControl.onSetup();
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+Key LEDControl::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::LEDControl.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+
+void LEDControl::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+  ::LEDControl.beforeReportingState();
+}
+#endif
+
 
 }
 

@@ -22,7 +22,7 @@ namespace kaleidoscope {
  * A LED mode **must** implement at least one of @ref onActivate or @ref
  * update, and possibly @ref refreshAt too.
  */
-class LEDMode : public KaleidoscopePlugin {
+class LEDMode : public kaleidoscope::Plugin {
   friend class LEDControl;
  protected:
   // These methods should only be called by LEDControl.
@@ -81,14 +81,16 @@ class LEDMode : public KaleidoscopePlugin {
    * Called via `Kaleidoscope.use()`, registers the LED mode, and does the
    * necessary initialization steps. Calls @ref setup at the end.
    */
-  void begin(void) final;
+  kaleidoscope::EventHandlerResult onSetup();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void begin();
+#endif
 };
 
-class LEDControl : public KaleidoscopePlugin {
+class LEDControl : public kaleidoscope::Plugin {
  public:
   LEDControl(void);
-
-  void begin(void) final;
 
   static void next_mode(void);
   static void prev_mode(void);
@@ -130,14 +132,23 @@ class LEDControl : public KaleidoscopePlugin {
 
   static bool focusHook(const char *command);
 
+  kaleidoscope::EventHandlerResult onSetup();
+  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  kaleidoscope::EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static uint16_t syncTimer;
   static LEDMode *modes[LED_MAX_MODES];
   static uint8_t mode;
-
-  static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
-  static void loopHook(bool postClear);
 };
+
 }
 
 extern kaleidoscope::LEDControl LEDControl;
