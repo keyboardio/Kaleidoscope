@@ -30,9 +30,9 @@ the box, without any further configuration:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-TypingBreaks.h>
 
-void setup (void) {
-  Kaleidoscope.use (&TypingBreaks);
+KALEIDOSCOPE_INIT_PLUGINS(TypingBreaks);
 
+void setup (void) {
   Kaleidoscope.setup ();
 
   TypingBreaks.settings.idle_time_limit = 60;
