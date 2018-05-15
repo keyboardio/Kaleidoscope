@@ -12,10 +12,17 @@ typedef struct {
   uint32_t badKeys;
 
 } side_data_t;
-class TestMode_ : public KaleidoscopePlugin {
+class TestMode_ : public kaleidoscope::Plugin {
  public:
-  TestMode_(void);
+  TestMode_(void) {};
+
+  kaleidoscope::EventHandlerResult beforeReportingState();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
   void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   static void run_tests();
@@ -24,7 +31,6 @@ class TestMode_ : public KaleidoscopePlugin {
   static void toggle_programming_leds_on();
   static void handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset);
   static void waitForKeypress();
-  static void loopHook(bool postClear);
   static void set_leds(cRGB color);
 };
 
