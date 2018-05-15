@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,15 +27,19 @@ class AlphaSquareEffect : public LEDMode {
   AlphaSquareEffect(void) {}
 
   static uint16_t length;
+
+  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
  protected:
-  void setup(void) final;
   void update(void) final;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void setup(void) final;
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   static uint32_t end_time_left_, end_time_right_;
   static Key last_key_left_, last_key_right_;
-
-  static Key eventHandlerHook(Key key, uint8_t row, uint8_t col, uint8_t key_state);
 };
 }
 
