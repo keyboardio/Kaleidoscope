@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-CycleTimeReport -- Scan cycle time reporting
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,18 +21,25 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
-class CycleTimeReport : public KaleidoscopePlugin {
+class CycleTimeReport : public kaleidoscope::Plugin {
  public:
   CycleTimeReport() {}
 
-  void begin(void) final;
+  EventHandlerResult onSetup();
+  EventHandlerResult beforeEachCycle();
+  EventHandlerResult afterEachCycle();
 
   static uint32_t average_loop_time;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
   static uint32_t next_report_time_;
   static uint32_t loop_start_time_;
-
-  static void loopHook(bool post_clear);
 };
 }
 

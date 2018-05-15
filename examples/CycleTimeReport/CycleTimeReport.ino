@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-CycleTimeReport -- Scan cycle time reporting
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,10 +39,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip),
 };
 
+KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
+
 void setup() {
   Serial.begin(9600);
-  Kaleidoscope.use(&CycleTimeReport);
-
   Kaleidoscope.setup();
 }
 

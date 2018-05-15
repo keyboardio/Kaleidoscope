@@ -23,10 +23,10 @@ the box, without any further configuration:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-CycleTimeReport.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
+
 void setup (void) {
   Serial.begin(9600);
-  Kaleidoscope.use (&CycleTimeReport);
-
   Kaleidoscope.setup ();
 }
 ```
