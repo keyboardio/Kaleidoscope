@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Unicode -- Unicode input helpers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,9 +65,11 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-void setup() {
-  Kaleidoscope.use(&Macros, &Unicode);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+                          Macros,
+                          Unicode);
 
+void setup() {
   Kaleidoscope.setup();
 }
 

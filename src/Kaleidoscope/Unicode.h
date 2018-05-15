@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Unicode -- Unicode input helpers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,9 @@
 #include <Kaleidoscope-HostOS.h>
 
 namespace kaleidoscope {
-class Unicode : public KaleidoscopePlugin {
+class Unicode : public kaleidoscope::Plugin {
  public:
-  Unicode(void);
-
-  void begin(void) final;
+  Unicode(void) {}
 
   static void start(void);
   static void input(void);
