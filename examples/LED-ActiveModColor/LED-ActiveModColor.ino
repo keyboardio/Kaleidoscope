@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-ActiveModColor.h>
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -39,9 +40,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_skip),
 };
 
-void setup() {
-  Kaleidoscope.use(&ActiveModColorEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          ActiveModColorEffect);
 
+void setup() {
   Kaleidoscope.setup();
 
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
