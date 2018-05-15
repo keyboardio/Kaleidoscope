@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Settings -- Basic EEPROM settings plugin for Kaleidoscope.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,11 @@
 #include <EEPROM.h>
 
 namespace kaleidoscope {
-class EEPROMSettings : public KaleidoscopePlugin {
+class EEPROMSettings : public kaleidoscope::Plugin {
  public:
-  EEPROMSettings(void);
+  EEPROMSettings(void) {}
 
-  void begin(void) final;
+  EventHandlerResult onSetup();
 
   static void update(void);
   static bool isValid(void);
@@ -38,6 +38,11 @@ class EEPROMSettings : public KaleidoscopePlugin {
   static void seal(void);
   static uint16_t crc(void);
   static uint16_t used(void);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+#endif
 
  private:
   static uint16_t next_start_;
