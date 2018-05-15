@@ -16,11 +16,13 @@ Provides a breathing effect for the keyboard. Breathe in, breathe out.
 To use the plugin, include the header, and tell the firmware to use it:
 
 ```c++
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Breathe.h>
 
-void setup() {
-  Kaleidoscope.use(&LEDBreatheEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          LEDBreatheEffect);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```
