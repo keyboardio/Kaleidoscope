@@ -22,11 +22,12 @@ To use the plugin, include the header, and tell the firmware to use either (or
 both!) of the effects:
 
 ```c++
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
 
-void setup() {
-  Kaleidoscope.use(&LEDRainbowEffect, &LEDRainbowWaveEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDRainbowEffect, LEDRainbowWaveEffect);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```
