@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-FingerPainter -- On-the-fly keyboard painting.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,16 +28,21 @@ class FingerPainter : public LEDMode {
   static void toggle(void);
   static bool focusHook(const char *command);
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onSetup();
+
  protected:
-  void setup(void) final;
   void update(void) final;
   void refreshAt(byte row, byte col) final;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
 
  private:
   static uint16_t color_base_;
   static bool edit_mode_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
