@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Palette-Theme -- Palette-based LED theme foundation
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,9 @@
 
 namespace kaleidoscope {
 
-class LEDPaletteTheme : public KaleidoscopePlugin {
+class LEDPaletteTheme : public kaleidoscope::Plugin {
  public:
   LEDPaletteTheme(void) {}
-
-  void begin(void) final;
 
   static uint16_t reserveThemes(uint8_t max_themes);
   static void updateHandler(uint16_t theme_base, uint8_t theme);
@@ -47,6 +45,16 @@ class LEDPaletteTheme : public KaleidoscopePlugin {
                                      const char *expected_command,
                                      uint16_t theme_base,
                                      uint8_t max_themes);
+
+  EventHandlerResult onSetup();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin() {
+    onSetup();
+  }
+#endif
+
  private:
   static uint16_t palette_base_;
 };

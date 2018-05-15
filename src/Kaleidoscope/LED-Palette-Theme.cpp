@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Palette-Theme -- Palette-based LED theme foundation
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ namespace kaleidoscope {
 
 uint16_t LEDPaletteTheme::palette_base_;
 
-void LEDPaletteTheme::begin(void) {
-  Kaleidoscope.use(&::EEPROMSettings);
-
+EventHandlerResult LEDPaletteTheme::onSetup(void) {
   if (!palette_base_)
     palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
+
+  return EventHandlerResult::OK;
 }
 
 uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
