@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-GhostInTheFirmware -- Let the keyboard write for you!
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <Kaleidoscope-LED-Stalker.h>
 #include <Kaleidoscope-Macros.h>
 
+// *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, M(0),
@@ -33,16 +34,24 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    ___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
-   ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
 
    ___, ___, ___, ___,
    ___),
 };
+// *INDENT-ON*
 
-static Key eventDropper(Key, byte, byte, uint8_t) {
-  return Key_NoKey;
-}
+class EventDropper_ : public kaleidoscope::Plugin {
+ public:
+  EventDropper_() {}
+
+  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+    return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  }
+};
+
+static EventDropper_ EventDropper;
 
 const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
   if (macro_index == 0 && keyToggledOn(key_state))
@@ -120,15 +129,16 @@ static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
   {0, 0, 0, 0}
 };
 
+KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
+                          StalkerEffect,
+                          Macros,
+                          EventDropper);
+
 void setup() {
-  Kaleidoscope.use(&GhostInTheFirmware, &StalkerEffect, &Macros);
+  Kaleidoscope.setup();
 
   StalkerEffect.variant = STALKER(BlazingTrail);
   GhostInTheFirmware.ghost_keys = ghost_keys;
-
-  Kaleidoscope.useEventHandlerHook(eventDropper);
-
-  Kaleidoscope.setup();
 }
 
 void loop() {
