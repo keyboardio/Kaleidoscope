@@ -24,30 +24,19 @@ namespace kaleidoscope {
 const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
 bool ShapeShifter::mod_active_;
 
-ShapeShifter::ShapeShifter(void) {
-}
-
-void ShapeShifter::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
-void ShapeShifter::loopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
+EventHandlerResult ShapeShifter::beforeReportingState() {
   mod_active_ = hid::isModifierKeyActive(Key_LeftShift) ||
                 hid::isModifierKeyActive(Key_RightShift);
+  return EventHandlerResult::OK;
 }
 
-Key
-ShapeShifter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (!dictionary)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   // If Shift is not active, bail out early.
   if (!mod_active_)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   Key orig, repl;
 
@@ -62,13 +51,35 @@ ShapeShifter::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_s
 
   // If not found, bail out.
   if (orig.raw == Key_NoKey.raw)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   repl.raw = pgm_read_word(&(dictionary[i].replacement.raw));
 
   // If found, handle the alternate key instead
-  return repl;
+  mapped_key = repl;
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void ShapeShifter::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+Key ShapeShifter::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::ShapeShifter.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+
+void ShapeShifter::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+  ::ShapeShifter.beforeReportingState();
+}
+#endif
 
 }
 

@@ -34,9 +34,9 @@ static const kaleidoscope::ShapeShifter::dictionary_t shape_shift_dictionary[] P
  {Key_NoKey, Key_NoKey},
 };
 
-void setup() {
-  Kaleidoscope.use(&ShapeShifter);
+KALEIDOSCOPE_INIT_PLUGINS(ShapeShifter);
 
+void setup() {
   Kaleidoscope.setup();
 
   ShapeShifter.dictionary = shape_shift_dictionary;
