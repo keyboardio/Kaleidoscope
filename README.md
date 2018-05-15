@@ -40,12 +40,15 @@ We can then update the keymap via [Focus][plugin:focus].
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Focus.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          EEPROMKeymap,
+                          Focus);
+
 void setup() {
   Serial.begin(9600);
-  Kaleidoscope.use(&EEPROMKeymap, &Focus);
-  
+
   Kaleidoscope.setup();
-  
+
   Focus.addHook(FOCUS_HOOK_KEYMAP);
   Focus.addHook(FOCUS_HOOK_KEYMAP_TRANSFER);
 

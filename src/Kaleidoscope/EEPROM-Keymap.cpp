@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap -- EEPROM-based keymap support.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,6 @@
 namespace kaleidoscope {
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
-
-EEPROMKeymap::EEPROMKeymap(void) {
-}
-
-void EEPROMKeymap::begin(void) {
-  Kaleidoscope.use(&::EEPROMSettings);
-}
 
 void EEPROMKeymap::max_layers(uint8_t max) {
   max_layers_ = max;
