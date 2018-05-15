@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,14 +29,7 @@ namespace kaleidoscope {
 bool HostPowerManagement::was_suspended_ = false;
 bool HostPowerManagement::initial_suspend_ = true;
 
-void HostPowerManagement::begin(void) {
-  Kaleidoscope.useLoopHook(loopHook);
-}
-
-void HostPowerManagement::loopHook(bool post_clear) {
-  if (post_clear)
-    return;
-
+EventHandlerResult HostPowerManagement::beforeEachCycle() {
   if ((_usbSuspendState & (1 << SUSPI))) {
     if (!initial_suspend_) {
       if (!was_suspended_) {
@@ -54,7 +47,23 @@ void HostPowerManagement::loopHook(bool post_clear) {
       hostPowerManagementEventHandler(Resume);
     }
   }
+
+  return EventHandlerResult::OK;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void HostPowerManagement::begin() {
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+void HostPowerManagement::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear)
+    return;
+
+  ::HostPowerManagement.beforeEachCycle();
+}
+#endif
 
 }
 

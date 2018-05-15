@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-MyOldFriend -- Host power management support plugin.
- * Copyright (C) 2017  Gergely Nagy
+ * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #include "PluggableUSB.h"
 #include "HID.h"
 
-class WakeupKeyboard_ : public PluggableUSBModule, public KaleidoscopePlugin {
+class WakeupKeyboard_ : public PluggableUSBModule, public kaleidoscope::Plugin {
  public:
   WakeupKeyboard_(void);
-  void begin() final;
+  void init();
 
  protected:
   int getInterface(uint8_t* interfaceCount);

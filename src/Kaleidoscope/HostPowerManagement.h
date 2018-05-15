@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-HostPowerManagement -- Host power management support plugin.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include "WakeupKeyboard.h"
 
 namespace kaleidoscope {
-class HostPowerManagement : public KaleidoscopePlugin {
+class HostPowerManagement : public kaleidoscope::Plugin {
  public:
   typedef enum {
     Suspend,
@@ -30,18 +30,23 @@ class HostPowerManagement : public KaleidoscopePlugin {
     Resume,
   } Event;
 
-  HostPowerManagement(void) {};
+  HostPowerManagement(void) {}
 
-  void begin(void) final;
   void enableWakeup(void) {
-    WakeupKeyboard.begin();
-  };
+    WakeupKeyboard.init();
+  }
+
+  EventHandlerResult beforeEachCycle();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   static bool was_suspended_;
   static bool initial_suspend_;
-
-  static void loopHook(bool post_clear);
 };
 }
 
