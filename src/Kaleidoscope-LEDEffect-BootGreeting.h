@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LEDEffect-BootGreeting -- Small greeting at boot time
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,20 +21,26 @@
 #include "Kaleidoscope-LEDControl.h"
 
 namespace kaleidoscope {
-class BootGreetingEffect : public KaleidoscopePlugin {
+class BootGreetingEffect : public kaleidoscope::Plugin {
  public:
   BootGreetingEffect(void) {}
   BootGreetingEffect(byte, byte);
 
-  void begin(void) final;
   static byte key_row;
   static byte key_col;
   static Key search_key;
   static uint8_t hue;
   static uint16_t timeout;
 
+  EventHandlerResult afterEachCycle();
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static void legacyLoopHook(bool is_post_clear);
+#endif
+
  private:
-  static void loopHook(const bool post_clear);
   static void findLed(void);
   static bool done_;
   static byte row_;

@@ -18,11 +18,14 @@ To use the plugin, include the header, and tell `Kaleidoscope` to use the plugin
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
-void setup() {
-  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          BootGreetingEffect
+                          LEDOff);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```
@@ -32,55 +35,69 @@ You may also set optional parameters.
 ### Specify by search key
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          BootGreetingEffect
+                          LEDOff);
+
 void setup() {
-  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
+  Kaleidoscope.setup();
 
   BootGreetingEffect.search_key = Key_M;
-
-  Kaleidoscope.setup();
 }
 ```
 
 ### Specify by position
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          BootGreetingEffect
+                          LEDOff);
+
 void setup() {
-  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
+  Kaleidoscope.setup();
 
   //Butterfly key
   BootGreetingEffect.key_col = 7;
   BootGreetingEffect.key_row = 3;
-
-  Kaleidoscope.setup();
 }
 ```
 
 ### Specify longer timeout
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          BootGreetingEffect
+                          LEDOff);
+
 void setup() {
-  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
+  Kaleidoscope.setup();
 
   //Butterfly key
   BootGreetingEffect.timeout = 15000;
-
-  Kaleidoscope.setup();
 }
 ```
 
 ### Specify different color
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
+                          BootGreetingEffect
+                          LEDOff);
+
 void setup() {
-  Kaleidoscope.use(&BootGreetingEffect, &LEDOff);
+  Kaleidoscope.setup();
 
   //Butterfly key
   BootGreetingEffect.hue = 90;
@@ -112,7 +129,7 @@ properties:
 ### `.key_col`
 
 > This is an optional override to explicitly set the selected key by exact row
-> and column.  This number is 0-indexed, so the left-most column is 0, the 
+> and column.  This number is 0-indexed, so the left-most column is 0, the
 > second column is 1, etc.  Must set `.key_row` property for this feature to
 > be enabled.
 
@@ -128,7 +145,7 @@ properties:
 
 > This property sets the color hue that the LED pulsing effect.
 >
-> The default is `170`, which is a blue color. 
+> The default is `170`, which is a blue color.
 
 ## Dependencies
 
