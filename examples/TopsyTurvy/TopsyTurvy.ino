@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TopsyTurvy -- Turn the effect of Shift upside down for certain keys
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-TopsyTurvy.h>
 
+// *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
   (
@@ -38,10 +39,11 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 };
+// *INDENT-ON*
+
+KALEIDOSCOPE_INIT_PLUGINS(TopsyTurvy);
 
 void setup() {
-  Kaleidoscope.use(&TopsyTurvy);
-
   Kaleidoscope.setup();
 }
 

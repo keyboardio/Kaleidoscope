@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TopsyTurvy -- Turn the effect of Shift upside down for certain keys
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,14 +27,19 @@ namespace kaleidoscope {
 
 class TopsyTurvy: public KaleidoscopePlugin {
  public:
-  TopsyTurvy(void);
+  TopsyTurvy(void) {}
 
-  void begin(void) final;
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
+
  private:
   static uint8_t mod_state_;
   static uint8_t last_pressed_position_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 
 }
