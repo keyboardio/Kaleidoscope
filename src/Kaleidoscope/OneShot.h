@@ -26,11 +26,9 @@
 
 namespace kaleidoscope {
 
-class OneShot : public KaleidoscopePlugin {
+class OneShot : public kaleidoscope::Plugin {
  public:
-  OneShot(void);
-
-  void begin(void) final;
+  OneShot(void) {}
 
   static bool isOneShotKey(Key key) {
     return (key.raw >= kaleidoscope::ranges::OS_FIRST && key.raw <= kaleidoscope::ranges::OS_LAST);
@@ -50,7 +48,18 @@ class OneShot : public KaleidoscopePlugin {
 
   static bool isModifierActive(Key key);
 
-  void inject(Key key, uint8_t key_state);
+  EventHandlerResult beforeReportingState();
+  EventHandlerResult afterEachCycle();
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+
+  void inject(Key mapped_key, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+  static void legacyLoopHook(bool is_post_clear);
+#endif
 
  private:
   typedef union {
@@ -75,9 +84,6 @@ class OneShot : public KaleidoscopePlugin {
   static void injectNormalKey(uint8_t idx, uint8_t key_state);
   static void activateOneShot(uint8_t idx);
   static void cancelOneShot(uint8_t idx);
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void loopHook(bool is_post_clear);
 };
 
 }
