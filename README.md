@@ -73,9 +73,12 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-void setup() {
-  Kaleidoscope.use(&EEPROMKeymapProgrammer, &EEPROMKeymap, &Macros);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          EEPROMKeymapProgrammer,
+                          EEPROMKeymap,
+                          Macros);
 
+void setup() {
   Kaleidoscope.setup();
 
   Layer.getKey = EEPROMKeymap.getKey;

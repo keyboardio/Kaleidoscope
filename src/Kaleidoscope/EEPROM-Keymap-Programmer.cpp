@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap-Programmer -- On-the-fly reprogrammable keymap.
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,6 @@ uint16_t EEPROMKeymapProgrammer::update_position_;
 EEPROMKeymapProgrammer::state_t EEPROMKeymapProgrammer::state_;
 EEPROMKeymapProgrammer::mode_t EEPROMKeymapProgrammer::mode;
 Key EEPROMKeymapProgrammer::new_key_;
-
-EEPROMKeymapProgrammer::EEPROMKeymapProgrammer(void) {
-}
-
-void EEPROMKeymapProgrammer::begin(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
 
 void EEPROMKeymapProgrammer::nextState(void) {
   switch (state_) {
@@ -56,9 +49,9 @@ void EEPROMKeymapProgrammer::cancel(void) {
   state_ = INACTIVE;
 }
 
-Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (state_ == INACTIVE)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
   if (state_ == WAIT_FOR_KEY) {
     if (keyToggledOn(key_state)) {
@@ -68,7 +61,7 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
       if ((uint16_t)(Layer.top() * ROWS * COLS + row * COLS + col) == update_position_)
         nextState();
     }
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (state_ == WAIT_FOR_SOURCE_KEY) {
@@ -79,16 +72,17 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
       if (new_key_ == Layer.getKeyFromPROGMEM(Layer.top(), row, col))
         nextState();
     }
-    return Key_NoKey;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // WAIT_FOR_CODE state
 
   if (mapped_key < Key_1 || mapped_key > Key_0)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
-  if (!keyToggledOn(key_state))
-    return Key_NoKey;
+  if (!keyToggledOn(key_state)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   uint8_t n;
   if (mapped_key.keyCode == Key_0.keyCode)
@@ -98,7 +92,7 @@ Key EEPROMKeymapProgrammer::eventHandlerHook(Key mapped_key, byte row, byte col,
 
   new_key_.raw = new_key_.raw * 10 + n;
 
-  return Key_NoKey;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 bool EEPROMKeymapProgrammer::focusHook(const char *command) {
@@ -112,6 +106,20 @@ bool EEPROMKeymapProgrammer::focusHook(const char *command) {
 
   return true;
 }
+
+// Legacy API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void EEPROMKeymapProgrammer::begin() {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key EEPROMKeymapProgrammer::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::EEPROMKeymapProgrammer.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 
