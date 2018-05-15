@@ -45,9 +45,9 @@ enabling the plugin:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-SpaceCadet.h>
 
-void setup() {
-  Kaleidoscope.use(&SpaceCadet);
+KALEIDOSCOPE_INIT_PLUGINS(SpaceCadet);
 
+void setup() {
   Kaleidoscope.setup();
 }
 ```
@@ -65,8 +65,10 @@ passing a new keymap into the SpaceCadet object, as shown below:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-SpaceCadet.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(SpaceCadet);
+
 void setup() {
-  Kaleidoscope.use(&SpaceCadet);
+  Kaleidoscope.setup();
 
   //Set the keymap with a 250ms timeout per-key
   //Setting is {KeyThatWasPressed, AlternativeKeyToSend, TimeoutInMS}
@@ -83,8 +85,6 @@ void setup() {
   };
   //Set the map.
   SpaceCadet.map = spacecadetmap;
-
-  Kaleidoscope.setup();
 }
 ```
 
