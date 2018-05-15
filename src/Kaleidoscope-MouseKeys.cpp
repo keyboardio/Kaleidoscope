@@ -39,23 +39,24 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
     kaleidoscope::hid::moveMouse(0, 0, 0, wheelSpeed);
 }
 
-void MouseKeys_::loopHook(bool postClear) {
-  if (postClear) {
-    kaleidoscope::hid::sendMouseReport();
-    kaleidoscope::hid::releaseAllMouseButtons();
-    mouseMoveIntent = 0;
-    return;
-  }
+kaleidoscope::EventHandlerResult MouseKeys_::afterEachCycle() {
+  kaleidoscope::hid::sendMouseReport();
+  kaleidoscope::hid::releaseAllMouseButtons();
+  mouseMoveIntent = 0;
 
+  return kaleidoscope::EventHandlerResult::OK;
+}
+
+kaleidoscope::EventHandlerResult MouseKeys_::beforeReportingState() {
   if (mouseMoveIntent == 0) {
     MouseWrapper.accelStep = 0;
     endTime = 0;
     accelEndTime = 0;
-    return;
+    return kaleidoscope::EventHandlerResult::OK;
   }
 
   if (millis() < endTime)
-    return;
+    return kaleidoscope::EventHandlerResult::OK;
 
   endTime = millis() + speedDelay;
 
@@ -79,11 +80,13 @@ void MouseKeys_::loopHook(bool postClear) {
     moveX = speed;
 
   MouseWrapper.move(moveX, moveY);
+
+  return kaleidoscope::EventHandlerResult::OK;
 }
 
-Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyState) {
+kaleidoscope::EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
-    return mappedKey;
+    return kaleidoscope::EventHandlerResult::OK;
 
   if (mappedKey.keyCode & KEY_MOUSE_BUTTON && !(mappedKey.keyCode & KEY_MOUSE_WARP)) {
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
@@ -122,17 +125,37 @@ Key MouseKeys_::eventHandlerHook(Key mappedKey, byte row, byte col, uint8_t keyS
     }
   }
 
+  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+}
+
+kaleidoscope::EventHandlerResult MouseKeys_::onSetup(void) {
+  MouseWrapper.begin();
+
+  return kaleidoscope::EventHandlerResult::OK;
+}
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void MouseKeys_::begin() {
+  onSetup();
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+  Kaleidoscope.useLoopHook(legacyLoopHook);
+}
+
+Key MouseKeys_::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  kaleidoscope::EventHandlerResult r = MouseKeys.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == kaleidoscope::EventHandlerResult::OK)
+    return mapped_key;
   return Key_NoKey;
 }
 
-MouseKeys_::MouseKeys_(void) {
+void MouseKeys_::legacyLoopHook(bool is_post_clear) {
+  if (is_post_clear) {
+    MouseKeys.afterEachCycle();
+  } else {
+    MouseKeys.beforeReportingState();
+  }
 }
-
-void
-MouseKeys_::begin(void) {
-  MouseWrapper.begin();
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-  Kaleidoscope.useLoopHook(loopHook);
-}
+#endif
 
 MouseKeys_ MouseKeys;
