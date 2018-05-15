@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,22 +24,24 @@
 namespace kaleidoscope {
 namespace hostos {
 
-void Base::begin(void) {
+EventHandlerResult Base::onSetup(void) {
   if (is_configured_)
-    return;
+    return EventHandlerResult::OK;
 
   eeprom_slice_ = ::EEPROMSettings.requestSlice(sizeof(os_));
 
   is_configured_ = true;
 
   if (os_ != AUTO) {
-    return;
+    return EventHandlerResult::OK;
   }
 
   if ((os_ = (Type)EEPROM.read(eeprom_slice_)) != AUTO)
-    return;
+    return EventHandlerResult::OK;
 
   autoDetect();
+
+  return EventHandlerResult::OK;
 }
 
 Type Base::os(void) {
@@ -68,6 +70,13 @@ bool Base::focusHook(const char *command) {
   Serial.read();
   return true;
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void Base::begin() {
+  ::HostOS.onSetup();
+}
+#endif
 
 }
 }

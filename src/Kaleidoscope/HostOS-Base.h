@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-HostOS -- Host OS detection and tracking for Kaleidoscope
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@ typedef enum {
   AUTO = 0xff,
 } Type;
 
-class Base : public KaleidoscopePlugin {
+class Base : public kaleidoscope::Plugin {
  public:
-  void begin(void) final;
+  EventHandlerResult onSetup();
 
   Type os(void);
   void os(Type new_os);
@@ -44,6 +44,10 @@ class Base : public KaleidoscopePlugin {
  protected:
   virtual void autoDetect(void) {}
   Type os_;
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  void begin();
+#endif
 
  private:
   uint16_t eeprom_slice_;
