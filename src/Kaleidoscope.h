@@ -82,6 +82,19 @@ class Kaleidoscope_ {
   void setup(void);
   void loop(void);
 
+  /** Returns the timer as it was at the start of the cycle.
+   * The goal of this method is two-fold:
+   *  - To reduce the amount of calls to millis(), providing something cheaper.
+   *  - To have a consistent timer value for the whole duration of a cycle.
+   *
+   * This cached value is updated at the start of each cycle as the name
+   * implies. It is recommended to use this in plugins over millis() unless
+   * there is good reason not to.
+   */
+  static uint32_t millisAtCycleStart() {
+    return millis_at_cycle_start_;
+  }
+
   // ---- Kaleidoscope.use() ----
 
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
@@ -151,6 +164,9 @@ class Kaleidoscope_ {
   DEPRECATED(LOOP_HOOK);
 
   static bool focusHook(const char *command);
+
+ private:
+  static uint32_t millis_at_cycle_start_;
 };
 
 extern kaleidoscope::Kaleidoscope_ Kaleidoscope;

@@ -15,6 +15,19 @@ easier to use and develop for:
  - The new system has more hook points, and the method names are much more clear
    now.
 
+### Kaleidoscope.millisAtCycleStart()
+
+Many plugins use timers, and most of them will call `millis()`, which isn't
+wrong, but isn't the most efficient either. While `millis()` isn't terribly
+expensive, it's not cheap either. For most cases, we do not need an exact timer,
+and one updated once per cycle is enough - which is what `.millisAtCycleStart()`
+is. Having a timer that is consistent throughout the whole cycle may also be
+beneficial.
+
+While `millis()` should continue to work forever, plugins and user code should,
+as a general rule, use `Kaleidoscope.millisAtCycleStart()` rather than
+`millis()`.
+
 ### KALEIDOSCOPE_API_VERSION bump
 
 `KALEIDOSCOPE_API_VERSION` has been bumped to **2** due to the plugin API
