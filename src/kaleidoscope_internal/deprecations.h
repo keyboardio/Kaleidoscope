@@ -44,7 +44,11 @@
   "Consider upgrading your plugins, or implementing the new interface\n"   \
   "described by `kaleidoscope::Plugin`. In particular, instead of using\n" \
   "`Kaleidoscope.useEventHandlerHook`, implement the\n"                    \
-  "`.onKeyswitchEvent()` method instead."
+  "`.onKeyswitchEvent()` method instead.\n"                                \
+  "\n"                                                                     \
+  "If your plugins are up-to-date, and you are not a developer, it is\n"   \
+  "usually safe to ignore this message. Especally if the full error\n"     \
+  "points to a line containing `legacyLoopHook` or `legacyEventHandler`."
 
 
 #define _DEPRECATED_MESSAGE_LOOP_HOOK                                      \
@@ -53,7 +57,12 @@
   "Consider upgrading your plugins, or implementing the new interface\n"   \
   "described by `kaleidoscope::Plugin`. In particular, instead of using\n" \
   "`Kaleidoscope.useLoopHook`, implement `.beforeEachCycle`,\n"            \
-  "`.beforeReportingState()`, or `.afterEachCycle()` instead."
+  "`.beforeReportingState()`, or `.afterEachCycle()` instead.\n"           \
+  "\n"                                                                     \
+  "If your plugins are up-to-date, and you are not a developer, it is\n"   \
+  "usually safe to ignore this message. Especally if the full error\n"     \
+  "points to a line containing `legacyLoopHook` or `legacyEventHandler`."
+
 
 #define _DEPRECATED_MESSAGE_USE_INSTEAD(new_method) \
   "Please use `" new_method "` instead."
