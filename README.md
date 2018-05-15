@@ -39,9 +39,9 @@ void cycleAction(Key previous_key, uint8_t cycle_count) {
   }
 }
 
-void setup(void) {
-  Kaleidoscope.use(&Cycle);
+KALEIDOSCOPE_INIT_PLUGINS(Cycle);
 
+void setup(void) {
   Kaleidoscope.setup();
 }
 ```

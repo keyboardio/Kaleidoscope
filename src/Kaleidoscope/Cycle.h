@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
- * Copyright (C) 2016, 2017  Gergely Nagy
+ * Copyright (C) 2016, 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,20 +29,24 @@
     })
 
 namespace kaleidoscope {
-class Cycle : public KaleidoscopePlugin {
+class Cycle : public kaleidoscope::Plugin {
  public:
-  Cycle(void);
-
-  void begin(void) final;
+  Cycle(void) {}
 
   static void replace(Key key);
   static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+ protected:
+  void begin();
+  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
+#endif
+
  private:
   static Key last_non_cycle_key_;
   static uint8_t cycle_count_;
-
-  static Key eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state);
 };
 };
 
