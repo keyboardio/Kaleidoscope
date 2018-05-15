@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Stalker -- Stalk keys pressed by lighting up and fading back the LED under them
- * Copyright (C) 2017  Gergely Nagy
+ * Copyright (C) 2017, 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,23 +26,19 @@ StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
 uint16_t StalkerEffect::step_start_time_;
 
-void StalkerEffect::setup(void) {
-  Kaleidoscope.useEventHandlerHook(eventHandlerHook);
-}
-
 void StalkerEffect::onActivate(void) {
   memset(map_, 0, sizeof(map_));
 }
 
-Key StalkerEffect::eventHandlerHook(Key mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (row >= ROWS || col >= COLS)
-    return mapped_key;
+    return EventHandlerResult::OK;
 
-  if (keyIsPressed(key_state)) {
+  if (keyIsPressed(keyState)) {
     map_[row][col] = 0xff;
   }
 
-  return mapped_key;
+  return EventHandlerResult::OK;
 }
 
 void StalkerEffect::update(void) {
@@ -142,6 +138,20 @@ cRGB Rainbow::compute(uint8_t *step) {
 }
 
 }
+
+// Legacy V1 API
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+void StalkerEffect::setup(void) {
+  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
+}
+
+Key StalkerEffect::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
+  EventHandlerResult r = ::StalkerEffect.onKeyswitchEvent(mapped_key, row, col, key_state);
+  if (r == EventHandlerResult::OK)
+    return mapped_key;
+  return Key_NoKey;
+}
+#endif
 
 }
 

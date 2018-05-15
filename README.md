@@ -19,11 +19,12 @@ To use the plugin, one needs to include the header and select the effect.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Stalker.h>
 
-void setup (){
-  Kaleidoscope.use(&StalkerEffect);
+KALEIDOSCOPE_INIT_PLUGINS(LEDControl, StalkerEffect);
 
+void setup (){
   Kaleidoscope.setup();
 
   StalkerEffect.variant = STALKER(Haunt, (CRGB(0, 128, 0)));
