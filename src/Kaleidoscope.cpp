@@ -11,7 +11,7 @@ Kaleidoscope_::Kaleidoscope_(void) {
 
 void
 Kaleidoscope_::setup(void) {
-  kaleidoscope::Hooks::onSetup();
+  kaleidoscope::hooks::onSetup();
 
   KeyboardHardware.setup();
 
@@ -35,11 +35,11 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::loop(void) {
-  kaleidoscope::Hooks::beforeEachCycle();
+  kaleidoscope::hooks::beforeEachCycle();
 
   KeyboardHardware.scanMatrix();
 
-  kaleidoscope::Hooks::beforeReportingState();
+  kaleidoscope::hooks::beforeReportingState();
 
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
@@ -58,7 +58,7 @@ Kaleidoscope_::loop(void) {
   }
 #endif
 
-  kaleidoscope::Hooks::afterEachCycle();
+  kaleidoscope::hooks::afterEachCycle();
 }
 
 bool
