@@ -26,41 +26,41 @@ union Key {
   };
   uint16_t raw;
 
-  inline bool operator==(uint16_t rhs) {
+  constexpr bool operator==(const uint16_t rhs) const {
     return this->raw == rhs;
   }
-  inline bool operator==(const Key rhs) {
+  constexpr bool operator==(const Key& rhs) const {
     return this->raw == rhs.raw;
   }
-  inline Key& operator=(uint16_t raw) {
+  Key& operator=(const uint16_t raw) {
     this->raw = raw;
     return *this;
   }
-  inline bool operator!=(const Key& rhs) {
+  constexpr bool operator!=(const Key& rhs) const {
     return !(*this == rhs);
   }
-  inline bool operator>=(uint16_t raw) {
+  constexpr bool operator>=(const uint16_t raw) const {
     return this->raw >= raw;
   }
-  inline bool operator<=(uint16_t raw) {
+  constexpr bool operator<=(const uint16_t raw) const {
     return this->raw <= raw;
   }
-  inline bool operator>(uint16_t raw) {
+  constexpr bool operator>(const uint16_t raw) const {
     return this->raw > raw;
   }
-  inline bool operator<(uint16_t raw) {
+  constexpr bool operator<(const uint16_t raw) const {
     return this->raw < raw;
   }
-  inline bool operator>=(const Key& other) {
+  constexpr bool operator>=(const Key& other) const {
     return this->raw >= other.raw;
   }
-  inline bool operator<=(const Key& other) {
+  constexpr bool operator<=(const Key& other) const {
     return this->raw <= other.raw;
   }
-  inline bool operator>(const Key& other) {
+  constexpr bool operator>(const Key& other) const {
     return this->raw > other.raw;
   }
-  inline bool operator<(const Key& other) {
+  constexpr bool operator<(const Key& other) const {
     return this->raw < other.raw;
   }
 };
