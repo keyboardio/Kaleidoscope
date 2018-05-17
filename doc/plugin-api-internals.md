@@ -242,14 +242,14 @@ struct EventDispatcher {
 
 Because we call `EventHandler_onSetup::call` with the plugin as the first
 argument, and because `call` is also a templated function, where the first
-argument is templated, we get a method that is polimorphic on its first
+argument is templated, we get a method that is polymorphic on its first
 argument. Meaning, for each and every plugin, we'll have a matching
 `EventHandler_onSetup::call`, that is tied to that plugin. *This* is the magic
 that lets us use non-virtual methods!
 
 ## Exploring what the compiler does
 
-Because all hooks are called via `kaleidoscope::Hooks::NAME`, lets explore how
+Because all hooks are called via `kaleidoscope::Hooks::NAME`, let's explore how
 the compiler will optimize the code for `onSetup`, assuming we use two plugins,
 `SomePlugin` and `ExampleEffect`.
 
@@ -291,7 +291,7 @@ EventHandlerResult kaleidoscope::Hooks::onSetup() {
 }
 ```
 
-This is starting to look human readable, doesn't it? But we can go further,
+This is starting to look human readable, isn't it? But we can go further,
 because `EventHandler::onSetup::call` and
 `EventHandler_onSetup::shouldAbortOnConsumedEvent` are evaluated at compile-time
 too!
