@@ -105,7 +105,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
 
   // New event handler interface
   //
-  if (kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, row, col, keyState) != kaleidoscope::EventHandlerResult::OK)
+  if (kaleidoscope::hooks::onKeyswitchEvent(mappedKey, row, col, keyState) != kaleidoscope::EventHandlerResult::OK)
     return;
 
   mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);

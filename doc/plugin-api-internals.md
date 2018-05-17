@@ -50,7 +50,7 @@ This is where things get interesting. This macro does two things:
    resolve to a function that calls the `foo` method of each plugin we listed
    for `KALEIDOSCOPE_INIT_PLUGINS`. We'll see in a bit how this happens.
 
- - The other part creates overrides for the `Kaleidoscope::Hooks::` family of
+ - The other part creates overrides for the `Kaleidoscope::hooks::` family of
    functions. These are wrappers around `EventDispatcher::template apply<foo>`.
    We have these so higher level code would not need to care about the
    implementation details, so that it can invoke the hooks as if they were
@@ -86,20 +86,20 @@ because that's easier to explain, and does not lead down another rabbit hole.
    } 	                                                                  \
                                                                           \
    namespace kaleidoscope {                                               \
-                                                                          \
-     EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      \
+   namespace hooks {                                                      \
+     EventHandlerResult HOOK_NAME SIGNATURE {                             \
         return kaleidoscope_internal::EventDispatcher::template           \
         apply<kaleidoscope_internal::EventHandler_ ## HOOK_NAME>          \
              ARGS_LIST;                                                   \
       }                                                                   \
-                                                                          \
+   }                                                                      \
    }
 ```
 
 This looks big and scary, but in practice, it isn't all that bad. Nevertheless,
 this is where the magic happens!
 
-We create two things: `EventHandler_SomeThing` and `Hooks::SomeThing`, the
+We create two things: `EventHandler_SomeThing` and `hooks::SomeThing`, the
 latter being a wrapper around the first, that uses `EventDispatcher::template
 apply<>` discussed above.
 
@@ -123,12 +123,12 @@ struct EventHandler_onSetup {
 }
 
 namespace kaleidoscope {
-
-EventHandlerResult Hooks::onSetup() {
+namespace hooks {
+EventHandlerResult onSetup() {
   return kaleidoscope_internal::EventDispatcher::template
          apply<kaleidoscope_internal::EventHandler_onSetup>();
 }
-
+}
 }
 ```
 
@@ -249,20 +249,20 @@ that lets us use non-virtual methods!
 
 ## Exploring what the compiler does
 
-Because all hooks are called via `kaleidoscope::Hooks::NAME`, lets explore how
+Because all hooks are called via `kaleidoscope::hooks::NAME`, lets explore how
 the compiler will optimize the code for `onSetup`, assuming we use two plugins,
 `SomePlugin` and `ExampleEffect`.
 
 Our entry point is this:
 
 ```c++
-return kaleidoscope::Hooks::onSetup();
+return kaleidoscope::hooks::onSetup();
 ```
 
-`_REGISTER_EVENT_HANDLER` created `Hooks::onSetup()` for us:
+`_REGISTER_EVENT_HANDLER` created `hooks::onSetup()` for us:
 
 ```c++
-EventHandlerResult kaleidoscope::Hooks::onSetup() {
+EventHandlerResult kaleidoscope::hooks::onSetup() {
   return kaleidoscope_internal::EventDispatcher::template
          apply<kaleidoscope_internal::EventHandler_onSetup>();
 }
@@ -272,7 +272,7 @@ If we inline the call to `EventDispatcher::template apply<>`, we end up with the
 following:
 
 ```c++
-EventHandlerResult kaleidoscope::Hooks::onSetup() {
+EventHandlerResult kaleidoscope::hooks::onSetup() {
   kaleidoscope::EventHandlerResult result;
 
   result = EventHandler_onSetup::call(SomePlugin);
@@ -297,7 +297,7 @@ because `EventHandler::onSetup::call` and
 too!
 
 ```c++
-EventHandlerResult kaleidoscope::Hooks::onSetup() {
+EventHandlerResult kaleidoscope::hooks::onSetup() {
   kaleidoscope::EventHandlerResult result;
 
   result = SomePlugin.onSetup();
@@ -319,7 +319,7 @@ EventHandlerResult kaleidoscope::Hooks::onSetup() {
 Which in turn, may be optimized further to something like the following:
 
 ```c++
-EventHandlerResult kaleidoscope::Hooks::onSetup() {
+EventHandlerResult kaleidoscope::hooks::onSetup() {
   kaleidoscope::EventHandlerResult result;
 
   result = SomePlugin.onSetup();

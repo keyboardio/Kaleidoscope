@@ -28,14 +28,14 @@
 // The EventDispatcher class implements a compile-time loop over all plugins, which
 // calls an event handler on each plugin.
 //
-// Each hook called by the firmware core compiles down to only a single
-// static function call (in class Hooks), rather than one for each plugin.
+// Each hook called by the firmware core compiles down to only a single static
+// function call (in the hooks namespace), rather than one for each plugin.
 //
 // This approach is better than using virtual event handlers in classes
 // derived from kaleidoscope::Plugin because it results in significantly fewer
 // virtual function calls and virtual function tables (vtables).
 //
-// The call to event handlers through kaleidoscope::Hooks and
+// The call to event handlers through kaleidoscope::hooks and
 // kaleidoscope_internal::EventDispatcher is templated to allow for compile time
 // static polymorphisms (plugins' EventHandlers aren't virtual).
 //
@@ -45,12 +45,12 @@
 // The compiler only cares that a method's signature matches, not that the plugin
 // is derived from kaleidoscope::Plugin.
 //
-// Static hook functions inside the Hooks class each use the EventDispatcher
+// Static hook functions inside the hooks namespace each use the EventDispatcher
 // helper class to cast an associated EventHandler on each plugin instance.
 
 
 // This defines an auxiliary class 'EventHandler_Foo' for each hook 'Foo'.
-// Kaleidoscope::Hooks calls the EventDispatcher class, which in turn invokes
+// Kaleidoscope::hooks calls the EventDispatcher class, which in turn invokes
 // the event handler method 'Foo' of each registered plugin with a given
 // set of arguments.
 
@@ -76,13 +76,13 @@
    } 	                                                                    __NL__ \
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
-                                                                          __NL__ \
-     EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
+   namespace hooks {                                                      __NL__ \
+     EventHandlerResult HOOK_NAME SIGNATURE {                             __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
         apply<kaleidoscope_internal::EventHandler_ ## HOOK_NAME>          __NL__ \
              ARGS_LIST;                                                   __NL__ \
       }                                                                   __NL__ \
-                                                                          __NL__ \
+   }                                                                      __NL__ \
    }
 
 #define _INLINE_EVENT_HANDLER_FOR_PLUGIN(PLUGIN)                            \
