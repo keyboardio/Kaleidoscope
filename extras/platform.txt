@@ -1,0 +1,7 @@
+## These should be appended to hardware/keyboardio/platform.txt
+
+tools.teensy_loader_cli.cmd.path=teensy_loader_cli
+tools.teensy_loader_cli.upload.params.verbose=-v
+tools.teensy_loader_cli.upload.params.quiet=
+tools.teensy_loader_cli.upload.noverify=
+tools.teensy_loader_cli.upload.pattern="{cmd.path}" {upload.verbose} --mcu=atmega32u4 -w -v "{build.path}/{build.project_name}.hex"
