@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-ErgoDox -- ErgoDox hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
  * Copyright (C) 2018  Gergely Nagy
  *
  * This program is free software: you can redistribute it and/or modify
