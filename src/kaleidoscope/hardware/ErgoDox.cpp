@@ -28,6 +28,8 @@ ErgoDoxScanner ErgoDox::scanner_;
 uint8_t ErgoDox::previousKeyState_[ROWS];
 uint8_t ErgoDox::keyState_[ROWS];
 uint8_t ErgoDox::masks_[ROWS];
+uint8_t ErgoDox::debounce_matrix_[ROWS][COLS];
+uint8_t ErgoDox::debounce = 5;
 
 void ErgoDox::setup(void) {
   wdt_disable();
@@ -53,20 +55,23 @@ void ErgoDox::setup(void) {
   setStatusLEDBrightness(3, 15);
 }
 
+void ErgoDox::readMatrixRow(uint8_t row) {
+  uint8_t mask, cols;
+
+  previousKeyState_[row] = keyState_[row];
+  mask = debounceMaskForRow(row);
+  cols = (scanner_.readCols(row) & mask) | (keyState_[row] & ~mask);
+  debounceRow(cols ^ keyState_[row], row);
+  keyState_[row] = cols;
+}
+
 void ErgoDox::readMatrix() {
-  for (uint8_t i = 0; i < ROWS / 2; i++) {
-    scanner_.selectRow(i);
-    scanner_.selectRow(i + ROWS / 2);
+  for (uint8_t row = 0; row < ROWS / 2; row++) {
+    scanner_.selectRow(row);
+    scanner_.selectRow(row + ROWS / 2);
 
-    // TODO(algernon): debouncing
-
-    // left side
-    previousKeyState_[i] = keyState_[i];
-    keyState_[i] = scanner_.readCols(i);
-
-    // right side
-    previousKeyState_[i + ROWS / 2] = keyState_[i + ROWS / 2];
-    keyState_[i + ROWS / 2] = scanner_.readCols(i + ROWS / 2);
+    readMatrixRow(row);
+    readMatrixRow(row + ROWS / 2);
 
     scanner_.unselectRows();
   }
@@ -157,6 +162,28 @@ void ErgoDox::resetDevice() {
   PORTE = 0;
   PORTF = 0;
   asm volatile("jmp 0x7E00");
+}
+
+
+uint8_t ErgoDox::debounceMaskForRow(uint8_t row) {
+  uint8_t result = 0;
+
+  for (uint8_t c = 0; c < COLS; ++c) {
+    if (debounce_matrix_[row][c]) {
+      --debounce_matrix_[row][c];
+    } else {
+      result |= (1 << c);
+    }
+  }
+  return result;
+}
+
+void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
+  for (uint8_t i = 0; i < COLS; ++i) {
+    if (change & (1 << i)) {
+      debounce_matrix_[row][i] = debounce;
+    }
+  }
 }
 
 }

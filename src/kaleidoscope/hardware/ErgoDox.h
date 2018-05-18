@@ -75,11 +75,18 @@ class ErgoDox {
 
   void resetDevice();
 
+  static uint8_t debounce;
+
  private:
   static ErgoDoxScanner scanner_;
   static uint8_t previousKeyState_[ROWS];
   static uint8_t keyState_[ROWS];
   static uint8_t masks_[ROWS];
+  static uint8_t debounce_matrix_[ROWS][COLS];
+
+  static uint8_t debounceMaskForRow(uint8_t row);
+  static void debounceRow(uint8_t change, uint8_t row);
+  static void readMatrixRow(uint8_t row);
 };
 
 #define KEYMAP_STACKED(                                         \
