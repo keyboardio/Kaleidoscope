@@ -73,6 +73,8 @@ class ErgoDox {
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
 
+  void resetDevice();
+
  private:
   static ErgoDoxScanner scanner_;
   static uint8_t previousKeyState_[ROWS];
