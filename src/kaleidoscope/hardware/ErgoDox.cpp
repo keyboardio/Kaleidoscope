@@ -47,6 +47,10 @@ void ErgoDox::setup(void) {
   PORTE |= (1 << 6);
 
   scanner_.begin();
+
+  setStatusLEDBrightness(1, 15);
+  setStatusLEDBrightness(2, 15);
+  setStatusLEDBrightness(3, 15);
 }
 
 void ErgoDox::readMatrix() {
@@ -102,6 +106,23 @@ bool ErgoDox::isKeyMasked(byte row, byte col) {
     return false;
 
   return bitRead(masks_[row], col);
+}
+
+// ErgoDox-specific stuff
+void ErgoDox::setStatusLED(uint8_t led, bool state) {
+  if (state) {
+    DDRB |= (1 << (led + 4));
+    PORTB |= (1 << (led + 4));
+  } else {
+    DDRB &= ~(1 << (led + 4));
+    PORTB &= ~(1 << (led + 4));
+  }
+}
+
+void ErgoDox::setStatusLEDBrightness(uint8_t led, uint8_t brightness) {
+  (led == 1) ? (OCR1A = brightness) :
+  (led == 2) ? (OCR1B = brightness) :
+  (OCR1C = brightness);
 }
 
 }

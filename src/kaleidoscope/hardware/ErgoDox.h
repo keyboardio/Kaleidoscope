@@ -69,6 +69,10 @@ class ErgoDox {
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
 
+  // ErgoDox-specific stuff
+  void setStatusLED(uint8_t led, bool state = true);
+  void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
+
  private:
   static ErgoDoxScanner scanner_;
   static uint8_t previousKeyState_[ROWS];
