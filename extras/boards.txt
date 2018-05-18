@@ -20,4 +20,4 @@ ergodox.build.usb_manufacturer="ErgoDox EZ"
 ergodox.build.board=AVR_ERGODOX
 ergodox.build.core=arduino:arduino
 ergodox.build.variant=ergodox
-ergodox.build.extra_flags={build.usb_flags} '-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-ErgoDox.h"'
+ergodox.build.extra_flags={build.usb_flags} '-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-ErgoDox.h"' '-DKALEIDOSCOPE_ENABLE_V1_PLUGIN_API=0'
