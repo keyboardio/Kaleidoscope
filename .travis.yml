@@ -4,9 +4,6 @@ os:
   - linux
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
-  - cat extras/boards.txt >>hardware/keyboardio/avr/boards.txt
-  - cat extras/platform.txt >>hardware/keyboardio/avr/platform.txt
-  - cp -pr extras/variants/ergodox hardware/keyboardio/avr/variants/
 script:
   - make travis-test BOARD_HARDWARE_PATH=$(pwd)/hardware
 notifications:
