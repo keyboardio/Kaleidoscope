@@ -108,3 +108,4 @@ bool ErgoDox::isKeyMasked(byte row, byte col) {
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
+kaleidoscope::hardware::ErgoDox &ErgoDox = KeyboardHardware;

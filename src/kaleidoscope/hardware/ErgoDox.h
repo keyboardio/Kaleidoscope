@@ -118,3 +118,5 @@ class ErgoDox {
 
 }
 }
+
+extern kaleidoscope::hardware::ErgoDox &ErgoDox;
