@@ -2,7 +2,12 @@
  * Kaleidoscope-Hardware-ErgoDox -- ErgoDox hardware support for Kaleidoscope
  * Copyright (C) 2018  Gergely Nagy
  *
- * Based on QMK, which is (C) Jack Humbert, Erez Zukerman, et al.
+ * Based on QMK (commit 8cdb4a915)
+ *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
+ * Original QMK sources:
+ *  - keyboards/ergodox_ez/ergodox_ez.c
+ *  - keyboards/ergodox_ez/ergodox_ez.h
+ *  - keyboards/ergodox_ez/matrix.c
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
