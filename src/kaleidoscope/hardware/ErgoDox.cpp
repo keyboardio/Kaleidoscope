@@ -77,7 +77,8 @@ void ErgoDox::actOnMatrixScan() {
     for (byte col = 0; col < COLS; col++) {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                          (bitRead(keyState_[row], col) << 1);
-      handleKeyswitchEvent(Key_NoKey, row, col, keyState);
+      if (keyState)
+        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
     }
   }
 }
