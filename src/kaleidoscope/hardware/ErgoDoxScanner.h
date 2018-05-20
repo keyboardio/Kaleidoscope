@@ -40,8 +40,9 @@ class ErgoDoxScanner {
   void unselectRows();
   uint8_t readCols(int row);
 
+  void reattachExpanderOnError();
+
  private:
-  bool i2c_initialized_ = false;
   uint8_t expander_error_ = 0x20;
 
   uint8_t initExpander();

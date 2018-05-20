@@ -45,11 +45,7 @@ namespace hardware {
 uint8_t ErgoDoxScanner::initExpander() {
   uint8_t status = 0x20;
 
-  if (i2c_initialized_ == false) {
-    i2c_init();
-    i2c_initialized_ = true;
-    _delay_ms(1000);
-  }
+  i2c_init();
 
   status = i2c_start(I2C_ADDR_WRITE);
   if (status)
@@ -185,6 +181,19 @@ out:
   } else {
     return (~((PINF & 0x03) | ((PINF & 0xF0) >> 2))) & ~0b11000000;
   }
+}
+
+void
+ErgoDoxScanner::reattachExpanderOnError() {
+  static uint8_t attach_counter;
+
+  if (!expander_error_)
+    return;
+
+  if (attach_counter++ != 0)
+    return;
+
+  expander_error_ = initExpander();
 }
 
 }

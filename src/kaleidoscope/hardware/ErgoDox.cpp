@@ -92,6 +92,8 @@ void ErgoDox::readMatrixRow(uint8_t row) {
 void ErgoDox::readMatrix() {
   do_scan_ = false;
 
+  scanner_.reattachExpanderOnError();
+
   for (uint8_t row = 0; row < ROWS / 2; row++) {
     scanner_.selectRow(row);
     scanner_.selectRow(row + ROWS / 2);
