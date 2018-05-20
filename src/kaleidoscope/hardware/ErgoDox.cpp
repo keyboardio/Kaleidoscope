@@ -39,6 +39,8 @@ uint8_t ErgoDox::masks_[ROWS];
 uint8_t ErgoDox::debounce_matrix_[ROWS][COLS];
 uint8_t ErgoDox::debounce = 5;
 
+static bool do_scan_ = 1;
+
 void ErgoDox::setup(void) {
   wdt_disable();
   delay(100);
@@ -61,6 +63,20 @@ void ErgoDox::setup(void) {
   setStatusLEDBrightness(1, 15);
   setStatusLEDBrightness(2, 15);
   setStatusLEDBrightness(3, 15);
+
+  /* Set up Timer1 for 500usec */
+  TCCR1B = _BV(WGM13);
+  TCCR1A = 0;
+
+  const unsigned long cycles = (F_CPU / 2000000) * 500;
+
+  ICR1 = cycles;
+  TCCR1B = _BV(WGM13) | _BV(CS10);
+  TIMSK1 = _BV(TOIE1);
+}
+
+ISR(TIMER1_OVF_vect) {
+  do_scan_ = true;
 }
 
 void ErgoDox::readMatrixRow(uint8_t row) {
@@ -74,6 +90,8 @@ void ErgoDox::readMatrixRow(uint8_t row) {
 }
 
 void ErgoDox::readMatrix() {
+  do_scan_ = false;
+
   for (uint8_t row = 0; row < ROWS / 2; row++) {
     scanner_.selectRow(row);
     scanner_.selectRow(row + ROWS / 2);
@@ -97,6 +115,9 @@ void ErgoDox::actOnMatrixScan() {
 }
 
 void ErgoDox::scanMatrix() {
+  if (!do_scan_)
+    return;
+
   readMatrix();
   actOnMatrixScan();
 }
