@@ -185,15 +185,16 @@ out:
 
 void
 ErgoDoxScanner::reattachExpanderOnError() {
-  static uint8_t attach_counter;
+  static uint32_t start_time = millis();
 
   if (!expander_error_)
     return;
 
-  if (attach_counter++ != 0)
+  if (millis() - start_time < 5000)
     return;
 
   expander_error_ = initExpander();
+  start_time = millis();
 }
 
 }
