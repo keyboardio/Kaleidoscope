@@ -46,6 +46,7 @@ uint8_t ErgoDoxScanner::initExpander() {
   uint8_t status = 0x20;
 
   i2c_init();
+  delay(1000);
 
   status = i2c_start(I2C_ADDR_WRITE);
   if (status)
