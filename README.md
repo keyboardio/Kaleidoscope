@@ -24,27 +24,28 @@ a special function to handle the combos:
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-MagicCombo.h>
-
-static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
-  {R1C3 | R2C1 | R2C4 | R2C7, // left hand,
-   R0C11 | R1C12 | R2C14      //right hand
-  },
-  {0, 0}
-};
 
 void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand) {
   switch (combo_index) {
   case 0:
-    Serial.println("It's a kind of magic!");
+    Macros.type(PSTR("It's a kind of magic!"));
     break;
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(MagicCombo);
+static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
+  {
+    R3C6,  // left palm key
+    R3C9   // right palm key
+  },
+  {0, 0}
+};
+
+KALEIDOSCOPE_INIT_PLUGINS(MagicCombo, Macros);
 
 void setup() {
-  Serial.begin(9600);
   Kaleidoscope.setup();
 
   MagicCombo.magic_combos = magic_combos;
