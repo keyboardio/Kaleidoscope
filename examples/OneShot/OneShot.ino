@@ -17,7 +17,13 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-OneShot.h>
+
+// Macros
+enum {
+  OSMALTCTRL,
+};
 
 // *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -26,17 +32,17 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
     Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
     Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-    Key_PageDown,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+    Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
 
-    OSM(LeftControl), Key_Backspace, OSM(LeftGui), Key_LeftShift,
-    Key_Keymap1_Momentary,
+    OSM(LeftControl), Key_Backspace, OSM(LeftGui), OSM(LeftShift),
+    M(OSMALTCTRL),
 
     Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
     Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
                Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-    Key_RightShift, OSM(RightAlt), Key_Spacebar, OSM(RightControl),
+    OSM(RightShift), OSM(RightAlt), Key_Spacebar, OSM(RightControl),
     OSL(1)),
 
   [1] = KEYMAP_STACKED
@@ -59,7 +65,20 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(OneShot);
+void macroOneShotAltControl(uint8_t keyState) {
+  OneShot.inject(OSM(LeftAlt), keyState);
+  OneShot.inject(OSM(LeftControl), keyState);
+}
+
+const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
+  if (macroIndex == OSMALTCTRL) {
+    macroOneShotAltControl(keyState);
+  }
+
+  return MACRO_NONE;
+}
+
+KALEIDOSCOPE_INIT_PLUGINS(OneShot, Macros);
 
 void setup() {
   Kaleidoscope.setup();
