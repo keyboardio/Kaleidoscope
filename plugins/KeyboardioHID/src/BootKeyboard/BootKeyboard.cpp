@@ -22,49 +22,50 @@ THE SOFTWARE.
 */
 
 #include "BootKeyboard.h"
+#include "DescriptorPrimitives.h"
 
 static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   //  Keyboard
-  0x05, 0x01,                      /* USAGE_PAGE (Generic Desktop)	  47 */
-  0x09, 0x06,                      /* USAGE (Keyboard) */
-  0xa1, 0x01,                      /* COLLECTION (Application) */
-  0x05, 0x07,                      /*   USAGE_PAGE (Keyboard) */
+  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
+  D_USAGE, D_USAGE_KEYBOARD,
+  D_COLLECTION, D_APPLICATION,
+  D_USAGE_PAGE, D_PAGE_KEYBOARD,
 
   /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
-  0x05, 0x08,						 /*   USAGE_PAGE (LEDs) */
-  0x19, 0x01,						 /*   USAGE_MINIMUM (Num Lock) */
-  0x29, 0x08,						 /*   USAGE_MAXIMUM (Kana + 3 custom)*/
-  0x95, 0x08,						 /*   REPORT_COUNT (8) */
-  0x75, 0x01,						 /*   REPORT_SIZE (1) */
-  0x91, 0x02,						 /*   OUTPUT (Data,Var,Abs) */
+  D_USAGE_PAGE, D_PAGE_LEDS,
+  D_USAGE_MINIMUM, 0x01,
+  D_USAGE_MAXIMUM, 0x08,
+  D_REPORT_COUNT, 0x08,
+  D_REPORT_SIZE, 0x01,
+  D_OUTPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
-  // 1 byte padding, needed for OSX
-  0x75, 0x08,            /*   REPORT_COUNT (8) */
-  0x95, 0x01,            /*   REPORT_SIZE (1) */
-  0x81, 0x01,            /*   INPUT (Data, Const) */
+  /* 1 byte padding, needed for OSX.
+   * Tested on High Sierra, with FileVault & boot menu.
+   */
+  D_REPORT_COUNT, 0x08,
+  D_REPORT_SIZE, 0x01,
+  D_INPUT, (D_CONSTANT),
 
   /* 6 Keyboard keys */
-  0x05, 0x07,                      /*   USAGE_PAGE (Keyboard) */
-  0x95, 0x06,                      /*   REPORT_COUNT (6) */
-  0x75, 0x08,                      /*   REPORT_SIZE (8) */
-  0x15, 0x00,                      /*   LOGICAL_MINIMUM (0) */
-  0x26, 0xE7, 0x00,                /*   LOGICAL_MAXIMUM (231) */
-  0x19, 0x00,                      /*   USAGE_MINIMUM (Reserved (no event indicated)) */
-  0x29, 0xE7,                      /*   USAGE_MAXIMUM (Keyboard Right GUI) */
-  0x81, 0x00,                      /*   INPUT (Data,Ary,Abs) */
+  D_USAGE_PAGE, D_PAGE_KEYBOARD,
+  D_REPORT_COUNT, 0x06,
+  D_REPORT_SIZE, 0x08,
+  D_LOGICAL_MINIMUM, 0x00,
+  D_MULTIBYTE(D_LOGICAL_MAXIMUM), HID_KEYBOARD_LAST_MODIFIER, 0x00,
+  D_USAGE_MINIMUM, HID_KEYBOARD_NO_EVENT,
+  D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
+  D_INPUT, (D_DATA|D_ARRAY|D_ABSOLUTE),
 
   /* Keyboard Modifiers (shift, alt, ...) */
-  0x19, 0xe0,                      /*   USAGE_MINIMUM (Keyboard LeftControl) */
-  0x29, 0xe7,                      /*   USAGE_MAXIMUM (Keyboard Right GUI) */
-  0x15, 0x00,                      /*   LOGICAL_MINIMUM (0) */
-  0x25, 0x01,                      /*   LOGICAL_MAXIMUM (1) */
-  0x75, 0x01,                      /*   REPORT_SIZE (1) */
-  0x95, 0x08,                      /*   REPORT_COUNT (8) */
-  0x81, 0x02,                      /*   INPUT (Data,Var,Abs) */
+  D_USAGE_MINIMUM, HID_KEYBOARD_FIRST_MODIFIER,
+  D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
+  D_LOGICAL_MINIMUM, 0x00,
+  D_LOGICAL_MAXIMUM, 0x01,
+  D_REPORT_SIZE, 0x01,
+  D_REPORT_COUNT, 0x08,
+  D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
-
-  /* End */
-  0xc0                            /* END_COLLECTION */
+  D_END_COLLECTION
 };
 
 BootKeyboard_::BootKeyboard_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1), leds(0) {
