@@ -5,6 +5,7 @@ namespace kaleidoscope {
 
 Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
 Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
+uint32_t Kaleidoscope_::millis_at_cycle_start_;
 
 Kaleidoscope_::Kaleidoscope_(void) {
 }
@@ -35,6 +36,8 @@ Kaleidoscope_::setup(void) {
 
 void
 Kaleidoscope_::loop(void) {
+  millis_at_cycle_start_ = millis();
+
   kaleidoscope::Hooks::beforeEachCycle();
 
   KeyboardHardware.scanMatrix();
