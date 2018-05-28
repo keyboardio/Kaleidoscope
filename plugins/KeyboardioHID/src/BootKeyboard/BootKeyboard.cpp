@@ -30,15 +30,6 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   0xa1, 0x01,                      /* COLLECTION (Application) */
   0x05, 0x07,                      /*   USAGE_PAGE (Keyboard) */
 
-  /* Keyboard Modifiers (shift, alt, ...) */
-  0x19, 0xe0,                      /*   USAGE_MINIMUM (Keyboard LeftControl) */
-  0x29, 0xe7,                      /*   USAGE_MAXIMUM (Keyboard Right GUI) */
-  0x15, 0x00,                      /*   LOGICAL_MINIMUM (0) */
-  0x25, 0x01,                      /*   LOGICAL_MAXIMUM (1) */
-  0x75, 0x01,                      /*   REPORT_SIZE (1) */
-  0x95, 0x08,                      /*   REPORT_COUNT (8) */
-  0x81, 0x02,                      /*   INPUT (Data,Var,Abs) */
-
   /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
   0x05, 0x08,						 /*   USAGE_PAGE (LEDs) */
   0x19, 0x01,						 /*   USAGE_MINIMUM (Num Lock) */
@@ -46,6 +37,11 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   0x95, 0x08,						 /*   REPORT_COUNT (8) */
   0x75, 0x01,						 /*   REPORT_SIZE (1) */
   0x91, 0x02,						 /*   OUTPUT (Data,Var,Abs) */
+
+  // 1 byte padding, needed for OSX
+  0x75, 0x08,            /*   REPORT_COUNT (8) */
+  0x95, 0x01,            /*   REPORT_SIZE (1) */
+  0x81, 0x01,            /*   INPUT (Data, Const) */
 
   /* 6 Keyboard keys */
   0x05, 0x07,                      /*   USAGE_PAGE (Keyboard) */
@@ -56,6 +52,16 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   0x19, 0x00,                      /*   USAGE_MINIMUM (Reserved (no event indicated)) */
   0x29, 0xE7,                      /*   USAGE_MAXIMUM (Keyboard Right GUI) */
   0x81, 0x00,                      /*   INPUT (Data,Ary,Abs) */
+
+  /* Keyboard Modifiers (shift, alt, ...) */
+  0x19, 0xe0,                      /*   USAGE_MINIMUM (Keyboard LeftControl) */
+  0x29, 0xe7,                      /*   USAGE_MAXIMUM (Keyboard Right GUI) */
+  0x15, 0x00,                      /*   LOGICAL_MINIMUM (0) */
+  0x25, 0x01,                      /*   LOGICAL_MAXIMUM (1) */
+  0x75, 0x01,                      /*   REPORT_SIZE (1) */
+  0x95, 0x08,                      /*   REPORT_COUNT (8) */
+  0x81, 0x02,                      /*   INPUT (Data,Var,Abs) */
+
 
   /* End */
   0xc0                            /* END_COLLECTION */

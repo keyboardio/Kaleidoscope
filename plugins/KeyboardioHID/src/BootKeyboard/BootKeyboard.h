@@ -35,6 +35,7 @@ typedef union {
   // Low level key report: up to 6 keys and shift, ctrl etc at once
   struct {
     uint8_t modifiers;
+    uint8_t __padding;
     uint8_t keycodes[6];
   };
   uint8_t keys[7];
