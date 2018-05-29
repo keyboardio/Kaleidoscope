@@ -81,8 +81,8 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
                             NUM_EXPECTED_ARGS,                                 \
                             ORIGINAL_MACRO,                                    \
                             ...)                                               \
-   (                                                                        __NL__ \
-   []{ /* Here we are in the body of a dummy lambda function.            */ __NL__ \
+  ((struct {                                                                __NL__ \
+       /* Here we are in the body of a dummy lambda function.            */ __NL__ \
        /* []{} is, BTW, the shortest way to write a lambda.              */ __NL__ \
        /* It is only used to hold the static_assert that cannot be       */ __NL__ \
        /* defined directly in the keymap initializer list. By using the  */ __NL__ \
@@ -116,6 +116,6 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
      VERBOSE_STATIC_ASSERT_FOOTER                                           __NL__ \
    );                                                                       __NL__ \
                                                                             __NL__ \
-   }, /* End of dummy lambda, the comma operator's A operand. */            __NL__ \
+   }){}, /* End of dummy lambda, the comma operator's A operand. */         __NL__ \
    B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */                __NL__ \
    )
