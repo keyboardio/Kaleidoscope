@@ -39,8 +39,16 @@ void setup() {
 ## Plugin methods
 
 The plugin provides two objects: `LEDRainbowEffect`, and `LEDRainbowWaveEffect`,
-both of which provide methods to set the delay time (animation speed)
-and effect brightness, called `delay` and `brightness` respectively.
+both of which provide the following methods:
+
+### `.brightness(brightness)`
+
+Sets the LED brightness for the effect.
+
+### `.update_delay(delay)`
+
+Sets the number of miliseconds between effect updates.
+Smaller number = faster rainbows.
 
 ## Dependencies
 
