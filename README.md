@@ -29,14 +29,26 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDRainbowEffect, LEDRainbowWaveEffect);
 
 void setup() {
   Kaleidoscope.setup();
+
+  LEDRainbowEffect.brightness(150);
+  LEDRainbowWaveEffect.brightness(150);
+  LEDRainbowWaveEffect.delay(50);
 }
 ```
 
 ## Plugin methods
 
 The plugin provides two objects: `LEDRainbowEffect`, and `LEDRainbowWaveEffect`,
-neither of which have any public methods or properties, outside of those
-provided by all LED modes.
+both of which provide the following methods:
+
+### `.brightness(brightness)`
+
+Sets the LED brightness for the effect.
+
+### `.update_delay(delay)`
+
+Sets the number of miliseconds between effect updates.
+Smaller number = faster rainbows.
 
 ## Dependencies
 
