@@ -32,7 +32,7 @@ void setup() {
 
   LEDRainbowEffect.brightness(150);
   LEDRainbowWaveEffect.brightness(150);
-  LEDRainbowWaveEffect.delay(50);
+  LEDRainbowWaveEffect.update_delay(50);
 }
 ```
 
