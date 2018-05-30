@@ -25,18 +25,22 @@ both!) of the effects:
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
 
-KALEIDOSCOPE_INIT_PLUGINS(LEDRainbowEffect, LEDRainbowWaveEffect);
 
 void setup() {
   Kaleidoscope.setup();
+  Kaleidoscope.use(&LEDRainbowWaveEffect, &LEDDigitalRainEffect);
+
+  LEDRainbowEffect.brightness(150);
+  LEDRainbowWaveEffect.brightness(150);
+  LEDRainbowWaveEffect.delay(50);
 }
 ```
 
 ## Plugin methods
 
 The plugin provides two objects: `LEDRainbowEffect`, and `LEDRainbowWaveEffect`,
-neither of which have any public methods or properties, outside of those
-provided by all LED modes.
+both of which provide methods to set the delay time (animation speed)
+and effect brightness, called `delay` and `brightness` respectively.
 
 ## Dependencies
 
