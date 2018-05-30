@@ -25,10 +25,10 @@ both!) of the effects:
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(LEDRainbowEffect, LEDRainbowWaveEffect);
 
 void setup() {
   Kaleidoscope.setup();
-  Kaleidoscope.use(&LEDRainbowWaveEffect, &LEDDigitalRainEffect);
 
   LEDRainbowEffect.brightness(150);
   LEDRainbowWaveEffect.brightness(150);
