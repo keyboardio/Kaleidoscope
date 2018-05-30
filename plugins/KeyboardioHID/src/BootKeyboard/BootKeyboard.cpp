@@ -24,47 +24,49 @@ THE SOFTWARE.
 #include "BootKeyboard.h"
 #include "DescriptorPrimitives.h"
 
+// See Appendix B of USB HID spec
 static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   //  Keyboard
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
   D_USAGE, D_USAGE_KEYBOARD,
+
   D_COLLECTION, D_APPLICATION,
+  // Modifiers
   D_USAGE_PAGE, D_PAGE_KEYBOARD,
-
-  /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
-  D_USAGE_PAGE, D_PAGE_LEDS,
-  D_USAGE_MINIMUM, 0x01,
-  D_USAGE_MAXIMUM, 0x08,
-  D_REPORT_COUNT, 0x08,
-  D_REPORT_SIZE, 0x01,
-  D_OUTPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
-
-  /* 1 byte padding, needed for OSX.
-   * Tested on High Sierra, with FileVault & boot menu.
-   */
-  D_REPORT_COUNT, 0x08,
-  D_REPORT_SIZE, 0x01,
-  D_INPUT, (D_CONSTANT),
-
-  /* 6 Keyboard keys */
-  D_USAGE_PAGE, D_PAGE_KEYBOARD,
-  D_REPORT_COUNT, 0x06,
-  D_REPORT_SIZE, 0x08,
-  D_LOGICAL_MINIMUM, 0x00,
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM), HID_KEYBOARD_LAST_MODIFIER, 0x00,
-  D_USAGE_MINIMUM, HID_KEYBOARD_NO_EVENT,
-  D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
-  D_INPUT, (D_DATA|D_ARRAY|D_ABSOLUTE),
-
-  /* Keyboard Modifiers (shift, alt, ...) */
-  D_USAGE_MINIMUM, HID_KEYBOARD_FIRST_MODIFIER,
-  D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
-  D_LOGICAL_MINIMUM, 0x00,
-  D_LOGICAL_MAXIMUM, 0x01,
-  D_REPORT_SIZE, 0x01,
-  D_REPORT_COUNT, 0x08,
+  D_USAGE_MINIMUM, 0xe0,
+  D_USAGE_MAXIMUM, 0xe7,
+  D_LOGICAL_MINIMUM, 0x0,
+  D_LOGICAL_MAXIMUM, 0x1,
+  D_REPORT_SIZE, 0x1,
+  D_REPORT_COUNT, 0x8,
   D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
+  // Reserved byte
+  D_REPORT_COUNT, 0x1,
+  D_REPORT_SIZE, 0x8,
+  D_INPUT, (D_CONSTANT),
+
+  // LEDs
+  D_REPORT_COUNT, 0x5,
+  D_REPORT_SIZE, 0x1,
+  D_USAGE_PAGE, D_PAGE_LEDS,
+  D_USAGE_MINIMUM, 0x1,
+  D_USAGE_MAXIMUM, 0x5,
+  D_OUTPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
+  // Pad LEDs up to a byte
+  D_REPORT_COUNT, 0x1,
+  D_REPORT_SIZE, 0x3,
+  D_OUTPUT, (D_CONSTANT),
+
+  // Non-modifiers
+  D_REPORT_COUNT, 0x6,
+  D_REPORT_SIZE, 0x8,
+  D_LOGICAL_MINIMUM, 0x0,
+  D_LOGICAL_MAXIMUM, 0xff,
+  D_USAGE_PAGE, D_PAGE_KEYBOARD,
+  D_USAGE_MINIMUM, 0x0,
+  D_USAGE_MAXIMUM, 0xff,
+  D_INPUT, (D_DATA|D_ARRAY|D_ABSOLUTE),
   D_END_COLLECTION
 };
 
@@ -281,7 +283,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 
 
 void BootKeyboard_::releaseAll(void) {
-  memset(&_keyReport.keys, 0x00, sizeof(_keyReport.keys));
+  memset(&_keyReport.bytes, 0x00, sizeof(_keyReport.bytes));
 }
 
 /* Returns true if the modifer key passed in will be sent during this key report
