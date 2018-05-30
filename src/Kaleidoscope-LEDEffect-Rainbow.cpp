@@ -56,7 +56,7 @@ void LEDRainbowWaveEffect::brightness(byte brightness) {
   rainbow_value = brightness;
 }
 
-void LEDRainbowWaveEffect::updat_delay(byte delay) {
+void LEDRainbowWaveEffect::update_delay(byte delay) {
   rainbow_update_delay = delay;
 }
 }
