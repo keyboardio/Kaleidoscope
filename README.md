@@ -32,7 +32,7 @@ void setup() {
 
   LEDRainbowEffect.brightness(150);
   LEDRainbowWaveEffect.brightness(150);
-  LEDRainbowWaveEffect.delay(50);
+  LEDRainbowWaveEffect.update_delay(50);
 }
 ```
 
@@ -43,12 +43,16 @@ both of which provide the following methods:
 
 ### `.brightness(brightness)`
 
-Sets the LED brightness for the effect.
+> Sets the LED brightness for the effect.
+>
+> Defaults to 50.
 
 ### `.update_delay(delay)`
 
-Sets the number of miliseconds between effect updates.
-Smaller number = faster rainbows.
+> Sets the number of miliseconds between effect updates. Smaller number results
+> in faster rainbows.
+>
+> Defaults to 40.
 
 ## Dependencies
 
