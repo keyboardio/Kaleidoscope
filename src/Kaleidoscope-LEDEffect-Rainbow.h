@@ -9,9 +9,13 @@ class LEDRainbowEffect : public LEDMode {
   LEDRainbowEffect(void) {}
 
   void brightness(byte);
-  byte brightness(void) { return rainbow_value; }
+  byte brightness(void) {
+    return rainbow_value;
+  }
   void update_delay(byte);
-  byte update_delay(void) { return rainbow_update_delay; }
+  byte update_delay(void) {
+    return rainbow_update_delay;
+  }
   void update(void) final;
 
  private:
@@ -31,9 +35,13 @@ class LEDRainbowWaveEffect : public LEDMode {
   LEDRainbowWaveEffect(void) {}
 
   void brightness(byte);
-  byte brightness(void) { return rainbow_value; }
+  byte brightness(void) {
+    return rainbow_value;
+  }
   void update_delay(byte);
-  byte update_delay(void) { return rainbow_update_delay; }
+  byte update_delay(void) {
+    return rainbow_update_delay;
+  }
   void update(void) final;
 
  private:
