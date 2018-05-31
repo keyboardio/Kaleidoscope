@@ -10,8 +10,9 @@
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Turn the `Esc` key into a special key, that can cancel any active `OneShot`
-effect - or act as the normal `Esc` key if none are active. For those times when
-one accidentally presses a one-shot key, or change their minds.
+effect - or act as the normal `Esc` key if none are active, or if any of them
+are still held. For those times when one accidentally presses a one-shot key, or
+change their minds.
 
 ## Using the plugin
 

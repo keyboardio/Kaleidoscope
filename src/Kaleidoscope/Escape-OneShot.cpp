@@ -28,7 +28,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, by
       !keyToggledOn(keyState))
     return EventHandlerResult::OK;
 
-  if (!::OneShot.isActive())
+  if (!::OneShot.isActive() || ::OneShot.isPressed())
     return EventHandlerResult::OK;
 
   KeyboardHardware.maskKey(row, col);
