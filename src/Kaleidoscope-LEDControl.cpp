@@ -194,9 +194,7 @@ bool LEDControl::focusHook(const char *command) {
     } else {
       cRGB c;
 
-      c.r = Serial.parseInt();
-      c.g = Serial.parseInt();
-      c.b = Serial.parseInt();
+      ::Focus.readColor(c);
 
       setCrgbAt(idx, c);
     }
@@ -205,9 +203,7 @@ bool LEDControl::focusHook(const char *command) {
   case SETALL: {
     cRGB c;
 
-    c.r = Serial.parseInt();
-    c.g = Serial.parseInt();
-    c.b = Serial.parseInt();
+    ::Focus.readColor(c);
 
     set_all_leds_to(c);
 
@@ -246,9 +242,7 @@ bool LEDControl::focusHook(const char *command) {
     while (idx < LED_COUNT && Serial.peek() != '\n') {
       cRGB color;
 
-      color.r = Serial.parseInt();
-      color.g = Serial.parseInt();
-      color.b = Serial.parseInt();
+      ::Focus.readColor(color);
 
       setCrgbAt(idx, color);
       idx++;
