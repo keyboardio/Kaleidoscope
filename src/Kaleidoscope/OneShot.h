@@ -34,6 +34,9 @@ class OneShot : public kaleidoscope::Plugin {
     return (key.raw >= kaleidoscope::ranges::OS_FIRST && key.raw <= kaleidoscope::ranges::OS_LAST);
   }
   static bool isActive(void);
+  static bool isPressed() {
+    return !!pressed_state_.all;
+  }
   static bool isActive(Key key);
   static bool isSticky(Key key);
   static void cancel(bool with_stickies);
