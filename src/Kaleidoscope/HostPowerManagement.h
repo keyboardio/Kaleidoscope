@@ -19,7 +19,11 @@
 #pragma once
 
 #include <Kaleidoscope.h>
-#include "WakeupKeyboard.h"
+
+#define _DEPRECATED_MESSAGE_ENABLEWAKEUP                                    \
+  "The HostPowerManagement.enableWakeup() call is not necessary anymore,\n" \
+  "the firmware supports wakeup by default now. The line can be safely\n"   \
+  "removed."
 
 namespace kaleidoscope {
 class HostPowerManagement : public kaleidoscope::Plugin {
@@ -32,9 +36,7 @@ class HostPowerManagement : public kaleidoscope::Plugin {
 
   HostPowerManagement(void) {}
 
-  void enableWakeup(void) {
-    WakeupKeyboard.init();
-  }
+  void enableWakeup(void) DEPRECATED(ENABLEWAKEUP) {}
 
   EventHandlerResult beforeEachCycle();
 
