@@ -127,19 +127,18 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
   static int8_t remainderY = 0;
   static const float HALF_SQRT_2 = 0.7071f;
 
-  boolean isDiagonal = (x != 0 && y != 0);
+  if (x != 0 && y != 0) {
+    x = roundAwayFromZero(HALF_SQRT_2 * x);
+    y = roundAwayFromZero(HALF_SQRT_2 * y);
+  }
 
   if (x != 0) {
-    if (isDiagonal) x = roundAwayFromZero(HALF_SQRT_2 * x);
     moveX = remainderX + (x * acceleration(accelStep));
-
     if (moveX > (int16_t)speedLimit) moveX = speedLimit;
     else if (moveX < -(int16_t)speedLimit) moveX = -speedLimit;
   }
   if (y != 0) {
-    if (isDiagonal) y = roundAwayFromZero(HALF_SQRT_2 * y);
     moveY = remainderY + (y * acceleration(accelStep));
-
     if (moveY > (int16_t)speedLimit) moveY = speedLimit;
     else if (moveY < -(int16_t)speedLimit) moveY = -speedLimit;
   }
