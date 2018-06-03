@@ -192,7 +192,7 @@ compile () {
 	      ${EXTRA_BUILDER_ARGS} \
 	      -build-path "${BUILD_PATH}" \
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
-	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      -prefs "compiler.cpp.extra_flags=-std=c++14 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
