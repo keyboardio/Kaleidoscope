@@ -112,19 +112,34 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
   return i;
 }
 
+static int8_t roundAwayFromZero(float value) {
+  if (value < 0.0f) {
+    return static_cast<int8_t>(value - 0.5f);
+  }
+
+  return static_cast<int8_t>(value + 0.5f);
+}
 
 void MouseWrapper_::move(int8_t x, int8_t y) {
   int16_t moveX = 0;
   int16_t moveY = 0;
   static int8_t remainderX = 0;
   static int8_t remainderY = 0;
+  static const float HALF_SQRT_2 = 0.7071f;
+
+  boolean isDiagonal = (x != 0 && y != 0);
+
   if (x != 0) {
+    if (isDiagonal) x = roundAwayFromZero(HALF_SQRT_2 * x);
     moveX = remainderX + (x * acceleration(accelStep));
+
     if (moveX > (int16_t)speedLimit) moveX = speedLimit;
     else if (moveX < -(int16_t)speedLimit) moveX = -speedLimit;
   }
   if (y != 0) {
+    if (isDiagonal) y = roundAwayFromZero(HALF_SQRT_2 * y);
     moveY = remainderY + (y * acceleration(accelStep));
+
     if (moveY > (int16_t)speedLimit) moveY = speedLimit;
     else if (moveY < -(int16_t)speedLimit) moveY = -speedLimit;
   }
