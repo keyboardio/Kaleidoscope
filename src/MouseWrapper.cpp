@@ -119,12 +119,13 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
   static int8_t remainderY = 0;
 
   if (x != 0 && y != 0) {
-    // 99 / 140 closely approximates sqrt(2) / 2.
-    int8_t adjusted_x = x * 99 / 140;
-    int8_t adjusted_y = y * 99 / 140;
+    // 99 / 140 closely approximates sqrt(2) / 2. Since integer division
+    // truncates towards zero we do not need to worry about truncation errors.
+    int8_t adjustedX = (int16_t)x * 99 / 140;
+    int8_t adjustedY = (int16_t)y * 99 / 140;
 
-    x = (adjusted_x == 0 ? x : adjusted_x);
-    y = (adjusted_y == 0 ? y : adjusted_y);
+    if (adjustedX != 0) x = adjustedX;
+    if (adjustedY != 0) y = adjustedY;
   }
 
   if (x != 0) {
