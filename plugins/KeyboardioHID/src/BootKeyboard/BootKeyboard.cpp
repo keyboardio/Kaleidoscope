@@ -249,7 +249,7 @@ size_t BootKeyboard_::press(uint8_t k) {
 size_t BootKeyboard_::release(uint8_t k) {
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
-    _keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_LAST_MODIFIER)));
+    _keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER)));
   } else {
     // it's some other key:
     // Test the key report to see if k is present.  Clear it if it exists.
