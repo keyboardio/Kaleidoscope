@@ -154,7 +154,14 @@ bool BootKeyboard_::setup(USBSetup& setup) {
       return true;
     }
     if (request == HID_SET_IDLE) {
+      // We currently ignore SET_IDLE, because we don't really do anything with it, and implementing
+      // it causes issues on OSX, such as key chatter. Other operating systems do not suffer if we
+      // force this to zero, either.
+#if 0
       idle = setup.wValueL;
+#else
+      idle = 0;
+#endif
       return true;
     }
     if (request == HID_SET_REPORT) {
