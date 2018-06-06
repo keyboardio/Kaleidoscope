@@ -7,7 +7,7 @@ byte NumPad_::row = 255, NumPad_::col = 255;
 uint8_t NumPad_::numPadLayer;
 bool NumPad_::cleanupDone = true;
 bool NumPad_::originalNumLockState = false;
-cRGB numpad_color = CRGB(255, 0, 0);
+cRGB numpad_color = CRGB(160, 0, 0);
 
 kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
   originalNumLockState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
