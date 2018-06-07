@@ -72,7 +72,6 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
 
 BootKeyboard_::BootKeyboard_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_BOOT_PROTOCOL), idle(1), leds(0) {
   epType[0] = EP_TYPE_INTERRUPT_IN;
-  PluggableUSB().plug(this);
 }
 
 int BootKeyboard_::getInterface(uint8_t* interfaceCount) {
@@ -108,6 +107,8 @@ int BootKeyboard_::getDescriptor(USBSetup& setup) {
 
 
 void BootKeyboard_::begin(void) {
+  PluggableUSB().plug(this);
+
   // Force API to send a clean report.
   // This is important for and HID bridge where the receiver stays on,
   // while the sender is resetted.
