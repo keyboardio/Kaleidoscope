@@ -162,8 +162,12 @@ class Kaleidoscope_ {
    * functions will, on the other hand, just append the hooks, and not care about
    * protection.
    */
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
+  typedef void (*loopHook)(bool postClear);
+
   static eventHandlerHook eventHandlers[HOOK_MAX];
+  static loopHook loopHooks[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
   DEPRECATED(EVENT_HANDLER_HOOK);
@@ -172,15 +176,13 @@ class Kaleidoscope_ {
   static void useEventHandlerHook(eventHandlerHook hook)
   DEPRECATED(EVENT_HANDLER_HOOK);
 
-  typedef void (*loopHook)(bool postClear);
-  static loopHook loopHooks[HOOK_MAX];
-
   static void replaceLoopHook(loopHook oldHook, loopHook newHook)
   DEPRECATED(LOOP_HOOK);
   static void appendLoopHook(loopHook hook)
   DEPRECATED(LOOP_HOOK);
   static void useLoopHook(loopHook hook)
   DEPRECATED(LOOP_HOOK);
+#endif
 
   static bool focusHook(const char *command);
 
@@ -208,6 +210,7 @@ using kaleidoscope::Kaleidoscope;
                                            "layer.getState")
 
 /* -- DEPRECATED aliases; remove them when there are no more users. -- */
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 
 void event_handler_hook_use(kaleidoscope::Kaleidoscope_::eventHandlerHook hook)
 DEPRECATED(EVENT_HANDLER_HOOK);
@@ -217,6 +220,8 @@ DEPRECATED(LOOP_HOOK);
 void __USE_PLUGINS(kaleidoscope::Plugin *plugin, ...) DEPRECATED(USE);
 
 #define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
+
+#endif
 
 // Use this function macro to register plugins with Kaleidoscope's
 // hooking system. The macro accepts a list of plugin instances that

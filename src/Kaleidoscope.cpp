@@ -3,8 +3,11 @@
 
 namespace kaleidoscope {
 
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
 Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
+#endif
+
 uint32_t Kaleidoscope_::millis_at_cycle_start_;
 
 Kaleidoscope_::Kaleidoscope_(void) {
@@ -115,67 +118,55 @@ Kaleidoscope_ Kaleidoscope;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 void
 Kaleidoscope_::replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (eventHandlers[i] == oldHook) {
       eventHandlers[i] = newHook;
       return;
     }
   }
-#endif
 }
 
 void
 Kaleidoscope_::appendEventHandlerHook(eventHandlerHook hook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   replaceEventHandlerHook((eventHandlerHook)NULL, hook);
-#endif
 }
 
 void
 Kaleidoscope_::useEventHandlerHook(eventHandlerHook hook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (eventHandlers[i] == hook)
       return;
   }
   appendEventHandlerHook(hook);
-#endif
 }
 
 void
 Kaleidoscope_::replaceLoopHook(loopHook oldHook, loopHook newHook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (loopHooks[i] == oldHook) {
       loopHooks[i] = newHook;
       return;
     }
   }
-#endif
 }
 
 void
 Kaleidoscope_::appendLoopHook(loopHook hook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   replaceLoopHook((loopHook)NULL, hook);
-#endif
 }
 
 void
 Kaleidoscope_::useLoopHook(loopHook hook) {
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   for (byte i = 0; i < HOOK_MAX; i++) {
     if (loopHooks[i] == hook)
       return;
   }
   appendLoopHook(hook);
-#endif
 }
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
   Kaleidoscope.useEventHandlerHook(hook);
 }
