@@ -60,36 +60,7 @@ class BootKeyboard_ : public PluggableUSBModule {
   uint8_t getProtocol(void);
   void setProtocol(uint8_t protocol);
 
-  /* The USB specification says that keyboards should start with
-   * HID_REPORT_PROTOCOL as a default, and yet, we default to HID_BOOT_PROTOCOL
-   * instead. We do this to support operating systems that require the keyboard
-   * to default to boot protocol during negotiation in order to enable them to
-   * wake the host up. This includes Linux, MacOS, and Windows. If the keyboard
-   * conforms to the spec, and starts in report mode, it will work under these
-   * operating systems, but if they are suspended, the keyboard will not be
-   * allowed to wake them up.
-   *
-   * Furthermore, there are BIOSes out there that do not implement a HID
-   * descriptor parser, nor do they explicitly send a SET_PROTOCOL request to
-   * put the keyboard into boot protocol. For these to work, we need to default
-   * to boot protocol.
-   *
-   * We could - and for some time, did - work the first issue around by having
-   * another end-point that implements a boot-keyboard, with boot-protocol as
-   * default. Sadly, that has side-effects too: some BIOSes, Grub, and OSX's
-   * FileVault gets easily confused, and will use the first node of a device. If
-   * that happens to be the dummy wakeup-only keyboard, then the keyboard will
-   * be unusable.
-   *
-   * There is no reliable way to support all these scenarios while still
-   * conforming to the specification.
-   *
-   * Luckily for us, all three major OSes are fine with boot being the default,
-   * they will all explicitly set the protocol to report. Any spec-conforming
-   * host will also work fine with boot being the default, because they are
-   * required - by spec - to set the protocol themselves.
-   */
-  uint8_t default_protocol = HID_BOOT_PROTOCOL;
+  uint8_t default_protocol = HID_REPORT_PROTOCOL;
 
  protected:
   HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;
