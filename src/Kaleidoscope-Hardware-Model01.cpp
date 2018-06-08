@@ -251,4 +251,12 @@ void Model01::setKeyscanInterval(uint8_t interval) {
   rightHand.setKeyscanInterval(interval);
 }
 
+void Model01::detachFromHost() {
+  UDCON |= (1 << DETACH);
+}
+
+void Model01::attachToHost() {
+  UDCON &= ~(1 << DETACH);
+}
+
 HARDWARE_IMPLEMENTATION KeyboardHardware;
