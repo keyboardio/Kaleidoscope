@@ -82,6 +82,25 @@ class Kaleidoscope_ {
   void setup(void);
   void loop(void);
 
+  /** Detaching from / attaching to the host.
+   *
+   * These two functions wrap the hardware plugin's similarly named functions.
+   * We wrap them, because we'd like plugins and user-code not having to use
+   * `KeyboardHardware` directly.
+   *
+   * The methods themselves implement detaching from / attaching to the host,
+   * without rebooting the device, and remaining powered in between.
+   *
+   * Intended to be used in cases where we want to change some settings between
+   * detach and attach.
+   */
+  void detachFromHost() {
+    KeyboardHardware.detachFromHost();
+  }
+  void attachToHost() {
+    KeyboardHardware.attachToHost();
+  }
+
   /** Returns the timer as it was at the start of the cycle.
    * The goal of this method is two-fold:
    *  - To reduce the amount of calls to millis(), providing something cheaper.
