@@ -28,6 +28,18 @@ While `millis()` should continue to work forever, plugins and user code should,
 as a general rule, use `Kaleidoscope.millisAtCycleStart()` rather than
 `millis()`.
 
+### Kaleidoscope.detachFromHost() and Kaleidoscope.attachToHost()
+
+These two require changes to the Hardware plugins, as they wrap functionality
+provided by it. The intent of these methods is to allow one to apply some
+configuration changes between detach and attach - because we only sever the link
+between device and host, power remains connected, and the device does not
+reboot. A quick way to re-initialize the endpoints.
+
+See the [Kaleidoscope-USB-Quriks][plugin:USB-Quriks] plugin for a use-case.
+
+ [plugin:USB-Quirks]: https://github.com/keyboardio/Kaleidoscope-USB-Quirks
+
 ### KALEIDOSCOPE_API_VERSION bump
 
 `KALEIDOSCOPE_API_VERSION` has been bumped to **2** due to the plugin API
