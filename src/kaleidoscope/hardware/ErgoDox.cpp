@@ -217,6 +217,14 @@ void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
   }
 }
 
+void ErgoDox::detachFromHost() {
+  UDCON |= (1 << DETACH);
+}
+
+void ErgoDox::attachToHost() {
+  UDCON &= ~(1 << DETACH);
+}
+
 }
 }
 
