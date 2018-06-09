@@ -259,4 +259,17 @@ void Model01::attachToHost() {
   UDCON &= ~(1 << DETACH);
 }
 
+uint8_t Model01::getKeyswitchStateAtPosition(byte row, byte col) {
+  if (col <= 7) {
+    return bitRead(leftHandState.rows[row], 7 - col);
+  } else {
+    return bitRead(rightHandState.rows[row], 7 - (col - 8));
+  }
+}
+
+uint8_t Model01::getKeyswitchStateAtPosition(uint8_t keyIndex) {
+  keyIndex--;
+  return getKeyswitchStateAtPosition(keyIndex / COLS, keyIndex % COLS);
+}
+
 HARDWARE_IMPLEMENTATION KeyboardHardware;
