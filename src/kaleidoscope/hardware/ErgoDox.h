@@ -87,6 +87,18 @@ class ErgoDox {
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
 
+  /** Key switch state
+   *
+   * These two methods return the state of the keyswitch at any given position,
+   * regardless of which half they are on. This is a hardware-agnostic access to
+   * the key switch states.
+   *
+   * The first variant requires a row and a column, the second an index, as
+   * returned by `keyIndex`.
+   */
+  uint8_t getKeyswitchStateAtPosition(byte row, byte col);
+  uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
+
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
@@ -148,5 +160,107 @@ class ErgoDox {
   }
 }
 }
+
+/* To be used by the hardware implementations, `keyIndex` tells us the index of
+ * a key, from which we can figure out the row and column as needed. The index
+ * starts at one, so that plugins that work with a list of key indexes can use
+ * zero as a sentinel. This is important, because when we initialize arrays with
+ * fewer elements than the declared array size, the remaining elements will be
+ * zero. We can use this to avoid having to explicitly add a sentinel in
+ * user-facing code.
+ */
+constexpr byte keyIndex(byte row, byte col) {
+  return row * COLS + col + 1;
+}
+
+constexpr byte R0C0  = keyIndex(0, 0);
+constexpr byte R0C1  = keyIndex(0, 1);
+constexpr byte R0C2  = keyIndex(0, 2);
+constexpr byte R0C3  = keyIndex(0, 3);
+constexpr byte R0C4  = keyIndex(0, 4);
+constexpr byte R0C5  = keyIndex(0, 5);
+constexpr byte R0C6  = keyIndex(0, 6);
+constexpr byte R0C7  = keyIndex(0, 7);
+constexpr byte R0C8  = keyIndex(0, 8);
+constexpr byte R0C9  = keyIndex(0, 9);
+constexpr byte R0C10 = keyIndex(0, 10);
+constexpr byte R0C11 = keyIndex(0, 11);
+constexpr byte R0C12 = keyIndex(0, 12);
+constexpr byte R0C13 = keyIndex(0, 13);
+
+constexpr byte R1C0  = keyIndex(1, 0);
+constexpr byte R1C1  = keyIndex(1, 1);
+constexpr byte R1C2  = keyIndex(1, 2);
+constexpr byte R1C3  = keyIndex(1, 3);
+constexpr byte R1C4  = keyIndex(1, 4);
+constexpr byte R1C5  = keyIndex(1, 5);
+constexpr byte R1C6  = keyIndex(1, 6);
+constexpr byte R1C7  = keyIndex(1, 7);
+constexpr byte R1C8  = keyIndex(1, 8);
+constexpr byte R1C9  = keyIndex(1, 9);
+constexpr byte R1C10 = keyIndex(1, 10);
+constexpr byte R1C11 = keyIndex(1, 11);
+constexpr byte R1C12 = keyIndex(1, 12);
+constexpr byte R1C13 = keyIndex(1, 13);
+
+constexpr byte R2C0  = keyIndex(2, 0);
+constexpr byte R2C1  = keyIndex(2, 1);
+constexpr byte R2C2  = keyIndex(2, 2);
+constexpr byte R2C3  = keyIndex(2, 3);
+constexpr byte R2C4  = keyIndex(2, 4);
+constexpr byte R2C5  = keyIndex(2, 5);
+constexpr byte R2C6  = keyIndex(2, 6);
+constexpr byte R2C7  = keyIndex(2, 7);
+constexpr byte R2C8  = keyIndex(2, 8);
+constexpr byte R2C9  = keyIndex(2, 9);
+constexpr byte R2C10 = keyIndex(2, 10);
+constexpr byte R2C11 = keyIndex(2, 11);
+constexpr byte R2C12 = keyIndex(2, 12);
+constexpr byte R2C13 = keyIndex(2, 13);
+
+constexpr byte R3C0  = keyIndex(3, 0);
+constexpr byte R3C1  = keyIndex(3, 1);
+constexpr byte R3C2  = keyIndex(3, 2);
+constexpr byte R3C3  = keyIndex(3, 3);
+constexpr byte R3C4  = keyIndex(3, 4);
+constexpr byte R3C5  = keyIndex(3, 5);
+constexpr byte R3C6  = keyIndex(3, 6);
+constexpr byte R3C7  = keyIndex(3, 7);
+constexpr byte R3C8  = keyIndex(3, 8);
+constexpr byte R3C9  = keyIndex(3, 9);
+constexpr byte R3C10 = keyIndex(3, 10);
+constexpr byte R3C11 = keyIndex(3, 11);
+constexpr byte R3C12 = keyIndex(3, 12);
+constexpr byte R3C13 = keyIndex(3, 13);
+
+constexpr byte R4C0  = keyIndex(4, 0);
+constexpr byte R4C1  = keyIndex(4, 1);
+constexpr byte R4C2  = keyIndex(4, 2);
+constexpr byte R4C3  = keyIndex(4, 3);
+constexpr byte R4C4  = keyIndex(4, 4);
+constexpr byte R4C5  = keyIndex(4, 5);
+constexpr byte R4C6  = keyIndex(4, 6);
+constexpr byte R4C7  = keyIndex(4, 7);
+constexpr byte R4C8  = keyIndex(4, 8);
+constexpr byte R4C9  = keyIndex(4, 9);
+constexpr byte R4C10 = keyIndex(4, 10);
+constexpr byte R4C11 = keyIndex(4, 11);
+constexpr byte R4C12 = keyIndex(4, 12);
+constexpr byte R4C13 = keyIndex(4, 13);
+
+constexpr byte R5C0  = keyIndex(5, 0);
+constexpr byte R5C1  = keyIndex(5, 1);
+constexpr byte R5C2  = keyIndex(5, 2);
+constexpr byte R5C3  = keyIndex(5, 3);
+constexpr byte R5C4  = keyIndex(5, 4);
+constexpr byte R5C5  = keyIndex(5, 5);
+constexpr byte R5C6  = keyIndex(5, 6);
+constexpr byte R5C7  = keyIndex(5, 7);
+constexpr byte R5C8  = keyIndex(5, 8);
+constexpr byte R5C9  = keyIndex(5, 9);
+constexpr byte R5C10 = keyIndex(5, 10);
+constexpr byte R5C11 = keyIndex(5, 11);
+constexpr byte R5C12 = keyIndex(5, 12);
+constexpr byte R5C13 = keyIndex(5, 13);
 
 extern kaleidoscope::hardware::ErgoDox &ErgoDox;
