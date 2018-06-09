@@ -62,6 +62,18 @@ class Model01 {
   bool isKeyMasked(byte row, byte col);
   void maskHeldKeys(void);
 
+  /** Key switch state
+   *
+   * These two methods return the state of the keyswitch at any given position,
+   * regardless of which half they are on. This is a hardware-agnostic access to
+   * the key switch states.
+   *
+   * The first variant requires a row and a column, the second an index, as
+   * returned by `keyIndex`.
+   */
+  uint8_t getKeyswitchStateAtPosition(byte row, byte col);
+  uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
+
   keydata_t leftHandState;
   keydata_t rightHandState;
   keydata_t previousLeftHandState;
@@ -78,77 +90,85 @@ class Model01 {
   static keydata_t rightHandMask;
 };
 
-#define SCANBIT(row,col) ((uint32_t)1 << ((row) * 8 + (7 - (col))))
-
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
+/* To be used by the hardware implementations, `keyIndex` tells us the index of
+ * a key, from which we can figure out the row and column as needed. The index
+ * starts at one, so that plugins that work with a list of key indexes can use
+ * zero as a sentinel. This is important, because when we initialize arrays with
+ * fewer elements than the declared array size, the remaining elements will be
+ * zero. We can use this to avoid having to explicitly add a sentinel in
+ * user-facing code.
+ */
+constexpr byte keyIndex(byte row, byte col) {
+  return row * COLS + col + 1;
+}
 
-#define R0C0  SCANBIT(0, 0)
-#define R0C1  SCANBIT(0, 1)
-#define R0C2  SCANBIT(0, 2)
-#define R0C3  SCANBIT(0, 3)
-#define R0C4  SCANBIT(0, 4)
-#define R0C5  SCANBIT(0, 5)
-#define R0C6  SCANBIT(0, 6)
-#define R0C7  SCANBIT(0, 7)
-#define R1C0  SCANBIT(1, 0)
-#define R1C1  SCANBIT(1, 1)
-#define R1C2  SCANBIT(1, 2)
-#define R1C3  SCANBIT(1, 3)
-#define R1C4  SCANBIT(1, 4)
-#define R1C5  SCANBIT(1, 5)
-#define R1C6  SCANBIT(1, 6)
-#define R1C7  SCANBIT(1, 7)
-#define R2C0  SCANBIT(2, 0)
-#define R2C1  SCANBIT(2, 1)
-#define R2C2  SCANBIT(2, 2)
-#define R2C3  SCANBIT(2, 3)
-#define R2C4  SCANBIT(2, 4)
-#define R2C5  SCANBIT(2, 5)
-#define R2C6  SCANBIT(2, 6)
-#define R2C7  SCANBIT(2, 7)
-#define R3C0  SCANBIT(3, 0)
-#define R3C1  SCANBIT(3, 1)
-#define R3C2  SCANBIT(3, 2)
-#define R3C3  SCANBIT(3, 3)
-#define R3C4  SCANBIT(3, 4)
-#define R3C5  SCANBIT(3, 5)
-#define R3C6  SCANBIT(3, 6)
-#define R3C7  SCANBIT(3, 7)
+constexpr byte R0C0  = keyIndex(0, 0);
+constexpr byte R0C1  = keyIndex(0, 1);
+constexpr byte R0C2  = keyIndex(0, 2);
+constexpr byte R0C3  = keyIndex(0, 3);
+constexpr byte R0C4  = keyIndex(0, 4);
+constexpr byte R0C5  = keyIndex(0, 5);
+constexpr byte R0C6  = keyIndex(0, 6);
+constexpr byte R0C7  = keyIndex(0, 7);
+constexpr byte R1C0  = keyIndex(1, 0);
+constexpr byte R1C1  = keyIndex(1, 1);
+constexpr byte R1C2  = keyIndex(1, 2);
+constexpr byte R1C3  = keyIndex(1, 3);
+constexpr byte R1C4  = keyIndex(1, 4);
+constexpr byte R1C5  = keyIndex(1, 5);
+constexpr byte R1C6  = keyIndex(1, 6);
+constexpr byte R1C7  = keyIndex(1, 7);
+constexpr byte R2C0  = keyIndex(2, 0);
+constexpr byte R2C1  = keyIndex(2, 1);
+constexpr byte R2C2  = keyIndex(2, 2);
+constexpr byte R2C3  = keyIndex(2, 3);
+constexpr byte R2C4  = keyIndex(2, 4);
+constexpr byte R2C5  = keyIndex(2, 5);
+constexpr byte R2C6  = keyIndex(2, 6);
+constexpr byte R2C7  = keyIndex(2, 7);
+constexpr byte R3C0  = keyIndex(3, 0);
+constexpr byte R3C1  = keyIndex(3, 1);
+constexpr byte R3C2  = keyIndex(3, 2);
+constexpr byte R3C3  = keyIndex(3, 3);
+constexpr byte R3C4  = keyIndex(3, 4);
+constexpr byte R3C5  = keyIndex(3, 5);
+constexpr byte R3C6  = keyIndex(3, 6);
+constexpr byte R3C7  = keyIndex(3, 7);
 
-#define R0C8  SCANBIT(0, 0)
-#define R0C9  SCANBIT(0, 1)
-#define R0C10 SCANBIT(0, 2)
-#define R0C11 SCANBIT(0, 3)
-#define R0C12 SCANBIT(0, 4)
-#define R0C13 SCANBIT(0, 5)
-#define R0C14 SCANBIT(0, 6)
-#define R0C15 SCANBIT(0, 7)
-#define R1C8  SCANBIT(1, 0)
-#define R1C9  SCANBIT(1, 1)
-#define R1C10 SCANBIT(1, 2)
-#define R1C11 SCANBIT(1, 3)
-#define R1C12 SCANBIT(1, 4)
-#define R1C13 SCANBIT(1, 5)
-#define R1C14 SCANBIT(1, 6)
-#define R1C15 SCANBIT(1, 7)
-#define R2C8  SCANBIT(2, 0)
-#define R2C9  SCANBIT(2, 1)
-#define R2C10 SCANBIT(2, 2)
-#define R2C11 SCANBIT(2, 3)
-#define R2C12 SCANBIT(2, 4)
-#define R2C13 SCANBIT(2, 5)
-#define R2C14 SCANBIT(2, 6)
-#define R2C15 SCANBIT(2, 7)
-#define R3C8  SCANBIT(3, 0)
-#define R3C9  SCANBIT(3, 1)
-#define R3C10 SCANBIT(3, 2)
-#define R3C11 SCANBIT(3, 3)
-#define R3C12 SCANBIT(3, 4)
-#define R3C13 SCANBIT(3, 5)
-#define R3C14 SCANBIT(3, 6)
-#define R3C15 SCANBIT(3, 7)
+constexpr byte R0C8  = keyIndex(0, 8);
+constexpr byte R0C9  = keyIndex(0, 9);
+constexpr byte R0C10 = keyIndex(0, 10);
+constexpr byte R0C11 = keyIndex(0, 11);
+constexpr byte R0C12 = keyIndex(0, 12);
+constexpr byte R0C13 = keyIndex(0, 13);
+constexpr byte R0C14 = keyIndex(0, 15);
+constexpr byte R0C15 = keyIndex(0, 16);
+constexpr byte R1C8  = keyIndex(1, 8);
+constexpr byte R1C9  = keyIndex(1, 9);
+constexpr byte R1C10 = keyIndex(1, 10);
+constexpr byte R1C11 = keyIndex(1, 11);
+constexpr byte R1C12 = keyIndex(1, 12);
+constexpr byte R1C13 = keyIndex(1, 13);
+constexpr byte R1C14 = keyIndex(1, 14);
+constexpr byte R1C15 = keyIndex(1, 15);
+constexpr byte R2C8  = keyIndex(2, 8);
+constexpr byte R2C9  = keyIndex(2, 9);
+constexpr byte R2C10 = keyIndex(2, 10);
+constexpr byte R2C11 = keyIndex(2, 11);
+constexpr byte R2C12 = keyIndex(2, 12);
+constexpr byte R2C13 = keyIndex(2, 13);
+constexpr byte R2C14 = keyIndex(2, 14);
+constexpr byte R2C15 = keyIndex(2, 15);
+constexpr byte R3C8  = keyIndex(3, 8);
+constexpr byte R3C9  = keyIndex(3, 9);
+constexpr byte R3C10 = keyIndex(3, 10);
+constexpr byte R3C11 = keyIndex(3, 11);
+constexpr byte R3C12 = keyIndex(3, 12);
+constexpr byte R3C13 = keyIndex(3, 13);
+constexpr byte R3C14 = keyIndex(3, 14);
+constexpr byte R3C15 = keyIndex(3, 15);
 
 
 #define LED_COUNT 64
