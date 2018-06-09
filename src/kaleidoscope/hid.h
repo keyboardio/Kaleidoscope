@@ -20,6 +20,9 @@ extern void sendKeyboardReport();
 extern boolean isModifierKeyActive(Key mappedKey);
 extern boolean wasModifierKeyActive(Key mappedKey);
 
+extern uint8_t getKeyswitchStateAtPosition(byte row, byte col);
+extern uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
+
 extern uint8_t getKeyboardLEDs();
 
 extern void initializeConsumerControl();
