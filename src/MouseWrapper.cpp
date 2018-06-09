@@ -14,6 +14,7 @@ boolean MouseWrapper_::is_warping;
 
 uint8_t MouseWrapper_::accelStep;
 uint8_t MouseWrapper_::speedLimit = 127;
+uint8_t MouseWrapper_::subpixelsPerPixel = 16;
 
 MouseWrapper_::MouseWrapper_(void) {
 }
@@ -112,39 +113,49 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
   return i;
 }
 
+// Get the diagonalized version of a value, i.e. value * sqrt(2) / 2. If the
+// value ends up being zero, return the original value instead.
+static int16_t diagonalize(int16_t value) {
+  // 99 / 140 closely approximates sqrt(2) / 2. Since integer division
+  // truncates towards zero we do not need to worry about truncation errors.
+  int16_t diagonalValue = value * 99 / 140;
+  return (diagonalValue == 0 ? value : diagonalValue);
+}
+
 void MouseWrapper_::move(int8_t x, int8_t y) {
   int16_t moveX = 0;
   int16_t moveY = 0;
   static int8_t remainderX = 0;
   static int8_t remainderY = 0;
+  int16_t effectiveSpeedLimit = speedLimit;
 
   if (x != 0 && y != 0) {
-    // 99 / 140 closely approximates sqrt(2) / 2. Since integer division
-    // truncates towards zero we do not need to worry about truncation errors.
-    int8_t adjustedX = (int16_t)x * 99 / 140;
-    int8_t adjustedY = (int16_t)y * 99 / 140;
+    // For diagonal movements, we apply a diagonalized speed limit. The
+    // effective speed limit is set based on whether we are moving diagonally.
+    effectiveSpeedLimit = diagonalize(effectiveSpeedLimit);
 
-    if (adjustedX != 0) x = adjustedX;
-    if (adjustedY != 0) y = adjustedY;
+    x = diagonalize(x);
+    y = diagonalize(y);
   }
 
   if (x != 0) {
     moveX = remainderX + (x * acceleration(accelStep));
-    if (moveX > (int16_t)speedLimit) moveX = speedLimit;
-    else if (moveX < -(int16_t)speedLimit) moveX = -speedLimit;
+    if (moveX > effectiveSpeedLimit) moveX = effectiveSpeedLimit;
+    else if (moveX < -effectiveSpeedLimit) moveX = -effectiveSpeedLimit;
   }
+
   if (y != 0) {
     moveY = remainderY + (y * acceleration(accelStep));
-    if (moveY > (int16_t)speedLimit) moveY = speedLimit;
-    else if (moveY < -(int16_t)speedLimit) moveY = -speedLimit;
+    if (moveY > effectiveSpeedLimit) moveY = effectiveSpeedLimit;
+    else if (moveY < -effectiveSpeedLimit) moveY = -effectiveSpeedLimit;
   }
 
   end_warping();
   // move by whole pixels, not subpixels
-  kaleidoscope::hid::moveMouse(moveX >> 4, moveY >> 4, 0);
+  kaleidoscope::hid::moveMouse(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel, 0);
   // save leftover subpixel movements for later
-  remainderX = moveX & 0x0f;
-  remainderY = moveY & 0x0f;
+  remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
+  remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;
 }
 
 MouseWrapper_ MouseWrapper;

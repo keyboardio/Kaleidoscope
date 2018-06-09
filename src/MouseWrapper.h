@@ -34,6 +34,7 @@ class MouseWrapper_ {
   static void release_button(uint8_t button);
   static uint8_t accelStep;
   static uint8_t speedLimit;
+  static uint8_t subpixelsPerPixel;
   static uint8_t warp_grid_size;
 
  private:
