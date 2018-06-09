@@ -69,7 +69,7 @@ class Model01 {
    * the key switch states.
    *
    * The first variant requires a row and a column, the second an index, as
-   * returned by `KEY_INDEX`.
+   * returned by `keyIndex`.
    */
   uint8_t getKeyswitchStateAtPosition(byte row, byte col);
   uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
@@ -92,71 +92,83 @@ class Model01 {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-#define R0C0  KEY_INDEX(0, 0)
-#define R0C1  KEY_INDEX(0, 1)
-#define R0C2  KEY_INDEX(0, 2)
-#define R0C3  KEY_INDEX(0, 3)
-#define R0C4  KEY_INDEX(0, 4)
-#define R0C5  KEY_INDEX(0, 5)
-#define R0C6  KEY_INDEX(0, 6)
-#define R0C7  KEY_INDEX(0, 7)
-#define R1C0  KEY_INDEX(1, 0)
-#define R1C1  KEY_INDEX(1, 1)
-#define R1C2  KEY_INDEX(1, 2)
-#define R1C3  KEY_INDEX(1, 3)
-#define R1C4  KEY_INDEX(1, 4)
-#define R1C5  KEY_INDEX(1, 5)
-#define R1C6  KEY_INDEX(1, 6)
-#define R1C7  KEY_INDEX(1, 7)
-#define R2C0  KEY_INDEX(2, 0)
-#define R2C1  KEY_INDEX(2, 1)
-#define R2C2  KEY_INDEX(2, 2)
-#define R2C3  KEY_INDEX(2, 3)
-#define R2C4  KEY_INDEX(2, 4)
-#define R2C5  KEY_INDEX(2, 5)
-#define R2C6  KEY_INDEX(2, 6)
-#define R2C7  KEY_INDEX(2, 7)
-#define R3C0  KEY_INDEX(3, 0)
-#define R3C1  KEY_INDEX(3, 1)
-#define R3C2  KEY_INDEX(3, 2)
-#define R3C3  KEY_INDEX(3, 3)
-#define R3C4  KEY_INDEX(3, 4)
-#define R3C5  KEY_INDEX(3, 5)
-#define R3C6  KEY_INDEX(3, 6)
-#define R3C7  KEY_INDEX(3, 7)
+/* To be used by the hardware implementations, `keyIndex` tells us the index of
+ * a key, from which we can figure out the row and column as needed. The index
+ * starts at one, so that plugins that work with a list of key indexes can use
+ * zero as a sentinel. This is important, because when we initialize arrays with
+ * fewer elements than the declared array size, the remaining elements will be
+ * zero. We can use this to avoid having to explicitly add a sentinel in
+ * user-facing code.
+ */
+constexpr byte keyIndex(byte row, byte col) {
+  return row * COLS + col + 1;
+}
 
-#define R0C8  KEY_INDEX(0, 8)
-#define R0C9  KEY_INDEX(0, 9)
-#define R0C10 KEY_INDEX(0, 10)
-#define R0C11 KEY_INDEX(0, 11)
-#define R0C12 KEY_INDEX(0, 12)
-#define R0C13 KEY_INDEX(0, 13)
-#define R0C14 KEY_INDEX(0, 15)
-#define R0C15 KEY_INDEX(0, 16)
-#define R1C8  KEY_INDEX(1, 8)
-#define R1C9  KEY_INDEX(1, 9)
-#define R1C10 KEY_INDEX(1, 10)
-#define R1C11 KEY_INDEX(1, 11)
-#define R1C12 KEY_INDEX(1, 12)
-#define R1C13 KEY_INDEX(1, 13)
-#define R1C14 KEY_INDEX(1, 14)
-#define R1C15 KEY_INDEX(1, 15)
-#define R2C8  KEY_INDEX(2, 8)
-#define R2C9  KEY_INDEX(2, 9)
-#define R2C10 KEY_INDEX(2, 10)
-#define R2C11 KEY_INDEX(2, 11)
-#define R2C12 KEY_INDEX(2, 12)
-#define R2C13 KEY_INDEX(2, 13)
-#define R2C14 KEY_INDEX(2, 14)
-#define R2C15 KEY_INDEX(2, 15)
-#define R3C8  KEY_INDEX(3, 8)
-#define R3C9  KEY_INDEX(3, 9)
-#define R3C10 KEY_INDEX(3, 10)
-#define R3C11 KEY_INDEX(3, 11)
-#define R3C12 KEY_INDEX(3, 12)
-#define R3C13 KEY_INDEX(3, 13)
-#define R3C14 KEY_INDEX(3, 14)
-#define R3C15 KEY_INDEX(3, 15)
+constexpr byte R0C0  = keyIndex(0, 0);
+constexpr byte R0C1  = keyIndex(0, 1);
+constexpr byte R0C2  = keyIndex(0, 2);
+constexpr byte R0C3  = keyIndex(0, 3);
+constexpr byte R0C4  = keyIndex(0, 4);
+constexpr byte R0C5  = keyIndex(0, 5);
+constexpr byte R0C6  = keyIndex(0, 6);
+constexpr byte R0C7  = keyIndex(0, 7);
+constexpr byte R1C0  = keyIndex(1, 0);
+constexpr byte R1C1  = keyIndex(1, 1);
+constexpr byte R1C2  = keyIndex(1, 2);
+constexpr byte R1C3  = keyIndex(1, 3);
+constexpr byte R1C4  = keyIndex(1, 4);
+constexpr byte R1C5  = keyIndex(1, 5);
+constexpr byte R1C6  = keyIndex(1, 6);
+constexpr byte R1C7  = keyIndex(1, 7);
+constexpr byte R2C0  = keyIndex(2, 0);
+constexpr byte R2C1  = keyIndex(2, 1);
+constexpr byte R2C2  = keyIndex(2, 2);
+constexpr byte R2C3  = keyIndex(2, 3);
+constexpr byte R2C4  = keyIndex(2, 4);
+constexpr byte R2C5  = keyIndex(2, 5);
+constexpr byte R2C6  = keyIndex(2, 6);
+constexpr byte R2C7  = keyIndex(2, 7);
+constexpr byte R3C0  = keyIndex(3, 0);
+constexpr byte R3C1  = keyIndex(3, 1);
+constexpr byte R3C2  = keyIndex(3, 2);
+constexpr byte R3C3  = keyIndex(3, 3);
+constexpr byte R3C4  = keyIndex(3, 4);
+constexpr byte R3C5  = keyIndex(3, 5);
+constexpr byte R3C6  = keyIndex(3, 6);
+constexpr byte R3C7  = keyIndex(3, 7);
+
+constexpr byte R0C8  = keyIndex(0, 8);
+constexpr byte R0C9  = keyIndex(0, 9);
+constexpr byte R0C10 = keyIndex(0, 10);
+constexpr byte R0C11 = keyIndex(0, 11);
+constexpr byte R0C12 = keyIndex(0, 12);
+constexpr byte R0C13 = keyIndex(0, 13);
+constexpr byte R0C14 = keyIndex(0, 15);
+constexpr byte R0C15 = keyIndex(0, 16);
+constexpr byte R1C8  = keyIndex(1, 8);
+constexpr byte R1C9  = keyIndex(1, 9);
+constexpr byte R1C10 = keyIndex(1, 10);
+constexpr byte R1C11 = keyIndex(1, 11);
+constexpr byte R1C12 = keyIndex(1, 12);
+constexpr byte R1C13 = keyIndex(1, 13);
+constexpr byte R1C14 = keyIndex(1, 14);
+constexpr byte R1C15 = keyIndex(1, 15);
+constexpr byte R2C8  = keyIndex(2, 8);
+constexpr byte R2C9  = keyIndex(2, 9);
+constexpr byte R2C10 = keyIndex(2, 10);
+constexpr byte R2C11 = keyIndex(2, 11);
+constexpr byte R2C12 = keyIndex(2, 12);
+constexpr byte R2C13 = keyIndex(2, 13);
+constexpr byte R2C14 = keyIndex(2, 14);
+constexpr byte R2C15 = keyIndex(2, 15);
+constexpr byte R3C8  = keyIndex(3, 8);
+constexpr byte R3C9  = keyIndex(3, 9);
+constexpr byte R3C10 = keyIndex(3, 10);
+constexpr byte R3C11 = keyIndex(3, 11);
+constexpr byte R3C12 = keyIndex(3, 12);
+constexpr byte R3C13 = keyIndex(3, 13);
+constexpr byte R3C14 = keyIndex(3, 14);
+constexpr byte R3C15 = keyIndex(3, 15);
 
 
 #define LED_COUNT 64
