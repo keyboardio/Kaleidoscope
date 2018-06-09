@@ -107,46 +107,45 @@ class ErgoDox {
   static void readMatrixRow(uint8_t row);
 };
 
-#define KEYMAP_STACKED(                                         \
-    /* left hand, spatial positions */                          \
-    k00,k01,k02,k03,k04,k05,k06,                                \
-    k10,k11,k12,k13,k14,k15,k16,                                \
-    k20,k21,k22,k23,k24,k25,                                    \
-    k30,k31,k32,k33,k34,k35,k36,                                \
-    k40,k41,k42,k43,k44,                                        \
-                            k55,k56,                            \
-                                k54,                            \
-                        k53,k52,k51,                            \
-                                                                \
-    /* right hand, spatial positions */                         \
-        k07,k08,k09,k0A,k0B,k0C,k0D,                            \
-        k17,k18,k19,k1A,k1B,k1C,k1D,                            \
-            k28,k29,k2A,k2B,k2C,k2D,                            \
-        k37,k38,k39,k3A,k3B,k3C,k3D,                            \
-                k49,k4A,k4B,k4C,k4D,                            \
-    k57,k58,                                                    \
-    k59,                                                        \
-    k5C,k5B,k5A )                                              \
-                                                                \
-   /* matrix positions */                                       \
-   {                                                            \
-    { k00, k10, k20, k30, k40, XXX },   \
-    { k01, k11, k21, k31, k41, k51 },   \
-    { k02, k12, k22, k32, k42, k52 },   \
-    { k03, k13, k23, k33, k43, k53 },   \
-    { k04, k14, k24, k34, k44, k54 },   \
-    { k05, k15, k25, k35, XXX, k55 },   \
-    { k06, k16, XXX, k36, XXX, k56 },   \
-                                                                 \
-    { k07, k17, XXX, k37,XXX, k57 },   \
-    { k08, k18, k28, k38,XXX, k58 },   \
-    { k09, k19, k29, k39, k49, k59 },   \
-    { k0A, k1A, k2A, k3A, k4A, k5A },   \
-    { k0B, k1B, k2B, k3B, k4B, k5B },   \
-    { k0C, k1C, k2C, k3C, k4C, k5C },   \
-    { k0D, k1D, k2D, k3D, k4D, XXX }    \
-   }
-
+#define KEYMAP_STACKED(                                                 \
+    /* left hand, spatial positions */                                  \
+    r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                           \
+    r1c0, r1c1, r1c2, r1c3, r1c4, r1c5, r1c6,                           \
+    r2c0, r2c1, r2c2, r2c3, r2c4, r2c5,                                 \
+    r3c0, r3c1, r3c2, r3c3, r3c4, r3c5, r3c6,                           \
+    r4c0, r4c1, r4c2, r4c3, r4c4,                                       \
+                            r5c5, r5c6,                                 \
+                                  r5c4,                                 \
+                      r5c3, r5c2, r5c1,                                 \
+                                                                        \
+    /* right hand, spatial positions */                                 \
+    r0c7,  r0c8,  r0c9,  r0c10, r0c11, r0c12, r0c13,                    \
+    r1c7,  r1c8,  r1c9,  r1c10, r1c11, r1c12, r1c13,                    \
+           r2c8,  r2c9,  r2c10, r2c11, r2c12, r2c13,                    \
+    r3c7,  r3c8,  r3c9,  r3c10, r3c11, r3c12, r3c13,                    \
+    r4c9,  r4c10, r4c11, r4c12, r4c13,                                  \
+    r5c7,  r5c8,                                                        \
+    r5c9,                                                               \
+    r5c12, r5c11, r5c10 )                                               \
+                                                                        \
+  /* matrix positions */                                                \
+  {                                                                     \
+    { r0c0, r1c0, r2c0, r3c0, r4c0, XXX  },                             \
+    { r0c1, r1c1, r2c1, r3c1, r4c1, r5c1 },                             \
+    { r0c2, r1c2, r2c2, r3c2, r4c2, r5c2 },                             \
+    { r0c3, r1c3, r2c3, r3c3, r4c3, r5c3 },                             \
+    { r0c4, r1c4, r2c4, r3c4, r4c4, r5c4 },                             \
+    { r0c5, r1c5, r2c5, r3c5, XXX,  r5c5 },                             \
+    { r0c6, r1c6, XXX,  r3c6, XXX,  r5c6 },                             \
+                                                                        \
+    { r0c7,  r1c7,  XXX,   r3c7,  XXX,   r5c7  },                       \
+    { r0c8,  r1c8,  r2c8,  r3c8,  XXX,   r5c8  },                       \
+    { r0c9,  r1c9,  r2c9,  r3c9,  r4c9,  r5c9  },                       \
+    { r0c10, r1c10, r2c10, r3c10, r4c10, r5c10 },                       \
+    { r0c11, r1c11, r2c11, r3c11, r4c11, r5c11 },                       \
+    { r0c12, r1c12, r2c12, r3c12, r4c12, r5c12 },                       \
+    { r0c13, r1c13, r2c13, r3c13, r4c13, XXX   }                        \
+  }
 }
 }
 
