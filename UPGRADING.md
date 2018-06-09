@@ -40,6 +40,14 @@ See the [Kaleidoscope-USB-Quriks][plugin:USB-Quriks] plugin for a use-case.
 
  [plugin:USB-Quirks]: https://github.com/keyboardio/Kaleidoscope-USB-Quirks
 
+### The `RxCy` macros and peeking into the keyswitch state
+
+The `RxCy` macros changed from being indexes into a per-hand bitmap to being an
+index across the whole keyboard. This means they can no longer be `or`-ed
+together to check against the keyswitch state of a given hand. Instead, the
+`kaleidoscope::hid::getKeyswitchStateAtPosition()` method can be used to check
+the state of a keyswitch at a given row and column; or at a given index.
+
 ### KALEIDOSCOPE_API_VERSION bump
 
 `KALEIDOSCOPE_API_VERSION` has been bumped to **2** due to the plugin API
