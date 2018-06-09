@@ -70,6 +70,16 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 
 const uint8_t KEYMAP_SIZE DEPRECATED(KEYMAP_SIZE) = 0;
 
+/* To be used by the hardware implementations, `KEY_INDEX` tells us the index of
+ * a key, from which we can figure out the row and column as needed. The index
+ * starts at one, so that plugins that work with a list of key indexes can use
+ * zero as a sentinel. This is important, because when we initialize arrays with
+ * fewer elements than the declared array size, the remaining elements will be
+ * zero. We can use this to avoid having to explicitly add a sentinel in
+ * user-facing code.
+ */
+#define KEY_INDEX(row, col) (row * COLS + col + 1)
+
 namespace kaleidoscope {
 
 class Kaleidoscope_ {
