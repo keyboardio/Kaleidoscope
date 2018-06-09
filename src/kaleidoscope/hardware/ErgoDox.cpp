@@ -225,6 +225,15 @@ void ErgoDox::attachToHost() {
   UDCON &= ~(1 << DETACH);
 }
 
+uint8_t ErgoDox::getKeyswitchStateAtPosition(byte row, byte col) {
+  return bitRead(keyState_[row], col);
+}
+
+uint8_t ErgoDox::getKeyswitchStateAtPosition(uint8_t keyIndex) {
+  keyIndex--;
+  return getKeyswitchStateAtPosition(keyIndex / COLS, keyIndex % COLS);
+}
+
 }
 }
 

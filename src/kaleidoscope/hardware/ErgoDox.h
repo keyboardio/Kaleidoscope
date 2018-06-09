@@ -87,6 +87,18 @@ class ErgoDox {
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
 
+  /** Key switch state
+   *
+   * These two methods return the state of the keyswitch at any given position,
+   * regardless of which half they are on. This is a hardware-agnostic access to
+   * the key switch states.
+   *
+   * The first variant requires a row and a column, the second an index, as
+   * returned by `keyIndex`.
+   */
+  uint8_t getKeyswitchStateAtPosition(byte row, byte col);
+  uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
+
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
