@@ -20,21 +20,15 @@
 #include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-MagicCombo.h>
 
-void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand) {
-  switch (combo_index) {
-  case 0:
-    Macros.type(PSTR("It's a kind of magic!"));
-    break;
-  }
+enum {
+  KIND_OF_MAGIC
+};
+
+void kindOfMagic(uint8_t combo_index) {
+  Macros.type(PSTR("It's a kind of magic!"));
 }
 
-static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
-  {
-    R3C6,  // left palm key
-    R3C9   // right palm key
-  },
-  {0, 0}
-};
+USE_MAGIC_COMBOS([KIND_OF_MAGIC] = {.action = kindOfMagic, .keys = {R3C6, R3C9}});
 
 // *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {
@@ -62,8 +56,6 @@ KALEIDOSCOPE_INIT_PLUGINS(MagicCombo, Macros);
 
 void setup() {
   Kaleidoscope.setup();
-
-  MagicCombo.magic_combos = magic_combos;
 }
 
 void loop() {
