@@ -20,34 +20,6 @@ extern void sendKeyboardReport();
 extern boolean isModifierKeyActive(Key mappedKey);
 extern boolean wasModifierKeyActive(Key mappedKey);
 
-/**
- * Check the state of a key at a given position.
- *
- * This is a hardware-agnostic, portable way to peek into the keyswitch states.
- * Implemented by the hardware plugins under the hood, we provide a wrapper here
- * for user code.
- *
- * @param row is the row the key is located at in the matrix.
- * @param col is the column the key is located at in the matrix.
- *
- * @returns zero if the key is not pressed, non-zero otherwise.
- */
-extern uint8_t getKeyswitchStateAtPosition(byte row, byte col);
-/**
- * Check the state of a key at a given position.
- *
- * This is a hardware-agnostic, portable way to peek into the keyswitch states.
- * Implemented by the hardware plugins under the hood, we provide a wrapper here
- * for user code.
- *
- * @param keyIndex is the key index, as calculated by `keyIndex`.
- *
- * @note Key indexes start at 1, not 0!
- *
- * @returns zero if the key is not pressed, non-zero otherwise.
- */
-extern uint8_t getKeyswitchStateAtPosition(uint8_t keyIndex);
-
 extern uint8_t getKeyboardLEDs();
 
 extern void initializeConsumerControl();
