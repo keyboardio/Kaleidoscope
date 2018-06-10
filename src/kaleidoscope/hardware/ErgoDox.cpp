@@ -225,13 +225,27 @@ void ErgoDox::attachToHost() {
   UDCON &= ~(1 << DETACH);
 }
 
-uint8_t ErgoDox::getKeyswitchStateAtPosition(byte row, byte col) {
-  return bitRead(keyState_[row], col);
+bool ErgoDox::isKeyswitchPressed(byte row, byte col) {
+  return (bitRead(keyState_[row], col) != 0);
 }
 
-uint8_t ErgoDox::getKeyswitchStateAtPosition(uint8_t keyIndex) {
+bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return getKeyswitchStateAtPosition(keyIndex / COLS, keyIndex % COLS);
+  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+}
+
+uint8_t ErgoDox::pressedKeyswitchCount() {
+  uint8_t count;
+
+  for (uint8_t r = 0; r < ROWS; r++) {
+    if (!keyState_[r])
+      continue;
+
+    for (uint8_t c = 0; c < COLS; c++) {
+      count += bitRead(keyState_[r], c);
+    }
+  }
+  return count;
 }
 
 }
