@@ -2,7 +2,6 @@
 
 #include "kaleidoscope_internal/deprecations.h"
 
-static const uint8_t MOMENTARY_OFFSET DEPRECATED(USE_INSTEAD("LAYER_SHIFT_OFFSET")) = 42;
 static const uint8_t LAYER_SHIFT_OFFSET = 42;
 
 #define KEYMAP_0     0

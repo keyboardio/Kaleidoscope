@@ -68,17 +68,12 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
               " available, but version " xstr(KALEIDOSCOPE_REQUIRED_API_VERSION) " is required.");
 #endif
 
-const uint8_t KEYMAP_SIZE DEPRECATED(KEYMAP_SIZE) = 0;
-
 namespace kaleidoscope {
 
 class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
 
-  void setup(const byte keymap_count) DEPRECATED(KEYMAP_SIZE) {
-    setup();
-  }
   void setup(void);
   void loop(void);
 
@@ -208,20 +203,6 @@ using kaleidoscope::Kaleidoscope;
                                            "layer.on\n"             \
                                            "layer.off\n"            \
                                            "layer.getState")
-
-/* -- DEPRECATED aliases; remove them when there are no more users. -- */
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-
-void event_handler_hook_use(kaleidoscope::Kaleidoscope_::eventHandlerHook hook)
-DEPRECATED(EVENT_HANDLER_HOOK);
-void loop_hook_use(kaleidoscope::Kaleidoscope_::loopHook hook)
-DEPRECATED(LOOP_HOOK);
-
-void __USE_PLUGINS(kaleidoscope::Plugin *plugin, ...) DEPRECATED(USE);
-
-#define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
-
-#endif
 
 // Use this function macro to register plugins with Kaleidoscope's
 // hooking system. The macro accepts a list of plugin instances that
