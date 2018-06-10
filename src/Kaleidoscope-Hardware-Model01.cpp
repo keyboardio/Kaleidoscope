@@ -259,17 +259,27 @@ void Model01::attachToHost() {
   UDCON &= ~(1 << DETACH);
 }
 
-uint8_t Model01::getKeyswitchStateAtPosition(byte row, byte col) {
+bool Model01::isKeyswitchPressed(byte row, byte col) {
   if (col <= 7) {
-    return bitRead(leftHandState.rows[row], 7 - col);
+    return (bitRead(leftHandState.rows[row], 7 - col) != 0);
   } else {
-    return bitRead(rightHandState.rows[row], 7 - (col - 8));
+    return (bitRead(rightHandState.rows[row], 7 - (col - 8)) != 0);
   }
 }
 
-uint8_t Model01::getKeyswitchStateAtPosition(uint8_t keyIndex) {
+bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return getKeyswitchStateAtPosition(keyIndex / COLS, keyIndex % COLS);
+  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+}
+
+uint8_t Model01::pressedKeyswitchCount() {
+  uint8_t count = 0;
+
+  for (uint8_t i = 0; i < 32; i++) {
+    count += bitRead(leftHandState.all, i) + bitRead(rightHandState.all, i);
+  }
+
+  return count;
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
