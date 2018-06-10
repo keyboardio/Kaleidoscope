@@ -166,25 +166,6 @@ Kaleidoscope_::useLoopHook(loopHook hook) {
   }
   appendLoopHook(hook);
 }
-
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
-  Kaleidoscope.useEventHandlerHook(hook);
-}
-
-void loop_hook_use(Kaleidoscope_::loopHook hook) {
-  Kaleidoscope.useLoopHook(hook);
-}
-
-void __USE_PLUGINS(kaleidoscope::Plugin *plugin, ...) {
-  va_list ap;
-
-  Kaleidoscope.use(plugin);
-
-  va_start(ap, plugin);
-  while ((plugin = (kaleidoscope::Plugin *)va_arg(ap, kaleidoscope::Plugin *)) != NULL)
-    Kaleidoscope.use(plugin);
-  va_end(ap);
-}
 #endif
 
 #pragma GCC diagnostic pop // restore diagnostic options

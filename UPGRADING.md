@@ -71,41 +71,6 @@ If any of this does not make sense to you, or you have trouble updating your
 .ino sketch, do not hesitate to write us at help@keyboard.io, we can help you
 fix it.
 
-### Sheduled for removal by 2018-05-26
-
-These APIs and functions have been deprecated for a long time, and as far as we
-can tell, aren't used by any third party or user code anymore.
-
-#### Kaleidoscope.setup(KEYMAP_SIZE)
-
-The `Kaleidoscope.setup()` method is still around, and is **not** deprecated,
-but the variant of it that takes a keymap size is, and has been since October
-2017.
-
-Instead, one should use the argument-less `Kaleidoscope.setup()`, and the new
-`KEYMAP()` macros to define a keymap.
-
-#### event_handler_hook_use, loop_hook_use, and USE_PLUGINS
-
-Deprecated in October 2017, these are old aliases that should no longer be in
-use. They were replaced by `Kaleidoscope.useEventHandlerHook`,
-`Kaleidoscope.useLoopHook`, and `Kaleidoscope.use`, respectively.
-
-The replacements themselves are also deprecated - see below -, but their removal
-will come at a later date.
-
-#### MOMENTARY_OFFSET
-
-Deprecated in October 2017, replaced by `LAYER_SHIFT_OFFSET`.
-
-This symbol was meant to be used by plugins, not user code, and as far as we
-know, no third party plugin ever used it.
-
-#### key_was_pressed, key_is_pressed, key_toggled_on, key_toggled_off
-
-Deprecated in July 2017, replaced by `keyWasPressed`, `keyIsPressed`,
-`keyToggledOn`, and `keyToggledOff`, respectively.
-
 ### Sheduled for removal by 2018-07-12
 
 We aim at making a new release by mid-July, and APIs we deprecate now, will be
@@ -173,3 +138,42 @@ public:
 
 Plugins are supposed to implement this new API, and then be initialised via
 `KALEIDOSCOPE_INIT_PLUGINS`.
+
+Deprecated and removed APIs
+---------------------------
+
+### Removed on 2018-06-10 (originally scheduled for 2018-05-27)
+
+These APIs and functions have been deprecated for a long time, and as far as we
+can tell, aren't used by any third party or user code anymore. They were removed
+as of the June 10th, 2018.
+
+#### Kaleidoscope.setup(KEYMAP_SIZE)
+
+The `Kaleidoscope.setup()` method is still around, and is **not** deprecated,
+but the variant of it that takes a keymap size is, and has been since October
+2017.
+
+Instead, one should use the argument-less `Kaleidoscope.setup()`, and the new
+`KEYMAP()` macros to define a keymap.
+
+#### event_handler_hook_use, loop_hook_use, and USE_PLUGINS
+
+Deprecated in October 2017, these are old aliases that should no longer be in
+use. They were replaced by `Kaleidoscope.useEventHandlerHook`,
+`Kaleidoscope.useLoopHook`, and `Kaleidoscope.use`, respectively.
+
+The replacements themselves are also deprecated - see below -, but their removal
+will come at a later date.
+
+#### MOMENTARY_OFFSET
+
+Deprecated in October 2017, replaced by `LAYER_SHIFT_OFFSET`.
+
+This symbol was meant to be used by plugins, not user code, and as far as we
+know, no third party plugin ever used it.
+
+#### key_was_pressed, key_is_pressed, key_toggled_on, key_toggled_off
+
+Deprecated in July 2017, replaced by `keyWasPressed`, `keyIsPressed`,
+`keyToggledOn`, and `keyToggledOff`, respectively.

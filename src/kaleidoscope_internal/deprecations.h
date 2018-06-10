@@ -11,10 +11,6 @@
 
 /* Messages */
 
-#define _DEPRECATED_MESSAGE_KEYMAP_SIZE                                    \
-  "Kaleidoscope.setup() does not require KEYMAP_SIZE anymore. It can be\n" \
-  "safely removed."
-
 #define _DEPRECATED_MESSAGE_USE                                                    \
    "Your sketch uses Kaleidoscope.use(), an old-style API to initialize\n"         \
    "plugins. To fix this, you need to modify your .ino sketch file, and\n"         \
