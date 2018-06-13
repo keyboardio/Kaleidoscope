@@ -27,9 +27,10 @@ void TestMode_::legacyLoopHook(bool is_post_clear) {
 #endif
 
 kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
-  if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO
-//  && KeyboardHardware.rightHandState.all == combo.rightHand
-     ) {
+  if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
+      KeyboardHardware.isKeyswitchPressed(R0C6) &&
+      KeyboardHardware.isKeyswitchPressed(R3C6) &&
+      KeyboardHardware.pressedKeyswitchCount() == 3) {
     run_tests();
   }
   return kaleidoscope::EventHandlerResult::OK;
@@ -41,7 +42,8 @@ void TestMode_::waitForKeypress() {
   }
   while (1) {
     KeyboardHardware.readMatrix();
-    if (KeyboardHardware.leftHandState.all ==  R3C6
+    if (KeyboardHardware.isKeyswitchPressed(R3C6)
+        && KeyboardHardware.pressedKeyswitchCount() == 1
         && KeyboardHardware.previousLeftHandState.all == 0) {
       break;
     }
@@ -127,7 +129,10 @@ void TestMode_::testMatrix() {
   // taps during LED test mode.
   while (1) {
     KeyboardHardware.readMatrix();
-    if (KeyboardHardware.leftHandState.all == TEST_MODE_KEY_COMBO) {
+    if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
+        KeyboardHardware.isKeyswitchPressed(R0C6) &&
+        KeyboardHardware.isKeyswitchPressed(R3C6) &&
+        KeyboardHardware.pressedKeyswitchCount() == 3) {
       break;
     }
     for (byte row = 0; row < 4; row++) {
