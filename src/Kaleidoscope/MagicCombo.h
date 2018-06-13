@@ -20,12 +20,40 @@
 
 #include <Kaleidoscope.h>
 
+#define MAX_COMBO_LENGTH 5
+
+#define USE_MAGIC_COMBOS(...)                                             \
+  namespace kaleidoscope {                                                \
+  namespace magiccombo {                                                  \
+  const kaleidoscope::MagicCombo::Combo combos[] PROGMEM = {__VA_ARGS__}; \
+                                                                          \
+  const uint8_t combos_length = sizeof(combos) / sizeof(*combos);         \
+  }                                                                       \
+  }
+
+#define _MAGICCOMBO_API_CHANGE                                            \
+  "The MagicCombo API changed in an incompatible way, you will need to\n" \
+  "upgrade.\n"                                                            \
+  "\n"                                                                    \
+  "Please see the `UPGRADING.md` document shipped with the source:\n"     \
+  " https://github.com/keyboardio/Kaleidoscope-MagicCombo/blob/master/UPGRADING.md"
+
 namespace kaleidoscope {
 
 class MagicCombo : public kaleidoscope::Plugin {
  public:
+  typedef void (*ComboAction)(uint8_t combo_index);
   typedef struct {
+    ComboAction action;
+    int8_t keys[MAX_COMBO_LENGTH + 1];
+  } Combo;
+  typedef struct combo_t {
     uint32_t left_hand, right_hand;
+
+    combo_t& operator=(combo_t &) {
+      static_assert(false, _DEPRECATE(_MAGICCOMBO_API_CHANGE));
+      return *this;
+    }
   } combo_t;
 
   MagicCombo(void) {}
@@ -45,8 +73,11 @@ class MagicCombo : public kaleidoscope::Plugin {
   static uint32_t end_time_;
 };
 
+namespace magiccombo {
+extern const MagicCombo::Combo combos[];
+extern const uint8_t combos_length;
 }
 
-void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand);
+}
 
 extern kaleidoscope::MagicCombo MagicCombo;

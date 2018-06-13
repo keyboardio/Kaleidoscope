@@ -18,88 +18,54 @@ This can be used to tie complex actions to key chords.
 
 ## Using the extension
 
-To use the extension, we must include the header, create an array of combos we
-want to work with, let the plugin know we want to work with those, and then use
-a special function to handle the combos:
+To use the extension, we must include the header, create actions for the magic
+combos we want to trigger, and set up a mapping:
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-MagicCombo.h>
 
-void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand) {
-  switch (combo_index) {
-  case 0:
-    Macros.type(PSTR("It's a kind of magic!"));
-    break;
-  }
+enum { KIND_OF_MAGIC };
+
+void kindOfMagic(uint8_t combo_index) {
+  Macros.type(PSTR("It's a kind of magic!"));
 }
 
-static const kaleidoscope::MagicCombo::combo_t magic_combos[] PROGMEM = {
-  {
-    R3C6,  // left palm key
-    R3C9   // right palm key
-  },
-  {0, 0}
-};
+USE_MAGIC_COMBOS(
+[KIND_OF_MAGIC] = {
+  .action = kindOfMagic,
+  .keys = {R3C6, R3C9} // Left Fn + Right Fn
+});
 
 KALEIDOSCOPE_INIT_PLUGINS(MagicCombo, Macros);
 
 void setup() {
   Kaleidoscope.setup();
-
-  MagicCombo.magic_combos = magic_combos;
 }
 ```
 
-The combo list **must** reside in `PROGMEM`, and is a list of tuples. Each
-element in the array has two fields: the left hand state, and the right hand
-state upon which to trigger the custom action. Both of these are bit fields,
-each bit set tells the extension that the key with that index must be held for
-the action to trigger. It is recommended to use the `RxCy` macros of the core
-`KaleidoscopeFirmware`, and *or* them together to form a bitfield.
-To see how the `RxCy` coordinates correspond to the physical keys of your
-keyboard, you'll have to consult the documentation for the keyboard.
-Below, you can find a diagram showing the layout for the Keyboardio Model 01.
+It is recommended to use the `RxCy` macros of the core firmware to set the keys
+that are part of a combination.
 
-The combo list **must** end with an element containing zero values for both the
-left and the right halves.
-
-## Extension methods
+## Plugin properties
 
 The extension provides a `MagicCombo` singleton object, with the following
-methods and properties:
-
-### `.magic_combos`
-
-> Setting this property lets the plugin know which combinations of key presses
-> we are interested in. If any of these are found active, the
-> `magicComboActions()` function will be called.
+property:
 
 ### `.min_interval`
 
-> Restrict the magic action to fire at most once every `minInterval`
+> Restrict the magic action to fire at most once every `min_interval`
 > milliseconds.
 >
 > Defaults to 500.
 
-## Overrideable methods
+## Plugin callbacks
 
-Whenever an combination is found to be held, the extension will trigger an
-action, in each scan cycle until the keys remain held. This is done by calling
-the overrideable `magicComboActions` function:
-
-### `magicComboActions(combo_index, left_hand, right_hand)`
-
-> Called whenever a combination is found to be held. The function by default
-> does nothing, and it is recommended to override it from within the Sketch.
->
-> The first argument will be the index in the combo list, the other two are the
-> key states on the left and right halves, respectively.
->
-> Plugins that build upon this extensions *should not* override this function,
-> but provide helpers that can be called from it. An override should only happen
-> in the Sketch.
+Whenever a combination is found to be held, the plugin will trigger the
+specified action, which is just a regular method with a single `uint8_t`
+argument: the index of the magic combo. This function will be called repeatedly
+(every `min_interval` milliseconds) while the combination is held.
 
 ## Further reading
 

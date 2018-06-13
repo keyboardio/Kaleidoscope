@@ -20,11 +20,21 @@
 #include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-MagicCombo.h>
 
+enum {
+  KIND_OF_MAGIC
+};
+
+void kindOfMagic(uint8_t combo_index) {
+  Macros.type(PSTR("It's a kind of magic!"));
+}
+
+USE_MAGIC_COMBOS([KIND_OF_MAGIC] = {.action = kindOfMagic, .keys = {R3C6, R3C9}});
+
 void magicComboActions(uint8_t combo_index, uint32_t left_hand, uint32_t right_hand) {
   switch (combo_index) {
-  case 0:
-    Macros.type(PSTR("It's a kind of magic!"));
-    break;
+    case 0:
+      Macros.type(PSTR("It's a kind of magic!"));
+      break;
   }
 }
 

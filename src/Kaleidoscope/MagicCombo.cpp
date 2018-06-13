@@ -18,42 +18,35 @@
 
 #include <Kaleidoscope-MagicCombo.h>
 
-#if defined(ARDUINO_AVR_MODEL01)
-#define LEFTHANDSTATE  KeyboardHardware.leftHandState
-#define RIGHTHANDSTATE KeyboardHardware.rightHandState
-#endif
-
-#if defined(ARDUINO_AVR_SHORTCUT)
-#define LEFTHANDSTATE  KeyboardHardware.scanner.leftHandState
-#define RIGHTHANDSTATE KeyboardHardware.scanner.rightHandState
-#endif
-
 namespace kaleidoscope {
 
-const MagicCombo::combo_t *MagicCombo::magic_combos;
 uint16_t MagicCombo::min_interval = 500;
 uint32_t MagicCombo::end_time_;
 
 EventHandlerResult MagicCombo::beforeReportingState() {
-  if (!magic_combos)
-    return EventHandlerResult::OK;
+  for (byte i = 0; i < magiccombo::combos_length; i++) {
+    bool match = true;
+    byte j;
 
-  for (byte i = 0;; i++) {
-    combo_t combo;
+    for (j = 0; j < MAX_COMBO_LENGTH; j++) {
+      int8_t comboKey = pgm_read_byte(&(magiccombo::combos[i].keys[j]));
 
-    combo.left_hand = pgm_read_dword(&(magic_combos[i].left_hand));
-    combo.right_hand = pgm_read_dword(&(magic_combos[i].right_hand));
+      if (comboKey == 0)
+        break;
 
-    if (combo.left_hand == 0 && combo.right_hand == 0)
-      break;
+      match &= KeyboardHardware.isKeyswitchPressed(comboKey);
+      if (!match)
+        break;
+    }
 
-    if (LEFTHANDSTATE.all == combo.left_hand &&
-        RIGHTHANDSTATE.all == combo.right_hand) {
-      if (millis() >= end_time_) {
-        magicComboActions(i, combo.left_hand, combo.right_hand);
-        end_time_ = millis() + min_interval;
-      }
-      break;
+    if (j != KeyboardHardware.pressedKeyswitchCount())
+      match = false;
+
+    if (match && (millis() >= end_time_)) {
+      ComboAction action = (ComboAction) pgm_read_ptr(&(magiccombo::combos[i].action));
+
+      (*action)(i);
+      end_time_ = millis() + min_interval;
     }
   }
 
@@ -74,8 +67,5 @@ void MagicCombo::legacyLoopHook(bool is_post_clear) {
 #endif
 
 };
-
-__attribute__((weak)) void magicComboActions(uint8_t comboIndex, uint32_t left_hand, uint32_t right_hand) {
-}
 
 kaleidoscope::MagicCombo MagicCombo;
