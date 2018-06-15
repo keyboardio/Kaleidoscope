@@ -10,6 +10,7 @@ class NumPad_ : public kaleidoscope::Plugin {
 
   static uint8_t numPadLayer;
   static cRGB color;
+  static uint8_t lock_hue;
 
   kaleidoscope::EventHandlerResult onSetup(void);
   kaleidoscope::EventHandlerResult afterEachCycle();

@@ -8,6 +8,7 @@ uint8_t NumPad_::numPadLayer;
 bool NumPad_::cleanupDone = true;
 bool NumPad_::originalNumLockState = false;
 cRGB NumPad_::color = CRGB(160, 0, 0);
+uint8_t NumPad_::lock_hue = 170;
 
 kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
   originalNumLockState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
@@ -65,7 +66,7 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (row > ROWS || col > COLS)
     return kaleidoscope::EventHandlerResult::OK;
 
-  cRGB lock_color = breath_compute();
+  cRGB lock_color = breath_compute(lock_hue);
   LEDControl.setCrgbAt(row, col, lock_color);
 
   return kaleidoscope::EventHandlerResult::OK;
