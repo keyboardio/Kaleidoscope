@@ -7,7 +7,7 @@
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-LEDControl.h"
-#include "Kaleidoscope-Numlock.h"
+#include "Kaleidoscope-NumPad.h"
 #include "Kaleidoscope.h"
 
 #include "LED-Off.h"
@@ -87,14 +87,14 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 KALEIDOSCOPE_INIT_PLUGINS(TestMode,
                           LEDControl, LEDOff,
                           solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
-                          LEDBreatheEffect, LEDRainbowEffect, LEDChaseEffect, NumLock,
+                          LEDBreatheEffect, LEDRainbowEffect, LEDChaseEffect, NumPad,
                           Macros,
                           MouseKeys);
 
 void setup() {
   Kaleidoscope.setup();
 
-  NumLock.numPadLayer = NUMPAD_KEYMAP;
+  NumPad.numPadLayer = NUMPAD_KEYMAP;
   LEDOff.activate();
 }
 
