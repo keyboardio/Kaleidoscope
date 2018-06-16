@@ -235,15 +235,10 @@ bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
 }
 
 uint8_t ErgoDox::pressedKeyswitchCount() {
-  uint8_t count;
+  uint8_t count = 0;
 
   for (uint8_t r = 0; r < ROWS; r++) {
-    if (!keyState_[r])
-      continue;
-
-    for (uint8_t c = 0; c < COLS; c++) {
-      count += bitRead(keyState_[r], c);
-    }
+    count += __builtin_popcount(keyState_[r]);
   }
   return count;
 }
