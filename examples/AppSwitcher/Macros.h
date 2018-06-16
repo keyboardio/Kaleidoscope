@@ -28,3 +28,4 @@ enum {
 
 const macro_t *macroAppSwitch(uint8_t keyState);
 const macro_t *macroAppCancel(uint8_t keyState);
+void macroAppSwitchLoop();

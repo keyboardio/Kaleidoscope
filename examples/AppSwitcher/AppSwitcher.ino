@@ -64,5 +64,6 @@ void setup() {
 }
 
 void loop() {
+  macroAppSwitchLoop();
   Kaleidoscope.loop();
 }
