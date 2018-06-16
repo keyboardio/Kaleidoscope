@@ -41,11 +41,6 @@ const macro_t *macroAppSwitch(uint8_t keyState) {
   if (keyToggledOff(keyState)) {
     return MACRO(U(Tab), Dr(mod));
   }
-  // Key is not pressed, and was not just released.
-  // if appSwitchActive is true, we continue holding Alt.
-  if (appSwitchActive) {
-    return MACRO(Dr(mod));
-  }
   // otherwise we do nothing
   return MACRO_NONE;
 }
@@ -54,4 +49,16 @@ const macro_t *macroAppCancel(uint8_t keyState) {
   if (keyToggledOn(keyState))
     appSwitchActive = false;
   return MACRO_NONE;
+}
+
+void macroAppSwitchLoop() {
+  Key mod = Key_LeftAlt;
+
+  if (HostOS.os() == H::OSX)
+    mod = Key_LeftGui;
+
+  // if appSwitchActive is true, we continue holding Alt.
+  if (appSwitchActive) {
+    handleKeyswitchEvent(mod, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED);
+  }
 }
