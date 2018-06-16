@@ -126,6 +126,14 @@ modifiers and one-shot layer keys. It has the following methods:
 > sticky one-shot effects. If omitted, it defaults to `false`, and not canceling
 > stickies.
 
+### `.inject(key, keyState)`
+
+> Simulates a key event, specifically designed to inject one-shot keys into the
+> event loop. The primary purpose of this method is to make it easier to trigger
+> multiple one-shots at the same time.
+>
+> See the example sketch for more information about its use.
+
 ## Plugin properties
 
 Along with the methods listed above, the `OneShot` object has the following
