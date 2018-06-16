@@ -139,6 +139,11 @@ public:
 Plugins are supposed to implement this new API, and then be initialised via
 `KALEIDOSCOPE_INIT_PLUGINS`.
 
+#### Consumer_SNapshot
+
+A key with a typo in its name, which was left in place after fixing the typo, so
+as to not break any code that may be using it already, however unlikely.
+
 Deprecated and removed APIs
 ---------------------------
 
