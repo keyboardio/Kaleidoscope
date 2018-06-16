@@ -27,10 +27,15 @@ void setup() {
 }
 ```
 
-## Plugin methods
+## Plugin properties
 
-The plugin provides the `LEDBreatheEffect` object, which has no public methods or
-properties, outside of those provided by all LED modes.
+The plugin provides the `LEDBreatheEffect` object, which has a single property:
+
+### `.hue`
+
+> The hue of the breathe effect.
+>
+> Defaults to 170.
 
 ## Dependencies
 
