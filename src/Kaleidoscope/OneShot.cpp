@@ -130,6 +130,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
         saveAsPrevious(mapped_key);
         clearSticky(idx);
         cancelOneShot(idx);
+        should_cancel_ = false;
       }
     } else {
       if (keyToggledOff(keyState)) {
