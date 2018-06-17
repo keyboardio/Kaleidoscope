@@ -37,6 +37,13 @@ class StalkerEffect : public LEDMode {
   static uint16_t step_length;
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+
+#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
+  kaleidoscope::EventHandlerResult onSetup() {
+    return kaleidoscope::EventHandlerResult::OK;
+  }
+#endif
+
  protected:
   void onActivate(void) final;
   void update(void) final;
