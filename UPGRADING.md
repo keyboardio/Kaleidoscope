@@ -39,7 +39,7 @@ void setup() {
 }
 ```
 
-Previsouly, we used a global, overrideable function (`magicComboActions`) to run
+Previously, we used a global, overrideable function (`magicComboActions`) to run
 the actions of all magic combos, similar to how macros are set up to work.
 Unlike macros, magic combos can't be defined in the keymap, due to technical
 reasons, so we had to use a separate list - `magic_combos` in our example. We
