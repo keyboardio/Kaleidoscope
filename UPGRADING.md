@@ -71,13 +71,14 @@ If any of this does not make sense to you, or you have trouble updating your
 .ino sketch, do not hesitate to write us at help@keyboard.io, we can help you
 fix it.
 
-### Sheduled for removal by 2018-07-12
+### Sheduled for removal by 2018-08-20
 
 We aim at making a new release by mid-July, and APIs we deprecate now, will be
-removed shortly before the major release. We may deprecate further APIs during
-the next month (until mid-June), and those deprecations will share the same
-removal date. We will try our best to minimize deprecations, and do them as soon
-as possible, to give everyone at least a month to prepare and update.
+removed shortly after the major release, before the next point release. We may
+deprecate further APIs during the next month (until mid-June), and those
+deprecations will share the same removal date. We will try our best to minimize
+deprecations, and do them as soon as possible, to give everyone at least a month
+to prepare and update.
 
 #### Kaleidoscope.use()
 
