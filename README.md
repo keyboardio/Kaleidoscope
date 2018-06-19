@@ -2,8 +2,8 @@
 
 ![status][st:experimental] [![Build Status][travis:image]][travis:status]
 
- [travis:image]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukeys.svg?branch=master
- [travis:status]: https://travis-ci.org/gedankenlab/Kaleidoscope-Qukeys
+ [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Qukeys.svg?branch=master
+ [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Qukeys
 
  [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
@@ -18,19 +18,15 @@ one keycode (i.e. symbol) when tapped, and a different keycode -- most likely a 
 
 ## Setup
 
-- Clone the module -- In your sketch directory (e.g. `Model01-Firmware/`:
-```
-git submodule add https://github.com/gedankenlab/Kaleidoscope-Qukeys.git Kaleidoscope-Qukeys
-```
 - Include the header file:
 ```
 #include <Kaleidoscope-Qukeys.h>
 ```
-- Use the plugin in the `setup()` function:
+- Use the plugin in the `KALEIDOSCOPE_INIT_PLUGINS` macro:
 ```
-Kaleidoscope.use(&Qukeys);
+KALEIDOSCOPE_INIT_PLUGINS(Qukeys);
 ```
-- Define some `Qukeys`:
+- Define some `Qukeys` of the format `Qukey(layer, row, col, alt_keycode)` (layers, rows and columns are all zero-indexed, rows are top to bottom and columns are left to right):
 ```
 QUKEYS(
   kaleidoscope::Qukey(0, 2, 1, Key_LeftGui),      // A/cmd
@@ -55,7 +51,7 @@ likely to generate errors and out-of-order events.
 - activate/deactivate `Qukeys`
 
 - see the
-  [example](https://github.com/gedankenlab/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino)
+  [example](https://github.com/keyboardio/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino)
   for a way to turn `Qukeys` on and off, using Kaleidoscope-Macros
 
 ### DualUse key definitions
