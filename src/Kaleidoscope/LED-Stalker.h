@@ -40,6 +40,8 @@ class StalkerEffect : public LEDMode {
 
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
   kaleidoscope::EventHandlerResult onSetup() {
+    ::LEDControl.mode_add(this);
+
     return kaleidoscope::EventHandlerResult::OK;
   }
 #endif
