@@ -312,7 +312,8 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     }
     flushQueue(queue_index);
     flushQueue();
-    return EventHandlerResult::EVENT_CONSUMED;
+    mapped_key = getDualUsePrimaryKey(mapped_key);
+    return EventHandlerResult::OK;
   }
 
   // Otherwise, the key is still pressed
