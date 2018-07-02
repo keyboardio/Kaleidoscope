@@ -57,12 +57,49 @@ likely to generate errors and out-of-order events.
 ### DualUse key definitions
 
 In addition to normal `Qukeys` described above, Kaleidoscope-Qukeys also treats
-DualUse keys in the keymap as `Qukeys`. See [the Kaleidoscope-DualUse
-documentation](https://github.com/keyboardio/Kaleidoscope-DualUse#keymap-markup)
-for a thorough description of how to define DualUse keys. This makes `Qukeys` a
-drop-in replacement for the `DualUse` plugin, without the need to edit the
-keymap.
+DualUse keys in the keymap as `Qukeys`. This makes `Qukeys` a drop-in replacement 
+for the `DualUse` plugin, without the need to edit the keymap.
 
+	
+The plugin provides a number of macros one can use in keymap definitions:	
+	
+#### `CTL_T(key)`	
+	
+> A key that acts as the *left* `Control` when held, or used in conjunction with	
+> other keys, but as `key` when tapped in isolation. The `key` argument must be	
+> a plain old key, and can't have any modifiers or anything else applied.	
+	
+#### `ALT_T(key)`	
+	
+> A key that acts as the *left* `Alt` when held, or used in conjunction with	
+> other keys, but as `key` when tapped in isolation. The `key` argument must be	
+> a plain old key, and can't have any modifiers or anything else applied.	
+	
+#### `SFT_T(key)`	
+	
+> A key that acts as the *left* `Shift` when held, or used in conjunction with	
+> other keys, but as `key` when tapped in isolation. The `key` argument must be	
+> a plain old key, and can't have any modifiers or anything else applied.	
+	
+#### `GUI_T(key)`	
+	
+> A key that acts as the *left* `GUI` when held, or used in conjunction with	
+> other keys, but as `key` when tapped in isolation. The `key` argument must be	
+> a plain old key, and can't have any modifiers or anything else applied.	
+	
+#### `MT(mod, key)`	
+	
+> A key that acts as `mod` when held, or used in conjunction with other keys,	
+> but as `key` when tapped in isolation. The `key` argument must be a plain old	
+> key, and can't have any modifiers or anything else applied. The `mod` argument	
+> can be any of the modifiers, *left* or *right* alike.	
+	
+#### `LT(layer, key)`	
+	
+> A key that momentarily switches to `layer` when held, or used in conjunction	
+> with other keys, but as `key` when tapped in isolation. The `key` argument	
+> must be a plain old key, and can't have any modifiers or anything else	
+> applied.
 
 ## Design & Implementation
 
