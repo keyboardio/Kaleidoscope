@@ -47,9 +47,12 @@ void cycleAction(Key previous_key, uint8_t cycle_count) {
       Cycle.replace(Key_G);
     }
   }
-  if (previous_key.raw == Key_A.raw) {
+
+  bool is_shifted = previous_key.flags & SHIFT_HELD;
+  if (previous_key.keyCode == Key_A.keyCode && is_shifted)
+    cycleThrough(LSHIFT(Key_A), LSHIFT(Key_B), LSHIFT(Key_C), LSHIFT(Key_D));
+  if (previous_key.keyCode == Key_A.keyCode && !is_shifted)
     cycleThrough(Key_A, Key_B, Key_C, Key_D);
-  }
 }
 
 KALEIDOSCOPE_INIT_PLUGINS(Cycle);

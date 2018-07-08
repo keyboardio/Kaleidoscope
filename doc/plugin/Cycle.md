@@ -25,9 +25,11 @@ Key_Cycle
 
 // later in the Sketch:
 void cycleAction(Key previous_key, uint8_t cycle_count) {
-  if (previous_key.raw == Key_A.raw) {
-    cycleThrough (Key_B, Key_C, Key_D);
-  }
+  bool is_shifted = previous_key.flags & SHIFT_HELD;
+  if (previous_key.keyCode == Key_A.keyCode && is_shifted)
+      cycleThrough (LSHIFT(Key_A), LSHIFT(Key_B), LSHIFT(Key_C));
+  if (previous_key.keyCode == Key_A.keyCode && !is_shifted)
+      cycleThrough (Key_A, Key_B, Key_C);
 }
 
 KALEIDOSCOPE_INIT_PLUGINS(Cycle);
