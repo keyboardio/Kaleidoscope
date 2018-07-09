@@ -151,8 +151,8 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (paused)
     return kaleidoscope::EventHandlerResult::OK;
 
-  uint16_t current_time = millis();
-  if ((current_time - syncTimer) > syncDelay) {
+  uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - syncTimer;
+  if (elapsed > syncDelay) {
     syncLeds();
     syncTimer += syncDelay;
   }
