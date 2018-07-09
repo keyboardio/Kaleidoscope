@@ -9,6 +9,7 @@ class LEDBreatheEffect : public LEDMode {
   LEDBreatheEffect(void) {}
 
   uint8_t hue = 170;
+  uint8_t saturation = 255;
 
  protected:
   void update(void) final;
