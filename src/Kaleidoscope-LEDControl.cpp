@@ -151,7 +151,11 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (paused)
     return kaleidoscope::EventHandlerResult::OK;
 
+  // unsigned subtraction means that as syncTimer rolls over
+  // the same interval is kept
   uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - syncTimer;
+  // on some platforms, the subtraction in the comparison results in a signed
+  // operation, resulting in syncLeds() no longer getting called.
   if (elapsed > syncDelay) {
     syncLeds();
     syncTimer += syncDelay;
