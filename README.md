@@ -1,6 +1,6 @@
 # Kaleidoscope-Qukeys
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Qukeys.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Qukeys
@@ -46,59 +46,75 @@ likely to generate errors and out-of-order events.
 
 ## Configuration
 
-- set timeout
+### `.setTimeout(time_limit)`
 
-- activate/deactivate `Qukeys`
+> Sets the time length in milliseconds which determines if a key has been tapped or held.
+>
+> Defaults to 250.
 
-- see the
-  [example](https://github.com/keyboardio/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino)
-  for a way to turn `Qukeys` on and off, using Kaleidoscope-Macros
+### `.setReleaseDelay(release_delay)`
+
+> Sets the time length in milliseconds to artificially delay the release of the Qukey.
+>
+> This is to accommodate users who are in the habit of releasing modifiers and the keys
+> they modify (almost) simultaneously, since the Qukey may be detected as released
+> *slightly* before the other key, which would not trigger the desired alternate keycode.
+>
+> It is best to keep this a very small value such as 20 to avoid over-extending the
+> modifier to further keystrokes.
+>
+> Defaults to 0.
+
+### `.activate()`
+### `.deactivate()`
+### `.toggle()`
+
+> activate/deactivate `Qukeys`
 
 ### DualUse key definitions
 
 In addition to normal `Qukeys` described above, Kaleidoscope-Qukeys also treats
-DualUse keys in the keymap as `Qukeys`. This makes `Qukeys` a drop-in replacement 
+DualUse keys in the keymap as `Qukeys`. This makes `Qukeys` a drop-in replacement
 for the `DualUse` plugin, without the need to edit the keymap.
 
-	
-The plugin provides a number of macros one can use in keymap definitions:	
-	
-#### `CTL_T(key)`	
-	
-> A key that acts as the *left* `Control` when held, or used in conjunction with	
-> other keys, but as `key` when tapped in isolation. The `key` argument must be	
-> a plain old key, and can't have any modifiers or anything else applied.	
-	
-#### `ALT_T(key)`	
-	
-> A key that acts as the *left* `Alt` when held, or used in conjunction with	
-> other keys, but as `key` when tapped in isolation. The `key` argument must be	
-> a plain old key, and can't have any modifiers or anything else applied.	
-	
-#### `SFT_T(key)`	
-	
-> A key that acts as the *left* `Shift` when held, or used in conjunction with	
-> other keys, but as `key` when tapped in isolation. The `key` argument must be	
-> a plain old key, and can't have any modifiers or anything else applied.	
-	
-#### `GUI_T(key)`	
-	
-> A key that acts as the *left* `GUI` when held, or used in conjunction with	
-> other keys, but as `key` when tapped in isolation. The `key` argument must be	
-> a plain old key, and can't have any modifiers or anything else applied.	
-	
-#### `MT(mod, key)`	
-	
-> A key that acts as `mod` when held, or used in conjunction with other keys,	
-> but as `key` when tapped in isolation. The `key` argument must be a plain old	
-> key, and can't have any modifiers or anything else applied. The `mod` argument	
-> can be any of the modifiers, *left* or *right* alike.	
-	
-#### `LT(layer, key)`	
-	
-> A key that momentarily switches to `layer` when held, or used in conjunction	
-> with other keys, but as `key` when tapped in isolation. The `key` argument	
-> must be a plain old key, and can't have any modifiers or anything else	
+The plugin provides a number of macros one can use in keymap definitions:
+
+#### `CTL_T(key)`
+
+> A key that acts as the *left* `Control` when held, or used in conjunction with
+> other keys, but as `key` when tapped in isolation. The `key` argument must be
+> a plain old key, and can't have any modifiers or anything else applied.
+
+#### `ALT_T(key)`
+
+> A key that acts as the *left* `Alt` when held, or used in conjunction with
+> other keys, but as `key` when tapped in isolation. The `key` argument must be
+> a plain old key, and can't have any modifiers or anything else applied.
+
+#### `SFT_T(key)`
+
+> A key that acts as the *left* `Shift` when held, or used in conjunction with
+> other keys, but as `key` when tapped in isolation. The `key` argument must be
+> a plain old key, and can't have any modifiers or anything else applied.
+
+#### `GUI_T(key)`
+
+> A key that acts as the *left* `GUI` when held, or used in conjunction with
+> other keys, but as `key` when tapped in isolation. The `key` argument must be
+> a plain old key, and can't have any modifiers or anything else applied.
+
+#### `MT(mod, key)`
+
+> A key that acts as `mod` when held, or used in conjunction with other keys,
+> but as `key` when tapped in isolation. The `key` argument must be a plain old
+> key, and can't have any modifiers or anything else applied. The `mod` argument
+> can be any of the modifiers, *left* or *right* alike.
+
+#### `LT(layer, key)`
+
+> A key that momentarily switches to `layer` when held, or used in conjunction
+> with other keys, but as `key` when tapped in isolation. The `key` argument
+> must be a plain old key, and can't have any modifiers or anything else
 > applied.
 
 ## Design & Implementation
@@ -127,3 +143,9 @@ The time limit is mainly there so that a `Qukey` can be used as a modifier (in i
 alternate state) with a second input device (e.g. a mouse). It can be quite short (200ms
 is probably short enough) -- as long as your "taps" while typing are shorter than the time
 limit, you won't get any unintended alternate keycodes.
+
+## Further reading
+
+The [example][plugin:example] can help to learn how to use this plugin.
+
+ [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino
