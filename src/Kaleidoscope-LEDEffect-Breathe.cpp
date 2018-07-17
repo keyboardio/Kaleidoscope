@@ -2,7 +2,7 @@
 
 namespace kaleidoscope {
 void LEDBreatheEffect::update(void) {
-  cRGB color = breath_compute(hue);
+  cRGB color = breath_compute(hue, saturation);
   ::LEDControl.set_all_leds_to(color);
 }
 }

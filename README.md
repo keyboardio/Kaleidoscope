@@ -35,7 +35,13 @@ The plugin provides the `LEDBreatheEffect` object, which has a single property:
 
 > The hue of the breathe effect.
 >
-> Defaults to 170.
+> Defaults to 170, a blue hue.
+
+### `.saturation`
+
+> The color saturation of the breathe effect.
+>
+> Defaults to 255, the maximum.
 
 ## Dependencies
 
