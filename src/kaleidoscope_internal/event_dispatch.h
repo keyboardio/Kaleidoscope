@@ -22,6 +22,7 @@
 #include "kaleidoscope/hooks.h"
 #include "eventhandler_signature_check.h"
 #include "event_handlers.h"
+#include "storage.h"
 
 // Some words about the design of hook routing:
 //
@@ -108,6 +109,8 @@
   namespace kaleidoscope_internal {                                           __NL__ \
   struct EventDispatcher {                                                    __NL__ \
                                                                               __NL__ \
+    __KALEIDOSCOPE_INIT_STORAGE_PLUGINS(__VA_ARGS__)                          __NL__ \
+                                                                              __NL__ \
     /* Iterate through plugins, calling each one's event handler with      */ __NL__ \
     /* the arguments passed to the hook                                    */ __NL__ \
     template<typename EventHandler__, typename... Args__ >                    __NL__ \
@@ -130,4 +133,5 @@
   /*                                                                       */ __NL__ \
   /* TODO(anyone): Move this somewhere else, outside of _internal, once    */ __NL__ \
   /*               the V1 API is removed.                                  */ __NL__ \
-  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)
+  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)                            __NL__ \
+  _KALEIDOSCOPE_INIT_STORAGE_HANDLERS()
