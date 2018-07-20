@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include <EEPROM.h>
 
 namespace kaleidoscope {
 union Key;
@@ -42,28 +41,6 @@ class Hooks {
  public:
 
   static EventHandlerResult onStorageReport();
-
-  template<typename T>
-  T& getFromStorage(kaleidoscope::Plugin &plugin, uint16_t offset, T& t) {
-    uint16_t plugin_offset = getStorageOffset(plugin);
-    return EEPROM.get(plugin_offset + offset, t);
-  }
-
-  template<typename T>
-  T& getFromStorage(kaleidoscope::Plugin &plugin, T& t) {
-    return getFromStorage(plugin, 0, t);
-  }
-
-  template<typename T>
-  const T& putToStorage(kaleidoscope::Plugin &plugin, uint16_t offset, T& t) {
-    uint16_t plugin_offset = getStorageOffset(plugin);
-    return EEPROM.put(plugin_offset + offset, t);
-  }
-
-  template<typename T>
-  const T& putToStorage(kaleidoscope::Plugin &plugin, T& t) {
-    return putToStorage(plugin, 0, t);
-  }
 
   template<typename Plugin__>
   static uint16_t getStorageOffset(Plugin__ &plugin);
