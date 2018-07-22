@@ -12,11 +12,10 @@
 #define __KALEIDOSCOPE_INIT_STORAGE_PLUGINS(...)                                         __NL__ \
   /* Iterate through plugins, calling onStorageReport for each of them. */               __NL__ \
   template<typename EventHandler__, typename... Args__ >                                 __NL__ \
-  static kaleidoscope::EventHandlerResult                                                __NL__ \
+  static void                                                                            __NL__ \
   apply_storage(Args__&&... hook_args) {                                                 __NL__ \
     uint16_t current_offset = 0;                                                         __NL__ \
     MAP(_INLINE_STORAGE_HANDLER_FOR_PLUGIN, __VA_ARGS__)                                 __NL__ \
-    return kaleidoscope::EventHandlerResult::OK;                                         __NL__ \
   }                                                                                      __NL__ \
                                                                                          __NL__ \
   template<typename EventHandler__, typename Plugin__>                                   __NL__ \
