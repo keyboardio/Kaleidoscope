@@ -30,7 +30,7 @@
   namespace kaleidoscope_internal {                                                      __NL__ \
   struct EventHandler_onStorageReport {                                                  __NL__ \
     template<typename Plugin__>                                                          __NL__ \
-    static kaleidoscope::EventHandlerResult                                              __NL__ \
+    static void                                                                          __NL__ \
     call(Plugin__ &plugin, uint16_t offset) {                                            __NL__ \
       if (plugin.storageSize()) {                                                        __NL__ \
         Serial.print(plugin.name());                                                     __NL__ \
@@ -39,7 +39,6 @@
         Serial.print(" - ");                                                             __NL__ \
         Serial.println(offset + plugin.storageSize() - 1, DEC);                          __NL__ \
       }                                                                                  __NL__ \
-      return kaleidoscope::EventHandlerResult::OK;                                       __NL__ \
     }                                                                                    __NL__ \
   };                                                                                     __NL__ \
                                                                                          __NL__ \
@@ -53,14 +52,14 @@
   }                                                                                      __NL__ \
                                                                                          __NL__ \
   namespace kaleidoscope {                                                               __NL__ \
-    EventHandlerResult Hooks::onStorageReport() {                                        __NL__ \
-      return kaleidoscope_internal::EventDispatcher::template                            __NL__ \
-        apply_storage<kaleidoscope_internal::EventHandler_onStorageReport>();            __NL__ \
-    }                                                                                    __NL__ \
+  void Storage::report() {                                                               __NL__ \
+    kaleidoscope_internal::EventDispatcher::template                                     __NL__ \
+      apply_storage<kaleidoscope_internal::EventHandler_onStorageReport>();              __NL__ \
+  }                                                                                      __NL__ \
                                                                                          __NL__ \
-    template<typename Plugin__>                                                          __NL__ \
-    uint16_t Hooks::getStorageOffset(Plugin__ &plugin) {                                 __NL__ \
-      return kaleidoscope_internal::EventDispatcher::template                            __NL__ \
-        apply_offsetCount<kaleidoscope_internal::EventHandler_getStorageOffset>(plugin); __NL__ \
-    }                                                                                    __NL__ \
+  template<typename Plugin__>                                                            __NL__ \
+  uint16_t Storage::getOffset(Plugin__ &plugin) {                                        __NL__ \
+    return kaleidoscope_internal::EventDispatcher::template                              __NL__ \
+      apply_offsetCount<kaleidoscope_internal::EventHandler_getStorageOffset>(plugin);   __NL__ \
+  }                                                                                      __NL__ \
   }

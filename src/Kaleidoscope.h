@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include <EEPROM.h>
 
 //end of add your includes here
 #ifdef __cplusplus
@@ -30,6 +29,7 @@ void setup();
 #include "kaleidoscope_internal/deprecations.h"
 #include "macro_helpers.h"
 #include "plugin.h"
+#include "kaleidoscope/storage.h"
 
 #define HOOK_MAX 64
 
@@ -109,20 +109,6 @@ class Kaleidoscope_ {
   static uint32_t millisAtCycleStart() {
     return millis_at_cycle_start_;
   }
-
-  struct {
-    template<typename P, typename T>
-    T& get(P &plugin, T& t, uint16_t offset = 0) {
-      uint16_t plugin_offset = kaleidoscope::Hooks::getStorageOffset(plugin);
-      return EEPROM.get(plugin_offset + offset, t);
-    }
-
-    template<typename P, typename T>
-    const T& put(P &plugin, T& t, uint16_t offset = 0) {
-      uint16_t plugin_offset = kaleidoscope::Hooks::getStorageOffset(plugin);
-      return EEPROM.put(plugin_offset + offset, t);
-    }
-  } Storage;
 
   // ---- Kaleidoscope.use() ----
 

@@ -38,12 +38,7 @@ class Hooks {
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
                                      byte row, byte col, uint8_t keyState);
 
- public:
-
-  static EventHandlerResult onStorageReport();
-
-  template<typename Plugin__>
-  static uint16_t getStorageOffset(Plugin__ &plugin);
+ private:
 
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
