@@ -140,6 +140,11 @@ class Kaleidoscope_ {
     use(plugins...);
 #pragma GCC diagnostic pop
   }
+#else
+  // NOTE: Do **NOT** remove this when sunsetting the V1 API!
+  inline void use(...) {
+    static_assert(false, _DEPRECATE(_DEPRECATED_MESSAGE_USE));
+  }
 #endif
 
   // ---- hooks ----
