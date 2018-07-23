@@ -42,7 +42,7 @@ class EventHandlerBasePlugin {
 
   _FOR_EACH_EVENT_HANDLER(DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD)
 
-  const uint16_t storageSize() {
+  const uint16_t persistentDataSize() {
     return 0;
   }
 
