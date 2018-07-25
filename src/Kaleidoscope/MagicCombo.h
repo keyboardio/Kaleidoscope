@@ -51,13 +51,8 @@ class MagicCombo : public kaleidoscope::Plugin {
     uint32_t left_hand, right_hand;
 
     template <typename T>
-    struct always_false {
-      enum { value = false };
-    };
-
-    template <typename T>
     combo_t(T l, T r) {
-      static_assert(always_false<T>::value, _DEPRECATE(_MAGICCOMBO_API_CHANGE));
+      static_assert(sizeof(T) < 0, _DEPRECATE(_MAGICCOMBO_API_CHANGE));
     }
   } combo_t;
 
