@@ -142,8 +142,9 @@ class Kaleidoscope_ {
   }
 #else
   // NOTE: Do **NOT** remove this when sunsetting the V1 API!
-  inline void use(...) {
-    static_assert(false, _DEPRECATE(_DEPRECATED_MESSAGE_USE));
+  template <typename Plugin__>
+  inline void use(Plugin__ first, ...) {
+    static_assert(sizeof(Plugin__) < 0, _DEPRECATE(_DEPRECATED_MESSAGE_USE));
   }
 #endif
 
