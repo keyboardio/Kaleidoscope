@@ -9,6 +9,8 @@ namespace hid {
 
 extern void initializeKeyboard();
 
+extern void pressToggledOnKey(Key mappedKey);
+
 extern void pressKey(Key mappedKey);
 extern void releaseKey(Key mappedKey);
 extern void releaseAllKeys();
