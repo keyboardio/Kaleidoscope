@@ -103,14 +103,26 @@ int Keyboard_::sendReportUnchecked(void) {
 int Keyboard_::sendReport(void) {
   // ChromeOS 51-60 (at least) bug: if a modifier and a normal keycode are added in the
   // same report, in some cases the shift is not applied (e.g. `shift`+`[` doesn't yield
-  // `{`). To compensate for this, check to see if the modifier byte has changed. If so,
-  // copy the modifier byte to the previous key report, and resend it before proceeding.
-  if (lastKeyReport.modifiers != keyReport.modifiers) {
+  // `{`). To compensate for this, check to see if the modifier byte has changed. 
+
+
+  // If modifiers are being turned on, then we send the previous report with the new modifiers
+  if ( (lastKeyReport.modifiers ^ keyReport.modifiers) & keyReport.modifiers) {
     uint8_t last_mods = lastKeyReport.modifiers;
     lastKeyReport.modifiers = keyReport.modifiers;
     int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &lastKeyReport, sizeof(lastKeyReport));
     lastKeyReport.modifiers = last_mods;
   }
+
+  // If modifiers are being turned off, then we send the new report with the previous modifiers. 
+  else if ( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers) {
+    uint8_t mods = keyReport.modifiers;
+    keyReport.modifiers = lastKeyReport.modifiers;
+    int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(lastKeyReport));
+    keyReport.modifiers = mods;
+  } 
+
+
 
   // If the last report is different than the current report, then we need to send a report.
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
