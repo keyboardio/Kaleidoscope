@@ -294,6 +294,33 @@ void BootKeyboard_::releaseAll(void) {
   memset(&_keyReport.bytes, 0x00, sizeof(_keyReport.bytes));
 }
 
+
+/* Returns true if the non-modifer key passed in will be sent during this key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::isKeyPressed(uint8_t k) {
+    for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
+        if (_keyReport.keycodes[i] == k) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/* Returns true if the non-modifer key passed in was sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::wasKeyPressed(uint8_t k) {
+    for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
+        if (_lastKeyReport.keycodes[i] == k) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 /* Returns true if the modifer key passed in will be sent during this key report
  * Returns false in all other cases
  * */

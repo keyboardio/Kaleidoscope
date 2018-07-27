@@ -148,6 +148,31 @@ boolean Keyboard_::wasModifierActive(uint8_t k) {
   return false;
 }
 
+
+/* Returns true if the non-modifier key passed in will be sent during this key report
+ * Returns false in all other cases
+ * */
+boolean Keyboard_::isKeyPressed(uint8_t k) {
+    if (k <= HID_LAST_KEY) {
+        uint8_t bit = 1 << (uint8_t(k) % 8);
+        return !! (keyReport.keys[k / 8] & bit);
+    }
+    return false;
+}
+
+/* Returns true if the non-modifer key passed in was sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean Keyboard_::wasKeyPressed(uint8_t k) {
+
+    if (k <= HID_LAST_KEY) {
+        uint8_t bit = 1 << (uint8_t(k) % 8);
+        return !! (lastKeyReport.keys[k / 8] & bit);
+    }
+    return false;
+}
+
+
 size_t Keyboard_::press(uint8_t k) {
   // If the key is in the range of 'printable' keys
   if (k <= HID_LAST_KEY) {

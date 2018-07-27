@@ -56,6 +56,8 @@ class Keyboard_ {
   void  releaseAll(void);
   int sendReport(void);
 
+  boolean isKeyPressed(uint8_t k);
+  boolean wasKeyPressed(uint8_t k);
   boolean isModifierActive(uint8_t k);
   boolean wasModifierActive(uint8_t k);
 
