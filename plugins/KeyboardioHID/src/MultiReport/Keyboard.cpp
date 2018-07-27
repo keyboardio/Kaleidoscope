@@ -109,8 +109,7 @@ int Keyboard_::sendReport(void) {
     uint8_t last_mods = lastKeyReport.modifiers;
     lastKeyReport.modifiers = keyReport.modifiers;
     int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &lastKeyReport, sizeof(lastKeyReport));
-    if (returnCode < 0)
-      lastKeyReport.modifiers = last_mods;
+    lastKeyReport.modifiers = last_mods;
   }
 
   // If the last report is different than the current report, then we need to send a report.
