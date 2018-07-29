@@ -49,6 +49,17 @@ class Mouse_ {
   void end(void);
   void click(uint8_t b = MOUSE_LEFT);
   void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+  /** stop() stops mouse and/or mouse wheel movement in given directions.
+   *
+   * Counterpart of move(), this function allows us to undo whatever movement we
+   * were supposed to make. The intended use-case is one where we send multiple
+   * reports per cycle, and want greater control over them, when we don't want
+   * to clear the whole report, just parts of it.
+   *
+   * Any of the arguments that is set to true, will be cleared from the report
+   * to be sent by the next call to sendReport().
+   */
+  void stop(bool x, bool y, bool vWheel = false, bool hWheel = false);
   void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
   void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
   bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default

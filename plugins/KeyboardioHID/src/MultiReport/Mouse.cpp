@@ -93,6 +93,17 @@ void Mouse_::move(signed char x, signed char y, signed char vWheel, signed char 
   report.hWheel = hWheel;
 }
 
+void Mouse_::stop(bool x, bool y, bool vWheel, bool hWheel) {
+  if (x)
+    report.xAxis = 0;
+  if (y)
+    report.yAxis = 0;
+  if (vWheel)
+    report.vWheel = 0;
+  if (hWheel)
+    report.hWheel = 0;
+}
+
 void Mouse_::releaseAll(void) {
   memset(&report, 0, sizeof(report));
 }
