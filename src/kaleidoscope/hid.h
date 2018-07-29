@@ -35,6 +35,17 @@ extern void releaseSystemControl(Key mappedKey);
 extern void initializeMouse();
 
 extern void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+/** stopMouse() stops mouse and/or mouse wheel movement in given directions.
+ *
+ * Counterpart of moveMouse(), this function allows us to undo whatever movement
+ * we were supposed to make. The intended use-case is one where we send multiple
+ * reports per cycle, and want greater control over them, when we don't want to
+ * clear the whole report, just parts of it.
+ *
+ * Any of the arguments that is set to true, will be cleared from the report to
+ * be sent by the next call to sendMouseReport().
+ */
+extern void stopMouse(bool x, bool y, bool vWheel = false, bool hWheel = false);
 extern void clickMouseButtons(uint8_t buttons);
 extern void pressMouseButtons(uint8_t buttons);
 extern void releaseMouseButtons(uint8_t buttons);
