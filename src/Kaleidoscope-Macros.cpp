@@ -13,6 +13,7 @@ byte Macros_::row, Macros_::col;
 void playMacroKeyswitchEvent(Key key, uint8_t flags) {
   handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | flags);
   kaleidoscope::hid::sendKeyboardReport();
+  kaleidoscope::hid::sendMouseReport();
 }
 
 static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
