@@ -114,6 +114,34 @@ kaleidoscope::EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, by
       } else {
         mouseMoveIntent |= mappedKey.keyCode;
       }
+    } else if (keyToggledOff(keyState)) {
+        /* If a mouse key toggles off, we want to explicitly stop moving (or
+         * scrolling) in that direction. We want to do this to support use-cases
+         * where we send multiple reports per cycle (such as macros), and can't
+         * rely on the main loop clearing the report for us. We do not want to
+         * clear the whole report either, because we want any other mouse keys
+         * to still have their desired effect. Therefore, we selectively stop
+         * movement or scrolling. */
+        mouseMoveIntent &= ~mappedKey.keyCode;
+        bool x = false, y = false, vWheel = false, hWheel = false;
+
+        if (mappedKey.keyCode & KEY_MOUSE_UP ||
+            mappedKey.keyCode & KEY_MOUSE_DOWN) {
+          if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {
+            vWheel = true;
+          } else {
+            y = true;
+          }
+        } else if (mappedKey.keyCode & KEY_MOUSE_LEFT ||
+                   mappedKey.keyCode & KEY_MOUSE_RIGHT) {
+          if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {
+            hWheel = true;
+          } else {
+            x = true;
+          }
+        }
+
+        kaleidoscope::hid::stopMouse(x, y, vWheel, hWheel);
     }
   } else if (keyToggledOn(keyState)) {
     if (mappedKey.keyCode & KEY_MOUSE_WARP && mappedKey.flags & IS_MOUSE_KEY) {
