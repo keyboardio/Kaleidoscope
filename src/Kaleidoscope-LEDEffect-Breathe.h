@@ -13,6 +13,9 @@ class LEDBreatheEffect : public LEDMode {
 
  protected:
   void update(void) final;
+
+ private:
+  uint16_t last_update = 0;
 };
 }
 
