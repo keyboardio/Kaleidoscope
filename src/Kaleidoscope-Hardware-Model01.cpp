@@ -287,13 +287,7 @@ bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
 }
 
 uint8_t Model01::pressedKeyswitchCount() {
-  uint8_t count = 0;
-
-  for (uint8_t i = 0; i < 32; i++) {
-    count += bitRead(leftHandState.all, i) + bitRead(rightHandState.all, i);
-  }
-
-  return count;
+  return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
