@@ -26,13 +26,23 @@ one keycode (i.e. symbol) when tapped, and a different keycode -- most likely a 
 ```
 KALEIDOSCOPE_INIT_PLUGINS(Qukeys);
 ```
-- Define some `Qukeys` of the format `Qukey(layer, row, col, alt_keycode)` (layers, rows and columns are all zero-indexed, rows are top to bottom and columns are left to right):
+
+- Define some `Qukeys` of the format `Qukey(layer, row, col, alt_keycode)`
+  (layers, rows and columns are all zero-indexed, rows are top to bottom and
+  columns are left to right):
+
+- For the Keyboardio Model 01, key coordinates refer to [this header
+  file](https://github.com/keyboardio/Kaleidoscope-Hardware-Model01/blob/f469015346535cb864a340bf8eb317d268943248/src/Kaleidoscope-Hardware-Model01.h#L267-L279).
+
 ```
 QUKEYS(
+  //                  l, r, c, alt_keycode
   kaleidoscope::Qukey(0, 2, 1, Key_LeftGui),      // A/cmd
   kaleidoscope::Qukey(0, 2, 2, Key_LeftAlt),      // S/alt
   kaleidoscope::Qukey(0, 2, 3, Key_LeftControl),  // D/ctrl
-  kaleidoscope::Qukey(0, 2, 4, Key_LeftShift)     // F/shift
+  kaleidoscope::Qukey(0, 2, 4, Key_LeftShift),    // F/shift
+  kaleidoscope::Qukey(0, 1, 14, Key_LeftShift),   // P/shift
+  kaleidoscope::Qukey(0, 3, 15, Key_LeftShift)    // Minus/shift
 )
 ```
 
