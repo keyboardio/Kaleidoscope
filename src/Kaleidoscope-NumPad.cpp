@@ -15,8 +15,12 @@ kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
   return kaleidoscope::EventHandlerResult::OK;
 }
 
+static bool getNumlockState() {
+  return !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
+}
+
 static void syncNumlock(bool state) {
-  bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
+  bool numState = getNumlockState();
   if (numState != state) {
     kaleidoscope::hid::pressKey(Key_KeypadNumLock);
   }
@@ -24,16 +28,15 @@ static void syncNumlock(bool state) {
 
 kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
-    bool numState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
+    bool numState = getNumlockState();
     if (!cleanupDone) {
       LEDControl.set_mode(LEDControl.get_mode_index());
-      syncNumlock(false);
-      cleanupDone = true;
 
-      if (numState && !originalNumLockState) {
-        kaleidoscope::hid::pressKey(Key_KeypadNumLock);
+      if (!originalNumLockState) {
+        syncNumlock(false);
         numState = false;
       }
+      cleanupDone = true;
     }
     originalNumLockState = numState;
 
