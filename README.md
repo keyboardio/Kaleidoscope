@@ -242,6 +242,12 @@ properties available:
 > wheel shall scroll, and defaults to 1. The second, `.wheelDelay`, controls the
 > delay between two scroll events, and defaults to 50 milliseconds.
 
+### `.setSpeedLimit`
+
+> This method sets the maximum speed after which acceleration stops.
+> The default is 127, and the minimum value is 16 (things will not work
+> properly below 16).
+
 ### `.setWarpGridSize`
 
 > This method changes the size of the grid used for [warping](#warping). The

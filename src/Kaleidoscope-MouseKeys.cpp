@@ -23,6 +23,10 @@ void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
   MouseWrapper.warp_grid_size = grid_size;
 }
 
+void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
+  MouseWrapper.speedLimit = speed_limit;
+}
+
 void MouseKeys_::scrollWheel(uint8_t keyCode) {
   if (millis() < wheelEndTime)
     return;

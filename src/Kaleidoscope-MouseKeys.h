@@ -16,6 +16,7 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   static uint16_t wheelDelay;
 
   static void setWarpGridSize(uint8_t grid_size);
+  static void setSpeedLimit(uint8_t speed_limit);
 
   kaleidoscope::EventHandlerResult onSetup();
   kaleidoscope::EventHandlerResult beforeReportingState();
