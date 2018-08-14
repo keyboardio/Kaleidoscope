@@ -10,8 +10,9 @@ MacroKeyEvent Macros_::active_macros[];
 byte Macros_::active_macro_count;
 byte Macros_::row, Macros_::col;
 
-void playMacroKeyswitchEvent(Key key, uint8_t flags) {
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | flags);
+void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state) {
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, keyswitch_state | INJECTED );
+
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::sendMouseReport();
 }
