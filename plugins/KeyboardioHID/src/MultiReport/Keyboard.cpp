@@ -114,15 +114,6 @@ int Keyboard_::sendReport(void) {
     lastKeyReport.modifiers = last_mods;
   }
 
-  // If modifiers are being turned off, then we send the new report with the previous modifiers. 
-  else if ( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers) {
-    uint8_t mods = keyReport.modifiers;
-    keyReport.modifiers = lastKeyReport.modifiers;
-    int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(lastKeyReport));
-    keyReport.modifiers = mods;
-  } 
-
-
 
   // If the last report is different than the current report, then we need to send a report.
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
