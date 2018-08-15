@@ -28,6 +28,7 @@ namespace H = kaleidoscope::hostos;
 static bool appSwitchActive = false;
 
 const macro_t *macroAppSwitch(uint8_t keyState) {
+  appSwitchActive = true;
   Key mod = Key_LeftAlt;
 
   if (HostOS.os() == H::OSX)
