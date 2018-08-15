@@ -79,6 +79,7 @@ typedef kaleidoscope::Key Key_;
 #define RALT_HELD         B00000100
 #define SHIFT_HELD        B00001000
 #define GUI_HELD          B00010000
+// #define IS_MACRO       B00100000  // defined in Kaleidoscope-Macros/src/MacroKeyDefs.h
 #define SYNTHETIC         B01000000
 #define RESERVED          B10000000
 
