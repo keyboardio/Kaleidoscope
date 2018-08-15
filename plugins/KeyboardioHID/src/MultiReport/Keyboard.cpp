@@ -125,6 +125,10 @@ int Keyboard_::sendReport(void) {
   }
 
   // If modifiers are being turned off, then we send the new report with the previous modifiers. 
+  // We need to do this, at least on Linux 4.17 + Wayland. 
+  // Jesse has observed that sending Shift + 3 key up events in the same report
+  // will sometimes result in a spurious '3' rather than '#', especially when the keys
+  // had been held for a while
   else if (( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers)
 	&& (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
     uint8_t mods = keyReport.modifiers;
