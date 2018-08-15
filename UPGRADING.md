@@ -36,7 +36,7 @@ configuration changes between detach and attach - because we only sever the link
 between device and host, power remains connected, and the device does not
 reboot. A quick way to re-initialize the endpoints.
 
-See the [Kaleidoscope-USB-Quriks][plugin:USB-Quriks] plugin for a use-case.
+See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 
  [plugin:USB-Quirks]: https://github.com/keyboardio/Kaleidoscope-USB-Quirks
 
@@ -71,7 +71,7 @@ If any of this does not make sense to you, or you have trouble updating your
 .ino sketch, do not hesitate to write us at help@keyboard.io, we can help you
 fix it.
 
-### Sheduled for removal by 2018-08-20
+### Scheduled for removal by 2018-08-20
 
 We aim at making a new release by mid-July, and APIs we deprecate now, will be
 removed shortly after the major release, before the next point release. We may
