@@ -113,8 +113,11 @@ int Keyboard_::sendReport(void) {
   // `{`). To compensate for this, check to see if the modifier byte has changed. 
 
 
-  // If modifiers are being turned on, then we send the previous report with the new modifiers
-  if ( (lastKeyReport.modifiers ^ keyReport.modifiers) & keyReport.modifiers) {
+  // If modifiers are being turned on at the same time as any change 
+  // to the non-modifier keys in the report, then we send the previous 
+  // report with the new modifiers
+  if ( ( (lastKeyReport.modifiers ^ keyReport.modifiers) & keyReport.modifiers)
+	&& (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
     uint8_t last_mods = lastKeyReport.modifiers;
     lastKeyReport.modifiers = keyReport.modifiers;
     int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &lastKeyReport, sizeof(lastKeyReport));
@@ -122,7 +125,8 @@ int Keyboard_::sendReport(void) {
   }
 
   // If modifiers are being turned off, then we send the new report with the previous modifiers. 
-  else if ( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers) {
+  else if (( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers)
+	&& (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
     uint8_t mods = keyReport.modifiers;
     keyReport.modifiers = lastKeyReport.modifiers;
     int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(lastKeyReport));
