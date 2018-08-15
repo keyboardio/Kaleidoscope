@@ -1,8 +1,6 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Model01-TestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
-#include <avr/io.h>
-#include <avr/wdt.h>
 
 
 #define CHATTER_CYCLE_LIMIT 30
