@@ -161,16 +161,22 @@ Macro steps can be divided into two groups:
 
 ### Key events
 
-Key event steps have two variants: one that prefixes its argument with `Key_`,
-and one that does not. The latter are the `Dr`, `Ur`, and `Tr` variants. In most
-cases, one is likely to use normal keys for the steps, so the `D`, `U`, and `T`
-steps apply the `Key_` prefix. This allows us to write `MACRO(T(X))`
-instead of `MACRO(Tr(Key_X))` - making the macro definition shorter, and
-more readable.
+Key event steps have three variants: one that prefixes its argument with `Key_`,
+one that does not, and a third that allows for a more compact - but also more
+limited - representation. The first are the `D`, `U`, and `T` variants, the
+second are `Dr`, `Ur`, and `Tr`, and the last variant are `Dc`, `Uc`, and `Tc`.
+In most cases, one is likely use normal keys for the steps, so the `D`, `U`, and
+`T` steps apply the `Key_` prefix. This allows us to write `MACRO(T(X))` instead
+of `MACRO(Tr(Key_X))` - making the macro definition shorter, and more readable.
 
-* `D(key)`, `Dr(key)`: Simulates a key being pressed (pushed down).
-* `U(key)`, `Ur(key)`: Simulates a key being released (going up).
-* `T(key)`, `Tr(key)`: Simulates a key being tapped (pressed first, then released).
+The compact variant (`Dc`, `Uc`, and `Tc`) prefix the argument with `Key_` too,
+but unlike `D`, `U`, and `T`, they ignore the `flags` component of the key, and
+as such, are limited to ordinary keys. Mouse keys, consumer- or system keys are
+not supported by this compact representation.
+
+* `D(key)`, `Dr(key)`, `Dc(key)`: Simulates a key being pressed (pushed down).
+* `U(key)`, `Ur(key)`, `Uc(key)`: Simulates a key being released (going up).
+* `T(key)`, `Tr(key)`, `Tc(key)`: Simulates a key being tapped (pressed first, then released).
 
 ## Overrideable methods
 
