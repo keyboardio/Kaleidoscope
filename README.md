@@ -19,6 +19,8 @@ Playing back a sequence means that when we press a macro key, we can have it
 play pretty much any sequence. It can type some text for us, or invoke a
 complicated shortcut - the possibilities are endless!
 
+In Kaleidoscope, macros are implemented via this plugin. You can define upto 256 macros.
+
 ## Using the plugin
 
 To use the plugin, we need to include the header, tell the firmware to `use` the
@@ -74,11 +76,11 @@ void setup() {
 
 ### `M(id)`
 
-> Places a macro key on the keymap, with the `id` identifier. Whenever this key
+> Places a macro key on the keymap, with the `id` number (0 to 255) as identifier. Whenever this key
 > has to be handled, the `macroAction` overrideable function will be called,
 > with the identifier and key state as arguments.
 >
-> It is recommended to give a *name* to macros, by using an `enum`.
+> It is recommended to give a *name* to macro ids, by using an `enum`.
 
 ## Plugin methods
 
