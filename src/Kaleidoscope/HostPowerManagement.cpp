@@ -22,7 +22,7 @@
 
 // This is a terrible hack until Arduino#6964 gets implemented.
 // It makes the `_usbSuspendState` symbol available to us.
-extern u8 _usbSuspendState;
+extern uint8_t _usbSuspendState;
 
 namespace kaleidoscope {
 
@@ -30,6 +30,8 @@ bool HostPowerManagement::was_suspended_ = false;
 bool HostPowerManagement::initial_suspend_ = true;
 
 EventHandlerResult HostPowerManagement::beforeEachCycle() {
+
+#ifdef __AVR__
   if ((_usbSuspendState & (1 << SUSPI))) {
     if (!initial_suspend_) {
       if (!was_suspended_) {
@@ -47,6 +49,7 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
       hostPowerManagementEventHandler(Resume);
     }
   }
+#endif
 
   return EventHandlerResult::OK;
 }
