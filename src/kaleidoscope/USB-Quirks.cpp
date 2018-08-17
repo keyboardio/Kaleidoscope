@@ -21,6 +21,8 @@
 namespace kaleidoscope {
 
 void USBQuirks::toggleKeyboardProtocol() {
+
+#if KALEIDOSCOPE_HIDADAPTOR_ENABLE_KEYBOARD_BOOT_PROTOCOL
   uint8_t new_protocol = !BootKeyboard.getProtocol();
 
   Kaleidoscope.detachFromHost();
@@ -28,6 +30,8 @@ void USBQuirks::toggleKeyboardProtocol() {
   BootKeyboard.setProtocol(new_protocol);
   delay(1000);
   Kaleidoscope.attachToHost();
+#endif
+
 }
 
 }
