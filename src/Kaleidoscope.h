@@ -26,7 +26,6 @@ void setup();
 #include "layers.h"
 #include "macro_map.h"
 #include "kaleidoscope_internal/event_dispatch.h"
-#include "kaleidoscope_internal/deprecations.h"
 #include "macro_helpers.h"
 #include "plugin.h"
 
@@ -108,82 +107,6 @@ class Kaleidoscope_ {
   static uint32_t millisAtCycleStart() {
     return millis_at_cycle_start_;
   }
-
-  // ---- Kaleidoscope.use() ----
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  // First, we have the zero-argument version, which will satisfy the tail case.
-  inline void use() {
-  }
-
-  // Then, the one-argument version, that gives us type safety for a single
-  // plugin.
-  inline void DEPRECATED(USE) use(kaleidoscope::Plugin *p) {
-    p->begin();
-  }
-
-  // We have a no-op with a int argument, as a temporary hack until we remove
-  // the last instance of a NULL-terminated Kaleidoscope.use() call.
-  inline void use(int) {
-  }
-
-  // And the magic is in the last one, a template. The first parameter is
-  // matched out by the compiler, and passed to one of the functions above. The
-  // rest of the parameter pack (which may be an empty set in a recursive case),
-  // are passed back to either ourselves, or the zero-argument version a few
-  // lines above.
-  template <typename... Plugins>
-  void DEPRECATED(USE) use(kaleidoscope::Plugin *first, Plugins&&... plugins) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    use(first);
-    use(plugins...);
-#pragma GCC diagnostic pop
-  }
-#else
-  // NOTE: Do **NOT** remove this when sunsetting the V1 API!
-  template <typename Plugin__>
-  inline void use(Plugin__ first, ...) {
-    static_assert(sizeof(Plugin__) < 0, _DEPRECATE(_DEPRECATED_MESSAGE_USE));
-  }
-#endif
-
-  // ---- hooks ----
-
-  /*
-   * In most cases, one only wants a single copy of a hook. On the other hand,
-   * plugins that depend on other plugins, may want to make it easier for the
-   * end-user to use the plugin, and call the setup function of the dependent
-   * plugins too. In case the end-user calls the same setup function, we'd end up
-   * with hooks registered multiple times.
-   *
-   * To avoid this, protection against double-registration has been introduced.
-   * The `event_handler_hook_use` and `loop_hook_use` functions will only allow
-   * one copy of the hook. The `event_handler_hook_append` and `loop_hook_append`
-   * functions will, on the other hand, just append the hooks, and not care about
-   * protection.
-   */
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
-  typedef void (*loopHook)(bool postClear);
-
-  static eventHandlerHook eventHandlers[HOOK_MAX];
-  static loopHook loopHooks[HOOK_MAX];
-
-  static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook)
-  DEPRECATED(EVENT_HANDLER_HOOK);
-  static void appendEventHandlerHook(eventHandlerHook hook)
-  DEPRECATED(EVENT_HANDLER_HOOK);
-  static void useEventHandlerHook(eventHandlerHook hook)
-  DEPRECATED(EVENT_HANDLER_HOOK);
-
-  static void replaceLoopHook(loopHook oldHook, loopHook newHook)
-  DEPRECATED(LOOP_HOOK);
-  static void appendLoopHook(loopHook hook)
-  DEPRECATED(LOOP_HOOK);
-  static void useLoopHook(loopHook hook)
-  DEPRECATED(LOOP_HOOK);
-#endif
 
   static bool focusHook(const char *command);
 

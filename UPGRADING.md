@@ -71,7 +71,10 @@ If any of this does not make sense to you, or you have trouble updating your
 .ino sketch, do not hesitate to write us at help@keyboard.io, we can help you
 fix it.
 
-### Scheduled for removal by 2018-08-20
+Deprecated and removed APIs
+---------------------------
+
+### Removed on 2018-08-20
 
 We aim at making a new release by mid-July, and APIs we deprecate now, will be
 removed shortly after the major release, before the next point release. We may
@@ -144,9 +147,6 @@ Plugins are supposed to implement this new API, and then be initialised via
 
 A key with a typo in its name, which was left in place after fixing the typo, so
 as to not break any code that may be using it already, however unlikely.
-
-Deprecated and removed APIs
----------------------------
 
 ### Removed on 2018-06-10 (originally scheduled for 2018-05-27)
 
