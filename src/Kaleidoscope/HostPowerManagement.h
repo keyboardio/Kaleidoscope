@@ -40,16 +40,6 @@ class HostPowerManagement : public kaleidoscope::Plugin {
 
   EventHandlerResult beforeEachCycle();
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   static bool was_suspended_;
   static bool initial_suspend_;

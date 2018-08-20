@@ -54,20 +54,6 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void HostPowerManagement::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void HostPowerManagement::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
-  ::HostPowerManagement.beforeEachCycle();
-}
-#endif
-
 }
 
 __attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
