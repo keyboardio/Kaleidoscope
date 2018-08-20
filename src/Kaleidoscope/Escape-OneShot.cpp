@@ -37,21 +37,6 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, by
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void EscapeOneShot::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key EscapeOneShot::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t keyState) {
-  EventHandlerResult r = ::EscapeOneShot.onKeyswitchEvent(mapped_key, row, col, keyState);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
-
 }
 
 kaleidoscope::EscapeOneShot EscapeOneShot;
