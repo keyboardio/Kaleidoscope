@@ -61,21 +61,6 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-// Legacy API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void ActiveModColorEffect::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void ActiveModColorEffect::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
-  ::ActiveModColorEffect.beforeReportingState();
-}
-#endif
-
-
 }
 
 kaleidoscope::ActiveModColorEffect ActiveModColorEffect;
