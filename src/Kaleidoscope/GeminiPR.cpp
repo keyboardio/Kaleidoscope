@@ -47,21 +47,6 @@ EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, byte row, byte co
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-// Legacy V1 API
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void GeminiPR::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key GeminiPR::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::GeminiPR.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 }
 }
 
