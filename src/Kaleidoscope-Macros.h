@@ -57,17 +57,6 @@ class Macros_ : public kaleidoscope::Plugin {
 
   static byte row, col;
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   Key lookupAsciiCode(uint8_t ascii_code);
 };

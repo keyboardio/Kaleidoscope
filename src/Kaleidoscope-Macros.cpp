@@ -218,27 +218,4 @@ kaleidoscope::EventHandlerResult Macros_::beforeReportingState() {
   return kaleidoscope::EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void Macros_::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key Macros_::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  kaleidoscope::EventHandlerResult r = Macros.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == kaleidoscope::EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void Macros_::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear) {
-    Macros.afterEachCycle();
-  } else {
-    Macros.beforeReportingState();
-  }
-}
-#endif
-
 Macros_ Macros;
