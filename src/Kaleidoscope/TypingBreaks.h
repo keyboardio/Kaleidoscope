@@ -41,16 +41,6 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
-
  private:
   static uint32_t session_start_time_;
   static uint32_t lock_start_time_;

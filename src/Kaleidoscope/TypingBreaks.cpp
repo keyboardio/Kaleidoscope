@@ -190,21 +190,6 @@ bool TypingBreaks::focusHook(const char *command) {
   return true;
 }
 
-// Legacy V1 API
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void TypingBreaks::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key TypingBreaks::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::TypingBreaks.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 }
 
 kaleidoscope::TypingBreaks TypingBreaks;
