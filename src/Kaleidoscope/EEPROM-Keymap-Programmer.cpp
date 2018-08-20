@@ -107,20 +107,6 @@ bool EEPROMKeymapProgrammer::focusHook(const char *command) {
   return true;
 }
 
-// Legacy API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void EEPROMKeymapProgrammer::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key EEPROMKeymapProgrammer::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::EEPROMKeymapProgrammer.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 }
 
 kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
