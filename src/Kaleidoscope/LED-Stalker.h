@@ -38,22 +38,9 @@ class StalkerEffect : public LEDMode {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    ::LEDControl.mode_add(this);
-
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-#endif
-
  protected:
   void onActivate(void) final;
   void update(void) final;
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void setup(void) final;
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
 
  private:
   static uint16_t step_start_time_;

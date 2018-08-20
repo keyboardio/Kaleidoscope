@@ -139,20 +139,6 @@ cRGB Rainbow::compute(uint8_t *step) {
 
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void StalkerEffect::setup(void) {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key StalkerEffect::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::StalkerEffect.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 }
 
 kaleidoscope::StalkerEffect StalkerEffect;
