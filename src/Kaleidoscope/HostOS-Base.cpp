@@ -71,12 +71,5 @@ bool Base::focusHook(const char *command) {
   return true;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void Base::begin() {
-  ::HostOS.onSetup();
-}
-#endif
-
 }
 }

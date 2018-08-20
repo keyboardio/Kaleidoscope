@@ -45,10 +45,6 @@ class Base : public kaleidoscope::Plugin {
   virtual void autoDetect(void) {}
   Type os_;
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void begin();
-#endif
-
  private:
   uint16_t eeprom_slice_;
   bool is_configured_ = false;
