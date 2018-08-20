@@ -81,20 +81,6 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, 
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-// Deprecated v1 API
-void Cycle::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key Cycle::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::Cycle.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 };
 
 __attribute__((weak))
