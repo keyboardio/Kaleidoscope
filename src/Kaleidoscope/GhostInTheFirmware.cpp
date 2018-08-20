@@ -70,20 +70,6 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void GhostInTheFirmware::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void GhostInTheFirmware::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
-  ::GhostInTheFirmware.beforeReportingState();
-}
-#endif
-
 };
 
 kaleidoscope::GhostInTheFirmware GhostInTheFirmware;
