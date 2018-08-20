@@ -43,16 +43,6 @@ class Syster : public kaleidoscope::Plugin {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
-
  private:
   static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
   static uint8_t symbol_pos_;
