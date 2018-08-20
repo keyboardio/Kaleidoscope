@@ -53,19 +53,6 @@ EventHandlerResult MagicCombo::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void MagicCombo::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void MagicCombo::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-  ::MagicCombo.beforeReportingState();
-}
-#endif
-
 };
 
 kaleidoscope::MagicCombo MagicCombo;
