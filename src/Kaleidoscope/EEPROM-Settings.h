@@ -39,11 +39,6 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static uint16_t crc(void);
   static uint16_t used(void);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
- protected:
-  void begin();
-#endif
-
  private:
   static uint16_t next_start_;
   static bool is_valid_;

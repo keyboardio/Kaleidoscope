@@ -98,13 +98,6 @@ void EEPROMSettings::version(uint8_t ver) {
   update();
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void EEPROMSettings::begin() {
-  ::EEPROMSettings.onSetup();
-}
-#endif
-
 }
 
 kaleidoscope::EEPROMSettings EEPROMSettings;
