@@ -31,12 +31,6 @@ class CycleTimeReport : public kaleidoscope::Plugin {
 
   static uint32_t average_loop_time;
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
- protected:
-  void begin();
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   static uint32_t next_report_time_;
   static uint32_t loop_start_time_;

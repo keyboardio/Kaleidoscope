@@ -51,20 +51,6 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-// Deprecated V1 APIs
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void CycleTimeReport::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void CycleTimeReport::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    ::CycleTimeReport.afterEachCycle();
-  else
-    ::CycleTimeReport.beforeEachCycle();
-}
-#endif
-
 }
 
 __attribute__((weak)) void cycleTimeReport(void) {
