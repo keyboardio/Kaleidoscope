@@ -20,12 +20,6 @@ kaleidoscope::EventHandlerResult LEDMode::onSetup() {
   return EventHandlerResult::OK;
 }
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void LEDMode::begin() {
-  onSetup();
-}
-#endif
-
 LEDControl::LEDControl(void) {
   mode = 0;
   memset(modes, 0, LED_MAX_MODES * sizeof(modes[0]));
@@ -257,29 +251,6 @@ bool LEDControl::focusHook(const char *command) {
 
   return true;
 }
-
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void LEDControl::begin() {
-  ::LEDControl.onSetup();
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key LEDControl::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::LEDControl.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void LEDControl::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-  ::LEDControl.beforeReportingState();
-}
-#endif
-
 
 }
 

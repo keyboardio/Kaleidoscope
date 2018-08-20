@@ -82,10 +82,6 @@ class LEDMode : public kaleidoscope::Plugin {
    * necessary initialization steps. Calls @ref setup at the end.
    */
   kaleidoscope::EventHandlerResult onSetup();
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void begin();
-#endif
 };
 
 class LEDControl : public kaleidoscope::Plugin {
@@ -135,13 +131,6 @@ class LEDControl : public kaleidoscope::Plugin {
   kaleidoscope::EventHandlerResult onSetup();
   kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
   kaleidoscope::EventHandlerResult beforeReportingState();
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void legacyLoopHook(bool is_post_clear);
-#endif
 
  private:
   static uint16_t syncTimer;
