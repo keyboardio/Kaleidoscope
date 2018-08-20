@@ -268,29 +268,6 @@ void OneShot::cancel(bool with_stickies) {
   should_cancel_stickies_ = with_stickies;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void OneShot::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key OneShot::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::OneShot.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void OneShot::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear) {
-    ::OneShot.afterEachCycle();
-  } else {
-    ::OneShot.beforeReportingState();
-  }
-}
-#endif
-
 }
 
 kaleidoscope::OneShot OneShot;

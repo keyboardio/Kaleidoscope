@@ -57,17 +57,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   void inject(Key mapped_key, uint8_t key_state);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   typedef union {
     struct {
