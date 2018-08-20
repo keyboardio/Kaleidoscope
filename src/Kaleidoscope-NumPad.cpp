@@ -75,18 +75,4 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   return kaleidoscope::EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void NumPad_::begin() {
-  onSetup();
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void NumPad_::legacyLoopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-  NumPad.afterEachCycle();
-}
-#endif
-
 NumPad_ NumPad;

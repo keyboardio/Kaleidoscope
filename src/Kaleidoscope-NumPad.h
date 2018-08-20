@@ -15,12 +15,6 @@ class NumPad_ : public kaleidoscope::Plugin {
   kaleidoscope::EventHandlerResult onSetup(void);
   kaleidoscope::EventHandlerResult afterEachCycle();
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
- protected:
-  void begin();
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   static byte row, col;
   static bool cleanupDone;
