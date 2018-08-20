@@ -37,12 +37,6 @@ class Heatmap : public LEDMode {
  protected:
   void update(void) final;
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   static uint16_t heatmap_[ROWS][COLS];
   static uint16_t highest_;

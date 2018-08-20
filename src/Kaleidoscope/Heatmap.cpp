@@ -198,28 +198,6 @@ void Heatmap::update(void) {
   }
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void Heatmap::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key Heatmap::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::HeatmapEffect.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void Heatmap::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
-  ::HeatmapEffect.beforeEachCycle();
-}
-#endif
-
 }
 
 kaleidoscope::Heatmap HeatmapEffect;
