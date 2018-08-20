@@ -48,13 +48,6 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
- protected:
-  void begin() {
-    onSetup();
-  }
-#endif
-
  private:
   static uint16_t palette_base_;
 };
