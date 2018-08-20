@@ -30,21 +30,8 @@ class AlphaSquareEffect : public LEDMode {
 
   EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    ::LEDControl.mode_add(this);
-
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-#endif
-
  protected:
   void update(void) final;
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void setup(void) final;
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
 
  private:
   static uint32_t end_time_left_, end_time_right_;

@@ -68,20 +68,6 @@ EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row,
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void AlphaSquareEffect::setup(void) {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-}
-
-Key AlphaSquareEffect::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::AlphaSquareEffect.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-#endif
-
 }
 
 kaleidoscope::AlphaSquareEffect AlphaSquareEffect;
