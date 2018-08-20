@@ -10,20 +10,6 @@
 #define RELEASED 0
 
 
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void TestMode_::begin(void) {
-  Kaleidoscope.useLoopHook(this->legacyLoopHook);
-}
-
-void TestMode_::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-
-  TestMode.beforeReportingState();
-}
-#endif
-
 kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
   if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
       KeyboardHardware.isKeyswitchPressed(R0C6) &&
