@@ -155,28 +155,6 @@ EventHandlerResult Leader::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void Leader::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key Leader::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::Leader.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void Leader::legacyLoopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-
-  ::Leader.afterEachCycle();
-}
-#endif
-
 }
 
 kaleidoscope::Leader Leader;
