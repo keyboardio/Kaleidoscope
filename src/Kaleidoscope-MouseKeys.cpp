@@ -166,28 +166,4 @@ kaleidoscope::EventHandlerResult MouseKeys_::onSetup(void) {
   return kaleidoscope::EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void MouseKeys_::begin() {
-  onSetup();
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key MouseKeys_::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  kaleidoscope::EventHandlerResult r = MouseKeys.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == kaleidoscope::EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void MouseKeys_::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear) {
-    MouseKeys.afterEachCycle();
-  } else {
-    MouseKeys.beforeReportingState();
-  }
-}
-#endif
-
 MouseKeys_ MouseKeys;
