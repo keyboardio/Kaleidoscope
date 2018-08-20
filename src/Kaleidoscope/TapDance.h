@@ -49,17 +49,6 @@ class TapDance : public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
   EventHandlerResult afterEachCycle();
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-
- protected:
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-  static void legacyLoopHook(bool is_post_clear);
-#endif
-
  private:
   static uint32_t end_time_;
   static uint8_t tap_count_[16];

@@ -222,29 +222,6 @@ EventHandlerResult TapDance::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void TapDance::begin() {
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key TapDance::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::TapDance.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void TapDance::legacyLoopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-
-  ::TapDance.afterEachCycle();
-}
-#endif
-
 }
 
 __attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
