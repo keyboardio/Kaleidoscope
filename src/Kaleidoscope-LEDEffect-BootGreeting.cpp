@@ -86,19 +86,6 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void BootGreetingEffect::begin() {
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-void BootGreetingEffect::legacyLoopHook(bool is_post_clear) {
-  if (!is_post_clear)
-    return;
-  ::BootGreetingEffect.afterEachCycle();
-}
-#endif
-
 }
 
 kaleidoscope::BootGreetingEffect BootGreetingEffect;
