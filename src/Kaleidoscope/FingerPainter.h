@@ -35,11 +35,6 @@ class FingerPainter : public LEDMode {
   void update(void) final;
   void refreshAt(byte row, byte col) final;
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void begin();
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
-
  private:
   static uint16_t color_base_;
   static bool edit_mode_;
