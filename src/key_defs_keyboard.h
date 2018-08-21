@@ -1,3 +1,19 @@
+/* Kaleidoscope - Firmware for computer input devices
+ * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 // Keyboard HID mappings
@@ -224,5 +240,3 @@
 #define Key_RightShift (Key) { HID_KEYBOARD_RIGHT_SHIFT, KEY_FLAGS }
 #define Key_RightAlt (Key) { HID_KEYBOARD_RIGHT_ALT, KEY_FLAGS }
 #define Key_RightGui (Key) { HID_KEYBOARD_RIGHT_GUI, KEY_FLAGS }
-
-
