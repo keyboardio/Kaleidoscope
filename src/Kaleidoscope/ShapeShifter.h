@@ -22,7 +22,7 @@
 
 namespace kaleidoscope {
 
-class ShapeShifter : public KaleidoscopePlugin {
+class ShapeShifter : public kaleidoscope::Plugin {
  public:
   typedef struct {
     Key original, replacement;
