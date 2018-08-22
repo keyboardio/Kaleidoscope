@@ -25,7 +25,7 @@
 
 namespace kaleidoscope {
 
-class TopsyTurvy: public KaleidoscopePlugin {
+class TopsyTurvy: public kaleidoscope::Plugin {
  public:
   TopsyTurvy(void) {}
 
