@@ -41,3 +41,10 @@ By making a contribution to this project, I certify that:
     maintained indefinitely and may be redistributed consistent with
     this project or the open source license(s) involved.
 ```
+
+## Sign your work
+
+To accept the DCO, please add this line to each commit message with your name
+and email address (`git commit -s` will do this for you):
+
+    Signed-off-by: Jane Example <jane@example.com>
