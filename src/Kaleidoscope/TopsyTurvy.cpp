@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TopsyTurvy -- Turn the effect of Shift upside down for certain keys
- * Copyright (C) 2017, 2018  Gergely Nagy
+ * Copyright (C) 2017, 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
