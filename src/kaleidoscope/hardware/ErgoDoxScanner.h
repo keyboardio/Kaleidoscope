@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018  Gergely Nagy
+ * Copyright (C) 2018  Keyboard.io, Inc
  *
  * Based on QMK (commit 8cdb4a915)
  *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
