@@ -1,5 +1,7 @@
 /*
 Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2015-2018 Keyboard.io, Inc
+
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -110,11 +112,11 @@ int Keyboard_::sendReport(void) {
 
   // ChromeOS 51-60 (at least) bug: if a modifier and a normal keycode are added in the
   // same report, in some cases the shift is not applied (e.g. `shift`+`[` doesn't yield
-  // `{`). To compensate for this, check to see if the modifier byte has changed. 
+  // `{`). To compensate for this, check to see if the modifier byte has changed.
 
 
-  // If modifiers are being turned on at the same time as any change 
-  // to the non-modifier keys in the report, then we send the previous 
+  // If modifiers are being turned on at the same time as any change
+  // to the non-modifier keys in the report, then we send the previous
   // report with the new modifiers
   if ( ( (lastKeyReport.modifiers ^ keyReport.modifiers) & keyReport.modifiers)
 	&& (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
@@ -124,8 +126,8 @@ int Keyboard_::sendReport(void) {
     lastKeyReport.modifiers = last_mods;
   }
 
-  // If modifiers are being turned off, then we send the new report with the previous modifiers. 
-  // We need to do this, at least on Linux 4.17 + Wayland. 
+  // If modifiers are being turned off, then we send the new report with the previous modifiers.
+  // We need to do this, at least on Linux 4.17 + Wayland.
   // Jesse has observed that sending Shift + 3 key up events in the same report
   // will sometimes result in a spurious '3' rather than '#', especially when the keys
   // had been held for a while
@@ -135,7 +137,7 @@ int Keyboard_::sendReport(void) {
     keyReport.modifiers = lastKeyReport.modifiers;
     int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(lastKeyReport));
     keyReport.modifiers = mods;
-  } 
+  }
 
 
 

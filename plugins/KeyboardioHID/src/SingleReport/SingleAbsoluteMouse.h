@@ -1,5 +1,7 @@
 /*
 Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2015-2018 Keyboard.io, Inc
+
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -43,13 +45,11 @@ protected:
     int getInterface(uint8_t* interfaceCount);
     int getDescriptor(USBSetup& setup);
     bool setup(USBSetup& setup);
-    
+
     uint8_t epType[1];
     uint8_t protocol;
     uint8_t idle;
-    
+
     virtual inline void sendReport(void* data, int length) override;
 };
 extern SingleAbsoluteMouse_ SingleAbsoluteMouse;
-
-
