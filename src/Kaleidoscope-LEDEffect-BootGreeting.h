@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LEDEffect-BootGreeting -- Small greeting at boot time
- * Copyright (C) 2017, 2018  Gergely Nagy
+ * Copyright (C) 2017, 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
