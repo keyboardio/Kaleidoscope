@@ -45,17 +45,16 @@ void NumPad_::syncNumlockState(bool state) {
 
 
 void NumPad_::cleanupNumlockState() {
-  bool numLockLEDState = getNumlockState();
   if (!cleanupDone) {
+    bool numLockLEDState = getNumlockState();
     LEDControl.set_mode(LEDControl.get_mode_index());
-
     if (!originalNumLockState) {
       syncNumlockState(false);
       numLockLEDState = false;
     }
     cleanupDone = true;
+    originalNumLockState = numLockLEDState;
   }
-  originalNumLockState = numLockLEDState;
 
 }
 
