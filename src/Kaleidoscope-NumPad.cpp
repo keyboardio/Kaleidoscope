@@ -27,15 +27,15 @@ cRGB NumPad_::color = CRGB(160, 0, 0);
 uint8_t NumPad_::lock_hue = 170;
 
 kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
-  originalNumLockState = !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
+  originalNumLockState = getNumlockState();
   return kaleidoscope::EventHandlerResult::OK;
 }
 
-static bool getNumlockState() {
+bool NumPad_::getNumlockState() {
   return !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
 }
 
-static void syncNumlock(bool state) {
+void NumPad_::syncNumlockState(bool state) {
   bool numLockLEDState = getNumlockState();
   if (numLockLEDState != state) {
     kaleidoscope::hid::pressKey(Key_KeypadNumLock);
@@ -50,7 +50,7 @@ void NumPad_::cleanupNumlockState() {
     LEDControl.set_mode(LEDControl.get_mode_index());
 
     if (!originalNumLockState) {
-      syncNumlock(false);
+      syncNumlockState(false);
       numLockLEDState = false;
     }
     cleanupDone = true;
@@ -91,14 +91,12 @@ void NumPad_::setKeyboardLEDColors(void) {
 kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
     cleanupNumlockState();
-    return kaleidoscope::EventHandlerResult::OK;
+  } else {
+    cleanupDone = false;
+    syncNumlockState(true);
+    setKeyboardLEDColors();
+
   }
-
-  cleanupDone = false;
-  syncNumlock(true);
-
-
-  setKeyboardLEDColors();
   return kaleidoscope::EventHandlerResult::OK;
 }
 
