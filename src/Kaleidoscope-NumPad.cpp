@@ -36,32 +36,30 @@ static bool getNumlockState() {
 }
 
 static void syncNumlock(bool state) {
-  bool numState = getNumlockState();
-  if (numState != state) {
+  bool numLockLEDState = getNumlockState();
+  if (numLockLEDState != state) {
     kaleidoscope::hid::pressKey(Key_KeypadNumLock);
   }
 }
 
-kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
-  if (!Layer.isOn(numPadLayer)) {
-    bool numState = getNumlockState();
-    if (!cleanupDone) {
-      LEDControl.set_mode(LEDControl.get_mode_index());
 
-      if (!originalNumLockState) {
-        syncNumlock(false);
-        numState = false;
-      }
-      cleanupDone = true;
+
+void NumPad_::cleanupNumlockState() {
+  bool numLockLEDState = getNumlockState();
+  if (!cleanupDone) {
+    LEDControl.set_mode(LEDControl.get_mode_index());
+
+    if (!originalNumLockState) {
+      syncNumlock(false);
+      numLockLEDState = false;
     }
-    originalNumLockState = numState;
-
-    return kaleidoscope::EventHandlerResult::OK;
+    cleanupDone = true;
   }
+  originalNumLockState = numLockLEDState;
 
-  cleanupDone = false;
-  syncNumlock(true);
+}
 
+void NumPad_::setKeyboardLEDColors(void) {
   LEDControl.set_mode(LEDControl.get_mode_index());
 
   for (uint8_t r = 0; r < ROWS; r++) {
@@ -82,12 +80,28 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
     }
   }
 
-  if ((numpad_lock_key_row > ROWS) || (numpad_lock_key_col > COLS)) {
+  if ((numpad_lock_key_row <= ROWS) && (numpad_lock_key_col <= COLS)) {
+
+
+    cRGB lock_color = breath_compute(lock_hue);
+    LEDControl.setCrgbAt(numpad_lock_key_row, numpad_lock_key_col, lock_color);
+  }
+}
+
+kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
+  if (!Layer.isOn(numPadLayer)) {
+    cleanupNumlockState();
     return kaleidoscope::EventHandlerResult::OK;
+  }
 
-  LEDControl.setCrgbAt(numpad_lock_key_row, numpad_lock_key_col, lock_color);
+  cleanupDone = false;
+  syncNumlock(true);
 
+
+  setKeyboardLEDColors();
   return kaleidoscope::EventHandlerResult::OK;
 }
+
+
 
 NumPad_ NumPad;

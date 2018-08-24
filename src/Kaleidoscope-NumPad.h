@@ -32,6 +32,10 @@ class NumPad_ : public kaleidoscope::Plugin {
   kaleidoscope::EventHandlerResult afterEachCycle();
 
  private:
+
+  void cleanupNumlockState(void);
+  void setKeyboardLEDColors(void);
+
   static uint8_t numpad_lock_key_row;
   static uint8_t numpad_lock_key_col;
   static bool cleanupDone;
