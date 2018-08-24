@@ -21,7 +21,7 @@
 
 byte NumPad_::numpad_lock_key_row = 255, NumPad_::numpad_lock_key_col = 255;
 uint8_t NumPad_::numPadLayer;
-bool NumPad_::cleanupDone = true;
+bool NumPad_::cleanupDone = false;
 bool NumPad_::originalNumLockState = false;
 cRGB NumPad_::color = CRGB(160, 0, 0);
 uint8_t NumPad_::lock_hue = 170;
@@ -52,8 +52,8 @@ void NumPad_::cleanupNumlockState() {
       syncNumlockState(false);
       numLockLEDState = false;
     }
-    cleanupDone = true;
     originalNumLockState = numLockLEDState;
+    cleanupDone = true;
   }
 
 }
@@ -90,10 +90,11 @@ void NumPad_::setKeyboardLEDColors(void) {
 kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
     cleanupNumlockState();
-  } else {
-    cleanupDone = false;
+  } else if (cleanupDone)  {
+    // If it's the first time we're in this loop after toggling the Numpad mode on
     syncNumlockState(true);
     setKeyboardLEDColors();
+    cleanupDone = false;
 
   }
   return kaleidoscope::EventHandlerResult::OK;
