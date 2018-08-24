@@ -73,7 +73,7 @@ find_sketch () {
             return
         fi
     done
-    echo "Couldn't find sketch (.ino file)" >&2
+    echo "I couldn't find your sketch (.ino file)" >&2
     exit 1
 }
 
@@ -83,7 +83,11 @@ prepare_to_flash () {
         size
     fi
 
-    echo "When ready, hold down PROG, and press ENTER. Keep holding PROG until flashing starts..."
+    echo "To update your keyboard's firmware, hold down the 'Prog' key on your keyboard,"
+    echo "and then press 'Enter'."
+    echo ""
+    echo "When the 'Prog' key glows red, you can release it."
+    echo ""
 
     # We do not want to permit line continuations here. We just want a newline.
     # shellcheck disable=SC2162
@@ -100,18 +104,23 @@ flash () {
     reset_device
     sleep 3s
     find_bootloader_ports
-    flash_over_usb || flash_over_usb
+    check_bootloader_port || ( flash_over_usb || flash_over_usb)
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
     ${postFlash_HOOKS}
 }
 
-flash_over_usb () {
+
+check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
-        echo 'DEVICE_PORT_BOOTLOADER is empty (did you hold "Prog" to enable bootloader mode?)' >&2
+        echo "Unable to detect a keyboard in bootloader mode. You may need to hold the 'Prog' key or hit a reset button"
         return 1
     fi
+
+}
+
+flash_over_usb () {
     sleep 1s
     ${AVRDUDE} -q -q -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
@@ -119,7 +128,7 @@ flash_over_usb () {
 flash_from_bootloader() {
     prepare_to_flash
     find_bootloader_ports
-    flash_over_usb || flash_over_usb
+    check_bootloader_port || ( flash_over_usb || flash_over_usb)
 }
 
 program() {
@@ -289,11 +298,13 @@ reset_device() {
 check_device_port () {
     if [ -z "$DEVICE_PORT" ]; then
         cat <<EOF >&2
-Couldn't autodetect the keyboard's serial port.
-If you see this message and your keyboard is connected to your computer,
-it probably means that our serial port detection logic is buggy or incomplete.
 
-Please report this issue at https://github.com/keyboardio/Kaleidoscope
+I couldn't autodetect the keyboard's serial port.
+
+If you see this message and your keyboard is connected to your computer,
+it may mean that our serial port detection logic is buggy or incomplete.
+In that case, please report this issue at:
+	 https://github.com/keyboardio/Kaleidoscope
 EOF
         exit 1
     elif echo "$DEVICE_PORT" | grep -q '[[:space:]]'; then
@@ -305,7 +316,8 @@ Unexpected whitespace found in detected serial port:
 If you see this message, it means that our serial port
 detection logic is buggy or incomplete.
 
-Please report this issue at https://github.com/keyboardio/Kaleidoscope
+Please report this issue at:
+	 https://github.com/keyboardio/Kaleidoscope
 EOF
         exit 1
     fi
