@@ -325,9 +325,16 @@ EOF
     if ! [ -w "$DEVICE_PORT" ]; then
         cat <<EOF >&2
 
-$DEVICE_PORT is not writable:
+In order to update your keyboard's firmware you need to have permission
+to write to its serial port $DEVICE_PORT. 
+
+It appears that you do not have this permission:
 
   $(ls -l "$DEVICE_PORT")
+
+This may be because you're not in the correct unix group: 
+
+  $(stat -c %G "$DEVICE_PORT").
 
 You are currently in the following groups:
 
