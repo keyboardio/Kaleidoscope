@@ -104,7 +104,7 @@ flash () {
     reset_device
     sleep 3s
     find_bootloader_ports
-    check_bootloader_port || ( flash_over_usb || flash_over_usb)
+    check_bootloader_port_and_flash
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -112,12 +112,12 @@ flash () {
 }
 
 
-check_bootloader_port () {
+check_bootloader_port_and_flash () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
         echo "Unable to detect a keyboard in bootloader mode. You may need to hold the 'Prog' key or hit a reset button"
         return 1
     fi
-
+    flash_over_usb || flash_over_usb
 }
 
 flash_over_usb () {
@@ -128,7 +128,7 @@ flash_over_usb () {
 flash_from_bootloader() {
     prepare_to_flash
     find_bootloader_ports
-    check_bootloader_port || ( flash_over_usb || flash_over_usb)
+    check_bootloader_port_and_flash 
 }
 
 program() {
