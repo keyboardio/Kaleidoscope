@@ -19,7 +19,7 @@
 #include "Kaleidoscope.h"
 #include "layers.h"
 
-byte NumPad_::row = 255, NumPad_::col = 255;
+byte NumPad_::numpad_lock_key_row = 255, NumPad_::numpad_lock_key_col = 255;
 uint8_t NumPad_::numPadLayer;
 bool NumPad_::cleanupDone = true;
 bool NumPad_::originalNumLockState = false;
@@ -70,8 +70,8 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
       if (k == LockLayer(numPadLayer)) {
-        row  = r;
-        col = c;
+        numpad_lock_key_row = r;
+        numpad_lock_key_col = c;
       }
 
       if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
@@ -82,11 +82,10 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
     }
   }
 
-  if (row > ROWS || col > COLS)
+  if ((numpad_lock_key_row > ROWS) || (numpad_lock_key_col > COLS)) {
     return kaleidoscope::EventHandlerResult::OK;
 
-  cRGB lock_color = breath_compute(lock_hue);
-  LEDControl.setCrgbAt(row, col, lock_color);
+  LEDControl.setCrgbAt(numpad_lock_key_row, numpad_lock_key_col, lock_color);
 
   return kaleidoscope::EventHandlerResult::OK;
 }

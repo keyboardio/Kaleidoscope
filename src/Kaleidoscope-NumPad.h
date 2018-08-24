@@ -32,7 +32,8 @@ class NumPad_ : public kaleidoscope::Plugin {
   kaleidoscope::EventHandlerResult afterEachCycle();
 
  private:
-  static byte row, col;
+  static uint8_t numpad_lock_key_row;
+  static uint8_t numpad_lock_key_col;
   static bool cleanupDone;
   static bool originalNumLockState;
 };
