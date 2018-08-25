@@ -40,7 +40,7 @@ class NumPad_ : public kaleidoscope::Plugin {
 
   static uint8_t numpad_lock_key_row;
   static uint8_t numpad_lock_key_col;
-  static bool cleanupDone;
+  static bool numlockUnsynced;
   static bool originalNumLockState;
 };
 
