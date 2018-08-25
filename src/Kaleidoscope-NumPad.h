@@ -32,8 +32,15 @@ class NumPad_ : public kaleidoscope::Plugin {
   kaleidoscope::EventHandlerResult afterEachCycle();
 
  private:
-  static byte row, col;
-  static bool cleanupDone;
+
+  void cleanupNumlockState(void);
+  void setKeyboardLEDColors(void);
+  bool getNumlockState(void);
+  void syncNumlockState(bool);
+
+  static uint8_t numpadLayerToggleKeyRow;
+  static uint8_t numpadLayerToggleKeyCol;
+  static bool numlockUnsynced;
   static bool originalNumLockState;
 };
 
