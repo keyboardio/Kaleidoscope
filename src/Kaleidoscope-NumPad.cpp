@@ -19,7 +19,7 @@
 #include "Kaleidoscope.h"
 #include "layers.h"
 
-byte NumPad_::numpad_lock_key_row = 255, NumPad_::numpad_lock_key_col = 255;
+byte NumPad_::numpadLayerToggleKeyRow = 255, NumPad_::numpadLayerToggleKeyCol = 255;
 uint8_t NumPad_::numPadLayer;
 bool NumPad_::numlockUnsynced = false;
 bool NumPad_::originalNumLockState = false;
@@ -67,8 +67,8 @@ void NumPad_::setKeyboardLEDColors(void) {
       Key layer_key = Layer.getKey(numPadLayer, r, c);
 
       if (k == LockLayer(numPadLayer)) {
-        numpad_lock_key_row = r;
-        numpad_lock_key_col = c;
+        numpadLayerToggleKeyRow = r;
+        numpadLayerToggleKeyCol = c;
       }
 
       if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
@@ -79,11 +79,11 @@ void NumPad_::setKeyboardLEDColors(void) {
     }
   }
 
-  if ((numpad_lock_key_row <= ROWS) && (numpad_lock_key_col <= COLS)) {
+  if ((numpadLayerToggleKeyRow <= ROWS) && (numpadLayerToggleKeyCol <= COLS)) {
 
 
     cRGB lock_color = breath_compute(lock_hue);
-    LEDControl.setCrgbAt(numpad_lock_key_row, numpad_lock_key_col, lock_color);
+    LEDControl.setCrgbAt(numpadLayerToggleKeyRow, numpadLayerToggleKeyCol, lock_color);
   }
 }
 

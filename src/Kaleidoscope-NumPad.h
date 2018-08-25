@@ -38,8 +38,8 @@ class NumPad_ : public kaleidoscope::Plugin {
   bool getNumlockState(void);
   void syncNumlockState(bool);
 
-  static uint8_t numpad_lock_key_row;
-  static uint8_t numpad_lock_key_col;
+  static uint8_t numpadLayerToggleKeyRow;
+  static uint8_t numpadLayerToggleKeyCol;
   static bool numlockUnsynced;
   static bool originalNumLockState;
 };
