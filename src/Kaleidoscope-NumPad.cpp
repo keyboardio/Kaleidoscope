@@ -90,12 +90,13 @@ void NumPad_::setKeyboardLEDColors(void) {
 kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
     cleanupNumlockState();
-  } else if (cleanupDone)  {
-    // If it's the first time we're in this loop after toggling the Numpad mode on
-    syncNumlockState(true);
+  } else {
+    if (cleanupDone)  {
+      // If it's the first time we're in this loop after toggling the Numpad mode on
+      syncNumlockState(true);
+      cleanupDone = false;
+    }
     setKeyboardLEDColors();
-    cleanupDone = false;
-
   }
   return kaleidoscope::EventHandlerResult::OK;
 }
