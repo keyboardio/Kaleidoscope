@@ -31,8 +31,8 @@ class TopsyTurvy: public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
 
  private:
-  static uint8_t mod_state_;
   static uint8_t last_pressed_position_;
+  static bool is_shifted_;
   static bool is_active_;
 };
 
