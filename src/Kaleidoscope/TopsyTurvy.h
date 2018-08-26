@@ -33,6 +33,7 @@ class TopsyTurvy: public kaleidoscope::Plugin {
  private:
   static uint8_t mod_state_;
   static uint8_t last_pressed_position_;
+  static bool is_active_;
 };
 
 }

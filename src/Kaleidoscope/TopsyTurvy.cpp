@@ -22,12 +22,19 @@ namespace kaleidoscope {
 
 uint8_t TopsyTurvy::mod_state_;
 uint8_t TopsyTurvy::last_pressed_position_;
+bool TopsyTurvy::is_active_;
 
 EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (mapped_key.raw == Key_LeftShift.raw)
+  if (mapped_key.raw == Key_LeftShift.raw) {
     bitWrite(mod_state_, 0, keyIsPressed(key_state));
-  if (mapped_key.raw == Key_RightShift.raw)
+    if (is_active_)
+      return EventHandlerResult::EVENT_CONSUMED;
+  }
+  if (mapped_key.raw == Key_RightShift.raw) {
     bitWrite(mod_state_, 1, keyIsPressed(key_state));
+    if (is_active_)
+      return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST) {
     if (keyToggledOn(key_state) && (mapped_key < Key_LeftControl || mapped_key > Key_RightGui)) {
@@ -45,6 +52,7 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     }
   }
 
+  is_active_ = keyIsPressed(key_state);
 
   // invert the shift state
   if (!mod_state_) {
