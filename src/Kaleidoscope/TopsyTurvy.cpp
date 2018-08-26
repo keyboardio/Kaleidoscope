@@ -34,9 +34,13 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
   if (mapped_key.raw == Key_RightShift.raw)
     bitWrite(mod_state_, 1, keyIsPressed(key_state));
 
+  if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST) {
+    if (keyToggledOn(key_state)) {
+      last_pressed_position_ = row * COLS + col;
+    }
 
-  if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST)
     return EventHandlerResult::OK;
+  }
 
   if (keyToggledOn(key_state)) {
     last_pressed_position_ = row * COLS + col;
