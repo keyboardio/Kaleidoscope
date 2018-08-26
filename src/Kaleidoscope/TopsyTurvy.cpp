@@ -18,17 +18,12 @@
 #include <Kaleidoscope-TopsyTurvy.h>
 #include "kaleidoscope/hid.h"
 
-#define TOPSYTURVY 0b01000000
-
 namespace kaleidoscope {
 
 uint8_t TopsyTurvy::mod_state_;
 uint8_t TopsyTurvy::last_pressed_position_;
 
 EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (key_state & TOPSYTURVY)
-    return EventHandlerResult::OK;
-
   if (mapped_key.raw == Key_LeftShift.raw)
     bitWrite(mod_state_, 0, keyIsPressed(key_state));
   if (mapped_key.raw == Key_RightShift.raw)
@@ -50,26 +45,20 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     }
   }
 
-  Key new_key = {.raw = mapped_key.raw - ranges::TT_FIRST};
-  if (new_key.raw == Key_NoKey.raw)
-    return EventHandlerResult::OK;
 
   // invert the shift state
   if (!mod_state_) {
     mapped_key.raw = mapped_key.raw - ranges::TT_FIRST;
     mapped_key.flags |= SHIFT_HELD;
     return EventHandlerResult::OK;
-  } else {
-    hid::releaseRawKey(Key_LeftShift);
-    hid::releaseRawKey(Key_RightShift);
-    hid::sendKeyboardReport();
-    handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
-    hid::sendKeyboardReport();
+  }
 
-    if (bitRead(mod_state_, 0))
-      hid::pressRawKey(Key_LeftShift);
-    if (bitRead(mod_state_, 1))
-      hid::pressRawKey(Key_RightShift);
+  if (keyIsPressed(key_state)) {
+    hid::releaseKey(Key_LeftShift);
+    hid::releaseKey(Key_RightShift);
+
+    mapped_key.raw = mapped_key.raw - ranges::TT_FIRST;
+    return EventHandlerResult::OK;
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
