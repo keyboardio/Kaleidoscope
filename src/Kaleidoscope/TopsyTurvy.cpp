@@ -55,14 +55,10 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     return EventHandlerResult::OK;
 
   // invert the shift state
-
   if (!mod_state_) {
-    if (keyIsPressed(key_state))
-      hid::pressRawKey(Key_LeftShift);
-    handleKeyswitchEvent(new_key, row, col, key_state | TOPSYTURVY | INJECTED);
-    hid::sendKeyboardReport();
-    if (keyToggledOff(key_state))
-      hid::releaseRawKey(Key_LeftShift);
+    mapped_key.raw = mapped_key.raw - ranges::TT_FIRST;
+    mapped_key.flags |= SHIFT_HELD;
+    return EventHandlerResult::OK;
   } else {
     hid::releaseRawKey(Key_LeftShift);
     hid::releaseRawKey(Key_RightShift);
