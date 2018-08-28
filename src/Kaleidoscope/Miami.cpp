@@ -17,5 +17,5 @@
 
 #include <Kaleidoscope-LEDEffects.h>
 
-kaleidoscope::TriColor MiamiEffect(CRGB(0xd6, 0xd6, 0x4e),   /* Cyan */
+kaleidoscope::TriColor MiamiEffect(CRGB(0x4e, 0xd6, 0xd6),   /* Cyan */
                                    CRGB(0xaf, 0x67, 0xfa));  /* Magenta */
