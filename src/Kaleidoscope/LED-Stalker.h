@@ -1,19 +1,18 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Stalker -- Stalk keys pressed by lighting up and fading back the LED under them
- * Copyright (C) 2017, 2018  Gergely Nagy
+ * Copyright (C) 2017, 2018  Keyboard.io, Inc
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
@@ -38,22 +37,9 @@ class StalkerEffect : public LEDMode {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  kaleidoscope::EventHandlerResult onSetup() {
-    ::LEDControl.mode_add(this);
-
-    return kaleidoscope::EventHandlerResult::OK;
-  }
-#endif
-
  protected:
   void onActivate(void) final;
   void update(void) final;
-
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-  void setup(void) final;
-  static Key legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state);
-#endif
 
  private:
   static uint16_t step_start_time_;
