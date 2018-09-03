@@ -46,6 +46,12 @@ properties:
 >
 > Defaults to 50.
 
+### `.inactive-color`
+
+> The color to use when a key hasn't been pressed recently.
+>
+> Defaults to `(cRGB) { 0, 0, 0 }`
+
 ## Plugin helpers
 
 ### `STALKER(effect, params)`
