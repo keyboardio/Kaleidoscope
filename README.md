@@ -30,21 +30,18 @@ SKETCHBOOK_DIR=$HOME/Arduino
 # go to your kaleidoscope directory
 cd $HOME/kaleidoscope
 # then clone the hardware definitions
-git clone --recursive https://github.com/keyboardio/Arduino-Boards.git
+git clone --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git
 # and make them available to the arduino environment
-mkdir -p $SKETCHBOOK_DIR/hardware/keyboardio
-ln -s $HOME/kaleidoscope/Arduino-Boards $SKETCHBOOK_DIR/hardware/keyboardio/avr
+mkdir -p $SKETCHBOOK_DIR/hardware
+ln -s $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio $SKETCHBOOK_DIR/hardware/keyboardio
 ```
 
-## Clone and Build the Kaleidoscope Firmware
+## Build the Kaleidoscope Firmware for your keyboard
 
 ```sh
 # go to your keyboardio directory
-cd $HOME/kaleidoscope
-# then clone the firmware repository
-git clone https://github.com/keyboardio/Kaleidoscope.git
+cd $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio/libraries/Model01-Firmware
 # and build your firmware!
-cd Kaleidoscope
 make
 ```
 
