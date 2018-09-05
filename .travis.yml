@@ -2,10 +2,15 @@ dist: trusty
 sudo: false
 os:
   - linux
+addons:
+  apt:
+    packages:
+      - shellcheck
 install:
-  - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Arduino-Boards hardware/keyboardio/avr
+  - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio hardware/keyboardio
 script:
   - make travis-test BOARD_HARDWARE_PATH=$(pwd)/hardware
+  - shellcheck bin/kaleidoscope-builder
 notifications:
   irc:
     channels:
@@ -13,7 +18,7 @@ notifications:
     use_notice: true
     skip_join: true
     template:
-      - "%{repository_name}/%{branch} %{commit} by %{author}: %{commit_subject} %{build_url} %{message}" 
+      - "%{repository_name}/%{branch} %{commit} by %{author}: %{commit_subject} %{build_url} %{message}"
   email:
     on_success: change
     on_failure: change
