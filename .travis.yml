@@ -2,15 +2,10 @@ dist: trusty
 sudo: false
 os:
   - linux
-addons:
-  apt:
-    packages:
-      - shellcheck
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio hardware/keyboardio
 script:
   - make travis-test BOARD_HARDWARE_PATH=$(pwd)/hardware
-  - shellcheck bin/kaleidoscope-builder
 notifications:
   irc:
     channels:
