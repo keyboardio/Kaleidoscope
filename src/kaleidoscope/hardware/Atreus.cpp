@@ -129,17 +129,17 @@ void Atreus::unselectRow(uint8_t row)
 }
 
 uint16_t Atreus::readCols() {
-  return ((PIND&(_BV(7)) ? 0 : (_BV(0))) |
-          (PINC&(_BV(6)) ? 0 : (_BV(1))) |
-          (PINB&(_BV(5)) ? 0 : (_BV(2))) |
-          (PINB&(_BV(4)) ? 0 : (_BV(3))) |
-          (PINE&(_BV(6)) ? 0 : (_BV(4))) |
+  return ((PINB&(_BV(4)) ? 0 : (_BV(0))) |
+          (PINB&(_BV(5)) ? 0 : (_BV(1))) |
+          (PINB&(_BV(6)) ? 0 : (_BV(2))) |
+          (PINB&(_BV(7)) ? 0 : (_BV(3))) |
+          (PINC&(_BV(6)) ? 0 : (_BV(4))) |
           (PIND&(_BV(4)) ? 0 : (_BV(5))) |
-          (PINB&(_BV(6)) ? 0 : (_BV(6))) |
-          (PINF&(_BV(6)) ? 0 : (_BV(7))) |
-          (PINF&(_BV(7)) ? 0 : (_BV(8))) |
-          (PIND&(_BV(6)) ? 0 : (_BV(9))) |
-          (PINB&(_BV(7)) ? 0 : (_BV(10))));
+          (PIND&(_BV(6)) ? 0 : (_BV(6))) |
+          (PIND&(_BV(7)) ? 0 : (_BV(7))) |
+          (PINE&(_BV(6)) ? 0 : (_BV(8))) |
+          (PINF&(_BV(6)) ? 0 : (_BV(9))) |
+          (PINF&(_BV(7)) ? 0 : (_BV(10))));
 }
 
 void Atreus::readMatrixRow(uint8_t current_row)
