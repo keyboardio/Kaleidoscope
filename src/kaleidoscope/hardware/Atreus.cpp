@@ -42,7 +42,7 @@ uint16_t Atreus::keyState_[ROWS];
 uint16_t Atreus::masks_[ROWS];
 
 uint8_t Atreus::debounce_matrix_[ROWS][COLS];
-uint8_t Atreus::debounce = 5;
+uint8_t Atreus::debounce = 3;
 
 void Atreus::setup(void) {
   wdt_disable();
