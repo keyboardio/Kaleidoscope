@@ -25,6 +25,7 @@
 #include "key_defs_keymaps.h"
 
 #include "key_defs_aliases.h"
+#include "kaleidoscope/lang/de_qwertz.h"
 
 #ifdef ARDUINO_VIRTUAL
 #include "VirtualHID/VirtualHID.h"
