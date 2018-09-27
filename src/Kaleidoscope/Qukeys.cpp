@@ -390,28 +390,6 @@ EventHandlerResult Qukeys::onSetup() {
   return EventHandlerResult::OK;
 }
 
-// Legacy V1 API
-#if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
-void Qukeys::begin() {
-  onSetup();
-  Kaleidoscope.useEventHandlerHook(legacyEventHandler);
-  Kaleidoscope.useLoopHook(legacyLoopHook);
-}
-
-Key Qukeys::legacyEventHandler(Key mapped_key, byte row, byte col, uint8_t key_state) {
-  EventHandlerResult r = ::Qukeys.onKeyswitchEvent(mapped_key, row, col, key_state);
-  if (r == EventHandlerResult::OK)
-    return mapped_key;
-  return Key_NoKey;
-}
-
-void Qukeys::legacyLoopHook(bool is_post_clear) {
-  if (is_post_clear)
-    return;
-  ::Qukeys.beforeReportingState();
-}
-#endif
-
 } // namespace kaleidoscope {
 
 kaleidoscope::Qukeys Qukeys;
