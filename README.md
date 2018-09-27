@@ -9,12 +9,9 @@
  [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
  [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
-...
+USB-Quirks provides a few methods to deal with more obscure parts of the USB spec, such as changing between `Boot` and `Report` protocols. These are in a separate plugin, because these features are not part of the USB spec, and are often workarounds for various issues. See the provided methods for more information about what they're useful for.
 
 ## Using the plugin
-
-After adding one-shot keys to the keymap, all one needs to do, is enable the
-plugin:
 
 ```c++
 #include <Kaleidoscope.h>
