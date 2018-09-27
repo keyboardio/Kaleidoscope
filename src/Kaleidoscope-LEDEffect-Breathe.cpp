@@ -20,9 +20,9 @@
 namespace kaleidoscope {
 void LEDBreatheEffect::update(void) {
   uint16_t now = millis();
-  if ((now - last_update) < UPDATE_INTERVAL)
+  if ((now - last_update_) < UPDATE_INTERVAL)
     return;
-  last_update = now;
+  last_update_ = now;
 
   cRGB color = breath_compute(hue, saturation);
   ::LEDControl.set_all_leds_to(color);
