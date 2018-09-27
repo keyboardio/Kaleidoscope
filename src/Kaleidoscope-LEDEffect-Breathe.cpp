@@ -19,7 +19,7 @@
 
 namespace kaleidoscope {
 void LEDBreatheEffect::update(void) {
-  uint16_t now = millis();
+  uint16_t now = Kaleidoscope.millisAtCycleStart();
   if ((now - last_update_) < UPDATE_INTERVAL)
     return;
   last_update_ = now;
