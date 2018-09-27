@@ -45,7 +45,7 @@ void StalkerEffect::update(void) {
     return;
 
   uint16_t now = millis();
-  bool time_out = (now - step_start_time_) > step_length;
+  uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - step_start_time_;
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
@@ -54,7 +54,7 @@ void StalkerEffect::update(void) {
         ::LEDControl.setCrgbAt(r, c, variant->compute(&step));
       }
 
-      if (time_out) {
+      if (elapsed > step_length) {
         map_[r][c] = step;
       }
 
@@ -65,8 +65,8 @@ void StalkerEffect::update(void) {
     }
   }
 
-  if (time_out)
-    step_start_time_ = now;
+  if (elapsed > step_length)
+    step_start_time_ = Kaleidoscope.millisAtCycleStart();
 }
 
 namespace stalker {
