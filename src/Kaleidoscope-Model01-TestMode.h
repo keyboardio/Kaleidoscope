@@ -16,6 +16,10 @@
 
 #pragma once
 
+#ifndef ARDUINO_AVR_MODEL01
+#error The Kaleidoscope-Model01-TestMode plugin was designed for the Keyboardio Model01, and does not work with any other hardware.
+#endif
+
 #include <Arduino.h>
 #include "Kaleidoscope.h"
 
