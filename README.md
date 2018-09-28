@@ -24,9 +24,11 @@ Using the extension is as simple as including the header, registering it with
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-HostOS.h>
+#include <Kaleidoscope/HostOS-select.h>
 #include <Kaleidoscope-Unicode.h>
 
-KALEIDOSCOPE_INIT_PLUGINS(Unicode);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS, Unicode);
 
 void setup() {
   Kaleidoscope.setup();
