@@ -111,20 +111,6 @@ typedef kaleidoscope::Key Key_;
 #define SWITCH_TO_KEYMAP           B00000100
 #define IS_CONSUMER                B00001000
 
-/* HID types we need to encode in the key flags for system and consumer control hid controls
-   Each key can only have one, so we don't need to use a bit vector.
-   We need to keep the top two bits clear for defining the keys as synthetic
-   We need to keep the bottom two bits clear for defining the keys as sysctl / consumerctl
-*/
-
-#define HID_TYPE_CL    B00000000
-#define HID_TYPE_LC    B00000100
-#define HID_TYPE_NARY  B00001000
-#define HID_TYPE_OOC   B00001100
-#define HID_TYPE_OSC   B00010000
-#define HID_TYPE_RTC   B00010100
-#define HID_TYPE_SEL   B00011000
-
 
 #define Key_NoKey (Key) { 0,  KEY_FLAGS }
 #define Key_skip (Key) { 0,  KEY_FLAGS }
