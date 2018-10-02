@@ -22,7 +22,8 @@
 #define KEY_MOUSE_BTN_L MOUSE_LEFT // Synthetic key
 #define KEY_MOUSE_BTN_M MOUSE_MIDDLE  // Synthetic key
 #define KEY_MOUSE_BTN_R MOUSE_RIGHT  // Synthetic key
-
+#define KEY_MOUSE_BTN_P MOUSE_PREV
+#define KEY_MOUSE_BTN_N MOUSE_NEXT
 
 #define KEY_MOUSE_UP            B0000001
 #define KEY_MOUSE_DOWN          B0000010
@@ -62,3 +63,5 @@
 #define Key_mouseBtnL     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_L, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }
 #define Key_mouseBtnM     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_M, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }
 #define Key_mouseBtnR     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_R, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }
+#define Key_mouseBtnP     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_P, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }
+#define Key_mouseBtnN     (Key) { KEY_MOUSE_BUTTON | KEY_MOUSE_BTN_N, KEY_FLAGS | SYNTHETIC | IS_MOUSE_KEY }

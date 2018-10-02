@@ -85,8 +85,9 @@ properties (see below).
 Buttons are even simpler than movement: there is no movement speed, nor
 acceleration involved. One just presses them.
 
-* `Key_mouseBtnL`, `Key_mouseBtnM`, `Key_mouseBtnR`: The left, middle, and right
-  mouse buttons, respectively.
+* `Key_mouseBtnL`, `Key_mouseBtnM`, `Key_mouseBtnR`, `Key_mouseBtnP`,
+  `Key_mouseBtnN`: The left, middle, right, previous, and next mouse buttons,
+  respectively.
 
 ## Warping
 
