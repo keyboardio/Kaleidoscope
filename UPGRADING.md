@@ -18,7 +18,7 @@ easier to use and develop for:
 ### Kaleidoscope.millisAtCycleStart()
 
 Many plugins use timers, and most of them will call `millis()`, which isn't
-wrong, but isn't the most efficient either. While `millis()` isn't terribly
+wrong, but isn't the most efficient way either. While `millis()` isn't terribly
 expensive, it's not cheap either. For most cases, we do not need an exact timer,
 and one updated once per cycle is enough - which is what `.millisAtCycleStart()`
 is. Having a timer that is consistent throughout the whole cycle may also be
@@ -27,6 +27,10 @@ beneficial.
 While `millis()` should continue to work forever, plugins and user code should,
 as a general rule, use `Kaleidoscope.millisAtCycleStart()` rather than
 `millis()`.
+
+To make using this easier, and thus encourage plugin authors to use it, the
+short but capitalized form `MILLIS()` is provided as a synonym for
+`Kaleidoscope.millisAtCycleStart()`.
 
 ### Kaleidoscope.detachFromHost() and Kaleidoscope.attachToHost()
 

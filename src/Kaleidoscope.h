@@ -120,6 +120,7 @@ class Kaleidoscope_ {
    * implies. It is recommended to use this in plugins over millis() unless
    * there is good reason not to.
    */
+#define MILLIS Kaleidoscope.millisAtCycleStart
   static uint32_t millisAtCycleStart() {
     return millis_at_cycle_start_;
   }
