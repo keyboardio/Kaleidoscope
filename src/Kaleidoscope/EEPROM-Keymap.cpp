@@ -53,8 +53,17 @@ Key EEPROMKeymap::getKeyOverride(uint8_t layer, byte row, byte col) {
   Key key;
 
   key = getKey(layer, row, col);
-  if (key == Key_Transparent || layer >= max_layers_)
+
+  /*
+  * If we read a transparent key from EEPROM, or we're trying to read from a
+  * layer higher than what is available there (max_layers), check if we're below
+  * the layer count in PROGMEM (layer_count). If we are, read from PROGMEM,
+  * otherwise leave the key as-is (either transparent or NoKey).
+  */
+  if ((key == Key_Transparent || layer >= max_layers) &&
+      (layer < layer_count))
     key = Layer.getKeyFromPROGMEM(layer, row, col);
+
   return key;
 }
 
