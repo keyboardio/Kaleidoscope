@@ -60,7 +60,7 @@ Key EEPROMKeymap::getKeyOverride(uint8_t layer, byte row, byte col) {
   * the layer count in PROGMEM (layer_count). If we are, read from PROGMEM,
   * otherwise leave the key as-is (either transparent or NoKey).
   */
-  if ((key == Key_Transparent || layer >= max_layers) &&
+  if ((key == Key_Transparent || layer >= max_layers_) &&
       (layer < layer_count))
     key = Layer.getKeyFromPROGMEM(layer, row, col);
 
