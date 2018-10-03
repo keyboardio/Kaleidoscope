@@ -23,6 +23,13 @@ namespace kaleidoscope {
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
 
+EventHandlerResult EEPROMKeymap::onSetup() {
+  ::EEPROMSettings.onSetup();
+  Layer.getKey = ::EEPROMKeymap.getKeyOverride;
+
+  return EventHandlerResult::OK;
+}
+
 void EEPROMKeymap::max_layers(uint8_t max) {
   max_layers_ = max;
   keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * ROWS * COLS * 2);

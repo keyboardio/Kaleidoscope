@@ -25,6 +25,8 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
  public:
   EEPROMKeymap(void) {}
 
+  EventHandlerResult onSetup();
+
   static void max_layers(uint8_t max);
 
   static uint16_t keymap_base(void);

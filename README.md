@@ -37,11 +37,9 @@ We can then update the keymap via [Focus][plugin:focus].
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Focus.h>
 
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
-                          EEPROMKeymap,
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap,
                           Focus);
 
 void setup() {
@@ -52,10 +50,7 @@ void setup() {
   Focus.addHook(FOCUS_HOOK_KEYMAP);
   Focus.addHook(FOCUS_HOOK_KEYMAP_TRANSFER);
 
-  Layer.getKey = EEPROMKeymap.getKeyOverride;
-
   EEPROMKeymap.max_layers(1);
-  EEPROMSettings.seal();
 }
 ```
 

@@ -20,7 +20,7 @@
 #include <Kaleidoscope-Focus.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_NoKey,         Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
    Key_Backtick,      Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
@@ -37,10 +37,10 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_skip),
-};
+)
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, EEPROMKeymap, Focus);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus);
 
 void setup() {
   Serial.begin(9600);
@@ -53,10 +53,7 @@ void setup() {
   Focus.addHook(FOCUS_HOOK_HELP);
   Focus.addHook(FOCUS_HOOK_VERSION);
 
-  Layer.getKey = EEPROMKeymap.getKeyOverride;
-
   EEPROMKeymap.max_layers(1);
-  EEPROMSettings.seal();
 }
 
 void loop() {
