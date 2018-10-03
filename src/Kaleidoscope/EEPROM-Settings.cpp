@@ -62,9 +62,6 @@ uint16_t EEPROMSettings::requestSlice(uint16_t size) {
   if (sealed_)
     return 0;
 
-  Serial.print("requestSlice; size=");
-  Serial.println(size);
-
   uint16_t start = next_start_;
   next_start_ += size;
 
