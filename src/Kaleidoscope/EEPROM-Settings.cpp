@@ -30,6 +30,13 @@ EventHandlerResult EEPROMSettings::onSetup() {
   return EventHandlerResult::OK;
 }
 
+EventHandlerResult EEPROMSettings::beforeEachCycle() {
+  if (!sealed_)
+    seal();
+
+  return EventHandlerResult::OK;
+}
+
 bool EEPROMSettings::isValid(void) {
   return is_valid_;
 }

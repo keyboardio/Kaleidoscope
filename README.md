@@ -72,6 +72,9 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > Seal the `EEPROM` layout, so no new slices can be requested. The CRC checksum
 > is considered final at this time, and the `isValid()`, `crc()`, `used()` and
 > `version()` methods can be used from this point onwards.
+>
+> If not called explicitly, the layout will be sealed automatically after
+> `setup()` in the sketch finished.
 
 ### `update()`
 
