@@ -27,6 +27,7 @@
   const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
   uint8_t layer_count = sizeof(keymaps) / sizeof(*keymaps);
 
+extern uint8_t layer_count;
 
 class Layer_ {
  public:
