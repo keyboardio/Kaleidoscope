@@ -26,6 +26,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   EEPROMSettings(void) {}
 
   EventHandlerResult onSetup();
+  EventHandlerResult beforeEachCycle();
 
   static void update(void);
   static bool isValid(void);
