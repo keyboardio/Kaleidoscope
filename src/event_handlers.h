@@ -59,6 +59,18 @@
                (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
                (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
                                                                           __NL__ \
+   /* Called by an external plugin (such as Kaleidoscope-FocusSerial)  */ __NL__ \
+   /* via Kaleidoscope::onFocusEvent. This is where Focus events can   */ __NL__ \
+   /* be handled. The function can return EventHandlerResult::OK, and  */ __NL__ \
+   /* allow other plugins to handle the same command (with the caveat  */ __NL__ \
+   /* that arguments can only be parsed once), or                      */ __NL__ \
+   /* EventHandlerResult::EVENT_CONSUMED, in which case no other       */ __NL__ \
+   /* plugin will have a chance to react to the event.                 */ __NL__ \
+   OPERATION(onFocusEvent,                                                __NL__ \
+                _ABORTABLE,                                               __NL__ \
+                (const char *command),                                    __NL__ \
+                (command), ##__VA_ARGS__)                                 __NL__ \
+                                                                          __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \

@@ -124,7 +124,9 @@ class Kaleidoscope_ {
     return millis_at_cycle_start_;
   }
 
-  static bool focusHook(const char *command);
+  EventHandlerResult onFocusEvent(const char *command) {
+    return kaleidoscope::Hooks::onFocusEvent(command);
+  }
 
  private:
   static uint32_t millis_at_cycle_start_;
@@ -143,11 +145,6 @@ typedef kaleidoscope::Kaleidoscope_  Kaleidoscope_;
 // in global namespace.
 //
 using kaleidoscope::Kaleidoscope;
-
-#define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \
-                                           "layer.on\n"             \
-                                           "layer.off\n"            \
-                                           "layer.getState")
 
 // Use this function macro to register plugins with Kaleidoscope's
 // hooking system. The macro accepts a list of plugin instances that

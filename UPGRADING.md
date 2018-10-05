@@ -15,6 +15,18 @@ easier to use and develop for:
  - The new system has more hook points, and the method names are much more clear
    now.
 
+### Bidirectional communication for plugins
+
+Formerly the `Kaleidoscope-Focus` plugin implemented a way for plugins to
+register hooks that respond to commands sent from the host. A part of this has
+been pulled into Kaleidoscope itself, in the form of the new `onFocusEvent`
+hook. For most intents and purposes, this hook works similar to how focus hooks
+worked previously, but has the advantage of not having to explicitly register
+them: if you use a plugin that supports this feature, and you have the new
+`Kaleidoscope-FocusSerial` plugin enabled, the commands will be made available.
+
+This drastically simplifies both the plugins that wish to implement this, and the user sketches, which no longer need to explicitly register the focus hooks.
+
 ### Kaleidoscope.millisAtCycleStart()
 
 Many plugins use timers, and most of them will call `millis()`, which isn't
