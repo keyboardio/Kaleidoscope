@@ -142,8 +142,6 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint16_t syncDelay;
   static bool paused;
 
-  static bool focusHook(const char *command);
-
   kaleidoscope::EventHandlerResult onSetup();
   kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
   kaleidoscope::EventHandlerResult beforeReportingState();
@@ -154,12 +152,14 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t mode;
 };
 
+class FocusLEDCommand : public Plugin {
+public:
+  FocusLEDCommand() {}
+
+  EventHandlerResult onFocusEvent(const char *command);
+};
+
 }
 
 extern kaleidoscope::LEDControl LEDControl;
-
-#define FOCUS_HOOK_LEDCONTROL FOCUS_HOOK (LEDControl.focusHook, \
-                                          "led.at\n"            \
-                                          "led.setAll\n"        \
-                                          "led.theme\n"         \
-                                          "led.mode")
+extern kaleidoscope::FocusLEDCommand FocusLEDCommand;
