@@ -24,6 +24,9 @@ class FocusSerial : public kaleidoscope::Plugin {
  public:
   FocusSerial(void) {}
 
+  bool handleHelp(const char *command,
+                  const char *help_message);
+
   /* Helpers */
   static void printNumber(uint16_t number);
   static void printSpace(void);

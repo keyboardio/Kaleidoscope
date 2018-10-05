@@ -59,6 +59,15 @@ EventHandlerResult FocusSerial::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
+bool FocusSerial::handleHelp(const char *command,
+                             const char *help_message) {
+  if (strcmp_P(command, PSTR("help")) != 0)
+    return false;
+
+  Serial.println((const __FlashStringHelper *)help_message);
+  return true;
+}
+
 void FocusSerial::printSpace(void) {
   Serial.print(F(" "));
 }
