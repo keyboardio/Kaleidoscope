@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope-TypingBreaks.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
 
@@ -123,7 +123,14 @@ void TypingBreaks::enableEEPROM(void) {
   EEPROM.get(settings_base_, settings);
 }
 
-bool TypingBreaks::focusHook(const char *command) {
+#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,      \
+                                           "typingbreaks.idleTimeLimit\n" \
+                                           "typingbreaks.lockTimeOut\n" \
+                                           "typingbreaks.lockLength\n"  \
+                                           "typingbreaks.leftMaxKeys\n" \
+                                           "typingbreaks.rightMaxKeys")
+
+EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
   enum {
     IDLE_TIME_LIMIT,
     LOCK_TIMEOUT,
@@ -132,8 +139,15 @@ bool TypingBreaks::focusHook(const char *command) {
     RIGHT_MAX,
   } subCommand;
 
+  if (::Focus.handleHelp(command, PSTR("typingbreaks.idleTimeLimit\n"
+                                      "typingbreaks.lockTimeOut\n"
+                                      "typingbreaks.lockLength\n"
+                                      "typingbreaks.leftMaxKeys\n"
+                                      "typingbreaks.rightMaxKeys")))
+    return EventHandlerResult::OK;
+
   if (strncmp_P(command, PSTR("typingbreaks."), 13) != 0)
-    return false;
+    return EventHandlerResult::OK;
   if (strcmp_P(command + 13, PSTR("idleTimeLimit")) == 0)
     subCommand = IDLE_TIME_LIMIT;
   else if (strcmp_P(command + 13, PSTR("lockTimeOut")) == 0)
@@ -145,7 +159,7 @@ bool TypingBreaks::focusHook(const char *command) {
   else if (strcmp_P(command + 13, PSTR("rightMaxKeys")) == 0)
     subCommand = RIGHT_MAX;
   else
-    return false;
+    return EventHandlerResult::OK;
 
   switch (subCommand) {
   case IDLE_TIME_LIMIT:
@@ -186,7 +200,7 @@ bool TypingBreaks::focusHook(const char *command) {
   }
 
   EEPROM.put(settings_base_, settings);
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 }
