@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Settings -- Basic EEPROM settings plugin for Kaleidoscope.
- * Copyright (C) 2017  Keyboard.io, Inc
+ * Copyright (C) 2017-2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,21 +16,26 @@
  */
 
 #include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "crc.h"
 
 namespace kaleidoscope {
-namespace eeprom_settings {
+namespace eeprom {
 
-bool settingsFocusHook(const char *command) {
+EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   enum {
     ISVALID,
     GETVERSION,
     CRC,
   } sub_command;
 
+  if (strcmp_P(command, PSTR("help")) == 0) {
+    Serial.println(F("settings.valid?\nsettings.version\nsettings.crc"));
+    return EventHandlerResult::OK;
+  }
+
   if (strncmp_P(command, PSTR("settings."), 9) != 0)
-    return false;
+    return EventHandlerResult::OK;
 
   if (strcmp_P(command + 9, PSTR("valid?")) == 0)
     sub_command = ISVALID;
@@ -39,7 +44,7 @@ bool settingsFocusHook(const char *command) {
   else if (strcmp_P(command + 9, PSTR("crc")) == 0)
     sub_command = CRC;
   else
-    return false;
+    return EventHandlerResult::OK;
 
   switch (sub_command) {
   case ISVALID:
@@ -56,21 +61,24 @@ bool settingsFocusHook(const char *command) {
     break;
   }
 
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-bool eepromFocusHook(const char *command) {
+EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   enum {
     CONTENTS,
     FREE,
   } sub_command;
+
+  if (::Focus.handleHelp(command, PSTR("eeprom.contents\neeprom.free")))
+    return EventHandlerResult::OK;
 
   if (strcmp_P(command, PSTR("eeprom.contents")) == 0)
     sub_command = CONTENTS;
   else if (strcmp_P(command, PSTR("eeprom.free")) == 0)
     sub_command = FREE;
   else
-    return false;
+    return EventHandlerResult::OK;
 
   switch (sub_command) {
   case CONTENTS: {
@@ -95,9 +103,11 @@ bool eepromFocusHook(const char *command) {
     break;
   }
 
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 }
-
 }
+
+kaleidoscope::eeprom::FocusSettingsCommand FocusSettingsCommand;
+kaleidoscope::eeprom::FocusEEPROMCommand FocusEEPROMCommand;
