@@ -129,9 +129,9 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
 }
 
 EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
-                                                   const char *expected_command,
-                                                   uint16_t theme_base,
-                                                   uint8_t max_themes) {
+    const char *expected_command,
+    uint16_t theme_base,
+    uint8_t max_themes) {
   if (::Focus.handleHelp(command, expected_command))
     return EventHandlerResult::OK;
 
