@@ -30,7 +30,7 @@ class FocusSettingsCommand : public kaleidoscope::Plugin {
 
 class FocusEEPROMCommand : public kaleidoscope::Plugin {
  public:
-  FocusEEPROMCommand () {}
+  FocusEEPROMCommand() {}
 
   EventHandlerResult onFocusEvent(const char *command);
 };
