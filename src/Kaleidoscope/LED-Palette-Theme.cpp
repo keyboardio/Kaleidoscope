@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include <EEPROM.h>
 
 namespace kaleidoscope {
@@ -92,9 +92,14 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
   EEPROM.update(map_base + position / 2, indexes);
 }
 
-bool LEDPaletteTheme::paletteFocusHook(const char *command) {
-  if (strcmp_P(command, PSTR("palette")) != 0)
-    return false;
+EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
+  const char *cmd = PSTR("palette");
+
+  if (::Focus.handleHelp(command, cmd))
+    return EventHandlerResult::OK;
+
+  if (strcmp_P(command, cmd) != 0)
+    return EventHandlerResult::OK;
 
   if (Serial.peek() == '\n') {
     for (uint8_t i = 0; i < 16; i++) {
@@ -105,7 +110,7 @@ bool LEDPaletteTheme::paletteFocusHook(const char *command) {
       ::Focus.printSpace();
     }
     Serial.println();
-    return true;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   uint8_t i = 0;
@@ -120,13 +125,18 @@ bool LEDPaletteTheme::paletteFocusHook(const char *command) {
     i++;
   }
 
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expected_command,
-                                        uint16_t theme_base, uint8_t max_themes) {
+EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
+                                                   const char *expected_command,
+                                                   uint16_t theme_base,
+                                                   uint8_t max_themes) {
+  if (::Focus.handleHelp(command, expected_command))
+    return EventHandlerResult::OK;
+
   if (strcmp_P(command, expected_command) != 0)
-    return false;
+    return EventHandlerResult::OK;
 
   uint16_t max_index = (max_themes * ROWS * COLS) / 2;
 
@@ -140,7 +150,7 @@ bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expecte
       ::Focus.printSpace();
     }
     Serial.println();
-    return true;
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
   uint16_t pos = 0;
@@ -154,45 +164,7 @@ bool LEDPaletteTheme::themeFocusHandler(const char *command, const char *expecte
     pos++;
   }
 
-  return true;
-}
-
-bool LEDPaletteTheme::themeLayerFocusHandler(const char *command, const char *expected_command,
-    uint16_t theme_base, uint8_t max_themes) {
-  if (strcmp_P(command, expected_command) != 0)
-    return false;
-
-  uint16_t count_per_layer = (ROWS * COLS) / 2;
-
-  uint8_t layer = Serial.parseInt();
-
-  uint16_t offset = theme_base + (layer * count_per_layer);
-
-  if (Serial.peek() == '\n') {
-    for (uint16_t pos = 0; pos < count_per_layer; pos++) {
-      uint8_t indexes = EEPROM.read(offset + pos);
-
-      ::Focus.printNumber(indexes >> 4);
-      ::Focus.printSpace();
-      ::Focus.printNumber(indexes & ~0xf0);
-      ::Focus.printSpace();
-    }
-    Serial.println();
-    return true;
-  }
-
-  uint16_t pos = 0;
-
-  while ((Serial.peek() != '\n') && (pos < count_per_layer)) {
-    uint8_t idx1 = Serial.parseInt();
-    uint8_t idx2 = Serial.parseInt();
-    uint8_t indexes = (idx1 << 4) + idx2;
-
-    EEPROM.update(offset + pos, indexes);
-    pos++;
-  }
-
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 }

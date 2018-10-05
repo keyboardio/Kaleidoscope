@@ -36,15 +36,10 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 
   static const cRGB lookupPaletteColor(uint8_t palette_index);
 
-  static bool paletteFocusHook(const char *command);
-  static bool themeFocusHandler(const char *command, const char *expected_command,
-                                uint16_t theme_base, uint8_t max_themes);
-
-  static bool themeLayerFocusHandler(const char *command,
+  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult themeFocusEvent(const char *command,
                                      const char *expected_command,
-                                     uint16_t theme_base,
-                                     uint8_t max_themes);
-
+                                     uint16_t theme_base, uint8_t max_themes);
   EventHandlerResult onSetup();
 
  private:
@@ -54,7 +49,3 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::LEDPaletteTheme LEDPaletteTheme;
-
-#define FOCUS_HOOK_LEDPALETTETHEME                                      \
-  FOCUS_HOOK(LEDPaletteTheme.paletteFocusHook,                          \
-             "palette")

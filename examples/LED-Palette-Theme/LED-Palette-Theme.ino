@@ -19,15 +19,14 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
-
+#include <Kaleidoscope-FocusSerial.h>
 namespace example {
 
 class TestLEDMode : public kaleidoscope::LEDMode {
  public:
   TestLEDMode() {}
 
-  static bool focusHook(const char *command);
+  kaleidoscope::EventHandlerResult onFocusEvent(const char *command);
 
  protected:
   void setup() final;
@@ -49,9 +48,9 @@ TestLEDMode::update(void) {
   LEDPaletteTheme.updateHandler(map_base_, 0);
 }
 
-bool
-TestLEDMode::focusHook(const char *command) {
-  return LEDPaletteTheme.themeFocusHandler(command, PSTR("testLedMode.map"), map_base_, 1);
+kaleidoscope::EventHandlerResult
+TestLEDMode::onFocusEvent(const char *command) {
+  return LEDPaletteTheme.themeFocusEvent(command, PSTR("testLedMode.map"), map_base_, 1);
 }
 
 }
@@ -83,15 +82,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 KALEIDOSCOPE_INIT_PLUGINS(Focus, LEDPaletteTheme, TestLEDMode, EEPROMSettings);
 
 void setup() {
-  Serial.begin(9600);
-
   Kaleidoscope.setup();
 
-  EEPROMSettings.seal();
   TestLEDMode.activate();
-
-  Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
-  Focus.addHook(FOCUS_HOOK(TestLEDMode.focusHook, "testLEDMode.map"));
 }
 
 void loop() {
