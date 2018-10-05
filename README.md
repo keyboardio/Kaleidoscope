@@ -24,7 +24,7 @@ full extent, we need to create our own plugin on top of it.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace example {
 
@@ -36,7 +36,7 @@ class TestLEDMode : public LEDMode {
   void setup(void) final;
   void update(void) final;
 
-  static bool focusHook(const char *command);
+  kaleidoscope::EventHandlerResult onFocusEvent(const char *command);
 
  private:
   static uint16_t map_base_;
@@ -52,27 +52,26 @@ void TestLEDMode::update(void) {
   LEDPaletteTheme.updateHandler(map_base_, 0);
 }
 
-bool
-TestLEDMode::focusHook(const char *command) {
-  return LEDPaletteTheme.themeFocusHandler(command, PSTR("testLedMode.map"), map_base_, 1);
+kaleidoscope::EventHandlerResult
+TestLEDMode::onFocusEvent(const char *command) {
+  return LEDPaletteTheme.themeFocusEvent(command, PSTR("testLedMode.map"), map_base_, 1);
 }
 
 }
 
 example::TestLEDMode TestLEDMode;
 
+KALEIDOSCOPE_INIT_PLUGINS(
+  Focus,
+  LEDPaletteTheme,
+  TestLEDMode,
+  EEPROMSettings
+);
+
 void setup() {
-  Serial.begin(9600);
-
-  Kaleidoscope.use(&Focus, &LEDPaletteTheme, &TestLEDMode, &EEPROMSettings);
-
   Kaleidoscope.setup();
 
-  EEPROMSettings.seal();
   TestLEDMode.activate();
-
-  Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
-  Focus.addHook(FOCUS_HOOK(TestLEDMode.focusHook, "testLEDMode.map"));
 }
 ```
 
@@ -100,7 +99,7 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 > The `theme` argument can be any index between zero and `max_themes`. How the
 > plugin decides which theme to display depends entirely on the plugin.
 
-### `.themeFocusHandler(command, expected_command, theme_base, max_themes)`
+### `.themeFocusEvent(command, expected_command, theme_base, max_themes)`
 
 > To be used in a custom `Focus` handler: handles the `expected_command` Focus
 > command, and provides a way to query and update the themes supported by the
@@ -109,13 +108,10 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 > When queried, it will list the color indexes. When used as a setter, it
 > expects one index per key.
 >
-> The palette can be set via the `palette` focus command, implemented by the
-> `FOCUS_HOOK_LEDPALETTETHEME` hook explained below.
+> The palette can be set via the `palette` focus command, provided by the
+> `LEDPaletteTheme` plugin.
 
 ## Focus commands
-
-The plugin provides a single `Focus` hook, `FOCUS_HOOK_LEDPALETTETHEME`,
-implementing the following command:
 
 ### `palette`
 
@@ -130,7 +126,7 @@ implementing the following command:
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
 
 ## Further reading
