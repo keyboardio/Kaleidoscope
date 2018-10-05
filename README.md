@@ -118,13 +118,12 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 
 ## Focus commands
 
-The plugin provides two [Focus][focus] hooks: `FOCUS_HOOK_SETTINGS`, and
-`FOCUS_HOOK_EEPROM`, that register commands that allow one to work with the
-settings, and with the contents of the `EEPROM` through Focus.
+The plugin provides two - optional - [Focus][FocusSerial] command plugins:
+`FocusSettingsCommand` and `FocusEEPROMCommand`. These must be explicitly added
+to `KALEIDOSCOPE_INIT_PLUGINS` if one wishes to use them. They provide the
+following commands:
 
- [focus]: https://github.com/keyboardio/Kaleidoscope-Focus
-
-These provide the following `Focus` commands:
+ [FocusSerial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
 
 ### `settings.crc`
 
@@ -153,7 +152,7 @@ These provide the following `Focus` commands:
 
 ## Dependencies
 
-* [Kaleidoscope-Focus][focus]
+* [Kaleidoscope-FocusSerial][FocusSerial]
 
 ## Further reading
 
