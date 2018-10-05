@@ -26,7 +26,6 @@ class TypingBreaks : public kaleidoscope::Plugin {
   TypingBreaks(void) {}
 
   static void enableEEPROM(void);
-  static bool focusHook(const char *command);
 
   typedef struct settings_t {
     uint16_t idle_time_limit;
@@ -39,6 +38,7 @@ class TypingBreaks : public kaleidoscope::Plugin {
   static settings_t settings;
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onFocusEvent(const char *command);
 
  private:
   static uint32_t session_start_time_;
@@ -55,10 +55,3 @@ class TypingBreaks : public kaleidoscope::Plugin {
 extern kaleidoscope::TypingBreaks TypingBreaks;
 
 void TypingBreak(bool is_locked);
-
-#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
-                                           "typingbreaks.idleTimeLimit\n" \
-                                           "typingbreaks.lockTimeOut\n"   \
-                                           "typingbreaks.lockLength\n"    \
-                                           "typingbreaks.leftMaxKeys\n"   \
-                                           "typingbreaks.rightMaxKeys")

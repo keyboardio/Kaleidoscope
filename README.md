@@ -84,10 +84,6 @@ properties. All times are in seconds.
 
 ## Focus commands
 
-The plugin provides a single `Focus` hook, `FOCUS_HOOK_TYPINGBREAKS`, which in
-turn make a few commands available. All of these return the respective setting's
-value when called without arguments, or set them if called with some.
-
 ### `typingbreaks.idleTimeLimit [limit]`
 
 > Get or set the `.settings.idle_time_limit` property.
