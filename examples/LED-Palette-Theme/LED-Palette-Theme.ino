@@ -20,14 +20,13 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
-
 namespace example {
 
 class TestLEDMode : public kaleidoscope::LEDMode {
  public:
   TestLEDMode() {}
 
-  EventHandlerResult onFocusEvent(const char *command);
+  kaleidoscope::EventHandlerResult onFocusEvent(const char *command);
 
  protected:
   void setup() final;
@@ -49,7 +48,7 @@ TestLEDMode::update(void) {
   LEDPaletteTheme.updateHandler(map_base_, 0);
 }
 
-EventHandlerResult
+kaleidoscope::EventHandlerResult
 TestLEDMode::onFocusEvent(const char *command) {
   return LEDPaletteTheme.themeFocusEvent(command, PSTR("testLedMode.map"), map_base_, 1);
 }
