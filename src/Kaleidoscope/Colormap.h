@@ -27,8 +27,7 @@ class ColormapEffect : public LEDMode {
 
   void max_layers(uint8_t max_);
 
-  static bool focusHook(const char *command);
-  static bool focusHookLayerwise(const char *command);
+  EventHandlerResult onFocusEvent(const char *command);
 
  protected:
   void onActivate(void) final;
@@ -39,14 +38,7 @@ class ColormapEffect : public LEDMode {
   static uint8_t last_highest_layer_;
   static uint8_t max_layers_;
   static uint16_t map_base_;
-  static bool dirty_;
 };
 }
 
 extern kaleidoscope::ColormapEffect ColormapEffect;
-
-#define FOCUS_HOOK_COLORMAP FOCUS_HOOK(ColormapEffect.focusHook,  \
-                                       "colormap.map")
-
-#define FOCUS_HOOK_COLORMAP_LAYER FOCUS_HOOK(ColormapEffect.focusHookLayerwise, \
-                                             "colormap.layer")

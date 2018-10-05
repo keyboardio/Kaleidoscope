@@ -18,7 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Colormap.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 // *INDENT-OFF*
@@ -53,8 +53,6 @@ void setup() {
   Kaleidoscope.setup();
   ColormapEffect.max_layers(1);
   ColormapEffect.activate();
-
-  EEPROMSettings.seal();
 }
 
 void loop() {
