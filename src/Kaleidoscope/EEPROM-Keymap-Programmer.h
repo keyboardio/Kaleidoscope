@@ -37,9 +37,8 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   static void nextState(void);
   static void cancel(void);
 
-  static bool focusHook(const char *command);
-
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onFocusEvent(const char *command);
 
  private:
   typedef enum {
@@ -56,6 +55,3 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
-
-#define FOCUS_HOOK_KEYMAP_PROGRAMMER FOCUS_HOOK(EEPROMKeymapProgrammer.focusHook, \
-                                                "keymap.toggleProgrammer")
