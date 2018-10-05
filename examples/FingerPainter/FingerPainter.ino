@@ -57,7 +57,6 @@ void setup() {
 
   EEPROMSettings.seal();
 
-  Focus.addHook(FOCUS_HOOK_FINGERPAINTER);
   FingerPainter.activate();
 }
 
