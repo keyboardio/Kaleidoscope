@@ -140,10 +140,10 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
   } subCommand;
 
   if (::Focus.handleHelp(command, PSTR("typingbreaks.idleTimeLimit\n"
-                                      "typingbreaks.lockTimeOut\n"
-                                      "typingbreaks.lockLength\n"
-                                      "typingbreaks.leftMaxKeys\n"
-                                      "typingbreaks.rightMaxKeys")))
+                                       "typingbreaks.lockTimeOut\n"
+                                       "typingbreaks.lockLength\n"
+                                       "typingbreaks.leftMaxKeys\n"
+                                       "typingbreaks.rightMaxKeys")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("typingbreaks."), 13) != 0)
