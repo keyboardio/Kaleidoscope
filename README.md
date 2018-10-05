@@ -14,10 +14,10 @@ color map per-layer. This means that we can set up a map of colors for each key,
 on a per-layer basis, and whenever a layer becomes active, the color map for
 that layer is applied. Colors are picked from a 16-color palette, provided by
 the [LED-Palette-Theme][plugin:l-p-t] plugin. The color map is stored in
-`EEPROM`, and can be easily changed via the [Focus][plugin:focus] plugin, which
-also provides palette editing capabilities.
+`EEPROM`, and can be easily changed via the [FocusSerial][plugin:focusserial]
+plugin, which also provides palette editing capabilities.
 
- [plugin:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [plugin:focusserial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
  [plugin:l-p-t]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme
 
 ## Using the extension
@@ -29,7 +29,7 @@ register the `Focus` hooks, and it will do the rest.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Colormap.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
@@ -41,10 +41,6 @@ void setup(void) {
   Kaleidoscope.setup();
 
   ColormapEffect.max_layers(1);
-  Focus.addHook(FOCUS_HOOK_LEDPALETTETHEME);
-  Focus.addHook(FOCUS_HOOK_COLORMAP);
-
-  EEPROMSettings.seal();
 }
 ```
 
@@ -59,9 +55,6 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 
 ## Focus commands
 
-The plugin provides a single `Focus` hook, `FOCUS_HOOK_COLORMAP`, implementing
-the following command:
-
 ### `colormap.map`
 
 > Without arguments, prints the color map: palette indexes for all layers.
@@ -74,7 +67,7 @@ the following command:
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
 * [Kaleidoscope-LED-Palette-Theme](https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme)
 
 ## Further reading
