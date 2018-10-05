@@ -15,7 +15,7 @@
  */
 
 #include "Kaleidoscope-LEDControl.h"
-#include "Kaleidoscope-Focus.h"
+#include "Kaleidoscope-FocusSerial.h"
 
 namespace kaleidoscope {
 
@@ -175,7 +175,7 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   return kaleidoscope::EventHandlerResult::OK;
 }
 
-bool LEDControl::focusHook(const char *command) {
+EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   enum {
     SETALL,
     MODE,
@@ -183,8 +183,14 @@ bool LEDControl::focusHook(const char *command) {
     THEME,
   } subCommand;
 
+  if (::Focus.handleHelp(command, PSTR("led.at\n"
+                                      "led.setAll\n"
+                                      "led.mode\n"
+                                      "led.theme")))
+    return EventHandlerResult::OK;
+
   if (strncmp_P(command, PSTR("led."), 4) != 0)
-    return false;
+    return EventHandlerResult::OK;
   if (strcmp_P(command + 4, PSTR("at")) == 0)
     subCommand = AT;
   else if (strcmp_P(command + 4, PSTR("setAll")) == 0)
@@ -194,14 +200,14 @@ bool LEDControl::focusHook(const char *command) {
   else if (strcmp_P(command + 4, PSTR("theme")) == 0)
     subCommand = THEME;
   else
-    return false;
+    return EventHandlerResult::OK;
 
   switch (subCommand) {
   case AT: {
     uint8_t idx = Serial.parseInt();
 
     if (Serial.peek() == '\n') {
-      cRGB c = getCrgbAt(idx);
+      cRGB c = ::LEDControl.getCrgbAt(idx);
 
       ::Focus.printColor(c.r, c.g, c.b);
       Serial.println();
@@ -210,7 +216,7 @@ bool LEDControl::focusHook(const char *command) {
 
       ::Focus.readColor(c);
 
-      setCrgbAt(idx, c);
+      ::LEDControl.setCrgbAt(idx, c);
     }
     break;
   }
@@ -219,31 +225,31 @@ bool LEDControl::focusHook(const char *command) {
 
     ::Focus.readColor(c);
 
-    set_all_leds_to(c);
+    ::LEDControl.set_all_leds_to(c);
 
     break;
   }
   case MODE: {
     char peek = Serial.peek();
     if (peek == '\n') {
-      Serial.println(get_mode_index());
+      Serial.println(::LEDControl.get_mode_index());
     } else if (peek == 'n') {
-      next_mode();
+      ::LEDControl.next_mode();
       Serial.read();
     } else if (peek == 'p') {
-      prev_mode();
+      ::LEDControl.prev_mode();
       Serial.read();
     } else {
       uint8_t mode = Serial.parseInt();
 
-      set_mode(mode);
+      ::LEDControl.set_mode(mode);
     }
     break;
   }
   case THEME: {
     if (Serial.peek() == '\n') {
       for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
-        cRGB c = getCrgbAt(idx);
+        cRGB c = ::LEDControl.getCrgbAt(idx);
 
         ::Focus.printColor(c.r, c.g, c.b);
         ::Focus.printSpace();
@@ -258,16 +264,17 @@ bool LEDControl::focusHook(const char *command) {
 
       ::Focus.readColor(color);
 
-      setCrgbAt(idx, color);
+      ::LEDControl.setCrgbAt(idx, color);
       idx++;
     }
     break;
   }
   }
 
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 }
 
 kaleidoscope::LEDControl LEDControl;
+kaleidoscope::FocusLEDCommand FocusLEDCommand;
