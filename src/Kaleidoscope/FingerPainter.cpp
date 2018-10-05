@@ -18,7 +18,7 @@
 #include <Kaleidoscope-FingerPainter.h>
 
 #include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
@@ -78,33 +78,36 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, by
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-bool FingerPainter::focusHook(const char *command) {
+EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
   enum {
     TOGGLE,
     CLEAR,
   } sub_command;
 
+  if (::Focus.handleHelp(command, PSTR("fingerpainter.toggle\nfingerpainter.clear")))
+    return EventHandlerResult::OK;
+
   if (strncmp_P(command, PSTR("fingerpainter."), 14) != 0)
-    return false;
+    return EventHandlerResult::OK;
 
   if (strcmp_P(command + 14, PSTR("toggle")) == 0)
     sub_command = TOGGLE;
   else if (strcmp_P(command + 14, PSTR("clear")) == 0)
     sub_command = CLEAR;
   else
-    return false;
+    return EventHandlerResult::OK;
 
   if (sub_command == CLEAR) {
     for (uint16_t i = 0; i < ROWS * COLS / 2; i++) {
       EEPROM.update(color_base_ + i, 0);
     }
-    return true;
+    return EventHandlerResult::OK;
   }
 
   ::FingerPainter.activate();
   toggle();
 
-  return true;
+  return EventHandlerResult::OK;
 }
 
 }

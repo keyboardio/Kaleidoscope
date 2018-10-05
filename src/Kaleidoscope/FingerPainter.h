@@ -25,9 +25,9 @@ class FingerPainter : public LEDMode {
   FingerPainter(void) {}
 
   static void toggle(void);
-  static bool focusHook(const char *command);
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult onSetup();
 
  protected:
@@ -41,7 +41,3 @@ class FingerPainter : public LEDMode {
 };
 
 extern kaleidoscope::FingerPainter FingerPainter;
-
-#define FOCUS_HOOK_FINGERPAINTER FOCUS_HOOK(FingerPainter.focusHook,  \
-                                            "fingerpainter.toggle\n"  \
-                                            "fingerpainter.clear")
