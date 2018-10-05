@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
 uint16_t EEPROMKeymap::keymap_base_;
@@ -88,9 +88,13 @@ void EEPROMKeymap::printKey(Key k) {
   ::Focus.printNumber(k.raw);
 }
 
-bool EEPROMKeymap::focusKeymap(const char *command) {
-  if (strcmp_P(command, PSTR("keymap.map")) != 0)
-    return false;
+EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
+  const char *cmd = PSTR("keymap.map");
+  if (::Focus.handleHelp(command, cmd))
+    return EventHandlerResult::OK;
+
+  if (strcmp_P(command, cmd) != 0)
+    return EventHandlerResult::OK;
 
   if (Serial.peek() == '\n') {
     for (uint8_t layer = 0; layer < max_layers_; layer++) {
@@ -112,55 +116,7 @@ bool EEPROMKeymap::focusKeymap(const char *command) {
     }
   }
 
-  return true;
-}
-
-bool EEPROMKeymap::focusKeymapLayer(const char *command) {
-  if (strcmp_P(command, PSTR("keymap.layer")) != 0) {
-    return false;
-  }
-
-  uint8_t layer = Serial.parseInt();
-  if (layer >= max_layers_) {
-    return false;
-  }
-  if (Serial.peek() == '\n') {
-    for (uint8_t row = 0; row < ROWS; row++) {
-      for (uint8_t col = 0; col < COLS; col++) {
-        Key k = Layer.getKey(layer, row, col);
-        printKey(k);
-        ::Focus.printSpace();
-      }
-    }
-    Serial.println();
-  } else {
-    uint16_t keysPerLayer = ROWS * COLS;
-    uint16_t offset = layer * keysPerLayer;
-    for (uint16_t k = 0; (k < keysPerLayer) && (Serial.peek() != '\n'); k++) {
-      updateKey(offset + k, parseKey());
-    }
-  }
-
-  return true;
-
-}
-
-bool EEPROMKeymap::focusKeymapTransfer(const char *command) {
-  if (strcmp_P(command, PSTR("keymap.transfer")) != 0)
-    return false;
-
-  uint8_t layer = Serial.parseInt();
-
-  for (uint8_t row = 0; row < ROWS; row++) {
-    for (uint8_t col = 0; col < COLS; col++) {
-      Key k = Layer.getKeyFromPROGMEM(layer, row, col);
-      uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col);
-
-      updateKey(pos, k);
-    }
-  }
-
-  return true;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 }

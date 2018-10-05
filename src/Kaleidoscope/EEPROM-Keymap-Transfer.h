@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap -- EEPROM-based keymap support.
- * Copyright (C) 2017  Keyboard.io, Inc
+ * Copyright (C) 2017-2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -20,10 +20,15 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope/EEPROM-Keymap.h>
 
-#define FOCUS_HOOK_KEYMAP FOCUS_HOOK(EEPROMKeymap.focusKeymap, "keymap.map")
+namespace kaleidoscope {
+namespace eeprom {
+class FocusKeymapTransferCommand : public Plugin {
+ public:
+  FocusKeymapTransferCommand() {}
 
-#define FOCUS_HOOK_KEYMAP_LAYER FOCUS_HOOK(EEPROMKeymap.focusKeymapLayer, \
-                                           "keymap.layer")
+  EventHandlerResult onFocusEvent(const char *command);
+};
+}
+}
 
-#define FOCUS_HOOK_KEYMAP_TRANSFER FOCUS_HOOK(EEPROMKeymap.focusKeymapTransfer, \
-                                              "keymap.transfer")
+extern kaleidoscope::eeprom::FocusKeymapTransferCommand FocusKeymapTransferCommand;
