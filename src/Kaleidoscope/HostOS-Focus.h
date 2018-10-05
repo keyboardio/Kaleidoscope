@@ -17,6 +17,18 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS-Base.h>
-#include <Kaleidoscope/HostOS-Focus.h>
-#include <Kaleidoscope/HostOS-Guesser.h>
+#include <Kaleidoscope.h>
+
+namespace kaleidoscope {
+namespace hostos {
+
+class FocusHostOSCommand : public kaleidoscope::Plugin {
+ public:
+  FocusHostOSCommand() {}
+  EventHandlerResult onFocusEvent(const char *command);
+};
+
+}
+}
+
+extern kaleidoscope::hostos::FocusHostOSCommand FocusHostOSCommand;
