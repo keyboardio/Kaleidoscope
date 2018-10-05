@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 // *INDENT-OFF*
 KEYMAPS(
@@ -40,18 +40,10 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus, FocusKeymapTransfer);
 
 void setup() {
-  Serial.begin(9600);
-
   Kaleidoscope.setup();
-
-  Focus.addHook(FOCUS_HOOK_SETTINGS);
-  Focus.addHook(FOCUS_HOOK_KEYMAP);
-  Focus.addHook(FOCUS_HOOK_KEYMAP_TRANSFER);
-  Focus.addHook(FOCUS_HOOK_HELP);
-  Focus.addHook(FOCUS_HOOK_VERSION);
 
   EEPROMKeymap.max_layers(1);
 }

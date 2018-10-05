@@ -18,37 +18,31 @@ overlay there. In the latter case, whenever there is a non-transparent key on
 the overlay, we will use that instead of the keyboard default.
 
 In short, this plugin allows us to change our keymaps, without having to compile
-and flash new firmware. It does so through the use of the [Focus][plugin:focus]
-plugin.
+and flash new firmware. It does so through the use of the
+[FocusSerial][plugin:focusSerial] plugin.
 
- [plugin:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [plugin:focusSerial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
 
 ## Using the plugin
 
 Using the plugin is reasonably simple: after including the header, enable the
-plugin, and let the `Layer` object know that we'll be using `EEPROMKeymap` to
-figure out which keys to use. We can either use the `getKeyOverride` or the
-`getKey` method, depending on whether we want to override, or fully replace the
-built-in keymap. Then we need to set at most how many layers we want to store in
-`EEPROM`, and that is about it.
+plugin, and configure how many layers at most we want to store in `EEPROM`.
+There are other settings one can tweak, but these two steps are enough to get
+started with.
 
-We can then update the keymap via [Focus][plugin:focus].
+Once these are set up, we can update the keymap via [Focus][plugin:focusSerial].
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Keymap.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap,
-                          Focus);
+                          Focus,
+                          FocusKeymapTransferCommand);
 
 void setup() {
-  Serial.begin(9600);
-
   Kaleidoscope.setup();
-
-  Focus.addHook(FOCUS_HOOK_KEYMAP);
-  Focus.addHook(FOCUS_HOOK_KEYMAP_TRANSFER);
 
   EEPROMKeymap.max_layers(1);
 }
@@ -68,9 +62,8 @@ The plugin provides the `EEPROMKeymap` object, which has the following methods:
 
 ## Focus commands
 
-The plugin provides three `Focus` hooks: `FOCUS_HOOK_KEYMAP`, `FOCUS_HOOK_KEYMAP_LAYER`,
-and `FOCUS_HOOK_KEYMAP_TRANSFER`. Together, they make the following commands
-available, respectively:
+The plugin provides a `keymap.map` Focus command unconditionally, and a
+`keymap.transfer` via the `FocusKeymapTransferCommand` object.
 
 ### `keymap.map [codes...]`
 
@@ -81,13 +74,6 @@ available, respectively:
 > keys, on all layers: the command will start from the first key on the first
 > layer, and go on as long as it has input. It will not go past the layer set
 > via the `.max_layers()` method.
-
-### `keymap.layer LAYER [codes...]`
-
-> Without codes, prints the keymap for the given layer (zero-indexed).
-> Prints each key as its raw 16-bit keycode.
-
-> With codes, stores them as the keymap for the given layer.
 
 ### `keymap.transfer LAYER`
 
@@ -103,7 +89,7 @@ available, respectively:
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
 
 ## Further reading
 
