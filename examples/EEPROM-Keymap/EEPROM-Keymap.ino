@@ -40,7 +40,7 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus, FocusKeymapTransfer);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus, FocusKeymapTransferCommand);
 
 void setup() {
   Kaleidoscope.setup();
