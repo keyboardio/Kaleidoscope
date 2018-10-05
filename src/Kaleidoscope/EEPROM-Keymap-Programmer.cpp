@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-EEPROM-Keymap-Programmer.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
 uint16_t EEPROMKeymapProgrammer::update_position_;
