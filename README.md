@@ -19,8 +19,7 @@ software (except to toggle edit mode on and off).
 
 ## Using the plugin
 
-To use the plugin, just include the header, add it to the list of used plugins,
-and register the `Focus` hooks:
+To use the plugin, just include the header, add it to the list of used plugins.
 
 ```c++
 #include <Kaleidoscope.h>
@@ -28,7 +27,7 @@ and register the `Focus` hooks:
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FingerPainter.h>
-#include <Kaleidoscope-Focus.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           EEPromSettings,
@@ -38,10 +37,6 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 
 void setup() {
   Kaleidoscope.setup();
-
-  EEPROMSettings.seal();
-
-  Focus.addHook(FOCUS_HOOK_FINGERPAINTER);
 }
 ```
 
@@ -50,9 +45,6 @@ void setup() {
 The plugin provides the `FingerPainter` object, which provides no public methods.
 
 ## Focus commands
-
-The plugin provides a single `Focus` hook: `FOCUS_HOOK_FINGERPAINTER`, which
-in turn provides the following commands:
 
 ### `fingerpainter.clear`
 
@@ -65,7 +57,7 @@ in turn provides the following commands:
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-Focus](https://github.com/keyboardio/Kaleidoscope-Focus)
+* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
 * [Kaleidoscope-LED-Palette-Theme][plugin:l-p-t]
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
 
