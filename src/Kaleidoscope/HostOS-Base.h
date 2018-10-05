@@ -38,8 +38,6 @@ class Base : public kaleidoscope::Plugin {
   Type os(void);
   void os(Type new_os);
 
-  static bool focusHook(const char *command);
-
  protected:
   virtual void autoDetect(void) {}
   Type os_;
@@ -53,5 +51,3 @@ class Base : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::hostos::Base HostOS;
-
-#define FOCUS_HOOK_HOSTOS FOCUS_HOOK(HostOS.focusHook, "hostos.type")
