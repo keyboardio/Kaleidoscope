@@ -184,9 +184,9 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   } subCommand;
 
   if (::Focus.handleHelp(command, PSTR("led.at\n"
-                                      "led.setAll\n"
-                                      "led.mode\n"
-                                      "led.theme")))
+                                       "led.setAll\n"
+                                       "led.mode\n"
+                                       "led.theme")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("led."), 4) != 0)

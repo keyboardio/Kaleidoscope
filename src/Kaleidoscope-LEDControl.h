@@ -153,7 +153,7 @@ class LEDControl : public kaleidoscope::Plugin {
 };
 
 class FocusLEDCommand : public Plugin {
-public:
+ public:
   FocusLEDCommand() {}
 
   EventHandlerResult onFocusEvent(const char *command);
