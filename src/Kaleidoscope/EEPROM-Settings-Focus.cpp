@@ -29,10 +29,8 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
     CRC,
   } sub_command;
 
-  if (strcmp_P(command, PSTR("help")) == 0) {
-    Serial.println(F("settings.valid?\nsettings.version\nsettings.crc"));
+  if (::Focus.handleHelp(command, PSTR("settings.valid?\nsettings.version\nsettings.crc")))
     return EventHandlerResult::OK;
-  }
 
   if (strncmp_P(command, PSTR("settings."), 9) != 0)
     return EventHandlerResult::OK;
