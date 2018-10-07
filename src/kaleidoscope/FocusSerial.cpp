@@ -68,6 +68,11 @@ bool FocusSerial::handleHelp(const char *command,
   return true;
 }
 
+EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
+  handleHelp(command, PSTR("help"));
+  return EventHandlerResult::OK;
+}
+
 void FocusSerial::printSpace(void) {
   Serial.print(F(" "));
 }

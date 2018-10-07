@@ -42,6 +42,7 @@ class FocusSerial : public kaleidoscope::Plugin {
     return EventHandlerResult::OK;
   }
   EventHandlerResult beforeReportingState();
+  EventHandlerResult onFocusEvent(const char *command);
 
  private:
   static char command_[32];
