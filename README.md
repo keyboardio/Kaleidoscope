@@ -67,6 +67,15 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 >
 > Should only be called **before** calling `seal()`.
 
+### `default_layer([id])`
+
+> Sets (or returns, if called without an ID) the default layer. When the
+> keyboard boots up, it will automatically switch to the configured layer - if
+> any.
+>
+> This is the Focus counterpart of the `default_layer()` method documented
+> above.
+
 ### `seal()`
 
 > Seal the `EEPROM` layout, so no new slices can be requested. The CRC checksum
@@ -124,6 +133,12 @@ to `KALEIDOSCOPE_INIT_PLUGINS` if one wishes to use them. They provide the
 following commands:
 
  [FocusSerial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
+
+### `settings.defaultLayer`
+
+> Sets or returns (if called without arguments) the ID of the default layer. If
+> set, the keyboard will automatically switch to the given layer when connected.
+> Setting it to `255` disables the automatic switching.
 
 ### `settings.crc`
 

@@ -24,32 +24,43 @@ namespace eeprom {
 
 EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   enum {
-    ISVALID,
-    GETVERSION,
+    DEFAULT_LAYER,
+    IS_VALID,
+    GET_VERSION,
     CRC,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("settings.valid?\nsettings.version\nsettings.crc")))
+  if (::Focus.handleHelp(command, PSTR("settings.defaultLayer\nsettings.valid?\nsettings.version\nsettings.crc")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("settings."), 9) != 0)
     return EventHandlerResult::OK;
 
-  if (strcmp_P(command + 9, PSTR("valid?")) == 0)
-    sub_command = ISVALID;
+  if (strcmp_P(command + 9, PSTR("defaultLayer")) == 0)
+    sub_command = DEFAULT_LAYER;
+  else if (strcmp_P(command + 9, PSTR("valid?")) == 0)
+    sub_command = IS_VALID;
   else if (strcmp_P(command + 9, PSTR("version")) == 0)
-    sub_command = GETVERSION;
+    sub_command = GET_VERSION;
   else if (strcmp_P(command + 9, PSTR("crc")) == 0)
     sub_command = CRC;
   else
     return EventHandlerResult::OK;
 
   switch (sub_command) {
-  case ISVALID:
+  case DEFAULT_LAYER: {
+    if (Serial.peek() == '\n') {
+      Serial.println(::EEPROMSettings.default_layer());
+    } else {
+      ::EEPROMSettings.default_layer(Serial.parseInt());
+    }
+    break;
+  }
+  case IS_VALID:
     ::Focus.printBool(::EEPROMSettings.isValid());
     Serial.println();
     break;
-  case GETVERSION:
+  case GET_VERSION:
     Serial.println(::EEPROMSettings.version());
     break;
   case CRC:
