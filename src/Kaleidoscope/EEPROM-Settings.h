@@ -45,7 +45,6 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static bool sealed_;
 
   static struct settings {
-    char magic[2];
     uint8_t version;
     uint16_t crc;
   } settings_;

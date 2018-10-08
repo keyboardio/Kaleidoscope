@@ -52,12 +52,11 @@ void EEPROMSettings::seal(void) {
 
   CRC.finalize();
 
-  if (settings_.magic[0] != 'K' || settings_.magic[1] != 'S') {
-    settings_.magic[0] = 'K';
-    settings_.magic[1] = 'S';
-    settings_.version = 0;
-    settings_.crc = CRC.crc;
-
+  /* Until we set a version, consider the EEPROM contents flexible, and always
+   * update the CRC. This will always result in the settings being considered
+   * valid.
+   */
+  if (settings_.version == 0xff) {
     return update();
   }
 
