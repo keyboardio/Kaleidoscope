@@ -18,4 +18,3 @@
 #pragma once
 
 #include <Kaleidoscope/EEPROM-Keymap.h>
-#include <Kaleidoscope/EEPROM-Keymap-Transfer.h>

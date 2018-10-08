@@ -20,14 +20,28 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
+EEPROMKeymap::Mode EEPROMKeymap::mode_;
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
+uint8_t EEPROMKeymap::progmem_layers_;
 
 EventHandlerResult EEPROMKeymap::onSetup() {
   ::EEPROMSettings.onSetup();
-  Layer.getKey = ::EEPROMKeymap.getKeyOverride;
-
+  progmem_layers_ = layer_count;
   return EventHandlerResult::OK;
+}
+
+void EEPROMKeymap::setup(uint8_t max, Mode mode) {
+  switch (mode) {
+  case Mode::CUSTOM:
+    break;
+  case Mode::EXTEND:
+    layer_count = progmem_layers_ + max;
+    Layer.getKey = getKeyExtended;
+    break;
+  }
+  mode_ = mode;
+  max_layers(max);
 }
 
 void EEPROMKeymap::max_layers(uint8_t max) {
@@ -49,22 +63,16 @@ Key EEPROMKeymap::getKey(uint8_t layer, byte row, byte col) {
   return key;
 }
 
-Key EEPROMKeymap::getKeyOverride(uint8_t layer, byte row, byte col) {
+Key EEPROMKeymap::getKeyExtended(uint8_t layer, byte row, byte col) {
   Key key;
 
-  key = getKey(layer, row, col);
+  // If the layer is within PROGMEM bounds, look it up from there
+  if (layer < progmem_layers_) {
+    return Layer.getKeyFromPROGMEM(layer, row, col);
+  }
 
-  /*
-  * If we read a transparent key from EEPROM, or we're trying to read from a
-  * layer higher than what is available there (max_layers), check if we're below
-  * the layer count in PROGMEM (layer_count). If we are, read from PROGMEM,
-  * otherwise leave the key as-is (either transparent or NoKey).
-  */
-  if ((key == Key_Transparent || layer >= max_layers_) &&
-      (layer < layer_count))
-    key = Layer.getKeyFromPROGMEM(layer, row, col);
-
-  return key;
+  // If the layer is outside of PROGMEM, look up from EEPROM
+  return getKey(layer - progmem_layers_, row, col);
 }
 
 uint16_t EEPROMKeymap::keymap_base(void) {
@@ -90,14 +98,24 @@ void EEPROMKeymap::printKey(Key k) {
 
 EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   const char *cmd = PSTR("keymap.map");
-  if (::Focus.handleHelp(command, cmd))
+  if (::Focus.handleHelp(command, PSTR("keymap.map\nkeymap.roLayers")))
     return EventHandlerResult::OK;
 
-  if (strcmp_P(command, cmd) != 0)
+  if (strncmp_P(command, PSTR("keymap."), 7) != 0)
+    return EventHandlerResult::OK;
+
+  if (strcmp_P(command + 7, PSTR("roLayers")) == 0) {
+    if (mode_ != Mode::EXTEND)
+      return EventHandlerResult::OK;
+    Serial.println(progmem_layers_);
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
+
+  if (strcmp_P(command + 7, PSTR("map")) != 0)
     return EventHandlerResult::OK;
 
   if (Serial.peek() == '\n') {
-    for (uint8_t layer = 0; layer < max_layers_; layer++) {
+    for (uint8_t layer = 0; layer < layer_count; layer++) {
       for (uint8_t row = 0; row < ROWS; row++) {
         for (uint8_t col = 0; col < COLS; col++) {
           Key k = Layer.getKey(layer, row, col);
@@ -110,8 +128,19 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     Serial.println();
   } else {
     uint16_t i = 0;
-    while ((Serial.peek() != '\n') && (i < ROWS * COLS * max_layers_)) {
-      updateKey(i, parseKey());
+    uint8_t layers = layer_count;
+    if (layers > 0)
+      layers--;
+    while ((Serial.peek() != '\n') && (i < ROWS * COLS * layers)) {
+      Key k = parseKey();
+
+      if (mode_ == Mode::EXTEND) {
+        uint8_t layer = i / (ROWS * COLS);
+        if (layer >= progmem_layers_)
+          updateKey(i - (progmem_layers_ * ROWS * COLS), k);
+      } else {
+        updateKey(i, k);
+      }
       i++;
     }
   }
