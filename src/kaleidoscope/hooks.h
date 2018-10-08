@@ -32,6 +32,9 @@ extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, byte row, byte col
 
 namespace kaleidoscope {
 
+// Forward declaration to enable friend declarations.
+class Layer_;
+
 // The reason why the hook routing entry point functions live within
 // class Hooks and not directly within a namespace is, that we want
 // to restrict who is allowed to trigger hooks, mainly to prevent
@@ -49,6 +52,7 @@ class Hooks {
   // Kaleidoscope_ calls Hooks::onSetup, Hooks::beforeReportingState
   // and Hooks::afterEachCycle.
   friend class Kaleidoscope_;
+  friend class ::kaleidoscope::Layer_;
 
   // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
