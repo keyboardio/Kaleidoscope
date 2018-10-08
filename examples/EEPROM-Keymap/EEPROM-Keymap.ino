@@ -40,12 +40,12 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus, FocusKeymapTransferCommand);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus);
 
 void setup() {
   Kaleidoscope.setup();
 
-  EEPROMKeymap.max_layers(1);
+  EEPROMKeymap.setup(1, EEPROMKeymap.Mode::EXTEND);
 }
 
 void loop() {

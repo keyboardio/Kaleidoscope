@@ -23,23 +23,32 @@
 namespace kaleidoscope {
 class EEPROMKeymap : public kaleidoscope::Plugin {
  public:
+  enum class Mode {
+    CUSTOM,
+    EXTEND,
+  };
+
   EEPROMKeymap(void) {}
 
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *command);
+
+  static void setup(uint8_t max, Mode mode = Mode::EXTEND);
 
   static void max_layers(uint8_t max);
 
   static uint16_t keymap_base(void);
 
   static Key getKey(uint8_t layer, byte row, byte col);
-  static Key getKeyOverride(uint8_t layer, byte row, byte col);
+  static Key getKeyExtended(uint8_t layer, byte row, byte col);
 
   static void updateKey(uint16_t base_pos, Key key);
 
  private:
   static uint16_t keymap_base_;
   static uint8_t max_layers_;
+  static uint8_t progmem_layers_;
+  static Mode mode_;
 
   static Key parseKey(void);
   static void printKey(Key key);
