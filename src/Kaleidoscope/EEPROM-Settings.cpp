@@ -47,15 +47,28 @@ uint16_t EEPROMSettings::crc(void) {
   return 0;
 }
 
+uint8_t EEPROMSettings::default_layer(uint8_t layer) {
+  if (layer == 0xff)
+    return settings_.default_layer;
+
+  settings_.default_layer = layer;
+  update();
+  return settings_.default_layer;
+}
+
 void EEPROMSettings::seal(void) {
   sealed_ = true;
 
   CRC.finalize();
 
+  /* If we have a default layer set, switch to it. As 0xff is the default EEPROM
+   * value, treat it as not having a default layer set. */
+  if (settings_.default_layer != 0xff)
+    Layer.move(settings_.default_layer);
+
   /* Until we set a version, consider the EEPROM contents flexible, and always
    * update the CRC. This will always result in the settings being considered
-   * valid.
-   */
+   * valid. */
   if (settings_.version == 0xff) {
     return update();
   }
