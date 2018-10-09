@@ -56,8 +56,13 @@ void ColormapEffect::refreshAt(byte row, byte col) {
 }
 
 EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
-  return ::LEDPaletteTheme.themeFocusEvent(command, PSTR("colormap.map"),
-         map_base_, max_layers_);
+  const char *cmd = PSTR("colormap.map");
+  EventHandlerResult result =
+      ::LEDPaletteTheme.themeFocusEvent(command, cmd,
+                                        map_base_, max_layers_);
+  if (strcmp_P(command, cmd) == 0)
+    onActivate();
+  return result;
 }
 
 }
