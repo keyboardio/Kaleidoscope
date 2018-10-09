@@ -125,6 +125,8 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     i++;
   }
 
+  ::LEDControl.refreshAll();
+
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
@@ -163,6 +165,8 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
     EEPROM.update(theme_base + pos, indexes);
     pos++;
   }
+
+  ::LEDControl.refreshAll();
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
