@@ -20,6 +20,8 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
+#define MAX_MODS_PER_LAYER 16
+
 namespace kaleidoscope {
 namespace plugin {
 class ActiveModColorEffect : public kaleidoscope::Plugin {
@@ -30,6 +32,11 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   static cRGB sticky_color;
 
   EventHandlerResult beforeReportingState();
+  EventHandlerResult onLayerChange();
+
+ private:
+  static uint8_t mod_keys_[MAX_MODS_PER_LAYER];
+  static uint8_t mod_key_count_;
 };
 }
 }
