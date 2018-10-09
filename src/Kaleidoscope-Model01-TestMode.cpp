@@ -60,7 +60,6 @@ void TestMode_::test_leds(void) {
   cRGB red = CRGB(201, 0, 0);
   cRGB blue = CRGB(0, 0, 201);
   cRGB green = CRGB(0, 201, 0);
-  cRGB white = CRGB(50, 50, 50);
   cRGB brightWhite = CRGB(160, 160, 160);
 
   // make all the LEDs bright red
