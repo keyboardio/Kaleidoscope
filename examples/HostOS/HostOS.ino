@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope/HostOS-select.h>
 
 // *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {

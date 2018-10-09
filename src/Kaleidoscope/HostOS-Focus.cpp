@@ -19,7 +19,6 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
-namespace hostos {
 
 EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
   const char *cmd = PSTR("hostos.type");
@@ -33,7 +32,7 @@ EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
     Serial.println(::HostOS.os());
   } else {
     uint8_t new_os = Serial.parseInt();
-    ::HostOS.os((Type) new_os);
+    ::HostOS.os((hostos::Type) new_os);
   }
 
   Serial.read();
@@ -41,6 +40,5 @@ EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
 }
 
 }
-}
 
-kaleidoscope::hostos::FocusHostOSCommand FocusHostOSCommand;
+kaleidoscope::FocusHostOSCommand FocusHostOSCommand;

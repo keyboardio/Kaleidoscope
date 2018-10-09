@@ -15,20 +15,35 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <Kaleidoscope/HostOS.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 
-#include <Kaleidoscope/HostOS-Base.h>
+#include <EEPROM.h>
 
 namespace kaleidoscope {
-namespace hostos {
 
-class Guesser : public Base {
- public:
-  Guesser(void) {}
+EventHandlerResult HostOS::onSetup(void) {
+  if (is_configured_)
+    return EventHandlerResult::OK;
 
- protected:
-  void autoDetect(void) final;
-};
+  eeprom_slice_ = ::EEPROMSettings.requestSlice(sizeof(os_));
+
+  is_configured_ = true;
+
+  if (os_ != hostos::UNKNOWN) {
+    return EventHandlerResult::OK;
+  }
+
+  os_ = (hostos::Type)EEPROM.read(eeprom_slice_);
+
+  return EventHandlerResult::OK;
+}
+
+void HostOS::os(hostos::Type new_os) {
+  os_ = new_os;
+  EEPROM.update(eeprom_slice_, os_);
+}
 
 }
-}
+
+kaleidoscope::HostOS HostOS;

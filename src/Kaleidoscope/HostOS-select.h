@@ -17,11 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS-Base.h>
-#include <Kaleidoscope/HostOS-Guesser.h>
-
-#if KALEIDOSCOPE_HOSTOS_GUESSER
-kaleidoscope::hostos::Base HostOS = kaleidoscope::hostos::Guesser();
-#else
-kaleidoscope::hostos::Base HostOS;
-#endif
+#warning <Kaleidoscope/HostOS-select.h> is an obsolete header, and can be safely removed.

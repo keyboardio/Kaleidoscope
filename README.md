@@ -7,13 +7,11 @@
 
 The `HostOS` extension is not all that useful in itself, rather, it is a
 building block other plugins and extensions can use to not repeat the same
-guesswork and logic. Its primary purpose is to help either detect, or keep track
-of the host operating system. The detection part is not the most reliable thing,
-mind you.
+guesswork and logic.
 
-The goal is to have a single place that remembers the host OS, either detected,
-or set by the end-user, in a Sketch, or via a macro, or some other way. This
-information can then be reused by other plugins.
+The goal is to have a single place that remembers the host OS, whether set by
+the end-user in a Sketch, or via a macro, or some other way. This information
+can then be reused by other plugins.
 
 See the [Unicode][plugin:unicode] extension for an example about how to use
 `HostOS` in practice.
@@ -22,20 +20,11 @@ See the [Unicode][plugin:unicode] extension for an example about how to use
 
 ## Using the extension
 
-The extension provides a `HostOS` singleton object. It can either be a simple
-one without auto-detection (the default), or one that will try to detect the
-Host OS, using the [FingerprintUSBHost][fprdetect] library. To enable
-auto-detection, `KALEIDOSCOPE_HOSTOS_GUESSER` must be defined before including
-the `HostOS` library header.
-
- [fprdetect]: https://github.com/keyboardio/FingerprintUSBHost
+The extension provides a `HostOS` singleton object.
 
 ```c++
-#define KALEIDOSCOPE_HOSTOS_GUESSER 1
-
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope/HostOS-select.h>
 
 void someFunction(void) {
   if (HostOS.os() == kaleidoscope::hostos::LINUX) {
@@ -46,15 +35,12 @@ void someFunction(void) {
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS)
 
 void setup(void) {
   Kaleidoscope.setup ();
 }
 ```
-
-To be able to choose between the two variants, one must also include the
-`Kaleidoscope/HostOS-select.h` header.
 
 ## Extension methods
 

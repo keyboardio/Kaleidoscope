@@ -28,26 +28,36 @@ typedef enum {
   WINDOWS,
   OTHER,
 
-  AUTO = 0xff,
+  UNKNOWN = 0xff,
+  AUTO = UNKNOWN
 } Type;
 
-class Base : public kaleidoscope::Plugin {
+}
+
+#define _DEPRECATED_MESSAGE_AUTODETECT                                  \
+  "The auto-detect mechanism of HostOS was removed, because it was\n"   \
+  "too unreliable. As such, the HostOS.autoDetect() method does\n"      \
+  "nothing anymore. Please consider other ways of changing the\n"       \
+  "HostOS type."
+
+class HostOS : public kaleidoscope::Plugin {
  public:
+  HostOS() {}
   EventHandlerResult onSetup();
 
-  Type os(void);
-  void os(Type new_os);
+  hostos::Type os(void) {
+    return os_;
+  }
+  void os(hostos::Type new_os);
 
- protected:
-  virtual void autoDetect(void) {}
-  Type os_;
+  void autoDetect() DEPRECATED(AUTODETECT) {}
 
  private:
+  hostos::Type os_;
   uint16_t eeprom_slice_;
   bool is_configured_ = false;
 };
 
 }
-}
 
-extern kaleidoscope::hostos::Base HostOS;
+extern kaleidoscope::HostOS HostOS;
