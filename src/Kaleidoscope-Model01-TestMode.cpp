@@ -19,11 +19,11 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 
-#define CHATTER_CYCLE_LIMIT 30
-#define TOGGLED_OFF 2
-#define TOGGLED_ON 1
-#define HELD 3
-#define RELEASED 0
+constexpr uint8_t CHATTER_CYCLE_LIMIT = 30;
+constexpr uint8_t TOGGLED_OFF = 2;
+constexpr uint8_t TOGGLED_ON = 1;
+constexpr uint8_t HELD = 3;
+constexpr uint8_t RELEASED = 0;
 
 
 kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
