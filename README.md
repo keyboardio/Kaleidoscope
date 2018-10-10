@@ -78,6 +78,19 @@ The OS type (i.e. the return type of `.os()` and the arguments to `.os(type)`) w
    - `kaleidoscope::hostos::WINDOWS`
    - `kaleidoscope::hostos::OTHER`
 
+## Focus commands
+
+The plugin provides the `FocusHostOSCommand` object, which, when enabled,
+provides the `hostos.type` Focus command.
+
+### `hostos.type [type]`
+
+> Without argument, returns the current OS type set (a numeric value).
+>
+> With an argument, it sets the OS type.
+>
+> This command can be used from the host to reliably set the OS type within the firmware.
+
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
