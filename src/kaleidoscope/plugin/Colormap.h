@@ -28,15 +28,15 @@ class ColormapEffect : public LEDMode {
 
   void max_layers(uint8_t max_);
 
+  EventHandlerResult onLayerChange();
   EventHandlerResult onFocusEvent(const char *command);
 
  protected:
   void onActivate(void) final;
-  void update(void) final;
   void refreshAt(byte row, byte col) final;
 
  private:
-  static uint8_t last_highest_layer_;
+  static uint8_t top_layer_;
   static uint8_t max_layers_;
   static uint16_t map_base_;
 };

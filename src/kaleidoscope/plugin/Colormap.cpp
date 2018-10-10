@@ -28,7 +28,7 @@ namespace plugin {
 
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
-uint8_t ColormapEffect::last_highest_layer_;
+uint8_t ColormapEffect::top_layer_;
 
 void ColormapEffect::max_layers(uint8_t max_) {
   if (map_base_ != 0)
@@ -42,21 +42,20 @@ void ColormapEffect::onActivate(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  last_highest_layer_ = Layer.top();
-  if (last_highest_layer_ <= max_layers_)
-    ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
-}
-
-void ColormapEffect::update(void) {
-  if (!Kaleidoscope.has_leds || Layer.top() == last_highest_layer_)
-    return;
-
-  onActivate();
+  top_layer_ = Layer.top();
+  if (top_layer_ <= max_layers_)
+    ::LEDPaletteTheme.updateHandler(map_base_, top_layer_);
 }
 
 void ColormapEffect::refreshAt(byte row, byte col) {
-  if (last_highest_layer_ <= max_layers_)
-    ::LEDPaletteTheme.refreshAt(map_base_, last_highest_layer_, row, col);
+  if (top_layer_ <= max_layers_)
+    ::LEDPaletteTheme.refreshAt(map_base_, top_layer_, row, col);
+}
+
+EventHandlerResult ColormapEffect::onLayerChange() {
+  if (::LEDControl.get_mode() == this)
+    onActivate();
+  return EventHandlerResult::OK;
 }
 
 EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
