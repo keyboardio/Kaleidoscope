@@ -1,13 +1,9 @@
 # Kaleidoscope-LEDEffect-Rainbow
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffect-Rainbow.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffect-Rainbow
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Two colorful rainbow effects are implemented by this plugin: one where the
 rainbow waves through the keys, and another where the LEDs breathe though the
