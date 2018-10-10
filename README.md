@@ -1,13 +1,9 @@
 # Kaleidoscope-ShapeShifter
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-ShapeShifter.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-ShapeShifter
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 `ShapeShifter` is a plugin that makes it considerably easier to change what
 symbol is input when a key is pressed together with `Shift`. If one wants to
