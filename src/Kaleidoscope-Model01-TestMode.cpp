@@ -19,11 +19,11 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 
-#define CHATTER_CYCLE_LIMIT 30
-#define TOGGLED_OFF 2
-#define TOGGLED_ON 1
-#define HELD 3
-#define RELEASED 0
+constexpr uint8_t CHATTER_CYCLE_LIMIT = 30;
+constexpr uint8_t TOGGLED_OFF = 2;
+constexpr uint8_t TOGGLED_ON = 1;
+constexpr uint8_t HELD = 3;
+constexpr uint8_t RELEASED = 0;
 
 
 kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
@@ -57,11 +57,10 @@ void TestMode_::set_leds(cRGB color) {
 }
 
 void TestMode_::test_leds(void) {
-  cRGB red = CRGB(201, 0, 0);
-  cRGB blue = CRGB(0, 0, 201);
-  cRGB green = CRGB(0, 201, 0);
-  cRGB white = CRGB(50, 50, 50);
-  cRGB brightWhite = CRGB(160, 160, 160);
+  constexpr cRGB red = CRGB(201, 0, 0);
+  constexpr cRGB blue = CRGB(0, 0, 201);
+  constexpr cRGB green = CRGB(0, 201, 0);
+  constexpr cRGB brightWhite = CRGB(160, 160, 160);
 
   // make all the LEDs bright red
   set_leds(red);
@@ -83,14 +82,14 @@ void TestMode_::test_leds(void) {
 
 void TestMode_::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
 
-  cRGB red = CRGB(201, 0, 0);
-  cRGB blue = CRGB(0, 0, 201);
-  cRGB green = CRGB(0, 201, 0);
+  constexpr cRGB red = CRGB(201, 0, 0);
+  constexpr cRGB blue = CRGB(0, 0, 201);
+  constexpr cRGB green = CRGB(0, 201, 0);
 
-  uint8_t keynum = (row * 8) + (col);
+  const uint8_t keynum = (row * 8) + (col);
 
-  uint8_t keyState = ((bitRead(oldState->all, keynum) << 1) |
-                      (bitRead(newState->all, keynum) << 0));
+  const uint8_t keyState = ((bitRead(oldState->all, keynum) << 1) |
+                            (bitRead(newState->all, keynum) << 0));
   if (keyState == TOGGLED_ON) {
     if (side->cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
       bitSet(side->badKeys, keynum);
