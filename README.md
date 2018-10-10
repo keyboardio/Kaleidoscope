@@ -1,13 +1,9 @@
 # Kaleidoscope-HostOS
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-HostOS
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `HostOS` extension is not all that useful in itself, rather, it is a
 building block other plugins and extensions can use to not repeat the same
@@ -50,9 +46,9 @@ void someFunction(void) {
   }
 }
 
-void setup(void) {
-  Kaleidoscope.use(&HostOS);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS);
 
+void setup(void) {
   Kaleidoscope.setup ();
 }
 ```
