@@ -1,13 +1,9 @@
 # Kaleidoscope-LED-ActiveModColor
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-ActiveModColor.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-ActiveModColor
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 With this plugin, any active modifier on the keyboard will have the LED under it
 highlighted. No matter how the modifier got activated (a key press, a macro,
