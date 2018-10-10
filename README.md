@@ -1,10 +1,9 @@
 # Kaleidoscope-LEDEffect-BootGreeting
 
-![status][st:stable]
+[![Build Status][travis:image]][travis:status]
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
+ [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffect-BootGreeting.svg?branch=master
+ [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LEDEffect-BootGreeting
 
 If you want to have your keyboard signal when it turns on, but you don't want to
 use any more complicated LED modes, this plugin is for you. It will make the
