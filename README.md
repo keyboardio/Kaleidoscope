@@ -1,13 +1,9 @@
 # Kaleidoscope-MouseKeys
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-MouseKeys.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-MouseKeys
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Have you ever wanted to control the mouse cursor from the comfort of your
 keyboard? With this plugin, you can. While it may not replace the mouse in all
