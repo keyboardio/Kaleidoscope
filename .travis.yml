@@ -7,13 +7,6 @@ install:
 script:
   - make travis-test BOARD_HARDWARE_PATH=$(pwd)/hardware
 notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#keyboardio"
-    use_notice: true
-    skip_join: true
-    template:
-      - "%{repository_name}/%{branch} %{commit} by %{author}: %{commit_subject} %{build_url} %{message}"
   email:
     on_success: change
     on_failure: change

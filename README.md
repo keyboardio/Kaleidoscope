@@ -1,13 +1,9 @@
 # Kaleidoscope-Cycle
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Cycle.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Cycle
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 If you ever wanted a key that works like keys on old cell phones, when you press
 a key and it cycles through a number of options in a sequence, then the cycling
