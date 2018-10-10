@@ -1,13 +1,9 @@
 # Kaleidoscope-USB-Quirks
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-USB-Quirks.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-USB-Quirks
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 USB-Quirks provides a few methods to deal with more obscure parts of the USB spec, such as changing between `Boot` and `Report` protocols. These are in a separate plugin, because these features are not part of the USB spec, and are often workarounds for various issues. See the provided methods for more information about what they're useful for.
 
