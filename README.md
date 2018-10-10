@@ -1,13 +1,9 @@
 # Kaleidoscope-Heatmap
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Heatmap
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `Heatmap` plugin provides a LED effect, that displays a heatmap on the
 keyboard. The LEDs under each key will have a color according to how much use
@@ -37,8 +33,6 @@ static const cRGB heat_colors[] PROGMEM = {
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl, HeatmapEffect);
 
 void setup() {
-  Kaleidoscope.use(&HeatmapEffect);
-
   Kaleidoscope.setup ();
 
   HeatmapEffect.heat_colors = heat_colors;
