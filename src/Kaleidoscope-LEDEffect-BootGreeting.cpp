@@ -36,16 +36,19 @@ BootGreetingEffect::BootGreetingEffect(byte pos_row, byte pos_col) {
 }
 
 void BootGreetingEffect::findLed(void) {
+  if (key_col != 255 && key_row != 255) {
+    row_ = key_row;
+    col_ = key_col;
+    done_ = true;
+    return;
+  }
+
   // Find the LED key.
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);
 
-      if (
-        //If key row and col explicitly set, ignore the search key
-        (k.raw == search_key.raw && key_row == 255 && key_row == 255)
-        || (key_row != 255 && key_col != 255 && key_row == r && key_col == c)
-      ) {
+      if (k.raw == search_key.raw) {
         row_ = r;
         col_ = c;
         return;
