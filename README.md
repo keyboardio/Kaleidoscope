@@ -1,13 +1,9 @@
 # Kaleidoscope-Redial
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Redial.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Redial
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 If you ever wanted to just repeat the last key pressed, no matter what it was,
 this plugin is made for you. It allows you to configure a key that will repeat
