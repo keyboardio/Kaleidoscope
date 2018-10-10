@@ -1,13 +1,9 @@
 # Kaleidoscope-LED-AlphaSquare
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-AlphaSquare.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-AlphaSquare
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 An alphabet for your per-key LEDs, `AlphaSquare` provides a way to display 4x4
 "pixel" symbols on your keyboard. With this building block, one can build some
