@@ -19,13 +19,17 @@
 
 #include <Kaleidoscope.h>
 
+#define _DEPRECATED_MESSAGE_ENABLE_EEPROM                          \
+  "EEPROM is now enabled automatically, and the .enableEEPROM()\n" \
+  "method is therefore obsolete. You can safely remove it."
+
 namespace kaleidoscope {
 
 class TypingBreaks : public kaleidoscope::Plugin {
  public:
   TypingBreaks(void) {}
 
-  static void enableEEPROM(void);
+  static void enableEEPROM(void) DEPRECATED(ENABLE_EEPROM) {}
 
   typedef struct settings_t {
     uint16_t idle_time_limit;
@@ -39,6 +43,7 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
   EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onSetup();
 
  private:
   static uint32_t session_start_time_;

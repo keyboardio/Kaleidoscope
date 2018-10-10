@@ -109,7 +109,7 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byt
   return EventHandlerResult::OK;
 }
 
-void TypingBreaks::enableEEPROM(void) {
+EventHandlerResult TypingBreaks::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
 
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
@@ -121,6 +121,7 @@ void TypingBreaks::enableEEPROM(void) {
   }
 
   EEPROM.get(settings_base_, settings);
+  return EventHandlerResult::OK;
 }
 
 #define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,      \
