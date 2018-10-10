@@ -1,13 +1,9 @@
 # Kaleidoscope-EEPROM-Keymap
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Keymap.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-EEPROM-Keymap
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 While keyboards usually ship with a keymap programmed in, to be able to change that keymap, without flashing new firmware, we need a way to place the keymap into a place we can update at run-time, and which persists across reboots. Fortunately, we have a bit of `EEPROM` on the keyboard, and can use it to store either the full keymap (and saving space in the firmware then), or store additional layers there.
 
