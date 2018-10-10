@@ -1,13 +1,9 @@
 # Kaleidoscope-SpaceCadet
 
-![status][st:stable] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-SpaceCadet.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-SpaceCadet
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 [Space Cadet][space-cadet] is a way to make it more convenient to input
 parens - those `(` and `)` things -, symbols that a lot of programming languages
