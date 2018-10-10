@@ -1,13 +1,9 @@
 # Kaleidoscope-TypingBreaks
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-TypingBreaks.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-TypingBreaks
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 Typing on the keyboard for an extended period of time may lead to injuries,
 which is why it is highly recommended to take frequent breaks from the
