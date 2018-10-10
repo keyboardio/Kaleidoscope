@@ -1,11 +1,5 @@
 # Kaleidoscope-TriColor
 
-![status][st:stable]
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
-
 The `TriColor` effect extension is a part of
 the [`LEDEffects`][plugin:ledeffects] library, not a stand-alone base library of
 its own. It is used to implement the effects in that library.
