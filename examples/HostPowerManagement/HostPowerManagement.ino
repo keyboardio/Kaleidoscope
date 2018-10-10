@@ -64,8 +64,6 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 
 void setup() {
   Kaleidoscope.setup();
-
-  HostPowerManagement.enableWakeup();
 }
 
 void loop() {

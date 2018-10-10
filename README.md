@@ -1,17 +1,12 @@
 # Kaleidoscope-HostPowerManagement
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-HostPowerManagement.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-HostPowerManagement
 
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
-
 Support performing custom actions whenever the host suspends, resumes, or is
-sleeping. Additionally, this plugin provides optional support for the keyboard
-to wake the host up from suspend.
+sleeping.
 
 ## Using the plugin
 
@@ -26,21 +21,12 @@ KALEIDOSCOPE_INIT_PLUGINS(HostPowerManagement);
 
 void setup () {
   Kaleidoscope.setup ();
-
-  HostPowerManagement.enableWakeup();
 }
 ```
 
 ## Plugin methods
 
-The plugin provides the `HostPowerManagement` object, which has the following methods:
-
-### `.enableWakeup()`
-
-> Enables host wakeup support. When enabled, pressing any key on the keyboard
-> will wake the host up.
->
-> Once enabled, it **cannot** be disabled again.
+The plugin provides the `HostPowerManagement` object, with no public methods.
 
 ## Overrideable methods
 
