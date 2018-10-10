@@ -1,13 +1,9 @@
 # Kaleidoscope-LED-Stalker
 
-![status][st:experimental] [![Build Status][travis:image]][travis:status]
+[![Build Status][travis:image]][travis:status]
 
  [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker.svg?branch=master
  [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-LED-Stalker
-
- [st:stable]: https://img.shields.io/badge/stable-✔-black.svg?style=flat&colorA=44cc11&colorB=494e52
- [st:broken]: https://img.shields.io/badge/broken-X-black.svg?style=flat&colorA=e05d44&colorB=494e52
- [st:experimental]: https://img.shields.io/badge/experimental----black.svg?style=flat&colorA=dfb317&colorB=494e52
 
 The `StalkerEffect` plugin provides an interesting new typing experience: the
 LEDs light up as you tap keys and play one of the selected effects: a haunting
