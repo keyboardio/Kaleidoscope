@@ -43,18 +43,18 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
+void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event) {
   switch (event) {
-  case kaleidoscope::HostPowerManagement::Suspend:
+  case kaleidoscope::plugin::HostPowerManagement::Suspend:
     LEDControl.paused = true;
     LEDControl.set_all_leds_to({0, 0, 0});
     LEDControl.syncLeds();
     break;
-  case kaleidoscope::HostPowerManagement::Resume:
+  case kaleidoscope::plugin::HostPowerManagement::Resume:
     LEDControl.paused = false;
     LEDControl.refreshAll();
     break;
-  case kaleidoscope::HostPowerManagement::Sleep:
+  case kaleidoscope::plugin::HostPowerManagement::Sleep:
     break;
   }
 }

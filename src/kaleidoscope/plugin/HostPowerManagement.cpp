@@ -25,6 +25,7 @@
 extern uint8_t _usbSuspendState;
 
 namespace kaleidoscope {
+namespace plugin {
 
 bool HostPowerManagement::was_suspended_ = false;
 bool HostPowerManagement::initial_suspend_ = true;
@@ -55,8 +56,9 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
 }
 
 }
-
-__attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
 }
 
-kaleidoscope::HostPowerManagement HostPowerManagement;
+__attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event) {
+}
+
+kaleidoscope::plugin::HostPowerManagement HostPowerManagement;

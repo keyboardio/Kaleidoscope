@@ -26,6 +26,7 @@
   "removed."
 
 namespace kaleidoscope {
+namespace plugin {
 class HostPowerManagement : public kaleidoscope::Plugin {
  public:
   typedef enum {
@@ -46,6 +47,11 @@ class HostPowerManagement : public kaleidoscope::Plugin {
 };
 }
 
-void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event);
+// Backwards compatibility
+typedef plugin::HostPowerManagement HostPowerManagement;
 
-extern kaleidoscope::HostPowerManagement HostPowerManagement;
+}
+
+void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event);
+
+extern kaleidoscope::plugin::HostPowerManagement HostPowerManagement;

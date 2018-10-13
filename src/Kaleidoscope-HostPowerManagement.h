@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostPowerManagement.h>
+#include <kaleidoscope/plugin/HostPowerManagement.h>
