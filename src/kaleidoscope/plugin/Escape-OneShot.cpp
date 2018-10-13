@@ -20,6 +20,7 @@
 #include <Kaleidoscope-Escape-OneShot.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (mapped_key.raw != Key_Escape.raw ||
@@ -37,5 +38,6 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, by
 }
 
 }
+}
 
-kaleidoscope::EscapeOneShot EscapeOneShot;
+kaleidoscope::plugin::EscapeOneShot EscapeOneShot;

@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Escape-OneShot.h>
+#include <kaleidoscope/plugin/Escape-OneShot.h>

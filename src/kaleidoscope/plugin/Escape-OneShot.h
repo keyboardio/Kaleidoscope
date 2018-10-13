@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class EscapeOneShot : public kaleidoscope::Plugin {
  public:
   EscapeOneShot(void) {}
@@ -27,5 +28,6 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 };
 }
+}
 
-extern kaleidoscope::EscapeOneShot EscapeOneShot;
+extern kaleidoscope::plugin::EscapeOneShot EscapeOneShot;
