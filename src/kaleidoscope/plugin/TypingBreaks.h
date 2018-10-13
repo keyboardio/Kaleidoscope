@@ -24,6 +24,7 @@
   "method is therefore obsolete. You can safely remove it."
 
 namespace kaleidoscope {
+namespace plugin {
 
 class TypingBreaks : public kaleidoscope::Plugin {
  public:
@@ -54,9 +55,9 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   static uint16_t settings_base_;
 };
-
+}
 }
 
-extern kaleidoscope::TypingBreaks TypingBreaks;
+extern kaleidoscope::plugin::TypingBreaks TypingBreaks;
 
 void TypingBreak(bool is_locked);

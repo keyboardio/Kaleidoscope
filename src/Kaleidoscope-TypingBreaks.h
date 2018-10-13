@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/TypingBreaks.h>
+#include <kaleidoscope/plugin/TypingBreaks.h>

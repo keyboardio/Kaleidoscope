@@ -20,6 +20,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 TypingBreaks::settings_t TypingBreaks::settings = {
   .idle_time_limit = 300, //  5m
@@ -205,8 +206,9 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::TypingBreaks TypingBreaks;
+kaleidoscope::plugin::TypingBreaks TypingBreaks;
 
 __attribute__((weak)) void TypingBreak(bool isLocked) {
 }
