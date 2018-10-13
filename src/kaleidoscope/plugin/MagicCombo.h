@@ -23,10 +23,13 @@
 
 #define USE_MAGIC_COMBOS(...)                                             \
   namespace kaleidoscope {                                                \
+  namespace plugin {                                                      \
   namespace magiccombo {                                                  \
-  const kaleidoscope::MagicCombo::Combo combos[] PROGMEM = {__VA_ARGS__}; \
+  const kaleidoscope::plugin::MagicCombo::Combo combos[] PROGMEM =        \
+    {__VA_ARGS__};                                                        \
                                                                           \
   const uint8_t combos_length = sizeof(combos) / sizeof(*combos);         \
+  }                                                                       \
   }                                                                       \
   }
 
@@ -38,6 +41,7 @@
   " https://github.com/keyboardio/Kaleidoscope-MagicCombo/blob/master/UPGRADING.md"
 
 namespace kaleidoscope {
+namespace plugin {
 
 class MagicCombo : public kaleidoscope::Plugin {
  public:
@@ -73,4 +77,8 @@ extern const uint8_t combos_length;
 
 }
 
-extern kaleidoscope::MagicCombo MagicCombo;
+// Backward compatibility
+typedef plugin::MagicCombo MagicCombo;
+}
+
+extern kaleidoscope::plugin::MagicCombo MagicCombo;

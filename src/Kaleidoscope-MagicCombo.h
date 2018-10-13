@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/MagicCombo.h>
+#include <kaleidoscope/plugin/MagicCombo.h>

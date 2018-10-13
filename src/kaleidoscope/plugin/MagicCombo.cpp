@@ -18,6 +18,7 @@
 #include <Kaleidoscope-MagicCombo.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint16_t MagicCombo::min_interval = 500;
 uint32_t MagicCombo::end_time_;
@@ -52,6 +53,7 @@ EventHandlerResult MagicCombo::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-};
+}
+}
 
-kaleidoscope::MagicCombo MagicCombo;
+kaleidoscope::plugin::MagicCombo MagicCombo;
