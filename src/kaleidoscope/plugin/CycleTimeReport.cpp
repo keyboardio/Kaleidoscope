@@ -18,6 +18,7 @@
 #include <Kaleidoscope-CycleTimeReport.h>
 
 namespace kaleidoscope {
+namespace plugin {
 uint32_t CycleTimeReport::next_report_time_;
 uint32_t CycleTimeReport::loop_start_time_;
 uint32_t CycleTimeReport::average_loop_time;
@@ -51,10 +52,11 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
 }
 
 }
+}
 
 __attribute__((weak)) void cycleTimeReport(void) {
   Serial.print(F("# average loop time: "));
   Serial.println(CycleTimeReport.average_loop_time);
 }
 
-kaleidoscope::CycleTimeReport CycleTimeReport;
+kaleidoscope::plugin::CycleTimeReport CycleTimeReport;

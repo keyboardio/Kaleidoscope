@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/CycleTimeReport.h>
+#include <kaleidoscope/plugin/CycleTimeReport.h>

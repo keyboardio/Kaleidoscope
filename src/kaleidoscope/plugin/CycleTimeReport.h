@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class CycleTimeReport : public kaleidoscope::Plugin {
  public:
   CycleTimeReport() {}
@@ -35,7 +36,8 @@ class CycleTimeReport : public kaleidoscope::Plugin {
   static uint32_t loop_start_time_;
 };
 }
+}
 
 void cycleTimeReport(void);
 
-extern kaleidoscope::CycleTimeReport CycleTimeReport;
+extern kaleidoscope::plugin::CycleTimeReport CycleTimeReport;
