@@ -20,6 +20,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class FingerPainter : public LEDMode {
  public:
   FingerPainter(void) {}
@@ -38,6 +39,7 @@ class FingerPainter : public LEDMode {
   static uint16_t color_base_;
   static bool edit_mode_;
 };
-};
+}
+}
 
-extern kaleidoscope::FingerPainter FingerPainter;
+extern kaleidoscope::plugin::FingerPainter FingerPainter;

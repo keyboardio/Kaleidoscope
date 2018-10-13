@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/FingerPainter.h>
+#include <kaleidoscope/plugin/FingerPainter.h>

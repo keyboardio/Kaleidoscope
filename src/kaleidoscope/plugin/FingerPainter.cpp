@@ -23,6 +23,7 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint16_t FingerPainter::color_base_;
 bool FingerPainter::edit_mode_;
@@ -111,5 +112,6 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::FingerPainter FingerPainter;
+kaleidoscope::plugin::FingerPainter FingerPainter;
