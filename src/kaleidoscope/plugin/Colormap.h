@@ -21,6 +21,7 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class ColormapEffect : public LEDMode {
  public:
   ColormapEffect(void) {}
@@ -40,5 +41,6 @@ class ColormapEffect : public LEDMode {
   static uint16_t map_base_;
 };
 }
+}
 
-extern kaleidoscope::ColormapEffect ColormapEffect;
+extern kaleidoscope::plugin::ColormapEffect ColormapEffect;

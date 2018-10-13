@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Colormap.h>
+#include <kaleidoscope/plugin/Colormap.h>

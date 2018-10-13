@@ -24,6 +24,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
@@ -61,5 +62,6 @@ EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::ColormapEffect ColormapEffect;
+kaleidoscope::plugin::ColormapEffect ColormapEffect;
