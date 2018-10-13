@@ -21,6 +21,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class ActiveModColorEffect : public kaleidoscope::Plugin {
  public:
   ActiveModColorEffect(void) {}
@@ -31,5 +32,6 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   EventHandlerResult beforeReportingState();
 };
 }
+}
 
-extern kaleidoscope::ActiveModColorEffect ActiveModColorEffect;
+extern kaleidoscope::plugin::ActiveModColorEffect ActiveModColorEffect;

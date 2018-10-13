@@ -20,6 +20,7 @@
 #include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
@@ -61,5 +62,6 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
 }
 
 }
+}
 
-kaleidoscope::ActiveModColorEffect ActiveModColorEffect;
+kaleidoscope::plugin::ActiveModColorEffect ActiveModColorEffect;

@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/LED-ActiveModColor.h>
+#include <kaleidoscope/plugin/LED-ActiveModColor.h>
