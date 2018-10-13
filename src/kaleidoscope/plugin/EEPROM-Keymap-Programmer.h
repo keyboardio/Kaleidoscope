@@ -21,6 +21,7 @@
 #include <Kaleidoscope-EEPROM-Keymap.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
  public:
   typedef enum {
@@ -53,5 +54,6 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   static Key new_key_;
 };
 }
+}
 
-extern kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
+extern kaleidoscope::plugin::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;

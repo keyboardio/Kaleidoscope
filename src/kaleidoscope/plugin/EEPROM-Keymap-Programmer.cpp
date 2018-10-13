@@ -19,6 +19,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
+namespace plugin {
 uint16_t EEPROMKeymapProgrammer::update_position_;
 EEPROMKeymapProgrammer::state_t EEPROMKeymapProgrammer::state_;
 EEPROMKeymapProgrammer::mode_t EEPROMKeymapProgrammer::mode;
@@ -113,5 +114,6 @@ EventHandlerResult EEPROMKeymapProgrammer::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
+kaleidoscope::plugin::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;
