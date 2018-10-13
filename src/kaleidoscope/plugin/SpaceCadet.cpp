@@ -19,6 +19,7 @@
 #include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 //Constructor with input and output, and assume default timeout
 SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_) {
@@ -244,5 +245,6 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
 }
 
 }
+}
 
-kaleidoscope::SpaceCadet SpaceCadet;
+kaleidoscope::plugin::SpaceCadet SpaceCadet;

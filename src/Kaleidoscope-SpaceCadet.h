@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/SpaceCadet.h>
+#include <kaleidoscope/plugin/SpaceCadet.h>

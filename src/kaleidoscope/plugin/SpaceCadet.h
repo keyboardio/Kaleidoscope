@@ -28,6 +28,7 @@
 #define Key_SpaceCadetDisable (Key) { .raw = kaleidoscope::ranges::SC_LAST }
 
 namespace kaleidoscope {
+namespace plugin {
 
 class SpaceCadet : public kaleidoscope::Plugin {
  public:
@@ -69,6 +70,11 @@ class SpaceCadet : public kaleidoscope::Plugin {
  private:
   static bool disabled;
 };
-};
+}
 
-extern kaleidoscope::SpaceCadet SpaceCadet;
+// Backwards compatibility
+typedef plugin::SpaceCadet SpaceCadet;
+
+}
+
+extern kaleidoscope::plugin::SpaceCadet SpaceCadet;

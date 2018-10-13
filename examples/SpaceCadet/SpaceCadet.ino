@@ -48,7 +48,7 @@ void setup() {
   //Set the SpaceCadet map
   //Setting is {KeyThatWasPressed, AlternativeKeyToSend, TimeoutInMS}
   //Note: must end with the SPACECADET_MAP_END delimiter
-  static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
+  static kaleidoscope::plugin::SpaceCadet::KeyBinding spacecadetmap[] = {
     {Key_LeftShift, Key_LeftParen, 250}
     , {Key_RightShift, Key_RightParen, 250}
     , {Key_LeftGui, Key_LeftCurlyBracket, 250}
