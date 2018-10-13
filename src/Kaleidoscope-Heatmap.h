@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Heatmap.h>
+#include <kaleidoscope/plugin/Heatmap.h>

@@ -20,6 +20,7 @@
 #include <Kaleidoscope-Heatmap.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 // store the number of times each key has been strock
 uint16_t Heatmap::heatmap_[ROWS][COLS];
@@ -199,5 +200,6 @@ void Heatmap::update(void) {
 }
 
 }
+}
 
-kaleidoscope::Heatmap HeatmapEffect;
+kaleidoscope::plugin::Heatmap HeatmapEffect;

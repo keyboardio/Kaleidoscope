@@ -22,6 +22,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class Heatmap : public LEDMode {
  public:
   Heatmap(void) {}
@@ -46,5 +47,6 @@ class Heatmap : public LEDMode {
   static cRGB computeColor(float v);
 };
 }
+}
 
-extern kaleidoscope::Heatmap HeatmapEffect;
+extern kaleidoscope::plugin::Heatmap HeatmapEffect;
