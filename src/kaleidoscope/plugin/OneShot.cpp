@@ -18,6 +18,7 @@
 #include <Kaleidoscope-OneShot.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 // ---- state ---------
 
@@ -268,5 +269,6 @@ void OneShot::cancel(bool with_stickies) {
 }
 
 }
+}
 
-kaleidoscope::OneShot OneShot;
+kaleidoscope::plugin::OneShot OneShot;

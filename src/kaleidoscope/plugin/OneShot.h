@@ -24,6 +24,7 @@
 #define OSL(n) (Key) {.raw = kaleidoscope::ranges::OSL_FIRST + n}
 
 namespace kaleidoscope {
+namespace plugin {
 
 class OneShot : public kaleidoscope::Plugin {
  public:
@@ -80,7 +81,7 @@ class OneShot : public kaleidoscope::Plugin {
   static void activateOneShot(uint8_t idx);
   static void cancelOneShot(uint8_t idx);
 };
-
+}
 }
 
-extern kaleidoscope::OneShot OneShot;
+extern kaleidoscope::plugin::OneShot OneShot;

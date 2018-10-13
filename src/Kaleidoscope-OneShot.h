@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/OneShot.h>
+#include <kaleidoscope/plugin/OneShot.h>
