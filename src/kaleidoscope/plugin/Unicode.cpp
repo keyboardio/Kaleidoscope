@@ -19,6 +19,7 @@
 #include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 void Unicode::start(void) {
   switch (::HostOS.os()) {
@@ -130,6 +131,7 @@ void Unicode::type(uint32_t unicode) {
 }
 
 }
+}
 
 __attribute__((weak)) Key hexToKey(uint8_t hex) {
   uint8_t m;
@@ -188,4 +190,4 @@ __attribute__((weak)) void unicodeCustomEnd(void) {
 __attribute__((weak)) void unicodeCustomInput(void) {
 }
 
-kaleidoscope::Unicode Unicode;
+kaleidoscope::plugin::Unicode Unicode;

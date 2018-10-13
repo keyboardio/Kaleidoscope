@@ -21,6 +21,7 @@
 #include <Kaleidoscope-HostOS.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class Unicode : public kaleidoscope::Plugin {
  public:
   Unicode(void) {}
@@ -33,6 +34,7 @@ class Unicode : public kaleidoscope::Plugin {
   static void typeCode(uint32_t unicode);
 };
 }
+}
 
 Key hexToKey(uint8_t hex);
 Key hexToKeysWithNumpad(uint8_t hex);
@@ -41,4 +43,4 @@ void unicodeCustomStart(void);
 void unicodeCustomEnd(void);
 void unicodeCustomInput(void);
 
-extern kaleidoscope::Unicode Unicode;
+extern kaleidoscope::plugin::Unicode Unicode;

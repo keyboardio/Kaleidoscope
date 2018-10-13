@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Unicode.h>
+#include <kaleidoscope/plugin/Unicode.h>
