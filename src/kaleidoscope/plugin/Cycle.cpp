@@ -20,6 +20,7 @@
 #include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
+namespace plugin {
 // --- state ---
 Key Cycle::last_non_cycle_key_;
 uint8_t Cycle::cycle_count_;
@@ -80,10 +81,11 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, 
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-};
+}
+}
 
 __attribute__((weak))
 void cycleAction(Key previous_key, uint8_t cycle_count) {
 }
 
-kaleidoscope::Cycle Cycle;
+kaleidoscope::plugin::Cycle Cycle;

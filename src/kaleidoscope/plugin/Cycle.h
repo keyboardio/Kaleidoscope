@@ -28,6 +28,7 @@
     })
 
 namespace kaleidoscope {
+namespace plugin {
 class Cycle : public kaleidoscope::Plugin {
  public:
   Cycle(void) {}
@@ -41,8 +42,9 @@ class Cycle : public kaleidoscope::Plugin {
   static Key last_non_cycle_key_;
   static uint8_t cycle_count_;
 };
-};
+}
+}
 
 void cycleAction(Key previous_key, uint8_t cycle_count);
 
-extern kaleidoscope::Cycle Cycle;
+extern kaleidoscope::plugin::Cycle Cycle;
