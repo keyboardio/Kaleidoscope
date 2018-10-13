@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/LED-Stalker.h>
+#include <kaleidoscope/plugin/LED-Stalker.h>

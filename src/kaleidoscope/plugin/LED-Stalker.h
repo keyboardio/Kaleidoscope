@@ -20,9 +20,10 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
-#define STALKER(v, ...) ({static kaleidoscope::stalker::v _effect __VA_ARGS__; &_effect;})
+#define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect;})
 
 namespace kaleidoscope {
+namespace plugin {
 class StalkerEffect : public LEDMode {
  public:
   class ColorComputer {
@@ -74,5 +75,6 @@ class Rainbow : public StalkerEffect::ColorComputer {
 
 }
 }
+}
 
-extern kaleidoscope::StalkerEffect StalkerEffect;
+extern kaleidoscope::plugin::StalkerEffect StalkerEffect;

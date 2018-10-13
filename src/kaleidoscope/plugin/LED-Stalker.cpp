@@ -16,9 +16,9 @@
  */
 
 #include <Kaleidoscope-LED-Stalker.h>
-#include <LEDUtils.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint8_t StalkerEffect::map_[ROWS][COLS];
 StalkerEffect::ColorComputer *StalkerEffect::variant;
@@ -137,7 +137,8 @@ cRGB Rainbow::compute(uint8_t *step) {
 }
 
 }
+}
 
 }
 
-kaleidoscope::StalkerEffect StalkerEffect;
+kaleidoscope::plugin::StalkerEffect StalkerEffect;
