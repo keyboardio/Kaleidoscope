@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LEDEffects -- An assorted collection of LED effects for Kaleidoscope
- * Copyright (C) 2016  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,10 +17,5 @@
 
 #include <Kaleidoscope-LEDEffects.h>
 
-kaleidoscope::TriColor JukeboxEffect(CRGB(0xc8, 0xe8, 0xee),   /* TM */
-                                     CRGB(0xc3, 0xee, 0x8c),   /* VCO */
-                                     CRGB(0x21, 0x38, 0xd7));  /* RN */
-
-kaleidoscope::TriColor JukeboxAlternateEffect(CRGB(0xc8, 0xe8, 0xee),   /* TM */
-    CRGB(0x21, 0x38, 0xd7),   /* RN */
-    CRGB(0xc3, 0xee, 0x8c));  /* VCO */
+kaleidoscope::plugin::TriColor MiamiEffect(CRGB(0x4e, 0xd6, 0xd6),   /* Cyan */
+                                   CRGB(0xaf, 0x67, 0xfa));  /* Magenta */

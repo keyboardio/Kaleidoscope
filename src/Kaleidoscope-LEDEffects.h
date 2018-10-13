@@ -17,6 +17,6 @@
 
 #pragma once
 
-#include <Kaleidoscope/TriColor.h>
-#include <Kaleidoscope/Miami.h>
-#include <Kaleidoscope/Jukebox.h>
+#include <kaleidoscope/plugin/TriColor.h>
+#include <kaleidoscope/plugin/Miami.h>
+#include <kaleidoscope/plugin/Jukebox.h>

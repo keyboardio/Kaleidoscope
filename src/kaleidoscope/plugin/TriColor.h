@@ -17,6 +17,23 @@
 
 #pragma once
 
-#include <Kaleidoscope/TriColor.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 
-extern kaleidoscope::TriColor MiamiEffect;
+namespace kaleidoscope {
+namespace plugin {
+class TriColor : public LEDMode {
+ public:
+  TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);
+  TriColor(cRGB base_color, cRGB mod_color) : TriColor(base_color, mod_color, mod_color) {}
+
+ protected:
+  void update(void) final;
+
+ private:
+  cRGB base_color_;
+  cRGB mod_color_;
+  cRGB esc_color_;
+};
+}
+}

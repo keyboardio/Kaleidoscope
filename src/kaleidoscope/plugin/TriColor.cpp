@@ -18,6 +18,7 @@
 #include <Kaleidoscope-LEDEffects.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   base_color_ = base_color;
@@ -57,4 +58,5 @@ void TriColor::update(void) {
   }
 }
 
+}
 }
