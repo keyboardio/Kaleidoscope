@@ -20,7 +20,6 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
-namespace hostos {
 
 class FocusHostOSCommand : public kaleidoscope::Plugin {
  public:
@@ -29,6 +28,5 @@ class FocusHostOSCommand : public kaleidoscope::Plugin {
 };
 
 }
-}
 
-extern kaleidoscope::hostos::FocusHostOSCommand FocusHostOSCommand;
+extern kaleidoscope::FocusHostOSCommand FocusHostOSCommand;
