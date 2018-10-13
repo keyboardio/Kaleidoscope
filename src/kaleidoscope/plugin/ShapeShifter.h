@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 class ShapeShifter : public kaleidoscope::Plugin {
  public:
@@ -37,7 +38,10 @@ class ShapeShifter : public kaleidoscope::Plugin {
  private:
   static bool mod_active_;
 };
-
 }
 
-extern kaleidoscope::ShapeShifter ShapeShifter;
+// Backwards compatibility
+typedef plugin::ShapeShifter ShapeShifter;
+}
+
+extern kaleidoscope::plugin::ShapeShifter ShapeShifter;

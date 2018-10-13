@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/ShapeShifter.h>
+#include <kaleidoscope/plugin/ShapeShifter.h>

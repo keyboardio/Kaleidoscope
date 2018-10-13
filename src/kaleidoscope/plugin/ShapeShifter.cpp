@@ -19,6 +19,7 @@
 #include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
 bool ShapeShifter::mod_active_;
@@ -60,5 +61,6 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, byte row, byt
 }
 
 }
+}
 
-kaleidoscope::ShapeShifter ShapeShifter;
+kaleidoscope::plugin::ShapeShifter ShapeShifter;
