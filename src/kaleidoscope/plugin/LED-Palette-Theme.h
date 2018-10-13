@@ -21,6 +21,7 @@
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 class LEDPaletteTheme : public kaleidoscope::Plugin {
  public:
@@ -47,5 +48,6 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 };
 
 }
+}
 
-extern kaleidoscope::LEDPaletteTheme LEDPaletteTheme;
+extern kaleidoscope::plugin::LEDPaletteTheme LEDPaletteTheme;

@@ -21,6 +21,7 @@
 #include <EEPROM.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint16_t LEDPaletteTheme::palette_base_;
 
@@ -172,5 +173,6 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
 }
 
 }
+}
 
-kaleidoscope::LEDPaletteTheme LEDPaletteTheme;
+kaleidoscope::plugin::LEDPaletteTheme LEDPaletteTheme;

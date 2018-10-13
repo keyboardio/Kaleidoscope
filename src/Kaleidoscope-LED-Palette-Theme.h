@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/LED-Palette-Theme.h>
+#include <kaleidoscope/plugin/LED-Palette-Theme.h>
