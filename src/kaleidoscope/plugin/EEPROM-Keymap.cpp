@@ -20,6 +20,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
+namespace plugin {
 EEPROMKeymap::Mode EEPROMKeymap::mode_;
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
@@ -149,5 +150,6 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::EEPROMKeymap EEPROMKeymap;
+kaleidoscope::plugin::EEPROMKeymap EEPROMKeymap;

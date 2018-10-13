@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/EEPROM-Keymap.h>
+#include <kaleidoscope/plugin/EEPROM-Keymap.h>
