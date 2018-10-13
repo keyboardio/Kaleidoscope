@@ -59,7 +59,7 @@ const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
   return MACRO_NONE;
 }
 
-static const kaleidoscope::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
+static const kaleidoscope::plugin::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
   {0, 6, 200, 50},
   {0, 5, 200, 50},
   {0, 4, 200, 50},

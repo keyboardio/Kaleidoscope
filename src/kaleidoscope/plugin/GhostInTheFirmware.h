@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class GhostInTheFirmware : public kaleidoscope::Plugin {
  public:
   typedef struct {
@@ -48,4 +49,8 @@ class GhostInTheFirmware : public kaleidoscope::Plugin {
 };
 }
 
-extern kaleidoscope::GhostInTheFirmware GhostInTheFirmware;
+// For backwards compatibility
+typedef kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;
+}
+
+extern kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;

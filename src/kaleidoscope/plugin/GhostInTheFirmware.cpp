@@ -19,6 +19,7 @@
 #include <Kaleidoscope-GhostInTheFirmware.h>
 
 namespace kaleidoscope {
+namespace plugin {
 const GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghost_keys;
 bool GhostInTheFirmware::is_active_;
 bool GhostInTheFirmware::is_pressed_;
@@ -69,6 +70,7 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-};
+}
+}
 
-kaleidoscope::GhostInTheFirmware GhostInTheFirmware;
+kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;

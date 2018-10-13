@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/GhostInTheFirmware.h>
+#include <kaleidoscope/plugin/GhostInTheFirmware.h>
