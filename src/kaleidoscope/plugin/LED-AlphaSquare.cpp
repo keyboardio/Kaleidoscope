@@ -16,9 +16,10 @@
  */
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
-#include <Kaleidoscope/LED-AlphaSquare-4x4.h>
+#include <kaleidoscope/plugin/LED-AlphaSquare-4x4.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 static const uint16_t alphabet[] PROGMEM = {
   ALPHASQUARE_SYMBOL_A,
@@ -95,5 +96,6 @@ void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {
 }
 
 }
+}
 
-kaleidoscope::AlphaSquare AlphaSquare;
+kaleidoscope::plugin::AlphaSquare AlphaSquare;

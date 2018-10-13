@@ -32,6 +32,7 @@
               p30 << 12 | p31 << 13 | p32 << 14 | p33 << 15 )
 
 namespace kaleidoscope {
+namespace plugin {
 class AlphaSquare : public kaleidoscope::Plugin {
  public:
   AlphaSquare(void) {}
@@ -78,5 +79,6 @@ class AlphaSquare : public kaleidoscope::Plugin {
 };
 
 }
+}
 
-extern kaleidoscope::AlphaSquare AlphaSquare;
+extern kaleidoscope::plugin::AlphaSquare AlphaSquare;

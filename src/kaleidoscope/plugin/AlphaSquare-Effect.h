@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-AlphaSquare -- 4x4 pixel LED alphabet
- * Copyright (C) 2017  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,17 +17,27 @@
 
 #pragma once
 
-#include <Kaleidoscope/LED-AlphaSquare.h>
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
-namespace alpha_square {
-namespace symbols {
+namespace plugin {
+class AlphaSquareEffect : public LEDMode {
+ public:
+  AlphaSquareEffect(void) {}
 
-/* λ */
-static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
-                                   0, 1, 0, 0,
-                                   0, 1, 1, 0,
-                                   1, 0, 0, 1);
+  static uint16_t length;
+
+  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+
+ protected:
+  void update(void) final;
+
+ private:
+  static uint32_t end_time_left_, end_time_right_;
+  static Key last_key_left_, last_key_right_;
+};
 }
 }
-}
+
+extern kaleidoscope::plugin::AlphaSquareEffect AlphaSquareEffect;

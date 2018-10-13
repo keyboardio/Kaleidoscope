@@ -75,15 +75,15 @@ const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
 
     for (uint8_t step = 0; step <= 0xf0; step += 8) {
       AlphaSquare.color = { step, step, step };
-      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 2);
-      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 10);
+      AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 2);
+      AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 10);
       delay(10);
     }
 
     for (uint8_t step = 0xff; step >= 8; step -= 8) {
       AlphaSquare.color = { step, step, step };
-      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 2);
-      AlphaSquare.display(kaleidoscope::alpha_square::symbols::Lambda, 10);
+      AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 2);
+      AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 10);
       delay(10);
     }
     delay(100);

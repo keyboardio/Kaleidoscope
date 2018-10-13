@@ -18,6 +18,7 @@
 #include <Kaleidoscope-LED-AlphaSquare.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint16_t AlphaSquareEffect::length = 1000;
 uint32_t AlphaSquareEffect::end_time_left_, AlphaSquareEffect::end_time_right_;
@@ -68,5 +69,6 @@ EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row,
 }
 
 }
+}
 
-kaleidoscope::AlphaSquareEffect AlphaSquareEffect;
+kaleidoscope::plugin::AlphaSquareEffect AlphaSquareEffect;
