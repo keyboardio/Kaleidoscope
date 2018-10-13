@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Redial.h>
+#include <kaleidoscope/plugin/Redial.h>

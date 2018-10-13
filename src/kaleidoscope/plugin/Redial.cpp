@@ -19,6 +19,7 @@
 #include <Kaleidoscope-Redial.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 Key Redial::key;
 Key Redial::key_to_redial_;
@@ -49,5 +50,6 @@ __attribute__((weak)) bool Redial::shouldRemember(Key mapped_key) {
 }
 
 }
+}
 
-kaleidoscope::Redial Redial;
+kaleidoscope::plugin::Redial Redial;

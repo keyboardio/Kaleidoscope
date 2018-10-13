@@ -25,7 +25,7 @@ enum {
 };
 #define Key_Redial (Key) {.raw = REDIAL}
 
-bool kaleidoscope::Redial::shouldRemember(Key mapped_key) {
+bool kaleidoscope::plugin::Redial::shouldRemember(Key mapped_key) {
   if (mapped_key >= Key_A && mapped_key <= Key_Z)
     return true;
   return false;

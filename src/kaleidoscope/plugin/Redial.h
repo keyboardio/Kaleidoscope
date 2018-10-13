@@ -21,6 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 class Redial : public kaleidoscope::Plugin {
  public:
@@ -37,5 +38,6 @@ class Redial : public kaleidoscope::Plugin {
 };
 
 }
+}
 
-extern kaleidoscope::Redial Redial;
+extern kaleidoscope::plugin::Redial Redial;
