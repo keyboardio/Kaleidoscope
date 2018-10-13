@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class FocusSerial : public kaleidoscope::Plugin {
  public:
   FocusSerial(void) {}
@@ -49,6 +50,7 @@ class FocusSerial : public kaleidoscope::Plugin {
 
   static void drain(void);
 };
-};
+}
+}
 
-extern kaleidoscope::FocusSerial Focus;
+extern kaleidoscope::plugin::FocusSerial Focus;

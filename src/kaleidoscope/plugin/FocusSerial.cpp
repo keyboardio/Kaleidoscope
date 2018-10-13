@@ -22,6 +22,7 @@
 #endif
 
 namespace kaleidoscope {
+namespace plugin {
 
 char FocusSerial::command_[32];
 
@@ -104,5 +105,6 @@ void FocusSerial::readColor(cRGB &color) {
 }
 
 }
+}
 
-kaleidoscope::FocusSerial Focus;
+kaleidoscope::plugin::FocusSerial Focus;

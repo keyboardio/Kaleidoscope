@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/FocusSerial.h>
+#include <kaleidoscope/plugin/FocusSerial.h>
