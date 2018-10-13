@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Syster.h>
+#include <kaleidoscope/plugin/Syster.h>

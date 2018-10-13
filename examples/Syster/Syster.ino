@@ -44,18 +44,18 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
+void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *symbol) {
   switch (action) {
-  case kaleidoscope::Syster::StartAction:
+  case kaleidoscope::plugin::Syster::StartAction:
     Unicode.type(0x2328);
     break;
-  case kaleidoscope::Syster::EndAction:
+  case kaleidoscope::plugin::Syster::EndAction:
     handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
     kaleidoscope::hid::sendKeyboardReport();
     handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
     kaleidoscope::hid::sendKeyboardReport();
     break;
-  case kaleidoscope::Syster::SymbolAction:
+  case kaleidoscope::plugin::Syster::SymbolAction:
     Serial.print("systerAction: symbol=");
     Serial.println(symbol);
     if (strcmp(symbol, "coffee") == 0) {

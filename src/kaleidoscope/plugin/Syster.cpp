@@ -21,6 +21,7 @@
 #undef SYSTER
 
 namespace kaleidoscope {
+namespace plugin {
 
 // --- state ---
 char Syster::symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
@@ -99,6 +100,7 @@ EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
 }
 
 }
+}
 
 __attribute__((weak)) const char keyToChar(Key key) {
   if (key.flags != 0)
@@ -117,4 +119,4 @@ __attribute__((weak)) const char keyToChar(Key key) {
 __attribute__((weak)) void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
 }
 
-kaleidoscope::Syster Syster;
+kaleidoscope::plugin::Syster Syster;

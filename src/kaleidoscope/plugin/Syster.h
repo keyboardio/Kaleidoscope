@@ -25,6 +25,7 @@
 #define SYSTER ((Key) { .raw = kaleidoscope::ranges::SYSTER })
 
 namespace kaleidoscope {
+namespace plugin {
 
 class Syster : public kaleidoscope::Plugin {
  public:
@@ -47,9 +48,14 @@ class Syster : public kaleidoscope::Plugin {
   static uint8_t symbol_pos_;
   static bool is_active_;
 };
-};
+}
+
+// Backwards compatibility
+typedef plugin::Syster Syster;
+
+}
 
 const char keyToChar(Key key);
-void systerAction(kaleidoscope::Syster::action_t action, const char *symbol);
+void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *symbol);
 
-extern kaleidoscope::Syster Syster;
+extern kaleidoscope::plugin::Syster Syster;
