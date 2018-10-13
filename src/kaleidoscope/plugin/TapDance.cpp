@@ -19,6 +19,7 @@
 #include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 // --- state ---
 uint32_t TapDance::end_time_;
@@ -222,9 +223,10 @@ EventHandlerResult TapDance::afterEachCycle() {
 }
 
 }
-
-__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
-    kaleidoscope::TapDance::ActionType tap_dance_action) {
 }
 
-kaleidoscope::TapDance TapDance;
+__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+    kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+}
+
+kaleidoscope::plugin::TapDance TapDance;

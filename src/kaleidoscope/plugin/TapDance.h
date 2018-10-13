@@ -29,6 +29,7 @@
     })
 
 namespace kaleidoscope {
+namespace plugin {
 class TapDance : public kaleidoscope::Plugin {
  public:
   typedef enum {
@@ -63,10 +64,14 @@ class TapDance : public kaleidoscope::Plugin {
   static void timeout(void);
   static void release(uint8_t tap_dance_index);
 };
+}
+
+// Backwards compatibility
+typedef plugin::TapDance TapDance;
 
 }
 
 void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
-                    kaleidoscope::TapDance::ActionType tap_dance_action);
+                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
 
-extern kaleidoscope::TapDance TapDance;
+extern kaleidoscope::plugin::TapDance TapDance;
