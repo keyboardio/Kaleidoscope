@@ -23,6 +23,7 @@
 #define TOPSY(k) (Key) { .raw = kaleidoscope::ranges::TT_FIRST + (Key_ ## k).keyCode }
 
 namespace kaleidoscope {
+namespace plugin {
 
 class TopsyTurvy: public kaleidoscope::Plugin {
  public:
@@ -35,7 +36,7 @@ class TopsyTurvy: public kaleidoscope::Plugin {
   static bool is_shifted_;
   static bool is_active_;
 };
-
+}
 }
 
-extern kaleidoscope::TopsyTurvy TopsyTurvy;
+extern kaleidoscope::plugin::TopsyTurvy TopsyTurvy;

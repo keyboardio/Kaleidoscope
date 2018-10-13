@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/TopsyTurvy.h>
+#include <kaleidoscope/plugin/TopsyTurvy.h>

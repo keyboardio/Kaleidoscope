@@ -19,6 +19,7 @@
 #include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 uint8_t TopsyTurvy::last_pressed_position_;
 bool TopsyTurvy::is_shifted_;
@@ -69,5 +70,6 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
 }
 
 }
+}
 
-kaleidoscope::TopsyTurvy TopsyTurvy;
+kaleidoscope::plugin::TopsyTurvy TopsyTurvy;
