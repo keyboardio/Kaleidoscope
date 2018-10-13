@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <kaleidoscope/USB-Quirks.h>
+#include <kaleidoscope/plugin/USB-Quirks.h>

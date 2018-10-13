@@ -21,6 +21,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class USBQuirks: public kaleidoscope::Plugin {
  public:
   USBQuirks() {}
@@ -28,5 +29,6 @@ class USBQuirks: public kaleidoscope::Plugin {
   void toggleKeyboardProtocol();
 };
 }
+}
 
-extern kaleidoscope::USBQuirks USBQuirks;
+extern kaleidoscope::plugin::USBQuirks USBQuirks;

@@ -19,6 +19,7 @@
 #include <Kaleidoscope-USB-Quirks.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 void USBQuirks::toggleKeyboardProtocol() {
 
@@ -35,5 +36,6 @@ void USBQuirks::toggleKeyboardProtocol() {
 }
 
 }
+}
 
-kaleidoscope::USBQuirks USBQuirks;
+kaleidoscope::plugin::USBQuirks USBQuirks;
