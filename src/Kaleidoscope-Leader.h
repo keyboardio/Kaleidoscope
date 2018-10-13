@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Leader.h>
+#include <kaleidoscope/plugin/Leader.h>

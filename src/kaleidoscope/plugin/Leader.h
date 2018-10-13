@@ -28,6 +28,7 @@
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
 
 namespace kaleidoscope {
+namespace plugin {
 
 class Leader : public kaleidoscope::Plugin {
  public:
@@ -55,7 +56,10 @@ class Leader : public kaleidoscope::Plugin {
 
   static int8_t lookup(void);
 };
-
 }
 
-extern kaleidoscope::Leader Leader;
+// Backwards compatibility
+typedef plugin::Leader Leader;
+}
+
+extern kaleidoscope::plugin::Leader Leader;

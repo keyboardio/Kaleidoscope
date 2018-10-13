@@ -47,7 +47,7 @@ static void leaderTestAA(uint8_t seq_index) {
   Serial.println(F("leaderTestAA"));
 }
 
-static const kaleidoscope::Leader::dictionary_t leader_dictionary[] PROGMEM =
+static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
 LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderTestA},
 {LEADER_SEQ(LEAD(0), Key_A, Key_A), leaderTestAA});
 

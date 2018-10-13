@@ -18,6 +18,7 @@
 #include <Kaleidoscope-Leader.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 // --- state ---
 Key Leader::sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
@@ -155,5 +156,6 @@ EventHandlerResult Leader::afterEachCycle() {
 }
 
 }
+}
 
-kaleidoscope::Leader Leader;
+kaleidoscope::plugin::Leader Leader;
