@@ -19,6 +19,7 @@
 #include "crc.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 struct EEPROMSettings::settings EEPROMSettings::settings_;
 bool EEPROMSettings::is_valid_;
@@ -114,5 +115,6 @@ void EEPROMSettings::version(uint8_t ver) {
 }
 
 }
+}
 
-kaleidoscope::EEPROMSettings EEPROMSettings;
+kaleidoscope::plugin::EEPROMSettings EEPROMSettings;

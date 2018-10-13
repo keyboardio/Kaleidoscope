@@ -17,5 +17,5 @@
 
 #pragma once
 
-#include <Kaleidoscope/EEPROM-Settings.h>
-#include <Kaleidoscope/EEPROM-Settings-Focus.h>
+#include <kaleidoscope/plugin/EEPROM-Settings.h>
+#include <kaleidoscope/plugin/EEPROM-Settings-Focus.h>

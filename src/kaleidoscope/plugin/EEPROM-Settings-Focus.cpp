@@ -20,6 +20,7 @@
 #include "crc.h"
 
 namespace kaleidoscope {
+namespace plugin {
 namespace eeprom {
 
 EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
@@ -117,6 +118,7 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
 
 }
 }
+}
 
-kaleidoscope::eeprom::FocusSettingsCommand FocusSettingsCommand;
-kaleidoscope::eeprom::FocusEEPROMCommand FocusEEPROMCommand;
+kaleidoscope::plugin::eeprom::FocusSettingsCommand FocusSettingsCommand;
+kaleidoscope::plugin::eeprom::FocusEEPROMCommand FocusEEPROMCommand;

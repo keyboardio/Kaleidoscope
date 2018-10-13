@@ -21,6 +21,7 @@
 #include <EEPROM.h>
 
 namespace kaleidoscope {
+namespace plugin {
 class EEPROMSettings : public kaleidoscope::Plugin {
  public:
   EEPROMSettings(void) {}
@@ -52,6 +53,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
     uint16_t crc;
   } settings_;
 };
-};
+}
+}
 
-extern kaleidoscope::EEPROMSettings EEPROMSettings;
+extern kaleidoscope::plugin::EEPROMSettings EEPROMSettings;

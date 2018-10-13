@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 namespace eeprom {
 class FocusSettingsCommand : public kaleidoscope::Plugin {
  public:
@@ -37,6 +38,7 @@ class FocusEEPROMCommand : public kaleidoscope::Plugin {
 
 }
 }
+}
 
-extern kaleidoscope::eeprom::FocusSettingsCommand FocusSettingsCommand;
-extern kaleidoscope::eeprom::FocusEEPROMCommand FocusEEPROMCommand;
+extern kaleidoscope::plugin::eeprom::FocusSettingsCommand FocusSettingsCommand;
+extern kaleidoscope::plugin::eeprom::FocusEEPROMCommand FocusEEPROMCommand;
