@@ -30,6 +30,7 @@
 
 
 namespace kaleidoscope {
+namespace plugin {
 
 inline
 bool isDualUse(Key k) {
@@ -389,6 +390,7 @@ EventHandlerResult Qukeys::onSetup() {
   return EventHandlerResult::OK;
 }
 
+} // namespace plugin {
 } // namespace kaleidoscope {
 
-kaleidoscope::Qukeys Qukeys;
+kaleidoscope::plugin::Qukeys Qukeys;

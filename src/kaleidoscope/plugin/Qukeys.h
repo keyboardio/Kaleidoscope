@@ -19,7 +19,7 @@
 #pragma once
 
 #include <Kaleidoscope.h>
-#include <addr.h>
+#include <kaleidoscope/addr.h>
 #include <Kaleidoscope-Ranges.h>
 
 // Maximum length of the pending queue
@@ -53,6 +53,7 @@
 #define LT(layer, key) (Key) { .raw = kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).keyCode }
 
 namespace kaleidoscope {
+namespace plugin {
 
 // Data structure for an individual qukey
 struct Qukey {
@@ -130,13 +131,18 @@ class Qukeys : public kaleidoscope::Plugin {
   static bool isQukey(uint8_t addr);
 };
 
+} // namespace plugin {
+
+// Backwards compatibility
+typedef plugin::Qukey Qukey;
+
 } // namespace kaleidoscope {
 
-extern kaleidoscope::Qukeys Qukeys;
+extern kaleidoscope::plugin::Qukeys Qukeys;
 
 // macro for use in sketch file to simplify definition of qukeys
 #define QUKEYS(qukey_defs...) {						\
-  static kaleidoscope::Qukey qk_table[] = { qukey_defs };		\
+  static kaleidoscope::plugin::Qukey qk_table[] = { qukey_defs }; \
   Qukeys.qukeys = qk_table;						\
-  Qukeys.qukeys_count = sizeof(qk_table) / sizeof(kaleidoscope::Qukey); \
+  Qukeys.qukeys_count = sizeof(qk_table) / sizeof(kaleidoscope::plugin::Qukey); \
 }

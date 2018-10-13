@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/Qukeys.h>
+#include <kaleidoscope/plugin/Qukeys.h>
