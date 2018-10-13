@@ -19,6 +19,7 @@
 #include <Kaleidoscope-Steno.h>
 
 namespace kaleidoscope {
+namespace plugin {
 namespace steno {
 
 uint8_t GeminiPR::keys_held_;
@@ -49,5 +50,6 @@ EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, byte row, byte co
 
 }
 }
+}
 
-kaleidoscope::steno::GeminiPR GeminiPR;
+kaleidoscope::plugin::steno::GeminiPR GeminiPR;

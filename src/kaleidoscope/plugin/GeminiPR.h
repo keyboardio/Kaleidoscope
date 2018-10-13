@@ -21,9 +21,10 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define S(n) (Key) {.raw = kaleidoscope::steno::geminipr::n }
+#define S(n) (Key) {.raw = kaleidoscope::plugin::steno::geminipr::n }
 
 namespace kaleidoscope {
+namespace plugin {
 namespace steno {
 class GeminiPR : public kaleidoscope::Plugin {
  public:
@@ -91,5 +92,6 @@ enum {
 }
 }
 }
+}
 
-extern kaleidoscope::steno::GeminiPR GeminiPR;
+extern kaleidoscope::plugin::steno::GeminiPR GeminiPR;

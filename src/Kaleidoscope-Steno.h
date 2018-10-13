@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/GeminiPR.h>
+#include <kaleidoscope/plugin/GeminiPR.h>
