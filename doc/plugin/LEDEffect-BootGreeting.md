@@ -143,4 +143,4 @@ properties:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
