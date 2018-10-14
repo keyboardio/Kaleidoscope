@@ -33,11 +33,11 @@
 
 #pragma once
 
-#include "macro_helpers.h"
-#include "plugin.h"
+#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/plugin.h"
 #include "kaleidoscope/hooks.h"
-#include "eventhandler_signature_check.h"
-#include "event_handlers.h"
+#include "kaleidoscope_internal/eventhandler_signature_check.h"
+#include "kaleidoscope/event_handlers.h"
 
 // Some words about the design of hook routing:
 //

@@ -14,7 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Kaleidoscope.h"
 #include <stdarg.h>
 
 namespace kaleidoscope {

@@ -14,43 +14,43 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
-
-static uint8_t DefaultLayer;
-static uint32_t LayerState;
+#include "kaleidoscope/Kaleidoscope.h"
 
 // The maximum number of layers allowed. `LayerState`, which stores
 // the on/off status of the layers in a bitfield has only 32 bits, and
 // that should be enough for almost any layout.
-#define MAX_LAYERS sizeof(LayerState) * 8;
-
-uint8_t Layer_::highestLayer;
-Key Layer_::liveCompositeKeymap[ROWS][COLS];
-uint8_t Layer_::activeLayers[ROWS][COLS];
-Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+#define MAX_LAYERS sizeof(uint32_t) * 8;
 
 // The total number of defined layers in the firmware sketch keymaps[]
 // array. If the keymap wasn't defined using KEYMAPS(), set it to the
 // highest possible number of layers.
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
-static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
+namespace kaleidoscope {
+uint8_t Layer_::DefaultLayer;
+uint32_t Layer_::LayerState;
+uint8_t Layer_::highestLayer;
+Key Layer_::liveCompositeKeymap[ROWS][COLS];
+uint8_t Layer_::activeLayers[ROWS][COLS];
+Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+
+void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
       if (keyToggledOn(keyState))
-        Layer.next();
+        next();
       else if (keyToggledOff(keyState))
-        Layer.previous();
+        previous();
       break;
 
     case KEYMAP_PREVIOUS:
       if (keyToggledOn(keyState))
-        Layer.previous();
+        previous();
       else if (keyToggledOff(keyState))
-        Layer.next();
+        next();
       break;
 
     default:
@@ -70,23 +70,22 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        */
       if (keyIsPressed(keyState)) {
         if (!Layer.isOn(target))
-          Layer.on(target);
+          on(target);
       } else if (keyToggledOff(keyState)) {
-        Layer.off(target);
+        off(target);
       }
       break;
     }
   } else if (keyToggledOn(keyState)) {
     // switch keymap and stay there
     if (Layer.isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
-      Layer.off(keymapEntry.keyCode);
+      off(keymapEntry.keyCode);
     else
-      Layer.on(keymapEntry.keyCode);
+      on(keymapEntry.keyCode);
   }
 }
 
-Key
-Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
@@ -94,12 +93,7 @@ Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   return Key_NoKey;
 }
 
-Layer_::Layer_(void) {
-  defaultLayer(0);
-}
-
-Key
-Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
+Key Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
   Key key;
 
   key.raw = pgm_read_word(&(keymaps[layer][row][col]));
@@ -107,14 +101,12 @@ Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
   return key;
 }
 
-void
-Layer_::updateLiveCompositeKeymap(byte row, byte col) {
+void Layer_::updateLiveCompositeKeymap(byte row, byte col) {
   int8_t layer = activeLayers[row][col];
   liveCompositeKeymap[row][col] = (*getKey)(layer, row, col);
 }
 
-void
-Layer_::updateActiveLayers(void) {
+void Layer_::updateActiveLayers(void) {
   memset(activeLayers, DefaultLayer, ROWS * COLS);
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
@@ -222,4 +214,6 @@ uint32_t Layer_::getLayerState(void) {
   return LayerState;
 }
 
-Layer_ Layer;
+}
+
+kaleidoscope::Layer_ Layer;

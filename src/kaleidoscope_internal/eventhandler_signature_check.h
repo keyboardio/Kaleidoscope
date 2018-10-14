@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "macro_helpers.h"
-#include "plugin.h"
+#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/plugin.h"
 
 
 // *************************************************************************

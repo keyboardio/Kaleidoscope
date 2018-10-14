@@ -22,8 +22,8 @@ namespace kaleidoscope {
 union Key;
 }
 
-#include "plugin.h"
-#include "event_handlers.h"
+#include "kaleidoscope/plugin.h"
+#include "kaleidoscope/event_handlers.h"
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.
