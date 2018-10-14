@@ -16,9 +16,9 @@
  */
 
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
-#include "LEDUtils.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 bool BootGreetingEffect::done_ = false;
 byte BootGreetingEffect::row_;
@@ -89,5 +89,6 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
 }
 
 }
+}
 
-kaleidoscope::BootGreetingEffect BootGreetingEffect;
+kaleidoscope::plugin::BootGreetingEffect BootGreetingEffect;

@@ -16,9 +16,8 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-BootGreeting.h>
-
-#include "LED-Off.h"
 
 // *INDENT-OFF*
 const Key keymaps[][ROWS][COLS] PROGMEM = {

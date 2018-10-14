@@ -17,4 +17,31 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-BootGreeting.h"
+#include "Kaleidoscope-LEDControl.h"
+
+namespace kaleidoscope {
+namespace plugin {
+class BootGreetingEffect : public kaleidoscope::Plugin {
+ public:
+  BootGreetingEffect(void) {}
+  BootGreetingEffect(byte, byte);
+
+  static byte key_row;
+  static byte key_col;
+  static Key search_key;
+  static uint8_t hue;
+  static uint16_t timeout;
+
+  EventHandlerResult afterEachCycle();
+
+ private:
+  static void findLed(void);
+  static bool done_;
+  static byte row_;
+  static byte col_;
+  static uint16_t start_time;
+};
+}
+}
+
+extern kaleidoscope::plugin::BootGreetingEffect BootGreetingEffect;
