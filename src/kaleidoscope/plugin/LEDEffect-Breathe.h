@@ -14,19 +14,26 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-Breathe.h"
-#define UPDATE_INTERVAL 50  // milliseconds between two LED updates to avoid overloading; 20 fps
+#pragma once
+
+#include "Kaleidoscope-LEDControl.h"
 
 namespace kaleidoscope {
-void LEDBreatheEffect::update(void) {
-  uint16_t now = Kaleidoscope.millisAtCycleStart();
-  if ((now - last_update_) < UPDATE_INTERVAL)
-    return;
-  last_update_ = now;
+namespace plugin {
+class LEDBreatheEffect : public LEDMode {
+ public:
+  LEDBreatheEffect(void) {}
 
-  cRGB color = breath_compute(hue, saturation);
-  ::LEDControl.set_all_leds_to(color);
+  uint8_t hue = 170;
+  uint8_t saturation = 255;
+
+ protected:
+  void update(void) final;
+
+ private:
+  uint16_t last_update_ = 0;
+};
 }
 }
 
-kaleidoscope::LEDBreatheEffect LEDBreatheEffect;
+extern kaleidoscope::plugin::LEDBreatheEffect LEDBreatheEffect;
