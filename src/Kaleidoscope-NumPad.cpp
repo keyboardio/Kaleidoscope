@@ -17,7 +17,6 @@
 #include "Kaleidoscope-NumPad.h"
 #include "LEDUtils.h"
 #include "Kaleidoscope.h"
-#include "layers.h"
 
 byte NumPad_::numpadLayerToggleKeyRow = 255, NumPad_::numpadLayerToggleKeyCol = 255;
 uint8_t NumPad_::numPadLayer;
