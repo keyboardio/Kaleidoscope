@@ -92,14 +92,14 @@ been an exaggeration, there is only one as of this writing:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-AlphaSquare/blob/master/examples/LED-AlphaSquare/LED-AlphaSquare.ino
+ [plugin:example]: ../../examples/LED-AlphaSquare/LED-AlphaSquare.ino
 
 ## Upgrading
 
