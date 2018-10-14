@@ -19,6 +19,9 @@
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
 
+namespace kaleidoscope {
+namespace hardware {
+
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
 bool Model01::isLEDChanged = true;
@@ -305,6 +308,9 @@ bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
 
 uint8_t Model01::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
+}
+
+}
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
