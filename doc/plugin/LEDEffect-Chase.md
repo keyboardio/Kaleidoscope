@@ -26,4 +26,4 @@ properties, outside of those provided by all LED modes.
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
