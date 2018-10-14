@@ -87,3 +87,12 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the extension.
 
  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-HostOS/blob/master/examples/HostOS/HostOS.ino
+
+## Upgrading
+
+Prior versions of `HostOS` used to include a way to auto-detect the host
+operating system. This code was brittle, unreliable, and rather big too. For
+these reasons, this functionality was removed. The `autoDetect()` method is now
+a no-op, and is deprecated. The `Kaleidoscope/HostOS-select.h` header is
+similarly obsolete. Both of these produce deprecation messages now, and will be
+removed by 2019-01-14.
