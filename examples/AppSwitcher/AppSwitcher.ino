@@ -16,8 +16,9 @@
  */
 
 #include "Kaleidoscope.h"
+#include "Kaleidoscope-EEPROM-Settings.h"
+#include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-HostOS.h"
-#include "Kaleidoscope/HostOS-select.h"
 
 #include "Macros.h"
 
@@ -54,7 +55,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          HostOS,
                           Macros);
 
 void setup() {
