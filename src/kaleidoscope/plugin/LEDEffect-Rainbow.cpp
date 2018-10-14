@@ -17,6 +17,7 @@
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 void LEDRainbowEffect::update(void) {
   uint16_t now = millis();
@@ -75,7 +76,9 @@ void LEDRainbowWaveEffect::brightness(byte brightness) {
 void LEDRainbowWaveEffect::update_delay(byte delay) {
   rainbow_update_delay = delay;
 }
+
+}
 }
 
-kaleidoscope::LEDRainbowEffect LEDRainbowEffect;
-kaleidoscope::LEDRainbowWaveEffect LEDRainbowWaveEffect;
+kaleidoscope::plugin::LEDRainbowEffect LEDRainbowEffect;
+kaleidoscope::plugin::LEDRainbowWaveEffect LEDRainbowWaveEffect;
