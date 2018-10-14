@@ -4,7 +4,7 @@ While keyboards usually ship with a keymap programmed in, to be able to change t
 
 In short, this plugin allows us to change our keymaps, without having to compile and flash new firmware. It does so through the use of the [FocusSerial][plugin:focusSerial] plugin.
 
- [plugin:focusSerial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
+ [plugin:focusSerial]: FocusSerial.md
 
 ## Using the plugin
 
@@ -55,11 +55,11 @@ The plugin provides the `keymap.map` and a `keymap.roLayers` commands.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](FocusSerial.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-EEPROM-Keymap/blob/master/examples/EEPROM-Keymap/EEPROM-Keymap.ino
+  [plugin:example]: ../../examples/EEPROM-Keymap/EEPROM-Keymap.ino
