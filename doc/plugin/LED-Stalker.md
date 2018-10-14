@@ -74,11 +74,11 @@ The plugin provides the following effects:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Stalker/blob/master/examples/LED-Stalker/LED-Stalker.ino
+ [plugin:example]: ../../examples/LED-Stalker/LED-Stalker.ino
