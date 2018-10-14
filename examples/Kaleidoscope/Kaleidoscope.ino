@@ -17,11 +17,11 @@
 
 #define DEBUG_SERIAL false
 
+#include "Kaleidoscope.h"
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-NumPad.h"
-#include "Kaleidoscope.h"
 
 #include "LED-Off.h"
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
