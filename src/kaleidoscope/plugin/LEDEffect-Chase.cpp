@@ -17,6 +17,7 @@
 #include "Kaleidoscope-LEDEffect-Chase.h"
 
 namespace kaleidoscope {
+namespace plugin {
 void LEDChaseEffect::update(void) {
   // Check to see if it's time to change the positions of the red and blue lights
   if (current_chase_counter++ < chase_threshold) {
@@ -58,6 +59,8 @@ void LEDChaseEffect::update(void) {
   if (pos2 < LED_COUNT)
     ::LEDControl.setCrgbAt(pos2, {255, 0, 0});
 }
+
+}
 }
 
-kaleidoscope::LEDChaseEffect LEDChaseEffect;
+kaleidoscope::plugin::LEDChaseEffect LEDChaseEffect;
