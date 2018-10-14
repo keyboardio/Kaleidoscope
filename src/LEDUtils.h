@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#warning Please migrate to including "kaleidoscope/plugin/LEDUtils.h" instead of "LEDUtils.h", or even consider dropping the include, because <Kaleidoscope-LEDControl.h> will pull the right header in anyway.
 
-cRGB breath_compute(uint8_t hue = 170, uint8_t saturation = 255);
-cRGB hsvToRgb(uint16_t h, uint16_t s, uint16_t v);
+#include "kaleidoscope/plugin/LEDUtils.h"

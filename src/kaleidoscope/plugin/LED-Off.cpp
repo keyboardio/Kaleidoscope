@@ -14,8 +14,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#warning Please migrate to including "kaleidoscope/plugin/LED-Off.h" instead of "LED-Off.h", or even consider dropping the include, because <Kaleidoscope-LEDControl.h> will pull the right header in anyway.
-
 #include "kaleidoscope/plugin/LED-Off.h"
+
+namespace kaleidoscope {
+namespace plugin {
+void LEDOff::onActivate(void) {
+  ::LEDControl.set_all_leds_to({0, 0, 0});
+}
+
+void LEDOff::refreshAt(byte row, byte col) {
+  ::LEDControl.setCrgbAt(row, col, {0, 0, 0});
+}
+}
+}
+
+kaleidoscope::plugin::LEDOff LEDOff;

@@ -14,7 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "BootAnimation.h"
+#include "kaleidoscope/plugin/BootAnimation.h"
 #include "Kaleidoscope-LEDControl.h"
 
 #ifdef ARDUINO_AVR_MODEL01

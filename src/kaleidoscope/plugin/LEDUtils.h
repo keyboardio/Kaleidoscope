@@ -14,16 +14,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "LED-Off.h"
+#pragma once
 
-namespace kaleidoscope {
-void LEDOff::onActivate(void) {
-  ::LEDControl.set_all_leds_to({0, 0, 0});
-}
+#include <Kaleidoscope.h>
 
-void LEDOff::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col, {0, 0, 0});
-}
-}
-
-kaleidoscope::LEDOff LEDOff;
+cRGB breath_compute(uint8_t hue = 170, uint8_t saturation = 255);
+cRGB hsvToRgb(uint16_t h, uint16_t s, uint16_t v);

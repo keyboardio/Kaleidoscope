@@ -16,6 +16,19 @@
 
 #pragma once
 
-#warning Please migrate to including "kaleidoscope/plugin/LED-Off.h" instead of "LED-Off.h", or even consider dropping the include, because <Kaleidoscope-LEDControl.h> will pull the right header in anyway.
+#include "Kaleidoscope-LEDControl.h"
 
-#include "kaleidoscope/plugin/LED-Off.h"
+namespace kaleidoscope {
+namespace plugin {
+class LEDOff : public LEDMode {
+ public:
+  LEDOff(void) { }
+
+ protected:
+  void onActivate(void) final;
+  void refreshAt(byte row, byte col) final;
+};
+}
+}
+
+extern kaleidoscope::plugin::LEDOff LEDOff;

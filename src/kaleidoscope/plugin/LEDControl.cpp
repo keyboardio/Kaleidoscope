@@ -18,6 +18,7 @@
 #include "Kaleidoscope-FocusSerial.h"
 
 namespace kaleidoscope {
+namespace plugin {
 
 LEDMode *LEDControl::modes[LED_MAX_MODES];
 uint8_t LEDControl::mode;
@@ -275,6 +276,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
 }
 
 }
+}
 
-kaleidoscope::LEDControl LEDControl;
-kaleidoscope::FocusLEDCommand FocusLEDCommand;
+kaleidoscope::plugin::LEDControl LEDControl;
+kaleidoscope::plugin::FocusLEDCommand FocusLEDCommand;
