@@ -23,7 +23,7 @@ void setup() {
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
 ## Upgrading
 
