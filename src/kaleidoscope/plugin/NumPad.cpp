@@ -15,26 +15,27 @@
  */
 
 #include "Kaleidoscope-NumPad.h"
-#include "LEDUtils.h"
-#include "Kaleidoscope.h"
 
-byte NumPad_::numpadLayerToggleKeyRow = 255, NumPad_::numpadLayerToggleKeyCol = 255;
-uint8_t NumPad_::numPadLayer;
-bool NumPad_::numlockUnsynced = false;
-bool NumPad_::originalNumLockState = false;
-cRGB NumPad_::color = CRGB(160, 0, 0);
-uint8_t NumPad_::lock_hue = 170;
+namespace kaleidoscope {
+namespace plugin {
 
-kaleidoscope::EventHandlerResult NumPad_::onSetup(void) {
+byte NumPad::numpadLayerToggleKeyRow = 255, NumPad::numpadLayerToggleKeyCol = 255;
+uint8_t NumPad::numPadLayer;
+bool NumPad::numlockUnsynced = false;
+bool NumPad::originalNumLockState = false;
+cRGB NumPad::color = CRGB(160, 0, 0);
+uint8_t NumPad::lock_hue = 170;
+
+EventHandlerResult NumPad::onSetup(void) {
   originalNumLockState = getNumlockState();
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-bool NumPad_::getNumlockState() {
+bool NumPad::getNumlockState() {
   return !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
 }
 
-void NumPad_::syncNumlockState(bool state) {
+void NumPad::syncNumlockState(bool state) {
   bool numLockLEDState = getNumlockState();
   if (numLockLEDState != state) {
     kaleidoscope::hid::pressKey(Key_KeypadNumLock);
@@ -43,10 +44,10 @@ void NumPad_::syncNumlockState(bool state) {
 
 
 
-void NumPad_::cleanupNumlockState() {
+void NumPad::cleanupNumlockState() {
   if (!numlockUnsynced) {
     bool numLockLEDState = getNumlockState();
-    LEDControl.set_mode(LEDControl.get_mode_index());
+    ::LEDControl.set_mode(::LEDControl.get_mode_index());
     if (!originalNumLockState) {
       syncNumlockState(false);
       numLockLEDState = false;
@@ -57,8 +58,8 @@ void NumPad_::cleanupNumlockState() {
 
 }
 
-void NumPad_::setKeyboardLEDColors(void) {
-  LEDControl.set_mode(LEDControl.get_mode_index());
+void NumPad::setKeyboardLEDColors(void) {
+  ::LEDControl.set_mode(::LEDControl.get_mode_index());
 
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
@@ -71,22 +72,20 @@ void NumPad_::setKeyboardLEDColors(void) {
       }
 
       if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
-        LEDControl.refreshAt(r, c);
+        ::LEDControl.refreshAt(r, c);
       } else {
-        LEDControl.setCrgbAt(r, c, color);
+        ::LEDControl.setCrgbAt(r, c, color);
       }
     }
   }
 
   if ((numpadLayerToggleKeyRow <= ROWS) && (numpadLayerToggleKeyCol <= COLS)) {
-
-
     cRGB lock_color = breath_compute(lock_hue);
-    LEDControl.setCrgbAt(numpadLayerToggleKeyRow, numpadLayerToggleKeyCol, lock_color);
+    ::LEDControl.setCrgbAt(numpadLayerToggleKeyRow, numpadLayerToggleKeyCol, lock_color);
   }
 }
 
-kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
+EventHandlerResult NumPad::afterEachCycle() {
   if (!Layer.isOn(numPadLayer)) {
     cleanupNumlockState();
   } else {
@@ -97,9 +96,10 @@ kaleidoscope::EventHandlerResult NumPad_::afterEachCycle() {
     }
     setKeyboardLEDColors();
   }
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
+}
+}
 
-
-NumPad_ NumPad;
+kaleidoscope::plugin::NumPad NumPad;
