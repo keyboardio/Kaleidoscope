@@ -123,7 +123,7 @@ The plugin provides two - optional - [Focus][FocusSerial] command plugins:
 to `KALEIDOSCOPE_INIT_PLUGINS` if one wishes to use them. They provide the
 following commands:
 
- [FocusSerial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
+ [FocusSerial]: FocusSerial.md
 
 ### `settings.defaultLayer`
 
@@ -165,4 +165,4 @@ following commands:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings/blob/master/examples/EEPROM-Settings/EEPROM-Settings.ino
+  [plugin:example]: ../../examples/EEPROM-Settings/EEPROM-Settings.ino
