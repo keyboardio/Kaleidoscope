@@ -71,6 +71,17 @@ The API version will remain the same, even if we introduce breaking changes -
 until a stable release is made from the v2 branch. From that point onwards, the
 API version will change with further breaking changes.
 
+### New source code layout
+
+The sources were rearranged so that most of them live under `src/kaleidoscope`,
+with only the main header, `Kaleidoscope.h` out in `src/`. Some select headers
+that were used by plugins in the wild also remained in `src/`, but now emit a
+warning. If you were including anything other than `Kaleidoscope.h` which was
+not namespaced, please update the include, and either add the namespace prefix,
+or consider removing the include altogether. Most - if not all - parts of
+Kaleidoscope are included via `Kaleidoscope.h` by design, so there should not be
+a need for any extra includes.
+
 Deprecated APIs and their replacements
 --------------------------------------
 
@@ -82,6 +93,17 @@ suggested upgrade paths, and any other information that may be useful.
 If any of this does not make sense to you, or you have trouble updating your
 .ino sketch, do not hesitate to write us at help@keyboard.io, we can help you
 fix it.
+
+### To be removed by 2019-01-14
+
+Any headers provided by the firmware other than `Kaleidoscope.h` (currently
+`layers.h`, `key_defs_keymaps.h` and `macro_helpers.h`) are obsolete, and will
+be removed.
+
+One should not need to use `key_defs_keymaps.h` and `layers.h`, as
+`Kaleidoscope.h` includes them anyway, and the same goes for `macro_helpers.h`.
+If one absolutely must, use `kaleidoscope/key_defs_keymaps.h` and
+`kaleidoscope/macro_helpers.h` instead.
 
 Deprecated and removed APIs
 ---------------------------

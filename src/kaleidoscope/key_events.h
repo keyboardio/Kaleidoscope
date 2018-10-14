@@ -18,8 +18,8 @@
 #include <Arduino.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
-#include "key_defs.h"
-#include "keyswitch_state.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 extern const Key keymaps[][ROWS][COLS];
 

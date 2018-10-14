@@ -16,7 +16,7 @@
 
 #pragma once
 #include <Arduino.h>
-#include "key_defs.h"
+#include "kaleidoscope/key_defs.h"
 
 namespace kaleidoscope {
 namespace hid {

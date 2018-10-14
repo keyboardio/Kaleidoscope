@@ -18,7 +18,7 @@
 
 #include "kaleidoscope/event_handler_result.h"
 #include "kaleidoscope_internal/event_dispatch.h"
-#include "event_handlers.h"
+#include "kaleidoscope/event_handlers.h"
 
 #if KALEIDOSCOPE_ENABLE_V1_PLUGIN_API
 #error The V1 plugin API has been removed, please see UPGRADING.md.

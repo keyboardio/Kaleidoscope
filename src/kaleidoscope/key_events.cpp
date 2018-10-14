@@ -14,9 +14,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Kaleidoscope.h"
 #include "kaleidoscope/hooks.h"
-#include "plugin.h"
+#include "kaleidoscope/plugin.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & RESERVED)

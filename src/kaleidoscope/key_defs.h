@@ -17,14 +17,14 @@
 #pragma once
 
 
-#include "HIDTables.h"
+#include "kaleidoscope/HIDTables.h"
 
-#include "key_defs_keyboard.h"
-#include "key_defs_sysctl.h"
-#include "key_defs_consumerctl.h"
-#include "key_defs_keymaps.h"
+#include "kaleidoscope/key_defs_keyboard.h"
+#include "kaleidoscope/key_defs_sysctl.h"
+#include "kaleidoscope/key_defs_consumerctl.h"
+#include "kaleidoscope/key_defs_keymaps.h"
 
-#include "key_defs_aliases.h"
+#include "kaleidoscope/key_defs_aliases.h"
 
 #ifdef ARDUINO_VIRTUAL
 #include "VirtualHID/VirtualHID.h"
