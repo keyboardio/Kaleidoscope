@@ -22,7 +22,7 @@
 
 namespace kaleidoscope {
 
-class Redial : public KaleidoscopePlugin {
+class Redial : public kaleidoscope::Plugin {
  public:
   Redial(void) {}
 
