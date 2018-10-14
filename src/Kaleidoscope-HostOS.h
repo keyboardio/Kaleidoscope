@@ -17,5 +17,5 @@
 
 #pragma once
 
-#include <Kaleidoscope/HostOS.h>
-#include <Kaleidoscope/HostOS-Focus.h>
+#include <kaleidoscope/plugin/HostOS.h>
+#include <kaleidoscope/plugin/HostOS-Focus.h>

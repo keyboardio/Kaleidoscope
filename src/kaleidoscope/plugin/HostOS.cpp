@@ -15,12 +15,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope/HostOS.h>
+#include <kaleidoscope/plugin/HostOS.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 
 #include <EEPROM.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 EventHandlerResult HostOS::onSetup(void) {
   if (is_configured_)
@@ -45,5 +46,6 @@ void HostOS::os(hostos::Type new_os) {
 }
 
 }
+}
 
-kaleidoscope::HostOS HostOS;
+kaleidoscope::plugin::HostOS HostOS;

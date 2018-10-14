@@ -20,6 +20,7 @@
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 namespace hostos {
 
 typedef enum {
@@ -57,7 +58,9 @@ class HostOS : public kaleidoscope::Plugin {
   uint16_t eeprom_slice_;
   bool is_configured_ = false;
 };
-
 }
 
-extern kaleidoscope::HostOS HostOS;
+namespace hostos = plugin::hostos;
+}
+
+extern kaleidoscope::plugin::HostOS HostOS;

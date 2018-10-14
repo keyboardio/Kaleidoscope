@@ -15,30 +15,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope-FocusSerial.h>
+#pragma once
+
+#include <Kaleidoscope.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
-EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
-  const char *cmd = PSTR("hostos.type");
-
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
-  if (strcmp_P(command, cmd) != 0)
-    return EventHandlerResult::OK;
-
-  if (Serial.peek() == '\n') {
-    Serial.println(::HostOS.os());
-  } else {
-    uint8_t new_os = Serial.parseInt();
-    ::HostOS.os((hostos::Type) new_os);
-  }
-
-  Serial.read();
-  return EventHandlerResult::EVENT_CONSUMED;
+class FocusHostOSCommand : public kaleidoscope::Plugin {
+ public:
+  FocusHostOSCommand() {}
+  EventHandlerResult onFocusEvent(const char *command);
+};
+}
 }
 
-}
-
-kaleidoscope::FocusHostOSCommand FocusHostOSCommand;
+extern kaleidoscope::plugin::FocusHostOSCommand FocusHostOSCommand;
