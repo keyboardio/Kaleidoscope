@@ -21,7 +21,6 @@
 #include <kaleidoscope/hid.h>
 #include <MultiReport/Keyboard.h>
 #include <Kaleidoscope-Ranges.h>
-#include <key_defs_keymaps.h>
 
 #ifdef ARDUINO_VIRTUAL
 #define debug_print(...) printf(__VA_ARGS__)
