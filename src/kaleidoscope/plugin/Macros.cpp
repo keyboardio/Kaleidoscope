@@ -22,6 +22,9 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
+namespace kaleidoscope {
+namespace plugin {
+
 MacroKeyEvent Macros_::active_macros[];
 byte Macros_::active_macro_count;
 byte Macros_::row, Macros_::col;
@@ -95,6 +98,7 @@ void Macros_::play(const macro_t *macro_p) {
     delay(interval);
   }
 }
+
 static const Key ascii_to_key_map[] PROGMEM = {
   // 0x21 - 0x30
   LSHIFT(Key_1),
@@ -201,23 +205,23 @@ const macro_t *Macros_::type(const char *string) {
   return MACRO_NONE;
 }
 
-kaleidoscope::EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
 
   byte key_id = (row * COLS) + col;
   addActiveMacroKey(mappedKey.keyCode, key_id, keyState);
 
-  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-kaleidoscope::EventHandlerResult Macros_::afterEachCycle() {
+EventHandlerResult Macros_::afterEachCycle() {
   active_macro_count = 0;
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-kaleidoscope::EventHandlerResult Macros_::beforeReportingState() {
+EventHandlerResult Macros_::beforeReportingState() {
   for (byte i = 0; i < active_macro_count; ++i) {
     if (active_macros[i].key_id == 0xFF) {
       // i.e. UNKNOWN_KEYSWITCH_LOCATION
@@ -231,7 +235,10 @@ kaleidoscope::EventHandlerResult Macros_::beforeReportingState() {
                                    active_macros[i].key_state);
     Macros.play(m);
   }
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-Macros_ Macros;
+}
+}
+
+kaleidoscope::plugin::Macros_ Macros;
