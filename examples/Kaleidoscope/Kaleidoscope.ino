@@ -23,7 +23,6 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-NumPad.h"
 
-#include "LED-Off.h"
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
 #include "Kaleidoscope-LEDEffect-Breathe.h"
 #include "Kaleidoscope-LEDEffect-Chase.h"
