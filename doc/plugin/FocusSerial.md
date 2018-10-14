@@ -4,7 +4,7 @@ Bidirectional communication for Kaleidoscope. With this plugin enabled, plugins 
 
 This plugin is an upgrade of the former [Kaleidoscope-Focus][kaleidoscope:focus] plugin. See the [UPGRADING][upgrading]  section for information about how to transition to the new system.
 
- [kaleidoscope:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [kaleidoscope:focus]: Focus.md
  [upgrading]: #upgrading-from-focus-to-onfocusevent--focusserial
 
 ## Using the plugin
@@ -95,7 +95,7 @@ the keyboard responds.
 
 Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-FocusSerial/blob/master/examples/FocusSerial/FocusSerial.ino
+  [plugin:example]: ../../examples/FocusSerial/FocusSerial.ino
 
 Upgrading from Focus to onFocusEvent + FocusSerial
 ==================================================
