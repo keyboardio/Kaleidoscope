@@ -67,7 +67,7 @@ started with the plugin.
 
 ![rxcy layout](../model01_coordinates.png)
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-MagicCombo/blob/master/examples/MagicCombo/MagicCombo.ino
+ [plugin:example]: ../../examples/MagicCombo/MagicCombo.ino
 
 ## Upgrading
 
@@ -80,7 +80,7 @@ Migration should be a straightforward process, but if you get stuck, please feel
 free to [open an issue][gh:issues], or start a thread on the [forums][forums],
 and we'll help you with it.
 
- [gh:issues]: https://github.com/keyboardio/Kaleidoscope-MagicCombo/issues
+ [gh:issues]: https://github.com/keyboardio/Kaleidoscope/issues
  [forums]: https://community.keyboard.io/
 
 ## The old API
@@ -133,7 +133,7 @@ The new API is much shorter, and is inspired by the way the [Leader][leader]
 plugin works: instead of having a list, and a dispatching function like
 `magicComboActions`, we include the action method in the list too!
 
- [leader]: https://github.com/keyboardio/Kaleidoscope-Leader
+ [leader]: Leader.md
 
 We also don't make a difference between left- and right-hand anymore, you can
 just list keys for either in the same list. This will be very handy for
