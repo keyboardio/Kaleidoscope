@@ -18,6 +18,8 @@
 #include "Kaleidoscope-Model01-TestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
+namespace kaleidoscope {
+namespace plugin {
 
 constexpr uint8_t CHATTER_CYCLE_LIMIT = 30;
 constexpr uint8_t TOGGLED_OFF = 2;
@@ -25,18 +27,17 @@ constexpr uint8_t TOGGLED_ON = 1;
 constexpr uint8_t HELD = 3;
 constexpr uint8_t RELEASED = 0;
 
-
-kaleidoscope::EventHandlerResult TestMode_::beforeReportingState() {
+EventHandlerResult TestMode::beforeReportingState() {
   if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
       KeyboardHardware.isKeyswitchPressed(R0C6) &&
       KeyboardHardware.isKeyswitchPressed(R3C6) &&
       KeyboardHardware.pressedKeyswitchCount() == 3) {
     run_tests();
   }
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-void TestMode_::waitForKeypress() {
+void TestMode::waitForKeypress() {
   for (uint8_t temp = 0; temp < 8; temp++) {
     KeyboardHardware.readMatrix();
   }
@@ -50,13 +51,13 @@ void TestMode_::waitForKeypress() {
   }
 }
 
-void TestMode_::set_leds(cRGB color) {
-  LEDControl.set_all_leds_to(color);
-  LEDControl.syncLeds();
+void TestMode::set_leds(cRGB color) {
+  ::LEDControl.set_all_leds_to(color);
+  ::LEDControl.syncLeds();
   waitForKeypress();
 }
 
-void TestMode_::test_leds(void) {
+void TestMode::test_leds(void) {
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
   constexpr cRGB green = CRGB(0, 201, 0);
@@ -72,15 +73,15 @@ void TestMode_::test_leds(void) {
   set_leds(brightWhite);
   // rainbow for 10 seconds
   for (auto i = 0; i < 1000; i++) {
-    LEDRainbowEffect.update();
-    LEDControl.syncLeds();
+    ::LEDRainbowEffect.update();
+    ::LEDControl.syncLeds();
   }
   waitForKeypress();
 }
 
 
 
-void TestMode_::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
@@ -117,13 +118,13 @@ void TestMode_::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t
 }
 
 
-void TestMode_::testMatrix() {
+void TestMode::testMatrix() {
   // Reset bad keys from previous tests.
   side_data_t left = {{0}, 0};
   side_data_t right = {{0}, 0};
 
 
-  LEDControl.set_all_leds_to(200, 0, 0);
+  ::LEDControl.set_all_leds_to(200, 0, 0);
   // Clear out the key event buffer so we don't get messed up information from
   // taps during LED test mode.
   while (1) {
@@ -140,16 +141,16 @@ void TestMode_::testMatrix() {
         handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), row, col, 15);
       }
     }
-    LEDControl.syncLeds();
+    ::LEDControl.syncLeds();
   }
 }
 
-void TestMode_::toggle_programming_leds_on() {
+void TestMode::toggle_programming_leds_on() {
   PORTD |= (1 << 5);
   PORTB |= (1 << 0);
 }
 
-void TestMode_::run_tests() {
+void TestMode::run_tests() {
   //  Serial.println("Running tests");
   toggle_programming_leds_on();
   // Disable debouncing
@@ -159,4 +160,7 @@ void TestMode_::run_tests() {
   //  Serial.println("Done running tests");
 }
 
-TestMode_ TestMode;
+}
+}
+
+kaleidoscope::plugin::TestMode TestMode;
