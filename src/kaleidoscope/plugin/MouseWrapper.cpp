@@ -21,6 +21,9 @@
 #include "MouseWrapper.h"
 #include "kaleidoscope/hid.h"
 
+namespace kaleidoscope {
+namespace plugin {
+
 uint8_t MouseWrapper_::warp_grid_size = MOUSE_WARP_GRID_2X2;
 uint16_t MouseWrapper_::next_width;
 uint16_t MouseWrapper_::next_height;
@@ -173,5 +176,7 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
   remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
   remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;
 }
+}
+}
 
-MouseWrapper_ MouseWrapper;
+kaleidoscope::plugin::MouseWrapper_ MouseWrapper;

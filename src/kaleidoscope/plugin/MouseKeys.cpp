@@ -20,6 +20,9 @@
 #include "MouseWrapper.h"
 #include "Kaleidoscope.h"
 
+namespace kaleidoscope {
+namespace plugin {
+
 uint8_t MouseKeys_::mouseMoveIntent;
 
 uint8_t MouseKeys_::speed = 1;
@@ -59,24 +62,24 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
     kaleidoscope::hid::moveMouse(0, 0, 0, wheelSpeed);
 }
 
-kaleidoscope::EventHandlerResult MouseKeys_::afterEachCycle() {
+EventHandlerResult MouseKeys_::afterEachCycle() {
   kaleidoscope::hid::sendMouseReport();
   kaleidoscope::hid::releaseAllMouseButtons();
   mouseMoveIntent = 0;
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-kaleidoscope::EventHandlerResult MouseKeys_::beforeReportingState() {
+EventHandlerResult MouseKeys_::beforeReportingState() {
   if (mouseMoveIntent == 0) {
     MouseWrapper.accelStep = 0;
     endTime = 0;
     accelEndTime = 0;
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
   }
 
   if (millis() < endTime)
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
 
   endTime = millis() + speedDelay;
 
@@ -101,12 +104,12 @@ kaleidoscope::EventHandlerResult MouseKeys_::beforeReportingState() {
 
   MouseWrapper.move(moveX, moveY);
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-kaleidoscope::EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
 
   if (mappedKey.keyCode & KEY_MOUSE_BUTTON && !(mappedKey.keyCode & KEY_MOUSE_WARP)) {
     uint8_t button = mappedKey.keyCode & ~KEY_MOUSE_BUTTON;
@@ -173,13 +176,16 @@ kaleidoscope::EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, by
     }
   }
 
-  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-kaleidoscope::EventHandlerResult MouseKeys_::onSetup(void) {
+EventHandlerResult MouseKeys_::onSetup(void) {
   MouseWrapper.begin();
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
-MouseKeys_ MouseKeys;
+}
+}
+
+kaleidoscope::plugin::MouseKeys_ MouseKeys;
