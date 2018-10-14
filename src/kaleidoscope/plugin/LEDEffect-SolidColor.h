@@ -14,20 +14,26 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-SolidColor.h"
+#pragma once
+
+#include "Kaleidoscope-LEDControl.h"
 
 namespace kaleidoscope {
-LEDSolidColor::LEDSolidColor(uint8_t r, uint8_t g, uint8_t b) {
-  this->r = r;
-  this->g = g;
-  this->b = b;
+namespace plugin {
+class LEDSolidColor : public LEDMode {
+ public:
+  LEDSolidColor(uint8_t r, uint8_t g, uint8_t b);
+
+ protected:
+  void onActivate(void) final;
+  void refreshAt(byte row, byte col) final;
+
+ private:
+  uint8_t r, g, b;
+};
 }
 
-void LEDSolidColor::onActivate(void) {
-  ::LEDControl.set_all_leds_to(r, g, b);
-}
+// Backwards compatibility
+typedef plugin::LEDSolidColor LEDSolidColor;
 
-void LEDSolidColor::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col, CRGB(r, g, b));
-}
 }
