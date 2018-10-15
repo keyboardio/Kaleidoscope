@@ -31,14 +31,14 @@ void setup () {
 }
 ```
 
-It is recommended to place the activation (the `Kaleidoscope.use` call) of the
+It is recommended to place the activation (the `KALEIDOSCOPE_INIT_PLUGINS` parameter) of the
 plugin last, so that it can reliably override any other plugins that may work
 with the LEDs, and apply the highlight over those.
 
 ## Plugin properties
 
 The plugin provides the `ActiveModColorEffect` object, which has the following
-property:
+properties:
 
 ### `.highlight_color`
 
