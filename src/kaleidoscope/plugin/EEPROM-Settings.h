@@ -53,7 +53,23 @@ class EEPROMSettings : public kaleidoscope::Plugin {
     uint16_t crc;
   } settings_;
 };
+
+class FocusSettingsCommand : public kaleidoscope::Plugin {
+ public:
+  FocusSettingsCommand() {}
+
+  EventHandlerResult onFocusEvent(const char *command);
+};
+
+class FocusEEPROMCommand : public kaleidoscope::Plugin {
+ public:
+  FocusEEPROMCommand() {}
+
+  EventHandlerResult onFocusEvent(const char *command);
+};
 }
 }
 
 extern kaleidoscope::plugin::EEPROMSettings EEPROMSettings;
+extern kaleidoscope::plugin::FocusSettingsCommand FocusSettingsCommand;
+extern kaleidoscope::plugin::FocusEEPROMCommand FocusEEPROMCommand;

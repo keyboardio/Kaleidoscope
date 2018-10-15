@@ -18,4 +18,3 @@
 #pragma once
 
 #include <kaleidoscope/plugin/EEPROM-Settings.h>
-#include <kaleidoscope/plugin/EEPROM-Settings-Focus.h>
