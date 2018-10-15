@@ -16,6 +16,6 @@
 
 #pragma once
 
-#warning Please migrate to including "kaleidoscope/plugin/MouseWrapper.h" instead of "MouseWrapper.h", or even consider dropping the include, because <Kaleidoscope-MouseKeys.h> will pull the right header in anyway.
+#warning The "MouseWrapper.h" header is deprecated, the same functionality is included by default when using <Kaleidoscope-MouseKeys.h>. It can be safely removed.
 
-#include "kaleidoscope/plugin/MouseWrapper.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"

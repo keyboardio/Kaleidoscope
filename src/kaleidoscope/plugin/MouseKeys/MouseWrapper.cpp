@@ -18,7 +18,7 @@
 // Mouse-related methods
 //
 //
-#include "MouseWrapper.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
 #include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {

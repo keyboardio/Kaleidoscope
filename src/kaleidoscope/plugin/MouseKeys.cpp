@@ -16,9 +16,8 @@
 
 #include <Arduino.h>
 
-#include "Kaleidoscope-MouseKeys.h"
-#include "MouseWrapper.h"
 #include "Kaleidoscope.h"
+#include "Kaleidoscope-MouseKeys.h"
 
 namespace kaleidoscope {
 namespace plugin {

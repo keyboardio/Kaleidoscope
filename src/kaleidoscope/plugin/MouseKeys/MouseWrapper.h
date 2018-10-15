@@ -17,7 +17,7 @@
 #pragma once
 
 #include "Arduino.h"
-#include "MouseWarpModes.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
 
 // Warping commands
 
