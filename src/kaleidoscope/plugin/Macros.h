@@ -18,8 +18,8 @@
 
 #include <Kaleidoscope.h>
 
-#include "MacroKeyDefs.h"
-#include "MacroSteps.h"
+#include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 
