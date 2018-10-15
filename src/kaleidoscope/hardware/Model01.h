@@ -23,7 +23,7 @@
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
-#include "macro_helpers.h"
+#include "kaleidoscope/macro_helpers.h"
 
 #define COLS 16
 #define ROWS 4
