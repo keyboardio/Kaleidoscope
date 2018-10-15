@@ -14,7 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/plugin/LEDUtils.h"
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"
 
 cRGB
 breath_compute(uint8_t hue, uint8_t saturation) {

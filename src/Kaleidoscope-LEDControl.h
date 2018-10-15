@@ -17,5 +17,5 @@
 #pragma once
 
 #include <kaleidoscope/plugin/LEDControl.h>
-#include <kaleidoscope/plugin/LEDUtils.h>
-#include <kaleidoscope/plugin/LED-Off.h>
+#include <kaleidoscope/plugin/LEDControl/LEDUtils.h>
+#include <kaleidoscope/plugin/LEDControl/LED-Off.h>

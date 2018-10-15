@@ -14,7 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/plugin/LED-Off.h"
+#include "kaleidoscope/plugin/LEDControl/LED-Off.h"
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,6 +16,6 @@
 
 #pragma once
 
-#warning Please migrate to including "kaleidoscope/plugin/LEDUtils.h" instead of "LEDUtils.h", or even consider dropping the include, because <Kaleidoscope-LEDControl.h> will pull the right header in anyway.
+#warning The "LEDUtils.h" header is deprecated, the mode is included by default when using <Kaleidoscope-LEDControl.h>. It can be safely removed.
 
-#include "kaleidoscope/plugin/LEDUtils.h"
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"

@@ -16,6 +16,6 @@
 
 #pragma once
 
-#warning Please migrate to including "kaleidoscope/plugin/LED-Off.h" instead of "LED-Off.h", or even consider dropping the include, because <Kaleidoscope-LEDControl.h> will pull the right header in anyway.
+#warning The "LED-Off.h" header is deprecated, the mode is included by default when using <Kaleidoscope-LEDControl.h>. It can be safely removed.
 
-#include "kaleidoscope/plugin/LED-Off.h"
+#include "kaleidoscope/plugin/LEDControl/LED-Off.h"
