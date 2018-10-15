@@ -16,7 +16,7 @@
  */
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
-#include <kaleidoscope/plugin/LED-AlphaSquare-4x4.h>
+#include <kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h>
 
 namespace kaleidoscope {
 namespace plugin {
