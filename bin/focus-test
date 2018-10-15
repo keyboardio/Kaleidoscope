@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# focus-test - Trivial Focus testing tool
+# Copyright (C) 2018  Keyboard.io, Inc.
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+DEVICE="${DEVICE:-/dev/ttyACM0}"
+
+stty -F "${DEVICE}" 9600 raw -echo
+
+exec 3<"${DEVICE}"
+echo "$@" >"${DEVICE}"
+
+while read -r line <&3; do
+    line="$(echo -n "${line}" | tr -d '\r')"
+    if [ "${line}" == "." ]; then
+        break
+    fi
+    echo "${line}"
+done
