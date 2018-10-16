@@ -15,6 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef ARDUINO_AVR_MODEL01
+
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
@@ -314,3 +316,5 @@ uint8_t Model01::pressedKeyswitchCount() {
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
+
+#endif

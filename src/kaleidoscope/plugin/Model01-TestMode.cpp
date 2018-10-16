@@ -14,6 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if ARDUINO_AVR_MODEL01
+
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Model01-TestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
@@ -164,3 +166,5 @@ void TestMode::run_tests() {
 }
 
 kaleidoscope::plugin::TestMode TestMode;
+
+#endif
