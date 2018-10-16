@@ -107,14 +107,11 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
   // If the key is held down
   if (keyState == HELD) {
     KeyboardHardware.setCrgbAt(row, col_offset - col, green);
-  }
-  // If we triggered chatter detection ever on this key
-  else if (bitRead(side->badKeys, keynum) == 1) {
+  } else if (bitRead(side->badKeys, keynum) == 1) {
+    // If we triggered chatter detection ever on this key
     KeyboardHardware.setCrgbAt(row, col_offset - col, red);
-  }
-
-  // If the key was just released
-  else if (keyState == TOGGLED_OFF) {
+  } else if (keyState == TOGGLED_OFF) {
+    // If the key was just released
     KeyboardHardware.setCrgbAt(row, col_offset - col, blue);
   }
 }

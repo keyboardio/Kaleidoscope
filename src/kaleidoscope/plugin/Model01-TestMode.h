@@ -32,7 +32,7 @@ class TestMode : public kaleidoscope::Plugin {
 
   } side_data_t;
 
-  TestMode(void) {};
+  TestMode(void) {}
 
   EventHandlerResult beforeReportingState();
 
