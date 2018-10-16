@@ -16,9 +16,7 @@
 
 #pragma once
 
-#ifndef ARDUINO_AVR_MODEL01
-#error The Kaleidoscope-Model01-TestMode plugin was designed for the Keyboardio Model01, and does not work with any other hardware.
-#endif
+#ifdef ARDUINO_AVR_MODEL01
 
 #include <Arduino.h>
 #include "Kaleidoscope.h"
@@ -51,3 +49,5 @@ class TestMode : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::plugin::TestMode TestMode;
+
+#endif
