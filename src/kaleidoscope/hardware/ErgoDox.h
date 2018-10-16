@@ -32,7 +32,7 @@
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "macro_helpers.h"
+#include "kaleidoscope/macro_helpers.h"
 
 struct cRGB {
   uint8_t r, g, b;
