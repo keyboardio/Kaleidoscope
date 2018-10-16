@@ -27,7 +27,7 @@
 
 #include <Arduino.h>
 
-#include "ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
 
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"

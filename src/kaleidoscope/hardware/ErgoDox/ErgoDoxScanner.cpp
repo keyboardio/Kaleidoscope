@@ -23,9 +23,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
 #include <avr/wdt.h>
-#include "i2cmaster.h"
+#include "kaleidoscope/hardware/ErgoDox/i2cmaster.h"
 
 #define I2C_ADDR        0b0100000
 #define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )

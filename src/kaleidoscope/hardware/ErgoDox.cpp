@@ -27,7 +27,7 @@
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
-#include "ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
 
 namespace kaleidoscope {
 namespace hardware {

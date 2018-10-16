@@ -1,6 +1,8 @@
-# Kaleidoscope-Hardware-ErgoDox
+# Kaleidoscope-Hardware-EZ-ErgoDox
 
-This is a plugin for [Kaleidoscope][fw], that adds hardware support for
-the ErgoDox.
+[![Build Status][travis:image]][travis:status]
 
- [fw]: https://github.com/keyboardio/Kaleidoscope
+ [travis:image]: https://travis-ci.org/keyboardio/Kaleidoscope-Hardware-EZ-ErgoDox.svg?branch=master
+ [travis:status]: https://travis-ci.org/keyboardio/Kaleidoscope-Hardware-EZ-ErgoDox
+
+See [doc/plugin/Hardware-EZ-ErgoDox.md](doc/plugin/Hardware-EZ-ErgoDox.md) for documentation.
