@@ -109,9 +109,11 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
+#if LED_COUNT > 0
   for (uint8_t i = 0; i < LED_COUNT; i++) {
     setCrgbAt(i, color);
   }
+#endif
 }
 
 void LEDControl::setCrgbAt(uint8_t i, cRGB crgb) {
@@ -248,6 +250,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     break;
   }
   case THEME: {
+#if LED_COUNT > 0
     if (Serial.peek() == '\n') {
       for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
         cRGB c = ::LEDControl.getCrgbAt(idx);
@@ -268,6 +271,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
       ::LEDControl.setCrgbAt(idx, color);
       idx++;
     }
+#endif
     break;
   }
   }

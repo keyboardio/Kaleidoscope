@@ -48,6 +48,7 @@ void LEDRainbowEffect::update_delay(byte delay) {
 // ---------
 
 void LEDRainbowWaveEffect::update(void) {
+#if LED_COUNT > 0
   uint16_t now = millis();
   if ((now - rainbow_last_update) < rainbow_update_delay) {
     return;
@@ -67,6 +68,7 @@ void LEDRainbowWaveEffect::update(void) {
   if (rainbow_hue >= 255) {
     rainbow_hue -= 255;
   }
+#endif
 }
 
 void LEDRainbowWaveEffect::brightness(byte brightness) {
