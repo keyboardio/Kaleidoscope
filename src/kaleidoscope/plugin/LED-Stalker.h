@@ -35,6 +35,7 @@ class StalkerEffect : public LEDMode {
 
   static ColorComputer *variant;
   static uint16_t step_length;
+  static cRGB inactive_color;
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 

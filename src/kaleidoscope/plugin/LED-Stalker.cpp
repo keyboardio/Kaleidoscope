@@ -24,6 +24,9 @@ uint8_t StalkerEffect::map_[ROWS][COLS];
 StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
 uint16_t StalkerEffect::step_start_time_;
+cRGB StalkerEffect::inactive_color = (cRGB) {
+  0, 0, 0
+};
 
 void StalkerEffect::onActivate(void) {
   memset(map_, 0, sizeof(map_));
@@ -59,9 +62,7 @@ void StalkerEffect::update(void) {
       }
 
       if (!map_[r][c])
-        ::LEDControl.setCrgbAt(r, c, (cRGB) {
-        0, 0, 0
-      });
+        ::LEDControl.setCrgbAt(r, c, inactive_color);
     }
   }
 
