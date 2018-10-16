@@ -73,7 +73,7 @@ void Atreus::setup(void) {
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
 
-  const unsigned long cycles = (F_CPU / 2000000) * 500;
+  const uint32_t cycles = (F_CPU / 2000000) * 500;
 
   ICR1 = cycles;
   TCCR1B = _BV(WGM13) | _BV(CS10);

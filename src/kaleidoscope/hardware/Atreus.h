@@ -46,14 +46,14 @@ namespace hardware {
 
 class Atreus {
  public:
-  Atreus(void) {};
+  Atreus(void) {}
 
-  void syncLeds(void) {};
-  void setCrgbAt(byte row, byte col, cRGB color) {};
-  void setCrgbAt(uint8_t i, cRGB crgb) {};
+  void syncLeds(void) {}
+  void setCrgbAt(byte row, byte col, cRGB color) {}
+  void setCrgbAt(uint8_t i, cRGB crgb) {}
   cRGB getCrgbAt(uint8_t i) {
     return CRGB(0, 0, 0);
-  };
+  }
 
   void scanMatrix(void);
   void readMatrix(void);
