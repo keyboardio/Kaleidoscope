@@ -79,11 +79,11 @@ and properties:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Heatmap/blob/master/examples/Heatmap/Heatmap.ino
+ [plugin:example]: ../../examples/Heatmap/Heatmap.ino
