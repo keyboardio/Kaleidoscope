@@ -24,6 +24,7 @@ The extension provides a `HostOS` singleton object.
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-HostOS.h>
 
 void someFunction(void) {
@@ -35,7 +36,7 @@ void someFunction(void) {
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS)
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, HostOS)
 
 void setup(void) {
   Kaleidoscope.setup ();
@@ -96,3 +97,6 @@ these reasons, this functionality was removed. The `autoDetect()` method is now
 a no-op, and is deprecated. The `Kaleidoscope/HostOS-select.h` header is
 similarly obsolete. Both of these produce deprecation messages now, and will be
 removed by 2019-01-14.
+
+Furthermore, `HostOS` now depends on `Kaleidoscope-EEPROM-Settings`, that plugin
+should be initialized first.

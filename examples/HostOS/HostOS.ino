@@ -15,6 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-HostOS.h>
 
 // *INDENT-OFF*
@@ -38,7 +40,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, HostOS);
 
 void setup() {
   Serial.begin(9600);
