@@ -11,7 +11,7 @@ can then be reused by other plugins.
 See the [Unicode][plugin:unicode] extension for an example about how to use
 `HostOS` in practice.
 
- [plugin:unicode]: https://github.com/keyboardio/Kaleidoscope-Unicode
+ [plugin:unicode]: Unicode.md
 
 ## Using the extension
 
@@ -74,14 +74,14 @@ provides the `hostos.type` Focus command.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the extension.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-HostOS/blob/master/examples/HostOS/HostOS.ino
+ [plugin:example]: ../../examples/HostOS/HostOS.ino
 
 ## Upgrading
 
