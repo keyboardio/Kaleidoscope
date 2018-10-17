@@ -136,14 +136,14 @@ property only:
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+* [Kaleidoscope-Ranges](Ranges.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-TapDance/blob/master/examples/TapDance/TapDance.ino
+ [plugin:example]: ../../examples/TapDance/TapDance.ino
 
 ## Upgrading
 
