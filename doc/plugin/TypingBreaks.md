@@ -98,14 +98,14 @@ properties. All times are in seconds.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-TypingBreaks/blob/master/examples/TypingBreaks/TypingBreaks.ino
+ [plugin:example]: ../../examples/TypingBreaks/TypingBreaks.ino
 
 ## Upgrading
 
