@@ -22,7 +22,7 @@ port, so any plugin that wants to use that port too, will run into
 conflicts with the Steno plugin. In other words, don't use it together
 with [Focus][k:focus].
 
- [k:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [k:focus]: Focus.md
 
 ## What is Steno? Why should I use it? How do I learn?
 
@@ -86,11 +86,11 @@ The plugin provides a `GeminiPR` object, with no public methods or properties.
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+* [Kaleidoscope-Ranges](Ranges.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Steno/blob/master/examples/Steno/Steno.ino
+ [plugin:example]: ../../examples/Steno/Steno.ino
