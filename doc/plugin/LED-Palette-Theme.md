@@ -116,13 +116,13 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme/blob/master/examples/LED-Palette-Theme/LED-Palette-Theme.ino
+  [plugin:example]: ../../examples/LED-Palette-Theme/LED-Palette-Theme.ino
