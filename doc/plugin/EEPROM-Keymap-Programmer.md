@@ -114,11 +114,11 @@ in turn provides the following command:
 
 * [Kaleidoscope-EEPROM-Keymap][plugin:eeprom-keymap]
 
-  [plugin:eeprom-keymap]: https://github.com/keyboardio/Kaleidoscope-EEPROM-Keymap
+  [plugin:eeprom-keymap]: EEPROM-Keymap.md
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-EEPROM-Keymap-Programmer/blob/master/examples/EEPROM-Keymap-Programmer/EEPROM-Keymap-Programmer.ino
+  [plugin:example]: ../../examples/EEPROM-Keymap-Programmer/EEPROM-Keymap-Programmer.ino
