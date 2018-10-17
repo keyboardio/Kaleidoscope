@@ -48,7 +48,7 @@ void Atreus::setup(void) {
   wdt_disable();
   delay(100);
 
-  for (uint8_t i=0; i < ROWS; i++) {
+  for (uint8_t i = 0; i < ROWS; i++) {
     unselectRow(i);
     keyState_[i] = previousKeyState_[i] = 0;
   }
@@ -80,70 +80,67 @@ void Atreus::setup(void) {
   TIMSK1 = _BV(TOIE1);
 }
 
-void Atreus::selectRow(uint8_t row)
-{
+void Atreus::selectRow(uint8_t row) {
   switch (row) {
-    case 0:
-      DDRD  |= (_BV(0));
-      PORTD &= ~(_BV(0));
-      break;
-    case 1:
-      DDRD  |= (_BV(1));
-      PORTD &= ~(_BV(1));
-      break;
-    case 2:
-      DDRD  |= (_BV(3));
-      PORTD &= ~(_BV(3));
-      break;
-    case 3:
-      DDRD  |= (_BV(2));
-      PORTD &= ~(_BV(2));
-      break;
-    default:
-      break;
+  case 0:
+    DDRD  |= (_BV(0));
+    PORTD &= ~(_BV(0));
+    break;
+  case 1:
+    DDRD  |= (_BV(1));
+    PORTD &= ~(_BV(1));
+    break;
+  case 2:
+    DDRD  |= (_BV(3));
+    PORTD &= ~(_BV(3));
+    break;
+  case 3:
+    DDRD  |= (_BV(2));
+    PORTD &= ~(_BV(2));
+    break;
+  default:
+    break;
   }
 }
 
-void Atreus::unselectRow(uint8_t row)
-{
+void Atreus::unselectRow(uint8_t row) {
   switch (row) {
-    case 0:
-      DDRD  &= ~(_BV(0));
-      PORTD |= (_BV(0));
-      break;
-    case 1:
-      DDRD  &= ~(_BV(1));
-      PORTD |= (_BV(1));
-      break;
-    case 2:
-      DDRD  &= ~(_BV(3));
-      PORTD |= (_BV(3));
-      break;
-    case 3:
-      DDRD  &= ~(_BV(2));
-      PORTD |= (_BV(2));
-      break;
-    default:
-      break;
+  case 0:
+    DDRD  &= ~(_BV(0));
+    PORTD |= (_BV(0));
+    break;
+  case 1:
+    DDRD  &= ~(_BV(1));
+    PORTD |= (_BV(1));
+    break;
+  case 2:
+    DDRD  &= ~(_BV(3));
+    PORTD |= (_BV(3));
+    break;
+  case 3:
+    DDRD  &= ~(_BV(2));
+    PORTD |= (_BV(2));
+    break;
+  default:
+    break;
   }
 }
 
 uint16_t Atreus::readCols() {
-  return ((PINB&(_BV(4)) ? 0 : (_BV(0))) |
-          (PINB&(_BV(5)) ? 0 : (_BV(1))) |
-          (PINB&(_BV(6)) ? 0 : (_BV(2))) |
-          (PINB&(_BV(7)) ? 0 : (_BV(3))) |
-          (PINC&(_BV(6)) ? 0 : (_BV(4))) |
-          (PIND&(_BV(4)) ? 0 : (_BV(5))) |
-          (PIND&(_BV(6)) ? 0 : (_BV(6))) |
-          (PIND&(_BV(7)) ? 0 : (_BV(7))) |
-          (PINE&(_BV(6)) ? 0 : (_BV(8))) |
-          (PINF&(_BV(6)) ? 0 : (_BV(9))) |
-          (PINF&(_BV(7)) ? 0 : (_BV(10))));
+  return ((PINB & (_BV(4)) ? 0 : (_BV(0))) |
+          (PINB & (_BV(5)) ? 0 : (_BV(1))) |
+          (PINB & (_BV(6)) ? 0 : (_BV(2))) |
+          (PINB & (_BV(7)) ? 0 : (_BV(3))) |
+          (PINC & (_BV(6)) ? 0 : (_BV(4))) |
+          (PIND & (_BV(4)) ? 0 : (_BV(5))) |
+          (PIND & (_BV(6)) ? 0 : (_BV(6))) |
+          (PIND & (_BV(7)) ? 0 : (_BV(7))) |
+          (PINE & (_BV(6)) ? 0 : (_BV(8))) |
+          (PINF & (_BV(6)) ? 0 : (_BV(9))) |
+          (PINF & (_BV(7)) ? 0 : (_BV(10))));
 }
 
-void Atreus::readMatrixRow(uint8_t current_row)
-{
+void Atreus::readMatrixRow(uint8_t current_row) {
   uint16_t mask, cols;
 
   previousKeyState_[current_row] = keyState_[current_row];
