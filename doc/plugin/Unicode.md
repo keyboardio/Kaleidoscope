@@ -100,7 +100,7 @@ functionality.
 
 ## Dependencies
 
-* [Kaleidoscope-HostOS](https://github.com/keyboardio/Kaleidoscope-HostOS)
+* [Kaleidoscope-HostOS](HostOS.md)
 
 ## Other Configuration
 
@@ -113,4 +113,4 @@ the `+` button, selecting it from the list, then setting it as the active input 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Unicode/blob/master/examples/Unicode/Unicode.ino
+ [plugin:example]: ../../examples/Unicode/Unicode.ino
