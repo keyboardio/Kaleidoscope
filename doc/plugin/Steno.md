@@ -22,7 +22,7 @@ port, so any plugin that wants to use that port too, will run into
 conflicts with the Steno plugin. In other words, don't use it together
 with [Focus][k:focus].
 
- [k:focus]: Focus.md
+ [k:focus]: FocusSerial.md
 
 ## What is Steno? Why should I use it? How do I learn?
 
