@@ -74,7 +74,7 @@ methods and properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-GhostInTheFirmware/blob/master/examples/GhostInTheFirmware/GhostInTheFirmware.ino
+ [plugin:example]: ../../examples/GhostInTheFirmware/GhostInTheFirmware.ino
 
 ## Upgrading
 
