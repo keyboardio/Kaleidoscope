@@ -58,7 +58,7 @@ properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-ShapeShifter/blob/master/examples/ShapeShifter/ShapeShifter.ino
+ [plugin:example]: ../../examples/ShapeShifter/ShapeShifter.ino
 
 ## Upgrading
 
