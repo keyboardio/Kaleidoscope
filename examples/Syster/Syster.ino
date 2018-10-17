@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-HostOS.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
@@ -64,7 +65,8 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          HostOS,
                           Unicode,
                           Syster);
 

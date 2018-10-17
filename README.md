@@ -21,6 +21,8 @@ will handle the symbol actions:
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-HostOS.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
 #include <kaleidoscope/hid.h>
@@ -46,7 +48,7 @@ void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(Unicode, Syster);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, HostOS, Unicode, Syster);
 
 void setup() {
   Serial.begin(9600);
