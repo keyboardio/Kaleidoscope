@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-TypingBreaks.h>
 
 // *INDENT-OFF*
@@ -40,7 +41,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(TypingBreaks);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, TypingBreaks);
 
 void setup() {
   Kaleidoscope.setup();

@@ -24,9 +24,10 @@ the box, without any further configuration:
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-TypingBreaks.h>
 
-KALEIDOSCOPE_INIT_PLUGINS(TypingBreaks);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, TypingBreaks);
 
 void setup (void) {
   Kaleidoscope.setup ();
@@ -100,9 +101,19 @@ properties. All times are in seconds.
 
 > Get or set the `.settings.right_hand_max_keys` property.
 
+## Dependencies
+
+* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-TypingBreaks/blob/master/examples/TypingBreaks/TypingBreaks.ino
+
+## Upgrading
+
+Storing the settable settings in EEPROM was made mandatory in recent versions of
+the plugin, and as such, it now depends on `Kaleidoscope-EEPROM-Settings`, which
+should be initialized before this plugin is.
