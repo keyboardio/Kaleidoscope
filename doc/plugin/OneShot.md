@@ -36,7 +36,7 @@ modifier will now stay on until you press it again. Continuing the
 Shift, d, e, f` will give you `ABCdef`.
 
 This can be a bit tricky; combining this plugin with
-[LED-ActiveModColor](https://github.com/keyboardio/Kaleidoscope-LED-ActiveModColor)
+[LED-ActiveModColor](LED-ActiveModColor).md
 will help you understand what state your one-shot is in; when a
 one-shot key is active, it will have a white LED highlight; when
 sticky, a red highlight.
@@ -178,11 +178,11 @@ properties too:
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+* [Kaleidoscope-Ranges](Ranges.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-OneShot/blob/master/examples/OneShot/OneShot.ino
+ [plugin:example]: ../../examples/OneShot/OneShot.ino
