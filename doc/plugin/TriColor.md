@@ -4,7 +4,7 @@ The `TriColor` effect extension is a part of
 the [`LEDEffects`][plugin:ledeffects] library, not a stand-alone base library of
 its own. It is used to implement the effects in that library.
 
- [plugin:ledeffects]: https://github/keyboardio/Kaleidoscope-LEDEffects
+ [plugin:ledeffects]: LEDEffects.md
 
 It is a class that can be used to create LED effects that all follow a similar
 pattern: alphas and similar in one color; modifiers, special keys, and half the
