@@ -15,9 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define KALEIDOSCOPE_HOSTOS_GUESSER 1
-
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-HostOS.h>
 #include "Kaleidoscope-Macros.h"
 #include <Kaleidoscope-Unicode.h>
@@ -63,7 +62,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          HostOS,
                           Macros,
                           Unicode);
 

@@ -20,11 +20,11 @@ Using the extension is as simple as including the header, registering it with
 
 ```c++
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope/HostOS-select.h>
 #include <Kaleidoscope-Unicode.h>
 
-KALEIDOSCOPE_INIT_PLUGINS(HostOS, Unicode);
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, HostOS, Unicode);
 
 void setup() {
   Kaleidoscope.setup();
