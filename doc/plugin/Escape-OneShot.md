@@ -31,11 +31,11 @@ The plugin provides the `EscapeOneShot` object, which has no public methods.
 
 ## Dependencies
 
-* [Kaleidoscope-OneShot](https://github.com/keyboardio/Kaleidoscope-OneShot)
+* [Kaleidoscope-OneShot](OneShot.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Escape-OneShot/blob/master/examples/Escape-OneShot/Escape-OneShot.ino
+ [plugin:example]: ../../examples/Escape-OneShot/Escape-OneShot.ino
