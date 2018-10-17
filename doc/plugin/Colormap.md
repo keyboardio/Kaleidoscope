@@ -8,8 +8,8 @@ the [LED-Palette-Theme][plugin:l-p-t] plugin. The color map is stored in
 `EEPROM`, and can be easily changed via the [FocusSerial][plugin:focusserial]
 plugin, which also provides palette editing capabilities.
 
- [plugin:focusserial]: https://github.com/keyboardio/Kaleidoscope-FocusSerial
- [plugin:l-p-t]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme
+ [plugin:focusserial]: FocusSerial.md
+ [plugin:l-p-t]: LED-Palette-Theme.md
 
 ## Using the extension
 
@@ -57,13 +57,13 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
-* [Kaleidoscope-LED-Palette-Theme](https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-LED-Palette-Theme](LED-Palette-Theme.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Colormap/blob/master/examples/Colormap/Colormap.ino
+ [plugin:example]: ../../examples/Colormap/Colormap.ino
