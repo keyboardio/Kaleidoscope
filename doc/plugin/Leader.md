@@ -90,14 +90,14 @@ The plugin provides the `Leader` object, with the following methods and properti
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](https://github.com/keyboardio/Kaleidoscope-Ranges)
+* [Kaleidoscope-Ranges](Ranges.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Leader/blob/master/examples/Leader/Leader.ino
+ [plugin:example]: ../../examples/Leader/Leader.ino
 
 ## Upgrading
 
