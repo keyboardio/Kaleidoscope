@@ -18,4 +18,4 @@
 #include <Kaleidoscope-LEDEffects.h>
 
 kaleidoscope::plugin::TriColor MiamiEffect(CRGB(0x4e, 0xd6, 0xd6),   /* Cyan */
-                                   CRGB(0xaf, 0x67, 0xfa));  /* Magenta */
+    CRGB(0xaf, 0x67, 0xfa));  /* Magenta */
