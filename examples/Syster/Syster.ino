@@ -17,7 +17,6 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope/HostOS-select.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
 #include <kaleidoscope/hid.h>
