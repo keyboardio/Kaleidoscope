@@ -47,16 +47,16 @@ The plugin provides the `FingerPainter` object, which provides no public methods
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](https://github.com/keyboardio/Kaleidoscope-EEPROM-Settings)
-* [Kaleidoscope-FocusSerial](https://github.com/keyboardio/Kaleidoscope-FocusSerial)
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](FocusSerial.md)
 * [Kaleidoscope-LED-Palette-Theme][plugin:l-p-t]
-* [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
+* [Kaleidoscope-LEDControl](LEDControl.md)
 
-  [plugin:l-p-t]: https://github.com/keyboardio/Kaleidoscope-LED-Palette-Theme
+  [plugin:l-p-t]: LED-Palette-Theme.md
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: https://github.com/keyboardio/Kaleidoscope-FingerPainter/blob/master/examples/FingerPainter/FingerPainter.ino
+  [plugin:example]: ../../examples/FingerPainter/FingerPainter.ino
