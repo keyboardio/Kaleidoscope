@@ -50,4 +50,4 @@ property. All times are in milliseconds.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-CycleTimeReport/blob/master/examples/CycleTimeReport/CycleTimeReport.ino
+ [plugin:example]: ../../examples/CycleTimeReport/CycleTimeReport.ino
