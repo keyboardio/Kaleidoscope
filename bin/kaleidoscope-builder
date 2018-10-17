@@ -52,7 +52,7 @@ firmware_size () {
     PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
 
     # we want the sed there, doing with shell builtins would be worse.
-    # shellcheck disable=SC2001
+    # shellcheck disable=SC2001 disable=SC1117
     echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
 }
 
