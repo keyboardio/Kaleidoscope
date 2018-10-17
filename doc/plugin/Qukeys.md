@@ -23,7 +23,7 @@ KALEIDOSCOPE_INIT_PLUGINS(Qukeys);
   columns are left to right):
 
 - For the Keyboardio Model 01, key coordinates refer to [this header
-  file](https://github.com/keyboardio/Kaleidoscope-Hardware-Model01/blob/f469015346535cb864a340bf8eb317d268943248/src/Kaleidoscope-Hardware-Model01.h#L267-L279).
+  file](Hardware-Model01/blob/f469015346535cb864a340bf8eb317d268943248/src/Kaleidoscope-Hardware-Model01.h#L267-L279)..md
 
 ```
 QUKEYS(
@@ -149,7 +149,7 @@ limit, you won't get any unintended alternate keycodes.
 
 The [example][plugin:example] can help to learn how to use this plugin.
 
- [plugin:example]: https://github.com/keyboardio/Kaleidoscope-Qukeys/blob/master/examples/Qukeys/Qukeys.ino
+ [plugin:example]: ../../examples/Qukeys/Qukeys.ino
 
 ## Upgrading
 
