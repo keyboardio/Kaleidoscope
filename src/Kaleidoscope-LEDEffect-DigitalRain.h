@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Kaleidoscope-LEDControl.h"
-#include "LEDUtils.h"
 
 namespace kaleidoscope {
 	class LEDDigitalRainEffect : public LEDMode {
