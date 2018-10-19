@@ -21,7 +21,7 @@
 #include <Kaleidoscope-Steno.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_NoKey,         Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
    Key_Backtick,      Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
@@ -55,7 +55,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    S(E), S(U), XXX, S(RE2),
    ___),
-};
+)
 // *INDENT-ON*
 
 KALEIDOSCOPE_INIT_PLUGINS(GeminiPR);

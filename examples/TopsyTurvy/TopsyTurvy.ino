@@ -19,7 +19,7 @@
 #include <Kaleidoscope-TopsyTurvy.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (
     Key_NoKey,    TOPSY(1), TOPSY(2), TOPSY(3), TOPSY(4), TOPSY(5), Key_NoKey,
@@ -37,7 +37,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
-};
+)
 // *INDENT-ON*
 
 KALEIDOSCOPE_INIT_PLUGINS(TopsyTurvy);
