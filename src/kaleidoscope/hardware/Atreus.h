@@ -37,10 +37,6 @@ struct cRGB {
   uint8_t r, g, b;
 };
 
-#define COLS 11
-#define ROWS 4
-#define LED_COUNT 0
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 namespace kaleidoscope {
@@ -49,6 +45,10 @@ namespace hardware {
 class Atreus {
  public:
   Atreus(void) {}
+
+  static constexpr byte matrix_columns = 11;
+  static constexpr byte matrix_rows = 4;
+  static constexpr uint8_t led_count = 0;
 
   void syncLeds(void) {}
   void setCrgbAt(byte row, byte col, cRGB color) {}
@@ -127,16 +127,16 @@ class Atreus {
   static uint8_t debounce;
 
  private:
-  static uint16_t previousKeyState_[ROWS];
-  static uint16_t keyState_[ROWS];
-  static uint16_t masks_[ROWS];
+  static uint16_t previousKeyState_[matrix_rows];
+  static uint16_t keyState_[matrix_rows];
+  static uint16_t masks_[matrix_rows];
 
   static void readMatrixRow(uint8_t row);
   static uint16_t readCols();
   static void selectRow(uint8_t row);
   static void unselectRow(uint8_t row);
 
-  static uint8_t debounce_matrix_[ROWS][COLS];
+  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
   static uint16_t debounceMaskForRow(uint8_t row);
   static void debounceRow(uint16_t change, uint8_t row);
 };
@@ -183,7 +183,7 @@ class Atreus {
  * user-facing code.
  */
 constexpr byte keyIndex(byte row, byte col) {
-  return row * COLS + col + 1;
+  return row * kaleidoscope::hardware::Atreus::matrix_columns + col + 1;
 }
 
 constexpr byte R0C0  = keyIndex(0, 0);
