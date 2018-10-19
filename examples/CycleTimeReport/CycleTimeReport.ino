@@ -18,6 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-CycleTimeReport.h>
 
+// *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -31,12 +32,13 @@ KEYMAPS(
 
     Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
     Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
-    Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
+               Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 )
+// *INDENT-ON*
 
 KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
 
