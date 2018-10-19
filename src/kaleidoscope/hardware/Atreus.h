@@ -24,6 +24,8 @@
 
 #pragma once
 
+#ifdef ARDUINO_AVR_ATREUS
+
 #include <Arduino.h>
 
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::Atreus
@@ -234,3 +236,5 @@ constexpr byte R3C10 = keyIndex(3, 10);
 constexpr byte R3C11 = keyIndex(3, 11);
 
 extern kaleidoscope::hardware::Atreus &Atreus;
+
+#endif

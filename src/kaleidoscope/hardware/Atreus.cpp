@@ -24,6 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef ARDUINO_AVR_ATREUS
+
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
@@ -291,3 +293,5 @@ void Atreus::debounceRow(uint16_t change, uint8_t row) {
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
 kaleidoscope::hardware::Atreus &Atreus = KeyboardHardware;
+
+#endif
