@@ -25,6 +25,9 @@ uint32_t AlphaSquareEffect::end_time_left_, AlphaSquareEffect::end_time_right_;
 Key AlphaSquareEffect::last_key_left_, AlphaSquareEffect::last_key_right_;
 
 void AlphaSquareEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   if (end_time_left_ && millis() > end_time_left_) {
     ::AlphaSquare.clear(last_key_left_);
     end_time_left_ = 0;
@@ -36,6 +39,9 @@ void AlphaSquareEffect::update(void) {
 }
 
 EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   if (::LEDControl.get_mode() != &::AlphaSquareEffect)
     return EventHandlerResult::OK;
 

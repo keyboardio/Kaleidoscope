@@ -29,6 +29,9 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
 cRGB ActiveModColorEffect::sticky_color = CRGB(0xff, 0x00, 0x00);
 
 EventHandlerResult ActiveModColorEffect::beforeReportingState() {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       Key k = Layer.lookupOnActiveLayer(r, c);

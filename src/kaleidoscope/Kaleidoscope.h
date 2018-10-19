@@ -37,6 +37,13 @@ void setup();
 #include <stdint.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
+
+extern HARDWARE_IMPLEMENTATION KeyboardHardware;
+
+#define ROWS (KeyboardHardware.matrix_rows)
+#define COLS (KeyboardHardware.matrix_columns)
+#define LED_COUNT (KeyboardHardware.led_count)
+
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/hid.h"
 #include "kaleidoscope/layers.h"
@@ -46,8 +53,6 @@ void setup();
 #include "kaleidoscope/plugin.h"
 
 #define HOOK_MAX 64
-
-extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #ifndef VERSION
 #define VERSION "locally-built"
@@ -91,6 +96,8 @@ class Kaleidoscope_ {
 
   void setup(void);
   void loop(void);
+
+  static constexpr bool has_leds = (KeyboardHardware.led_count > 0);
 
   /** Detaching from / attaching to the host.
    *

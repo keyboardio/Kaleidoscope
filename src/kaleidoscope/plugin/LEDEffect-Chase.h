@@ -28,7 +28,7 @@ class LEDChaseEffect : public LEDMode {
   void update(void) final;
 
  private:
-  uint8_t pos = 0;
+  int8_t pos = 0;
   int8_t chase_sign = 1; //negative values when it's going backwar
   uint8_t chase_pixels = 5;
   uint8_t current_chase_counter = 0;

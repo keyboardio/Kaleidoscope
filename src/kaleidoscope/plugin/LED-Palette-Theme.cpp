@@ -37,6 +37,9 @@ uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
 }
 
 void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
 
   for (uint16_t pos = 0; pos < ROWS * COLS; pos++) {
@@ -46,6 +49,9 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
 }
 
 void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
   uint16_t pos = KeyboardHardware.getLedIndex(row, col);
 
@@ -94,6 +100,9 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
 }
 
 EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   const char *cmd = PSTR("palette");
 
   if (::Focus.handleHelp(command, cmd))
@@ -135,6 +144,9 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
     const char *expected_command,
     uint16_t theme_base,
     uint8_t max_themes) {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   if (::Focus.handleHelp(command, expected_command))
     return EventHandlerResult::OK;
 

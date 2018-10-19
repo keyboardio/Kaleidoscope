@@ -27,9 +27,6 @@
 
 #include "kaleidoscope/macro_helpers.h"
 
-#define COLS 16
-#define ROWS 4
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 namespace kaleidoscope {
@@ -38,18 +35,22 @@ namespace hardware {
 class Model01 {
  public:
   Model01(void);
+
+  static constexpr byte matrix_rows = 4;
+  static constexpr byte matrix_columns = 16;
+  static constexpr int8_t led_count = 64;
+
   void syncLeds(void);
   void setCrgbAt(byte row, byte col, cRGB color);
-  void setCrgbAt(uint8_t i, cRGB crgb);
-  cRGB getCrgbAt(uint8_t i);
-  uint8_t getLedIndex(byte row, byte col);
+  void setCrgbAt(int8_t i, cRGB crgb);
+  cRGB getCrgbAt(int8_t i);
+  int8_t getLedIndex(byte row, byte col);
 
   void scanMatrix(void);
   void readMatrix(void);
   void actOnMatrixScan(void);
   void setup();
   void rebootBootloader();
-
 
   /** Detaching from / attaching to the host.
    *
@@ -147,7 +148,7 @@ class Model01 {
  * user-facing code.
  */
 constexpr byte keyIndex(byte row, byte col) {
-  return row * COLS + col + 1;
+  return row * kaleidoscope::hardware::Model01::matrix_columns + col + 1;
 }
 
 constexpr byte R0C0  = keyIndex(0, 0);
@@ -215,9 +216,6 @@ constexpr byte R3C12 = keyIndex(3, 12);
 constexpr byte R3C13 = keyIndex(3, 13);
 constexpr byte R3C14 = keyIndex(3, 14);
 constexpr byte R3C15 = keyIndex(3, 15);
-
-
-#define LED_COUNT 64
 
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 

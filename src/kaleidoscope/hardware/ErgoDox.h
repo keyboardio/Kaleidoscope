@@ -40,10 +40,6 @@ struct cRGB {
   uint8_t r, g, b;
 };
 
-#define COLS 6
-#define ROWS 14
-#define LED_COUNT 0
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 namespace kaleidoscope {
@@ -53,14 +49,18 @@ class ErgoDox {
  public:
   ErgoDox(void) {}
 
+  static constexpr byte matrix_columns = 6;
+  static constexpr byte matrix_rows = 14;
+  static constexpr int8_t led_count = 0;
+
   void syncLeds(void) {}
   void setCrgbAt(byte row, byte col, cRGB color) {}
-  void setCrgbAt(uint8_t i, cRGB crgb) {}
-  cRGB getCrgbAt(uint8_t i) {
+  void setCrgbAt(int8_t i, cRGB crgb) {}
+  cRGB getCrgbAt(int8_t i) {
     return CRGB(0, 0, 0);
   }
-  uint8_t getLedIndex(byte row, byte col) {
-    return 0;
+  int8_t getLedIndex(byte row, byte col) {
+    return -1;
   }
 
   void scanMatrix(void);
@@ -135,10 +135,10 @@ class ErgoDox {
 
  private:
   static ErgoDoxScanner scanner_;
-  static uint8_t previousKeyState_[ROWS];
-  static uint8_t keyState_[ROWS];
-  static uint8_t masks_[ROWS];
-  static uint8_t debounce_matrix_[ROWS][COLS];
+  static uint8_t previousKeyState_[matrix_rows];
+  static uint8_t keyState_[matrix_rows];
+  static uint8_t masks_[matrix_rows];
+  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
 
   static uint8_t debounceMaskForRow(uint8_t row);
   static void debounceRow(uint8_t change, uint8_t row);
@@ -196,7 +196,7 @@ class ErgoDox {
  * user-facing code.
  */
 constexpr byte keyIndex(byte row, byte col) {
-  return row * COLS + col + 1;
+  return row * kaleidoscope::hardware::ErgoDox::matrix_columns + col + 1;
 }
 
 constexpr byte R0C0  = keyIndex(0, 0);

@@ -109,10 +109,16 @@ class LEDControl : public kaleidoscope::Plugin {
   static void prev_mode(void);
   static void setup(void);
   static void update(void) {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (modes[mode])
       modes[mode]->update();
   }
   static void refreshAt(byte row, byte col) {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (modes[mode])
       modes[mode]->refreshAt(row, col);
   }
@@ -120,6 +126,9 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t get_mode_index();
   static LEDMode *get_mode();
   static void refreshAll() {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (paused)
       return;
 
@@ -130,9 +139,9 @@ class LEDControl : public kaleidoscope::Plugin {
 
   static int8_t mode_add(LEDMode *mode);
 
-  static void setCrgbAt(uint8_t i, cRGB crgb);
+  static void setCrgbAt(int8_t i, cRGB crgb);
   static void setCrgbAt(byte row, byte col, cRGB color);
-  static cRGB getCrgbAt(uint8_t i);
+  static cRGB getCrgbAt(int8_t i);
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);

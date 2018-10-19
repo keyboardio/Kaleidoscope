@@ -33,6 +33,9 @@ void StalkerEffect::onActivate(void) {
 }
 
 EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   if (row >= ROWS || col >= COLS)
     return EventHandlerResult::OK;
 
@@ -44,6 +47,9 @@ EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, by
 }
 
 void StalkerEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   if (!variant)
     return;
 

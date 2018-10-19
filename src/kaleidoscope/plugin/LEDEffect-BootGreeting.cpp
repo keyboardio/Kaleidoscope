@@ -61,6 +61,9 @@ void BootGreetingEffect::findLed(void) {
 }
 
 EventHandlerResult BootGreetingEffect::afterEachCycle() {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   //If already done or we're not in a ready state, bail
   if (done_) {
     return EventHandlerResult::OK;

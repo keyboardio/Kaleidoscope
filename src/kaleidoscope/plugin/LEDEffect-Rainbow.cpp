@@ -20,6 +20,9 @@ namespace kaleidoscope {
 namespace plugin {
 
 void LEDRainbowEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   uint16_t now = millis();
   if ((now - rainbow_last_update) < rainbow_update_delay) {
     return;
@@ -48,6 +51,9 @@ void LEDRainbowEffect::update_delay(byte delay) {
 // ---------
 
 void LEDRainbowWaveEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   uint16_t now = millis();
   if ((now - rainbow_last_update) < rainbow_update_delay) {
     return;
@@ -55,7 +61,7 @@ void LEDRainbowWaveEffect::update(void) {
     rainbow_last_update = now;
   }
 
-  for (uint8_t i = 0; i < LED_COUNT; i++) {
+  for (int8_t i = 0; i < LED_COUNT; i++) {
     uint16_t key_hue = rainbow_hue + 16 * (i / 4);
     if (key_hue >= 255)          {
       key_hue -= 255;

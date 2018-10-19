@@ -39,13 +39,16 @@ void ColormapEffect::max_layers(uint8_t max_) {
 }
 
 void ColormapEffect::onActivate(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   last_highest_layer_ = Layer.top();
   if (last_highest_layer_ <= max_layers_)
     ::LEDPaletteTheme.updateHandler(map_base_, last_highest_layer_);
 }
 
 void ColormapEffect::update(void) {
-  if (Layer.top() == last_highest_layer_)
+  if (!Kaleidoscope.has_leds || Layer.top() == last_highest_layer_)
     return;
 
   onActivate();
