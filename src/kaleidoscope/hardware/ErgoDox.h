@@ -59,6 +59,9 @@ class ErgoDox {
   cRGB getCrgbAt(uint8_t i) {
     return CRGB(0, 0, 0);
   }
+  uint8_t getLedIndex(byte row, byte col) {
+    return 0;
+  }
 
   void scanMatrix(void);
   void readMatrix(void);
