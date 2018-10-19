@@ -128,7 +128,7 @@ flash_over_usb () {
 flash_from_bootloader() {
     prepare_to_flash
     find_bootloader_ports
-    check_bootloader_port_and_flash 
+    check_bootloader_port_and_flash
 }
 
 program() {
@@ -195,6 +195,19 @@ compile () {
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
+    SKETCH_DIR="$(find_sketch)"
+    SAVED_BOARD="${BOARD}"
+    SAVED_FQBN="${FQBN}"
+    if [ -e "${SKETCH_DIR}/.kaleidoscope-builder.conf" ]; then
+        # shellcheck disable=SC1090
+        BOARD="$(. "${SKETCH_DIR}"/.kaleidoscope-builder.conf && echo "${BOARD}")"
+        # shellcheck disable=SC1090
+        FQBN="$(. "${SKETCH_DIR}"/.kaleidoscope-builder.conf && echo "${FQBN}")"
+        if [ "${SAVED_FQBN}" = "${FQBN}" ] || [ -z "${FQBN}" ]; then
+            FQBN="keyboardio:avr:${BOARD}"
+        fi
+    fi
+
     # SC2091: We do not care if quotes or backslashes are not respected.
     # SC2086: We want word splitting.
     # shellcheck disable=SC2086,SC2090
@@ -217,7 +230,7 @@ compile () {
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-	      "$(find_sketch)/${SKETCH}.ino"
+	      "${SKETCH_DIR}/${SKETCH}.ino"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
@@ -229,6 +242,9 @@ compile () {
     else
 	      rm -rf "${BUILD_PATH}"
     fi
+
+    BOARD="${SAVED_BOARD}"
+    FQBN="${SAVED_FQBN}"
 }
 
 _find_all () {
@@ -326,13 +342,13 @@ EOF
         cat <<EOF >&2
 
 In order to update your keyboard's firmware you need to have permission
-to write to its serial port $DEVICE_PORT. 
+to write to its serial port $DEVICE_PORT.
 
 It appears that you do not have this permission:
 
   $(ls -l "$DEVICE_PORT")
 
-This may be because you're not in the correct unix group: 
+This may be because you're not in the correct unix group:
 
   $(stat -c %G "$DEVICE_PORT").
 
