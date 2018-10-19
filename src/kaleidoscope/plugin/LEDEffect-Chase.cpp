@@ -30,7 +30,7 @@ void LEDChaseEffect::update(void) {
 
   // The red LED is at `pos`; the blue one follows behind. `chase_sign` is either +1 or
   // -1; `chase_pixels` is the gap between them.
-  byte pos2 = pos - (chase_sign * chase_pixels);
+  int8_t pos2 = pos - (chase_sign * chase_pixels);
 
   // First, we turn off the LEDs that were turned on in the previous update. `pos` is
   // always in the valid range (0 <= pos < LED_COUNT), but after it changes direction, for

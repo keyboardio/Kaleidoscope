@@ -112,12 +112,12 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (uint8_t i = 0; i < LED_COUNT; i++) {
+  for (int8_t i = 0; i < LED_COUNT; i++) {
     setCrgbAt(i, color);
   }
 }
 
-void LEDControl::setCrgbAt(uint8_t i, cRGB crgb) {
+void LEDControl::setCrgbAt(int8_t i, cRGB crgb) {
   KeyboardHardware.setCrgbAt(i, crgb);
 }
 
@@ -125,7 +125,7 @@ void LEDControl::setCrgbAt(byte row, byte col, cRGB color) {
   KeyboardHardware.setCrgbAt(row, col, color);
 }
 
-cRGB LEDControl::getCrgbAt(uint8_t i) {
+cRGB LEDControl::getCrgbAt(int8_t i) {
   return KeyboardHardware.getCrgbAt(i);
 }
 
@@ -255,7 +255,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (Serial.peek() == '\n') {
-      for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
+      for (int8_t idx = 0; idx < LED_COUNT; idx++) {
         cRGB c = ::LEDControl.getCrgbAt(idx);
 
         ::Focus.printColor(c.r, c.g, c.b);
@@ -265,7 +265,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
       break;
     }
 
-    uint8_t idx = 0;
+    int8_t idx = 0;
     while (idx < LED_COUNT && Serial.peek() != '\n') {
       cRGB color;
 

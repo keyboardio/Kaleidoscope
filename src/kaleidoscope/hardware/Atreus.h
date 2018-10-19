@@ -48,16 +48,16 @@ class Atreus {
 
   static constexpr byte matrix_columns = 11;
   static constexpr byte matrix_rows = 4;
-  static constexpr uint8_t led_count = 0;
+  static constexpr int8_t led_count = 0;
 
   void syncLeds(void) {}
   void setCrgbAt(byte row, byte col, cRGB color) {}
-  void setCrgbAt(uint8_t i, cRGB crgb) {}
-  cRGB getCrgbAt(uint8_t i) {
+  void setCrgbAt(int8_t i, cRGB crgb) {}
+  cRGB getCrgbAt(int8_t i) {
     return CRGB(0, 0, 0);
   }
-  uint8_t getLedIndex(byte row, byte col) {
-    return 0;
+  int8_t getLedIndex(byte row, byte col) {
+    return -1;
   }
 
   void scanMatrix(void);

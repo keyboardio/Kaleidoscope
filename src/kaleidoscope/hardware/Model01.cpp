@@ -30,7 +30,7 @@ bool Model01::isLEDChanged = true;
 keydata_t Model01::leftHandMask;
 keydata_t Model01::rightHandMask;
 
-static constexpr uint8_t key_led_map[4][16] PROGMEM = {
+static constexpr int8_t key_led_map[4][16] PROGMEM = {
   {3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60},
   {2, 5, 10, 13, 18, 21, 25, 28,     35, 38, 42, 45, 50, 53, 58, 61},
   {1, 6, 9, 14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62},
@@ -85,7 +85,7 @@ void Model01::setup(void) {
 }
 
 
-void Model01::setCrgbAt(uint8_t i, cRGB crgb) {
+void Model01::setCrgbAt(int8_t i, cRGB crgb) {
   if (i < 32) {
     cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
@@ -107,11 +107,11 @@ void Model01::setCrgbAt(byte row, byte col, cRGB color) {
   setCrgbAt(getLedIndex(row, col), color);
 }
 
-uint8_t Model01::getLedIndex(byte row, byte col) {
+int8_t Model01::getLedIndex(byte row, byte col) {
   return pgm_read_byte(&(key_led_map[row][col]));
 }
 
-cRGB Model01::getCrgbAt(uint8_t i) {
+cRGB Model01::getCrgbAt(int8_t i) {
   if (i < 32) {
     return leftHand.ledData.leds[i];
   } else if (i < 64) {

@@ -139,9 +139,9 @@ class LEDControl : public kaleidoscope::Plugin {
 
   static int8_t mode_add(LEDMode *mode);
 
-  static void setCrgbAt(uint8_t i, cRGB crgb);
+  static void setCrgbAt(int8_t i, cRGB crgb);
   static void setCrgbAt(byte row, byte col, cRGB color);
-  static cRGB getCrgbAt(uint8_t i);
+  static cRGB getCrgbAt(int8_t i);
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
