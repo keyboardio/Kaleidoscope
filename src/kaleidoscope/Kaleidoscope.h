@@ -97,6 +97,8 @@ class Kaleidoscope_ {
   void setup(void);
   void loop(void);
 
+  static constexpr bool has_leds = (KeyboardHardware.led_count > 0);
+
   /** Detaching from / attaching to the host.
    *
    * These two functions wrap the hardware plugin's similarly named functions.
