@@ -21,7 +21,7 @@
 #include <Kaleidoscope-Macros.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, M(0),
    ___, ___, ___, ___, ___, ___, ___,
@@ -38,7 +38,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    ___, ___, ___, ___,
    ___),
-};
+        )
 // *INDENT-ON*
 
 class EventDropper_ : public kaleidoscope::Plugin {

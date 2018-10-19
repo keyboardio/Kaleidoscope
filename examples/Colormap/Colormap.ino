@@ -22,8 +22,7 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 // *INDENT-OFF*
-
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_LEDEffectNext, Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
    Key_Backtick,      Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
@@ -40,7 +39,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_NoKey),
-};
+)
 
 // *INDENT-ON*
 

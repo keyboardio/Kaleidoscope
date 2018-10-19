@@ -19,7 +19,7 @@
 #include <Kaleidoscope-ShapeShifter.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (
     Key_skip,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_skip,
@@ -37,7 +37,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
-};
+)
 // *INDENT-ON*
 
 static const kaleidoscope::plugin::ShapeShifter::dictionary_t shape_shift_dictionary[] PROGMEM = {

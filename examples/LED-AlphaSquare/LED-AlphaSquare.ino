@@ -21,7 +21,7 @@
 #include <Kaleidoscope-Macros.h>
 
 // *INDENT-OFF*
-const Key keymaps[][ROWS][COLS] PROGMEM = {
+KEYMAPS(
   [0] = KEYMAP_STACKED
   (
     Key_LEDEffectNext, Key_1, Key_2, Key_3, Key_4, Key_5, M(0),
@@ -39,7 +39,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
-};
+)
 // *INDENT-ON*
 
 const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
