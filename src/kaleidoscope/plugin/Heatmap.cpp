@@ -125,6 +125,9 @@ void Heatmap::resetMap(void) {
 }
 
 EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   // this methode is called frequently by Kaleidoscope
   // even if the module isn't activated
 
@@ -155,6 +158,9 @@ EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 }
 
 EventHandlerResult Heatmap::beforeEachCycle() {
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
+
   // this methode is called frequently by Kaleidoscope
   // even if the module isn't activated
 
@@ -171,6 +177,9 @@ EventHandlerResult Heatmap::beforeEachCycle() {
 }
 
 void Heatmap::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   // this methode is called frequently by the LEDControl::loopHook
 
   // do nothing if we didn't reach next_heatmap_comp_time_ yet

@@ -109,10 +109,16 @@ class LEDControl : public kaleidoscope::Plugin {
   static void prev_mode(void);
   static void setup(void);
   static void update(void) {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (modes[mode])
       modes[mode]->update();
   }
   static void refreshAt(byte row, byte col) {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (modes[mode])
       modes[mode]->refreshAt(row, col);
   }
@@ -120,6 +126,9 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t get_mode_index();
   static LEDMode *get_mode();
   static void refreshAll() {
+    if (!Kaleidoscope.has_leds)
+      return;
+
     if (paused)
       return;
 

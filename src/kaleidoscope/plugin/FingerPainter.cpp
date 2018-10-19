@@ -47,7 +47,7 @@ void FingerPainter::toggle(void) {
 }
 
 EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (!edit_mode_)
+  if (!Kaleidoscope.has_leds || !edit_mode_)
     return EventHandlerResult::OK;
 
   if (!keyToggledOn(key_state)) {

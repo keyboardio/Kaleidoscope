@@ -101,6 +101,9 @@ int8_t LEDControl::mode_add(LEDMode *mode) {
 }
 
 void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   cRGB color;
   color.r = r;
   color.g = g;
@@ -183,6 +186,9 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     AT,
     THEME,
   } subCommand;
+
+  if (!Kaleidoscope.has_leds)
+    return EventHandlerResult::OK;
 
   if (::Focus.handleHelp(command, PSTR("led.at\n"
                                        "led.setAll\n"

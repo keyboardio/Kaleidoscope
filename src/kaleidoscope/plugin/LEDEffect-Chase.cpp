@@ -19,6 +19,9 @@
 namespace kaleidoscope {
 namespace plugin {
 void LEDChaseEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   // Check to see if it's time to change the positions of the red and blue lights
   if (current_chase_counter++ < chase_threshold) {
     return;

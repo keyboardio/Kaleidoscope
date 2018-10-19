@@ -64,6 +64,9 @@ static const uint16_t alphabet[] PROGMEM = {
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
 void AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   if (key < Key_A || key > Key_0)
     return;
 
@@ -78,6 +81,9 @@ void AlphaSquare::display(Key key, uint8_t row, uint8_t col) {
 }
 
 void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   for (uint8_t r = 0; r < 4; r++) {
     for (uint8_t c = 0; c < 4; c++) {
       uint8_t pixel = bitRead(symbol, r * 4 + c);

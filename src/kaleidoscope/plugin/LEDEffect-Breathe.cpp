@@ -21,6 +21,9 @@
 namespace kaleidoscope {
 namespace plugin {
 void LEDBreatheEffect::update(void) {
+  if (!Kaleidoscope.has_leds)
+    return;
+
   uint16_t now = Kaleidoscope.millisAtCycleStart();
   if ((now - last_update_) < UPDATE_INTERVAL)
     return;
