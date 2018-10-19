@@ -6,6 +6,9 @@
 * Target:   any AVR device with hardware TWI
 * Usage:    API compatible with I2C Software Library i2cmaster.h
 **************************************************************************/
+
+#ifdef ARDUINO_AVR_ERGODOX
+
 #include <inttypes.h>
 #include <compat/twi.h>
 
@@ -196,3 +199,5 @@ unsigned char i2c_readNak(void) {
   return TWDR;
 
 }/* i2c_readNak */
+
+#endif

@@ -25,6 +25,8 @@
 
 #pragma once
 
+#ifdef ARDUINO_AVR_ERGODOX
+
 #include <Arduino.h>
 
 namespace kaleidoscope {
@@ -50,3 +52,5 @@ class ErgoDoxScanner {
 
 }
 }
+
+#endif

@@ -25,6 +25,8 @@
 
 #pragma once
 
+#ifdef ARDUINO_AVR_ERGODOX
+
 #include <Arduino.h>
 
 #include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
@@ -285,3 +287,5 @@ constexpr byte R5C12 = keyIndex(5, 12);
 constexpr byte R5C13 = keyIndex(5, 13);
 
 extern kaleidoscope::hardware::ErgoDox &ErgoDox;
+
+#endif

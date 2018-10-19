@@ -9,6 +9,8 @@
 * Usage:    see Doxygen manual
 **************************************************************************/
 
+#ifdef ARDUINO_AVR_ERGODOX
+
 #ifdef DOXYGEN
 /**
  @defgroup pfleury_ic2master I2C Master library
@@ -174,3 +176,5 @@ extern unsigned char i2c_read(unsigned char ack);
 
 
 /**@}*/
+
+#endif

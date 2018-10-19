@@ -23,6 +23,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef ARDUINO_AVR_ERGODOX
+
 #include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
 #include <avr/wdt.h>
 #include "kaleidoscope/hardware/ErgoDox/i2cmaster.h"
@@ -200,3 +202,5 @@ ErgoDoxScanner::reattachExpanderOnError() {
 
 }
 }
+
+#endif
