@@ -123,14 +123,6 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 
-  if (!keyIsPressed(keyState) && !keyWasPressed(keyState)) {
-    if (isTapDance(mapped_key)) {
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-
-    return EventHandlerResult::OK;
-  }
-
   if (!isTapDance(mapped_key)) {
     if (!isActive())
       return EventHandlerResult::OK;
