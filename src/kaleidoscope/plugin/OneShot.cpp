@@ -34,7 +34,6 @@ OneShot::state_t OneShot::pressed_state_;
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
-bool OneShot::should_mask_on_interrupt_ = false;
 uint8_t OneShot::positions_[16];
 
 // --- helper macros ------
@@ -104,10 +103,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 
     if (keyToggledOff(keyState)) {
       clearPressed(idx);
-
-      if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST) {
-        should_mask_on_interrupt_ = true;
-      }
     } else if (keyToggledOn(keyState)) {
       start_time_ = millis();
       positions_[idx] = row * COLS + col;
@@ -178,8 +173,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
   if (keyIsPressed(keyState)) {
     saveAsPrevious(mapped_key);
     if (!isModifier(mapped_key) && (mapped_key.flags != (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
-      if (should_mask_on_interrupt_)
-        KeyboardHardware.maskKey(row, col);
       should_cancel_ = true;
     }
   }
@@ -228,7 +221,6 @@ EventHandlerResult OneShot::afterEachCycle() {
   if (is_cancelled) {
     should_cancel_ = false;
     should_cancel_stickies_ = false;
-    should_mask_on_interrupt_ = false;
   }
 
   return EventHandlerResult::OK;
