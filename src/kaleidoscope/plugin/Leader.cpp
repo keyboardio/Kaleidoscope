@@ -85,13 +85,6 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 
-  if (!keyIsPressed(keyState) && !keyWasPressed(keyState)) {
-    if (isLeader(mapped_key)) {
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-    return EventHandlerResult::OK;
-  }
-
   if (!isActive() && !isLeader(mapped_key))
     return EventHandlerResult::OK;
 

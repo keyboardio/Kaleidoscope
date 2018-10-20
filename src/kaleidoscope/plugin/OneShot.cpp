@@ -121,9 +121,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (!keyIsPressed(keyState) && !keyWasPressed(keyState))
-    return EventHandlerResult::OK;
-
   if (isOneShotKey(mapped_key)) {
     if (isSticky_(idx)) {
       if (keyToggledOn(keyState)) {  // maybe on _off instead?
