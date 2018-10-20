@@ -83,6 +83,9 @@ and we'll help you with it.
  [gh:issues]: https://github.com/keyboardio/Kaleidoscope/issues
  [forums]: https://community.keyboard.io/
 
+Trying to use the old API errors out with a helpful error message, but as the
+old API is deprecated, this will be removed by 2019-01-14.
+
 ## The old API
 
 ```c++
