@@ -42,10 +42,7 @@ class OneShot : public kaleidoscope::Plugin {
   }
   static bool isActive(Key key);
   static bool isSticky(Key key);
-  static void cancel(bool with_stickies);
-  static void cancel(void) {
-    cancel(false);
-  }
+  static void cancel(bool with_stickies = false);
   static uint16_t time_out;
   static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
