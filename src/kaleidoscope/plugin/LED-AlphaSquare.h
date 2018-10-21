@@ -75,6 +75,13 @@ class AlphaSquare : public kaleidoscope::Plugin {
     clear(symbol, 0, 2);
   }
 
+  static bool isSymbolPart(Key key,
+                           uint8_t display_row, uint8_t display_col,
+                           uint8_t row, uint8_t col);
+  static bool isSymbolPart(uint16_t symbol,
+                           uint8_t display_row, uint8_t display_col,
+                           uint8_t row, uint8_t col);
+
   static cRGB color;
 };
 
