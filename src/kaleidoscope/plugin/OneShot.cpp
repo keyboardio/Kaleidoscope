@@ -40,7 +40,7 @@ uint8_t OneShot::positions_[16];
 
 #define isOneShotKey(key) (key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST)
 #define isModifier(key) (key.raw >= Key_LeftControl.raw && key.raw <= Key_RightGui.raw)
-#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP) && key.keyCode >= LAYER_SHIFT_OFFSET && key.keyCode <= LAYER_SHIFT_OFFSET + 23)
+#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))
 
 #define isOneShot(idx) (bitRead (state_.all, (idx)))
 #define setOneShot(idx) (bitWrite (state_.all, idx, 1))
@@ -169,7 +169,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 
   if (keyIsPressed(keyState)) {
     saveAsPrevious(mapped_key);
-    if (!isModifier(mapped_key) && (mapped_key.flags != (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
+    if (!isModifier(mapped_key) && !isLayerKey(mapped_key)) {
       should_cancel_ = true;
     }
   }
