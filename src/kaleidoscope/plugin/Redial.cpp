@@ -23,18 +23,27 @@ namespace plugin {
 
 Key Redial::key;
 Key Redial::key_to_redial_;
+Key Redial::last_key_;
+bool Redial::redial_held_ = false;
 
 EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   if (key == Key_NoKey)
     return EventHandlerResult::OK;
 
   if (mapped_key == key) {
+    if (keyToggledOff(key_state))
+      key_to_redial_ = last_key_;
+
     mapped_key = key_to_redial_;
+    redial_held_ = keyIsPressed(key_state);
+
     return EventHandlerResult::OK;
   }
 
   if (keyToggledOn(key_state) && shouldRemember(mapped_key)) {
-    key_to_redial_ = mapped_key;
+    last_key_ = mapped_key;
+    if (!redial_held_)
+      key_to_redial_ = mapped_key;
   }
 
   return EventHandlerResult::OK;

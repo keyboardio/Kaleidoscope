@@ -35,6 +35,8 @@ class Redial : public kaleidoscope::Plugin {
 
  private:
   static Key key_to_redial_;
+  static Key last_key_;
+  static bool redial_held_;
 };
 
 }
