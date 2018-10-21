@@ -101,6 +101,40 @@ void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {
   display(symbol, row, col, color);
 }
 
+bool AlphaSquare::isSymbolPart(Key key,
+                               uint8_t display_row, uint8_t display_col,
+                               uint8_t row, uint8_t col) {
+  if (!Kaleidoscope.has_leds)
+    return false;
+
+  if (key < Key_A || key > Key_0)
+    return false;
+
+  uint8_t index = key.keyCode - Key_A.keyCode;
+  uint16_t symbol = pgm_read_word(&alphabet[index]);
+
+  return isSymbolPart(symbol, display_row, display_col, row, col);
+}
+
+bool AlphaSquare::isSymbolPart(uint16_t symbol,
+                               uint8_t display_row, uint8_t display_col,
+                               uint8_t row, uint8_t col) {
+  if (!Kaleidoscope.has_leds)
+    return false;
+
+  for (uint8_t r = 0; r < 4; r++) {
+    for (uint8_t c = 0; c < 4; c++) {
+      uint8_t pixel = bitRead(symbol, r * 4 + c);
+
+      if (display_row + r == row &&
+          display_col + c == col)
+        return !!pixel;
+    }
+  }
+
+  return false;
+}
+
 }
 }
 

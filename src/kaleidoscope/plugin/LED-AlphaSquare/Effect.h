@@ -32,6 +32,7 @@ class AlphaSquareEffect : public LEDMode {
 
  protected:
   void update(void) final;
+  void refreshAt(byte row, byte col) final;
 
  private:
   static uint32_t end_time_left_, end_time_right_;
