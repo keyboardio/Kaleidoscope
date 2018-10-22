@@ -75,10 +75,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/GhostInTheFirmware/GhostInTheFirmware.ino
-
-## Upgrading
-
-Previous versions of `GhostInTheFirmware` used
-`kaleidoscope::GhostInTheFirmware::GhostKey` as a type for defining keys. In
-newer versions, this is `kaleidoscope::plugin::GhostInTheFirmware::GhostKey`.
-The old name still works, but will be removed by 2019-01-14.

@@ -24,10 +24,3 @@ void setup() {
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](LEDControl.md)
-
-## Upgrading
-
-Previous versions of `LEDEffect-SolidColor` used `kaleidoscope::LEDSolidColor`
-as a class for defining solid-color effects. This is called
-`kaleidoscope::plugin::LEDSolidColor` now. The old name still works, but is
-deprecated, and will be removed by 2019-01-14.

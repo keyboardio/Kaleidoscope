@@ -100,10 +100,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/LED-AlphaSquare/LED-AlphaSquare.ino
-
-## Upgrading
-
-Former versions of the plugin used to have extra symbols in the
-`kaleidoscope::alpha_square::symbols` namespace, while current versions have
-them under `kaleidoscope::plugin::alpha_square::symbols`. The old name is
-deprecated, and will be removed by 2019-01-14.

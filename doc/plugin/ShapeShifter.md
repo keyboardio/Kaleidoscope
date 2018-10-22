@@ -59,11 +59,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/ShapeShifter/ShapeShifter.ino
-
-## Upgrading
-
-Previous versions of `ShapeShifter` used
-`kaleidoscope::ShapeShifter::dictionary_t` as a type for defining the
-dictionary. In newer versions, this is
-`kaleidoscope::plugin::ShapeShifter::dictionary_t`. The old name still works,
-but will be removed by 2019-01-14.
