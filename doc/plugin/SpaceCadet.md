@@ -155,10 +155,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/SpaceCadet/SpaceCadet.ino
-
-## Upgrading
-
-Previous versions of `SpaceCadet` used
-`kaleidoscope::SpaceCadet::KeyBinding` as a type for defining keybindings. In newer versions, this is
-`kaleidoscope::plugin::SpaceCadet::KeyBinding`. The old name still works,
-but will be removed by 2019-01-14.

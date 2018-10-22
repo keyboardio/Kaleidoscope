@@ -150,9 +150,3 @@ limit, you won't get any unintended alternate keycodes.
 The [example][plugin:example] can help to learn how to use this plugin.
 
  [plugin:example]: ../../examples/Qukeys/Qukeys.ino
-
-## Upgrading
-
-Previous versions of `Qukeys` used `kaleidoscope::Qukey` objects within the
-`QUKEYS` macro. In newer versions, this is `kaleidoscope::plugin::Qukey`
-instead. The old name still works, but will be removed by 2019-01-14.

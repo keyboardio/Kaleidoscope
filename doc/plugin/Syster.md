@@ -95,10 +95,3 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/Syster/Syster.ino
-
-## Upgrading
-
-Previous versions of `Syster` used `kaleidoscope::Syster::action_t` as the type
-of Syster actions. In newer versions, this is
-`kaleidoscope::plugin::Syster::action_t`. The old name still works, but will be
-removed by 2019-01-14.

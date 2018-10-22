@@ -25,9 +25,9 @@ Then, we simply create a new instance of the `TriColor` class, with appropriate
 colors set for the constructor:
 
 ```c++
-kaleidoscope::TriColor BlackAndWhiteEffect (CRGB(0x00, 0x00, 0x00),
-                                            CRGB(0xff, 0xff, 0xff),
-                                            CRGB(0x80, 0x80, 0x80));
+kaleidoscope::plugin::TriColor BlackAndWhiteEffect (CRGB(0x00, 0x00, 0x00),
+                                                    CRGB(0xff, 0xff, 0xff),
+                                                    CRGB(0x80, 0x80, 0x80));
 ```
 
 The first argument is the base color, the second is for modifiers and special
