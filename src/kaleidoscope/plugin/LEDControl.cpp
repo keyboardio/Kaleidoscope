@@ -130,6 +130,9 @@ cRGB LEDControl::getCrgbAt(int8_t i) {
 }
 
 void LEDControl::syncLeds(void) {
+  if (paused)
+    return;
+
   KeyboardHardware.syncLeds();
 }
 
