@@ -43,7 +43,7 @@ EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, byte row, byte co
     ::LEDControl.refreshAll();
   }
 
-  end_time_ = Kaleidoscope.millisAtCycleStart() + idle_time_limit * 1000;
+  end_time_ = Kaleidoscope.millisAtCycleStart() + (uint32_t)idle_time_limit * 1000;
 
   return EventHandlerResult::OK;
 }
