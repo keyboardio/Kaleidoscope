@@ -29,14 +29,14 @@ class IdleLEDs: public kaleidoscope::Plugin {
   static uint16_t idle_time_limit;
 
   EventHandlerResult onSetup() {
-    last_keypress_time_ = millis();
+    end_time_ = millis() + idle_time_limit * 1000;
     return EventHandlerResult::OK;
   }
   EventHandlerResult beforeEachCycle();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
 
  private:
-  static uint32_t last_keypress_time_;
+  static uint32_t end_time_;
 };
 }
 }
