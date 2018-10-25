@@ -5,6 +5,7 @@
 See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading from earlier versions (even earlier betas). This is just a list of noteworthy changes.
 
 * [New features](#new-features)
+* [New plugins](#new-plugins)
 * [Breaking changes](#breaking-changes)
 * [Bugfixes](#bugfixes)
 
@@ -60,6 +61,12 @@ It is now possible to detach, and re-attach the USB link from/to the host, witho
 See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 
  [plugin:USB-Quirks]: https://github.com/keyboardio/Kaleidoscope-USB-Quirks
+
+## New plugins
+
+### IdleLEDs
+
+The [IdleLEDs](doc/plugin/IdleLEDs.md) plugin is a simple, yet, useful one: it will turn the keyboard LEDs off after a period of inactivity, and back on upon the next key event.
 
 ## Breaking changes
 
