@@ -2,17 +2,21 @@
 
 One-shots are a new kind of behaviour for your standard modifier and momentary
 layer keys: instead of having to hold them while pressing other keys, they can
-be tapped and released, and will remain active until any other key is pressed.
+be tapped and released, and will remain active until any other key is pressed
+subject to a time-out.
+
 In short, they turn `Shift, A` into `Shift+A`, and `Fn, 1` to `Fn+1`. The main
 advantage is that this allows us to place the modifiers and layer keys to
 positions that would otherwise be awkward when chording. Nevertheless, they
 still act as normal when held, that behaviour is not lost.
 
-Furthermore, if a one-shot key is tapped two times in quick succession, it
-becomes sticky, and remains active until disabled with a third tap. This can be
-useful when one needs to input a number of keys with the modifier or layer
-active, and still does not wish to hold the key down. If this feature is
-undesirable, unset the `OneShot.double_tap_sticky` property (see later).
+Furthermore, if a one-shot key is double-tapped ie tapped two times in quick
+succession, it becomes sticky, and remains active until disabled with a third tap.
+This can be useful when one needs to input a number of keys with the modifier or
+layer active, and does not wish to hold the key down. If this "stickability"
+feature is undesirable, it can be unset (and later again set) for individual
+modifiers/layers. If stickability is unset, double-tapping a one-shot modifier
+will just restart the timer.
 
 To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain
 active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
@@ -39,7 +43,7 @@ This can be a bit tricky; combining this plugin with
 [LED-ActiveModColor](LED-ActiveModColor.md)
 will help you understand what state your one-shot is in; when a
 one-shot key is active, it will have a white LED highlight; when
-sticky, a red highlight.
+sticky, a red highlight. (These colors are configurable.)
 
 
 ## Using the plugin
@@ -125,6 +129,36 @@ modifiers and one-shot layer keys. It has the following methods:
 >
 > See the example sketch for more information about its use.
 
+### `.enableStickability(key...)`
+
+> Enables stickability for all keys listed. The keys should all be OneShot keys,
+> as if specified on the keymap. For example:
+>   `OneShot.enableStickability(OSM(LeftShift), OSL(1))`.
+>
+> By default, all oneshot keys are stickable.
+
+### `.enableStickabilityForModifiers()`
+### `.enableStickabilityForLayers()`
+
+> Enables stickability for all modifiers and layers, respectively. These are
+> convenience methods for cases where one wants to enable stickability for a
+> group of one-shot keys.
+
+### `.disableStickability(key...)`
+
+> Disables stickability for all keys listed. The keys should all be OneShot keys,
+> as if specified on the keymap. For example:
+>   `OneShot.disableStickability(OSM(LeftShift), OSL(1))`.
+>
+> By default, all oneshot keys are stickable.
+
+### `.disableStickabilityForModifiers()`
+### `.disableStickabilityForLayers()`
+
+> Disables stickability for all modifiers and layers, respectively. These are
+> convenience methods for cases where one wants to disable stickability for a
+> group of one-shot keys.
+
 ## Plugin properties
 
 Along with the methods listed above, the `OneShot` object has the following
@@ -147,22 +181,6 @@ properties too:
 > effect.
 >
 > Defaults to 200.
-
-### `.double_tap_sticky`
-
-> Set this boolean property to make the plugin treat a double-tap of a one-shot
-> key as making it sticky until a third tap. Setting it to `false` disables this
-> behaviour, in which case double-tapping a one-shot modifier will just restart
-> the timer.
->
-> Defaults to `true`.
-
-### `.double_tap_sticky_layers`
-
-> The same as `.double_tap_sticky`, but only applies to layers. The two can be
-> set separately.
->
-> Defaults to `true`.
 
 ### `.double_tap_time_out`
 
