@@ -60,7 +60,11 @@ It is now possible to detach, and re-attach the USB link from/to the host, witho
 
 See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 
- [plugin:USB-Quirks]: https://github.com/keyboardio/Kaleidoscope-USB-Quirks
+ [plugin:USB-Quirks]: hAttps://github.com/keyboardio/Kaleidoscope-USB-Quirks
+
+### Finer stickability controls for OneShot
+
+The [OneShot plugin](doc/plugin/OneShot.md) gained finer stickability controls, one can now control whether the double-tap stickiness is enabled on a per-key basis. See [UPGRADING.md](UPGRADING.md#finer-oneshot-stickability-control) for more information.
 
 ## New plugins
 

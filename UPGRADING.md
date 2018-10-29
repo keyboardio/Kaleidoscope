@@ -16,6 +16,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [MagicCombo](#magiccombo)
     - [TypingBreaks](#typingbreaks)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
+    - [Finer OneShot stickability control](#finer-oneshot-stickability-control)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
@@ -432,6 +433,12 @@ Both of them are unconditionally enabled now, because they add so much to the pl
 Storing the settable settings in EEPROM makes it depend on `Kaleidoscope-EEPROM-Settings`, which should be initialized before this plugin is.
 
 ## Deprecated APIs and their replacements
+
+### Finer OneShot stickability control
+
+The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods.
+
+The old method of setting `OneShot.double_tap_sticky` or `OneShot.double_tap_layer_sticky` continue to work, but using them is deprecated, and as such, these will be removed by **2019-01-14**.
 
 ### Source code and namespace rearrangement
 

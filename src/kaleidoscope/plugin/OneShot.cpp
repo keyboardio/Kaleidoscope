@@ -26,15 +26,17 @@ uint32_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
+OneShot::state_t OneShot::state_ = {0, 0};
+OneShot::state_t OneShot::sticky_state_ = {0, 0};
+OneShot::state_t OneShot::stickable_state_ = {0xFF, 0xFF};
+OneShot::state_t OneShot::pressed_state_ = {0, 0};
 bool OneShot::double_tap_sticky = true;
 bool OneShot::double_tap_sticky_layers = true;
-OneShot::state_t OneShot::state_;
-OneShot::state_t OneShot::sticky_state_;
-OneShot::state_t OneShot::pressed_state_;
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
 uint8_t OneShot::positions_[16];
+bool OneShot::use_new_stickies_ = false;
 
 // --- helper macros ------
 
@@ -58,6 +60,18 @@ uint8_t OneShot::positions_[16];
 #define saveAsPrevious(key) prev_key_.raw = key.raw
 
 #define hasTimedOut() (millis () - start_time_ >= time_out)
+
+bool OneShot::isStickable(Key key) {
+  if (use_new_stickies_)
+    return bitRead(stickable_state_.all, key.raw - ranges::OS_FIRST);
+
+  if (key >= ranges::OSM_FIRST && key <= ranges::OSM_LAST)
+    return true;
+  else if (key >= ranges::OSL_FIRST && key <= ranges::OSL_LAST)
+    return double_tap_sticky_layers;
+
+  return false;
+}
 
 void OneShot::positionToCoords(uint8_t pos, byte *row, byte *col) {
   *col = pos % COLS;
@@ -136,15 +150,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
       if (keyToggledOn(keyState)) {
         setPressed(idx);
 
-        bool set_sticky = false;
-        if (isSameAsPrevious(mapped_key)) {
-          if (mapped_key >= ranges::OSM_FIRST && mapped_key <= ranges::OSM_LAST && double_tap_sticky)
-            set_sticky = true;
-          else if (mapped_key >= ranges::OSL_FIRST && mapped_key <= ranges::OSL_LAST && double_tap_sticky_layers)
-            set_sticky = true;
-        }
-
-        if (set_sticky) {
+        if (isSameAsPrevious(mapped_key) && isStickable(mapped_key)) {
           if ((millis() - start_time_) <= ((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
             setSticky(idx);
 
@@ -255,6 +261,40 @@ bool OneShot::isModifierActive(Key key) {
 void OneShot::cancel(bool with_stickies) {
   should_cancel_ = true;
   should_cancel_stickies_ = with_stickies;
+}
+
+void OneShot::enableStickability(Key key) {
+  use_new_stickies_ = true;
+
+  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
+    bitSet(stickable_state_.all, (key.raw - ranges::OS_FIRST));
+}
+
+void OneShot::disableStickability(Key key) {
+  use_new_stickies_ = true;
+
+  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
+    bitClear(stickable_state_.all, (key.raw - ranges::OS_FIRST));
+}
+
+void OneShot::enableStickabilityForModifiers() {
+  use_new_stickies_ = true;
+  stickable_state_.mods = 0xFF;
+}
+
+void OneShot::enableStickabilityForLayers() {
+  use_new_stickies_ = true;
+  stickable_state_.layers = 0xFF;
+}
+
+void OneShot::disableStickabilityForModifiers() {
+  use_new_stickies_ = true;
+  stickable_state_.mods = 0;
+}
+
+void OneShot::disableStickabilityForLayers() {
+  use_new_stickies_ = true;
+  stickable_state_.layers = 0;
 }
 
 }
