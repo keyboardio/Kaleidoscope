@@ -48,7 +48,7 @@ void LEDChaseEffect::update(void) {
   // will be out of bounds. The simplest way to do this is to assign it a value that is
   // known to be invalid (LED_COUNT).
   pos += chase_sign;
-  if (pos < LED_COUNT) {
+  if (pos < LED_COUNT && pos > 0) {
     pos2 += chase_sign;
   } else {
     chase_sign = -chase_sign;

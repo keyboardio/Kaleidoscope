@@ -86,6 +86,9 @@ void Model01::setup(void) {
 
 
 void Model01::setCrgbAt(int8_t i, cRGB crgb) {
+  if (i < 0) {
+    return;
+  }
   if (i < 32) {
     cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
@@ -112,12 +115,13 @@ int8_t Model01::getLedIndex(byte row, byte col) {
 }
 
 cRGB Model01::getCrgbAt(int8_t i) {
+  if (i < 0 || i > 64)
+    return {0, 0, 0};
+
   if (i < 32) {
     return leftHand.ledData.leds[i];
-  } else if (i < 64) {
-    return rightHand.ledData.leds[i - 32] ;
   } else {
-    return {0, 0, 0};
+    return rightHand.ledData.leds[i - 32] ;
   }
 }
 
