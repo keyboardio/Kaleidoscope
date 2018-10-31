@@ -21,6 +21,8 @@
 namespace kaleidoscope {
 namespace plugin {
 
+uint8_t Unicode::input_delay_;
+
 void Unicode::start(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
@@ -62,6 +64,7 @@ void Unicode::input(void) {
     unicodeCustomInput();
     break;
   }
+  delay(input_delay_);
 }
 
 void Unicode::end(void) {

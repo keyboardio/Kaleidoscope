@@ -32,6 +32,15 @@ class Unicode : public kaleidoscope::Plugin {
 
   static void type(uint32_t unicode);
   static void typeCode(uint32_t unicode);
+
+  static void input_delay(uint8_t delay) {
+    input_delay_ = delay;
+  }
+  static uint8_t input_delay() {
+    return input_delay_;
+  }
+ private:
+  static uint8_t input_delay_;
 };
 }
 }
