@@ -15,9 +15,23 @@
 
 set -e
 
-DEVICE="${DEVICE:-/dev/ttyACM0}"
+OS=$(uname -s)
 
-stty -F "${DEVICE}" 9600 raw -echo
+case ${OS} in
+    Linux)
+        DEVICE="${DEVICE:-/dev/ttyACM0}"
+        stty -F "${DEVICE}" 9600 raw -echo
+        ;;
+    Darwin)
+        DEVICE="${DEVICE:-/dev/cu.usbmodemCkbio01E}"
+        stty -f "${DEVICE}" 9600 raw -echo
+        ;;
+    *)
+        echo "Error Unknown OS : ${OS}" >&2
+        exit 1
+        ;;
+esac
+
 
 exec 3<"${DEVICE}"
 echo "$@" >"${DEVICE}"
