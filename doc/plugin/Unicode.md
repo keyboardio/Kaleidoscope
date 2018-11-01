@@ -67,6 +67,14 @@ functionality.
 
 > Finishes the Unicode input method, in an OS-specific way.
 
+### `.input_delay([delay])`
+
+> Sets or returns (if called without an argument) the number of milliseconds to
+> wait between inputting each part of the sequence. In some cases, inputting too
+> fast does not give the host enough time to process, and a delay is needed.
+>
+> Defaults to zero, no delay.
+
 ## Overrideable methods
 
 ### `hexToKey(hex_digit)`
