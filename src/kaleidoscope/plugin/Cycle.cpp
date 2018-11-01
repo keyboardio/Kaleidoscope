@@ -23,6 +23,7 @@ namespace kaleidoscope {
 namespace plugin {
 // --- state ---
 Key Cycle::last_non_cycle_key_;
+uint8_t Cycle::current_modifier_flags_;
 uint8_t Cycle::cycle_count_;
 
 // --- helpers ---
@@ -66,8 +67,13 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, 
 
   if (!isCycle(mapped_key)) {
     if (keyToggledOn(key_state)) {
-      last_non_cycle_key_.raw = mapped_key.raw;
+      current_modifier_flags_ |= toModFlag(mapped_key.keyCode);
+      last_non_cycle_key_.keyCode = mapped_key.keyCode;
+      last_non_cycle_key_.flags = current_modifier_flags_;
       cycle_count_ = 0;
+    }
+    if (keyToggledOff(key_state)) {
+      current_modifier_flags_ &= ~toModFlag(mapped_key.keyCode);
     }
     return EventHandlerResult::OK;
   }
@@ -79,6 +85,26 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, 
   ++cycle_count_;
   cycleAction(last_non_cycle_key_, cycle_count_);
   return EventHandlerResult::EVENT_CONSUMED;
+}
+
+uint8_t Cycle::toModFlag(uint8_t keyCode) {
+  switch (keyCode) {
+  case Key_LeftShift.keyCode:
+  case Key_RightShift.keyCode:
+    return SHIFT_HELD;
+  case Key_LeftAlt.keyCode:
+    return LALT_HELD;
+  case Key_RightAlt.keyCode:
+    return RALT_HELD;
+  case Key_LeftControl.keyCode:
+  case Key_RightControl.keyCode:
+    return CTRL_HELD;
+  case Key_LeftGui.keyCode:
+  case Key_RightGui.keyCode:
+    return GUI_HELD;
+  default:
+    return 0;
+  }
 }
 
 }

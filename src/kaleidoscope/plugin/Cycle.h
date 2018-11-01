@@ -39,8 +39,10 @@ class Cycle : public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
 
  private:
+  static uint8_t toModFlag(uint8_t keyCode);
   static Key last_non_cycle_key_;
   static uint8_t cycle_count_;
+  static uint8_t current_modifier_flags_;
 };
 }
 }
