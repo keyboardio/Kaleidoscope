@@ -123,3 +123,31 @@
     #define PIN_F6 PINDEF(F, 6)
     #define PIN_F7 PINDEF(F, 7)
 #endif
+
+
+/* converting pins to ports */
+enum { PIN_OFFSET, DDR_OFFSET, PORT_OFFSET};
+
+#define PIN_ADDRESS_MASK 0xF
+
+#define PIN_ADDRESS(p, offset) _SFR_IO8(ADDRESS_BASE + (p >> PORT_SHIFTER) + offset)
+#define PIN_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PIN_OFFSET )
+#define DDR_REG_FOR_PIN(pin) PIN_ADDRESS(pin, DDR_OFFSET )
+#define PORT_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PORT_OFFSET )
+#define PIN_NUM_FOR_PIN(pin) ( pin & PIN_ADDRESS_MASK )
+#define PIN_MASK_FOR_PIN(pin) _BV(PIN_NUM_FOR_PIN(pin))
+
+#define DDR_INPUT(pin) (DDR_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+#define DDR_OUTPUT(pin) (DDR_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
+
+
+#define ENABLE_PULLUP(pin) (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
+#define DISABLE_PULLUP(pin) (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+
+
+#define OUTPUT_HIGH(pin) (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
+#define OUTPUT_LOW(pin) (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+#define OUTPUT_TOGGLE(pin) (PORT_REG_FOR_PIN(pin) ^= (PIN_MASK_FOR_PIN(pin)))
+
+#define READ_PIN(pin) (!!(PIN_REG_FOR_PIN(pin) & PIN_MASK_FOR_PIN(pin)))
+
