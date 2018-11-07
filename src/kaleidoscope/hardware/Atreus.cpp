@@ -52,11 +52,9 @@ void Atreus::setup(void) {
   wdt_disable();
   delay(100);
 
-  for (uint8_t i = 0; i < ROWS; i++) {
-    DDRD |= _BV(row_pins[i]);
-    PORTD |= _BV(row_pins[i]);
-    keyState_[i] = previousKeyState_[i] = 0;
-  }
+  // Initialize rows
+  DDRD |= _BV(0) | _BV(1) | _BV(3) | _BV(2);
+  PORTD |= _BV(0) | _BV(1) | _BV(3) | _BV(2);
 
   // Initialize columns
   DDRB &= ~(_BV(5) | _BV(4) | _BV(6) | _BV(7));
