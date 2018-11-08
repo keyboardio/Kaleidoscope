@@ -46,14 +46,15 @@ uint16_t Atreus::masks_[ROWS];
 uint8_t Atreus::debounce_matrix_[ROWS][COLS];
 uint8_t Atreus::debounce = 3;
 
+constexpr uint8_t Atreus::row_pins[4];
+
 void Atreus::setup(void) {
   wdt_disable();
   delay(100);
 
-  for (uint8_t i = 0; i < ROWS; i++) {
-    unselectRow(i);
-    keyState_[i] = previousKeyState_[i] = 0;
-  }
+  // Initialize rows
+  DDRD |= _BV(0) | _BV(1) | _BV(3) | _BV(2);
+  PORTD |= _BV(0) | _BV(1) | _BV(3) | _BV(2);
 
   // Initialize columns
   DDRB &= ~(_BV(5) | _BV(4) | _BV(6) | _BV(7));
@@ -82,50 +83,8 @@ void Atreus::setup(void) {
   TIMSK1 = _BV(TOIE1);
 }
 
-void Atreus::selectRow(uint8_t row) {
-  switch (row) {
-  case 0:
-    DDRD  |= (_BV(0));
-    PORTD &= ~(_BV(0));
-    break;
-  case 1:
-    DDRD  |= (_BV(1));
-    PORTD &= ~(_BV(1));
-    break;
-  case 2:
-    DDRD  |= (_BV(3));
-    PORTD &= ~(_BV(3));
-    break;
-  case 3:
-    DDRD  |= (_BV(2));
-    PORTD &= ~(_BV(2));
-    break;
-  default:
-    break;
-  }
-}
-
-void Atreus::unselectRow(uint8_t row) {
-  switch (row) {
-  case 0:
-    DDRD  &= ~(_BV(0));
-    PORTD |= (_BV(0));
-    break;
-  case 1:
-    DDRD  &= ~(_BV(1));
-    PORTD |= (_BV(1));
-    break;
-  case 2:
-    DDRD  &= ~(_BV(3));
-    PORTD |= (_BV(3));
-    break;
-  case 3:
-    DDRD  &= ~(_BV(2));
-    PORTD |= (_BV(2));
-    break;
-  default:
-    break;
-  }
+void Atreus::toggleRow(uint8_t row) {
+  PORTD ^= _BV(row_pins[row]);
 }
 
 uint16_t Atreus::readCols() {
@@ -149,9 +108,9 @@ void Atreus::readMatrixRow(uint8_t current_row) {
 
   mask = debounceMaskForRow(current_row);
 
-  selectRow(current_row);
+  toggleRow(current_row);
   cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
-  unselectRow(current_row);
+  toggleRow(current_row);
   debounceRow(cols ^ keyState_[current_row], current_row);
   keyState_[current_row] = cols;
 }

@@ -127,14 +127,15 @@ class Atreus {
   static uint8_t debounce;
 
  private:
+  static constexpr uint8_t row_pins[4] = {0, 1, 3, 2};
+
   static uint16_t previousKeyState_[matrix_rows];
   static uint16_t keyState_[matrix_rows];
   static uint16_t masks_[matrix_rows];
 
   static void readMatrixRow(uint8_t row);
   static uint16_t readCols();
-  static void selectRow(uint8_t row);
-  static void unselectRow(uint8_t row);
+  static void toggleRow(uint8_t row);
 
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
   static uint16_t debounceMaskForRow(uint8_t row);
