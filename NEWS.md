@@ -71,6 +71,10 @@ The [OneShot plugin](doc/plugin/OneShot.md) gained finer stickability controls, 
 
 In certain cases we need to delay the unicode input sequence, otherwise the host is unable to process the input properly. For this reason, the [Unicode](doc/plugin/Unicode.md) gained an `.input_delay()` method that lets us do just that. It still defaults to no delay.
 
+### Better support for modifiers in the Cycle plugin
+
+The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling through keys with modifiers applied to them, such as `LSHIFT(Key_A)`. Please see the documentation and the updated example for more information.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:
