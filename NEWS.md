@@ -67,6 +67,10 @@ See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 
 The [OneShot plugin](doc/plugin/OneShot.md) gained finer stickability controls, one can now control whether the double-tap stickiness is enabled on a per-key basis. See [UPGRADING.md](UPGRADING.md#finer-oneshot-stickability-control) for more information.
 
+### A way to slow down Unicode input
+
+In certain cases we need to delay the unicode input sequence, otherwise the host is unable to process the input properly. For this reason, the [Unicode](doc/plugin/Unicode.md) gained an `.input_delay()` method that lets us do just that. It still defaults to no delay.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:
