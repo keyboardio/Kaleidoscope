@@ -5,6 +5,7 @@
 See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading from earlier versions (even earlier betas). This is just a list of noteworthy changes.
 
 * [New features](#new-features)
+* [New hardware support](#new-hardware-support)
 * [New plugins](#new-plugins)
 * [Breaking changes](#breaking-changes)
 * [Bugfixes](#bugfixes)
@@ -65,6 +66,23 @@ See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 ### Finer stickability controls for OneShot
 
 The [OneShot plugin](doc/plugin/OneShot.md) gained finer stickability controls, one can now control whether the double-tap stickiness is enabled on a per-key basis. See [UPGRADING.md](UPGRADING.md#finer-oneshot-stickability-control) for more information.
+
+### A way to slow down Unicode input
+
+In certain cases we need to delay the unicode input sequence, otherwise the host is unable to process the input properly. For this reason, the [Unicode](doc/plugin/Unicode.md) gained an `.input_delay()` method that lets us do just that. It still defaults to no delay.
+
+### Better support for modifiers in the Cycle plugin
+
+The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling through keys with modifiers applied to them, such as `LSHIFT(Key_A)`. Please see the documentation and the updated example for more information.
+
+## New hardware support
+
+Kaleidoscope has been ported to the following devices:
+
+- [Atreus](doc/plugin/Hardware-Technomancy-Atreus.md), post-2016 PCB variants with an A* MCU, and the handwired with Teensy from FalbaTech are supported, PCBs prior to 2016 and the legacy teensy2 variants are not.
+- [ErgoDox](doc/plugin/Hardware-EZ-ErgoDox.md): Originally developed to support the ErgoDox EZ, but all other compatible hardware is supported, such as the original ErgoDox and anything else wired like it, like some Dactyls.
+
+For more information, please see the hardware plugins' documentation.
 
 ## New plugins
 
