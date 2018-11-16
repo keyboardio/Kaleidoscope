@@ -64,12 +64,12 @@ void ATMegaKeyboard::readMatrix(void) {
 
     KeyboardHardware.previousKeyState_[current_row] = KeyboardHardware.keyState_[current_row];
 
-    mask = debounceMaskForRow(current_row);
+    mask = KeyboardHardware.debounceMaskForRow(current_row);
 
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
-    cols = (readCols() & mask) | (KeyboardHardware.keyState_[current_row] & ~mask);
+    cols = (KeyboardHardware.readCols() & mask) | (KeyboardHardware.keyState_[current_row] & ~mask);
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
-    debounceRow(cols ^ KeyboardHardware.keyState_[current_row], current_row);
+    KeyboardHardware.debounceRow(cols ^ KeyboardHardware.keyState_[current_row], current_row);
     KeyboardHardware.keyState_[current_row] = cols;
   }
 }
@@ -113,8 +113,8 @@ void ATMegaKeyboard::scanMatrix() {
 
   do_scan_ = false;
 
-  readMatrix();
-  actOnMatrixScan();
+  KeyboardHardware.readMatrix();
+  KeyboardHardware.actOnMatrixScan();
 }
 
 void ATMegaKeyboard::maskKey(byte row, byte col) {
