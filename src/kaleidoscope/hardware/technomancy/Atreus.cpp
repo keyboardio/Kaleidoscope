@@ -27,7 +27,6 @@
 #ifdef ARDUINO_AVR_ATREUS
 
 #include <Kaleidoscope.h>
-#include <KeyboardioHID.h>
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
