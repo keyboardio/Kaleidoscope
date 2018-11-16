@@ -21,8 +21,6 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keyswitch_state.h"
 
-extern const Key keymaps[][ROWS][COLS];
-
 
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch

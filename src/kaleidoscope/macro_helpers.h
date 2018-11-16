@@ -135,3 +135,6 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
    }){}, /* End of dummy lambda, the comma operator's A operand. */         __NL__ \
    B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */                __NL__ \
    )
+
+/* Count the args in a list */
+#define NUM_ARGS(...)  (sizeof((int[])__VA_ARGS__)/sizeof(int))
