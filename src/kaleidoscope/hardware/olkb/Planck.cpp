@@ -24,19 +24,9 @@ namespace kaleidoscope {
 namespace hardware {
 namespace olkb {
 
-const int8_t Planck::matrix_rows;
-const int8_t Planck::matrix_columns;
-constexpr uint8_t Planck::matrix_row_pins[matrix_rows];
-constexpr uint8_t Planck::matrix_col_pins[matrix_columns];
+ATMEGA_KEYBOARD_DATA(Planck);
 constexpr int8_t Planck::led_count;
-uint16_t Planck::previousKeyState_[matrix_rows];
-uint16_t Planck::keyState_[matrix_rows];
-uint16_t Planck::masks_[matrix_rows];
-uint8_t Planck::debounce_matrix_[matrix_rows][matrix_columns];
 
-ISR(TIMER1_OVF_vect) {
-  Planck::do_scan_ = true;
-}
 }
 }
 }

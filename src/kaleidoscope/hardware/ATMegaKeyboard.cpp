@@ -23,6 +23,7 @@
 namespace kaleidoscope {
 namespace hardware {
 
+bool ATMegaKeyboard::do_scan_;
 uint8_t ATMegaKeyboard::debounce = 3;
 
 void ATMegaKeyboard::setup(void) {
@@ -136,8 +137,6 @@ bool ATMegaKeyboard::isKeyMasked(byte row, byte col) {
 
   return bitRead(KeyboardHardware.masks_[row], col);
 }
-
-bool ATMegaKeyboard::do_scan_;
 
 uint16_t ATMegaKeyboard::readCols() {
   uint16_t results = 0x00 ;

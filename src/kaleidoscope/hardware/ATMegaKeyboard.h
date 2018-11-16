@@ -38,16 +38,30 @@ struct cRGB {
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
-#define ATMEGA_KEYBOARD_CONFIG( ROW_PINS_, COL_PINS_)          	         \
+#define ATMEGA_KEYBOARD_CONFIG(ROW_PINS_, COL_PINS_)          	         \
   static const int8_t matrix_rows = NUM_ARGS(ROW_PINS_);                 \
   static const int8_t matrix_columns = NUM_ARGS(COL_PINS_);              \
-  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_ ;   \
-  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_ ;\
+  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;    \
+  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_; \
                                                                          \
   static uint16_t previousKeyState_[matrix_rows];                        \
   static uint16_t keyState_[matrix_rows];                                \
   static uint16_t masks_[matrix_rows];                                   \
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
+
+#define ATMEGA_KEYBOARD_DATA(BOARD)                             \
+  const int8_t BOARD::matrix_rows;                              \
+  const int8_t BOARD::matrix_columns;                           \
+  constexpr uint8_t BOARD::matrix_row_pins[matrix_rows];        \
+  constexpr uint8_t BOARD::matrix_col_pins[matrix_columns];     \
+  uint16_t BOARD::previousKeyState_[matrix_rows];               \
+  uint16_t BOARD::keyState_[matrix_rows];                       \
+  uint16_t BOARD::masks_[matrix_rows];                          \
+  uint8_t BOARD::debounce_matrix_[matrix_rows][matrix_columns]; \
+                                                                \
+  ISR(TIMER1_OVF_vect) {                                        \
+    BOARD::do_scan_ = true;                                     \
+  }
 
 namespace kaleidoscope {
 namespace hardware {

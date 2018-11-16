@@ -33,19 +33,8 @@ namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
 
-const int8_t Atreus::matrix_rows;
-const int8_t Atreus::matrix_columns;
-constexpr uint8_t Atreus::matrix_row_pins[matrix_rows];
-constexpr uint8_t Atreus::matrix_col_pins[matrix_columns];
+ATMEGA_KEYBOARD_DATA(Atreus);
 constexpr int8_t Atreus::led_count;
-uint16_t Atreus::previousKeyState_[matrix_rows];
-uint16_t Atreus::keyState_[matrix_rows];
-uint16_t Atreus::masks_[matrix_rows];
-uint8_t Atreus::debounce_matrix_[matrix_rows][matrix_columns];
-
-ISR(TIMER1_OVF_vect) {
-  Atreus::do_scan_ = true;
-}
 
 // Atreus-specific stuff
 
