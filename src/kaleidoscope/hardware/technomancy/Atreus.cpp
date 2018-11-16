@@ -32,6 +32,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace technomancy {
 
 const int8_t Atreus::matrix_rows;
 const int8_t Atreus::matrix_columns;
@@ -84,8 +85,9 @@ void Atreus::resetDevice() {
 
 }
 }
+}
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::Atreus &Atreus = KeyboardHardware;
+kaleidoscope::hardware::technomancy::Atreus &Atreus = KeyboardHardware;
 
 #endif

@@ -27,7 +27,7 @@
 #ifdef ARDUINO_AVR_ATREUS
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::Atreus
+#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::technomancy::Atreus
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -36,6 +36,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace technomancy {
 class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
  public:
   Atreus(void) {}
@@ -82,6 +83,7 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
   }
 }
 }
+}
 
 /* To be used by the hardware implementations, `keyIndex` tells us the index of
  * a key, from which we can figure out the row and column as needed. The index
@@ -92,11 +94,11 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
  * user-facing code.
  */
 constexpr byte keyIndex(byte row, byte col) {
-  return row * kaleidoscope::hardware::Atreus::matrix_columns + col + 1;
+  return row * kaleidoscope::hardware::technomancy::Atreus::matrix_columns + col + 1;
 }
 
 #include "kaleidoscope/hardware/key_indexes.h"
 
-extern kaleidoscope::hardware::Atreus &Atreus;
+extern kaleidoscope::hardware::technomancy::Atreus &Atreus;
 
 #endif
