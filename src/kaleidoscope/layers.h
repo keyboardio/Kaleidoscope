@@ -20,6 +20,9 @@
 #include "kaleidoscope/key_defs.h"
 #include KALEIDOSCOPE_HARDWARE_H
 
+extern const Key keymaps[][ROWS][COLS];
+
+
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
