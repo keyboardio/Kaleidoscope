@@ -151,71 +151,7 @@ constexpr byte keyIndex(byte row, byte col) {
   return row * kaleidoscope::hardware::Model01::matrix_columns + col + 1;
 }
 
-constexpr byte R0C0  = keyIndex(0, 0);
-constexpr byte R0C1  = keyIndex(0, 1);
-constexpr byte R0C2  = keyIndex(0, 2);
-constexpr byte R0C3  = keyIndex(0, 3);
-constexpr byte R0C4  = keyIndex(0, 4);
-constexpr byte R0C5  = keyIndex(0, 5);
-constexpr byte R0C6  = keyIndex(0, 6);
-constexpr byte R0C7  = keyIndex(0, 7);
-constexpr byte R1C0  = keyIndex(1, 0);
-constexpr byte R1C1  = keyIndex(1, 1);
-constexpr byte R1C2  = keyIndex(1, 2);
-constexpr byte R1C3  = keyIndex(1, 3);
-constexpr byte R1C4  = keyIndex(1, 4);
-constexpr byte R1C5  = keyIndex(1, 5);
-constexpr byte R1C6  = keyIndex(1, 6);
-constexpr byte R1C7  = keyIndex(1, 7);
-constexpr byte R2C0  = keyIndex(2, 0);
-constexpr byte R2C1  = keyIndex(2, 1);
-constexpr byte R2C2  = keyIndex(2, 2);
-constexpr byte R2C3  = keyIndex(2, 3);
-constexpr byte R2C4  = keyIndex(2, 4);
-constexpr byte R2C5  = keyIndex(2, 5);
-constexpr byte R2C6  = keyIndex(2, 6);
-constexpr byte R2C7  = keyIndex(2, 7);
-constexpr byte R3C0  = keyIndex(3, 0);
-constexpr byte R3C1  = keyIndex(3, 1);
-constexpr byte R3C2  = keyIndex(3, 2);
-constexpr byte R3C3  = keyIndex(3, 3);
-constexpr byte R3C4  = keyIndex(3, 4);
-constexpr byte R3C5  = keyIndex(3, 5);
-constexpr byte R3C6  = keyIndex(3, 6);
-constexpr byte R3C7  = keyIndex(3, 7);
-
-constexpr byte R0C8  = keyIndex(0, 8);
-constexpr byte R0C9  = keyIndex(0, 9);
-constexpr byte R0C10 = keyIndex(0, 10);
-constexpr byte R0C11 = keyIndex(0, 11);
-constexpr byte R0C12 = keyIndex(0, 12);
-constexpr byte R0C13 = keyIndex(0, 13);
-constexpr byte R0C14 = keyIndex(0, 15);
-constexpr byte R0C15 = keyIndex(0, 16);
-constexpr byte R1C8  = keyIndex(1, 8);
-constexpr byte R1C9  = keyIndex(1, 9);
-constexpr byte R1C10 = keyIndex(1, 10);
-constexpr byte R1C11 = keyIndex(1, 11);
-constexpr byte R1C12 = keyIndex(1, 12);
-constexpr byte R1C13 = keyIndex(1, 13);
-constexpr byte R1C14 = keyIndex(1, 14);
-constexpr byte R1C15 = keyIndex(1, 15);
-constexpr byte R2C8  = keyIndex(2, 8);
-constexpr byte R2C9  = keyIndex(2, 9);
-constexpr byte R2C10 = keyIndex(2, 10);
-constexpr byte R2C11 = keyIndex(2, 11);
-constexpr byte R2C12 = keyIndex(2, 12);
-constexpr byte R2C13 = keyIndex(2, 13);
-constexpr byte R2C14 = keyIndex(2, 14);
-constexpr byte R2C15 = keyIndex(2, 15);
-constexpr byte R3C8  = keyIndex(3, 8);
-constexpr byte R3C9  = keyIndex(3, 9);
-constexpr byte R3C10 = keyIndex(3, 10);
-constexpr byte R3C11 = keyIndex(3, 11);
-constexpr byte R3C12 = keyIndex(3, 12);
-constexpr byte R3C13 = keyIndex(3, 13);
-constexpr byte R3C14 = keyIndex(3, 14);
-constexpr byte R3C15 = keyIndex(3, 15);
+#include "kaleidoscope/hardware/key_indexes.h"
 
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 

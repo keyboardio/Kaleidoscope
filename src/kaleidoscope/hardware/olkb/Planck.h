@@ -167,55 +167,7 @@ constexpr uint8_t keyIndex(byte row, byte col) {
 
 */
 
-
-constexpr uint8_t R0C0 = keyIndex(0, 0);
-constexpr uint8_t R0C1 = keyIndex(0, 1);
-constexpr uint8_t R0C2 = keyIndex(0, 2);
-constexpr uint8_t R0C3 = keyIndex(0, 3);
-constexpr uint8_t R0C4 = keyIndex(0, 4);
-constexpr uint8_t R0C5 = keyIndex(0, 5);
-constexpr uint8_t R0C6 = keyIndex(0, 6);
-constexpr uint8_t R0C7 = keyIndex(0, 7);
-constexpr uint8_t R0C8 = keyIndex(0, 8);
-constexpr uint8_t R0C9 = keyIndex(0, 9);
-constexpr uint8_t R0C10 = keyIndex(0, 10);
-constexpr uint8_t R0C11 = keyIndex(0, 11);
-constexpr uint8_t R1C0 = keyIndex(1, 0);
-constexpr uint8_t R1C1 = keyIndex(1, 1);
-constexpr uint8_t R1C2 = keyIndex(1, 2);
-constexpr uint8_t R1C3 = keyIndex(1, 3);
-constexpr uint8_t R1C4 = keyIndex(1, 4);
-constexpr uint8_t R1C5 = keyIndex(1, 5);
-constexpr uint8_t R1C6 = keyIndex(1, 6);
-constexpr uint8_t R1C7 = keyIndex(1, 7);
-constexpr uint8_t R1C8 = keyIndex(1, 8);
-constexpr uint8_t R1C9 = keyIndex(1, 9);
-constexpr uint8_t R1C10 = keyIndex(1, 10);
-constexpr uint8_t R1C11 = keyIndex(1, 11);
-constexpr uint8_t R2C0 = keyIndex(2, 0);
-constexpr uint8_t R2C1 = keyIndex(2, 1);
-constexpr uint8_t R2C2 = keyIndex(2, 2);
-constexpr uint8_t R2C3 = keyIndex(2, 3);
-constexpr uint8_t R2C4 = keyIndex(2, 4);
-constexpr uint8_t R2C5 = keyIndex(2, 5);
-constexpr uint8_t R2C6 = keyIndex(2, 6);
-constexpr uint8_t R2C7 = keyIndex(2, 7);
-constexpr uint8_t R2C8 = keyIndex(2, 8);
-constexpr uint8_t R2C9 = keyIndex(2, 9);
-constexpr uint8_t R2C10 = keyIndex(2, 10);
-constexpr uint8_t R2C11 = keyIndex(2, 11);
-constexpr uint8_t R3C0 = keyIndex(3, 0);
-constexpr uint8_t R3C1 = keyIndex(3, 1);
-constexpr uint8_t R3C2 = keyIndex(3, 2);
-constexpr uint8_t R3C3 = keyIndex(3, 3);
-constexpr uint8_t R3C4 = keyIndex(3, 4);
-constexpr uint8_t R3C5 = keyIndex(3, 5);
-constexpr uint8_t R3C6 = keyIndex(3, 6);
-constexpr uint8_t R3C7 = keyIndex(3, 7);
-constexpr uint8_t R3C8 = keyIndex(3, 8);
-constexpr uint8_t R3C9 = keyIndex(3, 9);
-constexpr uint8_t R3C10 = keyIndex(3, 10);
-constexpr uint8_t R3C11 = keyIndex(3, 11);
+#include "kaleidoscope/hardware/key_indexes.h"
 
 extern kaleidoscope::hardware::olkb::Planck &Planck;
 
