@@ -38,6 +38,7 @@ namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
 class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
+  friend class ATMegaKeyboard;
  public:
   Atreus(void) {}
 
@@ -49,6 +50,9 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
   static constexpr int8_t led_count = 0;
 
   void resetDevice();
+
+ protected:
+  uint16_t readCols();
 };
 
 #define KEYMAP(                                                               \
