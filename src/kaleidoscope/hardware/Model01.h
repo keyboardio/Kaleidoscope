@@ -137,24 +137,7 @@ class Model01 {
 }
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-
-/* To be used by the hardware implementations, `keyIndex` tells us the index of
- * a key, from which we can figure out the row and column as needed. The index
- * starts at one, so that plugins that work with a list of key indexes can use
- * zero as a sentinel. This is important, because when we initialize arrays with
- * fewer elements than the declared array size, the remaining elements will be
- * zero. We can use this to avoid having to explicitly add a sentinel in
- * user-facing code.
- */
-constexpr byte keyIndex(byte row, byte col) {
-  return row * kaleidoscope::hardware::Model01::matrix_columns + col + 1;
-}
-
 #include "kaleidoscope/hardware/key_indexes.h"
-
-#endif /* DOXYGEN_SHOULD_SKIP_THIS */
-
 
 #define KEYMAP_STACKED(                                                 \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \

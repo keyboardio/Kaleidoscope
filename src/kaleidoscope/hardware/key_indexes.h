@@ -17,6 +17,20 @@
 
 #pragma once
 
+/* To be used by the hardware implementations, `keyIndex` tells us the index of
+ * a key, from which we can figure out the row and column as needed. The index
+ * starts at one, so that plugins that work with a list of key indexes can use
+ * zero as a sentinel. This is important, because when we initialize arrays with
+ * fewer elements than the declared array size, the remaining elements will be
+ * zero. We can use this to avoid having to explicitly add a sentinel in
+ * user-facing code.
+ *
+ * We're using a macro instead of a constexpr so that it is evaluated lazily,
+ * when `HARDWARE_IMPLEMENTATION` can be properly resolved.
+ */
+#define keyIndex(row,col)                                               \
+  (uint8_t)((row * HARDWARE_IMPLEMENTATION::matrix_columns) + col + 1)
+
 constexpr uint8_t R0C0 = keyIndex(0, 0);
 constexpr uint8_t R0C1 = keyIndex(0, 1);
 constexpr uint8_t R0C2 = keyIndex(0, 2);

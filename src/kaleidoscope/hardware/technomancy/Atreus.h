@@ -89,18 +89,6 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
 }
 }
 
-/* To be used by the hardware implementations, `keyIndex` tells us the index of
- * a key, from which we can figure out the row and column as needed. The index
- * starts at one, so that plugins that work with a list of key indexes can use
- * zero as a sentinel. This is important, because when we initialize arrays with
- * fewer elements than the declared array size, the remaining elements will be
- * zero. We can use this to avoid having to explicitly add a sentinel in
- * user-facing code.
- */
-constexpr byte keyIndex(byte row, byte col) {
-  return row * kaleidoscope::hardware::technomancy::Atreus::matrix_columns + col + 1;
-}
-
 #include "kaleidoscope/hardware/key_indexes.h"
 
 extern kaleidoscope::hardware::technomancy::Atreus &Atreus;
