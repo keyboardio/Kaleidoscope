@@ -29,6 +29,10 @@ typedef enum {
   MACRO_ACTION_STEP_KEYCODEDOWN,
   MACRO_ACTION_STEP_KEYCODEUP,
   MACRO_ACTION_STEP_TAPCODE,
+
+  MACRO_ACTION_STEP_EXPLICIT_REPORT,
+  MACRO_ACTION_STEP_IMPLICIT_REPORT,
+  MACRO_ACTION_STEP_SEND_REPORT,
 } MacroActionStepType;
 
 typedef uint8_t macro_t;
@@ -50,5 +54,9 @@ typedef uint8_t macro_t;
 #define Dc(k) MACRO_ACTION_STEP_KEYCODEDOWN, (Key_ ## k).keyCode
 #define Uc(k) MACRO_ACTION_STEP_KEYCODEUP, (Key_ ## k).keyCode
 #define Tc(k) MACRO_ACTION_STEP_TAPCODE, (Key_ ## k).keyCode
+
+#define WITH_EXPLICIT_REPORT MACRO_ACTION_STEP_EXPLICIT_REPORT
+#define WITH_IMPLICIT_REPORT MACRO_ACTION_STEP_IMPLICIT_REPORT
+#define SEND_REPORT MACRO_ACTION_STEP_SEND_REPORT
 
 __attribute__((deprecated("END is no longer required to end macros"))) const MacroActionStepType END = MACRO_ACTION_END;

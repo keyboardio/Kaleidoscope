@@ -75,6 +75,10 @@ In certain cases we need to delay the unicode input sequence, otherwise the host
 
 The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling through keys with modifiers applied to them, such as `LSHIFT(Key_A)`. Please see the documentation and the updated example for more information.
 
+### More control over when to send reports during Macro playback
+
+There are situations where one would like to disable sending a report after each and every step of a macro, and rather have direct control over when reports are sent. The new `WITH_EXPLICIT_REPORT`, `WITH_IMPLICIT_REPORT` and `SEND_REPORT` steps help with that. Please see the [Macros](doc/plugin/Macros.md) documentation for more information.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:
