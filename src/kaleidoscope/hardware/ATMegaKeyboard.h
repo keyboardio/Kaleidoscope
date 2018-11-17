@@ -17,7 +17,7 @@
 
 #pragma once
 
-#if ARDUINO_AVR_PLANCK || ARDUINO_AVR_ATREUS
+#if KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD
 
 #include <Arduino.h>
 #include <KeyboardioHID.h>

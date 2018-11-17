@@ -15,9 +15,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if ARDUINO_AVR_PLANCK || ARDUINO_AVR_ATREUS
-
 #include "Kaleidoscope.h"
+
+#if KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD
+
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
