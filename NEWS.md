@@ -85,6 +85,8 @@ Kaleidoscope has been ported to the following devices:
 
 For more information, please see the hardware plugins' documentation.
 
+To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](doc/plugin/ATMegaKeyboard.md) base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
+
 ## New plugins
 
 ### IdleLEDs
