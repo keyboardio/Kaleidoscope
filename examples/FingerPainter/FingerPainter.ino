@@ -22,8 +22,6 @@
 #include <Kaleidoscope-FingerPainter.h>
 #include <Kaleidoscope-FocusSerial.h>
 
-#include "LED-Off.h"
-
 // *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED

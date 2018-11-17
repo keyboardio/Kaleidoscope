@@ -18,8 +18,6 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDEffects.h>
 
-#include "LED-Off.h"
-
 // *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED
