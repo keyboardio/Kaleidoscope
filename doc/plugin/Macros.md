@@ -142,7 +142,7 @@ need to define them in a special way, using the `MACRO` helper (or its
 
 ## `MACRO` steps
 
-Macro steps can be divided into two groups:
+Macro steps can be divided into the following groups:
 
 ### Delays
 
@@ -170,6 +170,23 @@ not supported by this compact representation.
 * `D(key)`, `Dr(key)`, `Dc(key)`: Simulates a key being pressed (pushed down).
 * `U(key)`, `Ur(key)`, `Uc(key)`: Simulates a key being released (going up).
 * `T(key)`, `Tr(key)`, `Tc(key)`: Simulates a key being tapped (pressed first, then released).
+
+### Controlling when to send reports
+
+While the plugin will - by default - send a report after every step, that is not
+always desirable. For this reason, we allow turning this implicit reporting off,
+and switching to explicit reporting instead. Note that the tap steps (`T()`,
+`Tr()`, and `Tc()`) will always send an implicit report, and so will
+`Macros.type()`.
+
+To control when to send reports, the following steps can be used:
+
+* `WITH_EXPLICIT_REPORT`: Prevents the plugin from sending an implicit report
+  after every step. To send a report, one needs to have a `SEND_REPORT` step
+  too.
+* `WITH_IMPLICIT_REPORT`: Enables sending an implicit report after every step
+  (the default).
+* `SEND_REPORT`: Send a report.
 
 ## Overrideable methods
 

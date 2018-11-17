@@ -29,23 +29,26 @@ MacroKeyEvent Macros_::active_macros[];
 byte Macros_::active_macro_count;
 byte Macros_::row, Macros_::col;
 
-void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state) {
+void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state, bool explicit_report) {
   handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, keyswitch_state | INJECTED);
+
+  if (explicit_report)
+    return;
 
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::sendMouseReport();
 }
 
-static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates) {
+static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates, bool explicit_report) {
   Key key;
   key.flags = flags;
   key.keyCode = pgm_read_byte(macro_p++);
 
   if (keyIsPressed(keyStates)) {
-    playMacroKeyswitchEvent(key, IS_PRESSED);
+    playMacroKeyswitchEvent(key, IS_PRESSED, explicit_report);
   }
   if (keyWasPressed(keyStates)) {
-    playMacroKeyswitchEvent(key, WAS_PRESSED);
+    playMacroKeyswitchEvent(key, WAS_PRESSED, explicit_report);
   }
 }
 
@@ -53,12 +56,23 @@ void Macros_::play(const macro_t *macro_p) {
   macro_t macro = MACRO_ACTION_END;
   uint8_t interval = 0;
   uint8_t flags;
+  bool explicit_report = false;
 
   if (!macro_p)
     return;
 
   while (true) {
     switch (macro = pgm_read_byte(macro_p++)) {
+    case MACRO_ACTION_STEP_EXPLICIT_REPORT:
+      explicit_report = true;
+      break;
+    case MACRO_ACTION_STEP_IMPLICIT_REPORT:
+      explicit_report = false;
+      break;
+    case MACRO_ACTION_STEP_SEND_REPORT:
+      kaleidoscope::hid::sendKeyboardReport();
+      kaleidoscope::hid::sendMouseReport();
+      break;
     case MACRO_ACTION_STEP_INTERVAL:
       interval = pgm_read_byte(macro_p++);
       break;
@@ -69,25 +83,25 @@ void Macros_::play(const macro_t *macro_p) {
     }
     case MACRO_ACTION_STEP_KEYDOWN:
       flags = pgm_read_byte(macro_p++);
-      readKeyCodeAndPlay(macro_p++, flags, IS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, flags, IS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_KEYUP:
       flags = pgm_read_byte(macro_p++);
-      readKeyCodeAndPlay(macro_p++, flags, WAS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, flags, WAS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_TAP:
       flags = pgm_read_byte(macro_p++);
-      readKeyCodeAndPlay(macro_p++, flags, IS_PRESSED | WAS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, flags, IS_PRESSED | WAS_PRESSED, false);
       break;
 
     case MACRO_ACTION_STEP_KEYCODEDOWN:
-      readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_KEYCODEUP:
-      readKeyCodeAndPlay(macro_p++, 0, WAS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, 0, WAS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_TAPCODE:
-      readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED | WAS_PRESSED);
+      readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED | WAS_PRESSED, false);
       break;
 
     case MACRO_ACTION_END:
@@ -197,8 +211,8 @@ const macro_t *Macros_::type(const char *string) {
     if (key.raw == Key_NoKey.raw)
       continue;
 
-    playMacroKeyswitchEvent(key, IS_PRESSED);
-    playMacroKeyswitchEvent(key, WAS_PRESSED);
+    playMacroKeyswitchEvent(key, IS_PRESSED, false);
+    playMacroKeyswitchEvent(key, WAS_PRESSED, false);
 
   }
 
