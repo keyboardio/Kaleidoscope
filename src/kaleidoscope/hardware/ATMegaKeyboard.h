@@ -29,11 +29,15 @@
 
 #include <avr/wdt.h>
 
+#ifndef CRGB
+
 struct cRGB {
   uint8_t r, g, b;
 };
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
+
+#endif
 
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
