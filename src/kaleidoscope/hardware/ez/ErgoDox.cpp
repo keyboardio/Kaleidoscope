@@ -29,10 +29,11 @@
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
-#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
 
 namespace kaleidoscope {
 namespace hardware {
+namespace ez {
 
 ErgoDoxScanner ErgoDox::scanner_;
 uint8_t ErgoDox::previousKeyState_[ROWS];
@@ -247,8 +248,9 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
 
 }
 }
+}
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::ErgoDox &ErgoDox = KeyboardHardware;
+kaleidoscope::hardware::ez::ErgoDox &ErgoDox = KeyboardHardware;
 
 #endif
