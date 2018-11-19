@@ -23,6 +23,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace keyboardio {
 
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
@@ -316,6 +317,7 @@ uint8_t Model01::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
 }
 
+}
 }
 }
 

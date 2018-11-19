@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::Model01
+#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::keyboardio::Model01
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
@@ -31,6 +31,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace keyboardio {
 
 class Model01 {
  public:
@@ -134,6 +135,7 @@ class Model01 {
   static keydata_t rightHandMask;
 };
 
+}
 }
 }
 

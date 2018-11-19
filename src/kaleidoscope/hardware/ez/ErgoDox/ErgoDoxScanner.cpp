@@ -25,9 +25,9 @@
 
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
 #include <avr/wdt.h>
-#include "kaleidoscope/hardware/ErgoDox/i2cmaster.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/i2cmaster.h"
 
 #define I2C_ADDR        0b0100000
 #define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
@@ -43,6 +43,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace ez {
 
 uint8_t ErgoDoxScanner::initExpander() {
   uint8_t status = 0x20;
@@ -200,6 +201,7 @@ ErgoDoxScanner::reattachExpanderOnError() {
   start_time = millis();
 }
 
+}
 }
 }
 

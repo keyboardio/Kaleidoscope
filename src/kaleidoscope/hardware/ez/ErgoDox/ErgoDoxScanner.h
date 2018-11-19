@@ -31,6 +31,7 @@
 
 namespace kaleidoscope {
 namespace hardware {
+namespace ez {
 
 class ErgoDoxScanner {
  public:
@@ -50,6 +51,7 @@ class ErgoDoxScanner {
   uint8_t initExpander();
 };
 
+}
 }
 }
 

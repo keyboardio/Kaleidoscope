@@ -29,9 +29,9 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/hardware/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ErgoDox
+#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -44,6 +44,7 @@ struct cRGB {
 
 namespace kaleidoscope {
 namespace hardware {
+namespace ez {
 
 class ErgoDox {
  public:
@@ -186,9 +187,10 @@ class ErgoDox {
   }
 }
 }
+}
 
 #include "kaleidoscope/hardware/key_indexes.h"
 
-extern kaleidoscope::hardware::ErgoDox &ErgoDox;
+extern kaleidoscope::hardware::ez::ErgoDox &ErgoDox;
 
 #endif
