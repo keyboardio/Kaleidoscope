@@ -18,7 +18,6 @@
 #ifdef ARDUINO_AVR_PLANCK
 
 #include <Kaleidoscope.h>
-#include <avr/wdt.h>
 
 namespace kaleidoscope {
 namespace hardware {
