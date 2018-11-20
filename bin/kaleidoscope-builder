@@ -249,12 +249,19 @@ compile () {
 
 _find_all () {
     for plugin in ./*.ino \
-	    	          examples/* \
+  	              $([ -d examples ] && find examples -name '*.ino') \
                   src/*.ino; do
         if [ -d "$(dirname "${plugin}")" ] || [ -f "${plugin}" ]; then
             p="$(basename "${plugin}" .ino)"
             if [ "${p}" != '*' ]; then
-                echo "${p}"
+                case "${plugin}" in
+                    examples/*/${p}/${p}.ino)
+                        echo "${plugin}" | sed -e "s,examples/,," | sed -e "s,/${p}\\.ino,,"
+                        ;;
+                    *)
+                        echo "${p}"
+                        ;;
+                esac
             fi
         fi
     done | sort
@@ -496,6 +503,12 @@ for i in $(seq 1 $#); do
 done
 
 LIBRARY="${SKETCH}"
+
+case "${SKETCH}" in
+    */*)
+        SKETCH="$(basename "${SKETCH}")"
+        ;;
+esac
 
 export SKETCH
 export LIBRARY
