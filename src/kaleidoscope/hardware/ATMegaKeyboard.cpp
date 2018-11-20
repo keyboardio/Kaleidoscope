@@ -59,7 +59,7 @@ void ATMegaKeyboard::attachToHost() {
   UDCON &= ~_BV(DETACH);
 }
 
-void ATMegaKeyboard::readMatrix(void) {
+void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
   for (uint8_t current_row = 0; current_row < KeyboardHardware.matrix_rows; current_row++) {
     uint16_t mask, cols;
 
@@ -68,6 +68,7 @@ void ATMegaKeyboard::readMatrix(void) {
     mask = KeyboardHardware.debounceMaskForRow(current_row);
 
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
+    asm volatile("nop");
     cols = (KeyboardHardware.readCols() & mask) | (KeyboardHardware.keyState_[current_row] & ~mask);
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
     KeyboardHardware.debounceRow(cols ^ KeyboardHardware.keyState_[current_row], current_row);
@@ -95,7 +96,7 @@ bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
                             keyIndex % KeyboardHardware.matrix_columns);
 }
 
-void ATMegaKeyboard::actOnMatrixScan() {
+void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
   for (byte row = 0; row < KeyboardHardware.matrix_rows; row++) {
     for (byte col = 0; col < KeyboardHardware.matrix_columns; col++) {
       uint8_t keyState = (bitRead(KeyboardHardware.previousKeyState_[row], col) << 0) |
