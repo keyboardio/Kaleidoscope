@@ -52,7 +52,6 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
   void resetDevice();
 
  protected:
-  uint16_t readCols();
 };
 
 #define KEYMAP(                                                               \
