@@ -168,6 +168,8 @@ void Layer_::on(uint8_t layer) {
   // Update the keymap cache (but not liveCompositeKeymap; that gets
   // updated separately, when keys toggle on or off. See layers.h)
   updateActiveLayers();
+
+  kaleidoscope::Hooks::onLayerChange();
 }
 
 // Deactivate a given layer
@@ -187,6 +189,8 @@ void Layer_::off(uint8_t layer) {
   // Update the keymap cache (but not liveCompositeKeymap; that gets
   // updated separately, when keys toggle on or off. See layers.h)
   updateActiveLayers();
+
+  kaleidoscope::Hooks::onLayerChange();
 }
 
 boolean Layer_::isOn(uint8_t layer) {

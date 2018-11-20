@@ -79,6 +79,10 @@ The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling thro
 
 There are situations where one would like to disable sending a report after each and every step of a macro, and rather have direct control over when reports are sent. The new `WITH_EXPLICIT_REPORT`, `WITH_IMPLICIT_REPORT` and `SEND_REPORT` steps help with that. Please see the [Macros](doc/plugin/Macros.md) documentation for more information.
 
+### Events now trigger on layer changes
+
+Changing layers now triggers the `onLayerChange` event - but only if there was real change (thus, calling `Layer.on(SOME_LAYER)` multiple times in a row will only trigger one event). This event was introduced to help plugins that depend on layer state schedule their work better.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:

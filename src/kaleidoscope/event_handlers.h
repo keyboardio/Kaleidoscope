@@ -71,6 +71,12 @@
                 (const char *command),                                    __NL__ \
                 (command), ##__VA_ARGS__)                                 __NL__ \
                                                                           __NL__ \
+   /* Called when the layer state changes. Which layes changed are    */  __NL__ \
+   /* not passed as arguments. If one needs that info, they should    */  __NL__ \
+   /* track Layer.getState() themselves.                              */  __NL__ \
+   OPERATION(onLayerChange,                                               __NL__ \
+                _NOT_ABORTABLE,                                           __NL__ \
+                (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \
