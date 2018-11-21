@@ -67,11 +67,11 @@ void ErgoDox::setup(void) {
   setStatusLEDBrightness(2, 15);
   setStatusLEDBrightness(3, 15);
 
-  /* Set up Timer1 for 500usec */
+  /* Set up Timer1 for 1700usec */
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
 
-  const uint32_t cycles = (F_CPU / 2000000) * 500;
+  const uint32_t cycles = (F_CPU / 2000000) * 1700;
 
   ICR1 = cycles;
   TCCR1B = _BV(WGM13) | _BV(CS10);
@@ -82,17 +82,16 @@ ISR(TIMER1_OVF_vect) {
   do_scan_ = true;
 }
 
-void ErgoDox::readMatrixRow(uint8_t row) {
+void __attribute__((optimize(3))) ErgoDox::readMatrixRow(uint8_t row) {
   uint8_t mask, cols;
 
-  previousKeyState_[row] = keyState_[row];
   mask = debounceMaskForRow(row);
   cols = (scanner_.readCols(row) & mask) | (keyState_[row] & ~mask);
   debounceRow(cols ^ keyState_[row], row);
   keyState_[row] = cols;
 }
 
-void ErgoDox::readMatrix() {
+void __attribute__((optimize(3))) ErgoDox::readMatrix() {
   do_scan_ = false;
 
   scanner_.reattachExpanderOnError();
@@ -108,7 +107,7 @@ void ErgoDox::readMatrix() {
   }
 }
 
-void ErgoDox::actOnMatrixScan() {
+void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
@@ -116,14 +115,18 @@ void ErgoDox::actOnMatrixScan() {
       if (keyState)
         handleKeyswitchEvent(Key_NoKey, row, col, keyState);
     }
+    previousKeyState_[row] = keyState_[row];
   }
 }
 
 void ErgoDox::scanMatrix() {
-  if (!do_scan_)
-    return;
+  if (do_scan_) {
+    do_scan_ = false;
+    // We only want to update our matrix if the timer has expired.
+    readMatrix();
+  }
 
-  readMatrix();
+  // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   actOnMatrixScan();
 }
 

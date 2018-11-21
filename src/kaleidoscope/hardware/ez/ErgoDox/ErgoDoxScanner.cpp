@@ -99,7 +99,7 @@ ErgoDoxScanner::begin() {
   initCols();
 }
 
-void
+void __attribute__((optimize(3)))
 ErgoDoxScanner::selectRow(int row) {
   if (row < 7) {
     if (!expander_error_) {
@@ -149,7 +149,7 @@ out:
   }
 }
 
-void
+void __attribute__((optimize(3)))
 ErgoDoxScanner::unselectRows() {
   DDRB  &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
   PORTB &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
@@ -159,7 +159,7 @@ ErgoDoxScanner::unselectRows() {
   PORTC &= ~(1 << 6);
 }
 
-uint8_t
+uint8_t __attribute__((optimize(3)))
 ErgoDoxScanner::readCols(int row) {
   if (row < 7) {
     if (expander_error_) {

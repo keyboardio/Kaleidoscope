@@ -40,11 +40,11 @@ void ATMegaKeyboard::setup(void) {
     OUTPUT_HIGH(KeyboardHardware.matrix_row_pins[i]);
   }
 
-  /* Set up Timer1 for 500usec */
+  /* Set up Timer1 for 1700usec */
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
 
-  const uint32_t cycles = (F_CPU / 2000000) * 500;
+  const uint32_t cycles = (F_CPU / 2000000) * 1700;
 
   ICR1 = cycles;
   TCCR1B = _BV(WGM13) | _BV(CS10);
@@ -59,11 +59,9 @@ void ATMegaKeyboard::attachToHost() {
   UDCON &= ~_BV(DETACH);
 }
 
-void ATMegaKeyboard::readMatrix(void) {
+void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
   for (uint8_t current_row = 0; current_row < KeyboardHardware.matrix_rows; current_row++) {
     uint16_t mask, cols;
-
-    KeyboardHardware.previousKeyState_[current_row] = KeyboardHardware.keyState_[current_row];
 
     mask = KeyboardHardware.debounceMaskForRow(current_row);
 
@@ -95,7 +93,7 @@ bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
                             keyIndex % KeyboardHardware.matrix_columns);
 }
 
-void ATMegaKeyboard::actOnMatrixScan() {
+void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
   for (byte row = 0; row < KeyboardHardware.matrix_rows; row++) {
     for (byte col = 0; col < KeyboardHardware.matrix_columns; col++) {
       uint8_t keyState = (bitRead(KeyboardHardware.previousKeyState_[row], col) << 0) |
@@ -109,12 +107,12 @@ void ATMegaKeyboard::actOnMatrixScan() {
 }
 
 void ATMegaKeyboard::scanMatrix() {
-  if (!do_scan_)
-    return;
-
-  do_scan_ = false;
-
-  KeyboardHardware.readMatrix();
+  if (do_scan_) {
+    do_scan_ = false;
+    // We only want to update our matrix if the timer has expired.
+    KeyboardHardware.readMatrix();
+  }
+  // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   KeyboardHardware.actOnMatrixScan();
 }
 
@@ -142,6 +140,7 @@ bool ATMegaKeyboard::isKeyMasked(byte row, byte col) {
 uint16_t ATMegaKeyboard::readCols() {
   uint16_t results = 0x00 ;
   for (uint8_t i = 0; i < KeyboardHardware.matrix_columns; i++) {
+    asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
     results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[i]) << i);
   }
   return results;

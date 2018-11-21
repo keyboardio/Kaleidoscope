@@ -27,6 +27,7 @@
 #ifdef ARDUINO_AVR_ATREUS
 
 #include <Kaleidoscope.h>
+#include <avr/wdt.h>
 
 namespace kaleidoscope {
 namespace hardware {
@@ -70,22 +71,6 @@ void Atreus::resetDevice() {
   asm volatile("jmp 0x7E00");
 }
 
-uint16_t Atreus::readCols() {
-  uint16_t results = 0;
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[0]) << 0);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[1]) << 1);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[2]) << 2);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[3]) << 3);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[4]) << 4);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[5]) << 5);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[6]) << 6);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[7]) << 7);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[8]) << 8);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[9]) << 9);
-  results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[10]) << 10);
-
-  return results;
-}
 
 }
 }
