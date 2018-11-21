@@ -63,8 +63,6 @@ void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
   for (uint8_t current_row = 0; current_row < KeyboardHardware.matrix_rows; current_row++) {
     uint16_t mask, cols;
 
-    KeyboardHardware.previousKeyState_[current_row] = KeyboardHardware.keyState_[current_row];
-
     mask = KeyboardHardware.debounceMaskForRow(current_row);
 
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
