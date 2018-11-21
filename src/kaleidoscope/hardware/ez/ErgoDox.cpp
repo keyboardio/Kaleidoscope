@@ -97,13 +97,13 @@ void __attribute__((optimize(3))) ErgoDox::readMatrix() {
   scanner_.reattachExpanderOnError();
 
   for (uint8_t row = 0; row < ROWS / 2; row++) {
-    scanner_.selectRow(row);
-    scanner_.selectRow(row + ROWS / 2);
+    scanner_.selectExtenderRow(row);
+    scanner_.toggleATMegaRow(row);
 
     readMatrixRow(row);
     readMatrixRow(row + ROWS / 2);
 
-    scanner_.unselectRows();
+    scanner_.toggleATMegaRow(row);
   }
 }
 

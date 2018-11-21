@@ -86,77 +86,62 @@ out:
 }
 
 void
-ErgoDoxScanner::initCols() {
-  DDRF  &= ~(1 << 7 | 1 << 6 | 1 << 5 | 1 << 4 | 1 << 1 | 1 << 0);
-  PORTF |= (1 << 7 | 1 << 6 | 1 << 5 | 1 << 4 | 1 << 1 | 1 << 0);
-}
-
-void
 ErgoDoxScanner::begin() {
   expander_error_ = initExpander();
 
-  unselectRows();
-  initCols();
+  // Init columns
+  DDRF  &= ~(1 << 7 | 1 << 6 | 1 << 5 | 1 << 4 | 1 << 1 | 1 << 0);
+  PORTF |= (1 << 7 | 1 << 6 | 1 << 5 | 1 << 4 | 1 << 1 | 1 << 0);
+
+  // Init rows
+  DDRB  |= (1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+  PORTB |= (1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+  DDRD  |= (1 << 2 | 1 << 3);
+  PORTD |= (1 << 2 | 1 << 3);
+  DDRC  |= (1 << 6);
+  PORTC |= (1 << 6);
 }
 
-void __attribute__((optimize(3)))
-ErgoDoxScanner::selectRow(int row) {
-  if (row < 7) {
-    if (!expander_error_) {
-      expander_error_ = i2c_start(I2C_ADDR_WRITE);
-      if (expander_error_)
-        goto out;
-      expander_error_ = i2c_write(GPIOA);
-      if (expander_error_)
-        goto out;
-      expander_error_ = i2c_write(0xFF & ~(1 << row));
-      if (expander_error_)
-        goto out;
+void __attribute__((optimize(3))) ErgoDoxScanner::selectExtenderRow(int row) {
+  if (!expander_error_) {
+    expander_error_ = i2c_start(I2C_ADDR_WRITE);
+    if (expander_error_)
+      goto out;
+    expander_error_ = i2c_write(GPIOA);
+    if (expander_error_)
+      goto out;
+    expander_error_ = i2c_write(0xFF & ~(1 << row));
+    if (expander_error_)
+      goto out;
 out:
-      i2c_stop();
-    }
-  } else {
-    switch (row) {
-    case 7:
-      DDRB  |= (1 << 0);
-      PORTB &= ~(1 << 0);
-      break;
-    case 8:
-      DDRB  |= (1 << 1);
-      PORTB &= ~(1 << 1);
-      break;
-    case 9:
-      DDRB  |= (1 << 2);
-      PORTB &= ~(1 << 2);
-      break;
-    case 10:
-      DDRB  |= (1 << 3);
-      PORTB &= ~(1 << 3);
-      break;
-    case 11:
-      DDRD  |= (1 << 2);
-      PORTD &= ~(1 << 3);
-      break;
-    case 12:
-      DDRD  |= (1 << 3);
-      PORTD &= ~(1 << 3);
-      break;
-    case 13:
-      DDRC  |= (1 << 6);
-      PORTC &= ~(1 << 6);
-      break;
-    }
+    i2c_stop();
   }
 }
 
-void __attribute__((optimize(3)))
-ErgoDoxScanner::unselectRows() {
-  DDRB  &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-  PORTB &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-  DDRD  &= ~(1 << 2 | 1 << 3);
-  PORTD &= ~(1 << 2 | 1 << 3);
-  DDRC  &= ~(1 << 6);
-  PORTC &= ~(1 << 6);
+void __attribute__((optimize(3))) ErgoDoxScanner::toggleATMegaRow(int row) {
+  switch (row) {
+    case 0:
+      PORTB ^= (1 << 0);
+      break;
+    case 1:
+      PORTB ^= (1 << 1);
+      break;
+    case 2:
+      PORTB ^= (1 << 2);
+      break;
+    case 3:
+      PORTB ^= (1 << 3);
+      break;
+    case 4:
+      PORTD ^= (1 << 2);
+      break;
+    case 5:
+      PORTD ^= (1 << 3);
+      break;
+    case 6:
+      PORTC ^= (1 << 6);
+      break;
+  }
 }
 
 uint8_t __attribute__((optimize(3)))
