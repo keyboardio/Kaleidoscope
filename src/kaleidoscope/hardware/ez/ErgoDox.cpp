@@ -120,10 +120,13 @@ void ErgoDox::actOnMatrixScan() {
 }
 
 void ErgoDox::scanMatrix() {
-  if (!do_scan_)
-    return;
+  if (do_scan_) {
+    do_scan_ = false;
+    // We only want to update our matrix if the timer has expired.
+    readMatrix();
+  }
 
-  readMatrix();
+  // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   actOnMatrixScan();
 }
 
