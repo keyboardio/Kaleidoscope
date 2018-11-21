@@ -38,9 +38,8 @@ class ErgoDoxScanner {
   ErgoDoxScanner() {}
 
   void begin();
-  void initCols();
-  void selectRow(int row);
-  void unselectRows();
+  void toggleATMegaRow(int row);
+  void selectExtenderRow(int row);
   uint8_t readCols(int row);
 
   void reattachExpanderOnError();
