@@ -85,7 +85,6 @@ ISR(TIMER1_OVF_vect) {
 void ErgoDox::readMatrixRow(uint8_t row) {
   uint8_t mask, cols;
 
-  previousKeyState_[row] = keyState_[row];
   mask = debounceMaskForRow(row);
   cols = (scanner_.readCols(row) & mask) | (keyState_[row] & ~mask);
   debounceRow(cols ^ keyState_[row], row);
@@ -116,6 +115,7 @@ void ErgoDox::actOnMatrixScan() {
       if (keyState)
         handleKeyswitchEvent(Key_NoKey, row, col, keyState);
     }
+    previousKeyState_[row] = keyState_[row];
   }
 }
 
