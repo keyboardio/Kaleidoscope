@@ -82,7 +82,7 @@ ISR(TIMER1_OVF_vect) {
   do_scan_ = true;
 }
 
-void ErgoDox::readMatrixRow(uint8_t row) {
+void __attribute__((optimize(3))) ErgoDox::readMatrixRow(uint8_t row) {
   uint8_t mask, cols;
 
   mask = debounceMaskForRow(row);
@@ -91,7 +91,7 @@ void ErgoDox::readMatrixRow(uint8_t row) {
   keyState_[row] = cols;
 }
 
-void ErgoDox::readMatrix() {
+void __attribute__((optimize(3))) ErgoDox::readMatrix() {
   do_scan_ = false;
 
   scanner_.reattachExpanderOnError();
@@ -107,7 +107,7 @@ void ErgoDox::readMatrix() {
   }
 }
 
-void ErgoDox::actOnMatrixScan() {
+void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
