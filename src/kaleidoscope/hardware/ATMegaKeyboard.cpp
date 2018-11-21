@@ -66,7 +66,6 @@ void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
     mask = KeyboardHardware.debounceMaskForRow(current_row);
 
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
-    asm volatile("nop");
     cols = (KeyboardHardware.readCols() & mask) | (KeyboardHardware.keyState_[current_row] & ~mask);
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
     KeyboardHardware.debounceRow(cols ^ KeyboardHardware.keyState_[current_row], current_row);
@@ -141,6 +140,7 @@ bool ATMegaKeyboard::isKeyMasked(byte row, byte col) {
 uint16_t ATMegaKeyboard::readCols() {
   uint16_t results = 0x00 ;
   for (uint8_t i = 0; i < KeyboardHardware.matrix_columns; i++) {
+    asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
     results |= (!READ_PIN(KeyboardHardware.matrix_col_pins[i]) << i);
   }
   return results;
