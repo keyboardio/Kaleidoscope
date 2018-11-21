@@ -110,12 +110,12 @@ void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
 }
 
 void ATMegaKeyboard::scanMatrix() {
-  if (!do_scan_)
-    return;
-
-  do_scan_ = false;
-
-  KeyboardHardware.readMatrix();
+  if (do_scan_) {
+    do_scan_ = false;
+    // We only want to update our matrix if the timer has expired.
+    KeyboardHardware.readMatrix();
+  }
+  // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   KeyboardHardware.actOnMatrixScan();
 }
 
