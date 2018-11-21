@@ -27,6 +27,7 @@
 
 #include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
 #include <avr/wdt.h>
+#include "kaleidoscope/hardware/avr/pins_and_ports.h"
 #include "kaleidoscope/hardware/ez/ErgoDox/i2cmaster.h"
 
 #define I2C_ADDR        0b0100000
@@ -119,29 +120,8 @@ out:
 }
 
 void __attribute__((optimize(3))) ErgoDoxScanner::toggleATMegaRow(int row) {
-  switch (row) {
-    case 0:
-      PORTB ^= (1 << 0);
-      break;
-    case 1:
-      PORTB ^= (1 << 1);
-      break;
-    case 2:
-      PORTB ^= (1 << 2);
-      break;
-    case 3:
-      PORTB ^= (1 << 3);
-      break;
-    case 4:
-      PORTD ^= (1 << 2);
-      break;
-    case 5:
-      PORTD ^= (1 << 3);
-      break;
-    case 6:
-      PORTC ^= (1 << 6);
-      break;
-  }
+  static uint8_t row_pins[] = { PIN_B0, PIN_B1, PIN_B2, PIN_B3, PIN_D2, PIN_D3, PIN_C6 };
+  OUTPUT_TOGGLE(row_pins[row]);
 }
 
 uint8_t __attribute__((optimize(3)))
