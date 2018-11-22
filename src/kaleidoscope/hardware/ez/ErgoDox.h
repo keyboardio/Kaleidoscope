@@ -29,121 +29,36 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
-
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-
+#include "kaleidoscope/hardware/ExpanderKeyboard.h"
 #include "kaleidoscope/macro_helpers.h"
-
-struct cRGB {
-  uint8_t r, g, b;
-};
-
-#define CRGB(r,g,b) (cRGB){b, g, r}
 
 namespace kaleidoscope {
 namespace hardware {
 namespace ez {
 
-class ErgoDox {
+class ErgoDox : public kaleidoscope::hardware::ExpanderKeyboard {
+  friend class ATMegaKeyboard;
+  friend class ExpanderKeyboard;
  public:
   ErgoDox(void) {}
 
-  static constexpr byte matrix_columns = 6;
-  static constexpr byte matrix_rows = 14;
-  static constexpr int8_t led_count = 0;
+  EXPANDER_KEYBOARD_CONFIG(
+    EXPANDER_ROWS(7),
+    ROW_PIN_LIST({ PIN_B0, PIN_B1, PIN_B2, PIN_B3, PIN_D2, PIN_D3, PIN_C6 }),
+    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7 })
+  );
 
-  void syncLeds(void) {}
-  void setCrgbAt(byte row, byte col, cRGB color) {}
-  void setCrgbAt(int8_t i, cRGB crgb) {}
-  cRGB getCrgbAt(int8_t i) {
-    return CRGB(0, 0, 0);
-  }
-  int8_t getLedIndex(byte row, byte col) {
-    return -1;
-  }
-
-  void scanMatrix(void);
-  void readMatrix(void);
-  void actOnMatrixScan(void);
   void setup();
 
-  /** Detaching from / attaching to the host.
-   *
-   * These two functions should detach the device from (or attach it to) the
-   * host, preferably without rebooting the device. Their purpose is to allow
-   * one to do some configuration inbetween, so the re-attach happens with
-   * different properties. The device remains powered between these operations,
-   * only the connection to the host gets severed.
-   */
-  void detachFromHost();
-  void attachToHost();
-
-  /* Key masking
-   * -----------
-   *
-   * There are situations when one wants to ignore key events for a while, and
-   * mask them out. These functions help do that. In isolation, they do nothing,
-   * plugins and the core firmware is expected to make use of these.
-   *
-   * See `handleKeyswitchEvent` in the Kaleidoscope sources for a use-case.
-   */
-  void maskKey(byte row, byte col);
-  void unMaskKey(byte row, byte col);
-  bool isKeyMasked(byte row, byte col);
-
-  /** Key switch states
-   *
-   * These methods offer a way to peek at the key switch states, for those cases
-   * where we need to deal with the state closest to the hardware. Some methods
-   * offer a way to check if a key is pressed, others return the number of
-   * pressed keys.
-   */
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
-  bool isKeyswitchPressed(byte row, byte col);
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param keyIndex is the key index, as calculated by `keyIndex`.
-   *
-   * @note Key indexes start at 1, not 0!
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
-  bool isKeyswitchPressed(uint8_t keyIndex);
-  /**
-   * Check the number of key switches currently pressed.
-   *
-   * @returns the number of keys pressed.
-   */
-  uint8_t pressedKeyswitchCount();
+  static constexpr int8_t led_count = 0;
 
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
 
   void resetDevice();
-
-  static uint8_t debounce;
-
- private:
-  static ErgoDoxScanner scanner_;
-  static uint8_t previousKeyState_[matrix_rows];
-  static uint8_t keyState_[matrix_rows];
-  static uint8_t masks_[matrix_rows];
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
-
-  static uint8_t debounceMaskForRow(uint8_t row);
-  static void debounceRow(uint8_t change, uint8_t row);
-  static void readMatrixRow(uint8_t row);
 };
 
 #define KEYMAP_STACKED(                                                 \

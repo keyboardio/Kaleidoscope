@@ -17,4 +17,6 @@
  */
 
 #pragma once
+
+#define KALEIDOSCOPE_WITH_EXPANDER_KEYBOARD 1
 #include "kaleidoscope/hardware/ez/ErgoDox.h"

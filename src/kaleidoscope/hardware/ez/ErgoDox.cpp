@@ -29,129 +29,22 @@
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace ez {
 
-ErgoDoxScanner ErgoDox::scanner_;
-uint8_t ErgoDox::previousKeyState_[ROWS];
-uint8_t ErgoDox::keyState_[ROWS];
-uint8_t ErgoDox::masks_[ROWS];
-uint8_t ErgoDox::debounce_matrix_[ROWS][COLS];
-uint8_t ErgoDox::debounce = 5;
-
-static bool do_scan_ = 1;
+EXPANDER_KEYBOARD_DATA(ErgoDox);
+constexpr int8_t ErgoDox::led_count;
 
 void ErgoDox::setup(void) {
-  wdt_disable();
-  delay(100);
-
-  TCCR1A = 0b10101001;
-  TCCR1B = 0b00001001;
-
-  DDRB  &= ~(1 << 4);
-  PORTB &= ~(1 << 4);
-
-  DDRC  &= ~(1 << 7);
-  DDRD  &= ~(1 << 5 | 1 << 4);
-  DDRE  &= ~(1 << 6);
-  PORTC |= (1 << 7);
-  PORTD |= (1 << 5 | 1 << 4);
-  PORTE |= (1 << 6);
-
-  scanner_.begin();
+  ExpanderKeyboard::setup();
 
   setStatusLEDBrightness(1, 15);
   setStatusLEDBrightness(2, 15);
   setStatusLEDBrightness(3, 15);
-
-  /* Set up Timer1 for 1700usec */
-  TCCR1B = _BV(WGM13);
-  TCCR1A = 0;
-
-  const uint32_t cycles = (F_CPU / 2000000) * 1700;
-
-  ICR1 = cycles;
-  TCCR1B = _BV(WGM13) | _BV(CS10);
-  TIMSK1 = _BV(TOIE1);
 }
 
-ISR(TIMER1_OVF_vect) {
-  do_scan_ = true;
-}
-
-void __attribute__((optimize(3))) ErgoDox::readMatrixRow(uint8_t row) {
-  uint8_t mask, cols;
-
-  mask = debounceMaskForRow(row);
-  cols = (scanner_.readCols(row) & mask) | (keyState_[row] & ~mask);
-  debounceRow(cols ^ keyState_[row], row);
-  keyState_[row] = cols;
-}
-
-void __attribute__((optimize(3))) ErgoDox::readMatrix() {
-  do_scan_ = false;
-
-  scanner_.reattachExpanderOnError();
-
-  for (uint8_t row = 0; row < ROWS / 2; row++) {
-    scanner_.selectExtenderRow(row);
-    scanner_.toggleATMegaRow(row);
-
-    readMatrixRow(row);
-    readMatrixRow(row + ROWS / 2);
-
-    scanner_.toggleATMegaRow(row);
-  }
-}
-
-void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
-                         (bitRead(keyState_[row], col) << 1);
-      if (keyState)
-        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
-    }
-    previousKeyState_[row] = keyState_[row];
-  }
-}
-
-void ErgoDox::scanMatrix() {
-  if (do_scan_) {
-    do_scan_ = false;
-    // We only want to update our matrix if the timer has expired.
-    readMatrix();
-  }
-
-  // We ALWAYS want to tell Kaleidoscope about the state of the matrix
-  actOnMatrixScan();
-}
-
-void ErgoDox::maskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return;
-
-  bitWrite(masks_[row], col, 1);
-}
-
-void ErgoDox::unMaskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return;
-
-  bitWrite(masks_[row], col, 0);
-}
-
-bool ErgoDox::isKeyMasked(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
-    return false;
-
-  return bitRead(masks_[row], col);
-}
-
-// ErgoDox-specific stuff
 void ErgoDox::setStatusLED(uint8_t led, bool state) {
   if (state) {
     DDRB |= (1 << (led + 4));
@@ -199,54 +92,6 @@ void ErgoDox::resetDevice() {
   PORTE = 0;
   PORTF = 0;
   asm volatile("jmp 0x7E00");
-}
-
-
-uint8_t ErgoDox::debounceMaskForRow(uint8_t row) {
-  uint8_t result = 0;
-
-  for (uint8_t c = 0; c < COLS; ++c) {
-    if (debounce_matrix_[row][c]) {
-      --debounce_matrix_[row][c];
-    } else {
-      result |= (1 << c);
-    }
-  }
-  return result;
-}
-
-void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
-  for (uint8_t i = 0; i < COLS; ++i) {
-    if (change & (1 << i)) {
-      debounce_matrix_[row][i] = debounce;
-    }
-  }
-}
-
-void ErgoDox::detachFromHost() {
-  UDCON |= (1 << DETACH);
-}
-
-void ErgoDox::attachToHost() {
-  UDCON &= ~(1 << DETACH);
-}
-
-bool ErgoDox::isKeyswitchPressed(byte row, byte col) {
-  return (bitRead(keyState_[row], col) != 0);
-}
-
-bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
-  keyIndex--;
-  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
-}
-
-uint8_t ErgoDox::pressedKeyswitchCount() {
-  uint8_t count = 0;
-
-  for (uint8_t r = 0; r < ROWS; r++) {
-    count += __builtin_popcount(keyState_[r]);
-  }
-  return count;
 }
 
 }
