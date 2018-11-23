@@ -50,7 +50,7 @@ EventHandlerResult FocusSerial::beforeReportingState() {
 
   Kaleidoscope.onFocusEvent(command_);
 
-  Serial.println(F("."));
+  Serial.println(F("\r\n."));
 
   drain();
 
@@ -74,34 +74,8 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
   return EventHandlerResult::OK;
 }
 
-void FocusSerial::printSpace(void) {
-  Serial.print(F(" "));
-}
-
-void FocusSerial::printNumber(uint16_t num) {
-  Serial.print(num);
-}
-
-void FocusSerial::printColor(uint8_t r, uint8_t g, uint8_t b) {
-  printNumber(r);
-  printSpace();
-  printNumber(g);
-  printSpace();
-  printNumber(b);
-}
-
-void FocusSerial::printSeparator(void) {
-  Serial.print(F(" | "));
-}
-
 void FocusSerial::printBool(bool b) {
   Serial.print((b) ? F("true") : F("false"));
-}
-
-void FocusSerial::readColor(cRGB &color) {
-  color.r = Serial.parseInt();
-  color.g = Serial.parseInt();
-  color.b = Serial.parseInt();
 }
 
 }

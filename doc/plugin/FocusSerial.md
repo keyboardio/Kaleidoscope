@@ -26,7 +26,7 @@ class FocusTestCommand : public Plugin {
     if (strcmp_P(command, PSTR("test")) != 0)
       return EventHandlerResult::OK;
 
-    Serial.println(F("Congratulations, the test command works!"));
+    ::Focus.send(F("Congratulations, the test command works!"));
     return EventHandlerResult::EVENT_CONSUMED;
   }
 };
@@ -43,7 +43,34 @@ void setup () {
 
 ## Plugin methods
 
-The plugin provides the `Focus` object, with a couple of helper methods aimed at developers. Documenting those is a work in progress for now.
+The plugin provides the `Focus` object, with a couple of helper methods aimed at developers. Terminating the response with a dot on its own line is handled implicitly by `FocusSerial`, one does not need to do that explicitly.
+
+### `.send(...)`
+### `.sendRaw(...)`
+
+Sends a list of variables over the wire. The difference between `.send()` and `.sendRaw()` is that the former puts a space between each variable, the latter does not. If one just wants to send a list of things, use the former. If one needs more control over the formatting, use the latter. In most cases, `.send()` is the recommended method to use.
+
+Both of them take a variable number of arguments, of almost any type: all built-in types can be sent, `cRGB`, `Key` and `bool` too in addition. For colors, `.send()` will write them as an `R G B` sequence; `Key` objects will be sent as the raw 16-bit keycode; and `bool` will be sent as either the string `true`, or `false`.
+
+### `.read(variable)`
+
+Depending on the type of the variable passed by reference, reads a 8 or 16-bit unsigned integer, a `Key`, or a `cRGB` color from the wire, into the variable passed as the argument.
+
+### `.peek()`
+
+Returns the next character on the wire, without reading it. Subsequent reads will include the peeked-at byte too.
+
+### `.isEOL()`
+
+Returns whether we're at the end of the request line.
+
+### `.COMMENT`
+
+When sending something to the host that is not a response to a request, prefix the response lines with this.
+
+### `.SEPARATOR`
+
+To be used when using `.sendRaw`, when one needs complete control over where separators are inserted into the response.
 
 ## Wire protocol
 
@@ -61,6 +88,7 @@ Apart from these, there are no restrictions on what can go over the wire, but to
 * Do as little work in the hooks as possible. While the protocol is human readable, the expectation is that tools will be used to interact with the keyboard.
 * As such, keep formatting to the bare minimum. No fancy table-like responses.
 * In general, the output of a getter should be copy-pasteable to a setter.
+* Messages sent to the host, without a request, should be prefixed with a hash mark (`Focus.COMMENT`).
 
 These are merely guidelines, and there can be - and are - exceptions. Use your discretion when writing Focus hooks.
 

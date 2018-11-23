@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-CycleTimeReport.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
 namespace plugin {
@@ -55,8 +56,7 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
 }
 
 __attribute__((weak)) void cycleTimeReport(void) {
-  Serial.print(F("# average loop time: "));
-  Serial.println(CycleTimeReport.average_loop_time);
+  Focus.send(Focus.COMMENT, F("average loop time:"), CycleTimeReport.average_loop_time);
 }
 
 kaleidoscope::plugin::CycleTimeReport CycleTimeReport;

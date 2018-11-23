@@ -101,7 +101,7 @@ Upgrading from `Focus` to `onFocusEvent` and `FocusSerial` is a reasonably simpl
 
 ##### The most trivial example
 
-The biggest difference between `Focus` and `onFocusEvent` is that the former required explicit registering of hooks, while the latter does it automatically: every plugin that implements the `onFocusEvent` method will be part of the system. As a consequence, only plugins are able to supply new commands: there is no explicit registration, thus, no way to inject a command that isn't part of a plugin. This also means that these functions now return `kaleidoscope::EventHandlerResult` instead of `bool`. Lets see a trivial example!
+The biggest difference between `Focus` and `onFocusEvent` is that the former required explicit registering of hooks, while the latter does it automatically: every plugin that implements the `onFocusEvent` method will be part of the system. As a consequence, only plugins are able to supply new commands: there is no explicit registration, thus, no way to inject a command that isn't part of a plugin. This also means that these functions now return `kaleidoscope::EventHandlerResult` instead of `bool`. Furthermore, with `FocusSerial`, all communication is expected to go through it, instead of using `Serial` directly. Lets see a trivial example!
 
 ###### Focus
 
@@ -136,7 +136,7 @@ class FocusExampleCommand : public Plugin {
     if (strcmp_P(command, PSTR("example")) != 0)
       return EventHandlerResult::OK;
 
-    Serial.println(F("This is an example response. Hello world!"));
+    ::Focus.send(F("This is an example response. Hello world!"));
     return EventHandlerResult::EVENT_CONSUMED;
   }
 };
@@ -212,7 +212,7 @@ class ExamplePlugin : public Plugin {
       return EventHandlerResult::OK;
 
     example_toggle_ = !example_toggle_;
-    ::Focus.printBool(example_toggle_);
+    ::Focus.send(example_toggle_);
 
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -271,7 +271,7 @@ class ExampleOptionalCommand : public Plugin {
     if (strcmp_P(command, PSTR("optional")) != 0)
       return EventHandlerResult::OK;
 
-    Serial.println(Layer.getLayerState(), BIN);
+    ::Focus.send(Layer.getLayerState());
     return EventHandlerResult::EVENT_CONSUMED;
   }
 };

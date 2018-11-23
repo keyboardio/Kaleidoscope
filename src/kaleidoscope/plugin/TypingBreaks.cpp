@@ -165,38 +165,38 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
 
   switch (subCommand) {
   case IDLE_TIME_LIMIT:
-    if (Serial.peek() == '\n') {
-      Serial.println(settings.idle_time_limit);
+    if (::Focus.isEOL()) {
+      ::Focus.send(settings.idle_time_limit);
     } else {
-      settings.idle_time_limit = Serial.parseInt();
+      ::Focus.read(settings.idle_time_limit);
     }
     break;
   case LOCK_TIMEOUT:
-    if (Serial.peek() == '\n') {
-      Serial.println(settings.lock_time_out);
+    if (::Focus.isEOL()) {
+      ::Focus.send(settings.lock_time_out);
     } else {
-      settings.lock_time_out = Serial.parseInt();
+      ::Focus.read(settings.lock_time_out);
     }
     break;
   case LOCK_LENGTH:
-    if (Serial.peek() == '\n') {
-      Serial.println(settings.lock_length);
+    if (::Focus.isEOL()) {
+      ::Focus.send(settings.lock_length);
     } else {
-      settings.lock_length = Serial.parseInt();
+      ::Focus.read(settings.lock_length);
     }
     break;
   case LEFT_MAX:
-    if (Serial.peek() == '\n') {
-      Serial.println(settings.left_hand_max_keys);
+    if (::Focus.isEOL()) {
+      ::Focus.send(settings.left_hand_max_keys);
     } else {
-      settings.left_hand_max_keys = Serial.parseInt();
+      ::Focus.read(settings.left_hand_max_keys);
     }
     break;
   case RIGHT_MAX:
-    if (Serial.peek() == '\n') {
-      Serial.println(settings.right_hand_max_keys);
+    if (::Focus.isEOL()) {
+      ::Focus.send(settings.right_hand_max_keys);
     } else {
-      settings.right_hand_max_keys = Serial.parseInt();
+      ::Focus.read(settings.right_hand_max_keys);
     }
     break;
   }

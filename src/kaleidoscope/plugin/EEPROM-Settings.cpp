@@ -143,24 +143,23 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
 
   switch (sub_command) {
   case DEFAULT_LAYER: {
-    if (Serial.peek() == '\n') {
-      Serial.println(::EEPROMSettings.default_layer());
+    if (::Focus.isEOL()) {
+      ::Focus.send(::EEPROMSettings.default_layer());
     } else {
-      ::EEPROMSettings.default_layer(Serial.parseInt());
+      uint8_t layer;
+      ::Focus.read(layer);
+      ::EEPROMSettings.default_layer(layer);
     }
     break;
   }
   case IS_VALID:
-    ::Focus.printBool(::EEPROMSettings.isValid());
-    Serial.println();
+    ::Focus.send(::EEPROMSettings.isValid());
     break;
   case GET_VERSION:
-    Serial.println(::EEPROMSettings.version());
+    ::Focus.send(::EEPROMSettings.version());
     break;
   case CRC:
-    Serial.print(::CRC.crc, HEX);
-    Serial.print(F("/"));
-    Serial.println(::EEPROMSettings.crc(), HEX);
+    ::Focus.sendRaw(::CRC.crc, F("/"), ::EEPROMSettings.crc());
     break;
   }
 
@@ -185,16 +184,15 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
 
   switch (sub_command) {
   case CONTENTS: {
-    if (Serial.peek() == '\n') {
+    if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < EEPROM.length(); i++) {
         uint8_t d = EEPROM[i];
-        ::Focus.printNumber(d);
-        ::Focus.printSpace();
+        ::Focus.send(d);
       }
-      Serial.println();
     } else {
-      for (uint16_t i = 0; i < EEPROM.length() && Serial.peek() != '\n'; i++) {
-        uint8_t d = Serial.parseInt();
+      for (uint16_t i = 0; i < EEPROM.length() && !::Focus.isEOL(); i++) {
+        uint8_t d;
+        ::Focus.read(d);
         EEPROM.update(i, d);
       }
     }
@@ -202,7 +200,7 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
     break;
   }
   case FREE:
-    Serial.println(EEPROM.length() - ::EEPROMSettings.used());
+    ::Focus.send(EEPROM.length() - ::EEPROMSettings.used());
     break;
   }
 
