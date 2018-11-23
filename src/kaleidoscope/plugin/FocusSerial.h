@@ -28,14 +28,61 @@ class FocusSerial : public kaleidoscope::Plugin {
   bool handleHelp(const char *command,
                   const char *help_message);
 
-  /* Helpers */
-  static void printNumber(uint16_t number);
-  static void printSpace(void);
-  static void printColor(uint8_t r, uint8_t g, uint8_t b);
-  static void printSeparator(void);
-  static void printBool(bool b);
+  void send() {}
+  void send(const cRGB color) {
+    send(color.r, color.g, color.b);
+  }
+  void send(const Key key) {
+    send(key.raw);
+    Serial.print(SEPARATOR);
+  }
+  void send(const bool b) {
+    printBool(b);
+    Serial.print(SEPARATOR);
+  }
+  template <typename V>
+  void send(V v) {
+    Serial.print(v);
+    Serial.print(SEPARATOR);
+  }
+  template <typename Var, typename... Vars>
+  void send(Var v, const Vars&... vars) {
+    send(v);
+    send(vars...);
+  }
 
-  static void readColor(cRGB &color);
+  void sendRaw() {}
+  template <typename Var, typename... Vars>
+  void sendRaw(Var v, const Vars&... vars) {
+    Serial.print(v);
+    sendRaw(vars...);
+  }
+
+  const char peek() {
+    return Serial.peek();
+  }
+
+  void read(Key &key) {
+    key.raw = Serial.parseInt();
+  }
+  void read(cRGB &color) {
+    color.r = Serial.parseInt();
+    color.g = Serial.parseInt();
+    color.b = Serial.parseInt();
+  }
+  void read(uint8_t &u8) {
+    u8 = Serial.parseInt();
+  }
+  void read(uint16_t &u16) {
+    u16 = Serial.parseInt();
+  }
+
+  bool isEOL() {
+    return Serial.peek() == '\n';
+  }
+
+  static constexpr char COMMENT = '#';
+  static constexpr char SEPARATOR = ' ';
 
   /* Hooks */
   EventHandlerResult onSetup() {
@@ -49,6 +96,7 @@ class FocusSerial : public kaleidoscope::Plugin {
   static char command_[32];
 
   static void drain(void);
+  static void printBool(bool b);
 };
 }
 }

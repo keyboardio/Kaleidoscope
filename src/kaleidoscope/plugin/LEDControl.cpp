@@ -214,17 +214,18 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
 
   switch (subCommand) {
   case AT: {
-    uint8_t idx = Serial.parseInt();
+    uint8_t idx;
 
-    if (Serial.peek() == '\n') {
+    ::Focus.read(idx);
+
+    if (::Focus.isEOL()) {
       cRGB c = ::LEDControl.getCrgbAt(idx);
 
-      ::Focus.printColor(c.r, c.g, c.b);
-      Serial.println();
+      ::Focus.send(c);
     } else {
       cRGB c;
 
-      ::Focus.readColor(c);
+      ::Focus.read(c);
 
       ::LEDControl.setCrgbAt(idx, c);
     }
@@ -233,46 +234,43 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   case SETALL: {
     cRGB c;
 
-    ::Focus.readColor(c);
+    ::Focus.read(c);
 
     ::LEDControl.set_all_leds_to(c);
 
     break;
   }
   case MODE: {
-    char peek = Serial.peek();
+    char peek = ::Focus.peek();
     if (peek == '\n') {
-      Serial.println(::LEDControl.get_mode_index());
+      ::Focus.send(::LEDControl.get_mode_index());
     } else if (peek == 'n') {
       ::LEDControl.next_mode();
-      Serial.read();
     } else if (peek == 'p') {
       ::LEDControl.prev_mode();
-      Serial.read();
     } else {
-      uint8_t mode = Serial.parseInt();
+      uint8_t mode;
 
+      ::Focus.read(mode);
       ::LEDControl.set_mode(mode);
     }
     break;
   }
   case THEME: {
-    if (Serial.peek() == '\n') {
+    if (::Focus.isEOL()) {
       for (int8_t idx = 0; idx < LED_COUNT; idx++) {
         cRGB c = ::LEDControl.getCrgbAt(idx);
 
-        ::Focus.printColor(c.r, c.g, c.b);
-        ::Focus.printSpace();
+        ::Focus.send(c);
       }
-      Serial.println();
       break;
     }
 
     int8_t idx = 0;
-    while (idx < LED_COUNT && Serial.peek() != '\n') {
+    while (idx < LED_COUNT && !::Focus.isEOL()) {
       cRGB color;
 
-      ::Focus.readColor(color);
+      ::Focus.read(color);
 
       ::LEDControl.setCrgbAt(idx, color);
       idx++;

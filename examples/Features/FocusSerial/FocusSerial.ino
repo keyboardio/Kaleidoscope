@@ -51,7 +51,7 @@ class FocusTestCommand : public Plugin {
       return EventHandlerResult::OK;
 
     if (strcmp_P(command, cmd) == 0) {
-      Serial.println(F("ok!"));
+      ::Focus.send(F("ok!"));
       return EventHandlerResult::EVENT_CONSUMED;
     }
 

@@ -85,18 +85,6 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
   EEPROM.update(keymap_base_ + base_pos * 2 + 1, key.keyCode);
 }
 
-Key EEPROMKeymap::parseKey(void) {
-  Key key;
-
-  key.raw  = Serial.parseInt();
-
-  return key;
-}
-
-void EEPROMKeymap::printKey(Key k) {
-  ::Focus.printNumber(k.raw);
-}
-
 EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   const char *cmd = PSTR("keymap.map");
   if (::Focus.handleHelp(command, PSTR("keymap.map\nkeymap.roLayers")))
@@ -108,32 +96,32 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   if (strcmp_P(command + 7, PSTR("roLayers")) == 0) {
     if (mode_ != Mode::EXTEND)
       return EventHandlerResult::OK;
-    Serial.println(progmem_layers_);
+    ::Focus.send(progmem_layers_);
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 7, PSTR("map")) != 0)
     return EventHandlerResult::OK;
 
-  if (Serial.peek() == '\n') {
+  if (::Focus.isEOL()) {
     for (uint8_t layer = 0; layer < layer_count; layer++) {
       for (uint8_t row = 0; row < ROWS; row++) {
         for (uint8_t col = 0; col < COLS; col++) {
           Key k = Layer.getKey(layer, row, col);
 
-          printKey(k);
-          ::Focus.printSpace();
+          ::Focus.send(k);
         }
       }
     }
-    Serial.println();
   } else {
     uint16_t i = 0;
     uint8_t layers = layer_count;
     if (layers > 0)
       layers--;
-    while ((Serial.peek() != '\n') && (i < ROWS * COLS * layers)) {
-      Key k = parseKey();
+    while (!::Focus.isEOL() && (i < ROWS * COLS * layers)) {
+      Key k;
+
+      ::Focus.read(k);
 
       if (mode_ == Mode::EXTEND) {
         uint8_t layer = i / (ROWS * COLS);

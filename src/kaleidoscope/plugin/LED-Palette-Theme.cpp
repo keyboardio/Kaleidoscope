@@ -111,25 +111,21 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
   if (strcmp_P(command, cmd) != 0)
     return EventHandlerResult::OK;
 
-  if (Serial.peek() == '\n') {
+  if (::Focus.isEOL()) {
     for (uint8_t i = 0; i < 16; i++) {
       cRGB color;
 
       EEPROM.get(palette_base_ + i * sizeof(color), color);
-      ::Focus.printColor(color.r, color.g, color.b);
-      ::Focus.printSpace();
+      ::Focus.send(color);
     }
-    Serial.println();
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   uint8_t i = 0;
-  while (i < 16 && Serial.peek() != '\n') {
+  while (i < 16 && !::Focus.isEOL()) {
     cRGB color;
 
-    color.r = Serial.parseInt();
-    color.g = Serial.parseInt();
-    color.b = Serial.parseInt();
+    ::Focus.read(color);
 
     EEPROM.put(palette_base_ + i * sizeof(color), color);
     i++;
@@ -155,24 +151,22 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
 
   uint16_t max_index = (max_themes * ROWS * COLS) / 2;
 
-  if (Serial.peek() == '\n') {
+  if (::Focus.isEOL()) {
     for (uint16_t pos = 0; pos < max_index; pos++) {
       uint8_t indexes = EEPROM.read(theme_base + pos);
 
-      ::Focus.printNumber(indexes >> 4);
-      ::Focus.printSpace();
-      ::Focus.printNumber(indexes & ~0xf0);
-      ::Focus.printSpace();
+      ::Focus.send((uint8_t)(indexes >> 4), indexes & ~0xf0);
     }
-    Serial.println();
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   uint16_t pos = 0;
 
-  while ((Serial.peek() != '\n') && (pos < max_index)) {
-    uint8_t idx1 = Serial.parseInt();
-    uint8_t idx2 = Serial.parseInt();
+  while (!::Focus.isEOL() && (pos < max_index)) {
+    uint8_t idx1, idx2;
+    ::Focus.read(idx1);
+    ::Focus.read(idx2);
+
     uint8_t indexes = (idx1 << 4) + idx2;
 
     EEPROM.update(theme_base + pos, indexes);

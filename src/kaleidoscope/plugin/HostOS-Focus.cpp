@@ -29,14 +29,14 @@ EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
   if (strcmp_P(command, cmd) != 0)
     return EventHandlerResult::OK;
 
-  if (Serial.peek() == '\n') {
-    Serial.println(::HostOS.os());
+  if (::Focus.isEOL()) {
+    ::Focus.send(::HostOS.os());
   } else {
-    uint8_t new_os = Serial.parseInt();
+    uint8_t new_os;
+    ::Focus.read(new_os);
     ::HostOS.os((hostos::Type) new_os);
   }
 
-  Serial.read();
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
