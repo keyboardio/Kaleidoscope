@@ -101,6 +101,10 @@ To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](doc/p
 
 The [IdleLEDs](doc/plugin/IdleLEDs.md) plugin is a simple, yet, useful one: it will turn the keyboard LEDs off after a period of inactivity, and back on upon the next key event.
 
+### WinKeyToggle
+
+The [WinKeyToggle](doc/plugin/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
+
 ## Breaking changes
 
 ### The `RxCy` macros and peeking into the keyswitch state
