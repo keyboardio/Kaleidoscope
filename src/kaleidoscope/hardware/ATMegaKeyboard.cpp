@@ -35,7 +35,7 @@ void ATMegaKeyboard::setup(void) {
     ENABLE_PULLUP(KeyboardHardware.matrix_col_pins[i]);
   }
 
-  for (uint8_t i = 0; i < KeyboardHardware.matrix_rows; i++) {
+  for (uint8_t i = 0; i < KeyboardHardware.matrix_row_pin_cnt; i++) {
     DDR_OUTPUT(KeyboardHardware.matrix_row_pins[i]);
     OUTPUT_HIGH(KeyboardHardware.matrix_row_pins[i]);
   }
@@ -60,16 +60,21 @@ void ATMegaKeyboard::attachToHost() {
 }
 
 void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
-  for (uint8_t current_row = 0; current_row < KeyboardHardware.matrix_rows; current_row++) {
+  for (int8_t current_row = 0;
+       current_row < KeyboardHardware.matrix_row_pin_cnt;
+       current_row++) {
     uint16_t mask, cols;
+    int8_t matrix_row = current_row +
+                        (KeyboardHardware.matrix_rows - KeyboardHardware.matrix_row_pin_cnt);
 
-    mask = KeyboardHardware.debounceMaskForRow(current_row);
+    mask = KeyboardHardware.debounceMaskForRow(matrix_row);
 
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
-    cols = (KeyboardHardware.readCols() & mask) | (KeyboardHardware.keyState_[current_row] & ~mask);
+    cols = (KeyboardHardware.readCols() & mask) | (KeyboardHardware.keyState_[matrix_row] & ~mask);
     OUTPUT_TOGGLE(KeyboardHardware.matrix_row_pins[current_row]);
-    KeyboardHardware.debounceRow(cols ^ KeyboardHardware.keyState_[current_row], current_row);
-    KeyboardHardware.keyState_[current_row] = cols;
+
+    KeyboardHardware.debounceRow(cols ^ KeyboardHardware.keyState_[matrix_row], current_row);
+    KeyboardHardware.keyState_[matrix_row] = cols;
   }
 }
 

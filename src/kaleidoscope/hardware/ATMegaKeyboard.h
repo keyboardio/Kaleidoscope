@@ -42,21 +42,26 @@ struct cRGB {
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
-#define ATMEGA_KEYBOARD_CONFIG(ROW_PINS_, COL_PINS_)          	         \
-  static const int8_t matrix_rows = NUM_ARGS(ROW_PINS_);                 \
-  static const int8_t matrix_columns = NUM_ARGS(COL_PINS_);              \
-  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;    \
-  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_; \
-                                                                         \
-  static uint16_t previousKeyState_[matrix_rows];                        \
-  static uint16_t keyState_[matrix_rows];                                \
-  static uint16_t masks_[matrix_rows];                                   \
+#define ATMEGA_KEYBOARD_CONFIG_EXT(ROW_PINS_, COL_PINS_, MATRIX_ROWS_)      \
+  static const int8_t matrix_row_pin_cnt = NUM_ARGS(ROW_PINS_);             \
+  static const int8_t matrix_rows = MATRIX_ROWS_;                           \
+  static const int8_t matrix_columns = NUM_ARGS(COL_PINS_);                 \
+  static constexpr uint8_t matrix_row_pins[matrix_row_pin_cnt] = ROW_PINS_; \
+  static constexpr uint8_t matrix_col_pins[matrix_columns] = COL_PINS_;     \
+                                                                            \
+  static uint16_t previousKeyState_[matrix_rows];                           \
+  static uint16_t keyState_[matrix_rows];                                   \
+  static uint16_t masks_[matrix_rows];                                      \
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
 
+#define ATMEGA_KEYBOARD_CONFIG(ROW_PINS_, COL_PINS_) \
+  ATMEGA_KEYBOARD_CONFIG_EXT(ROW_PIN_LIST(ROW_PINS_), COL_PIN_LIST(COL_PINS_), matrix_row_pin_cnt);
+
 #define ATMEGA_KEYBOARD_DATA(BOARD)                             \
+  const int8_t BOARD::matrix_row_pin_cnt;                       \
   const int8_t BOARD::matrix_rows;                              \
   const int8_t BOARD::matrix_columns;                           \
-  constexpr uint8_t BOARD::matrix_row_pins[matrix_rows];        \
+  constexpr uint8_t BOARD::matrix_row_pins[matrix_row_pin_cnt]; \
   constexpr uint8_t BOARD::matrix_col_pins[matrix_columns];     \
   uint16_t BOARD::previousKeyState_[matrix_rows];               \
   uint16_t BOARD::keyState_[matrix_rows];                       \
@@ -154,8 +159,7 @@ class ATMegaKeyboard {
 
   static bool do_scan_;
 
- private:
-
+ protected:
   uint16_t readCols();
   uint16_t debounceMaskForRow(uint8_t row);
   void debounceRow(uint16_t change, uint8_t row);
