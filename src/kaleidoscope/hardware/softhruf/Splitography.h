@@ -40,7 +40,28 @@ namespace hardware {
 namespace softhruf {
 class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
  public:
-  Splitography(void) {}
+  Splitography(void) {
+    /* These two lines here are the result of many hours spent chasing ghosts.
+     * These are great lines, and we love them dearly, for they make a set of
+     * pins that would otherwise be reserved for JTAG accessible from the
+     * firmware.
+     *
+     * Most AVR chips that get put into keyboards have the JTAG port disabled in
+     * fuses, but some do not. When they're used for JTAG, then no matter what
+     * we do in the firmware, they will not be affected. So in case JTAG is not
+     * disabled in fuses, we want to do that in the firmware. Luckily for us,
+     * that's doable, we just have to write the JTD bit into MCUCR twice within
+     * four cycles. These two lines do just that.
+     *
+     * For more information, see the ATMega16U4/ATMega32U4 datasheet, the
+     * following sections:
+     *  - 2.2.7 (PIN Descriptions; PIN F)
+     *  - 7.8.7 (On-chip Debug System)
+     *  - 26.5.1 (MCU Control Register – MCUCR)
+     */
+    MCUCR |= (1 << JTD);
+    MCUCR |= (1 << JTD);
+  }
 
   ATMEGA_KEYBOARD_CONFIG(
     ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
