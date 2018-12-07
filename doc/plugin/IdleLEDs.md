@@ -55,4 +55,4 @@ properties. All times are in seconds.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/IdleLEDs/IdleLEDs.ino
+ [plugin:example]: ../../examples/LEDs/IdleLEDs/IdleLEDs.ino

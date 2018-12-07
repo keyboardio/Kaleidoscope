@@ -44,4 +44,4 @@ The plugin provides the `HostPowerManagement` object, with no public methods.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/HostPowerManagement/HostPowerManagement.ino
+ [plugin:example]: ../../examples/Features/HostPowerManagement/HostPowerManagement.ino

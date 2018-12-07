@@ -99,4 +99,4 @@ been an exaggeration, there is only one as of this writing:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/LED-AlphaSquare/LED-AlphaSquare.ino
+ [plugin:example]: ../../examples/LEDs/LED-AlphaSquare/LED-AlphaSquare.ino

@@ -94,4 +94,4 @@ methods outside of the object, however, that can be overridden:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Syster/Syster.ino
+ [plugin:example]: ../../examples/Keystrokes/Syster/Syster.ino

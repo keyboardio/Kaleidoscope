@@ -48,4 +48,4 @@ The plugin provides the `TopsyTurvy` object, without any public methods or prope
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/TopsyTurvy/TopsyTurvy.ino
+ [plugin:example]: ../../examples/Keystrokes/TopsyTurvy/TopsyTurvy.ino

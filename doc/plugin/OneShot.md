@@ -203,4 +203,4 @@ properties too:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/OneShot/OneShot.ino
+ [plugin:example]: ../../examples/Keystrokes/OneShot/OneShot.ino

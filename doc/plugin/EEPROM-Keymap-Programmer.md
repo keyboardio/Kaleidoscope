@@ -121,4 +121,4 @@ in turn provides the following command:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: ../../examples/EEPROM-Keymap-Programmer/EEPROM-Keymap-Programmer.ino
+  [plugin:example]: ../../examples/Features/EEPROM/EEPROM-Keymap-Programmer/EEPROM-Keymap-Programmer.ino

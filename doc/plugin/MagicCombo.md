@@ -67,4 +67,4 @@ started with the plugin.
 
 ![rxcy layout](../model01_coordinates.png)
 
- [plugin:example]: ../../examples/MagicCombo/MagicCombo.ino
+ [plugin:example]: ../../examples/Keystrokes/MagicCombo/MagicCombo.ino

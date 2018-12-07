@@ -154,4 +154,4 @@ properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/SpaceCadet/SpaceCadet.ino
+ [plugin:example]: ../../examples/Keystrokes/SpaceCadet/SpaceCadet.ino

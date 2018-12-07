@@ -96,4 +96,4 @@ method explained below.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Cycle/Cycle.ino
+ [plugin:example]: ../../examples/Keystrokes/Cycle/Cycle.ino

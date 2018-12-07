@@ -58,4 +58,4 @@ properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/ShapeShifter/ShapeShifter.ino
+ [plugin:example]: ../../examples/Keystrokes/ShapeShifter/ShapeShifter.ino

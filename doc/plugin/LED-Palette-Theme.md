@@ -125,4 +125,4 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: ../../examples/LED-Palette-Theme/LED-Palette-Theme.ino
+  [plugin:example]: ../../examples/LEDs/LED-Palette-Theme/LED-Palette-Theme.ino

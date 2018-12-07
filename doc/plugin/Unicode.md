@@ -121,4 +121,4 @@ the `+` button, selecting it from the list, then setting it as the active input 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Unicode/Unicode.ino
+ [plugin:example]: ../../examples/Keystrokes/Unicode/Unicode.ino

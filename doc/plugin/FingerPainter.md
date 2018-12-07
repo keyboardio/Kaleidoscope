@@ -59,4 +59,4 @@ The plugin provides the `FingerPainter` object, which provides no public methods
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: ../../examples/FingerPainter/FingerPainter.ino
+  [plugin:example]: ../../examples/LEDs/FingerPainter/FingerPainter.ino

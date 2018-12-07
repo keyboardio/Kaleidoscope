@@ -87,4 +87,4 @@ The plugin provides the following effects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/LED-Stalker/LED-Stalker.ino
+ [plugin:example]: ../../examples/LEDs/LED-Stalker/LED-Stalker.ino

@@ -81,4 +81,4 @@ provides the `hostos.type` Focus command.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the extension.
 
- [plugin:example]: ../../examples/HostOS/HostOS.ino
+ [plugin:example]: ../../examples/Features/HostOS/HostOS.ino

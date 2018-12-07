@@ -62,4 +62,4 @@ The plugin provides the `keymap.map` and a `keymap.roLayers` commands.
 
 Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
-  [plugin:example]: ../../examples/EEPROM-Keymap/EEPROM-Keymap.ino
+  [plugin:example]: ../../examples/Features/EEPROM/EEPROM-Keymap/EEPROM-Keymap.ino
