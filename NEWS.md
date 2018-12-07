@@ -87,7 +87,7 @@ Changing layers now triggers the `onLayerChange` event - but only if there was r
 
 Kaleidoscope has been ported to the following devices:
 
-- [Atreus](doc/plugin/Hardware-Technomancy-Atreus.md), post-2016 PCB variants with an A* MCU, and the handwired with Teensy from FalbaTech are supported, PCBs prior to 2016 and the legacy teensy2 variants are not.
+- [Atreus](doc/plugin/Hardware-Technomancy-Atreus.md): All known variants of the original Atreus are supported. From the Legacy Teensy variant, through the pre-2016 PCB with an A* MCU, the post-2016 PCB, and FalbaTech's handwired one too. Apart from the legacy Teensy variant, the other support both the A* or a Teensy as an MCU.
 - [ErgoDox](doc/plugin/Hardware-EZ-ErgoDox.md): Originally developed to support the ErgoDox EZ, but all other compatible hardware is supported, such as the original ErgoDox and anything else wired like it, like some Dactyls.
 - [Planck](doc/plugin/Hardware-OLKB-Planck.md): AVR-based Plancks, and anything else wired similarly should be supported, as long as they use a Teensy.
 - [Splitography](doc/plugin/Hardware-SOFTHRUF-Splitography.md): Initial support for the Splitography Steno keyboard.
