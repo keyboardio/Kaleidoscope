@@ -66,4 +66,4 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Colormap/Colormap.ino
+ [plugin:example]: ../../examples/LEDs/Colormap/Colormap.ino

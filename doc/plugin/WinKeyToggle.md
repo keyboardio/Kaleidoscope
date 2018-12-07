@@ -52,4 +52,4 @@ method:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/WinKeyToggle/WinKeyToggle.ino
+ [plugin:example]: ../../examples/Keystrokes/WinKeyToggle/WinKeyToggle.ino

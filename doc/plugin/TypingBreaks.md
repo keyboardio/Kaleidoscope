@@ -105,4 +105,4 @@ properties. All times are in seconds.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/TypingBreaks/TypingBreaks.ino
+ [plugin:example]: ../../examples/Features/TypingBreaks/TypingBreaks.ino

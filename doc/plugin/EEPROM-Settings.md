@@ -165,4 +165,4 @@ following commands:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
-  [plugin:example]: ../../examples/EEPROM-Settings/EEPROM-Settings.ino
+  [plugin:example]: ../../examples/Features/EEPROM/EEPROM-Settings/EEPROM-Settings.ino

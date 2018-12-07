@@ -68,4 +68,4 @@ The plugin provides a single method on each of the included effect objects:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/LEDEffects/LEDEffects.ino
+ [plugin:example]: ../../examples/LEDs/LEDEffects/LEDEffects.ino

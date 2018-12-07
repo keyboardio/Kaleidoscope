@@ -74,4 +74,4 @@ methods and properties:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/GhostInTheFirmware/GhostInTheFirmware.ino
+ [plugin:example]: ../../examples/Features/GhostInTheFirmware/GhostInTheFirmware.ino

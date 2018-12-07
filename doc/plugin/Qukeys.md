@@ -149,4 +149,4 @@ limit, you won't get any unintended alternate keycodes.
 
 The [example][plugin:example] can help to learn how to use this plugin.
 
- [plugin:example]: ../../examples/Qukeys/Qukeys.ino
+ [plugin:example]: ../../examples/Keystrokes/Qukeys/Qukeys.ino

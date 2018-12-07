@@ -123,4 +123,4 @@ the keyboard responds.
 
 Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
-  [plugin:example]: ../../examples/FocusSerial/FocusSerial.ino
+  [plugin:example]: ../../examples/Features/FocusSerial/FocusSerial.ino

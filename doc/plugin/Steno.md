@@ -93,4 +93,4 @@ The plugin provides a `GeminiPR` object, with no public methods or properties.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Steno/Steno.ino
+ [plugin:example]: ../../examples/Features/Steno/Steno.ino

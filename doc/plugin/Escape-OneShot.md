@@ -38,4 +38,4 @@ The plugin provides the `EscapeOneShot` object, which has no public methods.
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Escape-OneShot/Escape-OneShot.ino
+ [plugin:example]: ../../examples/Keystrokes/Escape-OneShot/Escape-OneShot.ino

@@ -97,4 +97,4 @@ The plugin provides the `Leader` object, with the following methods and properti
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/Leader/Leader.ino
+ [plugin:example]: ../../examples/Keystrokes/Leader/Leader.ino
