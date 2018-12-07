@@ -85,10 +85,6 @@ class FocusSerial : public kaleidoscope::Plugin {
   static constexpr char SEPARATOR = ' ';
 
   /* Hooks */
-  EventHandlerResult onSetup() {
-    Serial.begin(9600);
-    return EventHandlerResult::OK;
-  }
   EventHandlerResult beforeReportingState();
   EventHandlerResult onFocusEvent(const char *command);
 
