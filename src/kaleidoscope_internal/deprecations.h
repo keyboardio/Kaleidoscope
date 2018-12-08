@@ -26,3 +26,8 @@
   "------------------------------------------------------------------------\n" \
 
 /* Messages */
+#define _DEPRECATED_MESSAGE_LAYER_DEFAULT                                   \
+  "Layer.defaultLayer() is deprecated, and a no-op.\n"                      \
+  "\n"                                                                      \
+  "If you want to set the default layer for the keyboard, consider using\n" \
+  "EEPROMSettings.default_layer() instead."

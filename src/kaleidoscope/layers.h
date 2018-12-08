@@ -83,13 +83,15 @@ class Layer_ {
   static uint8_t top(void) {
     return highestLayer;
   }
+
+  static void defaultLayer(uint8_t layer) DEPRECATED(LAYER_DEFAULT) {}
+  static uint8_t defaultLayer(void) DEPRECATED(LAYER_DEFAULT) {
+    return 0;
+  }
   static void next(void);
   static void previous(void);
 
   static boolean isOn(uint8_t layer);
-
-  static void defaultLayer(uint8_t layer);
-  static uint8_t defaultLayer(void);
 
   static uint32_t getLayerState(void);
 

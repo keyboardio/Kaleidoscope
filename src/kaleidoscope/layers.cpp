@@ -27,7 +27,6 @@
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
 namespace kaleidoscope {
-uint8_t Layer_::DefaultLayer;
 uint32_t Layer_::LayerState;
 uint8_t Layer_::highestLayer;
 Key Layer_::liveCompositeKeymap[ROWS][COLS];
@@ -107,12 +106,12 @@ void Layer_::updateLiveCompositeKeymap(byte row, byte col) {
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(activeLayers, DefaultLayer, ROWS * COLS);
+  memset(activeLayers, 0, ROWS * COLS);
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
       int8_t layer = highestLayer;
 
-      while (layer > DefaultLayer) {
+      while (layer > 0) {
         if (Layer.isOn(layer)) {
           Key mappedKey = (*getKey)(layer, row, col);
 
@@ -130,7 +129,7 @@ void Layer_::updateActiveLayers(void) {
 void Layer_::updateHighestLayer(void) {
   // If layer_count is set, start there, otherwise search from the
   // highest possible layer (MAX_LAYERS) for the top active layer
-  for (byte i = (layer_count - 1); i > DefaultLayer; i--) {
+  for (byte i = (layer_count - 1); i > 0; i--) {
     if (bitRead(LayerState, i)) {
       highestLayer = i;
       return;
@@ -138,7 +137,7 @@ void Layer_::updateHighestLayer(void) {
   }
   // It's not possible to turn off the default layer (see
   // updateActiveLayers()), so if no other layers are active:
-  highestLayer = DefaultLayer;
+  highestLayer = 0;
 }
 
 void Layer_::move(uint8_t layer) {
@@ -203,15 +202,6 @@ void Layer_::next(void) {
 
 void Layer_::previous(void) {
   off(highestLayer);
-}
-
-void Layer_::defaultLayer(uint8_t layer) {
-  move(layer);
-  DefaultLayer = layer;
-}
-
-uint8_t Layer_::defaultLayer(void) {
-  return DefaultLayer;
 }
 
 uint32_t Layer_::getLayerState(void) {
