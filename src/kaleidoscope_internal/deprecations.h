@@ -31,3 +31,18 @@
   "\n"                                                                      \
   "If you want to set the default layer for the keyboard, consider using\n" \
   "EEPROMSettings.default_layer() instead."
+
+#define _DEPRECATED_MESSAGE_LAYER_ON                                        \
+  "Please use `Layer.activate()` instead of `Layer.on()`."
+
+#define _DEPRECATED_MESSAGE_LAYER_OFF                                       \
+  "Please use `Layer.deactivate()` instead of `Layer.off()`."
+
+#define _DEPRECATED_MESSAGE_LAYER_NEXT                                      \
+  "Please use `Layer.activateNext()` instead of `Layer.next()`."
+
+#define _DEPRECATED_MESSAGE_LAYER_PREVIOUS                                  \
+  "Please use `Layer.deactivateTop()` instead of `Layer.previous()`."
+
+#define _DEPRECATED_MESSAGE_LAYER_ISON                                      \
+  "Please use `Layer.isActive()` instead of `Layer.isOn().`"

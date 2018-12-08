@@ -67,33 +67,50 @@ class Layer_ {
    * `lookupOnActiveLayer`.
    */
   static Key lookup(byte row, byte col) {
-    return liveCompositeKeymap[row][col];
+    return live_composite_keymap_[row][col];
   }
   static Key lookupOnActiveLayer(byte row, byte col) {
-    uint8_t layer = activeLayers[row][col];
+    uint8_t layer = active_layers_[row][col];
     return (*getKey)(layer, row, col);
   }
   static uint8_t lookupActiveLayer(byte row, byte col) {
-    return activeLayers[row][col];
+    return active_layers_[row][col];
   }
-  static void on(uint8_t layer);
-  static void off(uint8_t layer);
+
+  static void activate(uint8_t layer);
+  static void deactivate(uint8_t layer);
+  static void on(uint8_t layer) DEPRECATED(LAYER_ON) {
+    activate(layer);
+  }
+  static void off(uint8_t layer) DEPRECATED(LAYER_OFF) {
+    deactivate(layer);
+  }
+  static void activateNext();
+  static void deactivateTop();
+  static void next(void) DEPRECATED(LAYER_NEXT) {
+    activateNext();
+  }
+  static void previous(void) DEPRECATED(LAYER_PREVIOUS) {
+    deactivateTop();
+  }
   static void move(uint8_t layer);
 
   static uint8_t top(void) {
-    return highestLayer;
+    return top_active_layer_;
   }
+  static boolean isActive(uint8_t layer);
+  static boolean isOn(uint8_t layer) DEPRECATED(LAYER_ISON) {
+    return isActive(layer);
+  };
 
   static void defaultLayer(uint8_t layer) DEPRECATED(LAYER_DEFAULT) {}
   static uint8_t defaultLayer(void) DEPRECATED(LAYER_DEFAULT) {
     return 0;
   }
-  static void next(void);
-  static void previous(void);
 
-  static boolean isOn(uint8_t layer);
-
-  static uint32_t getLayerState(void);
+  static uint32_t getLayerState(void) {
+    return layer_state_;
+  }
 
   static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
 
@@ -105,15 +122,13 @@ class Layer_ {
   static void updateActiveLayers(void);
 
  private:
-  static void updateHighestLayer(void);
-
-  static uint8_t DefaultLayer;
-  static uint32_t LayerState;
-  static uint8_t highestLayer;
-  static Key liveCompositeKeymap[ROWS][COLS];
-  static uint8_t activeLayers[ROWS][COLS];
+  static uint32_t layer_state_;
+  static uint8_t top_active_layer_;
+  static Key live_composite_keymap_[ROWS][COLS];
+  static uint8_t active_layers_[ROWS][COLS];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
+  static void updateTopActiveLayer(void);
 };
 }
 
