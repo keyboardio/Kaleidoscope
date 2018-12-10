@@ -86,7 +86,7 @@ void NumPad::setKeyboardLEDColors(void) {
 }
 
 EventHandlerResult NumPad::afterEachCycle() {
-  if (!Layer.isOn(numPadLayer)) {
+  if (!Layer.isActive(numPadLayer)) {
     cleanupNumlockState();
   } else {
     if (numlockUnsynced)  {

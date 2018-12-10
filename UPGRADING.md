@@ -16,6 +16,8 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [MagicCombo](#magiccombo)
     - [TypingBreaks](#typingbreaks)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
+    - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
+    - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
     - [Finer OneShot stickability control](#finer-oneshot-stickability-control)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
@@ -433,6 +435,22 @@ Both of them are unconditionally enabled now, because they add so much to the pl
 Storing the settable settings in EEPROM makes it depend on `Kaleidoscope-EEPROM-Settings`, which should be initialized before this plugin is.
 
 ## Deprecated APIs and their replacements
+
+### Removal of Layer.defaultLayer
+
+The `Layer.defaultLayer()` method has been deprecated, because it wasn't widely used, nor tested well, and needlessly complicated the layering logic. If one wants to set a default layer, which the keyboard switches to when booting up, `EEPROMSettings.default_layer()` may be of use.
+
+`Layer.defaultLayer` is slated for removal by **2019-02-14**.
+
+### More clarity in Layer method names
+
+A number of methods on the `Layer` object have been renamed, to make their intent clearer:
+
+- `Layer.on()` and `Layer.off()` became `Layer.activate()` and `Layer.decativate()`, repsectively.
+- `Layer.next()` and `Layer.previous()` became `Layer.activateNext()` and `Layer.deactivateTop()`.
+- `Layer.isOn` became `Layer.isActive()`.
+
+The goal was to have a method name that is a verb, because these are actions we do. The old names are still present, but emit a deprecation warning, and will be removed by **2019-02-14**.
 
 ### Finer OneShot stickability control
 
