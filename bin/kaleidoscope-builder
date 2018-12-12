@@ -45,15 +45,24 @@ firmware_size () {
     ## This is a terrible hack, please don't hurt me. - algernon
 
     find_max_prog_size
-    output="$("$@" | grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
+    set +e
+    raw_output=$("$@" 2> /dev/null)
+    rc=$?
+    set -e
 
-    PROGSIZE="$(echo "${output}" | grep "Program:" | cut -d: -f2 | awk '{print $1}')"
+    if [ $rc -eq 0 ]; then
+        output="$(echo "${raw_output}"| grep "\\(Program\\|Data\\):" | sed -e 's,^,  - ,' && echo)"
 
-    PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+        PROGSIZE="$(echo "${output}" | grep "Program:" | cut -d: -f2 | awk '{print $1}')"
 
-    # we want the sed there, doing with shell builtins would be worse.
-    # shellcheck disable=SC2001 disable=SC1117
-    echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
+        PERCENT="$(echo "${PROGSIZE}" "${MAX_PROG_SIZE}" | awk "{ printf \"%02.01f\", \$1 / \$2 * 100 }")"
+
+        # we want the sed there, doing with shell builtins would be worse.
+        # shellcheck disable=SC2001 disable=SC1117
+        echo "${output}" | sed -e "s/\(Program:.*\)(\([0-9\.]*%\) Full)/\1(${PERCENT}% Full)/"
+    else
+        echo "Unable to determine image size."
+    fi
 }
 
 
@@ -102,7 +111,7 @@ flash () {
     ${preFlash_HOOKS}
 
     reset_device
-    sleep 3s
+    sleep 3
     find_bootloader_ports
     check_bootloader_port_and_flash
 
@@ -121,7 +130,7 @@ check_bootloader_port_and_flash () {
 }
 
 flash_over_usb () {
-    sleep 1s
+    sleep 1
     ${AVRDUDE} -q -q -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
@@ -283,7 +292,7 @@ size () {
     fi
 
     echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
-    firmware_size "${AVR_SIZE}" -C --mcu="${MCU}" "${ELF_FILE_PATH}"
+    firmware_size "${AVR_SIZE}" "${AVR_SIZE_FLAGS}" "${ELF_FILE_PATH}"
     echo
 }
 
