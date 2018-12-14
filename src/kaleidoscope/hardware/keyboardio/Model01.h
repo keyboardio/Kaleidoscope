@@ -26,6 +26,7 @@
 #include "KeyboardioScanner.h"
 
 #include "kaleidoscope/macro_helpers.h"
+#include "model01/ScannerUpdate.h"
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
@@ -124,6 +125,9 @@ class Model01 {
   keydata_t previousLeftHandState;
   keydata_t previousRightHandState;
 
+  static void updateScanner() {
+    model01::ScannerUpdate::update();
+  }
  private:
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
 

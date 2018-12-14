@@ -96,6 +96,8 @@ For more information, please see the hardware plugins' documentation.
 
 To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](doc/plugin/ATMegaKeyboard.md) base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
 
+The [Model01](doc/plugin/Hardware-Keyboardio-Model01.md) port gained a new feature, with which one can update the firmware on the ATTinys in each half (which are responsible for key scanning, debouncing, etc). When compiling for a Model01, the `KeyboardHardware` object will have an `updateScanner()` method, which will conduct the update process.
+
 ## New plugins
 
 ### IdleLEDs
