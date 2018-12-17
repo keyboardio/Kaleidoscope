@@ -292,7 +292,7 @@ size () {
     fi
 
     echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
-    # shellcheck disable=SC2086 # We want word splitting here!
+    # shellcheck disable=SC2086
     firmware_size "${AVR_SIZE}" ${AVR_SIZE_FLAGS} "${ELF_FILE_PATH}"
     echo
 }
