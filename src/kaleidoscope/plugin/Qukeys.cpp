@@ -90,6 +90,8 @@ QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
 byte Qukeys::qukey_state_[] = {};
 bool Qukeys::flushing_queue_ = false;
+Key Qukeys::delayed_qukey_keycode_ = Key_NoKey;
+uint8_t Qukeys::delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
 
 constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
 
@@ -152,6 +154,12 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
       // the queue, delay this key's release event:
       if (release_delay_ > 0 && key_queue_length_ > 1) {
         key_queue_[0].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
+        if (is_dual_use) {
+          delayed_qukey_keycode_ = getDualUseAlternateKey(keycode);
+        } else { // is_qukey
+          delayed_qukey_keycode_ = qukeys[qukey_index].alt_keycode;
+        }
+        delayed_qukey_addr_ = key_queue_[0].addr;
         return false;
       }
     }
@@ -292,8 +300,22 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     if (queue_index == QUKEY_NOT_FOUND) {
       return EventHandlerResult::OK;
     }
-    flushQueue(queue_index);
-    flushQueue();
+    // Finally, send the release event of the delayed qukey, if any. This is necessary in
+    // order to send a toggle off of a `ShiftToLayer()` key; otherwise, that layer gets
+    // stuck on if there's a release delay and a rollover.
+    if (delayed_qukey_keycode_ != Key_NoKey) {
+      int8_t r = addr::row(delayed_qukey_addr_);
+      int8_t c = addr::col(delayed_qukey_addr_);
+      flushQueue(queue_index);
+      flushQueue();
+      flushing_queue_ = true;
+      handleKeyswitchEvent(delayed_qukey_keycode_, r, c, WAS_PRESSED);
+      flushing_queue_ = false;
+      delayed_qukey_keycode_ = Key_NoKey;
+    } else {
+      flushQueue(queue_index);
+      flushQueue();
+    }
     mapped_key = getDualUsePrimaryKey(mapped_key);
     return EventHandlerResult::OK;
   }
@@ -323,6 +345,7 @@ EventHandlerResult Qukeys::beforeReportingState() {
         setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
         flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
         flushQueue();
+        delayed_qukey_keycode_ = Key_NoKey;
       }
       return EventHandlerResult::OK;
     }
