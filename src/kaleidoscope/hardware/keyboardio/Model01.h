@@ -29,11 +29,13 @@
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
+#include "kaleidoscope/Hardware.h"
+
 namespace kaleidoscope {
 namespace hardware {
 namespace keyboardio {
 
-class Model01 {
+class Model01 : public kaleidoscope::Hardware {
  public:
   Model01(void);
 
@@ -53,17 +55,6 @@ class Model01 {
   void setup();
   void rebootBootloader();
 
-  /** Detaching from / attaching to the host.
-   *
-   * These two functions should detach the device from (or attach it to) the
-   * host, preferably without rebooting the device. Their purpose is to allow
-   * one to do some configuration inbetween, so the re-attach happens with
-   * different properties. The device remains powered between these operations,
-   * only the connection to the host gets severed.
-   */
-  void detachFromHost();
-  void attachToHost();
-
   /* These public functions are things supported by the Model 01, but
    * aren't necessarily part of the Kaleidoscope API
    */
@@ -72,51 +63,13 @@ class Model01 {
   void setKeyscanInterval(uint8_t interval);
   boolean ledPowerFault(void);
 
-  /* Key masking
-   * -----------
-   *
-   * There are situations when one wants to ignore key events for a while, and
-   * mask them out. These functions help do that. In isolation, they do nothing,
-   * plugins and the core firmware is expected to make use of these.
-   *
-   * See `handleKeyswitchEvent` in the Kaleidoscope sources for a use-case.
-   */
   void maskKey(byte row, byte col);
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
   void maskHeldKeys(void);
 
-  /** Key switch states
-   *
-   * These methods offer a way to peek at the key switch states, for those cases
-   * where we need to deal with the state closest to the hardware. Some methods
-   * offer a way to check if a key is pressed, others return the number of
-   * pressed keys.
-   */
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(byte row, byte col);
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param keyIndex is the key index, as calculated by `keyIndex`.
-   *
-   * @note Key indexes start at 1, not 0!
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(uint8_t keyIndex);
-  /**
-   * Check the number of key switches currently pressed.
-   *
-   * @returns the number of keys pressed.
-   */
   uint8_t pressedKeyswitchCount();
 
   keydata_t leftHandState;

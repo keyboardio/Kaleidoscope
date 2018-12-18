@@ -292,14 +292,6 @@ void Model01::setKeyscanInterval(uint8_t interval) {
   rightHand.setKeyscanInterval(interval);
 }
 
-void Model01::detachFromHost() {
-  UDCON |= (1 << DETACH);
-}
-
-void Model01::attachToHost() {
-  UDCON &= ~(1 << DETACH);
-}
-
 bool Model01::isKeyswitchPressed(byte row, byte col) {
   if (col <= 7) {
     return (bitRead(leftHandState.rows[row], 7 - col) != 0);

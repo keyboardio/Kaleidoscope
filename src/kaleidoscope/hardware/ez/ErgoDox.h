@@ -42,11 +42,13 @@ struct cRGB {
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
+#include "kaleidoscope/Hardware.h"
+
 namespace kaleidoscope {
 namespace hardware {
 namespace ez {
 
-class ErgoDox {
+class ErgoDox : public kaleidoscope::Hardware {
  public:
   ErgoDox(void) {}
 
@@ -54,76 +56,17 @@ class ErgoDox {
   static constexpr byte matrix_rows = 14;
   static constexpr int8_t led_count = 0;
 
-  void syncLeds(void) {}
-  void setCrgbAt(byte row, byte col, cRGB color) {}
-  void setCrgbAt(int8_t i, cRGB crgb) {}
-  cRGB getCrgbAt(int8_t i) {
-    return CRGB(0, 0, 0);
-  }
-  int8_t getLedIndex(byte row, byte col) {
-    return -1;
-  }
-
   void scanMatrix(void);
   void readMatrix(void);
   void actOnMatrixScan(void);
   void setup();
 
-  /** Detaching from / attaching to the host.
-   *
-   * These two functions should detach the device from (or attach it to) the
-   * host, preferably without rebooting the device. Their purpose is to allow
-   * one to do some configuration inbetween, so the re-attach happens with
-   * different properties. The device remains powered between these operations,
-   * only the connection to the host gets severed.
-   */
-  void detachFromHost();
-  void attachToHost();
-
-  /* Key masking
-   * -----------
-   *
-   * There are situations when one wants to ignore key events for a while, and
-   * mask them out. These functions help do that. In isolation, they do nothing,
-   * plugins and the core firmware is expected to make use of these.
-   *
-   * See `handleKeyswitchEvent` in the Kaleidoscope sources for a use-case.
-   */
   void maskKey(byte row, byte col);
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
 
-  /** Key switch states
-   *
-   * These methods offer a way to peek at the key switch states, for those cases
-   * where we need to deal with the state closest to the hardware. Some methods
-   * offer a way to check if a key is pressed, others return the number of
-   * pressed keys.
-   */
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(byte row, byte col);
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param keyIndex is the key index, as calculated by `keyIndex`.
-   *
-   * @note Key indexes start at 1, not 0!
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(uint8_t keyIndex);
-  /**
-   * Check the number of key switches currently pressed.
-   *
-   * @returns the number of keys pressed.
-   */
   uint8_t pressedKeyswitchCount();
 
   // ErgoDox-specific stuff
