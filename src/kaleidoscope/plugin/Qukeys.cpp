@@ -154,6 +154,7 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
       // the queue, delay this key's release event:
       if (release_delay_ > 0 && key_queue_length_ > 1) {
         key_queue_[0].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
+        // Store the alternate keycode to send the toggle-off event later, if appropriate:
         if (is_dual_use) {
           delayed_qukey_keycode_ = getDualUseAlternateKey(keycode);
         } else { // is_qukey
@@ -345,6 +346,8 @@ EventHandlerResult Qukeys::beforeReportingState() {
         setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
         flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
         flushQueue();
+        // If the release delay has timed out, we need to prevent the wrong toggle-off
+        // event from being sent:
         delayed_qukey_keycode_ = Key_NoKey;
       }
       return EventHandlerResult::OK;
