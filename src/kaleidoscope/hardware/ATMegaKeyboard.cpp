@@ -51,14 +51,6 @@ void ATMegaKeyboard::setup(void) {
   TIMSK1 = _BV(TOIE1);
 }
 
-void ATMegaKeyboard::detachFromHost() {
-  UDCON |= _BV(DETACH);
-}
-
-void ATMegaKeyboard::attachToHost() {
-  UDCON &= ~_BV(DETACH);
-}
-
 void __attribute__((optimize(3))) ATMegaKeyboard::readMatrix(void) {
   for (uint8_t current_row = 0; current_row < KeyboardHardware.matrix_rows; current_row++) {
     uint16_t mask, cols;

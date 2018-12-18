@@ -55,17 +55,6 @@ class Model01 : public kaleidoscope::Hardware {
   void setup();
   void rebootBootloader();
 
-  /** Detaching from / attaching to the host.
-   *
-   * These two functions should detach the device from (or attach it to) the
-   * host, preferably without rebooting the device. Their purpose is to allow
-   * one to do some configuration inbetween, so the re-attach happens with
-   * different properties. The device remains powered between these operations,
-   * only the connection to the host gets severed.
-   */
-  void detachFromHost();
-  void attachToHost();
-
   /* These public functions are things supported by the Model 01, but
    * aren't necessarily part of the Kaleidoscope API
    */

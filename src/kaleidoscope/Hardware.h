@@ -198,14 +198,17 @@ class Hardware {
    * Must detach the device, without rebooting or cutting power. Only the end
    * points should get detached, the device must remain powered on.
    */
-  void detachFromHost() {}
+  void detachFromHost() {
+    UDCON |= _BV(DETACH);
+  }
   /**
    * Attack the device to the host.
    *
    * Must restore the link detachFromHost severed.
    */
-  void attachToHost() {}
-
+  void attachToHost() {
+    UDCON &= ~_BV(DETACH);
+  }
   /** @} */
 
   /**

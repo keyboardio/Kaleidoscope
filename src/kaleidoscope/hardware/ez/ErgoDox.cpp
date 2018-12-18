@@ -223,14 +223,6 @@ void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
   }
 }
 
-void ErgoDox::detachFromHost() {
-  UDCON |= (1 << DETACH);
-}
-
-void ErgoDox::attachToHost() {
-  UDCON &= ~(1 << DETACH);
-}
-
 bool ErgoDox::isKeyswitchPressed(byte row, byte col) {
   return (bitRead(keyState_[row], col) != 0);
 }
