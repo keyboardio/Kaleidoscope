@@ -268,12 +268,6 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     return EventHandlerResult::OK;
   }
 
-  // If the key isn't active, and didn't just toggle off, continue to next plugin
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    mapped_key = getDualUsePrimaryKey(mapped_key);
-    return EventHandlerResult::OK;
-  }
-
   // If the key was just pressed:
   if (keyToggledOn(key_state)) {
     // If the queue is empty and the key isn't a qukey, proceed:
@@ -296,18 +290,6 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
   if (keyToggledOff(key_state)) {
     // If the key isn't in the key_queue, proceed
     if (queue_index == QUKEY_NOT_FOUND) {
-      // If a qukey was released while in its alternate state, change its keycode
-      if (isDualUse(mapped_key)) {
-        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-          mapped_key = getDualUseAlternateKey(mapped_key);
-        } else {
-          mapped_key = getDualUsePrimaryKey(mapped_key);
-        }
-      } else if (qukey_index != QUKEY_NOT_FOUND) {
-        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-          mapped_key = qukeys[qukey_index].alt_keycode;
-        }
-      }
       return EventHandlerResult::OK;
     }
     flushQueue(queue_index);
@@ -318,34 +300,15 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
 
   // Otherwise, the key is still pressed
 
-  // If the key is not a qukey:
-  if (qukey_index == QUKEY_NOT_FOUND &&
-      ! isDualUse(mapped_key)) {
-    // If the key was pressed before the keys in the queue, proceed:
-    if (queue_index == QUKEY_NOT_FOUND) {
-      return EventHandlerResult::OK;
-    } else {
-      // suppress this keypress; it's still in the queue
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-  }
-
-  // If the qukey is not in the queue, check its state
+  // Only keys in the queue can still evaluate as qukeys, so all we need to do here is
+  // block events for held keys that are still in the queue.
   if (queue_index == QUKEY_NOT_FOUND) {
-    if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-      if (isDualUse(mapped_key)) {
-        mapped_key = getDualUseAlternateKey(mapped_key);
-      } else {
-        mapped_key = qukeys[qukey_index].alt_keycode;
-      }
-    } else { // qukey_state == QUKEY_STATE_PRIMARY
-      mapped_key = getDualUsePrimaryKey(mapped_key);
-    }
+    // The key is not in the queue; proceed:
     return EventHandlerResult::OK;
+  } else {
+    // The key is still in the queue; abort:
+    return EventHandlerResult::EVENT_CONSUMED;
   }
-  // else state is undetermined; block. I could check timeouts here,
-  // but I'd rather do that in the pre-report hook
-  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 EventHandlerResult Qukeys::beforeReportingState() {
