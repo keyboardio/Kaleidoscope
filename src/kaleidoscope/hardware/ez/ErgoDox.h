@@ -61,50 +61,12 @@ class ErgoDox : public kaleidoscope::Hardware {
   void actOnMatrixScan(void);
   void setup();
 
-  /* Key masking
-   * -----------
-   *
-   * There are situations when one wants to ignore key events for a while, and
-   * mask them out. These functions help do that. In isolation, they do nothing,
-   * plugins and the core firmware is expected to make use of these.
-   *
-   * See `handleKeyswitchEvent` in the Kaleidoscope sources for a use-case.
-   */
   void maskKey(byte row, byte col);
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);
 
-  /** Key switch states
-   *
-   * These methods offer a way to peek at the key switch states, for those cases
-   * where we need to deal with the state closest to the hardware. Some methods
-   * offer a way to check if a key is pressed, others return the number of
-   * pressed keys.
-   */
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(byte row, byte col);
-  /**
-   * Check if a key is pressed at a given position.
-   *
-   * @param keyIndex is the key index, as calculated by `keyIndex`.
-   *
-   * @note Key indexes start at 1, not 0!
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
   bool isKeyswitchPressed(uint8_t keyIndex);
-  /**
-   * Check the number of key switches currently pressed.
-   *
-   * @returns the number of keys pressed.
-   */
   uint8_t pressedKeyswitchCount();
 
   // ErgoDox-specific stuff
