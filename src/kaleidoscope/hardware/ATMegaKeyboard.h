@@ -39,6 +39,8 @@ struct cRGB {
 
 #endif
 
+#include "kaleidoscope/Hardware.h"
+
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
@@ -69,22 +71,12 @@ struct cRGB {
 
 namespace kaleidoscope {
 namespace hardware {
-class ATMegaKeyboard {
+class ATMegaKeyboard : public kaleidoscope::Hardware {
  public:
   ATMegaKeyboard(void) {}
 
   // these will be overridden by the subclass
   static uint8_t debounce;
-
-  void syncLeds(void) {}
-  void setCrgbAt(uint8_t row, byte col, cRGB color) {}
-  void setCrgbAt(int8_t i, cRGB crgb) {}
-  cRGB getCrgbAt(int8_t i) {
-    return CRGB(0, 0, 0);
-  }
-  int8_t getLedIndex(uint8_t row, byte col) {
-    return -1;
-  }
 
   void setup(void);
 

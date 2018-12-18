@@ -29,11 +29,13 @@
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
+#include "kaleidoscope/Hardware.h"
+
 namespace kaleidoscope {
 namespace hardware {
 namespace keyboardio {
 
-class Model01 {
+class Model01 : public kaleidoscope::Hardware {
  public:
   Model01(void);
 
