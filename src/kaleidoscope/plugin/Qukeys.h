@@ -115,8 +115,8 @@ class Qukeys : public kaleidoscope::Plugin {
   static uint8_t key_queue_length_;
   static bool flushing_queue_;
 
-  static Key delayed_qukey_keycode_;
   static uint8_t delayed_qukey_addr_;
+  static int16_t delayed_qukey_start_time_;
 
   static int8_t lookupQukey(uint8_t key_addr);
   static void enqueue(uint8_t key_addr);

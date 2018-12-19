@@ -89,8 +89,8 @@ uint8_t Qukeys::release_delay_ = 0;
 QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
 bool Qukeys::flushing_queue_ = false;
-Key Qukeys::delayed_qukey_keycode_ = Key_NoKey;
 uint8_t Qukeys::delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
+int16_t Qukeys::delayed_qukey_start_time_ = 0;
 
 constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
 
@@ -146,14 +146,11 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
     if (qukey_state == QUKEY_STATE_PRIMARY) {
       // If there's a release delay in effect, and there's at least one key after it in
       // the queue, delay this key's release event:
-      if (release_delay_ > 0 && key_queue_length_ > 1) {
-        key_queue_[0].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
-        // Store the alternate keycode to send the toggle-off event later, if appropriate:
-        if (is_dual_use) {
-          delayed_qukey_keycode_ = getDualUseAlternateKey(keycode);
-        } else { // is_qukey
-          delayed_qukey_keycode_ = qukeys[qukey_index].alt_keycode;
-        }
+      if (release_delay_ > 0 && key_queue_length_ > 1
+          && delayed_qukey_addr_ == QUKEY_UNKNOWN_ADDR) {
+        delayed_qukey_start_time_ = millis();
+        // Store the delayed key's address to send the toggle-off event later, if
+        // appropriate:
         delayed_qukey_addr_ = key_queue_[0].addr;
         return false;
       }
@@ -289,19 +286,21 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     // Finally, send the release event of the delayed qukey, if any. This is necessary in
     // order to send a toggle off of a `ShiftToLayer()` key; otherwise, that layer gets
     // stuck on if there's a release delay and a rollover.
-    if (delayed_qukey_keycode_ != Key_NoKey) {
+    if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
       int8_t r = addr::row(delayed_qukey_addr_);
       int8_t c = addr::col(delayed_qukey_addr_);
       flushQueue(queue_index);
       flushQueue();
       flushing_queue_ = true;
-      handleKeyswitchEvent(delayed_qukey_keycode_, r, c, WAS_PRESSED);
+      handleKeyswitchEvent(Key_NoKey, r, c, WAS_PRESSED);
       flushing_queue_ = false;
-      delayed_qukey_keycode_ = Key_NoKey;
+      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
     } else {
       flushQueue(queue_index);
       flushQueue();
     }
+    //if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR)
+    //  return EventHandlerResult::EVENT_CONSUMED;
     mapped_key = getDualUsePrimaryKey(mapped_key);
     return EventHandlerResult::OK;
   }
@@ -323,19 +322,16 @@ EventHandlerResult Qukeys::beforeReportingState() {
 
   uint16_t current_time = millis();
 
-  if (release_delay_ > 0 && key_queue_length_ > 0) {
-    int16_t diff_time = key_queue_[0].start_time - current_time;
-    if (diff_time > 0) {
-      int16_t delay_window = QUKEYS_RELEASE_DELAY_OFFSET - release_delay_;
-      if (diff_time < delay_window) {
-        flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
-        flushQueue();
-        // If the release delay has timed out, we need to prevent the wrong toggle-off
-        // event from being sent:
-        delayed_qukey_keycode_ = Key_NoKey;
-      }
-      return EventHandlerResult::OK;
+  if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
+    int16_t diff_time = current_time - delayed_qukey_start_time_;
+    if (diff_time > release_delay_) {
+      flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
+      flushQueue();
+      // If the release delay has timed out, we need to prevent the wrong toggle-off
+      // event from being sent:
+      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
     }
+    return EventHandlerResult::OK;
   }
 
   // If the qukey has been held longer than the time limit, set its
