@@ -88,7 +88,6 @@ uint16_t Qukeys::time_limit_ = 250;
 uint8_t Qukeys::release_delay_ = 0;
 QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
-byte Qukeys::qukey_state_[] = {};
 bool Qukeys::flushing_queue_ = false;
 Key Qukeys::delayed_qukey_keycode_ = Key_NoKey;
 uint8_t Qukeys::delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
@@ -117,17 +116,14 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
 
 void Qukeys::enqueue(uint8_t key_addr) {
   if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
-    setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     flushQueue();
   }
   // default to alternate state to stop keys being flushed from the queue before the grace
   // period timeout
-  setQukeyState(key_addr, QUKEY_STATE_ALTERNATE);
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].start_time = millis();
   key_queue_length_++;
-  addr::mask(key_addr);
 }
 
 int8_t Qukeys::searchQueue(uint8_t key_addr) {
@@ -140,16 +136,14 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 
 // flush a single entry from the head of the queue
 bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
-  addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
   byte row = addr::row(key_queue_[0].addr);
   byte col = addr::col(key_queue_[0].addr);
-  bool is_dual_use = isDualUse(Layer.lookup(row, col));
-  Key keycode = Key_NoKey;
+  Key keycode = Layer.lookupOnActiveLayer(row, col);
+  bool is_dual_use = isDualUse(keycode);
   if (is_qukey || is_dual_use) {
-    if (qukey_state == QUKEY_STATE_PRIMARY &&
-        getQukeyState(key_queue_[0].addr) == QUKEY_STATE_ALTERNATE) {
+    if (qukey_state == QUKEY_STATE_PRIMARY) {
       // If there's a release delay in effect, and there's at least one key after it in
       // the queue, delay this key's release event:
       if (release_delay_ > 0 && key_queue_length_ > 1) {
@@ -163,8 +157,8 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
         delayed_qukey_addr_ = key_queue_[0].addr;
         return false;
       }
+      keycode = getDualUsePrimaryKey(keycode);
     }
-    setQukeyState(key_queue_[0].addr, qukey_state);
     if (qukey_state == QUKEY_STATE_ALTERNATE) {
       if (is_dual_use) {
         keycode = getDualUseAlternateKey(keycode);
@@ -265,15 +259,6 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
 
   // If the key was injected (from the queue being flushed)
   if (flushing_queue_) {
-    // If it's a DualUse key, we still need to update its keycode
-    if (isDualUse(mapped_key)) {
-      if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-        mapped_key = getDualUseAlternateKey(mapped_key);
-      } else {
-        mapped_key = getDualUsePrimaryKey(mapped_key);
-      }
-    }
-    // ...otherwise, just continue to the next plugin
     return EventHandlerResult::OK;
   }
 
@@ -343,7 +328,6 @@ EventHandlerResult Qukeys::beforeReportingState() {
     if (diff_time > 0) {
       int16_t delay_window = QUKEYS_RELEASE_DELAY_OFFSET - release_delay_;
       if (diff_time < delay_window) {
-        setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
         flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
         flushQueue();
         // If the release delay has timed out, we need to prevent the wrong toggle-off
