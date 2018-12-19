@@ -39,6 +39,7 @@ SpaceCadet::KeyBinding::KeyBinding(Key input_, Key output_, uint16_t timeout_) {
 SpaceCadet::KeyBinding * SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 1000;
 bool SpaceCadet::disabled = false;
+bool SpaceCadet::immediately_send_key = false;
 
 SpaceCadet::SpaceCadet() {
   static SpaceCadet::KeyBinding initialmap[] = {
@@ -146,7 +147,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     //of Alt -- sending Alt by itself activates the menubar.  We don't want to send
     //anything until we know that we're either sending the alternate key or we
     //know for sure that we want to send the originally pressed key.
-    if (valid_key) {
+    if (valid_key && !immediately_send_key) {
       return EventHandlerResult::EVENT_CONSUMED;
     }
 
@@ -237,7 +238,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
   //If it's a valid key, and it's continuing to be held, return NoKey.
   //This prevents us from accidentally triggering a keypress that we didn't
   //mean to handle.
-  if (valid_key) {
+  if (valid_key && !immediately_send_key) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 

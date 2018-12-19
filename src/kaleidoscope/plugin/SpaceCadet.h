@@ -65,6 +65,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
   //Publically accessible variables
   static uint16_t time_out;  //  The global timeout in milliseconds
   static SpaceCadet::KeyBinding * map;  // The map of key bindings
+  static bool immediately_send_key;  // Sends the original key while waiting for the timeout.
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
