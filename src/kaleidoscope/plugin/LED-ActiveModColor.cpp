@@ -39,7 +39,7 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
-      Key k = Layer.lookup(r, c);
+      Key k = Layer.lookupOnActiveLayer(r, c);
 
       if (::OneShot.isOneShotKey(k) ||
           (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
@@ -59,7 +59,7 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
     byte c = coords % COLS;
     byte r = (coords - c) / COLS;
 
-    Key k = Layer.lookup(r, c);
+    Key k = Layer.lookupOnActiveLayer(r, c);
 
     if (::OneShot.isOneShotKey(k)) {
       if (::OneShot.isSticky(k))
