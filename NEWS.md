@@ -106,6 +106,12 @@ The [IdleLEDs](doc/plugin/IdleLEDs.md) plugin is a simple, yet, useful one: it w
 
 The [LEDActiveLayerColor][doc/plugin/LEDActiveLayerColor.md] plugin makes it possible to set the color of all LEDs to the same color, depending on which layer is active topmost.
 
+### LED-Wavepool
+
+We integrated the [LEDWavepool](doc/plugin/LED-Wavepool.md) plugin by [ToyKeeper][wavepool:origin], with a few updates and new features added.
+
+ [wavepool:origin]: https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool
+
 ### WinKeyToggle
 
 The [WinKeyToggle](doc/plugin/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
