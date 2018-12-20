@@ -28,7 +28,7 @@ namespace kaleidoscope {
 namespace plugin {
 class WavepoolEffect : public LEDMode {
  public:
-  WavepoolEffect(void) {};
+  WavepoolEffect(void) {}
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
 
