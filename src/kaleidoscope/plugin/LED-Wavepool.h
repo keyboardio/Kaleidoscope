@@ -34,7 +34,9 @@ class WavepoolEffect : public LEDMode {
 
   // ms before idle animation starts after last keypress
   static uint16_t idle_timeout;
+  static int16_t ripple_hue;
 
+  static constexpr int16_t rainbow_hue = INT16_MAX;
  protected:
   void update(void) final;
 

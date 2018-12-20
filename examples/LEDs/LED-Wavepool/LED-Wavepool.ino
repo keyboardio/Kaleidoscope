@@ -50,6 +50,7 @@ void setup() {
   Kaleidoscope.setup();
 
   WavepoolEffect.idle_timeout = 5000;  // 5 seconds
+  WavepoolEffect.ripple_hue = WavepoolEffect.rainbow_hue;
   WavepoolEffect.activate();
 }
 

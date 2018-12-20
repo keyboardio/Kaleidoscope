@@ -25,7 +25,7 @@ void setup (){
 It is recommended to place the activation of the plugin as early as possible, so
 the plugin can catch all relevant key presses.
 
-## Plugin methods
+## Plugin properties
 
 The plugin provides the `WavepoolEffect` object, which has the following
 properties:
@@ -38,6 +38,16 @@ properties:
 > To disable the idle animation entirely, set this to 0.
 >
 > Default is 5000 (5 seconds).
+
+### `.ripple_hue`
+
+> The Hue of the ripple animation. If set, the light splashing across the
+> keyboard will use this value instead of all colors of the rainbow.
+>
+> Setting it to the special value of `Wavepool.rainbow_hue` will cause the
+> plugin to use all colors again.
+>
+> Defaults to `Wavepool.rainbow_hue`.
 
 ## Dependencies
 

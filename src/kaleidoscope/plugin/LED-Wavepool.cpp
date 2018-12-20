@@ -29,6 +29,7 @@ int8_t WavepoolEffect::surface[2][WP_WID * WP_HGT];
 uint8_t WavepoolEffect::page = 0;
 uint8_t WavepoolEffect::frames_since_event = 0;
 uint16_t WavepoolEffect::idle_timeout = 5000;  // 5 seconds
+int16_t WavepoolEffect::ripple_hue = WavepoolEffect::rainbow_hue; // automatic hue
 
 // map native keyboard coordinates (16x4) into geometric space (14x5)
 PROGMEM const uint8_t WavepoolEffect::rc2pos[ROWS * COLS] = {
@@ -189,10 +190,14 @@ void WavepoolEffect::update(void) {
 
       uint8_t intensity = abs(height) * 2;
       uint8_t saturation = 0xff - intensity;
-      // color starts white but gets dimmer and more saturated as it fades,
-      // with hue wobbling according to height map
-      int16_t hue = (current_hue + height + (height >> 1)) & 0xff;
       uint8_t value = (intensity >= 128) ? 255 : intensity << 1;
+      int16_t hue = ripple_hue;
+
+      if (ripple_hue == rainbow_hue) {
+        // color starts white but gets dimmer and more saturated as it fades,
+        // with hue wobbling according to height map
+        hue = (current_hue + height + (height >> 1)) & 0xff;
+      }
 
       cRGB color = hsvToRgb(hue, saturation, value);
 
