@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <Kaleidoscope/LED-Wavepool.h>
+#include <kaleidoscope/plugin/LED-Wavepool.h>

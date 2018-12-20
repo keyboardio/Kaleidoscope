@@ -25,6 +25,7 @@
 #define WP_HGT 5
 
 namespace kaleidoscope {
+namespace plugin {
 class WavepoolEffect : public LEDMode {
  public:
   WavepoolEffect(void) {};
@@ -48,5 +49,6 @@ class WavepoolEffect : public LEDMode {
 };
 
 }
+}
 
-extern kaleidoscope::WavepoolEffect WavepoolEffect;
+extern kaleidoscope::plugin::WavepoolEffect WavepoolEffect;

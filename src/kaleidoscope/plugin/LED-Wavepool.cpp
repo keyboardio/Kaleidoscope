@@ -19,6 +19,7 @@
 #include <Kaleidoscope-LED-Wavepool.h>
 
 namespace kaleidoscope {
+namespace plugin {
 
 #define INTERPOLATE 1 // smoother, slower animation
 #define MS_PER_FRAME 40  // 40 = 25 fps
@@ -213,5 +214,6 @@ void WavepoolEffect::update(void) {
 }
 
 }
+}
 
-kaleidoscope::WavepoolEffect WavepoolEffect;
+kaleidoscope::plugin::WavepoolEffect WavepoolEffect;
