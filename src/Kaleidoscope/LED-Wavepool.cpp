@@ -17,7 +17,6 @@
  */
 
 #include <Kaleidoscope-LED-Wavepool.h>
-#include <LEDUtils.h>
 
 namespace kaleidoscope {
 

@@ -17,8 +17,8 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Wavepool.h>
-#include "LED-Off.h"
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
   [0] = KEYMAP_STACKED
@@ -40,9 +40,13 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
     Key_NoKey),
 };
 
-void setup() {
-  Kaleidoscope.use(&LEDOff, &WavepoolEffect);
+KALEIDOSCOPE_INIT_PLUGINS(
+    LEDControl,
+    LEDOff,
+    WavepoolEffect
+);
 
+void setup() {
   Kaleidoscope.setup();
 
   WavepoolEffect.idle_timeout = 5000;  // 5 seconds
