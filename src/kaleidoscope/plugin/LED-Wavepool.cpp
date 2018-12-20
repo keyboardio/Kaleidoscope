@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef ARDUINO_AVR_MODEL01
+
 #include <Kaleidoscope-LED-Wavepool.h>
 
 namespace kaleidoscope {
@@ -219,3 +221,5 @@ void WavepoolEffect::update(void) {
 }
 
 kaleidoscope::plugin::WavepoolEffect WavepoolEffect;
+
+#endif

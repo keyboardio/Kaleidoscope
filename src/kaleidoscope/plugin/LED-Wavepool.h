@@ -18,6 +18,8 @@
 
 #pragma once
 
+#ifdef ARDUINO_AVR_MODEL01
+
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 
@@ -54,3 +56,5 @@ class WavepoolEffect : public LEDMode {
 }
 
 extern kaleidoscope::plugin::WavepoolEffect WavepoolEffect;
+
+#endif
