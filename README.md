@@ -40,7 +40,7 @@ ln -s $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio $SKETCHBOOK_DIR/hardware
 
 ```sh
 # go to your keyboardio directory
-cd $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio/libraries/Model01-Firmware
+cd $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio/avr/libraries/Model01-Firmware
 # and build your firmware!
 make
 ```
