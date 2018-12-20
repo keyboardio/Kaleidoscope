@@ -188,14 +188,13 @@ void WavepoolEffect::update(void) {
 #endif
 
       uint8_t intensity = abs(height) * 2;
-
+      uint8_t saturation = 0xff - intensity;
       // color starts white but gets dimmer and more saturated as it fades,
       // with hue wobbling according to height map
       int16_t hue = (current_hue + height + (height >> 1)) & 0xff;
+      uint8_t value = (intensity >= 128) ? 255 : intensity << 1;
 
-      cRGB color = hsvToRgb(hue,
-                            0xff - intensity,
-                            ((uint16_t)intensity) * 2);
+      cRGB color = hsvToRgb(hue, saturation, value);
 
       ::LEDControl.setCrgbAt(r, c, color);
     }
