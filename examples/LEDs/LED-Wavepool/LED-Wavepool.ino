@@ -41,9 +41,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 };
 
 KALEIDOSCOPE_INIT_PLUGINS(
-    LEDControl,
-    LEDOff,
-    WavepoolEffect
+  LEDControl,
+  LEDOff,
+  WavepoolEffect
 );
 
 void setup() {

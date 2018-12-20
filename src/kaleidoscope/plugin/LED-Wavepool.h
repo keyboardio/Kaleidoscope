@@ -40,9 +40,9 @@ class WavepoolEffect : public LEDMode {
 
  private:
   static uint8_t frames_since_event;
-  static int8_t surface[2][WP_WID*WP_HGT];
+  static int8_t surface[2][WP_WID * WP_HGT];
   static uint8_t page;
-  static PROGMEM const uint8_t rc2pos[ROWS*COLS];
+  static PROGMEM const uint8_t rc2pos[ROWS * COLS];
 
   static void raindrop(uint8_t x, uint8_t y, int8_t *page);
   static uint8_t wp_rand();
