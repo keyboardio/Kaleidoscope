@@ -129,6 +129,10 @@ We integrated the [LEDWavepool](doc/plugin/LED-Wavepool.md) plugin by [ToyKeeper
 
  [wavepool:origin]: https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool
 
+### Turbo
+
+The [Turbo](doc/plugin/Turbo.md) plugin provides a way to send keystrokes in very quick succession while holding down a key.
+
 ### WinKeyToggle
 
 The [WinKeyToggle](doc/plugin/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
