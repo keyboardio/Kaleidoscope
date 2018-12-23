@@ -17,7 +17,7 @@ Then, one needs to configure a color map:
 #include <Kaleidoscope-LED-ActiveLayerColor.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
-                          ActiveLayerColorEffect);
+                          LEDActiveLayerColorEffect);
 
 void setup () {
   static const cRGB layerColormap[] PROGMEM = {
