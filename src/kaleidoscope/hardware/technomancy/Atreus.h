@@ -61,7 +61,6 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
     ROW_PIN_LIST({PIN_D0, PIN_D1, PIN_D2, PIN_D3}),
     COL_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_B7, PIN_B6, PIN_B5, PIN_B4, PIN_B3, PIN_B2, PIN_B1, PIN_B0})
   );
-  )
 #endif
 
   static constexpr int8_t led_count = 0;
