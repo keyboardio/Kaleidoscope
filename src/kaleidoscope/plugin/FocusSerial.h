@@ -34,7 +34,6 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
   void send(const Key key) {
     send(key.raw);
-    Serial.print(SEPARATOR);
   }
   void send(const bool b) {
     printBool(b);
