@@ -1,14 +1,9 @@
-# This stub makefile for a Kaleidoscope plugin pulls in 
-# all targets from the Kaleidoscope-Plugin library
+EXAMPLES   := $(shell find examples -type f -name '*.ino' -exec dirname {} \; | sort)
+DESTDIR    := $(abspath ${CURDIR})/
+export DESTDIR
 
-UNAME_S := $(shell uname -s)
+BOARD_HARDWARE_PATH ?= ../../../../
+BUILD_TOOLS_PATH     = ${BOARD_HARDWARE_PATH}/keyboardio/build-tools
 
-ifeq ($(UNAME_S),Darwin)
-SKETCHBOOK_DIR ?= $(HOME)/Documents/Arduino/
-else
-SKETCHBOOK_DIR ?= $(HOME)/Arduino
-endif
-
-BOARD_HARDWARE_PATH ?= $(SKETCHBOOK_DIR)/hardware
-KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= keyboardio/avr/build-tools/makefiles/
-include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
+include ${BUILD_TOOLS_PATH}/makefiles/travis.mk
+include ${BUILD_TOOLS_PATH}/makefiles/tests.mk

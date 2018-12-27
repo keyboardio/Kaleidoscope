@@ -83,6 +83,12 @@ There are situations where one would like to disable sending a report after each
 
 Changing layers now triggers the `onLayerChange` event - but only if there was real change (thus, calling `Layer.on(SOME_LAYER)` multiple times in a row will only trigger one event). This event was introduced to help plugins that depend on layer state schedule their work better.
 
+### New command-line build system
+
+Previously we used a purpose-built tool, `kaleidoscope-builder` to abstract away a lot of nuances around building sketches from the command-line. This tool turned out to be less flexible than we would have liked, and a bit too brittle too. So we're switching to a new build system, built around make and much thinner wrappings. See [its documentation](doc/build-system.md) for more information.
+
+The older tool is still included for compatibility purposes, but we intend to remove it by **2019-04-01**.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:
