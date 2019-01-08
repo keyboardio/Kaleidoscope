@@ -15,6 +15,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
     - [TypingBreaks](#typingbreaks)
+    - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
     - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
     - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
@@ -433,6 +434,10 @@ Older versions of the plugin used to provide EEPROM storage for the settings onl
 Both of them are unconditionally enabled now, because they add so much to the plugin. This means that any calls to `TypingBreaks.enableEEPROM()` can be safely removed, the method is deprecated, a no-op by now. The method will be removed by **2019-01-14**.
 
 Storing the settable settings in EEPROM makes it depend on `Kaleidoscope-EEPROM-Settings`, which should be initialized before this plugin is.
+
+### Redial
+
+Older versions of the plugin required one to set up `Key_Redial` manually, and let the plugin know about it via `Redial.key`. This is no longer required, as the plugin sets up the redial key itself. As such, `Redial.key` was removed, and `Key_Redial` is defined by the plugin itself. To upgrade, simply remove your definition of `Key_Redial` and the `Redial.key` assignment from your sketch.
 
 ## Deprecated APIs and their replacements
 

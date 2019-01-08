@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Redial -- Redial support for Kaleidoscope
- * Copyright (C) 2018  Gergely Nagy
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,6 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Redial.h>
-#include <Kaleidoscope-Ranges.h>
-
-enum {
-  REDIAL = kaleidoscope::ranges::SAFE_START,
-};
-#define Key_Redial (Key) {.raw = REDIAL}
 
 bool kaleidoscope::plugin::Redial::shouldRemember(Key mapped_key) {
   if (mapped_key >= Key_A && mapped_key <= Key_Z)
@@ -57,8 +51,6 @@ KALEIDOSCOPE_INIT_PLUGINS(Redial);
 
 void setup() {
   Kaleidoscope.setup();
-
-  Redial.key = Key_Redial;
 }
 
 void loop() {

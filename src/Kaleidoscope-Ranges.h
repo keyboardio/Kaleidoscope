@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Ranges -- Common ranges, used by a number of Kaleidoscope plugins.
- * Copyright (C) 2016, 2017  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -47,6 +47,7 @@ enum : uint16_t {
   STENO_LAST  = STENO_FIRST + 42,
   SC_FIRST,
   SC_LAST,
+  REDIAL,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START

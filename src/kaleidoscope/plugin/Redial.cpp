@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Redial -- Redial support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc.
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -20,16 +20,12 @@
 namespace kaleidoscope {
 namespace plugin {
 
-Key Redial::key;
 Key Redial::key_to_redial_;
 Key Redial::last_key_;
 bool Redial::redial_held_ = false;
 
 EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (key == Key_NoKey)
-    return EventHandlerResult::OK;
-
-  if (mapped_key == key) {
+  if (mapped_key == Key_Redial) {
     if (keyToggledOff(key_state))
       key_to_redial_ = last_key_;
 
