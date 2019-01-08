@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Redial -- Redial support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc.
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,6 +18,9 @@
 #pragma once
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
+
+#define Key_Redial ((Key) { .raw = kaleidoscope::ranges::REDIAL })
 
 namespace kaleidoscope {
 namespace plugin {
@@ -25,8 +28,6 @@ namespace plugin {
 class Redial : public kaleidoscope::Plugin {
  public:
   Redial(void) {}
-
-  static Key key;
 
   static bool shouldRemember(Key mappedKey);
 

@@ -13,12 +13,6 @@ To use the plugin, we'll need to enable it, and configure a key to act as the
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Redial.h>
-#include <kaleidoscope-Ranges.h>
-
-enum {
-  REDIAL = kaleidoscope::ranges::SAFE_START,
-};
-#define Key_Redial (Key) {.raw = REDIAL}
 
 // Place Key_Redial somewhere on the keymap...
 
@@ -26,8 +20,6 @@ KALEIDOSCOPE_INIT_PLUGINS(Redial);
 
 void setup() {
   Kaleidoscope.setup();
-
-  Redial.key = Key_Redial;
 }
 ```
 
@@ -43,17 +35,9 @@ void setup() {
 >
 > By default, the plugin will remember alphanumeric keys only.
 
-## Plugin properties
+## Dependencies
 
-The `Redial` object has only one property, the key to trigger it.
-
-### `.key`
-
-> The key to trigger the redial effect. Be aware that whatever key you specify
-> here, will have its action shadowed by the redial functionality. Choose
-> something unused, see the example sketch for one way to do that.
->
-> There is no default.
+* [Kaleidoscope-Ranges](Ranges.md)
 
 ## Further reading
 

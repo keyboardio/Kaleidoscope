@@ -124,6 +124,10 @@ The `RxCy` macros changed from being indexes into a per-hand bitmap to being an 
 
 Please see the [relevant upgrade notes](UPGRADING.md#the-rxcy-macros-and-peeking-into-the-keyswitch-state) for more information.
 
+### The `Redial` plugin had a breaking API change
+
+The [Redial](doc/plugn/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
+
 ## Bugfixes
 
 We fixed way too many issues to list here, so we're going to narrow it down to the most important, most visible ones.
