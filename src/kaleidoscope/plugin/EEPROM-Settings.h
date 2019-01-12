@@ -40,7 +40,10 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static uint16_t crc(void);
   static uint16_t used(void);
 
-  static uint8_t default_layer(uint8_t layer = 0xff);
+  static uint8_t default_layer(uint8_t layer);
+  static uint8_t default_layer() {
+    return settings_.default_layer;
+  }
 
  private:
   static uint16_t next_start_;

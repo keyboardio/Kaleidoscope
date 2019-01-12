@@ -50,12 +50,13 @@ uint16_t EEPROMSettings::crc(void) {
 }
 
 uint8_t EEPROMSettings::default_layer(uint8_t layer) {
-  if (layer == 0xff)
-    return settings_.default_layer;
-
-  if (settings_.default_layer != layer)
+  if (layer < layer_count) {
     Layer.move(layer);
-  settings_.default_layer = layer;
+    settings_.default_layer = layer;
+  }
+  if (layer == 0xff) {
+    settings_.default_layer = layer;
+  }
   update();
   return settings_.default_layer;
 }
