@@ -83,6 +83,10 @@ There are situations where one would like to disable sending a report after each
 
 Changing layers now triggers the `onLayerChange` event - but only if there was real change (thus, calling `Layer.on(SOME_LAYER)` multiple times in a row will only trigger one event). This event was introduced to help plugins that depend on layer state schedule their work better.
 
+### Hyper and Meh keys
+
+To make it easier to create custom shortcuts, that do not interfere with system ones, an old trick is to use many modifiers. To make this easier, `Ctrl+Shift+Alt` is commonly abbreviated as `Meh`, while `Ctrl+Shift+Alt+Gui` is often called `Hyper`. To support this, we offer the `Key_Meh` and `Key_Hyper` aliases, along with `MEH(k)` and `HYPER(k)` to go with them.
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:

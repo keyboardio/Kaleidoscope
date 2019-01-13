@@ -53,3 +53,15 @@
 #define Key_RightCurlyBracket LSHIFT(Key_RightBracket)
 
 #define Key_Pipe LSHIFT(Key_Backslash)
+
+// To make it easier to create custom shortcuts, that do not interfere with
+// system ones, an old trick is to use many modifiers. To make this easier,
+// Ctrl+Shift+Alt is commonly abbreviated as "Meh", while Ctrl+Shift+Alt+GUI is
+// often called "Hyper". To support this, we offer the `Key_Meh` and `Key_Hyper`
+// aliases, along with `MEH(k)` and `HYPER(k)` to go with them.
+
+#define Key_Meh   LCTRL(LSHIFT(Key_LeftAlt))
+#define Key_Hyper MEH(Key_LeftGui)
+
+#define MEH(k)   LCTRL(LSHIFT(LALT(k)))
+#define HYPER(k) LGUI(MEH(k))
