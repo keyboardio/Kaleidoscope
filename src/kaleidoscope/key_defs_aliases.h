@@ -63,5 +63,5 @@
 #define Key_Meh   LCTRL(LSHIFT(Key_LeftAlt))
 #define Key_Hyper MEH(Key_LeftGui)
 
-#define MEH(k)   LCTRL(LSHIFT(LALT(k)))
-#define HYPER(k) LGUI(MEH(k))
+#define MEH(k)   LCTRL(LSHIFT(LALT((k))))
+#define HYPER(k) LGUI(MEH((k)))
