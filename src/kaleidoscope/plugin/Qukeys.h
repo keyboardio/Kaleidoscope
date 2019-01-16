@@ -42,15 +42,17 @@
 // Wildcard value; this matches any layer
 #define QUKEY_ALL_LAYERS -1
 
-#define MT(mod, key) (Key) { \
-    .raw = kaleidoscope::ranges::DUM_FIRST + \
-      (((Key_ ## mod).keyCode - Key_LeftControl.keyCode) << 8) + (Key_ ## key).keyCode }
+#define MT(mod, key) Key(                                               \
+    kaleidoscope::ranges::DUM_FIRST +                                   \
+    (((Key_ ## mod).keyCode - Key_LeftControl.keyCode) << 8) +          \
+    (Key_ ## key).keyCode                                               \
+)
 #define SFT_T(key) MT(LeftShift, key)
 #define CTL_T(key) MT(LeftControl, key)
 #define ALT_T(key) MT(LeftAlt, key)
 #define GUI_T(key) MT(LeftGui, key)
 
-#define LT(layer, key) (Key) { .raw = kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).keyCode }
+#define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).keyCode)
 
 namespace kaleidoscope {
 namespace plugin {

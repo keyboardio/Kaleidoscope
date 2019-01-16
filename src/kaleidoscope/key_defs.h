@@ -109,11 +109,11 @@ typedef kaleidoscope::Key Key_;
 #define SYNTHETIC         B01000000
 #define RESERVED          B10000000
 
-#define LCTRL(k)  ((Key) { k.keyCode, k.flags | CTRL_HELD })
-#define LALT(k)   ((Key) { k.keyCode, k.flags | LALT_HELD })
-#define RALT(k)   ((Key) { k.keyCode, k.flags | RALT_HELD })
-#define LSHIFT(k) ((Key) { k.keyCode, k.flags | SHIFT_HELD })
-#define LGUI(k)   ((Key) { k.keyCode, k.flags | GUI_HELD })
+#define LCTRL(k)  Key(k.keyCode, k.flags | CTRL_HELD)
+#define LALT(k)   Key(k.keyCode, k.flags | LALT_HELD)
+#define RALT(k)   Key(k.keyCode, k.flags | RALT_HELD)
+#define LSHIFT(k) Key(k.keyCode, k.flags | SHIFT_HELD)
+#define LGUI(k)   Key(k.keyCode, k.flags | GUI_HELD)
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
@@ -136,25 +136,20 @@ typedef kaleidoscope::Key Key_;
 #define HID_TYPE_SEL   B00011000
 
 
-#define Key_NoKey (Key) { 0,  KEY_FLAGS }
-#define Key_skip (Key) { 0,  KEY_FLAGS }
-#define Key_Transparent (Key){ .raw = 0xffff }
+#define Key_NoKey Key(0, KEY_FLAGS)
+#define Key_skip Key(0, KEY_FLAGS)
+#define Key_Transparent Key(0xffff)
 #define ___ Key_Transparent
 #define XXX Key_NoKey
 
-
-
-
-
-
-#define KEY_BACKLIGHT_DOWN 0xF1
-#define KEY_BACKLIGHT_UP 0xF2
-#define Key_BacklightDown (Key) { KEY_BACKLIGHT_DOWN,  KEY_FLAGS }
-#define Key_BacklightUp (Key) { KEY_BACKLIGHT_UP,  KEY_FLAGS }
+#define KEY_BACKLIGHT_DOWN 0xf1
+#define KEY_BACKLIGHT_UP 0xf2
+#define Key_BacklightDown Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
+#define Key_BacklightUp Key(KEY_BACKLIGHT_UP, KEY_FLAGS)
 #define KEY_RIGHT_FN2 0xfe
-#define Key_RFN2 (Key) { KEY_RIGHT_FN2,  KEY_FLAGS }
+#define Key_RFN2 Key(KEY_RIGHT_FN2, KEY_FLAGS)
 #define KEY_LEFT_FN2 0xff
-#define Key_LFN2 (Key) { KEY_LEFT_FN2,  KEY_FLAGS }
+#define Key_LFN2 Key(KEY_LEFT_FN2, KEY_FLAGS)
 
 
 /* Most Consumer keys are more then 8bit, the highest Consumer hid code
@@ -163,4 +158,4 @@ typedef kaleidoscope::Key Key_;
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
 #define CONSUMER(key) (key.raw & 0x03FF)
-#define CONSUMER_KEY(code, flags) (Key) { .raw = (code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8) }
+#define CONSUMER_KEY(code, flags) Key((code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8))

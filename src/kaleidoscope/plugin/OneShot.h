@@ -20,8 +20,8 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define OSM(kc) (Key) {.raw = kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode}
-#define OSL(n) (Key) {.raw = kaleidoscope::ranges::OSL_FIRST + n}
+#define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode)
+#define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
 
 namespace kaleidoscope {
 namespace plugin {

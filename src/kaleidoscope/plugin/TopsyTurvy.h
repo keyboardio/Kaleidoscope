@@ -20,7 +20,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define TOPSY(k) (Key) { .raw = kaleidoscope::ranges::TT_FIRST + (Key_ ## k).keyCode }
+#define TOPSY(k) Key(kaleidoscope::ranges::TT_FIRST + (Key_ ## k).keyCode)
 
 namespace kaleidoscope {
 namespace plugin {
