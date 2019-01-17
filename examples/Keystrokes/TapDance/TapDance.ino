@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TapDance -- Tap-dance keys
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -40,11 +40,11 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-static void tapDanceEsc(uint8_t tap_dance_index, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
+static void tapDanceEsc(uint8_t tap_dance_index, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
   tapDanceActionKeys(tap_count, tap_dance_action, Key_Escape, Key_Tab);
 }
 
-void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
+void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
     return tapDanceActionKeys(tap_count, tap_dance_action, Key_Tab, Key_Escape);

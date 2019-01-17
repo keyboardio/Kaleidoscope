@@ -135,9 +135,6 @@ class Qukeys : public kaleidoscope::Plugin {
 
 } // namespace plugin {
 
-// Backwards compatibility
-typedef plugin::Qukey Qukey;
-
 } // namespace kaleidoscope {
 
 extern kaleidoscope::plugin::Qukeys Qukeys;

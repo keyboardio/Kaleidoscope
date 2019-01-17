@@ -33,7 +33,4 @@ static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
 }
 }
 
-// Backwards compatibility
-namespace alpha_square = kaleidoscope::plugin::alpha_square;
-
 }

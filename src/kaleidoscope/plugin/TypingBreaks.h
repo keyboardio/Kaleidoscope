@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TypingBreaks -- Enforced typing breaks
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,18 +19,12 @@
 
 #include <Kaleidoscope.h>
 
-#define _DEPRECATED_MESSAGE_ENABLE_EEPROM                          \
-  "EEPROM is now enabled automatically, and the .enableEEPROM()\n" \
-  "method is therefore obsolete. You can safely remove it."
-
 namespace kaleidoscope {
 namespace plugin {
 
 class TypingBreaks : public kaleidoscope::Plugin {
  public:
   TypingBreaks(void) {}
-
-  static void enableEEPROM(void) DEPRECATED(ENABLE_EEPROM) {}
 
   typedef struct settings_t {
     uint16_t idle_time_limit;

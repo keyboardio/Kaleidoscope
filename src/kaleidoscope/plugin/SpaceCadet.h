@@ -1,6 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc, Ben Gemperline
+ * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,7 +22,7 @@
 #include <Kaleidoscope-Ranges.h>
 
 #ifndef SPACECADET_MAP_END
-#define SPACECADET_MAP_END (kaleidoscope::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
+#define SPACECADET_MAP_END (kaleidoscope::plugin::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
 #define Key_SpaceCadetEnable  Key(kaleidoscope::ranges::SC_FIRST)
@@ -71,9 +72,6 @@ class SpaceCadet : public kaleidoscope::Plugin {
   static bool disabled;
 };
 }
-
-// Backwards compatibility
-typedef plugin::SpaceCadet SpaceCadet;
 
 }
 

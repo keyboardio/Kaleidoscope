@@ -48,9 +48,6 @@ class GhostInTheFirmware : public kaleidoscope::Plugin {
   static void loopHook(bool is_post_clear);
 };
 }
-
-// For backwards compatibility
-typedef kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;
 }
 
 extern kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;

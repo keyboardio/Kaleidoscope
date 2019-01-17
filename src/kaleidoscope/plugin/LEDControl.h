@@ -171,8 +171,6 @@ class FocusLEDCommand : public Plugin {
 
 }
 
-// Backwards compatibility
-typedef plugin::LEDMode LEDMode;
 }
 
 extern kaleidoscope::plugin::LEDControl LEDControl;

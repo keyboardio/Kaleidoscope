@@ -23,7 +23,7 @@
 
 namespace example {
 
-class TestLEDMode : public kaleidoscope::LEDMode {
+class TestLEDMode : public kaleidoscope::plugin::LEDMode {
  public:
   TestLEDMode() {}
 

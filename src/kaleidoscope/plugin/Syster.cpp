@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Syster -- Symbolic input system
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -116,7 +116,7 @@ __attribute__((weak)) const char keyToChar(Key key) {
   return 0;
 }
 
-__attribute__((weak)) void systerAction(kaleidoscope::Syster::action_t action, const char *symbol) {
+__attribute__((weak)) void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *symbol) {
 }
 
 kaleidoscope::plugin::Syster Syster;

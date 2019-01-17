@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Syster -- Symbolic input system
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -49,9 +49,6 @@ class Syster : public kaleidoscope::Plugin {
   static bool is_active_;
 };
 }
-
-// Backwards compatibility
-typedef plugin::Syster Syster;
 
 }
 

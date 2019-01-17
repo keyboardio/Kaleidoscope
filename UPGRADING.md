@@ -311,12 +311,9 @@ the state of a keyswitch at a given row and column; or at a given index.
 
 Prior versions of `HostOS` used to include a way to auto-detect the host
 operating system. This code was brittle, unreliable, and rather big too. For
-these reasons, this functionality was removed. The `autoDetect()` method is now
-a no-op, and is deprecated.
+these reasons, this functionality was removed.
 Furthermore, `HostOS` now depends on `Kaleidoscope-EEPROM-Settings`, that plugin
 should be initialized first.
-
-The deprecated `autoDetect()` method will be removed by **2019-01-14**.
 
 ### MagicCombo
 
@@ -326,8 +323,6 @@ Migration should be a straightforward process, but if you get stuck, please feel
 
  [gh:issues]: https://github.com/keyboardio/Kaleidoscope/issues
  [forums]: https://community.keyboard.io/
-
-Trying to use the old API errors out with a helpful error message, but as the old API is deprecated, this will be removed by **2019-01-14**.
 
 #### The old API
 
@@ -431,8 +426,6 @@ open an issue, or ask for help on the forums, and we'll help you.
 
 Older versions of the plugin used to provide EEPROM storage for the settings only optionally, when it was explicitly enabled via the `TypingBreaks.enableEEPROM()` method. Similarly, the Focus hooks were optional too.
 
-Both of them are unconditionally enabled now, because they add so much to the plugin. This means that any calls to `TypingBreaks.enableEEPROM()` can be safely removed, the method is deprecated, a no-op by now. The method will be removed by **2019-01-14**.
-
 Storing the settable settings in EEPROM makes it depend on `Kaleidoscope-EEPROM-Settings`, which should be initialized before this plugin is.
 
 ### Redial
@@ -461,11 +454,9 @@ The goal was to have a method name that is a verb, because these are actions we 
 
 The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods.
 
-The old method of setting `OneShot.double_tap_sticky` or `OneShot.double_tap_layer_sticky` continue to work, but using them is deprecated, and as such, these will be removed by **2019-01-14**.
-
 ### Source code and namespace rearrangement
 
-With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. Unless noted otherwise, the old names still work, but will likely emit a warning, and the compatibility shims will be removed by **2019-01-14**.
+With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.
 
 The following headers and names have changed:
 
@@ -485,6 +476,28 @@ The following headers and names have changed:
 - [TapDance](doc/plugin/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2019-01-17
+
+#### Compat headers following the source code and namespace rearrangement
+
+With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.
+
+#### HostOS.autoDetect()
+
+The `autoDetect()` method has been formerly deprecated, and is now removed.
+
+#### The old MagicCombo API
+
+We've changed the API of the MagicCombo plugin, and while it provided a helpful error message for a while when trying to use the old API, it no longer does so, the error message has been removed.
+
+#### TypingBreaks.enableEEPROM()
+
+`TypingBreaks.enableEEPROM()` has been previously deprecated, and turned into a no-op, and is now removed.
+
+#### `OneShot.double_tap_sticky` and `OneShot.double_tap_layer_sticky`
+
+These were deprecated in favour of a better, finer grained API, and are now removed.
 
 ### Removed on 2018-08-20
 
