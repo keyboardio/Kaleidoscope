@@ -34,21 +34,21 @@ static const uint8_t LAYER_SHIFT_OFFSET = 42;
 #define KEYMAP_NEXT      34
 
 
-#define Key_Keymap0 (Key) { KEYMAP_0,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap1 (Key) { KEYMAP_1,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap2 (Key) { KEYMAP_2,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap3 (Key) { KEYMAP_3,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap4 (Key) { KEYMAP_4,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap5 (Key) { KEYMAP_5,  KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP  }
-#define Key_Keymap0_Momentary (Key){ KEYMAP_0 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_Keymap1_Momentary (Key){ KEYMAP_1 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_Keymap2_Momentary (Key){ KEYMAP_2 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_Keymap3_Momentary (Key){ KEYMAP_3 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_Keymap4_Momentary (Key){ KEYMAP_4 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_Keymap5_Momentary (Key){ KEYMAP_5 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define Key_Keymap0 Key(KEYMAP_0, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap1 Key(KEYMAP_1, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap2 Key(KEYMAP_2, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap3 Key(KEYMAP_3, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap4 Key(KEYMAP_4, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap5 Key(KEYMAP_5, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap0_Momentary Key(KEYMAP_0 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap1_Momentary Key(KEYMAP_1 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap2_Momentary Key(KEYMAP_2 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap3_Momentary Key(KEYMAP_3 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap4_Momentary Key(KEYMAP_4 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_Keymap5_Momentary Key(KEYMAP_5 + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
 
-#define Key_KeymapNext_Momentary (Key) { KEYMAP_NEXT + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
-#define Key_KeymapPrevious_Momentary (Key) { KEYMAP_PREVIOUS + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define Key_KeymapNext_Momentary Key(KEYMAP_NEXT + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+#define Key_KeymapPrevious_Momentary Key(KEYMAP_PREVIOUS + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
 
 
 /** Lock/Unlock layer `n`.
@@ -56,7 +56,7 @@ static const uint8_t LAYER_SHIFT_OFFSET = 42;
  * When locking a layer, it will remain active until unlocked explicitly. `n`
  * can be a number, or an enum value declared previously.
  */
-#define LockLayer(n) (Key){ n, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define LockLayer(n) Key(n, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
 #define UnlockLayer(n) LockLayer(n)
 
 /** Temporarily shift to layer `n`.
@@ -65,4 +65,4 @@ static const uint8_t LAYER_SHIFT_OFFSET = 42;
  * released, the layer shifts back too. `n` can be a number, or an enum
  * value declared previously.
  */
-#define ShiftToLayer(n) (Key){ n + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP }
+#define ShiftToLayer(n) Key(n + LAYER_SHIFT_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)

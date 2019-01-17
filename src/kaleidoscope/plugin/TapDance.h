@@ -20,7 +20,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define TD(n) (Key) {.raw = kaleidoscope::ranges::TD_FIRST + n }
+#define TD(n) Key(kaleidoscope::ranges::TD_FIRST + n)
 
 #define tapDanceActionKeys(tap_count, tap_dance_action, ...) ({         \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };                 \

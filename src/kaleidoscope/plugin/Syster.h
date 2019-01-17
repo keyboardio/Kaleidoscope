@@ -22,7 +22,7 @@
 
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
-#define SYSTER ((Key) { .raw = kaleidoscope::ranges::SYSTER })
+#define SYSTER Key(kaleidoscope::ranges::SYSTER)
 
 namespace kaleidoscope {
 namespace plugin {

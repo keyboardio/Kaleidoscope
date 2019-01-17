@@ -20,7 +20,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define S(n) (Key) {.raw = kaleidoscope::plugin::steno::geminipr::n }
+#define S(n) Key(kaleidoscope::plugin::steno::geminipr::n)
 
 namespace kaleidoscope {
 namespace plugin {
