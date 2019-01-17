@@ -132,6 +132,10 @@ Please see the [relevant upgrade notes](UPGRADING.md#the-rxcy-macros-and-peeking
 
 The [Redial](doc/plugin/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
 
+### Color palette storage has changed
+
+The [LED-Palette-Theme](doc/plugin/LED-Palette-Theme.md) had to be changed to store the palette colors in reverse. This change had to be made in order to not default to a bright white palette, that would draw so much power that most operating systems would disconnect the keyboard due to excessive power usage. With inverting the colors, we now default to a black palette instead. This sadly breaks existing palettes, and you will have to re-set the colors.
+
 ## Bugfixes
 
 We fixed way too many issues to list here, so we're going to narrow it down to the most important, most visible ones.
