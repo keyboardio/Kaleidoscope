@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Palette-Theme -- Palette-based LED theme foundation
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -82,6 +82,10 @@ const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {
   cRGB color;
 
   EEPROM.get(palette_base_ + color_index * sizeof(cRGB), color);
+  color.r ^= 0xff;
+  color.g ^= 0xff;
+  color.b ^= 0xff;
+
   return color;
 }
 
@@ -115,7 +119,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     for (uint8_t i = 0; i < 16; i++) {
       cRGB color;
 
-      EEPROM.get(palette_base_ + i * sizeof(color), color);
+      color = lookupPaletteColor(i);
       ::Focus.send(color);
     }
     return EventHandlerResult::EVENT_CONSUMED;
@@ -126,6 +130,9 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     cRGB color;
 
     ::Focus.read(color);
+    color.r ^= 0xff;
+    color.g ^= 0xff;
+    color.b ^= 0xff;
 
     EEPROM.put(palette_base_ + i * sizeof(color), color);
     i++;
