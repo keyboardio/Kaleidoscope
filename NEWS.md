@@ -130,7 +130,7 @@ Please see the [relevant upgrade notes](UPGRADING.md#the-rxcy-macros-and-peeking
 
 ### The `Redial` plugin had a breaking API change
 
-The [Redial](doc/plugn/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
+The [Redial](doc/plugin/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
 
 ## Bugfixes
 
