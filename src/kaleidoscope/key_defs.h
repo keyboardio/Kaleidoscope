@@ -42,6 +42,16 @@ union Key {
   };
   uint16_t raw;
 
+  Key() = default;
+
+  constexpr Key(uint8_t __keyCode, uint8_t __flags)
+    : keyCode(__keyCode), flags(__flags) {
+  }
+
+  constexpr Key(uint16_t __raw)
+    : raw(__raw) {
+  }
+
   constexpr bool operator==(const uint16_t rhs) const {
     return this->raw == rhs;
   }
