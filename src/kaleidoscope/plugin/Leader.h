@@ -58,8 +58,6 @@ class Leader : public kaleidoscope::Plugin {
 };
 }
 
-// Backwards compatibility
-typedef plugin::Leader Leader;
 }
 
 extern kaleidoscope::plugin::Leader Leader;

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2018  Keyboard.io, Inc.
+ * Copyright (C) 2016-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -30,13 +30,10 @@ OneShot::state_t OneShot::state_ = {0, 0};
 OneShot::state_t OneShot::sticky_state_ = {0, 0};
 OneShot::state_t OneShot::stickable_state_ = {0xFF, 0xFF};
 OneShot::state_t OneShot::pressed_state_ = {0, 0};
-bool OneShot::double_tap_sticky = true;
-bool OneShot::double_tap_sticky_layers = true;
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
 uint8_t OneShot::positions_[16];
-bool OneShot::use_new_stickies_ = false;
 
 // --- helper macros ------
 
@@ -62,15 +59,7 @@ bool OneShot::use_new_stickies_ = false;
 #define hasTimedOut() (millis () - start_time_ >= time_out)
 
 bool OneShot::isStickable(Key key) {
-  if (use_new_stickies_)
-    return bitRead(stickable_state_.all, key.raw - ranges::OS_FIRST);
-
-  if (key >= ranges::OSM_FIRST && key <= ranges::OSM_LAST)
-    return true;
-  else if (key >= ranges::OSL_FIRST && key <= ranges::OSL_LAST)
-    return double_tap_sticky_layers;
-
-  return false;
+  return bitRead(stickable_state_.all, key.raw - ranges::OS_FIRST);
 }
 
 void OneShot::positionToCoords(uint8_t pos, byte *row, byte *col) {
@@ -264,36 +253,28 @@ void OneShot::cancel(bool with_stickies) {
 }
 
 void OneShot::enableStickability(Key key) {
-  use_new_stickies_ = true;
-
   if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
     bitSet(stickable_state_.all, (key.raw - ranges::OS_FIRST));
 }
 
 void OneShot::disableStickability(Key key) {
-  use_new_stickies_ = true;
-
   if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
     bitClear(stickable_state_.all, (key.raw - ranges::OS_FIRST));
 }
 
 void OneShot::enableStickabilityForModifiers() {
-  use_new_stickies_ = true;
   stickable_state_.mods = 0xFF;
 }
 
 void OneShot::enableStickabilityForLayers() {
-  use_new_stickies_ = true;
   stickable_state_.layers = 0xFF;
 }
 
 void OneShot::disableStickabilityForModifiers() {
-  use_new_stickies_ = true;
   stickable_state_.mods = 0;
 }
 
 void OneShot::disableStickabilityForLayers() {
-  use_new_stickies_ = true;
   stickable_state_.layers = 0;
 }
 

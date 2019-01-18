@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope - A Kaleidoscope example
- * Copyright (C) 2016-2018  Keyboard.io, Inc.
+ * Copyright (C) 2016-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -76,13 +76,13 @@ KEYMAPS(
 )
 
 
-static kaleidoscope::LEDSolidColor solidRed(60, 0, 0);
-static kaleidoscope::LEDSolidColor solidOrange(60, 20, 0);
-static kaleidoscope::LEDSolidColor solidYellow(40, 35, 0);
-static kaleidoscope::LEDSolidColor solidGreen(0, 100, 0);
-static kaleidoscope::LEDSolidColor solidBlue(0, 15, 100);
-static kaleidoscope::LEDSolidColor solidIndigo(0, 0, 100);
-static kaleidoscope::LEDSolidColor solidViolet(70, 0, 60);
+static kaleidoscope::plugin::LEDSolidColor solidRed(60, 0, 0);
+static kaleidoscope::plugin::LEDSolidColor solidOrange(60, 20, 0);
+static kaleidoscope::plugin::LEDSolidColor solidYellow(40, 35, 0);
+static kaleidoscope::plugin::LEDSolidColor solidGreen(0, 100, 0);
+static kaleidoscope::plugin::LEDSolidColor solidBlue(0, 15, 100);
+static kaleidoscope::plugin::LEDSolidColor solidIndigo(0, 0, 100);
+static kaleidoscope::plugin::LEDSolidColor solidViolet(70, 0, 60);
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == 1 && keyToggledOn(keyState)) {

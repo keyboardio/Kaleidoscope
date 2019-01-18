@@ -35,12 +35,6 @@ typedef enum {
 
 }
 
-#define _DEPRECATED_MESSAGE_AUTODETECT                                  \
-  "The auto-detect mechanism of HostOS was removed, because it was\n"   \
-  "too unreliable. As such, the HostOS.autoDetect() method does\n"      \
-  "nothing anymore. Please consider other ways of changing the\n"       \
-  "HostOS type."
-
 class HostOS : public kaleidoscope::Plugin {
  public:
   HostOS() {}
@@ -50,8 +44,6 @@ class HostOS : public kaleidoscope::Plugin {
     return os_;
   }
   void os(hostos::Type new_os);
-
-  void autoDetect() DEPRECATED(AUTODETECT) {}
 
  private:
   hostos::Type os_;

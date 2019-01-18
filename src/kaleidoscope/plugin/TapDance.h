@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TapDance -- Tap-dance keys
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -65,9 +65,6 @@ class TapDance : public kaleidoscope::Plugin {
   static void release(uint8_t tap_dance_index);
 };
 }
-
-// Backwards compatibility
-typedef plugin::TapDance TapDance;
 
 }
 

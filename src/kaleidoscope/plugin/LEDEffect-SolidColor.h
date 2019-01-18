@@ -32,8 +32,4 @@ class LEDSolidColor : public LEDMode {
   uint8_t r, g, b;
 };
 }
-
-// Backwards compatibility
-typedef plugin::LEDSolidColor LEDSolidColor;
-
 }

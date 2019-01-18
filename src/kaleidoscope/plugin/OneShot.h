@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2018  Keyboard.io, Inc.
+ * Copyright (C) 2016-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -69,9 +69,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   static bool isStickable(Key key);
 
-  static bool double_tap_sticky;
-  static bool double_tap_sticky_layers;
-
   static bool isModifierActive(Key key);
 
   EventHandlerResult beforeReportingState();
@@ -97,7 +94,6 @@ class OneShot : public kaleidoscope::Plugin {
   static bool should_cancel_;
   static bool should_cancel_stickies_;
   static uint8_t positions_[16];
-  static bool use_new_stickies_;
 
   static void positionToCoords(uint8_t pos, byte *row, byte *col);
 
