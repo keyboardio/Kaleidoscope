@@ -36,8 +36,8 @@ extern void sendKeyboardReport();
 extern boolean isModifierKeyActive(Key mappedKey);
 extern boolean wasModifierKeyActive(Key mappedKey);
 
-extern boolean isAnyModifierKeyActive(Key mappedKey);
-extern boolean wasAnyModifierKeyActive(Key mappedKey);
+extern boolean isAnyModifierKeyActive();
+extern boolean wasAnyModifierKeyActive();
 
 extern uint8_t getKeyboardLEDs();
 
