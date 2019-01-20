@@ -79,6 +79,10 @@ The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling thro
 
 There are situations where one would like to disable sending a report after each and every step of a macro, and rather have direct control over when reports are sent. The new `WITH_EXPLICIT_REPORT`, `WITH_IMPLICIT_REPORT` and `SEND_REPORT` steps help with that. Please see the [Macros](doc/plugin/Macros.md) documentation for more information.
 
+### LED-ActiveModColor can be asked to not highlight normal modifiers
+
+The plugin was intended to work with OneShot primarily, and that's where it is most useful. To make it less surprising, and more suitable to include it in default-like firmware, we made it possible to ask it not to highlight normal modifiers. Please see the [LED-ActiveModColor](doc/plugin/LED-ActiveModColor.md) documentation for more information.
+
 ### Events now trigger on layer changes
 
 Changing layers now triggers the `onLayerChange` event - but only if there was real change (thus, calling `Layer.on(SOME_LAYER)` multiple times in a row will only trigger one event). This event was introduced to help plugins that depend on layer state schedule their work better.

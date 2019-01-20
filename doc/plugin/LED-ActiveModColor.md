@@ -43,6 +43,14 @@ properties:
 
 > The color to use for highlighting one-shot modifiers when they are sticky. Defaults to a red color.
 
+## Plugin methods
+
+The `ActiveModColorEffect` object provides the following methods:
+
+### `.highlightNormalModifiers(bool)`
+
+> Can be used to enable or disable the highlighting of normal modifiers. Defaults to true.
+
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](LEDControl.md)
