@@ -26,10 +26,10 @@ uint8_t ActiveModColorEffect::mod_keys_[MAX_MODS_PER_LAYER];
 uint8_t ActiveModColorEffect::mod_key_count_;
 
 cRGB ActiveModColorEffect::highlight_color = (cRGB) {
-  0xff, 0xff, 0xff
+  160, 160, 160
 };
 
-cRGB ActiveModColorEffect::sticky_color = CRGB(0xff, 0x00, 0x00);
+cRGB ActiveModColorEffect::sticky_color = CRGB(160, 0, 0);
 
 EventHandlerResult ActiveModColorEffect::onLayerChange() {
   if (!Kaleidoscope.has_leds)
