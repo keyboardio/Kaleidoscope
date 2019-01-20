@@ -345,4 +345,18 @@ boolean BootKeyboard_::wasModifierActive(uint8_t k) {
   return false;
 }
 
+/* Returns true if any modifier key will be sent during this key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::isAnyModifierActive() {
+  return _keyReport.modifiers > 0;
+}
+
+/* Returns true if any modifier key was being sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean BootKeyboard_::wasAnyModifierActive() {
+  return _lastKeyReport.modifiers > 0;
+}
+
 BootKeyboard_ BootKeyboard;

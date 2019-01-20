@@ -173,6 +173,20 @@ boolean Keyboard_::wasModifierActive(uint8_t k) {
   return false;
 }
 
+/* Returns true if *any* modifier will be sent during this key report
+ * Returns false in all other cases
+ * */
+boolean Keyboard_::isAnyModifierActive() {
+  return keyReport.modifiers > 0;
+}
+
+/* Returns true if *any* modifier was being sent during the previous key report
+ * Returns false in all other cases
+ * */
+boolean Keyboard_::wasAnyModifierActive() {
+  return lastKeyReport.modifiers > 0;
+}
+
 
 /* Returns true if the non-modifier key passed in will be sent during this key report
  * Returns false in all other cases
