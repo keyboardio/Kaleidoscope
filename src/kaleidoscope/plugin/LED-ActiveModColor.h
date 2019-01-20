@@ -31,10 +31,15 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   static cRGB highlight_color;
   static cRGB sticky_color;
 
+  static void highlightNormalModifiers(bool value) {
+    highlight_normal_modifiers_ = value;
+  }
+
   EventHandlerResult beforeReportingState();
   EventHandlerResult onLayerChange();
 
  private:
+  static bool highlight_normal_modifiers_;
   static uint8_t mod_keys_[MAX_MODS_PER_LAYER];
   static uint8_t mod_key_count_;
 };

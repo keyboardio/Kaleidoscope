@@ -24,6 +24,7 @@ namespace plugin {
 
 uint8_t ActiveModColorEffect::mod_keys_[MAX_MODS_PER_LAYER];
 uint8_t ActiveModColorEffect::mod_key_count_;
+bool ActiveModColorEffect::highlight_normal_modifiers_ = true;
 
 cRGB ActiveModColorEffect::highlight_color = (cRGB) {
   0xff, 0xff, 0xff
@@ -42,8 +43,9 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
       Key k = Layer.lookupOnActiveLayer(r, c);
 
       if (::OneShot.isOneShotKey(k) ||
-          (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
-          (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))) {
+          (highlight_normal_modifiers_ && (
+             (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
+             (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
         uint8_t coords = r * COLS + c;
         mod_keys_[mod_key_count_++] = coords;
       }
