@@ -1,5 +1,5 @@
 /* Kaleidoscope-LEDEffect-Rainbow - Rainbow LED effects for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,61 +17,106 @@
 #pragma once
 
 #include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-UnderglowControl.h"
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDRainbowEffect : public LEDMode {
+
+class RainbowEffect {
+ public:
+  RainbowEffect() {}
+
+  void brightness(byte brightness) {
+    brightness_ = brightness;
+  }
+  byte brightness() {
+    return brightness_;
+  }
+  void update_delay(uint16_t delay) {
+    update_delay_ = delay;
+  }
+  uint16_t update_delay() {
+    return update_delay_;
+  }
+
+ protected:
+  bool updateColor(cRGB &rainbow);
+
+ private:
+  uint16_t hue_ = 0;   //  stores 0 to 614
+
+  uint8_t steps_ = 1;  //  number of hues we skip in a 360 range per update
+  uint16_t last_update_ = 0;
+  uint16_t update_delay_ = 40; // delay between updates (ms)
+
+  byte saturation_ = 255;
+  byte brightness_ = 50;
+};
+
+class LEDRainbowEffect : public LEDMode, public RainbowEffect {
  public:
   LEDRainbowEffect(void) {}
 
-  void brightness(byte);
-  byte brightness(void) {
-    return rainbow_value;
-  }
-  void update_delay(byte);
-  byte update_delay(void) {
-    return rainbow_update_delay;
-  }
   void update(void) final;
-
- private:
-  uint16_t rainbow_hue = 0;   //  stores 0 to 614
-
-  uint8_t rainbow_steps = 1;  //  number of hues we skip in a 360 range per update
-  uint16_t rainbow_last_update = 0;
-  uint16_t rainbow_update_delay = 40; // delay between updates (ms)
-
-  byte rainbow_saturation = 255;
-  byte rainbow_value = 50;
 };
 
+class UnderglowRainbowEffect : public UnderglowEffect, public RainbowEffect {
+ public:
+  UnderglowRainbowEffect(void) {}
 
-class LEDRainbowWaveEffect : public LEDMode {
+  void update(void) final;
+};
+
+// ---
+
+class RainbowWaveEffect {
+ public:
+  RainbowWaveEffect() {}
+
+  void brightness(byte brightness) {
+    brightness_ = brightness;
+  }
+  byte brightness() {
+    return brightness_;
+  }
+  void update_delay(uint16_t delay) {
+    update_delay_ = delay;
+  }
+  uint16_t update_delay() {
+    return update_delay_;
+  }
+
+ protected:
+  bool updateHue();
+
+  uint16_t hue_ = 0;
+  byte saturation_ = 255;
+  byte brightness_ = 50;
+
+ private:
+  uint8_t steps_ = 1;
+  uint16_t last_update_ = 0;
+  uint16_t update_delay_ = 40;
+};
+
+class LEDRainbowWaveEffect : public LEDMode, public RainbowWaveEffect {
  public:
   LEDRainbowWaveEffect(void) {}
 
-  void brightness(byte);
-  byte brightness(void) {
-    return rainbow_value;
-  }
-  void update_delay(byte);
-  byte update_delay(void) {
-    return rainbow_update_delay;
-  }
   void update(void) final;
-
- private:
-  uint16_t rainbow_hue = 0;  //  stores 0 to 614
-
-  uint8_t rainbow_wave_steps = 1;  //  number of hues we skip in a 360 range per update
-  uint16_t rainbow_last_update = 0;
-  uint16_t rainbow_update_delay = 40; // delay between updates (ms)
-
-  byte rainbow_saturation = 255;
-  byte rainbow_value = 50;
 };
+
+class UnderglowRainbowWaveEffect : public UnderglowEffect, public RainbowWaveEffect {
+ public:
+  UnderglowRainbowWaveEffect(void) {}
+
+  void update(void) final;
+};
+
 }
 }
 
 extern kaleidoscope::plugin::LEDRainbowEffect LEDRainbowEffect;
 extern kaleidoscope::plugin::LEDRainbowWaveEffect LEDRainbowWaveEffect;
+extern kaleidoscope::plugin::UnderglowRainbowEffect UnderglowRainbowEffect;
+extern kaleidoscope::plugin::UnderglowRainbowWaveEffect UnderglowRainbowWaveEffect;

@@ -1,5 +1,5 @@
 /* Kaleidoscope-LEDEffect-Rainbow - Rainbow LED effects for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,68 +19,94 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDRainbowEffect::update(void) {
+bool RainbowEffect::updateColor(cRGB &rainbow) {
+  uint16_t now = millis();
+  if ((now - last_update_) < update_delay_) {
+    return false;
+  } else {
+    last_update_ = now;
+  }
+
+  rainbow = hsvToRgb(hue_, saturation_, brightness_);
+
+  hue_ += steps_;
+  if (hue_ >= 255) {
+    hue_ -= 255;
+  }
+
+  return true;
+}
+
+void LEDRainbowEffect::update() {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = millis();
-  if ((now - rainbow_last_update) < rainbow_update_delay) {
+  cRGB rainbow;
+  if (updateColor(rainbow))
+    ::LEDControl.set_all_leds_to(rainbow);
+}
+
+void UnderglowRainbowEffect::update() {
+  if (!::UnderglowControl.has_leds())
     return;
-  } else {
-    rainbow_last_update = now;
-  }
 
-  cRGB rainbow = hsvToRgb(rainbow_hue, rainbow_saturation, rainbow_value);
+  cRGB rainbow;
+  if (!updateColor(rainbow))
+    return;
 
-  rainbow_hue += rainbow_steps;
-  if (rainbow_hue >= 255) {
-    rainbow_hue -= 255;
-  }
-  ::LEDControl.set_all_leds_to(rainbow);
+  ::UnderglowControl.setColor(rainbow);
 }
-
-void LEDRainbowEffect::brightness(byte brightness) {
-  rainbow_value = brightness;
-}
-
-void LEDRainbowEffect::update_delay(byte delay) {
-  rainbow_update_delay = delay;
-}
-
 
 // ---------
 
-void LEDRainbowWaveEffect::update(void) {
+bool RainbowWaveEffect::updateHue() {
+  uint16_t now = millis();
+  if ((now - last_update_) < update_delay_) {
+    return false;
+  } else {
+    last_update_ = now;
+  }
+
+  hue_ += steps_;
+  if (hue_ >= 255) {
+    hue_ -= 255;
+  }
+
+  return true;
+}
+
+void LEDRainbowWaveEffect::update() {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = millis();
-  if ((now - rainbow_last_update) < rainbow_update_delay) {
+  if (!updateHue())
     return;
-  } else {
-    rainbow_last_update = now;
-  }
 
   for (int8_t i = 0; i < LED_COUNT; i++) {
-    uint16_t key_hue = rainbow_hue + 16 * (i / 4);
-    if (key_hue >= 255)          {
+    uint16_t key_hue = hue_ + 16 * (i / 4);
+    if (key_hue >= 255) {
       key_hue -= 255;
     }
-    cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, rainbow_value);
+    cRGB rainbow = hsvToRgb(key_hue, saturation_, brightness_);
     ::LEDControl.setCrgbAt(i, rainbow);
   }
-  rainbow_hue += rainbow_wave_steps;
-  if (rainbow_hue >= 255) {
-    rainbow_hue -= 255;
+}
+
+void UnderglowRainbowWaveEffect::update() {
+  if (!::UnderglowControl.has_leds())
+    return;
+
+  if (!updateHue())
+    return;
+
+  for (int8_t i = 0; i < ::UnderglowControl.led_count(); i++) {
+    uint16_t led_hue = hue_ + (i * ::UnderglowControl.led_count());
+    if (led_hue >= 255) {
+      led_hue -= 255;
+    }
+    cRGB rainbow = hsvToRgb(led_hue, saturation_, brightness_);
+    ::UnderglowControl.setColorAt(i, rainbow);
   }
-}
-
-void LEDRainbowWaveEffect::brightness(byte brightness) {
-  rainbow_value = brightness;
-}
-
-void LEDRainbowWaveEffect::update_delay(byte delay) {
-  rainbow_update_delay = delay;
 }
 
 }
@@ -88,3 +114,5 @@ void LEDRainbowWaveEffect::update_delay(byte delay) {
 
 kaleidoscope::plugin::LEDRainbowEffect LEDRainbowEffect;
 kaleidoscope::plugin::LEDRainbowWaveEffect LEDRainbowWaveEffect;
+kaleidoscope::plugin::UnderglowRainbowEffect UnderglowRainbowEffect;
+kaleidoscope::plugin::UnderglowRainbowWaveEffect UnderglowRainbowWaveEffect;
