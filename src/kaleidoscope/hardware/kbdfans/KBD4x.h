@@ -54,6 +54,10 @@ class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard {
      */
     MCUCR |= (1 << JTD);
     MCUCR |= (1 << JTD);
+
+    // Disable Clock division
+    CLKPR = (1 << CLKPCE);
+    CLKPR = (0 << CLKPS3) | (0 << CLKPS2) | (0 << CLKPS1) | (0 << CLKPS0);
   }
 
   ATMEGA_KEYBOARD_CONFIG(
