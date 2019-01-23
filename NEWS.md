@@ -124,6 +124,10 @@ We integrated the [LEDWavepool](doc/plugin/LED-Wavepool.md) plugin by [ToyKeeper
 
 The [WinKeyToggle](doc/plugin/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
 
+### FirmwareDump
+
+The [FirmwareDump](doc/plugin/FirmwareDump.md) plugin makes it possible to dump one's firmware over Focus.
+
 ## Breaking changes
 
 ### The `RxCy` macros and peeking into the keyswitch state
