@@ -18,6 +18,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
 LEDSolidColor::LEDSolidColor(uint8_t r, uint8_t g, uint8_t b) {
   this->r = r;
   this->g = g;
@@ -30,6 +31,14 @@ void LEDSolidColor::onActivate(void) {
 
 void LEDSolidColor::refreshAt(byte row, byte col) {
   ::LEDControl.setCrgbAt(row, col, CRGB(r, g, b));
+}
+
+void UnderglowSolidColor::onActivate() {
+  ::UnderglowControl.setColor(r_, g_, b_);
+}
+
+void UnderglowSolidColor::refreshAt(uint8_t index) {
+  ::UnderglowControl.setColorAt(index, r_, g_, b_);
 }
 
 }
