@@ -21,8 +21,23 @@ void setup() {
 
 ## Plugin methods
 
-The plugin provides the `LEDChaseEffect` object, which has no public methods or
-properties, outside of those provided by all LED modes.
+The plugin provides the `LEDChaseEffect` object, which has the following methods
+outside of those provided by all LED modes:
+
+### `.update_delay([delay])`
+
+> Accessor for the update delay, the time between each step of the animation.
+> When called without an argument, returns the current setting. When called with
+> one, sets it.
+>
+> Defaults to 150 (milliseconds).
+
+### `.distance([pixels])`
+
+> Accessor for the distance between the two pixels. When called without an
+> argument, returns the current setting. When called with one, sets it.
+>
+> Defaults to 5.
 
 ## Dependencies
 
