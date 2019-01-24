@@ -32,7 +32,22 @@ void LEDBreatheEffect::update(void) {
   cRGB color = breath_compute(hue, saturation);
   ::LEDControl.set_all_leds_to(color);
 }
+
+void UnderglowBreatheEffect::update(void) {
+  if (!::UnderglowControl.has_leds())
+    return;
+
+  uint16_t now = Kaleidoscope.millisAtCycleStart();
+  if ((now - last_update_) < UPDATE_INTERVAL)
+    return;
+  last_update_ = now;
+
+  cRGB color = breath_compute(hue_, saturation_);
+  ::UnderglowControl.setColor(color);
+}
+
 }
 }
 
 kaleidoscope::plugin::LEDBreatheEffect LEDBreatheEffect;
+kaleidoscope::plugin::UnderglowBreatheEffect UnderglowBreatheEffect;
