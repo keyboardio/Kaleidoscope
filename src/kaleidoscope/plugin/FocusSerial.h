@@ -82,6 +82,7 @@ class FocusSerial : public kaleidoscope::Plugin {
 
   static constexpr char COMMENT = '#';
   static constexpr char SEPARATOR = ' ';
+  static constexpr char NEWLINE = '\n';
 
   /* Hooks */
   EventHandlerResult beforeReportingState();
