@@ -23,10 +23,6 @@ namespace plugin {
 cRGB LEDActiveLayerColorEffect::active_color_;
 const cRGB *LEDActiveLayerColorEffect::colormap_;
 
-void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
-  colormap_ = colormap;
-}
-
 cRGB LEDActiveLayerColorEffect::getActiveColor() {
   cRGB color;
 
@@ -57,7 +53,43 @@ EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {
   return EventHandlerResult::OK;
 }
 
+// ---
+
+cRGB UnderglowActiveLayerColorEffect::active_color_;
+const cRGB *UnderglowActiveLayerColorEffect::colormap_;
+
+cRGB UnderglowActiveLayerColorEffect::getActiveColor() {
+  cRGB color;
+
+  uint8_t top_layer = ::Layer.top();
+
+  color.r = pgm_read_byte(&(colormap_[top_layer].r));
+  color.g = pgm_read_byte(&(colormap_[top_layer].g));
+  color.b = pgm_read_byte(&(colormap_[top_layer].b));
+
+  return color;
+}
+
+void UnderglowActiveLayerColorEffect::onActivate(void) {
+  if (!::UnderglowControl.has_leds())
+    return;
+
+  active_color_ = getActiveColor();
+  ::UnderglowControl.setColor(active_color_);
+}
+
+void UnderglowActiveLayerColorEffect::refreshAt(uint8_t index) {
+  ::UnderglowControl.setColorAt(index, active_color_);
+}
+
+EventHandlerResult UnderglowActiveLayerColorEffect::onLayerChange() {
+  if (::UnderglowControl.currentEffect() == this)
+    onActivate();
+  return EventHandlerResult::OK;
+}
+
 }
 }
 
 kaleidoscope::plugin::LEDActiveLayerColorEffect LEDActiveLayerColorEffect;
+kaleidoscope::plugin::UnderglowActiveLayerColorEffect UnderglowActiveLayerColorEffect;
