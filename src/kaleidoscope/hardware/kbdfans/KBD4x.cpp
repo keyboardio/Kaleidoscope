@@ -28,6 +28,7 @@ namespace kbdfans {
 
 ATMEGA_KEYBOARD_DATA(KBD4x);
 constexpr int8_t KBD4x::led_count;
+kaleidoscope::driver::led::WS2812<PIN_E2, Color, 6> KBD4x::underglow;
 
 #define BOOTLOADER_RESET_KEY 0xB007B007
 uint32_t reset_key  __attribute__((section(".noinit")));

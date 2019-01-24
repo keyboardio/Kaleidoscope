@@ -24,9 +24,19 @@
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+
+struct cRGB {
+  uint8_t g;
+  uint8_t r;
+  uint8_t b;
+};
+
+#define CRGB(r, g, b) (cRGB){g, r, b}
 
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/driver/led/WS2812.h"
+
+using Color = kaleidoscope::driver::led::color::GRB;
 
 namespace kaleidoscope {
 namespace hardware {
@@ -66,6 +76,8 @@ class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard {
   );
 
   static constexpr int8_t led_count = 0;
+
+  static kaleidoscope::driver::led::WS2812<PIN_E2, Color, 6> underglow;
 
   void resetDevice();
 };
