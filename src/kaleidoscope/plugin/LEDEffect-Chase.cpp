@@ -1,5 +1,5 @@
 /* Kaleidoscope-LEDEffect-Chase - A Chase LED effect for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -64,7 +64,53 @@ void LEDChaseEffect::update(void) {
     ::LEDControl.setCrgbAt(pos2, CRGB(0, 0, 255));
 }
 
+void UnderglowChaseEffect::update(void) {
+  if (!::UnderglowControl.has_leds())
+    return;
+
+  uint16_t now = Kaleidoscope.millisAtCycleStart();
+  if ((now - last_update_) < update_delay_) {
+    return;
+  }
+  last_update_ = now;
+
+  // The red LED is at `pos_`; the blue one follows behind. `direction_` is
+  // either +1 or -1; `distance_` is the gap between them.
+  int8_t pos2 = pos_ - (direction_ * distance_);
+
+  // First, we turn off the LEDs that were turned on in the previous update.
+  // `pos_` is always in the valid range (0 <= pos_ < LED_COUNT), but after it
+  // changes direction, for the first few updates, `pos2` will be out of bounds.
+  // Since it's an unsigned integer, even when it would have a value below zero,
+  // it underflows and so one test is good for both ends of the range.
+  ::UnderglowControl.setColorAt(pos_, {0, 0, 0});
+  if (pos2 < ::UnderglowControl.led_count())
+    ::UnderglowControl.setColorAt(pos2, {0, 0, 0});
+
+  // Next, we adjust the red light's position. If the direction hasn't changed (the red
+  // light isn't out of bounds), we also adjust the blue light's position to match the red
+  // one. If the new position puts it out of bounds, we reverse the direction, and bring
+  // it back in bounds. When this happens, the blue light "jumps" behind the red one, and
+  // will be out of bounds. The simplest way to do this is to assign it a value that is
+  // known to be invalid (LED_COUNT).
+  pos_ += direction_;
+  if (pos_ < ::UnderglowControl.led_count() && pos_ > 0) {
+    pos2 += direction_;
+  } else {
+    direction_ = -direction_;
+    pos_ += direction_;
+    pos2 = ::UnderglowControl.led_count();
+  }
+
+  // Last, we turn on the LEDs at their new positions. As before, the blue light (pos2) is
+  // only set if it's in the valid LED range.
+  ::UnderglowControl.setColorAt(pos_, CRGB(255, 0, 0));
+  if (pos2 < ::UnderglowControl.led_count())
+    ::UnderglowControl.setColorAt(pos2, CRGB(0, 0, 255));
+}
+
 }
 }
 
 kaleidoscope::plugin::LEDChaseEffect LEDChaseEffect;
+kaleidoscope::plugin::UnderglowChaseEffect UnderglowChaseEffect;
