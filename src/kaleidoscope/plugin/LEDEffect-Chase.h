@@ -30,14 +30,20 @@ class LEDChaseEffect : public LEDMode {
   void update_delay(uint16_t delay) {
     update_delay_ = delay;
   }
+  uint8_t distance() {
+    return distance_;
+  }
+  void distance(uint8_t value) {
+    distance_ = value;
+  }
 
  protected:
   void update(void) final;
 
  private:
-  int8_t pos = 0;
-  int8_t chase_sign = 1; //negative values when it's going backwar
-  uint8_t chase_pixels = 5;
+  int8_t pos_ = 0;
+  int8_t direction_ = 1;
+  uint8_t distance_ = 5;
   uint16_t update_delay_ = 150;
   uint16_t last_update_ = 0;
 };
