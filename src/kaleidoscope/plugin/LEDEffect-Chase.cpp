@@ -18,15 +18,16 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
 void LEDChaseEffect::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  // Check to see if it's time to change the positions of the red and blue lights
-  if (current_chase_counter++ < chase_threshold) {
+  uint16_t now = Kaleidoscope.millisAtCycleStart();
+  if ((now - last_update_) < update_delay_) {
     return;
   }
-  current_chase_counter = 0;
+  last_update_ = now;
 
   // The red LED is at `pos`; the blue one follows behind. `chase_sign` is either +1 or
   // -1; `chase_pixels` is the gap between them.
