@@ -129,6 +129,20 @@ bool ATMegaKeyboard::isKeyMasked(byte row, byte col) {
   return bitRead(KeyboardHardware.masks_[row], col);
 }
 
+/*
+ * This function has loop unrolling disabled on purpose: we want to give the
+ * hardware enough time to produce stable PIN reads for us. If we unroll the
+ * loop, we will not have that, because even with the NOP, the codepath is too
+ * fast. If we don't have stable reads, then entire rows or columns will behave
+ * erratically.
+ *
+ * For this reason, we ask the compiler to not unroll our loop, which in turn,
+ * gives hardware enough time to produce stable reads, at the cost of a little
+ * bit of speed.
+ *
+ * Do not remove the attribute!
+ */
+__attribute__((optimize("no-unroll-loops")))
 uint16_t ATMegaKeyboard::readCols() {
   uint16_t results = 0x00 ;
   for (uint8_t i = 0; i < KeyboardHardware.matrix_columns; i++) {
