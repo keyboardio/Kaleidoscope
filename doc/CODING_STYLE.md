@@ -2022,7 +2022,7 @@ All such variables with static storage duration (i.e. statics and globals, see [
 
 ### Function Names
 
-> Regular functions have mixed case; accessors and mutators may be named like variables.
+> Regular functions have mixed case
 
 Ordinarily, functions should start with a lower-case letter and have a capital letter for each new word (a.k.a. "[Camel Case][wikipedia:camel-case]" or "Pascal case"). Such names should not have underscores. Prefer to capitalize acronyms as single words (i.e. `startRpc()`, not `startRPC()`).
 
@@ -2035,8 +2035,6 @@ openFileOrDie()
 ```
 
 (The same naming rule applies to class- and namespace-scope constants that are exposed as part of an API and that are intended to look like functions, because the fact that they're objects rather than functions is an unimportant implementation detail.)
-
-Accessors and mutators (get and set functions) may be named like variables. These often correspond to actual member variables, but this is not required. For example, `int count()` and `void set_count(int count)`.
 
 ### Namespace Names
 
