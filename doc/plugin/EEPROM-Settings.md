@@ -64,8 +64,22 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > keyboard boots up, it will automatically switch to the configured layer - if
 > any.
 >
-> This is the Focus counterpart of the `default_layer()` method documented
-> above.
+> Setting it to `126` or anything higher disables the automatic switching.
+
+### `ignoreHardcodedLayers([true|false])`
+
+> Controls whether the hardcoded layers (in `PROGMEM`) are ignored or not.
+>
+> When not ignored, the custom layes (in `EEPROM`) extend the hardcoded ones.
+> When ignored, they replace the hardcoded set.
+>
+> Returns the setting if called without arguments, changes it to the desired
+> value if called with a boolean flag.
+>
+> This setting is exposed to Focus via the `keymap.onlyCustom` command
+> implemented by the [EEPROM-Keymap][EEPROM-Keymap.md] plugin.
+>
+> Defaults to `false`.
 
 ### `seal()`
 
@@ -129,7 +143,10 @@ following commands:
 
 > Sets or returns (if called without arguments) the ID of the default layer. If
 > set, the keyboard will automatically switch to the given layer when connected.
-> Setting it to `255` disables the automatic switching.
+> Setting it to `126` or anything higher disables the automatic switching.
+>
+> This is the Focus counterpart of the `default_layer()` method documented
+> above.
 
 ### `settings.crc`
 

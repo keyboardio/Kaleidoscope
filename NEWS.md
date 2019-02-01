@@ -144,6 +144,10 @@ The [Redial](doc/plugin/Redial.md) plugin was simplified, one no longer needs to
 
 The [LED-Palette-Theme](doc/plugin/LED-Palette-Theme.md) had to be changed to store the palette colors in reverse. This change had to be made in order to not default to a bright white palette, that would draw so much power that most operating systems would disconnect the keyboard due to excessive power usage. With inverting the colors, we now default to a black palette instead. This sadly breaks existing palettes, and you will have to re-set the colors.
 
+### EEPROM-Keymap changed Focus commands
+
+The [EEPROMKeymap](doc/plugin/EEPROM-Keymap.md) plugin was changed to treat built-in (default) and EEPROM-stored (custom) layers separately, because that's less surprising, and easier to work with from Chrysalis. The old `keymap.map` and `keymap.roLayers` commands are gone, the new `keymap.default` and `keymap.custom` commands should be used instead.
+
 ## Bugfixes
 
 We fixed way too many issues to list here, so we're going to narrow it down to the most important, most visible ones.

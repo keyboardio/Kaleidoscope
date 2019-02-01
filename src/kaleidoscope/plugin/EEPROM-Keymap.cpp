@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap -- EEPROM-based keymap support.
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,7 +21,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-EEPROMKeymap::Mode EEPROMKeymap::mode_;
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
 uint8_t EEPROMKeymap::progmem_layers_;
@@ -32,16 +31,14 @@ EventHandlerResult EEPROMKeymap::onSetup() {
   return EventHandlerResult::OK;
 }
 
-void EEPROMKeymap::setup(uint8_t max, Mode mode) {
-  switch (mode) {
-  case Mode::CUSTOM:
-    break;
-  case Mode::EXTEND:
-    layer_count = progmem_layers_ + max;
+void EEPROMKeymap::setup(uint8_t max) {
+  layer_count = max;
+  if (::EEPROMSettings.ignoreHardcodedLayers()) {
+    Layer.getKey = getKey;
+  } else {
+    layer_count += progmem_layers_;
     Layer.getKey = getKeyExtended;
-    break;
   }
-  mode_ = mode;
   max_layers(max);
 }
 
@@ -85,51 +82,63 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
   EEPROM.update(keymap_base_ + base_pos * 2 + 1, key.keyCode);
 }
 
+void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte)) {
+  for (uint8_t layer = 0; layer < layers; layer++) {
+    for (uint8_t row = 0; row < ROWS; row++) {
+      for (uint8_t col = 0; col < COLS; col++) {
+        Key k = (*getkey)(layer, row, col);
+
+        ::Focus.send(k);
+      }
+    }
+  }
+}
+
 EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
-  const char *cmd = PSTR("keymap.map");
-  if (::Focus.handleHelp(command, PSTR("keymap.map\nkeymap.roLayers")))
+  if (::Focus.handleHelp(command, PSTR("keymap.custom\nkeymap.default\nkeymap.onlyCustom")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("keymap."), 7) != 0)
     return EventHandlerResult::OK;
 
-  if (strcmp_P(command + 7, PSTR("roLayers")) == 0) {
-    if (mode_ != Mode::EXTEND)
-      return EventHandlerResult::OK;
-    ::Focus.send(progmem_layers_);
+  if (strcmp_P(command + 7, PSTR("onlyCustom")) == 0) {
+    if (::Focus.isEOL()) {
+      ::Focus.send((uint8_t)::EEPROMSettings.ignoreHardcodedLayers());
+    } else {
+      bool v;
+
+      ::Focus.read((uint8_t &)v);
+      ::EEPROMSettings.ignoreHardcodedLayers(v);
+
+      layer_count = max_layers_;
+      if (v) {
+        Layer.getKey = getKey;
+      } else {
+        layer_count += progmem_layers_;
+        Layer.getKey = getKeyExtended;
+      }
+    }
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 7, PSTR("map")) != 0)
+  if (strcmp_P(command + 7, PSTR("default")) == 0) {
+    dumpKeymap(progmem_layers_, Layer.getKeyFromPROGMEM);
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
+
+  if (strcmp_P(command + 7, PSTR("custom")) != 0)
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
-    for (uint8_t layer = 0; layer < layer_count; layer++) {
-      for (uint8_t row = 0; row < ROWS; row++) {
-        for (uint8_t col = 0; col < COLS; col++) {
-          Key k = Layer.getKey(layer, row, col);
-
-          ::Focus.send(k);
-        }
-      }
-    }
+    dumpKeymap(max_layers_, getKey);
   } else {
     uint16_t i = 0;
-    uint8_t layers = layer_count;
-    if (layers > 0)
-      layers--;
-    while (!::Focus.isEOL() && (i < ROWS * COLS * layers)) {
+
+    while (!::Focus.isEOL() && (i < ROWS * COLS * max_layers_)) {
       Key k;
 
       ::Focus.read(k);
-
-      if (mode_ == Mode::EXTEND) {
-        uint8_t layer = i / (ROWS * COLS);
-        if (layer >= progmem_layers_)
-          updateKey(i - (progmem_layers_ * ROWS * COLS), k);
-      } else {
-        updateKey(i, k);
-      }
+      updateKey(i, k);
       i++;
     }
   }

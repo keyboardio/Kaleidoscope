@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Settings -- Basic EEPROM settings plugin for Kaleidoscope.
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -44,14 +44,20 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static uint8_t default_layer() {
     return settings_.default_layer;
   }
+  static void ignoreHardcodedLayers(bool value);
+  static bool ignoreHardcodedLayers() {
+    return settings_.ignore_hardcoded_layers;
+  }
 
  private:
+  static constexpr uint8_t IGNORE_HARDCODED_LAYER_MASK = 0b1111110;
   static uint16_t next_start_;
   static bool is_valid_;
   static bool sealed_;
 
   static struct settings {
-    uint8_t default_layer;
+    uint8_t default_layer: 7;
+    bool ignore_hardcoded_layers: 1;
     uint8_t version;
     uint16_t crc;
   } settings_;
