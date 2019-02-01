@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap -- EEPROM-based keymap support.
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -20,13 +20,17 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 
+#define _DEPRECATED_MESSAGE_EEPROM_KEYMAP_SETUP_MODE                       \
+  "The `mode` argument of EEPROMKeymap.setup() is deprecated and is not\n" \
+  "used anymore. You can remove it safely."
+
 namespace kaleidoscope {
 namespace plugin {
 class EEPROMKeymap : public kaleidoscope::Plugin {
  public:
   enum class Mode {
     CUSTOM,
-    EXTEND,
+    EXTEND
   };
 
   EEPROMKeymap(void) {}
@@ -34,7 +38,10 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *command);
 
-  static void setup(uint8_t max, Mode mode = Mode::EXTEND);
+  static void setup(uint8_t max);
+  static void setup(uint8_t max, Mode mode) DEPRECATED(EEPROM_KEYMAP_SETUP_MODE) {
+    setup(max);
+  }
 
   static void max_layers(uint8_t max);
 
@@ -49,10 +56,10 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static uint16_t keymap_base_;
   static uint8_t max_layers_;
   static uint8_t progmem_layers_;
-  static Mode mode_;
 
   static Key parseKey(void);
   static void printKey(Key key);
+  static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte));
 };
 }
 }

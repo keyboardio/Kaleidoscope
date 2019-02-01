@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Settings -- Basic EEPROM settings plugin for Kaleidoscope.
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -54,11 +54,25 @@ uint8_t EEPROMSettings::default_layer(uint8_t layer) {
     Layer.move(layer);
     settings_.default_layer = layer;
   }
-  if (layer == 0xff) {
-    settings_.default_layer = layer;
+
+  /*
+   * We set default_layer to IGNORE_HARDCODED_LAYER_MASK (instead of `value`)
+   * because due to compatibility reasons, we might get passed 0xff (which
+   * conveniently matches our mask), yet, we want to set a different value to
+   * signal an explicit "no default".
+   */
+  if (layer & IGNORE_HARDCODED_LAYER_MASK) {
+    settings_.default_layer = IGNORE_HARDCODED_LAYER_MASK;
   }
   update();
   return settings_.default_layer;
+}
+
+void EEPROMSettings::ignoreHardcodedLayers(bool value) {
+  settings_.ignore_hardcoded_layers = value;
+  if (settings_.default_layer & IGNORE_HARDCODED_LAYER_MASK)
+    settings_.default_layer = IGNORE_HARDCODED_LAYER_MASK;
+  update();
 }
 
 void EEPROMSettings::seal(void) {
@@ -66,9 +80,18 @@ void EEPROMSettings::seal(void) {
 
   CRC.finalize();
 
-  /* If we have a default layer set, switch to it. As 0xff is the default EEPROM
-   * value, treat it as not having a default layer set. */
-  if (settings_.default_layer != 0xff)
+  /* If we have a default layer set, switch to it.
+   *
+   * We use IGNORE_HARDCODED_LAYER_MASK, because we want to avoid setting a
+   * default layer in two cases:
+   *
+   * - When the EEPROM is uninitialized (0x7f)
+   * - When such layer switching is explicitly turned off (0x7e)
+   *
+   * In both cases, the bits in IGNORE_HARDCODED_LAYER_MASK are set, and the
+   * remaining bit is not important.
+   */
+  if (!(settings_.default_layer & IGNORE_HARDCODED_LAYER_MASK))
     Layer.move(settings_.default_layer);
 
   /* Until we set a version, consider the EEPROM contents flexible, and always

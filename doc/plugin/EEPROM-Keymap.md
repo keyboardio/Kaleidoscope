@@ -6,6 +6,8 @@ In short, this plugin allows us to change our keymaps, without having to compile
 
  [plugin:focusSerial]: FocusSerial.md
 
+By default, the plugin extends the keymap in PROGMEM: it will only look for keys in EEPROM if looking up from a layer that's higher than the last one in PROGMEM. This behaviour can be changed either via `Focus` (see below), or by calling `EEPROMSettings.use_eeprom_layers_only` (see the [EEPROMSettings](EEPROM-Settings.md) documentation for more information).
+
 ## Using the plugin
 
 Using the plugin is reasonably simple: after including the header, enable the plugin, and configure how many layers at most we want to store in `EEPROM`. There are other settings one can tweak, but these two steps are enough to get started with.
@@ -31,27 +33,31 @@ void setup() {
 
 The plugin provides the `EEPROMKeymap` object, which has the following method:
 
-### `.setup(layers[, mode])`
+### `.setup(layers)`
 
-> Reserve space in EEPROM for up to `layers` layers, and set things up to work according to the specified `mode` (see below for a list of supported modes). To be called from the `setup` method of one's sketch.
->
-> Supported modes are:
-> - `EEPROMKeymap.Mode::EXTEND`: Extend the keymap with layers from EEPROM, treating them as extensions of the main keymap embedded in the firmware. The first layer in EEPROM will have a number one higher than the last layer in PROGMEM. In this case, the total number of layers will be the number of them in PROGMEM plus `layers`.
-> - `EEPROMKeymap.Mode::CUSTOM`: For advanced use cases where the `EXTEND` mode is not appropriate. In this case, the plugin merely reserves a slice of EEPROM for the requested amount of layers, but does no other configuration - that's entirely up to the Sketch.
+> Reserve space in EEPROM for up to `layers` layers, and set up the key lookup mechanism.
 
 ## Focus commands
 
-The plugin provides the `keymap.map` and a `keymap.roLayers` commands.
+The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and `keymap.useCustom`.
 
-### `keymap.map [codes...]`
+### `keymap.default`
 
-> Without arguments, displays the keymap currently in effect. Each key is printed as its raw, 16-bit keycode.
+> Display the default keymap from PROGMEM. Each key is printed as its raw, 16-bit keycode.
 >
-> With arguments, it stores as many keys as given. One does not need to set all keys, on all layers: the command will start from the first key on the first layer, and go on as long as it has input. It will not go past the total amount of layers (that is, `layer_count`).
+> Unlike `keymap.custom`, this does not support updating, because PROGMEM is read-only.
 
-### `keymap.roLayers`
+### `keymap.custom [codes...]`
 
-> Returns the number of read-only layers. This only makes sense for the `EEPROMKeymap.Mode::EXTEND` mode, where it returns the number of layers in PROGMEM. In any other case, it doesn't return anything, doing so is left for another event handler that understands what the correct value would be.
+> Without arguments, display the custom keymap stored in EEPROM. Each key is printed as its raw, 16-bit keycode.
+>
+> With arguments, it updates as many keys as given. One does not need to set all keys, on all layers: the command will start from the first key on the first layer (in EEPROM, which might be different than the first layer!), and go on as long as it has input. It will not go past the number of layers in EEPROM.
+
+### `keymap.onlyCustom [0|1]`
+
+> Without arguments, returns whether the firmware uses both the default and the custom layers (the default, `0`) or custom (EEPROM-stored) layers only (`1`).
+>
+> With an argument, sets whether to use custom layers only, or extend the built-in layers instead.
 
 ## Dependencies
 
