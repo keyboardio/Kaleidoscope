@@ -41,7 +41,6 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   EventHandlerResult themeFocusEvent(const char *command,
                                      const char *expected_command,
                                      uint16_t theme_base, uint8_t max_themes);
-  EventHandlerResult onSetup();
 
  private:
   static uint16_t palette_base_;

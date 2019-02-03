@@ -25,14 +25,10 @@ namespace plugin {
 
 uint16_t LEDPaletteTheme::palette_base_;
 
-EventHandlerResult LEDPaletteTheme::onSetup(void) {
+uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
   if (!palette_base_)
     palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
 
-  return EventHandlerResult::OK;
-}
-
-uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
   return ::EEPROMSettings.requestSlice(max_themes * ROWS * COLS / 2);
 }
 
