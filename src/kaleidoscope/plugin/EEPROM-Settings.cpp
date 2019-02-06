@@ -29,6 +29,28 @@ uint16_t EEPROMSettings::next_start_ = sizeof(EEPROMSettings::settings);
 
 EventHandlerResult EEPROMSettings::onSetup() {
   EEPROM.get(0, settings_);
+
+  /* If the version is undefined, set up sensible defaults. */
+  if (settings_.version == VERSION_UNDEFINED) {
+    if (settings_.default_layer == 127 &&
+        settings_.ignore_hardcoded_layers) {
+      /* If both of these are set, that means that the EEPROM is uninitialized,
+         and setting sensible defaults is safe. If either of them is not at it's
+         uninitialized state, we do not override them, to avoid overwriting user
+         settings. */
+      settings_.ignore_hardcoded_layers = false;
+      settings_.default_layer = 0;
+    }
+
+    /* If the version is undefined, we'll set it to our current one. */
+    settings_.version = VERSION_CURRENT;
+
+    /* Ideally, we'd save the defaults set here on the first write, but we are
+     * not able to catch all writes yet. For the sake of consistency, if we
+     * encounter a firmware with no version defined, we'll set sensible
+     * defaults. */
+    EEPROM.put(0, settings_);
+  }
   return EventHandlerResult::OK;
 }
 
@@ -80,6 +102,18 @@ void EEPROMSettings::seal(void) {
 
   CRC.finalize();
 
+  if (settings_.version != VERSION_CURRENT) {
+    is_valid_ = false;
+    return;
+  }
+
+  if (settings_.crc == 0xffff) {
+    settings_.crc = CRC.crc;
+    update();
+  } else if (settings_.crc != CRC.crc) {
+    return;
+  }
+
   /* If we have a default layer set, switch to it.
    *
    * We use IGNORE_HARDCODED_LAYER_MASK, because we want to avoid setting a
@@ -93,16 +127,6 @@ void EEPROMSettings::seal(void) {
    */
   if (!(settings_.default_layer & IGNORE_HARDCODED_LAYER_MASK))
     Layer.move(settings_.default_layer);
-
-  /* Until we set a version, consider the EEPROM contents flexible, and always
-   * update the CRC. This will always result in the settings being considered
-   * valid. */
-  if (settings_.version == 0xff) {
-    return update();
-  }
-
-  if (settings_.crc != CRC.crc)
-    is_valid_ = false;
 }
 
 uint16_t EEPROMSettings::requestSlice(uint16_t size) {
@@ -126,19 +150,8 @@ uint16_t EEPROMSettings::used(void) {
 }
 
 void EEPROMSettings::update(void) {
-  settings_.crc = CRC.crc;
-
   EEPROM.put(0, settings_);
   is_valid_ = true;
-}
-
-uint8_t EEPROMSettings::version(void) {
-  return settings_.version;
-}
-
-void EEPROMSettings::version(uint8_t ver) {
-  settings_.version = ver;
-  update();
 }
 
 /** Focus **/

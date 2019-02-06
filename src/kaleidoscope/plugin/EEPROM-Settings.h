@@ -20,6 +20,10 @@
 #include <Kaleidoscope.h>
 #include <EEPROM.h>
 
+#define _DEPRECATED_MESSAGE_EEPROMSETTINGS_VERSION_SET            \
+  "The EEPROMSettings.version(uint8_t version) method has been deprecated,\n" \
+  "and is a no-op now. Please see the NEWS file for more information."
+
 namespace kaleidoscope {
 namespace plugin {
 class EEPROMSettings : public kaleidoscope::Plugin {
@@ -29,11 +33,25 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
 
+  /* EEPROM is filled with 0xff when uninitialized, so a version with that value
+   * means we do not have an EEPROM version defined yet. */
+  static constexpr uint8_t VERSION_UNDEFINED = 0xff;
+  /* A version set to zero is likely some kind of corruption, we do not normally
+   * clear the byte. */
+  static constexpr uint8_t VERSION_IMPOSSIBLE_ZERO = 0x00;
+  /* Our current version. Whenever we change the layout of the settings, this
+   * needs to be increased too. If the version stored in EEPROM does not match
+   * this version, EEPROM use should be considered unsafe, and plugins should
+   * fall back to not using it. */
+  static constexpr uint8_t VERSION_CURRENT = 0x01;
+
   static void update(void);
   static bool isValid(void);
   static void invalidate(void);
-  static uint8_t version(void);
-  static void version(uint8_t ver);
+  static uint8_t version(void) {
+    return settings_.version;
+  }
+  static void version(uint8_t) DEPRECATED(EEPROMSETTINGS_VERSION_SET) {}
 
   static uint16_t requestSlice(uint16_t size);
   static void seal(void);

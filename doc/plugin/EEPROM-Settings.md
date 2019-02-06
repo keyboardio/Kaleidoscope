@@ -111,13 +111,12 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > firmware would expect. This signals to other plugins that the contents of
 > `EEPROM` should not be trusted.
 
-### `version([newVersion])`
+### `version()`
 
-> Sets or returns the version of the `EEPROM` layout. This is purely for use by
-> the firmware, so it can attempt to upgrade the contents, if need be, or alert
-> the user in there's a mismatch. Plugins do not use this property.
+> Returns the current version of the EEPROM settings. It's the version of the
+> settings only, not that of the whole layout - the CRC covers that.
 >
-> Should only be called after calling `seal()`.
+> This is for internal use only, end-users should not need to care about it.
 
 ### `crc()`
 
@@ -159,7 +158,7 @@ following commands:
 
 ### `settings.version`
 
-> Returns the (user-set) version of the settings.
+> Returns the version of the settings.
 
 ### `eeprom.contents`
 
