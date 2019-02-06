@@ -150,6 +150,15 @@ We also changed when we reserve space for the palette in EEPROM: we used to do i
 
 The [EEPROMKeymap](doc/plugin/EEPROM-Keymap.md) plugin was changed to treat built-in (default) and EEPROM-stored (custom) layers separately, because that's less surprising, and easier to work with from Chrysalis. The old `keymap.map` and `keymap.roLayers` commands are gone, the new `keymap.default` and `keymap.custom` commands should be used instead.
 
+### EEPROMSettings' version() setter has been deprecated
+
+We're repurposing the `version` setting: instead of it being something end-users
+can set, we'll be using it internally to track changes made to
+[EEPROMSettings](doc/plugin/EEPROM-Settings.md) itself, with the goal of
+allowing external tools to aid in migrations. The setting wasn't widely used -
+if at all -, which is why we chose to repurpose it instead of adding a new
+field.
+
 ## Bugfixes
 
 We fixed way too many issues to list here, so we're going to narrow it down to the most important, most visible ones.
