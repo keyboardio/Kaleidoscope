@@ -163,9 +163,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 }
 
 EventHandlerResult OneShot::beforeReportingState() {
-  if (!isActive())
-    return EventHandlerResult::OK;
-
   for (uint8_t i = 0; i < 8; i++) {
     if (state_[i].active) {
       activateOneShot(i);
@@ -176,9 +173,6 @@ EventHandlerResult OneShot::beforeReportingState() {
 }
 
 EventHandlerResult OneShot::afterEachCycle() {
-  if (!isActive())
-    return EventHandlerResult::OK;
-
   if (hasTimedOut())
     cancel();
 
