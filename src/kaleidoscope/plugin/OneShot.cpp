@@ -31,29 +31,6 @@ Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
 
-// --- helper macros ------
-
-#define isOneShotKey(key) (key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST)
-#define isModifier(key) (key.raw >= Key_LeftControl.raw && key.raw <= Key_RightGui.raw)
-#define isLayerKey(key) (key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))
-
-#define isOneShot(idx) (state_[idx].active)
-#define setOneShot(idx) (state_[idx].active = true)
-#define clearOneShot(idx) (state_[idx].active = false)
-
-#define isSticky_(idx) (state_[idx].sticky)
-#define setSticky(idx) (state_[idx].sticky = true)
-#define clearSticky(idx) (state_[idx].sticky = false)
-
-#define setPressed(idx) (state_[idx].pressed = true)
-#define clearPressed(idx) (state_[idx].pressed = false)
-#define isPressed_(idx) (state_[idx].pressed)
-
-#define isSameAsPrevious(key) (key.raw == prev_key_.raw)
-#define saveAsPrevious(key) prev_key_.raw = key.raw
-
-#define hasTimedOut() (millis () - start_time_ >= time_out)
-
 bool OneShot::isPressed() {
   for (uint8_t i = 0; i < sizeof(state_); i++) {
     if (state_[i].pressed)
@@ -101,7 +78,7 @@ void OneShot::activateOneShot(uint8_t idx) {
 }
 
 void OneShot::cancelOneShot(uint8_t idx) {
-  clearOneShot(idx);
+  state_[idx].active = false;
   injectNormalKey(idx, WAS_PRESSED);
 }
 
@@ -112,18 +89,18 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
     return EventHandlerResult::OK;
 
   if (!isActive()) {
-    if (!isOneShotKey(mapped_key)) {
+    if (!isOneShotKey_(mapped_key)) {
       return EventHandlerResult::OK;
     }
 
     if (keyToggledOff(keyState)) {
-      clearPressed(idx);
+      state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
-      start_time_ = millis();
+      start_time_ = Kaleidoscope.millisAtCycleStart();
       state_[idx].position = row * COLS + col;
-      setPressed(idx);
-      setOneShot(idx);
-      saveAsPrevious(mapped_key);
+      state_[idx].pressed = true;
+      state_[idx].active = true;
+      prev_key_ = mapped_key;
 
       activateOneShot(idx);
     }
@@ -131,38 +108,38 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (isOneShotKey(mapped_key)) {
-    if (isSticky_(idx)) {
+  if (isOneShotKey_(mapped_key)) {
+    if (state_[idx].sticky) {
       if (keyToggledOn(keyState)) {  // maybe on _off instead?
-        saveAsPrevious(mapped_key);
-        clearSticky(idx);
+        prev_key_ = mapped_key;
+        state_[idx].sticky = false;
         cancelOneShot(idx);
         should_cancel_ = false;
       }
     } else {
       if (keyToggledOff(keyState)) {
-        clearPressed(idx);
-        if ((millis() - start_time_) >= hold_time_out) {
+        state_[idx].pressed = false;
+        if ((Kaleidoscope.millisAtCycleStart() - start_time_) >= hold_time_out) {
           cancelOneShot(idx);
           should_cancel_ = false;
         }
       }
 
       if (keyToggledOn(keyState)) {
-        setPressed(idx);
+        state_[idx].pressed = true;
 
-        if (isSameAsPrevious(mapped_key) && isStickable(mapped_key)) {
-          if ((millis() - start_time_) <= ((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
-            setSticky(idx);
-
-            saveAsPrevious(mapped_key);
+        if (prev_key_ == mapped_key && isStickable(mapped_key)) {
+          if ((Kaleidoscope.millisAtCycleStart() - start_time_) <=
+              ((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
+            state_[idx].sticky = true;
+            prev_key_ = mapped_key;
           }
         } else {
-          start_time_ = millis();
+          start_time_ = Kaleidoscope.millisAtCycleStart();
 
           state_[idx].position = row * COLS + col;
-          setOneShot(idx);
-          saveAsPrevious(mapped_key);
+          state_[idx].active = true;
+          prev_key_ = mapped_key;
 
           activateOneShot(idx);
         }
@@ -175,8 +152,9 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
   // ordinary key here, with some event
 
   if (keyIsPressed(keyState)) {
-    saveAsPrevious(mapped_key);
-    if (!isModifier(mapped_key) && !isLayerKey(mapped_key)) {
+    prev_key_ = mapped_key;
+    if (!(mapped_key.raw >= Key_LeftControl.raw && mapped_key.raw <= Key_RightGui.raw) &&
+        !(mapped_key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
       should_cancel_ = true;
     }
   }
@@ -189,7 +167,7 @@ EventHandlerResult OneShot::beforeReportingState() {
     return EventHandlerResult::OK;
 
   for (uint8_t i = 0; i < 8; i++) {
-    if (isOneShot(i)) {
+    if (state_[i].active) {
       activateOneShot(i);
     }
   }
@@ -208,14 +186,14 @@ EventHandlerResult OneShot::afterEachCycle() {
 
   for (uint8_t i = 0; i < 32; i++) {
     if (should_cancel_) {
-      if (isSticky_(i)) {
+      if (state_[i].sticky) {
         if (should_cancel_stickies_) {
           is_cancelled = true;
-          clearSticky(i);
+          state_[i].sticky = false;
           cancelOneShot(i);
-          clearPressed(i);
+          state_[i].pressed = false;
         }
-      } else if (isOneShot(i) && !isPressed_(i)) {
+      } else if (state_[i].active && !state_[i].pressed) {
         is_cancelled = true;
         cancelOneShot(i);
       }
@@ -250,21 +228,22 @@ bool OneShot::isActive(Key key) {
   uint8_t idx = key.raw - ranges::OS_FIRST;
 
   return (state_[idx].active && !hasTimedOut()) ||
-      state_[idx].pressed ||
-      state_[idx].sticky;
+         state_[idx].pressed ||
+         state_[idx].sticky;
 }
 
 bool OneShot::isSticky(Key key) {
   uint8_t idx = key.raw - ranges::OS_FIRST;
 
-  return (isSticky_(idx));
+  return state_[idx].sticky;
 }
 
 bool OneShot::isModifierActive(Key key) {
   if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
     return false;
 
-  return isOneShot(key.keyCode - Key_LeftControl.keyCode);
+  uint8_t idx = key.keyCode - Key_LeftControl.keyCode;
+  return state_[idx].active;
 }
 
 void OneShot::cancel(bool with_stickies) {

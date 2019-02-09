@@ -99,6 +99,13 @@ class OneShot : public kaleidoscope::Plugin {
   static void injectNormalKey(uint8_t idx, uint8_t key_state);
   static void activateOneShot(uint8_t idx);
   static void cancelOneShot(uint8_t idx);
+
+  static bool isOneShotKey_(Key key) {
+    return key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST;
+  }
+  static bool hasTimedOut() {
+    return Kaleidoscope.millisAtCycleStart() - start_time_ >= time_out;
+  }
 };
 }
 }
