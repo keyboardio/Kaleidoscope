@@ -28,21 +28,22 @@ namespace plugin {
 
 class OneShot : public kaleidoscope::Plugin {
  public:
-  OneShot(void) {}
+  OneShot(void) {
+    for (uint8_t i = 0; i < 16; i++) {
+      state_[i].stickable = true;
+    }
+  }
 
   static bool isOneShotKey(Key key) {
     return (key.raw >= kaleidoscope::ranges::OS_FIRST && key.raw <= kaleidoscope::ranges::OS_LAST);
   }
   static bool isActive(void);
-  static bool isPressed() {
-    return !!pressed_state_.all;
-  }
-  static bool isSticky() {
-    return !!sticky_state_.all;
-  }
   static bool isActive(Key key);
+  static bool isPressed();
+  static bool isSticky();
   static bool isSticky(Key key);
   static void cancel(bool with_stickies = false);
+
   static uint16_t time_out;
   static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
@@ -78,22 +79,20 @@ class OneShot : public kaleidoscope::Plugin {
   void inject(Key mapped_key, uint8_t key_state);
 
  private:
-  typedef union {
-    struct {
-      uint8_t mods;
-      uint8_t layers;
-    };
-    uint16_t all;
-  } state_t;
+  typedef struct {
+    bool active: 1;
+    bool pressed: 1;
+    bool stickable: 1;
+    bool sticky: 1;
+    uint8_t __reserved: 4;
+    uint8_t position;
+  } key_state_t;
+  static key_state_t state_[16];
+
   static uint32_t start_time_;
-  static state_t state_;
-  static state_t sticky_state_;
-  static state_t stickable_state_;
-  static state_t pressed_state_;
   static Key prev_key_;
   static bool should_cancel_;
   static bool should_cancel_stickies_;
-  static uint8_t positions_[16];
 
   static void positionToCoords(uint8_t pos, byte *row, byte *col);
 
