@@ -2,7 +2,7 @@
 
 #include "Kaleidoscope-LEDControl.h"
 
-namespace kaleidoscope {
+namespace kaleidoscope { namespace plugin {
 	class LEDDigitalRainEffect : public LEDMode {
 		public:
 			LEDDigitalRainEffect(void) {}
@@ -80,6 +80,6 @@ namespace kaleidoscope {
 			 */
 			cRGB getColorFromComponents(uint8_t primary, uint8_t secondary);
 	};
-}
+}}
 
-extern kaleidoscope::LEDDigitalRainEffect LEDDigitalRainEffect;
+extern kaleidoscope::plugin::LEDDigitalRainEffect LEDDigitalRainEffect;
