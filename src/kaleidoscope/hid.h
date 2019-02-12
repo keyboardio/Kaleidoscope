@@ -33,6 +33,13 @@ extern void releaseRawKey(Key mappedKey);
 /** Flushes any pending regular key switch events and sends them out */
 extern void sendKeyboardReport();
 
+// Store a copy of the current report so that a mid-cycle report can be sent based on the
+// previous report instead of the incomplete current report
+extern void stashKeyboardReport();
+// Restore the saved copy of the keyboard report so that the current cycle can be resumed
+// properly after sending a mid-cycle report
+extern void restoreKeyboardReport();
+
 extern boolean isModifierKeyActive(Key mappedKey);
 extern boolean wasModifierKeyActive(Key mappedKey);
 
