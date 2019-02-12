@@ -173,11 +173,7 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // have a full HID report, and we don't want to accidentally turn
   // off keys that the scan hasn't reached yet, so we force the
   // current report to be the same as the previous one, then proceed
-  HID_KeyboardReport_Data_t hid_report;
-  // First, save the current report
-  memcpy(hid_report.allkeys, Keyboard.keyReport.allkeys, sizeof(hid_report));
-  // Next, copy the old report
-  memcpy(Keyboard.keyReport.allkeys, Keyboard.lastKeyReport.allkeys, sizeof(Keyboard.keyReport));
+  hid::stashKeyboardReport();
   // Instead of just calling pressKey here, we start processing the
   // key again, as if it was just pressed, and mark it as injected, so
   // we can ignore it and don't start an infinite loop. It would be
@@ -188,7 +184,7 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   hid::sendKeyboardReport();
 
   // Next, we restore the current state of the report
-  memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
+  hid::restoreKeyboardReport();
 
   // Last, if the key is still down, add its code back in
   if (keyswitch_state & IS_PRESSED)
