@@ -82,7 +82,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
     /* If a key had an on event, we update the live composite keymap. See
      * layers.h for an explanation about the different caches we have. */
     if (keyToggledOn(keyState)) {
-      if (mappedKey.raw == Key_NoKey.raw) {
+      if (mappedKey.raw == Key_NoKey.raw || keyState & EPHEMERAL) {
         Layer.updateLiveCompositeKeymap(row, col);
       } else {
         Layer.updateLiveCompositeKeymap(row, col, mappedKey);
