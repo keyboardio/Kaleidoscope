@@ -11,7 +11,7 @@ namespace kaleidoscope { namespace plugin {
 	void LEDDigitalRainEffect::update(void) {
 		uint8_t col;
 		uint8_t row;
-		
+
 		// Decay intensities and possibly make new raindrops
 		for (col = 0; col < COLS; col++) {
 			for (row = 0; row < ROWS; row++) {
