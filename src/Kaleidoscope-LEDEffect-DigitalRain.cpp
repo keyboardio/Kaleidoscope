@@ -1,7 +1,7 @@
 #include "Kaleidoscope-LEDEffect-DigitalRain.h"
 #include <stdlib.h>
 
-namespace kaleidoscope {
+namespace kaleidoscope { namespace plugin {
 	uint8_t LEDDigitalRainEffect::DROP_TICKS = 28;
 	uint8_t LEDDigitalRainEffect::NEW_DROP_PROBABILITY = 18;
 	uint8_t LEDDigitalRainEffect::PURE_GREEN_INTENSITY = 0xd0;
@@ -78,6 +78,6 @@ namespace kaleidoscope {
 			default: return CRGB(0, 0, 0);
 		}
 	}
-}
+}}
 
-kaleidoscope::LEDDigitalRainEffect LEDDigitalRainEffect;
+kaleidoscope::plugin::LEDDigitalRainEffect LEDDigitalRainEffect;
