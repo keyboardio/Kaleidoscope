@@ -26,13 +26,13 @@ uint32_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
-OneShot::key_state_t OneShot::state_[16];
+OneShot::key_state_t OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
 bool OneShot::should_cancel_stickies_ = false;
 
 bool OneShot::isPressed() {
-  for (uint8_t i = 0; i < sizeof(state_); i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
     if (state_[i].pressed)
       return true;
   }
@@ -40,7 +40,7 @@ bool OneShot::isPressed() {
 }
 
 bool OneShot::isSticky() {
-  for (uint8_t i = 0; i < sizeof(state_); i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
     if (state_[i].sticky)
       return true;
   }
@@ -209,7 +209,7 @@ void OneShot::inject(Key mapped_key, uint8_t key_state) {
 // --- glue code ---
 
 bool OneShot::isActive(void) {
-  for (uint8_t i = 0; i < 16; i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
     if ((state_[i].active && !hasTimedOut()) ||
         state_[i].pressed ||
         state_[i].sticky)
@@ -256,25 +256,25 @@ void OneShot::disableStickability(Key key) {
 }
 
 void OneShot::enableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < 8; i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
     state_[i].stickable = true;
   }
 }
 
 void OneShot::enableStickabilityForLayers() {
-  for (uint8_t i = 8; i < 16; i++) {
+  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
     state_[i].stickable = true;
   }
 }
 
 void OneShot::disableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < 8; i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
     state_[i].stickable = false;
   }
 }
 
 void OneShot::disableStickabilityForLayers() {
-  for (uint8_t i = 8; i < 16; i++) {
+  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
     state_[i].stickable = false;
   }
 }

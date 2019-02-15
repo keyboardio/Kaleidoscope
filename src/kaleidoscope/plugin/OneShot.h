@@ -29,7 +29,7 @@ namespace plugin {
 class OneShot : public kaleidoscope::Plugin {
  public:
   OneShot(void) {
-    for (uint8_t i = 0; i < 16; i++) {
+    for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
       state_[i].stickable = true;
     }
   }
@@ -79,6 +79,7 @@ class OneShot : public kaleidoscope::Plugin {
   void inject(Key mapped_key, uint8_t key_state);
 
  private:
+  static constexpr uint8_t ONESHOT_KEY_COUNT = 16;
   typedef struct {
     bool active: 1;
     bool pressed: 1;
@@ -87,7 +88,7 @@ class OneShot : public kaleidoscope::Plugin {
     uint8_t __reserved: 4;
     uint8_t position;
   } key_state_t;
-  static key_state_t state_[16];
+  static key_state_t state_[ONESHOT_KEY_COUNT];
 
   static uint32_t start_time_;
   static Key prev_key_;
