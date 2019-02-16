@@ -46,16 +46,12 @@ void NumPad::syncNumlockState(bool state) {
 
 void NumPad::cleanupNumlockState() {
   if (!numlockUnsynced) {
-    bool numLockLEDState = getNumlockState();
     ::LEDControl.set_mode(::LEDControl.get_mode_index());
-    if (!originalNumLockState) {
-      syncNumlockState(false);
-      numLockLEDState = false;
+    if (originalNumLockState != getNumlockState()) {
+      syncNumlockState(originalNumLockState);
     }
-    originalNumLockState = numLockLEDState;
     numlockUnsynced = true;
   }
-
 }
 
 void NumPad::setKeyboardLEDColors(void) {
@@ -91,6 +87,7 @@ EventHandlerResult NumPad::afterEachCycle() {
   } else {
     if (numlockUnsynced)  {
       // If it's the first time we're in this loop after toggling the Numpad mode on
+      originalNumLockState = getNumlockState();
       syncNumlockState(true);
       numlockUnsynced = false;
     }
