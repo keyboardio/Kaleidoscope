@@ -50,11 +50,16 @@ class TapDance : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
+  static constexpr uint8_t TAPDANCE_KEY_COUNT = 16;
+  struct TapDanceState {
+    bool pressed: 1;
+    bool triggered: 1;
+    bool release_next: 1;
+    uint8_t count;
+  };
+  static TapDanceState state_[TAPDANCE_KEY_COUNT];
+
   static uint32_t end_time_;
-  static uint8_t tap_count_[16];
-  static uint16_t pressed_state_;
-  static uint16_t triggered_state_;
-  static uint16_t release_next_state_;
   static Key last_tap_dance_key_;
   static byte last_tap_dance_row_;
   static byte last_tap_dance_col_;
