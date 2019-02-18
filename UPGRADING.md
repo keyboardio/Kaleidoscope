@@ -437,7 +437,7 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ### Finer OneShot stickability control
 
-The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods.
+The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods. The old properties are still available, but will be removed by **2019-04-30**.
 
 ### EEPROMKeymap mode
 
