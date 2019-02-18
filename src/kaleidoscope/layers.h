@@ -79,34 +79,14 @@ class Layer_ {
 
   static void activate(uint8_t layer);
   static void deactivate(uint8_t layer);
-  static void on(uint8_t layer) DEPRECATED(LAYER_ON) {
-    activate(layer);
-  }
-  static void off(uint8_t layer) DEPRECATED(LAYER_OFF) {
-    deactivate(layer);
-  }
   static void activateNext();
   static void deactivateTop();
-  static void next(void) DEPRECATED(LAYER_NEXT) {
-    activateNext();
-  }
-  static void previous(void) DEPRECATED(LAYER_PREVIOUS) {
-    deactivateTop();
-  }
   static void move(uint8_t layer);
 
   static uint8_t top(void) {
     return top_active_layer_;
   }
   static boolean isActive(uint8_t layer);
-  static boolean isOn(uint8_t layer) DEPRECATED(LAYER_ISON) {
-    return isActive(layer);
-  };
-
-  static void defaultLayer(uint8_t layer) DEPRECATED(LAYER_DEFAULT) {}
-  static uint8_t defaultLayer(void) DEPRECATED(LAYER_DEFAULT) {
-    return 0;
-  }
 
   static uint32_t getLayerState(void) {
     return layer_state_;
