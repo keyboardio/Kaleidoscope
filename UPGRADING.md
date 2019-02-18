@@ -435,22 +435,6 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ## Deprecated APIs and their replacements
 
-### Removal of Layer.defaultLayer
-
-The `Layer.defaultLayer()` method has been deprecated, because it wasn't widely used, nor tested well, and needlessly complicated the layering logic. If one wants to set a default layer, which the keyboard switches to when booting up, `EEPROMSettings.default_layer()` may be of use.
-
-`Layer.defaultLayer` is slated for removal by **2019-02-14**.
-
-### More clarity in Layer method names
-
-A number of methods on the `Layer` object have been renamed, to make their intent clearer:
-
-- `Layer.on()` and `Layer.off()` became `Layer.activate()` and `Layer.decativate()`, repsectively.
-- `Layer.next()` and `Layer.previous()` became `Layer.activateNext()` and `Layer.deactivateTop()`.
-- `Layer.isOn` became `Layer.isActive()`.
-
-The goal was to have a method name that is a verb, because these are actions we do. The old names are still present, but emit a deprecation warning, and will be removed by **2019-02-14**.
-
 ### Finer OneShot stickability control
 
 The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods.
@@ -481,6 +465,24 @@ The following headers and names have changed:
 - [TapDance](doc/plugin/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2019-01-18
+
+### Removal of Layer.defaultLayer
+
+The `Layer.defaultLayer()` method has been deprecated, because it wasn't widely used, nor tested well, and needlessly complicated the layering logic. If one wants to set a default layer, which the keyboard switches to when booting up, `EEPROMSettings.default_layer()` may be of use.
+
+`Layer.defaultLayer` has since been removed.
+
+### More clarity in Layer method names
+
+A number of methods on the `Layer` object have been renamed, to make their intent clearer:
+
+- `Layer.on()` and `Layer.off()` became `Layer.activate()` and `Layer.decativate()`, repsectively.
+- `Layer.next()` and `Layer.previous()` became `Layer.activateNext()` and `Layer.deactivateTop()`.
+- `Layer.isOn` became `Layer.isActive()`.
+
+The goal was to have a method name that is a verb, because these are actions we do. The old names have since been removed.
 
 ### Removed on 2019-01-17
 
