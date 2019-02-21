@@ -19,7 +19,6 @@
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/plugin.h"
 
-
 // *************************************************************************
 // *************************************************************************
 // NOTHING IN THIS HEADER WILL RESULT IN ANY CODE COMPILED INTO KALEIDOSCOPE
@@ -135,6 +134,7 @@ template<typename Plugin__> struct
   /* type of a plugin that implements an event handler with an         */ __NL__ \
   /* incorrect signature, because it's not possible to include any     */ __NL__ \
   /* non-literal string constant in a static_assert error message.     */ __NL__ \
-  constexpr bool dummy = ___________Culprit_Plugin___________             __NL__ \
+  __attribute__((unused)) constexpr bool dummy                            __NL__ \
+                       = ___________Culprit_Plugin___________             __NL__ \
        <PLUGIN, Check::value>::value;                                     __NL__ \
 }
