@@ -35,17 +35,17 @@
 // This enables suppress only those compiler warnings that are safe to
 // silence without using global flags as -Wno...
 //
-// Use e.g. as 
+// Use e.g. as
 //
 #if 0 // Not part of the example
 
 // Suppress Warnings for unused variables
-COMPILER_DIAG_OFF(unused-variable)
+COMPILER_DIAG_OFF(unused - variable)
 
 // Place code here that generates unavoidable unused variables
 
-COMPILER_DIAG_ON(unused-variable)
-// From this point onward, the compiler continues to warn for 
+COMPILER_DIAG_ON(unused - variable)
+// From this point onward, the compiler continues to warn for
 // unused variables.
 
 #endif // Not part of the example
