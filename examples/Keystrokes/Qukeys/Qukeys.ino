@@ -64,11 +64,11 @@ KALEIDOSCOPE_INIT_PLUGINS(Qukeys, Macros);
 
 void setup() {
   QUKEYS(
-    kaleidoscope::plugin::Qukey(0, 2, 1, Key_LeftGui),      // A/cmd
-    kaleidoscope::plugin::Qukey(0, 2, 2, Key_LeftAlt),      // S/alt
-    kaleidoscope::plugin::Qukey(0, 2, 3, Key_LeftControl),  // D/ctrl
-    kaleidoscope::plugin::Qukey(0, 2, 4, Key_LeftShift),    // F/shift
-    kaleidoscope::plugin::Qukey(0, 3, 6, ShiftToLayer(1))   // Q/layer-shift (on `fn`)
+    kaleidoscope::plugin::Qukey(0, KeyAddr(2, 1), Key_LeftGui),      // A/cmd
+    kaleidoscope::plugin::Qukey(0, KeyAddr(2, 2), Key_LeftAlt),      // S/alt
+    kaleidoscope::plugin::Qukey(0, KeyAddr(2, 3), Key_LeftControl),  // D/ctrl
+    kaleidoscope::plugin::Qukey(0, KeyAddr(2, 4), Key_LeftShift),    // F/shift
+    kaleidoscope::plugin::Qukey(0, KeyAddr(3, 6), ShiftToLayer(1))   // Q/layer-shift (on `fn`)
   )
   Qukeys.setTimeout(200);
   Qukeys.setReleaseDelay(20);

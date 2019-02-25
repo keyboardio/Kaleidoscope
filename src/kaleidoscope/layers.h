@@ -66,15 +66,26 @@ class Layer_ {
    * are curious what the active layer state describes the key as, use
    * `lookupOnActiveLayer`.
    */
-  static Key lookup(byte row, byte col) {
-    return live_composite_keymap_[row][col];
+  static Key lookup(KeyAddr key_addr) {
+    return live_composite_keymap_[key_addr.toInt()];
   }
-  static Key lookupOnActiveLayer(byte row, byte col) {
-    uint8_t layer = active_layers_[row][col];
-    return (*getKey)(layer, row, col);
+  DEPRECATED(ROW_COL_FUNC) static Key lookup(byte row, byte col) {
+    return live_composite_keymap_[KeyAddr(row, col).toInt()];
   }
-  static uint8_t lookupActiveLayer(byte row, byte col) {
-    return active_layers_[row][col];
+  static Key lookupOnActiveLayer(KeyAddr key_addr) {
+    uint8_t layer = active_layers_[key_addr.toInt()];
+    return (*getKey)(layer, key_addr);
+  }
+  DEPRECATED(ROW_COL_FUNC) static Key lookupOnActiveLayer(byte row, byte col) {
+    KeyAddr key_addr(row, col);
+    uint8_t layer = active_layers_[key_addr.toInt()];
+    return (*getKey)(layer, key_addr);
+  }
+  static uint8_t lookupActiveLayer(KeyAddr key_addr) {
+    return active_layers_[key_addr.toInt()];
+  }
+  DEPRECATED(ROW_COL_FUNC) static uint8_t lookupActiveLayer(byte row, byte col) {
+    return active_layers_[KeyAddr(row, col).toInt()];
   }
 
   static void activate(uint8_t layer);
@@ -92,23 +103,35 @@ class Layer_ {
     return layer_state_;
   }
 
-  static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+  DEPRECATED(ROW_COL_FUNC) static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+    return eventHandler(mappedKey, KeyAddr(row, col), keyState);
+  }
 
-  static Key(*getKey)(uint8_t layer, byte row, byte col);
+  static Key(*getKey)(uint8_t layer, KeyAddr key_addr);
 
-  static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
+  static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
+    return getKeyFromPROGMEM(layer, KeyAddr(row, col));
+  }
 
-  static void updateLiveCompositeKeymap(byte row, byte col);
-  static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
-    live_composite_keymap_[row][col] = mappedKey;
+  static void updateLiveCompositeKeymap(KeyAddr key_addr, Key mappedKey) {
+    live_composite_keymap_[key_addr.toInt()] = mappedKey;
+  }
+  DEPRECATED(ROW_COL_FUNC) static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
+    updateLiveCompositeKeymap(KeyAddr(row, col), mappedKey);
+  }
+  static void updateLiveCompositeKeymap(KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) static void updateLiveCompositeKeymap(byte row, byte col) {
+    updateLiveCompositeKeymap(KeyAddr(row, col));
   }
   static void updateActiveLayers(void);
 
  private:
   static uint32_t layer_state_;
   static uint8_t top_active_layer_;
-  static Key live_composite_keymap_[ROWS][COLS];
-  static uint8_t active_layers_[ROWS][COLS];
+  static Key live_composite_keymap_[KeyboardHardware.numKeys()];
+  static uint8_t active_layers_[KeyboardHardware.numKeys()];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
   static void updateTopActiveLayer(void);

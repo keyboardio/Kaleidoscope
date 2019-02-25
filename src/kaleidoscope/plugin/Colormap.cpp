@@ -47,9 +47,9 @@ void ColormapEffect::TransientLEDMode::onActivate(void) {
     ::LEDPaletteTheme.updateHandler(parent_->map_base_, parent_->top_layer_);
 }
 
-void ColormapEffect::TransientLEDMode::refreshAt(byte row, byte col) {
+void ColormapEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
   if (parent_->top_layer_ <= parent_->max_layers_)
-    ::LEDPaletteTheme.refreshAt(parent_->map_base_, parent_->top_layer_, row, col);
+    ::LEDPaletteTheme.refreshAt(parent_->map_base_, parent_->top_layer_, key_addr);
 }
 
 EventHandlerResult ColormapEffect::onLayerChange() {

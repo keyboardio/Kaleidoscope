@@ -29,8 +29,7 @@ class GeminiPR : public kaleidoscope::Plugin {
  public:
   GeminiPR(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
-
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
  private:
   static uint8_t keys_held_;
   static uint8_t state_[6];

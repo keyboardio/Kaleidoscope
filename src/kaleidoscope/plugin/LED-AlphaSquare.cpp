@@ -63,7 +63,7 @@ static const uint16_t alphabet[] PROGMEM = {
 
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
-void AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
+void AlphaSquare::display(Key key, KeyAddr key_addr, cRGB key_color) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -73,14 +73,14 @@ void AlphaSquare::display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
   uint8_t index = key.keyCode - Key_A.keyCode;
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
-  display(symbol, row, col, key_color);
+  display(symbol, key_addr, key_color);
 }
 
-void AlphaSquare::display(Key key, uint8_t row, uint8_t col) {
-  display(key, row, col, color);
+void AlphaSquare::display(Key key, KeyAddr key_addr) {
+  display(key, key_addr, color);
 }
 
-void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
+void AlphaSquare::display(uint16_t symbol, KeyAddr key_addr, cRGB key_color) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -90,20 +90,22 @@ void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_co
       if (!pixel)
         continue;
 
-      ::LEDControl.setCrgbAt(row + r, col + c, key_color);
+      KeyAddr shifted_addr = key_addr.shifted(r, c);
+
+      ::LEDControl.setCrgbAt(shifted_addr, key_color);
     }
   }
 
   ::LEDControl.syncLeds();
 }
 
-void AlphaSquare::display(uint16_t symbol, uint8_t row, uint8_t col) {
-  display(symbol, row, col, color);
+void AlphaSquare::display(uint16_t symbol, KeyAddr key_addr) {
+  display(symbol, key_addr, color);
 }
 
 bool AlphaSquare::isSymbolPart(Key key,
-                               uint8_t display_row, uint8_t display_col,
-                               uint8_t row, uint8_t col) {
+                               KeyAddr displayLedAddr,
+                               KeyAddr key_addr) {
   if (!Kaleidoscope.has_leds)
     return false;
 
@@ -113,12 +115,12 @@ bool AlphaSquare::isSymbolPart(Key key,
   uint8_t index = key.keyCode - Key_A.keyCode;
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
-  return isSymbolPart(symbol, display_row, display_col, row, col);
+  return isSymbolPart(symbol, displayLedAddr, key_addr);
 }
 
 bool AlphaSquare::isSymbolPart(uint16_t symbol,
-                               uint8_t display_row, uint8_t display_col,
-                               uint8_t row, uint8_t col) {
+                               KeyAddr displayLedAddr,
+                               KeyAddr key_addr) {
   if (!Kaleidoscope.has_leds)
     return false;
 
@@ -126,8 +128,8 @@ bool AlphaSquare::isSymbolPart(uint16_t symbol,
     for (uint8_t c = 0; c < 4; c++) {
       uint8_t pixel = bitRead(symbol, r * 4 + c);
 
-      if (display_row + r == row &&
-          display_col + c == col)
+      KeyAddr addr_shifted = displayLedAddr.shifted(r, c);
+      if (addr_shifted == key_addr)
         return !!pixel;
     }
   }

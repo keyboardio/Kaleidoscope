@@ -113,7 +113,7 @@ void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                          (bitRead(keyState_[row], col) << 1);
       if (keyState)
-        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
+        handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
     }
     previousKeyState_[row] = keyState_[row];
   }
@@ -130,25 +130,25 @@ void ErgoDox::scanMatrix() {
   actOnMatrixScan();
 }
 
-void ErgoDox::maskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+void ErgoDox::maskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
-  bitWrite(masks_[row], col, 1);
+  bitWrite(masks_[key_addr.row()], key_addr.col(), 1);
 }
 
-void ErgoDox::unMaskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+void ErgoDox::unMaskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
-  bitWrite(masks_[row], col, 0);
+  bitWrite(masks_[key_addr.row()], key_addr.col(), 0);
 }
 
-bool ErgoDox::isKeyMasked(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+bool ErgoDox::isKeyMasked(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return false;
 
-  return bitRead(masks_[row], col);
+  return bitRead(masks_[key_addr.row()], key_addr.col());
 }
 
 // ErgoDox-specific stuff
@@ -223,17 +223,17 @@ void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
   }
 }
 
-bool ErgoDox::isKeyswitchPressed(byte row, byte col) {
-  return (bitRead(keyState_[row], col) != 0);
+bool ErgoDox::isKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(keyState_[key_addr.row()], key_addr.col()) != 0);
 }
 
 bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+  return isKeyswitchPressed(KeyAddr(keyIndex));
 }
 
-bool ErgoDox::wasKeyswitchPressed(byte row, byte col) {
-  return (bitRead(previousKeyState_[row], col) != 0);
+bool ErgoDox::wasKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(previousKeyState_[key_addr.row()], key_addr.col()) != 0);
 }
 
 bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {

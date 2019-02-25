@@ -45,21 +45,20 @@ WavepoolEffect::TransientLEDMode::TransientLEDMode(const WavepoolEffect *parent)
     page_(0)
 {}
 
-EventHandlerResult WavepoolEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (row >= ROWS || col >= COLS)
+EventHandlerResult WavepoolEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+  if (!key_addr.isValid())
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
   return ::LEDControl.get_mode<TransientLEDMode>()
-         ->onKeyswitchEvent(mapped_key, row, col, key_state);
+         ->onKeyswitchEvent(mapped_key, key_addr, key_state);
 }
 
-EventHandlerResult WavepoolEffect::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult WavepoolEffect::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (keyIsPressed(key_state)) {
-    uint8_t offset = (row * COLS) + col;
-    surface_[page_][pgm_read_byte(rc2pos + offset)] = 0x7f;
+    surface_[page_][pgm_read_byte(rc2pos + key_addr.toInt())] = 0x7f;
     frames_since_event_ = 0;
   }
 
@@ -191,32 +190,29 @@ void WavepoolEffect::TransientLEDMode::update(void) {
 #endif
 
   // draw the water on the keys
-  for (byte r = 0; r < ROWS; r++) {
-    for (byte c = 0; c < COLS; c++) {
-      uint8_t offset = (r * COLS) + c;
-      int8_t height = oldpg[pgm_read_byte(rc2pos + offset)];
+  for (auto key_addr : KeyAddr::all()) {
+    int8_t height = oldpg[pgm_read_byte(rc2pos + key_addr.toInt())];
 #ifdef INTERPOLATE
-      if (now & 1) {  // odd frames only
-        // average height with other frame
-        height = ((int16_t)height + newpg[pgm_read_byte(rc2pos + offset)]) >> 1;
-      }
+    if (now & 1) {  // odd frames only
+      // average height with other frame
+      height = ((int16_t)height + newpg[pgm_read_byte(rc2pos + key_addr.toInt())]) >> 1;
+    }
 #endif
 
-      uint8_t intensity = abs(height) * 2;
-      uint8_t saturation = 0xff - intensity;
-      uint8_t value = (intensity >= 128) ? 255 : intensity << 1;
-      int16_t hue = ripple_hue;
+    uint8_t intensity = abs(height) * 2;
+    uint8_t saturation = 0xff - intensity;
+    uint8_t value = (intensity >= 128) ? 255 : intensity << 1;
+    int16_t hue = ripple_hue;
 
-      if (ripple_hue == WavepoolEffect::rainbow_hue) {
-        // color starts white but gets dimmer and more saturated as it fades,
-        // with hue wobbling according to height map
-        hue = (current_hue + height + (height >> 1)) & 0xff;
-      }
-
-      cRGB color = hsvToRgb(hue, saturation, value);
-
-      ::LEDControl.setCrgbAt(r, c, color);
+    if (ripple_hue == WavepoolEffect::rainbow_hue) {
+      // color starts white but gets dimmer and more saturated as it fades,
+      // with hue wobbling according to height map
+      hue = (current_hue + height + (height >> 1)) & 0xff;
     }
+
+    cRGB color = hsvToRgb(hue, saturation, value);
+
+    ::LEDControl.setCrgbAt(key_addr, color);
   }
 
 #ifdef INTERPOLATE

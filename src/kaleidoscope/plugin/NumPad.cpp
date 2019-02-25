@@ -25,7 +25,7 @@ cRGB NumPad::color = CRGB(160, 0, 0);
 uint8_t NumPad::lock_hue = 170;
 
 // private:
-byte NumPad::numpadLayerToggleKeyRow = 255, NumPad::numpadLayerToggleKeyCol = 255;
+KeyAddr NumPad::numpadLayerToggleKeyAddr;
 bool NumPad::numpadActive = false;
 
 EventHandlerResult NumPad::onSetup(void) {
@@ -35,27 +35,24 @@ EventHandlerResult NumPad::onSetup(void) {
 void NumPad::setKeyboardLEDColors(void) {
   ::LEDControl.set_mode(::LEDControl.get_mode_index());
 
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
-      Key layer_key = Layer.getKey(numPadLayer, r, c);
+  for (auto key_addr : KeyAddr::all()) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
+    Key layer_key = Layer.getKey(numPadLayer, key_addr);
 
-      if (k == LockLayer(numPadLayer)) {
-        numpadLayerToggleKeyRow = r;
-        numpadLayerToggleKeyCol = c;
-      }
+    if (k == LockLayer(numPadLayer)) {
+      numpadLayerToggleKeyAddr = key_addr;
+    }
 
-      if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
-        ::LEDControl.refreshAt(r, c);
-      } else {
-        ::LEDControl.setCrgbAt(r, c, color);
-      }
+    if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
+      ::LEDControl.refreshAt(KeyAddr(key_addr));
+    } else {
+      ::LEDControl.setCrgbAt(KeyAddr(key_addr), color);
     }
   }
 
-  if ((numpadLayerToggleKeyRow <= ROWS) && (numpadLayerToggleKeyCol <= COLS)) {
+  if (numpadLayerToggleKeyAddr.isValid()) {
     cRGB lock_color = breath_compute(lock_hue);
-    ::LEDControl.setCrgbAt(numpadLayerToggleKeyRow, numpadLayerToggleKeyCol, lock_color);
+    ::LEDControl.setCrgbAt(KeyAddr(numpadLayerToggleKeyAddr), lock_color);
   }
 }
 

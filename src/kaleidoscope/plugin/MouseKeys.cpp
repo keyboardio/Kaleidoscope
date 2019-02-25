@@ -106,7 +106,7 @@ EventHandlerResult MouseKeys_::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MOUSE_KEY))
     return EventHandlerResult::OK;
 

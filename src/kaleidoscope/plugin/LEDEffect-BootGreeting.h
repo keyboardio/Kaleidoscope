@@ -24,10 +24,11 @@ namespace plugin {
 class BootGreetingEffect : public kaleidoscope::Plugin {
  public:
   BootGreetingEffect(void) {}
-  BootGreetingEffect(byte, byte);
+  BootGreetingEffect(KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) BootGreetingEffect(byte row, byte col)
+    : BootGreetingEffect(KeyAddr(row, col)) {}
 
-  static byte key_row;
-  static byte key_col;
+  static KeyAddr user_key_addr;
   static Key search_key;
   static uint8_t hue;
   static uint16_t timeout;
@@ -37,8 +38,7 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
  private:
   static void findLed(void);
   static bool done_;
-  static byte row_;
-  static byte col_;
+  static KeyAddr key_addr_;
   static uint16_t start_time;
 };
 }

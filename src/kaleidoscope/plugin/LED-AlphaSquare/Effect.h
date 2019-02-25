@@ -30,7 +30,7 @@ class AlphaSquareEffect : public Plugin,
 
   static uint16_t length;
 
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
 
   // This class' instance has dynamic lifetime
   //
@@ -40,7 +40,10 @@ class AlphaSquareEffect : public Plugin,
 
    protected:
     void update(void) final;
-    void refreshAt(byte row, byte col) final;
+    void refreshAt(KeyAddr key_addr) final;
+    DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
+      refreshAt(KeyAddr(row, col));
+    }
 
    private:
     uint32_t end_time_left_, end_time_right_;

@@ -37,15 +37,15 @@ void FingerPainter::update(void) {
   ::LEDPaletteTheme.updateHandler(color_base_, 0);
 }
 
-void FingerPainter::refreshAt(byte row, byte col) {
-  ::LEDPaletteTheme.refreshAt(color_base_, 0, row, col);
+void FingerPainter::refreshAt(KeyAddr key_addr) {
+  ::LEDPaletteTheme.refreshAt(color_base_, 0, key_addr);
 }
 
 void FingerPainter::toggle(void) {
   edit_mode_ = !edit_mode_;
 }
 
-EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (!Kaleidoscope.has_leds || !edit_mode_)
     return EventHandlerResult::OK;
 
@@ -53,10 +53,12 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, by
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (row >= ROWS || col >= COLS)
+  if (!key_addr.isValid())
     return EventHandlerResult::EVENT_CONSUMED;
 
-  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col));
+  // TODO: The following works only for keyboards with LEDs for each key.
+
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(key_addr));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
@@ -73,7 +75,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, byte row, by
     new_color = ::LEDPaletteTheme.lookupPaletteColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(row, col), color_index);
+  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(key_addr), color_index);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }

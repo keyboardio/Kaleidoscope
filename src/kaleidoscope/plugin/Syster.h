@@ -41,7 +41,7 @@ class Syster : public kaleidoscope::Plugin {
 
   bool is_active(void);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
 
  private:
   static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
