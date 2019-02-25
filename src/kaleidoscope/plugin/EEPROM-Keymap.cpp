@@ -47,13 +47,13 @@ void EEPROMKeymap::max_layers(uint8_t max) {
   keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * KeyboardHardware.numKeys() * 2);
 }
 
-Key EEPROMKeymap::getKey(uint8_t layer, byte row, byte col) {
+Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
   Key key;
 
   if (layer >= max_layers_)
     return Key_NoKey;
 
-  uint16_t pos = ((layer * KeyboardHardware.numKeys()) + (row * COLS) + col) * 2;
+  uint16_t pos = ((layer * KeyboardHardware.numKeys()) + key_addr.toInt()) * 2;
 
   key.flags = EEPROM.read(keymap_base_ + pos);
   key.keyCode = EEPROM.read(keymap_base_ + pos + 1);
@@ -61,16 +61,15 @@ Key EEPROMKeymap::getKey(uint8_t layer, byte row, byte col) {
   return key;
 }
 
-Key EEPROMKeymap::getKeyExtended(uint8_t layer, byte row, byte col) {
-  Key key;
+Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
 
   // If the layer is within PROGMEM bounds, look it up from there
   if (layer < progmem_layers_) {
-    return Layer.getKeyFromPROGMEM(layer, row, col);
+    return Layer.getKeyFromPROGMEM(layer, key_addr);
   }
 
   // If the layer is outside of PROGMEM, look up from EEPROM
-  return getKey(layer - progmem_layers_, row, col);
+  return getKey(layer - progmem_layers_, key_addr);
 }
 
 uint16_t EEPROMKeymap::keymap_base(void) {
@@ -82,14 +81,22 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
   EEPROM.update(keymap_base_ + base_pos * 2 + 1, key.keyCode);
 }
 
+void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {
+  for (uint8_t layer = 0; layer < layers; layer++) {
+    for (auto key_addr : KeyAddr::all()) {
+      Key k = (*getkey)(layer, key_addr);
+
+      ::Focus.send(k);
+    }
+  }
+}
+
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
-    for (uint8_t row = 0; row < ROWS; row++) {
-      for (uint8_t col = 0; col < COLS; col++) {
-        Key k = (*getkey)(layer, row, col);
+    for (auto key_addr : KeyAddr::all()) {
+      Key k = (*getkey)(layer, key_addr.row(), key_addr.col());
 
-        ::Focus.send(k);
-      }
+      ::Focus.send(k);
     }
   }
 }
@@ -122,7 +129,12 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   }
 
   if (strcmp_P(command + 7, PSTR("default")) == 0) {
-    dumpKeymap(progmem_layers_, Layer.getKeyFromPROGMEM);
+    // By using a cast to the appropriate function type,
+    // tell the compiler which overload of getKeyFromPROGMEM
+    // we actully want.
+    //
+    dumpKeymap(progmem_layers_,
+               static_cast<Key(*)(uint8_t, KeyAddr)>(Layer.getKeyFromPROGMEM));
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
@@ -130,7 +142,11 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
-    dumpKeymap(max_layers_, getKey);
+    // By using a cast to the appropriate function type,
+    // tell the compiler which overload of getKey
+    // we actually want.
+    //
+    dumpKeymap(max_layers_, static_cast<Key(*)(uint8_t, KeyAddr)>(getKey));
   } else {
     uint16_t i = 0;
 

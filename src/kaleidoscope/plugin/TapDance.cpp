@@ -26,20 +26,19 @@ uint32_t TapDance::end_time_;
 uint16_t TapDance::time_out = 200;
 TapDance::TapDanceState TapDance::state_[TapDance::TAPDANCE_KEY_COUNT];
 Key TapDance::last_tap_dance_key_;
-byte TapDance::last_tap_dance_row_;
-byte TapDance::last_tap_dance_col_;
+KeyAddr TapDance::last_tap_dance_addr_;
 
 // --- actions ---
 
-void TapDance::interrupt(byte row, byte col) {
+void TapDance::interrupt(KeyAddr key_addr) {
   uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
 
-  tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, state_[idx].count, Interrupt);
+  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Interrupt);
   state_[idx].triggered = true;
 
   end_time_ = 0;
 
-  KeyboardHardware.maskKey(row, col);
+  KeyboardHardware.maskKey(key_addr);
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::releaseAllKeys();
 
@@ -52,7 +51,7 @@ void TapDance::interrupt(byte row, byte col) {
 void TapDance::timeout(void) {
   uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
 
-  tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, state_[idx].count, Timeout);
+  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Timeout);
   state_[idx].triggered = true;
 
   if (state_[idx].pressed)
@@ -78,7 +77,7 @@ void TapDance::tap(void) {
   state_[idx].count++;
   end_time_ = millis() + time_out;
 
-  tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, state_[idx].count, Tap);
+  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Tap);
 }
 
 // --- api ---
@@ -95,21 +94,21 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
     break;
   case Interrupt:
   case Timeout:
-    handleKeyswitchEvent(key, last_tap_dance_row_, last_tap_dance_col_, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, last_tap_dance_addr_, IS_PRESSED | INJECTED);
     break;
   case Hold:
-    handleKeyswitchEvent(key, last_tap_dance_row_, last_tap_dance_col_, IS_PRESSED | WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, last_tap_dance_addr_, IS_PRESSED | WAS_PRESSED | INJECTED);
     break;
   case Release:
     hid::sendKeyboardReport();
-    handleKeyswitchEvent(key, last_tap_dance_row_, last_tap_dance_col_, WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(key, last_tap_dance_addr_, WAS_PRESSED | INJECTED);
     break;
   }
 }
 
 // --- hooks ---
 
-EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 
@@ -118,10 +117,10 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
       return EventHandlerResult::OK;
 
     if (keyToggledOn(keyState))
-      interrupt(row, col);
+      interrupt(key_addr);
 
-    if (KeyboardHardware.isKeyMasked(row, col)) {
-      KeyboardHardware.unMaskKey(row, col);
+    if (KeyboardHardware.isKeyMasked(key_addr)) {
+      KeyboardHardware.unMaskKey(key_addr);
       return EventHandlerResult::EVENT_CONSUMED;
     }
     return EventHandlerResult::OK;
@@ -143,8 +142,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
       }
 
       last_tap_dance_key_.raw = mapped_key.raw;
-      last_tap_dance_row_ = row;
-      last_tap_dance_col_ = col;
+      last_tap_dance_addr_ = key_addr;
 
       tap();
 
@@ -159,7 +157,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
         return EventHandlerResult::EVENT_CONSUMED;
       }
 
-      interrupt(row, col);
+      interrupt(key_addr);
     }
   }
 
@@ -170,8 +168,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
   }
 
   last_tap_dance_key_.raw = mapped_key.raw;
-  last_tap_dance_row_ = row;
-  last_tap_dance_col_ = col;
+  last_tap_dance_addr_ = key_addr;
   state_[tap_dance_index].pressed = true;
 
   if (keyToggledOn(keyState)) {
@@ -180,7 +177,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, byte row, byte co
   }
 
   if (state_[tap_dance_index].triggered)
-    tapDanceAction(tap_dance_index, row, col, state_[tap_dance_index].count, Hold);
+    tapDanceAction(tap_dance_index, key_addr, state_[tap_dance_index].count, Hold);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
@@ -190,7 +187,7 @@ EventHandlerResult TapDance::afterEachCycle() {
     if (!state_[i].release_next)
       continue;
 
-    tapDanceAction(i, last_tap_dance_row_, last_tap_dance_col_, state_[i].count, Release);
+    tapDanceAction(i, last_tap_dance_addr_, state_[i].count, Release);
     state_[i].count = 0;
     state_[i].release_next = false;
   }
@@ -209,6 +206,12 @@ EventHandlerResult TapDance::afterEachCycle() {
 
 __attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
     kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+}
+
+// Let the future version be the wrapper to enable backward compatibility.
+__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
+    kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+  tapDanceAction(tap_dance_index, key_addr.row(), key_addr.col(), tap_count, tap_dance_action);
 }
 
 kaleidoscope::plugin::TapDance TapDance;

@@ -32,13 +32,16 @@ class FingerPainter : public LEDMode {
 
   static void toggle(void);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult onSetup();
 
  protected:
   void update(void) final;
-  void refreshAt(byte row, byte col) final;
+  void refreshAt(KeyAddr key_addr) final;
+  DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
+    refreshAt(KeyAddr(row, col));
+  }
 
  private:
   static uint16_t color_base_;

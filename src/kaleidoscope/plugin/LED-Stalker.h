@@ -39,7 +39,7 @@ class StalkerEffect : public Plugin,
   static uint16_t step_length;
   static cRGB inactive_color;
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
 
   // This class' instance has dynamic lifetime
   //
@@ -61,7 +61,7 @@ class StalkerEffect : public Plugin,
     const StalkerEffect *parent_;
 
     uint16_t step_start_time_;
-    uint8_t map_[ROWS][COLS];
+    uint8_t map_[KeyboardHardware.numKeys()];
 
     friend class StalkerEffect;
   };

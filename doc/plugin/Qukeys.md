@@ -18,8 +18,8 @@ one keycode (i.e. symbol) when tapped, and a different keycode -- most likely a 
 KALEIDOSCOPE_INIT_PLUGINS(Qukeys);
 ```
 
-- Define some `Qukeys` of the format `Qukey(layer, row, col, alt_keycode)`
-  (layers, rows and columns are all zero-indexed, rows are top to bottom and
+- Define some `Qukeys` of the format `Qukey(layer, key_addr, alt_keycode)`
+  (layers, and key addresses are all zero-indexed, in key addresses rows are top to bottom and
   columns are left to right):
 
 - For the Keyboardio Model 01, key coordinates refer to [this header

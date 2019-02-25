@@ -61,13 +61,13 @@ void LEDRainbowWaveEffect::TransientLEDMode::update(void) {
     rainbow_last_update = now;
   }
 
-  for (int8_t i = 0; i < LED_COUNT; i++) {
-    uint16_t key_hue = rainbow_hue + 16 * (i / 4);
+  for (auto key_addr : KeyAddr::all()) {
+    uint16_t key_hue = rainbow_hue + 16 * (key_addr.toInt() / 4);
     if (key_hue >= 255)          {
       key_hue -= 255;
     }
     cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, parent_->rainbow_value);
-    ::LEDControl.setCrgbAt(i, rainbow);
+    ::LEDControl.setCrgbAt(key_addr.toInt(), rainbow);
   }
   rainbow_hue += rainbow_wave_steps;
   if (rainbow_hue >= 255) {

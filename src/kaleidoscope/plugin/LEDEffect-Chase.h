@@ -58,7 +58,7 @@ class LEDChaseEffect : public Plugin,
 
     const LEDChaseEffect *parent_;
 
-    int8_t pos_ = 0;
+    int8_t pos_ = uint8_t(0);
     int8_t direction_ = 1;
     uint16_t last_update_ = 0;
   };

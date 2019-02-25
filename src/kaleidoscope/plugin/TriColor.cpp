@@ -27,34 +27,32 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
 }
 
 void TriColor::TransientLEDMode::update(void) {
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookup(r, c);
+  for (auto key_addr : KeyAddr::all()) {
+    Key k = Layer.lookup(key_addr);
 
-      // Special keys are always mod_color
-      if (k.flags != 0) {
-        ::LEDControl.setCrgbAt(r, c, parent_->mod_color_);
-        continue;
-      }
-
-      cRGB color = parent_->mod_color_;
-
-      switch (k.keyCode) {
-      case Key_A.keyCode ... Key_0.keyCode:
-      case Key_Spacebar.keyCode:
-      case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
-      case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
-      case Key_F1.keyCode ... Key_F4.keyCode:
-      case Key_F9.keyCode ... Key_F12.keyCode:
-        color = parent_->base_color_;
-        break;
-      case Key_Escape.keyCode:
-        color = parent_->esc_color_;
-        break;
-      }
-
-      ::LEDControl.setCrgbAt(r, c, color);
+    // Special keys are always mod_color
+    if (k.flags != 0) {
+      ::LEDControl.setCrgbAt(KeyAddr(key_addr), parent_->mod_color_);
+      continue;
     }
+
+    cRGB color = parent_->mod_color_;
+
+    switch (k.keyCode) {
+    case Key_A.keyCode ... Key_0.keyCode:
+    case Key_Spacebar.keyCode:
+    case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
+    case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
+    case Key_F1.keyCode ... Key_F4.keyCode:
+    case Key_F9.keyCode ... Key_F12.keyCode:
+      color = parent_->base_color_;
+      break;
+    case Key_Escape.keyCode:
+      color = parent_->esc_color_;
+      break;
+    }
+
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), color);
   }
 }
 

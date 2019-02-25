@@ -76,7 +76,7 @@ void HardwareTestMode::testLeds(void) {
 
 void HardwareTestMode::testMatrix() {
   // Reset bad keys from previous tests.
-  chatter_data state[KeyboardHardware.matrix_columns * KeyboardHardware.matrix_rows] = {0, 0, 0};
+  chatter_data state[KeyboardHardware.numKeys()] = {0, 0, 0};
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
@@ -85,36 +85,34 @@ void HardwareTestMode::testMatrix() {
 
   while (1) {
     KeyboardHardware.readMatrix();
-    for (byte row = 0; row < KeyboardHardware.matrix_rows; row++) {
-      for (byte col = 0; col < KeyboardHardware.matrix_columns; col++) {
-        uint8_t keynum = (row * KeyboardHardware.matrix_columns) + (col);
+    for (auto key_addr : KeyAddr::all()) {
+      uint8_t keynum = key_addr.toInt();
 
-        // If the key is toggled on
-        if (KeyboardHardware.isKeyswitchPressed(row, col) && ! KeyboardHardware.wasKeyswitchPressed(row, col)) {
-          // And it's too soon (in terms of cycles between changes)
-          state[keynum].tested = 1;
-          if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
-            state[keynum].bad = 1;
-          }
-          state[keynum].cyclesSinceStateChange = 0;
-        } else if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
-          state[keynum].cyclesSinceStateChange++;
+      // If the key is toggled on
+      if (KeyboardHardware.isKeyswitchPressed(key_addr) && ! KeyboardHardware.wasKeyswitchPressed(key_addr)) {
+        // And it's too soon (in terms of cycles between changes)
+        state[keynum].tested = 1;
+        if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
+          state[keynum].bad = 1;
         }
-        // If the key is held down
-        if (KeyboardHardware.isKeyswitchPressed(row, col) && KeyboardHardware.wasKeyswitchPressed(row, col)) {
-          KeyboardHardware.setCrgbAt(row, col, green);
-        }
+        state[keynum].cyclesSinceStateChange = 0;
+      } else if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
+        state[keynum].cyclesSinceStateChange++;
+      }
+      // If the key is held down
+      if (KeyboardHardware.isKeyswitchPressed(key_addr) && KeyboardHardware.wasKeyswitchPressed(key_addr)) {
+        KeyboardHardware.setCrgbAt(key_addr, green);
+      }
 
-        // If we triggered chatter detection ever on this key
-        else if (state[keynum].bad == 1) {
-          KeyboardHardware.setCrgbAt(row, col, red);
-        } else if (state[keynum].tested == 0) {
-          KeyboardHardware.setCrgbAt(row, col, yellow);
-        }
-        // If the key is not currently pressed and was not just released and is not marked bad
-        else if (! KeyboardHardware.isKeyswitchPressed(row, col)) {
-          KeyboardHardware.setCrgbAt(row, col, blue);
-        }
+      // If we triggered chatter detection ever on this key
+      else if (state[keynum].bad == 1) {
+        KeyboardHardware.setCrgbAt(key_addr, red);
+      } else if (state[keynum].tested == 0) {
+        KeyboardHardware.setCrgbAt(key_addr, yellow);
+      }
+      // If the key is not currently pressed and was not just released and is not marked bad
+      else if (! KeyboardHardware.isKeyswitchPressed(key_addr)) {
+        KeyboardHardware.setCrgbAt(key_addr, blue);
       }
     }
     ::LEDControl.syncLeds();

@@ -40,7 +40,7 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
 
  private:
   static bool highlight_normal_modifiers_;
-  static uint8_t mod_keys_[MAX_MODS_PER_LAYER];
+  static KeyAddr mod_keys_[MAX_MODS_PER_LAYER];
   static uint8_t mod_key_count_;
 };
 }

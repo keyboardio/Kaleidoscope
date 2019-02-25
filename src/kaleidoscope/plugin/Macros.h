@@ -53,7 +53,7 @@ class Macros_ : public kaleidoscope::Plugin {
     ++active_macro_count;
   }
 
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
 
@@ -74,7 +74,7 @@ class Macros_ : public kaleidoscope::Plugin {
     return type(strings...);
   }
 
-  static byte row, col;
+  static KeyAddr key_addr;
 
  private:
   Key lookupAsciiCode(uint8_t ascii_code);

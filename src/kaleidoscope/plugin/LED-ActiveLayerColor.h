@@ -44,7 +44,10 @@ class LEDActiveLayerColorEffect : public Plugin,
    protected:
 
     virtual void onActivate(void) final;
-    virtual void refreshAt(byte row, byte col) final;
+    virtual void refreshAt(KeyAddr key_addr) final;
+    DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
+      refreshAt(KeyAddr(row, col));
+    }
 
    private:
 

@@ -25,8 +25,8 @@ void LEDSolidColor::TransientLEDMode::onActivate(void) {
                                parent_->b_);
 }
 
-void LEDSolidColor::TransientLEDMode::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col,
+void LEDSolidColor::TransientLEDMode::refreshAt(KeyAddr key_addr) {
+  ::LEDControl.setCrgbAt(key_addr,
                          CRGB(parent_->r_,
                               parent_->g_,
                               parent_->b_));

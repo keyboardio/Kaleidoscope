@@ -74,15 +74,13 @@ uint8_t ATMegaKeyboard::pressedKeyswitchCount() {
   return count;
 }
 
-bool ATMegaKeyboard::isKeyswitchPressed(uint8_t row, byte col) {
-  return (bitRead(KeyboardHardware.keyState_[row], col) != 0);
-
+bool ATMegaKeyboard::isKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(KeyboardHardware.keyState_[key_addr.row()], key_addr.col()) != 0);
 }
 
 bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return isKeyswitchPressed(keyIndex / KeyboardHardware.matrix_columns,
-                            keyIndex % KeyboardHardware.matrix_columns);
+  return isKeyswitchPressed(KeyAddr(keyIndex));
 }
 
 
@@ -95,15 +93,14 @@ uint8_t ATMegaKeyboard::previousPressedKeyswitchCount() {
   return count;
 }
 
-bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t row, byte col) {
-  return (bitRead(KeyboardHardware.previousKeyState_[row], col) != 0);
+bool ATMegaKeyboard::wasKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(KeyboardHardware.previousKeyState_[key_addr.row()], key_addr.col()) != 0);
 
 }
 
 bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return wasKeyswitchPressed(keyIndex / KeyboardHardware.matrix_columns,
-                             keyIndex % KeyboardHardware.matrix_columns);
+  return wasKeyswitchPressed(KeyAddr(keyIndex));
 }
 
 
@@ -113,7 +110,7 @@ void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
       uint8_t keyState = (bitRead(KeyboardHardware.previousKeyState_[row], col) << 0) |
                          (bitRead(KeyboardHardware.keyState_[row], col) << 1);
       if (keyState) {
-        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
+        handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
       }
     }
     KeyboardHardware.previousKeyState_[row] = KeyboardHardware.keyState_[row];
@@ -130,25 +127,25 @@ void ATMegaKeyboard::scanMatrix() {
   KeyboardHardware.actOnMatrixScan();
 }
 
-void ATMegaKeyboard::maskKey(byte row, byte col) {
-  if (row >= KeyboardHardware.matrix_rows || col >= KeyboardHardware.matrix_columns)
+void ATMegaKeyboard::maskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
-  bitWrite(KeyboardHardware.masks_[row], col, 1);
+  bitWrite(KeyboardHardware.masks_[key_addr.row()], key_addr.col(), 1);
 }
 
-void ATMegaKeyboard::unMaskKey(byte row, byte col) {
-  if (row >= KeyboardHardware.matrix_rows || col >= KeyboardHardware.matrix_columns)
+void ATMegaKeyboard::unMaskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
-  bitWrite(KeyboardHardware.masks_[row], col, 0);
+  bitWrite(KeyboardHardware.masks_[key_addr.row()], key_addr.col(), 0);
 }
 
-bool ATMegaKeyboard::isKeyMasked(byte row, byte col) {
-  if (row >= KeyboardHardware.matrix_rows || col >= KeyboardHardware.matrix_columns)
+bool ATMegaKeyboard::isKeyMasked(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return false;
 
-  return bitRead(KeyboardHardware.masks_[row], col);
+  return bitRead(KeyboardHardware.masks_[key_addr.row()], key_addr.col());
 }
 
 /*

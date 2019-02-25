@@ -24,7 +24,7 @@ namespace steno {
 uint8_t GeminiPR::keys_held_;
 uint8_t GeminiPR::state_[6];
 
-EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (mapped_key < geminipr::START ||
       mapped_key > geminipr::END)
     return EventHandlerResult::OK;

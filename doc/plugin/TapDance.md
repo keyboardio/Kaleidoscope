@@ -123,7 +123,7 @@ property only:
 > The `tap_count` and `tap_dance_actions` parameters should be the same as the
 > similarly named parameters of the `tapDanceAction` function.
 
-### `tapDanceAction(tap_dance_index, row, col, tap_count, tap_dance_action)`
+### `tapDanceAction(tap_dance_index, key_addr, tap_count, tap_dance_action)`
 
 > The heart of the tap-dance plugin is the handler method. This is called every
 > time any kind of tap-dance action is to be performed. See the

@@ -53,20 +53,17 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
     return EventHandlerResult::OK;
   }
 
-  byte row = 255, col = 255;
+  KeyAddr key_addr_found;
 
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
-      Key g;
-      g.flags = 0;
-      g.keyCode = pgm_read_word(&greeting_[current_index_]);
+  for (auto key_addr : KeyAddr::all()) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
+    Key g;
+    g.flags = 0;
+    g.keyCode = pgm_read_word(&greeting_[current_index_]);
 
-      if (k.raw == g.raw) {
-        row = r;
-        col = c;
-        break;
-      }
+    if (k.raw == g.raw) {
+      key_addr_found = key_addr;
+      break;
     }
   }
 
@@ -76,13 +73,13 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
       done_ = true;
 
     start_time_ = Kaleidoscope.millisAtCycleStart();
-    if (row != 255 && col != 255)
-      ::LEDControl.refreshAt(row, col);
+    if (key_addr_found.isValid())
+      ::LEDControl.refreshAt(KeyAddr(key_addr_found));
     return EventHandlerResult::OK;
   }
 
-  if (row != 255 && col != 255) {
-    ::LEDControl.setCrgbAt(row, col, color);
+  if (key_addr_found.isValid()) {
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr_found), color);
   }
 
   return EventHandlerResult::OK;

@@ -22,6 +22,7 @@
 #pragma once
 
 #include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope_internal/deprecations.h"
 
 #ifndef CRGB
 #error cRGB and CRGB *must* be defined before including this header!
@@ -57,6 +58,12 @@ namespace kaleidoscope {
  */
 class Hardware {
  public:
+
+  // To satisfy the interface of those methods that allow
+  // for matrix addressing we define default key and led address classes.
+  // Those typedefs are supposed to overridden by derived hardware classes.
+  typedef MatrixAddr<0, 0> KeyAddr;
+
   /**
    * @defgroup kaleidoscope_hardware_leds Kaleidoscope::Hardware/LEDs
    * @{
@@ -72,11 +79,21 @@ class Hardware {
    * Setting the color does not need to take effect immediately, it can be
    * delayed until @ref syncLeds is called.
    *
+   * @param key_addr is the matrix address of the LED.
+   * @param color is the color to set the LED to.
+   */
+  void setCrgbAt(KeyAddr key_addr, cRGB color) {}
+  /**
+   * Set the color of a per-key LED at a given row and column.
+   *
+   * Setting the color does not need to take effect immediately, it can be
+   * delayed until @ref syncLeds is called.
+   *
    * @param row is the logical row position of the key.
    * @param col is the logical column position of the key.
    * @param color is the color to set the LED to.
    */
-  void setCrgbAt(byte row, byte col, cRGB color) {}
+  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {}
   /**
    * Set the color of a per-key LED at a given LED index.
    *
@@ -101,6 +118,17 @@ class Hardware {
     return c;
   }
   /**
+  * Returns the index of the LED at a given row & column.
+  *
+  * @param key_addr is the matrix address of the LED.
+  *
+  * @returns The index of the LED at the given position, or -1 if there are no
+  * LEDs there.
+  */
+  int8_t getLedIndex(KeyAddr key_addr) {
+    return -1;
+  }
+  /**
    * Returns the index of the LED at a given row & column.
    *
    * @param row is the logical row position of the key.
@@ -109,7 +137,7 @@ class Hardware {
    * @returns The index of the LED at the given position, or -1 if there are no
    * LEDs there.
    */
-  int8_t getLedIndex(uint8_t row, byte col) {
+  DEPRECATED(ROW_COL_FUNC) int8_t getLedIndex(uint8_t row, byte col) {
     return -1;
   }
   /** @} */
@@ -155,10 +183,28 @@ class Hardware {
    * Masking a key out means that any other event than a release will be
    * ignored until said release.
    *
+   * @param key_addr is the matrix address of the key.
+   */
+  void maskKey(KeyAddr key_addr) {}
+  /**
+   * Mask out a key.
+   *
+   * Masking a key out means that any other event than a release will be
+   * ignored until said release.
+   *
    * @param row is the row the key is located at in the matrix.
    * @param col is the column the key is located at in the matrix.
    */
-  void maskKey(byte row, byte col) {}
+  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {}
+  /**
+   * Unmask a key.
+   *
+   * Remove the mask - if any - for a given key. To be used when the mask
+   * needs to be removed without the key being released.
+   *
+   * @param key_addr is the matrix address of the key.
+   */
+  void unMaskKey(KeyAddr key_addr) {}
   /**
    * Unmask a key.
    *
@@ -172,12 +218,22 @@ class Hardware {
   /**
    * Check whether a key is masked or not.
    *
+   * @param key_addr is the matrix address of the key.
+   *
+   * @returns true if the key is masked, false otherwise.
+   */
+  bool isKeyMasked(KeyAddr key_addr) {
+    return false;
+  }
+  /**
+   * Check whether a key is masked or not.
+   *
    * @param row is the row the key is located at in the matrix.
    * @param col is the column the key is located at in the matrix.
    *
    * @returns true if the key is masked, false otherwise.
    */
-  bool isKeyMasked(byte row, byte col) {
+  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
     return false;
   }
   /** @} */
@@ -226,12 +282,22 @@ class Hardware {
   /**
    * Check if a key is pressed at a given position.
    *
+   * @param key_addr is the matrix address of the key.
+   *
+   * @returns true if the key is pressed, false otherwise.
+   */
+  bool isKeyswitchPressed(KeyAddr key_addr) {
+    return false;
+  }
+  /**
+   * Check if a key is pressed at a given position.
+   *
    * @param row is the row the key is located at in the matrix.
    * @param col is the column the key is located at in the matrix.
    *
    * @returns true if the key is pressed, false otherwise.
    */
-  bool isKeyswitchPressed(byte row, byte col) {
+  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
     return false;
   }
   /**
@@ -263,7 +329,17 @@ class Hardware {
    *
    * @returns true if the key was pressed, false otherwise.
    */
-  bool wasKeyswitchPressed(byte row, byte col) {
+  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
+    return false;
+  }
+  /**
+   * Check if a key was pressed at a given position on the previous scan
+   *
+   * @param key_addr is the matrix address of the key.
+   *
+   * @returns true if the key was pressed, false otherwise.
+   */
+  bool wasKeyswitchPressed(KeyAddr key_addr) {
     return false;
   }
   /**
