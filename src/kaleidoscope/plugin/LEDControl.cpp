@@ -121,8 +121,8 @@ void LEDControl::setCrgbAt(int8_t i, cRGB crgb) {
   KeyboardHardware.setCrgbAt(i, crgb);
 }
 
-void LEDControl::setCrgbAt(byte row, byte col, cRGB color) {
-  KeyboardHardware.setCrgbAt(row, col, color);
+void LEDControl::setCrgbAt(LEDAddr led_addr, cRGB color) {
+  KeyboardHardware.setCrgbAt(led_addr, color);
 }
 
 cRGB LEDControl::getCrgbAt(int8_t i) {
@@ -149,7 +149,7 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
   return EventHandlerResult::OK;
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return kaleidoscope::EventHandlerResult::OK;
 

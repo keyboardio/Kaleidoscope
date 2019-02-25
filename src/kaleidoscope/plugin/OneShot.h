@@ -74,7 +74,7 @@ class OneShot : public kaleidoscope::Plugin {
 
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
 
   void inject(Key mapped_key, uint8_t key_state);
 

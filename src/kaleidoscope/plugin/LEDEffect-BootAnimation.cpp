@@ -57,7 +57,7 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
+      Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
       Key g;
       g.flags = 0;
       g.keyCode = pgm_read_word(&greeting_[current_index_]);
@@ -77,12 +77,12 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
     start_time_ = Kaleidoscope.millisAtCycleStart();
     if (row != 255 && col != 255)
-      ::LEDControl.refreshAt(row, col);
+      ::LEDControl.refreshAt(LEDAddr(row, col));
     return EventHandlerResult::OK;
   }
 
   if (row != 255 && col != 255) {
-    ::LEDControl.setCrgbAt(row, col, color);
+    ::LEDControl.setCrgbAt(LEDAddr(row, col), color);
   }
 
   return EventHandlerResult::OK;

@@ -37,50 +37,78 @@ class AlphaSquare : public kaleidoscope::Plugin {
  public:
   AlphaSquare(void) {}
 
-  static void display(Key key, uint8_t row, uint8_t col, cRGB key_color);
-  static void display(Key key, uint8_t row, uint8_t col);
+  static void display(Key key, LEDAddr led_addr, cRGB key_color);
+  KS_ROW_COL_FUNC static void display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
+    display(key, LEDAddr(row, col), key_color);
+  }
+  static void display(Key key, LEDAddr led_addr);
+  KS_ROW_COL_FUNC static void display(Key key, uint8_t row, uint8_t col) {
+    display(key, LEDAddr(row, col));
+  }
   static void display(Key key) {
-    display(key, 0, 2);
+    display(key, LEDAddr(0, 2));
   }
   static void display(Key key, uint8_t col) {
-    display(key, 0, col);
+    display(key, LEDAddr(0, col));
   }
 
-  static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color);
-  static void display(uint16_t symbol, uint8_t row, uint8_t col);
+  static void display(uint16_t symbol, LEDAddr led_addr, cRGB key_color);
+  KS_ROW_COL_FUNC static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
+    display(symbol, LEDAddr(row, col), key_color);
+  }
+  static void display(uint16_t symbol, LEDAddr led_addr);
+  KS_ROW_COL_FUNC static void display(uint16_t symbol, uint8_t row, uint8_t col) {
+    display(symbol, LEDAddr(row, col));
+  }
   static void display(uint16_t symbol) {
-    display(symbol, 0, 2);
+    display(symbol, LEDAddr(0, 2));
   }
   static void display(uint16_t symbol, uint8_t col) {
-    display(symbol, 0, col);
+    display(symbol, LEDAddr(0, col));
   }
 
-  static void clear(Key key, uint8_t row, uint8_t col) {
-    display(key, row, col, {0, 0, 0});
+  static void clear(Key key, LEDAddr led_addr) {
+    display(key, led_addr, {0, 0, 0});
+  }
+  KS_ROW_COL_FUNC static void clear(Key key, uint8_t row, uint8_t col) {
+    clear(key, LEDAddr(row, col));
   }
   static void clear(Key key, uint8_t col) {
-    clear(key, 0, col);
+    clear(key, LEDAddr(0, col));
   }
   static void clear(Key key) {
-    clear(key, 0, 2);
+    clear(key, LEDAddr(0, 2));
   }
 
-  static void clear(uint16_t symbol, uint8_t row, uint8_t col) {
-    display(symbol, row, col, {0, 0, 0});
+  static void clear(uint16_t symbol, LEDAddr led_addr) {
+    display(symbol, led_addr, {0, 0, 0});
+  }
+  KS_ROW_COL_FUNC static void clear(uint16_t symbol, uint8_t row, uint8_t col) {
+    clear(symbol, LEDAddr(row, col));
   }
   static void clear(uint16_t symbol, uint8_t col) {
-    clear(symbol, 0, col);
+    clear(symbol, LEDAddr(0, col));
   }
   static void clear(uint16_t symbol) {
-    clear(symbol, 0, 2);
+    clear(symbol, LEDAddr(0, 2));
   }
 
   static bool isSymbolPart(Key key,
-                           uint8_t display_row, uint8_t display_col,
-                           uint8_t row, uint8_t col);
+                           LEDAddr displayLedAddr,
+                           LEDAddr led_addr);
+  KS_ROW_COL_FUNC static bool isSymbolPart(Key key,
+      uint8_t display_row, uint8_t display_col,
+      uint8_t row, uint8_t col) {
+    return isSymbolPart(key, LEDAddr(display_row, display_col), LEDAddr(row, col));
+  }
   static bool isSymbolPart(uint16_t symbol,
-                           uint8_t display_row, uint8_t display_col,
-                           uint8_t row, uint8_t col);
+                           LEDAddr displayLedAddr,
+                           LEDAddr led_addr);
+  KS_ROW_COL_FUNC static bool isSymbolPart(uint16_t symbol,
+      uint8_t display_row, uint8_t display_col,
+      uint8_t row, uint8_t col) {
+    return isSymbolPart(symbol, LEDAddr(display_row, display_col), LEDAddr(row, col));
+  }
 
   static cRGB color;
 };

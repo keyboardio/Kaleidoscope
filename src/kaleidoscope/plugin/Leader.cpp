@@ -77,11 +77,11 @@ void Leader::reset(void) {
 }
 
 void Leader::inject(Key key, uint8_t key_state) {
-  onKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
+  onKeyswitchEvent2(key, UnknownKeyswitchLocation, key_state);
 }
 
 // --- hooks ---
-EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult Leader::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 

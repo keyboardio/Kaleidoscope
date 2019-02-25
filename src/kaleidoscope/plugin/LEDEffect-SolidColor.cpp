@@ -28,8 +28,8 @@ void LEDSolidColor::onActivate(void) {
   ::LEDControl.set_all_leds_to(r, g, b);
 }
 
-void LEDSolidColor::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col, CRGB(r, g, b));
+void LEDSolidColor::refreshAt(LEDAddr led_addr) {
+  ::LEDControl.setCrgbAt(led_addr, CRGB(r, g, b));
 }
 
 }

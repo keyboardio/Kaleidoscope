@@ -30,6 +30,7 @@
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/Hardware.h"
+#include "kaleidoscope/MatrixAddr.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -43,11 +44,20 @@ class Model01 : public kaleidoscope::Hardware {
   static constexpr byte matrix_columns = 16;
   static constexpr int8_t led_count = 64;
 
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+  typedef MatrixAddr<matrix_rows, matrix_columns> LEDAddr;
+
   void syncLeds(void);
-  void setCrgbAt(byte row, byte col, cRGB color);
+  void setCrgbAt(LEDAddr led_addr, cRGB color);
+  KS_ROW_COL_FUNC void setCrgbAt(byte row, byte col, cRGB color) {
+    setCrgbAt(LEDAddr(row, col), color);
+  }
   void setCrgbAt(int8_t i, cRGB crgb);
   cRGB getCrgbAt(int8_t i);
-  int8_t getLedIndex(byte row, byte col);
+  int8_t getLedIndex(LEDAddr led_addr);
+  KS_ROW_COL_FUNC int8_t getLedIndex(byte row, byte col) {
+    return getLedIndex(LEDAddr(row, col));
+  }
 
   void scanMatrix(void);
   void readMatrix(void);
@@ -63,12 +73,24 @@ class Model01 : public kaleidoscope::Hardware {
   void setKeyscanInterval(uint8_t interval);
   boolean ledPowerFault(void);
 
-  void maskKey(byte row, byte col);
-  void unMaskKey(byte row, byte col);
-  bool isKeyMasked(byte row, byte col);
+  void maskKey(KeyAddr key_addr);
+  KS_ROW_COL_FUNC void maskKey(byte row, byte col) {
+    maskKey(KeyAddr(row, col));
+  }
+  void unMaskKey(KeyAddr key_addr);
+  KS_ROW_COL_FUNC void unMaskKey(byte row, byte col) {
+    unMaskKey(KeyAddr(row, col));
+  }
+  bool isKeyMasked(KeyAddr key_addr);
+  KS_ROW_COL_FUNC bool isKeyMasked(byte row, byte col) {
+    return isKeyMasked(KeyAddr(row, col));
+  }
   void maskHeldKeys(void);
 
-  bool isKeyswitchPressed(byte row, byte col);
+  bool isKeyswitchPressed(KeyAddr key_addr);
+  KS_ROW_COL_FUNC bool isKeyswitchPressed(byte row, byte col) {
+    return isKeyswitchPressed(KeyAddr(row, col));
+  }
   bool isKeyswitchPressed(uint8_t keyIndex);
   uint8_t pressedKeyswitchCount();
 

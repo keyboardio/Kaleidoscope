@@ -31,7 +31,7 @@ uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
 Key Layer_::live_composite_keymap_[ROWS][COLS];
 uint8_t Layer_::active_layers_[ROWS][COLS];
-Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
@@ -84,7 +84,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   }
 }
 
-Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
@@ -92,17 +92,19 @@ Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   return Key_NoKey;
 }
 
-Key Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
+Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
   Key key;
 
-  key.raw = pgm_read_word(&(keymaps[layer][row][col]));
+  key.raw = pgm_read_word(&(keymaps[layer][key_addr.row()][key_addr.col()]));
 
   return key;
 }
 
-void Layer_::updateLiveCompositeKeymap(byte row, byte col) {
+void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
+  auto row = key_addr.row();
+  auto col = key_addr.col();
   int8_t layer = active_layers_[row][col];
-  live_composite_keymap_[row][col] = (*getKey)(layer, row, col);
+  live_composite_keymap_[row][col] = (*getKey)(layer, key_addr);
 }
 
 void Layer_::updateActiveLayers(void) {
@@ -113,7 +115,7 @@ void Layer_::updateActiveLayers(void) {
 
       while (layer > 0) {
         if (Layer.isActive(layer)) {
-          Key mappedKey = (*getKey)(layer, row, col);
+          Key mappedKey = (*getKey)(layer, KeyAddr(row, col));
 
           if (mappedKey != Key_Transparent) {
             active_layers_[row][col] = layer;

@@ -25,19 +25,19 @@
 // as the keyboard has fewer than 256 keys.
 namespace kaleidoscope {
 namespace addr {
-inline uint8_t row(uint8_t key_addr) {
+KS_ROW_COL_FUNC inline uint8_t row(uint8_t key_addr) {
   return (key_addr / COLS);
 }
-inline uint8_t col(uint8_t key_addr) {
+KS_ROW_COL_FUNC inline uint8_t col(uint8_t key_addr) {
   return (key_addr % COLS);
 }
-inline uint8_t addr(uint8_t row, uint8_t col) {
+KS_ROW_COL_FUNC inline uint8_t addr(uint8_t row, uint8_t col) {
   return ((row * COLS) + col);
 }
-inline void mask(uint8_t key_addr) {
+KS_ROW_COL_FUNC inline void mask(uint8_t key_addr) {
   KeyboardHardware.maskKey(row(key_addr), col(key_addr));
 }
-inline void unmask(uint8_t key_addr) {
+KS_ROW_COL_FUNC inline void unmask(uint8_t key_addr) {
   KeyboardHardware.unMaskKey(row(key_addr), col(key_addr));
 }
 } // namespace addr {

@@ -40,7 +40,7 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
+      Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
 
       if (::OneShot.isOneShotKey(k) ||
           (highlight_normal_modifiers_ && (
@@ -65,29 +65,29 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
     byte c = coords % COLS;
     byte r = (coords - c) / COLS;
 
-    Key k = Layer.lookupOnActiveLayer(r, c);
+    Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
 
     if (::OneShot.isOneShotKey(k)) {
       if (::OneShot.isSticky(k))
-        ::LEDControl.setCrgbAt(r, c, sticky_color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), sticky_color);
       else if (::OneShot.isActive(k))
-        ::LEDControl.setCrgbAt(r, c, highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
       else
-        ::LEDControl.refreshAt(r, c);
+        ::LEDControl.refreshAt(LEDAddr(r, c));
     } else if (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) {
       if (hid::isModifierKeyActive(k))
-        ::LEDControl.setCrgbAt(r, c, highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
       else
-        ::LEDControl.refreshAt(r, c);
+        ::LEDControl.refreshAt(LEDAddr(r, c));
     } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
       uint8_t layer = k.keyCode;
       if (layer >= LAYER_SHIFT_OFFSET)
         layer -= LAYER_SHIFT_OFFSET;
 
       if (Layer.isActive(layer))
-        ::LEDControl.setCrgbAt(r, c, highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
       else
-        ::LEDControl.refreshAt(r, c);
+        ::LEDControl.refreshAt(LEDAddr(r, c));
     }
   }
 

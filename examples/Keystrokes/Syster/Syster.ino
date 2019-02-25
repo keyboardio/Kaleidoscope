@@ -50,9 +50,9 @@ void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *sym
     Unicode.type(0x2328);
     break;
   case kaleidoscope::plugin::Syster::EndAction:
-    handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
     kaleidoscope::hid::sendKeyboardReport();
-    handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+    handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
     kaleidoscope::hid::sendKeyboardReport();
     break;
   case kaleidoscope::plugin::Syster::SymbolAction:

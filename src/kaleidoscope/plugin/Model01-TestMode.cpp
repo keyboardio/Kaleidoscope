@@ -83,11 +83,14 @@ void TestMode::test_leds(void) {
 
 
 
-void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, KeyAddr key_addr, uint8_t col_offset) {
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
   constexpr cRGB green = CRGB(0, 201, 0);
+
+  auto row = key_addr.row();
+  auto col = key_addr.col();
 
   const uint8_t keynum = (row * 8) + (col);
 
@@ -106,13 +109,13 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
 
   // If the key is held down
   if (keyState == HELD) {
-    KeyboardHardware.setCrgbAt(row, col_offset - col, green);
+    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), green);
   } else if (bitRead(side->badKeys, keynum) == 1) {
     // If we triggered chatter detection ever on this key
-    KeyboardHardware.setCrgbAt(row, col_offset - col, red);
+    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), red);
   } else if (keyState == TOGGLED_OFF) {
     // If the key was just released
-    KeyboardHardware.setCrgbAt(row, col_offset - col, blue);
+    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), blue);
   }
 }
 
@@ -136,8 +139,8 @@ void TestMode::testMatrix() {
     }
     for (byte row = 0; row < 4; row++) {
       for (byte col = 0; col < 8; col++) {
-        handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), row, col, 7);
-        handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), row, col, 15);
+        handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), KeyAddr(row, col), 7);
+        handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), KeyAddr(row, col), 15);
       }
     }
     ::LEDControl.syncLeds();

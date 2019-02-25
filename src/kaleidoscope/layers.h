@@ -66,14 +66,24 @@ class Layer_ {
    * are curious what the active layer state describes the key as, use
    * `lookupOnActiveLayer`.
    */
-  static Key lookup(byte row, byte col) {
+  static Key lookup(KeyAddr key_addr) {
+    return live_composite_keymap_[key_addr.row()][key_addr.col()];
+  }
+  KS_ROW_COL_FUNC static Key lookup(byte row, byte col) {
     return live_composite_keymap_[row][col];
   }
-  static Key lookupOnActiveLayer(byte row, byte col) {
-    uint8_t layer = active_layers_[row][col];
-    return (*getKey)(layer, row, col);
+  static Key lookupOnActiveLayer(KeyAddr key_addr) {
+    uint8_t layer = active_layers_[key_addr.row()][key_addr.col()];
+    return (*getKey)(layer, key_addr);
   }
-  static uint8_t lookupActiveLayer(byte row, byte col) {
+  KS_ROW_COL_FUNC static Key lookupOnActiveLayer(byte row, byte col) {
+    uint8_t layer = active_layers_[row][col];
+    return (*getKey)(layer, KeyAddr(row, col));
+  }
+  static uint8_t lookupActiveLayer(KeyAddr key_addr) {
+    return active_layers_[key_addr.row()][key_addr.col()];
+  }
+  KS_ROW_COL_FUNC static uint8_t lookupActiveLayer(byte row, byte col) {
     return active_layers_[row][col];
   }
 
@@ -92,15 +102,27 @@ class Layer_ {
     return layer_state_;
   }
 
-  static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+  KS_ROW_COL_FUNC static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+    return eventHandler(mappedKey, KeyAddr(row, col), keyState);
+  }
 
-  static Key(*getKey)(uint8_t layer, byte row, byte col);
+  static Key(*getKey)(uint8_t layer, KeyAddr key_addr);
 
-  static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
+  static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
+  KS_ROW_COL_FUNC static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
+    return getKeyFromPROGMEM(layer, KeyAddr(row, col));
+  }
 
-  static void updateLiveCompositeKeymap(byte row, byte col);
-  static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
-    live_composite_keymap_[row][col] = mappedKey;
+  static void updateLiveCompositeKeymap(KeyAddr keyAddr, Key mappedKey) {
+    live_composite_keymap_[keyAddr.row()][keyAddr.col()] = mappedKey;
+  }
+  KS_ROW_COL_FUNC static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
+    updateLiveCompositeKeymap(KeyAddr(row, col), mappedKey);
+  }
+  static void updateLiveCompositeKeymap(KeyAddr keyAddr);
+  KS_ROW_COL_FUNC static void updateLiveCompositeKeymap(byte row, byte col) {
+    updateLiveCompositeKeymap(KeyAddr(row, col));
   }
   static void updateActiveLayers(void);
 

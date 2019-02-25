@@ -31,7 +31,7 @@ class Heatmap : public LEDMode {
   static uint8_t heat_colors_length;
   void resetMap(void);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeEachCycle();
 
  protected:

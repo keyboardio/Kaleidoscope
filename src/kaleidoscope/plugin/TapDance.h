@@ -46,7 +46,7 @@ class TapDance : public kaleidoscope::Plugin {
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
   EventHandlerResult afterEachCycle();
 
  private:
@@ -61,11 +61,10 @@ class TapDance : public kaleidoscope::Plugin {
 
   static uint32_t end_time_;
   static Key last_tap_dance_key_;
-  static byte last_tap_dance_row_;
-  static byte last_tap_dance_col_;
+  static KeyAddr last_tap_dance_addr_;
 
   static void tap(void);
-  static void interrupt(byte row, byte col);
+  static void interrupt(KeyAddr key_addr);
   static void timeout(void);
   static void release(uint8_t tap_dance_index);
 };
@@ -73,7 +72,9 @@ class TapDance : public kaleidoscope::Plugin {
 
 }
 
-void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
+KS_ROW_COL_FUNC void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+                                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
 
 extern kaleidoscope::plugin::TapDance TapDance;

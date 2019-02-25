@@ -40,7 +40,7 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
 
  private:
   static uint8_t mouseMoveIntent;

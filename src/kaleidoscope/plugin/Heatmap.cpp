@@ -123,7 +123,7 @@ void Heatmap::resetMap(void) {
   highest_ = 1;
 }
 
-EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Heatmap::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
 
@@ -137,6 +137,9 @@ EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, byte row, byte col
   // if the key is not toggled on, skip it
   if (!keyToggledOn(key_state))
     return EventHandlerResult::OK;
+
+  auto row = key_addr.row();
+  auto col = key_addr.col();
 
   // increment the heatmap_ value related to the key
   heatmap_[row][col]++;
@@ -202,7 +205,7 @@ void Heatmap::update(void) {
       // https://forum.arduino.cc/index.php?topic=92684.msg2733723#msg2733723
 
       // set the LED color accordingly
-      ::LEDControl.setCrgbAt(r, c, computeColor(v));
+      ::LEDControl.setCrgbAt(LEDAddr(r, c), computeColor(v));
     }
   }
 }

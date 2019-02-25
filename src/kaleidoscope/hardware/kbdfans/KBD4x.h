@@ -45,6 +45,9 @@ class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard {
 
   static constexpr int8_t led_count = 0;
 
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+  typedef MatrixAddr<1, 1> LEDAddr;
+
   void resetDevice();
 };
 

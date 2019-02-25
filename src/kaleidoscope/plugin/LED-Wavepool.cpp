@@ -41,13 +41,12 @@ PROGMEM const uint8_t WavepoolEffect::rc2pos[ROWS * COLS] = {
   42, 43, 44, 45, 46, 47,     58, 62, 63, 67,    50, 51, 52, 53, 54, 55,
 };
 
-EventHandlerResult WavepoolEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
-  if (row >= ROWS || col >= COLS)
+EventHandlerResult WavepoolEffect::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+  if (!key_addr.isValid())
     return EventHandlerResult::OK;
 
   if (keyIsPressed(key_state)) {
-    uint8_t offset = (row * COLS) + col;
-    surface[page][pgm_read_byte(rc2pos + offset)] = 0x7f;
+    surface[page][pgm_read_byte(rc2pos + key_addr.offset())] = 0x7f;
     frames_since_event = 0;
   }
 
@@ -203,7 +202,7 @@ void WavepoolEffect::update(void) {
 
       cRGB color = hsvToRgb(hue, saturation, value);
 
-      ::LEDControl.setCrgbAt(r, c, color);
+      ::LEDControl.setCrgbAt(LEDAddr(r, c), color);
     }
   }
 

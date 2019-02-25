@@ -19,7 +19,6 @@
 #pragma once
 
 #include <Kaleidoscope.h>
-#include <kaleidoscope/addr.h>
 #include <Kaleidoscope-Ranges.h>
 
 // Maximum length of the pending queue
@@ -61,7 +60,9 @@ namespace plugin {
 struct Qukey {
  public:
   Qukey(void) {}
-  Qukey(int8_t layer, byte row, byte col, Key alt_keycode);
+  Qukey(int8_t layer, KeyAddr key_addr, Key alt_keycode);
+  KS_ROW_COL_FUNC Qukey(int8_t layer, byte row, byte col, Key alt_keycode)
+    : Qukey(layer, KeyAddr(row, col), alt_keycode) {}
 
   int8_t layer;
   uint8_t addr;
@@ -104,7 +105,7 @@ class Qukeys : public kaleidoscope::Plugin {
   static uint8_t qukeys_count;
 
   EventHandlerResult onSetup();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeReportingState();
 
  private:

@@ -50,16 +50,16 @@ void EEPROMKeymapProgrammer::cancel(void) {
   state_ = INACTIVE;
 }
 
-EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (state_ == INACTIVE)
     return EventHandlerResult::OK;
 
   if (state_ == WAIT_FOR_KEY) {
     if (keyToggledOn(key_state)) {
-      update_position_ = Layer.top() * ROWS * COLS + row * COLS + col;
+      update_position_ = Layer.top() * ROWS * COLS + key_addr.offset();
     }
     if (keyToggledOff(key_state)) {
-      if ((uint16_t)(Layer.top() * ROWS * COLS + row * COLS + col) == update_position_)
+      if ((uint16_t)(Layer.top() * ROWS * COLS + key_addr.offset()) == update_position_)
         nextState();
     }
     return EventHandlerResult::EVENT_CONSUMED;
@@ -67,10 +67,10 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, byt
 
   if (state_ == WAIT_FOR_SOURCE_KEY) {
     if (keyToggledOn(key_state)) {
-      new_key_ = Layer.getKeyFromPROGMEM(Layer.top(), row, col);
+      new_key_ = Layer.getKeyFromPROGMEM(Layer.top(), key_addr);
     }
     if (keyToggledOff(key_state)) {
-      if (new_key_ == Layer.getKeyFromPROGMEM(Layer.top(), row, col))
+      if (new_key_ == Layer.getKeyFromPROGMEM(Layer.top(), key_addr))
         nextState();
     }
     return EventHandlerResult::EVENT_CONSUMED;

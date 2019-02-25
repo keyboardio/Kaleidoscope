@@ -44,12 +44,12 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
   }
 }
 
-void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col) {
+void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, LEDAddr led_addr) {
   if (!Kaleidoscope.has_leds)
     return;
 
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
-  uint16_t pos = KeyboardHardware.getLedIndex(row, col);
+  uint16_t pos = KeyboardHardware.getLedIndex(led_addr);
 
   cRGB color = lookupColorAtPosition(map_base, pos);
   ::LEDControl.setCrgbAt(pos, color);

@@ -33,7 +33,10 @@ class ColormapEffect : public LEDMode {
 
  protected:
   void onActivate(void) final;
-  void refreshAt(byte row, byte col) final;
+  void refreshAt(LEDAddr led_addr) final;
+  KS_ROW_COL_FUNC void refreshAt(byte row, byte col) final {
+    refreshAt(LEDAddr(row, col));
+  }
 
  private:
   static uint8_t top_layer_;

@@ -36,7 +36,7 @@ EventHandlerResult IdleLEDs::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult IdleLEDs::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
 
   if (::LEDControl.paused) {
     ::LEDControl.paused = false;

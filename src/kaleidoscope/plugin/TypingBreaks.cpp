@@ -37,7 +37,7 @@ uint16_t TypingBreaks::left_hand_keys_;
 uint16_t TypingBreaks::right_hand_keys_;
 uint16_t TypingBreaks::settings_base_;
 
-EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult TypingBreaks::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   uint32_t lock_length = settings.lock_length * 1000;
   uint32_t idle_time_limit = settings.idle_time_limit * 1000;
   uint32_t lock_time_out = settings.lock_time_out * 1000;
@@ -100,7 +100,7 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byt
   // counters if need be.
 
   if (keyToggledOn(key_state)) {
-    if (col <= COLS / 2)
+    if (key_addr.col() <= COLS / 2)
       left_hand_keys_++;
     else
       right_hand_keys_++;

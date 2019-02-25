@@ -118,12 +118,12 @@ void Model01::setCrgbAt(int8_t i, cRGB crgb) {
   }
 }
 
-void Model01::setCrgbAt(byte row, byte col, cRGB color) {
-  setCrgbAt(getLedIndex(row, col), color);
+void Model01::setCrgbAt(LEDAddr led_addr, cRGB color) {
+  setCrgbAt(getLedIndex(led_addr), color);
 }
 
-int8_t Model01::getLedIndex(byte row, byte col) {
-  return pgm_read_byte(&(key_led_map[row][col]));
+int8_t Model01::getLedIndex(LEDAddr led_addr) {
+  return pgm_read_byte(&(key_led_map[led_addr.row()][led_addr.col()]));
 }
 
 cRGB Model01::getCrgbAt(int8_t i) {
@@ -164,12 +164,12 @@ boolean Model01::ledPowerFault() {
   }
 }
 
-void debugKeyswitchEvent(keydata_t state, keydata_t previousState, uint8_t keynum, uint8_t row, uint8_t col) {
+void debugKeyswitchEvent(keydata_t state, keydata_t previousState, uint8_t keynum, KeyAddr key_addr) {
   if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum)) {
     Serial.print("Looking at row ");
-    Serial.print(row);
+    Serial.print(key_addr.row());
     Serial.print(", col ");
-    Serial.print(col);
+    Serial.print(key_addr.col());
     Serial.print(" key # ");
     Serial.print(keynum);
     Serial.print(" ");
@@ -202,7 +202,7 @@ void Model01::actOnHalfRow(byte row, byte colState, byte colPrevState, byte star
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
                           (bitRead(colState,     0) << 1));
       if (keyState)
-        handleKeyswitchEvent(Key_NoKey, row, startPos - col, keyState);
+        handleKeyswitchEvent(Key_NoKey, KeyAddr(row, startPos - col), keyState);
 
       // Throw away the data we've just used, so we can read the next column
       colState = colState >> 1;
@@ -259,10 +259,12 @@ constexpr byte HAND_BIT = B00001000;
 constexpr byte ROW_BITS = B00110000;
 constexpr byte COL_BITS = B00000111;
 
-void Model01::maskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+void Model01::maskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
+  auto row = key_addr.row();
+  auto col = key_addr.col();
   if (col & HAND_BIT) {
     rightHandMask.rows[row] |= (HIGH_BIT >> (col & COL_BITS));
   } else {
@@ -270,10 +272,12 @@ void Model01::maskKey(byte row, byte col) {
   }
 }
 
-void Model01::unMaskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+void Model01::unMaskKey(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return;
 
+  auto row = key_addr.row();
+  auto col = key_addr.col();
   if (col & HAND_BIT) {
     rightHandMask.rows[row] &= ~(HIGH_BIT >> (col & COL_BITS));
   } else {
@@ -281,10 +285,12 @@ void Model01::unMaskKey(byte row, byte col) {
   }
 }
 
-bool Model01::isKeyMasked(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+bool Model01::isKeyMasked(KeyAddr key_addr) {
+  if (!key_addr.isValid())
     return false;
 
+  auto row = key_addr.row();
+  auto col = key_addr.col();
   if (col & HAND_BIT) {
     return rightHandMask.rows[row] & (HIGH_BIT >> (col & COL_BITS));
   } else {
@@ -303,7 +309,9 @@ void Model01::setKeyscanInterval(uint8_t interval) {
   rightHand.setKeyscanInterval(interval);
 }
 
-bool Model01::isKeyswitchPressed(byte row, byte col) {
+bool Model01::isKeyswitchPressed(KeyAddr key_addr) {
+  auto row = key_addr.row();
+  auto col = key_addr.col();
   if (col <= 7) {
     return (bitRead(leftHandState.rows[row], 7 - col) != 0);
   } else {
@@ -313,7 +321,7 @@ bool Model01::isKeyswitchPressed(byte row, byte col) {
 
 bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+  return isKeyswitchPressed(KeyAddr(keyIndex));
 }
 
 

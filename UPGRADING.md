@@ -75,7 +75,7 @@ In practice, this boils down to implementing one or more of the following hook p
 
 - `onSetup()`: Called once during device bootup, at the end of the `setup()` method. It takes no arguments, and must return `kaleidoscope::EventHandlerResult::OK`.
 - `beforeEachCycle()`: Called once, at the beginning of each cycle of the main loop. This is similar to the old "loop hook" with its `post_clear` argument set to false. Takes no arguments, must return `kaleidoscope::EventHandlerResult::OK`.
-- `onKeyswitchEvent`: Called for every non-idle key event. This replaces the old "event handler hook". It takes a key reference, coordinates, and a key state. The key reference can be updated to change the key being processed, so that any plugin that processes it further, will see the updated key. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
+- `onKeyswitchEvent2`: Called for every non-idle key event. This replaces the old "event handler hook". It takes a key reference, a key address, and a key state. The key reference can be updated to change the key being processed, so that any plugin that processes it further, will see the updated key. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
 - `onFocusEvent`: Used to implement [bi-directional communication](#bidirectional-communication-for-plugins). This is called whenever the firmware receives a command from the host. The only argument is the command name. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
 - `beforeReportingState`: Called without arguments, just before sending the keyboard and mouse reports to the host. Must return `kaleidoscope::EventHandlerResult::OK`.
 - `afterEachCycle`: Called without arguments at the very end of each cycle. This is the replacement for the "loop hook" with its `post_clear` argument set.
@@ -564,7 +564,7 @@ class Plugin {
 public:
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr keyAddr, uint8_t key_state);
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
 };

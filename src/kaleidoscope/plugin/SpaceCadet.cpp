@@ -70,7 +70,7 @@ bool SpaceCadet::active() {
   return !disabled;
 }
 
-EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult SpaceCadet::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   //Handle our synthetic keys for enabling and disabling functionality
   if (mapped_key.raw >= kaleidoscope::ranges::SC_FIRST &&
       mapped_key.raw <= kaleidoscope::ranges::SC_LAST) {
@@ -130,7 +130,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
         //hit another key after this -- if it's a modifier, we want the modifier
         //key to be added to the report, for things like ctrl, alt, shift, etc)
         if (map[i].flagged) {
-          handleKeyswitchEvent(map[i].input, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+          handleKeyswitchEvent(map[i].input, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
         }
 
         //The keypress wasn't a match, so we need to mark it as not flagged and
@@ -225,7 +225,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     //only need to send that key and not the original key.
 
     //inject our new key
-    handleKeyswitchEvent(alternate_key, row, col, IS_PRESSED | INJECTED);
+    handleKeyswitchEvent(alternate_key, key_addr, IS_PRESSED | INJECTED);
 
     //Unflag the key so we don't try this again.
     map[index].flagged = false;

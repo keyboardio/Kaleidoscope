@@ -23,7 +23,7 @@ At the time of this writing, the following event handlers are run by hooks:
  - `onSetup`: Run once, when the plugin is initialised during
    `Kaleidoscope.setup()`.
  - `beforeEachCycle`: Run as the first thing at the start of each [cycle](#cycle).
- - `onKeyswitchEvent`: Run for every non-idle key, in each [cycle](#cycle) the
+ - `onKeyswitchEvent2`: Run for every non-idle key, in each [cycle](#cycle) the
    key isn't idle in. If a key gets pressed, released, or is held, it is not
    considered idle, and this event handler will run for it too.
  - `beforeReportingState`: Runs each [cycle](#cycle) right before sending the

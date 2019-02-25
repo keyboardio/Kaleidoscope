@@ -37,8 +37,8 @@ void NumPad::setKeyboardLEDColors(void) {
 
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
-      Key layer_key = Layer.getKey(numPadLayer, r, c);
+      Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
+      Key layer_key = Layer.getKey(numPadLayer, KeyAddr(r, c));
 
       if (k == LockLayer(numPadLayer)) {
         numpadLayerToggleKeyRow = r;
@@ -46,9 +46,9 @@ void NumPad::setKeyboardLEDColors(void) {
       }
 
       if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
-        ::LEDControl.refreshAt(r, c);
+        ::LEDControl.refreshAt(LEDAddr(r, c));
       } else {
-        ::LEDControl.setCrgbAt(r, c, color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), color);
       }
     }
   }

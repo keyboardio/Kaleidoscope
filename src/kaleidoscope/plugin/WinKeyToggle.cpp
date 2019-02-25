@@ -23,7 +23,7 @@ namespace plugin {
 
 bool WinKeyToggle::enabled_;
 
-EventHandlerResult WinKeyToggle::onKeyswitchEvent(Key &key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult WinKeyToggle::onKeyswitchEvent2(Key &key, KeyAddr key_addr, uint8_t key_state) {
   if (!enabled_)
     return EventHandlerResult::OK;
 

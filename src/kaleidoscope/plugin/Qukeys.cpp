@@ -40,10 +40,9 @@ bool isDualUse(Key k) {
 }
 
 inline
-bool isDualUse(byte key_addr) {
-  byte row = addr::row(key_addr);
-  byte col = addr::col(key_addr);
-  Key k = Layer.lookup(row, col);
+bool isDualUse(byte key_addr_offset) {
+  KeyAddr key_addr(key_addr_offset);
+  Key k = Layer.lookup(key_addr);
   return isDualUse(k);
 }
 
@@ -74,9 +73,9 @@ Key getDualUseAlternateKey(Key k) {
 }
 
 
-Qukey::Qukey(int8_t layer, byte row, byte col, Key alt_keycode) {
+Qukey::Qukey(int8_t layer, KeyAddr key_addr, Key alt_keycode) {
   this->layer = layer;
-  this->addr = addr::addr(row, col);
+  this->addr = key_addr.offset();
   this->alt_keycode = alt_keycode;
 }
 
@@ -97,16 +96,15 @@ constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
 // Empty constructor; nothing is stored at the instance level
 Qukeys::Qukeys(void) {}
 
-int8_t Qukeys::lookupQukey(uint8_t key_addr) {
-  if (key_addr == QUKEY_UNKNOWN_ADDR) {
+int8_t Qukeys::lookupQukey(uint8_t key_addr_offset) {
+  if (key_addr_offset == QUKEY_UNKNOWN_ADDR) {
     return QUKEY_NOT_FOUND;
   }
   for (int8_t i = 0; i < qukeys_count; i++) {
-    if (qukeys[i].addr == key_addr) {
-      byte row = addr::row(key_addr);
-      byte col = addr::col(key_addr);
+    if (qukeys[i].addr == key_addr_offset) {
+      KeyAddr keyAddr(key_addr_offset);
       if ((qukeys[i].layer == QUKEY_ALL_LAYERS) ||
-          (qukeys[i].layer == Layer.lookupActiveLayer(row, col))) {
+          (qukeys[i].layer == Layer.lookupActiveLayer(keyAddr))) {
         return i;
       }
     }
@@ -138,9 +136,8 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
-  byte row = addr::row(key_queue_[0].addr);
-  byte col = addr::col(key_queue_[0].addr);
-  Key keycode = Layer.lookupOnActiveLayer(row, col);
+  KeyAddr key_addr(key_queue_[0].addr);
+  Key keycode = Layer.lookupOnActiveLayer(key_addr);
   bool is_dual_use = isDualUse(keycode);
   if (is_qukey || is_dual_use) {
     if (qukey_state == QUKEY_STATE_PRIMARY) {
@@ -183,7 +180,7 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // we can ignore it and don't start an infinite loop. It would be
   // nice if we could use key_state to also indicate which plugin
   // injected the key.
-  handleKeyswitchEvent(keycode, row, col, IS_PRESSED);
+  handleKeyswitchEvent(keycode, key_addr, IS_PRESSED);
   // Now we send the report (if there were any changes)
   hid::sendKeyboardReport();
 
@@ -192,7 +189,7 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
 
   // Last, if the key is still down, add its code back in
   if (keyswitch_state & IS_PRESSED)
-    handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
+    handleKeyswitchEvent(keycode, key_addr, IS_PRESSED | WAS_PRESSED);
 
   // Now that we're done sending the report(s), Qukeys can process events again:
   flushing_queue_ = false;
@@ -238,10 +235,10 @@ bool Qukeys::isQukey(uint8_t addr) {
   return (isDualUse(addr) || lookupQukey(addr) != QUKEY_NOT_FOUND);
 }
 
-EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Qukeys::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
 
   // If key_addr is not a physical key, ignore it; some other plugin injected it
-  if (row >= ROWS || col >= COLS || (key_state & INJECTED) != 0)
+  if (!key_addr.isValid() || (key_state & INJECTED) != 0)
     return EventHandlerResult::OK;
 
   // If Qukeys is turned off, continue to next plugin
@@ -251,8 +248,8 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
   }
 
   // get key addr & qukey (if any)
-  uint8_t key_addr = addr::addr(row, col);
-  int8_t qukey_index = lookupQukey(key_addr);
+  uint8_t key_addr_offset = key_addr.offset();
+  int8_t qukey_index = lookupQukey(key_addr_offset);
 
   // If the key was injected (from the queue being flushed)
   if (flushing_queue_) {
@@ -269,13 +266,13 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     }
 
     // Otherwise, queue the key and stop processing:
-    enqueue(key_addr);
+    enqueue(key_addr_offset);
     // flushQueue() has already handled this key release
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // In all other cases, we need to know if the key is queued already
-  int8_t queue_index = searchQueue(key_addr);
+  int8_t queue_index = searchQueue(key_addr_offset);
 
   // If the key was just released:
   if (keyToggledOff(key_state)) {
@@ -287,12 +284,10 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
     // order to send a toggle off of a `ShiftToLayer()` key; otherwise, that layer gets
     // stuck on if there's a release delay and a rollover.
     if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
-      int8_t r = addr::row(delayed_qukey_addr_);
-      int8_t c = addr::col(delayed_qukey_addr_);
       flushQueue(queue_index);
       flushQueue();
       flushing_queue_ = true;
-      handleKeyswitchEvent(Key_NoKey, r, c, WAS_PRESSED);
+      handleKeyswitchEvent(Key_NoKey, KeyAddr(delayed_qukey_addr_), WAS_PRESSED);
       flushing_queue_ = false;
       delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
     } else {

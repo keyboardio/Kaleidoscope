@@ -83,10 +83,23 @@ class LEDMode : public kaleidoscope::Plugin {
    * restore whatever color the mode would set the key color to, this is the
    * method it will call.
    *
+   * @param led_addr is the matrix coordinate of the key to refresh the color of.
+   */
+  virtual void refreshAt(LEDAddr led_addr) {}
+
+  /** Refresh the color of a given key.
+   *
+   * If we have another plugin that overrides colors set by the active LED mode
+   * (either at @onActivate time, or via @ref update), if that plugin wants to
+   * restore whatever color the mode would set the key color to, this is the
+   * method it will call.
+   *
    * @param row is the row coordinate of the key to refresh the color of.
    * @param col is the column coordinate of the key to refresh the color of.
    */
-  virtual void refreshAt(byte row, byte col) {}
+  KS_ROW_COL_FUNC virtual void refreshAt(byte row, byte col) {
+    refreshAt(LEDAddr(row, col));
+  }
 
  public:
   /** Activate the current object as the LED mode.
@@ -115,12 +128,15 @@ class LEDControl : public kaleidoscope::Plugin {
     if (modes[mode])
       modes[mode]->update();
   }
-  static void refreshAt(byte row, byte col) {
+  static void refreshAt(LEDAddr led_addr) {
     if (!Kaleidoscope.has_leds)
       return;
 
     if (modes[mode])
-      modes[mode]->refreshAt(row, col);
+      modes[mode]->refreshAt(led_addr);
+  }
+  KS_ROW_COL_FUNC static void refreshAt(byte row, byte col) {
+    refreshAt(LEDAddr(row, col));
   }
   static void set_mode(uint8_t mode);
   static uint8_t get_mode_index();
@@ -140,7 +156,10 @@ class LEDControl : public kaleidoscope::Plugin {
   static int8_t mode_add(LEDMode *mode);
 
   static void setCrgbAt(int8_t i, cRGB crgb);
-  static void setCrgbAt(byte row, byte col, cRGB color);
+  static void setCrgbAt(LEDAddr led_addr, cRGB color);
+  KS_ROW_COL_FUNC static void setCrgbAt(byte row, byte col, cRGB color) {
+    setCrgbAt(LEDAddr(row, col), color);
+  }
   static cRGB getCrgbAt(int8_t i);
   static void syncLeds(void);
 
@@ -153,7 +172,7 @@ class LEDControl : public kaleidoscope::Plugin {
   static bool paused;
 
   kaleidoscope::EventHandlerResult onSetup();
-  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  kaleidoscope::EventHandlerResult onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
   kaleidoscope::EventHandlerResult beforeReportingState();
 
  private:

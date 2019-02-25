@@ -47,6 +47,7 @@
                _NOT_ABORTABLE,                                            __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
+   /* DEPRECATED                                                       */ __NL__ \
    /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
    /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
    /* passed by reference for this reason), and decide whether         */ __NL__ \
@@ -54,10 +55,22 @@
    /* EventHandlerResult::OK, other handlers will also get a chance    */ __NL__ \
    /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
    /* will stop processing there.                                      */ __NL__ \
-  OPERATION(onKeyswitchEvent,                                             __NL__ \
+   OPERATION(onKeyswitchEvent,                                            __NL__ \
                _ABORTABLE,                                                __NL__ \
                (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
                (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
+                                                                          __NL__ \
+   /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
+   /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
+   /* passed by reference for this reason), and decide whether         */ __NL__ \
+   /* further handles should be tried. If it returns                   */ __NL__ \
+   /* EventHandlerResult::OK, other handlers will also get a chance    */ __NL__ \
+   /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
+   /* will stop processing there.                                      */ __NL__ \
+   OPERATION(onKeyswitchEvent2,                                           __NL__ \
+               _ABORTABLE,                                                __NL__ \
+               (Key &mappedKey, KeyAddr key_addr, uint8_t keyState),       __NL__ \
+               (mappedKey, key_addr, keyState), ##__VA_ARGS__)             __NL__ \
                                                                           __NL__ \
    /* Called by an external plugin (such as Kaleidoscope-FocusSerial)  */ __NL__ \
    /* via Kaleidoscope::onFocusEvent. This is where Focus events can   */ __NL__ \

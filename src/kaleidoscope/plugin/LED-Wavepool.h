@@ -32,7 +32,7 @@ class WavepoolEffect : public LEDMode {
  public:
   WavepoolEffect(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
   // ms before idle animation starts after last keypress
   static uint16_t idle_timeout;

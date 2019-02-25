@@ -24,10 +24,18 @@
 
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch
+//
+// TODO: Once row/col based key/LED access is deprecated,
+//       deprecate UNKNOWN_KEYSWITCH_LOCATION as well.
 #define UNKNOWN_KEYSWITCH_LOCATION 255,255
+
+// UnknownKeyswitchLocation represents an invalid (as default constructed)
+// key address.
+static constexpr KeyAddr UnknownKeyswitchLocation;
+
 // Conversely, if an injected event *is* tied to a physical keyswitch and should
 // be resolved by the current keymap, code can use Key_NoKey on the injected event
-// with a real (row, col) location
+// with a real key address
 
 // sending events to the computer
 /* The event handling starts with the Scanner calling handleKeyswitchEvent() for
@@ -54,10 +62,13 @@
  * too.
  *
  * For this reason, the handleKeyswitchEvent receives four arguments: the mapped key
- * (or Key_NoKey if we do not want to override what is in the keymap), the row
- * and column of the key, so we can look up the code for it, and the current and
+ * (or Key_NoKey if we do not want to override what is in the keymap), the matrix
+ * address of the key, so we can look up the code for it, and the current and
  * previous state of the key, so we can determine what the event is. The
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
+void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+KS_ROW_COL_FUNC inline void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+  handleKeyswitchEvent(mappedKey, KeyAddr(row, col), keyState);
+}

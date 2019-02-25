@@ -46,7 +46,7 @@ void BootGreetingEffect::findLed(void) {
   // Find the LED key.
   for (uint8_t r = 0; r < ROWS; r++) {
     for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
+      Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
 
       if (k.raw == search_key.raw) {
         row_ = r;

@@ -28,11 +28,14 @@ class AlphaSquareEffect : public LEDMode {
 
   static uint16_t length;
 
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
 
  protected:
   void update(void) final;
-  void refreshAt(byte row, byte col) final;
+  void refreshAt(LEDAddr led_addr) final;
+  KS_ROW_COL_FUNC void refreshAt(byte row, byte col) final {
+    refreshAt(LEDAddr(row, col));
+  }
 
  private:
   static uint32_t end_time_left_, end_time_right_;

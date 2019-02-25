@@ -47,8 +47,8 @@ void LEDActiveLayerColorEffect::onActivate(void) {
   ::LEDControl.set_all_leds_to(active_color_);
 }
 
-void LEDActiveLayerColorEffect::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col, active_color_);
+void LEDActiveLayerColorEffect::refreshAt(LEDAddr led_addr) {
+  ::LEDControl.setCrgbAt(led_addr, active_color_);
 }
 
 EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {

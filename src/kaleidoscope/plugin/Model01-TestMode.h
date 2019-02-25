@@ -41,7 +41,7 @@ class TestMode : public kaleidoscope::Plugin {
   static void test_leds();
   static void testMatrix();
   static void toggle_programming_leds_on();
-  static void handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset);
+  static void handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, KeyAddr key_addr, uint8_t col_offset);
   static void waitForKeypress();
   static void set_leds(cRGB color);
 };

@@ -34,11 +34,11 @@ methods or properties other than those provided by all LED modes.
 
 ### `.display(key)`
 ### `.display(key, col)`
-### `.display(key, row, col)`
-### `.display(key, row, col, color)`
+### `.display(key, ledAddr)`
+### `.display(key, ledAddr, color)`
 
-> Display the symbol for `key` at the given row or column, with pixels set to
-> the specified `color`. If `row` is omitted, the first row - `0` is assumed. If
+> Display the symbol for `key` at the given led address, with pixels set to
+> the specified `color`. If only `col` is provided, the first row - `0` is assumed. If
 > the column is omitted, then the third column - `2` - is used.
 > If the `color` is omitted, the plugin will use the global `.color` property.
 >
@@ -50,8 +50,8 @@ methods or properties other than those provided by all LED modes.
 
 ### `.display(symbol)`
 ### `.display(symbol, col)`
-### `.display(symbol, row, col)`
-### `.display(symbol, row, col, color)`
+### `.display(symbol, ledAddr)`
+### `.display(symbol, ledAddr, color)`
 
 > As the previous function, but instead of a key, it expects a 4x4 bitmap in
 > the form of a 16-bit unsigned integer, where the low bit is the top-right
@@ -61,7 +61,7 @@ methods or properties other than those provided by all LED modes.
 
 ### `.clear(key)`, `.clear(symbol)`
 ### `.clear(key, col)`, `.clear(symbol, col)`
-### `.clear(key, col, row)`, `.clear(symbol, col, row)`
+### `.clear(key, ledAddr)`, `.clear(symbol, ledAddr)`
 
 > Just like the `.display()` counterparts, except these clear the symbol, by
 > turning the LED pixels it is made up from off.

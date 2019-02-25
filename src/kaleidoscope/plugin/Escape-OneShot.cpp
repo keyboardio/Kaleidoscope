@@ -22,7 +22,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult EscapeOneShot::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (mapped_key.raw != Key_Escape.raw ||
       (keyState & INJECTED) ||
       !keyToggledOn(keyState))
@@ -32,7 +32,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, byte row, by
     return EventHandlerResult::OK;
   }
 
-  KeyboardHardware.maskKey(row, col);
+  KeyboardHardware.maskKey(key_addr);
 
   ::OneShot.cancel(true);
   return EventHandlerResult::EVENT_CONSUMED;

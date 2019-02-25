@@ -27,10 +27,10 @@ namespace plugin {
 
 MacroKeyEvent Macros_::active_macros[];
 byte Macros_::active_macro_count;
-byte Macros_::row, Macros_::col;
+KeyAddr Macros_::key_addr;
 
 void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state, bool explicit_report) {
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, keyswitch_state | INJECTED);
+  handleKeyswitchEvent(key, UnknownKeyswitchLocation, keyswitch_state | INJECTED);
 
   if (explicit_report)
     return;
@@ -219,11 +219,11 @@ const macro_t *Macros_::type(const char *string) {
   return MACRO_NONE;
 }
 
-EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+EventHandlerResult Macros_::onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
     return EventHandlerResult::OK;
 
-  byte key_id = (row * COLS) + col;
+  byte key_id = key_addr.offset();
   addActiveMacroKey(mappedKey.keyCode, key_id, keyState);
 
   return EventHandlerResult::EVENT_CONSUMED;
@@ -238,12 +238,9 @@ EventHandlerResult Macros_::afterEachCycle() {
 EventHandlerResult Macros_::beforeReportingState() {
   for (byte i = 0; i < active_macro_count; ++i) {
     if (active_macros[i].key_id == 0xFF) {
-      // i.e. UNKNOWN_KEYSWITCH_LOCATION
-      row = 0xFF;
-      col = 0xFF;
+      key_addr = UnknownKeyswitchLocation;
     } else {
-      row = active_macros[i].key_id / COLS;
-      col = active_macros[i].key_id % COLS;
+      key_addr = KeyAddr(active_macros[i].key_id);
     }
     const macro_t *m = macroAction(active_macros[i].key_code,
                                    active_macros[i].key_state);

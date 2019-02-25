@@ -22,9 +22,10 @@
 #include <Arduino.h>
 #include <KeyboardioHID.h>
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
+#include "kaleidoscope/MatrixAddr.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/key_events.h"
+// #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/hardware/avr/pins_and_ports.h"
 
 #include <avr/wdt.h>
@@ -84,16 +85,31 @@ class ATMegaKeyboard : public kaleidoscope::Hardware {
   void scanMatrix();
 
   uint8_t pressedKeyswitchCount();
-  bool isKeyswitchPressed(uint8_t row, byte col);
+  bool isKeyswitchPressed(KeyAddr key_addr);
+  KS_ROW_COL_FUNC bool isKeyswitchPressed(uint8_t row, byte col) {
+    return isKeyswitchPressed(KeyAddr(row, col));
+  }
   bool isKeyswitchPressed(uint8_t keyIndex);
 
   uint8_t previousPressedKeyswitchCount();
-  bool wasKeyswitchPressed(uint8_t row, byte col);
+  bool wasKeyswitchPressed(KeyAddr keyAddr);
+  KS_ROW_COL_FUNC bool wasKeyswitchPressed(uint8_t row, byte col) {
+    return wasKeyswitchPressed(KeyAddr(row, col));
+  }
   bool wasKeyswitchPressed(uint8_t keyIndex);
 
-  void maskKey(byte row, byte col);
-  void unMaskKey(byte row, byte col);
-  bool isKeyMasked(byte row, byte col);
+  void maskKey(KeyAddr keyAddr);
+  KS_ROW_COL_FUNC void maskKey(byte row, byte col) {
+    maskKey(KeyAddr(row, col));
+  }
+  void unMaskKey(KeyAddr key_addr);
+  KS_ROW_COL_FUNC void unMaskKey(byte row, byte col) {
+    unMaskKey(KeyAddr(row, col));
+  }
+  bool isKeyMasked(KeyAddr key_addr);
+  KS_ROW_COL_FUNC bool isKeyMasked(byte row, byte col) {
+    return isKeyMasked(KeyAddr(row, col));
+  }
 
   static bool do_scan_;
 

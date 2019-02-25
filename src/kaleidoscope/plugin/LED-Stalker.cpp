@@ -32,15 +32,15 @@ void StalkerEffect::onActivate(void) {
   memset(map_, 0, sizeof(map_));
 }
 
-EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult StalkerEffect::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
 
-  if (row >= ROWS || col >= COLS)
+  if (!key_addr.isValid())
     return EventHandlerResult::OK;
 
   if (keyIsPressed(keyState)) {
-    map_[row][col] = 0xff;
+    map_[key_addr.row()][key_addr.col()] = 0xff;
   }
 
   return EventHandlerResult::OK;
@@ -61,13 +61,13 @@ void StalkerEffect::update(void) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t step = map_[r][c];
       if (step) {
-        ::LEDControl.setCrgbAt(r, c, variant->compute(&step));
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), variant->compute(&step));
       }
 
       map_[r][c] = step;
 
       if (!map_[r][c])
-        ::LEDControl.setCrgbAt(r, c, inactive_color);
+        ::LEDControl.setCrgbAt(LEDAddr(r, c), inactive_color);
     }
   }
 

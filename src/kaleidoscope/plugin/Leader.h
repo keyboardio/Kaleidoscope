@@ -46,7 +46,7 @@ class Leader : public kaleidoscope::Plugin {
 
   void inject(Key key, uint8_t key_state);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
   EventHandlerResult afterEachCycle();
 
  private:

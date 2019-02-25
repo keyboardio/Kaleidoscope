@@ -43,7 +43,7 @@ bool Syster::is_active(void) {
 }
 
 // --- hooks ---
-EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult Syster::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (!is_active_) {
     if (!isSyster(mapped_key))
       return EventHandlerResult::OK;
@@ -69,9 +69,9 @@ EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
   if (keyToggledOff(keyState)) {
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
-        handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+        handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
         hid::sendKeyboardReport();
-        handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+        handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
         hid::sendKeyboardReport();
       }
 
