@@ -176,8 +176,8 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (elapsed > syncDelay) {
     syncLeds();
     syncTimer += syncDelay;
+    update();
   }
-  update();
 
   return kaleidoscope::EventHandlerResult::OK;
 }
