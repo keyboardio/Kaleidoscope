@@ -20,9 +20,9 @@ set -e
 ######
 
 build_version () {
-    GIT_VERSION="$(cd "$(find_sketch)"; git describe --abbrev=4 --dirty --always)"
+    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
-    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 
     BUILD_PATH="${BUILD_PATH:-"$(mktemp -d 2>/dev/null || mktemp -d -t 'build')"}"
     OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
