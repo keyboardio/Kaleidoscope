@@ -29,6 +29,7 @@ build_paths() {
     OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
     OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
     STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-/tmp/kaleidoscope-${USER}}"
+    CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${STABLE_TEMP_DIR}/ccache/bin}"
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${STABLE_TEMP_DIR}/arduino-cores}"
     
 
@@ -44,6 +45,24 @@ build_filenames () {
     HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
     ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
 }
+
+
+enable_ccache () {
+    if  [ `which ccache` ]; then
+    if ! [ -d $CCACHE_WRAPPER_DIR ]; then
+	mkdir -p $CCACHE_WRAPPER_DIR
+	ln -s `which ccache` ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}gcc
+	ln -s `which ccache` ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}g++
+	ln -s ${AVR_NM} ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}nm
+	ln -s ${AVR_OBJCOPY} ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}objcopy
+	ln -s ${AVR_AR} ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}ar
+	ln -s ${AVR_SIZE} ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}size
+    fi
+    export CCACHE_PATH=${COMPILER_PATH}/
+    CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_DIR}/"
+    fi
+}
+
 
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
@@ -193,6 +212,8 @@ compile () {
     build_version
     build_paths
     build_filenames
+    enable_ccache
+
     install -d "${OUTPUT_PATH}"
 
     echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
@@ -247,6 +268,7 @@ compile () {
 	      -build-path "${BUILD_PATH}" \
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
 	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
