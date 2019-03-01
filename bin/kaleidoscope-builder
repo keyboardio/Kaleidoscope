@@ -26,12 +26,16 @@ build_version () {
 }
 
 build_paths() {
-    BUILD_PATH="${BUILD_PATH:-"$(mktemp -d 2>/dev/null || mktemp -d -t 'build')"}"
     OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
     OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
     STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-/tmp/kaleidoscope-${USER}}"
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${STABLE_TEMP_DIR}/arduino-cores}"
+    
+
+    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/${LIBRARY}}"
+
     mkdir -p "$CORE_CACHE_PATH"
+    mkdir -p "$BUILD_PATH"
 }
 
 build_filenames () {
@@ -255,8 +259,6 @@ compile () {
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
 	      echo "Build artifacts can be found in ${BUILD_PATH}";
-    else
-	      rm -rf "${BUILD_PATH}"
     fi
 
     BOARD="${SAVED_BOARD}"
