@@ -26,14 +26,13 @@ build_version () {
 }
 
 build_paths() {
-    OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
-    OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
     STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-/tmp/kaleidoscope-${USER}}"
+    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/build"
+    OUTPUT_PATH="${OUTPUT_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/output"
     CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${STABLE_TEMP_DIR}/ccache/bin}"
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${STABLE_TEMP_DIR}/arduino-cores}"
     
 
-    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/sketches/${LIBRARY}}"
 
     mkdir -p "$CORE_CACHE_PATH"
     mkdir -p "$BUILD_PATH"
@@ -216,7 +215,7 @@ compile () {
 
     install -d "${OUTPUT_PATH}"
 
-    echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+    echo "Building ${SKETCH} (${LIB_VERSION}) ..."
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -278,6 +277,8 @@ compile () {
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
     ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+
+    echo "Your compiled sketch can be found in ${OUTPUT_PATH}"
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
 	      echo "Build artifacts can be found in ${BUILD_PATH}";
