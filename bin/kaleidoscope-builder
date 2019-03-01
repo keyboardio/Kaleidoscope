@@ -32,7 +32,7 @@ build_paths() {
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${STABLE_TEMP_DIR}/arduino-cores}"
     
 
-    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/${LIBRARY}}"
+    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/sketches/${LIBRARY}}"
 
     mkdir -p "$CORE_CACHE_PATH"
     mkdir -p "$BUILD_PATH"
