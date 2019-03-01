@@ -26,9 +26,12 @@ build_version () {
 }
 
 build_paths() {
+
+    SKETCH_IDENTIFIER=$(ls -id $(realpath "$(find_sketch)/${SKETCH}.ino") | cut -d ' ' -f 1)"-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
-    BUILD_PATH="${BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/build"
-    OUTPUT_PATH="${OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/output"
+    SKETCH_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH}/sketch/${SKETCH_IDENTIFIER}"
+    BUILD_PATH="${BUILD_PATH:-${SKETCH_TEMP_PATH}/build}"
+    OUTPUT_PATH="${OUTPUT_PATH:-${SKETCH_TEMP_PATH}/output}"
     CCACHE_WRAPPER_PATH="${CCACHE_WRAPPER_PATH:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
     
