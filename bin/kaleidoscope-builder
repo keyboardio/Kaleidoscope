@@ -29,7 +29,7 @@ build_paths() {
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
     BUILD_PATH="${BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/build"
     OUTPUT_PATH="${OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/output"
-    CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
+    CCACHE_WRAPPER_PATH="${CCACHE_WRAPPER_PATH:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
     CORE_CACHE_PATH="${CORE_CACHE_PATH:-${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
     
 
@@ -48,17 +48,17 @@ build_filenames () {
 
 enable_ccache () {
     if  [ $(which ccache) ]; then
-    if ! [ -d $CCACHE_WRAPPER_DIR ]; then
-	mkdir -p $CCACHE_WRAPPER_DIR
-	ln -s "$(which ccache)" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}gcc
-	ln -s "$(which ccache)" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}g++
-	ln -s "${AVR_NM}" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}nm
-	ln -s "${AVR_OBJCOPY}" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}objcopy
-	ln -s "${AVR_AR}" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}ar
-	ln -s "${AVR_SIZE}" ${CCACHE_WRAPPER_DIR}/${COMPILER_PREFIX}size
+    if ! [ -d $CCACHE_WRAPPER_PATH ]; then
+	mkdir -p $CCACHE_WRAPPER_PATH
+	ln -s "$(which ccache)" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc
+	ln -s "$(which ccache)" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++
+	ln -s "${AVR_NM}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm
+	ln -s "${AVR_OBJCOPY}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy
+	ln -s "${AVR_AR}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar
+	ln -s "${AVR_SIZE}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size
     fi
     export CCACHE_PATH=${COMPILER_PATH}/
-    CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_DIR}/"
+    CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
     fi
 }
 
