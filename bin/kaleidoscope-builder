@@ -26,7 +26,7 @@ build_version () {
 }
 
 build_paths() {
-    STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-/tmp/kaleidoscope-${USER}}"
+    STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
     BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/build"
     OUTPUT_PATH="${OUTPUT_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/output"
     CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${STABLE_TEMP_DIR}/ccache/bin}"
