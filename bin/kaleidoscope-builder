@@ -26,11 +26,11 @@ build_version () {
 }
 
 build_paths() {
-    STABLE_TEMP_DIR="${STABLE_TEMP_DIR:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
-    BUILD_PATH="${BUILD_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/build"
-    OUTPUT_PATH="${OUTPUT_PATH:-${STABLE_TEMP_DIR}/sketch/${LIBRARY}}/output"
-    CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${STABLE_TEMP_DIR}/ccache/bin}"
-    CORE_CACHE_PATH="${CORE_CACHE_PATH:-${STABLE_TEMP_DIR}/arduino-cores}"
+    KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
+    BUILD_PATH="${BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/build"
+    OUTPUT_PATH="${OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch/${LIBRARY}}/output"
+    CCACHE_WRAPPER_DIR="${CCACHE_WRAPPER_DIR:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
+    CORE_CACHE_PATH="${CORE_CACHE_PATH:-${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
     
 
 
