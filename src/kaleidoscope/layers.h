@@ -22,6 +22,7 @@
 #include "kaleidoscope/device/device.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
+#include "kaleidoscope/key_groups.h"
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
@@ -41,6 +42,7 @@
 extern uint8_t layer_count;
 
 namespace kaleidoscope {
+
 class Layer_ {
  public:
   Layer_() {}
@@ -96,19 +98,19 @@ class Layer_ {
     return active_layers_[KeyAddr(row, col).toInt()];
   }
 
-  static void activate(uint8_t layer);
-  static void deactivate(uint8_t layer);
-  static void activateNext();
-  static void deactivateTop();
-  static void move(uint8_t layer);
+  static void activate(uint8_t layer, uint8_t key_group_flags = ALL_KEY_GROUPS);
+  static void deactivate(uint8_t layer, uint8_t key_group_flags = ALL_KEY_GROUPS);
+  static void activateNext(uint8_t key_group_flags = ALL_KEY_GROUPS);
+  static void deactivateTop(uint8_t key_group_flags = ALL_KEY_GROUPS);
+  static void move(uint8_t layer, uint8_t key_group_flags = ALL_KEY_GROUPS);
 
-  static uint8_t top(void) {
-    return top_active_layer_;
+  static uint8_t top(uint8_t key_group = 0) {
+    return top_active_layer_[key_group];
   }
-  static boolean isActive(uint8_t layer);
+  static boolean isActive(uint8_t layer, uint8_t key_group = 0);
 
-  static uint32_t getLayerState(void) {
-    return layer_state_;
+  static uint32_t getLayerState(uint8_t key_group = 0) {
+    return layer_state_[key_group];
   }
 
   static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
@@ -136,14 +138,18 @@ class Layer_ {
   static void updateActiveLayers(void);
 
  private:
-  static uint32_t layer_state_;
-  static uint8_t top_active_layer_;
+  static uint32_t layer_state_[kaleidoscope::max_num_key_groups];
+  static uint8_t top_active_layer_[kaleidoscope::max_num_key_groups];
   static Key live_composite_keymap_[kaleidoscope_internal::device.numKeys()];
   static uint8_t active_layers_[kaleidoscope_internal::device.numKeys()];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
-  static void updateTopActiveLayer(void);
+
+  static void updateTopActiveLayer(uint8_t key_group);
 };
+
 }
+
+extern uint8_t groupOfKey(KeyAddr key_addr);
 
 extern kaleidoscope::Layer_ Layer;

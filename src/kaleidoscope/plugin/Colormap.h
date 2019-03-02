@@ -59,7 +59,6 @@ class ColormapEffect : public Plugin,
   };
 
  private:
-  static uint8_t top_layer_;
   static uint8_t max_layers_;
   static uint16_t map_base_;
 };

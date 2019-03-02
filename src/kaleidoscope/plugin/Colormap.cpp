@@ -25,7 +25,6 @@ namespace plugin {
 
 uint16_t ColormapEffect::map_base_;
 uint8_t ColormapEffect::max_layers_;
-uint8_t ColormapEffect::top_layer_;
 
 void ColormapEffect::max_layers(uint8_t max_) {
   if (map_base_ != 0)
@@ -39,14 +38,16 @@ void ColormapEffect::TransientLEDMode::onActivate(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  parent_->top_layer_ = Layer.top();
-  if (parent_->top_layer_ <= parent_->max_layers_)
-    ::LEDPaletteTheme.updateHandler(parent_->map_base_, parent_->top_layer_);
+  for (auto key_addr : KeyAddr::all()) {
+    refreshAt(key_addr);
+  }
 }
 
 void ColormapEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
-  if (parent_->top_layer_ <= parent_->max_layers_)
-    ::LEDPaletteTheme.refreshAt(parent_->map_base_, parent_->top_layer_, key_addr);
+  uint8_t key_group = groupOfKey(key_addr);
+  uint8_t top_layer = ::Layer.top(key_group);
+  if (top_layer <= parent_->max_layers_)
+    ::LEDPaletteTheme.refreshAt(parent_->map_base_, top_layer, key_addr);
 }
 
 EventHandlerResult ColormapEffect::onLayerChange() {

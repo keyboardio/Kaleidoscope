@@ -79,7 +79,7 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
       if (layer >= LAYER_SHIFT_OFFSET)
         layer -= LAYER_SHIFT_OFFSET;
 
-      if (Layer.isActive(layer))
+      if (Layer.isActive(layer, groupOfKey(key_addr)))
         ::LEDControl.setCrgbAt(key_addr, highlight_color);
       else
         ::LEDControl.refreshAt(key_addr);

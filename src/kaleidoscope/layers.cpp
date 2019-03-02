@@ -36,29 +36,36 @@ __attribute__((weak))
 extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 
 namespace kaleidoscope {
-uint32_t Layer_::layer_state_;
-uint8_t Layer_::top_active_layer_;
+uint32_t Layer_::layer_state_[kaleidoscope::max_num_key_groups] = { 0, 0, 0, 0, 0, 0 };
+uint8_t Layer_::top_active_layer_[kaleidoscope::max_num_key_groups] = { 0, 0, 0, 0, 0, 0 };
 Key Layer_::live_composite_keymap_[Kaleidoscope.device().numKeys()];
 uint8_t Layer_::active_layers_[Kaleidoscope.device().numKeys()];
 Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
+
+  uint8_t key_group_flags = decodeKeyGroupFlags(keymapEntry.getFlags());
+
+  if (key_group_flags == 0) {
+    key_group_flags = ALL_KEY_GROUPS;
+  }
+
   if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
       if (keyToggledOn(keyState))
-        activateNext();
+        activateNext(key_group_flags);
       else if (keyToggledOff(keyState))
-        deactivateTop();
+        deactivateTop(key_group_flags);
       break;
 
     case KEYMAP_PREVIOUS:
       if (keyToggledOn(keyState))
-        deactivateTop();
+        deactivateTop(key_group_flags);
       else if (keyToggledOff(keyState))
-        activateNext();
+        activateNext(key_group_flags);
       break;
 
     default:
@@ -77,24 +84,24 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        * layer will toggle back on in the same cycle.
        */
       if (keyIsPressed(keyState)) {
-        if (!Layer.isActive(target))
-          activate(target);
+        if (!Layer.isActive(target, key_group_flags))
+          activate(target, key_group_flags);
       } else if (keyToggledOff(keyState)) {
-        deactivate(target);
+        deactivate(target, key_group_flags);
       }
       break;
     }
   } else if (keyToggledOn(keyState)) {
     // switch keymap and stay there
-    if (Layer.isActive(keymapEntry.getKeyCode()) && keymapEntry.getKeyCode())
-      deactivate(keymapEntry.getKeyCode());
+    if (Layer.isActive(keymapEntry.getKeyCode(), key_group_flags) && keymapEntry.getKeyCode())
+      deactivate(keymapEntry.getKeyCode(), key_group_flags);
     else
-      activate(keymapEntry.getKeyCode());
+      activate(keymapEntry.getKeyCode(), key_group_flags);
   }
 }
 
 Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | SWITCH_TO_KEYMAP))
+  if (!((mappedKey.getFlags() & SYNTHETIC) && (mappedKey.getFlags() & SWITCH_TO_KEYMAP)))
     return mappedKey;
 
   handleKeymapKeyswitchEvent(mappedKey, keyState);
@@ -113,10 +120,13 @@ void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
 void Layer_::updateActiveLayers(void) {
   memset(active_layers_, 0, Kaleidoscope.device().numKeys());
   for (auto key_addr : KeyAddr::all()) {
-    int8_t layer = top_active_layer_;
+
+    uint8_t key_group = groupOfKey(key_addr);
+
+    int8_t layer = top_active_layer_[key_group];
 
     while (layer > 0) {
-      if (Layer.isActive(layer)) {
+      if (Layer.isActive(layer, key_group)) {
         Key mappedKey = (*getKey)(layer, key_addr);
 
         if (mappedKey != Key_Transparent) {
@@ -129,43 +139,66 @@ void Layer_::updateActiveLayers(void) {
   }
 }
 
-void Layer_::updateTopActiveLayer(void) {
+void Layer_::updateTopActiveLayer(uint8_t key_group) {
   // If layer_count is set, start there, otherwise search from the
   // highest possible layer (MAX_LAYERS) for the top active layer
   for (byte i = (layer_count - 1); i > 0; i--) {
-    if (bitRead(layer_state_, i)) {
-      top_active_layer_ = i;
+    if (bitRead(layer_state_[key_group], i)) {
+      top_active_layer_[key_group] = i;
       return;
     }
   }
   // It's not possible to turn off the default layer (see
   // updateActiveLayers()), so if no other layers are active:
-  top_active_layer_ = 0;
+  top_active_layer_[key_group] = 0;
 }
 
-void Layer_::move(uint8_t layer) {
-  layer_state_ = 0;
-  activate(layer);
+void Layer_::move(uint8_t layer, uint8_t key_group_flags) {
+
+  for (uint8_t key_group = 0; key_group < kaleidoscope::max_num_key_groups; ++key_group) {
+
+    if (!isKeyGroupFlagSet(key_group_flags, key_group)) {
+      continue;
+    }
+
+    layer_state_[key_group] = 0;
+  }
+
+  activate(layer, key_group_flags);
 }
 
 // Activate a given layer
-void Layer_::activate(uint8_t layer) {
-  // If we're trying to turn on a layer that doesn't exist, abort (but
-  // if the keymap wasn't defined using the KEYMAPS() macro, proceed anyway
-  if (layer >= layer_count)
-    return;
+void Layer_::activate(uint8_t layer, uint8_t key_group_flags) {
 
-  // If the target layer was already on, return
-  if (isActive(layer))
-    return;
+  bool changes_applied = false;
 
-  // Otherwise, turn on its bit in layer_state_
-  bitSet(layer_state_, layer);
+  for (uint8_t key_group = 0; key_group < kaleidoscope::max_num_key_groups; ++key_group) {
 
-  // If the target layer is above the previous highest active layer,
-  // update top_active_layer_
-  if (layer > top_active_layer_)
-    updateTopActiveLayer();
+    if (!isKeyGroupFlagSet(key_group_flags, key_group)) {
+      continue;
+    }
+
+    // If we're trying to turn on a layer that doesn't exist, abort (but
+    // if the keymap wasn't defined using the KEYMAPS() macro, proceed anyway
+    if (layer >= layer_count)
+      return;
+
+    // If the target layer was already on, return
+    if (isActive(layer, key_group_flags))
+      continue;
+
+    changes_applied = true;
+
+    // Otherwise, turn on its bit in layer_state_
+    bitSet(layer_state_[key_group], layer);
+
+    // If the target layer is above the previous highest active layer,
+    // update top_active_layer_
+    if (layer > top_active_layer_[key_group])
+      updateTopActiveLayer(key_group);
+  }
+
+  if (!changes_applied) return;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
   // updated separately, when keys toggle on or off. See layers.h)
@@ -175,18 +208,33 @@ void Layer_::activate(uint8_t layer) {
 }
 
 // Deactivate a given layer
-void Layer_::deactivate(uint8_t layer) {
-  // If the target layer was already off, return
-  if (!bitRead(layer_state_, layer))
-    return;
 
-  // Turn off its bit in layer_state_
-  bitClear(layer_state_, layer);
+void Layer_::deactivate(uint8_t layer, uint8_t key_group_flags) {
 
-  // If the target layer was the previous highest active layer,
-  // update top_active_layer_
-  if (layer == top_active_layer_)
-    updateTopActiveLayer();
+  bool changes_applied = false;
+
+  for (uint8_t key_group = 0; key_group < kaleidoscope::max_num_key_groups; ++key_group) {
+
+    if (!isKeyGroupFlagSet(key_group_flags, key_group)) {
+      continue;
+    }
+
+    // If the target layer was already off, return
+    if (!bitRead(layer_state_[key_group], layer))
+      continue;
+
+    changes_applied = true;
+
+    // Turn off its bit in layer_state_
+    bitClear(layer_state_[key_group], layer);
+
+    // If the target layer was the previous highest active layer,
+    // update top_active_layer_
+    if (layer == top_active_layer_[key_group])
+      updateTopActiveLayer(key_group);
+  }
+
+  if (!changes_applied) return;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
   // updated separately, when keys toggle on or off. See layers.h)
@@ -195,18 +243,37 @@ void Layer_::deactivate(uint8_t layer) {
   kaleidoscope::Hooks::onLayerChange();
 }
 
-boolean Layer_::isActive(uint8_t layer) {
-  return bitRead(layer_state_, layer);
+boolean Layer_::isActive(uint8_t layer, uint8_t key_group) {
+  return bitRead(layer_state_[key_group], layer);
 }
 
-void Layer_::activateNext(void) {
-  activate(top_active_layer_ + 1);
+void Layer_::activateNext(uint8_t key_group_flags) {
+
+  for (uint8_t key_group = 0; key_group < kaleidoscope::max_num_key_groups; ++key_group) {
+
+    if (!isKeyGroupFlagSet(key_group_flags, key_group)) {
+      continue;
+    }
+    activate(top_active_layer_[key_group] + 1, key_group_flags);
+  }
 }
 
-void Layer_::deactivateTop(void) {
-  deactivate(top_active_layer_);
+void Layer_::deactivateTop(uint8_t key_group_flags) {
+
+  for (uint8_t key_group = 0; key_group < kaleidoscope::max_num_key_groups; ++key_group) {
+
+    if (!isKeyGroupFlagSet(key_group_flags, key_group)) {
+      continue;
+    }
+    deactivate(top_active_layer_[key_group]);
+  }
 }
 
+}
+
+__attribute__((weak))
+uint8_t groupOfKey(KeyAddr key_addr) {
+  return Kaleidoscope.device().keyScanner().isOnLeftHalf(key_addr) ? 0 : 1;
 }
 
 kaleidoscope::Layer_ Layer;

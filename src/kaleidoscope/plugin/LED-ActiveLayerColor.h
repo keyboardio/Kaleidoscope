@@ -55,7 +55,7 @@ class LEDActiveLayerColorEffect : public Plugin,
 
     cRGB active_color_;
 
-    cRGB getActiveColor();
+    cRGB getActiveColor(uint8_t top_layer);
 
     friend class LEDActiveLayerColorEffect;
   };
@@ -63,6 +63,8 @@ class LEDActiveLayerColorEffect : public Plugin,
  private:
 
   static const cRGB *colormap_;
+
+  static cRGB getActiveColor(uint8_t top_layer);
 };
 }
 }

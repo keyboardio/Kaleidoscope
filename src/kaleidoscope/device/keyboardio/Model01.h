@@ -73,6 +73,8 @@ class Model01LEDDriver;
 
 struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
   KEYSCANNER_PROPS(4, 16);
+
+  static constexpr byte HAND_BIT = B00001000;
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
@@ -80,6 +82,7 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
  private:
   typedef Model01KeyScanner ThisType;
  public:
+
   static void setup();
   static void scanMatrix();
   static void readMatrix();
@@ -97,6 +100,11 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static uint8_t previousPressedKeyswitchCount();
 
   static void setKeyscanInterval(uint8_t interval);
+
+  static constexpr bool isOnLeftHalf(KeyAddr key_addr) {
+    // If HAND_BIT is set, we are on the right hand side
+    return !(key_addr.col() & Model01KeyScannerProps::HAND_BIT);
+  }
 
  protected:
   static keydata_t leftHandState;
