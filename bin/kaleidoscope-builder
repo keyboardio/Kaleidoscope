@@ -224,8 +224,10 @@ compile () {
     enable_ccache
 
     install -d "${OUTPUT_PATH}"
+    
+    SKETCH_DIR="$(find_sketch)"
 
-    echo "Building ${SKETCH} (${LIB_VERSION}) ..."
+    echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}..."
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -244,7 +246,6 @@ compile () {
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
 
-    SKETCH_DIR="$(find_sketch)"
     SAVED_BOARD="${BOARD}"
     SAVED_FQBN="${FQBN}"
     if [ -e "${SKETCH_DIR}/.kaleidoscope-builder.conf" ]; then
@@ -288,10 +289,9 @@ compile () {
     ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 
-    echo "Your compiled sketch can be found in ${OUTPUT_PATH}"
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
-	      echo "Build artifacts can be found in ${BUILD_PATH}";
+      echo "Build artifacts can be found in ${BUILD_PATH}";
     fi
 
     BOARD="${SAVED_BOARD}"
