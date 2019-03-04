@@ -328,6 +328,18 @@ build_all () {
     done
 }
 
+
+compile_all () {
+    plugins="$(_find_all)"
+
+    for plugin in ${plugins}; do
+        export SKETCH="${plugin}"
+        export LIBRARY="${plugin}"
+        $0 "${plugin}" compile
+    done
+}
+
+
 size () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
