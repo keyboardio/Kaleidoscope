@@ -27,7 +27,7 @@ build_version () {
 
 build_paths() {
 
-    SKETCH_IDENTIFIER=$(ls -id $(realpath "$(find_sketch)/${SKETCH}.ino") | cut -d ' ' -f 1)"-${SKETCH}.ino"
+    SKETCH_IDENTIFIER="$(ls -id $(realpath "$(find_sketch)/${SKETCH}.ino") | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
@@ -56,15 +56,15 @@ build_filenames () {
 
 
 enable_ccache () {
-    if  [ $(which ccache) ]; then
-    if ! [ -d $CCACHE_WRAPPER_PATH ]; then
-	mkdir -p $CCACHE_WRAPPER_PATH
-	ln -s "$(which ccache)" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc
-	ln -s "$(which ccache)" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++
-	ln -s "${AVR_NM}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm
-	ln -s "${AVR_OBJCOPY}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy
-	ln -s "${AVR_AR}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar
-	ln -s "${AVR_SIZE}" ${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size
+    if  [ "$(which ccache)" ]; then
+    if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
+	mkdir -p "$CCACHE_WRAPPER_PATH"
+	ln -s "$(which ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
+	ln -s "$(which ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
+	ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
+	ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
+	ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
+	ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
     fi
     export CCACHE_PATH=${COMPILER_PATH}/
     CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
