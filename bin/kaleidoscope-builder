@@ -20,13 +20,32 @@ set -e
 ######
 
 build_version () {
-    GIT_VERSION="$(cd "$(find_sketch)"; git describe --abbrev=4 --dirty --always)"
+    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
-    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)-g${GIT_VERSION}"
+    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
+}
 
-    BUILD_PATH="${BUILD_PATH:-"$(mktemp -d 2>/dev/null || mktemp -d -t 'build')"}"
-    OUTPUT_DIR="${OUTPUT_DIR:-output/${LIBRARY}}"
-    OUTPUT_PATH="${OUTPUT_PATH:-${SOURCEDIR}/${OUTPUT_DIR}}"
+build_paths() {
+    # We don't really want to use find
+    # shellcheck disable=SC2012
+    SKETCH_IDENTIFIER="$(ls -id "$(realpath "$(find_sketch)/${SKETCH}.ino")" | cut -d ' ' -f 1)-${SKETCH}.ino"
+    KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
+
+
+    KALEIDOSCOPE_BUILD_PATH="${KALEIDOSCOPE_BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
+    KALEIDOSCOPE_OUTPUT_PATH="${KALEIDOSCOPE_OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
+
+    SKETCH_OUTPUT_DIR="${SKETCH_OUTPUT_DIR:-${SKETCH_IDENTIFIER}/output}"
+    SKETCH_BUILD_DIR="${SKETCH_BUILD_DIR:-${SKETCH_IDENTIFIER}/build}"
+
+    BUILD_PATH="${BUILD_PATH:-${KALEIDOSCOPE_BUILD_PATH}/${SKETCH_BUILD_DIR}}"
+    OUTPUT_PATH="${OUTPUT_PATH:-${KALEIDOSCOPE_OUTPUT_PATH}/${SKETCH_OUTPUT_DIR}}"
+
+    CCACHE_WRAPPER_PATH="${CCACHE_WRAPPER_PATH:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
+    CORE_CACHE_PATH="${CORE_CACHE_PATH:-${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
+
+    mkdir -p "$CORE_CACHE_PATH"
+    mkdir -p "$BUILD_PATH"
 }
 
 build_filenames () {
@@ -35,6 +54,24 @@ build_filenames () {
     HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
     ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
 }
+
+
+enable_ccache () {
+    if  [ "$(command -v ccache)" ]; then
+    if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
+	mkdir -p "$CCACHE_WRAPPER_PATH"
+	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
+	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
+	ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
+	ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
+	ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
+	ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
+    fi
+    export CCACHE_PATH=${COMPILER_PATH}/
+    CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
+    fi
+}
+
 
 firmware_size () {
     if [ "${BOARD}" = "virtual" ]; then
@@ -182,10 +219,13 @@ build () {
 
 compile () {
     build_version
+    build_paths
     build_filenames
+    enable_ccache
+
     install -d "${OUTPUT_PATH}"
 
-    echo "Building ${OUTPUT_DIR}/${SKETCH} (${LIB_VERSION}) ..."
+    echo "Building ${SKETCH} (${LIB_VERSION}) ..."
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -233,9 +273,11 @@ compile () {
 	      -libraries "${BOARD_HARDWARE_PATH}/.." \
         ${local_LIBS} \
 	      ${EXTRA_BUILDER_ARGS} \
+	      -build-cache "${CORE_CACHE_PATH}" \
 	      -build-path "${BUILD_PATH}" \
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
 	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
@@ -246,10 +288,10 @@ compile () {
     ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
     ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
 
+    echo "Your compiled sketch can be found in ${OUTPUT_PATH}"
+
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
 	      echo "Build artifacts can be found in ${BUILD_PATH}";
-    else
-	      rm -rf "${BUILD_PATH}"
     fi
 
     BOARD="${SAVED_BOARD}"
