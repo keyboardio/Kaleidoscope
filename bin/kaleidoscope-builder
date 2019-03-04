@@ -26,8 +26,9 @@ build_version () {
 }
 
 build_paths() {
-
-    SKETCH_IDENTIFIER="$(ls -id $(realpath "$(find_sketch)/${SKETCH}.ino") | cut -d ' ' -f 1)-${SKETCH}.ino"
+    # We don't really want to use find
+    # shellcheck disable=SC2012
+    SKETCH_IDENTIFIER="$(ls -id "$(realpath "$(find_sketch)/${SKETCH}.ino")" | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
