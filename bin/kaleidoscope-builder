@@ -57,11 +57,11 @@ build_filenames () {
 
 
 enable_ccache () {
-    if  [ "$(which ccache)" ]; then
+    if  [ "$(command -v ccache)" ]; then
     if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
 	mkdir -p "$CCACHE_WRAPPER_PATH"
-	ln -s "$(which ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
-	ln -s "$(which ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
+	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
+	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
 	ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
 	ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
 	ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
