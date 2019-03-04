@@ -1,5 +1,6 @@
 dist: trusty
 sudo: false
+language: c
 os:
   - linux
 addons:
@@ -14,5 +15,4 @@ notifications:
   email:
     on_success: change
     on_failure: change
-cache:
-  ccache: true
+cache: ccache
