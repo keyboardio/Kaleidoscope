@@ -277,6 +277,14 @@ class Hardware {
     return false;
   }
 
+  /**
+   * Check the number of key switches pressed in the previous scan.
+   *
+   * @returns the number of keys pressed.
+   */
+  uint8_t previousPressedKeyswitchCount() {
+    return 0;
+  }
 
 
   /** @} */

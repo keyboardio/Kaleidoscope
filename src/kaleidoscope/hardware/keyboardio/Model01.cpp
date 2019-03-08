@@ -323,6 +323,10 @@ uint8_t Model01::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
 }
 
+uint8_t Model01::previousPressedKeyswitchCount() {
+  return __builtin_popcountl(previousLeftHandState.all) + __builtin_popcountl(previousRightHandState.all);
+}
+
 }
 }
 }

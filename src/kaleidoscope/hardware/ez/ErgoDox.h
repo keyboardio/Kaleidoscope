@@ -71,6 +71,7 @@ class ErgoDox : public kaleidoscope::Hardware {
   
   bool wasKeyswitchPressed(byte row, byte col);
   bool wasKeyswitchPressed(uint8_t keyIndex);
+  uint8_t previousPressedKeyswitchCount();
 
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);

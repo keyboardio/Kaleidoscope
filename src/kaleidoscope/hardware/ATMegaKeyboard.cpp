@@ -86,6 +86,14 @@ bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
 }
 
 
+uint8_t ATMegaKeyboard::previousPressedKeyswitchCount() {
+  uint8_t count = 0;
+
+  for (int8_t r = 0; r < KeyboardHardware.matrix_rows; r++) {
+    count += __builtin_popcount(KeyboardHardware.previousKeyState_[r]);
+  }
+  return count;
+}
 
 bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t row, byte col) {
   return (bitRead(KeyboardHardware.previousKeyState_[row], col) != 0);

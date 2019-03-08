@@ -241,6 +241,14 @@ bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {
   return wasKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
 }
 
+uint8_t ErgoDox::previousPressedKeyswitchCount() {
+  uint8_t count = 0;
+
+  for (uint8_t r = 0; r < ROWS; r++) {
+    count += __builtin_popcount(previousKeyState_[r]);
+  }
+  return count;
+}
 
 uint8_t ErgoDox::pressedKeyswitchCount() {
   uint8_t count = 0;
