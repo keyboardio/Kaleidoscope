@@ -300,6 +300,16 @@ class Hardware {
    * bring it up into a useful state.
    */
   void setup() {}
+
+  /**
+   * Method to configure the device for a hardware test mode
+   *
+   * Called by the Kaleidoscope Hardware test plugin, this method should 
+   * do any device-specific initialization needed for factory hardware testing
+   *
+   */
+   void enableHardwareTestMode() {}
+
   /** @} */
 };
 }
