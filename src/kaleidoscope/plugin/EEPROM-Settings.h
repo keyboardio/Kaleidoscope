@@ -68,7 +68,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   }
 
  private:
-  static constexpr uint8_t IGNORE_HARDCODED_LAYER_MASK = 0b1111110;
+  static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;
   static uint16_t next_start_;
   static bool is_valid_;
   static bool sealed_;
