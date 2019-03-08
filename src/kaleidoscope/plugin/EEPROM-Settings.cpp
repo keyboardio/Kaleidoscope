@@ -78,13 +78,12 @@ uint8_t EEPROMSettings::default_layer(uint8_t layer) {
   }
 
   /*
-   * We set default_layer to IGNORE_HARDCODED_LAYER_MASK (instead of `value`)
-   * because due to compatibility reasons, we might get passed 0xff (which
-   * conveniently matches our mask), yet, we want to set a different value to
-   * signal an explicit "no default".
+   * We set default_layer to IGNORE_HARDCODED_LAYER (instead of `value`) because
+   * due to compatibility reasons, we might get passed 0xff, yet, we want to set
+   * a different value to signal an explicit "no default".
    */
-  if (layer & IGNORE_HARDCODED_LAYER_MASK) {
-    settings_.default_layer = IGNORE_HARDCODED_LAYER_MASK;
+  if (layer >= IGNORE_HARDCODED_LAYER) {
+    settings_.default_layer = IGNORE_HARDCODED_LAYER;
   }
   update();
   return settings_.default_layer;
@@ -92,8 +91,8 @@ uint8_t EEPROMSettings::default_layer(uint8_t layer) {
 
 void EEPROMSettings::ignoreHardcodedLayers(bool value) {
   settings_.ignore_hardcoded_layers = value;
-  if (settings_.default_layer & IGNORE_HARDCODED_LAYER_MASK)
-    settings_.default_layer = IGNORE_HARDCODED_LAYER_MASK;
+  if (settings_.default_layer > IGNORE_HARDCODED_LAYER)
+    settings_.default_layer = IGNORE_HARDCODED_LAYER;
   update();
 }
 
@@ -116,16 +115,13 @@ void EEPROMSettings::seal(void) {
 
   /* If we have a default layer set, switch to it.
    *
-   * We use IGNORE_HARDCODED_LAYER_MASK, because we want to avoid setting a
-   * default layer in two cases:
+   * We check if the layer is smaller than IGNORE_HARDCODED_LAYER (0x7e),
+   * because we want to avoid setting a default layer in two cases:
    *
    * - When the EEPROM is uninitialized (0x7f)
    * - When such layer switching is explicitly turned off (0x7e)
-   *
-   * In both cases, the bits in IGNORE_HARDCODED_LAYER_MASK are set, and the
-   * remaining bit is not important.
    */
-  if (!(settings_.default_layer & IGNORE_HARDCODED_LAYER_MASK))
+  if (settings_.default_layer < IGNORE_HARDCODED_LAYER)
     Layer.move(settings_.default_layer);
 }
 
