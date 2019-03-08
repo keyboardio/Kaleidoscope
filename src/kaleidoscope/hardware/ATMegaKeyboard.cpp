@@ -85,6 +85,20 @@ bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
                             keyIndex % KeyboardHardware.matrix_columns);
 }
 
+
+
+bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t row, byte col) {
+  return (bitRead(KeyboardHardware.previousKeyState_[row], col) != 0);
+
+}
+
+bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t keyIndex) {
+  keyIndex--;
+  return wasKeyswitchPressed(keyIndex / KeyboardHardware.matrix_columns,
+                            keyIndex % KeyboardHardware.matrix_columns);
+}
+
+
 void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
   for (byte row = 0; row < KeyboardHardware.matrix_rows; row++) {
     for (byte col = 0; col < KeyboardHardware.matrix_columns; col++) {

@@ -305,6 +305,20 @@ bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
   return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
 }
 
+
+bool Model01::wasKeyswitchPressed(byte row, byte col) {
+  if (col <= 7) {
+    return (bitRead(previousLeftHandState.rows[row], 7 - col) != 0);
+  } else {
+    return (bitRead(previousRightHandState.rows[row], 7 - (col - 8)) != 0);
+  }
+}
+
+bool Model01::wasKeyswitchPressed(uint8_t keyIndex) {
+  keyIndex--;
+  return wasKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+}
+
 uint8_t Model01::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
 }

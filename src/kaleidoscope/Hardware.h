@@ -253,6 +253,32 @@ class Hardware {
     return 0;
   }
 
+  /**
+   * Check if a key was pressed at a given position on the previous scan
+   *
+   * @param row is the row the key is located at in the matrix.
+   * @param col is the column the key is located at in the matrix.
+   *
+   * @returns true if the key was pressed, false otherwise.
+   */
+  bool wasKeyswitchPressed(byte row, byte col) {
+    return false;
+  }
+  /**
+   * Check if a key was pressed at a given position on the previous scan.
+   *
+   * @param keyIndex is the key index, as calculated by `keyIndex`.
+   *
+   * @note Key indexes start at 1, not 0!
+   *
+   * @returns true if the key was pressed, false otherwise.
+   */
+  bool wasKeyswitchPressed(uint8_t keyIndex) {
+    return false;
+  }
+
+
+
   /** @} */
 
   /**

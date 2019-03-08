@@ -232,6 +232,16 @@ bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
   return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
 }
 
+bool ErgoDox::wasKeyswitchPressed(byte row, byte col) {
+  return (bitRead(previousKeyState_[row], col) != 0);
+}
+
+bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {
+  keyIndex--;
+  return wasKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+}
+
+
 uint8_t ErgoDox::pressedKeyswitchCount() {
   uint8_t count = 0;
 
