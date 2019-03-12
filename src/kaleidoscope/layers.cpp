@@ -120,7 +120,7 @@ void Layer_::updateActiveLayers(void) {
             break;
           }
         }
-        layer--;
+        layer = nextLowerLayer(layer);
       }
     }
   }
@@ -202,6 +202,11 @@ void Layer_::activateNext(void) {
 
 void Layer_::deactivateTop(void) {
   deactivate(top_active_layer_);
+}
+
+__attribute__((weak))
+uint8_t nextLowerLayer(uint8_t layer) {
+  return layer - 1;
 }
 
 }

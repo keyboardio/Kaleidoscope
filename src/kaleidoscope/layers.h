@@ -110,6 +110,8 @@ class Layer_ {
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
   static void updateTopActiveLayer(void);
 };
+
+extern uint8_t nextLowerLayer(uint8_t layer);
 }
 
 extern kaleidoscope::Layer_ Layer;
