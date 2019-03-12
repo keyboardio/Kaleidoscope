@@ -163,7 +163,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 }
 
 EventHandlerResult OneShot::beforeReportingState() {
-  for (uint8_t i = 0; i < 8; i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
     if (state_[i].active) {
       activateOneShot(i);
     }
@@ -178,7 +178,7 @@ EventHandlerResult OneShot::afterEachCycle() {
 
   bool is_cancelled = false;
 
-  for (uint8_t i = 0; i < 32; i++) {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
     if (should_cancel_) {
       if (state_[i].sticky) {
         if (should_cancel_stickies_) {
