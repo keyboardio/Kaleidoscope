@@ -40,6 +40,14 @@ void setup();
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
+#ifdef KEYMAP_STACKED_GENERIC
+#define KEYMAP_STACKED(...) { KEYMAP_STACKED_GENERIC(XXX, __VA_ARGS__) }
+#endif
+
+#ifdef KEYMAP_GENERIC
+#define KEYMAP(...) { KEYMAP_GENERIC(XXX, __VA_ARGS__) }
+#endif
+
 #define ROWS (KeyboardHardware.matrix_rows)
 #define COLS (KeyboardHardware.matrix_columns)
 #define LED_COUNT (KeyboardHardware.led_count)

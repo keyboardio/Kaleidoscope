@@ -21,7 +21,7 @@
 // that should be enough for almost any layout.
 #define MAX_LAYERS sizeof(uint32_t) * 8;
 
-// The total number of defined layers in the firmware sketch keymaps[]
+// The total number of defined layers in the firmware sketch keymaps_linear[]
 // array. If the keymap wasn't defined using KEYMAPS(), set it to the
 // highest possible number of layers.
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
@@ -93,11 +93,7 @@ Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
 }
 
 Key Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
-  Key key;
-
-  key.raw = pgm_read_word(&(keymaps[layer][row][col]));
-
-  return key;
+  return keyFromKeymap(layer, row, col);
 }
 
 void Layer_::updateLiveCompositeKeymap(byte row, byte col) {

@@ -89,7 +89,7 @@ class ErgoDox : public kaleidoscope::Hardware {
   static void readMatrixRow(uint8_t row);
 };
 
-#define KEYMAP_STACKED(                                                 \
+#define KEYMAP_STACKED_GENERIC(dflt,                                    \
     /* left hand, spatial positions */                                  \
     r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                           \
     r1c0, r1c1, r1c2, r1c3, r1c4, r1c5, r1c6,                           \
@@ -111,23 +111,22 @@ class ErgoDox : public kaleidoscope::Hardware {
     r5c12, r5c11, r5c10 )                                               \
                                                                         \
   /* matrix positions */                                                \
-  {                                                                     \
-    { r0c0, r1c0, r2c0, r3c0, r4c0, XXX  },                             \
-    { r0c1, r1c1, r2c1, r3c1, r4c1, r5c1 },                             \
-    { r0c2, r1c2, r2c2, r3c2, r4c2, r5c2 },                             \
-    { r0c3, r1c3, r2c3, r3c3, r4c3, r5c3 },                             \
-    { r0c4, r1c4, r2c4, r3c4, r4c4, r5c4 },                             \
-    { r0c5, r1c5, r2c5, r3c5, XXX,  r5c5 },                             \
-    { r0c6, r1c6, XXX,  r3c6, XXX,  r5c6 },                             \
                                                                         \
-    { r0c7,  r1c7,  XXX,   r3c7,  XXX,   r5c7  },                       \
-    { r0c8,  r1c8,  r2c8,  r3c8,  XXX,   r5c8  },                       \
-    { r0c9,  r1c9,  r2c9,  r3c9,  r4c9,  r5c9  },                       \
-    { r0c10, r1c10, r2c10, r3c10, r4c10, r5c10 },                       \
-    { r0c11, r1c11, r2c11, r3c11, r4c11, r5c11 },                       \
-    { r0c12, r1c12, r2c12, r3c12, r4c12, r5c12 },                       \
-    { r0c13, r1c13, r2c13, r3c13, r4c13, XXX   }                        \
-  }
+    r0c0, r1c0, r2c0, r3c0, r4c0, dflt,                                 \
+    r0c1, r1c1, r2c1, r3c1, r4c1, r5c1,                                 \
+    r0c2, r1c2, r2c2, r3c2, r4c2, r5c2,                                 \
+    r0c3, r1c3, r2c3, r3c3, r4c3, r5c3,                                 \
+    r0c4, r1c4, r2c4, r3c4, r4c4, r5c4,                                 \
+    r0c5, r1c5, r2c5, r3c5, dflt, r5c5,                                 \
+    r0c6, r1c6, dflt, r3c6, dflt, r5c6,                                 \
+                                                                        \
+    r0c7,  r1c7,  dflt,  r3c7,  dflt,  r5c7,                            \
+    r0c8,  r1c8,  r2c8,  r3c8,  dflt,  r5c8,                            \
+    r0c9,  r1c9,  r2c9,  r3c9,  r4c9,  r5c9,                            \
+    r0c10, r1c10, r2c10, r3c10, r4c10, r5c10,                           \
+    r0c11, r1c11, r2c11, r3c11, r4c11, r5c11,                           \
+    r0c12, r1c12, r2c12, r3c12, r4c12, r5c12,                           \
+    r0c13, r1c13, r2c13, r3c13, r4c13, dflt
 }
 }
 }
