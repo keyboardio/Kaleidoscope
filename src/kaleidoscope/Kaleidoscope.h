@@ -40,6 +40,14 @@ void setup();
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
+#ifdef PER_KEY_DATA_STACKED
+#define KEYMAP_STACKED(...) { PER_KEY_DATA_STACKED(XXX, __VA_ARGS__) }
+#endif
+
+#ifdef PER_KEY_DATA
+#define KEYMAP(...) { PER_KEY_DATA(XXX, __VA_ARGS__) }
+#endif
+
 #define ROWS (KeyboardHardware.matrix_rows)
 #define COLS (KeyboardHardware.matrix_columns)
 #define LED_COUNT (KeyboardHardware.led_count)

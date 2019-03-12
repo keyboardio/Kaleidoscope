@@ -180,20 +180,20 @@ constexpr size_t nListEntries(Args__...) {
 #define BITFIELD(VAR_NAME, ...) BITFIELD__(VAR_NAME,, __VA_ARGS__)
 #define BITFIELD_PROGMEM(VAR_NAME, ...) BITFIELD__(VAR_NAME, const PROGMEM, __VA_ARGS__)
 
-#ifdef KEYMAP_GENERIC
+#ifdef PER_KEY_DATA
 #define KEYMAP_BITFIELD(VAR_NAME, ...) \
-    BITFIELD(VAR_NAME, KEYMAP_GENERIC(0 /*default for non-existent keys*/, __VA_ARGS__))
+    BITFIELD(VAR_NAME, PER_KEY_DATA(0 /*default for non-existent keys*/, __VA_ARGS__))
 
 #define KEYMAP_BITFIELD_PROGMEM(VAR_NAME, ...) \
-    BITFIELD_PROGMEM(VAR_NAME, KEYMAP_GENERIC(0 /*default for non-existent keys*/, __VA_ARGS__))
+    BITFIELD_PROGMEM(VAR_NAME, PER_KEY_DATA(0 /*default for non-existent keys*/, __VA_ARGS__))
 #endif
 
-#ifdef KEYMAP_STACKED_GENERIC
-#define KEYMAP_BITFIELDK_STACKED(VAR_NAME, ...) \
-    BITFIELD(VAR_NAME, KEYMAP_STACKED_GENERIC(0 /*default for non-existent keys*/, __VA_ARGS__))
+#ifdef PER_KEY_DATA_STACKED
+#define KEYMAP_BITFIELD_STACKED(VAR_NAME, ...) \
+    BITFIELD(VAR_NAME, PER_KEY_DATA_STACKED(0 /*default for non-existent keys*/, __VA_ARGS__))
 
 #define KEYMAP_BITFIELD_STACKED_PROGMEM(VAR_NAME, ...) \
-    BITFIELD_PROGMEM(VAR_NAME, KEYMAP_STACKED_GENERIC(0 /*default for non-existent keys*/, __VA_ARGS__))
+    BITFIELD_PROGMEM(VAR_NAME, PER_KEY_DATA_STACKED(0 /*default for non-existent keys*/, __VA_ARGS__))
 #endif
 
 } // end namespace bitfields

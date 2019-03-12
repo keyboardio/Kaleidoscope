@@ -18,17 +18,21 @@
 
 #include <Arduino.h>
 #include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/keymaps.h"
 #include KALEIDOSCOPE_HARDWARE_H
-
-extern const Key keymaps[][ROWS][COLS];
-
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
-#define KEYMAPS(layers...)				\
-  const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
-  uint8_t layer_count = sizeof(keymaps) / sizeof(*keymaps);
+#define KEYMAPS(layers...)				                                    __NL__ \
+  const Key keymaps_linear[][ROWS*COLS] PROGMEM = { layers };           __NL__ \
+  uint8_t layer_count                                                   __NL__ \
+     = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
+                                                                        __NL__ \
+  /* This deprecated compatibility wrapper is removed by the linker if  __NL__ \
+     it is not accessed nowhere.                                        __NL__ \
+  */                                                                    __NL__ \
+  kaleidoscope::internal::Keymaps2DInterface keymaps;
 
 extern uint8_t layer_count;
 
