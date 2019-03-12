@@ -45,3 +45,12 @@ Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
  [plugin:example]: ../../examples/Features/HostPowerManagement/HostPowerManagement.ino
+
+## Caveats
+
+On some systems, there can be a long delay between suspending/sleeping the host and the
+firmware responding to it and calling `hostPowerManagementEventHandler()`. In particular,
+on macOS, it can take 30 seconds or more after invoking "sleep" mode on the host before
+the keyboard responds. One user reports that it can take more than a minute, so if this
+plugin doesn't appear to be working, please wait a few minutes and check again.
+
