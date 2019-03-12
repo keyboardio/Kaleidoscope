@@ -30,6 +30,7 @@ class OneShot : public kaleidoscope::Plugin {
  public:
   OneShot(void) {
     for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+      state_[i] = {};
       state_[i].stickable = true;
     }
   }
