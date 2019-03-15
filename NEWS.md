@@ -130,6 +130,10 @@ The [FirmwareDump](doc/plugin/FirmwareDump.md) plugin makes it possible to dump 
 
 ## Breaking changes
 
+### The `NumPad` plugin no longer toggles `NumLock`
+
+The `NumPad` plugin used to toggle `NumLock` when switching to the NumPad layer. This caused issues on OSX where `NumLock` is interpreted as `Clear`. For this reason, the plugin no longer does this. As a consequence, everyone's encouraged to update their keymap so that the numpad layer uses normal number keys instead of the keypad numbers. See [Model01-Firmware#79](https://github.com/keyboardio/Model01-Firmware/pull/79) for an example about how to do this.
+
 ### The `RxCy` macros and peeking into the keyswitch state
 
 The `RxCy` macros changed from being indexes into a per-hand bitmap to being an index across the whole keyboard. This mostly affected the [MagicCombo](doc/plugin/MagicCombo.md) plugin.
