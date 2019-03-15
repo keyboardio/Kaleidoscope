@@ -173,7 +173,14 @@ EventHandlerResult OneShot::beforeReportingState() {
 }
 
 EventHandlerResult OneShot::afterEachCycle() {
-  if (hasTimedOut())
+  bool oneshot_active = false;
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+    if (state_[i].active) {
+      oneshot_active = true;
+      break;
+    }
+  }
+  if (oneshot_active && hasTimedOut())
     cancel();
 
   bool is_cancelled = false;
