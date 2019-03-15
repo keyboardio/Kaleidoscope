@@ -19,43 +19,17 @@
 namespace kaleidoscope {
 namespace plugin {
 
-byte NumPad::numpadLayerToggleKeyRow = 255, NumPad::numpadLayerToggleKeyCol = 255;
+// public:
 uint8_t NumPad::numPadLayer;
-bool NumPad::numlockUnsynced = false;
-bool NumPad::originalNumLockState = false;
 cRGB NumPad::color = CRGB(160, 0, 0);
 uint8_t NumPad::lock_hue = 170;
 
+// private:
+byte NumPad::numpadLayerToggleKeyRow = 255, NumPad::numpadLayerToggleKeyCol = 255;
+bool NumPad::numpadActive = false;
+
 EventHandlerResult NumPad::onSetup(void) {
-  originalNumLockState = getNumlockState();
   return EventHandlerResult::OK;
-}
-
-bool NumPad::getNumlockState() {
-  return !!(kaleidoscope::hid::getKeyboardLEDs() & LED_NUM_LOCK);
-}
-
-void NumPad::syncNumlockState(bool state) {
-  bool numLockLEDState = getNumlockState();
-  if (numLockLEDState != state) {
-    kaleidoscope::hid::pressKey(Key_KeypadNumLock);
-  }
-}
-
-
-
-void NumPad::cleanupNumlockState() {
-  if (!numlockUnsynced) {
-    bool numLockLEDState = getNumlockState();
-    ::LEDControl.set_mode(::LEDControl.get_mode_index());
-    if (!originalNumLockState) {
-      syncNumlockState(false);
-      numLockLEDState = false;
-    }
-    originalNumLockState = numLockLEDState;
-    numlockUnsynced = true;
-  }
-
 }
 
 void NumPad::setKeyboardLEDColors(void) {
@@ -87,12 +61,13 @@ void NumPad::setKeyboardLEDColors(void) {
 
 EventHandlerResult NumPad::afterEachCycle() {
   if (!Layer.isActive(numPadLayer)) {
-    cleanupNumlockState();
+    if (numpadActive) {
+      ::LEDControl.set_mode(::LEDControl.get_mode_index());
+      numpadActive = false;
+    }
   } else {
-    if (numlockUnsynced)  {
-      // If it's the first time we're in this loop after toggling the Numpad mode on
-      syncNumlockState(true);
-      numlockUnsynced = false;
+    if (!numpadActive)  {
+      numpadActive = true;
     }
     setKeyboardLEDColors();
   }
