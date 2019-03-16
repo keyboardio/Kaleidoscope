@@ -56,6 +56,10 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 }
 
 EventHandlerResult ActiveModColorEffect::beforeReportingState() {
+  if (mod_key_count_ == 0) {
+    onLayerChange();
+  }
+
   for (uint8_t i = 0; i < mod_key_count_; i++) {
     uint8_t coords = mod_keys_[i];
     byte c = coords % COLS;
