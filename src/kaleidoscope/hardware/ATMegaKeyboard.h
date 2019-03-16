@@ -40,6 +40,7 @@ struct cRGB {
 #endif
 
 #include "kaleidoscope/Hardware.h"
+#include "kaleidoscope/driver/MCU.h"
 
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
@@ -91,6 +92,9 @@ class ATMegaKeyboard : public kaleidoscope::Hardware {
   bool isKeyMasked(byte row, byte col);
 
   static bool do_scan_;
+
+ protected:
+  kaleidoscope::driver::mcu::ATMega32U4 mcu_;
 
  private:
 
