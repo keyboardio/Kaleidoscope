@@ -28,7 +28,9 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class WavepoolEffect : public LEDMode {
+class WavepoolEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   WavepoolEffect(void) {}
 
@@ -39,17 +41,38 @@ class WavepoolEffect : public LEDMode {
   static int16_t ripple_hue;
 
   static constexpr int16_t rainbow_hue = INT16_MAX;
- protected:
-  void update(void) final;
 
- private:
-  static uint8_t frames_since_event;
-  static int8_t surface[2][WP_WID * WP_HGT];
-  static uint8_t page;
-  static PROGMEM const uint8_t rc2pos[ROWS * COLS];
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
 
-  static void raindrop(uint8_t x, uint8_t y, int8_t *page);
-  static uint8_t wp_rand();
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const WavepoolEffect *parent);
+
+    EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+
+   protected:
+
+    virtual void update() final;
+
+   private:
+
+    const WavepoolEffect *parent_;
+
+    uint8_t frames_since_event_;
+    int8_t surface_[2][WP_WID * WP_HGT];
+    uint8_t page_;
+    static PROGMEM const uint8_t rc2pos[ROWS * COLS];
+
+    void raindrop(uint8_t x, uint8_t y, int8_t *page);
+    uint8_t wp_rand();
+
+    friend class WavepoolEffect;
+  };
 };
 
 }

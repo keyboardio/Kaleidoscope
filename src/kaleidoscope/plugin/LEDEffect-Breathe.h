@@ -20,18 +20,34 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDBreatheEffect : public LEDMode {
+class LEDBreatheEffect : public Plugin,
+  public LEDModeInterface {
  public:
   LEDBreatheEffect(void) {}
 
   uint8_t hue = 170;
   uint8_t saturation = 255;
 
- protected:
-  void update(void) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
 
- private:
-  uint16_t last_update_ = 0;
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDBreatheEffect *parent)
+      : parent_(parent) {}
+
+   protected:
+    virtual void update(void) final;
+
+   private:
+
+    const LEDBreatheEffect *parent_;
+    uint16_t last_update_ = 0;
+  };
 };
 }
 }

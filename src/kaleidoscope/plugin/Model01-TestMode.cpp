@@ -19,6 +19,7 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Model01-TestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include "kaleidoscope_internal/LEDModeManager.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -73,9 +74,17 @@ void TestMode::test_leds(void) {
   set_leds(blue);
   // make all the LEDs bright white (1.6A)
   set_leds(brightWhite);
+
+  // This works under the assumption that LEDRainbowEffect
+  // has been registered with KALEIDOSCOPE_INIT_PLUGINS in
+  // the sketch. Otherwise LEDRainbowEffect would not be
+  // known to LEDControl.
+  //
+  ::LEDControl.activate(&::LEDRainbowEffect);
+
   // rainbow for 10 seconds
   for (auto i = 0; i < 1000; i++) {
-    ::LEDRainbowEffect.update();
+    ::LEDControl.update();
     ::LEDControl.syncLeds();
   }
   waitForKeypress();

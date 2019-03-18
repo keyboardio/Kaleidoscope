@@ -19,19 +19,19 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDChaseEffect::update(void) {
+void LEDChaseEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
   uint16_t now = Kaleidoscope.millisAtCycleStart();
-  if ((now - last_update_) < update_delay_) {
+  if ((now - last_update_) < parent_->update_delay_) {
     return;
   }
   last_update_ = now;
 
   // The red LED is at `pos_`; the blue one follows behind. `direction_` is
   // either +1 or -1; `distance_` is the gap between them.
-  int8_t pos2 = pos_ - (direction_ * distance_);
+  int8_t pos2 = pos_ - (direction_ * parent_->distance_);
 
   // First, we turn off the LEDs that were turned on in the previous update.
   // `pos_` is always in the valid range (0 <= pos_ < LED_COUNT), but after it

@@ -20,6 +20,10 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
+// This is still an old style persistent LEDMode as it does not have
+// any members and thus there would not be any gain from making it dynamic.
+//
 class LEDOff : public LEDMode {
  public:
   LEDOff(void) { }

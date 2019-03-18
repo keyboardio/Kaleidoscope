@@ -198,4 +198,8 @@
                                                                               __NL__ \
   _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK                                      __NL__ \
                                                                               __NL__ \
-  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)
+  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)                            __NL__ \
+                                                                              __NL__ \
+  /* This generates a PROGMEM array-kind-of data structure that contains   */ __NL__ \
+  /* LEDModeFactory entries                                                */ __NL__ \
+  _INIT_LED_MODE_MANAGER(__VA_ARGS__)

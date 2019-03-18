@@ -30,7 +30,6 @@ bool FingerPainter::edit_mode_;
 
 EventHandlerResult FingerPainter::onSetup() {
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);
-  ::LEDControl.mode_add(this);
   return EventHandlerResult::OK;
 }
 

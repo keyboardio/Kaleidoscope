@@ -17,16 +17,11 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Heatmap.h>
+#include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
 namespace plugin {
 
-// store the number of times each key has been strock
-uint16_t Heatmap::heatmap_[ROWS][COLS];
-// max of heatmap_ (we divide by it so we start at 1)
-uint16_t Heatmap::highest_ = 1;
-// next heatmap computation time
-uint32_t Heatmap::next_heatmap_comp_time_ = 0;
 // in the cRGB struct the order is blue, green, red (It should be called cBGR…)
 // default heat_colors                                black        green         yellow           red
 static const cRGB heat_colors_default_[] PROGMEM = {{0, 0, 0}, {25, 255, 25}, {25, 255, 255}, {25, 25, 255}};
@@ -37,7 +32,17 @@ uint8_t Heatmap::heat_colors_length = 4;
 // number of millisecond to wait between each heatmap computation
 uint16_t Heatmap::update_delay = 1000;
 
-cRGB Heatmap::computeColor(float v) {
+Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
+  : parent_(parent),
+    // store the number of times each key has been strock
+    heatmap_{},
+    // max of heatmap_ (we divide by it so we start at 1)
+    highest_(1),
+    // next heatmap computation time
+    next_heatmap_comp_time_(0)
+{}
+
+cRGB Heatmap::TransientLEDMode::computeColor(float v) {
   // compute the color corresponding to a value between 0 and 1
 
   /*
@@ -95,7 +100,7 @@ cRGB Heatmap::computeColor(float v) {
   return {b, g, r};
 }
 
-void Heatmap::shiftStats(void) {
+void Heatmap::TransientLEDMode::shiftStats(void) {
   // this method is called when:
   // 1. a value in heatmap_ reach INT8_MAX
   // 2. highest_ reach heat_colors_length*512 (see Heatmap::loopHook)
@@ -112,6 +117,15 @@ void Heatmap::shiftStats(void) {
 }
 
 void Heatmap::resetMap(void) {
+
+  if (::LEDControl.get_mode_index() != led_mode_id_)
+    return;
+
+  ::LEDControl.get_mode<TransientLEDMode>()->resetMap();
+}
+
+void Heatmap::TransientLEDMode::resetMap() {
+
   // this method can be used as a way to work around an existing bug with a single key
   // getting special attention or if the user just wants a button to reset the map
   for (uint8_t r = 0; r < ROWS; r++) {
@@ -138,6 +152,15 @@ EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, byte row, byte col
   if (!keyToggledOn(key_state))
     return EventHandlerResult::OK;
 
+  // if the LED mode is not current, skip it
+  if (::LEDControl.get_mode_index() != led_mode_id_)
+    return EventHandlerResult::OK;
+
+  return ::LEDControl.get_mode<TransientLEDMode>()
+         ->onKeyswitchEvent(mapped_key, row, col, key_state);
+}
+
+EventHandlerResult Heatmap::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
   // increment the heatmap_ value related to the key
   heatmap_[row][col]++;
 
@@ -160,6 +183,13 @@ EventHandlerResult Heatmap::beforeEachCycle() {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
 
+  if (::LEDControl.get_mode_index() != led_mode_id_)
+    return EventHandlerResult::OK;
+
+  return ::LEDControl.get_mode<TransientLEDMode>()->beforeEachCycle();
+}
+
+EventHandlerResult Heatmap::TransientLEDMode::beforeEachCycle() {
   // this methode is called frequently by Kaleidoscope
   // even if the module isn't activated
 
@@ -175,7 +205,7 @@ EventHandlerResult Heatmap::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void Heatmap::update(void) {
+void Heatmap::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 

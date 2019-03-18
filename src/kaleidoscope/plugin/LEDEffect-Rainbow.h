@@ -20,7 +20,8 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDRainbowEffect : public LEDMode {
+class LEDRainbowEffect : public Plugin,
+  public LEDModeInterface {
  public:
   LEDRainbowEffect(void) {}
 
@@ -32,21 +33,40 @@ class LEDRainbowEffect : public LEDMode {
   byte update_delay(void) {
     return rainbow_update_delay;
   }
-  void update(void) final;
+
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDRainbowEffect *parent)
+      : parent_(parent) {}
+
+    virtual void update() final;
+
+   private:
+
+    const LEDRainbowEffect *parent_;
+
+    uint16_t rainbow_hue = 0;   //  stores 0 to 614
+
+    uint8_t rainbow_steps = 1;  //  number of hues we skip in a 360 range per update
+    uint16_t rainbow_last_update = 0;
+
+    byte rainbow_saturation = 255;
+  };
 
  private:
-  uint16_t rainbow_hue = 0;   //  stores 0 to 614
-
-  uint8_t rainbow_steps = 1;  //  number of hues we skip in a 360 range per update
-  uint16_t rainbow_last_update = 0;
   uint16_t rainbow_update_delay = 40; // delay between updates (ms)
-
-  byte rainbow_saturation = 255;
   byte rainbow_value = 50;
 };
 
 
-class LEDRainbowWaveEffect : public LEDMode {
+class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
  public:
   LEDRainbowWaveEffect(void) {}
 
@@ -58,16 +78,34 @@ class LEDRainbowWaveEffect : public LEDMode {
   byte update_delay(void) {
     return rainbow_update_delay;
   }
-  void update(void) final;
 
- private:
-  uint16_t rainbow_hue = 0;  //  stores 0 to 614
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
 
-  uint8_t rainbow_wave_steps = 1;  //  number of hues we skip in a 360 range per update
-  uint16_t rainbow_last_update = 0;
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDRainbowWaveEffect *parent)
+      : parent_(parent) {}
+
+    virtual void update() final;
+
+   private:
+
+    const LEDRainbowWaveEffect *parent_;
+
+    uint16_t rainbow_hue = 0;  //  stores 0 to 614
+
+    uint8_t rainbow_wave_steps = 1;  //  number of hues we skip in a 360 range per update
+    uint16_t rainbow_last_update = 0;
+
+    byte rainbow_saturation = 255;
+  };
+
   uint16_t rainbow_update_delay = 40; // delay between updates (ms)
-
-  byte rainbow_saturation = 255;
   byte rainbow_value = 50;
 };
 }

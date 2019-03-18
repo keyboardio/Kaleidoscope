@@ -16,21 +16,22 @@
  */
 
 #include <Kaleidoscope-LED-Stalker.h>
+#include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t StalkerEffect::map_[ROWS][COLS];
 StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
-uint16_t StalkerEffect::step_start_time_;
 cRGB StalkerEffect::inactive_color = (cRGB) {
   0, 0, 0
 };
 
-void StalkerEffect::onActivate(void) {
-  memset(map_, 0, sizeof(map_));
-}
+StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
+  : parent_(parent),
+    step_start_time_(0),
+    map_{}
+{}
 
 EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
   if (!Kaleidoscope.has_leds)
@@ -39,35 +40,38 @@ EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, by
   if (row >= ROWS || col >= COLS)
     return EventHandlerResult::OK;
 
+  if (::LEDControl.get_mode_index() != led_mode_id_)
+    return EventHandlerResult::OK;
+
   if (keyIsPressed(keyState)) {
-    map_[row][col] = 0xff;
+    ::LEDControl.get_mode<TransientLEDMode>()->map_[row][col] = 0xff;
   }
 
   return EventHandlerResult::OK;
 }
 
-void StalkerEffect::update(void) {
+void StalkerEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  if (!variant)
+  if (!parent_->variant)
     return;
 
   uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - step_start_time_;
-  if (elapsed < step_length)
+  if (elapsed < parent_->step_length)
     return;
 
   for (byte r = 0; r < ROWS; r++) {
     for (byte c = 0; c < COLS; c++) {
       uint8_t step = map_[r][c];
       if (step) {
-        ::LEDControl.setCrgbAt(r, c, variant->compute(&step));
+        ::LEDControl.setCrgbAt(r, c, parent_->variant->compute(&step));
       }
 
       map_[r][c] = step;
 
       if (!map_[r][c])
-        ::LEDControl.setCrgbAt(r, c, inactive_color);
+        ::LEDControl.setCrgbAt(r, c, parent_->inactive_color);
     }
   }
 

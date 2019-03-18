@@ -20,16 +20,38 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDSolidColor : public LEDMode {
+class LEDSolidColor : public Plugin,
+  public LEDModeInterface {
  public:
-  LEDSolidColor(uint8_t r, uint8_t g, uint8_t b);
 
- protected:
-  void onActivate(void) final;
-  void refreshAt(byte row, byte col) final;
+  LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
+    : r_(r), g_(g), b_(b)
+  {}
+
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDSolidColor *parent)
+      : parent_(parent) {}
+
+   protected:
+    virtual void onActivate(void) final;
+    virtual void refreshAt(byte row, byte col) final;
+
+   private:
+
+    const LEDSolidColor *parent_;
+  };
 
  private:
-  uint8_t r, g, b;
+
+  uint8_t r_, g_, b_;
 };
 }
 }

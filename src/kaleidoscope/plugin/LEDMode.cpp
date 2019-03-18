@@ -14,9 +14,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
 
 #include <kaleidoscope/plugin/LEDMode.h>
 #include <kaleidoscope/plugin/LEDControl.h>
-#include <kaleidoscope/plugin/LEDControl/LEDUtils.h>
-#include <kaleidoscope/plugin/LEDControl/LED-Off.h>
+#include <kaleidoscope/event_handler_result.h>
+
+namespace kaleidoscope {
+namespace plugin {
+
+void LEDModeInterface::activate() {
+  LEDControl::activate(this);
+}
+
+} // end namespace plugin
+} // end namespace kaleidoscope

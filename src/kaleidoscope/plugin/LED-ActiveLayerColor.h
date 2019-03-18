@@ -21,22 +21,45 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDActiveLayerColorEffect : public LEDMode {
+class LEDActiveLayerColorEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   LEDActiveLayerColorEffect(void) {}
 
   EventHandlerResult onLayerChange();
   void setColormap(const cRGB colormap[]);
 
- protected:
-  void onActivate(void) final;
-  void refreshAt(byte row, byte col) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDActiveLayerColorEffect *parent);
+
+   protected:
+
+    virtual void onActivate(void) final;
+    virtual void refreshAt(byte row, byte col) final;
+
+   private:
+
+    const LEDActiveLayerColorEffect *parent_;
+
+    cRGB active_color_;
+
+    cRGB getActiveColor();
+
+    friend class LEDActiveLayerColorEffect;
+  };
 
  private:
-  static const cRGB *colormap_;
-  static cRGB active_color_;
 
-  static cRGB getActiveColor();
+  static const cRGB *colormap_;
 };
 }
 }
