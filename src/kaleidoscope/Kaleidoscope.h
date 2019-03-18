@@ -158,3 +158,9 @@ using kaleidoscope::Kaleidoscope;
 // must have been instantiated at global scope.
 //
 #define KALEIDOSCOPE_INIT_PLUGINS(...) _KALEIDOSCOPE_INIT_PLUGINS(__VA_ARGS__)
+
+// Make the following functions available to user code
+//    LEDMode *getLEDMode(uint8_t n);
+//    uint8_t numLEDModes();
+//
+PROVIDE_ACCESS_TO_PLUGINS_OF_TYPE(LEDMode)

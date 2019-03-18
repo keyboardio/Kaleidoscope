@@ -20,8 +20,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-LEDMode *LEDControl::modes[LED_MAX_MODES];
-uint8_t LEDControl::mode;
+uint8_t LEDControl::mode_id;
 uint16_t LEDControl::syncDelay = 16;
 uint16_t LEDControl::syncTimer;
 bool LEDControl::paused = false;
@@ -31,73 +30,58 @@ void LEDMode::activate(void) {
 }
 
 kaleidoscope::EventHandlerResult LEDMode::onSetup() {
-  ::LEDControl.mode_add(this);
   setup();
 
   return EventHandlerResult::OK;
 }
 
 LEDControl::LEDControl(void) {
-  mode = 0;
-  memset(modes, 0, LED_MAX_MODES * sizeof(modes[0]));
+  mode_id = 0;
 }
 
 void LEDControl::next_mode(void) {
-  mode++;
+  mode_id++;
 
-  if (mode >= LED_MAX_MODES || !modes[mode]) {
+  if (mode_id >= numLEDModes()) {
     return set_mode(0);
   }
 
-  return set_mode(mode);
+  return set_mode(mode_id);
 }
 
 void LEDControl::prev_mode(void) {
-  if (mode == 0) {
+  if (mode_id == 0) {
     // wrap around
-    mode = LED_MAX_MODES - 1;
-    // then  count down until reaching a valid mode
-    while (mode > 0 && !modes[mode]) mode--;
+    mode_id = numLEDModes() - 1;
   } else {
-    mode--;
+    mode_id--;
   }
 
-  return set_mode(mode);
+  return set_mode(mode_id);
 }
 
 void
 LEDControl::set_mode(uint8_t mode_) {
-  if (mode_ >= LED_MAX_MODES)
+  if (mode_ >= numLEDModes())
     return;
 
-  mode = mode_;
+  mode_id = mode_;
   refreshAll();
 }
 
 uint8_t LEDControl::get_mode_index(void) {
-  return mode;
+  return mode_id;
 }
 
 LEDMode *LEDControl::get_mode(void) {
-  return modes[mode];
+  return getLEDMode(mode_id);
 }
 
 void LEDControl::activate(LEDMode *mode) {
-  for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
-    if (modes[i] == mode)
+  for (uint8_t i = 0; i < numLEDModes(); i++) {
+    if (getLEDMode(mode_id) == mode)
       return set_mode(i);
   }
-}
-
-int8_t LEDControl::mode_add(LEDMode *mode) {
-  for (int i = 0; i < LED_MAX_MODES; i++) {
-    if (modes[i])
-      continue;
-
-    modes[i] = mode;
-    return i;
-  }
-  return -1;
 }
 
 void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
@@ -139,9 +123,8 @@ void LEDControl::syncLeds(void) {
 kaleidoscope::EventHandlerResult LEDControl::onSetup() {
   set_all_leds_to({0, 0, 0});
 
-  for (uint8_t i = 0; i < LED_MAX_MODES; i++) {
-    if (modes[i])
-      (modes[i]->setup)();
+  for (uint8_t i = 0; i < numLEDModes(); i++) {
+    (getLEDMode(i)->setup)();
   }
 
   syncTimer = millis() + syncDelay;
@@ -249,10 +232,10 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     } else if (peek == 'p') {
       ::LEDControl.prev_mode();
     } else {
-      uint8_t mode;
+      uint8_t mode_id;
 
-      ::Focus.read(mode);
-      ::LEDControl.set_mode(mode);
+      ::Focus.read(mode_id);
+      ::LEDControl.set_mode(mode_id);
     }
     break;
   }

@@ -18,12 +18,15 @@
 
 #include <Kaleidoscope.h>
 
-#define LED_MAX_MODES 24
-
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
 #define Key_LEDEffectNext Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
 #define Key_LEDEffectPrevious Key(1, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
+
+#define _DEPRECATED_MESSAGE_LED_CONTROL_MODE_ADD                               \
+  "LEDControl::mode_add(LEDMode *mode) is deprecated. LEDModes are now \n"     \
+  "automatically registered. You can safely remove any calls to \n"            \
+  "LEDControl::mode_add from your code."
 
 namespace kaleidoscope {
 namespace plugin {
@@ -112,17 +115,15 @@ class LEDControl : public kaleidoscope::Plugin {
     if (!Kaleidoscope.has_leds)
       return;
 
-    if (modes[mode])
-      modes[mode]->update();
+    getLEDMode(mode_id)->update();
   }
   static void refreshAt(byte row, byte col) {
     if (!Kaleidoscope.has_leds)
       return;
 
-    if (modes[mode])
-      modes[mode]->refreshAt(row, col);
+    getLEDMode(mode_id)->refreshAt(row, col);
   }
-  static void set_mode(uint8_t mode);
+  static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index();
   static LEDMode *get_mode();
   static void refreshAll() {
@@ -133,11 +134,14 @@ class LEDControl : public kaleidoscope::Plugin {
       return;
 
     set_all_leds_to({0, 0, 0});
-    if (modes[mode])
-      modes[mode]->onActivate();
+
+    getLEDMode(mode_id)->onActivate();
   }
 
-  static int8_t mode_add(LEDMode *mode);
+  DEPRECATED(LED_CONTROL_MODE_ADD)
+  static int8_t mode_add(LEDMode *mode) {
+    return 0;
+  }
 
   static void setCrgbAt(int8_t i, cRGB crgb);
   static void setCrgbAt(byte row, byte col, cRGB color);
@@ -158,8 +162,7 @@ class LEDControl : public kaleidoscope::Plugin {
 
  private:
   static uint16_t syncTimer;
-  static LEDMode *modes[LED_MAX_MODES];
-  static uint8_t mode;
+  static uint8_t mode_id;
 };
 
 class FocusLEDCommand : public Plugin {

@@ -38,6 +38,7 @@
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope_internal/eventhandler_signature_check.h"
 #include "kaleidoscope/event_handlers.h"
+#include "kaleidoscope_internal/typed_plugins.h"
 
 // Some words about the design of hook routing:
 //
@@ -146,4 +147,6 @@
   /*                                                                       */ __NL__ \
   /* TODO(anyone): Move this somewhere else, outside of _internal, once    */ __NL__ \
   /*               the V1 API is removed.                                  */ __NL__ \
-  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)
+  _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)                            __NL__ \
+                                                                              __NL__ \
+  _GENERATE_TYPED_PLUGIN_ARRAY(LEDMode, __VA_ARGS__)
