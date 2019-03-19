@@ -45,7 +45,7 @@ KALEIDOSCOPE_INIT_PLUGINS(EEPROMKeymap, Focus);
 void setup() {
   Kaleidoscope.setup();
 
-  EEPROMKeymap.setup(1, EEPROMKeymap.Mode::EXTEND);
+  EEPROMKeymap.setup(1);
 }
 
 void loop() {
