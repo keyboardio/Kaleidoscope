@@ -68,7 +68,7 @@ class ErgoDox : public kaleidoscope::Hardware {
   bool isKeyswitchPressed(byte row, byte col);
   bool isKeyswitchPressed(uint8_t keyIndex);
   uint8_t pressedKeyswitchCount();
-  
+
   bool wasKeyswitchPressed(byte row, byte col);
   bool wasKeyswitchPressed(uint8_t keyIndex);
   uint8_t previousPressedKeyswitchCount();

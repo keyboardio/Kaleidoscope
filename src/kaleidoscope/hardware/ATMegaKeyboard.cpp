@@ -103,7 +103,7 @@ bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t row, byte col) {
 bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
   return wasKeyswitchPressed(keyIndex / KeyboardHardware.matrix_columns,
-                            keyIndex % KeyboardHardware.matrix_columns);
+                             keyIndex % KeyboardHardware.matrix_columns);
 }
 
 

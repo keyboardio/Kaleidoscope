@@ -27,14 +27,14 @@ constexpr uint8_t CHATTER_CYCLE_LIMIT = 30;
 uint8_t HardwareTestMode::actionKey;
 
 void HardwareTestMode::setActionKey(uint8_t key) {
-  actionKey = key; 
+  actionKey = key;
 }
 
 void HardwareTestMode::waitForKeypress() {
   while (1) {
     KeyboardHardware.readMatrix();
-    if (KeyboardHardware.isKeyswitchPressed(actionKey) && 
-	! KeyboardHardware.wasKeyswitchPressed(actionKey)) {
+    if (KeyboardHardware.isKeyswitchPressed(actionKey) &&
+        ! KeyboardHardware.wasKeyswitchPressed(actionKey)) {
       break;
     }
   }
@@ -68,7 +68,7 @@ void HardwareTestMode::testLeds(void) {
 
 void HardwareTestMode::testMatrix() {
   // Reset bad keys from previous tests.
-  chatter_data state[KeyboardHardware.matrix_columns * KeyboardHardware.matrix_rows] = {0,0,0};
+  chatter_data state[KeyboardHardware.matrix_columns * KeyboardHardware.matrix_rows] = {0, 0, 0};
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
@@ -81,10 +81,10 @@ void HardwareTestMode::testMatrix() {
       for (byte col = 0; col < KeyboardHardware.matrix_columns; col++) {
         uint8_t keynum = (row * KeyboardHardware.matrix_columns) + (col);
 
-	// If the key is toggled on
+        // If the key is toggled on
         if (KeyboardHardware.isKeyswitchPressed(row, col) && ! KeyboardHardware.wasKeyswitchPressed(row, col)) {
           // And it's too soon (in terms of cycles between changes)
-	  state[keynum].tested = 1;
+          state[keynum].tested = 1;
           if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
             state[keynum].bad = 1;
           }
@@ -95,18 +95,18 @@ void HardwareTestMode::testMatrix() {
         // If the key is held down
         if (KeyboardHardware.isKeyswitchPressed(row, col) && KeyboardHardware.wasKeyswitchPressed(row, col)) {
           KeyboardHardware.setCrgbAt(row, col, green);
-        } 
+        }
 
         // If we triggered chatter detection ever on this key
-	else if (state[keynum].bad == 1) {
+        else if (state[keynum].bad == 1) {
           KeyboardHardware.setCrgbAt(row, col, red);
         } else if (state[keynum].tested == 0) {
-	 KeyboardHardware.setCrgbAt(row,col,yellow);
-	}
+          KeyboardHardware.setCrgbAt(row, col, yellow);
+        }
         // If the key is not currently pressed and was not just released and is not marked bad
-        else if ( ! KeyboardHardware.isKeyswitchPressed(row, col)) {
+        else if (! KeyboardHardware.isKeyswitchPressed(row, col)) {
           KeyboardHardware.setCrgbAt(row, col, blue);
-	}
+        }
       }
     }
     ::LEDControl.syncLeds();

@@ -85,7 +85,7 @@ void Model01::setup(void) {
   TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
 }
 
-void Model01::enableHardwareTestMode () {
+void Model01::enableHardwareTestMode() {
 
   // Toggle the programming LEDS on
   PORTD |= (1 << 5);
