@@ -42,6 +42,8 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     return EventHandlerResult::OK;
   }
 
+  is_active_ = keyIsPressed(key_state);
+
   if (keyToggledOn(key_state)) {
     last_pressed_position_ = row * COLS + col;
   } else {
@@ -50,7 +52,6 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
     }
   }
 
-  is_active_ = keyIsPressed(key_state);
   mapped_key.raw = mapped_key.raw - ranges::TT_FIRST;
 
   // invert the shift state
