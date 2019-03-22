@@ -22,7 +22,7 @@ namespace plugin {
 
 LEDMode *LEDControl::modes[LED_MAX_MODES];
 uint8_t LEDControl::mode;
-uint16_t LEDControl::syncDelay = 16;
+uint16_t LEDControl::syncDelay = 32; // 32ms interval => 30Hz refresh rate
 uint16_t LEDControl::syncTimer;
 bool LEDControl::paused = false;
 
@@ -176,8 +176,8 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (elapsed > syncDelay) {
     syncLeds();
     syncTimer += syncDelay;
+    update();
   }
-  update();
 
   return kaleidoscope::EventHandlerResult::OK;
 }
