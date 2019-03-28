@@ -88,8 +88,9 @@ uint16_t Qukeys::time_limit_ = 250;
 uint8_t Qukeys::release_delay_ = 0;
 QueueItem Qukeys::key_queue_[] = {};
 uint8_t Qukeys::key_queue_length_ = 0;
-byte Qukeys::qukey_state_[] = {};
 bool Qukeys::flushing_queue_ = false;
+uint8_t Qukeys::delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
+int16_t Qukeys::delayed_qukey_start_time_ = 0;
 
 constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
 
@@ -115,17 +116,14 @@ int8_t Qukeys::lookupQukey(uint8_t key_addr) {
 
 void Qukeys::enqueue(uint8_t key_addr) {
   if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
-    setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
     flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
     flushQueue();
   }
   // default to alternate state to stop keys being flushed from the queue before the grace
   // period timeout
-  setQukeyState(key_addr, QUKEY_STATE_ALTERNATE);
   key_queue_[key_queue_length_].addr = key_addr;
   key_queue_[key_queue_length_].start_time = millis();
   key_queue_length_++;
-  addr::mask(key_addr);
 }
 
 int8_t Qukeys::searchQueue(uint8_t key_addr) {
@@ -138,24 +136,26 @@ int8_t Qukeys::searchQueue(uint8_t key_addr) {
 
 // flush a single entry from the head of the queue
 bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
-  addr::unmask(key_queue_[0].addr);
   int8_t qukey_index = lookupQukey(key_queue_[0].addr);
   bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
   byte row = addr::row(key_queue_[0].addr);
   byte col = addr::col(key_queue_[0].addr);
-  bool is_dual_use = isDualUse(Layer.lookup(row, col));
-  Key keycode = Key_NoKey;
+  Key keycode = Layer.lookupOnActiveLayer(row, col);
+  bool is_dual_use = isDualUse(keycode);
   if (is_qukey || is_dual_use) {
-    if (qukey_state == QUKEY_STATE_PRIMARY &&
-        getQukeyState(key_queue_[0].addr) == QUKEY_STATE_ALTERNATE) {
+    if (qukey_state == QUKEY_STATE_PRIMARY) {
       // If there's a release delay in effect, and there's at least one key after it in
       // the queue, delay this key's release event:
-      if (release_delay_ > 0 && key_queue_length_ > 1) {
-        key_queue_[0].start_time = millis() + QUKEYS_RELEASE_DELAY_OFFSET;
+      if (release_delay_ > 0 && key_queue_length_ > 1
+          && delayed_qukey_addr_ == QUKEY_UNKNOWN_ADDR) {
+        delayed_qukey_start_time_ = millis();
+        // Store the delayed key's address to send the toggle-off event later, if
+        // appropriate:
+        delayed_qukey_addr_ = key_queue_[0].addr;
         return false;
       }
+      keycode = getDualUsePrimaryKey(keycode);
     }
-    setQukeyState(key_queue_[0].addr, qukey_state);
     if (qukey_state == QUKEY_STATE_ALTERNATE) {
       if (is_dual_use) {
         keycode = getDualUseAlternateKey(keycode);
@@ -256,21 +256,6 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
 
   // If the key was injected (from the queue being flushed)
   if (flushing_queue_) {
-    // If it's a DualUse key, we still need to update its keycode
-    if (isDualUse(mapped_key)) {
-      if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-        mapped_key = getDualUseAlternateKey(mapped_key);
-      } else {
-        mapped_key = getDualUsePrimaryKey(mapped_key);
-      }
-    }
-    // ...otherwise, just continue to the next plugin
-    return EventHandlerResult::OK;
-  }
-
-  // If the key isn't active, and didn't just toggle off, continue to next plugin
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    mapped_key = getDualUsePrimaryKey(mapped_key);
     return EventHandlerResult::OK;
   }
 
@@ -296,73 +281,57 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
   if (keyToggledOff(key_state)) {
     // If the key isn't in the key_queue, proceed
     if (queue_index == QUKEY_NOT_FOUND) {
-      // If a qukey was released while in its alternate state, change its keycode
-      if (isDualUse(mapped_key)) {
-        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-          mapped_key = getDualUseAlternateKey(mapped_key);
-        } else {
-          mapped_key = getDualUsePrimaryKey(mapped_key);
-        }
-      } else if (qukey_index != QUKEY_NOT_FOUND) {
-        if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-          mapped_key = qukeys[qukey_index].alt_keycode;
-        }
-      }
       return EventHandlerResult::OK;
     }
-    flushQueue(queue_index);
-    flushQueue();
+    // Finally, send the release event of the delayed qukey, if any. This is necessary in
+    // order to send a toggle off of a `ShiftToLayer()` key; otherwise, that layer gets
+    // stuck on if there's a release delay and a rollover.
+    if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
+      int8_t r = addr::row(delayed_qukey_addr_);
+      int8_t c = addr::col(delayed_qukey_addr_);
+      flushQueue(queue_index);
+      flushQueue();
+      flushing_queue_ = true;
+      handleKeyswitchEvent(Key_NoKey, r, c, WAS_PRESSED);
+      flushing_queue_ = false;
+      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
+    } else {
+      flushQueue(queue_index);
+      flushQueue();
+    }
+    //if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR)
+    //  return EventHandlerResult::EVENT_CONSUMED;
     mapped_key = getDualUsePrimaryKey(mapped_key);
     return EventHandlerResult::OK;
   }
 
   // Otherwise, the key is still pressed
 
-  // If the key is not a qukey:
-  if (qukey_index == QUKEY_NOT_FOUND &&
-      ! isDualUse(mapped_key)) {
-    // If the key was pressed before the keys in the queue, proceed:
-    if (queue_index == QUKEY_NOT_FOUND) {
-      return EventHandlerResult::OK;
-    } else {
-      // suppress this keypress; it's still in the queue
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-  }
-
-  // If the qukey is not in the queue, check its state
+  // Only keys in the queue can still evaluate as qukeys, so all we need to do here is
+  // block events for held keys that are still in the queue.
   if (queue_index == QUKEY_NOT_FOUND) {
-    if (getQukeyState(key_addr) == QUKEY_STATE_ALTERNATE) {
-      if (isDualUse(mapped_key)) {
-        mapped_key = getDualUseAlternateKey(mapped_key);
-      } else {
-        mapped_key = qukeys[qukey_index].alt_keycode;
-      }
-    } else { // qukey_state == QUKEY_STATE_PRIMARY
-      mapped_key = getDualUsePrimaryKey(mapped_key);
-    }
+    // The key is not in the queue; proceed:
     return EventHandlerResult::OK;
+  } else {
+    // The key is still in the queue; abort:
+    return EventHandlerResult::EVENT_CONSUMED;
   }
-  // else state is undetermined; block. I could check timeouts here,
-  // but I'd rather do that in the pre-report hook
-  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 EventHandlerResult Qukeys::beforeReportingState() {
 
   uint16_t current_time = millis();
 
-  if (release_delay_ > 0 && key_queue_length_ > 0) {
-    int16_t diff_time = key_queue_[0].start_time - current_time;
-    if (diff_time > 0) {
-      int16_t delay_window = QUKEYS_RELEASE_DELAY_OFFSET - release_delay_;
-      if (diff_time < delay_window) {
-        setQukeyState(key_queue_[0].addr, QUKEY_STATE_PRIMARY);
-        flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
-        flushQueue();
-      }
-      return EventHandlerResult::OK;
+  if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
+    int16_t diff_time = current_time - delayed_qukey_start_time_;
+    if (diff_time > release_delay_) {
+      flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
+      flushQueue();
+      // If the release delay has timed out, we need to prevent the wrong toggle-off
+      // event from being sent:
+      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
     }
+    return EventHandlerResult::OK;
   }
 
   // If the qukey has been held longer than the time limit, set its

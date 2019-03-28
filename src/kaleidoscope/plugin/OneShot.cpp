@@ -51,11 +51,6 @@ bool OneShot::isStickable(Key key) {
   return state_[key.raw - ranges::OS_FIRST].stickable;
 }
 
-void OneShot::positionToCoords(uint8_t pos, byte *row, byte *col) {
-  *col = pos % COLS;
-  *row = (pos - *col) / COLS;
-}
-
 // ---- OneShot stuff ----
 void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
   Key key;
@@ -69,8 +64,7 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
   }
 
-  positionToCoords(state_[idx].position, &row, &col);
-  handleKeyswitchEvent(key, row, col, key_state | INJECTED);
+  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
 }
 
 void OneShot::activateOneShot(uint8_t idx) {

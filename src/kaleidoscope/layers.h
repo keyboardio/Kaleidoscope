@@ -99,6 +99,9 @@ class Layer_ {
   static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
 
   static void updateLiveCompositeKeymap(byte row, byte col);
+  static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
+    live_composite_keymap_[row][col] = mappedKey;
+  }
   static void updateActiveLayers(void);
 
  private:

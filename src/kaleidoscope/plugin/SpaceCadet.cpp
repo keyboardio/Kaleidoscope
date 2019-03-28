@@ -130,7 +130,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
         //hit another key after this -- if it's a modifier, we want the modifier
         //key to be added to the report, for things like ctrl, alt, shift, etc)
         if (map[i].flagged) {
-          handleKeyswitchEvent(map[i].input, row, col, IS_PRESSED | INJECTED);
+          handleKeyswitchEvent(map[i].input, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
         }
 
         //The keypress wasn't a match, so we need to mark it as not flagged and
