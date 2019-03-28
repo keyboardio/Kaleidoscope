@@ -72,6 +72,12 @@ class Model01 : public kaleidoscope::Hardware {
   bool isKeyswitchPressed(uint8_t keyIndex);
   uint8_t pressedKeyswitchCount();
 
+  bool wasKeyswitchPressed(byte row, byte col);
+  bool wasKeyswitchPressed(uint8_t keyIndex);
+  uint8_t previousPressedKeyswitchCount();
+
+  void enableHardwareTestMode();
+
   keydata_t leftHandState;
   keydata_t rightHandState;
   keydata_t previousLeftHandState;

@@ -87,6 +87,10 @@ class ATMegaKeyboard : public kaleidoscope::Hardware {
   bool isKeyswitchPressed(uint8_t row, byte col);
   bool isKeyswitchPressed(uint8_t keyIndex);
 
+  uint8_t previousPressedKeyswitchCount();
+  bool wasKeyswitchPressed(uint8_t row, byte col);
+  bool wasKeyswitchPressed(uint8_t keyIndex);
+
   void maskKey(byte row, byte col);
   void unMaskKey(byte row, byte col);
   bool isKeyMasked(byte row, byte col);

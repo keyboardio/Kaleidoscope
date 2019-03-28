@@ -85,6 +85,17 @@ void Model01::setup(void) {
   TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
 }
 
+void Model01::enableHardwareTestMode() {
+
+  // Toggle the programming LEDS on
+  PORTD |= (1 << 5);
+  PORTB |= (1 << 0);
+
+  // Disable the debouncer on the ATTinys
+  KeyboardHardware.setKeyscanInterval(2);
+}
+
+
 
 void Model01::setCrgbAt(int8_t i, cRGB crgb) {
   if (i < 0) {
@@ -305,8 +316,26 @@ bool Model01::isKeyswitchPressed(uint8_t keyIndex) {
   return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
 }
 
+
+bool Model01::wasKeyswitchPressed(byte row, byte col) {
+  if (col <= 7) {
+    return (bitRead(previousLeftHandState.rows[row], 7 - col) != 0);
+  } else {
+    return (bitRead(previousRightHandState.rows[row], 7 - (col - 8)) != 0);
+  }
+}
+
+bool Model01::wasKeyswitchPressed(uint8_t keyIndex) {
+  keyIndex--;
+  return wasKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+}
+
 uint8_t Model01::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
+}
+
+uint8_t Model01::previousPressedKeyswitchCount() {
+  return __builtin_popcountl(previousLeftHandState.all) + __builtin_popcountl(previousRightHandState.all);
 }
 
 }
