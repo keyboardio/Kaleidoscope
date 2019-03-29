@@ -61,13 +61,13 @@ void LEDRainbowWaveEffect::update(void) {
     rainbow_last_update = now;
   }
 
-  for (int8_t i = 0; i < LED_COUNT; i++) {
-    uint16_t key_hue = rainbow_hue + 16 * (i / 4);
+  for (auto led_addr : LEDAddr{}) {
+    uint16_t key_hue = rainbow_hue + 16 * (led_addr.toInt() / 4);
     if (key_hue >= 255)          {
       key_hue -= 255;
     }
     cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, rainbow_value);
-    ::LEDControl.setCrgbAt(i, rainbow);
+    ::LEDControl.setCrgbAt(led_addr, rainbow);
   }
   rainbow_hue += rainbow_wave_steps;
   if (rainbow_hue >= 255) {

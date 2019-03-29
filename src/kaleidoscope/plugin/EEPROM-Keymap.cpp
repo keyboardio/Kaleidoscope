@@ -53,7 +53,7 @@ Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
   if (layer >= max_layers_)
     return Key_NoKey;
 
-  uint16_t pos = ((layer * ROWS * COLS) + key_addr.offset()) * 2;
+  uint16_t pos = ((layer * ROWS * COLS) + key_addr.toInt()) * 2;
 
   key.flags = EEPROM.read(keymap_base_ + pos);
   key.keyCode = EEPROM.read(keymap_base_ + pos + 1);

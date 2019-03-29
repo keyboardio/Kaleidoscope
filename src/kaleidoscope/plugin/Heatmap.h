@@ -38,7 +38,7 @@ class Heatmap : public LEDMode {
   void update(void) final;
 
  private:
-  static uint16_t heatmap_[ROWS][COLS];
+  static uint16_t heatmap_[ROWS * COLS];
   static uint16_t highest_;
   static uint32_t next_heatmap_comp_time_;
 

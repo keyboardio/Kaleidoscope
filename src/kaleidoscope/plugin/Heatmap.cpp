@@ -22,7 +22,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 // store the number of times each key has been strock
-uint16_t Heatmap::heatmap_[ROWS][COLS];
+uint16_t Heatmap::heatmap_[ROWS * COLS];
 // max of heatmap_ (we divide by it so we start at 1)
 uint16_t Heatmap::highest_ = 1;
 // next heatmap computation time
@@ -101,10 +101,8 @@ void Heatmap::shiftStats(void) {
   // 2. highest_ reach heat_colors_length*512 (see Heatmap::loopHook)
 
   // we divide every heatmap element by 2
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      heatmap_[r][c] = heatmap_[r][c] >> 1;
-    }
+  for (auto key_addr : KeyAddr{}) {
+    heatmap_[key_addr.toInt()] = heatmap_[key_addr.toInt()] >> 1;
   }
 
   // and also divide highest_ accordingly
@@ -114,10 +112,8 @@ void Heatmap::shiftStats(void) {
 void Heatmap::resetMap(void) {
   // this method can be used as a way to work around an existing bug with a single key
   // getting special attention or if the user just wants a button to reset the map
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      heatmap_[r][c] = 0;
-    }
+  for (auto key_addr : KeyAddr{}) {
+    heatmap_[key_addr.toInt()] = 0;
   }
 
   highest_ = 1;
@@ -138,15 +134,12 @@ EventHandlerResult Heatmap::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr,
   if (!keyToggledOn(key_state))
     return EventHandlerResult::OK;
 
-  auto row = key_addr.row();
-  auto col = key_addr.col();
-
   // increment the heatmap_ value related to the key
-  heatmap_[row][col]++;
+  heatmap_[key_addr.toInt()]++;
 
   // check highest_
-  if (highest_ < heatmap_[row][col]) {
-    highest_ = heatmap_[row][col];
+  if (highest_ < heatmap_[key_addr.toInt()]) {
+    highest_ = heatmap_[key_addr.toInt()];
 
     // if highest_ (and so heatmap_ value related to the key)
     // is close to overflow: call shiftStats
@@ -194,19 +187,17 @@ void Heatmap::update(void) {
   next_heatmap_comp_time_ = millis() + update_delay;
 
   // for each key
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      // how much the key was pressed compared to the others (between 0 and 1)
-      // (total_keys_ can't be equal to 0)
-      float v = static_cast<float>(heatmap_[r][c]) / highest_;
-      // we could have used an interger instead of a float, but then we would
-      // have had to change some multiplication in division.
-      // / on uint is slower than * on float, so I stay with the float
-      // https://forum.arduino.cc/index.php?topic=92684.msg2733723#msg2733723
+  for (auto key_addr : KeyAddr{}) {
+    // how much the key was pressed compared to the others (between 0 and 1)
+    // (total_keys_ can't be equal to 0)
+    float v = static_cast<float>(heatmap_[key_addr.toInt()]) / highest_;
+    // we could have used an interger instead of a float, but then we would
+    // have had to change some multiplication in division.
+    // / on uint is slower than * on float, so I stay with the float
+    // https://forum.arduino.cc/index.php?topic=92684.msg2733723#msg2733723
 
-      // set the LED color accordingly
-      ::LEDControl.setCrgbAt(LEDAddr(r, c), computeColor(v));
-    }
+    // set the LED color accordingly
+    ::LEDControl.setCrgbAt(LEDAddr(key_addr), computeColor(v));
   }
 }
 

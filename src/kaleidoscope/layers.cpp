@@ -29,8 +29,8 @@ uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
-Key Layer_::live_composite_keymap_[ROWS][COLS];
-uint8_t Layer_::active_layers_[ROWS][COLS];
+Key Layer_::live_composite_keymap_[KeyAddr::upper_limit];
+uint8_t Layer_::active_layers_[KeyAddr::upper_limit];
 Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -101,29 +101,25 @@ Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
 }
 
 void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  auto row = key_addr.row();
-  auto col = key_addr.col();
-  int8_t layer = active_layers_[row][col];
-  live_composite_keymap_[row][col] = (*getKey)(layer, key_addr);
+  int8_t layer = active_layers_[key_addr.toInt()];
+  live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);
 }
 
 void Layer_::updateActiveLayers(void) {
   memset(active_layers_, 0, ROWS * COLS);
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      int8_t layer = top_active_layer_;
+  for (auto key_addr : KeyAddr{}) {
+    int8_t layer = top_active_layer_;
 
-      while (layer > 0) {
-        if (Layer.isActive(layer)) {
-          Key mappedKey = (*getKey)(layer, KeyAddr(row, col));
+    while (layer > 0) {
+      if (Layer.isActive(layer)) {
+        Key mappedKey = (*getKey)(layer, key_addr);
 
-          if (mappedKey != Key_Transparent) {
-            active_layers_[row][col] = layer;
-            break;
-          }
+        if (mappedKey != Key_Transparent) {
+          active_layers_[key_addr.toInt()] = layer;
+          break;
         }
-        layer--;
       }
+      layer--;
     }
   }
 }

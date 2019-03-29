@@ -89,33 +89,30 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
   constexpr cRGB blue = CRGB(0, 0, 201);
   constexpr cRGB green = CRGB(0, 201, 0);
 
-  auto row = key_addr.row();
-  auto col = key_addr.col();
+  auto key_id = key_addr.toInt();
 
-  const uint8_t keynum = (row * 8) + (col);
-
-  const uint8_t keyState = ((bitRead(oldState->all, keynum) << 1) |
-                            (bitRead(newState->all, keynum) << 0));
+  const uint8_t keyState = ((bitRead(oldState->all, key_id) << 1) |
+                            (bitRead(newState->all, key_id) << 0));
   if (keyState == TOGGLED_ON) {
-    if (side->cyclesSinceStateChange[keynum] < CHATTER_CYCLE_LIMIT) {
-      bitSet(side->badKeys, keynum);
+    if (side->cyclesSinceStateChange[key_id] < CHATTER_CYCLE_LIMIT) {
+      bitSet(side->badKeys, key_id);
     }
-    side->cyclesSinceStateChange[keynum] = 0;
-  } else if (side->cyclesSinceStateChange[keynum] <= CHATTER_CYCLE_LIMIT)  {
-    side->cyclesSinceStateChange[keynum]++;
+    side->cyclesSinceStateChange[key_id] = 0;
+  } else if (side->cyclesSinceStateChange[key_id] <= CHATTER_CYCLE_LIMIT)  {
+    side->cyclesSinceStateChange[key_id]++;
   }
 
 
 
   // If the key is held down
   if (keyState == HELD) {
-    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), green);
-  } else if (bitRead(side->badKeys, keynum) == 1) {
+    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), green);
+  } else if (bitRead(side->badKeys, key_addr.toInt()) == 1) {
     // If we triggered chatter detection ever on this key
-    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), red);
+    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), red);
   } else if (keyState == TOGGLED_OFF) {
     // If the key was just released
-    KeyboardHardware.setCrgbAt(LEDAddr(row, col_offset - col), blue);
+    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), blue);
   }
 }
 
@@ -137,11 +134,9 @@ void TestMode::testMatrix() {
         KeyboardHardware.pressedKeyswitchCount() == 3) {
       break;
     }
-    for (byte row = 0; row < 4; row++) {
-      for (byte col = 0; col < 8; col++) {
-        handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), KeyAddr(row, col), 7);
-        handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), KeyAddr(row, col), 15);
-      }
+    for (auto key_addr : KeyAddr{}) {
+      handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), key_addr, 7);
+      handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), key_addr, 15);
     }
     ::LEDControl.syncLeds();
   }

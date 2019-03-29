@@ -46,7 +46,7 @@ EventHandlerResult WavepoolEffect::onKeyswitchEvent2(Key &mapped_key, KeyAddr ke
     return EventHandlerResult::OK;
 
   if (keyIsPressed(key_state)) {
-    surface[page][pgm_read_byte(rc2pos + key_addr.offset())] = 0x7f;
+    surface[page][pgm_read_byte(rc2pos + key_addr.toInt())] = 0x7f;
     frames_since_event = 0;
   }
 

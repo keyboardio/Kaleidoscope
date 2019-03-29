@@ -112,8 +112,8 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (int8_t i = 0; i < LED_COUNT; i++) {
-    setCrgbAt(i, color);
+  for (auto led_addr : LEDAddr{}) {
+    setCrgbAt(led_addr, color);
   }
 }
 
@@ -127,6 +127,9 @@ void LEDControl::setCrgbAt(LEDAddr led_addr, cRGB color) {
 
 cRGB LEDControl::getCrgbAt(int8_t i) {
   return KeyboardHardware.getCrgbAt(i);
+}
+cRGB LEDControl::getCrgbAt(LEDAddr led_addr) {
+  return KeyboardHardware.getCrgbAt(KeyboardHardware.getLedIndex(led_addr));
 }
 
 void LEDControl::syncLeds(void) {
@@ -258,22 +261,24 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (int8_t idx = 0; idx < LED_COUNT; idx++) {
-        cRGB c = ::LEDControl.getCrgbAt(idx);
+      for (auto led_addr : LEDAddr{}) {
+        cRGB c = ::LEDControl.getCrgbAt(led_addr);
 
         ::Focus.send(c);
       }
       break;
     }
 
-    int8_t idx = 0;
-    while (idx < LED_COUNT && !::Focus.isEOL()) {
+    for (auto led_addr : LEDAddr{}) {
+      if (::Focus.isEOL()) {
+        break;
+      }
+
       cRGB color;
 
       ::Focus.read(color);
 
-      ::LEDControl.setCrgbAt(idx, color);
-      idx++;
+      ::LEDControl.setCrgbAt(led_addr, color);
     }
     break;
   }

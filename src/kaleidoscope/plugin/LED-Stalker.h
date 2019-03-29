@@ -45,7 +45,7 @@ class StalkerEffect : public LEDMode {
 
  private:
   static uint16_t step_start_time_;
-  static uint8_t map_[ROWS][COLS];
+  static uint8_t map_[kaleidoscope::num_keys];
 };
 
 namespace stalker {

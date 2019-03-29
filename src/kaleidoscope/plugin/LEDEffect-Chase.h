@@ -41,7 +41,7 @@ class LEDChaseEffect : public LEDMode {
   void update(void) final;
 
  private:
-  int8_t pos_ = 0;
+  int8_t pos_ = uint8_t(0);
   int8_t direction_ = 1;
   uint8_t distance_ = 5;
   uint16_t update_delay_ = 150;

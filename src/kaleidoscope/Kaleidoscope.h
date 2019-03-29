@@ -93,6 +93,9 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 
 namespace kaleidoscope {
 
+static constexpr uint8_t num_keys =  KeyboardHardware.matrix_rows
+                                     * KeyboardHardware.matrix_columns;
+
 class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);

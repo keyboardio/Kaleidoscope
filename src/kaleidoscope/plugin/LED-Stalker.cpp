@@ -20,7 +20,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t StalkerEffect::map_[ROWS][COLS];
+uint8_t StalkerEffect::map_[kaleidoscope::num_keys];
 StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
 uint16_t StalkerEffect::step_start_time_;
@@ -40,7 +40,7 @@ EventHandlerResult StalkerEffect::onKeyswitchEvent2(Key &mapped_key, KeyAddr key
     return EventHandlerResult::OK;
 
   if (keyIsPressed(keyState)) {
-    map_[key_addr.row()][key_addr.col()] = 0xff;
+    map_[key_addr.toInt()] = 0xff;
   }
 
   return EventHandlerResult::OK;
@@ -57,18 +57,16 @@ void StalkerEffect::update(void) {
   if (elapsed < step_length)
     return;
 
-  for (byte r = 0; r < ROWS; r++) {
-    for (byte c = 0; c < COLS; c++) {
-      uint8_t step = map_[r][c];
-      if (step) {
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), variant->compute(&step));
-      }
-
-      map_[r][c] = step;
-
-      if (!map_[r][c])
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), inactive_color);
+  for (auto key_addr : KeyAddr{}) {
+    uint8_t step = map_[key_addr.toInt()];
+    if (step) {
+      ::LEDControl.setCrgbAt(key_addr, variant->compute(&step));
     }
+
+    map_[key_addr.toInt()] = step;
+
+    if (!map_[key_addr.toInt()])
+      ::LEDControl.setCrgbAt(key_addr, inactive_color);
   }
 
   step_start_time_ = Kaleidoscope.millisAtCycleStart();

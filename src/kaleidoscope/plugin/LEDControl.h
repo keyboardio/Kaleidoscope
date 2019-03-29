@@ -161,6 +161,10 @@ class LEDControl : public kaleidoscope::Plugin {
     setCrgbAt(LEDAddr(row, col), color);
   }
   static cRGB getCrgbAt(int8_t i);
+  static cRGB getCrgbAt(LEDAddr led_addr);
+  KS_ROW_COL_FUNC static cRGB getCrgbAt(byte row, byte col) {
+    return getCrgbAt(LEDAddr(row, col));
+  }
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);

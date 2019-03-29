@@ -75,7 +75,7 @@ Key getDualUseAlternateKey(Key k) {
 
 Qukey::Qukey(int8_t layer, KeyAddr key_addr, Key alt_keycode) {
   this->layer = layer;
-  this->addr = key_addr.offset();
+  this->addr = key_addr.toInt();
   this->alt_keycode = alt_keycode;
 }
 
@@ -248,8 +248,7 @@ EventHandlerResult Qukeys::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, 
   }
 
   // get key addr & qukey (if any)
-  uint8_t key_addr_offset = key_addr.offset();
-  int8_t qukey_index = lookupQukey(key_addr_offset);
+  int8_t qukey_index = lookupQukey(key_addr.toInt());
 
   // If the key was injected (from the queue being flushed)
   if (flushing_queue_) {
@@ -266,13 +265,13 @@ EventHandlerResult Qukeys::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr, 
     }
 
     // Otherwise, queue the key and stop processing:
-    enqueue(key_addr_offset);
+    enqueue(key_addr.toInt());
     // flushQueue() has already handled this key release
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   // In all other cases, we need to know if the key is queued already
-  int8_t queue_index = searchQueue(key_addr_offset);
+  int8_t queue_index = searchQueue(key_addr.toInt());
 
   // If the key was just released:
   if (keyToggledOff(key_state)) {

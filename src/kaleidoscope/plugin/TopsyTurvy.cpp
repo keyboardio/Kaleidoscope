@@ -36,7 +36,7 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_ad
 
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST) {
     if (keyToggledOn(key_state) && (mapped_key < Key_LeftControl || mapped_key > Key_RightGui)) {
-      last_pressed_position_ = key_addr.offset();
+      last_pressed_position_ = key_addr.toInt();
     }
 
     return EventHandlerResult::OK;
@@ -45,9 +45,9 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_ad
   is_active_ = keyIsPressed(key_state);
 
   if (keyToggledOn(key_state)) {
-    last_pressed_position_ = key_addr.offset();
+    last_pressed_position_ = key_addr.toInt();
   } else {
-    if (last_pressed_position_ != key_addr.offset()) {
+    if (last_pressed_position_ != key_addr.toInt()) {
       return EventHandlerResult::EVENT_CONSUMED;
     }
   }

@@ -90,7 +90,7 @@ EventHandlerResult OneShot::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr,
       state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
       start_time_ = Kaleidoscope.millisAtCycleStart();
-      state_[idx].position = key_addr.offset();
+      state_[idx].position = key_addr.toInt();
       state_[idx].pressed = true;
       state_[idx].active = true;
       prev_key_ = mapped_key;
@@ -130,7 +130,7 @@ EventHandlerResult OneShot::onKeyswitchEvent2(Key &mapped_key, KeyAddr key_addr,
         } else {
           start_time_ = Kaleidoscope.millisAtCycleStart();
 
-          state_[idx].position = key_addr.offset();
+          state_[idx].position = key_addr.toInt();
           state_[idx].active = true;
           prev_key_ = mapped_key;
 

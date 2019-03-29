@@ -223,8 +223,7 @@ EventHandlerResult Macros_::onKeyswitchEvent2(Key &mappedKey, KeyAddr key_addr, 
   if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
     return EventHandlerResult::OK;
 
-  byte key_id = key_addr.offset();
-  addActiveMacroKey(mappedKey.keyCode, key_id, keyState);
+  addActiveMacroKey(mappedKey.keyCode, key_addr.toInt(), keyState);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }

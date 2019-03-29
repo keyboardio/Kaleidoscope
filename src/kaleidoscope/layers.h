@@ -67,24 +67,25 @@ class Layer_ {
    * `lookupOnActiveLayer`.
    */
   static Key lookup(KeyAddr key_addr) {
-    return live_composite_keymap_[key_addr.row()][key_addr.col()];
+    return live_composite_keymap_[key_addr.toInt()];
   }
   KS_ROW_COL_FUNC static Key lookup(byte row, byte col) {
-    return live_composite_keymap_[row][col];
+    return live_composite_keymap_[KeyAddr(row, col).toInt()];
   }
   static Key lookupOnActiveLayer(KeyAddr key_addr) {
-    uint8_t layer = active_layers_[key_addr.row()][key_addr.col()];
+    uint8_t layer = active_layers_[key_addr.toInt()];
     return (*getKey)(layer, key_addr);
   }
   KS_ROW_COL_FUNC static Key lookupOnActiveLayer(byte row, byte col) {
-    uint8_t layer = active_layers_[row][col];
-    return (*getKey)(layer, KeyAddr(row, col));
+    KeyAddr key_addr(row, col);
+    uint8_t layer = active_layers_[key_addr.toInt()];
+    return (*getKey)(layer, key_addr);
   }
   static uint8_t lookupActiveLayer(KeyAddr key_addr) {
-    return active_layers_[key_addr.row()][key_addr.col()];
+    return active_layers_[key_addr.toInt()];
   }
   KS_ROW_COL_FUNC static uint8_t lookupActiveLayer(byte row, byte col) {
-    return active_layers_[row][col];
+    return active_layers_[KeyAddr(row, col).toInt()];
   }
 
   static void activate(uint8_t layer);
@@ -115,7 +116,7 @@ class Layer_ {
   }
 
   static void updateLiveCompositeKeymap(KeyAddr keyAddr, Key mappedKey) {
-    live_composite_keymap_[keyAddr.row()][keyAddr.col()] = mappedKey;
+    live_composite_keymap_[keyAddr.toInt()] = mappedKey;
   }
   KS_ROW_COL_FUNC static void updateLiveCompositeKeymap(byte row, byte col, Key mappedKey) {
     updateLiveCompositeKeymap(KeyAddr(row, col), mappedKey);
@@ -129,8 +130,8 @@ class Layer_ {
  private:
   static uint32_t layer_state_;
   static uint8_t top_active_layer_;
-  static Key live_composite_keymap_[ROWS][COLS];
-  static uint8_t active_layers_[ROWS][COLS];
+  static Key live_composite_keymap_[KeyAddr::upper_limit];
+  static uint8_t active_layers_[KeyAddr::upper_limit];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
   static void updateTopActiveLayer(void);
