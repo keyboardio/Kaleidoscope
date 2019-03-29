@@ -38,9 +38,9 @@ void LEDChaseEffect::update(void) {
   // changes direction, for the first few updates, `pos2` will be out of bounds.
   // Since it's an unsigned integer, even when it would have a value below zero,
   // it underflows and so one test is good for both ends of the range.
-  ::LEDControl.setCrgbAt(LEDAddr(uint8_t(pos_)), CRGB(0, 0, 0));
+  ::LEDControl.setCrgbAt(pos_, CRGB(0, 0, 0));
   if (pos2 < LED_COUNT)
-    ::LEDControl.setCrgbAt(LEDAddr(uint8_t(pos2)), CRGB(0, 0, 0));
+    ::LEDControl.setCrgbAt(pos2, CRGB(0, 0, 0));
 
   // Next, we adjust the red light's position. If the direction hasn't changed (the red
   // light isn't out of bounds), we also adjust the blue light's position to match the red
@@ -59,9 +59,9 @@ void LEDChaseEffect::update(void) {
 
   // Last, we turn on the LEDs at their new positions. As before, the blue light (pos2) is
   // only set if it's in the valid LED range.
-  ::LEDControl.setCrgbAt(LEDAddr(uint8_t(pos_)), CRGB(255, 0, 0));
+  ::LEDControl.setCrgbAt(pos_, CRGB(255, 0, 0));
   if (pos2 < LED_COUNT)
-    ::LEDControl.setCrgbAt(LEDAddr(uint8_t(pos2)), CRGB(0, 0, 255));
+    ::LEDControl.setCrgbAt(pos2, CRGB(0, 0, 255));
 }
 
 }

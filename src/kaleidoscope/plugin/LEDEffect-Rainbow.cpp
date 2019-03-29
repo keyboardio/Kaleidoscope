@@ -67,7 +67,7 @@ void LEDRainbowWaveEffect::update(void) {
       key_hue -= 255;
     }
     cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, rainbow_value);
-    ::LEDControl.setCrgbAt(led_addr, rainbow);
+    ::LEDControl.setCrgbAt(led_addr.toInt(), rainbow);
   }
   rainbow_hue += rainbow_wave_steps;
   if (rainbow_hue >= 255) {
