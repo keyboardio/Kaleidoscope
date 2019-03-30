@@ -27,13 +27,12 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
 }
 
 void TriColor::update(void) {
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookup(KeyAddr(r, c));
+   for(auto key_addr: KeyAddr{}) {
+      Key k = Layer.lookup(key_addr);
 
       // Special keys are always mod_color
       if (k.flags != 0) {
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), mod_color_);
+        ::LEDControl.setCrgbAt(LEDAddr(key_addr), mod_color_);
         continue;
       }
 
@@ -53,9 +52,8 @@ void TriColor::update(void) {
         break;
       }
 
-      ::LEDControl.setCrgbAt(LEDAddr(r, c), color);
+      ::LEDControl.setCrgbAt(LEDAddr(key_addr), color);
     }
-  }
 }
 
 }

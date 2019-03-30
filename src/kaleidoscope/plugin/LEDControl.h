@@ -155,12 +155,12 @@ class LEDControl : public kaleidoscope::Plugin {
 
   static int8_t mode_add(LEDMode *mode);
 
-  static void setCrgbAt(int8_t i, cRGB crgb);
+  static void setCrgbAt(int8_t led_index, cRGB crgb);
   static void setCrgbAt(LEDAddr led_addr, cRGB color);
   KS_ROW_COL_FUNC static void setCrgbAt(byte row, byte col, cRGB color) {
     setCrgbAt(LEDAddr(row, col), color);
   }
-  static cRGB getCrgbAt(int8_t i);
+  static cRGB getCrgbAt(int8_t led_index);
   static cRGB getCrgbAt(LEDAddr led_addr);
   KS_ROW_COL_FUNC static cRGB getCrgbAt(byte row, byte col) {
     return getCrgbAt(LEDAddr(row, col));

@@ -37,12 +37,11 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
     return;
 
   uint16_t map_base = theme_base + (theme * ROWS * COLS / 2);
-
-  for (auto led_addr : LEDAddr{}) {
-    uint16_t pos = KeyboardHardware.getLedIndex(led_addr);
-    cRGB color = lookupColorAtPosition(map_base, pos);
-    ::LEDControl.setCrgbAt(led_addr, color);
-  }
+  
+  for (uint8_t pos = 0; pos < ROWS * COLS; pos++) {
+     cRGB color = lookupColorAtPosition(map_base, pos);
+    ::LEDControl.setCrgbAt(pos, color);
+   }
 }
 
 void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, LEDAddr led_addr) {

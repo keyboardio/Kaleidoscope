@@ -102,17 +102,17 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
     side->cyclesSinceStateChange[key_id]++;
   }
 
-
+  auto led_addr = LEDAddr(key_addr.row(), col_offset - key_addr.col());
 
   // If the key is held down
   if (keyState == HELD) {
-    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), green);
+    KeyboardHardware.setCrgbAt(led_addr, green);
   } else if (bitRead(side->badKeys, key_addr.toInt()) == 1) {
     // If we triggered chatter detection ever on this key
-    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), red);
+    KeyboardHardware.setCrgbAt(led_addr, red);
   } else if (keyState == TOGGLED_OFF) {
     // If the key was just released
-    KeyboardHardware.setCrgbAt(LEDAddr(key_addr.row(), col_offset - key_addr.col()), blue);
+    KeyboardHardware.setCrgbAt(led_addr, blue);
   }
 }
 

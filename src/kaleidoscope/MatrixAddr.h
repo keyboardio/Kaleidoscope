@@ -20,6 +20,32 @@
 #include <stdint.h>
 
 namespace kaleidoscope {
+   
+namespace internal {
+   
+template<typename T1, typename T2>
+struct IsSame {
+   static constexpr bool value = false;
+};
+
+template<typename T>
+struct IsSame<T, T> {
+   static constexpr bool value = true;
+};
+
+template<typename T>
+struct RemoveReference {
+   typedef T type;
+};
+
+template<typename T>
+struct RemoveReference<T&> {
+   typedef T type;
+};
+
+template<bool B> struct Bool2Type {};
+
+} // end namespace internal
 
 template<uint8_t rows__, uint8_t cols__>
 class MatrixAddr {
@@ -51,6 +77,7 @@ class MatrixAddr {
     : offset_(offset) {}
 
   constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
+  constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
 
   template<typename MatrixAddr__>
   constexpr MatrixAddr(const MatrixAddr__ &other)
@@ -81,7 +108,7 @@ class MatrixAddr {
 //   }
 
   constexpr bool isValid() const {
-    return (row() < rows__) && (col() < cols__);
+    return offset_ < upper_limit;
   }
 
   ThisType &operator=(const ThisType &other) {
@@ -110,10 +137,63 @@ class MatrixAddr {
     --*this;         // call the prefix increment
     return copy;
   }
-
+  
+  // The following templates are necessary as we cannot have both,
+  // a templated and a non templated version of operator=.
+  // Because of this, we have to take a detour over auxiliary
+  // assign methods, one that enables to assign the offset_ member directly,
+  // in case a compatible MatrixAddr class is used and 
+  // one that does a row/col conversion otherwise.
+  
+  template<uint8_t xrows__, uint8_t xcols__>
+  static void assign(internal::Bool2Type<true>, ThisType &self, const MatrixAddr<xrows__, xcols__> &other) {
+    self.offset_ = other.offset_;
+  }
+      
+  template<uint8_t xrows__, uint8_t xcols__>
+  static void assign(internal::Bool2Type<false>, ThisType &self, const MatrixAddr<xrows__, xcols__> &other) {
+    self.offset_ = other.row() * cols + other.col();
+  }
+  
+  // Normal assignment
+  //
   template<typename MatrixAddr__>
   ThisType& operator=(const MatrixAddr__ & other) {
-    offset_ = other.row() * cols + other.col();
+     assign(
+        // A dummy value that is only passed to make the compiler select
+        // the right overload of assign(...). It will be optimized away
+        // by the compiler, i.e. not be put on the stack when
+        // calling the function as the class IsSame is empty.
+        //
+        internal::Bool2Type<
+           internal::IsSame<
+              ThisType, 
+              typename internal::RemoveReference<MatrixAddr__>::type
+           >::value
+        >(), 
+        *this, other
+     );
+    return *this;
+  }  
+  
+  // Move assignment
+  //
+  template<typename MatrixAddr__>
+  ThisType& operator=(MatrixAddr__ && other) {
+     assign(
+        // A dummy value that is only passed to make the compiler select
+        // the right overload of assign(...). It will be optimized away
+        // by the compiler, i.e. not be put on the stack when
+        // calling the function as the class IsSame is empty.
+        //
+        internal::Bool2Type<
+           internal::IsSame<
+              ThisType, 
+              typename internal::RemoveReference<MatrixAddr__>::type
+           >::value
+        >(), 
+        *this, other
+     );
     return *this;
   }
 
@@ -145,6 +225,12 @@ class MatrixAddr {
 
   bool operator==(const ThisType &other) const {
     return offset_ == other.offset_;
+  }  
+  
+  template<typename MatrixAddr__>
+  bool operator==(const MatrixAddr__ & other) {
+     return   (this->row() == other.row())
+           && (this->col() == other.col());
   }
 
   class forward_iterator {

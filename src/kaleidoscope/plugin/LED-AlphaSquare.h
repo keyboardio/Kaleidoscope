@@ -35,6 +35,9 @@ namespace kaleidoscope {
 namespace plugin {
 class AlphaSquare : public kaleidoscope::Plugin {
  public:
+  
+  static constexpr LEDAddr base_pos = LEDAddr{0, 2};
+  
   AlphaSquare(void) {}
 
   static void display(Key key, LEDAddr led_addr, cRGB key_color);
@@ -46,7 +49,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
     display(key, LEDAddr(row, col));
   }
   static void display(Key key) {
-    display(key, LEDAddr(0, 2));
+    display(key, base_pos);
   }
   static void display(Key key, uint8_t col) {
     display(key, LEDAddr(0, col));
@@ -61,7 +64,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
     display(symbol, LEDAddr(row, col));
   }
   static void display(uint16_t symbol) {
-    display(symbol, LEDAddr(0, 2));
+    display(symbol, base_pos);
   }
   static void display(uint16_t symbol, uint8_t col) {
     display(symbol, LEDAddr(0, col));
@@ -77,7 +80,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
     clear(key, LEDAddr(0, col));
   }
   static void clear(Key key) {
-    clear(key, LEDAddr(0, 2));
+    clear(key, base_pos);
   }
 
   static void clear(uint16_t symbol, LEDAddr led_addr) {
@@ -90,7 +93,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
     clear(symbol, LEDAddr(0, col));
   }
   static void clear(uint16_t symbol) {
-    clear(symbol, LEDAddr(0, 2));
+    clear(symbol, base_pos);
   }
 
   static bool isSymbolPart(Key key,

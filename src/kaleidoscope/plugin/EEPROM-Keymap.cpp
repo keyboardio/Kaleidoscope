@@ -84,25 +84,21 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
 
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
-    for (uint8_t row = 0; row < ROWS; row++) {
-      for (uint8_t col = 0; col < COLS; col++) {
-        Key k = (*getkey)(layer, KeyAddr(row, col));
+     for(auto key_addr: KeyAddr{}) {
+        Key k = (*getkey)(layer, key_addr);
 
         ::Focus.send(k);
       }
     }
-  }
 }
 
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
-    for (uint8_t row = 0; row < ROWS; row++) {
-      for (uint8_t col = 0; col < COLS; col++) {
-        Key k = (*getkey)(layer, row, col);
+    for(auto key_addr: KeyAddr{}) {
+        Key k = (*getkey)(layer, key_addr.row(), key_addr.col());
 
         ::Focus.send(k);
       }
-    }
   }
 }
 

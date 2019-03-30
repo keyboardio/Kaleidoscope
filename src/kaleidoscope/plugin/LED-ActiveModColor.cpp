@@ -22,7 +22,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t ActiveModColorEffect::mod_keys_[MAX_MODS_PER_LAYER];
+KeyAddr ActiveModColorEffect::mod_keys_[MAX_MODS_PER_LAYER];
 uint8_t ActiveModColorEffect::mod_key_count_;
 bool ActiveModColorEffect::highlight_normal_modifiers_ = true;
 
@@ -38,18 +38,15 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 
   mod_key_count_ = 0;
 
-  for (byte r = 0; r < ROWS; r++) {
-    for (byte c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
+  for(auto key_addr: KeyAddr{}) {
+      Key k = Layer.lookupOnActiveLayer(key_addr);
 
       if (::OneShot.isOneShotKey(k) ||
           (highlight_normal_modifiers_ && (
              (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
              (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
-        uint8_t coords = r * COLS + c;
-        mod_keys_[mod_key_count_++] = coords;
+        mod_keys_[mod_key_count_++] = key_addr;
       }
-    }
   }
 
   return EventHandlerResult::OK;
@@ -61,33 +58,31 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
   }
 
   for (uint8_t i = 0; i < mod_key_count_; i++) {
-    uint8_t coords = mod_keys_[i];
-    byte c = coords % COLS;
-    byte r = (coords - c) / COLS;
+    const KeyAddr &key_addr = mod_keys_[i];
 
-    Key k = Layer.lookupOnActiveLayer(KeyAddr(r, c));
+    Key k = Layer.lookupOnActiveLayer(key_addr);
 
     if (::OneShot.isOneShotKey(k)) {
       if (::OneShot.isSticky(k))
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), sticky_color);
+        ::LEDControl.setCrgbAt(LEDAddr(key_addr), sticky_color);
       else if (::OneShot.isActive(k))
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(r, c));
+        ::LEDControl.refreshAt(LEDAddr(key_addr));
     } else if (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) {
       if (hid::isModifierKeyActive(k))
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(r, c));
+        ::LEDControl.refreshAt(LEDAddr(key_addr));
     } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
       uint8_t layer = k.keyCode;
       if (layer >= LAYER_SHIFT_OFFSET)
         layer -= LAYER_SHIFT_OFFSET;
 
       if (Layer.isActive(layer))
-        ::LEDControl.setCrgbAt(LEDAddr(r, c), highlight_color);
+        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(r, c));
+        ::LEDControl.refreshAt(LEDAddr(key_addr));
     }
   }
 

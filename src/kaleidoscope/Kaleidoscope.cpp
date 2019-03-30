@@ -51,11 +51,9 @@ Kaleidoscope_::setup(void) {
 
   // Update the keymap cache, so we start with a non-empty state.
   Layer.updateActiveLayers();
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      Layer.updateLiveCompositeKeymap(KeyAddr(row, col));
+  for(auto key_addr: KeyAddr{}) {
+      Layer.updateLiveCompositeKeymap(key_addr);
     }
-  }
 }
 
 void
