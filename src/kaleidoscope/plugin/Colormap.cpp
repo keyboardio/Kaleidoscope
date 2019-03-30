@@ -47,7 +47,7 @@ void ColormapEffect::onActivate(void) {
     ::LEDPaletteTheme.updateHandler(map_base_, top_layer_);
 }
 
-void ColormapEffect::refreshAt(LEDAddr led_addr) {
+void ColormapEffect::refreshAt(KeyLEDAddr led_addr) {
   if (top_layer_ <= max_layers_)
     ::LEDPaletteTheme.refreshAt(map_base_, top_layer_, led_addr);
 }

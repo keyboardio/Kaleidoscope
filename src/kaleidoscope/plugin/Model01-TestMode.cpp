@@ -102,7 +102,7 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
     side->cyclesSinceStateChange[key_id]++;
   }
 
-  auto led_addr = LEDAddr(key_addr.row(), col_offset - key_addr.col());
+  auto led_addr = KeyLEDAddr(key_addr.row(), col_offset - key_addr.col());
 
   // If the key is held down
   if (keyState == HELD) {

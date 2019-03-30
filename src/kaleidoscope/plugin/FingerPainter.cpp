@@ -38,7 +38,7 @@ void FingerPainter::update(void) {
   ::LEDPaletteTheme.updateHandler(color_base_, 0);
 }
 
-void FingerPainter::refreshAt(LEDAddr led_addr) {
+void FingerPainter::refreshAt(KeyLEDAddr led_addr) {
   ::LEDPaletteTheme.refreshAt(color_base_, 0, led_addr);
 }
 

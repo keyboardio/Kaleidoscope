@@ -121,14 +121,14 @@ void LEDControl::setCrgbAt(int8_t led_index, cRGB crgb) {
   KeyboardHardware.setCrgbAt(led_index, crgb);
 }
 
-void LEDControl::setCrgbAt(LEDAddr led_addr, cRGB color) {
+void LEDControl::setCrgbAt(KeyLEDAddr led_addr, cRGB color) {
   KeyboardHardware.setCrgbAt(led_addr, color);
 }
 
 cRGB LEDControl::getCrgbAt(int8_t led_index) {
   return KeyboardHardware.getCrgbAt(led_index);
 }
-cRGB LEDControl::getCrgbAt(LEDAddr led_addr) {
+cRGB LEDControl::getCrgbAt(KeyLEDAddr led_addr) {
   return KeyboardHardware.getCrgbAt(KeyboardHardware.getLedIndex(led_addr));
 }
 
@@ -261,7 +261,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (auto led_addr : LEDAddr{}) {
+      for (auto led_addr : KeyLEDAddr{}) {
         cRGB c = ::LEDControl.getCrgbAt(led_addr);
 
         ::Focus.send(c);
@@ -269,7 +269,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
       break;
     }
 
-    for (auto led_addr : LEDAddr{}) {
+    for (auto led_addr : KeyLEDAddr{}) {
       if (::Focus.isEOL()) {
         break;
       }

@@ -29,9 +29,9 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 
   static uint16_t reserveThemes(uint8_t max_themes);
   static void updateHandler(uint16_t theme_base, uint8_t theme);
-  static void refreshAt(uint16_t theme_base, uint8_t theme, LEDAddr led_addr);
+  static void refreshAt(uint16_t theme_base, uint8_t theme, KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static void refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col) {
-    refreshAt(theme_base, theme, LEDAddr(row, col));
+    refreshAt(theme_base, theme, KeyLEDAddr(row, col));
   }
 
   static const uint8_t lookupColorIndexAtPosition(uint16_t theme_base, uint16_t position);

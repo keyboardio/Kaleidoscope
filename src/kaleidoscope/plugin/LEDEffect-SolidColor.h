@@ -26,9 +26,9 @@ class LEDSolidColor : public LEDMode {
 
  protected:
   void onActivate(void) final;
-  void refreshAt(LEDAddr led_addr) final;
+  void refreshAt(KeyLEDAddr led_addr) final;
   KS_ROW_COL_FUNC void refreshAt(byte row, byte col) final {
-    refreshAt(LEDAddr(row, col));
+    refreshAt(KeyLEDAddr(row, col));
   }
 
  private:

@@ -32,7 +32,7 @@ void TriColor::update(void) {
 
       // Special keys are always mod_color
       if (k.flags != 0) {
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), mod_color_);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), mod_color_);
         continue;
       }
 
@@ -52,7 +52,7 @@ void TriColor::update(void) {
         break;
       }
 
-      ::LEDControl.setCrgbAt(LEDAddr(key_addr), color);
+      ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
     }
 }
 

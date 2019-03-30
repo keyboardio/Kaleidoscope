@@ -38,7 +38,7 @@ void AlphaSquareEffect::update(void) {
   }
 }
 
-void AlphaSquareEffect::refreshAt(LEDAddr led_addr) {
+void AlphaSquareEffect::refreshAt(KeyLEDAddr led_addr) {
   bool timed_out;
   uint8_t display_col = 2;
   Key key = last_key_left_;
@@ -51,7 +51,7 @@ void AlphaSquareEffect::refreshAt(LEDAddr led_addr) {
     timed_out = !end_time_right_ || (end_time_right_ && millis() > end_time_right_);
   }
 
-  if (!::AlphaSquare.isSymbolPart(key, LEDAddr(0, display_col), led_addr) || timed_out)
+  if (!::AlphaSquare.isSymbolPart(key, KeyLEDAddr(0, display_col), led_addr) || timed_out)
     ::LEDControl.setCrgbAt(led_addr, CRGB(0, 0, 0));
 }
 

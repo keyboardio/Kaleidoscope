@@ -62,7 +62,7 @@ class Hardware {
   // for matrix addressing we define default key and led address classes.
   // Those typedefs are supposed to overridden by derived hardware classes.
   typedef MatrixAddr<0, 0> KeyAddr;
-  typedef MatrixAddr<0, 0> LEDAddr;
+  typedef MatrixAddr<0, 0> KeyLEDAddr;
   /**
    * @defgroup kaleidoscope_hardware_leds Kaleidoscope::Hardware/LEDs
    * @{
@@ -81,7 +81,7 @@ class Hardware {
    * @param led_addr is the matrix address of the LED.
    * @param color is the color to set the LED to.
    */
-  void setCrgbAt(LEDAddr led_addr, cRGB color) {}
+  void setCrgbAt(KeyLEDAddr led_addr, cRGB color) {}
   /**
    * Set the color of a per-key LED at a given row and column.
    *
@@ -124,7 +124,7 @@ class Hardware {
   * @returns The index of the LED at the given position, or -1 if there are no
   * LEDs there.
   */
-  int8_t getLedIndex(LEDAddr led_addr) {
+  int8_t getLedIndex(KeyLEDAddr led_addr) {
     return -1;
   }
   /**

@@ -45,18 +45,18 @@ class Model01 : public kaleidoscope::Hardware {
   static constexpr int8_t led_count = 64;
 
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-  typedef MatrixAddr<matrix_rows, matrix_columns> LEDAddr;
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyLEDAddr;
 
   void syncLeds(void);
-  void setCrgbAt(LEDAddr led_addr, cRGB color);
+  void setCrgbAt(KeyLEDAddr led_addr, cRGB color);
   KS_ROW_COL_FUNC void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(LEDAddr(row, col), color);
+    setCrgbAt(KeyLEDAddr(row, col), color);
   }
   void setCrgbAt(int8_t i, cRGB crgb);
   cRGB getCrgbAt(int8_t i);
-  int8_t getLedIndex(LEDAddr led_addr);
+  int8_t getLedIndex(KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC int8_t getLedIndex(byte row, byte col) {
-    return getLedIndex(LEDAddr(row, col));
+    return getLedIndex(KeyLEDAddr(row, col));
   }
 
   void scanMatrix(void);

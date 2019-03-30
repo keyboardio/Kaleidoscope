@@ -61,7 +61,7 @@ void LEDRainbowWaveEffect::update(void) {
     rainbow_last_update = now;
   }
 
-  for (auto led_addr : LEDAddr{}) {
+  for (auto led_addr : KeyLEDAddr{}) {
     uint16_t key_hue = rainbow_hue + 16 * (led_addr.toInt() / 4);
     if (key_hue >= 255)          {
       key_hue -= 255;

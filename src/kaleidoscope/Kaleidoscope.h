@@ -41,7 +41,7 @@ void setup();
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 typedef HARDWARE_IMPLEMENTATION::KeyAddr KeyAddr;
-typedef HARDWARE_IMPLEMENTATION::LEDAddr LEDAddr;
+typedef HARDWARE_IMPLEMENTATION::KeyLEDAddr KeyLEDAddr;
 
 #define ROWS (KeyboardHardware.matrix_rows)
 #define COLS (KeyboardHardware.matrix_columns)

@@ -63,7 +63,7 @@ static const uint16_t alphabet[] PROGMEM = {
 
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
-void AlphaSquare::display(Key key, LEDAddr led_addr, cRGB key_color) {
+void AlphaSquare::display(Key key, KeyLEDAddr led_addr, cRGB key_color) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -76,11 +76,11 @@ void AlphaSquare::display(Key key, LEDAddr led_addr, cRGB key_color) {
   display(symbol, led_addr, key_color);
 }
 
-void AlphaSquare::display(Key key, LEDAddr led_addr) {
+void AlphaSquare::display(Key key, KeyLEDAddr led_addr) {
   display(key, led_addr, color);
 }
 
-void AlphaSquare::display(uint16_t symbol, LEDAddr led_addr, cRGB key_color) {
+void AlphaSquare::display(uint16_t symbol, KeyLEDAddr led_addr, cRGB key_color) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -90,20 +90,20 @@ void AlphaSquare::display(uint16_t symbol, LEDAddr led_addr, cRGB key_color) {
       if (!pixel)
         continue;
 
-      ::LEDControl.setCrgbAt(LEDAddr(led_addr.row() + r, led_addr.col() + c), key_color);
+      ::LEDControl.setCrgbAt(KeyLEDAddr(led_addr.row() + r, led_addr.col() + c), key_color);
     }
   }
 
   ::LEDControl.syncLeds();
 }
 
-void AlphaSquare::display(uint16_t symbol, LEDAddr led_addr) {
+void AlphaSquare::display(uint16_t symbol, KeyLEDAddr led_addr) {
   display(symbol, led_addr, color);
 }
 
 bool AlphaSquare::isSymbolPart(Key key,
-                               LEDAddr displayLedAddr,
-                               LEDAddr led_addr) {
+                               KeyLEDAddr displayLedAddr,
+                               KeyLEDAddr led_addr) {
   if (!Kaleidoscope.has_leds)
     return false;
 
@@ -117,8 +117,8 @@ bool AlphaSquare::isSymbolPart(Key key,
 }
 
 bool AlphaSquare::isSymbolPart(uint16_t symbol,
-                               LEDAddr displayLedAddr,
-                               LEDAddr led_addr) {
+                               KeyLEDAddr displayLedAddr,
+                               KeyLEDAddr led_addr) {
   if (!Kaleidoscope.has_leds)
     return false;
 

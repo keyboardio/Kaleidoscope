@@ -197,7 +197,7 @@ void Heatmap::update(void) {
     // https://forum.arduino.cc/index.php?topic=92684.msg2733723#msg2733723
 
     // set the LED color accordingly
-    ::LEDControl.setCrgbAt(LEDAddr(key_addr), computeColor(v));
+    ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), computeColor(v));
   }
 }
 

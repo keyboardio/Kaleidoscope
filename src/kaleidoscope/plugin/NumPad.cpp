@@ -44,15 +44,15 @@ void NumPad::setKeyboardLEDColors(void) {
       }
 
       if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
-        ::LEDControl.refreshAt(LEDAddr(key_addr));
+        ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
       } else {
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), color);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
       }
   }
 
   if (numpadLayerToggleKeyAddr.isValid()) {
     cRGB lock_color = breath_compute(lock_hue);
-    ::LEDControl.setCrgbAt(LEDAddr(numpadLayerToggleKeyAddr), lock_color);
+    ::LEDControl.setCrgbAt(KeyLEDAddr(numpadLayerToggleKeyAddr), lock_color);
   }
 }
 

@@ -22,7 +22,7 @@ void LEDOff::onActivate(void) {
   ::LEDControl.set_all_leds_to({0, 0, 0});
 }
 
-void LEDOff::refreshAt(LEDAddr led_addr) {
+void LEDOff::refreshAt(KeyLEDAddr led_addr) {
   ::LEDControl.setCrgbAt(led_addr, {0, 0, 0});
 }
 }

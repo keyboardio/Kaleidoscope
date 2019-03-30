@@ -202,7 +202,7 @@ void WavepoolEffect::update(void) {
 
       cRGB color = hsvToRgb(hue, saturation, value);
 
-      ::LEDControl.setCrgbAt(LEDAddr(r, c), color);
+      ::LEDControl.setCrgbAt(KeyLEDAddr(r, c), color);
     }
   }
 

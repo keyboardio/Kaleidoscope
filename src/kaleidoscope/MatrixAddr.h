@@ -280,7 +280,7 @@ class MatrixAddr {
 // To use them also for the regular firmware they would need to be
 // disambiguated by moving them to the Kaleidoscope.h header and replacing
 // them with non-template versions that operate on the actual typedefed
-// KeyAddr and LEDAddr.
+// KeyAddr and KeyLEDAddr.
 
 #ifdef MATRIX_ADDR_TESTING
 
@@ -330,6 +330,6 @@ bool operator<=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
 #if 0
 #define _DEPRECATED_MESSAGE_ROW_COL_FUNC \
    "Row/col based access functions have been deprecated. Please use " \
-   "the KeyAddr/LEDAddr based versions instead."
+   "the KeyAddr/KeyLEDAddr based versions instead."
 #define KS_ROW_COL_FUNC DEPRECATED(ROW_COL_FUNC)
 #endif

@@ -85,7 +85,7 @@ class LEDMode : public kaleidoscope::Plugin {
    *
    * @param led_addr is the matrix coordinate of the key to refresh the color of.
    */
-  virtual void refreshAt(LEDAddr led_addr) {}
+  virtual void refreshAt(KeyLEDAddr led_addr) {}
 
   /** Refresh the color of a given key.
    *
@@ -98,7 +98,7 @@ class LEDMode : public kaleidoscope::Plugin {
    * @param col is the column coordinate of the key to refresh the color of.
    */
   KS_ROW_COL_FUNC virtual void refreshAt(byte row, byte col) {
-    refreshAt(LEDAddr(row, col));
+    refreshAt(KeyLEDAddr(row, col));
   }
 
  public:
@@ -128,7 +128,7 @@ class LEDControl : public kaleidoscope::Plugin {
     if (modes[mode])
       modes[mode]->update();
   }
-  static void refreshAt(LEDAddr led_addr) {
+  static void refreshAt(KeyLEDAddr led_addr) {
     if (!Kaleidoscope.has_leds)
       return;
 
@@ -136,7 +136,7 @@ class LEDControl : public kaleidoscope::Plugin {
       modes[mode]->refreshAt(led_addr);
   }
   KS_ROW_COL_FUNC static void refreshAt(byte row, byte col) {
-    refreshAt(LEDAddr(row, col));
+    refreshAt(KeyLEDAddr(row, col));
   }
   static void set_mode(uint8_t mode);
   static uint8_t get_mode_index();
@@ -156,14 +156,14 @@ class LEDControl : public kaleidoscope::Plugin {
   static int8_t mode_add(LEDMode *mode);
 
   static void setCrgbAt(int8_t led_index, cRGB crgb);
-  static void setCrgbAt(LEDAddr led_addr, cRGB color);
+  static void setCrgbAt(KeyLEDAddr led_addr, cRGB color);
   KS_ROW_COL_FUNC static void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(LEDAddr(row, col), color);
+    setCrgbAt(KeyLEDAddr(row, col), color);
   }
   static cRGB getCrgbAt(int8_t led_index);
-  static cRGB getCrgbAt(LEDAddr led_addr);
+  static cRGB getCrgbAt(KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static cRGB getCrgbAt(byte row, byte col) {
-    return getCrgbAt(LEDAddr(row, col));
+    return getCrgbAt(KeyLEDAddr(row, col));
   }
   static void syncLeds(void);
 

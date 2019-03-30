@@ -118,11 +118,11 @@ void Model01::setCrgbAt(int8_t i, cRGB crgb) {
   }
 }
 
-void Model01::setCrgbAt(LEDAddr led_addr, cRGB color) {
+void Model01::setCrgbAt(KeyLEDAddr led_addr, cRGB color) {
   setCrgbAt(getLedIndex(led_addr), color);
 }
 
-int8_t Model01::getLedIndex(LEDAddr led_addr) {
+int8_t Model01::getLedIndex(KeyLEDAddr led_addr) {
   return pgm_read_byte(&(key_led_map[led_addr.toInt()]));
 }
 

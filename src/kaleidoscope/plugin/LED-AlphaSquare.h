@@ -36,81 +36,81 @@ namespace plugin {
 class AlphaSquare : public kaleidoscope::Plugin {
  public:
   
-  static constexpr LEDAddr base_pos = LEDAddr{0, 2};
+  static constexpr KeyLEDAddr base_pos = KeyLEDAddr{0, 2};
   
   AlphaSquare(void) {}
 
-  static void display(Key key, LEDAddr led_addr, cRGB key_color);
+  static void display(Key key, KeyLEDAddr led_addr, cRGB key_color);
   KS_ROW_COL_FUNC static void display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
-    display(key, LEDAddr(row, col), key_color);
+    display(key, KeyLEDAddr(row, col), key_color);
   }
-  static void display(Key key, LEDAddr led_addr);
+  static void display(Key key, KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static void display(Key key, uint8_t row, uint8_t col) {
-    display(key, LEDAddr(row, col));
+    display(key, KeyLEDAddr(row, col));
   }
   static void display(Key key) {
     display(key, base_pos);
   }
   static void display(Key key, uint8_t col) {
-    display(key, LEDAddr(0, col));
+    display(key, KeyLEDAddr(0, col));
   }
 
-  static void display(uint16_t symbol, LEDAddr led_addr, cRGB key_color);
+  static void display(uint16_t symbol, KeyLEDAddr led_addr, cRGB key_color);
   KS_ROW_COL_FUNC static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
-    display(symbol, LEDAddr(row, col), key_color);
+    display(symbol, KeyLEDAddr(row, col), key_color);
   }
-  static void display(uint16_t symbol, LEDAddr led_addr);
+  static void display(uint16_t symbol, KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static void display(uint16_t symbol, uint8_t row, uint8_t col) {
-    display(symbol, LEDAddr(row, col));
+    display(symbol, KeyLEDAddr(row, col));
   }
   static void display(uint16_t symbol) {
     display(symbol, base_pos);
   }
   static void display(uint16_t symbol, uint8_t col) {
-    display(symbol, LEDAddr(0, col));
+    display(symbol, KeyLEDAddr(0, col));
   }
 
-  static void clear(Key key, LEDAddr led_addr) {
+  static void clear(Key key, KeyLEDAddr led_addr) {
     display(key, led_addr, {0, 0, 0});
   }
   KS_ROW_COL_FUNC static void clear(Key key, uint8_t row, uint8_t col) {
-    clear(key, LEDAddr(row, col));
+    clear(key, KeyLEDAddr(row, col));
   }
   static void clear(Key key, uint8_t col) {
-    clear(key, LEDAddr(0, col));
+    clear(key, KeyLEDAddr(0, col));
   }
   static void clear(Key key) {
     clear(key, base_pos);
   }
 
-  static void clear(uint16_t symbol, LEDAddr led_addr) {
+  static void clear(uint16_t symbol, KeyLEDAddr led_addr) {
     display(symbol, led_addr, {0, 0, 0});
   }
   KS_ROW_COL_FUNC static void clear(uint16_t symbol, uint8_t row, uint8_t col) {
-    clear(symbol, LEDAddr(row, col));
+    clear(symbol, KeyLEDAddr(row, col));
   }
   static void clear(uint16_t symbol, uint8_t col) {
-    clear(symbol, LEDAddr(0, col));
+    clear(symbol, KeyLEDAddr(0, col));
   }
   static void clear(uint16_t symbol) {
     clear(symbol, base_pos);
   }
 
   static bool isSymbolPart(Key key,
-                           LEDAddr displayLedAddr,
-                           LEDAddr led_addr);
+                           KeyLEDAddr displayLedAddr,
+                           KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static bool isSymbolPart(Key key,
       uint8_t display_row, uint8_t display_col,
       uint8_t row, uint8_t col) {
-    return isSymbolPart(key, LEDAddr(display_row, display_col), LEDAddr(row, col));
+    return isSymbolPart(key, KeyLEDAddr(display_row, display_col), KeyLEDAddr(row, col));
   }
   static bool isSymbolPart(uint16_t symbol,
-                           LEDAddr displayLedAddr,
-                           LEDAddr led_addr);
+                           KeyLEDAddr displayLedAddr,
+                           KeyLEDAddr led_addr);
   KS_ROW_COL_FUNC static bool isSymbolPart(uint16_t symbol,
       uint8_t display_row, uint8_t display_col,
       uint8_t row, uint8_t col) {
-    return isSymbolPart(symbol, LEDAddr(display_row, display_col), LEDAddr(row, col));
+    return isSymbolPart(symbol, KeyLEDAddr(display_row, display_col), KeyLEDAddr(row, col));
   }
 
   static cRGB color;

@@ -74,12 +74,12 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
     start_time_ = Kaleidoscope.millisAtCycleStart();
     if (key_addr_found.isValid())
-      ::LEDControl.refreshAt(LEDAddr(key_addr_found));
+      ::LEDControl.refreshAt(KeyLEDAddr(key_addr_found));
     return EventHandlerResult::OK;
   }
 
   if (key_addr_found.isValid()) {
-    ::LEDControl.setCrgbAt(LEDAddr(key_addr_found), color);
+    ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr_found), color);
   }
 
   return EventHandlerResult::OK;

@@ -28,7 +28,7 @@ void LEDSolidColor::onActivate(void) {
   ::LEDControl.set_all_leds_to(r, g, b);
 }
 
-void LEDSolidColor::refreshAt(LEDAddr led_addr) {
+void LEDSolidColor::refreshAt(KeyLEDAddr led_addr) {
   ::LEDControl.setCrgbAt(led_addr, CRGB(r, g, b));
 }
 

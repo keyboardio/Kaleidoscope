@@ -64,25 +64,25 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
 
     if (::OneShot.isOneShotKey(k)) {
       if (::OneShot.isSticky(k))
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), sticky_color);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), sticky_color);
       else if (::OneShot.isActive(k))
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(key_addr));
+        ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
     } else if (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) {
       if (hid::isModifierKeyActive(k))
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(key_addr));
+        ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
     } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
       uint8_t layer = k.keyCode;
       if (layer >= LAYER_SHIFT_OFFSET)
         layer -= LAYER_SHIFT_OFFSET;
 
       if (Layer.isActive(layer))
-        ::LEDControl.setCrgbAt(LEDAddr(key_addr), highlight_color);
+        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), highlight_color);
       else
-        ::LEDControl.refreshAt(LEDAddr(key_addr));
+        ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
     }
   }
 
