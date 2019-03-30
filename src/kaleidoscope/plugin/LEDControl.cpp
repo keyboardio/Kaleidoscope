@@ -112,7 +112,7 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-   for (int8_t led_index = 0; led_index < LED_COUNT; led_index++) {
+  for (int8_t led_index = 0; led_index < LED_COUNT; led_index++) {
     setCrgbAt(led_index, color);
   }
 }

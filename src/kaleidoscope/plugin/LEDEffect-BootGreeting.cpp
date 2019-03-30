@@ -40,13 +40,13 @@ void BootGreetingEffect::findLed(void) {
   }
 
   // Find the LED key.
-  for(auto key_addr: KeyAddr{}) {
-      Key k = Layer.lookupOnActiveLayer(key_addr);
+  for (auto key_addr : KeyAddr{}) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
 
-      if (k.raw == search_key.raw) {
-        key_addr_ = key_addr;
-        return;
-      }
+    if (k.raw == search_key.raw) {
+      key_addr_ = key_addr;
+      return;
+    }
   }
 
   // We didn't find the LED key. Let's just pretend we're "done".

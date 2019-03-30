@@ -30,8 +30,11 @@
 #define UNKNOWN_KEYSWITCH_LOCATION 255,255
 
 // UnknownKeyswitchLocation represents an invalid (as default constructed)
-// key address.
-static constexpr KeyAddr UnknownKeyswitchLocation;
+// key address. Note: This is not a constexpr as it turned out
+// that the compiler would instanciate it and store it in RAM if
+// not made a temporary.
+//
+#define UnknownKeyswitchLocation (KeyAddr{})
 
 // Conversely, if an injected event *is* tied to a physical keyswitch and should
 // be resolved by the current keymap, code can use Key_NoKey on the injected event

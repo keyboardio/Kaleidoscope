@@ -26,7 +26,7 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
   BootGreetingEffect(void) {}
   BootGreetingEffect(KeyAddr key_addr);
   KS_ROW_COL_FUNC BootGreetingEffect(byte row, byte col)
-     : BootGreetingEffect(KeyAddr(row, col)) {}
+    : BootGreetingEffect(KeyAddr(row, col)) {}
 
   static KeyAddr user_key_addr;
   static Key search_key;

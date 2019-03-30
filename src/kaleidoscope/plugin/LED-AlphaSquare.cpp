@@ -90,7 +90,9 @@ void AlphaSquare::display(uint16_t symbol, KeyLEDAddr led_addr, cRGB key_color) 
       if (!pixel)
         continue;
 
-      ::LEDControl.setCrgbAt(KeyLEDAddr(led_addr.row() + r, led_addr.col() + c), key_color);
+      KeyLEDAddr shifted_addr = led_addr.shifted(r, c);
+
+      ::LEDControl.setCrgbAt(shifted_addr, key_color);
     }
   }
 
@@ -126,8 +128,8 @@ bool AlphaSquare::isSymbolPart(uint16_t symbol,
     for (uint8_t c = 0; c < 4; c++) {
       uint8_t pixel = bitRead(symbol, r * 4 + c);
 
-      if (displayLedAddr.row() + r == led_addr.row() &&
-          displayLedAddr.col() + c == led_addr.col())
+      KeyLEDAddr addr_shifted = displayLedAddr.shifted(r, c);
+      if (addr_shifted == led_addr)
         return !!pixel;
     }
   }

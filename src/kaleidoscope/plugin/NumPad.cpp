@@ -35,19 +35,19 @@ EventHandlerResult NumPad::onSetup(void) {
 void NumPad::setKeyboardLEDColors(void) {
   ::LEDControl.set_mode(::LEDControl.get_mode_index());
 
-  for(auto key_addr: KeyAddr{}) {
-      Key k = Layer.lookupOnActiveLayer(key_addr);
-      Key layer_key = Layer.getKey(numPadLayer, key_addr);
+  for (auto key_addr : KeyAddr{}) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
+    Key layer_key = Layer.getKey(numPadLayer, key_addr);
 
-      if (k == LockLayer(numPadLayer)) {
-        numpadLayerToggleKeyAddr = key_addr;
-      }
+    if (k == LockLayer(numPadLayer)) {
+      numpadLayerToggleKeyAddr = key_addr;
+    }
 
-      if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
-        ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
-      } else {
-        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
-      }
+    if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
+      ::LEDControl.refreshAt(KeyLEDAddr(key_addr));
+    } else {
+      ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
+    }
   }
 
   if (numpadLayerToggleKeyAddr.isValid()) {

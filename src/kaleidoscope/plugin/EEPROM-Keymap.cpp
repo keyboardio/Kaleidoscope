@@ -62,7 +62,6 @@ Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
 }
 
 Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
-  Key key;
 
   // If the layer is within PROGMEM bounds, look it up from there
   if (layer < progmem_layers_) {
@@ -84,21 +83,21 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
 
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
-     for(auto key_addr: KeyAddr{}) {
-        Key k = (*getkey)(layer, key_addr);
+    for (auto key_addr : KeyAddr{}) {
+      Key k = (*getkey)(layer, key_addr);
 
-        ::Focus.send(k);
-      }
+      ::Focus.send(k);
     }
+  }
 }
 
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
-    for(auto key_addr: KeyAddr{}) {
-        Key k = (*getkey)(layer, key_addr.row(), key_addr.col());
+    for (auto key_addr : KeyAddr{}) {
+      Key k = (*getkey)(layer, key_addr.row(), key_addr.col());
 
-        ::Focus.send(k);
-      }
+      ::Focus.send(k);
+    }
   }
 }
 

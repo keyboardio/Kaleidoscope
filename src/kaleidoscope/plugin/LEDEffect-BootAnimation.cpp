@@ -55,16 +55,16 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
   KeyAddr key_addr_found;
 
-  for(auto key_addr: KeyAddr{}) {
-      Key k = Layer.lookupOnActiveLayer(key_addr);
-      Key g;
-      g.flags = 0;
-      g.keyCode = pgm_read_word(&greeting_[current_index_]);
+  for (auto key_addr : KeyAddr{}) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
+    Key g;
+    g.flags = 0;
+    g.keyCode = pgm_read_word(&greeting_[current_index_]);
 
-      if (k.raw == g.raw) {
-        key_addr_found = key_addr;
-        break;
-      }
+    if (k.raw == g.raw) {
+      key_addr_found = key_addr;
+      break;
+    }
   }
 
   if ((Kaleidoscope.millisAtCycleStart() - start_time_) > timeout) {

@@ -20,32 +20,6 @@
 #include <stdint.h>
 
 namespace kaleidoscope {
-   
-namespace internal {
-   
-template<typename T1, typename T2>
-struct IsSame {
-   static constexpr bool value = false;
-};
-
-template<typename T>
-struct IsSame<T, T> {
-   static constexpr bool value = true;
-};
-
-template<typename T>
-struct RemoveReference {
-   typedef T type;
-};
-
-template<typename T>
-struct RemoveReference<T&> {
-   typedef T type;
-};
-
-template<bool B> struct Bool2Type {};
-
-} // end namespace internal
 
 template<uint8_t rows__, uint8_t cols__>
 class MatrixAddr {
@@ -76,8 +50,20 @@ class MatrixAddr {
   constexpr MatrixAddr(uint8_t offset)
     : offset_(offset) {}
 
-  constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
-  constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
+  // Rely on the default copy and move constructor.
+  //
+  // Note: If these were implemented naively as the commented versions below,
+  //       some versions of avr-gcc (e.g. 4.9.2 or 5.4 would generate
+  //       ridiculously bad assembler code for each copy construction,
+  //       that would bloat the default firmware by 1K of PROGMEM!
+  //
+  constexpr MatrixAddr(const ThisType &other) = default;
+  constexpr MatrixAddr(ThisType &&other) = default;
+  //constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
+  //constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
+
+  ThisType &operator=(const ThisType &) = default;
+  ThisType &operator=(ThisType &&) = default;
 
   template<typename MatrixAddr__>
   constexpr MatrixAddr(const MatrixAddr__ &other)
@@ -99,21 +85,36 @@ class MatrixAddr {
     offset_ = this->row() * cols + c;
   }
 
+  void shift(int8_t rows, int8_t cols) {
+    offset_ += rows * cols + cols;
+  }
+
+  void rowShift(int8_t rows) {
+    offset_ += rows * cols;
+  }
+
+  void colShift(int8_t cols) {
+    offset_ += cols;
+  }
+
+  constexpr ThisType shifted(int8_t rows, int8_t cols) const {
+    return ThisType(uint8_t(offset_ + rows * cols + cols));
+  }
+
+  constexpr ThisType rowShifted(int8_t rows) const {
+    return ThisType(uint8_t(offset_ + rows * cols));
+  }
+
+  constexpr ThisType colShifted(int8_t cols) const {
+    return ThisType(uint8_t(offset_ + cols));
+  }
+
   constexpr uint8_t toInt() const {
     return offset_;
   }
 
-//   constexpr operator uint8_t() {
-//     return offset_;
-//   }
-
   constexpr bool isValid() const {
     return offset_ < upper_limit;
-  }
-
-  ThisType &operator=(const ThisType &other) {
-    offset_ = other.offset_;
-    return *this;
   }
 
   ThisType operator++() {
@@ -136,65 +137,6 @@ class MatrixAddr {
     ThisType copy(*this);
     --*this;         // call the prefix increment
     return copy;
-  }
-  
-  // The following templates are necessary as we cannot have both,
-  // a templated and a non templated version of operator=.
-  // Because of this, we have to take a detour over auxiliary
-  // assign methods, one that enables to assign the offset_ member directly,
-  // in case a compatible MatrixAddr class is used and 
-  // one that does a row/col conversion otherwise.
-  
-  template<uint8_t xrows__, uint8_t xcols__>
-  static void assign(internal::Bool2Type<true>, ThisType &self, const MatrixAddr<xrows__, xcols__> &other) {
-    self.offset_ = other.offset_;
-  }
-      
-  template<uint8_t xrows__, uint8_t xcols__>
-  static void assign(internal::Bool2Type<false>, ThisType &self, const MatrixAddr<xrows__, xcols__> &other) {
-    self.offset_ = other.row() * cols + other.col();
-  }
-  
-  // Normal assignment
-  //
-  template<typename MatrixAddr__>
-  ThisType& operator=(const MatrixAddr__ & other) {
-     assign(
-        // A dummy value that is only passed to make the compiler select
-        // the right overload of assign(...). It will be optimized away
-        // by the compiler, i.e. not be put on the stack when
-        // calling the function as the class IsSame is empty.
-        //
-        internal::Bool2Type<
-           internal::IsSame<
-              ThisType, 
-              typename internal::RemoveReference<MatrixAddr__>::type
-           >::value
-        >(), 
-        *this, other
-     );
-    return *this;
-  }  
-  
-  // Move assignment
-  //
-  template<typename MatrixAddr__>
-  ThisType& operator=(MatrixAddr__ && other) {
-     assign(
-        // A dummy value that is only passed to make the compiler select
-        // the right overload of assign(...). It will be optimized away
-        // by the compiler, i.e. not be put on the stack when
-        // calling the function as the class IsSame is empty.
-        //
-        internal::Bool2Type<
-           internal::IsSame<
-              ThisType, 
-              typename internal::RemoveReference<MatrixAddr__>::type
-           >::value
-        >(), 
-        *this, other
-     );
-    return *this;
   }
 
   template<typename MatrixAddr__>
@@ -225,52 +167,23 @@ class MatrixAddr {
 
   bool operator==(const ThisType &other) const {
     return offset_ == other.offset_;
-  }  
-  
-  template<typename MatrixAddr__>
-  bool operator==(const MatrixAddr__ & other) {
-     return   (this->row() == other.row())
-           && (this->col() == other.col());
   }
 
-  class forward_iterator {
-
-    ThisType addr_;
-
-   public:
-
-    constexpr explicit forward_iterator(ThisType addr) : addr_(addr) {}
-
-    forward_iterator operator++() {
-      ++addr_;
-      return *this;
-    }
-
-    forward_iterator operator++(int) { // postfix ++
-      forward_iterator copy(*this);
-      ++*this;         // call the prefix increment
-      return copy;
-    }
-
-    ThisType operator*() {
-      return addr_;
-    }
-
-    bool operator==(const forward_iterator &other) {
-      return addr_ == other.addr_;
-    }
-    bool operator!=(const forward_iterator &other) {
-      return !this->operator==(other);
-    }
-  };
-
-  typedef forward_iterator iterator;
-
-  forward_iterator begin() const {
-    return forward_iterator(ThisType(uint8_t(0)));
+  bool operator!=(const ThisType &other) const {
+    return offset_ != other.offset_;
   }
-  forward_iterator end() const {
-    return forward_iterator(ThisType(upper_limit));
+
+  const ThisType &operator*() const {
+    return *this;
+  }
+
+  typedef ThisType iterator;
+
+  ThisType begin() const {
+    return ThisType(uint8_t(0));
+  }
+  ThisType end() const {
+    return ThisType(upper_limit);
   }
 };
 

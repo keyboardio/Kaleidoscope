@@ -27,33 +27,33 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
 }
 
 void TriColor::update(void) {
-   for(auto key_addr: KeyAddr{}) {
-      Key k = Layer.lookup(key_addr);
+  for (auto key_addr : KeyAddr{}) {
+    Key k = Layer.lookup(key_addr);
 
-      // Special keys are always mod_color
-      if (k.flags != 0) {
-        ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), mod_color_);
-        continue;
-      }
-
-      cRGB color = mod_color_;
-
-      switch (k.keyCode) {
-      case Key_A.keyCode ... Key_0.keyCode:
-      case Key_Spacebar.keyCode:
-      case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
-      case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
-      case Key_F1.keyCode ... Key_F4.keyCode:
-      case Key_F9.keyCode ... Key_F12.keyCode:
-        color = base_color_;
-        break;
-      case Key_Escape.keyCode:
-        color = esc_color_;
-        break;
-      }
-
-      ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
+    // Special keys are always mod_color
+    if (k.flags != 0) {
+      ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), mod_color_);
+      continue;
     }
+
+    cRGB color = mod_color_;
+
+    switch (k.keyCode) {
+    case Key_A.keyCode ... Key_0.keyCode:
+    case Key_Spacebar.keyCode:
+    case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
+    case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
+    case Key_F1.keyCode ... Key_F4.keyCode:
+    case Key_F9.keyCode ... Key_F12.keyCode:
+      color = base_color_;
+      break;
+    case Key_Escape.keyCode:
+      color = esc_color_;
+      break;
+    }
+
+    ::LEDControl.setCrgbAt(KeyLEDAddr(key_addr), color);
+  }
 }
 
 }

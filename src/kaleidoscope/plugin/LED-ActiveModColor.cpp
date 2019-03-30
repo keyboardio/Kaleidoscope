@@ -38,15 +38,15 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 
   mod_key_count_ = 0;
 
-  for(auto key_addr: KeyAddr{}) {
-      Key k = Layer.lookupOnActiveLayer(key_addr);
+  for (auto key_addr : KeyAddr{}) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
 
-      if (::OneShot.isOneShotKey(k) ||
-          (highlight_normal_modifiers_ && (
-             (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
-             (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
-        mod_keys_[mod_key_count_++] = key_addr;
-      }
+    if (::OneShot.isOneShotKey(k) ||
+        (highlight_normal_modifiers_ && (
+           (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
+           (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
+      mod_keys_[mod_key_count_++] = key_addr;
+    }
   }
 
   return EventHandlerResult::OK;
