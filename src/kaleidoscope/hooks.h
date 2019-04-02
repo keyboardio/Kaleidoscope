@@ -64,7 +64,8 @@ class Hooks {
   // and functions that are declared as friends above.
 
 #define DEFINE_WEAK_HOOK_FUNCTION(                                             \
-    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
+    HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
+    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)               __NL__ \
                                                                         __NL__ \
    static EventHandlerResult HOOK_NAME SIGNATURE;
 

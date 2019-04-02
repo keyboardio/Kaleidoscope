@@ -29,10 +29,11 @@ namespace kaleidoscope {
 // during the transition phase.
 
 #define INSTANTIATE_WEAK_HOOK_FUNCTION(                                        \
-    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
+    HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
+    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)               __NL__ \
                                                                         __NL__ \
    __attribute__((weak))                                                __NL__ \
-   EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                              __NL__ \
+   EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
       return EventHandlerResult::OK;                                    __NL__ \
    }
 

@@ -35,15 +35,68 @@
 #define _ABORTABLE true
 #define _NOT_ABORTABLE false
 
+#define _NOT_DEPRECATED
+
+//******************************************************************************
+//******************************************************************************
+// Important
+//******************************************************************************
+//******************************************************************************
+// When adding new handlers or handler versions, don't forget
+// to add them both to the _FOR_EACH_EVENT_HANDLER and
+// the _PROCESS_EVENT_HANDLER_VERSIONS function macros.
+//******************************************************************************
+//******************************************************************************
+
+// The following properties are passed to each invocation of the OPERATION
+// macro of the below definition of macro function _FOR_EACH_EVENT_HANDLER:
+//
+// handler name:
+//    This is the name that must be used to implement a handler in a plugin.
+//
+// handler version:
+//    Sometimes changes to the firmware's implementation require handler
+//    call signatures (the list of parameters) to be adapted. To allow
+//    for a deprecation periode to avoid breaking user code, it is
+//    desirable to have multiple overloads of a handler with the same
+//    name at the same time. Every overload must be assigned a version
+//    number and every individual version must appear in the below definition
+//    of the macros _FOR_EACH_EVENT_HANDLER and _PROCESS_EVENT_HANDLER_VERSIONS.
+//
+// deprecation flag:
+//    If a specific version is meant to be deprecated, pass the DEPRECATED(...)
+//    macro with a meaningful deprecation message. Pass _NOT_DEPRECATED
+//    otherwise.
+//
+// abortable flag:
+//    Plugins' event handlers are called in the same order as the plugins
+//    are passed to the KALEIDOSCOPE_INIT_PLUGINS(...) macro within the
+//    sketch. For some handlers it is desirable to not call subsequent
+//    plugins' handlers once a plugin's handler returned the value
+//    kaleidoscope::EventHandlerResult::EVENT_CONSUMED. To enable this
+//    pass the abortable flag value _ABORTABLE, _NOT_ABORTABLE otherwise.
+//
+// call signature:
+//    The type of arguments passed to the handlers as a comma separated
+//    list in brackets. Every parameter must be named.
+//
+// call parameters:
+//    The list of parameters as they would be passed to a call to the handler.
+//    Parameter names must match the names assigned to the call arguments.
+
 #define _FOR_EACH_EVENT_HANDLER(OPERATION, ...)                           __NL__ \
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
    /* Called at the very start of each cycle, before gathering         */ __NL__ \
    /* events, before doing anything else.                              */ __NL__ \
    OPERATION(beforeEachCycle,                                             __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
@@ -55,6 +108,8 @@
    /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
    /* will stop processing there.                                      */ __NL__ \
   OPERATION(onKeyswitchEvent,                                             __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                _ABORTABLE,                                                __NL__ \
                (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
                (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
@@ -67,6 +122,8 @@
    /* EventHandlerResult::EVENT_CONSUMED, in which case no other       */ __NL__ \
    /* plugin will have a chance to react to the event.                 */ __NL__ \
    OPERATION(onFocusEvent,                                                __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                 _ABORTABLE,                                               __NL__ \
                 (const char *command),                                    __NL__ \
                 (command), ##__VA_ARGS__)                                 __NL__ \
@@ -75,17 +132,71 @@
    /* not passed as arguments. If one needs that info, they should    */  __NL__ \
    /* track Layer.getState() themselves.                              */  __NL__ \
    OPERATION(onLayerChange,                                               __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                 _NOT_ABORTABLE,                                           __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \
    OPERATION(beforeReportingState,                                        __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
    /* Called at the very end of a cycle, after everything's            */ __NL__ \
    /* said and done.                                                   */ __NL__ \
    OPERATION(afterEachCycle,                                              __NL__ \
+             1,                                                           __NL__ \
+             _NOT_DEPRECATED,                                             __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),##__VA_ARGS__)
+
+// The following function macro lists event handler/hook method names and
+// available versions. It is used to auto-generate code that is
+// related to event handlers.
+//
+// The operators START and END are invoked with a list of all
+// available hook versions while the operator OP is invoked for every
+// version individually.
+//
+// If necessary, add handlers as provided in the following example.
+//
+// Example: Lets assume that a hook fancyHook has three versions,
+//          then the operator invokation would be.
+//
+// START(fancyHook, 1, 2, 3)
+//    OP(fancyHook, 1)
+//    OP(fancyHook, 2)
+//    OP(fancyHook, 3)
+// END(fancyHook, 1, 2, 3)
+//
+#define _PROCESS_EVENT_HANDLER_VERSIONS(START, OP, END, ...)            __NL__ \
+   START(onSetup, 1)                                                    __NL__ \
+      OP(onSetup, 1)                                                    __NL__ \
+   END(onSetup, 1)                                                      __NL__ \
+                                                                        __NL__ \
+   START(beforeEachCycle, 1)                                            __NL__ \
+      OP(beforeEachCycle, 1)                                            __NL__ \
+   END(beforeEachCycle, 1)                                              __NL__ \
+                                                                        __NL__ \
+   START(onKeyswitchEvent, 1)                                           __NL__ \
+      OP(onKeyswitchEvent, 1)                                           __NL__ \
+   END(onKeyswitchEvent, 1)                                             __NL__ \
+                                                                        __NL__ \
+   START(onFocusEvent, 1)                                               __NL__ \
+      OP(onFocusEvent, 1)                                               __NL__ \
+   END(onFocusEvent, 1)                                                 __NL__ \
+                                                                        __NL__ \
+   START(onLayerChange, 1)                                              __NL__ \
+      OP(onLayerChange, 1)                                              __NL__ \
+   END(onLayerChange, 1)                                                __NL__ \
+                                                                        __NL__ \
+   START(beforeReportingState, 1)                                       __NL__ \
+      OP(beforeReportingState, 1)                                       __NL__ \
+   END(beforeReportingState, 1)                                         __NL__ \
+                                                                        __NL__ \
+   START(afterEachCycle, 1)                                             __NL__ \
+      OP(afterEachCycle, 1)                                             __NL__ \
+   END(afterEachCycle, 1)

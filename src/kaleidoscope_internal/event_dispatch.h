@@ -70,12 +70,43 @@
 // the event handler method 'Foo' of each registered plugin with a given
 // set of arguments.
 
+// The following macros help to generate type or instance names
+// by concatenating macro parameter tokens.
+//
+#define _NAME3(A, B, C)       A##B##C
+#define _NAME4(A, B, C, D)    A##B##C##D
+#define _NAME5(A, B, C, D, E) A##B##C##D##E
+
 #define _REGISTER_EVENT_HANDLER(                                                 \
-    HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)      __NL__ \
+    HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                    \
+    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)                        \
                                                                           __NL__ \
   namespace kaleidoscope_internal {                                       __NL__ \
                                                                           __NL__ \
-   struct EventHandler_##HOOK_NAME {                                      __NL__ \
+   template<bool hook_is_implemented__,                                   __NL__ \
+            typename Plugin__,                                            __NL__ \
+            typename... Args__>                                           __NL__ \
+   struct _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) {   __NL__ \
+      static DEPRECATION_TAG kaleidoscope::EventHandlerResult             __NL__ \
+        call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
+         return plugin.HOOK_NAME(hook_args...);                           __NL__ \
+      }                                                                   __NL__ \
+   };                                                                     __NL__ \
+                                                                          __NL__ \
+   /* This specialization is used for those hooks that a plugin does not  __NL__ \
+    * implement.                                                          __NL__ \
+    */                                                                    __NL__ \
+   template<typename Plugin__,                                            __NL__ \
+            typename... Args__>                                           __NL__ \
+   struct _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller)     __NL__ \
+             <false, Plugin__, Args__...> {                               __NL__ \
+      static kaleidoscope::EventHandlerResult                             __NL__ \
+        call(Plugin__ &/*plugin*/, Args__&&... /*hook_args*/) {           __NL__ \
+         return kaleidoscope::EventHandlerResult::OK;                     __NL__ \
+      }                                                                   __NL__ \
+   };                                                                     __NL__ \
+                                                                          __NL__ \
+   struct _NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION) {            __NL__ \
                                                                           __NL__ \
       static bool shouldAbortOnConsumedEvent() {                          __NL__ \
         return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
@@ -84,8 +115,25 @@
       template<typename Plugin__, typename... Args__>                     __NL__ \
       static kaleidoscope::EventHandlerResult                             __NL__ \
         call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
+                                                                          __NL__ \
          _VALIDATE_EVENT_HANDLER_SIGNATURE(HOOK_NAME, Plugin__)           __NL__ \
-         return plugin.HOOK_NAME(hook_args...);                           __NL__ \
+                                                                          __NL__ \
+         static constexpr bool derived_implements_hook                    __NL__ \
+            = HookVersionImplemented_##HOOK_NAME<                         __NL__ \
+                 Plugin__, HOOK_VERSION>::value;                          __NL__ \
+                                                                          __NL__ \
+         /* The caller type adds another level of indirection that        __NL__ \
+          * is required to enable some hooks not to be implemented        __NL__ \
+          * by plugins.                                                   __NL__ \
+          */                                                              __NL__ \
+         typedef _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) __NL__ \
+            <                                                             __NL__ \
+               derived_implements_hook,                                   __NL__ \
+               Plugin__,                                                  __NL__ \
+               Args__...                                                  __NL__ \
+            > Caller;                                                     __NL__ \
+                                                                          __NL__ \
+         return Caller::call(plugin, hook_args...);                       __NL__ \
       }                                                                   __NL__ \
     };                                                                    __NL__ \
                                                                           __NL__ \
@@ -95,7 +143,8 @@
                                                                           __NL__ \
      EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
-        apply<kaleidoscope_internal::EventHandler_ ## HOOK_NAME>          __NL__ \
+        apply<kaleidoscope_internal                                       __NL__ \
+           ::_NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION)>          __NL__ \
              ARGS_LIST;                                                   __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
@@ -146,4 +195,7 @@
   /*                                                                       */ __NL__ \
   /* TODO(anyone): Move this somewhere else, outside of _internal, once    */ __NL__ \
   /*               the V1 API is removed.                                  */ __NL__ \
+                                                                              __NL__ \
+  _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK                                      __NL__ \
+                                                                              __NL__ \
   _FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)
