@@ -111,7 +111,7 @@ void Layer_::updateLiveCompositeKeymap(byte row, byte col) {
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(active_layers_, 0, ROWS * COLS);
+  memset(active_layers_, 0, KeyboardHardware.numKeys());
   for (byte row = 0; row < ROWS; row++) {
     for (byte col = 0; col < COLS; col++) {
       int8_t layer = top_active_layer_;

@@ -24,8 +24,6 @@
 
 // Maximum length of the pending queue
 #define QUKEYS_QUEUE_MAX 8
-// Total number of keys on the keyboard (assuming full grid)
-#define TOTAL_KEYS ROWS * COLS
 
 // Boolean values for storing qukey state
 #define QUKEY_STATE_PRIMARY false

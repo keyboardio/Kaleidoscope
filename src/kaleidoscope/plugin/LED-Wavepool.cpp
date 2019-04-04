@@ -31,7 +31,7 @@ uint16_t WavepoolEffect::idle_timeout = 5000;  // 5 seconds
 int16_t WavepoolEffect::ripple_hue = WavepoolEffect::rainbow_hue; // automatic hue
 
 // map native keyboard coordinates (16x4) into geometric space (14x5)
-PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[ROWS * COLS] = {
+PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[KeyboardHardware.numKeys()] = {
   0,  1,  2,  3,  4,  5,  6,     59, 66,    7,  8,  9, 10, 11, 12, 13,
   14, 15, 16, 17, 18, 19, 34,    60, 65,   35, 22, 23, 24, 25, 26, 27,
   28, 29, 30, 31, 32, 33, 48,    61, 64,   49, 36, 37, 38, 39, 40, 41,
