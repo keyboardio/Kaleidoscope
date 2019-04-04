@@ -25,6 +25,14 @@
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch
 #define UNKNOWN_KEYSWITCH_LOCATION 255,255
+
+// UnknownKeyswitchLocation represents an invalid (as default constructed)
+// key address. Note: This is not a constexpr as it turned out
+// that the compiler would instanciate it and store it in RAM if
+// not made a temporary.
+//
+#define UnknownKeyswitchLocation KeyAddr(KeyAddr::invalid_state)
+
 // Conversely, if an injected event *is* tied to a physical keyswitch and should
 // be resolved by the current keymap, code can use Key_NoKey on the injected event
 // with a real (row, col) location
