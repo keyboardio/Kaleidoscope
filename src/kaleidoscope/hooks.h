@@ -22,6 +22,7 @@ namespace kaleidoscope {
 union Key;
 }
 
+#include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/plugin.h"
 #include "kaleidoscope/event_handlers.h"
 

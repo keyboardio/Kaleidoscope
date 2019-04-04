@@ -73,7 +73,7 @@ template<typename Plugin__> struct
   static constexpr bool value = true;
 };
 
-#define _NOOP(...)   __NL__ \
+#define _NOOP(...)   __NL__
 
 #define _DEFINE_IMPLEMENTATION_CHECK_CLASSES(HOOK_NAME, ...)                   \
                                                                         __NL__ \
@@ -98,7 +98,7 @@ template<typename Plugin__> struct
      * to do check if a plugin defines a hook method with a specific    __NL__ \
      * signature.                                                       __NL__ \
      */                                                                 __NL__ \
-    DEFINE_HAS_METHOD_TRAITS(Plugin, HOOK_NAME,                         __NL__ \
+    DEFINE_HAS_METHOD_TRAITS(GLUE2(Plugin, HOOK_VERSION), HOOK_NAME,    __NL__ \
                              kaleidoscope::EventHandlerResult,          __NL__ \
                              SIGNATURE)                                 __NL__ \
                                                                         __NL__ \
@@ -107,7 +107,7 @@ template<typename Plugin__> struct
     */                                                                  __NL__ \
    template<typename Plugin__>                                          __NL__ \
    struct HookVersionImplemented_##HOOK_NAME<Plugin__, HOOK_VERSION>    __NL__ \
-      : public Plugin_HasMethod_##HOOK_NAME<Plugin__>                   __NL__ \
+      : public GLUE4(Plugin, HOOK_VERSION, _HasMethod_, HOOK_NAME)<Plugin__> __NL__ \
    {};
 
 #define _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_START(HOOK_NAME, ...)           \
@@ -219,7 +219,7 @@ template<typename Plugin__> struct
    */                                                                   __NL__ \
   __attribute__((unused)) constexpr bool dummy2                         __NL__ \
                        = ___________Culprit_Plugin___________           __NL__ \
-       <PLUGIN_TYPE, !handler_has_wrong_signature>::value;              __NL__ \
+       <PLUGIN_TYPE, !handler_ambiguously_implemented>::value;          __NL__ \
 }
 
 #define _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK                                 \
