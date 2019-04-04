@@ -31,17 +31,6 @@ class Plugin {
  public:
   // Please see "event_handlers.h" for a list of supported event handlers and
   // their documentation!
-
-#define DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD(                               \
-      HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)    __NL__ \
-                                                                          __NL__ \
-    EventHandlerResult HOOK_NAME SIGNATURE {                              __NL__ \
-      return EventHandlerResult::OK;                                      __NL__ \
-    }
-
-  _FOR_EACH_EVENT_HANDLER(DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD)
-
-#undef DEFINE_AND_IMPLEMENT_EVENT_HANDLER_METHOD
 };
 
 } // namespace kaleidoscope
