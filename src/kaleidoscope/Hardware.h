@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "kaleidoscope/MatrixAddr.h"
+
 #ifndef CRGB
 #error cRGB and CRGB *must* be defined before including this header!
 #endif
