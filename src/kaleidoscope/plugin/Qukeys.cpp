@@ -173,11 +173,12 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   // have a full HID report, and we don't want to accidentally turn
   // off keys that the scan hasn't reached yet, so we force the
   // current report to be the same as the previous one, then proceed
-  HID_KeyboardReport_Data_t hid_report;
-  // First, save the current report
-  memcpy(hid_report.allkeys, Keyboard.keyReport.allkeys, sizeof(hid_report));
+  HID_KeyboardReport_Data_t curr_hid_report;
+  // First, save the current report & previous report's modifiers
+  memcpy(&curr_hid_report, &Keyboard.keyReport, sizeof(curr_hid_report));
+  byte prev_hid_report_modifiers = Keyboard.lastKeyReport.modifiers;
   // Next, copy the old report
-  memcpy(Keyboard.keyReport.allkeys, Keyboard.lastKeyReport.allkeys, sizeof(Keyboard.keyReport));
+  memcpy(&Keyboard.keyReport, &Keyboard.lastKeyReport, sizeof(Keyboard.keyReport));
   // Instead of just calling pressKey here, we start processing the
   // key again, as if it was just pressed, and mark it as injected, so
   // we can ignore it and don't start an infinite loop. It would be
@@ -188,11 +189,32 @@ bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
   hid::sendKeyboardReport();
 
   // Next, we restore the current state of the report
-  memcpy(Keyboard.keyReport.allkeys, hid_report.allkeys, sizeof(hid_report));
+  memcpy(&Keyboard.keyReport, &curr_hid_report, sizeof(curr_hid_report));
 
   // Last, if the key is still down, add its code back in
-  if (keyswitch_state & IS_PRESSED)
+  if (keyswitch_state & IS_PRESSED) {
     handleKeyswitchEvent(keycode, row, col, IS_PRESSED | WAS_PRESSED);
+  } else {
+    // If this is the key that was released, send that release event now
+    handleKeyswitchEvent(Key_NoKey, row, col, WAS_PRESSED);
+    // ...and if there's another key in the queue that's about to also be
+    // flushed, we need to do something to clear this one's modifier flags (if
+    // any) from the previous report
+    if (key_queue_length_ > 1) {
+      // Restore the previous report; whatever was added by this key flush
+      // should not appear in the next one, because this key has now been
+      // released.  This is necessary to handle the case where a qukey's primary
+      // key value has a modifier flag.  Because we copy the last report
+      // directly, we're bypassing the mod-flag rollover protection offered by
+      // the HIDAdapter.  Unfortunately, this does not help if we're rolling
+      // over multiple keys, and one of the unreleased ones has a mod flag.
+      // That's probably rare enough that it won't be noticed, however.  THIS IS
+      // AN UGLY HACK, AND IT SHOULD BE FIXED WITH SOMETHING BETTER EVENTUALLY.
+      // Doing it right will most likely involve either major changes in
+      // KeyboardioHID or Kaleidoscope itself.
+      Keyboard.lastKeyReport.modifiers = prev_hid_report_modifiers;
+    }
+  }
 
   // Now that we're done sending the report(s), Qukeys can process events again:
   flushing_queue_ = false;
@@ -217,11 +239,7 @@ void Qukeys::flushQueue(int8_t index) {
       return;
     flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
   }
-  if (isQukey(key_queue_[0].addr)) {
-    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-  } else {
-    flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
-  }
+  flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
 }
 
 // Flush all the non-qukey keys from the front of the queue
