@@ -56,10 +56,10 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, byt
 
   if (state_ == WAIT_FOR_KEY) {
     if (keyToggledOn(key_state)) {
-      update_position_ = Layer.top() * ROWS * COLS + row * COLS + col;
+      update_position_ = Layer.top() * KeyboardHardware.numKeys() + row * COLS + col;
     }
     if (keyToggledOff(key_state)) {
-      if ((uint16_t)(Layer.top() * ROWS * COLS + row * COLS + col) == update_position_)
+      if ((uint16_t)(Layer.top() * KeyboardHardware.numKeys() + row * COLS + col) == update_position_)
         nextState();
     }
     return EventHandlerResult::EVENT_CONSUMED;
