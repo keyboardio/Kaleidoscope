@@ -35,7 +35,7 @@
 #define _ABORTABLE true
 #define _NOT_ABORTABLE false
 
-#define _NOT_DEPRECATED
+#define _CURRENT_IMPLEMENTATION
 
 //******************************************************************************
 //******************************************************************************
@@ -65,7 +65,7 @@
 //
 // deprecation flag:
 //    If a specific version is meant to be deprecated, pass the DEPRECATED(...)
-//    macro with a meaningful deprecation message. Pass _NOT_DEPRECATED
+//    macro with a meaningful deprecation message. Pass _CURRENT_IMPLEMENTATION
 //    otherwise.
 //
 // abortable flag:
@@ -88,7 +88,7 @@
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
@@ -96,7 +96,7 @@
    /* events, before doing anything else.                              */ __NL__ \
    OPERATION(beforeEachCycle,                                             __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
@@ -109,7 +109,7 @@
    /* will stop processing there.                                      */ __NL__ \
   OPERATION(onKeyswitchEvent,                                             __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _ABORTABLE,                                                __NL__ \
                (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
                (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
@@ -123,7 +123,7 @@
    /* plugin will have a chance to react to the event.                 */ __NL__ \
    OPERATION(onFocusEvent,                                                __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _ABORTABLE,                                               __NL__ \
                 (const char *command),                                    __NL__ \
                 (command), ##__VA_ARGS__)                                 __NL__ \
@@ -133,7 +133,7 @@
    /* track Layer.getState() themselves.                              */  __NL__ \
    OPERATION(onLayerChange,                                               __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _NOT_ABORTABLE,                                           __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
@@ -141,7 +141,7 @@
    /* reported to the host.                                            */ __NL__ \
    OPERATION(beforeReportingState,                                        __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
@@ -149,7 +149,7 @@
    /* said and done.                                                   */ __NL__ \
    OPERATION(afterEachCycle,                                              __NL__ \
              1,                                                           __NL__ \
-             _NOT_DEPRECATED,                                             __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),##__VA_ARGS__)
 
