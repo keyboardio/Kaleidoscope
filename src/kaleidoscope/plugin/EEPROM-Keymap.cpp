@@ -44,7 +44,7 @@ void EEPROMKeymap::setup(uint8_t max) {
 
 void EEPROMKeymap::max_layers(uint8_t max) {
   max_layers_ = max;
-  keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * ROWS * COLS * 2);
+  keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * KeyboardHardware.numKeys() * 2);
 }
 
 Key EEPROMKeymap::getKey(uint8_t layer, byte row, byte col) {
@@ -53,7 +53,7 @@ Key EEPROMKeymap::getKey(uint8_t layer, byte row, byte col) {
   if (layer >= max_layers_)
     return Key_NoKey;
 
-  uint16_t pos = ((layer * ROWS * COLS) + (row * COLS) + col) * 2;
+  uint16_t pos = ((layer * KeyboardHardware.numKeys()) + (row * COLS) + col) * 2;
 
   key.flags = EEPROM.read(keymap_base_ + pos);
   key.keyCode = EEPROM.read(keymap_base_ + pos + 1);
@@ -134,7 +134,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   } else {
     uint16_t i = 0;
 
-    while (!::Focus.isEOL() && (i < ROWS * COLS * max_layers_)) {
+    while (!::Focus.isEOL() && (i < (uint16_t)KeyboardHardware.numKeys() * max_layers_)) {
       Key k;
 
       ::Focus.read(k);
