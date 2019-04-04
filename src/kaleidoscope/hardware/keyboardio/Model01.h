@@ -43,6 +43,11 @@ class Model01 : public kaleidoscope::Hardware {
   static constexpr byte matrix_columns = 16;
   static constexpr int8_t led_count = 64;
 
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+  static constexpr int8_t numKeys() {
+    return matrix_columns * matrix_rows;
+  }
+
   void syncLeds(void);
   void setCrgbAt(byte row, byte col, cRGB color);
   void setCrgbAt(int8_t i, cRGB crgb);
