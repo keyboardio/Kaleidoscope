@@ -54,6 +54,7 @@ typedef HARDWARE_IMPLEMENTATION::KeyAddr KeyAddr;
 #define COLS (KeyboardHardware.matrix_columns)
 #define LED_COUNT (KeyboardHardware.led_count)
 
+#include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/hid.h"
 #include "kaleidoscope/layers.h"

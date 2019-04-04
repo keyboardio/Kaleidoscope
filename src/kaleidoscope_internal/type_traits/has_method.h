@@ -25,7 +25,7 @@
     * implements a method with given signature.                         __NL__ \
     */                                                                  __NL__ \
    template<typename Class__>                                           __NL__ \
-   struct PREFIX##_HasMethod_##METHOD_NAME                              __NL__ \
+   struct GLUE3(PREFIX, _HasMethod_, METHOD_NAME)                       __NL__ \
    {                                                                    __NL__ \
       /* Define a pointer to member function with the correct           __NL__ \
        * argument signature. The newly defined type is named            __NL__ \
