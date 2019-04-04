@@ -48,6 +48,10 @@
 #define __STRINGIZE(S) #S
 #define STRINGIZE(S) __STRINGIZE(S)
 
+#define GLUE2(A, B) A##B
+#define GLUE3(A, B, C) A##B##C
+#define GLUE4(A, B, C, D) A##B##C##D
+
 // Allow for the creation of verbose messages in static_asserts
 //
 #define VERBOSE_STATIC_ASSERT_HEADER                                           \
