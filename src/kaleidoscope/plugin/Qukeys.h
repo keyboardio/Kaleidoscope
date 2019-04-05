@@ -57,19 +57,16 @@ namespace plugin {
 // Data structure for an individual qukey
 struct Qukey {
  public:
-  Qukey(void) {}
-  Qukey(int8_t layer, KeyAddr key_addr, Key alt_keycode);
-  DEPRECATED(ROW_COL_FUNC) Qukey(int8_t layer, byte row, byte col, Key alt_keycode)
-    : Qukey(layer, KeyAddr(row, col), alt_keycode) {}
+  Qukey(int8_t layer, KeyAddr k, Key alt_keycode);
 
   int8_t layer;
-  uint8_t addr;
+  KeyAddr addr;
   Key alt_keycode;
 };
 
 // Data structure for an entry in the key_queue
 struct QueueItem {
-  uint8_t addr;        // keyswitch coordinates
+  KeyAddr addr;        // keyswitch coordinates
   uint16_t start_time; // time a queued key was pressed
 };
 
@@ -81,15 +78,15 @@ class Qukeys : public kaleidoscope::Plugin {
   // would enable storing the qukey list in PROGMEM, but I don't know
   // if the added complexity is worth it.
  public:
-  Qukeys(void);
+  Qukeys();
 
-  static void activate(void) {
+  static void activate() {
     active_ = true;
   }
-  static void deactivate(void) {
+  static void deactivate() {
     active_ = false;
   }
-  static void toggle(void) {
+  static void toggle() {
     active_ = !active_;
   }
   static void setTimeout(uint16_t time_limit) {
@@ -102,7 +99,6 @@ class Qukeys : public kaleidoscope::Plugin {
   static Qukey * qukeys;
   static uint8_t qukeys_count;
 
-  EventHandlerResult onSetup();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeReportingState();
 
@@ -112,18 +108,19 @@ class Qukeys : public kaleidoscope::Plugin {
   static uint8_t release_delay_;
   static QueueItem key_queue_[QUKEYS_QUEUE_MAX];
   static uint8_t key_queue_length_;
+  static uint8_t key_queue_release_bitfield_;
   static bool flushing_queue_;
+  static bool delayed_qukey_;
 
   static uint8_t delayed_qukey_addr_;
   static int16_t delayed_qukey_start_time_;
 
-  static int8_t lookupQukey(uint8_t key_addr);
-  static void enqueue(uint8_t key_addr);
-  static int8_t searchQueue(uint8_t key_addr);
-  static bool flushKey(bool qukey_state, uint8_t keyswitch_state);
-  static void flushQueue(int8_t index);
-  static void flushQueue(void);
-  static bool isQukey(uint8_t addr);
+  static int8_t lookupQukey(KeyAddr key_addr);
+  static void enqueue(KeyAddr key_addr);
+  static int8_t searchQueue(KeyAddr key_addr);
+  static void flushKey(bool qukey_state);
+  static bool isQukey(KeyAddr k);
+  static void sendReport(bool qukey_state);
 };
 
 } // namespace plugin {
