@@ -27,11 +27,14 @@
 #include "kaleidoscope/hardware/avr/pins_and_ports.h"
 
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#define KALEIDOSCOPE_BOOTLOADER_FLIP 1
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace kbdfans {
-class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard {
+class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard<KBD4x> {
+  friend class ATMegaKeyboard<KBD4x>;
  public:
   KBD4x(void) {
     mcu_.disableJTAG();
@@ -50,7 +53,8 @@ class KBD4x: public kaleidoscope::hardware::ATMegaKeyboard {
     return matrix_columns * matrix_rows;
   }
 
-  void resetDevice();
+ protected:
+  kaleidoscope::driver::bootloader::avr::FLIP bootloader_;
 };
 
 #define PER_KEY_DATA(dflt,                                                       \
