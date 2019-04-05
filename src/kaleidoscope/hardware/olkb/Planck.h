@@ -27,11 +27,14 @@
 #include "kaleidoscope/hardware/avr/pins_and_ports.h"
 
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#define KALEIDOSCOPE_BOOTLOADER_FLIP 1
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace olkb {
-class Planck: public kaleidoscope::hardware::ATMegaKeyboard {
+class Planck: public kaleidoscope::hardware::ATMegaKeyboard<Planck> {
+  friend class ATMegaKeyboard<Planck>;
  public:
   Planck(void) {}
 
@@ -41,6 +44,9 @@ class Planck: public kaleidoscope::hardware::ATMegaKeyboard {
   );
 
   static constexpr int8_t led_count = 0;
+
+ protected:
+  kaleidoscope::driver::bootloader::avr::FLIP bootloader_;
 };
 
 #define KEYMAP(                                                                    \

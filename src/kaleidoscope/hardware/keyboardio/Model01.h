@@ -26,10 +26,16 @@
 #include "KeyboardioScanner.h"
 
 #include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope_internal/deprecations.h"
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/Hardware.h"
+#include "kaleidoscope/driver/bootloader/avr/Caterina.h"
+
+#define _DEPRECATED_MESSAGE_MODEL01_REBOOT_BOOTLOADER   \
+  "Model01.rebootBootloader() is deprecated.\n"         \
+  "Please use KeyboardHardware.resetDevice() instead."
 
 namespace kaleidoscope {
 namespace hardware {
@@ -53,7 +59,12 @@ class Model01 : public kaleidoscope::Hardware {
   void readMatrix(void);
   void actOnMatrixScan(void);
   void setup();
-  void rebootBootloader();
+  void rebootBootloader() DEPRECATED(MODEL01_REBOOT_BOOTLOADER) {
+    resetDevice();
+  }
+  void resetDevice() {
+    bootloader_.resetDevice();
+  }
 
   /* These public functions are things supported by the Model 01, but
    * aren't necessarily part of the Kaleidoscope API
@@ -84,6 +95,7 @@ class Model01 : public kaleidoscope::Hardware {
   keydata_t previousRightHandState;
 
  private:
+  kaleidoscope::driver::bootloader::avr::Caterina bootloader_;
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
 
   static bool isLEDChanged;

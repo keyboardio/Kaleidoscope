@@ -43,6 +43,7 @@ struct cRGB {
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/Hardware.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -77,11 +78,14 @@ class ErgoDox : public kaleidoscope::Hardware {
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
 
-  void resetDevice();
+  void resetDevice() {
+    bootloader_.resetDevice();
+  }
 
   static uint8_t debounce;
 
  private:
+  kaleidoscope::driver::bootloader::avr::HalfKay bootloader_;
   static ErgoDoxScanner scanner_;
   static uint8_t previousKeyState_[matrix_rows];
   static uint8_t keyState_[matrix_rows];
