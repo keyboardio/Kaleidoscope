@@ -261,12 +261,12 @@ compile () {
     # SC2091: We do not care if quotes or backslashes are not respected.
     # SC2086: We want word splitting.
     # shellcheck disable=SC2086,SC2090
-    ${ARDUINO_BUILDER} \
+    "${ARDUINO_BUILDER}" \
         -compile \
 	      ${ARDUINO_PACKAGES} \
 	      -hardware "${ARDUINO_PATH}/hardware" \
 	      -hardware "${BOARD_HARDWARE_PATH}" \
-	      ${ARDUINO_TOOLS_PARAM} \
+	      ${ARDUINO_TOOLS_FLAG:+"${ARDUINO_TOOLS_FLAG}"} ${ARDUINO_TOOLS_PARAM:+"${ARDUINO_TOOLS_PARAM}"} \
 	      -tools "${ARDUINO_PATH}/tools-builder" \
 	      -fqbn "${FQBN}" \
         -libraries "." \
