@@ -19,6 +19,7 @@
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/plugin.h"
 #include "kaleidoscope_internal/type_traits/has_member.h"
+#include "kaleidoscope_internal/type_traits/has_method.h"
 
 // *************************************************************************
 // *************************************************************************
@@ -92,59 +93,22 @@ template<typename Plugin__> struct
 #define _DEFINE_IMPLEMENTATION_CHECK_CLASS_SPECIALIZATION(                     \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
     SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)                      \
+                                                                               \
+    /* We use the generalized traits class found in header has_method.h __NL__ \
+     * to do check if a plugin defines a hook method with a specific    __NL__ \
+     * signature.                                                       __NL__ \
+     */                                                                 __NL__ \
+    DEFINE_HAS_METHOD_TRAITS(Plugin, HOOK_NAME,                         __NL__ \
+                             kaleidoscope::EventHandlerResult,          __NL__ \
+                             SIGNATURE)                                 __NL__ \
                                                                         __NL__ \
    /* This specialization checks if a plugin of type Plugin__           __NL__ \
     * implements a handler with given signature SIGNATURE.              __NL__ \
     */                                                                  __NL__ \
    template<typename Plugin__>                                          __NL__ \
    struct HookVersionImplemented_##HOOK_NAME<Plugin__, HOOK_VERSION>    __NL__ \
-   {                                                                    __NL__ \
-      /* Define a pointer to member function with the correct           __NL__ \
-       * argument signature. The newly defined type is named            __NL__ \
-       * HookType__.                                                    __NL__ \
-       */                                                               __NL__ \
-      typedef kaleidoscope::EventHandlerResult                          __NL__ \
-                (Plugin__::*HookType__)SIGNATURE;                       __NL__ \
-                                                                        __NL__ \
-      /* See the definition of HookIimplemented_##HOOK_NAME above       __NL__ \
-       * for an explanation of the SFINAE concept that is applied here. __NL__ \
-       * The difference to the afforementioned class is that            __NL__ \
-       * here we check if a specific version of a handler was           __NL__ \
-       * implemented. This is done by forcing the compiler              __NL__ \
-       * through a static cast to select the respective method          __NL__ \
-       * if possible. If the method signature cannot be found,          __NL__ \
-       * the substitution fails and the first version of method "test"  __NL__ \
-       * will not be defined.                                           __NL__ \
-       */                                                               __NL__ \
-      template <typename PluginAux__>                                   __NL__ \
-      static constexpr                                                  __NL__ \
-      /* The following decltype-clause defines the function return type __NL__ \
-       */                                                               __NL__ \
-      decltype(                                                         __NL__ \
-         /* If &PluginAux__::HOOK_NAME exists and is of type            __NL__ \
-          * HookType__, the list below evaluates to bool{} whose        __NL__ \
-          * type can be determined. Otherwise the comma expression      __NL__ \
-          * cannot be evaluated and the content                         __NL__ \
-          * of decltype is undefined and this function overload         __NL__ \
-          * is ignored by the compiler                                  __NL__ \
-          * (SFINAE = substitution failure is not an error)             __NL__ \
-          * and the test(...) overload is used instead.                 __NL__ \
-          */                                                            __NL__ \
-         static_cast<HookType__>(&PluginAux__::HOOK_NAME), bool{}       __NL__ \
-      )                                                                 __NL__ \
-      test(int /* unused */)                                            __NL__ \
-      {                                                                 __NL__ \
-         return true;                                                   __NL__ \
-      }                                                                 __NL__ \
-                                                                        __NL__ \
-      template <typename PluginAux__>                                   __NL__ \
-      static constexpr bool test(...)                                   __NL__ \
-      {                                                                 __NL__ \
-         return false;                                                  __NL__ \
-      }                                                                 __NL__ \
-                                                                        __NL__ \
-      static constexpr bool value = test<Plugin__>(int{});              __NL__ \
-   };
+      : public Plugin_HasMethod_##HOOK_NAME<Plugin__>                   __NL__ \
+   {};
 
 #define _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_START(HOOK_NAME, ...)           \
                                                                         __NL__ \

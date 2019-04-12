@@ -19,18 +19,18 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDRainbowEffect::update(void) {
+void LEDRainbowEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
   uint16_t now = millis();
-  if ((now - rainbow_last_update) < rainbow_update_delay) {
+  if ((now - rainbow_last_update) < parent_->rainbow_update_delay) {
     return;
   } else {
     rainbow_last_update = now;
   }
 
-  cRGB rainbow = hsvToRgb(rainbow_hue, rainbow_saturation, rainbow_value);
+  cRGB rainbow = hsvToRgb(rainbow_hue, rainbow_saturation, parent_->rainbow_value);
 
   rainbow_hue += rainbow_steps;
   if (rainbow_hue >= 255) {
@@ -50,12 +50,12 @@ void LEDRainbowEffect::update_delay(byte delay) {
 
 // ---------
 
-void LEDRainbowWaveEffect::update(void) {
+void LEDRainbowWaveEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
   uint16_t now = millis();
-  if ((now - rainbow_last_update) < rainbow_update_delay) {
+  if ((now - rainbow_last_update) < parent_->rainbow_update_delay) {
     return;
   } else {
     rainbow_last_update = now;
@@ -66,7 +66,7 @@ void LEDRainbowWaveEffect::update(void) {
     if (key_hue >= 255)          {
       key_hue -= 255;
     }
-    cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, rainbow_value);
+    cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, parent_->rainbow_value);
     ::LEDControl.setCrgbAt(i, rainbow);
   }
   rainbow_hue += rainbow_wave_steps;

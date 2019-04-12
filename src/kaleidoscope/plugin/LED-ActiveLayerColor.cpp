@@ -20,26 +20,31 @@
 namespace kaleidoscope {
 namespace plugin {
 
-cRGB LEDActiveLayerColorEffect::active_color_;
 const cRGB *LEDActiveLayerColorEffect::colormap_;
+
+LEDActiveLayerColorEffect::TransientLEDMode::TransientLEDMode(
+  const LEDActiveLayerColorEffect *parent)
+  : parent_(parent),
+    active_color_{0, 0, 0}
+{}
 
 void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
   colormap_ = colormap;
 }
 
-cRGB LEDActiveLayerColorEffect::getActiveColor() {
+cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
   cRGB color;
 
   uint8_t top_layer = ::Layer.top();
 
-  color.r = pgm_read_byte(&(colormap_[top_layer].r));
-  color.g = pgm_read_byte(&(colormap_[top_layer].g));
-  color.b = pgm_read_byte(&(colormap_[top_layer].b));
+  color.r = pgm_read_byte(&(parent_->colormap_[top_layer].r));
+  color.g = pgm_read_byte(&(parent_->colormap_[top_layer].g));
+  color.b = pgm_read_byte(&(parent_->colormap_[top_layer].b));
 
   return color;
 }
 
-void LEDActiveLayerColorEffect::onActivate(void) {
+void LEDActiveLayerColorEffect::TransientLEDMode::onActivate(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -47,13 +52,14 @@ void LEDActiveLayerColorEffect::onActivate(void) {
   ::LEDControl.set_all_leds_to(active_color_);
 }
 
-void LEDActiveLayerColorEffect::refreshAt(byte row, byte col) {
+void LEDActiveLayerColorEffect::TransientLEDMode::refreshAt(byte row, byte col) {
   ::LEDControl.setCrgbAt(row, col, active_color_);
 }
 
 EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {
-  if (::LEDControl.get_mode() == this)
-    onActivate();
+  if (::LEDControl.get_mode_index() == led_mode_id_)
+    ::LEDControl.get_mode<TransientLEDMode>()->onActivate();
+
   return EventHandlerResult::OK;
 }
 

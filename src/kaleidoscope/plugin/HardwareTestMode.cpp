@@ -56,10 +56,18 @@ void HardwareTestMode::testLeds(void) {
   setLeds(blue);
   setLeds(green);
   setLeds(red);
+
+  // This works under the assumption that LEDRainbowEffect
+  // has been registered with KALEIDOSCOPE_INIT_PLUGINS in
+  // the sketch. Otherwise LEDRainbowEffect would not be
+  // known to LEDControl.
+  //
+  ::LEDControl.activate(&::LEDRainbowEffect);
+
   // rainbow for 10 seconds
   ::LEDRainbowEffect.update_delay(5);
   for (auto i = 0; i < 300; i++) {
-    ::LEDRainbowEffect.update();
+    ::LEDControl.update();
     ::LEDControl.syncLeds();
   }
 }

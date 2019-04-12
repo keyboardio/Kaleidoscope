@@ -20,7 +20,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-void LEDBreatheEffect::update(void) {
+void LEDBreatheEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
@@ -29,7 +29,7 @@ void LEDBreatheEffect::update(void) {
     return;
   last_update_ = now;
 
-  cRGB color = breath_compute(hue, saturation);
+  cRGB color = breath_compute(parent_->hue, parent_->saturation);
   ::LEDControl.set_all_leds_to(color);
 }
 }

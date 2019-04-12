@@ -22,7 +22,9 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class Heatmap : public LEDMode {
+class Heatmap : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   Heatmap(void) {}
 
@@ -34,16 +36,38 @@ class Heatmap : public LEDMode {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
   EventHandlerResult beforeEachCycle();
 
- protected:
-  void update(void) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
 
- private:
-  static uint16_t heatmap_[ROWS][COLS];
-  static uint16_t highest_;
-  static uint32_t next_heatmap_comp_time_;
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const Heatmap *parent);
 
-  static void shiftStats(void);
-  static cRGB computeColor(float v);
+    void resetMap();
+    EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+    EventHandlerResult beforeEachCycle();
+
+   protected:
+
+    virtual void update() final;
+
+   private:
+
+    const Heatmap *parent_;
+
+    uint16_t heatmap_[ROWS][COLS];
+    uint16_t highest_;
+    uint32_t next_heatmap_comp_time_;
+
+    void shiftStats(void);
+    cRGB computeColor(float v);
+
+    friend class Heatmap;
+  };
 };
 }
 }

@@ -22,7 +22,9 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class ColormapEffect : public LEDMode {
+class ColormapEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   ColormapEffect(void) {}
 
@@ -31,9 +33,28 @@ class ColormapEffect : public LEDMode {
   EventHandlerResult onLayerChange();
   EventHandlerResult onFocusEvent(const char *command);
 
- protected:
-  void onActivate(void) final;
-  void refreshAt(byte row, byte col) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const ColormapEffect *parent) : parent_(parent) {}
+
+   protected:
+
+    friend class ColormapEffect;
+
+    virtual void onActivate(void) final;
+    virtual void refreshAt(byte row, byte col) final;
+
+   private:
+
+    const ColormapEffect *parent_;
+  };
 
  private:
   static uint8_t top_layer_;

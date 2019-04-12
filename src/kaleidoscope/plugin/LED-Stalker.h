@@ -24,7 +24,9 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class StalkerEffect : public LEDMode {
+class StalkerEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   class ColorComputer {
    public:
@@ -39,13 +41,30 @@ class StalkerEffect : public LEDMode {
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
 
- protected:
-  void onActivate(void) final;
-  void update(void) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
 
- private:
-  static uint16_t step_start_time_;
-  static uint8_t map_[ROWS][COLS];
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const StalkerEffect *parent);
+
+   protected:
+
+    virtual void update() final;
+
+   private:
+
+    const StalkerEffect *parent_;
+
+    uint16_t step_start_time_;
+    uint8_t map_[ROWS][COLS];
+
+    friend class StalkerEffect;
+  };
 };
 
 namespace stalker {

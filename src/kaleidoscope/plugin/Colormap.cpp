@@ -38,23 +38,23 @@ void ColormapEffect::max_layers(uint8_t max_) {
   map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
 }
 
-void ColormapEffect::onActivate(void) {
+void ColormapEffect::TransientLEDMode::onActivate(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  top_layer_ = Layer.top();
-  if (top_layer_ <= max_layers_)
-    ::LEDPaletteTheme.updateHandler(map_base_, top_layer_);
+  parent_->top_layer_ = Layer.top();
+  if (parent_->top_layer_ <= parent_->max_layers_)
+    ::LEDPaletteTheme.updateHandler(parent_->map_base_, parent_->top_layer_);
 }
 
-void ColormapEffect::refreshAt(byte row, byte col) {
-  if (top_layer_ <= max_layers_)
-    ::LEDPaletteTheme.refreshAt(map_base_, top_layer_, row, col);
+void ColormapEffect::TransientLEDMode::refreshAt(byte row, byte col) {
+  if (parent_->top_layer_ <= parent_->max_layers_)
+    ::LEDPaletteTheme.refreshAt(parent_->map_base_, parent_->top_layer_, row, col);
 }
 
 EventHandlerResult ColormapEffect::onLayerChange() {
-  if (::LEDControl.get_mode() == this)
-    onActivate();
+  if (::LEDControl.get_mode_index() == led_mode_id_)
+    ::LEDControl.get_mode<TransientLEDMode>()->onActivate();
   return EventHandlerResult::OK;
 }
 

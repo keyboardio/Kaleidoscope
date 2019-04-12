@@ -20,7 +20,8 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDChaseEffect : public LEDMode {
+class LEDChaseEffect : public Plugin,
+  public LEDModeInterface {
  public:
   LEDChaseEffect(void) {}
 
@@ -37,15 +38,34 @@ class LEDChaseEffect : public LEDMode {
     distance_ = value;
   }
 
- protected:
-  void update(void) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+
+    // Please note that storing the parent ptr is only required
+    // for those LED modes that require access to
+    // members of their parent class. Most LED modes can do without.
+    //
+    TransientLEDMode(const LEDChaseEffect *parent)
+      : parent_(parent) {}
+
+   protected:
+
+    virtual void update() final;
+
+   private:
+
+    const LEDChaseEffect *parent_;
+
+    int8_t pos_ = 0;
+    int8_t direction_ = 1;
+    uint16_t last_update_ = 0;
+  };
 
  private:
-  int8_t pos_ = 0;
-  int8_t direction_ = 1;
   uint8_t distance_ = 5;
   uint16_t update_delay_ = 150;
-  uint16_t last_update_ = 0;
 };
 }
 }

@@ -49,6 +49,7 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/macro_map.h"
 #include "kaleidoscope_internal/event_dispatch.h"
+#include "kaleidoscope_internal/LEDModeManager.h"
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/plugin.h"
 

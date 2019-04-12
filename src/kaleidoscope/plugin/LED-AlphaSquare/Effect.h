@@ -22,7 +22,9 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class AlphaSquareEffect : public LEDMode {
+class AlphaSquareEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
  public:
   AlphaSquareEffect(void) {}
 
@@ -30,13 +32,22 @@ class AlphaSquareEffect : public LEDMode {
 
   EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
 
- protected:
-  void update(void) final;
-  void refreshAt(byte row, byte col) final;
+  // This class' instance has dynamic lifetime
+  //
+  class TransientLEDMode : public LEDMode {
+   public:
+    TransientLEDMode(AlphaSquareEffect *parent);
 
- private:
-  static uint32_t end_time_left_, end_time_right_;
-  static Key last_key_left_, last_key_right_;
+   protected:
+    void update(void) final;
+    void refreshAt(byte row, byte col) final;
+
+   private:
+    uint32_t end_time_left_, end_time_right_;
+    Key last_key_left_, last_key_right_;
+
+    friend class AlphaSquareEffect;
+  };
 };
 }
 }
