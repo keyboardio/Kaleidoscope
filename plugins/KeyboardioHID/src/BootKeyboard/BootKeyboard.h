@@ -75,7 +75,7 @@ class BootKeyboard_ : public PluggableUSBModule {
   int getDescriptor(USBSetup& setup);
   bool setup(USBSetup& setup);
 
-  uint8_t epType[1];
+  EPTYPE_DESCRIPTOR_SIZE epType[1];
   uint8_t protocol;
   uint8_t idle;
 

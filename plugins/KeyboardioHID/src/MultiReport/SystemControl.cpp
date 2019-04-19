@@ -26,6 +26,10 @@ THE SOFTWARE.
 #include "SystemControl.h"
 #include "DescriptorPrimitives.h"
 
+#ifdef ARDUINO_ARCH_SAMD
+#include "USB/SAMD21_USBDevice.h"
+#endif
+
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
   //TODO limit to system keys only?
   /*  System Control (Power Down, Sleep, Wakeup, ...) */
@@ -73,10 +77,17 @@ void SystemControl_::releaseAll(void) {
 }
 
 void SystemControl_::press(uint8_t s) {
-  if (s == HID_SYSTEM_WAKE_UP)
+  if (s == HID_SYSTEM_WAKE_UP) {
+#ifdef __AVR__
     USBDevice.wakeupHost();
-  else
+#endif
+#ifdef ARDUINO_ARCH_SAMD
+    extern USBDevice_SAMD21G18x usbd;
+    usbd.wakeupHost();
+#endif
+  } else {
     sendReport(&s, sizeof(s));
+  }
 }
 
 

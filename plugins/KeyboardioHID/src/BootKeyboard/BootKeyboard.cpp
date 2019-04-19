@@ -141,12 +141,22 @@ bool BootKeyboard_::setup(USBSetup& setup) {
     }
     if (request == HID_GET_PROTOCOL) {
       // TODO improve
+#ifdef __AVR__
       UEDATX = protocol;
+#endif
+#ifdef ARDUINO_ARCH_SAM
+      USBDevice.armSend(0, &protocol, 1);
+#endif
       return true;
     }
     if (request == HID_GET_IDLE) {
       // TODO improve
+#ifdef __AVR__
       UEDATX = idle;
+#endif
+#ifdef ARDUINO_ARCH_SAM
+      USBDevice.armSend(0, &idle, 1);
+#endif
       return true;
     }
   }
