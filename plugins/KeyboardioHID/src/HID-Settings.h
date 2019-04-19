@@ -68,3 +68,5 @@ THE SOFTWARE.
 #define HID_REPORT_TYPE_INPUT   1
 #define HID_REPORT_TYPE_OUTPUT  2
 #define HID_REPORT_TYPE_FEATURE 3
+
+#include "PluggableUSB.h"
