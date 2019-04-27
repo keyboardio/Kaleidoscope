@@ -90,14 +90,14 @@ EventHandlerResult MouseKeys_::beforeReportingState() {
   }
 
   if (mouseMoveIntent & KEY_MOUSE_UP)
-    moveY = -speed;
-  else if (mouseMoveIntent & KEY_MOUSE_DOWN)
-    moveY = speed;
+    moveY -= speed;
+  if (mouseMoveIntent & KEY_MOUSE_DOWN)
+    moveY += speed;
 
   if (mouseMoveIntent & KEY_MOUSE_LEFT)
-    moveX = -speed;
-  else if (mouseMoveIntent & KEY_MOUSE_RIGHT)
-    moveX = speed;
+    moveX -= speed;
+  if (mouseMoveIntent & KEY_MOUSE_RIGHT)
+    moveX += speed;
 
   MouseWrapper.move(moveX, moveY);
 
