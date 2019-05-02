@@ -1,4 +1,4 @@
-/* Kaleidoscope-LEDControl - LED control plugin for Kaleidoscope
+/* Kaleidoscope-LEDMode - LED modes for Kaleidoscope
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -17,6 +17,8 @@
 #pragma once
 
 #include "kaleidoscope/plugin.h"
+#include "kaleidoscope/plugin/AccessTransientLEDMode.h"
+#include "kaleidoscope/plugin/LEDModeInterface.h"
 
 namespace kaleidoscope {
 
@@ -26,42 +28,6 @@ class LEDModeManager;
 } // end namespace internal
 
 namespace plugin {
-
-class LEDModeInterface {
- public:
-
-  void activate();
-
-  // This auxiliary class helps to generate a verbose error message
-  // in case that there is no TransientLEDMode typedef or nested
-  // class present in a derived class of LEDModeInterface.
-  //
-  struct _____LEDModeInterface_derived_class_is_missing_a_TransientLEDMode_typedef_or_nested_class_____ {};
-  typedef _____LEDModeInterface_derived_class_is_missing_a_TransientLEDMode_typedef_or_nested_class_____ NoLEDMode;
-
-  // By redefining TransientLEDMode, derived plugins export
-  // a LED mode that becomes part of the set of LED modes whose
-  // lifetime is handled dynamically.
-  //
-  typedef NoLEDMode DynamicLEDMode;
-};
-
-class AccessTransientLEDMode {
- public:
-
-  // This method is called when a plugin's LED mode is activated.
-  // Derived plugins may reimplement it to store the id of their
-  // exported LED mode. A plugin can thus check
-  // whether their LED mode is currently active.
-  //
-  void registerLEDModeActivated(uint8_t led_mode_id) {
-    led_mode_id_ = led_mode_id;
-  }
-
- protected:
-
-  uint8_t led_mode_id_ = 255; /* 255 means uninitialized */
-};
 
 /** Base class for LED modes.
 *

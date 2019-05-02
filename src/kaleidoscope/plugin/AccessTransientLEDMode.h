@@ -1,4 +1,4 @@
-/* Kaleidoscope-LEDControl - LED control plugin for Kaleidoscope
+/*
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -14,17 +14,27 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include <kaleidoscope/plugin/LEDMode.h>
-#include <kaleidoscope/plugin/LEDControl.h>
-#include <kaleidoscope/event_handler_result.h>
+#pragma once
 
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDModeInterface::activate() {
-  LEDControl::activate(this);
-}
+class AccessTransientLEDMode {
+ public:
+
+  // This method is called when a plugin's LED mode is activated.
+  // Derived plugins may reimplement it to store the id of their
+  // exported LED mode. A plugin can thus check
+  // whether their LED mode is currently active.
+  //
+  void registerLEDModeActivated(uint8_t led_mode_id) {
+    led_mode_id_ = led_mode_id;
+  }
+
+ protected:
+
+  uint8_t led_mode_id_ = 255; /* 255 means uninitialized */
+};
 
 } // end namespace plugin
 } // end namespace kaleidoscope
