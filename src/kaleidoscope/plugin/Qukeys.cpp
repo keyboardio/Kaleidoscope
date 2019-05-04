@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Qukeys -- Assign two keycodes to a single key
- * Copyright (C) 2017  Michael Richters
+ * Copyright (C) 2017-2019  Michael Richters
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,359 +16,385 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
-#include <Kaleidoscope-Qukeys.h>
-#include <kaleidoscope/hid.h>
-#include <MultiReport/Keyboard.h>
-#include <Kaleidoscope-Ranges.h>
+#include "kaleidoscope/plugin/Qukeys.h"
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-#define debug_print(...) printf(__VA_ARGS__)
-#else
-#define debug_print(...)
-#endif
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-Ranges.h>
+#include "kaleidoscope/progmem_helpers.h"
 
 
 namespace kaleidoscope {
 namespace plugin {
 
-inline
-bool isDualUse(Key k) {
-  if (k.raw < ranges::DU_FIRST || k.raw > ranges::DU_LAST)
-    return false;
-  return true;
-}
-
-inline
-bool isDualUse(byte key_addr_offset) {
-  KeyAddr key_addr(key_addr_offset);
-  Key k = Layer.lookup(key_addr);
-  return isDualUse(k);
-}
-
-Key getDualUsePrimaryKey(Key k) {
-  if (k.raw >= ranges::DUM_FIRST && k.raw <= ranges::DUM_LAST) {
-    k.raw -= ranges::DUM_FIRST;
-    k.flags = 0;
-  } else if (k.raw >= ranges::DUL_FIRST && k.raw <= ranges::DUL_LAST) {
-    k.raw -= ranges::DUL_FIRST;
-    k.flags = 0;
-  }
-  return k;
-}
-
-Key getDualUseAlternateKey(Key k) {
-  if (k.raw >= ranges::DUM_FIRST && k.raw <= ranges::DUM_LAST) {
-    k.raw -= ranges::DUM_FIRST;
-    k.raw = (k.raw >> 8) + Key_LeftControl.keyCode;
-  } else if (k.raw >= ranges::DUL_FIRST && k.raw <= ranges::DUL_LAST) {
-    k.raw -= ranges::DUL_FIRST;
-    byte layer = k.flags;
-    // Should be `ShiftToLayer(layer)`, but that gives "narrowing conversion"
-    // warnings that I can't figure out how to resolve
-    k.keyCode = layer + LAYER_SHIFT_OFFSET;
-    k.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
-  }
-  return k;
-}
-
-
-Qukey::Qukey(int8_t layer, KeyAddr key_addr, Key alt_keycode) {
-  this->layer = layer;
-  this->addr = key_addr.toInt();
-  this->alt_keycode = alt_keycode;
-}
-
-Qukey * Qukeys::qukeys;
-uint8_t Qukeys::qukeys_count = 0;
-
-bool Qukeys::active_ = true;
-uint16_t Qukeys::time_limit_ = 250;
-uint8_t Qukeys::release_delay_ = 0;
-QueueItem Qukeys::key_queue_[] = {};
-uint8_t Qukeys::key_queue_length_ = 0;
-bool Qukeys::flushing_queue_ = false;
-uint8_t Qukeys::delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
-int16_t Qukeys::delayed_qukey_start_time_ = 0;
-
-constexpr uint16_t QUKEYS_RELEASE_DELAY_OFFSET = 4096;
-
-// Empty constructor; nothing is stored at the instance level
-Qukeys::Qukeys(void) {}
-
-int8_t Qukeys::lookupQukey(uint8_t key_addr_offset) {
-  if (key_addr_offset == QUKEY_UNKNOWN_ADDR) {
-    return QUKEY_NOT_FOUND;
-  }
-  for (int8_t i = 0; i < qukeys_count; i++) {
-    if (qukeys[i].addr == key_addr_offset) {
-      KeyAddr key_addr(key_addr_offset);
-      if ((qukeys[i].layer == QUKEY_ALL_LAYERS) ||
-          (qukeys[i].layer == Layer.lookupActiveLayer(key_addr))) {
-        return i;
-      }
-    }
-  }
-  return QUKEY_NOT_FOUND;
-}
-
-void Qukeys::enqueue(uint8_t key_addr) {
-  if (key_queue_length_ == QUKEYS_QUEUE_MAX) {
-    flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED);
-    flushQueue();
-  }
-  // default to alternate state to stop keys being flushed from the queue before the grace
-  // period timeout
-  key_queue_[key_queue_length_].addr = key_addr;
-  key_queue_[key_queue_length_].start_time = millis();
-  key_queue_length_++;
-}
-
-int8_t Qukeys::searchQueue(uint8_t key_addr) {
-  for (int8_t i = 0; i < key_queue_length_; i++) {
-    if (key_queue_[i].addr == key_addr)
-      return i;
-  }
-  return QUKEY_NOT_FOUND;
-}
-
-// flush a single entry from the head of the queue
-bool Qukeys::flushKey(bool qukey_state, uint8_t keyswitch_state) {
-  int8_t qukey_index = lookupQukey(key_queue_[0].addr);
-  bool is_qukey = (qukey_index != QUKEY_NOT_FOUND);
-  KeyAddr key_addr(key_queue_[0].addr);
-  Key keycode = Layer.lookupOnActiveLayer(key_addr);
-  bool is_dual_use = isDualUse(keycode);
-  if (is_qukey || is_dual_use) {
-    if (qukey_state == QUKEY_STATE_PRIMARY) {
-      // If there's a release delay in effect, and there's at least one key after it in
-      // the queue, delay this key's release event:
-      if (release_delay_ > 0 && key_queue_length_ > 1
-          && delayed_qukey_addr_ == QUKEY_UNKNOWN_ADDR) {
-        delayed_qukey_start_time_ = millis();
-        // Store the delayed key's address to send the toggle-off event later, if
-        // appropriate:
-        delayed_qukey_addr_ = key_queue_[0].addr;
-        return false;
-      }
-      keycode = getDualUsePrimaryKey(keycode);
-    }
-    if (qukey_state == QUKEY_STATE_ALTERNATE) {
-      if (is_dual_use) {
-        keycode = getDualUseAlternateKey(keycode);
-      } else { // is_qukey
-        keycode = qukeys[qukey_index].alt_keycode;
-      }
-    }
-  }
-
-  // Before calling handleKeyswitchEvent() below, make sure Qukeys knows not to handle
-  // these events:
-  flushing_queue_ = true;
-
-  // Since we're in the middle of the key scan, we don't necessarily
-  // have a full HID report, and we don't want to accidentally turn
-  // off keys that the scan hasn't reached yet, so we force the
-  // current report to be the same as the previous one, then proceed
-  HID_KeyboardReport_Data_t curr_hid_report;
-  // First, save the current report & previous report's modifiers
-  memcpy(&curr_hid_report, &Keyboard.keyReport, sizeof(curr_hid_report));
-  byte prev_hid_report_modifiers = Keyboard.lastKeyReport.modifiers;
-  // Next, copy the old report
-  memcpy(&Keyboard.keyReport, &Keyboard.lastKeyReport, sizeof(Keyboard.keyReport));
-  // Instead of just calling pressKey here, we start processing the
-  // key again, as if it was just pressed, and mark it as injected, so
-  // we can ignore it and don't start an infinite loop. It would be
-  // nice if we could use key_state to also indicate which plugin
-  // injected the key.
-  handleKeyswitchEvent(keycode, key_addr, IS_PRESSED);
-  // Now we send the report (if there were any changes)
-  hid::sendKeyboardReport();
-
-  // Next, we restore the current state of the report
-  memcpy(&Keyboard.keyReport, &curr_hid_report, sizeof(curr_hid_report));
-
-  // Last, if the key is still down, add its code back in
-  if (keyswitch_state & IS_PRESSED) {
-    handleKeyswitchEvent(keycode, key_addr, IS_PRESSED | WAS_PRESSED);
-  } else {
-    // If this is the key that was released, send that release event now
-    handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED);
-    // ...and if there's another key in the queue that's about to also be
-    // flushed, we need to do something to clear this one's modifier flags (if
-    // any) from the previous report
-    if (key_queue_length_ > 1) {
-      // Restore the previous report; whatever was added by this key flush
-      // should not appear in the next one, because this key has now been
-      // released.  This is necessary to handle the case where a qukey's primary
-      // key value has a modifier flag.  Because we copy the last report
-      // directly, we're bypassing the mod-flag rollover protection offered by
-      // the HIDAdapter.  Unfortunately, this does not help if we're rolling
-      // over multiple keys, and one of the unreleased ones has a mod flag.
-      // That's probably rare enough that it won't be noticed, however.  THIS IS
-      // AN UGLY HACK, AND IT SHOULD BE FIXED WITH SOMETHING BETTER EVENTUALLY.
-      // Doing it right will most likely involve either major changes in
-      // KeyboardioHID or Kaleidoscope itself.
-      Keyboard.lastKeyReport.modifiers = prev_hid_report_modifiers;
-    }
-  }
-
-  // Now that we're done sending the report(s), Qukeys can process events again:
-  flushing_queue_ = false;
-
-  // Shift the queue, so key_queue[0] is always the first key that gets processed
-  for (byte i = 0; i < key_queue_length_; i++) {
-    key_queue_[i] = key_queue_[i + 1];
-  }
-  key_queue_length_--;
-  return true;
-}
-
-// flushQueue() is called when a key that's in the key_queue is
-// released. This means that all the keys ahead of it in the queue are
-// still being held, so first we flush them, then we flush the
-// released key (with different parameters).
-void Qukeys::flushQueue(int8_t index) {
-  if (index == QUKEY_NOT_FOUND)
-    return;
-  for (int8_t i = 0; i < index; i++) {
-    if (key_queue_length_ == 0)
-      return;
-    flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
-  }
-  flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
-}
-
-// Flush all the non-qukey keys from the front of the queue
-void Qukeys::flushQueue() {
-  // flush keys until we find a qukey:
-  while (key_queue_length_ > 0 && !isQukey(key_queue_[0].addr)) {
-    if (flushKey(QUKEY_STATE_PRIMARY, IS_PRESSED | WAS_PRESSED) == false)
-      break;
-  }
-}
-
-inline
-bool Qukeys::isQukey(uint8_t addr) {
-  return (isDualUse(addr) || lookupQukey(addr) != QUKEY_NOT_FOUND);
-}
-
-EventHandlerResult Qukeys::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-
-  // If key_addr is not a physical key, ignore it; some other plugin injected it
-  if (!key_addr.isValid() || (key_state & INJECTED) != 0)
-    return EventHandlerResult::OK;
-
-  // If Qukeys is turned off, continue to next plugin
-  if (!active_) {
-    mapped_key = getDualUsePrimaryKey(mapped_key);
+// This is the event handler. It ignores certain events, but mostly just adds
+// them to the Qukeys event queue.
+EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_state) {
+  // If k is not a physical key, ignore it; some other plugin injected it.
+  if (! k.isValid() || (key_state & INJECTED) != 0) {
     return EventHandlerResult::OK;
   }
 
-  // get key addr & qukey (if any)
-  int8_t qukey_index = lookupQukey(key_addr.toInt());
-
-  // If the key was injected (from the queue being flushed)
+  // If the key was injected (from the queue being flushed), we need to ignore
+  // it.
   if (flushing_queue_) {
     return EventHandlerResult::OK;
   }
 
-  // If the key was just pressed:
-  if (keyToggledOn(key_state)) {
-    // If the queue is empty and the key isn't a qukey, proceed:
-    if (key_queue_length_ == 0 &&
-        ! isDualUse(mapped_key) &&
-        qukey_index == QUKEY_NOT_FOUND) {
-      return EventHandlerResult::OK;
+  // If Qukeys is turned off, continue to next plugin.
+  if (! active_) {
+    if (isDualUseKey(key)) {
+      key = queue_head_.primary_key;
     }
-
-    // Otherwise, queue the key and stop processing:
-    enqueue(key_addr.toInt());
-    // flushQueue() has already handled this key release
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  // In all other cases, we need to know if the key is queued already
-  int8_t queue_index = searchQueue(key_addr.toInt());
-
-  // If the key was just released:
-  if (keyToggledOff(key_state)) {
-    // If the key isn't in the key_queue, proceed
-    if (queue_index == QUKEY_NOT_FOUND) {
-      return EventHandlerResult::OK;
-    }
-    // Finally, send the release event of the delayed qukey, if any. This is necessary in
-    // order to send a toggle off of a `ShiftToLayer()` key; otherwise, that layer gets
-    // stuck on if there's a release delay and a rollover.
-    if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
-      flushQueue(queue_index);
-      flushQueue();
-      flushing_queue_ = true;
-      handleKeyswitchEvent(Key_NoKey, KeyAddr(delayed_qukey_addr_), WAS_PRESSED);
-      flushing_queue_ = false;
-      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
-    } else {
-      flushQueue(queue_index);
-      flushQueue();
-    }
-    //if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR)
-    //  return EventHandlerResult::EVENT_CONSUMED;
-    mapped_key = getDualUsePrimaryKey(mapped_key);
     return EventHandlerResult::OK;
   }
 
-  // Otherwise, the key is still pressed
-
-  // Only keys in the queue can still evaluate as qukeys, so all we need to do here is
-  // block events for held keys that are still in the queue.
-  if (queue_index == QUKEY_NOT_FOUND) {
-    // The key is not in the queue; proceed:
-    return EventHandlerResult::OK;
-  } else {
-    // The key is still in the queue; abort:
+  // Deal with keyswitch state changes.
+  if (keyToggledOn(key_state) || keyToggledOff(key_state)) {
+    // If we can't trivially ignore the event, just add it to the queue.
+    event_queue_.append(k, key_state);
+    // In order to prevent overflowing the queue, process it now.
+    if (event_queue_.isFull()) {
+      processQueue();
+    }
+    // Any event that gets added to the queue gets re-processed later, so we
+    // need to abort processing now.
     return EventHandlerResult::EVENT_CONSUMED;
   }
+
+  // The key is being held. We need to determine if we should block it because
+  // its key press event is still in the queue, waiting to be
+  // flushed. Therefore, we search the event queue for the same key. If the
+  // first event we find there is a key press, that means we need to suppress
+  // this hold, because it's still waiting on an earlier event.
+  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
+    if (event_queue_.addr(i) == k) {
+      // If the first matching event is a release, we do not suppress it,
+      // because its press event has already been flushed.
+      if (event_queue_.isRelease(i)) {
+        break;
+      }
+      // Otherwise, the first matching event was a key press, so we need to
+      // suppress it for now.
+      return EventHandlerResult::EVENT_CONSUMED;
+    }
+  }
+
+  // Either this key doesn't have an event in the queue at all, or its first
+  // event in the queue is a release. We treat the key as a normal held key.
+  return EventHandlerResult::OK;
 }
 
+
+// This hook runs once each cycle, and checks to see if the first event in the
+// queue is ready to be flushed. It only allows one event to be flushed per
+// cycle, because the keyboard HID report can't store all of the information
+// necessary to correctly handle all of the rollover corner cases.
 EventHandlerResult Qukeys::beforeReportingState() {
-
-  uint16_t current_time = millis();
-
-  if (delayed_qukey_addr_ != QUKEY_UNKNOWN_ADDR) {
-    int16_t diff_time = current_time - delayed_qukey_start_time_;
-    if (diff_time > release_delay_) {
-      flushKey(QUKEY_STATE_PRIMARY, WAS_PRESSED);
-      flushQueue();
-      // If the release delay has timed out, we need to prevent the wrong toggle-off
-      // event from being sent:
-      delayed_qukey_addr_ = QUKEY_UNKNOWN_ADDR;
+  // For keys that have been physically released, but whose release events are
+  // still waiting to be flushed from the queue, we need to restore them,
+  // because `handleKeyswitchEvent()` didn't get called for those KeyAddrs.
+  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
+    if (event_queue_.isRelease(i)) {
+      KeyAddr k = event_queue_.addr(i);
+      // Now for the tricky bit. Before "restoring" this key hold, we need to
+      // make sure that its key press event has already been flushed from the
+      // queue, so we need to search for a matching key press event preceding
+      // this release event. If we find one, we need to ignore it.
+      if (isKeyAddrInQueueBeforeIndex(k, i)) {
+        continue;
+      }
+      flushing_queue_ = true;
+      handleKeyswitchEvent(Key_NoKey, k, IS_PRESSED | WAS_PRESSED);
+      flushing_queue_ = false;
     }
+  }
+
+  // If any events get flushed from the queue, stop there; we can only safely
+  // send the one report per cycle.
+  if (processQueue()) {
     return EventHandlerResult::OK;
   }
 
-  // If the qukey has been held longer than the time limit, set its
-  // state to the alternate keycode and add it to the report
-  while (key_queue_length_ > 0) {
-    if ((current_time - key_queue_[0].start_time) > time_limit_) {
-      flushKey(QUKEY_STATE_ALTERNATE, IS_PRESSED | WAS_PRESSED);
-      flushQueue();
-    } else {
-      break;
-    }
+  // If we get here, that means that the first event in the queue is a qukey
+  // press. All that's left to do is to check if it's been held long enough that
+  // it has timed out.
+  if (Kaleidoscope.hasTimeExpired(event_queue_.timestamp(0), hold_timeout_)) {
+    // If it's a SpaceCadet-type key, it takes on its primary value, otherwise
+    // it takes on its secondary value.
+    Key event_key = isModifierKey(queue_head_.primary_key) ?
+                    queue_head_.primary_key : queue_head_.alternate_key;
+    flushEvent(event_key);
   }
-
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult Qukeys::onSetup() {
-  // initializing the key_queue seems unnecessary, actually
-  for (int8_t i = 0; i < QUKEYS_QUEUE_MAX; i++) {
-    key_queue_[i].addr = QUKEY_UNKNOWN_ADDR;
-    key_queue_[i].start_time = 0;
-  }
-  key_queue_length_ = 0;
 
-  return EventHandlerResult::OK;
+// -----------------------------------------------------------------------------
+
+
+// This function contains most of the logic behind Qukeys. It gets called after
+// an event gets added to the queue, and again once per cycle. It returns `true`
+// if nothing more should be done, either because the queue is empty, or because
+// an event has already been flushed. It's not perfect because we might be
+// getting more than one event in a given cycle, and because the queue might
+// overflow, but those are both rare cases, and should not cause any serious
+// problems even when they do come up.
+bool Qukeys::processQueue() {
+  // If the queue is empty, signal that the beforeReportingState() process
+  // should abort before checking for a hold timeout (since there's nothing to
+  // do).
+  if (event_queue_.isEmpty()) {
+    return true;
+  }
+
+  // In other cases, we will want the KeyAddr of the first event in the queue.
+  KeyAddr queue_head_addr = event_queue_.addr(0);
+
+  // If that first event is a key release, it can be flushed right away.
+  if (event_queue_.isRelease(0)) {
+    flushEvent(Key_NoKey);
+    return true;
+  }
+
+  // We now know that the first event is a key press. If it's not a qukey, or if
+  // it's only there because the plugin was just turned off, we can flush it
+  // immediately.
+  if (! isQukey(queue_head_addr) || ! active_) {
+    flushEvent(queue_head_.primary_key);
+    return true;
+  }
+
+  // Now we know that the first event is a key press, and that it's a qukey. In
+  // addition, `queue_head_` now contains the primary and secondary Key values
+  // for that qukey.
+
+  // This variable will be used to record the index in the event queue of the
+  // first subsequent key press (after the qukey), if any.
+  uint8_t next_keypress_index{0};
+
+  // Next we record if the qukey (at the head of the queue) is a SpaceCadet-type
+  // key, so we don't need to do it repeatedly later.
+  bool qukey_is_spacecadet = isModifierKey(queue_head_.primary_key);
+
+  // Now we search the queue for events that will let us decide if the qukey
+  // should be flushed (and if so, in which of its two states). We start with
+  // the second event in the queue (index 1).
+  for (uint8_t i{1}; i < event_queue_.length(); ++i) {
+    if (event_queue_.isPress(i)) {
+      // If some other key was pressed after a SpaceCadet key, that means the
+      // SpaceCadet qukey press should be flushed immediately, in its primary
+      // (modifier) state. SpaceCadet keys only fall into their alternate state
+      // if they are pressed and released with no rollover.
+      if (qukey_is_spacecadet) {
+        flushEvent(queue_head_.primary_key);
+        return true;
+      }
+      // Otherwise, we've found a subsequent key press, so we record it for the
+      // overlap comparison later, unless we've already done so.
+      if (next_keypress_index == 0) {
+        next_keypress_index = i;
+      }
+      continue;
+    }
+
+    // Now we know the event `i` is a key release. Next, we check to see if it
+    // is a release of the qukey.
+    if (event_queue_.addr(i) == queue_head_addr) {
+      // The qukey (at the head of the queue) was released. If it is a
+      // SpaceCadet key, or if no rollover compensation is being used, we can
+      // flush it now. Its state depends on whether or not it's a
+      // SpaceCadet-type key.
+      if (next_keypress_index == 0 || overlap_threshold_ == 0) {
+        Key event_key = qukey_is_spacecadet ?
+                        queue_head_.alternate_key : queue_head_.primary_key;
+        flushEvent(event_key);
+        return true;
+      }
+      // Now we know the qukey has been released, but we need to check to see if
+      // it's release should continue to be delayed during rollover -- if the
+      // subsequent key is released soon enough after the qukey is released, it
+      // will meet the maximum overlap requirement to make the qukey take on its
+      // alternate state.
+      uint16_t overlap_start = event_queue_.timestamp(next_keypress_index);
+      uint16_t overlap_end = event_queue_.timestamp(i);
+      if (releaseDelayed(overlap_start, overlap_end)) {
+        continue;
+      }
+      // The subsequent key was held long enough that the qukey can now be
+      // flushed in its primary state. We're treating the rollover as normal
+      // typing rollover, not deliberate chording.
+      flushEvent(queue_head_.primary_key);
+      return true;
+    }
+
+    // Event `i` is a key release of some other key than the qukey. Now we check
+    // to see if it's also a key that was pressed subsequent to the press of the
+    // qukey. We search from the next event after the qukey was pressed, and
+    // stop when we get to the release event we're currently looking at.
+    for (uint8_t j{1}; j < i; ++j) {
+      // If we find an event with a matching KeyAddr, that means there are two
+      // events for the same key in the queue after the qukey was pressed. Since
+      // the second (or maybe third) event `i` is a key release, even if `j` is
+      // not a key press, there must be one in the queue, so it shouldn't be
+      // necessary to confirm that `j` is a actually a key press.
+      if (event_queue_.addr(j) == event_queue_.addr(i)) {
+        flushEvent(queue_head_.alternate_key);
+        return true;
+      }
+    }
+  }
+
+  // Last, since our event queue is finite, we must make sure that there's
+  // always room to add another event to the queue by flushing one whenever the
+  // queue fills up. We could get multiple events in the same cycle, so this is
+  // necessary to avoid reading and writing past the end of the array.
+  if (event_queue_.isFull()) {
+    flushEvent(queue_head_.primary_key);
+    return true;
+  }
+
+  // If we got here, that means we're still waiting for an event (or a timeout)
+  // that will determine the state of the qukey. We do know that the event at
+  // the head of the queue is a qukey press, and that the `queue_head_.*_key`
+  // values are valid. We return false to let the `beforeReportingState()` hook
+  // check for hold timeout.
+  return false;
+}
+
+
+// Flush one event from the head of the queue, with the specified Key value.
+void Qukeys::flushEvent(Key event_key) {
+  // First we record the address and state of the event:
+  KeyAddr queue_head_addr = event_queue_.addr(0);
+  uint8_t keyswitch_state = event_queue_.isRelease(0) ? WAS_PRESSED : IS_PRESSED;
+
+  // Remove the head event from the queue:
+  event_queue_.shift();
+  // This ensures that the flushed event will be ignored by the event handler hook:
+  flushing_queue_ = true;
+  handleKeyswitchEvent(event_key, queue_head_addr, keyswitch_state);
+  flushing_queue_ = false;
+}
+
+
+// Test if the key at address `k` is a qukey. As a side effect, if it is, cache
+// that qukey's primary and alternate `Key` values for use later. We do this
+// because it's much more efficient than doing that as a separate step.
+bool Qukeys::isQukey(KeyAddr k) {
+  // First, look up the value from the keymap. We need to do a full lookup, not
+  // just looking up the cached value (i.e. `Layer.lookup(k)`), because the
+  // cached value will be out of date if a layer change happened since the
+  // keyswitch toggled on.
+  Key key = Layer.lookupOnActiveLayer(k);
+
+  // Next, we check to see if this is a DualUse-type qukey (defined in the keymap)
+  if (isDualUseKey(key)) {
+    return true;
+  }
+
+  // Last, we check the qukeys array for a match
+  uint8_t layer_index = Layer.lookupActiveLayer(k);
+  for (uint8_t i{0}; i < qukeys_count_; ++i) {
+    Qukey qukey = cloneFromProgmem(qukeys_[i]);
+    if (qukey.addr == k) {
+      if ((qukey.layer == layer_index) ||
+          (qukey.layer == layer_wildcard)) {
+        queue_head_.primary_key = key;
+        queue_head_.alternate_key = qukey.alternate_key;
+        return true;
+      }
+    }
+  }
+
+  // If no matches were found, clear queue_head_ and return false
+  queue_head_.primary_key = key;
+  queue_head_.alternate_key = Key_Transparent;
+  return false;
+}
+
+// Specific test for DualUse keys (in-keymap qukeys); this is a separate
+// function because it gets called on its own when Qukeys is turned off. Like
+// isQukey(), it sets `queue_head_.*` as a side effect.
+bool Qukeys::isDualUseKey(Key key) {
+  // Test for DualUse modifiers:
+  if (key >= ranges::DUM_FIRST && key <= ranges::DUM_LAST) {
+    key.raw -= ranges::DUM_FIRST;
+
+    queue_head_.primary_key = key;
+    queue_head_.primary_key.flags = 0;
+
+    queue_head_.alternate_key.raw = key.flags + Key_LeftControl.keyCode;
+    return true;
+  }
+  // Test for DualUse layer shifts:
+  if (key >= ranges::DUL_FIRST && key <= ranges::DUL_LAST) {
+    key.raw -= ranges::DUL_FIRST;
+
+    queue_head_.primary_key = key;
+    queue_head_.primary_key.flags = 0;
+
+    int8_t layer = key.flags;
+    queue_head_.alternate_key = ShiftToLayer(layer);
+    return true;
+  }
+  // It's not a DualUse Key:
+  return false;
+}
+
+
+// Return true if the release of the qukey still needs to be delayed due to
+// rollover. This is called when a qukey is released before a subsequent key,
+// and that key is still being held. It checks to see if the subsequent key has
+// been held long enough that the qukey should be flushed in its primary state
+// (in which case we return `false`).
+bool Qukeys::releaseDelayed(uint16_t overlap_start,
+                            uint16_t overlap_end) const {
+  // We want to calculate the timeout by dividing the overlap duration by the
+  // percentage required to make the qukey take on its alternate state. Since
+  // we're doing integer arithmetic, we need to first multiply by 100, then
+  // divide by the percentage value (as an integer). We use 32-bit integers
+  // here to make sure it doesn't overflow when we multiply by 100.
+  uint32_t overlap_duration = overlap_end - overlap_start;
+  uint32_t release_timeout = (overlap_duration * 100) / overlap_threshold_;
+  return !Kaleidoscope.hasTimeExpired(overlap_start, uint16_t(release_timeout));
+}
+
+
+// Helper function for `beforeReportingState()`. In order to restore a key that
+// has been physically released, but whose release event has not yet been
+// flushed from the queue, we need to be able to search the queue for a given
+// release event's corresponding press event, to add only those holds that
+// should still be present.
+bool Qukeys::isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const {
+  for (uint8_t i{0}; i < index; ++i) {
+    if (event_queue_.addr(i) == k) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+// -----------------------------------------------------------------------------
+
+// This function could get lifted into Kaleidoscope proper, since it might be
+// more generally useful. It's here to provide the test for a SpaceCadet-type
+// qukey, which is any Qukey that has a modifier (including layer shifts) as its
+// primary value.
+bool isModifierKey(Key key) {
+  // If it's a plain keyboard key, return true if its base keycode is a
+  // modifier, otherwise return false:
+  if ((key.flags & (SYNTHETIC | RESERVED)) == 0) {
+    return (key.keyCode >= HID_KEYBOARD_FIRST_MODIFIER &&
+            key.keyCode <= HID_KEYBOARD_LAST_MODIFIER);
+  }
+  // If it's a layer shift key, return true:
+  if (key.flags == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
+      key.keyCode >= LAYER_SHIFT_OFFSET) {
+    return true;
+  }
+  // In all other cases, return false:
+  return false;
 }
 
 } // namespace plugin {
