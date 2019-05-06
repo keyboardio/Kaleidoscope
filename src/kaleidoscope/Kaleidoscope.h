@@ -132,6 +132,28 @@ class Kaleidoscope_ {
     return millis_at_cycle_start_;
   }
 
+  /** Determines if a timer has expired.
+   *
+   * This method should be used whenever checking to see if a timeout has been
+   * reached. It correctly computes timeout values even when integer overflow
+   * occurs, given a start time and a timeout. It takes two parameters:
+   *
+   * - start_time: A timestamp when the timer started, which should be set by
+   *      calling `Kaleidoscope.millisAtCycleStart()`. It can be any integer
+   *      type.
+   *
+   * - ttl: The timeout value or interval to check (ttl = "time to live"). The
+   *      timer expires (and `hasTimeExpired()` returns true) when the time that
+   *      has elapsed since `start_time` exceeds this value. It must be an
+   *      integer type that is no bigger than the type of `start_time`.
+   */
+  template <typename _Timestamp, typename _Timeout>
+  bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
+    _Timestamp current_time = millis_at_cycle_start_;
+    _Timestamp elapsed_time = current_time - start_time;
+    return (elapsed_time > ttl);
+  }
+
   EventHandlerResult onFocusEvent(const char *command) {
     return kaleidoscope::Hooks::onFocusEvent(command);
   }
