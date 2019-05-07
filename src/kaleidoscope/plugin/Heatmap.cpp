@@ -38,8 +38,8 @@ Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
     heatmap_{},
     // max of heatmap_ (we divide by it so we start at 1)
     highest_(1),
-    // next heatmap computation time
-    next_heatmap_comp_time_(0)
+    // last heatmap computation time
+    last_heatmap_comp_time_(Kaleidoscope.millisAtCycleStart())
 {}
 
 cRGB Heatmap::TransientLEDMode::computeColor(float v) {
@@ -211,14 +211,14 @@ void Heatmap::TransientLEDMode::update(void) {
 
   // this methode is called frequently by the LEDControl::loopHook
 
-  // do nothing if we didn't reach next_heatmap_comp_time_ yet
-  if (next_heatmap_comp_time_ && (millis() < next_heatmap_comp_time_))
+  // do nothing if the update interval hasn't elapsed since the previous update
+  if (!Kaleidoscope.hasTimeExpired(last_heatmap_comp_time_, update_delay))
     return;
   // do the heatmap computing
-  // (we reach next_heatmap_comp_time_ or next_heatmap_comp_time_ was never scheduled)
+  // (update_delay milliseconds elapsed since last_heatmap_comp_time)
 
   // schedule the next heatmap computing
-  next_heatmap_comp_time_ = millis() + update_delay;
+  last_heatmap_comp_time_ = Kaleidoscope.millisAtCycleStart();
 
   // for each key
   for (uint8_t r = 0; r < ROWS; r++) {
