@@ -23,7 +23,7 @@ namespace plugin {
 // --- state ---
 Key Leader::sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
 uint8_t Leader::sequence_pos_;
-uint32_t Leader::end_time_;
+uint16_t Leader::start_time_ = 0;
 uint16_t Leader::time_out = 1000;
 const Leader::dictionary_t *Leader::dictionary;
 
@@ -93,7 +93,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
 
     if (keyToggledOff(keyState)) {
       // not active, but a leader key = start the sequence on key release!
-      end_time_ = millis() + time_out;
+      start_time_ = Kaleidoscope.millisAtCycleStart();
       sequence_pos_ = 0;
       sequence_[sequence_pos_].raw = mapped_key.raw;
     }
@@ -112,7 +112,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, byte row, byte col,
       return EventHandlerResult::OK;
     }
 
-    end_time_ = millis() + time_out;
+    start_time_ = Kaleidoscope.millisAtCycleStart();
     sequence_[sequence_pos_].raw = mapped_key.raw;
     action_index = lookup();
 
@@ -142,7 +142,7 @@ EventHandlerResult Leader::afterEachCycle() {
   if (!isActive())
     return EventHandlerResult::OK;
 
-  if (millis() >= end_time_)
+  if (Kaleidoscope.hasTimeExpired(start_time_, time_out))
     reset();
 
   return EventHandlerResult::OK;

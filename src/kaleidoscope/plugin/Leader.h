@@ -52,7 +52,7 @@ class Leader : public kaleidoscope::Plugin {
  private:
   static Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
   static uint8_t sequence_pos_;
-  static uint32_t end_time_;
+  static uint16_t start_time_;
 
   static int8_t lookup(void);
 };
