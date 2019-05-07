@@ -40,7 +40,6 @@ const uint8_t BootAnimationEffect::greeting_[11] PROGMEM = {
 };
 
 EventHandlerResult BootAnimationEffect::onSetup() {
-  start_time_ = Kaleidoscope.millisAtCycleStart();
   return EventHandlerResult::OK;
 }
 
@@ -70,12 +69,12 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
     }
   }
 
-  if ((Kaleidoscope.millisAtCycleStart() - start_time_) > timeout) {
+  if (Kaleidoscope.hasTimeExpired(start_time_, timeout)) {
     current_index_++;
     if (current_index_ == sizeof(greeting_))
       done_ = true;
 
-    start_time_ = Kaleidoscope.millisAtCycleStart();
+    start_time_ += timeout;
     if (row != 255 && col != 255)
       ::LEDControl.refreshAt(row, col);
     return EventHandlerResult::OK;
