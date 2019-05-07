@@ -22,10 +22,10 @@ namespace kaleidoscope {
 namespace plugin {
 
 // --- state ---
-uint32_t TapDance::end_time_;
+uint16_t TapDance::start_time_;
 uint16_t TapDance::time_out = 200;
 TapDance::TapDanceState TapDance::state_[TapDance::TAPDANCE_KEY_COUNT];
-Key TapDance::last_tap_dance_key_;
+Key TapDance::last_tap_dance_key_ = Key_NoKey;
 byte TapDance::last_tap_dance_row_;
 byte TapDance::last_tap_dance_col_;
 
@@ -37,7 +37,7 @@ void TapDance::interrupt(byte row, byte col) {
   tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, state_[idx].count, Interrupt);
   state_[idx].triggered = true;
 
-  end_time_ = 0;
+  last_tap_dance_key_ = Key_NoKey;
 
   KeyboardHardware.maskKey(row, col);
   kaleidoscope::hid::sendKeyboardReport();
@@ -64,7 +64,6 @@ void TapDance::timeout(void) {
 }
 
 void TapDance::release(uint8_t tap_dance_index) {
-  end_time_ = 0;
   last_tap_dance_key_.raw = Key_NoKey.raw;
 
   state_[tap_dance_index].pressed = false;
@@ -76,7 +75,7 @@ void TapDance::tap(void) {
   uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
 
   state_[idx].count++;
-  end_time_ = millis() + time_out;
+  start_time_ = Kaleidoscope.millisAtCycleStart();
 
   tapDanceAction(idx, last_tap_dance_row_, last_tap_dance_col_, state_[idx].count, Tap);
 }
@@ -198,7 +197,7 @@ EventHandlerResult TapDance::afterEachCycle() {
   if (last_tap_dance_key_.raw == Key_NoKey.raw)
     return EventHandlerResult::OK;
 
-  if (end_time_ && millis() > end_time_)
+  if (Kaleidoscope.hasTimeExpired(start_time_, time_out))
     timeout();
 
   return EventHandlerResult::OK;
