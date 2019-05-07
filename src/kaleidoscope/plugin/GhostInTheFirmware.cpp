@@ -46,11 +46,11 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
       return EventHandlerResult::OK;
     }
     is_pressed_ = true;
-    start_time_ = millis();
+    start_time_ = Kaleidoscope.millisAtCycleStart();
   } else {
-    if (is_pressed_ && ((millis() - start_time_) > press_timeout_)) {
+    if (is_pressed_ && Kaleidoscope.hasTimeExpired(start_time_, press_timeout_)) {
       is_pressed_ = false;
-      start_time_ = millis();
+      start_time_ = Kaleidoscope.millisAtCycleStart();
 
       byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
@@ -61,7 +61,7 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
       handleKeyswitchEvent(Key_NoKey, row, col, IS_PRESSED);
-    } else if ((millis() - start_time_) > delay_timeout_) {
+    } else if (Kaleidoscope.hasTimeExpired(start_time_, delay_timeout_)) {
       current_pos_++;
       press_timeout_ = 0;
     }
