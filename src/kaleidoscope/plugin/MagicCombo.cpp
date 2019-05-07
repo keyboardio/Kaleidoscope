@@ -21,7 +21,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint16_t MagicCombo::min_interval = 500;
-uint32_t MagicCombo::end_time_;
+uint16_t MagicCombo::start_time_ = 0;
 
 EventHandlerResult MagicCombo::beforeReportingState() {
   for (byte i = 0; i < magiccombo::combos_length; i++) {
@@ -42,11 +42,11 @@ EventHandlerResult MagicCombo::beforeReportingState() {
     if (j != KeyboardHardware.pressedKeyswitchCount())
       match = false;
 
-    if (match && (millis() >= end_time_)) {
+    if (match && Kaleidoscope.hasTimeExpired(start_time_, min_interval)) {
       ComboAction action = (ComboAction) pgm_read_ptr(&(magiccombo::combos[i].action));
 
       (*action)(i);
-      end_time_ = millis() + min_interval;
+      start_time_ = Kaleidoscope.millisAtCycleStart();
     }
   }
 
