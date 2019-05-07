@@ -43,7 +43,7 @@ class AlphaSquareEffect : public Plugin,
     void refreshAt(byte row, byte col) final;
 
    private:
-    uint32_t end_time_left_, end_time_right_;
+    uint16_t start_time_left_, start_time_right_;
     Key last_key_left_, last_key_right_;
 
     friend class AlphaSquareEffect;

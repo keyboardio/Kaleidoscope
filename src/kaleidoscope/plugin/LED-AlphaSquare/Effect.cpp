@@ -23,23 +23,23 @@ namespace plugin {
 uint16_t AlphaSquareEffect::length = 1000;
 
 AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect */*parent*/)
-  : end_time_left_(0),
-    end_time_right_(0),
-    last_key_left_(Key{}),
-    last_key_right_(Key{})
+  : last_key_left_(Key_NoKey),
+    last_key_right_(Key_NoKey)
 {}
 
 void AlphaSquareEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  if (end_time_left_ && millis() > end_time_left_) {
+  if (last_key_left_ != Key_NoKey &&
+      Kaleidoscope.hasTimeExpired(start_time_left_, length)) {
     ::AlphaSquare.clear(last_key_left_);
-    end_time_left_ = 0;
+    last_key_left_ = Key_NoKey;
   }
-  if (end_time_right_ && millis() > end_time_right_) {
+  if (last_key_right_ != Key_NoKey &&
+      Kaleidoscope.hasTimeExpired(start_time_right_, length)) {
     ::AlphaSquare.clear(last_key_right_, 10);
-    end_time_right_ = 0;
+    last_key_right_ = Key_NoKey;
   }
 }
 
@@ -49,11 +49,11 @@ void AlphaSquareEffect::TransientLEDMode::refreshAt(byte row, byte col) {
   Key key = last_key_left_;
 
   if (col < COLS / 2) {
-    timed_out = !end_time_left_ || (end_time_left_ && millis() > end_time_left_);
+    timed_out = Kaleidoscope.hasTimeExpired(start_time_left_, length);
   } else {
     key = last_key_right_;
     display_col = 10;
-    timed_out = !end_time_right_ || (end_time_right_ && millis() > end_time_right_);
+    timed_out = Kaleidoscope.hasTimeExpired(start_time_right_, length);
   }
 
   if (!::AlphaSquare.isSymbolPart(key, 0, display_col, row, col) || timed_out)
@@ -83,11 +83,11 @@ EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row,
 
   if (col < COLS / 2) {
     this_led_mode->last_key_left_ = mappedKey;
-    this_led_mode->end_time_left_ = millis() + length;
+    this_led_mode->start_time_left_ = Kaleidoscope.millisAtCycleStart();
   } else {
     prev_key = this_led_mode->last_key_right_;
     this_led_mode->last_key_right_ = mappedKey;
-    this_led_mode->end_time_right_ = millis() + length;
+    this_led_mode->start_time_right_ = Kaleidoscope.millisAtCycleStart();
     display_col = 10;
   }
 
