@@ -20,12 +20,12 @@
 
 namespace kaleidoscope {
 namespace plugin {
-uint32_t CycleTimeReport::next_report_time_;
+uint16_t CycleTimeReport::last_report_time_;
 uint32_t CycleTimeReport::loop_start_time_;
 uint32_t CycleTimeReport::average_loop_time;
 
 EventHandlerResult CycleTimeReport::onSetup() {
-  next_report_time_ = millis() + 1000;
+  last_report_time_ = Kaleidoscope.millisAtCycleStart();
   return EventHandlerResult::OK;
 }
 
@@ -42,11 +42,11 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
   else
     average_loop_time = loop_time;
 
-  if (millis() >= next_report_time_) {
+  if (Kaleidoscope.hasTimeExpired(last_report_time_, uint16_t(1000))) {
     cycleTimeReport();
 
     average_loop_time = 0;
-    next_report_time_ = millis() + 1000;
+    last_report_time_ = Kaleidoscope.millisAtCycleStart();
   }
 
   return EventHandlerResult::OK;
