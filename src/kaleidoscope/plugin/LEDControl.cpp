@@ -28,8 +28,8 @@ static constexpr uint8_t uninitialized_mode_id = 255;
 uint8_t LEDControl::mode_id = uninitialized_mode_id;
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_;
-uint16_t LEDControl::syncDelay = 32;
-uint16_t LEDControl::syncTimer;
+uint8_t LEDControl::syncDelay = 32;
+uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::paused = false;
 
 LEDControl::LEDControl(void) {
@@ -125,8 +125,6 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
 
   LEDModeManager::setupPersistentLEDModes();
 
-  syncTimer = millis() + syncDelay;
-
   if (mode_id == uninitialized_mode_id) {
     set_mode(0);
   }
@@ -153,12 +151,7 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (paused)
     return kaleidoscope::EventHandlerResult::OK;
 
-  // unsigned subtraction means that as syncTimer rolls over
-  // the same interval is kept
-  uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - syncTimer;
-  // on some platforms, the subtraction in the comparison results in a signed
-  // operation, resulting in syncLeds() no longer getting called.
-  if (elapsed > syncDelay) {
+  if (Kaleidoscope.hasTimeExpired(syncTimer, syncDelay)) {
     syncLeds();
     syncTimer += syncDelay;
     update();
