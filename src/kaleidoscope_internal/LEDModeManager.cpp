@@ -66,13 +66,6 @@ kaleidoscope::plugin::LEDMode *LEDModeManager::getLEDMode(uint8_t mode_id) {
   //              to enable the possible future introduction of a virtual
   //              destructor for class LEDMode.
   //
-  //              A virtual destructor would enable LEDModes to do any types of
-  //              cleanup on destruction. But as it's a virtual method,
-  //              introducing such a destructor would create additional
-  //              entries in vtables and mean higher PROGMEM consumption.
-  //              If it will be introduced in future versions of Kaleidoscope
-  //              uncomment the commented lines below.
-  //
   if (current_led_mode_dynamic) {
     cur_led_mode->~LEDMode();
   }
