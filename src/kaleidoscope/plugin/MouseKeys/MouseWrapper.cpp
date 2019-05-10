@@ -114,22 +114,17 @@ void MouseWrapper_::warp(uint8_t warp_cmd) {
   warp_jump(section_left, section_top, next_height, next_width);
 }
 
-// cubic wave function based on code from FastLED
-// produces a shape similar to a sine curve from 0 to 255
-// (slow growth at 0, fast growth in the middle, slow growth at 255)
-// http://www.wolframalpha.com/input/?i=((3((x)**2)%2F256)+-+((2((x)(x)(x%2F256))%2F256)))+%2B+1
+// To approximate a sine wave, this uses two parabolas. Acceleration begins
+// slowly, grows rapidly in the middle, and slows again near the top.
 uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
-  uint16_t i = cycles;
-
-  uint16_t ii = (i * i) >> 8;
-  uint16_t iii = (ii * i) >> 8;
-
-  i = ((3 * ii) - (2 * iii)) + 1;
-
-  // Just in case (may go up to 256 at peak)
-  if (i > 255) i = 255;
-
-  return i;
+  if (cycles < 128) {
+    uint16_t c2 = cycles * cycles;
+    return 1 + (c2 >> 7);
+  } else {
+    uint16_t remaining_cycles = 256 - cycles;
+    uint16_t c2 = remaining_cycles * remaining_cycles;
+    return 255 - (c2 >> 7);
+  }
 }
 
 // Get the diagonalized version of a value, i.e. value * sqrt(2) / 2. If the
