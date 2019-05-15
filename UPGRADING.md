@@ -443,6 +443,14 @@ The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability contr
 
 The [EEPROM-Keymap](doc/plugin/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed. Supplying a second argument will continue to work until its scheduled removal by **2019-04-30**.
 
+## keymaps array and KEYMAPS and KEYMAPS_STACKED macros
+
+The `keymaps` array has been replaced with a `keymaps_linear` array. This new array treats each layer as a simple one dimensional array of keys, rather than a two dimensional array of arrays of rows. At the same time, the `KEYMAPS` and `KEYMAPS_STACKED` macros that were previously defined in each hardware implmentation class have been replaced with `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros in each hardware class. This change should be invisible to users, but will require changes by any plugin that accessed the 'keymaps' variable directly.
+
+Code like `key.raw = pgm_read_word(&(keymaps[layer][row][col])); return key;` should be changed to look like this: `return keyFromKeymap(layer, row, col);`
+
+The old, deprecated, API will be removed on **2019-08-13**.
+
 ### Source code and namespace rearrangement
 
 With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.

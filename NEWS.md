@@ -91,6 +91,15 @@ Changing layers now triggers the `onLayerChange` event - but only if there was r
 
 To make it easier to create custom shortcuts, that do not interfere with system ones, an old trick is to use many modifiers. To make this easier, `Ctrl+Shift+Alt` is commonly abbreviated as `Meh`, while `Ctrl+Shift+Alt+Gui` is often called `Hyper`. To support this, we offer the `Key_Meh` and `Key_Hyper` aliases, along with `MEH(k)` and `HYPER(k)` to go with them.
 
+## `keymap` internals are now a one dimensional array
+
+Historically, Kaleidoscope used the dimensional array `keymaps` to map between logical key position and hardware key position. `keymaps` has been replaced with `keymaps_linear`, which moves the keymap to a simple array. This makes it easier to support new features in Kaleidoscope and simplifies some code
+
+
+## `PER_KEY_DATA` macros
+
+New `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros are available (when defined by a hardware implementation). These macros make it easier to build features like `KEYMAPS` that track some data about each key on a keyboard. 
+
 ## New hardware support
 
 Kaleidoscope has been ported to the following devices:
