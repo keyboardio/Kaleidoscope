@@ -36,6 +36,8 @@
 // explain what it does. But the explanations are good enough to actually
 // understand what's going on.
 
+#define CAT3(A, B, C) A##B##C
+
 #define DEFINE_HAS_MEMBER_TRAITS(PREFIX, MEMBER_NAME)                   __NL__ \
                                                                         __NL__ \
    /* This defines a templated class PREFIX##_HasMember_##MEMBER_NAME.  __NL__ \
@@ -44,7 +46,7 @@
     * string tokens to form new identifiers (here the struct name).     __NL__ \
     */                                                                  __NL__ \
    template<typename T>                                                 __NL__ \
-   struct PREFIX##_HasMember_##MEMBER_NAME {                            __NL__ \
+   struct CAT3(PREFIX, _HasMember_, MEMBER_NAME) {                      __NL__ \
                                                                         __NL__ \
       /* This code defines an inner class, Fallback, with one           __NL__ \
        * member – named MEMBER_NAME (remember that MEMBER_NAME is a     __NL__ \
