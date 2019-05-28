@@ -16,6 +16,7 @@
 
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-FocusSerial.h"
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include "kaleidoscope_internal/LEDModeManager.h"
 
 using namespace kaleidoscope::internal;
@@ -23,37 +24,40 @@ using namespace kaleidoscope::internal;
 namespace kaleidoscope {
 namespace plugin {
 
-static constexpr uint8_t uninitialized_mode_id = 255;
 
-uint8_t LEDControl::mode_id = uninitialized_mode_id;
+LEDControl::settings_t LEDControl::settings = {
+  .mode_id = 0, // defaults
+};
+
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_;
 uint16_t LEDControl::syncDelay = 32;
 uint16_t LEDControl::syncTimer;
 bool LEDControl::paused = false;
+uint16_t LEDControl::settings_base_;
 
 LEDControl::LEDControl(void) {
 }
 
 void LEDControl::next_mode(void) {
-  mode_id++;
+  settings.mode_id++;
 
-  if (mode_id >= num_led_modes_) {
+  if (settings.mode_id >= num_led_modes_) {
     return set_mode(0);
   }
 
-  return set_mode(mode_id);
+  return set_mode(settings.mode_id);
 }
 
 void LEDControl::prev_mode(void) {
-  if (mode_id == 0) {
+  if (settings.mode_id == 0) {
     // wrap around
-    mode_id = num_led_modes_ - 1;
+    settings.mode_id = num_led_modes_ - 1;
   } else {
-    mode_id--;
+    settings.mode_id--;
   }
 
-  return set_mode(mode_id);
+  return set_mode(settings.mode_id);
 }
 
 void
@@ -61,11 +65,15 @@ LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= num_led_modes_)
     return;
 
-  mode_id = mode_;
+  settings.mode_id = mode_;
 
   // Cache the LED mode
   //
-  cur_led_mode_ = LEDModeManager::getLEDMode(mode_id);
+  cur_led_mode_ = LEDModeManager::getLEDMode(settings.mode_id);
+
+  // store the mode
+  KeyboardHardware.storage().put(settings_base_, settings);
+  KeyboardHardware.storage().commit();
 
   refreshAll();
 }
@@ -96,12 +104,12 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (int8_t i = 0; i < LED_COUNT; i++) {
+  for (uint8_t i = 0; i < LED_COUNT; i++) {
     setCrgbAt(i, color);
   }
 }
 
-void LEDControl::setCrgbAt(int8_t i, cRGB crgb) {
+void LEDControl::setCrgbAt(uint8_t i, cRGB crgb) {
   KeyboardHardware.setCrgbAt(i, crgb);
 }
 
@@ -109,7 +117,7 @@ void LEDControl::setCrgbAt(byte row, byte col, cRGB color) {
   KeyboardHardware.setCrgbAt(row, col, color);
 }
 
-cRGB LEDControl::getCrgbAt(int8_t i) {
+cRGB LEDControl::getCrgbAt(uint8_t i) {
   return KeyboardHardware.getCrgbAt(i);
 }
 
@@ -127,9 +135,20 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
 
   syncTimer = millis() + syncDelay;
 
-  if (mode_id == uninitialized_mode_id) {
-    set_mode(0);
+  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
+
+  // If mode_id is max, assume that EEPROM is uninitialized, and store the
+  // defaults.
+  uint8_t mode_id;
+  KeyboardHardware.storage().get(settings_base_, mode_id);
+  if (mode_id == 0xFF) {
+    KeyboardHardware.storage().put(settings_base_, settings);
+    KeyboardHardware.storage().commit();
   }
+
+  KeyboardHardware.storage().get(settings_base_, settings);
+
+  set_mode(settings.mode_id);
 
   return EventHandlerResult::OK;
 }
@@ -234,16 +253,15 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     } else if (peek == 'p') {
       ::LEDControl.prev_mode();
     } else {
-      uint8_t mode_id;
 
-      ::Focus.read(mode_id);
-      ::LEDControl.set_mode(mode_id);
+      ::Focus.read(LEDControl::settings.mode_id);
+      ::LEDControl.set_mode(LEDControl::settings.mode_id);
     }
     break;
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (int8_t idx = 0; idx < LED_COUNT; idx++) {
+      for (uint8_t idx = 0; idx < LED_COUNT; idx++) {
         cRGB c = ::LEDControl.getCrgbAt(idx);
 
         ::Focus.send(c);

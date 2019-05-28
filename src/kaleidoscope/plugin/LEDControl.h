@@ -54,7 +54,7 @@ class LEDControl : public kaleidoscope::Plugin {
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
-    return mode_id;
+    return settings.mode_id;
   }
   static LEDMode *get_mode() {
     return cur_led_mode_;
@@ -74,16 +74,23 @@ class LEDControl : public kaleidoscope::Plugin {
     set_all_leds_to({0, 0, 0});
 
     cur_led_mode_->onActivate();
+
   }
+
+  typedef struct settings_t {
+    uint8_t mode_id;
+  } settings_t;
+
+  static settings_t settings;
 
   DEPRECATED(LED_CONTROL_MODE_ADD)
   static int8_t mode_add(LEDMode *mode) {
     return 0;
   }
 
-  static void setCrgbAt(int8_t i, cRGB crgb);
+  static void setCrgbAt(uint8_t i, cRGB crgb);
   static void setCrgbAt(byte row, byte col, cRGB color);
-  static cRGB getCrgbAt(int8_t i);
+  static cRGB getCrgbAt(uint8_t i);
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
@@ -104,9 +111,9 @@ class LEDControl : public kaleidoscope::Plugin {
 
  private:
   static uint16_t syncTimer;
-  static uint8_t mode_id;
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
+  static uint16_t settings_base_;
 };
 
 class FocusLEDCommand : public Plugin {
