@@ -136,7 +136,7 @@ class Bitfield : public internal::_BaseBitfield {
   //       access method isBitSet(raw_pos) otherwise.
   //
   constexpr bool operator[](uint8_t raw_pos) const {
-    return this->isBitSetPROGMEM_P(raw_pos);
+    return this->isBitSetPROGMEM_P(&bits_, raw_pos);
   }
 
  private:
