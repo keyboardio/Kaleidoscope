@@ -17,6 +17,10 @@
 
 #pragma once
 
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#error "Firmware Dump is not available for virtual builds"
+#else
+
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
@@ -36,3 +40,5 @@ class FirmwareDump : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::plugin::FirmwareDump FirmwareDump;
+
+#endif

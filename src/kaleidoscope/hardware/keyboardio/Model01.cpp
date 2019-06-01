@@ -16,6 +16,7 @@
  */
 
 #ifdef ARDUINO_AVR_MODEL01
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
@@ -354,4 +355,5 @@ uint8_t Model01::previousPressedKeyswitchCount() {
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
 
+#endif
 #endif
