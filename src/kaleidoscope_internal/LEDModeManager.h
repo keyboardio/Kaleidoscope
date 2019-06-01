@@ -23,12 +23,17 @@
 
 #include <stddef.h>
 
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#include <new>
+#else
+
 // To enable placement new, we need to supply a global operator
 // function.
 //
 inline void* operator new (size_t, void* __p) throw() {
   return __p;
 }
+#endif
 
 namespace kaleidoscope {
 
