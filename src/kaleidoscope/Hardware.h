@@ -32,16 +32,7 @@
  * HARDWARE_IMPLEMENTATION - the name of your public object conforming to
  *   the 'class Hardware' interface below.
  * CRGB(r,g,b) - explained below
- */
-
-/**
- * Forward declaration of the cRGB structure.
- *
- * The base class does not define the cRGB structure, that is left up to the
- * individual Hardware libraries. We do a forward declaration here, because the
- * base hardware has methods that depend on a cRGB structure.
- *
- * The structure will need to have at least three members: r, g, and b -
+ * cRGB, a structure with at least three members: r, g, and b -
  * compilation will fail otherwise.
  *
  * Despite its name, the members do not need to be in the order r g b -- most
@@ -50,7 +41,6 @@
  * colors where r, g, and b do not have the same value. Each Hardware library
  * defines a CRGB(r,g,b) macro which returns a literal cRGB with the given values.
  */
-typedef struct cRGB cRGB;
 
 namespace kaleidoscope {
 /** Kaleidoscope Hardware base class.
