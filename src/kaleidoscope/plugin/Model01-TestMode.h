@@ -16,6 +16,10 @@
 
 #pragma once
 
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#error "Model01 testmode not available for virtual builds"
+#else
+
 #ifdef ARDUINO_AVR_MODEL01
 
 #include <Arduino.h>
@@ -49,5 +53,7 @@ class TestMode : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::plugin::TestMode TestMode;
+
+#endif
 
 #endif

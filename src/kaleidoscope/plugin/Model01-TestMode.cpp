@@ -14,6 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
 #if ARDUINO_AVR_MODEL01
 
 #include "Kaleidoscope.h"
@@ -172,5 +174,7 @@ void TestMode::run_tests() {
 }
 
 kaleidoscope::plugin::TestMode TestMode;
+
+#endif
 
 #endif
