@@ -17,6 +17,10 @@
 
 #include <Kaleidoscope-USB-Quirks.h>
 
+#if KALEIDOSCOPE_HIDADAPTOR_ENABLE_KEYBOARD_BOOT_PROTOCOL
+#include "BootKeyboard/BootKeyboard.h"
+#endif
+
 namespace kaleidoscope {
 namespace plugin {
 
