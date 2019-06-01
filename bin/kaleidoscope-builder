@@ -58,23 +58,42 @@ build_filenames () {
 
 enable_ccache () {
     if  [ "$(command -v ccache)" ]; then
-    if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
-	mkdir -p "$CCACHE_WRAPPER_PATH"
-	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
-	ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
-	ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
-	ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
-	ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
-	ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
-    fi
-    export CCACHE_PATH=${COMPILER_PATH}/
-    CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
+      if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
+         mkdir -p "$CCACHE_WRAPPER_PATH"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc" ]; then
+         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++" ]; then
+         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
+         ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
+         ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
+         ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
+      fi
+      
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
+         ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
+      fi
+    
+      export CCACHE_PATH=${COMPILER_PATH}/
+      CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
     fi
 }
 
 
 firmware_size () {
-    if [ "${BOARD}" = "virtual" ]; then
+    if [ "${ARCH}" = "x86" ]; then
         echo "[Size not computed for virtual build]"
         return
     fi
@@ -245,7 +264,7 @@ compile () {
         # We want literal backslashes here, not arrays.
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
-
+    
     SAVED_BOARD="${BOARD}"
     SAVED_FQBN="${FQBN}"
     if [ -e "${SKETCH_DIR}/.kaleidoscope-builder.conf" ]; then
@@ -253,8 +272,12 @@ compile () {
         BOARD="$(. "${SKETCH_DIR}"/.kaleidoscope-builder.conf && echo "${BOARD}")"
         # shellcheck disable=SC1090
         FQBN="$(. "${SKETCH_DIR}"/.kaleidoscope-builder.conf && echo "${FQBN}")"
-        if [ "${SAVED_FQBN}" = "${FQBN}" ] || [ -z "${FQBN}" ]; then
-            FQBN="keyboardio:avr:${BOARD}"
+        if [ -n "${BOARD}" ]; then
+            if [ -z "${ARCH}" ]; then
+               FQBN="keyboardio:avr:${BOARD}"
+            else
+               FQBN="keyboardio:${ARCH}:${BOARD}"
+            fi
         fi
     fi
 
