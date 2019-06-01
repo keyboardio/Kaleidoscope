@@ -18,7 +18,6 @@
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
-#include <EEPROM.h>
 
 namespace kaleidoscope {
 namespace plugin {

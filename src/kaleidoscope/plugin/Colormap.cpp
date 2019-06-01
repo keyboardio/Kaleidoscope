@@ -17,9 +17,6 @@
 
 
 #include <Kaleidoscope-Colormap.h>
-
-#include <EEPROM.h>
-
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
 
