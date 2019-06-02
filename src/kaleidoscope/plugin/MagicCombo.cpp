@@ -43,7 +43,7 @@ EventHandlerResult MagicCombo::beforeReportingState() {
       match = false;
 
     if (match && Kaleidoscope.hasTimeExpired(start_time_, min_interval)) {
-      ComboAction action = (ComboAction) pgm_read_ptr(&(magiccombo::combos[i].action));
+      ComboAction action = (ComboAction) pgm_read_ptr((void const **) & (magiccombo::combos[i].action));
 
       (*action)(i);
       start_time_ = Kaleidoscope.millisAtCycleStart();
