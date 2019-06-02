@@ -132,7 +132,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  action_t leaderAction = (action_t) pgm_read_ptr(&(dictionary[action_index].action));
+  action_t leaderAction = (action_t) pgm_read_ptr((void const **) & (dictionary[action_index].action));
   (*leaderAction)(action_index);
 
   return EventHandlerResult::EVENT_CONSUMED;

@@ -48,7 +48,7 @@ void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
   uint8_t idx = cycle_count_ % cycle_size;
   Key key;
 
-  key.raw = pgm_read_word(cycle_steps + idx);
+  key.raw = pgm_read_word(&cycle_steps[idx].raw);
   replace(key);
 }
 

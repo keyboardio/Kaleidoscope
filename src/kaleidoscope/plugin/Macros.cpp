@@ -174,26 +174,26 @@ Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
     key.keyCode = Key_Spacebar.keyCode;
     break;
   case 0x21 ... 0x30:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x21]);
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x21].raw);
     break;
   case 0x31 ... 0x39:
     key.keyCode = Key_1.keyCode + ascii_code - 0x31;
     break;
   case 0x3A ... 0x40:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x3A + 16]);
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x3A + 16].raw);
     break;
   case 0x41 ... 0x5A:
     key.flags = SHIFT_HELD;
     key.keyCode = Key_A.keyCode + ascii_code - 0x41;
     break;
   case 0x5B ... 0x60:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23]);
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23].raw);
     break;
   case 0x61 ... 0x7A:
     key.keyCode = Key_A.keyCode + ascii_code - 0x61;
     break;
   case 0x7B ... 0x7E:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29]);
+    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29].raw);
     break;
   }
   return key;

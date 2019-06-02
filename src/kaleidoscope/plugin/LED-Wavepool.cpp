@@ -78,9 +78,9 @@ void WavepoolEffect::TransientLEDMode::raindrop(uint8_t x, uint8_t y, int8_t *pa
 // this is a lot smaller than the standard library's rand(),
 // and still looks random-ish
 uint8_t WavepoolEffect::TransientLEDMode::wp_rand() {
-  static uint16_t offset = 0x400;
+  static intptr_t offset = 0x400;
   offset = ((offset + 1) & 0x4fff) | 0x400;
-  return (Kaleidoscope.millisAtCycleStart() / MS_PER_FRAME) + pgm_read_byte(offset);
+  return (Kaleidoscope.millisAtCycleStart() / MS_PER_FRAME) + pgm_read_byte((const uint8_t *)offset);
 }
 
 void WavepoolEffect::TransientLEDMode::update(void) {
