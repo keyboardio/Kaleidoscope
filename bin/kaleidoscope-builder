@@ -93,7 +93,7 @@ enable_ccache () {
 
 
 firmware_size () {
-    if [ "${ARCH}" = "x86" ]; then
+    if [ "${ARCH}" = "virtual" ]; then
         echo "[Size not computed for virtual build]"
         return
     fi
