@@ -124,7 +124,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
 
         if (prev_key_ == mapped_key && isStickable(mapped_key)) {
           if ((Kaleidoscope.millisAtCycleStart() - start_time_) <=
-              ((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
+              uint16_t((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
             state_[idx].sticky = true;
             prev_key_ = mapped_key;
           }
