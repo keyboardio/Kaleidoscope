@@ -44,8 +44,8 @@ bool _BaseBitfield::isBitSetPROGMEM_P(const void *bit_field, uint8_t raw_pos) {
   uint8_t byte_id = raw_pos >> 3;
   uint8_t bit_pos = raw_pos & 0x7;
   const uint8_t *bytes = reinterpret_cast<const uint8_t *>(bit_field);
-  uint8_t byte = pgm_read_byte(&(bytes[byte_id]));
-  return byte & (0x1 << bit_pos);
+  uint8_t the_byte = pgm_read_byte(&(bytes[byte_id]));
+  return the_byte & (0x1 << bit_pos);
 }
 
 } // end namespace internal
