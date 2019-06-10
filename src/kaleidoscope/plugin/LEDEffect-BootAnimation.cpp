@@ -60,7 +60,7 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
       Key k = Layer.lookupOnActiveLayer(r, c);
       Key g;
       g.flags = 0;
-      g.keyCode = pgm_read_word(&greeting_[current_index_]);
+      g.keyCode = pgm_read_byte(&greeting_[current_index_]);
 
       if (k.raw == g.raw) {
         row = r;
