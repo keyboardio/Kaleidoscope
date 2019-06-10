@@ -46,6 +46,7 @@ class LEDMode : public kaleidoscope::Plugin,
   friend class LEDControl;
   friend class kaleidoscope::internal::LEDModeManager;
  protected:
+
   // These methods should only be called by LEDControl.
 
   /** One-time setup, called at keyboard boot.
