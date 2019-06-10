@@ -21,10 +21,19 @@
 // that should be enough for almost any layout.
 #define MAX_LAYERS sizeof(uint32_t) * 8;
 
-// The total number of defined layers in the firmware sketch keymaps_linear[]
-// array. If the keymap wasn't defined using KEYMAPS(), set it to the
-// highest possible number of layers.
-uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
+// The following definitions of layer_count and keymaps_linear
+// are used if the user does not define a keymap within the sketch
+// by means of the KEYMAP macro.
+// This can e.g. be the case if some sort of plugin is used that features
+// a different layer system and registeres it with the layer class.
+// In that case the layer lookup through keymaps_linear is completely
+// disabled but the weak versions must be there to make the linker happy.
+//
+__attribute__((weak))
+uint8_t layer_count = 0;
+
+__attribute__((weak))
+extern const Key keymaps_linear[][ROWS * COLS] = {};
 
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
