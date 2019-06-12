@@ -89,6 +89,14 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node) {
 }
 
 int HID_::SendReport(uint8_t id, const void* data, int len) {
+    auto result = SendReport_(id, data, len);
+    if(send_report_hook) {
+        (*send_report_hook)(id, data, len, result);
+    }
+    return result;
+}
+
+int HID_::SendReport_(uint8_t id, const void* data, int len) {
     auto ret = USB_Send(pluggedEndpoint, &id, 1);
     if (ret < 0) return ret;
     auto ret2 = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, len);
