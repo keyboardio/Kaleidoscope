@@ -32,14 +32,13 @@ THE SOFTWARE.
 #include "../DeviceAPIs/AbsoluteMouseAPI.h"
 
 
-class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI
-{
-public:
+class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI {
+  public:
     SingleAbsoluteMouse_(void);
     uint8_t getLeds(void);
     uint8_t getProtocol(void);
 
-protected:
+  protected:
     // Implementation of the PUSBListNode
     int getInterface(uint8_t* interfaceCount);
     int getDescriptor(USBSetup& setup);
