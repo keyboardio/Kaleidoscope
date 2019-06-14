@@ -61,7 +61,7 @@ class Heatmap : public Plugin,
 
     uint16_t heatmap_[ROWS][COLS];
     uint16_t highest_;
-    uint32_t next_heatmap_comp_time_;
+    uint16_t last_heatmap_comp_time_;
 
     void shiftStats(void);
     cRGB computeColor(float v);

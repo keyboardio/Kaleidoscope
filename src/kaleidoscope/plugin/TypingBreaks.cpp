@@ -30,6 +30,7 @@ TypingBreaks::settings_t TypingBreaks::settings = {
   .right_hand_max_keys = 0
 };
 
+bool TypingBreaks::keyboard_locked_{false};
 uint32_t TypingBreaks::session_start_time_;
 uint32_t TypingBreaks::last_key_time_;
 uint32_t TypingBreaks::lock_start_time_;
@@ -42,22 +43,17 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byt
   uint32_t idle_time_limit = settings.idle_time_limit * 1000;
   uint32_t lock_time_out = settings.lock_time_out * 1000;
 
-  // If we are locked, and didn't time out yet, no key has to be pressed.
-  if (lock_start_time_ && (millis() - lock_start_time_ <= lock_length)) {
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
   // If we are locked...
-  if (lock_start_time_) {
+  if (keyboard_locked_) {
     // ...and the lock has not expired yet
-    if (millis() - lock_start_time_ <= lock_length) {
+    if (!Kaleidoscope.hasTimeExpired(lock_start_time_, lock_length)) {
       return EventHandlerResult::EVENT_CONSUMED;  // remain locked
     }
 
     // ...otherwise clear the lock
-    lock_start_time_ = 0;
+    keyboard_locked_ = false;
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = millis();
+    session_start_time_ = Kaleidoscope.millisAtCycleStart();
 
     TypingBreak(false);
   }
@@ -65,31 +61,26 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byt
   // Any other case, we are not locked yet! (or we just unlocked)
 
   // Are we still in the same session?
-  if (last_key_time_ && (millis() - last_key_time_) >= idle_time_limit) {
+  if (Kaleidoscope.hasTimeExpired(last_key_time_, idle_time_limit)) {
     // No, we are not. Clear timers and start over.
-    lock_start_time_ = 0;
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = millis();
+    session_start_time_ = Kaleidoscope.millisAtCycleStart();
   }
 
-  // If we have a limit on the left hand, and we reached it, lock up!
-  if (settings.left_hand_max_keys && left_hand_keys_ >= settings.left_hand_max_keys) {
-    lock_start_time_ = millis();
-    TypingBreak(true);
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  // If we have a limit on the right hand, and we reached it, lock up!
-  if (settings.right_hand_max_keys && right_hand_keys_ >= settings.right_hand_max_keys) {
-    lock_start_time_ = millis();
+  // If we have a limit on the either hand, and we reached it, lock up!
+  if ((settings.left_hand_max_keys && left_hand_keys_ >= settings.left_hand_max_keys) ||
+      (settings.right_hand_max_keys && right_hand_keys_ >= settings.right_hand_max_keys)) {
+    keyboard_locked_ = true;
+    lock_start_time_ = last_key_time_;
     TypingBreak(true);
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (lock_time_out) {
     // Is the session longer than lock_time_out?
-    if (millis() - session_start_time_ >= lock_time_out) {
+    if (Kaleidoscope.hasTimeExpired(session_start_time_, lock_time_out)) {
       // Yeah, it is.
+      keyboard_locked_ = true;
       lock_start_time_ = last_key_time_;
       TypingBreak(true);
       return EventHandlerResult::EVENT_CONSUMED;
@@ -104,7 +95,7 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, byte row, byt
       left_hand_keys_++;
     else
       right_hand_keys_++;
-    last_key_time_ = millis();
+    last_key_time_ = Kaleidoscope.millisAtCycleStart();
   }
 
   return EventHandlerResult::OK;

@@ -41,6 +41,7 @@ class TypingBreaks : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
 
  private:
+  static bool keyboard_locked_;
   static uint32_t session_start_time_;
   static uint32_t lock_start_time_;
   static uint32_t last_key_time_;

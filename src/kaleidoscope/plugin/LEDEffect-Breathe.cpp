@@ -16,18 +16,15 @@
 
 #include "Kaleidoscope-LEDEffect-Breathe.h"
 
-#define UPDATE_INTERVAL 50  // milliseconds between two LED updates to avoid overloading; 20 fps
-
 namespace kaleidoscope {
 namespace plugin {
 void LEDBreatheEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = Kaleidoscope.millisAtCycleStart();
-  if ((now - last_update_) < UPDATE_INTERVAL)
+  if (!Kaleidoscope.hasTimeExpired(last_update_, update_interval_))
     return;
-  last_update_ = now;
+  last_update_ += update_interval_;
 
   cRGB color = breath_compute(parent_->hue, parent_->saturation);
   ::LEDControl.set_all_leds_to(color);

@@ -44,9 +44,9 @@ class MouseKeys_ : public kaleidoscope::Plugin {
 
  private:
   static uint8_t mouseMoveIntent;
-  static uint32_t endTime;
-  static uint32_t accelEndTime;
-  static uint32_t wheelEndTime;
+  static uint16_t move_start_time_;
+  static uint16_t accel_start_time_;
+  static uint16_t wheel_start_time_;
 
   static void scrollWheel(uint8_t keyCode);
 };

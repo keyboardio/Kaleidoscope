@@ -23,11 +23,10 @@ void LEDChaseEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = Kaleidoscope.millisAtCycleStart();
-  if ((now - last_update_) < parent_->update_delay_) {
+  if (!Kaleidoscope.hasTimeExpired(last_update_, parent_->update_delay_)) {
     return;
   }
-  last_update_ = now;
+  last_update_ += parent_->update_delay_;
 
   // The red LED is at `pos_`; the blue one follows behind. `direction_` is
   // either +1 or -1; `distance_` is the gap between them.

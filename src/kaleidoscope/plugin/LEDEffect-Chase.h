@@ -25,10 +25,10 @@ class LEDChaseEffect : public Plugin,
  public:
   LEDChaseEffect(void) {}
 
-  uint16_t update_delay() {
+  uint8_t update_delay() {
     return update_delay_;
   }
-  void update_delay(uint16_t delay) {
+  void update_delay(uint8_t delay) {
     update_delay_ = delay;
   }
   uint8_t distance() {
@@ -48,7 +48,7 @@ class LEDChaseEffect : public Plugin,
     // members of their parent class. Most LED modes can do without.
     //
     TransientLEDMode(const LEDChaseEffect *parent)
-      : parent_(parent) {}
+      : parent_(parent), last_update_(Kaleidoscope.millisAtCycleStart()) {}
 
    protected:
 
@@ -60,12 +60,12 @@ class LEDChaseEffect : public Plugin,
 
     int8_t pos_ = 0;
     int8_t direction_ = 1;
-    uint16_t last_update_ = 0;
+    uint16_t last_update_;
   };
 
  private:
   uint8_t distance_ = 5;
-  uint16_t update_delay_ = 150;
+  uint8_t update_delay_ = 150;
 };
 }
 }

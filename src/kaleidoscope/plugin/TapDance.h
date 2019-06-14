@@ -59,7 +59,7 @@ class TapDance : public kaleidoscope::Plugin {
   };
   static TapDanceState state_[TAPDANCE_KEY_COUNT];
 
-  static uint32_t end_time_;
+  static uint16_t start_time_;
   static Key last_tap_dance_key_;
   static byte last_tap_dance_row_;
   static byte last_tap_dance_col_;

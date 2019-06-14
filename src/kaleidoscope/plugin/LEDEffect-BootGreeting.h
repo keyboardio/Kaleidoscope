@@ -32,6 +32,7 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
   static uint8_t hue;
   static uint16_t timeout;
 
+  EventHandlerResult onSetup();
   EventHandlerResult afterEachCycle();
 
  private:

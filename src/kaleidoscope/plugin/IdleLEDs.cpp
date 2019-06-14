@@ -22,11 +22,11 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint16_t IdleLEDs::idle_time_limit = 600; // 10 minutes
-uint32_t IdleLEDs::end_time_;
+uint32_t IdleLEDs::start_time_ = 0;
 
 EventHandlerResult IdleLEDs::beforeEachCycle() {
   if (!::LEDControl.paused &&
-      (Kaleidoscope.millisAtCycleStart() >= end_time_)) {
+      Kaleidoscope.hasTimeExpired(start_time_, uint32_t(idle_time_limit * 1000))) {
     ::LEDControl.set_all_leds_to(CRGB(0, 0, 0));
     ::LEDControl.syncLeds();
 
@@ -43,7 +43,7 @@ EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, byte row, byte co
     ::LEDControl.refreshAll();
   }
 
-  end_time_ = Kaleidoscope.millisAtCycleStart() + (uint32_t)idle_time_limit * 1000;
+  start_time_ = Kaleidoscope.millisAtCycleStart();
 
   return EventHandlerResult::OK;
 }

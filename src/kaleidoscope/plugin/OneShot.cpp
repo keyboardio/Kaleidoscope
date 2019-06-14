@@ -22,7 +22,7 @@ namespace plugin {
 
 // ---- state ---------
 
-uint32_t OneShot::start_time_ = 0;
+uint16_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
@@ -113,7 +113,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
     } else {
       if (keyToggledOff(keyState)) {
         state_[idx].pressed = false;
-        if ((Kaleidoscope.millisAtCycleStart() - start_time_) >= hold_time_out) {
+        if (Kaleidoscope.hasTimeExpired(start_time_, hold_time_out)) {
           cancelOneShot(idx);
           should_cancel_ = false;
         }
@@ -123,8 +123,8 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
         state_[idx].pressed = true;
 
         if (prev_key_ == mapped_key && isStickable(mapped_key)) {
-          if ((Kaleidoscope.millisAtCycleStart() - start_time_) <=
-              uint16_t((double_tap_time_out == -1) ? time_out : double_tap_time_out)) {
+          uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
+          if (!Kaleidoscope.hasTimeExpired(start_time_, dtto)) {
             state_[idx].sticky = true;
             prev_key_ = mapped_key;
           }

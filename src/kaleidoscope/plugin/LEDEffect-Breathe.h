@@ -46,7 +46,9 @@ class LEDBreatheEffect : public Plugin,
    private:
 
     const LEDBreatheEffect *parent_;
-    uint16_t last_update_ = 0;
+
+    static constexpr uint8_t update_interval_ = 50;
+    uint8_t last_update_ = 0;
   };
 };
 }

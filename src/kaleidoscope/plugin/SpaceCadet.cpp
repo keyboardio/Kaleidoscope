@@ -119,7 +119,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
       if (mapped_key.raw == map[i].input.raw) {
         //The keypress was valid and a match. Mark it as flagged and reset the counter
         map[i].flagged = true;
-        map[i].start_time = millis();
+        map[i].start_time = Kaleidoscope.millisAtCycleStart();
 
         //yes, we found a valid key
         valid_key = true;
@@ -199,7 +199,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, byte row, byte 
   }
 
   //Check to determine if we have surpassed our timeout for holding this key
-  if ((millis() - map[index].start_time) >= current_timeout) {
+  if (Kaleidoscope.hasTimeExpired(map[index].start_time, current_timeout)) {
     // if we timed out, that means we need to keep pressing the mapped
     // key, but we won't need to send the alternative key in the end
     map[index].flagged = false;

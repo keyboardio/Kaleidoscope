@@ -52,7 +52,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
     //The flag (set to 0)
     bool flagged = false;
     //the start time for this key press
-    uint32_t start_time = 0;
+    uint16_t start_time = 0;
   };
 
   SpaceCadet(void);

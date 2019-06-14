@@ -60,6 +60,11 @@ void BootGreetingEffect::findLed(void) {
   done_ = true;
 }
 
+EventHandlerResult BootGreetingEffect::onSetup() {
+  findLed();
+  return EventHandlerResult::OK;
+}
+
 EventHandlerResult BootGreetingEffect::afterEachCycle() {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
@@ -69,17 +74,8 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
     return EventHandlerResult::OK;
   }
 
-  //If the start time isn't set, set the start time and
-  //find the LEDs.
-  if (start_time == 0) {
-    start_time = millis();
-    findLed();
-    //the first time, don't do anything.
-    return EventHandlerResult::OK;
-  }
-
   //Only run for 'timeout' milliseconds
-  if ((millis() - start_time) > timeout) {
+  if (Kaleidoscope.hasTimeExpired(start_time, timeout)) {
     done_ = true;
     ::LEDControl.refreshAt(row_, col_);
     return EventHandlerResult::OK;

@@ -33,9 +33,9 @@ uint16_t MouseKeys_::accelDelay = 64;
 uint8_t MouseKeys_::wheelSpeed = 1;
 uint16_t MouseKeys_::wheelDelay = 50;
 
-uint32_t MouseKeys_::accelEndTime;
-uint32_t MouseKeys_::endTime;
-uint32_t MouseKeys_::wheelEndTime;
+uint16_t MouseKeys_::move_start_time_;
+uint16_t MouseKeys_::accel_start_time_;
+uint16_t MouseKeys_::wheel_start_time_;
 
 void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
   MouseWrapper.warp_grid_size = grid_size;
@@ -46,10 +46,10 @@ void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
 }
 
 void MouseKeys_::scrollWheel(uint8_t keyCode) {
-  if (millis() < wheelEndTime)
+  if (!Kaleidoscope.hasTimeExpired(wheel_start_time_, wheelDelay))
     return;
 
-  wheelEndTime = millis() + wheelDelay;
+  wheel_start_time_ = Kaleidoscope.millisAtCycleStart();
 
   if (keyCode & KEY_MOUSE_UP)
     kaleidoscope::hid::moveMouse(0, 0, wheelSpeed);
@@ -72,23 +72,21 @@ EventHandlerResult MouseKeys_::afterEachCycle() {
 EventHandlerResult MouseKeys_::beforeReportingState() {
   if (mouseMoveIntent == 0) {
     MouseWrapper.accelStep = 0;
-    endTime = 0;
-    accelEndTime = 0;
     return EventHandlerResult::OK;
   }
 
-  if (millis() < endTime)
+  if (!Kaleidoscope.hasTimeExpired(move_start_time_, speedDelay))
     return EventHandlerResult::OK;
 
-  endTime = millis() + speedDelay;
+  move_start_time_ = Kaleidoscope.millisAtCycleStart();
 
   int8_t moveX = 0, moveY = 0;
 
-  if (millis() >= accelEndTime) {
+  if (Kaleidoscope.hasTimeExpired(accel_start_time_, accelDelay)) {
     if (MouseWrapper.accelStep < 255 - accelSpeed) {
       MouseWrapper.accelStep += accelSpeed;
     }
-    accelEndTime = millis() + accelDelay;
+    accel_start_time_ = Kaleidoscope.millisAtCycleStart();
   }
 
   if (mouseMoveIntent & KEY_MOUSE_UP)
@@ -126,9 +124,9 @@ EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, byte row, byte c
     }
   } else if (!(mappedKey.keyCode & KEY_MOUSE_WARP)) {
     if (keyToggledOn(keyState)) {
-      endTime = millis() + speedDelay;
-      accelEndTime = millis() + accelDelay;
-      wheelEndTime = 0;
+      move_start_time_ = Kaleidoscope.millisAtCycleStart();
+      accel_start_time_ = Kaleidoscope.millisAtCycleStart();
+      wheel_start_time_ = Kaleidoscope.millisAtCycleStart() - wheelDelay;
     }
     if (keyIsPressed(keyState)) {
       if (mappedKey.keyCode & KEY_MOUSE_WHEEL) {

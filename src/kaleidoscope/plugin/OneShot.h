@@ -90,7 +90,7 @@ class OneShot : public kaleidoscope::Plugin {
   } key_state_t;
   static key_state_t state_[ONESHOT_KEY_COUNT];
 
-  static uint32_t start_time_;
+  static uint16_t start_time_;
   static Key prev_key_;
   static bool should_cancel_;
   static bool should_cancel_stickies_;
@@ -103,7 +103,7 @@ class OneShot : public kaleidoscope::Plugin {
     return key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST;
   }
   static bool hasTimedOut() {
-    return Kaleidoscope.millisAtCycleStart() - start_time_ >= time_out;
+    return Kaleidoscope.hasTimeExpired(start_time_, time_out);
   }
 };
 }

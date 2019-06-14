@@ -95,7 +95,7 @@ class LEDControl : public kaleidoscope::Plugin {
   //
   static void activate(LEDModeInterface *plugin);
 
-  static uint16_t syncDelay;
+  static uint8_t syncDelay;
   static bool paused;
 
   kaleidoscope::EventHandlerResult onSetup();

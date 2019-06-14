@@ -23,11 +23,11 @@ void LEDRainbowEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = millis();
-  if ((now - rainbow_last_update) < parent_->rainbow_update_delay) {
+  if (!Kaleidoscope.hasTimeExpired(rainbow_last_update,
+                                   parent_->rainbow_update_delay)) {
     return;
   } else {
-    rainbow_last_update = now;
+    rainbow_last_update += parent_->rainbow_update_delay;
   }
 
   cRGB rainbow = hsvToRgb(rainbow_hue, rainbow_saturation, parent_->rainbow_value);
@@ -54,11 +54,11 @@ void LEDRainbowWaveEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t now = millis();
-  if ((now - rainbow_last_update) < parent_->rainbow_update_delay) {
+  if (!Kaleidoscope.hasTimeExpired(rainbow_last_update,
+                                   parent_->rainbow_update_delay)) {
     return;
   } else {
-    rainbow_last_update = now;
+    rainbow_last_update += parent_->rainbow_update_delay;
   }
 
   for (int8_t i = 0; i < LED_COUNT; i++) {

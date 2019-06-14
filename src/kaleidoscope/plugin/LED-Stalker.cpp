@@ -57,8 +57,7 @@ void StalkerEffect::TransientLEDMode::update(void) {
   if (!parent_->variant)
     return;
 
-  uint16_t elapsed = Kaleidoscope.millisAtCycleStart() - step_start_time_;
-  if (elapsed < parent_->step_length)
+  if (!Kaleidoscope.hasTimeExpired(step_start_time_, parent_->step_length))
     return;
 
   for (byte r = 0; r < ROWS; r++) {

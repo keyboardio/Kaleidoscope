@@ -32,7 +32,7 @@ class CycleTimeReport : public kaleidoscope::Plugin {
   static uint32_t average_loop_time;
 
  private:
-  static uint32_t next_report_time_;
+  static uint16_t last_report_time_;
   static uint32_t loop_start_time_;
 };
 }
