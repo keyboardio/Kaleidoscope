@@ -167,7 +167,7 @@ class Kaleidoscope_ {
    *          std::numeric_limits<uint16_t>::max() - x.
    */
   template <typename _Timestamp, typename _Timeout>
-  bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
+  static bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
     _Timestamp current_time = millis_at_cycle_start_;
     _Timestamp elapsed_time = current_time - start_time;
     return (elapsed_time > ttl);
