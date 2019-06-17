@@ -26,7 +26,7 @@
 
 #include "kaleidoscope/key_defs_aliases.h"
 
-#ifdef ARDUINO_VIRTUAL
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "VirtualHID/VirtualHID.h"
 #else
 #include "KeyboardioHID.h"
