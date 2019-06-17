@@ -154,9 +154,20 @@ class Kaleidoscope_ {
    *      timer expires (and `hasTimeExpired()` returns true) when the time that
    *      has elapsed since `start_time` exceeds this value. It must be an
    *      integer type that is no bigger than the type of `start_time`.
+   *
+   * Warning: When using hasTimeExpired, make sure that the value of ttl
+   *          is at least by the size of the call interval smaller than
+   *          the maximum value that the datatype of timeout can store.
+   *          Otherwise false negatives are likely to occur
+   *          when checking (elapsed_time > ttl).
+   *
+   * Example: When both arguments of hasTimeExpired are of type uint16_t and
+   *          the function is called in every cycle with a cycle duration
+   *          of x ms, the value of ttl must not be larger than
+   *          std::numeric_limits<uint16_t>::max() - x.
    */
   template <typename _Timestamp, typename _Timeout>
-  bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
+  static bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
     _Timestamp current_time = millis_at_cycle_start_;
     _Timestamp elapsed_time = current_time - start_time;
     return (elapsed_time > ttl);
