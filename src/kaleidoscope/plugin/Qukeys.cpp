@@ -22,7 +22,7 @@
 #include <MultiReport/Keyboard.h>
 #include <Kaleidoscope-Ranges.h>
 
-#ifdef ARDUINO_VIRTUAL
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 #define debug_print(...) printf(__VA_ARGS__)
 #else
 #define debug_print(...)
