@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 #include "BootKeyboard.h"
 #include "DescriptorPrimitives.h"
+#include "HIDReportObserver.h"
 
 // See Appendix B of USB HID spec
 static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
@@ -217,6 +218,7 @@ int BootKeyboard_::sendReport(void) {
     if (memcmp(&_lastKeyReport, &_keyReport, sizeof(_keyReport))) {
         // if the two reports are different, send a report
         int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
+        HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &_keyReport, sizeof(_keyReport), returnCode);
         memcpy(&_lastKeyReport, &_keyReport, sizeof(_keyReport));
         return returnCode;
     }

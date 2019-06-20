@@ -19,6 +19,7 @@
 #ifndef KEYBOARDIOHID_BUILD_WITHOUT_HID
 
 #include "HID.h"
+#include "HIDReportObserver.h"
 
 #if defined(USBCON)
 
@@ -92,9 +93,7 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node) {
 
 int HID_::SendReport(uint8_t id, const void* data, int len) {
     auto result = SendReport_(id, data, len);
-    if(send_report_hook) {
-        (*send_report_hook)(id, data, len, result);
-    }
+    HIDReportObserver::observeReport(id, data, len, result);
     return result;
 }
 

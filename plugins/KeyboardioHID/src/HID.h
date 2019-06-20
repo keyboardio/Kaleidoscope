@@ -89,8 +89,6 @@ class HIDSubDescriptor {
 class HID_ : public PluggableUSBModule {
   public:
 
-    typedef void(*SendReportHook)(uint8_t id, const void* data, int len, int result);
-
     HID_(void);
     int begin(void);
     int SendReport(uint8_t id, const void* data, int len);
@@ -98,13 +96,6 @@ class HID_ : public PluggableUSBModule {
     uint8_t getLEDs(void) {
         return setReportData.leds;
     };
-
-    void setSendReportHook(SendReportHook hook) {
-        send_report_hook = hook;
-    }
-    SendReportHook getCurrentSendReportHook() const {
-        return send_report_hook;
-    }
 
   protected:
     // Implementation of the PluggableUSBModule
@@ -116,8 +107,6 @@ class HID_ : public PluggableUSBModule {
     int SendReport_(uint8_t id, const void* data, int len);
   private:
     EPTYPE_DESCRIPTOR_SIZE epType[1];
-
-    SendReportHook send_report_hook = nullptr;
 
     HIDSubDescriptor* rootNode;
     uint16_t descriptorSize;

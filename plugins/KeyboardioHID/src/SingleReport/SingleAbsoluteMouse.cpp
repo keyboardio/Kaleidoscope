@@ -24,6 +24,7 @@ THE SOFTWARE.
 */
 
 #include "SingleAbsoluteMouse.h"
+#include "HIDReportObserver.h"
 
 static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
     D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)         54 */
@@ -109,7 +110,8 @@ bool SingleAbsoluteMouse_::setup(USBSetup& setup) {
 }
 
 void SingleAbsoluteMouse_::sendReport(void* data, int length) {
-    USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, length);
+    auto result = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, length);
+    HIDReportObserver::observeReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length, result);
 }
 
 SingleAbsoluteMouse_ SingleAbsoluteMouse;
