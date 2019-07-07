@@ -21,38 +21,31 @@ namespace kaleidoscope {
 namespace plugin {
 
 bool BootGreetingEffect::done_ = false;
-byte BootGreetingEffect::row_;
-byte BootGreetingEffect::col_;
-byte BootGreetingEffect::key_row = 255;
-byte BootGreetingEffect::key_col = 255;
+KeyAddr BootGreetingEffect::key_addr_;
+KeyAddr BootGreetingEffect::user_key_addr;
 Key BootGreetingEffect::search_key = Key_LEDEffectNext;
 uint8_t BootGreetingEffect::hue = 170;
 uint16_t BootGreetingEffect::start_time = 0;
 uint16_t BootGreetingEffect::timeout = 9200;
 
-BootGreetingEffect::BootGreetingEffect(byte pos_row, byte pos_col) {
-  key_row = pos_row;
-  key_col = pos_col;
+BootGreetingEffect::BootGreetingEffect(KeyAddr key_addr) {
+  user_key_addr = key_addr;
 }
 
 void BootGreetingEffect::findLed(void) {
-  if (key_col != 255 && key_row != 255) {
-    row_ = key_row;
-    col_ = key_col;
+  if (user_key_addr.isValid()) {
+    key_addr_ = user_key_addr;
     done_ = true;
     return;
   }
 
   // Find the LED key.
-  for (uint8_t r = 0; r < ROWS; r++) {
-    for (uint8_t c = 0; c < COLS; c++) {
-      Key k = Layer.lookupOnActiveLayer(r, c);
+  for (auto key_addr : KeyAddr::all()) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
 
-      if (k.raw == search_key.raw) {
-        row_ = r;
-        col_ = c;
-        return;
-      }
+    if (k.raw == search_key.raw) {
+      key_addr_ = key_addr;
+      return;
     }
   }
 
@@ -77,12 +70,12 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
   //Only run for 'timeout' milliseconds
   if (Kaleidoscope.hasTimeExpired(start_time, timeout)) {
     done_ = true;
-    ::LEDControl.refreshAt(row_, col_);
+    ::LEDControl.refreshAt(key_addr_);
     return EventHandlerResult::OK;
   }
 
   cRGB color = breath_compute(hue);
-  ::LEDControl.setCrgbAt(row_, col_, color);
+  ::LEDControl.setCrgbAt(key_addr_, color);
 
   return EventHandlerResult::OK;
 }

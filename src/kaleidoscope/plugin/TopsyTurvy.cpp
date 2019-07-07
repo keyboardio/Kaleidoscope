@@ -25,7 +25,7 @@ uint8_t TopsyTurvy::last_pressed_position_;
 bool TopsyTurvy::is_shifted_;
 bool TopsyTurvy::is_active_;
 
-EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
 
   if (mapped_key == Key_LeftShift ||
       mapped_key == Key_RightShift) {
@@ -36,7 +36,7 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
 
   if (mapped_key < ranges::TT_FIRST || mapped_key > ranges::TT_LAST) {
     if (keyToggledOn(key_state) && (mapped_key < Key_LeftControl || mapped_key > Key_RightGui)) {
-      last_pressed_position_ = row * COLS + col;
+      last_pressed_position_ = key_addr.toInt();
     }
 
     return EventHandlerResult::OK;
@@ -45,9 +45,9 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, byte row, byte 
   is_active_ = keyIsPressed(key_state);
 
   if (keyToggledOn(key_state)) {
-    last_pressed_position_ = row * COLS + col;
+    last_pressed_position_ = key_addr.toInt();
   } else {
-    if (last_pressed_position_ != row * COLS + col) {
+    if (last_pressed_position_ != key_addr.toInt()) {
       return EventHandlerResult::EVENT_CONSUMED;
     }
   }

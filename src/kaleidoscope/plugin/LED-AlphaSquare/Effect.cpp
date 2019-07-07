@@ -43,12 +43,12 @@ void AlphaSquareEffect::TransientLEDMode::update(void) {
   }
 }
 
-void AlphaSquareEffect::TransientLEDMode::refreshAt(byte row, byte col) {
+void AlphaSquareEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
   bool timed_out;
   uint8_t display_col = 2;
   Key key = last_key_left_;
 
-  if (col < COLS / 2) {
+  if (key_addr.col() < COLS / 2) {
     timed_out = Kaleidoscope.hasTimeExpired(start_time_left_, length);
   } else {
     key = last_key_right_;
@@ -56,11 +56,11 @@ void AlphaSquareEffect::TransientLEDMode::refreshAt(byte row, byte col) {
     timed_out = Kaleidoscope.hasTimeExpired(start_time_right_, length);
   }
 
-  if (!::AlphaSquare.isSymbolPart(key, 0, display_col, row, col) || timed_out)
-    ::LEDControl.setCrgbAt(row, col, CRGB(0, 0, 0));
+  if (!::AlphaSquare.isSymbolPart(key, KeyAddr(0, display_col), key_addr) || timed_out)
+    ::LEDControl.setCrgbAt(key_addr, CRGB(0, 0, 0));
 }
 
-EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
 
@@ -81,7 +81,7 @@ EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, byte row,
 
   Key prev_key = this_led_mode->last_key_left_;
 
-  if (col < COLS / 2) {
+  if (key_addr.col() < COLS / 2) {
     this_led_mode->last_key_left_ = mappedKey;
     this_led_mode->start_time_left_ = Kaleidoscope.millisAtCycleStart();
   } else {

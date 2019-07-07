@@ -29,7 +29,7 @@ class TopsyTurvy: public kaleidoscope::Plugin {
  public:
   TopsyTurvy(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:
   static uint8_t last_pressed_position_;

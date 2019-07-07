@@ -22,8 +22,8 @@ void LEDOff::onActivate(void) {
   ::LEDControl.set_all_leds_to({0, 0, 0});
 }
 
-void LEDOff::refreshAt(byte row, byte col) {
-  ::LEDControl.setCrgbAt(row, col, {0, 0, 0});
+void LEDOff::refreshAt(KeyAddr key_addr) {
+  ::LEDControl.setCrgbAt(key_addr, {0, 0, 0});
 }
 }
 }

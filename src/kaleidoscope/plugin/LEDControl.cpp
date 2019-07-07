@@ -101,16 +101,19 @@ void LEDControl::set_all_leds_to(cRGB color) {
   }
 }
 
-void LEDControl::setCrgbAt(int8_t i, cRGB crgb) {
-  KeyboardHardware.setCrgbAt(i, crgb);
+void LEDControl::setCrgbAt(int8_t led_index, cRGB crgb) {
+  KeyboardHardware.setCrgbAt(led_index, crgb);
 }
 
-void LEDControl::setCrgbAt(byte row, byte col, cRGB color) {
-  KeyboardHardware.setCrgbAt(row, col, color);
+void LEDControl::setCrgbAt(KeyAddr key_addr, cRGB color) {
+  KeyboardHardware.setCrgbAt(key_addr, color);
 }
 
-cRGB LEDControl::getCrgbAt(int8_t i) {
-  return KeyboardHardware.getCrgbAt(i);
+cRGB LEDControl::getCrgbAt(int8_t led_index) {
+  return KeyboardHardware.getCrgbAt(led_index);
+}
+cRGB LEDControl::getCrgbAt(KeyAddr key_addr) {
+  return KeyboardHardware.getCrgbAt(KeyboardHardware.getLedIndex(key_addr));
 }
 
 void LEDControl::syncLeds(void) {
@@ -132,7 +135,7 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
   return EventHandlerResult::OK;
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState) {
+kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return kaleidoscope::EventHandlerResult::OK;
 
@@ -236,22 +239,24 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (int8_t idx = 0; idx < LED_COUNT; idx++) {
-        cRGB c = ::LEDControl.getCrgbAt(idx);
+      for (auto key_addr : KeyAddr::all()) {
+        cRGB c = ::LEDControl.getCrgbAt(key_addr);
 
         ::Focus.send(c);
       }
       break;
     }
 
-    int8_t idx = 0;
-    while (idx < LED_COUNT && !::Focus.isEOL()) {
+    for (auto key_addr : KeyAddr::all()) {
+      if (::Focus.isEOL()) {
+        break;
+      }
+
       cRGB color;
 
       ::Focus.read(color);
 
-      ::LEDControl.setCrgbAt(idx, color);
-      idx++;
+      ::LEDControl.setCrgbAt(key_addr, color);
     }
     break;
   }

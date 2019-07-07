@@ -47,8 +47,14 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   static uint16_t keymap_base(void);
 
-  static Key getKey(uint8_t layer, byte row, byte col);
-  static Key getKeyExtended(uint8_t layer, byte row, byte col);
+  static Key getKey(uint8_t layer, KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) static Key getKey(uint8_t layer, byte row, byte col) {
+    return getKey(layer, KeyAddr(row, col));
+  }
+  static Key getKeyExtended(uint8_t layer, KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) static Key getKeyExtended(uint8_t layer, byte row, byte col) {
+    return getKeyExtended(layer, KeyAddr(row, col));
+  }
 
   static void updateKey(uint16_t base_pos, Key key);
 
@@ -59,7 +65,8 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   static Key parseKey(void);
   static void printKey(Key key);
-  static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte));
+  static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr));
+  DEPRECATED(ROW_COL_FUNC) static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte));
 };
 }
 }

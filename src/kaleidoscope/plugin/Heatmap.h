@@ -33,7 +33,7 @@ class Heatmap : public Plugin,
   static uint8_t heat_colors_length;
   void resetMap(void);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeEachCycle();
 
   // This class' instance has dynamic lifetime
@@ -48,7 +48,7 @@ class Heatmap : public Plugin,
     TransientLEDMode(const Heatmap *parent);
 
     void resetMap();
-    EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+    EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
     EventHandlerResult beforeEachCycle();
 
    protected:
@@ -59,7 +59,7 @@ class Heatmap : public Plugin,
 
     const Heatmap *parent_;
 
-    uint16_t heatmap_[ROWS][COLS];
+    uint16_t heatmap_[KeyboardHardware.numKeys()];
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
 

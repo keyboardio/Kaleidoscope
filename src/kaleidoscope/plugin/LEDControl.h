@@ -46,11 +46,11 @@ class LEDControl : public kaleidoscope::Plugin {
 
     cur_led_mode_->update();
   }
-  static void refreshAt(byte row, byte col) {
+  static void refreshAt(KeyAddr key_addr) {
     if (!Kaleidoscope.has_leds)
       return;
 
-    cur_led_mode_->refreshAt(row, col);
+    cur_led_mode_->refreshAt(key_addr);
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
@@ -62,6 +62,10 @@ class LEDControl : public kaleidoscope::Plugin {
   template<typename LEDMode__>
   static LEDMode__ *get_mode() {
     return static_cast<LEDMode__*>(cur_led_mode_);
+
+  }
+  DEPRECATED(ROW_COL_FUNC) static void refreshAt(byte row, byte col) {
+    refreshAt(KeyAddr(row, col));
   }
 
   static void refreshAll() {
@@ -81,9 +85,16 @@ class LEDControl : public kaleidoscope::Plugin {
     return 0;
   }
 
-  static void setCrgbAt(int8_t i, cRGB crgb);
-  static void setCrgbAt(byte row, byte col, cRGB color);
-  static cRGB getCrgbAt(int8_t i);
+  static void setCrgbAt(int8_t led_index, cRGB crgb);
+  static void setCrgbAt(KeyAddr key_addr, cRGB color);
+  DEPRECATED(ROW_COL_FUNC) static void setCrgbAt(byte row, byte col, cRGB color) {
+    setCrgbAt(KeyAddr(row, col), color);
+  }
+  static cRGB getCrgbAt(int8_t led_index);
+  static cRGB getCrgbAt(KeyAddr key_addr);
+  DEPRECATED(ROW_COL_FUNC) static cRGB getCrgbAt(byte row, byte col) {
+    return getCrgbAt(KeyAddr(row, col));
+  }
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
@@ -99,7 +110,7 @@ class LEDControl : public kaleidoscope::Plugin {
   static bool paused;
 
   kaleidoscope::EventHandlerResult onSetup();
-  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, uint8_t keyState);
+  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
   kaleidoscope::EventHandlerResult beforeReportingState();
 
  private:

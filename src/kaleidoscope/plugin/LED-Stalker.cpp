@@ -33,18 +33,18 @@ StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
     map_{}
 {}
 
-EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (!Kaleidoscope.has_leds)
     return EventHandlerResult::OK;
 
-  if (row >= ROWS || col >= COLS)
+  if (!key_addr.isValid())
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
   if (keyIsPressed(keyState)) {
-    ::LEDControl.get_mode<TransientLEDMode>()->map_[row][col] = 0xff;
+    ::LEDControl.get_mode<TransientLEDMode>()->map_[key_addr.toInt()] = 0xff;
   }
 
   return EventHandlerResult::OK;
@@ -60,18 +60,16 @@ void StalkerEffect::TransientLEDMode::update(void) {
   if (!Kaleidoscope.hasTimeExpired(step_start_time_, parent_->step_length))
     return;
 
-  for (byte r = 0; r < ROWS; r++) {
-    for (byte c = 0; c < COLS; c++) {
-      uint8_t step = map_[r][c];
-      if (step) {
-        ::LEDControl.setCrgbAt(r, c, parent_->variant->compute(&step));
-      }
-
-      map_[r][c] = step;
-
-      if (!map_[r][c])
-        ::LEDControl.setCrgbAt(r, c, parent_->inactive_color);
+  for (auto key_addr : KeyAddr::all()) {
+    uint8_t step = map_[key_addr.toInt()];
+    if (step) {
+      ::LEDControl.setCrgbAt(key_addr, parent_->variant->compute(&step));
     }
+
+    map_[key_addr.toInt()] = step;
+
+    if (!map_[key_addr.toInt()])
+      ::LEDControl.setCrgbAt(key_addr, parent_->inactive_color);
   }
 
   step_start_time_ = Kaleidoscope.millisAtCycleStart();

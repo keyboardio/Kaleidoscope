@@ -46,7 +46,7 @@ class TapDance : public kaleidoscope::Plugin {
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
   EventHandlerResult afterEachCycle();
 
  private:
@@ -61,11 +61,10 @@ class TapDance : public kaleidoscope::Plugin {
 
   static uint16_t start_time_;
   static Key last_tap_dance_key_;
-  static byte last_tap_dance_row_;
-  static byte last_tap_dance_col_;
+  static KeyAddr last_tap_dance_addr_;
 
   static void tap(void);
-  static void interrupt(byte row, byte col);
+  static void interrupt(KeyAddr key_addr);
   static void timeout(void);
   static void release(uint8_t tap_dance_index);
 };
@@ -73,6 +72,14 @@ class TapDance : public kaleidoscope::Plugin {
 
 }
 
+void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
+                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
+
+// The old version of te tapdance action is DEPRECATED(ROW_COL_FUNC) although this
+// cannot be flagged to the user. The weak function is called by the tap dance
+// plugin's implementation. That's why the deprecation warning would always
+// fire.
+//
 void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
 

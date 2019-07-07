@@ -75,7 +75,7 @@ In practice, this boils down to implementing one or more of the following hook p
 
 - `onSetup()`: Called once during device bootup, at the end of the `setup()` method. It takes no arguments, and must return `kaleidoscope::EventHandlerResult::OK`.
 - `beforeEachCycle()`: Called once, at the beginning of each cycle of the main loop. This is similar to the old "loop hook" with its `post_clear` argument set to false. Takes no arguments, must return `kaleidoscope::EventHandlerResult::OK`.
-- `onKeyswitchEvent`: Called for every non-idle key event. This replaces the old "event handler hook". It takes a key reference, coordinates, and a key state. The key reference can be updated to change the key being processed, so that any plugin that processes it further, will see the updated key. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
+- `onKeyswitchEvent`: Called for every non-idle key event. This replaces the old "event handler hook". It takes a key reference, a key address, and a key state. The key reference can be updated to change the key being processed, so that any plugin that processes it further, will see the updated key. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
 - `onFocusEvent`: Used to implement [bi-directional communication](#bidirectional-communication-for-plugins). This is called whenever the firmware receives a command from the host. The only argument is the command name. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
 - `beforeReportingState`: Called without arguments, just before sending the keyboard and mouse reports to the host. Must return `kaleidoscope::EventHandlerResult::OK`.
 - `afterEachCycle`: Called without arguments at the very end of each cycle. This is the replacement for the "loop hook" with its `post_clear` argument set.
@@ -435,6 +435,13 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ## Deprecated APIs and their replacements
 
+### Transition to linear indexing
+
+Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
+the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
+
+Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated.
+
 ### Finer OneShot stickability control
 
 The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods. The old properties are still available, but will be removed by **2019-04-30**.
@@ -572,7 +579,7 @@ class Plugin {
 public:
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
 };

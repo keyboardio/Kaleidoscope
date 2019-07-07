@@ -38,9 +38,9 @@ extern const Key keymaps_linear[][ROWS * COLS] = {};
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
-Key Layer_::live_composite_keymap_[ROWS][COLS];
-uint8_t Layer_::active_layers_[ROWS][COLS];
-Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+Key Layer_::live_composite_keymap_[KeyboardHardware.numKeys()];
+uint8_t Layer_::active_layers_[KeyboardHardware.numKeys()];
+Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
@@ -93,7 +93,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   }
 }
 
-Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
@@ -101,32 +101,30 @@ Key Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
   return Key_NoKey;
 }
 
-Key Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
-  return keyFromKeymap(layer, row, col);
+Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
+  return keyFromKeymap(layer, key_addr);
 }
 
-void Layer_::updateLiveCompositeKeymap(byte row, byte col) {
-  int8_t layer = active_layers_[row][col];
-  live_composite_keymap_[row][col] = (*getKey)(layer, row, col);
+void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
+  int8_t layer = active_layers_[key_addr.toInt()];
+  live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);
 }
 
 void Layer_::updateActiveLayers(void) {
   memset(active_layers_, 0, KeyboardHardware.numKeys());
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      int8_t layer = top_active_layer_;
+  for (auto key_addr : KeyAddr::all()) {
+    int8_t layer = top_active_layer_;
 
-      while (layer > 0) {
-        if (Layer.isActive(layer)) {
-          Key mappedKey = (*getKey)(layer, row, col);
+    while (layer > 0) {
+      if (Layer.isActive(layer)) {
+        Key mappedKey = (*getKey)(layer, key_addr);
 
-          if (mappedKey != Key_Transparent) {
-            active_layers_[row][col] = layer;
-            break;
-          }
+        if (mappedKey != Key_Transparent) {
+          active_layers_[key_addr.toInt()] = layer;
+          break;
         }
-        layer--;
       }
+      layer--;
     }
   }
 }

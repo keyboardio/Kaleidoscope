@@ -58,6 +58,6 @@ void macroAppSwitchLoop() {
 
   // if appSwitchActive is true, we continue holding Alt.
   if (appSwitchActive) {
-    handleKeyswitchEvent(mod, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED);
+    handleKeyswitchEvent(mod, UnknownKeyswitchLocation, IS_PRESSED);
   }
 }

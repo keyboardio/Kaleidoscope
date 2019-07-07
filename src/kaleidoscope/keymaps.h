@@ -23,8 +23,8 @@ extern const Key keymaps_linear[][ROWS * COLS];
 namespace kaleidoscope {
 
 inline
-Key keyFromKeymap(uint8_t layer, uint8_t row, uint8_t col) {
-  return pgm_read_word(&keymaps_linear[layer][row * COLS + col]);
+Key keyFromKeymap(uint8_t layer, KeyAddr key_addr) {
+  return pgm_read_word(&keymaps_linear[layer][key_addr.toInt()]);
 }
 
 namespace internal {

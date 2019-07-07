@@ -92,13 +92,13 @@ void TestMode::test_leds(void) {
 
 
 
-void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, uint8_t row, uint8_t col, uint8_t col_offset) {
+void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, KeyAddr key_addr, uint8_t col_offset) {
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
   constexpr cRGB green = CRGB(0, 201, 0);
 
-  const uint8_t keynum = (row * 8) + (col);
+  auto keynum = key_addr.toInt();
 
   const uint8_t keyState = ((bitRead(oldState->all, keynum) << 1) |
                             (bitRead(newState->all, keynum) << 0));
@@ -111,17 +111,17 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
     side->cyclesSinceStateChange[keynum]++;
   }
 
-
+  auto key_addr_col_shifted = KeyAddr(key_addr.row(), col_offset - key_addr.col());
 
   // If the key is held down
   if (keyState == HELD) {
-    KeyboardHardware.setCrgbAt(row, col_offset - col, green);
-  } else if (bitRead(side->badKeys, keynum) == 1) {
+    KeyboardHardware.setCrgbAt(key_addr_col_shifted, green);
+  } else if (bitRead(side->badKeys, key_addr_col_shifted.toInt()) == 1) {
     // If we triggered chatter detection ever on this key
-    KeyboardHardware.setCrgbAt(row, col_offset - col, red);
+    KeyboardHardware.setCrgbAt(key_addr_col_shifted, red);
   } else if (keyState == TOGGLED_OFF) {
     // If the key was just released
-    KeyboardHardware.setCrgbAt(row, col_offset - col, blue);
+    KeyboardHardware.setCrgbAt(key_addr_col_shifted, blue);
   }
 }
 
@@ -143,11 +143,9 @@ void TestMode::testMatrix() {
         KeyboardHardware.pressedKeyswitchCount() == 3) {
       break;
     }
-    for (byte row = 0; row < 4; row++) {
-      for (byte col = 0; col < 8; col++) {
-        handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), row, col, 7);
-        handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), row, col, 15);
-      }
+    for (auto key_addr : KeyAddr::all()) {
+      handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), key_addr, 7);
+      handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), key_addr, 15);
     }
     ::LEDControl.syncLeds();
   }

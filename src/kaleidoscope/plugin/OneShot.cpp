@@ -54,7 +54,6 @@ bool OneShot::isStickable(Key key) {
 // ---- OneShot stuff ----
 void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
   Key key;
-  byte row, col;
 
   if (idx < 8) {
     key.flags = Key_LeftControl.flags;
@@ -64,7 +63,7 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
     key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
   }
 
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, key_state | INJECTED);
+  handleKeyswitchEvent(key, UnknownKeyswitchLocation, key_state | INJECTED);
 }
 
 void OneShot::activateOneShot(uint8_t idx) {
@@ -76,7 +75,7 @@ void OneShot::cancelOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED);
 }
 
-EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t keyState) {
+EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   uint8_t idx = mapped_key.raw - ranges::OS_FIRST;
 
   if (keyState & INJECTED)
@@ -91,7 +90,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
       state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
       start_time_ = Kaleidoscope.millisAtCycleStart();
-      state_[idx].position = row * COLS + col;
+      state_[idx].position = key_addr.toInt();
       state_[idx].pressed = true;
       state_[idx].active = true;
       prev_key_ = mapped_key;
@@ -131,7 +130,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, byte row, byte col
         } else {
           start_time_ = Kaleidoscope.millisAtCycleStart();
 
-          state_[idx].position = row * COLS + col;
+          state_[idx].position = key_addr.toInt();
           state_[idx].active = true;
           prev_key_ = mapped_key;
 
@@ -204,7 +203,7 @@ EventHandlerResult OneShot::afterEachCycle() {
 }
 
 void OneShot::inject(Key mapped_key, uint8_t key_state) {
-  onKeyswitchEvent(mapped_key, UNKNOWN_KEYSWITCH_LOCATION, key_state);
+  onKeyswitchEvent(mapped_key, UnknownKeyswitchLocation, key_state);
 }
 
 // --- glue code ---

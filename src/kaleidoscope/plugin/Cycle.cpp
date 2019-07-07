@@ -33,14 +33,14 @@ uint8_t Cycle::cycle_count_;
 // --- api ---
 
 void Cycle::replace(Key key) {
-  handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
   hid::sendKeyboardReport();
-  handleKeyswitchEvent(Key_Backspace, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
   hid::sendKeyboardReport();
 
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, IS_PRESSED | INJECTED);
+  handleKeyswitchEvent(key, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
   hid::sendKeyboardReport();
-  handleKeyswitchEvent(key, UNKNOWN_KEYSWITCH_LOCATION, WAS_PRESSED | INJECTED);
+  handleKeyswitchEvent(key, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
   hid::sendKeyboardReport();
 }
 
@@ -54,7 +54,7 @@ void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
 
 // --- hooks ---
 
-EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (key_state & INJECTED)
     return EventHandlerResult::OK;
 

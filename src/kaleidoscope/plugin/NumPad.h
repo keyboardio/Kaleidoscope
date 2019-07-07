@@ -36,8 +36,7 @@ class NumPad : public kaleidoscope::Plugin {
 
   void setKeyboardLEDColors(void);
 
-  static uint8_t numpadLayerToggleKeyRow;
-  static uint8_t numpadLayerToggleKeyCol;
+  static KeyAddr numpadLayerToggleKeyAddr;
   static bool numpadActive;
 };
 }

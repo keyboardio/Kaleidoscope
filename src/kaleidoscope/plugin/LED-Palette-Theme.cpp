@@ -37,21 +37,21 @@ void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
 
   uint16_t map_base = theme_base + (theme * KeyboardHardware.numKeys() / 2);
 
-  for (uint16_t pos = 0; pos < KeyboardHardware.numKeys(); pos++) {
+  for (uint8_t pos = 0; pos < KeyboardHardware.numKeys(); pos++) {
     cRGB color = lookupColorAtPosition(map_base, pos);
     ::LEDControl.setCrgbAt(pos, color);
   }
 }
 
-void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, byte row, byte col) {
+void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_addr) {
   if (!Kaleidoscope.has_leds)
     return;
 
   uint16_t map_base = theme_base + (theme * KeyboardHardware.numKeys() / 2);
-  uint16_t pos = KeyboardHardware.getLedIndex(row, col);
+  uint8_t pos = KeyboardHardware.getLedIndex(key_addr);
 
   cRGB color = lookupColorAtPosition(map_base, pos);
-  ::LEDControl.setCrgbAt(pos, color);
+  ::LEDControl.setCrgbAt(KeyAddr(pos), color);
 }
 
 

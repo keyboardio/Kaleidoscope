@@ -30,7 +30,7 @@ EventHandlerResult ShapeShifter::beforeReportingState() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (!dictionary)
     return EventHandlerResult::OK;
 
