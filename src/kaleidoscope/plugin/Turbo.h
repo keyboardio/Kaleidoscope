@@ -44,7 +44,7 @@ class Turbo : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult onLayerChange();
-  EventHandlerResult onKeyswitchEvent(Key &key, byte row, byte col, uint8_t key_state);
+  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult afterEachCycle();
  private:
   void findKeyPositions();
@@ -58,7 +58,7 @@ class Turbo : public kaleidoscope::Plugin {
   static bool enable;
   static uint32_t startTime;
   static uint32_t flashStartTime;
-  static byte keyPositions[4];
+  static KeyAddr keyPositions[4];
   static uint16_t numKeys;
 };
 }

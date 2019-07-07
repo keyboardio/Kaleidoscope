@@ -30,7 +30,7 @@ cRGB Turbo::activeColor_ = CRGB(160, 0, 0);
 bool Turbo::enable = false;
 uint32_t Turbo::startTime = 0;
 uint32_t Turbo::flashStartTime = 0;
-byte Turbo::keyPositions[4];
+KeyAddr Turbo::keyPositions[4];
 uint16_t Turbo::numKeys = 0;
 
 uint16_t Turbo::interval() {
@@ -70,11 +70,10 @@ void Turbo::activeColor(cRGB newVal) {
 
 void Turbo::findKeyPositions() {
   numKeys = 0;
-  for (byte r = 0; r < ROWS; r++) {
-    for (byte c = 0; c < COLS; c++) {
-      if (Layer.lookupOnActiveLayer(r, c) == Key_Turbo) {
-        keyPositions[numKeys++] = r * COLS + c;
-      }
+
+  for (auto key_addr : KeyAddr::all()) {
+    if (Layer.lookupOnActiveLayer(key_addr) == Key_Turbo) {
+      keyPositions[numKeys++] = key_addr;
     }
   }
 }
@@ -89,12 +88,12 @@ EventHandlerResult Turbo::onLayerChange() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult Turbo::onKeyswitchEvent(Key &key, byte row, byte col, uint8_t key_state) {
+EventHandlerResult Turbo::onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state) {
   if (key != Key_Turbo) return EventHandlerResult::OK;
   enable = sticky_ ? (keyIsPressed(key_state) ? enable : !enable) : keyIsPressed(key_state);
   if (!enable) {
     for (uint16_t i = 0; i < numKeys; i++) {
-      LEDControl::refreshAt(keyPositions[i] / COLS, keyPositions[i] % COLS);
+      LEDControl::refreshAt(KeyAddr(keyPositions[i]));
     }
   }
   return EventHandlerResult::EVENT_CONSUMED;
@@ -110,18 +109,18 @@ EventHandlerResult Turbo::afterEachCycle() {
     if (flash_) {
       if (Kaleidoscope.millisAtCycleStart() - flashStartTime > flashInterval_ * 2) {
         for (uint16_t i = 0; i < numKeys; i++) {
-          LEDControl::setCrgbAt(keyPositions[i] / COLS, keyPositions[i] % COLS, activeColor_);
+          LEDControl::setCrgbAt(KeyAddr(keyPositions[i]), activeColor_);
         }
         flashStartTime = Kaleidoscope.millisAtCycleStart();
       } else if (Kaleidoscope.millisAtCycleStart() - flashStartTime > flashInterval_) {
         for (uint16_t i = 0; i < numKeys; i++) {
-          LEDControl::setCrgbAt(keyPositions[i] / COLS, keyPositions[i] % COLS, {0, 0, 0});
+          LEDControl::setCrgbAt(KeyAddr(keyPositions[i]), {0, 0, 0});
         }
       }
       LEDControl::syncLeds();
     } else {
       for (uint16_t i = 0; i < numKeys; i++) {
-        LEDControl::setCrgbAt(keyPositions[i] / COLS, keyPositions[i] % COLS, activeColor_);
+        LEDControl::setCrgbAt(KeyAddr(keyPositions[i]), activeColor_);
       }
     }
   }
