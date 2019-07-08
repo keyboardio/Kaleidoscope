@@ -8,8 +8,6 @@ If you're just getting started with the Keyboardio Model 01, the [introductory d
 
 # Getting Started
 
-Pick a directory to work in, you'll need to clone multiple repositories. We'll assume you picked `$HOME/kaleidoscope`, if you chose another adapt the commands below accordingly.
-
 ## Setup the Arduino IDE
 
 Setup the Arduino IDE on your system. Make sure you install at least version 1.6, since older version may not support all required features.
@@ -17,32 +15,49 @@ Setup the Arduino IDE on your system. Make sure you install at least version 1.6
 * On Linux, follow the instructions [on the wiki](https://github.com/keyboardio/Kaleidoscope/wiki/Install-Arduino-support-on-Linux).
 * On macOS, install using [homebrew](http://brew.sh/) [cask](https://caskroom.github.io/) with `brew cask install arduino` or download the application from [the official website](https://www.arduino.cc/en/Main/Software) and move it to your `/Applications` folder.
 
-## Install the Kaleidoscope Hardware Definitions
+## Get into the right directory
+
+### macOS
+```sh
+
+mkdir -p $HOME/Documents/Arduino/hardware
+cd $HOME/Documents/Arduino/hardware
+```
+
+### Linux
 
 ```sh
-# you'll need to know your arduino sketchbook directory
+mkdir -p $HOME/Arduino/hardware
+cd $HOME/Arduino/hardware
+```
 
-# on macOS the default is
-SKETCHBOOK_DIR=$HOME/Documents/Arduino
-# on Linux the default is
-SKETCHBOOK_DIR=$HOME/Arduino
+### Windows
 
-# go to your kaleidoscope directory
-cd $HOME/kaleidoscope
+*TODO*: Write me
+
+### Install the libraries and hardware definitions
+
 # then clone the hardware definitions
-git clone --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git
-# and make them available to the arduino environment
-mkdir -p $SKETCHBOOK_DIR/hardware
-ln -s $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio $SKETCHBOOK_DIR/hardware/keyboardio
+git clone --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git keyboardio
+
+
 ```
 
 ## Build the Kaleidoscope Firmware for your keyboard
 
+(This part assumes you're building firmware for the Keyboardio Model 01)
+
 ```sh
-# go to your keyboardio directory
-cd $HOME/kaleidoscope/Kaleidoscope-Bundle-Keyboardio/avr/libraries/Model01-Firmware
-# and build your firmware!
+# Go to your device firmware directory
+cd keyboardio/avr/libraries/Model01-Firmware
+
+# Build your firmware!
 make
+
+
+# Install your firmware
+make flash
+
 ```
 
 <3 jesse
