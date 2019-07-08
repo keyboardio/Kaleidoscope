@@ -28,8 +28,8 @@
  * We're using a macro instead of a constexpr so that it is evaluated lazily,
  * when `HARDWARE_IMPLEMENTATION` can be properly resolved.
  */
-#define keyIndex(row,col)                                               \
-  (uint8_t)((row * HARDWARE_IMPLEMENTATION::matrix_columns) + col + 1)
+#define keyIndex(row,col)                                                      \
+  (uint8_t)(KeyAddr(row, col).toInt() + 1)
 
 constexpr uint8_t R0C0 = keyIndex(0, 0);
 constexpr uint8_t R0C1 = keyIndex(0, 1);
