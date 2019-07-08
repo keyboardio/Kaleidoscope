@@ -38,7 +38,7 @@ class MatrixAddr {
   static constexpr uint8_t invalid_state = 255;
 
   static_assert(rows * cols < 255,
-                "The number of rows and columns provided to instanciate \n"
+                "The number of rows and columns provided to instantiate \n"
                 "MatrixAddr<rows, cols> exceeds the supported total number \n"
                 "of 255 keys");
 
