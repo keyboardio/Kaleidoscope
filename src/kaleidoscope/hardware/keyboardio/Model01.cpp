@@ -44,22 +44,14 @@ Model01::Model01(void) {
 }
 
 void Model01::enableScannerPower(void) {
-  // PC7
-  //pinMode(13, OUTPUT);
-  //digitalWrite(13, HIGH);
   // Turn on power to the LED net
   DDRC |= _BV(7);
   PORTC |= _BV(7);
-
 }
 
-// This lets the keyboard pull up to 1.6 amps from
-// the host. That violates the USB spec. But it sure
-// is pretty looking
 void Model01::enableHighPowerLeds(void) {
-  // PE6
-  //    pinMode(7, OUTPUT);
-  //    digitalWrite(7, LOW);
+  // This lets the keyboard pull up to 1.6 amps from the host. 
+  // That violates the USB spec. But it sure is pretty looking
   DDRE |= _BV(6);
   PORTE &= ~_BV(6);
 
@@ -76,9 +68,8 @@ void Model01::setup(void) {
   delay(100);
   enableScannerPower();
 
-  // Consider not doing this until 30s after keyboard
-  // boot up, to make it easier to rescue things
-  // in case of power draw issues.
+  // TODO: Consider not doing this until 30s after keyboard
+  // boot up, to make it easier to rescue things in case of power draw issues.
   enableHighPowerLeds();
   leftHandState.all = 0;
   rightHandState.all = 0;
@@ -134,13 +125,19 @@ cRGB Model01::getCrgbAt(int8_t i) {
   if (i < 32) {
     return leftHand.ledData.leds[i];
   } else {
-    return rightHand.ledData.leds[i - 32] ;
+    return rightHand.ledData.leds[i - 32];
   }
 }
 
 void Model01::syncLeds() {
   if (!isLEDChanged)
     return;
+
+  // LED Data is stored in four "banks" for each side
+  // We send it all at once to make it look nicer.
+  // We alternate left and right hands because otherwise
+  // we run into a race condition with updating the next bank
+  // on an ATTiny before it's done writing the previous one to memory
 
   leftHand.sendLEDData();
   rightHand.sendLEDData();
