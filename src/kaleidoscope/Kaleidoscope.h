@@ -48,8 +48,6 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #define KEYMAP(...) { PER_KEY_DATA(XXX, __VA_ARGS__) }
 #endif
 
-typedef HARDWARE_IMPLEMENTATION::KeyAddr KeyAddr;
-
 #define ROWS (KeyboardHardware.matrix_rows)
 #define COLS (KeyboardHardware.matrix_columns)
 #define LED_COUNT (KeyboardHardware.led_count)
