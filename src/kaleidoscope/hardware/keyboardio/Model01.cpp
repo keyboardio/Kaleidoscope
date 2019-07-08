@@ -165,23 +165,6 @@ boolean Model01::ledPowerFault() {
   }
 }
 
-void debugKeyswitchEvent(keydata_t state, keydata_t previousState, uint8_t keynum, KeyAddr key_addr) {
-  if (bitRead(state.all, keynum) != bitRead(previousState.all, keynum)) {
-    Serial.print("Looking at row ");
-    Serial.print(key_addr.row());
-    Serial.print(", col ");
-    Serial.print(key_addr.col());
-    Serial.print(" key # ");
-    Serial.print(keynum);
-    Serial.print(" ");
-    Serial.print(bitRead(previousState.all, keynum));
-    Serial.print(" -> ");
-    Serial.print(bitRead(state.all, keynum));
-    Serial.println();
-  }
-}
-
-
 void Model01::readMatrix() {
   //scan the Keyboard matrix looking for connections
   previousLeftHandState = leftHandState;
