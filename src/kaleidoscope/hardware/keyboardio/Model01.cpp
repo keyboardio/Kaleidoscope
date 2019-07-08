@@ -52,7 +52,7 @@ void Model01::enableScannerPower(void) {
 }
 
 void Model01::enableHighPowerLeds(void) {
-  // This lets the keyboard pull up to 1.6 amps from the host. 
+  // This lets the keyboard pull up to 1.6 amps from the host.
   // That violates the USB spec. But it sure is pretty looking
   DDRE |= _BV(6);
   PORTE &= ~_BV(6);
