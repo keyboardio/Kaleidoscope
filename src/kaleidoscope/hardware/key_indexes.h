@@ -17,6 +17,8 @@
 
 #pragma once
 
+typedef HARDWARE_IMPLEMENTATION::KeyAddr KeyAddr;
+
 /* To be used by the hardware implementations, `keyIndex` tells us the index of
  * a key, from which we can figure out the row and column as needed. The index
  * starts at one, so that plugins that work with a list of key indexes can use
