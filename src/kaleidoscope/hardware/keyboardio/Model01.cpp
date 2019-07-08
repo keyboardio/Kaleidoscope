@@ -28,7 +28,9 @@ namespace keyboardio {
 
 KeyboardioScanner Model01::leftHand(0);
 KeyboardioScanner Model01::rightHand(3);
+
 bool Model01::isLEDChanged = true;
+
 keydata_t Model01::leftHandMask;
 keydata_t Model01::rightHandMask;
 
