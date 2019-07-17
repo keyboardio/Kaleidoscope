@@ -26,12 +26,14 @@ class IdleLEDs: public kaleidoscope::Plugin {
  public:
   IdleLEDs(void) {}
 
-  static uint16_t idle_time_limit;
+  static uint16_t idle_time_limit();
+  static void set_idle_time_limit(uint16_t new_limit);
 
   EventHandlerResult beforeEachCycle();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:
+  static uint32_t idle_time_limit_;
   static uint32_t start_time_;
 };
 }

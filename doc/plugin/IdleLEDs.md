@@ -34,17 +34,22 @@ Because the plugin needs to know about key events, it is best to make it one of
 the first plugins, so it can catch all of them, before any other plugin would
 have a chance to consume key events.
 
-## Plugin properties
+## Plugin Methods
 
 The plugin provides a single object, `IdleLEDs`, with the following
-properties. All times are in seconds.
+methods. All times are in seconds.
 
-### `idle_time_limit`
+### `.idle_time_limit()`
 
-> The amount of time that can pass without a single key being pressed, before
-> the plugin considers the keyboard idle, and turns the LEDs off.
+> The amount of time that can pass without a single key being pressed before
+> the plugin considers the keyboard idle and turns off the LEDs.
 >
 > Defaults to 600 seconds (10 minutes).
+
+### `.set_idle_time_limit(uint16_t new_limit)`
+
+> Sets the amount of time that can pass without a single key being pressed
+> before the plugin considers the keyboard idle and turns off the LEDs.
 
 ## Dependencies
 
