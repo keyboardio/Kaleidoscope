@@ -24,6 +24,10 @@ class LEDSolidColor : public Plugin,
   public LEDModeInterface {
  public:
 
+  LEDSolidColor(cRGB color)
+    : r_(color.r), g_(color.g), b_(color.b)
+  {}
+
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b)
   {}
