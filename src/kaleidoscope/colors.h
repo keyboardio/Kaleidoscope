@@ -156,8 +156,6 @@ constexpr cRGB whitesmoke = CRGB(245, 245, 245);
 constexpr cRGB yellow = CRGB(255, 255, 0);
 constexpr cRGB yellowgreen = CRGB(154, 205, 50);
 
-// Not sure if this is the right place for this...
-
 // Function to dim the color from 0-255 (by default) or over a specified range
 // dims the specified color from 0 (off) to 255 (full)
 inline constexpr float brightnessScale(byte brightness, byte range=255) {
@@ -168,7 +166,7 @@ inline constexpr float brightnessScale(byte brightness, byte range=255) {
 //if brightness is over about 51, and the *original* value for an rgb was over 80, set the new value to 28 if it would otherwise fall below that.
 inline constexpr byte dimLimit(byte brightness, byte rgbByte, byte range = 255) {
   //Uncomment this line to bypass the dimming limiting that prevents lights from blacking out at moderate values
-  //return brightnessScale(brightness, range)*rgbByte;
+  //return brightnessScale(brightness, range) * rgbByte;
   return byte(brightnessScale(brightness, range) >= 0.20 && rgbByte >= 80 && brightnessScale(brightness, range) * rgbByte < 28) ? 28 : brightnessScale(brightness, range) * rgbByte;
 }
 
