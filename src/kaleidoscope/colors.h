@@ -111,8 +111,8 @@ constexpr cRGB oldlace = CRGB(253, 245, 230);
 constexpr cRGB olive = CRGB(128, 128, 0);
 constexpr cRGB olivedrab = CRGB(107, 142, 35);
 constexpr cRGB orange = CRGB(255, 165, 0);
-  // The original orangered looked exactly like red to me, so I adjusted
-  //cRGB orangered = CRGB(255, 69, 0);
+// The original orangered looked exactly like red to me, so I adjusted
+//cRGB orangered = CRGB(255, 69, 0);
 constexpr cRGB orangered = CRGB(255, 100, 0);
 constexpr cRGB orchid = CRGB(218, 112, 214);
 constexpr cRGB palegoldenrod = CRGB(238, 232, 170);
