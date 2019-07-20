@@ -158,7 +158,7 @@ constexpr cRGB yellowgreen = CRGB(154, 205, 50);
 
 // Function to dim the color from 0-255 (by default) or over a specified range
 // dims the specified color from 0 (off) to 255 (full)
-inline constexpr float brightnessScale(byte brightness, byte range=255) {
+inline constexpr float brightnessScale(byte brightness, byte range = 255) {
   return float(brightness) / float(range);
 }
 
@@ -173,8 +173,8 @@ inline constexpr byte dimLimit(byte brightness, byte rgbByte, byte range = 255) 
 //Note that in practice, on the model01, 28 is the lowest value that actually lights up at all
 __attribute__((always_inline))
 inline constexpr cRGB dim(const cRGB &color, byte brightness, byte range = 255) {
-  return CRGB(uint8_t(dimLimit(brightness, color.r, range)), 
-              uint8_t(dimLimit(brightness, color.g, range)), 
+  return CRGB(uint8_t(dimLimit(brightness, color.r, range)),
+              uint8_t(dimLimit(brightness, color.g, range)),
               uint8_t(dimLimit(brightness, color.b, range)));
 }
 
