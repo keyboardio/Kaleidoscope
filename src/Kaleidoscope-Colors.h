@@ -1,6 +1,6 @@
 /* Kaleidoscope-Colors -- Color names for Kaleidoscope
  * Copyright (C) 2019  JD Lien
- * Copyright (C) 2019  Keyboard.io, Inc.
+ * Copyright (C) 2017  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software

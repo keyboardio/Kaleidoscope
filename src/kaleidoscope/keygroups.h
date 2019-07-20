@@ -53,7 +53,7 @@ inline constexpr bool isArrow(const Key& k) {
   return (k.flags == KEY_FLAGS && (k.keyCode >= (Key_RightArrow).keyCode) && (k.keyCode <= (Key_UpArrow).keyCode))?true:false;
 }
 
-//All keypad keys including numbers, and mathemetical operators
+//All keypad keys including numbers, and mathemetical operators.
 //There's another group of more obscure keypad keys that are unused so they don't interfere with consumer keys
 // ((k.keyCode >= (Key_Keypad00).keyCode) && (k.keyCode <= (Key_KeypadHexadecimal).keyCode))
 inline constexpr bool isKeypad(const Key& k) {
