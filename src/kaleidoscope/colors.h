@@ -111,8 +111,8 @@ constexpr cRGB oldlace = CRGB(253, 245, 230);
 constexpr cRGB olive = CRGB(128, 128, 0);
 constexpr cRGB olivedrab = CRGB(107, 142, 35);
 constexpr cRGB orange = CRGB(255, 165, 0);
-  // The original orangered looked exactly like red to me, so I adjusted
-  //cRGB orangered = CRGB(255, 69, 0);
+// The original orangered looked exactly like red to me, so I adjusted
+//cRGB orangered = CRGB(255, 69, 0);
 constexpr cRGB orangered = CRGB(255, 100, 0);
 constexpr cRGB orchid = CRGB(218, 112, 214);
 constexpr cRGB palegoldenrod = CRGB(238, 232, 170);
@@ -161,27 +161,27 @@ constexpr cRGB yellowgreen = CRGB(154, 205, 50);
 // Function to dim the color from 0-255 (by default) or over a specified range
 // dims the specified color from 0 (off) to 255 (full)
 inline constexpr float brightnessScale(byte brightness, byte range=255) {
-  return float(brightness)/float(range);
+  return float(brightness) / float(range);
 }
 
 // dimLimit prevents small adjustments from completely shutting colors off, as they are not visible below 28.
 //if brightness is over about 51, and the *original* value for an rgb was over 80, set the new value to 28 if it would otherwise fall below that.
-inline constexpr byte dimLimit(byte brightness, byte rgbByte, byte range=255) {
+inline constexpr byte dimLimit(byte brightness, byte rgbByte, byte range = 255) {
   //Uncomment this line to bypass the dimming limiting that prevents lights from blacking out at moderate values
   //return brightnessScale(brightness, range)*rgbByte;
-  return byte(brightnessScale(brightness, range) >= 0.20 && rgbByte >= 80 && brightnessScale(brightness, range)*rgbByte < 28)?28:brightnessScale(brightness, range)*rgbByte;
+  return byte(brightnessScale(brightness, range) >= 0.20 && rgbByte >= 80 && brightnessScale(brightness, range) * rgbByte < 28) ? 28 : brightnessScale(brightness, range) * rgbByte;
 }
 
 //Note that in practice, on the model01, 28 is the lowest value that actually lights up at all
 __attribute__((always_inline))
-inline constexpr cRGB dim(const cRGB &color, byte brightness, byte range=255) {
+inline constexpr cRGB dim(const cRGB &color, byte brightness, byte range = 255) {
   return CRGB(uint8_t(dimLimit(brightness, color.r, range)), 
               uint8_t(dimLimit(brightness, color.g, range)), 
               uint8_t(dimLimit(brightness, color.b, range)));
 }
 
 inline constexpr bool isColorMatch(cRGB color1, cRGB color2) {
-  return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b)?true:false;
+  return (color1.r == color2.r && color1.g == color2.g && color1.b == color2.b) ? true : false;
 }
 
 } // namespace colors
