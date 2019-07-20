@@ -5,6 +5,8 @@
  * to color keys by the group that they are in.
  */ 
 
+namespace kaleidoscope {
+
 //Alphabetical keys A-Z
 inline constexpr bool isAlpha(const Key& k) {
   return ( k.flags == KEY_FLAGS && (k.keyCode >= (Key_A).keyCode) && (k.keyCode <= (Key_Z).keyCode) )?true:false;
@@ -190,3 +192,5 @@ inline constexpr bool isMouseWarp(const Key& k) {
 inline constexpr bool isMouse(const Key& k) {
 	return (isMouseMove(k) || isMouseWheel(k) || isMouseButton(k) || isMouseWarp(k));
 }
+
+}//namespace kaleidoscope
