@@ -50,7 +50,7 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 void setup() {
   Kaleidoscope.setup();
 
-  IdleLEDs.set_idle_time_limit(300); // 5 minutes
+  IdleLEDs.setIdleTimeoutSeconds(300); // 5 minutes
 
   LEDRainbowWaveEffect.activate();
 }
