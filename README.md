@@ -12,13 +12,17 @@ To use the plugin, include the header, and tell the firmware to use it:
 ```c++
 #include <Kaleidoscope-LEDEffect-DigitalRain.h>
 
+KALEIDOSCOPE_INIT_PLUGINS(
+  LEDDigitalRainEffect
+);
+
 void setup() {
-  Kaleidoscope.use(&LEDDigitalRainEffect);
+  Kaleidoscope.setup();
 
   // Optionally adjust the configuration
   LEDDigitalRainEffect.DROP_TICKS = 22; // Make the rain fall faster
 
-  Kaleidoscope.setup();
+  LEDDigitalRainEffect.activate();
 }
 ```
 
