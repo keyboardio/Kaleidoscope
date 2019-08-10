@@ -19,7 +19,6 @@ Setup the Arduino IDE on your system. Make sure you install at least version 1.6
 
 ### macOS
 ```sh
-
 mkdir -p $HOME/Documents/Arduino/hardware
 cd $HOME/Documents/Arduino/hardware
 ```
@@ -37,9 +36,9 @@ cd $HOME/Arduino/hardware
 
 ### Install the libraries and hardware definitions
 
-# then clone the hardware definitions
+## Clone the hardware definitions
+```sh
 git clone --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git keyboardio
-
 
 ```
 
