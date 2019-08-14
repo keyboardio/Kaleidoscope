@@ -26,7 +26,7 @@ namespace kaleidoscope { namespace plugin {
 				}
 
 				// Set the colour for this pixel
-				::LEDControl.setCrgbAt(row, col, getColorFromIntensity(map[col][row]));
+				::LEDControl.setCrgbAt(KeyAddr(row, col), getColorFromIntensity(map[col][row]));
 			}
 		}
 
