@@ -37,6 +37,9 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
 
   EventHandlerResult beforeReportingState();
   EventHandlerResult onLayerChange();
+  EventHandlerResult onSetup() {
+    return onLayerChange();
+  }
 
  private:
   static bool highlight_normal_modifiers_;
