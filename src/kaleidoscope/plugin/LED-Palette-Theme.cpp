@@ -51,7 +51,7 @@ void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_
   uint8_t pos = KeyboardHardware.getLedIndex(key_addr);
 
   cRGB color = lookupColorAtPosition(map_base, pos);
-  ::LEDControl.setCrgbAt(KeyAddr(pos), color);
+  ::LEDControl.setCrgbAt(key_addr, color);
 }
 
 
