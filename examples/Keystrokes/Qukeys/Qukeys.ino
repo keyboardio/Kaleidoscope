@@ -70,8 +70,8 @@ void setup() {
     kaleidoscope::plugin::Qukey(0, KeyAddr(2, 4), Key_LeftShift),    // F/shift
     kaleidoscope::plugin::Qukey(0, KeyAddr(3, 6), ShiftToLayer(1))   // Q/layer-shift (on `fn`)
   )
-  Qukeys.setTimeout(200);
-  Qukeys.setReleaseDelay(20);
+  Qukeys.setHoldTimeout(1000);
+  Qukeys.setOverlapThreshold(50);
 
   Kaleidoscope.setup();
 }
