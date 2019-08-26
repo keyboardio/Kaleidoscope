@@ -53,6 +53,8 @@ class Atreus2: public kaleidoscope::hardware::ATMegaKeyboard {
  protected:
 };
 
+uint8_t Atreus2::debounce = 8;
+
 #define PER_KEY_DATA(dflt,                                                    \
     R0C0, R0C1, R0C2, R0C3, R0C4,             R0C7, R0C8, R0C9, R0C10, R0C11, \
     R1C0, R1C1, R1C2, R1C3, R1C4,             R1C7, R1C8, R1C9, R1C10, R1C11, \
