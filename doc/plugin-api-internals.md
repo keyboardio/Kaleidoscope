@@ -1,14 +1,10 @@
 # Kaleidoscope Plugin API Internals
 
-This document attempts to explain how the plugin system works internally, behind
-the scenes. We feel this is necessary, because there are some unorthodox
-solutions in play, which make the code incredibly hard to untangle. This is an
-unavoidable side-effect of employing a system that lets us use non-virtual
-functions, and save large amounts of RAM thereby. It would be a lot simpler
-without this feature, but alas, saving hundreds of bytes of RAM is something we
-felt is worth the complexity.
+In this document we explain how the plugin system works behind the scenes. 
 
-Lets start at the top:
+This is useful because there are some unorthodox solutions in play that make the code incredibly hard to untangle. It's an unavoidable side effect of employing a system that uses non-virtual functions, which lets us save large amounts of RAM.
+
+Let's start at the top:
 
 ## `KALEIDOSCOPE_INIT_PLUGINS`
 
@@ -45,20 +41,20 @@ another header, because it belongs to `Kaleidoscope.h`.
 This is where things get interesting. This macro does two things:
 
  - It creates `kaleidoscope_internal::EventDispatcher`, a class with a single
-   method, `apply`. This is a templated method, the template argument is the
-   method `apply` will call. Thus, `EventDispatcher::template apply<foo>` will
-   resolve to a function that calls the `foo` method of each plugin we listed
+   method, `apply`. This is a templated method. The template argument is the
+   method `apply` calls. Therefore, `EventDispatcher::template apply<foo>` 
+   resolves to  a function that calls the `foo` method of each plugin we list
    for `KALEIDOSCOPE_INIT_PLUGINS`. We'll see in a bit how this happens.
 
  - The other part creates overrides for the `Kaleidoscope::Hooks::` family of
    functions. These are wrappers around `EventDispatcher::template apply<foo>`.
-   We have these so higher level code would not need to care about the
-   implementation details, so that it can invoke the hooks as if they were
+   We have these so that higher level code does not need to be concerned with the
+   implementation details. It can invoke the hooks as if they were
    ordinary functions.
 
 ## `_FOR_EACH_EVENT_HANDLER(_REGISTER_EVENT_HANDLER)`
 
-Lets look at `_FOR_EACH_EVENT_HANDLER` and `_REGISTER_EVENT_HANDLER` first,
+Let's look at `_FOR_EACH_EVENT_HANDLER` and `_REGISTER_EVENT_HANDLER` first,
 because that's easier to explain, and does not lead down another rabbit hole.
 
 ### `_REGISTER_EVENT_HANDLER`
@@ -163,7 +159,7 @@ this to be able to make sense of `_REGISTER_EVENT_HANDLER` above.
 
 ### `_INLINE_EVENT_HANDLER_FOR_PLUGIN`
 
-This in isolation, is not very interesting, and is closely tied to
+In isolation, this is not very interesting, and is closely tied to
 `EventDispatcher`. The definition is here so we can look at it while we learn
 the details of `EventDispatcher` below.
 
@@ -180,10 +176,10 @@ the details of `EventDispatcher` below.
 
 ### Back to `EventDispatcher`...
 
-The `EventDispatcher` structure has a single method: `apply<>`, which needs an
-event handler as its template argument. What the macro does, is call the event
+The `EventDispatcher` structure has a single method: `apply<>`, which requires an
+event handler as its template argument. The macros calls the event
 handler given in the template argument for each and every initialised plugin.
-It's best explained with an example! Lets use two plugins, `SomePlugin` and
+It's best explained with an example! Let's use two plugins, `SomePlugin` and
 `ExampleEffect`:
 
 ```c++
@@ -243,9 +239,9 @@ struct EventDispatcher {
 Because we call `EventHandler_onSetup::call` with the plugin as the first
 argument, and because `call` is also a templated function, where the first
 argument is templated, we get a method that is polymorphic on its first
-argument. Meaning, for each and every plugin, we'll have a matching
-`EventHandler_onSetup::call`, that is tied to that plugin. *This* is the magic
-that lets us use non-virtual methods!
+argument. This means that for each and every plugin, we have a matching
+`EventHandler_onSetup::call` that is tied to that plugin. *This* is the magic
+that lets us use non-virtual methods.
 
 ## Exploring what the compiler does
 
@@ -335,8 +331,8 @@ present.
 
 ## Summary
 
-As we can see, there is a lot going on behind the scenes, and a combination of
+As you can see, there is a lot going on behind the scenes, and a combination of
 template meta programming and pre-processor macros is used to accomplish our
-goal. But following the code path like we did above allows us to see what the
-compiler sees (more or less), and inlining all the things that are done
-compile-time gives us the final code, which is pretty simple by that point.
+goal. Following the code path as outlined above allows us to see what the
+compiler sees (more or less), and inlining all the things that are done at 
+compile-time provides us with the final code, which is pretty simple by that point.
