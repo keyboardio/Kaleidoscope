@@ -121,7 +121,7 @@ int8_t Model01::getLedIndex(KeyAddr key_addr) {
 }
 
 cRGB Model01::getCrgbAt(int8_t i) {
-  if (i < 0 || i > 64)
+  if (i < 0 || i >= 64)
     return {0, 0, 0};
 
   if (i < 32) {
