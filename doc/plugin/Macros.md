@@ -171,6 +171,21 @@ not supported by this compact representation.
 * `U(key)`, `Ur(key)`, `Uc(key)`: Simulates a key being released (going up).
 * `T(key)`, `Tr(key)`, `Tc(key)`: Simulates a key being tapped (pressed first, then released).
 
+### Key sequences
+
+One often used case for macros is to type longer sequences of text. In these
+cases, assembling the macro step by step using the events described above is
+verbose both in source code, and compiled. For this reason, the plugin provides
+two other actions, both of which take a sequence of keys, and will tap all of
+them in order.
+
+* `SEQ(K(key1), K(key2), ...)`: Simulates all the given keys being tapped in
+  order, with the currently active interval waited between them. The keys need
+  to be specified by their full name.
+* `SEQc(Kc(key1), Kc(key2), ...)`: Same as `SEQ()`, but the keys are prefixed
+  with `Key_`, and they ignore the `flags` component of a key, and as such, are
+  limited to ordinary keys.
+
 ### Controlling when to send reports
 
 While the plugin will - by default - send a report after every step, that is not

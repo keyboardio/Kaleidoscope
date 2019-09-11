@@ -1,5 +1,5 @@
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -39,17 +39,21 @@ void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state, bool explicit_rep
   kaleidoscope::hid::sendMouseReport();
 }
 
-static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates, bool explicit_report) {
-  Key key;
-  key.flags = flags;
-  key.keyCode = pgm_read_byte(macro_p++);
-
+static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
   if (keyIsPressed(keyStates)) {
     playMacroKeyswitchEvent(key, IS_PRESSED, explicit_report);
   }
   if (keyWasPressed(keyStates)) {
     playMacroKeyswitchEvent(key, WAS_PRESSED, explicit_report);
   }
+}
+
+static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates, bool explicit_report) {
+  Key key;
+  key.flags = flags;
+  key.keyCode = pgm_read_byte(macro_p++);
+
+  playKeyCode(key, keyStates, explicit_report);
 }
 
 void Macros_::play(const macro_t *macro_p) {
@@ -103,6 +107,26 @@ void Macros_::play(const macro_t *macro_p) {
     case MACRO_ACTION_STEP_TAPCODE:
       readKeyCodeAndPlay(macro_p++, 0, IS_PRESSED | WAS_PRESSED, false);
       break;
+
+    case MACRO_ACTION_STEP_TAP_SEQUENCE: {
+      uint8_t keyCode;
+      do {
+        flags = pgm_read_byte(macro_p++);
+        keyCode = pgm_read_byte(macro_p++);
+        playKeyCode(Key(keyCode, flags), IS_PRESSED | WAS_PRESSED, false);
+        delay(interval);
+      } while (!(flags == 0 && keyCode == 0));
+      break;
+    }
+    case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
+      uint8_t keyCode;
+      do {
+        keyCode = pgm_read_byte(macro_p++);
+        playKeyCode(Key(keyCode, 0), IS_PRESSED | WAS_PRESSED, false);
+        delay(interval);
+      } while (keyCode != 0);
+      break;
+    }
 
     case MACRO_ACTION_END:
     default:
