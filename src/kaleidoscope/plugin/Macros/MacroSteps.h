@@ -1,5 +1,5 @@
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -33,6 +33,9 @@ typedef enum {
   MACRO_ACTION_STEP_EXPLICIT_REPORT,
   MACRO_ACTION_STEP_IMPLICIT_REPORT,
   MACRO_ACTION_STEP_SEND_REPORT,
+
+  MACRO_ACTION_STEP_TAP_SEQUENCE,
+  MACRO_ACTION_STEP_TAP_CODE_SEQUENCE,
 } MacroActionStepType;
 
 typedef uint8_t macro_t;
@@ -44,16 +47,23 @@ typedef uint8_t macro_t;
 #define I(n)  MACRO_ACTION_STEP_INTERVAL, n
 #define W(n)  MACRO_ACTION_STEP_WAIT, n
 
-#define Dr(k) MACRO_ACTION_STEP_KEYDOWN, (k).flags, (k).keyCode
+#define Kr(k) (k).flags, (k).keyCode
+#define Kc(k) (Key_ ## k).keyCode
+#define K(k) Kr(Key_ ## k)
+
+#define Dr(k) MACRO_ACTION_STEP_KEYDOWN, Kr(k)
 #define D(k)  Dr(Key_ ## k)
-#define Ur(k) MACRO_ACTION_STEP_KEYUP, (k).flags, (k).keyCode
+#define Ur(k) MACRO_ACTION_STEP_KEYUP, Kr(k)
 #define U(k)  Ur(Key_ ## k)
-#define Tr(k) MACRO_ACTION_STEP_TAP, (k).flags, (k).keyCode
+#define Tr(k) MACRO_ACTION_STEP_TAP, Kr(k)
 #define T(k)  Tr(Key_ ## k)
 
-#define Dc(k) MACRO_ACTION_STEP_KEYCODEDOWN, (Key_ ## k).keyCode
-#define Uc(k) MACRO_ACTION_STEP_KEYCODEUP, (Key_ ## k).keyCode
-#define Tc(k) MACRO_ACTION_STEP_TAPCODE, (Key_ ## k).keyCode
+#define Dc(k) MACRO_ACTION_STEP_KEYCODEDOWN, Kc(k)
+#define Uc(k) MACRO_ACTION_STEP_KEYCODEUP, Kc(k)
+#define Tc(k) MACRO_ACTION_STEP_TAPCODE, Kc(k)
+
+#define SEQ(...) MACRO_ACTION_STEP_TAP_SEQUENCE, __VA_ARGS__, MACRO_ACTION_END, MACRO_ACTION_END
+#define SEQc(...) MACRO_ACTION_STEP_TAP_CODE_SEQUENCE, __VA_ARGS__, MACRO_ACTION_END
 
 #define WITH_EXPLICIT_REPORT MACRO_ACTION_STEP_EXPLICIT_REPORT
 #define WITH_IMPLICIT_REPORT MACRO_ACTION_STEP_IMPLICIT_REPORT
