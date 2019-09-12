@@ -33,12 +33,13 @@
 #include "kaleidoscope/macro_helpers.h"
 
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
-class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
-  friend class ATMegaKeyboard;
+class Atreus: public kaleidoscope::hardware::ATMegaKeyboard<Atreus> {
+  friend class ATMegaKeyboard<Atreus>;
  public:
   Atreus(void) {}
 
@@ -70,9 +71,8 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
     return matrix_columns * matrix_rows;
   }
 
-  void resetDevice();
-
  protected:
+  kaleidoscope::driver::bootloader::avr::HalfKay bootloader_;
 };
 
 #define PER_KEY_DATA(dflt,                                                  \

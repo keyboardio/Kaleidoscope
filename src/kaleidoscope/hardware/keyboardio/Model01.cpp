@@ -207,27 +207,6 @@ void Model01::scanMatrix() {
   actOnMatrixScan();
 }
 
-void Model01::rebootBootloader() {
-  // Set the magic bits to get a Caterina-based device
-  // to reboot into the bootloader and stay there, rather
-  // than run move onward
-  //
-  // These values are the same as those defined in
-  // Caterina.c
-
-  uint16_t bootKey = 0x7777;
-  uint16_t *const bootKeyPtr = reinterpret_cast<uint16_t *>(0x0800);
-
-  // Stash the magic key
-  *bootKeyPtr = bootKey;
-
-  // Set a watchdog timer
-  wdt_enable(WDTO_120MS);
-
-  while (1) {} // This infinite loop ensures nothing else
-  // happens before the watchdog reboots us
-}
-
 // In the maskKey(), unMaskKey(), and isKeyMasked() functions, we read and write bits in
 // two bitfields -- one for each half of the keyboard. The fourth bit of the column number
 // tells us which bitfield (right or left) to access, thus the "8" (B00001000). The row

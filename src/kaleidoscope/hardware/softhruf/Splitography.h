@@ -34,11 +34,14 @@
 #include "kaleidoscope/hardware/avr/pins_and_ports.h"
 
 #include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#define KALEIDOSCOPE_BOOTLOADER_FLIP 1
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace softhruf {
-class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
+class Splitography: public kaleidoscope::hardware::ATMegaKeyboard<Splitography> {
+  friend class ATMegaKeyboard<Splitography>;
  public:
   Splitography(void) {
     mcu_.disableJTAG();
@@ -55,6 +58,8 @@ class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
   static constexpr int8_t numKeys() {
     return matrix_columns * matrix_rows;
   }
+ protected:
+  kaleidoscope::driver::bootloader::avr::FLIP bootloader_;
 };
 
 #define PER_KEY_DATA(dflt,                                                       \
