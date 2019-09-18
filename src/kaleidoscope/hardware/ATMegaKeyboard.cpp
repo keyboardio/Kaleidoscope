@@ -110,7 +110,8 @@ void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
       uint8_t keyState = (bitRead(KeyboardHardware.previousKeyState_[row], col) << 0) |
                          (bitRead(KeyboardHardware.keyState_[row], col) << 1);
       if (keyState) {
-        handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
+       //handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
+        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
       }
     }
     KeyboardHardware.previousKeyState_[row] = KeyboardHardware.keyState_[row];
