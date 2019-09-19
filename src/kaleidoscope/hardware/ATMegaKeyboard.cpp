@@ -80,7 +80,7 @@ bool ATMegaKeyboard::isKeyswitchPressed(KeyAddr key_addr) {
 
 bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return isKeyswitchPressed(KeyAddr(keyIndex));
+  return isKeyswitchPressed(::KeyAddr(keyIndex));
 }
 
 
@@ -100,7 +100,7 @@ bool ATMegaKeyboard::wasKeyswitchPressed(KeyAddr key_addr) {
 
 bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return wasKeyswitchPressed(KeyAddr(keyIndex));
+  return wasKeyswitchPressed(::KeyAddr(keyIndex));
 }
 
 
@@ -110,8 +110,7 @@ void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
       uint8_t keyState = (bitRead(KeyboardHardware.previousKeyState_[row], col) << 0) |
                          (bitRead(KeyboardHardware.keyState_[row], col) << 1);
       if (keyState) {
-       //handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
-        handleKeyswitchEvent(Key_NoKey, row, col, keyState);
+       handleKeyswitchEvent(Key_NoKey, ::KeyAddr(row, col), keyState);
       }
     }
     KeyboardHardware.previousKeyState_[row] = KeyboardHardware.keyState_[row];
