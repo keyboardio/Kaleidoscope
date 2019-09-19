@@ -50,6 +50,7 @@ struct cRGB {
   static const int8_t matrix_columns = NUM_ARGS(COL_PINS_);              \
   static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;    \
   static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_; \
+  typedef MatrixAddr<NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_)> KeyAddr;  \
                                                                          \
   static uint16_t previousKeyState_[matrix_rows];                        \
   static uint16_t keyState_[matrix_rows];                                \
