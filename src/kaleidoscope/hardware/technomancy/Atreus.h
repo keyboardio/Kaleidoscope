@@ -65,7 +65,6 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
 
   static constexpr int8_t led_count = 0;
 
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
   static constexpr int8_t numKeys() {
     return matrix_columns * matrix_rows;
   }
