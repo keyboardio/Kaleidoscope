@@ -46,13 +46,20 @@ namespace kaleidoscope {
 /** Kaleidoscope Hardware base class.
  * Essential methods all hardware libraries must implement.
  */
+
+struct NoopKeyAddr {
+  NoopKeyAddr() {}
+  template<typename T_>
+  NoopKeyAddr(T_) {}
+};
+
 class Hardware {
  public:
 
   // To satisfy the interface of those methods that allow
-  // for matrix addressing we define default key and led address classes.
-  // Those typedefs are supposed to overridden by derived hardware classes.
-  typedef MatrixAddr<0, 0> KeyAddr;
+  // for matrix addressing we define a default key address class.
+  // This typedef is supposed to overridden by derived hardware classes.
+  typedef NoopKeyAddr KeyAddr;
 
   /**
    * @defgroup kaleidoscope_hardware_leds Kaleidoscope::Hardware/LEDs

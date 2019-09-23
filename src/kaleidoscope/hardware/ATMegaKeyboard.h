@@ -45,6 +45,66 @@ struct cRGB {
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
+// By implementing all KeyAddr based access methods via macros in
+// the derived hardware classes, we deal with the problem that
+// keyboard matrix dimension (matrix_rows/matrix_columns)
+// and thus type KeyAddr is only known to the derived hardware classes
+// but not to ATMegaKeyboard.
+//
+#define ATMEGA_KEYBOARD_MATRIX_ACCESS_METHODS                            \
+  bool isKeyswitchPressed(KeyAddr key_addr) {                            \
+    return (bitRead(keyState_[key_addr.row()],                           \
+               key_addr.col()) != 0);                                    \
+  }                                                                      \
+  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(uint8_t row, byte col)\
+  {                                                                      \
+    return isKeyswitchPressed(KeyAddr(row, col));                        \
+  }                                                                      \
+  bool isKeyswitchPressed(uint8_t keyIndex) {                            \
+    keyIndex--;                                                          \
+    return isKeyswitchPressed(KeyAddr(keyIndex));                        \
+  }                                                                      \
+  bool wasKeyswitchPressed(KeyAddr key_addr) {                           \
+    return (bitRead(previousKeyState_[key_addr.row()],                   \
+               key_addr.col()) != 0);                                    \
+  }                                                                      \
+  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(uint8_t row, byte col)\
+  {                                                                      \
+    return wasKeyswitchPressed(KeyAddr(row, col));                       \
+  }                                                                      \
+  bool wasKeyswitchPressed(uint8_t keyIndex) {                           \
+    keyIndex--;                                                          \
+    return wasKeyswitchPressed(KeyAddr(keyIndex));                       \
+  }                                                                      \
+  void maskKey(KeyAddr key_addr) {                                       \
+    if (!key_addr.isValid())                                             \
+      return;                                                            \
+                                                                         \
+    bitWrite(masks_[key_addr.row()], key_addr.col(), 1);                 \
+  }                                                                      \
+  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {            \
+    maskKey(KeyAddr(row, col));                                          \
+  }                                                                      \
+  void unMaskKey(KeyAddr key_addr) {                                     \
+    if (!key_addr.isValid())                                             \
+      return;                                                            \
+                                                                         \
+    bitWrite(masks_[key_addr.row()], key_addr.col(), 0);                 \
+  }                                                                      \
+  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {          \
+    unMaskKey(KeyAddr(row, col));                                        \
+  }                                                                      \
+  bool isKeyMasked(KeyAddr key_addr) {                                   \
+    if (!key_addr.isValid())                                             \
+      return false;                                                      \
+                                                                         \
+    return bitRead(masks_[key_addr.row()],                               \
+               key_addr.col());                                          \
+  }                                                                      \
+  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {        \
+    return isKeyMasked(KeyAddr(row, col));                               \
+  }
+
 #define ATMEGA_KEYBOARD_CONFIG(ROW_PINS_, COL_PINS_)          	         \
   static const int8_t matrix_rows = NUM_ARGS(ROW_PINS_);                 \
   static const int8_t matrix_columns = NUM_ARGS(COL_PINS_);              \
@@ -55,7 +115,9 @@ struct cRGB {
   static uint16_t previousKeyState_[matrix_rows];                        \
   static uint16_t keyState_[matrix_rows];                                \
   static uint16_t masks_[matrix_rows];                                   \
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
+  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];          \
+                                                                         \
+  ATMEGA_KEYBOARD_MATRIX_ACCESS_METHODS
 
 #define ATMEGA_KEYBOARD_DATA(BOARD)                             \
   const int8_t BOARD::matrix_rows;                              \
@@ -85,31 +147,8 @@ class ATMegaKeyboard : public kaleidoscope::Hardware {
   void scanMatrix();
 
   uint8_t pressedKeyswitchCount();
-  bool isKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(uint8_t row, byte col) {
-    return isKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool isKeyswitchPressed(uint8_t keyIndex);
 
   uint8_t previousPressedKeyswitchCount();
-  bool wasKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(uint8_t row, byte col) {
-    return wasKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool wasKeyswitchPressed(uint8_t keyIndex);
-
-  void maskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
-    maskKey(KeyAddr(row, col));
-  }
-  void unMaskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
-    unMaskKey(KeyAddr(row, col));
-  }
-  bool isKeyMasked(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return isKeyMasked(KeyAddr(row, col));
-  }
 
   static bool do_scan_;
 

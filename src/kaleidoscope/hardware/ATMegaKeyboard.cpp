@@ -74,16 +74,6 @@ uint8_t ATMegaKeyboard::pressedKeyswitchCount() {
   return count;
 }
 
-bool ATMegaKeyboard::isKeyswitchPressed(KeyAddr key_addr) {
-  return (bitRead(KeyboardHardware.keyState_[key_addr.row()], key_addr.col()) != 0);
-}
-
-bool ATMegaKeyboard::isKeyswitchPressed(uint8_t keyIndex) {
-  keyIndex--;
-  return isKeyswitchPressed(::KeyAddr(keyIndex));
-}
-
-
 uint8_t ATMegaKeyboard::previousPressedKeyswitchCount() {
   uint8_t count = 0;
 
@@ -92,17 +82,6 @@ uint8_t ATMegaKeyboard::previousPressedKeyswitchCount() {
   }
   return count;
 }
-
-bool ATMegaKeyboard::wasKeyswitchPressed(KeyAddr key_addr) {
-  return (bitRead(KeyboardHardware.previousKeyState_[key_addr.row()], key_addr.col()) != 0);
-
-}
-
-bool ATMegaKeyboard::wasKeyswitchPressed(uint8_t keyIndex) {
-  keyIndex--;
-  return wasKeyswitchPressed(::KeyAddr(keyIndex));
-}
-
 
 void __attribute__((optimize(3))) ATMegaKeyboard::actOnMatrixScan() {
   for (byte row = 0; row < KeyboardHardware.matrix_rows; row++) {
@@ -125,27 +104,6 @@ void ATMegaKeyboard::scanMatrix() {
   }
   // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   KeyboardHardware.actOnMatrixScan();
-}
-
-void ATMegaKeyboard::maskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return;
-
-  bitWrite(KeyboardHardware.masks_[key_addr.row()], key_addr.col(), 1);
-}
-
-void ATMegaKeyboard::unMaskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return;
-
-  bitWrite(KeyboardHardware.masks_[key_addr.row()], key_addr.col(), 0);
-}
-
-bool ATMegaKeyboard::isKeyMasked(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return false;
-
-  return bitRead(KeyboardHardware.masks_[key_addr.row()], key_addr.col());
 }
 
 /*
