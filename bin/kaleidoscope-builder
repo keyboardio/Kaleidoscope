@@ -300,6 +300,7 @@ compile () {
 	      -build-cache "${CORE_CACHE_PATH}" \
 	      -build-path "${BUILD_PATH}" \
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
+	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
