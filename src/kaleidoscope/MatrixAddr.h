@@ -68,12 +68,11 @@ class MatrixAddr {
   template<typename MatrixAddr__>
   explicit
   constexpr MatrixAddr(const MatrixAddr__ &other)
-    : MatrixAddr(other.row(), other.col()) 
-  {
-     static_assert(MatrixAddr__::rows <= ThisType::rows,
-        "Matrix type conversion failed. Source type must not have greater row size than target type");
-     static_assert(MatrixAddr__::cols <= ThisType::cols,
-        "Matrix type conversion failed. Source type must not have greater col size than target type");
+    : MatrixAddr(other.row(), other.col()) {
+    static_assert(MatrixAddr__::rows <= ThisType::rows,
+                  "Matrix type conversion failed. Source type must not have greater row size than target type");
+    static_assert(MatrixAddr__::cols <= ThisType::cols,
+                  "Matrix type conversion failed. Source type must not have greater col size than target type");
   }
 
   constexpr uint8_t row() const {
