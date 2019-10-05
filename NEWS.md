@@ -98,7 +98,7 @@ Historically, Kaleidoscope used the dimensional array `keymaps` to map between l
 
 ## `PER_KEY_DATA` macros
 
-New `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros are available (when defined by a hardware implementation). These macros make it easier to build features like `KEYMAPS` that track some data about each key on a keyboard. 
+New `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros are available (when defined by a hardware implementation). These macros make it easier to build features like `KEYMAPS` that track some data about each key on a keyboard.
 
 ## New hardware support
 
@@ -114,6 +114,10 @@ For more information, please see the hardware plugins' documentation.
 To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](doc/plugin/ATMegaKeyboard.md) base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
 
 ## New plugins
+
+### DynamicMacros
+
+The [DynamicMacros](doc/plugin/DynamicMacros.md) plugin provides a way to use and update macros via the Focus API, through Chrysalis.
 
 ### IdleLEDs
 
