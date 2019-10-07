@@ -113,9 +113,9 @@ struct cRGB {
   typedef MatrixAddr<NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_)> KeyAddr;  \
                                                                          \
   static uint16_t previousKeyState_[matrix_rows];                        \
-  static uint16_t keyState_[matrix_rows];                                \
+  static volatile uint16_t keyState_[matrix_rows];                                \
   static uint16_t masks_[matrix_rows];                                   \
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];          \
+  static volatile uint8_t debounce_matrix_[matrix_rows][matrix_columns];          \
                                                                          \
   ATMEGA_KEYBOARD_MATRIX_ACCESS_METHODS
 
@@ -125,12 +125,12 @@ struct cRGB {
   constexpr uint8_t BOARD::matrix_row_pins[matrix_rows];        \
   constexpr uint8_t BOARD::matrix_col_pins[matrix_columns];     \
   uint16_t BOARD::previousKeyState_[matrix_rows];               \
-  uint16_t BOARD::keyState_[matrix_rows];                       \
+  volatile uint16_t BOARD::keyState_[matrix_rows];                       \
   uint16_t BOARD::masks_[matrix_rows];                          \
-  uint8_t BOARD::debounce_matrix_[matrix_rows][matrix_columns]; \
+  volatile uint8_t BOARD::debounce_matrix_[matrix_rows][matrix_columns]; \
                                                                 \
   ISR(TIMER1_OVF_vect) {                                        \
-    BOARD::do_scan_ = true;                                     \
+    KeyboardHardware.readMatrix();				\
   }
 
 namespace kaleidoscope {
@@ -150,7 +150,6 @@ class ATMegaKeyboard : public kaleidoscope::Hardware {
 
   uint8_t previousPressedKeyswitchCount();
 
-  static bool do_scan_;
 
  protected:
   kaleidoscope::driver::mcu::ATMega32U4 mcu_;
