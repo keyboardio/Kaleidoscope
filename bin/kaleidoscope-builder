@@ -216,6 +216,8 @@ hex_with_bootloader () {
         compile
     fi
 
+    find_bootloader_path
+
     awk '/^:00000001FF/ == 0' "${HEX_FILE_PATH}" > "${HEX_FILE_WITH_BOOTLOADER_PATH}"
     echo "Using ${BOOTLOADER_PATH}"
     ${MD5} "${BOOTLOADER_PATH}"
