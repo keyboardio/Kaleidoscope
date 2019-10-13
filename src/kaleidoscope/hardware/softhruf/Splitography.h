@@ -28,31 +28,29 @@
 
 #include <Arduino.h>
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::softhruf::Splitography
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/hardware/softhruf/splitography/SplitographyKeyScannerDescription.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/driver/mcu/ATMega32U4.h"
+#include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+
+#include "kaleidoscope/DeviceDescription.h"
+#include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace softhruf {
-class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
+
+struct SplitographyDeviceDescription : kaleidoscope::DeviceDescription {
+  typedef SplitographyKeyScannerDescription KeyScannerDescription;
+  typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<SplitographyKeyScannerDescription> KeyScanner;
+  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+};
+
+class Splitography: public kaleidoscope::Device<SplitographyDeviceDescription> {
  public:
   Splitography(void) {
     mcu_.disableJTAG();
-  }
-
-  ATMEGA_KEYBOARD_CONFIG(
-    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
-  );
-
-  static constexpr int8_t led_count = 0;
-
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
   }
 };
 
