@@ -21,30 +21,28 @@
 
 #include <Arduino.h>
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::olkb::Planck
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/hardware/olkb/planck/PlanckKeyScannerDescription.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/driver/mcu/ATMega32U4.h"
+#include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+
+#include "kaleidoscope/DeviceDescription.h"
+#include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace olkb {
-class Planck: public kaleidoscope::hardware::ATMegaKeyboard {
+
+struct PlanckDeviceDescription : kaleidoscope::DeviceDescription {
+  typedef PlanckKeyScannerDescription KeyScannerDescription;
+  typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<PlanckKeyScannerDescription> KeyScanner;
+  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+};
+
+class Planck: public kaleidoscope::Device<PlanckDeviceDescription> {
  public:
   Planck(void) {}
-
-  ATMEGA_KEYBOARD_CONFIG(
-    ROW_PIN_LIST({ PIN_D0, PIN_D5, PIN_B5, PIN_B6 }),
-    COL_PIN_LIST({ PIN_F1, PIN_F0, PIN_B0, PIN_C7, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_D4, PIN_D6, PIN_B4, PIN_D7 })
-  );
-
-  static constexpr int8_t led_count = 0;
-
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
-  }
 };
 
 #define PER_KEY_DATA(dflt,                                                       \
