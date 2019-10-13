@@ -34,33 +34,31 @@
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "kaleidoscope/macro_helpers.h"
-
 struct cRGB {
   uint8_t r, g, b;
 };
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/Hardware.h"
-#include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxKeyScannerDescription.h"
+#include "kaleidoscope/driver/led/NoLeds.h"
+#include "kaleidoscope/driver/mcu/ATMega32U4.h"
+
+#include "kaleidoscope/DeviceDescription.h"
+#include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace ez {
 
-class ErgoDox : public kaleidoscope::Hardware {
+struct ErgoDoxDeviceDescription : public kaleidoscope::DeviceDescription {
+  typedef ErgoDoxKeyScannerDescription KeyScannerDescription;
+  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+};
+
+class ErgoDox : public kaleidoscope::Device<ErgoDoxDeviceDescription> {
  public:
   ErgoDox(void) {}
-
-  static constexpr byte matrix_columns = 6;
-  static constexpr byte matrix_rows = 14;
-  static constexpr int8_t led_count = 0;
-
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
-  }
 
   void scanMatrix(void);
   void readMatrix(void);
