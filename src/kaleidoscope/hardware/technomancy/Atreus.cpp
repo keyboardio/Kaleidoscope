@@ -33,8 +33,7 @@ namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
 
-ATMEGA_KEYBOARD_DATA(Atreus);
-constexpr int8_t Atreus::led_count;
+ATMEGA_KEYSCANNER_DATA(kaleidoscope::hardware::technomancy::AtreusDeviceDescription::KeyScanner);
 
 // Atreus-specific stuff
 
