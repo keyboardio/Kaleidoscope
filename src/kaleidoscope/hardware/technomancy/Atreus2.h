@@ -22,34 +22,29 @@
 
 #include <Arduino.h>
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::technomancy::Atreus2
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/hardware/technomancy/atreus2/Atreus2KeyScannerDescription.h"
+#include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+#include "kaleidoscope/driver/mcu/ATMega32U4.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/DeviceDescription.h"
+#include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
-class Atreus2: public kaleidoscope::hardware::ATMegaKeyboard {
-  friend class ATMegaKeyboard;
+
+struct Atreus2DeviceDescription : kaleidoscope::DeviceDescription {
+  typedef Atreus2KeyScannerDescription KeyScannerDescription;
+  typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<Atreus2KeyScannerDescription> KeyScanner;
+  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+};
+
+class Atreus2: public kaleidoscope::Device<Atreus2DeviceDescription> {
  public:
   Atreus2(void) {}
 
-  ATMEGA_KEYBOARD_CONFIG(
-    ROW_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_F1}),
-    COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2})
-
-  )
-  static constexpr int8_t led_count = 0;
-
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
-  }
-
   void resetDevice();
-
- protected:
 };
 
 #define PER_KEY_DATA(dflt,                                                    \
