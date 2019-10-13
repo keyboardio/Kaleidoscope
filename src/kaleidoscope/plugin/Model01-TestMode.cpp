@@ -50,7 +50,7 @@ void TestMode::waitForKeypress() {
     KeyboardHardware.readMatrix();
     if (KeyboardHardware.isKeyswitchPressed(R3C6)
         && KeyboardHardware.pressedKeyswitchCount() == 1
-        && KeyboardHardware.previousLeftHandState.all == 0) {
+        && KeyboardHardware.previousLeftHandState().all == 0) {
       break;
     }
   }
@@ -146,8 +146,13 @@ void TestMode::testMatrix() {
       break;
     }
     for (auto key_addr : KeyAddr::all()) {
-      handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), key_addr, 7);
-      handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), key_addr, 15);
+      keydata_t previousState = KeyboardHardware.previousLeftHandState();
+      keydata_t state = KeyboardHardware.leftHandState();
+      handleKeyEvent(&left, &previousState, &state, key_addr, 7);
+
+      previousState = KeyboardHardware.previousRightHandState();
+      state = KeyboardHardware.rightHandState();
+      handleKeyEvent(&right, &previousState, &state, key_addr, 15);
     }
     ::LEDControl.syncLeds();
   }

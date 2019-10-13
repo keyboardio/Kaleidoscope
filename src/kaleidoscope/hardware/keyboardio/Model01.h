@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2018  Keyboard.io, Inc
+ * Copyright (C) 2017-2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -25,100 +25,52 @@
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
-#include "kaleidoscope/macro_helpers.h"
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/Hardware.h"
-#include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope/hardware/keyboardio/model01/Model01KeyScannerDescription.h"
+#include "kaleidoscope/hardware/keyboardio/model01/Model01KeyScanner.h"
+#include "kaleidoscope/hardware/keyboardio/model01/Model01Leds.h"
+#include "kaleidoscope/driver/mcu/ATMega32U4.h"
+
+#include "kaleidoscope/DeviceDescription.h"
+#include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace keyboardio {
 
-class Model01 : public kaleidoscope::Hardware {
+struct Model01DeviceDescription : kaleidoscope::DeviceDescription {
+  typedef Model01KeyScannerDescription KeyScannerDescription;
+  typedef Model01KeyScanner KeyScanner;
+  typedef Model01Leds LEDs;
+  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+};
+
+class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {
  public:
-  Model01(void);
+  Model01(void) {}
 
-  static constexpr byte matrix_rows = 4;
-  static constexpr byte matrix_columns = 16;
-  static constexpr int8_t led_count = 64;
+  static void setup();
+  static void rebootBootloader();
 
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
+  static void enableHardwareTestMode();
+
+  static void setKeyscanInterval(uint8_t interval) {
+    Model01DeviceDescription::KeyScanner::setKeyscanInterval(interval);
+  }
+  static keydata_t leftHandState() {
+    return Model01DeviceDescription::KeyScanner::leftHandState;
+  }
+  static keydata_t rightHandState() {
+    return Model01DeviceDescription::KeyScanner::rightHandState;
+  }
+  static keydata_t previousLeftHandState() {
+    return Model01DeviceDescription::KeyScanner::leftHandState;
+  }
+  static keydata_t previousRightHandState() {
+    return Model01DeviceDescription::KeyScanner::rightHandState;
   }
 
-  void syncLeds(void);
-  void setCrgbAt(KeyAddr key_addr, cRGB color);
-  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(KeyAddr(row, col), color);
-  }
-  void setCrgbAt(int8_t i, cRGB crgb);
-  cRGB getCrgbAt(int8_t i);
-  int8_t getLedIndex(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) int8_t getLedIndex(byte row, byte col) {
-    return getLedIndex(KeyAddr(row, col));
-  }
-
-  void scanMatrix(void);
-  void readMatrix(void);
-  void actOnMatrixScan(void);
-  void setup();
-  void rebootBootloader();
-
-  /* These public functions are things supported by the Model 01, but
-   * aren't necessarily part of the Kaleidoscope API
-   */
-  void enableHighPowerLeds(void);
-  void enableScannerPower(void);
-  void setKeyscanInterval(uint8_t interval);
-  boolean ledPowerFault(void);
-
-  void maskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
-    maskKey(KeyAddr(row, col));
-  }
-  void unMaskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
-    unMaskKey(KeyAddr(row, col));
-  }
-  bool isKeyMasked(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return isKeyMasked(KeyAddr(row, col));
-  }
-  void maskHeldKeys(void);
-
-  bool isKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
-    return isKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool isKeyswitchPressed(uint8_t keyIndex);
-  uint8_t pressedKeyswitchCount();
-
-  bool wasKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
-    return wasKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool wasKeyswitchPressed(uint8_t keyIndex);
-  uint8_t previousPressedKeyswitchCount();
-
-  void enableHardwareTestMode();
-
-  keydata_t leftHandState;
-  keydata_t rightHandState;
-  keydata_t previousLeftHandState;
-  keydata_t previousRightHandState;
-
- private:
-  static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
-
-  static bool isLEDChanged;
-  static KeyboardioScanner leftHand;
-  static KeyboardioScanner rightHand;
-
-  static keydata_t leftHandMask;
-  static keydata_t rightHandMask;
 };
 
 }
