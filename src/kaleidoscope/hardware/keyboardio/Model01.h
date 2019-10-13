@@ -42,6 +42,7 @@ namespace keyboardio {
 struct Model01DeviceDescription : kaleidoscope::DeviceDescription {
   typedef Model01KeyScannerDescription KeyScannerDescription;
   typedef Model01KeyScanner KeyScanner;
+  typedef Model01LedsDescription LEDsDescription;
   typedef Model01Leds LEDs;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
 };
