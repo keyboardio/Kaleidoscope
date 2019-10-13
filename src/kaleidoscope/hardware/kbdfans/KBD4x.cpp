@@ -21,13 +21,11 @@
 #include <avr/wdt.h>
 #include <avr/boot.h>
 
-
 namespace kaleidoscope {
 namespace hardware {
 namespace kbdfans {
 
-ATMEGA_KEYBOARD_DATA(KBD4x);
-constexpr int8_t KBD4x::led_count;
+ATMEGA_KEYSCANNER_DATA(kaleidoscope::hardware::kbdfans::KBD4xDeviceDescription::KeyScanner);
 
 #define BOOTLOADER_RESET_KEY 0xB007B007
 uint32_t reset_key  __attribute__((section(".noinit")));
