@@ -44,6 +44,10 @@
  * defines a CRGB(r,g,b) macro which returns a literal cRGB with the given values.
  */
 
+#define _DEPRECATED_MESSAGE_HARDWARE_BASE_CLASS                                    \
+  "The `Hardware` base class is deprecated. Please use the new Device APIs" __NL__ \
+  " instead."
+
 namespace kaleidoscope {
 /** Kaleidoscope Hardware base class.
  * Essential methods all hardware libraries must implement.
@@ -263,7 +267,7 @@ class Hardware {
    *
    * Must restore the link detachFromHost severed.
    */
-  void attachToHost() {
+  DEPRECATED(HARDWARE_BASE_CLASS) void attachToHost() {
     UDCON &= ~_BV(DETACH);
   }
   /** @} */
@@ -376,7 +380,7 @@ class Hardware {
    * Called once when the device boots, this should initialize the device, and
    * bring it up into a useful state.
    */
-  void setup() {}
+  DEPRECATED(HARDWARE_BASE_CLASS) void setup() {}
 
   /**
    * Method to configure the device for a hardware test mode
