@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-SOFTHRUF-Splitography -- Splitography hardware support for Kaleidoscope
+ * SplitographyKeyScannerDescription -- Splitography keyscanner description
  * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd) and sdothum's fork (commit 8616b44)
@@ -22,22 +22,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
-#include <Kaleidoscope.h>
-#include <avr/wdt.h>
+#include "kaleidoscope/driver/keyscanner/ATMegaKeyScannerDescription.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace softhruf {
 
-ATMEGA_KEYSCANNER_DATA(kaleidoscope::hardware::softhruf::SplitographyDeviceDescription::KeyScanner);
+struct SplitographyKeyScannerDescription : public kaleidoscope::driver::keyscanner::ATMegaKeyScannerDescription {
+  ATMEGA_KEYSCANNER_DESCRIPTION(
+    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
+    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
+  );
+};
 
 }
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::softhruf::Splitography &Splitography = KeyboardHardware;
+typedef kaleidoscope::hardware::softhruf::SplitographyKeyScannerDescription::KeyAddr KeyAddr;
 
 #endif
