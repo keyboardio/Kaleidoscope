@@ -56,6 +56,7 @@ class Device {
   typedef typename _DeviceDescription::KeyScannerDescription::KeyAddr KeyAddr;
   typedef typename _DeviceDescription::LEDs LEDs;
   typedef typename _DeviceDescription::MCU MCU;
+  typedef typename _DeviceDescription::BootLoader BootLoader;
 
   static constexpr uint8_t matrix_rows = _DeviceDescription::KeyScannerDescription::matrix_rows;
   static constexpr uint8_t matrix_columns = _DeviceDescription::KeyScannerDescription::matrix_columns;
@@ -425,11 +426,28 @@ class Device {
    */
   void enableHardwareTestMode() {}
 
+  /**
+   * Method to put the device into programmable/bootloader mode.
+   *
+   * This is the old, legacy name of the method.
+   */
+  DEPRECATED(HARDWARE_RESETDEVICE) void resetDevice() {
+    bootloader_.rebootBootloader();
+  }
+
+  /**
+   * Method to put the device into programmable/bootloader mode.
+   */
+  void rebootBootloader() {
+    bootloader_.rebootBootloader();
+  }
+
   /** @} */
 
  protected:
   KeyScanner key_scanner_;
   LEDs leds_;
   MCU mcu_;
+  BootLoader bootloader_;
 };
 }

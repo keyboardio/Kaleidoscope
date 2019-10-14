@@ -27,6 +27,7 @@
 #include "kaleidoscope/driver/led/NoLeds.h"
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -39,6 +40,7 @@ struct PlanckDeviceDescription : kaleidoscope::DeviceDescription {
   typedef PlanckKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<PlanckKeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
 };
 
 class Planck: public kaleidoscope::Device<PlanckDeviceDescription> {

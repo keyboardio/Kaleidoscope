@@ -27,6 +27,7 @@
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/led/NoLeds.h"
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -39,13 +40,12 @@ struct Atreus2DeviceDescription : kaleidoscope::DeviceDescription {
   typedef Atreus2KeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<Atreus2KeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
 };
 
 class Atreus2: public kaleidoscope::Device<Atreus2DeviceDescription> {
  public:
   Atreus2(void) {}
-
-  void resetDevice();
 };
 
 #define PER_KEY_DATA(dflt,                                                    \

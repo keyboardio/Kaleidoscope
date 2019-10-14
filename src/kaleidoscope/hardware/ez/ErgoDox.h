@@ -43,6 +43,7 @@ struct cRGB {
 #include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxKeyScannerDescription.h"
 #include "kaleidoscope/driver/led/NoLeds.h"
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -54,6 +55,7 @@ namespace ez {
 struct ErgoDoxDeviceDescription : public kaleidoscope::DeviceDescription {
   typedef ErgoDoxKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
 };
 
 class ErgoDox : public kaleidoscope::Device<ErgoDoxDeviceDescription> {
@@ -95,8 +97,6 @@ class ErgoDox : public kaleidoscope::Device<ErgoDoxDeviceDescription> {
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
-
-  void resetDevice();
 
   static uint8_t debounce;
 
