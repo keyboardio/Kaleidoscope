@@ -32,6 +32,7 @@
 #include "kaleidoscope/hardware/keyboardio/model01/Model01LedDriver.h"
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
+#include "kaleidoscope/driver/storage/AVREEPROM.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -47,6 +48,8 @@ struct Model01DeviceDescription : kaleidoscope::DeviceDescription {
   typedef Model01LedDriver LEDs;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
+  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {

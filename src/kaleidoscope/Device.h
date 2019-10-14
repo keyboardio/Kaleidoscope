@@ -62,6 +62,7 @@ class Device {
   typedef typename _DeviceDescription::LEDs LEDs;
   typedef typename _DeviceDescription::MCU MCU;
   typedef typename _DeviceDescription::BootLoader BootLoader;
+  typedef typename _DeviceDescription::Storage Storage;
 
   static constexpr uint8_t matrix_rows = _DeviceDescription::KeyScannerDescription::matrix_rows;
   static constexpr uint8_t matrix_columns = _DeviceDescription::KeyScannerDescription::matrix_columns;
@@ -72,6 +73,13 @@ class Device {
    */
   static constexpr int8_t numKeys() {
     return matrix_columns * matrix_rows;
+  }
+
+  /**
+   * Returns the storage driver used by the keyboard.
+   */
+  Storage &storage() {
+    return storage_;
   }
 
   /**
@@ -458,5 +466,6 @@ class Device {
   LEDs leds_;
   MCU mcu_;
   BootLoader bootloader_;
+  Storage storage_;
 };
 }
