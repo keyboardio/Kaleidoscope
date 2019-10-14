@@ -20,6 +20,7 @@
 #include <Arduino.h>
 
 #include "kaleidoscope/driver/KeyScannerDescription.h"
+#include "kaleidoscope/driver/BaseKeyScanner.h"
 
 namespace kaleidoscope {
 namespace driver {
