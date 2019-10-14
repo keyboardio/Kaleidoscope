@@ -28,6 +28,10 @@
 #error cRGB and CRGB *must* be defined before including this header!
 #endif
 
+#define _DEPRECATED_MESSAGE_HARDWARE_RESETDEVICE                       \
+  "`KeyboardHardware.resetDevice()` is deprecated, please use " __NL__ \
+  "`KeyboardHardware.rebootBootloader()` instead."
+
 /* All hardware libraries must define the following macros:
  * HARDWARE_IMPLEMENTATION - the name of your public object conforming to
  *   the 'class Hardware' interface below.
