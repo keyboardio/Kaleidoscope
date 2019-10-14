@@ -58,7 +58,7 @@ void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_
 const uint8_t LEDPaletteTheme::lookupColorIndexAtPosition(uint16_t map_base, uint16_t position) {
   uint8_t color_index;
 
-  color_index = EEPROM.read(map_base + position / 2);
+  color_index = KeyboardHardware.storage().read(map_base + position / 2);
   if (position % 2)
     color_index &= ~0xf0;
   else
@@ -76,7 +76,7 @@ const cRGB LEDPaletteTheme::lookupColorAtPosition(uint16_t map_base, uint16_t po
 const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {
   cRGB color;
 
-  EEPROM.get(palette_base_ + color_index * sizeof(cRGB), color);
+  KeyboardHardware.storage().get(palette_base_ + color_index * sizeof(cRGB), color);
   color.r ^= 0xff;
   color.g ^= 0xff;
   color.b ^= 0xff;
@@ -87,7 +87,7 @@ const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {
 void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t position, uint8_t color_index) {
   uint8_t indexes;
 
-  indexes = EEPROM.read(map_base + position / 2);
+  indexes = KeyboardHardware.storage().read(map_base + position / 2);
   if (position % 2) {
     uint8_t other = indexes >> 4;
     indexes = (other << 4) + color_index;
@@ -95,7 +95,7 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
     uint8_t other = indexes & ~0xf0;
     indexes = (color_index << 4) + other;
   }
-  EEPROM.update(map_base + position / 2, indexes);
+  KeyboardHardware.storage().update(map_base + position / 2, indexes);
 }
 
 EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
@@ -129,7 +129,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     color.g ^= 0xff;
     color.b ^= 0xff;
 
-    EEPROM.put(palette_base_ + i * sizeof(color), color);
+    KeyboardHardware.storage().put(palette_base_ + i * sizeof(color), color);
     i++;
   }
 
@@ -155,7 +155,7 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
 
   if (::Focus.isEOL()) {
     for (uint16_t pos = 0; pos < max_index; pos++) {
-      uint8_t indexes = EEPROM.read(theme_base + pos);
+      uint8_t indexes = KeyboardHardware.storage().read(theme_base + pos);
 
       ::Focus.send((uint8_t)(indexes >> 4), indexes & ~0xf0);
     }
@@ -171,7 +171,7 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
 
     uint8_t indexes = (idx1 << 4) + idx2;
 
-    EEPROM.update(theme_base + pos, indexes);
+    KeyboardHardware.storage().update(theme_base + pos, indexes);
     pos++;
   }
 

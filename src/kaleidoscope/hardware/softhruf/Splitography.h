@@ -37,6 +37,7 @@
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
+#include "kaleidoscope/driver/storage/AVREEPROM.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -50,6 +51,8 @@ struct SplitographyDeviceDescription : kaleidoscope::DeviceDescription {
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<SplitographyKeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
+  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
+  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class Splitography: public kaleidoscope::Device<SplitographyDeviceDescription> {

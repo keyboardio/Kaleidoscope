@@ -49,7 +49,7 @@ static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
 static void readKeyCodeAndPlay(uint16_t pos, uint8_t flags, uint8_t keyStates, bool explicit_report) {
   Key key;
   key.flags = flags;
-  key.keyCode = EEPROM.read(pos++);
+  key.keyCode = KeyboardHardware.storage().read(pos++);
 
   playKeyCode(key, keyStates, explicit_report);
 }
@@ -63,7 +63,7 @@ void DynamicMacros::updateDynamicMacroCache(void) {
   map_[0] = 0;
 
   while (pos < storage_base_ + storage_size_) {
-    macro = EEPROM.read(pos++);
+    macro = KeyboardHardware.storage().read(pos++);
     switch (macro) {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
     case MACRO_ACTION_STEP_IMPLICIT_REPORT:
@@ -91,8 +91,8 @@ void DynamicMacros::updateDynamicMacroCache(void) {
       previous_macro_ended = false;
       uint8_t keyCode, flags;
       do {
-        flags = EEPROM.read(pos++);
-        keyCode = EEPROM.read(pos++);
+        flags = KeyboardHardware.storage().read(pos++);
+        keyCode = KeyboardHardware.storage().read(pos++);
       } while (!(flags == 0 && keyCode == 0));
       break;
     }
@@ -101,7 +101,7 @@ void DynamicMacros::updateDynamicMacroCache(void) {
       previous_macro_ended = false;
       uint8_t keyCode, flags;
       do {
-        keyCode = EEPROM.read(pos++);
+        keyCode = KeyboardHardware.storage().read(pos++);
       } while (keyCode != 0);
       break;
     }
@@ -128,7 +128,7 @@ void DynamicMacros::play(uint8_t macro_id) {
   pos = storage_base_ + map_[macro_id];
 
   while (true) {
-    switch (macro = EEPROM.read(pos++)) {
+    switch (macro = KeyboardHardware.storage().read(pos++)) {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
       explicit_report = true;
       break;
@@ -140,23 +140,23 @@ void DynamicMacros::play(uint8_t macro_id) {
       kaleidoscope::hid::sendMouseReport();
       break;
     case MACRO_ACTION_STEP_INTERVAL:
-      interval = EEPROM.read(pos++);
+      interval = KeyboardHardware.storage().read(pos++);
       break;
     case MACRO_ACTION_STEP_WAIT: {
-      uint8_t wait = EEPROM.read(pos++);
+      uint8_t wait = KeyboardHardware.storage().read(pos++);
       delay(wait);
       break;
     }
     case MACRO_ACTION_STEP_KEYDOWN:
-      flags = EEPROM.read(pos++);
+      flags = KeyboardHardware.storage().read(pos++);
       readKeyCodeAndPlay(pos++, flags, IS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_KEYUP:
-      flags = EEPROM.read(pos++);
+      flags = KeyboardHardware.storage().read(pos++);
       readKeyCodeAndPlay(pos++, flags, WAS_PRESSED, explicit_report);
       break;
     case MACRO_ACTION_STEP_TAP:
-      flags = EEPROM.read(pos++);
+      flags = KeyboardHardware.storage().read(pos++);
       readKeyCodeAndPlay(pos++, flags, IS_PRESSED | WAS_PRESSED, false);
       break;
 
@@ -173,8 +173,8 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       uint8_t keyCode;
       do {
-        flags = EEPROM.read(pos++);
-        keyCode = EEPROM.read(pos++);
+        flags = KeyboardHardware.storage().read(pos++);
+        keyCode = KeyboardHardware.storage().read(pos++);
         playKeyCode(Key(keyCode, flags), IS_PRESSED | WAS_PRESSED, false);
         delay(interval);
       } while (!(flags == 0 && keyCode == 0));
@@ -183,7 +183,7 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
       uint8_t keyCode;
       do {
-        keyCode = EEPROM.read(pos++);
+        keyCode = KeyboardHardware.storage().read(pos++);
         playKeyCode(Key(keyCode, 0), IS_PRESSED | WAS_PRESSED, false);
         delay(interval);
       } while (keyCode != 0);
@@ -221,7 +221,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
     if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < storage_size_; i++) {
         uint8_t b;
-        b = EEPROM.read(storage_base_ + i);
+        b = KeyboardHardware.storage().read(storage_base_ + i);
         ::Focus.send(b);
       }
     } else {
@@ -231,7 +231,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
         uint8_t b;
         ::Focus.read(b);
 
-        EEPROM.update(storage_base_ + pos++, b);
+        KeyboardHardware.storage().update(storage_base_ + pos++, b);
       }
       updateDynamicMacroCache();
     }

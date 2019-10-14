@@ -22,6 +22,8 @@
 #include "kaleidoscope/driver/led/NoLeds.h"
 #include "kaleidoscope/driver/mcu/NoMCU.h"
 #include "kaleidoscope/driver/bootloader/NoBootloader.h"
+#include "kaleidoscope/driver/storage/NoStorageDescription.h"
+#include "kaleidoscope/driver/storage/NoStorage.h"
 
 namespace kaleidoscope {
 
@@ -32,6 +34,8 @@ struct DeviceDescription {
   typedef kaleidoscope::driver::led::NoLeds<LEDsDescription> LEDs;
   typedef kaleidoscope::driver::mcu::NoMCU MCU;
   typedef kaleidoscope::driver::bootloader::NoBootloader BootLoader;
+  typedef kaleidoscope::driver::storage::NoStorageDescription StorageDescription;
+  typedef kaleidoscope::driver::storage::NoStorage<StorageDescription> Storage;
 };
 
 }

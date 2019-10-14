@@ -101,7 +101,7 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
 
   if (sub_command == CLEAR) {
     for (uint16_t i = 0; i < KeyboardHardware.numKeys() / 2; i++) {
-      EEPROM.update(color_base_ + i, 0);
+      KeyboardHardware.storage().update(color_base_ + i, 0);
     }
     return EventHandlerResult::OK;
   }
