@@ -27,29 +27,6 @@ namespace kbdfans {
 
 ATMEGA_KEYSCANNER_DATA(kaleidoscope::hardware::kbdfans::KBD4xDeviceDescription::KeyScanner);
 
-#define BOOTLOADER_RESET_KEY 0xB007B007
-uint32_t reset_key  __attribute__((section(".noinit")));
-
-/*
- * This function runs before main(), and jumps to the bootloader after a reset
- * initiated by .resetDevice().
- */
-void _bootloader_jump_after_watchdog_reset()
-__attribute__((used, naked, section(".init3")));
-void _bootloader_jump_after_watchdog_reset() {
-  if ((MCUSR & (1 << WDRF)) && reset_key == BOOTLOADER_RESET_KEY) {
-    reset_key = 0;
-
-    ((void (*)(void))(((FLASHEND + 1L) - 4096) >> 1))();
-  }
-}
-
-void KBD4x::resetDevice() {
-  reset_key = BOOTLOADER_RESET_KEY;
-  wdt_enable(WDTO_250MS);
-  for (;;);
-}
-
 }
 }
 }

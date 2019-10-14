@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * DeviceDescription -- Device description base class
+ * kaleidoscope::driver::BaseBootloader -- Base Bootloader Driver
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -17,20 +17,15 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/keyscanner/None.h"
-#include "kaleidoscope/driver/led/None.h"
-#include "kaleidoscope/driver/mcu/None.h"
-#include "kaleidoscope/driver/bootloader/None.h"
-
 namespace kaleidoscope {
+namespace driver {
 
-struct DeviceDescription {
-  typedef kaleidoscope::driver::keyscanner::NoKeyScannerDescription KeyScannerDescription;
-  typedef kaleidoscope::driver::keyscanner::None KeyScanner;
-  typedef kaleidoscope::driver::led::NoLedDriverDescription LEDsDescription;
-  typedef kaleidoscope::driver::led::None LEDs;
-  typedef kaleidoscope::driver::mcu::None MCU;
-  typedef kaleidoscope::driver::bootloader::None BootLoader;
+class BaseBootloader {
+ public:
+  BaseBootloader() {}
+
+  static void rebootBootloader() {}
 };
 
+}
 }

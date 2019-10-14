@@ -19,6 +19,8 @@
 
 #ifdef ARDUINO_AVR_KBD4X
 
+#define KALEIDOSCOPE_BOOTLOADER_FLIP 1
+
 #include <Arduino.h>
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::kbdfans::KBD4x
 
@@ -26,6 +28,7 @@
 
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -38,6 +41,7 @@ struct KBD4xDeviceDescription : kaleidoscope::DeviceDescription {
   typedef KBD4xKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<KBD4xKeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
 class KBD4x: public kaleidoscope::Device<KBD4xDeviceDescription> {
@@ -46,8 +50,6 @@ class KBD4x: public kaleidoscope::Device<KBD4xDeviceDescription> {
     mcu_.disableJTAG();
     mcu_.disableClockDivision();
   }
-
-  void resetDevice();
 };
 
 #define PER_KEY_DATA(dflt,                                                       \

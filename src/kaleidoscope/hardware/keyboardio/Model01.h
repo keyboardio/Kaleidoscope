@@ -31,6 +31,7 @@
 #include "kaleidoscope/hardware/keyboardio/model01/Model01KeyScanner.h"
 #include "kaleidoscope/hardware/keyboardio/model01/Model01LedDriver.h"
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
+#include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -45,6 +46,7 @@ struct Model01DeviceDescription : kaleidoscope::DeviceDescription {
   typedef Model01LedDriverDescription LEDsDescription;
   typedef Model01LedDriver LEDs;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
 class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {
@@ -52,7 +54,6 @@ class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {
   Model01(void) {}
 
   static void setup();
-  static void rebootBootloader();
 
   static void enableHardwareTestMode();
 

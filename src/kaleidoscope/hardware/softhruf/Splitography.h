@@ -26,6 +26,8 @@
 
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
+#define KALEIDOSCOPE_BOOTLOADER_FLIP 1
+
 #include <Arduino.h>
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::softhruf::Splitography
 
@@ -33,6 +35,7 @@
 
 #include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 
 #include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
@@ -45,6 +48,7 @@ struct SplitographyDeviceDescription : kaleidoscope::DeviceDescription {
   typedef SplitographyKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<SplitographyKeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
+  typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
 class Splitography: public kaleidoscope::Device<SplitographyDeviceDescription> {

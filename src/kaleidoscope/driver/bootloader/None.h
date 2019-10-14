@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * DeviceDescription -- Device description base class
+ * kaleidoscope::driver::bootloader::None -- Dummy Bootloader driver
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -17,20 +17,21 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/keyscanner/None.h"
-#include "kaleidoscope/driver/led/None.h"
-#include "kaleidoscope/driver/mcu/None.h"
-#include "kaleidoscope/driver/bootloader/None.h"
+#include <avr/wdt.h>
+#include "kaleidoscope/driver/BaseBootloader.h"
 
 namespace kaleidoscope {
+namespace driver {
+namespace bootloader {
 
-struct DeviceDescription {
-  typedef kaleidoscope::driver::keyscanner::NoKeyScannerDescription KeyScannerDescription;
-  typedef kaleidoscope::driver::keyscanner::None KeyScanner;
-  typedef kaleidoscope::driver::led::NoLedDriverDescription LEDsDescription;
-  typedef kaleidoscope::driver::led::None LEDs;
-  typedef kaleidoscope::driver::mcu::None MCU;
-  typedef kaleidoscope::driver::bootloader::None BootLoader;
-};
+/*
+ * The purpose of this class is to serve as a default for the base
+ * `DeviceDescription` class, with a name more descriptive than
+ * `BaseBootloader`. In practice, one shouldn't use it, and should override the
+ * bootloader in the device description.
+ */
+class None : public kaleidoscope::driver::BaseBootloader {};
 
+}
+}
 }
