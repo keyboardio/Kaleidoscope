@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * DeviceDescription -- Device description base class
+ * NoLedsDescription -- LED-less hardware LED driver description class
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -17,19 +17,14 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/keyscanner/NoOpKeyScanner.h"
-#include "kaleidoscope/driver/led/NoLedsDescription.h"
-#include "kaleidoscope/driver/led/NoLeds.h"
-#include "kaleidoscope/driver/mcu/NoMCU.h"
+#include "kaleidoscope/driver/BaseLedsDescription.h"
 
 namespace kaleidoscope {
+namespace driver {
+namespace led {
 
-struct DeviceDescription {
-  typedef kaleidoscope::driver::keyscanner::NoOpKeyScannerDescription KeyScannerDescription;
-  typedef kaleidoscope::driver::keyscanner::NoOpKeyScanner<KeyScannerDescription> KeyScanner;
-  typedef kaleidoscope::driver::led::NoLedsDescription LEDsDescription;
-  typedef kaleidoscope::driver::led::NoLeds<LEDsDescription> LEDs;
-  typedef kaleidoscope::driver::mcu::NoMCU MCU;
-};
+struct NoLedsDescription : public kaleidoscope::driver::BaseLedsDescription {};
 
+}
+}
 }

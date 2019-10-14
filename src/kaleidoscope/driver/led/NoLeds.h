@@ -28,13 +28,13 @@ struct cRGB {
 #endif
 
 #include "kaleidoscope/driver/BaseLeds.h"
-#include "kaleidoscope/driver/BaseLedsDescription.h"
 
 namespace kaleidoscope {
 namespace driver {
 namespace led {
 
-class NoLeds : public kaleidoscope::driver::BaseLeds<BaseLedsDescription> {};
+template <typename _LedsDescription>
+class NoLeds : public kaleidoscope::driver::BaseLeds<_LedsDescription> {};
 
 }
 }
