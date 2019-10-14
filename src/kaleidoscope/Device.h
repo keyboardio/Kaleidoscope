@@ -23,6 +23,7 @@
 
 #include "kaleidoscope/MatrixAddr.h"
 #include "kaleidoscope_internal/deprecations.h"
+#include "kaleidoscope/macro_helpers.h"
 
 #ifndef CRGB
 #error cRGB and CRGB *must* be defined before including this header!
