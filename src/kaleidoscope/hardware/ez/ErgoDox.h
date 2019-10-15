@@ -29,8 +29,6 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
-
 #define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
@@ -41,6 +39,7 @@ struct cRGB {
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxKeyScannerDescription.h"
+#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
 
@@ -52,61 +51,26 @@ namespace ez {
 
 struct ErgoDoxDeviceDescription : public kaleidoscope::hardware::avr::AVRDeviceDescription {
   typedef ErgoDoxKeyScannerDescription KeyScannerDescription;
+  typedef ErgoDoxKeyScanner<KeyScannerDescription> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
+
+  typedef KeyScanner::ATMegaKeyScanner ATMegaKeyScanner;
+  typedef KeyScanner::ATMegaKeyScannerDescription ATMegaKeyScannerDescription;
 };
 
 class ErgoDox : public kaleidoscope::Device<ErgoDoxDeviceDescription> {
  public:
-  ErgoDox(void) {}
+  void setup() {
+    kaleidoscope::Device<ErgoDoxDeviceDescription>::setup();
 
-  void scanMatrix(void);
-  void readMatrix(void);
-  void actOnMatrixScan(void);
-  void setup();
-
-  void maskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
-    maskKey(KeyAddr(row, col));
+    setStatusLEDBrightness(1, 15);
+    setStatusLEDBrightness(2, 15);
+    setStatusLEDBrightness(3, 15);
   }
-  void unMaskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
-    unMaskKey(KeyAddr(row, col));
-  }
-  bool isKeyMasked(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return isKeyMasked(KeyAddr(row, col));
-  }
-
-  bool isKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
-    return isKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool isKeyswitchPressed(uint8_t keyIndex);
-  uint8_t pressedKeyswitchCount();
-
-  bool wasKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
-    return wasKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool wasKeyswitchPressed(uint8_t keyIndex);
-  uint8_t previousPressedKeyswitchCount();
 
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
-
-  static uint8_t debounce;
-
- private:
-  static ErgoDoxScanner scanner_;
-  static uint8_t previousKeyState_[matrix_rows];
-  static uint8_t keyState_[matrix_rows];
-  static uint8_t masks_[matrix_rows];
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
-
-  static uint8_t debounceMaskForRow(uint8_t row);
-  static void debounceRow(uint8_t change, uint8_t row);
-  static void readMatrixRow(uint8_t row);
 };
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
