@@ -90,7 +90,11 @@ class ATMegaKeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScanner
         uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                            (bitRead(keyState_[row], col) << 1);
         if (keyState) {
-          handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
+          KeyAddr addr = KeyAddr(
+              row + _KeyScannerDescription::row_offset,
+              col + _KeyScannerDescription::column_offset
+          );
+          handleKeyswitchEvent(Key_NoKey, addr, keyState);
         }
       }
       previousKeyState_[row] = keyState_[row];

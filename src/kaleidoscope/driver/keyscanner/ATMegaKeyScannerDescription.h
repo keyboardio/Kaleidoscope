@@ -26,15 +26,26 @@
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
-#define ATMEGA_KEYSCANNER_DESCRIPTION(ROW_PINS_, COL_PINS_)             \
-  KEYSCANNER_DESCRIPTION(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));     \
-  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;   \
-  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;
+#define ATMEGA_KEYSCANNER_DESCRIPTION_WITH_OFFSET(ROW_OFFSET_, COL_OFFSET_, ROW_PINS_, COL_PINS_) \
+  KEYSCANNER_DESCRIPTION(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));                               \
+  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;                             \
+  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;                          \
+  static constexpr uint8_t row_offset = ROW_OFFSET_;                                              \
+  static constexpr uint8_t column_offset = COL_OFFSET_;
+
+#define ATMEGA_KEYSCANNER_DESCRIPTION(ROW_PINS_, COL_PINS_)              \
+  KEYSCANNER_DESCRIPTION(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));      \
+  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;    \
+  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_; \
+  static constexpr uint8_t row_offset = 0;                               \
+  static constexpr uint8_t column_offset = 0;
 
 #define ATMEGA_KEYSCANNER_DESCRIPTION_DATA(BOARD)           \
   KEYSCANNER_DESCRIPTION_DATA(BOARD);                       \
   constexpr uint8_t BOARD::matrix_row_pins[matrix_rows];    \
-  constexpr uint8_t BOARD::matrix_col_pins[matrix_columns];
+  constexpr uint8_t BOARD::matrix_col_pins[matrix_columns]; \
+  const uint8_t BOARD::row_offset; \
+  const uint8_t BOARD::column_offset;
 
 #define _SD(BOARD) \
   BOARD::KeyScannerDescription_
@@ -66,6 +77,13 @@ struct ATMegaKeyScannerDescription : kaleidoscope::driver::BaseKeyScannerDescrip
    */
   static constexpr uint8_t matrix_row_pins[] = {};
   static constexpr uint8_t matrix_col_pins[] = {};
+  /*
+   * The following two lines tell the scanner to offset the rows and/or columns
+   * by a given amount when _acting_ on key events. This is to support setups
+   * where the ATMega-based scanner is just one part of the full picture.
+   */
+  static constexpr uint8_t row_offset = 0;
+  static constexpr uint8_t column_offset = 0;
 };
 
 }
