@@ -43,6 +43,7 @@
   BOARD::KeyScannerDescription_
 #define MCP23018_KEYSCANNER_DATA(BOARD)                                                      \
   MCP23018_KEYSCANNER_DESCRIPTION_DATA(BOARD ## Description)                                 \
+  template<> uint8_t BOARD::expander_error_ = 0x20;                                       \
   template<>                                                                               \
   volatile uint16_t BOARD::previousKeyState_[_SD(BOARD)::matrix_rows] = {}; \
   template<>                                                                               \

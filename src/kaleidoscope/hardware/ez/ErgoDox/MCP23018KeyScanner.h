@@ -50,7 +50,7 @@ namespace ergodox {
 template <typename _KeyScannerDescription>
 class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScannerDescription> {
  public:
-  void setup() {
+  static void setup() {
     static_assert(
         sizeof(_KeyScannerDescription::matrix_rows) > 0,
         "The key scanner description has zero rows."
@@ -139,14 +139,14 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
   }
 
  private:
-  uint8_t expander_error_ = 0x20;
+  static uint8_t expander_error_;
   typedef _KeyScannerDescription KeyScannerDescription_;
   static volatile uint16_t previousKeyState_[_KeyScannerDescription::matrix_rows];
   static volatile uint16_t keyState_[_KeyScannerDescription::matrix_rows];
   static uint16_t masks_[_KeyScannerDescription::matrix_rows];
   static uint8_t debounce_matrix_[_KeyScannerDescription::matrix_rows][_KeyScannerDescription::matrix_columns];
 
-  uint8_t initExpander() {
+  static uint8_t __attribute__((noinline)) initExpander() {
     uint8_t status = 0x20;
 
     i2c_init();
@@ -186,7 +186,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     return status;
   }
 
-  void reattachExpanderOnError() {
+  static void __attribute__((noinline)) reattachExpanderOnError() {
     static uint32_t start_time = millis();
 
     if (!expander_error_)
@@ -199,7 +199,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     start_time = millis();
   }
 
-  void __attribute__((optimize(3))) selectRow(uint8_t row) {
+  static void __attribute__((optimize(3), noinline)) selectRow(uint8_t row) {
     if (expander_error_)
       return;
 
@@ -216,7 +216,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     i2c_stop();
   }
 
-  uint8_t __attribute__((optimize(3))) readCols(uint8_t row) {
+  static uint8_t __attribute__((optimize(3), noinline)) readCols(uint8_t row) {
     if (expander_error_) {
       return 0;
     }
@@ -239,7 +239,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     return data;
   }
 
-  void __attribute__((optimize(3))) readMatrixRow(uint8_t row) {
+  static void __attribute__((optimize(3), noinline)) readMatrixRow(uint8_t row) {
     uint8_t mask, cols;
 
     mask = debounceMaskForRow(row);
@@ -248,7 +248,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     keyState_[row] = cols;
   }
 
-  uint8_t debounceMaskForRow(uint8_t row) {
+  static uint8_t __attribute__((noinline)) debounceMaskForRow(uint8_t row) {
     uint8_t result = 0;
 
     for (uint8_t c = 0; c < _KeyScannerDescription::matrix_columns; ++c) {
@@ -261,7 +261,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     return result;
   }
 
-  void debounceRow(uint8_t change, uint8_t row) {
+  static void __attribute__((noinline)) debounceRow(uint8_t change, uint8_t row) {
     for (uint8_t i = 0; i < _KeyScannerDescription::matrix_columns; ++i) {
       if (change & (1 << i)) {
         debounce_matrix_[row][i] = _KeyScannerDescription::debounce;
