@@ -26,25 +26,20 @@
 
 #include "kaleidoscope/hardware/kbdfans/kbd4x/KBD4xKeyScannerDescription.h"
 
-#include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+#include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
 
-#include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace kbdfans {
 
-struct KBD4xDeviceDescription : kaleidoscope::DeviceDescription {
+struct KBD4xDeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescription {
   typedef KBD4xKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<KBD4xKeyScannerDescription> KeyScanner;
-  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
-  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
-  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class KBD4x: public kaleidoscope::Device<KBD4xDeviceDescription> {

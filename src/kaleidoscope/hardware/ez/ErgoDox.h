@@ -41,23 +41,18 @@ struct cRGB {
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxKeyScannerDescription.h"
-#include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+#include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
 
-#include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace ez {
 
-struct ErgoDoxDeviceDescription : public kaleidoscope::DeviceDescription {
+struct ErgoDoxDeviceDescription : public kaleidoscope::hardware::avr::AVRDeviceDescription {
   typedef ErgoDoxKeyScannerDescription KeyScannerDescription;
-  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
-  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
-  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class ErgoDox : public kaleidoscope::Device<ErgoDoxDeviceDescription> {

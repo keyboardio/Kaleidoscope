@@ -30,26 +30,21 @@
 #include "kaleidoscope/hardware/keyboardio/model01/Model01KeyScannerDescription.h"
 #include "kaleidoscope/hardware/keyboardio/model01/Model01KeyScanner.h"
 #include "kaleidoscope/hardware/keyboardio/model01/Model01LedDriver.h"
-#include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+#include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
 
-#include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace keyboardio {
 
-struct Model01DeviceDescription : kaleidoscope::DeviceDescription {
+struct Model01DeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescription {
   typedef Model01KeyScannerDescription KeyScannerDescription;
   typedef Model01KeyScanner KeyScanner;
   typedef Model01LedDriverDescription LEDsDescription;
   typedef Model01LedDriver LEDs;
-  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
-  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
-  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {

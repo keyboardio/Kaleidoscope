@@ -31,24 +31,19 @@
 
 #include "kaleidoscope/hardware/technomancy/atreus/AtreusKeyScannerDescription.h"
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
-#include "kaleidoscope/driver/mcu/ATMega32U4.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+#include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
 
-#include "kaleidoscope/DeviceDescription.h"
 #include "kaleidoscope/Device.h"
 
 namespace kaleidoscope {
 namespace hardware {
 namespace technomancy {
 
-struct AtreusDeviceDescription : kaleidoscope::DeviceDescription {
+struct AtreusDeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescription {
   typedef AtreusKeyScannerDescription KeyScannerDescription;
   typedef kaleidoscope::driver::keyscanner::ATMegaKeyScanner<AtreusKeyScannerDescription> KeyScanner;
-  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
   typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
-  typedef kaleidoscope::driver::storage::AVREEPROMStorageDescription StorageDescription;
-  typedef kaleidoscope::driver::storage::AVREEPROM<StorageDescription> Storage;
 };
 
 class Atreus: public kaleidoscope::Device<AtreusDeviceDescription> {
