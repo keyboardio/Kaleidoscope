@@ -27,8 +27,7 @@
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
-
-#include "kaleidoscope/Device.h"
+#include "kaleidoscope/hardware/avr/AVRDevice.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -40,9 +39,9 @@ struct PlanckDeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescripti
   typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
 };
 
-class Planck: public kaleidoscope::Device<PlanckDeviceDescription> {
+class Planck: public kaleidoscope::hardware::avr::AVRDevice<PlanckDeviceDescription> {
  public:
-  Planck(void) {}
+  Planck() {}
 };
 
 #define PER_KEY_DATA(dflt,                                                       \

@@ -32,8 +32,7 @@
 #include "kaleidoscope/hardware/keyboardio/model01/Model01LedDriver.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
-
-#include "kaleidoscope/Device.h"
+#include "kaleidoscope/hardware/avr/AVRDevice.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -47,10 +46,8 @@ struct Model01DeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescript
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
-class Model01 : public kaleidoscope::Device<Model01DeviceDescription> {
+class Model01 : public kaleidoscope::hardware::avr::AVRDevice<Model01DeviceDescription> {
  public:
-  Model01(void) {}
-
   static void setup();
 
   static void enableHardwareTestMode();

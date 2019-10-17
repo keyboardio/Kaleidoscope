@@ -55,6 +55,14 @@ namespace kaleidoscope {
 
 template<typename _DeviceDescription>
 class Device {
+ private:
+  class DummySerial {
+   public:
+    DummySerial() {}
+  };
+
+  static DummySerial dummy_serial_;
+
  public:
 
   typedef typename _DeviceDescription::KeyScanner KeyScanner;
@@ -80,6 +88,13 @@ class Device {
    */
   Storage &storage() {
     return storage_;
+  }
+
+  /**
+   * Returns the serial port driver used by the keyboard.
+   */
+  DummySerial &serialPort() {
+    return dummy_serial_;
   }
 
   /**
@@ -438,10 +453,6 @@ class Device {
    *
    */
   void enableHardwareTestMode() {}
-
-  auto serialPort() -> decltype(Serial) & {
-    return Serial;
-  }
 
   /**
    * Method to put the device into programmable/bootloader mode.

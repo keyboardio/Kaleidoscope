@@ -36,8 +36,7 @@
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
-
-#include "kaleidoscope/Device.h"
+#include "kaleidoscope/hardware/avr/AVRDevice.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -49,9 +48,9 @@ struct SplitographyDeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDes
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
-class Splitography: public kaleidoscope::Device<SplitographyDeviceDescription> {
+class Splitography: public kaleidoscope::hardware::avr::AVRDevice<SplitographyDeviceDescription> {
  public:
-  Splitography(void) {
+  Splitography() {
     mcu_.disableJTAG();
   }
 };

@@ -29,8 +29,7 @@
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
-
-#include "kaleidoscope/Device.h"
+#include "kaleidoscope/hardware/avr/AVRDevice.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -42,9 +41,9 @@ struct KBD4xDeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescriptio
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
-class KBD4x: public kaleidoscope::Device<KBD4xDeviceDescription> {
+class KBD4x: public kaleidoscope::hardware::avr::AVRDevice<KBD4xDeviceDescription> {
  public:
-  KBD4x(void) {
+  KBD4x() {
     mcu_.disableJTAG();
     mcu_.disableClockDivision();
   }

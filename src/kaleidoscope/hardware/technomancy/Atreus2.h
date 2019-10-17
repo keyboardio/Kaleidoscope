@@ -27,8 +27,7 @@
 #include "kaleidoscope/driver/keyscanner/ATMegaKeyScanner.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 #include "kaleidoscope/hardware/avr/AVRDeviceDescription.h"
-
-#include "kaleidoscope/Device.h"
+#include "kaleidoscope/hardware/avr/AVRDevice.h"
 
 namespace kaleidoscope {
 namespace hardware {
@@ -40,10 +39,7 @@ struct Atreus2DeviceDescription : kaleidoscope::hardware::avr::AVRDeviceDescript
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
-class Atreus2: public kaleidoscope::Device<Atreus2DeviceDescription> {
- public:
-  Atreus2(void) {}
-};
+class Atreus2: public kaleidoscope::hardware::avr::AVRDevice<Atreus2DeviceDescription> {};
 
 #define PER_KEY_DATA(dflt,                                                    \
     R0C0, R0C1, R0C2, R0C3, R0C4,             R0C7, R0C8, R0C9, R0C10, R0C11, \
