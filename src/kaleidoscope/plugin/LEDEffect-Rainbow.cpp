@@ -63,9 +63,14 @@ void LEDRainbowWaveEffect::TransientLEDMode::update(void) {
 
   for (auto key_addr : KeyAddr::all()) {
     uint16_t key_hue = rainbow_hue + 16 * (key_addr.toInt() / 4);
-    if (key_hue >= 255)          {
+    // We want key_hue to be capped at 255, but we do not want to clip it to
+    // that, because that does not result in a nice animation. Instead, when it
+    // is higher than 255, we simply substract 255, and repeat that until we're
+    // within cap. This lays out the rainbow in a kind of wave.
+    while (key_hue >= 255) {
       key_hue -= 255;
     }
+
     cRGB rainbow = hsvToRgb(key_hue, rainbow_saturation, parent_->rainbow_value);
     ::LEDControl.setCrgbAt(key_addr.toInt(), rainbow);
   }
