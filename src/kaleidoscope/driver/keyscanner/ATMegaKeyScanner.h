@@ -32,6 +32,10 @@ namespace keyscanner {
 
 template <typename _KeyScannerDescription>
 class ATMegaKeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScannerDescription> {
+ private:
+  typedef ATMegaKeyScanner<_KeyScannerDescription> ThisType;
+  static void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+
  public:
   void setup() {
     static_assert(
@@ -94,7 +98,7 @@ class ATMegaKeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScanner
               row + _KeyScannerDescription::row_offset,
               col + _KeyScannerDescription::column_offset
           );
-          handleKeyswitchEvent(Key_NoKey, addr, keyState);
+          ThisType::handleKeyswitchEvent(Key_NoKey, addr, keyState);
         }
       }
       previousKeyState_[row] = keyState_[row];

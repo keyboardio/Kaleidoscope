@@ -72,7 +72,7 @@
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+void handleKeyswitchEvent(Key mappedKey, HARDWARE_IMPLEMENTATION::KeyScannerDescription::KeyAddr key_addr, uint8_t keyState);
 DEPRECATED(ROW_COL_FUNC) inline void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   handleKeyswitchEvent(mappedKey, KeyAddr(row, col), keyState);
 }
