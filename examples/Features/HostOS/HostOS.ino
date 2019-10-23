@@ -43,12 +43,12 @@ KEYMAPS(
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, HostOS);
 
 void setup() {
-  Serial.begin(9600);
+  KeyboardHardware.serialPort().begin(9600);
 
   Kaleidoscope.setup();
 
-  Serial.print("Host OS id is: ");
-  Serial.println(HostOS.os(), DEC);
+  KeyboardHardware.serialPort().print("Host OS id is: ");
+  KeyboardHardware.serialPort().println(HostOS.os(), DEC);
 }
 
 void loop() {

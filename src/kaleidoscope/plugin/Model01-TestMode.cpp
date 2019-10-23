@@ -159,13 +159,13 @@ void TestMode::toggle_programming_leds_on() {
 }
 
 void TestMode::run_tests() {
-  //  Serial.println("Running tests");
+  //  KeyboardHardware.serialPort().println("Running tests");
   toggle_programming_leds_on();
   // Disable debouncing
   KeyboardHardware.setKeyscanInterval(2);
   test_leds();
   testMatrix();
-  //  Serial.println("Done running tests");
+  //  KeyboardHardware.serialPort().println("Done running tests");
 }
 
 }

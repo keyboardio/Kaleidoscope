@@ -34,7 +34,7 @@ Kaleidoscope_::setup(void) {
   //
   // TODO(anyone): Figure out a way we can get rid of this, and fix the bug
   // properly.
-  Serial.begin(9600);
+  KeyboardHardware.serialPort().begin(9600);
 
   kaleidoscope::Hooks::onSetup();
 

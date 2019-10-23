@@ -394,6 +394,13 @@ class Hardware {
     return EEPROM;
   }
 
+  /**
+   * Method to return the serial port object used by the hardware.
+   */
+  auto serialPort() -> decltype(Serial) & {
+    return Serial;
+  }
+
   /** @} */
 };
 }

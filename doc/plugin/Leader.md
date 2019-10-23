@@ -32,11 +32,11 @@ dictionary:
 #include <Kaleidoscope-Leader.h>
 
 static void leaderA(uint8_t seq_index) {
-  Serial.println("leaderA");
+  KeyboardHardware.serialPort().println("leaderA");
 }
 
 static void leaderTX(uint8_t seq_index) {
-  Serial.println("leaderTX");
+  KeyboardHardware.serialPort().println("leaderTX");
 }
 
 static const kaleidoscope::Leader::dictionary_t leader_dictionary[] PROGMEM =
@@ -46,7 +46,7 @@ static const kaleidoscope::Leader::dictionary_t leader_dictionary[] PROGMEM =
 KALEIDOSCOPE_INIT_PLUGINS(Leader);
 
 void setup() {
-  Serial.begin(9600);
+  KeyboardHardware.serialPort().begin(9600);
 
   Kaleidoscope.setup();
 
