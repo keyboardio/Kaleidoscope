@@ -43,7 +43,7 @@ void setup () {
     return;
   }
 
-  EEPROM.get(settingsBase, testSettings);
+  KeyboardHardware.storage().get(settingsBase, testSettings);
 }
 ```
 
