@@ -24,6 +24,8 @@
 #include "kaleidoscope/MatrixAddr.h"
 #include "kaleidoscope_internal/deprecations.h"
 
+#include "EEPROM.h"
+
 #ifndef CRGB
 #error cRGB and CRGB *must* be defined before including this header!
 #endif
@@ -384,6 +386,20 @@ class Hardware {
    *
    */
   void enableHardwareTestMode() {}
+
+  /**
+   * Method to return the object the hardware uses for storage.
+   */
+  auto storage() -> decltype(EEPROM) & {
+    return EEPROM;
+  }
+
+  /**
+   * Method to return the serial port object used by the hardware.
+   */
+  auto serialPort() -> decltype(Serial) & {
+    return Serial;
+  }
 
   /** @} */
 };

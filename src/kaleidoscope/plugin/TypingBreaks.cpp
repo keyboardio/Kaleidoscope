@@ -107,12 +107,12 @@ EventHandlerResult TypingBreaks::onSetup() {
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint32_t idle_time;
-  EEPROM.get(settings_base_, idle_time);
+  KeyboardHardware.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffffffff) {
-    EEPROM.put(settings_base_, settings);
+    KeyboardHardware.storage().put(settings_base_, settings);
   }
 
-  EEPROM.get(settings_base_, settings);
+  KeyboardHardware.storage().get(settings_base_, settings);
   return EventHandlerResult::OK;
 }
 
@@ -192,7 +192,7 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
     break;
   }
 
-  EEPROM.put(settings_base_, settings);
+  KeyboardHardware.storage().put(settings_base_, settings);
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

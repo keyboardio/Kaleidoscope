@@ -43,7 +43,7 @@ KEYMAPS(
 KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
 
 void setup() {
-  Serial.begin(9600);
+  KeyboardHardware.serialPort().begin(9600);
   Kaleidoscope.setup();
 }
 

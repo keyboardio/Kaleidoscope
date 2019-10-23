@@ -17,7 +17,7 @@ the box, without any further configuration:
 KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
 
 void setup (void) {
-  Serial.begin(9600);
+  KeyboardHardware.serialPort().begin(9600);
   Kaleidoscope.setup ();
 }
 ```
