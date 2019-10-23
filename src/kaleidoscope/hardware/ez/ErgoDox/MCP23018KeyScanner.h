@@ -52,12 +52,12 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
  public:
   static void setup() {
     static_assert(
-        sizeof(_KeyScannerDescription::matrix_rows) > 0,
-        "The key scanner description has zero rows."
+      sizeof(_KeyScannerDescription::matrix_rows) > 0,
+      "The key scanner description has zero rows."
     );
     static_assert(
-        sizeof(_KeyScannerDescription::matrix_columns) > 0,
-        "The key scanner description has zero columns."
+      sizeof(_KeyScannerDescription::matrix_columns) > 0,
+      "The key scanner description has zero columns."
     );
 
     expander_error_ = initExpander();
@@ -86,9 +86,9 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
           continue;
 
         KeyAddr addr = KeyAddr(
-            row + _KeyScannerDescription::row_offset,
-            col + _KeyScannerDescription::column_offset
-        );
+                         row + _KeyScannerDescription::row_offset,
+                         col + _KeyScannerDescription::column_offset
+                       );
         handleKeyswitchEvent(Key_NoKey, addr, keyState);
       }
       previousKeyState_[row] = keyState_[row];
@@ -180,7 +180,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     if (status)
       goto out;
 
- out:
+out:
     i2c_stop();
 
     return status;
@@ -212,7 +212,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
     expander_error_ = i2c_write(0xFF & ~(1 << row));
     if (expander_error_)
       goto out;
- out:
+out:
     i2c_stop();
   }
 
@@ -234,7 +234,7 @@ class MCP23018KeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScann
 
     data = i2c_readNak();
     data = ~data;
- out:
+out:
     i2c_stop();
     return data;
   }

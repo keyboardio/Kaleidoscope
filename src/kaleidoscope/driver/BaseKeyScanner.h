@@ -29,6 +29,8 @@ class BaseKeyScanner {
 
   typedef typename _KeyScannerDescription::KeyAddr KeyAddr;
 
+  static void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+
   void setup() {}
   void readMatrix() {}
   void scanMatrix() {}

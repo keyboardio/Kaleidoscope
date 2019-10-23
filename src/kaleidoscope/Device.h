@@ -65,6 +65,8 @@ class Device {
 
  public:
 
+  typedef _DeviceDescription Description;
+
   typedef typename _DeviceDescription::KeyScanner KeyScanner;
   typedef typename _DeviceDescription::KeyScannerDescription::KeyAddr KeyAddr;
   typedef typename _DeviceDescription::LEDs LEDs;

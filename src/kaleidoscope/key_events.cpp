@@ -137,8 +137,3 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
     return;
   handleKeyswitchEventDefault(mappedKey, key_addr, keyState);
 }
-
-inline
-void HARDWARE_IMPLEMENTATION::KeyScanner::handleKeyswitchEvent(Key mappedKey, HARDWARE_IMPLEMENTATION::KeyScannerDescription::KeyAddr key_addr, uint8_t keyState) {
-  ::handleKeyswitchEvent(mappedKey, key_addr, keyState);
-}

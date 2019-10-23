@@ -50,7 +50,7 @@ class ErgoDoxKeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScanne
 
   uint8_t pressedKeyswitchCount() {
     return atmega_scanner_.pressedKeyswitchCount() +
-      expander_scanner_.pressedKeyswitchCount();
+           expander_scanner_.pressedKeyswitchCount();
   }
   bool isKeyswitchPressed(KeyAddr key_addr) {
     if (key_addr.row() < 7) {
@@ -62,7 +62,7 @@ class ErgoDoxKeyScanner : public kaleidoscope::driver::BaseKeyScanner<_KeyScanne
 
   uint8_t previousPressedKeyswitchCount() {
     return atmega_scanner_.previousPressedKeyswitchCount() +
-      expander_scanner_.previousPressedKeyswitchCount();
+           expander_scanner_.previousPressedKeyswitchCount();
   }
   bool wasKeyswitchPressed(KeyAddr key_addr) {
     if (key_addr.row() < 7) {

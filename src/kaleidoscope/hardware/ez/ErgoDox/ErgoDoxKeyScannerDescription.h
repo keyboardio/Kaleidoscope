@@ -44,7 +44,7 @@ struct ErgoDoxATMegaKeyScannerDescription : kaleidoscope::driver::keyscanner::AT
   ATMEGA_KEYSCANNER_DESCRIPTION_WITH_OFFSET(7, 0,
       ROW_PIN_LIST({PIN_B0, PIN_B1, PIN_B2, PIN_B3, PIN_D2, PIN_D3, PIN_C6}),
       COL_PIN_LIST({PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7})
-  );
+                                           );
 };
 
 struct ErgoDoxMCP23018KeyScannerDescription : kaleidoscope::hardware::ez::ergodox::MCP23018KeyScannerDescription {
