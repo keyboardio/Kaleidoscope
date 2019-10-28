@@ -28,16 +28,16 @@ uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
   if (!palette_base_)
     palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
 
-  return ::EEPROMSettings.requestSlice(max_themes * KeyboardHardware.numKeys() / 2);
+  return ::EEPROMSettings.requestSlice(max_themes * KeyboardHardware.led_count / 2);
 }
 
 void LEDPaletteTheme::updateHandler(uint16_t theme_base, uint8_t theme) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t map_base = theme_base + (theme * KeyboardHardware.numKeys() / 2);
+  uint16_t map_base = theme_base + (theme * KeyboardHardware.led_count / 2);
 
-  for (uint8_t pos = 0; pos < KeyboardHardware.numKeys(); pos++) {
+  for (uint8_t pos = 0; pos < KeyboardHardware.led_count; pos++) {
     cRGB color = lookupColorAtPosition(map_base, pos);
     ::LEDControl.setCrgbAt(pos, color);
   }
@@ -47,7 +47,7 @@ void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_
   if (!Kaleidoscope.has_leds)
     return;
 
-  uint16_t map_base = theme_base + (theme * KeyboardHardware.numKeys() / 2);
+  uint16_t map_base = theme_base + (theme * KeyboardHardware.led_count / 2);
   uint8_t pos = KeyboardHardware.getLedIndex(key_addr);
 
   cRGB color = lookupColorAtPosition(map_base, pos);
@@ -151,7 +151,7 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
   if (strcmp_P(command, expected_command) != 0)
     return EventHandlerResult::OK;
 
-  uint16_t max_index = (max_themes * KeyboardHardware.numKeys()) / 2;
+  uint16_t max_index = (max_themes * KeyboardHardware.led_count) / 2;
 
   if (::Focus.isEOL()) {
     for (uint16_t pos = 0; pos < max_index; pos++) {
