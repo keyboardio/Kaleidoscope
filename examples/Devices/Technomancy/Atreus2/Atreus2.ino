@@ -83,8 +83,8 @@ KEYMAPS(
 
   /* _LOWER
      +-------+-------+-------+-------+-------+
-     |       |       |       |       |       |
-     | Left  | Down  |  Up   | Right | PgUp  +-------+
+     |       |       |  Up   |       |       |
+     |       | Left  | Down  | Right | PgUp  +-------+
      |       |       |       |       | PgDn  | Home  |
      | -L1-  | Del   | Ctrl  |  Cmd  | Shift |  Esc  |
      +-------+-------+-------+-------+-------+-------+
@@ -98,10 +98,10 @@ KEYMAPS(
   */
   [_LOWER] = KEYMAP_STACKED
   (
-       XXX      ,XXX        ,XXX    ,XXX       ,XXX
-      ,Key_Left ,Key_Down   ,Key_Up ,Key_Right ,Key_PageUp
-      ,XXX      ,XXX        ,XXX    ,XXX       ,Key_PageDown ,Key_Home
-      ,___      ,Key_Delete ,___    ,___       ,___          ,___
+       XXX ,XXX        ,Key_Up   ,XXX       ,XXX
+      ,XXX ,Key_Left   ,Key_Down ,Key_Right ,Key_PageUp
+      ,XXX ,XXX        ,XXX      ,XXX       ,Key_PageDown ,Key_Home
+      ,___ ,Key_Delete ,___      ,___       ,___          ,___
 
                  ,Key_Backtick ,Key_7 ,Key_8      ,Key_9    ,Key_Minus
                  ,Key_Period   ,Key_4 ,Key_5      ,Key_6    ,Key_Plus
