@@ -27,68 +27,141 @@
 #include "Kaleidoscope-Qukeys.h"
 #include "Kaleidoscope-SpaceCadet.h"
 
-
-
 #define MO(n) ShiftToLayer(n)
 #define TG(n) LockLayer(n)
 
-enum {
-  LAYER_QWERTY
-};
-
-#define Key_Exclamation LSHIFT(Key_1)
-#define Key_At LSHIFT(Key_2)
-#define Key_Hash LSHIFT(Key_3)
-#define Key_Dollar LSHIFT(Key_4)
-#define Key_And LSHIFT(Key_7)
+#define Key_BSpc Key_Backspace
+#define Key_VolUp Consumer_VolumeIncrement
+#define Key_VolDn Consumer_VolumeDecrement
+#define Key_LCBracket LSHIFT(Key_LeftBracket)
+#define Key_RCBracket LSHIFT(Key_RightBracket)
 #define Key_Star LSHIFT(Key_8)
 #define Key_Plus LSHIFT(Key_Equals)
 
+#define Key_Up Key_UpArrow
+#define Key_Down Key_DownArrow
+#define Key_Left Key_LeftArrow
+#define Key_Right Key_RightArrow
+
 enum {
-  QWERTY,
-  NUMPAD,
-  NAV
+  _QWERTY,
+  _LOWER,
+  _RAISE,
+  _MOUSE
 };
 
 /* *INDENT-OFF* */
 KEYMAPS(
-  [QWERTY] = KEYMAP_STACKED
-  (
-       Key_Q   ,Key_W   ,Key_E       ,Key_R         ,Key_T
-      ,Key_A   ,Key_S   ,Key_D       ,Key_F         ,Key_G
-      ,Key_Z   ,Key_X   ,Key_C       ,Key_V         ,Key_B, Key_Backtick
-      ,Key_Esc ,Key_Tab ,Key_LeftGui ,Key_LeftShift ,Key_Backspace ,Key_LeftControl
+    /* QWERTY:
+      +-------+-------+-------+-------+-------+
+      | Q     | W     | E     | R     | T     |
+      | A     | S     | D     | F     | G     +-------+
+      | Z     | X     | C     | V     | B     | Tab   |
+      | L1    | Bspc  | Ctrl  | Cmd   | Shift | Esc   |
+      +-------+-------+-------+-------+-------+-------+
 
-                     ,Key_Y     ,Key_U   ,Key_I     ,Key_O      ,Key_P
-                     ,Key_H     ,Key_J   ,Key_K     ,Key_L      ,Key_Semicolon
-       ,Key_Backslash,Key_N     ,Key_M   ,Key_Comma ,Key_Period ,Key_Slash
-       ,Key_LeftAlt  ,Key_Space ,MO(NUMPAD) ,Key_Minus ,Key_Quote  ,Key_Enter
+      .       +-------+-------+-------+-------+-------+
+      .       | Y     | U     | I     | O     | P     |
+      +-------| H     | J     | K     | L     | ;     |
+      | Enter | N     | M     | ,     | .     | /     |
+      | Space | Shift | Alt   | -     | '     | L2    |
+      +-------+-------+-------+-------+-------+-------+
+    */
+  [_QWERTY] = KEYMAP_STACKED
+  (
+       Key_Q      ,Key_W    ,Key_E           ,Key_R       ,Key_T
+      ,Key_A      ,Key_S    ,Key_D           ,Key_F       ,Key_G
+      ,Key_Z      ,Key_X    ,Key_C           ,Key_V       ,Key_B         ,Key_Tab
+      ,MO(_LOWER) ,Key_BSpc ,Key_LeftControl ,Key_LeftGui ,Key_LeftShift ,Key_Esc
+
+                  ,Key_Y          ,Key_U       ,Key_I     ,Key_O      ,Key_P
+                  ,Key_H          ,Key_J       ,Key_K     ,Key_L      ,Key_Semicolon
+       ,Key_Enter ,Key_N          ,Key_M       ,Key_Comma ,Key_Period ,Key_Slash
+       ,Key_Space ,Key_RightShift ,Key_LeftAlt ,Key_Minus ,Key_Quote  ,MO(_RAISE)
   ),
 
-  [NUMPAD] = KEYMAP_STACKED
-  (
-       Key_Exclamation ,Key_At           ,Key_UpArrow   ,Key_LeftCurlyBracket ,Key_RightCurlyBracket
-      ,Key_Hash        ,Key_LeftArrow    ,Key_DownArrow ,Key_RightArrow       ,Key_Dollar
-      ,Key_LeftBracket ,Key_RightBracket ,Key_LeftParen ,Key_RightParen       ,Key_And		     ,___
-      ,TG(NAV)         ,Key_Insert       ,Key_LeftGui   ,Key_LeftShift        ,Key_Backspace         ,Key_LeftControl
+  /* _LOWER
+     +-------+-------+-------+-------+-------+
+     |       |       |       |       |       |
+     | Left  | Down  |  Up   | Right | PgUp  +-------+
+     |       |       |       |       | PgDn  | Home  |
+     | -L1-  | Del   | Ctrl  |  Cmd  | Shift |  Esc  |
+     +-------+-------+-------+-------+-------+-------+
 
-                   ,Key_PageUp   ,Key_7 ,Key_8      ,Key_9 ,Key_Star
-                   ,Key_PageDown ,Key_4 ,Key_5      ,Key_6 ,Key_Plus
-      ,___         ,Key_Backtick ,Key_1 ,Key_2      ,Key_3 ,Key_Backslash
-      ,Key_LeftAlt ,Key_Space    ,___   ,Key_Period ,Key_0 ,Key_Equals
+     .       +-------+-------+-------+-------+-------+
+     .       |   `   |   7   |   8   |   9   |  -    |
+     +-------|   .   |   4   |   5   |   6   |  +    |
+     | End   |   0   |   1   |   2   |   3   |  \    |
+     | Enter | Shift |  Alt  |   =   |   *   | *L3*  |
+     +-------+-------+-------+-------+-------+-------+
+  */
+  [_LOWER] = KEYMAP_STACKED
+  (
+       XXX      ,XXX        ,XXX    ,XXX       ,XXX
+      ,Key_Left ,Key_Down   ,Key_Up ,Key_Right ,Key_PageUp
+      ,XXX      ,XXX        ,XXX    ,XXX       ,Key_PageDown ,Key_Home
+      ,___      ,Key_Delete ,___    ,___       ,___          ,___
+
+                 ,Key_Backtick ,Key_7 ,Key_8      ,Key_9    ,Key_Minus
+                 ,Key_Period   ,Key_4 ,Key_5      ,Key_6    ,Key_Plus
+      ,Key_End   ,Key_0        ,Key_1 ,Key_2      ,Key_3    ,Key_Slash
+      ,Key_Enter ,___          ,___   ,Key_Equals ,Key_Star ,TG(_MOUSE)
    ),
 
-  [NAV] = KEYMAP_STACKED
-  (
-       Key_Insert ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
-      ,Key_Delete ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
-      ,XXX        ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
-      ,XXX        ,Consumer_VolumeDecrement ,___           ,___            ,___  ,___
+  /* _RAISE
+     +-------+-------+-------+-------+-------+
+     |  F7   |  F8   |  F9   | F10   |  >>   |
+     |  F4   |  F5   |  F6   | F11   |  <<   +-------+
+     |  F1   |  F2   |  F3   | F12   |Ply/Pse| Mute  |
+     | *L3*  |  Del  |  Ctrl | Cmd   | Shift |  Esc  |
+     +-------+-------+-------+-------+-------+-------+
 
-                ,Key_UpArrow   ,Key_F7 ,Key_F8          ,Key_F9         ,Key_F10
-                ,Key_DownArrow ,Key_F4 ,Key_F5          ,Key_F6         ,Key_F11
-      ,___      ,XXX           ,Key_F1 ,Key_F2          ,Key_F3         ,Key_F12
-      ,___      ,___           ,M(QWERTY)  ,Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
+     .       +-------+-------+-------+-------+-------+
+     .       |       |       |       |       |       |
+     +-------|   {   |   }   |   [   |   ]   |       |
+     | Vol+  |  Vol- |       |       |       |  \    |
+     | Enter | Shift |  Alt  |       |       | -L2-  |
+     +-------+-------+-------+-------+-------+-------+
+  */
+  [_RAISE] = KEYMAP_STACKED
+  (
+       Key_F7     ,Key_F8     ,Key_F9 ,Key_F10 ,Consumer_ScanNextTrack
+      ,Key_F4     ,Key_F5     ,Key_F6 ,Key_F11 ,Consumer_ScanPreviousTrack
+      ,Key_F1     ,Key_F2     ,Key_F3 ,Key_F12 ,Consumer_PlaySlashPause    ,Consumer_Mute
+      ,TG(_MOUSE) ,Key_Delete ,___    ,___     ,___                        ,___
+
+                 ,XXX           ,XXX           ,XXX          ,XXX          ,XXX
+                 ,Key_LCBracket ,Key_RCBracket ,Key_LBracket ,Key_RBracket ,XXX
+      ,Key_VolUp ,Key_VolDn     ,XXX           ,XXX          ,XXX          ,Key_Slash
+      ,Key_Enter ,___           ,___           ,XXX          ,XXX          ,___
+   ),
+
+  /* _MOUSE
+     +-------+-------+-------+-------+-------+
+     |       |       |  MUp  |       |  MBL  |
+     |       | MLeft | MDown | MRght |  MBM  +-------+
+     |       |       |       |       |  MBR  |       |
+     | *L3*  |       |  Ctrl |  Cmd  | Shift |  Esc  |
+     +-------+-------+-------+-------+-------+-------+
+
+     .       +-------+-------+-------+-------+-------+
+     .       | PrScr | WClr  |       |       |       |
+     +-------|  Ins  |  WNW  |  WNE  |       |       |
+     |       |       |  WSW  |  WSE  |       |       |
+     |       | Shift |  Alt  |       |       | *L3*  |
+     +-------+-------+-------+-------+-------+-------+
+  */
+  [_MOUSE] = KEYMAP_STACKED
+  (
+       XXX ,XXX        ,Key_mouseUp ,XXX        ,Key_mouseBtnL
+      ,XXX ,Key_mouseL ,Key_mouseDn ,Key_mouseR ,Key_mouseBtnM
+      ,XXX ,XXX        ,XXX         ,XXX        ,Key_mouseBtnR ,XXX
+      ,___ ,XXX        ,___         ,___        ,___           ,___
+
+           ,Key_PrintScreen ,Key_mouseWarpEnd ,XXX             ,XXX ,XXX
+           ,Key_Insert      ,Key_mouseWarpNW  ,Key_mouseWarpNE ,XXX ,XXX
+      ,XXX ,XXX             ,Key_mouseWarpSW  ,Key_mouseWarpSE ,XXX ,XXX
+      ,XXX ,___             ,___              ,XXX             ,XXX ,___
    )
 )
 /* *INDENT-ON* */
@@ -105,18 +178,6 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Macros,
   Qukeys
 );
-
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
-  case QWERTY:
-    Layer.move(LAYER_QWERTY);
-    break;
-  default:
-    break;
-  }
-
-  return MACRO_NONE;
-}
 
 void setup() {
   Kaleidoscope.setup();
