@@ -26,6 +26,7 @@
 #include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-Qukeys.h"
 #include "Kaleidoscope-SpaceCadet.h"
+#include "Kaleidoscope-EscapeOneShot.h"
 
 #define MO(n) ShiftToLayer(n)
 #define TG(n) LockLayer(n)
@@ -69,15 +70,15 @@ KEYMAPS(
     */
   [_QWERTY] = KEYMAP_STACKED
   (
-       Key_Q      ,Key_W    ,Key_E           ,Key_R       ,Key_T
-      ,Key_A      ,Key_S    ,Key_D           ,Key_F       ,Key_G
-      ,Key_Z      ,Key_X    ,Key_C           ,Key_V       ,Key_B         ,Key_Tab
-      ,MO(_LOWER) ,Key_BSpc ,Key_LeftControl ,Key_LeftGui ,Key_LeftShift ,Key_Esc
+       Key_Q       ,Key_W    ,Key_E            ,Key_R        ,Key_T
+      ,Key_A       ,Key_S    ,Key_D            ,Key_F        ,Key_G
+      ,Key_Z       ,Key_X    ,Key_C            ,Key_V        ,Key_B          ,Key_Tab
+      ,OSL(_LOWER) ,Key_BSpc ,OSM(LeftControl) ,OSM(LeftGui) ,OSM(LeftShift) ,Key_Esc
 
-                  ,Key_Y          ,Key_U       ,Key_I     ,Key_O      ,Key_P
-                  ,Key_H          ,Key_J       ,Key_K     ,Key_L      ,Key_Semicolon
-       ,Key_Enter ,Key_N          ,Key_M       ,Key_Comma ,Key_Period ,Key_Slash
-       ,Key_Space ,Key_RightShift ,Key_LeftAlt ,Key_Minus ,Key_Quote  ,MO(_RAISE)
+                  ,Key_Y           ,Key_U        ,Key_I     ,Key_O      ,Key_P
+                  ,Key_H           ,Key_J        ,Key_K     ,Key_L      ,Key_Semicolon
+       ,Key_Enter ,Key_N           ,Key_M        ,Key_Comma ,Key_Period ,Key_Slash
+       ,Key_Space ,OSM(RightShift) ,OSM(LeftAlt) ,Key_Minus ,Key_Quote  ,OSL(_RAISE)
   ),
 
   /* _LOWER
@@ -172,6 +173,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Focus,
   FocusEEPROMCommand,
   FocusSettingsCommand,
+  EscapeOneShot,
   OneShot,
   SpaceCadet,
   MouseKeys,
