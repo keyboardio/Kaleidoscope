@@ -37,7 +37,6 @@
 #define Key_LCBracket LSHIFT(Key_LeftBracket)
 #define Key_RCBracket LSHIFT(Key_RightBracket)
 #define Key_Star LSHIFT(Key_8)
-#define Key_Plus LSHIFT(Key_Equals)
 
 #define Key_Up Key_UpArrow
 #define Key_Down Key_DownArrow
@@ -83,58 +82,58 @@ KEYMAPS(
 
   /* _LOWER
      +-------+-------+-------+-------+-------+
-     |       |       |  Up   |       |       |
-     |       | Left  | Down  | Right | PgUp  +-------+
-     |       |       |       |       | PgDn  | Home  |
+     |       | Left  | Down  | Up    | Right |
+     |  1    |   2   | 3     | 4     | 5     +-------+
+     |       |       | PgDn  | PgUp  |       | Home  |
      | -L1-  | Del   | Ctrl  |  Cmd  | Shift |  Esc  |
      +-------+-------+-------+-------+-------+-------+
 
      .       +-------+-------+-------+-------+-------+
-     .       |   `   |   7   |   8   |   9   |  -    |
-     +-------|   .   |   4   |   5   |   6   |  +    |
-     | End   |   0   |   1   |   2   |   3   |  \    |
-     | Enter | Shift |  Alt  |   =   |   *   | *L3*  |
+     .       |   {   |   }   |   [   |   ]   |  *    |
+     +-------|   6   |   7   |   8   |   9   |  0    |
+     | End   |       |       |       |       |  \    |
+     | Enter | Shift |  Alt  |   =   |   `   | *L3*  |
      +-------+-------+-------+-------+-------+-------+
   */
   [_LOWER] = KEYMAP_STACKED
   (
-       XXX ,XXX        ,Key_Up   ,XXX       ,XXX
-      ,XXX ,Key_Left   ,Key_Down ,Key_Right ,Key_PageUp
-      ,XXX ,XXX        ,XXX      ,XXX       ,Key_PageDown ,Key_Home
-      ,___ ,Key_Delete ,___      ,___       ,___          ,___
+       XXX   ,Key_Left   ,Key_Down   ,Key_Up     ,Key_Right
+      ,Key_1 ,Key_2      ,Key_3      ,Key_4      ,Key_5
+      ,XXX   ,XXX        ,Key_PageDn ,Key_PageUp ,XXX       ,Key_Home
+      ,___   ,Key_Delete ,___        ,___        ,___       ,___
 
-                 ,Key_Backtick ,Key_7 ,Key_8      ,Key_9    ,Key_Minus
-                 ,Key_Period   ,Key_4 ,Key_5      ,Key_6    ,Key_Plus
-      ,Key_End   ,Key_0        ,Key_1 ,Key_2      ,Key_3    ,Key_Slash
-      ,Key_Enter ,___          ,___   ,Key_Equals ,Key_Star ,TG(_MOUSE)
+                 ,Key_LCBracket ,Key_RCBracket ,Key_LBracket ,Key_RBracket ,Key_Star
+                 ,Key_6         ,Key_7         ,Key_8        ,Key_9        ,Key_0
+      ,Key_End   ,XXX           ,XXX           ,XXX          ,XXX          ,Key_Slash
+      ,Key_Enter ,___           ,___           ,Key_Equals   ,Key_Backtick ,TG(_MOUSE)
    ),
 
   /* _RAISE
      +-------+-------+-------+-------+-------+
-     |  F7   |  F8   |  F9   | F10   |  >>   |
-     |  F4   |  F5   |  F6   | F11   |  <<   +-------+
-     |  F1   |  F2   |  F3   | F12   |Ply/Pse| Mute  |
+     |  F11  | F12   |       | <<    |  >>   |
+     |  F1   |  F2   |  F3   | F4    |  F5   +-------+
+     |       |       |       |       |Ply/Pse| Mute  |
      | *L3*  |  Del  |  Ctrl | Cmd   | Shift |  Esc  |
      +-------+-------+-------+-------+-------+-------+
 
      .       +-------+-------+-------+-------+-------+
      .       |       |       |       |       |       |
-     +-------|   {   |   }   |   [   |   ]   |       |
+     +-------| F6    | F7    | F8    | F9    | F10   |
      | Vol+  |  Vol- |       |       |       |  \    |
      | Enter | Shift |  Alt  |       |       | -L2-  |
      +-------+-------+-------+-------+-------+-------+
   */
   [_RAISE] = KEYMAP_STACKED
   (
-       Key_F7     ,Key_F8     ,Key_F9 ,Key_F10 ,Consumer_ScanNextTrack
-      ,Key_F4     ,Key_F5     ,Key_F6 ,Key_F11 ,Consumer_ScanPreviousTrack
-      ,Key_F1     ,Key_F2     ,Key_F3 ,Key_F12 ,Consumer_PlaySlashPause    ,Consumer_Mute
+       Key_F11    ,Key_F12    ,XXX    ,Consumer_ScanPreviousTrack ,Consumer_ScanNextTrack
+      ,Key_F1     ,Key_F2     ,Key_F3 ,Key_F4                     ,Key_F5
+      ,XXX        ,XXX        ,XXX    ,XXX                         ,Consumer_PlaySlashPause    ,Consumer_Mute
       ,TG(_MOUSE) ,Key_Delete ,___    ,___     ,___                        ,___
 
-                 ,XXX           ,XXX           ,XXX          ,XXX          ,XXX
-                 ,Key_LCBracket ,Key_RCBracket ,Key_LBracket ,Key_RBracket ,XXX
-      ,Key_VolUp ,Key_VolDn     ,XXX           ,XXX          ,XXX          ,Key_Slash
-      ,Key_Enter ,___           ,___           ,XXX          ,XXX          ,___
+                 ,XXX       ,XXX    ,XXX    ,XXX    ,XXX
+                 ,Key_F6    ,Key_F7 ,Key_F8 ,Key_F9 ,Key_F10
+      ,Key_VolUp ,Key_VolDn ,XXX    ,XXX    ,XXX    ,Key_Slash
+      ,Key_Enter ,___       ,___    ,XXX    ,XXX    ,___
    ),
 
   /* _MOUSE
