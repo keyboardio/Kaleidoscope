@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-OLKB-Planck -- OLKB Planck hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,4 +19,4 @@
 #pragma once
 
 #define KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD 1
-#include "kaleidoscope/hardware/olkb/Planck.h"
+#include "kaleidoscope/device/olkb/Planck.h"

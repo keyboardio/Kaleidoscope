@@ -56,7 +56,7 @@ KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           Macros);
 
 void setup() {
-  KeyboardHardware.serialPort().begin(9600);
+  Kaleidoscope.serialPort().begin(9600);
 
   Kaleidoscope.setup();
 

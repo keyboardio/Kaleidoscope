@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Technomancy-Atreus -- Atreus hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd)
  *  (C) Jack Humbert, Phil Hagelberg, and others
@@ -30,7 +30,7 @@
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace technomancy {
 
 ATMEGA_KEYBOARD_DATA(Atreus);
@@ -76,7 +76,6 @@ void Atreus::resetDevice() {
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::technomancy::Atreus &Atreus = KeyboardHardware;
+kaleidoscope::device::technomancy::Atreus &Atreus = kaleidoscope_internal::device;
 
 #endif

@@ -91,7 +91,7 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   // counters if need be.
 
   if (keyToggledOn(key_state)) {
-    if (key_addr.col() <= COLS / 2)
+    if (key_addr.col() <= Kaleidoscope.device().matrix_columns / 2)
       left_hand_keys_++;
     else
       right_hand_keys_++;
@@ -107,12 +107,12 @@ EventHandlerResult TypingBreaks::onSetup() {
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint32_t idle_time;
-  KeyboardHardware.storage().get(settings_base_, idle_time);
+  Kaleidoscope.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffffffff) {
-    KeyboardHardware.storage().put(settings_base_, settings);
+    Kaleidoscope.storage().put(settings_base_, settings);
   }
 
-  KeyboardHardware.storage().get(settings_base_, settings);
+  Kaleidoscope.storage().get(settings_base_, settings);
   return EventHandlerResult::OK;
 }
 
@@ -192,7 +192,7 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
     break;
   }
 
-  KeyboardHardware.storage().put(settings_base_, settings);
+  Kaleidoscope.storage().put(settings_base_, settings);
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

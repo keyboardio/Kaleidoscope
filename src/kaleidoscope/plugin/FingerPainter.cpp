@@ -58,7 +58,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
 
   // TODO: The following works only for keyboards with LEDs for each key.
 
-  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(key_addr));
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, Kaleidoscope.device().getLedIndex(key_addr));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
@@ -75,7 +75,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     new_color = ::LEDPaletteTheme.lookupPaletteColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, KeyboardHardware.getLedIndex(key_addr), color_index);
+  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, Kaleidoscope.device().getLedIndex(key_addr), color_index);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
@@ -100,8 +100,8 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
     return EventHandlerResult::OK;
 
   if (sub_command == CLEAR) {
-    for (uint16_t i = 0; i < KeyboardHardware.numKeys() / 2; i++) {
-      KeyboardHardware.storage().update(color_base_ + i, 0);
+    for (uint16_t i = 0; i < Kaleidoscope.device().numKeys() / 2; i++) {
+      Kaleidoscope.storage().update(color_base_ + i, 0);
     }
     return EventHandlerResult::OK;
   }

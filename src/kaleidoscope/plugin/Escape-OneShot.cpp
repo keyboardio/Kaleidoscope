@@ -32,7 +32,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     return EventHandlerResult::OK;
   }
 
-  KeyboardHardware.maskKey(key_addr);
+  Kaleidoscope.device().maskKey(key_addr);
 
   ::OneShot.cancel(true);
   return EventHandlerResult::EVENT_CONSUMED;

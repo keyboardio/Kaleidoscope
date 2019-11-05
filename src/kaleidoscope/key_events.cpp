@@ -96,9 +96,9 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
      * See layers.cpp for an example that masks keys, and the reason why it does
      * so.
      */
-    if (KeyboardHardware.isKeyMasked(key_addr)) {
+    if (Kaleidoscope.device().isKeyMasked(key_addr)) {
       if (keyToggledOff(keyState)) {
-        KeyboardHardware.unMaskKey(key_addr);
+        Kaleidoscope.device().unMaskKey(key_addr);
       } else {
         return;
       }

@@ -26,3 +26,23 @@
   "------------------------------------------------------------------------\n" \
 
 /* Messages */
+
+#define _DEPRECATED_MESSAGE_NAMED_HARDWARE              __NL__ \
+  "Named hardware objects are deprecated, please use\n" __NL__ \
+  "`Kaleidoscope.device()` instead."
+
+#define _DEPRECATED_MESSAGE_KEYBOARDHARDWARE              \
+  "`KeyboardHardware` is deprecated, please use\n" __NL__ \
+  "`Kaleidoscope.device()` instead"
+
+#define _DEPRECATED_MESSAGE_ROWS                        \
+  "The `ROWS` macro is deprecated, please use\n" __NL__ \
+  "`Kaleidoscope.device().matrix_rows` instead."
+
+#define _DEPRECATED_MESSAGE_COLS                          \
+  "The `COLS` macro is deprecated, please use \n" __NL__  \
+  "`Kaleidoscope.device().matrix_columns` instead."
+
+#define _DEPRECATED_MESSAGE_LED_COUNT                         \
+  "The `LED_COUNT` macro is deprecated, please use \n" __NL__ \
+  "`Kaleidoscope.device().led_count` instead."

@@ -33,13 +33,13 @@ __attribute__((weak))
 uint8_t layer_count = 0;
 
 __attribute__((weak))
-extern const Key keymaps_linear[][ROWS * COLS] = {};
+extern const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
-Key Layer_::live_composite_keymap_[KeyboardHardware.numKeys()];
-uint8_t Layer_::active_layers_[KeyboardHardware.numKeys()];
+Key Layer_::live_composite_keymap_[Kaleidoscope.device().numKeys()];
+uint8_t Layer_::active_layers_[Kaleidoscope.device().numKeys()];
 Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -111,7 +111,7 @@ void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(active_layers_, 0, KeyboardHardware.numKeys());
+  memset(active_layers_, 0, Kaleidoscope.device().numKeys());
   for (auto key_addr : KeyAddr::all()) {
     int8_t layer = top_active_layer_;
 

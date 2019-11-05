@@ -1,5 +1,5 @@
-/* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+/* kaleidoscope_internal::device - Global device object for internal use
+ * Copyright (C) 2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,6 @@
 
 #pragma once
 
-#include KALEIDOSCOPE_HARDWARE_H
-
-typedef kaleidoscope::Device::KeyAddr KeyAddr;
+namespace kaleidoscope_internal {
+extern kaleidoscope::Device device;
+}

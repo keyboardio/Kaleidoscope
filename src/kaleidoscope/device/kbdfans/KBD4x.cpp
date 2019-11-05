@@ -23,7 +23,7 @@
 
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace kbdfans {
 
 ATMEGA_KEYBOARD_DATA(KBD4x);
@@ -56,7 +56,6 @@ void KBD4x::resetDevice() {
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::kbdfans::KBD4x &KBD4x = KeyboardHardware;
+kaleidoscope::device::kbdfans::KBD4x &KBD4x = kaleidoscope_internal::device;
 
 #endif

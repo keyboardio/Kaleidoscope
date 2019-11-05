@@ -27,20 +27,20 @@ namespace plugin {
 char FocusSerial::command_[32];
 
 void FocusSerial::drain(void) {
-  if (KeyboardHardware.serialPort().available())
-    while (KeyboardHardware.serialPort().peek() != '\n')
-      KeyboardHardware.serialPort().read();
+  if (Kaleidoscope.serialPort().available())
+    while (Kaleidoscope.serialPort().peek() != '\n')
+      Kaleidoscope.serialPort().read();
 }
 
 EventHandlerResult FocusSerial::beforeReportingState() {
-  if (KeyboardHardware.serialPort().available() == 0)
+  if (Kaleidoscope.serialPort().available() == 0)
     return EventHandlerResult::OK;
 
   uint8_t i = 0;
   do {
-    command_[i++] = KeyboardHardware.serialPort().read();
+    command_[i++] = Kaleidoscope.serialPort().read();
 
-    if (KeyboardHardware.serialPort().peek() == '\n')
+    if (Kaleidoscope.serialPort().peek() == '\n')
       break;
   } while (command_[i - 1] != ' ' && i < 32);
   if (command_[i - 1] == ' ')
@@ -50,12 +50,12 @@ EventHandlerResult FocusSerial::beforeReportingState() {
 
   Kaleidoscope.onFocusEvent(command_);
 
-  KeyboardHardware.serialPort().println(F("\r\n."));
+  Kaleidoscope.serialPort().println(F("\r\n."));
 
   drain();
 
-  if (KeyboardHardware.serialPort().peek() == '\n')
-    KeyboardHardware.serialPort().read();
+  if (Kaleidoscope.serialPort().peek() == '\n')
+    Kaleidoscope.serialPort().read();
 
   return EventHandlerResult::OK;
 }
@@ -65,7 +65,7 @@ bool FocusSerial::handleHelp(const char *command,
   if (strcmp_P(command, PSTR("help")) != 0)
     return false;
 
-  KeyboardHardware.serialPort().println((const __FlashStringHelper *)help_message);
+  Kaleidoscope.serialPort().println((const __FlashStringHelper *)help_message);
   return true;
 }
 
@@ -75,7 +75,7 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
 }
 
 void FocusSerial::printBool(bool b) {
-  KeyboardHardware.serialPort().print((b) ? F("true") : F("false"));
+  Kaleidoscope.serialPort().print((b) ? F("true") : F("false"));
 }
 
 }

@@ -20,4 +20,4 @@
 
 #define KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD 1
 
-#include "kaleidoscope/hardware/technomancy/Atreus2.h"
+#include "kaleidoscope/device/technomancy/Atreus2.h"

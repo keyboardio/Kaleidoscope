@@ -37,8 +37,11 @@ void setup();
 #include <stdint.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope/device/key_indexes.h"
+#include "kaleidoscope_internal/device.h"
+#include "kaleidoscope_internal/deprecations.h"
 
-extern HARDWARE_IMPLEMENTATION KeyboardHardware;
+static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal::device;
 
 #ifdef PER_KEY_DATA_STACKED
 #define KEYMAP_STACKED(...) { PER_KEY_DATA_STACKED(XXX, __VA_ARGS__) }
@@ -48,9 +51,9 @@ extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 #define KEYMAP(...) { PER_KEY_DATA(XXX, __VA_ARGS__) }
 #endif
 
-#define ROWS (KeyboardHardware.matrix_rows)
-#define COLS (KeyboardHardware.matrix_columns)
-#define LED_COUNT (KeyboardHardware.led_count)
+static constexpr DEPRECATED(ROWS) uint8_t ROWS = kaleidoscope_internal::device.matrix_rows;
+static constexpr DEPRECATED(COLS) uint8_t COLS = kaleidoscope_internal::device.matrix_columns;
+static constexpr DEPRECATED(LED_COUNT) uint8_t LED_COUNT = kaleidoscope_internal::device.led_count;
 
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/key_events.h"
@@ -107,13 +110,17 @@ class Kaleidoscope_ {
   void setup(void);
   void loop(void);
 
-  static constexpr bool has_leds = (KeyboardHardware.led_count > 0);
+  static constexpr kaleidoscope::Device &device() {
+    return kaleidoscope_internal::device;
+  }
+
+  static constexpr bool has_leds = (kaleidoscope_internal::device.led_count > 0);
 
   /** Detaching from / attaching to the host.
    *
    * These two functions wrap the hardware plugin's similarly named functions.
    * We wrap them, because we'd like plugins and user-code not having to use
-   * `KeyboardHardware` directly.
+   * `Kaleidoscope.device()` directly.
    *
    * The methods themselves implement detaching from / attaching to the host,
    * without rebooting the device, and remaining powered in between.
@@ -122,10 +129,23 @@ class Kaleidoscope_ {
    * detach and attach.
    */
   void detachFromHost() {
-    KeyboardHardware.detachFromHost();
+    device().detachFromHost();
   }
   void attachToHost() {
-    KeyboardHardware.attachToHost();
+    device().attachToHost();
+  }
+
+  /** Wrapper functions for some device features.
+   *
+   * The next three functions wrap methods of the device plugin, to make using
+   * them in user sketches easier, and require less typing.
+   */
+  auto serialPort() -> decltype(device().serialPort()) & {
+    return device().serialPort();
+  }
+
+  auto storage() -> decltype(device().storage()) & {
+    return device().storage();
   }
 
   /** Returns the timer as it was at the start of the cycle.

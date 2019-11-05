@@ -20,12 +20,13 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
 #include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope_internal/device.h"
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
 #define KEYMAPS(layers...)				                                    __NL__ \
-  const Key keymaps_linear[][ROWS*COLS] PROGMEM = { layers };           __NL__ \
+  const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
   uint8_t layer_count                                                   __NL__ \
      = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
                                                                         __NL__ \
@@ -134,8 +135,8 @@ class Layer_ {
  private:
   static uint32_t layer_state_;
   static uint8_t top_active_layer_;
-  static Key live_composite_keymap_[KeyboardHardware.numKeys()];
-  static uint8_t active_layers_[KeyboardHardware.numKeys()];
+  static Key live_composite_keymap_[kaleidoscope_internal::device.numKeys()];
+  static uint8_t active_layers_[kaleidoscope_internal::device.numKeys()];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
   static void updateTopActiveLayer(void);

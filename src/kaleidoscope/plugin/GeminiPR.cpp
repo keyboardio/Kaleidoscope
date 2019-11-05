@@ -39,7 +39,7 @@ EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
 
     if (keys_held_ == 0) {
       state_[0] |= 0x80;
-      KeyboardHardware.serialPort().write(state_, sizeof(state_));
+      Kaleidoscope.serialPort().write(state_, sizeof(state_));
       memset(state_, 0, sizeof(state_));
     }
   }

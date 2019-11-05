@@ -246,7 +246,7 @@ class Hardware {
    *
    * Because different hardware has different ways to accomplish this, the
    * hardware plugin must provide these functions. Kaleidoscope will wrap them,
-   * so user code does not have to deal with KeyboardHardware.
+   * so user code does not have to deal with `Kaleidoscope.device()`.
    * @{
    */
   /**

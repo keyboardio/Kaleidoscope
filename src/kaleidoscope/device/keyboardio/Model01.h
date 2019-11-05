@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2018  Keyboard.io, Inc
+ * Copyright (C) 2017-2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,7 +21,6 @@
 
 #include <Arduino.h>
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::keyboardio::Model01
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
@@ -33,7 +32,7 @@
 #include "kaleidoscope/MatrixAddr.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace keyboardio {
 
 class Model01 : public kaleidoscope::Hardware {
@@ -123,9 +122,10 @@ class Model01 : public kaleidoscope::Hardware {
 
 }
 }
-}
 
-#include "kaleidoscope/hardware/key_indexes.h"
+typedef kaleidoscope::device::keyboardio::Model01 Device;
+
+}
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \

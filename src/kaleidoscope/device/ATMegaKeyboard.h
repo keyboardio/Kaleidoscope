@@ -25,7 +25,7 @@
 #include "kaleidoscope/MatrixAddr.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/device/avr/pins_and_ports.h"
 
 #include <avr/wdt.h>
 
@@ -130,11 +130,11 @@ struct cRGB {
   volatile uint8_t BOARD::debounce_matrix_[matrix_rows][matrix_columns]; \
                                                                 \
   ISR(TIMER1_OVF_vect) {                                        \
-    KeyboardHardware.readMatrix();				\
+    Kaleidoscope.device().readMatrix();                         \
   }
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 class ATMegaKeyboard : public kaleidoscope::Hardware {
  public:
   ATMegaKeyboard(void) {}

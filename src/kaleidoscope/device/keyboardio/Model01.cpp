@@ -23,7 +23,7 @@
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace keyboardio {
 
 KeyboardioScanner Model01::leftHand(0);
@@ -86,7 +86,7 @@ void Model01::enableHardwareTestMode() {
   PORTB |= (1 << 0);
 
   // Disable the debouncer on the ATTinys
-  KeyboardHardware.setKeyscanInterval(2);
+  Kaleidoscope.device().setKeyscanInterval(2);
 }
 
 
@@ -334,8 +334,6 @@ uint8_t Model01::previousPressedKeyswitchCount() {
 }
 }
 }
-
-HARDWARE_IMPLEMENTATION KeyboardHardware;
 
 #endif
 #endif

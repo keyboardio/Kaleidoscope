@@ -21,17 +21,16 @@
 #ifdef ARDUINO_AVR_ATREUS2
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::technomancy::Atreus2
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/device/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace technomancy {
-class Atreus2: public kaleidoscope::hardware::ATMegaKeyboard {
+class Atreus2: public kaleidoscope::device::ATMegaKeyboard {
   friend class ATMegaKeyboard;
  public:
   Atreus2(void) {}
@@ -80,10 +79,11 @@ class Atreus2: public kaleidoscope::hardware::ATMegaKeyboard {
   R3C0, R3C1, R3C2, R3C3, R3C4, R3C5, R3C6, R3C7, R3C8, R3C9, R3C10, R3C11
 }
 }
+
+typedef kaleidoscope::device::technomancy::Atreus2 Device;
+
 }
 
-#include "kaleidoscope/hardware/key_indexes.h"
-
-extern kaleidoscope::hardware::technomancy::Atreus2 &Atreus2;
+extern kaleidoscope::device::technomancy::Atreus2 DEPRECATED(NAMED_HARDWARE) &Atreus2;
 
 #endif

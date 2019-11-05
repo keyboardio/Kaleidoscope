@@ -96,31 +96,31 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (int8_t i = 0; i < LED_COUNT; i++) {
+  for (int8_t i = 0; i < Kaleidoscope.device().led_count; i++) {
     setCrgbAt(i, color);
   }
 }
 
 void LEDControl::setCrgbAt(int8_t led_index, cRGB crgb) {
-  KeyboardHardware.setCrgbAt(led_index, crgb);
+  Kaleidoscope.device().setCrgbAt(led_index, crgb);
 }
 
 void LEDControl::setCrgbAt(KeyAddr key_addr, cRGB color) {
-  KeyboardHardware.setCrgbAt(key_addr, color);
+  Kaleidoscope.device().setCrgbAt(key_addr, color);
 }
 
 cRGB LEDControl::getCrgbAt(int8_t led_index) {
-  return KeyboardHardware.getCrgbAt(led_index);
+  return Kaleidoscope.device().getCrgbAt(led_index);
 }
 cRGB LEDControl::getCrgbAt(KeyAddr key_addr) {
-  return KeyboardHardware.getCrgbAt(KeyboardHardware.getLedIndex(key_addr));
+  return Kaleidoscope.device().getCrgbAt(Kaleidoscope.device().getLedIndex(key_addr));
 }
 
 void LEDControl::syncLeds(void) {
   if (paused)
     return;
 
-  KeyboardHardware.syncLeds();
+  Kaleidoscope.device().syncLeds();
 }
 
 kaleidoscope::EventHandlerResult LEDControl::onSetup() {

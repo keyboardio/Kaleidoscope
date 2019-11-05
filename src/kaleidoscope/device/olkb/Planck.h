@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-OLKB-Planck -- Planck hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -20,18 +20,17 @@
 #ifdef ARDUINO_AVR_PLANCK
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::olkb::Planck
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/device/avr/pins_and_ports.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/device/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace olkb {
-class Planck: public kaleidoscope::hardware::ATMegaKeyboard {
+class Planck: public kaleidoscope::device::ATMegaKeyboard {
  public:
   Planck(void) {}
 
@@ -59,12 +58,12 @@ class Planck: public kaleidoscope::hardware::ATMegaKeyboard {
          R3C0, R3C1, R3C2, R3C3, R3C4, R3C5, R3C6, R3C7, R3C8, R3C9, R3C10, R3C11
 
 }
-
-}
 }
 
-#include "kaleidoscope/hardware/key_indexes.h"
+typedef kaleidoscope::device::olkb::Planck Device;
 
-extern kaleidoscope::hardware::olkb::Planck &Planck;
+}
+
+extern kaleidoscope::device::olkb::Planck DEPRECATED(NAMED_HARDWARE) &Planck;
 
 #endif

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit 8cdb4a915)
  *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
@@ -25,10 +25,10 @@
 
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
 #include <avr/wdt.h>
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
-#include "kaleidoscope/hardware/ez/ErgoDox/i2cmaster.h"
+#include "kaleidoscope/device/avr/pins_and_ports.h"
+#include "kaleidoscope/device/ez/ErgoDox/i2cmaster.h"
 
 #define I2C_ADDR        0b0100000
 #define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
@@ -43,7 +43,7 @@
 #define OLATB           0x15
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace ez {
 
 uint8_t ErgoDoxScanner::initExpander() {

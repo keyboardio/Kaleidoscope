@@ -61,7 +61,7 @@ KEYMAPS(
 KALEIDOSCOPE_INIT_PLUGINS(GeminiPR);
 
 void setup() {
-  KeyboardHardware.serialPort().begin(9600);
+  Kaleidoscope.serialPort().begin(9600);
   Kaleidoscope.setup();
 }
 

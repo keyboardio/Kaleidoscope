@@ -31,7 +31,7 @@ enum {  _QWERTY,
 
 
 /* *INDENT-OFF* */
-KEYMAPS( 
+KEYMAPS(
 
 /* Qwerty
  * ,-----------------------------------------------------------------------------------.
@@ -167,7 +167,7 @@ KALEIDOSCOPE_INIT_PLUGINS(Macros);
 
 void setup() {
   Kaleidoscope.setup();
-  KeyboardHardware.serialPort().begin(9600);
+  Kaleidoscope.serialPort().begin(9600);
 }
 
 void loop() {
