@@ -157,6 +157,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
       updateKey(i, k);
       i++;
     }
+    Kaleidoscope.storage().commit();
   }
 
   return EventHandlerResult::EVENT_CONSUMED;

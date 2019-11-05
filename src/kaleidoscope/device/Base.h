@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware -- Kaleidoscope Hardware Base class
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * kaleidoscope::device::Base -- Kaleidoscope device Base class
+ * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,22 +15,28 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @file kaleidoscope/Hardware.h
- * Base class for Kaleidoscope hardware libraries.
+/** @file kaleidoscope/device/Base.h
+ * Base class for Kaleidoscope device libraries.
  */
 
 #pragma once
 
 #include "kaleidoscope/MatrixAddr.h"
 #include "kaleidoscope_internal/deprecations.h"
+#include "kaleidoscope/macro_helpers.h"
 
-#include "EEPROM.h"
+#include "kaleidoscope/driver/keyscanner/None.h"
+#include "kaleidoscope/driver/led/None.h"
+#include "kaleidoscope/driver/mcu/None.h"
+#include "kaleidoscope/driver/bootloader/None.h"
+#include "kaleidoscope/driver/storage/None.h"
 
 #ifndef CRGB
 #error cRGB and CRGB *must* be defined before including this header!
 #endif
 
-/* All hardware libraries must define the following macros:
+/* All hardware libraries must define the following types and macros:
+ * kaleidoscope::Device - a typedef to your device's class.
  * CRGB(r,g,b) - explained below
  * cRGB, a structure with at least three members: r, g, and b -
  * compilation will fail otherwise.
@@ -43,23 +49,71 @@
  */
 
 namespace kaleidoscope {
-/** Kaleidoscope Hardware base class.
- * Essential methods all hardware libraries must implement.
- */
+namespace device {
 
-struct NoopKeyAddr {
-  NoopKeyAddr() {}
-  template<typename T_>
-  NoopKeyAddr(T_) {}
+struct BaseProps {
+  typedef kaleidoscope::driver::keyscanner::BaseProps KeyScannerProps;
+  typedef kaleidoscope::driver::keyscanner::None KeyScanner;
+  typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;
+  typedef kaleidoscope::driver::led::None LEDDriver;
+  typedef kaleidoscope::driver::mcu::None MCU;
+  typedef kaleidoscope::driver::bootloader::None Bootloader;
+  typedef kaleidoscope::driver::storage::BaseProps StorageProps;
+  typedef kaleidoscope::driver::storage::None Storage;
 };
 
-class Hardware {
- public:
+template<typename _DeviceProps>
+class Base {
+ private:
+  class NoOpSerial {
+   public:
+    NoOpSerial() {}
+  };
 
-  // To satisfy the interface of those methods that allow
-  // for matrix addressing we define a default key address class.
-  // This typedef is supposed to overridden by derived hardware classes.
-  typedef NoopKeyAddr KeyAddr;
+  static NoOpSerial noop_serial_;
+
+ public:
+  Base() {}
+
+  typedef _DeviceProps Props;
+
+  typedef typename _DeviceProps::KeyScanner KeyScanner;
+  typedef typename _DeviceProps::KeyScannerProps KeyScannerProps;
+  typedef typename _DeviceProps::KeyScannerProps::KeyAddr KeyAddr;
+  typedef typename _DeviceProps::LEDDriverProps LEDDriverProps;
+  typedef typename _DeviceProps::LEDDriver LEDDriver;
+  typedef typename _DeviceProps::MCU MCU;
+  typedef typename _DeviceProps::Bootloader Bootloader;
+  typedef typename _DeviceProps::StorageProps StorageProps;
+  typedef typename _DeviceProps::Storage Storage;
+
+  static constexpr uint8_t matrix_rows = KeyScannerProps::matrix_rows;
+  static constexpr uint8_t matrix_columns = KeyScannerProps::matrix_columns;
+  static constexpr uint8_t led_count = LEDDriverProps::led_count;
+  static constexpr typename LEDDriver::LEDs &LEDs() {
+    return LEDDriver::LEDs;
+  }
+
+  /**
+   * @returns the number of keys on the keyboard.
+   */
+  static constexpr int8_t numKeys() {
+    return matrix_columns * matrix_rows;
+  }
+
+  /**
+   * Returns the storage driver used by the keyboard.
+   */
+  Storage &storage() {
+    return storage_;
+  }
+
+  /**
+   * Returns the serial port driver used by the keyboard.
+   */
+  NoOpSerial &serialPort() {
+    return noop_serial_;
+  }
 
   /**
    * @defgroup kaleidoscope_hardware_leds Kaleidoscope::Hardware/LEDs
@@ -69,7 +123,9 @@ class Hardware {
    * Sync the LEDs with the underlying hardware. This should make sure that
    * changes made before this call are reflected on the device.
    */
-  void syncLeds(void) {}
+  void syncLeds(void) {
+    led_driver_.syncLeds();
+  }
   /**
    * Set the color of a per-key LED at a given row and column.
    *
@@ -79,7 +135,9 @@ class Hardware {
    * @param key_addr is the matrix address of the LED.
    * @param color is the color to set the LED to.
    */
-  void setCrgbAt(KeyAddr key_addr, cRGB color) {}
+  void setCrgbAt(KeyAddr key_addr, cRGB color) {
+    setCrgbAt(getLedIndex(key_addr), color);
+  }
   /**
    * Set the color of a per-key LED at a given row and column.
    *
@@ -90,7 +148,9 @@ class Hardware {
    * @param col is the logical column position of the key.
    * @param color is the color to set the LED to.
    */
-  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {}
+  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {
+    setCrgbAt(KeyAddr(row, col), color);
+  }
   /**
    * Set the color of a per-key LED at a given LED index.
    *
@@ -100,7 +160,9 @@ class Hardware {
    * @param i is the LED index to change the color of.
    * @param color is the color to set it to.
    */
-  void setCrgbAt(uint8_t i, cRGB color) {}
+  void setCrgbAt(uint8_t i, cRGB color) {
+    led_driver_.setCrgbAt(i, color);
+  }
   /**
    * Returns the color of the LED at a given index.
    *
@@ -109,10 +171,17 @@ class Hardware {
    * @returns The color at the given position.
    */
   cRGB getCrgbAt(uint8_t i) {
-    cRGB c = {
-      0, 0, 0
-    };
-    return c;
+    return led_driver_.getCrgbAt(i);
+  }
+  /**
+   * Returns the color of the LED at a given index.
+   *
+   * @param key_addr is the key address of the LED to return the color of.
+   *
+   * @returns The color at the given position.
+   */
+  cRGB getCrgbAt(KeyAddr key_addr) {
+    return getCrgbAt(getLedIndex(key_addr));
   }
   /**
   * Returns the index of the LED at a given row & column.
@@ -123,7 +192,7 @@ class Hardware {
   * LEDs there.
   */
   int8_t getLedIndex(KeyAddr key_addr) {
-    return -1;
+    return led_driver_.getLedIndex(key_addr.toInt());
   }
   /**
    * Returns the index of the LED at a given row & column.
@@ -135,7 +204,7 @@ class Hardware {
    * LEDs there.
    */
   DEPRECATED(ROW_COL_FUNC) int8_t getLedIndex(uint8_t row, byte col) {
-    return -1;
+    return led_driver_.getLedIndex(KeyAddr(row, col));
   }
   /** @} */
 
@@ -145,7 +214,9 @@ class Hardware {
   /**
    * Scan the keyboard matrix, and act on it.
    */
-  void scanMatrix(void) {}
+  void scanMatrix(void) {
+    key_scanner_.scanMatrix();
+  }
   /**
    * Read the state of the keyboard matrix.
    *
@@ -154,13 +225,17 @@ class Hardware {
    *
    * This is primarily used by @ref scanMatrix, but may have other uses too.
    */
-  void readMatrix(void) {}
+  void readMatrix(void) {
+    key_scanner_.readMatrix();
+  }
   /**
    * Act on the scanned keyboard matrix.
    *
    * Iterate through the scanned state (@see readMatrix), and act on any events.
    */
-  void actOnMatrixScan(void) {}
+  void actOnMatrixScan(void) {
+    key_scanner_.actOnMatrixScan();
+  }
   /** @} */
 
   /** @defgroup kaleidoscope_hardware_masking Kaleidoscope::Hardware/Key masking
@@ -182,7 +257,9 @@ class Hardware {
    *
    * @param key_addr is the matrix address of the key.
    */
-  void maskKey(KeyAddr key_addr) {}
+  void maskKey(KeyAddr key_addr) {
+    key_scanner_.maskKey(key_addr);
+  }
   /**
    * Mask out a key.
    *
@@ -192,7 +269,9 @@ class Hardware {
    * @param row is the row the key is located at in the matrix.
    * @param col is the column the key is located at in the matrix.
    */
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {}
+  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
+    key_scanner_.maskKey(KeyAddr(row, col));
+  }
   /**
    * Unmask a key.
    *
@@ -201,7 +280,9 @@ class Hardware {
    *
    * @param key_addr is the matrix address of the key.
    */
-  void unMaskKey(KeyAddr key_addr) {}
+  void unMaskKey(KeyAddr key_addr) {
+    key_scanner_.unMaskKey(key_addr);
+  }
   /**
    * Unmask a key.
    *
@@ -211,7 +292,9 @@ class Hardware {
    * @param row is the row the key is located at in the matrix.
    * @param col is the column the key is located at in the matrix.
    */
-  void unMaskKey(byte row, byte col) {}
+  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
+    key_scanner_.unMaskKey(KeyAddr(row, col));
+  }
   /**
    * Check whether a key is masked or not.
    *
@@ -220,7 +303,7 @@ class Hardware {
    * @returns true if the key is masked, false otherwise.
    */
   bool isKeyMasked(KeyAddr key_addr) {
-    return false;
+    return key_scanner_.isKeyMasked(key_addr);
   }
   /**
    * Check whether a key is masked or not.
@@ -231,7 +314,7 @@ class Hardware {
    * @returns true if the key is masked, false otherwise.
    */
   DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return false;
+    return key_scanner_.isKeyMasked(KeyAddr(row, col));
   }
   /** @} */
 
@@ -244,7 +327,7 @@ class Hardware {
    *
    * Because different hardware has different ways to accomplish this, the
    * hardware plugin must provide these functions. Kaleidoscope will wrap them,
-   * so user code does not have to deal with `Kaleidoscope.device()`.
+   * so user code does not have to deal with them directly.
    * @{
    */
   /**
@@ -254,15 +337,15 @@ class Hardware {
    * points should get detached, the device must remain powered on.
    */
   void detachFromHost() {
-    UDCON |= _BV(DETACH);
+    mcu_.detachFromHost();
   }
   /**
    * Attack the device to the host.
    *
    * Must restore the link detachFromHost severed.
    */
-  DEPRECATED(HARDWARE_BASE_CLASS) void attachToHost() {
-    UDCON &= ~_BV(DETACH);
+  void attachToHost() {
+    mcu_.attachToHost();
   }
   /** @} */
 
@@ -284,7 +367,7 @@ class Hardware {
    * @returns true if the key is pressed, false otherwise.
    */
   bool isKeyswitchPressed(KeyAddr key_addr) {
-    return false;
+    return key_scanner_.isKeyswitchPressed(key_addr);
   }
   /**
    * Check if a key is pressed at a given position.
@@ -295,7 +378,7 @@ class Hardware {
    * @returns true if the key is pressed, false otherwise.
    */
   DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
-    return false;
+    return key_scanner_.isKeyswitchPressed(KeyAddr(row, col));
   }
   /**
    * Check if a key is pressed at a given position.
@@ -307,7 +390,7 @@ class Hardware {
    * @returns true if the key is pressed, false otherwise.
    */
   bool isKeyswitchPressed(uint8_t keyIndex) {
-    return false;
+    return key_scanner_.isKeyswitchPressed(KeyAddr(--keyIndex));
   }
   /**
    * Check the number of key switches currently pressed.
@@ -315,9 +398,19 @@ class Hardware {
    * @returns the number of keys pressed.
    */
   uint8_t pressedKeyswitchCount() {
-    return 0;
+    return key_scanner_.pressedKeyswitchCount();
   }
 
+  /**
+   * Check if a key was pressed at a given position on the previous scan
+   *
+   * @param key_addr is the matrix address of the key.
+   *
+   * @returns true if the key was pressed, false otherwise.
+   */
+  bool wasKeyswitchPressed(KeyAddr key_addr) {
+    return key_scanner_.wasKeyswitchPressed(key_addr);
+  }
   /**
    * Check if a key was pressed at a given position on the previous scan
    *
@@ -327,17 +420,7 @@ class Hardware {
    * @returns true if the key was pressed, false otherwise.
    */
   DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
-    return false;
-  }
-  /**
-   * Check if a key was pressed at a given position on the previous scan
-   *
-   * @param key_addr is the matrix address of the key.
-   *
-   * @returns true if the key was pressed, false otherwise.
-   */
-  bool wasKeyswitchPressed(KeyAddr key_addr) {
-    return false;
+    return key_scanner_.wasKeyswitchPressed(KeyAddr(row, col));
   }
   /**
    * Check if a key was pressed at a given position on the previous scan.
@@ -349,7 +432,7 @@ class Hardware {
    * @returns true if the key was pressed, false otherwise.
    */
   bool wasKeyswitchPressed(uint8_t keyIndex) {
-    return false;
+    return key_scanner_.wasKeyswitchPressed(KeyAddr(--keyIndex));
   }
 
   /**
@@ -358,7 +441,7 @@ class Hardware {
    * @returns the number of keys pressed.
    */
   uint8_t previousPressedKeyswitchCount() {
-    return 0;
+    return key_scanner_.previousPressedKeyswitchCount();
   }
 
 
@@ -374,7 +457,13 @@ class Hardware {
    * Called once when the device boots, this should initialize the device, and
    * bring it up into a useful state.
    */
-  DEPRECATED(HARDWARE_BASE_CLASS) void setup() {}
+  void setup() {
+    bootloader_.setup();
+    mcu_.setup();
+    storage_.setup();
+    key_scanner_.setup();
+    led_driver_.setup();
+  }
 
   /**
    * Method to configure the device for a hardware test mode
@@ -386,19 +475,30 @@ class Hardware {
   void enableHardwareTestMode() {}
 
   /**
-   * Method to return the object the hardware uses for storage.
+   * Method to put the device into programmable/bootloader mode.
+   *
+   * This is the old, legacy name of the method.
    */
-  auto storage() -> decltype(EEPROM) & {
-    return EEPROM;
+  DEPRECATED(HARDWARE_RESETDEVICE) void resetDevice() {
+    bootloader_.rebootBootloader();
   }
 
   /**
-   * Method to return the serial port object used by the hardware.
+   * Method to put the device into programmable/bootloader mode.
    */
-  auto serialPort() -> decltype(Serial) & {
-    return Serial;
+  void rebootBootloader() {
+    bootloader_.rebootBootloader();
   }
 
   /** @} */
+
+ protected:
+  KeyScanner key_scanner_;
+  LEDDriver led_driver_;
+  MCU mcu_;
+  Bootloader bootloader_;
+  Storage storage_;
 };
+
+}
 }

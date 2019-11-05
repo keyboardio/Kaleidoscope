@@ -96,12 +96,12 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (int8_t i = 0; i < Kaleidoscope.device().led_count; i++) {
-    setCrgbAt(i, color);
+  for (auto led_index : Kaleidoscope.device().LEDs().all()) {
+    setCrgbAt(led_index.offset(), color);
   }
 }
 
-void LEDControl::setCrgbAt(int8_t led_index, cRGB crgb) {
+void LEDControl::setCrgbAt(uint8_t led_index, cRGB crgb) {
   Kaleidoscope.device().setCrgbAt(led_index, crgb);
 }
 
@@ -109,7 +109,7 @@ void LEDControl::setCrgbAt(KeyAddr key_addr, cRGB color) {
   Kaleidoscope.device().setCrgbAt(key_addr, color);
 }
 
-cRGB LEDControl::getCrgbAt(int8_t led_index) {
+cRGB LEDControl::getCrgbAt(uint8_t led_index) {
   return Kaleidoscope.device().getCrgbAt(led_index);
 }
 cRGB LEDControl::getCrgbAt(KeyAddr key_addr) {
@@ -239,15 +239,15 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (auto key_addr : KeyAddr::all()) {
-        cRGB c = ::LEDControl.getCrgbAt(key_addr);
+      for (auto led_index : Kaleidoscope.device().LEDs().all()) {
+        cRGB c = ::LEDControl.getCrgbAt(led_index.offset());
 
         ::Focus.send(c);
       }
       break;
     }
 
-    for (auto key_addr : KeyAddr::all()) {
+    for (auto led_index : Kaleidoscope.device().LEDs().all()) {
       if (::Focus.isEOL()) {
         break;
       }
@@ -256,7 +256,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
 
       ::Focus.read(color);
 
-      ::LEDControl.setCrgbAt(key_addr, color);
+      ::LEDControl.setCrgbAt(led_index.offset(), color);
     }
     break;
   }

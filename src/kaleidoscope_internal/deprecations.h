@@ -34,6 +34,9 @@
 #define _DEPRECATED_MESSAGE_KEYBOARDHARDWARE              \
   "`KeyboardHardware` is deprecated, please use\n" __NL__ \
   "`Kaleidoscope.device()` instead"
+#define _DEPRECATED_MESSAGE_HARDWARE_RESETDEVICE                        \
+  "`KeyboardHardware.resetDevice()` is deprecated, please use " __NL__  \
+  "`Kaleidoscope.rebootBootloader()` instead."
 
 #define _DEPRECATED_MESSAGE_ROWS                        \
   "The `ROWS` macro is deprecated, please use\n" __NL__ \
@@ -46,3 +49,7 @@
 #define _DEPRECATED_MESSAGE_LED_COUNT                         \
   "The `LED_COUNT` macro is deprecated, please use \n" __NL__ \
   "`Kaleidoscope.device().led_count` instead."
+
+#define _DEPRECATED_MESSAGE_HARDWARE_BASE_CLASS                 \
+  "The `Hardware` base class is deprecated. Please use\n" __NL_ \
+  "the new APIs based on `kaleidoscope::device::Base`."

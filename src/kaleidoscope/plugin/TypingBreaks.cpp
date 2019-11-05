@@ -110,6 +110,7 @@ EventHandlerResult TypingBreaks::onSetup() {
   Kaleidoscope.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffffffff) {
     Kaleidoscope.storage().put(settings_base_, settings);
+    Kaleidoscope.storage().commit();
   }
 
   Kaleidoscope.storage().get(settings_base_, settings);
@@ -193,6 +194,7 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
   }
 
   Kaleidoscope.storage().put(settings_base_, settings);
+  Kaleidoscope.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

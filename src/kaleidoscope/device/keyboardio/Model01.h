@@ -24,100 +24,88 @@
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
-#include "kaleidoscope/macro_helpers.h"
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/Hardware.h"
-#include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/driver/bootloader/avr/Caterina.h"
+#include "kaleidoscope/device/ATMega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-class Model01 : public kaleidoscope::Hardware {
+struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
+  static constexpr uint8_t led_count = 64;
+};
+
+class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriverProps> {
  public:
-  Model01(void);
+  static void syncLeds();
+  static void setCrgbAt(uint8_t i, cRGB crgb);
+  static cRGB getCrgbAt(uint8_t i);
 
-  static constexpr byte matrix_rows = 4;
-  static constexpr byte matrix_columns = 16;
-  static constexpr int8_t led_count = 64;
+  static uint8_t getLedIndex(uint8_t key_offset);
 
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
-  }
-
-  void syncLeds(void);
-  void setCrgbAt(KeyAddr key_addr, cRGB color);
-  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(KeyAddr(row, col), color);
-  }
-  void setCrgbAt(int8_t i, cRGB crgb);
-  cRGB getCrgbAt(int8_t i);
-  int8_t getLedIndex(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) int8_t getLedIndex(byte row, byte col) {
-    return getLedIndex(KeyAddr(row, col));
-  }
-
-  void scanMatrix(void);
-  void readMatrix(void);
-  void actOnMatrixScan(void);
-  void setup();
-  void rebootBootloader();
-
-  /* These public functions are things supported by the Model 01, but
-   * aren't necessarily part of the Kaleidoscope API
-   */
-  void enableHighPowerLeds(void);
-  void enableScannerPower(void);
-  void setKeyscanInterval(uint8_t interval);
-  boolean ledPowerFault(void);
-
-  void maskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
-    maskKey(KeyAddr(row, col));
-  }
-  void unMaskKey(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
-    unMaskKey(KeyAddr(row, col));
-  }
-  bool isKeyMasked(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return isKeyMasked(KeyAddr(row, col));
-  }
-  void maskHeldKeys(void);
-
-  bool isKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
-    return isKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool isKeyswitchPressed(uint8_t keyIndex);
-  uint8_t pressedKeyswitchCount();
-
-  bool wasKeyswitchPressed(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
-    return wasKeyswitchPressed(KeyAddr(row, col));
-  }
-  bool wasKeyswitchPressed(uint8_t keyIndex);
-  uint8_t previousPressedKeyswitchCount();
-
-  void enableHardwareTestMode();
-
-  keydata_t leftHandState;
-  keydata_t rightHandState;
-  keydata_t previousLeftHandState;
-  keydata_t previousRightHandState;
+  static void enableHighPowerLeds();
+  static boolean ledPowerFault();
 
  private:
-  static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
-
   static bool isLEDChanged;
-  static KeyboardioScanner leftHand;
-  static KeyboardioScanner rightHand;
+};
+
+struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
+  KEYSCANNER_PROPS(4, 16);
+};
+
+class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01KeyScannerProps> {
+ private:
+  typedef Model01KeyScanner ThisType;
+ public:
+  static void setup();
+  static void scanMatrix();
+  static void readMatrix();
+  static void actOnMatrixScan();
+
+  static void maskKey(KeyAddr key_addr);
+  static void unMaskKey(KeyAddr key_addr);
+  static bool isKeyMasked(KeyAddr key_addr);
+  static void maskHeldKeys();
+
+  static bool isKeyswitchPressed(KeyAddr key_addr);
+  static uint8_t pressedKeyswitchCount();
+
+  static bool wasKeyswitchPressed(KeyAddr key_addr);
+  static uint8_t previousPressedKeyswitchCount();
+
+  static void setKeyscanInterval(uint8_t interval);
+
+ protected:
+  static keydata_t leftHandState;
+  static keydata_t rightHandState;
+  static keydata_t previousLeftHandState;
+  static keydata_t previousRightHandState;
 
   static keydata_t leftHandMask;
   static keydata_t rightHandMask;
+
+  static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
+  static void enableScannerPower();
+};
+
+struct Model01Props : kaleidoscope::device::ATMega32U4KeyboardProps {
+  typedef Model01LEDDriverProps  LEDDriverProps;
+  typedef Model01LEDDriver LEDDriver;
+  typedef Model01KeyScannerProps KeyScannerProps;
+  typedef Model01KeyScanner KeyScanner;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+};
+
+class Model01 : public kaleidoscope::device::ATMega32U4Keyboard<Model01Props> {
+ public:
+  static void setup();
+
+  static void enableHardwareTestMode();
 };
 
 }

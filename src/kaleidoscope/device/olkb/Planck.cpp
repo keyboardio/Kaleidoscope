@@ -18,14 +18,12 @@
 #ifdef ARDUINO_AVR_PLANCK
 
 #include <Kaleidoscope.h>
-#include <avr/wdt.h>
 
 namespace kaleidoscope {
 namespace device {
 namespace olkb {
 
-ATMEGA_KEYBOARD_DATA(Planck);
-constexpr int8_t Planck::led_count;
+AVR_KEYSCANNER_BOILERPLATE
 
 }
 }

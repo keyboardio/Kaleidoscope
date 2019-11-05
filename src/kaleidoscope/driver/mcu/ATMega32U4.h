@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::driver::mcu -- Various MCU drivers
+ * driver::MCU::ATMega32U4 -- ATMega32U4 MCU driver for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -17,15 +17,22 @@
 
 #pragma once
 
+#include "kaleidoscope/driver/mcu/Base.h"
+
 namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
-class ATMega32U4 {
+class ATMega32U4 : public kaleidoscope::driver::mcu::Base {
  public:
-  ATMega32U4() {}
+  void detachFromHost() {
+    UDCON |= _BV(DETACH);
+  }
+  void attachToHost() {
+    UDCON &= ~_BV(DETACH);
+  }
 
-  static inline void disableJTAG() {
+  static void disableJTAG() {
     /* These two lines here are the result of many hours spent chasing ghosts.
      * These are great lines, and we love them dearly, for they make a set of
      * pins that would otherwise be reserved for JTAG accessible from the
@@ -48,10 +55,12 @@ class ATMega32U4 {
     MCUCR |= (1 << JTD);
   }
 
-  static inline void disableClockDivision() {
+  static void disableClockDivision() {
     CLKPR = (1 << CLKPCE);
     CLKPR = (0 << CLKPS3) | (0 << CLKPS2) | (0 << CLKPS1) | (0 << CLKPS0);
   }
+
+  void setup() {}
 };
 
 }
