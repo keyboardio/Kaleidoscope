@@ -39,8 +39,9 @@ void setup();
 #include KALEIDOSCOPE_HARDWARE_H
 #include "kaleidoscope/device/key_indexes.h"
 #include "kaleidoscope_internal/device.h"
+#include "kaleidoscope_internal/deprecations.h"
 
-static constexpr kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal::device;
+static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal::device;
 
 #ifdef PER_KEY_DATA_STACKED
 #define KEYMAP_STACKED(...) { PER_KEY_DATA_STACKED(XXX, __VA_ARGS__) }
@@ -50,9 +51,9 @@ static constexpr kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal:
 #define KEYMAP(...) { PER_KEY_DATA(XXX, __VA_ARGS__) }
 #endif
 
-static constexpr uint8_t ROWS = kaleidoscope_internal::device.matrix_rows;
-static constexpr uint8_t COLS = kaleidoscope_internal::device.matrix_columns;
-static constexpr uint8_t LED_COUNT = kaleidoscope_internal::device.led_count;
+static constexpr DEPRECATED(ROWS) uint8_t ROWS = kaleidoscope_internal::device.matrix_rows;
+static constexpr DEPRECATED(COLS) uint8_t COLS = kaleidoscope_internal::device.matrix_columns;
+static constexpr DEPRECATED(LED_COUNT) uint8_t LED_COUNT = kaleidoscope_internal::device.led_count;
 
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/key_events.h"
