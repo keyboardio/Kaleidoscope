@@ -20,7 +20,7 @@ set -e
 ######
 
 build_version () {
-    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo '-g' && git describe --abbrev=4 --dirty --always; fi)"
+    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
     LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 }
@@ -57,7 +57,7 @@ build_filenames () {
 
 
 enable_ccache () {
-    if  [ "$(command -v ccache)" ]; then
+    if [ -z "${CCACHE_NOT_SUPPORTED}" ] && [ "$(command -v ccache)" ]; then
       if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
          mkdir -p "$CCACHE_WRAPPER_PATH"
       fi
@@ -304,6 +304,7 @@ compile () {
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      -prefs compiler.path=${COMPILER_PATH} \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
