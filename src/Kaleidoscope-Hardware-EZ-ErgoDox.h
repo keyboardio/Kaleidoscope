@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,4 +17,4 @@
  */
 
 #pragma once
-#include "kaleidoscope/hardware/ez/ErgoDox.h"
+#include "kaleidoscope/device/ez/ErgoDox.h"

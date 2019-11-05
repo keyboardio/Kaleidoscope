@@ -23,7 +23,7 @@
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace keyboardio {
 
 KeyboardioScanner Model01::leftHand(0);

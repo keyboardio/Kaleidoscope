@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit 8cdb4a915)
  *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
@@ -29,9 +29,9 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::ez::ErgoDox
+#define HARDWARE_IMPLEMENTATION kaleidoscope::device::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -46,7 +46,7 @@ struct cRGB {
 #include "kaleidoscope/MatrixAddr.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace ez {
 
 class ErgoDox : public kaleidoscope::Hardware {
@@ -156,8 +156,8 @@ class ErgoDox : public kaleidoscope::Hardware {
 }
 }
 
-#include "kaleidoscope/hardware/key_indexes.h"
+#include "kaleidoscope/device/key_indexes.h"
 
-extern kaleidoscope::hardware::ez::ErgoDox &ErgoDox;
+extern kaleidoscope::device::ez::ErgoDox &ErgoDox;
 
 #endif

@@ -22,7 +22,7 @@
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace technomancy {
 
 ATMEGA_KEYBOARD_DATA(Atreus2);
@@ -33,6 +33,6 @@ constexpr int8_t Atreus2::led_count;
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::technomancy::Atreus2 &Atreus2 = KeyboardHardware;
+kaleidoscope::device::technomancy::Atreus2 &Atreus2 = KeyboardHardware;
 
 #endif

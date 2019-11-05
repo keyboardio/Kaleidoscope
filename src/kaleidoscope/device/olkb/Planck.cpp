@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-OLKB-Planck -- Planck hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -21,7 +21,7 @@
 #include <avr/wdt.h>
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace olkb {
 
 ATMEGA_KEYBOARD_DATA(Planck);
@@ -32,6 +32,6 @@ constexpr int8_t Planck::led_count;
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::olkb::Planck &Planck = KeyboardHardware;
+kaleidoscope::device::olkb::Planck &Planck = KeyboardHardware;
 
 #endif

@@ -12,7 +12,7 @@
 #include <inttypes.h>
 #include <compat/twi.h>
 
-#include "kaleidoscope/hardware/ez/ErgoDox/i2cmaster.h"
+#include "kaleidoscope/device/ez/ErgoDox/i2cmaster.h"
 
 
 /* define CPU frequency in Mhz here if not defined in Makefile */

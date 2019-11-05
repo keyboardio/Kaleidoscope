@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Technomancy-Atreus -- Atreus hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,4 +26,4 @@
 #define KALEIDOSCOPE_HARDWARE_ATREUS_PINOUT_ASTAR 1
 #endif
 
-#include "kaleidoscope/hardware/technomancy/Atreus.h"
+#include "kaleidoscope/device/technomancy/Atreus.h"

@@ -25,7 +25,7 @@
 #include "kaleidoscope/MatrixAddr.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/device/avr/pins_and_ports.h"
 
 #include <avr/wdt.h>
 
@@ -134,7 +134,7 @@ struct cRGB {
   }
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 class ATMegaKeyboard : public kaleidoscope::Hardware {
  public:
   ATMegaKeyboard(void) {}

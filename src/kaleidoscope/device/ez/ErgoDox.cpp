@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit 8cdb4a915)
  *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
@@ -29,10 +29,10 @@
 #include <Kaleidoscope.h>
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
-#include "kaleidoscope/hardware/ez/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace ez {
 
 ErgoDoxScanner ErgoDox::scanner_;
@@ -264,6 +264,6 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
 }
 
 HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::ez::ErgoDox &ErgoDox = KeyboardHardware;
+kaleidoscope::device::ez::ErgoDox &ErgoDox = KeyboardHardware;
 
 #endif

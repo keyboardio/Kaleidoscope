@@ -20,4 +20,4 @@
 
 #define KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD 1
 
-#include "kaleidoscope/hardware/kbdfans/KBD4x.h"
+#include "kaleidoscope/device/kbdfans/KBD4x.h"

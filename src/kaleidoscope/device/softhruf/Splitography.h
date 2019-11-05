@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-SOFTHRUF-Splitography -- Splitography hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd) and sdothum's fork (commit 8616b44)
  *  (C) Jack Humbert, Jun Wako, Steven Hum, and others
@@ -27,18 +27,18 @@
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::softhruf::Splitography
+#define HARDWARE_IMPLEMENTATION kaleidoscope::device::softhruf::Splitography
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/device/avr/pins_and_ports.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/device/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace softhruf {
-class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
+class Splitography: public kaleidoscope::device::ATMegaKeyboard {
  public:
   Splitography(void) {
     mcu_.disableJTAG();
@@ -88,8 +88,8 @@ class Splitography: public kaleidoscope::hardware::ATMegaKeyboard {
 }
 }
 
-#include "kaleidoscope/hardware/key_indexes.h"
+#include "kaleidoscope/device/key_indexes.h"
 
-extern kaleidoscope::hardware::softhruf::Splitography &Splitography;
+extern kaleidoscope::device::softhruf::Splitography &Splitography;
 
 #endif

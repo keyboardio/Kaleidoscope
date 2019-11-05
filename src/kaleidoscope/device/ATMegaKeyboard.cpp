@@ -19,10 +19,10 @@
 
 #if KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/device/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 
 uint8_t ATMegaKeyboard::debounce = 3;
 

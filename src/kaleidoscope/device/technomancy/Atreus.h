@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Technomancy-Atreus -- Atreus hardware support for Kaleidoscope
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd)
  *  (C) Jack Humbert, Jun Wako, Phil Hagelberg, and others
@@ -27,17 +27,17 @@
 #ifdef ARDUINO_AVR_ATREUS
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::hardware::technomancy::Atreus
+#define HARDWARE_IMPLEMENTATION kaleidoscope::device::technomancy::Atreus
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
 
-#include "kaleidoscope/hardware/ATMegaKeyboard.h"
+#include "kaleidoscope/device/ATMegaKeyboard.h"
 
 namespace kaleidoscope {
-namespace hardware {
+namespace device {
 namespace technomancy {
-class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
+class Atreus: public kaleidoscope::device::ATMegaKeyboard {
   friend class ATMegaKeyboard;
  public:
   Atreus(void) {}
@@ -105,8 +105,8 @@ class Atreus: public kaleidoscope::hardware::ATMegaKeyboard {
 }
 }
 
-#include "kaleidoscope/hardware/key_indexes.h"
+#include "kaleidoscope/device/key_indexes.h"
 
-extern kaleidoscope::hardware::technomancy::Atreus &Atreus;
+extern kaleidoscope::device::technomancy::Atreus &Atreus;
 
 #endif
