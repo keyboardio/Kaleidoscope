@@ -17,7 +17,7 @@
 
 #pragma once
 
-typedef HARDWARE_IMPLEMENTATION::KeyAddr KeyAddr;
+#include "kaleidoscope/KeyAddr.h"
 
 /* To be used by the hardware implementations, `keyIndex` tells us the index of
  * a key, from which we can figure out the row and column as needed. The index

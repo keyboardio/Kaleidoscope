@@ -125,8 +125,6 @@ class Model01 : public kaleidoscope::Hardware {
 }
 }
 
-#include "kaleidoscope/device/key_indexes.h"
-
 #define PER_KEY_DATA_STACKED(dflt,                                    \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \
                r1c0, r1c1, r1c2, r1c3, r1c4, r1c5, r1c6,                \

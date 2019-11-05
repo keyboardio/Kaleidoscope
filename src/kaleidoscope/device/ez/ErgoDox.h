@@ -156,8 +156,6 @@ class ErgoDox : public kaleidoscope::Hardware {
 }
 }
 
-#include "kaleidoscope/device/key_indexes.h"
-
 extern kaleidoscope::device::ez::ErgoDox &ErgoDox;
 
 #endif

@@ -37,6 +37,7 @@ void setup();
 #include <stdint.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope/device/key_indexes.h"
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 

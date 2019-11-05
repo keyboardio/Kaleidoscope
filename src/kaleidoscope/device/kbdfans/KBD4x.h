@@ -67,8 +67,6 @@ class KBD4x: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-#include "kaleidoscope/device/key_indexes.h"
-
 extern kaleidoscope::device::kbdfans::KBD4x &KBD4x;
 
 #endif

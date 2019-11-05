@@ -82,8 +82,6 @@ class Atreus2: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-#include "kaleidoscope/device/key_indexes.h"
-
 extern kaleidoscope::device::technomancy::Atreus2 &Atreus2;
 
 #endif

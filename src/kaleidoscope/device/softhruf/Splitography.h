@@ -88,8 +88,6 @@ class Splitography: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-#include "kaleidoscope/device/key_indexes.h"
-
 extern kaleidoscope::device::softhruf::Splitography &Splitography;
 
 #endif
