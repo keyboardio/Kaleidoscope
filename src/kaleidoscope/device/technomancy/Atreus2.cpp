@@ -32,7 +32,6 @@ constexpr int8_t Atreus2::led_count;
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::technomancy::Atreus2 &Atreus2 = KeyboardHardware;
+kaleidoscope::device::technomancy::Atreus2 &Atreus2 = kaleidoscope_internal::device;
 
 #endif

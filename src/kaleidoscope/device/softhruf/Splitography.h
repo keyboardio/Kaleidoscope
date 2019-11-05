@@ -27,7 +27,6 @@
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::device::softhruf::Splitography
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -86,6 +85,9 @@ class Splitography: public kaleidoscope::device::ATMegaKeyboard {
 
 }
 }
+
+typedef kaleidoscope::device::softhruf::Splitography Device;
+
 }
 
 extern kaleidoscope::device::softhruf::Splitography DEPRECATED(NAMED_HARDWARE) &Splitography;

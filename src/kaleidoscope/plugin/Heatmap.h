@@ -59,7 +59,7 @@ class Heatmap : public Plugin,
 
     const Heatmap *parent_;
 
-    uint16_t heatmap_[KeyboardHardware.numKeys()];
+    uint16_t heatmap_[Kaleidoscope.device().numKeys()];
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
 

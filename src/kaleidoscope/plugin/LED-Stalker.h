@@ -61,7 +61,7 @@ class StalkerEffect : public Plugin,
     const StalkerEffect *parent_;
 
     uint16_t step_start_time_;
-    uint8_t map_[KeyboardHardware.numKeys()];
+    uint8_t map_[Kaleidoscope.device().numKeys()];
 
     friend class StalkerEffect;
   };

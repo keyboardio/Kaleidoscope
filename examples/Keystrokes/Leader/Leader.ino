@@ -40,11 +40,11 @@ KEYMAPS(
 // *INDENT-ON*
 
 static void leaderTestA(uint8_t seq_index) {
-  KeyboardHardware.serialPort().println(F("leaderTestA"));
+  Kaleidoscope.serialPort().println(F("leaderTestA"));
 }
 
 static void leaderTestAA(uint8_t seq_index) {
-  KeyboardHardware.serialPort().println(F("leaderTestAA"));
+  Kaleidoscope.serialPort().println(F("leaderTestAA"));
 }
 
 static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =

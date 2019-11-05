@@ -36,10 +36,10 @@ namespace device {
 namespace ez {
 
 ErgoDoxScanner ErgoDox::scanner_;
-uint8_t ErgoDox::previousKeyState_[ROWS];
-uint8_t ErgoDox::keyState_[ROWS];
-uint8_t ErgoDox::masks_[ROWS];
-uint8_t ErgoDox::debounce_matrix_[ROWS][COLS];
+uint8_t ErgoDox::previousKeyState_[matrix_rows];
+uint8_t ErgoDox::keyState_[matrix_rows];
+uint8_t ErgoDox::masks_[matrix_rows];
+uint8_t ErgoDox::debounce_matrix_[matrix_rows][matrix_columns];
 uint8_t ErgoDox::debounce = 5;
 
 static bool do_scan_ = 1;
@@ -96,20 +96,20 @@ void __attribute__((optimize(3))) ErgoDox::readMatrix() {
 
   scanner_.reattachExpanderOnError();
 
-  for (uint8_t row = 0; row < ROWS / 2; row++) {
+  for (uint8_t row = 0; row < matrix_rows / 2; row++) {
     scanner_.selectExtenderRow(row);
     scanner_.toggleATMegaRow(row);
 
     readMatrixRow(row);
-    readMatrixRow(row + ROWS / 2);
+    readMatrixRow(row + matrix_rows / 2);
 
     scanner_.toggleATMegaRow(row);
   }
 }
 
 void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
+  for (byte row = 0; row < matrix_rows; row++) {
+    for (byte col = 0; col < matrix_columns; col++) {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                          (bitRead(keyState_[row], col) << 1);
       if (keyState)
@@ -205,7 +205,7 @@ void ErgoDox::resetDevice() {
 uint8_t ErgoDox::debounceMaskForRow(uint8_t row) {
   uint8_t result = 0;
 
-  for (uint8_t c = 0; c < COLS; ++c) {
+  for (uint8_t c = 0; c < matrix_columns; ++c) {
     if (debounce_matrix_[row][c]) {
       --debounce_matrix_[row][c];
     } else {
@@ -216,7 +216,7 @@ uint8_t ErgoDox::debounceMaskForRow(uint8_t row) {
 }
 
 void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
-  for (uint8_t i = 0; i < COLS; ++i) {
+  for (uint8_t i = 0; i < matrix_columns; ++i) {
     if (change & (1 << i)) {
       debounce_matrix_[row][i] = debounce;
     }
@@ -244,7 +244,7 @@ bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {
 uint8_t ErgoDox::previousPressedKeyswitchCount() {
   uint8_t count = 0;
 
-  for (uint8_t r = 0; r < ROWS; r++) {
+  for (uint8_t r = 0; r < matrix_rows; r++) {
     count += __builtin_popcount(previousKeyState_[r]);
   }
   return count;
@@ -253,7 +253,7 @@ uint8_t ErgoDox::previousPressedKeyswitchCount() {
 uint8_t ErgoDox::pressedKeyswitchCount() {
   uint8_t count = 0;
 
-  for (uint8_t r = 0; r < ROWS; r++) {
+  for (uint8_t r = 0; r < matrix_rows; r++) {
     count += __builtin_popcount(keyState_[r]);
   }
   return count;
@@ -263,7 +263,6 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::ez::ErgoDox &ErgoDox = KeyboardHardware;
+kaleidoscope::device::ez::ErgoDox &ErgoDox = kaleidoscope_internal::device;
 
 #endif

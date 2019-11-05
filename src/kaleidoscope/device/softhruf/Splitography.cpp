@@ -38,7 +38,6 @@ constexpr int8_t Splitography::led_count;
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::softhruf::Splitography &Splitography = KeyboardHardware;
+kaleidoscope::device::softhruf::Splitography &Splitography = kaleidoscope_internal::device;
 
 #endif

@@ -37,12 +37,12 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
   void send(const bool b) {
     printBool(b);
-    KeyboardHardware.serialPort().print(SEPARATOR);
+    Kaleidoscope.serialPort().print(SEPARATOR);
   }
   template <typename V>
   void send(V v) {
-    KeyboardHardware.serialPort().print(v);
-    KeyboardHardware.serialPort().print(SEPARATOR);
+    Kaleidoscope.serialPort().print(v);
+    Kaleidoscope.serialPort().print(SEPARATOR);
   }
   template <typename Var, typename... Vars>
   void send(Var v, const Vars&... vars) {
@@ -53,31 +53,31 @@ class FocusSerial : public kaleidoscope::Plugin {
   void sendRaw() {}
   template <typename Var, typename... Vars>
   void sendRaw(Var v, const Vars&... vars) {
-    KeyboardHardware.serialPort().print(v);
+    Kaleidoscope.serialPort().print(v);
     sendRaw(vars...);
   }
 
   const char peek() {
-    return KeyboardHardware.serialPort().peek();
+    return Kaleidoscope.serialPort().peek();
   }
 
   void read(Key &key) {
-    key.raw = KeyboardHardware.serialPort().parseInt();
+    key.raw = Kaleidoscope.serialPort().parseInt();
   }
   void read(cRGB &color) {
-    color.r = KeyboardHardware.serialPort().parseInt();
-    color.g = KeyboardHardware.serialPort().parseInt();
-    color.b = KeyboardHardware.serialPort().parseInt();
+    color.r = Kaleidoscope.serialPort().parseInt();
+    color.g = Kaleidoscope.serialPort().parseInt();
+    color.b = Kaleidoscope.serialPort().parseInt();
   }
   void read(uint8_t &u8) {
-    u8 = KeyboardHardware.serialPort().parseInt();
+    u8 = Kaleidoscope.serialPort().parseInt();
   }
   void read(uint16_t &u16) {
-    u16 = KeyboardHardware.serialPort().parseInt();
+    u16 = Kaleidoscope.serialPort().parseInt();
   }
 
   bool isEOL() {
-    return KeyboardHardware.serialPort().peek() == '\n';
+    return Kaleidoscope.serialPort().peek() == '\n';
   }
 
   static constexpr char COMMENT = '#';

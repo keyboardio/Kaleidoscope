@@ -25,13 +25,10 @@
  * zero as a sentinel. This is important, because when we initialize arrays with
  * fewer elements than the declared array size, the remaining elements will be
  * zero. We can use this to avoid having to explicitly add a sentinel in
- * user-facing code.
- *
- * We're using a macro instead of a constexpr so that it is evaluated lazily,
- * when `HARDWARE_IMPLEMENTATION` can be properly resolved.
- */
-#define keyIndex(row,col)                                                      \
-  (uint8_t)(KeyAddr(row, col).toInt() + 1)
+ * user-facing code. */
+constexpr uint8_t keyIndex(uint8_t row, uint8_t col) {
+  return KeyAddr(row, col).toInt() + 1;
+}
 
 constexpr uint8_t R0C0 = keyIndex(0, 0);
 constexpr uint8_t R0C1 = keyIndex(0, 1);

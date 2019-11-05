@@ -20,7 +20,6 @@
 #ifdef ARDUINO_AVR_KBD4X
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::device::kbdfans::KBD4x
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -63,8 +62,10 @@ class KBD4x: public kaleidoscope::device::ATMegaKeyboard {
          R2C0, R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, R2C7, R2C8, R2C9, R2C10, R2C11, \
          R3C0, R3C1, R3C2, R3C3, R3C4, R3C5, R3C5, R3C7, R3C8, R3C9, R3C10, R3C11
 }
-
 }
+
+typedef kaleidoscope::device::kbdfans::KBD4x Device;
+
 }
 
 extern kaleidoscope::device::kbdfans::KBD4x DEPRECATED(NAMED_HARDWARE) &KBD4x;

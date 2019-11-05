@@ -38,7 +38,7 @@ void TapDance::interrupt(KeyAddr key_addr) {
 
   last_tap_dance_key_ = Key_NoKey;
 
-  KeyboardHardware.maskKey(key_addr);
+  Kaleidoscope.device().maskKey(key_addr);
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::releaseAllKeys();
 
@@ -118,8 +118,8 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     if (keyToggledOn(keyState))
       interrupt(key_addr);
 
-    if (KeyboardHardware.isKeyMasked(key_addr)) {
-      KeyboardHardware.unMaskKey(key_addr);
+    if (Kaleidoscope.device().isKeyMasked(key_addr)) {
+      Kaleidoscope.device().unMaskKey(key_addr);
       return EventHandlerResult::EVENT_CONSUMED;
     }
     return EventHandlerResult::OK;

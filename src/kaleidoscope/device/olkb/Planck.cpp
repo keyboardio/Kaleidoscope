@@ -31,7 +31,6 @@ constexpr int8_t Planck::led_count;
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::olkb::Planck &Planck = KeyboardHardware;
+kaleidoscope::device::olkb::Planck &Planck = kaleidoscope_internal::device;
 
 #endif

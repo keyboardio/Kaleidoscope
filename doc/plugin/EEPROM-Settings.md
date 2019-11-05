@@ -43,7 +43,7 @@ void setup () {
     return;
   }
 
-  KeyboardHardware.storage().get(settingsBase, testSettings);
+  Kaleidoscope.storage().get(settingsBase, testSettings);
 }
 ```
 

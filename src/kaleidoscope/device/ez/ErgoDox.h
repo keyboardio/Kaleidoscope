@@ -31,7 +31,6 @@
 
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::device::ez::ErgoDox
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -154,6 +153,9 @@ class ErgoDox : public kaleidoscope::Hardware {
     r0c13, r1c13, r2c13, r3c13, r4c13, dflt
 }
 }
+
+typedef kaleidoscope::device::ez::ErgoDox Device;
+
 }
 
 extern kaleidoscope::device::ez::ErgoDox DEPRECATED(NAMED_HARDWARE) &ErgoDox;

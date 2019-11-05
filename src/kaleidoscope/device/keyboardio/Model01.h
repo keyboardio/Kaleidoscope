@@ -21,7 +21,6 @@
 
 #include <Arduino.h>
 
-#define HARDWARE_IMPLEMENTATION kaleidoscope::device::keyboardio::Model01
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "KeyboardioScanner.h"
 
@@ -123,6 +122,9 @@ class Model01 : public kaleidoscope::Hardware {
 
 }
 }
+
+typedef kaleidoscope::device::keyboardio::Model01 Device;
+
 }
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \

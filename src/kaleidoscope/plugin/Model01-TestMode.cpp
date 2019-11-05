@@ -33,10 +33,10 @@ constexpr uint8_t HELD = 3;
 constexpr uint8_t RELEASED = 0;
 
 EventHandlerResult TestMode::beforeReportingState() {
-  if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
-      KeyboardHardware.isKeyswitchPressed(R0C6) &&
-      KeyboardHardware.isKeyswitchPressed(R3C6) &&
-      KeyboardHardware.pressedKeyswitchCount() == 3) {
+  if (Kaleidoscope.device().isKeyswitchPressed(R0C0) &&
+      Kaleidoscope.device().isKeyswitchPressed(R0C6) &&
+      Kaleidoscope.device().isKeyswitchPressed(R3C6) &&
+      Kaleidoscope.device().pressedKeyswitchCount() == 3) {
     run_tests();
   }
   return EventHandlerResult::OK;
@@ -44,13 +44,13 @@ EventHandlerResult TestMode::beforeReportingState() {
 
 void TestMode::waitForKeypress() {
   for (uint8_t temp = 0; temp < 8; temp++) {
-    KeyboardHardware.readMatrix();
+    Kaleidoscope.device().readMatrix();
   }
   while (1) {
-    KeyboardHardware.readMatrix();
-    if (KeyboardHardware.isKeyswitchPressed(R3C6)
-        && KeyboardHardware.pressedKeyswitchCount() == 1
-        && KeyboardHardware.previousLeftHandState.all == 0) {
+    Kaleidoscope.device().readMatrix();
+    if (Kaleidoscope.device().isKeyswitchPressed(R3C6)
+        && Kaleidoscope.device().pressedKeyswitchCount() == 1
+        && Kaleidoscope.device().previousLeftHandState.all == 0) {
       break;
     }
   }
@@ -117,13 +117,13 @@ void TestMode::handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t 
 
   // If the key is held down
   if (keyState == HELD) {
-    KeyboardHardware.setCrgbAt(key_addr_col_shifted, green);
+    Kaleidoscope.device().setCrgbAt(key_addr_col_shifted, green);
   } else if (bitRead(side->badKeys, key_addr_col_shifted.toInt()) == 1) {
     // If we triggered chatter detection ever on this key
-    KeyboardHardware.setCrgbAt(key_addr_col_shifted, red);
+    Kaleidoscope.device().setCrgbAt(key_addr_col_shifted, red);
   } else if (keyState == TOGGLED_OFF) {
     // If the key was just released
-    KeyboardHardware.setCrgbAt(key_addr_col_shifted, blue);
+    Kaleidoscope.device().setCrgbAt(key_addr_col_shifted, blue);
   }
 }
 
@@ -138,16 +138,16 @@ void TestMode::testMatrix() {
   // Clear out the key event buffer so we don't get messed up information from
   // taps during LED test mode.
   while (1) {
-    KeyboardHardware.readMatrix();
-    if (KeyboardHardware.isKeyswitchPressed(R0C0) &&
-        KeyboardHardware.isKeyswitchPressed(R0C6) &&
-        KeyboardHardware.isKeyswitchPressed(R3C6) &&
-        KeyboardHardware.pressedKeyswitchCount() == 3) {
+    Kaleidoscope.device().readMatrix();
+    if (Kaleidoscope.device().isKeyswitchPressed(R0C0) &&
+        Kaleidoscope.device().isKeyswitchPressed(R0C6) &&
+        Kaleidoscope.device().isKeyswitchPressed(R3C6) &&
+        Kaleidoscope.device().pressedKeyswitchCount() == 3) {
       break;
     }
     for (auto key_addr : KeyAddr::all()) {
-      handleKeyEvent(&left, &(KeyboardHardware.previousLeftHandState), &(KeyboardHardware.leftHandState), key_addr, 7);
-      handleKeyEvent(&right, &(KeyboardHardware.previousRightHandState), &(KeyboardHardware.rightHandState), key_addr, 15);
+      handleKeyEvent(&left, &(Kaleidoscope.device().previousLeftHandState), &(Kaleidoscope.device().leftHandState), key_addr, 7);
+      handleKeyEvent(&right, &(Kaleidoscope.device().previousRightHandState), &(Kaleidoscope.device().rightHandState), key_addr, 15);
     }
     ::LEDControl.syncLeds();
   }
@@ -159,13 +159,13 @@ void TestMode::toggle_programming_leds_on() {
 }
 
 void TestMode::run_tests() {
-  //  KeyboardHardware.serialPort().println("Running tests");
+  //  Kaleidoscope.device().serialPort().println("Running tests");
   toggle_programming_leds_on();
   // Disable debouncing
-  KeyboardHardware.setKeyscanInterval(2);
+  Kaleidoscope.device().setKeyscanInterval(2);
   test_leds();
   testMatrix();
-  //  KeyboardHardware.serialPort().println("Done running tests");
+  //  Kaleidoscope.device().serialPort().println("Done running tests");
 }
 
 }

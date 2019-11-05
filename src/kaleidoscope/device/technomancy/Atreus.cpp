@@ -76,7 +76,6 @@ void Atreus::resetDevice() {
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::technomancy::Atreus &Atreus = KeyboardHardware;
+kaleidoscope::device::technomancy::Atreus &Atreus = kaleidoscope_internal::device;
 
 #endif

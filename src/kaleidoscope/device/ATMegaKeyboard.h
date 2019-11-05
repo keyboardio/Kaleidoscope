@@ -130,7 +130,7 @@ struct cRGB {
   volatile uint8_t BOARD::debounce_matrix_[matrix_rows][matrix_columns]; \
                                                                 \
   ISR(TIMER1_OVF_vect) {                                        \
-    KeyboardHardware.readMatrix();				\
+    Kaleidoscope.device().readMatrix();                         \
   }
 
 namespace kaleidoscope {

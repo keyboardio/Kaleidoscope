@@ -27,7 +27,6 @@
 #ifdef ARDUINO_AVR_ATREUS
 
 #include <Arduino.h>
-#define HARDWARE_IMPLEMENTATION kaleidoscope::device::technomancy::Atreus
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
@@ -103,6 +102,9 @@ class Atreus: public kaleidoscope::device::ATMegaKeyboard {
     R3C0, R3C1, R3C2, R3C3, R3C4, R3C6,   R3C7, R3C8, R3C9, R3C10, R3C11
 }
 }
+
+typedef kaleidoscope::device::technomancy::Atreus Device;
+
 }
 
 extern kaleidoscope::device::technomancy::Atreus DEPRECATED(NAMED_HARDWARE) &Atreus;

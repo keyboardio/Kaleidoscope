@@ -18,7 +18,7 @@
 
 #include "kaleidoscope/key_defs.h"
 
-extern const Key keymaps_linear[][ROWS * COLS];
+extern const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns];
 
 namespace kaleidoscope {
 
@@ -58,7 +58,7 @@ class Keymaps2DInterface {
     };
 
     KeymapRow operator[](uint8_t row) {
-      return KeymapRow(keymap_layer_ + row * COLS);
+      return KeymapRow(keymap_layer_ + row * kaleidoscope_internal::device.matrix_columns);
     }
   };
 

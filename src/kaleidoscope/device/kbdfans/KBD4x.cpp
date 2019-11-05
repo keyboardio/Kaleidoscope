@@ -56,7 +56,6 @@ void KBD4x::resetDevice() {
 }
 }
 
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::device::kbdfans::KBD4x &KBD4x = KeyboardHardware;
+kaleidoscope::device::kbdfans::KBD4x &KBD4x = kaleidoscope_internal::device;
 
 #endif
