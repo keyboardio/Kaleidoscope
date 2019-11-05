@@ -22,12 +22,13 @@
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-NumPad.h"
+#include "Kaleidoscope-HardwareTestMode.h"
+#include "Kaleidoscope-MagicCombo.h"
 
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
 #include "Kaleidoscope-LEDEffect-Breathe.h"
 #include "Kaleidoscope-LEDEffect-Chase.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
-#include "Kaleidoscope-Model01-TestMode.h"
 
 #define NUMPAD_KEYMAP 2
 
@@ -96,12 +97,30 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   return MACRO_NONE;
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(TestMode,
+/**
+ *  This enters the hardware test mode
+ */
+static void enterHardwareTestMode(uint8_t combo_index) {
+  HardwareTestMode.runTests();
+}
+
+
+/** Magic combo list, a list of key combo and action pairs the firmware should
+ * recognise.
+ */
+USE_MAGIC_COMBOS({
+  .action = enterHardwareTestMode,
+  // Left Fn + Prog + LED
+  .keys = { R3C6, R0C0, R0C6 }
+});
+
+KALEIDOSCOPE_INIT_PLUGINS(HardwareTestMode,
                           LEDControl, LEDOff,
                           solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
                           LEDBreatheEffect, LEDRainbowEffect, LEDChaseEffect, NumPad,
                           Macros,
-                          MouseKeys);
+                          MouseKeys,
+                          MagicCombo);
 
 void setup() {
   Kaleidoscope.setup();

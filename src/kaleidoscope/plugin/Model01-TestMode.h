@@ -24,30 +24,18 @@
 
 #include <Arduino.h>
 #include "Kaleidoscope.h"
+#include "kaleidoscope_internal/deprecations.h"
+
+#define _DEPRECATED_MESSAGE_MODEL01_TESTMODE                                      \
+  "The Model01-specific TestMode plugin has been deprecated in favour of\n" __NL__ \
+  "the more generic HardwareTestMode. Please migrate to the new one."
 
 namespace kaleidoscope {
 namespace plugin {
 
 class TestMode : public kaleidoscope::Plugin {
  public:
-  typedef struct {
-    uint8_t cyclesSinceStateChange[32];
-    uint32_t badKeys;
-
-  } side_data_t;
-
-  TestMode(void) {}
-
-  EventHandlerResult beforeReportingState();
-
- private:
-  static void run_tests();
-  static void test_leds();
-  static void testMatrix();
-  static void toggle_programming_leds_on();
-  static void handleKeyEvent(side_data_t *side, keydata_t *oldState, keydata_t *newState, KeyAddr key_addr, uint8_t col_offset);
-  static void waitForKeypress();
-  static void set_leds(cRGB color);
+  DEPRECATED(MODEL01_TESTMODE) EventHandlerResult beforeReportingState() {};
 };
 }
 }
