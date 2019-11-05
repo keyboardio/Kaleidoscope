@@ -63,6 +63,6 @@ class Planck: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-extern kaleidoscope::device::olkb::Planck &Planck;
+extern kaleidoscope::device::olkb::Planck DEPRECATED(NAMED_HARDWARE) &Planck;
 
 #endif

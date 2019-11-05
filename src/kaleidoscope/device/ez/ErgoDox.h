@@ -156,6 +156,6 @@ class ErgoDox : public kaleidoscope::Hardware {
 }
 }
 
-extern kaleidoscope::device::ez::ErgoDox &ErgoDox;
+extern kaleidoscope::device::ez::ErgoDox DEPRECATED(NAMED_HARDWARE) &ErgoDox;
 
 #endif

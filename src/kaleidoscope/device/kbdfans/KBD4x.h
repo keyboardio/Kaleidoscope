@@ -67,6 +67,6 @@ class KBD4x: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-extern kaleidoscope::device::kbdfans::KBD4x &KBD4x;
+extern kaleidoscope::device::kbdfans::KBD4x DEPRECATED(NAMED_HARDWARE) &KBD4x;
 
 #endif

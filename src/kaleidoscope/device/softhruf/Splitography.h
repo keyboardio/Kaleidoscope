@@ -88,6 +88,6 @@ class Splitography: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-extern kaleidoscope::device::softhruf::Splitography &Splitography;
+extern kaleidoscope::device::softhruf::Splitography DEPRECATED(NAMED_HARDWARE) &Splitography;
 
 #endif

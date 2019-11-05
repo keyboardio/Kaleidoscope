@@ -26,3 +26,7 @@
   "------------------------------------------------------------------------\n" \
 
 /* Messages */
+
+#define _DEPRECATED_MESSAGE_NAMED_HARDWARE                                 __NL__ \
+  "Named hardware objects are deprecated, please use `KeyboardHardware`\n" __NL__ \
+  "instead."

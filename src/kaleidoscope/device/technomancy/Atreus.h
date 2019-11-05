@@ -105,6 +105,6 @@ class Atreus: public kaleidoscope::device::ATMegaKeyboard {
 }
 }
 
-extern kaleidoscope::device::technomancy::Atreus &Atreus;
+extern kaleidoscope::device::technomancy::Atreus DEPRECATED(NAMED_HARDWARE) &Atreus;
 
 #endif
