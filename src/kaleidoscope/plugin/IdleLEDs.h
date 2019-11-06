@@ -18,6 +18,7 @@
 #pragma once
 
 #include <Kaleidoscope.h>
+#include "kaleidoscope/focus_eeprom.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -34,10 +35,30 @@ class IdleLEDs: public kaleidoscope::Plugin {
   EventHandlerResult beforeEachCycle();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
- private:
+ protected:
   static uint32_t start_time_;
 };
+
+class PersistentIdleLEDs : public IdleLEDs {
+ public:
+
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+  static void setIdleTimeoutSeconds(uint32_t new_limit);
+
+ private:
+  static ReferenceFocusEEPROMWrapper<uint32_t, uint16_t> start_time_focus_;
+
+  // Note: If members are added that should themselves be Focus controlled
+  //       and support EEPROM storage without being associated with
+  //       a variable of a parent class, use the ValueFocusEEPROMWrapper
+  //       instead.
+  //ValueFocusEEPROMWrapper<uint32_t, uint16_t> start_time_focus_;
+};
+
 }
 }
 
 extern kaleidoscope::plugin::IdleLEDs IdleLEDs;
+extern kaleidoscope::plugin::PersistentIdleLEDs PersistentIdleLEDs;

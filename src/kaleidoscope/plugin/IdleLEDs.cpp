@@ -56,7 +56,37 @@ EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
   return EventHandlerResult::OK;
 }
 
+ReferenceFocusEEPROMWrapper<uint32_t, uint16_t>
+PersistentIdleLEDs::start_time_focus_{
+  // The parent class member variable that is
+  // controlled by the wrapper
+  //
+  PersistentIdleLEDs::start_time_,
+
+  // Make sure to store the focus string only once
+  // in PROGMEM.
+  //
+  PSTR_ANYWHERE("idleLeds.idleTimeLimit")};
+
+EventHandlerResult PersistentIdleLEDs::onSetup() {
+  start_time_focus_.setup();
+  return EventHandlerResult::OK;
+}
+EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *command) {
+  if (start_time_focus_.focusRead(command)) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
+
+  return EventHandlerResult::OK;
+}
+
+void PersistentIdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
+  IdleLEDs::setIdleTimeoutSeconds(new_limit);
+  start_time_focus_.store();
+}
+
 }
 }
 
 kaleidoscope::plugin::IdleLEDs IdleLEDs;
+kaleidoscope::plugin::PersistentIdleLEDs PersistentIdleLEDs;
