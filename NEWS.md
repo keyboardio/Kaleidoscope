@@ -24,6 +24,15 @@ The API version will remain the same, even if we introduce breaking changes -
 until a stable release is made from the v2 branch. From that point onwards, the
 API version will change with further breaking changes.
 
+### New device API
+
+A new hardware device API was introduced in November 2019, replacing the old
+system. It was designed to be more composable, more future proof than the old
+system. All hardware plugins under Keyboardio control have been updated to use
+the new APIs.
+
+See [UPGRADING.md](UPGRADING.md#new-device-api) for more information.
+
 ### New plugin API
 
 A new plugin API was introduced in May 2018, which replaces the old system. The new system is hopefully easier to use and develop for:

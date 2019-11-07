@@ -7,6 +7,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 * [Upgrade notes](#upgrade-notes)
   + [New features](#new-features)
+    - [New device API](#new-device-api)
     - [New plugin API](#new-plugin-api)
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
@@ -27,6 +28,18 @@ If any of this does not make sense to you, or you have trouble updating your .in
 # Upgrade notes
 
 ## New features
+
+### New device API
+
+We are introducing - or rather, replacing - the older hardware plugins, with a system that's much more composable, more extensible, and will allow us to better support new devices, different MCUs, and so on.
+
+### For end-users
+
+For end users, this doesn't come with any breaking changes. A few things have been deprecated (`ROWS`, `COLS`, `LED_COUNT`, `KeyboardHardware`), but they still function for the time being.
+
+### For developers
+
+For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
 
 ### New plugin API
 
