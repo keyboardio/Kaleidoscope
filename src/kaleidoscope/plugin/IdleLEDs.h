@@ -1,6 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Idle-LEDs -- Turn off the LEDs when the keyboard's idle
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2019  Dygma, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,7 +38,19 @@ class IdleLEDs: public kaleidoscope::Plugin {
  private:
   static uint32_t start_time_;
 };
+
+class PersistentIdleLEDs : public IdleLEDs {
+ public:
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+  static void setIdleTimeoutSeconds(uint32_t new_limit);
+ private:
+  static uint16_t settings_base_;
+};
+
 }
 }
 
 extern kaleidoscope::plugin::IdleLEDs IdleLEDs;
+extern kaleidoscope::plugin::PersistentIdleLEDs PersistentIdleLEDs;

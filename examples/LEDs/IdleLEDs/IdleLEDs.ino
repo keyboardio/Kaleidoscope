@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Idle-LEDs -- Turn off the LEDs when the keyboard's idle
- * Copyright (C) 2018  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,6 +18,8 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-IdleLEDs.h>
 
 // *INDENT-OFF*
@@ -43,14 +45,18 @@ KEYMAPS(
 // *INDENT-ON*
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
-                          IdleLEDs,
+                          EEPROMSettings,
+                          Focus,
+                          PersistentIdleLEDs,
                           LEDRainbowWaveEffect,
                           LEDOff);
 
 void setup() {
+  KeyboardHardware.serialPort().begin(9600);
+
   Kaleidoscope.setup();
 
-  IdleLEDs.setIdleTimeoutSeconds(300); // 5 minutes
+  PersistentIdleLEDs.setIdleTimeoutSeconds(300); // 5 minutes
 
   LEDRainbowWaveEffect.activate();
 }
