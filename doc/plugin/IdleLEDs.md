@@ -34,10 +34,35 @@ Because the plugin needs to know about key events, it is best to make it one of
 the first plugins, so it can catch all of them, before any other plugin would
 have a chance to consume key events.
 
+It is also possible to enable run-time configuration via he `Focus` plugin, and
+persistent storage of such settings. To do that, one has to use the
+`PersistentIdleLEDs` object instead, provided by the plugin:
+
+```c++
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-LEDEffect-Rainbow.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-FocusSerial.h>
+#include <Kaleidoscope-IdleLEDs.h>
+
+KALEIDOSCOPE_INIT_PLUGINS(
+  EEPROMSettings,
+  Focus,
+  LEDControl,
+  PersistentIdleLEDs,
+  LEDEffectRainbowWave
+);
+
+void setup (void) {
+  Kaleidoscope.setup ();
+}
+```
+
 ## Plugin Properties
 
-The plugin provides a single object, `IdleLEDs`, with the following properties
-and methods.
+The plugin provides two objects, `IdleLEDs`, and `PersistentIdleLEDs`, both with
+the following properties and methods.
 
 ### `.idle_time_limit`
 
@@ -48,7 +73,9 @@ and methods.
 > Defaults to 600000 milliseconds (10 minutes).
 
 > Provided for compatibility reasons. It is recommended to use one of the
-> methods below instead of setting this property directly.
+> methods below instead of setting this property directly. If using
+> `PersistentIdleLEDs`, setting this property will not persist the value to
+> storage. Use `.seetIdleTimeoutSeconds()` if persistence is desired.
 
 ### `.idleTimeoutSeconds()`
 
@@ -61,9 +88,26 @@ and methods.
 > Sets the amount of time (in seconds) that can pass without a single key being
 > pressed before the plugin considers the keyboard idle and turns off the LEDs.
 
+## Focus commands
+
+The plugin provides a single [Focus][FocusSerial] command, but only when using
+the `PersistentIdleLEDs` variant:
+
+ [FocusSerial]: FocusSerial.md
+
+### `idleleds.time_limit [seconds]`
+
+> Sets the idle time limit to `seconds`, when called with an argument. Returns
+> the current limit (in seconds) when called without any.
+
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](LEDControl.md)
+
+### Optional dependencies
+
+* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [FocusSerial](FocusSerial.md)
 
 ## Further reading
 
