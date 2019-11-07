@@ -31,8 +31,6 @@
 #endif
 
 /* All hardware libraries must define the following macros:
- * HARDWARE_IMPLEMENTATION - the name of your public object conforming to
- *   the 'class Hardware' interface below.
  * CRGB(r,g,b) - explained below
  * cRGB, a structure with at least three members: r, g, and b -
  * compilation will fail otherwise.
@@ -263,7 +261,7 @@ class Hardware {
    *
    * Must restore the link detachFromHost severed.
    */
-  void attachToHost() {
+  DEPRECATED(HARDWARE_BASE_CLASS) void attachToHost() {
     UDCON &= ~_BV(DETACH);
   }
   /** @} */
@@ -376,7 +374,7 @@ class Hardware {
    * Called once when the device boots, this should initialize the device, and
    * bring it up into a useful state.
    */
-  void setup() {}
+  DEPRECATED(HARDWARE_BASE_CLASS) void setup() {}
 
   /**
    * Method to configure the device for a hardware test mode

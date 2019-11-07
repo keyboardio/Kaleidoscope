@@ -50,6 +50,7 @@ EventHandlerResult EEPROMSettings::onSetup() {
      * encounter a firmware with no version defined, we'll set sensible
      * defaults. */
     Kaleidoscope.storage().put(0, settings_);
+    Kaleidoscope.storage().commit();
   }
   return EventHandlerResult::OK;
 }
@@ -147,6 +148,7 @@ uint16_t EEPROMSettings::used(void) {
 
 void EEPROMSettings::update(void) {
   Kaleidoscope.storage().put(0, settings_);
+  Kaleidoscope.storage().commit();
   is_valid_ = true;
 }
 

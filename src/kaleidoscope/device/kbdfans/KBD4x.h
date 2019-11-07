@@ -19,36 +19,35 @@
 
 #ifdef ARDUINO_AVR_KBD4X
 
+#define KALEIDOSCOPE_BOOTLOADER_FLIP_WORKAROUND 1
+
 #include <Arduino.h>
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/device/avr/pins_and_ports.h"
-
-#include "kaleidoscope/device/ATMegaKeyboard.h"
+#include "kaleidoscope/driver/keyscanner/AVR.h"
+#include "kaleidoscope/driver/bootloader/avr/FLIP.h"
+#include "kaleidoscope/device/ATMega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace kbdfans {
-class KBD4x: public kaleidoscope::device::ATMegaKeyboard {
+
+struct KBD4xProps : kaleidoscope::device::ATMega32U4KeyboardProps {
+  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::AVRProps {
+    AVR_KEYSCANNER_PROPS(
+      ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
+      COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7 })
+    );
+  };
+  typedef kaleidoscope::driver::keyscanner::AVR<KeyScannerProps> KeyScanner;
+  typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
+};
+
+class KBD4x: public kaleidoscope::device::ATMega32U4Keyboard<KBD4xProps> {
  public:
-  KBD4x(void) {
+  KBD4x() {
     mcu_.disableJTAG();
     mcu_.disableClockDivision();
   }
-
-  ATMEGA_KEYBOARD_CONFIG(
-    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7 })
-  );
-
-  static constexpr int8_t led_count = 0;
-
-  static constexpr int8_t numKeys() {
-    return matrix_columns * matrix_rows;
-  }
-
-  void resetDevice();
 };
 
 #define PER_KEY_DATA(dflt,                                                       \

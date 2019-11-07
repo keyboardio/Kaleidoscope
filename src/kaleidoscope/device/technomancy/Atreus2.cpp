@@ -19,14 +19,12 @@
 #ifdef ARDUINO_AVR_ATREUS2
 
 #include <Kaleidoscope.h>
-#include <avr/wdt.h>
 
 namespace kaleidoscope {
 namespace device {
 namespace technomancy {
 
-ATMEGA_KEYBOARD_DATA(Atreus2);
-constexpr int8_t Atreus2::led_count;
+AVR_KEYSCANNER_BOILERPLATE
 
 }
 }

@@ -41,6 +41,7 @@ EventHandlerResult HostOS::onSetup(void) {
 void HostOS::os(hostos::Type new_os) {
   os_ = new_os;
   Kaleidoscope.storage().update(eeprom_slice_, os_);
+  Kaleidoscope.storage().commit();
 }
 
 }

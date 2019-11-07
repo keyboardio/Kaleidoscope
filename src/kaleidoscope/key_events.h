@@ -72,7 +72,20 @@
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+void handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState);
 DEPRECATED(ROW_COL_FUNC) inline void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   handleKeyswitchEvent(mappedKey, KeyAddr(row, col), keyState);
 }
+
+namespace kaleidoscope {
+namespace driver {
+namespace keyscanner {
+
+template<>
+inline
+void Base<kaleidoscope::Device::Props::KeyScannerProps>::handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState) {
+  ::handleKeyswitchEvent(mappedKey, key_addr, keyState);
+}
+} // namespace keyscanner
+} // namespace driver
+} // namespace kaleidoscope

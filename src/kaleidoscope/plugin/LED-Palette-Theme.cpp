@@ -96,6 +96,7 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
     indexes = (color_index << 4) + other;
   }
   Kaleidoscope.storage().update(map_base + position / 2, indexes);
+  Kaleidoscope.storage().commit();
 }
 
 EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
@@ -132,6 +133,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     Kaleidoscope.storage().put(palette_base_ + i * sizeof(color), color);
     i++;
   }
+  Kaleidoscope.storage().commit();
 
   ::LEDControl.refreshAll();
 
@@ -174,6 +176,7 @@ EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
     Kaleidoscope.storage().update(theme_base + pos, indexes);
     pos++;
   }
+  Kaleidoscope.storage().commit();
 
   ::LEDControl.refreshAll();
 

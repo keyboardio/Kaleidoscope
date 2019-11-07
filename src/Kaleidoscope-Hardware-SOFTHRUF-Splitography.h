@@ -18,5 +18,4 @@
 
 #pragma once
 
-#define KALEIDOSCOPE_WITH_ATMEGA_KEYBOARD 1
 #include "kaleidoscope/device/softhruf/Splitography.h"

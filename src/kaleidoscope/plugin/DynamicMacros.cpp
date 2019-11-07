@@ -233,6 +233,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
 
         Kaleidoscope.storage().update(storage_base_ + pos++, b);
       }
+      Kaleidoscope.storage().commit();
       updateDynamicMacroCache();
     }
   }
