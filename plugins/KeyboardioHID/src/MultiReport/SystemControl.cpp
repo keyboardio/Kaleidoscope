@@ -26,10 +26,6 @@ THE SOFTWARE.
 #include "SystemControl.h"
 #include "DescriptorPrimitives.h"
 
-#ifdef ARDUINO_ARCH_SAMD
-#include "USB/SAMD21_USBDevice.h"
-#endif
-
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
     //TODO limit to system keys only?
     /*  System Control (Power Down, Sleep, Wakeup, ...) */
@@ -82,8 +78,10 @@ void SystemControl_::press(uint8_t s) {
         USBDevice.wakeupHost();
 #endif
 #ifdef ARDUINO_ARCH_SAMD
-        extern USBDevice_SAMD21G18x usbd;
-        usbd.wakeupHost();
+        // This is USBDevice_SAMD21G18x.wakeupHost(). But we can't include that
+        // header, because it redefines a few symbols, and causes linking
+        // errors. So we simply reimplement the same thing here.
+        USB->DEVICE.CTRLB.bit.UPRSM = 1;
 #endif
     } else {
         sendReport(&s, sizeof(s));
