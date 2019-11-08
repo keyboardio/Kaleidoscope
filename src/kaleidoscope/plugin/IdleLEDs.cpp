@@ -67,9 +67,9 @@ EventHandlerResult PersistentIdleLEDs::onSetup() {
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint16_t idle_time;
-  KeyboardHardware.storage().get(settings_base_, idle_time);
+  Kaleidoscope.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffff) {
-    KeyboardHardware.storage().put(settings_base_, idle_time_limit);
+    idle_time = idle_time_limit;
   }
   setIdleTimeoutSeconds(idle_time);
 
@@ -78,7 +78,10 @@ EventHandlerResult PersistentIdleLEDs::onSetup() {
 
 void PersistentIdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
   IdleLEDs::setIdleTimeoutSeconds(new_limit);
-  KeyboardHardware.storage().put(settings_base_, (uint16_t)new_limit);
+
+  uint16_t stored_limit = (uint16_t)new_limit;
+  Kaleidoscope.storage().put(settings_base_, stored_limit);
+  Kaleidoscope.storage().commit();
 }
 
 EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *command) {

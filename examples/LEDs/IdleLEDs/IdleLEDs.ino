@@ -52,7 +52,7 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           LEDOff);
 
 void setup() {
-  KeyboardHardware.serialPort().begin(9600);
+  Kaleidoscope.serialPort().begin(9600);
 
   Kaleidoscope.setup();
 
