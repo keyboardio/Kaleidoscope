@@ -17,6 +17,8 @@
 
 #pragma once
 
+#ifdef ARDUINO_ARCH_AVR
+
 #include "kaleidoscope/driver/storage/Base.h"
 #include <EEPROM.h>
 
@@ -57,3 +59,5 @@ class AVREEPROM : public kaleidoscope::driver::storage::Base<_StorageProps> {
 }
 }
 }
+
+#endif
