@@ -197,6 +197,13 @@ constexpr Key addFlags(Key k, uint8_t add_flags) {
 
 } // namespace kaleidoscope
 
+// Redefine this macro to enable using alternative char-string to Key
+// conversions per layer. This is, howerver, only necessary in rare cases
+// (e.g. to use individual host_keymap language maps on
+// different layers, see kaleidoscope/host_keymap/host_keymap.h for an example).
+//
+#define CONVERT_TO_KEY(INPUT) kaleidoscope::convertToKey(INPUT)
+
 // For compatibility reasons make the Key class also available
 // in global namespace.
 //
@@ -213,11 +220,11 @@ typedef kaleidoscope::Key Key_;
 #define SYNTHETIC         B01000000
 #define RESERVED          B10000000
 
-#define LCTRL(k)  Key(k.getKeyCode(), k.getFlags() | CTRL_HELD)
-#define LALT(k)   Key(k.getKeyCode(), k.getFlags() | LALT_HELD)
-#define RALT(k)   Key(k.getKeyCode(), k.getFlags() | RALT_HELD)
-#define LSHIFT(k) Key(k.getKeyCode(), k.getFlags() | SHIFT_HELD)
-#define LGUI(k)   Key(k.getKeyCode(), k.getFlags() | GUI_HELD)
+#define LCTRL(k)  kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
+#define LALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
+#define RALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
+#define LSHIFT(k) kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
+#define LGUI(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
