@@ -44,12 +44,41 @@ void setup();
 
 #include "kaleidoscope/hid.h"
 
+
+// Note: The CONVERT_TO_KEY macro can be redefined to use different
+//       host_keymap-keymaps on different layers (see key_defs.h for its
+//       default definition.
+
+#define CONVERT_AND_CHECK_KEY(KEY)                                             \
+   (                                                                           \
+   (                                                                           \
+      struct {                                                                 \
+         static_assert(CONVERT_TO_KEY(KEY) != kaleidoscope::bad_keymap_key,    \
+                       "Bad key definition: \'" #KEY "\'");                    \
+      }                                                                        \
+   ){},                                                                        \
+   CONVERT_TO_KEY(KEY)                                                         \
+   )
+
 #ifdef PER_KEY_DATA_STACKED
-#define KEYMAP_STACKED(...) { PER_KEY_DATA_STACKED(XXX, __VA_ARGS__) }
+#define KEYMAP_STACKED(...)                                                    \
+   {                                                                           \
+      MAP_LIST(                                                                \
+         CONVERT_AND_CHECK_KEY,                                                \
+         PER_KEY_DATA_STACKED(XXX, __VA_ARGS__)                                \
+      )                                                                        \
+   }
+
 #endif
 
 #ifdef PER_KEY_DATA
-#define KEYMAP(...) { PER_KEY_DATA(XXX, __VA_ARGS__) }
+#define KEYMAP(...)                                                            \
+   {                                                                           \
+      MAP_LIST(                                                                \
+         CONVERT_AND_CHECK_KEY,                                                \
+         PER_KEY_DATA(XXX, __VA_ARGS__)                                        \
+      )                                                                        \
+   }
 #endif
 
 #include "kaleidoscope/KeyAddr.h"
