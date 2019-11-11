@@ -33,7 +33,7 @@ class FocusSerial : public kaleidoscope::Plugin {
     send(color.r, color.g, color.b);
   }
   void send(const Key key) {
-    send(key.raw);
+    send(key.getRaw());
   }
   void send(const bool b) {
     printBool(b);
@@ -62,7 +62,7 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
 
   void read(Key &key) {
-    key.raw = Kaleidoscope.serialPort().parseInt();
+    key.setRaw(Kaleidoscope.serialPort().parseInt());
   }
   void read(cRGB &color) {
     color.r = Kaleidoscope.serialPort().parseInt();

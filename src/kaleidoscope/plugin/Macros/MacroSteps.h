@@ -47,8 +47,8 @@ typedef uint8_t macro_t;
 #define I(n)  MACRO_ACTION_STEP_INTERVAL, n
 #define W(n)  MACRO_ACTION_STEP_WAIT, n
 
-#define Kr(k) (k).flags, (k).keyCode
-#define Kc(k) (Key_ ## k).keyCode
+#define Kr(k) (k).getFlags(), (k).getKeyCode()
+#define Kc(k) (Key_ ## k).getKeyCode()
 #define K(k) Kr(Key_ ## k)
 
 #define Dr(k) MACRO_ACTION_STEP_KEYDOWN, Kr(k)

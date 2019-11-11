@@ -156,6 +156,22 @@ The [FirmwareDump](doc/plugin/FirmwareDump.md) plugin makes it possible to dump 
 
 ## Breaking changes
 
+### Implementation of type Key internally changed from C++ union to class
+
+Type `Key` was originally implemented as a C++ union. For technical reasons
+it had to be converted to a C++ class. This implies that the double usage
+of the original union, holding either raw data (member `raw`) or key code/key flags
+data (members `keyCode` and `flags`) is no more possible. 
+
+Direct use of member `raw` will 
+emit a diagnostic compiler message but will cause the firmware linking 
+process to fail. For a deprecation
+periode `keyCode` and `flags` keep on being supported but will cause 
+deprecation warnings during compile. 
+
+Please see the [relevant upgrade notes](UPGRADING.md##implementation-of-type-key-internally-changed-from-union-to-class)
+for information about how to upgrade legacy code.
+
 ### The `NumPad` plugin no longer toggles `NumLock`
 
 The `NumPad` plugin used to toggle `NumLock` when switching to the NumPad layer. This caused issues on OSX where `NumLock` is interpreted as `Clear`. For this reason, the plugin no longer does this. As a consequence, everyone's encouraged to update their keymap so that the numpad layer uses normal number keys instead of the keypad numbers. See [Model01-Firmware#79](https://github.com/keyboardio/Model01-Firmware/pull/79) for an example about how to do this.

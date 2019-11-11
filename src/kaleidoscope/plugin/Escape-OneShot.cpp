@@ -23,7 +23,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  if (mapped_key.raw != Key_Escape.raw ||
+  if (mapped_key != Key_Escape ||
       (keyState & INJECTED) ||
       !keyToggledOn(keyState))
     return EventHandlerResult::OK;

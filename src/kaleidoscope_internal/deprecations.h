@@ -51,5 +51,23 @@
   "`Kaleidoscope.device().led_count` instead."
 
 #define _DEPRECATED_MESSAGE_HARDWARE_BASE_CLASS                 \
-  "The `Hardware` base class is deprecated. Please use\n" __NL_ \
+  "The `Hardware` base class is deprecated. Please use\n" __NL__ \
   "the new APIs based on `kaleidoscope::device::Base`."
+
+#define _DEPRECATED_MESSAGE_DIRECT_KEY_MEMBER_ACCESS                           \
+  "Direct access to `Key` class' data members is deprecated.\n"                \
+  "Please use `Key::setKeyCode()`/`Key::getKeyCode()` or\n"                    \
+  "`Key::setFlags()`/`Key::getFlags()` instead.\n"                             \
+  "\n"                                                                         \
+  "For further information and examples on how to do that, \n"                 \
+  "please see UPGRADING.md."
+
+#define _DEPRECATED_MESSAGE_KEY_MEMBER_RAW_ACCESS                              \
+  "The member variable `raw` of class Key had to be removed. Please \n"        \
+  "use `Key::setRaw()`/`Key::getRaw()` to set and get raw data.\n"             \
+  "\n"                                                                         \
+  "Important: This is not a deprecation. Your code will compile but fail\n"    \
+  "           to link until all access to `Key::raw` has been replaced.\n"     \
+  "\n"                                                                         \
+  "For further information and examples on how to do that, \n"                 \
+  "please see UPGRADING.md."

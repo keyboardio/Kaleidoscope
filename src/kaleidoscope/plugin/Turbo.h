@@ -19,7 +19,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define Key_Turbo ((Key) { .raw = kaleidoscope::ranges::TURBO })
+#define Key_Turbo Key{kaleidoscope::ranges::TURBO }
 
 namespace kaleidoscope {
 namespace plugin {

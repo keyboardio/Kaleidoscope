@@ -103,14 +103,14 @@ EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
 }
 
 __attribute__((weak)) const char keyToChar(Key key) {
-  if (key.flags != 0)
+  if (key.getFlags() != 0)
     return 0;
 
-  switch (key.keyCode) {
-  case Key_A.keyCode ... Key_Z.keyCode:
-    return 'a' + (key.keyCode - Key_A.keyCode);
-  case Key_1.keyCode ... Key_0.keyCode:
-    return '1' + (key.keyCode - Key_1.keyCode);
+  switch (key.getKeyCode()) {
+  case Key_A.getKeyCode() ... Key_Z.getKeyCode():
+    return 'a' + (key.getKeyCode() - Key_A.getKeyCode());
+  case Key_1.getKeyCode() ... Key_0.getKeyCode():
+    return '1' + (key.getKeyCode() - Key_1.getKeyCode());
   }
 
   return 0;

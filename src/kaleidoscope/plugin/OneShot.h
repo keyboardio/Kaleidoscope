@@ -20,7 +20,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Ranges.h>
 
-#define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).keyCode - Key_LeftControl.keyCode)
+#define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
 
 namespace kaleidoscope {
@@ -35,7 +35,7 @@ class OneShot : public kaleidoscope::Plugin {
   }
 
   static bool isOneShotKey(Key key) {
-    return (key.raw >= kaleidoscope::ranges::OS_FIRST && key.raw <= kaleidoscope::ranges::OS_LAST);
+    return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST && key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
   static bool isActive(void);
   static bool isActive(Key key);
@@ -100,7 +100,7 @@ class OneShot : public kaleidoscope::Plugin {
   static void cancelOneShot(uint8_t idx);
 
   static bool isOneShotKey_(Key key) {
-    return key.raw >= ranges::OS_FIRST && key.raw <= ranges::OS_LAST;
+    return key.getRaw() >= ranges::OS_FIRST && key.getRaw() <= ranges::OS_LAST;
   }
   static bool hasTimedOut() {
     return Kaleidoscope.hasTimeExpired(start_time_, time_out);

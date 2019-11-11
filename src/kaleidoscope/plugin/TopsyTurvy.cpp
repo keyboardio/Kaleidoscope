@@ -52,11 +52,11 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     }
   }
 
-  mapped_key.raw = mapped_key.raw - ranges::TT_FIRST;
+  mapped_key.setRaw(mapped_key.getRaw() - ranges::TT_FIRST);
 
   // invert the shift state
   if (!is_shifted_) {
-    mapped_key.flags |= SHIFT_HELD;
+    mapped_key.setFlags(mapped_key.getFlags() | SHIFT_HELD);
     return EventHandlerResult::OK;
   }
 

@@ -43,8 +43,8 @@ EventHandlerResult ActiveModColorEffect::onLayerChange() {
 
     if (::OneShot.isOneShotKey(k) ||
         (highlight_normal_modifiers_ && (
-           (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) ||
-           (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
+           (k >= Key_LeftControl && k <= Key_RightGui) ||
+           (k.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))))) {
       mod_keys_[mod_key_count_++] = key_addr;
     }
   }
@@ -69,13 +69,13 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
         ::LEDControl.setCrgbAt(key_addr, highlight_color);
       else
         ::LEDControl.refreshAt(key_addr);
-    } else if (k.raw >= Key_LeftControl.raw && k.raw <= Key_RightGui.raw) {
+    } else if (k >= Key_LeftControl && k <= Key_RightGui) {
       if (hid::isModifierKeyActive(k))
         ::LEDControl.setCrgbAt(key_addr, highlight_color);
       else
         ::LEDControl.refreshAt(key_addr);
-    } else if (k.flags == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
-      uint8_t layer = k.keyCode;
+    } else if (k.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP)) {
+      uint8_t layer = k.getKeyCode();
       if (layer >= LAYER_SHIFT_OFFSET)
         layer -= LAYER_SHIFT_OFFSET;
 

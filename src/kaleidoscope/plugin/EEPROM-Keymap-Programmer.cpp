@@ -87,12 +87,12 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, Key
   }
 
   uint8_t n;
-  if (mapped_key.keyCode == Key_0.keyCode)
+  if (mapped_key.getKeyCode() == Key_0.getKeyCode())
     n = 0;
   else
-    n = mapped_key.keyCode - Key_1.keyCode + 1;
+    n = mapped_key.getKeyCode() - Key_1.getKeyCode() + 1;
 
-  new_key_.raw = new_key_.raw * 10 + n;
+  new_key_.setRaw(new_key_.getRaw() * 10 + n);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }

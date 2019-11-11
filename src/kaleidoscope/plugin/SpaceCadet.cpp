@@ -72,8 +72,8 @@ bool SpaceCadet::active() {
 
 EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   //Handle our synthetic keys for enabling and disabling functionality
-  if (mapped_key.raw >= kaleidoscope::ranges::SC_FIRST &&
-      mapped_key.raw <= kaleidoscope::ranges::SC_LAST) {
+  if (mapped_key.getRaw() >= kaleidoscope::ranges::SC_FIRST &&
+      mapped_key.getRaw() <= kaleidoscope::ranges::SC_LAST) {
     //Only fire the activate / deactivate on the initial press (not held or release)
     if (keyToggledOn(key_state)) {
       if (mapped_key == Key_SpaceCadetEnable) {
@@ -109,14 +109,14 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     for (
       uint8_t i = 0 ;
       !(
-        map[i].input.raw == Key_NoKey.raw
-        && map[i].output.raw == Key_NoKey.raw
+        map[i].input == Key_NoKey
+        && map[i].output == Key_NoKey
         && map[i].timeout == 0
       ) ;
       ++i
     ) {
 
-      if (mapped_key.raw == map[i].input.raw) {
+      if (mapped_key == map[i].input) {
         //The keypress was valid and a match. Mark it as flagged and reset the counter
         map[i].flagged = true;
         map[i].start_time = Kaleidoscope.millisAtCycleStart();
@@ -166,8 +166,8 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
   for (
     uint8_t i = 0 ;
     !(
-      map[i].input.raw == Key_NoKey.raw
-      && map[i].output.raw == Key_NoKey.raw
+      map[i].input == Key_NoKey
+      && map[i].output == Key_NoKey
       && map[i].timeout == 0
     );
     ++i
@@ -180,7 +180,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     }
 
     //the key we're looking at was valid (in the map)
-    if (map[i].input.raw == mapped_key.raw) {
+    if (map[i].input == mapped_key) {
       pressed_key_was_valid = true;
     }
   }

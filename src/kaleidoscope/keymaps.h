@@ -24,7 +24,7 @@ namespace kaleidoscope {
 
 inline
 Key keyFromKeymap(uint8_t layer, KeyAddr key_addr) {
-  return pgm_read_word(&keymaps_linear[layer][key_addr.toInt()].raw);
+  return keymaps_linear[layer][key_addr.toInt()].readFromProgmem();
 }
 
 namespace internal {

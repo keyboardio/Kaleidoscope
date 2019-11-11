@@ -32,8 +32,8 @@ const Leader::dictionary_t *Leader::dictionary;
 #define PARTIAL_MATCH -1
 #define NO_MATCH -2
 
-#define isLeader(k) (k.raw >= ranges::LEAD_FIRST && k.raw <= ranges::LEAD_LAST)
-#define isActive() (sequence_[0].raw != Key_NoKey.raw)
+#define isLeader(k) (k.getRaw() >= ranges::LEAD_FIRST && k.getRaw() <= ranges::LEAD_LAST)
+#define isActive() (sequence_[0] != Key_NoKey)
 
 // --- actions ---
 int8_t Leader::lookup(void) {
@@ -42,14 +42,14 @@ int8_t Leader::lookup(void) {
   for (uint8_t seq_index = 0; ; seq_index++) {
     match = true;
 
-    if (pgm_read_word(&(dictionary[seq_index].sequence[0].raw)) == Key_NoKey.raw)
+    if (dictionary[seq_index].sequence[0].readFromProgmem() == Key_NoKey)
       break;
 
     Key seq_key;
     for (uint8_t i = 0; i <= sequence_pos_; i++) {
-      seq_key.raw = pgm_read_word(&(dictionary[seq_index].sequence[i].raw));
+      seq_key = dictionary[seq_index].sequence[i].readFromProgmem();
 
-      if (sequence_[i].raw != seq_key.raw) {
+      if (sequence_[i] != seq_key) {
         match = false;
         break;
       }
@@ -58,8 +58,9 @@ int8_t Leader::lookup(void) {
     if (!match)
       continue;
 
-    seq_key.raw = pgm_read_word(&(dictionary[seq_index].sequence[sequence_pos_ + 1].raw));
-    if (seq_key.raw == Key_NoKey.raw) {
+    seq_key
+      = dictionary[seq_index].sequence[sequence_pos_ + 1].readFromProgmem();
+    if (seq_key == Key_NoKey) {
       return seq_index;
     } else {
       return PARTIAL_MATCH;
@@ -73,7 +74,7 @@ int8_t Leader::lookup(void) {
 
 void Leader::reset(void) {
   sequence_pos_ = 0;
-  sequence_[0].raw = Key_NoKey.raw;
+  sequence_[0] = Key_NoKey;
 }
 
 void Leader::inject(Key key, uint8_t key_state) {
@@ -95,7 +96,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
       // not active, but a leader key = start the sequence on key release!
       start_time_ = Kaleidoscope.millisAtCycleStart();
       sequence_pos_ = 0;
-      sequence_[sequence_pos_].raw = mapped_key.raw;
+      sequence_[sequence_pos_] = mapped_key;
     }
 
     // If the sequence was not active yet, ignore the key.
@@ -113,7 +114,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
     }
 
     start_time_ = Kaleidoscope.millisAtCycleStart();
-    sequence_[sequence_pos_].raw = mapped_key.raw;
+    sequence_[sequence_pos_] = mapped_key;
     action_index = lookup();
 
     if (action_index >= 0) {

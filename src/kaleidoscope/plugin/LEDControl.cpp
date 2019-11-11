@@ -136,7 +136,7 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
 }
 
 kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.flags != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
+  if (mappedKey.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return kaleidoscope::EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {

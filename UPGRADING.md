@@ -12,6 +12,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
+    - [Implementation of type Key internally changed from C++ union to class](#implementation-of-type-key-internally-changed-from-union-to-class)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
@@ -33,11 +34,11 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 We are introducing - or rather, replacing - the older hardware plugins, with a system that's much more composable, more extensible, and will allow us to better support new devices, different MCUs, and so on.
 
-### For end-users
+#### For end-users
 
 For end users, this doesn't come with any breaking changes. A few things have been deprecated (`ROWS`, `COLS`, `LED_COUNT`, `KeyboardHardware`), but they still function for the time being.
 
-### For developers
+#### For developers
 
 For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
 
@@ -312,6 +313,45 @@ As an end-user, there's nothing one needs to do. Consistent timing helpers are p
 As a developer, one can continue using `millis()`, but migrating to `Kaleidoscope.millisAtCycleStart()` is recommended. The new method will return the same value for the duration of the main loop cycle, making time-based synchronization between plugins a lot easier.
 
 ## Breaking changes
+
+### Implementation of type Key internally changed from C++ union to class
+
+#### For end-users
+
+This is a breaking change only if your code accesses the member `raw` of
+type `Key` directly, for instance in a construct like
+
+```cpp
+Key k;
+k.raw = Key_A.raw;
+```
+
+This can easily be fixed by replacing read access to `Key::raw` with `Key::getRaw()`
+and write access with `Key::setRaw(...)`.
+
+```cpp
+Key k;
+k.setRaw(Key_A.getRaw());
+```
+
+Moreover, the compiler will still emit warnings in places of the code where
+members `keyCode` and `flags` of the original type `Key` are used, like e.g.
+
+```cpp
+Key k;
+k.keyCode = Key_A.keyCode;
+k.flags = Key_A.flags;
+```
+
+These warnings can be also resolved by using the appropriate accessor methods
+`Key::getKeyCode()`/`Key::setKeyCode()` and `Key::getFlags()`/`Key::setKlags()`
+instead.
+
+```cpp
+Key k;
+k.setKeyCode(Key_A.getKeyCode());
+k.setFlags(Key_A.getFlags());
+```
 
 ### The `RxCy` macros and peeking into the keyswitch state
 

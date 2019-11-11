@@ -48,7 +48,7 @@ bool OneShot::isSticky() {
 }
 
 bool OneShot::isStickable(Key key) {
-  return state_[key.raw - ranges::OS_FIRST].stickable;
+  return state_[key.getRaw() - ranges::OS_FIRST].stickable;
 }
 
 // ---- OneShot stuff ----
@@ -56,11 +56,11 @@ void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
   Key key;
 
   if (idx < 8) {
-    key.flags = Key_LeftControl.flags;
-    key.keyCode = Key_LeftControl.keyCode + idx;
+    key = Key(Key_LeftControl.getKeyCode() + idx,
+              Key_LeftControl.getFlags());
   } else {
-    key.flags = KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP;
-    key.keyCode = LAYER_SHIFT_OFFSET + idx - 8;
+    key = Key(LAYER_SHIFT_OFFSET + idx - 8,
+              KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
   }
 
   handleKeyswitchEvent(key, UnknownKeyswitchLocation, key_state | INJECTED);
@@ -76,7 +76,7 @@ void OneShot::cancelOneShot(uint8_t idx) {
 }
 
 EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  uint8_t idx = mapped_key.raw - ranges::OS_FIRST;
+  uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
 
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
@@ -146,8 +146,8 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
   if (keyIsPressed(keyState)) {
     prev_key_ = mapped_key;
-    if (!(mapped_key.raw >= Key_LeftControl.raw && mapped_key.raw <= Key_RightGui.raw) &&
-        !(mapped_key.flags == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
+    if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
+        !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
       should_cancel_ = true;
     }
   }
@@ -219,7 +219,7 @@ bool OneShot::isActive(void) {
 }
 
 bool OneShot::isActive(Key key) {
-  uint8_t idx = key.raw - ranges::OS_FIRST;
+  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
 
   return (state_[idx].active && !hasTimedOut()) ||
          state_[idx].pressed ||
@@ -227,16 +227,16 @@ bool OneShot::isActive(Key key) {
 }
 
 bool OneShot::isSticky(Key key) {
-  uint8_t idx = key.raw - ranges::OS_FIRST;
+  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
 
   return state_[idx].sticky;
 }
 
 bool OneShot::isModifierActive(Key key) {
-  if (key.raw < Key_LeftControl.raw || key.raw > Key_RightGui.raw)
+  if (key < Key_LeftControl || key > Key_RightGui)
     return false;
 
-  uint8_t idx = key.keyCode - Key_LeftControl.keyCode;
+  uint8_t idx = key.getKeyCode() - Key_LeftControl.getKeyCode();
   return state_[idx].active;
 }
 
@@ -247,12 +247,12 @@ void OneShot::cancel(bool with_stickies) {
 
 void OneShot::enableStickability(Key key) {
   if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.raw - ranges::OS_FIRST].stickable = true;
+    state_[key.getRaw() - ranges::OS_FIRST].stickable = true;
 }
 
 void OneShot::disableStickability(Key key) {
   if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.raw - ranges::OS_FIRST].stickable = false;
+    state_[key.getRaw() - ranges::OS_FIRST].stickable = false;
 }
 
 void OneShot::enableStickabilityForModifiers() {

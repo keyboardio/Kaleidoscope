@@ -25,15 +25,15 @@
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key) Key(                                               \
     kaleidoscope::ranges::DUM_FIRST +                                   \
-    (((Key_ ## mod).keyCode - Key_LeftControl.keyCode) << 8) +          \
-    (Key_ ## key).keyCode                                               \
+    (((Key_ ## mod).getKeyCode() - Key_LeftControl.getKeyCode()) << 8) +          \
+    (Key_ ## key).getKeyCode()                                               \
 )
 #define SFT_T(key) MT(LeftShift, key)
 #define CTL_T(key) MT(LeftControl, key)
 #define ALT_T(key) MT(LeftAlt, key)
 #define GUI_T(key) MT(LeftGui, key)
 
-#define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).keyCode)
+#define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).getKeyCode())
 
 #define _DEPRECATED_MESSAGE_QUKEY_ROW_COL_CONSTRUCTOR                        \
   "The `Qukey(layer, row, col, alternate_key)` constructor using separate\n" \

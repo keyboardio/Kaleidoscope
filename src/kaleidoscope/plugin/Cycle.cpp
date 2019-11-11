@@ -28,7 +28,7 @@ uint8_t Cycle::cycle_count_;
 
 // --- helpers ---
 
-#define isCycle(k) (k.raw == kaleidoscope::ranges::CYCLE)
+#define isCycle(k) (k.getRaw() == kaleidoscope::ranges::CYCLE)
 
 // --- api ---
 
@@ -46,10 +46,7 @@ void Cycle::replace(Key key) {
 
 void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
   uint8_t idx = cycle_count_ % cycle_size;
-  Key key;
-
-  key.raw = pgm_read_word(&cycle_steps[idx].raw);
-  replace(key);
+  replace(cycle_steps[idx].readFromProgmem());
 }
 
 // --- hooks ---
@@ -67,13 +64,13 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, ui
 
   if (!isCycle(mapped_key)) {
     if (keyToggledOn(key_state)) {
-      current_modifier_flags_ |= toModFlag(mapped_key.keyCode);
-      last_non_cycle_key_.keyCode = mapped_key.keyCode;
-      last_non_cycle_key_.flags = current_modifier_flags_;
+      current_modifier_flags_ |= toModFlag(mapped_key.getKeyCode());
+      last_non_cycle_key_.setKeyCode(mapped_key.getKeyCode());
+      last_non_cycle_key_.setFlags(current_modifier_flags_);
       cycle_count_ = 0;
     }
     if (keyToggledOff(key_state)) {
-      current_modifier_flags_ &= ~toModFlag(mapped_key.keyCode);
+      current_modifier_flags_ &= ~toModFlag(mapped_key.getKeyCode());
     }
     return EventHandlerResult::OK;
   }
@@ -89,18 +86,18 @@ EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, ui
 
 uint8_t Cycle::toModFlag(uint8_t keyCode) {
   switch (keyCode) {
-  case Key_LeftShift.keyCode:
-  case Key_RightShift.keyCode:
+  case Key_LeftShift.getKeyCode():
+  case Key_RightShift.getKeyCode():
     return SHIFT_HELD;
-  case Key_LeftAlt.keyCode:
+  case Key_LeftAlt.getKeyCode():
     return LALT_HELD;
-  case Key_RightAlt.keyCode:
+  case Key_RightAlt.getKeyCode():
     return RALT_HELD;
-  case Key_LeftControl.keyCode:
-  case Key_RightControl.keyCode:
+  case Key_LeftControl.getKeyCode():
+  case Key_RightControl.getKeyCode():
     return CTRL_HELD;
-  case Key_LeftGui.keyCode:
-  case Key_RightGui.keyCode:
+  case Key_LeftGui.getKeyCode():
+  case Key_RightGui.getKeyCode():
     return GUI_HELD;
   default:
     return 0;
