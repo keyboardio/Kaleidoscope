@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_ARCH_AVR
+#ifdef __AVR__
 
 #include "kaleidoscope/driver/storage/Base.h"
 #include <EEPROM.h>

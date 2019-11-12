@@ -21,6 +21,8 @@
 
 #pragma once
 
+#ifdef __AVR__
+
 #include "kaleidoscope/MatrixAddr.h"
 #include "kaleidoscope_internal/deprecations.h"
 
@@ -402,3 +404,5 @@ class Hardware {
   /** @} */
 };
 }
+
+#endif

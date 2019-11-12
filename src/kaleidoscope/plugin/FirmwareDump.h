@@ -21,6 +21,8 @@
 #error "Firmware Dump is not available for virtual builds"
 #else
 
+#ifdef __AVR__
+
 #include <Kaleidoscope.h>
 
 namespace kaleidoscope {
@@ -41,4 +43,5 @@ class FirmwareDump : public kaleidoscope::Plugin {
 
 extern kaleidoscope::plugin::FirmwareDump FirmwareDump;
 
+#endif
 #endif
