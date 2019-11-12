@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <avr/wdt.h>
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {

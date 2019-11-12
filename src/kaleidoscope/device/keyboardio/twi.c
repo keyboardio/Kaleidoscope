@@ -18,6 +18,8 @@
   Modified 2012 by Todd Krein (todd@krein.org) to implement repeated starts
 */
 
+#ifdef __AVR__
+
 #define ENABLE_TWI_SLAVE_MODE 0
 
 #include <math.h>
@@ -559,3 +561,5 @@ ISR(TWI_vect) {
     break;
   }
 }
+
+#endif

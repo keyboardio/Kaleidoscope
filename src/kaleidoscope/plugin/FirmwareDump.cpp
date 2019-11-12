@@ -15,6 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef __AVR__
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include <Kaleidoscope-FirmwareDump.h>
@@ -71,4 +72,5 @@ EventHandlerResult FirmwareDump::onFocusEvent(const char *command) {
 
 kaleidoscope::plugin::FirmwareDump FirmwareDump;
 
+#endif
 #endif

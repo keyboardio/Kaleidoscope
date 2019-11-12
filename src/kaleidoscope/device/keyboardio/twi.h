@@ -16,6 +16,8 @@
   with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef __AVR__
+
 #ifndef twi_h
 #define twi_h
 
@@ -50,4 +52,5 @@ void twi_reply(uint8_t);
 void twi_stop(void);
 void twi_releaseBus(void);
 
+#endif
 #endif
