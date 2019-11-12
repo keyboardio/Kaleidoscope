@@ -24,16 +24,24 @@
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
 
-// Macro for defining the keymap. This should be used in the sketch
-// file (*.ino) to define the keymap[] array that holds the user's
-// layers. It also computes the number of layers in that keymap.
-#define KEYMAPS(layers...)				                                    __NL__ \
-  constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
-  uint8_t layer_count                                                   __NL__ \
-     = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
+#define START_KEYMAPS                                                   __NL__ \
+   constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
+
+#define END_KEYMAPS                                                     __NL__ \
+   };                                                                   __NL__ \
+   uint8_t layer_count                                                  __NL__ \
+      = sizeof(keymaps_linear) / sizeof(*keymaps_linear);               __NL__ \
                                                                         __NL__ \
   _INIT_SKETCH_EXPLORATION                                              __NL__ \
   _INIT_HID_GETSHORTNAME
+
+// Macro for defining the keymap. This should be used in the sketch
+// file (*.ino) to define the keymap[] array that holds the user's
+// layers. It also computes the number of layers in that keymap.
+#define KEYMAPS(layers...)                                              __NL__ \
+  START_KEYMAPS                                                         __NL__ \
+     layers                                                             __NL__ \
+  END_KEYMAPS
 
 extern uint8_t layer_count;
 
