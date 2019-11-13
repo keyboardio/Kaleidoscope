@@ -69,6 +69,12 @@ THE SOFTWARE.
 #define HID_REPORT_TYPE_OUTPUT  2
 #define HID_REPORT_TYPE_FEATURE 3
 
+// Controls whether to pack messages or not. When set, any sends will be delayed
+// until packing is toggled off, and sent then. This is a no-op on AVR, but is
+// required for SAMD. We place a forward-declaration here to be able to avoid
+// architecture-specific ifdefs elsewhere in the code.
+void USB_PackMessages(bool pack);
+
 #if defined(ARDUINO_ARCH_AVR)
 
 #include "PluggableUSB.h"

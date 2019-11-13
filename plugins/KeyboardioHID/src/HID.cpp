@@ -54,6 +54,7 @@ int HID_::getDescriptor(USBSetup& setup) {
 
     int total = 0;
     HIDSubDescriptor* node;
+    USB_PackMessages(true);
     for (node = rootNode; node; node = node->next) {
         int res = USB_SendControl(TRANSFER_PGM, node->data, node->length);
         if (res == -1)
@@ -65,6 +66,7 @@ int HID_::getDescriptor(USBSetup& setup) {
     // due to the USB specs, but Windows and Linux just assumes its in report mode.
     protocol = HID_REPORT_PROTOCOL;
 
+    USB_PackMessages(false);
     return total;
 }
 
