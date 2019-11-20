@@ -18,7 +18,7 @@
   Modified 2012 by Todd Krein (todd@krein.org) to implement repeated starts
 */
 
-#ifdef __AVR__
+#if defined(__AVR__) && !defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
 #define ENABLE_TWI_SLAVE_MODE 0
 

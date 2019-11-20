@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef __AVR__
+#if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
 #include <Arduino.h>
 #include "kaleidoscope/device/Base.h"
@@ -46,6 +46,7 @@ struct ATmega32U4KeyboardProps : kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::storage::AVREEPROM<StorageProps> Storage;
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 template <typename _DeviceProps>
 class ATmega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
  public:
@@ -53,6 +54,10 @@ class ATmega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
     return Serial;
   }
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+template <typename _DeviceProps>
+class ATmega32U4Keyboard;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }

@@ -21,15 +21,24 @@
 
 #include <Arduino.h>
 
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-#include "KeyboardioScanner.h"
-
 #define CRGB(r,g,b) (cRGB){b, g, r}
+
+struct cRGB {
+  uint8_t b;
+  uint8_t g;
+  uint8_t r;
+};
+
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/device/ATmega32U4Keyboard.h"
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "KeyboardioScanner.h"
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
 namespace device {
@@ -45,6 +54,7 @@ struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   };
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriverProps> {
  public:
   static void syncLeds();
@@ -57,11 +67,15 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
  private:
   static bool isLEDChanged;
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class Model01LEDDriver;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
   KEYSCANNER_PROPS(4, 16);
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01KeyScannerProps> {
  private:
   typedef Model01KeyScanner ThisType;
@@ -96,14 +110,19 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class Model01KeyScanner;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model01Props : kaleidoscope::device::ATmega32U4KeyboardProps {
+struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef Model01LEDDriverProps  LEDDriverProps;
   typedef Model01LEDDriver LEDDriver;
   typedef Model01KeyScannerProps KeyScannerProps;
   typedef Model01KeyScanner KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
  public:
@@ -112,8 +131,10 @@ class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
   static void enableHardwareTestMode();
 };
 
-}
-}
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
+} // namespace keyboardio
+} // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model01)
 

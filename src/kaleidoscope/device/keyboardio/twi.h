@@ -21,6 +21,8 @@
 #ifndef twi_h
 #define twi_h
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
 #include <inttypes.h>
 
 //#define ATMEGA8
@@ -52,5 +54,6 @@ void twi_reply(uint8_t);
 void twi_stop(void);
 void twi_releaseBus(void);
 
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #endif
 #endif
