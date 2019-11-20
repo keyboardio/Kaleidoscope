@@ -116,6 +116,20 @@ class Base {
   }
 
   /**
+     * Returns the key scanner used by the keyboard.
+     */
+  KeyScanner &keyScanner() {
+    return key_scanner_;
+  }
+
+  /**
+   * Returns the LED driver
+   */
+  LEDDriver &ledDriver() {
+    return led_driver_;
+  }
+
+  /**
    * @defgroup kaleidoscope_hardware_leds Kaleidoscope::Hardware/LEDs
    * @{
    */
