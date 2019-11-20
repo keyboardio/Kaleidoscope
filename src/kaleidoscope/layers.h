@@ -19,7 +19,7 @@
 #include <Arduino.h>
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
-#include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope/device/device.h"
 #include "kaleidoscope_internal/device.h"
 
 // Macro for defining the keymap. This should be used in the sketch

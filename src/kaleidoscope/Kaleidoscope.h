@@ -36,7 +36,7 @@ void setup();
 #include <math.h>
 #include <stdint.h>
 
-#include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope/device/device.h"
 #include "kaleidoscope/device/key_indexes.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/deprecations.h"

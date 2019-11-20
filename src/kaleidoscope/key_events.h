@@ -17,7 +17,7 @@
 #pragma once
 #include <Arduino.h>
 
-#include KALEIDOSCOPE_HARDWARE_H
+#include "kaleidoscope/device/device.h"
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keyswitch_state.h"
 
