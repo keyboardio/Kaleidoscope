@@ -42,6 +42,7 @@ struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {
  public:
   KBD4x() {
@@ -49,6 +50,9 @@ class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {
     mcu_.disableClockDivision();
   }
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class KBD4x;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define PER_KEY_DATA(dflt,                                                       \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7, R0C8, R0C9, R0C10, R0C11, \

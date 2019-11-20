@@ -20,6 +20,7 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "kaleidoscope/driver/bootloader/None.h"
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {
@@ -69,7 +70,7 @@ class HalfKay : public kaleidoscope::driver::bootloader::Base {
   }
 };
 #else
-class HalfKay;
+typedef bootloader::None HalfKay;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }

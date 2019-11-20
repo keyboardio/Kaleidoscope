@@ -25,6 +25,7 @@
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+#include "kaleidoscope/driver/bootloader/None.h"
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {
@@ -38,7 +39,7 @@ class FLIP : public kaleidoscope::driver::bootloader::Base {
   static void rebootBootloader();
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class FLIP;
+typedef bootloader::None FLIP;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }

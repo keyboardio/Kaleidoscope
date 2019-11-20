@@ -21,7 +21,7 @@
 
 #pragma once
 
-#ifndef __ASSEMBLER__
+#if !defined(__ASSEMBLER__) && !defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 #include <avr/io.h>
 #endif
 #define PORT_SHIFTER 4 // this may be 4 for all AVR chips
@@ -55,13 +55,22 @@
 #define PINC_ADDRESS 0x3
 #define PINB_ADDRESS 0x6
 #define PINA_ADDRESS 0x9
-#else
+#elif !defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 #error "Pins are not defined"
 #endif
 
 /* I/O pins */
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define PINDEF(port, pin) ((PIN##port##_ADDRESS << PORT_SHIFTER) | pin)
-
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define PINDEF(port, pin) 0
+#define PORTA
+#define PORTB
+#define PORTC
+#define PORTD
+#define PORTE
+#define PORTF
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #ifdef PORTA
 #define PIN_A0 PINDEF(A, 0)
@@ -123,7 +132,6 @@
 #define PIN_F6 PINDEF(F, 6)
 #define PIN_F7 PINDEF(F, 7)
 #endif
-
 
 /* converting pins to ports */
 enum { PIN_OFFSET, DDR_OFFSET, PORT_OFFSET};

@@ -22,17 +22,26 @@
 
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/keyscanner/None.h"
+
 #include "kaleidoscope/device/avr/pins_and_ports.h"
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)                   \
   KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));           \
   static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;   \
   static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)               \
+  KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
   KEYSCANNER_PROPS_BOILERPLATE(kaleidoscope::Device::KeyScannerProps);                                  \
@@ -66,6 +75,8 @@ struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
   static constexpr uint8_t matrix_col_pins[] = {};
 };
 
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 template <typename _KeyScannerProps>
 class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
  private:
@@ -233,6 +244,10 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
   }
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+template <typename _KeyScannerProps>
+class ATmega : public keyscanner::None {};
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }

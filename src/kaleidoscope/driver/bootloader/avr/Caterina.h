@@ -20,6 +20,7 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "kaleidoscope/driver/bootloader/None.h"
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {
@@ -53,7 +54,7 @@ class Caterina : public kaleidoscope::driver::bootloader::Base {
   }
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Caterina;
+typedef bootloader::None Caterina;
 #endif // #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
