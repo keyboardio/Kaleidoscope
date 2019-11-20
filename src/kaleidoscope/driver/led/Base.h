@@ -109,7 +109,7 @@ class Base {
     constexpr bool isValid(uint8_t index) {
       return (_LEDDriverProps::led_count > 0 && index < _LEDDriverProps::led_count);
     }
-  } LEDs;
+  } LEDs_;
 
  protected:
   typedef _LEDDriverProps Props_;
