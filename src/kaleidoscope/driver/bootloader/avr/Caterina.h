@@ -17,7 +17,9 @@
 
 #pragma once
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {
@@ -25,6 +27,7 @@ namespace driver {
 namespace bootloader {
 namespace avr {
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Caterina : public kaleidoscope::driver::bootloader::Base {
  public:
   static void rebootBootloader() {
@@ -49,6 +52,9 @@ class Caterina : public kaleidoscope::driver::bootloader::Base {
     // happens before the watchdog reboots us
   }
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class Caterina;
+#endif // #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }
