@@ -49,12 +49,16 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<SplitographyProps> {
  public:
   Splitography() {
     mcu_.disableJTAG();
   }
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class Splitography;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define PER_KEY_DATA(dflt,                                                       \
       r0c0 ,r0c1 ,r0c2 ,r0c3 ,r0c4 ,r0c5   ,r0c6 ,r0c7 ,r0c8 ,r0c9 ,r0c10 ,r0c11   \

@@ -22,6 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
 #include <Kaleidoscope.h>
@@ -39,3 +40,4 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 kaleidoscope::device::softhruf::Splitography &Splitography = kaleidoscope_internal::device;
 
 #endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
