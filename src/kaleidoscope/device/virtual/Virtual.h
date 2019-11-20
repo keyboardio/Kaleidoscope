@@ -107,7 +107,6 @@ class VirtualLEDDriver
   void syncLeds();
   void setCrgbAt(uint8_t i, cRGB color);
   cRGB getCrgbAt(uint8_t i) const;
-  uint8_t getLedIndex(uint8_t key_offset) const;
 
  private:
 

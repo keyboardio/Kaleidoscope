@@ -371,10 +371,6 @@ cRGB VirtualLEDDriver::getCrgbAt(uint8_t i) const {
   return led_states_[i];
 }
 
-uint8_t VirtualLEDDriver::getLedIndex(uint8_t key_offset) const {
-  return kaleidoscope::DeviceProps::LEDDriverProps::getLedIndex(key_offset);
-}
-
 } // namespace virt
 } // namespace device
 
