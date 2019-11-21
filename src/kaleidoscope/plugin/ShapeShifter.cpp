@@ -43,17 +43,17 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   // Try to find the current key in the dictionary
   uint8_t i = 0;
   do {
-    orig.raw = pgm_read_word(&(dictionary[i].original.raw));
+    orig = dictionary[i].original.readFromProgmem();
     i++;
-  } while (orig.raw != Key_NoKey.raw &&
-           orig.raw != mapped_key.raw);
+  } while (orig != Key_NoKey &&
+           orig != mapped_key);
   i--;
 
   // If not found, bail out.
-  if (orig.raw == Key_NoKey.raw)
+  if (orig == Key_NoKey)
     return EventHandlerResult::OK;
 
-  repl.raw = pgm_read_word(&(dictionary[i].replacement.raw));
+  repl = dictionary[i].replacement.readFromProgmem();
 
   // If found, handle the alternate key instead
   mapped_key = repl;

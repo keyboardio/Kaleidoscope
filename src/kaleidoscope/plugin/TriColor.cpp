@@ -31,23 +31,23 @@ void TriColor::TransientLEDMode::update(void) {
     Key k = Layer.lookup(key_addr);
 
     // Special keys are always mod_color
-    if (k.flags != 0) {
+    if (k.getFlags() != 0) {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), parent_->mod_color_);
       continue;
     }
 
     cRGB color = parent_->mod_color_;
 
-    switch (k.keyCode) {
-    case Key_A.keyCode ... Key_0.keyCode:
-    case Key_Spacebar.keyCode:
-    case Key_KeypadDivide.keyCode ... Key_KeypadSubtract.keyCode:
-    case Key_Keypad1.keyCode ... Key_KeypadDot.keyCode:
-    case Key_F1.keyCode ... Key_F4.keyCode:
-    case Key_F9.keyCode ... Key_F12.keyCode:
+    switch (k.getKeyCode()) {
+    case Key_A.getKeyCode() ... Key_0.getKeyCode():
+    case Key_Spacebar.getKeyCode():
+    case Key_KeypadDivide.getKeyCode() ... Key_KeypadSubtract.getKeyCode():
+    case Key_Keypad1.getKeyCode() ... Key_KeypadDot.getKeyCode():
+    case Key_F1.getKeyCode() ... Key_F4.getKeyCode():
+    case Key_F9.getKeyCode() ... Key_F12.getKeyCode():
       color = parent_->base_color_;
       break;
-    case Key_Escape.keyCode:
+    case Key_Escape.getKeyCode():
       color = parent_->esc_color_;
       break;
     }

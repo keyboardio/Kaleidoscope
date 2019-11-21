@@ -43,7 +43,7 @@ void BootGreetingEffect::findLed(void) {
   for (auto key_addr : KeyAddr::all()) {
     Key k = Layer.lookupOnActiveLayer(key_addr);
 
-    if (k.raw == search_key.raw) {
+    if (k == search_key) {
       key_addr_ = key_addr;
       return;
     }

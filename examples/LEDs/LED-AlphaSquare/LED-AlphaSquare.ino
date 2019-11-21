@@ -47,7 +47,7 @@ const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
     return MACRO_NONE;
 
   if (macro_index == 0) {
-    for (uint8_t i = Key_A.keyCode; i <= Key_0.keyCode; i++) {
+    for (uint8_t i = Key_A.getKeyCode(); i <= Key_0.getKeyCode(); i++) {
       LEDControl.set_all_leds_to(0, 0, 0);
       LEDControl.syncLeds();
       delay(100);

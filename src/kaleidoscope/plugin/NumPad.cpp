@@ -43,7 +43,7 @@ void NumPad::setKeyboardLEDColors(void) {
       numpadLayerToggleKeyAddr = key_addr;
     }
 
-    if ((k != layer_key) || (k == Key_NoKey) || (k.flags != KEY_FLAGS)) {
+    if ((k != layer_key) || (k == Key_NoKey) || (k.getFlags() != KEY_FLAGS)) {
       ::LEDControl.refreshAt(KeyAddr(key_addr));
     } else {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), color);

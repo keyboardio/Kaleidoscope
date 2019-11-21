@@ -142,9 +142,9 @@ __attribute__((weak)) Key hexToKey(uint8_t hex) {
     return Key_0;
   }
   if (hex < 0xA) {
-    m = Key_1.keyCode + (hex - 0x1);
+    m = Key_1.getKeyCode() + (hex - 0x1);
   } else {
-    m = Key_A.keyCode + (hex - 0xA);
+    m = Key_A.getKeyCode() + (hex - 0xA);
   }
   return { m, KEY_FLAGS };
 }
@@ -155,29 +155,29 @@ __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
     return Key_Keypad0;
   }
   if (hex < 0xA) {
-    m = Key_Keypad1.keyCode + (hex - 0x1);
+    m = Key_Keypad1.getKeyCode() + (hex - 0x1);
   } else {
     switch (hex) {
     case 0xA:
-      m = Key_A.keyCode;
+      m = Key_A.getKeyCode();
       break;
     case 0xB:
-      m = Key_B.keyCode;
+      m = Key_B.getKeyCode();
       break;
     case 0xC:
-      m = Key_C.keyCode;
+      m = Key_C.getKeyCode();
       break;
     case 0xD:
-      m = Key_D.keyCode;
+      m = Key_D.getKeyCode();
       break;
     case 0xE:
-      m = Key_E.keyCode;
+      m = Key_E.getKeyCode();
       break;
     case 0xF:
-      m = Key_F.keyCode;
+      m = Key_F.getKeyCode();
       break;
     default:
-      m = Key_NoKey.keyCode;
+      m = Key_NoKey.getKeyCode();
       break;
     }
   }

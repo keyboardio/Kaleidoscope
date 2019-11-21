@@ -70,7 +70,7 @@ void AlphaSquare::display(Key key, KeyAddr key_addr, cRGB key_color) {
   if (key < Key_A || key > Key_0)
     return;
 
-  uint8_t index = key.keyCode - Key_A.keyCode;
+  uint8_t index = key.getKeyCode() - Key_A.getKeyCode();
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
   display(symbol, key_addr, key_color);
@@ -112,7 +112,7 @@ bool AlphaSquare::isSymbolPart(Key key,
   if (key < Key_A || key > Key_0)
     return false;
 
-  uint8_t index = key.keyCode - Key_A.keyCode;
+  uint8_t index = key.getKeyCode() - Key_A.getKeyCode();
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
   return isSymbolPart(symbol, displayLedAddr, key_addr);

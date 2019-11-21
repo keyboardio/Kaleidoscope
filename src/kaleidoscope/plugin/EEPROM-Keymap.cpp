@@ -48,17 +48,13 @@ void EEPROMKeymap::max_layers(uint8_t max) {
 }
 
 Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
-  Key key;
-
   if (layer >= max_layers_)
     return Key_NoKey;
 
   uint16_t pos = ((layer * Kaleidoscope.device().numKeys()) + key_addr.toInt()) * 2;
 
-  key.flags = Kaleidoscope.storage().read(keymap_base_ + pos);
-  key.keyCode = Kaleidoscope.storage().read(keymap_base_ + pos + 1);
-
-  return key;
+  return Key(Kaleidoscope.storage().read(keymap_base_ + pos + 1), // key_code
+             Kaleidoscope.storage().read(keymap_base_ + pos));    // flags
 }
 
 Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
@@ -77,8 +73,8 @@ uint16_t EEPROMKeymap::keymap_base(void) {
 }
 
 void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
-  Kaleidoscope.storage().update(keymap_base_ + base_pos * 2, key.flags);
-  Kaleidoscope.storage().update(keymap_base_ + base_pos * 2 + 1, key.keyCode);
+  Kaleidoscope.storage().update(keymap_base_ + base_pos * 2, key.getFlags());
+  Kaleidoscope.storage().update(keymap_base_ + base_pos * 2 + 1, key.getKeyCode());
 }
 
 void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {

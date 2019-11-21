@@ -19,7 +19,7 @@
 #include <Arduino.h>
 
 namespace kaleidoscope {
-union Key;
+class Key;
 }
 
 #include "kaleidoscope/KeyAddr.h"

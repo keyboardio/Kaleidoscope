@@ -26,17 +26,17 @@ uint16_t BootAnimationEffect::start_time_ = 0;
 uint16_t BootAnimationEffect::timeout = 1000;
 uint8_t BootAnimationEffect::current_index_ = 0;
 const uint8_t BootAnimationEffect::greeting_[11] PROGMEM = {
-  Key_K.keyCode,
-  Key_E.keyCode,
-  Key_Y.keyCode,
-  Key_B.keyCode,
-  Key_O.keyCode,
-  Key_A.keyCode,
-  Key_R.keyCode,
-  Key_D.keyCode,
-  Key_Period.keyCode,
-  Key_I.keyCode,
-  Key_O.keyCode
+  Key_K.getKeyCode(),
+  Key_E.getKeyCode(),
+  Key_Y.getKeyCode(),
+  Key_B.getKeyCode(),
+  Key_O.getKeyCode(),
+  Key_A.getKeyCode(),
+  Key_R.getKeyCode(),
+  Key_D.getKeyCode(),
+  Key_Period.getKeyCode(),
+  Key_I.getKeyCode(),
+  Key_O.getKeyCode()
 };
 
 EventHandlerResult BootAnimationEffect::onSetup() {
@@ -56,11 +56,10 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
   for (auto key_addr : KeyAddr::all()) {
     Key k = Layer.lookupOnActiveLayer(key_addr);
-    Key g;
-    g.flags = 0;
-    g.keyCode = pgm_read_byte(&greeting_[current_index_]);
+    Key g(pgm_read_byte(&greeting_[current_index_]), // key_code
+          0);                                        // flags
 
-    if (k.raw == g.raw) {
+    if (k == g) {
       key_addr_found = key_addr;
       break;
     }

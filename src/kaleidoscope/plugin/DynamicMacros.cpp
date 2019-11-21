@@ -47,9 +47,8 @@ static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
 }
 
 static void readKeyCodeAndPlay(uint16_t pos, uint8_t flags, uint8_t keyStates, bool explicit_report) {
-  Key key;
-  key.flags = flags;
-  key.keyCode = Kaleidoscope.storage().read(pos++);
+  Key key(Kaleidoscope.storage().read(pos++), // key_code
+          flags);
 
   playKeyCode(key, keyStates, explicit_report);
 }
@@ -200,11 +199,11 @@ void DynamicMacros::play(uint8_t macro_id) {
 }
 
 EventHandlerResult DynamicMacros::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.raw < DYNAMIC_MACRO_FIRST || mappedKey.raw > DYNAMIC_MACRO_LAST)
+  if (mappedKey.getRaw() < DYNAMIC_MACRO_FIRST || mappedKey.getRaw() > DYNAMIC_MACRO_LAST)
     return EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {
-    play(mappedKey.raw - DYNAMIC_MACRO_FIRST);
+    play(mappedKey.getRaw() - DYNAMIC_MACRO_FIRST);
   }
 
   return EventHandlerResult::EVENT_CONSUMED;

@@ -43,8 +43,8 @@ uint8_t Layer_::active_layers_[Kaleidoscope.device().numKeys()];
 Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
-  if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
-    uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
+  if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
+    uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
@@ -86,15 +86,15 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
     }
   } else if (keyToggledOn(keyState)) {
     // switch keymap and stay there
-    if (Layer.isActive(keymapEntry.keyCode) && keymapEntry.keyCode)
-      deactivate(keymapEntry.keyCode);
+    if (Layer.isActive(keymapEntry.getKeyCode()) && keymapEntry.getKeyCode())
+      deactivate(keymapEntry.getKeyCode());
     else
-      activate(keymapEntry.keyCode);
+      activate(keymapEntry.getKeyCode());
   }
 }
 
 Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
+  if (mappedKey.getFlags() != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
   handleKeymapKeyswitchEvent(mappedKey, keyState);

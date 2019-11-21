@@ -49,9 +49,8 @@ static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
 }
 
 static void readKeyCodeAndPlay(const macro_t *macro_p, uint8_t flags, uint8_t keyStates, bool explicit_report) {
-  Key key;
-  key.flags = flags;
-  key.keyCode = pgm_read_byte(macro_p++);
+  Key key(pgm_read_byte(macro_p++), // key_code
+          flags);
 
   playKeyCode(key, keyStates, explicit_report);
 }
@@ -186,38 +185,38 @@ Key Macros_::lookupAsciiCode(uint8_t ascii_code) {
 
   switch (ascii_code) {
   case 0x08 ... 0x09:
-    key.keyCode = Key_Backspace.keyCode + ascii_code - 0x08;
+    key.setKeyCode(Key_Backspace.getKeyCode() + ascii_code - 0x08);
     break;
   case 0x0A:
-    key.keyCode = Key_Enter.keyCode;
+    key.setKeyCode(Key_Enter.getKeyCode());
     break;
   case 0x1B:
-    key.keyCode = Key_Escape.keyCode;
+    key.setKeyCode(Key_Escape.getKeyCode());
     break;
   case 0x20:
-    key.keyCode = Key_Spacebar.keyCode;
+    key.setKeyCode(Key_Spacebar.getKeyCode());
     break;
   case 0x21 ... 0x30:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x21].raw);
+    key = ascii_to_key_map[ascii_code - 0x21].readFromProgmem();
     break;
   case 0x31 ... 0x39:
-    key.keyCode = Key_1.keyCode + ascii_code - 0x31;
+    key.setKeyCode(Key_1.getKeyCode() + ascii_code - 0x31);
     break;
   case 0x3A ... 0x40:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x3A + 16].raw);
+    key = ascii_to_key_map[ascii_code - 0x3A + 16].readFromProgmem();
     break;
   case 0x41 ... 0x5A:
-    key.flags = SHIFT_HELD;
-    key.keyCode = Key_A.keyCode + ascii_code - 0x41;
+    key.setFlags(SHIFT_HELD);
+    key.setKeyCode(Key_A.getKeyCode() + ascii_code - 0x41);
     break;
   case 0x5B ... 0x60:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x5B + 23].raw);
+    key = ascii_to_key_map[ascii_code - 0x5B + 23].readFromProgmem();
     break;
   case 0x61 ... 0x7A:
-    key.keyCode = Key_A.keyCode + ascii_code - 0x61;
+    key.setKeyCode(Key_A.getKeyCode() + ascii_code - 0x61);
     break;
   case 0x7B ... 0x7E:
-    key.raw = pgm_read_word(&ascii_to_key_map[ascii_code - 0x7B + 29].raw);
+    key = ascii_to_key_map[ascii_code - 0x7B + 29].readFromProgmem();
     break;
   }
   return key;
@@ -232,7 +231,7 @@ const macro_t *Macros_::type(const char *string) {
     Key key = lookupAsciiCode(ascii_code);
 
 
-    if (key.raw == Key_NoKey.raw)
+    if (key == Key_NoKey)
       continue;
 
     playMacroKeyswitchEvent(key, IS_PRESSED, false);
@@ -244,10 +243,10 @@ const macro_t *Macros_::type(const char *string) {
 }
 
 EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.flags != (SYNTHETIC | IS_MACRO))
+  if (mappedKey.getFlags() != (SYNTHETIC | IS_MACRO))
     return EventHandlerResult::OK;
 
-  addActiveMacroKey(mappedKey.keyCode, key_addr.toInt(), keyState);
+  addActiveMacroKey(mappedKey.getKeyCode(), key_addr.toInt(), keyState);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }

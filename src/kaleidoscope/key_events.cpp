@@ -19,24 +19,24 @@
 #include "kaleidoscope/plugin.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
-  if (mappedKey.flags & RESERVED)
+  if (mappedKey.getFlags() & RESERVED)
     return false;
 
-  if (!(mappedKey.flags & SYNTHETIC))
+  if (!(mappedKey.getFlags() & SYNTHETIC))
     return false;
 
-  if (mappedKey.flags & IS_CONSUMER) {
+  if (mappedKey.getFlags() & IS_CONSUMER) {
     if (keyIsPressed(keyState))
       kaleidoscope::hid::pressConsumerControl(mappedKey);
-  } else if (mappedKey.flags & IS_SYSCTL) {
+  } else if (mappedKey.getFlags() & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
     } else if (keyWasPressed(keyState)) {
       kaleidoscope::hid::pressSystemControl(mappedKey);
       kaleidoscope::hid::releaseSystemControl(mappedKey);
     }
-  } else if (mappedKey.flags & IS_INTERNAL) {
+  } else if (mappedKey.getFlags() & IS_INTERNAL) {
     return false;
-  } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
+  } else if (mappedKey.getFlags() & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
   }
 
@@ -47,7 +47,7 @@ static bool handleKeyswitchEventDefault(Key mappedKey, KeyAddr key_addr, uint8_t
   //for every newly pressed button, figure out what logical key it is and send a key down event
   // for every newly released button, figure out what logical key it is and send a key up event
 
-  if (mappedKey.flags & SYNTHETIC) {
+  if (mappedKey.getFlags() & SYNTHETIC) {
     handleSyntheticKeyswitchEvent(mappedKey, keyState);
   } else if (keyToggledOn(keyState)) {
     kaleidoscope::hid::pressKey(mappedKey);
@@ -82,7 +82,7 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
     /* If a key had an on event, we update the live composite keymap. See
      * layers.h for an explanation about the different caches we have. */
     if (keyToggledOn(keyState)) {
-      if (mappedKey.raw == Key_NoKey.raw || keyState & EPHEMERAL) {
+      if (mappedKey == Key_NoKey || keyState & EPHEMERAL) {
         Layer.updateLiveCompositeKeymap(key_addr);
       } else {
         Layer.updateLiveCompositeKeymap(key_addr, mappedKey);
@@ -108,7 +108,7 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
      * The condition here means that if mappedKey and key_addr are both valid,
      *   the mappedKey wins - we don't re-look-up the mappedKey
      */
-    if (mappedKey.raw == Key_NoKey.raw) {
+    if (mappedKey == Key_NoKey) {
       mappedKey = Layer.lookup(key_addr);
     }
 
@@ -133,7 +133,7 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
     return;
 
   mappedKey = Layer.eventHandler(mappedKey, key_addr, keyState);
-  if (mappedKey.raw == Key_NoKey.raw)
+  if (mappedKey == Key_NoKey)
     return;
   handleKeyswitchEventDefault(mappedKey, key_addr, keyState);
 }

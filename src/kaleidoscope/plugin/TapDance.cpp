@@ -31,7 +31,7 @@ KeyAddr TapDance::last_tap_dance_addr_;
 // --- actions ---
 
 void TapDance::interrupt(KeyAddr key_addr) {
-  uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
+  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
 
   tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Interrupt);
   state_[idx].triggered = true;
@@ -49,7 +49,7 @@ void TapDance::interrupt(KeyAddr key_addr) {
 }
 
 void TapDance::timeout(void) {
-  uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
+  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
 
   tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Timeout);
   state_[idx].triggered = true;
@@ -57,13 +57,13 @@ void TapDance::timeout(void) {
   if (state_[idx].pressed)
     return;
 
-  last_tap_dance_key_.raw = Key_NoKey.raw;
+  last_tap_dance_key_ = Key_NoKey;
 
   release(idx);
 }
 
 void TapDance::release(uint8_t tap_dance_index) {
-  last_tap_dance_key_.raw = Key_NoKey.raw;
+  last_tap_dance_key_ = Key_NoKey;
 
   state_[tap_dance_index].pressed = false;
   state_[tap_dance_index].triggered = false;
@@ -71,7 +71,7 @@ void TapDance::release(uint8_t tap_dance_index) {
 }
 
 void TapDance::tap(void) {
-  uint8_t idx = last_tap_dance_key_.raw - ranges::TD_FIRST;
+  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
 
   state_[idx].count++;
   start_time_ = Kaleidoscope.millisAtCycleStart();
@@ -85,8 +85,7 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
   if (tap_count > max_keys)
     tap_count = max_keys;
 
-  Key key;
-  key.raw = pgm_read_word(&(tap_keys[tap_count - 1].raw));
+  Key key = tap_keys[tap_count - 1].readFromProgmem();
 
   switch (tap_dance_action) {
   case Tap:
@@ -111,8 +110,8 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 
-  if (mapped_key.raw < ranges::TD_FIRST || mapped_key.raw > ranges::TD_LAST) {
-    if (last_tap_dance_key_.raw == Key_NoKey.raw)
+  if (mapped_key.getRaw() < ranges::TD_FIRST || mapped_key.getRaw() > ranges::TD_LAST) {
+    if (last_tap_dance_key_ == Key_NoKey)
       return EventHandlerResult::OK;
 
     if (keyToggledOn(keyState))
@@ -125,13 +124,13 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     return EventHandlerResult::OK;
   }
 
-  uint8_t tap_dance_index = mapped_key.raw - ranges::TD_FIRST;
+  uint8_t tap_dance_index = mapped_key.getRaw() - ranges::TD_FIRST;
 
   if (keyToggledOff(keyState))
     state_[tap_dance_index].pressed = false;
 
-  if (last_tap_dance_key_.raw != mapped_key.raw) {
-    if (last_tap_dance_key_.raw == Key_NoKey.raw) {
+  if (last_tap_dance_key_ != mapped_key) {
+    if (last_tap_dance_key_ == Key_NoKey) {
       if (state_[tap_dance_index].triggered) {
         if (keyToggledOff(keyState)) {
           release(tap_dance_index);
@@ -140,7 +139,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
         return EventHandlerResult::EVENT_CONSUMED;
       }
 
-      last_tap_dance_key_.raw = mapped_key.raw;
+      last_tap_dance_key_ = mapped_key;
       last_tap_dance_addr_ = key_addr;
 
       tap();
@@ -166,7 +165,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  last_tap_dance_key_.raw = mapped_key.raw;
+  last_tap_dance_key_ = mapped_key;
   last_tap_dance_addr_ = key_addr;
   state_[tap_dance_index].pressed = true;
 
@@ -191,7 +190,7 @@ EventHandlerResult TapDance::afterEachCycle() {
     state_[i].release_next = false;
   }
 
-  if (last_tap_dance_key_.raw == Key_NoKey.raw)
+  if (last_tap_dance_key_ == Key_NoKey)
     return EventHandlerResult::OK;
 
   if (Kaleidoscope.hasTimeExpired(start_time_, time_out))

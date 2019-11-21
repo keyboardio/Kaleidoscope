@@ -30,62 +30,162 @@
 
 namespace kaleidoscope {
 
-union Key {
+class Key {
 
-  struct {
-    uint8_t keyCode;
-    uint8_t flags;
-  };
-  uint16_t raw;
+ public:
+
+  typedef uint16_t StorageType;
 
   Key() = default;
 
-  constexpr Key(uint8_t __keyCode, uint8_t __flags)
-    : keyCode(__keyCode), flags(__flags) {
+  constexpr Key(uint16_t raw)
+    : Key{(uint8_t)(raw & 0x00FF), (uint8_t)(raw >> 8)}
+  {}
+
+  constexpr Key(uint8_t key_code, uint8_t flags)
+    : keyCode{key_code},
+      flags{flags}
+  {}
+
+  void setFlags(uint8_t new_flags) {
+    flags.value_ = new_flags;
+  }
+  constexpr const uint8_t &getFlags() const {
+    return flags.value_;
   }
 
-  constexpr Key(uint16_t __raw)
-    : raw(__raw) {
+  void setKeyCode(uint8_t key_code) {
+    keyCode.value_ = key_code;
+  }
+  constexpr const uint8_t &getKeyCode() const {
+    return keyCode.value_;
   }
 
-  constexpr bool operator==(const uint16_t rhs) const {
-    return this->raw == rhs;
+  void setRaw(uint16_t raw) {
+    flags.value_  = (uint8_t)(raw >> 8);
+    keyCode.value_ = (uint8_t)(raw & 0x00FF);
+  }
+  constexpr uint16_t getRaw() const {
+    return (uint16_t)(
+             ((uint16_t)flags.value_ << 8)
+             + (uint16_t)keyCode.value_
+           );
+  }
+
+  constexpr bool operator==(const StorageType rhs) const {
+    return this->getRaw() == rhs;
   }
   constexpr bool operator==(const Key& rhs) const {
-    return this->raw == rhs.raw;
+    return (this->keyCode.value_ == rhs.keyCode.value_)
+           && (this->flags.value_ == rhs.flags.value_);
   }
-  Key& operator=(const uint16_t raw) {
-    this->raw = raw;
+  Key& operator=(const StorageType raw) {
+    this->setRaw(raw);
     return *this;
   }
   constexpr bool operator!=(const Key& rhs) const {
     return !(*this == rhs);
   }
-  constexpr bool operator>=(const uint16_t raw) const {
-    return this->raw >= raw;
+  constexpr bool operator>=(const StorageType raw) const {
+    return this->getRaw() >= raw;
   }
-  constexpr bool operator<=(const uint16_t raw) const {
-    return this->raw <= raw;
+  constexpr bool operator<=(const StorageType raw) const {
+    return this->getRaw() <= raw;
   }
-  constexpr bool operator>(const uint16_t raw) const {
-    return this->raw > raw;
+  constexpr bool operator>(const StorageType raw) const {
+    return this->getRaw() > raw;
   }
-  constexpr bool operator<(const uint16_t raw) const {
-    return this->raw < raw;
+  constexpr bool operator<(const StorageType raw) const {
+    return this->getRaw() < raw;
   }
   constexpr bool operator>=(const Key& other) const {
-    return this->raw >= other.raw;
+    return this->getRaw() >= other.getRaw();
   }
   constexpr bool operator<=(const Key& other) const {
-    return this->raw <= other.raw;
+    return this->getRaw() <= other.getRaw();
   }
   constexpr bool operator>(const Key& other) const {
-    return this->raw > other.raw;
+    return this->getRaw() > other.getRaw();
   }
   constexpr bool operator<(const Key& other) const {
-    return this->raw < other.raw;
+    return this->getRaw() < other.getRaw();
   }
+
+  Key readFromProgmem() const {
+    return Key{pgm_read_byte(&(this->getKeyCode())),
+               pgm_read_byte(&(this->getFlags()))};
+  }
+
+  // The data proxy objects are required to only emit deprecation
+  // messages when members 'keyCode' and 'flags' are accessed directly
+  // but not if accessed by class Key.
+  //
+  // Once the deprecation periode elapsed both proxy members 'keyCode'
+  // and 'flags' of class Key can be converted to private uint8_t members
+  // of class Key. Class DataProxy can then be safely removed.
+  //
+  class DataProxy {
+
+    friend class Key;
+
+   public:
+
+    DataProxy() = default;
+
+    constexpr DataProxy(uint8_t value) : value_{value} {}
+
+    DEPRECATED(DIRECT_KEY_MEMBER_ACCESS)
+    DataProxy &operator=(uint8_t value) {
+      value_ = value;
+      return *this;
+    }
+
+    DEPRECATED(DIRECT_KEY_MEMBER_ACCESS)
+    constexpr operator uint8_t () const {
+      return value_;
+    }
+
+   private:
+    uint8_t value_;
+  };
+
+  DataProxy keyCode;
+  DataProxy flags;
+
+  // For technical reasons the implementation of type Key has been changed
+  // from a C++ union to a class.
+  //
+  // Although it is not entirely possible to retain all features of the
+  // union-based implementation, we can still warn for access to member raw.
+  //
+  // After converting Key::raw to a static member, it can now still be accessed
+  // as before. But accessing it will trigger a compiler message that informs
+  // the user about the importance of replacing its access
+  // with Key::getRaw() or Key::setRaw().
+  //
+  // This is not a deprecation! All code that accesses Key::raw directly
+  // will fail to link instead.
+  //
+  // This is because there is no instance provided for the static fake
+  // member Key::raw. Because of that, this approach does not mean
+  // any harm. The emitted diagnostics help pointing users
+  // to the places in the code where changes are required.
+  //
+  DEPRECATED(KEY_MEMBER_RAW_ACCESS)
+  static uint16_t raw;
 };
+
+static_assert(sizeof(Key) == 2, "sizeof(Key) changed");
+
+// Overload this function to define alternative conversions to type Key.
+//
+constexpr Key convertToKey(Key k) {
+  return k;
+}
+
+constexpr Key addFlags(Key k, uint8_t add_flags) {
+  return Key(k.getKeyCode(), k.getFlags() | add_flags);
+}
 
 } // namespace kaleidoscope
 
@@ -105,11 +205,11 @@ typedef kaleidoscope::Key Key_;
 #define SYNTHETIC         B01000000
 #define RESERVED          B10000000
 
-#define LCTRL(k)  Key(k.keyCode, k.flags | CTRL_HELD)
-#define LALT(k)   Key(k.keyCode, k.flags | LALT_HELD)
-#define RALT(k)   Key(k.keyCode, k.flags | RALT_HELD)
-#define LSHIFT(k) Key(k.keyCode, k.flags | SHIFT_HELD)
-#define LGUI(k)   Key(k.keyCode, k.flags | GUI_HELD)
+#define LCTRL(k)  Key(k.getKeyCode(), k.getFlags() | CTRL_HELD)
+#define LALT(k)   Key(k.getKeyCode(), k.getFlags() | LALT_HELD)
+#define RALT(k)   Key(k.getKeyCode(), k.getFlags() | RALT_HELD)
+#define LSHIFT(k) Key(k.getKeyCode(), k.getFlags() | SHIFT_HELD)
+#define LGUI(k)   Key(k.getKeyCode(), k.getFlags() | GUI_HELD)
 
 // we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
 #define IS_SYSCTL                  B00000001
@@ -153,5 +253,9 @@ typedef kaleidoscope::Key Key_;
    use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
-#define CONSUMER(key) (key.raw & 0x03FF)
+#define CONSUMER(key) (key.getRaw() & 0x03FF)
 #define CONSUMER_KEY(code, flags) Key((code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8))
+
+namespace kaleidoscope {
+constexpr Key bad_keymap_key{0, RESERVED};
+}

@@ -30,7 +30,7 @@ EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     return EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {
-    uint8_t key = mapped_key.raw - geminipr::START;
+    uint8_t key = mapped_key.getRaw() - geminipr::START;
     ++keys_held_;
 
     state_[key / 7] |= 1 << (6 - (key % 7));

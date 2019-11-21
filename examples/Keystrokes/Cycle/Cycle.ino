@@ -40,7 +40,7 @@ KEYMAPS(
 // *INDENT-ON*
 
 void cycleAction(Key previous_key, uint8_t cycle_count) {
-  if (previous_key.raw == Key_E.raw) {
+  if (previous_key == Key_E) {
     if (cycle_count == 1) {
       Cycle.replace(Key_F);
     } else if (cycle_count == 2) {
@@ -48,10 +48,10 @@ void cycleAction(Key previous_key, uint8_t cycle_count) {
     }
   }
 
-  bool is_shifted = previous_key.flags & SHIFT_HELD;
-  if (previous_key.keyCode == Key_A.keyCode && is_shifted)
+  bool is_shifted = previous_key.getFlags() & SHIFT_HELD;
+  if (previous_key.getKeyCode() == Key_A.getKeyCode() && is_shifted)
     cycleThrough(LSHIFT(Key_A), LSHIFT(Key_B), LSHIFT(Key_C), LSHIFT(Key_D));
-  if (previous_key.keyCode == Key_A.keyCode && !is_shifted)
+  if (previous_key.getKeyCode() == Key_A.getKeyCode() && !is_shifted)
     cycleThrough(Key_A, Key_B, Key_C, Key_D);
 }
 

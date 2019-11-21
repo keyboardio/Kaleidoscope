@@ -318,22 +318,22 @@ bool Qukeys::isQukey(KeyAddr k) {
 bool Qukeys::isDualUseKey(Key key) {
   // Test for DualUse modifiers:
   if (key >= ranges::DUM_FIRST && key <= ranges::DUM_LAST) {
-    key.raw -= ranges::DUM_FIRST;
+    key.setRaw(key.getRaw() - ranges::DUM_FIRST);
 
     queue_head_.primary_key = key;
-    queue_head_.primary_key.flags = 0;
+    queue_head_.primary_key.setFlags(0);
 
-    queue_head_.alternate_key.raw = key.flags + Key_LeftControl.keyCode;
+    queue_head_.alternate_key.setRaw(key.getFlags() + Key_LeftControl.getKeyCode());
     return true;
   }
   // Test for DualUse layer shifts:
   if (key >= ranges::DUL_FIRST && key <= ranges::DUL_LAST) {
-    key.raw -= ranges::DUL_FIRST;
+    key.setRaw(key.getRaw() - ranges::DUL_FIRST);
 
     queue_head_.primary_key = key;
-    queue_head_.primary_key.flags = 0;
+    queue_head_.primary_key.setFlags(0);
 
-    int8_t layer = key.flags;
+    int8_t layer = key.getFlags();
     queue_head_.alternate_key = ShiftToLayer(layer);
     return true;
   }
@@ -384,13 +384,13 @@ bool Qukeys::isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const {
 bool isModifierKey(Key key) {
   // If it's a plain keyboard key, return true if its base keycode is a
   // modifier, otherwise return false:
-  if ((key.flags & (SYNTHETIC | RESERVED)) == 0) {
-    return (key.keyCode >= HID_KEYBOARD_FIRST_MODIFIER &&
-            key.keyCode <= HID_KEYBOARD_LAST_MODIFIER);
+  if ((key.getFlags() & (SYNTHETIC | RESERVED)) == 0) {
+    return (key.getKeyCode() >= HID_KEYBOARD_FIRST_MODIFIER &&
+            key.getKeyCode() <= HID_KEYBOARD_LAST_MODIFIER);
   }
   // If it's a layer shift key, return true:
-  if (key.flags == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
-      key.keyCode >= LAYER_SHIFT_OFFSET) {
+  if (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
+      key.getKeyCode() >= LAYER_SHIFT_OFFSET) {
     return true;
   }
   // In all other cases, return false:
