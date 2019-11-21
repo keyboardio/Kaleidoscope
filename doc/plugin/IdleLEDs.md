@@ -75,7 +75,7 @@ the following properties and methods.
 > Provided for compatibility reasons. It is recommended to use one of the
 > methods below instead of setting this property directly. If using
 > `PersistentIdleLEDs`, setting this property will not persist the value to
-> storage. Use `.seetIdleTimeoutSeconds()` if persistence is desired.
+> storage. Use `.setIdleTimeoutSeconds()` if persistence is desired.
 
 ### `.idleTimeoutSeconds()`
 
