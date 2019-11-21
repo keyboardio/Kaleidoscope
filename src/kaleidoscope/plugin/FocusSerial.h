@@ -45,14 +45,14 @@ class FocusSerial : public kaleidoscope::Plugin {
     Kaleidoscope.serialPort().print(SEPARATOR);
   }
   template <typename Var, typename... Vars>
-  void send(Var v, const Vars&... vars) {
+  void send(Var v, Vars... vars) {
     send(v);
     send(vars...);
   }
 
   void sendRaw() {}
   template <typename Var, typename... Vars>
-  void sendRaw(Var v, const Vars&... vars) {
+  void sendRaw(Var v, Vars... vars) {
     Kaleidoscope.serialPort().print(v);
     sendRaw(vars...);
   }
