@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * device::ATMega32U4Keyboard -- Generic ATMega32U4 keyboard base class
+ * device::ATmega32U4Keyboard -- Generic ATmega32U4 keyboard base class
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,31 +22,32 @@
 #include <Arduino.h>
 #include "kaleidoscope/device/Base.h"
 
-#include "kaleidoscope/driver/mcu/ATMega32U4.h"
-#include "kaleidoscope/driver/storage/ATMega32U4EEPROMProps.h"
+#include "kaleidoscope/driver/mcu/ATmega32U4.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
+#include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"
 #include "kaleidoscope/driver/storage/AVREEPROM.h"
 
 #define ATMEGA32U4_KEYBOARD(BOARD_, BOOTLOADER_, ROW_PINS_, COL_PINS_)           \
-  struct BOARD_##Props : kaleidoscope::device::ATMega32U4KeyboardProps {         \
-    struct KeyScannerProps : public kaleidoscope::driver::keyscanner::AVRProps { \
-      AVR_KEYSCANNER_PROPS(ROW_PIN_LIST(ROW_PINS_), COL_PIN_LIST(COL_PINS_));    \
+  struct BOARD_##Props : kaleidoscope::device::ATmega32U4KeyboardProps {         \
+    struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps { \
+      ATMEGA_KEYSCANNER_PROPS(ROW_PIN_LIST(ROW_PINS_), COL_PIN_LIST(COL_PINS_));    \
     };                                                                           \
-    typedef kaleidoscope::driver::keyscanner::AVR<KeyScannerProps> KeyScanner;   \
+    typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;   \
     typedef kaleidoscope::driver::bootloader::avr::BOOTLOADER_ BootLoader;       \
   }; \
-  class BOARD_: public kaleidoscope::device::ATMega32U4Keyboard<BOARD_##Props> {};
+  class BOARD_: public kaleidoscope::device::ATmega32U4Keyboard<BOARD_##Props> {};
 
 namespace kaleidoscope {
 namespace device {
 
-struct ATMega32U4KeyboardProps : kaleidoscope::device::BaseProps {
-  typedef kaleidoscope::driver::mcu::ATMega32U4 MCU;
-  typedef kaleidoscope::driver::storage::ATMega32U4EEPROMProps StorageProps;
+struct ATmega32U4KeyboardProps : kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::mcu::ATmega32U4 MCU;
+  typedef kaleidoscope::driver::storage::ATmega32U4EEPROMProps StorageProps;
   typedef kaleidoscope::driver::storage::AVREEPROM<StorageProps> Storage;
 };
 
 template <typename _DeviceProps>
-class ATMega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
+class ATmega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
  public:
   auto serialPort() -> decltype(Serial) & {
     return Serial;

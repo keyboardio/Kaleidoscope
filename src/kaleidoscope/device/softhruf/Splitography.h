@@ -30,26 +30,26 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/driver/keyscanner/AVR.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace softhruf {
 
-struct SplitographyProps : kaleidoscope::device::ATMega32U4KeyboardProps {
-  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::AVRProps {
-    AVR_KEYSCANNER_PROPS(
+struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
+  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
+    ATMEGA_KEYSCANNER_PROPS(
       ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
       COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
     );
   };
-  typedef kaleidoscope::driver::keyscanner::AVR<KeyScannerProps> KeyScanner;
+  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
 };
 
-class Splitography: public kaleidoscope::device::ATMega32U4Keyboard<SplitographyProps> {
+class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<SplitographyProps> {
  public:
   Splitography() {
     mcu_.disableJTAG();

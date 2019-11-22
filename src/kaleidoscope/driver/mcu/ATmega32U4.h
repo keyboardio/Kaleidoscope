@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * driver::MCU::ATMega32U4 -- ATMega32U4 MCU driver for Kaleidoscope
+ * driver::MCU::ATmega32U4 -- ATmega32U4 MCU driver for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -23,7 +23,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
-class ATMega32U4 : public kaleidoscope::driver::mcu::Base {
+class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
  public:
   void detachFromHost() {
     UDCON |= _BV(DETACH);
@@ -45,7 +45,7 @@ class ATMega32U4 : public kaleidoscope::driver::mcu::Base {
      * that's doable, we just have to write the JTD bit into MCUCR twice within
      * four cycles. These two lines do just that.
      *
-     * For more information, see the ATMega16U4/ATMega32U4 datasheet, the
+     * For more information, see the ATmega16U4/ATmega32U4 datasheet, the
      * following sections:
      *  - 2.2.7 (PIN Descriptions; PIN F)
      *  - 7.8.7 (On-chip Debug System)

@@ -29,7 +29,7 @@
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -93,7 +93,7 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void enableScannerPower();
 };
 
-struct Model01Props : kaleidoscope::device::ATMega32U4KeyboardProps {
+struct Model01Props : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef Model01LEDDriverProps  LEDDriverProps;
   typedef Model01LEDDriver LEDDriver;
   typedef Model01KeyScannerProps KeyScannerProps;
@@ -101,7 +101,7 @@ struct Model01Props : kaleidoscope::device::ATMega32U4KeyboardProps {
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
-class Model01 : public kaleidoscope::device::ATMega32U4Keyboard<Model01Props> {
+class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
  public:
   static void setup();
 

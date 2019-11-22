@@ -22,9 +22,8 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/driver/keyscanner/AVR.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {

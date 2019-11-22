@@ -29,10 +29,10 @@ struct cRGB {
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/driver/keyscanner/AVR.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -61,20 +61,20 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static void twiSend(uint8_t addr, uint8_t Reg_Add, uint8_t Reg_Dat);
 };
 
-struct ImagoProps : kaleidoscope::device::ATMega32U4KeyboardProps {
-  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::AVRProps {
-    AVR_KEYSCANNER_PROPS(
+struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
+  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
+    ATMEGA_KEYSCANNER_PROPS(
       ROW_PIN_LIST({ PIN_F6, PIN_F5, PIN_F4, PIN_F1, PIN_F0}),
       COL_PIN_LIST({ PIN_B2, PIN_B7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7, PIN_D6,  PIN_D4, PIN_D5, PIN_D3, PIN_D2, PIN_E6, PIN_F7})
     );
   };
-  typedef kaleidoscope::driver::keyscanner::AVR<KeyScannerProps> KeyScanner;
+  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef ImagoLEDDriverProps LEDDriverProps;
   typedef ImagoLEDDriver LEDDriver;
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
-class Imago: public kaleidoscope::device::ATMega32U4Keyboard<ImagoProps> {
+class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
  public:
   void setup();
 };

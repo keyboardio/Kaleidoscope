@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::driver::storage::ATMega32U4StorageProps -- Storage driver props for ATMega32U4
+ * kaleidoscope::driver::storage::ATmega32U4StorageProps -- Storage driver props for ATmega32U4
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -23,7 +23,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace storage {
 
-struct ATMega32U4EEPROMProps : kaleidoscope::driver::storage::AVREEPROMProps {
+struct ATmega32U4EEPROMProps : kaleidoscope::driver::storage::AVREEPROMProps {
   static constexpr uint16_t length = 1024;
 };
 

@@ -23,7 +23,7 @@ namespace kaleidoscope {
 namespace device {
 namespace olkb {
 
-AVR_KEYSCANNER_BOILERPLATE
+ATMEGA_KEYSCANNER_BOILERPLATE
 
 }
 }
