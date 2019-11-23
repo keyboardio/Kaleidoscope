@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::driver::keyscanner::AVR -- AVR-based keyscanner component
+ * kaleidoscope::driver::keyscanner::ATmega -- AVR ATmega-based keyscanner component
  * Copyright (C) 2018-2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -29,20 +29,20 @@
 #define ROW_PIN_LIST(...)  __VA_ARGS__
 #define COL_PIN_LIST(...)  __VA_ARGS__
 
-#define AVR_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)               \
-  KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));       \
+#define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)                   \
+  KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));           \
   static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;   \
   static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;
 
-#define AVR_KEYSCANNER_BOILERPLATE                                                      \
+#define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
   KEYSCANNER_PROPS_BOILERPLATE(kaleidoscope::Device::KeyScannerProps);                                  \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
-  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns]; \
-  template<>                                                                               \
+  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             \
+  template<>                                                                                            \
   volatile uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; \
-  template<>                                                                               \
-  volatile uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; \
-  template<>                                                                               \
+  template<>                                                                                            \
+  volatile uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};         \
+  template<>                                                                                            \
   uint16_t kaleidoscope::Device::KeyScanner::masks_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};            \
   template<>                                                                               \
   uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {}; \
@@ -55,7 +55,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace keyscanner {
 
-struct AVRProps: kaleidoscope::driver::keyscanner::BaseProps {
+struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
   static const uint8_t debounce = 3;
 
   /*
@@ -67,9 +67,9 @@ struct AVRProps: kaleidoscope::driver::keyscanner::BaseProps {
 };
 
 template <typename _KeyScannerProps>
-class AVR : public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
+class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
  private:
-  typedef AVR<_KeyScannerProps> ThisType;
+  typedef ATmega<_KeyScannerProps> ThisType;
 
  public:
   void setup() {

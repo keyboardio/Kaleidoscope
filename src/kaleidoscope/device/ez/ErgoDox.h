@@ -41,20 +41,20 @@ struct cRGB {
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace ez {
 
-struct ErgoDoxProps : public kaleidoscope::device::ATMega32U4KeyboardProps {
+struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
     KEYSCANNER_PROPS(14, 6);
   };
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
 };
 
-class ErgoDox : public kaleidoscope::device::ATMega32U4Keyboard<ErgoDoxProps> {
+class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
  public:
   ErgoDox(void) {}
 

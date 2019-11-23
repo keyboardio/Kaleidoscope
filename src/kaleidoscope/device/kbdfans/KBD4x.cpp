@@ -23,7 +23,7 @@ namespace kaleidoscope {
 namespace device {
 namespace kbdfans {
 
-AVR_KEYSCANNER_BOILERPLATE
+ATMEGA_KEYSCANNER_BOILERPLATE
 
 }
 }

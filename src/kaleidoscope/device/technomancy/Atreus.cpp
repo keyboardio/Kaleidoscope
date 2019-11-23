@@ -32,7 +32,7 @@ namespace kaleidoscope {
 namespace device {
 namespace technomancy {
 
-AVR_KEYSCANNER_BOILERPLATE
+ATMEGA_KEYSCANNER_BOILERPLATE
 
 }
 }

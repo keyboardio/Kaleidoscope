@@ -48,7 +48,7 @@ static constexpr uint8_t LED_REGISTER_DATA1_SIZE = 0xAB;
 
 static constexpr uint8_t LED_REGISTER_DATA_LARGEST = LED_REGISTER_DATA0_SIZE;
 
-AVR_KEYSCANNER_BOILERPLATE
+ATMEGA_KEYSCANNER_BOILERPLATE
 
 bool ImagoLEDDriver::isLEDChanged = true;
 cRGB ImagoLEDDriver::led_data[];
@@ -181,7 +181,7 @@ void Imago::setup() {
   }
   TWBR = 10;
 
-  kaleidoscope::device::ATMega32U4Keyboard<ImagoProps>::setup();
+  kaleidoscope::device::ATmega32U4Keyboard<ImagoProps>::setup();
 }
 
 }
