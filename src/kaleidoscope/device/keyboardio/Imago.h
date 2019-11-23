@@ -38,8 +38,17 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
+using kaleidoscope::driver::led::no_led;
+
 struct ImagoLEDDriverProps: public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 78;
+  static constexpr uint8_t key_led_map[/* 5*16 */] PROGMEM = {
+    104,    0,     1,     2,     3,    4,    5,     6,    7,     8,    9,   10,   11,   115,   12,   116,
+    91,   13, no_led,   15,    16,   17,   18,    19,   20,    21,   22,   23,   24,   102,   15,   103,
+    78,   26,    27,    28,    29,   30,   31, no_led,  33,    34,   35,   36,   37,    89,   38, no_led,
+    65,   39,    40,    41,    42,   43,   44,    45,   46,    47,   48,   49,   50,    51, no_led,  90,
+    52,   66,    53,    54, no_led,  56,   57,    71,   59, no_led,  61,   62,   63,    64, no_led,  77
+  };
 };
 
 class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProps> {
@@ -48,7 +57,6 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
   static cRGB getCrgbAt(uint8_t i);
-  static uint8_t getLedIndex(uint8_t key_offset);
 
   static cRGB led_data[117]; // 117 is the number of LEDs the chip drives
   // until we clean stuff up a bit, it's easiest to just have the whole struct around
