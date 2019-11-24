@@ -516,3 +516,22 @@ class Base {
 
 }
 }
+
+// EXPORT_DEVICE exports a device type from a specific namespace to
+// the 'kaleidoscope' namespace as type 'Device'. The corresponding
+// properties type is also exported as 'DeviceProps'.
+//
+// Please note that this macro expects to find two types, one referenced
+// by the macro argument DEVICE and another one, the properties class
+// with the name of the type that is passed as DEVICE prefixed by 'Props',
+// e.g. Model01 as device and Model01Props as properties class.
+//
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define EXPORT_DEVICE(DEVICE)                                                  \
+  typedef DEVICE##Props DeviceProps;                                           \
+  typedef DEVICE Device;
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define EXPORT_DEVICE(DEVICE)                                                  \
+  typedef DEVICE##Props DeviceProps;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
