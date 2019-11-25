@@ -33,8 +33,8 @@ EventHandlerResult PersistentLEDMode::onSetup() {
   Kaleidoscope.storage().get(settings_base_, cached_mode_index_);
 
   // If the index is max, assume an uninitialized EEPROM, and don't set the LED
-  // mode. We don't change the cached index here, `afterEachCycle()` will do
-  // that at the end of he cycle anyway.
+  // mode. We don't change the cached index here, `onLEDModeChange()` will do
+  // that whenever a led mode change happens.
   if (cached_mode_index_ != 0xff)
     return EventHandlerResult::OK;
 
@@ -43,7 +43,7 @@ EventHandlerResult PersistentLEDMode::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult PersistentLEDMode::afterEachCycle() {
+EventHandlerResult PersistentLEDMode::onLEDModeChange() {
   if (cached_mode_index_ == ::LEDControl.get_mode_index())
     return EventHandlerResult::OK;
 
