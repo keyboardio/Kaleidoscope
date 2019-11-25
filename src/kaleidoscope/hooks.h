@@ -33,6 +33,10 @@ extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, KeyAddr key_addr, 
 DEPRECATED(ROW_COL_FUNC) extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, byte row, byte col, uint8_t keyState);
 
 namespace kaleidoscope {
+namespace plugin {
+// Forward declaration to enable friend declarations.
+class LEDControl;
+}
 
 // Forward declaration to enable friend declarations.
 class Layer_;
@@ -55,6 +59,7 @@ class Hooks {
   // and Hooks::afterEachCycle.
   friend class Kaleidoscope_;
   friend class ::kaleidoscope::Layer_;
+  friend class ::kaleidoscope::plugin::LEDControl;
 
   // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
