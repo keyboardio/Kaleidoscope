@@ -63,7 +63,7 @@ class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {
 }
 }
 
-typedef kaleidoscope::device::kbdfans::KBD4x Device;
+EXPORT_DEVICE(kaleidoscope::device::kbdfans::KBD4x)
 
 }
 

@@ -115,7 +115,7 @@ class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
 }
 }
 
-typedef kaleidoscope::device::keyboardio::Model01 Device;
+EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model01)
 
 }
 

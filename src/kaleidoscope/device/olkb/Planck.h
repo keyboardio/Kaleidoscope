@@ -48,7 +48,7 @@ ATMEGA32U4_KEYBOARD(
 }
 }
 
-typedef kaleidoscope::device::olkb::Planck Device;
+EXPORT_DEVICE(kaleidoscope::device::olkb::Planck)
 
 }
 

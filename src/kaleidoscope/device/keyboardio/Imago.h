@@ -103,7 +103,7 @@ class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
 }
 }
 
-typedef kaleidoscope::device::keyboardio::Imago Device;
+EXPORT_DEVICE(kaleidoscope::device::keyboardio::Imago)
 
 }
 

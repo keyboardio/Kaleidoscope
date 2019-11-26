@@ -81,7 +81,7 @@ ATMEGA32U4_KEYBOARD(
 }
 }
 
-typedef kaleidoscope::device::technomancy::Atreus Device;
+EXPORT_DEVICE(kaleidoscope::device::technomancy::Atreus)
 
 }
 

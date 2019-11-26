@@ -135,7 +135,7 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
 }
 }
 
-typedef kaleidoscope::device::ez::ErgoDox Device;
+EXPORT_DEVICE(kaleidoscope::device::ez::ErgoDox)
 
 }
 

@@ -87,7 +87,7 @@ class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<Splitography
 }
 }
 
-typedef kaleidoscope::device::softhruf::Splitography Device;
+EXPORT_DEVICE(kaleidoscope::device::softhruf::Splitography)
 
 }
 
