@@ -31,6 +31,8 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
+constexpr uint8_t ImagoLEDDriverProps::key_led_map[] PROGMEM;
+
 static constexpr uint8_t CMD_SET_REGISTER = 0xFD;
 static constexpr uint8_t CMD_WRITE_ENABLE = 0xFE;
 static constexpr uint8_t WRITE_ENABLE_ONCE = 0b11000101;
@@ -52,16 +54,6 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 
 bool ImagoLEDDriver::isLEDChanged = true;
 cRGB ImagoLEDDriver::led_data[];
-
-#define NOLED 254
-
-static constexpr uint8_t key_led_map[5][16] PROGMEM = {
-  { 104,    0,     1,    2,     3,    4,    5,     6,    7,     8,    9,   10,   11,   115,   12,   116},
-  {  91,   13, NOLED,   15,    16,   17,   18,    19,   20,    21,   22,   23,   24,   102,   15,   103},
-  {  78,   26,    27,   28,    29,   30,   31, NOLED,   33,    34,   35,   36,   37,   89,    38, NOLED},
-  {  65,   39,    40,   41,    42,   43,   44,    45,   46,    47,   48,   49,   50,   51, NOLED,    90},
-  {  52,   66,    53,   54, NOLED,   56,   57,    71,   59, NOLED,   61,   62,   63,   64, NOLED,    77}
-};
 
 void ImagoLEDDriver::setup() {
   setAllPwmTo(0xFF);
@@ -94,10 +86,6 @@ void ImagoLEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
   isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
   led_data[i] = crgb;
-}
-
-uint8_t ImagoLEDDriver::getLedIndex(uint8_t key_offset) {
-  return pgm_read_byte(key_led_map + key_offset);
 }
 
 cRGB ImagoLEDDriver::getCrgbAt(uint8_t i) {

@@ -25,8 +25,14 @@ namespace kaleidoscope {
 namespace driver {
 namespace led {
 
+constexpr uint8_t no_led = uint8_t(-1);
+
 struct BaseProps {
   static constexpr uint8_t led_count = 0;
+
+  // C++ does not allow empty constexpr arrays
+  //
+  static constexpr uint8_t key_led_map[] PROGMEM = { no_led };
 };
 
 template <typename _LEDDriverProps>
@@ -43,8 +49,20 @@ class Base {
     };
     return c;
   }
-  uint8_t getLedIndex(uint8_t key_offset) {
-    return 0;
+  static uint8_t getLedIndex(uint8_t key_offset) {
+
+    // Give the compiler the oportunity to optimize
+    // for boards without LEDs.
+    //
+    if (_LEDDriverProps::led_count == 0) {
+      return no_led;
+    }
+
+    if (key_offset >= sizeof(_LEDDriverProps::key_led_map)) {
+      return no_led;
+    }
+
+    return pgm_read_byte(&_LEDDriverProps::key_led_map[key_offset]);
   }
 
   static class LEDs {

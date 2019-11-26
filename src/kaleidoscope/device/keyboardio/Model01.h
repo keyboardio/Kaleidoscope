@@ -37,6 +37,12 @@ namespace keyboardio {
 
 struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 64;
+  static constexpr uint8_t key_led_map[] PROGMEM = {
+    3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60,
+    2, 5, 10, 13, 18, 21, 25, 28,     35, 38, 42, 45, 50, 53, 58, 61,
+    1, 6, 9, 14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62,
+    0, 7, 8, 15, 16, 23, 31, 30,     33, 32, 40, 47, 48, 55, 56, 63,
+  };
 };
 
 class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriverProps> {
@@ -44,8 +50,6 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
   static cRGB getCrgbAt(uint8_t i);
-
-  static uint8_t getLedIndex(uint8_t key_offset);
 
   static void enableHighPowerLeds();
   static boolean ledPowerFault();
