@@ -161,6 +161,14 @@
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _NOT_ABORTABLE,                                           __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
+   /* Called when the LED mode changes. If one needs to know what      */ __NL__ \
+   /* from and what to the mode changed, they should track that        */ __NL__ \
+   /* themselves.                                                      */ __NL__ \
+   OPERATION(onLEDModeChange,                                             __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+                _NOT_ABORTABLE,                                           __NL__ \
+                (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \
@@ -218,6 +226,10 @@
    START(onLayerChange, 1)                                              __NL__ \
       OP(onLayerChange, 1)                                              __NL__ \
    END(onLayerChange, 1)                                                __NL__ \
+                                                                        __NL__ \
+   START(onLEDModeChange, 1)                                            __NL__ \
+      OP(onLEDModeChange, 1)                                            __NL__ \
+   END(onLEDModeChange, 1)                                              __NL__ \
                                                                         __NL__ \
    START(beforeReportingState, 1)                                       __NL__ \
       OP(beforeReportingState, 1)                                       __NL__ \

@@ -68,6 +68,8 @@ LEDControl::set_mode(uint8_t mode_) {
   cur_led_mode_ = LEDModeManager::getLEDMode(mode_id);
 
   refreshAll();
+
+  kaleidoscope::Hooks::onLEDModeChange();
 }
 
 void LEDControl::activate(LEDModeInterface *plugin) {

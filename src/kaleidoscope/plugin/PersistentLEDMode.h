@@ -16,11 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* NOTE: This plugin is a workaround. It allows us to (optionally) save the LED
- * mode to storage, and restore it on next boot, without having a way to hook
- * into led mode change events. Once we can hook into that, this plugin shall be
- * reworked to use it instead of keeping `afterEachCycle()` busy. */
-
 #pragma once
 
 #include <Kaleidoscope.h>
@@ -33,7 +28,7 @@ class PersistentLEDMode: public kaleidoscope::Plugin {
   PersistentLEDMode() {}
 
   EventHandlerResult onSetup();
-  EventHandlerResult afterEachCycle();
+  EventHandlerResult onLEDModeChange();
  private:
   static uint16_t settings_base_;
   static uint8_t cached_mode_index_;
