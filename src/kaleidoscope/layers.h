@@ -26,7 +26,7 @@
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
 #define KEYMAPS(layers...)				                                    __NL__ \
-  const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
+  constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
   uint8_t layer_count                                                   __NL__ \
      = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
                                                                         __NL__ \
