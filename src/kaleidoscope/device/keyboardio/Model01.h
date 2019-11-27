@@ -127,7 +127,7 @@ struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
 
 class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
  public:
-  static void setup();
+  void setup();
 
   static void enableHardwareTestMode();
 };
