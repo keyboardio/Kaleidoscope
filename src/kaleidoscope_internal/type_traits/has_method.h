@@ -18,13 +18,15 @@
 
 #include "kaleidoscope/macro_helpers.h"
 
-#define DEFINE_HAS_METHOD_TRAITS(PREFIX, METHOD_NAME,                          \
+#define DEFINE_HAS_METHOD_TRAITS(PREFIX,                                       \
+                                 TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST,        \
+                                 METHOD_NAME,                                  \
                                  RETURN_TYPE, ARGUMENTS)                       \
                                                                         __NL__ \
    /* This traits checks if a class of type Class__                     __NL__ \
     * implements a method with given signature.                         __NL__ \
     */                                                                  __NL__ \
-   template<typename Class__>                                           __NL__ \
+   template<typename Class__ UNWRAP TMPL_PARAM_TYPE_LIST>               __NL__ \
    struct GLUE3(PREFIX, _HasMethod_, METHOD_NAME)                       __NL__ \
    {                                                                    __NL__ \
       /* Define a pointer to member function with the correct           __NL__ \
@@ -55,7 +57,10 @@
           * (SFINAE = substitution failure is not an error)             __NL__ \
           * and the test(...) overload is used instead.                 __NL__ \
           */                                                            __NL__ \
-         static_cast<MethodType__>(&ClassAux__::METHOD_NAME), bool{}    __NL__ \
+         static_cast<MethodType__>(                                     __NL__ \
+            &ClassAux__::TEMPLATE_KEYWORD(UNWRAP TMPL_PARAM_LIST)       __NL__ \
+               METHOD_NAME ADD_TEMPLATE_BRACES(UNWRAP TMPL_PARAM_LIST)  __NL__ \
+         ), bool{}                                                      __NL__ \
       )                                                                 __NL__ \
       test(int /* unused */)                                            __NL__ \
       {                                                                 __NL__ \

@@ -72,8 +72,11 @@ class Hooks {
 
 #define DEFINE_WEAK_HOOK_FUNCTION(                                             \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
-    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)               __NL__ \
+    SHOULD_ABORT_ON_CONSUMED_EVENT,                                            \
+    TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,               \
+    SIGNATURE, ARGS_LIST)                                               __NL__ \
                                                                         __NL__ \
+   MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                 __NL__ \
    static EventHandlerResult HOOK_NAME SIGNATURE;
 
   _FOR_EACH_EVENT_HANDLER(DEFINE_WEAK_HOOK_FUNCTION)

@@ -76,6 +76,25 @@
 //    kaleidoscope::EventHandlerResult::EVENT_CONSUMED. To enable this
 //    pass the abortable flag value _ABORTABLE, _NOT_ABORTABLE otherwise.
 //
+// template parameter type list:
+//    The hook's template type list in parenthesis, with a trailing comma.
+//      e.g. (, typename _T1, typename _T2)
+//    Pass empty parenthesis if the hook is non templatized.
+//
+// template parameters:
+//    The hook's template parameters in parenthesis, with a trailing comma.
+//    The template parameter names must match the template type list.
+//      e.g. (, _T1, _T2)
+//    Pass empty parenthesis if the hook is non templatized.
+//
+// dummy template arguments:
+//    Supply a list of already defined dummy types that could realistically
+//    be used to instantiate the template hook. Those types are only used
+//    during hook method signature checks.
+//    Please add parenthesis and a trailing comma.
+//      e.g. (, int, int)
+//    Pass empty parenthesis if the hook is non templatized.
+//
 // call signature:
 //    The type of arguments passed to the handlers as a comma separated
 //    list in brackets. Every parameter must be named.
@@ -93,12 +112,21 @@
 "                                       uint8_t keyState)\n"            __NL__ \
 "instead."
 
+namespace kaleidoscope {
+
+// This dummy class can be used as dummy template argument to
+// be passed in the definition of template hooks.
+//
+class SignatureCheckDummy {};
+} // namespace kaleidoscope
+
 #define _FOR_EACH_EVENT_HANDLER(OPERATION, ...)                           __NL__ \
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
+               (),(),(), /* non template */                               __NL__ \
                (),(), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
    /* Called at the very start of each cycle, before gathering         */ __NL__ \
@@ -107,6 +135,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
+               (),(),(), /* non template */                               __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
    /* DEPRECATED                                                       */ __NL__ \
@@ -121,6 +150,7 @@
              1,                                                           __NL__ \
              DEPRECATED(ON_KEYSWITCH_EVENT_HANDLER_V1),                   __NL__ \
                _ABORTABLE,                                                __NL__ \
+                (),(),(), /* non template */                              __NL__ \
                (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
                (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
                                                                           __NL__ \
@@ -135,6 +165,7 @@
               2,                                                          __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _ABORTABLE,                                                __NL__ \
+                (),(),(), /* non template */                              __NL__ \
                (Key &mappedKey, KeyAddr key_addr, uint8_t keyState),      __NL__ \
                (mappedKey, key_addr, keyState), ##__VA_ARGS__)            __NL__ \
                                                                           __NL__ \
@@ -150,6 +181,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _ABORTABLE,                                               __NL__ \
+                (),(),(), /* non template */                              __NL__ \
                 (const char *command),                                    __NL__ \
                 (command), ##__VA_ARGS__)                                 __NL__ \
                                                                           __NL__ \
@@ -160,6 +192,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _NOT_ABORTABLE,                                           __NL__ \
+                (),(),(), /* non template */                              __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called when the LED mode changes. If one needs to know what      */ __NL__ \
    /* from and what to the mode changed, they should track that        */ __NL__ \
@@ -168,6 +201,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _NOT_ABORTABLE,                                           __NL__ \
+                (),(),(), /* non template */                              __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
@@ -176,6 +210,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
+               (),(),(), /* non template */                               __NL__ \
                (),(),##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
    /* Called at the very end of a cycle, after everything's            */ __NL__ \
@@ -184,6 +219,7 @@
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
+               (),(),(), /* non template */                               __NL__ \
                (),(),##__VA_ARGS__)
 
 // The following function macro lists event handler/hook method names and

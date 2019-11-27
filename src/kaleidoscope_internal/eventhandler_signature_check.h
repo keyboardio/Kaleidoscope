@@ -92,13 +92,17 @@ template<typename Plugin__> struct
 
 #define _DEFINE_IMPLEMENTATION_CHECK_CLASS_SPECIALIZATION(                     \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
-    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)                      \
+    SHOULD_ABORT_ON_CONSUMED_EVENT,                                            \
+    TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,               \
+    SIGNATURE, ARGS_LIST)                                                      \
                                                                                \
     /* We use the generalized traits class found in header has_method.h __NL__ \
      * to do check if a plugin defines a hook method with a specific    __NL__ \
      * signature.                                                       __NL__ \
      */                                                                 __NL__ \
-    DEFINE_HAS_METHOD_TRAITS(GLUE2(Plugin, HOOK_VERSION), HOOK_NAME,    __NL__ \
+    DEFINE_HAS_METHOD_TRAITS(GLUE2(Plugin, HOOK_VERSION),               __NL__ \
+                             TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST,     __NL__ \
+                             HOOK_NAME,                                 __NL__ \
                              kaleidoscope::EventHandlerResult,          __NL__ \
                              SIGNATURE)                                 __NL__ \
                                                                         __NL__ \
@@ -107,7 +111,8 @@ template<typename Plugin__> struct
     */                                                                  __NL__ \
    template<typename Plugin__>                                          __NL__ \
    struct HookVersionImplemented_##HOOK_NAME<Plugin__, HOOK_VERSION>    __NL__ \
-      : public GLUE4(Plugin, HOOK_VERSION, _HasMethod_, HOOK_NAME)<Plugin__> __NL__ \
+      : public GLUE4(Plugin, HOOK_VERSION, _HasMethod_, HOOK_NAME)      __NL__ \
+           <Plugin__ UNWRAP TMPL_DUMMY_ARGS_LIST>                       __NL__ \
    {};
 
 #define _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_START(HOOK_NAME, ...)           \
