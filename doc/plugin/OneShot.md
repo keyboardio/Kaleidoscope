@@ -54,7 +54,6 @@ plugin:
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-OneShot.h>
-#include <kaleidoscope/hid.h>
 
 // somewhere in the keymap...
 OSM(LeftControl), OSL(_FN)
@@ -108,8 +107,8 @@ modifiers and one-shot layer keys. It has the following methods:
 ### `.isModifierActive(key)`
 
 > Returns if the modifier `key` has a one-shot state active. Use this together
-> with `hid::isModifierKeyActive` to catch cases where a one-shot modifier is
-> active, but not registered yet.
+> with `Kaleidoscope.hid().keyboard().isModifierKeyActive` to catch cases where
+> a one-shot modifier is active, but not registered yet.
 
 ### `.cancel([with_stickies])`
 

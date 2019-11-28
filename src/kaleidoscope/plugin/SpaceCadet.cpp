@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-SpaceCadet.h>
-#include <kaleidoscope/hid.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 

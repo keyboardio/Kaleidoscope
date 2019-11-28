@@ -15,7 +15,6 @@
  */
 
 #include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/hid.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -43,10 +42,6 @@ Runtime_::setup(void) {
 
   device().setup();
 
-  kaleidoscope::hid::initializeKeyboard();
-  kaleidoscope::hid::initializeConsumerControl();
-  kaleidoscope::hid::initializeSystemControl();
-
   // Update the keymap cache, so we start with a non-empty state.
   Layer.updateActiveLayers();
   for (auto key_addr : KeyAddr::all()) {
@@ -64,8 +59,8 @@ Runtime_::loop(void) {
 
   kaleidoscope::Hooks::beforeReportingState();
 
-  kaleidoscope::hid::sendKeyboardReport();
-  kaleidoscope::hid::releaseAllKeys();
+  device().hid().keyboard().sendReport();
+  device().hid().keyboard().releaseAllKeys();
 
   kaleidoscope::Hooks::afterEachCycle();
 }

@@ -25,6 +25,7 @@
 #include "kaleidoscope_internal/deprecations.h"
 #include "kaleidoscope/macro_helpers.h"
 
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/keyscanner/None.h"
 #include "kaleidoscope/driver/led/None.h"
 #include "kaleidoscope/driver/mcu/None.h"
@@ -52,6 +53,8 @@ namespace kaleidoscope {
 namespace device {
 
 struct BaseProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
   typedef kaleidoscope::driver::keyscanner::BaseProps KeyScannerProps;
   typedef kaleidoscope::driver::keyscanner::None KeyScanner;
   typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;
@@ -78,6 +81,8 @@ class Base {
 
   typedef _DeviceProps Props;
 
+  typedef typename _DeviceProps::HIDProps HIDProps;
+  typedef typename _DeviceProps::HID HID;
   typedef typename _DeviceProps::KeyScanner KeyScanner;
   typedef typename _DeviceProps::KeyScannerProps KeyScannerProps;
   typedef typename _DeviceProps::KeyScannerProps::KeyAddr KeyAddr;
@@ -100,6 +105,13 @@ class Base {
    */
   static constexpr int8_t numKeys() {
     return matrix_columns * matrix_rows;
+  }
+
+  /**
+   * Returns the HID driver used by the keyboard.
+   */
+  HID &hid() {
+    return hid_;
   }
 
   /**
@@ -483,6 +495,7 @@ class Base {
   void setup() {
     bootloader_.setup();
     mcu_.setup();
+    hid_.setup();
     storage_.setup();
     key_scanner_.setup();
     led_driver_.setup();
@@ -516,6 +529,7 @@ class Base {
   /** @} */
 
  protected:
+  HID hid_;
   KeyScanner key_scanner_;
   LEDDriver led_driver_;
   MCU mcu_;

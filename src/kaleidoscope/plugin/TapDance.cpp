@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-TapDance.h>
-#include <kaleidoscope/hid.h>
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -40,8 +39,8 @@ void TapDance::interrupt(KeyAddr key_addr) {
   last_tap_dance_key_ = Key_NoKey;
 
   Runtime.device().maskKey(key_addr);
-  kaleidoscope::hid::sendKeyboardReport();
-  kaleidoscope::hid::releaseAllKeys();
+  Runtime.hid().keyboard().sendReport();
+  Runtime.hid().keyboard().releaseAllKeys();
 
   if (state_[idx].pressed)
     return;
@@ -99,7 +98,7 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
     handleKeyswitchEvent(key, last_tap_dance_addr_, IS_PRESSED | WAS_PRESSED | INJECTED);
     break;
   case Release:
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     handleKeyswitchEvent(key, last_tap_dance_addr_, WAS_PRESSED | INJECTED);
     break;
   }

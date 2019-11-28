@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-TopsyTurvy.h>
-#include "kaleidoscope/hid.h"
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -62,8 +61,8 @@ EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
   }
 
   if (keyIsPressed(key_state)) {
-    hid::releaseKey(Key_LeftShift);
-    hid::releaseKey(Key_RightShift);
+    kaleidoscope::Runtime.hid().keyboard().releaseKey(Key_LeftShift);
+    kaleidoscope::Runtime.hid().keyboard().releaseKey(Key_RightShift);
 
     return EventHandlerResult::OK;
   }

@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-Unicode.h>
-#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -26,25 +25,25 @@ uint8_t Unicode::input_delay_;
 void Unicode::start(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
-    hid::pressRawKey(Key_LeftControl);
-    hid::pressRawKey(Key_LeftShift);
-    hid::pressRawKey(Key_U);
-    hid::sendKeyboardReport();
-    hid::releaseRawKey(Key_LeftControl);
-    hid::releaseRawKey(Key_LeftShift);
-    hid::releaseRawKey(Key_U);
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftControl);
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_U);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftControl);
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftShift);
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_U);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   case hostos::WINDOWS:
-    hid::pressRawKey(Key_LeftAlt);
-    hid::sendKeyboardReport();
-    hid::pressRawKey(Key_KeypadAdd);
-    hid::sendKeyboardReport();
-    hid::releaseRawKey(Key_KeypadAdd);
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftAlt);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_KeypadAdd);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_KeypadAdd);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   case hostos::OSX:
-    hid::pressRawKey(Key_LeftAlt);
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftAlt);
     break;
   default:
     unicodeCustomStart();
@@ -58,7 +57,7 @@ void Unicode::input(void) {
     break;
   case hostos::WINDOWS:
   case hostos::OSX:
-    hid::pressRawKey(Key_LeftAlt);
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftAlt);
     break;
   default:
     unicodeCustomInput();
@@ -70,15 +69,15 @@ void Unicode::input(void) {
 void Unicode::end(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
-    hid::pressRawKey(Key_Spacebar);
-    hid::sendKeyboardReport();
-    hid::releaseRawKey(Key_Spacebar);
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Spacebar);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_Spacebar);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   case hostos::WINDOWS:
   case hostos::OSX:
-    hid::releaseRawKey(Key_LeftAlt);
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftAlt);
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   default:
     unicodeCustomEnd();
@@ -102,11 +101,11 @@ void Unicode::typeCode(uint32_t unicode) {
           key = hexToKey(digit);
         }
         input();
-        hid::pressRawKey(key);
-        hid::sendKeyboardReport();
+        kaleidoscope::Runtime.hid().keyboard().pressRawKey(key);
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
         input();
-        hid::releaseRawKey(key);
-        hid::sendKeyboardReport();
+        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(key);
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
       }
     } else {
       Key key;
@@ -116,11 +115,11 @@ void Unicode::typeCode(uint32_t unicode) {
         key = hexToKey(digit);
       }
       input();
-      hid::pressRawKey(key);
-      hid::sendKeyboardReport();
+      kaleidoscope::Runtime.hid().keyboard().pressRawKey(key);
+      kaleidoscope::Runtime.hid().keyboard().sendReport();
       input();
-      hid::releaseRawKey(key);
-      hid::sendKeyboardReport();
+      kaleidoscope::Runtime.hid().keyboard().releaseRawKey(key);
+      kaleidoscope::Runtime.hid().keyboard().sendReport();
       on_zero_start = false;
     }
     delay(5);

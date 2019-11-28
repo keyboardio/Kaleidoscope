@@ -17,7 +17,6 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/hid.h"
 #include "kaleidoscope/layers.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
@@ -27,14 +26,16 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (!(mappedKey.getFlags() & SYNTHETIC))
     return false;
 
+  using kaleidoscope::Runtime;
+
   if (mappedKey.getFlags() & IS_CONSUMER) {
     if (keyIsPressed(keyState))
-      kaleidoscope::hid::pressConsumerControl(mappedKey);
+      Runtime.hid().keyboard().pressConsumerControl(mappedKey);
   } else if (mappedKey.getFlags() & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
     } else if (keyWasPressed(keyState)) {
-      kaleidoscope::hid::pressSystemControl(mappedKey);
-      kaleidoscope::hid::releaseSystemControl(mappedKey);
+      Runtime.hid().keyboard().pressSystemControl(mappedKey);
+      Runtime.hid().keyboard().releaseSystemControl(mappedKey);
     }
   } else if (mappedKey.getFlags() & IS_INTERNAL) {
     return false;
@@ -46,17 +47,18 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
 }
 
 static bool handleKeyswitchEventDefault(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
+  using kaleidoscope::Runtime;
   //for every newly pressed button, figure out what logical key it is and send a key down event
   // for every newly released button, figure out what logical key it is and send a key up event
 
   if (mappedKey.getFlags() & SYNTHETIC) {
     handleSyntheticKeyswitchEvent(mappedKey, keyState);
   } else if (keyToggledOn(keyState)) {
-    kaleidoscope::hid::pressKey(mappedKey);
+    Runtime.hid().keyboard().pressKey(mappedKey);
   } else if (keyIsPressed(keyState)) {
-    kaleidoscope::hid::pressKey(mappedKey, false);
+    Runtime.hid().keyboard().pressKey(mappedKey, false);
   } else if (keyToggledOff(keyState) && (keyState & INJECTED)) {
-    kaleidoscope::hid::releaseKey(mappedKey);
+    Runtime.hid().keyboard().releaseKey(mappedKey);
   }
   return true;
 }

@@ -24,7 +24,6 @@
 #include <KeyboardioHID.h>
 #include <Wire.h>
 
-#include "kaleidoscope/hid.h"
 #include "kaleidoscope/util/crc16.h"
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
@@ -418,8 +417,8 @@ void RaiseKeyScanner::setup() {
 void RaiseKeyScanner::reset() {
   leftHandState.all = 0;
   rightHandState.all = 0;
-  kaleidoscope::hid::releaseAllKeys();
-  kaleidoscope::hid::sendKeyboardReport();
+  Kaleidoscope.hid().keyboard().releaseAllKeys();
+  Kaleidoscope.hid().keyboard().sendReport();
 }
 
 /********* Hardware plugin *********/
