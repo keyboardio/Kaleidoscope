@@ -27,6 +27,10 @@
 
 /* Messages */
 
+#define _DEPRECATED_MESSAGE_HID_FACADE                                   __NL__ \
+  "The HID facade in the `kaleidoscope::hid` namespace is deprecated.\n" __NL__ \
+  "Please use `Kaleidoscope.hid()` instead."
+
 #define _DEPRECATED_MESSAGE_NAMED_HARDWARE              __NL__ \
   "Named hardware objects are deprecated, please use\n" __NL__ \
   "`Kaleidoscope.device()` instead."
