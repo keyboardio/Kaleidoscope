@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,44 +16,44 @@
 
 #pragma once
 #include <Arduino.h>
+
+#include <Kaleidoscope-HIDAdaptor-KeyboardioHID.h>
 #include "kaleidoscope/key_defs.h"
+#include "kaleidoscope_internal/deprecations.h"
 
 namespace kaleidoscope {
 namespace hid {
 
-// A facade on top of our HID implementation
-
-extern void initializeKeyboard();
-
-extern void pressKey(Key mappedKey, boolean toggledOn = true);
-extern void releaseKey(Key mappedKey);
-extern void releaseAllKeys();
-extern void pressRawKey(Key mappedKey);
-extern void releaseRawKey(Key mappedKey);
+extern void initializeKeyboard() DEPRECATED(HID_FACADE);
+extern void pressKey(Key mappedKey, boolean toggledOn = true) DEPRECATED(HID_FACADE);
+extern void releaseKey(Key mappedKey) DEPRECATED(HID_FACADE);
+extern void releaseAllKeys() DEPRECATED(HID_FACADE);
+extern void pressRawKey(Key mappedKey) DEPRECATED(HID_FACADE);
+extern void releaseRawKey(Key mappedKey) DEPRECATED(HID_FACADE);
 /** Flushes any pending regular key switch events and sends them out */
-extern void sendKeyboardReport();
+extern void sendKeyboardReport() DEPRECATED(HID_FACADE);
 
-extern boolean isModifierKeyActive(Key mappedKey);
-extern boolean wasModifierKeyActive(Key mappedKey);
+extern boolean isModifierKeyActive(Key mappedKey) DEPRECATED(HID_FACADE);
+extern boolean wasModifierKeyActive(Key mappedKey) DEPRECATED(HID_FACADE);
 
-extern boolean isAnyModifierKeyActive();
-extern boolean wasAnyModifierKeyActive();
+extern boolean isAnyModifierKeyActive() DEPRECATED(HID_FACADE);
+extern boolean wasAnyModifierKeyActive() DEPRECATED(HID_FACADE);
 
-extern uint8_t getKeyboardLEDs();
+extern uint8_t getKeyboardLEDs() DEPRECATED(HID_FACADE);
 
-extern void initializeConsumerControl();
+extern void initializeConsumerControl() DEPRECATED(HID_FACADE);
 
-extern void pressConsumerControl(Key mappedKey);
-extern void releaseConsumerControl(Key mappedKey);
+extern void pressConsumerControl(Key mappedKey) DEPRECATED(HID_FACADE);
+extern void releaseConsumerControl(Key mappedKey) DEPRECATED(HID_FACADE);
 
-extern void initializeSystemControl();
+extern void initializeSystemControl() DEPRECATED(HID_FACADE);
 
-extern void pressSystemControl(Key mappedKey);
-extern void releaseSystemControl(Key mappedKey);
+extern void pressSystemControl(Key mappedKey) DEPRECATED(HID_FACADE);
+extern void releaseSystemControl(Key mappedKey) DEPRECATED(HID_FACADE);
 
-extern void initializeMouse();
+extern void initializeMouse() DEPRECATED(HID_FACADE);
 
-extern void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+extern void moveMouse(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0) DEPRECATED(HID_FACADE);
 /** stopMouse() stops mouse and/or mouse wheel movement in given directions.
  *
  * Counterpart of moveMouse(), this function allows us to undo whatever movement
@@ -64,20 +64,20 @@ extern void moveMouse(signed char x, signed char y, signed char vWheel = 0, sign
  * Any of the arguments that is set to true, will be cleared from the report to
  * be sent by the next call to sendMouseReport().
  */
-extern void stopMouse(bool x, bool y, bool vWheel = false, bool hWheel = false);
-extern void clickMouseButtons(uint8_t buttons);
-extern void pressMouseButtons(uint8_t buttons);
-extern void releaseMouseButtons(uint8_t buttons);
-extern void releaseAllMouseButtons(void);
-extern void sendMouseReport(void);
+extern void stopMouse(bool x, bool y, bool vWheel = false, bool hWheel = false) DEPRECATED(HID_FACADE);
+extern void clickMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
+extern void pressMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
+extern void releaseMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
+extern void releaseAllMouseButtons(void) DEPRECATED(HID_FACADE);
+extern void sendMouseReport(void) DEPRECATED(HID_FACADE);
 
-extern void initializeAbsoluteMouse();
+extern void initializeAbsoluteMouse() DEPRECATED(HID_FACADE);
 
-extern void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
-extern void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
-extern void clickAbsoluteMouseButtons(uint8_t buttons);
-extern void pressAbsoluteMouseButtons(uint8_t buttons);
-extern void releaseAbsoluteMouseButtons(uint8_t buttons);
+extern void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) DEPRECATED(HID_FACADE);
+extern void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel) DEPRECATED(HID_FACADE);
+extern void clickAbsoluteMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
+extern void pressAbsoluteMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
+extern void releaseAbsoluteMouseButtons(uint8_t buttons) DEPRECATED(HID_FACADE);
 
 }
 };
