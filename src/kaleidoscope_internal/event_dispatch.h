@@ -38,7 +38,7 @@
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope_internal/eventhandler_signature_check.h"
 #include "kaleidoscope/event_handlers.h"
-#include "kaleidoscope_internal/keymap_exploration.h"
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 
 // Some words about the design of hook routing:
 //
@@ -214,4 +214,6 @@
                                                                               __NL__ \
   /* This generates a PROGMEM array-kind-of data structure that contains   */ __NL__ \
   /* LEDModeFactory entries                                                */ __NL__ \
-  _INIT_LED_MODE_MANAGER(__VA_ARGS__)
+  _INIT_LED_MODE_MANAGER(__VA_ARGS__)                                         __NL__ \
+                                                                              __NL__ \
+  _INIT_PLUGIN_EXPLORATION(__VA_ARGS__)

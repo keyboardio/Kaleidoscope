@@ -45,4 +45,18 @@ _FOR_EACH_EVENT_HANDLER(INSTANTIATE_WEAK_HOOK_FUNCTION)
 
 #undef INSTANTIATE_WEAK_HOOK_FUNCTION
 
+namespace sketch_exploration {
+class Sketch;
+}
+
+// Make sure that there is no undefined symbol if KALEIDOSCOPE_INIT_PLUGINS(...)
+// is not invoked in the user's sketch.
+//
+template<>
+__attribute__((weak))
+EventHandlerResult Hooks::exploreSketch
+<sketch_exploration::Sketch>() {
+  return EventHandlerResult::OK;
+};
+
 } // namespace kaleidoscope

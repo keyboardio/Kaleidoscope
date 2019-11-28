@@ -220,7 +220,19 @@ class SignatureCheckDummy {};
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),(), /* non template */                               __NL__ \
-               (),(),##__VA_ARGS__)
+               (),(),##__VA_ARGS__)                                       __NL__ \
+                                                                          __NL__ \
+   /* Called before setup to enable plugins at compile time            */ __NL__ \
+   /* to explore the sketch.                                           */ __NL__ \
+   OPERATION(exploreSketch ,                                              __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+               _NOT_ABORTABLE,                                            __NL__ \
+               (,typename _Sketch),                                       __NL__ \
+               (,_Sketch),                                                __NL__ \
+               (,kaleidoscope::SignatureCheckDummy),                      __NL__ \
+               (),                                                        __NL__ \
+               (),##__VA_ARGS__)
 
 // The following function macro lists event handler/hook method names and
 // available versions. It is used to auto-generate code that is
@@ -273,4 +285,8 @@ class SignatureCheckDummy {};
                                                                         __NL__ \
    START(afterEachCycle, 1)                                             __NL__ \
       OP(afterEachCycle, 1)                                             __NL__ \
-   END(afterEachCycle, 1)
+   END(afterEachCycle, 1)                                               __NL__ \
+                                                                        __NL__ \
+   START(exploreSketch, 1)                                              __NL__ \
+      OP(exploreSketch, 1)                                              __NL__ \
+   END(exploreSketch, 1)

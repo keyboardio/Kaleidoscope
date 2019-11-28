@@ -36,6 +36,7 @@ Kaleidoscope_::setup(void) {
   // properly.
   device().serialPort().begin(9600);
 
+  kaleidoscope::sketch_exploration::pluginsExploreSketch();
   kaleidoscope::Hooks::onSetup();
 
   device().setup();

@@ -41,6 +41,10 @@ class LEDControl;
 // Forward declaration to enable friend declarations.
 class Layer_;
 
+namespace sketch_exploration {
+void pluginsExploreSketch();
+} // namespace sketch_exploration
+
 // The reason why the hook routing entry point functions live within
 // class Hooks and not directly within a namespace is, that we want
 // to restrict who is allowed to trigger hooks, mainly to prevent
@@ -60,6 +64,7 @@ class Hooks {
   friend class Kaleidoscope_;
   friend class ::kaleidoscope::Layer_;
   friend class ::kaleidoscope::plugin::LEDControl;
+  friend void ::kaleidoscope::sketch_exploration::pluginsExploreSketch();
 
   // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
