@@ -18,7 +18,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"

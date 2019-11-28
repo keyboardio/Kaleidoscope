@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-ShapeShifter.h>
-#include <kaleidoscope/hid.h>
 
 namespace kaleidoscope {
 namespace plugin {
@@ -25,8 +24,8 @@ const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
 bool ShapeShifter::mod_active_;
 
 EventHandlerResult ShapeShifter::beforeReportingState() {
-  mod_active_ = hid::isModifierKeyActive(Key_LeftShift) ||
-                hid::isModifierKeyActive(Key_RightShift);
+  mod_active_ = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
+                kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
   return EventHandlerResult::OK;
 }
 

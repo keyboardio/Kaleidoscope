@@ -18,7 +18,6 @@
 
 #include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-MouseKeys.h"
-#include "kaleidoscope/hid.h"
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -54,18 +53,18 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
   wheel_start_time_ = Runtime.millisAtCycleStart();
 
   if (keyCode & KEY_MOUSE_UP)
-    kaleidoscope::hid::moveMouse(0, 0, wheelSpeed);
+    kaleidoscope::Runtime.hid().mouse().move(0, 0, wheelSpeed);
   else if (keyCode & KEY_MOUSE_DOWN)
-    kaleidoscope::hid::moveMouse(0, 0, -wheelSpeed);
+    kaleidoscope::Runtime.hid().mouse().move(0, 0, -wheelSpeed);
   else if (keyCode & KEY_MOUSE_LEFT)
-    kaleidoscope::hid::moveMouse(0, 0, 0, -wheelSpeed);
+    kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, -wheelSpeed);
   else if (keyCode & KEY_MOUSE_RIGHT)
-    kaleidoscope::hid::moveMouse(0, 0, 0, wheelSpeed);
+    kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, wheelSpeed);
 }
 
 EventHandlerResult MouseKeys_::afterEachCycle() {
-  kaleidoscope::hid::sendMouseReport();
-  kaleidoscope::hid::releaseAllMouseButtons();
+  kaleidoscope::Runtime.hid().mouse().sendReport();
+  kaleidoscope::Runtime.hid().mouse().releaseAllButtons();
   mouseMoveIntent = 0;
 
   return EventHandlerResult::OK;
@@ -120,9 +119,10 @@ EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr
         MouseWrapper.reset_warping();
       }
 
-      MouseWrapper.pressButton(button);
+      kaleidoscope::Runtime.hid().mouse().pressButtons(button);
     } else if (keyToggledOff(keyState)) {
-      MouseWrapper.release_button(button);
+      kaleidoscope::Runtime.hid().mouse().releaseButtons(button);
+      MouseWrapper.end_warping();
     }
   } else if (!(mappedKey.getKeyCode() & KEY_MOUSE_WARP)) {
     if (keyToggledOn(keyState)) {
@@ -163,7 +163,7 @@ EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr
         }
       }
 
-      kaleidoscope::hid::stopMouse(x, y, vWheel, hWheel);
+      kaleidoscope::Runtime.hid().mouse().stop(x, y, vWheel, hWheel);
     }
   } else if (keyToggledOn(keyState)) {
     if (mappedKey.getKeyCode() & KEY_MOUSE_WARP && mappedKey.getFlags() & IS_MOUSE_KEY) {
@@ -179,7 +179,8 @@ EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr
 }
 
 EventHandlerResult MouseKeys_::onSetup(void) {
-  MouseWrapper.begin();
+  kaleidoscope::Runtime.hid().mouse().setup();
+  kaleidoscope::Runtime.hid().absoluteMouse().setup();
 
   return EventHandlerResult::OK;
 }

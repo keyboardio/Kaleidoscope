@@ -43,14 +43,13 @@ namespace plugin {
 
 class MouseWrapper_ {
  public:
-  MouseWrapper_(void);
+  MouseWrapper_() {}
 
-  static void begin(void);
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
+  static void end_warping();
   static void reset_warping();
-  static void pressButton(uint8_t button);
-  static void release_button(uint8_t button);
+
   static uint8_t accelStep;
   static uint8_t speedLimit;
   static uint8_t subpixelsPerPixel;
@@ -65,7 +64,6 @@ class MouseWrapper_ {
 
   static uint8_t acceleration(uint8_t cycles);
   static void begin_warping();
-  static void end_warping();
   static void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
 }

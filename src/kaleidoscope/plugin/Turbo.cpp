@@ -19,7 +19,6 @@
 #include <Kaleidoscope-LEDControl.h>
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -105,7 +104,7 @@ EventHandlerResult Turbo::onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t k
 EventHandlerResult Turbo::afterEachCycle() {
   if (enable) {
     if (Runtime.millisAtCycleStart() - startTime > interval_) {
-      kaleidoscope::hid::sendKeyboardReport();
+      kaleidoscope::Runtime.hid().keyboard().sendReport();
       startTime = Runtime.millisAtCycleStart();
     }
 

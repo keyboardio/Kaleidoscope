@@ -70,6 +70,10 @@ class Runtime_ {
     return device().storage();
   }
 
+  auto hid() -> decltype(device().hid()) & {
+    return device().hid();
+  }
+
   void rebootBootloader() {
     device().rebootBootloader();
   }

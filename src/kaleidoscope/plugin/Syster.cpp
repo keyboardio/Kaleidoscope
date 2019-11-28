@@ -16,7 +16,6 @@
  */
 
 #include <Kaleidoscope-Syster.h>
-#include <kaleidoscope/hid.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
@@ -72,9 +71,9 @@ EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
     if (mapped_key == Key_Spacebar) {
       for (uint8_t i = 0; i <= symbol_pos_; i++) {
         handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
-        hid::sendKeyboardReport();
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
         handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
-        hid::sendKeyboardReport();
+        kaleidoscope::Runtime.hid().keyboard().sendReport();
       }
 
       systerAction(EndAction, NULL);

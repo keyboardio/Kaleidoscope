@@ -33,7 +33,6 @@ struct cRGB {
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

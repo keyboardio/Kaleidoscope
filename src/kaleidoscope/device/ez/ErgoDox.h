@@ -29,8 +29,6 @@
 
 #include <Arduino.h>
 
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-
 struct cRGB {
   uint8_t r, g, b;
 };

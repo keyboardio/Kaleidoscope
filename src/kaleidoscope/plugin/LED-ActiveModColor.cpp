@@ -17,7 +17,6 @@
 
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-OneShot.h>
-#include <kaleidoscope/hid.h>
 #include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
@@ -71,7 +70,7 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
       else
         ::LEDControl.refreshAt(key_addr);
     } else if (k >= Key_LeftControl && k <= Key_RightGui) {
-      if (hid::isModifierKeyActive(k))
+      if (kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(k))
         ::LEDControl.setCrgbAt(key_addr, highlight_color);
       else
         ::LEDControl.refreshAt(key_addr);
