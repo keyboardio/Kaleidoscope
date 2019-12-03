@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
 #define LEADER_MAX_SEQUENCE_LENGTH 4

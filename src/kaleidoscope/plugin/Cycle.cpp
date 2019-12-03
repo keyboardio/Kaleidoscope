@@ -15,9 +15,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Cycle.h>
 #include "kaleidoscope/hid.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {

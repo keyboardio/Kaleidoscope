@@ -21,6 +21,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -46,7 +47,7 @@ void FingerPainter::toggle(void) {
 }
 
 EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (!Kaleidoscope.has_leds || !edit_mode_)
+  if (!Runtime.has_leds || !edit_mode_)
     return EventHandlerResult::OK;
 
   if (!keyToggledOn(key_state)) {
@@ -58,7 +59,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
 
   // TODO: The following works only for keyboards with LEDs for each key.
 
-  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, Kaleidoscope.device().getLedIndex(key_addr));
+  uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, Runtime.device().getLedIndex(key_addr));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!
@@ -75,7 +76,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     new_color = ::LEDPaletteTheme.lookupPaletteColor(color_index);
   }
 
-  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, Kaleidoscope.device().getLedIndex(key_addr), color_index);
+  ::LEDPaletteTheme.updateColorIndexAtPosition(color_base_, Runtime.device().getLedIndex(key_addr), color_index);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
@@ -100,10 +101,10 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
     return EventHandlerResult::OK;
 
   if (sub_command == CLEAR) {
-    for (uint16_t i = 0; i < Kaleidoscope.device().numKeys() / 2; i++) {
-      Kaleidoscope.storage().update(color_base_ + i, 0);
+    for (uint16_t i = 0; i < Runtime.device().numKeys() / 2; i++) {
+      Runtime.storage().update(color_base_ + i, 0);
     }
-    Kaleidoscope.storage().commit();
+    Runtime.storage().commit();
     return EventHandlerResult::OK;
   }
 

@@ -18,6 +18,7 @@
 #include <Kaleidoscope-TypingBreaks.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -46,14 +47,14 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   // If we are locked...
   if (keyboard_locked_) {
     // ...and the lock has not expired yet
-    if (!Kaleidoscope.hasTimeExpired(lock_start_time_, lock_length)) {
+    if (!Runtime.hasTimeExpired(lock_start_time_, lock_length)) {
       return EventHandlerResult::EVENT_CONSUMED;  // remain locked
     }
 
     // ...otherwise clear the lock
     keyboard_locked_ = false;
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = Kaleidoscope.millisAtCycleStart();
+    session_start_time_ = Runtime.millisAtCycleStart();
 
     TypingBreak(false);
   }
@@ -61,10 +62,10 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   // Any other case, we are not locked yet! (or we just unlocked)
 
   // Are we still in the same session?
-  if (Kaleidoscope.hasTimeExpired(last_key_time_, idle_time_limit)) {
+  if (Runtime.hasTimeExpired(last_key_time_, idle_time_limit)) {
     // No, we are not. Clear timers and start over.
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = Kaleidoscope.millisAtCycleStart();
+    session_start_time_ = Runtime.millisAtCycleStart();
   }
 
   // If we have a limit on the either hand, and we reached it, lock up!
@@ -78,7 +79,7 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
 
   if (lock_time_out) {
     // Is the session longer than lock_time_out?
-    if (Kaleidoscope.hasTimeExpired(session_start_time_, lock_time_out)) {
+    if (Runtime.hasTimeExpired(session_start_time_, lock_time_out)) {
       // Yeah, it is.
       keyboard_locked_ = true;
       lock_start_time_ = last_key_time_;
@@ -91,11 +92,11 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   // counters if need be.
 
   if (keyToggledOn(key_state)) {
-    if (key_addr.col() <= Kaleidoscope.device().matrix_columns / 2)
+    if (key_addr.col() <= Runtime.device().matrix_columns / 2)
       left_hand_keys_++;
     else
       right_hand_keys_++;
-    last_key_time_ = Kaleidoscope.millisAtCycleStart();
+    last_key_time_ = Runtime.millisAtCycleStart();
   }
 
   return EventHandlerResult::OK;
@@ -107,13 +108,13 @@ EventHandlerResult TypingBreaks::onSetup() {
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint32_t idle_time;
-  Kaleidoscope.storage().get(settings_base_, idle_time);
+  Runtime.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffffffff) {
-    Kaleidoscope.storage().put(settings_base_, settings);
-    Kaleidoscope.storage().commit();
+    Runtime.storage().put(settings_base_, settings);
+    Runtime.storage().commit();
   }
 
-  Kaleidoscope.storage().get(settings_base_, settings);
+  Runtime.storage().get(settings_base_, settings);
   return EventHandlerResult::OK;
 }
 
@@ -193,8 +194,8 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
     break;
   }
 
-  Kaleidoscope.storage().put(settings_base_, settings);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().put(settings_base_, settings);
+  Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

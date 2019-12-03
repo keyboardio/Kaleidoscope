@@ -23,7 +23,7 @@
 #ifdef ARDUINO_AVR_MODEL01
 
 #include <Arduino.h>
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope_internal/deprecations.h"
 
 #define _DEPRECATED_MESSAGE_MODEL01_TESTMODE                                      \

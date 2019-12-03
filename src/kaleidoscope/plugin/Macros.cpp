@@ -16,6 +16,8 @@
 
 #include "Kaleidoscope-Macros.h"
 #include "kaleidoscope/hid.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 __attribute__((weak))
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {

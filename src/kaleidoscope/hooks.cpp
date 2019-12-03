@@ -14,7 +14,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
+#include "kaleidoscope/event_handler_result.h"
+#include "kaleidoscope/event_handlers.h"
+#include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/hooks.h"
 
 namespace kaleidoscope {

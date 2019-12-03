@@ -19,10 +19,10 @@
 namespace kaleidoscope {
 namespace plugin {
 void LEDBreatheEffect::TransientLEDMode::update(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
-  if (!Kaleidoscope.hasTimeExpired(last_update_, update_interval_))
+  if (!Runtime.hasTimeExpired(last_update_, update_interval_))
     return;
   last_update_ += update_interval_;
 

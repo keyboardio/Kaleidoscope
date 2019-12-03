@@ -15,9 +15,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Heatmap.h>
 #include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -38,7 +39,7 @@ Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
     // max of heatmap_ (we divide by it so we start at 1)
     highest_(1),
     // last heatmap computation time
-    last_heatmap_comp_time_(Kaleidoscope.millisAtCycleStart())
+    last_heatmap_comp_time_(Runtime.millisAtCycleStart())
 {}
 
 cRGB Heatmap::TransientLEDMode::computeColor(float v) {
@@ -133,7 +134,7 @@ void Heatmap::TransientLEDMode::resetMap() {
 }
 
 EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   // this methode is called frequently by Kaleidoscope
@@ -175,7 +176,7 @@ EventHandlerResult Heatmap::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, 
 }
 
 EventHandlerResult Heatmap::beforeEachCycle() {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
@@ -201,19 +202,19 @@ EventHandlerResult Heatmap::TransientLEDMode::beforeEachCycle() {
 }
 
 void Heatmap::TransientLEDMode::update(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   // this methode is called frequently by the LEDControl::loopHook
 
   // do nothing if the update interval hasn't elapsed since the previous update
-  if (!Kaleidoscope.hasTimeExpired(last_heatmap_comp_time_, update_delay))
+  if (!Runtime.hasTimeExpired(last_heatmap_comp_time_, update_delay))
     return;
   // do the heatmap computing
   // (update_delay milliseconds elapsed since last_heatmap_comp_time)
 
   // schedule the next heatmap computing
-  last_heatmap_comp_time_ = Kaleidoscope.millisAtCycleStart();
+  last_heatmap_comp_time_ = Runtime.millisAtCycleStart();
 
   // for each key
   for (auto key_addr : KeyAddr::all()) {

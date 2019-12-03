@@ -14,7 +14,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/layers.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 // The maximum number of layers allowed. `layer_state_`, which stores
 // the on/off status of the layers in a bitfield has only 32 bits, and
@@ -38,8 +40,8 @@ extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows 
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
-Key Layer_::live_composite_keymap_[Kaleidoscope.device().numKeys()];
-uint8_t Layer_::active_layers_[Kaleidoscope.device().numKeys()];
+Key Layer_::live_composite_keymap_[Runtime.device().numKeys()];
+uint8_t Layer_::active_layers_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -111,7 +113,7 @@ void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(active_layers_, 0, Kaleidoscope.device().numKeys());
+  memset(active_layers_, 0, Runtime.device().numKeys());
   for (auto key_addr : KeyAddr::all()) {
     int8_t layer = top_active_layer_;
 

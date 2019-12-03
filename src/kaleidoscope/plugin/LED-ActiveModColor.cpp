@@ -18,6 +18,7 @@
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-OneShot.h>
 #include <kaleidoscope/hid.h>
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -33,7 +34,7 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
 cRGB ActiveModColorEffect::sticky_color = CRGB(160, 0, 0);
 
 EventHandlerResult ActiveModColorEffect::onLayerChange() {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   mod_key_count_ = 0;

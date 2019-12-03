@@ -27,10 +27,11 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace device {

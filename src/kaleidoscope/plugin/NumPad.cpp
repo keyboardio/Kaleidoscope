@@ -15,6 +15,7 @@
  */
 
 #include "Kaleidoscope-NumPad.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {

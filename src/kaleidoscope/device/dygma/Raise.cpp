@@ -18,7 +18,7 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <KeyboardioHID.h>
@@ -85,20 +85,20 @@ void RaiseHands::setup() {
   // If keyscan is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint16_t interval;
-  Kaleidoscope.storage().get(settings_base_, interval);
+  Runtime.storage().get(settings_base_, interval);
   if (interval == 0xffff) {
-    Kaleidoscope.storage().put(settings_base_, keyscan_interval_);
-    Kaleidoscope.storage().commit();
+    Runtime.storage().put(settings_base_, keyscan_interval_);
+    Runtime.storage().commit();
   }
-  Kaleidoscope.storage().get(settings_base_, keyscan_interval_);
+  Runtime.storage().get(settings_base_, keyscan_interval_);
 }
 
 void RaiseHands::keyscanInterval(uint16_t interval) {
   leftHand.setKeyscanInterval(interval);
   rightHand.setKeyscanInterval(interval);
   keyscan_interval_ = interval;
-  Kaleidoscope.storage().put(settings_base_, keyscan_interval_);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().put(settings_base_, keyscan_interval_);
+  Runtime.storage().commit();
 }
 
 void RaiseHands::initializeSides() {

@@ -16,7 +16,7 @@
  */
 
 #include <stdint.h>
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
 #define Key_Turbo Key{kaleidoscope::ranges::TURBO }

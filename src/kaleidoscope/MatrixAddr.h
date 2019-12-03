@@ -211,7 +211,7 @@ class MatrixAddr {
 // cause ambiguous symbol lookup when used in the regular firmware.
 //
 // To use them also for the regular firmware they would need to be
-// disambiguated by moving them to the Kaleidoscope.h header and replacing
+// disambiguated by moving them to the Runtime.h header and replacing
 // them with non-template versions that operate on the actual typedefed
 // KeyAddr and KeyAddr.
 

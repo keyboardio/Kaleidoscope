@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-Steno.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -39,7 +40,7 @@ EventHandlerResult GeminiPR::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
 
     if (keys_held_ == 0) {
       state_[0] |= 0x80;
-      Kaleidoscope.serialPort().write(state_, sizeof(state_));
+      Runtime.serialPort().write(state_, sizeof(state_));
       memset(state_, 0, sizeof(state_));
     }
   }

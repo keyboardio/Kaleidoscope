@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
@@ -103,7 +103,7 @@ class OneShot : public kaleidoscope::Plugin {
     return key.getRaw() >= ranges::OS_FIRST && key.getRaw() <= ranges::OS_LAST;
   }
   static bool hasTimedOut() {
-    return Kaleidoscope.hasTimeExpired(start_time_, time_out);
+    return Runtime.hasTimeExpired(start_time_, time_out);
   }
 };
 }

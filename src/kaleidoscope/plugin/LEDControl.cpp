@@ -17,6 +17,7 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope_internal/LEDModeManager.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 using namespace kaleidoscope::internal;
 
@@ -87,7 +88,7 @@ void LEDControl::activate(LEDModeInterface *plugin) {
 }
 
 void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   cRGB color;
@@ -98,31 +99,31 @@ void LEDControl::set_all_leds_to(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void LEDControl::set_all_leds_to(cRGB color) {
-  for (auto led_index : Kaleidoscope.device().LEDs().all()) {
+  for (auto led_index : Runtime.device().LEDs().all()) {
     setCrgbAt(led_index.offset(), color);
   }
 }
 
 void LEDControl::setCrgbAt(uint8_t led_index, cRGB crgb) {
-  Kaleidoscope.device().setCrgbAt(led_index, crgb);
+  Runtime.device().setCrgbAt(led_index, crgb);
 }
 
 void LEDControl::setCrgbAt(KeyAddr key_addr, cRGB color) {
-  Kaleidoscope.device().setCrgbAt(key_addr, color);
+  Runtime.device().setCrgbAt(key_addr, color);
 }
 
 cRGB LEDControl::getCrgbAt(uint8_t led_index) {
-  return Kaleidoscope.device().getCrgbAt(led_index);
+  return Runtime.device().getCrgbAt(led_index);
 }
 cRGB LEDControl::getCrgbAt(KeyAddr key_addr) {
-  return Kaleidoscope.device().getCrgbAt(Kaleidoscope.device().getLedIndex(key_addr));
+  return Runtime.device().getCrgbAt(Runtime.device().getLedIndex(key_addr));
 }
 
 void LEDControl::syncLeds(void) {
   if (paused)
     return;
 
-  Kaleidoscope.device().syncLeds();
+  Runtime.device().syncLeds();
 }
 
 kaleidoscope::EventHandlerResult LEDControl::onSetup() {
@@ -156,7 +157,7 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (paused)
     return kaleidoscope::EventHandlerResult::OK;
 
-  if (Kaleidoscope.hasTimeExpired(syncTimer, syncDelay)) {
+  if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
     syncLeds();
     syncTimer += syncDelay;
     update();
@@ -173,7 +174,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     THEME,
   } subCommand;
 
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   if (::Focus.handleHelp(command, PSTR("led.at\n"
@@ -241,7 +242,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   }
   case THEME: {
     if (::Focus.isEOL()) {
-      for (auto led_index : Kaleidoscope.device().LEDs().all()) {
+      for (auto led_index : Runtime.device().LEDs().all()) {
         cRGB c = ::LEDControl.getCrgbAt(led_index.offset());
 
         ::Focus.send(c);
@@ -249,7 +250,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
       break;
     }
 
-    for (auto led_index : Kaleidoscope.device().LEDs().all()) {
+    for (auto led_index : Runtime.device().LEDs().all()) {
       if (::Focus.isEOL()) {
         break;
       }

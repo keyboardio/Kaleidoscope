@@ -29,11 +29,11 @@ void USBQuirks::toggleKeyboardProtocol() {
 #if KALEIDOSCOPE_HIDADAPTOR_ENABLE_KEYBOARD_BOOT_PROTOCOL
   uint8_t new_protocol = !BootKeyboard.getProtocol();
 
-  Kaleidoscope.detachFromHost();
+  Runtime.detachFromHost();
   BootKeyboard.default_protocol = new_protocol;
   BootKeyboard.setProtocol(new_protocol);
   delay(1000);
-  Kaleidoscope.attachToHost();
+  Runtime.attachToHost();
 #endif
 
 }

@@ -20,8 +20,9 @@
 #include <Arduino.h>
 //#include <assert.h>
 
-#include "kaleidoscope/Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/KeyAddr.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -85,7 +86,7 @@ class KeyAddrEventQueue {
   void append(KeyAddr k, uint8_t keyswitch_state) {
     // assert(length_ < _capacity);
     addrs_[length_]      = k;
-    timestamps_[length_] = Kaleidoscope.millisAtCycleStart();
+    timestamps_[length_] = Runtime.millisAtCycleStart();
     bitWrite(release_event_bits_, length_, keyToggledOff(keyswitch_state));
     ++length_;
   }

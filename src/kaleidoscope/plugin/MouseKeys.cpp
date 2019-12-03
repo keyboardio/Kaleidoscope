@@ -16,8 +16,10 @@
 
 #include <Arduino.h>
 
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-MouseKeys.h"
+#include "kaleidoscope/hid.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -46,10 +48,10 @@ void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
 }
 
 void MouseKeys_::scrollWheel(uint8_t keyCode) {
-  if (!Kaleidoscope.hasTimeExpired(wheel_start_time_, wheelDelay))
+  if (!Runtime.hasTimeExpired(wheel_start_time_, wheelDelay))
     return;
 
-  wheel_start_time_ = Kaleidoscope.millisAtCycleStart();
+  wheel_start_time_ = Runtime.millisAtCycleStart();
 
   if (keyCode & KEY_MOUSE_UP)
     kaleidoscope::hid::moveMouse(0, 0, wheelSpeed);
@@ -75,18 +77,18 @@ EventHandlerResult MouseKeys_::beforeReportingState() {
     return EventHandlerResult::OK;
   }
 
-  if (!Kaleidoscope.hasTimeExpired(move_start_time_, speedDelay))
+  if (!Runtime.hasTimeExpired(move_start_time_, speedDelay))
     return EventHandlerResult::OK;
 
-  move_start_time_ = Kaleidoscope.millisAtCycleStart();
+  move_start_time_ = Runtime.millisAtCycleStart();
 
   int8_t moveX = 0, moveY = 0;
 
-  if (Kaleidoscope.hasTimeExpired(accel_start_time_, accelDelay)) {
+  if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
     if (MouseWrapper.accelStep < 255 - accelSpeed) {
       MouseWrapper.accelStep += accelSpeed;
     }
-    accel_start_time_ = Kaleidoscope.millisAtCycleStart();
+    accel_start_time_ = Runtime.millisAtCycleStart();
   }
 
   if (mouseMoveIntent & KEY_MOUSE_UP)
@@ -124,9 +126,9 @@ EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr
     }
   } else if (!(mappedKey.getKeyCode() & KEY_MOUSE_WARP)) {
     if (keyToggledOn(keyState)) {
-      move_start_time_ = Kaleidoscope.millisAtCycleStart();
-      accel_start_time_ = Kaleidoscope.millisAtCycleStart();
-      wheel_start_time_ = Kaleidoscope.millisAtCycleStart() - wheelDelay;
+      move_start_time_ = Runtime.millisAtCycleStart();
+      accel_start_time_ = Runtime.millisAtCycleStart();
+      wheel_start_time_ = Runtime.millisAtCycleStart() - wheelDelay;
     }
     if (keyIsPressed(keyState)) {
       if (mappedKey.getKeyCode() & KEY_MOUSE_WHEEL) {

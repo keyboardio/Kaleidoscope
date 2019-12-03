@@ -25,7 +25,8 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_SPLITOGRAPHY
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 namespace kaleidoscope {
 namespace device {

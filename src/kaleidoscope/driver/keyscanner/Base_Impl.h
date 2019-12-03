@@ -1,5 +1,6 @@
-/* kaleidoscope_internal::device - Global device object for internal use
- * Copyright (C) 2019  Keyboard.io, Inc.
+/* -*- mode: c++ -*-
+ * kaleidoscope::driver::keyscanner::base -- Keyscanner base class
+ * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,8 +17,17 @@
 
 #pragma once
 
+#include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/device/device.h"
 
-namespace kaleidoscope_internal {
-extern kaleidoscope::Device device;
+namespace kaleidoscope {
+namespace driver {
+namespace keyscanner {
+
+template<>
+void Base<kaleidoscope::Device::Props::KeyScannerProps>::handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState) {
+  ::handleKeyswitchEvent(mappedKey, key_addr, keyState);
 }
+} // namespace keyscanner
+} // namespace driver
+} // namespace kaleidoscope

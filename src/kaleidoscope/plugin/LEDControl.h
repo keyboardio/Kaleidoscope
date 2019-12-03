@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/plugin/LEDMode.h"
 
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
@@ -41,13 +42,13 @@ class LEDControl : public kaleidoscope::Plugin {
   static void prev_mode(void);
   static void setup(void);
   static void update(void) {
-    if (!Kaleidoscope.has_leds)
+    if (!Runtime.has_leds)
       return;
 
     cur_led_mode_->update();
   }
   static void refreshAt(KeyAddr key_addr) {
-    if (!Kaleidoscope.has_leds)
+    if (!Runtime.has_leds)
       return;
 
     cur_led_mode_->refreshAt(key_addr);
@@ -69,7 +70,7 @@ class LEDControl : public kaleidoscope::Plugin {
   }
 
   static void refreshAll() {
-    if (!Kaleidoscope.has_leds)
+    if (!Runtime.has_leds)
       return;
 
     if (paused)

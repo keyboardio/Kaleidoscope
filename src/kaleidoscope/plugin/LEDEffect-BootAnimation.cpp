@@ -16,6 +16,7 @@
  */
 
 #include "Kaleidoscope-LEDEffect-BootAnimation.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -44,7 +45,7 @@ EventHandlerResult BootAnimationEffect::onSetup() {
 }
 
 EventHandlerResult BootAnimationEffect::afterEachCycle() {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   //If already done or we're not in a ready state, bail
@@ -65,7 +66,7 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
     }
   }
 
-  if (Kaleidoscope.hasTimeExpired(start_time_, timeout)) {
+  if (Runtime.hasTimeExpired(start_time_, timeout)) {
     current_index_++;
     if (current_index_ == sizeof(greeting_))
       done_ = true;

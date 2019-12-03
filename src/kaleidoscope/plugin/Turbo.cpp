@@ -17,6 +17,9 @@
 
 #include <Kaleidoscope-Turbo.h>
 #include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/layers.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -101,18 +104,18 @@ EventHandlerResult Turbo::onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t k
 
 EventHandlerResult Turbo::afterEachCycle() {
   if (enable) {
-    if (Kaleidoscope.millisAtCycleStart() - startTime > interval_) {
+    if (Runtime.millisAtCycleStart() - startTime > interval_) {
       kaleidoscope::hid::sendKeyboardReport();
-      startTime = Kaleidoscope.millisAtCycleStart();
+      startTime = Runtime.millisAtCycleStart();
     }
 
     if (flash_) {
-      if (Kaleidoscope.millisAtCycleStart() - flashStartTime > flashInterval_ * 2) {
+      if (Runtime.millisAtCycleStart() - flashStartTime > flashInterval_ * 2) {
         for (uint16_t i = 0; i < numKeys; i++) {
           LEDControl::setCrgbAt(KeyAddr(keyPositions[i]), activeColor_);
         }
-        flashStartTime = Kaleidoscope.millisAtCycleStart();
-      } else if (Kaleidoscope.millisAtCycleStart() - flashStartTime > flashInterval_) {
+        flashStartTime = Runtime.millisAtCycleStart();
+      } else if (Runtime.millisAtCycleStart() - flashStartTime > flashInterval_) {
         for (uint16_t i = 0; i < numKeys; i++) {
           LEDControl::setCrgbAt(KeyAddr(keyPositions[i]), {0, 0, 0});
         }

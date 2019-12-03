@@ -20,7 +20,7 @@
 
 #ifdef ARDUINO_AVR_MODEL01
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
 
 #define WP_WID 14
@@ -64,7 +64,7 @@ class WavepoolEffect : public Plugin,
     uint8_t frames_since_event_;
     int8_t surface_[2][WP_WID * WP_HGT];
     uint8_t page_;
-    static PROGMEM const uint8_t rc2pos[Kaleidoscope.device().numKeys()];
+    static PROGMEM const uint8_t rc2pos[Runtime.device().numKeys()];
 
     void raindrop(uint8_t x, uint8_t y, int8_t *page);
     uint8_t wp_rand();

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-Ranges.h>
 

@@ -17,9 +17,11 @@
 #pragma once
 #include <Arduino.h>
 
+#include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/device/device.h"
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/KeyAddr.h"
 
 
 // Code can use this macro on injected key events to signal that
@@ -76,16 +78,3 @@ void handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScanner
 DEPRECATED(ROW_COL_FUNC) inline void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   handleKeyswitchEvent(mappedKey, KeyAddr(row, col), keyState);
 }
-
-namespace kaleidoscope {
-namespace driver {
-namespace keyscanner {
-
-template<>
-inline
-void Base<kaleidoscope::Device::Props::KeyScannerProps>::handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState) {
-  ::handleKeyswitchEvent(mappedKey, key_addr, keyState);
-}
-} // namespace keyscanner
-} // namespace driver
-} // namespace kaleidoscope

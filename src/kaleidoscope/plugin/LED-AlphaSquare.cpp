@@ -64,7 +64,7 @@ static const uint16_t alphabet[] PROGMEM = {
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
 
 void AlphaSquare::display(Key key, KeyAddr key_addr, cRGB key_color) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   if (key < Key_A || key > Key_0)
@@ -81,7 +81,7 @@ void AlphaSquare::display(Key key, KeyAddr key_addr) {
 }
 
 void AlphaSquare::display(uint16_t symbol, KeyAddr key_addr, cRGB key_color) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   for (uint8_t r = 0; r < 4; r++) {
@@ -106,7 +106,7 @@ void AlphaSquare::display(uint16_t symbol, KeyAddr key_addr) {
 bool AlphaSquare::isSymbolPart(Key key,
                                KeyAddr displayLedAddr,
                                KeyAddr key_addr) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return false;
 
   if (key < Key_A || key > Key_0)
@@ -121,7 +121,7 @@ bool AlphaSquare::isSymbolPart(Key key,
 bool AlphaSquare::isSymbolPart(uint16_t symbol,
                                KeyAddr displayLedAddr,
                                KeyAddr key_addr) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return false;
 
   for (uint8_t r = 0; r < 4; r++) {

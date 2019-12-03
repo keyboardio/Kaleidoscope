@@ -25,7 +25,7 @@ uint32_t CycleTimeReport::loop_start_time_;
 uint32_t CycleTimeReport::average_loop_time;
 
 EventHandlerResult CycleTimeReport::onSetup() {
-  last_report_time_ = Kaleidoscope.millisAtCycleStart();
+  last_report_time_ = Runtime.millisAtCycleStart();
   return EventHandlerResult::OK;
 }
 
@@ -42,11 +42,11 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
   else
     average_loop_time = loop_time;
 
-  if (Kaleidoscope.hasTimeExpired(last_report_time_, uint16_t(1000))) {
+  if (Runtime.hasTimeExpired(last_report_time_, uint16_t(1000))) {
     cycleTimeReport();
 
     average_loop_time = 0;
-    last_report_time_ = Kaleidoscope.millisAtCycleStart();
+    last_report_time_ = Runtime.millisAtCycleStart();
   }
 
   return EventHandlerResult::OK;

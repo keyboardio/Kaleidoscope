@@ -110,7 +110,7 @@ class LEDMode : public kaleidoscope::Plugin,
 
   /** Plugin initialization.
    *
-   * Called via `Kaleidoscope.use()`, registers the LED mode, and does the
+   * Called via `Runtime.use()`, registers the LED mode, and does the
    * necessary initialization steps. Calls @ref setup at the end.
    */
   kaleidoscope::EventHandlerResult onSetup() {

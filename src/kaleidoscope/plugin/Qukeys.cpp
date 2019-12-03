@@ -18,9 +18,10 @@
 
 #include "kaleidoscope/plugin/Qukeys.h"
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 #include "kaleidoscope/progmem_helpers.h"
+#include "kaleidoscope/layers.h"
 
 
 namespace kaleidoscope {
@@ -118,7 +119,7 @@ EventHandlerResult Qukeys::beforeReportingState() {
   // If we get here, that means that the first event in the queue is a qukey
   // press. All that's left to do is to check if it's been held long enough that
   // it has timed out.
-  if (Kaleidoscope.hasTimeExpired(event_queue_.timestamp(0), hold_timeout_)) {
+  if (Runtime.hasTimeExpired(event_queue_.timestamp(0), hold_timeout_)) {
     // If it's a SpaceCadet-type key, it takes on its primary value, otherwise
     // it takes on its secondary value.
     Key event_key = isModifierKey(queue_head_.primary_key) ?
@@ -356,7 +357,7 @@ bool Qukeys::releaseDelayed(uint16_t overlap_start,
   // here to make sure it doesn't overflow when we multiply by 100.
   uint32_t overlap_duration = overlap_end - overlap_start;
   uint32_t release_timeout = (overlap_duration * 100) / overlap_threshold_;
-  return !Kaleidoscope.hasTimeExpired(overlap_start, uint16_t(release_timeout));
+  return !Runtime.hasTimeExpired(overlap_start, uint16_t(release_timeout));
 }
 
 

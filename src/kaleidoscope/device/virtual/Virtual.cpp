@@ -22,7 +22,10 @@
 #include "kaleidoscope/device/virtual/Logging.h"
 
 #include "kaleidoscope/keyswitch_state.h"
-#include "Kaleidoscope.h"
+#include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/key_events.h"
+
 
 #include "HIDReportObserver.h"
 #include "virtual_io.h"
@@ -30,7 +33,6 @@
 
 #include <sstream>
 #include <string>
-#include <iomanip>
 
 // FIXME: This relates to virtual/cores/arduino/EEPROM.h.
 //        EEPROM static data must be defined here as only

@@ -18,7 +18,10 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_KBD4X
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/key_events.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace device {

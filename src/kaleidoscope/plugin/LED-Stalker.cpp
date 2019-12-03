@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-LED-Stalker.h>
 #include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -34,7 +35,7 @@ StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
 {}
 
 EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   if (!key_addr.isValid())
@@ -51,13 +52,13 @@ EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
 }
 
 void StalkerEffect::TransientLEDMode::update(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   if (!parent_->variant)
     return;
 
-  if (!Kaleidoscope.hasTimeExpired(step_start_time_, parent_->step_length))
+  if (!Runtime.hasTimeExpired(step_start_time_, parent_->step_length))
     return;
 
   for (auto key_addr : KeyAddr::all()) {
@@ -72,7 +73,7 @@ void StalkerEffect::TransientLEDMode::update(void) {
       ::LEDControl.setCrgbAt(key_addr, parent_->inactive_color);
   }
 
-  step_start_time_ = Kaleidoscope.millisAtCycleStart();
+  step_start_time_ = Runtime.millisAtCycleStart();
 }
 
 namespace stalker {

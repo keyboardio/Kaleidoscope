@@ -33,15 +33,15 @@ EventHandlerResult HostOS::onSetup(void) {
     return EventHandlerResult::OK;
   }
 
-  os_ = (hostos::Type)Kaleidoscope.storage().read(eeprom_slice_);
+  os_ = (hostos::Type)Runtime.storage().read(eeprom_slice_);
 
   return EventHandlerResult::OK;
 }
 
 void HostOS::os(hostos::Type new_os) {
   os_ = new_os;
-  Kaleidoscope.storage().update(eeprom_slice_, os_);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().update(eeprom_slice_, os_);
+  Runtime.storage().commit();
 }
 
 }

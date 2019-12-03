@@ -17,7 +17,8 @@
 
 #ifdef ARDUINO_AVR_KEYBOARDIO_IMAGO
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 extern "C" {
 #include "twi.h"
@@ -81,7 +82,7 @@ void ImagoLEDDriver::selectRegister(uint8_t page) {
 }
 
 void ImagoLEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
-  if (!Kaleidoscope.device().LEDs().isValid(i))
+  if (!Runtime.device().LEDs().isValid(i))
     return;
 
   cRGB oldColor = getCrgbAt(i);
@@ -91,7 +92,7 @@ void ImagoLEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
 }
 
 cRGB ImagoLEDDriver::getCrgbAt(uint8_t i) {
-  if (!Kaleidoscope.device().LEDs().isValid(i))
+  if (!Runtime.device().LEDs().isValid(i))
     return {0, 0, 0};
 
   return led_data[i];
