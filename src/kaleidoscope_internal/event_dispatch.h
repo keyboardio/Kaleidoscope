@@ -38,6 +38,7 @@
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope_internal/eventhandler_signature_check.h"
 #include "kaleidoscope/event_handlers.h"
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 
 // Some words about the design of hook routing:
 //
@@ -79,40 +80,48 @@
 
 #define _REGISTER_EVENT_HANDLER(                                                 \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                    \
-    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)                        \
+    SHOULD_ABORT_ON_CONSUMED_EVENT,                                              \
+    TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,                 \
+    SIGNATURE, ARGS_LIST)                                                 __NL__ \
                                                                           __NL__ \
   namespace kaleidoscope_internal {                                       __NL__ \
                                                                           __NL__ \
    template<bool hook_is_implemented__,                                   __NL__ \
-            typename Plugin__,                                            __NL__ \
-            typename... Args__>                                           __NL__ \
+            typename Plugin__                                             __NL__ \
+            UNWRAP TMPL_PARAM_TYPE_LIST /* may evaluate empty */          __NL__ \
+            , typename... Args__>                                         __NL__ \
    struct _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) {   __NL__ \
       static DEPRECATION_TAG kaleidoscope::EventHandlerResult             __NL__ \
         call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
-         return plugin.HOOK_NAME(hook_args...);                           __NL__ \
+         return plugin.TEMPLATE_KEYWORD(UNWRAP TMPL_PARAM_LIST) HOOK_NAME __NL__ \
+            ADD_TEMPLATE_BRACES(UNWRAP TMPL_PARAM_LIST)                   __NL__ \
+            (hook_args...);                                               __NL__ \
       }                                                                   __NL__ \
    };                                                                     __NL__ \
                                                                           __NL__ \
    /* This specialization is used for those hooks that a plugin does not  __NL__ \
     * implement.                                                          __NL__ \
     */                                                                    __NL__ \
-   template<typename Plugin__,                                            __NL__ \
-            typename... Args__>                                           __NL__ \
+   template<typename Plugin__                                             __NL__ \
+            UNWRAP TMPL_PARAM_TYPE_LIST /* may evaluate empty */          __NL__ \
+            , typename... Args__>                                         __NL__ \
    struct _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller)     __NL__ \
-             <false, Plugin__, Args__...> {                               __NL__ \
+             <false, Plugin__ UNWRAP TMPL_PARAM_LIST, Args__...> {        __NL__ \
       static kaleidoscope::EventHandlerResult                             __NL__ \
         call(Plugin__ &/*plugin*/, Args__&&... /*hook_args*/) {           __NL__ \
          return kaleidoscope::EventHandlerResult::OK;                     __NL__ \
       }                                                                   __NL__ \
    };                                                                     __NL__ \
                                                                           __NL__ \
+   MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                   __NL__ \
    struct _NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION) {            __NL__ \
                                                                           __NL__ \
       static bool shouldAbortOnConsumedEvent() {                          __NL__ \
         return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
-      template<typename Plugin__, typename... Args__>                     __NL__ \
+      template<typename Plugin__,                                         __NL__ \
+               typename... Args__>                                        __NL__ \
       static kaleidoscope::EventHandlerResult                             __NL__ \
         call(Plugin__ &plugin, Args__&&... hook_args) {                   __NL__ \
                                                                           __NL__ \
@@ -129,8 +138,9 @@
          typedef _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) __NL__ \
             <                                                             __NL__ \
                derived_implements_hook,                                   __NL__ \
-               Plugin__,                                                  __NL__ \
-               Args__...                                                  __NL__ \
+               Plugin__                                                   __NL__ \
+               UNWRAP TMPL_PARAM_LIST                                     __NL__ \
+               , Args__...                                                __NL__ \
             > Caller;                                                     __NL__ \
                                                                           __NL__ \
          return Caller::call(plugin, hook_args...);                       __NL__ \
@@ -141,11 +151,13 @@
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \
+     MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                 __NL__ \
      EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
         apply<kaleidoscope_internal                                       __NL__ \
-           ::_NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION)>          __NL__ \
-             ARGS_LIST;                                                   __NL__ \
+           ::_NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION)           __NL__ \
+                ADD_TEMPLATE_BRACES(UNWRAP TMPL_PARAM_LIST)               __NL__ \
+           >ARGS_LIST;                                                    __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
    }
@@ -202,4 +214,6 @@
                                                                               __NL__ \
   /* This generates a PROGMEM array-kind-of data structure that contains   */ __NL__ \
   /* LEDModeFactory entries                                                */ __NL__ \
-  _INIT_LED_MODE_MANAGER(__VA_ARGS__)
+  _INIT_LED_MODE_MANAGER(__VA_ARGS__)                                         __NL__ \
+                                                                              __NL__ \
+  _INIT_PLUGIN_EXPLORATION(__VA_ARGS__)

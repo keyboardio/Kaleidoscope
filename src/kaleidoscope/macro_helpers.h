@@ -52,6 +52,8 @@
 #define GLUE3(A, B, C) A##B##C
 #define GLUE4(A, B, C, D) A##B##C##D
 
+#define UNWRAP(...) __VA_ARGS__
+
 // Allow for the creation of verbose messages in static_asserts
 //
 #define VERBOSE_STATIC_ASSERT_HEADER                                           \
@@ -142,3 +144,50 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
 
 /* Count the args in a list */
 #define NUM_ARGS(...)  (sizeof((int[])__VA_ARGS__)/sizeof(int))
+
+// Macro MAKE_TEMPLATE_SIGNATURE(...) wraps arguments 2..last in a template
+// signature like 'template<ARG2, ARG3, ...>' only if it is passed more
+// than one argument. Otherwise it generates an empty string.
+//
+#define MAKE_TEMPLATE_SIGNATURE(UNUSED, ...)                                   \
+   SELECT_ON_EMPTY_SIGNATURE(MAKE_TEMPLATE_SIGNATURE_, UNUSED,##__VA_ARGS__)
+#define MAKE_TEMPLATE_SIGNATURE_0(...)
+#define MAKE_TEMPLATE_SIGNATURE_1(...) template<__VA_ARGS__>
+
+// Macro ADD_TEMPLATE_BRACES(...) wraps arguments 2..last in angle brackets
+// only if it is passed more than one argument. Otherwise it generates an
+// empty string.
+//
+#define ADD_TEMPLATE_BRACES(UNUSED, ...)                                       \
+   SELECT_ON_EMPTY_SIGNATURE(ADD_TEMPLATE_BRACES_, UNUSED,##__VA_ARGS__)
+#define ADD_TEMPLATE_BRACES_0(...)
+#define ADD_TEMPLATE_BRACES_1(...) <__VA_ARGS__>
+
+// Macro TEMPLATE_KEYWORD(...) generates the 'template' keyword only if it is
+// passed more than one argument.
+//
+#define TEMPLATE_KEYWORD(UNUSED, ...)                                          \
+   SELECT_ON_EMPTY_SIGNATURE(TEMPLATE_KEYWORD_, UNUSED,##__VA_ARGS__)
+#define TEMPLATE_KEYWORD_0(...)
+#define TEMPLATE_KEYWORD_1(...) template
+
+// Helper macros for template parameter list treatment
+
+#define GLUE2_AUX(...) GLUE2(__VA_ARGS__)
+
+#define TEST1(UNUSED, A, B, C, D,                                              \
+                      E, F, G, H,                                              \
+                      I, J, K, L,                                              \
+                      M, N, O, P,                                              \
+                      Q, ...) Q
+#define TEST(...) TEST1(__VA_ARGS__)
+#define CHOICE(UNUSED, ...) ,##__VA_ARGS__, 1, 1, 1, 1,                        \
+                                            1, 1, 1, 1,                        \
+                                            1, 1, 1, 1,                        \
+                                            1, 1, 1, 1,                        \
+                                            0
+#define SELECT_ON_EMPTY_SIGNATURE(MACRO_BASE_NAME, UNUSED, ...)                \
+   GLUE2_AUX(                                                                  \
+      MACRO_BASE_NAME,                                                         \
+      TEST(CHOICE(1,##__VA_ARGS__))                                            \
+   )(__VA_ARGS__)

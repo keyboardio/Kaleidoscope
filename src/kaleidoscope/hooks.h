@@ -41,6 +41,10 @@ class LEDControl;
 // Forward declaration to enable friend declarations.
 class Layer_;
 
+namespace sketch_exploration {
+void pluginsExploreSketch();
+} // namespace sketch_exploration
+
 // The reason why the hook routing entry point functions live within
 // class Hooks and not directly within a namespace is, that we want
 // to restrict who is allowed to trigger hooks, mainly to prevent
@@ -60,6 +64,7 @@ class Hooks {
   friend class Kaleidoscope_;
   friend class ::kaleidoscope::Layer_;
   friend class ::kaleidoscope::plugin::LEDControl;
+  friend void ::kaleidoscope::sketch_exploration::pluginsExploreSketch();
 
   // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
@@ -72,8 +77,11 @@ class Hooks {
 
 #define DEFINE_WEAK_HOOK_FUNCTION(                                             \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
-    SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST)               __NL__ \
+    SHOULD_ABORT_ON_CONSUMED_EVENT,                                            \
+    TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,               \
+    SIGNATURE, ARGS_LIST)                                               __NL__ \
                                                                         __NL__ \
+   MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                 __NL__ \
    static EventHandlerResult HOOK_NAME SIGNATURE;
 
   _FOR_EACH_EVENT_HANDLER(DEFINE_WEAK_HOOK_FUNCTION)

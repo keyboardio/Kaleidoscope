@@ -82,7 +82,9 @@ inline void registerLEDModeActivated(Bool2Type<false>,
   // Noop
 }
 
-DEFINE_HAS_METHOD_TRAITS(Plugin, registerLEDModeActivated, void, (uint8_t led_mode_id))
+DEFINE_HAS_METHOD_TRAITS(Plugin,
+                         /* registerLEDModeActivated not templated */ (), (),
+                         registerLEDModeActivated, void, (uint8_t led_mode_id))
 
 // A templated implementation of LEDModeFactoryFunc.
 //

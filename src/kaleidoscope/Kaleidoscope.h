@@ -59,6 +59,7 @@ static constexpr DEPRECATED(LED_COUNT) uint8_t LED_COUNT = kaleidoscope_internal
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/hid.h"
 #include "kaleidoscope/layers.h"
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope/macro_map.h"
 #include "kaleidoscope_internal/event_dispatch.h"
 #include "kaleidoscope_internal/LEDModeManager.h"

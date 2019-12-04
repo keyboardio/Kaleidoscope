@@ -33,7 +33,7 @@ __attribute__((weak))
 uint8_t layer_count = 0;
 
 __attribute__((weak))
-extern const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
+extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;

@@ -21,19 +21,22 @@
 #include "kaleidoscope/keymaps.h"
 #include "kaleidoscope/device/device.h"
 #include "kaleidoscope_internal/device.h"
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
 #define KEYMAPS(layers...)				                                    __NL__ \
-  const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
+  constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = { layers };           __NL__ \
   uint8_t layer_count                                                   __NL__ \
      = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
                                                                         __NL__ \
   /* This deprecated compatibility wrapper is removed by the linker if  __NL__ \
      it is not accessed nowhere.                                        __NL__ \
   */                                                                    __NL__ \
-  kaleidoscope::internal::Keymaps2DInterface keymaps;
+  kaleidoscope::internal::Keymaps2DInterface keymaps;                   __NL__ \
+                                                                        __NL__ \
+  _INIT_SKETCH_EXPLORATION
 
 extern uint8_t layer_count;
 
