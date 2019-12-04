@@ -29,8 +29,6 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
-
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
 struct cRGB {
@@ -42,6 +40,9 @@ struct cRGB {
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
 namespace device {
@@ -54,6 +55,7 @@ struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
  public:
   ErgoDox(void) {}
@@ -93,6 +95,9 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   static void debounceRow(uint8_t change, uint8_t row);
   static void readMatrixRow(uint8_t row);
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class ErgoDox;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
     /* left hand, spatial positions */                                  \

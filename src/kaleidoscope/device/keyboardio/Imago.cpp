@@ -33,6 +33,8 @@ namespace keyboardio {
 
 constexpr uint8_t ImagoLEDDriverProps::key_led_map[] PROGMEM;
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
 static constexpr uint8_t CMD_SET_REGISTER = 0xFD;
 static constexpr uint8_t CMD_WRITE_ENABLE = 0xFE;
 static constexpr uint8_t WRITE_ENABLE_ONCE = 0b11000101;
@@ -171,6 +173,8 @@ void Imago::setup() {
 
   kaleidoscope::device::ATmega32U4Keyboard<ImagoProps>::setup();
 }
+
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }

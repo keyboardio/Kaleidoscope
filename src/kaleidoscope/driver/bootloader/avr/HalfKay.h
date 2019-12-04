@@ -17,7 +17,10 @@
 
 #pragma once
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "kaleidoscope/driver/bootloader/None.h"
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {
@@ -25,6 +28,7 @@ namespace driver {
 namespace bootloader {
 namespace avr {
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class HalfKay : public kaleidoscope::driver::bootloader::Base {
  public:
   // To reset a Teensy with the HalfKay bootloader, we need to disable all
@@ -65,6 +69,9 @@ class HalfKay : public kaleidoscope::driver::bootloader::Base {
     asm volatile("jmp 0x7E00");
   }
 };
+#else
+typedef bootloader::None HalfKay;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }

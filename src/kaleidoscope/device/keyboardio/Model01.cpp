@@ -16,17 +16,21 @@
  */
 
 #ifdef ARDUINO_AVR_MODEL01
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include <Kaleidoscope.h>
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
 constexpr uint8_t Model01LEDDriverProps::key_led_map[] PROGMEM;
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 /********* Model01Hands *********/
 
@@ -293,9 +297,9 @@ void Model01::enableHardwareTestMode() {
   KeyScanner::setKeyscanInterval(2);
 }
 
-}
-}
-}
-
 #endif
+
+}
+}
+}
 #endif

@@ -15,6 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <Kaleidoscope.h>
 
 #ifdef KALEIDOSCOPE_BOOTLOADER_FLIP_WORKAROUND
@@ -74,3 +75,4 @@ void FLIP::rebootBootloader() {
 }
 
 #endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

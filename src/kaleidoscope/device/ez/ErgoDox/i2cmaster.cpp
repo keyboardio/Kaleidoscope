@@ -7,6 +7,7 @@
 * Usage:    API compatible with I2C Software Library i2cmaster.h
 **************************************************************************/
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
 #include <inttypes.h>
@@ -201,3 +202,4 @@ unsigned char i2c_readNak(void) {
 }/* i2c_readNak */
 
 #endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

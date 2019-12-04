@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef __AVR__
+#if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
 #include "kaleidoscope/driver/storage/Base.h"
 #include <EEPROM.h>

@@ -51,6 +51,7 @@ struct ImagoLEDDriverProps: public kaleidoscope::driver::led::BaseProps {
   };
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProps> {
  public:
   static void setup();
@@ -68,6 +69,9 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static void setAllPwmTo(uint8_t);
   static void twiSend(uint8_t addr, uint8_t Reg_Add, uint8_t Reg_Dat);
 };
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class ImagoLEDDriver;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
@@ -82,10 +86,12 @@ struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
 };
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
  public:
   void setup();
 };
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define PER_KEY_DATA(dflt,                                              \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7, R0C8, R0C9, R0C10, R0C11, R0C12, R0C13, R0C14, R0C15, \

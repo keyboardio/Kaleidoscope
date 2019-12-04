@@ -24,6 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
 #include <Kaleidoscope.h>
@@ -232,3 +233,4 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
 kaleidoscope::device::ez::ErgoDox &ErgoDox = kaleidoscope_internal::device;
 
 #endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

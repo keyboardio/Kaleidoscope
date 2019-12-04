@@ -23,6 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
@@ -171,3 +172,4 @@ ErgoDoxScanner::reattachExpanderOnError() {
 }
 
 #endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

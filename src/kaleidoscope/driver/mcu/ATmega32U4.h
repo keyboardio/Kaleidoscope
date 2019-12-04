@@ -23,6 +23,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
  public:
   void detachFromHost() {
@@ -62,6 +63,9 @@ class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
 
   void setup() {}
 };
+#else
+typedef Base ATmega32U4;
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
 }
