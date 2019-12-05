@@ -62,12 +62,12 @@ enable_ccache () {
          mkdir -p "$CCACHE_WRAPPER_PATH"
       fi
       
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}gcc"
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
+         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
       fi
       
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}g++"
+      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
+         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
       fi
       
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
@@ -305,6 +305,8 @@ compile () {
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -prefs compiler.path=${COMPILER_PATH} \
+	      -prefs "compiler.c.cmd=${COMPILER_PREFIX}${C_COMPILER_BASENAME}" \
+	      -prefs "compiler.cpp.cmd=${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
