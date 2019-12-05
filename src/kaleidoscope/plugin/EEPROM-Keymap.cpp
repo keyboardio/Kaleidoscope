@@ -130,7 +130,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     // we actully want.
     //
     dumpKeymap(progmem_layers_,
-               static_cast<Key(*)(uint8_t, KeyAddr)>(Layer.getKeyFromPROGMEM));
+               static_cast<Key(*)(uint8_t, KeyAddr)>(Layer_::getKeyFromPROGMEM));
     return EventHandlerResult::EVENT_CONSUMED;
   }
 

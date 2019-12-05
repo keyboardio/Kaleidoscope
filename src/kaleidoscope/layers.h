@@ -116,7 +116,8 @@ class Layer_ {
     return eventHandler(mappedKey, KeyAddr(row, col), keyState);
   }
 
-  static Key(*getKey)(uint8_t layer, KeyAddr key_addr);
+  typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
+  static GetKeyFunction getKey;
 
   static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
   DEPRECATED(ROW_COL_FUNC) static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {

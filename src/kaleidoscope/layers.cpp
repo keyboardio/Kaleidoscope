@@ -40,7 +40,7 @@ uint32_t Layer_::layer_state_;
 uint8_t Layer_::top_active_layer_;
 Key Layer_::live_composite_keymap_[Kaleidoscope.device().numKeys()];
 uint8_t Layer_::active_layers_[Kaleidoscope.device().numKeys()];
-Key(*Layer_::getKey)(uint8_t layer, KeyAddr key_addr) = Layer.getKeyFromPROGMEM;
+Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
