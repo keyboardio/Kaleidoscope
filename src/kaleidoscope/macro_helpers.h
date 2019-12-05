@@ -99,6 +99,27 @@
 int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
 #endif
 //
+#ifdef __clang__
+// Clang does not allow temporaries of anonymous structs as they are used
+// in the below definition of RESTRICT_ARGS_COUNT as accepted by gcc
+// (due to a language extension,
+// see https://gcc.gnu.org/onlinedocs/gcc/Compound-Literals.html)
+//
+// As there is currently no other known workaround available that would allow
+// us to sneak a static_assert (unfortunately a statement rather
+// than an expression) into the initializer list of a constexpr array,
+// like the keymap.
+//
+// Thus, we have to disable this feature for clang builds until
+// a solution becomes available.
+//
+#define RESTRICT_ARGS_COUNT(B,                                                 \
+                            NUM_EXPECTED_ARGS,                                 \
+                            ORIGINAL_MACRO,                                    \
+                            ...)                                               \
+   B
+
+#else
 #define RESTRICT_ARGS_COUNT(B,                                                 \
                             NUM_EXPECTED_ARGS,                                 \
                             ORIGINAL_MACRO,                                    \
@@ -141,6 +162,7 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
    }){}, /* End of dummy lambda, the comma operator's A operand. */         __NL__ \
    B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */                __NL__ \
    )
+#endif
 
 /* Count the args in a list */
 #define NUM_ARGS(...)  (sizeof((int[])__VA_ARGS__)/sizeof(int))
