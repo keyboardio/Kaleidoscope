@@ -74,7 +74,7 @@ class Base {
 
     typedef LEDs ThisType;
 
-    constexpr uint8_t offset() {
+    constexpr uint8_t offset() const {
       return offset_;
     }
 
@@ -124,7 +124,7 @@ class Base {
     constexpr const ThisType &operator*() const {
       return *this;
     }
-    constexpr bool isValid(uint8_t index) {
+    constexpr bool isValid(uint8_t index) const {
       return (_LEDDriverProps::led_count > 0 && index < _LEDDriverProps::led_count);
     }
   } LEDs_;
