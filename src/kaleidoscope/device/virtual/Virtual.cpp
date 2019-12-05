@@ -374,17 +374,6 @@ cRGB VirtualLEDDriver::getCrgbAt(uint8_t i) const {
 } // namespace virt
 } // namespace device
 
-
-namespace driver {
-namespace led {
-
-template<>
-Base<kaleidoscope::DeviceProps::LEDDriverProps>::LEDs
-Base<kaleidoscope::DeviceProps::LEDDriverProps>::LEDs_{};
-
-} // namespace led
-} // namespace driver
-
 } // namespace kaleidoscope
 
 
