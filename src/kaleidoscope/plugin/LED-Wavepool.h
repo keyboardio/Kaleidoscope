@@ -61,8 +61,6 @@ class WavepoolEffect : public Plugin,
 
    private:
 
-    const WavepoolEffect *parent_;
-
     uint8_t frames_since_event_;
     int8_t surface_[2][WP_WID * WP_HGT];
     uint8_t page_;

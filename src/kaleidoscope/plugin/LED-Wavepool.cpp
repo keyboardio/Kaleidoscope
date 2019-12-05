@@ -39,8 +39,7 @@ PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[Kaleidoscope.devi
 };
 
 WavepoolEffect::TransientLEDMode::TransientLEDMode(const WavepoolEffect *parent)
-  : parent_(parent),
-    frames_since_event_(0),
+  : frames_since_event_(0),
     surface_{},
     page_(0)
 {}
