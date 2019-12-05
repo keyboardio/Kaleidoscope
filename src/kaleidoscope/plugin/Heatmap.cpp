@@ -33,8 +33,7 @@ uint8_t Heatmap::heat_colors_length = 4;
 uint16_t Heatmap::update_delay = 1000;
 
 Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
-  : parent_(parent),
-    // store the number of times each key has been strock
+  : // store the number of times each key has been strock
     heatmap_{},
     // max of heatmap_ (we divide by it so we start at 1)
     highest_(1),
