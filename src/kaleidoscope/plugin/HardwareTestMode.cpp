@@ -76,7 +76,7 @@ void HardwareTestMode::testLeds(void) {
 
 void HardwareTestMode::testMatrix() {
   // Reset bad keys from previous tests.
-  chatter_data state[Kaleidoscope.device().numKeys()] = {0, 0, 0};
+  chatter_data state[Kaleidoscope.device().numKeys()] = {{0, 0, 0}};
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
