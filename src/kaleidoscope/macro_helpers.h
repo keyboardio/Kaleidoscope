@@ -125,14 +125,13 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
                             ORIGINAL_MACRO,                                    \
                             ...)                                               \
   ((struct {                                                                __NL__ \
-       /* Here we are in the body of a dummy lambda function.            */ __NL__ \
-       /* []{} is, BTW, the shortest way to write a lambda.              */ __NL__ \
+       /* Here we are in the body of a anonymous struct.                 */ __NL__ \
        /* It is only used to hold the static_assert that cannot be       */ __NL__ \
        /* defined directly in the keymap initializer list. By using the  */ __NL__ \
        /* comma operator ((A, B) always evaluates to b), we ensure       */ __NL__ \
-       /* that not the lambda but B is what ASSERT_ARGS_COUNT            */ __NL__ \
+       /* that not the temporary struct but B is what ASSERT_ARGS_COUNT  */ __NL__ \
        /* finally evaluates to.                                          */ __NL__ \
-       /* Please not that passing B through this macro is a must         */ __NL__ \
+       /* Please note that passing B through this macro is a must        */ __NL__ \
        /* as we need it for the comma operator to work.                  */ __NL__ \
    static_assert(sizeof(const char) == sizeof(#__VA_ARGS__ ),               __NL__ \
         /* sizeof(const char) == sizeof(#__VA_ARGS__ ) checks the quoted */ __NL__ \
@@ -159,7 +158,7 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
      VERBOSE_STATIC_ASSERT_FOOTER                                           __NL__ \
    );                                                                       __NL__ \
                                                                             __NL__ \
-   }){}, /* End of dummy lambda, the comma operator's A operand. */         __NL__ \
+   }){}, /* End of dummy struct, the comma operator's A operand. */         __NL__ \
    B     /* The overall ASSERT_ARGS_COUNT evaluates to B. */                __NL__ \
    )
 #endif
