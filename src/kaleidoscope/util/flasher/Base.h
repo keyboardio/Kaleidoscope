@@ -28,7 +28,7 @@ struct BaseProps {
   static constexpr uint8_t blank = 0xff;
   static constexpr uint8_t delay = 1;
 
-  static struct {
+  static struct command {
     static constexpr uint8_t page_address = 0x01;
     static constexpr uint8_t continue_page = 0x02;
     static constexpr uint8_t execute = 0x03;
