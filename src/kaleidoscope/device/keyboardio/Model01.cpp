@@ -197,7 +197,7 @@ void Model01KeyScanner::scanMatrix() {
 // halves, with eight keys per logical row.
 
 constexpr byte HIGH_BIT = B10000000;
-constexpr byte HAND_BIT = B00001000;
+constexpr byte HAND_BIT = Model01KeyScannerProps::HAND_BIT;
 constexpr byte ROW_BITS = B00110000;
 constexpr byte COL_BITS = B00000111;
 

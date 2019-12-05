@@ -60,6 +60,7 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, Key
       update_position_ = Layer.top() * Kaleidoscope.device().numKeys() + key_addr.toInt();
     }
     if (keyToggledOff(key_state)) {
+      // TODO: Check use of Layer.top() in presence of multiple key groups
       if ((uint16_t)(Layer.top() * Kaleidoscope.device().numKeys() + key_addr.toInt()) == update_position_)
         nextState();
     }
@@ -68,9 +69,11 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, Key
 
   if (state_ == WAIT_FOR_SOURCE_KEY) {
     if (keyToggledOn(key_state)) {
+      // TODO: Check use of Layer.top() in presence of multiple key groups
       new_key_ = Layer.getKeyFromPROGMEM(Layer.top(), key_addr);
     }
     if (keyToggledOff(key_state)) {
+      // TODO: Check use of Layer.top() in presence of multiple key groups
       if (new_key_ == Layer.getKeyFromPROGMEM(Layer.top(), key_addr))
         nextState();
     }

@@ -32,10 +32,8 @@ void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
   colormap_ = colormap;
 }
 
-cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
+cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor(uint8_t top_layer) {
   cRGB color;
-
-  uint8_t top_layer = ::Layer.top();
 
   color.r = pgm_read_byte(&(parent_->colormap_[top_layer].r));
   color.g = pgm_read_byte(&(parent_->colormap_[top_layer].g));
@@ -48,12 +46,16 @@ void LEDActiveLayerColorEffect::TransientLEDMode::onActivate(void) {
   if (!Kaleidoscope.has_leds)
     return;
 
-  active_color_ = getActiveColor();
-  ::LEDControl.set_all_leds_to(active_color_);
+  for (auto key_addr : KeyAddr::all()) {
+    refreshAt(key_addr);
+  }
 }
 
 void LEDActiveLayerColorEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
-  ::LEDControl.setCrgbAt(key_addr, active_color_);
+  uint8_t key_group = groupOfKey(key_addr);
+  uint8_t top_layer = ::Layer.top(key_group);
+  cRGB active_color = getActiveColor(top_layer);
+  ::LEDControl.setCrgbAt(key_addr, active_color);
 }
 
 EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {

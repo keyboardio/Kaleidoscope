@@ -75,6 +75,10 @@ class Base {
   bool isKeyMasked(KeyAddr key_addr) {
     return false;
   }
+
+  static constexpr bool isOnLeftHalf(KeyAddr key_addr) {
+    return true;
+  }
 };
 
 }

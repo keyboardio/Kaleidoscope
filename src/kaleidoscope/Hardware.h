@@ -45,6 +45,7 @@
  */
 
 namespace kaleidoscope {
+
 /** Kaleidoscope Hardware base class.
  * Essential methods all hardware libraries must implement.
  */

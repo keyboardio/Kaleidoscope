@@ -48,10 +48,22 @@ namespace kaleidoscope {
 namespace device {
 namespace ez {
 
+struct ErgoDoxKeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
+  KEYSCANNER_PROPS(14, 6);
+};
+
+class ErgoDoxKeyScanner : public kaleidoscope::device::ATmega32U4KeyboardProps::KeyScanner {
+ public:
+
+  static constexpr bool isOnLeftHalf(ErgoDoxKeyScannerProps::KeyAddr key_addr) {
+    return key_addr.row() < 7;
+  }
+};
+
 struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
-  struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
-    KEYSCANNER_PROPS(14, 6);
-  };
+
+  typedef ErgoDoxKeyScannerProps KeyScannerProps;
+  typedef ErgoDoxKeyScanner KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
 };
 

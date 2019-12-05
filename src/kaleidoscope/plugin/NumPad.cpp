@@ -57,6 +57,7 @@ void NumPad::setKeyboardLEDColors(void) {
 }
 
 EventHandlerResult NumPad::afterEachCycle() {
+  // TODO: How could this work with more than one keygroup?
   if (!Layer.isActive(numPadLayer)) {
     if (numpadActive) {
       ::LEDControl.set_mode(::LEDControl.get_mode_index());
