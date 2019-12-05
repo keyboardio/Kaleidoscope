@@ -39,10 +39,10 @@ class KeymapAdaptor {
     :  keymap_{keymap}
   {}
 
-  constexpr Key getKey(uint8_t layer, uint8_t offset) {
+  constexpr Key getKey(uint8_t layer, uint8_t offset) const {
     return keymap_[layer][offset];
   }
-  constexpr Key getKey(uint8_t layer, KeyAddr key_addr) {
+  constexpr Key getKey(uint8_t layer, KeyAddr key_addr) const {
     return this->getKey(layer, key_addr.toInt());
   }
 };
@@ -62,14 +62,14 @@ class AccumulationHelper : public KeymapAdaptor<_n_layers, _layer_size> {
 
   typedef typename _Accumulation::ResultType ResultType;
 
-  constexpr ResultType accumulateOnLayer(uint8_t layer, uint8_t offset) {
+  constexpr ResultType accumulateOnLayer(uint8_t layer, uint8_t offset) const {
     return (offset >= _layer_size)
            ?  op_.init_value
            :  op_.apply(this->getKey(layer, offset),
                         this->accumulateOnLayer(layer, offset + 1));
   }
 
-  constexpr ResultType accumulate(uint8_t layer) {
+  constexpr ResultType accumulate(uint8_t layer) const {
     return (layer >= _n_layers)
            ?   op_.init_value
            :   op_.apply(this->accumulateOnLayer(layer, 0),
@@ -86,7 +86,7 @@ class AccumulationHelper : public KeymapAdaptor<_n_layers, _layer_size> {
         op_{op}
   {}
 
-  constexpr ResultType apply() {
+  constexpr ResultType apply() const {
     return this->accumulate(0);
   }
 };
@@ -101,7 +101,7 @@ struct MaxKeyRaw {
   typedef Key ResultType;
   static constexpr ResultType init_value = 0;
 
-  constexpr ResultType apply(Key k1, Key k2) {
+  constexpr ResultType apply(Key k1, Key k2) const {
     return (k1 > k2) ? k1 : k2;
   }
 };
@@ -112,10 +112,10 @@ struct NumKeysEqual {
 
   constexpr NumKeysEqual(Key k) : k_{k} {}
 
-  constexpr ResultType apply(Key test_key, ResultType r) {
+  constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? r + 1 : r;
   }
-  constexpr ResultType apply(ResultType r1, ResultType r2) {
+  constexpr ResultType apply(ResultType r1, ResultType r2) const {
     return r1 + r2;
   }
 
@@ -128,10 +128,10 @@ struct HasKey {
 
   constexpr HasKey(Key k) : k_{k} {}
 
-  constexpr ResultType apply(Key test_key, ResultType r) {
+  constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? true : r;
   }
-  constexpr ResultType apply(ResultType r1, ResultType r2) {
+  constexpr ResultType apply(ResultType r1, ResultType r2) const {
     return r1 || r2;
   }
 
