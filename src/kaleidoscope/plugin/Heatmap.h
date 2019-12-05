@@ -57,8 +57,6 @@ class Heatmap : public Plugin,
 
    private:
 
-    const Heatmap *parent_;
-
     uint16_t heatmap_[Kaleidoscope.device().numKeys()];
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
