@@ -100,11 +100,25 @@ int HID_::SendReport(uint8_t id, const void* data, int len) {
 }
 
 int HID_::SendReport_(uint8_t id, const void* data, int len) {
+  /* On SAMD, we need to send the whole report in one batch; sending the id, and
+   * the report itself separately does not work, the report never arrives. Due
+   * to this, we merge the two into a single buffer, and send that.
+   *
+   * While the same would work for other architectures, AVR included, doing so
+   * costs RAM, which is something scarce on AVR. So on that platform, we opt to
+   * send the id and the report separately instead. */
+#ifdef ARDUINO_ARCH_SAMD
+    uint8_t p[64];
+    p[0] = id;
+    memcpy(&p[1], data, len);
+    return USB_Send(pluggedEndpoint, p, len+1);
+#else
     auto ret = USB_Send(pluggedEndpoint, &id, 1);
     if (ret < 0) return ret;
     auto ret2 = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, len);
     if (ret2 < 0) return ret2;
     return ret + ret2;
+#endif
 }
 
 bool HID_::setup(USBSetup& setup) {
