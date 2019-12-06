@@ -16,6 +16,8 @@
    SOFTWARE.
  */
 
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+
 // This is a modified version of the original HID.cpp from
 // library KeyboardioHID. It replaces all hardware related stuff
 // with stub implementations.
@@ -92,3 +94,5 @@ int HID_::begin(void) {
 }
 
 #endif /* if defined(USBCON) */
+
+#endif // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD

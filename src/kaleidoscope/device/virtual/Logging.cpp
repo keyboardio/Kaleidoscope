@@ -14,6 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+
 #include "Logging.h"
 
 namespace kaleidoscope {
@@ -31,3 +33,5 @@ bool verboseOutputEnabled() {
 
 } // namespace logging
 } // namespace kaleidoscope
+
+#endif // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
