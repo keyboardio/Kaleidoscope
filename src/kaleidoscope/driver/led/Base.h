@@ -65,14 +65,14 @@ class Base {
     return pgm_read_byte(&_LEDDriverProps::key_led_map[key_offset]);
   }
 
-  static class LEDs {
+  class LEDRangeIterator {
    private:
     uint8_t offset_;
    public:
-    LEDs() : offset_(0) {}
-    LEDs(uint8_t offset) : offset_(offset) {}
+    LEDRangeIterator() : offset_(0) {}
+    LEDRangeIterator(uint8_t offset) : offset_(offset) {}
 
-    typedef LEDs ThisType;
+    typedef LEDRangeIterator ThisType;
 
     constexpr uint8_t offset() const {
       return offset_;
@@ -109,7 +109,7 @@ class Base {
     }
 
     struct Range {
-      typedef ThisType Iterator;
+      typedef LEDRangeIterator Iterator;
       static constexpr ThisType begin() {
         return ThisType(uint8_t(0));
       }
@@ -127,7 +127,12 @@ class Base {
     constexpr bool isValid(uint8_t index) const {
       return (_LEDDriverProps::led_count > 0 && index < _LEDDriverProps::led_count);
     }
-  } LEDs_;
+  };
+
+  static LEDRangeIterator &LEDs() {
+    static LEDRangeIterator leds;
+    return leds;
+  }
 
  protected:
   typedef _LEDDriverProps Props_;

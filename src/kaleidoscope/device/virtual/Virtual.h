@@ -99,8 +99,6 @@ class VirtualLEDDriver
   typedef driver::led::Base<kaleidoscope::DeviceProps::LEDDriverProps>
   ParentType;
 
-  using typename ParentType::LEDs;
-
   static constexpr uint8_t led_count = kaleidoscope::DeviceProps::LEDDriverProps::led_count;
 
   void setup();
