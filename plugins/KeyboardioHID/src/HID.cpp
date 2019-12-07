@@ -70,6 +70,7 @@ int HID_::getDescriptor(USBSetup& setup) {
     return total;
 }
 
+__attribute__((weak))
 uint8_t HID_::getShortName(char *name) {
     name[0] = 'k';
     name[1] = 'b';
