@@ -16,10 +16,12 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 
 #include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 
@@ -61,7 +63,7 @@ class Macros_ : public kaleidoscope::Plugin {
 
   /* What follows below, is a bit of template magic that allows us to use
      Macros.type() with any number of arguments, without having to use a
-     sentinel. See the comments on Kaleidoscope.use() for more details - this is
+     sentinel. See the comments on Runtime.use() for more details - this is
      the same trick.
    */
   inline const macro_t *type() {

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 
 #define _DEPRECATED_MESSAGE_EEPROMSETTINGS_VERSION_SET            \
   "The EEPROMSettings.version(uint8_t version) method has been deprecated,\n" \

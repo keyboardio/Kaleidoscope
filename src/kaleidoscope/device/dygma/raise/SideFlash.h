@@ -20,7 +20,8 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/plugin.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -39,9 +40,9 @@ class SideFlash : public kaleidoscope::Plugin {
     if (strncmp_P(command, PSTR("hardware."), 9) != 0)
       return EventHandlerResult::OK;
 
-    auto sideFlasher = Kaleidoscope.device().sideFlasher();
-    uint8_t left_boot_address = Kaleidoscope.device().side.left_boot_address;
-    uint8_t right_boot_address = Kaleidoscope.device().side.right_boot_address;
+    auto sideFlasher = Runtime.device().sideFlasher();
+    uint8_t left_boot_address = Runtime.device().side.left_boot_address;
+    uint8_t right_boot_address = Runtime.device().side.right_boot_address;
     enum {
       FLASH,
       VERIFY
@@ -65,7 +66,7 @@ class SideFlash : public kaleidoscope::Plugin {
     }
 
     bool result;
-    Kaleidoscope.device().side.prepareForFlash();
+    Runtime.device().side.prepareForFlash();
     if (sub_command == FLASH)
       result = sideFlasher.flash(address, firmware);
     else

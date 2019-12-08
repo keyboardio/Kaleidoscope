@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope {
@@ -57,7 +57,7 @@ class Heatmap : public Plugin,
 
    private:
 
-    uint16_t heatmap_[Kaleidoscope.device().numKeys()];
+    uint16_t heatmap_[Runtime.device().numKeys()];
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
 

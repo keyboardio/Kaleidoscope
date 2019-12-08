@@ -14,9 +14,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-HardwareTestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -32,9 +33,9 @@ void HardwareTestMode::setActionKey(uint8_t key) {
 
 void HardwareTestMode::waitForKeypress() {
   while (1) {
-    Kaleidoscope.device().readMatrix();
-    if (Kaleidoscope.device().isKeyswitchPressed(actionKey) &&
-        ! Kaleidoscope.device().wasKeyswitchPressed(actionKey)) {
+    Runtime.device().readMatrix();
+    if (Runtime.device().isKeyswitchPressed(actionKey) &&
+        ! Runtime.device().wasKeyswitchPressed(actionKey)) {
       break;
     }
   }
@@ -76,7 +77,7 @@ void HardwareTestMode::testLeds(void) {
 
 void HardwareTestMode::testMatrix() {
   // Reset bad keys from previous tests.
-  chatter_data state[Kaleidoscope.device().numKeys()] = {{0, 0, 0}};
+  chatter_data state[Runtime.device().numKeys()] = {{0, 0, 0}};
 
   constexpr cRGB red = CRGB(201, 0, 0);
   constexpr cRGB blue = CRGB(0, 0, 201);
@@ -84,12 +85,12 @@ void HardwareTestMode::testMatrix() {
   constexpr cRGB yellow = CRGB(201, 100, 0);
 
   while (1) {
-    Kaleidoscope.device().readMatrix();
+    Runtime.device().readMatrix();
     for (auto key_addr : KeyAddr::all()) {
       uint8_t keynum = key_addr.toInt();
 
       // If the key is toggled on
-      if (Kaleidoscope.device().isKeyswitchPressed(key_addr) && ! Kaleidoscope.device().wasKeyswitchPressed(key_addr)) {
+      if (Runtime.device().isKeyswitchPressed(key_addr) && ! Runtime.device().wasKeyswitchPressed(key_addr)) {
         // And it's too soon (in terms of cycles between changes)
         state[keynum].tested = 1;
         if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
@@ -100,19 +101,19 @@ void HardwareTestMode::testMatrix() {
         state[keynum].cyclesSinceStateChange++;
       }
       // If the key is held down
-      if (Kaleidoscope.device().isKeyswitchPressed(key_addr) && Kaleidoscope.device().wasKeyswitchPressed(key_addr)) {
-        Kaleidoscope.device().setCrgbAt(key_addr, green);
+      if (Runtime.device().isKeyswitchPressed(key_addr) && Runtime.device().wasKeyswitchPressed(key_addr)) {
+        Runtime.device().setCrgbAt(key_addr, green);
       }
 
       // If we triggered chatter detection ever on this key
       else if (state[keynum].bad == 1) {
-        Kaleidoscope.device().setCrgbAt(key_addr, red);
+        Runtime.device().setCrgbAt(key_addr, red);
       } else if (state[keynum].tested == 0) {
-        Kaleidoscope.device().setCrgbAt(key_addr, yellow);
+        Runtime.device().setCrgbAt(key_addr, yellow);
       }
       // If the key is not currently pressed and was not just released and is not marked bad
-      else if (! Kaleidoscope.device().isKeyswitchPressed(key_addr)) {
-        Kaleidoscope.device().setCrgbAt(key_addr, blue);
+      else if (! Runtime.device().isKeyswitchPressed(key_addr)) {
+        Runtime.device().setCrgbAt(key_addr, blue);
       }
     }
     ::LEDControl.syncLeds();
@@ -124,7 +125,7 @@ void HardwareTestMode::runTests() {
   // out and send a new report
   kaleidoscope::hid::releaseAllKeys();
   kaleidoscope::hid::sendKeyboardReport();
-  Kaleidoscope.device().enableHardwareTestMode();
+  Runtime.device().enableHardwareTestMode();
   testLeds();
   testMatrix();
 }

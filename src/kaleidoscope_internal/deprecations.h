@@ -71,3 +71,11 @@
   "\n"                                                                         \
   "For further information and examples on how to do that, \n"                 \
   "please see UPGRADING.md."
+
+#define _DEPRECATED_MESSAGE_GLOBAL_VARIABLE_KALEIDOSCOPE                       \
+  "Variable `Kaleidoscope` in global namespace has been deprecated.\n"         \
+  "Please use `kaleidoscope::Runtime` instead."
+
+#define _DEPRECATED_MESSAGE_GLOBAL_TYPENAME_KALEIDOSCOPE                       \
+  "Type `Kaleidoscope_` in global namespace has been deprecated.\n"            \
+  "Please use `kaleidoscope::Runtime_` instead."

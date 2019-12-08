@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-LED-ActiveLayerColor.h>
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -45,7 +46,7 @@ cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
 }
 
 void LEDActiveLayerColorEffect::TransientLEDMode::onActivate(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   active_color_ = getActiveColor();

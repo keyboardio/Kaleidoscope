@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
 
 #define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect;})
@@ -61,7 +61,7 @@ class StalkerEffect : public Plugin,
     const StalkerEffect *parent_;
 
     uint16_t step_start_time_;
-    uint8_t map_[Kaleidoscope.device().numKeys()];
+    uint8_t map_[Runtime.device().numKeys()];
 
     friend class StalkerEffect;
   };

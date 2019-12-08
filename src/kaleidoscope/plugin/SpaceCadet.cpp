@@ -17,6 +17,8 @@
 
 #include <Kaleidoscope-SpaceCadet.h>
 #include <kaleidoscope/hid.h>
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -119,7 +121,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
       if (mapped_key == map[i].input) {
         //The keypress was valid and a match. Mark it as flagged and reset the counter
         map[i].flagged = true;
-        map[i].start_time = Kaleidoscope.millisAtCycleStart();
+        map[i].start_time = Runtime.millisAtCycleStart();
 
         //yes, we found a valid key
         valid_key = true;
@@ -199,7 +201,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
   }
 
   //Check to determine if we have surpassed our timeout for holding this key
-  if (Kaleidoscope.hasTimeExpired(map[index].start_time, current_timeout)) {
+  if (Runtime.hasTimeExpired(map[index].start_time, current_timeout)) {
     // if we timed out, that means we need to keep pressing the mapped
     // key, but we won't need to send the alternative key in the end
     map[index].flagged = false;

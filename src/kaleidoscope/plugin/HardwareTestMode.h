@@ -17,7 +17,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include "Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

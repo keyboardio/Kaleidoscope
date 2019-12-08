@@ -20,7 +20,7 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/plugin.h"
 
 namespace kaleidoscope {
 namespace device {

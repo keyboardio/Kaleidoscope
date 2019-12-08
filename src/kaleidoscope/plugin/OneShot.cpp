@@ -16,6 +16,8 @@
  */
 
 #include <Kaleidoscope-OneShot.h>
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -89,7 +91,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
     if (keyToggledOff(keyState)) {
       state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
-      start_time_ = Kaleidoscope.millisAtCycleStart();
+      start_time_ = Runtime.millisAtCycleStart();
       state_[idx].position = key_addr.toInt();
       state_[idx].pressed = true;
       state_[idx].active = true;
@@ -112,7 +114,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
     } else {
       if (keyToggledOff(keyState)) {
         state_[idx].pressed = false;
-        if (Kaleidoscope.hasTimeExpired(start_time_, hold_time_out)) {
+        if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
           cancelOneShot(idx);
           should_cancel_ = false;
         }
@@ -123,12 +125,12 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
         if (prev_key_ == mapped_key && isStickable(mapped_key)) {
           uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
-          if (!Kaleidoscope.hasTimeExpired(start_time_, dtto)) {
+          if (!Runtime.hasTimeExpired(start_time_, dtto)) {
             state_[idx].sticky = true;
             prev_key_ = mapped_key;
           }
         } else {
-          start_time_ = Kaleidoscope.millisAtCycleStart();
+          start_time_ = Runtime.millisAtCycleStart();
 
           state_[idx].position = key_addr.toInt();
           state_[idx].active = true;

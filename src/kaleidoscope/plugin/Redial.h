@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
 #define Key_Redial Key(kaleidoscope::ranges::REDIAL)

@@ -18,6 +18,7 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/plugin/EEPROM-Settings/crc.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -28,7 +29,7 @@ bool EEPROMSettings::sealed_;
 uint16_t EEPROMSettings::next_start_ = sizeof(EEPROMSettings::settings);
 
 EventHandlerResult EEPROMSettings::onSetup() {
-  Kaleidoscope.storage().get(0, settings_);
+  Runtime.storage().get(0, settings_);
 
   /* If the version is undefined, set up sensible defaults. */
   if (settings_.version == VERSION_UNDEFINED) {
@@ -49,8 +50,8 @@ EventHandlerResult EEPROMSettings::onSetup() {
      * not able to catch all writes yet. For the sake of consistency, if we
      * encounter a firmware with no version defined, we'll set sensible
      * defaults. */
-    Kaleidoscope.storage().put(0, settings_);
-    Kaleidoscope.storage().commit();
+    Runtime.storage().put(0, settings_);
+    Runtime.storage().commit();
   }
   return EventHandlerResult::OK;
 }
@@ -147,8 +148,8 @@ uint16_t EEPROMSettings::used(void) {
 }
 
 void EEPROMSettings::update(void) {
-  Kaleidoscope.storage().put(0, settings_);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().put(0, settings_);
+  Runtime.storage().commit();
   is_valid_ = true;
 }
 
@@ -222,22 +223,22 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   switch (sub_command) {
   case CONTENTS: {
     if (::Focus.isEOL()) {
-      for (uint16_t i = 0; i < Kaleidoscope.storage().length(); i++) {
-        uint8_t d = Kaleidoscope.storage().read(i);
+      for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
+        uint8_t d = Runtime.storage().read(i);
         ::Focus.send(d);
       }
     } else {
-      for (uint16_t i = 0; i < Kaleidoscope.storage().length() && !::Focus.isEOL(); i++) {
+      for (uint16_t i = 0; i < Runtime.storage().length() && !::Focus.isEOL(); i++) {
         uint8_t d;
         ::Focus.read(d);
-        Kaleidoscope.storage().update(i, d);
+        Runtime.storage().update(i, d);
       }
     }
 
     break;
   }
   case FREE:
-    ::Focus.send(Kaleidoscope.storage().length() - ::EEPROMSettings.used());
+    ::Focus.send(Runtime.storage().length() - ::EEPROMSettings.used());
     break;
   }
 

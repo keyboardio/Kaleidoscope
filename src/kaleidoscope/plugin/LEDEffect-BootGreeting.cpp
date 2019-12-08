@@ -16,6 +16,7 @@
  */
 
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -59,7 +60,7 @@ EventHandlerResult BootGreetingEffect::onSetup() {
 }
 
 EventHandlerResult BootGreetingEffect::afterEachCycle() {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   //If already done or we're not in a ready state, bail
@@ -68,7 +69,7 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
   }
 
   //Only run for 'timeout' milliseconds
-  if (Kaleidoscope.hasTimeExpired(start_time, timeout)) {
+  if (Runtime.hasTimeExpired(start_time, timeout)) {
     done_ = true;
     ::LEDControl.refreshAt(key_addr_);
     return EventHandlerResult::OK;

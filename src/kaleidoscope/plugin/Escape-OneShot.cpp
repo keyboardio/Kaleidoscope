@@ -15,9 +15,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -32,7 +33,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     return EventHandlerResult::OK;
   }
 
-  Kaleidoscope.device().maskKey(key_addr);
+  Runtime.device().maskKey(key_addr);
 
   ::OneShot.cancel(true);
   return EventHandlerResult::EVENT_CONSUMED;

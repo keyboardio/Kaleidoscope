@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-TopsyTurvy.h>
 #include "kaleidoscope/hid.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {

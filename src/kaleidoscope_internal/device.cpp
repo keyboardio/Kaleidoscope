@@ -14,7 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope_internal/device.h"
 
 namespace kaleidoscope_internal {
 kaleidoscope::Device device;

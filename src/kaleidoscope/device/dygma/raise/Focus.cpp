@@ -18,7 +18,7 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/device/dygma/raise/Focus.h"
 
@@ -50,72 +50,72 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
 
   if (strcmp_P(command + 9, PSTR("side_power")) == 0)
     if (::Focus.isEOL()) {
-      ::Focus.send(Kaleidoscope.device().side.getPower());
+      ::Focus.send(Runtime.device().side.getPower());
       return EventHandlerResult::EVENT_CONSUMED;
     } else {
       uint8_t power;
       ::Focus.read(power);
-      Kaleidoscope.device().side.setPower(power);
+      Runtime.device().side.setPower(power);
       return EventHandlerResult::EVENT_CONSUMED;
     }
 
   if (strcmp_P(command + 9, PSTR("side_ver")) == 0) {
     ::Focus.send("left:");
-    ::Focus.send(Kaleidoscope.device().side.leftVersion());
+    ::Focus.send(Runtime.device().side.leftVersion());
     ::Focus.send("\nright:");
-    ::Focus.send(Kaleidoscope.device().side.rightVersion());
+    ::Focus.send(Runtime.device().side.rightVersion());
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 9, PSTR("crc_errors")) == 0) {
     ::Focus.send("left:");
-    ::Focus.send(Kaleidoscope.device().side.leftCRCErrors());
+    ::Focus.send(Runtime.device().side.leftCRCErrors());
     ::Focus.send("\nright:");
-    ::Focus.send(Kaleidoscope.device().side.rightCRCErrors());
+    ::Focus.send(Runtime.device().side.rightCRCErrors());
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 9, PSTR("sled_ver")) == 0) {
     ::Focus.send("left:");
-    ::Focus.send(Kaleidoscope.device().side.leftSLEDVersion());
+    ::Focus.send(Runtime.device().side.leftSLEDVersion());
     ::Focus.send("\nright:");
-    ::Focus.send(Kaleidoscope.device().side.rightSLEDVersion());
+    ::Focus.send(Runtime.device().side.rightSLEDVersion());
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 9, PSTR("sled_current")) == 0)
     if (::Focus.isEOL()) {
       ::Focus.send("left:");
-      ::Focus.send(Kaleidoscope.device().side.leftSLEDCurrent());
+      ::Focus.send(Runtime.device().side.leftSLEDCurrent());
       ::Focus.send("\nright:");
-      ::Focus.send(Kaleidoscope.device().side.rightSLEDCurrent());
+      ::Focus.send(Runtime.device().side.rightSLEDCurrent());
       return EventHandlerResult::EVENT_CONSUMED;
     } else {
       uint8_t current;
       ::Focus.read(current);
-      Kaleidoscope.device().side.setSLEDCurrent(current);
+      Runtime.device().side.setSLEDCurrent(current);
       return EventHandlerResult::EVENT_CONSUMED;
     }
 
   if (strcmp_P(command + 9, PSTR("layout")) == 0) {
-    static const auto ANSI = Kaleidoscope.device().settings.Layout::ANSI;
-    ::Focus.send(Kaleidoscope.device().settings.layout() == ANSI ? "ANSI" : "ISO");
+    static const auto ANSI = Runtime.device().settings.Layout::ANSI;
+    ::Focus.send(Runtime.device().settings.layout() == ANSI ? "ANSI" : "ISO");
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 9, PSTR("joint")) == 0) {
-    ::Focus.send(Kaleidoscope.device().settings.joint());
+    ::Focus.send(Runtime.device().settings.joint());
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (strcmp_P(command + 9, PSTR("keyscan")) == 0) {
     if (::Focus.isEOL()) {
-      ::Focus.send(Kaleidoscope.device().settings.keyscanInterval());
+      ::Focus.send(Runtime.device().settings.keyscanInterval());
       return EventHandlerResult::EVENT_CONSUMED;
     } else {
       uint8_t keyscan;
       ::Focus.read(keyscan);
-      Kaleidoscope.device().settings.keyscanInterval(keyscan);
+      Runtime.device().settings.keyscanInterval(keyscan);
       return EventHandlerResult::EVENT_CONSUMED;
     }
   }

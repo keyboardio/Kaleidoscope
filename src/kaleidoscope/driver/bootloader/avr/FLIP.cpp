@@ -16,7 +16,7 @@
  */
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 
 #ifdef KALEIDOSCOPE_BOOTLOADER_FLIP_WORKAROUND
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"

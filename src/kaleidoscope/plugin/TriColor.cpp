@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-LEDEffects.h>
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {

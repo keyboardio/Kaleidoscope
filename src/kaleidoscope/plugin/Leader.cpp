@@ -16,6 +16,9 @@
  */
 
 #include <Kaleidoscope-Leader.h>
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -94,7 +97,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
 
     if (keyToggledOff(keyState)) {
       // not active, but a leader key = start the sequence on key release!
-      start_time_ = Kaleidoscope.millisAtCycleStart();
+      start_time_ = Runtime.millisAtCycleStart();
       sequence_pos_ = 0;
       sequence_[sequence_pos_] = mapped_key;
     }
@@ -113,7 +116,7 @@ EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
       return EventHandlerResult::OK;
     }
 
-    start_time_ = Kaleidoscope.millisAtCycleStart();
+    start_time_ = Runtime.millisAtCycleStart();
     sequence_[sequence_pos_] = mapped_key;
     action_index = lookup();
 
@@ -143,7 +146,7 @@ EventHandlerResult Leader::afterEachCycle() {
   if (!isActive())
     return EventHandlerResult::OK;
 
-  if (Kaleidoscope.hasTimeExpired(start_time_, time_out))
+  if (Runtime.hasTimeExpired(start_time_, time_out))
     reset();
 
   return EventHandlerResult::OK;

@@ -59,9 +59,9 @@ class Hooks {
   // The following friend declarations restrict access to
   // the hook routing system.
 
-  // Kaleidoscope_ calls Hooks::onSetup, Hooks::beforeReportingState
+  // Runtime_ calls Hooks::onSetup, Hooks::beforeReportingState
   // and Hooks::afterEachCycle.
-  friend class Kaleidoscope_;
+  friend class Runtime_;
   friend class ::kaleidoscope::Layer_;
   friend class ::kaleidoscope::plugin::LEDControl;
   friend void ::kaleidoscope::sketch_exploration::pluginsExploreSketch();

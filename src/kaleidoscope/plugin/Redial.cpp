@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-Redial.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {

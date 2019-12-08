@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
 
 #define MAX_MODS_PER_LAYER 16

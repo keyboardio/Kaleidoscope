@@ -48,7 +48,7 @@ class LEDChaseEffect : public Plugin,
     // members of their parent class. Most LED modes can do without.
     //
     TransientLEDMode(const LEDChaseEffect *parent)
-      : parent_(parent), last_update_(Kaleidoscope.millisAtCycleStart()) {}
+      : parent_(parent), last_update_(Runtime.millisAtCycleStart()) {}
 
    protected:
 

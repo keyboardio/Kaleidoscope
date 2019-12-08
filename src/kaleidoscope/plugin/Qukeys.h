@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 #include "kaleidoscope/plugin/Qukeys/KeyAddrEventQueue.h"
 

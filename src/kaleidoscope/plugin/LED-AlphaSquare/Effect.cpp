@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-LED-AlphaSquare.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -28,16 +29,16 @@ AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect */*paren
 {}
 
 void AlphaSquareEffect::TransientLEDMode::update(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   if (last_key_left_ != Key_NoKey &&
-      Kaleidoscope.hasTimeExpired(start_time_left_, length)) {
+      Runtime.hasTimeExpired(start_time_left_, length)) {
     ::AlphaSquare.clear(last_key_left_);
     last_key_left_ = Key_NoKey;
   }
   if (last_key_right_ != Key_NoKey &&
-      Kaleidoscope.hasTimeExpired(start_time_right_, length)) {
+      Runtime.hasTimeExpired(start_time_right_, length)) {
     ::AlphaSquare.clear(last_key_right_, 10);
     last_key_right_ = Key_NoKey;
   }
@@ -48,12 +49,12 @@ void AlphaSquareEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
   uint8_t display_col = 2;
   Key key = last_key_left_;
 
-  if (key_addr.col() < Kaleidoscope.device().matrix_columns / 2) {
-    timed_out = Kaleidoscope.hasTimeExpired(start_time_left_, length);
+  if (key_addr.col() < Runtime.device().matrix_columns / 2) {
+    timed_out = Runtime.hasTimeExpired(start_time_left_, length);
   } else {
     key = last_key_right_;
     display_col = 10;
-    timed_out = Kaleidoscope.hasTimeExpired(start_time_right_, length);
+    timed_out = Runtime.hasTimeExpired(start_time_right_, length);
   }
 
   if (!::AlphaSquare.isSymbolPart(key, KeyAddr(0, display_col), key_addr) || timed_out)
@@ -61,7 +62,7 @@ void AlphaSquareEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
 }
 
 EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
@@ -81,13 +82,13 @@ EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, KeyAddr k
 
   Key prev_key = this_led_mode->last_key_left_;
 
-  if (key_addr.col() < Kaleidoscope.device().matrix_columns / 2) {
+  if (key_addr.col() < Runtime.device().matrix_columns / 2) {
     this_led_mode->last_key_left_ = mappedKey;
-    this_led_mode->start_time_left_ = Kaleidoscope.millisAtCycleStart();
+    this_led_mode->start_time_left_ = Runtime.millisAtCycleStart();
   } else {
     prev_key = this_led_mode->last_key_right_;
     this_led_mode->last_key_right_ = mappedKey;
-    this_led_mode->start_time_right_ = Kaleidoscope.millisAtCycleStart();
+    this_led_mode->start_time_right_ = Runtime.millisAtCycleStart();
     display_col = 10;
   }
 

@@ -16,7 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-PersistentLEDMode.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
@@ -30,7 +30,7 @@ uint8_t PersistentLEDMode::cached_mode_index_;
 EventHandlerResult PersistentLEDMode::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(cached_mode_index_));
 
-  Kaleidoscope.storage().get(settings_base_, cached_mode_index_);
+  Runtime.storage().get(settings_base_, cached_mode_index_);
 
   // If the index is max, assume an uninitialized EEPROM, and don't set the LED
   // mode. We don't change the cached index here, `onLEDModeChange()` will do
@@ -48,8 +48,8 @@ EventHandlerResult PersistentLEDMode::onLEDModeChange() {
     return EventHandlerResult::OK;
 
   cached_mode_index_ = ::LEDControl.get_mode_index();
-  Kaleidoscope.storage().put(settings_base_, cached_mode_index_);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().put(settings_base_, cached_mode_index_);
+  Runtime.storage().commit();
   return EventHandlerResult::OK;
 }
 

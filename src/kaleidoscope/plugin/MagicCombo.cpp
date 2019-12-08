@@ -34,19 +34,19 @@ EventHandlerResult MagicCombo::beforeReportingState() {
       if (comboKey == 0)
         break;
 
-      match &= Kaleidoscope.device().isKeyswitchPressed(comboKey);
+      match &= Runtime.device().isKeyswitchPressed(comboKey);
       if (!match)
         break;
     }
 
-    if (j != Kaleidoscope.device().pressedKeyswitchCount())
+    if (j != Runtime.device().pressedKeyswitchCount())
       match = false;
 
-    if (match && Kaleidoscope.hasTimeExpired(start_time_, min_interval)) {
+    if (match && Runtime.hasTimeExpired(start_time_, min_interval)) {
       ComboAction action = (ComboAction) pgm_read_ptr((void const **) & (magiccombo::combos[i].action));
 
       (*action)(i);
-      start_time_ = Kaleidoscope.millisAtCycleStart();
+      start_time_ = Runtime.millisAtCycleStart();
     }
   }
 

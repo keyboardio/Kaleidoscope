@@ -14,9 +14,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Kaleidoscope.h"
+#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/hooks.h"
-#include "kaleidoscope/plugin.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/hid.h"
+#include "kaleidoscope/layers.h"
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.getFlags() & RESERVED)
@@ -60,6 +62,9 @@ static bool handleKeyswitchEventDefault(Key mappedKey, KeyAddr key_addr, uint8_t
 }
 
 void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
+
+  using kaleidoscope::Runtime;
+
   /* These first steps are only done for keypresses that have a valid key_addr.
    * In particular, doing them for keypresses with out-of-bounds key_addr
    *   would cause out-of-bounds array accesses in Layer.lookup(),
@@ -96,9 +101,9 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
      * See layers.cpp for an example that masks keys, and the reason why it does
      * so.
      */
-    if (Kaleidoscope.device().isKeyMasked(key_addr)) {
+    if (Runtime.device().isKeyMasked(key_addr)) {
       if (keyToggledOff(keyState)) {
-        Kaleidoscope.device().unMaskKey(key_addr);
+        Runtime.device().unMaskKey(key_addr);
       } else {
         return;
       }

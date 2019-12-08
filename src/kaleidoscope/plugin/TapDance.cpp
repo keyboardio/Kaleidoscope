@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-TapDance.h>
 #include <kaleidoscope/hid.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -38,7 +39,7 @@ void TapDance::interrupt(KeyAddr key_addr) {
 
   last_tap_dance_key_ = Key_NoKey;
 
-  Kaleidoscope.device().maskKey(key_addr);
+  Runtime.device().maskKey(key_addr);
   kaleidoscope::hid::sendKeyboardReport();
   kaleidoscope::hid::releaseAllKeys();
 
@@ -74,7 +75,7 @@ void TapDance::tap(void) {
   uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
 
   state_[idx].count++;
-  start_time_ = Kaleidoscope.millisAtCycleStart();
+  start_time_ = Runtime.millisAtCycleStart();
 
   tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Tap);
 }
@@ -117,8 +118,8 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     if (keyToggledOn(keyState))
       interrupt(key_addr);
 
-    if (Kaleidoscope.device().isKeyMasked(key_addr)) {
-      Kaleidoscope.device().unMaskKey(key_addr);
+    if (Runtime.device().isKeyMasked(key_addr)) {
+      Runtime.device().unMaskKey(key_addr);
       return EventHandlerResult::EVENT_CONSUMED;
     }
     return EventHandlerResult::OK;
@@ -193,7 +194,7 @@ EventHandlerResult TapDance::afterEachCycle() {
   if (last_tap_dance_key_ == Key_NoKey)
     return EventHandlerResult::OK;
 
-  if (Kaleidoscope.hasTimeExpired(start_time_, time_out))
+  if (Runtime.hasTimeExpired(start_time_, time_out))
     timeout();
 
   return EventHandlerResult::OK;

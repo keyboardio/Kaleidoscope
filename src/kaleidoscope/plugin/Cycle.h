@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
 #define Key_Cycle Key(kaleidoscope::ranges::CYCLE)

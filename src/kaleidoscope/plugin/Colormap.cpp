@@ -19,6 +19,7 @@
 #include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-FocusSerial.h>
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -36,7 +37,7 @@ void ColormapEffect::max_layers(uint8_t max_) {
 }
 
 void ColormapEffect::TransientLEDMode::onActivate(void) {
-  if (!Kaleidoscope.has_leds)
+  if (!Runtime.has_leds)
     return;
 
   parent_->top_layer_ = Layer.top();

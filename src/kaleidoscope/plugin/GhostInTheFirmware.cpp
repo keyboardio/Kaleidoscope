@@ -15,8 +15,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-GhostInTheFirmware.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -46,11 +47,11 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
       return EventHandlerResult::OK;
     }
     is_pressed_ = true;
-    start_time_ = Kaleidoscope.millisAtCycleStart();
+    start_time_ = Runtime.millisAtCycleStart();
   } else {
-    if (is_pressed_ && Kaleidoscope.hasTimeExpired(start_time_, press_timeout_)) {
+    if (is_pressed_ && Runtime.hasTimeExpired(start_time_, press_timeout_)) {
       is_pressed_ = false;
-      start_time_ = Kaleidoscope.millisAtCycleStart();
+      start_time_ = Runtime.millisAtCycleStart();
 
       byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
@@ -61,7 +62,7 @@ EventHandlerResult GhostInTheFirmware::beforeReportingState() {
       byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
 
       handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), IS_PRESSED);
-    } else if (Kaleidoscope.hasTimeExpired(start_time_, delay_timeout_)) {
+    } else if (Runtime.hasTimeExpired(start_time_, delay_timeout_)) {
       current_pos_++;
       press_timeout_ = 0;
     }

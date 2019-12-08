@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope.h>
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -37,12 +37,12 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
   void send(const bool b) {
     printBool(b);
-    Kaleidoscope.serialPort().print(SEPARATOR);
+    Runtime.serialPort().print(SEPARATOR);
   }
   template <typename V>
   void send(V v) {
-    Kaleidoscope.serialPort().print(v);
-    Kaleidoscope.serialPort().print(SEPARATOR);
+    Runtime.serialPort().print(v);
+    Runtime.serialPort().print(SEPARATOR);
   }
   template <typename Var, typename... Vars>
   void send(Var v, Vars... vars) {
@@ -53,31 +53,31 @@ class FocusSerial : public kaleidoscope::Plugin {
   void sendRaw() {}
   template <typename Var, typename... Vars>
   void sendRaw(Var v, Vars... vars) {
-    Kaleidoscope.serialPort().print(v);
+    Runtime.serialPort().print(v);
     sendRaw(vars...);
   }
 
   const char peek() {
-    return Kaleidoscope.serialPort().peek();
+    return Runtime.serialPort().peek();
   }
 
   void read(Key &key) {
-    key.setRaw(Kaleidoscope.serialPort().parseInt());
+    key.setRaw(Runtime.serialPort().parseInt());
   }
   void read(cRGB &color) {
-    color.r = Kaleidoscope.serialPort().parseInt();
-    color.g = Kaleidoscope.serialPort().parseInt();
-    color.b = Kaleidoscope.serialPort().parseInt();
+    color.r = Runtime.serialPort().parseInt();
+    color.g = Runtime.serialPort().parseInt();
+    color.b = Runtime.serialPort().parseInt();
   }
   void read(uint8_t &u8) {
-    u8 = Kaleidoscope.serialPort().parseInt();
+    u8 = Runtime.serialPort().parseInt();
   }
   void read(uint16_t &u16) {
-    u16 = Kaleidoscope.serialPort().parseInt();
+    u16 = Runtime.serialPort().parseInt();
   }
 
   bool isEOL() {
-    return Kaleidoscope.serialPort().peek() == '\n';
+    return Runtime.serialPort().peek() == '\n';
   }
 
   static constexpr char COMMENT = '#';

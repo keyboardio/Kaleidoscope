@@ -37,7 +37,7 @@ void IdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
 
 EventHandlerResult IdleLEDs::beforeEachCycle() {
   if (!::LEDControl.paused &&
-      Kaleidoscope.hasTimeExpired(start_time_, idle_time_limit)) {
+      Runtime.hasTimeExpired(start_time_, idle_time_limit)) {
     ::LEDControl.set_all_leds_to(CRGB(0, 0, 0));
     ::LEDControl.syncLeds();
 
@@ -54,7 +54,7 @@ EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     ::LEDControl.refreshAll();
   }
 
-  start_time_ = Kaleidoscope.millisAtCycleStart();
+  start_time_ = Runtime.millisAtCycleStart();
 
   return EventHandlerResult::OK;
 }
@@ -67,7 +67,7 @@ EventHandlerResult PersistentIdleLEDs::onSetup() {
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
   uint16_t idle_time;
-  Kaleidoscope.storage().get(settings_base_, idle_time);
+  Runtime.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffff) {
     idle_time = idle_time_limit;
   }
@@ -80,8 +80,8 @@ void PersistentIdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
   IdleLEDs::setIdleTimeoutSeconds(new_limit);
 
   uint16_t stored_limit = (uint16_t)new_limit;
-  Kaleidoscope.storage().put(settings_base_, stored_limit);
-  Kaleidoscope.storage().commit();
+  Runtime.storage().put(settings_base_, stored_limit);
+  Runtime.storage().commit();
 }
 
 EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *command) {

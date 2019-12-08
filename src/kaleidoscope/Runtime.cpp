@@ -14,18 +14,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Kaleidoscope.h"
-#include <stdarg.h>
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/hid.h"
+#include "kaleidoscope/layers.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 
-uint32_t Kaleidoscope_::millis_at_cycle_start_;
+uint32_t Runtime_::millis_at_cycle_start_;
 
-Kaleidoscope_::Kaleidoscope_(void) {
+Runtime_::Runtime_(void) {
 }
 
 void
-Kaleidoscope_::setup(void) {
+Runtime_::setup(void) {
   // We are explicitly initializing the Serial port as early as possible to
   // (temporarily, hopefully) work around an issue on OSX. If we initialize
   // Serial too late, no matter what we do, we'll end up reading garbage from
@@ -53,7 +55,7 @@ Kaleidoscope_::setup(void) {
 }
 
 void
-Kaleidoscope_::loop(void) {
+Runtime_::loop(void) {
   millis_at_cycle_start_ = millis();
 
   kaleidoscope::Hooks::beforeEachCycle();
@@ -68,6 +70,8 @@ Kaleidoscope_::loop(void) {
   kaleidoscope::Hooks::afterEachCycle();
 }
 
-Kaleidoscope_ Kaleidoscope;
+Runtime_ Runtime;
 
 } // namespace kaleidoscope
+
+kaleidoscope::Runtime_ &Kaleidoscope = kaleidoscope::Runtime;

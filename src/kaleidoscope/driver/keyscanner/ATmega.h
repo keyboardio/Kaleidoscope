@@ -57,7 +57,7 @@
   uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {}; \
                                                                                            \
   ISR(TIMER1_OVF_vect) {                                                                   \
-    Kaleidoscope.device().readMatrix();                                              \
+    Runtime.device().readMatrix();                                              \
   }
 
 namespace kaleidoscope {

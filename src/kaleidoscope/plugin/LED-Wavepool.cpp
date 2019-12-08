@@ -19,6 +19,7 @@
 #ifdef ARDUINO_AVR_MODEL01
 
 #include <Kaleidoscope-LED-Wavepool.h>
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -31,7 +32,7 @@ uint16_t WavepoolEffect::idle_timeout = 5000;  // 5 seconds
 int16_t WavepoolEffect::ripple_hue = WavepoolEffect::rainbow_hue; // automatic hue
 
 // map native keyboard coordinates (16x4) into geometric space (14x5)
-PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[Kaleidoscope.device().numKeys()] = {
+PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[Runtime.device().numKeys()] = {
   0,  1,  2,  3,  4,  5,  6,     59, 66,    7,  8,  9, 10, 11, 12, 13,
   14, 15, 16, 17, 18, 19, 34,    60, 65,   35, 22, 23, 24, 25, 26, 27,
   28, 29, 30, 31, 32, 33, 48,    61, 64,   49, 36, 37, 38, 39, 40, 41,
@@ -79,14 +80,14 @@ void WavepoolEffect::TransientLEDMode::raindrop(uint8_t x, uint8_t y, int8_t *pa
 uint8_t WavepoolEffect::TransientLEDMode::wp_rand() {
   static intptr_t offset = 0x400;
   offset = ((offset + 1) & 0x4fff) | 0x400;
-  return (Kaleidoscope.millisAtCycleStart() / MS_PER_FRAME) + pgm_read_byte((const uint8_t *)offset);
+  return (Runtime.millisAtCycleStart() / MS_PER_FRAME) + pgm_read_byte((const uint8_t *)offset);
 }
 
 void WavepoolEffect::TransientLEDMode::update(void) {
 
   // limit the frame rate; one frame every 64 ms
   static uint8_t prev_time = 0;
-  uint8_t now = Kaleidoscope.millisAtCycleStart() / MS_PER_FRAME;
+  uint8_t now = Runtime.millisAtCycleStart() / MS_PER_FRAME;
   if (now != prev_time) {
     prev_time = now;
   } else {

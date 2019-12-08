@@ -488,6 +488,10 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ## Deprecated APIs and their replacements
 
+### Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime
+
+After renaming, some of the original symbols have been deprecated. The deprecated symbols in `kaleidoscope/Runtime.h` are scheduled for removal on **2019-03-10**.
+
 ### Transition to linear indexing
 
 Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
