@@ -47,6 +47,22 @@ class KeymapAdaptor {
   }
 };
 
+// A special case for empty keymaps that makes the compiler happy.
+//
+class EmptyKeymapAdaptor {
+ public:
+
+  static constexpr uint8_t n_layers = 0;
+  static constexpr uint8_t layer_size = 0;
+
+  constexpr Key getKey(uint8_t layer, uint8_t offset) const {
+    return Key_NoKey;
+  }
+  constexpr Key getKey(uint8_t layer, KeyAddr key_addr) const {
+    return Key_NoKey;
+  }
+};
+
 // This class implements compile time keymap traversal.
 //
 // Every key is visited an the _Accumulation functor decides on how
@@ -88,6 +104,27 @@ class AccumulationHelper : public KeymapAdaptor<_n_layers, _layer_size> {
 
   constexpr ResultType apply() const {
     return this->accumulate(0);
+  }
+};
+
+// A special case for empty keymaps that makes the compiler happy.
+//
+template<typename _Accumulation>
+class EmptyKeymapAccumulationHelper {
+ private:
+
+  const _Accumulation &op_;
+
+  typedef typename _Accumulation::ResultType ResultType;
+
+ public:
+
+  constexpr EmptyKeymapAccumulationHelper(const _Accumulation &op)
+    :   op_{op}
+  {}
+
+  constexpr ResultType apply() const {
+    return op_.init_value;
   }
 };
 
@@ -179,10 +216,9 @@ extern void pluginsExploreSketch();
 #define _INIT_KEYMAP_EXPLORATION                                               \
   namespace kaleidoscope {                                                     \
   namespace sketch_exploration {                                               \
-    class StaticKeymap                                                         \
-    {                                                                          \
-      private:                                                                 \
                                                                                \
+     template<bool _keymap_is_empty>                                           \
+     struct StaticKeymapHelper {                                               \
         template<int _n_layers, int _layer_size, typename _Accumulation>       \
         static constexpr auto accumulationHelper(                              \
                   const Key (&keymap)[_n_layers][_layer_size],                 \
@@ -193,13 +229,6 @@ extern void pluginsExploreSketch();
                                     _Accumulation>{keymap, op};                \
         }                                                                      \
                                                                                \
-        template<typename _Accumulation>                                       \
-        static constexpr auto accumulationHelper(const _Accumulation &op)      \
-          -> decltype(accumulationHelper(::keymaps_linear, op))                \
-        {                                                                      \
-          return accumulationHelper(::keymaps_linear, op);                     \
-        }                                                                      \
-                                                                               \
         template<int _n_layers, int _layer_size>                               \
         static constexpr auto keymapAdaptor(                                   \
                   const Key (&keymap)[_n_layers][_layer_size])                 \
@@ -207,12 +236,35 @@ extern void pluginsExploreSketch();
         {                                                                      \
           return KeymapAdaptor<_n_layers, _layer_size>{keymap};                \
         }                                                                      \
+    };                                                                         \
                                                                                \
-        static constexpr auto keymapAdaptor()                                  \
-          -> decltype(keymapAdaptor(::keymaps_linear))                         \
+    /* Empty keymaps need a special treatment */                               \
+    template<>                                                                 \
+    struct StaticKeymapHelper<true> {                                          \
+                                                                               \
+        template<typename _Accumulation>                                       \
+        static constexpr auto accumulationHelper(const _Accumulation &op)      \
+          -> decltype(EmptyKeymapAccumulationHelper<_Accumulation>{op})        \
         {                                                                      \
-          return keymapAdaptor(::keymaps_linear);                              \
+          return EmptyKeymapAccumulationHelper<_Accumulation>{op};             \
         }                                                                      \
+                                                                               \
+        template<typename _Keymap>                                             \
+        static constexpr auto keymapAdaptor(const _Keymap &)                   \
+          -> EmptyKeymapAdaptor                                                \
+        {                                                                      \
+          return EmptyKeymapAdaptor{};                                         \
+        }                                                                      \
+    };                                                                         \
+                                                                               \
+    class StaticKeymap                                                         \
+    {                                                                          \
+      private:                                                                 \
+                                                                               \
+         static constexpr bool keymap_is_empty                                 \
+            = (sizeof(::keymaps_linear) == 0);                                 \
+                                                                               \
+         typedef StaticKeymapHelper<keymap_is_empty> SKH;                      \
                                                                                \
       public:                                                                  \
                                                                                \
@@ -233,20 +285,20 @@ extern void pluginsExploreSketch();
         static constexpr auto collect(const _Accumulation &op)                 \
                -> typename _Accumulation::ResultType                           \
         {                                                                      \
-           return accumulationHelper(op).apply();                              \
+           return SKH::accumulationHelper(::keymaps_linear, op).apply();       \
         }                                                                      \
                                                                                \
         /* COMPILE_TIME_USE_ONLY (see explanation above)                       \
          */                                                                    \
         static constexpr Key getKey(uint8_t layer, KeyAddr key_addr) {         \
-          return keymapAdaptor().getKey(layer, key_addr);                      \
+          return SKH::keymapAdaptor(::keymaps_linear).getKey(layer, key_addr); \
         }                                                                      \
                                                                                \
         static constexpr uint8_t nLayers() {                                   \
-           return keymapAdaptor().n_layers;                                    \
+           return SKH::keymapAdaptor(::keymaps_linear).n_layers;               \
         }                                                                      \
         static constexpr uint8_t layerSize() {                                 \
-           return keymapAdaptor().layer_size;                                  \
+           return SKH::keymapAdaptor(::keymaps_linear).layer_size;             \
         }                                                                      \
     };                                                                         \
   } /* namespace sketch_exploration */                                         \
