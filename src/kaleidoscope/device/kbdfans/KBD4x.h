@@ -40,6 +40,7 @@ struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
+  static constexpr const char *short_name = "kbd4x";
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

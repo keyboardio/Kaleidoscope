@@ -53,6 +53,7 @@ struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
     KEYSCANNER_PROPS(14, 6);
   };
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
+  static constexpr const char *short_name = "ErgoDox-EZ";
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
