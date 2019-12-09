@@ -60,6 +60,7 @@ struct BaseProps {
   typedef kaleidoscope::driver::bootloader::None Bootloader;
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
   typedef kaleidoscope::driver::storage::None Storage;
+  static constexpr const char *short_name = USB_PRODUCT;
 };
 
 template<typename _DeviceProps>
@@ -116,8 +117,8 @@ class Base {
   }
 
   /**
-     * Returns the key scanner used by the keyboard.
-     */
+   * Returns the key scanner used by the keyboard.
+   */
   KeyScanner &keyScanner() {
     return key_scanner_;
   }
@@ -127,6 +128,14 @@ class Base {
    */
   LEDDriver &ledDriver() {
     return led_driver_;
+  }
+
+  /**
+   * Returns the short name of the device.
+   */
+  static const uint8_t getShortName(char *name) {
+    memcpy(name, _DeviceProps::short_name, strlen(_DeviceProps::short_name));
+    return strlen(_DeviceProps::short_name);
   }
 
   /**
@@ -534,4 +543,3 @@ class Base {
 #define EXPORT_DEVICE(DEVICE)                                                  \
   typedef DEVICE##Props DeviceProps;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-
