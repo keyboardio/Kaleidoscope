@@ -16,4 +16,5 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include "kaleidoscope/plugin/HardwareTestMode.h"

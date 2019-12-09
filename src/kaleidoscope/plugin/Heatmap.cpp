@@ -15,10 +15,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Heatmap.h>
-#include <Kaleidoscope-LEDControl.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                                  // for INT16_MAX
+#include "Arduino.h"                                 // for pgm_read_byte
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for cRGB
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/keyswitch_state.h"            // for INJECTED, keyTog...
+#include "kaleidoscope/plugin/Heatmap.h"             // for Heatmap::Transie...
+#include "kaleidoscope/plugin/LEDControl.h"          // for LEDControl
+
+namespace kaleidoscope {
+class Key;
+}
 
 namespace kaleidoscope {
 namespace plugin {

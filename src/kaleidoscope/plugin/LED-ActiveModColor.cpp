@@ -15,9 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-ActiveModColor.h>
-#include <Kaleidoscope-OneShot.h>
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                                  // for uint8_t
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for cRGB, CRGB
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                   // for Key, Key_LeftCon...
+#include "kaleidoscope/key_defs_keymaps.h"           // for LAYER_SHIFT_OFFSET
+#include "kaleidoscope/layers.h"                     // for Layer, Layer_
+#include "kaleidoscope/plugin/LED-ActiveModColor.h"  // for ActiveModColorEf...
+#include "kaleidoscope/plugin/OneShot.h"             // for OneShot
+#include "kaleidoscope/plugin/LEDControl.h"
+#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {

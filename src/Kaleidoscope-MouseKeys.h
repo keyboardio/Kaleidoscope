@@ -16,4 +16,6 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include "kaleidoscope/plugin/MouseKeys.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseKeyDefs.h"

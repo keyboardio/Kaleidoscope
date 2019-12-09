@@ -14,7 +14,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-SolidColor.h"
+#include "kaleidoscope/KeyAddr.h"                      // for KeyAddr
+#include "kaleidoscope/device/device.h"                // for CRGB
+#include "kaleidoscope/plugin/LEDEffect-SolidColor.h"  // for LEDSolidColor
+#include "kaleidoscope/plugin/LEDControl.h"
 
 namespace kaleidoscope {
 namespace plugin {

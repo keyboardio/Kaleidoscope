@@ -17,7 +17,9 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/event_handler_result.h"   // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                 // for Plugin
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
 
 #define _DEPRECATED_MESSAGE_ENABLEWAKEUP                                    \
   "The HostPowerManagement.enableWakeup() call is not necessary anymore,\n" \

@@ -15,9 +15,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-Palette-Theme.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include <stdint.h>                                  // for uint8_t, uint16_t
+#include "Arduino.h"                                 // for strcmp_P, PSTR
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/Base.h"                // for Base<>::Storage
+#include "kaleidoscope/device/device.h"              // for cRGB
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/plugin/EEPROM-Settings.h"     // for EEPROMSettings
+#include "kaleidoscope/plugin/FocusSerial.h"         // for Focus, FocusSerial
+#include "kaleidoscope/plugin/LED-Palette-Theme.h"   // for LEDPaletteTheme
+#include "kaleidoscope/plugin/LEDControl.h"
 
 namespace kaleidoscope {
 namespace plugin {

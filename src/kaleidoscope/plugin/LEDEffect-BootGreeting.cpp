@@ -15,8 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-BootGreeting.h"
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                                      // for uint16_t
+#include "kaleidoscope/Runtime.h"             // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
+#include "kaleidoscope/device/device.h"                  // for cRGB
+#include "kaleidoscope/event_handler_result.h"           // for EventHandler...
+#include "kaleidoscope/key_defs.h"                       // for Key
+#include "kaleidoscope/layers.h"                         // for Layer, Layer_
+#include "kaleidoscope/plugin/LEDControl.h"              // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"     // for breath_compute
+#include "kaleidoscope/plugin/LEDEffect-BootGreeting.h"  // for BootGreeting...
 
 namespace kaleidoscope {
 namespace plugin {

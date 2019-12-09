@@ -15,7 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LEDEffects.h>
+#include "kaleidoscope/device/device.h"              // for CRGB
+#include "kaleidoscope/plugin/TriColor.h"            // for TriColor
 
 kaleidoscope::plugin::TriColor MiamiEffect(CRGB(0x4e, 0xd6, 0xd6),   /* Cyan */
     CRGB(0xaf, 0x67, 0xfa));  /* Magenta */

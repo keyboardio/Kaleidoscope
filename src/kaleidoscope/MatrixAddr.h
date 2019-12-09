@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <limits.h>
 #include <stdint.h>
 
 namespace kaleidoscope {

@@ -15,10 +15,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-DynamicTapDance.h"
-
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include "Kaleidoscope-FocusSerial.h"
+#include "kaleidoscope/plugin/DynamicTapDance.h"
+#include "kaleidoscope/hid.h"
+#include "kaleidoscope/plugin/EEPROM-Settings.h"
+#include "kaleidoscope/plugin/FocusSerial.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace plugin {

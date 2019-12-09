@@ -18,6 +18,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <stdint.h>
 //#include <assert.h>
 
 #include "kaleidoscope/Runtime.h"

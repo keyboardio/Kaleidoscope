@@ -18,6 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
 #include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope-LEDControl.h>
 
 // *INDENT-OFF*
 KEYMAPS(

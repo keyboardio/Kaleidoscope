@@ -14,7 +14,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-Chase.h"
+#include <stdint.h>                                  // for uint16_t, uint8_t
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/device/device.h"              // for Device
+#include "kaleidoscope/plugin/LEDEffect-Chase.h"     // for LEDChaseEffect::...
+#include "kaleidoscope/plugin/LEDControl.h"
 
 namespace kaleidoscope {
 namespace plugin {

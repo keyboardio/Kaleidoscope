@@ -16,10 +16,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-PersistentLEDMode.h>
-#include <Kaleidoscope-LEDControl.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
+#include <stdint.h>                                 // for uint8_t, uint16_t
+#include "kaleidoscope/Runtime.h"        // for Kaleidoscope, Kal...
+#include "kaleidoscope/device/device.h"             // for Device
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
+#include "kaleidoscope/plugin/EEPROM-Settings.h"    // for EEPROMSettings
+#include "kaleidoscope/plugin/LEDControl.h"         // for LEDControl
+#include "kaleidoscope/plugin/PersistentLEDMode.h"  // for PersistentLEDMode
 
 namespace kaleidoscope {
 namespace plugin {

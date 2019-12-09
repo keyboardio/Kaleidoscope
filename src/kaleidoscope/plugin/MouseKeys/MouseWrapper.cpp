@@ -20,6 +20,8 @@
 //
 #include <Kaleidoscope.h>
 #include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
+#include "kaleidoscope/hid.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
 
 namespace kaleidoscope {
 namespace plugin {

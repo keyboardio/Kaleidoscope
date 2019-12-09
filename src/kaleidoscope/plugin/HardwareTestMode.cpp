@@ -14,9 +14,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include "Kaleidoscope-HardwareTestMode.h"
-#include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include <stdint.h>                                  // for uint8_t
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for Device
+#include "kaleidoscope/hid.h"                        // for releaseAllKeys
+#include "kaleidoscope/plugin/HardwareTestMode.h"    // for HardwareTestMode...
+#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"   // for LEDRainbowEffect
+#include "kaleidoscope/plugin/LEDControl.h"          // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

@@ -15,7 +15,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-FocusSerial.h>
+#include "Arduino.h"                            // for PSTR, strcmp_P
+#include "HardwareSerial.h"                     // for HardwareSerial
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin/FocusSerial.h"    // for FocusSerial
 
 #ifdef __AVR__
 #include <avr/pgmspace.h>

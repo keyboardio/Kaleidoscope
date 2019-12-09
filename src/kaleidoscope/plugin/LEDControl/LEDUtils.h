@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>                                  // for uint16_t, uint8_t
+#include "kaleidoscope/device/device.h"              // for cRGB
 
 cRGB breath_compute(uint8_t hue = 170, uint8_t saturation = 255, uint8_t phase_offset = 0);
 cRGB hsvToRgb(uint16_t h, uint16_t s, uint16_t v);

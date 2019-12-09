@@ -18,8 +18,20 @@
 
 #ifdef ARDUINO_AVR_MODEL01
 
-#include <Kaleidoscope-LED-Wavepool.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                                  // for int8_t, intptr_t
+#include "Arduino.h"                                 // for pgm_read_byte
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for Device
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/keyswitch_state.h"            // for keyIsPressed
+#include "kaleidoscope/plugin/LED-Wavepool.h"        // for WavepoolEffect::...
+#include "kaleidoscope/plugin/LEDControl.h"          // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h" // for hsvToRgb
+
+namespace kaleidoscope {
+class Key;
+}
 
 namespace kaleidoscope {
 namespace plugin {

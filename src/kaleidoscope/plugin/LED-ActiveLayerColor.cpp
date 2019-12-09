@@ -15,8 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-ActiveLayerColor.h>
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                                    // for uint8_t
+#include "Arduino.h"                                   // for pgm_read_byte
+#include "kaleidoscope/Runtime.h"           // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                      // for KeyAddr
+#include "kaleidoscope/device/device.h"                // for cRGB
+#include "kaleidoscope/event_handler_result.h"         // for EventHandlerRe...
+#include "kaleidoscope/layers.h"                       // for Layer, Layer_
+#include "kaleidoscope/plugin/LED-ActiveLayerColor.h"  // for LEDActiveLayer...
+#include "kaleidoscope/plugin/LEDControl.h"            // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

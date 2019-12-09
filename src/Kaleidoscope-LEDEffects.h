@@ -17,6 +17,10 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include <kaleidoscope/plugin/TriColor.h>
 #include <kaleidoscope/plugin/Miami.h>
 #include <kaleidoscope/plugin/Jukebox.h>
+#include <kaleidoscope/plugin/LEDControl.h>
+#include <kaleidoscope/plugin/LEDControl/LED-Off.h>
+#include <kaleidoscope/plugin/LEDControl/LEDUtils.h>

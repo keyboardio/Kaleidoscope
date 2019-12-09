@@ -15,10 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>                             // for uint8_t
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/hid.h"                   // for sendKeyboardReport
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Backspace
+#include "kaleidoscope/key_events.h"            // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED
+#include "kaleidoscope/plugin/Cycle.h"          // for Cycle, cycleAction
+#include "Kaleidoscope-Ranges.h"
 #include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Cycle.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {

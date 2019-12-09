@@ -15,6 +15,7 @@
  */
 
 #include "kaleidoscope/plugin/LEDControl/LED-Off.h"
+#include "kaleidoscope/plugin/LEDControl.h"
 
 namespace kaleidoscope {
 namespace plugin {

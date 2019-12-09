@@ -15,7 +15,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-USB-Quirks.h>
+#include <stdint.h>                                 // for uint8_t
+#include "Arduino.h"                                // for delay
+#include "BootKeyboard/BootKeyboard.h"              // for BootKeyboard, Boo...
+#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"  // for KALEIDOSCOPE_HIDA...
+#include "kaleidoscope/Runtime.h"        // for Kaleidoscope, Kal...
+#include "kaleidoscope/plugin/USB-Quirks.h"         // for USBQuirks
 
 namespace kaleidoscope {
 namespace plugin {

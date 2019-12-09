@@ -15,9 +15,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-HostPowerManagement.h>
-#include <Kaleidoscope-LEDControl.h>
+#include <stdint.h>                                   // for uint8_t
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
+#include "kaleidoscope/plugin/HostPowerManagement.h"  // for HostPowerManage...
 
 // This is a terrible hack until Arduino#6964 gets implemented.
 // It makes the `_usbSuspendState` symbol available to us.

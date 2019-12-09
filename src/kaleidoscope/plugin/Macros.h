@@ -16,12 +16,13 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-
-#include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
-#include "kaleidoscope/plugin/Macros/MacroSteps.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                                 // for uint8_t
+#include "Arduino.h"                                // for byte
+#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                  // for Key
+#include "kaleidoscope/plugin.h"                    // for Plugin
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState);
 

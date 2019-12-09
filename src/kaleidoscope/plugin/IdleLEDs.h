@@ -18,7 +18,14 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>                             // for uint32_t, uint16_t
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                // for Plugin
+
+namespace kaleidoscope {
+class Key;
+}
 
 namespace kaleidoscope {
 namespace plugin {

@@ -15,14 +15,13 @@
  */
 
 #pragma once
-#include <Arduino.h>
 
-#include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/device/device.h"
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/KeyAddr.h"
-
+#include <Arduino.h>                              // for byte
+#include <stdint.h>                               // for uint8_t
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/key_defs.h"                // for Key
+#include "kaleidoscope_internal/deprecations.h"   // for DEPRECATED
 
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch

@@ -15,9 +15,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Syster.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                             // for uint8_t
+#include <kaleidoscope/hid.h>                   // for sendKeyboardReport
+#include <stddef.h>                             // for NULL
+#include "Kaleidoscope-Ranges.h"                // for SYSTER
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Backspace
+#include "kaleidoscope/key_events.h"            // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, keyToggledOn
+#include "kaleidoscope/plugin/Syster.h"         // for Syster, SYSTER_MAX_SY...
+#include "kaleidoscope/Runtime.h"
 
 #undef SYSTER
 

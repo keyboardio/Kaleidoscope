@@ -17,4 +17,6 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include <kaleidoscope/plugin/Colormap.h>
+#include "kaleidoscope/plugin/LEDControl.h"

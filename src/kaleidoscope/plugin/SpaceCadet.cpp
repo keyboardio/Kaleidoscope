@@ -15,9 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-SpaceCadet.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                             // for uint16_t, uint8_t
+#include "Kaleidoscope-Ranges.h"                // for SC_FIRST, SC_LAST
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey, Key_L...
+#include "kaleidoscope/key_events.h"            // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED
+#include "kaleidoscope/plugin/SpaceCadet.h"     // for SpaceCadet::KeyBinding
 
 namespace kaleidoscope {
 namespace plugin {

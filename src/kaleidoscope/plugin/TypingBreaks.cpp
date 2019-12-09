@@ -15,10 +15,21 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-TypingBreaks.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                               // for uint32_t, uint16_t
+#include "Arduino.h"                              // for PSTR, strcmp_P, str...
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/Base.h"             // for Base<>::Storage
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOn
+#include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
+#include "kaleidoscope/plugin/FocusSerial.h"      // for Focus, FocusSerial
+#include "kaleidoscope/plugin/TypingBreaks.h"     // for TypingBreaks::setti...
+
+namespace kaleidoscope {
+class Key;
+}
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,15 +16,13 @@
 
 #pragma once
 
-#include <Arduino.h>
-
-namespace kaleidoscope {
-class Key;
-}
-
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/plugin.h"
-#include "kaleidoscope/event_handlers.h"
+#include <Arduino.h>                             // for byte
+#include <stdint.h>                              // for uint8_t
+#include "kaleidoscope/KeyAddr.h"                // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"   // for EventHandlerResult
+#include "kaleidoscope/event_handlers.h"         // for _FOR_EACH_EVENT_HANDLER
+#include "kaleidoscope/macro_helpers.h"          // for __NL__
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.

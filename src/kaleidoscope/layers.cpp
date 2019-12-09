@@ -14,9 +14,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/layers.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                               // for uint8_t, uint32_t
+#include <string.h>                               // for memset
+#include "Arduino.h"                              // for bitRead, bitClear
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/hooks.h"                   // for Hooks
+#include "kaleidoscope/key_defs.h"                // for Key, Key_NoKey, Key...
+#include "kaleidoscope/key_defs_keymaps.h"        // for LAYER_SHIFT_OFFSET
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOff, keyT...
+#include "kaleidoscope/layers.h"                  // for Layer_, Layer
+#include "kaleidoscope_internal/device.h"         // for device
+#include "kaleidoscope/keymaps.h"
 
 // The maximum number of layers allowed. `layer_state_`, which stores
 // the on/off status of the layers in a bitfield has only 32 bits, and

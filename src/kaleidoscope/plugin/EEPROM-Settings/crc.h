@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include <Arduino.h>
-
 class CRC_ {
  public:
   uint16_t crc = 0;

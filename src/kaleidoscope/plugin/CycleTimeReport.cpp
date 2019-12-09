@@ -15,8 +15,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-CycleTimeReport.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include <stdint.h>                               // for uint16_t, uint32_t
+#include "Arduino.h"                              // for micros
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/plugin/CycleTimeReport.h"  // for CycleTimeReport
+#include "kaleidoscope/plugin/FocusSerial.h"      // for Focus, FocusSerial
 
 namespace kaleidoscope {
 namespace plugin {

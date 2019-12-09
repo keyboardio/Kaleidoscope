@@ -16,7 +16,10 @@
 
 #pragma once
 
-#include "Kaleidoscope-LEDControl.h"
+#include "Arduino.h"                             // for byte
+#include "kaleidoscope/KeyAddr.h"                // for KeyAddr
+#include "kaleidoscope/plugin/LEDMode.h"         // for LEDMode
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
 
 namespace kaleidoscope {
 namespace plugin {

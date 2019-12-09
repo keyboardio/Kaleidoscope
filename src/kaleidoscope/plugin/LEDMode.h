@@ -16,9 +16,18 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin.h"
-#include "kaleidoscope/plugin/AccessTransientLEDMode.h"
-#include "kaleidoscope/plugin/LEDModeInterface.h"
+#include "Arduino.h"                               // for byte
+#include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                   // for Plugin
+#include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
+#include "kaleidoscope_internal/deprecations.h"    // for DEPRECATED
+
+namespace kaleidoscope {
+namespace internal {
+class LEDModeManager;
+}
+}
 
 namespace kaleidoscope {
 

@@ -17,8 +17,19 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-LEDControl.h>
+#include <stdint.h>                                      // for uint8_t, uin...
+#include "kaleidoscope/Runtime.h"             // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
+#include "kaleidoscope/device/device.h"                  // for Device
+#include "kaleidoscope/event_handler_result.h"           // for EventHandler...
+#include "kaleidoscope/plugin.h"                         // for Plugin
+#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransi...
+#include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
+#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInter...
+
+namespace kaleidoscope {
+class Key;
+}
 
 #define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect;})
 

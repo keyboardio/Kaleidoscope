@@ -17,8 +17,14 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include "Kaleidoscope-Ranges.h"                // for OS_FIRST, OS_LAST
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/key_defs_keyboard.h"     // for Key_LeftControl
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)

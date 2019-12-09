@@ -17,8 +17,17 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
+#include <stdint.h>                             // for uint8_t
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
+
+// We have to include the ranges header here as this file defines a macro
+// SYSTER that would otherwise replace one of the enum names defined in
+// the ranges header if it was included after the macro definition.
+//
+#include "Kaleidoscope-Ranges.h"
 
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 

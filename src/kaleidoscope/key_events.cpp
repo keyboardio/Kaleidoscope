@@ -14,10 +14,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/hooks.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                               // for uint8_t
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/hid.h"                     // for pressKey, pressCons...
+#include "kaleidoscope/hooks.h"                   // for Hooks, handleKeyswi...
+#include "kaleidoscope/key_defs.h"                // for Key, Key_NoKey, SYN...
+#include "kaleidoscope/keyswitch_state.h"         // for keyIsPressed, keyTo...
+#include "kaleidoscope/layers.h"                  // for Layer, Layer_
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.getFlags() & RESERVED)

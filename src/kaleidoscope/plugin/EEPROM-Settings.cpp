@@ -15,10 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/plugin/EEPROM-Settings/crc.h"
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                                   // for uint16_t, uint8_t
+#include "Arduino.h"                                  // for PSTR, strcmp_P
+#include "kaleidoscope/Runtime.h"          // for Kaleidoscope
+#include "kaleidoscope/device/device.h"               // for Device
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
+#include "kaleidoscope/layers.h"                      // for Layer, Layer_
+#include "kaleidoscope/plugin/EEPROM-Settings.h"      // for EEPROMSettings
+#include "kaleidoscope/plugin/EEPROM-Settings/crc.h"  // for CRC, CRC_
+#include "kaleidoscope/plugin/FocusSerial.h"          // for Focus, FocusSerial
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,8 +16,21 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/plugin/LEDMode.h"
+#include "Arduino.h"                                 // for byte
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for cRGB
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                   // for IS_INTERNAL, KEY...
+#include "kaleidoscope/plugin.h"                     // for Plugin
+#include "kaleidoscope/plugin/LEDMode.h"             // for LEDMode
+#include "kaleidoscope_internal/deprecations.h"      // for DEPRECATED
+
+namespace kaleidoscope {
+namespace plugin {
+class LEDModeInterface;
+}
+}
 
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
@@ -32,8 +45,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-
-class LEDMode;
 
 class LEDControl : public kaleidoscope::Plugin {
  public:

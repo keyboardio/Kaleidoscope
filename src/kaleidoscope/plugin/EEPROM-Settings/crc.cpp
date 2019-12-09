@@ -26,6 +26,7 @@
  *    Algorithm     = bit-by-bit-fast
  */
 
+#include <stdint.h>
 #include "crc.h"
 
 void

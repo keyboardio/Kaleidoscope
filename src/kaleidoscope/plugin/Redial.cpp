@@ -15,8 +15,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Redial.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                             // for uint8_t
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_0, Key_1, Key_A
+#include "kaleidoscope/keyswitch_state.h"       // for keyIsPressed, keyTogg...
+#include "kaleidoscope/plugin/Redial.h"         // for Redial, Key_Redial
+#include "Kaleidoscope-Ranges.h"
 
 namespace kaleidoscope {
 namespace plugin {

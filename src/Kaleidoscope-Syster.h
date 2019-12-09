@@ -17,4 +17,6 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include <kaleidoscope/plugin/Syster.h>
+#include "kaleidoscope/keyswitch_state.h"

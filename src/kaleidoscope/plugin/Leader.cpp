@@ -15,10 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Leader.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                             // for int8_t
+#include "Arduino.h"                            // for pgm_read_ptr
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
+#include "kaleidoscope/key_events.h"            // for UnknownKeyswitchLocation
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, keyIsPressed
+#include "kaleidoscope/plugin/Leader.h"         // for Leader, Leader::dicti...
+#include "Kaleidoscope-Ranges.h"
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

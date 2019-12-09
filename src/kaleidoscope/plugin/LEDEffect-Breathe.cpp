@@ -14,7 +14,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-Breathe.h"
+#include <stdint.h>                                   // for uint8_t
+#include "kaleidoscope/Runtime.h"          // for Kaleidoscope
+#include "kaleidoscope/device/keyboardio/Model01.h"   // for cRGB
+#include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for breath_compute
+#include "kaleidoscope/plugin/LEDEffect-Breathe.h"    // for LEDBreatheEffec...
 
 namespace kaleidoscope {
 namespace plugin {

@@ -15,7 +15,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-ShapeShifter.h>
+#include <stdint.h>                             // for uint8_t
+#include <stddef.h>                             // for NULL
+#include "kaleidoscope/hid.h"                   // for isModifierKeyActive
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey, Key_L...
+#include "kaleidoscope/plugin/ShapeShifter.h"   // for ShapeShifter, ShapeSh...
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

@@ -18,9 +18,16 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/plugin/Qukeys/KeyAddrEventQueue.h"
+#include <stdint.h>                                        // for int8_t
+#include "Arduino.h"                                       // for PROGMEM
+#include "kaleidoscope/KeyAddr.h"                          // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"             // for EventHandl...
+#include "kaleidoscope/key_defs.h"                         // for Key, Key_T...
+#include "kaleidoscope/key_defs_keyboard.h"                // for Key_LeftCo...
+#include "kaleidoscope/plugin.h"                           // for Plugin
+#include "kaleidoscope/plugin/Qukeys/KeyAddrEventQueue.h"  // for KeyAddrEve...
+#include "kaleidoscope_internal/deprecations.h"            // for DEPRECATED
+#include "Kaleidoscope-Ranges.h"
 
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key) Key(                                               \

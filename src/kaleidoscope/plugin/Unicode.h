@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-HostOS.h>
+#include <stdint.h>                 // for uint8_t, uint32_t
+#include "kaleidoscope/key_defs.h"  // for Key
+#include "kaleidoscope/plugin.h"    // for Plugin
 
 namespace kaleidoscope {
 namespace plugin {

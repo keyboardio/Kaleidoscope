@@ -15,9 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-GhostInTheFirmware.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                                  // for uint16_t, uint32_t
+#include "Arduino.h"                                 // for byte, pgm_read_byte
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/hooks.h"                      // for handleKeyswitchE...
+#include "kaleidoscope/key_defs.h"                   // for Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"            // for IS_PRESSED, WAS_...
+#include "kaleidoscope/plugin/GhostInTheFirmware.h"  // for GhostInTheFirmwa...
 
 namespace kaleidoscope {
 namespace plugin {

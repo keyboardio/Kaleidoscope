@@ -16,9 +16,16 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/Runtime.h"
-#include "Kaleidoscope-MouseKeys.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                             // for int8_t
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/hid.h"                   // for moveMouse, releaseAll...
+#include "kaleidoscope/key_defs.h"              // for Key, SYNTHETIC
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn, keyIsPr...
+#include "kaleidoscope/plugin/MouseKeys.h"      // for MouseKeys_
+#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseKeyDefs.h"
 
 namespace kaleidoscope {
 namespace plugin {

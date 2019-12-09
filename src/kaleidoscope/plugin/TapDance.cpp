@@ -15,8 +15,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-TapDance.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include <kaleidoscope/hid.h>                   // for sendKeyboardReport
+#include "Arduino.h"                            // for byte
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/hooks.h"                 // for handleKeyswitchEvent
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, keyToggledOff
+#include "kaleidoscope/plugin/TapDance.h"       // for TapDance::TapDanceState
+#include "kaleidoscope/Runtime.h"
+#include "Kaleidoscope-Ranges.h"
 
 namespace kaleidoscope {
 namespace plugin {

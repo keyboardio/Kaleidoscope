@@ -20,4 +20,5 @@
 #error The Kaleidoscope-Model01-TestMode plugin was designed for the Keyboardio Model01, and does not work with any other hardware.
 #endif
 
+#include "Kaleidoscope.h"
 #include "kaleidoscope/plugin/Model01-TestMode.h"

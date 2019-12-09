@@ -17,4 +17,5 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include <kaleidoscope/plugin/USB-Quirks.h>

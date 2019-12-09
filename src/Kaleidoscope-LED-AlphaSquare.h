@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include <kaleidoscope/plugin/LED-AlphaSquare.h>
 #include <kaleidoscope/plugin/LED-AlphaSquare/Effect.h>
 #include <kaleidoscope/plugin/LED-AlphaSquare/Symbols.h>

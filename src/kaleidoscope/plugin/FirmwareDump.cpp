@@ -18,8 +18,8 @@
 #ifdef __AVR__
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include <Kaleidoscope-FirmwareDump.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include "kaleidoscope/plugin/FirmwareDump.h"
+#include "kaleidoscope/plugin/FocusSerial.h"
 #include <avr/boot.h>
 
 namespace kaleidoscope {

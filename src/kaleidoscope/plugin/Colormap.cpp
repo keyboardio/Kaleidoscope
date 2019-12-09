@@ -16,10 +16,15 @@
  */
 
 
-#include <Kaleidoscope-Colormap.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include "Arduino.h"                            // for PSTR
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/layers.h"                // for Layer, Layer_
+#include "kaleidoscope/plugin/Colormap.h"       // for ColormapEffect, Color...
+#include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include "kaleidoscope/plugin/LED-Palette-Theme.h"
 
 namespace kaleidoscope {
 namespace plugin {

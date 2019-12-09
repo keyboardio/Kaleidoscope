@@ -23,7 +23,7 @@
 
 #ifdef __AVR__
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/plugin.h"
 
 namespace kaleidoscope {
 namespace plugin {

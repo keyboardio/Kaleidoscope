@@ -17,7 +17,10 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>                              // for uint8_t, uint16_t
+#include "kaleidoscope/event_handler_result.h"   // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                 // for Plugin
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
 
 #define _DEPRECATED_MESSAGE_EEPROMSETTINGS_VERSION_SET            \
   "The EEPROMSettings.version(uint8_t version) method has been deprecated,\n" \

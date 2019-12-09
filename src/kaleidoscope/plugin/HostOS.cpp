@@ -15,8 +15,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <kaleidoscope/plugin/HostOS.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
+#include "kaleidoscope/plugin/HostOS.h"
+#include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

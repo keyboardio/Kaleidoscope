@@ -15,7 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LEDEffects.h>
+#include "kaleidoscope/device/device.h"              // for CRGB
+#include "kaleidoscope/plugin/TriColor.h"            // for TriColor
 
 kaleidoscope::plugin::TriColor JukeboxEffect(CRGB(0xc8, 0xe8, 0xee),   /* TM */
     CRGB(0xc3, 0xee, 0x8c),   /* VCO */

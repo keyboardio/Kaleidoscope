@@ -18,8 +18,8 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "utility"
-#include "stdio.h"
+#include <utility>
+#include <stdio.h>
 
 namespace kaleidoscope {
 namespace logging {

@@ -23,7 +23,7 @@
 #include "kaleidoscope/key_defs_sysctl.h"
 #include "kaleidoscope/key_defs_consumerctl.h"
 #include "kaleidoscope/key_defs_keymaps.h"
-
+#include "kaleidoscope_internal/deprecations.h"
 #include "kaleidoscope/key_defs_aliases.h"
 
 namespace kaleidoscope {

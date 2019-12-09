@@ -16,4 +16,7 @@
 
 #pragma once
 
+#include "Kaleidoscope.h"
 #include "kaleidoscope/plugin/Macros.h"
+#include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
+#include "kaleidoscope/keyswitch_state.h"

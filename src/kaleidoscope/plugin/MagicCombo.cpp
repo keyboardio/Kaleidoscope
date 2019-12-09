@@ -15,7 +15,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-MagicCombo.h>
+#include <stdint.h>                               // for int8_t
+#include "Arduino.h"                              // for byte, pgm_read_byte
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/plugin/MagicCombo.h"       // for MagicCombo, MagicCo...
 
 namespace kaleidoscope {
 namespace plugin {

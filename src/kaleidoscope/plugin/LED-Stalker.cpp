@@ -15,9 +15,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-Stalker.h>
-#include <Kaleidoscope-LEDControl.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                                   // for uint8_t, uint16_t
+#include "Arduino.h"                                  // for min
+#include "kaleidoscope/Runtime.h"          // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                     // for KeyAddr
+#include "kaleidoscope/device/device.h"               // for cRGB, CRGB
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
+#include "kaleidoscope/keyswitch_state.h"             // for keyIsPressed
+#include "kaleidoscope/plugin/LED-Stalker.h"          // for StalkerEffect
+#include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
+
+namespace kaleidoscope {
+class Key;
+}
 
 namespace kaleidoscope {
 namespace plugin {

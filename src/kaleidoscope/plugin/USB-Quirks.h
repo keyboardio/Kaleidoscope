@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/plugin.h"  // for Plugin
 
 namespace kaleidoscope {
 namespace plugin {

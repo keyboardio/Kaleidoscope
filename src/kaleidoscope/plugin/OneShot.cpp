@@ -15,9 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-OneShot.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include "Kaleidoscope-Ranges.h"                // for OS_FIRST, OS_LAST
+#include "kaleidoscope/Runtime.h"    // for Kaleidoscope, Kaleido...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftControl
+#include "kaleidoscope/key_defs_keymaps.h"      // for LAYER_SHIFT_OFFSET
+#include "kaleidoscope/key_events.h"            // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn, INJECTED
+#include "kaleidoscope/plugin/OneShot.h"        // for OneShot::key_state_t
 
 namespace kaleidoscope {
 namespace plugin {

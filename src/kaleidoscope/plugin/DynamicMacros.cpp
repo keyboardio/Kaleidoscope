@@ -14,10 +14,21 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-DynamicMacros.h"
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                               // for uint8_t, uint16_t
+#include "Arduino.h"                              // for PSTR, delay, strcmp_P
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/hid.h"                     // for sendKeyboardReport
+#include "kaleidoscope/key_defs.h"                // for Key
+#include "kaleidoscope/key_events.h"              // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"         // for IS_PRESSED, WAS_PRE...
+#include "kaleidoscope/plugin/DynamicMacros.h"    // for DynamicMacros
+#include "kaleidoscope/plugin/FocusSerial.h"      // for Focus, FocusSerial
+#include "Kaleidoscope-Ranges.h"
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"
+#include "kaleidoscope/plugin/EEPROM-Settings.h"
 
 using namespace kaleidoscope::ranges;
 

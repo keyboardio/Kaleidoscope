@@ -16,8 +16,10 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>               // for uint8_t
+#include "kaleidoscope/plugin.h"  // for Plugin
+
+struct cRGB;
 
 namespace kaleidoscope {
 namespace plugin {

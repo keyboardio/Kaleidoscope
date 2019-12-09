@@ -15,7 +15,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Unicode.h>
+#include <stdint.h>                       // for int8_t
+#include "Arduino.h"                      // for delay
+#include "kaleidoscope/hid.h"             // for sendKeyboardReport, pressRa...
+#include "kaleidoscope/key_defs.h"        // for Key, Key_LeftAlt, KEY_FLAGS
+#include "kaleidoscope/plugin/Unicode.h"  // for Unicode, hexToKey, hexToKey...
+#include "kaleidoscope/plugin/HostOS.h"
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

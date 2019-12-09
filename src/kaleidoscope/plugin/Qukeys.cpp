@@ -17,12 +17,13 @@
  */
 
 #include "kaleidoscope/plugin/Qukeys.h"
-
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/progmem_helpers.h"
-#include "kaleidoscope/layers.h"
-
+#include "Kaleidoscope-Ranges.h"              // for DUL_FIRST, DUM_FIRST
+#include "HIDAliases.h"                       // for HID_KEYBOARD_FIRST_MODI...
+#include "kaleidoscope/Runtime.h"  // for Kaleidoscope, Kaleidosc...
+#include "kaleidoscope/hooks.h"               // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"     // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/layers.h"              // for Layer, Layer_
+#include "kaleidoscope/progmem_helpers.h"     // for cloneFromProgmem
 
 namespace kaleidoscope {
 namespace plugin {

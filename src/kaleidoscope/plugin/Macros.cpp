@@ -14,9 +14,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-Macros.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
+#include <stdint.h>                                 // for uint8_t
+#include "Arduino.h"                                // for delay, pgm_read_byte
+#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
+#include "kaleidoscope/hid.h"                       // for sendKeyboardReport
+#include "kaleidoscope/key_defs.h"                  // for Key, LSHIFT, Key_0
+#include "kaleidoscope/key_events.h"                // for handleKeyswitchEvent
+#include "kaleidoscope/keyswitch_state.h"           // for IS_PRESSED, WAS_P...
+#include "kaleidoscope/plugin/Macros.h"             // for Macros_, MacroKey...
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_AC...
+#include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
+#include "kaleidoscope/Runtime.h"
 
 __attribute__((weak))
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {

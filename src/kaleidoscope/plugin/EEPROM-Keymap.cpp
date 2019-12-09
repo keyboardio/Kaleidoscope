@@ -15,10 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-EEPROM-Keymap.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/layers.h"
+#include <stdint.h>                               // for uint8_t, uint16_t
+#include "Arduino.h"                              // for PSTR, strcmp_P, byte
+#include "kaleidoscope/Runtime.h"      // for Kaleidoscope, Kalei...
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/Base.h"             // for Base<>::Storage
+#include "kaleidoscope/device/device.h"           // for VirtualProps::Storage
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                // for Key, Key_NoKey
+#include "kaleidoscope/layers.h"                  // for Layer, Layer_, laye...
+#include "kaleidoscope/plugin/EEPROM-Keymap.h"    // for EEPROMKeymap
+#include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
+#include "kaleidoscope/plugin/FocusSerial.h"      // for Focus, FocusSeria
 
 namespace kaleidoscope {
 namespace plugin {

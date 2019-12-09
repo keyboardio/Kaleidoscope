@@ -16,11 +16,15 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/key_defs.h"
+#include <Arduino.h>                              // for byte, PROGMEM, boolean
+#include <stdint.h>                               // for uint8_t, uint32_t
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/device/device.h"           // for Device
+#include "kaleidoscope/key_defs.h"                // for Key
+#include "kaleidoscope/macro_helpers.h"           // for __NL__
+#include "kaleidoscope_internal/deprecations.h"   // for DEPRECATED
+#include "kaleidoscope_internal/device.h"         // for device
 #include "kaleidoscope/keymaps.h"
-#include "kaleidoscope/device/device.h"
-#include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
 

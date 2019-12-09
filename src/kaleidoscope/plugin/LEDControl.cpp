@@ -14,10 +14,29 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDControl.h"
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope_internal/LEDModeManager.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                                  // for uint8_t, uint16_t
+#include "Arduino.h"                                 // for PSTR, strcmp_P
+#include "kaleidoscope/Runtime.h"         // for Kaleidoscope
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for Device
+#include "kaleidoscope/event_handler_result.h"       // for EventHandlerResult
+#include "kaleidoscope/hooks.h"                      // for Hooks
+#include "kaleidoscope/key_defs.h"                   // for Key, IS_INTERNAL
+#include "kaleidoscope/keyswitch_state.h"            // for keyToggledOn
+#include "kaleidoscope/plugin/FocusSerial.h"         // for Focus, FocusSerial
+#include "kaleidoscope/plugin/LEDControl.h"          // for LEDControl, Focu...
+#include "kaleidoscope_internal/LEDModeManager.h"    // for LEDModeManager
+
+namespace kaleidoscope {
+namespace plugin {
+class LEDMode;
+}
+}
+namespace kaleidoscope {
+namespace plugin {
+class LEDModeInterface;
+}
+}
 
 using namespace kaleidoscope::internal;
 

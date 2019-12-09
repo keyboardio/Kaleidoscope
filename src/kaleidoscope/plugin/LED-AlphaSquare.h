@@ -17,8 +17,12 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-LEDControl.h>
+#include <stdint.h>                                  // for uint8_t, uint16_t
+#include "kaleidoscope/KeyAddr.h"                    // for KeyAddr
+#include "kaleidoscope/device/device.h"              // for cRGB
+#include "kaleidoscope/key_defs.h"                   // for Key
+#include "kaleidoscope/plugin.h"                     // for Plugin
+#include "kaleidoscope_internal/deprecations.h"      // for DEPRECATED
 
 #define SYM4x4(                                                   \
                p00, p01, p02, p03,                                \

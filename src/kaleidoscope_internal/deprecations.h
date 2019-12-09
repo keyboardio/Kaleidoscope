@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "kaleidoscope/macro_helpers.h" // For definition of __NL__
+
 #define DEPRECATED(tag)                                                 \
   __attribute__((deprecated(_DEPRECATE(_DEPRECATED_MESSAGE_ ## tag))))
 

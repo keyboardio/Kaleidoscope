@@ -15,8 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-AlphaSquare.h>
-#include <kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h>
+#include <stdint.h>                                        // for uint16_t
+#include <kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h>  // for ALPHASQUAR...
+#include "Arduino.h"                                       // for bitRead
+#include "kaleidoscope/KeyAddr.h"                          // for KeyAddr
+#include "kaleidoscope/device/device.h"                    // for cRGB
+#include "kaleidoscope/key_defs.h"                         // for Key, Key_A
+#include "kaleidoscope/plugin/LED-AlphaSquare.h"           // for AlphaSquare
+#include "kaleidoscope/plugin/LEDControl.h"                // for LEDControl
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {

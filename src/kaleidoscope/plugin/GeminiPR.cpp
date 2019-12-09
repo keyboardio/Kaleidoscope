@@ -15,8 +15,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Steno.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <stdint.h>                             // for uint8_t
+#include <string.h>                             // for memset
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOff, keyTog...
+#include "kaleidoscope/plugin/GeminiPR.h"       // for GeminiPR, START, END
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {
