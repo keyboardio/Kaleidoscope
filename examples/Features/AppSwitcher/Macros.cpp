@@ -27,18 +27,20 @@ static bool appSwitchActive = false;
 
 const macro_t *macroAppSwitch(uint8_t keyState) {
   appSwitchActive = true;
-  Key mod = Key_LeftAlt;
-
-  if (HostOS.os() == H::OSX)
-    mod = Key_LeftGui;
 
   // Key was just pressed, or is being held
   if (keyIsPressed(keyState)) {
-    return MACRO(Dr(mod), D(Tab));
+    if (HostOS.os() == H::OSX)
+      return MACRO(Dr(Key_LeftGui), D(Tab));
+    else
+      return MACRO(Dr(Key_LeftAlt), D(Tab));
   }
   // Key was just released
   if (keyToggledOff(keyState)) {
-    return MACRO(U(Tab), Dr(mod));
+    if (HostOS.os() == H::OSX)
+      return MACRO(U(Tab), Dr(Key_LeftGui));
+    else
+      return MACRO(U(Tab), Dr(Key_LeftAlt));
   }
   // otherwise we do nothing
   return MACRO_NONE;
