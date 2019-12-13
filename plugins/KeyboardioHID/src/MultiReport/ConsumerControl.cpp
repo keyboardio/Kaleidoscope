@@ -44,11 +44,12 @@ static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
 };
 
 ConsumerControl_::ConsumerControl_(void) {
-    static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
-    HID().AppendDescriptor(&node);
 }
 
 void ConsumerControl_::begin(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
+    HID().AppendDescriptor(&node);
+
     // release all buttons
     end();
 }
