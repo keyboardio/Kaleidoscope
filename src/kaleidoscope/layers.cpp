@@ -103,10 +103,6 @@ Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
   return Key_NoKey;
 }
 
-Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
-  return keyFromKeymap(layer, key_addr);
-}
-
 void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
   int8_t layer = active_layers_[key_addr.toInt()];
   live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);

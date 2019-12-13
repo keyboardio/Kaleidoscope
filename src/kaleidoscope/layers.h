@@ -119,6 +119,9 @@ class Layer_ {
   typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
   static GetKeyFunction getKey;
 
+  // Due to an issue with gcc 7, getKeyFromPROGMEM(...) is currently implemented
+  // in kaleidoscope_internal/sketch_preprocessing/sketch_footer.h.
+  //
   static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
   DEPRECATED(ROW_COL_FUNC) static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
     return getKeyFromPROGMEM(layer, KeyAddr(row, col));
