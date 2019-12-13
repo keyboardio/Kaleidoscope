@@ -40,7 +40,13 @@ struct KeyboardioProps: public BaseProps {
 };
 
 template <typename _Props>
-class Keyboardio: public Base<_Props> {};
+class Keyboardio: public Base<_Props> {
+ public:
+  void setup() {
+    Base<_Props>::keyboard().setDefaultProtocol(_Props::KeyboardProps::default_protocol);
+    Base<_Props>::setup();
+  }
+};
 
 }
 }

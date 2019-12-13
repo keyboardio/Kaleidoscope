@@ -164,6 +164,8 @@ class SystemControlWrapper {
 };
 
 struct KeyboardProps: public base::KeyboardProps {
+  static constexpr const uint8_t default_protocol = HID_REPORT_PROTOCOL;
+
   typedef BootKeyboardWrapper BootKeyboard;
   typedef NKROKeyboardWrapper NKROKeyboard;
   typedef ConsumerControlWrapper ConsumerControl;
