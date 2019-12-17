@@ -45,12 +45,11 @@ static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
 };
 
 SystemControl_::SystemControl_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
+    HID().AppendDescriptor(&node);
 }
 
 void SystemControl_::begin(void) {
-    static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
-    HID().AppendDescriptor(&node);
-
     // release all buttons
     end();
 }

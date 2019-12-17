@@ -79,12 +79,11 @@ static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
 };
 
 Keyboard_::Keyboard_(void) {
+    static HIDSubDescriptor node(_hidMultiReportDescriptorKeyboard, sizeof(_hidMultiReportDescriptorKeyboard));
+    HID().AppendDescriptor(&node);
 }
 
 void Keyboard_::begin(void) {
-    static HIDSubDescriptor node(_hidMultiReportDescriptorKeyboard, sizeof(_hidMultiReportDescriptorKeyboard));
-    HID().AppendDescriptor(&node);
-
     // Force API to send a clean report.
     // This is important for and HID bridge where the receiver stays on,
     // while the sender is resetted.
