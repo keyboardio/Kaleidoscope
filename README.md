@@ -20,7 +20,7 @@ void setup() {
   Kaleidoscope.setup();
 
   // Optionally adjust the configuration
-  LEDDigitalRainEffect.DROP_TICKS = 22; // Make the rain fall faster
+  LEDDigitalRainEffect.DROP_MS = 140; // Make the rain fall faster
 
   LEDDigitalRainEffect.activate();
 }
@@ -37,8 +37,10 @@ A few properties are exposed for configuration.
 For their full documentation, see the [header file](src/Kaleidoscope-LEDEffect-DigitalRain.h),
 and for the defaults, see the [implementation file](src/Kaleidoscope-LEDEffect-DigitalRain.cpp).
 
-- `LEDDigitalRainEffect.DROP_TICKS`:
-  number of frames before digital raindrops fall one row
+- `LEDDigitalRainEffect.DECAY_MS`:
+  number of milliseconds it takes for a raindrop to decay from full intensity
+- `LEDDigitalRainEffect.DROP_MS`:
+  number of milliseconds before digital raindrops fall one row
 - `LEDDigitalRainEffect.NEW_DROP_PROBABILITY`:
   inverse probability of a new raindrop appearing at the top of each column,
   each time drops fall

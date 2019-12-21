@@ -1,8 +1,9 @@
-#include "Kaleidoscope-LEDEffect-DigitalRain.h"
+#include <Kaleidoscope-LEDEffect-DigitalRain.h>
 #include <stdlib.h>
 
 namespace kaleidoscope { namespace plugin {
-	uint8_t LEDDigitalRainEffect::DROP_TICKS = 28;
+	uint16_t LEDDigitalRainEffect::DECAY_MS = 2000;
+	uint16_t LEDDigitalRainEffect::DROP_MS = 180;
 	uint8_t LEDDigitalRainEffect::NEW_DROP_PROBABILITY = 18;
 	uint8_t LEDDigitalRainEffect::PURE_GREEN_INTENSITY = 0xd0;
 	uint8_t LEDDigitalRainEffect::MAXIMUM_BRIGHTNESS_BOOST = 0xc0;
@@ -12,17 +13,25 @@ namespace kaleidoscope { namespace plugin {
 		uint8_t col;
 		uint8_t row;
 
+		// By how much intensity should each pixel decay,
+		// based on how much time has passed since we last ran?
+		uint8_t decayAmount = 0xff * (Runtime.millisAtCycleStart() - previousTimestamp) / DECAY_MS;
+
 		// Decay intensities and possibly make new raindrops
 		for (col = 0; col < COLS; col++) {
 			for (row = 0; row < ROWS; row++) {
-				if (row == 0 && drop == 0 && rand() < RAND_MAX / NEW_DROP_PROBABILITY) {
+				if (row == 0 && justDropped && rand() < RAND_MAX / NEW_DROP_PROBABILITY) {
 					// This is the top row, pixels have just fallen,
 					// and we've decided to make a new raindrop in this column
 					map[col][row] = 0xff;
 				} else if (map[col][row] > 0 && map[col][row] < 0xff) {
 					// Pixel is neither full brightness nor totally dark;
 					// decay it
-					map[col][row]--;
+					if (map[col][row] <= decayAmount) {
+						map[col][row] = 0;
+					} else {
+						map[col][row] -= decayAmount;
+					}
 				}
 
 				// Set the colour for this pixel
@@ -31,9 +40,15 @@ namespace kaleidoscope { namespace plugin {
 		}
 
 		// Drop the raindrops one row periodically
-		if (++drop >= DROP_TICKS) {
-			// Reset the drop timer
-			drop = 0;
+		if (Runtime.hasTimeExpired(dropStartTimestamp, DROP_MS)) {
+			// Remember for next time that this just happened
+			justDropped = true;
+
+			// Reset the timestamp
+			dropStartTimestamp = Runtime.millisAtCycleStart();
+
+			// Remember for next tick that we just dropped
+			justDropped = true;
 
 			for (row = ROWS - 1; row > 0; row--) {
 				for (col = 0; col < COLS; col++) {
@@ -53,7 +68,13 @@ namespace kaleidoscope { namespace plugin {
 					}
 				}
 			}
+		} else {
+			justDropped = false;
 		}
+
+		// Update previous timestamp variable to now
+		// so we can tell how much time has passed next time we run
+		previousTimestamp = Runtime.millisAtCycleStart();
 	}
 
 	cRGB LEDDigitalRainEffect::getColorFromIntensity(uint8_t intensity) {

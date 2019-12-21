@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Kaleidoscope-LEDControl.h"
+#include "kaleidoscope/Runtime.h"
+#include <Kaleidoscope-LEDControl.h>
 
 namespace kaleidoscope { namespace plugin {
 	class LEDDigitalRainEffect : public LEDMode {
@@ -8,15 +9,21 @@ namespace kaleidoscope { namespace plugin {
 			LEDDigitalRainEffect(void) {}
 
 			/**
-			 * Number of ticks before raindrops fall.
+			 * Number of milliseconds it takes for a drop to decay
+			 * from full intensity to zero.
 			 */
-			static uint8_t DROP_TICKS;
+			static uint16_t DECAY_MS;
+
+			/**
+			 * Number of milliseconds before raindrops fall.
+			 */
+			static uint16_t DROP_MS;
 
 			/**
 			 * Probability divisor for new drops.
 			 *
 			 * The inverse of this number (1/n) gives the probability
-			 * each time DROP_TICKS frames have elapsed
+			 * each time DROP_MS frames have elapsed
 			 * that a new raindrop will appear in a given column.
 			 */
 			static uint8_t NEW_DROP_PROBABILITY;
@@ -52,23 +59,42 @@ namespace kaleidoscope { namespace plugin {
 			static uint8_t COLOR_CHANNEL;
 
 		protected:
-			void update(void) final;
+			virtual void update(void) final;
 
 		private:
 			/**
-			 * Timer position for raindrops falling.
-			 *
-			 * This ticks upwards linearly and resets after DROP_TICKS.
+			 * Timer at start of drop cycle.
 			 */
-			uint8_t drop = 0;
+			uint32_t dropStartTimestamp = 0;
+
+			/**
+			 * Timer at previous tick.
+			 */
+			uint32_t previousTimestamp = 0;
+
+			/**
+			 * Keep track of whether raindrops fell on the last
+			 * tick.
+			 */
+			bool justDropped = false;
+
+			/**
+			 * Number of columns
+			 */
+			uint8_t COLS = Runtime.device().matrix_columns;
+
+			/**
+			 * Number of rows
+			 */
+			uint8_t ROWS = Runtime.device().matrix_rows;
 
 			/**
 			 * Map of intensities for each pixel.
 			 *
-			 * Intensity 0xff stays for a full cycle of DROP_TICKS,
+			 * Intensity 0xff stays for a full DROP_MS,
 			 * then linearly drops off to zero with time.
 			 */
-			uint8_t map[COLS][ROWS] = {{0}};
+			uint8_t map[Runtime.device().matrix_columns][Runtime.device().matrix_rows] = {{0}};
 
 			/**
 			 * Get colour from intensity.
