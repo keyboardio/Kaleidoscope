@@ -105,8 +105,8 @@ cRGB Haunt::compute(uint8_t *step) {
 // BlazingTrail
 BlazingTrail::BlazingTrail(void) {
 }
-uint8_t hue_start = 50.0 / 360 * 0xff;
-uint8_t hue_end = 0;
+constexpr uint8_t hue_start = 50.0 / 360 * 0xff;
+constexpr uint8_t hue_end = 0;
 
 cRGB BlazingTrail::compute(uint8_t *step) {
   cRGB color;
