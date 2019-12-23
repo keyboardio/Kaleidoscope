@@ -47,6 +47,7 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
+  static constexpr const char *short_name = "splitography";
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

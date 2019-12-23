@@ -120,6 +120,7 @@ struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef Model01KeyScannerProps KeyScannerProps;
   typedef Model01KeyScanner KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  static constexpr const char *short_name = "kbio01";
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

@@ -170,6 +170,7 @@ struct RaiseProps : kaleidoscope::device::BaseProps {
 
   typedef RaiseSideFlasherProps SideFlasherProps;
   typedef kaleidoscope::util::flasher::KeyboardioI2CBootloader<SideFlasherProps> SideFlasher;
+  static constexpr const char *short_name = "raise";
 };
 
 class Raise: public kaleidoscope::device::Base<RaiseProps> {
