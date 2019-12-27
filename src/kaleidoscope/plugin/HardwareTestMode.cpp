@@ -17,7 +17,6 @@
 #include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-HardwareTestMode.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
-#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -123,8 +122,8 @@ void HardwareTestMode::testMatrix() {
 void HardwareTestMode::runTests() {
   // When we start test mode, we -may- have some keys held, so empty it
   // out and send a new report
-  kaleidoscope::hid::releaseAllKeys();
-  kaleidoscope::hid::sendKeyboardReport();
+  kaleidoscope::Runtime.hid().keyboard().releaseAllKeys();
+  kaleidoscope::Runtime.hid().keyboard().sendReport();
   Runtime.device().enableHardwareTestMode();
   testLeds();
   testMatrix();

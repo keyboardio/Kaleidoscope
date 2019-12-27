@@ -285,8 +285,8 @@ uint8_t Model01KeyScanner::previousPressedKeyswitchCount() {
 /********* Hardware plugin *********/
 
 void Model01::setup() {
-  KeyScanner::setup();
   Model01Hands::setup();
+  kaleidoscope::device::Base<Model01Props>::setup();
 
   TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
 }

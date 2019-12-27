@@ -26,8 +26,6 @@
 
 #include "kaleidoscope/key_defs_aliases.h"
 
-#include "KeyboardioHID.h"
-
 namespace kaleidoscope {
 
 class Key {

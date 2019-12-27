@@ -33,7 +33,6 @@ struct cRGB {
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
@@ -127,7 +126,7 @@ struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
 
 class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
  public:
-  static void setup();
+  void setup();
 
   static void enableHardwareTestMode();
 };

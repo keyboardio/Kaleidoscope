@@ -15,7 +15,6 @@
  */
 
 #include "Kaleidoscope-DynamicMacros.h"
-#include "kaleidoscope/hid.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
@@ -35,8 +34,8 @@ static void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state, bool expli
   if (explicit_report)
     return;
 
-  kaleidoscope::hid::sendKeyboardReport();
-  kaleidoscope::hid::sendMouseReport();
+  kaleidoscope::Runtime.hid().keyboard().sendReport();
+  kaleidoscope::Runtime.hid().mouse().sendReport();
 }
 
 static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
@@ -137,8 +136,8 @@ void DynamicMacros::play(uint8_t macro_id) {
       explicit_report = false;
       break;
     case MACRO_ACTION_STEP_SEND_REPORT:
-      kaleidoscope::hid::sendKeyboardReport();
-      kaleidoscope::hid::sendMouseReport();
+      kaleidoscope::Runtime.hid().keyboard().sendReport();
+      kaleidoscope::Runtime.hid().mouse().sendReport();
       break;
     case MACRO_ACTION_STEP_INTERVAL:
       interval = Runtime.storage().read(pos++);

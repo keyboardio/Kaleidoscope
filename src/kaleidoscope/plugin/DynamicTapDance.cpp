@@ -17,7 +17,6 @@
 
 #include "Kaleidoscope-DynamicTapDance.h"
 
-#include "kaleidoscope/hid.h"
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include "Kaleidoscope-FocusSerial.h"
 
@@ -79,7 +78,7 @@ bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr,
     handleKeyswitchEvent(key, key_addr, IS_PRESSED | WAS_PRESSED | INJECTED);
     break;
   case TapDance::Release:
-    hid::sendKeyboardReport();
+    kaleidoscope::Runtime.hid().keyboard().sendReport();
     handleKeyswitchEvent(key, key_addr, WAS_PRESSED | INJECTED);
     break;
   }

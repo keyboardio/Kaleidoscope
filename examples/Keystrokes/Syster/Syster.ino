@@ -20,7 +20,6 @@
 #include <Kaleidoscope-HostOS.h>
 #include <Kaleidoscope-Syster.h>
 #include <Kaleidoscope-Unicode.h>
-#include <kaleidoscope/hid.h>
 
 // *INDENT-OFF*
 KEYMAPS(
@@ -51,9 +50,9 @@ void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *sym
     break;
   case kaleidoscope::plugin::Syster::EndAction:
     handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
+    Kaleidoscope.hid().keyboard().sendReport();
     handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
-    kaleidoscope::hid::sendKeyboardReport();
+    Kaleidoscope.hid().keyboard().sendReport();
     break;
   case kaleidoscope::plugin::Syster::SymbolAction:
     Kaleidoscope.serialPort().print("systerAction: symbol=");

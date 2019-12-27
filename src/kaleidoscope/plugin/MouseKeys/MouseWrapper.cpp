@@ -18,8 +18,8 @@
 // Mouse-related methods
 //
 //
+#include <Kaleidoscope.h>
 #include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
-#include "kaleidoscope/hid.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -35,27 +35,10 @@ uint8_t MouseWrapper_::accelStep;
 uint8_t MouseWrapper_::speedLimit = 127;
 uint8_t MouseWrapper_::subpixelsPerPixel = 16;
 
-MouseWrapper_::MouseWrapper_(void) {
-}
-
-void MouseWrapper_::begin(void) {
-  kaleidoscope::hid::initializeMouse();
-  kaleidoscope::hid::initializeAbsoluteMouse();
-}
-
-void MouseWrapper_::pressButton(uint8_t button) {
-  kaleidoscope::hid::pressMouseButtons(button);
-}
-
-void MouseWrapper_::release_button(uint8_t button) {
-  kaleidoscope::hid::releaseMouseButtons(button);
-  end_warping();
-}
-
 void MouseWrapper_::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
   uint16_t y_center = top + height / 2;
-  kaleidoscope::hid::moveAbsoluteMouseTo(x_center, y_center, 0);
+  Kaleidoscope.hid().absoluteMouse().moveTo(x_center, y_center, 0);
 }
 
 void MouseWrapper_::begin_warping() {
@@ -166,7 +149,7 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
 
   end_warping();
   // move by whole pixels, not subpixels
-  kaleidoscope::hid::moveMouse(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel, 0);
+  Kaleidoscope.hid().mouse().move(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel, 0);
   // save leftover subpixel movements for later
   remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
   remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;

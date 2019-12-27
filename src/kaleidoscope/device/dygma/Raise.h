@@ -21,7 +21,6 @@
 #ifdef ARDUINO_SAMD_RAISE
 #include <Arduino.h>
 
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "kaleidoscope/device/dygma/raise/Hand.h"
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
