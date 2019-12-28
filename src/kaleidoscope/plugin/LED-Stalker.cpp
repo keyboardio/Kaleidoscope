@@ -105,27 +105,32 @@ cRGB Haunt::compute(uint8_t *step) {
 // BlazingTrail
 BlazingTrail::BlazingTrail(void) {
 }
+constexpr uint8_t hue_start = 50.0 / 360 * 0xff;
+constexpr uint8_t hue_end = 0;
 
 cRGB BlazingTrail::compute(uint8_t *step) {
   cRGB color;
 
-  if (*step >= 0xff - 30) {
-    color = hsvToRgb(0xff - *step, 255, 255);
-  } else {
-    color = hsvToRgb(30, 255, 255);
+  // Get the position in the animation, where 0 is start and 0xff is end
+  uint8_t pos255 = 0xff - *step;
 
-    color.r = min(*step * color.r / 255, 255);
-    color.g = min(*step * color.g / 255, 255);
-  }
+  // Fade hue linearly from orange to red
+  uint8_t hue = hue_start + (pos255 * (hue_end - hue_start) >> 8);
 
-  if (*step >= 0xff - 30)
-    *step -= 1;
-  else if (*step >= 0x40)
-    *step -= 16;
-  else if (*step >= 32)
-    *step -= 32;
-  else
+  // Fade value from full following a 1-x^4 curve
+  uint8_t val =
+    0xff // Maximum brightness
+    - ((uint32_t) pos255 * pos255 * pos255 * pos255 // Animation position to 4th power
+       >> 24) // ...pulled down to 8-bit range (but this has a maximum of 0xfc rather than 0xff)
+    - pos255 / (0x100 / 4); // Correction to bring the end result into a full 0 to 0xff range
+
+  color = hsvToRgb(hue, 0xff, val);
+
+  if (*step < 4) {
     *step = 0;
+  } else {
+    *step -= 4;
+  }
 
   return color;
 }
