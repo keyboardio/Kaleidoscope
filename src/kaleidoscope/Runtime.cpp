@@ -17,6 +17,7 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/remote_call.h"
 
 namespace kaleidoscope {
 
@@ -47,6 +48,10 @@ Runtime_::setup(void) {
   for (auto key_addr : KeyAddr::all()) {
     Layer.updateLiveCompositeKeymap(key_addr);
   }
+
+  // Export any symbols required for remote calls.
+  //
+  _KRC_EXPORT_SYMBOLS
 }
 
 void
