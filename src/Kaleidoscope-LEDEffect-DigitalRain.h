@@ -23,7 +23,7 @@ namespace kaleidoscope { namespace plugin {
 			 * Probability divisor for new drops.
 			 *
 			 * The inverse of this number (1/n) gives the probability
-			 * each time DROP_MS frames have elapsed
+			 * each time DROP_MS has elapsed
 			 * that a new raindrop will appear in a given column.
 			 */
 			static uint8_t NEW_DROP_PROBABILITY;
