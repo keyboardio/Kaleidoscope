@@ -3,109 +3,170 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
 
-namespace kaleidoscope { namespace plugin {
-	class LEDDigitalRainEffect : public LEDMode {
-		public:
-			LEDDigitalRainEffect(void) {}
+namespace kaleidoscope {
+namespace plugin {
 
-			/**
-			 * Number of milliseconds it takes for a drop to decay
-			 * from full intensity to zero.
-			 */
-			static uint16_t DECAY_MS;
+class LEDDigitalRainEffect : public Plugin,
+  public LEDModeInterface,
+  public AccessTransientLEDMode {
+ public:
+  LEDDigitalRainEffect(void) {}
 
-			/**
-			 * Number of milliseconds before raindrops fall.
-			 */
-			static uint16_t DROP_MS;
+  /**
+   * Color channel enum.
+   */
+  enum class ColorChannel {RED, GREEN, BLUE};
 
-			/**
-			 * Probability divisor for new drops.
-			 *
-			 * The inverse of this number (1/n) gives the probability
-			 * each time DROP_MS has elapsed
-			 * that a new raindrop will appear in a given column.
-			 */
-			static uint8_t NEW_DROP_PROBABILITY;
+  /**
+   * Get or set the number milliseconds it takes for a drop to decay
+   * from full intensity to zero.
+   */
+  uint16_t getDecayMs(void) {
+    return decay_ms_;
+  }
+  void setDecayMs(uint16_t decayMs) {
+    decay_ms_ = decayMs;
+  }
 
-			/**
-			 * Intensity at which full green is used.
-			 *
-			 * When a pixel is at this intensity,
-			 * full green with no red nor blue is used.
-			 * Above this intensity red and blue are added
-			 * to lighten the colour.
-			 */
-			static uint8_t PURE_GREEN_INTENSITY;
+  /**
+   * Get or set the number of milliseconds before raindrops fall.
+   */
+  uint16_t getDropMs(void) {
+    return drop_ms_;
+  }
+  void setDropMs(uint16_t dropMs) {
+    drop_ms_ = dropMs;
+  }
 
-			/**
-			 * Maximum brightness boost.
-			 *
-			 * The maximum brightness boost added to pure green
-			 * when a pixel is at full intensity.
-			 *
-			 * 0xff would give full white for full-intensity pixels,
-			 * while zero would give pure green for all intensities
-			 * above PURE_GREEN_INTENSITY.
-			 */
-			static uint8_t MAXIMUM_BRIGHTNESS_BOOST;
+  /**
+   * Get or set the probability divisor for new drops.
+   *
+   * The inverse of this number (1/n) gives the probability
+   * each time raindrops fall one row (see getDropMs/setDropMs) has elapsed
+   * that a new raindrop will appear in a given column.
+   */
+  uint8_t getNewDropProbability(void) {
+    return new_drop_probability_;
+  }
+  void setNewDropProbability(uint8_t newDropProbability) {
+    new_drop_probability_ = newDropProbability;
+  }
 
-			/**
-			 * Colour channel.
-			 *
-			 * This can be changed to set the colour
-			 * to red (0), green (1), or blue (2).
-			 */
-			static uint8_t COLOR_CHANNEL;
+  /**
+   * Get or set the intensity at which we display neither a tint nor shade.
+   *
+   * Intensity falls from 255 to 0.
+   *
+   * When a pixel's intensity level reaches this value,
+   * full green with no red nor blue is used.
+   * Above this intensity red and blue are added
+   * to tint the color towards white,
+   * and below this intensity the green channel is dimmed.
+   */
+  uint8_t getTintShadeRatio(void) {
+    return tint_shade_ratio_;
+  }
+  void setTintShadeRatio(uint8_t tintShadeRatio) {
+    tint_shade_ratio_ = tintShadeRatio;
+  }
 
-		protected:
-			virtual void update(void) final;
+  /**
+   * Get or set the maximum tint.
+   *
+   * This is the maximum tint of a pixel,
+   * used when it is at full intensity.
+   * More specifically, this is the maximum value
+   * which will be in the red and blue channels.
+   *
+   * As such, 0xff would give full white for full-intensity pixels,
+   * while zero would give pure green for all intensities
+   * at and above the intensity described by the tint/shade ratio.
+   */
+  uint8_t getMaximumTint(void) {
+    return maximum_tint_;
+  }
+  void setMaximumTint(uint8_t maximumTint) {
+    maximum_tint_ = maximumTint;
+  }
 
-		private:
-			/**
-			 * Timer at start of drop cycle.
-			 */
-			uint32_t dropStartTimestamp = 0;
+  /**
+   * Get or set the color channel.
+   *
+   * This can be changed to set the color
+   * to red, green, or blue.
+   */
+  ColorChannel getColorChannel(void) {
+    return color_channel_;
+  }
+  void setColorChannel(ColorChannel colorChannel) {
+    color_channel_ = colorChannel;
+  }
 
-			/**
-			 * Timer at previous tick.
-			 */
-			uint32_t previousTimestamp = 0;
+  class TransientLEDMode : public LEDMode {
+   public:
+    TransientLEDMode(const LEDDigitalRainEffect *parent)
+      : parent_(parent) {};
 
-			/**
-			 * Keep track of whether raindrops fell on the last
-			 * tick.
-			 */
-			bool justDropped = false;
+   protected:
+    virtual void update() final;
 
-			/**
-			 * Number of columns
-			 */
-			uint8_t COLS = Runtime.device().matrix_columns;
+   private:
+    /**
+     * Pointer to parent class, which houses configuration.
+     */
+    const LEDDigitalRainEffect *parent_;
 
-			/**
-			 * Number of rows
-			 */
-			uint8_t ROWS = Runtime.device().matrix_rows;
+    /**
+     * Timer at start of drop cycle.
+     */
+    uint32_t drop_start_timestamp_ = 0;
 
-			/**
-			 * Map of intensities for each pixel.
-			 *
-			 * Intensity 0xff stays for a full DROP_MS,
-			 * then linearly drops off to zero with time.
-			 */
-			uint8_t map[Runtime.device().matrix_columns][Runtime.device().matrix_rows] = {{0}};
+    /**
+     * Timer at previous tick.
+     */
+    uint32_t previous_timestamp_ = 0;
 
-			/**
-			 * Get colour from intensity.
-			 */
-			cRGB getColorFromIntensity(uint8_t intensity);
+    /**
+     * Keep track of whether raindrops fell on the last
+     * tick.
+     */
+    bool just_dropped_ = false;
 
-			/**
-			 * Get colour from primary and secondary components.
-			 */
-			cRGB getColorFromComponents(uint8_t primary, uint8_t secondary);
-	};
-}}
+    /**
+     * Map of intensities for each pixel.
+     *
+     * Intensity 0xff stays for a full drop_ms_,
+     * then linearly drops off to zero with time.
+     */
+    uint8_t map_[Runtime.device().matrix_columns][Runtime.device().matrix_rows] = {{0}};
+
+    /**
+     * Get color from intensity.
+     */
+    cRGB get_color_from_intensity_(uint8_t intensity);
+
+    /**
+     * Get color from primary and secondary components.
+     */
+    cRGB get_color_from_components_(uint8_t primary, uint8_t secondary);
+
+    friend class LEDDigitalRainEffect;
+  };
+
+ private:
+  /**
+   * Values which the public accessors get and set,
+   * and their defaults.
+   */
+  uint16_t decay_ms_ = 2000;
+  uint16_t drop_ms_ = 180;
+  uint8_t new_drop_probability_ = 18;
+  uint8_t tint_shade_ratio_ = 0xd0;
+  uint8_t maximum_tint_ = 0xc0;
+  ColorChannel color_channel_ = ColorChannel::GREEN;
+};
+
+}
+}
 
 extern kaleidoscope::plugin::LEDDigitalRainEffect LEDDigitalRainEffect;

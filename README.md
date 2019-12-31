@@ -20,36 +20,55 @@ void setup() {
   Kaleidoscope.setup();
 
   // Optionally adjust the configuration
-  LEDDigitalRainEffect.DROP_MS = 140; // Make the rain fall faster
+  LEDDigitalRainEffect.setDropMs(260); // Make the rain fall more slowly
+  LEDDigitalRainEffect.setColorChannel(LEDDigitalRainEffect.ColorChannel::BLUE);
 
+  // Optionally switch this LED mode on at startup
   LEDDigitalRainEffect.activate();
 }
 ```
 
 ## Plugin methods
 
-The plugin provides the `LEDDigitalRainEffect` object, which has no public methods,
-outside of those provided by all LED modes.
+The plugin provides the `LEDDigitalRainEffect` object,
+which has various public getters and setters for configuration,
+as well as the methods associated with all LED mode plugins.
 
-## Configuration
+### Configuration
 
-A few properties are exposed for configuration.
-For their full documentation, see the [header file](src/Kaleidoscope-LEDEffect-DigitalRain.h),
-and for the defaults, see the [implementation file](src/Kaleidoscope-LEDEffect-DigitalRain.cpp).
+For full documentation and defaults, see the [header file](src/Kaleidoscope-LEDEffect-DigitalRain.h).
 
-- `LEDDigitalRainEffect.DECAY_MS`:
-  number of milliseconds it takes for a raindrop to decay from full intensity
-- `LEDDigitalRainEffect.DROP_MS`:
-  number of milliseconds before digital raindrops fall one row
-- `LEDDigitalRainEffect.NEW_DROP_PROBABILITY`:
-  inverse probability of a new raindrop appearing at the top of each column,
+- `LEDDigitalRainEffect.getDecayMs()`,
+  `LEDDigitalRainEffect.setDecayMs(uint16_t)`:
+  get or set the number of milliseconds it takes for a raindrop
+  to decay from full intensity
+- `LEDDigitalRainEffect.getDropMs()`,
+  `LEDDigitalRainEffect.setDropMs(uint16_t)`:
+  get or set the number of milliseconds before digital raindrops fall one row
+- `LEDDigitalRainEffect.getNewDropProbability()`,
+  `LEDDigitalRainEffect.setNewDropProbability(uint8_t)`:
+  get or set the *inverse* probability
+  of a new raindrop appearing at the top of each column,
   each time drops fall
-- `LEDDigitalRainEffect.PURE_GREEN_INTENSITY`:
-  this allows the time ratio of tints vs shades of green to be controlled
-- `LEDDigitalRainEffect.MAXIMUM_BRIGHTNESS_BOOST`:
-  the maximum lightness of a pixel, above pure green
-- `LEDDigitalRainEffect.COLOR_CHANNEL`:
-  colour channel to use, allowing green to be overridden with red or blue
+- `LEDDigitalRainEffect.getTintShadeRatio()`,
+  `LEDDigitalRainEffect.setTintShadeRatio(uint8_t)`:
+  get or set the intensity level (0 to 255)
+  at which pure green should be output;
+  this allows the timeshare ratio of tints vs shades of green to be controlled,
+  where `0` would mean all tints and `255` would mean all shades
+- `LEDDigitalRainEffect.getMaximumTint()`,
+  `LEDDigitalRainEffect.setMaximumTint(uint8_t)`:
+  get or set the maximum tint of a pixel,
+  where `0` would mean nothing brighter than pure green,
+  or `255` would mean tint all the way to pure white
+- `LEDDigitalRainEffect.getColorChannel()`,
+  `LEDDigitalRainEffect.setColorChannel(ColorChannel)`:
+  color channel to use, allowing green to be overridden with red or blue
+
+#### Color channels
+
+Color channels are identified with
+the `LEDDigitalRainEffect.ColorChannel` enum class.
 
 ## Dependencies
 
