@@ -45,7 +45,11 @@ uint8_t Layer_::active_layers_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
-  if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
+  if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
+    if (keyToggledOn(keyState)) {
+      move(keymapEntry.getKeyCode() - LAYER_MOVE_OFFSET);
+    }
+  } else if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
