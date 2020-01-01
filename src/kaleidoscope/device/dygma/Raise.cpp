@@ -417,8 +417,8 @@ void RaiseKeyScanner::setup() {
 void RaiseKeyScanner::reset() {
   leftHandState.all = 0;
   rightHandState.all = 0;
-  Kaleidoscope.hid().keyboard().releaseAllKeys();
-  Kaleidoscope.hid().keyboard().sendReport();
+  Runtime.hid().keyboard().releaseAllKeys();
+  Runtime.hid().keyboard().sendReport();
 }
 
 /********* Hardware plugin *********/
