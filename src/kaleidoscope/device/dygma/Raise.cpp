@@ -392,11 +392,11 @@ bool RaiseKeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
 }
 
 uint8_t RaiseKeyScanner::pressedKeyswitchCount() {
-  return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
+  return __builtin_popcountll(leftHandState.all) + __builtin_popcountll(rightHandState.all);
 }
 
 uint8_t RaiseKeyScanner::previousPressedKeyswitchCount() {
-  return __builtin_popcountl(previousLeftHandState.all) + __builtin_popcountl(previousRightHandState.all);
+  return __builtin_popcountll(previousLeftHandState.all) + __builtin_popcountll(previousRightHandState.all);
 }
 
 void RaiseKeyScanner::setKeyscanInterval(uint8_t interval) {
