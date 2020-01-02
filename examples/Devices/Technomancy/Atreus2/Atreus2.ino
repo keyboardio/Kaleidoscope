@@ -40,6 +40,8 @@ enum {
 #define Key_At LSHIFT(Key_2)
 #define Key_Hash LSHIFT(Key_3)
 #define Key_Dollar LSHIFT(Key_4)
+#define Key_Percent LSHIFT(Key_5)
+#define Key_Caret LSHIFT(Key_6)
 #define Key_And LSHIFT(Key_7)
 #define Key_Star LSHIFT(Key_8)
 #define Key_Plus LSHIFT(Key_Equals)
@@ -59,22 +61,22 @@ KEYMAPS(
       ,Key_Z   ,Key_X   ,Key_C       ,Key_V         ,Key_B, Key_Backtick
       ,Key_Esc ,Key_Tab ,Key_LeftGui ,Key_LeftShift ,Key_Backspace ,Key_LeftControl
 
-                     ,Key_Y     ,Key_U   ,Key_I     ,Key_O      ,Key_P
-                     ,Key_H     ,Key_J   ,Key_K     ,Key_L      ,Key_Semicolon
-       ,Key_Backslash,Key_N     ,Key_M   ,Key_Comma ,Key_Period ,Key_Slash
+                     ,Key_Y     ,Key_U      ,Key_I     ,Key_O      ,Key_P
+                     ,Key_H     ,Key_J      ,Key_K     ,Key_L      ,Key_Semicolon
+       ,Key_Backslash,Key_N     ,Key_M      ,Key_Comma ,Key_Period ,Key_Slash
        ,Key_LeftAlt  ,Key_Space ,MO(NUMPAD) ,Key_Minus ,Key_Quote  ,Key_Enter
   ),
 
   [NUMPAD] = KEYMAP_STACKED
   (
-       Key_Exclamation ,Key_At           ,Key_UpArrow   ,Key_LeftCurlyBracket ,Key_RightCurlyBracket
-      ,Key_Hash        ,Key_LeftArrow    ,Key_DownArrow ,Key_RightArrow       ,Key_Dollar
-      ,Key_LeftBracket ,Key_RightBracket ,Key_LeftParen ,Key_RightParen       ,Key_And		     ,___
+       Key_Exclamation ,Key_At           ,Key_UpArrow   ,Key_Dollar           ,Key_Percent
+      ,Key_LeftParen   ,Key_LeftArrow    ,Key_DownArrow ,Key_RightArrow       ,Key_RightParen
+      ,Key_LeftBracket ,Key_RightBracket ,Key_Hash      ,Key_LeftCurlyBracket ,Key_RightCurlyBracket ,Key_Caret
       ,TG(NAV)         ,Key_Insert       ,Key_LeftGui   ,Key_LeftShift        ,Key_Backspace         ,Key_LeftControl
 
-                   ,Key_PageUp   ,Key_7 ,Key_8      ,Key_9 ,Key_Star
-                   ,Key_PageDown ,Key_4 ,Key_5      ,Key_6 ,Key_Plus
-      ,___         ,Key_Backtick ,Key_1 ,Key_2      ,Key_3 ,Key_Backslash
+                   ,Key_PageUp   ,Key_7 ,Key_8      ,Key_9 ,Key_Backspace
+                   ,Key_PageDown ,Key_4 ,Key_5      ,Key_6 ,___
+      ,Key_And     ,Key_Star     ,Key_1 ,Key_2      ,Key_3 ,Key_Plus
       ,Key_LeftAlt ,Key_Space    ,___   ,Key_Period ,Key_0 ,Key_Equals
    ),
 
