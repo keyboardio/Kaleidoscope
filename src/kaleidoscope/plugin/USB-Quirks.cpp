@@ -17,25 +17,16 @@
 
 #include <Kaleidoscope-USB-Quirks.h>
 
-#if KALEIDOSCOPE_HIDADAPTOR_ENABLE_KEYBOARD_BOOT_PROTOCOL
-#include "BootKeyboard/BootKeyboard.h"
-#endif
-
 namespace kaleidoscope {
 namespace plugin {
 
 void USBQuirks::toggleKeyboardProtocol() {
-
-#if KALEIDOSCOPE_HIDADAPTOR_ENABLE_KEYBOARD_BOOT_PROTOCOL
-  uint8_t new_protocol = !BootKeyboard.getProtocol();
+  uint8_t new_protocol = !Runtime.hid().keyboard().getProtocol();
 
   Runtime.detachFromHost();
-  BootKeyboard.default_protocol = new_protocol;
-  BootKeyboard.setProtocol(new_protocol);
+  Runtime.hid().keyboard().setDefaultProtocol(new_protocol);
   delay(1000);
   Runtime.attachToHost();
-#endif
-
 }
 
 }
