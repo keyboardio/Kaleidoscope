@@ -4,7 +4,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDDigitalRainEffect::TransientLEDMode::update(void) {
+void LEDDigitalRainEffect::TransientLEDMode::update() {
   static constexpr uint8_t rows = Runtime.device().matrix_rows;
   static constexpr uint8_t cols = Runtime.device().matrix_columns;
 

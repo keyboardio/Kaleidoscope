@@ -10,7 +10,7 @@ class LEDDigitalRainEffect : public Plugin,
   public LEDModeInterface,
   public AccessTransientLEDMode {
  public:
-  LEDDigitalRainEffect(void) {}
+  LEDDigitalRainEffect() {}
 
   /**
    * Color channel enum.
@@ -21,7 +21,7 @@ class LEDDigitalRainEffect : public Plugin,
    * Get or set the number milliseconds it takes for a drop to decay
    * from full intensity to zero.
    */
-  uint16_t getDecayMs(void) {
+  uint16_t getDecayMs() {
     return decay_ms_;
   }
   void setDecayMs(uint16_t decayMs) {
@@ -31,7 +31,7 @@ class LEDDigitalRainEffect : public Plugin,
   /**
    * Get or set the number of milliseconds before raindrops fall.
    */
-  uint16_t getDropMs(void) {
+  uint16_t getDropMs() {
     return drop_ms_;
   }
   void setDropMs(uint16_t dropMs) {
@@ -45,7 +45,7 @@ class LEDDigitalRainEffect : public Plugin,
    * each time raindrops fall one row (see getDropMs/setDropMs) has elapsed
    * that a new raindrop will appear in a given column.
    */
-  uint8_t getNewDropProbability(void) {
+  uint8_t getNewDropProbability() {
     return new_drop_probability_;
   }
   void setNewDropProbability(uint8_t newDropProbability) {
@@ -63,7 +63,7 @@ class LEDDigitalRainEffect : public Plugin,
    * to tint the color towards white,
    * and below this intensity the green channel is dimmed.
    */
-  uint8_t getTintShadeRatio(void) {
+  uint8_t getTintShadeRatio() {
     return tint_shade_ratio_;
   }
   void setTintShadeRatio(uint8_t tintShadeRatio) {
@@ -82,7 +82,7 @@ class LEDDigitalRainEffect : public Plugin,
    * while zero would give pure green for all intensities
    * at and above the intensity described by the tint/shade ratio.
    */
-  uint8_t getMaximumTint(void) {
+  uint8_t getMaximumTint() {
     return maximum_tint_;
   }
   void setMaximumTint(uint8_t maximumTint) {
@@ -95,7 +95,7 @@ class LEDDigitalRainEffect : public Plugin,
    * This can be changed to set the color
    * to red, green, or blue.
    */
-  ColorChannel getColorChannel(void) {
+  ColorChannel getColorChannel() {
     return color_channel_;
   }
   void setColorChannel(ColorChannel colorChannel) {
