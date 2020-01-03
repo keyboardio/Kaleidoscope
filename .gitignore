@@ -2,3 +2,7 @@
 .#*
 /output/
 /examples/*/output/
+docs/_build
+docs/doxyoutput
+docs/api
+
