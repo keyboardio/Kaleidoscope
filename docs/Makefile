@@ -3,10 +3,10 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
+SPHINXOPTS    ?= -c ../etc/docs
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = ../out/docs
 
 # Put it first so that "make" without argument is like "make help".
 help:
