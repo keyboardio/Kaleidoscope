@@ -53,7 +53,7 @@ void LEDDigitalRainEffect::TransientLEDMode::update() {
         // If this pixel is on the bottom row and bright,
         // allow it to start decaying
         if (row == rows - 1 && map_[col][row] == 0xff) {
-          map_[col][row]--;
+          --map_[col][row];
         }
 
         // Check if the pixel above is bright
