@@ -15,8 +15,12 @@ Welcome to Kaleidoscope's documentation!
    :caption: Contents:
 
 
+For users
+=========
+
+
 Supported input devices
-=======================
+-----------------------
 .. toctree::
    :maxdepth: 2
    :glob:
@@ -24,8 +28,7 @@ Supported input devices
    hardware-devices/*
 
 Plugins 
-=======
-
+-------
 .. toctree::
    :maxdepth: 1
    :glob: 
@@ -36,6 +39,9 @@ Plugins
 For developers
 ==============
 
+Understanding the codebase
+--------------------------
+
 .. toctree::
    :maxdepth: 1
 
@@ -43,7 +49,7 @@ For developers
    codebase/code-style.md
 
 API Design docs
-===============
+---------------
 
 .. toctree::
    maxdepth: 1
@@ -53,9 +59,9 @@ API Design docs
 
 
 Device drivers
-==============
+--------------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :glob:
 
    drivers/**
@@ -63,10 +69,10 @@ Device drivers
 
 
 Upgrading from old versions
-===========================
+---------------------------
    
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    UPGRADING.md
 
