@@ -13,6 +13,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
     - [Implementation of type Key internally changed from C++ union to class](#implementation-of-type-key-internally-changed-from-union-to-class)
+    - [`LEDControl.paused` has been deprecated](#ledcontrolpaused-has-been-deprecated)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
@@ -351,6 +352,44 @@ instead.
 Key k;
 k.setKeyCode(Key_A.getKeyCode());
 k.setFlags(Key_A.getFlags());
+```
+
+### `LEDControl.paused` has been deprecated
+
+Wherever we used `LEDControl.paused`, we'll need to use one of
+`LEDControl.disable()`, `LEDControl.enable()`, or `LEDControl.isEnabled()`
+instead. `LEDControl.paused` will still compile, but will emit deprecation
+warnings, and will be removed after **2020-03-15**.
+
+Keep in mind that `.enable()` and `.disable()` do more than what `paused` did:
+they will refresh and turn off LEDs too, respectively.
+
+A few examples to show how to transition to the new APIs follow, old use first, new second.
+
+```c++
+if (someCondition) {
+  LEDControl.set_all_leds_to({0, 0, 0});
+  LEDControl.syncLeds();
+  LEDControl.paused = true;
+} else if (someOtherCondition) {
+  LEDControl.paused = false;
+  LEDControl.refreshAll();
+}
+
+if (LEDControl.paused) {
+ // do things...
+}
+```
+
+```c++
+if (someCondition) {
+  LEDControl.disable();
+} else if (someOtherCondition) {
+  LEDControl.enable();
+}
+if (!LEDControl.isEnabled()) {
+  // do things...
+}
 ```
 
 ### The `RxCy` macros and peeking into the keyswitch state

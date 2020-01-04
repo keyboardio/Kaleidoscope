@@ -1,5 +1,5 @@
 /* Kaleidoscope-LEDControl - LED control plugin for Kaleidoscope
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -31,7 +31,7 @@ uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_;
 uint8_t LEDControl::syncDelay = 32;
 uint16_t LEDControl::syncTimer = 0;
-bool LEDControl::paused = false;
+bool LEDControl::enabled_ = true;
 
 LEDControl::LEDControl(void) {
 }
@@ -120,7 +120,7 @@ cRGB LEDControl::getCrgbAt(KeyAddr key_addr) {
 }
 
 void LEDControl::syncLeds(void) {
-  if (paused)
+  if (!enabled_)
     return;
 
   Runtime.device().syncLeds();
@@ -138,6 +138,18 @@ kaleidoscope::EventHandlerResult LEDControl::onSetup() {
   return EventHandlerResult::OK;
 }
 
+void LEDControl::disable() {
+  set_all_leds_to(CRGB(0, 0, 0));
+  Runtime.device().syncLeds();
+  enabled_ = false;
+}
+
+void LEDControl::enable() {
+  enabled_ = true;
+  refreshAll();
+  Runtime.device().syncLeds();
+}
+
 kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
   if (mappedKey.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return kaleidoscope::EventHandlerResult::OK;
@@ -147,6 +159,11 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
       next_mode();
     } else if (mappedKey == Key_LEDEffectPrevious) {
       prev_mode();
+    } else if (mappedKey == Key_LEDToggle) {
+      if (enabled_)
+        disable();
+      else
+        enable();
     }
   }
 
@@ -154,7 +171,7 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
 }
 
 kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
-  if (paused)
+  if (!enabled_)
     return kaleidoscope::EventHandlerResult::OK;
 
   if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
