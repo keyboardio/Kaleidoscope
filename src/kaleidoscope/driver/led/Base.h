@@ -49,6 +49,9 @@ class Base {
     };
     return c;
   }
+  void setBrightness(uint8_t brightness) {}
+  uint8_t getBrightness() { return 255; }
+
   static uint8_t getLedIndex(uint8_t key_offset) {
 
     // Give the compiler the oportunity to optimize

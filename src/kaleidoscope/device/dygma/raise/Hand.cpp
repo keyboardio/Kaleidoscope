@@ -223,7 +223,13 @@ void Hand::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1]; // + 1 for the update LED command itself
   data[0]  = TWI_CMD_LED_BASE + bank;
   for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
-    data[i + 1] = pgm_read_byte(&gamma8[led_data.bytes[bank][i]]);
+    uint8_t c = led_data.bytes[bank][i];
+    if (c > brightness_adjustment_)
+      c -= brightness_adjustment_;
+    else
+      c = 0;
+
+    data[i + 1] = pgm_read_byte(&gamma8[c]);
   }
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));
 }

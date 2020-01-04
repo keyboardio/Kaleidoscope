@@ -81,10 +81,18 @@ class Hand {
     return twi_.crc_errors();
   }
 
+  void setBrightness(uint8_t brightness) {
+    brightness_adjustment_ = 255 - brightness;
+  }
+  uint8_t getBrightness() {
+    return 255 - brightness_adjustment_;
+  }
+
   LEDData_t led_data;
   bool online = false;
 
  private:
+  uint8_t brightness_adjustment_ = 0;
   int ad01_;
   TWI twi_;
   keydata_t key_data_;

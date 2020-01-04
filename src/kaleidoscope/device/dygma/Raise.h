@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::dygma::Raise -- Kaleidoscope device plugin for Dygma Raise
- * Copyright (C) 2017-2019  Keyboard.io, Inc
- * Copyright (C) 2017-2019  Dygma Lab S.L.
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -61,6 +61,8 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
   static cRGB getCrgbAt(uint8_t i);
+  static void setBrightness(uint8_t brightness);
+  static uint8_t getBrightness();
 
   static void updateNeuronLED();
  private:

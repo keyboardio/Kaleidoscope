@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::dygma::Raise -- Kaleidoscope device plugin for Dygma Raise
- * Copyright (C) 2017-2019  Keyboard.io, Inc
- * Copyright (C) 2017-2019  Dygma Lab S.L.
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -143,6 +143,19 @@ cRGB RaiseLEDDriver::neuronLED;
 constexpr uint8_t RaiseLEDDriver::led_map[][RaiseLEDDriverProps::led_count + 1];
 
 constexpr uint8_t RaiseLEDDriverProps::key_led_map[];
+
+void RaiseLEDDriver::setBrightness(uint8_t brightness) {
+  RaiseHands::leftHand.setBrightness(brightness);
+  RaiseHands::rightHand.setBrightness(brightness);
+  for (uint8_t i = 0; i < LED_BANKS; i++) {
+    isLEDChangedLeft[i] = true;
+    isLEDChangedRight[i] = true;
+  }
+}
+
+uint8_t RaiseLEDDriver::getBrightness() {
+  return RaiseHands::leftHand.getBrightness();
+}
 
 void RaiseLEDDriver::syncLeds() {
   // left and right sides

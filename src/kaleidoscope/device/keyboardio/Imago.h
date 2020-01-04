@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Keyboardio-Imago -- Imago hardware support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -58,12 +58,22 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
   static cRGB getCrgbAt(uint8_t i);
+  static void setBrightness(uint8_t brightness) {
+    brightness_adjustment_ = 255 - brightness;
+    isLEDChanged = true;
+  }
+  static uint8_t getBrightness() {
+    return 255 - brightness_adjustment_;
+  }
 
   static cRGB led_data[117]; // 117 is the number of LEDs the chip drives
   // until we clean stuff up a bit, it's easiest to just have the whole struct around
 
  private:
+  static uint8_t brightness_adjustment_;
   static bool isLEDChanged;
+
+  static uint8_t adjustBrightness(uint8_t value);
   static void selectRegister(uint8_t);
   static void unlockRegister();
   static void setAllPwmTo(uint8_t);

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Keyboardio-Imago -- Imago hardware support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -98,6 +98,15 @@ cRGB ImagoLEDDriver::getCrgbAt(uint8_t i) {
   return led_data[i];
 }
 
+uint8_t ImagoLEDDriver::adjustBrightness(uint8_t value) {
+  if (value > brightness_adjustment_)
+    value -= brightness_adjustment;
+  else
+    value = 0;
+
+  return value;
+}
+
 void ImagoLEDDriver::syncLeds() {
 //  if (!isLEDChanged)
 //   return;
@@ -110,9 +119,9 @@ void ImagoLEDDriver::syncLeds() {
   selectRegister(LED_REGISTER_DATA0);
 
   for (auto i = 1; i < LED_REGISTER_DATA0_SIZE; i += 3) {
-    data[i] = led_data[last_led].b;
-    data[i + 1] = led_data[last_led].g;
-    data[i + 2] = led_data[last_led].r;
+    data[i] = adjustBrightness(led_data[last_led].b);
+    data[i + 1] = adjustBrightness(led_data[last_led].g);
+    data[i + 2] = adjustBrightness(led_data[last_led].r);
     last_led++;
   }
 
@@ -130,9 +139,9 @@ void ImagoLEDDriver::syncLeds() {
   selectRegister(LED_REGISTER_DATA1);
 
   for (auto i = 1; i < LED_REGISTER_DATA1_SIZE; i += 3) {
-    data[i] = led_data[last_led].b;
-    data[i + 1] = led_data[last_led].g;
-    data[i + 2] = led_data[last_led].r;
+    data[i] = adjustBrightness(led_data[last_led].b);
+    data[i + 1] = adjustBrightness(led_data[last_led].g);
+    data[i + 2] = adjustBrightness(led_data[last_led].r);
     last_led++;
   }
 
