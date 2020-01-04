@@ -77,7 +77,8 @@ def config_inited(app, config):
     def docname(item):
         """Helper for status_iterator()."""
         return str(Path(item[0]).relative_to(source_path).parent)
-    rmtree(dest_path)
+    if os.path.isdir(dest_path):
+        rmtree(dest_path)
     copytree(source_path, dest_path)
 
 

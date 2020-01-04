@@ -74,6 +74,12 @@ Device drivers
    drivers/**
 
 
+What's new in v2.0
+------------------
+.. toctree::
+   :maxdepth: 2
+
+   NEWS.md
 
 Upgrading from old versions
 ---------------------------
