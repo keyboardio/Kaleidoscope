@@ -11,8 +11,10 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import sys
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.append('_sphinx')
+
 
 
 # -- Project information -----------------------------------------------------
@@ -33,6 +35,12 @@ extensions = [
 	'recommonmark'
 
 ]
+
+extensions.append('copy-examples')
+
+examples_source = '../examples'
+examples_dest = 'examples'
+
 
 # Setup the breathe extension
 breathe_projects = {
@@ -76,7 +84,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'etc']
+exclude_patterns = ['_build', '_sphinx', 'Thumbs.db', '.DS_Store', 'etc', 'requirements.txt']
 
 
 # -- Options for HTML output -------------------------------------------------

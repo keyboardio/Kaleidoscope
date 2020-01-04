@@ -3,16 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Kaleidoscope's documentation!
-========================================
+Kaleidoscope
+============
+
+
+Flexible firmware for computer keyboards.
+
+This package contains the "core" of Kaleidoscope and a number of [example firmware "Sketches"](https://github.com/keyboardio/Kaleidoscope/tree/master/examples).
+
+If you're just getting started with the Keyboardio Model 01, the [introductory docs are here](https://github.com/keyboardio/Kaleidoscope/wiki/Keyboardio-Model-01-Introduction) and the source for the basic firmware package is here: https://github.com/keyboardio/Model01-Firmware. It's probably a good idea to start there, learn how to modify your keymap and maybe turn some modules on or off, and then come back to the full repository when you have more complex changes in mind.
+
+Installation and setup
+======================
 
 .. toctree::
    :maxdepth: 2
-
-   about
-   api/library_root
-
-   :caption: Contents:
+  
+   quick_start  
 
 
 For users
@@ -52,7 +59,7 @@ API Design docs
 ---------------
 
 .. toctree::
-   maxdepth: 1
+   :maxdepth: 1
    :glob:
 
    api-reference/*
@@ -77,9 +84,39 @@ Upgrading from old versions
    UPGRADING.md
 
 
+For Everybody
+=============
+
+.. toctree::
+   :maxdepth: 0
+
+   code_of_conduct.md
+
+
+WIP
+===
+
+
+.. toctree::
+   :maxdepth: 2
+  
+   examples
+   about
+   api/library_root
+
+   :caption: Contents:
+
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+
+Links
+=====
+
+`Source code on GitHub <https://github.com/keyboardio/kaleidoscope>`_
