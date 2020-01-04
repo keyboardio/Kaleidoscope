@@ -99,4 +99,4 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 html_static_path = ['_static']
 
 
-master_doc = 'index.rst'
+master_doc = 'index'
