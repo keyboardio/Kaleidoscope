@@ -74,8 +74,6 @@ class Hand {
   bool moreKeysWaiting();
   void sendLEDData();
   void sendLEDBank(uint8_t bank);
-  void setOneLEDTo(byte led, cRGB color);
-  void setAllLEDsTo(cRGB color);
   keydata_t getKeyData();
   bool readKeys();
   uint8_t controllerAddress();

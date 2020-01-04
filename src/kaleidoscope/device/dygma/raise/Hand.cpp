@@ -228,25 +228,6 @@ void Hand::sendLEDBank(uint8_t bank) {
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));
 }
 
-void Hand::setAllLEDsTo(cRGB color) {
-  uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
-                    pgm_read_byte(&gamma8[color.r]),
-                    pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.b])
-                   };
-  twi_.writeTo(data, ELEMENTS(data));
-}
-
-void Hand::setOneLEDTo(byte led, cRGB color) {
-  uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
-                    led,
-                    pgm_read_byte(&gamma8[color.r]),
-                    pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.b])
-                   };
-  twi_.writeTo(data, ELEMENTS(data));
-}
-
 }
 }
 }
