@@ -85,7 +85,7 @@ KEYMAPS(
        Key_Insert ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
       ,Key_Delete ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
       ,XXX        ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
-      ,XXX        ,Consumer_VolumeDecrement ,___           ,___            ,___  ,___
+      ,M(QWERTY)  ,Consumer_VolumeDecrement ,___           ,___            ,___ ,___
 
                 ,Key_UpArrow   ,Key_F7 ,Key_F8          ,Key_F9         ,Key_F10
                 ,Key_DownArrow ,Key_F4 ,Key_F5          ,Key_F6         ,Key_F11
