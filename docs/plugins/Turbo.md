@@ -1,4 +1,4 @@
-# Kaleidoscope-Turbo
+# Turbo
 
 The `Turbo` plugin provides an extra key one can place on their keymap. While the
 key is pressed or toggled, pressing other keys will generate quick repeated

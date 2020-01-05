@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffects
+# LEDEffects
 
 The `LEDEffects` plugin provides a selection of LED effects, each of them fairly
 simple, simple enough to not need a plugin of their own.

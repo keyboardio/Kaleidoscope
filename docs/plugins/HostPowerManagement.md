@@ -1,4 +1,4 @@
-# Kaleidoscope-HostPowerManagement
+# HostPowerManagement
 
 Support performing custom actions whenever the host suspends, resumes, or is
 sleeping.

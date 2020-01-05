@@ -1,4 +1,4 @@
-# Kaleidoscope-Ranges
+# Ranges
 
 ## kaleidoscope::ranges enum
 

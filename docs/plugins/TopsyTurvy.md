@@ -1,4 +1,4 @@
-# Kaleidoscope-TopsyTurvy
+# TopsyTurvy
 
 `TopsyTurvy` is a plugin that inverts the behaviour of the `Shift` key for some
 selected keys. That is, if configured so, it will input `!` when pressing the

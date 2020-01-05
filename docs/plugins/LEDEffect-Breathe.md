@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-Breathe
+# LEDEffect-Breathe
 
 Provides a breathing effect for the keyboard. Breathe in, breathe out.
 

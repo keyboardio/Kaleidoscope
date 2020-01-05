@@ -1,4 +1,4 @@
-# Kaleidoscope-FocusSerial
+# FocusSerial
 
 Bidirectional communication for Kaleidoscope. With this plugin enabled, plugins that implement the `onFocusEvent` hook will start responding to Focus commands sent via `Serial`, allowing bidirectional communication between firmware and host.
 

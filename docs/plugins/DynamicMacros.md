@@ -1,4 +1,4 @@
-# Kaleidoscope-DynamicMacros
+# DynamicMacros
 
 Dynamic macros are similar to [Macros][plugin:macros], but unlike them, they can
 be re-defined without compiling and flashing new firmware: one can change

@@ -1,4 +1,4 @@
-# Kaleidoscope-MagicCombo
+# MagicCombo
 
 The `MagicCombo` extension provides a way to perform custom actions when a
 particular set of keys are held down together. The functionality assigned to

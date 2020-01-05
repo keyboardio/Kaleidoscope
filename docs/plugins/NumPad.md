@@ -1,4 +1,4 @@
-# Kaleidoscope-NumPad
+# NumPad
 
 This is a plugin for [Kaleidoscope][fw], that adds a NumPad-specific LED
 effect and applies it when the numpad layer is active.

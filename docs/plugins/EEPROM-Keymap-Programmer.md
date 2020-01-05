@@ -1,4 +1,4 @@
-# Kaleidoscope-EEPROM-Keymap-Programmer
+# EEPROM-Keymap-Programmer
 
 Inspired by a similar feature on other keyboards, the `EEPROM-Keymap-Programmer`
 plugin implements an on-device keymap re-arrangement / re-coding system. There

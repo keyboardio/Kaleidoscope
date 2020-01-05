@@ -1,4 +1,4 @@
-# Kaleidoscope-Steno
+# Steno
 
 Stenography is a way to write in shorthand, a chorded input system that allows
 very fast input (considerably higher than normal touch typing), by using

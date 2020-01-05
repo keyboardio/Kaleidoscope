@@ -1,4 +1,4 @@
-# Kaleidoscope-CycleTimeReport
+# CycleTimeReport
 
 A development and debugging aid, this plugin will measure average mainloop times
 (in microseconds) and print it to `Serial` periodically. While not the most

@@ -1,4 +1,4 @@
-# Kaleidoscope-FirmwareDump
+# FirmwareDump
 
 This plugin provides a single Focus command: `firmware.dump`, which dumps the
 firmware's executable code. One might rightfully wonder what purpose this serves

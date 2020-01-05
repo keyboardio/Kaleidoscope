@@ -1,4 +1,4 @@
-# Kaleidoscope-Colormap
+# Colormap
 
 The `Colormap` extension provides an easier way to set up a different - static -
 color map per-layer. This means that we can set up a map of colors for each key,

@@ -1,4 +1,4 @@
-# Kaleidoscope-Escape-OneShot
+# Escape-OneShot
 
 Turn the `Esc` key into a special key, that can cancel any active `OneShot`
 effect - or act as the normal `Esc` key if none are active, or if any of them

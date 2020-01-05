@@ -1,4 +1,4 @@
-# Kaleidoscope-Macros
+# Macros
 
 Macros are a standard feature on many keyboards and Kaleidoscope-powered ones
 are no exceptions. Macros are a way to have a single key-press do a whole lot of

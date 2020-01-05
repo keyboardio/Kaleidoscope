@@ -1,4 +1,4 @@
-# Kaleidoscope-FingerPainter
+# FingerPainter
 
 The `FingerPainter` plugin provides an elaborate `LED` mode, in which one's able
 to paint with their fingers: when edit mode is toggled on, keys will - instead

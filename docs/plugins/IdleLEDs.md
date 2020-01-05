@@ -1,4 +1,4 @@
-# Kaleidoscope-IdleLEDs
+# IdleLEDs
 
 Having LED effects on the keyboard can be exceptionally helpful. However, having
 the effects - or lights, in general - on all the time, even when the keyboard is

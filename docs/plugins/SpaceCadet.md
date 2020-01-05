@@ -1,4 +1,4 @@
-# Kaleidoscope-SpaceCadet
+# SpaceCadet
 
 [Space Cadet][space-cadet] is a way to make it more convenient to input
 parens - those `(` and `)` things -, symbols that a lot of programming languages

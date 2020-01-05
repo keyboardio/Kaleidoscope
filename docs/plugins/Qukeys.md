@@ -1,4 +1,4 @@
-# Kaleidoscope-Qukeys
+# Qukeys
 
 ## Concept
 

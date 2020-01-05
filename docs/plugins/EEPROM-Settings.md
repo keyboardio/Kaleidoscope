@@ -1,4 +1,4 @@
-# Kaleidoscope-EEPROM-Settings
+# EEPROM-Settings
 
 To be able to reliably store persistent configuration in `EEPROM`, we need to be
 able to split up the available space for plugins to use. We also want to make

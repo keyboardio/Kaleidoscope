@@ -1,4 +1,4 @@
-# Kaleidoscope-Unicode
+# Unicode
 
 The `Unicode` extension makes it easier to write plugins that input Unicode
 symbols on the host. Because inputting Unicode varies from OS to OS, this helper

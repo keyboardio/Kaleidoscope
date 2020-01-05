@@ -1,4 +1,4 @@
-# Kaleidoscope-DynamicTapDance
+# DynamicTapDance
 
 The `DynamicTapDance` plugin allows one to set up [TapDance][plugin:tapdance] keys
 without the need to compile and flash new firmware: one can change dynamic

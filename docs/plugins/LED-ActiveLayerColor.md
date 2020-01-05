@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-ActiveLayerColor
+# LED-ActiveLayerColor
 
 A simple way to light up the keyboard in uniform colors, depending on what layer
 one's on. Unlike [Colormap](Colormap.md), all keys will be the same color. But

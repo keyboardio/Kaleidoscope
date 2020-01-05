@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-Rainbow
+# LEDEffect-Rainbow
 
 Two colorful rainbow effects are implemented by this plugin: one where the
 rainbow waves through the keys, and another where the LEDs breathe though the

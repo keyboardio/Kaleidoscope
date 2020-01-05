@@ -1,4 +1,4 @@
-# Kaleidoscope-Heatmap
+# Heatmap
 
 The `Heatmap` plugin provides a LED effect, that displays a heatmap on the
 keyboard. The LEDs under each key will have a color according to how much use

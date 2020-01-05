@@ -1,4 +1,4 @@
-# Kaleidoscope-WinKeyToggle
+# WinKeyToggle
 
 If you ever played games on Windows on a traditional keyboard, you likely ran
 into the issue of the Windows key: in the heat of the moment, you accidentally

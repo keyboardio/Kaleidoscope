@@ -1,4 +1,4 @@
-# Kaleidoscope-Syster
+# Syster
 
 Syster is a way to input symbols in a different way: instead of macros, Leader
 sequences or the like, we trigger the special input mode, and enter the symbol's

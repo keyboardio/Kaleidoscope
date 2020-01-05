@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-Palette-Theme
+# LED-Palette-Theme
 
 A common base for plugins that want to provide themes, or theme-related
 capabilities, using a 16 color palette. In other words, this is for plugin

@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-Stalker
+# LED-Stalker
 
 The `StalkerEffect` plugin provides an interesting new typing experience: the
 LEDs light up as you tap keys and play one of the selected effects: a haunting

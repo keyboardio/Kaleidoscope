@@ -1,4 +1,4 @@
-# Kaleidoscope-Redial
+# Redial
 
 If you ever wanted to just repeat the last key pressed, no matter what it was,
 this plugin is made for you. It allows you to configure a key that will repeat

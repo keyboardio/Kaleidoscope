@@ -1,4 +1,4 @@
-# Kaleidoscope-EEPROM-Keymap
+# EEPROM-Keymap
 
 While keyboards usually ship with a keymap programmed in, to be able to change that keymap, without flashing new firmware, we need a way to place the keymap into a place we can update at run-time, and which persists across reboots. Fortunately, we have a bit of `EEPROM` on the keyboard, and can use it to store either the full keymap (and saving space in the firmware then), or store additional layers there.
 

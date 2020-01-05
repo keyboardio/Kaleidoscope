@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-BootAnimation
+# LEDEffect-BootAnimation
 
 With this plugin enabled, the keyboard will play a little boot animation when
 starting up (this animation does not inhibit typing, you can still use the

@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-ActiveModColor
+# LED-ActiveModColor
 
 With this plugin, any active modifier on the keyboard will have the LED under it
 highlighted. No matter how the modifier got activated (a key press, a macro,

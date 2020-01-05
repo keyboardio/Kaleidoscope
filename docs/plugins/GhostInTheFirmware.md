@@ -1,4 +1,4 @@
-# Kaleidoscope-GhostInTheFirmware
+# GhostInTheFirmware
 
 Born out of the desire to demo LED effects on the keyboard without having to
 touch it by hand (which would obstruct the video), the `GhostInTheFirmware`

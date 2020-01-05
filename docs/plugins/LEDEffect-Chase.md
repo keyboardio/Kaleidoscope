@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-Chase
+# LEDEffect-Chase
 
 A simple LED effect where one color chases another across the keyboard and back,
 over and over again. Playful colors they are.

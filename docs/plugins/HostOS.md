@@ -1,4 +1,4 @@
-# Kaleidoscope-HostOS
+# HostOS
 
 The `HostOS` extension is not all that useful in itself, rather, it is a
 building block other plugins and extensions can use to not repeat the same

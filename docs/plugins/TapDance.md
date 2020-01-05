@@ -1,4 +1,4 @@
-# Kaleidoscope-TapDance
+# TapDance
 
 Tap-dance keys are general purpose, multi-use keys, which trigger a different
 action based on the number of times they were tapped in sequence. As an example

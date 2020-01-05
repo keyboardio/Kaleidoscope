@@ -1,4 +1,4 @@
-# Kaleidoscope-TypingBreaks
+# TypingBreaks
 
 Typing on the keyboard for an extended period of time may lead to injuries,
 which is why it is highly recommended to take frequent breaks from the

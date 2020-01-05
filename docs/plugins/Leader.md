@@ -1,4 +1,4 @@
-# Kaleidoscope-Leader
+# Leader
 
 Leader keys are a kind of key where when they are tapped, all following keys are
 swallowed, until the plugin finds a matching sequence in the dictionary, it

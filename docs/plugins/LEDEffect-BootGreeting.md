@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-BootGreeting
+# LEDEffect-BootGreeting
 
 If you want to have your keyboard signal when it turns on, but you don't want to
 use any more complicated LED modes, this plugin is for you. It will make the

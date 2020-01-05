@@ -1,4 +1,4 @@
-# Kaleidoscope-OneShot
+# OneShot
 
 One-shots are a new kind of behaviour for your standard modifier and momentary
 layer keys: instead of having to hold them while pressing other keys, they can

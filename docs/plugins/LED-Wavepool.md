@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-Wavepool
+# LED-Wavepool
 
 The `WavepoolEffect` plugin makes waves of light splash out from each keypress.
 When idle, it will also simulate gentle rainfall on the keyboard.

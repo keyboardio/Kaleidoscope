@@ -1,4 +1,4 @@
-# Kaleidoscope-LEDEffect-SolidColor
+# LEDEffect-SolidColor
 
 This plugin provides tools to build LED effects that set the entire keyboard to
 a single color. For show, and for backlighting purposes.

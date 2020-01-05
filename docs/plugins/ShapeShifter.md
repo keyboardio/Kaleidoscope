@@ -1,4 +1,4 @@
-# Kaleidoscope-ShapeShifter
+# ShapeShifter
 
 `ShapeShifter` is a plugin that makes it considerably easier to change what
 symbol is input when a key is pressed together with `Shift`. If one wants to

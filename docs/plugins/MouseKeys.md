@@ -1,4 +1,4 @@
-# Kaleidoscope-MouseKeys
+# MouseKeys
 
 Have you ever wanted to control the mouse cursor from the comfort of your
 keyboard? With this plugin, you can. While it may not replace the mouse in all

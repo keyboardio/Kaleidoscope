@@ -1,4 +1,4 @@
-# Kaleidoscope-LED-AlphaSquare
+# LED-AlphaSquare
 
 An alphabet for your per-key LEDs, `AlphaSquare` provides a way to display 4x4
 "pixel" symbols on your keyboard. With this building block, one can build some

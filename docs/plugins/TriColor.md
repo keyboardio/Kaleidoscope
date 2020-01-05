@@ -1,4 +1,4 @@
-# Kaleidoscope-TriColor
+# TriColor
 
 The `TriColor` effect extension is a part of
 the [`LEDEffects`][plugin:ledeffects] library, not a stand-alone base library of
