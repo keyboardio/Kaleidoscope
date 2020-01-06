@@ -21,7 +21,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
     - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
     - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
-    - [Finer OneShot stickability control](#finer-oneshot-stickability-control)
     - [EEPROMKeymap mode](#eepromkeymap-mode)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
@@ -498,10 +497,6 @@ Row/col based indexing was replaced by linear indexing throughout the whole firm
 the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
 
 Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated.
-
-### Finer OneShot stickability control
-
-The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods. The old properties are still available, but will be removed by **2019-04-30**.
 
 ### EEPROMKeymap mode
 
