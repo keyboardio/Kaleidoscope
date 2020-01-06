@@ -19,6 +19,9 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
+    - [Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime](#classglobal-instance-kaleidoscope_kaleidoscope-renamed-to-kaleidoscoperuntime_kaleidoscoperuntime)
+    - [Transition to linear indexing](#transition-to-linear-indexing)
+    - [keymaps array and KEYMAPS and KEYMAPS_STACKED macros](#keymaps-array-and-keymaps-and-keymaps_stacked-macros)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
