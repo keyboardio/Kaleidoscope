@@ -495,7 +495,7 @@ After renaming, some of the original symbols have been deprecated. The deprecate
 Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
 the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
 
-Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated.
+Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated, and will be removed after **2020-03-15**.
 
 ### Source code and namespace rearrangement
 
