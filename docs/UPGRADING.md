@@ -40,6 +40,8 @@ For end users, this doesn't come with any breaking changes. A few things have be
 
 For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
 
+The old symbols and APIs will be removed by **2020-03-15**.
+
 ### New plugin API
 
 #### For end-users
