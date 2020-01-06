@@ -19,8 +19,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
-    - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
-    - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
