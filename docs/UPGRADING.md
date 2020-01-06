@@ -21,7 +21,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
     - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
     - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
-    - [EEPROMKeymap mode](#eepromkeymap-mode)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
@@ -498,10 +497,6 @@ the firmware to remain backwards compatible, however, these functions are deprec
 
 Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated.
 
-### EEPROMKeymap mode
-
-The [EEPROM-Keymap](doc/plugin/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed. Supplying a second argument will continue to work until its scheduled removal by **2019-04-30**.
-
 ## keymaps array and KEYMAPS and KEYMAPS_STACKED macros
 
 The `keymaps` array has been replaced with a `keymaps_linear` array. This new array treats each layer as a simple one dimensional array of keys, rather than a two dimensional array of arrays of rows. At the same time, the `KEYMAPS` and `KEYMAPS_STACKED` macros that were previously defined in each hardware implmentation class have been replaced with `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros in each hardware class. This change should be invisible to users, but will require changes by any plugin that accessed the 'keymaps' variable directly.
@@ -532,6 +527,12 @@ The following headers and names have changed:
 - [TapDance](doc/plugin/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2020-01-06
+
+### EEPROMKeymap mode
+
+The [EEPROM-Keymap](doc/plugin/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed.
 
 ### Removed on 2019-01-18
 
