@@ -26,6 +26,7 @@ namespace plugin {
 
 uint32_t IdleLEDs::idle_time_limit = 600000; // 10 minutes
 uint32_t IdleLEDs::start_time_     = 0;
+bool IdleLEDs::idle_;
 
 uint32_t IdleLEDs::idleTimeoutSeconds() {
   return idle_time_limit / 1000;
@@ -39,6 +40,7 @@ EventHandlerResult IdleLEDs::beforeEachCycle() {
   if (::LEDControl.isEnabled() &&
       Runtime.hasTimeExpired(start_time_, idle_time_limit)) {
     ::LEDControl.disable();
+    idle_ = true;
   }
 
   return EventHandlerResult::OK;
@@ -46,8 +48,9 @@ EventHandlerResult IdleLEDs::beforeEachCycle() {
 
 EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
 
-  if (!::LEDControl.isEnabled()) {
+  if (idle_) {
     ::LEDControl.enable();
+    idle_ = false;
   }
 
   start_time_ = Runtime.millisAtCycleStart();
