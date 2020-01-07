@@ -57,6 +57,7 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 
 bool ImagoLEDDriver::isLEDChanged = true;
 cRGB ImagoLEDDriver::led_data[];
+uint8_t ImagoLEDDriver::brightness_adjustment_;
 
 void ImagoLEDDriver::setup() {
   setAllPwmTo(0xFF);
@@ -100,7 +101,7 @@ cRGB ImagoLEDDriver::getCrgbAt(uint8_t i) {
 
 uint8_t ImagoLEDDriver::adjustBrightness(uint8_t value) {
   if (value > brightness_adjustment_)
-    value -= brightness_adjustment;
+    value -= brightness_adjustment_;
   else
     value = 0;
 
