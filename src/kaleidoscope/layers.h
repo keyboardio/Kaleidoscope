@@ -32,11 +32,6 @@
   uint8_t layer_count                                                   __NL__ \
      = sizeof(keymaps_linear) / sizeof(*keymaps_linear);                __NL__ \
                                                                         __NL__ \
-  /* This deprecated compatibility wrapper is removed by the linker if  __NL__ \
-     it is not accessed nowhere.                                        __NL__ \
-  */                                                                    __NL__ \
-  kaleidoscope::internal::Keymaps2DInterface keymaps;                   __NL__ \
-                                                                        __NL__ \
   _INIT_SKETCH_EXPLORATION                                              __NL__ \
   _INIT_HID_GETSHORTNAME
 

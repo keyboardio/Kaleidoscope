@@ -19,10 +19,8 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
-    - [Removal of Layer.defaultLayer](#removal-of-layerdefaultlayer)
-    - [More clarity in Layer method names](#more-clarity-in-layer-method-names)
-    - [Finer OneShot stickability control](#finer-oneshot-stickability-control)
-    - [EEPROMKeymap mode](#eepromkeymap-mode)
+    - [Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime](#classglobal-instance-kaleidoscope_kaleidoscope-renamed-to-kaleidoscoperuntime_kaleidoscoperuntime)
+    - [Transition to linear indexing](#transition-to-linear-indexing)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
@@ -41,6 +39,8 @@ For end users, this doesn't come with any breaking changes. A few things have be
 #### For developers
 
 For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
+
+The old symbols and APIs will be removed by **2020-03-15**.
 
 ### New plugin API
 
@@ -497,23 +497,7 @@ After renaming, some of the original symbols have been deprecated. The deprecate
 Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
 the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
 
-Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated.
-
-### Finer OneShot stickability control
-
-The [OneShot plugin](doc/plugin/OneShot.md) has much improved stickability control. Instead of only being able to control if one-shot layers should be stickable too, or disabling the sticky feature in general, it is now possible to control stickiness on a per-key basis with the new `OneShot.enableStickability()` and `OneShot.disableStickablity()` methods. The old properties are still available, but will be removed by **2019-04-30**.
-
-### EEPROMKeymap mode
-
-The [EEPROM-Keymap](doc/plugin/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed. Supplying a second argument will continue to work until its scheduled removal by **2019-04-30**.
-
-## keymaps array and KEYMAPS and KEYMAPS_STACKED macros
-
-The `keymaps` array has been replaced with a `keymaps_linear` array. This new array treats each layer as a simple one dimensional array of keys, rather than a two dimensional array of arrays of rows. At the same time, the `KEYMAPS` and `KEYMAPS_STACKED` macros that were previously defined in each hardware implmentation class have been replaced with `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros in each hardware class. This change should be invisible to users, but will require changes by any plugin that accessed the 'keymaps' variable directly.
-
-Code like `key.raw = pgm_read_word(&(keymaps[layer][row][col])); return key;` should be changed to look like this: `return keyFromKeymap(layer, row, col);`
-
-The old, deprecated, API will be removed on **2019-08-13**.
+Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated, and will be removed after **2020-03-15**.
 
 ### Source code and namespace rearrangement
 
@@ -537,6 +521,18 @@ The following headers and names have changed:
 - [TapDance](doc/plugin/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2020-01-06
+
+### EEPROMKeymap mode
+
+The [EEPROM-Keymap](doc/plugin/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed.
+
+## keymaps array and KEYMAPS and KEYMAPS_STACKED macros
+
+The `keymaps` array has been replaced with a `keymaps_linear` array. This new array treats each layer as a simple one dimensional array of keys, rather than a two dimensional array of arrays of rows. At the same time, the `KEYMAPS` and `KEYMAPS_STACKED` macros that were previously defined in each hardware implmentation class have been replaced with `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros in each hardware class. This change should be invisible to users, but will require changes by any plugin that accessed the 'keymaps' variable directly.
+
+Code like `key.raw = pgm_read_word(&(keymaps[layer][row][col])); return key;` should be changed to look like this: `return keyFromKeymap(layer, row, col);`
 
 ### Removed on 2019-01-18
 
