@@ -30,9 +30,9 @@ author = 'Keyboardio & Friends'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-   # 'breathe',
-   # 'exhale',
-	'recommonmark'
+    'breathe',
+    'exhale',
+    'recommonmark'
 
 ]
 
@@ -59,7 +59,7 @@ exhale_args = {
     "createTreeView":        False,
     # TIP: if using the sphinx-bootstrap-theme, you need
     # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": False,
+    "exhaleExecutesDoxygen": True,
     "exhaleDoxygenStdin":    "INPUT = ../src",
     "verboseBuild": True
 }

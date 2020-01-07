@@ -4,3 +4,5 @@
 /examples/*/output/
 /out/
 /docs/generated
+/docs/doxyoutput
+/docs/api
