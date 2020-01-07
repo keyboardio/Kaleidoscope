@@ -245,6 +245,7 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
       ::Focus.read(brightness);
       ::LEDControl.setBrightness(brightness);
     }
+    break;
   }
   case SETALL: {
     cRGB c;
