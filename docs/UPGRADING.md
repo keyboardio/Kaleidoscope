@@ -529,7 +529,10 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ### Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime
 
-After renaming, some of the original symbols have been deprecated. The deprecated symbols in `kaleidoscope/Runtime.h` are scheduled for removal on **2019-03-10**.
+After the renaming, Kaleidoscope core should be using `kaleidoscope::Runtime`.
+The former `Kaleidoscope` global symbol is to be used by sketches only - and
+only because to not diverge too much from the Arduino naming style. Deprecated
+symbols are scheduled for removal on **2020-03-15**.
 
 ### Transition to linear indexing
 
