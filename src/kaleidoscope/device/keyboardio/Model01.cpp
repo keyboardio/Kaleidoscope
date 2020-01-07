@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2018  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -63,6 +63,16 @@ void Model01Hands::setup(void) {
 
 /********* LED Driver *********/
 bool Model01LEDDriver::isLEDChanged = true;
+
+void Model01LEDDriver::setBrightness(uint8_t brightness) {
+  Model01Hands::leftHand.setBrightness(brightness);
+  Model01Hands::rightHand.setBrightness(brightness);
+  isLEDChanged = true;
+}
+
+uint8_t Model01LEDDriver::getBrightness() {
+  return Model01Hands::leftHand.getBrightness();
+}
 
 void Model01LEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
   if (i < 32) {

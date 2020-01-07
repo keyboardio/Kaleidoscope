@@ -120,6 +120,13 @@ class LEDControl : public kaleidoscope::Plugin {
     return enabled_;
   }
 
+  static void setBrightness(uint8_t brightness) {
+    Runtime.device().ledDriver().setBrightness(brightness);
+  }
+  static uint8_t getBrightness() {
+    return Runtime.device().ledDriver().getBrightness();
+  }
+
   // The data proxy objects are required to only emit deprecation
   // messages when the `paused` property is accessed directly.
   //

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -59,6 +59,8 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
   static cRGB getCrgbAt(uint8_t i);
+  static void setBrightness(uint8_t brightness);
+  static uint8_t getBrightness();
 
   static void enableHighPowerLeds();
   static boolean ledPowerFault();

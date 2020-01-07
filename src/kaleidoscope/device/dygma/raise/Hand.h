@@ -74,8 +74,6 @@ class Hand {
   bool moreKeysWaiting();
   void sendLEDData();
   void sendLEDBank(uint8_t bank);
-  void setOneLEDTo(byte led, cRGB color);
-  void setAllLEDsTo(cRGB color);
   keydata_t getKeyData();
   bool readKeys();
   uint8_t controllerAddress();
@@ -83,10 +81,18 @@ class Hand {
     return twi_.crc_errors();
   }
 
+  void setBrightness(uint8_t brightness) {
+    brightness_adjustment_ = 255 - brightness;
+  }
+  uint8_t getBrightness() {
+    return 255 - brightness_adjustment_;
+  }
+
   LEDData_t led_data;
   bool online = false;
 
  private:
+  uint8_t brightness_adjustment_ = 0;
   int ad01_;
   TWI twi_;
   keydata_t key_data_;
