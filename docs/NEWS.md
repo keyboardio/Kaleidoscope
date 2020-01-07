@@ -161,16 +161,23 @@ The [FirmwareDump](doc/plugin/FirmwareDump.md) plugin makes it possible to dump 
 Type `Key` was originally implemented as a C++ union. For technical reasons
 it had to be converted to a C++ class. This implies that the double usage
 of the original union, holding either raw data (member `raw`) or key code/key flags
-data (members `keyCode` and `flags`) is no more possible. 
+data (members `keyCode` and `flags`) is no more possible.
 
-Direct use of member `raw` will 
-emit a diagnostic compiler message but will cause the firmware linking 
+Direct use of member `raw` will
+emit a diagnostic compiler message but will cause the firmware linking
 process to fail. For a deprecation
-periode `keyCode` and `flags` keep on being supported but will cause 
-deprecation warnings during compile. 
+periode `keyCode` and `flags` keep on being supported but will cause
+deprecation warnings during compile.
 
 Please see the [relevant upgrade notes](UPGRADING.md##implementation-of-type-key-internally-changed-from-union-to-class)
 for information about how to upgrade legacy code.
+
+### `LEDControl.paused` has been deprecated
+
+The `.paused` property of `LEDControl` has been deprecated in favour of the new
+`LEDControl.disable()` and `LEDControl.enable()` methods. These two will turn
+off or refresh the LEDs, respectively, along with disabling or re-enabling
+future updates and syncs.
 
 ### The `NumPad` plugin no longer toggles `NumLock`
 
