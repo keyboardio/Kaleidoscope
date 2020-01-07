@@ -36,6 +36,7 @@ class IdleLEDs: public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:
+  static bool idle_;
   static uint32_t start_time_;
 };
 
