@@ -42,6 +42,8 @@ void setup();
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/deprecations.h"
 
+#include "kaleidoscope/hid.h"
+
 static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal::device;
 
 #ifdef PER_KEY_DATA_STACKED
