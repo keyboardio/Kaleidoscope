@@ -37,6 +37,9 @@ void IdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
 }
 
 EventHandlerResult IdleLEDs::beforeEachCycle() {
+  if (idle_time_limit == 0)
+    return EventHandlerResult::OK;
+
   if (::LEDControl.isEnabled() &&
       Runtime.hasTimeExpired(start_time_, idle_time_limit)) {
     ::LEDControl.disable();
