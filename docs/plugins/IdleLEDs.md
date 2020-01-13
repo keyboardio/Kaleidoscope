@@ -87,6 +87,9 @@ the following properties and methods.
 
 > Sets the amount of time (in seconds) that can pass without a single key being
 > pressed before the plugin considers the keyboard idle and turns off the LEDs.
+>
+> Setting the timeout to 0 will disable the plugin until it is set to a higher
+> value.
 
 ## Focus commands
 
@@ -99,6 +102,9 @@ the `PersistentIdleLEDs` variant:
 
 > Sets the idle time limit to `seconds`, when called with an argument. Returns
 > the current limit (in seconds) when called without any.
+>
+> Setting the timeout to 0 will disable the plugin until it is set to a higher
+> value.
 
 ## Dependencies
 
