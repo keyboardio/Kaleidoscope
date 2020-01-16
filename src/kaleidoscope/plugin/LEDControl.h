@@ -18,6 +18,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/plugin/LEDMode.h"
+#include "kaleidoscope/remote_call.h"
 
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
@@ -176,3 +177,25 @@ class FocusLEDCommand : public Plugin {
 
 extern kaleidoscope::plugin::LEDControl LEDControl;
 extern kaleidoscope::plugin::FocusLEDCommand FocusLEDCommand;
+
+KALEIDOSCOPE_REMOTE_CALL(
+  KRC_ROOT_PACKAGE(plugin,
+                   KRC_PACKAGE(LEDControl,
+                               KRC_F(setCrgbAt, KRC_NO_RESULTS,
+                                     ((uint8_t, row), (uint8_t, col),
+                                      (uint8_t, red), (uint8_t, green), (uint8_t, blue)),
+                                     (LEDControl.setCrgbAt(KeyAddr{args->row, args->col},
+                                         CRGB(args->red, args->green, args->blue));),
+                                     KRC_DESCRIPTION("Sets the LED color of a single key")
+                                    )
+                               KRC_F(setMode, KRC_NO_RESULTS, ((uint8_t, mode_id)),
+                                     (LEDControl.set_mode(args->mode_id);),
+                                     KRC_DESCRIPTION("Sets the LED mode")
+                                    )
+                               KRC_F(getMode, ((uint8_t, mode_id)), KRC_NO_ARGS,
+                                     (results->mode_id = LEDControl.get_mode_index();),
+                                     KRC_DESCRIPTION("Queries the LED mode")
+                                    )
+                              )
+                  )
+)
