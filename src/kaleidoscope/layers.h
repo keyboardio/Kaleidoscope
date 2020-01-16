@@ -22,6 +22,7 @@
 #include "kaleidoscope/device/device.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
+#include "kaleidoscope/remote_call.h"
 #include "kaleidoscope_internal/shortname.h"
 
 // Macro for defining the keymap. This should be used in the sketch
@@ -145,3 +146,28 @@ class Layer_ {
 }
 
 extern kaleidoscope::Layer_ Layer;
+
+KALEIDOSCOPE_REMOTE_CALL(
+  KRC_ROOT_PACKAGE(Layer,
+                   KRC_F(activate, KRC_NO_RESULTS, ((uint8_t, layer)),
+                         (Layer.activate(args->layer);),
+                         KRC_DESCRIPTION("Activates a specific layer")
+                        )
+                   KRC_F(deactivate, KRC_NO_RESULTS, ((uint8_t, layer)),
+                         (Layer.deactivate(args->layer);),
+                         KRC_DESCRIPTION("Deactivates a specific layer")
+                        )
+                   KRC_F(activateNext, KRC_NO_RESULTS, KRC_NO_ARGS,
+                         (Layer.activateNext();),
+                         KRC_DESCRIPTION("Activates the next layer")
+                        )
+                   KRC_F(deactivateTop, KRC_NO_RESULTS, KRC_NO_ARGS,
+                         (Layer.deactivateTop();),
+                         KRC_DESCRIPTION("Deactivates top layer")
+                        )
+                   KRC_F(move, KRC_NO_RESULTS, ((uint8_t, layer)),
+                         (Layer.move(args->layer);),
+                         KRC_DESCRIPTION("Moves to layer")
+                        )
+                  )
+)
