@@ -19,6 +19,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/remote_call.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -39,6 +40,7 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   static void updateColorIndexAtPosition(uint16_t theme_base, uint16_t position, uint8_t color_index);
 
   static const cRGB lookupPaletteColor(uint8_t palette_index);
+  static void setPaletteColor(uint8_t palette_index, cRGB color);
 
   EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult themeFocusEvent(const char *command,
@@ -53,3 +55,38 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
 }
 
 extern kaleidoscope::plugin::LEDPaletteTheme LEDPaletteTheme;
+
+KALEIDOSCOPE_REMOTE_CALL(
+  KRC_ROOT_PACKAGE(plugin,
+                   KRC_PACKAGE(LEDPaletteTheme,
+                               KRC_F(getPaletteColor,
+                                     ((uint8_t, red), (uint8_t, green), (uint8_t, blue)),
+                                     ((uint8_t, palette_index)),
+                                     (
+                                       cRGB color;
+                                       color = LEDPaletteTheme.lookupPaletteColor(args->palette_index);
+                                       results->red = color.r;
+                                       results->green = color.g;
+                                       results->blue = color.b;
+                                     ),
+                                     KRC_DESCRIPTION("Retrieves the RGB value of a palette color")
+                                    )
+                               KRC_F(setPaletteColor, KRC_NO_RESULTS,
+                                     ((uint8_t, palette_index), (uint8_t, red), (uint8_t, green), (uint8_t, blue)),
+                                     (
+                                       LEDPaletteTheme.setPaletteColor(args->palette_index,
+                                           cRGB{args->red, args->green, args->blue});
+                                     ),
+                                     KRC_DESCRIPTION("Sets the RGB value of a palette color")
+                                    )
+                               KRC_F(commitPalette, KRC_NO_RESULTS, KRC_NO_ARGS,
+                                     (
+                                       Runtime.storage().commit();
+                                       ::LEDControl.refreshAll();
+                                     ),
+                                     KRC_DESCRIPTION("Sets the RGB value of a palette color")
+                                    )
+                              )
+                  )
+)
+
