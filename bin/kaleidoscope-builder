@@ -303,7 +303,7 @@ compile () {
 	      -build-path "${BUILD_PATH}" \
 	      -ide-version "${ARDUINO_IDE_VERSION}" \
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
-	      -prefs "compiler.cpp.extra_flags=-std=c++11 -Woverloaded-virtual -Wno-unused-parameter -Wno-unused-variable -Wno-ignored-qualifiers ${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
+	      -prefs "compiler.cpp.extra_flags=${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -prefs "compiler.path=${COMPILER_PATH}" \
 	      -prefs "compiler.c.cmd=${COMPILER_PREFIX}${C_COMPILER_BASENAME}" \
 	      -prefs "compiler.cpp.cmd=${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" \
