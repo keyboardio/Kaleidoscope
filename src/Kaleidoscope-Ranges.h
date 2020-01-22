@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Ranges -- Common ranges, used by a number of Kaleidoscope plugins.
- * Copyright (C) 2016, 2017, 2019  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -51,6 +51,7 @@ enum : uint16_t {
   TURBO,
   DYNAMIC_MACRO_FIRST,
   DYNAMIC_MACRO_LAST = DYNAMIC_MACRO_FIRST + 31,
+  LAYER_SELECT,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START
