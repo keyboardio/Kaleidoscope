@@ -146,8 +146,20 @@ void Layer_::updateTopActiveLayer(void) {
 }
 
 void Layer_::move(uint8_t layer) {
+  // We do pretty much what activate() does, except we do everything
+  // unconditionally, to make sure all parts of the firmware are aware of the
+  // layer change.
   layer_state_ = 0;
-  activate(layer);
+
+  if (layer >= layer_count) {
+    layer = 0;
+  }
+  bitSet(layer_state_, layer);
+
+  updateTopActiveLayer();
+  updateActiveLayers();
+
+  kaleidoscope::Hooks::onLayerChange();
 }
 
 // Activate a given layer
