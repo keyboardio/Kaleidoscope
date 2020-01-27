@@ -312,6 +312,10 @@ compile () {
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
 	      "${SKETCH_DIR}/${SKETCH}.ino"
+	      
+    preprocessed_sketch="${BUILD_PATH}/sketch/${SKETCH}.ino.cpp"
+    echo "Dumping preprocessed sketch ${preprocessed_sketch}"
+    cat "${preprocessed_sketch}"
 
     cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
     cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
