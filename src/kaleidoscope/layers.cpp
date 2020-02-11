@@ -45,7 +45,11 @@ uint8_t Layer_::active_layers_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
-  if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
+  if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
+    if (keyToggledOn(keyState)) {
+      move(keymapEntry.getKeyCode() - LAYER_MOVE_OFFSET);
+    }
+  } else if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
@@ -146,8 +150,20 @@ void Layer_::updateTopActiveLayer(void) {
 }
 
 void Layer_::move(uint8_t layer) {
+  // We do pretty much what activate() does, except we do everything
+  // unconditionally, to make sure all parts of the firmware are aware of the
+  // layer change.
   layer_state_ = 0;
-  activate(layer);
+
+  if (layer >= layer_count) {
+    layer = 0;
+  }
+  bitSet(layer_state_, layer);
+
+  updateTopActiveLayer();
+  updateActiveLayers();
+
+  kaleidoscope::Hooks::onLayerChange();
 }
 
 // Activate a given layer
