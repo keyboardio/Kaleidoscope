@@ -48,6 +48,14 @@ class Key {
   void setFlags(uint8_t new_flags) {
     flags.value_ = new_flags;
   }
+
+// gcc 7 (Arduino > 1.8.10) has a problem with the layer dimension of
+// keymap_linear, as used by keyFromKeymap(...) being undefined.
+// Because of this, we disable -Warray_bounds locally to avoid spurious warnings.
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
   constexpr const uint8_t &getFlags() const {
     return flags.value_;
   }
@@ -58,6 +66,8 @@ class Key {
   constexpr const uint8_t &getKeyCode() const {
     return keyCode.value_;
   }
+#pragma GCC diagnostic pop
+
 
   void setRaw(uint16_t raw) {
     flags.value_  = (uint8_t)(raw >> 8);
