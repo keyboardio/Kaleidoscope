@@ -156,7 +156,7 @@ prepare_to_flash () {
 
     printf '%b\n\n' "${flashing_instructions}"
     echo ""
-    echo "When you're ready proceed, press 'Enter'."
+    echo "When you're ready to proceed, press 'Enter'."
     echo ""
 
     # We do not want to permit line continuations here. We just want a newline.
