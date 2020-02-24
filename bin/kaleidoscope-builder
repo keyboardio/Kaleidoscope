@@ -163,15 +163,22 @@ prompt_before_flashing () {
 
 flash () {
     maybe_build
-    prompt_before_flashing
 
-    # This is defined in the (optional) user config.
-    # shellcheck disable=SC2154
-    ${preFlash_HOOKS}
-
-    reset_device
-    sleep 3
+    # Check to see if we can see a keyboard bootloader port. 
+    # If we -can-, then we should skip over the "reset to bootloader" thing
     find_bootloader_ports
+    if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
+        prompt_before_flashing
+    
+        # This is defined in the (optional) user config.
+        # shellcheck disable=SC2154
+        ${preFlash_HOOKS}
+    
+        reset_device
+        sleep 3
+        find_bootloader_ports
+    fi
+
     check_bootloader_port_and_flash
 
     # This is defined in the (optional) user config.

@@ -88,6 +88,6 @@ EOWARN
     exit(0);
 }
 
-print_warning(join("\n",@log));
-print_warning("ERROR: I couldn't find a USB device matching the keyboard's USB Vendor and Device IDs\n");
+#debug("ERROR: I couldn't find a USB device matching the keyboard's USB Vendor and Device IDs\n");
+#print_warning(join("\n",@log));
 
