@@ -197,7 +197,7 @@ check_bootloader_port_and_flash () {
 
 flash_over_usb () {
     sleep 1
-    ${AVRDUDE} -q -q -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i"
+    ${AVRDUDE} -C "${AVRDUDE_CONF}" -p"${MCU}" -cavr109 -D -P "${DEVICE_PORT_BOOTLOADER}" -b57600 "-Uflash:w:${HEX_FILE_PATH}:i" 2>&1
 }
 
 flash_from_bootloader() {
