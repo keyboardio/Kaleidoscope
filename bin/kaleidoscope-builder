@@ -161,7 +161,7 @@ prompt_before_flashing () {
 }
 
 flash () {
-    maybe_build
+    maybe_build "$@"
 
     # Check to see if we can see a keyboard bootloader port. 
     # If we -can-, then we should skip over the "reset to bootloader" thing
@@ -186,29 +186,38 @@ flash () {
 }
 
 
-check_bootloader_port_and_flash () {
+check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
-        echo "Unable to detect a keyboard in bootloader mode. You may need to hold the 'Prog' key or hit a reset button"
+        echo "Unable to detect a keyboard in bootloader mode."
+	echo "You may need to hold a key or hit a reset button."
+	echo "Please check your keyboard's documentation"
         return 1
     fi
-    
+
+}
+
+check_bootloader_port_and_flash () {
+
+    if ! check_bootloader_port; then
+        return 1
+    fi
+ 
     echo "Flashing your keyboard:"
-	
-    flash_over_usb 
-   	 
-    if [ $? != 0 ]; then 
+
+    # If the flash fails, try a second time
+    if ! flash_over_usb; then 
         sleep 2
- 	flash_over_usb
+        if  ! flash_over_usb; then
+            if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
+                echo "Something went wrong."
+    	        echo "You might want to try flashing again with the VERBOSE environment variable set"
+            fi
+
+            return 1
+        fi
     fi
-
-
-    if [ $? = 0 ]; then
-	echo "Keyboard flashed successfully!"
-    elif [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
-	echo "Something went wrong. You might want to try flashing again with the VERBOSE environment variable set"
-	exit -1
-    fi
-
+    echo "Keyboard flashed successfully!"
+    return 0
 }
 
 flash_over_usb () {
@@ -222,7 +231,7 @@ flash_over_usb () {
 		-b57600 \
 		"-Uflash:w:${HEX_FILE_PATH}:i" \
 		2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
-    	return ${PIPESTATUS[0]}
+    	return "${PIPESTATUS[0]}"
     else
     	${AVRDUDE} \
 		-C "${AVRDUDE_CONF}" \
@@ -237,14 +246,14 @@ flash_over_usb () {
 }
 
 flash_from_bootloader() {
-    maybe_build
+    maybe_build "$@"
     prompt_before_flashing
     find_bootloader_ports
     check_bootloader_port_and_flash
 }
 
 program() {
-    maybe_build
+    maybe_build "$@"
     prompt_before_flashing
     flash_with_programmer
 }
@@ -283,7 +292,7 @@ hex_with_bootloader () {
 
 maybe_build () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
-	build
+	build "$@"
     fi
 
 }
