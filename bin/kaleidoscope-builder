@@ -147,11 +147,16 @@ prepare_to_flash () {
         compile
         size
     fi
+ 
+    flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
-    echo "To update your keyboard's firmware, hold down the 'Prog' key on your keyboard,"
-    echo "and then press 'Enter'."
+    if [ "x${flashing_instructions}x" == "xx" ]; then
+	flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
+    fi
+
+    printf '%b\n\n' "${flashing_instructions}"
     echo ""
-    echo "When the 'Prog' key glows red, you can release it."
+    echo "When you're ready proceed, press 'Enter'."
     echo ""
 
     # We do not want to permit line continuations here. We just want a newline.
