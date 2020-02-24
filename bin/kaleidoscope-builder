@@ -142,12 +142,9 @@ find_sketch () {
     exit 1
 }
 
-prepare_to_flash () {
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-        size
-    fi
- 
+
+
+prompt_before_flashing () {
     flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
     if [ "x${flashing_instructions}x" == "xx" ]; then
@@ -165,7 +162,8 @@ prepare_to_flash () {
 }
 
 flash () {
-    prepare_to_flash
+    maybe_build
+    prompt_before_flashing
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -196,13 +194,15 @@ flash_over_usb () {
 }
 
 flash_from_bootloader() {
-    prepare_to_flash
+    maybe_build
+    prompt_before_flashing
     find_bootloader_ports
     check_bootloader_port_and_flash
 }
 
 program() {
-    prepare_to_flash
+    maybe_build
+    prompt_before_flashing
     flash_with_programmer
 }
 
@@ -236,6 +236,13 @@ hex_with_bootloader () {
 		And TEST THIS ON REAL HARDWARE BEFORE YOU GIVE IT TO ANYONE
 
 		EOF
+}
+
+maybe_build () {
+    if [ ! -e "${HEX_FILE_PATH}" ]; then
+	build
+    fi
+
 }
 
 build () {
