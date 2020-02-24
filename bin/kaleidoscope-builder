@@ -147,14 +147,13 @@ find_sketch () {
 prompt_before_flashing () {
     flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
-    if [ "x${flashing_instructions}x" == "xx" ]; then
+    if [ "x${flashing_instructions}x" = "xx" ]; then
 	flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
     fi
 
     printf '%b\n\n' "${flashing_instructions}"
     echo ""
     echo "When you're ready to proceed, press 'Enter'."
-    echo ""
 
     # We do not want to permit line continuations here. We just want a newline.
     # shellcheck disable=SC2162
@@ -192,12 +191,29 @@ check_bootloader_port_and_flash () {
         echo "Unable to detect a keyboard in bootloader mode. You may need to hold the 'Prog' key or hit a reset button"
         return 1
     fi
-    flash_over_usb || flash_over_usb
+    
+    echo "Flashing your keyboard:"
+	
+    flash_over_usb 
+   	 
+    if [ $? != 0 ]; then 
+        sleep 2
+ 	flash_over_usb
+    fi
+
+
+    if [ $? = 0 ]; then
+	echo "Keyboard flashed successfully!"
+    elif [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
+	echo "Something went wrong. You might want to try flashing again with the VERBOSE environment variable set"
+	exit -1
+    fi
+
 }
 
 flash_over_usb () {
-    sleep 2
-    ${AVRDUDE} \
+    if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
+    	${AVRDUDE} \
 		-C "${AVRDUDE_CONF}" \
 		-p"${MCU}" \
  		-cavr109 \
@@ -205,7 +221,19 @@ flash_over_usb () {
 		-P "${DEVICE_PORT_BOOTLOADER}" \
 		-b57600 \
 		"-Uflash:w:${HEX_FILE_PATH}:i" \
-		2>&1
+		2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
+    	return ${PIPESTATUS[0]}
+    else
+    	${AVRDUDE} \
+		-C "${AVRDUDE_CONF}" \
+		-p"${MCU}" \
+ 		-cavr109 \
+		-D \
+		-P "${DEVICE_PORT_BOOTLOADER}" \
+		-b57600 \
+		"-Uflash:w:${HEX_FILE_PATH}:i"
+	return $?
+    fi
 }
 
 flash_from_bootloader() {
@@ -275,7 +303,7 @@ compile () {
     
     SKETCH_DIR="$(find_sketch)"
 
-    echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}..."
+    echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}"
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
