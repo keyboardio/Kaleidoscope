@@ -2,103 +2,94 @@
 
 # Based on listArduinos.pl from https://github.com/todbot/usbSearch (License: MIT)
 # Original (C) 2012, Tod E. Kurt, http://todbot.com/blog/
-# This version by Michael Richters <gedankenexperimenter@gmail.com>
+# This version by Michael Richters <gedankenexperimenter@gmail.com> and Jesse Vincent <jesse@keyboard.io>
 
 use warnings;
 use strict;
+
+my $vid = shift @ARGV;
+my $pid = shift @ARGV;
 
 # ioreg might be more machine-readable than system_profiler, but I haven't been able to
 # get it to produce useful output
 my @output = qx(/usr/sbin/system_profiler SPUSBDataType);
 
-my $parse_state = 0;
-my $device      = {};
+my $serial   = "";
+my $location = "";
 
-LINE: foreach my $line (@output) {
+my $output = join('', @output);
 
-    chomp $line;
-
-    if ( $parse_state == 0 ) {
-        if ( $line =~ m/Model 01/ ) {
-            $parse_state = 1;
-            next LINE;
+my @stanzas = split(/\n\n/, $output);
+foreach my $stanza (@stanzas) {
+    if ($stanza =~ /Product ID: ${pid}/ && $stanza =~ /Vendor ID: ${vid}/) {
+        if ($stanza =~ /Serial Number: (.*?)$/m) {
+            $serial = $1;
         }
+        if ($stanza =~ /Location ID: (.*?)$/m) {
+            $location = $1;
+        }
+
+        if ($serial) {
+            try_for_raw_serialnum($serial);
+        }
+        if ($location) {
+            try_for_location_id($location);
+        }
+        if ($serial) {
+            try_for_sn_prefix($serial);
+        }
+
     }
-
-    if ( $parse_state == 1 ) {
-        if ( $line =~ m/^\s*$/ ) {
-            $parse_state = 2;
-            next LINE;
-        }
-    }
-
-    if ( $parse_state == 2 ) {
-        if ( $line =~ m/Serial Number: (.+)$/ ) {
-            $device->{'serial_number'} = $1;
-            next LINE;
-        }
-        if ( $line =~ m/Location ID: (.+)$/ ) {
-            $device->{'location_id'} = $1;
-            next LINE;
-        }
-        if ( $line =~ m/Product ID: (.+)$/ ) {
-            $device->{'product_id'} = $1;
-            next LINE;
-        }
-        if ( $line =~ m/Vendor ID: (.+)$/ ) {
-            $device->{'vendor_id'} = $1;
-            next LINE;
-        }
-        if ( $line =~ m/^\s*$/ ) {
-            last LINE;
-        }
-    }
-
 }
 
-die "Can't find Model 01" if ( $device == {} );
+sub try_for_raw_serialnum {
+    my $sn = shift;
 
-my $serial_port_name = "";
+    my $serial_port_name = "/dev/cu.usbmodem" . $sn;
+    exit_with_port_if_exists($serial_port_name);
 
-if ( exists( $device->{'serial_number'} ) ) {
-    $serial_port_name = "/dev/cu.usbmodem" . $device->{'serial_number'};
-    if ( -e $serial_port_name ) {
-        print $serial_port_name;
-        exit 0;
-    }
     # High Sierra sometimes has a mismatch between the serial number and the device
     # filename. I'm not sure why, but system_profiler has a serial number ending in "E",
     # whereas the device filename ends in "1". In fact, when I change HID.getShortName()
     # to return "kbio02", the final character is replaced with a "1", so we should do the
-    # same here.
-    $serial_port_name =~ s/.$/1/;
-    if ( -e $serial_port_name ) {
+    # same here. If the serial number doesn't end in a digit, however, we may want to append
+    # rather than replace the last character with a 1.
+    if ($serial_port_name =~ /\d$/) {
+        $serial_port_name =~ s/.$/1/;
+    } else {
+        $serial_port_name .= "1";
+    }
+    exit_with_port_if_exists($serial_port_name);
+}
+
+sub try_for_location_id {
+    my $location_id = shift;
+
+    # Here, also, the final character is always a "1", so if macOS ever stops doing that, this
+    # will need an update, as well.
+    my $loc = substr($location_id, 2, 3);
+    exit_with_port_if_exists("/dev/cu.usbmodem" . $loc . 1);
+}
+
+sub try_for_sn_prefix {
+    my $sn = shift;
+
+    # If none of the above tests succeeds, just list the directory and see if there are any
+    # files that have the device shortname that we expect:
+    foreach my $line (qx(ls /dev/cu.usbmodem*)) {
+        if ($line =~ /${sn}/) {
+            chomp $line;
+            print $line;
+            exit 0;
+        }
+    }
+}
+
+sub exit_with_port_if_exists {
+    my $serial_port_name = shift;
+
+    if (-e $serial_port_name) {
         print $serial_port_name;
         exit 0;
     }
 }
-
-# Here, also, the final character is always a "1", so if macOS ever stops doing that, this
-# will need an update, as well.
-if ( exists( $device->{'location_id'} ) ) {
-    my $loc = substr( $device->{'location_id'}, 2, 3 );
-    $serial_port_name = "/dev/cu.usbmodem" . $loc . 1;
-    if ( -e $serial_port_name ) {
-        print $serial_port_name;
-        exit 0;
-    }
-}
-
-# If none of the above tests succeeds, just list the directory and see if there are any
-# files that have the device shortname that we expect:
-foreach my $line (qx(ls /dev/cu.usbmodem*)) {
-    # If this script gets used for the Model 02 (or anything else that won't end it "1"),
-    # the line below should probably drop the final character (see above):
-    if ( $line =~ m/kbio01/ ) {
-	chomp $line;
-	print $line;
-	exit 0;
-    }
-}
-
-die "Can't find Model 01 serial port name";
