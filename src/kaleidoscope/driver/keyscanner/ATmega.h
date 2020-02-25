@@ -140,7 +140,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
      * interrupts, we might end up in a situation where the state is updated in
      * the middle of our check, making us misdetect state changes.
      */
-    cli();
+    noInterrupts();
     for (byte row = 0; row < _KeyScannerProps::matrix_rows; row++) {
       for (byte col = 0; col < _KeyScannerProps::matrix_columns; col++) {
         uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
@@ -152,7 +152,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
       }
       previousKeyState_[row] = keyState_[row];
     }
-    sei();
+    interrupts();
   }
 
   uint8_t pressedKeyswitchCount() {

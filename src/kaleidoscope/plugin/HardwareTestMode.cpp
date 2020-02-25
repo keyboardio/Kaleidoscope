@@ -36,7 +36,7 @@ void HardwareTestMode::waitForKeypress() {
    * scanning and reaction completely. As such, it makes no sense to run the
    * matrix scanning in the interrupt handler at the same time.
    */
-  cli();
+  noInterrupts();
   while (1) {
     Runtime.device().readMatrix();
     if (Runtime.device().isKeyswitchPressed(actionKey) &&
@@ -44,7 +44,7 @@ void HardwareTestMode::waitForKeypress() {
       break;
     }
   }
-  sei();
+  interrupts();
 }
 
 void HardwareTestMode::setLeds(cRGB color) {
@@ -96,7 +96,7 @@ void HardwareTestMode::testMatrix() {
      * scanning and reaction completely. As such, it makes no sense to run the
      * matrix scanning in the interrupt handler at the same time.
      */
-    cli();
+    noInterrupts();
     Runtime.device().readMatrix();
     for (auto key_addr : KeyAddr::all()) {
       uint8_t keynum = key_addr.toInt();
@@ -128,7 +128,7 @@ void HardwareTestMode::testMatrix() {
         Runtime.device().setCrgbAt(key_addr, blue);
       }
     }
-    sei();
+    interrupts();
     ::LEDControl.syncLeds();
   }
 }
