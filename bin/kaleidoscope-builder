@@ -613,7 +613,7 @@ fi
 # shellcheck disable=SC1090
 . "${ROOT}/etc/kaleidoscope-builder.conf"
 
-if [ -n "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
+if [ -n "${VERBOSE}" ] && [[ "${VERBOSE}" -gt 0 ]]; then
     ARDUINO_VERBOSE="-verbose"
 else
     ARDUINO_VERBOSE="-quiet"
