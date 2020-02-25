@@ -134,16 +134,25 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   }
 
   void __attribute__((optimize(3))) actOnMatrixScan() {
+    /*
+     * Note: we disable interrupts for the _whole_ of `actOnMatrixScan`, so that
+     * we are guaranteed to see a consistent key state. Without disabling
+     * interrupts, we might end up in a situation where the state is updated in
+     * the middle of our check, making us misdetect state changes.
+     */
+    cli();
     for (byte row = 0; row < _KeyScannerProps::matrix_rows; row++) {
       for (byte col = 0; col < _KeyScannerProps::matrix_columns; col++) {
         uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                            (bitRead(keyState_[row], col) << 1);
+
         if (keyState) {
           ThisType::handleKeyswitchEvent(Key_NoKey, typename _KeyScannerProps::KeyAddr(row, col), keyState);
         }
       }
       previousKeyState_[row] = keyState_[row];
     }
+    sei();
   }
 
   uint8_t pressedKeyswitchCount() {

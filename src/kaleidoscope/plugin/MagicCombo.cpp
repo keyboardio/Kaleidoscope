@@ -28,6 +28,16 @@ EventHandlerResult MagicCombo::beforeReportingState() {
     bool match = true;
     byte j;
 
+    /*
+     * Note: we're disabling interrupts here so we see a consistent state for
+     * every combo checked. We're not disabling them for the entire
+     * `beforeReportingState`, because we're ok with state changes between
+     * individual combo checks. We only need consistent state for each combo,
+     * not all of them.
+     */
+
+    cli();
+
     for (j = 0; j < MAX_COMBO_LENGTH; j++) {
       int8_t comboKey = pgm_read_byte(&(magiccombo::combos[i].keys[j]));
 
@@ -41,6 +51,8 @@ EventHandlerResult MagicCombo::beforeReportingState() {
 
     if (j != Runtime.device().pressedKeyswitchCount())
       match = false;
+
+    sei();
 
     if (match && Runtime.hasTimeExpired(start_time_, min_interval)) {
       ComboAction action = (ComboAction) pgm_read_ptr((void const **) & (magiccombo::combos[i].action));
