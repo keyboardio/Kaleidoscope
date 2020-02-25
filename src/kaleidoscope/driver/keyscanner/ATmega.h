@@ -47,16 +47,16 @@
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             \
   template<>                                                                                            \
-  uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; \
+  volatile uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; \
   template<>                                                                                            \
-  uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};         \
+  volatile uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};         \
   template<>                                                                                            \
   uint16_t kaleidoscope::Device::KeyScanner::masks_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};            \
   template<>                                                                               \
   uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {}; \
                                                                                            \
   ISR(TIMER1_OVF_vect) {                                                                   \
-    Runtime.device().keyScanner().do_scan_ = true;                                         \
+    Runtime.device().readMatrix();                                              \
   }
 
 namespace kaleidoscope {
@@ -130,10 +130,6 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   }
 
   void scanMatrix() {
-    if (do_scan_) {
-      do_scan_ = false;
-      readMatrix();
-    }
     actOnMatrixScan();
   }
 
@@ -196,12 +192,10 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
                    key_addr.col());
   }
 
-  bool do_scan_;
-
  private:
   typedef _KeyScannerProps KeyScannerProps_;
-  static uint16_t previousKeyState_[_KeyScannerProps::matrix_rows];
-  static uint16_t keyState_[_KeyScannerProps::matrix_rows];
+  static volatile uint16_t previousKeyState_[_KeyScannerProps::matrix_rows];
+  static volatile uint16_t keyState_[_KeyScannerProps::matrix_rows];
   static uint16_t masks_[_KeyScannerProps::matrix_rows];
   static uint8_t debounce_matrix_[_KeyScannerProps::matrix_rows][_KeyScannerProps::matrix_columns];
 
