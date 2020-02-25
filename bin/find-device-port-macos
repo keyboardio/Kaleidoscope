@@ -12,7 +12,7 @@ my $pid = shift @ARGV;
 
 # ioreg might be more machine-readable than system_profiler, but I haven't been able to
 # get it to produce useful output
-my @output = qx(/usr/sbin/system_profiler SPUSBDataType);
+my @output = qx(/usr/sbin/system_profiler SPUSBDataType 2> /dev/null);
 
 my $serial   = "";
 my $location = "";

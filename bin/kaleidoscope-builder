@@ -291,8 +291,14 @@ hex_with_bootloader () {
 }
 
 maybe_build () {
+    build_version
+    build_paths
+    build_filenames
+
     if [ ! -e "${HEX_FILE_PATH}" ]; then
 	build "$@"
+    else
+      SKETCH_DIR="$(find_sketch)"
     fi
 
 }
@@ -609,7 +615,7 @@ fi
 # shellcheck disable=SC1090
 . "${ROOT}/etc/kaleidoscope-builder.conf"
 
-if [ -n "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
+if [ -n "${VERBOSE}" ] && [[ "${VERBOSE}" -gt 0 ]]; then
     ARDUINO_VERBOSE="-verbose"
 else
     ARDUINO_VERBOSE="-quiet"
