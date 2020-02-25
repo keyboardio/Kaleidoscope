@@ -291,6 +291,10 @@ hex_with_bootloader () {
 }
 
 maybe_build () {
+    build_version
+    build_paths
+    build_filenames
+
     if [ ! -e "${HEX_FILE_PATH}" ]; then
 	build "$@"
     fi
