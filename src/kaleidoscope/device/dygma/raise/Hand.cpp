@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::dygma::Raise -- Kaleidoscope device plugin for Dygma Raise
  * Copyright (C) 2017-2019  Keyboard.io, Inc
- * Copyright (C) 2017-2019  Dygma Lab S.L.
+ * Copyright (C) 2017-2020  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -230,6 +230,15 @@ void Hand::sendLEDBank(uint8_t bank) {
       c = 0;
 
     data[i + 1] = pgm_read_byte(&gamma8[c]);
+
+    // The Red component on the Raise hardware appears to get more voltage than
+    // the others, resulting in colors slightly off. Adjust for that here by
+    // reducing the red component a little.
+    //
+    // FIXME(@anyone): This should eventually be configurable someway.
+    if ((i + 1) % 3 == 1 && data[i + 1] >= 26) {
+      data[i + 1] -= 26;
+    }
   }
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));
 }
