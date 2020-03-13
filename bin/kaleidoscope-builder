@@ -148,7 +148,7 @@ prompt_before_flashing () {
     flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
     if [ "x${flashing_instructions}x" = "xx" ]; then
-	flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
+        flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
     fi
 
     printf '%b\n\n' "${flashing_instructions}"
@@ -160,24 +160,50 @@ prompt_before_flashing () {
     read
 }
 
+
+prompt_reset () {
+    flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
+
+    if [ -z "${flashing_instructions}" ]; then
+        flashing_instructions="Reset your keyboard now to initiate flashing."
+    fi
+    
+    printf '%b\n\n' "${flashing_instructions}"
+    echo ""
+}
+
+
 flash () {
     maybe_build "$@"
-
-    # Check to see if we can see a keyboard bootloader port. 
-    # If we -can-, then we should skip over the "reset to bootloader" thing
-    find_bootloader_ports
-    if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
-        prompt_before_flashing
-    
+      
+    WAIT_FOR_UPLOAD_PORT=$(get_arduino_pref 'upload.wait_for_upload_port')
+      
+    if [ "$WAIT_FOR_UPLOAD_PORT" != 'true' ]; then
+        # Check to see if we can see a keyboard bootloader port. 
+        # If we -can-, then we should skip over the "reset to bootloader" thing
+        find_bootloader_ports
+        if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
+            prompt_before_flashing
+          
+            # This is defined in the (optional) user config.
+            # shellcheck disable=SC2154
+            ${preFlash_HOOKS}
+          
+            reset_device
+            sleep 2
+            find_bootloader_ports
+        fi
+    else
+        # For keyboards that require a reset to enter flashing mode
+        # and open a port 
+        prompt_reset
+        
         # This is defined in the (optional) user config.
         # shellcheck disable=SC2154
         ${preFlash_HOOKS}
-    
-        reset_device
-        sleep 2
-        find_bootloader_ports
+        
+        wait_for_bootloader_port
     fi
-
     check_bootloader_port_and_flash
 
     # This is defined in the (optional) user config.
