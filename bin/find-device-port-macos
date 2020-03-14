@@ -66,8 +66,9 @@ sub try_for_location_id {
     my $location_id = shift;
 
     # Here, also, the final character is always a "1", so if macOS ever stops doing that, this
-    # will need an update, as well.
-    my $loc = substr($location_id, 2, 3);
+    # will need an update, as well. 
+    my $len = index($location_id, "0", 2) - 2;
+    my $loc = substr($location_id, 2, $len);
     exit_with_port_if_exists("/dev/cu.usbmodem" . $loc . 1);
 }
 
