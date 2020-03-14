@@ -143,24 +143,6 @@ find_sketch () {
 }
 
 
-
-prompt_before_flashing () {
-    flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
-
-    if [ "x${flashing_instructions}x" = "xx" ]; then
-        flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
-    fi
-
-    printf '%b\n\n' "${flashing_instructions}"
-    echo ""
-    echo "When you're ready to proceed, press 'Enter'."
-
-    # We do not want to permit line continuations here. We just want a newline.
-    # shellcheck disable=SC2162
-    read
-}
-
-
 prompt_reset () {
     flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
@@ -176,9 +158,7 @@ prompt_reset () {
 flash () {
     maybe_build "$@"
       
-    WAIT_FOR_UPLOAD_PORT=$(get_arduino_pref 'upload.wait_for_upload_port')
-      
-    if [ "$WAIT_FOR_UPLOAD_PORT" != 'true' ]; then
+    if [ -z "${QMK_FLASH}" ]; then
         # Check to see if we can see a keyboard bootloader port. 
         # If we -can-, then we should skip over the "reset to bootloader" thing
         find_bootloader_ports
@@ -194,9 +174,9 @@ flash () {
             find_bootloader_ports
         fi
     else
-        # For keyboards that require a reset to enter flashing mode
-        # and open a port 
-        prompt_reset
+        # For keyboards that require a reset before ports are visible
+        # i.e. QMK firmware
+        echo "Reset your keyboard now to initiate flashing."
         
         # This is defined in the (optional) user config.
         # shellcheck disable=SC2154
