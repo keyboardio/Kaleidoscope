@@ -143,15 +143,20 @@ find_sketch () {
 }
 
 
-prompt_reset () {
+prompt_before_flashing () {
     flashing_instructions=$(get_arduino_pref 'build.flashing_instructions')
 
-    if [ -z "${flashing_instructions}" ]; then
-        flashing_instructions="Reset your keyboard now to initiate flashing."
+    if [ "x${flashing_instructions}x" = "xx" ]; then
+        flashing_instructions="If your keyboard needs you to do something to put it in flashing mode, do that now."
     fi
-    
+
     printf '%b\n\n' "${flashing_instructions}"
     echo ""
+    echo "When you're ready to proceed, press 'Enter'."
+
+    # We do not want to permit line continuations here. We just want a newline.
+    # shellcheck disable=SC2162
+    read
 }
 
 
@@ -184,6 +189,7 @@ flash () {
         
         wait_for_bootloader_port
     fi
+    
     check_bootloader_port_and_flash
 
     # This is defined in the (optional) user config.
