@@ -197,6 +197,31 @@ flash () {
     ${postFlash_HOOKS}
 }
 
+wait_for_bootloader_port() {
+    ls /dev/cu.* > /tmp/1
+
+    local count=20
+    while [[ $count > 0 && -z "${DEVICE_PORT_BOOTLOADER}" ]]; do 
+        sleep 0.5
+        printf "."
+        ls /dev/cu.* > /tmp/2
+        DEVICE_PORT_BOOTLOADER=$(comm -13 /tmp/1 /tmp/2 | grep -o '/dev/cu.*')
+        mv /tmp/2 /tmp/1
+        let count--
+    done
+    
+    while [[ $count > 0 && ! -w "${DEVICE_PORT_BOOTLOADER}" ]]; do
+        sleep 0.5
+        printf "."
+        let count--
+    done 
+    
+    echo ""
+    
+    if [[ $count > 0 ]]; then
+        echo "Found ${DEVICE_PORT_BOOTLOADER}."
+    fi 
+}
 
 check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
