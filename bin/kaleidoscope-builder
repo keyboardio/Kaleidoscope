@@ -163,11 +163,11 @@ prompt_before_flashing () {
 flash () {
     maybe_build "$@"
       
-    if [ -z "${QMK_FLASH}" ]; then
-        # Check to see if we can see a keyboard bootloader port. 
-        # If we -can-, then we should skip over the "reset to bootloader" thing
-        find_bootloader_ports
-        if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
+    # Check to see if we can see a keyboard bootloader port. 
+    # If we -can-, then we should skip over the "reset to bootloader" thing
+    find_bootloader_ports
+    if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
+        if [ -z "${QMK_FLASH}" ]; then
             prompt_before_flashing
           
             # This is defined in the (optional) user config.
@@ -177,17 +177,15 @@ flash () {
             reset_device
             sleep 2
             find_bootloader_ports
+        else
+            # This is defined in the (optional) user config.
+            # shellcheck disable=SC2154
+            ${preFlash_HOOKS}
+        
+            # Keyboards with QMK firmware must be reset manually to enter bootloader mode.
+            echo "Reset your keyboard now to initiate flashing."
+            wait_for_bootloader_port
         fi
-    else
-        # For keyboards that require a reset before ports are visible
-        # i.e. QMK firmware
-        echo "Reset your keyboard now to initiate flashing."
-        
-        # This is defined in the (optional) user config.
-        # shellcheck disable=SC2154
-        ${preFlash_HOOKS}
-        
-        wait_for_bootloader_port
     fi
     
     check_bootloader_port_and_flash
@@ -197,12 +195,29 @@ flash () {
     ${postFlash_HOOKS}
 }
 
+wait_for_bootloader_port() {
+    declare -i tries
+    tries=15
+    
+    while [ "$tries" -gt 0 ] && [ -z "${DEVICE_PORT_BOOTLOADER}" ]; do
+        sleep 1
+        printf "."
+        find_bootloader_ports
+        tries=$(($tries-1))
+    done
+    
+    if [ "$tries" -gt 0 ]; then
+        echo "Found."
+    else 
+        echo "Timed out."
+    fi 
+}
 
 check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
         echo "Unable to detect a keyboard in bootloader mode."
-	echo "You may need to hold a key or hit a reset button."
-	echo "Please check your keyboard's documentation"
+        echo "You may need to hold a key or hit a reset button."
+        echo "Please check your keyboard's documentation"
         return 1
     fi
 
@@ -215,14 +230,13 @@ check_bootloader_port_and_flash () {
     fi
  
     echo "Flashing your keyboard:"
-
     # If the flash fails, try a second time
     if ! flash_over_usb; then 
         sleep 2
         if  ! flash_over_usb; then
             if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
                 echo "Something went wrong."
-    	        echo "You might want to try flashing again with the VERBOSE environment variable set"
+                echo "You might want to try flashing again with the VERBOSE environment variable set"
             fi
 
             return 1
