@@ -167,24 +167,17 @@ flash () {
     # If we -can-, then we should skip over the "reset to bootloader" thing
     find_bootloader_ports
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
-        if [ -z "${QMK_FLASH}" ]; then
-            prompt_before_flashing
-          
-            # This is defined in the (optional) user config.
-            # shellcheck disable=SC2154
-            ${preFlash_HOOKS}
-          
-            reset_device
-            sleep 2
-            find_bootloader_ports
+        prompt_before_flashing
+        # This is defined in the (optional) user config.
+        # shellcheck disable=SC2154
+        ${preFlash_HOOKS}
+
+        if [ -z "${MANUAL_RESET}" ]; then          
+           reset_device
+           sleep 2
+           find_bootloader_ports
         else
-            # This is defined in the (optional) user config.
-            # shellcheck disable=SC2154
-            ${preFlash_HOOKS}
-        
-            # Keyboards with QMK firmware must be reset manually to enter bootloader mode.
-            echo "Reset your keyboard now to initiate flashing."
-            wait_for_bootloader_port
+           wait_for_bootloader_port
         fi
     fi
     
