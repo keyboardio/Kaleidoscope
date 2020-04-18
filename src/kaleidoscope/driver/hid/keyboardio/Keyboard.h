@@ -140,10 +140,10 @@ class ConsumerControlWrapper {
     ConsumerControl.releaseAll();
   }
 
-  void press(uint8_t code) {
+  void press(uint16_t code) {
     ConsumerControl.press(code);
   }
-  void release(uint8_t code) {
+  void release(uint16_t code) {
     ConsumerControl.release(code);
   }
 };
