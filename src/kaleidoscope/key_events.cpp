@@ -32,9 +32,9 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
     if (keyIsPressed(keyState))
       Runtime.hid().keyboard().pressConsumerControl(mappedKey);
   } else if (mappedKey.getFlags() & IS_SYSCTL) {
-    if (keyIsPressed(keyState)) {
-    } else if (keyWasPressed(keyState)) {
+    if (keyToggledOn(keyState)) {
       Runtime.hid().keyboard().pressSystemControl(mappedKey);
+    } else if (keyToggledOff(keyState)) {
       Runtime.hid().keyboard().releaseSystemControl(mappedKey);
     }
   } else if (mappedKey.getFlags() & IS_INTERNAL) {
