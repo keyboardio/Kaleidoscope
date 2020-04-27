@@ -194,10 +194,10 @@ class Keyboard {
   void releaseAllKeys() __attribute__((noinline)) {
     resetModifierTracking();
     if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-        boot_keyboard_.releaseAll();
+      boot_keyboard_.releaseAll();
     } else {
-        nkro_keyboard_.releaseAll();
-        consumer_control_.releaseAll();
+      nkro_keyboard_.releaseAll();
+      consumer_control_.releaseAll();
     }
   }
   void pressConsumerControl(Key mapped_key) {
