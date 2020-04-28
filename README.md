@@ -30,9 +30,13 @@ mkdir -p $HOME/Arduino/hardware
 cd $HOME/Arduino/hardware
 ```
 
-### Windows
+### Windows (Assuming cmd)
 
-*TODO*: Write me
+```sh
+mkdir %userprofile%\Documents\Arduino\hardware
+cd %userprofile%\Documents\Arduino\hardware
+```
+
 
 ### Install the libraries and hardware definitions
 
