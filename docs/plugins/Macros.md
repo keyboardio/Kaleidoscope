@@ -83,7 +83,9 @@ The plugin provides a `Macros` object, with the following methods and properties
 > helper discussed below. This method will be used by the plugin to play back
 > the result of the `macroAction()` method, but is used rarely otherwise.
 >
-> The `macro` argument must be a sequence created with the `MACRO()` helper!
+> The `macro` argument must be a sequence created with the `MACRO()` helper! For example:
+>
+> Macros.play(MACRO(D(LeftControl), D(LeftAlt), D(Spacebar), U(LeftControl), U(LeftAlt), U(Spacebar)));
 
 ### `.type(strings...)`
 
