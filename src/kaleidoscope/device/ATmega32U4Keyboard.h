@@ -27,17 +27,29 @@
 #include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"
 #include "kaleidoscope/driver/storage/AVREEPROM.h"
 
-#define ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_) \
-  struct BOARD_##Props : kaleidoscope::device::ATmega32U4KeyboardProps {          \
-    struct KeyScannerProps                                                        \
-       : public kaleidoscope::driver::keyscanner::ATmegaProps                     \
-    {                                                                             \
-      ATMEGA_KEYSCANNER_PROPS(ROW_PIN_LIST(ROW_PINS_),                            \
-                              COL_PIN_LIST(COL_PINS_));                           \
-    };                                                                            \
-    typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner; \
-    typedef kaleidoscope::driver::bootloader::avr::BOOTLOADER_ BootLoader;        \
-    static constexpr const char *short_name = NAME_;                             \
+//#define PROG_KEY(...)  __VA_ARGS__
+//#define NO_PROG_KEY PROG_KEY(KeyScannerProps::KeyAddr::invalid_state)
+
+#define PROG_KEY(...) \
+ static constexpr uint8_t prog_key_addresses[] = { \
+   KeyScannerProps::KeyAddr(__VA_ARGS__).toInt() \
+ }
+
+#define NO_PROG_KEY \
+ static constexpr uint8_t prog_key_addresses[] = {}
+
+#define ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_, PROG_KEY_) \
+  struct BOARD_##Props : kaleidoscope::device::ATmega32U4KeyboardProps {                     \
+    struct KeyScannerProps                                                                   \
+       : public kaleidoscope::driver::keyscanner::ATmegaProps                                \
+    {                                                                                        \
+      ATMEGA_KEYSCANNER_PROPS(ROW_PIN_LIST(ROW_PINS_),                                       \
+                              COL_PIN_LIST(COL_PINS_));                                      \
+    };                                                                                       \
+    typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;            \
+    typedef kaleidoscope::driver::bootloader::avr::BOOTLOADER_ BootLoader;                   \
+    static constexpr const char *short_name = NAME_;                                         \
+    PROG_KEY_;                                                                               \
   };
 
 #define ATMEGA32U4_DEVICE(BOARD_)                                              \
@@ -47,21 +59,21 @@
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#define ATMEGA32U4_KEYBOARD(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_)  \
-  ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_,                          \
-                          FORWARD(ROW_PINS_), FORWARD(COL_PINS_))              \
+#define ATMEGA32U4_KEYBOARD(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_, PROG_KEY_)  \
+  ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_,                                     \
+                          FORWARD(ROW_PINS_), FORWARD(COL_PINS_), FORWARD(PROG_KEY_))     \
   ATMEGA32U4_DEVICE(BOARD_)
 
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#define ATMEGA32U4_KEYBOARD(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_)  \
-  ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_,                          \
-                          FORWARD(ROW_PINS_), FORWARD(COL_PINS_))              \
-  /* Device definition omitted for virtual device builds.                      \
-   * We need to forward declare the device name, though, as there are          \
-   * some legacy extern references to boards whose definition                  \
-   * depends on this.                                                          \
-   */                                                                          \
+#define ATMEGA32U4_KEYBOARD(BOARD_, BOOTLOADER_, NAME_, ROW_PINS_, COL_PINS_, PROG_KEY_)  \
+  ATMEGA32U4_DEVICE_PROPS(BOARD_, BOOTLOADER_, NAME_,                                     \
+                          FORWARD(ROW_PINS_), FORWARD(COL_PINS_), FORWARD(PROG_KEY_))     \
+  /* Device definition omitted for virtual device builds.                                 \
+   * We need to forward declare the device name, though, as there are                     \
+   * some legacy extern references to boards whose definition                             \
+   * depends on this.                                                                     \
+   */                                                                                     \
   class BOARD_;
 
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
