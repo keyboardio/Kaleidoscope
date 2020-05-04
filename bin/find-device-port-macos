@@ -77,6 +77,8 @@ sub try_for_location_id {
 
 sub try_for_sn_prefix {
     my $sn = shift;
+    # If macOS has appended 'E', take it off to maximise our chances of a match.
+    $sn =~ s/E$//;
 
     # If none of the above tests succeeds, just list the directory and see if there are any
     # files that have the device shortname that we expect:
