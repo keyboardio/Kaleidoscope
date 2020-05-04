@@ -10,6 +10,10 @@ use strict;
 my $vid = shift @ARGV;
 my $pid = shift @ARGV;
 
+if (!defined $vid || !defined $pid) {
+  die "$0 has two required parameters, VID and PID";
+}
+
 # ioreg might be more machine-readable than system_profiler, but I haven't been able to
 # get it to produce useful output
 my @output = qx(/usr/sbin/system_profiler SPUSBDataType 2> /dev/null);
