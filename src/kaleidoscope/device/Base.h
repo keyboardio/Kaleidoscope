@@ -64,6 +64,7 @@ struct BaseProps {
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
   typedef kaleidoscope::driver::storage::None Storage;
   static constexpr const char *short_name = USB_PRODUCT;
+  static constexpr const uint8_t prog_key_addresses[] = {};
 };
 
 template<typename _DeviceProps>
@@ -105,6 +106,13 @@ class Base {
    */
   static constexpr int8_t numKeys() {
     return matrix_columns * matrix_rows;
+  }
+
+  static constexpr auto progKeyAddresses() {
+    return Props::prog_key_addresses;
+  }
+  static constexpr uint8_t numProgKeys() {
+    return sizeof(Props::prog_key_addresses) / sizeof(uint8_t);
   }
 
   /**
