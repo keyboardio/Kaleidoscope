@@ -172,10 +172,17 @@ flash () {
         # This is defined in the (optional) user config.
         # shellcheck disable=SC2154
         ${preFlash_HOOKS}
-    
-        reset_device
-        sleep 2
-        find_bootloader_ports
+  
+	# If we're -not- doing a manual reset, then try to do it automatically
+        if [ -z "${MANUAL_RESET}" ]; then
+            reset_device
+            sleep 2
+            find_bootloader_ports
+	# Otherwise, poll for a bootloader port.
+        else
+           wait_for_bootloader_port
+        fi
+
     fi
 
     check_bootloader_port_and_flash
@@ -185,6 +192,25 @@ flash () {
     ${postFlash_HOOKS}
 }
 
+wait_for_bootloader_port() {
+    declare -i tries
+    tries=15
+    
+    while [ "$tries" -gt 0 ] && [ -z "${DEVICE_PORT_BOOTLOADER}" ]; do
+        sleep 1
+        printf "."
+        find_bootloader_ports
+        # the variable annotations do appear to be necessary
+        # shellcheck disable=SC2004
+        tries=$(($tries-1))
+    done
+    
+    if [ "$tries" -gt 0 ]; then
+        echo "Found."
+    else 
+        echo "Timed out."
+    fi 
+}
 
 check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then

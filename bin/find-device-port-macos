@@ -10,6 +10,10 @@ use strict;
 my $vid = shift @ARGV;
 my $pid = shift @ARGV;
 
+if (!defined $vid || !defined $pid) {
+  die "$0 has two required parameters, VID and PID";
+}
+
 # ioreg might be more machine-readable than system_profiler, but I haven't been able to
 # get it to produce useful output
 my @output = qx(/usr/sbin/system_profiler SPUSBDataType 2> /dev/null);
@@ -51,28 +55,42 @@ sub try_for_raw_serialnum {
     # High Sierra sometimes has a mismatch between the serial number and the device
     # filename. I'm not sure why, but system_profiler has a serial number ending in "E",
     # whereas the device filename ends in "1". In fact, when I change HID.getShortName()
-    # to return "kbio02", the final character is replaced with a "1", so we should do the
-    # same here. If the serial number doesn't end in a digit, however, we may want to append
-    # rather than replace the last character with a 1.
+    # to return "kbio02", the final character is replaced with a "1". 
+    
     if ($serial_port_name =~ /\d$/) {
-        $serial_port_name =~ s/.$/1/;
+    	chop $serial_port_name;
+    	exit_with_port_if_exists($serial_port_name . "1");
     } else {
-        $serial_port_name .= "1";
+	# If the serial port name doesn't end with a digit, try -appending- rather than replacing 
+	# the last character of the port name
+    	exit_with_port_if_exists($serial_port_name . "1");
+    
+	# and if that didn't work, try replacing the last character with a "1" anyway.
+    	# Jason Koh reports that he saw this behavior as required on Catalina in May 2020.
+    
+    	chop $serial_port_name;
+    	exit_with_port_if_exists($serial_port_name . "1");
     }
-    exit_with_port_if_exists($serial_port_name);
+
+
 }
 
 sub try_for_location_id {
     my $location_id = shift;
 
-    # Here, also, the final character is always a "1", so if macOS ever stops doing that, this
-    # will need an update, as well.
-    my $loc = substr($location_id, 2, 3);
-    exit_with_port_if_exists("/dev/cu.usbmodem" . $loc . 1);
+    # macOS truncates the string of "0"s from the right of the location id.
+    # Here, also, the final character is an appended "1", so if macOS ever stops doing that,
+    # this will need an update, as well. 
+    if ($location_id =~ /0x(\d+?)0*\b/) {
+        my $loc = $1;
+        exit_with_port_if_exists("/dev/cu.usbmodem" . $loc . "1");
+    }
 }
 
 sub try_for_sn_prefix {
     my $sn = shift;
+    # If macOS has appended 'E', take it off to maximise our chances of a match.
+    $sn =~ s/E$//;
 
     # If none of the above tests succeeds, just list the directory and see if there are any
     # files that have the device shortname that we expect:
