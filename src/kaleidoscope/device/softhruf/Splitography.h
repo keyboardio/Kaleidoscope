@@ -38,18 +38,17 @@ namespace kaleidoscope {
 namespace device {
 namespace softhruf {
 
-WITH_ATMEGA32U4_DEVICE_PROPS(
-  Splitography,
-  WITH_KEYBOARD_SHORTNAME("splitography");
-  WITH_BOOTLOADER(avr::FLIP);
-  WITH_ATMEGA_KEYSCANNER(
-    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
-  );
-);
-
 ATMEGA32U4_DEVICE(
   Splitography,
+  WITH_ATMEGA32U4_DEVICE_PROPS(
+    Splitography,
+    WITH_KEYBOARD_SHORTNAME("splitography");
+    WITH_BOOTLOADER(avr::FLIP);
+    WITH_ATMEGA_KEYSCANNER(
+      ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
+      COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
+    );
+  ),
   public:
 Splitography() {
   mcu_.disableJTAG();

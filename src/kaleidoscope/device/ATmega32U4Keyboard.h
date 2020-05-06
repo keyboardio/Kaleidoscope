@@ -42,12 +42,14 @@
 
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#define ATMEGA32U4_DEVICE(BOARD_, ...)                                  \
+#define ATMEGA32U4_DEVICE(BOARD_, PROPS_, ...)                                   \
+  PROPS_;                                                                        \
   class BOARD_: public kaleidoscope::device::ATmega32U4Keyboard<BOARD_##Props> { \
     __VA_ARGS__                                                                  \
   };
 #else
-#define ATMEGA32U4_DEVICE(BOARD_, ...)          \
+#define ATMEGA32U4_DEVICE(BOARD_, PROPS_, ...)  \
+  PROPS_;                                       \
   class BOARD_;
 #endif
 
@@ -61,8 +63,7 @@
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
 
 #define DECLARE_ATMEGA32U4_KEYBOARD(BOARD_, ...)     \
-  WITH_ATMEGA32U4_DEVICE_PROPS(BOARD_, __VA_ARGS__); \
-  ATMEGA32U4_DEVICE(BOARD_)
+  ATMEGA32U4_DEVICE(BOARD_, WITH_ATMEGA32U4_DEVICE_PROPS(BOARD_, __VA_ARGS__))
 
 #define FORWARD(...) __VA_ARGS__
 

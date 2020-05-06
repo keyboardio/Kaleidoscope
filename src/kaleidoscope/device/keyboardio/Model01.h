@@ -115,17 +115,16 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
 class Model01KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-WITH_ATMEGA32U4_DEVICE_PROPS(
-  Model01,
-  WITH_BOOTLOADER(avr::Caterina);
-  WITH_KEYBOARD_SHORTNAME("kbio01");
-
-  WITH_LED_DRIVER(Model01);
-  WITH_KEYSCANNER(Model01);
-);
-
 ATMEGA32U4_DEVICE(
   Model01,
+  WITH_ATMEGA32U4_DEVICE_PROPS(
+    Model01,
+    WITH_BOOTLOADER(avr::Caterina);
+    WITH_KEYBOARD_SHORTNAME("kbio01");
+
+    WITH_LED_DRIVER(Model01);
+    WITH_KEYSCANNER(Model01);
+  ),
   public:
   void setup();
 
