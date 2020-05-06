@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * device::ATmega32U4Keyboard -- Generic ATmega32U4 keyboard base class
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -40,8 +40,29 @@
     static constexpr const char *short_name = NAME_;                             \
   };
 
-#define ATMEGA32U4_DEVICE(BOARD_)                                              \
-  class BOARD_: public kaleidoscope::device::ATmega32U4Keyboard<BOARD_##Props> {};
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define ATMEGA32U4_DEVICE(BOARD_, ...)                                  \
+  class BOARD_: public kaleidoscope::device::ATmega32U4Keyboard<BOARD_##Props> { \
+    __VA_ARGS__                                                                  \
+  };
+#else
+#define ATMEGA32U4_DEVICE(BOARD_, ...)          \
+  class BOARD_;
+#endif
+
+#define WITH_ATMEGA32U4_DEVICE_PROPS(BOARD_, ...)             \
+  WITH_DEVICE_PROPS(BOARD_, ATmega32U4Keyboard, __VA_ARGS__)
+
+#define WITH_ATMEGA_KEYSCANNER(ROW_PINS_, COL_PINS_)                             \
+  struct KeyScannerProps: public kaleidoscope::driver::keyscanner::ATmegaProps { \
+    ATMEGA_KEYSCANNER_PROPS(ROW_PIN_LIST(ROW_PINS_), COL_PIN_LIST(COL_PINS_));   \
+  };                                                                             \
+  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
+
+#define DECLARE_ATMEGA32U4_KEYBOARD(BOARD_, ...)     \
+  WITH_ATMEGA32U4_DEVICE_PROPS(BOARD_, __VA_ARGS__); \
+  ATMEGA32U4_DEVICE(BOARD_)
 
 #define FORWARD(...) __VA_ARGS__
 

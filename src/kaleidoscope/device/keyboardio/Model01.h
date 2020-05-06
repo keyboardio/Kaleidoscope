@@ -115,25 +115,22 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
 class Model01KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
-  typedef Model01LEDDriverProps  LEDDriverProps;
-  typedef Model01LEDDriver LEDDriver;
-  typedef Model01KeyScannerProps KeyScannerProps;
-  typedef Model01KeyScanner KeyScanner;
-  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
-  static constexpr const char *short_name = "kbio01";
-};
+WITH_ATMEGA32U4_DEVICE_PROPS(
+  Model01,
+  WITH_BOOTLOADER(avr::Caterina);
+  WITH_KEYBOARD_SHORTNAME("kbio01");
 
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+  WITH_LED_DRIVER(Model01);
+  WITH_KEYSCANNER(Model01);
+);
 
-class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
- public:
+ATMEGA32U4_DEVICE(
+  Model01,
+  public:
   void setup();
 
   static void enableHardwareTestMode();
-};
-
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+);
 
 } // namespace keyboardio
 } // namespace device

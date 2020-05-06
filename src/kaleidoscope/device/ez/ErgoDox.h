@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-EZ-ErgoDox -- ErgoDox hardware support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
  *
  * Based on QMK (commit 8cdb4a915)
  *  (C) Jack Humbert, Erez Zukerman, Oleg Kostyuk
@@ -46,13 +46,14 @@ namespace kaleidoscope {
 namespace device {
 namespace ez {
 
-struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
-  struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
-    KEYSCANNER_PROPS(14, 6);
-  };
-  typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
-  static constexpr const char *short_name = "ErgoDox-EZ";
+WITH_ATMEGA32U4_DEVICE_PROPS(
+  ErgoDox,
+  WITH_KEYBOARD_SHORTNAME("ErgoDox-EZ");
+  WITH_BOOTLOADER(avr::HalfKay);
+struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
+  KEYSCANNER_PROPS(14, 6);
 };
+);
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {

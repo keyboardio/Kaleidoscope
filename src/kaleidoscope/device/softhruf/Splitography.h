@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-SOFTHRUF-Splitography -- Splitography hardware support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd) and sdothum's fork (commit 8616b44)
  *  (C) Jack Humbert, Jun Wako, Steven Hum, and others
@@ -38,28 +38,23 @@ namespace kaleidoscope {
 namespace device {
 namespace softhruf {
 
-struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
-  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    ATMEGA_KEYSCANNER_PROPS(
-      ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-      COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
-    );
-  };
-  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
-  typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
-  static constexpr const char *short_name = "splitography";
-};
+WITH_ATMEGA32U4_DEVICE_PROPS(
+  Splitography,
+  WITH_KEYBOARD_SHORTNAME("splitography");
+  WITH_BOOTLOADER(avr::FLIP);
+  WITH_ATMEGA_KEYSCANNER(
+    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
+    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
+  );
+);
 
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<SplitographyProps> {
- public:
-  Splitography() {
-    mcu_.disableJTAG();
-  }
-};
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Splitography;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+ATMEGA32U4_DEVICE(
+  Splitography,
+  public:
+Splitography() {
+  mcu_.disableJTAG();
+}
+);
 
 #define PER_KEY_DATA(dflt,                                                       \
       r0c0 ,r0c1 ,r0c2 ,r0c3 ,r0c4 ,r0c5   ,r0c6 ,r0c7 ,r0c8 ,r0c9 ,r0c10 ,r0c11   \

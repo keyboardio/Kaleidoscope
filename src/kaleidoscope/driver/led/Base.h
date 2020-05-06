@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::driver::led::Base -- LED hardware driver base class for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -146,3 +146,7 @@ class Base {
 }
 }
 }
+
+#define WITH_LED_DRIVER(BOARD_)                  \
+  typedef BOARD_##LEDDriverProps LEDDriverProps; \
+  typedef BOARD_##LEDDriver LEDDriver;

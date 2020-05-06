@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::driver::keyscanner::base -- Keyscanner base class
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -80,3 +80,7 @@ class Base {
 }
 }
 }
+
+#define WITH_KEYSCANNER(BOARD_)                    \
+  typedef BOARD_##KeyScannerProps KeyScannerProps; \
+  typedef BOARD_##KeyScanner KeyScanner;

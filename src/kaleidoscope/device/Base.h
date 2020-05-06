@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::Base -- Kaleidoscope device Base class
- * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -557,3 +557,14 @@ class Base {
 #define EXPORT_DEVICE(DEVICE)                                                  \
   typedef DEVICE##Props DeviceProps;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
+#define WITH_KEYBOARD_SHORTNAME(NAME_)              \
+  static constexpr const char *short_name = NAME_;
+
+#define WITH_BOOTLOADER(BOOTLOADER_)                                \
+  typedef kaleidoscope::driver::bootloader::BOOTLOADER_ BootLoader;
+
+#define WITH_DEVICE_PROPS(BOARD_, BASE_, ...)                           \
+  struct BOARD_##Props: kaleidoscope::device::BASE_##Props {            \
+    __VA_ARGS__                                                         \
+  }

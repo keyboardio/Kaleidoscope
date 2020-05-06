@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-KBDFans-KBD4x -- KBD4x hardware support for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of version 3 of the GNU General Public License as
@@ -31,29 +31,24 @@ namespace kaleidoscope {
 namespace device {
 namespace kbdfans {
 
-struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
-  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    ATMEGA_KEYSCANNER_PROPS(
-      ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-      COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7 })
-    );
-  };
-  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
-  typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
-  static constexpr const char *short_name = "kbd4x";
-};
+WITH_ATMEGA32U4_DEVICE_PROPS(
+  KBD4x,
+  WITH_KEYBOARD_SHORTNAME("kbd4x");
+  WITH_BOOTLOADER(avr::FLIP);
+  WITH_ATMEGA_KEYSCANNER(
+    ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
+    COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7 })
+  );
+);
 
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {
- public:
-  KBD4x() {
-    mcu_.disableJTAG();
-    mcu_.disableClockDivision();
-  }
-};
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class KBD4x;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+ATMEGA32U4_DEVICE(
+  KBD4x,
+  public:
+KBD4x() {
+  mcu_.disableJTAG();
+  mcu_.disableClockDivision();
+}
+);
 
 #define PER_KEY_DATA(dflt,                                                       \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7, R0C8, R0C9, R0C10, R0C11, \

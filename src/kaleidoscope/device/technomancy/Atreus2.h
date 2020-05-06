@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Technomancy Atreus2 hardware support for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,14 @@ namespace kaleidoscope {
 namespace device {
 namespace technomancy {
 
-ATMEGA32U4_KEYBOARD(
-  Atreus2, Caterina, "atreus",
-  ROW_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_F1}),
-  COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2})
+DECLARE_ATMEGA32U4_KEYBOARD(
+  Atreus2,
+  WITH_KEYBOARD_SHORTNAME("atreus");
+  WITH_BOOTLOADER(avr::Caterina);
+  WITH_ATMEGA_KEYSCANNER(
+    ROW_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_F1}),
+    COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2})
+  );
 );
 
 #define PER_KEY_DATA(dflt,                                                    \
