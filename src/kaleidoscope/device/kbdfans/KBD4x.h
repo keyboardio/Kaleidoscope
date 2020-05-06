@@ -32,6 +32,11 @@ namespace device {
 namespace kbdfans {
 
 struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
+  struct MCUProps: public kaleidoscope::driver::mcu::ATmega32U4Props {
+    static constexpr bool disable_jtag = true;
+    static constexpr bool disable_clock_division = true;
+  };
+  typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
     ATMEGA_KEYSCANNER_PROPS(
       ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
@@ -44,13 +49,7 @@ struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {
- public:
-  KBD4x() {
-    mcu_.disableJTAG();
-    mcu_.disableClockDivision();
-  }
-};
+ATMEGA32U4_DEVICE(KBD4x);
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class KBD4x;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

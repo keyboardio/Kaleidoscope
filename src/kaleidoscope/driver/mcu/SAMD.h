@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * driver::mcu::SAMD -- SAMD MCU driver class for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  * Copyright (C) 2019  Dygma, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -26,7 +26,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
-class SAMD : public kaleidoscope::driver::mcu::Base {
+class SAMD : public kaleidoscope::driver::mcu::Base<BaseProps> {
  public:
   void detachFromHost() {
     USBDevice.detach();
