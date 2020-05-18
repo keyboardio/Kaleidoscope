@@ -41,8 +41,11 @@ cd %userprofile%\Documents\Arduino\hardware
 ### Install the libraries and hardware definitions
 
 ## Clone the hardware definitions
+
+Because git for Windows doesn't always have symlink support enabled by default, you may need to enable it for Kaleidoscope. To do that, add '-c core.symlinks=true' to your commandline. On all other platforms, that option is safe, but not necessary, as symlinks should work by default.
+
 ```sh
-git clone --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git keyboardio
+git clone -c core.symlinks=true --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git keyboardio
 
 ```
 
