@@ -177,8 +177,8 @@ kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
 
   if (pending_next_prev_key_ != Key_NoKey) {
     bool is_shifted =
-        kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
-        kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
+      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
+      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
 
     if ((pending_next_prev_key_ == Key_LEDEffectNext && !is_shifted) ||
         (pending_next_prev_key_ == Key_LEDEffectPrevious && is_shifted)) {
