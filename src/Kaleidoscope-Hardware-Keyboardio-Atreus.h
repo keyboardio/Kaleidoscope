@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/technomancy/Atreus2.h"
+#include "kaleidoscope/device/keyboardio/Atreus2.h"
