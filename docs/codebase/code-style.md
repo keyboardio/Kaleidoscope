@@ -2535,10 +2535,10 @@ auto x_plus_n = [&x](int n) -> int { return x + n; }
 Short lambdas may be written inline as function arguments.
 
 ```c++
-std::set<int> blacklist = {7, 8, 9};
+std::set<int> skip_list = {7, 8, 9};
 std::vector<int> digits = {3, 9, 1, 8, 4, 7, 1};
-digits.erase(std::remove_if(digits.begin(), digits.end(), [&blacklist](int i) {
-               return blacklist.find(i) != blacklist.end();
+digits.erase(std::remove_if(digits.begin(), digits.end(), [&skip_list](int i) {
+               return skip_list.find(i) != skip_list.end();
              }),
              digits.end());
 ```
