@@ -161,6 +161,7 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
   static bool enabled_;
+  static Key pending_next_prev_key_;
 };
 
 class FocusLEDCommand : public Plugin {
