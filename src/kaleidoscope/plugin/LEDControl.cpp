@@ -32,6 +32,7 @@ LEDMode *LEDControl::cur_led_mode_;
 uint8_t LEDControl::syncDelay = 32;
 uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::enabled_ = true;
+Key LEDControl::pending_next_prev_key_ = Key_NoKey;
 
 LEDControl::LEDControl(void) {
 }
@@ -155,10 +156,10 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
     return kaleidoscope::EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {
-    if (mappedKey == Key_LEDEffectNext) {
-      next_mode();
-    } else if (mappedKey == Key_LEDEffectPrevious) {
-      prev_mode();
+    if (mappedKey == Key_LEDEffectNext || mappedKey == Key_LEDEffectPrevious) {
+      // Handling of these keys is delayed into `beforeReportingState`
+      // so that we can incorporate the shift modifier state.
+      pending_next_prev_key_ = mappedKey;
     } else if (mappedKey == Key_LEDToggle) {
       if (enabled_)
         disable();
@@ -173,6 +174,20 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
 kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
   if (!enabled_)
     return kaleidoscope::EventHandlerResult::OK;
+
+  if (pending_next_prev_key_ != Key_NoKey) {
+    bool is_shifted =
+      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
+      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
+
+    if ((pending_next_prev_key_ == Key_LEDEffectNext && !is_shifted) ||
+        (pending_next_prev_key_ == Key_LEDEffectPrevious && is_shifted)) {
+      next_mode();
+    } else {
+      prev_mode();
+    }
+    pending_next_prev_key_ = Key_NoKey;
+  }
 
   if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
     syncLeds();
