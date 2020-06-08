@@ -18,7 +18,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_AVR_ATREUS2
+#ifdef ARDUINO_AVR_KEYBOARDIO_ATREUS
 
 #include <Arduino.h>
 
