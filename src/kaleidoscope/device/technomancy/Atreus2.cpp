@@ -24,7 +24,7 @@
 
 namespace kaleidoscope {
 namespace device {
-namespace technomancy {
+namespace keyboardio {
 
 ATMEGA_KEYSCANNER_BOILERPLATE
 
@@ -32,7 +32,7 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 }
 }
 
-kaleidoscope::device::technomancy::Atreus2 &Atreus2 = kaleidoscope_internal::device;
+kaleidoscope::device::keyboardio::Atreus &Atreus = kaleidoscope_internal::device;
 
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
