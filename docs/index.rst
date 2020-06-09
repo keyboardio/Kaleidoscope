@@ -34,6 +34,14 @@ Supported input devices
 
    hardware-devices/*
 
+Topic overviews
+----------------
+.. toctree::
+   :maxdepth: 1
+   :glob: 
+
+   overviews/*
+
 Plugins 
 -------
 .. toctree::
