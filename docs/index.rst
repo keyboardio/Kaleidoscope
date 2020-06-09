@@ -84,6 +84,15 @@ Device drivers
    drivers/**
 
 
+Development tips
+----------------
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   development/**
+
+
 What's new in v2.0
 ------------------
 .. toctree::
