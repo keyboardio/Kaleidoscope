@@ -1,3 +1,5 @@
+# Design philosophy
+
 Kaleidoscope should, in order:  
 
 1) Work well as a keyboard 
