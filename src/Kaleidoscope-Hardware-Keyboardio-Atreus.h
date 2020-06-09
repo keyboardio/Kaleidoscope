@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Technomancy-Atreus2 -- Atreus2 hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-Keyboardio-Atreus -- Keyboardio Atreus hardware support for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
