@@ -51,7 +51,8 @@ Understanding the codebase
 
 .. toctree::
    :maxdepth: 1
-
+  
+   codebase/design-philosophy.md
    codebase/glossary.md
    codebase/code-style.md
 
