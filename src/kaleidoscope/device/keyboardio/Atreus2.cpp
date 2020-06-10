@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Technomancy-Atreus2 -- Atreus2 hardware support for Kaleidoscope
+ * Keyboardio Atreus hardware support for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#ifdef ARDUINO_AVR_KEYBOARDIO_ATREUS
 
-#include "kaleidoscope/device/technomancy/Atreus2.h"
+#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+
+namespace kaleidoscope {
+namespace device {
+namespace keyboardio {
+
+ATMEGA_KEYSCANNER_BOILERPLATE
+
+}
+}
+}
+
+kaleidoscope::device::keyboardio::Atreus &Atreus = kaleidoscope_internal::device;
+
+#endif
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

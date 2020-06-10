@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Technomancy Atreus2 hardware support for Kaleidoscope
+ * Keyboardio Atreus hardware support for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_AVR_ATREUS2
+#ifdef ARDUINO_AVR_KEYBOARDIO_ATREUS
 
 #include <Arduino.h>
 
@@ -27,10 +27,10 @@
 
 namespace kaleidoscope {
 namespace device {
-namespace technomancy {
+namespace keyboardio {
 
 ATMEGA32U4_KEYBOARD(
-  Atreus2, Caterina, "atreus",
+  Atreus, Caterina, "atreus",
   ROW_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_F1}),
   COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2})
 );
@@ -64,10 +64,10 @@ ATMEGA32U4_KEYBOARD(
 }
 }
 
-EXPORT_DEVICE(kaleidoscope::device::technomancy::Atreus2)
+EXPORT_DEVICE(kaleidoscope::device::keyboardio::Atreus)
 
 }
 
-extern kaleidoscope::device::technomancy::Atreus2 DEPRECATED(NAMED_HARDWARE) &Atreus2;
+extern kaleidoscope::device::keyboardio::Atreus DEPRECATED(NAMED_HARDWARE) &Atreus;
 
 #endif

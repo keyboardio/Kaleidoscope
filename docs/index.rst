@@ -34,6 +34,14 @@ Supported input devices
 
    hardware-devices/*
 
+Topic overviews
+----------------
+.. toctree::
+   :maxdepth: 1
+   :glob: 
+
+   overviews/*
+
 Plugins 
 -------
 .. toctree::
@@ -51,9 +59,11 @@ Understanding the codebase
 
 .. toctree::
    :maxdepth: 1
-
+  
+   codebase/design-philosophy.md
    codebase/glossary.md
    codebase/code-style.md
+   codebase/release-testing.md
 
 API Design docs
 ---------------
@@ -72,6 +82,15 @@ Device drivers
    :glob:
 
    drivers/**
+
+
+Development tips
+----------------
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   development/**
 
 
 What's new in v2.0
