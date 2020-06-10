@@ -123,7 +123,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
   Kaleidoscope.setup();
   SpaceCadet.disable();
-  EEPROMKeymap.setup(5);
+  EEPROMKeymap.setup(10);
 }
 
 void loop() {
