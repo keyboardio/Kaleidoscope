@@ -44,14 +44,12 @@ BOARD_HARDWARE_PATH = $(ARDUINO_INSTALLED_ENV)
 KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= build-tools/makefiles/
 KALEIDOSCOPE_BUILDER_DIR ?= $(ARDUINO_INSTALLED_ENV)/libraries/Kaleidoscope/bin/
 
-
-
 endif
-
-ifneq ("$(wildcard $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk)","") 
 
 BOARD_HARDWARE_PATH ?= $(SKETCHBOOK_DIR)/hardware
 KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= keyboardio/avr/build-tools/makefiles/
+
+ifneq ("$(wildcard $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk)","") 
 
 include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
 
