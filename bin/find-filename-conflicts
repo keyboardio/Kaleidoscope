@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# find-duplicate-cpp-files - Finds duplicate cpp files
+# find-filename-conflicts - Finds cpp files with conflicting filenames
 # Copyright (C) 2020  Keyboard.io, Inc.
 #
 # This program is free software: you can redistribute it and/or modify it under
@@ -42,7 +42,7 @@ for f in $(echo "${FILE_LIST}" | cut -f1 -d" "); do
     count=$(echo "${FILE_LIST}" | grep -c "^${f}")
     if [ "$count" -gt 1 ]; then
         echo >&2
-        echo " Duplicate found for ${f}: " >&2
+        echo " Conflict found for ${f}: " >&2
         echo "${FILE_LIST}" | grep "${f}" | cut -d" " -f2 | sed -e 's,^,   ,' >&2
         exit_code=1
     fi
