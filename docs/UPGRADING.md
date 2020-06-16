@@ -570,6 +570,10 @@ The following headers and names have changed:
 
 After the introduction of the new device API, the old APIs (`ROWS`, `COLS`, `LED_COUNT`, `KeyboardHardware`, the old `Hardware` base class, etc) were removed on **2020-06-16**.
 
+#### `LEDControl.mode_add()`
+
+Since March of 2019, this method has been deprecated, and turned into a no-op. While no removal date was posted at the time, after more than a year of deprecation, it has been removed on **2020-06-16**.
+
 ### Removed on 2020-01-06
 
 #### EEPROMKeymap mode
