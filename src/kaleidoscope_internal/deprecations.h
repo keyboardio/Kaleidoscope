@@ -39,13 +39,6 @@
   "For further information and examples on how to do that, \n"                 \
   "please see UPGRADING.md."
 
-#define _DEPRECATED_MESSAGE_DIRECT_LEDCONTROL_PAUSED_ACCESS                \
-  "Direct access to `LEDControl.paused` is deprecated.\n"                  \
-  "Please use `LEDControl.disable()` and `LEDControl.enable()` instead.\n" \
-  "\n"                                                                     \
-  "For further information and examples on how to do that, please see\n"   \
-  "UPGRADING.md"
-
 #define _DEPRECATED_MESSAGE_KEY_MEMBER_RAW_ACCESS                              \
   "The member variable `raw` of class Key had to be removed. Please \n"        \
   "use `Key::setRaw()`/`Key::getRaw()` to set and get raw data.\n"             \

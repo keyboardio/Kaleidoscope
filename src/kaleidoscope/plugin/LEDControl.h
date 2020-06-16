@@ -117,34 +117,6 @@ class LEDControl : public kaleidoscope::Plugin {
     return Runtime.device().ledDriver().getBrightness();
   }
 
-  // The data proxy objects are required to only emit deprecation
-  // messages when the `paused` property is accessed directly.
-  //
-  // Once the deprecation period elapsed, the proxy class and the proxied
-  // `paused` property can be safely removed.
-  class DataProxy {
-   public:
-    DataProxy() = default;
-
-    //constexpr DataProxy(bool value) : value_{value} {}
-
-    DEPRECATED(DIRECT_LEDCONTROL_PAUSED_ACCESS)
-    DataProxy &operator=(bool value) {
-      if (value)
-        disable();
-      else
-        enable();
-      return *this;
-    }
-
-    DEPRECATED(DIRECT_LEDCONTROL_PAUSED_ACCESS)
-    operator bool () const {
-      return !isEnabled();
-    }
-  };
-
-  DataProxy paused;
-
  private:
   static uint16_t syncTimer;
   static uint8_t mode_id;
