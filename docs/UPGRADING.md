@@ -19,7 +19,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
-    - [Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime](#classglobal-instance-kaleidoscope_kaleidoscope-renamed-to-kaleidoscoperuntime_kaleidoscoperuntime)
     - [Transition to linear indexing](#transition-to-linear-indexing)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
@@ -488,13 +487,6 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ## Deprecated APIs and their replacements
 
-### Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime
-
-After the renaming, Kaleidoscope core should be using `kaleidoscope::Runtime`.
-The former `Kaleidoscope` global symbol is to be used by sketches only - and
-only because to not diverge too much from the Arduino naming style. Deprecated
-symbols are scheduled for removal on **2020-03-15**.
-
 ### Transition to linear indexing
 
 Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
@@ -571,6 +563,14 @@ if (!LEDControl.isEnabled()) {
   // do things...
 }
 ```
+
+#### Class/global instance Kaleidoscope_/Kaleidoscope renamed to kaleidoscope::Runtime_/kaleidoscope::Runtime
+
+After the renaming, Kaleidoscope core should be using `kaleidoscope::Runtime`.
+The former `Kaleidoscope` global symbol is to be used by sketches only - and
+only  to not diverge too much from the Arduino naming style.
+
+The deprecated `Kaleidoscope_` class has been removed on **2020-06-16**.
 
 ### Removed on 2020-01-06
 

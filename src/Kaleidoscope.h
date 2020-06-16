@@ -105,12 +105,6 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 //
 #define KALEIDOSCOPE_INIT_PLUGINS(...) _KALEIDOSCOPE_INIT_PLUGINS(__VA_ARGS__)
 
-// For compatibility reasons we export class Runtime_ as Kaleidoscope_
-// in global namespace.
-//
-DEPRECATED(GLOBAL_TYPENAME_KALEIDOSCOPE)
-typedef kaleidoscope::Runtime_  Kaleidoscope_;
-
 // For compatibility/usability reasons we enable the global variable
 // Kaleidoscope in global namespace.
 //
