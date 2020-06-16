@@ -61,9 +61,6 @@ class LEDControl : public kaleidoscope::Plugin {
     return static_cast<LEDMode__*>(cur_led_mode_);
 
   }
-  DEPRECATED(ROW_COL_FUNC) static void refreshAt(byte row, byte col) {
-    refreshAt(KeyAddr(row, col));
-  }
 
   static void refreshAll() {
     if (!Runtime.has_leds)
@@ -79,14 +76,8 @@ class LEDControl : public kaleidoscope::Plugin {
 
   static void setCrgbAt(uint8_t led_index, cRGB crgb);
   static void setCrgbAt(KeyAddr key_addr, cRGB color);
-  DEPRECATED(ROW_COL_FUNC) static void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(KeyAddr(row, col), color);
-  }
   static cRGB getCrgbAt(uint8_t led_index);
   static cRGB getCrgbAt(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static cRGB getCrgbAt(byte row, byte col) {
-    return getCrgbAt(KeyAddr(row, col));
-  }
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);

@@ -252,10 +252,3 @@ bool operator<=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
 #endif
 
 } // end namespace kaleidoscope
-
-// Row/col based access functions have been superseded by matrix address
-// base access.
-//
-#define _DEPRECATED_MESSAGE_ROW_COL_FUNC \
-   "Row/col based access functions have been deprecated. Please use " \
-   "the KeyAddr/KeyAddr based versions instead."

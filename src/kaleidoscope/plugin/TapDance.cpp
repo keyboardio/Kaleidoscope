@@ -202,14 +202,8 @@ EventHandlerResult TapDance::afterEachCycle() {
 }
 }
 
-__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
-    kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
-}
-
-// Let the future version be the wrapper to enable backward compatibility.
 __attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
     kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
-  tapDanceAction(tap_dance_index, key_addr.row(), key_addr.col(), tap_count, tap_dance_action);
 }
 
 kaleidoscope::plugin::TapDance TapDance;

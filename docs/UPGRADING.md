@@ -19,7 +19,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
   + [Deprecated APIs and their replacements](#deprecated-apis-and-their-replacements)
-    - [Transition to linear indexing](#transition-to-linear-indexing)
     - [Source code and namespace rearrangement](#source-code-and-namespace-rearrangement)
 * [Removed APIs](#removed-apis)
 
@@ -487,13 +486,6 @@ Older versions of the plugin required one to set up `Key_Redial` manually, and l
 
 ## Deprecated APIs and their replacements
 
-### Transition to linear indexing
-
-Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows
-the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
-
-Also a new version of the onKeyswitchEvent-handler has been introduced. The old version is deprecated, and will be removed after **2020-03-15**.
-
 ### Source code and namespace rearrangement
 
 With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.
@@ -571,6 +563,14 @@ The former `Kaleidoscope` global symbol is to be used by sketches only - and
 only  to not diverge too much from the Arduino naming style.
 
 The deprecated `Kaleidoscope_` class has been removed on **2020-06-16**.
+
+#### Transition to linear indexing
+
+Row/col based indexing was replaced by linear indexing throughout the whole firmware. A compatibility layer of functions was introduced that allows the firmware to remain backwards compatible, however, these functions are deprecated and will be removed in future versions of the firmware.
+
+Also a new version of the onKeyswitchEvent-handler has been introduced.
+
+The deprecated row/col based indexing APIs have been removed on **2020-06-16**.
 
 ### Removed on 2020-01-06
 

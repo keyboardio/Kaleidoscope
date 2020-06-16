@@ -25,8 +25,6 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
  public:
   BootGreetingEffect(void) {}
   BootGreetingEffect(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) BootGreetingEffect(byte row, byte col)
-    : BootGreetingEffect(KeyAddr(row, col)) {}
 
   static KeyAddr user_key_addr;
   static Key search_key;
