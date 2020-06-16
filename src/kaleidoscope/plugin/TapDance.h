@@ -75,12 +75,4 @@ class TapDance : public kaleidoscope::Plugin {
 void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
 
-// The old version of te tapdance action is DEPRECATED(ROW_COL_FUNC) although this
-// cannot be flagged to the user. The weak function is called by the tap dance
-// plugin's implementation. That's why the deprecation warning would always
-// fire.
-//
-void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
-                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
-
 extern kaleidoscope::plugin::TapDance TapDance;

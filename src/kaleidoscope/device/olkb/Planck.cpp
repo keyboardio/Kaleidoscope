@@ -31,7 +31,5 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 }
 }
 
-kaleidoscope::device::olkb::Planck &Planck = kaleidoscope_internal::device;
-
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

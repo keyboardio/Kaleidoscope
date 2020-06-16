@@ -23,15 +23,6 @@
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/KeyAddr.h"
 
-
-// Code can use this macro on injected key events to signal that
-// the event isn't tied to a specific physical keyswitch
-//
-// TODO DEPRECATED(ROW_COL_FUNC): Once row/col based key/LED access
-//       is deprecated, deprecate UNKNOWN_KEYSWITCH_LOCATION as well.
-//
-#define UNKNOWN_KEYSWITCH_LOCATION 255,255
-
 // UnknownKeyswitchLocation represents an invalid (as default constructed)
 // key address. Note: This is not a constexpr as it turned out
 // that the compiler would instanciate it and store it in RAM if
@@ -75,6 +66,3 @@
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
 void handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState);
-DEPRECATED(ROW_COL_FUNC) inline void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
-  handleKeyswitchEvent(mappedKey, KeyAddr(row, col), keyState);
-}

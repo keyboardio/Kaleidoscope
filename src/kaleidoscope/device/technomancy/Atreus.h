@@ -85,6 +85,4 @@ EXPORT_DEVICE(kaleidoscope::device::technomancy::Atreus)
 
 }
 
-extern kaleidoscope::device::technomancy::Atreus DEPRECATED(NAMED_HARDWARE) &Atreus;
-
 #endif

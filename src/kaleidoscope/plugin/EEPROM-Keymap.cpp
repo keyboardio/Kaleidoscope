@@ -88,16 +88,6 @@ void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {
   }
 }
 
-void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, byte, byte)) {
-  for (uint8_t layer = 0; layer < layers; layer++) {
-    for (auto key_addr : KeyAddr::all()) {
-      Key k = (*getkey)(layer, key_addr.row(), key_addr.col());
-
-      ::Focus.send(k);
-    }
-  }
-}
-
 EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   if (::Focus.handleHelp(command, PSTR("keymap.custom\nkeymap.default\nkeymap.onlyCustom")))
     return EventHandlerResult::OK;

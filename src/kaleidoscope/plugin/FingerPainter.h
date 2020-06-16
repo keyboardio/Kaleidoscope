@@ -39,9 +39,6 @@ class FingerPainter : public LEDMode {
  protected:
   void update(void) final;
   void refreshAt(KeyAddr key_addr) final;
-  DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
-    refreshAt(KeyAddr(row, col));
-  }
 
  private:
   static uint16_t color_base_;

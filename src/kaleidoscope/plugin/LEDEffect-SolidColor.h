@@ -43,9 +43,6 @@ class LEDSolidColor : public Plugin,
    protected:
     virtual void onActivate(void) final;
     virtual void refreshAt(KeyAddr key_addr) final;
-    DEPRECATED(ROW_COL_FUNC) virtual void refreshAt(byte row, byte col) final {
-      refreshAt(KeyAddr(row, col));
-    }
 
    private:
 

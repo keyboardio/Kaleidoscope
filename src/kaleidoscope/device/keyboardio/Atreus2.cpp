@@ -32,7 +32,5 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 }
 }
 
-kaleidoscope::device::keyboardio::Atreus &Atreus = kaleidoscope_internal::device;
-
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
