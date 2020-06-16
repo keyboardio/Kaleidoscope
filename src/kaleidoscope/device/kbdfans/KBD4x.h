@@ -72,6 +72,4 @@ EXPORT_DEVICE(kaleidoscope::device::kbdfans::KBD4x)
 
 }
 
-extern kaleidoscope::device::kbdfans::KBD4x DEPRECATED(NAMED_HARDWARE) &KBD4x;
-
 #endif

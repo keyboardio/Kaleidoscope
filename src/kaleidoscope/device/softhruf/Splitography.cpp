@@ -38,7 +38,5 @@ ATMEGA_KEYSCANNER_BOILERPLATE
 }
 }
 
-kaleidoscope::device::softhruf::Splitography &Splitography = kaleidoscope_internal::device;
-
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

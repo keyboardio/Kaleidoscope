@@ -96,6 +96,4 @@ EXPORT_DEVICE(kaleidoscope::device::softhruf::Splitography)
 
 }
 
-extern kaleidoscope::device::softhruf::Splitography DEPRECATED(NAMED_HARDWARE) &Splitography;
-
 #endif

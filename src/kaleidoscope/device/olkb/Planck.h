@@ -52,6 +52,4 @@ EXPORT_DEVICE(kaleidoscope::device::olkb::Planck)
 
 }
 
-extern kaleidoscope::device::olkb::Planck DEPRECATED(NAMED_HARDWARE) &Planck;
-
 #endif

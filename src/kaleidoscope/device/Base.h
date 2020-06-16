@@ -512,15 +512,6 @@ class Base {
 
   /**
    * Method to put the device into programmable/bootloader mode.
-   *
-   * This is the old, legacy name of the method.
-   */
-  DEPRECATED(HARDWARE_RESETDEVICE) void resetDevice() {
-    bootloader_.rebootBootloader();
-  }
-
-  /**
-   * Method to put the device into programmable/bootloader mode.
    */
   void rebootBootloader() {
     bootloader_.rebootBootloader();

@@ -68,6 +68,4 @@ EXPORT_DEVICE(kaleidoscope::device::keyboardio::Atreus)
 
 }
 
-extern kaleidoscope::device::keyboardio::Atreus DEPRECATED(NAMED_HARDWARE) &Atreus;
-
 #endif

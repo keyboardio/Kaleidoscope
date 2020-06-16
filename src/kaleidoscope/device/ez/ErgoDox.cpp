@@ -232,7 +232,5 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
 }
 }
 
-kaleidoscope::device::ez::ErgoDox &ErgoDox = kaleidoscope_internal::device;
-
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

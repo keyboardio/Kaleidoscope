@@ -41,7 +41,7 @@ For end users, this doesn't come with any breaking changes. A few things have be
 
 For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
 
-The old symbols and APIs will be removed by **2020-03-15**.
+The old symbols and APIs are no longer available.
 
 ### New plugin API
 
@@ -563,6 +563,12 @@ The following headers and names have changed:
 - [TapDance](doc/plugin/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2020-06-16
+
+#### The old device API
+
+After the introduction of the new device API, the old APIs (`ROWS`, `COLS`, `LED_COUNT`, `KeyboardHardware`, the old `Hardware` base class, etc) were removed on **2020-06-16**.
 
 ### Removed on 2020-01-06
 

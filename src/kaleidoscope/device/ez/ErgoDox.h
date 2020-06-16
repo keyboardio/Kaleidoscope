@@ -143,6 +143,4 @@ EXPORT_DEVICE(kaleidoscope::device::ez::ErgoDox)
 
 }
 
-extern kaleidoscope::device::ez::ErgoDox DEPRECATED(NAMED_HARDWARE) &ErgoDox;
-
 #endif
