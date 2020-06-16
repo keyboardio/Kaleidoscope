@@ -12,6 +12,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
+    - [Deprecation of the HID facade](#deprecation-of-the-hid-facade)
     - [Implementation of type Key internally changed from C++ union to class](#implementation-of-type-key-internally-changed-from-union-to-class)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
@@ -312,7 +313,13 @@ As a developer, one can continue using `millis()`, but migrating to `Kaleidoscop
 
 ## Breaking changes
 
+### Deprecation of the HID facade
+
+With the new Device APIs it became possible to replace the HID facade (the `kaleidoscope::hid` family of functions) with a driver. As such, the old APIs are deprecated, and will be removed by **2020-09-16**. Please use `Kaleidoscope.hid()` instead.
+
 ### Implementation of type Key internally changed from C++ union to class
+
+The deprecated functions continue to work, but they will be removed by **2020-09-16**.
 
 #### For end-users
 
