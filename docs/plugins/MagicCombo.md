@@ -65,6 +65,6 @@ started with the plugin.
 
 `RxCy` coordinates for a Model01:
 
-![rxcy layout](../model01_coordinates.png)
+![rxcy layout](../hardware-devices/keyboardio/model01/model01_coordinates.png)
 
  [plugin:example]: ../../examples/Keystrokes/MagicCombo/MagicCombo.ino
