@@ -119,7 +119,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     ) {
 
       if (map[i].flagged
-        && map[i].input != mapped_key) {
+          && map[i].input != mapped_key) {
         other_mapped_key_flagged = true;
         break;
       }
