@@ -41,13 +41,15 @@ class LEDControl : public kaleidoscope::Plugin {
     if (!Runtime.has_leds)
       return;
 
-    cur_led_mode_->update();
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->update();
   }
   static void refreshAt(KeyAddr key_addr) {
     if (!Runtime.has_leds)
       return;
 
-    cur_led_mode_->refreshAt(key_addr);
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->refreshAt(key_addr);
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
@@ -71,7 +73,8 @@ class LEDControl : public kaleidoscope::Plugin {
 
     set_all_leds_to({0, 0, 0});
 
-    cur_led_mode_->onActivate();
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->onActivate();
   }
 
   static void setCrgbAt(uint8_t led_index, cRGB crgb);
