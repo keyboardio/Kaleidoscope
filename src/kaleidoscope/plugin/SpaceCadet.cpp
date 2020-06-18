@@ -104,6 +104,26 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
 
     //check to see if we found a valid key. Assume not valid.
     bool valid_key = false;
+    bool other_mapped_key_flagged = false;
+
+    //Check the current map to see if any other key has been already flagged
+    //Exit condition is if we reach the special SPACECADET_MAP_END sentinel
+    for (
+      uint8_t i = 0 ;
+      !(
+        map[i].input == Key_NoKey
+        && map[i].output == Key_NoKey
+        && map[i].timeout == 0
+      ) ;
+      ++i
+    ) {
+
+        if (map[i].flagged
+         && map[i].input != mapped_key) {
+          other_mapped_key_flagged = true;
+          break;
+        }
+    }
 
     //This will only set one key, and, if it isn't in our map, it clears everything for the non-pressed key
     //Exit condition is if we reach the special SPACECADET_MAP_END sentinel
@@ -118,13 +138,18 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_add
     ) {
 
       if (mapped_key == map[i].input) {
-        //The keypress was valid and a match. Mark it as flagged and reset the counter
-        map[i].flagged = true;
-        map[i].start_time = Runtime.millisAtCycleStart();
+        //Only activate this as part of the mapping if there isn't already a
+        //key waiting for timeout. This allows us to return OK later and for
+        //this loop to inject all the other flagged keys
+        if (!other_mapped_key_flagged)
+        {
+          //The keypress was valid and a match. Mark it as flagged and reset the counter
+          map[i].flagged = true;
+          map[i].start_time = Runtime.millisAtCycleStart();
 
-        //yes, we found a valid key
-        valid_key = true;
-
+          //yes, we found a valid key
+          valid_key = true;
+        }
       } else {
         //If the key entry we're looking at was flagged previously, add it to the
         //report before we do anything else (this handles the situation where we
