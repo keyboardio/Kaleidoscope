@@ -28,7 +28,7 @@ static constexpr uint8_t uninitialized_mode_id = 255;
 
 uint8_t LEDControl::mode_id = uninitialized_mode_id;
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
-LEDMode *LEDControl::cur_led_mode_;
+LEDMode *LEDControl::cur_led_mode_ = nullptr;
 uint8_t LEDControl::syncDelay = 32;
 uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::enabled_ = true;
