@@ -26,24 +26,9 @@ For users
 =========
 
 
-Supported input devices
------------------------
-.. toctree::
-   :maxdepth: 2
-   :glob:
 
-   hardware-devices/*
-
-Topic overviews
----------------
-.. toctree::
-   :maxdepth: 1
-   :glob: 
-
-   overviews/*
-
-Customization reference
------------------------
+Customizing your firmware
+-------------------------
 .. toctree::
    :maxdepth: 1
    :glob: 
@@ -57,6 +42,14 @@ Plugins
    :glob: 
 
    plugins/*
+
+Supported input devices
+-----------------------
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   hardware-devices/*
 
 
 For developers
