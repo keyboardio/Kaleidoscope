@@ -37,7 +37,7 @@ As of this writing, the latest version is v1.8.13, which you can download from h
 Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
 
-# <a name="Arduino-Linux"/>Install on Linux
+# <a name="Arduino-Linux"/>Install Arduino on Linux
 
 1. Install version 1.8.13 or newer of the Arduino IDE from http://arduino.cc/download.  Unfortunately, the version packaged in Ubuntu is too ancient to support Arduino's new way of doing 3rd-party hardware.
 
@@ -90,7 +90,7 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
 Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
-# <a name="Arduino-Windows"/>Install on Windows 10
+# <a name="Arduino-Windows"/>Install Arduino on Windows 10
 
 
 _**Note:** This tutorial has been written using Windows 10._
@@ -108,7 +108,7 @@ _**Note:** Some users have had difficulties with the Windows store version of th
 
 Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
-## <a name="Arduino-FreeBSD"/>Install on FreeBSD
+## <a name="Arduino-FreeBSD"/>Install Arduino on FreeBSD
 
 1. Install the following packages required by the build system: `bash`, `gmake`, `perl5`, `avrdude`, and `arduino18`.
 
