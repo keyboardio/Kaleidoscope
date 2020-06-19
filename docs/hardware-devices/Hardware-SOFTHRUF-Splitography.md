@@ -1,4 +1,4 @@
-# Kaleidoscope-Hardware-SOFTHRUF-Splitography
+# SOFTHRUF Splitography
 
 Hardware support for the [SOFTHRUF Splitography][splitography] Steno keyboard.
 
