@@ -6,6 +6,8 @@ For most folks, the right way to get started is to install the Arduino IDE with 
 
 [setup_toolchain](Install Arduino and Kaleidoscope)
 
+The first thing you should do once you install Kaleidoscope is to [try building your keyboard's firmware](build_default_firmware).
+
 If you intend to develop Kaleidoscope, you may want to install Kaleidoscope from git.
 
 ### Clone the hardware definitions
