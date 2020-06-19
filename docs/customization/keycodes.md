@@ -1,3 +1,5 @@
+# What can go on your keymap
+
 Eventually there should be a helpful table here with good definitions for the common codes. In the meantime, you can check these files for all the codes the Keyboardio supports:
 
  - Most of the common keyboard key codes are here: 
