@@ -188,4 +188,4 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 ![](images/arduino-setup/boards-manager-close.png)
 
 
-Next up, you might want to [build the latest version of your keyboard's firmware](build-default-firmware)
+Next up, you might want to [build the latest version of your keyboard's firmware](build-default-firmware.html)
