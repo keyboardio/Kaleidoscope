@@ -155,3 +155,47 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
 
 # <a name="Add-keyboard-support-to-Arduino"/>Add keyboard support to Arduino
+
+1. Open the Arduino IDE. It will open an empty "sketch" window. 
+
+2. On Windows or Linux: Open the "File" menu, and click on "Preferences." 
+   On a Mac: Open the "Arduino" menu, and click on "Preferences."
+
+![](images/arduino-setup/open-preferences.png)
+
+3. Paste the following url into the box labeled 'Additional Board Manager URLs':
+   ```
+   https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json
+   ```
+![](images/arduino-setup/add-boards-manager-link.png)
+
+4. Click ‘OK’ to close the dialog
+
+5. Open the ‘Tools’ menu, click on ‘Board’ and then click on ‘Boards Manager’
+
+![](images/arduino-setup/open-boards-manager.png)
+
+6. Type ‘Keyboardio’ into the search box. 
+
+![](images/arduino-setup/pick-keyboardio-from-boards-manager.png)
+
+7. You will see an entry that says "keyboardio by Keyboardio" click on it to select it, and then click ‘Install’. 
+
+![](images/arduino-setup/boards-manager-install.png)
+
+8. Once the install completes, click "Close".
+
+![](images/arduino-setup/boards-manager-close.png)
+
+9. Open the 'Tools' menu, click on 'Board' and then click on 'Keyboardio Model 01'. (You may have to scroll through a long list of other boards to get there.)
+
+
+![](images/arduino-setup/select-board-in-menu.png)
+
+10. Open the 'Tools' menu, click on "Port > ".  If your keyboard is not already selected, click on it to select it. (If there is only one option such as "COM3" try it, it's almost certainly the correct port.)
+
+![](images/arduino-setup/select-port.png)
+
+Next step: [Install the latest firmware on your keyboard](Install-latest-firmware)
+
+
