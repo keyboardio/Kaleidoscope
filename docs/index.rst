@@ -13,119 +13,86 @@ This package contains the "core" of Kaleidoscope and a number of [example firmwa
 
 If you're just getting started with the Keyboardio Model 01, the [introductory docs are here](https://github.com/keyboardio/Kaleidoscope/wiki/Keyboardio-Model-01-Introduction) and the source for the basic firmware package is here: https://github.com/keyboardio/Model01-Firmware. It's probably a good idea to start there, learn how to modify your keymap and maybe turn some modules on or off, and then come back to the full repository when you have more complex changes in mind.
 
-Installation and setup
-======================
-
 .. toctree::
+   :caption: Installation and setup
    :maxdepth: 2
   
    quick_start  
-
+   setup_toolchain
+   build_default_firmware
 
 For users
 =========
 
-
-
-Customizing your firmware
--------------------------
 .. toctree::
+   :caption: Customizing your firmware
    :maxdepth: 1
    :glob: 
 
-   customization/*
+   layers.md
+   keycodes.md
+   customization/**
+   plugin_list.rst
 
-Plugins 
--------
-.. toctree::
-   :maxdepth: 1
-   :glob: 
 
-   plugins/*
-
-Supported input devices
------------------------
 .. toctree::
    :maxdepth: 2
+   :caption: Supported devices
    :glob:
 
-   hardware-devices/*
+   hardware-devices/**
 
 
 For developers
 ==============
 
-Understanding the codebase
---------------------------
-
 .. toctree::
+   :caption: Understanding the codebase
    :maxdepth: 1
-  
-   codebase/design-philosophy.md
-   codebase/glossary.md
-   codebase/code-style.md
-   codebase/release-testing.md
+   :glob: 
 
-API Design docs
----------------
+   codebase/**
 
 .. toctree::
+   :caption: API Design
    :maxdepth: 1
    :glob:
 
-   api-reference/*
+   api-reference/**
 
 
-Device drivers
---------------
 .. toctree::
-   :maxdepth: 1
+   :caption: Device Drivers
    :glob:
 
    drivers/**
 
-
-Development tips
-----------------
 .. toctree::
-   :maxdepth: 1
+   :caption: Development tips
    :glob:
 
    development/**
 
 
-What's new in v2.0
-------------------
 .. toctree::
    :maxdepth: 2
+   :caption: Changes
 
    NEWS.md
-
-Upgrading from old versions
----------------------------
-   
-.. toctree::
-   :maxdepth: 1
-
    UPGRADING.md
 
 
-For Everybody
-=============
-
 .. toctree::
-   :maxdepth: 0
+   :maxdepth: 1
+   :caption: Code of Conduct
 
    code_of_conduct.md
 
 
-WIP
-===
-
-
 .. toctree::
+   :caption: Docs that don't work yet 
    :maxdepth: 2
-  
+
    examples
    about
    api/library_root

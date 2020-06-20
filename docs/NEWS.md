@@ -74,23 +74,23 @@ See the [Kaleidoscope-USB-Quirks][plugin:USB-Quirks] plugin for a use-case.
 
 ### Finer stickability controls for OneShot
 
-The [OneShot plugin](doc/plugin/OneShot.md) gained finer stickability controls, one can now control whether the double-tap stickiness is enabled on a per-key basis. See [UPGRADING.md](UPGRADING.md#finer-oneshot-stickability-control) for more information.
+The [OneShot plugin](plugins/OneShot.md) gained finer stickability controls, one can now control whether the double-tap stickiness is enabled on a per-key basis. See [UPGRADING.md](UPGRADING.md#finer-oneshot-stickability-control) for more information.
 
 ### A way to slow down Unicode input
 
-In certain cases we need to delay the unicode input sequence, otherwise the host is unable to process the input properly. For this reason, the [Unicode](doc/plugin/Unicode.md) gained an `.input_delay()` method that lets us do just that. It still defaults to no delay.
+In certain cases we need to delay the unicode input sequence, otherwise the host is unable to process the input properly. For this reason, the [Unicode](plugins/Unicode.md) gained an `.input_delay()` method that lets us do just that. It still defaults to no delay.
 
 ### Better support for modifiers in the Cycle plugin
 
-The [Cycle](doc/plugin/Cycle.md) plugin has much better support for cycling through keys with modifiers applied to them, such as `LSHIFT(Key_A)`. Please see the documentation and the updated example for more information.
+The [Cycle](plugins/Cycle.md) plugin has much better support for cycling through keys with modifiers applied to them, such as `LSHIFT(Key_A)`. Please see the documentation and the updated example for more information.
 
 ### More control over when to send reports during Macro playback
 
-There are situations where one would like to disable sending a report after each and every step of a macro, and rather have direct control over when reports are sent. The new `WITH_EXPLICIT_REPORT`, `WITH_IMPLICIT_REPORT` and `SEND_REPORT` steps help with that. Please see the [Macros](doc/plugin/Macros.md) documentation for more information.
+There are situations where one would like to disable sending a report after each and every step of a macro, and rather have direct control over when reports are sent. The new `WITH_EXPLICIT_REPORT`, `WITH_IMPLICIT_REPORT` and `SEND_REPORT` steps help with that. Please see the [Macros](plugins/Macros.md) documentation for more information.
 
 ### LED-ActiveModColor can be asked to not highlight normal modifiers
 
-The plugin was intended to work with OneShot primarily, and that's where it is most useful. To make it less surprising, and more suitable to include it in default-like firmware, we made it possible to ask it not to highlight normal modifiers. Please see the [LED-ActiveModColor](doc/plugin/LED-ActiveModColor.md) documentation for more information.
+The plugin was intended to work with OneShot primarily, and that's where it is most useful. To make it less surprising, and more suitable to include it in default-like firmware, we made it possible to ask it not to highlight normal modifiers. Please see the [LED-ActiveModColor](plugins/LED-ActiveModColor.md) documentation for more information.
 
 ### Events now trigger on layer changes
 
@@ -113,46 +113,46 @@ New `PER_KEY_DATA` and `PER_KEY_DATA_STACKED` macros are available (when defined
 
 Kaleidoscope has been ported to the following devices:
 
-- [Atreus](doc/plugin/Hardware-Technomancy-Atreus.md): All known variants of the original Atreus are supported. From the Legacy Teensy variant, through the pre-2016 PCB with an A* MCU, the post-2016 PCB, and FalbaTech's handwired one too. Apart from the legacy Teensy variant, the other support both the A* or a Teensy as an MCU.
-- [ErgoDox](doc/plugin/Hardware-EZ-ErgoDox.md): Originally developed to support the ErgoDox EZ, but all other compatible hardware is supported, such as the original ErgoDox and anything else wired like it, like some Dactyls.
-- [Planck](doc/plugin/Hardware-OLKB-Planck.md): AVR-based Plancks, and anything else wired similarly should be supported, as long as they use a Teensy.
-- [Splitography](doc/plugin/Hardware-SOFTHRUF-Splitography.md): Initial support for the Splitography Steno keyboard.
+- [Atreus](hardware-devices/Hardware-Technomancy-Atreus.md): All known variants of the original Atreus are supported. From the Legacy Teensy variant, through the pre-2016 PCB with an A* MCU, the post-2016 PCB, and FalbaTech's handwired one too. Apart from the legacy Teensy variant, the other support both the A* or a Teensy as an MCU.
+- [ErgoDox](hardware-devices/Hardware-EZ-ErgoDox.md): Originally developed to support the ErgoDox EZ, but all other compatible hardware is supported, such as the original ErgoDox and anything else wired like it, like some Dactyls.
+- [Planck](hardware-devices/Hardware-OLKB-Planck.md): AVR-based Plancks, and anything else wired similarly should be supported, as long as they use a Teensy.
+- [Splitography](hardware-devices/Hardware-SOFTHRUF-Splitography.md): Initial support for the Splitography Steno keyboard.
 
 For more information, please see the hardware plugins' documentation.
 
-To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](doc/plugin/ATMegaKeyboard.md) base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
+To make it easier to port Kaleidoscope, we introduced the [ATMegaKeyboard](plugins/ATMegaKeyboard.md) base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
 
 ## New plugins
 
 ### DynamicMacros
 
-The [DynamicMacros](doc/plugin/DynamicMacros.md) plugin provides a way to use and update macros via the Focus API, through Chrysalis.
+The [DynamicMacros](plugins/DynamicMacros.md) plugin provides a way to use and update macros via the Focus API, through Chrysalis.
 
 ### IdleLEDs
 
-The [IdleLEDs](doc/plugin/IdleLEDs.md) plugin is a simple, yet, useful one: it will turn the keyboard LEDs off after a period of inactivity, and back on upon the next key event.
+The [IdleLEDs](plugins/IdleLEDs.md) plugin is a simple, yet, useful one: it will turn the keyboard LEDs off after a period of inactivity, and back on upon the next key event.
 
 ### LEDActiveLayerColor
 
-The [LEDActiveLayerColor][doc/plugin/LEDActiveLayerColor.md] plugin makes it possible to set the color of all LEDs to the same color, depending on which layer is active topmost.
+The [LEDActiveLayerColor][plugins/LEDActiveLayerColor.md] plugin makes it possible to set the color of all LEDs to the same color, depending on which layer is active topmost.
 
 ### LED-Wavepool
 
-We integrated the [LEDWavepool](doc/plugin/LED-Wavepool.md) plugin by [ToyKeeper][wavepool:origin], with a few updates and new features added.
+We integrated the [LEDWavepool](plugins/LED-Wavepool.md) plugin by [ToyKeeper][wavepool:origin], with a few updates and new features added.
 
  [wavepool:origin]: https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool
 
 ### Turbo
 
-The [Turbo](doc/plugin/Turbo.md) plugin provides a way to send keystrokes in very quick succession while holding down a key.
+The [Turbo](plugins/Turbo.md) plugin provides a way to send keystrokes in very quick succession while holding down a key.
 
 ### WinKeyToggle
 
-The [WinKeyToggle](doc/plugin/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
+The [WinKeyToggle](plugins/WinKeyToggle.md) plugin assists with toggling the Windows key on and off - a little something for those of us who game under Windows and are tired of accidentally popping up the start menu.
 
 ### FirmwareDump
 
-The [FirmwareDump](doc/plugin/FirmwareDump.md) plugin makes it possible to dump one's firmware over Focus.
+The [FirmwareDump](plugins/FirmwareDump.md) plugin makes it possible to dump one's firmware over Focus.
 
 ## Breaking changes
 
@@ -185,29 +185,29 @@ The `NumPad` plugin used to toggle `NumLock` when switching to the NumPad layer.
 
 ### The `RxCy` macros and peeking into the keyswitch state
 
-The `RxCy` macros changed from being indexes into a per-hand bitmap to being an index across the whole keyboard. This mostly affected the [MagicCombo](doc/plugin/MagicCombo.md) plugin.
+The `RxCy` macros changed from being indexes into a per-hand bitmap to being an index across the whole keyboard. This mostly affected the [MagicCombo](plugins/MagicCombo.md) plugin.
 
 Please see the [relevant upgrade notes](UPGRADING.md#the-rxcy-macros-and-peeking-into-the-keyswitch-state) for more information.
 
 ### The `Redial` plugin had a breaking API change
 
-The [Redial](doc/plugin/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
+The [Redial](plugins/Redial.md) plugin was simplified, one no longer needs to define `Key_Redial` on their own, the plugin defines it itself. See the [upgrade notes](UPGRADING.md#Redial) for more information about how to upgrade.
 
 ### Color palette storage has changed
 
-The [LED-Palette-Theme](doc/plugin/LED-Palette-Theme.md) had to be changed to store the palette colors in reverse. This change had to be made in order to not default to a bright white palette, that would draw so much power that most operating systems would disconnect the keyboard due to excessive power usage. With inverting the colors, we now default to a black palette instead. This sadly breaks existing palettes, and you will have to re-set the colors.
+The [LED-Palette-Theme](plugins/LED-Palette-Theme.md) had to be changed to store the palette colors in reverse. This change had to be made in order to not default to a bright white palette, that would draw so much power that most operating systems would disconnect the keyboard due to excessive power usage. With inverting the colors, we now default to a black palette instead. This sadly breaks existing palettes, and you will have to re-set the colors.
 
 We also changed when we reserve space for the palette in EEPROM: we used to do it as soon as possible, but that made it impossible to go from a firmware that does not use the plugin to one that does, and still have a compatible EEPROM layout. We now reserve space as late as possible. This breaks existing EEPROM layouts however.
 
 ### EEPROM-Keymap changed Focus commands
 
-The [EEPROMKeymap](doc/plugin/EEPROM-Keymap.md) plugin was changed to treat built-in (default) and EEPROM-stored (custom) layers separately, because that's less surprising, and easier to work with from Chrysalis. The old `keymap.map` and `keymap.roLayers` commands are gone, the new `keymap.default` and `keymap.custom` commands should be used instead.
+The [EEPROMKeymap](plugins/EEPROM-Keymap.md) plugin was changed to treat built-in (default) and EEPROM-stored (custom) layers separately, because that's less surprising, and easier to work with from Chrysalis. The old `keymap.map` and `keymap.roLayers` commands are gone, the new `keymap.default` and `keymap.custom` commands should be used instead.
 
 ### EEPROMSettings' version() setter has been deprecated
 
 We're repurposing the `version` setting: instead of it being something end-users
 can set, we'll be using it internally to track changes made to
-[EEPROMSettings](doc/plugin/EEPROM-Settings.md) itself, with the goal of
+[EEPROMSettings](plugins/EEPROM-Settings.md) itself, with the goal of
 allowing external tools to aid in migrations. The setting wasn't widely used -
 if at all -, which is why we chose to repurpose it instead of adding a new
 field.

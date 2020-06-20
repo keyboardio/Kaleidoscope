@@ -20,7 +20,7 @@ The right way to install Arduino is a little bit different depending on what ope
 * [Install Arduino on FreeBSD](#Arduino-FreeBSD)
 
 
-## <a name="Arduino-macOS"/>Install Arduino on macOS
+## <a name="Arduino-macOS"></a>Install Arduino on macOS
 
 
 
@@ -34,10 +34,10 @@ As of this writing, the latest version is v1.8.13, which you can download from h
 
 4. Double-click on Arduino.app to start it.
 
-Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
+Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 
-# <a name="Arduino-Linux"/>Install Arduino on Linux
+## <a name="Arduino-Linux"></a>Install Arduino on Linux
 
 1. Install version 1.8.13 or newer of the Arduino IDE from http://arduino.cc/download.  Unfortunately, the version packaged in Ubuntu is too ancient to support Arduino's new way of doing 3rd-party hardware.
 
@@ -77,7 +77,7 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
 
     On Arch linux, Manjaro linux, and probably other Arch derivatives, the group for the device access is `uucp`. To add yourself to this group if necessary, use
 
-    ```shq
+    ```sh
     $ sudo usermod -a -G uucp $USER
     $ newgrp uucp   # or su - $USER, or log out and in again
     ```
@@ -88,9 +88,9 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
     export ARDUINO_PATH=/usr/local/arduino
     ```
 
-Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
+Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
-# <a name="Arduino-Windows"/>Install Arduino on Windows 10
+## <a name="Arduino-Windows"></a>Install Arduino on Windows 10
 
 
 _**Note:** This tutorial has been written using Windows 10._
@@ -106,9 +106,9 @@ _**Note:** Some users have had difficulties with the Windows store version of th
 
 2. Open the installation package and follow the prompts to install the Arduino IDE.
 
-Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
+Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
-## <a name="Arduino-FreeBSD"/>Install Arduino on FreeBSD
+## <a name="Arduino-FreeBSD"></a>Install Arduino on FreeBSD
 
 1. Install the following packages required by the build system: `bash`, `gmake`, `perl5`, `avrdude`, and `arduino18`.
 
@@ -151,10 +151,10 @@ Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
       $ sudo service devfs restart
       ```
 
-Next step: [Add keyboard support to Arduino](#Add-keyboard-support-to-Arduino)
+Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 
-# <a name="Add-keyboard-support-to-Arduino"/>Add keyboard support to Arduino
+# Add keyboard support to Arduino
 
 1. Open the Arduino IDE. It will open an empty "sketch" window. 
 

@@ -6,8 +6,8 @@
 All example sketches
 ====================
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 8
    :glob:
 
-   examples/**/*.ino
+   generated/examples/**/*.ino
 

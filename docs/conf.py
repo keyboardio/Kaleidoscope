@@ -32,8 +32,8 @@ author = 'Keyboardio & Friends'
 extensions = [
     #'breathe',
     #'exhale',
-    'recommonmark'
-
+    'recommonmark',
+    'sphinx_markdown_tables'
 ]
 
 extensions.append('copy-examples')
@@ -56,11 +56,11 @@ exhale_args = {
     "rootFileTitle":         "Kaleidoscope",
     "doxygenStripFromPath":  "..",
     # Suggested optional arguments
-    "createTreeView":        False,
+    "createTreeView":        True,
     # TIP: if using the sphinx-bootstrap-theme, you need
     # "treeViewIsBootstrap": True,
     "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin":    "INPUT = ../src",
+    "exhaleUseDoxyfile": True,
     "verboseBuild": True
 }
 
@@ -69,6 +69,10 @@ primary_domain = 'cpp'
 
 # Tell sphinx what the pygments highlight language should be.
 highlight_language = 'cpp'
+
+
+cpp_id_attributes = ["aligned","packed","weak","always_inline","noinline","no-unroll-loops","__attribute__((optimize(3)))"]
+cpp_paren_attributes = ["optimize","__aligned__","section","deprecated"]
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -91,6 +95,22 @@ exclude_patterns = ['_build', '_sphinx', 'Thumbs.db', '.DS_Store', 'etc', 'requi
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+html_theme_options = {
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': 'white',
+    # Toc options
+
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 8,
+    'includehidden': False,
+    'titles_only': True
+}
+
 #
 
 # on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
