@@ -28,7 +28,7 @@
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
-#define I2C_CLOCK_KHZ 200
+#define I2C_CLOCK_KHZ 100
 #define I2C_FLASH_CLOCK_KHZ 100 // flashing doesn't work reliably at higher clock speeds
 
 #define SIDE_POWER 1 // side power switch pa10
