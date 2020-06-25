@@ -44,17 +44,6 @@ int HID_::getDescriptor(USBSetup &setup) {
   return 1;
 }
 
-uint8_t HID_::getShortName(char *name) {
-  name[0] = 'v';
-  name[1] = 'i';
-  name[2] = 'r';
-  name[3] = 't';
-  name[4] = 'u';
-  name[5] = 'a';
-  name[6] = 'l';
-  return 7;
-}
-
 void HID_::AppendDescriptor(HIDSubDescriptor *node) {
   if (!rootNode) {
     rootNode = node;

@@ -562,6 +562,12 @@ EOF
     fi
 }
 
+run_simulator_tests() {
+   kaleidoscope_dir="$(dirname "$0")/.."
+   cd "${kaleidoscope_dir}/test/simulator"
+   make
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
@@ -599,6 +605,9 @@ usage () {
 
 		  build-all
 		    Build all Sketches we can find.
+		    
+        run-simulator-tests
+          Builds and runs all simulator tests.
 		EOF
 }
 
