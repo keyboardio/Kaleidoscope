@@ -27,10 +27,6 @@
   static constexpr uint8_t matrix_columns = COLS_;          \
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 
-#define KEYSCANNER_PROPS_BOILERPLATE(BOARD)         \
-  const uint8_t BOARD::matrix_rows;                 \
-  const uint8_t BOARD::matrix_columns;
-
 namespace kaleidoscope {
 namespace driver {
 namespace keyscanner {
@@ -38,7 +34,6 @@ namespace keyscanner {
 struct BaseProps {
   static constexpr uint8_t matrix_rows = 0;
   static constexpr uint8_t matrix_columns = 0;
-
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 

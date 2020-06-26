@@ -43,7 +43,8 @@
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
-  KEYSCANNER_PROPS_BOILERPLATE(kaleidoscope::Device::KeyScannerProps);                                  \
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;                 \
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns; \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             \
   template<>                                                                                            \
