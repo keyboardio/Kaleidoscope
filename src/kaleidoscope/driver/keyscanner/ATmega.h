@@ -34,16 +34,22 @@
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)                   \
-  KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));           \
+  static constexpr uint8_t matrix_rows = NUM_ARGS(ROW_PINS_);		\
+  static constexpr uint8_t matrix_columns = NUM_ARGS(COL_PINS_); 	\
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;		\
+									\
   static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;   \
   static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)               \
-  KEYSCANNER_PROPS(NUM_ARGS(ROW_PINS_), NUM_ARGS(COL_PINS_));
+  static constexpr uint8_t matrix_rows = NUM_ARGS(ROW_PINS_);		\
+  static constexpr uint8_t matrix_columns = NUM_ARGS(COL_PINS_); 	\
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
-  KEYSCANNER_PROPS_BOILERPLATE(kaleidoscope::Device::KeyScannerProps);                                  \
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;                 \
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns; \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             \
   template<>                                                                                            \
