@@ -48,6 +48,7 @@
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
+  template<> uint8_t kaleidoscope::Device::KeyScanner::debounce_ = kaleidoscope::Device::KeyScannerProps::debounce; \
   const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;                 \
   const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns; \
   constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
@@ -119,6 +120,13 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     ICR1 = cycles;
     TCCR1B = _BV(WGM13) | _BV(CS10);
     TIMSK1 = _BV(TOIE1);
+  }
+
+  void setDebounce(uint8_t d) {
+    debounce_ = d;
+  }
+  uint8_t getDebounce() {
+    return debounce_;
   }
 
   void __attribute__((optimize(3))) readMatrix(void) {
@@ -210,6 +218,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   static uint16_t keyState_[_KeyScannerProps::matrix_rows];
   static uint16_t masks_[_KeyScannerProps::matrix_rows];
   static uint8_t debounce_matrix_[_KeyScannerProps::matrix_rows][_KeyScannerProps::matrix_columns];
+  static uint8_t debounce_;
 
   /*
    * This function has loop unrolling disabled on purpose: we want to give the
@@ -250,7 +259,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   void debounceRow(uint16_t change, uint8_t row) {
     for (uint16_t i = 0; i < _KeyScannerProps::matrix_columns; ++i) {
       if (change & _BV(i)) {
-        debounce_matrix_[row][i] = _KeyScannerProps::debounce;
+        debounce_matrix_[row][i] = debounce_;
       }
     }
   }
