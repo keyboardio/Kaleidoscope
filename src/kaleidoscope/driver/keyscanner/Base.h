@@ -22,11 +22,6 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/MatrixAddr.h"
 
-#define KEYSCANNER_PROPS(ROWS_, COLS_)                      \
-  static constexpr uint8_t matrix_rows = ROWS_;             \
-  static constexpr uint8_t matrix_columns = COLS_;          \
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-
 namespace kaleidoscope {
 namespace driver {
 namespace keyscanner {
