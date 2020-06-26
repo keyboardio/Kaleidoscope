@@ -70,7 +70,7 @@ for my $path (@paths) {
     }
 
     if ( $devices{$path}{'ID_MM_CANDIDATE'}) {
-      my $rules = "$Bin/../etc/99-kaleidoscope.rules";
+      my $rules = "$Bin/../etc/60-kaleidoscope.rules";
       print_warning <<EOWARN
 
 WARNING: your udev rules are currently configured to suggest
@@ -90,4 +90,3 @@ EOWARN
 
 #debug("ERROR: I couldn't find a USB device matching the keyboard's USB Vendor and Device IDs\n");
 #print_warning(join("\n",@log));
-

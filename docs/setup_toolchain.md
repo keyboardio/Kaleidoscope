@@ -1,13 +1,13 @@
 # Setting up your development environment
 
-If you'd like to customize your keyboard's layout or functionality, the most robust and flexible option is to use the Arduino IDE. 
+If you'd like to customize your keyboard's layout or functionality, the most robust and flexible option is to use the Arduino IDE.
 
-Arduino is one of the world's most widely used (and user friendly) platforms for programming "embedded" devices like the chip inside your keyboard. 
+Arduino is one of the world's most widely used (and user friendly) platforms for programming "embedded" devices like the chip inside your keyboard.
 
 
 # Set up the Arduino IDE
 
-Arduino's designers made it to be accessible to people at all skill levels, and Kaleidoscope is built on top of the Arduino platform because we share that goal. The easiest way to customize your keyboard's firmware is to use the Arduino IDE. Even if you expect to use the command line to compile your firmware, you'll still need to install Arduino, as they provide the compilers and libraries Kaleidoscope needs to work. 
+Arduino's designers made it to be accessible to people at all skill levels, and Kaleidoscope is built on top of the Arduino platform because we share that goal. The easiest way to customize your keyboard's firmware is to use the Arduino IDE. Even if you expect to use the command line to compile your firmware, you'll still need to install Arduino, as they provide the compilers and libraries Kaleidoscope needs to work.
 
 Using the IDE is is the easiest process for folks who are new to Arduino, or to programming generally. If you follow the instructions below step by step you should be fine. :-)
 
@@ -28,7 +28,7 @@ The right way to install Arduino is a little bit different depending on what ope
 
 As of this writing, the latest version is v1.8.13, which you can download from https://www.arduino.cc/download_handler.php?f=/arduino-1.8.13-macosx.zip
 
-2. Double-click "arduino-1.8.13-macos.zip" to uncompress the Arduino IDE. 
+2. Double-click "arduino-1.8.13-macos.zip" to uncompress the Arduino IDE.
 
 3. Move Arduino.app from your `Downloads` folder to your Applications folder.
 
@@ -53,8 +53,8 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 3. On Ubuntu, you will have to prevent ModemManager from attempting to grab the keyboard virtual serial port when it goes into bootloader mode:
 
     ```sh
-    $ wget https://raw.githubusercontent.com/keyboardio/Kaleidoscope/master/etc/99-kaleidoscope.rules
-    $ sudo cp 99-kaleidoscope.rules /etc/udev/rules.d
+    $ wget https://raw.githubusercontent.com/keyboardio/Kaleidoscope/master/etc/60-kaleidoscope.rules
+    $ sudo cp 60-kaleidoscope.rules /etc/udev/rules.d
     $ sudo /etc/init.d/udev reload
     ```
 
@@ -65,7 +65,7 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     From a shell:
 
     ```sh
-    $ groups 
+    $ groups
     ```
 
     If you see dialout in the list, you're good to go. If you don't, you'll have to add yourself and then get Linux to recognize the change in your current shell:
@@ -156,9 +156,9 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 # Add keyboard support to Arduino
 
-1. Open the Arduino IDE. It will open an empty "sketch" window. 
+1. Open the Arduino IDE. It will open an empty "sketch" window.
 
-2. On Windows or Linux: Open the "File" menu, and click on "Preferences." 
+2. On Windows or Linux: Open the "File" menu, and click on "Preferences."
    On a Mac: Open the "Arduino" menu, and click on "Preferences."
 
 ![](images/arduino-setup/open-preferences.png)
@@ -175,11 +175,11 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 ![](images/arduino-setup/open-boards-manager.png)
 
-6. Type ‘Keyboardio’ into the search box. 
+6. Type ‘Keyboardio’ into the search box.
 
 ![](images/arduino-setup/pick-keyboardio-from-boards-manager.png)
 
-7. You will see an entry that says "keyboardio by Keyboardio" click on it to select it, and then click ‘Install’. 
+7. You will see an entry that says "keyboardio by Keyboardio" click on it to select it, and then click ‘Install’.
 
 ![](images/arduino-setup/boards-manager-install.png)
 
