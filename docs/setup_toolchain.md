@@ -55,34 +55,12 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     ```sh
     $ https://raw.githubusercontent.com/keyboardio/Kaleidoscope/master/etc/60-kaleidoscope.rules
     $ sudo cp 60-kaleidoscope.rules /etc/udev/rules.d
-    $ sudo /etc/init.d/udev reload
+    $ sudo udevadm control -R
     ```
 
 4. Then disconnect and reconnect the keyboard for that change to take effect.
 
-5. To let Arduino talk to the device over the serial port, you'll need to be in the appropriate group.  On Ubuntu and some other Linux distributions, the group you need is the 'dialout' group.
-
-    From a shell:
-
-    ```sh
-    $ groups 
-    ```
-
-    If you see dialout in the list, you're good to go. If you don't, you'll have to add yourself and then get Linux to recognize the change in your current shell:
-
-    ```sh
-    $ sudo usermod -a -G dialout $USER
-    $ newgrp dialout   # or su - $USER, or log out and in again
-    ```
-
-    On Arch linux, Manjaro linux, and probably other Arch derivatives, the group for the device access is `uucp`. To add yourself to this group if necessary, use
-
-    ```sh
-    $ sudo usermod -a -G uucp $USER
-    $ newgrp uucp   # or su - $USER, or log out and in again
-    ```
-
-6. You may have to tweak the `ARDUINO_PATH` (put this line in your shell-rc)
+5. You may have to tweak the `ARDUINO_PATH` (put this line in your shell-rc)
 
     ```sh
     export ARDUINO_PATH=/usr/local/arduino
