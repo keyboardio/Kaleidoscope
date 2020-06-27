@@ -35,7 +35,7 @@ namespace keyboardio {
                           COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2}));
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-  ATMEGA32U4_DEVICE(Atreus)
+  class Atreus: public kaleidoscope::device::ATmega32U4Keyboard<AtreusProps> {};
 
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
   /* Device definition omitted for virtual device builds.                      
