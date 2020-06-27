@@ -25,8 +25,18 @@
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
-
-ATMEGA_KEYSCANNER_BOILERPLATE
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;                 
+  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns; 
+  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                
+  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             
+  template<> uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; 
+  template<> uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};         
+  template<> uint16_t kaleidoscope::Device::KeyScanner::masks_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};            
+  template<> uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {}; 
+                                                                                           
+  ISR(TIMER1_OVF_vect) {                                                                   
+    Runtime.device().keyScanner().do_scan_ = true;                                         
+  }
 
 }
 }
