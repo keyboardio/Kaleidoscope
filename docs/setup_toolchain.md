@@ -50,11 +50,11 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     $ cd /usr/local/arduino
     $ sudo ./install.sh
     ```
-3. On Ubuntu, you will have to prevent ModemManager from attempting to grab the keyboard virtual serial port when it goes into bootloader mode:
+3. On some linux distributions, ModemManager can prevent you from flashing or updating your keyboard by interfering with its virtual serial port. Additionally, by default, you may not have permissions to access your keyboard's serial port. `udev` is the Linux subsystem that managed both of these things. You should install our udev rules to manage access to your keyboard's serial port.
 
     ```sh
-    $ wget https://raw.githubusercontent.com/keyboardio/Kaleidoscope/master/etc/99-kaleidoscope.rules
-    $ sudo cp 99-kaleidoscope.rules /etc/udev/rules.d
+    $ https://raw.githubusercontent.com/keyboardio/Kaleidoscope/master/etc/60-kaleidoscope.rules
+    $ sudo cp 60-kaleidoscope.rules /etc/udev/rules.d
     $ sudo /etc/init.d/udev reload
     ```
 
