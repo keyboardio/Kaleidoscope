@@ -111,10 +111,14 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
 
     /* Set up Timer1 for 1700usec */
+    setScanCycleTime(1700);
+  }
+
+  void setScanCycleTime(uint16_t c) {
     TCCR1B = _BV(WGM13);
     TCCR1A = 0;
 
-    const uint32_t cycles = (F_CPU / 2000000) * 1700;
+    const uint32_t cycles = (F_CPU / 2000000) * c;
 
     ICR1 = cycles;
     TCCR1B = _BV(WGM13) | _BV(CS10);
