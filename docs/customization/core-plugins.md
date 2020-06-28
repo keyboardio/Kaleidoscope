@@ -1,32 +1,35 @@
 # Core plugin overview
 
-This is a list of the stable core plugins. Noncore plugins can be found at https://community.keyboard.io/c/programming/Discuss-Kaleidoscope-Plugins-one-thread-per-plugin
+This is an annotated list of some of Kaleidoscope's most important core plugins. You may also want to consult the [automatically generated list of all plugins bundled with Kaleidoscope](../plugin_list).
 
-\<h4>Kaleidoscope-EEPROM-Keymap</h4>
 
-[Kaleidoscope-EEPROM-Keymap Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/EEPROM-Keymap.md)
+You can find a list of hird-party plugins not distributed as part of Kaleidoscope at https://community.keyboard.io/c/programming/Discuss-Plugins-one-thread-per-plugin
+
+## EEPROM-Keymap
+
+[EEPROM-Keymap Documentation](../plugins/EEPROM-Keymap.md)
 
 While keyboards usually ship with a keymap programmed in, to be able to change that keymap, without flashing new firmware, we need a way to place the keymap into a place we can update at run-time, and which persists across reboots. Fortunately, we have a bit of EEPROM on the keyboard, and can use it to store either the full keymap (and saving space in the firmware then), or store an overlay there. In the latter case, whenever there is a non-transparent key on the overlay, we will use that instead of the keyboard default.
 
 In short, this plugin allows us to change our keymaps, without having to compile and flash new firmware. It does so through the use of the Focus plugin.
 
-<h4>Kaleidoscope-Escape-OneShot</h4>
+## Escape-OneShot
 
-[Kaleidoscope-Escape-OneShot Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/Escape-OneShot.md)
+[Escape-OneShot Documentation](../plugins/Escape-OneShot.md)
 
 Turn the Esc key into a special key, that can cancel any active OneShot effect - or act as the normal Esc key if none are active. For those times when one accidentally presses a one-shot key, or change their minds.
 
-<h4>Kaleidoscope-KeyLogger</h4>
+## KeyLogger
 
-[Kaleidoscope-KeyLogger Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/KeyLogger.md)
+[KeyLogger Documentation](../plugins/KeyLogger.md)
 
 The KeyLogger plugin, as the name suggests, implements a key logger for the Kaleidoscope firmware. It logs the row and column of every key press and release, along with the event, and the layer number, in a format that is reasonably easy to parse, to the Serial interface.
 
 **A word of warning**: Having a key logger is as dangerous as it sounds. Anyone who can read the serial events from the keyboard, will know exactly what keys you press, and when. Unless you know what you are doing, and can secure your keyboard, do not enable this plugin.
 
-<h4>Kaleidoscope-Leader</h4>
+## Leader
 
-[Kaleidoscope-Leader Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/Leader.md)
+[Leader Documentation](../plugins/Leader.md)
 
 Leader keys are a kind of key where when they are tapped, all following keys are swallowed, until the plugin finds a matching sequence in the dictionary, it times out, or fails to find any possibilities. When a sequence is found, the corresponding action is executed, but the processing still continues. If any key is pressed that is not the continuation of the existing sequence, processing aborts, and the key is handled normally.
 
@@ -34,25 +37,25 @@ This behaviour is best described with an example. Suppose we want a behaviour wh
 
 So we put ``LEAD u`` and ``LEAD u h e a r t`` in the dictionary only. The first will start unicode input mode, the second will type in the magic sequence that results in the symbol, and then aborts the leader sequence processing. With this setup, if we type ``LEAD u 0``, then ``LEAD u`` will be handled first, and start unicode input mode. Then, at the 0, the plugin notices it is not part of any sequence, so aborts leader processing, and passes the key on as-is, and it ends up being sent to the host. Thus, we covered all the cases of our scenario!
 
-<h4>Kaleidoscope-Macros</h4>
+## Macros
 
-[Kaleidoscope-Macros Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/Macros.md)
+[Macros Documentation](../plugins/Macros.md)
 
-Macros are a standard feature on many keyboards and Kaleidoscope-powered ones are no exceptions. Macros are a way to have a single key-press do a whole lot of things under the hood: conventionally, macros play back a key sequence, but with Kaleidoscope, there is much more we can do. Nevertheless, playing back a sequence of events is still the primary use of macros.
+Macros are a standard feature on many keyboards and powered ones are no exceptions. Macros are a way to have a single key-press do a whole lot of things under the hood: conventionally, macros play back a key sequence, but with Kaleidoscope, there is much more we can do. Nevertheless, playing back a sequence of events is still the primary use of macros.
 
 Playing back a sequence means that when we press a macro key, we can have it play pretty much any sequence. It can type some text for us, or invoke a complicated shortcut - the possibilities are endless!
 
-<h4>Kaleidoscope-MagicCombo</h4>
+## MagicCombo
 
-[Kaleidoscope-MagicCombo Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/MagicCombo.md)
+[MagicCombo Documentation](../plugins/MagicCombo.md)
 
 The MagicCombo extension provides a way to perform custom actions when a particular set of keys are held down together. The functionality assigned to these keys are not changed, and the custom action triggers as long as all keys within the set are pressed. The order in which they were pressed do not matter.
 
 This can be used to tie complex actions to key chords.
 
-<h4>Kaleidoscope-OneShot</h4>
+## OneShot
 
-[Kaleidoscope-OneShot Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/OneShot.md)
+[OneShot Documentation](../plugins/OneShot.md)
 
 One-shots are a new kind of behaviour for your standard modifier and momentary layer keys: instead of having to hold them while pressing other keys, they can be tapped and released, and will remain active until any other key is pressed. In short, they turn ``Shift, A`` into ``Shift+A``, and ``Fn, 1`` to ``Fn+1``. The main advantage is that this allows us to place the modifiers and layer keys to positions that would otherwise be awkward when chording. Nevertheless, they still act as normal when held, that behaviour is not lost.
 
@@ -60,17 +63,17 @@ Furthermore, if a one-shot key is tapped two times in quick succession, it becom
 
 To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain active if another one-shot of the same type is tapped, so ``Ctrl, Alt, b`` becomes ``Ctrl+Alt+b``, and ``L1, L2, c`` is turned into ``L1+L2+c``.
 
-<h4>Kaleidoscope-ShapeShifter</h4>
+## ShapeShifter
 
-[Kaleidoscope-ShapeShifter Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/ShapeShifter.md)
+[ShapeShifter Documentation](../plugins/ShapeShifter.md)
 
 ShapeShifter is a plugin that makes it considerably easier to change what symbol is input when a key is pressed together with ``Shift``. If one wants to rearrange the symbols on the number row for example, without modifying the layout on the operating system side, this plugin is where one can turn to.
 
 What it does, is very simple: if any key in its dictionary is found pressed while ``Shift`` is held, it will press another key instead of the one triggering the event. For example, if it sees ``Shift + 1`` pressed together, which normally results in a ``!``, it will press ``4`` instead of ``1``, inputting ``$``.
 
-<h4>Kaleidoscope-SpaceCadet</h4>
+## SpaceCadet
 
-[Kaleidoscope-SpaceCadet Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/SpaceCadet.md)
+[SpaceCadet Documentation](../plugins/SpaceCadet.md)
 
 Space Cadet is a way to make it more convenient to input parens - those ``(`` and ``)`` things -, symbols that a lot of programming languages use frequently. If you are working with Lisp, you are using these all the time.
 
@@ -80,9 +83,9 @@ But if you wish to write capital letters, you hold it, as usual, and you will no
 
 After getting used to the Space Cadet style of typing, you may wish to enable this sort of functionality on other keys, as well. Fortunately, the Space Cadet plugin is configurable and extensible to support adding symbols to other keys. Along with ``(`` on your left ``Shift`` key and ``)`` on your right ``Shift`` key, you may wish to add other such programming mainstays as ``{`` to your left-side ``cmd`` key, ``}`` to your right-side ``alt`` key, [ to your left ``Control`` key, and ``]`` to your right ``Control`` key. You can map the keys in whatever way you may wish to do, so feel free to experiment with different combinations and discover what works best for you!
 
-<h4>Kaleidoscope-TapDance</h4>
+## TapDance
 
-[Kaleidoscope-TapDance Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/TapDance.md)
+[TapDance Documentation](../plugins/TapDance.md)
 
 Tap-dance keys are general purpose, multi-use keys, which trigger a different action based on the number of times they were tapped in sequence. As an example to make this clearer, one can have a key that inputs ``A`` when tapped once, inputs ``B`` when tapped twice, and lights up the keyboard in Christmas colors when tapped a third time.
 
@@ -102,9 +105,9 @@ These actions allow us to create sophisticated tap-dance setups, where one can t
 
 There is one additional value the tapDanceAction parameter can ``take: kaleidoscope::TapDance::Tap``. It is called with this argument for each and every tap, even if no action is to be triggered yet. This is so that we can have a way to do some side-effects, like light up LEDs to show progress, and so on.
 
-<h4>Kaleidoscope-TopsyTurvy</h4>
+## TopsyTurvy
 
-[Kaleidoscope-TopsyTurvy Documentation](https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/TopsyTurvy.md)
+[TopsyTurvy Documentation](../plugins/TopsyTurvy.md)
 
 TopsyTurvy is a plugin that inverts the behaviour of the Shift key for some selected keys. That is, if configured so, it will input ``!`` when pressing the ``1`` key without ``Shift``, but with the modifier pressed, it will input the original ``1`` symbol.
 
