@@ -39,7 +39,7 @@ static void leaderTX(uint8_t seq_index) {
   Kaleidoscope.serialPort().println("leaderTX");
 }
 
-static const kaleidoscope::Leader::dictionary_t leader_dictionary[] PROGMEM =
+static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
   LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderA},
               {LEADER_SEQ(LEAD(0), Key_T, Key_X), leaderTX});
 
@@ -68,7 +68,7 @@ The plugin provides the `Leader` object, with the following methods and properti
 ### `.dictionary`
 
 > Set this property to the dictionary `Leader` should use. The dictionary is an
-> array of `kaleidoscope::Leader::dictionary_t` elements. Each element is made
+> array of `kaleidoscope::plugin::Leader::dictionary_t` elements. Each element is made
 > up of two elements, the first being a list of keys, the second an action to
 > perform when the sequence is found.i
 >
