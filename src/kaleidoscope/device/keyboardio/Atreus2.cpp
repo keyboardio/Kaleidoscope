@@ -22,17 +22,25 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
+using namespace kaleidoscope::device::keyboardio;
+
+using KeyScannerProps = typename AtreusProps::KeyScannerProps;
+using KeyScanner = typename AtreusProps::KeyScanner;
+
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
-const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;
-const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns;
-constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];
-constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];
-template<> uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};
-template<> uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};
-template<> uint16_t kaleidoscope::Device::KeyScanner::masks_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};
-template<> uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {};
+
+const uint8_t KeyScannerProps::matrix_rows;
+const uint8_t KeyScannerProps::matrix_columns;
+
+constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
+constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
+
+template<> uint16_t KeyScanner::previousKeyState_[KeyScannerProps::matrix_rows] = {};
+template<> uint16_t KeyScanner::keyState_[KeyScannerProps::matrix_rows] = {};
+template<> uint16_t KeyScanner::masks_[KeyScannerProps::matrix_rows] = {};
+template<> uint8_t KeyScanner::debounce_matrix_[KeyScannerProps::matrix_rows][KeyScannerProps::matrix_columns] = {};
 
 ISR(TIMER1_OVF_vect) {
   Runtime.device().keyScanner().do_scan_ = true;
