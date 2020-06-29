@@ -40,7 +40,7 @@ void ColormapEffect::TransientLEDMode::onActivate(void) {
   if (!Runtime.has_leds)
     return;
 
-  parent_->top_layer_ = Layer.top();
+  parent_->top_layer_ = Layer.mostRecent();
   if (parent_->top_layer_ <= parent_->max_layers_)
     ::LEDPaletteTheme.updateHandler(parent_->map_base_, parent_->top_layer_);
 }

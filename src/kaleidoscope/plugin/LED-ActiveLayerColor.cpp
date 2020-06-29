@@ -36,7 +36,7 @@ void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
 cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
   cRGB color;
 
-  uint8_t top_layer = ::Layer.top();
+  uint8_t top_layer = ::Layer.mostRecent();
 
   color.r = pgm_read_byte(&(parent_->colormap_[top_layer].r));
   color.g = pgm_read_byte(&(parent_->colormap_[top_layer].g));

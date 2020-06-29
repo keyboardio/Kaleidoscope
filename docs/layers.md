@@ -21,6 +21,10 @@ will be active, without any stacking.
 If you want the layer switch to be active only while the key is held, like in
 the case of modifiers, the `ShiftToLayer(n)` method does just that.
 
+While switching layers this way is similar to how modifiers work, there are
+subtle differences. For a longer explanation, see
+[later](#layers-transparency-and-how-lookup-works).
+
 ## Layer theory
 
 First of all, the most important thing to remember is that layers are like a
@@ -111,36 +115,28 @@ They're like overrides. Any layer you place on top of the existing stack, will
 override keys in the layers below.
 
 When you have multiple layers active, to figure out what a key does, the
-firmware will first look at the key position on the topmost active layer, and
-see if there's a non-transparent key there. If there is, it will use that. If
-there isn't, it will start walking backwards on the stack of _active_ layers to
-find the highest one with a non-transparent key. The first one it finds is whose
-key it will use. If it finds none, then a transparent key will act like a blank
-one, and do nothing.
+firmware will first look at the key position on the most recently activated
+layer, and see if there's a non-transparent key there. If there is, it will use
+that. If there isn't, it will start walking backwards on the stack of _active_
+layers to find the highest one with a non-transparent key. The first one it
+finds is whose key it will use. If it finds none, then a transparent key will
+act like a blank one, and do nothing.
 
 It is important to note that transparent keys are looked up from active layers
-only, from highest to lowest. Lets consider that we have three layers, 0, 1,
-and 2. On a given position, we have a non-transparent key on layers 0 and 1, but
-the same position is transparent on layer 2. If we have layer 0 and 2 active,
-the key will be looked up from layer 0, because layer 2 is transparent. If we
-activate layer 1 too, it will be looked up from there, since layer 1 is higher
-in the stack than layer 0.
+only, from most recently activated to least. Lets consider that we have three
+layers, 0, 1, and 2. On a given position, we have a non-transparent key on
+layers 0 and 1, but the same position is transparent on layer 2. If we have
+layer 0 and 2 active, the key will be looked up from layer 0, because layer 2 is
+transparent. If we activate layer 1 too, it will be looked up from there, since
+layer 1 is higher in the stack than layer 0. In this case, since we activated
+layer 1 most recently, layer 2 wouldn't even be looked at.
 
 As we just saw, another important factor is that layers are ordered by their
-index, not by the order of activation. Whether you activate layer 1 or 2 first
-doesn't matter. What matters is their index. In other words, when you have layer
-0 and 2 active, then activate layer 1, that is like placing the layer 1 foil
-between 0 and 2.
-
-A side-effect of this is that while you can activate a lower-indexed layer from
-a higher index, the higher indexed one will still override the lower-indexed
-one. As such, as a general rule of thumb, you want to order your layers in such
-a way that this doesn't become a problem.
-
-This can be a little confusing at first, but it is easy to get used to with some
-practice. Once mastered, layers are an incredibly powerful feature.
-
-Nevertheless, we have the `MoveToLayer(n)` method, where only one layer is ever
-active. This way, we do not need to care about transparency, and we can freely
-move from a higher layer to a lower one, because the higher one will get
-disabled, and will not be able to shadow the lower-indexed one.
+order of activation. Whether you activate layer 1 or 2 first, matters. Lets look
+at another example: we have three layers, 0, 1, and 2. On a given position, we
+have a non-transparent key on every layer. If we have just layer 0 active, it
+will be looked up from there. If we activate layer 2, then the firmware will
+look there first. If we activate layer 1 as well, then - since now layer 1 is
+the most recently activated layer - the firmware will look the code up from
+layer 1, without looking at layer 2. It would only look at layer 2 if the key
+was transparent on layer 1.

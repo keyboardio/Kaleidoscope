@@ -12,6 +12,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
+    - [Layer system switched to activation-order](#layer-system-switched-to-activation-order)
     - [Deprecation of the HID facade](#deprecation-of-the-hid-facade)
     - [Implementation of type Key internally changed from C++ union to class](#implementation-of-type-key-internally-changed-from-union-to-class)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
@@ -313,6 +314,26 @@ As an end-user, there's nothing one needs to do. Consistent timing helpers are p
 As a developer, one can continue using `millis()`, but migrating to `Kaleidoscope.millisAtCycleStart()` is recommended. The new method will return the same value for the duration of the main loop cycle, making time-based synchronization between plugins a lot easier.
 
 ## Breaking changes
+
+### Layer system switched to activation order
+
+The layer system used to be index-ordered, meaning that we'd look keys up on
+layers based on the _index_ of active layers. Kaleidoscope now uses activation
+order, which looks up keys based on the order of layer activation.
+
+This means that the following functions are deprecated, and will be removed by **2020-09-16**:
+
+- `Layer.top()`, which used to return the topmost layer index. Use
+  `Layer.mostRecent()` instead, which returns the most recently activated layer.
+  Until removed, the old function will return the most recent layer.
+- `Layer.deactivateTop()`, which used to return the topmost layer index. Use
+  `Layer.deactivateMostRecent()` instead. The old function will deactivate the
+  most recent layer.
+- `Layer.getLayerState()`, which used to return a bitmap of the active layers.
+  With activation-order, a simple bitmap is not enough. For now, we still return
+  the bitmap, but without the ordering, it is almost useless. Use
+  `Layer.forEachActiveLayer()` to walk the active layers in order (from least
+  recent to most).
 
 ### Deprecation of the HID facade
 

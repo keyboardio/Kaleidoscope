@@ -39,9 +39,11 @@ extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows 
 
 namespace kaleidoscope {
 uint32_t Layer_::layer_state_;
-uint8_t Layer_::top_active_layer_;
+uint8_t Layer_::active_layer_count_ = 1;
+int8_t Layer_::active_layers_[31];
+
 Key Layer_::live_composite_keymap_[Runtime.device().numKeys()];
-uint8_t Layer_::active_layers_[Runtime.device().numKeys()];
+uint8_t Layer_::active_layer_keymap_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -57,12 +59,12 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       if (keyToggledOn(keyState))
         activateNext();
       else if (keyToggledOff(keyState))
-        deactivateTop();
+        deactivateMostRecent();
       break;
 
     case KEYMAP_PREVIOUS:
       if (keyToggledOn(keyState))
-        deactivateTop();
+        deactivateMostRecent();
       else if (keyToggledOff(keyState))
         activateNext();
       break;
@@ -112,41 +114,27 @@ Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
 }
 
 void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  int8_t layer = active_layers_[key_addr.toInt()];
+  int8_t layer = active_layer_keymap_[key_addr.toInt()];
   live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(active_layers_, 0, Runtime.device().numKeys());
+  memset(active_layer_keymap_, 0, Runtime.device().numKeys());
   for (auto key_addr : KeyAddr::all()) {
-    int8_t layer = top_active_layer_;
-
-    while (layer > 0) {
+    int8_t layer_index = active_layer_count_;
+    while (layer_index > 0) {
+      uint8_t layer = active_layers_[layer_index - 1];
       if (Layer.isActive(layer)) {
         Key mappedKey = (*getKey)(layer, key_addr);
 
         if (mappedKey != Key_Transparent) {
-          active_layers_[key_addr.toInt()] = layer;
+          active_layer_keymap_[key_addr.toInt()] = layer;
           break;
         }
       }
-      layer--;
+      layer_index--;
     }
   }
-}
-
-void Layer_::updateTopActiveLayer(void) {
-  // If layer_count is set, start there, otherwise search from the
-  // highest possible layer (MAX_LAYERS) for the top active layer
-  for (byte i = (layer_count - 1); i > 0; i--) {
-    if (bitRead(layer_state_, i)) {
-      top_active_layer_ = i;
-      return;
-    }
-  }
-  // It's not possible to turn off the default layer (see
-  // updateActiveLayers()), so if no other layers are active:
-  top_active_layer_ = 0;
 }
 
 void Layer_::move(uint8_t layer) {
@@ -159,8 +147,9 @@ void Layer_::move(uint8_t layer) {
     layer = 0;
   }
   bitSet(layer_state_, layer);
+  active_layer_count_ = 1;
+  active_layers_[0] = layer;
 
-  updateTopActiveLayer();
   updateActiveLayers();
 
   kaleidoscope::Hooks::onLayerChange();
@@ -179,11 +168,7 @@ void Layer_::activate(uint8_t layer) {
 
   // Otherwise, turn on its bit in layer_state_
   bitSet(layer_state_, layer);
-
-  // If the target layer is above the previous highest active layer,
-  // update top_active_layer_
-  if (layer > top_active_layer_)
-    updateTopActiveLayer();
+  active_layers_[active_layer_count_++] = layer;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
   // updated separately, when keys toggle on or off. See layers.h)
@@ -201,10 +186,16 @@ void Layer_::deactivate(uint8_t layer) {
   // Turn off its bit in layer_state_
   bitClear(layer_state_, layer);
 
-  // If the target layer was the previous highest active layer,
-  // update top_active_layer_
-  if (layer == top_active_layer_)
-    updateTopActiveLayer();
+  // Rearrange the activation order array...
+  uint8_t idx = 0;
+  for (uint8_t i = active_layer_count_; i > 0; i--) {
+    if (active_layers_[i] == layer) {
+      idx = i;
+      break;
+    }
+  }
+  memmove(&active_layers_[idx], &active_layers_[idx + 1], active_layer_count_ - idx);
+  active_layer_count_--;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
   // updated separately, when keys toggle on or off. See layers.h)
@@ -218,11 +209,17 @@ boolean Layer_::isActive(uint8_t layer) {
 }
 
 void Layer_::activateNext(void) {
-  activate(top_active_layer_ + 1);
+  activate(active_layers_[active_layer_count_ - 1] + 1);
 }
 
-void Layer_::deactivateTop(void) {
-  deactivate(top_active_layer_);
+void Layer_::deactivateMostRecent(void) {
+  deactivate(active_layers_[active_layer_count_ - 1]);
+}
+
+void Layer_::forEachActiveLayer(forEachHandler h) {
+  for (uint8_t i = 0; i < active_layer_count_; i++) {
+    (*h)(i, active_layers_[i]);
+  }
 }
 
 }
