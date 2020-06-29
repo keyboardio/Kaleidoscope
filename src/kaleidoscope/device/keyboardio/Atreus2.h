@@ -29,11 +29,36 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-ATMEGA32U4_KEYBOARD(
-  Atreus, Caterina, "atreus",
-  ROW_PIN_LIST({PIN_F6, PIN_F5, PIN_F4, PIN_F1}),
-  COL_PIN_LIST({PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2})
-);
+
+struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
+  struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
+
+    static constexpr uint8_t matrix_rows = 4;
+    static constexpr uint8_t matrix_columns = 12;
+    typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows] =  {PIN_F6, PIN_F5, PIN_F4, PIN_F1};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_F7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2};
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+  };
+
+  typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  static constexpr const char *short_name = "atreus";
+};
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class Atreus: public kaleidoscope::device::ATmega32U4Keyboard<AtreusProps> {};
+#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+/* Device definition omitted for virtual device builds.
+ * We need to forward declare the device name, though, as there are
+ * some legacy extern references to boards whose definition
+ * depends on this.
+ */
+class Atreus;
+
+#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
 
 #define PER_KEY_DATA(dflt,                                                    \
     R0C0, R0C1, R0C2, R0C3, R0C4,             R0C7, R0C8, R0C9, R0C10, R0C11, \
