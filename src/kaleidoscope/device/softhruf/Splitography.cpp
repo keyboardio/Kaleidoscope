@@ -28,7 +28,7 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
-// Here, we set up aliases to the device's KeyScanner and KeyScannerProps 
+// Here, we set up aliases to the device's KeyScanner and KeyScannerProps
 // in the global namespace within the scope of this file. We'll use these
 // aliases to simplify some template initialization code below.
 using KeyScannerProps = typename kaleidoscope::device::softhruf::SplitographyProps::KeyScannerProps;

@@ -28,7 +28,7 @@ extern "C" {
 
 #define LED_DRIVER_ADDR 0x30
 
-// Here, we set up aliases to the device's KeyScanner and KeyScannerProps 
+// Here, we set up aliases to the device's KeyScanner and KeyScannerProps
 // in the global namespace within the scope of this file. We'll use these
 // aliases to simplify some template initialization code below.
 using KeyScannerProps = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScannerProps;
