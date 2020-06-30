@@ -44,10 +44,13 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   };
   typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    ATMEGA_KEYSCANNER_PROPS(
-      ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
-      COL_PIN_LIST({ PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 })
-    );
+    static constexpr uint8_t matrix_rows = 4;
+    static constexpr uint8_t matrix_columns = 12;
+    typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows] = {PIN_D0, PIN_D1, PIN_D2, PIN_D3};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = { PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 };
+#endif // KALEIDOSCOPE_VIRTUAL_BUILD
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP BootLoader;
@@ -55,8 +58,13 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-ATMEGA32U4_DEVICE(Splitography);
+class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<SplitographyProps> {};
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+/* Device definition omitted for virtual device builds.
+ * We need to forward declare the device name, though, as there are
+ * some legacy extern references to boards whose definition
+ * depends on this.
+ */
 class Splitography;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 

@@ -22,13 +22,12 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
-// We're using the `kaleidoscope::device::keyboardio` namespace, and set up the
-// aliases here, so that they're in the global namespace, within the scope of
-// this file. We do that, because of how templates are resolved and evaluated,
-// see more just down below!
-using namespace kaleidoscope::device::keyboardio;
-using KeyScannerProps = typename AtreusProps::KeyScannerProps;
-using KeyScanner = typename AtreusProps::KeyScanner;
+
+// Here, we set up aliases to the device's KeyScanner and KeyScannerProps
+// in the global namespace within the scope of this file. We'll use these
+// aliases to simplify some template initialization code below.
+using KeyScannerProps = typename kaleidoscope::device::keyboardio::AtreusProps::KeyScannerProps;
+using KeyScanner = typename kaleidoscope::device::keyboardio::AtreusProps::KeyScanner;
 
 namespace kaleidoscope {
 namespace device {
