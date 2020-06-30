@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-SOFTHRUF-Splitography -- Splitography hardware support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
  *
  * Based on QMK (commit e9a67f8fd) and sdothum's fork (commit 8616b44)
  *  (C) Jack Humbert, Jun Wako, Steven Hum, and others
@@ -39,6 +39,10 @@ namespace device {
 namespace softhruf {
 
 struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
+  struct MCUProps: kaleidoscope::driver::mcu::ATmega32U4Props {
+    static constexpr bool disable_jtag = true;
+  };
+  typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
     ATMEGA_KEYSCANNER_PROPS(
       ROW_PIN_LIST({ PIN_D0, PIN_D1, PIN_D2, PIN_D3 }),
@@ -51,12 +55,7 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<SplitographyProps> {
- public:
-  Splitography() {
-    mcu_.disableJTAG();
-  }
-};
+ATMEGA32U4_DEVICE(Splitography);
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Splitography;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

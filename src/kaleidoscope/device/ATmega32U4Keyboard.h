@@ -70,7 +70,8 @@ namespace kaleidoscope {
 namespace device {
 
 struct ATmega32U4KeyboardProps : kaleidoscope::device::BaseProps {
-  typedef kaleidoscope::driver::mcu::ATmega32U4 MCU;
+  typedef kaleidoscope::driver::mcu::ATmega32U4Props MCUProps;
+  typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   typedef kaleidoscope::driver::storage::ATmega32U4EEPROMProps StorageProps;
   typedef kaleidoscope::driver::storage::AVREEPROM<StorageProps> Storage;
 };

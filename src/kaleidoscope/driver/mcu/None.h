@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * driver::MCU::None -- Dummy MCU driver for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -27,9 +27,9 @@ namespace mcu {
  * The purpose of this class is to serve as a default inside the base
  * `kaleidoscope::device::Base` class, with a name more descriptive than
  * `mcu::Base`. In practice, one shouldn't use it, and should override the
- * bootloader in the device description.
+ * MCU in the device description.
  */
-class None : public kaleidoscope::driver::mcu::Base {};
+class None : public kaleidoscope::driver::mcu::Base<BaseProps> {};
 
 }
 }

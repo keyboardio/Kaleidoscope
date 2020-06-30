@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * driver::mcu::Base -- MCU driver base class for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,6 +21,9 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
+struct BaseProps {};
+
+template<typename _Props>
 class Base {
  public:
   Base() {}

@@ -59,6 +59,7 @@ struct BaseProps {
   typedef kaleidoscope::driver::keyscanner::None KeyScanner;
   typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;
   typedef kaleidoscope::driver::led::None LEDDriver;
+  typedef kaleidoscope::driver::mcu::BaseProps MCUProps;
   typedef kaleidoscope::driver::mcu::None MCU;
   typedef kaleidoscope::driver::bootloader::None Bootloader;
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
@@ -88,6 +89,7 @@ class Base {
   typedef typename _DeviceProps::KeyScannerProps::KeyAddr KeyAddr;
   typedef typename _DeviceProps::LEDDriverProps LEDDriverProps;
   typedef typename _DeviceProps::LEDDriver LEDDriver;
+  typedef typename _DeviceProps::MCUProps MCUProps;
   typedef typename _DeviceProps::MCU MCU;
   typedef typename _DeviceProps::Bootloader Bootloader;
   typedef typename _DeviceProps::StorageProps StorageProps;

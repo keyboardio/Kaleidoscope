@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * driver::MCU::ATmega32U4 -- ATmega32U4 MCU driver for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -23,8 +23,14 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
+struct ATmega32U4Props: public kaleidoscope::driver::mcu::BaseProps {
+  static constexpr bool disable_jtag = false;
+  static constexpr bool disable_clock_division = false;
+};
+
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
+template <typename _Props>
+class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {
  public:
   void detachFromHost() {
     UDCON |= _BV(DETACH);
@@ -61,7 +67,12 @@ class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
     CLKPR = (0 << CLKPS3) | (0 << CLKPS2) | (0 << CLKPS1) | (0 << CLKPS0);
   }
 
-  void setup() {}
+  void setup() {
+    if (_Props::disable_jtag)
+      disableJTAG();
+    if (_Props::disable_clock_division)
+      disableClockDivision();
+  }
 };
 #else
 typedef Base ATmega32U4;
