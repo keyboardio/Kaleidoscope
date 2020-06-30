@@ -29,42 +29,6 @@
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#define ROW_PIN_LIST(...)  __VA_ARGS__
-#define COL_PIN_LIST(...)  __VA_ARGS__
-
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)                   \
-  static constexpr uint8_t matrix_rows = NUM_ARGS(ROW_PINS_);		\
-  static constexpr uint8_t matrix_columns = NUM_ARGS(COL_PINS_); 	\
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;		\
-									\
-  static constexpr uint8_t matrix_row_pins[matrix_rows] =  ROW_PINS_;   \
-  static constexpr uint8_t matrix_col_pins[matrix_columns] =  COL_PINS_;
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#define ATMEGA_KEYSCANNER_PROPS(ROW_PINS_, COL_PINS_)               \
-  static constexpr uint8_t matrix_rows = NUM_ARGS(ROW_PINS_);		\
-  static constexpr uint8_t matrix_columns = NUM_ARGS(COL_PINS_); 	\
-  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-
-#define ATMEGA_KEYSCANNER_BOILERPLATE                                                                   \
-  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_rows;                 \
-  const uint8_t kaleidoscope::Device::KeyScannerProps::matrix_columns; \
-  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_row_pins[matrix_rows];                \
-  constexpr uint8_t kaleidoscope::Device::KeyScannerProps::matrix_col_pins[matrix_columns];             \
-  template<>                                                                                            \
-  uint16_t kaleidoscope::Device::KeyScanner::previousKeyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {}; \
-  template<>                                                                                            \
-  uint16_t kaleidoscope::Device::KeyScanner::keyState_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};         \
-  template<>                                                                                            \
-  uint16_t kaleidoscope::Device::KeyScanner::masks_[kaleidoscope::Device::KeyScannerProps::matrix_rows] = {};            \
-  template<>                                                                               \
-  uint8_t kaleidoscope::Device::KeyScanner::debounce_matrix_[kaleidoscope::Device::KeyScannerProps::matrix_rows][kaleidoscope::Device::KeyScannerProps::matrix_columns] = {}; \
-                                                                                           \
-  ISR(TIMER1_OVF_vect) {                                                                   \
-    Runtime.device().keyScanner().do_scan_ = true;                                         \
-  }
-
 namespace kaleidoscope {
 namespace driver {
 namespace keyscanner {
