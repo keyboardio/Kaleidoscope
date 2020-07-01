@@ -29,6 +29,7 @@
 #include <Arduino.h>
 
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
+#include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
@@ -63,7 +64,12 @@ struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   };
 
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
+
+#ifdef KALEIDOSCOPE_HARDWARE_ATREUS_PINOUT_LEGACY_TEENSY2
   typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
+#else
+  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+#endif
   static constexpr const char *short_name = "atreus";
 };
 
