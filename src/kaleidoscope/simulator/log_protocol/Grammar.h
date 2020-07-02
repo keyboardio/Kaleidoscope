@@ -79,7 +79,6 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace log_protocol {
-namespace v1 {
 
 #define PROTOCOL_V1_COMMANDS(OP, SEP, TERM_SEP)                         \
   OP(none, 0)SEP                                                        \
@@ -113,7 +112,6 @@ constexpr uint8_t protocol_version = 1;
 
 constexpr char comment_symbol = '#';
 
-} // namespace v1
 } // namespace log_protocol
 } // namespace simulator
 } // namespace kaleidoscope

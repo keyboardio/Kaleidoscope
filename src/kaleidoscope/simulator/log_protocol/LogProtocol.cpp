@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/LogProtocol.h"
-#include "kaleidoscope/simulator/log_protocol/v1/Parser.h"
+#include "kaleidoscope/simulator/log_protocol/Parser.h"
 
 #include <string.h>
 #include <sstream>
@@ -69,7 +69,7 @@ void LogProtocol::parse(std::istream &in, Consumer_ &consumer) {
     switch (protocol_version_) {
     case 1: {
       LOG_PROTOCOL_DEBUG("Delegating to v1 parser")
-      v1::Parser delegate_parser(*this, document_type_, line_id_);
+      Parser delegate_parser(*this, document_type_, line_id_);
       delegate_parser.parse(in, consumer);
     }
     }
@@ -105,7 +105,7 @@ void LogProtocol::compress(std::istream &in, std::ostream &out) {
       LOG_PROTOCOL_DEBUG("Delegating to v1 parser")
       LOG_PROTOCOL_DEBUG("debug: " << debug_)
       LOG_PROTOCOL_DEBUG("output document type: " << (int)output_document_type_)
-      v1::Parser delegate_parser(*this, document_type_, line_id_);
+      Parser delegate_parser(*this, document_type_, line_id_);
       delegate_parser.compress(in, out);
     }
     }

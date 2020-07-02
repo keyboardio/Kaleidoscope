@@ -49,12 +49,9 @@ namespace kaleidoscope {
 namespace simulator {
 namespace log_protocol {
 
-namespace v1 {
 class Parser;
-class CompressionConsumer;
-}
-
 class Consumer_;
+class CompressionConsumer;
 
 class LogProtocol {
 
@@ -89,8 +86,8 @@ class LogProtocol {
   uint8_t output_document_type_ = DocumentType::compressed;
   bool quote_lines_ = false;
 
-  friend class v1::Parser;
-  friend class v1::CompressionConsumer;
+  friend class Parser;
+  friend class CompressionConsumer;
 };
 
 } // namespace log_protocol

@@ -19,8 +19,8 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/log_protocol/Consumer_.h"
-#include "kaleidoscope/simulator/log_protocol/v1/Parser.h"
-#include "kaleidoscope/simulator/log_protocol/v1/Grammar.h"
+#include "kaleidoscope/simulator/log_protocol/Parser.h"
+#include "kaleidoscope/simulator/log_protocol/Grammar.h"
 
 #include <vector>
 #include <map>
@@ -38,7 +38,6 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace log_protocol {
-namespace v1 {
 
 #define COMMA ,
 
@@ -650,7 +649,6 @@ void Parser::compress(std::istream &in, std::ostream &out) {
   this->parse(in, cc);
 }
 
-} // namespace V1
 } // namespace log_protocol
 } // namespace simulator
 } // namespace kaleidoscope

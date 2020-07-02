@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/log_protocol/v1/Grammar.h"
+#include "kaleidoscope/simulator/log_protocol/Grammar.h"
 
 #include <string>
 #include <istream>
@@ -31,13 +31,9 @@ namespace log_protocol {
 
 class Consumer_;
 
-namespace v1 {
-
 class Parser {
-
  public:
-
-  static constexpr uint8_t protocol_version = log_protocol::v1::protocol_version;
+  static constexpr uint8_t protocol_version = log_protocol::protocol_version;
 
   Parser(const LogProtocol &protocol, uint8_t input_document_type, int start_line_id)
     :  protocol_{protocol},
@@ -81,7 +77,6 @@ class Parser {
   friend class CompressionConsumer;
 };
 
-} // namespace V1
 } // namespace log_protocol
 } // namespace simulator
 } // namespace kaleidoscope
