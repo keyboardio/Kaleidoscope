@@ -17,6 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef BUILD_INFORMATION
+#define BUILD_INFORMATION "locally built"
+#endif
+
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-EEPROM-Settings.h"
 #include "Kaleidoscope-EEPROM-Keymap.h"
@@ -33,7 +37,8 @@
 #define TG(n) LockLayer(n)
 
 enum {
-  MACRO_QWERTY
+  MACRO_QWERTY,
+  MACRO_VERSION_INFO
 };
 
 #define Key_Exclamation LSHIFT(Key_1)
@@ -82,10 +87,10 @@ KEYMAPS(
 
   [UPPER] = KEYMAP_STACKED
   (
-       Key_Insert          ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
-      ,Key_Delete          ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
-      ,XXX                 ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
-      ,MoveToLayer(QWERTY) ,Consumer_VolumeDecrement ,___           ,___            ,___ ,___
+       Key_Insert            ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
+      ,Key_Delete            ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
+      ,M(MACRO_VERSION_INFO) ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
+      ,MoveToLayer(QWERTY)   ,Consumer_VolumeDecrement ,___           ,___            ,___ ,___
 
                 ,Key_UpArrow   ,Key_F7              ,Key_F8          ,Key_F9         ,Key_F10
                 ,Key_DownArrow ,Key_F4              ,Key_F5          ,Key_F6         ,Key_F11
@@ -116,6 +121,12 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     // longer do. We keep it so that if someone still has the old layout with
     // the macro in EEPROM, it will keep working after a firmware update.
     Layer.move(QWERTY);
+    break;
+  case MACRO_VERSION_INFO:
+    if (keyToggledOn(keyState)) {
+      Macros.type(PSTR("Keyboardio Atreus - Kaleidoscope "));
+      Macros.type(PSTR(BUILD_INFORMATION));
+    }
     break;
   default:
     break;
