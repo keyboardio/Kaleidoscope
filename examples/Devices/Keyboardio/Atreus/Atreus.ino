@@ -82,15 +82,15 @@ KEYMAPS(
 
   [UPPER] = KEYMAP_STACKED
   (
-       Key_Insert      ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
-      ,Key_Delete      ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
-      ,XXX             ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
-      ,M(MACRO_QWERTY) ,Consumer_VolumeDecrement ,___           ,___            ,___ ,___
+       Key_Insert          ,Key_Home                 ,Key_UpArrow   ,Key_End        ,Key_PageUp
+      ,Key_Delete          ,Key_LeftArrow            ,Key_DownArrow ,Key_RightArrow ,Key_PageDown
+      ,XXX                 ,Consumer_VolumeIncrement ,XXX           ,XXX            ,___ ,___
+      ,MoveToLayer(QWERTY) ,Consumer_VolumeDecrement ,___           ,___            ,___ ,___
 
-                ,Key_UpArrow   ,Key_F7          ,Key_F8          ,Key_F9         ,Key_F10
-                ,Key_DownArrow ,Key_F4          ,Key_F5          ,Key_F6         ,Key_F11
-      ,___      ,XXX           ,Key_F1          ,Key_F2          ,Key_F3         ,Key_F12
-      ,___      ,___           ,M(MACRO_QWERTY) ,Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
+                ,Key_UpArrow   ,Key_F7              ,Key_F8          ,Key_F9         ,Key_F10
+                ,Key_DownArrow ,Key_F4              ,Key_F5          ,Key_F6         ,Key_F11
+      ,___      ,XXX           ,Key_F1              ,Key_F2          ,Key_F3         ,Key_F12
+      ,___      ,___           ,MoveToLayer(QWERTY) ,Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
    )
 )
 /* *INDENT-ON* */
@@ -111,6 +111,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   switch (macroIndex) {
   case MACRO_QWERTY:
+    // This macro is currently unused, but is kept around for compatibility
+    // reasons. We used to use it in place of `MoveToLayer(QWERTY)`, but no
+    // longer do. We keep it so that if someone still has the old layout with
+    // the macro in EEPROM, it will keep working after a firmware update.
     Layer.move(QWERTY);
     break;
   default:
