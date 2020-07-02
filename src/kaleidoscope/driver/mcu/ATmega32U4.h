@@ -64,7 +64,8 @@ class ATmega32U4 : public kaleidoscope::driver::mcu::Base {
   void setup() {}
 };
 #else
-typedef Base ATmega32U4;
+template <typename _Props>
+class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {};
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }
