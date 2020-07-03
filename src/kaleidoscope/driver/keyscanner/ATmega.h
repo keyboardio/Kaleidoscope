@@ -35,6 +35,8 @@ namespace keyscanner {
 
 struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
   static const uint8_t debounce = 3;
+  static const uint16_t keyscan_interval = 1700;
+
 
   /*
    * The following two lines declare an empty array. Both of these must be
@@ -75,7 +77,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
 
     /* Set up Timer1 for 1700usec */
-    setScanCycleTime(1700);
+    setScanCycleTime(_KeyScannerProps::keyscan_interval);
   }
 
   void setScanCycleTime(uint16_t c) {
