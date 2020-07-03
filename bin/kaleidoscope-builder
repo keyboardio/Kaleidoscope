@@ -305,7 +305,7 @@ hex_with_bootloader () {
     echo "Using ${BOOTLOADER_PATH}"
     ${MD5} "${BOOTLOADER_PATH}"
     cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
-    ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    ln -sf -- "${OUTPUT_FILE_PREFIX}-with-bootloader.hex" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
     cat <<- EOF
 
 		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
