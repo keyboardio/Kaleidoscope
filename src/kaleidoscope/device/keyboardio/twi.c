@@ -532,7 +532,7 @@ ISR(TWI_vect) {
       twi_txBufferLength = 1;
       twi_txBuffer[0] = 0x00;
     }
-  // transmit first byte from buffer, fall
+  // transmit first byte from buffer, fall through
   case TW_ST_DATA_ACK: // byte sent, ack returned
     // copy data to output register
     TWDR = twi_txBuffer[twi_txBufferIndex++];
