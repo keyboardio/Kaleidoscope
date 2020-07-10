@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::driver::keyscanner::ATmega -- AVR ATmega-based keyscanner component
- * Copyright (C) 2018-2019  Keyboard.io, Inc
+ * Copyright (C) 2018-2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -34,9 +34,7 @@ namespace driver {
 namespace keyscanner {
 
 struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
-  static const uint8_t debounce = 3;
   static const uint16_t keyscan_interval = 1700;
-
 
   /*
    * The following two lines declare an empty array. Both of these must be
@@ -91,20 +89,42 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     TIMSK1 = _BV(TOIE1);
   }
 
-  void __attribute__((optimize(3))) readMatrix(void) {
+  /*
+   * This function has loop unrolling disabled on purpose: we want to give the
+   * hardware enough time to produce stable PIN reads for us. If we unroll the
+   * loop, we will not have that, because even with the NOP, the codepath is too
+   * fast. If we don't have stable reads, then entire rows or columns will behave
+   * erratically.
+   *
+   * For this reason, we ask the compiler to not unroll our loop, which in turn,
+   * gives hardware enough time to produce stable reads, at the cost of a little
+   * bit of speed.
+   *
+   * Do not remove the attribute!
+   */
+  void __attribute__((optimize(3), optimize("no-unroll-loops")))
+  readMatrix(void) {
+    uint8_t any_debounced_changes = 0;
+
     for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-      uint16_t mask, cols;
-
-      mask = debounceMaskForRow(current_row);
+      uint8_t hot_pins = 0;
+      for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
+        asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
+        hot_pins |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
+      }
 
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
-      cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
-      OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
-      debounceRow(cols ^ keyState_[current_row], current_row);
-      keyState_[current_row] = cols;
+      OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[(current_row + 1) % _KeyScannerProps::matrix_rows]);
+
+      any_debounced_changes |= debounce(hot_pins, db + current_row);
+
+      if (any_debounced_changes) {
+        for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
+          keyState_[current_row] = db[current_row].state;
+        }
+      }
     }
   }
-
   void scanMatrix() {
     if (do_scan_) {
       do_scan_ = false;
@@ -116,8 +136,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   void __attribute__((optimize(3))) actOnMatrixScan() {
     for (byte row = 0; row < _KeyScannerProps::matrix_rows; row++) {
       for (byte col = 0; col < _KeyScannerProps::matrix_columns; col++) {
-        uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
-                           (bitRead(keyState_[row], col) << 1);
+        uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) | (bitRead(keyState_[row], col) << 1);
         if (keyState) {
           ThisType::handleKeyswitchEvent(Key_NoKey, typename _KeyScannerProps::KeyAddr(row, col), keyState);
         }
@@ -135,8 +154,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     return count;
   }
   bool isKeyswitchPressed(typename _KeyScannerProps::KeyAddr key_addr) {
-    return (bitRead(keyState_[key_addr.row()],
-                    key_addr.col()) != 0);
+    return (bitRead(keyState_[key_addr.row()], key_addr.col()) != 0);
   }
 
   uint8_t previousPressedKeyswitchCount() {
@@ -174,55 +192,49 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
   bool do_scan_;
 
+
+ protected:
+  /*
+    each of these 8 bit variables are storing the state for 8 keys
+
+    so for key 0, the counter is represented by db0[0] and db1[0]
+    and the state in state[0].
+  */
+  struct debounce_t {
+    uint8_t db0;    // counter bit 0
+    uint8_t db1;    // counter bit 1
+    uint8_t state;  // debounced state
+  };
+
  private:
   typedef _KeyScannerProps KeyScannerProps_;
   static uint16_t previousKeyState_[_KeyScannerProps::matrix_rows];
   static uint16_t keyState_[_KeyScannerProps::matrix_rows];
   static uint16_t masks_[_KeyScannerProps::matrix_rows];
-  static uint8_t debounce_matrix_[_KeyScannerProps::matrix_rows][_KeyScannerProps::matrix_columns];
 
-  /*
-   * This function has loop unrolling disabled on purpose: we want to give the
-   * hardware enough time to produce stable PIN reads for us. If we unroll the
-   * loop, we will not have that, because even with the NOP, the codepath is too
-   * fast. If we don't have stable reads, then entire rows or columns will behave
-   * erratically.
-   *
-   * For this reason, we ask the compiler to not unroll our loop, which in turn,
-   * gives hardware enough time to produce stable reads, at the cost of a little
-   * bit of speed.
-   *
-   * Do not remove the attribute!
-   */
-  __attribute__((optimize("no-unroll-loops")))
-  uint16_t readCols() {
-    uint16_t results = 0x00 ;
-    for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
-      asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
-      results |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
-    }
-    return results;
-  }
+  static debounce_t db[_KeyScannerProps::matrix_rows];
 
-  uint16_t debounceMaskForRow(uint8_t row) {
-    uint16_t result = 0;
+  static inline uint8_t debounce(uint8_t sample, debounce_t *debouncer) {
+    uint8_t delta, changes;
 
-    for (uint16_t c = 0; c < _KeyScannerProps::matrix_columns; ++c) {
-      if (debounce_matrix_[row][c]) {
-        --debounce_matrix_[row][c];
-      } else {
-        result |= _BV(c);
-      }
-    }
-    return result;
-  }
+    // Use xor to detect changes from last stable state:
+    // if a key has changed, it's bit will be 1, otherwise 0
+    delta = sample ^ debouncer->state;
 
-  void debounceRow(uint16_t change, uint8_t row) {
-    for (uint16_t i = 0; i < _KeyScannerProps::matrix_columns; ++i) {
-      if (change & _BV(i)) {
-        debounce_matrix_[row][i] = _KeyScannerProps::debounce;
-      }
-    }
+    // Increment counters and reset any unchanged bits:
+    // increment bit 1 for all changed keys
+    debouncer->db1 = ((debouncer->db1) ^ (debouncer->db0)) & delta;
+    // increment bit 0 for all changed keys
+    debouncer->db0 = ~(debouncer->db0) & delta;
+
+    // Calculate returned change set: if delta is still true
+    // and the counter has wrapped back to 0, the key is changed.
+
+    changes = ~(~delta | (debouncer->db0) | (debouncer->db1));
+    // Update state: in this case use xor to flip any bit that is true in changes.
+    debouncer->state ^= changes;
+
+    return changes;
   }
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

@@ -51,7 +51,7 @@ constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 template<> uint16_t KeyScanner::previousKeyState_[KeyScannerProps::matrix_rows] = {};
 template<> uint16_t KeyScanner::keyState_[KeyScannerProps::matrix_rows] = {};
 template<> uint16_t KeyScanner::masks_[KeyScannerProps::matrix_rows] = {};
-template<> uint8_t KeyScanner::debounce_matrix_[KeyScannerProps::matrix_rows][KeyScannerProps::matrix_columns] = {};
+template<> KeyScanner::debounce_t KeyScanner::db[KeyScannerProps::matrix_rows] = {};
 
 // We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
 // cannot be in a header-only driver, and must be placed here.
