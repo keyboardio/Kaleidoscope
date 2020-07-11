@@ -90,29 +90,12 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     TIMSK1 = _BV(TOIE1);
   }
 
-  /*
-   * This function has loop unrolling disabled on purpose: we want to give the
-   * hardware enough time to produce stable PIN reads for us. If we unroll the
-   * loop, we will not have that, because even with the NOP, the codepath is too
-   * fast. If we don't have stable reads, then entire rows or columns will behave
-   * erratically.
-   *
-   * For this reason, we ask the compiler to not unroll our loop, which in turn,
-   * gives hardware enough time to produce stable reads, at the cost of a little
-   * bit of speed.
-   *
-   * Do not remove the attribute!
-   */
-  void __attribute__((optimize(3), optimize("no-unroll-loops")))
-  readMatrix(void) {
+  __attribute__((optimize(3)))
+  void readMatrix(void) {
     typename _KeyScannerProps::RowState any_debounced_changes = 0;
 
     for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-      typename _KeyScannerProps::RowState hot_pins = 0;
-      for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
-        asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
-        hot_pins |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
-      }
+      typename _KeyScannerProps::RowState hot_pins = readCols();
 
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[(current_row + 1) % _KeyScannerProps::matrix_rows]);
@@ -217,6 +200,30 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
  private:
   typedef _KeyScannerProps KeyScannerProps_;
   static state_t state_;
+
+  /*
+   * This function has loop unrolling disabled on purpose: we want to give the
+   * hardware enough time to produce stable PIN reads for us. If we unroll the
+   * loop, we will not have that, because even with the NOP, the codepath is too
+   * fast. If we don't have stable reads, then entire rows or columns will behave
+   * erratically.
+   *
+   * For this reason, we ask the compiler to not unroll our loop, which in turn,
+   * gives hardware enough time to produce stable reads, at the cost of a little
+   * bit of speed.
+   *
+   * Do not remove the attribute!
+   */
+  __attribute__((optimize("no-unroll-loops")))
+  typename _KeyScannerProps::RowState readCols() {
+    typename _KeyScannerProps::RowState hot_pins = 0;
+    for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
+      asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
+      hot_pins |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
+    }
+
+    return hot_pins;
+  }
 
   static inline typename _KeyScannerProps::RowState debounce(
     typename _KeyScannerProps::RowState sample, debounce_t *debouncer
