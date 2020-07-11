@@ -35,6 +35,7 @@ namespace keyscanner {
 
 struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
   static const uint16_t keyscan_interval = 1700;
+  typedef uint16_t RowState;
 
   /*
    * The following two lines declare an empty array. Both of these must be
@@ -104,10 +105,10 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
    */
   void __attribute__((optimize(3), optimize("no-unroll-loops")))
   readMatrix(void) {
-    uint8_t any_debounced_changes = 0;
+    typename _KeyScannerProps::RowState any_debounced_changes = 0;
 
     for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-      uint8_t hot_pins = 0;
+      typename _KeyScannerProps::RowState hot_pins = 0;
       for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
         asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
         hot_pins |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
@@ -116,7 +117,7 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[(current_row + 1) % _KeyScannerProps::matrix_rows]);
 
-      any_debounced_changes |= debounce(hot_pins, state_.db + current_row);
+      any_debounced_changes |= debounce(hot_pins, &state_.db[current_row]);
 
       if (any_debounced_changes) {
         for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
@@ -195,21 +196,21 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
  protected:
   /*
-    each of these 8 bit variables are storing the state for 8 keys
+    each of these variables are storing the state for a row of keys
 
     so for key 0, the counter is represented by db0[0] and db1[0]
     and the state in state[0].
   */
   struct debounce_t {
-    uint8_t db0;    // counter bit 0
-    uint8_t db1;    // counter bit 1
-    uint8_t state;  // debounced state
+    typename _KeyScannerProps::RowState db0;    // counter bit 0
+    typename _KeyScannerProps::RowState db1;    // counter bit 1
+    typename _KeyScannerProps::RowState state;  // debounced state
   };
 
   struct state_t {
-    uint16_t previousKeyState[_KeyScannerProps::matrix_rows];
-    uint16_t keyState[_KeyScannerProps::matrix_rows];
-    uint16_t masks[_KeyScannerProps::matrix_rows];
+    typename _KeyScannerProps::RowState previousKeyState[_KeyScannerProps::matrix_rows];
+    typename _KeyScannerProps::RowState keyState[_KeyScannerProps::matrix_rows];
+    typename _KeyScannerProps::RowState masks[_KeyScannerProps::matrix_rows];
     debounce_t db[_KeyScannerProps::matrix_rows];
   };
 
@@ -217,8 +218,10 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   typedef _KeyScannerProps KeyScannerProps_;
   static state_t state_;
 
-  static inline uint8_t debounce(uint8_t sample, debounce_t *debouncer) {
-    uint8_t delta, changes;
+  static inline typename _KeyScannerProps::RowState debounce(
+    typename _KeyScannerProps::RowState sample, debounce_t *debouncer
+  ) {
+    typename _KeyScannerProps::RowState delta, changes;
 
     // Use xor to detect changes from last stable state:
     // if a key has changed, it's bit will be 1, otherwise 0
