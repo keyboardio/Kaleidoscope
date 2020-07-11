@@ -116,11 +116,11 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[(current_row + 1) % _KeyScannerProps::matrix_rows]);
 
-      any_debounced_changes |= debounce(hot_pins, db + current_row);
+      any_debounced_changes |= debounce(hot_pins, state_.db + current_row);
 
       if (any_debounced_changes) {
         for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-          keyState_[current_row] = db[current_row].state;
+          state_.keyState[current_row] = state_.db[current_row].state;
         }
       }
     }
@@ -136,12 +136,12 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   void __attribute__((optimize(3))) actOnMatrixScan() {
     for (byte row = 0; row < _KeyScannerProps::matrix_rows; row++) {
       for (byte col = 0; col < _KeyScannerProps::matrix_columns; col++) {
-        uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) | (bitRead(keyState_[row], col) << 1);
+        uint8_t keyState = (bitRead(state_.previousKeyState[row], col) << 0) | (bitRead(state_.keyState[row], col) << 1);
         if (keyState) {
           ThisType::handleKeyswitchEvent(Key_NoKey, typename _KeyScannerProps::KeyAddr(row, col), keyState);
         }
       }
-      previousKeyState_[row] = keyState_[row];
+      state_.previousKeyState[row] = state_.keyState[row];
     }
   }
 
@@ -149,24 +149,24 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     uint8_t count = 0;
 
     for (int8_t r = 0; r < _KeyScannerProps::matrix_rows; r++) {
-      count += __builtin_popcount(keyState_[r]);
+      count += __builtin_popcount(state_.keyState[r]);
     }
     return count;
   }
   bool isKeyswitchPressed(typename _KeyScannerProps::KeyAddr key_addr) {
-    return (bitRead(keyState_[key_addr.row()], key_addr.col()) != 0);
+    return (bitRead(state_.keyState[key_addr.row()], key_addr.col()) != 0);
   }
 
   uint8_t previousPressedKeyswitchCount() {
     uint8_t count = 0;
 
     for (int8_t r = 0; r < _KeyScannerProps::matrix_rows; r++) {
-      count += __builtin_popcount(previousKeyState_[r]);
+      count += __builtin_popcount(state_.previousKeyState[r]);
     }
     return count;
   }
   bool wasKeyswitchPressed(typename _KeyScannerProps::KeyAddr key_addr) {
-    return (bitRead(previousKeyState_[key_addr.row()],
+    return (bitRead(state_.previousKeyState[key_addr.row()],
                     key_addr.col()) != 0);
   }
 
@@ -174,19 +174,19 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     if (!key_addr.isValid())
       return;
 
-    bitWrite(masks_[key_addr.row()], key_addr.col(), 1);
+    bitWrite(state_.masks[key_addr.row()], key_addr.col(), 1);
   }
   void unMaskKey(typename _KeyScannerProps::KeyAddr key_addr) {
     if (!key_addr.isValid())
       return;
 
-    bitWrite(masks_[key_addr.row()], key_addr.col(), 0);
+    bitWrite(state_.masks[key_addr.row()], key_addr.col(), 0);
   }
   bool isKeyMasked(typename _KeyScannerProps::KeyAddr key_addr) {
     if (!key_addr.isValid())
       return false;
 
-    return bitRead(masks_[key_addr.row()],
+    return bitRead(state_.masks[key_addr.row()],
                    key_addr.col());
   }
 
@@ -206,13 +206,16 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     uint8_t state;  // debounced state
   };
 
+  struct state_t {
+    uint16_t previousKeyState[_KeyScannerProps::matrix_rows];
+    uint16_t keyState[_KeyScannerProps::matrix_rows];
+    uint16_t masks[_KeyScannerProps::matrix_rows];
+    debounce_t db[_KeyScannerProps::matrix_rows];
+  };
+
  private:
   typedef _KeyScannerProps KeyScannerProps_;
-  static uint16_t previousKeyState_[_KeyScannerProps::matrix_rows];
-  static uint16_t keyState_[_KeyScannerProps::matrix_rows];
-  static uint16_t masks_[_KeyScannerProps::matrix_rows];
-
-  static debounce_t db[_KeyScannerProps::matrix_rows];
+  static state_t state_;
 
   static inline uint8_t debounce(uint8_t sample, debounce_t *debouncer) {
     uint8_t delta, changes;
