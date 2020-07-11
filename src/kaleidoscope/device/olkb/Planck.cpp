@@ -41,15 +41,9 @@ const uint8_t KeyScannerProps::matrix_columns;
 constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
 constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
-// Resolving is a bit different in case of templates, however: the name of the
-// array is resolved within the scope of the namespace and the class, but the
-// array size is not - because it is a template. Therefore, we need a fully
-// qualified name there - or an alias in the global scope, which we set up just
-// above.
-template<> uint16_t KeyScanner::previousKeyState_[KeyScannerProps::matrix_rows] = {};
-template<> uint16_t KeyScanner::keyState_[KeyScannerProps::matrix_rows] = {};
-template<> uint16_t KeyScanner::masks_[KeyScannerProps::matrix_rows] = {};
-template<> uint8_t KeyScanner::debounce_matrix_[KeyScannerProps::matrix_rows][KeyScannerProps::matrix_columns] = {};
+// `KeyScanner` here refers to the alias set up above, just like in the
+// `KeyScannerProps` case above.
+template<> KeyScanner::state_t KeyScanner::state_ = {};
 
 // We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
 // cannot be in a header-only driver, and must be placed here.
