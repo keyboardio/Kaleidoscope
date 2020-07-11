@@ -95,10 +95,10 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     typename _KeyScannerProps::RowState any_debounced_changes = 0;
 
     for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
+      OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
       typename _KeyScannerProps::RowState hot_pins = readCols();
 
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
-      OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[(current_row + 1) % _KeyScannerProps::matrix_rows]);
 
       any_debounced_changes |= debounce(hot_pins, &state_.debounce[current_row]);
 
