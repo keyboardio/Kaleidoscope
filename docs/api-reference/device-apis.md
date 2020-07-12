@@ -225,7 +225,7 @@ constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
 // `KeyScanner` here refers to the alias set up above, just like in the
 // `KeyScannerProps` case above.
-template<> KeyScanner::state_t KeyScanner::state_ = {};
+template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
 
 // We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
 // cannot be in a header-only driver, and must be placed here.
