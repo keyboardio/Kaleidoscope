@@ -33,7 +33,6 @@ namespace keyboardio {
 struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
 
-    static const uint16_t keyscan_interval = 2700;
 
     static constexpr uint8_t matrix_rows = 4;
     static constexpr uint8_t matrix_columns = 12;

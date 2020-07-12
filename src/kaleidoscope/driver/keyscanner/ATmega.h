@@ -34,7 +34,7 @@ namespace driver {
 namespace keyscanner {
 
 struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
-  static const uint16_t keyscan_interval = 1700;
+  static const uint16_t keyscan_interval = 1500;
   typedef uint16_t RowState;
 
   /*
