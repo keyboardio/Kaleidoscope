@@ -33,6 +33,7 @@
 #include "kaleidoscope/driver/keyscanner/ATmega.h"
 #include "kaleidoscope/driver/bootloader/avr/FLIP.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
+#include "kaleidoscope/driver/debouncer/Counter.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -47,6 +48,7 @@ struct SplitographyProps : kaleidoscope::device::ATmega32U4KeyboardProps {
     static constexpr uint8_t matrix_rows = 4;
     static constexpr uint8_t matrix_columns = 12;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+    typedef driver::debouncer::Counter<matrix_rows, uint16_t> Debouncer;
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
     static constexpr uint8_t matrix_row_pins[matrix_rows] = {PIN_D0, PIN_D1, PIN_D2, PIN_D3};
     static constexpr uint8_t matrix_col_pins[matrix_columns] = { PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7 };

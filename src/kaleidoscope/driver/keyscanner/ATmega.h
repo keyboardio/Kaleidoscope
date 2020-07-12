@@ -22,6 +22,7 @@
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/keyscanner/None.h"
+#include "kaleidoscope/driver/debouncer/None.h"
 
 #include "kaleidoscope/device/avr/pins_and_ports.h"
 
@@ -36,6 +37,8 @@ namespace keyscanner {
 struct ATmegaProps: kaleidoscope::driver::keyscanner::BaseProps {
   static const uint16_t keyscan_interval = 1700;
   typedef uint16_t RowState;
+
+  typedef debouncer::None<matrix_rows, uint16_t> Debouncer;
 
   /*
    * The following two lines declare an empty array. Both of these must be
@@ -100,11 +103,11 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
 
-      any_debounced_changes |= debounce(hot_pins, &matrix_state_[current_row].debouncer);
+      any_debounced_changes |= debouncer_.debounce(hot_pins, current_row);
 
       if (any_debounced_changes) {
         for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-          matrix_state_[current_row].current = matrix_state_[current_row].debouncer.debounced_state;
+          matrix_state_[current_row].current = debouncer_.getRowState(current_row);
         }
       }
     }
@@ -178,24 +181,12 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
 
  protected:
-  /*
-    each of these variables are storing the state for a row of keys
-
-    so for key 0, the counter is represented by db0[0] and db1[0]
-    and the state in debounced_state[0].
-  */
-  struct debounce_t {
-    typename _KeyScannerProps::RowState db0;    // counter bit 0
-    typename _KeyScannerProps::RowState db1;    // counter bit 1
-    typename _KeyScannerProps::RowState debounced_state;  // debounced state
-  };
-
   struct row_state_t {
     typename _KeyScannerProps::RowState previous;
     typename _KeyScannerProps::RowState current;
     typename _KeyScannerProps::RowState masks;
-    debounce_t debouncer;
   };
+  typename _KeyScannerProps::Debouncer debouncer_;
 
  private:
   typedef _KeyScannerProps KeyScannerProps_;
@@ -223,31 +214,6 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
 
     return hot_pins;
-  }
-
-  static inline typename _KeyScannerProps::RowState debounce(
-    typename _KeyScannerProps::RowState sample, debounce_t *debouncer
-  ) {
-    typename _KeyScannerProps::RowState delta, changes;
-
-    // Use xor to detect changes from last stable state:
-    // if a key has changed, it's bit will be 1, otherwise 0
-    delta = sample ^ debouncer->debounced_state;
-
-    // Increment counters and reset any unchanged bits:
-    // increment bit 1 for all changed keys
-    debouncer->db1 = ((debouncer->db1) ^ (debouncer->db0)) & delta;
-    // increment bit 0 for all changed keys
-    debouncer->db0 = ~(debouncer->db0) & delta;
-
-    // Calculate returned change set: if delta is still true
-    // and the counter has wrapped back to 0, the key is changed.
-
-    changes = ~(~delta | (debouncer->db0) | (debouncer->db1));
-    // Update state: in this case use xor to flip any bit that is true in changes.
-    debouncer->debounced_state ^= changes;
-
-    return changes;
   }
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

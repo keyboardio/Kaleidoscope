@@ -160,6 +160,7 @@ four keys only.
 #include "kaleidoscope/driver/keyscanner/AVR.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 #include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/driver/debouncer/Counter.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -170,6 +171,7 @@ struct KeypadProps : kaleidoscope::device::ATmega32U4KeyboardProps {
     static constexpr uint8_t matrix_rows = 2;
     static constexpr uint8_t matrix_columns = 2;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+    typedef driver::debouncer::Counter<matrix_rows, uint16_t> Debouncer;
     static constexpr uint8_t matrix_row_pins[matrix_rows] = {PIN_D0, PIN_D1};
     static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_C0, PIN_C1};
   };

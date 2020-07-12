@@ -31,6 +31,7 @@
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
+#include "kaleidoscope/driver/debouncer/Counter.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -42,6 +43,7 @@ struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
     static constexpr uint8_t matrix_rows = 4;
     static constexpr uint8_t matrix_columns = 12;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+    typedef driver::debouncer::Counter<matrix_rows, uint16_t> Debouncer;
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
