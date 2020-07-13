@@ -81,9 +81,9 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
   /* setScanCycleTime takes a value of between 0 and 8192. This corresponds (roughly) to the number of microseconds to wait between scanning the key matrix. Our debouncing algorithm does four checks before deciding that a result is valid. Most normal mechanical switches specify a 5ms debounce period. On an ATMega32U4, 1700 gets you about 5ms of debouncing.
 
-Because keycanning is triggered by an interrupt but not run in that interrupt, the actual amount of time between scans is prone to a little bit of jitter.
+  Because keycanning is triggered by an interrupt but not run in that interrupt, the actual amount of time between scans is prone to a little bit of jitter.
 
- */
+  */
   void setScanCycleTime(uint16_t c) {
     TCCR1B = _BV(WGM13);
     TCCR1A = 0;
