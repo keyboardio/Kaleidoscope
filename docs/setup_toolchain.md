@@ -57,6 +57,11 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     $ sudo cp 60-kaleidoscope.rules /etc/udev/rules.d
     $ sudo /etc/init.d/udev reload
     ```
+    For Arch based distros one may have to use:
+    
+    ```sh
+    $ sudo udevadm control --reload-rules && udevadm trigger
+    ```
 
 4. Then disconnect and reconnect the keyboard for that change to take effect.
 
