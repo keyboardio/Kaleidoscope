@@ -39,9 +39,16 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 ## <a name="Arduino-Linux"></a>Install Arduino on Linux
 
-1. Install version 1.8.13 or newer of the Arduino IDE from http://arduino.cc/download.  Unfortunately, the version packaged in Ubuntu is too ancient to support Arduino's new way of doing 3rd-party hardware.
+1. Install version 1.8.13 or newer of the Arduino IDE from:
+   ```sh
+   Tar archive: http://arduino.cc/download
+   Flatpak:     https://flathub.org/apps/details/cc.arduino.arduinoide
+   Snap:        https://snapcraft.io/arduino
+   Arch:        sudo pacman -S arduino
+   ``` 
+   Unfortunately, the version packaged in Ubuntu is too ancient to support Arduino's new way of doing 3rd-party hardware.
 
-2. Assuming you're untarring in the download directory:
+2. Assuming you're using the tar archive, and untarring in the download directory:
 
     ```sh
     $ cd ~/Downloads
@@ -50,6 +57,23 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     $ cd /usr/local/arduino
     $ sudo ./install.sh
     ```
+    
+    #### How to install Flatpak on your system:
+    `https://flatpak.org/setup/`
+    
+    Then install Arduino Flatpak from terminal:
+    `$ flatpak install flathub cc.arduino.arduinoide`
+    
+    #### How to install Snap on your system:
+    `https://snapcraft.io/docs/installing-snapd`
+    
+    Then install Arduino Snap from terminal :
+    `$ sudo snap install arduino`
+    
+    Additonal install instructions and app details are on their respective pages.
+    Troubleshooting Flatpak and Snaps are beyond the scope of this document.
+    
+    
 3. On some linux distributions, ModemManager can prevent you from flashing or updating your keyboard by interfering with its virtual serial port. Additionally, by default, you may not have permissions to access your keyboard's serial port. `udev` is the Linux subsystem that managed both of these things. You should install our udev rules to manage access to your keyboard's serial port.
 
     ```sh
@@ -71,6 +95,7 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     ```sh
     export ARDUINO_PATH=/usr/local/arduino
     ```
+    Snaps and Flatpaks should have their PATH added by their respective install process.
 
 Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
