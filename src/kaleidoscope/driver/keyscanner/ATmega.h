@@ -104,14 +104,15 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
 
       any_debounced_changes |= debouncer_.debounce(hot_pins, current_row);
+    }
 
-      if (any_debounced_changes) {
-        for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-          matrix_state_[current_row].current = debouncer_.getRowState(current_row);
-        }
+    if (any_debounced_changes) {
+      for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
+        matrix_state_[current_row].current = debouncer_.getRowState(current_row);
       }
     }
   }
+
   void scanMatrix() {
     if (do_scan_) {
       do_scan_ = false;
