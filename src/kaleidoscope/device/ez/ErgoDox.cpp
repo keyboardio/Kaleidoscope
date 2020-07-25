@@ -173,18 +173,8 @@ bool ErgoDox::isKeyswitchPressed(KeyAddr key_addr) {
   return (bitRead(matrix_state_[key_addr.row()].current, key_addr.col()) != 0);
 }
 
-bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
-  keyIndex--;
-  return isKeyswitchPressed(KeyAddr(keyIndex));
-}
-
 bool ErgoDox::wasKeyswitchPressed(KeyAddr key_addr) {
   return (bitRead(matrix_state_[key_addr.row()].previous, key_addr.col()) != 0);
-}
-
-bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {
-  keyIndex--;
-  return wasKeyswitchPressed(KeyAddr(keyIndex));
 }
 
 uint8_t ErgoDox::previousPressedKeyswitchCount() {

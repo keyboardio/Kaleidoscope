@@ -73,18 +73,14 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   bool isKeyMasked(KeyAddr key_addr);
 
   bool isKeyswitchPressed(KeyAddr key_addr);
-  bool isKeyswitchPressed(uint8_t keyIndex);
   uint8_t pressedKeyswitchCount();
 
   bool wasKeyswitchPressed(KeyAddr key_addr);
-
-  bool wasKeyswitchPressed(uint8_t keyIndex);
   uint8_t previousPressedKeyswitchCount();
 
   // ErgoDox-specific stuff
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
-
 
  protected:
   struct row_state_t {
