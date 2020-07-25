@@ -37,6 +37,7 @@ struct cRGB {
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
+#include "kaleidoscope/driver/debouncer/Counter.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
@@ -51,7 +52,7 @@ struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
     static constexpr uint8_t matrix_rows = 14;
     static constexpr uint8_t matrix_columns = 6;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-
+    typedef kaleidoscope::driver::debouncer::Counter<matrix_rows, uint8_t> Debouncer;
   };
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
   static constexpr const char *short_name = "ErgoDox-EZ";
@@ -84,18 +85,18 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
 
-  static uint8_t debounce;
+
+ protected:
+  struct row_state_t {
+    uint8_t previous;
+    uint8_t current;
+    uint8_t masks;
+  };
+  typename ErgoDoxProps::KeyScannerProps::Debouncer debouncer_;
 
  private:
+  static row_state_t matrix_state_[ErgoDoxProps::KeyScannerProps::matrix_rows];
   static ErgoDoxScanner scanner_;
-  static uint8_t previousKeyState_[matrix_rows];
-  static uint8_t keyState_[matrix_rows];
-  static uint8_t masks_[matrix_rows];
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
-
-  static uint8_t debounceMaskForRow(uint8_t row);
-  static void debounceRow(uint8_t change, uint8_t row);
-  static void readMatrixRow(uint8_t row);
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox;

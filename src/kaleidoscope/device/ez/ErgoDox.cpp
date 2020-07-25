@@ -37,11 +37,7 @@ namespace device {
 namespace ez {
 
 ErgoDoxScanner ErgoDox::scanner_;
-uint8_t ErgoDox::previousKeyState_[matrix_rows];
-uint8_t ErgoDox::keyState_[matrix_rows];
-uint8_t ErgoDox::masks_[matrix_rows];
-uint8_t ErgoDox::debounce_matrix_[matrix_rows][matrix_columns];
-uint8_t ErgoDox::debounce = 5;
+ErgoDox::row_state_t ErgoDox::matrix_state_[ErgoDoxProps::KeyScannerProps::matrix_rows];
 
 static bool do_scan_ = 1;
 
@@ -85,16 +81,9 @@ ISR(TIMER1_OVF_vect) {
   do_scan_ = true;
 }
 
-void __attribute__((optimize(3))) ErgoDox::readMatrixRow(uint8_t row) {
-  uint8_t mask, cols;
-
-  mask = debounceMaskForRow(row);
-  cols = (scanner_.readCols(row) & mask) | (keyState_[row] & ~mask);
-  debounceRow(cols ^ keyState_[row], row);
-  keyState_[row] = cols;
-}
-
 void __attribute__((optimize(3))) ErgoDox::readMatrix() {
+  uint8_t any_debounced_changes = 0;
+
   do_scan_ = false;
 
   scanner_.reattachExpanderOnError();
@@ -103,22 +92,31 @@ void __attribute__((optimize(3))) ErgoDox::readMatrix() {
     scanner_.selectExtenderRow(row);
     scanner_.toggleATMegaRow(row);
 
-    readMatrixRow(row);
-    readMatrixRow(row + matrix_rows / 2);
+    uint8_t hot_pins = scanner_.readCols(row);
+    any_debounced_changes |= debouncer_.debounce(hot_pins, row);
+
+    uint8_t hot_extender_pins = scanner_.readCols(row + matrix_rows / 2);
+    any_debounced_changes |= debouncer_.debounce(hot_extender_pins, row + matrix_rows / 2);
 
     scanner_.toggleATMegaRow(row);
+  }
+
+  if (any_debounced_changes) {
+    for (uint8_t row = 0; row < matrix_rows; row++) {
+      matrix_state_[row].current = debouncer_.getRowState(row);
+    }
   }
 }
 
 void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
   for (byte row = 0; row < matrix_rows; row++) {
     for (byte col = 0; col < matrix_columns; col++) {
-      uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
-                         (bitRead(keyState_[row], col) << 1);
+      uint8_t keyState = (bitRead(matrix_state_[row].previous, col) << 0) |
+                         (bitRead(matrix_state_[row].current, col) << 1);
       if (keyState)
         handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
     }
-    previousKeyState_[row] = keyState_[row];
+    matrix_state_[row].previous = matrix_state_[row].current;
   }
 }
 
@@ -137,21 +135,21 @@ void ErgoDox::maskKey(KeyAddr key_addr) {
   if (!key_addr.isValid())
     return;
 
-  bitWrite(masks_[key_addr.row()], key_addr.col(), 1);
+  bitWrite(matrix_state_[key_addr.row()].masks, key_addr.col(), 1);
 }
 
 void ErgoDox::unMaskKey(KeyAddr key_addr) {
   if (!key_addr.isValid())
     return;
 
-  bitWrite(masks_[key_addr.row()], key_addr.col(), 0);
+  bitWrite(matrix_state_[key_addr.row()].masks, key_addr.col(), 0);
 }
 
 bool ErgoDox::isKeyMasked(KeyAddr key_addr) {
   if (!key_addr.isValid())
     return false;
 
-  return bitRead(masks_[key_addr.row()], key_addr.col());
+  return bitRead(matrix_state_[key_addr.row()].masks, key_addr.col());
 }
 
 // ErgoDox-specific stuff
@@ -171,29 +169,8 @@ void ErgoDox::setStatusLEDBrightness(uint8_t led, uint8_t brightness) {
   (OCR1C = brightness);
 }
 
-uint8_t ErgoDox::debounceMaskForRow(uint8_t row) {
-  uint8_t result = 0;
-
-  for (uint8_t c = 0; c < matrix_columns; ++c) {
-    if (debounce_matrix_[row][c]) {
-      --debounce_matrix_[row][c];
-    } else {
-      result |= (1 << c);
-    }
-  }
-  return result;
-}
-
-void ErgoDox::debounceRow(uint8_t change, uint8_t row) {
-  for (uint8_t i = 0; i < matrix_columns; ++i) {
-    if (change & (1 << i)) {
-      debounce_matrix_[row][i] = debounce;
-    }
-  }
-}
-
 bool ErgoDox::isKeyswitchPressed(KeyAddr key_addr) {
-  return (bitRead(keyState_[key_addr.row()], key_addr.col()) != 0);
+  return (bitRead(matrix_state_[key_addr.row()].current, key_addr.col()) != 0);
 }
 
 bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
@@ -202,7 +179,7 @@ bool ErgoDox::isKeyswitchPressed(uint8_t keyIndex) {
 }
 
 bool ErgoDox::wasKeyswitchPressed(KeyAddr key_addr) {
-  return (bitRead(previousKeyState_[key_addr.row()], key_addr.col()) != 0);
+  return (bitRead(matrix_state_[key_addr.row()].previous, key_addr.col()) != 0);
 }
 
 bool ErgoDox::wasKeyswitchPressed(uint8_t keyIndex) {
@@ -214,7 +191,7 @@ uint8_t ErgoDox::previousPressedKeyswitchCount() {
   uint8_t count = 0;
 
   for (uint8_t r = 0; r < matrix_rows; r++) {
-    count += __builtin_popcount(previousKeyState_[r]);
+    count += __builtin_popcount(matrix_state_[r].previous);
   }
   return count;
 }
@@ -223,7 +200,7 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
   uint8_t count = 0;
 
   for (uint8_t r = 0; r < matrix_rows; r++) {
-    count += __builtin_popcount(keyState_[r]);
+    count += __builtin_popcount(matrix_state_[r].current);
   }
   return count;
 }
