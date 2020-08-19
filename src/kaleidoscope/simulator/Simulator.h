@@ -41,7 +41,7 @@ uint8_t toKeycode(Key key) {
 
 #include "kaleidoscope/simulator/Interface.h"
 #include "kaleidoscope/simulator/Executor.h"
-#include "kaleidoscope/simulator/AglaisInterface.h"
+#include "kaleidoscope/simulator/LogProtocolInterface.h"
 #include "kaleidoscope/simulator/interface/Visualization.h"
 
 #include "kaleidoscope/simulator/actions/AssertLayerIsActive.h"

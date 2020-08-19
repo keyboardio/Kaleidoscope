@@ -48,7 +48,7 @@ void runSimulator(Executor &simulator) {
 //    simulator.permanentMouseReportActions().add(GenerateHostEvent<MouseReport>{});
 //    simulator.permanentAbsoluteMouseReportActions().add(GenerateHostEvent<AbsoluteMouseReport>{});
 
-  processAglaisDocument(aglais_test_recording, simulator);
+  processLogDocument(aglais_test_recording, simulator);
 }
 
 const char aglais_test_recording[] =

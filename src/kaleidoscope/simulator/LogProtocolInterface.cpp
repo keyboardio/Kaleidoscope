@@ -18,7 +18,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/AglaisInterface.h"
+#include "kaleidoscope/simulator/LogProtocolInterface.h"
 #include "kaleidoscope/simulator/reports/KeyboardReport.h"
 #include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
 #include "kaleidoscope/simulator/reports/MouseReport.h"
@@ -147,7 +147,7 @@ class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
 
 };
 
-void processAglaisDocument(const char *code, interface::Simulator_ &simulator) {
+void processLogDocument(const char *code, interface::Simulator_ &simulator) {
   auto rwqa_state = simulator.getErrorIfReportWithoutQueuedActions();
 
   log_protocol::LogProtocol a;

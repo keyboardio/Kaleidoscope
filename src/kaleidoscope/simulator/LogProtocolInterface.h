@@ -26,7 +26,7 @@ namespace interface {
 class Simulator_;
 } // namespace interface
 
-void processAglaisDocument(const char *code, interface::Simulator_ &sim);
+void processLogDocument(const char *code, interface::Simulator_ &sim);
 
 } // namespace simulator
 } // namespace kaleidoscope
