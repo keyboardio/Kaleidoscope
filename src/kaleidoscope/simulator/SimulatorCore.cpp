@@ -167,7 +167,7 @@ std::map<uint8_t, const char*> hid_code_to_string = {
 unsigned long millis = 0;
 
 void SimulatorCore::init() {
-  kaleidoscope::hid::initializeKeyboard();
+  Kaleidoscope.hid().keyboard().setup();
 }
 
 void SimulatorCore::getKeyMatrixDimensions(uint8_t &rows, uint8_t &cols) const {
