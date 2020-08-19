@@ -20,3 +20,4 @@
 #pragma once
 
 #include "kaleidoscope/simulator/Simulator.h"
+#include "kaleidoscope/simulator/AglaisInterface.h"
