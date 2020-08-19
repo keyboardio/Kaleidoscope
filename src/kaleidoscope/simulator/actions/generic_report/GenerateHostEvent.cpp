@@ -18,6 +18,12 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
+#ifdef KALEIDOSCOPE_VIRTUAL_HOST_EVENTS
+
+#ifndef __linux__
+#error Generating host events is only supported on Linux at the moment.
+#endif
+
 #include "kaleidoscope/simulator/actions/generic_report/GenerateHostEvent.h"
 #include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
 #include "kaleidoscope/simulator/reports/KeyboardReport.h"
@@ -396,4 +402,5 @@ bool GenerateHostEvent<AbsoluteMouseReport>::Action::evalInternal() {
 #error __CLANG_ATOMIC_LLONG_LOCK_FREE
 #endif
 
+#endif // KALEIDOSCOPE_VIRTUAL_HOST_EVENTS
 #endif // KALEIDOSCOPE_VIRTUAL_BUILD

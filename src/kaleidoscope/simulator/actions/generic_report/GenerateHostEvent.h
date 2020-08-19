@@ -19,6 +19,7 @@
 #pragma once
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#ifdef KALEIDOSCOPE_VIRTUAL_HOST_EVENTS
 
 #include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 #include "kaleidoscope/simulator/interface/reports/Report_.h"
@@ -87,4 +88,5 @@ class GenerateHostEvent {
 } // namespace simulator
 } // namespace kaleidoscope
 
+#endif // KALEIDOSCOPE_VIRTUAL_HOST_EVENTS
 #endif // KALEIDOSCOPE_VIRTUAL_BUILD
