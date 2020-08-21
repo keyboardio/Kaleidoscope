@@ -28,7 +28,7 @@ namespace simulator {
 
 extern const char aglais_test_recording[];
 
-void runSimulator(Executor &simulator) {
+void runSimulator(Simulator &simulator) {
 
   using namespace actions;
 

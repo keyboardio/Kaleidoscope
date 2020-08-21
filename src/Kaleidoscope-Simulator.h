@@ -19,6 +19,6 @@
 
 #pragma once
 
-#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/Simulator.h"
 #include "kaleidoscope/simulator/macros.h"
 #include "kaleidoscope/simulator/LogProtocolInterface.h"

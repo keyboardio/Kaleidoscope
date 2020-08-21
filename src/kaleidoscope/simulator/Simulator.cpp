@@ -18,7 +18,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/Simulator.h"
 #include "kaleidoscope/simulator/SimulatorCore.h"
 #include "kaleidoscope/simulator/reports/KeyboardReport.h"
 #include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
@@ -33,26 +33,26 @@
 namespace kaleidoscope {
 namespace simulator {
 
-Executor::Executor(std::ostream &out) : interface::Simulator_{out} {
+Simulator::Simulator(std::ostream &out) : interface::Simulator_{out} {
   this->setCore(
   std::shared_ptr<SimulatorCore> {
     new SimulatorCore{}
   }
   );
 
-  HIDReportObserver::resetHook(&Executor::processHIDReport);
+  HIDReportObserver::resetHook(&Simulator::processHIDReport);
 
   Kaleidoscope.device().keyScanner().setEnableReadMatrix(false);
 }
 
-Executor &Executor::getInstance() {
-  static Executor sim{std::cout};
+Simulator &Simulator::getInstance() {
+  static Simulator sim{std::cout};
   return sim;
 }
 
-void Executor::processHIDReport(uint8_t id, const void* data,
-                                int len, int result) {
-  auto &simulator = Executor::getInstance();
+void Simulator::processHIDReport(uint8_t id, const void* data,
+                                 int len, int result) {
+  auto &simulator = Simulator::getInstance();
 
   switch (id) {
   // TODO: React appropriately on the following

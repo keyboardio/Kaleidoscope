@@ -32,16 +32,16 @@ namespace simulator {
 
 /// @brief A Kaleidoscope specific simulator class.
 ///
-class Executor : public interface::Simulator_ {
+class Simulator: public interface::Simulator_ {
  public:
 
   /// @brief Access the global simulator singleton.
   ///
-  static Executor &getInstance();
+  static Simulator &getInstance();
 
  private:
 
-  Executor(std::ostream &out);
+  Simulator(std::ostream &out);
 
   static void processHIDReport(uint8_t id, const void* data,
                                int len, int result);

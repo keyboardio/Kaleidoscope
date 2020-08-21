@@ -40,7 +40,7 @@ uint8_t toKeycode(Key key) {
 } // namespace kaleidoscope
 
 #include "kaleidoscope/simulator/Interface.h"
-#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/Simulator.h"
 #include "kaleidoscope/simulator/LogProtocolInterface.h"
 #include "kaleidoscope/simulator/interface/Visualization.h"
 
@@ -61,7 +61,7 @@ extern void executeTestFunction();
    namespace kaleidoscope {                                                    \
    namespace simulator {                                                       \
    /* Forward declare the actual test function */                              \
-   void runSimulator(Executor &simulator);                                     \
+   void runSimulator(Simulator &simulator);                                    \
    } /* namespace simulator */                                                 \
    } /* namespace kaleidoscope */                                              \
                                                                                \
@@ -71,5 +71,5 @@ extern void executeTestFunction();
    void executeTestFunction() {                                                \
       setup(); /* setup Kaleidoscope */                                        \
       using namespace kaleidoscope::simulator;                                 \
-      runSimulator(Executor::getInstance());                                   \
+      runSimulator(Simulator::getInstance());                                  \
    }

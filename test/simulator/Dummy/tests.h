@@ -23,7 +23,7 @@ KALEIDOSCOPE_SIMULATOR_INIT
 namespace kaleidoscope {
 namespace simulator {
 
-void runSimulator(Executor &simulator) {
+void runSimulator(Simulator &simulator) {
 
   using namespace actions;
   using namespace interface;
