@@ -50,6 +50,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(int n_overall_reports)
           : n_overall_reports_(n_overall_reports) {}
 

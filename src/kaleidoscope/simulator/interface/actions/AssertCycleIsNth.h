@@ -46,6 +46,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(int cycle_id) : cycle_id_(cycle_id) {}
 
         virtual void describe(const char *add_indent = "") const override {

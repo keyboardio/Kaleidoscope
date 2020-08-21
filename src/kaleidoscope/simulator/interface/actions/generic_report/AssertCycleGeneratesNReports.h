@@ -50,6 +50,7 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
         Action(int n_reports) : n_reports_(n_reports) {}
 
         virtual void describe(const char *add_indent = "") const override {

@@ -58,6 +58,7 @@ class GenerateHostEvent {
   class Action : public interface::ReportAction<typename _ReportType::BaseReportType>,
       public HostEventAction {
 public:
+      virtual ~Action() = default;
 
       virtual void describe(const char *add_indent = "") const override {
         this->getSimulator()->log() << add_indent << "Generating host event";

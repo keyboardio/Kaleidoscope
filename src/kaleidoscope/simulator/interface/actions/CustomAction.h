@@ -50,6 +50,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(const std::function<bool()> &func)
           : func_(func)
         {}

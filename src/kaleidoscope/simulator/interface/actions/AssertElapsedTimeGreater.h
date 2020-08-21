@@ -48,6 +48,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
           :  start_t_(start_t),
              delta_t_(delta_t)

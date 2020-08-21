@@ -54,6 +54,8 @@ namespace interface {
 
         using ReportAction<_ReportType>::ActionBaseType;
 
+        virtual ~Action() = default;
+
         Action(const std::function<bool(const _ReportType&)> &func)
           : func_(func)
         {}

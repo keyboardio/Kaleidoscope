@@ -77,6 +77,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(const std::vector<uint8_t> &keycodes,
                bool exclusively = false)
           :  keycodes_(keycodes),

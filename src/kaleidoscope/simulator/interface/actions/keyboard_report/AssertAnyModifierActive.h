@@ -41,6 +41,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         virtual void describe(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Any modifiers active";
         }

@@ -57,6 +57,8 @@ namespace interface {
 
        public:
 
+        virtual ~Action() = default;
+
         Action(const _ReportType &report)
           :  report_(report)
         {}

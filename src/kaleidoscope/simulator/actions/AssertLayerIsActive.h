@@ -48,6 +48,8 @@ class AssertLayerIsActive {
 
 public:
 
+      virtual ~Action() = default;
+
       Action(int layer_id) : layer_id_(layer_id) {}
 
       virtual void describe(const char *add_indent = "") const override {

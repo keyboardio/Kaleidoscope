@@ -38,9 +38,11 @@ namespace interface {
 ///
     class ReportAction_ : public Action_ {
      public:
-
+     
       typedef Report_ ReportType;
       typedef ReportAction_ ActionBaseType;
+
+      virtual ~ReportAction_() = default; 
 
       virtual uint8_t getReportTypeId() const {
         return AnyTypeReportTypeId;
