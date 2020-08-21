@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "Kaleidoscope-Simulator.h"
-#include "kaleidoscope_simulator/vendors/keyboardio/model01.h"
+#include "kaleidoscope/simulator/vendors/keyboardio/model01.h"
 
 KALEIDOSCOPE_SIMULATOR_INIT
 
@@ -28,9 +28,9 @@ namespace simulator {
 
 void runSimulator(Simulator &simulator) {
 
-  using namespace kaleidoscope::simulator::actions;
-  using namespace framework::actions;
-  using namespace papilio;
+  using namespace actions;
+  using namespace interface;
+  using namespace interface::actions;
 
 //    std::shared_ptr<framework::Action_> test = AssertKeycodesActive{Key_A};
 //    std::shared_ptr<framework::ReportAction<framework::KeyboardReport_>> test = AssertKeycodesActive{Key_A};
