@@ -58,7 +58,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Custom keyboard report action";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Custom keyboard report action failed";
         }
 

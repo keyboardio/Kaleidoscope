@@ -56,8 +56,8 @@ namespace interface {
           this->getSimulator()->log() << add_indent << n_reports_ << " keyboard reports expected in cycle";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
           this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() << " keyboard reports encountered";
+        virtual void describeState(const char *add_indent = "") const override {
         }
 
         virtual bool evalInternal() override {

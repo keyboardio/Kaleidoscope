@@ -63,7 +63,7 @@ namespace interface {
                                       << _ReportType::typeString() << " report action";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Custom "
                                       << _ReportType::typeString() << " report action failed";
         }

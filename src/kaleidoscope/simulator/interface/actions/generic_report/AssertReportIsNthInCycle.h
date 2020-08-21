@@ -52,7 +52,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Report " << report_id_ << ". in cycle";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Report is "
                                       << this->getSimulator()->getNumReportsInCycle() << ". in cycle";
         }

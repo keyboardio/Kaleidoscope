@@ -70,7 +70,7 @@ namespace interface {
           report_->dump(*this->getSimulator(), add_indent);
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
 
           this->getSimulator()->log() << add_indent << "Reports differ: ";
           this->getSimulator()->log() << add_indent << "expected: ";

@@ -45,7 +45,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Any modifiers active";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Any modifiers active: ";
           this->getSimulator()->log() << this->getReport().isAssertAnyModifierActive();
         }

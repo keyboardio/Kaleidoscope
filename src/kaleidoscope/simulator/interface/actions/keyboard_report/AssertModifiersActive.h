@@ -104,7 +104,7 @@ namespace interface {
           }
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
 
           this->getSimulator()->log() << add_indent << "Modifiers actually active: ";
 

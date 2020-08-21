@@ -57,7 +57,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Time elapsed greater " << delta_t_ << " ms";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Actual time elapsed "
                                       << this->getSimulator()->getTime() << " ms";
         }

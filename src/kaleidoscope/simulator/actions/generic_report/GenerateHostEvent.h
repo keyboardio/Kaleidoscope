@@ -63,7 +63,7 @@ public:
         this->getSimulator()->log() << add_indent << "Generating host event";
       }
 
-      virtual void describeState(const char *add_indent = "") const {
+      virtual void describeState(const char *add_indent = "") const override {
         this->describe(add_indent);
       }
 

@@ -52,7 +52,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Is " << cycle_id_ << ". cycle";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Is " << this->getSimulator()->getCycleId() << ". cycle";
         }
 

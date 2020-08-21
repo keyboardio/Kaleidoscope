@@ -45,7 +45,7 @@ namespace interface {
           this->getSimulator()->log() << add_indent << "Report empty";
         }
 
-        virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const override {
           this->getSimulator()->log() << add_indent << "Report: ";
           this->getReport().dump(*this->getSimulator(), add_indent);
         }

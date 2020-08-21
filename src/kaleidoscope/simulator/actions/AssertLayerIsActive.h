@@ -54,7 +54,7 @@ public:
         this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " expected to be active";
       }
 
-      virtual void describeState(const char *add_indent = "") const {
+      virtual void describeState(const char *add_indent = "") const override {
         this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " is active: " << Layer.isActive((uint8_t)layer_id_);
       }
 

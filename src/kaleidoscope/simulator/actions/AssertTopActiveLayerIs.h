@@ -53,7 +53,7 @@ public:
         this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
       }
 
-      virtual void describeState(const char *add_indent = "") const {
+      virtual void describeState(const char *add_indent = "") const override {
         this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
       }
 
