@@ -19,4 +19,4 @@
 
 #pragma once
 
-#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/Simulator.h"
