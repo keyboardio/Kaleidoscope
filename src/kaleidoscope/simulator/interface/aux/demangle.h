@@ -26,21 +26,21 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace aux {
+    namespace aux {
 
 /// @brief Demangles a C++ symbol name.
 ///
-std::string demangle(const char* name);
+    std::string demangle(const char* name);
 
 /// @brief Returns a human readable representation of a typename.
 ///
-template <class T>
-std::string type(const T& t) {
-  return demangle(typeid(t).name());
-}
+    template <class T>
+    std::string type(const T& t) {
+      return demangle(typeid(t).name());
+    }
 
-} // namespace aux
-} // namespace interface
+    } // namespace aux
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

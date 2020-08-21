@@ -26,149 +26,149 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Overload this function if you intent to use any other data type
 ///        that can be mapped to a keycode.
 ///
-inline
-uint8_t toKeycode(uint8_t keycode) {
-  return keycode;
-}
+    inline
+    uint8_t toKeycode(uint8_t keycode) {
+      return keycode;
+    }
 
 /// @brief Asserts that a specific set of keys is active in the keyboard report.
 ///
-class AssertKeycodesActive {
+    class AssertKeycodesActive {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  ///
-  /// @param keycodes A collection of keycodes.
-  /// @param exclusively If enabled no other keys than the listed
-  ///                 ones must be part of the checked keyboard report.
-  ///
-  AssertKeycodesActive(const std::vector<uint8_t> &keycodes,
-                       bool exclusively = false)
-    : AssertKeycodesActive(DelegateConstruction{}, keycodes, exclusively)
-  {}
+      /// @brief Constructor.
+      ///
+      /// @param keycodes A collection of keycodes.
+      /// @param exclusively If enabled no other keys than the listed
+      ///                 ones must be part of the checked keyboard report.
+      ///
+      AssertKeycodesActive(const std::vector<uint8_t> &keycodes,
+                           bool exclusively = false)
+        : AssertKeycodesActive(DelegateConstruction{}, keycodes, exclusively)
+      {}
 
-  /// @brief Constructor.
-  ///
-  /// @tparam key_info A list of key information objects. This
-  ///         can be a mixture of keycodes or Key specifications.
-  ///
-  template<typename..._KeyInfo>
-  AssertKeycodesActive(_KeyInfo...key_info)
-    : AssertKeycodesActive(DelegateConstruction{}, std::forward<_KeyInfo>(key_info)...)
-  {}
+      /// @brief Constructor.
+      ///
+      /// @tparam key_info A list of key information objects. This
+      ///         can be a mixture of keycodes or Key specifications.
+      ///
+      template<typename..._KeyInfo>
+      AssertKeycodesActive(_KeyInfo...key_info)
+        : AssertKeycodesActive(DelegateConstruction{}, std::forward<_KeyInfo>(key_info)...)
+      {}
 
-  /// @details After this was called, no other keys than the listed
-  ///          ones are allowed in the keyboard report for the
-  ///          action to pass.
-  ///
-  void exclusively() {
-    action_->setExclusively(true);
-  }
-
- private:
-
-  class Action : public ReportAction<KeyboardReport_> {
-
-   public:
-
-    Action(const std::vector<uint8_t> &keycodes,
-           bool exclusively = false)
-      :  keycodes_(keycodes),
-         exclusively_(exclusively)
-    {}
-
-    template<typename..._KeyInfo>
-    Action(_KeyInfo...key_info)
-      :  keycodes_{toKeycode(std::forward<_KeyInfo>(key_info))...},
-         exclusively_(false)
-    {}
-
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Keycodes active: ";
-
-      if (keycodes_.empty()) {
-        this->getSimulator()->log() << "<none>";
-        return;
+      /// @details After this was called, no other keys than the listed
+      ///          ones are allowed in the keyboard report for the
+      ///          action to pass.
+      ///
+      void exclusively() {
+        action_->setExclusively(true);
       }
 
-      for (auto keycode : keycodes_) {
-        this->getSimulator()->log()
-            << this->getSimulator()->getCore().keycodeToName(keycode) << " ";
-      }
-    }
+     private:
 
-    virtual void describeState(const char *add_indent = "") const {
+      class Action : public ReportAction<KeyboardReport_> {
 
-      this->getSimulator()->log() << add_indent << "Keycodes actually active: ";
+       public:
 
-      auto active_keycodes = this->getReport().getActiveKeycodes();
+        Action(const std::vector<uint8_t> &keycodes,
+               bool exclusively = false)
+          :  keycodes_(keycodes),
+             exclusively_(exclusively)
+        {}
 
-      if (active_keycodes.empty()) {
-        this->getSimulator()->log() << "<none>";
-        return;
-      }
-      for (auto keycode : active_keycodes) {
-        this->getSimulator()->log()
-            << this->getSimulator()->getCore().keycodeToName(keycode) << " ";
-      }
-    }
+        template<typename..._KeyInfo>
+        Action(_KeyInfo...key_info)
+          :  keycodes_{toKeycode(std::forward<_KeyInfo>(key_info))...},
+             exclusively_(false)
+        {}
 
-    virtual bool evalInternal() override {
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Keycodes active: ";
 
-      for (auto keycode : keycodes_) {
-        if (!this->getReport().isKeycodeActive(keycode)) {
-          return false;
-        }
-      }
+          if (keycodes_.empty()) {
+            this->getSimulator()->log() << "<none>";
+            return;
+          }
 
-      if (exclusively_) {
-
-        auto active_keycodes = this->getReport().getActiveKeycodes();
-
-        for (auto keycode : active_keycodes) {
-
-          if (std::find(keycodes_.begin(), keycodes_.end(), keycode) == keycodes_.end()) {
-            return false;
+          for (auto keycode : keycodes_) {
+            this->getSimulator()->log()
+                << this->getSimulator()->getCore().keycodeToName(keycode) << " ";
           }
         }
-      }
 
-      return true;
-    }
+        virtual void describeState(const char *add_indent = "") const {
 
-    /// @brief Set exclusivity of the keycodes allowed in the keyboard
-    ///        report.
-    /// @param state The exclusivity state.
-    ///
-    void setExclusively(bool state) {
-      exclusively_ = state;
-    }
+          this->getSimulator()->log() << add_indent << "Keycodes actually active: ";
 
-    /// @brief Retreives the state of exclusivity of keycodes in the
-    ///        keyboard report.
-    /// @return [bool] The exclusivity state.
-    ///
-    bool getExclusively() const {
-      return exclusively_;
-    }
+          auto active_keycodes = this->getReport().getActiveKeycodes();
 
-   private:
+          if (active_keycodes.empty()) {
+            this->getSimulator()->log() << "<none>";
+            return;
+          }
+          for (auto keycode : active_keycodes) {
+            this->getSimulator()->log()
+                << this->getSimulator()->getCore().keycodeToName(keycode) << " ";
+          }
+        }
 
-    std::vector<uint8_t> keycodes_;
-    bool exclusively_ = false;
-  };
+        virtual bool evalInternal() override {
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertKeycodesActive)
-};
+          for (auto keycode : keycodes_) {
+            if (!this->getReport().isKeycodeActive(keycode)) {
+              return false;
+            }
+          }
 
-} // namespace actions
-} // namespace interface
+          if (exclusively_) {
+
+            auto active_keycodes = this->getReport().getActiveKeycodes();
+
+            for (auto keycode : active_keycodes) {
+
+              if (std::find(keycodes_.begin(), keycodes_.end(), keycode) == keycodes_.end()) {
+                return false;
+              }
+            }
+          }
+
+          return true;
+        }
+
+        /// @brief Set exclusivity of the keycodes allowed in the keyboard
+        ///        report.
+        /// @param state The exclusivity state.
+        ///
+        void setExclusively(bool state) {
+          exclusively_ = state;
+        }
+
+        /// @brief Retreives the state of exclusivity of keycodes in the
+        ///        keyboard report.
+        /// @return [bool] The exclusivity state.
+        ///
+        bool getExclusively() const {
+          return exclusively_;
+        }
+
+       private:
+
+        std::vector<uint8_t> keycodes_;
+        bool exclusively_ = false;
+      };
+
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertKeycodesActive)
+    };
+
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

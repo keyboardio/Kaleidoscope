@@ -33,19 +33,19 @@ namespace simulator {
 /// @brief A Kaleidoscope specific simulator class.
 ///
 class Simulator: public interface::Simulator_ {
- public:
+public:
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Simulator &getInstance();
+    /// @brief Access the global simulator singleton.
+    ///
+    static Simulator &getInstance();
 
- private:
+private:
 
-  Simulator(std::ostream &out);
+    Simulator(std::ostream &out);
 
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
+    static void processHIDReport(uint8_t id, const void* data,
+                                 int len, int result);
+  };
 
 } // namespace simulator
 } // namespace kaleidoscope

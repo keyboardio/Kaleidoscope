@@ -26,43 +26,43 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-void Action_::report(const char *add_indent) const {
-  if (this->valid_) {
-    {
-      auto log = simulator_->log();
-      log << add_indent;
-      if (this->negate_) {
-        log << "negated ";
+    void Action_::report(const char *add_indent) const {
+      if (this->valid_) {
+        {
+          auto log = simulator_->log();
+          log << add_indent;
+          if (this->negate_) {
+            log << "negated ";
+          }
+          log << aux::type(*this) << " action passed";
+        }
+        //this->describe();
+      } else {
+        std::string indent = std::string(add_indent) + "      ";
+        {
+          auto error = simulator_->error();
+          error << add_indent;
+          if (negate_) {
+            error << "negated ";
+          }
+          error << aux::type(*this) << " action failed";
+        }
+        simulator_->log() << add_indent << "expected:";
+        this->describe(indent.c_str());
+        simulator_->log() << add_indent << "actual:";
+        this->describeState(indent.c_str());
       }
-      log << aux::type(*this) << " action passed";
     }
-    //this->describe();
-  } else {
-    std::string indent = std::string(add_indent) + "      ";
-    {
-      auto error = simulator_->error();
-      error << add_indent;
-      if (negate_) {
-        error << "negated ";
+
+    void Action_::describeState(const char *add_indent) const {
+      if (valid_) {
+        simulator_->log() << add_indent << "valid";
+      } else {
+        simulator_->error() << add_indent << "failed";
       }
-      error << aux::type(*this) << " action failed";
     }
-    simulator_->log() << add_indent << "expected:";
-    this->describe(indent.c_str());
-    simulator_->log() << add_indent << "actual:";
-    this->describeState(indent.c_str());
-  }
-}
 
-void Action_::describeState(const char *add_indent) const {
-  if (valid_) {
-    simulator_->log() << add_indent << "valid";
-  } else {
-    simulator_->error() << add_indent << "failed";
-  }
-}
-
-} // namespace interface
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

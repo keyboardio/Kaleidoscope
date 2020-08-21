@@ -29,74 +29,74 @@ namespace interface {
 /// @details The adaptor provides the necessary access method
 ///        of a typical queue container.
 ///
-template<typename _ContainerType>
-class ActionQueueAdaptor {
- public:
+    template<typename _ContainerType>
+    class ActionQueueAdaptor {
+     public:
 
-  typedef typename _ContainerType::ActionType ActionType;
-  typedef ActionQueueAdaptor<_ContainerType> ThisType;
+      typedef typename _ContainerType::ActionType ActionType;
+      typedef ActionQueueAdaptor<_ContainerType> ThisType;
 
-  ActionQueueAdaptor(_ContainerType &container)
-    :  container_{container}
-  {}
+      ActionQueueAdaptor(_ContainerType &container)
+        :  container_{container}
+      {}
 
-  /// @brief Queues actions.
-  ///
-  /// @param actions The actions to be added to the queue.
-  ///
-  ThisType &queue(const std::vector<std::shared_ptr<ActionType>> &actions) {
-    container_.add(actions);
-    return *this;
-  }
+      /// @brief Queues actions.
+      ///
+      /// @param actions The actions to be added to the queue.
+      ///
+      ThisType &queue(const std::vector<std::shared_ptr<ActionType>> &actions) {
+        container_.add(actions);
+        return *this;
+      }
 
 
-  /// @brief Queues actions.
-  ///
-  /// @tparam actions The actions to be added to the queue.
-  ///
-  template<typename..._Actions>
-  ThisType &queue(_Actions...actions) {
-    container_.add(
-    std::vector<std::shared_ptr<ActionType>> {
-      unwrapAction(actions)...
-    }
-    );
-    return *this;
-  }
+      /// @brief Queues actions.
+      ///
+      /// @tparam actions The actions to be added to the queue.
+      ///
+      template<typename..._Actions>
+      ThisType &queue(_Actions...actions) {
+        container_.add(
+        std::vector<std::shared_ptr<ActionType>> {
+          unwrapAction(actions)...
+        }
+        );
+        return *this;
+      }
 
-  /// @brief Queues a list of action.
-  ///
-  /// @param actions The actions to be added to the queue.
-  ///
-  ThisType &queueGrouped(const std::vector<std::shared_ptr<ActionType>> &actions) {
-    container_.addGrouped(actions);
-    return *this;
-  }
+      /// @brief Queues a list of action.
+      ///
+      /// @param actions The actions to be added to the queue.
+      ///
+      ThisType &queueGrouped(const std::vector<std::shared_ptr<ActionType>> &actions) {
+        container_.addGrouped(actions);
+        return *this;
+      }
 
-  /// @brief Queues a list of action.
-  ///
-  /// @tparam actions The actions to be added to the queue.
-  ///
-  template<typename..._Actions>
-  ThisType &queueGrouped(_Actions...actions) {
-    container_.addGrouped(
-    std::vector<std::shared_ptr<ActionType>> {
-      unwrapAction(actions)...
-    }
-    );
-    return *this;
-  }
+      /// @brief Queues a list of action.
+      ///
+      /// @tparam actions The actions to be added to the queue.
+      ///
+      template<typename..._Actions>
+      ThisType &queueGrouped(_Actions...actions) {
+        container_.addGrouped(
+        std::vector<std::shared_ptr<ActionType>> {
+          unwrapAction(actions)...
+        }
+        );
+        return *this;
+      }
 
-  bool empty() const {
-    return container_.empty();
-  }
+      bool empty() const {
+        return container_.empty();
+      }
 
- private:
+     private:
 
-  _ContainerType &container_;
-};
+      _ContainerType &container_;
+    };
 
-} // namespace interface
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

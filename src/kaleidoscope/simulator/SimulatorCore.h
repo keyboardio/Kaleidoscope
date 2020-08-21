@@ -28,34 +28,34 @@ namespace simulator {
 /// @brief A Kaleidoscope specific simulator core class.
 ///
 class SimulatorCore : public interface::SimulatorCore_ {
- public:
+public:
 
-  virtual void init() override;
+    virtual void init() override;
 
-  virtual void getKeyMatrixDimensions(uint8_t &rows, uint8_t &cols) const override;
+    virtual void getKeyMatrixDimensions(uint8_t &rows, uint8_t &cols) const override;
 
-  virtual void pressKey(uint8_t row, uint8_t col) override;
+    virtual void pressKey(uint8_t row, uint8_t col) override;
 
-  virtual void releaseKey(uint8_t row, uint8_t col) override;
+    virtual void releaseKey(uint8_t row, uint8_t col) override;
 
-  virtual void tapKey(uint8_t row, uint8_t col) override;
+    virtual void tapKey(uint8_t row, uint8_t col) override;
 
-  virtual bool isKeyPressed(uint8_t row, uint8_t col) const override;
+    virtual bool isKeyPressed(uint8_t row, uint8_t col) const override;
 
-  virtual uint8_t getNumLEDs() const override;
+    virtual uint8_t getNumLEDs() const override;
 
-  virtual void getCurrentKeyLEDColor(uint8_t key_offset,
-                                     uint8_t &red, uint8_t &green, uint8_t &blue) const override;
+    virtual void getCurrentKeyLEDColor(uint8_t key_offset,
+                                       uint8_t &red, uint8_t &green, uint8_t &blue) const override;
 
-  virtual void getCurrentKeyLabel(uint8_t row, uint8_t col,
-                                  std::string &label_string) const override;
+    virtual void getCurrentKeyLabel(uint8_t row, uint8_t col,
+                                    std::string &label_string) const override;
 
-  virtual void setTime(uint32_t time) override;
+    virtual void setTime(uint32_t time) override;
 
-  virtual const char *keycodeToName(uint8_t keycode) const override;
+    virtual const char *keycodeToName(uint8_t keycode) const override;
 
-  virtual void loop() override;
-};
+    virtual void loop() override;
+  };
 
 } // namespace simulator
 } // namespace kaleidoscope

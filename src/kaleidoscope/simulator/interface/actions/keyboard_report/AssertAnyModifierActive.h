@@ -25,41 +25,41 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that any modifiers are active in the current keyboard report.
 ///
-class AssertAnyModifierActive {
+    class AssertAnyModifierActive {
 
- public:
+     public:
 
-  SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertAnyModifierActive)
+      SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertAnyModifierActive)
 
- private:
+     private:
 
-  class Action : public ReportAction<KeyboardReport_> {
+      class Action : public ReportAction<KeyboardReport_> {
 
-   public:
+       public:
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Any modifiers active";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Any modifiers active";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Any modifiers active: ";
-      this->getSimulator()->log() << this->getReport().isAssertAnyModifierActive();
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << "Any modifiers active: ";
+          this->getSimulator()->log() << this->getReport().isAssertAnyModifierActive();
+        }
 
-    virtual bool evalInternal() override {
-      return this->getReport().isAssertAnyModifierActive();
-    }
-  };
+        virtual bool evalInternal() override {
+          return this->getReport().isAssertAnyModifierActive();
+        }
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertAnyModifierActive)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertAnyModifierActive)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

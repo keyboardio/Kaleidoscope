@@ -26,54 +26,54 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that there was a specific number of reports of a given
 ///        type generated within a specific scan cycle.
 ///
-template<typename _ReportType>
-class AssertCycleGeneratesNReports {
+    template<typename _ReportType>
+    class AssertCycleGeneratesNReports {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  /// @param n_reports The number of reports that must have been
-  ///        generated.
-  ///
-  AssertCycleGeneratesNReports(int n_reports)
-    : AssertCycleGeneratesNReports(DelegateConstruction{}, n_reports)
-  {}
+      /// @brief Constructor.
+      /// @param n_reports The number of reports that must have been
+      ///        generated.
+      ///
+      AssertCycleGeneratesNReports(int n_reports)
+        : AssertCycleGeneratesNReports(DelegateConstruction{}, n_reports)
+      {}
 
- private:
+     private:
 
-  class Action : public Action_ {
+      class Action : public Action_ {
 
-   public:
+       public:
 
-    Action(int n_reports) : n_reports_(n_reports) {}
+        Action(int n_reports) : n_reports_(n_reports) {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << n_reports_ << " keyboard reports expected in cycle";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << n_reports_ << " keyboard reports expected in cycle";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() << " keyboard reports encountered";
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() << " keyboard reports encountered";
+        }
 
-    virtual bool evalInternal() override {
-      return this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() == n_reports_;
-    }
+        virtual bool evalInternal() override {
+          return this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() == n_reports_;
+        }
 
-   private:
+       private:
 
-    int n_reports_ = -1;
-  };
+        int n_reports_ = -1;
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertCycleGeneratesNReports<_ReportType>)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertCycleGeneratesNReports<_ReportType>)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

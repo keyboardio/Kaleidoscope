@@ -36,64 +36,64 @@ namespace interface {
 ///        **Important:** This class is not part of Papilio's
 ///                   public API. It is meant for internal use only.
 ///
-class ReportAction_ : public Action_ {
- public:
+    class ReportAction_ : public Action_ {
+     public:
 
-  typedef Report_ ReportType;
-  typedef ReportAction_ ActionBaseType;
+      typedef Report_ ReportType;
+      typedef ReportAction_ ActionBaseType;
 
-  virtual uint8_t getReportTypeId() const {
-    return AnyTypeReportTypeId;
-  }
+      virtual uint8_t getReportTypeId() const {
+        return AnyTypeReportTypeId;
+      }
 
-  virtual void setReport(const Report_ *report) override {
-    report_ = report;
-  }
+      virtual void setReport(const Report_ *report) override {
+        report_ = report;
+      }
 
- protected:
+     protected:
 
-  virtual const Report_ &getReport() const {
-    assert(report_);
-    return *report_;
-  }
+      virtual const Report_ &getReport() const {
+        assert(report_);
+        return *report_;
+      }
 
- protected:
+     protected:
 
-  const Report_ *report_ = nullptr;
-};
+      const Report_ *report_ = nullptr;
+    };
 
 /// @brief A report action.
 ///
 ///        **Important:** This class is not part of Papilio's
 ///                   public API. It is meant for internal use only.
 ///
-template<typename _ReportType>
-class ReportAction : public ReportAction_ {
- public:
+    template<typename _ReportType>
+    class ReportAction : public ReportAction_ {
+     public:
 
-  typedef _ReportType ReportType;
+      typedef _ReportType ReportType;
 
-  virtual uint8_t getReportTypeId() const override {
-    return _ReportType::type_;
-  }
+      virtual uint8_t getReportTypeId() const override {
+        return _ReportType::type_;
+      }
 
-  static const char *typeString() {
-    return _ReportType::typeString();
-  }
+      static const char *typeString() {
+        return _ReportType::typeString();
+      }
 
-  virtual const char *getTypeString() const override {
-    return _ReportType::typeString();
-  }
+      virtual const char *getTypeString() const override {
+        return _ReportType::typeString();
+      }
 
- protected:
+     protected:
 
-  virtual const _ReportType &getReport() const override {
-    assert(report_);
-    return *static_cast<const _ReportType *>(report_);
-  }
-};
+      virtual const _ReportType &getReport() const override {
+        assert(report_);
+        return *static_cast<const _ReportType *>(report_);
+      }
+    };
 
-} // namespace interface
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

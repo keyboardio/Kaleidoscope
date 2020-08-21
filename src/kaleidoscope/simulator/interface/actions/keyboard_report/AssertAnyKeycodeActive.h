@@ -25,41 +25,41 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that any keycodes are active in the current report.
 ///
-class AssertAnyKeycodeActive {
+    class AssertAnyKeycodeActive {
 
- public:
+     public:
 
-  SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertAnyKeycodeActive)
+      SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertAnyKeycodeActive)
 
- private:
+     private:
 
-  class Action : public ReportAction<KeyboardReport_> {
+      class Action : public ReportAction<KeyboardReport_> {
 
-   public:
+       public:
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Any keycodes active";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Any keycodes active";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Any keycodes active: ";
-      this->getSimulator()->log() << this->getReport().isAnyKeyActive();
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << "Any keycodes active: ";
+          this->getSimulator()->log() << this->getReport().isAnyKeyActive();
+        }
 
-    virtual bool evalInternal() override {
-      return this->getReport().isAnyKeyActive();
-    }
-  };
+        virtual bool evalInternal() override {
+          return this->getReport().isAnyKeyActive();
+        }
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertAnyKeycodeActive)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertAnyKeycodeActive)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -21,20 +21,20 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
-inline
-uint8_t toModifier(Key key) {
-  return key.getKeyCode();
-}
+    inline
+    uint8_t toModifier(Key key) {
+      return key.getKeyCode();
+    }
 
-inline
-uint8_t toKeycode(Key key) {
-  return key.getKeyCode();
-}
+    inline
+    uint8_t toKeycode(Key key) {
+      return key.getKeyCode();
+    }
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 
 } // namespace simulator
 } // namespace kaleidoscope

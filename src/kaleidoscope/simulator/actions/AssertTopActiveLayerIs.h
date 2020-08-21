@@ -45,26 +45,26 @@ class AssertTopActiveLayerIs {
 
   class Action : public interface::Action_ {
 
-   public:
+public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+      Action(int layer_id) : layer_id_(layer_id) {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
-    }
+      virtual void describe(const char *add_indent = "") const override {
+        this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
-    }
+      virtual void describeState(const char *add_indent = "") const {
+        this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      }
 
-    virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
-    }
+      virtual bool evalInternal() override {
+        return Layer.top() == (uint8_t)layer_id_;
+      }
 
-   private:
+private:
 
-    int layer_id_;
-  };
+      int layer_id_;
+    };
 
   SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
 };

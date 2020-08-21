@@ -23,8 +23,8 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-class Simulator_;
-} // namespace interface
+    class Simulator_;
+  } // namespace interface
 
 void processLogDocument(const char *code, interface::Simulator_ &sim);
 

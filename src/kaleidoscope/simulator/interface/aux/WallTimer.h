@@ -25,23 +25,23 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace aux {
+    namespace aux {
 
-class WallTimer {
- public:
+    class WallTimer {
+     public:
 
-  void start();
-  double elapsed(); // ms
+      void start();
+      double elapsed(); // ms
 
- private:
+     private:
 
-  typedef decltype(std::chrono::high_resolution_clock::now()) TimerType;
+      typedef decltype(std::chrono::high_resolution_clock::now()) TimerType;
 
-  TimerType start_time_;
-};
+      TimerType start_time_;
+    };
 
-} // namespace aux
-} // namespace interface
+    } // namespace aux
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

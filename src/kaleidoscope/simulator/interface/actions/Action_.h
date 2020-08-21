@@ -31,12 +31,12 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator_;
-class Report_;
+    class Simulator_;
+    class Report_;
 
 /// @private
 ///
-class VoidReport {};
+    class VoidReport {};
 
 /// @brief An abstract action.
 /// @details This abstract class serves as base class for any
@@ -45,145 +45,145 @@ class VoidReport {};
 ///        **Important:** This class is not part of Papilio's
 ///                   public API. It is meant for internal use only.
 ///
-class Action_ {
+    class Action_ {
 
- public:
+     public:
 
-  typedef VoidReport ReportType;
-  typedef Action_ ActionBaseType;
+      typedef VoidReport ReportType;
+      typedef Action_ ActionBaseType;
 
-  /// @brief Reports information about the action.
-  ///
-  /// @details Do not override this method but the method describeState instead.
-  ///
-  /// @param add_indent An additional indentation string.
-  ///
-  virtual void report(const char *add_indent = "") const;
+      /// @brief Reports information about the action.
+      ///
+      /// @details Do not override this method but the method describeState instead.
+      ///
+      /// @param add_indent An additional indentation string.
+      ///
+      virtual void report(const char *add_indent = "") const;
 
-  /// @brief Describes the action.
-  ///
-  /// @param add_indent An additional indentation string.
-  ///
-  virtual void describe(const char *add_indent = "") const = 0;
+      /// @brief Describes the action.
+      ///
+      /// @param add_indent An additional indentation string.
+      ///
+      virtual void describe(const char *add_indent = "") const = 0;
 
-  /// @brief Evaluates the condition that is supposed to be asserted.
-  /// @details Do not override this method.
-  ///
-  /// @return [bool] True if the action passed, false otherwise.
-  ///
-  bool eval() {
-    valid_ = (this->evalInternal() != negate_); // logical XOR
-    return valid_;
-  }
+      /// @brief Evaluates the condition that is supposed to be asserted.
+      /// @details Do not override this method.
+      ///
+      /// @return [bool] True if the action passed, false otherwise.
+      ///
+      bool eval() {
+        valid_ = (this->evalInternal() != negate_); // logical XOR
+        return valid_;
+      }
 
-  /// @brief Describes the current state of the action object.
-  /// @details Possibly provides information about what went wrong
-  ///         if the action failed.
-  ///
-  /// @param add_indent An additional indentation string.
-  ///
-  ///
-  virtual void describeState(const char *add_indent = "") const;
+      /// @brief Describes the current state of the action object.
+      /// @details Possibly provides information about what went wrong
+      ///         if the action failed.
+      ///
+      /// @param add_indent An additional indentation string.
+      ///
+      ///
+      virtual void describeState(const char *add_indent = "") const;
 
-  /// @brief Register the test simulator with the action.
-  ///
-  virtual void setSimulator(const Simulator_ *simulator) {
-    simulator_ = simulator;
-  }
+      /// @brief Register the test simulator with the action.
+      ///
+      virtual void setSimulator(const Simulator_ *simulator) {
+        simulator_ = simulator;
+      }
 
-  /// @brief Retreive the test simulator object that is associated with
-  ///        the action.
-  ///
-  /// @return A pointer to the current test simulator.
-  ///
-  const Simulator_ *getSimulator() const {
-    return simulator_;
-  }
+      /// @brief Retreive the test simulator object that is associated with
+      ///        the action.
+      ///
+      /// @return A pointer to the current test simulator.
+      ///
+      const Simulator_ *getSimulator() const {
+        return simulator_;
+      }
 
-  /// @brief Checks validity of an action.
-  ///
-  /// @return True if valid, false otherwise.
-  ///
-  bool isValid() const {
-    return valid_;
-  }
+      /// @brief Checks validity of an action.
+      ///
+      /// @return True if valid, false otherwise.
+      ///
+      bool isValid() const {
+        return valid_;
+      }
 
-  /// @brief Set the boolean negation state of the action validity check.
-  /// @details If negation is enabled, an action is assumed to be correct
-  ///        if the non negated version would fail.
-  ///
-  /// @param state The negation state.
-  ///
-  void negate(bool state = true) {
-    negate_ = state;
-  }
+      /// @brief Set the boolean negation state of the action validity check.
+      /// @details If negation is enabled, an action is assumed to be correct
+      ///        if the non negated version would fail.
+      ///
+      /// @param state The negation state.
+      ///
+      void negate(bool state = true) {
+        negate_ = state;
+      }
 
-  /// @brief Set the boolean negation state of the action validity check.
-  /// @details If negation is enabled, an action is assumed to be correct
-  ///        if the non negated version would fail.
-  ///
-  /// @param state The negation state.
-  ///
-  void setNegate(bool state = true) {
-    negate_ = state;
-  }
+      /// @brief Set the boolean negation state of the action validity check.
+      /// @details If negation is enabled, an action is assumed to be correct
+      ///        if the non negated version would fail.
+      ///
+      /// @param state The negation state.
+      ///
+      void setNegate(bool state = true) {
+        negate_ = state;
+      }
 
-  /// @brief Retreive the boolean negation state of the action validity check.
-  ///
-  /// @return The negation state.
-  ///
-  bool getNegate() const {
-    return negate_;
-  }
+      /// @brief Retreive the boolean negation state of the action validity check.
+      ///
+      /// @return The negation state.
+      ///
+      bool getNegate() const {
+        return negate_;
+      }
 
-  /// @details This noop method is there to satisfy the interface
-  ///        of derived classes. It is not meant to be called.
-  ///
-  virtual void setReport(const Report_ *report) {}
+      /// @details This noop method is there to satisfy the interface
+      ///        of derived classes. It is not meant to be called.
+      ///
+      virtual void setReport(const Report_ *report) {}
 
-  static const char *typeString() {
-    return "generic";
-  }
+      static const char *typeString() {
+        return "generic";
+      }
 
-  virtual const char *getTypeString() const {
-    return typeString();
-  }
+      virtual const char *getTypeString() const {
+        return typeString();
+      }
 
- protected:
+     protected:
 
-  /// @brief Evaluates the condition that is supposed to be asserted.
-  /// @details Override this method in derived actions.
-  ///
-  /// @return [bool] True if the action passed, false otherwise.
-  ///
-  virtual bool evalInternal() = 0;
+      /// @brief Evaluates the condition that is supposed to be asserted.
+      /// @details Override this method in derived actions.
+      ///
+      /// @return [bool] True if the action passed, false otherwise.
+      ///
+      virtual bool evalInternal() = 0;
 
- protected:
+     protected:
 
-  bool valid_ = false;
-  const Simulator_ *simulator_ = nullptr;
+      bool valid_ = false;
+      const Simulator_ *simulator_ = nullptr;
 
- private:
+     private:
 
-  bool negate_ = false;
-};
+      bool negate_ = false;
+    };
 
-template<typename _T>
-std::shared_ptr<_T> unwrapAction(std::shared_ptr<_T> &&ptr) {
-  return std::forward(ptr);
-}
+    template<typename _T>
+    std::shared_ptr<_T> unwrapAction(std::shared_ptr<_T> &&ptr) {
+      return std::forward(ptr);
+    }
 
-template<typename _T>
-std::shared_ptr<_T> unwrapAction(const std::shared_ptr<_T> &ptr) {
-  return ptr;
-}
+    template<typename _T>
+    std::shared_ptr<_T> unwrapAction(const std::shared_ptr<_T> &ptr) {
+      return ptr;
+    }
 
-template<typename _T>
-auto unwrapAction(const _T &action) -> decltype(action.ptr()) {
-  return action.ptr();
-}
+    template<typename _T>
+    auto unwrapAction(const _T &action) -> decltype(action.ptr()) {
+      return action.ptr();
+    }
 
-} // namespace interface
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

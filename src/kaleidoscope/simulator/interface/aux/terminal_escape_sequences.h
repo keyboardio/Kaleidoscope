@@ -23,15 +23,15 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace terminal_escape_sequences {
+    namespace terminal_escape_sequences {
 
-constexpr char reset_formatting[] = "\x1B[0m";
-constexpr char underlined[] = "\x1B[4m";
-constexpr char clear_screen[] = "\033[2J\033[1;1H";
-constexpr char cursor_to_upper_left[] = "\x1B[0;0H";
+    constexpr char reset_formatting[] = "\x1B[0m";
+    constexpr char underlined[] = "\x1B[4m";
+    constexpr char clear_screen[] = "\033[2J\033[1;1H";
+    constexpr char cursor_to_upper_left[] = "\x1B[0;0H";
 
-} // namespace terminal_escape_sequences
-} // namespace interface
+    } // namespace terminal_escape_sequences
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

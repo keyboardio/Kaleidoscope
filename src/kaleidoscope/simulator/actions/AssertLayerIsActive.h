@@ -46,26 +46,26 @@ class AssertLayerIsActive {
 
   class Action : public interface::Action_ {
 
-   public:
+public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+      Action(int layer_id) : layer_id_(layer_id) {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " expected to be active";
-    }
+      virtual void describe(const char *add_indent = "") const override {
+        this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " expected to be active";
+      }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " is active: " << Layer.isActive((uint8_t)layer_id_);
-    }
+      virtual void describeState(const char *add_indent = "") const {
+        this->getSimulator()->log() << add_indent << "Layer " << layer_id_ << " is active: " << Layer.isActive((uint8_t)layer_id_);
+      }
 
-    virtual bool evalInternal() override {
-      return Layer.isActive((uint8_t)layer_id_);
-    }
+      virtual bool evalInternal() override {
+        return Layer.isActive((uint8_t)layer_id_);
+      }
 
-   private:
+private:
 
-    int layer_id_;
-  };
+      int layer_id_;
+    };
 
   SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertLayerIsActive)
 };

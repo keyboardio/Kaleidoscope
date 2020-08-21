@@ -26,57 +26,57 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that that time that elapsed is greater than a given time in [ms].
 ///
-class AssertElapsedTimeGreater {
+    class AssertElapsedTimeGreater {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  /// @param delta_t The amount of time that is asserted being elapsed.
-  /// @param start_t An optional start point in time as reference (defaults to zero).
-  ///
-  AssertElapsedTimeGreater(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
-    :  AssertElapsedTimeGreater(DelegateConstruction{}, delta_t, start_t)
-  {}
+      /// @brief Constructor.
+      /// @param delta_t The amount of time that is asserted being elapsed.
+      /// @param start_t An optional start point in time as reference (defaults to zero).
+      ///
+      AssertElapsedTimeGreater(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
+        :  AssertElapsedTimeGreater(DelegateConstruction{}, delta_t, start_t)
+      {}
 
- private:
+     private:
 
-  class Action : public Action_ {
+      class Action : public Action_ {
 
-   public:
+       public:
 
-    Action(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
-      :  start_t_(start_t),
-         delta_t_(delta_t)
-    {}
+        Action(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
+          :  start_t_(start_t),
+             delta_t_(delta_t)
+        {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Time elapsed greater " << delta_t_ << " ms";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Time elapsed greater " << delta_t_ << " ms";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Actual time elapsed "
-                                  << this->getSimulator()->getTime() << " ms";
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << "Actual time elapsed "
+                                      << this->getSimulator()->getTime() << " ms";
+        }
 
-    virtual bool evalInternal() override {
-      return this->getSimulator()->getTime() - start_t_ > delta_t_;
-    }
+        virtual bool evalInternal() override {
+          return this->getSimulator()->getTime() - start_t_ > delta_t_;
+        }
 
-   private:
+       private:
 
-    Simulator_::TimeType start_t_ = .0;
-    Simulator_::TimeType delta_t_ = .0;
-  };
+        Simulator_::TimeType start_t_ = .0;
+        Simulator_::TimeType delta_t_ = .0;
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertElapsedTimeGreater)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertElapsedTimeGreater)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

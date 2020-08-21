@@ -25,42 +25,42 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts nothing but dumps the current report instead.
 ///
-class DumpReport {
+    class DumpReport {
 
- public:
+     public:
 
-  SIMULATOR_ACTION_STD_CONSTRUCTOR(DumpReport)
+      SIMULATOR_ACTION_STD_CONSTRUCTOR(DumpReport)
 
- private:
+     private:
 
-  class Action : public ReportAction_ {
+      class Action : public ReportAction_ {
 
-   public:
+       public:
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getReport().dump(*this->getSimulator(), add_indent);
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getReport().dump(*this->getSimulator(), add_indent);
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->describe(add_indent);
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->describe(add_indent);
+        }
 
-    virtual bool evalInternal() override {
-      this->describe();
-      return true;
-    }
+        virtual bool evalInternal() override {
+          this->describe();
+          return true;
+        }
 
-  };
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(DumpReport)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(DumpReport)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

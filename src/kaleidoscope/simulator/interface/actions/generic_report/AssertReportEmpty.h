@@ -25,41 +25,41 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that the current report is empty.
 ///
-class AssertReportEmpty {
+    class AssertReportEmpty {
 
- public:
+     public:
 
-  SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertReportEmpty)
+      SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertReportEmpty)
 
- private:
+     private:
 
-  class Action : public ReportAction_ {
+      class Action : public ReportAction_ {
 
-   public:
+       public:
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Report empty";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Report empty";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Report: ";
-      this->getReport().dump(*this->getSimulator(), add_indent);
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << "Report: ";
+          this->getReport().dump(*this->getSimulator(), add_indent);
+        }
 
-    virtual bool evalInternal() override {
-      return this->getReport().isEmpty();
-    }
-  };
+        virtual bool evalInternal() override {
+          return this->getReport().isEmpty();
+        }
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertReportEmpty)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertReportEmpty)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

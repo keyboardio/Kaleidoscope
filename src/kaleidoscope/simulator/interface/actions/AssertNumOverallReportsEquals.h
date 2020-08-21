@@ -25,56 +25,56 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Checks the number of overall reports of a specific type.
 /// @details Asserts that there was a specific number of reports
 ///          generated since testing started.
 ///
-template<typename _ReportType>
-class AssertNumOverallReportsEquals {
+    template<typename _ReportType>
+    class AssertNumOverallReportsEquals {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  /// @param n_overall_reports The expected overall number of reports
-  ///                          of type _ReportType
-  ///
-  AssertNumOverallReportsEquals(int n_overall_reports)
-    : AssertNumOverallReportsEquals(DelegateConstruction{}, n_overall_reports)
-  {}
+      /// @brief Constructor.
+      /// @param n_overall_reports The expected overall number of reports
+      ///                          of type _ReportType
+      ///
+      AssertNumOverallReportsEquals(int n_overall_reports)
+        : AssertNumOverallReportsEquals(DelegateConstruction{}, n_overall_reports)
+      {}
 
- private:
+     private:
 
-  class Action : public Action_ {
+      class Action : public Action_ {
 
-   public:
+       public:
 
-    Action(int n_overall_reports)
-      : n_overall_reports_(n_overall_reports) {}
+        Action(int n_overall_reports)
+          : n_overall_reports_(n_overall_reports) {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << n_overall_reports_ << " overall " << _ReportType::typeString() << " reports expected";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << n_overall_reports_ << " overall " << _ReportType::typeString() << " reports expected";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedOverallReports<_ReportType>() << " overall " << _ReportType::typeString() << " reports encountered";
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedOverallReports<_ReportType>() << " overall " << _ReportType::typeString() << " reports encountered";
+        }
 
-    virtual bool evalInternal() override {
-      return this->getSimulator()->getNumTypedOverallReports<_ReportType>() == n_overall_reports_;
-    }
+        virtual bool evalInternal() override {
+          return this->getSimulator()->getNumTypedOverallReports<_ReportType>() == n_overall_reports_;
+        }
 
-   private:
+       private:
 
-    int n_overall_reports_ = -1;
-  };
+        int n_overall_reports_ = -1;
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertNumOverallReportsEquals<_ReportType>)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertNumOverallReportsEquals<_ReportType>)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -27,61 +27,61 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Executes a lambda function of type bool(const _ReportType&).
 /// @details The lambda must return true to signal that the action passed
 ///        and false otherwise.
 ///
-template<typename _ReportType>
-class CustomReportAction {
+    template<typename _ReportType>
+    class CustomReportAction {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  /// @param func The function to evaluate as a condition for
-  ///        the action to pass.
-  ///
-  CustomReportAction(const std::function<bool(const _ReportType&)> &func)
-    : CustomReportAction(DelegateConstruction{}, func)
-  {}
+      /// @brief Constructor.
+      /// @param func The function to evaluate as a condition for
+      ///        the action to pass.
+      ///
+      CustomReportAction(const std::function<bool(const _ReportType&)> &func)
+        : CustomReportAction(DelegateConstruction{}, func)
+      {}
 
- private:
+     private:
 
-  class Action : public ReportAction<_ReportType> {
+      class Action : public ReportAction<_ReportType> {
 
-   public:
+       public:
 
-    using ReportAction<_ReportType>::ActionBaseType;
+        using ReportAction<_ReportType>::ActionBaseType;
 
-    Action(const std::function<bool(const _ReportType&)> &func)
-      : func_(func)
-    {}
+        Action(const std::function<bool(const _ReportType&)> &func)
+          : func_(func)
+        {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Custom "
-                                  << _ReportType::typeString() << " report action";
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Custom "
+                                      << _ReportType::typeString() << " report action";
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Custom "
-                                  << _ReportType::typeString() << " report action failed";
-    }
+        virtual void describeState(const char *add_indent = "") const {
+          this->getSimulator()->log() << add_indent << "Custom "
+                                      << _ReportType::typeString() << " report action failed";
+        }
 
-    virtual bool evalInternal() override {
-      return func_(this->getReport());
-    }
+        virtual bool evalInternal() override {
+          return func_(this->getReport());
+        }
 
-   private:
+       private:
 
-    std::function<bool(const _ReportType&)> func_;
-  };
+        std::function<bool(const _ReportType&)> func_;
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(CustomReportAction<_ReportType>)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(CustomReportAction<_ReportType>)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

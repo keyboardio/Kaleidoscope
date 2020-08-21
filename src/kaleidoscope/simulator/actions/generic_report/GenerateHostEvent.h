@@ -56,30 +56,30 @@ class GenerateHostEvent {
  private:
 
   class Action : public interface::ReportAction<typename _ReportType::BaseReportType>,
-    public HostEventAction {
-   public:
+      public HostEventAction {
+public:
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Generating host event";
-    }
+      virtual void describe(const char *add_indent = "") const override {
+        this->getSimulator()->log() << add_indent << "Generating host event";
+      }
 
-    virtual void describeState(const char *add_indent = "") const {
-      this->describe(add_indent);
-    }
+      virtual void describeState(const char *add_indent = "") const {
+        this->describe(add_indent);
+      }
 
-    virtual bool evalInternal() override;
+      virtual bool evalInternal() override;
 
-   private:
+private:
 
-    void cachePreviousReport() {
-      previous_report_
-        = std::static_pointer_cast<_ReportType>(this->getReport().clone());
-    }
+      void cachePreviousReport() {
+        previous_report_
+          = std::static_pointer_cast<_ReportType>(this->getReport().clone());
+      }
 
-   private:
+private:
 
-    std::shared_ptr<_ReportType> previous_report_;
-  };
+      std::shared_ptr<_ReportType> previous_report_;
+    };
 
   SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(GenerateHostEvent<_ReportType>)
 };

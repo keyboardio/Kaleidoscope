@@ -23,20 +23,20 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace aux {
+    namespace aux {
 
-void WallTimer::start() {
-  start_time_ = std::chrono::high_resolution_clock::now();
-}
+    void WallTimer::start() {
+      start_time_ = std::chrono::high_resolution_clock::now();
+    }
 
-double WallTimer::elapsed() {
-  static constexpr double inv_clocks_per_sec = 1.0 / CLOCKS_PER_SEC;
-  auto cur_time = std::chrono::high_resolution_clock::now();
-  return std::chrono::duration<double, std::milli>(cur_time - start_time_).count();
-}
+    double WallTimer::elapsed() {
+      static constexpr double inv_clocks_per_sec = 1.0 / CLOCKS_PER_SEC;
+      auto cur_time = std::chrono::high_resolution_clock::now();
+      return std::chrono::duration<double, std::milli>(cur_time - start_time_).count();
+    }
 
-} // namespace aux
-} // namespace interface
+    } // namespace aux
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

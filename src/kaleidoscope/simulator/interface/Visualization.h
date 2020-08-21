@@ -24,7 +24,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator_;
+    class Simulator_;
 
 /// @brief Renders a keyboard's asscii representation.
 ///
@@ -32,9 +32,9 @@ class Simulator_;
 /// @param ascii_keyboard The ascii representation of the keyboards
 ///        key layout.
 ///
-void renderKeyboard(const Simulator_ &simulator, const char *ascii_keyboard);
+    void renderKeyboard(const Simulator_ &simulator, const char *ascii_keyboard);
 
-} // namespace interface
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

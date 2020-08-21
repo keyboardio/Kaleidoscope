@@ -26,74 +26,74 @@
 namespace kaleidoscope {
 namespace simulator {
 namespace interface {
-namespace actions {
+    namespace actions {
 
 /// @brief Asserts that the current report equals another report.
 ///
-template<typename _ReportType>
-class AssertReportEquals {
+    template<typename _ReportType>
+    class AssertReportEquals {
 
- public:
+     public:
 
-  /// @brief Constructor.
-  ///
-  /// @param report The report to compare with.
-  ///
-  AssertReportEquals(const std::shared_ptr<_ReportType> &report)
-    : AssertReportEquals(DelegateConstruction{}, report)
-  {}
+      /// @brief Constructor.
+      ///
+      /// @param report The report to compare with.
+      ///
+      AssertReportEquals(const std::shared_ptr<_ReportType> &report)
+        : AssertReportEquals(DelegateConstruction{}, report)
+      {}
 
-  /// @brief Constructor.
-  ///
-  /// @param data The data of the report to compare with.
-  ///
-  AssertReportEquals(const void *data)
-    : AssertReportEquals(DelegateConstruction{}, data)
-  {}
+      /// @brief Constructor.
+      ///
+      /// @param data The data of the report to compare with.
+      ///
+      AssertReportEquals(const void *data)
+        : AssertReportEquals(DelegateConstruction{}, data)
+      {}
 
- private:
+     private:
 
-  class Action : public ReportAction<_ReportType> {
+      class Action : public ReportAction<_ReportType> {
 
-   public:
+       public:
 
-    Action(const _ReportType &report)
-      :  report_(report)
-    {}
+        Action(const _ReportType &report)
+          :  report_(report)
+        {}
 
-    Action(const void *data)
-      :  report_(_ReportType::create(data))
-    {}
+        Action(const void *data)
+          :  report_(_ReportType::create(data))
+        {}
 
-    virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Report equals: ";
-      report_->dump(*this->getSimulator(), add_indent);
-    }
+        virtual void describe(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << "Report equals: ";
+          report_->dump(*this->getSimulator(), add_indent);
+        }
 
-    virtual void describeState(const char *add_indent = "") const {
+        virtual void describeState(const char *add_indent = "") const {
 
-      this->getSimulator()->log() << add_indent << "Reports differ: ";
-      this->getSimulator()->log() << add_indent << "expected: ";
-      report_->dump(*this->getSimulator(), add_indent);
-      this->getSimulator()->log() << add_indent << "actual: ";
-      this->getReport().dump(*this->getSimulator(), add_indent);
-    }
+          this->getSimulator()->log() << add_indent << "Reports differ: ";
+          this->getSimulator()->log() << add_indent << "expected: ";
+          report_->dump(*this->getSimulator(), add_indent);
+          this->getSimulator()->log() << add_indent << "actual: ";
+          this->getReport().dump(*this->getSimulator(), add_indent);
+        }
 
-    virtual bool evalInternal() override {
+        virtual bool evalInternal() override {
 
-      return this->getReport().equals(*report_);
-    }
+          return this->getReport().equals(*report_);
+        }
 
-   private:
+       private:
 
-    std::shared_ptr<_ReportType> report_;
-  };
+        std::shared_ptr<_ReportType> report_;
+      };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertReportEquals<_ReportType>)
-};
+      SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertReportEquals<_ReportType>)
+    };
 
-} // namespace actions
-} // namespace interface
+    } // namespace actions
+  } // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 
