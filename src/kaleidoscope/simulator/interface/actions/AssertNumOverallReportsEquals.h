@@ -59,12 +59,12 @@ namespace interface {
           this->getSimulator()->log() << add_indent << n_overall_reports_ << " overall " << _ReportType::typeString() << " reports expected";
         }
 
-          this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedOverallReports<_ReportType>() << " overall " << _ReportType::typeString() << " reports encountered";
         virtual void describeState(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << this->getSimulator()->template getNumTypedOverallReports<_ReportType>() << " overall " << _ReportType::typeString() << " reports encountered";
         }
 
         virtual bool evalInternal() override {
-          return this->getSimulator()->getNumTypedOverallReports<_ReportType>() == n_overall_reports_;
+          return this->getSimulator()->template getNumTypedOverallReports<_ReportType>() == n_overall_reports_;
         }
 
        private:

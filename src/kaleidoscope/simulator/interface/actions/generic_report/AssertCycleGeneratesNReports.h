@@ -57,12 +57,12 @@ namespace interface {
           this->getSimulator()->log() << add_indent << n_reports_ << " keyboard reports expected in cycle";
         }
 
-          this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() << " keyboard reports encountered";
         virtual void describeState(const char *add_indent = "") const override {
+          this->getSimulator()->log() << add_indent << this->getSimulator()->template getNumTypedReportsInCycle<_ReportType>() << " keyboard reports encountered";
         }
 
         virtual bool evalInternal() override {
-          return this->getSimulator()->getNumTypedReportsInCycle<_ReportType>() == n_reports_;
+          return this->getSimulator()->template getNumTypedReportsInCycle<_ReportType>() == n_reports_;
         }
 
        private:
