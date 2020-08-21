@@ -18,11 +18,11 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/AglaisInterface.h"
-#include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/MouseReport.h"
-#include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
+#include "kaleidoscope/simulator/AglaisInterface.h"
+#include "kaleidoscope/simulator/reports/KeyboardReport.h"
+#include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
+#include "kaleidoscope/simulator/reports/MouseReport.h"
+#include "kaleidoscope/simulator/reports/AbsoluteMouseReport.h"
 #include "kaleidoscope/simulator/LogProtocol.h"
 #include "kaleidoscope/simulator/log_protocol/Consumer_.h"
 #include "kaleidoscope/simulator/interface/actions/generic_report/AssertReportEquals.h"
@@ -31,7 +31,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 /// @private
 ///
@@ -160,7 +159,6 @@ void processAglaisDocument(const char *code, interface::Simulator_ &simulator) {
   simulator.setErrorIfReportWithoutQueuedActions(rwqa_state);
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

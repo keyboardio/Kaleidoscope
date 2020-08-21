@@ -26,11 +26,8 @@ namespace interface {
 class Simulator_;
 } // namespace interface
 
-namespace executor {
-
 void processAglaisDocument(const char *code, interface::Simulator_ &sim);
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -26,7 +26,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 namespace actions {
 
 /// @brief Asserts that a given layer is active.
@@ -72,7 +71,6 @@ class AssertLayerIsActive {
 };
 
 } // namespace actions
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

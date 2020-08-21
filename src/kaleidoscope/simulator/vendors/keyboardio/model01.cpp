@@ -18,7 +18,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/vendors/keyboardio/model01.h"
+#include "kaleidoscope/simulator/vendors/keyboardio/model01.h"
 
 namespace kaleidoscope {
 namespace simulator {

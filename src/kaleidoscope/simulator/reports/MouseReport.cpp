@@ -18,13 +18,12 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/reports/MouseReport.h"
+#include "kaleidoscope/simulator/reports/MouseReport.h"
 
 #include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 MouseReport::MouseReport()
   :  report_data_{} {
@@ -111,7 +110,6 @@ void MouseReport::setReportData(const HID_MouseReport_Data_t &report_data) {
   memcpy(&report_data_, &report_data, sizeof(report_data_));
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

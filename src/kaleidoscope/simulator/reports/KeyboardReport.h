@@ -20,8 +20,11 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "MultiReport/Mouse.h"
-#include "kaleidoscope/simulator/interface/reports/MouseReport_.h"
+#include <stdint.h>
+
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/simulator/interface/reports/KeyboardReport_.h"
+#include "MultiReport/Keyboard.h"
 
 // Undefine some macros defined by Arduino
 //
@@ -34,95 +37,85 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 class Simulator;
 
-/// @brief An interface hat facilitates analyzing mouse reports.
+/// @brief An interface hat facilitates analyzing keyboard reports.
 ///
-class MouseReport : public interface::MouseReport_ {
+class KeyboardReport : public interface::KeyboardReport_ {
 
  public:
 
-  typedef HID_MouseReport_Data_t ReportDataType;
+  typedef HID_KeyboardReport_Data_t ReportDataType;
 
-  static constexpr uint8_t hid_report_type_ = HID_REPORTID_MOUSE;
+  static constexpr uint8_t hid_report_type_ = HID_REPORTID_NKRO_KEYBOARD;
 
   /// @brief Default consturctor.
   /// @details Creates an empty report.
   ///
-  MouseReport();
+  KeyboardReport();
 
   /// @brief Constructs based on a raw pointer to report data.
   /// @details Only use this if you know what you are doning!
   /// @param data The address where the report data starts.
   ///
-  MouseReport(const void *data);
+  KeyboardReport(const void *data);
 
   /// @brief Constructs based on a report data object.
   /// @param report_data The report data object to read.
   ///
-  MouseReport(const HID_MouseReport_Data_t &report_data);
+  KeyboardReport(const ReportDataType &report_data);
 
   template<typename..._Args>
-  static std::shared_ptr<MouseReport> create(_Args &&... args) {
-    return std::shared_ptr<MouseReport> {
-      new MouseReport{std::forward<_Args>(args)...}
+  static std::shared_ptr<KeyboardReport> create(_Args &&... args) {
+    return std::shared_ptr<KeyboardReport> {
+      new KeyboardReport{std::forward<_Args>(args)...}
     };
   }
 
   virtual std::shared_ptr<interface::Report_> clone() const override;
 
-  /// @brief Checks equality with another report.
-  /// @param other Another report to compare with.
+  /// @brief Checks equality with another key report.
+  /// @param other Another key report to compare with.
   /// @returns [bool] True if both reports are equal.
   ///
   virtual bool equals(const interface::Report_ &other) const override;
 
-  /// @brief Checks if a set of buttons is pressed.
-  /// @param button_state The state of the mouse buttons to check.
-  /// @returns True if the button state matches the given one.
+  /// @brief Checks if a keycode is active in the keyboard report.
+  /// @param keycode The keycode to check for.
+  /// @returns [bool] True if the given keycode is active.
   ///
-  virtual bool areButtonsPressed(uint8_t button_state) const override;
+  virtual bool isKeycodeActive(uint8_t keycode) const override;
 
-  /// @brief Queries if the left button is pressed.
-  /// @returns True if the left button is pressed.
+  /// @brief Retreives a list of all keycodes that are active in the
+  ///        keyboard report.
+  /// @returns A vector of keycodes.
   ///
-  virtual bool isLeftButtonPressed() const override;
+  virtual std::vector<uint8_t> getActiveKeycodes() const override;
 
-  /// @brief Queries if the middle button is pressed.
-  /// @returns True if the middle button is pressed.
+  /// @brief Checks if a modifier keycode is active in the keyboard report.
+  /// @param keycode The modifier keycode to check for.
+  /// @returns [bool] True if the given modifier keycode is active.
   ///
-  virtual bool isMiddleButtonPressed() const override;
+  virtual bool isModifierKeycodeActive(uint8_t modifier) const override;
 
-  /// @brief Queries if the right button is pressed.
-  /// @returns True if the right button is pressed.
+  /// @brief Checks if any modifier keycode is active.
+  /// @returns [bool] True if any modifier keycode is active, false otherwise.
   ///
-  virtual bool isRightButtonPressed() const override;
+  virtual bool isAssertAnyModifierActive() const override;
 
-  /// @brief Queries the x-movement stored in the report.
-  /// @returns The x-movement.
+  /// @brief Checks if any key keycode is active.
+  /// @returns [bool] True if any key keycode is active, false otherwise.
   ///
-  virtual int8_t getXMovement() const override;
+  virtual bool isAnyKeyActive() const override;
 
-  /// @brief Queries the y-movement stored in the report.
-  /// @returns The y-movement.
+  /// @brief Retreives a list of active modifier keycodes.
+  /// @returns A list of active modifier keycodes.
   ///
-  virtual int8_t getYMovement() const override;
-
-  /// @brief Queries the verical wheel movement.
-  /// @returns The vertical wheel movement.
-  ///
-  virtual int8_t getVerticalWheel() const override;
-
-  /// @brief Queries the horizontal wheel movement.
-  /// @returns The horizontal wheel movement.
-  ///
-  virtual int8_t getHorizontalWheel() const override;
+  virtual std::vector<uint8_t> getActiveModifiers() const override;
 
   /// @brief Checks if the report is empty.
-  /// @details Empty means that no buttons are active and
-  ///        no motion or wheel activity is present.
+  /// @details Empty means neither key nor modifier keycodes are active.
   ///
   virtual bool isEmpty() const override;
 
@@ -135,14 +128,14 @@ class MouseReport : public interface::MouseReport_ {
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.
   ///
-  void setReportData(const HID_MouseReport_Data_t &report_data);
+  void setReportData(const ReportDataType &report_data);
 
-  const HID_MouseReport_Data_t& getReportData() const {
+  const ReportDataType& getReportData() const {
     return report_data_;
   }
 
   static const char *typeString() {
-    return "mouse";
+    return "keyboard";
   }
   virtual const char *getTypeString() const override {
     return typeString();
@@ -150,10 +143,9 @@ class MouseReport : public interface::MouseReport_ {
 
  private:
 
-  HID_MouseReport_Data_t report_data_;
+  ReportDataType report_data_;
 };
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

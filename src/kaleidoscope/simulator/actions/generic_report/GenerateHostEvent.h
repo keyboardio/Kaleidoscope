@@ -27,7 +27,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 namespace actions {
 
 /// @private
@@ -85,7 +84,6 @@ class GenerateHostEvent {
 };
 
 } // namespace actions
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

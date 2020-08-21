@@ -18,12 +18,11 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
+#include "kaleidoscope/simulator/reports/AbsoluteMouseReport.h"
 #include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 AbsoluteMouseReport::AbsoluteMouseReport()
   :  report_data_{} {
@@ -118,7 +117,6 @@ void AbsoluteMouseReport::setReportData(const AbsoluteMouseReport::ReportDataTyp
   memcpy(&report_data_, &report_data, sizeof(report_data_));
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

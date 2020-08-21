@@ -24,8 +24,8 @@
 //
 #include <stdint.h>
 
-#include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
-#include "kaleidoscope/simulator/executor/aux/exceptions.h"
+#include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
+#include "kaleidoscope/simulator/aux/exceptions.h"
 #include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 #include "MultiReport/Keyboard.h"
@@ -34,7 +34,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 BootKeyboardReport
 ::BootKeyboardReport()
@@ -204,7 +203,6 @@ BootKeyboardReport
   }
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

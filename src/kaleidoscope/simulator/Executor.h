@@ -30,8 +30,6 @@ namespace kaleidoscope {
 ///
 namespace simulator {
 
-namespace executor {
-
 /// @brief A Kaleidoscope specific simulator class.
 ///
 class Executor : public interface::Simulator_ {
@@ -49,7 +47,6 @@ class Executor : public interface::Simulator_ {
                                int len, int result);
 };
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

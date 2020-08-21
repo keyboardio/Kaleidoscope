@@ -20,9 +20,8 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/simulator/interface/reports/BootKeyboardReport_.h"
-#include "BootKeyboard/BootKeyboard.h"
+#include "DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/simulator/interface/reports/AbsoluteMouseReport_.h"
 
 // Undefine some macros defined by Arduino
 //
@@ -35,86 +34,97 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 class Simulator;
 
-/// @brief An interface hat facilitates analyzing boot keyboard reports.
+/// @brief An interface hat facilitates analyzing absolute mouse reports.
 ///
-class BootKeyboardReport : public interface::BootKeyboardReport_ {
+class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
 
  public:
 
-  typedef HID_BootKeyboardReport_Data_t ReportDataType;
+  typedef HID_MouseAbsoluteReport_Data_t ReportDataType;
 
-  static constexpr uint8_t hid_report_type_ = HID_REPORTID_KEYBOARD;
+  static constexpr uint16_t max_x_coordinate = 32767;
+  static constexpr uint16_t max_y_coordinate = 32767;
 
   /// @brief Default consturctor.
   /// @details Creates an empty report.
   ///
-  BootKeyboardReport();
+  AbsoluteMouseReport();
 
   /// @brief Constructs based on a raw pointer to report data.
   /// @details Only use this if you know what you are doning!
   /// @param data The address where the report data starts.
   ///
-  BootKeyboardReport(const void *data);
+  AbsoluteMouseReport(const void *);
 
   /// @brief Constructs based on a report data object.
   /// @param report_data The report data object to read.
   ///
-  BootKeyboardReport(const ReportDataType &report_data);
+  AbsoluteMouseReport(const ReportDataType &report_data);
 
   template<typename..._Args>
-  static std::shared_ptr<BootKeyboardReport> create(_Args &&... args) {
-    return std::shared_ptr<BootKeyboardReport> {
-      new BootKeyboardReport{std::forward<_Args>(args)...}
+  static std::shared_ptr<AbsoluteMouseReport> create(_Args &&... args) {
+    return std::shared_ptr<AbsoluteMouseReport> {
+      new AbsoluteMouseReport{std::forward<_Args>(args)...}
     };
   }
 
+  AbsoluteMouseReport &operator=(const AbsoluteMouseReport &other);
+
   virtual std::shared_ptr<interface::Report_> clone() const override;
 
-  /// @brief Checks equality with another key report.
-  /// @param other Another key report to compare with.
+  /// @brief Checks equality with another report.
+  /// @param other Another report to compare with.
   /// @returns [bool] True if both reports are equal.
   ///
   virtual bool equals(const interface::Report_ &other) const override;
 
-  /// @brief Checks if a keycode is active in the keyboard report.
-  /// @param keycode The keycode to check for.
-  /// @returns [bool] True if the given keycode is active.
+  /// @brief Checks if a set of buttons is pressed.
+  /// @param button_state The state of the mouse buttons to check.
+  /// @returns True if the button state matches the given one.
   ///
-  virtual bool isKeycodeActive(uint8_t keycode) const override;
+  virtual bool areButtonsPressed(uint8_t button_state) const override;
 
-  /// @brief Retreives a list of all keycodes that are active in the
-  ///        keyboard report.
-  /// @returns A vector of keycodes.
+  /// @brief Queries if the left button is pressed.
+  /// @returns True if the left button is pressed.
   ///
-  virtual std::vector<uint8_t> getActiveKeycodes() const override;
+  virtual bool isLeftButtonPressed() const override;
 
-  /// @brief Checks if a modifier keycode is active in the keyboard report.
-  /// @param keycode The modifier keycode to check for.
-  /// @returns [bool] True if the given modifier keycode is active.
+  /// @brief Queries if the middle button is pressed.
+  /// @returns True if the middle button is pressed.
   ///
-  virtual bool isModifierKeycodeActive(uint8_t modifier) const override;
+  virtual bool isMiddleButtonPressed() const override;
 
-  /// @brief Checks if any modifier keycode is active.
-  /// @returns [bool] True if any modifier keycode is active, false otherwise.
+  /// @brief Queries if the right button is pressed.
+  /// @returns True if the right button is pressed.
   ///
-  virtual bool isAssertAnyModifierActive() const override;
+  virtual bool isRightButtonPressed() const override;
 
-  /// @brief Checks if any key keycode is active.
-  /// @returns [bool] True if any key keycode is active, false otherwise.
+  /// @brief Queries the absolute x-position.
+  /// @returns The absolute x-position.
   ///
-  virtual bool isAnyKeyActive() const override;
+  virtual uint16_t getXPosition() const override;
 
-  /// @brief Retreives a list of active modifier keycodes.
-  /// @returns A list of active modifier keycodes.
+  /// @brief Queries the absolute y-position.
+  /// @returns The absolute y-position.
   ///
-  virtual std::vector<uint8_t> getActiveModifiers() const override;
+  virtual uint16_t getYPosition() const override;
+
+  /// @brief Queries the absolute vertical wheel-position.
+  /// @returns The absolute vertical wheel-position.
+  ///
+  virtual int8_t getVerticalWheel() const override;
+
+  /// @brief Queries the absolute horizontal wheel-position.
+  /// @returns The absolute horizontal wheel-position.
+  ///
+  virtual int8_t getHorizontalWheel() const override;
 
   /// @brief Checks if the report is empty.
-  /// @details Empty means neither key nor modifier keycodes are active.
+  /// @details Empty means that no buttons are active and
+  ///        no motion or wheel activity is present.
   ///
   virtual bool isEmpty() const override;
 
@@ -134,7 +144,7 @@ class BootKeyboardReport : public interface::BootKeyboardReport_ {
   }
 
   static const char *typeString() {
-    return "keyboard";
+    return "absolute mouse";
   }
   virtual const char *getTypeString() const override {
     return typeString();
@@ -145,7 +155,6 @@ class BootKeyboardReport : public interface::BootKeyboardReport_ {
   ReportDataType report_data_;
 };
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

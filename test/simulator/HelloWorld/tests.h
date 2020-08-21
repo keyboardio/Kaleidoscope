@@ -17,7 +17,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "Kaleidoscope-Simulator.h"
-#include "kaleidoscope/simulator/executor/AglaisInterface.h"
+#include "kaleidoscope/simulator/AglaisInterface.h"
 
 #include <iostream>
 #include <sstream>
@@ -26,7 +26,6 @@ KALEIDOSCOPE_SIMULATOR_INIT
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 extern const char aglais_test_recording[];
 
@@ -57,7 +56,6 @@ const char aglais_test_recording[] =
 #include "IO_protocol.agl"
   ;
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

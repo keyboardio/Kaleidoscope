@@ -26,7 +26,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 namespace actions {
 
 /// @brief Asserts that a given layer is the current top layer.
@@ -71,7 +70,6 @@ class AssertTopActiveLayerIs {
 };
 
 } // namespace actions
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

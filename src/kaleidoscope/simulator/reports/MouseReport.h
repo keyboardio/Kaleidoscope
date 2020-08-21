@@ -20,8 +20,8 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "DeviceAPIs/AbsoluteMouseAPI.h"
-#include "kaleidoscope/simulator/interface/reports/AbsoluteMouseReport_.h"
+#include "MultiReport/Mouse.h"
+#include "kaleidoscope/simulator/interface/reports/MouseReport_.h"
 
 // Undefine some macros defined by Arduino
 //
@@ -34,45 +34,41 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 class Simulator;
 
-/// @brief An interface hat facilitates analyzing absolute mouse reports.
+/// @brief An interface hat facilitates analyzing mouse reports.
 ///
-class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
+class MouseReport : public interface::MouseReport_ {
 
  public:
 
-  typedef HID_MouseAbsoluteReport_Data_t ReportDataType;
+  typedef HID_MouseReport_Data_t ReportDataType;
 
-  static constexpr uint16_t max_x_coordinate = 32767;
-  static constexpr uint16_t max_y_coordinate = 32767;
+  static constexpr uint8_t hid_report_type_ = HID_REPORTID_MOUSE;
 
   /// @brief Default consturctor.
   /// @details Creates an empty report.
   ///
-  AbsoluteMouseReport();
+  MouseReport();
 
   /// @brief Constructs based on a raw pointer to report data.
   /// @details Only use this if you know what you are doning!
   /// @param data The address where the report data starts.
   ///
-  AbsoluteMouseReport(const void *);
+  MouseReport(const void *data);
 
   /// @brief Constructs based on a report data object.
   /// @param report_data The report data object to read.
   ///
-  AbsoluteMouseReport(const ReportDataType &report_data);
+  MouseReport(const HID_MouseReport_Data_t &report_data);
 
   template<typename..._Args>
-  static std::shared_ptr<AbsoluteMouseReport> create(_Args &&... args) {
-    return std::shared_ptr<AbsoluteMouseReport> {
-      new AbsoluteMouseReport{std::forward<_Args>(args)...}
+  static std::shared_ptr<MouseReport> create(_Args &&... args) {
+    return std::shared_ptr<MouseReport> {
+      new MouseReport{std::forward<_Args>(args)...}
     };
   }
-
-  AbsoluteMouseReport &operator=(const AbsoluteMouseReport &other);
 
   virtual std::shared_ptr<interface::Report_> clone() const override;
 
@@ -103,23 +99,23 @@ class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
   ///
   virtual bool isRightButtonPressed() const override;
 
-  /// @brief Queries the absolute x-position.
-  /// @returns The absolute x-position.
+  /// @brief Queries the x-movement stored in the report.
+  /// @returns The x-movement.
   ///
-  virtual uint16_t getXPosition() const override;
+  virtual int8_t getXMovement() const override;
 
-  /// @brief Queries the absolute y-position.
-  /// @returns The absolute y-position.
+  /// @brief Queries the y-movement stored in the report.
+  /// @returns The y-movement.
   ///
-  virtual uint16_t getYPosition() const override;
+  virtual int8_t getYMovement() const override;
 
-  /// @brief Queries the absolute vertical wheel-position.
-  /// @returns The absolute vertical wheel-position.
+  /// @brief Queries the verical wheel movement.
+  /// @returns The vertical wheel movement.
   ///
   virtual int8_t getVerticalWheel() const override;
 
-  /// @brief Queries the absolute horizontal wheel-position.
-  /// @returns The absolute horizontal wheel-position.
+  /// @brief Queries the horizontal wheel movement.
+  /// @returns The horizontal wheel movement.
   ///
   virtual int8_t getHorizontalWheel() const override;
 
@@ -138,14 +134,14 @@ class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.
   ///
-  void setReportData(const ReportDataType &report_data);
+  void setReportData(const HID_MouseReport_Data_t &report_data);
 
-  const ReportDataType& getReportData() const {
+  const HID_MouseReport_Data_t& getReportData() const {
     return report_data_;
   }
 
   static const char *typeString() {
-    return "absolute mouse";
+    return "mouse";
   }
   virtual const char *getTypeString() const override {
     return typeString();
@@ -153,10 +149,9 @@ class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
 
  private:
 
-  ReportDataType report_data_;
+  HID_MouseReport_Data_t report_data_;
 };
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

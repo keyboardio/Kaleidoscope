@@ -18,11 +18,11 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/actions/generic_report/GenerateHostEvent.h"
-#include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/MouseReport.h"
-#include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
+#include "kaleidoscope/simulator/actions/generic_report/GenerateHostEvent.h"
+#include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
+#include "kaleidoscope/simulator/reports/KeyboardReport.h"
+#include "kaleidoscope/simulator/reports/MouseReport.h"
+#include "kaleidoscope/simulator/reports/AbsoluteMouseReport.h"
 #include "kaleidoscope/simulator/interface/Simulator_.h"
 
 #ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
@@ -39,7 +39,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 namespace actions {
 
 HostEventAction::HostEventAction()
@@ -390,7 +389,6 @@ bool GenerateHostEvent<AbsoluteMouseReport>::Action::evalInternal() {
 }
 
 } // namespace actions
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

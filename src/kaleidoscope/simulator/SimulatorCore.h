@@ -24,7 +24,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 /// @brief A Kaleidoscope specific simulator core class.
 ///
@@ -58,7 +57,6 @@ class SimulatorCore : public interface::SimulatorCore_ {
   virtual void loop() override;
 };
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

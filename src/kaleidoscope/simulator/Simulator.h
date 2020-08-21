@@ -40,13 +40,13 @@ uint8_t toKeycode(Key key) {
 } // namespace kaleidoscope
 
 #include "kaleidoscope/simulator/Interface.h"
-#include "kaleidoscope/simulator/executor/Executor.h"
-#include "kaleidoscope/simulator/executor/AglaisInterface.h"
+#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/AglaisInterface.h"
 #include "kaleidoscope/simulator/interface/Visualization.h"
 
-#include "kaleidoscope/simulator/executor/actions/AssertLayerIsActive.h"
-#include "kaleidoscope/simulator/executor/actions/AssertTopActiveLayerIs.h"
-#include "kaleidoscope/simulator/executor/actions/generic_report/GenerateHostEvent.h"
+#include "kaleidoscope/simulator/actions/AssertLayerIsActive.h"
+#include "kaleidoscope/simulator/actions/AssertTopActiveLayerIs.h"
+#include "kaleidoscope/simulator/actions/generic_report/GenerateHostEvent.h"
 
 #include <iostream>
 
@@ -60,10 +60,8 @@ extern void executeTestFunction();
                                                                                \
    namespace kaleidoscope {                                                    \
    namespace simulator {                                                       \
-   namespace executor {                                                        \
    /* Forward declare the actual test function */                              \
    void runSimulator(Executor &simulator);                                     \
-   } /* namespace executor */                                                  \
    } /* namespace simulator */                                                 \
    } /* namespace kaleidoscope */                                              \
                                                                                \
@@ -72,6 +70,6 @@ extern void executeTestFunction();
     */                                                                         \
    void executeTestFunction() {                                                \
       setup(); /* setup Kaleidoscope */                                        \
-      using namespace kaleidoscope::simulator::executor;                       \
+      using namespace kaleidoscope::simulator;                                 \
       runSimulator(Executor::getInstance());                                   \
    }

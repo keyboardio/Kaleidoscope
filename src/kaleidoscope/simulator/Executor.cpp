@@ -18,12 +18,12 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/Executor.h"
-#include "kaleidoscope/simulator/executor/SimulatorCore.h"
-#include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
-#include "kaleidoscope/simulator/executor/reports/MouseReport.h"
-#include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
+#include "kaleidoscope/simulator/Executor.h"
+#include "kaleidoscope/simulator/SimulatorCore.h"
+#include "kaleidoscope/simulator/reports/KeyboardReport.h"
+#include "kaleidoscope/simulator/reports/BootKeyboardReport.h"
+#include "kaleidoscope/simulator/reports/MouseReport.h"
+#include "kaleidoscope/simulator/reports/AbsoluteMouseReport.h"
 
 #include "Kaleidoscope.h"
 #include "HIDReportObserver.h"
@@ -32,7 +32,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 Executor::Executor(std::ostream &out) : interface::Simulator_{out} {
   this->setCore(
@@ -84,7 +83,6 @@ void Executor::processHIDReport(uint8_t id, const void* data,
   }
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -18,7 +18,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/executor/SimulatorCore.h"
+#include "kaleidoscope/simulator/SimulatorCore.h"
 
 #include "Kaleidoscope.h"
 
@@ -29,7 +29,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 std::map<uint8_t, const char*> hid_code_to_string = {
   { 0x04, "A   " },  // HID_KEYBOARD_A_AND_A
@@ -466,12 +465,11 @@ void SimulatorCore::loop() {
   ::loop();
 }
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 
 unsigned long millis(void) {
-  return kaleidoscope::simulator::executor::millis;
+  return kaleidoscope::simulator::millis;
 }
 
 #endif // KALEIDOSCOPE_VIRTUAL_BUILD

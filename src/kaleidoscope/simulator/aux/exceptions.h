@@ -25,7 +25,6 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
 
 /// @private
 ///
@@ -46,7 +45,6 @@ struct OStringStreamWrapper {
 #define KS_T_EXCEPTION(...)                                                    \
    throw std::runtime_error(OStringStreamWrapper() << __VA_ARGS__);
 
-} // namespace executor
 } // namespace simulator
 } // namespace kaleidoscope
 
