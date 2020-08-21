@@ -34,7 +34,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace executor {
 
-Executor::Executor(std::ostream &out) : interface::Simulator{out} {
+Executor::Executor(std::ostream &out) : interface::Simulator_{out} {
   this->setCore(
   std::shared_ptr<SimulatorCore> {
     new SimulatorCore{}

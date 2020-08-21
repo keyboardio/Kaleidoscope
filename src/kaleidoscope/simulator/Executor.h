@@ -39,7 +39,7 @@ uint8_t toKeycode(Key key) {
 } // namespace simulator
 } // namespace kaleidoscope
 
-#include "kaleidoscope/simulator/Framework.h"
+#include "kaleidoscope/simulator/Interface.h"
 #include "kaleidoscope/simulator/executor/Executor.h"
 #include "kaleidoscope/simulator/executor/AglaisInterface.h"
 #include "kaleidoscope/simulator/interface/Visualization.h"

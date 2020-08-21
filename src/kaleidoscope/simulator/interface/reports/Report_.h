@@ -34,7 +34,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 
 enum {
   AnyTypeReportTypeId = 0,
@@ -74,7 +74,7 @@ class Report_ {
   ///        to the simulator's log stream.
   /// @param add_indent An additional indentation string.
   ///
-  virtual void dump(const Simulator &simulator, const char *add_indent = "") const = 0;
+  virtual void dump(const Simulator_ &simulator, const char *add_indent = "") const = 0;
 
   static const char *typeString() {
     return "generic report";

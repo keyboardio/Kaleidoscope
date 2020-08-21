@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -104,7 +104,7 @@ bool AbsoluteMouseReport::isEmpty() const {
          && (report_data_.wheel == 0);
 }
 
-void AbsoluteMouseReport::dump(const interface::Simulator &simulator, const char *add_indent) const {
+void AbsoluteMouseReport::dump(const interface::Simulator_ &simulator, const char *add_indent) const {
   simulator.log() << add_indent << "Absolute mouse report content:";
   simulator.log() << add_indent << "  left button: " << this->isLeftButtonPressed();
   simulator.log() << add_indent << "  middle button: " << this->isMiddleButtonPressed();

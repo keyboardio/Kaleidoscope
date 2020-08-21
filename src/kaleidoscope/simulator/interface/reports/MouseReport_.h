@@ -34,7 +34,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 
 /// @brief An interface hat facilitates analyzing mouse reports.
 ///

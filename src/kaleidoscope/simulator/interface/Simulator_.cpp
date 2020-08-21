@@ -20,7 +20,7 @@
 
 #include "Arduino.h"
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/ActionContainer_Impl.h"
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 #include "kaleidoscope/simulator/interface/aux/WallTimer.h"
@@ -86,7 +86,7 @@ void SimulatorStream_::reactOnLineEnd() {
   this->getOStream() << "\n";
 }
 
-ErrorStream::ErrorStream(const Simulator *simulator)
+ErrorStream::ErrorStream(const Simulator_ *simulator)
   :  SimulatorStream_(simulator) {
   auto &out = this->getOStream();
 
@@ -119,7 +119,7 @@ void ErrorStream::reactOnLineStart() {
   this->getOStream() << "!!! ";
 }
 
-DebugStream::DebugStream(const Simulator *simulator)
+DebugStream::DebugStream(const Simulator_ *simulator)
   :  SimulatorStream_(simulator) {
   if (this->mute()) {
     return;
@@ -155,7 +155,7 @@ void DebugStream::reactOnLineStart() {
   this->getOStream() << "***Debug: ";
 }
 
-LogStream::LogStream(const Simulator *simulator)
+LogStream::LogStream(const Simulator_ *simulator)
   :  SimulatorStream_(simulator) {
 }
 
@@ -167,7 +167,7 @@ LogStream::~LogStream() {
   this->getOStream() << "\n";
 }
 
-HeaderStream::HeaderStream(const Simulator *simulator)
+HeaderStream::HeaderStream(const Simulator_ *simulator)
   :  SimulatorStream_(simulator) {
   if (this->mute()) {
     return;
@@ -205,7 +205,7 @@ void HeaderStream::reactOnLineStart() {
   this->getOStream() << "### ";
 }
 
-Test::Test(Simulator *simulator, const char *name)
+Test::Test(Simulator_ *simulator, const char *name)
   :  simulator_(simulator),
      name_(name),
      error_count_start_(simulator->getErrorCount()) {
@@ -222,10 +222,10 @@ Test::~Test() {
   }
 }
 
-Simulator::Simulator(std::ostream &out,
-                     bool debug,
-                     int cycle_duration,
-                     bool abort_on_first_error)
+Simulator_::Simulator_(std::ostream &out,
+                       bool debug,
+                       int cycle_duration,
+                       bool abort_on_first_error)
 
   :  out_{&out},
      debug_{debug},
@@ -245,7 +245,7 @@ Simulator::Simulator(std::ostream &out,
   this->headerText();
 }
 
-Simulator::~Simulator() {
+Simulator_::~Simulator_() {
   this->footerText();
 
   if (!test_success_) {
@@ -254,24 +254,24 @@ Simulator::~Simulator() {
   }
 }
 
-void Simulator::pressKey(uint8_t row, uint8_t col) {
+void Simulator_::pressKey(uint8_t row, uint8_t col) {
   this->log() << "+ Activating key (" << (unsigned)row << ", " << (unsigned)col << ")";
   simulator_core_->pressKey(row, col);
 }
 
-void Simulator::releaseKey(uint8_t row, uint8_t col) {
+void Simulator_::releaseKey(uint8_t row, uint8_t col) {
   this->log() << "+ Releasing key (" << (unsigned)row << ", " << (unsigned)col << ")";
   simulator_core_->releaseKey(row, col);
 }
 
-void Simulator::tapKey(uint8_t row, uint8_t col) {
+void Simulator_::tapKey(uint8_t row, uint8_t col) {
   this->log() << "+- Tapping key (" << (unsigned)row << ", " << (unsigned)col << ")";
   simulator_core_->tapKey(row, col);
 }
 
-void Simulator::multiTapKeyInternal(int num_taps, uint8_t row, uint8_t col,
-                                    int tap_interval_cycles,
-                                    std::shared_ptr<Action_> after_tap_and_cycles_action) {
+void Simulator_::multiTapKeyInternal(int num_taps, uint8_t row, uint8_t col,
+                                     int tap_interval_cycles,
+                                     std::shared_ptr<Action_> after_tap_and_cycles_action) {
   if (after_tap_and_cycles_action) {
     after_tap_and_cycles_action->setSimulator(this);
   }
@@ -302,7 +302,7 @@ void Simulator::multiTapKeyInternal(int num_taps, uint8_t row, uint8_t col,
   }
 }
 
-void Simulator::clearAllKeys() {
+void Simulator_::clearAllKeys() {
   this->log() << "- Clearing all keys";
 
   uint8_t rows = 0, cols = 0;
@@ -316,7 +316,7 @@ void Simulator::clearAllKeys() {
   }
 }
 
-void Simulator::cycle(bool suppress_cycle_info_log) {
+void Simulator_::cycle(bool suppress_cycle_info_log) {
   if (!suppress_cycle_info_log) {
     this->log() << "Running single scan cycle";
   }
@@ -328,8 +328,8 @@ void Simulator::cycle(bool suppress_cycle_info_log) {
   }
 }
 
-void Simulator::cyclesInternal(int n,
-                               const std::vector<std::shared_ptr<Action_>> &cycle_action_list) {
+void Simulator_::cyclesInternal(int n,
+                                const std::vector<std::shared_ptr<Action_>> &cycle_action_list) {
   if (n == 0) {
     n = scan_cycles_default_count_;
   }
@@ -344,7 +344,7 @@ void Simulator::cyclesInternal(int n,
   this->log() << "";
 }
 
-void Simulator::advanceTimeBy(Simulator::TimeType delta_t) {
+void Simulator_::advanceTimeBy(Simulator_::TimeType delta_t) {
 
   this->checkCycleDurationSet();
 
@@ -353,13 +353,13 @@ void Simulator::advanceTimeBy(Simulator::TimeType delta_t) {
   this->skipTimeInternal(delta_t);
 }
 
-void Simulator::skipTimeInternal(Simulator::TimeType delta_t) {
+void Simulator_::skipTimeInternal(Simulator_::TimeType delta_t) {
 
   auto start_cycle = cycle_id_;
 
   auto start_time = time_;
 
-  Simulator::TimeType elapsed_time = 0;
+  Simulator_::TimeType elapsed_time = 0;
   while (elapsed_time < delta_t) {
     this->cycleInternal(true /* only_log_reports */);
     elapsed_time = time_ - start_time;
@@ -370,7 +370,7 @@ void Simulator::skipTimeInternal(Simulator::TimeType delta_t) {
   this->log() << "";
 }
 
-void Simulator::advanceTimeTo(TimeType time) {
+void Simulator_::advanceTimeTo(TimeType time) {
   if (time <= time_) {
     this->error() << "Failed cycling to time " << time << " ms. Target time is in the past.";
     return;
@@ -383,12 +383,12 @@ void Simulator::advanceTimeTo(TimeType time) {
   this->skipTimeInternal(delta_t);
 }
 
-void Simulator::init() {
+void Simulator_::init() {
   this->clearAllKeys();
   simulator_core_->init();
 }
 
-bool Simulator::checkStatus() {
+bool Simulator_::checkStatus() {
 
   if (!queued_report_actions_.empty()) {
     this->error() << "There are " << queued_report_actions_.size()
@@ -415,7 +415,7 @@ bool Simulator::checkStatus() {
   return false;
 }
 
-void Simulator::headerText() {
+void Simulator_::headerText() {
 
   // Foreground color yellow
   //
@@ -440,7 +440,7 @@ void Simulator::headerText() {
   this->getOStream() << "\x1B[0m";
 }
 
-void Simulator::footerText() {
+void Simulator_::footerText() {
 
   // Foreground color yellow
   //
@@ -471,7 +471,7 @@ void Simulator::footerText() {
   this->getOStream() << "\x1B[0m";
 }
 
-void Simulator::cycleInternal(bool only_log_reports) {
+void Simulator_::cycleInternal(bool only_log_reports) {
 
   ++cycle_id_;
   n_reports_in_cycle_ = 0;
@@ -516,14 +516,14 @@ void Simulator::cycleInternal(bool only_log_reports) {
   }
 }
 
-void Simulator::checkCycleDurationSet() {
+void Simulator_::checkCycleDurationSet() {
   if (cycle_duration_ == 0) {
     this->error() << "Please set test.cycle_duration_ to a value in "
                   "[ms] greater zero before using time based testing";
   }
 }
 
-void Simulator::assertNothingQueued() const {
+void Simulator_::assertNothingQueued() const {
   if (!queued_report_actions_.empty()) {
     this->error() << "Report actions are left in queue";
   }
@@ -533,14 +533,14 @@ void Simulator::assertNothingQueued() const {
   }
 }
 
-void Simulator::assertCondition(bool cond, const char *action_code) const {
+void Simulator_::assertCondition(bool cond, const char *action_code) const {
   if (!cond) {
     this->error() << "Action failed: " << action_code;
   }
 }
 
-void Simulator::runRealtime(TimeType duration,
-                            const std::function<void()> &cycle_function) {
+void Simulator_::runRealtime(TimeType duration,
+                             const std::function<void()> &cycle_function) {
   auto n_cycles = duration / cycle_duration_;
 
   aux::WallTimer timer;
@@ -591,12 +591,12 @@ class DataCollectorThread {
   uint16_t key_bitfield_[n_bytes_per_row] = {};
   std::mutex mutex_;
 
-  friend class Simulator;
+  friend class Simulator_;
 };
 
-void Simulator::runRemoteControlled(const std::function<void()> &cycle_callback,
-                                    bool realtime
-                                   ) {
+void Simulator_::runRemoteControlled(const std::function<void()> &cycle_callback,
+                                     bool realtime
+                                     ) {
   aux::WallTimer timer;
 
   DataCollectorThread dct;

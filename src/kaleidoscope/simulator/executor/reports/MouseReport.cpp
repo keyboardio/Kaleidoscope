@@ -20,7 +20,7 @@
 
 #include "kaleidoscope/simulator/executor/reports/MouseReport.h"
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -96,7 +96,7 @@ bool MouseReport::isEmpty() const {
          && (report_data_.hWheel == 0);
 }
 
-void MouseReport::dump(const interface::Simulator &simulator, const char *add_indent) const {
+void MouseReport::dump(const interface::Simulator_ &simulator, const char *add_indent) const {
   simulator.log() << add_indent << "Mouse report content:";
   simulator.log() << add_indent << "  left button: " << this->isLeftButtonPressed();
   simulator.log() << add_indent << "  middle button: " << this->isMiddleButtonPressed();

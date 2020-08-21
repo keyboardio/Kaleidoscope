@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/interface/Visualization.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 #include "kaleidoscope/simulator/interface/aux/terminal_escape_sequences.h"
 
@@ -113,7 +113,7 @@ class KeyboardRenderer {
   const SimulatorCore_ &simulator_core_;
 };
 
-void renderKeyboard(const Simulator &simulator, const char *ascii_keyboard) {
+void renderKeyboard(const Simulator_ &simulator, const char *ascii_keyboard) {
 
   KeyAddrToKeyString lookup;
   KeyboardRenderer kr{simulator.getCore()};

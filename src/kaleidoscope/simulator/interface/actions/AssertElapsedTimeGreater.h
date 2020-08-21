@@ -21,7 +21,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -38,7 +38,7 @@ class AssertElapsedTimeGreater {
   /// @param delta_t The amount of time that is asserted being elapsed.
   /// @param start_t An optional start point in time as reference (defaults to zero).
   ///
-  AssertElapsedTimeGreater(Simulator::TimeType delta_t, Simulator::TimeType start_t = 0)
+  AssertElapsedTimeGreater(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
     :  AssertElapsedTimeGreater(DelegateConstruction{}, delta_t, start_t)
   {}
 
@@ -48,7 +48,7 @@ class AssertElapsedTimeGreater {
 
    public:
 
-    Action(Simulator::TimeType delta_t, Simulator::TimeType start_t = 0)
+    Action(Simulator_::TimeType delta_t, Simulator_::TimeType start_t = 0)
       :  start_t_(start_t),
          delta_t_(delta_t)
     {}
@@ -68,8 +68,8 @@ class AssertElapsedTimeGreater {
 
    private:
 
-    Simulator::TimeType start_t_ = .0;
-    Simulator::TimeType delta_t_ = .0;
+    Simulator_::TimeType start_t_ = .0;
+    Simulator_::TimeType delta_t_ = .0;
   };
 
   SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertElapsedTimeGreater)

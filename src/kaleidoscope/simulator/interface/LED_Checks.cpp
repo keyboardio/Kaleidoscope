@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/interface/LED_Checks.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 
 #include <iostream>
@@ -28,7 +28,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-void dumpKeyLEDState(const Simulator &simulator) {
+void dumpKeyLEDState(const Simulator_ &simulator) {
 
   std::cout << "const uint8_t key_led_colors[][3] = {\n";
 
@@ -56,7 +56,7 @@ void dumpKeyLEDState(const Simulator &simulator) {
   std::cout << "};\n\n";
 }
 
-void assertKeyLEDState(const Simulator &simulator,
+void assertKeyLEDState(const Simulator_ &simulator,
                        const uint8_t key_led_colors[][3]) {
   const auto &simulator_core = simulator.getCore();
 

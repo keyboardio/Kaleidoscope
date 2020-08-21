@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 #include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 
@@ -59,7 +59,7 @@ class GroupedAction_ : public _ActionType {
     }
   }
 
-  virtual void setSimulator(const Simulator *simulator) override {
+  virtual void setSimulator(const Simulator_ *simulator) override {
     this->Action_::setSimulator(simulator);
 
     for (auto &action : actions_) {

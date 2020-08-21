@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/Visualization.h"
 #include "kaleidoscope/simulator/interface/LED_Checks.h"
 

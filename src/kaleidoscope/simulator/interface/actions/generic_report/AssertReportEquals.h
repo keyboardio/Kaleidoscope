@@ -21,7 +21,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {

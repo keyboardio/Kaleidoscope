@@ -26,18 +26,18 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 
 /// @brief Dumps the state of the key LEDs as C++ code
 ///
-void dumpKeyLEDState(const Simulator &simulator);
+void dumpKeyLEDState(const Simulator_ &simulator);
 
 /// @brief Compares the current state of the key LEDs to a representation
 ///        stored in an array.
 /// @param key_led_colors An array of key LED state data to compare the current
 ///                       state with.
 ///
-void assertKeyLEDState(const Simulator &simulator,
+void assertKeyLEDState(const Simulator_ &simulator,
                        const uint8_t key_led_colors[][3]);
 
 } // namespace interface

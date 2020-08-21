@@ -20,7 +20,7 @@
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 #include "kaleidoscope/simulator/interface/aux/demangle.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 namespace kaleidoscope {
 namespace simulator {

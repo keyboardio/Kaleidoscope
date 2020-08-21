@@ -26,7 +26,7 @@
 #include "kaleidoscope/simulator/LogProtocol.h"
 #include "kaleidoscope/simulator/log_protocol/Consumer_.h"
 #include "kaleidoscope/simulator/interface/actions/generic_report/AssertReportEquals.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "HID-Settings.h"
 
 namespace kaleidoscope {
@@ -38,7 +38,7 @@ namespace executor {
 class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
  public:
 
-  SimulatorConsumerAdaptor(interface::Simulator &simulator)
+  SimulatorConsumerAdaptor(interface::Simulator_ &simulator)
     :  simulator_(simulator)
   {}
 
@@ -144,11 +144,11 @@ class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
 
  private:
 
-  interface::Simulator &simulator_;
+  interface::Simulator_ &simulator_;
 
 };
 
-void processAglaisDocument(const char *code, interface::Simulator &simulator) {
+void processAglaisDocument(const char *code, interface::Simulator_ &simulator) {
   auto rwqa_state = simulator.getErrorIfReportWithoutQueuedActions();
 
   log_protocol::LogProtocol a;

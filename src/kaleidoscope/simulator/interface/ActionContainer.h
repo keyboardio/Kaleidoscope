@@ -35,7 +35,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 
 /// @brief An auxiliary class that represents a container of action objects.
 ///
@@ -49,7 +49,7 @@ class ActionContainer {
   /// @brief Constructor.
   /// @param simulator The associated Simulator object.
   ///
-  ActionContainer(Simulator &simulator)
+  ActionContainer(Simulator_ &simulator)
     :  simulator_(simulator)
   {}
 
@@ -157,7 +157,7 @@ class ActionContainer {
 
  private:
 
-  Simulator &simulator_;
+  Simulator_ &simulator_;
   std::deque<std::shared_ptr<_ActionType>> container_;
 };
 

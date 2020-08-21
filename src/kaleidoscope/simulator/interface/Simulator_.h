@@ -37,7 +37,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 class SimulatorCore_;
 class Action_;
 
@@ -99,7 +99,7 @@ class SimulatorStream_ {
   ///
   struct Endl {};
 
-  SimulatorStream_(const Simulator *simulator) : simulator_(simulator) {}
+  SimulatorStream_(const Simulator_ *simulator) : simulator_(simulator) {}
 
   virtual ~SimulatorStream_() {}
 
@@ -128,7 +128,7 @@ class SimulatorStream_ {
 
  protected:
 
-  const Simulator *simulator_;
+  const Simulator_ *simulator_;
 
  private:
 
@@ -141,7 +141,7 @@ class ErrorStream : public SimulatorStream_ {
 
  public:
 
-  ErrorStream(const Simulator *simulator);
+  ErrorStream(const Simulator_ *simulator);
 
   template<typename _T>
   ErrorStream &operator<<(const _T &t) {
@@ -162,7 +162,7 @@ class DebugStream : public SimulatorStream_ {
 
  public:
 
-  DebugStream(const Simulator *simulator);
+  DebugStream(const Simulator_ *simulator);
 
   template<typename _T>
   DebugStream &operator<<(const _T &t) {
@@ -186,7 +186,7 @@ class LogStream : public SimulatorStream_ {
 
  public:
 
-  LogStream(const Simulator *simulator);
+  LogStream(const Simulator_ *simulator);
   virtual ~LogStream() override;
 
   template<typename _T>
@@ -205,7 +205,7 @@ class HeaderStream : public SimulatorStream_ {
 
  public:
 
-  HeaderStream(const Simulator *simulator);
+  HeaderStream(const Simulator_ *simulator);
 
   template<typename _T>
   HeaderStream &operator<<(const _T &t) {
@@ -229,12 +229,12 @@ class Test {
 
  public:
 
-  Test(Simulator *simulator, const char *name);
+  Test(Simulator_ *simulator, const char *name);
   ~Test();
 
  private:
 
-  Simulator *simulator_;
+  Simulator_ *simulator_;
   const char *name_;
   int error_count_start_;
 };
@@ -242,7 +242,7 @@ class Test {
 
 /// @brief The main simulator object.
 ///
-class Simulator {
+class Simulator_ {
 
  public:
 
@@ -288,7 +288,7 @@ class Simulator {
 
  public:
 
-  ~Simulator();
+  ~Simulator_();
 
   /// @details If the ErrorIfReportWithoutQueuedActions is enabled
   ///          it is considered an error if no actions are queued
@@ -712,10 +712,10 @@ class Simulator {
   /// @param abort_on_first_error If enabled, testing is aborted after
   ///        the first error occurred.
   ///
-  Simulator(std::ostream &out,
-            bool debug = false,
-            int cycle_duration = 1,
-            bool abort_on_first_error = false);
+  Simulator_(std::ostream &out,
+             bool debug = false,
+             int cycle_duration = 1,
+             bool abort_on_first_error = false);
 
  protected:
 

@@ -31,7 +31,7 @@ namespace kaleidoscope {
 namespace simulator {
 namespace interface {
 
-class Simulator;
+class Simulator_;
 class Report_;
 
 /// @private
@@ -87,7 +87,7 @@ class Action_ {
 
   /// @brief Register the test simulator with the action.
   ///
-  virtual void setSimulator(const Simulator *simulator) {
+  virtual void setSimulator(const Simulator_ *simulator) {
     simulator_ = simulator;
   }
 
@@ -96,7 +96,7 @@ class Action_ {
   ///
   /// @return A pointer to the current test simulator.
   ///
-  const Simulator *getSimulator() const {
+  const Simulator_ *getSimulator() const {
     return simulator_;
   }
 
@@ -161,7 +161,7 @@ class Action_ {
  protected:
 
   bool valid_ = false;
-  const Simulator *simulator_ = nullptr;
+  const Simulator_ *simulator_ = nullptr;
 
  private:
 

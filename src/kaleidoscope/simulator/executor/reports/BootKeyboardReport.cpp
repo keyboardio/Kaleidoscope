@@ -26,7 +26,7 @@
 
 #include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
 #include "kaleidoscope/simulator/executor/aux/exceptions.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 #include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 #include "MultiReport/Keyboard.h"
 
@@ -171,7 +171,7 @@ BootKeyboardReport
   if((bitfield) & 1<<7) stream << str7;
 void
 BootKeyboardReport
-::dump(const interface::Simulator &simulator, const char *add_indent) const {
+::dump(const interface::Simulator_ &simulator, const char *add_indent) const {
   bool anything = false;
   if (report_data_.modifiers) {
     anything = true;

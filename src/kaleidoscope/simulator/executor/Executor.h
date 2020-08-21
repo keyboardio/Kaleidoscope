@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 /// @namespace kaleidoscope
 ///
@@ -34,7 +34,7 @@ namespace executor {
 
 /// @brief A Kaleidoscope specific simulator class.
 ///
-class Executor : public interface::Simulator {
+class Executor : public interface::Simulator_ {
  public:
 
   /// @brief Access the global simulator singleton.

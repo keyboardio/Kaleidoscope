@@ -122,7 +122,7 @@ class BootKeyboardReport : public interface::BootKeyboardReport_ {
   ///        to the simulator's log stream.
   /// @param add_indent An additional indentation string.
   ///
-  virtual void dump(const interface::Simulator &simulator, const char *add_indent = "") const override;
+  virtual void dump(const interface::Simulator_ &simulator, const char *add_indent = "") const override;
 
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.

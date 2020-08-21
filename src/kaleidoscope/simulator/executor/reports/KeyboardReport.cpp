@@ -26,7 +26,7 @@
 
 #include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
 #include "kaleidoscope/simulator/executor/aux/exceptions.h"
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator_.h"
 
 #include <vector>
 
@@ -174,7 +174,7 @@ KeyboardReport
 
 void
 KeyboardReport
-::dump(const interface::Simulator &simulator, const char *add_indent) const {
+::dump(const interface::Simulator_ &simulator, const char *add_indent) const {
   bool anything = false;
   if (report_data_.modifiers) anything = true;
   else for (int i = 0; i < KEY_BYTES; i++) if (report_data_.keys[i]) {
