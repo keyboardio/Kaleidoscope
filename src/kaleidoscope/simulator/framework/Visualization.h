@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::simulator::framework - A keyboard simulation framework
+ * kaleidoscope::simulator - Testing API for Kaleidoscope
  * Copyright (C) 2019  noseglasses (shinynoseglasses@gmail.com)
  * Copyright (C) 2020  Keyboard.io, Inc
  *
