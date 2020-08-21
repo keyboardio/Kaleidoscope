@@ -22,13 +22,13 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace framework {
+namespace interface {
 class Simulator;
-} // namespace framework
+} // namespace interface
 
 namespace executor {
 
-void processAglaisDocument(const char *code, framework::Simulator &sim);
+void processAglaisDocument(const char *code, interface::Simulator &sim);
 
 } // namespace executor
 } // namespace simulator

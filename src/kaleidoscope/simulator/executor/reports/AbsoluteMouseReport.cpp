@@ -19,7 +19,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
-#include "kaleidoscope/simulator/framework/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -50,11 +50,11 @@ AbsoluteMouseReport::AbsoluteMouseReport(const void *data) {
   this->setReportData(report_data);
 }
 
-std::shared_ptr<framework::Report_> AbsoluteMouseReport::clone() const {
-  return std::shared_ptr<framework::Report_> { new AbsoluteMouseReport{*this} };
+std::shared_ptr<interface::Report_> AbsoluteMouseReport::clone() const {
+  return std::shared_ptr<interface::Report_> { new AbsoluteMouseReport{*this} };
 }
 
-bool AbsoluteMouseReport::equals(const framework::Report_ &other) const {
+bool AbsoluteMouseReport::equals(const interface::Report_ &other) const {
   const AbsoluteMouseReport *other_amr =
     dynamic_cast<const AbsoluteMouseReport *>(&other);
 
@@ -104,7 +104,7 @@ bool AbsoluteMouseReport::isEmpty() const {
          && (report_data_.wheel == 0);
 }
 
-void AbsoluteMouseReport::dump(const framework::Simulator &simulator, const char *add_indent) const {
+void AbsoluteMouseReport::dump(const interface::Simulator &simulator, const char *add_indent) const {
   simulator.log() << add_indent << "Absolute mouse report content:";
   simulator.log() << add_indent << "  left button: " << this->isLeftButtonPressed();
   simulator.log() << add_indent << "  middle button: " << this->isMiddleButtonPressed();

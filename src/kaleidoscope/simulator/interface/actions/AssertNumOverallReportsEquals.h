@@ -22,56 +22,59 @@
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 
-#include "kaleidoscope/layers.h"
-
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Checks the number of overall reports of a specific type.
+/// @details Asserts that there was a specific number of reports
+///          generated since testing started.
 ///
-class AssertTopActiveLayerIs {
+template<typename _ReportType>
+class AssertNumOverallReportsEquals {
 
  public:
 
   /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @param n_overall_reports The expected overall number of reports
+  ///                          of type _ReportType
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  AssertNumOverallReportsEquals(int n_overall_reports)
+    : AssertNumOverallReportsEquals(DelegateConstruction{}, n_overall_reports)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public Action_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    Action(int n_overall_reports)
+      : n_overall_reports_(n_overall_reports) {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << n_overall_reports_ << " overall " << _ReportType::typeString() << " reports expected";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << this->getSimulator()->getNumTypedOverallReports<_ReportType>() << " overall " << _ReportType::typeString() << " reports encountered";
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return this->getSimulator()->getNumTypedOverallReports<_ReportType>() == n_overall_reports_;
     }
 
    private:
 
-    int layer_id_;
+    int n_overall_reports_ = -1;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(AssertNumOverallReportsEquals<_ReportType>)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

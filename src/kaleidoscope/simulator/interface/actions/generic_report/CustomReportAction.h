@@ -20,58 +20,68 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/actions/Action_.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 
-#include "kaleidoscope/layers.h"
+#include <functional>
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Executes a lambda function of type bool(const _ReportType&).
+/// @details The lambda must return true to signal that the action passed
+///        and false otherwise.
 ///
-class AssertTopActiveLayerIs {
+template<typename _ReportType>
+class CustomReportAction {
 
  public:
 
   /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @param func The function to evaluate as a condition for
+  ///        the action to pass.
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  CustomReportAction(const std::function<bool(const _ReportType&)> &func)
+    : CustomReportAction(DelegateConstruction{}, func)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public ReportAction<_ReportType> {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    using ReportAction<_ReportType>::ActionBaseType;
+
+    Action(const std::function<bool(const _ReportType&)> &func)
+      : func_(func)
+    {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Custom "
+                                  << _ReportType::typeString() << " report action";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << "Custom "
+                                  << _ReportType::typeString() << " report action failed";
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return func_(this->getReport());
     }
 
    private:
 
-    int layer_id_;
+    std::function<bool(const _ReportType&)> func_;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY_TMPL(CustomReportAction<_ReportType>)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

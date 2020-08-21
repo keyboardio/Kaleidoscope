@@ -20,36 +20,21 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
-
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace keyboardio {
+namespace model01 {
 
-namespace executor {
-
-/// @brief A Kaleidoscope specific simulator class.
+/// @brief A formatted string that represents the keyboard layout of
+///        the Keyboardio Model01.
+/// @details Use this string with the renderKeyboard(...) function.
 ///
-class Executor : public interface::Simulator {
- public:
+extern const char *ascii_keyboard;
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
-
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+} // namespace model01
+} // namespace keyboardio
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

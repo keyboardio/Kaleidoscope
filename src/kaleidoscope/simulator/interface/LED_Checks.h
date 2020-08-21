@@ -20,36 +20,27 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include <stdint.h>
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
 
-namespace executor {
+class Simulator;
 
-/// @brief A Kaleidoscope specific simulator class.
+/// @brief Dumps the state of the key LEDs as C++ code
 ///
-class Executor : public interface::Simulator {
- public:
+void dumpKeyLEDState(const Simulator &simulator);
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
+/// @brief Compares the current state of the key LEDs to a representation
+///        stored in an array.
+/// @param key_led_colors An array of key LED state data to compare the current
+///                       state with.
+///
+void assertKeyLEDState(const Simulator &simulator,
+                       const uint8_t key_led_colors[][3]);
 
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

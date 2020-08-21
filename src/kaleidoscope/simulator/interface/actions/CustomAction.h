@@ -22,56 +22,60 @@
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 
-#include "kaleidoscope/layers.h"
+#include <functional>
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Executes a lambda function of type bool(const Simulator &).
+/// @details The lambda must return true to signal that the action passed
+///        and false otherwise.
 ///
-class AssertTopActiveLayerIs {
+class CustomAction {
 
  public:
 
   /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @param func The function object to evaluate.
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  CustomAction(const std::function<bool()> &func)
+    : CustomAction(DelegateConstruction{}, func)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public Action_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    Action(const std::function<bool()> &func)
+      : func_(func)
+    {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Custom keyboard report action";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << "Custom keyboard report action failed";
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return func_();
     }
 
    private:
 
-    int layer_id_;
+    std::function<bool()> func_;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(CustomAction)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

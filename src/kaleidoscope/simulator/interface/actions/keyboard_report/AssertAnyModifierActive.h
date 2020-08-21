@@ -20,58 +20,46 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/actions/Action_.h"
-
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Asserts that any modifiers are active in the current keyboard report.
 ///
-class AssertTopActiveLayerIs {
+class AssertAnyModifierActive {
 
  public:
 
-  /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
-  ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
-  {}
+  SIMULATOR_ACTION_STD_CONSTRUCTOR(AssertAnyModifierActive)
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public ReportAction<KeyboardReport_> {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
-
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Any modifiers active";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << "Any modifiers active: ";
+      this->getSimulator()->log() << this->getReport().isAssertAnyModifierActive();
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return this->getReport().isAssertAnyModifierActive();
     }
-
-   private:
-
-    int layer_id_;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertAnyModifierActive)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

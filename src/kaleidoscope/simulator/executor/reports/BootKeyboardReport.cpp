@@ -26,8 +26,8 @@
 
 #include "kaleidoscope/simulator/executor/reports/BootKeyboardReport.h"
 #include "kaleidoscope/simulator/executor/aux/exceptions.h"
-#include "kaleidoscope/simulator/framework/Simulator.h"
-#include "kaleidoscope/simulator/framework/SimulatorCore_.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 #include "MultiReport/Keyboard.h"
 
 #include <vector>
@@ -54,13 +54,13 @@ BootKeyboardReport
   this->setReportData(report_data);
 }
 
-std::shared_ptr<framework::Report_> BootKeyboardReport::clone() const {
-  return std::shared_ptr<framework::Report_> { new BootKeyboardReport{*this} };
+std::shared_ptr<interface::Report_> BootKeyboardReport::clone() const {
+  return std::shared_ptr<interface::Report_> { new BootKeyboardReport{*this} };
 }
 
 bool
 BootKeyboardReport
-::equals(const framework::Report_ &other) const {
+::equals(const interface::Report_ &other) const {
   const BootKeyboardReport *other_bkr =
     dynamic_cast<const BootKeyboardReport *>(&other);
 
@@ -171,7 +171,7 @@ BootKeyboardReport
   if((bitfield) & 1<<7) stream << str7;
 void
 BootKeyboardReport
-::dump(const framework::Simulator &simulator, const char *add_indent) const {
+::dump(const interface::Simulator &simulator, const char *add_indent) const {
   bool anything = false;
   if (report_data_.modifiers) {
     anything = true;

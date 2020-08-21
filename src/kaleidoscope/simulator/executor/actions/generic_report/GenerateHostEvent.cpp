@@ -23,7 +23,7 @@
 #include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
 #include "kaleidoscope/simulator/executor/reports/MouseReport.h"
 #include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
-#include "kaleidoscope/simulator/framework/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 
 #ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
 
@@ -82,7 +82,7 @@ class KeyboardReportEventCheck {
 
  public:
 
-  KeyboardReportEventCheck(const framework::Simulator &simulator,
+  KeyboardReportEventCheck(const interface::Simulator &simulator,
                            Display *display,
                            const KeyboardReport &previous_report,
                            const KeyboardReport &current_report)
@@ -140,7 +140,7 @@ class KeyboardReportEventCheck {
 
  private:
 
-  const framework::Simulator &simulator_;
+  const interface::Simulator &simulator_;
   Display *display_;
   const KeyboardReport::ReportDataType &previous_report_data_;
   const KeyboardReport::ReportDataType &current_report_data_;
@@ -150,7 +150,7 @@ class BootKeyboardReportEventCheck {
 
  public:
 
-  BootKeyboardReportEventCheck(const framework::Simulator &simulator,
+  BootKeyboardReportEventCheck(const interface::Simulator &simulator,
                                Display *display,
                                const BootKeyboardReport &previous_report,
                                const BootKeyboardReport &current_report)
@@ -231,7 +231,7 @@ class BootKeyboardReportEventCheck {
 
  private:
 
-  const framework::Simulator &simulator_;
+  const interface::Simulator &simulator_;
   Display *display_;
   const BootKeyboardReport::ReportDataType &previous_report_data_;
   const BootKeyboardReport::ReportDataType &current_report_data_;

@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 #include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/simulator/framework/reports/KeyboardReport_.h"
+#include "kaleidoscope/simulator/interface/reports/KeyboardReport_.h"
 #include "MultiReport/Keyboard.h"
 
 // Undefine some macros defined by Arduino
@@ -43,7 +43,7 @@ class Simulator;
 
 /// @brief An interface hat facilitates analyzing keyboard reports.
 ///
-class KeyboardReport : public framework::KeyboardReport_ {
+class KeyboardReport : public interface::KeyboardReport_ {
 
  public:
 
@@ -74,13 +74,13 @@ class KeyboardReport : public framework::KeyboardReport_ {
     };
   }
 
-  virtual std::shared_ptr<framework::Report_> clone() const override;
+  virtual std::shared_ptr<interface::Report_> clone() const override;
 
   /// @brief Checks equality with another key report.
   /// @param other Another key report to compare with.
   /// @returns [bool] True if both reports are equal.
   ///
-  virtual bool equals(const framework::Report_ &other) const override;
+  virtual bool equals(const interface::Report_ &other) const override;
 
   /// @brief Checks if a keycode is active in the keyboard report.
   /// @param keycode The keycode to check for.
@@ -124,7 +124,7 @@ class KeyboardReport : public framework::KeyboardReport_ {
   ///        to the simulator's log stream.
   /// @param add_indent An additional indentation string.
   ///
-  virtual void dump(const framework::Simulator &simulator, const char *add_indent = "") const override;
+  virtual void dump(const interface::Simulator &simulator, const char *add_indent = "") const override;
 
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.

@@ -20,36 +20,28 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include <chrono>
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace aux {
 
-namespace executor {
-
-/// @brief A Kaleidoscope specific simulator class.
-///
-class Executor : public interface::Simulator {
+class WallTimer {
  public:
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
+  void start();
+  double elapsed(); // ms
 
  private:
 
-  Executor(std::ostream &out);
+  typedef decltype(std::chrono::high_resolution_clock::now()) TimerType;
 
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
+  TimerType start_time_;
 };
 
-} // namespace executor
+} // namespace aux
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

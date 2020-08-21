@@ -26,7 +26,7 @@
 
 #include "kaleidoscope/simulator/executor/reports/KeyboardReport.h"
 #include "kaleidoscope/simulator/executor/aux/exceptions.h"
-#include "kaleidoscope/simulator/framework/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 
 #include <vector>
 
@@ -52,13 +52,13 @@ KeyboardReport
   this->setReportData(report_data);
 }
 
-std::shared_ptr<framework::Report_> KeyboardReport::clone() const {
-  return std::shared_ptr<framework::Report_> { new KeyboardReport{*this} };
+std::shared_ptr<interface::Report_> KeyboardReport::clone() const {
+  return std::shared_ptr<interface::Report_> { new KeyboardReport{*this} };
 }
 
 bool
 KeyboardReport
-::equals(const framework::Report_ &other) const {
+::equals(const interface::Report_ &other) const {
   const KeyboardReport *other_kr =
     dynamic_cast<const KeyboardReport *>(&other);
 
@@ -174,7 +174,7 @@ KeyboardReport
 
 void
 KeyboardReport
-::dump(const framework::Simulator &simulator, const char *add_indent) const {
+::dump(const interface::Simulator &simulator, const char *add_indent) const {
   bool anything = false;
   if (report_data_.modifiers) anything = true;
   else for (int i = 0; i < KEY_BYTES; i++) if (report_data_.keys[i]) {

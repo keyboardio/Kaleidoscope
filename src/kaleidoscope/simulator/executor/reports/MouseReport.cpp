@@ -20,7 +20,7 @@
 
 #include "kaleidoscope/simulator/executor/reports/MouseReport.h"
 
-#include "kaleidoscope/simulator/framework/Simulator.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -41,11 +41,11 @@ MouseReport::MouseReport(const void *data) {
   this->setReportData(report_data);
 }
 
-std::shared_ptr<framework::Report_> MouseReport::clone() const {
-  return std::shared_ptr<framework::Report_> { new MouseReport{*this} };
+std::shared_ptr<interface::Report_> MouseReport::clone() const {
+  return std::shared_ptr<interface::Report_> { new MouseReport{*this} };
 }
 
-bool MouseReport::equals(const framework::Report_ &other) const {
+bool MouseReport::equals(const interface::Report_ &other) const {
   const MouseReport *other_mr =
     dynamic_cast<const MouseReport *>(&other);
 
@@ -96,7 +96,7 @@ bool MouseReport::isEmpty() const {
          && (report_data_.hWheel == 0);
 }
 
-void MouseReport::dump(const framework::Simulator &simulator, const char *add_indent) const {
+void MouseReport::dump(const interface::Simulator &simulator, const char *add_indent) const {
   simulator.log() << add_indent << "Mouse report content:";
   simulator.log() << add_indent << "  left button: " << this->isLeftButtonPressed();
   simulator.log() << add_indent << "  middle button: " << this->isMiddleButtonPressed();

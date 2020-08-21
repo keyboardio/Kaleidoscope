@@ -22,56 +22,56 @@
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
 
-#include "kaleidoscope/layers.h"
-
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Asserts that the current cycle is the nth.
 ///
-class AssertTopActiveLayerIs {
+class AssertCycleIsNth {
 
  public:
 
-  /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @brief Constructor
+  /// @param cycle_id The id of the cycle to check against.
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  AssertCycleIsNth(int cycle_id)
+    : AssertCycleIsNth(DelegateConstruction{}, cycle_id)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public Action_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    Action(int cycle_id) : cycle_id_(cycle_id) {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Is " << cycle_id_ << ". cycle";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
-    }
-
-    virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      this->getSimulator()->log() << add_indent << "Is " << this->getSimulator()->getCycleId() << ". cycle";
     }
 
    private:
 
-    int layer_id_;
+    virtual bool evalInternal() override {
+      return this->getSimulator()->getCycleId() == cycle_id_;
+    }
+
+   private:
+
+    int cycle_id_ = -1;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertCycleIsNth)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -16,40 +16,38 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
+#include "kaleidoscope/simulator/interface/actions/Grouped.h"
 #include "kaleidoscope/simulator/interface/Simulator.h"
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace actions {
 
-namespace executor {
+void Grouped<ReportAction_>::Action::determineGroupType() {
+  auto report_type_ = actions_[0]->getReportTypeId();
 
-/// @brief A Kaleidoscope specific simulator class.
-///
-class Executor : public interface::Simulator {
- public:
+  for (const auto &action : actions_) {
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
+    auto new_type = action->getReportTypeId();
 
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+    if (new_type != AnyTypeReportTypeId) {
+      if (report_type_ == AnyTypeReportTypeId) {
+        report_type_ = new_type;
+      } else if (report_type_ != new_type) {
+        this->getSimulator()->error()
+            << "Error grouping report actions. Trying to group non-generic actions of different type";
+        actions_.clear();
+        report_type_ = AnyTypeReportTypeId;
+        break;
+      }
+    }
+  }
+}
+} // namespace actions
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

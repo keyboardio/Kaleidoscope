@@ -16,40 +16,27 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/aux/WallTimer.h"
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace aux {
 
-namespace executor {
+void WallTimer::start() {
+  start_time_ = std::chrono::high_resolution_clock::now();
+}
 
-/// @brief A Kaleidoscope specific simulator class.
-///
-class Executor : public interface::Simulator {
- public:
+double WallTimer::elapsed() {
+  static constexpr double inv_clocks_per_sec = 1.0 / CLOCKS_PER_SEC;
+  auto cur_time = std::chrono::high_resolution_clock::now();
+  return std::chrono::duration<double, std::milli>(cur_time - start_time_).count();
+}
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
-
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+} // namespace aux
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -25,8 +25,8 @@
 #include "kaleidoscope/simulator/executor/reports/AbsoluteMouseReport.h"
 #include "kaleidoscope/simulator/LogProtocol.h"
 #include "kaleidoscope/simulator/log_protocol/Consumer_.h"
-#include "kaleidoscope/simulator/framework/actions/generic_report/AssertReportEquals.h"
-#include "kaleidoscope/simulator/framework/Simulator.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/AssertReportEquals.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 #include "HID-Settings.h"
 
 namespace kaleidoscope {
@@ -38,7 +38,7 @@ namespace executor {
 class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
  public:
 
-  SimulatorConsumerAdaptor(framework::Simulator &simulator)
+  SimulatorConsumerAdaptor(interface::Simulator &simulator)
     :  simulator_(simulator)
   {}
 
@@ -93,28 +93,28 @@ class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
     case HID_REPORTID_KEYBOARD: {
       assert(length == sizeof(BootKeyboardReport::ReportDataType));
       simulator_.reportActionsQueue().queue(
-        framework::actions::AssertReportEquals<BootKeyboardReport> {data}
+        interface::actions::AssertReportEquals<BootKeyboardReport> {data}
       );
     }
     break;
     case HID_REPORTID_MOUSE_ABSOLUTE: {
       assert(length == sizeof(AbsoluteMouseReport::ReportDataType));
       simulator_.reportActionsQueue().queue(
-        framework::actions::AssertReportEquals<AbsoluteMouseReport> {data}
+        interface::actions::AssertReportEquals<AbsoluteMouseReport> {data}
       );
     }
     break;
     case HID_REPORTID_MOUSE: {
       assert(length == sizeof(MouseReport::ReportDataType));
       simulator_.reportActionsQueue().queue(
-        framework::actions::AssertReportEquals<MouseReport> {data}
+        interface::actions::AssertReportEquals<MouseReport> {data}
       );
     }
     break;
     case HID_REPORTID_NKRO_KEYBOARD: {
       assert(length == sizeof(KeyboardReport::ReportDataType));
       simulator_.reportActionsQueue().queue(
-        framework::actions::AssertReportEquals<KeyboardReport> {data}
+        interface::actions::AssertReportEquals<KeyboardReport> {data}
       );
     }
     break;
@@ -144,11 +144,11 @@ class SimulatorConsumerAdaptor : public log_protocol::Consumer_ {
 
  private:
 
-  framework::Simulator &simulator_;
+  interface::Simulator &simulator_;
 
 };
 
-void processAglaisDocument(const char *code, framework::Simulator &simulator) {
+void processAglaisDocument(const char *code, interface::Simulator &simulator) {
   auto rwqa_state = simulator.getErrorIfReportWithoutQueuedActions();
 
   log_protocol::LogProtocol a;

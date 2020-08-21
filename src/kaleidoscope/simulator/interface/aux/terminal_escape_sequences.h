@@ -20,36 +20,18 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
-
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace terminal_escape_sequences {
 
-namespace executor {
+constexpr char reset_formatting[] = "\x1B[0m";
+constexpr char underlined[] = "\x1B[4m";
+constexpr char clear_screen[] = "\033[2J\033[1;1H";
+constexpr char cursor_to_upper_left[] = "\x1B[0;0H";
 
-/// @brief A Kaleidoscope specific simulator class.
-///
-class Executor : public interface::Simulator {
- public:
-
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
-
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+} // namespace terminal_escape_sequences
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -21,7 +21,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "MultiReport/Mouse.h"
-#include "kaleidoscope/simulator/framework/reports/MouseReport_.h"
+#include "kaleidoscope/simulator/interface/reports/MouseReport_.h"
 
 // Undefine some macros defined by Arduino
 //
@@ -40,7 +40,7 @@ class Simulator;
 
 /// @brief An interface hat facilitates analyzing mouse reports.
 ///
-class MouseReport : public framework::MouseReport_ {
+class MouseReport : public interface::MouseReport_ {
 
  public:
 
@@ -71,13 +71,13 @@ class MouseReport : public framework::MouseReport_ {
     };
   }
 
-  virtual std::shared_ptr<framework::Report_> clone() const override;
+  virtual std::shared_ptr<interface::Report_> clone() const override;
 
   /// @brief Checks equality with another report.
   /// @param other Another report to compare with.
   /// @returns [bool] True if both reports are equal.
   ///
-  virtual bool equals(const framework::Report_ &other) const override;
+  virtual bool equals(const interface::Report_ &other) const override;
 
   /// @brief Checks if a set of buttons is pressed.
   /// @param button_state The state of the mouse buttons to check.
@@ -130,7 +130,7 @@ class MouseReport : public framework::MouseReport_ {
   ///        to the simulator's log stream.
   /// @param add_indent An additional indentation string.
   ///
-  virtual void dump(const framework::Simulator &simulator, const char *add_indent = "") const override;
+  virtual void dump(const interface::Simulator &simulator, const char *add_indent = "") const override;
 
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.

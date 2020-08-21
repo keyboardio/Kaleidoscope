@@ -20,58 +20,57 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/actions/Action_.h"
-
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Asserts that the current report is the nth report in the current cycle.
 ///
-class AssertTopActiveLayerIs {
+class AssertReportIsNthInCycle {
 
  public:
 
   /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @param report_id The id of the report to check against.
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  AssertReportIsNthInCycle(int report_id)
+    : AssertReportIsNthInCycle(DelegateConstruction{}, report_id)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public ReportAction_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    Action(int report_id) : report_id_(report_id) {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Report " << report_id_ << ". in cycle";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << "Report is "
+                                  << this->getSimulator()->getNumReportsInCycle() << ". in cycle";
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return this->getSimulator()->getNumReportsInCycle() == report_id_;
     }
 
    private:
 
-    int layer_id_;
+    int report_id_ = -1;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertReportIsNthInCycle)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

@@ -20,36 +20,27 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include <string>
+#include <typeinfo>
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace aux {
 
-namespace executor {
-
-/// @brief A Kaleidoscope specific simulator class.
+/// @brief Demangles a C++ symbol name.
 ///
-class Executor : public interface::Simulator {
- public:
+std::string demangle(const char* name);
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
+/// @brief Returns a human readable representation of a typename.
+///
+template <class T>
+std::string type(const T& t) {
+  return demangle(typeid(t).name());
+}
 
- private:
-
-  Executor(std::ostream &out);
-
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
-
-} // namespace executor
+} // namespace aux
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

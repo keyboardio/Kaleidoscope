@@ -16,40 +16,45 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/Simulator.h"
+#include "kaleidoscope/simulator/interface/aux/demangle.h"
+#ifdef __GNUG__
+#include <cstdlib>
+#include <memory>
+#include <cxxabi.h>
+#endif
 
-/// @namespace kaleidoscope
-///
 namespace kaleidoscope {
-
-/// @namespace simulator
-///
 namespace simulator {
+namespace interface {
+namespace aux {
 
-namespace executor {
+#ifdef __GNUG__
 
-/// @brief A Kaleidoscope specific simulator class.
-///
-class Executor : public interface::Simulator {
- public:
+std::string demangle(const char* name) {
 
-  /// @brief Access the global simulator singleton.
-  ///
-  static Executor &getInstance();
+  int status = -4; // some arbitrary value to eliminate the compiler warning
 
- private:
+  // enable c++11 by passing the flag -std=c++11 to g++
+  std::unique_ptr<char, void(*)(void*)> res {
+    abi::__cxa_demangle(name, NULL, NULL, &status),
+    std::free
+  };
 
-  Executor(std::ostream &out);
+  return (status == 0) ? res.get() : name ;
+}
 
-  static void processHIDReport(uint8_t id, const void* data,
-                               int len, int result);
-};
+#else
 
-} // namespace executor
+// does nothing if not g++
+std::string demangle(const char* name) {
+  return name;
+}
+
+#endif
+} // namespace aux
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

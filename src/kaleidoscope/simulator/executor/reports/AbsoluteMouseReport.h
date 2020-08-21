@@ -21,7 +21,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "DeviceAPIs/AbsoluteMouseAPI.h"
-#include "kaleidoscope/simulator/framework/reports/AbsoluteMouseReport_.h"
+#include "kaleidoscope/simulator/interface/reports/AbsoluteMouseReport_.h"
 
 // Undefine some macros defined by Arduino
 //
@@ -40,7 +40,7 @@ class Simulator;
 
 /// @brief An interface hat facilitates analyzing absolute mouse reports.
 ///
-class AbsoluteMouseReport : public framework::AbsoluteMouseReport_ {
+class AbsoluteMouseReport : public interface::AbsoluteMouseReport_ {
 
  public:
 
@@ -74,13 +74,13 @@ class AbsoluteMouseReport : public framework::AbsoluteMouseReport_ {
 
   AbsoluteMouseReport &operator=(const AbsoluteMouseReport &other);
 
-  virtual std::shared_ptr<framework::Report_> clone() const override;
+  virtual std::shared_ptr<interface::Report_> clone() const override;
 
   /// @brief Checks equality with another report.
   /// @param other Another report to compare with.
   /// @returns [bool] True if both reports are equal.
   ///
-  virtual bool equals(const framework::Report_ &other) const override;
+  virtual bool equals(const interface::Report_ &other) const override;
 
   /// @brief Checks if a set of buttons is pressed.
   /// @param button_state The state of the mouse buttons to check.
@@ -133,7 +133,7 @@ class AbsoluteMouseReport : public framework::AbsoluteMouseReport_ {
   ///        to the simulator's log stream.
   /// @param add_indent An additional indentation string.
   ///
-  virtual void dump(const framework::Simulator &simulator, const char *add_indent = "") const override;
+  virtual void dump(const interface::Simulator &simulator, const char *add_indent = "") const override;
 
   /// @brief Associates the object with new report data.
   /// @param report_data The new report data struct.

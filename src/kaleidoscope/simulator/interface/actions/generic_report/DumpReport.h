@@ -20,58 +20,47 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/interface/actions/Action_.h"
-
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Asserts nothing but dumps the current report instead.
 ///
-class AssertTopActiveLayerIs {
+class DumpReport {
 
  public:
 
-  /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
-  ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
-  {}
+  SIMULATOR_ACTION_STD_CONSTRUCTOR(DumpReport)
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public ReportAction_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
-
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getReport().dump(*this->getSimulator(), add_indent);
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->describe(add_indent);
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      this->describe();
+      return true;
     }
 
-   private:
-
-    int layer_id_;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(DumpReport)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

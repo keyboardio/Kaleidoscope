@@ -21,57 +21,62 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/simulator/interface/actions/Action_.h"
-
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/simulator/interface/Simulator.h"
 
 namespace kaleidoscope {
 namespace simulator {
-namespace executor {
+namespace interface {
 namespace actions {
 
-/// @brief Asserts that a given layer is the current top layer.
+/// @brief Asserts that that time that elapsed is greater than a given time in [ms].
 ///
-class AssertTopActiveLayerIs {
+class AssertElapsedTimeGreater {
 
  public:
 
   /// @brief Constructor.
-  /// @param[in] layer_id The id of the layer to check as top active.
+  /// @param delta_t The amount of time that is asserted being elapsed.
+  /// @param start_t An optional start point in time as reference (defaults to zero).
   ///
-  AssertTopActiveLayerIs(int layer_id)
-    : AssertTopActiveLayerIs(DelegateConstruction{}, layer_id)
+  AssertElapsedTimeGreater(Simulator::TimeType delta_t, Simulator::TimeType start_t = 0)
+    :  AssertElapsedTimeGreater(DelegateConstruction{}, delta_t, start_t)
   {}
 
  private:
 
-  class Action : public interface::Action_ {
+  class Action : public Action_ {
 
    public:
 
-    Action(int layer_id) : layer_id_(layer_id) {}
+    Action(Simulator::TimeType delta_t, Simulator::TimeType start_t = 0)
+      :  start_t_(start_t),
+         delta_t_(delta_t)
+    {}
 
     virtual void describe(const char *add_indent = "") const override {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << layer_id_;
+      this->getSimulator()->log() << add_indent << "Time elapsed greater " << delta_t_ << " ms";
     }
 
     virtual void describeState(const char *add_indent = "") const {
-      this->getSimulator()->log() << add_indent << "Top active layer is " << Layer.top();
+      this->getSimulator()->log() << add_indent << "Actual time elapsed "
+                                  << this->getSimulator()->getTime() << " ms";
     }
 
     virtual bool evalInternal() override {
-      return Layer.top() == (uint8_t)layer_id_;
+      return this->getSimulator()->getTime() - start_t_ > delta_t_;
     }
 
    private:
 
-    int layer_id_;
+    Simulator::TimeType start_t_ = .0;
+    Simulator::TimeType delta_t_ = .0;
   };
 
-  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertTopActiveLayerIs)
+  SIMULATOR_AUTO_DEFINE_ACTION_INVENTORY(AssertElapsedTimeGreater)
 };
 
 } // namespace actions
-} // namespace executor
+} // namespace interface
 } // namespace simulator
 } // namespace kaleidoscope
 

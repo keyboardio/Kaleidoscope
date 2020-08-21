@@ -20,7 +20,7 @@
 
 namespace kaleidoscope {
 namespace simulator {
-namespace framework {
+namespace interface {
 namespace actions {
 
 inline
@@ -34,7 +34,7 @@ uint8_t toKeycode(Key key) {
 }
 
 } // namespace actions
-} // namespace framework
+} // namespace interface
 
 } // namespace simulator
 } // namespace kaleidoscope
@@ -42,7 +42,7 @@ uint8_t toKeycode(Key key) {
 #include "kaleidoscope/simulator/Framework.h"
 #include "kaleidoscope/simulator/executor/Executor.h"
 #include "kaleidoscope/simulator/executor/AglaisInterface.h"
-#include "kaleidoscope/simulator/framework/Visualization.h"
+#include "kaleidoscope/simulator/interface/Visualization.h"
 
 #include "kaleidoscope/simulator/executor/actions/AssertLayerIsActive.h"
 #include "kaleidoscope/simulator/executor/actions/AssertTopActiveLayerIs.h"

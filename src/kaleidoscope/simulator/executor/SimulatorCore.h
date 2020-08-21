@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/framework/SimulatorCore_.h"
+#include "kaleidoscope/simulator/interface/SimulatorCore_.h"
 
 namespace kaleidoscope {
 namespace simulator {
@@ -28,7 +28,7 @@ namespace executor {
 
 /// @brief A Kaleidoscope specific simulator core class.
 ///
-class SimulatorCore : public framework::SimulatorCore_ {
+class SimulatorCore : public interface::SimulatorCore_ {
  public:
 
   virtual void init() override;

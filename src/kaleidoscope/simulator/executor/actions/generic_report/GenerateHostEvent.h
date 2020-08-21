@@ -20,8 +20,8 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/framework/actions/generic_report/ReportAction.h"
-#include "kaleidoscope/simulator/framework/reports/Report_.h"
+#include "kaleidoscope/simulator/interface/actions/generic_report/ReportAction.h"
+#include "kaleidoscope/simulator/interface/reports/Report_.h"
 
 #include <cassert>
 
@@ -55,7 +55,7 @@ class GenerateHostEvent {
 
  private:
 
-  class Action : public framework::ReportAction<typename _ReportType::BaseReportType>,
+  class Action : public interface::ReportAction<typename _ReportType::BaseReportType>,
     public HostEventAction {
    public:
 

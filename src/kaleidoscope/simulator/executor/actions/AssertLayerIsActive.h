@@ -20,7 +20,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "kaleidoscope/simulator/framework/actions/Action_.h"
+#include "kaleidoscope/simulator/interface/actions/Action_.h"
 
 #include "kaleidoscope/layers.h"
 
@@ -45,7 +45,7 @@ class AssertLayerIsActive {
 
  private:
 
-  class Action : public framework::Action_ {
+  class Action : public interface::Action_ {
 
    public:
 
