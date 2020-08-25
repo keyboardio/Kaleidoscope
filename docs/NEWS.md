@@ -212,6 +212,10 @@ allowing external tools to aid in migrations. The setting wasn't widely used -
 if at all -, which is why we chose to repurpose it instead of adding a new
 field.
 
+### Key masking has been deprecated
+
+Key masking was a band-aid introduced to avoid accidentally sending unintended keys when key mapping changes between a key being pressed and released. Since the introduction of keymap caching, this is no longer necessary, as long as we can keep the mapping consistent. Users of key masking are encouraged to find ways to use the caching mechanism instead.
+
 ## Bugfixes
 
 We fixed way too many issues to list here, so we're going to narrow it down to the most important, most visible ones.

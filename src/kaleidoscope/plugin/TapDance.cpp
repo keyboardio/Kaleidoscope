@@ -38,7 +38,6 @@ void TapDance::interrupt(KeyAddr key_addr) {
 
   last_tap_dance_key_ = Key_NoKey;
 
-  Runtime.device().maskKey(key_addr);
   Runtime.hid().keyboard().sendReport();
   Runtime.hid().keyboard().releaseAllKeys();
 
@@ -114,13 +113,11 @@ EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
     if (last_tap_dance_key_ == Key_NoKey)
       return EventHandlerResult::OK;
 
-    if (keyToggledOn(keyState))
+    if (keyToggledOn(keyState)) {
       interrupt(key_addr);
-
-    if (Runtime.device().isKeyMasked(key_addr)) {
-      Runtime.device().unMaskKey(key_addr);
-      return EventHandlerResult::EVENT_CONSUMED;
+      mapped_key = Key_NoKey;
     }
+
     return EventHandlerResult::OK;
   }
 

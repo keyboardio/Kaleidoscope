@@ -27,6 +27,12 @@
 
 /* Messages */
 
+#define _DEPRECATED_MESSAGE_KEY_MASKING                                  __NL__ \
+  "Key masking has been deprecated, please map keys to NoKey instead.\n" __NL__ \
+  "\n"                                                                   __NL__ \
+  "For further information and examples on how to do that, \n"           __NL__ \
+  "please see UPGRADING.md"
+
 #define _DEPRECATED_MESSAGE_HID_FACADE                                   __NL__ \
   "The HID facade in the `kaleidoscope::hid` namespace is deprecated.\n" __NL__ \
   "Please use `Kaleidoscope.hid()` instead."

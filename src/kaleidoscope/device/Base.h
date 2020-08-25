@@ -269,7 +269,7 @@ class Base {
    *
    * @param key_addr is the matrix address of the key.
    */
-  void maskKey(KeyAddr key_addr) {
+  void maskKey(KeyAddr key_addr) DEPRECATED(KEY_MASKING) {
     key_scanner_.maskKey(key_addr);
   }
   /**
