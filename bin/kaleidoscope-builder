@@ -570,7 +570,7 @@ EOF
 run_simulator_tests() {
    kaleidoscope_dir="$(dirname "$0")/.."
    cd "${kaleidoscope_dir}/test/simulator"
-   make
+   ${MAKE:-make}
 }
 
 usage () {
