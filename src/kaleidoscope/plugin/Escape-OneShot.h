@@ -26,6 +26,9 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   EscapeOneShot(void) {}
 
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
+
+ private:
+  static bool did_escape_;
 };
 }
 }
