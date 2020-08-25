@@ -408,6 +408,7 @@ compile () {
 	      -prefs "compiler.c.cmd=${_CMD_CC}" \
 	      -prefs "compiler.cpp.cmd=${_CMD_CXX}" \
         -prefs "compiler.ar.cmd=${_CMD_AR}" \
+        -prefs "compiler.c.elf.cmd=${_CMD_CXX}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
