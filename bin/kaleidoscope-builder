@@ -569,6 +569,7 @@ EOF
 }
 
 run_simulator_tests() {
+   (cd ${BOARD_HARDWARE_PATH}/keyboardio && make prepare-virtual)
    kaleidoscope_dir="$(dirname "$0")/.."
    cd "${kaleidoscope_dir}/test/simulator"
    ${MAKE:-make}
