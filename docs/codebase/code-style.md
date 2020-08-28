@@ -12,132 +12,131 @@ Our style guide is based on the [Google C++ style guide][goog:c++-guide] which w
 
 ## Table of Contents
 
-* [Background](#background)
-    * [Goals of the Style Guide](#goals-of-the-style-guide)
-* [Library Guidelines](#library-guidelines)
-* [Header Files](#header-files)
-    * [Self-contained Headers](#self-contained-headers)
-    * [Header Guards](#header-guards)
-    * [Forward Declarations](#forward-declarations)
-    * [Inline Functions](#inline-functions)
-    * [Names and Order of Includes](#names-and-order-of-includes)
-* [Scoping](#scoping)
-    * [Namespaces](#namespaces)
-    * [Unnamed Namespaces and Static Variables](#unnamed-namespaces-and-static-variables)
-    * [Nonmember, Static Member, and Global Functions](#nonmember-static-member-and-global-functions)
-    * [Local Variables](#local-variables)
-    * [Static and Global Variables](#static-and-global-variables)
-* [Classes](#classes)
-    * [Doing Work in Constructors](#doing-work-in-constructors)
-    * [Implicit Conversions](#implicit-conversions)
-    * [Copyable and Movable Types](#copyable-and-movable-types)
-    * [Structs vs. Classes](#structs-vs-classes)
-    * [Inheritance](#inheritance)
-    * [Multiple Inheritance](#multiple-inheritance)
-    * [Interfaces](#interfaces)
-    * [Operator Overloading](#operator-overloading)
-    * [Access Control](#access-control)
-    * [Declaration Order](#declaration-order)
-* [Functions](#functions)
-    * [Parameter Ordering](#parameter-ordering)
-    * [Write Short Functions](#write-short-functions)
-    * [Reference Arguments](#reference-arguments)
-    * [Function Overloading](#function-overloading)
-    * [Default Arguments](#default-arguments)
-    * [Trailing Return Type Syntax](#trailing-return-type-syntax)
-* [Google-specific magic](#google-specific-magic)
-    * [Ownership and Smart Pointers](#ownership-and-smart-pointers)
-    * [cpplint](#cpplint)
-* [Other C++ Features](#other-c-features)
-    * [Rvalue References](#rvalue-references)
-    * [Friends](#friends)
-    * [Exceptions](#exceptions)
-    * [Run-Time Type Information (RTTI)](#run-time-type-information-rtti)
-    * [Casting](#casting)
-    * [Streams](#streams)
-    * [Preincrement and Predecrement](#preincrement-and-predecrement)
-    * [Use of const](#use-of-const)
-        * [Where to put the const](#where-to-put-the-const)
-    * [Use of constexpr](#use-of-constexpr)
-    * [Integer Types](#integer-types)
-        * [On Unsigned Integers](#on-unsigned-integers)
-    * [Preprocessor Macros](#preprocessor-macros)
-    * [0 and nullptr/NULL](#0-and-nullptrnull)
-    * [sizeof](#sizeof)
-    * [auto](#auto)
-    * [Braced Initializer List](#braced-initializer-list)
-    * [Lambda expressions](#lambda-expressions)
-    * [Template metaprogramming](#template-metaprogramming)
-    * [C++11](#c11)
-    * [Nonstandard Extensions](#nonstandard-extensions)
-    * [Aliases](#aliases)
-* [Naming](#naming)
-    * [General Naming Rules](#general-naming-rules)
-    * [File Names](#file-names)
-    * [Type Names](#type-names)
-    * [Variable Names](#variable-names)
-        * [Common Variable Names](#common-variable-names)
-        * [Class Data Members](#class-data-members)
-        * [Struct Data Members](#struct-data-members)
-    * [Constant Names](#constant-names)
-    * [Function Names](#function-names)
-    * [Namespace Names](#namespace-names)
-    * [Enumerator Names](#enumerator-names)
-    * [Macro Names](#macro-names)
-    * [Exceptions to Naming Rules](#exceptions-to-naming-rules)
-* [Comments](#comments)
-    * [Comment Style](#comment-style)
-    * [File Comments](#file-comments)
-        * [Legal Notice and Author Line](#legal-notice-and-author-line)
-        * [File Contents](#file-contents)
-    * [Class Comments](#class-comments)
-    * [Function Comments](#function-comments)
-        * [Function Declarations](#function-declarations)
-        * [Function Definitions](#function-definitions)
-    * [Variable Comments](#variable-comments)
-        * [Class Data Member Comments](#class-data-member-comments)
-        * [Global Variable Comments](#global-variable-comments)
-    * [Implementation Comments](#implementation-comments)
-        * [Explanatory Comments](#explanatory-comments)
-        * [Line Comments](#line-comments)
-    * [Function Argument Comments](#function-argument-comments)
-    * [Dont's](#donts)
-    * [Punctuation, Spelling and Grammar](#punctuation-spelling-and-grammar)
-    * [TODO Comments](#todo-comments)
-    * [Deprecation Comments](#deprecation-comments)
-* [Formatting](#formatting)
-    * [Line Length](#line-length)
-    * [Non-ASCII Characters](#non-ascii-characters)
-    * [Spaces vs. Tabs](#spaces-vs-tabs)
-    * [Function Declarations and Definitions](#function-declarations-and-definitions)
-    * [Formatting Lambda Expressions](#formatting-lambda-expressions)
-    * [Function Calls](#function-calls)
-    * [Braced Initializer List Format](#braced-initializer-list-format)
-    * [Conditionals](#conditionals)
-    * [Loops and Switch Statements](#loops-and-switch-statements)
-    * [Pointer and Reference Expressions](#pointer-and-reference-expressions)
-    * [Boolean Expressions](#boolean-expressions)
-    * [Return Values](#return-values)
-    * [Variable and Array Initialization](#variable-and-array-initialization)
-    * [Preprocessor Directives](#preprocessor-directives)
-    * [Class Format](#class-format)
-    * [Constructor Initializer Lists](#constructor-initializer-lists)
-    * [Namespace Formatting](#namespace-formatting)
-    * [Horizontal Whitespace](#horizontal-whitespace)
-        * [General](#general)
-        * [Loops and Conditionals](#loops-and-conditionals)
-        * [Operators](#operators)
-        * [Templates and Casts](#templates-and-casts)
-    * [Vertical Whitespace](#vertical-whitespace)
-* [Exceptions to the Rules](#exceptions-to-the-rules)
-    * [Existing Non-conformant Code](#existing-non-conformant-code)
-* [Parting Words](#parting-words)
+- [Kaleidoscope C++ Coding Style](#kaleidoscope-c-coding-style)
+  - [Important warning](#important-warning)
+  - [Table of Contents](#table-of-contents)
+  - [Background](#background)
+    - [Goals of the Style Guide](#goals-of-the-style-guide)
+  - [Library Guidelines](#library-guidelines)
+  - [Header Files](#header-files)
+    - [Self-contained Headers](#self-contained-headers)
+    - [Header Guards](#header-guards)
+    - [Forward Declarations](#forward-declarations)
+    - [Inline Functions](#inline-functions)
+    - [Names and Order of Includes](#names-and-order-of-includes)
+  - [Scoping](#scoping)
+    - [Namespaces](#namespaces)
+    - [Unnamed Namespaces and Static Variables](#unnamed-namespaces-and-static-variables)
+    - [Nonmember, Static Member, and Global Functions](#nonmember-static-member-and-global-functions)
+    - [Local Variables](#local-variables)
+    - [Static and Global Variables](#static-and-global-variables)
+  - [Classes](#classes)
+    - [Doing Work in Constructors](#doing-work-in-constructors)
+    - [Implicit Conversions](#implicit-conversions)
+    - [Copyable and Movable Types](#copyable-and-movable-types)
+    - [Structs vs. Classes](#structs-vs-classes)
+    - [Inheritance](#inheritance)
+    - [Multiple Inheritance](#multiple-inheritance)
+    - [Interfaces](#interfaces)
+    - [Operator Overloading](#operator-overloading)
+    - [Access Control](#access-control)
+    - [Declaration Order](#declaration-order)
+  - [Functions](#functions)
+  - [Parameter Ordering](#parameter-ordering)
+  - [Write Short Functions](#write-short-functions)
+  - [Reference Arguments](#reference-arguments)
+  - [Function Overloading](#function-overloading)
+    - [Default Arguments](#default-arguments)
+    - [Trailing Return Type Syntax](#trailing-return-type-syntax)
+  - [Google-Specific Magic](#google-specific-magic)
+    - [Ownership and Smart Pointers](#ownership-and-smart-pointers)
+    - [cpplint](#cpplint)
+  - [Other C++ Features](#other-c-features)
+    - [Rvalue References](#rvalue-references)
+    - [Friends](#friends)
+    - [Exceptions](#exceptions)
+    - [Run-Time Type Information (RTTI)](#run-time-type-information-rtti)
+    - [Casting](#casting)
+    - [Streams](#streams)
+    - [Preincrement and Predecrement](#preincrement-and-predecrement)
+    - [Use of const](#use-of-const)
+      - [Where to put the const](#where-to-put-the-const)
+    - [Use of constexpr](#use-of-constexpr)
+    - [Integer Types](#integer-types)
+      - [On Unsigned Integers](#on-unsigned-integers)
+    - [Preprocessor Macros](#preprocessor-macros)
+    - [0 and nullptr/NULL](#0-and-nullptrnull)
+    - [sizeof](#sizeof)
+    - [auto](#auto)
+    - [Braced Initializer List](#braced-initializer-list)
+    - [Lambda expressions](#lambda-expressions)
+  - [Naming](#naming)
+    - [General Naming Rules](#general-naming-rules)
+    - [File Names](#file-names)
+    - [Type Names](#type-names)
+    - [Variable Names](#variable-names)
+      - [Common Variable Names](#common-variable-names)
+      - [Class Data Members](#class-data-members)
+      - [Struct Data Members](#struct-data-members)
+    - [Constant Names](#constant-names)
+    - [Function Names](#function-names)
+    - [Namespace Names](#namespace-names)
+    - [Enumerator Names](#enumerator-names)
+    - [Macro Names](#macro-names)
+    - [Exceptions to Naming Rules](#exceptions-to-naming-rules)
+  - [Comments](#comments)
+    - [Comment Style](#comment-style)
+    - [File Comments](#file-comments)
+      - [Legal Notice and Author Line](#legal-notice-and-author-line)
+      - [File Contents](#file-contents)
+    - [Class Comments](#class-comments)
+    - [Function Comments](#function-comments)
+      - [Function Declarations](#function-declarations)
+      - [Function Definitions](#function-definitions)
+    - [Variable Comments](#variable-comments)
+      - [Class Data Member Comments](#class-data-member-comments)
+      - [Global Variable Comments](#global-variable-comments)
+    - [Implementation Comments](#implementation-comments)
+      - [Explanatory Comments](#explanatory-comments)
+      - [Line Comments](#line-comments)
+      - [Function Argument Comments](#function-argument-comments)
+      - [Don'ts](#donts)
+    - [Punctuation, Spelling and Grammar](#punctuation-spelling-and-grammar)
+    - [TODO Comments](#todo-comments)
+    - [Deprecation Comments](#deprecation-comments)
+  - [Formatting](#formatting)
+    - [Line Length](#line-length)
+    - [Non-ASCII Characters](#non-ascii-characters)
+    - [Spaces vs. Tabs](#spaces-vs-tabs)
+    - [Function Declarations and Definitions](#function-declarations-and-definitions)
+    - [Formatting Lambda Expressions](#formatting-lambda-expressions)
+    - [Function Calls](#function-calls)
+    - [Braced Initializer List Format](#braced-initializer-list-format)
+    - [Conditionals](#conditionals)
+    - [Loops and Switch Statements](#loops-and-switch-statements)
+    - [Pointer and Reference Expressions](#pointer-and-reference-expressions)
+    - [Boolean Expressions](#boolean-expressions)
+    - [Return Values](#return-values)
+    - [Variable and Array Initialization](#variable-and-array-initialization)
+    - [Preprocessor Directives](#preprocessor-directives)
+    - [Class Format](#class-format)
+    - [Constructor Initializer Lists](#constructor-initializer-lists)
+    - [Namespace Formatting](#namespace-formatting)
+    - [Horizontal Whitespace](#horizontal-whitespace)
+      - [General](#general)
+      - [Loops and Conditionals](#loops-and-conditionals)
+      - [Operators](#operators)
+      - [Templates and Casts](#templates-and-casts)
+    - [Vertical Whitespace](#vertical-whitespace)
+  - [Exceptions to the Rules](#exceptions-to-the-rules)
+    - [Existing Non-conformant Code](#existing-non-conformant-code)
+  - [Parting Words](#parting-words)
 
 ## Background
 
 <!-- TODO: Review this section, the Google-specifc wording was replaced with something more appropriate -->
 
-C++ is the language of Arduino libraries, and as a consequence, in which Kaleidoscope was written in. As every C++ programmer knows, the language has many powerful features, but this power brings with it complexity, which in turn can make code more bug-prone and harder to read and maintain.
+C++ is the language of Arduino libraries, and as a consequence, the language in which Kaleidoscope was written. As every C++ programmer knows, the language has many powerful features, but this power brings with it complexity, which in turn can make code more bug-prone and harder to read and to maintain.
 
 The goal of this guide is to manage this complexity by describing in detail the dos and don'ts of writing C++ code. These rules exist to keep the code base manageable while still allowing coders to use C++ language features productively.
 
@@ -157,7 +156,7 @@ The goals of the style guide as we currently see them are as follows:
 
 <dt>Style rules should pull their weight</dt>
 <dd>
-The benefit of a style rule must be large enough to justify asking all of our engineers to remember it. The benefit is measured relative to the codebase we would get without the rule, so a rule against a very harmful practice may still have a small benefit if people are unlikely to do it anyway. This principle mostly explains the rules we don't have, rather than the rules we do: for example, `goto` contravenes many of the following principles, but is already vanishingly rare, so the Style Guide doesn't discuss it.
+The benefit of a style rule must be large enough to justify asking all of our engineers to remember it. The benefit is measured relative to the codebase we would get without the rule, so a rule against a very harmful practice may still have a small benefit if people are unlikely to do it anyway. This principle mostly explains the rules we don't have, rather than the rules we do: for example, <code>goto</code> contravenes many of the following principles, but is already vanishingly rare, so the Style Guide doesn't discuss it.
 </dd>
 
 <!-- TODO: Review the Kaleidoscope/Arduino bits -->
@@ -185,7 +184,7 @@ C++ has features that are more surprising or dangerous than one might think at a
 <!-- TODO: Review the wording: changed to mention that our target are not necessarily programmers. -->
 <dt>Avoid constructs that our average C++ programmer would find tricky or hard to maintain</dt>
 <dd>
-C++ has features that may not be generally appropriate because of the complexity they introduce to the code. In widely used code, it may be more acceptable to use trickier language constructs, because any benefits of more complex implementation are multiplied widely by usage, and the cost in understanding the complexity does not need to be paid again when working with new portions of the codebase. When in doubt, waivers to rules of this type can be sought by asking your project leads. This is specifically important for our codebase because code ownership and team membership changes over time: even if everyone that works with some piece of code currently understands it, such understanding is not guaranteed to hold a few years from now. Not to mention that our target audience are average people, not average C++ programmers.
+C++ has features that may not be generally appropriate because of the complexity they introduce to the code. In widely used code, it may be more acceptable to use trickier language constructs, because any benefits of more complex implementation are multiplied widely by usage, and the cost in understanding the complexity does not need to be paid again when working with new portions of the codebase. When in doubt, waivers to rules of this type can be sought by asking [the Kaleidoscope maintainers](maintainers.md). This is specifically important for our codebase because code ownership changes over time: even if everyone that works with some piece of code currently understands it, such understanding is not guaranteed to hold a few years from now. Not to mention that our target audience are average people, not necessarily professional C++ programmers.
 </dd>
 
 <!-- TODO: Un-googlified... -->
@@ -200,14 +199,17 @@ Performance optimizations can sometimes be necessary and appropriate, even when 
 
 </dl>
 
-The intent of this document is to provide maximal guidance with reasonable restriction. As always, common sense and good taste should prevail. By this we specifically refer to the established conventions of the entire community (both Kaleidoscope and Arduino communities), not just your personal preferences or those of your team. Be skeptical about and reluctant to use clever or unusual constructs: the absence of a prohibition is not the same as a license to proceed. Use your judgment, and if you are unsure, please don't hesitate to ask, to get additional input.
+The intent of this document is to provide maximal guidance with reasonable restriction. As always, common sense and good taste should prevail. By this we specifically refer to the established conventions of the entire community (both Kaleidoscope and Arduino communities), not just personal preferences. Be skeptical about and reluctant to use clever or unusual constructs: the absence of a prohibition is not the same as a license to proceed. Use your judgment, and if you are unsure, please don't hesitate to ask (e.g. on [Discourse][keyboardio:discourse] or on [Discord][keyboardio:discord]), to get additional input.
+
+[keyboardio:discourse]: https://community.keyboard.io/
+[keyboardio:discord]: https://keyboard.io/discord-invite
 
 ## Library Guidelines
 <!-- TODO: This is a whole new section! -->
 
 Before looking at the coding style guidelines, we must first talk about libraries. Every Kaleidoscope plugin is also an Arduino library. The core firmware is an Arduino library too. As such, libraries should follow the [Arduino library specification][arduino:library-spec] (revision 2.1 or later), with a few additional recommendations:
 
- [arduino:library-spec]: https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification
+ [arduino:library-spec]: https://arduino.github.io/arduino-cli/library-specification/
 
 <dl>
 <dt>Use Semantic Versioning for versioning</dt>
@@ -222,7 +224,7 @@ It does not matter much what hardware the example is for, as long as there is on
 
 <dt>Be mindful of the documentation</dt>
 <dd>
-Documenting the interfaces of the library, how to use it, its dependencies, in a way that is meaningful for a novice user is a very strong recommendation. The `README.md` in a library should target a novice audience. Would one want or need to document parts of the code that is only meaningful for more advanced programmers, do so in the code.
+Documenting the interfaces of the library, how to use it, and its dependencies, in a way that is meaningful for a novice user is a very strong recommendation. The <code>README.md</code> in a library should target a novice audience. Should one want or need to document parts of the code that is only meaningful for more advanced programmers, do so in the code.
 </dd>
 
 <dt>Use the tools provided in Kaleidoscope-Plugin</dt>
@@ -246,7 +248,7 @@ The following rules will guide you through the various pitfalls of using header 
 
 All header files should be self-contained. Users and refactoring tools should not have to adhere to special conditions to include the header. Specifically, a header should have [header guards](#header-guards) and include all other headers it needs.
 
-Prefer placing the definitions for template and inline functions in the same file as their declarations. The definitions of these constructs must be included into every `.cpp` file that uses them, or the program may fail to link in some build configurations. If declarations and definitions are in different files, including the former should transitively include the latter. Do not move these definitions to separately included header files (`-inl.h`).
+Prefer placing the definitions for template and inline functions in the same file as their declarations. The definitions of these constructs must be included into every `.cpp` file that uses them, or the program may fail to link in some build configurations. If declarations and definitions are in different files, including the former should transitively include the latter. Do not move these definitions to separately included header files (e.g. `-inl.h` files).
 
 As an exception, a template that is explicitly instantiated for all relevant sets of template arguments, or that is a private implementation detail of a class, is allowed to be defined in the one and only `.cpp` file that instantiates the template.
 
@@ -283,7 +285,7 @@ A *"forward declaration"* is a declaration of a class, function, or template wit
 * When using a function declared in a header file, always `#include` that header.
 * When using a class template, prefer to `#include` its header file.
 
-Please see [Names and Order of Includes](#names-and-order-of-includes) for rules about when to #include a header.
+Please see [Names and Order of Includes](#names-and-order-of-includes) for rules about when to `#include` a header.
 
 ### Inline Functions
 
@@ -328,20 +330,20 @@ If there is more than one header, they should be listed as descendants of the pr
 
 Having more than one level of subdirectories is not recommended.
 
-In `dir/foo.cpp` or `dir/foo_test.cc`, whose main purpose is to implement or test the stuff in `dir2/foo2.h`, order your includes as follows:
+In `dir/foo.cpp` or `dir/foo_test.cpp`, whose main purpose is to implement or test the stuff in `dir2/foo2.h`, order your includes as follows:
 
 1. `dir2/foo2.h`
 2. Arduino libraries.
 3. Other libraries' `.h` files.
 4. Your project's `.h` files.
 
-With the preferred ordering, if `dir2/foo2.h` omits any necessary includes, the build of `dir/foo.cpp` or `dir/foo_test.cpp` will break. Thus, this rule ensures that build breaks show up first for the people working on these files, not for innocent people in other packages.
+With the preferred ordering, if `dir2/foo2.h` omits any necessary includes, the build of `dir/foo.cpp` or `dir/foo_test.cpp` will break. Thus, this rule ensures that build breakages show up first for the people working on these files, not for innocent people in other packages.
 
 `dir/foo.cc` and `dir2/foo2.h` are usually in the same directory (e.g. `Kaleidoscope/Something_test.cpp` and `Kaleidoscope/Something.h`), but may sometimes be in different directories too.
 
 Within each section the includes should be ordered alphabetically.
 
-You should include all the headers that define the symbols you rely upon, except in the unusual case of [forward declarations](#forward-declarations) . If you rely on symbols from `bar.h`, don't count on the fact that you included `foo.h` which (currently) includes `bar.h`: include `bar.h` yourself, unless `foo.h` explicitly demonstrates its intent to provide you the symbols of `bar.h`. However, any includes present in the related header do not need to be included again in the related `cc` (i.e., `foo.cc` can rely on `foo.h`'s includes).
+You should include all the headers that define the symbols you rely upon, except in the unusual case of [forward declarations](#forward-declarations). If you rely on symbols from `bar.h`, don't count on the fact that you included `foo.h` which (currently) includes `bar.h`: include `bar.h` yourself, unless `foo.h` explicitly demonstrates its intent to provide you the symbols of `bar.h`. However, any includes present in the related header do not need to be included again in the related `cc` (i.e., `foo.cc` can rely on `foo.h`'s includes).
 
 For example, the includes in `Kaleidoscope-Something/src/Kaleidoscope/Something.cpp` might look like this:
 
@@ -362,11 +364,11 @@ Sometimes, system-specific code needs conditional includes. Such code can put co
 #include "Kaleidoscope.h"
 
 #if defined(ARDUINO_AVR_MODEL01)
-#include "Kaleidoscope/Something-Model01.h"
+#include "Kaleidoscope/Something-AVR-Model01.h"
 #endif
 
 #if defined(ARDUINO_AVR_SHORTCUT)
-#include "Kaleidoscope/Something-Shortcut.h"
+#include "Kaleidoscope/Something-AVR-Shortcut.h"
 #endif
 ```
 
@@ -414,7 +416,7 @@ The expressions `X::Y::foo()` and `X::foo()` are interchangeable. Inline namespa
 
 **Cons**
 
-Namespaces can be confusing, because they complicate the mechanics of figuring out what definition a name refers to.
+Namespaces can be confusing, because they complicate the mechanics of figuring out to what definition a name refers.
 
 Inline namespaces, in particular, can be confusing because names aren't actually restricted to the namespace where they are declared. They are only useful as part of some larger versioning policy.
 
@@ -513,7 +515,7 @@ All declarations can be given internal linkage by placing them in unnamed namesp
 
 **Decision**
 
-Use of internal linkage in `.cc` files is encouraged for all code that does not need to be referenced elsewhere. Do not use internal linkage in `.h` files.
+Use of internal linkage in `.cpp` files is encouraged for all code that does not need to be referenced elsewhere. Do not use internal linkage in `.h` files.
 
 Format unnamed namespaces like named namespaces. In the terminating comment, leave the namespace name empty:
 
@@ -638,7 +640,7 @@ One way to alleviate the destructor problem is to terminate the program by calli
 
 As a result we only allow static variables to contain POD data. This rule completely disallows `std::vector` (use C arrays instead), or `string` (use `const char []`).
 
-If you need a static or global variable of a class type, consider initializing a pointer (which will never be freed), from either your main() function or from pthread_once(). Note that this must be a raw pointer, not a "smart" pointer, since the smart pointer's destructor will have the order-of-destructor issue that we are trying to avoid.
+If you need a static or global variable of a class type, consider initializing a pointer (which will never be freed), from either your `main()` function or from `pthread_once()`. Note that this must be a raw pointer, not a "smart" pointer, since the smart pointer's destructor will have the order-of-destructor issue that we are trying to avoid.
 
 ## Classes
 
@@ -716,7 +718,7 @@ This kind of code isn't technically an implicit conversion, but the language tre
 
 **Decision**
 
-Type conversion operators, and constructors that are callable with a single argument, must be marked `explicit` in the class definition. As an exception, copy and move constructors should not be `explicit`, since they do not perform type conversion. Implicit conversions can sometimes be necessary and appropriate for types that are designed to transparently wrap other types. In that case, contact your project leads to request a waiver of this rule.
+Type conversion operators, and constructors that are callable with a single argument, must be marked `explicit` in the class definition. As an exception, copy and move constructors should not be `explicit`, since they do not perform type conversion. Implicit conversions can sometimes be necessary and appropriate for types that are designed to transparently wrap other types. In that case, contact the [Kaleidoscope maintainers](maintainers.md) to request a waiver of this rule.
 
 Constructors that cannot be called with a single argument should usually omit `explicit`. Constructors that take a single `std::initializer_list` parameter should also omit `explicit`, in order to support copy-initialization (e.g. `MyType m = {1, 2};`).
 
@@ -785,7 +787,7 @@ MyClass& operator=(const MyClass&) = delete;
 
 The `struct` and `class` keywords behave almost identically in C++. We add our own semantic meanings to each keyword, so you should use the appropriate keyword for the data-type you're defining.
 
-`structs` should be used for passive objects that carry data, and may have associated constants, but lack any functionality other than access/setting the data members. The accessing/setting of fields is done by directly accessing the fields rather than through method invocations. Methods should not provide behavior but should only be used to set up the data members, e.g., constructor, destructor, `Initialize()`, `Reset()`, `Validate()`.
+`struct`s should be used for passive objects that carry data, and may have associated constants, but lack any functionality other than access/setting the data members. The accessing/setting of fields is done by directly accessing the fields rather than through method invocations. Methods should not provide behavior but should only be used to set up the data members, e.g., constructor, destructor, `Initialize()`, `Reset()`, `Validate()`.
 
 If more functionality is required, a `class` is more appropriate. If in doubt, make it a `class`.
 
@@ -799,7 +801,7 @@ Note that member variables in structs and classes have [different naming rules](
 
 **Definition**
 
-When a sub-class inherits from a base class, it includes the definitions of all the data and operations that the parent base class defines. In practice, inheritance is used in two major ways in C++: implementation inheritance, in which actual code is inherited by the child, and [interface inheritance](#interfaces) , in which only method names are inherited.
+When a sub-class inherits from a base class, it includes the definitions of all the data and operations that the base class defines. In practice, inheritance is used in two major ways in C++: implementation inheritance, in which actual code is inherited by the child, and [interface inheritance](#interfaces), in which only method names are inherited.
 
 **Pros**
 

@@ -1,4 +1,6 @@
+python>=3.6
 sphinx>=2.0
 breathe>=4.13.0
 exhale
+recommonmark
 sphinx_markdown_tables
