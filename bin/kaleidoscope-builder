@@ -575,6 +575,13 @@ run_simulator_tests() {
    ${MAKE:-make}
 }
 
+docker_simulator_tests() {
+    docker build -t kaleidoscope/simulator test
+    docker run --rm -it \
+           -v ${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio \
+           kaleidoscope/simulator
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
