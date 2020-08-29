@@ -16,6 +16,7 @@ install:
   - rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
 script:
+  - unset CC
   - make travis-test KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware
 notifications:
   email:
