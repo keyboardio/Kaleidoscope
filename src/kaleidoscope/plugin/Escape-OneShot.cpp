@@ -35,7 +35,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
       !::OneShot.isPressed()) {
     // Cancel all OneShot keys
     ::OneShot.cancel(true);
-   // Suppress the escape key event, and mask the key until it's released
+    // Suppress the escape key event, and mask the key until it's released
     mapped_key = Key_NoKey;
     return EventHandlerResult::EVENT_CONSUMED;
   }
