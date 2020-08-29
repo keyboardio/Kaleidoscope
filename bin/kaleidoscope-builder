@@ -569,7 +569,7 @@ EOF
 }
 
 run_simulator_tests() {
-   (cd ${BOARD_HARDWARE_PATH}/keyboardio && make prepare-virtual)
+   (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
    kaleidoscope_dir="$(dirname "$0")/.."
    cd "${kaleidoscope_dir}/test/simulator"
    ${MAKE:-make}
@@ -578,8 +578,8 @@ run_simulator_tests() {
 docker_simulator_tests() {
     docker build -t kaleidoscope/simulator test
     docker run --rm -it \
-           -v ${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio \
-           -v $(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope \
+           -v "${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio" \
+           -v "$(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope" \
            kaleidoscope/simulator
 }
 
