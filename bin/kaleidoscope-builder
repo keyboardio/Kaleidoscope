@@ -396,6 +396,7 @@ compile () {
 	      -fqbn "${FQBN}" \
         -libraries "." \
         -libraries "${ROOT}" \
+        -libraries "${ROOT}/fake-gtest" \
 	      -libraries "${BOARD_HARDWARE_PATH}/.." \
         ${local_LIBS} \
 	      ${EXTRA_BUILDER_ARGS} \
@@ -573,6 +574,14 @@ run_simulator_tests() {
    kaleidoscope_dir="$(dirname "$0")/.."
    cd "${kaleidoscope_dir}/test/simulator"
    ${MAKE:-make}
+}
+
+run_simulator_googletest() {
+    (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
+    kaleidoscope_dir="$(dirname "$0")/.."
+    (cd "${kaleidoscope_dir}/testing/googletest" && cmake . && make)
+    cd "${kaleidoscope_dir}/testing"
+    ${MAKE:-make}
 }
 
 docker_simulator_tests() {

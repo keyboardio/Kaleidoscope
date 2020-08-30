@@ -6,3 +6,6 @@
 /docs/generated
 /docs/doxyoutput
 /docs/api
+tags
+**/generated/
+**/results/
