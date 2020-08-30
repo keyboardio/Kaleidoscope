@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "gtest/gtest.h"
+#include "gtest.h"
 
 #include "Kaleidoscope-Simulator.h"
 
