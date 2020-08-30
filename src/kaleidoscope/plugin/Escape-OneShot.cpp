@@ -19,6 +19,7 @@
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-Escape-OneShot.h>
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -36,7 +37,7 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     // Cancel all OneShot keys
     ::OneShot.cancel(true);
     // Suppress the escape key event, and mask the key until it's released
-    mapped_key = Key_NoKey;
+    Layer.updateLiveCompositeKeymap(key_addr, Key_NoKey);
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
