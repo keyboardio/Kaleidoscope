@@ -1,5 +1,7 @@
 #pragma once
 
+#if defined(__AVR__)
+
 #define KALEIDOSCOPE_AVR_GCC_MINIMAL_VERSION 5
 #define KALEIDOSCOPE_AVR_GCC_MINIMAL_MINOR 4
 
@@ -8,4 +10,6 @@
         && (__GNUC_MINOR__ < KALEIDOSCOPE_AVR_GCC_MINIMAL_MINOR) \
       )
 #error Kaleidoscope requires Arduino version >= 1.8.6 to build. Please upgrade.
+#endif
+
 #endif

@@ -61,31 +61,31 @@ enable_ccache () {
       if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
          mkdir -p "$CCACHE_WRAPPER_PATH"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
          ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
          ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
          ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
          ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
          ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
       fi
-      
+
       if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
          ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
       fi
-    
+
       export CCACHE_PATH=${COMPILER_PATH}/
       CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
     fi
@@ -163,16 +163,16 @@ prompt_before_flashing () {
 flash () {
     maybe_build "$@"
 
-    # Check to see if we can see a keyboard bootloader port. 
+    # Check to see if we can see a keyboard bootloader port.
     # If we -can-, then we should skip over the "reset to bootloader" thing
     find_bootloader_ports
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
         prompt_before_flashing
-    
+
         # This is defined in the (optional) user config.
         # shellcheck disable=SC2154
         ${preFlash_HOOKS}
-  
+
 	# If we're -not- doing a manual reset, then try to do it automatically
         if [ -z "${MANUAL_RESET}" ]; then
             reset_device
@@ -195,7 +195,7 @@ flash () {
 wait_for_bootloader_port() {
     declare -i tries
     tries=15
-    
+
     while [ "$tries" -gt 0 ] && [ -z "${DEVICE_PORT_BOOTLOADER}" ]; do
         sleep 1
         printf "."
@@ -204,12 +204,12 @@ wait_for_bootloader_port() {
         # shellcheck disable=SC2004
         tries=$(($tries-1))
     done
-    
+
     if [ "$tries" -gt 0 ]; then
         echo "Found."
-    else 
+    else
         echo "Timed out."
-    fi 
+    fi
 }
 
 check_bootloader_port () {
@@ -227,11 +227,11 @@ check_bootloader_port_and_flash () {
     if ! check_bootloader_port; then
         return 1
     fi
- 
+
     echo "Flashing your keyboard:"
 
     # If the flash fails, try a second time
-    if ! flash_over_usb; then 
+    if ! flash_over_usb; then
         sleep 2
         if  ! flash_over_usb; then
             if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
@@ -341,7 +341,7 @@ compile () {
     enable_ccache
 
     install -d "${OUTPUT_PATH}"
-    
+
     SKETCH_DIR="$(find_sketch)"
 
     echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}"
@@ -362,7 +362,7 @@ compile () {
         # We want literal backslashes here, not arrays.
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
-    
+
     SAVED_BOARD="${BOARD}"
     SAVED_FQBN="${FQBN}"
     if [ -e "${SKETCH_DIR}/.kaleidoscope-builder.conf" ]; then
@@ -378,6 +378,10 @@ compile () {
             fi
         fi
     fi
+
+    _CMD_CXX="${CXX:-${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_CC="${CC:-${COMPILER_PREFIX}${C_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_AR="${AR:-${COMPILER_PREFIX}${AR_BASENAME}${COMPILER_SUFFIX}}"
 
     # SC2091: We do not care if quotes or backslashes are not respected.
     # SC2086: We want word splitting.
@@ -401,8 +405,10 @@ compile () {
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -prefs "compiler.path=${COMPILER_PATH}" \
-	      -prefs "compiler.c.cmd=${COMPILER_PREFIX}${C_COMPILER_BASENAME}" \
-	      -prefs "compiler.cpp.cmd=${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" \
+	      -prefs "compiler.c.cmd=${_CMD_CC}" \
+	      -prefs "compiler.cpp.cmd=${_CMD_CXX}" \
+        -prefs "compiler.ar.cmd=${_CMD_AR}" \
+        -prefs "compiler.c.elf.cmd=${_CMD_CXX}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
@@ -562,6 +568,21 @@ EOF
     fi
 }
 
+run_simulator_tests() {
+   (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
+   kaleidoscope_dir="$(dirname "$0")/.."
+   cd "${kaleidoscope_dir}/test/simulator"
+   ${MAKE:-make}
+}
+
+docker_simulator_tests() {
+    docker build -t kaleidoscope/simulator test
+    docker run --rm -it \
+           -v "${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio" \
+           -v "$(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope" \
+           kaleidoscope/simulator
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
@@ -599,6 +620,9 @@ usage () {
 
 		  build-all
 		    Build all Sketches we can find.
+
+        run-simulator-tests
+          Builds and runs all simulator tests.
 		EOF
 }
 

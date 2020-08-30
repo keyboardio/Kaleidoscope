@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <Arduino.h>
 
 #include "kaleidoscope/HIDTables.h"
 
