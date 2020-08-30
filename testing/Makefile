@@ -1,24 +1,21 @@
-GTEST_DIR=googletest/googletest
-BIN_DIR=bin
-LIB_DIR=lib
-OBJ_DIR=obj
+TEST_DIRS = $(dir $(wildcard */tests.h))
 
-all: run-hello-test
+all: ${TEST_DIRS}
+	@:
 
-run-hello-test: $(BIN_DIR)/hello-test
-	$(BIN_DIR)/hello-test
+Makefile: ${TEST_DIRS}
+	@:
 
-$(BIN_DIR)/hello-test: hello-test.cpp $(LIB_DIR)/libgtest.so $(OBJ_DIR)/gtest_main.o
-	mkdir -p $(BIN_DIR)
-	g++ -o $(BIN_DIR)/hello-test -I$(GTEST_DIR)/include hello-test.cpp $(OBJ_DIR)/gtest_main.o $(LIB_DIR)/libgtest.so
+%: FORCE 
+	@if [ ! -f "$@/tests.h" ]; then \
+		echo 'Unable to find test file "$@/tests.h"'; \
+	else \
+		echo "Running tests in $@"; \
+		echo "env LOCAL_CFLAGS='-DTESTING_INCLUDE_FILE="$@/tests.h" "-I$(PWD)/$@"' VERBOSE=1 $(MAKE) -f delegate.mk"; \
+		env LOCAL_CFLAGS='-DTESTING_INCLUDE_FILE="$@/tests.h" "-I$(PWD)/$@"' VERBOSE=1 $(MAKE) -f delegate.mk; \
+	fi
 
-$(OBJ_DIR)/gtest_main.o: $(GTEST_DIR)/src/gtest_main.cc $(wildcard $(GTEST_DIR)/include/gtest/*.h)
-	mkdir -p $(OBJ_DIR)
-	g++ -o $(OBJ_DIR)/gtest_main.o -c -pthread -I$(GTEST_DIR)/include $(GTEST_DIR)/src/gtest_main.cc
+.PHONY: FORCE
 
-$(LIB_DIR)/libgtest.so: $(wildcard $(GTEST_DIR)/src/*.cc) $(wildcard $(GTEST_DIR)/include/gtest/*.h)
-	mkdir -p $(LIB_DIR)
-	g++ -o $(LIB_DIR)/libgtest.so -shared -fPIC -pthread -I$(GTEST_DIR) -I$(GTEST_DIR)/include $(GTEST_DIR)/src/gtest-all.cc
 
-clean:
-	rm $(BIN_DIR)/* $(LIB_DIR)/* $(OBJ_DIR)/*
+
