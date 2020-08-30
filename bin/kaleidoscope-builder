@@ -14,7 +14,6 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 set -e
-set -x
 
 ######
 ###### Build and output configuration
@@ -398,8 +397,7 @@ compile () {
         -libraries "." \
         -libraries "${ROOT}" \
 	      -libraries "${BOARD_HARDWARE_PATH}/.." \
-        -libraries "${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries/Kaleidoscope/testing/googletest/googletest/include/gtest" \
-        -libraries "${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries/Kaleidoscope/testing/googletest/googletest/src" \
+        -libraries "${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries/Kaleidoscope/gtest-arduino" \
         ${local_LIBS} \
 	      ${EXTRA_BUILDER_ARGS} \
 	      -build-cache "${CORE_CACHE_PATH}" \
