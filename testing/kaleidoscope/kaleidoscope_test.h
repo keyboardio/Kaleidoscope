@@ -18,57 +18,22 @@
 
 #pragma once
 
-#undef min
-#undef max
-#undef T
-#undef U
-
 #include "setup-googletest.h"
-
-#include "Kaleidoscope-Simulator.h"
 
 SETUP_GOOGLETEST();
 
 namespace kaleidoscope {
-namespace simulator {
+namespace testing {
 namespace {
 
-using namespace actions;
-using namespace interface;
-using namespace interface::actions;
+class KeyboardReports : public VirtualDeviceTest {};
 
-class SimulatorTest : public ::testing::Test {
- protected:
-  void SetUp() {
-    sim_ = &Simulator::getInstance();
-  }
-
-  Simulator* sim_;
-};
-
-class KeyboardReports : public SimulatorTest {};
-
-TEST_F(KeyboardReports, ActiveKeycodesAreAccurate) {
-  // Assert that the next cycle generates exactly one keyboard report.
-  //
-  sim_->cycleActionsQueue().queue(AssertCycleGeneratesNReports<KeyboardReport_> {1});
-
-  sim_->tapKey(2, 1); // A
-  sim_->cycleExpectReports(AssertKeycodesActive{Key_A});
-
-  sim_->cycleExpectReports(AssertReportEmpty{});
-}
-
-TEST(Test, ThatPasses) {
-  EXPECT_TRUE(true);
-}
-
-TEST(Test, ThatFails) {
-  EXPECT_TRUE(false);
+TEST_F(KeyboardReports, KeysActiveWhenPressed) {
+  Press(2, 1); // A
 }
 
 }  // namespace
-}  // namespace simulator
+}  // namespace testing
 }  // namespace kaleidoscope
 
 #endif  // KALEIDOSCOPE_VIRTUAL_BUILD
