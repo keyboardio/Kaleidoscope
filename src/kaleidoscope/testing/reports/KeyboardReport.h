@@ -18,4 +18,26 @@
 
 #pragma once
 
+#include "MultiReport/Keyboard.h"
+
+namespace kaleidoscope {
+namespace testing {
+
+class KeyboardReport {
+ public:
+  typedef HID_KeyboardReport_Data_t ReportData;
+
+  static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
+
+  KeyboardReport(const void* data);
+
+  std::vector<uint8_t> ActiveKeycodes() const;
+
+ private:
+  ReportData report_data_;
+};
+
+}  // namespace testing
+}  // namespace kaleidoscope
+
 #endif  // KALEIDOSCOPE_VIRTUAL_BUILD

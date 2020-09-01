@@ -18,58 +18,32 @@
 
 #pragma once
 
-#include "./Logging.h"
+#include "setup-googletest.h"
 
 #include "HID-Settings.h"
+#include "kaleidoscope/sim/Sim.h"
+#include "kaleidoscope/testing/observer/Observer.h"
 
 namespace kaleidoscope {
 namespace testing {
 
 class VirtualDeviceTest : public ::testing::Test {
  protected:
-  void SetUp() {
-    HIDReportObserver
+  void RunCycle() {
+    observer_.Clear();
+    sim_.RunCycle();
   }
+  void RunCycles(size_t n) {
+    if (n == 0) return;
+    observer_.Clear();
+    sim_.RunCycles(n);
+  }
+  Observer& Result() { return observer_; }
 
-  void Press(uint8_t row, uint8_t, col) {
-    Kaleidoscope.device().keyScanner().setKeystate(
-        KeyAddr{row, col},
-        Kaleidoscope::Device::Props::keyScanner::KeyState::Pressed);
-  }
+  Sim sim_;
 
  private:
-  template <class R>
-  void ProcessReport(const R& report) {
-    observer_RecordReport(report);
-  }
-
-  template <class R>
-  void RecordReport(const R& report);
-
-  template <>
-  void RecordReport<MouseReport>(const MouseReport& report) {
-    mouse_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<BootKeyboardReport>(const BootKeyboardReport& report) {
-    boot_keyboard_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<AbsoluteMouseReport>(const AbsoluteMouseReport& report) {
-    absolute_mouse_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<KeyboardReport>(const KeyboardReport& report) {
-    keyboard_reports_.push_back(report);
-  }
-
-  std::vector<MouseReport> mouse_reports_;
-  std::vector<BootKeyboardReport> boot_keyboard_reports_;
-  std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
-  std::vector<KeyboardReport> keyboard_reports_;
+  Observer observer_;
 };
 
 }  // namespace testing

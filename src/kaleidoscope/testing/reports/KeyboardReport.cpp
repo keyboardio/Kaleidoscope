@@ -1,5 +1,5 @@
-/* kailedoscope::sim - Simulator for Unit Testing Kaleidoscope
- * Copyright (C) 2020  epan <epaniagua@google.com>
+/* -*- mode: c++ -*-
+ * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,18 +16,28 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#pragma once
+#include <cstring>
 
 namespace kaleidoscope {
-namespace sim {
+namespace testing {
 
-class Sim {
- public:
-  void RunCycle();
-  void Press(uint8_t row, uint8_t col);
-};
+KeyboardReport::KeyboardReport(const void* data) {
+  const ReportData& report_data =
+    *static_cast<const ReportData*>(data);
+  memcpy(&report_data_, &report_data, sizeof(report_data_));
+}
 
-}  // namespace sim
+std::vector<uint8_t> KeyboardReport::ActiveKeycodes() const {
+  std::vector<uint8_t> active_keys;
+  for (uint8_t i = 0; i <= HID_LAST_KEY; ++k) {
+    uint8_t bit = 1 << (uint8_t(k) % 8);
+    uint8_t key_code = report_data_.keys[k/8] & bit;
+    if (key_code) active_keys.push_back(i);
+  }
+  return active_keys;
+}
+
+}  // namespace testing
 }  // namespace kaleidoscope
 
 #endif  // KALEIDOSCOPE_VIRTUAL_BUILD

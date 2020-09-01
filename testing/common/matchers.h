@@ -20,19 +20,11 @@
 
 #include "setup-googletest.h"
 
-SETUP_GOOGLETEST();
-
 namespace kaleidoscope {
 namespace testing {
-namespace {
 
-class KeyboardReports : public VirtualDeviceTest {};
+auto ContainsKey(Key key) { return ::testing::Contains(key.getKeyCode()); }
 
-TEST_F(KeyboardReports, KeysActiveWhenPressed) {
-  Press(2, 1); // A
-}
-
-}  // namespace
 }  // namespace testing
 }  // namespace kaleidoscope
 

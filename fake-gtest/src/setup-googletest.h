@@ -22,8 +22,10 @@
 #undef max
 #undef T
 #undef U
+#undef TEST
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #define SETUP_GOOGLETEST() \
   void executeTestFunction() { \

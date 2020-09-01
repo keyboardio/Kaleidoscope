@@ -15,9 +15,24 @@
  */
 
 #include "kaleidoscope/sim/Sim.h"
+#include "Kaleidoscope.h"
 
 namespace kaleidoscope {
 namespace sim {
+
+void Sim::RunCycle() {
+  Kaleidoscope.loop();
+}
+
+void Sim::RunCycles(size_t n) {
+  for (size_t i = 0; i < n; ++i) RunCycle();
+}
+
+void Sim::Press(uint8_t row, uint8_t, col) {
+  Kaleidoscope.device().keyScanner().setKeystate(
+      KeyAddr{row, col},
+      Kaleidoscope::Device::Props::keyScanner::KeyState::Pressed);
+}
 
 }  // namespace sim
 }  // namespace kaleidoscope

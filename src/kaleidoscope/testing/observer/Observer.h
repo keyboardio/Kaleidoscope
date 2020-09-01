@@ -18,15 +18,31 @@
 
 #pragma once
 
-#include "./Logging.h"
+//#include "./Logging.h"
+#include <iostream>
+#define LOG(x) std::cout
 
 #include "HID-Settings.h"
+#include "HIDReportObserver.h"
+#include "kaleidoscope/testing/reports/KeyboardReport.h"
 
 namespace kaleidoscope {
 namespace testing {
 
 class Observer {
  public:
+  Observer() {
+    HIDReportObserver::resetHook(
+        std::bind(&Observer::ProcessHidReport, this));
+  }
+
+  void Clear() {
+    mouse_reports_.clear();
+    boot_keyboard_reports_.clear();
+    absolute_mouse_reports_.clear();
+    keyboard_reports_.clear();
+  }
+
   void ProcessHidReport(uint8_t id, const void* data, int len, int result) {
     switch (id) {
       case HID_REPORTID_MOUSE: {
@@ -57,34 +73,32 @@ class Observer {
     }
   }
 
+  const std::vector<KeyboardReport>& KeyboardReports() const {
+    return keyboard_reports_;
+  }
+
+  const KeyboardReport& KeyboardReports(size_t i) const {
+    return keyboard_reports_.at(i);
+  }
+
+ private:
+  template <class R>
+  void ProcessReport(const R& report) {
+    observer_.RecordReport(report);
+  }
+
   template <class R>
   void RecordReport(const R& report);
 
-  template <>
-  void RecordReport<MouseReport>(const MouseReport& report) {
-    mouse_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<BootKeyboardReport>(const BootKeyboardReport& report) {
-    boot_keyboard_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<AbsoluteMouseReport>(const AbsoluteMouseReport& report) {
-    absolute_mouse_reports_.push_back(report);
-  }
-
-  template <>
-  void RecordReport<KeyboardReport>(const KeyboardReport& report) {
-    keyboard_reports_.push_back(report);
-  }
-
-  std::vector<MouseReport> mouse_reports_;
-  std::vector<BootKeyboardReport> boot_keyboard_reports_;
-  std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   std::vector<KeyboardReport> keyboard_reports_;
 };
 
+template <>
+void Observer::RecordReport<KeyboardReport>(const KeyboardReport& report) {
+  keyboard_reports_.push_back(report);
+}
+
 }  // namespace testing
 }  // namespace kaleidoscope
+
+#endif  // KALEIDOSCOPE_VIRTUAL_BUILD
