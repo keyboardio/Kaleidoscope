@@ -23,8 +23,7 @@
 #undef T
 #undef U
 
-#include "fake-gtest.h"
-#include "gtest/gtest.h"
+#include "googletest.h"
 
 #include "Kaleidoscope-Simulator.h"
 
