@@ -32,9 +32,10 @@ cRGB ActiveModColorEffect::highlight_color = (cRGB) {
 
 cRGB ActiveModColorEffect::sticky_color = CRGB(160, 0, 0);
 
-EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(Key &key,
-                                                          KeyAddr key_addr,
-                                                          uint8_t key_state) {
+EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(
+  Key &key,
+  KeyAddr key_addr,
+  uint8_t key_state) {
   // If `key_addr` is not a physical key address, ignore it:
   if (! key_addr.isValid()) {
     return EventHandlerResult::OK;
@@ -69,7 +70,7 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
 
   // This loop iterates through only the `key_addr`s that have their
   // bits in the `mod_key_bits_` bitfield set.
-  for (KeyAddr key_addr: mod_key_bits_) {
+  for (KeyAddr key_addr : mod_key_bits_) {
     Key key = Layer.lookup(key_addr);
 
     if (::OneShot.isOneShotKey(key)) {
