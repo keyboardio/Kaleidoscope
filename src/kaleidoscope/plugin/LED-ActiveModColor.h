@@ -18,6 +18,7 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyAddrBitfield.h"
 #include <Kaleidoscope-LEDControl.h>
 
 #define MAX_MODS_PER_LAYER 16
@@ -35,16 +36,14 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
     highlight_normal_modifiers_ = value;
   }
 
+  EventHandlerResult onKeyswitchEvent(Key &key,
+                                      KeyAddr key_addr,
+                                      uint8_t key_state);
   EventHandlerResult beforeReportingState();
-  EventHandlerResult onLayerChange();
-  EventHandlerResult onSetup() {
-    return onLayerChange();
-  }
 
  private:
   static bool highlight_normal_modifiers_;
-  static KeyAddr mod_keys_[MAX_MODS_PER_LAYER];
-  static uint8_t mod_key_count_;
+  static KeyAddrBitfield mod_key_bits_;
 };
 }
 }
