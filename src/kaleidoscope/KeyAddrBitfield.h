@@ -102,7 +102,7 @@ class KeyAddrBitfield {
   class Iterator {
    public:
     Iterator(KeyAddrBitfield &bitfield, uint8_t x)
-        : bitfield_(bitfield), block_index_(x) {}
+      : bitfield_(bitfield), block_index_(x) {}
 
     bool operator!=(const Iterator &other) {
       // First, the test for the end condition (return false when all the blocks have been
@@ -154,9 +154,9 @@ class KeyAddrBitfield {
 
   }; // class Iterator {
 
-} __attribute__((packed)); // class Bitfield {
+} __attribute__((packed)); // class KeyAddrBitfield {
 
-} // namespace kaleidoglyph {
+} // namespace kaleidoscope {
 
 
 // ================================================================================
