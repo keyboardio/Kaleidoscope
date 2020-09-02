@@ -19,8 +19,6 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include KALEIDOSCOPE_HARDWARE_H
-
 #include "kaleidoscope/driver/bootloader/None.h"
 #include "kaleidoscope/driver/led/Base.h"
 

@@ -10,6 +10,13 @@ target_include_directories(bitfields
   ${KALEIDOSCOPE_SRC}
   "${VIRTUAL_ROOT}/cores/arduino" )
 
+set(KALEIDOSCOPE_HARDWARE_H "Kaleidoscope-Hardware-Model01.h")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/device/device.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/device/device.h"
+  @ONLY)
+
 add_library(hooks hooks.cpp)
 target_include_directories(hooks
   PRIVATE

@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Kaleidoscope-Hardware-Model01.h"
+#include "@KALEIDOSCOPE_HARDWARE_H@"
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/device/virtual/Virtual.h"
