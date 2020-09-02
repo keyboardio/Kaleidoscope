@@ -100,7 +100,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
       activateOneShot(idx);
     }
 
-    return EventHandlerResult::EVENT_CONSUMED;
+    return EventHandlerResult::OK;
   }
 
   if (isOneShotKey_(mapped_key)) {
@@ -141,7 +141,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
       }
     }
 
-    return EventHandlerResult::EVENT_CONSUMED;
+    return EventHandlerResult::OK;
   }
 
   // ordinary key here, with some event
