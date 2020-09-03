@@ -63,6 +63,18 @@ Furthermore, if a one-shot key is tapped two times in quick succession, it becom
 
 To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain active if another one-shot of the same type is tapped, so ``Ctrl, Alt, b`` becomes ``Ctrl+Alt+b``, and ``L1, L2, c`` is turned into ``L1+L2+c``.
 
+## Qukeys
+
+[Qukeys Documentation](../plugins/Qukeys.md)
+
+A Qukey is a key that has two possible values, usually a modifier and a printable character. The name is a play on the term "qubit" (short for "quantum bit") from quantum computing. The value produced depends on how long the key press lasts, and how it is used in combination with other keys (roughly speaking, whether the key is "tapped" or "held").
+
+The _primary_ value (a printable character) of a Qukey is output if the key is "tapped" (i.e. quickly pressed and released). If it is held long enough, it will instead produce the Qukey's _alternate_ value (usually a modifier). It will also produce that alternate value if a subsequent key is tapped after the initial keypress of the Qukey, even if both keys are released before the time it takes to produce the alternate value on its own. This makes it feasible for most people to use Qukeys on home-row keys, without slowing down typing. In this configuration, it can become very comfortable to use modifier combinations, without needing to move one's hands from the home position at all.
+
+Qukeys can be defined to produce any two keys, including other plugin keys and keys with modifier flags applied. For example, one could define a Qukey to produce ``Shift + 9`` when tapped, and a OneShot ``Ctrl`` when held.
+
+It is also possible to use Qukeys like SpaceCadet (see below), by setting the primary value to a modifier, and the alternate value to a printable character (e.g. ``(``). In that case, the behavior is reversed, and the alternate value will only be used if the key is pressed and released without any rollover to a subsequent key press.
+
 ## ShapeShifter
 
 [ShapeShifter Documentation](../plugins/ShapeShifter.md)
