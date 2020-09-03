@@ -535,5 +535,3 @@ void setup() {
 void loop() {
   Kaleidoscope.loop();
 }
-
-#include TESTING_INCLUDE_FILE
