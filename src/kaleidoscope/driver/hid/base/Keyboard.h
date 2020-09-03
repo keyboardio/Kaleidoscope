@@ -207,10 +207,15 @@ class Keyboard {
     consumer_control_.release(CONSUMER(mapped_key));
   }
   void pressSystemControl(Key mapped_key) {
-    system_control_.press(mapped_key.getKeyCode());
+    uint8_t keycode = mapped_key.getKeyCode();
+    system_control_.press(keycode);
+    last_system_control_keycode_ = keycode;
   }
   void releaseSystemControl(Key mapped_key) {
-    system_control_.release();
+    uint8_t keycode = mapped_key.getKeyCode();
+    if (keycode == last_system_control_keycode_) {
+      system_control_.release();
+    }
   }
 
   // pressKey takes a Key, as well as optional boolean 'toggledOn' which defaults
@@ -373,6 +378,12 @@ class Keyboard {
   }
 
  private:
+  // To prevent premature release of a System Control key when rolling
+  // over from one to another, we record the last System Control
+  // keycode that was pressed. It's initialized to zero, which should
+  // not be a valid System Control keycode.
+  uint8_t last_system_control_keycode_ = 0;
+
   // modifier_flag_mask is a bitmask of modifiers that we found attached to
   // keys that were newly pressed down during the most recent cycle with any new
   // keypresses.
