@@ -92,7 +92,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
       state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
       start_time_ = Runtime.millisAtCycleStart();
-      state_[idx].position = key_addr.toInt();
       state_[idx].pressed = true;
       state_[idx].active = true;
       prev_key_ = mapped_key;
@@ -132,7 +131,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
         } else {
           start_time_ = Runtime.millisAtCycleStart();
 
-          state_[idx].position = key_addr.toInt();
           state_[idx].active = true;
           prev_key_ = mapped_key;
 

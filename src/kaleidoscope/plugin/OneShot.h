@@ -86,7 +86,6 @@ class OneShot : public kaleidoscope::Plugin {
     bool stickable: 1;
     bool sticky: 1;
     uint8_t __reserved: 4;
-    uint8_t position;
   } key_state_t;
   static key_state_t state_[ONESHOT_KEY_COUNT];
 
