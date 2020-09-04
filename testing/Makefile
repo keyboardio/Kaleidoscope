@@ -13,6 +13,12 @@ googletest: FORCE
 common: FORCE
 	cd common && env LIB_DIR="${LIB_DIR}" $(MAKE)
 
+clean: FORCE
+	rm -rf "${LIB_DIR}"
+	cd common && make clean
+	cd hello-simulator && make clean
+	cd kaleidoscope && make clean
+
 %: common googltest FORCE
 	if [ -f "$@/Makefile" ]; then cd "$@"; $(MAKE); fi
 

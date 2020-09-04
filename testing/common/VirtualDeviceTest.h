@@ -36,7 +36,7 @@ class VirtualDeviceTest : public ::testing::Test {
 
   const State& Result() const;
 
-  Simulator sim_;
+  ::kaleidoscope::testing::Simulator sim_;
 
  private:
   State state_;

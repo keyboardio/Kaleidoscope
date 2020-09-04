@@ -31,6 +31,7 @@ ${OBJ_DIR}/%.o: %.cpp
 		-I../../testing/googletest/googlemock/include \
 		-I../../testing/googletest/googletest/include \
 		-DARDUINO=10607 \
+		-DARDUINO_ARCH_VIRTUAL \
 		-DARDUINO_AVR_MODEL01 \
 		'-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Model01.h"' \
 		-DKALEIDOSCOPE_VIRTUAL_BUILD=1 \

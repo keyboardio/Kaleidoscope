@@ -23,10 +23,10 @@ ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} FORCE
 		-g \
 		-w \
 		${TEST_OBJS} \
-		"${LIB_DIR}/${LIB_FILE}" \
-		-L"$(PWD)/../googletest/lib" \
 		-L"${PWD}/../lib" \
 		-lcommon \
+		"${LIB_DIR}/${LIB_FILE}" \
+		-L"$(PWD)/../googletest/lib" \
 		-lgtest \
 		-lgmock \
 		-lm \
@@ -45,6 +45,7 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 		-I${PWD}/../../testing/googletest/googlemock/include \
 		-I${PWD}/../../testing/googletest/googletest/include \
 		-DARDUINO=10607 \
+		-DARDUINO_ARCH_VIRTUAL \
 		-DARDUINO_AVR_MODEL01 \
 		'-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Model01.h"' \
 		-DKALEIDOSCOPE_VIRTUAL_BUILD=1 \

@@ -18,6 +18,14 @@
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
+#undef T
+#undef U
+#undef min
+#undef max
+#undef TEST
+
+#include <iostream>
+
 namespace kaleidoscope {
 
 uint32_t Runtime_::millis_at_cycle_start_;
@@ -51,18 +59,26 @@ Runtime_::setup(void) {
 
 void
 Runtime_::loop(void) {
+  std::cout << "epan 2.2.1.1" << std::endl;
   millis_at_cycle_start_ = millis();
+  std::cout << "epan 2.2.1.2" << std::endl;
 
   kaleidoscope::Hooks::beforeEachCycle();
+  std::cout << "epan 2.2.1.3" << std::endl;
 
   device().scanMatrix();
+  std::cout << "epan 2.2.1.4" << std::endl;
 
   kaleidoscope::Hooks::beforeReportingState();
+  std::cout << "epan 2.2.1.5" << std::endl;
 
   device().hid().keyboard().sendReport();
+  std::cout << "epan 2.2.1.6" << std::endl;
   device().hid().keyboard().releaseAllKeys();
+  std::cout << "epan 2.2.1.7" << std::endl;
 
   kaleidoscope::Hooks::afterEachCycle();
+  std::cout << "epan 2.2.1.8" << std::endl;
 }
 
 Runtime_ Runtime;

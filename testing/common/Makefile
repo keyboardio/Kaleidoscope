@@ -25,6 +25,7 @@ ${OBJ_DIR}/%.o: %.cpp $(wildcard *.h)
 		-I${PWD}/../../testing/googletest/googlemock/include \
 		-I${PWD}/../../testing/googletest/googletest/include \
 		-DARDUINO=10607 \
+		-DARDUINO_ARCH_VIRTUAL \
 		-DARDUINO_AVR_MODEL01 \
 		'-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Model01.h"' \
 		-DKALEIDOSCOPE_VIRTUAL_BUILD=1 \
@@ -33,3 +34,6 @@ ${OBJ_DIR}/%.o: %.cpp $(wildcard *.h)
 		-DARDUINO_ARCH_AVR=1 \
 		'-DUSB_PRODUCT="Model 01"' \
 		$<
+
+clean:
+	rm -rf "${LIB_DIR}" "${OBJ_DIR}"
