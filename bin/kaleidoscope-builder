@@ -583,7 +583,6 @@ build_gtest_gmock() {
 
 run_simulator_tests() {
     (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
-    build_gtest_gmock
     kaleidoscope_dir="$(dirname "$0")/.."
     cd "${kaleidoscope_dir}/test/simulator"
     ${MAKE:-make}
