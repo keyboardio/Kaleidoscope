@@ -14,15 +14,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-
-#pragma once
-
-#include "setup-googletest.h"
-
 #include "kaleidoscope/key_defs_keyboard.h"
-#include "../common/matchers.h"
-#include "../common/VirtualDeviceTest.h"
+
+// Out of order because `fix-macros.h` clears the preprocessor environment for
+// gtest and gmock.
+#include "testing/common/fix-macros.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
+#include "testing/common/matchers.h"
+#include "testing/common/VirtualDeviceTest.h"
 
 SETUP_GOOGLETEST();
 
@@ -40,17 +41,15 @@ TEST_F(KeyboardReports, KeysActiveWhenPressed) {
 
   EXPECT_EQ(Result().KeyboardReports().size(), 1);
   EXPECT_THAT(
-      Result().KeyboardReports(0).ActiveKeyCodes(),
+      Result().KeyboardReports(0).ActiveKeycodes(),
       ContainsKey(Key_A));
 
   sim_.Release(2, 1);  // A
   RunCycles(2);
 
-  EXPECT_THAT(Result().KeyboardReports().size(), IsEmpty());
+  EXPECT_THAT(Result().KeyboardReports(), IsEmpty());
 }
 
 }  // namespace
 }  // namespace testing
 }  // namespace kaleidoscope
-
-#endif  // KALEIDOSCOPE_VIRTUAL_BUILD

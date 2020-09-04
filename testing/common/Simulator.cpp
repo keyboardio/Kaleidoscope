@@ -14,20 +14,25 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-
-#pragma once
+#include "Kaleidoscope.h"
+#include "testing/common/Simulator.h"
 
 namespace kaleidoscope {
-namespace sim {
+namespace testing {
 
-class Sim {
- public:
-  void RunCycle();
-  void Press(uint8_t row, uint8_t col);
-};
+void Simulator::RunCycle() {
+  Kaleidoscope.loop();
+}
 
-}  // namespace sim
+void Simulator::RunCycles(size_t n) {
+  for (size_t i = 0; i < n; ++i) RunCycle();
+}
+
+void Simulator::Press(uint8_t row, uint8_t col) {
+  Kaleidoscope.device().keyScanner().setKeystate(
+      KeyAddr{row, col},
+      kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
+}
+
+}  // namespace testing
 }  // namespace kaleidoscope
-
-#endif  // KALEIDOSCOPE_VIRTUAL_BUILD

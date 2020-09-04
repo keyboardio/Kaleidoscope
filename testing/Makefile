@@ -1,9 +1,19 @@
+LIB_DIR?=${PWD}/lib
 TEST_DIRS=$(dir $(wildcard */*_test.cpp))
 
-Makefile: ${TEST_DIRS}
+Makefile: build-libs ${TEST_DIRS}
 	@:
 
-%: FORCE
-	cd "$@" && $(MAKE)
+build-libs: googletest common
+	@:
 
-.PHONY: FORCE
+googletest: FORCE
+	cd googletest && $(MAKE)
+
+common: FORCE
+	cd common && env LIB_DIR="${LIB_DIR}" $(MAKE)
+
+%: FORCE
+	if [ -f "$@/Makefile" ]; then cd "$@"; $(MAKE); fi
+
+.PHONY: FORCE googletest build-libs

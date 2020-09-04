@@ -14,30 +14,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+// We intentionally omit `#pragma once` since we need to set up macros per
+// compilation unit.
+// #pragma once
 
-#pragma once
+#undef min
+#undef max
+#undef T
+#undef U
+#undef TEST
 
-#include "MultiReport/Keyboard.h"
-
-namespace kaleidoscope {
-namespace testing {
-
-class KeyboardReport {
- public:
-  typedef HID_KeyboardReport_Data_t ReportData;
-
-  static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
-
-  KeyboardReport(const void* data);
-
-  std::vector<uint8_t> ActiveKeycodes() const;
-
- private:
-  ReportData report_data_;
-};
-
-}  // namespace testing
-}  // namespace kaleidoscope
-
-#endif  // KALEIDOSCOPE_VIRTUAL_BUILD
+#define SETUP_GOOGLETEST() \
+  void executeTestFunction() { \
+    setup(); /* setup Kaleidoscope */ \
+    testing::InitGoogleTest(); \
+    RUN_ALL_TESTS(); \
+  }

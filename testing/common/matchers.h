@@ -14,11 +14,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-
 #pragma once
 
-#include "setup-googletest.h"
+#include "kaleidoscope/key_defs.h"
+
+// Out of order because `fix-macros.h` clears the preprocessor environment for
+// gtest and gmock.
+#include "testing/common/fix-macros.h"
+#include "gmock/gmock.h"
 
 namespace kaleidoscope {
 namespace testing {
@@ -27,5 +30,3 @@ auto ContainsKey(Key key) { return ::testing::Contains(key.getKeyCode()); }
 
 }  // namespace testing
 }  // namespace kaleidoscope
-
-#endif  // KALEIDOSCOPE_VIRTUAL_BUILD

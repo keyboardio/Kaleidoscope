@@ -16,30 +16,26 @@
 
 #pragma once
 
-#include <cstddef>
+#include <cstdint>
+#include <vector>
 
-#include "testing/common/Simulator.h"
-#include "testing/common/State.h"
-
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
-#include "testing/common/fix-macros.h"
-#include "gtest/gtest.h"
+#include "MultiReport/Keyboard.h"
 
 namespace kaleidoscope {
 namespace testing {
 
-class VirtualDeviceTest : public ::testing::Test {
- protected:
-  void RunCycle();
-  void RunCycles(size_t n);
+class KeyboardReport {
+ public:
+  typedef HID_KeyboardReport_Data_t ReportData;
 
-  const State& Result() const;
+  static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
 
-  Simulator sim_;
+  KeyboardReport(const void* data);
+
+  std::vector<uint8_t> ActiveKeycodes() const;
 
  private:
-  State state_;
+  ReportData report_data_;
 };
 
 }  // namespace testing
