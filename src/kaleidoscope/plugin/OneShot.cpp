@@ -78,16 +78,27 @@ void OneShot::cancelOneShot(uint8_t idx) {
 }
 
 EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
-
   if (keyState & INJECTED)
     return EventHandlerResult::OK;
 
-  if (!isActive()) {
-    if (!isOneShotKey_(mapped_key)) {
-      return EventHandlerResult::OK;
+  // If it's not a OneShot key, and not a modifier, cancel all active OneShot keys:
+  if (!isOneShotKey_(mapped_key)) {
+    if (isActive() && keyIsPressed(keyState)) {
+      prev_key_ = mapped_key;
+      if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
+          !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
+        should_cancel_ = true;
+      }
     }
+    return EventHandlerResult::OK;
+  }
 
+  // We know that `mapped_key` is a OneShot key, and the call to
+  // `isOneShotKey_()` above ensures that the index is not out of
+  // bounds, so this is now valid:
+  uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
+
+  if (!isActive()) {
     if (keyToggledOff(keyState)) {
       state_[idx].pressed = false;
     } else if (keyToggledOn(keyState)) {
@@ -102,55 +113,41 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (isOneShotKey_(mapped_key)) {
-    if (state_[idx].sticky) {
-      if (keyToggledOn(keyState)) {  // maybe on _off instead?
-        prev_key_ = mapped_key;
-        state_[idx].sticky = false;
+  if (state_[idx].sticky) {
+    if (keyToggledOn(keyState)) {  // maybe on _off instead?
+      prev_key_ = mapped_key;
+      state_[idx].sticky = false;
+      cancelOneShot(idx);
+    }
+  } else {
+    if (keyToggledOff(keyState)) {
+      state_[idx].pressed = false;
+      if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
         cancelOneShot(idx);
       }
-    } else {
-      if (keyToggledOff(keyState)) {
-        state_[idx].pressed = false;
-        if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
-          cancelOneShot(idx);
-        }
-      }
+    }
 
-      if (keyToggledOn(keyState)) {
-        state_[idx].pressed = true;
+    if (keyToggledOn(keyState)) {
+      state_[idx].pressed = true;
 
-        if (prev_key_ == mapped_key && isStickable(mapped_key)) {
-          uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
-          if (!Runtime.hasTimeExpired(start_time_, dtto)) {
-            state_[idx].sticky = true;
-            prev_key_ = mapped_key;
-          }
-        } else {
-          start_time_ = Runtime.millisAtCycleStart();
-
-          state_[idx].active = true;
+      if (prev_key_ == mapped_key && isStickable(mapped_key)) {
+        uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
+        if (!Runtime.hasTimeExpired(start_time_, dtto)) {
+          state_[idx].sticky = true;
           prev_key_ = mapped_key;
-
-          activateOneShot(idx);
         }
+      } else {
+        start_time_ = Runtime.millisAtCycleStart();
+
+        state_[idx].active = true;
+        prev_key_ = mapped_key;
+
+        activateOneShot(idx);
       }
     }
-
-    return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  // ordinary key here, with some event
-
-  if (keyIsPressed(keyState)) {
-    prev_key_ = mapped_key;
-    if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
-        !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
-      should_cancel_ = true;
-    }
-  }
-
-  return EventHandlerResult::OK;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
 EventHandlerResult OneShot::beforeReportingState() {
