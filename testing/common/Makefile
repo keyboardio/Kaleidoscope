@@ -3,27 +3,27 @@ OBJ_DIR ?= ${PWD}/obj
 
 
 CXX_FILES=$(wildcard *.cpp)
-LIB_FILE=common.a
+LIB_FILE=libcommon.a
 OBJ_FILES=$(patsubst %.cpp,${OBJ_DIR}/%.o,$(CXX_FILES))
 
-Makefile: ${LIB_DIR}/${LIB_FILE}
+Makefile: ${OBJ_FILES} ${LIB_DIR}/${LIB_FILE}
 	@:
 
 ${LIB_DIR}/${LIB_FILE}: ${OBJ_FILES}
 	mkdir -p "${LIB_DIR}"
 	ar rcs "${LIB_DIR}/${LIB_FILE}" ${OBJ_FILES}
 
-${OBJ_DIR}/%.o: %.cpp
+${OBJ_DIR}/%.o: %.cpp $(wildcard *.h)
 	@echo "compile $@"
 	mkdir -p "${OBJ_DIR}"
 	g++ -o "$@" -c \
-		-I../.. \
-		-I../../src \
-		-I../../../../../virtual/cores/arduino \
-		-I../../../Kaleidoscope-HIDAdaptor-KeyboardioHID/src \
-		-I../../../KeyboardioHID/src \
-		-I../../testing/googletest/googlemock/include \
-		-I../../testing/googletest/googletest/include \
+		-I${PWD}/../.. \
+		-I${PWD}/../../src \
+		-I${PWD}/../../../../../virtual/cores/arduino \
+		-I${PWD}/../../../Kaleidoscope-HIDAdaptor-KeyboardioHID/src \
+		-I${PWD}/../../../KeyboardioHID/src \
+		-I${PWD}/../../testing/googletest/googlemock/include \
+		-I${PWD}/../../testing/googletest/googletest/include \
 		-DARDUINO=10607 \
 		-DARDUINO_AVR_MODEL01 \
 		'-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Model01.h"' \

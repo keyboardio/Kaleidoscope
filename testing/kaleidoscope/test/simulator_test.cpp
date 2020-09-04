@@ -22,6 +22,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include <iostream>
+
 #include "testing/common/matchers.h"
 #include "testing/common/VirtualDeviceTest.h"
 
@@ -36,18 +38,27 @@ using ::testing::IsEmpty;
 class KeyboardReports : public VirtualDeviceTest {};
 
 TEST_F(KeyboardReports, KeysActiveWhenPressed) {
+  std::cout << "epan 1" << std::endl;
   sim_.Press(2, 1); // A
+  std::cout << "epan 2" << std::endl;
   RunCycle();
+  std::cout << "epan 3" << std::endl;
 
   EXPECT_EQ(Result().KeyboardReports().size(), 1);
+  std::cout << "epan 4" << std::endl;
   EXPECT_THAT(
       Result().KeyboardReports(0).ActiveKeycodes(),
       ContainsKey(Key_A));
+  std::cout << "epan 5" << std::endl;
 
   sim_.Release(2, 1);  // A
+  std::cout << "epan 6" << std::endl;
   RunCycles(2);
+  std::cout << "epan 7" << std::endl;
 
+  std::cout << "epan 8" << std::endl;
   EXPECT_THAT(Result().KeyboardReports(), IsEmpty());
+  std::cout << "epan 9" << std::endl;
 }
 
 }  // namespace

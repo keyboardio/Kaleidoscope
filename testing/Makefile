@@ -13,7 +13,7 @@ googletest: FORCE
 common: FORCE
 	cd common && env LIB_DIR="${LIB_DIR}" $(MAKE)
 
-%: FORCE
+%: common googltest FORCE
 	if [ -f "$@/Makefile" ]; then cd "$@"; $(MAKE); fi
 
 .PHONY: FORCE googletest build-libs

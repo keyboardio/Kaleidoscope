@@ -20,8 +20,11 @@ namespace kaleidoscope {
 namespace testing {
 
 void VirtualDeviceTest::RunCycle() {
+  std::cout << "epan 2.1" << std::endl;
   state_.Clear();
+  std::cout << "epan 2.2" << std::endl;
   sim_.RunCycle();
+  std::cout << "epan 2.3" << std::endl;
 }
 
 void VirtualDeviceTest::RunCycles(size_t n) {

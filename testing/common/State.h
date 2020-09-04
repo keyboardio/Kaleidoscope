@@ -39,20 +39,10 @@ class State {
   const KeyboardReport& KeyboardReports(size_t i) const;
 
  private:
-  template <class R>
-  void ProcessReport(const R& report);
+  void ProcessKeyboardReport(const KeyboardReport& report);
 
   std::vector<KeyboardReport> keyboard_reports_;
 };
-
-/*
- * Implementation
- */
-
-template <>
-void State::ProcessReport<KeyboardReport>(const KeyboardReport& report) {
-  keyboard_reports_.push_back(report);
-}
 
 }  // namespace testing
 }  // namespace kaleidoscope

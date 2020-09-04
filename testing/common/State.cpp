@@ -59,7 +59,7 @@ void State::ProcessHidReport(
       break;
     }
     case HID_REPORTID_NKRO_KEYBOARD: {
-      ProcessReport(KeyboardReport{data});
+      ProcessKeyboardReport(KeyboardReport{data});
       break;
     }
     default:
@@ -73,6 +73,10 @@ const std::vector<KeyboardReport>& State::KeyboardReports() const {
 
 const KeyboardReport& State::KeyboardReports(size_t i) const {
   return keyboard_reports_.at(i);
+}
+
+void State::ProcessKeyboardReport(const KeyboardReport& report) {
+  keyboard_reports_.push_back(report);
 }
 
 }  // namespace testing

@@ -29,7 +29,7 @@ KeyboardReport::KeyboardReport(const void* data) {
 
 std::vector<uint8_t> KeyboardReport::ActiveKeycodes() const {
   std::vector<uint8_t> active_keys;
-  for (uint8_t i = 0; i <= HID_LAST_KEY; ++i) {
+  for (uint8_t i = 0; i < HID_LAST_KEY; ++i) {
     uint8_t bit = 1 << (uint8_t(i) % 8);
     uint8_t key_code = report_data_.keys[i/8] & bit;
     if (key_code) active_keys.push_back(i);

@@ -17,11 +17,16 @@
 #include "Kaleidoscope.h"
 #include "testing/common/Simulator.h"
 
+#include "testing/common/fix-macros.h"
+#include <iostream>
+
 namespace kaleidoscope {
 namespace testing {
 
 void Simulator::RunCycle() {
+  std::cout << "epan 2.2.1" << std::endl;
   Kaleidoscope.loop();
+  std::cout << "epan 2.2.2" << std::endl;
 }
 
 void Simulator::RunCycles(size_t n) {
@@ -32,6 +37,12 @@ void Simulator::Press(uint8_t row, uint8_t col) {
   Kaleidoscope.device().keyScanner().setKeystate(
       KeyAddr{row, col},
       kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
+}
+
+void Simulator::Release(uint8_t row, uint8_t col) {
+  Kaleidoscope.device().keyScanner().setKeystate(
+      KeyAddr{row, col},
+      kaleidoscope::Device::Props::KeyScanner::KeyState::NotPressed);
 }
 
 }  // namespace testing
