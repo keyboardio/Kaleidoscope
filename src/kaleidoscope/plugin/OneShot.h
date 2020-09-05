@@ -83,14 +83,14 @@ class OneShot : public kaleidoscope::Plugin {
  private:
   static constexpr uint8_t ONESHOT_KEY_COUNT = 16;
   static constexpr uint8_t ONESHOT_MOD_COUNT = 8;
-  typedef struct {
+  struct OneShotKeyState {
     bool active: 1;
     bool pressed: 1;
     bool stickable: 1;
     bool sticky: 1;
     uint8_t __reserved: 4;
-  } key_state_t;
-  static key_state_t state_[ONESHOT_KEY_COUNT];
+  };
+  static OneShotKeyState state_[ONESHOT_KEY_COUNT];
 
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
