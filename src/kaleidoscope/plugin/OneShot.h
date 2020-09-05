@@ -90,7 +90,7 @@ class OneShot : public kaleidoscope::Plugin {
   static key_state_t state_[ONESHOT_KEY_COUNT];
 
   static uint16_t start_time_;
-  static Key prev_key_;
+  static KeyAddr prev_key_addr_;
   static bool should_cancel_;
 
   static void injectNormalKey(uint8_t idx, uint8_t key_state);

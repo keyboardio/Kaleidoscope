@@ -29,7 +29,7 @@ uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
 OneShot::key_state_t OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
-Key OneShot::prev_key_;
+KeyAddr OneShot::prev_key_addr_ = UnknownKeyswitchLocation;
 bool OneShot::should_cancel_ = false;
 
 bool OneShot::isPressed() {
@@ -83,7 +83,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
   // If it's not a OneShot key, and not a modifier, cancel all active OneShot keys:
   if (!isOneShotKey_(mapped_key)) {
     if (isActive() && keyIsPressed(keyState)) {
-      prev_key_ = mapped_key;
+      prev_key_addr_ = key_addr;
       if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
           !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
         should_cancel_ = true;
@@ -104,7 +104,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
       start_time_ = Runtime.millisAtCycleStart();
       state_[idx].pressed = true;
       state_[idx].active = true;
-      prev_key_ = mapped_key;
+      prev_key_addr_ = key_addr;
 
       activateOneShot(idx);
     }
@@ -114,7 +114,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
   if (state_[idx].sticky) {
     if (keyToggledOn(keyState)) {  // maybe on _off instead?
-      prev_key_ = mapped_key;
+      prev_key_addr_ = key_addr;
       state_[idx].sticky = false;
       cancelOneShot(idx);
     } else if (keyToggledOff(keyState)) {
@@ -131,17 +131,17 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
     if (keyToggledOn(keyState)) {
       state_[idx].pressed = true;
 
-      if (prev_key_ == mapped_key && isStickable(mapped_key)) {
+      if ((key_addr == prev_key_addr_) && isStickable(mapped_key)) {
         uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
         if (!Runtime.hasTimeExpired(start_time_, dtto)) {
           state_[idx].sticky = true;
-          prev_key_ = mapped_key;
+          prev_key_addr_ = key_addr;
         }
       } else {
         start_time_ = Runtime.millisAtCycleStart();
 
         state_[idx].active = true;
-        prev_key_ = mapped_key;
+        prev_key_addr_ = key_addr;
 
         activateOneShot(idx);
       }
