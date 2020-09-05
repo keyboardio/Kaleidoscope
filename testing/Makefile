@@ -1,11 +1,10 @@
 COMMON_LIB_DIR?=${PWD}/lib
 TEST_DIRS=$(shell dirname $(wildcard */Makefile))
 
-DIRS=googletest hello-simulator kaleidoscope common
+DIRS=googletest hello-simulator kaleidoscope common issue_840
 CLEANDIRS = $(DIRS:%=clean-%)
 
 .PHONY: subdirs $(CLEANDIRS)
-.PHONY: subdirs $(DIRS)
 
 clean: googletest/Makefile $(CLEANDIRS)
 	rm -rf "$(COMMON_LIB_DIR)"
@@ -26,6 +25,9 @@ common:
 	cd common && COMMON_LIB_DIR="${COMMON_LIB_DIR}" $(MAKE)
 
 hello-simulator:
+	@:
+
+Makefile:
 	@:
 
 %: common googletest 
