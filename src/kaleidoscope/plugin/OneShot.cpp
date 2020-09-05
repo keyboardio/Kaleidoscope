@@ -82,7 +82,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
   // If it's not a OneShot key, and not a modifier, cancel all active OneShot keys:
   if (!isOneShotKey_(mapped_key)) {
-    if (isActive() && keyIsPressed(keyState)) {
+    if (isActive()) {
       prev_key_addr_ = key_addr;
       if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
           !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
