@@ -26,7 +26,7 @@
 namespace kaleidoscope {
 namespace testing {
 
-auto ContainsKey(Key key) { return ::testing::Contains(key.getKeyCode()); }
+auto Contains(Key key) { return ::testing::Contains(key.getKeyCode()); }
 
 }  // namespace testing
 }  // namespace kaleidoscope

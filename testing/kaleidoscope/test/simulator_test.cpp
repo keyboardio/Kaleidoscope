@@ -44,7 +44,7 @@ TEST_F(KeyboardReports, KeysActiveWhenPressed) {
   ASSERT_EQ(state->KeyboardReports().size(), 1);
   EXPECT_THAT(
       state->KeyboardReports(0).ActiveKeycodes(),
-      ContainsKey(Key_A));
+      Contains(Key_A));
 
   sim_.Release(2, 1);  // A
   state = RunCycle();
