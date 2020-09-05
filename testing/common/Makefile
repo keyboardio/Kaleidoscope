@@ -5,7 +5,7 @@ CXX_FILES=$(wildcard *.cpp)
 LIB_FILE=libcommon.a
 OBJ_FILES=$(patsubst %.cpp,${OBJ_DIR}/%.o,$(CXX_FILES))
 
-Makefile: ${OBJ_FILES} ${COMMON_LIB_DIR}/${LIB_FILE}
+all: ${OBJ_FILES} ${COMMON_LIB_DIR}/${LIB_FILE}
 	@:
 
 ${COMMON_LIB_DIR}/${LIB_FILE}: ${OBJ_FILES}

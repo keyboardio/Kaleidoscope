@@ -4,10 +4,12 @@ Current behavior
 - `make` builds googletest, common, kaleidoscope, and issue_840
   - This is intended :)
   - It is also intended that hello-simulator be omitted, since it has a test which is intended to fail to smoke test the framework
-- `make clean` builds googletest, common, kaleidoscope, and issue_840, then manually runs make clean for each
+FIXED - `make clean` builds googletest, common, kaleidoscope, and issue_840, then manually runs make clean for each
   - Err... not intended
-  - Ideally `make clean` would recursively invoke `make clean` or equivalent
-- `make issue_840` (or another target in $(TEST_DIRS)) builds googletest, common, kaleidoscope, and issue_840
+
+
+FIXED  - Ideally `make clean` would recursively invoke `make clean` or equivalent
+FIXED - `make issue_840` (or another target in $(TEST_DIRS)) builds googletest, common, kaleidoscope, and issue_840
   - Not intended
   - Should just build googletest, common, and the target director (issue_840 in this case)
 Desired (currently missing) behavior

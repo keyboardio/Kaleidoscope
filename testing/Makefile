@@ -1,26 +1,34 @@
 COMMON_LIB_DIR?=${PWD}/lib
 TEST_DIRS=$(shell dirname $(wildcard */Makefile))
 
-Makefile: ${TEST_DIRS} FORCE
+DIRS=googletest hello-simulator kaleidoscope common
+CLEANDIRS = $(DIRS:%=clean-%)
+
+.PHONY: subdirs $(CLEANDIRS)
+.PHONY: subdirs $(DIRS)
+
+clean: googletest/Makefile $(CLEANDIRS)
+	rm -rf "$(COMMON_LIB_DIR)"
+
+$(CLEANDIRS): 
+	cd $(@:clean-%=%) && $(MAKE) clean
+
+all: ${TEST_DIRS}
 	@echo TEST_DIRS="${TEST_DIRS}"
 
-googletest: FORCE
+googletest: googletest/Makefile
 	cd googletest && $(MAKE)
 
-common: FORCE
-	cd common && env COMMON_LIB_DIR="${COMMON_LIB_DIR}" $(MAKE)
+googletest/Makefile:
+	cd googletest && cmake .
 
-clean:
-	rm -rf "${COMMON_LIB_DIR}"
-	cd googletest && make clean
-	cd common && make clean
-	cd hello-simulator && make clean
-	cd kaleidoscope && make clean
+common: 
+	cd common && COMMON_LIB_DIR="${COMMON_LIB_DIR}" $(MAKE)
 
 hello-simulator:
 	@:
 
-%: common googletest FORCE
+%: common googletest 
 	cd "$@" && $(MAKE)
 
-.PHONY: FORCE googletest build-libs
+.PHONY: googletest build-libs common
