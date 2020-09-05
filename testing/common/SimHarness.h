@@ -14,34 +14,22 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
-#include "testing/common/Simulator.h"
+#pragma once
 
-#include "testing/common/fix-macros.h"
-#include <iostream>
+#include <cstddef>
+#include <cstdint>
 
 namespace kaleidoscope {
 namespace testing {
 
-void Simulator::RunCycle() {
-  Kaleidoscope.loop();
-}
+class SimHarness {
+ public:
+  void RunCycle();
+  void RunCycles(size_t n);
 
-void Simulator::RunCycles(size_t n) {
-  for (size_t i = 0; i < n; ++i) RunCycle();
-}
-
-void Simulator::Press(uint8_t row, uint8_t col) {
-  Kaleidoscope.device().keyScanner().setKeystate(
-      KeyAddr{row, col},
-      kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
-}
-
-void Simulator::Release(uint8_t row, uint8_t col) {
-  Kaleidoscope.device().keyScanner().setKeystate(
-      KeyAddr{row, col},
-      kaleidoscope::Device::Props::KeyScanner::KeyState::NotPressed);
-}
+  void Press(uint8_t row, uint8_t col);
+  void Release(uint8_t row, uint8_t col);
+};
 
 }  // namespace testing
 }  // namespace kaleidoscope

@@ -1,5 +1,5 @@
-/* -*- mode: c++ -*-
- * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
+/* kailedoscope::sim - Harness for Unit Testing Kaleidoscope
+ * Copyright (C) 2020  Eric Paniagua <epaniagua@google.com>
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,30 +14,34 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <cstddef>
-
+#include "Kaleidoscope.h"
 #include "testing/common/SimHarness.h"
-#include "testing/common/State.h"
 
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
 #include "testing/common/fix-macros.h"
-#include "gtest/gtest.h"
+#include <iostream>
 
 namespace kaleidoscope {
 namespace testing {
 
-class VirtualDeviceTest : public ::testing::Test {
- protected:
-  std::unique_ptr<State> RunCycle();
+void SimHarness::RunCycle() {
+  Kaleidoscope.loop();
+}
 
-  SimHarness sim_;
+void SimHarness::RunCycles(size_t n) {
+  for (size_t i = 0; i < n; ++i) RunCycle();
+}
 
- private:
-  State state_;
-};
+void SimHarness::Press(uint8_t row, uint8_t col) {
+  Kaleidoscope.device().keyScanner().setKeystate(
+      KeyAddr{row, col},
+      kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
+}
+
+void SimHarness::Release(uint8_t row, uint8_t col) {
+  Kaleidoscope.device().keyScanner().setKeystate(
+      KeyAddr{row, col},
+      kaleidoscope::Device::Props::KeyScanner::KeyState::NotPressed);
+}
 
 }  // namespace testing
 }  // namespace kaleidoscope
