@@ -16,22 +16,16 @@
 
 #include "testing/common/VirtualDeviceTest.h"
 
+#include <memory>
+
 namespace kaleidoscope {
 namespace testing {
 
-void VirtualDeviceTest::RunCycle() {
-  state_.Clear();
+std::unique_ptr<State> VirtualDeviceTest::RunCycle() {
+  auto state = std::unique_ptr<State>(new State());
   sim_.RunCycle();
-}
-
-void VirtualDeviceTest::RunCycles(size_t n) {
-  if (n == 0) return;
-  state_.Clear();
-  sim_.RunCycles(n);
-}
-
-const State& VirtualDeviceTest::Result() const {
-  return state_;
+  state->Snapshot();
+  return state;
 }
 
 }  // namespace testing

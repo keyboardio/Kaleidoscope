@@ -31,11 +31,11 @@ namespace testing {
 
 class VirtualDeviceTest : public ::testing::Test {
  protected:
-  void RunCycle();
-  void RunCycles(size_t n);
+  std::unique_ptr<State> RunCycle();
 
-  const State& Result() const;
-
+  // DO NOT REMOVE: This namespace qualification is required. Otherwise the
+  // linker decides this symbol is really ::kaleidoscope::simulator::Simulator.
+  // No idea why.
   ::kaleidoscope::testing::Simulator sim_;
 
  private:

@@ -29,9 +29,9 @@ namespace testing {
 
 class State {
  public:
-  State();
+  ~State();
 
-  void Clear();
+  static void DefaultProcessHidReport(uint8_t, const void*, int, int);
 
   void ProcessHidReport(uint8_t id, const void* data, int len, int result);
 
@@ -39,7 +39,13 @@ class State {
   const KeyboardReport& KeyboardReports(size_t i) const;
 
  private:
+  friend class VirtualDeviceTest;
+
+  State();
+
   void ProcessKeyboardReport(const KeyboardReport& report);
+
+  void Snapshot();
 
   std::vector<KeyboardReport> keyboard_reports_;
 };

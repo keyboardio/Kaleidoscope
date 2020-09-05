@@ -32,8 +32,13 @@ State::State() {
       });
 }
 
-void State::Clear() {
-  keyboard_reports_.clear();
+State::~State() {
+  HIDReportObserver::resetHook(&State::DefaultProcessHidReport);
+}
+
+// static
+void State::DefaultProcessHidReport(uint8_t, const void*, int, int) {
+  // TODO: Log that the report was dropped.
 }
 
 void State::ProcessHidReport(
@@ -77,6 +82,11 @@ const KeyboardReport& State::KeyboardReports(size_t i) const {
 
 void State::ProcessKeyboardReport(const KeyboardReport& report) {
   keyboard_reports_.push_back(report);
+}
+
+void State::Snapshot() {
+  // TODO: Grab a copy of current instantaneous state, like:
+  //  key states, layer stack, led states
 }
 
 }  // namespace testing

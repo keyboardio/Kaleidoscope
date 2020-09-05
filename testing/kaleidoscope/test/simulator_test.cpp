@@ -39,20 +39,24 @@ class KeyboardReports : public VirtualDeviceTest {};
 
 TEST_F(KeyboardReports, KeysActiveWhenPressed) {
   sim_.Press(2, 1); // A
-  RunCycle();
+  auto state = RunCycle();
 
-  EXPECT_EQ(Result().KeyboardReports().size(), 1);
+  ASSERT_EQ(state->KeyboardReports().size(), 1);
   EXPECT_THAT(
-      Result().KeyboardReports(0).ActiveKeycodes(),
+      state->KeyboardReports(0).ActiveKeycodes(),
       ContainsKey(Key_A));
 
   sim_.Release(2, 1);  // A
-  RunCycles(2);
+  state = RunCycle();
 
-  EXPECT_EQ(Result().KeyboardReports().size(), 1);
+  ASSERT_EQ(state->KeyboardReports().size(), 1);
   EXPECT_THAT(
-      Result().KeyboardReports(0).ActiveKeycodes(),
+      state->KeyboardReports(0).ActiveKeycodes(),
       IsEmpty());
+
+  state = RunCycle();  // 2 cycles later
+
+  EXPECT_EQ(state->KeyboardReports().size(), 0);
 }
 
 }  // namespace
