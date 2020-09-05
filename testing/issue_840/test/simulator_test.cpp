@@ -37,7 +37,7 @@ using ::testing::IsEmpty;
 
 class Issue840 : public VirtualDeviceTest {};
 
-TEST_F(Issue840, Reproduces) {
+TEST_F(Issue840, HasNotRegressed) {
   sim_.Press(2, 1); // Press System_PowerDown
   auto state = RunCycle();
 
@@ -57,10 +57,7 @@ TEST_F(Issue840, Reproduces) {
   sim_.Release(2, 1);  // Release System_PowerDown
   state = RunCycle();
 
-  ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_EQ(
-      state->SystemControlReports(0).Key(),
-      0 /* null report */);
+  ASSERT_EQ(state->SystemControlReports().size(), 0);
 
   sim_.Release(3, 5);  // Release System_Sleep
   state = RunCycle();
@@ -74,6 +71,44 @@ TEST_F(Issue840, Reproduces) {
 
   EXPECT_EQ(state->SystemControlReports().size(), 0);
 }
+
+// TEST_F(Issue840, Reproduces) {
+//   sim_.Press(2, 1); // Press System_PowerDown
+//   auto state = RunCycle();
+// 
+//   ASSERT_EQ(state->SystemControlReports().size(), 1);
+//   EXPECT_EQ(
+//       state->SystemControlReports(0).Key(),
+//       System_PowerDown.getKeyCode());
+// 
+//   sim_.Press(3, 5); // Press System_Sleep
+//   state = RunCycle();
+// 
+//   ASSERT_EQ(state->SystemControlReports().size(), 1);
+//   EXPECT_EQ(
+//       state->SystemControlReports(0).Key(),
+//       System_Sleep.getKeyCode());
+// 
+//   sim_.Release(2, 1);  // Release System_PowerDown
+//   state = RunCycle();
+// 
+//   ASSERT_EQ(state->SystemControlReports().size(), 1);
+//   EXPECT_EQ(
+//       state->SystemControlReports(0).Key(),
+//       0 /* null report */);
+// 
+//   sim_.Release(3, 5);  // Release System_Sleep
+//   state = RunCycle();
+// 
+//   ASSERT_EQ(state->SystemControlReports().size(), 1);
+//   EXPECT_EQ(
+//       state->SystemControlReports(0).Key(),
+//       0 /* null report */);
+// 
+//   state = RunCycle();
+// 
+//   EXPECT_EQ(state->SystemControlReports().size(), 0);
+// }
 
 }  // namespace
 }  // namespace testing
