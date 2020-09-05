@@ -14,9 +14,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// We intentionally omit `#pragma once` since we need to set up macros per
-// compilation unit.
-// #pragma once
+#pragma once
+
+#include "Kaleidoscope.h"
 
 #undef min
 #undef max
@@ -27,6 +27,8 @@
 #define SETUP_GOOGLETEST() \
   void executeTestFunction() { \
     setup(); /* setup Kaleidoscope */ \
+    /* Turn off virtual_io's input. */ \
+    Kaleidoscope.device().keyScanner().setEnableReadMatrix(false); \
     testing::InitGoogleTest(); \
     RUN_ALL_TESTS(); \
   }

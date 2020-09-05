@@ -1,5 +1,5 @@
 /* kailedoscope::sim - Simulator for Unit Testing Kaleidoscope
- * Copyright (C) 2020  epan <epaniagua@google.com>
+ * Copyright (C) 2020  Eric Paniagua <epaniagua@google.com>
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -24,9 +24,7 @@ namespace kaleidoscope {
 namespace testing {
 
 void Simulator::RunCycle() {
-  std::cout << "epan 2.2.1" << std::endl;
   Kaleidoscope.loop();
-  std::cout << "epan 2.2.2" << std::endl;
 }
 
 void Simulator::RunCycles(size_t n) {

@@ -12,7 +12,7 @@ TEST_OBJS=$(patsubst $(SRC_DIR)/%.cpp,${OBJ_DIR}/%.o,$(TEST_FILES))
 
 run: ${BIN_DIR}/${BIN_FILE}
 	@echo "run"
-	"./${BIN_DIR}/${BIN_FILE}" -t
+	"./${BIN_DIR}/${BIN_FILE}" -t -q
 
 ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} FORCE
 	@echo "link"
