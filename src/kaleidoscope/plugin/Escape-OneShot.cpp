@@ -33,12 +33,12 @@ EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
     mapped_key = Key_NoKey;
   did_escape_ = !keyToggledOff(keyState);
 
-  if ((!::OneShot.isActive() || ::OneShot.isPressed()) && !::OneShot.isSticky()) {
-    return EventHandlerResult::OK;
+  if (::OneShot.isActive() && !::OneShot.isPressed()) {
+    ::OneShot.cancel(true);
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  ::OneShot.cancel(true);
-  return EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::OK;
 }
 
 }
