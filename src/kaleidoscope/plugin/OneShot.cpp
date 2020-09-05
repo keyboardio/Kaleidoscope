@@ -31,7 +31,6 @@ int16_t OneShot::double_tap_time_out = -1;
 OneShot::key_state_t OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
 Key OneShot::prev_key_;
 bool OneShot::should_cancel_ = false;
-bool OneShot::should_cancel_stickies_ = false;
 
 bool OneShot::isPressed() {
   for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
@@ -178,12 +177,6 @@ EventHandlerResult OneShot::afterEachCycle() {
   for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
     if (should_cancel_) {
       if (state_[i].sticky) {
-        if (should_cancel_stickies_) {
-          is_cancelled = true;
-          state_[i].sticky = false;
-          cancelOneShot(i);
-          state_[i].pressed = false;
-        }
       } else if (state_[i].active && !state_[i].pressed) {
         is_cancelled = true;
         cancelOneShot(i);
@@ -193,7 +186,6 @@ EventHandlerResult OneShot::afterEachCycle() {
 
   if (is_cancelled) {
     should_cancel_ = false;
-    should_cancel_stickies_ = false;
   }
 
   return EventHandlerResult::OK;
@@ -237,9 +229,13 @@ bool OneShot::isModifierActive(Key key) {
   return state_[idx].active;
 }
 
-void OneShot::cancel(bool with_stickies) {
+void OneShot::cancel(bool cancel_stickies) {
   should_cancel_ = true;
-  should_cancel_stickies_ = with_stickies;
+  if (cancel_stickies) {
+    for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
+      state_[i].sticky = false;
+    }
+  }
 }
 
 void OneShot::enableStickability(Key key) {
