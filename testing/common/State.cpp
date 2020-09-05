@@ -26,6 +26,7 @@ namespace kaleidoscope {
 namespace testing {
 
 std::vector<KeyboardReport> State::keyboard_reports;
+std::vector<SystemControlReport> State::system_control_reports;
 
 // static
 void State::ProcessHidReport(
@@ -40,10 +41,13 @@ void State::ProcessHidReport(
       break;
     }
     case HID_REPORTID_GAMEPAD:
-    case HID_REPORTID_CONSUMERCONTROL:
-    case HID_REPORTID_SYSTEMCONTROL: {
+    case HID_REPORTID_CONSUMERCONTROL: {
       // TODO: React appropriately to these.
       LOG(INFO) << "Ignoring HID report with id = " << id;
+      break;
+    }
+    case HID_REPORTID_SYSTEMCONTROL: {
+      ProcessSystemControlReport(SystemControlReport{data});
       break;
     }
     case HID_REPORTID_MOUSE_ABSOLUTE: {
@@ -66,6 +70,7 @@ std::unique_ptr<State> State::Snapshot() {
   // TODO: Grab a copy of current instantaneous state, like:
   //  key states, layer stack, led states
   state->keyboard_reports_ = std::move(keyboard_reports);
+  state->system_control_reports_ = std::move(system_control_reports);
 
   Clear();  // Clear global state.
   return state;
@@ -79,14 +84,28 @@ const KeyboardReport& State::KeyboardReports(size_t i) const {
   return keyboard_reports_.at(i);
 }
 
+const std::vector<SystemControlReport>& State::SystemControlReports() const {
+  return system_control_reports_;
+}
+
+const SystemControlReport& State::SystemControlReports(size_t i) const {
+  return system_control_reports_.at(i);
+}
+
 // static
 void State::Clear() {
   keyboard_reports.clear();
+  system_control_reports.clear();
 }
 
 // static
 void State::ProcessKeyboardReport(const KeyboardReport& report) {
   keyboard_reports.push_back(report);
+}
+
+// static
+void State::ProcessSystemControlReport(const SystemControlReport& report) {
+  system_control_reports.push_back(report);
 }
 
 }  // namespace testing

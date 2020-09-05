@@ -22,6 +22,7 @@
 
 #include "HID-Settings.h"
 #include "testing/common/KeyboardReport.h"
+#include "testing/common/SystemControlReport.h"
 
 // Out of order due to macro conflicts.
 #include "testing/common/fix-macros.h"
@@ -40,13 +41,19 @@ class State {
   const std::vector<KeyboardReport>& KeyboardReports() const;
   const KeyboardReport& KeyboardReports(size_t i) const;
 
+  const std::vector<SystemControlReport>& SystemControlReports() const;
+  const SystemControlReport& SystemControlReports(size_t i) const;
+
  private:
   static std::vector<KeyboardReport> keyboard_reports;
+  static std::vector<SystemControlReport> system_control_reports;
 
   static void Clear();
   static void ProcessKeyboardReport(const KeyboardReport& report);
+  static void ProcessSystemControlReport(const SystemControlReport& report);
 
   std::vector<KeyboardReport> keyboard_reports_;
+  std::vector<SystemControlReport> system_control_reports_;
 };
 
 }  // namespace testing
