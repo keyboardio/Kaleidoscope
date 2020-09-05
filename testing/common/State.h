@@ -20,9 +20,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "HID-Settings.h"
-#include "testing/common/KeyboardReport.h"
-#include "testing/common/SystemControlReport.h"
+#include "testing/common/HIDState.h"
 
 // Out of order due to macro conflicts.
 #include "testing/common/fix-macros.h"
@@ -33,27 +31,12 @@ namespace testing {
 
 class State {
  public:
-  static void ProcessHidReport(
-      uint8_t id, const void* data, int len, int result);
-
   static std::unique_ptr<State> Snapshot();
 
-  const std::vector<KeyboardReport>& KeyboardReports() const;
-  const KeyboardReport& KeyboardReports(size_t i) const;
-
-  const std::vector<SystemControlReport>& SystemControlReports() const;
-  const SystemControlReport& SystemControlReports(size_t i) const;
+  const HIDState* HIDReports() const;
 
  private:
-  static std::vector<KeyboardReport> keyboard_reports;
-  static std::vector<SystemControlReport> system_control_reports;
-
-  static void Clear();
-  static void ProcessKeyboardReport(const KeyboardReport& report);
-  static void ProcessSystemControlReport(const SystemControlReport& report);
-
-  std::vector<KeyboardReport> keyboard_reports_;
-  std::vector<SystemControlReport> system_control_reports_;
+  std::unique_ptr<HIDState> hid_state_;
 };
 
 }  // namespace testing

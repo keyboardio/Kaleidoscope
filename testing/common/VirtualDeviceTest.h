@@ -36,9 +36,6 @@ class VirtualDeviceTest : public ::testing::Test {
   std::unique_ptr<State> RunCycle();
 
   SimHarness sim_;
-
- private:
-  State state_;
 };
 
 }  // namespace testing

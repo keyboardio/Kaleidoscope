@@ -41,23 +41,23 @@ TEST_F(KeyboardReports, KeysActiveWhenPressed) {
   sim_.Press(2, 1); // A
   auto state = RunCycle();
 
-  ASSERT_EQ(state->KeyboardReports().size(), 1);
+  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
   EXPECT_THAT(
-      state->KeyboardReports(0).ActiveKeycodes(),
+      state->HIDReports()->Keyboard(0).ActiveKeycodes(),
       Contains(Key_A));
 
   sim_.Release(2, 1);  // A
   state = RunCycle();
 
-  ASSERT_EQ(state->KeyboardReports().size(), 1);
+  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
   EXPECT_THAT(
-      state->KeyboardReports(0).ActiveKeycodes(),
+      state->HIDReports()->Keyboard(0).ActiveKeycodes(),
       IsEmpty());
 
   state = RunCycle();
 
   // 2 cycles after releasing A
-  EXPECT_EQ(state->KeyboardReports().size(), 0);
+  EXPECT_EQ(state->HIDReports()->Keyboard().size(), 0);
 }
 
 }  // namespace

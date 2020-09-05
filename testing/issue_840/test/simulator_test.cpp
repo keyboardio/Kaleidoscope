@@ -41,29 +41,29 @@ TEST_F(Issue840, HasNotRegressed) {
   sim_.Press(2, 1); // Press System_PowerDown
   auto state = RunCycle();
 
-  ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_THAT(state->SystemControlReports(0), Contains(System_PowerDown));
+  ASSERT_EQ(state->HIDReports()->SystemControl().size(), 1);
+  EXPECT_THAT(state->HIDReports()->SystemControl(0), Contains(System_PowerDown));
 
   sim_.Press(3, 5); // Press System_Sleep
   state = RunCycle();
 
-  ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_THAT(state->SystemControlReports(0), Contains(System_Sleep));
+  ASSERT_EQ(state->HIDReports()->SystemControl().size(), 1);
+  EXPECT_THAT(state->HIDReports()->SystemControl(0), Contains(System_Sleep));
 
   sim_.Release(2, 1);  // Release System_PowerDown
   state = RunCycle();
 
-  EXPECT_EQ(state->SystemControlReports().size(), 0);
+  EXPECT_EQ(state->HIDReports()->SystemControl().size(), 0);
 
   sim_.Release(3, 5);  // Release System_Sleep
   state = RunCycle();
 
-  ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_THAT(state->SystemControlReports(0), IsEmpty());
+  ASSERT_EQ(state->HIDReports()->SystemControl().size(), 1);
+  EXPECT_THAT(state->HIDReports()->SystemControl(0), IsEmpty());
 
   state = RunCycle();
 
-  EXPECT_EQ(state->SystemControlReports().size(), 0);
+  EXPECT_EQ(state->HIDReports()->SystemControl().size(), 0);
 }
 
 // TEST_F(Issue840, Reproduces) {
