@@ -10,6 +10,9 @@ Current behavior
 - `make issue_840` (or another target in $(TEST_DIRS)) builds googletest, common, kaleidoscope, and issue_840
   - Not intended
   - Should just build googletest, common, and the target director (issue_840 in this case)
+Desired (currently missing) behavior
+- Support for docker as done for `make docker-simulator-tests`
+  - I tried this, but wasn't able to get cmake (for googletest) to play well with Docker
 Duplication of compiler flags across Makefiles under this directory
 - Intended, but definitely shouldn't be in handwritten copies
 Other duplication across Makefiles
