@@ -118,6 +118,8 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
       prev_key_ = mapped_key;
       state_[idx].sticky = false;
       cancelOneShot(idx);
+    } else if (keyToggledOff(keyState)) {
+      state_[idx].pressed = false;
     }
   } else {
     if (keyToggledOff(keyState)) {
