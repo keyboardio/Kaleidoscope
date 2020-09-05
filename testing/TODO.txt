@@ -1,0 +1,18 @@
+Build System
+============
+Current behavior
+- `make` builds googletest, common, kaleidoscope, and issue_840
+  - This is intended :)
+  - It is also intended that hello-simulator be omitted, since it has a test which is intended to fail to smoke test the framework
+- `make clean` builds googletest, common, kaleidoscope, and issue_840, then manually runs make clean for each
+  - Err... not intended
+  - Ideally `make clean` would recursively invoke `make clean` or equivalent
+- `make issue_840` (or another target in $(TEST_DIRS)) builds googletest, common, kaleidoscope, and issue_840
+  - Not intended
+  - Should just build googletest, common, and the target director (issue_840 in this case)
+Duplication of compiler flags across Makefiles under this directory
+- Intended, but definitely shouldn't be in handwritten copies
+Other duplication across Makefiles
+- Intended, but already drifing; also, shouldn't be in manual copies
+Duplication of delegate.mk
+- Intended, to support invoking kaleidoscope-builder, but definitely shouldn't be manually copied
