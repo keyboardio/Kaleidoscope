@@ -19,6 +19,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
+#include "kaleidoscope/key_events.h"
 
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
@@ -44,6 +45,7 @@ class OneShot : public kaleidoscope::Plugin {
   static bool isSticky(Key key);
   static void cancel(bool with_stickies = false);
 
+  // Need to add setter functions and deprecate these symbols so they can be made private
   static uint16_t time_out;
   static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
@@ -80,6 +82,7 @@ class OneShot : public kaleidoscope::Plugin {
 
  private:
   static constexpr uint8_t ONESHOT_KEY_COUNT = 16;
+  static constexpr uint8_t ONESHOT_MOD_COUNT = 8;
   typedef struct {
     bool active: 1;
     bool pressed: 1;
@@ -91,11 +94,14 @@ class OneShot : public kaleidoscope::Plugin {
 
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
-  static bool should_cancel_;
+  static uint8_t release_countdown_;
 
-  static void injectNormalKey(uint8_t idx, uint8_t key_state);
+  static void injectNormalKey(uint8_t idx, uint8_t key_state,
+                              KeyAddr key_addr = UnknownKeyswitchLocation);
   static void activateOneShot(uint8_t idx);
-  static void cancelOneShot(uint8_t idx);
+  static void sustainOneShot(uint8_t idx);
+  static void replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr);
+  static void releaseOneShot(uint8_t idx);
 
   static bool isOneShotKey_(Key key) {
     return key.getRaw() >= ranges::OS_FIRST && key.getRaw() <= ranges::OS_LAST;
