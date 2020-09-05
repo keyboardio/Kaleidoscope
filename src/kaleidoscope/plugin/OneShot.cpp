@@ -90,14 +90,14 @@ void OneShot::releaseOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED);
 }
 
-EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  if (keyState & INJECTED)
+EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+  if (key_state & INJECTED)
     return EventHandlerResult::OK;
 
   // If it's not a OneShot key, and not a modifier, cancel all active
   // OneShot keys except for sticky ones.
   if (!isOneShotKey_(mapped_key)) {
-    if (keyToggledOn(keyState)) {
+    if (keyToggledOn(key_state)) {
       prev_key_addr_ = key_addr;
       if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
           !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
@@ -112,13 +112,13 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
   // bounds, so this is now valid:
   uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
 
-  if (keyToggledOn(keyState)) {
+  if (keyToggledOn(key_state)) {
     state_[idx].pressed = true;
     if (! state_[idx].active) {
       // first press
       activateOneShot(idx);
     } else if (state_[idx].sticky) {
-      replaceOneShot(idx, keyState, key_addr);
+      replaceOneShot(idx, key_state, key_addr);
     } else {
       if ((key_addr == prev_key_addr_) && state_[idx].stickable) {
         uint16_t dtto = (double_tap_time_out < 0) ? time_out : double_tap_time_out;
@@ -126,15 +126,15 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
           // double tap
           state_[idx].sticky = true;
         } else {
-          replaceOneShot(idx, keyState, key_addr);
+          replaceOneShot(idx, key_state, key_addr);
         }
       } else {
-        replaceOneShot(idx, keyState, key_addr);
+        replaceOneShot(idx, key_state, key_addr);
       }
     }
     prev_key_addr_ = key_addr;
 
-  } else if (keyToggledOff(keyState)) {
+  } else if (keyToggledOff(key_state)) {
     state_[idx].pressed = false;
     if (state_[idx].active && !state_[idx].sticky) {
       // check hold timeout
@@ -150,7 +150,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
     // modifiers.
     if (release_countdown_ == 1) {
       if (state_[idx].active && !state_[idx].sticky) {
-        replaceOneShot(idx, keyState, key_addr);
+        replaceOneShot(idx, key_state, key_addr);
       }
     }
   }
