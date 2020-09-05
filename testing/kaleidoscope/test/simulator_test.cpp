@@ -54,8 +54,9 @@ TEST_F(KeyboardReports, KeysActiveWhenPressed) {
       state->KeyboardReports(0).ActiveKeycodes(),
       IsEmpty());
 
-  state = RunCycle();  // 2 cycles later
+  state = RunCycle();
 
+  // 2 cycles after releasing A
   EXPECT_EQ(state->KeyboardReports().size(), 0);
 }
 

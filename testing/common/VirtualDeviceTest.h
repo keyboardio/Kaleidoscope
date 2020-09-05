@@ -21,16 +21,18 @@
 #include "testing/common/SimHarness.h"
 #include "testing/common/State.h"
 
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
+// Out of order due to macro conflicts.
 #include "testing/common/fix-macros.h"
 #include "gtest/gtest.h"
+#include <memory>
 
 namespace kaleidoscope {
 namespace testing {
 
 class VirtualDeviceTest : public ::testing::Test {
  protected:
+  void SetUp();
+
   std::unique_ptr<State> RunCycle();
 
   SimHarness sim_;

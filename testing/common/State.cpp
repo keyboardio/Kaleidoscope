@@ -25,22 +25,9 @@
 namespace kaleidoscope {
 namespace testing {
 
-State::State() {
-  HIDReportObserver::resetHook(
-      [this](uint8_t id, const void* data, int len, int result) {
-        this->ProcessHidReport(id, data, len, result);
-      });
-}
-
-State::~State() {
-  HIDReportObserver::resetHook(&State::DefaultProcessHidReport);
-}
+std::vector<KeyboardReport> State::keyboard_reports;
 
 // static
-void State::DefaultProcessHidReport(uint8_t, const void*, int, int) {
-  // TODO: Log that the report was dropped.
-}
-
 void State::ProcessHidReport(
     uint8_t id, const void* data, int len, int result) {
   switch (id) {
@@ -72,6 +59,18 @@ void State::ProcessHidReport(
   }
 }
 
+// static
+std::unique_ptr<State> State::Snapshot() {
+  auto state = std::make_unique<State>();
+  // Populate state.
+  // TODO: Grab a copy of current instantaneous state, like:
+  //  key states, layer stack, led states
+  state->keyboard_reports_ = std::move(keyboard_reports);
+
+  Clear();  // Clear global state.
+  return state;
+}
+
 const std::vector<KeyboardReport>& State::KeyboardReports() const {
   return keyboard_reports_;
 }
@@ -80,13 +79,14 @@ const KeyboardReport& State::KeyboardReports(size_t i) const {
   return keyboard_reports_.at(i);
 }
 
-void State::ProcessKeyboardReport(const KeyboardReport& report) {
-  keyboard_reports_.push_back(report);
+// static
+void State::Clear() {
+  keyboard_reports.clear();
 }
 
-void State::Snapshot() {
-  // TODO: Grab a copy of current instantaneous state, like:
-  //  key states, layer stack, led states
+// static
+void State::ProcessKeyboardReport(const KeyboardReport& report) {
+  keyboard_reports.push_back(report);
 }
 
 }  // namespace testing

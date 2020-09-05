@@ -21,31 +21,30 @@
 #include <vector>
 
 #include "HID-Settings.h"
-#include "HIDReportObserver.h"
 #include "testing/common/KeyboardReport.h"
+
+// Out of order due to macro conflicts.
+#include "testing/common/fix-macros.h"
+#include <memory>
 
 namespace kaleidoscope {
 namespace testing {
 
 class State {
  public:
-  ~State();
+  static void ProcessHidReport(
+      uint8_t id, const void* data, int len, int result);
 
-  static void DefaultProcessHidReport(uint8_t, const void*, int, int);
-
-  void ProcessHidReport(uint8_t id, const void* data, int len, int result);
+  static std::unique_ptr<State> Snapshot();
 
   const std::vector<KeyboardReport>& KeyboardReports() const;
   const KeyboardReport& KeyboardReports(size_t i) const;
 
  private:
-  friend class VirtualDeviceTest;
+  static std::vector<KeyboardReport> keyboard_reports;
 
-  State();
-
-  void ProcessKeyboardReport(const KeyboardReport& report);
-
-  void Snapshot();
+  static void Clear();
+  static void ProcessKeyboardReport(const KeyboardReport& report);
 
   std::vector<KeyboardReport> keyboard_reports_;
 };
