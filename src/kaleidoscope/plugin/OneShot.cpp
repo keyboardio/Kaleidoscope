@@ -86,7 +86,7 @@ void OneShot::replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
 
 void OneShot::releaseOneShot(uint8_t idx) {
   state_[idx].active = false;
-  state_[idx].active = false;
+  state_[idx].sticky = false;
   injectNormalKey(idx, WAS_PRESSED);
 }
 
