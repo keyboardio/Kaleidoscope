@@ -1,4 +1,5 @@
 BIN_DIR=bin
+COMMON_LIB_DIR ?= ${PWD}/../lib
 LIB_DIR=lib
 OBJ_DIR=obj
 SRC_DIR=test
@@ -23,7 +24,7 @@ ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} FORCE
 		-g \
 		-w \
 		${TEST_OBJS} \
-		-L"${PWD}/../lib" \
+		-L"${COMMON_LIB_DIR}" \
 		-lcommon \
 		"${LIB_DIR}/${LIB_FILE}" \
 		-L"$(PWD)/../googletest/lib" \

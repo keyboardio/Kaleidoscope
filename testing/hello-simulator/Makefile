@@ -23,13 +23,13 @@ ${OBJ_DIR}/%.o: %.cpp
 	@echo "compile $@"
 	mkdir -p "${OBJ_DIR}"
 	g++ -o "$@" -c \
-		-I../.. \
-		-I../../src \
-		-I../../../../../virtual/cores/arduino \
-		-I../../../Kaleidoscope-HIDAdaptor-KeyboardioHID/src \
-		-I../../../KeyboardioHID/src \
-		-I../../testing/googletest/googlemock/include \
-		-I../../testing/googletest/googletest/include \
+		-I${PWD}/../.. \
+		-I${PWD}/../../src \
+		-I${PWD}/../../../../../virtual/cores/arduino \
+		-I${PWD}/../../../Kaleidoscope-HIDAdaptor-KeyboardioHID/src \
+		-I${PWD}/../../../KeyboardioHID/src \
+		-I${PWD}/../../testing/googletest/googlemock/include \
+		-I${PWD}/../../testing/googletest/googletest/include \
 		-DARDUINO=10607 \
 		-DARDUINO_ARCH_VIRTUAL \
 		-DARDUINO_AVR_MODEL01 \
@@ -41,7 +41,7 @@ ${OBJ_DIR}/%.o: %.cpp
 		'-DUSB_PRODUCT="Model 01"' \
 		$<
 
-clean: FORCE
+clean:
 	rm -rf "${BIN_DIR}" "${LIB_DIR}" "${OBJ_DIR}"
 
 .PHONY: FORCE

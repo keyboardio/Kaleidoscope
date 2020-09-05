@@ -1,25 +1,26 @@
-LIB_DIR?=${PWD}/lib
-TEST_DIRS=$(dir $(wildcard */*_test.cpp))
+COMMON_LIB_DIR?=${PWD}/lib
+TEST_DIRS=$(shell dirname $(wildcard */Makefile))
 
-Makefile: build-libs ${TEST_DIRS}
-	@:
-
-build-libs: googletest common
-	@:
+Makefile: ${TEST_DIRS} FORCE
+	@echo TEST_DIRS="${TEST_DIRS}"
 
 googletest: FORCE
 	cd googletest && $(MAKE)
 
 common: FORCE
-	cd common && env LIB_DIR="${LIB_DIR}" $(MAKE)
+	cd common && env COMMON_LIB_DIR="${COMMON_LIB_DIR}" $(MAKE)
 
-clean: FORCE
-	rm -rf "${LIB_DIR}"
+clean:
+	rm -rf "${COMMON_LIB_DIR}"
+	cd googletest && make clean
 	cd common && make clean
 	cd hello-simulator && make clean
 	cd kaleidoscope && make clean
 
-%: common googltest FORCE
-	if [ -f "$@/Makefile" ]; then cd "$@"; $(MAKE); fi
+hello-simulator:
+	@:
+
+%: common googletest FORCE
+	cd "$@" && $(MAKE)
 
 .PHONY: FORCE googletest build-libs
