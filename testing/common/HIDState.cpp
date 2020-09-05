@@ -27,6 +27,14 @@
 namespace kaleidoscope {
 namespace testing {
 
+const std::vector<AbsoluteMouseReport>& HIDState::AbsoluteMouse() const {
+  return absolute_mouse_reports_;
+}
+
+const AbsoluteMouseReport& HIDState::AbsoluteMouse(size_t i) const {
+  return absolute_mouse_reports_.at(i);
+}
+
 const std::vector<KeyboardReport>& HIDState::Keyboard() const {
   return keyboard_reports_;
 }
@@ -68,7 +76,7 @@ void HIDStateBuilder::ProcessHidReport(
       break;
     }
     case HID_REPORTID_MOUSE_ABSOLUTE: {
-      LOG(ERROR) << "Dropped AbsoluteMouseReport: unimplemented";
+      ProcessAbsoluteMouseReport(AbsoluteMouseReport{data});
       break;
     }
     case HID_REPORTID_NKRO_KEYBOARD: {
@@ -86,6 +94,7 @@ std::unique_ptr<HIDState> HIDStateBuilder::Snapshot() {
   // Populate state.
   // TODO: Grab a copy of current instantaneous state, like:
   //  key states, layer stack, led states
+  hid_state->absolute_mouse_reports_ = std::move(absolute_mouse_reports_);
   hid_state->keyboard_reports_ = std::move(keyboard_reports_);
   hid_state->system_control_reports_ = std::move(system_control_reports_);
 
@@ -95,8 +104,14 @@ std::unique_ptr<HIDState> HIDStateBuilder::Snapshot() {
 
 // static
 void HIDStateBuilder::Clear() {
+  absolute_mouse_reports_.clear();
   keyboard_reports_.clear();
   system_control_reports_.clear();
+}
+
+// static
+void HIDStateBuilder::ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report) {
+  absolute_mouse_reports_.push_back(report);
 }
 
 // static
