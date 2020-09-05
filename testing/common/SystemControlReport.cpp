@@ -25,6 +25,7 @@ SystemControlReport::SystemControlReport(const void* data) {
   const ReportData& report_data =
     *static_cast<const ReportData*>(data);
   memcpy(&report_data_, &report_data, sizeof(report_data_));
+  this->push_back(report_data_.key);
 }
 
 uint8_t SystemControlReport::Key() const {

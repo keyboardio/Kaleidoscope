@@ -42,30 +42,24 @@ TEST_F(Issue840, HasNotRegressed) {
   auto state = RunCycle();
 
   ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_EQ(
-      state->SystemControlReports(0).Key(),
-      System_PowerDown.getKeyCode());
+  EXPECT_THAT(state->SystemControlReports(0), Contains(System_PowerDown));
 
   sim_.Press(3, 5); // Press System_Sleep
   state = RunCycle();
 
   ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_EQ(
-      state->SystemControlReports(0).Key(),
-      System_Sleep.getKeyCode());
+  EXPECT_THAT(state->SystemControlReports(0), Contains(System_Sleep));
 
   sim_.Release(2, 1);  // Release System_PowerDown
   state = RunCycle();
 
-  ASSERT_EQ(state->SystemControlReports().size(), 0);
+  EXPECT_EQ(state->SystemControlReports().size(), 0);
 
   sim_.Release(3, 5);  // Release System_Sleep
   state = RunCycle();
 
   ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_EQ(
-      state->SystemControlReports(0).Key(),
-      0 /* null report */);
+  EXPECT_THAT(state->SystemControlReports(0), IsNull());
 
   state = RunCycle();
 
@@ -77,33 +71,25 @@ TEST_F(Issue840, HasNotRegressed) {
 //   auto state = RunCycle();
 // 
 //   ASSERT_EQ(state->SystemControlReports().size(), 1);
-//   EXPECT_EQ(
-//       state->SystemControlReports(0).Key(),
-//       System_PowerDown.getKeyCode());
+//   EXPECT_THAT(state->SystemControlReports(0), Contains(System_PowerDown));
 // 
 //   sim_.Press(3, 5); // Press System_Sleep
 //   state = RunCycle();
 // 
 //   ASSERT_EQ(state->SystemControlReports().size(), 1);
-//   EXPECT_EQ(
-//       state->SystemControlReports(0).Key(),
-//       System_Sleep.getKeyCode());
+//   EXPECT_THAT(state->SystemControlReports(0), Contains(System_Sleep));
 // 
 //   sim_.Release(2, 1);  // Release System_PowerDown
 //   state = RunCycle();
 // 
 //   ASSERT_EQ(state->SystemControlReports().size(), 1);
-//   EXPECT_EQ(
-//       state->SystemControlReports(0).Key(),
-//       0 /* null report */);
+//   EXPECT_THAT(state->SystemControlReports(0), IsNull());
 // 
 //   sim_.Release(3, 5);  // Release System_Sleep
 //   state = RunCycle();
 // 
 //   ASSERT_EQ(state->SystemControlReports().size(), 1);
-//   EXPECT_EQ(
-//       state->SystemControlReports(0).Key(),
-//       0 /* null report */);
+//   EXPECT_THAT(state->SystemControlReports(0), IsNull());
 // 
 //   state = RunCycle();
 // 

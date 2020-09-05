@@ -24,7 +24,7 @@
 namespace kaleidoscope {
 namespace testing {
 
-class SystemControlReport {
+class SystemControlReport : public std::vector<uint8_t> {
  public:
   typedef HID_SystemControlReport_Data_t ReportData;
 
