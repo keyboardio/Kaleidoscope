@@ -31,27 +31,6 @@ MATCHER_P(Contains, key, negation ? "does not contain" : "contains") {
   return arg.Key() == key.getKeyCode();
 }
 
-class SystemControlReportIsNullMatcher
-    : public ::testing::MatcherInterface<SystemControlReport> {
- public:
-  bool MatchAndExplain(SystemControlReport report,
-                       ::testing::MatchResultListener* /* ignored */) const override {
-    return report.Key() == 0;
-  }
-
-  void DescribeTo(std::ostream* os) const override {
-    *os << "is empty";
-  }
-
-  void DescribeNegationTo(std::ostream* os) const override {
-    *os << "is not empty";
-  }
-};
-
-::testing::Matcher<SystemControlReport> IsNull() {
-  return ::testing::MakeMatcher(new SystemControlReportIsNullMatcher);
-}
-
 auto Contains(Key key) { return ::testing::Contains(key.getKeyCode()); }
 
 }  // namespace testing

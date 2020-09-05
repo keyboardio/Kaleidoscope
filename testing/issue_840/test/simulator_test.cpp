@@ -59,7 +59,7 @@ TEST_F(Issue840, HasNotRegressed) {
   state = RunCycle();
 
   ASSERT_EQ(state->SystemControlReports().size(), 1);
-  EXPECT_THAT(state->SystemControlReports(0), IsNull());
+  EXPECT_THAT(state->SystemControlReports(0), IsEmpty());
 
   state = RunCycle();
 
