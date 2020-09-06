@@ -21,3 +21,12 @@ Other duplication across Makefiles
 - Intended, but already drifing; also, shouldn't be in manual copies
 Duplication of delegate.mk
 - Intended, to support invoking kaleidoscope-builder, but definitely shouldn't be manually copied
+
+Directory structure
+- Tests (e.g. testing/hello-simulator, testing/kaleidoscope, testing/issue_840) should be moved into a directory
+  separate from test infrastructure, maybe just tests/
+- Tests should be able to be organized in a hierarchical manner, eg
+  - tests/regression/issue_blah
+  - tests/hid/usb/bootkeyboard/foo
+- Test infracture (now in testing/common/) should be moved into testing/ after the actual tests are moved out
+- Test infrastructure should be able to be hierarchically organized
