@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "testing/common/AbsoluteMouseReport.h"
 #include "testing/common/KeyboardReport.h"
 #include "testing/common/SystemControlReport.h"
 
@@ -29,6 +30,9 @@ namespace internal { class HIDStateBuilder; }
 
 class HIDState {
  public:
+  const std::vector<AbsoluteMouseReport>& AbsoluteMouse() const;
+  const AbsoluteMouseReport& AbsoluteMouse(size_t i) const;
+
   const std::vector<KeyboardReport>& Keyboard() const;
   const KeyboardReport& Keyboard(size_t i) const;
 
@@ -38,6 +42,7 @@ class HIDState {
  private:
   friend class internal::HIDStateBuilder;
 
+  std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   std::vector<KeyboardReport> keyboard_reports_;
   std::vector<SystemControlReport> system_control_reports_;
 };
@@ -53,9 +58,11 @@ class HIDStateBuilder {
 
  private:
   static void Clear();
+  static void ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report);
   static void ProcessKeyboardReport(const KeyboardReport& report);
   static void ProcessSystemControlReport(const SystemControlReport& report);
 
+  static std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   static std::vector<KeyboardReport> keyboard_reports_;
   static std::vector<SystemControlReport> system_control_reports_;
 };

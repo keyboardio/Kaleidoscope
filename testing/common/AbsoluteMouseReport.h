@@ -19,25 +19,28 @@
 #include <cstdint>
 #include <vector>
 
+#include "DeviceAPIs/AbsoluteMouseAPI.h"
 #include "HID-Settings.h"
-#include "MultiReport/Keyboard.h"
 
 namespace kaleidoscope {
 namespace testing {
 
-class KeyboardReport {
+class AbsoluteMouseReport {
  public:
-  typedef HID_KeyboardReport_Data_t ReportData;
+  typedef HID_MouseAbsoluteReport_Data_t ReportData;
 
-  static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
+  static constexpr uint8_t kHidReportType = HID_REPORTID_MOUSE_ABSOLUTE;
 
-  KeyboardReport(const void* data);
+  AbsoluteMouseReport(const void* data);
 
-  std::vector<uint8_t> ActiveKeycodes() const;
+  std::vector<uint8_t> Buttons() const;
+  uint16_t XAxis() const;
+  uint16_t YAxis() const;
+  int8_t Wheel() const;
 
  private:
   ReportData report_data_;
 };
 
 }  // namespace testing
-}  // namespace kaleidoscope
+}  // namespce kaleidoscope
