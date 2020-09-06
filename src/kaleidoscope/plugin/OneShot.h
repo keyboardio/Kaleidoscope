@@ -126,13 +126,13 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Internal utility functions
-  static Key getNormalKey(uint8_t idx);
-  static void injectNormalKey(uint8_t idx, uint8_t key_state,
+  static Key getNormalKey(uint8_t n);
+  static void injectNormalKey(uint8_t n, uint8_t key_state,
                               KeyAddr key_addr = UnknownKeyswitchLocation);
 
-  static void activateOneShot(uint8_t idx);
-  static void sustainOneShot(uint8_t idx);
-  static void releaseOneShot(uint8_t idx);
+  static void activateOneShot(uint8_t n);
+  static void sustainOneShot(uint8_t n);
+  static void releaseOneShot(uint8_t n);
 
   static bool hasTimedOut() {
     return Runtime.hasTimeExpired(start_time_, time_out);

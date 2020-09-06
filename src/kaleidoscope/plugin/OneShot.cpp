@@ -109,15 +109,15 @@ bool OneShot::isPressed() {
 // Key-specific OneShot key tests
 
 bool OneShot::isActive(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
+  uint8_t n = key.getRaw() - ranges::OS_FIRST;
 
-  return state_[idx].active || state_[idx].pressed;
+  return state_[n].active || state_[n].pressed;
 }
 
 bool OneShot::isSticky(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
+  uint8_t n = key.getRaw() - ranges::OS_FIRST;
 
-  return state_[idx].sticky;
+  return state_[n].sticky;
 }
 
 bool OneShot::isStickable(Key key) {
@@ -158,8 +158,8 @@ bool OneShot::isModifierActive(Key key) {
   if (key < Key_LeftControl || key > Key_RightGui)
     return false;
 
-  uint8_t idx = key.getKeyCode() - Key_LeftControl.getKeyCode();
-  return state_[idx].active;
+  uint8_t n = key.getKeyCode() - Key_LeftControl.getKeyCode();
+  return state_[n].active;
 }
 
 
@@ -200,31 +200,31 @@ EventHandlerResult OneShot::onKeyswitchEvent(
   // We know that `mapped_key` is a OneShot key, and the call to
   // `isOneShotKey_()` above ensures that the index is not out of
   // bounds, so this is now valid:
-  uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
+  uint8_t n = mapped_key.getRaw() - ranges::OS_FIRST;
 
   if (keyToggledOn(key_state)) {
-    state_[idx].pressed = true;
-    if (! state_[idx].active) {
+    state_[n].pressed = true;
+    if (! state_[n].active) {
       // This is the first press of an inactive OneShot key, so we
       // simply activate it, setting `active` to true.
       // `activateOneShot()` sends the toggled on event, and in
       // subsequent cycles, the `beforeReportingState()` hook will
       // send `sustainOneShot()`, sending the hold "event".
-      activateOneShot(idx);
-    } else if (state_[idx].sticky) {
+      activateOneShot(n);
+    } else if (state_[n].sticky) {
       // If the OneShot key is already sticky, and it gets pressed, we
       // remove its `active` state flag. As long as it is still held
       // (`pressed == true`), it will continue to be translated into
       // its corresponding modifier in `beforeReportingState()`.
-      state_[idx].active = false;
-      state_[idx].sticky = false;
+      state_[n].active = false;
+      state_[n].sticky = false;
     } else {
       // The OneShot key has been pressed while it is active, but not
       // (yet) sticky. First we determine if it's a candidate for
       // becoming sticky: it can only become sticky if the same key is
       // pressed twice in a row, and that key is configured to be
       // sticky.
-      if ((key_addr == prev_key_addr_) && state_[idx].stickable) {
+      if ((key_addr == prev_key_addr_) && state_[n].stickable) {
         // In addition, it must have been "double-tapped": pressed
         // twice in less than `double_tap_time_out` milliseconds. But
         // if that variable isn't set (negative), we use the default
@@ -233,33 +233,33 @@ EventHandlerResult OneShot::onKeyswitchEvent(
         if (! Runtime.hasTimeExpired(start_time_, dtto)) {
           // Making a OneShot sticky is as simple as setting its
           // `sticky` flag; the other hook functions handle the rest.
-          state_[idx].sticky = true;
+          state_[n].sticky = true;
         } else {
           // If two presses weren't quick enough, this second press
           // will terminate the OneShot behaviour (see above).
-          state_[idx].active = false;
+          state_[n].active = false;
         }
       } else {
         // If this OneShot key is not "stickable", we deactivate
         // it. It still remains in effect until it is released.
-        state_[idx].active = false;
+        state_[n].active = false;
       }
     }
     prev_key_addr_ = key_addr;
 
   } else if (keyToggledOff(key_state)) {
-    state_[idx].pressed = false;
-    if (! state_[idx].active) {
-      releaseOneShot(idx);
+    state_[n].pressed = false;
+    if (! state_[n].active) {
+      releaseOneShot(n);
     }
 
   } else {
-    if (state_[idx].active && !state_[idx].sticky) {
+    if (state_[n].active && !state_[n].sticky) {
       // If a OneShot key is held (on its initial press) long enough
       // (i.e. > `hold_time_out` milliseconds), deactivate it. It
       // still remains in effect until it is released.
       if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
-        state_[idx].active = false;
+        state_[n].active = false;
       }
     }
   }
@@ -313,34 +313,34 @@ EventHandlerResult OneShot::afterEachCycle() {
 // ----------------------------------------------------------------------------
 // Helper functions for acting on OneShot key events
 
-Key OneShot::getNormalKey(uint8_t idx) {
-  if (idx < ONESHOT_MOD_COUNT) {
-    return Key(Key_LeftControl.getKeyCode() + idx,
+Key OneShot::getNormalKey(uint8_t n) {
+  if (n < ONESHOT_MOD_COUNT) {
+    return Key(Key_LeftControl.getKeyCode() + n,
                Key_LeftControl.getFlags());
   } else {
-    return Key(LAYER_SHIFT_OFFSET + idx - ONESHOT_MOD_COUNT,
+    return Key(LAYER_SHIFT_OFFSET + n - ONESHOT_MOD_COUNT,
                KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
   }
 }
 
-void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
-  handleKeyswitchEvent(getNormalKey(idx), key_addr, key_state | INJECTED);
+void OneShot::injectNormalKey(uint8_t n, uint8_t key_state, KeyAddr key_addr) {
+  handleKeyswitchEvent(getNormalKey(n), key_addr, key_state | INJECTED);
 }
 
-void OneShot::activateOneShot(uint8_t idx) {
+void OneShot::activateOneShot(uint8_t n) {
   start_time_ = Runtime.millisAtCycleStart();
-  state_[idx].active = true;
-  injectNormalKey(idx, IS_PRESSED);
+  state_[n].active = true;
+  injectNormalKey(n, IS_PRESSED);
 }
 
-void OneShot::sustainOneShot(uint8_t idx) {
-  injectNormalKey(idx, WAS_PRESSED | IS_PRESSED);
+void OneShot::sustainOneShot(uint8_t n) {
+  injectNormalKey(n, WAS_PRESSED | IS_PRESSED);
 }
 
-void OneShot::releaseOneShot(uint8_t idx) {
-  state_[idx].active = false;
-  state_[idx].sticky = false;
-  injectNormalKey(idx, WAS_PRESSED);
+void OneShot::releaseOneShot(uint8_t n) {
+  state_[n].active = false;
+  state_[n].sticky = false;
+  injectNormalKey(n, WAS_PRESSED);
 }
 
 } // namespace plugin
