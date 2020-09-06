@@ -108,16 +108,29 @@ bool OneShot::isPressed() {
 // ----------------------------------------------------------------------------
 // Key-specific OneShot key tests
 
+// These functions are particularly useful for ActiveModColor, which
+// could potentially use three different color values for the three
+// states (sticky | active && !sticky | pressed && !active).
+
+// WARNING: There is no bounds checking done before getting the value
+// from the array. The caller must check `OneShot.isOneShotKey(key)`
+// before calling any of these functions.
 bool OneShot::isActive(Key key) {
   uint8_t n = key.getRaw() - ranges::OS_FIRST;
 
-  return state_[n].active || state_[n].pressed;
+  return state_[n].active;
 }
 
 bool OneShot::isSticky(Key key) {
   uint8_t n = key.getRaw() - ranges::OS_FIRST;
 
   return state_[n].sticky;
+}
+
+bool OneShot::isPressed(Key key) {
+  uint8_t n = key.getRaw() - ranges::OS_FIRST;
+
+  return state_[n].pressed;
 }
 
 bool OneShot::isStickable(Key key) {

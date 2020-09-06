@@ -78,6 +78,7 @@ class OneShot : public kaleidoscope::Plugin {
   }
   static bool isActive(Key key);
   static bool isSticky(Key key);
+  static bool isPressed(Key key);
   static bool isStickable(Key key);
 
   // --------------------------------------------------------------------------
