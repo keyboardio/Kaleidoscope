@@ -168,7 +168,7 @@ bool OneShot::isModifierActive(Key key) {
 // Plugin hook functions
 
 EventHandlerResult OneShot::onKeyswitchEvent(
-    Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+  Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
 
   // Ignore injected key events. This prevents re-processing events
   // that the hook functions generate (by calling `injectNormalKey()`
