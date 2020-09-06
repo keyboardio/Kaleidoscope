@@ -111,7 +111,7 @@ bool OneShot::isPressed() {
 bool OneShot::isActive(Key key) {
   uint8_t idx = key.getRaw() - ranges::OS_FIRST;
 
-  return state_[idx].active;
+  return state_[idx].active || state_[idx].pressed;
 }
 
 bool OneShot::isSticky(Key key) {
