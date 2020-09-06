@@ -14,18 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/key_defs_keyboard.h"
-
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
-#include "testing/common/fix-macros.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
-
-#include <iostream>
-
-#include "testing/common/matchers.h"
-#include "testing/common/VirtualDeviceTest.h"
+#include "testing/common/setup-googletest.h"
 
 SETUP_GOOGLETEST();
 

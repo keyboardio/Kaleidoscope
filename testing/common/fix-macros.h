@@ -14,21 +14,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// No `#pragma once` since these undefs need to have every time a Kaleidoscope/
+// Arduino header is included before non-Kaleidoscope/Arduino header.
+// #pragma once
 
-#include "Kaleidoscope.h"
 
 #undef min
 #undef max
 #undef T
 #undef U
 #undef TEST
-
-#define SETUP_GOOGLETEST() \
-  void executeTestFunction() { \
-    setup(); /* setup Kaleidoscope */ \
-    /* Turn off virtual_io's input. */ \
-    Kaleidoscope.device().keyScanner().setEnableReadMatrix(false); \
-    testing::InitGoogleTest(); \
-    RUN_ALL_TESTS(); \
-  }

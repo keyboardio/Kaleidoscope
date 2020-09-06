@@ -1,4 +1,4 @@
-COMMON_LIB_DIR?=${PWD}/lib
+LIB_DIR?=${PWD}/lib
 TEST_DIRS=$(shell dirname $(wildcard */Makefile))
 
 DIRS=googletest hello-simulator kaleidoscope common issue_840
@@ -7,7 +7,7 @@ CLEANDIRS = $(DIRS:%=clean-%)
 .PHONY: subdirs $(CLEANDIRS)
 
 clean: googletest/Makefile $(CLEANDIRS)
-	rm -rf "$(COMMON_LIB_DIR)"
+	rm -rf "$(LIB_DIR)"
 
 $(CLEANDIRS): 
 	cd $(@:clean-%=%) && $(MAKE) clean
@@ -22,7 +22,7 @@ googletest/Makefile:
 	cd googletest && cmake .
 
 common: 
-	cd common && COMMON_LIB_DIR="${COMMON_LIB_DIR}" $(MAKE)
+	cd common && LIB_DIR="${LIB_DIR}" $(MAKE)
 
 hello-simulator:
 	@:
