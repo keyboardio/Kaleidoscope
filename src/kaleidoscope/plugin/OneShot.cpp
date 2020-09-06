@@ -212,12 +212,6 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
   } else if (keyToggledOff(key_state)) {
     state_[idx].pressed = false;
-    if (state_[idx].active && !state_[idx].sticky) {
-      // check hold timeout
-      if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
-        releaseOneShot(idx);
-      }
-    }
   } else {
     // This is a OneShot key that is being held. If a keypress has
     // triggered the release of OneShot keys, `release_countdown_`
@@ -229,7 +223,20 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
         replaceOneShot(idx, key_state, key_addr);
       }
     }
+    // If a OneShot key is held (on its initial press) long enough (>
+    // `hold_time_out` milliseconds), we convert that key to its
+    // corresponding modifier/layer shift, and it won't remain active
+    // after release.
+    if (state_[idx].active && !state_[idx].sticky) {
+      if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
+        replaceOneShot(idx, key_state, key_addr);
+      }
+    }
   }
+
+  // Finally, we allow event processing to continue so that plugins
+  // later in the processing order can act on OneShot key events (in
+  // particular, ActiveModColor).
   return EventHandlerResult::OK;
 }
 
