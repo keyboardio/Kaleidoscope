@@ -18,6 +18,7 @@
 #include <Kaleidoscope-OneShot.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -166,18 +167,32 @@ bool OneShot::isModifierActive(Key key) {
 // ----------------------------------------------------------------------------
 // Plugin hook functions
 
-EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult OneShot::onKeyswitchEvent(
+    Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+
+  // Ignore injected key events. This prevents re-processing events
+  // that the hook functions generate (by calling `injectNormalKey()`
+  // via one of the `*OneShot()` functions). There are more robust
+  // ways to do this, but since OneShot is intended to react to only
+  // physical keypresses, this is adequate.
   if (key_state & INJECTED)
     return EventHandlerResult::OK;
 
-  // If it's not a OneShot key, and not a modifier, cancel all active
-  // OneShot keys except for sticky ones.
+  // If it's not a OneShot key, and not a modifier, set up the active,
+  // non-sticky OneShot keys to be released at the end of the next
+  // cycle.
   if (!isOneShotKey(mapped_key)) {
     if (keyToggledOn(key_state)) {
       prev_key_addr_ = key_addr;
       if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
           !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
-        release_countdown_ = 0b10;
+        // We can't immediately send the release event(s) for active
+        // OneShot keys here, because that would release those keys
+        // before the report in which the keycodes they are meant to
+        // modify gets sent. Instead, we use this variable, which will
+        // get bit-shifted each cycle, and trigger the release when it
+        // gets to 1 (which is why it's written as a bit-shifted 1 here).
+        release_countdown_ = 1 << 1;
       }
     }
     return EventHandlerResult::OK;
@@ -191,45 +206,61 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
   if (keyToggledOn(key_state)) {
     state_[idx].pressed = true;
     if (! state_[idx].active) {
-      // first press
+      // This is the first press of an inactive OneShot key, so we
+      // simply activate it, setting `active` to true.
+      // `activateOneShot()` sends the toggled on event, and in
+      // subsequent cycles, the `beforeReportingState()` hook will
+      // send `sustainOneShot()`, sending the hold "event".
       activateOneShot(idx);
     } else if (state_[idx].sticky) {
-      replaceOneShot(idx, key_state, key_addr);
+      // If the OneShot key is already sticky, and it gets pressed, we
+      // remove its `active` state flag. As long as it is still held
+      // (`pressed == true`), it will continue to be translated into
+      // its corresponding modifier in `beforeReportingState()`.
+      state_[idx].active = false;
+      state_[idx].sticky = false;
     } else {
+      // The OneShot key has been pressed while it is active, but not
+      // (yet) sticky. First we determine if it's a candidate for
+      // becoming sticky: it can only become sticky if the same key is
+      // pressed twice in a row, and that key is configured to be
+      // sticky.
       if ((key_addr == prev_key_addr_) && state_[idx].stickable) {
+        // In addition, it must have been "double-tapped": pressed
+        // twice in less than `double_tap_time_out` milliseconds. But
+        // if that variable isn't set (negative), we use the default
+        // `time_out` value instead.
         uint16_t dtto = (double_tap_time_out < 0) ? time_out : double_tap_time_out;
         if (! Runtime.hasTimeExpired(start_time_, dtto)) {
-          // double tap
+          // Making a OneShot sticky is as simple as setting its
+          // `sticky` flag; the other hook functions handle the rest.
           state_[idx].sticky = true;
         } else {
-          replaceOneShot(idx, key_state, key_addr);
+          // If two presses weren't quick enough, this second press
+          // will terminate the OneShot behaviour (see above).
+          state_[idx].active = false;
         }
       } else {
-        replaceOneShot(idx, key_state, key_addr);
+        // If this OneShot key is not "stickable", we deactivate
+        // it. It still remains in effect until it is released.
+        state_[idx].active = false;
       }
     }
     prev_key_addr_ = key_addr;
 
   } else if (keyToggledOff(key_state)) {
     state_[idx].pressed = false;
-  } else {
-    // This is a OneShot key that is being held. If a keypress has
-    // triggered the release of OneShot keys, `release_countdown_`
-    // will be set. When it gets to 1, it's time to replace non-sticky
-    // OneShot keys that are still being held with their corresponding
-    // modifiers.
-    if (release_countdown_ == 1) {
-      if (state_[idx].active && !state_[idx].sticky) {
-        replaceOneShot(idx, key_state, key_addr);
-      }
+    if (! state_[idx].active) {
+      releaseOneShot(idx);
     }
-    // If a OneShot key is held (on its initial press) long enough (>
-    // `hold_time_out` milliseconds), we convert that key to its
-    // corresponding modifier/layer shift, and it won't remain active
-    // after release.
+
+  } else {
     if (state_[idx].active && !state_[idx].sticky) {
+      // If a OneShot key is held (on its initial press) long enough
+      // (i.e. > `hold_time_out` milliseconds), deactivate it. It
+      // still remains in effect until it is released.
       if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
-        replaceOneShot(idx, key_state, key_addr);
+        state_[idx].active = false;
       }
     }
   }
@@ -244,8 +275,8 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 // For any active OneShot modifier keys, keep those modifiers active
 // in the keyboard HID report.
 EventHandlerResult OneShot::beforeReportingState() {
-  for (uint8_t i{0}; i < ONESHOT_MOD_COUNT; ++i) {
-    if (state_[i].active) {
+  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
+    if (state_[i].active || state_[i].pressed) {
       sustainOneShot(i);
     }
   }
@@ -254,8 +285,13 @@ EventHandlerResult OneShot::beforeReportingState() {
 
 
 EventHandlerResult OneShot::afterEachCycle() {
-  // At the end of every cycle, we check to see if any OneShot keys
-  // have timed out.
+  // If a normal, non-modifier key has been pressed, or if active,
+  // non-sticky OneShot keys have timed out, this is where they get
+  // released. Release is triggered when `release_countdown_` gets to
+  // 1, not 0, because most of the time it will be 0 (see below). It
+  // gets set to 2 on the press of a normal key when there are any
+  // active OneShot keys; that way, the OneShot keys will stay active
+  // long enough to apply to the newly-pressed key.
   if ((release_countdown_ == 1) || hasTimedOut()) {
     for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
       if (state_[i].active && !state_[i].sticky && !state_[i].pressed) {
@@ -263,7 +299,6 @@ EventHandlerResult OneShot::afterEachCycle() {
       }
     }
   }
-
   // Also, advance the counter for OneShot keys that have been
   // cancelled by the press of a non-OneShot, non-modifier key. An
   // unconditional bit shift should be more efficient than checking
@@ -279,18 +314,18 @@ EventHandlerResult OneShot::afterEachCycle() {
 // ----------------------------------------------------------------------------
 // Helper functions for acting on OneShot key events
 
-void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
-  Key key;
-
-  if (idx < 8) {
-    key = Key(Key_LeftControl.getKeyCode() + idx,
-              Key_LeftControl.getFlags());
+Key OneShot::getNormalKey(uint8_t idx) {
+  if (idx < ONESHOT_MOD_COUNT) {
+    return Key(Key_LeftControl.getKeyCode() + idx,
+               Key_LeftControl.getFlags());
   } else {
-    key = Key(LAYER_SHIFT_OFFSET + idx - 8,
-              KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
+    return Key(LAYER_SHIFT_OFFSET + idx - ONESHOT_MOD_COUNT,
+               KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
   }
+}
 
-  handleKeyswitchEvent(key, key_addr, key_state | INJECTED);
+void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
+  handleKeyswitchEvent(getNormalKey(idx), key_addr, key_state | INJECTED);
 }
 
 void OneShot::activateOneShot(uint8_t idx) {
@@ -303,11 +338,19 @@ void OneShot::sustainOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED | IS_PRESSED);
 }
 
-void OneShot::replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
+// This function is probably no longer useful, unless there are core
+// changes to fix the OSL double-tap bug.
+void OneShot::replaceOneShot(uint8_t idx, KeyAddr key_addr) {
   state_[idx].active = false;
   state_[idx].sticky = false;
   state_[idx].pressed = false;
-  injectNormalKey(idx, key_state, key_addr);
+  Key key = getNormalKey(idx);
+  Layer.updateLiveCompositeKeymap(key_addr, key);
+  handleKeyswitchEvent(key, key_addr, IS_PRESSED | WAS_PRESSED | INJECTED);
+  // We need to send a "toggled on" key state to trigger the keymap
+  // substitution. It would be more correct to use a "held" key state,
+  // but that would require much more code.
+  //injectNormalKey(idx, IS_PRESSED, key_addr);
 }
 
 void OneShot::releaseOneShot(uint8_t idx) {

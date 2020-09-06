@@ -103,8 +103,14 @@ class OneShot : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
+
+  // --------------------------------------------------------------------------
+  // Constants
   static constexpr uint8_t ONESHOT_KEY_COUNT = 16;
   static constexpr uint8_t ONESHOT_MOD_COUNT = 8;
+
+  // --------------------------------------------------------------------------
+  // State variables
   struct OneShotKeyState {
     bool active: 1;
     bool pressed: 1;
@@ -120,13 +126,13 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Internal utility functions
-
+  static Key getNormalKey(uint8_t idx);
   static void injectNormalKey(uint8_t idx, uint8_t key_state,
                               KeyAddr key_addr = UnknownKeyswitchLocation);
 
   static void activateOneShot(uint8_t idx);
   static void sustainOneShot(uint8_t idx);
-  static void replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr);
+  static void replaceOneShot(uint8_t idx, KeyAddr key_addr);
   static void releaseOneShot(uint8_t idx);
 
   static bool hasTimedOut() {
