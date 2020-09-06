@@ -32,9 +32,53 @@ OneShot::OneShotKeyState OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
 KeyAddr OneShot::prev_key_addr_ = UnknownKeyswitchLocation;
 uint8_t OneShot::release_countdown_ = 0;
 
-bool OneShot::isPressed() {
+
+// ============================================================================
+// Public interface
+
+// ----------------------------------------------------------------------------
+// Configuration functions
+
+void OneShot::enableStickability(Key key) {
+  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
+    state_[key.getRaw() - ranges::OS_FIRST].stickable = true;
+}
+
+void OneShot::disableStickability(Key key) {
+  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
+    state_[key.getRaw() - ranges::OS_FIRST].stickable = false;
+}
+
+void OneShot::enableStickabilityForModifiers() {
+  for (uint8_t i{0}; i < ONESHOT_MOD_COUNT; ++i) {
+    state_[i].stickable = true;
+  }
+}
+
+void OneShot::disableStickabilityForModifiers() {
+  for (uint8_t i{0}; i < ONESHOT_MOD_COUNT; ++i) {
+    state_[i].stickable = false;
+  }
+}
+
+void OneShot::enableStickabilityForLayers() {
+  for (uint8_t i{ONESHOT_MOD_COUNT}; i < ONESHOT_KEY_COUNT; ++i) {
+    state_[i].stickable = true;
+  }
+}
+
+void OneShot::disableStickabilityForLayers() {
+  for (uint8_t i{ONESHOT_MOD_COUNT}; i < ONESHOT_KEY_COUNT; ++i) {
+    state_[i].stickable = false;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Global tests for any OneShot key
+
+bool OneShot::isActive() {
   for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (state_[i].pressed)
+    if (state_[i].active)
       return true;
   }
   return false;
@@ -48,47 +92,74 @@ bool OneShot::isSticky() {
   return false;
 }
 
+bool OneShot::isPressed() {
+  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+    if (state_[i].pressed)
+      return true;
+  }
+  return false;
+}
+
+// ----------------------------------------------------------------------------
+// Key-specific OneShot key tests
+
+bool OneShot::isActive(Key key) {
+  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
+
+  return state_[idx].active;
+}
+
+bool OneShot::isSticky(Key key) {
+  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
+
+  return state_[idx].sticky;
+}
+
 bool OneShot::isStickable(Key key) {
   return state_[key.getRaw() - ranges::OS_FIRST].stickable;
 }
 
-// ---- OneShot stuff ----
-void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
-  Key key;
+// ----------------------------------------------------------------------------
+// Other functions
 
-  if (idx < 8) {
-    key = Key(Key_LeftControl.getKeyCode() + idx,
-              Key_LeftControl.getFlags());
-  } else {
-    key = Key(LAYER_SHIFT_OFFSET + idx - 8,
-              KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
+// Cancel all active OneShot keys (if `cancel_stickies` is true) or
+// just non-sticky active OneShot keys. This function is called by
+// Escape-OneShot to release active OneShot keys.
+void OneShot::cancel(bool cancel_stickies) {
+  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
+    if (state_[i].active) {
+      if (state_[i].sticky && !cancel_stickies) {
+        continue;
+      }
+      releaseOneShot(i);
+    }
   }
-
-  handleKeyswitchEvent(key, key_addr, key_state | INJECTED);
 }
 
-void OneShot::activateOneShot(uint8_t idx) {
-  start_time_ = Runtime.millisAtCycleStart();
-  state_[idx].active = true;
-  injectNormalKey(idx, IS_PRESSED);
+// ----------------------------------------------------------------------------
+// Vestigial functions?
+
+// Is this function used by anything? It's part of the public API, but
+// none of the core plugins use it. Calling the event handler doesn't
+// seem like the right thing to do here, so perhaps the function
+// should be deprecated, then removed.
+void OneShot::inject(Key mapped_key, uint8_t key_state) {
+  onKeyswitchEvent(mapped_key, UnknownKeyswitchLocation, key_state);
 }
 
-void OneShot::sustainOneShot(uint8_t idx) {
-  injectNormalKey(idx, WAS_PRESSED | IS_PRESSED);
+// This function also isn't called anywhere by any core
+// plugins. Perhaps it should be deprecated.
+bool OneShot::isModifierActive(Key key) {
+  if (key < Key_LeftControl || key > Key_RightGui)
+    return false;
+
+  uint8_t idx = key.getKeyCode() - Key_LeftControl.getKeyCode();
+  return state_[idx].active;
 }
 
-void OneShot::replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
-  state_[idx].active = false;
-  state_[idx].sticky = false;
-  state_[idx].pressed = false;
-  injectNormalKey(idx, key_state, key_addr);
-}
 
-void OneShot::releaseOneShot(uint8_t idx) {
-  state_[idx].active = false;
-  state_[idx].sticky = false;
-  injectNormalKey(idx, WAS_PRESSED);
-}
+// ----------------------------------------------------------------------------
+// Plugin hook functions
 
 EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (key_state & INJECTED)
@@ -96,7 +167,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, 
 
   // If it's not a OneShot key, and not a modifier, cancel all active
   // OneShot keys except for sticky ones.
-  if (!isOneShotKey_(mapped_key)) {
+  if (!isOneShotKey(mapped_key)) {
     if (keyToggledOn(key_state)) {
       prev_key_addr_ = key_addr;
       if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
@@ -190,86 +261,50 @@ EventHandlerResult OneShot::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void OneShot::inject(Key mapped_key, uint8_t key_state) {
-  onKeyswitchEvent(mapped_key, UnknownKeyswitchLocation, key_state);
-}
+// ============================================================================
+// Private functions, not exposed to other plugins
 
-// --- glue code ---
+// ----------------------------------------------------------------------------
+// Helper functions for acting on OneShot key events
 
-bool OneShot::isActive(void) {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (state_[i].active)
-      return true;
+void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
+  Key key;
+
+  if (idx < 8) {
+    key = Key(Key_LeftControl.getKeyCode() + idx,
+              Key_LeftControl.getFlags());
+  } else {
+    key = Key(LAYER_SHIFT_OFFSET + idx - 8,
+              KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
   }
-  return false;
+
+  handleKeyswitchEvent(key, key_addr, key_state | INJECTED);
 }
 
-bool OneShot::isActive(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
-
-  return state_[idx].active;
+void OneShot::activateOneShot(uint8_t idx) {
+  start_time_ = Runtime.millisAtCycleStart();
+  state_[idx].active = true;
+  injectNormalKey(idx, IS_PRESSED);
 }
 
-bool OneShot::isSticky(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
-
-  return state_[idx].sticky;
+void OneShot::sustainOneShot(uint8_t idx) {
+  injectNormalKey(idx, WAS_PRESSED | IS_PRESSED);
 }
 
-bool OneShot::isModifierActive(Key key) {
-  if (key < Key_LeftControl || key > Key_RightGui)
-    return false;
-
-  uint8_t idx = key.getKeyCode() - Key_LeftControl.getKeyCode();
-  return state_[idx].active;
+void OneShot::replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr) {
+  state_[idx].active = false;
+  state_[idx].sticky = false;
+  state_[idx].pressed = false;
+  injectNormalKey(idx, key_state, key_addr);
 }
 
-void OneShot::cancel(bool cancel_stickies) {
-  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
-    if (state_[i].active) {
-      if (state_[i].sticky && !cancel_stickies) {
-        continue;
-      }
-      releaseOneShot(i);
-    }
-  }
+void OneShot::releaseOneShot(uint8_t idx) {
+  state_[idx].active = false;
+  state_[idx].sticky = false;
+  injectNormalKey(idx, WAS_PRESSED);
 }
 
-void OneShot::enableStickability(Key key) {
-  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.getRaw() - ranges::OS_FIRST].stickable = true;
-}
-
-void OneShot::disableStickability(Key key) {
-  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.getRaw() - ranges::OS_FIRST].stickable = false;
-}
-
-void OneShot::enableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
-    state_[i].stickable = true;
-  }
-}
-
-void OneShot::enableStickabilityForLayers() {
-  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
-    state_[i].stickable = true;
-  }
-}
-
-void OneShot::disableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
-    state_[i].stickable = false;
-  }
-}
-
-void OneShot::disableStickabilityForLayers() {
-  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
-    state_[i].stickable = false;
-  }
-}
-
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::OneShot OneShot;

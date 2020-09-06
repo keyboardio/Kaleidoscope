@@ -21,6 +21,9 @@
 #include <Kaleidoscope-Ranges.h>
 #include "kaleidoscope/key_events.h"
 
+// ----------------------------------------------------------------------------
+// Keymap macros
+
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
 
@@ -29,26 +32,15 @@ namespace plugin {
 
 class OneShot : public kaleidoscope::Plugin {
  public:
-  OneShot(void) {
-    for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+  // Constructor
+  OneShot() {
+    for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
       state_[i].stickable = true;
     }
   }
 
-  static bool isOneShotKey(Key key) {
-    return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST && key.getRaw() <= kaleidoscope::ranges::OS_LAST);
-  }
-  static bool isActive(void);
-  static bool isActive(Key key);
-  static bool isPressed();
-  static bool isSticky();
-  static bool isSticky(Key key);
-  static void cancel(bool with_stickies = false);
-
-  // Need to add setter functions and deprecate these symbols so they can be made private
-  static uint16_t time_out;
-  static int16_t double_tap_time_out;
-  static uint16_t hold_time_out;
+  // --------------------------------------------------------------------------
+  // Configuration functions
 
   static inline void enableStickablity() {}
   static void enableStickability(Key key);
@@ -70,15 +62,45 @@ class OneShot : public kaleidoscope::Plugin {
   static void disableStickabilityForModifiers();
   static void disableStickabilityForLayers();
 
+  // --------------------------------------------------------------------------
+  // Global test functions
+
+  static bool isActive();
+  static bool isSticky();
+  static bool isPressed();
+
+  // --------------------------------------------------------------------------
+  // Single-key test functions
+
+  static bool isOneShotKey(Key key) {
+    return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST &&
+            key.getRaw() <= kaleidoscope::ranges::OS_LAST);
+  }
+  static bool isActive(Key key);
+  static bool isSticky(Key key);
   static bool isStickable(Key key);
 
+  // --------------------------------------------------------------------------
+  // Utility function for other plugins to cancel OneShot keys
+  static void cancel(bool with_stickies = false);
+
+  // --------------------------------------------------------------------------
+  // Vestigial functions?
+  void inject(Key mapped_key, uint8_t key_state);
   static bool isModifierActive(Key key);
+
+  // Need to add setter functions and deprecate these symbols so they can be made private
+  static uint16_t time_out;
+  static int16_t double_tap_time_out;
+  static uint16_t hold_time_out;
+
+  // --------------------------------------------------------------------------
+  // Plugin hook functions
 
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
-  void inject(Key mapped_key, uint8_t key_state);
 
  private:
   static constexpr uint8_t ONESHOT_KEY_COUNT = 16;
@@ -96,21 +118,23 @@ class OneShot : public kaleidoscope::Plugin {
   static KeyAddr prev_key_addr_;
   static uint8_t release_countdown_;
 
+  // --------------------------------------------------------------------------
+  // Internal utility functions
+
   static void injectNormalKey(uint8_t idx, uint8_t key_state,
                               KeyAddr key_addr = UnknownKeyswitchLocation);
+
   static void activateOneShot(uint8_t idx);
   static void sustainOneShot(uint8_t idx);
   static void replaceOneShot(uint8_t idx, uint8_t key_state, KeyAddr key_addr);
   static void releaseOneShot(uint8_t idx);
 
-  static bool isOneShotKey_(Key key) {
-    return key.getRaw() >= ranges::OS_FIRST && key.getRaw() <= ranges::OS_LAST;
-  }
   static bool hasTimedOut() {
     return Runtime.hasTimeExpired(start_time_, time_out);
   }
 };
-}
-}
+
+} // namespace plugin
+} // namespace kaleidoscope
 
 extern kaleidoscope::plugin::OneShot OneShot;
