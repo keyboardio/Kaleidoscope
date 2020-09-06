@@ -14,30 +14,27 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "testing/common/ConsumerControlReport.h"
 
-#include <cstdint>
-#include <vector>
-
-#include "HID-Settings.h"
-#include "MultiReport/SystemControl.h"
+#include <cstring>
 
 namespace kaleidoscope {
 namespace testing {
 
-class SystemControlReport : public std::vector<uint8_t> {
- public:
-  typedef HID_SystemControlReport_Data_t ReportData;
+ConsumerControlReport::ConsumerControlReport(const void *data) {
+  const ReportData& report_data =
+    *static_cast<const ReportData*>(data);
+  memcpy(&report_data_, &report_data, sizeof(report_data_));
+}
 
-  static constexpr uint8_t kHidReportType = HID_REPORTID_SYSTEMCONTROL;
-
-  SystemControlReport(const void* data);
-
-  uint8_t Key() const;
-
- private:
-  ReportData report_data_;
-};
+std::vector<uint16_t> ConsumerControlReport::Keys() const {
+  std::vector<uint16_t> keys;
+  if (report_data_.key1) keys.push_back(report_data_.key1);
+  if (report_data_.key2) keys.push_back(report_data_.key2);
+  if (report_data_.key3) keys.push_back(report_data_.key3);
+  if (report_data_.key4) keys.push_back(report_data_.key4);
+  return keys;
+}
 
 }  // namespace testing
 }  // namespace kaleidoscope

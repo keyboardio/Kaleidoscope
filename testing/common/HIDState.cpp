@@ -35,6 +35,14 @@ const AbsoluteMouseReport& HIDState::AbsoluteMouse(size_t i) const {
   return absolute_mouse_reports_.at(i);
 }
 
+const std::vector<ConsumerControlReport>& HIDState::ConsumerControl() const {
+  return consumer_control_reports_;
+}
+
+const ConsumerControlReport& HIDState::ConsumerControl(size_t i) const {
+  return consumer_control_reports_.at(i);
+}
+
 const std::vector<KeyboardReport>& HIDState::Keyboard() const {
   return keyboard_reports_;
 }
@@ -65,10 +73,12 @@ void HIDStateBuilder::ProcessHidReport(
       LOG(ERROR) << "Dropped BootKeyboardReport: unimplemented";
       break;
     }
-    case HID_REPORTID_GAMEPAD:
+    case HID_REPORTID_GAMEPAD: {
+      LOG(ERROR) << "Dropped GamePadReport: unimplemented";
+      break;
+    }
     case HID_REPORTID_CONSUMERCONTROL: {
-      // TODO: React appropriately to these.
-      LOG(INFO) << "Ignoring HID report with id = " << id;
+      ProcessConsumerControlReport(ConsumerControlReport{data});
       break;
     }
     case HID_REPORTID_SYSTEMCONTROL: {
@@ -95,6 +105,7 @@ std::unique_ptr<HIDState> HIDStateBuilder::Snapshot() {
   // TODO: Grab a copy of current instantaneous state, like:
   //  key states, layer stack, led states
   hid_state->absolute_mouse_reports_ = std::move(absolute_mouse_reports_);
+  hid_state->consumer_control_reports_ = std::move(consumer_control_reports_);
   hid_state->keyboard_reports_ = std::move(keyboard_reports_);
   hid_state->system_control_reports_ = std::move(system_control_reports_);
 
@@ -105,6 +116,7 @@ std::unique_ptr<HIDState> HIDStateBuilder::Snapshot() {
 // static
 void HIDStateBuilder::Clear() {
   absolute_mouse_reports_.clear();
+  consumer_control_reports_.clear();
   keyboard_reports_.clear();
   system_control_reports_.clear();
 }
@@ -112,6 +124,11 @@ void HIDStateBuilder::Clear() {
 // static
 void HIDStateBuilder::ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report) {
   absolute_mouse_reports_.push_back(report);
+}
+
+// static
+void HIDStateBuilder::ProcessConsumerControlReport(const ConsumerControlReport& report) {
+  consumer_control_reports_.push_back(report);
 }
 
 // static
@@ -124,6 +141,10 @@ void HIDStateBuilder::ProcessSystemControlReport(const SystemControlReport& repo
   system_control_reports_.push_back(report);
 }
 
+// static
+std::vector<AbsoluteMouseReport> HIDStateBuilder::absolute_mouse_reports_;
+// static
+std::vector<ConsumerControlReport> HIDStateBuilder::consumer_control_reports_;
 // static
 std::vector<KeyboardReport> HIDStateBuilder::keyboard_reports_;
 // static

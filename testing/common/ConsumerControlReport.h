@@ -20,20 +20,20 @@
 #include <vector>
 
 #include "HID-Settings.h"
-#include "MultiReport/SystemControl.h"
+#include "MultiReport/ConsumerControl.h"
 
 namespace kaleidoscope {
 namespace testing {
 
-class SystemControlReport : public std::vector<uint8_t> {
+class ConsumerControlReport {
  public:
-  typedef HID_SystemControlReport_Data_t ReportData;
+  typedef HID_ConsumerControlReport_Data_t ReportData;
 
-  static constexpr uint8_t kHidReportType = HID_REPORTID_SYSTEMCONTROL;
+  static constexpr uint8_t kHidReportType = HID_REPORTID_CONSUMERCONTROL;
 
-  SystemControlReport(const void* data);
+  ConsumerControlReport(const void *data);
 
-  uint8_t Key() const;
+  std::vector<uint16_t> Keys() const;
 
  private:
   ReportData report_data_;

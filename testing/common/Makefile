@@ -1,16 +1,16 @@
-COMMON_LIB_DIR ?= ${PWD}/lib
+LIB_DIR ?= ${PWD}/lib
 OBJ_DIR ?= ${PWD}/obj
 
 CXX_FILES=$(wildcard *.cpp)
 LIB_FILE=libcommon.a
 OBJ_FILES=$(patsubst %.cpp,${OBJ_DIR}/%.o,$(CXX_FILES))
 
-all: ${OBJ_FILES} ${COMMON_LIB_DIR}/${LIB_FILE}
+all: ${OBJ_FILES} ${LIB_DIR}/${LIB_FILE}
 	@:
 
-${COMMON_LIB_DIR}/${LIB_FILE}: ${OBJ_FILES}
-	mkdir -p "${COMMON_LIB_DIR}"
-	ar rcs "${COMMON_LIB_DIR}/${LIB_FILE}" ${OBJ_FILES}
+${LIB_DIR}/${LIB_FILE}: ${OBJ_FILES}
+	mkdir -p "${LIB_DIR}"
+	ar rcs "${LIB_DIR}/${LIB_FILE}" ${OBJ_FILES}
 
 ${OBJ_DIR}/%.o: %.cpp $(wildcard *.h)
 	@echo "compile $@"
@@ -35,4 +35,4 @@ ${OBJ_DIR}/%.o: %.cpp $(wildcard *.h)
 		$<
 
 clean:
-	rm -rf "${COMMON_LIB_DIR}" "${OBJ_DIR}"
+	rm -rf "${LIB_DIR}" "${OBJ_DIR}"
