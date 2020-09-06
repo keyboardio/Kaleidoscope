@@ -89,18 +89,18 @@ class OneShot : public kaleidoscope::Plugin {
   void inject(Key mapped_key, uint8_t key_state);
   static bool isModifierActive(Key key);
 
-  // Need to add setter functions and deprecate these symbols so they can be made private
+  // --------------------------------------------------------------------------
+  // Configuration variables (should probably be private)
   static uint16_t time_out;
-  static int16_t double_tap_time_out;
   static uint16_t hold_time_out;
+  static int16_t double_tap_time_out;
 
   // --------------------------------------------------------------------------
   // Plugin hook functions
 
+  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
-
 
  private:
   static constexpr uint8_t ONESHOT_KEY_COUNT = 16;

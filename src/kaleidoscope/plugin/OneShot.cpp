@@ -22,13 +22,18 @@
 namespace kaleidoscope {
 namespace plugin {
 
-// ---- state ---------
+// ----------------------------------------------------------------------------
+// Configuration variables
 
-uint16_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
+
+// ----------------------------------------------------------------------------
+// State variables
+
 OneShot::OneShotKeyState OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
+uint16_t OneShot::start_time_ = 0;
 KeyAddr OneShot::prev_key_addr_ = UnknownKeyswitchLocation;
 uint8_t OneShot::release_countdown_ = 0;
 
