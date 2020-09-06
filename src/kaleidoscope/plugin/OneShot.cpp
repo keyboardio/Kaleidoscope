@@ -117,24 +117,22 @@ bool OneShot::isPressed() {
 // before calling any of these functions.
 bool OneShot::isActive(Key key) {
   uint8_t n = key.getRaw() - ranges::OS_FIRST;
-
   return state_[n].active;
 }
 
 bool OneShot::isSticky(Key key) {
   uint8_t n = key.getRaw() - ranges::OS_FIRST;
-
   return state_[n].sticky;
 }
 
 bool OneShot::isPressed(Key key) {
   uint8_t n = key.getRaw() - ranges::OS_FIRST;
-
   return state_[n].pressed;
 }
 
 bool OneShot::isStickable(Key key) {
-  return state_[key.getRaw() - ranges::OS_FIRST].stickable;
+  uint8_t n = key.getRaw() - ranges::OS_FIRST;
+  return state_[n].stickable;
 }
 
 // ----------------------------------------------------------------------------
