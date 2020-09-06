@@ -52,6 +52,7 @@ Without releasing that key, click on the "right arrow" button in the sketch wind
 
 
 ![](images/arduino-setup/press-prog.png)
+![](images/arduino-setup/press-prog-atreus.png)
  
 ![](images/arduino-setup/upload-sketch.png)
 
