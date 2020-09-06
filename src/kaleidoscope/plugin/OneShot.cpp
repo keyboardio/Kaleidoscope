@@ -82,7 +82,7 @@ void OneShot::disableStickabilityForLayers() {
 // Global tests for any OneShot key
 
 bool OneShot::isActive() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
     if (state_[i].active)
       return true;
   }
@@ -90,7 +90,7 @@ bool OneShot::isActive() {
 }
 
 bool OneShot::isSticky() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
     if (state_[i].sticky)
       return true;
   }
@@ -98,7 +98,7 @@ bool OneShot::isSticky() {
 }
 
 bool OneShot::isPressed() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
+  for (uint8_t i{0}; i < ONESHOT_KEY_COUNT; ++i) {
     if (state_[i].pressed)
       return true;
   }
