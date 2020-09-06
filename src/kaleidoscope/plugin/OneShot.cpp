@@ -338,21 +338,6 @@ void OneShot::sustainOneShot(uint8_t idx) {
   injectNormalKey(idx, WAS_PRESSED | IS_PRESSED);
 }
 
-// This function is probably no longer useful, unless there are core
-// changes to fix the OSL double-tap bug.
-void OneShot::replaceOneShot(uint8_t idx, KeyAddr key_addr) {
-  state_[idx].active = false;
-  state_[idx].sticky = false;
-  state_[idx].pressed = false;
-  Key key = getNormalKey(idx);
-  Layer.updateLiveCompositeKeymap(key_addr, key);
-  handleKeyswitchEvent(key, key_addr, IS_PRESSED | WAS_PRESSED | INJECTED);
-  // We need to send a "toggled on" key state to trigger the keymap
-  // substitution. It would be more correct to use a "held" key state,
-  // but that would require much more code.
-  //injectNormalKey(idx, IS_PRESSED, key_addr);
-}
-
 void OneShot::releaseOneShot(uint8_t idx) {
   state_[idx].active = false;
   state_[idx].sticky = false;

@@ -132,7 +132,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   static void activateOneShot(uint8_t idx);
   static void sustainOneShot(uint8_t idx);
-  static void replaceOneShot(uint8_t idx, KeyAddr key_addr);
   static void releaseOneShot(uint8_t idx);
 
   static bool hasTimedOut() {
