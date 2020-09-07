@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2019  Keyboard.io, Inc.
+ * Copyright (C) 2016-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
