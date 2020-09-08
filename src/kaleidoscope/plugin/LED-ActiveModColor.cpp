@@ -78,7 +78,7 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
       if (::OneShot.isSticky(key)) {
         // If the OneShot key is sticky, it gets a different color:
         ::LEDControl.setCrgbAt(key_addr, sticky_color);
-      } else if (::OneShot.isActive(key)) {
+      } else if (::OneShot.isActive(key) || ::OneShot.isPressed(key)) {
         // Non-sticky active OneShot keys also get highlighted:
         ::LEDControl.setCrgbAt(key_addr, highlight_color);
       } else {
