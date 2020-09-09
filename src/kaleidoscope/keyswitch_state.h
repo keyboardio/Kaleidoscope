@@ -20,7 +20,6 @@
 #include <Arduino.h>
 
 #define INJECTED    B10000000
-#define EPHEMERAL   B01000000
 #define IS_PRESSED  B00000010
 #define WAS_PRESSED B00000001
 
