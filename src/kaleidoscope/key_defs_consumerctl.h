@@ -397,3 +397,8 @@
 #define Consumer_AC_Split CONSUMER_KEY(HID_CONSUMER_AC_SPLIT, KEY_FLAGS |  HID_TYPE_SEL)
 #define Consumer_AC_Distribute_Horizontally CONSUMER_KEY(HID_CONSUMER_AC_DISTRIBUTE_HORIZONTALLY, KEY_FLAGS |  HID_TYPE_SEL)
 #define Consumer_AC_Distribute_Vertically CONSUMER_KEY(HID_CONSUMER_AC_DISTRIBUTE_VERTICALLY, KEY_FLAGS |  HID_TYPE_SEL)
+
+// These keys are not documented in the USB HID Usage Tables, but are
+// supported by Linux, macOS, and Windows to change display brightness.
+#define Consumer_BrightnessUp CONSUMER_KEY(0x6f, HID_TYPE_OSC)
+#define Consumer_BrightnessDown CONSUMER_KEY(0x70, HID_TYPE_OSC)
