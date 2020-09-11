@@ -262,7 +262,7 @@ typedef kaleidoscope::Key Key_;
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
 #define CONSUMER(key) (key.getRaw() & 0x03FF)
-#define CONSUMER_KEY(code, flags) Key((code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8))
+#define CONSUMER_KEY(code, flags) Key((code & 0x03FF) | ((SYNTHETIC | IS_CONSUMER) << 8))
 
 namespace kaleidoscope {
 constexpr Key bad_keymap_key{0, RESERVED};
