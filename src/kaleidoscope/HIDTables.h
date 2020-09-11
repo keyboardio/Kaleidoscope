@@ -39,6 +39,8 @@
 // better.
 //
 
+// New URL for USB HID Usage Tables 1.12v2 (2020-09-11):
+// https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 
 // ==============================================================================
 // System Control USB HID keycodes
