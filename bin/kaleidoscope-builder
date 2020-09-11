@@ -580,6 +580,7 @@ docker_simulator_tests() {
     docker run --rm -it \
            -v "${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio" \
            -v "$(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope" \
+           -e DOCKER_COMMAND="make run-simulator-tests" \
            kaleidoscope/simulator
 }
 

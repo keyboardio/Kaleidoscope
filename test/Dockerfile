@@ -17,4 +17,5 @@ RUN /usr/local/bin/arduino-cli core install arduino:avr
 VOLUME ["/kaleidoscope/hardware/keyboardio"]
 ENV BOARD_HARDWARE_PATH "/kaleidoscope/hardware"
 WORKDIR /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
-ENTRYPOINT ["make", "run-simulator-tests"]
+COPY docker-entrypoint /kaleidoscope/entry-point
+ENTRYPOINT ["/kaleidoscope/entry-point"]
