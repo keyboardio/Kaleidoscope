@@ -255,6 +255,7 @@ typedef kaleidoscope::Key Key_;
 #define KEY_LEFT_FN2 0xff
 #define Key_LFN2 Key(KEY_LEFT_FN2, KEY_FLAGS)
 
+#define SYSTEM_KEY(code) Key(code, SYNTHETIC | IS_SYSCTL)
 
 /* Most Consumer keys are more then 8bit, the highest Consumer hid code
    uses 10bit. By using the 11bit as flag to indicate a consumer keys was activate we can
