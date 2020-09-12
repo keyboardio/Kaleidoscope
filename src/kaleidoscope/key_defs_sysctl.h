@@ -38,6 +38,15 @@
 #define System_DPadRight Key(HID_D_PAD_RIGHT, SYNTHETIC | IS_SYSCTL)
 #define System_DPadLeft Key(HID_D_PAD_LEFT, SYNTHETIC | IS_SYSCTL)
 
+#define System_IndexTrigger Key(HID_INDEX_TRIGGER, SYNTHETIC | IS_SYSCTL)
+#define System_PalmTrigger Key(HID_PALM_TRIGGER, SYNTHETIC | IS_SYSCTL)
+#define System_Thumbstick Key(HID_THUMBSTICK, SYNTHETIC | IS_SYSCTL)
+#define System_SystemFunctionShift Key(HID_SYSTEM_FUNCTION_SHIFT, SYNTHETIC | IS_SYSCTL)
+#define System_SystemFunctionShiftLock Key(HID_SYSTEM_FUNCTION_SHIFT_LOCK, SYNTHETIC | IS_SYSCTL)
+#define System_SystemFunctionShiftLockIndicator Key(HID_SYSTEM_FUNCTION_SHIFT_LOCK_INDICATOR, SYNTHETIC | IS_SYSCTL)
+#define System_DismissNotification Key(HID_DISMISS_NOTIFICATION, SYNTHETIC | IS_SYSCTL)
+#define System_DoNotDisturb Key(HID_DO_NOT_DISTURB, SYNTHETIC | IS_SYSCTL)
+
 #define System_Dock Key(HID_SYSTEM_DOCK, SYNTHETIC | IS_SYSCTL)
 #define System_Undock Key(HID_SYSTEM_UNDOCK, SYNTHETIC | IS_SYSCTL)
 #define System_Setup Key(HID_SYSTEM_SETUP, SYNTHETIC | IS_SYSCTL)
