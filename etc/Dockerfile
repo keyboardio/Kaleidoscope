@@ -17,4 +17,4 @@ RUN /usr/local/bin/arduino-cli core install arduino:avr
 VOLUME ["/kaleidoscope/hardware/keyboardio"]
 ENV BOARD_HARDWARE_PATH "/kaleidoscope/hardware"
 WORKDIR /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
-ENTRYPOINT ["/bin/bash", "-c", "eval \"${DOCKER_COMMAND}\""]
+ENTRYPOINT ["/bin/bash"]
