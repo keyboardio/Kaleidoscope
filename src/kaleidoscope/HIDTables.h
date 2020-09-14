@@ -31,7 +31,7 @@
 // In particular, any System Control or Consumer Control entry that doesn't
 // have a comment indicating that it's "OSC" mayrequire additional
 // code in the Arduino core to work. In particular, some keycodes with
-//  usage type RTC (Re-Trigger Control) and OOC (On/Off Control) are 
+//  usage type RTC (Re-Trigger Control) and OOC (On/Off Control) are
 //  also functional.
 //
 // Non-working usages are listed here in the interest of not having to manually
