@@ -231,13 +231,16 @@ typedef kaleidoscope::Key Key_;
 // the HID usage type of a keycode, which leaves us with only two
 // bits. Since we don't currently do anything different based on HID
 // usage type, these are currently all set to zeroes.
+#define HID_TYPE_CA    B00000000
 #define HID_TYPE_CL    B00000000
 #define HID_TYPE_LC    B00000000
+#define HID_TYPE_MC    B00000000
 #define HID_TYPE_NARY  B00000000
 #define HID_TYPE_OOC   B00000000
 #define HID_TYPE_OSC   B00000000
 #define HID_TYPE_RTC   B00000000
 #define HID_TYPE_SEL   B00000000
+#define HID_TYPE_SV    B00000000
 // Mask defining the allowed usage type flag bits:
 #define HID_TYPE_MASK  B00110000
 
@@ -257,7 +260,8 @@ typedef kaleidoscope::Key Key_;
 #define KEY_LEFT_FN2 0xff
 #define Key_LFN2 Key(KEY_LEFT_FN2, KEY_FLAGS)
 
-#define SYSTEM_KEY(code) Key(code, SYNTHETIC | IS_SYSCTL)
+#define SYSTEM_KEY(code, hid_type) \
+  Key(code, SYNTHETIC | IS_SYSCTL | (hid_type & HID_TYPE_MASK))
 
 /* Most Consumer keys are more then 8bit, the highest Consumer hid code
    uses 10bit. By using the 11bit as flag to indicate a consumer keys was activate we can
@@ -265,7 +269,8 @@ typedef kaleidoscope::Key Key_;
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
 #define CONSUMER(key) (key.getRaw() & 0x03FF)
-#define CONSUMER_KEY(code) Key((code & 0x03FF) | ((SYNTHETIC | IS_CONSUMER) << 8))
+#define CONSUMER_KEY(code, hid_type) \
+  Key((code & 0x03FF) | ((SYNTHETIC | IS_CONSUMER | (hid_type & HID_TYPE_MASK)) << 8))
 
 namespace kaleidoscope {
 constexpr Key bad_keymap_key{0, RESERVED};
