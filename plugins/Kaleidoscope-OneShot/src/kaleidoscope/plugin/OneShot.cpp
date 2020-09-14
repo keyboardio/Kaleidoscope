@@ -27,6 +27,11 @@ namespace plugin {
 // ----------------------------------------------------------------------------
 // Configuration variables
 
+uint16_t OneShot::timeout_ = 2500;
+uint16_t OneShot::hold_timeout_ = 250;
+int16_t OneShot::double_tap_timeout_ = -1;
+
+// Deprecated
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
@@ -215,7 +220,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(
         temp_addrs_.clear(key_addr);
 
         // Derive the true double-tap timeout value if we're using the default.
-        uint16_t dtto = (double_tap_time_out < 0) ? time_out : double_tap_time_out;
+        uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
 
         // If the key is not stickable, or the double-tap timeout has
         // expired, clear the `glue` state, as well; this OneShot key
@@ -271,7 +276,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(
       // This key is in the "pending" OneShot state. We need to check
       // its hold timeout, and turn it back into a normal key if it
       // has timed out.
-      if (hasTimedOut(hold_time_out)) {
+      if (hasTimedOut(hold_timeout_)) {
         temp_addrs_.clear(key_addr);
       }
     }
@@ -305,7 +310,7 @@ EventHandlerResult OneShot::afterEachCycle() {
   // gets set to 2 on the press of a normal key when there are any
   // active OneShot keys; that way, the OneShot keys will stay active
   // long enough to apply to the newly-pressed key.
-  if ((release_countdown_ == 1) || hasTimedOut(time_out)) {
+  if ((release_countdown_ == 1) || hasTimedOut(timeout_)) {
     for (KeyAddr key_addr : temp_addrs_) {
       if (glue_addrs_.read(key_addr)) {
         releaseKey(key_addr);
@@ -318,6 +323,14 @@ EventHandlerResult OneShot::afterEachCycle() {
   // unconditional bit shift should be more efficient than checking
   // for zero to avoid underflow.
   release_countdown_ >>= 1;
+
+  // Temporary fix for deprecated variables
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  timeout_ = time_out;
+  hold_timeout_ = hold_time_out;
+  double_tap_timeout_ = double_tap_time_out;
+#pragma GCC diagnostic pop
 
   return EventHandlerResult::OK;
 }
@@ -386,6 +399,69 @@ void OneShot::releaseKey(KeyAddr key_addr) {
   temp_addrs_.clear(key_addr);
   handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | INJECTED);
 }
+
+// ------------------------------------------------------------------------------
+// Deprecated functions
+
+void OneShot::inject(Key key, uint8_t key_state) {
+  if (! isOneShotKey(key)) {
+    return;
+  }
+  // Find an idle keyswitch to use for the injected OneShot key and activate
+  // it. This is an ugly hack, but it will work. It does mean that whatever key
+  // is used will be unavailable for its normal function until the injected
+  // OneShot key is deactivated, so use of `inject()` is strongly discouraged.
+  for (KeyAddr key_addr : KeyAddr::all()) {
+    if (live_keys[key_addr] == Key_Transparent) {
+      pressKey(key_addr, key);
+      glue_addrs_.set(key_addr);
+      break;
+    }
+  }
+}
+
+bool OneShot::isModifierActive(Key key) {
+  // This actually works for any `Key` value, not just modifiers. Because we're
+  // just searching the keymap cache, it's also possible to return a false
+  // positive (a plugin might have altered the cache for an idle `KeyAddr`), or
+  // a false negative (a plugin might be inserting a modifier without a valid
+  // `KeyAddr`), but as this is a deprecated function, I think this is good
+  // enough.
+  for (KeyAddr key_addr : KeyAddr::all()) {
+    if (live_keys[key_addr] == key) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool OneShot::isActive(Key oneshot_key) {
+  if (! isOneShotKey(oneshot_key)) {
+    return false;
+  }
+  Key key = decodeOneShotKey(oneshot_key);
+  for (KeyAddr key_addr : glue_addrs_) {
+    if (live_keys[key_addr] == key) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool OneShot::isSticky(Key oneshot_key) {
+  if (! isOneShotKey(oneshot_key)) {
+    return false;
+  }
+  Key key = decodeOneShotKey(oneshot_key);
+  for (KeyAddr key_addr : glue_addrs_) {
+    if (live_keys[key_addr] == key &&
+        !temp_addrs_.read(key_addr)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 } // namespace plugin
 } // namespace kaleidoscope
