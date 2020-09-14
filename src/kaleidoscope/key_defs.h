@@ -225,6 +225,22 @@ typedef kaleidoscope::Key Key_;
 #define SWITCH_TO_KEYMAP           B00000100
 #define IS_CONSUMER                B00001000
 
+// HID Usage Types: Because these constants, like the ones above, are
+// used in the flags byte of the Key class, they can't overlap any of
+// the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
+// the HID usage type of a keycode, which leaves us with only two
+// bits. Since we don't currently do anything different based on HID
+// usage type, these are currently all set to zeroes.
+#define HID_TYPE_CL    B00000000
+#define HID_TYPE_LC    B00000000
+#define HID_TYPE_NARY  B00000000
+#define HID_TYPE_OOC   B00000000
+#define HID_TYPE_OSC   B00000000
+#define HID_TYPE_RTC   B00000000
+#define HID_TYPE_SEL   B00000000
+// Mask defining the allowed usage type flag bits:
+#define HID_TYPE_MASK  B00110000
+
 
 #define Key_NoKey Key(0, KEY_FLAGS)
 #define Key_skip Key(0, KEY_FLAGS)
