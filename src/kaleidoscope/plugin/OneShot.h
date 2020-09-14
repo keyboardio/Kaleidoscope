@@ -23,6 +23,46 @@
 #include "kaleidoscope/KeyAddrBitfield.h"
 
 // ----------------------------------------------------------------------------
+// Deprecation warning messages
+#define _DEPRECATED_MESSAGE_ONESHOT_TIMEOUT                                     \
+  "The `OneShot.time_out` variable has been deprecated, and will be removed\n"  \
+  "after 2021-04-31.\n"                                                         \
+  "Please use the `OneShot.setTimeout()` function instead."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_HOLD_TIMEOUT                                \
+  "The `OneShot.hold_time_out` variable has been deprecated, and will be\n"     \
+  "removed after 2021-04-31.\n"                                                 \
+  "Please use the `OneShot.setHoldTimeout()` function instead."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_DOUBLE_TAP_TIMEOUT                          \
+  "The `OneShot.double_tap_time_out` variable has been deprecated, and will\n"  \
+  "be removed after 2021-04-31.\n"                                              \
+  "Please use the `OneShot.setDoubleTapTimeout()` function instead."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_INJECT                                      \
+  "The `OneShot.inject(key, key_state)` function has been deprecated, and\n"    \
+  "will be removed after 2021-04-31.\n"
+
+#define _DEPRECATED_MESSAGE_ONESHOT_ISACTIVE_KEY                                \
+  "The `OneShot.isActive(key)` function has been deprecated, and will be\n"     \
+  "removed after 2021-04-31.\n"                                                 \
+  "Please use `OneShot.isActive(key_addr)` instead, if possible."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_ISSTICKY_KEY                                \
+  "The `OneShot.isSticky(key)` function has been deprecated, and will be\n"     \
+  "removed after 2021-04-31.\n"                                                 \
+  "Please use `OneShot.isSticky(key_addr)` instead, if possible."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_ISPRESSED                                   \
+  "The `OneShot.isPressed()` function has been deprecated, and will be\n"       \
+  "removed after 2021-04-31.\n"                                                 \
+  "This function now always returns false."
+
+#define _DEPRECATED_MESSAGE_ONESHOT_ISMODIFIERACTIVE                            \
+  "The `OneShot.isModifierActive()` function has been deprecated, and will\n"   \
+  "be removed after 2021-04-31."
+
+// ----------------------------------------------------------------------------
 // Keymap macros
 
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
@@ -82,16 +122,55 @@ class OneShot : public kaleidoscope::Plugin {
   static void cancel(bool with_stickies = false);
 
   // --------------------------------------------------------------------------
-  // Vestigial functions?
-  void inject(Key key, uint8_t key_state) {}
-  static bool isModifierActive(Key key) {
+  // Deprecated functions
+  DEPRECATED(ONESHOT_INJECT)
+  void inject(Key key, uint8_t key_state);
+
+  DEPRECATED(ONESHOT_ISMODIFIERACTIVE)
+  static bool isModifierActive(Key key);
+
+  DEPRECATED(ONESHOT_ISACTIVE_KEY)
+  static bool isActive(Key oneshot_key);
+
+  DEPRECATED(ONESHOT_ISSTICKY_KEY)
+  static bool isSticky(Key oneshot_key);
+
+  DEPRECATED(ONESHOT_ISPRESSED)
+  static bool isPressed() {
     return false;
   }
 
   // --------------------------------------------------------------------------
+  // Timeout onfiguration functions
+  static void setTimeout(uint16_t ttl) {
+    timeout_ = ttl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    time_out = ttl;
+#pragma GCC diagnostic pop
+  }
+  static void setHoldTimeout(uint16_t ttl) {
+    hold_timeout_ = ttl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    hold_time_out = ttl;
+#pragma GCC diagnostic pop
+  }
+  static void setDoubleTapTimeout(int16_t ttl) {
+    double_tap_timeout_ = ttl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    double_tap_time_out = ttl;
+#pragma GCC diagnostic pop
+  }
+
+  // --------------------------------------------------------------------------
   // Configuration variables (should probably be private)
+  DEPRECATED(ONESHOT_TIMEOUT)
   static uint16_t time_out;
+  DEPRECATED(ONESHOT_HOLD_TIMEOUT)
   static uint16_t hold_time_out;
+  DEPRECATED(ONESHOT_DOUBLE_TAP_TIMEOUT)
   static int16_t double_tap_time_out;
 
   // --------------------------------------------------------------------------
@@ -110,6 +189,12 @@ class OneShot : public kaleidoscope::Plugin {
   static constexpr uint8_t oneshot_layer_count = oneshot_key_count - oneshot_mod_count;
   static constexpr uint16_t stickable_modifiers_mask = uint16_t(uint16_t(-1) >> oneshot_layer_count);
   static constexpr uint16_t stickable_layers_mask = uint16_t(uint16_t(-1) << oneshot_mod_count);
+
+  // --------------------------------------------------------------------------
+  // Configuration variables
+  static uint16_t timeout_;
+  static uint16_t hold_timeout_;
+  static int16_t double_tap_timeout_;
 
   // --------------------------------------------------------------------------
   // State variables
