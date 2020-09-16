@@ -45,8 +45,7 @@ EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(
     // it will get highlighted. Conditionally (if
     // `highlight_normal_modifiers_` is set), we also highlight
     // modifier and layer-shift keys.
-    if ((key >= Key_LeftControl && key <= Key_RightGui) ||
-        (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))) {
+    if (::OneShot.isModifier() || ::OneShot.isLayerShift()) {
       mod_key_bits_.set(key_addr);
     }
   } else if (keyToggledOff(key_state)) {
