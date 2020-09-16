@@ -99,6 +99,42 @@ class OneShot : public kaleidoscope::Plugin {
   static void disableStickabilityForModifiers();
   static void disableStickabilityForLayers();
 
+  static void enableAutoModifiers() {
+    auto_modifiers_ = true;
+  }
+  static void enableAutoLayers() {
+    auto_layers_ = true;
+  }
+  static void enableAutoOneShot() {
+    enableAutoModifiers();
+    enableAutoLayers();
+  }
+
+  static void disableAutoModifiers() {
+    auto_modifiers_ = false;
+  }
+  static void disableAutoLayers() {
+    auto_layers_ = false;
+  }
+  static void disableAutoOneShot() {
+    disableAutoModifiers();
+    disableAutoLayers();
+  }
+
+  static void toggleAutoModifiers() {
+    auto_modifiers_ = ! auto_modifiers_;
+  }
+  static void toggleAutoLayers() {
+    auto_layers_ = ! auto_layers_;
+  }
+  static void toggleAutoOneShot() {
+    if (auto_modifiers_ || auto_layers_) {
+      disableAutoOneShot();
+    } else {
+      enableAutoOneShot();
+    }
+  }
+
   // --------------------------------------------------------------------------
   // Global test functions
 
@@ -111,6 +147,9 @@ class OneShot : public kaleidoscope::Plugin {
     return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST &&
             key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
+  static bool isModifier(Key key);
+  static bool isLayerShift(Key key);
+
   static bool isStickable(Key key); // inline?
 
   static bool isTemporary(KeyAddr key_addr); // inline?
@@ -199,6 +238,8 @@ class OneShot : public kaleidoscope::Plugin {
   // --------------------------------------------------------------------------
   // State variables
   static uint16_t stickable_keys_;
+  static bool auto_modifiers_;
+  static bool auto_layers_;
 
   static KeyAddrBitfield temp_addrs_;
   static KeyAddrBitfield glue_addrs_;

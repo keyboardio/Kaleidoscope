@@ -40,6 +40,9 @@ int16_t OneShot::double_tap_time_out = -1;
 
 uint16_t OneShot::stickable_keys_ = -1;
 
+bool OneShot::auto_modifiers_ = false;
+bool OneShot::auto_layers_ = false;
+
 KeyAddrBitfield OneShot::temp_addrs_;
 KeyAddrBitfield OneShot::glue_addrs_;
 
@@ -176,7 +179,9 @@ EventHandlerResult OneShot::onKeyswitchEvent(
 
     if (!temp && !glue) {
       // This key_addr is not in a OneShot state.
-      if (isOneShotKey(key)) {
+      if (isOneShotKey(key) ||
+          (auto_modifiers_ && key.isKeyboardModifier()) ||
+          (auto_layers_ && key.isLayerShift())) {
         // Replace the OneShot key with its corresponding normal key.
         pressKey(key_addr, key);
         return EventHandlerResult::ABORT;
@@ -349,8 +354,10 @@ Key OneShot::decodeOneShotKey(Key oneshot_key) {
 // ------------------------------------------------------------------------------
 // Helper functions for sending key events for keys in OneShot states
 
-void OneShot::pressKey(KeyAddr key_addr, Key oneshot_key) {
-  Key key = decodeOneShotKey(oneshot_key);
+void OneShot::pressKey(KeyAddr key_addr, Key key) {
+  if (isOneShotKey(key)) {
+    key = decodeOneShotKey(key);
+  }
   prev_key_addr_ = key_addr;
   start_time_ = Runtime.millisAtCycleStart();
   temp_addrs_.set(key_addr);
@@ -371,8 +378,8 @@ void OneShot::releaseKey(KeyAddr key_addr) {
 // Deprecated functions
 
 void OneShot::inject(Key key, uint8_t key_state) {
-  if (! isOneShotKey(key)) {
-    return;
+  if (isOneShotKey(key)) {
+    key = decodeOneShotKey(key);
   }
   // Find an idle keyswitch to use for the injected OneShot key and activate
   // it. This is an ugly hack, but it will work. It does mean that whatever key
@@ -402,11 +409,10 @@ bool OneShot::isModifierActive(Key key) {
   return false;
 }
 
-bool OneShot::isActive(Key oneshot_key) {
-  if (! isOneShotKey(oneshot_key)) {
-    return false;
+bool OneShot::isActive(Key key) {
+  if (isOneShotKey(key)) {
+    key = decodeOneShotKey(key);
   }
-  Key key = decodeOneShotKey(oneshot_key);
   for (KeyAddr key_addr : glue_addrs_) {
     if (Runtime.activeKey(key_addr) == key) {
       return true;
@@ -415,11 +421,10 @@ bool OneShot::isActive(Key oneshot_key) {
   return false;
 }
 
-bool OneShot::isSticky(Key oneshot_key) {
-  if (! isOneShotKey(oneshot_key)) {
-    return false;
+bool OneShot::isSticky(Key key) {
+  if (isOneShotKey(key)) {
+    key = decodeOneShotKey(key);
   }
-  Key key = decodeOneShotKey(oneshot_key);
   for (KeyAddr key_addr : glue_addrs_) {
     if (Runtime.activeKey(key_addr) == key &&
         !temp_addrs_.read(key_addr)) {
