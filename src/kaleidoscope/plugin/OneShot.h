@@ -166,6 +166,7 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Deprecated functions
+#ifndef NDEPRECATED
   DEPRECATED(ONESHOT_INJECT)
   void inject(Key key, uint8_t key_state);
 
@@ -182,29 +183,36 @@ class OneShot : public kaleidoscope::Plugin {
   static bool isPressed() {
     return false;
   }
+#endif
 
   // --------------------------------------------------------------------------
   // Timeout onfiguration functions
   static void setTimeout(uint16_t ttl) {
     timeout_ = ttl;
+#ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     time_out = ttl;
 #pragma GCC diagnostic pop
+#endif
   }
   static void setHoldTimeout(uint16_t ttl) {
     hold_timeout_ = ttl;
+#ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     hold_time_out = ttl;
 #pragma GCC diagnostic pop
+#endif
   }
   static void setDoubleTapTimeout(int16_t ttl) {
     double_tap_timeout_ = ttl;
+#ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     double_tap_time_out = ttl;
 #pragma GCC diagnostic pop
+#endif
   }
 
   // --------------------------------------------------------------------------
@@ -244,7 +252,6 @@ class OneShot : public kaleidoscope::Plugin {
   static uint16_t stickable_keys_;
   static bool auto_modifiers_;
   static bool auto_layers_;
-  static KeyAddr meta_sticky_key_addr_;
 
   static KeyAddrBitfield temp_addrs_;
   static KeyAddrBitfield glue_addrs_;
@@ -252,6 +259,10 @@ class OneShot : public kaleidoscope::Plugin {
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
   static uint8_t release_countdown_;
+
+#ifndef ONESHOT_WITHOUT_METASTICKY
+  static KeyAddr meta_sticky_key_addr_;
+#endif
 
   // --------------------------------------------------------------------------
   // Internal utility functions
