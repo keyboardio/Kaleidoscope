@@ -32,9 +32,11 @@ uint16_t OneShot::hold_timeout_ = 250;
 int16_t OneShot::double_tap_timeout_ = -1;
 
 // Deprecated
+#ifndef NDEPRECATED
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
+#endif
 
 // ----------------------------------------------------------------------------
 // State variables
@@ -44,14 +46,16 @@ uint16_t OneShot::stickable_keys_ = -1;
 bool OneShot::auto_modifiers_ = false;
 bool OneShot::auto_layers_ = false;
 
-KeyAddr OneShot::meta_sticky_key_addr_ = KeyAddr{KeyAddr::invalid_state};
-
 KeyAddrBitfield OneShot::temp_addrs_;
 KeyAddrBitfield OneShot::glue_addrs_;
 
 uint16_t OneShot::start_time_ = 0;
 KeyAddr OneShot::prev_key_addr_ = OneShot::invalid_key_addr;
 uint8_t OneShot::release_countdown_ = 0;
+
+#ifndef ONESHOT_WITHOUT_METASTICKY
+KeyAddr OneShot::meta_sticky_key_addr_ {KeyAddr::invalid_state};
+#endif
 
 
 // ============================================================================
@@ -142,8 +146,10 @@ bool OneShot::isStickable(Key key) {
     if (n < oneshot_key_count) {
       return bitRead(stickable_keys_, n);
     }
+#ifndef ONESHOT_WITHOUT_METASTICKY
   } else if (key == OneShot_MetaStickyKey) {
     return true;
+#endif
   }
   return false;
 }
@@ -206,6 +212,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(
 
     if (!temp && !glue) {
       // This key_addr is not in a OneShot state.
+#ifndef ONESHOT_WITHOUT_METASTICKY
       if (meta_sticky_key_addr_.isValid()) {
         // If the meta key isn't sticky, release it
         bool ms_temp = temp_addrs_.read(meta_sticky_key_addr_);
@@ -231,10 +238,15 @@ EventHandlerResult OneShot::onKeyswitchEvent(
         meta_sticky_key_addr_ = key_addr;
         temp_addrs_.set(key_addr);
         start_time_ = Runtime.millisAtCycleStart();
-
-      } else if (isOneShotKey(key) ||
-                 (auto_modifiers_ && isModifier(key)) ||
-                 (auto_layers_ && isLayerShift(key))) {
+      } else  // NOLINT
+#endif
+      // *INDENT-OFF*
+      // Because of the preceding #ifdef, indentation gets thrown off for astyle here.
+      // This is only an independent `if` block if `ONESHOT_WITHOUT_METASTICKY`
+      // is set (see above); otherwise it's an `else if`.
+      if (isOneShotKey(key) ||
+          (auto_modifiers_ && isModifier(key)) ||
+          (auto_layers_ && isLayerShift(key))) {
         // Replace the OneShot key with its corresponding normal key.
         pressKey(key_addr, key);
         return EventHandlerResult::ABORT;
@@ -244,7 +256,7 @@ EventHandlerResult OneShot::onKeyswitchEvent(
         // pressed key is neither a modifier nor a layer shift.
         release_countdown_ = (1 << 1);
       }
-      // return EventHandlerResult::OK;
+      // *INDENT-ON*
 
     } else if (temp && glue) {
       // This key_addr is in the temporary OneShot state.
@@ -307,9 +319,10 @@ EventHandlerResult OneShot::onKeyswitchEvent(
       // `beforeReportingState()` hook below.
       //Layer.updateLiveCompositeKeymap(key_addr, key);
       return EventHandlerResult::ABORT;
+#ifndef ONESHOT_WITHOUT_METASTICKY
     } else if (key == OneShot_MetaStickyKey) {
       meta_sticky_key_addr_ = KeyAddr{KeyAddr::invalid_state};
-      //cancel(true);
+#endif
     }
 
   } else {
@@ -367,12 +380,14 @@ EventHandlerResult OneShot::afterEachCycle() {
   release_countdown_ >>= 1;
 
   // Temporary fix for deprecated variables
+#ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   timeout_ = time_out;
   hold_timeout_ = hold_time_out;
   double_tap_timeout_ = double_tap_time_out;
 #pragma GCC diagnostic pop
+#endif
 
   return EventHandlerResult::OK;
 }
@@ -450,7 +465,7 @@ void OneShot::releaseKey(KeyAddr key_addr) {
 
 // ------------------------------------------------------------------------------
 // Deprecated functions
-
+#ifndef NDEPRECATED
 void OneShot::inject(Key key, uint8_t key_state) {
   if (isOneShotKey(key)) {
     key = decodeOneShotKey(key);
@@ -507,6 +522,7 @@ bool OneShot::isSticky(Key key) {
   }
   return false;
 }
+#endif
 
 
 } // namespace plugin
