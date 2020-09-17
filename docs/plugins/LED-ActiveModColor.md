@@ -2,9 +2,8 @@
 
 With this plugin, any active modifier on the keyboard will have the LED under it
 highlighted. No matter how the modifier got activated (a key press, a macro,
-anything else), the coloring will apply. Layer keys, be them layer toggles,
-momentary switches, or one-shot layer keys count as modifiers as far as the
-plugin is concerned.
+anything else), the coloring will apply. Layer shift keys and OneShot layer keys
+count as modifiers as far as the plugin is concerned.
 
 ## Using the plugin
 
@@ -37,11 +36,20 @@ properties:
 
 ### `.highlight_color`
 
-> The color to use for highlighting the modifiers. Defaults to a white color.
+> The color to use for highlighting normal modifier keys and
+> layer-shift keys. Defaults to a white color.
+
+### `.oneshot_color`
+
+> The color to use for highlighting active one-shot keys. These are
+> the keys that will time out or deactivate when a subsequent key is
+> pressed. Defaults to a yellow color.
 
 ### `.sticky_color`
 
-> The color to use for highlighting one-shot modifiers when they are sticky. Defaults to a red color.
+> The color to use for highlighting "sticky" one-shot keys. These keys
+> will remain active until they are pressed again. Defaults to a red
+> color.
 
 ## Plugin methods
 

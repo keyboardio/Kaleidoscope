@@ -17,6 +17,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
+    - [OneShot](#oneshot)
     - [Qukeys](#qukeys)
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
@@ -531,6 +532,44 @@ If your actions made use of the `left_hand` or `right_hand` arguments of
 `magicComboActions`, the same information is still available. But that's a bit
 more involved to get to, out of scope for this simple migration guide. Please
 open an issue, or ask for help on the forums, and we'll help you.
+
+### OneShot
+
+Older versions of the plugin were based on `Key` values; OneShot is now based on
+`KeyAddr` coordinates instead, in order to improve reliability and
+functionality.
+
+The following deprecated functions and variables will be removed after
+**2021-04-31**.
+
+#### Deprecated functions
+
+- `OneShot.inject(key, key_state)`: This `Key`-based function still works, but
+  because OneShot keys are now required to have a valid `KeyAddr`, it will now
+  look for an idle key, and use that, masking whatever value was mapped to that
+  key. Most of the reasons for using this function are better addressed by using
+  the newer features of the plugin, such as automatic one-shot modifiers. Use is
+  very strongly discouraged.
+- `OneShot.isActive(key)`: This `Key`-based function no longer makes sense now
+  that OneShot is `KeyAddr`-based. There is a `OneShot.isActive(key_addr)`
+  function that should be used instead. The deprecated function still works, but
+  its use is discouraged.
+- `OneShot.isSticky(key)`: This `Key`-based function no longer makes sense now
+  that OneShot is `KeyAddr`-based. There is a `OneShot.isSticky(key_addr)`
+  function that should be used instead. The deprecated function still works, but
+  its use is discouraged.
+- `OneShot.isPressed()`: This function no longer has any reason for existing. In
+  older versions, the Escape-OneShot companion plugin used it to solve a problem
+  that no longer exists. It now always returns `false`.
+- `OneShot.isModifierActive(key)`: This function still works, but is not
+  perfectly reliable, because it now returns positive results for keys other
+  than OneShot modifiers. It should not be used.
+
+#### Deprecated variables
+
+- `OneShot.time_out`: Use `OneShot.setTimeout()` instead.
+- `OneShot.hold_time_out`: Use `OneShot.setHoldTimeout()` instead.
+- `OneShot.double_tap_time_out`: Use `OneShot.setDoubleTapTimeout()` instead.
 
 ### Qukeys
 
