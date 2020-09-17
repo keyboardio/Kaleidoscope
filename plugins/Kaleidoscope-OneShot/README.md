@@ -23,7 +23,7 @@ active if another one-shot of the same type is tapped, so `Ctrl, Alt, b` becomes
 `Ctrl+Alt+b`, and `L1, L2, c` is turned into `L1+L2+c`. Furthermore, modifiers
 and other layer keys do not cancel the one-shot effect, either.
 
-## Using One-Shot Keys
+## Using One-Shot keys
 
 To enter one-shot mode, tap _quickly_ on a one-shot key. The next
 normal (non-one-shot) key you press will have the modifier applied,
@@ -40,11 +40,30 @@ modifier will now stay on until you press it again. Continuing the
 Shift, d, e, f` will give you `ABCdef`.
 
 This can be a bit tricky; combining this plugin with
-[LED-ActiveModColor](Kaleidoscope-LED-ActiveModColor.md)
-will help you understand what state your one-shot is in; when a
-one-shot key is active, it will have a white LED highlight; when
-sticky, a red highlight. (These colors are configurable.)
+[LED-ActiveModColor](Kaleidoscope-LED-ActiveModColor.md) will help you
+understand what state your one-shot is in; when a one-shot key is active, it
+will have a yellow LED highlight; when sticky, a red highlight. When it is in a
+"held" state, but will be deactivated when released like any non-one-shot key,
+it will have a white highlight. (These colors are configurable.)
 
+## Special OneShot keys
+
+OneShot also comes with two special keys that can make any key on your keyboard
+sticky: `OneShot_MetaStickyKey` & `OneShot_ActiveStickyKey`. These are both
+`Key` values that can be used as entries in your sketch's keymap.
+
+### `OneShot_MetaStickyKey`
+
+This special OneShot key behaves like other OneShot keys, but its affect is to
+make the next key pressed sticky. Tap `OneShot_MetaStickyKey`, then tap `X`, and
+`X` will become sticky. Tap `X` again to deactivate it.
+
+### `OneShot_ActiveStickyKey`
+
+This special key doesn't act like a OneShot key, but instead makes any key(s)
+currently held (or otherwise active) sticky. Press (and hold) `X`, tap
+`OneShot_ActiveStickyKey`, then release `X`, and `X` will stay active until it
+is tapped again to deactivate it.
 
 ## Using the plugin
 
@@ -69,13 +88,13 @@ void setup() {
 
 There are two macros the plugin provides:
 
-### `OSM(mod)`
+#### `OSM(mod)`
 
 > A macro that takes a single argument, the name of the modifier: `LeftControl`,
 > `LeftShift`, `LeftAlt`, `LeftGui` or their right-side variant. When marked up
 > with this macro, the modifier will act as a one-shot modifier.
 
-### `OSL(layer)`
+#### `OSL(layer)`
 
 > Takes a layer number as argument, and sets up the key to act as a one-shot
 > layer key.
@@ -83,85 +102,203 @@ There are two macros the plugin provides:
 > Please note that while `Kaleidoscope` supports more, one-shot layers are
 > limited to 8 layers only.
 
+In addition, there is a special key:
+
+#### `Key_MetaSticky`
+
+> A key that behaves like a one-shot key, but while active, it makes
+> other keys that are pressed become sticky, just like double-tapped
+> one-shot keys.
+
 ## Plugin methods
 
 The plugin provides one object, `OneShot`, which implements both one-shot
 modifiers and one-shot layer keys. It has the following methods:
 
-### `.isActive()`
+### Configuration methods: Timeouts
 
-> Returns if any one-shot key is in flight. This makes it possible to
-> differentiate between having a modifier or layer active, versus having them
-> active only until after the next key getting pressed. And this, in turn, is
-> useful for macros that need to fiddle with either modifier or layer state: if
-> one-shots are not active, they need not restore the original state.
+#### `.setTimeout(timeout)`
 
-### `.isPressed()`
+> OneShot keys will remain active after they're pressed for `timeout`
+> milliseconds (or until a subsequent non-oneshot key is pressed). The
+> default value is 2500 (2.5 seconds).
 
-> Returns true if any one-shot key is still held.
+#### `.setHoldTimeout(timeout)`
 
-### `.isSticky(key)`
+> If a one-shot key is held for longer than `timeout` milliseconds, it
+> will behave like a normal key, and won't remain active after it is
+> released. The default value is 250 (1/4 seconds).
 
-> Returns if the key is currently sticky.
+#### `.setDoubleTapTimeout(timeout)`
 
-### `.isModifierActive(key)`
+> If a one-shot key is double-tapped (pressed twice in a row) in less
+> than `timeout` milliseconds, it wil become sticky, and will remain
+> active until it is pressed a third time. The default value is -1,
+> which indicates that it should use the same timeout as
+> `.setTimeout()`.
 
-> Returns if the modifier `key` has a one-shot state active. Use this together
-> with `Kaleidoscope.hid().keyboard().isModifierKeyActive` to catch cases where
-> a one-shot modifier is active, but not registered yet.
+### Configuration methods: Stickability
 
-### `.cancel([with_stickies])`
+#### `.enableStickability(key...)`
+#### `.disableStickability(key...)`
 
-> The `cancel()` method can be used to cancel any pending one-shot effects,
-> useful when one changed their minds, and does not wish to wait for the
-> timeout.
+> Enables/disables stickability for all keys listed. The keys should
+> all be OneShot keys, modifier keys, or layer-shift keys, as
+> specified on the keymap. For example:
+> `OneShot.enableStickability(OSM(LeftShift), OSL(1), Key_RightGUI)`.
+> `OneShot.disableStickability(OSM(RighttAlt), OSL(2), ShiftToLayer(4))`.
 >
-> The optional `with_stickies` argument, if set to `true`, will also cancel
-> sticky one-shot effects. If omitted, it defaults to `false`, and not canceling
-> stickies.
+> By default, all OneShot keys are stickable.
 
-### `.inject(key, keyState)`
+#### `.enableStickabilityForModifiers()`
+#### `.enableStickabilityForLayers()`
+#### `.disableStickabilityForModifiers()`
+#### `.disableStickabilityForLayers()`
 
-> Simulates a key event, specifically designed to inject one-shot keys into the
-> event loop. The primary purpose of this method is to make it easier to trigger
-> multiple one-shots at the same time.
->
-> See the example sketch for more information about its use.
+> Enables/disables stickability for all modifiers and layers,
+> respectively. These are convenience methods for cases where one
+> wants to enable stickability for a group of one-shot keys.
 
-### `.enableStickability(key...)`
+### Configuration methods: Automatic one-shot keys
 
-> Enables stickability for all keys listed. The keys should all be OneShot keys,
-> as if specified on the keymap. For example:
->   `OneShot.enableStickability(OSM(LeftShift), OSL(1))`.
->
-> By default, all oneshot keys are stickable.
+#### `.enableAutoModifiers()`
+#### `.disableAutoModifiers()`
+#### `.toggleAutoModifiers()`
 
-### `.enableStickabilityForModifiers()`
-### `.enableStickabilityForLayers()`
+> Enables/disables/toggles auto-oneshot functionality for modifier
+> keys. When enabled, all normal modifier keys, including those with
+> other modifier flags added to them (e.g. `LSHIFT(Key_LeftAlt)`,
+> `Key_Meh`) will be automatically treated as one-shot keys, in
+> addition to dedicated ones like `OSM(LeftGui)`.
 
-> Enables stickability for all modifiers and layers, respectively. These are
-> convenience methods for cases where one wants to enable stickability for a
-> group of one-shot keys.
+#### `.enableAutoLayers()`
+#### `.disableAutoLayers()`
+#### `.toggleAutoLayers()`
 
-### `.disableStickability(key...)`
+> Enables/disables/toggles auto-oneshot functionality for layer shift
+> keys (see above).
 
-> Disables stickability for all keys listed. The keys should all be OneShot keys,
-> as if specified on the keymap. For example:
->   `OneShot.disableStickability(OSM(LeftShift), OSL(1))`.
->
-> By default, all oneshot keys are stickable.
+#### `.enableAutoOneShot()`
+#### `.disableAutoOneShot()`
+#### `.toggleAutoOneShot()`
 
-### `.disableStickabilityForModifiers()`
-### `.disableStickabilityForLayers()`
+> Enables/disables/toggles auto-oneshot functionality for all
+> modifiers and layer shift keys.
 
-> Disables stickability for all modifiers and layers, respectively. These are
-> convenience methods for cases where one wants to disable stickability for a
-> group of one-shot keys.
+### Test methods
 
-## Plugin properties
+#### `.isActive(key_addr)`
 
-Along with the methods listed above, the `OneShot` object has the following
-properties too:
+> Returns `true` if the key at `key_addr` is in an active one-shot
+> state. Note that if a key is still being held, but will be not
+> remain active after it is released, it is not considered to be in a
+> one-shot state, even if it had been earlier.
+
+#### `.isTemporary(key_addr)`
+
+> Returns `true` if the key at `key_addr` is in a temporary one-shot
+> state. Such a key will eventually time out or get deactivated by a
+> subsequent key press.
+
+#### `.isSticky(key_addr)`
+
+> Returns `true` if the key at `key_addr` is in a permanent one-shot
+> state. Such a key will not be deactivated by subsequent keypresses,
+> nor will it time out. It will only be deactivated by pressing it one
+> more time, or by being cancelled by the `cancel()` method (see
+> below).
+
+#### `.isActive()`
+
+> Returns `true` if there are any active one-shot keys. Note: it
+> returns `false` if there are no currently active one-shot keys, but
+> there are keys that were at one time in a one-shot state, but are
+> still being held after that state has been cancelled.
+
+#### `.isSticky()`
+
+> Returns `true` if there are any sticky one-shot keys.
+
+#### `.isStickable(key)`
+
+> Returns `true` if a key of the specified value can be made sticky by
+> double-tapping.
+
+#### `.isModifier(key)`
+
+> Returns `true` if the specified key is a modifier key. This does not
+> include OneShot modifiers (e.g. `OSM(LeftShift)`), but it does
+> include modifiers with additional modifier flags (e.g. `Key_Meh`,
+> `LCTRL(Key_RightGui)`).
+
+#### `.isLayerShift(key)`
+
+> Returns `true` if the specified key is a layer-shift key
+> (e.g. `ShiftToLayer(2)`). OneShot layer keys (e.g. `OSL(5)` are not
+> included).
+
+#### `.isOneShotKey(key)`
+
+> Returns `true` if the specified key is a OneShot modifier or
+> layer-shift key (e.g. `OSM(LeftAlt)`, `OSL(3)`).
+
+### Other methods
+
+#### `.cancel([with_stickies])`
+
+> Immediately deactivates the one-shot status of any _temporary_
+> one-shot keys. Any keys still being physically held will continue to
+> function as normal modifier/layer-shift keys.
+> 
+> If `with_stickies` is `true` (the default is `false`), _sticky_
+> one-shot keys will also be deactivated, in the same way.
+
+### Deprecated methods
+
+The following methods have been deprecated, and should no longer be
+used, if possible. These functions made more sense when OneShot was
+based on `Key` values; it has since be rewritten to be based on
+`KeyAddr` values.
+
+#### `.inject(key, key_state)`
+
+> Finds an idle key on the keyboard, and turns it into a one-shot
+> key. When OneShot was based on `Key` values, this made more sense,
+> as it didn't need a valid `KeyAddr` to work. Since the main purpose
+> of this method was to enable the triggering of multiple one-shot
+> modifiers with a single key, it is much better to use automatic
+> one-shot modifiers, if possible, because then it's not necessary to
+> use a Macro to configure.
+
+#### `.isModifierActive(key)`
+
+> Returns `true` if a keymap cache entry with the current value of
+> `key` is active (one-shot, sticky, or held). This should be a
+> function that is not specific to OneShot.
+
+#### `.isActive(key)`
+
+> Returns `true` if a keymap cache entry with the current value of
+> `key` is in an active one-shot state. Please use
+> `.isActive(key_addr)` instead.
+
+#### `.isSticky(key)`
+
+> Returns `true` if a keymap cache entry with the current value of
+> `key` is in a sticky one-shot state. Please use
+> `.isSticky(key_addr)` instead.
+
+#### `.isPressed()`
+
+> Returns `false`. OneShot doesn't need to keep track of whether or
+> not a one-shot key is still pressed any more. This function was
+> mainly used by LED-ActiveModColor, which no longer needs it.
+
+## Plugin properties **[DEPRECATED]**
+
+Along with the methods listed above, the `OneShot` object has the
+following properties, too. [Note: these have all been deprecated,
+please use the `.set*Timeout()` methods above instead.]
 
 ### `.time_out`
 

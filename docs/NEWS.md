@@ -12,6 +12,60 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### New OneShot features
+
+#### Auto-OneShot modifiers & layers
+
+OneShot can now treat modifiers and layer-shift keys as automatic OneShot
+keys. This includes modifiers with other modifier flags applied, so it is now
+very simple to turn `Key_Meh` or `Key_Hyper` into a OneShot key. The feature is
+controlled by the following new functions:
+
+- `OneShot.toggleAutoModifiers()`: Turn auto-OneShot modifiers on or off.
+- `OneShot.toggleAutoLayers()`: Turn auto-OneShot layer shifts on or off.
+- `OneShot.toggleAutoOneShot()`: Both of the above.
+
+There are also `enable` and `disable` versions of these functions.
+
+Note, it is still possible to define a modifier key in the keymap that will not
+automatically become a OneShot key when pressed, by applying modifier flags to
+`Key_NoKey` (e.g. `LSHIFT(Key_NoKey)`).
+
+#### Two new special OneShot keys
+
+OneShot can now also turn _any_ key into a sticky key, using either of two
+special `Key` values that can be inserted in the keymap.
+
+##### `OneShot_MetaStickyKey`
+
+This is a special OneShot key (it behaves like other OneShot keys), but its
+effect is to make any key pressed while it is active sticky. Press
+`OneShot_MetaStickyKey`, then press `X`, and `X` will become sticky. Sticky
+keys can be deactivated just like other OneShot keys, by pressing them
+again. This works for any key value, so use it with caution.
+
+##### `OneShot_ActiveStickyKey`
+
+Like `OneShot_ActiveStickyKey`, this key makes other keys sticky, but rather than
+affecting a subsequent key, it affects any keys already held when it is
+pressed. Press `X`, press `OneShot_ActiveStickyKey`, and release `X`, and `X`
+will be sticky until it is pressed again to deactivate it. Again, it works on
+any key value, so use with caution.
+
+#### LED-ActiveModColor highlighting
+
+With the updates to OneShot, LED-ActiveModColor now recognizes and highlights
+OneShot keys in three different states (along with normal modifiers):
+
+- one-shot (a key that's active after release, but will time out)
+- sticky (a key that will stay active indefinitely after release)
+- normal (a key that will stay active only while physically held; also applies
+  to normal modifier keys)
+
+The colors of theses three highlights are controlled by the properties
+`ActiveModColorEffect.oneshot_color`, `ActiveModColorEffect.sticky_color`, and
+`ActiveModColorEffect.highlight_color`, respectively.
+
 ### Better protection against unintended modifiers from Qukeys
 
 Qukeys has two new configuration options for preventing unintended modifiers in
