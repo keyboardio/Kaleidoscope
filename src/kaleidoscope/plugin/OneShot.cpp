@@ -43,6 +43,8 @@ uint16_t OneShot::stickable_keys_ = -1;
 bool OneShot::auto_modifiers_ = false;
 bool OneShot::auto_layers_ = false;
 
+KeyAddr OneShot::meta_sticky_key_addr_ = KeyAddr::none();
+
 KeyAddrBitfield OneShot::temp_addrs_;
 KeyAddrBitfield OneShot::glue_addrs_;
 
@@ -118,6 +120,8 @@ bool OneShot::isStickable(Key key) {
     if (n < oneshot_key_count) {
       return bitRead(stickable_keys_, n);
     }
+  } else if (key == OneShot_MetaStickyKey) {
+    return true;
   }
   return false;
 }
@@ -179,9 +183,35 @@ EventHandlerResult OneShot::onKeyswitchEvent(
 
     if (!temp && !glue) {
       // This key_addr is not in a OneShot state.
-      if (isOneShotKey(key) ||
-          (auto_modifiers_ && key.isKeyboardModifier()) ||
-          (auto_layers_ && key.isLayerShift())) {
+      if (meta_sticky_key_addr_.isValid()) {
+        // If the meta key isn't sticky, release it
+        bool ms_temp = temp_addrs_.read(meta_sticky_key_addr_);
+        bool ms_glue = glue_addrs_.read(meta_sticky_key_addr_);
+        if (ms_temp) {
+          if (ms_glue) {
+            // ms key is temp one-shot
+            releaseKey(meta_sticky_key_addr_);
+            meta_sticky_key_addr_.clear();
+          } else {
+            // ms key is held
+            temp_addrs_.clear(meta_sticky_key_addr_);
+          }
+        } else {
+          // ms key is sticky
+        }
+        glue_addrs_.set(key_addr);
+        //prev_key_addr_ = key_addr;
+        start_time_ = Runtime.millisAtCycleStart();
+        //return EventHandlerResult::OK;
+
+      } else if (key == OneShot_MetaStickyKey) {
+        meta_sticky_key_addr_ = key_addr;
+        temp_addrs_.set(key_addr);
+        start_time_ = Runtime.millisAtCycleStart();
+
+      } else if (isOneShotKey(key) ||
+                 (auto_modifiers_ && key.isKeyboardModifier()) ||
+                 (auto_layers_ && key.isLayerShift())) {
         // Replace the OneShot key with its corresponding normal key.
         pressKey(key_addr, key);
         return EventHandlerResult::ABORT;
@@ -222,6 +252,9 @@ EventHandlerResult OneShot::onKeyswitchEvent(
       // This is a sticky OneShot key that has been pressed. Clear state now, so
       // it will become a normal key.
       glue_addrs_.clear(key_addr);
+      // Then replace the key toggled on event with a key held event.
+      holdKey(key_addr);
+      return EventHandlerResult::EVENT_CONSUMED;
 
     } else { // (temp && !glue)
       // A key has been pressed that is in the "pending" OneShot state. Since
@@ -245,6 +278,9 @@ EventHandlerResult OneShot::onKeyswitchEvent(
       // stop that event from sending a report, and instead send a "hold"
       // event. This is handled in the `beforeReportingState()` hook below.
       return EventHandlerResult::ABORT;
+    } else if (key == OneShot_MetaStickyKey) {
+      meta_sticky_key_addr_.clear();
+      //cancel(true);
     }
 
   } else {
@@ -371,6 +407,10 @@ void OneShot::holdKey(KeyAddr key_addr) {
 void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
+
+  if (Runtime.activeKey(key_addr) == OneShot_MetaStickyKey)
+    meta_sticky_key_addr_.clear();
+
   handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | INJECTED);
 }
 
