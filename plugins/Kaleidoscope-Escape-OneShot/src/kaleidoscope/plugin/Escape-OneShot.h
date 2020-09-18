@@ -19,6 +19,8 @@
 
 #include "kaleidoscope/Runtime.h"
 
+constexpr Key OneShotCancelKey {kaleidoscope::ranges::OS_CANCEL};
+
 namespace kaleidoscope {
 namespace plugin {
 class EscapeOneShot : public kaleidoscope::Plugin {
@@ -26,6 +28,13 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   EscapeOneShot(void) {}
 
   EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
+
+  void setCancelKey(Key cancel_key) {
+    cancel_oneshot_key_ = cancel_key;
+  }
+
+ private:
+  static Key cancel_oneshot_key_;
 };
 }
 }

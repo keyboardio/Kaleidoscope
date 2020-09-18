@@ -27,7 +27,17 @@ The plugin only makes sense when using one-shot keys.
 
 ## Plugin methods
 
-The plugin provides the `EscapeOneShot` object, which has no public methods.
+The plugin provides the `EscapeOneShot` object, which has one public
+configuration method:
+
+### `.setCancelKey(key)`
+
+> Changes the `Key` value that will trigger deactivation of one-shot
+> (including sticky) keys. The default is to use `Key_Escape` (the
+> normal `Esc` key), but if you would rather have a dedicated key (so
+> that you can use `Key_Escape` in combination with one-shot
+> modifiers), there is the special `OneShotCancelKey`, which will not
+> have any side effects.
 
 ## Dependencies
 
