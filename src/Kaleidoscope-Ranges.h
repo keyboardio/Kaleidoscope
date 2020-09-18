@@ -29,6 +29,7 @@ enum : uint16_t {
   OSL_FIRST,
   OSL_LAST    = OSL_FIRST + 7,
   OS_LAST     = OSL_LAST,
+  OS_CANCEL,
   DU_FIRST,
   DUM_FIRST   = DU_FIRST,
   DUM_LAST    = DUM_FIRST + (8 << 8),
