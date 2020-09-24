@@ -2,7 +2,7 @@ FROM debian:stable-slim
 LABEL maintainer="Keyboard.io, inc"
 
 RUN apt-get -qq update
-RUN apt-get -qq install -y xz-utils curl git-core make build-essential libxtst-dev
+RUN apt-get -qq install -y xz-utils curl git-core make build-essential libxtst-dev cmake
 
 ENV ARDUINO_VERSION "1.8.13"
 
