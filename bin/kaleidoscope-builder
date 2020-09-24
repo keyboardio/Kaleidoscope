@@ -379,6 +379,10 @@ compile () {
         fi
     fi
 
+    _CMD_CXX="${CXX:-${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_CC="${CC:-${COMPILER_PREFIX}${C_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_AR="${AR:-${COMPILER_PREFIX}${AR_BASENAME}${COMPILER_SUFFIX}}"
+
     # SC2091: We do not care if quotes or backslashes are not respected.
     # SC2086: We want word splitting.
     # shellcheck disable=SC2086,SC2090
@@ -401,8 +405,10 @@ compile () {
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -prefs "compiler.path=${COMPILER_PATH}" \
-	      -prefs "compiler.c.cmd=${COMPILER_PREFIX}${C_COMPILER_BASENAME}" \
-	      -prefs "compiler.cpp.cmd=${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" \
+	      -prefs "compiler.c.cmd=${_CMD_CC}" \
+	      -prefs "compiler.cpp.cmd=${_CMD_CXX}" \
+        -prefs "compiler.ar.cmd=${_CMD_AR}" \
+        -prefs "compiler.c.elf.cmd=${_CMD_CXX}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
