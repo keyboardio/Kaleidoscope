@@ -510,6 +510,11 @@ decompile () {
 
 clean () {
     rm -rf -- "${OUTPUT_PATH}"
+    kaleidoscope_dir="$(dirname "$0")/.."
+    (install -d "${kaleidoscope_dir}/testing/googletest/build" &&
+         cd "${kaleidoscope_dir}/testing/googletest/build" &&
+         cmake .. &&
+         make clean)
 }
 
 reset_device() {
@@ -573,6 +578,25 @@ EOF
     fi
 }
 
+build_gtest_gmock() {
+    kaleidoscope_dir="$(dirname "$0")/.."
+    (cd "${kaleidoscope_dir}/testing/googletest" && cmake . && make)
+}
+
+run_tests() {
+    (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
+    build_gtest_gmock
+    kaleidoscope_dir="$(dirname "$0")/.."
+    cd "${kaleidoscope_dir}/tests"
+    ${MAKE:-make}
+}
+
+docker_tests() {
+    kaleidoscope_dir="$(dirname "$0")/.."
+    cd "${kaleidoscope_dir}"
+    bin/run-docker make -C tests all
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
@@ -610,6 +634,9 @@ usage () {
 
 		  build-all
 		    Build all Sketches we can find.
+
+      run-tests | docker-tests
+        Builds and runs the test suite, on the host, and in docker, respectively.
 		EOF
 }
 
