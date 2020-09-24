@@ -53,6 +53,7 @@ build_filenames () {
     HEX_FILE_PATH="${HEX_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex}"
     HEX_FILE_WITH_BOOTLOADER_PATH="${HEX_FILE_WITH_BOOTLOADER_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex}"
     ELF_FILE_PATH="${ELF_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf}"
+    LIB_FILE_PATH="${LIB_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.a}"
 }
 
 
@@ -415,11 +416,15 @@ compile () {
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
 	      "${SKETCH_DIR}/${SKETCH}.ino"
 
-    cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
-    cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
-    ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
-    ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
-
+    if [ -z "${LIBONLY}" ]; then
+      cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
+      cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
+      ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+    else
+      cp "${BUILD_PATH}/${SKETCH}.ino.a" "${LIB_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH}-latest.a"
+    fi
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
       echo "Build artifacts can be found in ${BUILD_PATH}";
