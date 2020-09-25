@@ -15,9 +15,8 @@
  */
 
 // No `#pragma once` since these undefs need to have every time a Kaleidoscope/
-// Arduino header is included before non-Kaleidoscope/Arduino header.
-// #pragma once
-
+// Arduino header is included before non-Kaleidoscope/Arduino header. The undefs
+// are needed, due to naming conflicts between Arduino and Googletest.
 
 #undef min
 #undef max
