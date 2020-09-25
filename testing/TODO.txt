@@ -1,0 +1,87 @@
+Build System
+============
+Directory structure
+- Test infrastructure should be able to be hierarchically organized
+
+Future Work
+===========
+Issue 867
+- Infra changes: none needed
+- Testing 867
+  - Design a set of layers that allows all the test cases you would like, and configure them in a sketch.
+    - If you need multiple sets of layers, the current build mechanism requires splitting
+      the test code in two, each with its corresponding sketch.
+  - Navigate between layers using sim_.Press(row, col) and sim_.Release(row, col) as a user
+    would with the test sketch loaded.
+  - Verify that the right keys are pressed (based on the current layer) using
+    EXPECT_THAT(state->HidReports()->Keyboard(0), Contains(Key_A))
+  - See issue_840 for example usage.
+Testing LED activation
+- Infra changes
+  - Create an LedState class to hold a snapshot of LED activations.
+  - Add an led_state_ member to State together with whatever accessors are convenient.
+    - If the accessors are complicated or you just want to namespace that part of the global state,
+      create a state module for LEDs following the pattern implemented for HIDState.
+      - Of course, the HIDReportObserver stuff doesn't apply here.
+  - Modify State::Snapshot to copy the current LED state into led_state_
+    - This must be a copy, not a reference, as it may be desirable to compare state objects
+      generated at different times.
+  - Consider whether there are any sensible LED-specific "matchers" (in the gmock sense) that could
+    be added to make LED tests more readable.
+    - See https://github.com/google/googletest/blob/master/googlemock/docs/cook_book.md for instructions
+      and examples on writing new matchers
+- Add USB simulation, eg to test Focus and FocusSerial
+- It would be nice if there were a way to specify the test firmware configuration directly in the test
+  (ie *_test.cpp) files
+
+Design of the Testing Simulator
+===============================
+Two halves of the simulator, each an abstraction to isolate tests from firmware implementation details
+and thereby decrease the maintence cost of tests.
+- SimHarness
+  - This is what lets you prod the firmware, e.g. with a change in keyswitch state
+  - Any new ways of feeding input to the simulated firmware should do so through this abstraction
+- State
+  - This is a snapshot of the global firmware state. It is currently only intended to be accessible via
+    the snapshot returned by RunCycle.
+  - Should always be a copy of firmware state, never a reference or pointer to it.
+    - In general it is desirable to be able to compare aspects of state from two different "times" in
+      the simulation.
+Both halves may end up with modular structure as complexity grows. This is fine as long as the basic
+abstractions and division of responsibilities are maintained.
+
+BEFORE MERGING
+==============
+- The bundle repo should merge branch `epan/build/justlib`. The test infra depends on the changes in
+  that branch.
+- Consider whether you want to add the following before or after merging (and delay merging if appropriate):
+  - Fleshing out the coverage of HID reports by HID state.
+  - Adding LED output capture to State.
+- Please impement a proper logging solution (rather than dumping almost everything to stdout/stderr and
+  needing to sort through it manually at fixed verbosity)
+  - Some desirable properties of a logging system
+    - Global verbosity levels (e.g. INFO, WARNING, ERROR, FATAL)
+    - Custom verbosity levels
+    - Local verbosity levels, eg per file, ideally configurable in a central and obvious location like the command line
+      - See parseCommandLine in virtual/cores/main.cpp for the hook that would need to be overridden
+    - Logging macros that compile away to nothing in production builds (ie where NDEBUG is defined)
+      - This allows logging directly from the firmware code at no space or time cost to the real firmware
+  - glog is a good example of some desirable capabilities in a logging system, if not a good system to adopt.
+For portability for developers, please get the test build system to play well with Docker
+  - (right now, cmake isn't playing well with Docker)
+Update testing documentation as appropriate to relfect changes to test infra or to directory structures.
+  - See docs/codebase/testing/automated-testing.md
+  - Add links into the codebase as appropriate
+
+What I'd do with Another Solid Week
+===================================
+- Add coverage of remaining HID report types
+- Add capture of LED state
+- Pick several reported bugs and write up tests to reproduce them and then regression tests once they've been fixed
+  - My main goal here would be to exercise the framwork to identify pain points or other areas for improvement
+- Write a test-specific plugin that supports snapshotting state each time one of its event handlers is called
+- More formally document the test simulator's design and usage
+- If there were time left and earlier steps were to bear out the need...
+  - Add the ability to inject synthetic events or events at a given delay into the future
+  - Improve the simulator's concept of time and trigger events against the firmware, interleaving them in the right
+    order with a time-based priority queue

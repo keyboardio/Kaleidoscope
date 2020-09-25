@@ -1,4 +1,4 @@
-dist: trusty
+dist: bionic
 sudo: false
 language: c
 os:
@@ -7,6 +7,7 @@ addons:
   apt:
     packages:
       - shellcheck
+      - cmake
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
 ## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
@@ -14,6 +15,11 @@ install:
   - rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
 script:
+  - unset CC
+  - make travis-install-arduino BOARD_HARDWARE_PATH=$(pwd)/../hardware
+  - (cd ../hardware/keyboardio && make prepare-virtual)
+  - make -C tests all BOARD_HARDWARE_PATH=$(pwd)/../hardware ARDUINO_PATH="$(pwd)/arduino-1.8.13"
+  - rm -rf .kaleidoscope-build-cache
   - make travis-test KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware
 notifications:
   email:

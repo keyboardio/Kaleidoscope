@@ -6,3 +6,5 @@
 /docs/generated
 /docs/doxyoutput
 /docs/api
+/_build/
+/results/
