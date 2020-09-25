@@ -35,7 +35,6 @@ ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS}
 		  OUTPUT_PATH="${LIB_DIR}" \
 			VERBOSE=1 \
 			ARCH=virtual DEFAULT_SKETCH=sketch \
-			BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH}" \
 		$(MAKE) -f ${top_dir}/testing/makefiles/delegate.mk
 	g++ -o "${BIN_DIR}/${BIN_FILE}" \
 		-lpthread \
