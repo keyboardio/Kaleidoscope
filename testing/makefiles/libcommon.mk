@@ -28,6 +28,7 @@ ${OBJ_DIR}/%.o: ${top_dir}/testing/%.cpp ${H_FILES}
 	@echo "compile $@"
 	@install -d "${OBJ_DIR}"
 	g++ -o "$@" -c \
+	  -std=c++14 \
 		-I${top_dir} \
 		-I${top_dir}/src \
 		-I${bundle_path}/../../virtual/cores/arduino \

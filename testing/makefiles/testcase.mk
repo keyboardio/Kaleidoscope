@@ -55,6 +55,7 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@echo "compile $@"
 	install -d "${OBJ_DIR}"
 	g++ -o "$@" -c \
+	  -std=c++14 \
 		-I${top_dir} \
 		-I${top_dir}/src \
 		-I${bundle_path}/../../virtual/cores/arduino \
