@@ -84,6 +84,13 @@ const cRGB LEDPaletteTheme::lookupPaletteColor(uint8_t color_index) {
   return color;
 }
 
+void LEDPaletteTheme::setPaletteColor(uint8_t palette_index, cRGB color) {
+  color.r ^= 0xff;
+  color.g ^= 0xff;
+  color.b ^= 0xff;
+  Runtime.storage().put(palette_base_ + palette_index * sizeof(color), color);
+}
+
 void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t position, uint8_t color_index) {
   uint8_t indexes;
 

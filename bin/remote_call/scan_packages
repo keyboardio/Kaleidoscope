@@ -1,0 +1,949 @@
+#!/usr/bin/python
+  
+# -*- coding: utf-8 -*-
+
+# -*- mode: python -*-
+
+# Author: noseglasses (shinynoseglasses@gmail.com)
+
+import os
+import sys
+import regex
+import subprocess
+import logging
+import copy
+
+type_ids = { \
+   0 : "uint8_t", \
+   1 : "uint16_t", \
+   2 : "uint32_t", \
+   3 : "int8_t", \
+   4 : "int16_t", \
+   5 : "int32_t", \
+   6 : "float" \
+   }
+
+indent_level = "   "
+
+SYMBOL_TYPE_NONE = 0
+SYMBOL_TYPE_MODULE = 1
+SYMBOL_TYPE_INPUT = 2
+SYMBOL_TYPE_PROCEDURE = 3
+SYMBOL_TYPE_FUNCTION_ARG = 4
+SYMBOL_TYPE_FUNCTION_RESULT = 5
+      
+def is_exe(fpath):
+   return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+def unique(list1):
+   list_set = set(list1)
+   return (list(list_set))
+
+def findFirstFile(directory, extension):
+            
+   for file in os.listdir(directory):
+      if file.endswith(extension):
+         return os.path.join(directory, file)
+      
+   return None
+
+def dump_object(obj, target = sys.stdout, indent = ""):
+   for (key, value) in obj.__dict__.items():
+      target.write(indent + key + ": " + str(value) + "\n")
+
+class FunctionIODatum(object):
+   
+   def __init__(self, function, name):
+      self.name = name
+      self.callable = function
+      self.description = ""
+      self.data = DataEntity()
+      
+   def writeYaml(self, target, indent):
+      target.write(indent + "- name: " + self.name + "\n")
+      target.write(indent + "  description: " + self.description + "\n")
+      target.write(indent + "  data:\n")
+      self.data.writeYaml(target, indent + indent_level)
+
+class Function(object):
+   
+   def __init__(self, package, name):
+      self.package = package
+      self.name = name
+      self.callable = None
+      self.description = ""
+      self.arguments = {}
+      self.results = {}
+      
+   def getArgument(self, name):
+      
+      if not name in self.arguments.keys():
+         self.arguments[name] = FunctionIODatum(self, name)
+         
+      return self.arguments[name]
+      
+   def getResult(self, name):
+      
+      if not name in self.results.keys():
+         self.results[name] = FunctionIODatum(self, name)
+         
+      return self.results[name]
+      
+   def getName(self):
+      return self.package.getName() + "::" + self.name
+   
+   def writeYaml(self, target, indent):
+      target.write(indent + "- name: " + self.name + "\n")
+      target.write(indent + "  callable:\n")
+      self.callable.writeYaml(target, indent + indent_level)
+      target.write(indent + "  arguments:\n")
+      for arg in sorted(self.arguments.values(), key=lambda arg: arg.data.address): 
+         arg.writeYaml(target, indent + indent_level)
+      target.write(indent + "  results:\n")
+      for arg in sorted(self.results.values(), key=lambda result: result.data.address):
+         arg.writeYaml(target, indent + indent_level)
+
+class Callable(object):
+   
+   def __init__(self, symbol_mangled, symbol_unmangled):
+      self.symbol_mangled = symbol_mangled
+      self.symbol_unmangled = symbol_unmangled
+      self.address = None
+      
+   def writeYaml(self, target, indent):
+      target.write(indent + "  address: " + str(self.address) + "\n")
+      target.write(indent + "  symbol_mangled: " + str(self.symbol_mangled) + "\n")
+      target.write(indent + "  symbol_unmangled: " + str(self.symbol_unmangled) + "\n")
+      
+      if "inherited" in self.__dict__.keys():
+         target.write(indent + "  inherited: " + str(self.inherited) + "\n")
+   
+class DataEntity(object):
+   
+   def __init__(self):
+      #self.symbol_mangled = None
+      #self.symbol_unmangled = None
+      self.offset = 0
+      self.size = 0
+      self.type = None
+      self.address = None
+      self.base_address = None
+      
+   def writeYaml(self, target, indent):
+      target.write(indent + "  address: " + str(self.address) + "\n")
+      target.write(indent + "  base_address: " + str(self.base_address) + "\n")
+      target.write(indent + "  offset: " + str(self.offset) + "\n")
+      target.write(indent + "  size: " + str(self.size) + "\n")
+      target.write(indent + "  type: " + str(self.type) + "\n")
+      if "symbol_unmangled" in self.__dict__.keys():
+         target.write(indent + "  symbol_unmangled: " + str(self.symbol_unmangled) + "\n")
+      if "symbol_mangled" in self.__dict__.keys():
+         target.write(indent + "  symbol_mangled: " + str(self.symbol_mangled) + "\n")
+         
+class Input(object):
+   
+   def __init__(self, package, name):
+      self.name = name
+      self.description = ""
+      self.callable = None
+      self.data = DataEntity()
+      
+   def getName(self):
+      return self.package.getName() + "::" + self.name
+   
+   def writeYaml(self, target, indent = ""):
+      target.write(indent + "- name: " + self.name + "\n")
+      
+      target.write(indent + "  description: " + str(self.description) + "\n")
+      
+      target.write(indent + "  data:\n")
+      self.data.writeYaml(target, indent + indent_level)
+      
+      if self.callable:
+         target.write(indent + "  callable:\n")
+         self.callable.writeYaml(target, indent + indent_level)
+         
+   def getParentCallable(self):
+      
+      m = self.package
+      
+      while m:
+         if m.callable:
+            return copy.deepcopy(m.callable)
+         else:
+            m = m.parent_package
+            
+      return None
+   
+class Package(object):
+   
+   def __init__(self, name):
+      self.name = name
+      self.inputs = {}
+      self.functions = {}
+      self.packages = {}
+      self.description = ""
+      self.callable = None
+      self.parent_package = None
+      
+   def getName(self):
+      return self.name
+   
+   def writeYaml(self, target, indent = ""):
+      target.write(indent + "- name: " + self.name + "\n")
+      target.write(indent + "  description: " + str(self.description) + "\n")
+      if self.callable:
+         target.write(indent + "  callable:\n")
+         self.callable.writeYaml(target, indent + indent_level)
+         
+      if len(self.inputs) > 0:
+         target.write(indent + "  inputs:\n")
+         for input in self.inputs.values():
+            input.writeYaml(target, indent + indent_level)
+            
+      if len(self.functions) > 0:
+         target.write(indent + "  functions:\n")
+         for function in self.functions.values():
+            function.writeYaml(target, indent + indent_level)
+            
+      if len(self.packages) > 0:
+         target.write(indent + "  packages:\n")
+         for package in self.packages.values():
+            package.writeYaml(target, indent + indent_level)
+
+# This class parses a mangled symbol name and extract related information
+#
+class Symbol(object):
+   
+   def __init__(self, extractor, name_mangled):
+      
+      self.extractor = extractor
+      self.name_mangled = name_mangled
+      self.name_unmangled = extractor.demangleSymbolName(self.name_mangled)
+      self.symbol_type = SYMBOL_TYPE_NONE
+      
+      self.is_relevant = False
+
+      for (mangled_package_name, package_name) \
+         in extractor.mangled_package_name_to_package_name.items():
+         
+         input_name_regex = 'kaleidoscope::remote_call::' + mangled_package_name \
+            + '::(_______package_______|_______inputs_______|_______function_______|_______info_______)' \
+            + '(::([\w:]+))?'
+
+         input_info_match = regex.match(input_name_regex, self.name_unmangled)
+         
+         if input_info_match == None:
+            continue
+         
+         self.is_relevant = True
+         self.symbol_type = SYMBOL_TYPE_MODULE
+         self.package_name = package_name
+         
+         sub_type = input_info_match.group(1)
+         rest = input_info_match.group(3)
+         
+         if sub_type == "_______package_______":
+            self.is_relevant = False
+            break
+         elif sub_type == "_______info_______":
+            self.info_type = rest
+         elif sub_type == "_______inputs_______":
+            
+            self.symbol_type = SYMBOL_TYPE_INPUT
+            
+            input_data_regex = '(\w+)::_______info_______::(\w+)'
+            input_data_match = regex.match(input_data_regex, rest)
+            
+            if not input_data_match:
+               logging.error("Strange input data \'" + rest + "\'")
+
+            self.input_name = input_data_match.group(1)
+            self.info_type = input_data_match.group(2)
+
+            if not (   (self.info_type == "description") \
+                    or (self.info_type == "size") \
+                    or (self.info_type == "type") \
+                    or (self.info_type == "callable") \
+                    or (self.info_type == "address")):
+               logging.error("Strange package input datum \'" + self.info_type + "\'")
+               
+         elif sub_type == "_______function_______":
+         
+            self.symbol_type = SYMBOL_TYPE_PROCEDURE
+               
+            proc_info_regex = '(\w+)::_______info_______::(\w+)'
+            proc_data_match = regex.match(proc_info_regex, rest)
+            
+            if proc_data_match:
+               self.proc_name = proc_data_match.group(1)
+               self.info_type = proc_data_match.group(2)
+            else:
+               
+               args_info_regex = '(\w+)::(_______arguments_______|_______results_______)::(\w+)::_______info_______::(\w+)'
+               data_match = regex.match(args_info_regex, rest)
+               
+               if data_match:
+                  if data_match.group(2) == "_______arguments_______":
+                     self.symbol_type = SYMBOL_TYPE_FUNCTION_ARG
+                  elif data_match.group(2) == "_______results_______":
+                     self.symbol_type = SYMBOL_TYPE_FUNCTION_RESULT
+                     
+                  self.proc_name = data_match.group(1)
+                  self.io_name = data_match.group(3)
+                  self.info_type = data_match.group(4)
+               else:
+                  self.is_relevant = False
+                  break
+                  #logging.error("Strange function args data \'" + rest + "\'") 
+         else:
+            # Do not report an error to enable nested packages
+            pass
+     
+class SymbolExtractor(object):
+   
+   def __init__(self):
+      
+      self.packages = {}
+      
+      self.parseCommandLineArgs()
+      self.findExecutables()
+      self.findBuildArtifacts()
+      
+   def parseCommandLineArgs(self):
+      
+      import argparse
+
+      parser = argparse.ArgumentParser(description='Extracts package information from Kaleidoscope binaries.')
+            
+      parser.add_argument('--sketch_dir', \
+                           help = 'Base build directory with sketch information')
+      parser.add_argument('--binutils_dir', \
+                           help = 'Directory where binutils are stored')
+      parser.add_argument('--binutils_prefix', \
+                           help = 'Prefix for binutils (optional)',
+                           default = '')
+      parser.add_argument('--yaml_output_file', \
+                           help = 'The filename of a yaml output file to create',
+                           default = '')
+      parser.add_argument('--ram_start_address', \
+                           help = 'The hex load address of the start of RAM', \
+                           default = "0x800000") # Default value for AVR
+      parser.add_argument('--function_address_divisor', \
+                           help = 'A power of two to divide callable addresses by', \
+                           default = '2') # Default value for AVR
+      
+      args = parser.parse_args()
+      
+      self.sketch_dir = args.sketch_dir
+      self.binutils_dir = args.binutils_dir
+      self.binutils_prefix = args.binutils_prefix
+      self.yaml_output_file = args.yaml_output_file
+      self.ram_start_address = int(args.ram_start_address, 16)
+      self.function_address_divisor = int(args.function_address_divisor)
+      
+   def findBuildArtifacts(self):
+      
+      sketch_obj_dir = self.sketch_dir + '/build/sketch'
+      
+      self.sketch_object = findFirstFile(sketch_obj_dir, '.o')
+      
+      if not self.sketch_object:
+         logging.error('Unable to find sketch object file')
+      else:
+         print 'Sketch object file: ' + self.sketch_object
+         
+      elf_dir = self.sketch_dir + '/build'
+      
+      self.map_file = findFirstFile(elf_dir, '.map')
+      
+      if not self.map_file:
+         logging.error('Unable to find firmware linker map file')
+      else:
+         print 'Firmware linker map file: ' + self.map_file
+                  
+      self.elf_file = findFirstFile(elf_dir, '.elf')
+      
+      if not self.elf_file:
+         logging.error('Unable to find firmware elf file')
+      else:
+         print 'Firmware elf file: ' + self.elf_file
+         
+   def findExecutables(self):
+      
+      self.objdump_executable = self.binutils_dir + '/' + self.binutils_prefix + 'objdump'
+      
+      if not is_exe(self.objdump_executable):
+         logging.error('Unable to find objdump executable \'' + self.objdump_executable + '\'')
+      
+      self.objcopy_executable = self.binutils_dir + '/' + self.binutils_prefix + 'objcopy'
+      
+      if not is_exe(self.objcopy_executable):
+         logging.error('Unable to find objcopy executable \'' + self.objcopy_executable + '\'')
+         
+      self.cpp_filt_executable = self.binutils_dir + '/' + self.binutils_prefix + 'c++filt'
+      
+      if not is_exe(self.cpp_filt_executable):
+         logging.error('Unable to find c++filt executable \'' + self.cpp_filt_executable + '\'')
+         
+   def demangleSymbolName(self, name):
+      
+      cmd = [self.cpp_filt_executable, name]
+      proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+      o, e = proc.communicate()
+      
+      return o.decode('utf8').rstrip()
+   
+   # Retreives the value of a mangled symbol from the sketch object file
+   #
+   def getValueFromSection(self, symbol_name_mangled):
+      
+      data = self.getValueFromSectionAux('.rodata.' + symbol_name_mangled)
+      
+      if data != None:
+         return data
+      
+      data = self.getValueFromSectionAux('.data.' + symbol_name_mangled)
+      
+      if data != None:
+         return data
+      
+      data = self.getValueFromSectionAux('.bss.' + symbol_name_mangled)
+      
+      if data != None:
+         return data
+      
+      logging.error("Unable to find section for mangled symbol \'" + symbol_name_mangled \
+         + "\' in sketch object file")
+      
+   def getValueFromSectionAux(self, section_name):
+      
+      cmd = [self.objdump_executable, '-s', '-j', section_name, self.sketch_object]
+      proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+      o, e = proc.communicate()
+      
+      objdump_output = o.decode('utf8')
+         
+      lines = objdump_output.splitlines()
+      
+      data = []
+       
+      data_regex = "^\s*[\da-fA-F]+\s*(([\da-fA-F]+\s*)+)"
+      
+      in_data_lines = False 
+      for line in lines:
+         if in_data_lines:
+            data_block = regex.match(data_regex, line)
+            
+            if not data_block:
+               logging.error('Unable to find data block for section \'' + section_name \
+                             + '\' in sketch object file')
+            
+            tokens = data_block.group(1).split()
+            
+            block_regex = "([\da-fA-F][\da-fA-F])"
+            for token in tokens:
+               
+               for byte in regex.findall(block_regex, token):
+                  data.append(int(byte, 16))
+         else:
+            if line.find('Contents of section') != -1: 
+               in_data_lines = True
+         
+      if not in_data_lines:
+         return None
+
+      return data
+      
+   def getPackage(self, package_name):
+      
+      package_tokens = package_name.split("::")
+      
+      cur_packages = self.packages
+      cur_package = None
+
+      for token in package_tokens:
+         
+         if not token in cur_packages.keys():
+            cur_packages[token] = Package(token)
+            cur_packages[token].parent_package = cur_package
+         
+         cur_package = cur_packages[token]
+         cur_packages = cur_package.packages
+
+      return cur_package
+      
+   def getInput(self, package_name, input_name):
+         
+      package = self.getPackage(package_name)
+      
+      if not input_name in package.inputs.keys():
+         package.inputs[input_name] = Input(package, input_name)
+         package.inputs[input_name].package = package
+         
+      return package.inputs[input_name]
+   
+   def getPackageFunction(self, package_name, function_name):
+         
+      package = self.getPackage(package_name)
+      
+      if not function_name in package.functions.keys():
+         package.functions[function_name] = Function(package, function_name)
+         package.functions[function_name].package = package
+         
+      return package.functions[function_name]
+   
+   def readRelocationLine(self, line, symbol):
+      
+      match = regex.match("\d+ \w+\s+(\S+)", line)
+      reloc_target = match.group(1)
+      
+      if match == None:
+         logging.error("Strange reloc info line: \'" + line + "\'")
+         
+      if symbol.symbol_type == SYMBOL_TYPE_INPUT:
+         target = self.getInput(symbol.package_name, symbol.input_name)
+      elif symbol.symbol_type == SYMBOL_TYPE_MODULE:
+         target = self.getPackage(symbol.package_name)
+      elif symbol.symbol_type == SYMBOL_TYPE_PROCEDURE:
+         target = self.getPackageFunction(symbol.package_name, symbol.proc_name)
+      elif symbol.symbol_type == SYMBOL_TYPE_FUNCTION_ARG:
+         target = self.getPackageFunction(symbol.package_name, symbol.proc_name).getArgument(symbol.proc_arg)
+      elif symbol.symbol_type == SYMBOL_TYPE_FUNCTION_RESULT:
+         target = self.getPackageFunction(symbol.package_name, symbol.proc_name).getResult(symbol.proc_arg)
+      else:
+         logging.error("Strange symbol type " + str(symbol.symbol_type))
+         dump_object(symbol, sys.stdout, indent_level)
+      
+      match = regex.match("\.text\.(\w+)", reloc_target)
+      
+      if match:
+         target.callable \
+            = Callable(match.group(1), \
+                              self.demangleSymbolName(match.group(1)))
+      else:
+         #print "target: " + reloc_target
+      
+         match = regex.match("\.(bss|data)\.(\w+)(\+([\da-fA-Fx]+))?", reloc_target)
+         if match:
+            target.data.symbol_mangled = match.group(2)
+            target.data.symbol_unmangled = self.demangleSymbolName(match.group(2))
+            
+            if match.group(4):
+               target.data.offset = int(match.group(4), 16)
+            else:
+               target.data.offset = 0
+            
+   def readRelocationInfo(self, objdump_output):
+      
+      # Parse relocation info generated by the compiler.
+      # It enables the linker to generate correct addresses in case of program relocation.
+      # Whenever the addresses of any global symbol has been assigned to a global variable
+      # the linker must resolve this address at program startup and compute the correct value.
+      #
+      # Here we exploit this feature to determine the correct symbol that is used as update function
+      # and to get the relative symbol offset or address of object input variables or global
+      # variables.
+      
+      lines = objdump_output.splitlines()
+      base_reloc_regex = "RELOCATION RECORDS FOR \[([\.\w]+)\]"
+      
+      skip = False
+      parse_next_line = False
+      for line in lines:
+         
+         if skip:
+            skip = False
+            continue
+         
+         if parse_next_line:
+            
+            parse_next_line = False
+            
+            self.readRelocationLine(line, symbol)
+            
+         reloc_line_match = regex.match(base_reloc_regex, line)
+         
+         if not reloc_line_match:
+            continue
+         
+         r_line_tokens = reloc_line_match.group(1).split('.')
+         
+         symbol_name_mangled = r_line_tokens[len(r_line_tokens) - 1]
+         
+         #print "Symbol mangled: " + symbol_name_mangled
+         
+         symbol = Symbol(self, symbol_name_mangled)
+         
+         if not symbol.is_relevant:
+            continue
+         
+         #print "Is package symbol"
+         if    (symbol.info_type == "callable") \
+            or (symbol.info_type == "address"):
+            #print "Parsing next line"
+            skip = True
+            parse_next_line = True
+            
+   def readPackages(self, objdump_output):
+      
+      package_regex = "\.(\w+kaleidoscope[0-9]+remote_call[0-9]+\S+)"
+      package_candidates = unique(regex.findall(package_regex, objdump_output))
+      
+      self.mangled_package_name_to_package_name = {}
+      #package_cand_regex = "kaleidoscope::remote_call::((?P<package>\w+)::)+_______package_______"
+      package_cand_regex = "kaleidoscope::remote_call::([\w:]+)::_______package_______"
+      
+      for package_candidate in package_candidates:
+         package_candidate_unmangled = self.demangleSymbolName(package_candidate)
+         
+         match = regex.match(package_cand_regex, package_candidate_unmangled)
+         
+         if match:
+            
+            mangled_package_name = match.group(1)
+            
+            # Package namespace are named like _______package42_______ThePackageName
+            # This is because due to implementation details every invocation to
+            # KRC_PACKAGE(...) must generate an individual namespace. The
+            # same package can thus have different C++ namespace names with
+            # different integer numbers.
+            #
+            # Therefore, we must map such mangled namespace names to unique
+            # package namespace names.
+            #
+            namespaces_match = regex.match("(_______package(?P<id>\d+)_______(?P<name>\w+):*:*)+", mangled_package_name)
+            
+            namespace_tokens = namespaces_match.captures("name")
+            
+            package_name = "::".join(namespace_tokens)
+            
+            self.mangled_package_name_to_package_name[mangled_package_name] = package_name
+         
+   def extractPackageInfo(self, objdump_output):
+      
+      print ""
+      
+      package_regex = '\.(\w+kaleidoscope[0-9]+remote_call\w+)'
+      symbol_names_mangled = unique(regex.findall(package_regex, objdump_output))
+      
+      for symbol_name_mangled in symbol_names_mangled:
+         
+         symbol = Symbol(self, symbol_name_mangled)
+         
+         if not symbol.is_relevant:
+            continue
+         
+         if symbol.symbol_type == SYMBOL_TYPE_MODULE:
+            
+            target = self.getPackage(symbol.package_name)
+            
+            if symbol.info_type == "description":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.description = str(bytearray(data))[:-1] # remove last char
+            elif symbol.info_type == "callable":
+               # Parsed from relocation data
+               pass
+            elif symbol.info_type == "address":
+               # Parsed from relocation data
+               pass
+            else:
+               logging.error("Strange package info type \'" + symbol.info_type + "\'")
+               
+         elif symbol.symbol_type == SYMBOL_TYPE_INPUT:
+            
+            target = self.getInput(symbol.package_name, symbol.input_name)
+            
+            if symbol.info_type == "description":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.description = str(bytearray(data))[:-1] # remove last char
+            elif symbol.info_type == "callable":
+               # Parsed from relocation data
+               pass
+            elif symbol.info_type == "address":
+               # Parsed from relocation data
+               pass
+            elif symbol.info_type == "size":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.data.size = data[0] + 0xFF*data[1]
+            elif symbol.info_type == "type":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.data.type = type_ids[data[0]]
+            else:
+               logging.error("Strange package input info type \'" + symbol.info_type + "\'")
+               
+         elif symbol.symbol_type == SYMBOL_TYPE_PROCEDURE:
+            
+            target = self.getPackageFunction(symbol.package_name, symbol.proc_name)
+            
+            if symbol.info_type == "description":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.description = str(bytearray(data))[:-1] # remove last char
+            elif symbol.info_type == "callable":
+               # Parsed from relocation data
+               pass
+            else:
+               logging.error("Strange package function info type \'" + symbol.info_type + "\'")
+               
+         elif (symbol.symbol_type == SYMBOL_TYPE_FUNCTION_ARG) \
+            or (symbol.symbol_type == SYMBOL_TYPE_FUNCTION_RESULT):
+
+            # Ignore void results and arguments
+            #
+            if symbol.io_name == "_______void_______":
+               continue
+            
+            proc = self.getPackageFunction(symbol.package_name, symbol.proc_name)
+            
+            if symbol.symbol_type == SYMBOL_TYPE_FUNCTION_ARG:
+               target = proc.getArgument(symbol.io_name)
+            else:
+               target = proc.getResult(symbol.io_name)
+            
+            if symbol.info_type == "description":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.description = str(bytearray(data))[:-1] # remove last char
+            elif symbol.info_type == "offset":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.data.offset = data[0]
+            elif symbol.info_type == "size":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.data.size = data[0] + 0xFF*data[1]
+            elif symbol.info_type == "type":
+               data = self.getValueFromSection(symbol.name_mangled)
+               target.data.type = type_ids[data[0]]
+            else:
+               logging.error("Strange package function argument info type \'" + symbol.info_type + "\'")
+               
+         else:
+            logging.error("Strange symbol type \'" + str(symbol.symbol_type) + "\'")
+            
+   # The linker map file provides information about where global variables
+   # and functions reside in RAM and PROGMEM, respectively.
+   #
+   def parseMapFile(self):
+      
+      my_file = open(self.map_file, "rt")
+      
+      text_regex = '\s+\.(text|bss|data)\.(\w+)'
+      address_line_regex = '\s+(\w+)\s'
+      
+      self.unmangled_symbol_to_address = {}
+      self.mangled_symbol_to_address = {}
+      
+      parse_next_line = False
+      in_map_section = False
+      
+      for line in my_file.readlines():
+         
+         if not in_map_section:
+            if line.find("Linker script and memory map") != -1:
+               in_map_section = True
+            continue
+         
+         if parse_next_line:
+            address_line_match = regex.match(address_line_regex, line)
+            
+            if not address_line_match:
+               logging.error("Strange address line \'" + line + "\'")
+               
+            address = address_line_match.group(1)
+            
+            self.unmangled_symbol_to_address[symbol_unmangled] = address
+            self.mangled_symbol_to_address[symbol_mangled] = address
+            
+            parse_next_line = False
+            
+            continue
+         
+         text_match = regex.match(text_regex, line)
+         
+         if not text_match:
+            continue
+         
+         symbol_mangled = text_match.group(2)
+         symbol_unmangled = self.demangleSymbolName(symbol_mangled)
+         parse_next_line = True
+         
+   # After the map file has been read, the absolute addresses of
+   # package inputs and update functions need to be resolved.
+   # This is done by checking the map file and calculating the right
+   # addresses.
+   #
+   def collectSymbolAddressesOfPackage(self, package = None):
+      
+      if package == None:
+         for package in self.packages.values():
+            self.collectSymbolAddressesOfPackage(package)
+         return
+      
+      for sub_package in package.packages.values():
+         self.collectSymbolAddressesOfPackage(sub_package)
+         
+      if package.callable:
+         self.collectSymbolAddressesOfCallable(package.callable)
+            
+      for input in package.inputs.values():
+         self.collectSymbolAddressesOfData(input.data)
+         self.collectSymbolAddressesOfCallable(input.callable, input = input)
+         
+      for function in package.functions.values():
+         self.collectSymbolAddressesOfCallable(function.callable)
+     
+   def collectSymbolAddressesOfData(self, data):
+      
+      if not "symbol_unmangled" in data.__dict__.keys():
+         logging.error("Data is missing symbol_unmangled key")
+         dump_object(data)
+      
+      if data.symbol_unmangled in self.unmangled_symbol_to_address.keys():
+         data.address = int(self.unmangled_symbol_to_address[data.symbol_unmangled], 16) + data.offset - self.ram_start_address
+         data.base_address = int(self.unmangled_symbol_to_address[data.symbol_unmangled], 16) - self.ram_start_address
+      else:
+         data.address = "unexported"
+         data.base_address = "unexported"
+
+   def collectSymbolAddressesOfCallable(self, callable, input = None):
+      
+      if callable:
+         if callable.symbol_unmangled in self.unmangled_symbol_to_address.keys():
+            # Function addresses must be divided by two (two byte words)
+            callable.address \
+               = int(self.unmangled_symbol_to_address[callable.symbol_unmangled], 16) \
+                  /self.function_address_divisor
+         elif callable.symbol_unmangled == "kaleidoscope::remote_call::_______noUpdate_______()":
+            callable = None
+         else:
+            callable.address = "unexported"
+            
+         if input:
+            callable.inherited = False
+      elif input:
+         callable = input.getParentCallable()
+         callable.inherited = True
+         
+   def resolveFunctionIODatum(self, datum):
+      datum.data.address = self.args_start + datum.data.offset - self.ram_start_address
+      datum.data.base_address = self.args_start - self.ram_start_address
+      datum.data.symbol_unmangled = self.args_symbol_unmangled
+         
+   def resolveFunctionArgsAbsAddressProc(self, function):
+      
+      for arg in function.arguments.values():
+         self.resolveFunctionIODatum(arg)
+         
+      for result in function.results.values():
+         self.resolveFunctionIODatum(result)
+      
+   def resolveFunctionArgsAbsAddress(self, package = None):
+      
+      if package == None:
+
+         self.args_symbol_unmangled = 'kaleidoscope::remote_call::_______function_io_union_______'
+         
+         if not self.args_symbol_unmangled in self.unmangled_symbol_to_address.keys():
+            logging.error("Unable to find address of symbol \'" + self.args_symbol_unmangled + '\'')
+         
+         self.args_start = int(self.unmangled_symbol_to_address[self.args_symbol_unmangled], 16)
+         
+         for package in self.packages.values():
+            self.resolveFunctionArgsAbsAddress(package)
+         return
+      
+      for function in package.functions.values():
+         self.resolveFunctionArgsAbsAddressProc(function)
+         
+      for sub_package in package.packages.values():
+         self.resolveFunctionArgsAbsAddress(sub_package)
+         
+   def computeFileHash64(self, filename):
+      
+      import hashlib
+ 
+      hasher = hashlib.sha1()
+      with open(filename, 'rb') as afile:
+         buf = afile.read()
+         hasher.update(buf)
+         
+      return int(hasher.hexdigest(), 16) % (2 ** 64)
+   
+   def replaceElfFileChecksum(self):
+      
+      data = self.getValueFromSectionAux('.progmem.data._ZN12kaleidoscope6remote_call17firmware_checksumE')
+      
+      if data == None:
+         print "Firmware checksum not supported"
+         self.checksum_bytearray = None
+         return
+      
+      checksum = 0
+      for datum in data:
+         checksum += datum
+      
+      checksum = self.computeFileHash64(self.sketch_object)
+      
+      import struct
+      self.checksum_bytearray = bytearray(struct.pack('<Q', checksum))
+      
+      if checksum != 0:
+         print "Checksum " + str(map(hex, data)) + " already set"
+         return
+      
+      checksum_file = self.sketch_object + '.checksum'
+      with open(checksum_file, 'w+b') as f:
+         f.write(self.checksum_bytearray)
+         
+      print "Setting checksum " + str(hex(checksum))
+      
+      cmd = [self.objcopy_executable, "--update-section", ".progmem.data._ZN12kaleidoscope6remote_call17firmware_checksumE=" + checksum_file, self.sketch_object]
+      
+      proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+      o, e = proc.communicate()
+         
+   def writeYaml(self, target):
+      
+      if self.checksum_bytearray != None:
+         target.write("checksum: ")
+         
+         for byte in self.checksum_bytearray:
+            target.write(str(hex(byte)) + " ")
+         target.write("\n")
+      
+      target.write("packages:\n")
+      if len(self.packages) > 0:
+         for package in self.packages.values():
+            package.writeYaml(target, indent_level)
+            
+   # Read package and symbol information from the sketch object and the map 
+   # file.
+   #
+   def run(self):
+      
+      cmd = [self.objdump_executable, '-x', self.sketch_object]
+      proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+      o, e = proc.communicate()
+      
+      objdump_output = o.decode('utf8')
+      
+      self.readPackages(objdump_output)
+      self.readRelocationInfo(objdump_output)
+      self.extractPackageInfo(objdump_output)
+      self.parseMapFile()
+      self.collectSymbolAddressesOfPackage()
+      self.resolveFunctionArgsAbsAddress()
+      
+      self.replaceElfFileChecksum()
+      #self.listPackages(sys.stdout)
+      
+      if self.yaml_output_file:
+         with open(self.yaml_output_file, 'w') as yaml_file:
+            self.writeYaml(yaml_file)
+      else:
+         self.writeYaml(sys.stdout)
+         
+if __name__ == "__main__":
+   SymbolExtractor().run()
