@@ -8,6 +8,9 @@ TESTS			?= $(shell find . -name 'sketch.ino' -exec dirname {} \;)
 .PHONY: clean cmake-clean all googletest
 
 all: ${TESTS}
+	@for test in ${TESTS}; do \
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} top_dir=${top_dir} testcase=$${test} run; \
+	done
 
 cmake-clean:
 	-${MAKE} clean
@@ -28,5 +31,8 @@ ${libcommon_a}:
 Makefile:
 	@:
 
-%: ${libcommon_a} googletest
+${TESTS}: ${libcommon_a} googletest
 	${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ top_dir=${top_dir} testcase=$@
+
+%+run:
+	${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $* top_dir=${top_dir} testcase=$* run
