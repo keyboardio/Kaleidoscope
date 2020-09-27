@@ -21,6 +21,8 @@ else
 bundle_path = ${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries
 endif
 
+build: ${BIN_DIR}/${BIN_FILE}
+
 all: run
 
 run: ${BIN_DIR}/${BIN_FILE}
@@ -76,4 +78,4 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 clean:
 	rm -rf "${build_dir}"
 
-.PHONY: clean run all
+.PHONY: clean run all build
