@@ -21,12 +21,7 @@ install:
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
 script:
   - unset CC
-  - make cpplint BOARD_HARDWARE_PATH=$(pwd)/../hardware
-  - make travis-install-arduino BOARD_HARDWARE_PATH=$(pwd)/../hardware
-  - (cd ../hardware/keyboardio && make prepare-virtual)
-  - make -C tests all BOARD_HARDWARE_PATH=$(pwd)/../hardware ARDUINO_PATH="$(pwd)/arduino-1.8.13"
-  - rm -rf .kaleidoscope-build-cache
-  - make travis-test KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware
+  - make $TEST_TARGET KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware ARDUINO_PATH="$(pwd)/arduino-1.8.13"
 notifications:
   email:
     on_success: change
@@ -34,5 +29,4 @@ notifications:
 cache:
   ccache: true
   directories:
-    - .kaleidoscope-build-cache
     - .ccache
