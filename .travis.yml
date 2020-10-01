@@ -8,6 +8,9 @@ addons:
     packages:
       - shellcheck
       - cmake
+env:
+  global:
+  - LC_ALL: C
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
 ## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
