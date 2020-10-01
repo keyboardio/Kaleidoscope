@@ -18,8 +18,8 @@
 
 #include "kaleidoscope/key_defs.h"
 
-namespace kaleidoscope {
-namespace sketch_exploration {
+namespace kaleidoscope { // NOLINT(build/namespaces)
+namespace sketch_exploration { // NOLINT(build/namespaces)
 
 // A simple keymap adaptor class that makes the keymap conveniently accessible.
 // at compiletime.
@@ -214,7 +214,7 @@ extern void pluginsExploreSketch();
 // exploreSketch<_Sketch>(...)-hook.
 //
 #define _INIT_KEYMAP_EXPLORATION                                               \
-  namespace kaleidoscope {                                                     \
+  namespace kaleidoscope { /* NOLINT(build/namespaces) */                      \
   namespace sketch_exploration {                                               \
                                                                                \
      template<bool _keymap_is_empty>                                           \
