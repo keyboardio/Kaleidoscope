@@ -35,3 +35,4 @@ cache:
   directories:
     - .ccache
     - .download-cache
+    - .kaleidoscope-build-cache
