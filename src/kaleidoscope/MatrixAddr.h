@@ -47,7 +47,7 @@ class MatrixAddr {
   constexpr MatrixAddr(uint8_t row, uint8_t col)
     : offset_(row * cols + col) {}
 
-  constexpr MatrixAddr(uint8_t offset)
+  explicit constexpr MatrixAddr(uint8_t offset)
     : offset_(offset) {}
 
   // Rely on the default copy and move constructor.

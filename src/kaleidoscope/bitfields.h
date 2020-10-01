@@ -113,7 +113,7 @@ class Bitfield : public internal::_BaseBitfield {
   static constexpr size_t n_bytes_ = nBytesForBits(BitCount__);
 
   template<typename ... Bits__>
-  constexpr Bitfield(Bits__...bits) : bits_(bits...) {
+  explicit constexpr Bitfield(Bits__...bits) : bits_(bits...) {
     static_assert(sizeof...(Bits__) == n_bits_,
                   "Invalid number of bits supplied to Bitfield<BitCount__> constructor. \n"
                   "Compare the number of bits supplied with the provided template \n"
