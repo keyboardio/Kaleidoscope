@@ -80,7 +80,7 @@ class WS2812 {
   }
 
  private:
-  Color leds_[ledCount];
+  Color leds_[ledCount]; // NOLINT(runtime/arrays)
   uint8_t pinmask_;
   bool modified_ = false;
 
