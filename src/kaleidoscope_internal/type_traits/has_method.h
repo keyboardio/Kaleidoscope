@@ -62,7 +62,7 @@
                METHOD_NAME ADD_TEMPLATE_BRACES(UNWRAP TMPL_PARAM_LIST)  __NL__ \
          ), bool{}                                                      __NL__ \
       )                                                                 __NL__ \
-      test(int /* unused */)                                            __NL__ \
+      test(int /* unused */) /* NOLINT(readability/casting) */          __NL__ \
       {                                                                 __NL__ \
          return true;                                                   __NL__ \
       }                                                                 __NL__ \
@@ -75,4 +75,3 @@
                                                                         __NL__ \
       static constexpr bool value = test<Class__>(int{});               __NL__ \
    };
-
