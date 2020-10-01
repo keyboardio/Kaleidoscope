@@ -16,6 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #ifdef ARDUINO_SAMD_RAISE
 
 #include <Arduino.h>

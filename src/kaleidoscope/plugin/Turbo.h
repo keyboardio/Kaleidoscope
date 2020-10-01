@@ -19,6 +19,8 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
+#pragma once
+
 #define Key_Turbo Key{kaleidoscope::ranges::TURBO }
 
 namespace kaleidoscope {
