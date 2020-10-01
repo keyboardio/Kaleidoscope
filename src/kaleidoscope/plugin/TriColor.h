@@ -42,7 +42,7 @@ class TriColor : public Plugin,
 
    protected:
 
-    virtual void update(void) final;
+    void update(void) final;
 
    private:
 

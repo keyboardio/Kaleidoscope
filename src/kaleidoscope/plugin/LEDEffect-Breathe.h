@@ -41,7 +41,7 @@ class LEDBreatheEffect : public Plugin,
       : parent_(parent) {}
 
    protected:
-    virtual void update(void) final;
+    void update(void) final;
 
    private:
 

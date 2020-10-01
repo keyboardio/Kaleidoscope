@@ -57,7 +57,7 @@ class WavepoolEffect : public Plugin,
 
    protected:
 
-    virtual void update() final;
+    void update() final;
 
    private:
 

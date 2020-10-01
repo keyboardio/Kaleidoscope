@@ -46,7 +46,7 @@ class LEDRainbowEffect : public Plugin,
     TransientLEDMode(const LEDRainbowEffect *parent)
       : parent_(parent) {}
 
-    virtual void update() final;
+    void update() final;
 
    private:
 
@@ -91,7 +91,7 @@ class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
     TransientLEDMode(const LEDRainbowWaveEffect *parent)
       : parent_(parent) {}
 
-    virtual void update() final;
+    void update() final;
 
    private:
 
