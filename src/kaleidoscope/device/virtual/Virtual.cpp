@@ -360,7 +360,7 @@ void VirtualLEDDriver::syncLeds() {
 }
 
 void VirtualLEDDriver::setCrgbAt(uint8_t i, cRGB color) {
-  if ((int)i >= (int)led_count) {
+  if (static_cast<int>(i) >= static_cast<int>(led_count)) {
     log_error("Virtual::setCrgbAt: Index %d out of bounds\n", i);
     return;
   }
@@ -368,7 +368,7 @@ void VirtualLEDDriver::setCrgbAt(uint8_t i, cRGB color) {
 }
 
 cRGB VirtualLEDDriver::getCrgbAt(uint8_t i) const {
-  if ((int)i >= (int)led_count) {
+  if (static_cast<int>(i) >= static_cast<int>(led_count)) {
     log_error("Virtual::getCrgbAt: Index %d out of bounds\n", i);
     return CRGB(0, 0, 0);
   }

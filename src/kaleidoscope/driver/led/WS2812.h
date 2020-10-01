@@ -85,7 +85,7 @@ class WS2812 {
   bool modified_ = false;
 
   void sendArrayWithMask(uint8_t maskhi) {
-    uint8_t *data = (uint8_t *)leds_;
+    uint8_t *data = reinterpret_cast<uint8_t *>(leds_);
     uint16_t datalen = ledCount * sizeof(Color);
     uint8_t curbyte, ctr, masklo;
     uint8_t sreg_prev;
