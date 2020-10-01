@@ -34,3 +34,4 @@ cache:
   ccache: true
   directories:
     - .ccache
+    - .download-cache
