@@ -59,6 +59,6 @@ __attribute__((weak))
 EventHandlerResult Hooks::exploreSketch
 <sketch_exploration::Sketch>() {
   return EventHandlerResult::OK;
-};
+}
 
 } // namespace kaleidoscope

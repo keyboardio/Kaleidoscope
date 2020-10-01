@@ -167,9 +167,11 @@ void VirtualKeyScanner::readMatrix() {
     std::string token;
     std::getline(sline, token, ' ');
 
-    if (token == "") break;   // end of line
-    else if (token == "#") break;   // skip the rest of the line
-    else if ((token == "?" || token == "help") && isInteractive()) {
+    if (token == "") {
+      break;   // end of line
+    } else if (token == "#") {
+      break;   // skip the rest of the line
+    } else if ((token == "?" || token == "help") && isInteractive()) {
       printHelp();
     } else if (token == "Q") {
       exit(0);

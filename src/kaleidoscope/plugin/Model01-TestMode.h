@@ -35,7 +35,7 @@ namespace plugin {
 
 class TestMode : public kaleidoscope::Plugin {
  public:
-  DEPRECATED(MODEL01_TESTMODE) EventHandlerResult beforeReportingState() {};
+  DEPRECATED(MODEL01_TESTMODE) EventHandlerResult beforeReportingState() {}
 };
 }
 }
