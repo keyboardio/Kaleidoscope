@@ -85,7 +85,7 @@ struct ArrayLikeStorage<StoredType__, true /* is of appropriate type */> {
 
  public:
 
-  explicit constexpr ArrayLikeStorage(StoredType__ entry)
+  constexpr ArrayLikeStorage(StoredType__ entry)
     : entry_(entry)
   {}
 
@@ -103,7 +103,7 @@ struct ArrayLikeStorage<StoredType__, false /* not of appropriate type */> {
  public:
 
   template<typename AnyType__>
-  explicit constexpr ArrayLikeStorage(AnyType__/* non-matching entity */) {}
+  constexpr ArrayLikeStorage(AnyType__/* non-matching entity */) {}
 
   static constexpr uint8_t n_entries = 0;
 
