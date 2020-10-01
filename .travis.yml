@@ -13,6 +13,8 @@ env:
   - LC_ALL: C
 git:
   quiet: true
+before-install: 
+  - ccache --set-config=compiler_check=content
 install:
   - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
 ## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
