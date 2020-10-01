@@ -99,9 +99,9 @@
       }                                                                   __NL__ \
    };                                                                     __NL__ \
                                                                           __NL__ \
-   /* This specialization is used for those hooks that a plugin does not  __NL__ \
-    * implement.                                                          __NL__ \
-    */                                                                    __NL__ \
+   /* This specialization is used for those hooks that a plugin does */   __NL__ \
+   /* not implement. */                                                   __NL__ \
+                                                                          __NL__ \
    template<typename Plugin__                                             __NL__ \
             UNWRAP TMPL_PARAM_TYPE_LIST /* may evaluate empty */          __NL__ \
             , typename... Args__>                                         __NL__ \
