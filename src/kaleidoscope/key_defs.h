@@ -36,7 +36,7 @@ class Key {
 
   Key() = default;
 
-  constexpr Key(uint16_t raw)
+  constexpr Key(uint16_t raw) // NOLINT(runtime/explicit)
     : Key{(uint8_t)(raw & 0x00FF), (uint8_t)(raw >> 8)}
   {}
 
@@ -140,7 +140,7 @@ class Key {
 
     DataProxy() = default;
 
-    constexpr DataProxy(uint8_t value) : value_{value} {}
+    constexpr DataProxy(uint8_t value) : value_{value} {} // NOLINT(runtime/explicit)
 
     DEPRECATED(DIRECT_KEY_MEMBER_ACCESS)
     DataProxy &operator=(uint8_t value) {
