@@ -206,7 +206,7 @@ void VirtualKeyScanner::readMatrix() {
           }
         }
       } else {
-        // TODO: Is there a device independent
+        // TODO(anyone): Is there a device independent
         //       way to determine KeyAddr from key names?
 //         key_addr = getRCfromPhysicalKey(token);
 //

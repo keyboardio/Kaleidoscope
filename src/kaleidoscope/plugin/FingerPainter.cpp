@@ -57,7 +57,7 @@ EventHandlerResult FingerPainter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_
   if (!key_addr.isValid())
     return EventHandlerResult::EVENT_CONSUMED;
 
-  // TODO: The following works only for keyboards with LEDs for each key.
+  // TODO(anyone): The following works only for keyboards with LEDs for each key.
 
   uint8_t color_index = ::LEDPaletteTheme.lookupColorIndexAtPosition(color_base_, Runtime.device().getLedIndex(key_addr));
 

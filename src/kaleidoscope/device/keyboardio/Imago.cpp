@@ -159,7 +159,7 @@ void ImagoLEDDriver::syncLeds() {
   twi_writeTo(LED_DRIVER_ADDR, data, LED_REGISTER_DATA0_SIZE + 1, 1, 0);
 
   // Don't reset "Last LED", because this is just us picking up from the last bank
-  // TODO - we don't use all 117 LEDs on the Imago, so we can probably stop writing earlier
+  // TODO(anyone) - we don't use all 117 LEDs on the Imago, so we can probably stop writing earlier
   // Write the second LED bank
 
   // For space efficiency, we reuse the LED sending buffer
