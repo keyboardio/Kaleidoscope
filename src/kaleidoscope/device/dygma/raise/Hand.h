@@ -56,7 +56,7 @@ typedef union {
 
 class Hand {
  public:
-  Hand(byte ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
+  explicit Hand(byte ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
 
   int readVersion();
   int readSLEDVersion();

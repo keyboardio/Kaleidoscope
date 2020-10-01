@@ -45,7 +45,7 @@ class Heatmap : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const Heatmap *parent);
+    explicit TransientLEDMode(const Heatmap *parent);
 
     void resetMap();
     EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);

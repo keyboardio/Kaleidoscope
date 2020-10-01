@@ -47,7 +47,7 @@ class MatrixAddr {
   constexpr MatrixAddr(uint8_t row, uint8_t col)
     : offset_(row * cols + col) {}
 
-  constexpr MatrixAddr(uint8_t offset)
+  explicit constexpr MatrixAddr(uint8_t offset)
     : offset_(offset) {}
 
   // Rely on the default copy and move constructor.
@@ -57,8 +57,8 @@ class MatrixAddr {
   //       ridiculously bad assembler code for each copy construction,
   //       that would bloat the default firmware by 1K of PROGMEM!
   //
-  constexpr MatrixAddr(const ThisType &other) = default;
-  constexpr MatrixAddr(ThisType &&other) = default;
+  explicit constexpr MatrixAddr(const ThisType &other) = default;
+  explicit constexpr MatrixAddr(ThisType &&other) = default;
   //constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
   //constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
 
@@ -66,8 +66,7 @@ class MatrixAddr {
   ThisType &operator=(ThisType &&) = default;
 
   template<typename MatrixAddr__>
-  explicit
-  constexpr MatrixAddr(const MatrixAddr__ &other)
+  explicit constexpr MatrixAddr(const MatrixAddr__ &other)
     : MatrixAddr(other.row(), other.col()) {
     static_assert(MatrixAddr__::rows <= ThisType::rows,
                   "Matrix type conversion failed. Source type must not have greater row size than target type");

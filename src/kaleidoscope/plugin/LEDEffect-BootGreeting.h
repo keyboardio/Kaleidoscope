@@ -24,7 +24,7 @@ namespace plugin {
 class BootGreetingEffect : public kaleidoscope::Plugin {
  public:
   BootGreetingEffect(void) {}
-  BootGreetingEffect(KeyAddr key_addr);
+  explicit BootGreetingEffect(KeyAddr key_addr);
 
   static KeyAddr user_key_addr;
   static Key search_key;

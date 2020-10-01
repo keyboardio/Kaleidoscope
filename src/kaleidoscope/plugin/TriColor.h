@@ -37,7 +37,7 @@ class TriColor : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const TriColor *parent)
+    explicit TransientLEDMode(const TriColor *parent)
       : parent_(parent) {}
 
    protected:
