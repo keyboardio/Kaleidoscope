@@ -345,7 +345,7 @@ compile () {
 
     SKETCH_DIR="$(find_sketch)"
 
-    echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}"
+    echo "Building ${SKETCH_DIR}/${SKETCH}"
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
