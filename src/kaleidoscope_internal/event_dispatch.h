@@ -131,10 +131,10 @@
             = HookVersionImplemented_##HOOK_NAME<                         __NL__ \
                  Plugin__, HOOK_VERSION>::value;                          __NL__ \
                                                                           __NL__ \
-         /* The caller type adds another level of indirection that        __NL__ \
-          * is required to enable some hooks not to be implemented        __NL__ \
-          * by plugins.                                                   __NL__ \
-          */                                                              __NL__ \
+         /* The caller type adds another level of indirection that */     __NL__ \
+         /* is required to enable some hooks not to be implemented */     __NL__ \
+         /* by plugins.                                            */     __NL__ \
+                                                                          __NL__ \
          typedef _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) __NL__ \
             <                                                             __NL__ \
                derived_implements_hook,                                   __NL__ \
@@ -147,7 +147,7 @@
       }                                                                   __NL__ \
     };                                                                    __NL__ \
                                                                           __NL__ \
-   } 	                                                                    __NL__ \
+   } 	                                                                  __NL__ \
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \

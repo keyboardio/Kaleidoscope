@@ -338,9 +338,8 @@ class LEDModeManager {
                         0 /*dummy*/
                       )
                     );
-    parent_plugin->registerLEDModeActivated(255 /* dymmy to disable access
-            to transient LED modes through LEDControl */
-                                           );
+    // dummy to disable access to transient LED modes through LEDControl
+    parent_plugin->registerLEDModeActivated(255);
 
     return led_mode;
   }

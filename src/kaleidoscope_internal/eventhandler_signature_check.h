@@ -77,16 +77,16 @@ template<typename Plugin__> struct
 
 #define _DEFINE_IMPLEMENTATION_CHECK_CLASSES(HOOK_NAME, ...)                   \
                                                                         __NL__ \
-   /* Defines a traits class Plugin_HasMember_HOOK_NAME                 __NL__ \
-    * where HOOK_NAME is replaced with the actual hook name             __NL__ \
-    * that is passed in as a parameter to this macro.                   __NL__ \
-    */                                                                  __NL__ \
+   /* Defines a traits class Plugin_HasMember_HOOK_NAME        */       __NL__ \
+   /* where HOOK_NAME is replaced with the actual hook name    */       __NL__ \
+   /* that is passed in as a parameter to this macro.          */       __NL__ \
+                                                                      __NL__ \
    DEFINE_HAS_MEMBER_TRAITS(Plugin, HOOK_NAME)                          __NL__ \
                                                                         __NL__ \
-   /* Specializations of this helper class check if a plugin            __NL__ \
-    * implements a handler with the specific signature that is          __NL__ \
-    * identified by a hook version.                                     __NL__ \
-    */                                                                  __NL__ \
+   /* Specializations of this helper class check if a plugin    */      __NL__ \
+   /* implements a handler with the specific signature that is  */      __NL__ \
+   /* identified by a hook version.                             */      __NL__ \
+                                                                        __NL__ \
    template<typename Plugin__, int hook_version_id_>                    __NL__ \
    struct HookVersionImplemented_##HOOK_NAME {};
 
@@ -96,19 +96,19 @@ template<typename Plugin__> struct
     TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,               \
     SIGNATURE, ARGS_LIST)                                                      \
                                                                                \
-    /* We use the generalized traits class found in header has_method.h __NL__ \
-     * to do check if a plugin defines a hook method with a specific    __NL__ \
-     * signature.                                                       __NL__ \
-     */                                                                 __NL__ \
+    /* We use the generalized traits class found in header has_method.h */ __NL__ \
+    /* to do check if a plugin defines a hook method with a specific    */ __NL__ \
+    /* signature.                                                       */ __NL__ \
+                                                                        __NL__ \
     DEFINE_HAS_METHOD_TRAITS(GLUE2(Plugin, HOOK_VERSION),               __NL__ \
                              TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST,     __NL__ \
                              HOOK_NAME,                                 __NL__ \
                              kaleidoscope::EventHandlerResult,          __NL__ \
                              SIGNATURE)                                 __NL__ \
                                                                         __NL__ \
-   /* This specialization checks if a plugin of type Plugin__           __NL__ \
-    * implements a handler with given signature SIGNATURE.              __NL__ \
-    */                                                                  __NL__ \
+   /* This specialization checks if a plugin of type Plugin__  */       __NL__ \
+   /* implements a handler with given signature SIGNATURE.     */       __NL__ \
+                                                                        __NL__ \
    template<typename Plugin__>                                          __NL__ \
    struct HookVersionImplemented_##HOOK_NAME<Plugin__, HOOK_VERSION>    __NL__ \
       : public GLUE4(Plugin, HOOK_VERSION, _HasMethod_, HOOK_NAME)      __NL__ \
@@ -117,20 +117,20 @@ template<typename Plugin__> struct
 
 #define _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_START(HOOK_NAME, ...)           \
                                                                         __NL__ \
-   /* This struct enables checking if a handler of a specific type      __NL__ \
-    * has been implemented. If so, there must be exactly one overload   __NL__ \
-    * with correct signature.                                           __NL__ \
-    */                                                                  __NL__ \
+   /* This struct enables checking if a handler of a specific type    */__NL__ \
+   /* has been implemented. If so, there must be exactly one overload */__NL__ \
+   /* with correct signature.                                         */__NL__ \
+                                                                        __NL__ \
    template <class Plugin__>                                            __NL__ \
    struct NumberOfImplementationsOf_##HOOK_NAME                         __NL__ \
    {                                                                    __NL__ \
       static constexpr int value =                                      __NL__ \
          0                                                              __NL__ \
-         /* What follows is a list of handler implementation            __NL__ \
-          * checks for different versions of a handler                  __NL__ \
-          * generated by several calls to                               __NL__ \
-          * _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_OP.                  __NL__ \
-          */
+         /* What follows is a list of handler implementation   */       __NL__ \
+         /* checks for different versions of a handler         */       __NL__ \
+         /* generated by several calls to                      */       __NL__ \
+         /* _PREPARE_EVENT_HANDLER_SIGNATURE_CHECK_OP.         */
+
 
 // This is invoked for every version of a hook.
 //
@@ -151,16 +151,16 @@ template<typename Plugin__> struct
    static constexpr int n_implementations                               __NL__ \
          = NumberOfImplementationsOf_##HOOK_NAME<PLUGIN_TYPE>::value;   __NL__ \
                                                                         __NL__ \
-   /* A handler is acceptable if it is either not implemented           __NL__ \
-      * by the derived class or if there is only one implementation     __NL__ \
-      * with correct signature.                                         __NL__ \
-      * Please note that any other methods with different names         __NL__ \
-      * but other, unrelated signatures are ignored as long             __NL__ \
-      * as there is one correct implementation.                         __NL__ \
-      * Only if there are several versions supported at a time          __NL__ \
-      * and more than one of them has been implemented, we              __NL__ \
-      * treat this as an ambiguity and raise an error.                  __NL__ \
-      */                                                                __NL__ \
+     /* A handler is acceptable if it is either not implemented     */  __NL__ \
+     /* by the derived class or if there is only one implementation */  __NL__ \
+     /* with correct signature.                                     */  __NL__ \
+     /* Please note that any other methods with different names     */  __NL__ \
+     /* but other, unrelated signatures are ignored as long         */  __NL__ \
+     /* as there is one correct implementation.                     */  __NL__ \
+     /* Only if there are several versions supported at a time      */  __NL__ \
+     /* and more than one of them has been implemented, we          */  __NL__ \
+     /* treat this as an ambiguity and raise an error.              */  __NL__ \
+                                                                        __NL__ \
    static constexpr bool handler_has_wrong_signature =                  __NL__ \
          derived_implements_handler && (n_implementations == 0);        __NL__ \
                                                                         __NL__ \
@@ -187,11 +187,11 @@ template<typename Plugin__> struct
     VERBOSE_STATIC_ASSERT_FOOTER                                        __NL__ \
   );                                                                    __NL__ \
                                                                         __NL__ \
-  /* The following construct is necessary enable reporting of the       __NL__ \
-   * type of a plugin that implements an event handler with an          __NL__ \
-   * incorrect signature, because it's not possible to include any      __NL__ \
-   * non-literal string constant in a static_assert error message.      __NL__ \
-   */                                                                   __NL__ \
+  /* The following construct is necessary enable reporting of the   */  __NL__ \
+  /* type of a plugin that implements an event handler with an      */  __NL__ \
+  /* incorrect signature, because it's not possible to include any  */  __NL__ \
+  /* non-literal string constant in a static_assert error message.  */  __NL__ \
+  /*                                                                */  __NL__ \
   __attribute__((unused)) constexpr bool dummy1                         __NL__ \
                        = ___________Culprit_Plugin___________           __NL__ \
        <PLUGIN_TYPE, !handler_has_wrong_signature>::value;              __NL__ \
@@ -217,11 +217,11 @@ template<typename Plugin__> struct
     VERBOSE_STATIC_ASSERT_FOOTER                                        __NL__ \
   );                                                                    __NL__ \
                                                                         __NL__ \
-  /* The following construct is necessary enable reporting of the       __NL__ \
-   * type of a plugin that implements an event handler with an          __NL__ \
-   * incorrect signature, because it's not possible to include any      __NL__ \
-   * non-literal string constant in a static_assert error message.      __NL__ \
-   */                                                                   __NL__ \
+  /* The following construct is necessary enable reporting of the   */  __NL__ \
+  /* type of a plugin that implements an event handler with an      */  __NL__ \
+  /* incorrect signature, because it's not possible to include any  */  __NL__ \
+  /* non-literal string constant in a static_assert error message.  */  __NL__ \
+                                                                        __NL__ \
   __attribute__((unused)) constexpr bool dummy2                         __NL__ \
                        = ___________Culprit_Plugin___________           __NL__ \
        <PLUGIN_TYPE, !handler_ambiguously_implemented>::value;          __NL__ \
