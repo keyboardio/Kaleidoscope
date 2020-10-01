@@ -22,6 +22,14 @@ install:
 ## This makes sure we're using the current version of the library.
   - rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+jobs:
+  include:
+    - env: TEST_TARGET=travis-smoke-examples
+    - env: TEST_TARGET=travis-simulator-tests
+    - env: TEST_TARGET=cpplint
+    - env: TEST_TARGET=find-filename-conflicts 
+    - env: TEST_TARGET=shellcheck 
+    - env: TEST_TARGET=travis-check-astyle
 script:
   - unset CC
   - make $TEST_TARGET KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware ARDUINO_PATH="$(pwd)/arduino-1.8.13"
