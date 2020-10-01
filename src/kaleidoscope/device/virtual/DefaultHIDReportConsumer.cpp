@@ -29,7 +29,7 @@
 
 namespace kaleidoscope {
 
-using namespace logging;
+using namespace logging; // NOLINT(build/namespaces)
 
 // For each bit set in 'bitfield', output the corresponding string to 'stream'
 #define FOREACHBIT(bitfield, stream, str0, str1, str2, str3, str4, str5, str6, str7) \

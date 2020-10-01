@@ -44,7 +44,7 @@ KEYMAPS(
 )
 /* *INDENT-ON* */
 
-using namespace kaleidoscope::sketch_exploration;
+using namespace kaleidoscope::sketch_exploration; // NOLINT(build/namespaces)
 
 class BPlugin : public kaleidoscope::Plugin {};
 class CPlugin : public kaleidoscope::Plugin {};

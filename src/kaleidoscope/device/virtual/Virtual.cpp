@@ -53,7 +53,7 @@ namespace kaleidoscope {
 namespace device {
 namespace virt {
 
-using namespace kaleidoscope::logging;
+using namespace kaleidoscope::logging; // NOLINT(build/namespaces)
 
 //##############################################################################
 // VirtualKeyScanner
