@@ -33,6 +33,5 @@ cache:
   apt: true
   ccache: true
   directories:
-    - .ccache
     - .download-cache
     - .kaleidoscope-build-cache
