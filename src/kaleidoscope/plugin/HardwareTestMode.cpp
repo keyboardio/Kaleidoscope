@@ -102,16 +102,13 @@ void HardwareTestMode::testMatrix() {
       // If the key is held down
       if (Runtime.device().isKeyswitchPressed(key_addr) && Runtime.device().wasKeyswitchPressed(key_addr)) {
         Runtime.device().setCrgbAt(key_addr, green);
-      }
-
-      // If we triggered chatter detection ever on this key
-      else if (state[keynum].bad == 1) {
+      } else if (state[keynum].bad == 1) {
+        // If we triggered chatter detection ever on this key
         Runtime.device().setCrgbAt(key_addr, red);
       } else if (state[keynum].tested == 0) {
         Runtime.device().setCrgbAt(key_addr, yellow);
-      }
-      // If the key is not currently pressed and was not just released and is not marked bad
-      else if (! Runtime.device().isKeyswitchPressed(key_addr)) {
+      } else if (! Runtime.device().isKeyswitchPressed(key_addr)) {
+        // If the key is not currently pressed and was not just released and is not marked bad
         Runtime.device().setCrgbAt(key_addr, blue);
       }
     }

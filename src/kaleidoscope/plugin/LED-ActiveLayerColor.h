@@ -39,12 +39,12 @@ class LEDActiveLayerColorEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const LEDActiveLayerColorEffect *parent);
+    explicit TransientLEDMode(const LEDActiveLayerColorEffect *parent);
 
    protected:
 
-    virtual void onActivate(void) final;
-    virtual void refreshAt(KeyAddr key_addr) final;
+    void onActivate(void) final;
+    void refreshAt(KeyAddr key_addr) final;
 
    private:
 

@@ -53,7 +53,7 @@ namespace kaleidoscope {
 namespace device {
 namespace virt {
 
-using namespace kaleidoscope::logging;
+using namespace kaleidoscope::logging; // NOLINT(build/namespaces)
 
 //##############################################################################
 // VirtualKeyScanner
@@ -167,9 +167,11 @@ void VirtualKeyScanner::readMatrix() {
     std::string token;
     std::getline(sline, token, ' ');
 
-    if (token == "") break;   // end of line
-    else if (token == "#") break;   // skip the rest of the line
-    else if ((token == "?" || token == "help") && isInteractive()) {
+    if (token == "") {
+      break;   // end of line
+    } else if (token == "#") {
+      break;   // skip the rest of the line
+    } else if ((token == "?" || token == "help") && isInteractive()) {
       printHelp();
     } else if (token == "Q") {
       exit(0);
@@ -204,7 +206,7 @@ void VirtualKeyScanner::readMatrix() {
           }
         }
       } else {
-        // TODO: Is there a device independent
+        // TODO(anyone): Is there a device independent
         //       way to determine KeyAddr from key names?
 //         key_addr = getRCfromPhysicalKey(token);
 //
@@ -358,7 +360,7 @@ void VirtualLEDDriver::syncLeds() {
 }
 
 void VirtualLEDDriver::setCrgbAt(uint8_t i, cRGB color) {
-  if ((int)i >= (int)led_count) {
+  if (static_cast<int>(i) >= static_cast<int>(led_count)) {
     log_error("Virtual::setCrgbAt: Index %d out of bounds\n", i);
     return;
   }
@@ -366,7 +368,7 @@ void VirtualLEDDriver::setCrgbAt(uint8_t i, cRGB color) {
 }
 
 cRGB VirtualLEDDriver::getCrgbAt(uint8_t i) const {
-  if ((int)i >= (int)led_count) {
+  if (static_cast<int>(i) >= static_cast<int>(led_count)) {
     log_error("Virtual::getCrgbAt: Index %d out of bounds\n", i);
     return CRGB(0, 0, 0);
   }

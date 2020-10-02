@@ -18,8 +18,8 @@
 
 #include "kaleidoscope/key_defs.h"
 
-namespace kaleidoscope {
-namespace sketch_exploration {
+namespace kaleidoscope { // NOLINT(build/namespaces)
+namespace sketch_exploration { // NOLINT(build/namespaces)
 
 // A simple keymap adaptor class that makes the keymap conveniently accessible.
 // at compiletime.
@@ -35,7 +35,7 @@ class KeymapAdaptor {
   static constexpr uint8_t n_layers = _n_layers;
   static constexpr uint8_t layer_size = _layer_size;
 
-  constexpr KeymapAdaptor(const Key(&keymap)[_n_layers][_layer_size])
+  explicit constexpr KeymapAdaptor(const Key(&keymap)[_n_layers][_layer_size])
     :  keymap_{keymap}
   {}
 
@@ -119,7 +119,7 @@ class EmptyKeymapAccumulationHelper {
 
  public:
 
-  constexpr EmptyKeymapAccumulationHelper(const _Accumulation &op)
+  explicit constexpr EmptyKeymapAccumulationHelper(const _Accumulation &op)
     :   op_{op}
   {}
 
@@ -147,7 +147,7 @@ struct NumKeysEqual {
   typedef uint8_t ResultType;
   static constexpr ResultType init_value = 0;
 
-  constexpr NumKeysEqual(Key k) : k_{k} {}
+  explicit constexpr NumKeysEqual(Key k) : k_{k} {}
 
   constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? r + 1 : r;
@@ -163,7 +163,7 @@ struct HasKey {
   typedef bool ResultType;
   static constexpr ResultType init_value = false;
 
-  constexpr HasKey(Key k) : k_{k} {}
+  explicit constexpr HasKey(Key k) : k_{k} {}
 
   constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? true : r;
@@ -214,7 +214,7 @@ extern void pluginsExploreSketch();
 // exploreSketch<_Sketch>(...)-hook.
 //
 #define _INIT_KEYMAP_EXPLORATION                                               \
-  namespace kaleidoscope {                                                     \
+  namespace kaleidoscope { /* NOLINT(build/namespaces) */                      \
   namespace sketch_exploration {                                               \
                                                                                \
      template<bool _keymap_is_empty>                                           \

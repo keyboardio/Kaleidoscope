@@ -310,7 +310,7 @@ class Keyboard {
 
     if (!isModifierKey(released_key)) {
 
-      // TODO: this code is incomplete, but is better than nothing
+      // TODO(anyone): this code is incomplete, but is better than nothing
       // If we're toggling off the most recently toggled on key, clear
       // last_keycode_toggled_on
       if (last_keycode_toggled_on == released_key.getKeyCode()) {
@@ -424,7 +424,7 @@ class Keyboard {
 
   // isModifierKey takes a Key and returns true if the key is a
   // keyboard key corresponding to a modifier like Control, Alt or Shift
-  // TODO: This function should be lifted to the Kaleidoscope core, somewhere.
+  // TODO(anyone): This function should be lifted to the Kaleidoscope core, somewhere.
 
   bool isModifierKey(Key key) {
     // If it's not a keyboard key, return false

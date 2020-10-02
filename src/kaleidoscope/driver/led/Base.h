@@ -75,7 +75,7 @@ class Base {
     uint8_t offset_;
    public:
     LEDRangeIterator() : offset_(0) {}
-    LEDRangeIterator(uint8_t offset) : offset_(offset) {}
+    explicit LEDRangeIterator(uint8_t offset) : offset_(offset) {}
 
     typedef LEDRangeIterator ThisType;
 

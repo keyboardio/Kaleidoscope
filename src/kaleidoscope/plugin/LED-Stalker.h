@@ -50,11 +50,11 @@ class StalkerEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const StalkerEffect *parent);
+    explicit TransientLEDMode(const StalkerEffect *parent);
 
    protected:
 
-    virtual void update() final;
+    void update() final;
 
    private:
 

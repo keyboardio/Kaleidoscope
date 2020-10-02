@@ -19,7 +19,7 @@
 #include "kaleidoscope_internal/LEDModeManager.h"
 #include "kaleidoscope/keyswitch_state.h"
 
-using namespace kaleidoscope::internal;
+using namespace kaleidoscope::internal; // NOLINT(build/namespaces)
 
 namespace kaleidoscope {
 namespace plugin {

@@ -37,11 +37,11 @@ class LEDBreatheEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const LEDBreatheEffect *parent)
+    explicit TransientLEDMode(const LEDBreatheEffect *parent)
       : parent_(parent) {}
 
    protected:
-    virtual void update(void) final;
+    void update(void) final;
 
    private:
 

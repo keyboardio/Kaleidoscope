@@ -19,6 +19,7 @@ install:
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
 script:
   - unset CC
+  - make cpplint BOARD_HARDWARE_PATH=$(pwd)/../hardware
   - make travis-install-arduino BOARD_HARDWARE_PATH=$(pwd)/../hardware
   - (cd ../hardware/keyboardio && make prepare-virtual)
   - make -C tests all BOARD_HARDWARE_PATH=$(pwd)/../hardware ARDUINO_PATH="$(pwd)/arduino-1.8.13"

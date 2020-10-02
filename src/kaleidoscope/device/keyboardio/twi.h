@@ -16,10 +16,9 @@
   with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef __AVR__
+#pragma once
 
-#ifndef twi_h
-#define twi_h
+#ifdef __AVR__
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
@@ -55,5 +54,4 @@ void twi_stop(void);
 void twi_releaseBus(void);
 
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#endif
 #endif

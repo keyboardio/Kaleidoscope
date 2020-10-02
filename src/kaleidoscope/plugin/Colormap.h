@@ -42,14 +42,14 @@ class ColormapEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const ColormapEffect *parent) : parent_(parent) {}
+    explicit TransientLEDMode(const ColormapEffect *parent) : parent_(parent) {}
 
    protected:
 
     friend class ColormapEffect;
 
-    virtual void onActivate(void) final;
-    virtual void refreshAt(KeyAddr key_addr) final;
+    void onActivate(void) final;
+    void refreshAt(KeyAddr key_addr) final;
    private:
 
     const ColormapEffect *parent_;

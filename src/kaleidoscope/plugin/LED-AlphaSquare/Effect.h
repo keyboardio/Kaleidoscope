@@ -36,7 +36,7 @@ class AlphaSquareEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-    TransientLEDMode(AlphaSquareEffect *parent);
+    explicit TransientLEDMode(AlphaSquareEffect *parent);
 
    protected:
     void update(void) final;
