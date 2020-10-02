@@ -19,6 +19,12 @@ set -e
 ###### Build and output configuration
 ######
 
+absolute_filename() {
+    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+
+
 build_version () {
     GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
@@ -26,9 +32,9 @@ build_version () {
 }
 
 build_paths() {
-    # We don't really want to use find
-    # shellcheck disable=SC2012
-    SKETCH_IDENTIFIER="$(ls -id "$(find_sketch)/${SKETCH}.ino" | cut -d ' ' -f 1)-${SKETCH}.ino"
+    # We need that echo because we\re piping to cksum
+    # shellcheck disable=SC2005
+    SKETCH_IDENTIFIER="$(echo "$(absolute_filename "$(find_sketch)/${SKETCH}.ino")" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
