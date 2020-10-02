@@ -1,5 +1,4 @@
 dist: focal
-sudo: false
 language: c
 os:
   - linux
@@ -13,7 +12,7 @@ env:
   - LC_ALL: C
 git:
   quiet: true
-before-install: 
+before_install: 
   - ccache --set-config=compiler_check=content -M 5G -F 0
 
 install:
