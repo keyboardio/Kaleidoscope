@@ -742,12 +742,6 @@ done
 
 LIBRARY="${SKETCH}"
 
-case "${SKETCH}" in
-    */*)
-        SKETCH="$(basename "${SKETCH}")"
-        ;;
-esac
-
 export SKETCH
 export LIBRARY
 
