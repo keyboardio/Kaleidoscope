@@ -32,9 +32,9 @@ jobs:
     - env: TEST_TARGET=travis-check-astyle
 script:
   - unset CC
-  - export KALEIDOSCOPE_TEMP_PATH=$(TRAVIS_BUILD_DIR)/.kaleidoscope-build-cache
-  - export BOARD_HARDWARE_PATH=$(TRAVIS_BUILD_DIR)/../hardware
-  - export ARDUINO_PATH=$(TRAVIS_BUILD_DIR)/arduino-1.8.13
+  - export KALEIDOSCOPE_TEMP_PATH=$TRAVIS_BUILD_DIR/.kaleidoscope-build-cache
+  - export BOARD_HARDWARE_PATH=$TRAVIS_BUILD_DIR/../hardware
+  - export ARDUINO_PATH=$TRAVIS_BUILD_DIR/arduino-1.8.13
   - make adjust-git-timestamps
   - make travis-install-arduino 
   - make -j 4 $TEST_TARGET 
