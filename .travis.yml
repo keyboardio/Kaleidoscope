@@ -38,7 +38,7 @@ jobs:
     - env: TEST_TARGET=travis-check-astyle
 script:
   - unset CC
-  - make -j 2 $TEST_TARGET 
+  - make -j 32 $TEST_TARGET 
 notifications:
   email:
     on_success: change
