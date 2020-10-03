@@ -336,8 +336,6 @@ maybe_build () {
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
 	build "$@"
-    else
-      SKETCH_DIR="$(find_sketch)"
     fi
 
 }
