@@ -26,15 +26,15 @@ absolute_filename() {
 
 
 build_version () {
-    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
+    GIT_VERSION="$(cd "${SKETCH_DIR}"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
-    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
+    LIB_VERSION="$(cd "${SKETCH_DIR}"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 }
 
 build_paths() {
     # We need that echo because we\re piping to cksum
     # shellcheck disable=SC2005
-    SKETCH_IDENTIFIER="$(echo "$(absolute_filename "$(find_sketch)/${SKETCH}.ino")" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
+    SKETCH_IDENTIFIER="$(echo "$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
@@ -136,12 +136,17 @@ find_sketch () {
         echo "SKETCH, LIBRARY, SOURCEDIR, and ROOT need to be set before including this file!" >&2
         exit 1
     fi
+  
+    SKETCH_DIR="$SKETCH"
+    SKETCH_FILE=$(basename "$SKETCH")
 
-    for path in "examples/${LIBRARY}" \
+    for path in "${SKETCH_DIR}" \
+		    "examples/${LIBRARY}" \
                     "src" \
 		    "."; do
-        if [ -f "${path}/${SKETCH}.ino" ]; then
-            echo "${path}"
+        if [ -f "${path}/${SKETCH_FILE}.ino" ]; then
+      	    SKETCH_DIR="${path}"
+	    SKETCH="${SKETCH_FILE}"
             return
         fi
     done
@@ -324,6 +329,7 @@ hex_with_bootloader () {
 }
 
 maybe_build () {
+    find_sketch
     build_version
     build_paths
     build_filenames
@@ -342,14 +348,13 @@ build () {
 }
 
 compile () {
+    find_sketch
     build_version
     build_paths
     build_filenames
     enable_ccache
 
     install -d "${OUTPUT_PATH}"
-
-    SKETCH_DIR="$(find_sketch)"
 
     echo "Building ${SKETCH_DIR}/${SKETCH}"
 
