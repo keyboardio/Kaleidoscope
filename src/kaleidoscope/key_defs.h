@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -225,19 +225,22 @@ typedef kaleidoscope::Key Key_;
 #define SWITCH_TO_KEYMAP           B00000100
 #define IS_CONSUMER                B00001000
 
-/* HID types we need to encode in the key flags for system and consumer control hid controls
-   Each key can only have one, so we don't need to use a bit vector.
-   We need to keep the top two bits clear for defining the keys as synthetic
-   We need to keep the bottom two bits clear for defining the keys as sysctl / consumerctl
-*/
-
+// HID Usage Types: Because these constants, like the ones above, are
+// used in the flags byte of the Key class, they can't overlap any of
+// the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
+// the HID usage type of a keycode, which leaves us with only two
+// bits. Since we don't currently do anything different based on HID
+// usage type, these are currently all set to zeroes.
+#define HID_TYPE_CA    B00000000
 #define HID_TYPE_CL    B00000000
-#define HID_TYPE_LC    B00000100
-#define HID_TYPE_NARY  B00001000
-#define HID_TYPE_OOC   B00001100
-#define HID_TYPE_OSC   B00010000
-#define HID_TYPE_RTC   B00010100
-#define HID_TYPE_SEL   B00011000
+#define HID_TYPE_LC    B00000000
+#define HID_TYPE_MC    B00000000
+#define HID_TYPE_NARY  B00000000
+#define HID_TYPE_OOC   B00000000
+#define HID_TYPE_OSC   B00000000
+#define HID_TYPE_RTC   B00000000
+#define HID_TYPE_SEL   B00000000
+#define HID_TYPE_SV    B00000000
 // Mask defining the allowed usage type flag bits:
 #define HID_TYPE_MASK  B00110000
 
