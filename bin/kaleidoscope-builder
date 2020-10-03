@@ -445,7 +445,7 @@ compile () {
     FQBN="${SAVED_FQBN}"
 }
 
-_find_all () {
+find_all_sketches () {
     for plugin in ./*.ino \
   	              $([ -d examples ] && find examples -name '*.ino') \
                   src/*.ino; do
@@ -466,7 +466,7 @@ _find_all () {
 }
 
 build_all () {
-    plugins="$(_find_all)"
+    plugins="$(find_all_sketches)"
 
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
@@ -477,7 +477,7 @@ build_all () {
 
 
 compile_all () {
-    plugins="$(_find_all)"
+    plugins="$(find_all_sketches)"
 
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
