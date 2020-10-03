@@ -67,30 +67,30 @@ enable_ccache () {
     if [ -z "${CCACHE_NOT_SUPPORTED}" ] && [ "$(command -v ccache)" ]; then
       if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
          mkdir -p "$CCACHE_WRAPPER_PATH"
-      fi
 
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
-      fi
-
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
-      fi
-
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
-         ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
-      fi
-
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
-         ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
-      fi
-
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
-         ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
-      fi
-
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
-         ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
+             ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
+             ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
+             ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
+             ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
+             ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
+             ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
+          fi
       fi
 
       export CCACHE_PATH=${COMPILER_PATH}/
@@ -343,6 +343,12 @@ maybe_build () {
 build () {
     compile "$@"
     size "$@"
+}
+
+
+prepare_ccache () {
+    build_paths
+    enable_ccache
 }
 
 compile () {
