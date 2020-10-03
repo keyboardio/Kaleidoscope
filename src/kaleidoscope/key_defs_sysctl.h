@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,6 +37,15 @@
 #define System_DPadDown Key(HID_D_PAD_DOWN, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OOC)
 #define System_DPadRight Key(HID_D_PAD_RIGHT, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OOC)
 #define System_DPadLeft Key(HID_D_PAD_LEFT, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OOC)
+
+#define System_IndexTrigger Key(HID_INDEX_TRIGGER, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_MC)
+#define System_PalmTrigger Key(HID_PALM_TRIGGER, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_MC)
+#define System_Thumbstick Key(HID_THUMBSTICK, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_CP)
+#define System_SystemFunctionShift Key(HID_SYSTEM_FUNCTION_SHIFT, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_MC)
+#define System_SystemFunctionShiftLock Key(HID_SYSTEM_FUNCTION_SHIFT_LOCK, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OOC)
+#define System_SystemFunctionShiftLockIndicator Key(HID_SYSTEM_FUNCTION_SHIFT_LOCK_INDICATOR, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_DV)
+#define System_DismissNotification Key(HID_DISMISS_NOTIFICATION, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OSC)
+#define System_DoNotDisturb Key(HID_DO_NOT_DISTURB, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OOC)
 
 #define System_Dock Key(HID_SYSTEM_DOCK, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OSC)
 #define System_Undock Key(HID_SYSTEM_UNDOCK, KEY_FLAGS | SYNTHETIC|IS_SYSCTL | HID_TYPE_OSC)
