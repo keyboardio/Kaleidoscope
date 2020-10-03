@@ -37,6 +37,7 @@ script:
   - export ARDUINO_PATH=$TRAVIS_BUILD_DIR/arduino-1.8.13
   - make adjust-git-timestamps
   - make travis-install-arduino 
+  - make prepare-ccache
   - make -j 4 $TEST_TARGET 
 notifications:
   email:
