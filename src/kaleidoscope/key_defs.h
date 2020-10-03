@@ -238,6 +238,8 @@ typedef kaleidoscope::Key Key_;
 #define HID_TYPE_OSC   B00010000
 #define HID_TYPE_RTC   B00010100
 #define HID_TYPE_SEL   B00011000
+// Mask defining the allowed usage type flag bits:
+#define HID_TYPE_MASK  B00110000
 
 
 #define Key_NoKey Key(0, KEY_FLAGS)
@@ -263,8 +265,11 @@ typedef kaleidoscope::Key Key_;
    use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
    use the CONSUMER(key) macro this will return the 10bit keycode.
 */
-#define CONSUMER(key) (key.getRaw() & 0x03FF)
-#define CONSUMER_KEY(code, flags) Key((code) | ((flags | SYNTHETIC|IS_CONSUMER) << 8))
+constexpr uint16_t CONSUMER_KEYCODE_MASK = 0x03FF;
+#define CONSUMER(key) (key.getRaw() & CONSUMER_KEYCODE_MASK)
+#define CONSUMER_KEY(code, hid_type) \
+  Key((code & CONSUMER_KEYCODE_MASK) | \
+      ((SYNTHETIC | IS_CONSUMER | (hid_type & HID_TYPE_MASK)) << 8))
 
 namespace kaleidoscope {
 constexpr Key bad_keymap_key{0, RESERVED};
