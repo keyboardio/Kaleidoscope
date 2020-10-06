@@ -31,9 +31,6 @@ class LEDOff : public LEDMode {
  protected:
   void onActivate(void) final;
   void refreshAt(KeyAddr key_addr) final;
-  DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
-    refreshAt(KeyAddr(row, col));
-  }
 };
 }
 }

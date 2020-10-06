@@ -1,0 +1,16 @@
+## This file sets up a few things for selected Kaleidoscope-powered keyboards:
+## - We first symlink the device to a more friendly name, based on the product
+##   name.
+## - We then ask ModemManager to ignore the serial ports on the device, and not
+##   consider them a candidate.
+## - We also tell systemd to grant access to the device (via ACLs) to the user
+##   at-seat.
+##
+## For more information about the access part, see the following resources:
+##  - https://github.com/systemd/systemd/issues/4288
+##  - https://www.freedesktop.org/software/systemd/man/sd-login.html
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2300", SYMLINK+="model01", ENV{ID_MM_DEVICE_IGNORE}:="1", ENV{ID_MM_CANDIDATE}:="0", TAG+="uaccess", TAG+="seat"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2301", SYMLINK+="model01", ENV{ID_MM_DEVICE_IGNORE}:="1", ENV{ID_MM_CANDIDATE}:="0", TAG+="uaccess", TAG+="seat"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2302", SYMLINK+="Atreus2", ENV{ID_MM_DEVICE_IGNORE}:="1", ENV{ID_MM_CANDIDATE}:="0", TAG+="uaccess", TAG+="seat"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2303", SYMLINK+="Atreus2", ENV{ID_MM_DEVICE_IGNORE}:="1", ENV{ID_MM_CANDIDATE}:="0", TAG+="uaccess", TAG+="seat"

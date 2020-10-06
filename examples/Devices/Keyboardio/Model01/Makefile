@@ -44,12 +44,28 @@ BOARD_HARDWARE_PATH = $(ARDUINO_INSTALLED_ENV)
 KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= build-tools/makefiles/
 KALEIDOSCOPE_BUILDER_DIR ?= $(ARDUINO_INSTALLED_ENV)/libraries/Kaleidoscope/bin/
 
-
-
 endif
-
 
 BOARD_HARDWARE_PATH ?= $(SKETCHBOOK_DIR)/hardware
 KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= keyboardio/avr/build-tools/makefiles/
 
+ifneq ("$(wildcard $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk)","") 
+
 include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
+
+else
+
+$(info ****************************************************************************)
+$(info I can't find an installed copy of Kaleidoscope's source code.)
+$(info )
+$(info This usually means you're attempting to build a device's firmware from a git)
+$(info checkout without having previously told Arduino where to find Kaleidoscope.)
+$(info )
+$(info It is probably the case that you want to move or symlink your git checkout )
+$(info of the Kaleidoscope bundle to the directory: ) 
+$(info )
+$(info   $(SKETCHBOOK_DIR)/hardware/keyboardio )
+$(info ****************************************************************************)
+
+
+endif

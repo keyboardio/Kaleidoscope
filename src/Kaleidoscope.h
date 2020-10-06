@@ -44,7 +44,6 @@ void setup();
 
 #include "kaleidoscope/hid.h"
 
-static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHardware = kaleidoscope_internal::device;
 
 // Note: The CONVERT_TO_KEY macro can be redefined to use different
 //       host_keymap-keymaps on different layers (see key_defs.h for its
@@ -60,6 +59,7 @@ static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHard
    ){},                                                                        \
    CONVERT_TO_KEY(KEY)                                                         \
    )
+
 
 #ifdef PER_KEY_DATA_STACKED
 #define KEYMAP_STACKED(...)                                                    \
@@ -81,10 +81,6 @@ static constexpr DEPRECATED(KEYBOARDHARDWARE) kaleidoscope::Device &KeyboardHard
       )                                                                        \
    }
 #endif
-
-static constexpr DEPRECATED(ROWS) uint8_t ROWS = kaleidoscope_internal::device.matrix_rows;
-static constexpr DEPRECATED(COLS) uint8_t COLS = kaleidoscope_internal::device.matrix_columns;
-static constexpr DEPRECATED(LED_COUNT) uint8_t LED_COUNT = kaleidoscope_internal::device.led_count;
 
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/key_events.h"
@@ -138,12 +134,6 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 // must have been instantiated at global scope.
 //
 #define KALEIDOSCOPE_INIT_PLUGINS(...) _KALEIDOSCOPE_INIT_PLUGINS(__VA_ARGS__)
-
-// For compatibility reasons we export class Runtime_ as Kaleidoscope_
-// in global namespace.
-//
-DEPRECATED(GLOBAL_TYPENAME_KALEIDOSCOPE)
-typedef kaleidoscope::Runtime_  Kaleidoscope_;
 
 // For compatibility/usability reasons we enable the global variable
 // Kaleidoscope in global namespace.

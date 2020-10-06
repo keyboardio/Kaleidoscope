@@ -43,10 +43,10 @@ class LEDRainbowEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const LEDRainbowEffect *parent)
+    explicit TransientLEDMode(const LEDRainbowEffect *parent)
       : parent_(parent) {}
 
-    virtual void update() final;
+    void update() final;
 
    private:
 
@@ -88,10 +88,10 @@ class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const LEDRainbowWaveEffect *parent)
+    explicit TransientLEDMode(const LEDRainbowWaveEffect *parent)
       : parent_(parent) {}
 
-    virtual void update() final;
+    void update() final;
 
    private:
 

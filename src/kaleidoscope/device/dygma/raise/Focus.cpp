@@ -48,7 +48,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 9, PSTR("side_power")) == 0)
+  if (strcmp_P(command + 9, PSTR("side_power")) == 0) {
     if (::Focus.isEOL()) {
       ::Focus.send(Runtime.device().side.getPower());
       return EventHandlerResult::EVENT_CONSUMED;
@@ -58,6 +58,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
       Runtime.device().side.setPower(power);
       return EventHandlerResult::EVENT_CONSUMED;
     }
+  }
 
   if (strcmp_P(command + 9, PSTR("side_ver")) == 0) {
     ::Focus.send("left:");
@@ -83,7 +84,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 9, PSTR("sled_current")) == 0)
+  if (strcmp_P(command + 9, PSTR("sled_current")) == 0) {
     if (::Focus.isEOL()) {
       ::Focus.send("left:");
       ::Focus.send(Runtime.device().side.leftSLEDCurrent());
@@ -96,6 +97,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
       Runtime.device().side.setSLEDCurrent(current);
       return EventHandlerResult::EVENT_CONSUMED;
     }
+  }
 
   if (strcmp_P(command + 9, PSTR("layout")) == 0) {
     static const auto ANSI = Runtime.device().settings.Layout::ANSI;

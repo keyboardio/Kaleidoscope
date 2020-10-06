@@ -1,5 +1,4 @@
-dist: trusty
-sudo: false
+dist: focal
 language: c
 os:
   - linux
@@ -7,20 +6,46 @@ addons:
   apt:
     packages:
       - shellcheck
+      - cmake
+env:
+  global:
+  - LC_ALL: C
+
+git:
+  quiet: true
+before_install: 
+  - ccache --set-config=compiler_check=content -M 1G -F 0
+
 install:
-  - git clone --depth 1 --recurse-submodules https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+  - git clone --depth 1 --recurse-submodules --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
 ## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
 ## This makes sure we're using the current version of the library.
   - rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
   - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+  - export KALEIDOSCOPE_TEMP_PATH=$TRAVIS_BUILD_DIR/.kaleidoscope-build-cache
+  - export BOARD_HARDWARE_PATH=$TRAVIS_BUILD_DIR/../hardware
+  - export ARDUINO_PATH=$TRAVIS_BUILD_DIR/arduino-1.8.13
+  - make adjust-git-timestamps
+  - make travis-install-arduino 
+  - make prepare-ccache
+jobs:
+  include:
+    - env: TEST_TARGET=smoke-sketches
+    - env: TEST_TARGET=travis-simulator-tests
+    - env: TEST_TARGET=cpplint
+    - env: TEST_TARGET=find-filename-conflicts 
+    - env: TEST_TARGET=shellcheck 
+    - env: TEST_TARGET=travis-check-astyle
 script:
-  - make travis-test KALEIDOSCOPE_TEMP_PATH=$(pwd)/.kaleidoscope-build-cache BOARD_HARDWARE_PATH=$(pwd)/../hardware
+  - unset CC
+  - make -j 2 $TEST_TARGET 
 notifications:
   email:
     on_success: change
     on_failure: change
 cache:
+  apt: true
   ccache: true
   directories:
+    - .download-cache
     - .kaleidoscope-build-cache
-    - .ccache

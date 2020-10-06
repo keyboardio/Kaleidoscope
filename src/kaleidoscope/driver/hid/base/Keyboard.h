@@ -193,8 +193,12 @@ class Keyboard {
   }
   void releaseAllKeys() __attribute__((noinline)) {
     resetModifierTracking();
-    nkro_keyboard_.releaseAll();
-    consumer_control_.releaseAll();
+    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
+      boot_keyboard_.releaseAll();
+    } else {
+      nkro_keyboard_.releaseAll();
+      consumer_control_.releaseAll();
+    }
   }
   void pressConsumerControl(Key mapped_key) {
     consumer_control_.press(CONSUMER(mapped_key));
@@ -203,10 +207,15 @@ class Keyboard {
     consumer_control_.release(CONSUMER(mapped_key));
   }
   void pressSystemControl(Key mapped_key) {
-    system_control_.press(mapped_key.getKeyCode());
+    uint8_t keycode = mapped_key.getKeyCode();
+    system_control_.press(keycode);
+    last_system_control_keycode_ = keycode;
   }
   void releaseSystemControl(Key mapped_key) {
-    system_control_.release();
+    uint8_t keycode = mapped_key.getKeyCode();
+    if (keycode == last_system_control_keycode_) {
+      system_control_.release();
+    }
   }
 
   // pressKey takes a Key, as well as optional boolean 'toggledOn' which defaults
@@ -297,11 +306,11 @@ class Keyboard {
   void releaseKey(Key released_key) {
     // Remove any modifiers attached to this key from the bitmask of modifiers we're
     // willing to attach to USB HID keyboard reports
-    modifier_flag_mask ^= released_key.getFlags();
+    modifier_flag_mask &= ~(released_key.getFlags());
 
     if (!isModifierKey(released_key)) {
 
-      // TODO: this code is incomplete, but is better than nothing
+      // TODO(anyone): this code is incomplete, but is better than nothing
       // If we're toggling off the most recently toggled on key, clear
       // last_keycode_toggled_on
       if (last_keycode_toggled_on == released_key.getKeyCode()) {
@@ -369,6 +378,12 @@ class Keyboard {
   }
 
  private:
+  // To prevent premature release of a System Control key when rolling
+  // over from one to another, we record the last System Control
+  // keycode that was pressed. It's initialized to zero, which should
+  // not be a valid System Control keycode.
+  uint8_t last_system_control_keycode_ = 0;
+
   // modifier_flag_mask is a bitmask of modifiers that we found attached to
   // keys that were newly pressed down during the most recent cycle with any new
   // keypresses.
@@ -409,7 +424,7 @@ class Keyboard {
 
   // isModifierKey takes a Key and returns true if the key is a
   // keyboard key corresponding to a modifier like Control, Alt or Shift
-  // TODO: This function should be lifted to the Kaleidoscope core, somewhere.
+  // TODO(anyone): This function should be lifted to the Kaleidoscope core, somewhere.
 
   bool isModifierKey(Key key) {
     // If it's not a keyboard key, return false
@@ -430,7 +445,7 @@ class Keyboard {
   // to the next USB HID report and removes them from the bitmap of all such modifiers.
 
   void cancelModifierRequest(byte flags) {
-    requested_modifier_flags ^= flags;
+    requested_modifier_flags &= ~flags;
   }
 
   // pressModifiers takes a bitmap of modifier keys that must be included in

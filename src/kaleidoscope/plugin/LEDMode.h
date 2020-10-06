@@ -92,20 +92,6 @@ class LEDMode : public kaleidoscope::Plugin,
    */
   virtual void refreshAt(KeyAddr key_addr) {}
 
-  /** Refresh the color of a given key.
-   *
-   * If we have another plugin that overrides colors set by the active LED mode
-   * (either at @onActivate time, or via @ref update), if that plugin wants to
-   * restore whatever color the mode would set the key color to, this is the
-   * method it will call.
-   *
-   * @param row is the row coordinate of the key to refresh the color of.
-   * @param col is the column coordinate of the key to refresh the color of.
-   */
-  DEPRECATED(ROW_COL_FUNC) virtual void refreshAt(byte row, byte col) {
-    refreshAt(KeyAddr(row, col));
-  }
-
  public:
 
   /** Plugin initialization.

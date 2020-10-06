@@ -36,14 +36,11 @@ class AlphaSquareEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-    TransientLEDMode(AlphaSquareEffect *parent);
+    explicit TransientLEDMode(AlphaSquareEffect *parent);
 
    protected:
     void update(void) final;
     void refreshAt(KeyAddr key_addr) final;
-    DEPRECATED(ROW_COL_FUNC) void refreshAt(byte row, byte col) final {
-      refreshAt(KeyAddr(row, col));
-    }
 
    private:
     uint16_t start_time_left_, start_time_right_;

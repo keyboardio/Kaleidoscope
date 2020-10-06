@@ -39,13 +39,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
   AlphaSquare(void) {}
 
   static void display(Key key, KeyAddr key_addr, cRGB key_color);
-  DEPRECATED(ROW_COL_FUNC) static void display(Key key, uint8_t row, uint8_t col, cRGB key_color) {
-    display(key, KeyAddr(row, col), key_color);
-  }
   static void display(Key key, KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static void display(Key key, uint8_t row, uint8_t col) {
-    display(key, KeyAddr(row, col));
-  }
   static void display(Key key) {
     display(key, KeyAddr(0, 2));
   }
@@ -54,13 +48,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
   }
 
   static void display(uint16_t symbol, KeyAddr key_addr, cRGB key_color);
-  DEPRECATED(ROW_COL_FUNC) static void display(uint16_t symbol, uint8_t row, uint8_t col, cRGB key_color) {
-    display(symbol, KeyAddr(row, col), key_color);
-  }
   static void display(uint16_t symbol, KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static void display(uint16_t symbol, uint8_t row, uint8_t col) {
-    display(symbol, KeyAddr(row, col));
-  }
   static void display(uint16_t symbol) {
     display(symbol, KeyAddr(0, 2));
   }
@@ -70,9 +58,6 @@ class AlphaSquare : public kaleidoscope::Plugin {
 
   static void clear(Key key, KeyAddr key_addr) {
     display(key, key_addr, {0, 0, 0});
-  }
-  DEPRECATED(ROW_COL_FUNC) static void clear(Key key, uint8_t row, uint8_t col) {
-    clear(key, KeyAddr(row, col));
   }
   static void clear(Key key, uint8_t col) {
     clear(key, KeyAddr(0, col));
@@ -84,9 +69,6 @@ class AlphaSquare : public kaleidoscope::Plugin {
   static void clear(uint16_t symbol, KeyAddr key_addr) {
     display(symbol, key_addr, {0, 0, 0});
   }
-  DEPRECATED(ROW_COL_FUNC) static void clear(uint16_t symbol, uint8_t row, uint8_t col) {
-    clear(symbol, KeyAddr(row, col));
-  }
   static void clear(uint16_t symbol, uint8_t col) {
     clear(symbol, KeyAddr(0, col));
   }
@@ -97,19 +79,9 @@ class AlphaSquare : public kaleidoscope::Plugin {
   static bool isSymbolPart(Key key,
                            KeyAddr displayLedAddr,
                            KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static bool isSymbolPart(Key key,
-      uint8_t display_row, uint8_t display_col,
-      uint8_t row, uint8_t col) {
-    return isSymbolPart(key, KeyAddr(display_row, display_col), KeyAddr(row, col));
-  }
   static bool isSymbolPart(uint16_t symbol,
                            KeyAddr displayLedAddr,
                            KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static bool isSymbolPart(uint16_t symbol,
-      uint8_t display_row, uint8_t display_col,
-      uint8_t row, uint8_t col) {
-    return isSymbolPart(symbol, KeyAddr(display_row, display_col), KeyAddr(row, col));
-  }
 
   static cRGB color;
 };

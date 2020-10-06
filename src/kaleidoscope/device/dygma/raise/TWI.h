@@ -16,6 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #ifdef ARDUINO_SAMD_RAISE
 
 #include <Arduino.h>
@@ -27,7 +29,7 @@ namespace raise {
 
 class TWI {
  public:
-  TWI(int addr) : addr_(addr), crc_errors_(0) {};
+  explicit TWI(int addr) : addr_(addr), crc_errors_(0) {}
 
   uint8_t writeTo(uint8_t *data, size_t length);
   uint8_t readFrom(uint8_t* data, size_t length);

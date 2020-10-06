@@ -32,9 +32,9 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
     if (keyIsPressed(keyState))
       Runtime.hid().keyboard().pressConsumerControl(mappedKey);
   } else if (mappedKey.getFlags() & IS_SYSCTL) {
-    if (keyIsPressed(keyState)) {
-    } else if (keyWasPressed(keyState)) {
+    if (keyToggledOn(keyState)) {
       Runtime.hid().keyboard().pressSystemControl(mappedKey);
+    } else if (keyToggledOff(keyState)) {
       Runtime.hid().keyboard().releaseSystemControl(mappedKey);
     }
   } else if (mappedKey.getFlags() & IS_INTERNAL) {
@@ -123,20 +123,7 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
 
   // Keypresses with out-of-bounds key_addr start here in the processing chain
 
-  // We call both versions of onKeyswitchEvent. This assumes that a plugin
-  // implements either the old or the new version of the hook.
-  // The call to that version that is not implemented is optimized out
-  // by the caller. This is possible as the call would fall back to
-  // the version of the hook that is implemented in the base class of the
-  // plugin. This fallback version is an empty inline noop method that
-  // is simple for the compiler to optimize out.
-
-  // New event handler interface version 2 (key address version)
   if (kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, key_addr, keyState) != kaleidoscope::EventHandlerResult::OK)
-    return;
-
-  // New event handler interface (deprecated version)
-  if (kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, key_addr.row(), key_addr.col(), keyState) != kaleidoscope::EventHandlerResult::OK)
     return;
 
   mappedKey = Layer.eventHandler(mappedKey, key_addr, keyState);

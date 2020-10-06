@@ -338,9 +338,8 @@ class LEDModeManager {
                         0 /*dummy*/
                       )
                     );
-    parent_plugin->registerLEDModeActivated(255 /* dymmy to disable access
-            to transient LED modes through LEDControl */
-                                           );
+    // dummy to disable access to transient LED modes through LEDControl
+    parent_plugin->registerLEDModeActivated(255);
 
     return led_mode;
   }
@@ -406,9 +405,9 @@ class LEDModeManager {
    LEDModeManager::setupLEDMode(&::PLUGIN);
 
 #define _INIT_LED_MODE_MANAGER(...)                                            \
-   namespace kaleidoscope {                                             __NL__ \
-   namespace internal {                                                 __NL__ \
-   namespace led_mode_management {                                      __NL__ \
+   namespace kaleidoscope { /* NOLINT(build/namespaces) */              __NL__ \
+   namespace internal { /* NOLINT(build/namespaces) */                  __NL__ \
+   namespace led_mode_management { /* NOLINT(build/namespaces) */       __NL__ \
                                                                         __NL__ \
       /* Setup the array-like data structure that stores                __NL__ \
        * LEDModeFactories */                                            __NL__ \

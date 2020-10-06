@@ -25,11 +25,6 @@
 #define Key_LEDEffectPrevious Key(1, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
 #define Key_LEDToggle Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
 
-#define _DEPRECATED_MESSAGE_LED_CONTROL_MODE_ADD                               \
-  "LEDControl::mode_add(LEDMode *mode) is deprecated. LEDModes are now \n"     \
-  "automatically registered. You can safely remove any calls to \n"            \
-  "LEDControl::mode_add from your code."
-
 namespace kaleidoscope {
 namespace plugin {
 
@@ -46,13 +41,15 @@ class LEDControl : public kaleidoscope::Plugin {
     if (!Runtime.has_leds)
       return;
 
-    cur_led_mode_->update();
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->update();
   }
   static void refreshAt(KeyAddr key_addr) {
     if (!Runtime.has_leds)
       return;
 
-    cur_led_mode_->refreshAt(key_addr);
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->refreshAt(key_addr);
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
@@ -66,9 +63,6 @@ class LEDControl : public kaleidoscope::Plugin {
     return static_cast<LEDMode__*>(cur_led_mode_);
 
   }
-  DEPRECATED(ROW_COL_FUNC) static void refreshAt(byte row, byte col) {
-    refreshAt(KeyAddr(row, col));
-  }
 
   static void refreshAll() {
     if (!Runtime.has_leds)
@@ -79,24 +73,14 @@ class LEDControl : public kaleidoscope::Plugin {
 
     set_all_leds_to({0, 0, 0});
 
-    cur_led_mode_->onActivate();
-  }
-
-  DEPRECATED(LED_CONTROL_MODE_ADD)
-  static int8_t mode_add(LEDMode *mode) {
-    return 0;
+    if (cur_led_mode_ != nullptr)
+      cur_led_mode_->onActivate();
   }
 
   static void setCrgbAt(uint8_t led_index, cRGB crgb);
   static void setCrgbAt(KeyAddr key_addr, cRGB color);
-  DEPRECATED(ROW_COL_FUNC) static void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(KeyAddr(row, col), color);
-  }
   static cRGB getCrgbAt(uint8_t led_index);
   static cRGB getCrgbAt(KeyAddr key_addr);
-  DEPRECATED(ROW_COL_FUNC) static cRGB getCrgbAt(byte row, byte col) {
-    return getCrgbAt(KeyAddr(row, col));
-  }
   static void syncLeds(void);
 
   static void set_all_leds_to(uint8_t r, uint8_t g, uint8_t b);
@@ -127,40 +111,13 @@ class LEDControl : public kaleidoscope::Plugin {
     return Runtime.device().ledDriver().getBrightness();
   }
 
-  // The data proxy objects are required to only emit deprecation
-  // messages when the `paused` property is accessed directly.
-  //
-  // Once the deprecation period elapsed, the proxy class and the proxied
-  // `paused` property can be safely removed.
-  class DataProxy {
-   public:
-    DataProxy() = default;
-
-    //constexpr DataProxy(bool value) : value_{value} {}
-
-    DEPRECATED(DIRECT_LEDCONTROL_PAUSED_ACCESS)
-    DataProxy &operator=(bool value) {
-      if (value)
-        disable();
-      else
-        enable();
-      return *this;
-    }
-
-    DEPRECATED(DIRECT_LEDCONTROL_PAUSED_ACCESS)
-    operator bool () const {
-      return !isEnabled();
-    }
-  };
-
-  DataProxy paused;
-
  private:
   static uint16_t syncTimer;
   static uint8_t mode_id;
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
   static bool enabled_;
+  static Key pending_next_prev_key_;
 };
 
 class FocusLEDCommand : public Plugin {

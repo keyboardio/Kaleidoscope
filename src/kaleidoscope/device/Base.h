@@ -59,6 +59,7 @@ struct BaseProps {
   typedef kaleidoscope::driver::keyscanner::None KeyScanner;
   typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;
   typedef kaleidoscope::driver::led::None LEDDriver;
+  typedef kaleidoscope::driver::mcu::BaseProps MCUProps;
   typedef kaleidoscope::driver::mcu::None MCU;
   typedef kaleidoscope::driver::bootloader::None Bootloader;
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
@@ -88,6 +89,7 @@ class Base {
   typedef typename _DeviceProps::KeyScannerProps::KeyAddr KeyAddr;
   typedef typename _DeviceProps::LEDDriverProps LEDDriverProps;
   typedef typename _DeviceProps::LEDDriver LEDDriver;
+  typedef typename _DeviceProps::MCUProps MCUProps;
   typedef typename _DeviceProps::MCU MCU;
   typedef typename _DeviceProps::Bootloader Bootloader;
   typedef typename _DeviceProps::StorageProps StorageProps;
@@ -174,19 +176,6 @@ class Base {
     setCrgbAt(getLedIndex(key_addr), color);
   }
   /**
-   * Set the color of a per-key LED at a given row and column.
-   *
-   * Setting the color does not need to take effect immediately, it can be
-   * delayed until @ref syncLeds is called.
-   *
-   * @param row is the logical row position of the key.
-   * @param col is the logical column position of the key.
-   * @param color is the color to set the LED to.
-   */
-  DEPRECATED(ROW_COL_FUNC) void setCrgbAt(byte row, byte col, cRGB color) {
-    setCrgbAt(KeyAddr(row, col), color);
-  }
-  /**
    * Set the color of a per-key LED at a given LED index.
    *
    * Setting the color does not need to take effect immediately, it can be
@@ -228,18 +217,6 @@ class Base {
   */
   int8_t getLedIndex(KeyAddr key_addr) {
     return led_driver_.getLedIndex(key_addr.toInt());
-  }
-  /**
-   * Returns the index of the LED at a given row & column.
-   *
-   * @param row is the logical row position of the key.
-   * @param col is the logical column position of the key.
-   *
-   * @returns The index of the LED at the given position, or -1 if there are no
-   * LEDs there.
-   */
-  DEPRECATED(ROW_COL_FUNC) int8_t getLedIndex(uint8_t row, byte col) {
-    return led_driver_.getLedIndex(KeyAddr(row, col));
   }
   /** @} */
 
@@ -292,20 +269,8 @@ class Base {
    *
    * @param key_addr is the matrix address of the key.
    */
-  void maskKey(KeyAddr key_addr) {
+  void maskKey(KeyAddr key_addr) DEPRECATED(KEY_MASKING) {
     key_scanner_.maskKey(key_addr);
-  }
-  /**
-   * Mask out a key.
-   *
-   * Masking a key out means that any other event than a release will be
-   * ignored until said release.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   */
-  DEPRECATED(ROW_COL_FUNC) void maskKey(byte row, byte col) {
-    key_scanner_.maskKey(KeyAddr(row, col));
   }
   /**
    * Unmask a key.
@@ -319,18 +284,6 @@ class Base {
     key_scanner_.unMaskKey(key_addr);
   }
   /**
-   * Unmask a key.
-   *
-   * Remove the mask - if any - for a given key. To be used when the mask
-   * needs to be removed without the key being released.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   */
-  DEPRECATED(ROW_COL_FUNC) void unMaskKey(byte row, byte col) {
-    key_scanner_.unMaskKey(KeyAddr(row, col));
-  }
-  /**
    * Check whether a key is masked or not.
    *
    * @param key_addr is the matrix address of the key.
@@ -339,17 +292,6 @@ class Base {
    */
   bool isKeyMasked(KeyAddr key_addr) {
     return key_scanner_.isKeyMasked(key_addr);
-  }
-  /**
-   * Check whether a key is masked or not.
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is masked, false otherwise.
-   */
-  DEPRECATED(ROW_COL_FUNC) bool isKeyMasked(byte row, byte col) {
-    return key_scanner_.isKeyMasked(KeyAddr(row, col));
   }
   /** @} */
 
@@ -407,17 +349,6 @@ class Base {
   /**
    * Check if a key is pressed at a given position.
    *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key is pressed, false otherwise.
-   */
-  DEPRECATED(ROW_COL_FUNC) bool isKeyswitchPressed(byte row, byte col) {
-    return key_scanner_.isKeyswitchPressed(KeyAddr(row, col));
-  }
-  /**
-   * Check if a key is pressed at a given position.
-   *
    * @param keyIndex is the key index, as calculated by `keyIndex`.
    *
    * @note Key indexes start at 1, not 0!
@@ -445,17 +376,6 @@ class Base {
    */
   bool wasKeyswitchPressed(KeyAddr key_addr) {
     return key_scanner_.wasKeyswitchPressed(key_addr);
-  }
-  /**
-   * Check if a key was pressed at a given position on the previous scan
-   *
-   * @param row is the row the key is located at in the matrix.
-   * @param col is the column the key is located at in the matrix.
-   *
-   * @returns true if the key was pressed, false otherwise.
-   */
-  DEPRECATED(ROW_COL_FUNC) bool wasKeyswitchPressed(byte row, byte col) {
-    return key_scanner_.wasKeyswitchPressed(KeyAddr(row, col));
   }
   /**
    * Check if a key was pressed at a given position on the previous scan.
@@ -509,15 +429,6 @@ class Base {
    *
    */
   void enableHardwareTestMode() {}
-
-  /**
-   * Method to put the device into programmable/bootloader mode.
-   *
-   * This is the old, legacy name of the method.
-   */
-  DEPRECATED(HARDWARE_RESETDEVICE) void resetDevice() {
-    bootloader_.rebootBootloader();
-  }
 
   /**
    * Method to put the device into programmable/bootloader mode.

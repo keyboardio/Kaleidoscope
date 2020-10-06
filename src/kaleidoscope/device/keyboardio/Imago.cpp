@@ -28,6 +28,12 @@ extern "C" {
 
 #define LED_DRIVER_ADDR 0x30
 
+// Here, we set up aliases to the device's KeyScanner and KeyScannerProps
+// in the global namespace within the scope of this file. We'll use these
+// aliases to simplify some template initialization code below.
+using KeyScannerProps = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScannerProps;
+using KeyScanner = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScanner;
+
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
@@ -53,7 +59,31 @@ static constexpr uint8_t LED_REGISTER_DATA1_SIZE = 0xAB;
 
 static constexpr uint8_t LED_REGISTER_DATA_LARGEST = LED_REGISTER_DATA0_SIZE;
 
-ATMEGA_KEYSCANNER_BOILERPLATE
+// `KeyScannerProps` here refers to the alias set up above. We do not need to
+// prefix the `matrix_rows` and `matrix_columns` names within the array
+// declaration, because those are resolved within the context of the class, so
+// the `matrix_rows` in `KeyScannerProps::matrix_row_pins[matrix_rows]` gets
+// resolved as `KeyScannerProps::matrix_rows`.
+const uint8_t KeyScannerProps::matrix_rows;
+const uint8_t KeyScannerProps::matrix_columns;
+constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
+constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
+
+// `KeyScanner` here refers to the alias set up above, just like in the
+// `KeyScannerProps` case above.
+template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
+
+// We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
+// cannot be in a header-only driver, and must be placed here.
+//
+// Timer1 is responsible for setting a property on the KeyScanner, which will
+// tell it to do a scan. We use this to make sure that scans happen at roughly
+// the intervals we want. We do the scan outside of the interrupt scope for
+// practical reasons: guarding every codepath against interrupts that can be
+// reached from the scan is far too tedious, for very little gain.
+ISR(TIMER1_OVF_vect) {
+  Runtime.device().keyScanner().do_scan_ = true;
+}
 
 bool ImagoLEDDriver::isLEDChanged = true;
 cRGB ImagoLEDDriver::led_data[];
@@ -129,7 +159,7 @@ void ImagoLEDDriver::syncLeds() {
   twi_writeTo(LED_DRIVER_ADDR, data, LED_REGISTER_DATA0_SIZE + 1, 1, 0);
 
   // Don't reset "Last LED", because this is just us picking up from the last bank
-  // TODO - we don't use all 117 LEDs on the Imago, so we can probably stop writing earlier
+  // TODO(anyone) - we don't use all 117 LEDs on the Imago, so we can probably stop writing earlier
   // Write the second LED bank
 
   // For space efficiency, we reuse the LED sending buffer

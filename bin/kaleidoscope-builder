@@ -19,16 +19,22 @@ set -e
 ###### Build and output configuration
 ######
 
+absolute_filename() {
+    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+
+
 build_version () {
-    GIT_VERSION="$(cd "$(find_sketch)"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
+    GIT_VERSION="$(cd "${SKETCH_DIR}"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
-    LIB_VERSION="$(cd "$(find_sketch)"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
+    LIB_VERSION="$(cd "${SKETCH_DIR}"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 }
 
 build_paths() {
-    # We don't really want to use find
-    # shellcheck disable=SC2012
-    SKETCH_IDENTIFIER="$(ls -id "$(find_sketch)/${SKETCH}.ino" | cut -d ' ' -f 1)-${SKETCH}.ino"
+    # We need that echo because we\re piping to cksum
+    # shellcheck disable=SC2005
+    SKETCH_IDENTIFIER="$(echo "$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
@@ -49,10 +55,11 @@ build_paths() {
 }
 
 build_filenames () {
-    OUTPUT_FILE_PREFIX="${SKETCH}-${LIB_VERSION}"
-    HEX_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex"
-    HEX_FILE_WITH_BOOTLOADER_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex"
-    ELF_FILE_PATH="${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf"
+    OUTPUT_FILE_PREFIX="${OUTPUT_FILE_PREFIX:-${SKETCH}-${LIB_VERSION}}"
+    HEX_FILE_PATH="${HEX_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex}"
+    HEX_FILE_WITH_BOOTLOADER_PATH="${HEX_FILE_WITH_BOOTLOADER_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex}"
+    ELF_FILE_PATH="${ELF_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf}"
+    LIB_FILE_PATH="${LIB_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.a}"
 }
 
 
@@ -60,32 +67,32 @@ enable_ccache () {
     if [ -z "${CCACHE_NOT_SUPPORTED}" ] && [ "$(command -v ccache)" ]; then
       if ! [ -d "$CCACHE_WRAPPER_PATH" ]; then
          mkdir -p "$CCACHE_WRAPPER_PATH"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
-         ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
-         ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
-         ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
-         ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
-      fi
-      
-      if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
-         ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
-      fi
+
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}" ]; then
+             ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${C_COMPILER_BASENAME}"
+          fi
     
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" ]; then
+             ln -s "$(command -v ccache)" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm" ]; then
+             ln -s "${AVR_NM}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}nm"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy" ]; then
+             ln -s "${AVR_OBJCOPY}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}objcopy"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar" ]; then
+             ln -s "${AVR_AR}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}ar"
+          fi
+    
+          if ! [ -h "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size" ]; then
+             ln -s "${AVR_SIZE}" "${CCACHE_WRAPPER_PATH}/${COMPILER_PREFIX}size"
+          fi
+      fi
+
       export CCACHE_PATH=${COMPILER_PATH}/
       CCACHE_ENABLE="-prefs compiler.path=${CCACHE_WRAPPER_PATH}/"
     fi
@@ -129,12 +136,17 @@ find_sketch () {
         echo "SKETCH, LIBRARY, SOURCEDIR, and ROOT need to be set before including this file!" >&2
         exit 1
     fi
+  
+    SKETCH_DIR="$SKETCH"
+    SKETCH_FILE=$(basename "$SKETCH")
 
-    for path in "examples/${LIBRARY}" \
+    for path in "${SKETCH_DIR}" \
+		    "examples/${LIBRARY}" \
                     "src" \
 		    "."; do
-        if [ -f "${path}/${SKETCH}.ino" ]; then
-            echo "${path}"
+        if [ -f "${path}/${SKETCH_FILE}.ino" ]; then
+      	    SKETCH_DIR="${path}"
+	    SKETCH="${SKETCH_FILE}"
             return
         fi
     done
@@ -163,19 +175,26 @@ prompt_before_flashing () {
 flash () {
     maybe_build "$@"
 
-    # Check to see if we can see a keyboard bootloader port. 
+    # Check to see if we can see a keyboard bootloader port.
     # If we -can-, then we should skip over the "reset to bootloader" thing
     find_bootloader_ports
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
         prompt_before_flashing
-    
+
         # This is defined in the (optional) user config.
         # shellcheck disable=SC2154
         ${preFlash_HOOKS}
-    
-        reset_device
-        sleep 2
-        find_bootloader_ports
+
+	# If we're -not- doing a manual reset, then try to do it automatically
+        if [ -z "${MANUAL_RESET}" ]; then
+            reset_device
+            sleep 2
+            find_bootloader_ports
+	# Otherwise, poll for a bootloader port.
+        else
+           wait_for_bootloader_port
+        fi
+
     fi
 
     check_bootloader_port_and_flash
@@ -185,6 +204,25 @@ flash () {
     ${postFlash_HOOKS}
 }
 
+wait_for_bootloader_port() {
+    declare -i tries
+    tries=15
+
+    while [ "$tries" -gt 0 ] && [ -z "${DEVICE_PORT_BOOTLOADER}" ]; do
+        sleep 1
+        printf "."
+        find_bootloader_ports
+        # the variable annotations do appear to be necessary
+        # shellcheck disable=SC2004
+        tries=$(($tries-1))
+    done
+
+    if [ "$tries" -gt 0 ]; then
+        echo "Found."
+    else
+        echo "Timed out."
+    fi
+}
 
 check_bootloader_port () {
     if [ -z "${DEVICE_PORT_BOOTLOADER}" ]; then
@@ -201,11 +239,11 @@ check_bootloader_port_and_flash () {
     if ! check_bootloader_port; then
         return 1
     fi
- 
+
     echo "Flashing your keyboard:"
 
     # If the flash fails, try a second time
-    if ! flash_over_usb; then 
+    if ! flash_over_usb; then
         sleep 2
         if  ! flash_over_usb; then
             if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
@@ -279,7 +317,7 @@ hex_with_bootloader () {
     echo "Using ${BOOTLOADER_PATH}"
     ${MD5} "${BOOTLOADER_PATH}"
     cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
-    ln -sf -- "${HEX_FILE_WITH_BOOTLOADER_PATH}" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    ln -sf -- "${OUTPUT_FILE_PREFIX}-with-bootloader.hex" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
     cat <<- EOF
 
 		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
@@ -291,14 +329,13 @@ hex_with_bootloader () {
 }
 
 maybe_build () {
+    find_sketch
     build_version
     build_paths
     build_filenames
 
     if [ ! -e "${HEX_FILE_PATH}" ]; then
 	build "$@"
-    else
-      SKETCH_DIR="$(find_sketch)"
     fi
 
 }
@@ -308,17 +345,22 @@ build () {
     size "$@"
 }
 
+
+prepare_ccache () {
+    build_paths
+    enable_ccache
+}
+
 compile () {
+    find_sketch
     build_version
     build_paths
     build_filenames
     enable_ccache
 
     install -d "${OUTPUT_PATH}"
-    
-    SKETCH_DIR="$(find_sketch)"
 
-    echo "Building ${SKETCH_DIR}/${SKETCH} ${LIB_VERSION} into ${OUTPUT_PATH}"
+    echo "Building ${SKETCH_DIR}/${SKETCH}"
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -336,7 +378,7 @@ compile () {
         # We want literal backslashes here, not arrays.
 	      ARDUINO_PACKAGES="-hardware \"${ARDUINO_PACKAGE_PATH}\""
     fi
-    
+
     SAVED_BOARD="${BOARD}"
     SAVED_FQBN="${FQBN}"
     if [ -e "${SKETCH_DIR}/.kaleidoscope-builder.conf" ]; then
@@ -352,6 +394,10 @@ compile () {
             fi
         fi
     fi
+
+    _CMD_CXX="${CXX:-${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_CC="${CC:-${COMPILER_PREFIX}${C_COMPILER_BASENAME}${COMPILER_SUFFIX}}"
+    _CMD_AR="${AR:-${COMPILER_PREFIX}${AR_BASENAME}${COMPILER_SUFFIX}}"
 
     # SC2091: We do not care if quotes or backslashes are not respected.
     # SC2086: We want word splitting.
@@ -375,19 +421,25 @@ compile () {
 	      -built-in-libraries "${ARDUINO_PATH}/libraries" \
 	      -prefs "compiler.cpp.extra_flags=${ARDUINO_CFLAGS} ${LOCAL_CFLAGS}" \
 	      -prefs "compiler.path=${COMPILER_PATH}" \
-	      -prefs "compiler.c.cmd=${COMPILER_PREFIX}${C_COMPILER_BASENAME}" \
-	      -prefs "compiler.cpp.cmd=${COMPILER_PREFIX}${CXX_COMPILER_BASENAME}" \
+	      -prefs "compiler.c.cmd=${_CMD_CC}" \
+	      -prefs "compiler.cpp.cmd=${_CMD_CXX}" \
+        -prefs "compiler.ar.cmd=${_CMD_AR}" \
+        -prefs "compiler.c.elf.cmd=${_CMD_CXX}" \
 	      $CCACHE_ENABLE \
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
 	      "${SKETCH_DIR}/${SKETCH}.ino"
 
-    cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
-    cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
-    ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
-    ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
-
+    if [ -z "${LIBONLY}" ]; then
+      cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
+      cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
+      ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+    else
+      cp "${BUILD_PATH}/${SKETCH}.ino.a" "${LIB_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH}-latest.a"
+    fi
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
       echo "Build artifacts can be found in ${BUILD_PATH}";
@@ -397,7 +449,7 @@ compile () {
     FQBN="${SAVED_FQBN}"
 }
 
-_find_all () {
+find_all_sketches () {
     for plugin in ./*.ino \
   	              $([ -d examples ] && find examples -name '*.ino') \
                   src/*.ino; do
@@ -418,7 +470,7 @@ _find_all () {
 }
 
 build_all () {
-    plugins="$(_find_all)"
+    plugins="$(find_all_sketches)"
 
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
@@ -429,7 +481,7 @@ build_all () {
 
 
 compile_all () {
-    plugins="$(_find_all)"
+    plugins="$(find_all_sketches)"
 
     for plugin in ${plugins}; do
         export SKETCH="${plugin}"
@@ -473,6 +525,11 @@ decompile () {
 
 clean () {
     rm -rf -- "${OUTPUT_PATH}"
+    kaleidoscope_dir="$(dirname "$0")/.."
+    (install -d "${kaleidoscope_dir}/testing/googletest/build" &&
+         cd "${kaleidoscope_dir}/testing/googletest/build" &&
+         cmake .. &&
+         make clean)
 }
 
 reset_device() {
@@ -536,6 +593,25 @@ EOF
     fi
 }
 
+build_gtest_gmock() {
+    kaleidoscope_dir="$(dirname "$0")/.."
+    (cd "${kaleidoscope_dir}/testing/googletest" && cmake . && make)
+}
+
+run_tests() {
+    (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
+    build_gtest_gmock
+    kaleidoscope_dir="$(dirname "$0")/.."
+    cd "${kaleidoscope_dir}/tests"
+    ${MAKE:-make}
+}
+
+docker_tests() {
+    kaleidoscope_dir="$(dirname "$0")/.."
+    cd "${kaleidoscope_dir}"
+    bin/run-docker make -C tests all
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
@@ -573,6 +649,9 @@ usage () {
 
 		  build-all
 		    Build all Sketches we can find.
+
+      run-tests | docker-tests
+        Builds and runs the test suite, on the host, and in docker, respectively.
 		EOF
 }
 
@@ -666,12 +745,6 @@ for i in $(seq 1 $#); do
 done
 
 LIBRARY="${SKETCH}"
-
-case "${SKETCH}" in
-    */*)
-        SKETCH="$(basename "${SKETCH}")"
-        ;;
-esac
 
 export SKETCH
 export LIBRARY

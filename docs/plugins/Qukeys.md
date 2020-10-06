@@ -40,7 +40,7 @@ KALEIDOSCOPE_INIT_PLUGINS(Qukeys);
   columns are left to right:
 
 - For the Keyboardio Model 01, key coordinates refer to [this header
-  file](https://github.com/keyboardio/Kaleidoscope-Hardware-Model01/blob/f469015346535cb864a340bf8eb317d268943248/src/Kaleidoscope-Hardware-Model01.h#L267-L279).
+  file](https://github.com/keyboardio/Kaleidoscope/blob/master/src/kaleidoscope/device/keyboardio/Model01.h#L167-L179).
 
 ```
 QUKEYS(

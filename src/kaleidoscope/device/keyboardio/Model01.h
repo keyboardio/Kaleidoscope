@@ -73,7 +73,9 @@ class Model01LEDDriver;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
-  KEYSCANNER_PROPS(4, 16);
+  static constexpr uint8_t matrix_rows = 4;
+  static constexpr uint8_t matrix_columns = 16;
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

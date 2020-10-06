@@ -23,7 +23,7 @@ namespace plugin {
 
 uint16_t AlphaSquareEffect::length = 1000;
 
-AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect */*parent*/)
+AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect */*parent*/) // NOLINT(readability/casting)
   : last_key_left_(Key_NoKey),
     last_key_right_(Key_NoKey)
 {}

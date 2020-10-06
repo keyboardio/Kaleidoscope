@@ -47,12 +47,12 @@ class LEDChaseEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const LEDChaseEffect *parent)
+    explicit TransientLEDMode(const LEDChaseEffect *parent)
       : parent_(parent), last_update_(Runtime.millisAtCycleStart()) {}
 
    protected:
 
-    virtual void update() final;
+    void update() final;
 
    private:
 

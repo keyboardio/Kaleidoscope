@@ -44,10 +44,10 @@ properties:
 > The Hue of the ripple animation. If set, the light splashing across the
 > keyboard will use this value instead of all colors of the rainbow.
 >
-> Setting it to the special value of `Wavepool.rainbow_hue` will cause the
+> Setting it to the special value of `WavepoolEffect.rainbow_hue` will cause the
 > plugin to use all colors again.
 >
-> Defaults to `Wavepool.rainbow_hue`.
+> Defaults to `WavepoolEffect.rainbow_hue`.
 
 ## Dependencies
 

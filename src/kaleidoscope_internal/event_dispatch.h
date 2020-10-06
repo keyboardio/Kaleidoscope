@@ -99,9 +99,9 @@
       }                                                                   __NL__ \
    };                                                                     __NL__ \
                                                                           __NL__ \
-   /* This specialization is used for those hooks that a plugin does not  __NL__ \
-    * implement.                                                          __NL__ \
-    */                                                                    __NL__ \
+   /* This specialization is used for those hooks that a plugin does */   __NL__ \
+   /* not implement. */                                                   __NL__ \
+                                                                          __NL__ \
    template<typename Plugin__                                             __NL__ \
             UNWRAP TMPL_PARAM_TYPE_LIST /* may evaluate empty */          __NL__ \
             , typename... Args__>                                         __NL__ \
@@ -131,10 +131,10 @@
             = HookVersionImplemented_##HOOK_NAME<                         __NL__ \
                  Plugin__, HOOK_VERSION>::value;                          __NL__ \
                                                                           __NL__ \
-         /* The caller type adds another level of indirection that        __NL__ \
-          * is required to enable some hooks not to be implemented        __NL__ \
-          * by plugins.                                                   __NL__ \
-          */                                                              __NL__ \
+         /* The caller type adds another level of indirection that */     __NL__ \
+         /* is required to enable some hooks not to be implemented */     __NL__ \
+         /* by plugins.                                            */     __NL__ \
+                                                                          __NL__ \
          typedef _NAME5(EventHandler_, HOOK_NAME, _v, HOOK_VERSION, _caller) __NL__ \
             <                                                             __NL__ \
                derived_implements_hook,                                   __NL__ \
@@ -147,7 +147,7 @@
       }                                                                   __NL__ \
     };                                                                    __NL__ \
                                                                           __NL__ \
-   } 	                                                                    __NL__ \
+   } 	                                                                  __NL__ \
                                                                           __NL__ \
    namespace kaleidoscope {                                               __NL__ \
                                                                           __NL__ \

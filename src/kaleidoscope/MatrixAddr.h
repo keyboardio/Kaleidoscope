@@ -47,7 +47,7 @@ class MatrixAddr {
   constexpr MatrixAddr(uint8_t row, uint8_t col)
     : offset_(row * cols + col) {}
 
-  constexpr MatrixAddr(uint8_t offset)
+  explicit constexpr MatrixAddr(uint8_t offset)
     : offset_(offset) {}
 
   // Rely on the default copy and move constructor.
@@ -57,8 +57,8 @@ class MatrixAddr {
   //       ridiculously bad assembler code for each copy construction,
   //       that would bloat the default firmware by 1K of PROGMEM!
   //
-  constexpr MatrixAddr(const ThisType &other) = default;
-  constexpr MatrixAddr(ThisType &&other) = default;
+  constexpr MatrixAddr(const ThisType &other) = default; // NOLINT(runtime/explicit)
+  constexpr MatrixAddr(ThisType &&other) = default; // NOLINT(runtime/explicit)
   //constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
   //constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
 
@@ -66,8 +66,7 @@ class MatrixAddr {
   ThisType &operator=(ThisType &&) = default;
 
   template<typename MatrixAddr__>
-  explicit
-  constexpr MatrixAddr(const MatrixAddr__ &other)
+  explicit constexpr MatrixAddr(const MatrixAddr__ &other)
     : MatrixAddr(other.row(), other.col()) {
     static_assert(MatrixAddr__::rows <= ThisType::rows,
                   "Matrix type conversion failed. Source type must not have greater row size than target type");
@@ -252,10 +251,3 @@ bool operator<=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
 #endif
 
 } // end namespace kaleidoscope
-
-// Row/col based access functions have been superseded by matrix address
-// base access.
-//
-#define _DEPRECATED_MESSAGE_ROW_COL_FUNC \
-   "Row/col based access functions have been deprecated. Please use " \
-   "the KeyAddr/KeyAddr based versions instead."

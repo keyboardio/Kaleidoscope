@@ -30,7 +30,6 @@ class Key;
 // in class Hooks.
 class kaleidoscope_;
 extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, KeyAddr key_addr, uint8_t keyState);
-DEPRECATED(ROW_COL_FUNC) extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, byte row, byte col, uint8_t keyState);
 
 namespace kaleidoscope {
 namespace plugin {

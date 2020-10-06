@@ -86,10 +86,10 @@ class VirtualKeyScanner
 
   bool read_matrix_enabled_;
 
-  KeyState keystates_[matrix_rows * matrix_columns];
-  KeyState keystates_prev_[matrix_rows * matrix_columns];
+  KeyState keystates_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
+  KeyState keystates_prev_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
 
-  bool mask_[matrix_rows * matrix_columns];
+  bool mask_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
 };
 
 class VirtualLEDDriver
@@ -108,7 +108,7 @@ class VirtualLEDDriver
 
  private:
 
-  cRGB led_states_[led_count];
+  cRGB led_states_[led_count]; // NOLINT(runtime/arrays)
 };
 
 // This overrides only the drivers and keeps the driver props of

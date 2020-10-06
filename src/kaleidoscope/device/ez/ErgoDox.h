@@ -48,7 +48,10 @@ namespace ez {
 
 struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
-    KEYSCANNER_PROPS(14, 6);
+    static constexpr uint8_t matrix_rows = 14;
+    static constexpr uint8_t matrix_columns = 6;
+    typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+
   };
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
   static constexpr const char *short_name = "ErgoDox-EZ";
@@ -142,7 +145,5 @@ class ErgoDox;
 EXPORT_DEVICE(kaleidoscope::device::ez::ErgoDox)
 
 }
-
-extern kaleidoscope::device::ez::ErgoDox DEPRECATED(NAMED_HARDWARE) &ErgoDox;
 
 #endif

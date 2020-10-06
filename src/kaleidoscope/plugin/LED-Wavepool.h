@@ -51,13 +51,13 @@ class WavepoolEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    TransientLEDMode(const WavepoolEffect *parent);
+    explicit TransientLEDMode(const WavepoolEffect *parent);
 
     EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
    protected:
 
-    virtual void update() final;
+    void update() final;
 
    private:
 

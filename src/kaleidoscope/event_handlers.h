@@ -103,15 +103,6 @@
 //    The list of parameters as they would be passed to a call to the handler.
 //    Parameter names must match the names assigned to the call arguments.
 
-#define _DEPRECATED_MESSAGE_ON_KEYSWITCH_EVENT_HANDLER_V1                      \
-"The event handler signature\n"                                         __NL__ \
-"EventHandlerResult onKeyswitchEvent(Key &mappedKey, byte row, byte col, \n" __NL__ \
-"                                        uint8_t keyState)\n"           __NL__ \
-"has been deprecated. Please use the new signature\n"                   __NL__ \
-"EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, \n" __NL__ \
-"                                       uint8_t keyState)\n"            __NL__ \
-"instead."
-
 namespace kaleidoscope {
 
 // This dummy class can be used as dummy template argument to
@@ -138,22 +129,6 @@ class SignatureCheckDummy {};
                (),(),(), /* non template */                               __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
-   /* DEPRECATED                                                       */ __NL__ \
-   /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
-   /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
-   /* passed by reference for this reason), and decide whether         */ __NL__ \
-   /* further handles should be tried. If it returns                   */ __NL__ \
-   /* EventHandlerResult::OK, other handlers will also get a chance    */ __NL__ \
-   /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
-   /* will stop processing there.                                      */ __NL__ \
-  OPERATION(onKeyswitchEvent,                                             __NL__ \
-             1,                                                           __NL__ \
-             DEPRECATED(ON_KEYSWITCH_EVENT_HANDLER_V1),                   __NL__ \
-               _ABORTABLE,                                                __NL__ \
-                (),(),(), /* non template */                              __NL__ \
-               (Key &mappedKey, byte row, byte col, uint8_t keyState),    __NL__ \
-               (mappedKey, row, col, keyState), ##__VA_ARGS__)            __NL__ \
-                                                                          __NL__ \
    /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
    /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
    /* passed by reference for this reason), and decide whether         */ __NL__ \
@@ -162,7 +137,7 @@ class SignatureCheckDummy {};
    /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
    /* will stop processing there.                                      */ __NL__ \
    OPERATION(onKeyswitchEvent,                                            __NL__ \
-              2,                                                          __NL__ \
+              1,                                                          __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                _ABORTABLE,                                                __NL__ \
                 (),(),(), /* non template */                              __NL__ \
@@ -262,10 +237,9 @@ class SignatureCheckDummy {};
       OP(beforeEachCycle, 1)                                            __NL__ \
    END(beforeEachCycle, 1)                                              __NL__ \
                                                                         __NL__ \
-   START(onKeyswitchEvent, 1, 2)                                        __NL__ \
+   START(onKeyswitchEvent, 1)                                           __NL__ \
       OP(onKeyswitchEvent, 1)                                           __NL__ \
-      OP(onKeyswitchEvent, 2)                                           __NL__ \
-   END(onKeyswitchEvent, 1, 2)                                          __NL__ \
+   END(onKeyswitchEvent, 1)                                             __NL__ \
                                                                         __NL__ \
    START(onFocusEvent, 1)                                               __NL__ \
       OP(onFocusEvent, 1)                                               __NL__ \

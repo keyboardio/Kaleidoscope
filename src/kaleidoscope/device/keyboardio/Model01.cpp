@@ -48,9 +48,6 @@ KeyboardioScanner Model01Hands::leftHand(0);
 KeyboardioScanner Model01Hands::rightHand(3);
 
 void Model01Hands::setup(void) {
-  // TODO: Consider not doing this until 30s after keyboard
-  // boot up, to make it easier to rescue things in case of power draw issues.
-
   // This lets the keyboard pull up to 1.6 amps from the host.
   // That violates the USB spec. But it sure is pretty looking
   DDRE |= _BV(6);

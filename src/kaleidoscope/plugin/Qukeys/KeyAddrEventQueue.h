@@ -45,7 +45,7 @@ class KeyAddrEventQueue {
  private:
   uint8_t    length_{0};
   KeyAddr    addrs_[_capacity];
-  _Timestamp timestamps_[_capacity];
+  _Timestamp timestamps_[_capacity]; // NOLINT(runtime/arrays)
   _Bitfield  release_event_bits_;
 
  public:

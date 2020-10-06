@@ -28,7 +28,7 @@
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
-#define I2C_CLOCK_KHZ 200
+#define I2C_CLOCK_KHZ 100
 #define I2C_FLASH_CLOCK_KHZ 100 // flashing doesn't work reliably at higher clock speeds
 
 #define SIDE_POWER 1 // side power switch pa10
@@ -274,22 +274,24 @@ void RaiseKeyScanner::readMatrix() {
   if (RaiseHands::leftHand.readKeys()) {
     leftHandState = RaiseHands::leftHand.getKeyData();
     // if ANSI, then swap r3c0 and r3c1 to match the PCB
-    if (RaiseHands::layout == LAYOUT_ANSI)
+    if (RaiseHands::layout == LAYOUT_ANSI) {
       // only swap if bits are different
       if ((leftHandState.rows[3] & (1 << 0)) ^ leftHandState.rows[3] & (1 << 1)) {
         leftHandState.rows[3] ^= (1 << 0); // flip the bit
         leftHandState.rows[3] ^= (1 << 1); // flip the bit
       }
+    }
   }
 
   if (RaiseHands::rightHand.readKeys()) {
     rightHandState = RaiseHands::rightHand.getKeyData();
     // if ANSI, then swap r1c0 and r2c0 to match the PCB
-    if (RaiseHands::layout == LAYOUT_ANSI)
+    if (RaiseHands::layout == LAYOUT_ANSI) {
       if ((rightHandState.rows[1] & (1 << 0)) ^ rightHandState.rows[2] & (1 << 0)) {
         rightHandState.rows[1] ^= (1 << 0);
         rightHandState.rows[2] ^= (1 << 0);
       }
+    }
   }
 
   // if a side has just been replugged, initialise it

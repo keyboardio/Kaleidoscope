@@ -111,7 +111,10 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
 };
 
 struct RaiseKeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
-  KEYSCANNER_PROPS(5, 16);
+  static constexpr uint8_t matrix_rows = 5;
+  static constexpr uint8_t matrix_columns = 16;
+  typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
+
   static constexpr uint8_t left_columns = 8;
   static constexpr uint8_t right_columns = matrix_columns - left_columns;
 };

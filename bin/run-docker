@@ -1,0 +1,19 @@
+#! /bin/sh
+## -*- mode: sh -*-
+set -e
+
+uname_S=$(uname -s 2>/dev/null || echo not)
+
+ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
+
+if [ "${uname_S}" = "Darwin" ]; then
+    ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Documents/Arduino}"
+fi
+
+BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH:-${ARDUINO_LOCAL_LIB_PATH}/hardware}"
+
+docker build -t kaleidoscope/docker etc
+docker run --rm -it \
+       -v "${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio" \
+       -v "$(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope" \
+       kaleidoscope/docker -c "$*"

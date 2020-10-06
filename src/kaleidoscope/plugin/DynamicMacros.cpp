@@ -19,8 +19,6 @@
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
-using namespace kaleidoscope::ranges;
-
 namespace kaleidoscope {
 namespace plugin {
 
@@ -200,11 +198,11 @@ void DynamicMacros::play(uint8_t macro_id) {
 }
 
 EventHandlerResult DynamicMacros::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getRaw() < DYNAMIC_MACRO_FIRST || mappedKey.getRaw() > DYNAMIC_MACRO_LAST)
+  if (mappedKey.getRaw() < ranges::DYNAMIC_MACRO_FIRST || mappedKey.getRaw() > ranges::DYNAMIC_MACRO_LAST)
     return EventHandlerResult::OK;
 
   if (keyToggledOn(keyState)) {
-    play(mappedKey.getRaw() - DYNAMIC_MACRO_FIRST);
+    play(mappedKey.getRaw() - ranges::DYNAMIC_MACRO_FIRST);
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
