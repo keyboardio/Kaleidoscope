@@ -97,6 +97,17 @@ likely to generate errors and out-of-order events.
 >
 > Defaults to `80`.
 
+### `.setMinimumHoldTime(min_hold_time)`
+
+> Sets the minimum amount of time (in milliseconds) a qukey must be held before
+> it is allowed to resolve to its alternate `Key` value. Use this if you find
+> that you're getting unintended alternate values (i.e. modifiers) while typing
+> on home-row qukeys, despite setting the overlap threshold (see above) to
+> 100%. It may mean that you'll need to slow down when using Qukeys to get
+> modifiers, however.
+>
+> Defaults to `50` (milliseconds).
+
 ### `.activate()`
 ### `.deactivate()`
 ### `.toggle()`
