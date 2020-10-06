@@ -106,11 +106,11 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Focus,
   FocusEEPROMCommand,
   FocusSettingsCommand,
-  OneShot,
+  Qukeys,
   SpaceCadet,
-  MouseKeys,
+  OneShot,
   Macros,
-  Qukeys
+  MouseKeys
 );
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
