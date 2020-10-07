@@ -333,8 +333,12 @@ maybe_build () {
     build_version
     build_paths
     build_filenames
-
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
+    # If the hex file is older than the sketch file, or the hex file does not exist
+    # then rebuild. This is not as correct as letting make check our dependencies
+    # But it's less broken for most user use cases
+    # TODO(anyone): Make this suck less
+    SKETCH_FILE_PATH=$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")
+    if [ "${HEX_FILE_PATH}" -ot "${SKETCH_FILE_PATH}" ]; then
 	build "$@"
     fi
 
