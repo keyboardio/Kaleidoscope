@@ -120,6 +120,13 @@ class Qukeys : public kaleidoscope::Plugin {
     }
   }
 
+  // Set the minimum length of time a qukey must be held before it can resolve
+  // to its alternate key value. If a qukey is pressed and released in less than
+  // this number of milliseconds, it will always produce its primary key value.
+  void setMinimumHoldTime(uint8_t min_hold_time) {
+    minimum_hold_time_ = min_hold_time;
+  }
+
   // Function for defining the array of qukeys data (in PROGMEM). It's a
   // template function that takes as its sole argument an array reference of
   // size `_qukeys_count`, so there's no need to use `sizeof` to calculate the
@@ -174,6 +181,11 @@ class Qukeys : public kaleidoscope::Plugin {
   // The number of milliseconds until a qukey held on its own will take on its
   // alternate state (or primary state, in the case of a SpaceCadet-type qukey).
   uint16_t hold_timeout_{250};
+
+  // The minimum number of milliseconds a qukey must be held before it is
+  // allowed to take on its alternate key value (to limit unintended modifiers
+  // for very fast typists).
+  uint8_t minimum_hold_time_{50};
 
   // This is a guard against re-processing events when qukeys flushes them from
   // its event queue. We can't just use an "injected" key state flag, because

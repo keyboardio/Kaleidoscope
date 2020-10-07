@@ -239,8 +239,14 @@ bool Qukeys::processQueue() {
       // not a key press, there must be one in the queue, so it shouldn't be
       // necessary to confirm that `j` is a actually a key press.
       if (event_queue_.addr(j) == event_queue_.addr(i)) {
-        flushEvent(queue_head_.alternate_key);
-        return true;
+        // Next, verify that enough time has passed after the qukey was pressed
+        // to make it eligible for its alternate value. This helps faster
+        // typists avoid unintended modifiers in the output.
+        if (Runtime.hasTimeExpired(event_queue_.timestamp(0),
+                                   minimum_hold_time_)) {
+          flushEvent(queue_head_.alternate_key);
+          return true;
+        }
       }
     }
   }
