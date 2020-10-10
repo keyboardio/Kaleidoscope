@@ -321,7 +321,7 @@ The layer system used to be index-ordered, meaning that we'd look keys up on
 layers based on the _index_ of active layers. Kaleidoscope now uses activation
 order, which looks up keys based on the order of layer activation.
 
-This means that the following functions are deprecated, and will be removed by **2020-09-16**:
+This means that the following functions are deprecated, and will be removed by **2020-12-31**:
 
 - `Layer.top()`, which used to return the topmost layer index. Use
   `Layer.mostRecent()` instead, which returns the most recently activated layer.
