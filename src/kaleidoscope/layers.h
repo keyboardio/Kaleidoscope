@@ -23,6 +23,7 @@
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
+#include "kaleidoscope_internal/deprecations.h"
 
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
@@ -83,25 +84,31 @@ class Layer_ {
     return live_composite_keymap_[key_addr.toInt()];
   }
   static Key lookupOnActiveLayer(KeyAddr key_addr) {
-    uint8_t layer = active_layers_[key_addr.toInt()];
+    uint8_t layer = active_layer_keymap_[key_addr.toInt()];
     return (*getKey)(layer, key_addr);
   }
   static uint8_t lookupActiveLayer(KeyAddr key_addr) {
-    return active_layers_[key_addr.toInt()];
+    return active_layer_keymap_[key_addr.toInt()];
   }
 
   static void activate(uint8_t layer);
   static void deactivate(uint8_t layer);
   static void activateNext();
-  static void deactivateTop();
+  static void deactivateTop() DEPRECATED(LAYER_DEACTIVATETOP) {
+    deactivateMostRecent();
+  }
+  static void deactivateMostRecent();
   static void move(uint8_t layer);
 
-  static uint8_t top(void) {
-    return top_active_layer_;
+  static uint8_t top(void) DEPRECATED(LAYER_TOP) {
+    return mostRecent();
+  }
+  static uint8_t mostRecent() {
+    return active_layers_[active_layer_count_ - 1];
   }
   static boolean isActive(uint8_t layer);
 
-  static uint32_t getLayerState(void) {
+  static uint32_t getLayerState(void) DEPRECATED(LAYER_GETLAYERSTATE) {
     return layer_state_;
   }
 
@@ -119,13 +126,19 @@ class Layer_ {
   static void updateActiveLayers(void);
 
  private:
+  using forEachHandler = void(*)(uint8_t index, uint8_t layer);
+
+ public:
+  static void forEachActiveLayer(forEachHandler h);
+
+ private:
   static uint32_t layer_state_;
-  static uint8_t top_active_layer_;
+  static uint8_t active_layer_count_;
+  static int8_t active_layers_[31];
   static Key live_composite_keymap_[kaleidoscope_internal::device.numKeys()];
-  static uint8_t active_layers_[kaleidoscope_internal::device.numKeys()];
+  static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
-  static void updateTopActiveLayer(void);
 };
 }
 
