@@ -23,52 +23,52 @@
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
-    Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,M(0)
+    Key_0 ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,M(0)
    ,ShiftToLayer(1)
 
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-          ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A ,Key_A
-   ,Key_A ,Key_A ,Key_A ,Key_A
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,Key_0
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+          ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX
    ,ShiftToLayer(2)
   ),
 
   [1] =  KEYMAP_STACKED
   (
-    Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B
+    Key_1 ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX
    ,___
 
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-          ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B ,Key_B
-   ,Key_B ,Key_B ,Key_B ,Key_B
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,Key_1
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+          ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX
    ,___
   ),
 
   [2] =  KEYMAP_STACKED
   (
-    Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C
+    Key_2 ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX
    ,___
 
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-          ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C ,Key_C
-   ,Key_C ,Key_C ,Key_C ,Key_C
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,Key_2
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+          ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX   ,XXX
+   ,XXX   ,XXX   ,XXX   ,XXX
    ,___
   )
 ) // KEYMAPS(
