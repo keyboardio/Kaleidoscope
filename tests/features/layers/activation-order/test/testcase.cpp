@@ -44,24 +44,24 @@ class LayerActivationOrder : public VirtualDeviceTest {
     sim_.Release(addr.row(), addr.col());
   }
 
-  auto pressKeyswitchAndCycle(const KeyAddr& addr) {
+  auto pressKeyswitchAndRunCycle(const KeyAddr& addr) {
     pressKeyswitch(addr);
     return RunCycle();
   }
 
-  auto releaseKeyswitchAndCycle(const KeyAddr& addr) {
+  auto releaseKeyswitchAndRunCycle(const KeyAddr& addr) {
     releaseKeyswitch(addr);
     return RunCycle();
   }
 
-  void assertSingleReportThatContains(std::unique_ptr<State> &state, Key k) {
+  void assertSingleKeyboardReportContaining(std::unique_ptr<State> &state, Key k) {
     ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
     EXPECT_THAT(
       state->HIDReports()->Keyboard(0).ActiveKeycodes(),
       Contains(k));
   }
 
-  void assertSingleReportThatDoesNotContain(std::unique_ptr<State> &state, Key k) {
+  void assertSingleKeyboardReportNotContaining(std::unique_ptr<State> &state, Key k) {
     ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
     EXPECT_THAT(
       state->HIDReports()->Keyboard(0).ActiveKeycodes(),
@@ -85,10 +85,10 @@ class LayerActivationOrder : public VirtualDeviceTest {
   }
 
   void TestPressAndRelease(const KeyAddr& addr, Key k) {
-    auto state = pressKeyswitchAndCycle(addr);
-    assertSingleReportThatContains(state, k);
+    auto state = pressKeyswitchAndRunCycle(addr);
+    assertSingleKeyboardReportContaining(state, k);
 
-    state = releaseKeyswitchAndCycle(addr);
+    state = releaseKeyswitchAndRunCycle(addr);
     assertSingleEmptyReport(state);
 
     assertNoReportAfterCycle();
@@ -101,21 +101,21 @@ TEST_F(LayerActivationOrder, BaseLayerHasNotRegressed) {
 
 TEST_F(LayerActivationOrder, ShifToLayerOne) {
   // Pressing (KEYSWITCH_LEFT_PALM) shifts to Layer 1, and we stay there until release.
-  auto state = pressKeyswitchAndCycle(KEYSWITCH_LEFT_PALM);
+  auto state = pressKeyswitchAndRunCycle(KEYSWITCH_LEFT_PALM);
   TestPressAndRelease(KEYSWITCH_TOP_LEFT, LAYER1_KEY);
 
   // Releasing (KEYSWITCH_LEFT_PALM) gets us back to the base layer
-  state = releaseKeyswitchAndCycle(KEYSWITCH_LEFT_PALM);
+  state = releaseKeyswitchAndRunCycle(KEYSWITCH_LEFT_PALM);
   TestPressAndRelease(KEYSWITCH_TOP_LEFT, LAYER0_KEY);
 }
 
 TEST_F(LayerActivationOrder, ShiftingWithCaching) {
   // Pressing (KEYSWITCH_TOP_LEFT) will activate the key on layer 0
-  auto state = pressKeyswitchAndCycle(KEYSWITCH_TOP_LEFT);
-  assertSingleReportThatContains(state, LAYER0_KEY);
+  auto state = pressKeyswitchAndRunCycle(KEYSWITCH_TOP_LEFT);
+  assertSingleKeyboardReportContaining(state, LAYER0_KEY);
 
   // Pressing (KEYSWITCH_LEFT_PALM) will switch to Layer 1
-  state = pressKeyswitchAndCycle(KEYSWITCH_LEFT_PALM);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_LEFT_PALM);
 
   // ...since we're still pressing (KEYSWITCH_TOP_LEFT), and there was no change
   // in the HID states, we shouldn't emit a report.
@@ -124,24 +124,24 @@ TEST_F(LayerActivationOrder, ShiftingWithCaching) {
   // Pressing (KEYSWITCH_TOP_RIGHT), the report shall contain keys from both
   // layer 0 and layer1, because we started holding the layer 0 key prior to
   // switching layers, so it's code should remain cached.
-  state = pressKeyswitchAndCycle(KEYSWITCH_TOP_RIGHT);
-  assertSingleReportThatContains(state, LAYER0_KEY);
-  assertSingleReportThatContains(state, LAYER1_KEY);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_TOP_RIGHT);
+  assertSingleKeyboardReportContaining(state, LAYER0_KEY);
+  assertSingleKeyboardReportContaining(state, LAYER1_KEY);
 
   // Releasing (KEYSWITCH_TOP_LEFT), the report should now contain the key from
   // layer1 only, and should not contain the layer0 key anymore.
-  state = releaseKeyswitchAndCycle(KEYSWITCH_TOP_LEFT);
-  assertSingleReportThatContains(state, LAYER1_KEY);
-  assertSingleReportThatDoesNotContain(state, LAYER0_KEY);
+  state = releaseKeyswitchAndRunCycle(KEYSWITCH_TOP_LEFT);
+  assertSingleKeyboardReportContaining(state, LAYER1_KEY);
+  assertSingleKeyboardReportNotContaining(state, LAYER0_KEY);
 
   // Release (KEYSWITCH_TOP_RIGHT)
-  state = releaseKeyswitchAndCycle(KEYSWITCH_TOP_RIGHT);
+  state = releaseKeyswitchAndRunCycle(KEYSWITCH_TOP_RIGHT);
 
   // Test the layer 1 key in isolation again
   TestPressAndRelease(KEYSWITCH_TOP_LEFT, LAYER1_KEY);
 
   // Release the layer key as well.
-  state = releaseKeyswitchAndCycle(KEYSWITCH_LEFT_PALM);
+  state = releaseKeyswitchAndRunCycle(KEYSWITCH_LEFT_PALM);
 
   // Since the layer key release is internal to us, we shouldn't send a report.
   assertNoReport(state);
@@ -149,23 +149,23 @@ TEST_F(LayerActivationOrder, ShiftingWithCaching) {
 
 TEST_F(LayerActivationOrder, Ordering) {
   // Pressing (KEYSWITCH_RIGHT_PALM) will switch to Layer 2
-  auto state = pressKeyswitchAndCycle(KEYSWITCH_RIGHT_PALM);
+  auto state = pressKeyswitchAndRunCycle(KEYSWITCH_RIGHT_PALM);
 
   // Pressing (KEYSWITCH_TOP_LEFT) will activate a key on layer 2
-  state = pressKeyswitchAndCycle(KEYSWITCH_TOP_LEFT);
-  assertSingleReportThatContains(state, LAYER2_KEY);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_TOP_LEFT);
+  assertSingleKeyboardReportContaining(state, LAYER2_KEY);
 
   // Pressing (KEYSWITCH_LEFT_PALM) will activate Layer 1
-  state = pressKeyswitchAndCycle(KEYSWITCH_LEFT_PALM);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_LEFT_PALM);
 
   // Pressing (KEYSWITCH_TOP_RIGHT) will activate the layer 1 key now, due to
   // activation ordering.
-  state = pressKeyswitchAndCycle(KEYSWITCH_TOP_RIGHT);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_TOP_RIGHT);
 
   // We should have both the layer 1 and the layer 2 key active, because we're
   // holding both.
-  assertSingleReportThatContains(state, LAYER1_KEY);
-  assertSingleReportThatContains(state, LAYER2_KEY);
+  assertSingleKeyboardReportContaining(state, LAYER1_KEY);
+  assertSingleKeyboardReportContaining(state, LAYER2_KEY);
 
   // Releaseing all held keys, we should get an empty report.
   releaseKeyswitch(KEYSWITCH_TOP_LEFT);
@@ -183,11 +183,11 @@ TEST_F(LayerActivationOrder, Ordering) {
 
 TEST_F(LayerActivationOrder, LayerZero) {
   // Pressing the rightmost of the left thumb keys should deactivate layer 0
-  auto state = pressKeyswitchAndCycle(KEYSWITCH_LEFT_THUMB_RIGHTMOST);
+  auto state = pressKeyswitchAndRunCycle(KEYSWITCH_LEFT_THUMB_RIGHTMOST);
 
   // Pressing KEYSWITCH_TOP_LEFT should fall back to activating the key on layer 0
-  state = pressKeyswitchAndCycle(KEYSWITCH_TOP_LEFT);
-  assertSingleReportThatContains(state, LAYER0_KEY);
+  state = pressKeyswitchAndRunCycle(KEYSWITCH_TOP_LEFT);
+  assertSingleKeyboardReportContaining(state, LAYER0_KEY);
 
   // Releasing all keys should generate a single empty report
   releaseKeyswitch(KEYSWITCH_TOP_LEFT);
