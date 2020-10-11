@@ -41,42 +41,39 @@ class Key {
   {}
 
   constexpr Key(uint8_t key_code, uint8_t flags)
-    : keyCode{key_code},
-      flags{flags}
+    : keyCode_{key_code},
+      flags_{flags}
   {}
 
   void setFlags(uint8_t new_flags) {
-    flags.value_ = new_flags;
+    flags_ = new_flags;
   }
 
 // gcc 7 (Arduino > 1.8.10) has a problem with the layer dimension of
 // keymap_linear, as used by keyFromKeymap(...) being undefined.
 // Because of this, we disable -Warray_bounds locally to avoid spurious warnings.
-
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
   constexpr const uint8_t &getFlags() const {
-    return flags.value_;
+    return flags_;
   }
 
   void setKeyCode(uint8_t key_code) {
-    keyCode.value_ = key_code;
+    keyCode_ = key_code;
   }
   constexpr const uint8_t &getKeyCode() const {
-    return keyCode.value_;
+    return keyCode_;
   }
 #pragma GCC diagnostic pop
 
-
   void setRaw(uint16_t raw) {
-    flags.value_  = (uint8_t)(raw >> 8);
-    keyCode.value_ = (uint8_t)(raw & 0x00FF);
+    flags_  = (uint8_t)(raw >> 8);
+    keyCode_ = (uint8_t)(raw & 0x00FF);
   }
   constexpr uint16_t getRaw() const {
     return (uint16_t)(
-             ((uint16_t)flags.value_ << 8)
-             + (uint16_t)keyCode.value_
+             ((uint16_t)flags_ << 8)
+             + (uint16_t)keyCode_
            );
   }
 
@@ -84,8 +81,8 @@ class Key {
     return this->getRaw() == rhs;
   }
   constexpr bool operator==(const Key& rhs) const {
-    return (this->keyCode.value_ == rhs.keyCode.value_)
-           && (this->flags.value_ == rhs.flags.value_);
+    return (this->keyCode_ == rhs.keyCode_)
+           && (this->flags_ == rhs.flags_);
   }
   Key& operator=(const StorageType raw) {
     this->setRaw(raw);
@@ -124,63 +121,10 @@ class Key {
                pgm_read_byte(&(this->getFlags()))};
   }
 
-  // The data proxy objects are required to only emit deprecation
-  // messages when members 'keyCode' and 'flags' are accessed directly
-  // but not if accessed by class Key.
-  //
-  // Once the deprecation periode elapsed both proxy members 'keyCode'
-  // and 'flags' of class Key can be converted to private uint8_t members
-  // of class Key. Class DataProxy can then be safely removed.
-  //
-  class DataProxy {
+ private:
+  uint8_t keyCode_;
+  uint8_t flags_;
 
-    friend class Key;
-
-   public:
-
-    DataProxy() = default;
-
-    constexpr DataProxy(uint8_t value) : value_{value} {} // NOLINT(runtime/explicit)
-
-    DEPRECATED(DIRECT_KEY_MEMBER_ACCESS)
-    DataProxy &operator=(uint8_t value) {
-      value_ = value;
-      return *this;
-    }
-
-    DEPRECATED(DIRECT_KEY_MEMBER_ACCESS)
-    constexpr operator uint8_t () const {
-      return value_;
-    }
-
-   private:
-    uint8_t value_;
-  };
-
-  DataProxy keyCode;
-  DataProxy flags;
-
-  // For technical reasons the implementation of type Key has been changed
-  // from a C++ union to a class.
-  //
-  // Although it is not entirely possible to retain all features of the
-  // union-based implementation, we can still warn for access to member raw.
-  //
-  // After converting Key::raw to a static member, it can now still be accessed
-  // as before. But accessing it will trigger a compiler message that informs
-  // the user about the importance of replacing its access
-  // with Key::getRaw() or Key::setRaw().
-  //
-  // This is not a deprecation! All code that accesses Key::raw directly
-  // will fail to link instead.
-  //
-  // This is because there is no instance provided for the static fake
-  // member Key::raw. Because of that, this approach does not mean
-  // any harm. The emitted diagnostics help pointing users
-  // to the places in the code where changes are required.
-  //
-  DEPRECATED(KEY_MEMBER_RAW_ACCESS)
-  static uint16_t raw;
 };
 
 static_assert(sizeof(Key) == 2, "sizeof(Key) changed");
