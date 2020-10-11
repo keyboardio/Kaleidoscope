@@ -42,8 +42,6 @@ void setup();
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/deprecations.h"
 
-#include "kaleidoscope/hid.h"
-
 
 // Note: The CONVERT_TO_KEY macro can be redefined to use different
 //       host_keymap-keymaps on different layers (see key_defs.h for its
