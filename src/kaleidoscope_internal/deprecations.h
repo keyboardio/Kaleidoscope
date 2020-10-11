@@ -46,10 +46,6 @@
   "Layers are now in activation-order, please use" __NL__ \
   "`Layer.forEachActiveLayer()` instead."
 
-#define _DEPRECATED_MESSAGE_HID_FACADE                                   __NL__ \
-  "The HID facade in the `kaleidoscope::hid` namespace is deprecated.\n" __NL__ \
-  "Please use `Kaleidoscope.hid()` instead."
-
 #define _DEPRECATED_MESSAGE_DIRECT_KEY_MEMBER_ACCESS                           \
   "Direct access to `Key` class' data members is deprecated.\n"                \
   "Please use `Key::setKeyCode()`/`Key::getKeyCode()` or\n"                    \

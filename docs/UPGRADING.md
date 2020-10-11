@@ -13,7 +13,6 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
     - [Layer system switched to activation-order](#layer-system-switched-to-activation-order)
-    - [Deprecation of the HID facade](#deprecation-of-the-hid-facade)
     - [Implementation of type Key internally changed from C++ union to class](#implementation-of-type-key-internally-changed-from-union-to-class)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
@@ -335,10 +334,6 @@ This means that the following functions are deprecated, and will be removed by *
   `Layer.forEachActiveLayer()` to walk the active layers in order (from least
   recent to most).
 
-### Deprecation of the HID facade
-
-With the new Device APIs it became possible to replace the HID facade (the `kaleidoscope::hid` family of functions) with a driver. As such, the old APIs are deprecated, and will be removed by **2020-09-16**. Please use `Kaleidoscope.hid()` instead.
-
 ### Implementation of type Key internally changed from C++ union to class
 
 The deprecated functions continue to work, but they will be removed by **2020-09-16**.
@@ -545,6 +540,12 @@ The following headers and names have changed:
 - [TapDance](plugins/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
+
+### Removed on 2020-10-10
+
+### Deprecation of the HID facade
+
+With the new Device APIs it became possible to replace the HID facade (the `kaleidoscope::hid` family of functions) with a driver. As such, the old APIs are deprecated, and was removed on 2020-10-10. Please use `Kaleidoscope.hid()` instead.
 
 ### Removed on 2020-06-16
 
