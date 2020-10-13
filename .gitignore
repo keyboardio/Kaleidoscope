@@ -1,4 +1,5 @@
 *~
+/.docker_xfer
 .#*
 /output/
 /examples/*/output/

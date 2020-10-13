@@ -25,6 +25,10 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 # Upgrade notes
 
+As a matter of policy, we try hard to give you at least 60 days notice before we permanently remove or break
+any API we've included in a release. Typically, this means that any code that uses the old API will emit a warning when compiled with a newer version of Kaleidoscope. In all cases, this document should explain how to update your code to use the new API.
+
+
 ## New features
 
 ### New device API

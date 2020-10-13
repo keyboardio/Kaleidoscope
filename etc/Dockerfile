@@ -1,8 +1,12 @@
-FROM debian:stable-slim
+FROM ubuntu:20.04
 LABEL maintainer="Keyboard.io, inc"
 
-RUN apt-get -qq update
-RUN apt-get -qq install -y xz-utils curl git-core make build-essential libxtst-dev cmake
+RUN apt-get -qq update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get -qq install -y xz-utils curl make build-essential libxtst-dev cmake ccache
+
+RUN ccache --set-config=cache_dir=/kaleidoscope-persist/ccache/cache
+
 
 ENV ARDUINO_VERSION "1.8.13"
 
@@ -14,7 +18,21 @@ RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/inst
   sh
 RUN /usr/local/bin/arduino-cli core install arduino:avr
 
-VOLUME ["/kaleidoscope/hardware/keyboardio"]
+
+COPY docker-entrypoint.sh /usr/local/bin/entrypoint
+
+VOLUME ["/kaleidoscope", \
+        "/kaleidoscope-src", \
+        "/kaleidoscope-persist", \
+        "/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/testing/googletest/build", \
+        "/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/_build"]
+
 ENV BOARD_HARDWARE_PATH "/kaleidoscope/hardware"
-WORKDIR /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
-ENTRYPOINT ["/bin/bash"]
+ENV KALEIDOSCOPE_TEMP_PATH "/kaleidoscope-persist/temp"
+
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+

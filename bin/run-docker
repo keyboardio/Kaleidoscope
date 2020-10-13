@@ -8,12 +8,33 @@ ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
 
 if [ "${uname_S}" = "Darwin" ]; then
     ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Documents/Arduino}"
+    # This stops macos from copying resource forks into thigns like tar
+    export COPYFILE_DISABLE=true
 fi
 
 BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH:-${ARDUINO_LOCAL_LIB_PATH}/hardware}"
 
-docker build -t kaleidoscope/docker etc
+echo "Preparing Kaleidoscope and the bundle..."
+
+XFER_DIR="$(pwd)/.docker_xfer"
+mkdir -p "${XFER_DIR}"
+
+tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
+	--exclude .docker_xfer	--exclude .git --exclude _build --exclude testing/googletest/build  \
+	.
+
+(cd "${BOARD_HARDWARE_PATH}/keyboardio" && tar  -cf "${XFER_DIR}/bundle.tar" \
+	--exclude .git --exclude avr/libraries/Kaleidoscope .)
+
+echo "Building the docker image..."
+docker build -q -t kaleidoscope/docker etc
 docker run --rm -it \
-       -v "${BOARD_HARDWARE_PATH}/keyboardio:/kaleidoscope/hardware/keyboardio" \
-       -v "$(pwd):/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope" \
-       kaleidoscope/docker -c "$*"
+       --tmpfs /kaleidoscope:exec \
+       --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
+       --mount type=volume,source=kaleidoscope-persist,destination=/kaleidoscope-persist,consistency=delegated \
+       --mount type=volume,source=kaleidoscope-googletest-build,destination=/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/testing/googletest/build,consistency=delegated \
+       --mount type=volume,source=kaleidoscope-build,destination=/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/_build,consistency=delegated \
+       kaleidoscope/docker "$*"
+
+
+exit 0
