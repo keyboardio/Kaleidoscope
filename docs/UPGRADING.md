@@ -16,6 +16,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
+    - [Qukeys](#qukeys)
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
     - [Key mapping has been deprecated](#key-mapping-has-been-deprecated)
@@ -496,6 +497,32 @@ If your actions made use of the `left_hand` or `right_hand` arguments of
 `magicComboActions`, the same information is still available. But that's a bit
 more involved to get to, out of scope for this simple migration guide. Please
 open an issue, or ask for help on the forums, and we'll help you.
+
+### Qukeys
+
+Older versions of the plugin used `row` and `col` indexing for defining `Qukey`
+objects. This has since been replaced with a single `KeyAddr` parameter in the
+constructor.
+
+Older versions of the plugin used a single timeout, configured via a
+`setTimeout()` method. For clarity, that method has been renamed to
+`setHoldTimeout()`.
+
+Older versions of the plugin used a configurable "release delay" value to give
+the user control over how Qukeys determined which value to assign to a qukey
+involved in rollover, via the `setReleaseDelay()` method. That release delay has
+been replaced with a better "overlap percentage" strategy, which makes the
+decision based on the percentage of the subsequent keypress's duration overlaps
+with the qukey's press. The configuration method is now `setOverlapThreshold()`,
+which accepts a value between 0 and 100 (interpreted as a percentage). User who
+used higher values for `setReleaseDelay()` will want a lower values for
+`setOverlapThreshold()`.
+
+These functions have been deprecated since 2019-08-22, and will be removed by **2020-12-31**:
+
+- `Qukeys.setTimeout(millis)`
+- `Qukeys.setReleaseDelay(millis)`
+- `Qukey(layer, row, col, alternate_key)`
 
 ### TypingBreaks
 
