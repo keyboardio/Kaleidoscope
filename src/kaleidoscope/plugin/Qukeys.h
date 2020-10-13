@@ -35,21 +35,24 @@
 
 #define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).getKeyCode())
 
-#define _DEPRECATED_MESSAGE_QUKEY_ROW_COL_CONSTRUCTOR                        \
-  "The `Qukey(layer, row, col, alternate_key)` constructor using separate\n" \
-  "`row` & `col` parameters has been deprecated. Please replace this\n"      \
-  "constructor with the new `KeyAddr` version:\n"                            \
-  "    `Qukey(layer, KeyAddr(row, col), alternate_key)`"
+#define _DEPRECATED_MESSAGE_QUKEY_ROW_COL_CONSTRUCTOR                           \
+  "The `Qukey(layer, row, col, alternate_key)` constructor using separate\n"    \
+  "`row` & `col` parameters has been deprecated. Please replace this\n"         \
+  "constructor with the new `KeyAddr` version:\n"                               \
+  "    `Qukey(layer, KeyAddr(row, col), alternate_key)`"                        \
+  "The deprecated function will be removed after 2020-12-31"
 
-#define _DEPRECATED_MESSAGE_QUKEYS_TIMEOUT                                  \
-  "The Qukeys.setTimeout() function has been renamed to setHoldTimeout()\n" \
-  "in order to distinguish it from the other timeouts more clearly."
+#define _DEPRECATED_MESSAGE_QUKEYS_TIMEOUT                                      \
+  "The Qukeys.setTimeout() function has been renamed to setHoldTimeout()\n"     \
+  "in order to distinguish it from the other timeouts more clearly."            \
+  "The deprecated function will be removed after 2020-12-31"
 
-#define _DEPRECATED_MESSAGE_QUKEYS_RELEASEDELAY                               \
-  "The Qukeys.setReleaseDelay() is now obsolete. The rollover grace period\n" \
-  "for qukey release has been replaced with an improved version based on\n"   \
-  "the percentage of overlap between the qukey and the subsequent\n"          \
-  "key. Please use the setOverlapThreshold() function instead."
+#define _DEPRECATED_MESSAGE_QUKEYS_RELEASEDELAY                                 \
+  "The Qukeys.setReleaseDelay() is now obsolete. The rollover grace period\n"   \
+  "for qukey release has been replaced with an improved version based on\n"     \
+  "the percentage of overlap between the qukey and the subsequent\n"            \
+  "key. Please use the setOverlapThreshold() function instead."                 \
+  "The deprecated function will be removed after 2020-12-31"
 
 namespace kaleidoscope {
 namespace plugin {
