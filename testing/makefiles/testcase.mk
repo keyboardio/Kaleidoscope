@@ -35,7 +35,7 @@ ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS}
 	env LIBONLY=yes \
 		  LOCAL_CFLAGS='"-I$(shell pwd)"' \
 		  OUTPUT_PATH="${LIB_DIR}" \
-			VERBOSE=1 \
+			VERBOSE=${VERBOSE} \
 			ARCH=virtual DEFAULT_SKETCH=sketch \
 		$(MAKE) -f ${top_dir}/testing/makefiles/delegate.mk
 	g++ -o "${BIN_DIR}/${BIN_FILE}" \
