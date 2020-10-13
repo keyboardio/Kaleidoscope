@@ -35,25 +35,6 @@
 
 #define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).getKeyCode())
 
-#define _DEPRECATED_MESSAGE_QUKEY_ROW_COL_CONSTRUCTOR                           \
-  "The `Qukey(layer, row, col, alternate_key)` constructor using separate\n"    \
-  "`row` & `col` parameters has been deprecated. Please replace this\n"         \
-  "constructor with the new `KeyAddr` version:\n"                               \
-  "    `Qukey(layer, KeyAddr(row, col), alternate_key)`"                        \
-  "The deprecated function will be removed after 2020-12-31"
-
-#define _DEPRECATED_MESSAGE_QUKEYS_TIMEOUT                                      \
-  "The Qukeys.setTimeout() function has been renamed to setHoldTimeout()\n"     \
-  "in order to distinguish it from the other timeouts more clearly."            \
-  "The deprecated function will be removed after 2020-12-31"
-
-#define _DEPRECATED_MESSAGE_QUKEYS_RELEASEDELAY                                 \
-  "The Qukeys.setReleaseDelay() is now obsolete. The rollover grace period\n"   \
-  "for qukey release has been replaced with an improved version based on\n"     \
-  "the percentage of overlap between the qukey and the subsequent\n"            \
-  "key. Please use the setOverlapThreshold() function instead."                 \
-  "The deprecated function will be removed after 2020-12-31"
-
 namespace kaleidoscope {
 namespace plugin {
 
@@ -75,12 +56,6 @@ struct Qukey {
   // This constructor is here so that we can create an empty Qukey object in RAM
   // into which we can copy the values from a PROGMEM Qukey object.
   Qukey() = default;
-
-  // Old-style Qukey constructor for backwards compatibility.
-  DEPRECATED(QUKEY_ROW_COL_CONSTRUCTOR)
-  constexpr
-  Qukey(int8_t layer, uint8_t row, uint8_t col, Key alternate_key)
-    : layer(layer), addr(KeyAddr(row, col)), alternate_key(alternate_key) {}
 };
 
 
@@ -138,20 +113,6 @@ class Qukeys : public kaleidoscope::Plugin {
   void configureQukeys(Qukey const(&qukeys)[_qukeys_count]) {
     qukeys_ = qukeys;
     qukeys_count_ = _qukeys_count;
-  }
-
-  // Obsolete configuration functions.
-  DEPRECATED(QUKEYS_TIMEOUT)
-  void setTimeout(uint16_t time_limit) {
-    setHoldTimeout(time_limit);
-  }
-  DEPRECATED(QUKEYS_RELEASEDELAY)
-  void setReleaseDelay(uint8_t release_delay) {
-    if (release_delay == 0) {
-      overlap_threshold_ = 0;
-    } else {
-      overlap_threshold_ = 60;
-    }
   }
 
   // A wildcard value for a qukey that exists on every layer.
