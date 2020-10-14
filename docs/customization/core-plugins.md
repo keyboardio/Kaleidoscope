@@ -3,7 +3,7 @@
 This is an annotated list of some of Kaleidoscope's most important core plugins. You may also want to consult the [automatically generated list of all plugins bundled with Kaleidoscope](../plugin_list).
 
 
-You can find a list of hird-party plugins not distributed as part of Kaleidoscope at https://community.keyboard.io/c/programming/Discuss-Plugins-one-thread-per-plugin
+You can find a list of third-party plugins not distributed as part of Kaleidoscope at https://community.keyboard.io/c/programming/Discuss-Plugins-one-thread-per-plugin
 
 ## EEPROM-Keymap
 
