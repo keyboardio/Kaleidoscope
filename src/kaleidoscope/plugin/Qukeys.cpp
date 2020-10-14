@@ -126,6 +126,14 @@ EventHandlerResult Qukeys::beforeReportingState() {
                     queue_head_.primary_key : queue_head_.alternate_key;
     flushEvent(event_key);
   }
+
+  // Last, if there hasn't been a keypress in a while, update the prior keypress
+  // timestamp to avoid integer overflow issues:
+  if (Runtime.hasTimeExpired(prior_keypress_timestamp_,
+                             minimum_prior_interval_)) {
+    prior_keypress_timestamp_ =
+      Runtime.millisAtCycleStart() - (minimum_prior_interval_ + 1);
+  }
   return EventHandlerResult::OK;
 }
 
@@ -176,6 +184,14 @@ bool Qukeys::processQueue() {
   // Next we record if the qukey (at the head of the queue) is a SpaceCadet-type
   // key, so we don't need to do it repeatedly later.
   bool qukey_is_spacecadet = isModifierKey(queue_head_.primary_key);
+
+  // If the qukey press followed a non-modifier key too closely, it's not
+  // eligible to take on its alternate value unless it's a SpaceCadet-type key.
+  if (!Runtime.hasTimeExpired(prior_keypress_timestamp_,
+                              minimum_prior_interval_) &&
+      !qukey_is_spacecadet) {
+    flushEvent(queue_head_.primary_key);
+  }
 
   // Now we search the queue for events that will let us decide if the qukey
   // should be flushed (and if so, in which of its two states). We start with
@@ -274,6 +290,11 @@ void Qukeys::flushEvent(Key event_key) {
   // First we record the address and state of the event:
   KeyAddr queue_head_addr = event_queue_.addr(0);
   uint8_t keyswitch_state = event_queue_.isRelease(0) ? WAS_PRESSED : IS_PRESSED;
+
+  // If the flushed event is a keypress of a non-modifier, record its timestamp:
+  if (!event_queue_.isRelease(0) && !isModifierKey(event_key)) {
+    prior_keypress_timestamp_ = event_queue_.timestamp(0);
+  }
 
   // Remove the head event from the queue:
   event_queue_.shift();

@@ -12,6 +12,17 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### Better protection against unintended modifiers from Qukeys
+
+Qukeys has two new configuration options for preventing unintended modifiers in
+the output, particularly when typing fast:
+
+- `Qukeys.setMinimumHoldTime(ms)` sets the minimum duration of a qukey press
+  required for it to be eligible to take on its alternate (modifier) value.
+- `Qukeys.setMinimumPriorInterval(ms)` sets the minimum interval between the
+  previous non-modifier key press and the press of the qukey required to make
+  the qukey eligible to take on its alternate (modifier) value.
+
 ### KALEIDOSCOPE_API_VERSION bump
 
 `KALEIDOSCOPE_API_VERSION` has been bumped to **2** due to the plugin API
