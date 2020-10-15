@@ -259,19 +259,8 @@ check_bootloader_port_and_flash () {
 }
 
 flash_over_usb () {
-    if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
-    	${AVRDUDE} \
-		-C "${AVRDUDE_CONF}" \
-		-p"${MCU}" \
- 		-cavr109 \
-		-D \
-		-P "${DEVICE_PORT_BOOTLOADER}" \
-		-b57600 \
-		"-Uflash:w:${HEX_FILE_PATH}:i" \
-		2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
-    	return "${PIPESTATUS[0]}"
-    else
-    	${AVRDUDE} \
+
+    FLASH_CMD=${AVRDUDE} \
 		-C "${AVRDUDE_CONF}" \
 		-p"${MCU}" \
  		-cavr109 \
@@ -279,6 +268,12 @@ flash_over_usb () {
 		-P "${DEVICE_PORT_BOOTLOADER}" \
 		-b57600 \
 		"-Uflash:w:${HEX_FILE_PATH}:i"
+
+    if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
+	${FLASH_CMD} 2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
+    	return "${PIPESTATUS[0]}"
+    else
+        ${FLASH_CMD}
 	return $?
     fi
 }
