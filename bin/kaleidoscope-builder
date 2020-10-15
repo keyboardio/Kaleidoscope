@@ -259,26 +259,21 @@ check_bootloader_port_and_flash () {
 }
 
 flash_over_usb () {
-    if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
-    	${AVRDUDE} \
+
+    FLASH_CMD=$(${AVRDUDE} \
 		-C "${AVRDUDE_CONF}" \
 		-p"${MCU}" \
  		-cavr109 \
 		-D \
 		-P "${DEVICE_PORT_BOOTLOADER}" \
 		-b57600 \
-		"-Uflash:w:${HEX_FILE_PATH}:i" \
-		2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
+		"-Uflash:w:${HEX_FILE_PATH}:i")
+
+    if [ "${ARDUINO_VERBOSE}" != "-verbose" ]; then
+	${FLASH_CMD} 2>&1 |grep -v ^avrdude | grep -v '^$' |grep -v '^ ' | grep -vi programmer
     	return "${PIPESTATUS[0]}"
     else
-    	${AVRDUDE} \
-		-C "${AVRDUDE_CONF}" \
-		-p"${MCU}" \
- 		-cavr109 \
-		-D \
-		-P "${DEVICE_PORT_BOOTLOADER}" \
-		-b57600 \
-		"-Uflash:w:${HEX_FILE_PATH}:i"
+        ${FLASH_CMD}
 	return $?
     fi
 }
@@ -597,24 +592,6 @@ EOF
     fi
 }
 
-build_gtest_gmock() {
-    kaleidoscope_dir="$(dirname "$0")/.."
-    (cd "${kaleidoscope_dir}/testing/googletest" && cmake . && make)
-}
-
-run_tests() {
-    (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
-    build_gtest_gmock
-    kaleidoscope_dir="$(dirname "$0")/.."
-    cd "${kaleidoscope_dir}/tests"
-    ${MAKE:-make}
-}
-
-docker_tests() {
-    kaleidoscope_dir="$(dirname "$0")/.."
-    cd "${kaleidoscope_dir}"
-    bin/run-docker make -C tests all
-}
 
 usage () {
     cat <<- EOF
@@ -654,8 +631,6 @@ usage () {
 		  build-all
 		    Build all Sketches we can find.
 
-      run-tests | docker-tests
-        Builds and runs the test suite, on the host, and in docker, respectively.
 		EOF
 }
 
