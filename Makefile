@@ -75,6 +75,13 @@ include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
 prepare-virtual:
 	$(MAKE) -C $(BOARD_HARDWARE_PATH)/keyboardio prepare-virtual
 
+
+simulator-tests: prepare-virtual
+	$(MAKE) -C tests all
+
+docker-simulator-tests:
+	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "make simulator-tests"
+
 run-tests: prepare-virtual build-gtest-gmock
 	$(MAKE) -c tests
 	@: # blah
@@ -82,3 +89,22 @@ run-tests: prepare-virtual build-gtest-gmock
 build-gtest-gmock:
 	(cd testing/googletest && cmake .)
 	$(MAKE) -C testing/googletest
+
+adjust-git-timestamps:
+	bin/set-timestamps-from-git
+
+find-filename-conflicts:
+	@if [ -d "bin" ]; then \
+		bin/find-filename-conflicts; \
+	fi
+
+SMOKE_SKETCHES=$(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi)
+
+smoke-sketches: $(SMOKE_SKETCHES)
+	@echo "Smoke-tested all the sketches"
+
+.PHONY: force
+
+
+$(SMOKE_SKETCHES): force
+	@BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" $(KALEIDOSCOPE_BUILDER_DIR)/kaleidoscope-builder $@ compile
