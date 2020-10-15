@@ -495,7 +495,7 @@ size () {
         compile
     fi
 
-    echo "- Size: firmware/${LIBRARY}/${OUTPUT_FILE_PREFIX}.elf"
+    echo "- Size: ${ELF_FILE_PATH}"
     # shellcheck disable=SC2086
     firmware_size "${AVR_SIZE}" ${AVR_SIZE_FLAGS} "${ELF_FILE_PATH}"
     echo
