@@ -71,6 +71,14 @@ endif
 
 include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
 
+
+prepare-virtual:
+	$(MAKE) -C $(BOARD_HARDWARE_PATH)/keyboardio prepare-virtual
+
+run-tests: prepare-virtual build-gtest-gmock
+	$(MAKE) -c tests
+	@: # blah
+
 build-gtest-gmock:
 	(cd testing/googletest && cmake .)
 	$(MAKE) -C testing/googletest

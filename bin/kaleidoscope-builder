@@ -592,19 +592,6 @@ EOF
     fi
 }
 
-run_tests() {
-    (cd "${BOARD_HARDWARE_PATH}/keyboardio" && make prepare-virtual)
-    build_gtest_gmock
-    kaleidoscope_dir="$(dirname "$0")/.."
-    cd "${kaleidoscope_dir}/tests"
-    ${MAKE:-make}
-}
-
-docker_tests() {
-    kaleidoscope_dir="$(dirname "$0")/.."
-    cd "${kaleidoscope_dir}"
-    bin/run-docker make -C tests all
-}
 
 usage () {
     cat <<- EOF
@@ -644,8 +631,6 @@ usage () {
 		  build-all
 		    Build all Sketches we can find.
 
-      run-tests | docker-tests
-        Builds and runs the test suite, on the host, and in docker, respectively.
 		EOF
 }
 
