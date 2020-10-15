@@ -26,15 +26,18 @@ absolute_filename() {
 
 
 build_version () {
-    GIT_VERSION="$(cd "${SKETCH_DIR}"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
+    GIT_VERSION="$(cd "${SKETCH_DIR}"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_VERSION="$(cd "${SKETCH_DIR}"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 }
 
 build_paths() {
+
+    SKETCH_FILE_PATH=$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")
+
     # We need that echo because we\re piping to cksum
     # shellcheck disable=SC2005
-    SKETCH_IDENTIFIER="$(echo "$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
+    SKETCH_IDENTIFIER="$(echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
@@ -330,7 +333,6 @@ maybe_build () {
     # then rebuild. This is not as correct as letting make check our dependencies
     # But it's less broken for most user use cases
     # TODO(anyone): Make this suck less
-    SKETCH_FILE_PATH=$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")
     if [ "${HEX_FILE_PATH}" -ot "${SKETCH_FILE_PATH}" ]; then
 	build "$@"
     fi
