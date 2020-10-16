@@ -108,9 +108,10 @@ firmware_size () {
         return
     fi
 
+    MAX_PROG_SIZE=${MAX_PROG_SIZE:-$(get_arduino_pref 'upload.maximum_size')}
+
     ## This is a terrible hack, please don't hurt me. - algernon
 
-    find_max_prog_size
     set +e
     raw_output=$("$@" 2> /dev/null)
     rc=$?
