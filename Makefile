@@ -98,6 +98,29 @@ find-filename-conflicts:
 		bin/find-filename-conflicts; \
 	fi
 
+#.PHONY: astyle test cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts:
+
+astyle:
+	PATH="$(PLUGIN_TEST_BIN_DIR):$(PATH)" $(PLUGIN_TEST_SUPPORT_DIR)/quality/run-astyle
+
+check-astyle: astyle
+	PATH="$(PLUGIN_TEST_BIN_DIR):$(PATH)" $(PLUGIN_TEST_SUPPORT_DIR)/quality/astyle-check
+
+cpplint-noisy:
+	-$(PLUGIN_TEST_SUPPORT_DIR)/quality/cpplint.py  --filter=-legal/copyright,-build/include,-readability/namespace,-whitespace/line_length,-runtime/references  --recursive --extensions=cpp,h,ino --exclude=$(BOARD_HARDWARE_PATH) src examples
+
+
+cpplint:
+	$(PLUGIN_TEST_SUPPORT_DIR)/quality/cpplint.py  --quiet --filter=-whitespace,-legal/copyright,-build/include,-readability/namespace,-runtime/references  --recursive --extensions=cpp,h,ino src examples
+
+
+SHELL_FILES = $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
+
+shellcheck:
+	@if [ -d "bin" ]; then \
+		shellcheck ${SHELL_FILES}; \
+	fi
+
 SMOKE_SKETCHES=$(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi)
 
 smoke-sketches: $(SMOKE_SKETCHES)
