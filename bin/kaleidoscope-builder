@@ -657,6 +657,11 @@ fi
 ##  - if there is only one argument, that's a command
 
 KALEIDOSCOPE_DIR="$(cd "$(dirname "$0")"/..; pwd)"
+# shellcheck disable=SC2034
+KALEIDOSCOPE_BIN_DIR="${KALEIDOSCOPE_DIR}/bin/"
+
+
+
 
 # shellcheck disable=SC2155
 export SOURCEDIR="$(pwd)"
