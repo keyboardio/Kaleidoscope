@@ -418,7 +418,7 @@ compile () {
 	      -tools "${ARDUINO_PATH}/tools-builder" \
 	      -fqbn "${FQBN}" \
         -libraries "." \
-        -libraries "${ROOT}" \
+        -libraries "${KALEIDOSCOPE_DIR}" \
 	      -libraries "${BOARD_HARDWARE_PATH}/.." \
         ${local_LIBS} \
 	      ${EXTRA_BUILDER_ARGS} \
@@ -656,8 +656,8 @@ fi
 ##
 ##  - if there is only one argument, that's a command
 
-ROOT="$(cd "$(dirname "$0")"/..; pwd)"
-export ROOT
+KALEIDOSCOPE_DIR="$(cd "$(dirname "$0")"/..; pwd)"
+
 # shellcheck disable=SC2155
 export SOURCEDIR="$(pwd)"
 
@@ -677,7 +677,7 @@ if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
 fi
 
 # shellcheck disable=SC1090
-. "${ROOT}/etc/kaleidoscope-builder.conf"
+. "${KALEIDOSCOPE_DIR}/etc/kaleidoscope-builder.conf"
 
 if [ -n "${VERBOSE}" ] && [[ "${VERBOSE}" -gt 0 ]]; then
     ARDUINO_VERBOSE="-verbose"
