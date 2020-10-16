@@ -302,6 +302,13 @@ flash_with_programmer() {
 	       "-Uflash:w:${HEX_FILE_PATH}:i"
 }
 
+find_bootloader_path() {
+    BOOTLOADER_FILE=$( get_arduino_pref 'bootloader.file' )
+    BOOTLOADER_FILE="${BOOTLOADER_FILE:-caterina/Caterina.hex}"
+    BOOTLOADER_PATH="${BOOTLOADER_PATH:-${BOARD_HARDWARE_PATH}/keyboardio/avr/bootloaders/${BOOTLOADER_FILE}}"
+}
+
+
 hex_with_bootloader () {
     if [ ! -e "${HEX_FILE_PATH}" ]; then
         compile
