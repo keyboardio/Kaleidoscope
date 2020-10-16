@@ -134,8 +134,8 @@ firmware_size () {
 
 find_sketch () {
     SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
-    if [ -z "${SKETCH}" ] || [ -z "${ROOT}" ]; then
-        echo "SKETCH and ROOT need to be set before including this file!" >&2
+    if [ -z "${SKETCH}" ]; then
+        echo "SKETCH needs to be set before including this file!" >&2
         exit 1
     fi
   
