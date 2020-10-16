@@ -33,11 +33,10 @@ build_version () {
 
 build_paths() {
 
-    SKETCH_FILE_PATH=$(absolute_filename "${SKETCH_DIR}/${SKETCH}.ino")
 
     # We need that echo because we\re piping to cksum
     # shellcheck disable=SC2005
-    SKETCH_IDENTIFIER="$(echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-${SKETCH}.ino"
+    SKETCH_IDENTIFIER="$(echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-${SKETCH_FILE_NAME}"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
 
@@ -58,7 +57,7 @@ build_paths() {
 }
 
 build_filenames () {
-    OUTPUT_FILE_PREFIX="${OUTPUT_FILE_PREFIX:-${SKETCH}-${LIB_VERSION}}"
+    OUTPUT_FILE_PREFIX="${OUTPUT_FILE_PREFIX:-${SKETCH_BASE_NAME}-${LIB_VERSION}}"
     HEX_FILE_PATH="${HEX_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex}"
     HEX_FILE_WITH_BOOTLOADER_PATH="${HEX_FILE_WITH_BOOTLOADER_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex}"
     ELF_FILE_PATH="${ELF_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf}"
@@ -134,21 +133,21 @@ firmware_size () {
 
 
 find_sketch () {
-    SKETCH="${SKETCH:-${DEFAULT_SKETCH}}"
     if [ -z "${SKETCH}" ]; then
         echo "SKETCH needs to be set before including this file!" >&2
         exit 1
     fi
   
-    SKETCH_DIR="$SKETCH"
-    SKETCH_FILE=$(basename "$SKETCH")
+    SKETCH_DIR="${SKETCH}"
+    SKETCH_BASE_NAME=$(basename "$SKETCH")
+    SKETCH_FILE_NAME="${SKETCH_BASE_NAME}.ino"
 
     for path in "${SKETCH_DIR}" \
                     "src" \
 		    "."; do
-        if [ -f "${path}/${SKETCH_FILE}.ino" ]; then
+        if [ -f "${path}/${SKETCH_FILE_NAME}" ]; then
       	    SKETCH_DIR="${path}"
-	    SKETCH="${SKETCH_FILE}"
+      	    SKETCH_FILE_PATH=$(absolute_filename "${SKETCH_DIR}/${SKETCH_FILE_NAME}")
             return
         fi
     done
@@ -321,7 +320,7 @@ hex_with_bootloader () {
     echo "Using ${BOOTLOADER_PATH}"
     ${MD5} "${BOOTLOADER_PATH}"
     cat "${BOOTLOADER_PATH}" >> "${HEX_FILE_WITH_BOOTLOADER_PATH}"
-    ln -sf -- "${OUTPUT_FILE_PREFIX}-with-bootloader.hex" "${OUTPUT_PATH}/${SKETCH}-latest-with-bootloader.hex"
+    ln -sf -- "${OUTPUT_FILE_PREFIX}-with-bootloader.hex" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest-with-bootloader.hex"
     cat <<- EOF
 
 		Combined firmware and bootloader are now at ${HEX_FILE_WITH_BOOTLOADER_PATH}
@@ -367,7 +366,7 @@ compile () {
 
     install -d "${OUTPUT_PATH}"
 
-    echo "Building ${SKETCH_DIR}/${SKETCH}"
+    echo "Building ${SKETCH_FILE_PATH}"
 
     # This is defined in the (optional) user config.
     # shellcheck disable=SC2154
@@ -436,16 +435,16 @@ compile () {
 	      -warnings all \
         ${ARDUINO_VERBOSE} \
 	      ${ARDUINO_AVR_GCC_PREFIX_PARAM} \
-	      "${SKETCH_DIR}/${SKETCH}.ino"
+	      "${SKETCH_FILE_PATH}"
 
     if [ -z "${LIBONLY}" ]; then
-      cp "${BUILD_PATH}/${SKETCH}.ino.hex" "${HEX_FILE_PATH}"
-      cp "${BUILD_PATH}/${SKETCH}.ino.elf" "${ELF_FILE_PATH}"
-      ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH}-latest.hex"
-      ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH}-latest.elf"
+      cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.hex" "${HEX_FILE_PATH}"
+      cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.elf" "${ELF_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.hex"
+      ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.elf"
     else
-      cp "${BUILD_PATH}/${SKETCH}.ino.a" "${LIB_FILE_PATH}"
-      ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH}-latest.a"
+      cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.a" "${LIB_FILE_PATH}"
+      ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.a"
     fi
 
     if [ "${ARDUINO_VERBOSE}" = "-verbose" ]; then
@@ -733,8 +732,6 @@ for i in $(seq 1 $#); do
     cmds="${cmds} $(echo "$1" | tr '-' '_')"
     shift
 done
-
-export SKETCH
 
 for cmd in ${cmds}; do
     ${cmd}
