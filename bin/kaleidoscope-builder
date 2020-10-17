@@ -357,9 +357,8 @@ prepare_ccache () {
 compile () {
     find_sketch
     build_version
-    build_paths
+    prepare_ccache
     build_filenames
-    enable_ccache
 
     install -d "${OUTPUT_PATH}"
 
