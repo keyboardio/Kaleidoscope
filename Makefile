@@ -121,6 +121,12 @@ shellcheck:
 		shellcheck ${SHELL_FILES}; \
 	fi
 
+
+check-docs:
+	doxygen $(PLUGIN_TEST_SUPPORT_DIR)/quality/etc/check-docs.conf 2> /dev/null >/dev/null
+	python $(PLUGIN_TEST_SUPPORT_DIR)/quality/doxy-coverage.py /tmp/undocced/xml
+
+
 SMOKE_SKETCHES=$(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi)
 
 smoke-sketches: $(SMOKE_SKETCHES)
