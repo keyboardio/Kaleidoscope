@@ -171,7 +171,7 @@ prompt_before_flashing () {
 }
 
 flash () {
-    maybe_build "$@"
+    compile "$@"
 
     # Check to see if we can see a keyboard bootloader port.
     # If we -can-, then we should skip over the "reset to bootloader" thing
@@ -277,14 +277,14 @@ flash_over_usb () {
 }
 
 flash_from_bootloader() {
-    maybe_build "$@"
+    compile "$@"
     prompt_before_flashing
     find_bootloader_ports
     check_bootloader_port_and_flash
 }
 
 program() {
-    maybe_build "$@"
+    compile "$@"
     prompt_before_flashing
     flash_with_programmer
 }
@@ -307,9 +307,7 @@ find_bootloader_path() {
 
 
 hex_with_bootloader () {
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-    fi
+    compile
 
     find_bootloader_path
 
@@ -328,21 +326,6 @@ hex_with_bootloader () {
 		EOF
 }
 
-maybe_build () {
-    find_sketch
-    build_version
-    build_paths
-    build_filenames
-    # If the hex file is older than the sketch file, or the hex file does not exist
-    # then rebuild. This is not as correct as letting make check our dependencies
-    # But it's less broken for most user use cases
-    # TODO(anyone): Make this suck less
-    if [ "${HEX_FILE_PATH}" -ot "${SKETCH_FILE_PATH}" ]; then
-	build "$@"
-    fi
-
-}
-
 build () {
     compile "$@"
     size "$@"
@@ -353,12 +336,24 @@ prepare_ccache () {
     build_paths
     enable_ccache
 }
-
 compile () {
     find_sketch
     build_version
-    prepare_ccache
+    build_paths
     build_filenames
+    # If the hex file is older than the sketch file, or the hex file does not exist
+    # then rebuild. This is not as correct as letting make check our dependencies
+    # But it's less broken for most user use cases
+    # TODO(anyone): Make this suck less
+    if [ "${HEX_FILE_PATH}" -ot "${SKETCH_FILE_PATH}" ]; then
+	do_compile "$@"
+    fi
+
+}
+
+
+do_compile () {
+    prepare_ccache
 
     install -d "${OUTPUT_PATH}"
 
@@ -492,9 +487,7 @@ compile_all () {
 
 
 size () {
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-    fi
+    compile
 
     echo "- Size: ${ELF_FILE_PATH}"
     # shellcheck disable=SC2086
@@ -503,18 +496,13 @@ size () {
 }
 
 size_map () {
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-    fi
+    compile
 
     "${AVR_NM}" --size-sort -C -r -l -t decimal "${ELF_FILE_PATH}"
 }
 
 disassemble () {
-
-    if [ ! -e "${HEX_FILE_PATH}" ]; then
-        compile
-    fi
+    compile
 
     "${AVR_OBJDUMP}" -C -d "${ELF_FILE_PATH}"
 }
