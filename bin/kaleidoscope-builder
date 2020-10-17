@@ -32,13 +32,10 @@ build_version () {
 }
 
 build_paths() {
-
-
     # We need that echo because we\re piping to cksum
     # shellcheck disable=SC2005
     SKETCH_IDENTIFIER="$(echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-${SKETCH_FILE_NAME}"
     KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
-
 
     KALEIDOSCOPE_BUILD_PATH="${KALEIDOSCOPE_BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
     KALEIDOSCOPE_OUTPUT_PATH="${KALEIDOSCOPE_OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
@@ -665,23 +662,20 @@ KALEIDOSCOPE_BIN_DIR="${KALEIDOSCOPE_DIR}/bin/"
 # shellcheck disable=SC2155
 export SOURCEDIR="$(pwd)"
 
-if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
-    # shellcheck disable=SC1090
-    . "${HOME}/.kaleidoscope-builder.conf"
-fi
 
-if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
-    # shellcheck disable=SC1090
-    . "${SOURCEDIR}/.kaleidoscope-builder.conf"
-fi
+for conf_file in \
+    "${HOME}/.kaleidoscope-builder.conf" \
+    "${SOURCEDIR}/.kaleidoscope-builder.conf" \
+    "${SOURCEDIR}/kaleidoscope-builder.conf" \
+    "${KALEIDOSCOPE_DIR}/etc/kaleidoscope-builder.conf"; do
+    if [ -e "${conf_file}" ]; then
+        # shellcheck disable=SC1090
+        . "${conf_file}"
+    fi
 
-if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
-    # shellcheck disable=SC1090
-    . "${SOURCEDIR}/kaleidoscope-builder.conf"
-fi
+done
 
 # shellcheck disable=SC1090
-. "${KALEIDOSCOPE_DIR}/etc/kaleidoscope-builder.conf"
 
 if [ -n "${VERBOSE}" ] && [[ "${VERBOSE}" -gt 0 ]]; then
     ARDUINO_VERBOSE="-verbose"
