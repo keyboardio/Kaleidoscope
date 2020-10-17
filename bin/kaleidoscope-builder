@@ -26,7 +26,7 @@ absolute_filename() {
 
 
 build_version () {
-    LIB_PROPERTIES_PATH="${LIB_PROPERTIES_PATH:-"../.."}"
+    : "${LIB_PROPERTIES_PATH:="../.."}"
     GIT_VERSION="$(cd "${SKETCH_DIR}"; if [ -d .git ]; then echo -n '-g' && git describe --abbrev=4 --dirty --always; fi)"
     LIB_VERSION="$(cd "${SKETCH_DIR}"; (grep version= "${LIB_PROPERTIES_PATH}/library.properties" 2>/dev/null || echo version=0.0.0) | cut -d= -f2)${GIT_VERSION}"
 }
@@ -35,30 +35,30 @@ build_paths() {
     # We need that echo because we\re piping to cksum
     # shellcheck disable=SC2005
     SKETCH_IDENTIFIER="$(echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-${SKETCH_FILE_NAME}"
-    KALEIDOSCOPE_TEMP_PATH="${KALEIDOSCOPE_TEMP_PATH:-${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
+    : "${KALEIDOSCOPE_TEMP_PATH:=${TMPDIR:-/tmp}/kaleidoscope-${USER}}"
 
-    KALEIDOSCOPE_BUILD_PATH="${KALEIDOSCOPE_BUILD_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
-    KALEIDOSCOPE_OUTPUT_PATH="${KALEIDOSCOPE_OUTPUT_PATH:-${KALEIDOSCOPE_TEMP_PATH}/sketch}"
+    : "${KALEIDOSCOPE_BUILD_PATH:=${KALEIDOSCOPE_TEMP_PATH}/sketch}"
+    : "${KALEIDOSCOPE_OUTPUT_PATH:=${KALEIDOSCOPE_TEMP_PATH}/sketch}"
 
-    SKETCH_OUTPUT_DIR="${SKETCH_OUTPUT_DIR:-${SKETCH_IDENTIFIER}/output}"
-    SKETCH_BUILD_DIR="${SKETCH_BUILD_DIR:-${SKETCH_IDENTIFIER}/build}"
+    : "${SKETCH_OUTPUT_DIR:=${SKETCH_IDENTIFIER}/output}"
+    : "${SKETCH_BUILD_DIR:=${SKETCH_IDENTIFIER}/build}"
 
-    BUILD_PATH="${BUILD_PATH:-${KALEIDOSCOPE_BUILD_PATH}/${SKETCH_BUILD_DIR}}"
-    OUTPUT_PATH="${OUTPUT_PATH:-${KALEIDOSCOPE_OUTPUT_PATH}/${SKETCH_OUTPUT_DIR}}"
+    : "${BUILD_PATH:=${KALEIDOSCOPE_BUILD_PATH}/${SKETCH_BUILD_DIR}}"
+    : "${OUTPUT_PATH:=${KALEIDOSCOPE_OUTPUT_PATH}/${SKETCH_OUTPUT_DIR}}"
 
-    CCACHE_WRAPPER_PATH="${CCACHE_WRAPPER_PATH:-${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
-    CORE_CACHE_PATH="${CORE_CACHE_PATH:-${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
+    : "${CCACHE_WRAPPER_PATH:=${KALEIDOSCOPE_TEMP_PATH}/ccache/bin}"
+    : "${CORE_CACHE_PATH:=${KALEIDOSCOPE_TEMP_PATH}/arduino-cores}"
 
     mkdir -p "$CORE_CACHE_PATH"
     mkdir -p "$BUILD_PATH"
 }
 
 build_filenames () {
-    OUTPUT_FILE_PREFIX="${OUTPUT_FILE_PREFIX:-${SKETCH_BASE_NAME}-${LIB_VERSION}}"
-    HEX_FILE_PATH="${HEX_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex}"
-    HEX_FILE_WITH_BOOTLOADER_PATH="${HEX_FILE_WITH_BOOTLOADER_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex}"
-    ELF_FILE_PATH="${ELF_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf}"
-    LIB_FILE_PATH="${LIB_FILE_PATH:-${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.a}"
+    : "${OUTPUT_FILE_PREFIX:=${SKETCH_BASE_NAME}-${LIB_VERSION}}"
+    : "${HEX_FILE_PATH:=${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.hex}"
+    : "${HEX_FILE_WITH_BOOTLOADER_PATH:=${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}-with-bootloader.hex}"
+    : "${ELF_FILE_PATH:=${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.elf}"
+    : "${LIB_FILE_PATH:=${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.a}"
 }
 
 
@@ -104,7 +104,7 @@ firmware_size () {
         return
     fi
 
-    MAX_PROG_SIZE=${MAX_PROG_SIZE:-$(get_arduino_pref 'upload.maximum_size')}
+    : "${MAX_PROG_SIZE:=$(get_arduino_pref 'upload.maximum_size')}"
 
     ## This is a terrible hack, please don't hurt me. - algernon
 
@@ -301,8 +301,8 @@ flash_with_programmer() {
 
 find_bootloader_path() {
     BOOTLOADER_FILE=$( get_arduino_pref 'bootloader.file' )
-    BOOTLOADER_FILE="${BOOTLOADER_FILE:-caterina/Caterina.hex}"
-    BOOTLOADER_PATH="${BOOTLOADER_PATH:-${BOARD_HARDWARE_PATH}/keyboardio/avr/bootloaders/${BOOTLOADER_FILE}}"
+    : "${BOOTLOADER_FILE:=caterina/Caterina.hex}"
+    : "${BOOTLOADER_PATH:=${BOARD_HARDWARE_PATH}/keyboardio/avr/bootloaders/${BOOTLOADER_FILE}}"
 }
 
 
