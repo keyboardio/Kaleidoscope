@@ -405,7 +405,7 @@ do_compile () {
 	      -hardware "${ARDUINO_PATH}/hardware" \
 	      -hardware "${BOARD_HARDWARE_PATH}" \
 	      ${ARDUINO_TOOLS_FLAG:+"${ARDUINO_TOOLS_FLAG}"} ${ARDUINO_TOOLS_PARAM:+"${ARDUINO_TOOLS_PARAM}"} \
-	      -tools "${ARDUINO_PATH}/tools-builder" \
+	      -tools "${ARDUINO_BUILDER_TOOLS_PATH}" \
 	      -fqbn "${FQBN}" \
         -libraries "." \
         -libraries "${KALEIDOSCOPE_DIR}" \
