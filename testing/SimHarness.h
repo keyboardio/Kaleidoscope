@@ -26,6 +26,9 @@ class SimHarness {
  public:
   void RunCycle();
   void RunCycles(size_t n);
+  void RunMillis(size_t t) {
+    RunCycles(t);
+  }
 
   void Press(uint8_t row, uint8_t col);
   void Release(uint8_t row, uint8_t col);
