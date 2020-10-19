@@ -29,8 +29,15 @@ class SimHarness {
  public:
   void RunCycle();
   void RunCycles(size_t n);
+  void RunForCycles(size_t n) {
+    RunCycles(n);
+  }
+
   void RunMillis(size_t t) {
     RunCycles(t);
+  }
+  void RunForMillis(size_t t) {
+    RunMillis(t);
   }
 
   void Press(KeyAddr key_addr);
