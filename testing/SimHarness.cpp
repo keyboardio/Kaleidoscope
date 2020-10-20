@@ -14,7 +14,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope.h"
 #include "testing/SimHarness.h"
 
 #include "testing/fix-macros.h"
@@ -31,16 +30,24 @@ void SimHarness::RunCycles(size_t n) {
   for (size_t i = 0; i < n; ++i) RunCycle();
 }
 
-void SimHarness::Press(uint8_t row, uint8_t col) {
+void SimHarness::Press(KeyAddr key_addr) {
   Kaleidoscope.device().keyScanner().setKeystate(
-    KeyAddr{row, col},
+    key_addr,
     kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
 }
 
-void SimHarness::Release(uint8_t row, uint8_t col) {
+void SimHarness::Release(KeyAddr key_addr) {
   Kaleidoscope.device().keyScanner().setKeystate(
-    KeyAddr{row, col},
+    key_addr,
     kaleidoscope::Device::Props::KeyScanner::KeyState::NotPressed);
+}
+
+void SimHarness::Press(uint8_t row, uint8_t col) {
+  Press(KeyAddr{row, col});
+}
+
+void SimHarness::Release(uint8_t row, uint8_t col) {
+  Release(KeyAddr{row, col});
 }
 
 }  // namespace testing

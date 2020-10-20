@@ -15,6 +15,7 @@
  */
 
 #include "testing/setup-googletest.h"
+#include "Kaleidoscope.h"
 
 SETUP_GOOGLETEST();
 
@@ -22,12 +23,14 @@ namespace kaleidoscope {
 namespace testing {
 namespace {
 
+constexpr KeyAddr key_addr_A{2, 1};
+
 using ::testing::IsEmpty;
 
 class KeyboardReports : public VirtualDeviceTest {};
 
 TEST_F(KeyboardReports, KeysActiveWhenPressed) {
-  sim_.Press(2, 1); // A
+  sim_.Press(key_addr_A); // A
   auto state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
@@ -35,7 +38,7 @@ TEST_F(KeyboardReports, KeysActiveWhenPressed) {
     state->HIDReports()->Keyboard(0).ActiveKeycodes(),
     Contains(Key_A));
 
-  sim_.Release(2, 1);  // A
+  sim_.Release(key_addr_A);  // A
   state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
