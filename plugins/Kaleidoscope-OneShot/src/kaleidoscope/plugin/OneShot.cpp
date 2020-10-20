@@ -210,6 +210,26 @@ EventHandlerResult OneShot::onKeyswitchEvent(
 
   if (keyToggledOn(key_state)) {
 
+    // Make all held keys sticky if `OneShot_ActiveStickyKey` toggles on.
+    if (key == OneShot_ActiveStickyKey) {
+      // Skip the stickify key itself
+      for (KeyAddr entry_addr : KeyAddr::all()) {
+        if (entry_addr == key_addr) {
+          continue;
+        }
+        // Get the entry from the keymap cache
+        Key entry_key = live_keys[entry_addr];
+        // Skip empty entries
+        if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
+          continue;
+        }
+        // Make everything else sticky
+        temp_addrs_.clear(entry_addr);
+        glue_addrs_.set(entry_addr);
+      }
+      return EventHandlerResult::OK;
+    }
+
     if (!temp && !glue) {
       // This key_addr is not in a OneShot state.
 #ifndef ONESHOT_WITHOUT_METASTICKY

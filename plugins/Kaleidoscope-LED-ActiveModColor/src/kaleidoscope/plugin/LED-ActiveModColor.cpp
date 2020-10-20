@@ -50,6 +50,18 @@ EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(
         ::OneShot.isActive(key_addr)) {
       mod_key_bits_.set(key_addr);
     }
+    if (key == OneShot_ActiveStickyKey) {
+      for (KeyAddr entry_addr : KeyAddr::all()) {
+        // Get the entry from the keymap cache
+        Key entry_key = Layer.lookup(entry_addr);
+        // Skip empty entries
+        if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
+          continue;
+        }
+        // Highlight everything else
+        mod_key_bits_.set(entry_addr);
+      }
+    }
   } else if (keyToggledOff(key_state)) {
     // Things get a bit ugly here because this plugin might come
     // before OneShot in the order, so we can't just count on OneShot
