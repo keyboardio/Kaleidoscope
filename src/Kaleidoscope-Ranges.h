@@ -30,6 +30,7 @@ enum : uint16_t {
   OSL_LAST    = OSL_FIRST + 7,
   OS_LAST     = OSL_LAST,
   OS_META_STICKY,
+  OS_ACTIVE_STICKY,
   OS_CANCEL,
   DU_FIRST,
   DUM_FIRST   = DU_FIRST,

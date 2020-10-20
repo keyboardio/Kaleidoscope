@@ -71,6 +71,7 @@
 // ----------------------------------------------------------------------------
 // Key constants
 constexpr Key OneShot_MetaStickyKey {kaleidoscope::ranges::OS_META_STICKY};
+constexpr Key OneShot_ActiveStickyKey {kaleidoscope::ranges::OS_ACTIVE_STICKY};
 
 namespace kaleidoscope {
 namespace plugin {
