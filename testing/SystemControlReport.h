@@ -33,7 +33,7 @@ class SystemControlReport : public std::vector<uint8_t> {
 
   SystemControlReport(const void* data);
 
-  uint8_t Key() const;
+  uint8_t ActiveKeycode() const;
 
  private:
   ReportData report_data_;
