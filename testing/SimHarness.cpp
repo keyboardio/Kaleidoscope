@@ -30,6 +30,13 @@ void SimHarness::RunCycles(size_t n) {
   for (size_t i = 0; i < n; ++i) RunCycle();
 }
 
+void SimHarness::RunForMillis(size_t t) {
+  auto start_time = Kaleidoscope.millisAtCycleStart();
+  while (Kaleidoscope.millisAtCycleStart() - start_time < t) {
+    RunCycle();
+  }
+}
+
 void SimHarness::Press(KeyAddr key_addr) {
   Kaleidoscope.device().keyScanner().setKeystate(
     key_addr,
