@@ -26,7 +26,7 @@ constexpr uint32_t t_0{0};
 constexpr uint32_t t_1{1};
 constexpr uint32_t t_100{100};
 constexpr uint32_t t_500{500};
-constexpr uint32_t t_500_000{500000};
+constexpr uint32_t t_100_000{100000};
 
 using ::testing::IsEmpty;
 
@@ -65,7 +65,7 @@ TEST_F(SimulatorTiming, ZeroTimeElapses) {
 
 TEST_F(SimulatorTiming, LongTimeElapses) {
   // Bigger number than uint16_t can hold
-  assertTimeElapses(t_500_000);
+  assertTimeElapses(t_100_000);
 }
 
 TEST_F(SimulatorTiming, 3msPerCycleTestRunCycles) {
