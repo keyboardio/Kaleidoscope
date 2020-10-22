@@ -48,9 +48,9 @@ class SimulatorTiming : public VirtualDeviceTest {
 
 TEST_F(SimulatorTiming, SimulatorStart) {
   // Time doesn't advance in the simulator until after the first cycle runs
-  ASSERT_EQ(Kaleidoscope.millisAtCycleStart(), t_0);
+  ASSERT_EQ(Kaleidoscope.millisAtCycleStart(), t_0) << "Clock is at 0 ms before we do anything";
   RunCycle();
-  ASSERT_EQ(Kaleidoscope.millisAtCycleStart(), t_1);
+  ASSERT_EQ(Kaleidoscope.millisAtCycleStart(), t_1) << "Clock is at 1 ms after the first cycle";
 }
 
 TEST_F(SimulatorTiming, TimeElapses) {
