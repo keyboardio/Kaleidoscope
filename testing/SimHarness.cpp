@@ -23,6 +23,14 @@ namespace kaleidoscope {
 namespace testing {
 
 void SimHarness::RunCycle() {
+  if (CycleTime() > 1) {
+    // We incrememnt the time before running the loop so that
+    // millisAtCycleStart ends up where we want it to
+    for (size_t i = 1; i < CycleTime() ; i++) {
+      // The current millis implementation gets us 1 milli per call to millis.
+      millis();
+    }
+  }
   Kaleidoscope.loop();
 }
 
@@ -56,6 +64,15 @@ void SimHarness::Press(uint8_t row, uint8_t col) {
 void SimHarness::Release(uint8_t row, uint8_t col) {
   Release(KeyAddr{row, col});
 }
+
+void SimHarness::SetCycleTime(uint8_t millis) {
+  millis_per_cycle = millis;
+}
+
+uint8_t SimHarness::CycleTime() {
+  return millis_per_cycle;
+}
+
 
 }  // namespace testing
 }  // namespace kaleidoscope

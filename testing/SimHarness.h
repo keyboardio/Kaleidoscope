@@ -34,6 +34,10 @@ class SimHarness {
   void Release(KeyAddr key_addr);
   void Press(uint8_t row, uint8_t col);
   void Release(uint8_t row, uint8_t col);
+  void SetCycleTime(uint8_t millis);
+  uint8_t CycleTime();
+ private:
+  uint8_t millis_per_cycle = 1;
 };
 
 }  // namespace testing
