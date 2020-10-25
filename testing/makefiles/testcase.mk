@@ -21,7 +21,7 @@ else
 bundle_path = ${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries
 endif
 
-build: ${BIN_DIR}/${BIN_FILE}
+build: ${BIN_DIR}/${BIN_FILE} compile-sketch
 
 all: run
 
@@ -29,7 +29,10 @@ run: ${BIN_DIR}/${BIN_FILE}
 	@echo "run"
 	"${BIN_DIR}/${BIN_FILE}" -t -q
 
-${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS}
+${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} 
+
+# We force sketch recompiliation because otherwise, make won't pick up changes to...anything on the arduino side
+compile-sketch:
 	@echo "link"
 	install -d "${BIN_DIR}" "${LIB_DIR}"
 	env LIBONLY=yes \
