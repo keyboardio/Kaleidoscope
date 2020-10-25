@@ -34,6 +34,8 @@ class KeyboardReport {
   KeyboardReport(const void* data);
 
   std::vector<uint8_t> ActiveKeycodes() const;
+  std::vector<uint8_t> ActiveModifierKeycodes() const;
+  std::vector<uint8_t> ActiveNonModifierKeycodes() const;
 
  private:
   ReportData report_data_;

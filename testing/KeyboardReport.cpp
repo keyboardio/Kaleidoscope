@@ -28,13 +28,38 @@ KeyboardReport::KeyboardReport(const void* data) {
 }
 
 std::vector<uint8_t> KeyboardReport::ActiveKeycodes() const {
-  std::vector<uint8_t> active_keys;
+  auto keycodes = ActiveNonModifierKeycodes();
+  auto mods = ActiveModifierKeycodes();
+  keycodes.insert(keycodes.end(), mods.begin(), mods.end());
+  return keycodes;
+}
+
+std::vector<uint8_t> KeyboardReport::ActiveModifierKeycodes() const {
+  constexpr uint8_t modifier_keycode_offset{HID_KEYBOARD_FIRST_MODIFIER};
+
+  std::vector<uint8_t> active_modifiers;
+
+  uint8_t modifiers{report_data_.modifiers}, mask{1};
+
+  for (uint8_t i{0}; modifiers != 0; ++i, modifiers >>= 1) {
+    if (modifiers & mask) {
+      active_modifiers.push_back(i + modifier_keycode_offset);
+    }
+  }
+
+  return active_modifiers;
+}
+
+std::vector<uint8_t> KeyboardReport::ActiveNonModifierKeycodes() const {
+  std::vector<uint8_t> active_keycodes;
+
   for (uint8_t i = 0; i < HID_LAST_KEY; ++i) {
     uint8_t bit = 1 << (uint8_t(i) % 8);
-    uint8_t key_code = report_data_.keys[i / 8] & bit;
-    if (key_code) active_keys.push_back(i);
+    uint8_t keycode = report_data_.keys[i / 8] & bit;
+    if (keycode) active_keycodes.push_back(i);
   }
-  return active_keys;
+
+  return active_keycodes;
 }
 
 }  // namespace testing
