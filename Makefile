@@ -80,7 +80,7 @@ simulator-tests: prepare-virtual
 	$(MAKE) -C tests all
 
 docker-simulator-tests:
-	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "make simulator-tests"
+	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "make simulator-tests TEST_PATH=\"${TEST_PATH}\""
 
 run-tests: prepare-virtual build-gtest-gmock
 	$(MAKE) -c tests
