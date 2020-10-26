@@ -16,7 +16,7 @@
 
 #include "testing/setup-googletest.h"
 
-#include "../sketch.h"
+#include "../shared.h"
 
 SETUP_GOOGLETEST();
 
