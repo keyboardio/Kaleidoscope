@@ -27,7 +27,7 @@ ConsumerControlReport::ConsumerControlReport(const void *data) {
   memcpy(&report_data_, &report_data, sizeof(report_data_));
 }
 
-std::vector<uint16_t> ConsumerControlReport::Keys() const {
+std::vector<uint16_t> ConsumerControlReport::ActiveKeycodes() const {
   std::vector<uint16_t> keys;
   if (report_data_.key1) keys.push_back(report_data_.key1);
   if (report_data_.key2) keys.push_back(report_data_.key2);

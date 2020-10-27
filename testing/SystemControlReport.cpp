@@ -30,7 +30,7 @@ SystemControlReport::SystemControlReport(const void* data) {
   }
 }
 
-uint8_t SystemControlReport::Key() const {
+uint8_t SystemControlReport::ActiveKeycode() const {
   return report_data_.key;
 }
 

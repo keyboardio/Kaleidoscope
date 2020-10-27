@@ -33,7 +33,7 @@ class ConsumerControlReport {
 
   ConsumerControlReport(const void *data);
 
-  std::vector<uint16_t> Keys() const;
+  std::vector<uint16_t> ActiveKeycodes() const;
 
  private:
   ReportData report_data_;

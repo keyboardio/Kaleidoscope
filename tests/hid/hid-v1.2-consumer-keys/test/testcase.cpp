@@ -32,7 +32,7 @@ TEST_F(KeyboardReports, HIDUsageTablev12KeycodesAdded) {
 
   ASSERT_EQ(state->HIDReports()->ConsumerControl().size(), 1);
   EXPECT_THAT(
-    state->HIDReports()->ConsumerControl(0).Keys(),
+    state->HIDReports()->ConsumerControl(0).ActiveKeycodes(),
     Contains(Consumer_VoiceCommand));
 
   sim_.Release(1, 1);  // VoiceCommand
@@ -40,7 +40,7 @@ TEST_F(KeyboardReports, HIDUsageTablev12KeycodesAdded) {
 
   ASSERT_EQ(state->HIDReports()->ConsumerControl().size(), 1);
   EXPECT_THAT(
-    state->HIDReports()->ConsumerControl(0).Keys(),
+    state->HIDReports()->ConsumerControl(0).ActiveKeycodes(),
     IsEmpty());
 
   state = RunCycle();
