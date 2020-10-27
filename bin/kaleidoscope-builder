@@ -512,12 +512,16 @@ decompile () {
 }
 
 clean () {
+    find_sketch
+    build_paths
     rm -rf -- "${OUTPUT_PATH}"
+    rm -rf -- "${BUILD_PATH}"
     kaleidoscope_dir="$(dirname "$0")/.."
-    (install -d "${kaleidoscope_dir}/testing/googletest/build" &&
-         cd "${kaleidoscope_dir}/testing/googletest/build" &&
+    if [ -d "${kaleidoscope_dir}/testing/googletest/build" ]; then
+         ( cd "${kaleidoscope_dir}/testing/googletest/build" &&
          cmake .. &&
          make clean)
+    fi
 }
 
 reset_device() {
