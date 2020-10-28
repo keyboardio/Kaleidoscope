@@ -33,9 +33,11 @@ class SystemControlReport : public std::vector<uint8_t> {
 
   SystemControlReport(const void* data);
 
+  uint32_t Timestamp() const;
   uint8_t ActiveKeycode() const;
 
  private:
+  uint32_t timestamp_;
   ReportData report_data_;
 };
 

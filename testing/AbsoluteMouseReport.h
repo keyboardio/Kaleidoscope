@@ -33,12 +33,14 @@ class AbsoluteMouseReport {
 
   AbsoluteMouseReport(const void* data);
 
+  uint32_t Timestamp() const;
   std::vector<uint8_t> Buttons() const;
   uint16_t XAxis() const;
   uint16_t YAxis() const;
   int8_t Wheel() const;
 
  private:
+  uint32_t timestamp_;
   ReportData report_data_;
 };
 
