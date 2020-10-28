@@ -30,12 +30,12 @@
 #include "testing/matchers.h"
 #include "testing/VirtualDeviceTest.h"
 
-#define SETUP_GOOGLETEST() \
-  void executeTestFunction() { \
-    setup(); /* setup Kaleidoscope */ \
-    /* Turn off virtual_io's input. */ \
-    Kaleidoscope.device().keyScanner().setEnableReadMatrix(false); \
-    testing::InitGoogleTest(); \
-    int result = RUN_ALL_TESTS();           \
-    exit(result); \
+#define SETUP_GOOGLETEST()                                              \
+  void executeTestFunction() {                                          \
+    setup(); /* setup Kaleidoscope */                                   \
+    /* Turn off virtual_io's input. */                                  \
+    Kaleidoscope.device().keyScanner().setEnableReadMatrix(false);      \
+    testing::InitGoogleTest();                                          \
+    int result = RUN_ALL_TESTS();                                       \
+    exit(result);                                                       \
   }
