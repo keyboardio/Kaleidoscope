@@ -36,7 +36,6 @@
     /* Turn off virtual_io's input. */ \
     Kaleidoscope.device().keyScanner().setEnableReadMatrix(false); \
     testing::InitGoogleTest(); \
-    /* We assign the return value of RUN_ALL_TESTS, to */ \
-    /* silence a compiler warning. */                     \
-    int __ignore__ = RUN_ALL_TESTS();           \
+    int result = RUN_ALL_TESTS();           \
+    exit(result); \
   }
