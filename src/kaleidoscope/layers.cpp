@@ -46,6 +46,17 @@ Key Layer_::live_composite_keymap_[Runtime.device().numKeys()];
 uint8_t Layer_::active_layer_keymap_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
+void Layer_::setup() {
+  // Explicitly set layer 0's state to 1
+  bitSet(layer_state_, 0);
+
+  // Update the keymap cache, so we start with a non-empty state.
+  Layer.updateActiveLayers();
+  for (auto key_addr : KeyAddr::all()) {
+    Layer.updateLiveCompositeKeymap(key_addr);
+  }
+}
+
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
     if (keyToggledOn(keyState)) {

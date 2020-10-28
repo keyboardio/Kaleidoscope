@@ -42,11 +42,7 @@ Runtime_::setup(void) {
 
   device().setup();
 
-  // Update the keymap cache, so we start with a non-empty state.
-  Layer.updateActiveLayers();
-  for (auto key_addr : KeyAddr::all()) {
-    Layer.updateLiveCompositeKeymap(key_addr);
-  }
+  Layer.setup();
 }
 
 void

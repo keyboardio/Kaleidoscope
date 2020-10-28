@@ -51,6 +51,8 @@ class Layer_ {
  public:
   Layer_() {}
 
+  void setup();
+
   /* There are two lookup functions, because we have two caches, and different
    * parts of the firmware will want to use either this or that (or perhaps
    * both, in rare cases).
