@@ -69,7 +69,7 @@ void SimHarness::SetCycleTime(uint8_t millis) {
   millis_per_cycle = millis;
 }
 
-uint8_t SimHarness::CycleTime() {
+uint8_t SimHarness::CycleTime() const {
   return millis_per_cycle;
 }
 
