@@ -36,6 +36,7 @@ class SimHarness {
   void Release(uint8_t row, uint8_t col);
   void SetCycleTime(uint8_t millis);
   uint8_t CycleTime() const;
+
  private:
   uint8_t millis_per_cycle_ = 1;
 };
