@@ -16,6 +16,9 @@
 
 #include "testing/SystemControlReport.h"
 
+#include "Kaleidoscope.h"
+#include "testing/fix-macros.h"
+
 #include <cstring>
 
 namespace kaleidoscope {
@@ -28,6 +31,11 @@ SystemControlReport::SystemControlReport(const void* data) {
   if (report_data_.key != 0) {
     this->push_back(report_data_.key);
   }
+  timestamp_ = Runtime.millisAtCycleStart();
+}
+
+uint32_t SystemControlReport::Timestamp() const {
+  return timestamp_;
 }
 
 uint8_t SystemControlReport::ActiveKeycode() const {

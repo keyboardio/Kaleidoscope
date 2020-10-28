@@ -16,6 +16,9 @@
 
 #include "testing/KeyboardReport.h"
 
+#include "Kaleidoscope.h"
+#include "testing/fix-macros.h"
+
 #include <cstring>
 
 namespace kaleidoscope {
@@ -25,6 +28,11 @@ KeyboardReport::KeyboardReport(const void* data) {
   const ReportData& report_data =
     *static_cast<const ReportData*>(data);
   memcpy(&report_data_, &report_data, sizeof(report_data_));
+  timestamp_ = Runtime.millisAtCycleStart();
+}
+
+uint32_t KeyboardReport::Timestamp() const {
+  return timestamp_;
 }
 
 std::vector<uint8_t> KeyboardReport::ActiveKeycodes() const {

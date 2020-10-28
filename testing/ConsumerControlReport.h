@@ -33,9 +33,11 @@ class ConsumerControlReport {
 
   ConsumerControlReport(const void *data);
 
+  uint32_t Timestamp() const;
   std::vector<uint16_t> ActiveKeycodes() const;
 
  private:
+  uint32_t timestamp_;
   ReportData report_data_;
 };
 

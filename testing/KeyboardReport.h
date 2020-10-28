@@ -33,11 +33,13 @@ class KeyboardReport {
 
   KeyboardReport(const void* data);
 
+  uint32_t Timestamp() const;
   std::vector<uint8_t> ActiveKeycodes() const;
   std::vector<uint8_t> ActiveModifierKeycodes() const;
   std::vector<uint8_t> ActiveNonModifierKeycodes() const;
 
  private:
+  uint32_t timestamp_;
   ReportData report_data_;
 };
 
