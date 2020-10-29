@@ -89,6 +89,11 @@ likely to generate errors and out-of-order events.
 > subsequent key is held longer after the qukey is released, the qukey will take
 > on its primary (non-modifier) value.
 >
+> Setting `percentage` to 100% turns off the grace period, so you can’t reliably
+> get either output if you release the two keys simultaneously. That means the
+> subsequent key must be released before the qukey for the release-order
+> condition to trigger making the qukey take on its alternate state.
+>
 > Setting `percentage` to a low value (e.g. `30`) will result in a longer grace
 > period. If you're getting primary values when you intended modifiers, try
 > decreasing this setting. If, on the other hand, you start getting modifiers
