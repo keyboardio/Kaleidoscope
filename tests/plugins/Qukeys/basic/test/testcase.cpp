@@ -39,14 +39,30 @@ class ExpectedKeyboardReport {
     timestamp_ = timestamp;
     keycodes_ = std::set<uint8_t>(keycodes);
   }
+  ExpectedKeyboardReport(uint32_t timestamp,
+                         const std::set<uint8_t> &keycodes,
+                         std::string message) {
+    timestamp_ = timestamp;
+    keycodes_ = std::set<uint8_t>(keycodes);
+    failure_message_ = message;
+  }
 
   const std::set<uint8_t> & Keycodes() const {
     return keycodes_;
   }
 
+  const uint32_t Timestamp() const {
+    return timestamp_;
+  }
+
+  const std::string & Message() const {
+    return failure_message_;
+  }
+
  private:
   uint32_t timestamp_;
   std::set<uint8_t> keycodes_;
+  std::string failure_message_ = "";
 };
 
 class QukeysBasic : public VirtualDeviceTest {
@@ -56,19 +72,16 @@ class QukeysBasic : public VirtualDeviceTest {
 
   std::set<uint8_t> expected_keycodes_ = {};
   std::unique_ptr<State> state_ = nullptr;
-  uint32_t last_event_timestamp_ = 0;
 
   uint32_t pressKey(uint32_t delay, KeyAddr addr) {
     sim_.RunForMillis(delay);
     sim_.Press(addr);
-    last_event_timestamp_ = Runtime.millisAtCycleStart();
-    return last_event_timestamp_;
+    return Runtime.millisAtCycleStart();
   }
   uint32_t releaseKey(uint32_t delay, KeyAddr addr) {
     sim_.RunForMillis(delay);
     sim_.Release(addr);
-    last_event_timestamp_ = Runtime.millisAtCycleStart();
-    return last_event_timestamp_;
+    return Runtime.millisAtCycleStart();
   }
 
   void addToReport(Key key) {
@@ -77,20 +90,69 @@ class QukeysBasic : public VirtualDeviceTest {
   void removeFromReport(Key key) {
     current_keyboard_keycodes_.erase(key.getKeyCode());
   }
-  uint32_t expectReport() {
+  uint32_t expectReport(std::set<Key> added_keys = {},
+                        std::set<Key> removed_keys = {},
+                        std::string failure_message = "") {
     uint32_t report_timestamp = Runtime.millisAtCycleStart();
+    for (Key key : added_keys) {
+      addToReport(key);
+    }
+    for (Key key : removed_keys) {
+      removeFromReport(key);
+    }
     ExpectedKeyboardReport new_report(report_timestamp,
-                                      current_keyboard_keycodes_);
+                                      current_keyboard_keycodes_,
+                                      failure_message);
     expected_reports_.push_back(new_report);
     return report_timestamp;
   }
-  uint32_t expectReportAfterCycles(size_t n) {
-    sim_.RunCycles(n);
-    return expectReport();
+  uint32_t expectReportWith(Key key, std::string message = "") {
+    return expectReport(std::set<Key>{key}, std::set<Key>{}, message);
   }
-  uint32_t expectReportAfterMillis(uint32_t t) {
+  uint32_t expectReportWithout(Key key, std::string message = "") {
+    return expectReport(std::set<Key>{}, std::set<Key>{key}, message);
+  }
+  uint32_t expectReportAfterCycles(size_t n,
+                                   std::set<Key> added_keys,
+                                   std::set<Key> removed_keys,
+                                   std::string message = "") {
+    sim_.RunCycles(n);
+    return expectReport(added_keys, removed_keys, message);
+  }
+  uint32_t expectReportAfterCycles(size_t n, std::string message = "") {
+    return expectReportAfterCycles(n, std::set<Key>{}, std::set<Key>{},
+                                   message);
+  }
+  uint32_t expectReportAfterCyclesWith(size_t n, Key key,
+                                       std::string message = "") {
+    sim_.RunCycles(n);
+    return expectReportWith(key, message);
+  }
+  uint32_t expectReportAfterCyclesWithout(size_t n, Key key,
+                                          std::string message = "") {
+    sim_.RunCycles(n);
+    return expectReportWithout(key, message);
+  }
+  uint32_t expectReportAfterMillis(uint32_t t,
+                                   std::set<Key> added_keys,
+                                   std::set<Key> removed_keys,
+                                   std::string message = "") {
     sim_.RunForMillis(t);
-    return expectReport();
+    return expectReport(added_keys, removed_keys, message);
+  }
+  uint32_t expectReportAfterMillis(uint32_t t, std::string message = "") {
+    return expectReportAfterMillis(t, std::set<Key>{}, std::set<Key>{},
+                                   message);
+  }
+  uint32_t expectReportAfterMillisWith(uint32_t t, Key key,
+                                       std::string message = "") {
+    sim_.RunForMillis(t);
+    return expectReportWith(key, message);
+  }
+  uint32_t expectReportAfterMillisWithout(uint32_t t, Key key,
+                                          std::string message = "") {
+    sim_.RunForMillis(t);
+    return expectReportWithout(key, message);
   }
 };
 
@@ -98,36 +160,32 @@ TEST_F(QukeysBasic, TapQukeyAlone) {
 
   pressKey(10, key_addr_A);
   releaseKey(50, key_addr_A);
-  addToReport(Key_A);
-  expectReportAfterCycles(1);
-  removeFromReport(Key_A); 
-  expectReportAfterCycles(1);
+  expectReportAfterCyclesWith(
+      1, Key_A, "Report should contain only `A`");
+  expectReportAfterCyclesWithout(
+      1, Key_A, "Report should be empty");
 
-  sim_.RunForMillis(100);
+  sim_.RunForMillis(10);
   auto state = RunCycle();
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 2)
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(state->HIDReports()->Keyboard().size(), expected_report_count)
       << "There should be two HID reports after a qukey is tapped";
 
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[0].Keycodes()))
-      << "The first report should include only `A`";
-
-  EXPECT_THAT(state->HIDReports()->Keyboard(1).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[1].Keycodes()))
-      << "The second report should be empty";
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(state->HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(QukeysBasic, HoldQukeyAlone) {
   constexpr uint32_t hold_time = 400;
-
   
   uint32_t t0 = pressKey(10, key_addr_A);
-  addToReport(Key_LeftGui);
-  uint32_t t1 = expectReportAfterMillis(QUKEYS_HOLD_TIMEOUT);
-  releaseKey(hold_time, key_addr_A);
-  removeFromReport(Key_LeftGui);
-  expectReportAfterCycles(1);
+  uint32_t t1 = expectReportAfterMillisWith(QUKEYS_HOLD_TIMEOUT, Key_LeftGui);
+  uint32_t t2 = releaseKey(hold_time, key_addr_A);
+  uint32_t t3 = expectReportAfterCyclesWithout(1, Key_LeftGui);
 
   sim_.RunForMillis(10);
   auto state = RunCycle();
@@ -192,9 +250,9 @@ TEST_F(QukeysBasic, RolloverPrimary) {
   addToReport(Key_F);
   expectReportAfterMillis(30);
   addToReport(Key_X);
-  expectReport();
+  expectReport(std::set<Key>{}, std::set<Key>{});
   removeFromReport(Key_F);
-  expectReport();
+  expectReport(std::set<Key>{}, std::set<Key>{});
   releaseKey(40, key_addr_X);
   removeFromReport(Key_X);
   expectReportAfterCycles(1);
