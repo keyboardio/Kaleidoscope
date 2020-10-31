@@ -267,33 +267,28 @@ TEST_F(QukeysBasic, RolloverPrimary) {
   pressKey(10, key_addr_F);
   pressKey(40, key_addr_X);
   releaseKey(20, key_addr_F);
-  addToReport(Key_F);
-  expectReportAfterMillis(30);
-  addToReport(Key_X);
-  expectReport(std::set<Key> {}, std::set<Key> {});
-  removeFromReport(Key_F);
-  expectReport(std::set<Key> {}, std::set<Key> {});
+  expectReportAfterMillisWith(
+      30, Key_F, "The first report should add `F`");
+  expectReportAfterCyclesWith(
+      1, Key_X, "The second report should add `X`");
+  expectReportAfterCyclesWithout(
+      1, Key_F, "The third report should remove `F`");
   releaseKey(40, key_addr_X);
-  removeFromReport(Key_X);
-  expectReportAfterCycles(1);
+  expectReportAfterCyclesWithout(
+      1, Key_X, "The fourth report should remove `X`");
 
   sim_.RunForMillis(10);
   auto state = RunCycle();
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 4)
+  constexpr int expected_report_count = 4;
+  ASSERT_EQ(output_state_->HIDReports()->Keyboard().size(), expected_report_count)
       << "There should be four HID reports total";
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[0].Keycodes()))
-      << "The first report should contain only `F`";
-  EXPECT_THAT(state->HIDReports()->Keyboard(1).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[1].Keycodes()))
-      << "The second report should add `X`";
-  EXPECT_THAT(state->HIDReports()->Keyboard(2).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[2].Keycodes()))
-      << "The third report should remove `F`";
-  EXPECT_THAT(state->HIDReports()->Keyboard(3).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_reports_[3].Keycodes()))
-      << "The fourth report should remove `X`";
+
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(output_state_->HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 }  // namespace
