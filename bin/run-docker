@@ -26,9 +26,13 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 (cd "${BOARD_HARDWARE_PATH}/keyboardio" && tar  -cf "${XFER_DIR}/bundle.tar" \
 	--exclude .git --exclude avr/libraries/Kaleidoscope .)
 
+if [ -z "${DOCKER_RUN_NON_INTERACTIVE}" ]; then
+    DOCKER_RUN_INTERACTIVE_OPTS="-it"
+fi
+
 echo "Building the docker image..."
 docker build -q -t kaleidoscope/docker etc
-docker run --rm -it \
+docker run --rm ${DOCKER_RUN_INTERACTIVE_OPTS}\
        --tmpfs /kaleidoscope:exec \
        --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
        --mount type=volume,source=kaleidoscope-persist,destination=/kaleidoscope-persist,consistency=delegated \
