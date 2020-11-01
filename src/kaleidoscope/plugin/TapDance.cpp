@@ -200,7 +200,7 @@ EventHandlerResult TapDance::afterEachCycle() {
 }
 
 __attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
-    kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+                                          kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
 }
 
 kaleidoscope::plugin::TapDance TapDance;
