@@ -18,6 +18,7 @@
 
 #include <cstddef>
 
+#include "testing/ExpectedKeyboardReport.h"
 #include "testing/SimHarness.h"
 #include "testing/State.h"
 
@@ -29,6 +30,28 @@
 namespace kaleidoscope {
 namespace testing {
 
+// -----------------------------------------------------------------------------
+// Utility classes for use in `PressKey()`/`ReleaseKey()` & `ExpectReport()`
+// method invocations. These make those calls simpler by providing
+// differentiated types for those polymorphic functions.
+struct Cycles {
+  size_t value;
+};
+struct Millis {
+  uint32_t value;
+};
+
+class AddKeycodes : public std::set<Key> {
+ public:
+  AddKeycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+};
+class RemoveKeycodes : public std::set<Key> {
+ public:
+  RemoveKeycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+};
+
+// -----------------------------------------------------------------------------
+// The base class for testcases
 class VirtualDeviceTest : public ::testing::Test {
  protected:
   void SetUp();
@@ -36,6 +59,73 @@ class VirtualDeviceTest : public ::testing::Test {
   std::unique_ptr<State> RunCycle();
 
   SimHarness sim_;
+
+  // ---------------------------------------------------------------------------
+  // A representation of the set of observed HID reports accumulated by the
+  // simulator as a testcase executes. It starts out empty, and a call to
+  // `LoadState()` is required in order to load those reports into this
+  // `output_state_` variable so that they can be used.
+  std::unique_ptr<State> output_state_ = nullptr;
+
+  // Load any accumulated observed HID reports from the simulator (since the
+  // previous call to this function).
+  void LoadState();
+
+  // Get a pointer to the current list of observed HID reports
+  const HIDState* HIDReports() const;
+
+  // Get the timestamp of a logged Keyboard HID report
+  uint32_t ReportTimestamp(size_t index) const;
+
+  // ---------------------------------------------------------------------------
+  // A vector of timestamps for input events. Calls to `PressKey()` &
+  // `ReleaseKey()` append timestamps to it when called.
+  std::vector<uint32_t> input_timestamps_ = {};
+
+  // Get the timestamp of a logged input event from `output_state_`
+  uint32_t EventTimestamp(size_t index) const;
+
+  // ---------------------------------------------------------------------------
+  // Press/release a keyswitch & log the input event timestamp
+  void PressKey(KeyAddr addr);
+  void ReleaseKey(KeyAddr addr);
+
+  // Run for `n` cycles, then press/release a keyswitch
+  void PressKey(Cycles n, KeyAddr addr);
+  void ReleaseKey(Cycles n, KeyAddr addr);
+
+  // Run for `t` milliseconds, then press/release a keyswitch
+  void PressKey(Millis t, KeyAddr addr);
+  void ReleaseKey(Millis t, KeyAddr addr);
+
+  // ---------------------------------------------------------------------------
+  // The following functions all add an expected value of HID report to the
+  // queue. They specify modifications to the current (expected) report, and a
+  // message to display if verification fails. Some versions allow multiple
+  // keycode changes in a single report; others only a single keycode. Some run
+  // the simulator for a specified number of milliseconds or cycles first. These
+  // expected-value reports are all stored in a vector:
+  std::vector<ExpectedKeyboardReport> expected_reports_ = {};
+
+  void ExpectReport(AddKeycodes added_keys,
+                    RemoveKeycodes removed_keys,
+                    std::string description);
+
+  void ExpectReport(AddKeycodes added_keys, std::string description);
+  void ExpectReport(RemoveKeycodes removed_keys, std::string description);
+
+  void ExpectReport(Cycles n, AddKeycodes added_keys, std::string description);
+  void ExpectReport(Cycles n, RemoveKeycodes removed_keys, std::string description);
+
+  void ExpectReport(Millis t, AddKeycodes added_keys, std::string description);
+  void ExpectReport(Millis t, RemoveKeycodes removed_keys, std::string description);
+
+  // ---------------------------------------------------------------------------
+  std::set<uint8_t> current_keyboard_keycodes_ = {};
+  // Add to/remove from the set of keycodes expected in the next report
+  void AddToReport(Key key);
+  void RemoveFromReport(Key key);
+
 };
 
 }  // namespace testing
