@@ -30,184 +30,116 @@ constexpr KeyAddr key_addr_D{2, 3};
 constexpr KeyAddr key_addr_F{2, 4};
 constexpr KeyAddr key_addr_X{3, 2};
 
-using ::testing::IsEmpty;
-
-class QukeysBasic : public VirtualDeviceTest {
- protected:
-  std::set<uint8_t> expected_keycodes_ = {};
-  std::unique_ptr<State> state_ = nullptr;
-};
+class QukeysBasic : public VirtualDeviceTest {};
 
 TEST_F(QukeysBasic, TapQukeyAlone) {
 
-  // Press `A`
-  sim_.Press(key_addr_A);
+  PressKey(Millis{10}, key_addr_A);
+  ReleaseKey(Millis{50}, key_addr_A);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_A}, "Report should contain only `A`");
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_A}, "Report should be empty");
 
-  state_ = RunCycle();
+  sim_.RunForMillis(10);
+  LoadState();
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0)
-      << "There should be no HID report after the qukey is pressed";
-  sim_.RunForMillis(20);
-  // Release `A`
-  sim_.Release(key_addr_A);
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be two HID reports after a qukey is tapped";
 
-  sim_.RunCycles(2);
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 2)
-      << "There should be two HID reports after the release of a tapped qukey";
-
-  expected_keycodes_.insert(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The first report should include only `A`";
-
-  expected_keycodes_.erase(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(1).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The second report should be empty";
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(QukeysBasic, HoldQukeyAlone) {
+  constexpr uint32_t hold_time = 400;
 
-  // Press `A`
-  sim_.Press(key_addr_A);
+  PressKey(Millis{10}, key_addr_A);
+  ExpectReport(Millis{QUKEYS_HOLD_TIMEOUT}, AddKeycodes{Key_LeftGui},
+               "The first report should include only `LeftGui`");
+  ReleaseKey(Millis{hold_time}, key_addr_A);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_LeftGui},
+               "The second report should be empty");
 
-  state_ = RunCycle();
+  sim_.RunForMillis(10);
+  LoadState();
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be two HID reports after a qukey is held and released";
 
-  uint32_t t0 = Kaleidoscope.millisAtCycleStart();
-
-  // To test the hold timeout, we check after every cycle to see if there's new
-  // HID report. We can't just call `RunForMillis()` because we care about when
-  // that report was sent.
-  do {
-    state_ = RunCycle();
-  } while (state_->HIDReports()->Keyboard().size() == 0 &&
-           (Kaleidoscope.millisAtCycleStart() - t0 < QUKEYS_HOLD_TIMEOUT + 1));
-
-  uint32_t t1 = Kaleidoscope.millisAtCycleStart();
-
-  EXPECT_THAT(t1 - t0, ::testing::Ge(QUKEYS_HOLD_TIMEOUT))
+  uint32_t measured_delay = ReportTimestamp(0) - input_timestamps_[0];
+  EXPECT_THAT(measured_delay, ::testing::Ge(QUKEYS_HOLD_TIMEOUT))
       << "The HID report should be sent after the hold timeout has elapsed";
 
-  expected_keycodes_.insert(Key_LeftGui.getKeyCode());
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be only one HID report";
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The HID report should contain just `Key_LeftGui`";
+  EXPECT_THAT(ReportTimestamp(1), ::testing::Ge(EventTimestamp(1)))
+      << "The key should stay active until release";
 
-  sim_.RunForMillis(100);
-
-  sim_.Release(key_addr_A);
-  sim_.RunCycles(2);
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be a HID report immediately after the key is released";
-
-  expected_keycodes_.erase(Key_LeftGui.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The HID report should be empty at this point";
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(QukeysBasic, FullOverlap) {
 
-  sim_.Press(key_addr_F);
-  sim_.RunForMillis(20);
-  sim_.Press(key_addr_X);
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0)
-      << "After both keys are pressed, there should still be no reports";
+  PressKey(Millis{10}, key_addr_F);
+  PressKey(Millis{20}, key_addr_X);
+  ReleaseKey(Millis{50}, key_addr_X);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_LeftShift},
+               "The first report should contain only `LeftShift`");
+  ExpectReport(Cycles{1}, AddKeycodes{Key_X},
+               "The second report should add `X`");
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_X},
+               "The third report should remove `X`");
+  ReleaseKey(Millis{10}, key_addr_F);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_LeftShift},
+               "The fourth report should remove `LeftShift`");
 
-  sim_.RunForMillis(50);
-  sim_.Release(key_addr_X);
-  sim_.RunCycles(3);
-  state_ = RunCycle();
+  sim_.RunForMillis(10);
+  LoadState();
 
-  expected_keycodes_.insert(Key_LeftShift.getKeyCode());
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 3)
-      << "After the subsequent key is released, we should get 3 reports";
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The first report should contain the qukey's altername keycode";
+  constexpr int expected_report_count = 4;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be four HID reports total";
 
-  expected_keycodes_.insert(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(1).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The second report should add the subsequent key";
-
-  expected_keycodes_.erase(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(2).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The third report should be the release of the subsequent key";
-
-  sim_.Release(key_addr_F);
-  sim_.RunCycles(3);
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "After the qukey is release, we should get one report";
-  expected_keycodes_.erase(Key_LeftShift.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The HID report should now be empty";
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(QukeysBasic, RolloverPrimary) {
 
-  sim_.Press(key_addr_F);
-  sim_.RunForMillis(20);
-  sim_.Press(key_addr_X);
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0)
-      << "After both keys are pressed, there should still be no reports";
+  PressKey(Millis{10}, key_addr_F);
+  PressKey(Millis{40}, key_addr_X);
+  ReleaseKey(Millis{20}, key_addr_F);
+  ExpectReport(Millis{30}, AddKeycodes{Key_F},
+               "The first report should add `F`");
+  ExpectReport(Cycles{1}, AddKeycodes{Key_X},
+               "The second report should add `X`");
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_F},
+               "The third report should remove `F`");
+  ReleaseKey(Millis{40}, key_addr_X);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_X},
+               "The fourth report should remove `X`");
 
-  sim_.RunForMillis(50);
-  sim_.Release(key_addr_F);
-  sim_.RunForMillis(50);
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 3)
-      << "After the qukey is released, and the overlap threshold is exceeded, there should be 3 reports";
+  sim_.RunForMillis(10);
+  LoadState();
 
-  expected_keycodes_.insert(Key_F.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The first report should contain the qukey's primary value";
+  constexpr int expected_report_count = 4;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be four HID reports total";
 
-  expected_keycodes_.insert(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(1).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The second report should contain the subsequent (normal) key";
-
-  expected_keycodes_.erase(Key_F.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(2).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The third report should contain the release of the qukey";
-
-  sim_.Release(key_addr_X);
-  sim_.RunCycles(3);
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "After the normal key is released, we should get one report";
-  expected_keycodes_.erase(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The HID report should now be empty";
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 }  // namespace

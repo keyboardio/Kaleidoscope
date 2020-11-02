@@ -27,142 +27,70 @@ constexpr KeyAddr key_addr_A{2, 1};
 constexpr KeyAddr key_addr_X{3, 2};
 
 class RedialBasic : public VirtualDeviceTest {
- protected:
-  std::set<uint8_t> expected_keycodes_ = {};
-  std::unique_ptr<State> state_ = nullptr;
 };
 
-TEST_F(RedialBasic, RedialFirst) {
+TEST_F(RedialBasic, RedialWithoutPriorKey) {
 
-  // Press redial key
-  sim_.Press(key_addr_Redial);
+  PressKey(Millis{10}, key_addr_Redial);
+  ReleaseKey(Millis{25}, key_addr_Redial);
 
-  state_ = RunCycle();
+  sim_.RunForMillis(10);
+  LoadState();
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0)
-      << "There should be no HID report for a redial key without anything pressed first";
-
-  // Release redial key
-  sim_.Release(key_addr_Redial);
-  sim_.RunCycle();
+  ASSERT_EQ(HIDReports()->Keyboard().size(), 0)
+      << "There should be no HID report without a prior keypress";
 }
 
 TEST_F(RedialBasic, RedialFirstKey) {
 
-  // Press `A`
-  sim_.Press(key_addr_A);
-  state_ = RunCycle();
+  PressKey(Millis{10}, key_addr_A);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_A}, "Report should contain only `A`");
+  ReleaseKey(Millis{25}, key_addr_A);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_A}, "Report should be empty");
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after letter key press";
+  PressKey(Millis{10}, key_addr_Redial);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_A}, "Report should contain only `A`");
+  ReleaseKey(Millis{25}, key_addr_Redial);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_A}, "Report should be empty");
 
-  expected_keycodes_.insert(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should include only `A`";
+  sim_.RunForMillis(10);
+  LoadState();
 
-  // Release `A`
-  sim_.Release(key_addr_A);
-  state_ = RunCycle();
+  constexpr int expected_report_count = 4;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be " << expected_report_count << " HID reports";
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after letter key release";
-
-  expected_keycodes_.erase(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should be empty";
-
-  sim_.RunCycle();
-
-  // Press redial key
-  sim_.Press(key_addr_Redial);
-
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should now be a redial-key report";
-
-  expected_keycodes_.insert(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should include only `A`";
-
-  // Release redial key
-  sim_.Release(key_addr_Redial);
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after redial-key release";
-
-  expected_keycodes_.erase(Key_A.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should be empty";
-
-  sim_.RunCycle();
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(RedialBasic, RedialNextKey) {
 
-  // Press `X`
-  sim_.Press(key_addr_X);
-  state_ = RunCycle();
+  PressKey(Millis{10}, key_addr_X);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_X}, "Report should contain only `X`");
+  ReleaseKey(Millis{25}, key_addr_X);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_X}, "Report should be empty");
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after letter key press";
+  PressKey(Millis{10}, key_addr_Redial);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_X}, "Report should contain only `X`");
+  ReleaseKey(Millis{25}, key_addr_Redial);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_X}, "Report should be empty");
 
-  expected_keycodes_.insert(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should include only `X`";
+  sim_.RunForMillis(10);
+  LoadState();
 
-  // Release `X`
-  sim_.Release(key_addr_X);
-  state_ = RunCycle();
+  constexpr int expected_report_count = 4;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be " << expected_report_count << " HID reports";
 
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after letter key release";
-
-  expected_keycodes_.erase(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should be empty";
-
-  sim_.RunCycle();
-
-  // Press redial key
-  sim_.Press(key_addr_Redial);
-
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should now be a redial-key report";
-
-  expected_keycodes_.insert(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should include only `X`";
-
-  // Release redial key
-  sim_.Release(key_addr_Redial);
-  state_ = RunCycle();
-
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 1)
-      << "There should be one report after redial-key release";
-
-  expected_keycodes_.erase(Key_X.getKeyCode());
-  EXPECT_THAT(state_->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes_))
-      << "The report should be empty";
-
-  sim_.RunCycle();
-
-  state_ = RunCycle();
-  ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 }  // namespace

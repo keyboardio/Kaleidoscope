@@ -25,63 +25,51 @@ namespace {
 constexpr KeyAddr key_addr_A{2, 1};
 constexpr KeyAddr key_addr_S{2, 2};
 constexpr KeyAddr key_addr_LeftShift{3, 7};
-constexpr uint8_t keycode_LeftShift{Key_LeftShift.getKeyCode()};
 
 class Keycodes : public VirtualDeviceTest {};
 
 TEST_F(Keycodes, KeyboardNonModifier) {
 
-  std::set<uint8_t> expected_keycodes{};
+  PressKey(Millis{10}, key_addr_A);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_A}, "Report should contain only `A`");
+  ReleaseKey(Millis{25}, key_addr_A);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_A}, "Report should be empty");
 
-  // Press `A`
-  sim_.Press(key_addr_A);
-  expected_keycodes.insert(Key_A.getKeyCode());
+  sim_.RunForMillis(10);
+  LoadState();
 
-  auto state = VirtualDeviceTest::RunCycle();
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be " << expected_report_count << " HID reports";
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveNonModifierKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
-
-  sim_.Release(key_addr_A);
-  expected_keycodes.erase(Key_A.getKeyCode());
-
-  state = VirtualDeviceTest::RunCycle();
-
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 TEST_F(Keycodes, KeyboardModifier) {
 
-  std::set<uint8_t> expected_keycodes{};
+  PressKey(Millis{10}, key_addr_LeftShift);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_LeftShift},
+               "Report should contain only `shift`");
+  ReleaseKey(Millis{25}, key_addr_LeftShift);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_LeftShift},
+               "Report should be empty");
 
-  // Press `LeftShift`
-  sim_.Press(key_addr_LeftShift);
-  expected_keycodes.insert(keycode_LeftShift);
+  sim_.RunForMillis(10);
+  LoadState();
 
-  auto state = VirtualDeviceTest::RunCycle();
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be " << expected_report_count << " HID reports";
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveModifierKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
-
-  uint8_t bit_LeftShift = keycode_LeftShift - HID_KEYBOARD_FIRST_MODIFIER;
-  uint8_t expected_modifiers = 1 << bit_LeftShift;
-
-  sim_.Release(key_addr_LeftShift);
-  expected_keycodes.erase(Key_LeftShift.getKeyCode());
-
-  state = VirtualDeviceTest::RunCycle();
-
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-              ::testing::ElementsAreArray(expected_keycodes));
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 }  // namespace

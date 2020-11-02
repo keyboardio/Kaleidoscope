@@ -25,31 +25,27 @@ namespace {
 
 constexpr KeyAddr key_addr_A{2, 1};
 
-using ::testing::IsEmpty;
-
 class KeyboardReports : public VirtualDeviceTest {};
 
 TEST_F(KeyboardReports, KeysActiveWhenPressed) {
-  sim_.Press(key_addr_A); // A
-  auto state = RunCycle();
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(
-    state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-    Contains(Key_A));
+  PressKey(Millis{10}, key_addr_A);
+  ExpectReport(Cycles{1}, AddKeycodes{Key_A}, "Report should contain only `A`");
+  ReleaseKey(Millis{25}, key_addr_A);
+  ExpectReport(Cycles{1}, RemoveKeycodes{Key_A}, "Report should be empty");
 
-  sim_.Release(key_addr_A);  // A
-  state = RunCycle();
+  sim_.RunForMillis(10);
+  LoadState();
 
-  ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
-  EXPECT_THAT(
-    state->HIDReports()->Keyboard(0).ActiveKeycodes(),
-    IsEmpty());
+  constexpr int expected_report_count = 2;
+  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_report_count)
+      << "There should be " << expected_report_count << " HID reports";
 
-  state = RunCycle();
-
-  // 2 cycles after releasing A
-  EXPECT_EQ(state->HIDReports()->Keyboard().size(), 0);
+  for (int i = 0; i < expected_report_count; ++i) {
+    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),
+                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))
+        << expected_reports_[i].Message();
+  }
 }
 
 }  // namespace
