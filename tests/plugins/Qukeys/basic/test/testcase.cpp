@@ -24,11 +24,7 @@ namespace kaleidoscope {
 namespace testing {
 namespace {
 
-constexpr KeyAddr key_addr_A{2, 1};
-constexpr KeyAddr key_addr_S{2, 2};
-constexpr KeyAddr key_addr_D{2, 3};
-constexpr KeyAddr key_addr_F{2, 4};
-constexpr KeyAddr key_addr_X{3, 2};
+using namespace kaleidoscope::testing::keymap;
 
 class QukeysBasic : public VirtualDeviceTest {};
 

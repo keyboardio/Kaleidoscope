@@ -17,18 +17,28 @@
 
 #pragma once
 
-#include <cstdint>
 #include <kaleidoscope/key_defs.h>
 #include <kaleidoscope/KeyAddr.h>
+#include "testing/keymap-defaults.h"
 
-#include "keymap.h"
+#include <Kaleidoscope-Qukeys.h>
 
 namespace kaleidoscope {
 namespace testing {
+namespace keymap {
 
-constexpr uint16_t QUKEYS_HOLD_TIMEOUT = 200;
-constexpr uint8_t QUKEYS_OVERLAP_THRESHOLD = 90;
-constexpr uint8_t QUKEYS_MINIMUM_HOLD_TIME = 10;
+class Keymap : public KeymapDefaults {
+ public:
+  // Layer 0
+  static constexpr Key key_0AA = Key_A;
+  static constexpr Key key_0AB = Key_F;
+  static constexpr Key key_0AC = Key_X;
+};
 
+constexpr KeyAddr key_addr_A = addr_AA;
+constexpr KeyAddr key_addr_F = addr_AB;
+constexpr KeyAddr key_addr_X = addr_AC;
+
+}  // namespace keymap
 }  // namespace testing
 }  // namespace kaleidoscope

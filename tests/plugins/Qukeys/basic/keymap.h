@@ -17,18 +17,15 @@
 
 #pragma once
 
-#include <cstdint>
-#include <kaleidoscope/key_defs.h>
-#include <kaleidoscope/KeyAddr.h>
+// Default key values to be used in sketches are defined from the
+// `keymap-defaults.h` file, provided by Kaleidoscope.
+#include "testing/keymap-defaults.h"
 
-#include "keymap.h"
+// For keys of interest, the values can be overridden by defining them in the
+// `keymap-overrides.h` file, in this directory.
+#include "keymap-overrides.h"
 
-namespace kaleidoscope {
-namespace testing {
-
-constexpr uint16_t QUKEYS_HOLD_TIMEOUT = 200;
-constexpr uint8_t QUKEYS_OVERLAP_THRESHOLD = 90;
-constexpr uint8_t QUKEYS_MINIMUM_HOLD_TIME = 10;
-
-}  // namespace testing
-}  // namespace kaleidoscope
+// Finally, we include this file so we can refer to key values in the keymap
+// more briefly (`key_0AA` vs `Keymap::key_0AA`, both in the
+// `kaleidoscope::testing::keymap` namespace).
+#include "testing/keymap-aliases.inc"
