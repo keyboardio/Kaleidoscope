@@ -14,22 +14,26 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
+#pragma once
+
+#include <kaleidoscope/key_defs.h>
+#include <kaleidoscope/KeyAddr.h>
+#include "testing/keymap-defaults.h"
+
 #include <Kaleidoscope-Redial.h>
 
-#include "./common.h"
-#include "testing/default-layers.h"
+namespace kaleidoscope {
+namespace testing {
+namespace keymap {
 
-using namespace kaleidoscope::testing::keymap;
+class Keymap : public KeymapDefaults {
+ public:
+  // Layer 0
+  static constexpr Key key_0AA = Key_Redial;
+  static constexpr Key key_0AB = Key_A;
+  static constexpr Key key_0AC = Key_X;
+};
 
-KEYMAPS(LAYER_0);
-
-KALEIDOSCOPE_INIT_PLUGINS(Redial);
-
-void setup() {
-  Kaleidoscope.setup();
-}
-
-void loop() {
-  Kaleidoscope.loop();
-}
+}  // namespace keymap
+}  // namespace testing
+}  // namespace kaleidoscope

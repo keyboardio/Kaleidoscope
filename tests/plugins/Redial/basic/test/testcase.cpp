@@ -16,15 +16,17 @@
 
 #include "testing/setup-googletest.h"
 
+#include "../common.h"
+
 SETUP_GOOGLETEST();
 
 namespace kaleidoscope {
 namespace testing {
 namespace {
 
-constexpr KeyAddr key_addr_Redial{0, 9};
-constexpr KeyAddr key_addr_A{2, 1};
-constexpr KeyAddr key_addr_X{3, 2};
+constexpr KeyAddr key_addr_Redial = addr_AA;
+constexpr KeyAddr key_addr_A = addr_AB;
+constexpr KeyAddr key_addr_X = addr_AC;
 
 class RedialBasic : public VirtualDeviceTest {
 };

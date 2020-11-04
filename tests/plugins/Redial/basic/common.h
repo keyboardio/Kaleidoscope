@@ -1,4 +1,5 @@
-/* -*- mode: c++ -*-
+// -*- mode: c++ -*-
+/* Kaleidoscope - Firmware for computer input devices
  * Copyright (C) 2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -14,22 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
-#include <Kaleidoscope-Redial.h>
+#pragma once
 
-#include "./common.h"
-#include "testing/default-layers.h"
+#include <cstdint>
+#include <kaleidoscope/key_defs.h>
+#include <kaleidoscope/KeyAddr.h>
 
-using namespace kaleidoscope::testing::keymap;
+#include "keymap.h"
 
-KEYMAPS(LAYER_0);
+namespace kaleidoscope {
+namespace testing {
 
-KALEIDOSCOPE_INIT_PLUGINS(Redial);
+// Constants shared by both the sketch and the testcase should be defined here.
 
-void setup() {
-  Kaleidoscope.setup();
-}
-
-void loop() {
-  Kaleidoscope.loop();
-}
+}  // namespace testing
+}  // namespace kaleidoscope
