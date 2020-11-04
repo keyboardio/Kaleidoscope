@@ -1,4 +1,5 @@
-/* -*- mode: c++ -*-
+// -*- mode: c++ -*-
+/* Kaleidoscope - Firmware for computer input devices
  * Copyright (C) 2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -14,22 +15,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope.h>
-#include <Kaleidoscope-Redial.h>
+#pragma once
 
-#include "./common.h"
-#include "testing/default-layers.h"
+// Default key values to be used in sketches are defined from the
+// `keymap-defaults.h` file, provided by Kaleidoscope.
+#include "testing/keymap-defaults.h"
 
-using namespace kaleidoscope::testing::keymap;
+// For keys of interest, the values can be overridden by defining them in the
+// `keymap-overrides.h` file, in this directory.
+#include "keymap-overrides.h"
 
-KEYMAPS(LAYER_0);
-
-KALEIDOSCOPE_INIT_PLUGINS(Redial);
-
-void setup() {
-  Kaleidoscope.setup();
-}
-
-void loop() {
-  Kaleidoscope.loop();
-}
+// Finally, we include this file so we can refer to key values in the keymap
+// more briefly (`key_0AA` vs `Keymap::key_0AA`, both in the
+// `kaleidoscope::testing::keymap` namespace).
+#include "testing/keymap-aliases.inc"
