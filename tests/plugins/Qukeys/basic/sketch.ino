@@ -18,7 +18,7 @@
 #include <Kaleidoscope-Qukeys.h>
 #include <Kaleidoscope-Macros.h>
 
-#include "./shared.h"
+#include "./common.h"
 
 enum { MACRO_TOGGLE_QUKEYS };
 
