@@ -58,7 +58,7 @@ EventHandlerResult ColormapEffect::onLayerChange() {
 
 EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
   return ::LEDPaletteTheme.themeFocusEvent(command, PSTR("colormap.map"),
-         map_base_, max_layers_);
+                                           map_base_, max_layers_);
 }
 
 }

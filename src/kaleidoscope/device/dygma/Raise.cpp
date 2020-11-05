@@ -210,8 +210,8 @@ void RaiseLEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
     cRGB oldColor = RaiseHands::leftHand.led_data.leds[sled_num];
     RaiseHands::leftHand.led_data.leds[sled_num] = crgb;
     isLEDChangedLeft[uint8_t(sled_num / 8)] |= !(oldColor.r == crgb.r &&
-        oldColor.g == crgb.g &&
-        oldColor.b == crgb.b);
+                                                 oldColor.g == crgb.g &&
+                                                 oldColor.b == crgb.b);
   } else if (sled_num < 2 * LEDS_PER_HAND) {
     cRGB oldColor = RaiseHands::rightHand.led_data.leds[sled_num - LEDS_PER_HAND];
     RaiseHands::rightHand.led_data.leds[sled_num - LEDS_PER_HAND] = crgb;

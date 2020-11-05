@@ -26,9 +26,9 @@ namespace symbols {
 
 /* λ */
 static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
-                                   0, 1, 0, 0,
-                                   0, 1, 1, 0,
-                                   1, 0, 0, 1);
+                                          0, 1, 0, 0,
+                                          0, 1, 1, 0,
+                                          1, 0, 0, 1);
 }
 }
 }

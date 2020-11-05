@@ -356,7 +356,7 @@ class LEDModeManager {
   static kaleidoscope::plugin::LEDMode *getLEDMode(uint8_t mode_id);
 
   static void retreiveLEDModeFactoryFromPROGMEM(uint8_t mode_id,
-      LEDModeFactory &fac);
+                                                LEDModeFactory &fac);
 
   static void setupPersistentLEDModes();
 
