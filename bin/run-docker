@@ -4,6 +4,14 @@ set -e
 
 uname_S=$(uname -s 2>/dev/null || echo not)
 
+# If we're running in a terminal and want interactive docker
+# Specifically "is there a STDIN file descriptor"
+if [ -t 0 ]; then
+    : "${DOCKER_RUN_INTERACTIVE_OPTS:=--tty --interactive}"
+fi
+
+
+
 if [ "${uname_S}" = "Darwin" ]; then
     ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Documents/Arduino}"
     # This stops macos from copying resource forks into thigns like tar
@@ -28,7 +36,8 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 
 echo "Building the docker image..."
 docker build -q -t kaleidoscope/docker etc
-docker run --rm -it \
+# shellcheck disable=SC2086   # We do want word splitting since there are multiple options here
+docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
        --tmpfs /kaleidoscope:exec \
        --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
        --mount type=volume,source=kaleidoscope-persist,destination=/kaleidoscope-persist,consistency=delegated \
