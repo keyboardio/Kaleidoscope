@@ -31,7 +31,7 @@ const std::set<uint8_t> & ExpectedKeyboardReport::Keycodes() const {
   return keycodes_;
 }
 
-uint32_t ExpectedKeyboardReport::Timestamp() const {
+Millis ExpectedKeyboardReport::Timestamp() const {
   return timestamp_;
 }
 

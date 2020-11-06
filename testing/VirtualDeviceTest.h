@@ -18,6 +18,8 @@
 
 #include <cstddef>
 
+#include "testing/Cycles.h"
+#include "testing/Millis.h"
 #include "testing/ExpectedKeyboardReport.h"
 #include "testing/SimHarness.h"
 #include "testing/State.h"
@@ -60,6 +62,24 @@ class VirtualDeviceTest : public ::testing::Test {
   SimHarness sim_;
 
   // ---------------------------------------------------------------------------
+  // Utility functions to advance time in the simulator.
+
+  // Run the simulator `n` cycles
+  void Run(Cycles n);
+
+  // Run the simulator `t` (virtual) milliseconds
+  void Run(Millis t);
+
+  // Run the simulator until the (virtual) clock reaches `end` milliseconds
+  void RunUntil(Millis end);
+
+  // Run the simulator until the (virtual) clock advances `t` milliseconds past
+  // `start`. This is most useful when testing timeouts based on an input event
+  // that is not the most recent one (e.g. a timeout following a keypress, but
+  // with a key release in between).
+  void RunFrom(Millis start, Millis t);
+
+  // ---------------------------------------------------------------------------
   // A representation of the set of observed HID reports accumulated by the
   // simulator as a testcase executes. It starts out empty, and a call to
   // `LoadState()` is required in order to load those reports into this
@@ -79,21 +99,28 @@ class VirtualDeviceTest : public ::testing::Test {
   const HIDState* HIDReports() const;
 
   // Get the timestamp of a logged Keyboard HID report
-  uint32_t ReportTimestamp(size_t index) const;
+  Millis ReportTimestamp(size_t index) const;
 
   // ---------------------------------------------------------------------------
   // A vector of timestamps for input events. Calls to `PressKey()` &
   // `ReleaseKey()` append timestamps to it when called.
-  std::vector<uint32_t> input_timestamps_ = {};
+  std::vector<Millis> input_timestamps_ = {};
 
   // Get the timestamp of a logged input event from `output_state_`
-  uint32_t EventTimestamp(size_t index) const;
+  Millis EventTimestamp(size_t index) const;
 
   // ---------------------------------------------------------------------------
   // Press/release a keyswitch & log the input event timestamp
   void PressKey(KeyAddr addr);
   void ReleaseKey(KeyAddr addr);
 
+  // Run for `n` cycles, then press/release a keyswitch
+  void PressKey(Cycles n, KeyAddr addr);
+  void ReleaseKey(Cycles n, KeyAddr addr);
+
+  // Run for `t` milliseconds, then press/release a keyswitch
+  void PressKey(Millis t, KeyAddr addr);
+  void ReleaseKey(Millis t, KeyAddr addr);
 
   // ---------------------------------------------------------------------------
   // The following functions all add an expected value of HID report to the
@@ -111,6 +138,12 @@ class VirtualDeviceTest : public ::testing::Test {
   void ExpectReport(Keycodes added_keys, std::string description);
   void ExpectReport(AddKeycodes added_keys, std::string description);
   void ExpectReport(RemoveKeycodes removed_keys, std::string description);
+
+  void ExpectReport(Cycles n, AddKeycodes added_keys, std::string description);
+  void ExpectReport(Cycles n, RemoveKeycodes removed_keys, std::string description);
+
+  void ExpectReport(Millis t, AddKeycodes added_keys, std::string description);
+  void ExpectReport(Millis t, RemoveKeycodes removed_keys, std::string description);
 
   // ---------------------------------------------------------------------------
   std::set<uint8_t> current_keyboard_keycodes_ = {};

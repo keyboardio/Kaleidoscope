@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Copyright (C) 2020  Keyboard.io, Inc
+ * Copyright (C) 2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,31 +17,12 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
-#include <set>
-#include <string>
-
-#include "testing/Millis.h"
 
 namespace kaleidoscope {
 namespace testing {
 
-class ExpectedKeyboardReport {
- public:
-  ExpectedKeyboardReport(Millis timestamp,
-                         const std::set<uint8_t> & keycodes,
-                         std::string message = "");
-
-  const std::set<uint8_t> & Keycodes() const;
-
-  Millis Timestamp() const;
-
-  const std::string & Message() const;
-
- private:
-  Millis timestamp_;
-  std::set<uint8_t> keycodes_;
-  std::string failure_message_;
+struct Cycles {
+  uint32_t value;
 };
 
 }  // namespace testing

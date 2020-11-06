@@ -32,6 +32,24 @@ std::unique_ptr<State> VirtualDeviceTest::RunCycle() {
 }
 
 // =============================================================================
+void VirtualDeviceTest::Run(Cycles n) {
+  sim_.RunCycles(n.value);
+}
+
+void VirtualDeviceTest::Run(Millis t) {
+  sim_.RunForMillis(t);
+}
+
+void VirtualDeviceTest::RunUntil(Millis end) {
+  uint32_t t0 = Runtime.millisAtCycleStart();
+  Run(Millis{end - t0});
+}
+
+void VirtualDeviceTest::RunFrom(Millis start, Millis t) {
+  RunUntil(Millis{start + t});
+}
+
+// =============================================================================
 void VirtualDeviceTest::LoadState() {
   output_state_ = State::Snapshot();
 }
@@ -47,24 +65,44 @@ const HIDState* VirtualDeviceTest::HIDReports() const {
   return output_state_->HIDReports();
 }
 
-uint32_t VirtualDeviceTest::ReportTimestamp(size_t index) const {
+Millis VirtualDeviceTest::ReportTimestamp(size_t index) const {
   uint32_t t = output_state_->HIDReports()->Keyboard(index).Timestamp();
-  return t;
+  return Millis{t};
 }
 
 // -----------------------------------------------------------------------------
-uint32_t VirtualDeviceTest::EventTimestamp(size_t index) const {
-  return input_timestamps_[index];
+Millis VirtualDeviceTest::EventTimestamp(size_t index) const {
+  return Millis{input_timestamps_[index]};
 }
 
 // =============================================================================
 void VirtualDeviceTest::PressKey(KeyAddr addr) {
   sim_.Press(addr);
-  input_timestamps_.push_back(Runtime.millisAtCycleStart());
+  input_timestamps_.push_back(Millis{Runtime.millisAtCycleStart()});
 }
 void VirtualDeviceTest::ReleaseKey(KeyAddr addr) {
   sim_.Release(addr);
-  input_timestamps_.push_back(Runtime.millisAtCycleStart());
+  input_timestamps_.push_back(Millis{Runtime.millisAtCycleStart()});
+}
+
+// -----------------------------------------------------------------------------
+void VirtualDeviceTest::PressKey(Cycles n, KeyAddr addr) {
+  sim_.RunCycles(n.value);
+  PressKey(addr);
+}
+void VirtualDeviceTest::ReleaseKey(Cycles n, KeyAddr addr) {
+  sim_.RunCycles(n.value);
+  ReleaseKey(addr);
+}
+
+// -----------------------------------------------------------------------------
+void VirtualDeviceTest::PressKey(Millis t, KeyAddr addr) {
+  sim_.RunForMillis(t);
+  PressKey(addr);
+}
+void VirtualDeviceTest::ReleaseKey(Millis t, KeyAddr addr) {
+  sim_.RunForMillis(t);
+  ReleaseKey(addr);
 }
 
 
@@ -86,7 +124,7 @@ void VirtualDeviceTest::ExpectReport(Keycodes keys,
 void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
                                      RemoveKeycodes removed_keys,
                                      std::string description) {
-  uint32_t report_timestamp = Runtime.millisAtCycleStart();
+  Millis report_timestamp{Runtime.millisAtCycleStart()};
   for (Key key : added_keys) {
     AddToReport(key);
   }
@@ -107,6 +145,34 @@ void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
 void VirtualDeviceTest::ExpectReport(RemoveKeycodes removed_keys,
                                      std::string description) {
   ExpectReport(AddKeycodes{}, removed_keys, description);
+}
+
+// -----------------------------------------------------------------------------
+void VirtualDeviceTest::ExpectReport(Cycles n,
+                                     AddKeycodes added_keys,
+                                     std::string description) {
+  sim_.RunCycles(n.value);
+  ExpectReport(added_keys, description);
+}
+void VirtualDeviceTest::ExpectReport(Cycles n,
+                                     RemoveKeycodes removed_keys,
+                                     std::string description) {
+  sim_.RunCycles(n.value);
+  ExpectReport(removed_keys, description);
+}
+
+// -----------------------------------------------------------------------------
+void VirtualDeviceTest::ExpectReport(Millis t,
+                                     AddKeycodes added_keys,
+                                     std::string description) {
+  sim_.RunForMillis(t);
+  ExpectReport(added_keys, description);
+}
+void VirtualDeviceTest::ExpectReport(Millis t,
+                                     RemoveKeycodes removed_keys,
+                                     std::string description) {
+  sim_.RunForMillis(t);
+  ExpectReport(removed_keys, description);
 }
 
 // =============================================================================
