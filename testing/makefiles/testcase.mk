@@ -13,6 +13,12 @@ BIN_FILE=$(subst .ino,,$(SKETCH_FILE))
 LIB_FILE=${BIN_FILE}-latest.a
 
 TEST_FILES=$(wildcard $(SRC_DIR)/*.cpp)
+
+# If we have a ktest file, we want to turn it into a generated testcase
+ifneq (,$(wildcard test.ktest))
+TEST_FILES += $(SRC_DIR)/generated-testcase.cpp
+endif
+
 TEST_OBJS=$(patsubst $(SRC_DIR)/%.cpp,${OBJ_DIR}/%.o,$(TEST_FILES))
 
 ifndef BOARD_HARDWARE_PATH
@@ -54,6 +60,17 @@ compile-sketch:
 		-lgmock \
 		-lpthread \
 		-lm
+
+
+# If we have a test.ktest file, it should be processed into a c++ testcase
+${SRC_DIR}/generated-testcase.cpp: test.ktest
+ifneq (,$(wildcard test.ktest))
+	@echo "Compiling ktest script into ${SRC_DIR}/generated-testcase.cpp"
+	install -d "${SRC_DIR}"
+	perl ${top_dir}/testing/bin/ktest-to-cxx \
+		--ktest=test.ktest \
+		--cxx=${SRC_DIR}/generated-testcase.cpp
+endif
 
 ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@echo "compile $@"

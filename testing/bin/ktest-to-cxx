@@ -1,0 +1,362 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Getopt::Long;
+use File::Spec;
+
+my $text_filename = "";
+my $cxx_filename  = "";
+my $verbose;
+my $cxx_output       = "";
+my $depth            = 0;
+my $reports_expected = 0;
+my @script_lines;
+my $named_switches = {};
+
+GetOptions(
+    "cxx=s"   => \$cxx_filename,     # string
+    "ktest=s"  => \$text_filename,
+    "verbose" => \$verbose
+  )                                  # flag
+  or die("Error in command line arguments\n");
+
+my $test;
+
+if ( -f $text_filename ) {
+    load_from_text();
+}
+else {
+    die "Couldn't find $text_filename";
+}
+
+generate_test_file();
+
+open(my $outfile, ">", $cxx_filename) || die "Can't open output file $!";
+print $outfile $cxx_output;
+close ($outfile);
+
+exit(0);
+
+
+
+
+sub load_from_text {
+    my @content = ();
+    open( my $text_fh, "<", $text_filename ) or die "Can't open file $!";
+    my $line_num = 0;
+    for my $line (<$text_fh>) {
+        my ( $key, $content, $comment, $error, $type );
+        $line_num++;
+        chomp $line;
+
+        $line =~ s/^\s+//;
+
+        if ( $line eq '' ) {
+            next;
+        }
+        if ( $line =~ /^(.*?)\s*#\s+(.*)$/ ) {
+            $line    = $1;
+            $comment = $2;
+        }
+
+        if ( $line =~ /^(.*?)\s+(.*)\s*$/ ) {
+            $type    = lc $1;
+            $content = $2;
+        }
+        else {
+            $error = "Couldn't parse line";
+        }
+
+        my $dispatcher = {
+	    version => sub {
+		my $version = shift;
+		if ($version != 1) {	
+			die "This parser only supports v1";
+		}
+		return undef;
+		},
+	    type => sub {	
+			my $type = shift;
+			$type =~ s/\s//g;
+			$test->{type} = $type;	
+			return undef;
+		},
+	    name => sub {	
+			my $name = shift;
+			$name =~ s/\s//g;
+			$test->{name} = $name;	
+			return undef;
+		},
+
+            keyswitch => sub {
+                my $content = shift;
+                if ( $content =~ /^(.*)\s+(\d+)\s+(\d+)$/ ) {
+                    my $switch = $1;
+                    my $row    = $2;
+                    my $col    = $3;
+                    if ( exists $named_switches->{$switch} ) {
+                        die "Attempted to redefine '$switch' on line $line_num";
+                    }
+                    else {
+                        $named_switches->{$switch} = [ $row, $col ];
+                    }
+                    return undef;
+                }
+            },
+            press => sub {
+                my $content = shift;
+                unless ( defined $named_switches->{$content} ) {
+                    die "Attempt to press undefined switch $content on line $line_num";
+                }
+                return { switch => $content };
+            },
+            release => sub {
+                my $content = shift;
+                unless ( defined $named_switches->{$content} ) {
+                    die
+"Attempt to press undefined switch $content on line $line_num";
+                }
+                return { switch => $content };
+            },
+            expect => sub {
+                my $content = shift;
+                if ( $content =~ /^keyboard-report\s+(.*)$/ ) {
+                    my $report_data = $1;
+                    my @keys        = split( /,?\s+/, $report_data );
+                    if ( $#keys == 0 && $keys[0] =~ /^empty$/i ) {
+                        @keys = ();
+                    }
+                    return {
+                        report_type => 'keyboard',
+                        keys        => [@keys]
+                    };
+                }
+                else {
+                    die "Don't know how parse $content at line $line_num";
+                }
+            },
+            run => sub {
+                my $content = shift;
+                if ( $content =~ /^(\d+)\s+(\w+)$/ ) {
+                    my $count = $1;
+                    my $unit  = $2;
+                    if ( $unit =~ /cycle/ ) {
+                        return { cycles => $count };
+                    }
+                    elsif ( $unit =~ /milli|ms/ ) {
+                        return { millis => $count };
+                    }
+                    else { die "Line $line_num: failed to parse a 'run' clause: $content"; }
+                }
+                else { die "Line $line_num: failed to parse a 'run' clause: $content"; }
+
+            },
+
+        };
+
+        my $data;
+        if ( $type && exists $dispatcher->{$type} ) {
+            $data = $dispatcher->{$type}->($content);
+	    # an empty return means "don't put it in the script
+	    if (!$data)  {
+		next;
+		}
+        }
+
+        push @content,
+          {
+            action     => $type,
+            content  => $content,
+            comment  => $comment,
+            data     => $data,
+            line_num => $line_num
+          };
+
+    }
+    close ($text_fh);
+    @script_lines = @content;
+}
+
+
+sub generate_test_file {
+
+my $preface = <<EOF;
+#include "testing/setup-googletest.h"
+#include "Kaleidoscope.h"
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !! WARNING! This test file was automatically generated. !!
+// !! It -will- be overwritten on on subsequent test runs. !!
+// !! Do not edit it. You will be sad, when you lose all   !!
+// !! your changes.                                        !!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// Source file:  @{[File::Spec->rel2abs( $text_filename ) ]}
+
+SETUP_GOOGLETEST();
+
+namespace kaleidoscope {
+namespace testing {
+namespace {
+
+class KeyboardReports : public VirtualDeviceTest {};
+EOF
+
+for my $line (split/\n/,$preface) {
+	cxx($line);
+}
+
+    cxx( "TEST_F(" . $test->{type} . "," . $test->{name} . ") {" );
+    indent();
+    generate_key_addrs();
+
+    generate_script( );
+
+    outdent();
+    cxx("} // TEST_F");
+
+my $postscript = <<EOF;
+
+}  // namespace
+}  // namespace testing
+}  // namespace kaleidoscope
+EOF
+
+for my $line (split/\n/,$postscript) {
+	cxx($line);
+}
+
+
+    if ( $depth != 0 ) {
+        die "Unbalanced indentation";
+    }
+}
+
+sub generate_key_addrs {
+    cxx_section('Key Addresses');
+    for my $key ( keys %$named_switches  ) {
+
+        cxx(    "constexpr KeyAddr key_addr_$key {"
+              . $named_switches->{$key}->[0] . ", "
+              . $named_switches->{$key}->[1]
+              . "};" );
+
+    }
+
+}
+
+sub generate_script {
+    cxx_section("Test script");
+    $reports_expected = 0;
+    for my $entry (@script_lines) {
+
+	if ($entry->{comment} && (! $entry->{action} ) ) {
+		cxx_comment($entry->{comment});
+	} elsif (my $action = $entry->{action} )  {
+
+            if ( $action eq 'press' ) { generate_press( $entry ) }
+            elsif ( $action eq 'release' ) { generate_release( $entry ); }
+            elsif ( $action eq 'run' ) { generate_run( $entry ) }
+            elsif ( $action eq 'expect' ) { generate_expect_report( $entry ); }
+	    else {
+		die "$action unknown on line $entry->{line_num}";
+		}
+        }
+    }
+    if ($reports_expected) {
+        generate_check_expected_reports();
+    }
+}
+
+sub generate_run {
+    my $action = shift;
+    if ( $action->{'comment'} ) {
+        cxx_comment( $action->{'comment'} );
+    }
+    if ( $action->{data}->{'cycles'} ) {
+        cxx( 'sim_.RunCycles(' . $action->{data}->{'cycles'} . ');' );
+    }
+    elsif ( $action->{data}->{'millis'} ) {
+        cxx( 'sim_.RunForMillis(' . $action->{data}->{'millis'} . ');' );
+    }
+}
+
+sub generate_press {
+    my $e = shift;
+
+    # TODO handle multuple presses
+    cxx( "PressKey(key_addr_" . $e->{data}->{switch} . ");" , $e->{comment});
+}
+
+sub generate_release {
+    my $e = shift;
+
+    # TODO handle multiple releases
+    cxx( "ReleaseKey(key_addr_" . $e->{data}->{switch} . ");" , $e->{comment});
+}
+
+sub generate_expect_report {
+    my $report = shift;
+    $reports_expected++;
+    my $codes = join(
+        ", ",
+        (
+            ref( $report->{data}->{keys} )
+            ? @{ $report->{data}->{keys} }
+            : ( $report->{data}->{keys} )
+        )
+    );
+    cxx( "ExpectReport(Keycodes{$codes}, \"" . $report->{comment} . "\");" );
+    cxx("");
+}
+
+sub generate_check_expected_reports {
+    cxx("");
+    cxx("");
+    cxx("CHECK_EXPECTED_REPORTS();");
+    cxx("");
+}
+
+sub indent {
+    $depth += 2;
+}
+
+sub outdent {
+    $depth -= 2;
+    if ( $depth < 0 ) {
+        die "Tried to outdent beyond 0";
+    }
+}
+
+sub cxx_section {
+    my $line = shift;
+    cxx('');
+    cxx('');
+    cxx_comment($line);
+    cxx_comment( "=" x length($line) );
+    cxx('');
+    cxx('');
+}
+
+sub cxx_comment {
+    my $line = shift;
+    cxx( "// " . $line );
+}
+
+sub cxx {
+    my $line = shift;
+    my $comment = shift || '';
+    $cxx_output .= " " x $depth;
+    $cxx_output .= $line;
+	$cxx_output .= $comment if ($comment);	
+     $cxx_output .= "\n";
+    if ($verbose) {
+        debug("$line");
+    }
+}
+
+sub debug {
+    my $msg = shift;
+    print STDERR ( " " x $depth ) . $msg . "\n";
+}
