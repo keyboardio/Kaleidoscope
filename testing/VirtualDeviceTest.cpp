@@ -67,6 +67,21 @@ void VirtualDeviceTest::ReleaseKey(KeyAddr addr) {
   input_timestamps_.push_back(Runtime.millisAtCycleStart());
 }
 
+
+// =============================================================================
+void VirtualDeviceTest::ExpectReport(Keycodes keys,
+                                     std::string description) {
+  Millis report_timestamp{Runtime.millisAtCycleStart()};
+  ClearReport();
+  for (Key key : keys) {
+    AddToReport(key);
+  }
+  ExpectedKeyboardReport new_report(report_timestamp,
+                                    current_keyboard_keycodes_,
+                                    description);
+  expected_reports_.push_back(new_report);
+}
+
 // =============================================================================
 void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
                                      RemoveKeycodes removed_keys,
@@ -95,6 +110,9 @@ void VirtualDeviceTest::ExpectReport(RemoveKeycodes removed_keys,
 }
 
 // =============================================================================
+void VirtualDeviceTest::ClearReport() {
+  current_keyboard_keycodes_.clear();
+}
 void VirtualDeviceTest::AddToReport(Key key) {
   current_keyboard_keycodes_.insert(key.getKeyCode());
 }

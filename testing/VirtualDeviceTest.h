@@ -43,6 +43,12 @@ class RemoveKeycodes : public std::set<Key> {
   RemoveKeycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
 };
 
+class Keycodes : public std::set<Key> {
+ public:
+  Keycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+};
+
+
 // -----------------------------------------------------------------------------
 // The base class for testcases
 class VirtualDeviceTest : public ::testing::Test {
@@ -102,12 +108,14 @@ class VirtualDeviceTest : public ::testing::Test {
                     RemoveKeycodes removed_keys,
                     std::string description);
 
+  void ExpectReport(Keycodes added_keys, std::string description);
   void ExpectReport(AddKeycodes added_keys, std::string description);
   void ExpectReport(RemoveKeycodes removed_keys, std::string description);
 
   // ---------------------------------------------------------------------------
   std::set<uint8_t> current_keyboard_keycodes_ = {};
-  // Add to/remove from the set of keycodes expected in the next report
+  // Manage the set of keycodes expected in the next report
+  void ClearReport();
   void AddToReport(Key key);
   void RemoveFromReport(Key key);
 
