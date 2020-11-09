@@ -244,7 +244,7 @@ const macro_t *Macros_::type(const char *string) {
 }
 
 bool Macros_::isMacroKey(Key key) {
-  if (key.getFlags() == (SYNTHETIC | IS_MACRO))
+  if (key >= ranges::MACRO_FIRST && key <= ranges::MACRO_LAST)
     return true;
   return false;
 }
@@ -253,7 +253,8 @@ EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, u
   if (! isMacroKey(mappedKey))
     return EventHandlerResult::OK;
 
-  addActiveMacroKey(mappedKey.getKeyCode(), key_addr.toInt(), keyState);
+  uint8_t macro_index = mappedKey.getRaw() - ranges::MACRO_FIRST;
+  addActiveMacroKey(macro_index, key_addr.toInt(), keyState);
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
