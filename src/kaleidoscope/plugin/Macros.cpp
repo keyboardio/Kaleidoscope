@@ -243,8 +243,14 @@ const macro_t *Macros_::type(const char *string) {
   return MACRO_NONE;
 }
 
+bool Macros_::isMacroKey(Key key) {
+  if (key.getFlags() == (SYNTHETIC | IS_MACRO))
+    return true;
+  return false;
+}
+
 EventHandlerResult Macros_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | IS_MACRO))
+  if (! isMacroKey(mappedKey))
     return EventHandlerResult::OK;
 
   addActiveMacroKey(mappedKey.getKeyCode(), key_addr.toInt(), keyState);

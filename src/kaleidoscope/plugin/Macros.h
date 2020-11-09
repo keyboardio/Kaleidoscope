@@ -80,6 +80,7 @@ class Macros_ : public kaleidoscope::Plugin {
 
  private:
   Key lookupAsciiCode(uint8_t ascii_code);
+  bool isMacroKey(Key key);
 };
 
 }
