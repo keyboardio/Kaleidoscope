@@ -1,5 +1,4 @@
 VERSION 1
-TYPE KeyboardReports
 NAME Keys Active When pressed
 
 # Comment lines end up as comments in the generated source

@@ -1,5 +1,4 @@
 VERSION 1
-TYPE Keycode
 NAME Keyboard Non Modifiers
 
 KEYSWITCH A 2 1
@@ -17,7 +16,6 @@ RELEASE A
 EXPECT keyboard-report empty # Report should be empty
 
 # TODO, this should be generate a second test stanza
-# TYPE Keycode
 # NAME Keyboard Modifiers
 
 RUN 10 ms

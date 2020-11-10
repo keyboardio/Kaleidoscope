@@ -13,6 +13,10 @@ my $depth            = 0;
 my $reports_expected = 0;
 my @script_lines;
 my $named_switches = {};
+my $inside_test = 0;
+
+my $test_class = 'GeneratedKTest';
+
 
 GetOptions(
     "cxx=s"   => \$cxx_filename,     # string
@@ -77,19 +81,11 @@ sub load_from_text {
 		}
 		return undef;
 		},
-	    type => sub {	
-			my $type = shift;
-			$type =~ s/\s(\w)/uc($1)/eg;
-			$test->{type} = $type;	
-			return undef;
-		},
 	    name => sub {	
 			my $name = shift;
 			$name =~ s/\s(\w)/uc($1)/eg;
-			$test->{name} = $name;	
-			return undef;
+			return { test_name => $name };
 		},
-
             keyswitch => sub {
                 my $content = shift;
                 if ( $content =~ /^(.*)\s+(\d+)\s+(\d+)$/ ) {
@@ -208,36 +204,53 @@ sub generate_key_addrs {
     }
 
 }
+sub generate_start_new_test {
+    my $entry = shift;
+    my $name  = $entry->{data}->{test_name};
+    if ($inside_test) {
+        generate_end_test();
+    }
+    cxx( "TEST_F(" . $test_class . "," . $name . ") {" );
+    $inside_test = 1;
+    indent();
+}
+sub generate_end_test {
+    if ($reports_expected) {
+        generate_check_expected_reports();
+    }
+    outdent();
+    cxx("} // TEST_F");
+    $inside_test = 0;
+}
 
 sub generate_script {
     cxx_section("Test script");
-    cxx( "TEST_F(" . $test->{type} . "," . $test->{name} . ") {" );
-    indent();
 
     $reports_expected = 0;
     for my $entry (@script_lines) {
 
-	if ($entry->{comment} && (! $entry->{action} ) ) {
-		cxx_comment($entry->{comment});
-	} elsif (my $action = $entry->{action} )  {
+        if ( $entry->{comment} && ( !$entry->{action} ) ) {
+            cxx_comment( $entry->{comment} );
+        }
+        elsif ( my $action = $entry->{action} ) {
 
-            if ( $action eq 'press' ) { generate_press( $entry ) }
-            elsif ( $action eq 'release' ) { generate_release( $entry ); }
-            elsif ( $action eq 'run' ) { generate_run( $entry ) }
-            elsif ( $action eq 'expect' ) { generate_expect_report( $entry ); }
-	    else {
-		die "$action unknown on line $entry->{line_num}";
-		}
+            if ( $action eq 'name' ) { generate_start_new_test($entry) }
+            elsif ( !$inside_test ) {
+                die "Attempting to run an action when not inside a test section on line " . $entry->{line_num} . "\n";
+            }
+            elsif ( $action eq 'press' )   { generate_press($entry) }
+            elsif ( $action eq 'release' ) { generate_release($entry); }
+            elsif ( $action eq 'run' )     { generate_run($entry) }
+            elsif ( $action eq 'expect' )  { generate_expect_report($entry); }
+            else {
+                die "$action unknown on line $entry->{line_num}";
+            }
         }
     }
 
 
-    if ($reports_expected) {
-        generate_check_expected_reports();
-    }
+    generate_end_test();
 
-    outdent();
-    cxx("} // TEST_F");
 }
 
 sub generate_run {
@@ -290,6 +303,7 @@ sub generate_check_expected_reports {
 }
 
 sub generate_preface {
+
 my $preface = <<EOF;
 #include "testing/setup-googletest.h"
 #include "Kaleidoscope.h"
@@ -309,7 +323,7 @@ namespace kaleidoscope {
 namespace testing {
 namespace {
 
-class @{[$test->{type}]} : public VirtualDeviceTest {};
+class @{[$test_class]} : public VirtualDeviceTest {};
 EOF
 
 for my $line (split/\n/,$preface) {

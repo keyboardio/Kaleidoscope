@@ -1,5 +1,4 @@
-TYPE Issue941
-NAME one keypress per cycle
+NAME Issue 941 one keypress per cycle
 
 KEYSWITCH A 2 1
 KEYSWITCH S 2 2
