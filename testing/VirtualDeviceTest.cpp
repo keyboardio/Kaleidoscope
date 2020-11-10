@@ -71,7 +71,7 @@ void VirtualDeviceTest::ReleaseKey(KeyAddr addr) {
 // =============================================================================
 void VirtualDeviceTest::ExpectReport(Keycodes keys,
                                      std::string description) {
-  Millis report_timestamp{Runtime.millisAtCycleStart()};
+  size_t report_timestamp{Runtime.millisAtCycleStart()};
   ClearReport();
   for (Key key : keys) {
     AddToReport(key);
