@@ -185,7 +185,7 @@ bool Qukeys::processQueue() {
   // key, so we don't need to do it repeatedly later.
   bool qukey_is_spacecadet = isModifierKey(queue_head_.primary_key);
 
-  // If the qukey press followed a non-modifier key too closely, it's not
+  // If the qukey press is followed a printable key too closely, it's not
   // eligible to take on its alternate value unless it's a SpaceCadet-type key.
   if (!Runtime.hasTimeExpired(prior_keypress_timestamp_,
                               minimum_prior_interval_) &&
@@ -291,8 +291,13 @@ void Qukeys::flushEvent(Key event_key) {
   KeyAddr queue_head_addr = event_queue_.addr(0);
   uint8_t keyswitch_state = event_queue_.isRelease(0) ? WAS_PRESSED : IS_PRESSED;
 
-  // If the flushed event is a keypress of a non-modifier, record its timestamp:
-  if (!event_queue_.isRelease(0) && !isModifierKey(event_key)) {
+  // If the flushed event is a keypress of a printable symbol, record its
+  // timestamp. This lets us suppress some unintended alternate values seen by
+  // fast typists by requiring a minimum interval between this keypress and the
+  // next qukey press in order for that qukey to become alternate-eligible.
+  if (!event_queue_.isRelease(0) &&
+      ((event_key >= Key_A && event_key <= Key_0) ||
+       (event_key >= Key_Minus && event_key <= Key_Slash))) {
     prior_keypress_timestamp_ = event_queue_.timestamp(0);
   }
 

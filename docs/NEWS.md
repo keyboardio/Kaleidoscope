@@ -20,8 +20,9 @@ the output, particularly when typing fast:
 - `Qukeys.setMinimumHoldTime(ms)` sets the minimum duration of a qukey press
   required for it to be eligible to take on its alternate (modifier) value.
 - `Qukeys.setMinimumPriorInterval(ms)` sets the minimum interval between the
-  previous non-modifier key press and the press of the qukey required to make
-  the qukey eligible to take on its alternate (modifier) value.
+  previous printable (letters, numbers, and punctuation) key press and the press
+  of the qukey required to make the qukey eligible to take on its alternate
+  (modifier) value.
 
 ### KALEIDOSCOPE_API_VERSION bump
 
