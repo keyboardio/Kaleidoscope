@@ -51,6 +51,7 @@ sub load_from_text {
         chomp $line;
 
         $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
 
         if ( $line eq '' ) {
             next;
@@ -78,13 +79,13 @@ sub load_from_text {
 		},
 	    type => sub {	
 			my $type = shift;
-			$type =~ s/\s//g;
+			$type =~ s/\s(\w)/uc($1)/eg;
 			$test->{type} = $type;	
 			return undef;
 		},
 	    name => sub {	
 			my $name = shift;
-			$name =~ s/\s//g;
+			$name =~ s/\s(\w)/uc($1)/eg;
 			$test->{name} = $name;	
 			return undef;
 		},
@@ -174,6 +175,7 @@ sub load_from_text {
           };
 
     }
+
     close ($text_fh);
     @script_lines = @content;
 }
@@ -181,52 +183,13 @@ sub load_from_text {
 
 sub generate_test_file {
 
-my $preface = <<EOF;
-#include "testing/setup-googletest.h"
-#include "Kaleidoscope.h"
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// !! WARNING! This test file was automatically generated. !!
-// !! It -will- be overwritten on on subsequent test runs. !!
-// !! Do not edit it. You will be sad, when you lose all   !!
-// !! your changes.                                        !!
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-// Source file:  @{[File::Spec->rel2abs( $text_filename ) ]}
-
-SETUP_GOOGLETEST();
-
-namespace kaleidoscope {
-namespace testing {
-namespace {
-
-class KeyboardReports : public VirtualDeviceTest {};
-EOF
-
-for my $line (split/\n/,$preface) {
-	cxx($line);
-}
-
-    cxx( "TEST_F(" . $test->{type} . "," . $test->{name} . ") {" );
-    indent();
+generate_preface(); 
     generate_key_addrs();
+    
 
     generate_script( );
 
-    outdent();
-    cxx("} // TEST_F");
-
-my $postscript = <<EOF;
-
-}  // namespace
-}  // namespace testing
-}  // namespace kaleidoscope
-EOF
-
-for my $line (split/\n/,$postscript) {
-	cxx($line);
-}
-
+    generate_postscript();
 
     if ( $depth != 0 ) {
         die "Unbalanced indentation";
@@ -248,6 +211,9 @@ sub generate_key_addrs {
 
 sub generate_script {
     cxx_section("Test script");
+    cxx( "TEST_F(" . $test->{type} . "," . $test->{name} . ") {" );
+    indent();
+
     $reports_expected = 0;
     for my $entry (@script_lines) {
 
@@ -264,9 +230,14 @@ sub generate_script {
 		}
         }
     }
+
+
     if ($reports_expected) {
         generate_check_expected_reports();
     }
+
+    outdent();
+    cxx("} // TEST_F");
 }
 
 sub generate_run {
@@ -316,6 +287,47 @@ sub generate_check_expected_reports {
     cxx("");
     cxx("CHECK_EXPECTED_REPORTS();");
     cxx("");
+}
+
+sub generate_preface {
+my $preface = <<EOF;
+#include "testing/setup-googletest.h"
+#include "Kaleidoscope.h"
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !! WARNING! This test file was automatically generated. !!
+// !! It -will- be overwritten on on subsequent test runs. !!
+// !! Do not edit it. You will be sad, when you lose all   !!
+// !! your changes.                                        !!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// Source file:  @{[File::Spec->rel2abs( $text_filename ) ]}
+
+SETUP_GOOGLETEST();
+
+namespace kaleidoscope {
+namespace testing {
+namespace {
+
+class @{[$test->{type}]} : public VirtualDeviceTest {};
+EOF
+
+for my $line (split/\n/,$preface) {
+	cxx($line);
+}
+}
+sub generate_postscript {
+
+my $postscript = <<EOF;
+
+}  // namespace
+}  // namespace testing
+}  // namespace kaleidoscope
+EOF
+
+for my $line (split/\n/,$postscript) {
+	cxx($line);
+}
 }
 
 sub indent {
