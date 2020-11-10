@@ -16,9 +16,12 @@
 
 #pragma once
 
-#define IS_MACRO       B00100000
+#include "Kaleidoscope-Ranges.h"
 
-#define M(n)           Key(n, KEY_FLAGS | SYNTHETIC | IS_MACRO)
+constexpr Key M(uint8_t n) {
+  return Key(kaleidoscope::ranges::MACRO_FIRST + n);
+}
+
 #define Key_macroKey1  M(1)
 #define Key_macroKey2  M(2)
 #define Key_macroKey3  M(3)
