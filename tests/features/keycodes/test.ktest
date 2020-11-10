@@ -13,10 +13,10 @@ EXPECT keyboard-report Key_A  # Report should contain only 'a'
 RUN 25 ms
 RELEASE A
 
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 
-# TODO, this should be generate a second test stanza
-# NAME Keyboard Modifiers
+NAME Keyboard Modifiers
 
 RUN 10 ms
 PRESS LeftShift
