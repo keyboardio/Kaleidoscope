@@ -60,7 +60,7 @@ sub load_from_text {
         if ( $line eq '' ) {
             next;
         }
-        if ( $line =~ /^(.*?)\s*#\s+(.*)$/ ) {
+        if ( $line =~ /^(.*?)\s*#\s*(.*)$/ ) {
             $line    = $1;
             $comment = $2;
         }
@@ -235,8 +235,8 @@ sub generate_script {
         elsif ( my $action = $entry->{action} ) {
 
             if ( $action eq 'name' ) { generate_start_new_test($entry) }
-            elsif ( !$inside_test ) {
-                die "Attempting to run an action when not inside a test section on line " . $entry->{line_num} . "\n";
+            elsif ( !$inside_test && defined $action ) {
+                die "Attempting to run an action '$action' when not inside a test section on line " . $entry->{line_num} . "\n";
             }
             elsif ( $action eq 'press' )   { generate_press($entry) }
             elsif ( $action eq 'release' ) { generate_release($entry); }
@@ -248,8 +248,9 @@ sub generate_script {
         }
     }
 
-
-    generate_end_test();
+    if ($inside_test) {
+    	generate_end_test();
+    }
 
 }
 
