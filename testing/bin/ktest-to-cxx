@@ -205,14 +205,14 @@ sub generate_key_addrs {
 
 }
 sub generate_start_new_test {
-    my $entry = shift;
-    my $name  = $entry->{data}->{test_name};
+    my $name  = shift;
     if ($inside_test) {
         generate_end_test();
     }
     cxx( "TEST_F(" . $test_class . "," . $name . ") {" );
     $inside_test = 1;
     indent();
+    cxx("ClearState(); // Clear any state from previous tests");
 }
 sub generate_end_test {
     if ($reports_expected) {
@@ -220,11 +220,24 @@ sub generate_end_test {
     }
     outdent();
     cxx("} // TEST_F");
+    cxx('');
+    cxx('');
+    cxx('');
     $inside_test = 0;
 }
 
 sub generate_script {
     cxx_section("Test script");
+ 
+    # Super evil hack from https://stackoverflow.com/a/48924764
+    # We should do this better, inside the core. But until we do
+    # I'd rather stick the macro in the code generator so nobody
+    # gets to use it from regular tests, boxing us in
+    cxx('#define GTEST_COUT std::cerr << "[ INFO     ] "');
+
+    generate_start_new_test('KtestSourceFilename');
+    cxx("GTEST_COUT << \"test: @{[File::Spec->rel2abs( $text_filename ) ]}\"   << std::endl;");
+    generate_end_test('');
 
     $reports_expected = 0;
     for my $entry (@script_lines) {
@@ -234,7 +247,7 @@ sub generate_script {
         }
         elsif ( my $action = $entry->{action} ) {
 
-            if ( $action eq 'name' ) { generate_start_new_test($entry) }
+            if ( $action eq 'name' ) { generate_start_new_test($entry->{data}->{test_name}) }
             elsif ( !$inside_test && defined $action ) {
                 die "Attempting to run an action '$action' when not inside a test section on line " . $entry->{line_num} . "\n";
             }
@@ -298,9 +311,7 @@ sub generate_expect_report {
 
 sub generate_check_expected_reports {
     cxx("");
-    cxx("");
     cxx("CHECK_EXPECTED_REPORTS();");
-    cxx("");
 }
 
 sub generate_preface {
