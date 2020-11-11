@@ -36,7 +36,8 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 
 echo "Building the docker image..."
 docker build -q -t kaleidoscope/docker etc
-# shellcheck disable=SC2086   # We do want word splitting since there are multiple options here
+# We do want word splitting since there are multiple options here
+# shellcheck disable=SC2086   
 docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
        --tmpfs /kaleidoscope:exec \
        --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
