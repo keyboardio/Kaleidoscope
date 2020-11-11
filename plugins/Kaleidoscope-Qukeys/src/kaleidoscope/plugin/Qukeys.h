@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Qukeys -- Assign two keycodes to a single key
- * Copyright (C) 2017-2019  Michael Richters
+ * Copyright (C) 2017-2020  Michael Richters
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,17 @@ class Qukeys : public kaleidoscope::Plugin {
   // value is a modifier -- i.e. a SpaceCadet type key).
   void setHoldTimeout(uint16_t hold_timeout) {
     hold_timeout_ = hold_timeout;
+  }
+
+  // Set the timeout (in milliseconds) for the tap-repeat feature. If a qukey is
+  // tapped twice in a row in less time than this amount, it will allow the user
+  // to hold the key with its primary value (unless it's a SpaceCadet type key,
+  // in which case it will repeat the alternate value instead). This requires a
+  // quick tap immediately followed by a press and hold, and will result in a
+  // single press-and-hold on the host system. If a double tap is done instead,
+  // it will result in two independent taps.
+  void setMaxIntervalForTapRepeat(uint8_t ttl) {
+    tap_repeat_.timeout = ttl;
   }
 
   // Set the percentage of the duration of a subsequent key's press that must
@@ -190,6 +201,14 @@ class Qukeys : public kaleidoscope::Plugin {
   bool isDualUseKey(Key key);
   bool releaseDelayed(uint16_t overlap_start, uint16_t overlap_end) const;
   bool isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const;
+
+  // Tap-repeat feature support.
+  struct {
+    KeyAddr addr{KeyAddr::invalid_state};
+    uint16_t start_time;
+    uint8_t timeout{200};
+  } tap_repeat_;
+  bool shouldWaitForTapRepeat();
 };
 
 // This function returns true for any key that we expect to be used chorded with
