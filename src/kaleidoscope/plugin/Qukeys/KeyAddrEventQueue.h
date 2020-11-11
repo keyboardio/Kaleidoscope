@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2019  Keyboard.io, Inc.
+ * Copyright (C) 2013-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -91,18 +91,31 @@ class KeyAddrEventQueue {
     ++length_;
   }
 
-  // Remove the first event from the head of the queue, shifting the
-  // others. This function actually shifts the queue by copying element values,
+  // Remove an event from the head of the queue, shifting the subsequent
+  // ones. This function actually shifts the queue by copying element values,
   // rather than using a ring buffer because we expect it will be called much
   // less often than the queue is searched via a for loop.
-  void shift() {
-    // assert(length > 0);
+  void remove(uint8_t n = 0) {
+    // assert(length > n);
     --length_;
-    for (uint8_t i{0}; i < length_; ++i) {
+    for (uint8_t i{n}; i < length_; ++i) {
       addrs_[i]      = addrs_[i + 1];
       timestamps_[i] = timestamps_[i + 1];
     }
+    // mask = all ones for bits >= n, zeros otherwise
+    _Bitfield mask = _Bitfield(~0) << n;
+    // use the inverse mask to get just the low bits (that won't be shifted)
+    _Bitfield low_bits = release_event_bits_ & ~mask;
+    // shift the event bits
     release_event_bits_ >>= 1;
+    // use the mask to zero the low bits, leaving only the shifted high bits
+    release_event_bits_ &= mask;
+    // add the low bits back in
+    release_event_bits_ |= low_bits;
+  }
+
+  void shift() {
+    remove(0);
   }
 
   // Empty the queue entirely.
