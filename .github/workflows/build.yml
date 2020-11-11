@@ -1,0 +1,64 @@
+name: Build
+
+on: push
+
+env: 
+  BOARD_HARDWARE_PATH: ../hardware
+  ARDUINO_PATH: ./arduino-1.8.13
+  ARDUINO_DOWNLOAD_URL: https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz
+
+jobs:
+  smoke-sketches:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+    - run: rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    # - run: make adjust-git-timestamps
+    - run: wget --quiet $ARDUINO_DOWNLOAD_URL -O - | tar xJf -
+    - run: make -j 8 smoke-sketches
+  run-google-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio $HOME/Arduino/hardware/keyboardio
+    - run: rm -rf $HOME/Arduino/hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) $HOME/Arduino/hardware/keyboardio/avr/libraries/Kaleidoscope
+    # - run: make adjust-git-timestamps
+    - run: wget --quiet $ARDUINO_DOWNLOAD_URL -O - | tar xJf -
+    - run: BOARD_HARDWARE_PATH=$HOME/Arduino/hardware ARDUINO_PATH=$GITHUB_WORKSPACE/arduino-1.8.13 ARDUINO_BUILDER=$ARDUINO_PATH/arduino-builder make simulator-tests
+  check-astyle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+    - run: rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    # - run: make adjust-git-timestamps
+    - run: make check-astyle
+  check-shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+    - run: rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: make shellcheck
+  check-cpplint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+    - run: rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    # - run: make adjust-git-timestamps
+    - run: make cpplint
+  find-filename-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+    - run: rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
+    - run: make find-filename-conflicts 
