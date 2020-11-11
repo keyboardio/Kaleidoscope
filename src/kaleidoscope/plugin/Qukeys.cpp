@@ -118,6 +118,14 @@ EventHandlerResult Qukeys::beforeReportingState() {
     }
   }
 
+  // Next, if there hasn't been a keypress in a while, update the prior keypress
+  // timestamp to avoid integer overflow issues:
+  if (Runtime.hasTimeExpired(prior_keypress_timestamp_,
+                             minimum_prior_interval_)) {
+    prior_keypress_timestamp_ =
+      Runtime.millisAtCycleStart() - (minimum_prior_interval_ + 1);
+  }
+
   // If any events get flushed from the queue, stop there; we can only safely
   // send the one report per cycle.
   if (processQueue()) {
@@ -133,14 +141,6 @@ EventHandlerResult Qukeys::beforeReportingState() {
     Key event_key = isModifierKey(queue_head_.primary_key) ?
                     queue_head_.primary_key : queue_head_.alternate_key;
     flushEvent(event_key);
-  }
-
-  // Last, if there hasn't been a keypress in a while, update the prior keypress
-  // timestamp to avoid integer overflow issues:
-  if (Runtime.hasTimeExpired(prior_keypress_timestamp_,
-                             minimum_prior_interval_)) {
-    prior_keypress_timestamp_ =
-      Runtime.millisAtCycleStart() - (minimum_prior_interval_ + 1);
   }
   return EventHandlerResult::OK;
 }
