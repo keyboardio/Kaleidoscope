@@ -39,6 +39,8 @@ class QukeysBasic : public VirtualDeviceTest {
 };
 
 TEST_F(QukeysBasic, TapQukeyAlone) {
+  // XXX Temporary workaround
+  sim_.RunForMillis(1000);
 
   // Press `A`
   sim_.Press(key_addr_A);
@@ -72,6 +74,8 @@ TEST_F(QukeysBasic, TapQukeyAlone) {
 }
 
 TEST_F(QukeysBasic, HoldQukeyAlone) {
+  // XXX Temporary workaround
+  sim_.RunForMillis(1000);
 
   // Press `A`
   sim_.Press(key_addr_A);
@@ -121,6 +125,8 @@ TEST_F(QukeysBasic, HoldQukeyAlone) {
 }
 
 TEST_F(QukeysBasic, FullOverlap) {
+  // XXX Temporary workaround
+  sim_.RunForMillis(1000);
 
   sim_.Press(key_addr_F);
   sim_.RunForMillis(20);
@@ -166,6 +172,8 @@ TEST_F(QukeysBasic, FullOverlap) {
 }
 
 TEST_F(QukeysBasic, RolloverPrimary) {
+  // XXX Temporary workaround
+  sim_.RunForMillis(1000);
 
   sim_.Press(key_addr_F);
   sim_.RunForMillis(20);
