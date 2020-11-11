@@ -51,6 +51,14 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_sta
 
   // Deal with keyswitch state changes.
   if (keyToggledOn(key_state) || keyToggledOff(key_state)) {
+    // If the user rolled over from a non-modifier key to a qukey, let the
+    // release event for that key skip the queue. This prevents unintended
+    // repeat characters for the tapped key, which would otherwise have its
+    // release event delayed.
+    if (keyToggledOff(key_state) && event_queue_.length() == 1 &&
+        k != event_queue_.addr(0) && !isModifierKey(key)) {
+      return EventHandlerResult::OK;
+    }
     // If we can't trivially ignore the event, just add it to the queue.
     event_queue_.append(k, key_state);
     // In order to prevent overflowing the queue, process it now.
