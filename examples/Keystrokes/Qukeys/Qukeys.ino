@@ -74,6 +74,7 @@ void setup() {
   Qukeys.setOverlapThreshold(50);
   Qukeys.setMinimumHoldTime(100);
   Qukeys.setMinimumPriorInterval(80);
+  Qukeys.setMaxIntervalForTapRepeat(150);
 
   Kaleidoscope.setup();
 }

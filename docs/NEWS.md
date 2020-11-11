@@ -12,6 +12,24 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### New Qukeys features
+
+#### Tap-repeat
+
+It is now possible to get the "tap" value of a qukey to repeat (as if that key
+for that character was simply being held down on a normal keyboard) by tapping
+the qukey, then quickly pressing and holding it down. The result on the OS will
+be as if the key was pressed and held just once, so that users of macOS apps
+that use the Cocoa input system can get the menu for characters with diacritics
+without an extra character in the output.
+
+The maximum interval between the two keypresses that will trigger a tap repeat
+can be configured via the `Qukeys.setMaxIntervalForTapRepeat(ms)` function,
+where the argument specifies the number of milliseconds Qukeys will wait after a
+qukey is tapped for it to be pressed a second time. If it is, but the qukey is
+released within that same interval from the first tap's release, it will be
+treated as a double-tap, and both taps will be sent to the OS.
+
 ### Better protection against unintended modifiers from Qukeys
 
 Qukeys has two new configuration options for preventing unintended modifiers in
