@@ -202,7 +202,10 @@ class Qukeys : public kaleidoscope::Plugin {
   uint8_t minimum_prior_interval_{75};
 
   // Timestamp of the keypress event immediately prior to the queue head event.
-  uint16_t prior_keypress_timestamp_{0};
+  // The initial value is 256 to ensure that it won't trigger an error if a
+  // qukey is pressed before `minimum_prior_interval_` milliseconds after the
+  // keyboard powers on, and that value can only be as high as 255.
+  uint16_t prior_keypress_timestamp_{256};
 
   // This is a guard against re-processing events when qukeys flushes them from
   // its event queue. We can't just use an "injected" key state flag, because
