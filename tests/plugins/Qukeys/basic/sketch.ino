@@ -89,6 +89,7 @@ void setup() {
   Qukeys.setHoldTimeout(kaleidoscope::testing::QUKEYS_HOLD_TIMEOUT);
   Qukeys.setOverlapThreshold(kaleidoscope::testing::QUKEYS_OVERLAP_THRESHOLD);
   Qukeys.setMinimumHoldTime(kaleidoscope::testing::QUKEYS_MINIMUM_HOLD_TIME);
+  Qukeys.setMinimumPriorInterval(kaleidoscope::testing::QUKEYS_MIN_PRIOR_INTERVAL);
 
   Kaleidoscope.setup();
 }
