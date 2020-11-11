@@ -113,6 +113,15 @@ likely to generate errors and out-of-order events.
 >
 > Defaults to `50` (milliseconds).
 
+### `.setMinimumPriorInterval(min_interval)`
+
+> Sets the minimum amount of time (in milliseconds) that must pass between the
+> press event of a prior (non-modifier) key and the press of a qukey required to
+> make that qukey eligible to take on it's alternate state. This is another
+> measure that can be taken to prevent unintended modifiers while typing fast.
+>
+> Defaults to `75` (milliseconds).
+
 ### `.activate()`
 ### `.deactivate()`
 ### `.toggle()`

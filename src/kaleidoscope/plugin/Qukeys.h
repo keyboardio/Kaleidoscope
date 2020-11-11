@@ -130,6 +130,12 @@ class Qukeys : public kaleidoscope::Plugin {
     minimum_hold_time_ = min_hold_time;
   }
 
+  // Set the minimum interval between the previous keypress and the qukey press
+  // to make the qukey eligible to become its alternate keycode.
+  void setMinimumPriorInterval(uint8_t min_interval) {
+    minimum_prior_interval_ = min_interval;
+  }
+
   // Function for defining the array of qukeys data (in PROGMEM). It's a
   // template function that takes as its sole argument an array reference of
   // size `_qukeys_count`, so there's no need to use `sizeof` to calculate the
@@ -189,6 +195,14 @@ class Qukeys : public kaleidoscope::Plugin {
   // allowed to take on its alternate key value (to limit unintended modifiers
   // for very fast typists).
   uint8_t minimum_hold_time_{50};
+
+  // The minimum interval in milliseconds between the previous keypress and the
+  // press of a qukey required to make the qukey eligible to take on its
+  // alternate value.
+  uint8_t minimum_prior_interval_{75};
+
+  // Timestamp of the keypress event immediately prior to the queue head event.
+  uint16_t prior_keypress_timestamp_{0};
 
   // This is a guard against re-processing events when qukeys flushes them from
   // its event queue. We can't just use an "injected" key state flag, because
