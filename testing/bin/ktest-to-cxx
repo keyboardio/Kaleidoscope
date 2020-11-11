@@ -112,12 +112,17 @@ sub load_from_text {
                 my $content = shift;
                 unless ( defined $named_switches->{$content} ) {
                     die
-"Attempt to press undefined switch $content on line $line_num";
+"Attempt to release undefined switch $content on line $line_num";
                 }
                 return { switch => $content };
             },
             expect => sub {
                 my $content = shift;
+		if ( $content =~ /^no keyboard-report/) {
+			return {
+				report_type => 'keyboard',
+				count => 0 };
+		}
                 if ( $content =~ /^keyboard-report\s+(.*)$/ ) {
                     my $report_data = $1;
                     my @keys        = split( /,?\s+/, $report_data );
@@ -125,6 +130,7 @@ sub load_from_text {
                         @keys = ();
                     }
                     return {
+   			count => 1, # We expect one report here
                         report_type => 'keyboard',
                         keys        => [@keys]
                     };
@@ -135,7 +141,7 @@ sub load_from_text {
             },
             run => sub {
                 my $content = shift;
-                if ( $content =~ /^(\d+)\s+(\w+)$/ ) {
+                if ( $content =~ /^(\d+)\s*(\w*?)$/ ) {
                     my $count = $1;
                     my $unit  = $2;
                     if ( $unit =~ /cycle/ ) {
@@ -216,7 +222,7 @@ sub generate_start_new_test {
 }
 sub generate_end_test {
     if ($reports_expected) {
-        generate_check_expected_reports();
+    	generate_check_expected_reports();
     }
     outdent();
     cxx("} // TEST_F");
@@ -296,7 +302,18 @@ sub generate_release {
 
 sub generate_expect_report {
     my $report = shift;
+    if (! $report->{data}->{report_type}  || $report->{data}->{report_type} ne 'keyboard') {
+	die "Don't know how to work with expectaions of reports other than 'keyboard' reports at line #".$report->{line_num}."\n";
+
+    }
     $reports_expected++;
+
+    if ($report->{data}->{count} == 0) { 
+	cxx_comment($report->{comment});
+	cxx_comment("We don't expect any report here, and have told the tests to check that");
+	return;
+    }
+
     my $codes = join(
         ", ",
         (
