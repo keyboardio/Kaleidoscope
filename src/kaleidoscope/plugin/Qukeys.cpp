@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Qukeys -- Assign two keycodes to a single key
- * Copyright (C) 2017-2019  Michael Richters
+ * Copyright (C) 2017-2020  Michael Richters
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -148,7 +148,6 @@ EventHandlerResult Qukeys::beforeReportingState() {
 
 // -----------------------------------------------------------------------------
 
-
 // This function contains most of the logic behind Qukeys. It gets called after
 // an event gets added to the queue, and again once per cycle. It returns `true`
 // if nothing more should be done, either because the queue is empty, or because
@@ -169,8 +168,22 @@ bool Qukeys::processQueue() {
 
   // If that first event is a key release, it can be flushed right away.
   if (event_queue_.isRelease(0)) {
-    flushEvent(Key_NoKey);
-    return true;
+    // We can't unconditionally flush the release event, because it might be
+    // second half of a tap-repeat event. If the queue is full, we won't bother to
+    // check, but otherwise, ift `tap_repeat_.addr` is set (and matches), we call
+    // `shouldWaitForTapRepeat()` to determine whether or not to flush the key
+    // release event.
+    if (event_queue_.isFull() ||
+        queue_head_addr != tap_repeat_.addr ||
+        !shouldWaitForTapRepeat()) {
+      flushEvent(Key_NoKey);
+      return true;
+    }
+    // We now know that we're waiting to determine if we're getting a tap-repeat
+    // sequence, so we can't flush the release event at the head of the queue.
+    // Warning: Returning false here is only okay because we already checked to
+    // make sure the queue isn't full.
+    return false;
   }
 
   // We now know that the first event is a key press. If it's not a qukey, or if
@@ -232,6 +245,13 @@ bool Qukeys::processQueue() {
       if (next_keypress_index == 0 || overlap_threshold_ == 0) {
         Key event_key = qukey_is_spacecadet ?
                         queue_head_.alternate_key : queue_head_.primary_key;
+        // A qukey just got released in primary state; this might turn out to be
+        // the beginning of a tap-repeat sequence, so we set the tap-repeat
+        // address and start time to the time of the initial press event before
+        // flushing it from the queue. This will come into play when processing
+        // the corresponding release event later.
+        tap_repeat_.addr = queue_head_addr;
+        tap_repeat_.start_time = event_queue_.timestamp(0);
         flushEvent(event_key);
         return true;
       }
@@ -413,6 +433,100 @@ bool Qukeys::isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const {
     }
   }
   return false;
+}
+
+
+// This question gets called early in `processQueue()` if a key release event is
+// at the head of the queue, and the `tap_repeat_.addr` is the same as that
+// event's KeyAddr. It returns true if `processQueue()` should wait for either
+// subsequent events or a timeout instead of proceeding to flush the key release
+// event immediately, and false if it is still waiting. It assumes that
+// `event_queue_[0]` is a release event, and that `event_queue_[0].addr ==
+// tap_repeat_.addr`. (The latter should only be set to a valid KeyAddr if a qukey
+// press event has been flushed with its primary Key value, and could still
+// represent the start of a double-tap or tap-repeat sequeunce.)
+bool Qukeys::shouldWaitForTapRepeat() {
+  // First, we set up a variable to store the queue index of a subsequent press
+  // of the same qukey addr, if any.
+  uint8_t second_press_index = 0;
+
+  // Next, we search the event queue (starting at index 1 because the first
+  // event in the queue is known), trying to find a matching sequeunce for
+  // either a double-tap, or a tap-repeat.
+  for (uint8_t i{1}; i < event_queue_.length(); ++i) {
+    if (event_queue_.isPress(i)) {
+      // Found a keypress event following the release of the initial primary
+      // qukey.
+      if (event_queue_.addr(i) == tap_repeat_.addr) {
+        // The same qukey toggled on twice in a row, and because of the timeout
+        // check below, we know it was quick enough that it could represent a
+        // tap-repeat sequence. Now we update the start time (which had been set
+        // to the timestamp of the first press event) to the timestamp of the
+        // first release event (currently at the head of the queue), because we
+        // want to compare the release times of the two taps to determine if
+        // it's actually a double-tap sequence instead (otherwise it could be
+        // too difficult to tap it fast enough).
+        tap_repeat_.start_time = event_queue_.timestamp(0);
+        // We also record the index of this second press event. If it turns out
+        // that we've got a tap-repeat sequence, we want to silently suppress the
+        // first release and second press by removing them from the queue
+        // without flushing them. We don't know yet whether we'll be doing so.
+        second_press_index = i;
+      } else {
+        // Some other key was pressed. For it to be a tap-repeat sequence, we
+        // require that the same key be pressed twice in a row, with no
+        // intervening presses of other keys. Therefore, we can return false to
+        // signal that the release event at the head of the queue can be
+        // flushed.
+        return false;
+      }
+
+    } else if (event_queue_.addr(i) == tap_repeat_.addr) {
+      // We've found a key release event in the queue, and it's the same key as
+      // the qukey at the head of the queue, so this is the second release that
+      // has occurred before timing out (see below for the timeout
+      // check). Therefore, this is a double-tap sequence (the second release
+      // happened very close to the first release), not a tap-repeat, so we
+      // clear the tap-repeat address, and return false to trigger the flush of
+      // the first release event.
+      tap_repeat_.addr = KeyAddr{KeyAddr::invalid_state};
+      return false;
+    }
+  }
+
+  // We've now searched the queue. Either we found only irrelevant key release
+  // events (for other keys that were pressed before the sequence began), or we
+  // found only a second key press event of the same qukey (but not a double
+  // tap). Next, we check the timeout. If we didn't find a second press event,
+  // the start time will still be that of the initial key press event (already
+  // flushed from the queue), but if the second press has been detected, the
+  // start time will be that of the key release event currently at the head of
+  // the queue.
+  if (Runtime.hasTimeExpired(tap_repeat_.start_time, tap_repeat_.timeout)) {
+    // Time has expired. The sequence represents either a single tap or a
+    // tap-repeat of the qukey's primary value. Either way, we can clear the
+    // stored address.
+    tap_repeat_.addr = KeyAddr{KeyAddr::invalid_state};
+
+    if (second_press_index > 0) {
+      // A second press was found (but it's release didn't come quick enough to
+      // be a double tap), so this is a tap-repeat event. To turn it into a
+      // single key press and hold, we need to remove the second press event and
+      // the first release event from the queue without flushing the
+      // events. Order matters here!
+      event_queue_.remove(second_press_index);
+      event_queue_.remove(0);
+    } else {
+      // The key was not pressed again, so the single tap has timed out. We
+      // return false to let the release event be flushed.
+      return false;
+    }
+  }
+
+  // We haven't found a double-tap sequence, and the timeout hasn't expired, so
+  // we return true to signal that we should just wait until we get another
+  // event, or until time runs out.
+  return true;
 }
 
 
