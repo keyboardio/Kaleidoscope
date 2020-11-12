@@ -1,0 +1,134 @@
+VERSION 1
+
+KEYSWITCH A 0 0
+KEYSWITCH B 0 1
+KEYSWITCH J 1 0
+
+# ==============================================================================
+# Qukey tap-repeat test
+NAME TapRepeat Generic Qukey
+
+RUN 10 ms
+
+PRESS A
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only A
+RUN 5 ms
+
+PRESS A
+RUN 5 ms
+
+RELEASE A
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_A # Report should contain only A
+
+RUN 16 ms
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 100 ms
+
+PRESS A
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only A
+RUN 5 ms
+
+PRESS A
+RUN 50 ms
+
+RELEASE A
+# I'm not sure why this takes 2 cycles instead of just one
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+# DualUse Qukey tap-repeat test
+NAME TapRepeat DualUse Qukey
+
+RUN 10 ms
+
+PRESS J
+RUN 5 ms
+
+RELEASE J
+RUN 1 cycle
+EXPECT keyboard-report Key_J # Report should contain only J
+RUN 5 ms
+
+PRESS J
+RUN 5 ms
+
+RELEASE J
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_J # Report should contain only J
+
+RUN 16 ms
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 100 ms
+
+PRESS J
+RUN 5 ms
+
+RELEASE J
+RUN 1 cycle
+EXPECT keyboard-report Key_J # Report should contain only J
+RUN 5 ms
+
+PRESS J
+RUN 50 ms
+
+RELEASE J
+# I'm not sure why this takes 2 cycles instead of just one
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+# SpaceCadet Qukey tap-repeat test
+NAME TapRepeat SpaceCadet Qukey
+
+RUN 10 ms
+
+PRESS B
+RUN 5 ms
+
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only B
+RUN 5 ms
+
+PRESS B
+RUN 5 ms
+
+RELEASE B
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_B # Report should contain only B
+
+RUN 16 ms
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 100 ms
+
+PRESS B
+RUN 5 ms
+
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only B
+RUN 5 ms
+
+PRESS B
+RUN 50 ms
+
+RELEASE B
+# I'm not sure why this takes 2 cycles instead of just one
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
