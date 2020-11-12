@@ -24,6 +24,7 @@
 
 // Out of order due to macro conflicts.
 #include "testing/fix-macros.h"
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <memory>
 
@@ -119,23 +120,12 @@ class VirtualDeviceTest : public ::testing::Test {
   void AddToReport(Key key);
   void RemoveFromReport(Key key);
 
+  // ---------------------------------------------------------------------------
+  // Compare accumulated observed and expected reports, matching both timestamps
+  // and keycodes.
+  void CheckReports() const;
+
 };
 
 }  // namespace testing
 }  // namespace kaleidoscope
-
-
-// XXX  This is a horrible hack and this should be a function, but I (Jesse)
-// can't quite figure out the right way to get ASSERT_EQ and ElementsAreArray
-// into a method in VirtualDeviceTest
-#define CHECK_EXPECTED_REPORTS()  							\
-  LoadState(); 										\
-  ASSERT_EQ(HIDReports()->Keyboard().size(), expected_reports_.size());                 \
-                                                                                        \
-  for (auto i = 0; i < expected_reports_.size(); ++i) {                                 \
-    EXPECT_THAT(HIDReports()->Keyboard(i).ActiveKeycodes(),                             \
-                ::testing::ElementsAreArray(expected_reports_[i].Keycodes()))           \
-        << expected_reports_[i].Message();                                              \
-  }                                                                                     \
-
-
