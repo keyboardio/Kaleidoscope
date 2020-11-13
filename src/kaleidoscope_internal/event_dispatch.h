@@ -167,7 +167,7 @@
    result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
    if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
-       result == kaleidoscope::EventHandlerResult::EVENT_CONSUMED) { __NL__ \
+       result != kaleidoscope::EventHandlerResult::OK) {             __NL__ \
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
