@@ -15,17 +15,21 @@ all: ${TESTS}
 	done
 
 cmake-clean:
-	-${MAKE} clean
-	rm -rf ../testing/googletest/build
+	rm -rf "${top_dir}/testing/googletest/build/*"
 
-clean: ../testing/googletest/build/Makefile
-	rm -rf "${build_dir}"
+clean: cmake-clean
+# ${top_dir}/testing/googletest/build/Makefile
+	@for test in ${TESTS}; do \
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} top_dir=${top_dir} testcase=$${test} clean; \
+	done
 
-googletest: ../testing/googletest/build/Makefile
-	cd ../testing/googletest/build && $(MAKE)
+	rm -rf "${build_dir}/*"
 
-../testing/googletest/build/Makefile:
-	install -d ../testing/googletest/build && cd ../testing/googletest/build && cmake ..
+googletest: ${top_dir}/testing/googletest/build/Makefile
+	cd ${top_dir}/testing/googletest/build && $(MAKE)
+
+${top_dir}/testing/googletest/build/Makefile:
+	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake ..
 
 ${libcommon_a}:
 	${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
