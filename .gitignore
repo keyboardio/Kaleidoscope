@@ -1,4 +1,5 @@
 *~
+.arduino
 /.docker_xfer
 .#*
 /output/
