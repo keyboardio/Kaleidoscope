@@ -101,6 +101,7 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 		$<
 
 clean:
+	rm -f "${SRC_DIR}/generated-testcase.cpp"
 	rm -rf "${build_dir}"
 
 .PHONY: clean run all build
