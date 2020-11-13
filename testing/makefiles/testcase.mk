@@ -14,10 +14,16 @@ LIB_FILE=${BIN_FILE}-latest.a
 
 TEST_FILES=$(wildcard $(SRC_DIR)/*.cpp)
 
-# If we have a ktest file, we want to turn it into a generated testcase
+# If we have a ktest file and no generated testcase, 
+# we want to turn it into a generated testcase
+# and add it to the list of possible test files
+
 ifneq (,$(wildcard test.ktest))
+ifeq (,$(findstring $(SRC_DIR)/generated-testcase.cpp, $(TEST_FILES)))
 TEST_FILES += $(SRC_DIR)/generated-testcase.cpp
 endif
+endif
+
 
 TEST_OBJS=$(patsubst $(SRC_DIR)/%.cpp,${OBJ_DIR}/%.o,$(TEST_FILES))
 
