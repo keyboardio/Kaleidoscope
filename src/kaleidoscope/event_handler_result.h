@@ -21,6 +21,7 @@ namespace kaleidoscope {
 enum class EventHandlerResult {
   OK,
   EVENT_CONSUMED,
+  ABORT,
   ERROR,
 };
 
