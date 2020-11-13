@@ -27,7 +27,7 @@
 // OPERATION once for each event handler defined herein with the following
 // parameters:
 //
-// HOOK_NAME, SHOULD_ABORT_ON_CONSUMED_EVENT, SIGNATURE, ARGS_LIST, ...
+// HOOK_NAME, SHOULD_EXIT_IF_RESULT_NOT_OK, SIGNATURE, ARGS_LIST, ...
 //
 // Any additional parameters that are added to an invokation
 // of _FOR_EACH_EVENT_HANDLER are passed through to OP.
@@ -72,8 +72,8 @@
 //    Plugins' event handlers are called in the same order as the plugins
 //    are passed to the KALEIDOSCOPE_INIT_PLUGINS(...) macro within the
 //    sketch. For some handlers it is desirable to not call subsequent
-//    plugins' handlers once a plugin's handler returned the value
-//    kaleidoscope::EventHandlerResult::EVENT_CONSUMED. To enable this
+//    plugins' handlers once a plugin's handler returned a value other
+//    than kaleidoscope::EventHandlerResult::OK. To enable this,
 //    pass the abortable flag value _ABORTABLE, _NOT_ABORTABLE otherwise.
 //
 // template parameter type list:

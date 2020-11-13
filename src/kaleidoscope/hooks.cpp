@@ -32,7 +32,7 @@ namespace kaleidoscope {
 
 #define INSTANTIATE_WEAK_HOOK_FUNCTION(                                        \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
-    SHOULD_ABORT_ON_CONSUMED_EVENT,                                            \
+    SHOULD_EXIT_IF_RESULT_NOT_OK,                                              \
     TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,               \
     SIGNATURE, ARGS_LIST)                                               __NL__ \
                                                                         __NL__ \
