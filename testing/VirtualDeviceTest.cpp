@@ -120,5 +120,40 @@ void VirtualDeviceTest::RemoveFromReport(Key key) {
   current_keyboard_keycodes_.erase(key.getKeyCode());
 }
 
+// =============================================================================
+void VirtualDeviceTest::CheckReports() const {
+  int observed_report_count = HIDReports()->Keyboard().size();
+  int expected_report_count = expected_reports_.size();
+
+  EXPECT_EQ(observed_report_count, expected_report_count);
+
+  int max_count = std::max(observed_report_count, expected_report_count);
+
+  for (int i = 0; i < observed_report_count; ++i) {
+    auto observed_report = HIDReports()->Keyboard(i);
+    auto observed_keycodes = observed_report.ActiveKeycodes();
+
+    if (i < expected_report_count) {
+      auto expected_report = expected_reports_[i];
+      auto expected_keycodes = expected_report.Keycodes();
+
+      EXPECT_THAT(observed_keycodes,
+                  ::testing::ElementsAreArray(expected_keycodes))
+          << expected_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
+          << "Report timestamps don't match (i=" << i << ")";
+
+    } else {
+
+      std::cerr << "Unexpected keyboard report at "
+                << observed_report.Timestamp() << "ms: { " << std::hex;
+      for (uint8_t keycode : observed_keycodes) {
+        std::cerr << int(keycode) << " ";
+      }
+      std::cerr << "}" << std::dec << std::endl;
+    }
+  }
+}
+
 }  // namespace testing
 }  // namespace kaleidoscope

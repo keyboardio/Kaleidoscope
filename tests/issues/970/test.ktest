@@ -8,13 +8,13 @@ RUN 10 ms
 RELEASE A
 RUN 1 cycle
 EXPECT keyboard-report Key_A # Report should contain only `A`
-RUN 1 cycle
+RUN 2 cycles
 EXPECT keyboard-report empty # Report should be empty
 
 RUN 65536 ms
 
 PRESS A
-RUN 201 ms
+RUN 202 ms
 EXPECT keyboard-report Key_LeftGui # Report should contain only `LeftGui`
 
 RUN 10 ms

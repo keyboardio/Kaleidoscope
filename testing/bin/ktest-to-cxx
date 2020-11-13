@@ -328,7 +328,8 @@ sub generate_expect_report {
 
 sub generate_check_expected_reports {
     cxx("");
-    cxx("CHECK_EXPECTED_REPORTS();");
+    cxx("LoadState();");
+    cxx("CheckReports();");
 }
 
 sub generate_preface {
