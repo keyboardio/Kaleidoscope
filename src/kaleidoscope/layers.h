@@ -20,6 +20,7 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
 #include "kaleidoscope/device/device.h"
+#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
@@ -83,7 +84,13 @@ class Layer_ {
    * `lookupOnActiveLayer`.
    */
   static Key lookup(KeyAddr key_addr) {
-    return live_composite_keymap_[key_addr.toInt()];
+    // First check the active keys array
+    Key key = Runtime.activeKey(key_addr);
+    // If that entry is clear, look up the entry from the active keymap layers
+    if (key == Key_Transparent) {
+      key = lookupOnActiveLayer(key_addr);
+    }
+    return key;
   }
   static Key lookupOnActiveLayer(KeyAddr key_addr) {
     uint8_t layer = active_layer_keymap_[key_addr.toInt()];
@@ -121,9 +128,11 @@ class Layer_ {
 
   static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
 
+  DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
   static void updateLiveCompositeKeymap(KeyAddr key_addr, Key mappedKey) {
-    live_composite_keymap_[key_addr.toInt()] = mappedKey;
+    Runtime.updateActiveKey(key_addr, mappedKey);
   }
+  DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
   static void updateLiveCompositeKeymap(KeyAddr key_addr);
   static void updateActiveLayers(void);
 
@@ -137,7 +146,6 @@ class Layer_ {
   static uint32_t layer_state_;
   static uint8_t active_layer_count_;
   static int8_t active_layers_[31];
-  static Key live_composite_keymap_[kaleidoscope_internal::device.numKeys()];
   static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
