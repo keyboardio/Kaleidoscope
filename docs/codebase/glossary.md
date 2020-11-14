@@ -17,7 +17,7 @@ A single physical input, such as a keyswitch or other input like a knob or a sli
 
 ### Key number
 
-An integer representing a Keyswitch’s position in the “Physical Layout”
+An integer representing a Keyswitch’s position in the “Physical Layout”. Represented in the code by the `KeyAddr` type.
 
 ### Physical Layout
 
@@ -33,7 +33,7 @@ A representation of a specific behavior. Most often a representation of a specif
 
 ### Keymap
 
-A list of key bindings for all keyswitchess on the Physical Layout
+A list of key bindings for all keyswitchess on the Physical Layout. Represented in the code by the `KeyMap` type.
 
 ### Keymaps
 
@@ -47,10 +47,9 @@ An entry in that ordered list of keymaps. Each layer has a unique id number that
 
 An ordered list of all the currently-active layers, in the order they should be evaluated when figuring out what a key does.
 
-### Override Layer
+### Live keys
 
-A special layer that’s always active and evaluated before checking keys in the “Active layer stack”  
-
+A representation of the current state of the keyboard's keys, where non-transparent entries indicate keys that are active (logically—usually, but not necessarily, physically held). Represented in the code by the `LiveKeys` type (and the `live_keys` object).
 
 
 ## Keyswitch state
