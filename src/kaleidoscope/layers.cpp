@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope_internal/device.h"
+#include "kaleidoscope/hooks.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -42,19 +43,15 @@ uint32_t Layer_::layer_state_;
 uint8_t Layer_::active_layer_count_ = 1;
 int8_t Layer_::active_layers_[31];
 
-Key Layer_::live_composite_keymap_[Runtime.device().numKeys()];
-uint8_t Layer_::active_layer_keymap_[Runtime.device().numKeys()];
+uint8_t Layer_::active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::setup() {
   // Explicitly set layer 0's state to 1
   bitSet(layer_state_, 0);
 
-  // Update the keymap cache, so we start with a non-empty state.
+  // Update the active layer cache (every entry will be `0` to start)
   Layer.updateActiveLayers();
-  for (auto key_addr : KeyAddr::all()) {
-    Layer.updateLiveCompositeKeymap(key_addr);
-  }
 }
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
@@ -113,24 +110,29 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
 }
 
 Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | SWITCH_TO_KEYMAP))
-    return mappedKey;
-
-  handleKeymapKeyswitchEvent(mappedKey, keyState);
-  return Key_NoKey;
+  if (mappedKey.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))
+    handleKeymapKeyswitchEvent(mappedKey, keyState);
+  return mappedKey;
 }
 
 Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
   return keyFromKeymap(layer, key_addr);
 }
 
+// Deprecated
 void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  int8_t layer = active_layer_keymap_[key_addr.toInt()];
-  live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);
+  // We could update the active keys cache here (as commented below), but I
+  // think that's unlikely to serve whatever purpose the caller had in
+  // mind. `Layer.lookup()` will still give the correct result, and without a
+  // `Key` value is specified, this function no longer serves a purpose.
+
+  // #include "kaleidoscope/LiveKeys.h"
+  // int8_t layer = active_layer_keymap_[key_addr.toInt()];
+  // live_keys.activate(key_addr, (*getKey)(layer, key_addr));
 }
 
 void Layer_::updateActiveLayers(void) {
-  memset(active_layer_keymap_, 0, Runtime.device().numKeys());
+  memset(active_layer_keymap_, 0, kaleidoscope_internal::device.numKeys());
   for (auto key_addr : KeyAddr::all()) {
     int8_t layer_index = active_layer_count_;
     while (layer_index > 0) {
