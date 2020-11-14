@@ -34,6 +34,69 @@ any API we've included in a release. Typically, this means that any code that us
 
 ## New features
 
+### Keyboard State array
+
+The keymap cache (`Layer_::live_composite_keymap_[]`) has been replaced by a keyboard state array (`kaleidoscope::live_keys[]`). The top-level functions that handle keyswitch events have been updated to treat this new array as a representation of the current state of the keyboard, with corresponding `Key` values for any keys that are active (physically held or activated by a plugin).
+
+#### For end-users
+
+There should be no user-visible changes for anyone who simply uses core plugins. A few functions have been deprecated (`Layer.eventHandler()` & `Layer.updateLiveCompositeKeymap()`), but there are straightforward replacements for both.
+
+#### For developers
+
+The major changes are to the `handleKeyswitchEvent()` function, which has been reorganized in order to update the new keyboard state array with correct values at the appropriate times. In addition to that, two new facilities are available:
+
+##### `EventHandlerResult::ABORT`
+
+This is a new return value available to plugin event handlers, which is similar to `EVENT_CONSUMED` in that it causes the calling hook function to return early (stopping any subsequent handlers from seeing the event), but is treated differently by `handleKeyswitchEvent()`. If a handler returns `EVENT_CONSUMED`, the keyboard state array will still be updated by `handleKeyswitchEvent()`, but if it returns `ABORT`, it will not. In both cases, no further event processing will be done by the built-in event handler.
+
+##### `live_keys[key_addr]`
+
+This is the new facility for checking the value of an entry in the keyboard state array. It is indexed directly by `KeyAddr` values, without the need to convert them to integers first. For example, it could be used in a range-based `for` loop to check for values of interest:
+
+```c++
+for (KeyAddr key_addr : KeyAddr::all()) {
+  Key key = live_keys[key_addr];
+  if (key == Key_LeftShift || key == Key_RightShift) {
+    // do something special...
+  }
+}
+```
+
+Additionally, if the `KeyAddr` values are not needed, one can use the iterator from the new `KeyMap` class like so:
+
+```c++
+for (Key key : live_keys.all()) {
+  if (key == Key_X) {
+    // do something special...
+  }
+}
+```
+
+The `live_keys` object's subscript operator can also be used to set values in the keyboard state array:
+
+```c++
+live_keys[key_addr] = Key_X;
+```
+
+It also comes with several convenience functions which can be used to make the intention of the code clear:
+
+```c++
+// Set a value in the keyboard state array to a specified Key value:
+live_keys.activate(key_addr, Key_X);
+
+// Set a value to Key_Transparent, deactivating the key:
+live_keys.clear(key_addr);
+
+// Set all values in the array to Key_Transparent:
+live_keys.clear();)
+
+// Set a value to Key_NoKey, masking the key until its next release event:
+live_keys.mask(key_addr);
+```
+
+In most cases, it won't be necessary for plugins or user sketches to call any of these functions directly, as the built-in event handler functions will manage the keyboard state array automatically.
+
 ### New build system
 
 In this release, we replace kaleidoscope-builder with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
@@ -578,6 +641,14 @@ The following headers and names have changed:
 - [SpaceCadet](plugins/Kaleidoscope-SpaceCadet.md) had the `kaleidoscope::SpaceCadet::KeyBinding` type replaced by `kaleidoscope::plugin::SpaceCadet::KeyBinding`.
 - [Syster](plugins/Kaleidoscope-Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
 - [TapDance](plugins/Kaleidoscope-TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
+
+### Live Composite Keymap Cache
+
+The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `Runtime.updateActiveKey()` instead.
+
+When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `Runtime.updateActiveKey()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
+
+Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
 
 # Removed APIs
 
