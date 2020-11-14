@@ -71,6 +71,16 @@ endif
 
 include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
 
+# Set up an argument for passing to the simulator tests in docker
+# but if the var isn't set, don't even pass the definition
+# since this messes with downstream makefiles
+
+ifneq ($(TEST_PATH),) 
+ TEST_PATH_ARG="TEST_PATH='$(TEST_PATH)'"
+endif
+
+
+
 clean:
 	$(MAKE) -C tests clean
 	rm -rf testing/googletest/build/*
@@ -84,7 +94,7 @@ simulator-tests: prepare-virtual
 	$(MAKE) -C tests all
 
 docker-simulator-tests:
-	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "make simulator-tests TEST_PATH=\"${TEST_PATH}\""
+	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "make simulator-tests ${TEST_PATH_ARG}"
 
 docker-bash:
 	BOARD_HARDWARE_PATH="$(BOARD_HARDWARE_PATH)" ./bin/run-docker "bash"
