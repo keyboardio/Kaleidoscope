@@ -1,3 +1,6 @@
+top_dir         := $(dir $(lastword ${MAKEFILE_LIST}))../..
+
+
 build_dir := ${top_dir}/_build/${testcase}
 
 LIB_DIR := ${build_dir}/lib
