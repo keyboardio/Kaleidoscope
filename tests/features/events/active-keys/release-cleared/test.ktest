@@ -1,0 +1,59 @@
+VERSION 1
+
+KEYSWITCH A 0 0
+KEYSWITCH LAYER_SHIFT 1 0
+
+# ==============================================================================
+# Active Keys Cache
+NAME Active keys cache cleared
+
+RUN 10 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# Press and hold `ShiftToLayer(1)`, changing the `A` key to `X`
+PRESS LAYER_SHIFT
+RUN 5 ms
+
+# Press `X`, which gets converted to `Y` by the `ConvertXtoY` plugin defined in
+# the sketch. The plugin simply changes the value of the key, which causes it to
+# get set to `Key_Y` in the active keys cache.
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # Report should contain only `Y`
+
+RUN 5 ms
+
+# Release the `X` key (on Layer 1), which has become a `Y` key in the active
+# keys cache. This should clear its entry in that cache.
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# Release `ShiftToLayer(1)`. This should restore the `A` key to its base layer
+# value on subsequent presses, unless the Macros key gets "stuck" in the active
+# keys array because it returns `EVENT_CONSUMED`.
+RELEASE LAYER_SHIFT
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
