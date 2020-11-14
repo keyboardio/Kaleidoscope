@@ -17,7 +17,7 @@ generate-testcases:
 all: ${TESTS}
 	@for test in ${TESTS}; do \
 		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} top_dir=${top_dir} testcase=$${test} run; \
-	done
+	done || exit 1
 
 cmake-clean:
 	rm -rf "${top_dir}/testing/googletest/build/*"
