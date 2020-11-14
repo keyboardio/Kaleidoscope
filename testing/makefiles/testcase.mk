@@ -72,6 +72,10 @@ compile-sketch:
 
 
 # If we have a test.ktest file, it should be processed into a c++ testcase
+
+generate-testcase: ${SRC_DIR}/generated-testcase.cpp
+
+
 ${SRC_DIR}/generated-testcase.cpp: test.ktest
 ifneq (,$(wildcard test.ktest))
 	@echo "Compiling ktest script into ${SRC_DIR}/generated-testcase.cpp"
