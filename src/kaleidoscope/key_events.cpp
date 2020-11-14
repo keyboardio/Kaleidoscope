@@ -41,7 +41,7 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   } else if (mappedKey.getFlags() & IS_INTERNAL) {
     return false;
   } else if (mappedKey.getFlags() & SWITCH_TO_KEYMAP) {
-    // Should not happen, handled elsewhere.
+    Layer.handleKeymapKeyswitchEvent(mappedKey, keyState);
   }
 
   return true;
@@ -124,6 +124,5 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
     return;
 
   // Handle all built-in key types.
-  Layer.eventHandler(mappedKey, key_addr, keyState);
   handleKeyswitchEventDefault(mappedKey, key_addr, keyState);
 }
