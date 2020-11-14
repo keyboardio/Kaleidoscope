@@ -121,6 +121,9 @@ class Layer_ {
     return layer_state_;
   }
 
+  static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
+
+  DEPRECATED(LAYER_EVENTHANDLER)
   static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
 
   typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
@@ -147,8 +150,6 @@ class Layer_ {
   static uint8_t active_layer_count_;
   static int8_t active_layers_[31];
   static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
-
-  static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
 };
 }
 
