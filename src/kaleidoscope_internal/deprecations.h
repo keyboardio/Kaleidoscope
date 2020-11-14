@@ -46,3 +46,10 @@
   "Layers are now in activation-order, please use" __NL__ \
   "`Layer.forEachActiveLayer()` instead."
 
+#define _DEPRECATED_MESSAGE_LAYER_UPDATELIVECOMPOSITEKEYMAP             __NL__ \
+  "`Layer.updateLiveCompositeKeymap()` is deprecated.\n"                __NL__ \
+  "The 'live composite keymap' cache has been replaced with the\n"      __NL__ \
+  "'active keys' cache, which now represents the state of the active\n" __NL__ \
+  "keys at any given time. It is probably not necessary to directly\n"  __NL__ \
+  "update that cache from a plugin, but if you need to, please use\n"   __NL__ \
+  "the `Runtime.updateActiveKey(key_addr, key)` function instead."

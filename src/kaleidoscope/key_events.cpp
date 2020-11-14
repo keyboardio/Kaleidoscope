@@ -86,16 +86,6 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
    */
   if (key_addr.isValid()) {
 
-    /* If a key had an on event, we update the live composite keymap. See
-     * layers.h for an explanation about the different caches we have. */
-    if (keyToggledOn(keyState)) {
-      if (mappedKey == Key_NoKey || keyState & EPHEMERAL) {
-        Layer.updateLiveCompositeKeymap(key_addr);
-      } else {
-        Layer.updateLiveCompositeKeymap(key_addr, mappedKey);
-      }
-    }
-
     /* If the key we are dealing with is masked, ignore it until it is released.
      * When releasing it, clear the mask, so future key events can be handled
      * appropriately.
@@ -111,23 +101,44 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
       }
     }
 
-    /* Convert key_addr to the correct mappedKey
-     * The condition here means that if mappedKey and key_addr are both valid,
-     *   the mappedKey wins - we don't re-look-up the mappedKey
-     */
+    // If the caller did not supply a `Key` value, get it from the keymap
+    // cache. If that value is transparent, look it up from the active layer for
+    // that key address.
     if (mappedKey == Key_NoKey) {
+      // Note: If the next line returns `Key_NoKey`, that will effectively mask
+      // the key.
       mappedKey = Layer.lookup(key_addr);
     }
 
   }  // key_addr valid
 
   // Keypresses with out-of-bounds key_addr start here in the processing chain
+  auto result = kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, key_addr, keyState);
 
-  if (kaleidoscope::Hooks::onKeyswitchEvent(mappedKey, key_addr, keyState) != kaleidoscope::EventHandlerResult::OK)
+  // If any plugin returns `ABORT`, stop here and don't update the active keys
+  // cache entry.
+  if (result == kaleidoscope::EventHandlerResult::ABORT)
     return;
 
-  mappedKey = Layer.eventHandler(mappedKey, key_addr, keyState);
-  if (mappedKey == Key_NoKey)
+  // Update the active keys cache if the key toggled on or off.
+  if (key_addr.isValid()) {
+    if (keyToggledOn(keyState)) {
+      Runtime.updateActiveKey(key_addr, mappedKey);
+    } else if (keyToggledOff(keyState)) {
+      Runtime.updateActiveKey(key_addr, Key_Transparent);
+    }
+  }
+
+  // Only continue if all plugin handlers returned `OK`.
+  if (result != kaleidoscope::EventHandlerResult::OK)
     return;
+
+  // If the key has been masked (i.e. `Key_NoKey`), or it's a plugin-specific
+  // key (`RESERVED`), don't bother continuing.
+  if (mappedKey == Key_NoKey || (mappedKey.getFlags() & RESERVED) != 0)
+    return;
+
+  // Handle all built-in key types.
+  Layer.eventHandler(mappedKey, key_addr, keyState);
   handleKeyswitchEventDefault(mappedKey, key_addr, keyState);
 }
