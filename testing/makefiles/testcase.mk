@@ -22,6 +22,7 @@ TEST_FILES=$(wildcard $(SRC_DIR)/*.cpp)
 # and add it to the list of possible test files
 
 ifneq (,$(wildcard test.ktest))
+HAS_KTEST_FILE=1
 ifeq (,$(findstring $(SRC_DIR)/generated-testcase.cpp, $(TEST_FILES)))
 TEST_FILES += $(SRC_DIR)/generated-testcase.cpp
 endif
@@ -73,12 +74,12 @@ compile-sketch:
 
 # If we have a test.ktest file, it should be processed into a c++ testcase
 
-generate-testcase: ${SRC_DIR}/generated-testcase.cpp
+generate-testcase: $(if $(HAS_KTEST_FILE), ${SRC_DIR}/generated-testcase.cpp)
 
 
 ${SRC_DIR}/generated-testcase.cpp: test.ktest
 ifneq (,$(wildcard test.ktest))
-	@echo "Compiling ktest script into ${SRC_DIR}/generated-testcase.cpp"
+	@echo "Compiling ${testcase} ktest script into ${SRC_DIR}/generated-testcase.cpp"
 	install -d "${SRC_DIR}"
 	perl ${top_dir}/testing/bin/ktest-to-cxx \
 		--ktest=test.ktest \

@@ -9,6 +9,11 @@ TEST_PATH ?= tests/
 TESTS			?= $(shell find ${top_dir}/${TEST_PATH} -name 'sketch.ino' -exec dirname {} \;)
 .PHONY: clean cmake-clean all googletest
 
+generate-testcases:
+	@for test in ${TESTS}; do \
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} top_dir=${top_dir} testcase=$${test} generate-testcase; \
+	done
+
 all: ${TESTS}
 	@for test in ${TESTS}; do \
 		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} top_dir=${top_dir} testcase=$${test} run; \
