@@ -1,0 +1,51 @@
+VERSION 1
+
+KEYSWITCH A 0 0
+KEYSWITCH LAYER_SHIFT 1 0
+
+# ==============================================================================
+# Active Keys Cache
+NAME Active keys cache cleared
+
+RUN 10 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# Press and hold `ShiftToLayer(1)`, changing the `A` key to `X`
+PRESS LAYER_SHIFT
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # Report should contain only `Y`
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+RELEASE A
+
+RUN 5 ms
+
+RELEASE LAYER_SHIFT
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
