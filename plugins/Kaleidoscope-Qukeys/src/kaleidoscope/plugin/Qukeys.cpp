@@ -72,7 +72,7 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_sta
     }
     // Any event that gets added to the queue gets re-processed later, so we
     // need to abort processing now.
-    return EventHandlerResult::EVENT_CONSUMED;
+    return EventHandlerResult::ABORT;
   }
 
   // The key is being held. We need to determine if we should block it because
@@ -89,7 +89,7 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_sta
       }
       // Otherwise, the first matching event was a key press, so we need to
       // suppress it for now.
-      return EventHandlerResult::EVENT_CONSUMED;
+      return EventHandlerResult::ABORT;
     }
   }
 
