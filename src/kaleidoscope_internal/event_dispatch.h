@@ -80,7 +80,7 @@
 
 #define _REGISTER_EVENT_HANDLER(                                                 \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                    \
-    SHOULD_ABORT_ON_CONSUMED_EVENT,                                              \
+    SHOULD_EXIT_IF_RESULT_NOT_OK,                                                \
     TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,                 \
     SIGNATURE, ARGS_LIST)                                                 __NL__ \
                                                                           __NL__ \
@@ -116,8 +116,8 @@
    MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                   __NL__ \
    struct _NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION) {            __NL__ \
                                                                           __NL__ \
-      static bool shouldAbortOnConsumedEvent() {                          __NL__ \
-        return SHOULD_ABORT_ON_CONSUMED_EVENT;                            __NL__ \
+      static bool shouldExitIfResultNotOk() {                             __NL__ \
+        return SHOULD_EXIT_IF_RESULT_NOT_OK;                              __NL__ \
       }                                                                   __NL__ \
                                                                           __NL__ \
       template<typename Plugin__,                                         __NL__ \
@@ -166,7 +166,7 @@
                                                                      __NL__ \
    result = EventHandler__::call(PLUGIN, hook_args...);              __NL__ \
                                                                      __NL__ \
-   if (EventHandler__::shouldAbortOnConsumedEvent() &&               __NL__ \
+   if (EventHandler__::shouldExitIfResultNotOk() &&                  __NL__ \
        result != kaleidoscope::EventHandlerResult::OK) {             __NL__ \
       return result;                                                 __NL__ \
    }                                                                 __NL__
