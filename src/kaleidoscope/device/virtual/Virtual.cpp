@@ -260,7 +260,8 @@ void VirtualKeyScanner::actOnMatrixScan() {
       break;
     }
 
-    handleKeyswitchEvent(Key_NoKey, key_addr, key_state);
+    if (key_state != 0)
+      handleKeyswitchEvent(Key_NoKey, key_addr, key_state);
     keystates_prev_[key_addr.toInt()] = keystates_[key_addr.toInt()];
 
     if (keystates_[key_addr.toInt()] == KeyState::Tap) {
