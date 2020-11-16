@@ -66,7 +66,7 @@ time an action is to be performed.
 TD(0)
 
 // later in the Sketch:
-void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
@@ -131,7 +131,7 @@ property only:
 > how this function is called.
 >
 > The `tap_dance_index` and `tap_count` parameters help us choose which action
-> to perform. The `row` and `col` parameters tell us where the tap-dance key is
+> to perform. The `key_addr` parameter tells us where the tap-dance key is
 > on the keyboard.
 
 ## Dependencies
