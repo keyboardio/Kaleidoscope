@@ -1,0 +1,12 @@
+VERSION 1
+
+KEYSWITCH A 0 0
+
+# ==============================================================================
+# This testcase shouldn't generate any HID reports. The sketch includes a plugin
+# that produces `Key_X` if the key at (0,0) is idle, so if the virtual device is
+# calling `handleKeyswitchEvent()` when `key_state` has neither `IS_PRESSED` nor
+# `WAS_PRESSED` bits set, it will fail.
+NAME Idle key detector
+
+RUN 3 cycles
