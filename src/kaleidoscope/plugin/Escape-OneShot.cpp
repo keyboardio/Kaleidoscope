@@ -23,21 +23,19 @@
 namespace kaleidoscope {
 namespace plugin {
 
-bool EscapeOneShot::did_escape_;
-
 EventHandlerResult EscapeOneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (mapped_key != Key_Escape || (keyState & INJECTED))
     return EventHandlerResult::OK;
 
-  if (did_escape_)
-    mapped_key = Key_NoKey;
-  did_escape_ = !keyToggledOff(keyState);
+  if (!keyToggledOn(keyState))
+    return EventHandlerResult::OK;
 
   if ((!::OneShot.isActive() || ::OneShot.isPressed()) && !::OneShot.isSticky()) {
     return EventHandlerResult::OK;
   }
 
   ::OneShot.cancel(true);
+  mapped_key = Key_NoKey;
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
