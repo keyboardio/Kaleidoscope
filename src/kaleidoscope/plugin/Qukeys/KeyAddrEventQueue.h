@@ -105,6 +105,19 @@ class KeyAddrEventQueue {
     release_event_bits_ >>= 1;
   }
 
+  void shift(uint8_t n) {
+    if (n >= length_) {
+      clear();
+      return;
+    }
+    length_ -= n;
+    for (uint8_t i{0}; i < length_; ++i) {
+      addrs_[i]      = addrs_[i + n];
+      timestamps_[i] = timestamps_[i + n];
+    }
+    release_event_bits_ >>= n;
+  }
+
   // Empty the queue entirely.
   void clear() {
     length_             = 0;
