@@ -27,8 +27,10 @@ EventHandlerResult WinKeyToggle::onKeyswitchEvent(Key &key, KeyAddr key_addr, ui
   if (!enabled_)
     return EventHandlerResult::OK;
 
-  if (key == Key_LeftGui || key == Key_RightGui)
+  if (key == Key_LeftGui || key == Key_RightGui) {
+    key = Key_NoKey;
     return EventHandlerResult::EVENT_CONSUMED;
+  }
 
   return EventHandlerResult::OK;
 }
