@@ -88,7 +88,7 @@ sub load_from_text {
 		},
             keyswitch => sub {
                 my $content = shift;
-                if ( $content =~ /^(.*)\s+(\d+)\s+(\d+)$/ ) {
+                if ( $content =~ /^(.*?)\s+(\d+)\s+(\d+)$/ ) {
                     my $switch = $1;
                     my $row    = $2;
                     my $col    = $3;
