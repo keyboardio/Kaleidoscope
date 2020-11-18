@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2019  Keyboard.io, Inc.
+ * Copyright (C) 2013-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -72,6 +72,18 @@ class MatrixAddr {
                   "Matrix type conversion failed. Source type must not have greater row size than target type");
     static_assert(MatrixAddr__::cols <= ThisType::cols,
                   "Matrix type conversion failed. Source type must not have greater col size than target type");
+  }
+
+  // Get an invalid key address. Useful when initializing a state variable or
+  // function parameter that handles invalid addresses.
+  static constexpr ThisType none() {
+    return ThisType(invalid_state);
+  }
+
+  // Invalidate the key address. Useful in plugins that need a state variable
+  // that is sometimes valid, and sometimes not.
+  void clear() {
+    offset_ = invalid_state;
   }
 
   constexpr uint8_t row() const {
