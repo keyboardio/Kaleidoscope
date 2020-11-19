@@ -1,5 +1,6 @@
 # Kaleidoscope
 
+
 Flexible firmware for Arduino-powered keyboards.
 
 This package contains the "core" of Kaleidoscope and a number of [example firmware "Sketches"](https://github.com/keyboardio/Kaleidoscope/tree/master/examples).
@@ -8,65 +9,59 @@ If you're just getting started with the Keyboardio Model 01, the [introductory d
 
 # Getting Started
 
-## Setup the Arduino IDE
 
-Setup the Arduino IDE on your system. Make sure you install at least version 1.8.6, since older version may not support all required features.
+If you want to use Kaleidoscope to customize or compile a "sketch" to power a supported keyboard, the fastest way to get started is to use the Arduino IDE. You can find [setup instructions](https://kaleidoscope.readthedocs.io/en/latest/quick_start.html) on [kaleidoscope.readthedocs.io](https://kaleidoscope.readthedocs.io)
 
-* On Linux, follow the instructions [on the wiki](https://github.com/keyboardio/Kaleidoscope/wiki/Install-Arduino-support-on-Linux).
-* On macOS, install using [homebrew](http://brew.sh/) [cask](https://caskroom.github.io/) with `brew cask install arduino` or download the application from [the official website](https://www.arduino.cc/en/Main/Software) and move it to your `/Applications` folder.
+If you prefer to work from the command line or intend to work on Kaleidscope itself, please follow the instructions below
 
-## Get into the right directory
+# Use git to check out a copy of Kaleidoscope
 
-### macOS
+1. Open a commandline shell and navigate to where you want to check out Kaleidoscope.
+
+For the purposes of this tutorial, we'll assume your checkout is in a directory called `kaleidoscope` inside a directory called `git` in your home directory.
+
 ```sh
-mkdir -p $HOME/Documents/Arduino/hardware
-cd $HOME/Documents/Arduino/hardware
+$ mkdir ${HOME}/git
+$ cd ${HOME}/git
 ```
 
-### Linux
+2. Use git to download the latest version of Kaleidoscope
 
 ```sh
-mkdir -p $HOME/Arduino/hardware
-cd $HOME/Arduino/hardware
+$ git clone https://github.com/keyboardio/Kaleidoscope
 ```
 
-### Windows (Assuming cmd)
+3.  Ask Kaleidoscope to install the compiler toolchain, arduino-cli and platform support
 
 ```sh
-mkdir %userprofile%\Documents\Arduino\hardware
-cd %userprofile%\Documents\Arduino\hardware
+$ cd ${HOME}/git/Kaleidoscope
+$ make setup
 ```
 
-
-### Install the libraries and hardware definitions
-
-## Clone the hardware definitions
-
-Because git for Windows doesn't always have symlink support enabled by default, you may need to enable it for Kaleidoscope. To do that, add '-c core.symlinks=true' to your commandline. On all other platforms, that option is safe, but not necessary, as symlinks should work by default.
+4.  Tell your shell where to find your Kaleidoscope installation. This example is for bash. If you're using another shell, consult the shell's documentation for instructions about how to set an environment variable
 
 ```sh
-git clone -c core.symlinks=true --recursive https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio.git keyboardio
+$ export KALEIDOSCOPE_DIR=${HOME}/git/Kaleidoscope
 
+$ echo "export KALEIDOSCOPE_DIR=${HOME}/git/Kaleidoscope" >> ${HOME}/.bash_profile
 ```
 
-## Build the Kaleidoscope Firmware for your keyboard
+5.  Build the Kaleidoscope Firmware for your keyboard
 
-(This part assumes you're building firmware for the Keyboardio Model 01)
+(This part assumes you're building firmware for the Keyboardio Atreus)
 
 ```sh
-# Go to your device firmware directory
-cd keyboardio/avr/libraries/Model01-Firmware
+$ cd examples/Devices/Keyboardio/Atreus
 
-# Build your firmware!
-make
+$ make compile
+```
 
+5.  Install your firmware
 
-# Install your firmware
-make flash
+```sh
+$ make flash
 
 ```
 
 <3 jesse
 
-[![Build
-Status](https://travis-ci.org/keyboardio/Kaleidoscope.svg?branch=master)](https://travis-ci.org/keyboardio/Kaleidoscope)
