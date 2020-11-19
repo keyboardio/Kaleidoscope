@@ -7,7 +7,7 @@ teensy2 variant too.
 
 To select which one to build for, you can either use the Arduino IDE, and select
 the appropriate Pinout and CPU, or, if using `kaleidoscope-builder`, you can add
-a `LOCAL_CFLAGS` setting to `.kaleidoscope-builder.conf`.
+a `LOCAL_CFLAGS` setting to your Makefile
 
 For the post-2016 variant (the default, also used by the handwired variant from
 FalbaTech), if you want to explicitly select it, add
