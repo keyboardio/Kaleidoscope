@@ -1,0 +1,24 @@
+VERSION 1
+
+KEYSWITCH X     0 0
+KEYSWITCH TD_0  1 0
+KEYSWITCH LL_1  2 0
+
+# ==============================================================================
+NAME TapDance hold past timeout
+
+RUN 5 ms
+
+PRESS TD_0
+RUN 1 cycle
+RUN 25 ms # timeout is 25 ms
+
+RUN 2 cycles
+EXPECT keyboard-report Key_A # The report should contain only `A`
+
+RUN 20 ms
+
+RELEASE TD_0
+RUN 1 cycle
+
+EXPECT keyboard-report empty # The report should be empty
