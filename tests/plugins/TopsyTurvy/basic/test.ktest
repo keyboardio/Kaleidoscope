@@ -1,0 +1,47 @@
+VERSION 1
+
+KEYSWITCH TOPSY_1  0 0
+KEYSWITCH TOPSY_2  0 1
+KEYSWITCH A        1 0
+KEYSWITCH B        1 1
+KEYSWITCH LSHIFT   2 0
+
+# ==============================================================================
+NAME TopsyTurvy without shift
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy with shift
+
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+# Really the report above should be empty, but it seems to work okay in master
+# like this, and it will get fixed if and when Kaleidoscope becomes
+# event-driven.
+# EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
