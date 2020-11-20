@@ -13,14 +13,11 @@ fi
 
 
 if [ "${uname_S}" = "Darwin" ]; then
-    ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Documents/Arduino}"
     # This stops macos from copying resource forks into thigns like tar
     export COPYFILE_DISABLE=true
 else
     ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
 fi
-
-BOARD_HARDWARE_PATH="${BOARD_HARDWARE_PATH:-${ARDUINO_LOCAL_LIB_PATH}/hardware}"
 
 echo "Preparing Kaleidoscope and the bundle..."
 
@@ -28,10 +25,16 @@ XFER_DIR="$(pwd)/.docker_xfer"
 mkdir -p "${XFER_DIR}"
 
 tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
-	--exclude .docker_xfer	--exclude .git --exclude _build --exclude testing/googletest/build  \
+	--exclude .arduino/data \
+	--exclude bin/arduino-cli \
+	--exclude .docker_xfer \
+	--exclude .git \
+	--exclude _build \
+	--exclude testing/googletest/build  \
 	.
 
-(cd "${BOARD_HARDWARE_PATH}/keyboardio" && tar  -cf "${XFER_DIR}/bundle.tar" \
+echo "The bundle is coming from ${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio"
+(cd "${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio" && tar  -cf "${XFER_DIR}/bundle.tar" \
 	--exclude .git --exclude avr/libraries/Kaleidoscope .)
 
 echo "Building the docker image..."
@@ -39,11 +42,13 @@ docker build -q -t kaleidoscope/docker etc
 # We do want word splitting since there are multiple options here
 # shellcheck disable=SC2086   
 docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
-       --tmpfs /kaleidoscope:exec \
+       --mount type=tmpfs,destination=/kaleidoscope:exec \
        --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
        --mount type=volume,source=kaleidoscope-persist,destination=/kaleidoscope-persist,consistency=delegated \
-       --mount type=volume,source=kaleidoscope-googletest-build,destination=/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/testing/googletest/build,consistency=delegated \
-       --mount type=volume,source=kaleidoscope-build,destination=/kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope/_build,consistency=delegated \
+       --mount type=volume,source=kaleidoscope-googletest-build,destination=/kaleidoscope/testing/googletest/build,consistency=delegated \
+       --mount type=volume,source=kaleidoscope-build,destination=/kaleidoscope/_build,consistency=delegated \
+       --env ARDUINO_DIRECTORIES_DATA=/arduino-cli/data \
+       --env ARDUINO_DIRECTORIES_USER=/kaleidoscope/.arduino/user/ \
        kaleidoscope/docker "$*"
 
 

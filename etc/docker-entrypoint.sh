@@ -1,20 +1,24 @@
 #! /bin/bash
 set -e
 
-install -d /kaleidoscope/hardware/keyboardio \
-           /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope \
+install -d /kaleidoscope/ \
+           /kaleidoscope/.arduino/user/hardware/keyboardio \
            /kaleidoscope-persist/temp  \
            /kaleidoscope-persist/ccache/cache
 
-echo "Syncing the bundle..."
-tar xf /kaleidoscope-src/bundle.tar -C /kaleidoscope/hardware/keyboardio
 
 echo "Syncing Kaleidoscope..."
-tar xf /kaleidoscope-src/kaleidoscope.tar -C /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
+tar xf /kaleidoscope-src/kaleidoscope.tar -C /kaleidoscope/
 
-ln -s /kaleidoscope/hardware/keyboardio/virtual/libraries/Kaleidoscope \
-      /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
+echo "Syncing the bundle..."
+tar xf /kaleidoscope-src/bundle.tar -C /kaleidoscope/.arduino/user/hardware/keyboardio
 
-cd /kaleidoscope/hardware/keyboardio/avr/libraries/Kaleidoscope
+rm -f /kaleidoscope/.arduino/user/hardware/keyboardio/avr/libraries/Kaleidoscope
+ln -s /kaleidoscope /kaleidoscope/.arduino/user/hardware/keyboardio/avr/libraries/Kaleidoscope
+
+
+cd /kaleidoscope/
+export ARDUINO_DIRECTORIES_DATA=/arduino-cli/data
+export KALEIDOSCOPE_CCACHE=1
 
 /bin/bash -c "$*"
