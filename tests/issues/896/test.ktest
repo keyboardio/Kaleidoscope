@@ -1,0 +1,61 @@
+VERSION 1
+
+KEYSWITCH OSL_1  0 0
+KEYSWITCH A      1 0
+KEYSWITCH B      1 1
+
+# ==============================================================================
+NAME OneShot next key
+
+RUN 5 ms
+
+PRESS OSL_1
+RUN 5 ms
+RELEASE OSL_1
+RUN 10 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_C # There should be only `C`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME OneShot double tap layer 896
+
+RUN 5 ms
+PRESS OSL_1
+RUN 5 ms
+RELEASE OSL_1
+
+RUN 5 ms
+PRESS OSL_1
+RUN 5 ms
+RELEASE OSL_1
+
+RUN 50 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_C # There should be only `C`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 10 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_C # There should be only `C`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+PRESS OSL_1
+RUN 5 ms
+RELEASE OSL_1
+RUN 1 cycle
