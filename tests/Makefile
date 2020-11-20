@@ -6,7 +6,7 @@ libcommon_a	:= ${top_dir}/_build/lib/libcommon.a
 
 TEST_PATH ?= tests/
 
-TESTS			?= $(shell find ${top_dir}/${TEST_PATH} -name 'sketch.ino' -exec dirname {} \;)
+TESTS			?= $(shell find ${top_dir}/${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 .PHONY: clean cmake-clean all googletest
 
 generate-testcases:
