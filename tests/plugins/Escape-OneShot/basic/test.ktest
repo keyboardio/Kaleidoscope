@@ -1,0 +1,48 @@
+VERSION 1
+
+KEYSWITCH OSM_0  0 0  # left shift
+KEYSWITCH OSM_1  0 1  # left alt
+KEYSWITCH ESC    1 0
+
+# ==============================================================================
+NAME EscapeOneShot cancel temporary
+
+RUN 5 ms
+PRESS OSM_0
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE OSM_0
+RUN 10 ms
+PRESS ESC
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+RELEASE ESC
+RUN 1 cycle
+
+# ==============================================================================
+# The testcases below are commented out because they are currently failing.
+
+# # ==============================================================================
+# NAME EscapeOneShot cancel sticky
+
+# RUN 5 ms
+# PRESS OSM_0
+# RUN 1 cycle
+# EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+# RUN 5 ms
+# RELEASE OSM_0
+
+# RUN 5 ms
+# PRESS OSM_0
+# RUN 5 ms
+# RELEASE OSM_0
+
+# RUN 50 ms
+# PRESS ESC
+# RUN 2 cycles
+# EXPECT keyboard-report empty # Report should be empty
+# RUN 5 ms
+# RELEASE ESC
+# RUN 1 cycle
