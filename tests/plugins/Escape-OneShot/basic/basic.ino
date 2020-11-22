@@ -45,9 +45,9 @@ KALEIDOSCOPE_INIT_PLUGINS(OneShot, EscapeOneShot);
 
 void setup() {
   Kaleidoscope.setup();
-  OneShot.time_out = 50;
-  OneShot.hold_time_out = 20;
-  OneShot.double_tap_time_out = 20;
+  OneShot.setTimeout(50);
+  OneShot.setHoldTimeout(20);
+  OneShot.setDoubleTapTimeout(20);
 }
 
 void loop() {
