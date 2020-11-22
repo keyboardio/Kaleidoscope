@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ASTYLE_IGNORE_PATTERN='testing/googletest/'
+find ./* -type f \( -name  '*.h' -o -name '*.cpp' -o -name '*.ino' \) | grep -v "$ASTYLE_IGNORE_PATTERN" | xargs -n 1 astyle -q --style=google --unpad-paren --pad-header --pad-oper --indent-classes --indent=spaces=2 --max-continuation-indent=80

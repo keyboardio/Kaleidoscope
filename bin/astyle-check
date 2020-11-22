@@ -1,0 +1,7 @@
+#!/bin/sh
+if ! git diff --exit-code; then
+  >&2 echo "'make astyle' found code style differences. Please make astyle and commit your changes"
+  exit 1;
+fi
+exit 0;
+
