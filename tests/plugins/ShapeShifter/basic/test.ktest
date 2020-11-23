@@ -1,0 +1,38 @@
+VERSION 1
+
+KEYSWITCH K1       0 0
+KEYSWITCH K2       0 1
+KEYSWITCH K3       0 2
+KEYSWITCH LSHIFT   2 0
+
+# ==============================================================================
+NAME ShapeShifter without shift
+
+RUN 5 ms
+PRESS K1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE K1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME ShapeShifter full overlap
+
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS K1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_2 # The report should contain `shift` + `2`
+RUN 5 ms
+RELEASE K1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty

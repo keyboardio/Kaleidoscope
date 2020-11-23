@@ -1,0 +1,105 @@
+VERSION 1
+
+KEYSWITCH X     0 0
+KEYSWITCH TD_0  1 0
+
+# ==============================================================================
+NAME Tapdance interrupt
+
+RUN 5 ms
+PRESS TD_0
+RUN 5 ms
+RELEASE TD_0
+
+RUN 10 ms
+PRESS TD_0
+RUN 5 ms
+RELEASE TD_0
+
+RUN 5 ms
+PRESS X
+RUN 1 cycle
+EXPECT keyboard-report Key_B # The report should contain `B`
+EXPECT keyboard-report empty # Report should be empty
+RUN 1 cycle
+EXPECT keyboard-report Key_X # Report should contain `X`
+
+RUN 5 ms
+RELEASE X
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME Tapdance timeout
+
+RUN 50 ms
+
+PRESS TD_0
+RUN 5 ms
+RELEASE TD_0
+RUN 10 ms
+
+PRESS TD_0
+RUN 1 cycle
+RUN 5 ms
+RELEASE TD_0
+RUN 20 ms # Timeout = 25ms
+
+RUN 2 ms # Extra 2 cycles for some reason
+EXPECT keyboard-report Key_B # The report should contain `B`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+# The testcases below are commented out because they are currently failing.
+
+# # ==============================================================================
+# NAME Tapdance interrupt with rollover
+
+# RUN 5 ms
+# PRESS TD_0
+# RUN 5 ms
+# RELEASE TD_0
+
+# RUN 10 ms
+# PRESS TD_0
+
+# RUN 5 ms
+# PRESS X
+# RUN 1 cycle
+# EXPECT keyboard-report Key_B # The report should contain `B`
+# RUN 1 cycle
+# EXPECT keyboard-report Key_B Key_X # Report should contain `B` & `X`
+
+# RUN 5 ms
+# RELEASE TD_0
+# RUN 1 cycle
+# EXPECT keyboard-report Key_X # Report should contain `X`
+
+
+# RUN 5 ms
+# RELEASE X
+# RUN 1 cycle
+# EXPECT keyboard-report empty # Report should be empty
+
+# # ==============================================================================
+# NAME Tapdance timeout while held
+
+# RUN 5 ms
+
+# PRESS TD_0
+# RUN 5 ms
+# RELEASE TD_0
+# RUN 10 ms
+
+# PRESS TD_0
+# RUN 1 cycle
+# RUN 25 ms
+
+# RUN 2 cycles
+# EXPECT keyboard-report Key_B # The report should contain `B`
+
+# RUN 10 ms
+# RELEASE TD_0
+# RUN 1 cycle
+
+# EXPECT keyboard-report empty # Report should be empty

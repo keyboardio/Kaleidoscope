@@ -1,0 +1,30 @@
+VERSION 1
+
+KEYSWITCH MC0  0 0
+KEYSWITCH MC1  0 1
+KEYSWITCH MC2  0 2
+
+# ==============================================================================
+NAME MagicCombo key A
+
+RUN 5 ms
+PRESS MC2
+PRESS MC1
+RUN 5 ms
+PRESS MC0
+RUN 10 ms
+# With MagicCombo.min_interval set to 20(ms), we need to wait that long before
+# it will trigger, plus one.
+RUN 1 ms
+EXPECT keyboard-report Key_A # The report should contain only `A`
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+RELEASE MC0
+RUN 1 cycle
+RELEASE MC2
+RUN 1 cycle
+RELEASE MC1
+RUN 1 cycle
+
+# Run a bit longer to make sure no extra reports were generated.
+RUN 5 ms

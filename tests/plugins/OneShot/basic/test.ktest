@@ -1,0 +1,145 @@
+VERSION 1
+
+KEYSWITCH OS_shift  0 0
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+
+# ==============================================================================
+NAME OneShot timeout
+
+RUN 5 ms
+
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE OS_shift
+RUN 45 ms
+RUN 2 cycles
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME OneShot next key
+
+RUN 5 ms
+
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE OS_shift
+RUN 10 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # There should be `shift`+`A`
+RUN 1 cycle
+EXPECT keyboard-report Key_A # There should be only `A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME OneShot double tap
+
+RUN 5 ms
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE OS_shift
+
+RUN 5 ms
+PRESS OS_shift
+RUN 5 ms
+RELEASE OS_shift
+
+RUN 50 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # There should be `shift`+`A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+
+RUN 10 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # There should be `shift`+`A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+
+RUN 5 ms
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+RELEASE OS_shift
+RUN 1 cycle
+
+# ==============================================================================
+NAME OneShot double tap timeout
+
+RUN 5 ms
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE OS_shift
+
+RUN 20 ms
+PRESS OS_shift
+RUN 5 ms
+RELEASE OS_shift
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 50 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # There should be only `A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 10 ms
+
+# ==============================================================================
+NAME OneShot hold timeout
+
+RUN 5 ms
+
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 30 ms
+RELEASE OS_shift
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME OneShot rollover
+
+RUN 5 ms
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # There should be `shift`+`A`
+RUN 5 ms
+RELEASE OS_shift
+RUN 2 cycles # 2 cycles?
+EXPECT keyboard-report Key_A # There should be only `A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
