@@ -16,7 +16,7 @@ jobs:
 ## This makes sure we're using the current version of the library.
     - run: sudo apt-get install ccache
     - run: make setup
-    - run: make smoke-sketches
+    - run: make -j $(nproc) smoke-sketches
   run-google-tests:
     runs-on: ubuntu-20.04
     steps:
@@ -24,7 +24,7 @@ jobs:
 #    - uses: mxschmitt/action-tmate@v3
     - run: sudo apt-get install ccache
     - run: make setup
-    - run: make simulator-tests
+    - run: make -j $(nproc) simulator-tests
   check-astyle:
     runs-on: ubuntu-latest
     steps:
