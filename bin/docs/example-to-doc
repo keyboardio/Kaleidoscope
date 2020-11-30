@@ -6,6 +6,6 @@ cd examples ||exit; \
 install -d dirname "${EXAMPLE}"
 printf "# %s\n\`\`\` c++\n", "${EXNAME}" > "${EXAMPLE}.md"
 cat ../../examples/"${EXAMPLE}" >> "${EXAMPLE}.md"
-printf '\n```'  >> "${EXAMPLE}.md"
+printf "\n\`\`\`"  >> "${EXAMPLE}.md"
 
 
