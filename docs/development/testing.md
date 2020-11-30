@@ -1,3 +1,5 @@
+# Testing Kaleidoscope
+
 This is not yet proper documentation about running or writing tests, just some rough notes.
 
 Kaleidoscope includes a simulator that can pretend (to a certain extent) to be a keyboard for the purpose of testing.
