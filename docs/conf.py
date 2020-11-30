@@ -38,9 +38,6 @@ extensions = [
 
 extensions.append('copy-examples')
 
-examples_source = '../examples'
-examples_dest = 'generated/examples'
-
 
 # Setup the breathe extension
 breathe_projects = {

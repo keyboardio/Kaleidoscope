@@ -70,19 +70,7 @@ def find_examples_docs(src_dir, target_dir):
 
 
 def config_inited(app, config):
-    # Handle configuration settings
-    source_path = Path(app.srcdir, app.config.examples_source).resolve()
-    dest_path = Path(app.srcdir, app.config.examples_dest).resolve()
-    print (dest_path)
-    def docname(item):
-        """Helper for status_iterator()."""
-        return str(Path(item[0]).relative_to(source_path).parent)
-    if os.path.isdir(dest_path):
-        rmtree(dest_path)
-    copytree(source_path, dest_path)
-
+    os.system('make examples')
 
 def setup(app):
-    app.add_config_value('examples_source', None, 'env', (PathLike, str))
-    app.add_config_value('examples_dest', None, 'env', (PathLike, str))
     app.connect('config-inited', config_inited)
