@@ -68,4 +68,4 @@ The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and
 
 Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
-  [plugin:example]: ../../examples/Features/EEPROM/EEPROM-Keymap/EEPROM-Keymap.ino
+  [plugin:example]: /examples/Features/EEPROM/EEPROM-Keymap/EEPROM-Keymap.ino

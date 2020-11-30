@@ -9,5 +9,5 @@ All example sketches
    :maxdepth: 8
    :glob:
 
-   generated/examples/**/*.ino
+   examples/**
 

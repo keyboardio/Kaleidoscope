@@ -61,4 +61,4 @@ The `ActiveModColorEffect` object provides the following methods:
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]: ../../examples/LEDs/LED-ActiveModColor/LED-ActiveModColor.ino
+ [plugin:example]: /examples/LEDs/LED-ActiveModColor/LED-ActiveModColor.ino
