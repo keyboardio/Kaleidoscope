@@ -1,11 +1,11 @@
 #!/bin/sh
 
 export EXAMPLE=$1
-export EXNAME=`echo ${EXAMPLE} |cut -c 3-`
-cd examples; \
-install -d dirname ${EXAMPLE} 
-echo "# ${EXNAME}\n\`\`\` c++\n" > ${EXAMPLE}.md
-cat ../../examples/${EXAMPLE} >> ${EXAMPLE}.md
-echo "\n\`\`\`"  >> ${EXAMPLE}.md
+EXNAME=$(echo "${EXAMPLE}" |cut -c 3)
+cd examples ||exit; \
+install -d dirname "${EXAMPLE}"
+printf "# %s\n\`\`\` c++\n", "${EXNAME}" > "${EXAMPLE}.md"
+cat ../../examples/"${EXAMPLE}" >> "${EXAMPLE}.md"
+printf '\n```'  >> "${EXAMPLE}.md"
 
 
