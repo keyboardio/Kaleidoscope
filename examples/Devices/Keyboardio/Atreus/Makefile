@@ -1,56 +1,48 @@
-# This stub makefile for a Kaleidoscope example pulls in all the targets
+# This makefile for a Kaleidoscope sketch pulls in all the targets
 # required to build the example
 
-UNAME_S := $(shell uname -s)
 
-ifeq ($(UNAME_S),Darwin)
-SKETCHBOOK_DIR ?= $(HOME)/Documents/Arduino
-PACKAGE_DIR ?= $(HOME)/Library/Arduino15
+
+
+ifneq ($(KALEIDOSCOPE_DIR),)
+search_path += $(KALEIDOSCOPE_DIR)
+endif
+
+ifneq ($(ARDUINO_DIRECTORIES_USER),)
+search_path += $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
+endif
+
+ifeq ($(shell uname -s),Darwin)
+search_path += $(HOME)/Documents/Arduino/hardware/keyboardio/avr/libraries/Kaleidoscope
 else
-SKETCHBOOK_DIR ?= $(HOME)/Arduino
-PACKAGE_DIR ?= $(HOME)/.arduino15
+search_path += $(HOME)/Arduino/hardware/keyboardio/avr/libraries/Kaleidoscope
 endif
 
+sketch_makefile := etc/makefiles/sketch.mk
 
+$(foreach candidate, $(search_path), $(if $(wildcard $(candidate)/$(sketch_makefile)), $(eval ks_dir ?= $(candidate))))
 
-ARDUINO_INSTALLED_ENV=$(shell ls -dt $(PACKAGE_DIR)/packages/keyboardio/hardware/avr 2>/dev/null |head -n 1)
-MANUALLY_INSTALLED_ENV=$(shell ls -dt $(SKETCHBOOK_DIR)/hardware/keyboardio/avr 2>/dev/null |head -n 1)
+ifneq ($(ks_dir),)
 
+$(info Using Kaleidoscope from $(ks_dir))
 
+export KALEIDOSCOPE_DIR := $(ks_dir)
+include $(ks_dir)/$(sketch_makefile)
 
-ifneq ("$(wildcard $(ARDUINO_INSTALLED_ENV)/boards.txt)","")
+else
 
-ifneq ("$(wildcard $(MANUALLY_INSTALLED_ENV)/boards.txt)","")
-
-$(info ***************************************************************************)
-$(info It appears that you have installed two copies of Kaleidoscope. One copy was)
-$(info installed using Arduino's "Board Manager", while the other was installed by)
-$(info hand, probably using "git".)
+$(info I can't find your Kaleidoscope installation.)
 $(info )
-$(info This will likely cause some trouble as you try to build keyboard firmware)
-$(info using Kaleidoscope. You may want to remove either: )
+$(info I tried looking in:)
 $(info )
-$(info $(PACKAGE_DIR)/packages/keyboardio/ which was installed using Arduino)
+$(foreach candidate, $(search_path), $(info $(candidate)))
 $(info )
-$(info or)
-$(info )
-$(info $(SKETCHBOOK_DIR)/hardware/keyboardio/ which was installed by hand.)
-$(info )
-$(info ***************************************************************************)
-$(info )
-	
-endif
-
-BOARD_HARDWARE_PATH = $(ARDUINO_INSTALLED_ENV)
-KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= build-tools/makefiles/
-KALEIDOSCOPE_BUILDER_DIR ?= $(ARDUINO_INSTALLED_ENV)/libraries/Kaleidoscope/bin/
-
-
+$(info The easiest way to fix this is to set the 'KALEIDOSCOPE_DIR' environment)
+$(info variable to the location of your Kaleidoscope directory.)
 
 endif
 
 
-BOARD_HARDWARE_PATH ?= $(SKETCHBOOK_DIR)/hardware
-KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR ?= keyboardio/avr/build-tools/makefiles/
-
-include $(BOARD_HARDWARE_PATH)/$(KALEIDOSCOPE_PLUGIN_MAKEFILE_DIR)/rules.mk
+null-target:
+	$(info You should never see this message)
+	@:

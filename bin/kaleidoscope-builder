@@ -586,6 +586,17 @@ EOF
 }
 
 
+deprecation_message() {
+echo "kaleidoscope-builder is deprecated and will be removed"
+echo "by February 15, 2021"
+echo ""
+echo "To switch to the new build system, replace your sketch's"
+echo "Makefile with a copy of:"
+echo ""
+echo "${KALEIDOSCOPE_DIR}/etc/Makefile.sketch"
+echo ""
+}
+
 usage () {
     cat <<- EOF
 		Usage: $0 SKETCH commands...
@@ -627,6 +638,12 @@ usage () {
 		EOF
 }
 
+
+KALEIDOSCOPE_DIR="$(cd "$(dirname "$0")"/..; pwd)"
+# shellcheck disable=SC2034
+KALEIDOSCOPE_BIN_DIR="${KALEIDOSCOPE_DIR}/bin/"
+
+
 help () {
     usage
 }
@@ -643,11 +660,8 @@ fi
 ##
 ##  - if there is only one argument, that's a command
 
-KALEIDOSCOPE_DIR="$(cd "$(dirname "$0")"/..; pwd)"
-# shellcheck disable=SC2034
-KALEIDOSCOPE_BIN_DIR="${KALEIDOSCOPE_DIR}/bin/"
 
-
+deprecation_message
 
 
 # shellcheck disable=SC2155
@@ -667,6 +681,7 @@ for conf_file in \
 done
 
 # shellcheck disable=SC1090
+
 
 if [ -n "${VERBOSE}" ] && [[ "${VERBOSE}" -gt 0 ]]; then
     ARDUINO_VERBOSE="-verbose"

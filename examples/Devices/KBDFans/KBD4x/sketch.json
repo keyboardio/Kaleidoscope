@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:avr:kbd4x",
+    "port": ""
+  }
+}

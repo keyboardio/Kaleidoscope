@@ -7,6 +7,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 * [Upgrade notes](#upgrade-notes)
   + [New features](#new-features)
+    - [New build system](#new-build-system)
     - [New device API](#new-device-api)
     - [New plugin API](#new-plugin-api)
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
@@ -31,6 +32,10 @@ any API we've included in a release. Typically, this means that any code that us
 
 
 ## New features
+
+### New build system
+
+In this release, we replace kaleidoscope-builder with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
 
 ### New device API
 

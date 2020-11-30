@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:avr:gheavy_faunchpad",
+    "port": ""
+  }
+}

@@ -1,51 +1,41 @@
-top_dir		:= $(dir $(lastword ${MAKEFILE_LIST}))../..
-build_dir := ${top_dir}/_build
+mkfile_dir      := $(dir $(lastword ${MAKEFILE_LIST}))
+top_dir         := $(abspath $(mkfile_dir)../..)
 
-ifndef BOARD_HARDWARE_PATH
-bundle_path = ${top_dir}/..
-else
-bundle_path = ${BOARD_HARDWARE_PATH}/keyboardio/avr/libraries
-endif
+include $(mkfile_dir)/shared.mk
+
+
+build_dir := ${top_dir}/_build
 
 LIB_DIR := ${build_dir}/lib
 OBJ_DIR := ${build_dir}/obj
 
-CXX_FILES := $(wildcard ${top_dir}/testing/*.cpp)
-H_FILES		:= $(wildcard ${top_dir}/testing/*.h)
+CXX_FILES := $(sort $(wildcard ${top_dir}/testing/*.cpp))
+H_FILES		:= $(sort $(wildcard ${top_dir}/testing/*.h))
 BARE_CXX_FILES := $(foreach path,${CXX_FILES},$(notdir ${path}))
 OBJ_FILES	:= $(patsubst %.cpp,${OBJ_DIR}/%.o,$(BARE_CXX_FILES))
 LIB_FILE	:= libcommon.a
 
+ifneq ($(KALEIDOSCOPE_CCACHE),)
+COMPILER_WRAPPER := ccache
+endif
+
+
 .PHONY: all
+
+DEFAULT_GOAL: all
 
 all: ${OBJ_FILES} ${LIB_DIR}/${LIB_FILE}
 
 ${LIB_DIR}/${LIB_FILE}: ${OBJ_FILES}
-	@install -d "${LIB_DIR}"
-	ar rcs "${LIB_DIR}/${LIB_FILE}" ${OBJ_FILES}
+	$(QUIET) install -d "${LIB_DIR}"
+	$(QUIET) $(call _arduino_prop,compiler.ar.cmd) $(call _arduino_prop,compiler.ar.flags) "${LIB_DIR}/${LIB_FILE}" ${OBJ_FILES}
 
 ${OBJ_DIR}/%.o: ${top_dir}/testing/%.cpp ${H_FILES}
-	@echo "compile $@"
-	@install -d "${OBJ_DIR}"
-	g++ -o "$@" -c \
-	  -std=c++14 \
-		-I${top_dir} \
-		-I${top_dir}/src \
-		-I${bundle_path}/../../virtual/cores/arduino \
-		-I${bundle_path}/Kaleidoscope-HIDAdaptor-KeyboardioHID/src \
-		-I${bundle_path}/KeyboardioHID/src \
-		-I${top_dir}/testing/googletest/googlemock/include \
-		-I${top_dir}/testing/googletest/googletest/include \
-		-DARDUINO=10607 \
-		-DARDUINO_ARCH_VIRTUAL \
-		-DARDUINO_AVR_MODEL01 \
-		'-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Model01.h"' \
-		-DKALEIDOSCOPE_VIRTUAL_BUILD=1 \
-		-DKEYBOARDIOHID_BUILD_WITHOUT_HID=1 \
-		-DUSBCON=dummy \
-		-DARDUINO_ARCH_AVR=1 \
-		'-DUSB_PRODUCT="Model 01"' \
-		$<
+	$(info compile $@)
+	$(QUIET) install -d "${OBJ_DIR}"
+	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) -o "$@" -c -std=c++14 ${shared_includes} ${shared_defines} $<
 
 clean:
-	rm -rf "${build_dir}"
+	$(QUIET) rm -rf -- "${build_dir}"
+
+include $(top_dir)/etc/makefiles/arduino-cli.mk

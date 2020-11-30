@@ -1,5 +1,2 @@
-**/bin/
-**/lib/
-**/obj/
 /googletest/googletest/generated/
 /googletest/build/

@@ -13,7 +13,6 @@ env:
   global:
   - LC_ALL: C
   - CCACHE_WRAPPER_PATH: /tmp/kaleidoscope-ccache
-  - ARDUINO_DOWNLOAD_URL: https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz
 git:
   quiet: true
   depth: false
@@ -23,17 +22,15 @@ before_install:
 
 install:
   - cd $TRAVIS_BUILD_DIR
-  - git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio ../hardware/keyboardio
+  - git clone --depth 1 --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ --jobs 16 --shallow-submodules git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio $TRAVIS_BUILD_DIR/.arduino/user/hardware/keyboardio
 ## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
 ## This makes sure we're using the current version of the library.
-  - rm -rf ../hardware/keyboardio/avr/libraries/Kaleidoscope
-  - ln -s $(pwd) ../hardware/keyboardio/avr/libraries/Kaleidoscope
   - export KALEIDOSCOPE_TEMP_PATH=$TRAVIS_BUILD_DIR/.kaleidoscope-build-cache
-  - export BOARD_HARDWARE_PATH=$TRAVIS_BUILD_DIR/../hardware
-  - export ARDUINO_PATH=$TRAVIS_BUILD_DIR/arduino-1.8.13
+  - export KALEIDOSCOPE_ETC_DIR=$TRAVIS_BUILD_DIR/etc
   - make adjust-git-timestamps
-  - wget --quiet $ARDUINO_DOWNLOAD_URL -O - | tar xJf -
-  - make prepare-ccache
+  - make install-arduino-cli
+  - make configure-arduino-cli
+  - make install-arduino-core-avr
 jobs:
   include:
     - env: TEST_CMD="make -j 2 smoke-sketches"
@@ -53,5 +50,4 @@ cache:
   apt: true
   ccache: true
   directories:
-    - .download-cache
     - .kaleidoscope-build-cache
