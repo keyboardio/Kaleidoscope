@@ -202,6 +202,13 @@ typedef kaleidoscope::Key Key_;
 #define ___ Key_Transparent
 #define XXX Key_NoKey
 
+// -----------------------------------------------------------------------------
+// Constant keycode values
+#define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
+#define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
+#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
+#define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI
+
 #define KEY_BACKLIGHT_DOWN 0xf1
 #define KEY_BACKLIGHT_UP 0xf2
 #define Key_BacklightDown Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
