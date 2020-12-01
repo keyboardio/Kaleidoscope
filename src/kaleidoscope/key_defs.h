@@ -209,6 +209,27 @@ typedef kaleidoscope::Key Key_;
 #define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
 #define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI
 
+namespace kaleidoscope {
+namespace key_flags {
+// -----------------------------------------------------------------------------
+// Useful constants for the `Key` object's `flags` byte.
+
+// There are two bits available for Consumer Control & System Control keys to
+// use for storing information about the HID Usage Type. These bits are ones in
+// the following mask.
+constexpr uint8_t hid_type_mask = HID_TYPE_MASK;
+
+// The bits that must match exactly when checking if a `Key` value corresponds
+// to a System Control keycode.
+constexpr uint8_t system_control_mask = ~hid_type_mask;
+
+// The bits that must match exactly when checking if a `Key` value corresponds
+// to a Consumer Control keycode.
+constexpr uint8_t consumer_control_mask = (RESERVED | SYNTHETIC | IS_CONSUMER);
+
+}  // namespace key_flags
+} // namespace kaleidoscope
+
 #define KEY_BACKLIGHT_DOWN 0xf1
 #define KEY_BACKLIGHT_UP 0xf2
 #define Key_BacklightDown Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
