@@ -66,7 +66,7 @@ void HardwareTestMode::testLeds(void) {
 
   // rainbow for 10 seconds
   ::LEDRainbowEffect.update_delay(5);
-  for (auto i = 0; i < 300; i++) {
+  for (uint8_t i = 0; i < 254; i++) {
     ::LEDControl.update();
     ::LEDControl.syncLeds();
   }
