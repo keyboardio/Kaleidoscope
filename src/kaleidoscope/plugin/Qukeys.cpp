@@ -418,24 +418,11 @@ bool Qukeys::isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const {
 
 // -----------------------------------------------------------------------------
 
-// This function could get lifted into Kaleidoscope proper, since it might be
-// more generally useful. It's here to provide the test for a SpaceCadet-type
-// qukey, which is any Qukey that has a modifier (including layer shifts) as its
-// primary value.
+// This function is here to provide the test for a SpaceCadet-type qukey, which
+// is any Qukey that has a modifier (including layer shifts) as its primary
+// value.
 bool isModifierKey(Key key) {
-  // If it's a plain keyboard key, return true if its base keycode is a
-  // modifier, otherwise return false:
-  if ((key.getFlags() & (SYNTHETIC | RESERVED)) == 0) {
-    return (key.getKeyCode() >= HID_KEYBOARD_FIRST_MODIFIER &&
-            key.getKeyCode() <= HID_KEYBOARD_LAST_MODIFIER);
-  }
-  // If it's a layer shift key, return true:
-  if (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
-      key.getKeyCode() >= LAYER_SHIFT_OFFSET) {
-    return true;
-  }
-  // In all other cases, return false:
-  return false;
+  return (key.isKeyboardModifier() || key.isLayerShift());
 }
 
 } // namespace plugin {
