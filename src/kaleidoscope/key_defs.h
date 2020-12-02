@@ -26,6 +26,52 @@
 
 #include "kaleidoscope/key_defs_aliases.h"
 
+// -----------------------------------------------------------------------------
+// Constant keycode values
+#define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
+#define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
+#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
+#define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI
+
+// -----------------------------------------------------------------------------
+// Constant flags values
+#define KEY_FLAGS         B00000000
+#define CTRL_HELD         B00000001
+#define LALT_HELD         B00000010
+#define RALT_HELD         B00000100
+#define SHIFT_HELD        B00001000
+#define GUI_HELD          B00010000
+
+#define SYNTHETIC         B01000000
+#define RESERVED          B10000000
+
+// we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
+#define IS_SYSCTL                  B00000001
+#define IS_INTERNAL                B00000010
+#define SWITCH_TO_KEYMAP           B00000100
+#define IS_CONSUMER                B00001000
+
+// HID Usage Types: Because these constants, like the ones above, are
+// used in the flags byte of the Key class, they can't overlap any of
+// the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
+// the HID usage type of a keycode, which leaves us with only two
+// bits. Since we don't currently do anything different based on HID
+// usage type, these are currently all set to zeroes.
+#define HID_TYPE_CA    B00000000
+#define HID_TYPE_CL    B00000000
+#define HID_TYPE_LC    B00000000
+#define HID_TYPE_MC    B00000000
+#define HID_TYPE_NARY  B00000000
+#define HID_TYPE_OOC   B00000000
+#define HID_TYPE_OSC   B00000000
+#define HID_TYPE_RTC   B00000000
+#define HID_TYPE_SEL   B00000000
+#define HID_TYPE_SV    B00000000
+// Mask defining the allowed usage type flag bits:
+#define HID_TYPE_MASK  B00110000
+
+
+// =============================================================================
 namespace kaleidoscope {
 
 class Key {
@@ -121,9 +167,83 @@ class Key {
                pgm_read_byte(&(this->getFlags()))};
   }
 
+  // ---------------------------------------------------------------------------
+  // Builtin Key variant test functions
+  //
+  // The following functions return `true` if the `key` parameter is of the
+  // corresponding HID type (Keyboard, Consumer Control, or System Control).
+  constexpr bool isKeyboardKey() {
+    return ((flags_ & (RESERVED | SYNTHETIC)) == 0);
+  }
+  constexpr bool isSystemControlKey() {
+    return ((flags_ & system_control_mask_) == (SYNTHETIC | IS_SYSCTL));
+  }
+  constexpr bool isConsumerControlKey() {
+    return ((flags_ & consumer_control_mask_) == (SYNTHETIC | IS_CONSUMER));
+  }
+  // Not a HID type, but also a builtin `Key` variant.
+  constexpr bool isLayerKey() {
+    return (flags_ == (SYNTHETIC | SWITCH_TO_KEYMAP));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Additional utility functions for builtin `Key` variants
+  //
+  // An "intentional" Keyboard modifier is any HID Keyboard key that has a
+  // keycode byte corresponding to a modifier. This includes combination
+  // modifier keys like `LSHIFT(Key_RightAlt)` and `Key_Meh`. It will not match
+  // a key with only modifier flags (e.g. `LCTRL(RALT(Key_NoKey))`); this is an
+  // intentional feature so that plugins can distinguish between the two.
+  constexpr bool isKeyboardModifier() {
+    return (isKeyboardKey() &&
+            (keyCode_ >= HID_KEYBOARD_FIRST_MODIFIER &&
+             keyCode_ <= HID_KEYBOARD_LAST_MODIFIER));
+  }
+  // It's important to distinguish between "intentional" modifiers and
+  // "incidental" modifiers (non-modifier keys with a modifier flag). The
+  // following test matches any Keyboard modifier key that includes a `shift`
+  // keycode either in its keycode byte or in its flags. In this way, we treat
+  // all of the modifiers in a combination modifier key the same. There should
+  // be no difference between `LSHIFT(Key_RightAlt)` and `RALT(Key_LeftShift)`.
+  //
+  // The `shift` modifiers are special even among the Keyboard modifier keys
+  // (and several plugins single them out for this reason), because they are
+  // used in a conceptually different way: to get a different symbol in the
+  // output. We don't normally think "type `shift`+`1`"; we think "type `!`".
+  constexpr bool isKeyboardShift() {
+    return (isKeyboardModifier() &&
+            ((keyCode_ == HID_KEYBOARD_LEFT_SHIFT ||
+              keyCode_ == HID_KEYBOARD_RIGHT_SHIFT) ||
+             ((flags_ & SHIFT_HELD) != 0)));
+  }
+  // Layer shift keys are conceptually similar to Keyboard modifier keys in that
+  // they are used chorded to change the result of typing those other
+  // keys. They're even more similar to `shift` keys. For both reasons, it's
+  // worth singling them out.
+  constexpr bool isLayerShift() {
+    return (isLayerKey() &&
+            (keyCode_ >= LAYER_SHIFT_OFFSET));
+  }
+
  private:
   uint8_t keyCode_;
   uint8_t flags_;
+
+  // -----------------------------------------------------------------------------
+  // Useful constants for the `Key` object's `flags` byte.
+
+  // There are two bits available for Consumer Control & System Control keys to
+  // use for storing information about the HID Usage Type. These bits are ones
+  // in the following mask.
+  static constexpr uint8_t hid_type_mask_ = HID_TYPE_MASK;
+
+  // The bits that must match exactly when checking if a `Key` value corresponds
+  // to a System Control keycode.
+  static constexpr uint8_t system_control_mask_ = ~hid_type_mask_;
+
+  // The bits that must match exactly when checking if a `Key` value corresponds
+  // to a Consumer Control keycode.
+  static constexpr uint8_t consumer_control_mask_ = (RESERVED | SYNTHETIC | IS_CONSUMER);
 
 };
 
@@ -154,81 +274,17 @@ constexpr Key addFlags(Key k, uint8_t add_flags) {
 typedef kaleidoscope::Key Key;
 typedef kaleidoscope::Key Key_;
 
-#define KEY_FLAGS         B00000000
-#define CTRL_HELD         B00000001
-#define LALT_HELD         B00000010
-#define RALT_HELD         B00000100
-#define SHIFT_HELD        B00001000
-#define GUI_HELD          B00010000
-
-#define SYNTHETIC         B01000000
-#define RESERVED          B10000000
-
 #define LCTRL(k)  kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
 #define LALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
 #define RALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
 #define LSHIFT(k) kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
 #define LGUI(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
 
-// we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_SYSCTL                  B00000001
-#define IS_INTERNAL                B00000010
-#define SWITCH_TO_KEYMAP           B00000100
-#define IS_CONSUMER                B00001000
-
-// HID Usage Types: Because these constants, like the ones above, are
-// used in the flags byte of the Key class, they can't overlap any of
-// the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
-// the HID usage type of a keycode, which leaves us with only two
-// bits. Since we don't currently do anything different based on HID
-// usage type, these are currently all set to zeroes.
-#define HID_TYPE_CA    B00000000
-#define HID_TYPE_CL    B00000000
-#define HID_TYPE_LC    B00000000
-#define HID_TYPE_MC    B00000000
-#define HID_TYPE_NARY  B00000000
-#define HID_TYPE_OOC   B00000000
-#define HID_TYPE_OSC   B00000000
-#define HID_TYPE_RTC   B00000000
-#define HID_TYPE_SEL   B00000000
-#define HID_TYPE_SV    B00000000
-// Mask defining the allowed usage type flag bits:
-#define HID_TYPE_MASK  B00110000
-
-
 #define Key_NoKey Key(0, KEY_FLAGS)
 #define Key_skip Key(0, KEY_FLAGS)
 #define Key_Transparent Key(0xffff)
 #define ___ Key_Transparent
 #define XXX Key_NoKey
-
-// -----------------------------------------------------------------------------
-// Constant keycode values
-#define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
-#define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
-#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
-#define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI
-
-namespace kaleidoscope {
-namespace key_flags {
-// -----------------------------------------------------------------------------
-// Useful constants for the `Key` object's `flags` byte.
-
-// There are two bits available for Consumer Control & System Control keys to
-// use for storing information about the HID Usage Type. These bits are ones in
-// the following mask.
-constexpr uint8_t hid_type_mask = HID_TYPE_MASK;
-
-// The bits that must match exactly when checking if a `Key` value corresponds
-// to a System Control keycode.
-constexpr uint8_t system_control_mask = ~hid_type_mask;
-
-// The bits that must match exactly when checking if a `Key` value corresponds
-// to a Consumer Control keycode.
-constexpr uint8_t consumer_control_mask = (RESERVED | SYNTHETIC | IS_CONSUMER);
-
-}  // namespace key_flags
-} // namespace kaleidoscope
 
 #define KEY_BACKLIGHT_DOWN 0xf1
 #define KEY_BACKLIGHT_UP 0xf2
