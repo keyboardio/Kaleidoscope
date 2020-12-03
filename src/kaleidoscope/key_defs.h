@@ -172,17 +172,17 @@ class Key {
   //
   // The following functions return `true` if the `key` parameter is of the
   // corresponding HID type (Keyboard, Consumer Control, or System Control).
-  constexpr bool isKeyboardKey() {
+  constexpr bool isKeyboardKey() const {
     return ((flags_ & (RESERVED | SYNTHETIC)) == 0);
   }
-  constexpr bool isSystemControlKey() {
+  constexpr bool isSystemControlKey() const {
     return ((flags_ & system_control_mask_) == (SYNTHETIC | IS_SYSCTL));
   }
-  constexpr bool isConsumerControlKey() {
+  constexpr bool isConsumerControlKey() const {
     return ((flags_ & consumer_control_mask_) == (SYNTHETIC | IS_CONSUMER));
   }
   // Not a HID type, but also a builtin `Key` variant.
-  constexpr bool isLayerKey() {
+  constexpr bool isLayerKey() const {
     return (flags_ == (SYNTHETIC | SWITCH_TO_KEYMAP));
   }
 
@@ -194,7 +194,7 @@ class Key {
   // modifier keys like `LSHIFT(Key_RightAlt)` and `Key_Meh`. It will not match
   // a key with only modifier flags (e.g. `LCTRL(RALT(Key_NoKey))`); this is an
   // intentional feature so that plugins can distinguish between the two.
-  constexpr bool isKeyboardModifier() {
+  constexpr bool isKeyboardModifier() const {
     return (isKeyboardKey() &&
             (keyCode_ >= HID_KEYBOARD_FIRST_MODIFIER &&
              keyCode_ <= HID_KEYBOARD_LAST_MODIFIER));
@@ -210,7 +210,7 @@ class Key {
   // (and several plugins single them out for this reason), because they are
   // used in a conceptually different way: to get a different symbol in the
   // output. We don't normally think "type `shift`+`1`"; we think "type `!`".
-  constexpr bool isKeyboardShift() {
+  constexpr bool isKeyboardShift() const {
     return (isKeyboardModifier() &&
             ((keyCode_ == HID_KEYBOARD_LEFT_SHIFT ||
               keyCode_ == HID_KEYBOARD_RIGHT_SHIFT) ||
@@ -220,7 +220,7 @@ class Key {
   // they are used chorded to change the result of typing those other
   // keys. They're even more similar to `shift` keys. For both reasons, it's
   // worth singling them out.
-  constexpr bool isLayerShift() {
+  constexpr bool isLayerShift() const {
     return (isLayerKey() &&
             (keyCode_ >= LAYER_SHIFT_OFFSET));
   }
