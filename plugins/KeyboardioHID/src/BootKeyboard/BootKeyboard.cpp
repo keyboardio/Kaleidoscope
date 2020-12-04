@@ -191,8 +191,8 @@ bool BootKeyboard_::setup(USBSetup& setup) {
 
       // Input (set HID report)
       else if (setup.wValueH == HID_REPORT_TYPE_INPUT) {
-        if (length == sizeof(key_report_)) {
-          USB_RecvControl(&key_report_, length);
+        if (length == sizeof(report_)) {
+          USB_RecvControl(&report_, length);
           return true;
         }
       }
@@ -215,11 +215,11 @@ void BootKeyboard_::setProtocol(uint8_t protocol) {
 }
 
 int BootKeyboard_::sendReport() {
-  if (memcmp(&last_key_report_, &key_report_, sizeof(key_report_))) {
+  if (memcmp(&last_report_, &report_, sizeof(report_))) {
     // if the two reports are different, send a report
-    int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &key_report_, sizeof(key_report_));
-    HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &key_report_, sizeof(key_report_), returnCode);
-    memcpy(&last_key_report_, &key_report_, sizeof(key_report_));
+    int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &report_, sizeof(report_));
+    HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &report_, sizeof(report_), returnCode);
+    memcpy(&last_report_, &report_, sizeof(report_));
     return returnCode;
   }
   return -1;
@@ -236,15 +236,15 @@ size_t BootKeyboard_::press(uint8_t k) {
 
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
-    key_report_.modifiers |= (0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER));
+    report_.modifiers |= (0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER));
   } else {
     // it's some other key:
     // Add k to the key report only if it's not already present
     // and if there is an empty slot.
-    for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
-      if (key_report_.keycodes[i] != k) { // is k already in list?
-        if (0 == key_report_.keycodes[i]) { // have we found an empty slot?
-          key_report_.keycodes[i] = k;
+    for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
+      if (report_.keycodes[i] != k) { // is k already in list?
+        if (0 == report_.keycodes[i]) { // have we found an empty slot?
+          report_.keycodes[i] = k;
           done = 1;
           break;
         }
@@ -271,14 +271,14 @@ size_t BootKeyboard_::press(uint8_t k) {
 size_t BootKeyboard_::release(uint8_t k) {
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
-    key_report_.modifiers = key_report_.modifiers & (~(0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER)));
+    report_.modifiers = report_.modifiers & (~(0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER)));
   } else {
     // it's some other key:
     // Test the key report to see if k is present.  Clear it if it exists.
     // Check all positions in case the key is present more than once (which it shouldn't be)
-    for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
-      if (key_report_.keycodes[i] == k) {
-        key_report_.keycodes[i] = 0;
+    for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
+      if (report_.keycodes[i] == k) {
+        report_.keycodes[i] = 0;
       }
     }
 
@@ -289,11 +289,11 @@ size_t BootKeyboard_::release(uint8_t k) {
     //    (0x03)(0x02)(0x01)(0x00)(0x00)(0x00)
     uint8_t current = 0, nextpos = 0;
 
-    while (current < sizeof(key_report_.keycodes)) {
-      if (key_report_.keycodes[current]) {
-        uint8_t tmp = key_report_.keycodes[nextpos];
-        key_report_.keycodes[nextpos] = key_report_.keycodes[current];
-        key_report_.keycodes[current] = tmp;
+    while (current < sizeof(report_.keycodes)) {
+      if (report_.keycodes[current]) {
+        uint8_t tmp = report_.keycodes[nextpos];
+        report_.keycodes[nextpos] = report_.keycodes[current];
+        report_.keycodes[current] = tmp;
         ++nextpos;
       }
       ++current;
@@ -305,7 +305,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 
 
 void BootKeyboard_::releaseAll() {
-  memset(&key_report_.bytes, 0x00, sizeof(key_report_.bytes));
+  memset(&report_.bytes, 0x00, sizeof(report_.bytes));
 }
 
 
@@ -313,8 +313,8 @@ void BootKeyboard_::releaseAll() {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::isKeyPressed(uint8_t k) {
-  for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
-    if (key_report_.keycodes[i] == k) {
+  for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
+    if (report_.keycodes[i] == k) {
       return true;
     }
   }
@@ -325,8 +325,8 @@ bool BootKeyboard_::isKeyPressed(uint8_t k) {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::wasKeyPressed(uint8_t k) {
-  for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
-    if (last_key_report_.keycodes[i] == k) {
+  for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
+    if (last_report_.keycodes[i] == k) {
       return true;
     }
   }
@@ -341,7 +341,7 @@ bool BootKeyboard_::wasKeyPressed(uint8_t k) {
 bool BootKeyboard_::isModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
-    return !!(key_report_.modifiers & (1 << k));
+    return !!(report_.modifiers & (1 << k));
   }
   return false;
 }
@@ -352,7 +352,7 @@ bool BootKeyboard_::isModifierActive(uint8_t k) {
 bool BootKeyboard_::wasModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
-    return !!(last_key_report_.modifiers & (1 << k));
+    return !!(last_report_.modifiers & (1 << k));
   }
   return false;
 }
@@ -361,14 +361,14 @@ bool BootKeyboard_::wasModifierActive(uint8_t k) {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::isAnyModifierActive() {
-  return key_report_.modifiers > 0;
+  return report_.modifiers > 0;
 }
 
 /* Returns true if any modifier key was being sent during the previous key report
  * Returns false in all other cases
  * */
 bool BootKeyboard_::wasAnyModifierActive() {
-  return last_key_report_.modifiers > 0;
+  return last_report_.modifiers > 0;
 }
 
 BootKeyboard_ BootKeyboard;

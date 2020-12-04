@@ -68,7 +68,7 @@ class BootKeyboard_ : public PluggableUSBModule {
   uint8_t default_protocol = HID_REPORT_PROTOCOL;
 
  protected:
-  HID_BootKeyboardReport_Data_t key_report_, last_key_report_;
+  HID_BootKeyboardReport_Data_t report_, last_report_;
 
   // Implementation of the PUSBListNode
   int getInterface(uint8_t* interfaceCount);
