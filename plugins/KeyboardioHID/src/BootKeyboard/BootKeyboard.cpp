@@ -312,7 +312,7 @@ void BootKeyboard_::releaseAll() {
 /* Returns true if the non-modifer key passed in will be sent during this key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::isKeyPressed(uint8_t k) {
+bool BootKeyboard_::isKeyPressed(uint8_t k) {
   for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
     if (_keyReport.keycodes[i] == k) {
       return true;
@@ -324,7 +324,7 @@ boolean BootKeyboard_::isKeyPressed(uint8_t k) {
 /* Returns true if the non-modifer key passed in was sent during the previous key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::wasKeyPressed(uint8_t k) {
+bool BootKeyboard_::wasKeyPressed(uint8_t k) {
   for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
     if (_lastKeyReport.keycodes[i] == k) {
       return true;
@@ -338,7 +338,7 @@ boolean BootKeyboard_::wasKeyPressed(uint8_t k) {
 /* Returns true if the modifer key passed in will be sent during this key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::isModifierActive(uint8_t k) {
+bool BootKeyboard_::isModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
     return !!(_keyReport.modifiers & (1 << k));
@@ -349,7 +349,7 @@ boolean BootKeyboard_::isModifierActive(uint8_t k) {
 /* Returns true if the modifer key passed in was being sent during the previous key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::wasModifierActive(uint8_t k) {
+bool BootKeyboard_::wasModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
     return !!(_lastKeyReport.modifiers & (1 << k));
@@ -360,14 +360,14 @@ boolean BootKeyboard_::wasModifierActive(uint8_t k) {
 /* Returns true if any modifier key will be sent during this key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::isAnyModifierActive() {
+bool BootKeyboard_::isAnyModifierActive() {
   return _keyReport.modifiers > 0;
 }
 
 /* Returns true if any modifier key was being sent during the previous key report
  * Returns false in all other cases
  * */
-boolean BootKeyboard_::wasAnyModifierActive() {
+bool BootKeyboard_::wasAnyModifierActive() {
   return _lastKeyReport.modifiers > 0;
 }
 

@@ -57,12 +57,12 @@ class Keyboard_ {
   void  releaseAll();
   int sendReport();
 
-  boolean isKeyPressed(uint8_t k);
-  boolean wasKeyPressed(uint8_t k);
-  boolean isModifierActive(uint8_t k);
-  boolean wasModifierActive(uint8_t k);
-  boolean isAnyModifierActive();
-  boolean wasAnyModifierActive();
+  bool isKeyPressed(uint8_t k);
+  bool wasKeyPressed(uint8_t k);
+  bool isModifierActive(uint8_t k);
+  bool wasModifierActive(uint8_t k);
+  bool isAnyModifierActive();
+  bool wasAnyModifierActive();
 
   uint8_t getLEDs() {
     return HID().getLEDs();

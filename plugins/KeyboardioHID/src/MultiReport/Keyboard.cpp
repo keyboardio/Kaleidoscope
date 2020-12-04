@@ -154,7 +154,7 @@ int Keyboard_::sendReport() {
 /* Returns true if the modifer key passed in will be sent during this key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::isModifierActive(uint8_t k) {
+bool Keyboard_::isModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
     return !!(keyReport.modifiers & (1 << k));
@@ -165,7 +165,7 @@ boolean Keyboard_::isModifierActive(uint8_t k) {
 /* Returns true if the modifer key passed in was being sent during the previous key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::wasModifierActive(uint8_t k) {
+bool Keyboard_::wasModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
     return !!(lastKeyReport.modifiers & (1 << k));
@@ -176,14 +176,14 @@ boolean Keyboard_::wasModifierActive(uint8_t k) {
 /* Returns true if *any* modifier will be sent during this key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::isAnyModifierActive() {
+bool Keyboard_::isAnyModifierActive() {
   return keyReport.modifiers > 0;
 }
 
 /* Returns true if *any* modifier was being sent during the previous key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::wasAnyModifierActive() {
+bool Keyboard_::wasAnyModifierActive() {
   return lastKeyReport.modifiers > 0;
 }
 
@@ -191,7 +191,7 @@ boolean Keyboard_::wasAnyModifierActive() {
 /* Returns true if the non-modifier key passed in will be sent during this key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::isKeyPressed(uint8_t k) {
+bool Keyboard_::isKeyPressed(uint8_t k) {
   if (k <= HID_LAST_KEY) {
     uint8_t bit = 1 << (uint8_t(k) % 8);
     return !!(keyReport.keys[k / 8] & bit);
@@ -202,7 +202,7 @@ boolean Keyboard_::isKeyPressed(uint8_t k) {
 /* Returns true if the non-modifer key passed in was sent during the previous key report
  * Returns false in all other cases
  * */
-boolean Keyboard_::wasKeyPressed(uint8_t k) {
+bool Keyboard_::wasKeyPressed(uint8_t k) {
 
   if (k <= HID_LAST_KEY) {
     uint8_t bit = 1 << (uint8_t(k) % 8);
