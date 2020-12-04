@@ -48,14 +48,14 @@ typedef union {
 
 class Keyboard_ {
  public:
-  Keyboard_(void);
-  void begin(void);
-  void end(void);
+  Keyboard_();
+  void begin();
+  void end();
 
   size_t press(uint8_t k);
   size_t release(uint8_t k);
-  void  releaseAll(void);
-  int sendReport(void);
+  void  releaseAll();
+  int sendReport();
 
   boolean isKeyPressed(uint8_t k);
   boolean wasKeyPressed(uint8_t k);
@@ -71,6 +71,6 @@ class Keyboard_ {
   HID_KeyboardReport_Data_t keyReport;
   HID_KeyboardReport_Data_t lastKeyReport;
  private:
-  int sendReportUnchecked(void);
+  int sendReportUnchecked();
 };
 extern Keyboard_ Keyboard;

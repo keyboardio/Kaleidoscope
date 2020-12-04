@@ -67,17 +67,17 @@ static const uint8_t _hidMultiReportDescriptorMouse[] PROGMEM = {
   D_END_COLLECTION                                // END_COLLECTION
 };
 
-Mouse_::Mouse_(void) {
+Mouse_::Mouse_() {
 }
 
-void Mouse_::begin(void) {
+void Mouse_::begin() {
   static HIDSubDescriptor node(_hidMultiReportDescriptorMouse, sizeof(_hidMultiReportDescriptorMouse));
   HID().AppendDescriptor(&node);
 
   end();
 }
 
-void Mouse_::end(void) {
+void Mouse_::end() {
   releaseAll();
   sendReport();
 }
@@ -95,7 +95,7 @@ void Mouse_::move(signed char x, signed char y, signed char vWheel, signed char 
   report.hWheel = hWheel;
 }
 
-void Mouse_::releaseAll(void) {
+void Mouse_::releaseAll() {
   memset(&report, 0, sizeof(report));
 }
 
@@ -113,11 +113,11 @@ bool Mouse_::isPressed(uint8_t b) {
   return false;
 }
 
-void Mouse_::sendReportUnchecked(void) {
+void Mouse_::sendReportUnchecked() {
   HID().SendReport(HID_REPORTID_MOUSE, &report, sizeof(report));
 }
 
-void Mouse_::sendReport(void) {
+void Mouse_::sendReport() {
   // If the last report is different than the current report, then we need to send a report.
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
   // if sendReport is called in a tight loop.

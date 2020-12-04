@@ -78,12 +78,12 @@ static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
 
 };
 
-Keyboard_::Keyboard_(void) {
+Keyboard_::Keyboard_() {
   static HIDSubDescriptor node(_hidMultiReportDescriptorKeyboard, sizeof(_hidMultiReportDescriptorKeyboard));
   HID().AppendDescriptor(&node);
 }
 
-void Keyboard_::begin(void) {
+void Keyboard_::begin() {
   // Force API to send a clean report.
   // This is important for and HID bridge where the receiver stays on,
   // while the sender is resetted.
@@ -92,17 +92,17 @@ void Keyboard_::begin(void) {
 }
 
 
-void Keyboard_::end(void) {
+void Keyboard_::end() {
   releaseAll();
   sendReportUnchecked();
 }
 
-int Keyboard_::sendReportUnchecked(void) {
+int Keyboard_::sendReportUnchecked() {
   return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(keyReport));
 }
 
 
-int Keyboard_::sendReport(void) {
+int Keyboard_::sendReport() {
   // If the last report is different than the current report, then we need to send a report.
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
   // if sendReport is called in a tight loop.
@@ -252,7 +252,7 @@ size_t Keyboard_::release(uint8_t k) {
   return 0;
 }
 
-void Keyboard_::releaseAll(void) {
+void Keyboard_::releaseAll() {
   // Release all keys
   memset(&keyReport.allkeys, 0x00, sizeof(keyReport.allkeys));
 }

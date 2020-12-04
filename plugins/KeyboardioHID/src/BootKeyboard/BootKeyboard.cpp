@@ -73,7 +73,7 @@ static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
   D_END_COLLECTION
 };
 
-BootKeyboard_::BootKeyboard_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1), leds(0) {
+BootKeyboard_::BootKeyboard_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1), leds(0) {
   epType[0] = EP_TYPE_INTERRUPT_IN;
 }
 
@@ -109,7 +109,7 @@ int BootKeyboard_::getDescriptor(USBSetup& setup) {
 }
 
 
-void BootKeyboard_::begin(void) {
+void BootKeyboard_::begin() {
   PluggableUSB().plug(this);
 
   // Force API to send a clean report.
@@ -120,7 +120,7 @@ void BootKeyboard_::begin(void) {
 }
 
 
-void BootKeyboard_::end(void) {
+void BootKeyboard_::end() {
   releaseAll();
   sendReport();
 }
@@ -202,11 +202,11 @@ bool BootKeyboard_::setup(USBSetup& setup) {
   return false;
 }
 
-uint8_t BootKeyboard_::getLeds(void) {
+uint8_t BootKeyboard_::getLeds() {
   return leds;
 }
 
-uint8_t BootKeyboard_::getProtocol(void) {
+uint8_t BootKeyboard_::getProtocol() {
   return protocol;
 }
 
@@ -214,7 +214,7 @@ void BootKeyboard_::setProtocol(uint8_t protocol) {
   this->protocol = protocol;
 }
 
-int BootKeyboard_::sendReport(void) {
+int BootKeyboard_::sendReport() {
   if (memcmp(&_lastKeyReport, &_keyReport, sizeof(_keyReport))) {
     // if the two reports are different, send a report
     int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
@@ -304,7 +304,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 }
 
 
-void BootKeyboard_::releaseAll(void) {
+void BootKeyboard_::releaseAll() {
   memset(&_keyReport.bytes, 0x00, sizeof(_keyReport.bytes));
 }
 

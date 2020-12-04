@@ -89,11 +89,11 @@ class HIDSubDescriptor {
 class HID_ : public PluggableUSBModule {
  public:
 
-  HID_(void);
-  int begin(void);
+  HID_();
+  int begin();
   int SendReport(uint8_t id, const void* data, int len);
   void AppendDescriptor(HIDSubDescriptor* node);
-  uint8_t getLEDs(void) {
+  uint8_t getLEDs() {
     return setReportData.leds;
   };
 

@@ -99,14 +99,14 @@ typedef union {
 
 class Gamepad_ {
  public:
-  Gamepad_(void);
+  Gamepad_();
 
-  void begin(void);
-  void end(void);
-  void write(void);
+  void begin();
+  void end();
+  void write();
   void press(uint8_t b);
   void release(uint8_t b);
-  void releaseAll(void);
+  void releaseAll();
 
   void buttons(uint32_t b);
   void xAxis(int16_t a);

@@ -170,7 +170,7 @@ bool HID_::setup(USBSetup& setup) {
   return false;
 }
 
-HID_::HID_(void) : PluggableUSBModule(1, 1, epType),
+HID_::HID_() : PluggableUSBModule(1, 1, epType),
   rootNode(NULL), descriptorSize(0),
   protocol(HID_REPORT_PROTOCOL), idle(1) {
   setReportData.reportId = 0;
@@ -179,7 +179,7 @@ HID_::HID_(void) : PluggableUSBModule(1, 1, epType),
   PluggableUSB().plug(this);
 }
 
-int HID_::begin(void) {
+int HID_::begin() {
   return 0;
 }
 

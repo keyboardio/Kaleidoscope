@@ -39,15 +39,15 @@ typedef union {
 
 class SystemControl_ {
  public:
-  void begin(void);
-  void end(void);
+  void begin();
+  void end();
   void write(uint8_t s);
   void press(uint8_t s);
-  void release(void);
-  void releaseAll(void);
+  void release();
+  void releaseAll();
   void sendReport(void* data, int length);
 
-  SystemControl_(void);
+  SystemControl_();
 
  protected:
 };

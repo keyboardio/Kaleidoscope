@@ -75,23 +75,23 @@ static const uint8_t _hidMultiReportDescriptorGamepad[] PROGMEM = {
   D_END_COLLECTION								/* END_COLLECTION */
 };
 
-Gamepad_::Gamepad_(void) {
+Gamepad_::Gamepad_() {
   static HIDSubDescriptor node(_hidMultiReportDescriptorGamepad, sizeof(_hidMultiReportDescriptorGamepad));
   HID().AppendDescriptor(&node);
 }
 
 
-void Gamepad_::begin(void) {
+void Gamepad_::begin() {
   // release all buttons
   end();
 }
 
-void Gamepad_::end(void) {
+void Gamepad_::end() {
   memset(&_report, 0x00, sizeof(_report));
   sendReport(&_report, sizeof(_report));
 }
 
-void Gamepad_::write(void) {
+void Gamepad_::write() {
   sendReport(&_report, sizeof(_report));
 }
 
@@ -106,7 +106,7 @@ void Gamepad_::release(uint8_t b) {
 }
 
 
-void Gamepad_::releaseAll(void) {
+void Gamepad_::releaseAll() {
   memset(&_report, 0x00, sizeof(_report));
 }
 

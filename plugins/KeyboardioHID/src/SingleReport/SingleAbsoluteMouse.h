@@ -34,9 +34,9 @@ THE SOFTWARE.
 
 class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI {
  public:
-  SingleAbsoluteMouse_(void);
-  uint8_t getLeds(void);
-  uint8_t getProtocol(void);
+  SingleAbsoluteMouse_();
+  uint8_t getLeds();
+  uint8_t getProtocol();
 
  protected:
   // Implementation of the PUSBListNode

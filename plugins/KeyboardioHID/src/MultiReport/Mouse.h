@@ -45,9 +45,9 @@ typedef union {
 
 class Mouse_ {
  public:
-  Mouse_(void);
-  void begin(void);
-  void end(void);
+  Mouse_();
+  void begin();
+  void end();
   void click(uint8_t b = MOUSE_LEFT);
   void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
   void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
@@ -63,15 +63,15 @@ class Mouse_ {
   const HID_MouseReport_Data_t getReport() {
     return report;
   }
-  void sendReport(void);
+  void sendReport();
 
-  void releaseAll(void);
+  void releaseAll();
 
  protected:
   HID_MouseReport_Data_t report;
   HID_MouseReport_Data_t lastReport;
 
  private:
-  void sendReportUnchecked(void);
+  void sendReportUnchecked();
 };
 extern Mouse_ Mouse;

@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #pragma once
 
-AbsoluteMouseAPI::AbsoluteMouseAPI(void): xAxis(0), yAxis(0), _buttons(0) { // Empty
+AbsoluteMouseAPI::AbsoluteMouseAPI(): xAxis(0), yAxis(0), _buttons(0) { // Empty
 }
 
 void AbsoluteMouseAPI::buttons(uint8_t b) {
@@ -53,12 +53,12 @@ int16_t AbsoluteMouseAPI::qadd16(int16_t base, int16_t increment) {
   return base;
 }
 
-void AbsoluteMouseAPI::begin(void) {
+void AbsoluteMouseAPI::begin() {
   // release all buttons
   end();
 }
 
-void AbsoluteMouseAPI::end(void) {
+void AbsoluteMouseAPI::end() {
   _buttons = 0;
   moveTo(xAxis, yAxis, 0);
 }

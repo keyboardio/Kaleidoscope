@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 class AbsoluteMouse_ : public AbsoluteMouseAPI {
  public:
-  AbsoluteMouse_(void);
+  AbsoluteMouse_();
 
  protected:
   // Sending is public in the base class for advanced users.

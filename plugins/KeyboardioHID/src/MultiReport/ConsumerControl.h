@@ -44,22 +44,22 @@ typedef union {
 
 class ConsumerControl_ {
  public:
-  ConsumerControl_(void);
-  void begin(void);
-  void end(void);
+  ConsumerControl_();
+  void begin();
+  void end();
   void write(uint16_t m);
   void press(uint16_t m);
   void release(uint16_t m);
-  void releaseAll(void);
+  void releaseAll();
 
   // Sending is public in the base class for advanced users.
-  void sendReport(void);
+  void sendReport();
 
  protected:
   HID_ConsumerControlReport_Data_t _report;
   HID_ConsumerControlReport_Data_t _lastReport;
 
  private:
-  void sendReportUnchecked(void);
+  void sendReportUnchecked();
 };
 extern ConsumerControl_ ConsumerControl;

@@ -76,9 +76,9 @@ typedef union {
 
 class AbsoluteMouseAPI {
  public:
-  inline AbsoluteMouseAPI(void);
-  inline void begin(void);
-  inline void end(void);
+  inline AbsoluteMouseAPI();
+  inline void begin();
+  inline void end();
 
   inline void click(uint8_t b = MOUSE_LEFT);
   inline void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);

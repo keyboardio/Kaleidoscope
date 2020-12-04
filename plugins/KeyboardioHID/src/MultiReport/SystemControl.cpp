@@ -44,17 +44,17 @@ static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
   D_END_COLLECTION 									/* END_COLLECTION */
 };
 
-SystemControl_::SystemControl_(void) {
+SystemControl_::SystemControl_() {
   static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
   HID().AppendDescriptor(&node);
 }
 
-void SystemControl_::begin(void) {
+void SystemControl_::begin() {
   // release all buttons
   end();
 }
 
-void SystemControl_::end(void) {
+void SystemControl_::end() {
   uint8_t _report = 0x00;
   sendReport(&_report, sizeof(_report));
 }
@@ -64,11 +64,11 @@ void SystemControl_::write(uint8_t s) {
   release();
 }
 
-void SystemControl_::release(void) {
+void SystemControl_::release() {
   begin();
 }
 
-void SystemControl_::releaseAll(void) {
+void SystemControl_::releaseAll() {
   begin();
 }
 

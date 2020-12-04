@@ -45,14 +45,14 @@ typedef union {
 
 class BootKeyboard_ : public PluggableUSBModule {
  public:
-  BootKeyboard_(void);
+  BootKeyboard_();
   size_t press(uint8_t);
-  void begin(void);
-  void end(void);
+  void begin();
+  void end();
   size_t release(uint8_t);
-  void releaseAll(void);
+  void releaseAll();
 
-  int sendReport(void);
+  int sendReport();
 
   boolean isModifierActive(uint8_t k);
   boolean wasModifierActive(uint8_t k);
@@ -61,8 +61,8 @@ class BootKeyboard_ : public PluggableUSBModule {
   boolean isKeyPressed(uint8_t k);
   boolean wasKeyPressed(uint8_t k);
 
-  uint8_t getLeds(void);
-  uint8_t getProtocol(void);
+  uint8_t getLeds();
+  uint8_t getProtocol();
   void setProtocol(uint8_t protocol);
 
   uint8_t default_protocol = HID_REPORT_PROTOCOL;

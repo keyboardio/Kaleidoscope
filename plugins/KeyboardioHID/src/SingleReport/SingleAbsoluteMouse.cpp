@@ -38,7 +38,7 @@ static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
 };
 
 
-SingleAbsoluteMouse_::SingleAbsoluteMouse_(void) : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
+SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
   epType[0] = EP_TYPE_INTERRUPT_IN;
   PluggableUSB().plug(this);
 }

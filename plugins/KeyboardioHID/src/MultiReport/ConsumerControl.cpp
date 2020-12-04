@@ -43,17 +43,17 @@ static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
   D_END_COLLECTION /* end collection */
 };
 
-ConsumerControl_::ConsumerControl_(void) {
+ConsumerControl_::ConsumerControl_() {
   static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
   HID().AppendDescriptor(&node);
 }
 
-void ConsumerControl_::begin(void) {
+void ConsumerControl_::begin() {
   // release all buttons
   end();
 }
 
-void ConsumerControl_::end(void) {
+void ConsumerControl_::end() {
   memset(&_report, 0, sizeof(_report));
   sendReport();
 }
@@ -83,15 +83,15 @@ void ConsumerControl_::release(uint16_t m) {
   }
 }
 
-void ConsumerControl_::releaseAll(void) {
+void ConsumerControl_::releaseAll() {
   memset(&_report, 0, sizeof(_report));
 }
 
-void ConsumerControl_::sendReportUnchecked(void) {
+void ConsumerControl_::sendReportUnchecked() {
   HID().SendReport(HID_REPORTID_CONSUMERCONTROL, &_report, sizeof(_report));
 }
 
-void ConsumerControl_::sendReport(void) {
+void ConsumerControl_::sendReport() {
   // If the last report is different than the current report, then we need to send a report.
   // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
   // if sendReport is called in a tight loop.
