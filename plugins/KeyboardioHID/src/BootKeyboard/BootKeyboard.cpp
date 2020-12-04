@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "HIDReportObserver.h"
 
 // See Appendix B of USB HID spec
-static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {
+static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
   //  Keyboard
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
   D_USAGE, D_USAGE_KEYBOARD,
@@ -81,7 +81,7 @@ int BootKeyboard_::getInterface(uint8_t* interfaceCount) {
   *interfaceCount += 1; // uses 1
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT_INTERFACE, HID_PROTOCOL_KEYBOARD),
-    D_HIDREPORT(sizeof(_hidReportDescriptorKeyboard)),
+    D_HIDREPORT(sizeof(boot_keyboard_hid_descriptor_)),
     D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)
   };
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
@@ -105,7 +105,7 @@ int BootKeyboard_::getDescriptor(USBSetup& setup) {
   // due to the USB specs, but Windows and Linux just assumes its in report mode.
   protocol = default_protocol;
 
-  return USB_SendControl(TRANSFER_PGM, _hidReportDescriptorKeyboard, sizeof(_hidReportDescriptorKeyboard));
+  return USB_SendControl(TRANSFER_PGM, boot_keyboard_hid_descriptor_, sizeof(boot_keyboard_hid_descriptor_));
 }
 
 
@@ -191,8 +191,8 @@ bool BootKeyboard_::setup(USBSetup& setup) {
 
       // Input (set HID report)
       else if (setup.wValueH == HID_REPORT_TYPE_INPUT) {
-        if (length == sizeof(_keyReport)) {
-          USB_RecvControl(&_keyReport, length);
+        if (length == sizeof(key_report_)) {
+          USB_RecvControl(&key_report_, length);
           return true;
         }
       }
@@ -215,11 +215,11 @@ void BootKeyboard_::setProtocol(uint8_t protocol) {
 }
 
 int BootKeyboard_::sendReport() {
-  if (memcmp(&_lastKeyReport, &_keyReport, sizeof(_keyReport))) {
+  if (memcmp(&last_key_report_, &key_report_, sizeof(key_report_))) {
     // if the two reports are different, send a report
-    int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &_keyReport, sizeof(_keyReport));
-    HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &_keyReport, sizeof(_keyReport), returnCode);
-    memcpy(&_lastKeyReport, &_keyReport, sizeof(_keyReport));
+    int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &key_report_, sizeof(key_report_));
+    HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &key_report_, sizeof(key_report_), returnCode);
+    memcpy(&last_key_report_, &key_report_, sizeof(key_report_));
     return returnCode;
   }
   return -1;
@@ -236,15 +236,15 @@ size_t BootKeyboard_::press(uint8_t k) {
 
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
-    _keyReport.modifiers |= (0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER));
+    key_report_.modifiers |= (0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER));
   } else {
     // it's some other key:
     // Add k to the key report only if it's not already present
     // and if there is an empty slot.
-    for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
-      if (_keyReport.keycodes[i] != k) { // is k already in list?
-        if (0 == _keyReport.keycodes[i]) { // have we found an empty slot?
-          _keyReport.keycodes[i] = k;
+    for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
+      if (key_report_.keycodes[i] != k) { // is k already in list?
+        if (0 == key_report_.keycodes[i]) { // have we found an empty slot?
+          key_report_.keycodes[i] = k;
           done = 1;
           break;
         }
@@ -271,14 +271,14 @@ size_t BootKeyboard_::press(uint8_t k) {
 size_t BootKeyboard_::release(uint8_t k) {
   if ((k >= HID_KEYBOARD_FIRST_MODIFIER) && (k <= HID_KEYBOARD_LAST_MODIFIER)) {
     // it's a modifier key
-    _keyReport.modifiers = _keyReport.modifiers & (~(0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER)));
+    key_report_.modifiers = key_report_.modifiers & (~(0x01 << (k - HID_KEYBOARD_FIRST_MODIFIER)));
   } else {
     // it's some other key:
     // Test the key report to see if k is present.  Clear it if it exists.
     // Check all positions in case the key is present more than once (which it shouldn't be)
-    for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
-      if (_keyReport.keycodes[i] == k) {
-        _keyReport.keycodes[i] = 0;
+    for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
+      if (key_report_.keycodes[i] == k) {
+        key_report_.keycodes[i] = 0;
       }
     }
 
@@ -289,11 +289,11 @@ size_t BootKeyboard_::release(uint8_t k) {
     //    (0x03)(0x02)(0x01)(0x00)(0x00)(0x00)
     uint8_t current = 0, nextpos = 0;
 
-    while (current < sizeof(_keyReport.keycodes)) {
-      if (_keyReport.keycodes[current]) {
-        uint8_t tmp = _keyReport.keycodes[nextpos];
-        _keyReport.keycodes[nextpos] = _keyReport.keycodes[current];
-        _keyReport.keycodes[current] = tmp;
+    while (current < sizeof(key_report_.keycodes)) {
+      if (key_report_.keycodes[current]) {
+        uint8_t tmp = key_report_.keycodes[nextpos];
+        key_report_.keycodes[nextpos] = key_report_.keycodes[current];
+        key_report_.keycodes[current] = tmp;
         ++nextpos;
       }
       ++current;
@@ -305,7 +305,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 
 
 void BootKeyboard_::releaseAll() {
-  memset(&_keyReport.bytes, 0x00, sizeof(_keyReport.bytes));
+  memset(&key_report_.bytes, 0x00, sizeof(key_report_.bytes));
 }
 
 
@@ -313,8 +313,8 @@ void BootKeyboard_::releaseAll() {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::isKeyPressed(uint8_t k) {
-  for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
-    if (_keyReport.keycodes[i] == k) {
+  for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
+    if (key_report_.keycodes[i] == k) {
       return true;
     }
   }
@@ -325,8 +325,8 @@ bool BootKeyboard_::isKeyPressed(uint8_t k) {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::wasKeyPressed(uint8_t k) {
-  for (uint8_t i = 0; i < sizeof(_keyReport.keycodes); i++) {
-    if (_lastKeyReport.keycodes[i] == k) {
+  for (uint8_t i = 0; i < sizeof(key_report_.keycodes); i++) {
+    if (last_key_report_.keycodes[i] == k) {
       return true;
     }
   }
@@ -341,7 +341,7 @@ bool BootKeyboard_::wasKeyPressed(uint8_t k) {
 bool BootKeyboard_::isModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
-    return !!(_keyReport.modifiers & (1 << k));
+    return !!(key_report_.modifiers & (1 << k));
   }
   return false;
 }
@@ -352,7 +352,7 @@ bool BootKeyboard_::isModifierActive(uint8_t k) {
 bool BootKeyboard_::wasModifierActive(uint8_t k) {
   if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
     k = k - HID_KEYBOARD_FIRST_MODIFIER;
-    return !!(_lastKeyReport.modifiers & (1 << k));
+    return !!(last_key_report_.modifiers & (1 << k));
   }
   return false;
 }
@@ -361,14 +361,14 @@ bool BootKeyboard_::wasModifierActive(uint8_t k) {
  * Returns false in all other cases
  * */
 bool BootKeyboard_::isAnyModifierActive() {
-  return _keyReport.modifiers > 0;
+  return key_report_.modifiers > 0;
 }
 
 /* Returns true if any modifier key was being sent during the previous key report
  * Returns false in all other cases
  * */
 bool BootKeyboard_::wasAnyModifierActive() {
-  return _lastKeyReport.modifiers > 0;
+  return last_key_report_.modifiers > 0;
 }
 
 BootKeyboard_ BootKeyboard;

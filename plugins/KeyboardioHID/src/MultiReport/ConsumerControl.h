@@ -56,8 +56,8 @@ class ConsumerControl_ {
   void sendReport();
 
  protected:
-  HID_ConsumerControlReport_Data_t _report;
-  HID_ConsumerControlReport_Data_t _lastReport;
+  HID_ConsumerControlReport_Data_t report_;
+  HID_ConsumerControlReport_Data_t last_report_;
 
  private:
   void sendReportUnchecked();

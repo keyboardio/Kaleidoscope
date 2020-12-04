@@ -68,8 +68,8 @@ class Keyboard_ {
     return HID().getLEDs();
   };
 
-  HID_KeyboardReport_Data_t keyReport;
-  HID_KeyboardReport_Data_t lastKeyReport;
+  HID_KeyboardReport_Data_t key_report_;
+  HID_KeyboardReport_Data_t last_key_report_;
  private:
   int sendReportUnchecked();
 };

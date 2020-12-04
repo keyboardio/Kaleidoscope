@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "SystemControl.h"
 #include "DescriptorPrimitives.h"
 
-static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
+static const uint8_t system_control_hid_descriptor_[] PROGMEM = {
   //TODO limit to system keys only?
   /*  System Control (Power Down, Sleep, Wakeup, ...) */
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,								/* USAGE_PAGE (Generic Desktop) */
@@ -45,7 +45,7 @@ static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
 };
 
 SystemControl_::SystemControl_() {
-  static HIDSubDescriptor node(_hidMultiReportDescriptorSystem, sizeof(_hidMultiReportDescriptorSystem));
+  static HIDSubDescriptor node(system_control_hid_descriptor_, sizeof(system_control_hid_descriptor_));
   HID().AppendDescriptor(&node);
 }
 
@@ -55,8 +55,8 @@ void SystemControl_::begin() {
 }
 
 void SystemControl_::end() {
-  uint8_t _report = 0x00;
-  sendReport(&_report, sizeof(_report));
+  uint8_t report = 0x00;
+  sendReport(&report, sizeof(report));
 }
 
 void SystemControl_::write(uint8_t s) {

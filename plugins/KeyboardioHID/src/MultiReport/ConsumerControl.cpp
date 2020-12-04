@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "ConsumerControl.h"
 #include "DescriptorPrimitives.h"
 
-static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
+static const uint8_t consumer_control_hid_descriptor_[] PROGMEM = {
   /* Consumer Control (Sound/Media keys) */
   D_USAGE_PAGE, 0x0C,									/* usage page (consumer device) */
   D_USAGE, 0x01, 								/* usage -- consumer control */
@@ -44,7 +44,7 @@ static const uint8_t _hidMultiReportDescriptorConsumer[] PROGMEM = {
 };
 
 ConsumerControl_::ConsumerControl_() {
-  static HIDSubDescriptor node(_hidMultiReportDescriptorConsumer, sizeof(_hidMultiReportDescriptorConsumer));
+  static HIDSubDescriptor node(consumer_control_hid_descriptor_, sizeof(consumer_control_hid_descriptor_));
   HID().AppendDescriptor(&node);
 }
 
@@ -54,7 +54,7 @@ void ConsumerControl_::begin() {
 }
 
 void ConsumerControl_::end() {
-  memset(&_report, 0, sizeof(_report));
+  memset(&report_, 0, sizeof(report_));
   sendReport();
 }
 
@@ -66,8 +66,8 @@ void ConsumerControl_::write(uint16_t m) {
 void ConsumerControl_::press(uint16_t m) {
   // search for a free spot
   for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-    if (_report.keys[i] == 0x00) {
-      _report.keys[i] = m;
+    if (report_.keys[i] == 0x00) {
+      report_.keys[i] = m;
       break;
     }
   }
@@ -76,19 +76,19 @@ void ConsumerControl_::press(uint16_t m) {
 void ConsumerControl_::release(uint16_t m) {
   // search and release the keypress
   for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-    if (_report.keys[i] == m) {
-      _report.keys[i] = 0x00;
+    if (report_.keys[i] == m) {
+      report_.keys[i] = 0x00;
       // no break to delete multiple keys
     }
   }
 }
 
 void ConsumerControl_::releaseAll() {
-  memset(&_report, 0, sizeof(_report));
+  memset(&report_, 0, sizeof(report_));
 }
 
 void ConsumerControl_::sendReportUnchecked() {
-  HID().SendReport(HID_REPORTID_CONSUMERCONTROL, &_report, sizeof(_report));
+  HID().SendReport(HID_REPORTID_CONSUMERCONTROL, &report_, sizeof(report_));
 }
 
 void ConsumerControl_::sendReport() {
@@ -97,11 +97,11 @@ void ConsumerControl_::sendReport() {
   // if sendReport is called in a tight loop.
 
   // if the previous report is the same, return early without a new report.
-  if (memcmp(&_lastReport, &_report, sizeof(_report)) == 0)
+  if (memcmp(&last_report_, &report_, sizeof(report_)) == 0)
     return;
 
   sendReportUnchecked();
-  memcpy(&_lastReport, &_report, sizeof(_report));
+  memcpy(&last_report_, &report_, sizeof(report_));
 }
 
 ConsumerControl_ ConsumerControl;

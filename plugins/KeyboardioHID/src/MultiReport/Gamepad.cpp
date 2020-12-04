@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "Gamepad.h"
 #include "DescriptorPrimitives.h"
 
-static const uint8_t _hidMultiReportDescriptorGamepad[] PROGMEM = {
+static const uint8_t gamepad_hid_descriptor_[] PROGMEM = {
   /* Gamepad with 32 buttons and 6 axis*/
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,							/* USAGE_PAGE (Generic Desktop) */
   D_USAGE, D_USAGE_JOYSTICK,							/* USAGE (Joystick) */
@@ -76,7 +76,7 @@ static const uint8_t _hidMultiReportDescriptorGamepad[] PROGMEM = {
 };
 
 Gamepad_::Gamepad_() {
-  static HIDSubDescriptor node(_hidMultiReportDescriptorGamepad, sizeof(_hidMultiReportDescriptorGamepad));
+  static HIDSubDescriptor node(gamepad_hid_descriptor_, sizeof(gamepad_hid_descriptor_));
   HID().AppendDescriptor(&node);
 }
 
@@ -87,71 +87,71 @@ void Gamepad_::begin() {
 }
 
 void Gamepad_::end() {
-  memset(&_report, 0x00, sizeof(_report));
-  sendReport(&_report, sizeof(_report));
+  memset(&report_, 0x00, sizeof(report_));
+  sendReport(&report_, sizeof(report_));
 }
 
 void Gamepad_::write() {
-  sendReport(&_report, sizeof(_report));
+  sendReport(&report_, sizeof(report_));
 }
 
 
 void Gamepad_::press(uint8_t b) {
-  _report.buttons |= (uint32_t)1 << (b - 1);
+  report_.buttons |= (uint32_t)1 << (b - 1);
 }
 
 
 void Gamepad_::release(uint8_t b) {
-  _report.buttons &= ~((uint32_t)1 << (b - 1));
+  report_.buttons &= ~((uint32_t)1 << (b - 1));
 }
 
 
 void Gamepad_::releaseAll() {
-  memset(&_report, 0x00, sizeof(_report));
+  memset(&report_, 0x00, sizeof(report_));
 }
 
 void Gamepad_::buttons(uint32_t b) {
-  _report.buttons = b;
+  report_.buttons = b;
 }
 
 
 void Gamepad_::xAxis(int16_t a) {
-  _report.xAxis = a;
+  report_.xAxis = a;
 }
 
 
 void Gamepad_::yAxis(int16_t a) {
-  _report.yAxis = a;
+  report_.yAxis = a;
 }
 
 
 void Gamepad_::zAxis(int8_t a) {
-  _report.zAxis = a;
+  report_.zAxis = a;
 }
 
 
 void Gamepad_::rxAxis(int16_t a) {
-  _report.rxAxis = a;
+  report_.rxAxis = a;
 }
 
 
 void Gamepad_::ryAxis(int16_t a) {
-  _report.ryAxis = a;
+  report_.ryAxis = a;
 }
 
 
 void Gamepad_::rzAxis(int8_t a) {
-  _report.rzAxis = a;
+  report_.rzAxis = a;
 }
 
 
 void Gamepad_::dPad1(int8_t d) {
-  _report.dPad1 = d;
+  report_.dPad1 = d;
 }
 
 
 void Gamepad_::dPad2(int8_t d) {
-  _report.dPad2 = d;
+  report_.dPad2 = d;
 }
 
 

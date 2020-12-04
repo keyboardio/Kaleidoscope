@@ -91,9 +91,9 @@ class AbsoluteMouseAPI {
   virtual void sendReport(void* data, int length) {}
 
  protected:
-  uint16_t xAxis;
-  uint16_t yAxis;
-  uint8_t _buttons;
+  uint16_t x_axis_;
+  uint16_t y_axis_;
+  uint8_t buttons_;
 
   inline void buttons(uint8_t b);
   inline int16_t qadd16(int16_t base, int16_t increment);

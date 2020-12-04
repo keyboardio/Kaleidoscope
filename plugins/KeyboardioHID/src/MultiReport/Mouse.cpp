@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "Mouse.h"
 #include "DescriptorPrimitives.h"
 
-static const uint8_t _hidMultiReportDescriptorMouse[] PROGMEM = {
+static const uint8_t mouse_hid_descriptor_[] PROGMEM = {
   /*  Mouse relative */
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,           // USAGE_PAGE (Generic Desktop)
   D_USAGE, D_USAGE_MOUSE,                         //  USAGE (Mouse)
@@ -71,7 +71,7 @@ Mouse_::Mouse_() {
 }
 
 void Mouse_::begin() {
-  static HIDSubDescriptor node(_hidMultiReportDescriptorMouse, sizeof(_hidMultiReportDescriptorMouse));
+  static HIDSubDescriptor node(mouse_hid_descriptor_, sizeof(mouse_hid_descriptor_));
   HID().AppendDescriptor(&node);
 
   end();
@@ -88,33 +88,33 @@ void Mouse_::click(uint8_t b) {
   release(b);
 }
 
-void Mouse_::move(signed char x, signed char y, signed char vWheel, signed char hWheel) {
-  report.xAxis = x;
-  report.yAxis = y;
-  report.vWheel = vWheel;
-  report.hWheel = hWheel;
+void Mouse_::move(signed char x, signed char y, signed char v_wheel, signed char h_wheel) {
+  report_.xAxis = x;
+  report_.yAxis = y;
+  report_.vWheel = v_wheel;
+  report_.hWheel = h_wheel;
 }
 
 void Mouse_::releaseAll() {
-  memset(&report, 0, sizeof(report));
+  memset(&report_, 0, sizeof(report_));
 }
 
 void Mouse_::press(uint8_t b) {
-  report.buttons |= b;
+  report_.buttons |= b;
 }
 
 void Mouse_::release(uint8_t b) {
-  report.buttons &= ~b;
+  report_.buttons &= ~b;
 }
 
 bool Mouse_::isPressed(uint8_t b) {
-  if ((b & report.buttons) > 0)
+  if ((b & report_.buttons) > 0)
     return true;
   return false;
 }
 
 void Mouse_::sendReportUnchecked() {
-  HID().SendReport(HID_REPORTID_MOUSE, &report, sizeof(report));
+  HID().SendReport(HID_REPORTID_MOUSE, &report_, sizeof(report_));
 }
 
 void Mouse_::sendReport() {
@@ -124,13 +124,13 @@ void Mouse_::sendReport() {
 
   // if the two reports are the same, check if they're empty, and return early
   // without a report if they are.
-  static HID_MouseReport_Data_t emptyReport;
-  if (memcmp(&lastReport, &report, sizeof(report)) == 0 &&
-      memcmp(&report, &emptyReport, sizeof(report)) == 0)
+  static HID_MouseReport_Data_t empty_report;
+  if (memcmp(&last_report_, &report_, sizeof(report_)) == 0 &&
+      memcmp(&report_, &empty_report, sizeof(report_)) == 0)
     return;
 
   sendReportUnchecked();
-  memcpy(&lastReport, &report, sizeof(report));
+  memcpy(&last_report_, &report_, sizeof(report_));
 }
 
 Mouse_ Mouse;

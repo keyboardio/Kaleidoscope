@@ -25,13 +25,13 @@ THE SOFTWARE.
 
 #pragma once
 
-AbsoluteMouseAPI::AbsoluteMouseAPI(): xAxis(0), yAxis(0), _buttons(0) { // Empty
+AbsoluteMouseAPI::AbsoluteMouseAPI(): x_axis_(0), y_axis_(0), buttons_(0) { // Empty
 }
 
 void AbsoluteMouseAPI::buttons(uint8_t b) {
-  if (b != _buttons) {
-    _buttons = b;
-    moveTo(xAxis, yAxis, 0);
+  if (b != buttons_) {
+    buttons_ = b;
+    moveTo(x_axis_, y_axis_, 0);
   }
 }
 
@@ -59,22 +59,22 @@ void AbsoluteMouseAPI::begin() {
 }
 
 void AbsoluteMouseAPI::end() {
-  _buttons = 0;
-  moveTo(xAxis, yAxis, 0);
+  buttons_ = 0;
+  moveTo(x_axis_, y_axis_, 0);
 }
 
 void AbsoluteMouseAPI::click(uint8_t b) {
-  _buttons = b;
-  moveTo(xAxis, yAxis, 0);
-  _buttons = 0;
-  moveTo(xAxis, yAxis, 0);
+  buttons_ = b;
+  moveTo(x_axis_, y_axis_, 0);
+  buttons_ = 0;
+  moveTo(x_axis_, y_axis_, 0);
 }
 
 void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char wheel) {
-  xAxis = x;
-  yAxis = y;
+  x_axis_ = x;
+  y_axis_ = y;
   HID_MouseAbsoluteReport_Data_t report;
-  report.buttons = _buttons;
+  report.buttons = buttons_;
   report.xAxis = x;
   report.yAxis = y;
   report.wheel = wheel;
@@ -82,22 +82,22 @@ void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char wheel) {
 }
 
 void AbsoluteMouseAPI::move(int x, int y, signed char wheel) {
-  moveTo(qadd16(xAxis, x), qadd16(yAxis, y), wheel);
+  moveTo(qadd16(x_axis_, x), qadd16(y_axis_, y), wheel);
 }
 
 void AbsoluteMouseAPI::press(uint8_t b) {
   // press LEFT by default
-  buttons(_buttons | b);
+  buttons(buttons_ | b);
 }
 
 void AbsoluteMouseAPI::release(uint8_t b) {
   // release LEFT by default
-  buttons(_buttons & ~b);
+  buttons(buttons_ & ~b);
 }
 
 bool AbsoluteMouseAPI::isPressed(uint8_t b) {
   // check LEFT by default
-  if ((b & _buttons) > 0)
+  if ((b & buttons_) > 0)
     return true;
   return false;
 }

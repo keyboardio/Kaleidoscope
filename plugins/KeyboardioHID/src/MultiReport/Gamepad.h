@@ -120,6 +120,6 @@ class Gamepad_ {
 
   void sendReport(void* data, int length);
  protected:
-  HID_GamepadReport_Data_t _report;
+  HID_GamepadReport_Data_t report_;
 };
 extern Gamepad_ Gamepad;

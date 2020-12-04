@@ -49,7 +49,7 @@ class Mouse_ {
   void begin();
   void end();
   void click(uint8_t b = MOUSE_LEFT);
-  void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+  void move(signed char x, signed char y, signed char v_wheel = 0, signed char h_wheel = 0);
   void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
   void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
   bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
@@ -61,15 +61,15 @@ class Mouse_ {
    * @returns A copy of the report.
    */
   const HID_MouseReport_Data_t getReport() {
-    return report;
+    return report_;
   }
   void sendReport();
 
   void releaseAll();
 
  protected:
-  HID_MouseReport_Data_t report;
-  HID_MouseReport_Data_t lastReport;
+  HID_MouseReport_Data_t report_;
+  HID_MouseReport_Data_t last_report_;
 
  private:
   void sendReportUnchecked();
