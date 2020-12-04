@@ -33,35 +33,35 @@ THE SOFTWARE.
 #include "DescriptorPrimitives.h"
 
 
-#define DESCRIPTOR_ABS_MOUSE_BUTTONS  					  \
-  /* 8 Buttons */							  \
-  D_USAGE_PAGE, D_PAGE_BUTTON,             /* USAGE_PAGE (Button) */	  \
+#define DESCRIPTOR_ABS_MOUSE_BUTTONS \
+  /* 8 Buttons */                                                         \
+  D_USAGE_PAGE, D_PAGE_BUTTON,             /* USAGE_PAGE (Button) */      \
   D_USAGE_MINIMUM, 0x01,                   /* USAGE_MINIMUM (Button 1) */ \
   D_USAGE_MAXIMUM, 0x08,                   /* USAGE_MAXIMUM (Button 8) */ \
-  D_LOGICAL_MINIMUM, 0x00,                 /* LOGICAL_MINIMUM (0) */	  \
-  D_LOGICAL_MAXIMUM, 0x01,                 /* LOGICAL_MAXIMUM (1) */	  \
-  D_REPORT_COUNT, 0x08,                    /* REPORT_COUNT (8) */	  \
-  D_REPORT_SIZE, 0x01,                     /* REPORT_SIZE (1) */	  \
+  D_LOGICAL_MINIMUM, 0x00,                 /* LOGICAL_MINIMUM (0) */      \
+  D_LOGICAL_MAXIMUM, 0x01,                 /* LOGICAL_MAXIMUM (1) */      \
+  D_REPORT_COUNT, 0x08,                    /* REPORT_COUNT (8) */         \
+  D_REPORT_SIZE, 0x01,                     /* REPORT_SIZE (1) */          \
   D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
 # define DESCRIPTOR_ABS_MOUSE_XY \
-  /* X, Y */ 									 \
+  /* X, Y */                                                                     \
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,       /* USAGE_PAGE (Generic Desktop) */ \
-  D_USAGE, 0x30,                      	      /* USAGE (X) */			 \
-  D_USAGE, 0x31,                              /* USAGE (Y) */			 \
-  D_MULTIBYTE(D_LOGICAL_MINIMUM), 0x00, 0x00, /* Logical Minimum (0) */ 	 \
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x7f, /* Logical Maximum (32767) */	 \
-  D_REPORT_SIZE, 0x10,			      /* Report Size (16), */		 \
-  D_REPORT_COUNT, 0x02,		 	      /* Report Count (2), */		 \
+  D_USAGE, 0x30,                              /* USAGE (X) */                    \
+  D_USAGE, 0x31,                              /* USAGE (Y) */                    \
+  D_MULTIBYTE(D_LOGICAL_MINIMUM), 0x00, 0x00, /* Logical Minimum (0) */          \
+  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x7f, /* Logical Maximum (32767) */      \
+  D_REPORT_SIZE, 0x10,                        /* Report Size (16), */            \
+  D_REPORT_COUNT, 0x02,                       /* Report Count (2), */            \
   D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),    /* Input (Data, Variable, Absolute) */
 
 #define DESCRIPTOR_ABS_MOUSE_WHEEL \
-  /* Wheel */									\
-  D_USAGE, 0x38,                      	    /*     USAGE (Wheel) */		\
-  D_LOGICAL_MINIMUM, 0x81,                  /*     LOGICAL_MINIMUM (-127) */	\
-  D_LOGICAL_MAXIMUM, 0x7f,                  /*     LOGICAL_MAXIMUM (127) */	\
-  D_REPORT_SIZE, 0x08,                      /*     REPORT_SIZE (8) */		\
-  D_REPORT_COUNT, 0x01,                     /*     REPORT_COUNT (1) */		\
+  /* Wheel */                                                               \
+  D_USAGE, 0x38,                            /* USAGE (Wheel) */             \
+  D_LOGICAL_MINIMUM, 0x81,                  /* LOGICAL_MINIMUM (-127) */    \
+  D_LOGICAL_MAXIMUM, 0x7f,                  /* LOGICAL_MAXIMUM (127) */     \
+  D_REPORT_SIZE, 0x08,                      /* REPORT_SIZE (8) */           \
+  D_REPORT_COUNT, 0x01,                     /* REPORT_COUNT (1) */          \
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
 
 typedef union {
