@@ -81,8 +81,8 @@ class AbsoluteMouseAPI {
   inline void end();
 
   inline void click(uint8_t b = MOUSE_LEFT);
-  inline void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
-  inline void move(int x, int y, signed char wheel = 0);
+  inline void moveTo(uint16_t x, uint16_t y, int8_t wheel = 0);
+  inline void move(int x, int y, int8_t wheel = 0);
   inline void press(uint8_t b = MOUSE_LEFT);
   inline void release(uint8_t b = MOUSE_LEFT);
   inline bool isPressed(uint8_t b = MOUSE_LEFT);

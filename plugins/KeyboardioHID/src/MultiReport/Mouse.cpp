@@ -89,7 +89,7 @@ void Mouse_::click(uint8_t b) {
   release(b);
 }
 
-void Mouse_::move(signed char x, signed char y, signed char v_wheel, signed char h_wheel) {
+void Mouse_::move(int8_t x, int8_t y, int8_t v_wheel, int8_t h_wheel) {
   report_.xAxis = x;
   report_.yAxis = y;
   report_.vWheel = v_wheel;
