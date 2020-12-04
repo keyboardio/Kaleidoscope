@@ -46,10 +46,10 @@ typedef union {
 class BootKeyboard_ : public PluggableUSBModule {
  public:
   BootKeyboard_();
-  size_t press(uint8_t);
+  size_t press(uint8_t k);
   void begin();
   void end();
-  size_t release(uint8_t);
+  size_t release(uint8_t k);
   void releaseAll();
 
   int sendReport();
