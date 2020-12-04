@@ -32,12 +32,12 @@ THE SOFTWARE.
 #include "../DeviceAPIs/AbsoluteMouseAPI.h"
 
 class AbsoluteMouse_ : public AbsoluteMouseAPI {
-  public:
-    AbsoluteMouse_(void);
+ public:
+  AbsoluteMouse_(void);
 
-  protected:
-    // Sending is public in the base class for advanced users.
-    virtual void sendReport(void* data, int length);
+ protected:
+  // Sending is public in the base class for advanced users.
+  virtual void sendReport(void* data, int length);
 };
 
 extern AbsoluteMouse_ AbsoluteMouse;

@@ -38,7 +38,7 @@ THE SOFTWARE.
 // Not every HID usage listed in this file is currently supported by Arduino
 // In particular, any System Control or Consumer Control entry that doesn't
 // have a comment indicating that it's "HID type OSC" may require additional
-// code in the Arduino core to work, although // some keycodes with usage 
+// code in the Arduino core to work, although // some keycodes with usage
 // type RTC (Re-Trigger Control) and OOC (On/Off Control) are also functional.
 //
 // Non-working usages are listed here in the interest of not having to manually
