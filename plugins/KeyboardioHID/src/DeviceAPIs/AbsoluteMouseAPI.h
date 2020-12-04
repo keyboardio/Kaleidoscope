@@ -33,15 +33,15 @@ THE SOFTWARE.
 #include "DescriptorPrimitives.h"
 
 
-#define DESCRIPTOR_ABS_MOUSE_BUTTONS  					 \
-  /* 8 Buttons */							 \
-  D_USAGE_PAGE, D_PAGE_BUTTON,        /*     USAGE_PAGE (Button) */	 \
-  D_USAGE_MINIMUM, 0x01,              /*     USAGE_MINIMUM (Button 1) */ \
-  D_USAGE_MAXIMUM, 0x08,              /*     USAGE_MAXIMUM (Button 8) */ \
-  D_LOGICAL_MINIMUM, 0x00,            /*     LOGICAL_MINIMUM (0) */	 \
-  D_LOGICAL_MAXIMUM, 0x01,            /*     LOGICAL_MAXIMUM (1) */	 \
-  D_REPORT_COUNT, 0x08,               /*     REPORT_COUNT (8) */	 \
-  D_REPORT_SIZE, 0x01,                /*     REPORT_SIZE (1) */	         \
+#define DESCRIPTOR_ABS_MOUSE_BUTTONS  					  \
+  /* 8 Buttons */							  \
+  D_USAGE_PAGE, D_PAGE_BUTTON,             /* USAGE_PAGE (Button) */	  \
+  D_USAGE_MINIMUM, 0x01,                   /* USAGE_MINIMUM (Button 1) */ \
+  D_USAGE_MAXIMUM, 0x08,                   /* USAGE_MAXIMUM (Button 8) */ \
+  D_LOGICAL_MINIMUM, 0x00,                 /* LOGICAL_MINIMUM (0) */	  \
+  D_LOGICAL_MAXIMUM, 0x01,                 /* LOGICAL_MAXIMUM (1) */	  \
+  D_REPORT_COUNT, 0x08,                    /* REPORT_COUNT (8) */	  \
+  D_REPORT_SIZE, 0x01,                     /* REPORT_SIZE (1) */	  \
   D_INPUT, (D_DATA|D_VARIABLE|D_ABSOLUTE),
 
 # define DESCRIPTOR_ABS_MOUSE_XY \

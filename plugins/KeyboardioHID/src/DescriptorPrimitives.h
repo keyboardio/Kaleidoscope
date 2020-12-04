@@ -60,45 +60,44 @@ THE SOFTWARE.
 // The bits that make up inputs, outputs and features
 
 // Bit 0
-#define D_DATA         0b00000000
-#define D_CONSTANT     0b00000001
+#define D_DATA              0b00000000
+#define D_CONSTANT          0b00000001
 // Bit 1
-#define D_ARRAY        0b00000000
-#define D_VARIABLE     0b00000010
+#define D_ARRAY             0b00000000
+#define D_VARIABLE          0b00000010
 // Bit 2
-#define D_ABSOLUTE     0b00000000
-#define D_RELATIVE     0b00000100
+#define D_ABSOLUTE          0b00000000
+#define D_RELATIVE          0b00000100
 // Bit 3
-#define D_NO_WRAP      0b00000000
-#define D_WRAP         0b00001000
+#define D_NO_WRAP           0b00000000
+#define D_WRAP              0b00001000
 // Bit 4
-#define D_LINEAR       0b00000000
-#define D_NON_LINEAR   0b00010000
+#define D_LINEAR            0b00000000
+#define D_NON_LINEAR        0b00010000
 // Bit 5
-#define D_PREFERRED_STATE 0b00000000
-#define D_NO_PREFERRED    0b00100000
+#define D_PREFERRED_STATE   0b00000000
+#define D_NO_PREFERRED      0b00100000
 // Bit 6
-#define D_NO_NULL_POSITION      0b00000000
-#define D_NULL_STATE            0b01000000
+#define D_NO_NULL_POSITION  0b00000000
+#define D_NULL_STATE        0b01000000
 // Bit 7
-#define D_NON_VOLATILE    0b00000000
-#define D_VOLATILE        0b01000000
-
+#define D_NON_VOLATILE      0b00000000
+#define D_VOLATILE          0b01000000
 // Bit 8
-#define D_BIT_FIELD        0b00000000
-#define D_BUFFERED_BYTES   0b10000000
+#define D_BIT_FIELD         0b00000000
+#define D_BUFFERED_BYTES    0b10000000
 
 
 
 // Collection types
 
 
-#define D_PHYSICAL    0x00  // (group of axes)
-#define D_APPLICATION  0x01  // (mouse, keyboard)
-#define D_LOGICAL      0x02// (interrelated data)
-#define D_REPORT       0x03
-#define D_NAMED_ARRAY  0x04
-#define D_USAGE_SWITCH 0x05
+#define D_PHYSICAL        0x00  // (group of axes)
+#define D_APPLICATION     0x01  // (mouse, keyboard)
+#define D_LOGICAL         0x02  // (interrelated data)
+#define D_REPORT          0x03
+#define D_NAMED_ARRAY     0x04
+#define D_USAGE_SWITCH    0x05
 #define D_USAGE_MODIFIER  0x06
 // 0x07-0x7f - Reserved
 // 0x80-0xff - Vendor define

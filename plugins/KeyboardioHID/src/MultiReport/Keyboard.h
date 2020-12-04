@@ -45,7 +45,6 @@ typedef union {
 } HID_KeyboardReport_Data_t;
 
 
-
 class Keyboard_ {
  public:
   Keyboard_();

@@ -25,8 +25,8 @@ THE SOFTWARE.
 
 #pragma once
 
-AbsoluteMouseAPI::AbsoluteMouseAPI(): x_axis_(0), y_axis_(0), buttons_(0) { // Empty
-}
+AbsoluteMouseAPI::AbsoluteMouseAPI()
+    : x_axis_(0), y_axis_(0), buttons_(0) {}
 
 void AbsoluteMouseAPI::buttons(uint8_t b) {
   if (b != buttons_) {

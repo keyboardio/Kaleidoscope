@@ -34,7 +34,6 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_REPORT_ID, HID_REPORTID_NKRO_KEYBOARD,
   D_USAGE_PAGE, D_PAGE_KEYBOARD,
 
-
   /* Key modifier byte */
   D_USAGE_MINIMUM, HID_KEYBOARD_FIRST_MODIFIER,
   D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
@@ -43,7 +42,6 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_REPORT_SIZE, 0x01,
   D_REPORT_COUNT, 0x08,
   D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
 
   /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
   D_USAGE_PAGE, D_PAGE_LEDS,
@@ -75,18 +73,17 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_INPUT, (D_CONSTANT),
 
   D_END_COLLECTION,
-
 };
 
 Keyboard_::Keyboard_() {
-  static HIDSubDescriptor node(nkro_keyboard_hid_descriptor_, sizeof(nkro_keyboard_hid_descriptor_));
+  static HIDSubDescriptor node(nkro_keyboard_hid_descriptor_,
+                               sizeof(nkro_keyboard_hid_descriptor_));
   HID().AppendDescriptor(&node);
 }
 
 void Keyboard_::begin() {
-  // Force API to send a clean report.
-  // This is important for and HID bridge where the receiver stays on,
-  // while the sender is resetted.
+  // Force API to send a clean report.  This is important for and HID bridge
+  // where the receiver stays on, while the sender is resetted.
   releaseAll();
   sendReportUnchecked();
 }
@@ -103,39 +100,42 @@ int Keyboard_::sendReportUnchecked() {
 
 
 int Keyboard_::sendReport() {
-  // If the last report is different than the current report, then we need to send a report.
-  // We guard sendReport like this so that calling code doesn't end up spamming the host with empty reports
-  // if sendReport is called in a tight loop.
+  // If the last report is different than the current report, then we need to
+  // send a report.  We guard sendReport like this so that calling code doesn't
+  // end up spamming the host with empty reports if sendReport is called in a
+  // tight loop.
 
   if (memcmp(last_report_.allkeys, report_.allkeys, sizeof(report_))) {
     // if the two reports are different, send a report
 
-    // ChromeOS 51-60 (at least) bug: if a modifier and a normal keycode are added in the
-    // same report, in some cases the shift is not applied (e.g. `shift`+`[` doesn't yield
-    // `{`). To compensate for this, check to see if the modifier byte has changed.
+    // ChromeOS 51-60 (at least) bug: if a modifier and a normal keycode are
+    // added in the same report, in some cases the shift is not applied
+    // (e.g. `shift`+`[` doesn't yield `{`). To compensate for this, check to
+    // see if the modifier byte has changed.
 
-
-    // If modifiers are being turned on at the same time as any change
-    // to the non-modifier keys in the report, then we send the previous
-    // report with the new modifiers
+    // If modifiers are being turned on at the same time as any change to the
+    // non-modifier keys in the report, then we send the previous report with
+    // the new modifiers
     if (((last_report_.modifiers ^ report_.modifiers) & report_.modifiers)
         && (memcmp(last_report_.keys, report_.keys, sizeof(report_.keys)))) {
       uint8_t last_mods = last_report_.modifiers;
       last_report_.modifiers = report_.modifiers;
-      int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &last_report_, sizeof(last_report_));
+      int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD,
+                                        &last_report_, sizeof(last_report_));
       last_report_.modifiers = last_mods;
     }
 
-    // If modifiers are being turned off, then we send the new report with the previous modifiers.
-    // We need to do this, at least on Linux 4.17 + Wayland.
-    // Jesse has observed that sending Shift + 3 key up events in the same report
-    // will sometimes result in a spurious '3' rather than '#', especially when the keys
-    // had been held for a while
+    // If modifiers are being turned off, then we send the new report with the
+    // previous modifiers.  We need to do this, at least on Linux 4.17 +
+    // Wayland.  Jesse has observed that sending Shift + 3 key up events in the
+    // same report will sometimes result in a spurious '3' rather than '#',
+    // especially when the keys had been held for a while
     else if (((last_report_.modifiers ^ report_.modifiers) & last_report_.modifiers)
              && (memcmp(last_report_.keys, report_.keys, sizeof(report_.keys)))) {
       uint8_t mods = report_.modifiers;
       report_.modifiers = last_report_.modifiers;
-      int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &report_, sizeof(last_report_));
+      int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD,
+                                        &report_, sizeof(last_report_));
       report_.modifiers = mods;
     }
 

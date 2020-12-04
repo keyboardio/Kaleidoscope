@@ -41,7 +41,8 @@ static const uint8_t absolute_mouse_hid_descriptor_[] PROGMEM = {
 };
 
 AbsoluteMouse_::AbsoluteMouse_() {
-  static HIDSubDescriptor node(absolute_mouse_hid_descriptor_, sizeof(absolute_mouse_hid_descriptor_));
+  static HIDSubDescriptor node(absolute_mouse_hid_descriptor_,
+                               sizeof(absolute_mouse_hid_descriptor_));
   HID().AppendDescriptor(&node);
 }
 
