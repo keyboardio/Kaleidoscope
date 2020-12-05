@@ -35,11 +35,7 @@ EXPECT keyboard-report Key_1 # The report should contain only `1`
 RUN 5 ms
 RELEASE TOPSY_1
 RUN 1 cycle
-EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
-# Really the report above should be empty, but it seems to work okay in master
-# like this, and it will get fixed if and when Kaleidoscope becomes
-# event-driven.
-# EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
 RUN 5 ms
 RELEASE LSHIFT
