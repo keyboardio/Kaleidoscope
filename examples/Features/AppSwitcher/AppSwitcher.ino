@@ -61,6 +61,9 @@ KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
 
 void setup() {
   Kaleidoscope.setup();
+  // Uncomment to manually set the OS, as Kaleidoscope will not autodetect it.
+  // (Possible values are in HostOS.h.)
+  // HostOS.os(kaleidoscope::hostos::LINUX);
 }
 
 void loop() {
