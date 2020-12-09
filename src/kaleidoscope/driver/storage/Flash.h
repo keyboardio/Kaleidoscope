@@ -25,7 +25,7 @@
 
 #pragma once
 
-#ifdef __SAMD21G18A__
+#if defined(__SAMD21__) || defined(__SAMD51__)
 
 #include "kaleidoscope/driver/storage/Base.h"
 #include <FlashStorage.h>
