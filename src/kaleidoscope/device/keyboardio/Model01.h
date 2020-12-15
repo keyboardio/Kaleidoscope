@@ -32,12 +32,9 @@ struct cRGB {
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/keyboardio/Model01Side.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include "KeyboardioScanner.h"
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
 namespace device {
@@ -102,13 +99,13 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void setKeyscanInterval(uint8_t interval);
 
  protected:
-  static keydata_t leftHandState;
-  static keydata_t rightHandState;
-  static keydata_t previousLeftHandState;
-  static keydata_t previousRightHandState;
+  static driver::keyboardio::keydata_t leftHandState;
+  static driver::keyboardio::keydata_t rightHandState;
+  static driver::keyboardio::keydata_t previousLeftHandState;
+  static driver::keyboardio::keydata_t previousRightHandState;
 
-  static keydata_t leftHandMask;
-  static keydata_t rightHandMask;
+  static driver::keyboardio::keydata_t leftHandMask;
+  static driver::keyboardio::keydata_t rightHandMask;
 
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();
