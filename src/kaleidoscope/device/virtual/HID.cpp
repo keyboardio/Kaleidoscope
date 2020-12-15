@@ -24,7 +24,7 @@
 
 // Include KeyboardioHID's HID.h header
 //
-#include "HID.h"
+#include "kaleidoscope/driver/hid/keyboardio/HID/HID.h"
 
 #include "HIDReportObserver.h"
 

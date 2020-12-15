@@ -23,7 +23,6 @@
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include <KeyboardioHID.h>
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 

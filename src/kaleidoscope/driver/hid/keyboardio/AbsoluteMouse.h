@@ -18,7 +18,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <KeyboardioHID.h>
+#include "HID/KeyboardioHID.h"
 
 #include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"
 
