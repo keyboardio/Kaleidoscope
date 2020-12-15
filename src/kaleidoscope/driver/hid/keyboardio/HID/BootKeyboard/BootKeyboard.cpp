@@ -137,11 +137,11 @@ bool BootKeyboard_::setup(USBSetup& setup) {
 
     if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
         if (request == HID_GET_REPORT) {
-            // TODO: HID_GetReport();
+            // TODO(anyone): HID_GetReport();
             return true;
         }
         if (request == HID_GET_PROTOCOL) {
-            // TODO improve
+            // TODO(anyone) improve
 #ifdef __AVR__
             UEDATX = protocol;
 #endif
@@ -151,7 +151,7 @@ bool BootKeyboard_::setup(USBSetup& setup) {
             return true;
         }
         if (request == HID_GET_IDLE) {
-            // TODO improve
+            // TODO(anyone) improve
 #ifdef __AVR__
             UEDATX = idle;
 #endif
@@ -187,14 +187,13 @@ bool BootKeyboard_::setup(USBSetup& setup) {
                     USB_RecvControl(&leds, length);
                     return true;
                 }
-            }
-
-            // Input (set HID report)
-            else if (setup.wValueH == HID_REPORT_TYPE_INPUT) {
+            } else { // Input (set HID report)
+              if (setup.wValueH == HID_REPORT_TYPE_INPUT) {
                 if (length == sizeof(_keyReport)) {
                     USB_RecvControl(&_keyReport, length);
                     return true;
                 }
+              }
             }
         }
     }

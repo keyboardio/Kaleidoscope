@@ -94,7 +94,7 @@ class HID_ : public PluggableUSBModule {
     void AppendDescriptor(HIDSubDescriptor* node);
     uint8_t getLEDs(void) {
         return setReportData.leds;
-    };
+    }
 
   protected:
     // Implementation of the PluggableUSBModule

@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "../DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorSystem[] PROGMEM = {
-    //TODO limit to system keys only?
+    //TODO(anyone): limit to system keys only?
     /*  System Control (Power Down, Sleep, Wakeup, ...) */
     D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,								/* USAGE_PAGE (Generic Desktop) */
     D_USAGE, 0x80,								/* USAGE (System Control) */

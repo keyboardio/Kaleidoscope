@@ -124,24 +124,21 @@ int Keyboard_::sendReport(void) {
             lastKeyReport.modifiers = keyReport.modifiers;
             int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &lastKeyReport, sizeof(lastKeyReport));
             lastKeyReport.modifiers = last_mods;
-        }
+        } else {
+          // If modifiers are being turned off, then we send the new report with the previous modifiers.
+          // We need to do this, at least on Linux 4.17 + Wayland.
+          // Jesse has observed that sending Shift + 3 key up events in the same report
+          // will sometimes result in a spurious '3' rather than '#', especially when the keys
+          // had been held for a while
 
-        // If modifiers are being turned off, then we send the new report with the previous modifiers.
-        // We need to do this, at least on Linux 4.17 + Wayland.
-        // Jesse has observed that sending Shift + 3 key up events in the same report
-        // will sometimes result in a spurious '3' rather than '#', especially when the keys
-        // had been held for a while
-        else if (( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers)
-                 && (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
+          if (( (lastKeyReport.modifiers ^ keyReport.modifiers) & lastKeyReport.modifiers)
+              && (memcmp(lastKeyReport.keys,keyReport.keys, sizeof(keyReport.keys)))) {
             uint8_t mods = keyReport.modifiers;
             keyReport.modifiers = lastKeyReport.modifiers;
             int returnCode = HID().SendReport(HID_REPORTID_NKRO_KEYBOARD, &keyReport, sizeof(lastKeyReport));
             keyReport.modifiers = mods;
+          }
         }
-
-
-
-
 
         int returnCode = sendReportUnchecked();
         if (returnCode > 0)
@@ -218,14 +215,13 @@ size_t Keyboard_::press(uint8_t k) {
         uint8_t bit = 1 << (uint8_t(k) % 8);
         keyReport.keys[k / 8] |= bit;
         return 1;
-    }
-
-    // It's a modifier key
-    else if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    } else { // It's a modifier key
+      if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
         // Convert key into bitfield (0 - 7)
         k = k - HID_KEYBOARD_FIRST_MODIFIER;
         keyReport.modifiers |= (1 << k);
         return 1;
+      }
     }
 
     // No empty/pressed key was found
@@ -238,14 +234,13 @@ size_t Keyboard_::release(uint8_t k) {
         uint8_t bit = 1 << (k % 8);
         keyReport.keys[k / 8] &= ~bit;
         return 1;
-    }
-
-    // It's a modifier key
-    else if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
+    } else { // It's a modifier key
+      if (k >= HID_KEYBOARD_FIRST_MODIFIER && k <= HID_KEYBOARD_LAST_MODIFIER) {
         // Convert key into bitfield (0 - 7)
         k = k - HID_KEYBOARD_FIRST_MODIFIER;
         keyReport.modifiers &= ~(1 << k);
         return 1;
+      }
     }
 
     // No empty/pressed key was found
