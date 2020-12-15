@@ -137,7 +137,9 @@ $(KALEIDOSCOPE_BIN_DIR)/arduino-cli:
 
 install-arduino-cli: $(KALEIDOSCOPE_BIN_DIR)/arduino-cli
 
-configure-arduino-cli:
+configure-arduino-cli: $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml
+
+$(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml:
 	$(QUIET) $(ARDUINO_CLI) config init
 
 install-arduino-core-kaleidoscope:
