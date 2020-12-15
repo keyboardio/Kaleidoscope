@@ -33,21 +33,21 @@ THE SOFTWARE.
 
 
 class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI {
-  public:
-    SingleAbsoluteMouse_(void);
-    uint8_t getLeds(void);
-    uint8_t getProtocol(void);
+ public:
+  SingleAbsoluteMouse_(void);
+  uint8_t getLeds(void);
+  uint8_t getProtocol(void);
 
-  protected:
-    // Implementation of the PUSBListNode
-    int getInterface(uint8_t* interfaceCount);
-    int getDescriptor(USBSetup& setup);
-    bool setup(USBSetup& setup);
+ protected:
+  // Implementation of the PUSBListNode
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
 
-    EPTYPE_DESCRIPTOR_SIZE epType[1];
-    uint8_t protocol;
-    uint8_t idle;
+  EPTYPE_DESCRIPTOR_SIZE epType[1];
+  uint8_t protocol;
+  uint8_t idle;
 
-    inline void sendReport(void* data, int length) override;
+  inline void sendReport(void* data, int length) override;
 };
 extern SingleAbsoluteMouse_ SingleAbsoluteMouse;

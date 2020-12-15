@@ -65,38 +65,38 @@ THE SOFTWARE.
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
 
 typedef union {
-    // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
-    struct {
-        uint8_t buttons;
-        uint16_t xAxis;
-        uint16_t yAxis;
-        int8_t wheel;
-    };
+  // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
+  struct {
+    uint8_t buttons;
+    uint16_t xAxis;
+    uint16_t yAxis;
+    int8_t wheel;
+  };
 } HID_MouseAbsoluteReport_Data_t;
 
 class AbsoluteMouseAPI {
-  public:
-    inline AbsoluteMouseAPI(void);
-    inline void begin(void);
-    inline void end(void);
+ public:
+  inline AbsoluteMouseAPI(void);
+  inline void begin(void);
+  inline void end(void);
 
-    inline void click(uint8_t b = MOUSE_LEFT);
-    inline void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
-    inline void move(int x, int y, signed char wheel = 0);
-    inline void press(uint8_t b = MOUSE_LEFT);
-    inline void release(uint8_t b = MOUSE_LEFT);
-    inline bool isPressed(uint8_t b = MOUSE_LEFT);
+  inline void click(uint8_t b = MOUSE_LEFT);
+  inline void moveTo(uint16_t x, uint16_t y, signed char wheel = 0);
+  inline void move(int x, int y, signed char wheel = 0);
+  inline void press(uint8_t b = MOUSE_LEFT);
+  inline void release(uint8_t b = MOUSE_LEFT);
+  inline bool isPressed(uint8_t b = MOUSE_LEFT);
 
-    // Sending is public in the base class for advanced users.
-    virtual void sendReport(void* data, int length) {}
+  // Sending is public in the base class for advanced users.
+  virtual void sendReport(void* data, int length) {}
 
-  protected:
-    uint16_t xAxis;
-    uint16_t yAxis;
-    uint8_t _buttons;
+ protected:
+  uint16_t xAxis;
+  uint16_t yAxis;
+  uint8_t _buttons;
 
-    inline void buttons(uint8_t b);
-    inline int16_t qadd16(int16_t base, int16_t increment);
+  inline void buttons(uint8_t b);
+  inline int16_t qadd16(int16_t base, int16_t increment);
 };
 
 #include "AbsoluteMouseAPI.hpp"

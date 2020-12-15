@@ -33,52 +33,52 @@ THE SOFTWARE.
 #include "../HIDAliases.h"
 
 typedef union {
-    // Low level key report: up to 6 keys and shift, ctrl etc at once
-    struct {
-        uint8_t modifiers;
-        uint8_t reserved;
-        uint8_t keycodes[6];
-    };
-    uint8_t bytes[8];
+  // Low level key report: up to 6 keys and shift, ctrl etc at once
+  struct {
+    uint8_t modifiers;
+    uint8_t reserved;
+    uint8_t keycodes[6];
+  };
+  uint8_t bytes[8];
 } HID_BootKeyboardReport_Data_t;
 
 
 class BootKeyboard_ : public PluggableUSBModule {
-  public:
-    BootKeyboard_(void);
-    size_t press(uint8_t);
-    void begin(void);
-    void end(void);
-    size_t release(uint8_t);
-    void releaseAll(void);
+ public:
+  BootKeyboard_(void);
+  size_t press(uint8_t);
+  void begin(void);
+  void end(void);
+  size_t release(uint8_t);
+  void releaseAll(void);
 
-    int sendReport(void);
+  int sendReport(void);
 
-    boolean isModifierActive(uint8_t k);
-    boolean wasModifierActive(uint8_t k);
-    boolean isAnyModifierActive();
-    boolean wasAnyModifierActive();
-    boolean isKeyPressed(uint8_t k);
-    boolean wasKeyPressed(uint8_t k);
+  boolean isModifierActive(uint8_t k);
+  boolean wasModifierActive(uint8_t k);
+  boolean isAnyModifierActive();
+  boolean wasAnyModifierActive();
+  boolean isKeyPressed(uint8_t k);
+  boolean wasKeyPressed(uint8_t k);
 
-    uint8_t getLeds(void);
-    uint8_t getProtocol(void);
-    void setProtocol(uint8_t protocol);
+  uint8_t getLeds(void);
+  uint8_t getProtocol(void);
+  void setProtocol(uint8_t protocol);
 
-    uint8_t default_protocol = HID_REPORT_PROTOCOL;
+  uint8_t default_protocol = HID_REPORT_PROTOCOL;
 
-  protected:
-    HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;
+ protected:
+  HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;
 
-    // Implementation of the PUSBListNode
-    int getInterface(uint8_t* interfaceCount);
-    int getDescriptor(USBSetup& setup);
-    bool setup(USBSetup& setup);
+  // Implementation of the PUSBListNode
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
 
-    EPTYPE_DESCRIPTOR_SIZE epType[1];
-    uint8_t protocol;
-    uint8_t idle;
+  EPTYPE_DESCRIPTOR_SIZE epType[1];
+  uint8_t protocol;
+  uint8_t idle;
 
-    uint8_t leds;
+  uint8_t leds;
 };
 extern BootKeyboard_ BootKeyboard;

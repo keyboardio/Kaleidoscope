@@ -26,29 +26,30 @@ THE SOFTWARE.
 
 #include <stdint.h>
 
-class HIDReportObserver
-{
-   public:
+class HIDReportObserver {
+ public:
 
-    typedef void(*SendReportHook)(uint8_t id, const void* data, 
-                                  int len, int result);
-    
-    static void observeReport(uint8_t id, const void* data, 
-                                  int len, int result) {
-       if(send_report_hook_) {
-          (*send_report_hook_)(id, data, len, result);
-       }
+  typedef void(*SendReportHook)(uint8_t id, const void* data,
+                                int len, int result);
+
+  static void observeReport(uint8_t id, const void* data,
+                            int len, int result) {
+    if (send_report_hook_) {
+      (*send_report_hook_)(id, data, len, result);
     }
-      
-    static SendReportHook currentHook() { return send_report_hook_; }
-    
-    static SendReportHook resetHook(SendReportHook new_hook) {
-       auto previous_hook = send_report_hook_;
-       send_report_hook_ = new_hook; 
-       return previous_hook;
-   }
-      
-   private:
-      
-      static SendReportHook send_report_hook_;
+  }
+
+  static SendReportHook currentHook() {
+    return send_report_hook_;
+  }
+
+  static SendReportHook resetHook(SendReportHook new_hook) {
+    auto previous_hook = send_report_hook_;
+    send_report_hook_ = new_hook;
+    return previous_hook;
+  }
+
+ private:
+
+  static SendReportHook send_report_hook_;
 };

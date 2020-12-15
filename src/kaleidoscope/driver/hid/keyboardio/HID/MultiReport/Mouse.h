@@ -32,46 +32,46 @@ THE SOFTWARE.
 #include "../MouseButtons.h"
 
 typedef union {
-    // Mouse report: 8 buttons, position, wheel
-    struct {
-        uint8_t buttons;
-        int8_t xAxis;
-        int8_t yAxis;
-        int8_t vWheel;
-        int8_t hWheel;
-    };
+  // Mouse report: 8 buttons, position, wheel
+  struct {
+    uint8_t buttons;
+    int8_t xAxis;
+    int8_t yAxis;
+    int8_t vWheel;
+    int8_t hWheel;
+  };
 } HID_MouseReport_Data_t;
 
 
 class Mouse_ {
-  public:
-    Mouse_(void);
-    void begin(void);
-    void end(void);
-    void click(uint8_t b = MOUSE_LEFT);
-    void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
-    void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
-    void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
-    bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
+ public:
+  Mouse_(void);
+  void begin(void);
+  void end(void);
+  void click(uint8_t b = MOUSE_LEFT);
+  void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
+  void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
+  void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
+  bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
 
-    /** getReport returns the current report.
-     *
-     * The current report is the one to be send next time sendReport() is called.
-     *
-     * @returns A copy of the report.
-     */
-    const HID_MouseReport_Data_t getReport() {
-        return report;
-    }
-    void sendReport(void);
+  /** getReport returns the current report.
+   *
+   * The current report is the one to be send next time sendReport() is called.
+   *
+   * @returns A copy of the report.
+   */
+  const HID_MouseReport_Data_t getReport() {
+    return report;
+  }
+  void sendReport(void);
 
-    void releaseAll(void);
+  void releaseAll(void);
 
-  protected:
-    HID_MouseReport_Data_t report;
-    HID_MouseReport_Data_t lastReport;
+ protected:
+  HID_MouseReport_Data_t report;
+  HID_MouseReport_Data_t lastReport;
 
-  private:
-    void sendReportUnchecked(void);
+ private:
+  void sendReportUnchecked(void);
 };
 extern Mouse_ Mouse;

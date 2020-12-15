@@ -59,63 +59,63 @@
 #define HID_REPORT_TYPE_FEATURE 3
 
 typedef struct {
-    uint8_t len;      // 9
-    uint8_t dtype;    // 0x21
-    uint8_t addr;
-    uint8_t versionL; // 0x101
-    uint8_t versionH; // 0x101
-    uint8_t country;
-    uint8_t desctype; // 0x22 report
-    uint8_t descLenL;
-    uint8_t descLenH;
+  uint8_t len;      // 9
+  uint8_t dtype;    // 0x21
+  uint8_t addr;
+  uint8_t versionL; // 0x101
+  uint8_t versionH; // 0x101
+  uint8_t country;
+  uint8_t desctype; // 0x22 report
+  uint8_t descLenL;
+  uint8_t descLenH;
 } HIDDescDescriptor;
 
 typedef struct {
-    InterfaceDescriptor hid;
-    HIDDescDescriptor   desc;
-    EndpointDescriptor  in;
+  InterfaceDescriptor hid;
+  HIDDescDescriptor   desc;
+  EndpointDescriptor  in;
 } HIDDescriptor;
 
 class HIDSubDescriptor {
-  public:
-    HIDSubDescriptor *next = NULL;
-    HIDSubDescriptor(const void *d, const uint16_t l) : data(d), length(l) { }
+ public:
+  HIDSubDescriptor *next = NULL;
+  HIDSubDescriptor(const void *d, const uint16_t l) : data(d), length(l) { }
 
-    const void* data;
-    const uint16_t length;
+  const void* data;
+  const uint16_t length;
 };
 
 class HID_ : public PluggableUSBModule {
-  public:
+ public:
 
-    HID_(void);
-    int begin(void);
-    int SendReport(uint8_t id, const void* data, int len);
-    void AppendDescriptor(HIDSubDescriptor* node);
-    uint8_t getLEDs(void) {
-        return setReportData.leds;
-    }
+  HID_(void);
+  int begin(void);
+  int SendReport(uint8_t id, const void* data, int len);
+  void AppendDescriptor(HIDSubDescriptor* node);
+  uint8_t getLEDs(void) {
+    return setReportData.leds;
+  }
 
-  protected:
-    // Implementation of the PluggableUSBModule
-    int getInterface(uint8_t* interfaceCount);
-    int getDescriptor(USBSetup& setup);
-    bool setup(USBSetup& setup);
-    uint8_t getShortName(char* name);
+ protected:
+  // Implementation of the PluggableUSBModule
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
+  uint8_t getShortName(char* name);
 
-    int SendReport_(uint8_t id, const void* data, int len);
-  private:
-    EPTYPE_DESCRIPTOR_SIZE epType[1];
+  int SendReport_(uint8_t id, const void* data, int len);
+ private:
+  EPTYPE_DESCRIPTOR_SIZE epType[1];
 
-    HIDSubDescriptor* rootNode;
-    uint16_t descriptorSize;
+  HIDSubDescriptor* rootNode;
+  uint16_t descriptorSize;
 
-    uint8_t protocol;
-    uint8_t idle;
-    struct {
-        uint8_t reportId;
-        uint8_t leds;
-    } setReportData;
+  uint8_t protocol;
+  uint8_t idle;
+  struct {
+    uint8_t reportId;
+    uint8_t leds;
+  } setReportData;
 };
 
 // Replacement for global singleton.

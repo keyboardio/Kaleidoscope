@@ -32,24 +32,24 @@ THE SOFTWARE.
 #include "../HIDTables.h"
 
 typedef union {
-    // Every usable system control key possible
-    uint8_t key;
+  // Every usable system control key possible
+  uint8_t key;
 } HID_SystemControlReport_Data_t;
 
 
 class SystemControl_ {
-  public:
-    void begin(void);
-    void end(void);
-    void write(uint8_t s);
-    void press(uint8_t s);
-    void release(void);
-    void releaseAll(void);
-    void sendReport(void* data, int length);
+ public:
+  void begin(void);
+  void end(void);
+  void write(uint8_t s);
+  void press(uint8_t s);
+  void release(void);
+  void releaseAll(void);
+  void sendReport(void* data, int length);
 
-    SystemControl_(void);
+  SystemControl_(void);
 
-  protected:
+ protected:
 };
 
 
