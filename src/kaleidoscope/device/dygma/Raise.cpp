@@ -21,7 +21,6 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LEDControl.h>
-#include <KeyboardioHID.h>
 #include <Wire.h>
 
 #include "kaleidoscope/util/crc16.h"
