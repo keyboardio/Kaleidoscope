@@ -21,7 +21,7 @@
 #ifdef ARDUINO_SAMD_RAISE
 #include <Arduino.h>
 
-#include "kaleidoscope/device/dygma/raise/Hand.h"
+#include "kaleidoscope/device/dygma/raise/RaiseSide.h"
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
