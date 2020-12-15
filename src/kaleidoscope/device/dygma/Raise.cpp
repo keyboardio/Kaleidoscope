@@ -43,8 +43,8 @@ namespace dygma {
 /********* RaiseHands *********/
 
 struct RaiseHands {
-  static raise::Hand leftHand;
-  static raise::Hand rightHand;
+  static raise::RaiseSide leftHand;
+  static raise::RaiseSide rightHand;
 
   static void setup();
   static void initializeSides();
@@ -68,8 +68,8 @@ struct RaiseHands {
   static constexpr uint8_t iso_only_led_ = 19;
 };
 
-raise::Hand RaiseHands::leftHand(0);
-raise::Hand RaiseHands::rightHand(1);
+raise::RaiseSide RaiseHands::leftHand(0);
+raise::RaiseSide RaiseHands::rightHand(1);
 uint8_t RaiseHands::layout;
 bool RaiseHands::side_power_;
 uint16_t RaiseHands::settings_base_;

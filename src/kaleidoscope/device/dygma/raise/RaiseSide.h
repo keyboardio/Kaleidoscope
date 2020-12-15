@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::dygma::Raise -- Kaleidoscope device plugin for Dygma Raise
- * Copyright (C) 2017-2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
  * Copyright (C) 2017-2019  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -54,9 +54,9 @@ typedef union {
   uint64_t all;
 } keydata_t;
 
-class Hand {
+class RaiseSide {
  public:
-  explicit Hand(byte ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
+  explicit RaiseSide(byte ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
 
   int readVersion();
   int readSLEDVersion();

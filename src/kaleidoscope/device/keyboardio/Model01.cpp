@@ -38,14 +38,14 @@ constexpr uint8_t Model01LEDDriverProps::key_led_map[] PROGMEM;
 /********* Model01Hands *********/
 
 struct Model01Hands {
-  static KeyboardioScanner leftHand;
-  static KeyboardioScanner rightHand;
+  static driver::keyboardio::Model01Side leftHand;
+  static driver::keyboardio::Model01Side rightHand;
 
   static void setup();
 };
 
-KeyboardioScanner Model01Hands::leftHand(0);
-KeyboardioScanner Model01Hands::rightHand(3);
+driver::keyboardio::Model01Side Model01Hands::leftHand(0);
+driver::keyboardio::Model01Side Model01Hands::rightHand(3);
 
 void Model01Hands::setup(void) {
   // This lets the keyboard pull up to 1.6 amps from the host.
@@ -135,12 +135,12 @@ boolean Model01LEDDriver::ledPowerFault() {
 
 /********* Key scanner *********/
 
-keydata_t Model01KeyScanner::leftHandState;
-keydata_t Model01KeyScanner::rightHandState;
-keydata_t Model01KeyScanner::previousLeftHandState;
-keydata_t Model01KeyScanner::previousRightHandState;
-keydata_t Model01KeyScanner::leftHandMask;
-keydata_t Model01KeyScanner::rightHandMask;
+driver::keyboardio::keydata_t Model01KeyScanner::leftHandState;
+driver::keyboardio::keydata_t Model01KeyScanner::rightHandState;
+driver::keyboardio::keydata_t Model01KeyScanner::previousLeftHandState;
+driver::keyboardio::keydata_t Model01KeyScanner::previousRightHandState;
+driver::keyboardio::keydata_t Model01KeyScanner::leftHandMask;
+driver::keyboardio::keydata_t Model01KeyScanner::rightHandMask;
 
 void Model01KeyScanner::enableScannerPower(void) {
   // Turn on power to the LED net

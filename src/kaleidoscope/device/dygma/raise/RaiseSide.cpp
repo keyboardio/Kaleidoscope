@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::dygma::Raise -- Kaleidoscope device plugin for Dygma Raise
- * Copyright (C) 2017-2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2020  Keyboard.io, Inc
  * Copyright (C) 2017-2020  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -19,7 +19,7 @@
 #ifdef ARDUINO_SAMD_RAISE
 
 #include <Arduino.h>
-#include "Hand.h"
+#include "RaiseSide.h"
 
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 
@@ -66,7 +66,7 @@ namespace raise {
 #define ELEMENTS(arr)  (sizeof(arr) / sizeof((arr)[0]))
 
 // Returns the relative controller addresss. The expected range is 0-3
-uint8_t Hand::controllerAddress() {
+uint8_t RaiseSide::controllerAddress() {
   return ad01_;
 }
 
@@ -87,42 +87,42 @@ uint8_t Hand::controllerAddress() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Hand::setKeyscanInterval(byte delay) {
+byte RaiseSide::setKeyscanInterval(byte delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
   return twi_.writeTo(data, ELEMENTS(data));
 }
 
 // returns -1 on error, otherwise returns the scanner version integer
-int Hand::readVersion() {
+int RaiseSide::readVersion() {
   return readRegister(TWI_CMD_VERSION);
 }
 
 // returns -1 on error, otherwise returns the sled version integer
-int Hand::readSLEDVersion() {
+int RaiseSide::readSLEDVersion() {
   return readRegister(TWI_CMD_SLED_STATUS);
 }
 // returns -1 on error, otherwise returns the sled current settings
-int Hand::readSLEDCurrent() {
+int RaiseSide::readSLEDCurrent() {
   return readRegister(TWI_CMD_SLED_CURRENT);
 }
 
-byte Hand::setSLEDCurrent(byte current) {
+byte RaiseSide::setSLEDCurrent(byte current) {
   uint8_t data[] = {TWI_CMD_SLED_CURRENT, current};
   return twi_.writeTo(data, ELEMENTS(data));
 }
 
 // returns -1 on error, otherwise returns the scanner keyscan interval
-int Hand::readKeyscanInterval() {
+int RaiseSide::readKeyscanInterval() {
   return readRegister(TWI_CMD_KEYSCAN_INTERVAL);
 }
 
 // returns -1 on error, otherwise returns the layout (ANSI/ISO) setting
-int Hand::readLayout() {
+int RaiseSide::readLayout() {
   return readRegister(TWI_CMD_LAYOUT);
 }
 
 // returns -1 on error, otherwise returns the LED SPI Frequncy
-int Hand::readLEDSPIFrequency() {
+int RaiseSide::readLEDSPIFrequency() {
   return readRegister(TWI_CMD_LED_SPI_FREQUENCY);
 }
 
@@ -131,13 +131,13 @@ int Hand::readLEDSPIFrequency() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Hand::setLEDSPIFrequency(byte frequency) {
+byte RaiseSide::setLEDSPIFrequency(byte frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
   return twi_.writeTo(data, ELEMENTS(data));
 }
 
 // returns -1 on error, otherwise returns the value of the hall sensor integer
-int Hand::readJoint() {
+int RaiseSide::readJoint() {
   byte return_value = 0;
 
   uint8_t data[] = {TWI_CMD_JOINED};
@@ -159,7 +159,7 @@ int Hand::readJoint() {
   }
 }
 
-int Hand::readRegister(uint8_t cmd) {
+int RaiseSide::readRegister(uint8_t cmd) {
   byte return_value = 0;
 
   uint8_t data[] = {cmd};
@@ -182,13 +182,13 @@ int Hand::readRegister(uint8_t cmd) {
 }
 
 // gives information on the key that was just pressed or released.
-bool Hand::readKeys() {
+bool RaiseSide::readKeys() {
   uint8_t rxBuffer[6] = {0, 0, 0, 0, 0, 0};
 
   // perform blocking read into buffer
   uint8_t result = twi_.readFrom(rxBuffer, ELEMENTS(rxBuffer));
   // if result isn't 6? this can happens if slave nacks while trying to read
-  Hand::online = (result == 6) ? true : false;
+  RaiseSide::online = (result == 6) ? true : false;
 
   if (result != 6)
     // could also try reset pressed keys here
@@ -206,11 +206,11 @@ bool Hand::readKeys() {
   }
 }
 
-keydata_t Hand::getKeyData() {
+keydata_t RaiseSide::getKeyData() {
   return key_data_;
 }
 
-void Hand::sendLEDData() {
+void RaiseSide::sendLEDData() {
   sendLEDBank(next_led_bank_++);
   if (next_led_bank_ == LED_BANKS) {
     next_led_bank_ = 0;
@@ -219,7 +219,7 @@ void Hand::sendLEDData() {
 
 auto constexpr gamma8 = kaleidoscope::driver::color::gamma_correction;
 
-void Hand::sendLEDBank(uint8_t bank) {
+void RaiseSide::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1]; // + 1 for the update LED command itself
   data[0]  = TWI_CMD_LED_BASE + bank;
   for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
