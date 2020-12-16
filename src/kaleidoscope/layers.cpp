@@ -42,8 +42,12 @@ uint32_t Layer_::layer_state_;
 uint8_t Layer_::active_layer_count_ = 1;
 int8_t Layer_::active_layers_[31];
 
+Key Layer_::live_keymap_[Runtime.device().numKeys()];
 uint8_t Layer_::active_layer_keymap_[Runtime.device().numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
+
+
+
 
 void Layer_::setup() {
   // Explicitly set layer 0's state to 1
@@ -51,7 +55,13 @@ void Layer_::setup() {
 
   // Update the active layer cache (every entry will be `0` to start)
   Layer.updateActiveLayers();
+
+  Layer.setupLiveKeymap();
+
+
 }
+
+
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
@@ -119,15 +129,7 @@ Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
 }
 
 // Deprecated
-void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  // We could update the active keys cache here (as commented below), but I
-  // think that's unlikely to serve whatever purpose the caller had in
-  // mind. `Layer.lookup()` will still give the correct result, and without a
-  // `Key` value is specified, this function no longer serves a purpose.
-
-  // int8_t layer = active_layer_keymap_[key_addr.toInt()];
-  // Runtime.updateActiveKey(key_addr, (*getKey)(layer, key_addr));
-}
+void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) { }
 
 void Layer_::updateActiveLayers(void) {
   memset(active_layer_keymap_, 0, Runtime.device().numKeys());
@@ -232,6 +234,25 @@ void Layer_::forEachActiveLayer(forEachHandler h) {
     (*h)(i, active_layers_[i]);
   }
 }
+
+
+void Layer_::setupLiveKeymap() {
+  // Clear the active keys array (all keys idle at start)
+  for (auto key_addr : KeyAddr::all()) {
+    Layer.updateLiveKeymap(key_addr, Key_Transparent);
+  }
+
+
+}
+Key Layer_::lookupOnLiveKeymap(KeyAddr key_addr) {
+    return live_keymap_[key_addr.toInt()];
+  }
+void Layer_::updateLiveKeymap(KeyAddr key_addr, Key key) {
+    live_keymap_[key_addr.toInt()] = key;
+}
+
+
+
 
 }
 

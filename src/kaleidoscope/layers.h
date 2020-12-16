@@ -20,7 +20,6 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
 #include "kaleidoscope/device/device.h"
-#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
@@ -53,7 +52,7 @@ class Layer_ {
   Layer_() {}
 
   void setup();
-
+  
   /* There are two lookup functions, because we have two caches, and different
    * parts of the firmware will want to use either this or that (or perhaps
    * both, in rare cases).
@@ -85,17 +84,22 @@ class Layer_ {
    */
   static Key lookup(KeyAddr key_addr) {
     // First check the active keys array
-    Key key = Runtime.activeKey(key_addr);
+    Key key = lookupOnLiveKeymap(key_addr);
     // If that entry is clear, look up the entry from the active keymap layers
     if (key == Key_Transparent) {
       key = lookupOnActiveLayer(key_addr);
     }
     return key;
   }
+
+
+  static Key lookupOnLiveKeymap(KeyAddr key_addr);
+
   static Key lookupOnActiveLayer(KeyAddr key_addr) {
     uint8_t layer = active_layer_keymap_[key_addr.toInt()];
     return (*getKey)(layer, key_addr);
   }
+
   static uint8_t lookupActiveLayer(KeyAddr key_addr) {
     return active_layer_keymap_[key_addr.toInt()];
   }
@@ -133,13 +137,19 @@ class Layer_ {
 
   DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
   static void updateLiveCompositeKeymap(KeyAddr key_addr, Key mappedKey) {
-    Runtime.updateActiveKey(key_addr, mappedKey);
+    updateLiveKeymap(key_addr, mappedKey);
   }
   DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
   static void updateLiveCompositeKeymap(KeyAddr key_addr);
+
+
   static void updateActiveLayers(void);
 
+  static void updateLiveKeymap(KeyAddr key_addr, Key key);
+
+
  private:
+  static void setupLiveKeymap();
   using forEachHandler = void(*)(uint8_t index, uint8_t layer);
 
  public:
@@ -149,7 +159,10 @@ class Layer_ {
   static uint32_t layer_state_;
   static uint8_t active_layer_count_;
   static int8_t active_layers_[31];
+  static Key live_keymap_[kaleidoscope_internal::device.numKeys()];
   static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
+
+
 };
 }
 

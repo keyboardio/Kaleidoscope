@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-ShapeShifter.h>
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -50,7 +51,7 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   bool shift_detected = false;
 
   for (KeyAddr k : KeyAddr::all()) {
-    if (Runtime.activeKey(k).isKeyboardShift())
+    if (Layer.lookupOnLiveKeymap(k).isKeyboardShift())
       shift_detected = true;
   }
   if (! shift_detected)

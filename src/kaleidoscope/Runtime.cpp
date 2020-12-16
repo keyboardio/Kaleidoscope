@@ -21,7 +21,6 @@
 namespace kaleidoscope {
 
 uint32_t Runtime_::millis_at_cycle_start_;
-Key Runtime_::active_keys_[kaleidoscope_internal::device.numKeys()];
 
 Runtime_::Runtime_(void) {
 }
@@ -43,10 +42,6 @@ Runtime_::setup(void) {
 
   device().setup();
 
-  // Clear the active keys array (all keys idle at start)
-  for (auto key_addr : KeyAddr::all()) {
-    updateActiveKey(key_addr, Key_Transparent);
-  }
 
   Layer.setup();
 }

@@ -46,7 +46,7 @@ void TapDance::actionKeys(uint8_t tap_count,
       break;
     {
       KeyAddr td_addr = event_queue_.addr(0);
-      bool key_released = (Runtime.activeKey(td_addr) == Key_Transparent);
+      bool key_released = (Layer.lookupOnLiveKeymap(td_addr) == Key_Transparent);
       handleKeyswitchEvent(key, td_addr, IS_PRESSED | INJECTED);
       if (key_released)
         release_addr_ = td_addr;

@@ -128,16 +128,8 @@ class Runtime_ {
     return kaleidoscope::Hooks::onFocusEvent(command);
   }
 
-  static Key activeKey(KeyAddr key_addr) {
-    return active_keys_[key_addr.toInt()];
-  }
-  static void updateActiveKey(KeyAddr key_addr, Key key) {
-    active_keys_[key_addr.toInt()] = key;
-  }
-
  private:
   static uint32_t millis_at_cycle_start_;
-  static Key active_keys_[kaleidoscope_internal::device.numKeys()];
 };
 
 extern kaleidoscope::Runtime_ Runtime;

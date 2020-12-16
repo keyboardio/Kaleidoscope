@@ -123,9 +123,9 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
   // Update the active keys cache if the key toggled on or off.
   if (key_addr.isValid()) {
     if (keyToggledOn(keyState)) {
-      Runtime.updateActiveKey(key_addr, mappedKey);
+      Layer.updateLiveKeymap(key_addr, mappedKey);
     } else if (keyToggledOff(keyState)) {
-      Runtime.updateActiveKey(key_addr, Key_Transparent);
+      Layer.updateLiveKeymap(key_addr, Key_Transparent);
     }
   }
 
