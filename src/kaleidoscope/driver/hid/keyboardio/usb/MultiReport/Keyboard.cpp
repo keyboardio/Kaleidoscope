@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "./Keyboard.h"
-#include "../DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorKeyboard[] PROGMEM = {
   //  NKRO Keyboard

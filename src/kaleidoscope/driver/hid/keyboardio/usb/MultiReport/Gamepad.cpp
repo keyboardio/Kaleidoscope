@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "./Gamepad.h"
-#include "../DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Gamepad.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t _hidMultiReportDescriptorGamepad[] PROGMEM = {
   /* Gamepad with 32 buttons and 6 axis*/

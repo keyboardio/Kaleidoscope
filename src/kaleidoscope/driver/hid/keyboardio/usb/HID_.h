@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 #include <Arduino.h>
-#include "./HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
 
 #if defined(USBCON)
 

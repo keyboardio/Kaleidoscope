@@ -1,5 +1,6 @@
 /*
-Copyright (c) 2015-2019 Keyboard.io, Inc
+Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2015-2018 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -22,6 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "./HIDReportObserver.h"
+#pragma once
 
-HIDReportObserver::SendReportHook HIDReportObserver::send_report_hook_ = nullptr;
+#include "kaleidoscope/HIDTables.h"
+
+#define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
+#define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
+#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
+#define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI

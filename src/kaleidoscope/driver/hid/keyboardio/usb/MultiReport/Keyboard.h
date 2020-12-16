@@ -27,11 +27,11 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
 
-#include "../HIDTables.h"
-#include "../HIDAliases.h"
+#include "kaleidoscope/HIDTables.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"
 
 #define KEY_BYTES 28
 

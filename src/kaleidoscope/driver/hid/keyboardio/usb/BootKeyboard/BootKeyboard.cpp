@@ -23,9 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "BootKeyboard.h"
-#include "../DescriptorPrimitives.h"
-#include "../HIDReportObserver.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/BootKeyboard/BootKeyboard.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 // See Appendix B of USB HID spec
 static const uint8_t _hidReportDescriptorKeyboard[] PROGMEM = {

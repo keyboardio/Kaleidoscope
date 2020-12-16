@@ -27,39 +27,17 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.h"
 
-typedef union {
-  // Every usable Consumer key possible, up to 4 keys presses possible
-  uint16_t keys[4];
-  struct {
-    uint16_t key1;
-    uint16_t key2;
-    uint16_t key3;
-    uint16_t key4;
-  };
-} HID_ConsumerControlReport_Data_t;
-
-
-class ConsumerControl_ {
+class AbsoluteMouse_ : public AbsoluteMouseAPI {
  public:
-  ConsumerControl_(void);
-  void begin(void);
-  void end(void);
-  void write(uint16_t m);
-  void press(uint16_t m);
-  void release(uint16_t m);
-  void releaseAll(void);
-
-  // Sending is public in the base class for advanced users.
-  void sendReport(void);
+  AbsoluteMouse_(void);
 
  protected:
-  HID_ConsumerControlReport_Data_t _report;
-  HID_ConsumerControlReport_Data_t _lastReport;
-
- private:
-  void sendReportUnchecked(void);
+  // Sending is public in the base class for advanced users.
+  virtual void sendReport(void* data, int length);
 };
-extern ConsumerControl_ ConsumerControl;
+
+extern AbsoluteMouse_ AbsoluteMouse;

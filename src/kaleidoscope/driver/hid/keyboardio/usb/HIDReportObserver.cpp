@@ -1,6 +1,5 @@
 /*
-Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2019 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -23,35 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Include guard
-#pragma once
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
-#include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
-#include "../HIDTables.h"
-
-typedef union {
-  // Every usable system control key possible
-  uint8_t key;
-} HID_SystemControlReport_Data_t;
-
-
-class SystemControl_ {
- public:
-  void begin(void);
-  void end(void);
-  void write(uint8_t s);
-  void press(uint8_t s);
-  void release(void);
-  void releaseAll(void);
-  void sendReport(void* data, int length);
-
-  SystemControl_(void);
-
- protected:
-};
-
-
-
-extern SystemControl_ SystemControl;
+HIDReportObserver::SendReportHook HIDReportObserver::send_report_hook_ = nullptr;

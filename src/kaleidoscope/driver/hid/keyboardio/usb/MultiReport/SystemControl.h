@@ -27,17 +27,31 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
-#include "../DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/HIDTables.h"
 
-class AbsoluteMouse_ : public AbsoluteMouseAPI {
+typedef union {
+  // Every usable system control key possible
+  uint8_t key;
+} HID_SystemControlReport_Data_t;
+
+
+class SystemControl_ {
  public:
-  AbsoluteMouse_(void);
+  void begin(void);
+  void end(void);
+  void write(uint8_t s);
+  void press(uint8_t s);
+  void release(void);
+  void releaseAll(void);
+  void sendReport(void* data, int length);
+
+  SystemControl_(void);
 
  protected:
-  // Sending is public in the base class for advanced users.
-  virtual void sendReport(void* data, int length);
 };
 
-extern AbsoluteMouse_ AbsoluteMouse;
+
+
+extern SystemControl_ SystemControl;

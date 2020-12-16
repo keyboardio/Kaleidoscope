@@ -17,7 +17,7 @@
 
 #pragma once
 #include <Arduino.h>
-#include "keyboardio/HID/KeyboardioHID.h"
+#include "keyboardio/usb/USBHID.h"
 #include "kaleidoscope/key_defs.h"
 
 #include "kaleidoscope/driver/hid/Base.h"

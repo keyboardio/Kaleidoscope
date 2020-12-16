@@ -23,16 +23,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/AbsoluteMouse.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
-// Keyboard Leds
-enum KeyboardLeds : uint8_t {
-  LED_NUM_LOCK            = (1 << 0),
-  LED_CAPS_LOCK           = (1 << 1),
-  LED_SCROLL_LOCK         = (1 << 2),
-  LED_COMPOSE                     = (1 << 3),
-  LED_KANA                        = (1 << 4),
-  LED_POWER                       = (1 << 5),
-  LED_SHIFT                       = (1 << 6),
-  LED_DO_NOT_DISTURB      = (1 << 7),
+static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
+  /*  Mouse absolute */
+  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)	  54 */
+  D_USAGE, D_USAGE_MOUSE,                      	/* USAGE (Mouse) */
+  D_COLLECTION, D_APPLICATION,                 	/* COLLECTION (Application) */
+  D_REPORT_ID, HID_REPORTID_MOUSE_ABSOLUTE,	/*  REPORT_ID */
+
+  DESCRIPTOR_ABS_MOUSE_BUTTONS
+  DESCRIPTOR_ABS_MOUSE_XY
+  DESCRIPTOR_ABS_MOUSE_WHEEL
+
+  D_END_COLLECTION 				 /* End */
 };
+
+AbsoluteMouse_::AbsoluteMouse_(void) {
+  static HIDSubDescriptor node(_hidMultiReportDescriptorAbsoluteMouse, sizeof(_hidMultiReportDescriptorAbsoluteMouse));
+  HID().AppendDescriptor(&node);
+}
+
+
+void AbsoluteMouse_::sendReport(void* data, int length) {
+  HID().SendReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length);
+}
+
+AbsoluteMouse_ AbsoluteMouse;

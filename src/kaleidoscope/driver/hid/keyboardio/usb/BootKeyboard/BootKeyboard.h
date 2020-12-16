@@ -27,51 +27,58 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
-#include "../MouseButtons.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"
+#include "kaleidoscope/HIDTables.h"
 
 typedef union {
-  // Mouse report: 8 buttons, position, wheel
+  // Low level key report: up to 6 keys and shift, ctrl etc at once
   struct {
-    uint8_t buttons;
-    int8_t xAxis;
-    int8_t yAxis;
-    int8_t vWheel;
-    int8_t hWheel;
+    uint8_t modifiers;
+    uint8_t reserved;
+    uint8_t keycodes[6];
   };
-} HID_MouseReport_Data_t;
+  uint8_t bytes[8];
+} HID_BootKeyboardReport_Data_t;
 
 
-class Mouse_ {
+class BootKeyboard_ : public PluggableUSBModule {
  public:
-  Mouse_(void);
+  BootKeyboard_(void);
+  size_t press(uint8_t);
   void begin(void);
   void end(void);
-  void click(uint8_t b = MOUSE_LEFT);
-  void move(signed char x, signed char y, signed char vWheel = 0, signed char hWheel = 0);
-  void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
-  void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
-  bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
-
-  /** getReport returns the current report.
-   *
-   * The current report is the one to be send next time sendReport() is called.
-   *
-   * @returns A copy of the report.
-   */
-  const HID_MouseReport_Data_t getReport() {
-    return report;
-  }
-  void sendReport(void);
-
+  size_t release(uint8_t);
   void releaseAll(void);
 
- protected:
-  HID_MouseReport_Data_t report;
-  HID_MouseReport_Data_t lastReport;
+  int sendReport(void);
 
- private:
-  void sendReportUnchecked(void);
+  boolean isModifierActive(uint8_t k);
+  boolean wasModifierActive(uint8_t k);
+  boolean isAnyModifierActive();
+  boolean wasAnyModifierActive();
+  boolean isKeyPressed(uint8_t k);
+  boolean wasKeyPressed(uint8_t k);
+
+  uint8_t getLeds(void);
+  uint8_t getProtocol(void);
+  void setProtocol(uint8_t protocol);
+
+  uint8_t default_protocol = HID_REPORT_PROTOCOL;
+
+ protected:
+  HID_BootKeyboardReport_Data_t _keyReport, _lastKeyReport;
+
+  // Implementation of the PUSBListNode
+  int getInterface(uint8_t* interfaceCount);
+  int getDescriptor(USBSetup& setup);
+  bool setup(USBSetup& setup);
+
+  EPTYPE_DESCRIPTOR_SIZE epType[1];
+  uint8_t protocol;
+  uint8_t idle;
+
+  uint8_t leds;
 };
-extern Mouse_ Mouse;
+extern BootKeyboard_ BootKeyboard;

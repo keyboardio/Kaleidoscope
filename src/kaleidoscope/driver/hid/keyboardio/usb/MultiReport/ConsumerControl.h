@@ -23,31 +23,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "./AbsoluteMouse.h"
-#include "../DescriptorPrimitives.h"
+// Include guard
+#pragma once
 
-static const uint8_t _hidMultiReportDescriptorAbsoluteMouse[] PROGMEM = {
-  /*  Mouse absolute */
-  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)	  54 */
-  D_USAGE, D_USAGE_MOUSE,                      	/* USAGE (Mouse) */
-  D_COLLECTION, D_APPLICATION,                 	/* COLLECTION (Application) */
-  D_REPORT_ID, HID_REPORTID_MOUSE_ABSOLUTE,	/*  REPORT_ID */
+#include <Arduino.h>
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
 
-  DESCRIPTOR_ABS_MOUSE_BUTTONS
-  DESCRIPTOR_ABS_MOUSE_XY
-  DESCRIPTOR_ABS_MOUSE_WHEEL
+typedef union {
+  // Every usable Consumer key possible, up to 4 keys presses possible
+  uint16_t keys[4];
+  struct {
+    uint16_t key1;
+    uint16_t key2;
+    uint16_t key3;
+    uint16_t key4;
+  };
+} HID_ConsumerControlReport_Data_t;
 
-  D_END_COLLECTION 				 /* End */
+
+class ConsumerControl_ {
+ public:
+  ConsumerControl_(void);
+  void begin(void);
+  void end(void);
+  void write(uint16_t m);
+  void press(uint16_t m);
+  void release(uint16_t m);
+  void releaseAll(void);
+
+  // Sending is public in the base class for advanced users.
+  void sendReport(void);
+
+ protected:
+  HID_ConsumerControlReport_Data_t _report;
+  HID_ConsumerControlReport_Data_t _lastReport;
+
+ private:
+  void sendReportUnchecked(void);
 };
-
-AbsoluteMouse_::AbsoluteMouse_(void) {
-  static HIDSubDescriptor node(_hidMultiReportDescriptorAbsoluteMouse, sizeof(_hidMultiReportDescriptorAbsoluteMouse));
-  HID().AppendDescriptor(&node);
-}
-
-
-void AbsoluteMouse_::sendReport(void* data, int length) {
-  HID().SendReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length);
-}
-
-AbsoluteMouse_ AbsoluteMouse;
+extern ConsumerControl_ ConsumerControl;

@@ -27,10 +27,10 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "../HID.h"
-#include "../HID-Settings.h"
-#include "../MouseButtons.h"
-#include "../DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 
 #define DESCRIPTOR_ABS_MOUSE_BUTTONS  					 \

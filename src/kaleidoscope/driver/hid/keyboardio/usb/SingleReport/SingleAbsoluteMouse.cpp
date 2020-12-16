@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "SingleAbsoluteMouse.h"
-#include "HIDReportObserver.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/SingleReport/SingleAbsoluteMouse.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)         54 */

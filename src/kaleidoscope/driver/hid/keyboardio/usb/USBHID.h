@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2020 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -23,11 +23,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+// Include guard
 #pragma once
 
-#include "HIDTables.h"
+// Keyboard Leds
+enum KeyboardLeds : uint8_t {
+  LED_NUM_LOCK            = (1 << 0),
+  LED_CAPS_LOCK           = (1 << 1),
+  LED_SCROLL_LOCK         = (1 << 2),
+  LED_COMPOSE                     = (1 << 3),
+  LED_KANA                        = (1 << 4),
+  LED_POWER                       = (1 << 5),
+  LED_SHIFT                       = (1 << 6),
+  LED_DO_NOT_DISTURB      = (1 << 7),
+};
 
-#define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
-#define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
-#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
-#define HID_KEYBOARD_LAST_MODIFIER HID_KEYBOARD_RIGHT_GUI
+// Include all HID libraries (.a linkage required to work) properly
+#include "MultiReport/AbsoluteMouse.h"
+#include "MultiReport/Mouse.h"
+#include "MultiReport/ConsumerControl.h"
+#include "MultiReport/Gamepad.h"
+#include "MultiReport/SystemControl.h"
+#include "MultiReport/Keyboard.h"
+
+#include "SingleReport/SingleAbsoluteMouse.h"
+
+#include "BootKeyboard/BootKeyboard.h"

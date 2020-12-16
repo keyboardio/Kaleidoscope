@@ -18,8 +18,8 @@
 
 #ifndef KEYBOARDIOHID_BUILD_WITHOUT_HID
 
-#include "./HID.h"
-#include "./HIDReportObserver.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 #if defined(USBCON)
 
