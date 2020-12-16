@@ -16,7 +16,7 @@
 
 #include "testing/VirtualDeviceTest.h"
 
-#include "HIDReportObserver.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 #include "testing/HIDState.h"
 
 namespace kaleidoscope {

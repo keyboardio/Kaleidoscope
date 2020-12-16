@@ -24,9 +24,8 @@
 
 // Include KeyboardioHID's HID.h header
 //
-#include "kaleidoscope/driver/hid/keyboardio/HID/HID.h"
-
-#include "HIDReportObserver.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 #if defined(USBCON)
 
