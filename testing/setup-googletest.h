@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs_keyboard.h"
+#include "kaleidoscope/key_defs/keyboard.h"
 #include "Kaleidoscope.h"
 
 // Out of order because `fix-macros.h` clears the preprocessor environment for

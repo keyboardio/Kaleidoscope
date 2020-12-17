@@ -19,12 +19,11 @@
 
 #include "kaleidoscope/HIDTables.h"
 
-#include "kaleidoscope/key_defs_keyboard.h"
-#include "kaleidoscope/key_defs_sysctl.h"
-#include "kaleidoscope/key_defs_consumerctl.h"
-#include "kaleidoscope/key_defs_keymaps.h"
-
-#include "kaleidoscope/key_defs_aliases.h"
+#include "kaleidoscope/key_defs/keyboard.h"
+#include "kaleidoscope/key_defs/sysctl.h"
+#include "kaleidoscope/key_defs/consumerctl.h"
+#include "kaleidoscope/key_defs/keymaps.h"
+#include "kaleidoscope/key_defs/aliases.h"
 
 // -----------------------------------------------------------------------------
 // Constant keycode values
