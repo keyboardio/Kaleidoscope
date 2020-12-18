@@ -32,6 +32,8 @@ chdir($checkout_path);
 `rm -rf $checkout_path/toolchain`;
 `rm -rf $checkout_path/etc`;
 `rm -rf $checkout_path/doc`;
+chdir("$checkout_dir/avr/libraries/");
+`mv Kaleidoscope/plugins/* .`;
 chdir($dir);
 `rm -rf $checkout_dir/avr/build-tools`;
 `mv $checkout_dir/avr $checkout_dir/$checkout_dir`; # A hack to get consistent naming with the old setup
