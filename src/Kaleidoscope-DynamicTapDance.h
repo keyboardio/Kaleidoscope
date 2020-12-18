@@ -17,4 +17,5 @@
 
 #pragma once
 
+#include "Kaleidoscope-TapDance.h"
 #include "kaleidoscope/plugin/DynamicTapDance.h"

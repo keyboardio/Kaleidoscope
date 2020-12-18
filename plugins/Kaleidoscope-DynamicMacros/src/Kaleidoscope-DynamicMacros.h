@@ -16,4 +16,5 @@
 
 #pragma once
 
+#include "Kaleidoscope-Macros.h"
 #include "kaleidoscope/plugin/DynamicMacros.h"
