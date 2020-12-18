@@ -17,7 +17,7 @@ my $sha256 = 0;
 my $size   = 0;
 
 my $tag = shift || 'master';
-
+my $kaleidoscope_tag = shift || 'master';
 my $dir           = tempdir( CLEANUP => 0 );
 my $checkout_dir  = "Kaleidoscope-$tag";
 my $filename      = $checkout_dir . ".tar.bz2";
@@ -28,15 +28,20 @@ chdir($dir);
 chdir($checkout_path);
 `git checkout $tag`;
 `make update-submodules`;
-`find $checkout_path -name .git |xargs rm -rf`;
 `rm -rf $checkout_path/toolchain`;
 `rm -rf $checkout_path/etc`;
 `rm -rf $checkout_path/doc`;
-chdir("$checkout_dir/avr/libraries/");
+chdir("$checkout_path/avr/libraries/Kaleidoscope");
+`git checkout $kaleidoscope_tag`;
+
+print "In $checkout_path/avr/libraries/Kaleidoscope\n";
+chdir("$checkout_path/avr/libraries");
+
 `mv Kaleidoscope/plugins/* .`;
 chdir($dir);
-`rm -rf $checkout_dir/avr/build-tools`;
-`mv $checkout_dir/avr $checkout_dir/$checkout_dir`; # A hack to get consistent naming with the old setup
+`rm -rf $checkout_path/avr/build-tools`;
+`mv $checkout_path/avr $checkout_path/$checkout_dir`; # A hack to get consistent naming with the old setup
+`find $checkout_path -name .git |xargs rm -rf`;
 `tar cjvf $filename -C $checkout_dir/ $checkout_dir `;
 $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
 chomp($sha256);
