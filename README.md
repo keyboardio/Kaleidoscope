@@ -25,7 +25,7 @@ $ mkdir ${HOME}/git
 $ cd ${HOME}/git
 ```
 
-2. Use git to download the latest version of Kaleidoscope
+2. Download the latest version of Kaleidoscope
 
 ```sh
 $ git clone https://github.com/keyboardio/Kaleidoscope

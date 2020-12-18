@@ -1,8 +1,11 @@
 # Setting up your development environment
 
-If you'd like to customize your keyboard's layout or functionality, the most robust and flexible option is to use the Arduino IDE.
 
 Arduino is one of the world's most widely used (and user friendly) platforms for programming "embedded" devices like the chip inside your keyboard.
+
+To customize your keyboard's layout or functionality, the most robust and flexible option is to use the Arduino IDE.
+
+If you're planning to modify Kaleidoscope itself or plan on developing Kaleidoscope plugins, you should be checking out the source code from our git repository instead. You can find instructions for that at https://github.com/keyboardio/Kaleidoscope
 
 
 # Set up the Arduino IDE
@@ -21,8 +24,6 @@ The right way to install Arduino is a little bit different depending on what ope
 
 
 ## <a name="Arduino-macOS"></a>Install Arduino on macOS
-
-
 
 1. Download the Arduino IDE install package from https://www.arduino.cc/en/Main/Software
 
