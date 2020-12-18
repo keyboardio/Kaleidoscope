@@ -58,22 +58,6 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     $ sudo ./install.sh
     ```
     
-    #### How to install Flatpak on your system:
-    `https://flatpak.org/setup/`
-    
-    Then install Arduino Flatpak from terminal:
-    `$ flatpak install flathub cc.arduino.arduinoide`
-    
-    #### How to install Snap on your system:
-    `https://snapcraft.io/docs/installing-snapd`
-    
-    Then install Arduino Snap from terminal :
-    `$ sudo snap install arduino`
-    
-    Additonal install instructions and app details are on their respective pages.
-    Troubleshooting Flatpak and Snaps are beyond the scope of this document.
-    
-    
 3. On some linux distributions, ModemManager can prevent you from flashing or updating your keyboard by interfering with its virtual serial port. Additionally, by default, you may not have permissions to access your keyboard's serial port. `udev` is the Linux subsystem that managed both of these things. You should install our udev rules to manage access to your keyboard's serial port.
 
     ```sh
@@ -89,15 +73,6 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     
 
 4. Then disconnect and reconnect the keyboard for that change to take effect.
-
-5. You may have to tweak the `ARDUINO_PATH` (put this line in your shell-rc)
-
-    ```sh
-    export ARDUINO_PATH=/usr/local/arduino
-    ```
-    Snaps and Flatpaks should have their PATH added by their respective install process.
-
-Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 ## <a name="Arduino-Windows"></a>Install Arduino on Windows 10
 
