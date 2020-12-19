@@ -17,7 +17,10 @@ endif
 # Build path config
 TMPDIR ?= /tmp
 
-export KALEIDOSCOPE_DIR ?= $(abspath $(mkfile_dir)/../..)
+ifeq ($(KALEIDOSCOPE_DIR),)
+export KALEIDOSCOPE_DIR := $(abspath $(mkfile_dir)/../..)
+endif
+
 KALEIDOSCOPE_BIN_DIR ?= $(KALEIDOSCOPE_DIR)/bin
 KALEIDOSCOPE_ETC_DIR ?= $(KALEIDOSCOPE_DIR)/etc
 
@@ -74,7 +77,7 @@ endif
 
 
 
-system_arduino_cli=$(shell command -v arduino-cli || true)
+system_arduino_cli := $(shell command -v arduino-cli || true)
 
 arduino_env = ARDUINO_DIRECTORIES_USER=$(ARDUINO_DIRECTORIES_USER) \
 	      ARDUINO_DIRECTORIES_DATA=$(ARDUINO_DIRECTORIES_DATA)

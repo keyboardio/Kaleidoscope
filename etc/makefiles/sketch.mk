@@ -33,8 +33,9 @@ endif
 # but since we'd just return an empty value in that case, why bother?
 GIT_VERSION := $(shell git -C "$(SKETCH_DIR)" describe --abbrev=6 --dirty --alway  2>/dev/null || echo 'unknown')
 
-SKETCH_IDENTIFIER ?= $(shell echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-$(SKETCH_FILE_NAME)
-
+ifeq ($(SKETCH_IDENTIFIER),)
+SKETCH_IDENTIFIER := $(shell echo "${SKETCH_FILE_PATH}" | cksum | cut -d ' ' -f 1)-$(SKETCH_FILE_NAME)
+endif
 
 BUILD_PATH ?= $(KALEIDOSCOPE_BUILD_PATH)/$(SKETCH_IDENTIFIER)
 OUTPUT_PATH ?= $(KALEIDOSCOPE_OUTPUT_PATH)/$(SKETCH_IDENTIFIER)
@@ -53,7 +54,7 @@ KALEIDOSCOPE_PLATFORM_LIB_DIR := $(abspath $(KALEIDOSCOPE_DIR)/..)
 
 
 ifeq ($(FQBN),)
-possible_fqbns =  $(shell $(ARDUINO_CLI) board list --format=json |grep FQBN| grep -v "keyboardio:virtual"|cut -d: -f 2-)
+possible_fqbns = $(shell $(ARDUINO_CLI) board list --format=json |grep FQBN| grep -v "keyboardio:virtual"|cut -d: -f 2-)
 
 possible_fqbn = $(firstword $(possible_fqbns))
 
@@ -106,7 +107,9 @@ endif
 
 # Flashing related config
 ifneq ($(FQBN),)
-KALEIDOSCOPE_DEVICE_PORT ?= $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
+ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
+KALEIDOSCOPE_DEVICE_PORT = $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
+endif
 endif
 
 flashing_instructions	:= $(call _arduino_prop,build.flashing_instructions)
@@ -194,16 +197,18 @@ endif
 #TODO (arduino team) I'd love to do this with their json output
 #but it's short some of the data we kind of need
 
-flash:
-ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
-	$(info ERROR: Unable to detect keyboard serial port.)
-	$(info )
-	$(info Arduino should autodetect it, but you could also set )
-	$(info KALEIDOSCOPE_DEVICE_PORT to your keyboard's serial port.)
-	$(info )
-	$(error )
+.PHONY: ensure-device-port-defined
 
-endif
+ensure-device-port-defined:  
+	@if [ -z $(KALEIDOSCOPE_DEVICE_PORT) ]; then \
+	echo "ERROR: Unable to detect keyboard serial port.";\
+	echo ;\
+	echo "Arduino should autodetect it, but you could also set";\
+	echo "KALEIDOSCOPE_DEVICE_PORT to your keyboard's serial port.";\
+	echo ;\
+	exit -1;fi
+
+flash: ensure-device-port-defined
 	$(info $(unescaped_flashing_instructions))
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
