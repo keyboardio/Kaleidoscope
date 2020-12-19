@@ -117,7 +117,7 @@ ifeq ($(flashing_instructions),)
 flashing_instructions	:= "If your keyboard needs you to do something to put it in flashing mode, do that now."
 endif
 
-unescaped_flashing_instructions := $(shell printf $(flashing_instructions) )
+unescaped_flashing_instructions = $(shell printf $(flashing_instructions) )
 
 DEFAULT_GOAL: compile
 
