@@ -3,7 +3,7 @@ mkfile_dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 ifeq ($(VERBOSE),)
 
 ifeq ($(QUIET),)
-$(info Building in quiet mode. For a lot more informatiion, add 'VERBOSE=1' to the beginning of your call to $(MAKE))
+$(info Building in quiet mode. For a lot more information, add 'VERBOSE=1' to the beginning of your call to $(MAKE))
 export QUIET = @
 endif
 
