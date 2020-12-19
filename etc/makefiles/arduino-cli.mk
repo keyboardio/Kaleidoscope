@@ -75,12 +75,12 @@ endif
 
 endif
 
-
-
-system_arduino_cli := $(shell command -v arduino-cli || true)
-
 arduino_env = ARDUINO_DIRECTORIES_USER=$(ARDUINO_DIRECTORIES_USER) \
 	      ARDUINO_DIRECTORIES_DATA=$(ARDUINO_DIRECTORIES_DATA)
+
+ifeq ($(ARDUINO_CLI_PATH),) 
+
+system_arduino_cli ?= $(shell command -v arduino-cli || true)
 
 ifeq ($(system_arduino_cli),) 
 export ARDUINO_CLI_PATH ?= $(KALEIDOSCOPE_BIN_DIR)/arduino-cli
@@ -88,6 +88,7 @@ else
 export ARDUINO_CLI_PATH ?= $(system_arduino_cli)
 endif
 
+endif
 
 export ARDUINO_CLI ?= $(arduino_env) $(ARDUINO_CLI_PATH)
 
