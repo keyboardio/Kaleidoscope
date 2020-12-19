@@ -109,10 +109,12 @@ ifneq ($(FQBN),)
 KALEIDOSCOPE_DEVICE_PORT ?= $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
 endif
 
-flashing_instructions	:=	$(shell printf $(call _arduino_prop,build.flashing_instructions))
+flashing_instructions	:= $(call _arduino_prop,build.flashing_instructions)
 ifeq ($(flashing_instructions),)
-flashing_instruction	:= "If your keyboard needs you to do something to put it in flashing mode, do that now."
+flashing_instructions	:= "If your keyboard needs you to do something to put it in flashing mode, do that now."
 endif
+
+unescaped_flashing_instructions := $(shell printf $(flashing_instructions) )
 
 DEFAULT_GOAL: compile
 
@@ -199,9 +201,10 @@ ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
 	$(info Arduino should autodetect it, but you could also set )
 	$(info KALEIDOSCOPE_DEVICE_PORT to your keyboard's serial port.)
 	$(info )
-	$(error )	
+	$(error )
+
 endif
-	$(info $(flashing_instructions))
+	$(info $(unescaped_flashing_instructions))
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
