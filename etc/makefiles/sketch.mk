@@ -197,7 +197,7 @@ ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
 	$(info ERROR: Unable to detect keyboard serial port.)
 	$(info )
 	$(info Arduino should autodetect it, but you could also set )
-	$(info KALEIDOSCOPE_DEVICE_PORt to your keyboard's serial port.)
+	$(info KALEIDOSCOPE_DEVICE_PORT to your keyboard's serial port.)
 	$(info )
 	$(error )	
 endif
