@@ -29,7 +29,7 @@ my $only_latest_platform = 0;
 
 my $bundle_repo = 'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
 my $boards_repo = 'https://github.com/keyboardio/boardsmanager';
-
+my $push_package_repo = 0;
 
 
 
@@ -39,8 +39,8 @@ my $boards_repo = 'https://github.com/keyboardio/boardsmanager';
 		  "output-repo=s" => \$boards_repo,
 		  "index-filename-slug=s" => \$index_filename_slug,
 		  "version=s" => \$version,
-		  "only-one-platform-revision" => \$only_latest_platform		
-)
+		  "only-one-platform-revision" => \$only_latest_platform,
+		  "push" => \$push_package_repo)
       or die("Error in command line arguments\n");
 
 my $index_filename = 'package_'.$index_filename_slug.'_index.json';
@@ -49,7 +49,7 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
-my $checkout_dir     = "Kaleidoscope-$tag";
+my $checkout_dir     = "Kaleidoscope-$tag-$version";
 my $filename         = $checkout_dir . ".tar.bz2";
 
 my $build_base_url = $boards_repo."/master/builds/";
@@ -145,9 +145,13 @@ chdir('boardsmanager');
 `git add $index_filename`;
 `git add builds`;
 `git commit -a -m 'Built by $executed_as'`;
+if ($push_package_repo) {
+	`git push`;
+} else {
+
 print
 "Now, you need to cd to $temp_dir/boardsmanager check the content and push it\n";
-
+}
 
 
 sub set_plugin_versions {
