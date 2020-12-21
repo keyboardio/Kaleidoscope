@@ -23,8 +23,6 @@ my $version = '';
 my $tag              =  'master';
 my $kaleidoscope_tag =  'master';
 my $temp_dir         = tempdir( CLEANUP => 0 );
-my $checkout_dir     = "Kaleidoscope-$tag";
-my $filename         = $checkout_dir . ".tar.bz2";
 my $index_filename_slug  ='keyboardio';
 
 my $only_latest_platform = 0;
@@ -51,6 +49,8 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
+my $checkout_dir     = "Kaleidoscope-$tag";
+my $filename         = $checkout_dir . ".tar.bz2";
 
 my $build_base_url = $boards_repo."/master/builds/";
 $build_base_url =~ s/github.com/raw.githubusercontent.com/;
