@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::plugin::PersistentLEDMode -- Persist the current LED mode to Storage
+ * Kaleidoscope-PersistentLEDMode -- Persist the current LED mode to Storage
  * Copyright (C) 2019  Keyboard.io, Inc.
  * Copyright (C) 2019  Dygma, Inc.
  *

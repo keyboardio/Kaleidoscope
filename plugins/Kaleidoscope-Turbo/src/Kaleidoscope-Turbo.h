@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Turbo
+ * Kaleidoscope-Turbo -- Faster key repeats
  * Copyright (C) 2018 ash lea
  *
  * This program is free software: you can redistribute it and/or modify it under

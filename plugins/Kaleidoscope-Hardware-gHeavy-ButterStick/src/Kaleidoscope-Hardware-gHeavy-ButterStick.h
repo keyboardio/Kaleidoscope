@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::device::gheavy::ButterStick -- gHeavy ButterStick hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-gHeavy-ButterStick -- gHeavy ButterStick hardware support for Kaleidoscope
  * Copyright (C) 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify

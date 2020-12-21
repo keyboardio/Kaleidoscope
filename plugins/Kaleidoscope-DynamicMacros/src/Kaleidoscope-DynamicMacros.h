@@ -1,4 +1,4 @@
-/* DynamicMacros - Dynamic macro support for Kaleidoscope.
+/* Kaleidoscope-DynamicMacros -- Dynamic macro support for Kaleidoscope.
  * Copyright (C) 2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

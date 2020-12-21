@@ -1,4 +1,4 @@
-/* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
+/* Kaleidoscope-Macros -- Macro keys for Kaleidoscope
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

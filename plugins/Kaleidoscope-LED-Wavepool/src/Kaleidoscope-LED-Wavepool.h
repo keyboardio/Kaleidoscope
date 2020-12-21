@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-LED-Wavepool
+ * Kaleidoscope-LED-Wavepool -- Wavepool LED effect for Kaleidoscope
  * Copyright (C) 2017  Selene Scriven
  *
  * This program is free software: you can redistribute it and/or modify

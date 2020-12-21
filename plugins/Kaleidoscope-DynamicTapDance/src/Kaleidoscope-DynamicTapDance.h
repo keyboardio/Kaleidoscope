@@ -1,4 +1,4 @@
-/* DynamicTapDance -- Dynamic TapDance support for Kaleidoscope
+/* Kaleidoscope-DynamicTapDance -- Dynamic TapDance support for Kaleidoscope
  * Copyright (C) 2019  Keyboard.io, Inc
  * Copyright (C) 2019  Dygma Lab S.L.
  *

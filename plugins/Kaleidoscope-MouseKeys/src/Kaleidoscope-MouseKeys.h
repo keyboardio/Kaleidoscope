@@ -1,4 +1,4 @@
-/* Kaleidoscope-MouseKeys - Mouse keys for Kaleidoscope.
+/* Kaleidoscope-MouseKeys -- Mouse keys for Kaleidoscope.
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-Keyboardio-Model01 -- Keyboardio Model01 hardware support for Kaleidoscope
  * Copyright (C) 2017-2019  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under

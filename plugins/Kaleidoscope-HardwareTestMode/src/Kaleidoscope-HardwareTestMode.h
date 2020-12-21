@@ -1,4 +1,4 @@
-/* Kaleidoscope-Hardware-TestMode - A factory test mode for the Model 01.
+/* Kaleidoscope-HardwareTestMode -- A factory test mode for keyboards with RGB LEDs
  * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

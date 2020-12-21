@@ -1,4 +1,4 @@
-/* Kaleidoscope-LEDEffect-Chase - A Chase LED effect for Kaleidoscope.
+/* Kaleidoscope-LEDEffect-Chase -- A Chase LED effect for Kaleidoscope.
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

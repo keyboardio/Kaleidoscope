@@ -1,4 +1,4 @@
-/* Kaleidoscope-LEDEffect-Breathe - A breathing effect on the LEDs, for Kaleidoscope.
+/* Kaleidoscope-LEDEffect-Breathe -- A breathing effect on the LEDs, for Kaleidoscope.
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

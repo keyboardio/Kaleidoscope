@@ -1,4 +1,4 @@
-/* Kaleidoscope-Model01-TestMode - A factory test mode for the Model 01.
+/* Kaleidoscope-Model01-TestMode -- A factory test mode for the Model 01.
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

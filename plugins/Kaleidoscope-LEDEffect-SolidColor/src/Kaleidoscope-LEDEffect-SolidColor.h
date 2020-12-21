@@ -1,4 +1,4 @@
-/* Kaleidoscope-LEDEffect-SolidColor - Solid color LED effects for Kaleidoscope.
+/* Kaleidoscope-LEDEffect-SolidColor -- Solid color LED effects for Kaleidoscope.
  * Copyright (C) 2017  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

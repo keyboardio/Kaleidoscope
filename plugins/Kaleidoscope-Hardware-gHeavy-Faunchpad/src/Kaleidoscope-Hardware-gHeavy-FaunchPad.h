@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * kaleidoscope::device::gheavy::FaunchPad -- gHeavy FaunchPad hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-gHeavy-FaunchPad -- gHeavy FaunchPad hardware support for Kaleidoscope
  * Copyright (C) 2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
