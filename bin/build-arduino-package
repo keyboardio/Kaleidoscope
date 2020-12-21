@@ -78,6 +78,9 @@ chdir("plugins");
 `mv * ../../`;
 }
 
+set_plugin_versions();
+
+
 chdir($temp_dir);
 `mv $checkout_dir/avr $checkout_dir/$checkout_dir`
   ;    # A hack to get consistent naming with the old setup
@@ -110,7 +113,7 @@ my $platform_template = {
         }
     ],
     'url'      => $build_base_url . '/' . $filename,
-    'name'     => 'keyboardio',
+    'name'     => "Kaleidoscope keyboards - nightly builds",
     'version'  => $version,
     'checksum' => 'SHA-256:' . $sha256,
     'size'     => $size,
@@ -144,3 +147,10 @@ chdir('boardsmanager');
 `git commit -a -m 'Built by $executed_as'`;
 print
 "Now, you need to cd to $temp_dir/boardsmanager check the content and push it\n";
+
+
+
+sub set_plugin_versions {
+	chdir("$temp_dir/$checkout_dir/avr/libraries");
+	`perl -pi -e's/version=0.0.0/version=$version/' */library.properties`
+}
