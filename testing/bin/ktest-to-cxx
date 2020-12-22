@@ -13,16 +13,15 @@ my $depth            = 0;
 my $reports_expected = 0;
 my @script_lines;
 my $named_switches = {};
-my $inside_test = 0;
+my $inside_test    = 0;
 
 my $test_class = 'GeneratedKTest';
 
-
 GetOptions(
-    "cxx=s"   => \$cxx_filename,     # string
-    "ktest=s"  => \$text_filename,
+    "cxx=s"   => \$cxx_filename,    # string
+    "ktest=s" => \$text_filename,
     "verbose" => \$verbose
-  )                                  # flag
+  )                                 # flag
   or die("Error in command line arguments\n");
 
 my $test;
@@ -36,14 +35,11 @@ else {
 
 generate_test_file();
 
-open(my $outfile, ">", $cxx_filename) || die "Can't open output file $!";
+open( my $outfile, ">", $cxx_filename ) || die "Can't open output file $!";
 print $outfile $cxx_output;
-close ($outfile);
+close($outfile);
 
 exit(0);
-
-
-
 
 sub load_from_text {
     my @content = ();
@@ -74,18 +70,18 @@ sub load_from_text {
         }
 
         my $dispatcher = {
-	    version => sub {
-		my $version = shift;
-		if ($version != 1) {	
-			die "This parser only supports v1";
-		}
-		return undef;
-		},
-	    name => sub {	
-			my $name = shift;
-			$name =~ s/\s(\w)/uc($1)/eg;
-			return { test_name => $name };
-		},
+            version => sub {
+                my $version = shift;
+                if ( $version != 1 ) {
+                    die "This parser only supports v1";
+                }
+                return undef;
+            },
+            name => sub {
+                my $name = shift;
+                $name =~ s/\s(\w)/uc($1)/eg;
+                return { test_name => $name };
+            },
             keyswitch => sub {
                 my $content = shift;
                 if ( $content =~ /^(.*?)\s+(\d+)\s+(\d+)$/ ) {
@@ -104,7 +100,8 @@ sub load_from_text {
             press => sub {
                 my $content = shift;
                 unless ( defined $named_switches->{$content} ) {
-                    die "Attempt to press undefined switch $content on line $line_num";
+                    die
+"Attempt to press undefined switch $content on line $line_num";
                 }
                 return { switch => $content };
             },
@@ -118,11 +115,12 @@ sub load_from_text {
             },
             expect => sub {
                 my $content = shift;
-		if ( $content =~ /^no keyboard-report/) {
-			return {
-				report_type => 'keyboard',
-				count => 0 };
-		}
+                if ( $content =~ /^no keyboard-report/ ) {
+                    return {
+                        report_type => 'keyboard',
+                        count       => 0
+                    };
+                }
                 if ( $content =~ /^keyboard-report\s+(.*)$/ ) {
                     my $report_data = $1;
                     my @keys        = split( /,?\s+/, $report_data );
@@ -130,7 +128,7 @@ sub load_from_text {
                         @keys = ();
                     }
                     return {
-   			count => 1, # We expect one report here
+                        count       => 1,            # We expect one report here
                         report_type => 'keyboard',
                         keys        => [@keys]
                     };
@@ -150,9 +148,15 @@ sub load_from_text {
                     elsif ( $unit =~ /milli|ms/ ) {
                         return { millis => $count };
                     }
-                    else { die "Line $line_num: failed to parse a 'run' clause: $content"; }
+                    else {
+                        die
+"Line $line_num: failed to parse a 'run' clause: $content";
+                    }
                 }
-                else { die "Line $line_num: failed to parse a 'run' clause: $content"; }
+                else {
+                    die
+"Line $line_num: failed to parse a 'run' clause: $content";
+                }
 
             },
 
@@ -161,15 +165,16 @@ sub load_from_text {
         my $data;
         if ( $type && exists $dispatcher->{$type} ) {
             $data = $dispatcher->{$type}->($content);
-	    # an empty return means "don't put it in the script
-	    if (!$data)  {
-		next;
-		}
+
+            # an empty return means "don't put it in the script
+            if ( !$data ) {
+                next;
+            }
         }
 
         push @content,
           {
-            action     => $type,
+            action   => $type,
             content  => $content,
             comment  => $comment,
             data     => $data,
@@ -178,18 +183,16 @@ sub load_from_text {
 
     }
 
-    close ($text_fh);
+    close($text_fh);
     @script_lines = @content;
 }
 
-
 sub generate_test_file {
 
-generate_preface(); 
+    generate_preface();
     generate_key_addrs();
-    
 
-    generate_script( );
+    generate_script();
 
     generate_postscript();
 
@@ -200,7 +203,7 @@ generate_preface();
 
 sub generate_key_addrs {
     cxx_section('Key Addresses');
-    for my $key ( keys %$named_switches  ) {
+    for my $key ( keys %$named_switches ) {
 
         cxx(    "constexpr KeyAddr key_addr_$key {"
               . $named_switches->{$key}->[0] . ", "
@@ -210,8 +213,9 @@ sub generate_key_addrs {
     }
 
 }
+
 sub generate_start_new_test {
-    my $name  = shift;
+    my $name = shift;
     if ($inside_test) {
         generate_end_test();
     }
@@ -220,6 +224,7 @@ sub generate_start_new_test {
     indent();
     cxx("ClearState(); // Clear any state from previous tests");
 }
+
 sub generate_end_test {
     generate_check_expected_reports();
     outdent();
@@ -232,7 +237,7 @@ sub generate_end_test {
 
 sub generate_script {
     cxx_section("Test script");
- 
+
     # Super evil hack from https://stackoverflow.com/a/48924764
     # We should do this better, inside the core. But until we do
     # I'd rather stick the macro in the code generator so nobody
@@ -240,7 +245,9 @@ sub generate_script {
     cxx('#define GTEST_COUT std::cerr << "[ INFO     ] "');
 
     generate_start_new_test('KtestSourceFilename');
-    cxx("GTEST_COUT << \"test: @{[File::Spec->rel2abs( $text_filename ) ]}\"   << std::endl;");
+    cxx(
+"GTEST_COUT << \"test: @{[File::Spec->rel2abs( $text_filename ) ]}\"   << std::endl;"
+    );
     generate_end_test('');
 
     $reports_expected = 0;
@@ -251,9 +258,13 @@ sub generate_script {
         }
         elsif ( my $action = $entry->{action} ) {
 
-            if ( $action eq 'name' ) { generate_start_new_test($entry->{data}->{test_name}) }
+            if ( $action eq 'name' ) {
+                generate_start_new_test( $entry->{data}->{test_name} );
+            }
             elsif ( !$inside_test && defined $action ) {
-                die "Attempting to run an action '$action' when not inside a test section on line " . $entry->{line_num} . "\n";
+                die
+"Attempting to run an action '$action' when not inside a test section on line "
+                  . $entry->{line_num} . "\n";
             }
             elsif ( $action eq 'press' )   { generate_press($entry) }
             elsif ( $action eq 'release' ) { generate_release($entry); }
@@ -266,7 +277,7 @@ sub generate_script {
     }
 
     if ($inside_test) {
-    	generate_end_test();
+        generate_end_test();
     }
 
 }
@@ -288,28 +299,34 @@ sub generate_press {
     my $e = shift;
 
     # TODO handle multuple presses
-    cxx( "PressKey(key_addr_" . $e->{data}->{switch} . ");" , $e->{comment});
+    cxx( "PressKey(key_addr_" . $e->{data}->{switch} . ");", $e->{comment} );
 }
 
 sub generate_release {
     my $e = shift;
 
     # TODO handle multiple releases
-    cxx( "ReleaseKey(key_addr_" . $e->{data}->{switch} . ");" , $e->{comment});
+    cxx( "ReleaseKey(key_addr_" . $e->{data}->{switch} . ");", $e->{comment} );
 }
 
 sub generate_expect_report {
     my $report = shift;
-    if (! $report->{data}->{report_type}  || $report->{data}->{report_type} ne 'keyboard') {
-	die "Don't know how to work with expectaions of reports other than 'keyboard' reports at line #".$report->{line_num}."\n";
+    if (  !$report->{data}->{report_type}
+        || $report->{data}->{report_type} ne 'keyboard' )
+    {
+        die
+"Don't know how to work with expectaions of reports other than 'keyboard' reports at line #"
+          . $report->{line_num} . "\n";
 
     }
     $reports_expected++;
 
-    if ($report->{data}->{count} == 0) { 
-	cxx_comment($report->{comment});
-	cxx_comment("We don't expect any report here, and have told the tests to check that");
-	return;
+    if ( $report->{data}->{count} == 0 ) {
+        cxx_comment( $report->{comment} );
+        cxx_comment(
+"We don't expect any report here, and have told the tests to check that"
+        );
+        return;
     }
 
     my $codes = join(
@@ -332,7 +349,7 @@ sub generate_check_expected_reports {
 
 sub generate_preface {
 
-my $preface = <<EOF;
+    my $preface = <<EOF;
 #include "testing/setup-googletest.h"
 #include "Kaleidoscope.h"
 
@@ -354,22 +371,23 @@ namespace {
 class @{[$test_class]} : public VirtualDeviceTest {};
 EOF
 
-for my $line (split/\n/,$preface) {
-	cxx($line);
+    for my $line ( split /\n/, $preface ) {
+        cxx($line);
+    }
 }
-}
+
 sub generate_postscript {
 
-my $postscript = <<EOF;
+    my $postscript = <<EOF;
 
 }  // namespace
 }  // namespace testing
 }  // namespace kaleidoscope
 EOF
 
-for my $line (split/\n/,$postscript) {
-	cxx($line);
-}
+    for my $line ( split /\n/, $postscript ) {
+        cxx($line);
+    }
 }
 
 sub indent {
@@ -399,12 +417,12 @@ sub cxx_comment {
 }
 
 sub cxx {
-    my $line = shift;
+    my $line    = shift;
     my $comment = shift || '';
     $cxx_output .= " " x $depth;
     $cxx_output .= $line;
-	$cxx_output .= $comment if ($comment);	
-     $cxx_output .= "\n";
+    $cxx_output .= $comment if ($comment);
+    $cxx_output .= "\n";
     if ($verbose) {
         debug("$line");
     }
