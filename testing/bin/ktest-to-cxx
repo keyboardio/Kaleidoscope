@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use Getopt::Long;
 use File::Spec;
+use Data::Dumper;
 
 my $text_filename = "";
 my $cxx_filename  = "";
@@ -14,8 +15,8 @@ my $reports_expected = 0;
 my @script_lines;
 my $named_switches = {};
 my $inside_test    = 0;
-
-my $test_class = 'GeneratedKTest';
+my $stanza         = 0;
+my $test_class     = 'GeneratedKTest';
 
 GetOptions(
     "cxx=s"   => \$cxx_filename,    # string
@@ -66,7 +67,7 @@ sub load_from_text {
             $content = $2;
         }
         else {
-            $error = "Couldn't parse line";
+            $type = lc $line;
         }
 
         my $dispatcher = {
@@ -82,6 +83,8 @@ sub load_from_text {
                 $name =~ s/\s(\w)/uc($1)/eg;
                 return { test_name => $name };
             },
+            todo => sub { my $content = shift; return { reason => $content }; },
+            end_todo  => sub { return { 1 => 1 } },
             keyswitch => sub {
                 my $content = shift;
                 if ( $content =~ /^(.*?)\s+(\d+)\s+(\d+)$/ ) {
@@ -197,7 +200,7 @@ sub generate_test_file {
     generate_postscript();
 
     if ( $depth != 0 ) {
-        die "Unbalanced indentation";
+        die "Unbalanced indentation: Depth is $depth";
     }
 }
 
@@ -219,10 +222,34 @@ sub generate_start_new_test {
     if ($inside_test) {
         generate_end_test();
     }
-    cxx( "TEST_F(" . $test_class . "," . $name . ") {" );
-    $inside_test = 1;
+    cxx( "TEST_F($test_class, " . $stanza++ . "_$name) {" );
+    $inside_test = $name;
     indent();
     cxx("ClearState(); // Clear any state from previous tests");
+}
+
+sub generate_start_todo_test_section {
+    if ($inside_test) {
+        outdent();
+        cxx("} // TEST_F");
+        cxx('');
+        cxx('');
+        cxx('');
+    }
+    cxx( "TEST_F($test_class, DISABLED_" . $stanza++ . "_$inside_test) {" );
+    indent();
+}
+
+sub generate_end_todo_test_section {
+    outdent();
+    cxx("} // DISABLED TEST_F");
+    if ($inside_test) {
+        cxx('');
+        cxx('');
+        cxx('');
+        cxx( "TEST_F($test_class, " . $stanza++ . "_$inside_test) {" );
+        indent();
+    }
 }
 
 sub generate_end_test {
@@ -261,6 +288,27 @@ sub generate_script {
             if ( $action eq 'name' ) {
                 generate_start_new_test( $entry->{data}->{test_name} );
             }
+
+            elsif ( $action eq 'todo' ) {
+                generate_start_todo_test_section();
+                cxx(
+                    "GTEST_COUT << \"TODO: @{[
+			$entry->{'data'}->{'reason'} || 'The author did not specify a reason' 
+			]}\"   << std::endl;"
+                );
+
+                if ( $entry->{comment} ) {
+                    cxx_comment( $entry->{comment} );
+                }
+            }
+            elsif ( $action eq 'end_todo' ) {
+                if ( $entry->{comment} ) {
+                    cxx_comment( $entry->{comment} );
+                }
+
+                generate_end_todo_test_section();
+            }
+
             elsif ( !$inside_test && defined $action ) {
                 die
 "Attempting to run an action '$action' when not inside a test section on line "
@@ -337,7 +385,9 @@ sub generate_expect_report {
             : ( $report->{data}->{keys} )
         )
     );
-    cxx( "ExpectReport(Keycodes{$codes}, \"" . $report->{comment} . "\");" );
+    cxx(    "ExpectReport(Keycodes{$codes}, \""
+          . ( $report->{comment} || 'No explanatory comment specified' )
+          . "\");" );
     cxx("");
 }
 
