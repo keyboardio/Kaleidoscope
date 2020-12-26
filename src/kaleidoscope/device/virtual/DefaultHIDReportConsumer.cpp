@@ -17,7 +17,7 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "DefaultHIDReportConsumer.h"
-#include "MultiReport/Keyboard.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
 #include "Logging.h"
 
 #include "virtual_io.h"

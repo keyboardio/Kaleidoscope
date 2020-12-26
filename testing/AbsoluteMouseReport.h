@@ -19,8 +19,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "DeviceAPIs/AbsoluteMouseAPI.h"
-#include "HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.h"
 
 namespace kaleidoscope {
 namespace testing {

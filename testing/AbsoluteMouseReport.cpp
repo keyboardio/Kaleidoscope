@@ -21,7 +21,8 @@
 
 #include <cstring>
 
-#include "MouseButtons.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
+
 
 namespace kaleidoscope {
 namespace testing {

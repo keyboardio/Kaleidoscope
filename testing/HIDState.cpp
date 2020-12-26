@@ -16,8 +16,6 @@
 
 #include "testing/HIDState.h"
 
-#include "HID-Settings.h"
-
 #include "testing/fix-macros.h"
 
 // TODO(epan): Add proper logging.
