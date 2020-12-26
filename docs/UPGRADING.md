@@ -13,6 +13,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
+    - [git checkouts aren't compatible with Arduino IDE (GUI)]([#repository-rearchitecture)
     - [Layer system switched to activation-order](#layer-system-switched-to-activation-order)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
@@ -322,6 +323,14 @@ As an end-user, there's nothing one needs to do. Consistent timing helpers are p
 As a developer, one can continue using `millis()`, but migrating to `Kaleidoscope.millisAtCycleStart()` is recommended. The new method will return the same value for the duration of the main loop cycle, making time-based synchronization between plugins a lot easier.
 
 ## Breaking changes
+
+### Repository rearchitecture
+
+To improve build times and to better highlight Kaleidoscope's many plugins, plugins have been move into directories inside the Kaleidoscope directory. 
+
+The "breaking change" part of this is that git checkouts of Kaleidoscope are no longer directly compatible with the Arduino IDE, since plugins aren't in a directory the IDE looks in. They are, of course, visible to tools using our commandline build infrastructure / Makefiles.
+
+When we build releases, those plugins are moved into directories inside the arduino platform packages for each architecture to make them visible to the Arduino IDE.
 
 ### Layer system switched to activation order
 
