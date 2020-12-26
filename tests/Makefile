@@ -34,8 +34,11 @@ all: ${TESTS} run-all
 
 run-all: ${TESTS}
 	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} run; \
-	done || exit 1
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} run || ERROR=$$?; \
+	done; \
+	if [ -n $${ERROR} ]; then exit $${ERROR}; fi
+
+
 
 cmake-clean:
 	rm -rf "${top_dir}"/testing/googletest/build/*
