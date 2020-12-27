@@ -7,68 +7,118 @@
 ###################
 ###################
 
+my $executed_as = join(' ', @ARGV);
+
 use warnings;
 use strict;
 use File::Temp qw/tempdir/;
 use Cwd qw/abs_path cwd/;
 use JSON;
+      use Getopt::Long;
 
 my $sha256 = 0;
 my $size   = 0;
 
-my $tag = shift || 'master';
+my $version = '';
+my $tag              =  'master';
+my $kaleidoscope_tag =  'master';
+my $temp_dir         = tempdir( CLEANUP => 0 );
+my $index_filename_slug  ='keyboardio';
 
-my $dir           = tempdir( CLEANUP => 0 );
-my $checkout_dir  = "Kaleidoscope-$tag";
-my $filename      = $checkout_dir . ".tar.bz2";
-my $checkout_path = "$dir/$checkout_dir";
-chdir($dir);
+my $only_latest_platform = 0;
 
-`git clone --depth=1 https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio $checkout_path`;
-chdir($checkout_path);
-`git checkout $tag`;
-`make update-submodules`;
-`find $checkout_path -name .git |xargs rm -rf`;
-`rm -rf $checkout_path/toolchain`;
-`rm -rf $checkout_path/etc`;
-`rm -rf $checkout_path/doc`;
-chdir($dir);
-`rm -rf $checkout_dir/avr/build-tools`;
-`mv $checkout_dir/avr $checkout_dir/$checkout_dir`; # A hack to get consistent naming with the old setup
+my $bundle_repo = 'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
+my $boards_repo = 'https://github.com/keyboardio/boardsmanager';
+my $push_package_repo = 0;
+
+
+
+      GetOptions ("bundle-tag=s" => \$tag,
+		  "kaleidoscope-tag=s" => \$kaleidoscope_tag,
+		  "bundle-repo=s" => \$bundle_repo,
+		  "output-repo=s" => \$boards_repo,
+		  "index-filename-slug=s" => \$index_filename_slug,
+		  "version=s" => \$version,
+		  "only-one-platform-revision" => \$only_latest_platform,
+		  "push" => \$push_package_repo)
+      or die("Error in command line arguments\n");
+
+my $index_filename = 'package_'.$index_filename_slug.'_index.json';
+
+if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
+    $version = $1;
+}
+
+my $checkout_dir     = "Kaleidoscope-$tag-$version";
+my $filename         = $checkout_dir . ".tar.bz2";
+
+my $build_base_url = $boards_repo."/master/builds/";
+$build_base_url =~ s/github.com/raw.githubusercontent.com/;
+
+
+my @bundle_dirs_to_remove = qw|toolchain etc doc avr/build-tools|;
+
+chdir($temp_dir);
+
+`git clone --depth=1 --quiet --recurse-submodules --branch $tag $bundle_repo $checkout_dir`;
+`git clone $boards_repo boardsmanager`;
+
+
+chdir($checkout_dir);
+foreach my $dir_to_remove (@bundle_dirs_to_remove) {
+    `rm -rf $dir_to_remove`;
+}
+
+chdir("avr/libraries/Kaleidoscope");
+`git checkout --quiet $kaleidoscope_tag`;
+
+if ( -d 'plugins') { 
+chdir("plugins");
+# move the plugins to where they should live
+`mv * ../../`;
+}
+
+set_plugin_versions();
+
+
+chdir($temp_dir);
+`mv $checkout_dir/avr $checkout_dir/$checkout_dir`
+  ;    # A hack to get consistent naming with the old setup
+`find $checkout_dir -name .git |xargs rm -rf`;
 `tar cjvf $filename -C $checkout_dir/ $checkout_dir `;
+
 $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
 chomp($sha256);
-
 die "There was a problem generating the sha256" unless ($sha256);
-$size = -s $filename;
 
-`git clone https://github.com/keyboardio/boardsmanager`;
+$size = -s $filename;
 `mkdir -p boardsmanager/builds`;
+if ($only_latest_platform) {
+`rm -rf boardsmanager/builds/*`;
+}
 `cp $filename boardsmanager/builds/`;
 
 my $platform_template = {
-    'archiveFileName'   => 'Arduino-Boards-v1.14.zip',
+    'archiveFileName'   => $filename,
     'toolsDependencies' => [
-            {
-              "packager" => "arduino",
-              "name" => "avr-gcc",
-              "version" => "7.3.0-atmel3.6.1-arduino5"
-            },
-            {
-              "packager" => "arduino",
-              "name" => "avrdude",
-              "version" => "6.3.0-arduino17"
-            }
+        {
+            "packager" => "arduino",
+            "name"     => "avr-gcc",
+            "version"  => "7.3.0-atmel3.6.1-arduino7"
+        },
+        {
+            "packager" => "arduino",
+            "name"     => "avrdude",
+            "version"  => "6.3.0-arduino17"
+        }
     ],
-    'url'  => 'https://github.com/keyboardio/Arduino-Boards/archive/v1.14.zip',
-    'name' => 'keyboardio',
-    'version' => '1.1.4',
-    'checksum' =>
-'SHA-256:fd0017ea2950f6fb3afb46a503f0193c75111d68dfc95fa2775fbd63f0cf4528',
-    'size'   => '1008405',
-    'boards' => [
-        { 'name' => 'Keyboardio Model 01' },
-	{ 'name' => 'Keyboardio Atreus' }
+    'url'      => $build_base_url . '/' . $filename,
+    'name'     => "Kaleidoscope keyboards - nightly builds",
+    'version'  => $version,
+    'checksum' => 'SHA-256:' . $sha256,
+    'size'     => $size,
+    'boards'   => [
+        { 'name' => 'Keyboardio Model 01' }, { 'name' => 'Keyboardio Atreus' }
     ],
     'architecture' => 'avr',
     'category'     => 'Contributed',
@@ -77,35 +127,34 @@ my $platform_template = {
     }
 };
 
-my $version = $tag;
-if ($version =~ /^v(\d.*)$/) {
-	$version = $1
-};
-
-$platform_template->{archiveFileName} = $filename;
-$platform_template->{version} = $version;
-$platform_template->{url} =
-  'https://raw.githubusercontent.com/keyboardio/boardsmanager/master/builds/'
-  . $filename;
-$platform_template->{checksum} = 'SHA-256:' . $sha256;
-$platform_template->{size}     = $size;
-
 my $json = JSON->new->allow_nonref;
-
 local $/;
-open( my $fh, '<', 'boardsmanager/package_keyboardio_index.json' );
+open( my $fh, '<', 'boardsmanager/'.$index_filename) || die "Could not open boardsmanager/$index_filename $!";
 my $json_text = <$fh>;
 my $data      = from_json($json_text);
-
+if ($only_latest_platform) {
+@{ $data->{'packages'}->[0]->{'platforms'} } = ( $platform_template);
+} else {
 push @{ $data->{'packages'}->[0]->{'platforms'} }, $platform_template;
-
+}
 my $json_out = $json->canonical->pretty->encode($data);
-
-open( my $out_fh, '>', 'boardsmanager/package_keyboardio_index.json' );
+open( my $out_fh, '>',  'boardsmanager/'.$index_filename);
 print $out_fh $json_out;
 close($out_fh);
-
-#	rm -rf /tmp/boardsmanager
+chdir('boardsmanager');
+`git add $index_filename`;
+`git add builds`;
+`git commit -a -m 'Built by $executed_as'`;
+if ($push_package_repo) {
+	`git push`;
+} else {
 
 print
-  "Now, you need to cd to $dir/boardsmanager check the content and commit it\n";
+"Now, you need to cd to $temp_dir/boardsmanager check the content and push it\n";
+}
+
+
+sub set_plugin_versions {
+	chdir("$temp_dir/$checkout_dir/avr/libraries");
+	`perl -pi -e's/version=0.0.0/version=$version/' */library.properties`
+}

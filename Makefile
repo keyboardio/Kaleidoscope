@@ -109,3 +109,13 @@ clean:
 
 $(SMOKE_SKETCHES): force
 	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
+
+
+build-arduino-nightly-package:
+	perl bin/build-arduino-package \
+		--kaleidoscope-tag=master \
+		--version `date +%Y.%m.%d%H%M%S` \
+		--index-filename-slug=kaleidoscope_nightly \
+		--only-one-platform-revision \
+		--push \
+		--output-repo=https://github.com/keyboardio/arduino-kaleidoscope-nightly 

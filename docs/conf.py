@@ -37,6 +37,7 @@ extensions = [
 ]
 
 extensions.append('copy-examples')
+extensions.append('copy-plugin-readmes')
 
 
 # Setup the breathe extension

@@ -177,6 +177,7 @@ compile:
 	$(QUIET) install -d "${OUTPUT_PATH}"
 	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} --warnings all ${ccache_wrapper_property} ${local_cflags_property} \
 	  --libraries "${KALEIDOSCOPE_PLATFORM_LIB_DIR}" \
+	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
 	  --output-dir "${OUTPUT_PATH}" \
 	  --build-cache-path "${CORE_CACHE_PATH}" \
