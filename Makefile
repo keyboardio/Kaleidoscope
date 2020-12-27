@@ -18,7 +18,7 @@ setup: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_
 	@:
 
 
-checkout-platform: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt
+checkout-platform: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd/boards.txt
 	@:
 
 prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt
@@ -27,6 +27,11 @@ prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
 	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
 
+$(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd/boards.txt:
+	git clone -c core.symlinks=true \
+		https://github.com/keyboardio/ArduinoCore-samd \
+		$(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd
+	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd/libraries/Kaleidoscope
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true --recurse-submodules=":(exclude)avr/libraries/Kaleidoscope" --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio
