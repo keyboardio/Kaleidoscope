@@ -50,3 +50,15 @@ jobs:
     - uses: actions/checkout@v2
     - run: make setup
     - run: make find-filename-conflicts 
+  publish-arduino-package-on-every-commit:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@v2
+    - uses: webfactory/ssh-agent@v0.4.1
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEPLOY }}
+    - run: git config --global user.email "nobody@keyboard.io"
+    - run: git config --global user.name "Automated release publisher"
+    - run: make setup 
+    - run: make build-arduino-nightly-package

@@ -13,7 +13,7 @@ use warnings;
 use strict;
 use File::Temp qw/tempdir/;
 use Cwd qw/abs_path cwd/;
-use JSON;
+use JSON::PP;
       use Getopt::Long;
 
 my $sha256 = 0;
@@ -53,10 +53,9 @@ my $checkout_dir     = "Kaleidoscope-$tag-$version";
 my $filename         = $checkout_dir . ".tar.bz2";
 
 my $build_base_url = $boards_repo."/master/builds/";
-$build_base_url =~ s/github.com/raw.githubusercontent.com/;
+$build_base_url =~ s|ssh://git\@github.com|https://raw.githubusercontent.com|;
 
-
-my @bundle_dirs_to_remove = qw|toolchain etc doc avr/build-tools|;
+my @bundle_dirs_to_remove = qw|toolchain etc doc avr/build-tools avr/bootloaders/*/lufa avr/libraries/Kaleidoscope/testing avr/libraries/Kaleidoscope/tests avr/libraries/Kaleidoscope/docs|;
 
 chdir($temp_dir);
 
@@ -127,11 +126,11 @@ my $platform_template = {
     }
 };
 
-my $json = JSON->new->allow_nonref;
+my $json = JSON::PP->new->allow_nonref;
 local $/;
 open( my $fh, '<', 'boardsmanager/'.$index_filename) || die "Could not open boardsmanager/$index_filename $!";
 my $json_text = <$fh>;
-my $data      = from_json($json_text);
+my $data      = decode_json($json_text);
 if ($only_latest_platform) {
 @{ $data->{'packages'}->[0]->{'platforms'} } = ( $platform_template);
 } else {

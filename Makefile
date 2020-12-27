@@ -115,7 +115,7 @@ build-arduino-nightly-package:
 	perl bin/build-arduino-package \
 		--kaleidoscope-tag=master \
 		--version `date +%Y.%m.%d%H%M%S` \
-		--index-filename-slug=kaleidoscope_nightly \
+		--index-filename-slug=kaleidoscope_master \
 		--only-one-platform-revision \
 		--push \
-		--output-repo=https://github.com/keyboardio/arduino-kaleidoscope-nightly 
+		--output-repo=ssh://git@github.com/keyboardio/arduino-kaleidoscope-master
