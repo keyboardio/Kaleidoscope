@@ -51,8 +51,8 @@ If your keyboard has a programming interlock key, you'll need to hold it down no
 Without releasing that key, click on the "right arrow" button in the sketch window menu bar. This starts the firmware installation process.
 
 
-![](images/arduino-setup/press-prog.png)
-![](images/arduino-setup/press-prog-atreus.png)
+![](images/arduino-setup/press-prog.jpg)
+![](images/arduino-setup/press-prog-atreus.jpg)
  
 ![](images/arduino-setup/upload-sketch.png)
 
