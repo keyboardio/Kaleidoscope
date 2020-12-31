@@ -90,8 +90,8 @@ For developers
 
 
 .. toctree::
-   :caption: Docs that don't work yet 
    :maxdepth: 2
+   :caption: Examples
 
    examples
    about
