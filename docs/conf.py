@@ -100,6 +100,8 @@ html_theme_options = {
     'style_external_links': False,
     'vcs_pageview_mode': '',
     'style_nav_header_background': 'white',
+    "display_github": False, # Add 'Edit on Github' link instead of 'View page source'
+
     # Toc options
 
     'collapse_navigation': True,
