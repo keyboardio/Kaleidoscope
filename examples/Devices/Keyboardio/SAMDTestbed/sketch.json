@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "kaleidoscope:samd:kbio_metro_m4",
+    "port": ""
+  }
+}
