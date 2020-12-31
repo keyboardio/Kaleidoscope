@@ -21,7 +21,6 @@
 
 #include <Arduino.h>
 #include "kaleidoscope/device/Base.h"
-
 #include "kaleidoscope/driver/mcu/SAMD.h"
 #include "kaleidoscope/driver/keyscanner/SAMD.h"
 #include "kaleidoscope/driver/storage/Flash.h"

@@ -23,7 +23,14 @@
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/keyscanner/None.h"
 
-#include "kaleidoscope/device/samd/pins_and_ports.h"
+//todo
+#define DDR_INPUT
+#define DDR_OUTPUT
+#define ENABLE_PULLUP
+#define OUTPUT_HIGH
+#define OUTPUT_TOGGLE 
+#define READ_TOGGLE 
+#define READ_PIN
 
 namespace kaleidoscope {
 namespace driver {
@@ -94,7 +101,6 @@ class SAMD: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
 */
   }
-
   __attribute__((optimize(3)))
   void readMatrix(void) {
     typename _KeyScannerProps::RowState any_debounced_changes = 0;

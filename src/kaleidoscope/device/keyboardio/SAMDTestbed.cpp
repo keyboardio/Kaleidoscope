@@ -55,9 +55,7 @@ template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::ma
 // the intervals we want. We do the scan outside of the interrupt scope for
 // practical reasons: guarding every codepath against interrupts that can be
 // reached from the scan is far too tedious, for very little gain.
-ISR(TIMER1_OVF_vect) {
-  Runtime.device().keyScanner().do_scan_ = true;
-}
+//ISR(TIMER1_OVF_vect) { Runtime.device().keyScanner().do_scan_ = true; }
 
 }
 }

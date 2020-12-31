@@ -145,10 +145,19 @@ configure-arduino-cli: $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml
 
 $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml:
 	$(QUIET) $(ARDUINO_CLI) config init
+	$(QUIET) $(ARDUINO_CLI) core update-index
 
 install-arduino-core-kaleidoscope:
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr"
 
+install-arduino-core-kaleidoscope-samd:
+	$(QUIET) $(ARDUINO_CLI) core install "kaleidoscope:samd"
+
 install-arduino-core-avr: 
 	$(QUIET) $(ARDUINO_CLI) core install "arduino:avr"
 
+install-arduino-core-samd: 
+	$(QUIET) $(ARDUINO_CLI) core install "arduino:samd"
+
+arduino-cli-run:
+	$(ARDUINO_CLI) $(ARGS)
