@@ -68,10 +68,10 @@ For developers
    drivers/**
 
 .. toctree::
-   :caption: Development tips
+   :caption: Testing
    :glob:
 
-   development/**
+   testing/**
 
 
 .. toctree::
