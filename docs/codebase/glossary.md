@@ -4,12 +4,75 @@ This document is intended to name and describe the concepts, functions and data 
 
 It is, as yet, incredibly incomplete.
 
-Entries should be included in dictionary order. When describing an identifier of any kind from the codebase, it should be
+When describing an identifier of any kind from the codebase, it should be
 written using identical capitalization to its use in the code and surrounded by backticks: `identifierName`
 
 ## Firmware Terminology
 
 These terms commonly arise when discussing the firmware.
+
+### Keyswitch
+
+A single physical input, such as a keyswitch or other input like a knob or a slider
+
+### Key number
+
+An integer representing a Keyswitch’s position in the “Physical Layout”
+
+### Physical Layout
+
+A mapping of keyswitches to key numbers
+
+### Key binding
+
+A mapping from a key number to a behavior. 
+
+### `Key`
+
+A representation of a specific behavior. Most often a representation of a specific entry in the USB HID Usage Tables.
+
+### Keymap
+
+A list of key bindings for all keyswitchess on the Physical Layout
+
+### Keymaps
+
+An ordered list of all the Keymaps installed on a keyboard. 
+
+### Layer
+
+An entry in that ordered list of keymaps. Each layer has a unique id number that does not change. Layer numbers start at 0.
+
+### Active Layer Stack
+
+An ordered list of all the currently-active layers, in the order they should be evaluated when figuring out what a key does.
+
+### Override Layer
+
+A special layer that’s always active and evaluated before checking keys in the “Active layer stack”  
+
+
+
+## Keyswitch state
+
+### Pressed
+
+The state of a keyswitch that has been actuated by the user or a routine acting on behalf of the user 
+
+### Unpressed
+
+The state of a keyswitch that is not currently actuated
+
+### Toggled on
+
+The state of a keyswitch that was not pressed during the last scan cycle and is now pressed.
+
+### Toggled off
+
+The state of a keyswitch that was pressed during the last scan cycle and is no longer pressed.
+
+
+
 
 ### Cycle
 
