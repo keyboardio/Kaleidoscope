@@ -96,20 +96,6 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
       }
     }
 
-    /* If the key we are dealing with is masked, ignore it until it is released.
-     * When releasing it, clear the mask, so future key events can be handled
-     * appropriately.
-     *
-     * See layers.cpp for an example that masks keys, and the reason why it does
-     * so.
-     */
-    if (Runtime.device().isKeyMasked(key_addr)) {
-      if (keyToggledOff(keyState)) {
-        Runtime.device().unMaskKey(key_addr);
-      } else {
-        return;
-      }
-    }
 
     /* Convert key_addr to the correct mappedKey
      * The condition here means that if mappedKey and key_addr are both valid,

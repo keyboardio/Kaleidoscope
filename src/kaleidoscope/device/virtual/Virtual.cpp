@@ -72,7 +72,6 @@ void VirtualKeyScanner::setup() {
   for (auto key_addr : KeyAddr::all()) {
     keystates_[key_addr.toInt()] = KeyState::NotPressed;
     keystates_prev_[key_addr.toInt()] = KeyState::NotPressed;
-    mask_[key_addr.toInt()] = false;
   }
 }
 
@@ -294,30 +293,6 @@ bool VirtualKeyScanner::wasKeyswitchPressed(KeyAddr key_addr) const {
   }
 
   return true;
-}
-
-void VirtualKeyScanner::maskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid()) {
-    log_error("Virtual::maskKey: key_addr invalid\n");
-    return;
-  }
-  mask_[key_addr.toInt()] = true;
-}
-
-void VirtualKeyScanner::unMaskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid()) {
-    log_error("Virtual::unMaskKey: key_addr invalid\n");
-    return;
-  }
-  mask_[key_addr.toInt()] = false;
-}
-
-bool VirtualKeyScanner::isKeyMasked(KeyAddr key_addr) const {
-  if (!key_addr.isValid()) {
-    log_error("Virtual::isKeyMasked: key_addr invalid\n");
-    return false;
-  }
-  return mask_[key_addr.toInt()];
 }
 
 void VirtualKeyScanner::setKeystate(KeyAddr keyAddr, KeyState ks) {

@@ -85,11 +85,6 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void readMatrix();
   static void actOnMatrixScan();
 
-  static void maskKey(KeyAddr key_addr);
-  static void unMaskKey(KeyAddr key_addr);
-  static bool isKeyMasked(KeyAddr key_addr);
-  static void maskHeldKeys();
-
   static bool isKeyswitchPressed(KeyAddr key_addr);
   static uint8_t pressedKeyswitchCount();
 
@@ -103,9 +98,6 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static driver::keyboardio::keydata_t rightHandState;
   static driver::keyboardio::keydata_t previousLeftHandState;
   static driver::keyboardio::keydata_t previousRightHandState;
-
-  static driver::keyboardio::keydata_t leftHandMask;
-  static driver::keyboardio::keydata_t rightHandMask;
 
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();

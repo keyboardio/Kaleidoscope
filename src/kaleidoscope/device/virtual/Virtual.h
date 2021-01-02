@@ -64,10 +64,6 @@ class VirtualKeyScanner
   uint8_t previousPressedKeyswitchCount() const;
   bool wasKeyswitchPressed(KeyAddr key_addr) const;
 
-  void maskKey(KeyAddr key_addr);
-  void unMaskKey(KeyAddr key_addr);
-  bool isKeyMasked(KeyAddr key_addr) const;
-
   void setEnableReadMatrix(bool state) {
     read_matrix_enabled_ = state;
   }
@@ -89,7 +85,6 @@ class VirtualKeyScanner
   KeyState keystates_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
   KeyState keystates_prev_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
 
-  bool mask_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
 };
 
 class VirtualLEDDriver

@@ -129,11 +129,6 @@ class RaiseKeyScanner : public kaleidoscope::driver::keyscanner::Base<RaiseKeySc
   static void readMatrix();
   static void actOnMatrixScan();
 
-  static void maskKey(KeyAddr key_addr);
-  static void unMaskKey(KeyAddr key_addr);
-  static bool isKeyMasked(KeyAddr key_addr);
-  static void maskHeldKeys();
-
   static bool isKeyswitchPressed(KeyAddr key_addr);
   static uint8_t pressedKeyswitchCount();
 
@@ -149,9 +144,6 @@ class RaiseKeyScanner : public kaleidoscope::driver::keyscanner::Base<RaiseKeySc
   static raise::keydata_t rightHandState;
   static raise::keydata_t previousLeftHandState;
   static raise::keydata_t previousRightHandState;
-
-  static raise::keydata_t leftHandMask;
-  static raise::keydata_t rightHandMask;
 
   static bool lastLeftOnline;
   static bool lastRightOnline;

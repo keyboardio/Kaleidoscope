@@ -27,9 +27,3 @@
 
 /* Messages */
 
-#define _DEPRECATED_MESSAGE_KEY_MASKING                                  __NL__ \
-  "Key masking has been deprecated, please map keys to NoKey instead.\n" __NL__ \
-  "\n"                                                                   __NL__ \
-  "For further information and examples on how to do that, \n"           __NL__ \
-  "please see UPGRADING.md"
-

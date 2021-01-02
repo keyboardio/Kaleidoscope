@@ -67,10 +67,6 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   void actOnMatrixScan(void);
   void setup();
 
-  void maskKey(KeyAddr key_addr);
-  void unMaskKey(KeyAddr key_addr);
-  bool isKeyMasked(KeyAddr key_addr);
-
   bool isKeyswitchPressed(KeyAddr key_addr);
   bool isKeyswitchPressed(uint8_t keyIndex);
   uint8_t pressedKeyswitchCount();
@@ -90,7 +86,6 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   static ErgoDoxScanner scanner_;
   static uint8_t previousKeyState_[matrix_rows];
   static uint8_t keyState_[matrix_rows];
-  static uint8_t masks_[matrix_rows];
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
 
   static uint8_t debounceMaskForRow(uint8_t row);

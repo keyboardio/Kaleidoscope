@@ -60,11 +60,6 @@ class Base {
     return false;
   }
 
-  void maskKey(KeyAddr key_addr) {}
-  void unMaskKey(KeyAddr key_addr) {}
-  bool isKeyMasked(KeyAddr key_addr) {
-    return false;
-  }
 };
 
 }
