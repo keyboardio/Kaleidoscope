@@ -35,7 +35,7 @@ ARDUINO_CONTENT ?= $(KALEIDOSCOPE_DIR)/.arduino
 export ARDUINO_DIRECTORIES_DATA ?= $(ARDUINO_CONTENT)/data
 export ARDUINO_DIRECTORIES_DOWNLOADS ?= $(ARDUINO_CONTENT)/downloads
 export ARDUINO_CLI_CONFIG ?= $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml
-export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS ?= https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json
+export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS ?= https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 
 # If it looks like Kaleidoscope is inside a "traditional" Arduino hardware directory 
 # in the user's homedir, let's use that.
@@ -156,8 +156,8 @@ install-arduino-core-kaleidoscope-samd:
 install-arduino-core-avr: 
 	$(QUIET) $(ARDUINO_CLI) core install "arduino:avr"
 
-install-arduino-core-samd: 
-	$(QUIET) $(ARDUINO_CLI) core install "arduino:samd"
+install-adafruit-core-samd: 
+	$(QUIET) $(ARDUINO_CLI) core install "adafruit:samd"
 
 arduino-cli-run:
 	$(ARDUINO_CLI) $(ARGS)

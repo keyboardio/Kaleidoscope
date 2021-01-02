@@ -14,7 +14,7 @@ DEFAULT_GOAL: smoke-sketches
 PLUGIN_TEST_SUPPORT_DIR ?= $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/build-tools/
 PLUGIN_TEST_BIN_DIR ?= $(PLUGIN_TEST_SUPPORT_DIR)/../toolchain/$(shell gcc --print-multiarch)/bin
 
-setup: $(ARDUINO_CLI_PATH) configure-arduino-cli install-arduino-core-avr install-arduino-core-samd $(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
+setup: $(ARDUINO_CLI_PATH) configure-arduino-cli install-arduino-core-avr install-adafruit-core-samd $(ARDUINO_DIRECTORIES_USER)/hardware/kaleidoscope/samd/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
 	@:
 
 
