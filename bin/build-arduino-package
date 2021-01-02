@@ -49,7 +49,7 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
-my $checkout_dir     = "Kaleidoscope-$tag-$version";
+my $checkout_dir     = "Kaleidoscope-$version";
 my $filename         = $checkout_dir . ".tar.bz2";
 
 my $build_base_url = $boards_repo."/master/builds/";
@@ -63,8 +63,10 @@ chdir($temp_dir);
 `git clone $boards_repo boardsmanager`;
 
 
+print "cd $checkout_dir\n";
 chdir($checkout_dir);
 foreach my $dir_to_remove (@bundle_dirs_to_remove) {
+	print "rm -rf $dir_to_remove\n";
     `rm -rf $dir_to_remove`;
 }
 
@@ -112,7 +114,7 @@ my $platform_template = {
         }
     ],
     'url'      => $build_base_url . '/' . $filename,
-    'name'     => "Kaleidoscope keyboards - nightly builds",
+    'name'     => "Kaleidoscope keyboards",
     'version'  => $version,
     'checksum' => 'SHA-256:' . $sha256,
     'size'     => $size,
