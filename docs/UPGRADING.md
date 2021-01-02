@@ -532,7 +532,7 @@ which accepts a value between 0 and 100 (interpreted as a percentage). User who
 used higher values for `setReleaseDelay()` will want a lower values for
 `setOverlapThreshold()`.
 
-These functions have been deprecated since 2019-08-22, and will be removed by **2020-12-31**:
+These functions have been removed as of **2020-12-31**:
 
 - `Qukeys.setTimeout(millis)`
 - `Qukeys.setReleaseDelay(millis)`
