@@ -53,7 +53,8 @@ my $checkout_dir     = "Kaleidoscope-$version";
 my $filename         = $checkout_dir . ".tar.bz2";
 
 my $build_base_url = $boards_repo."/master/builds/";
-$build_base_url =~ s|ssh://git\@github.com|https://raw.githubusercontent.com|;
+$build_base_url =~ s|^ssh://git\@github.com|https://raw.githubusercontent.com|;
+$build_base_url =~ s|^https?://github.com|https://raw.githubusercontent.com|;
 
 my @bundle_dirs_to_remove = qw|toolchain etc doc avr/build-tools avr/bootloaders/*/lufa avr/libraries/Kaleidoscope/testing avr/libraries/Kaleidoscope/tests avr/libraries/Kaleidoscope/docs|;
 
