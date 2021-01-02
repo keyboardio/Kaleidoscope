@@ -31,7 +31,7 @@ The plugin provides the `EscapeOneShot` object, which has no public methods.
 
 ## Dependencies
 
-* [Kaleidoscope-OneShot](OneShot.md)
+* [Kaleidoscope-OneShot](Kaleidoscope-OneShot.md)
 
 ## Further reading
 

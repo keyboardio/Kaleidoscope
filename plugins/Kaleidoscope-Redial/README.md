@@ -23,7 +23,7 @@ void setup() {
 }
 ```
 
-## Overrideable plugin methods
+## Overridable plugin methods
 
 ### `bool shouldRemember(Key mapped_key)`
 
@@ -37,7 +37,7 @@ void setup() {
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

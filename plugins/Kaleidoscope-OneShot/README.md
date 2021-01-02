@@ -40,7 +40,7 @@ modifier will now stay on until you press it again. Continuing the
 Shift, d, e, f` will give you `ABCdef`.
 
 This can be a bit tricky; combining this plugin with
-[LED-ActiveModColor](LED-ActiveModColor.md)
+[LED-ActiveModColor](Kaleidoscope-LED-ActiveModColor.md)
 will help you understand what state your one-shot is in; when a
 one-shot key is active, it will have a white LED highlight; when
 sticky, a red highlight. (These colors are configurable.)
@@ -195,7 +195,7 @@ properties too:
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

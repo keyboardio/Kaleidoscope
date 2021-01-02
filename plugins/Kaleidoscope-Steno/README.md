@@ -22,7 +22,7 @@ port, so any plugin that wants to use that port too, will run into
 conflicts with the Steno plugin. In other words, don't use it together
 with [Focus][k:focus].
 
- [k:focus]: FocusSerial.md
+ [k:focus]: Kaleidoscope-FocusSerial.md
 
 ## What is Steno? Why should I use it? How do I learn?
 
@@ -86,7 +86,7 @@ The plugin provides a `GeminiPR` object, with no public methods or properties.
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

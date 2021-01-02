@@ -42,4 +42,4 @@ properties:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)

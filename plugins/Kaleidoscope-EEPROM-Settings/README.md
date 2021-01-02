@@ -136,7 +136,7 @@ The plugin provides two - optional - [Focus][FocusSerial] command plugins:
 to `KALEIDOSCOPE_INIT_PLUGINS` if one wishes to use them. They provide the
 following commands:
 
- [FocusSerial]: FocusSerial.md
+ [FocusSerial]: Kaleidoscope-FocusSerial.md
 
 ### `settings.defaultLayer`
 
@@ -174,7 +174,7 @@ following commands:
 
 ## Dependencies
 
-* [Kaleidoscope-FocusSerial][FocusSerial]
+* (Kaleidoscope-FocusSerial)[Kaleidoscope-FocusSerial.md]
 
 ## Further reading
 

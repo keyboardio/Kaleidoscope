@@ -88,7 +88,7 @@ properties:
 
 > Set the key map. This takes an array of
 > `kaleidoscope::plugin::SpaceCadet::KeyBinding` objects with the special
-> `SPACECADET_MAP_END` sentinal to mark the end of the map. Each KeyBinding
+> `SPACECADET_MAP_END` sentinel to mark the end of the map. Each KeyBinding
 > object takes, in order, the key that was pressed, the key that should be sent
 > instead, and an optional per-key timeout override
 >
@@ -136,18 +136,18 @@ properties:
 ### `Key_SpaceCadetEnable`
 
 > This provides a key for placing on a keymap for enabling the SpaceCadet
-> behavior.  This is only triggered on initial downpress, and does not
+> behavior.  This is only triggered on initial press, and does not
 > trigger again if held down or when the key is released.
 
 ### `Key_SpaceCadetDisable`
 
 > This provides a key for placing on a keymap for disabling the SpaceCadet
-> behavior. This is only triggered on initial downpress, and does not
+> behavior. This is only triggered on initial press, and does not
 > trigger again if held down or when the key is released.
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

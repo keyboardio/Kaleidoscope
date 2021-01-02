@@ -47,12 +47,12 @@ The plugin provides the `FingerPainter` object, which provides no public methods
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
 * [Kaleidoscope-LED-Palette-Theme][plugin:l-p-t]
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
-  [plugin:l-p-t]: LED-Palette-Theme.md
+  [plugin:l-p-t]: Kaleidoscope-LED-Palette-Theme.md
 
 ## Further reading
 

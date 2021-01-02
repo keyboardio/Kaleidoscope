@@ -48,7 +48,7 @@ For end users, this doesn't come with any breaking changes. A few things have be
 
 #### For developers
 
-For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the (work in progress) documentation in [doc/device-apis.md](doc/device-apis.md).
+For those wishing to port Kaleidoscope to devices it doesn't support yet, the new API should make most things considerably easier. Please see the documentation in [device-apis.md](api-reference/device-apis.md).
 
 The old symbols and APIs are no longer available.
 
@@ -464,7 +464,7 @@ The new API is much shorter, and is inspired by the way the [Leader][leader]
 plugin works: instead of having a list, and a dispatching function like
 `magicComboActions`, we include the action method in the list too!
 
- [leader]: plugins/Leader.md
+ [leader]: plugins/Kaleidoscope-Leader.md
 
 We also don't make a difference between left- and right-hand anymore, you can
 just list keys for either in the same list. This will be very handy for
@@ -565,19 +565,19 @@ With the move towards a monorepo-based source, some headers have moved to a new 
 The following headers and names have changed:
 
 - `layers.h`, `key_defs_keymaps.h` and `macro_helpers.h` are obsolete, and should not be included in the first place, as `Kaleidoscope.h` will pull them in. In the rare case that one needs them, prefixing them with `kaleidoscope/` is the way to go. Of the various headers provided under the `kaleidoscope/` space, only `kaleidoscope/macro_helpers.h` should be included directly, and only by hardware plugins that can't pull `Kaleidoscope.h` in due to circular dependencies.
-- `LED-Off.h`, provided by [LEDControl](plugins/LEDControl.md) is obsolete, the `LEDOff` LED mode is automatically provided by `Kaleidoscope-LEDControl.h`. The `LED-Off.h` includes can be safely removed.
+- `LED-Off.h`, provided by [LEDControl](plugins/Kaleidoscope-LEDControl.md) is obsolete, the `LEDOff` LED mode is automatically provided by `Kaleidoscope-LEDControl.h`. The `LED-Off.h` includes can be safely removed.
 - `LEDUtils.h` is automatically pulled in by `Kaleiodscope-LEDControl.h`, too, and there's no need to directly include it anymore.
 - Plugins that implement LED modes should subclass `kaleidoscope::plugin::LEDMode` instead of `kaleidoscope::LEDMode`.
-- [GhostInTheFirmware](plugins/GhostInTheFirmware.md) had the `kaleidoscope::GhostInTheFirmware::GhostKey` type replaced by `kaleidoscope::plugin::GhostInTheFirmware::GhostKey`.
-- [HostOS](plugins/HostOS.md) no longer provides the `Kaleidoscope/HostOS-select.h` header, and there is no backwards compatibility header either.
-- [Leader](plugins/Leader.md) had the `kaleidoscope::Leader::dictionary_t` type replaced by `kaleidoscope::plugin::Leader::dictionary_t`.
-- [LED-AlphaSquare](plugins/LED-AlphaSquare.md) used to provide extra symbol graphics in the `kaleidoscope::alpha_square::symbols` namespace. This is now replaced by `kaleidoscope::plugin::alpha_square::symbols`.
-- [LEDEffect-SolidColor](plugins/LEDEffect-SolidColor.md) replaced the base class  - `kaleidoscope::LEDSolidColor` - with `kaleidoscope::plugin::LEDSolidColor`.
-- [Qukeys](plugins/Qukeys.md) had the `kaleidoscope::Qukey` type replaced by `kaleidoscope::plugin::Qukey`.
-- [ShapeShifter](plugins/ShateShifter.md) had the `kaleidoscope::ShapeShifter::dictionary_t` type replaced by `kaleidoscope::plugin::ShapeShifter::dictionary_t`.
-- [SpaceCadet](plugins/SpaceCadet.md) had the `kaleidoscope::SpaceCadet::KeyBinding` type replaced by `kaleidoscope::plugin::SpaceCadet::KeyBinding`.
-- [Syster](plugins/Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
-- [TapDance](plugins/TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
+- [GhostInTheFirmware](plugins/Kaleidoscope-GhostInTheFirmware.md) had the `kaleidoscope::GhostInTheFirmware::GhostKey` type replaced by `kaleidoscope::plugin::GhostInTheFirmware::GhostKey`.
+- [HostOS](plugins/Kaleidoscope-HostOS.md) no longer provides the `Kaleidoscope/HostOS-select.h` header, and there is no backwards compatibility header either.
+- [Leader](plugins/Kaleidoscope-Leader.md) had the `kaleidoscope::Leader::dictionary_t` type replaced by `kaleidoscope::plugin::Leader::dictionary_t`.
+- [LED-AlphaSquare](plugins/Kaleidoscope-LED-AlphaSquare.md) used to provide extra symbol graphics in the `kaleidoscope::alpha_square::symbols` namespace. This is now replaced by `kaleidoscope::plugin::alpha_square::symbols`.
+- [LEDEffect-SolidColor](plugins/Kaleidoscope-LEDEffect-SolidColor.md) replaced the base class  - `kaleidoscope::LEDSolidColor` - with `kaleidoscope::plugin::LEDSolidColor`.
+- [Qukeys](plugins/Kaleidoscope-Qukeys.md) had the `kaleidoscope::Qukey` type replaced by `kaleidoscope::plugin::Qukey`.
+- [ShapeShifter](plugins/Kaleidoscope-ShapeShifter.md) had the `kaleidoscope::ShapeShifter::dictionary_t` type replaced by `kaleidoscope::plugin::ShapeShifter::dictionary_t`.
+- [SpaceCadet](plugins/Kaleidoscope-SpaceCadet.md) had the `kaleidoscope::SpaceCadet::KeyBinding` type replaced by `kaleidoscope::plugin::SpaceCadet::KeyBinding`.
+- [Syster](plugins/Kaleidoscope-Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
+- [TapDance](plugins/Kaleidoscope-TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
 # Removed APIs
 
@@ -658,7 +658,7 @@ The deprecated row/col based indexing APIs have been removed on **2020-06-16**.
 
 #### EEPROMKeymap mode
 
-The [EEPROM-Keymap](plugins/EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed.
+The [EEPROM-Keymap](plugins/Kaleidoscope-EEPROM-Keymap.md) plugin had its `setup()` method changed, the formerly optional `method` argument is now obsolete and unused. It can be safely removed.
 
 ##### keymaps array and KEYMAPS and KEYMAPS_STACKED macros
 

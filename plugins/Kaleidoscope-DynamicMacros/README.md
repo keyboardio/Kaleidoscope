@@ -5,8 +5,8 @@ be re-defined without compiling and flashing new firmware: one can change
 dynamic macros via [Focus][plugin:focus], using a tool like
 [Chrysalis][chrysalis].
 
- [plugin:macros]: Macros.md
- [plugin:focus]: FocusSerial.md
+ [plugin:macros]: Kaleidoscope-Macros.md
+ [plugin:focus]: Kaleidoscope-FocusSerial.md
  [chrysalis]: https://github.com/keyboardio/Chrysalis
 
 Dynamic macros come with certain limitations, however: unlike the built-in
@@ -69,7 +69,7 @@ The plugin provides a `DynamicMacros` object, with the following methods and pro
 The plugin supports the same [macro steps][doc:steps] as the Macros plugin,
 please refer to the documentation therein.
 
- [doc:steps]: Macros.md#macro-steps
+ [doc:steps]: (Kaleidoscope-Macros.md#macro-steps)
 
 ## Focus commands
 
@@ -96,5 +96,5 @@ The plugin provides two Focus commands: `macros.map` and `macros.trigger`.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)

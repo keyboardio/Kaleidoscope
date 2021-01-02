@@ -61,7 +61,7 @@ The plugin provides a single method on each of the included effect objects:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 

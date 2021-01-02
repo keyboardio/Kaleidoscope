@@ -53,8 +53,8 @@ The `ActiveModColorEffect` object provides the following methods:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
-* [Kaleidoscope-OneShot](OneShot.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
+* [Kaleidoscope-OneShot](Kaleidoscope-OneShot.md)
 
 ## Further reading
 

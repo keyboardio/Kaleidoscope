@@ -86,7 +86,7 @@ methods outside of the object, however, that can be overridden:
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

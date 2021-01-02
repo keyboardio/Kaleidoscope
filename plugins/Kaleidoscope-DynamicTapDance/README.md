@@ -4,8 +4,8 @@ The `DynamicTapDance` plugin allows one to set up [TapDance][plugin:tapdance] ke
 without the need to compile and flash new firmware: one can change dynamic
 dances via [Focus][plugin:focus], using a tool like [Chrysalis][chrysalis].
 
- [plugin:tapdance]: TapDance.md
- [plugin:focus]: FocusSerial.md
+ [plugin:tapdance]: Kaleidoscope-TapDance.md
+ [plugin:focus]: Kaleidoscope-FocusSerial.md
  [chrysalis]: https://github.com/keyboardio/Chrysalis
 
 Dynamic dances come with certain limitations, however: unlike the built-in ones,
@@ -96,6 +96,6 @@ The plugin provides one Focus command: `tapdance.ap`.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
-* [Kaleidoscope-TapDance](TapDance.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
+* [Kaleidoscope-TapDance](Kaleidoscope-TapDance.md)

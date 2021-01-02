@@ -48,4 +48,4 @@ both of which provide the following methods:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)

@@ -41,4 +41,4 @@ outside of those provided by all LED modes:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)

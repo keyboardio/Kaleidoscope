@@ -1,7 +1,7 @@
 # LED-ActiveLayerColor
 
 A simple way to light up the keyboard in uniform colors, depending on what layer
-one's on. Unlike [Colormap](Colormap.md), all keys will be the same color. But
+one's on. Unlike [Colormap](Kaleidoscope-Colormap.md), all keys will be the same color. But
 this plugin uses considerably less resources, and is easier to set up as well. A
 perfect solution when one wants to quickly see what layer they're on, with
 minimal resources and time investment.
@@ -43,7 +43,7 @@ method:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 

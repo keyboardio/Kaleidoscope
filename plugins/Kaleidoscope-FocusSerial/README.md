@@ -4,7 +4,7 @@ Bidirectional communication for Kaleidoscope. With this plugin enabled, plugins 
 
 This plugin is an upgrade of the former [Kaleidoscope-Focus][kaleidoscope:focus] plugin. See the [UPGRADING.md][upgrading] document for information about how to transition to the new system.
 
- [kaleidoscope:focus]: https://github.com/keyboardio/Kaleidoscope-Focus
+ [kaleidoscope:focus]: (Kaleidoscope-FocusSerial.md)
  [upgrading]: ../../UPGRADING.md#bidirectional-communication-for-plugins
 
 ## Using the plugin

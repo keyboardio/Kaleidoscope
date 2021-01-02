@@ -92,7 +92,7 @@ been an exaggeration, there is only one as of this writing:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 

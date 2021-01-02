@@ -36,4 +36,4 @@ The plugin provides the `LEDBreatheEffect` object, which has a single property:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)

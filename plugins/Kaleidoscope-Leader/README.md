@@ -90,7 +90,7 @@ The plugin provides the `Leader` object, with the following methods and properti
 
 ## Dependencies
 
-* [Kaleidoscope-Ranges](Ranges.md)
+* [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
 
 ## Further reading
 

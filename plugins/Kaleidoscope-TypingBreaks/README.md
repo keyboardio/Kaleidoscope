@@ -98,7 +98,7 @@ properties. All times are in seconds.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
 
 ## Further reading
 

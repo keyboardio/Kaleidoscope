@@ -31,7 +31,7 @@ The plugin provides one object, `USBQuirks`, which provides the following method
 
 > Toggle between `Boot` and `Report` protocol by detaching, and then
 > re-attaching the USB devices, and setting the `BootKeyboard` protocol
-> inbetween.
+> in between.
 >
 > This is most useful when one needs to have a boot keyboard, when one's in a
 > BIOS, boot loader, or early password prompt or the like, and the host does not

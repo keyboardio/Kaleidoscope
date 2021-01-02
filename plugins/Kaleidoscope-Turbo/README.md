@@ -2,7 +2,7 @@
 
 The `Turbo` plugin provides an extra key one can place on their keymap. While the
 key is pressed or toggled, pressing other keys will generate quick repeated
-inputs independent of the OS key repeation mechanics.
+inputs independent of the OS key repetition mechanics.
 
 ## Using the plugin
 
@@ -73,7 +73,7 @@ The `Turbo` object has the following user-configurable properties:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 

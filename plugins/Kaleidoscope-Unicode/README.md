@@ -75,7 +75,7 @@ functionality.
 >
 > Defaults to zero, no delay.
 
-## Overrideable methods
+## Overridable methods
 
 ### `hexToKey(hex_digit)`
 
@@ -108,7 +108,7 @@ functionality.
 
 ## Dependencies
 
-* [Kaleidoscope-HostOS](HostOS.md)
+* [Kaleidoscope-HostOS](Kaleidoscope-HostOS.md)
 
 ## Other Configuration
 

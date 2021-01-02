@@ -32,7 +32,7 @@ void setup () {
 
 The plugin provides a single [Focus][FocusSerial] command:
 
- [FocusSerial]: FocusSerial.md
+ [FocusSerial]: Kaleidoscope-FocusSerial.md
 
 ### `firmware.dump`
 
@@ -40,4 +40,4 @@ The plugin provides a single [Focus][FocusSerial] command:
 
 ## Dependencies
 
-* [Kaleidoscope-FocusSerial][FocusSerial]
+* [Kaleidoscope-FocusSerial][Kaleidoscope-FocusSerial.md]

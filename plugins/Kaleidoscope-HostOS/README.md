@@ -11,7 +11,7 @@ can then be reused by other plugins.
 See the [Unicode][plugin:unicode] extension for an example about how to use
 `HostOS` in practice.
 
- [plugin:unicode]: Unicode.md
+ [plugin:unicode]: Kaleidoscope-Unicode.md
 
 ## Using the extension
 
@@ -74,7 +74,7 @@ provides the `hostos.type` Focus command.
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
 
 ## Further reading
 

@@ -47,7 +47,7 @@ properties:
 
 > Set this property to the dictionary `ShapeShifter` should use. The dictionary
 > is an array of `kaleidoscope::ShapeShifter::dictionary_t` elements, which is
-> just a very verbose way of saying that its a pair of keys. The first one is
+> just a very verbose way of saying that it is a pair of keys. The first one is
 > the one to replace, and the other is to replace it with.
 >
 > Be aware that the replacement key will be pressed with `Shift` held, so do

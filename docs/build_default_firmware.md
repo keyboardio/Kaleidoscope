@@ -42,8 +42,6 @@ If something goes wrong, the status bar turns orange and displays an error messa
 
 ![](images/arduino-setup/verify-failed.png)
 
-If you see errors, refer to [Getting help](Getting-help) for troubleshooting tips and useful resources.
-
 # Install the firmware
 
 If your keyboard has a programming interlock key, you'll need to hold it down now. On the Keyboardio Model 01, this is the `Prog` key. On the Keyboardio Atreus, this is the `Esc` key.

@@ -96,7 +96,7 @@ the following properties and methods.
 The plugin provides a single [Focus][FocusSerial] command, but only when using
 the `PersistentIdleLEDs` variant:
 
- [FocusSerial]: FocusSerial.md
+ [FocusSerial]: Kaleidoscope-FocusSerial.md
 
 ### `idleleds.time_limit [seconds]`
 
@@ -108,12 +108,12 @@ the `PersistentIdleLEDs` variant:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ### Optional dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [FocusSerial](FocusSerial.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [FocusSerial](Kaleidoscope-FocusSerial.md)
 
 ## Further reading
 

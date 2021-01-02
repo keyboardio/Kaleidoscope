@@ -4,9 +4,9 @@ While keyboards usually ship with a keymap programmed in, to be able to change t
 
 In short, this plugin allows us to change our keymaps, without having to compile and flash new firmware. It does so through the use of the [FocusSerial][plugin:focusSerial] plugin.
 
- [plugin:focusSerial]: FocusSerial.md
+ [plugin:focusSerial]: Kaleidoscope-FocusSerial.md
 
-By default, the plugin extends the keymap in PROGMEM: it will only look for keys in EEPROM if looking up from a layer that's higher than the last one in PROGMEM. This behaviour can be changed either via `Focus` (see below), or by calling `EEPROMSettings.use_eeprom_layers_only` (see the [EEPROMSettings](EEPROM-Settings.md) documentation for more information).
+By default, the plugin extends the keymap in PROGMEM: it will only look for keys in EEPROM if looking up from a layer that's higher than the last one in PROGMEM. This behaviour can be changed either via `Focus` (see below), or by calling `EEPROMSettings.use_eeprom_layers_only` (see the [EEPROMSettings](Kaleidoscope-EEPROM-Settings.md) documentation for more information).
 
 ## Using the plugin
 
@@ -61,8 +61,8 @@ The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
 
 ## Further reading
 

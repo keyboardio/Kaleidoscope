@@ -7,7 +7,7 @@ You can find a list of third-party plugins not distributed as part of Kaleidosco
 
 ## EEPROM-Keymap
 
-[EEPROM-Keymap Documentation](../plugins/EEPROM-Keymap.md)
+[EEPROM-Keymap Documentation](../plugins/Kaleidoscope-EEPROM-Keymap.md)
 
 While keyboards usually ship with a keymap programmed in, to be able to change that keymap, without flashing new firmware, we need a way to place the keymap into a place we can update at run-time, and which persists across reboots. Fortunately, we have a bit of EEPROM on the keyboard, and can use it to store either the full keymap (and saving space in the firmware then), or store an overlay there. In the latter case, whenever there is a non-transparent key on the overlay, we will use that instead of the keyboard default.
 
@@ -15,21 +15,13 @@ In short, this plugin allows us to change our keymaps, without having to compile
 
 ## Escape-OneShot
 
-[Escape-OneShot Documentation](../plugins/Escape-OneShot.md)
+[Escape-OneShot Documentation](../plugins/Kaleidoscope-Escape-OneShot.md)
 
 Turn the Esc key into a special key, that can cancel any active OneShot effect - or act as the normal Esc key if none are active. For those times when one accidentally presses a one-shot key, or change their minds.
 
-## KeyLogger
-
-[KeyLogger Documentation](../plugins/KeyLogger.md)
-
-The KeyLogger plugin, as the name suggests, implements a key logger for the Kaleidoscope firmware. It logs the row and column of every key press and release, along with the event, and the layer number, in a format that is reasonably easy to parse, to the Serial interface.
-
-**A word of warning**: Having a key logger is as dangerous as it sounds. Anyone who can read the serial events from the keyboard, will know exactly what keys you press, and when. Unless you know what you are doing, and can secure your keyboard, do not enable this plugin.
-
 ## Leader
 
-[Leader Documentation](../plugins/Leader.md)
+[Leader Documentation](../plugins/Kaleidoscope-Leader.md)
 
 Leader keys are a kind of key where when they are tapped, all following keys are swallowed, until the plugin finds a matching sequence in the dictionary, it times out, or fails to find any possibilities. When a sequence is found, the corresponding action is executed, but the processing still continues. If any key is pressed that is not the continuation of the existing sequence, processing aborts, and the key is handled normally.
 
@@ -39,7 +31,7 @@ So we put ``LEAD u`` and ``LEAD u h e a r t`` in the dictionary only. The first 
 
 ## Macros
 
-[Macros Documentation](../plugins/Macros.md)
+[Macros Documentation](../plugins/Kaleidoscope-Macros.md)
 
 Macros are a standard feature on many keyboards and powered ones are no exceptions. Macros are a way to have a single key-press do a whole lot of things under the hood: conventionally, macros play back a key sequence, but with Kaleidoscope, there is much more we can do. Nevertheless, playing back a sequence of events is still the primary use of macros.
 
@@ -47,7 +39,7 @@ Playing back a sequence means that when we press a macro key, we can have it pla
 
 ## MagicCombo
 
-[MagicCombo Documentation](../plugins/MagicCombo.md)
+[MagicCombo Documentation](../plugins/Kaleidoscope-MagicCombo.md)
 
 The MagicCombo extension provides a way to perform custom actions when a particular set of keys are held down together. The functionality assigned to these keys are not changed, and the custom action triggers as long as all keys within the set are pressed. The order in which they were pressed do not matter.
 
@@ -55,7 +47,7 @@ This can be used to tie complex actions to key chords.
 
 ## OneShot
 
-[OneShot Documentation](../plugins/OneShot.md)
+[OneShot Documentation](../plugins/Kaleidoscope-OneShot.md)
 
 One-shots are a new kind of behaviour for your standard modifier and momentary layer keys: instead of having to hold them while pressing other keys, they can be tapped and released, and will remain active until any other key is pressed. In short, they turn ``Shift, A`` into ``Shift+A``, and ``Fn, 1`` to ``Fn+1``. The main advantage is that this allows us to place the modifiers and layer keys to positions that would otherwise be awkward when chording. Nevertheless, they still act as normal when held, that behaviour is not lost.
 
@@ -65,7 +57,7 @@ To make multi-modifier, or multi-layer shortcuts possible, one-shot keys remain 
 
 ## Qukeys
 
-[Qukeys Documentation](../plugins/Qukeys.md)
+[Qukeys Documentation](../plugins/Kaleidoscope-Qukeys.md)
 
 A Qukey is a key that has two possible values, usually a modifier and a printable character. The name is a play on the term "qubit" (short for "quantum bit") from quantum computing. The value produced depends on how long the key press lasts, and how it is used in combination with other keys (roughly speaking, whether the key is "tapped" or "held").
 
@@ -77,7 +69,7 @@ It is also possible to use Qukeys like SpaceCadet (see below), by setting the pr
 
 ## ShapeShifter
 
-[ShapeShifter Documentation](../plugins/ShapeShifter.md)
+[ShapeShifter Documentation](../plugins/Kaleidoscope-ShapeShifter.md)
 
 ShapeShifter is a plugin that makes it considerably easier to change what symbol is input when a key is pressed together with ``Shift``. If one wants to rearrange the symbols on the number row for example, without modifying the layout on the operating system side, this plugin is where one can turn to.
 
@@ -85,7 +77,7 @@ What it does, is very simple: if any key in its dictionary is found pressed whil
 
 ## SpaceCadet
 
-[SpaceCadet Documentation](../plugins/SpaceCadet.md)
+[SpaceCadet Documentation](../plugins/Kaleidoscope-SpaceCadet.md)
 
 Space Cadet is a way to make it more convenient to input parens - those ``(`` and ``)`` things -, symbols that a lot of programming languages use frequently. If you are working with Lisp, you are using these all the time.
 
@@ -97,7 +89,7 @@ After getting used to the Space Cadet style of typing, you may wish to enable th
 
 ## TapDance
 
-[TapDance Documentation](../plugins/TapDance.md)
+[TapDance Documentation](../plugins/Kaleidoscope-TapDance.md)
 
 Tap-dance keys are general purpose, multi-use keys, which trigger a different action based on the number of times they were tapped in sequence. As an example to make this clearer, one can have a key that inputs ``A`` when tapped once, inputs ``B`` when tapped twice, and lights up the keyboard in Christmas colors when tapped a third time.
 
@@ -119,7 +111,7 @@ There is one additional value the tapDanceAction parameter can ``take: kaleidosc
 
 ## TopsyTurvy
 
-[TopsyTurvy Documentation](../plugins/TopsyTurvy.md)
+[TopsyTurvy Documentation](../plugins/Kaleidoscope-TopsyTurvy.md)
 
 TopsyTurvy is a plugin that inverts the behaviour of the Shift key for some selected keys. That is, if configured so, it will input ``!`` when pressing the ``1`` key without ``Shift``, but with the modifier pressed, it will input the original ``1`` symbol.
 

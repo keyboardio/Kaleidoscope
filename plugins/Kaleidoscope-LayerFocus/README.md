@@ -3,7 +3,7 @@
 The `LayerFocus` plugin exposes a number of layer-related commands via
 [Focus][plugin:focus], to allow controlling layers from the host side.
 
- [plugin:focus]: FocusSerial.md
+ [plugin:focus]: Kaleidoscope-FocusSerial.md
 
 ## Using the plugin
 
@@ -43,4 +43,4 @@ The plugin provides the following Focus commands:
 
 ## Dependencies
 
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)

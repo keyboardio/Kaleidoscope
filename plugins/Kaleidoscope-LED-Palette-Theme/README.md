@@ -116,9 +116,9 @@ The plugin provides the `LEDPaletteTheme` object, which has the following method
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 

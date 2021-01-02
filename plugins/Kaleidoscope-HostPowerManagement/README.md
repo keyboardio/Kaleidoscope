@@ -23,7 +23,7 @@ void setup () {
 
 The plugin provides the `HostPowerManagement` object, with no public methods.
 
-## Overrideable methods
+## Overridable methods
 
 ### `hostPowerManagementEventHandler(event)`
 

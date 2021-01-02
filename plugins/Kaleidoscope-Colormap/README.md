@@ -8,8 +8,8 @@ the [LED-Palette-Theme][plugin:l-p-t] plugin. The color map is stored in
 `EEPROM`, and can be easily changed via the [FocusSerial][plugin:focusserial]
 plugin, which also provides palette editing capabilities.
 
- [plugin:focusserial]: FocusSerial.md
- [plugin:l-p-t]: LED-Palette-Theme.md
+ [plugin:focusserial]: Kaleidoscope-FocusSerial.md
+ [plugin:l-p-t]: Kaleidoscope-LED-Palette-Theme.md
 
 ## Using the extension
 
@@ -57,9 +57,9 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 
 ## Dependencies
 
-* [Kaleidoscope-EEPROM-Settings](EEPROM-Settings.md)
-* [Kaleidoscope-FocusSerial](FocusSerial.md)
-* [Kaleidoscope-LED-Palette-Theme](LED-Palette-Theme.md)
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
+* [Kaleidoscope-LED-Palette-Theme](Kaleidoscope-LED-Palette-Theme.md)
 
 ## Further reading
 

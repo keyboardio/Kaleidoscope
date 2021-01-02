@@ -114,7 +114,7 @@ in turn provides the following command:
 
 * [Kaleidoscope-EEPROM-Keymap][plugin:eeprom-keymap]
 
-  [plugin:eeprom-keymap]: EEPROM-Keymap.md
+  [plugin:eeprom-keymap]: Kaleidoscope-EEPROM-Keymap.md
 
 ## Further reading
 

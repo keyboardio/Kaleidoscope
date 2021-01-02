@@ -51,11 +51,11 @@ properties:
 
 ## Dependencies
 
-* [Kaleidoscope-LEDControl](LEDControl.md)
+* [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
 started with the plugin.
 
- [plugin:example]:  /examples/LEDS/LED-Wavepool/LED-Wavepool.ino
+ [plugin:example]:  /examples/LEDs/LED-Wavepool/LED-Wavepool.ino
