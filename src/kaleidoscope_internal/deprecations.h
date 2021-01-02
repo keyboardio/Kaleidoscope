@@ -33,16 +33,3 @@
   "For further information and examples on how to do that, \n"           __NL__ \
   "please see UPGRADING.md"
 
-#define _DEPRECATED_MESSAGE_LAYER_DEACTIVATETOP  __NL__ \
-  "`Layer.deactivateTop()` is deprecated.\n"     __NL__ \
-  "Please use `Layer.deactivateMostRecent()` instead."
-
-#define _DEPRECATED_MESSAGE_LAYER_TOP __NL__ \
-  "`Layer.top()` is deprecated.\n"    __NL__ \
-  "Please use `Layer.mostRecent()` instead."
-
-#define _DEPRECATED_MESSAGE_LAYER_GETLAYERSTATE    __NL__ \
-  "`Layer.getLayerState()` is deprecated.\n"       __NL__ \
-  "Layers are now in activation-order, please use" __NL__ \
-  "`Layer.forEachActiveLayer()` instead."
-
