@@ -20,7 +20,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/plugin/Qukeys/KeyAddrEventQueue.h"
+#include "kaleidoscope/KeyAddrEventQueue.h"
 
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key) Key(                                               \
