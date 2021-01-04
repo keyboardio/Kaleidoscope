@@ -25,7 +25,6 @@
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
-namespace plugin {
 
 // This class defines a keyswitch event queue that stores both press and release
 // events, recording the key address, a timestamp, and the keyswitch state
@@ -125,5 +124,4 @@ class KeyAddrEventQueue {
   }
 };
 
-}  // namespace plugin
 }  // namespace kaleidoscope

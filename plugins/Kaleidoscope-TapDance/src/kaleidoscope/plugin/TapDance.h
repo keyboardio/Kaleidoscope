@@ -20,7 +20,7 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/LiveKeys.h"
 #include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/plugin/Qukeys/KeyAddrEventQueue.h"
+#include "kaleidoscope/KeyAddrEventQueue.h"
 
 #define TD(n) Key(kaleidoscope::ranges::TD_FIRST + n)
 
