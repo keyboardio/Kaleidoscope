@@ -250,51 +250,6 @@ class Base {
   }
   /** @} */
 
-  /** @defgroup kaleidoscope_hardware_masking Kaleidoscope::Hardware/Key masking
-   *
-   * Sometimes there are situations when one wants to ignore key events for a
-   * while, to mask them out. Masked keys will be ignored until they are
-   * released.
-   *
-   * This is implemented in the Hardware library because that knows best how
-   * to mask efficiently, as this requires a deeper knowledge of the hardware,
-   * which is all but hidden from the rest of the plugins.
-   * @{
-   */
-  /**
-   * Mask out a key.
-   *
-   * Masking a key out means that any other event than a release will be
-   * ignored until said release.
-   *
-   * @param key_addr is the matrix address of the key.
-   */
-  void maskKey(KeyAddr key_addr) DEPRECATED(KEY_MASKING) {
-    key_scanner_.maskKey(key_addr);
-  }
-  /**
-   * Unmask a key.
-   *
-   * Remove the mask - if any - for a given key. To be used when the mask
-   * needs to be removed without the key being released.
-   *
-   * @param key_addr is the matrix address of the key.
-   */
-  void unMaskKey(KeyAddr key_addr) {
-    key_scanner_.unMaskKey(key_addr);
-  }
-  /**
-   * Check whether a key is masked or not.
-   *
-   * @param key_addr is the matrix address of the key.
-   *
-   * @returns true if the key is masked, false otherwise.
-   */
-  bool isKeyMasked(KeyAddr key_addr) {
-    return key_scanner_.isKeyMasked(key_addr);
-  }
-  /** @} */
-
   /** @defgroup kaleidoscope_hardware_reattach Kaleidoscope::Hardware/Attach & Detach
    *
    * In situations where one wants to re-initialize the devices, perhaps to

@@ -39,7 +39,6 @@ namespace ez {
 ErgoDoxScanner ErgoDox::scanner_;
 uint8_t ErgoDox::previousKeyState_[matrix_rows];
 uint8_t ErgoDox::keyState_[matrix_rows];
-uint8_t ErgoDox::masks_[matrix_rows];
 uint8_t ErgoDox::debounce_matrix_[matrix_rows][matrix_columns];
 uint8_t ErgoDox::debounce = 5;
 
@@ -131,27 +130,6 @@ void ErgoDox::scanMatrix() {
 
   // We ALWAYS want to tell Kaleidoscope about the state of the matrix
   actOnMatrixScan();
-}
-
-void ErgoDox::maskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return;
-
-  bitWrite(masks_[key_addr.row()], key_addr.col(), 1);
-}
-
-void ErgoDox::unMaskKey(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return;
-
-  bitWrite(masks_[key_addr.row()], key_addr.col(), 0);
-}
-
-bool ErgoDox::isKeyMasked(KeyAddr key_addr) {
-  if (!key_addr.isValid())
-    return false;
-
-  return bitRead(masks_[key_addr.row()], key_addr.col());
 }
 
 // ErgoDox-specific stuff

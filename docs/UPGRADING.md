@@ -338,7 +338,7 @@ The layer system used to be index-ordered, meaning that we'd look keys up on
 layers based on the _index_ of active layers. Kaleidoscope now uses activation
 order, which looks up keys based on the order of layer activation.
 
-This means that the following functions are deprecated, and will be removed by **2020-12-31**:
+The following functions have been removed as of **2021-01-01**:
 
 - `Layer.top()`, which used to return the topmost layer index. Use
   `Layer.mostRecent()` instead, which returns the most recently activated layer.
@@ -532,7 +532,7 @@ which accepts a value between 0 and 100 (interpreted as a percentage). User who
 used higher values for `setReleaseDelay()` will want a lower values for
 `setOverlapThreshold()`.
 
-These functions have been deprecated since 2019-08-22, and will be removed by **2020-12-31**:
+These functions have been removed as of **2020-12-31**:
 
 - `Qukeys.setTimeout(millis)`
 - `Qukeys.setReleaseDelay(millis)`
@@ -548,13 +548,13 @@ Storing the settable settings in EEPROM makes it depend on `Kaleidoscope-EEPROM-
 
 Older versions of the plugin required one to set up `Key_Redial` manually, and let the plugin know about it via `Redial.key`. This is no longer required, as the plugin sets up the redial key itself. As such, `Redial.key` was removed, and `Key_Redial` is defined by the plugin itself. To upgrade, simply remove your definition of `Key_Redial` and the `Redial.key` assignment from your sketch.
 
-### Key masking has been deprecated
+### Key masking has been removed
 
 Key masking was a band-aid introduced to avoid accidentally sending unintended keys when key mapping changes between a key being pressed and released. Since the introduction of keymap caching, this is no longer necessary, as long as we can keep the mapping consistent. Users of key masking are encouraged to find ways to use the caching mechanism instead.
 
 As an example, if you had a key event handler that in some cases masked a key, it should now map it to `Key_NoKey` instead, until released.
 
-The masking API has been deprecated, and is scheduled to be removed after **2020-11-25**.
+The masking API has been removed on **2021-01-01**
 
 ## Deprecated APIs and their replacements
 

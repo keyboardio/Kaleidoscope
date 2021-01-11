@@ -159,26 +159,6 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
                     key_addr.col()) != 0);
   }
 
-  void maskKey(typename _KeyScannerProps::KeyAddr key_addr) {
-    if (!key_addr.isValid())
-      return;
-
-    bitWrite(matrix_state_[key_addr.row()].masks, key_addr.col(), 1);
-  }
-  void unMaskKey(typename _KeyScannerProps::KeyAddr key_addr) {
-    if (!key_addr.isValid())
-      return;
-
-    bitWrite(matrix_state_[key_addr.row()].masks, key_addr.col(), 0);
-  }
-  bool isKeyMasked(typename _KeyScannerProps::KeyAddr key_addr) {
-    if (!key_addr.isValid())
-      return false;
-
-    return bitRead(matrix_state_[key_addr.row()].masks,
-                   key_addr.col());
-  }
-
   bool do_scan_;
 
 
@@ -198,7 +178,6 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   struct row_state_t {
     typename _KeyScannerProps::RowState previous;
     typename _KeyScannerProps::RowState current;
-    typename _KeyScannerProps::RowState masks;
     debounce_t debouncer;
   };
 

@@ -96,23 +96,13 @@ class Layer_ {
   static void activate(uint8_t layer);
   static void deactivate(uint8_t layer);
   static void activateNext();
-  static void deactivateTop() DEPRECATED(LAYER_DEACTIVATETOP) {
-    deactivateMostRecent();
-  }
   static void deactivateMostRecent();
   static void move(uint8_t layer);
 
-  static uint8_t top(void) DEPRECATED(LAYER_TOP) {
-    return mostRecent();
-  }
   static uint8_t mostRecent() {
     return active_layers_[active_layer_count_ - 1];
   }
   static boolean isActive(uint8_t layer);
-
-  static uint32_t getLayerState(void) DEPRECATED(LAYER_GETLAYERSTATE) {
-    return layer_state_;
-  }
 
   static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
 
