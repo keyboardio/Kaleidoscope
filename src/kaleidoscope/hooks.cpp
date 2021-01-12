@@ -21,15 +21,14 @@
 
 namespace kaleidoscope {
 
-// The following weak symbols are overwritten by
-// using the KALEIDOSCOPE_INIT_PLUGINS(...) macro
-// in the the firmware sketch. Their only purpose is
-// to provide backwards compatibility during the transition
-// from the old implementation of the hooking/plugin system
-// to the new one. The weak symbols ensure that there
-// are no undefined symbols if KALEIDOSCOPE_INIT_PLUGINS(...)
-// is not used. This allows legacy sketches to be used
-// during the transition phase.
+// The following weak symbols are overwritten by using the
+// KALEIDOSCOPE_INIT_PLUGINS(...) macro in the firmware sketch. Their only
+// purpose is to ensure that there are no undefined symbols if
+// KALEIDOSCOPE_INIT_PLUGINS(...) is not used. Sketches that use no plugins do
+// not use the macro, because due to technical reasons, we do not support an
+// empty KALEIDOSCOPE_INIT_PLUGINS() invocation. These symbols therefore ensure
+// that we can compile sketches that use no plugins, without them having to use
+// KALEIDOSCOPE_INIT_PLUGINS() with a dummy plugin.
 
 #define INSTANTIATE_WEAK_HOOK_FUNCTION(                                        \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
