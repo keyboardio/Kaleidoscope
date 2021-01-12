@@ -172,6 +172,34 @@
       return result;                                                 __NL__ \
    }                                                                 __NL__
 
+// Fallback plugin to use when no other plugin has been initialized.
+
+#define INSTANTIATE_EVENT_HANDLER(                                      \
+    HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                           \
+    SHOULD_ABORT_ON_CONSUMED_EVENT,                                     \
+    TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST, TMPL_DUMMY_ARGS_LIST,        \
+    SIGNATURE, ARGS_LIST)                                        __NL__ \
+                                                                 __NL__ \
+   MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)          __NL__ \
+   kaleidoscope::EventHandlerResult HOOK_NAME SIGNATURE {        __NL__ \
+     return kaleidoscope::EventHandlerResult::OK;                __NL__ \
+   }
+
+namespace kaleidoscope_internal {
+namespace plugin {
+
+class FallbackPlugin {
+ public:
+  FallbackPlugin() {}
+
+  _FOR_EACH_EVENT_HANDLER(INSTANTIATE_EVENT_HANDLER)
+};
+
+}
+}
+
+#undef INSTANTIATE_EVENT_HANDLER
+
 // _KALEIDOSCOPE_INIT_PLUGINS builds the loops that execute the plugins'
 // implementations of the various event handlers.
 //
@@ -184,6 +212,7 @@
 
 #define _KALEIDOSCOPE_INIT_PLUGINS(...)                                       __NL__ \
   namespace kaleidoscope_internal {                                           __NL__ \
+  kaleidoscope_internal::plugin::FallbackPlugin __fallback__;             __NL__ \
   struct EventDispatcher {                                                    __NL__ \
                                                                               __NL__ \
     /* Iterate through plugins, calling each one's event handler with      */ __NL__ \
@@ -192,9 +221,8 @@
     static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {    __NL__ \
                                                                               __NL__ \
       kaleidoscope::EventHandlerResult result;                                __NL__ \
-      kaleidoscope::Plugin __dummy_plugin__;                                  __NL__ \
       MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN,                                   __NL__ \
-          IFNE(__VA_ARGS__)(__VA_ARGS__, __dummy_plugin__))                   __NL__ \
+          IFNE(__VA_ARGS__)(__VA_ARGS__, __fallback__))                       __NL__ \
                                                                               __NL__ \
       return result;                                                          __NL__ \
     }                                                                         __NL__ \
