@@ -39,6 +39,8 @@ KEYMAPS(
 
 // *INDENT-ON*
 
+KALEIDOSCOPE_INIT_PLUGINS();
+
 void setup() {
   Kaleidoscope.setup();
 }
