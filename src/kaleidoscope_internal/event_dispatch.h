@@ -39,6 +39,7 @@
 #include "kaleidoscope_internal/eventhandler_signature_check.h"
 #include "kaleidoscope/event_handlers.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
+#include "kaleidoscope_internal/VA_OPT.hpp"
 
 // Some words about the design of hook routing:
 //
@@ -191,7 +192,9 @@
     static kaleidoscope::EventHandlerResult apply(Args__&&... hook_args) {    __NL__ \
                                                                               __NL__ \
       kaleidoscope::EventHandlerResult result;                                __NL__ \
-      MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN, __VA_ARGS__)                      __NL__ \
+      kaleidoscope::Plugin __dummy_plugin__;                                  __NL__ \
+      MAP(_INLINE_EVENT_HANDLER_FOR_PLUGIN,                                   __NL__ \
+          IFNE(__VA_ARGS__)(__VA_ARGS__, __dummy_plugin__))                   __NL__ \
                                                                               __NL__ \
       return result;                                                          __NL__ \
     }                                                                         __NL__ \
@@ -214,6 +217,6 @@
                                                                               __NL__ \
   /* This generates a PROGMEM array-kind-of data structure that contains   */ __NL__ \
   /* LEDModeFactory entries                                                */ __NL__ \
-  _INIT_LED_MODE_MANAGER(__VA_ARGS__)                                         __NL__ \
+  IFN(__VA_ARGS__)(_INIT_LED_MODE_MANAGER(__VA_ARGS__))                       __NL__ \
                                                                               __NL__ \
-  _INIT_PLUGIN_EXPLORATION(__VA_ARGS__)
+  IFN(__VA_ARGS__)(_INIT_PLUGIN_EXPLORATION(__VA_ARGS__))
