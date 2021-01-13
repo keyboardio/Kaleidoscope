@@ -47,7 +47,7 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
    Snap:        https://snapcraft.io/arduino
    Arch:        sudo pacman -S arduino
    ``` 
-   Unfortunately, the version packaged in Ubuntu is too ancient to support Arduino's new way of doing 3rd-party hardware.
+   Unfortunately, the version of the Arduino IDE packaged in Ubuntu is unmaintained and too old to use.
 
 2. Assuming you're using the tar archive, and untarring in the download directory:
 
@@ -67,13 +67,13 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
     $ sudo /etc/init.d/udev reload
     ```
     
-    For Arch based distributions the following command will be used instead of `sudo /etc/init.d/udev reload`
+    For Arch based distributions use the following command instead of `sudo /etc/init.d/udev reload`
     ```sh
     $ sudo udevadm control --reload-rules && udevadm trigger
     ```
     
 
-4. Then disconnect and reconnect the keyboard for that change to take effect.
+4. Next, disconnect and reconnect your keyboard so that your computer will apply the changes.
 
 ## <a name="Arduino-Windows"></a>Install Arduino on Windows 10
 
@@ -148,10 +148,18 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
 
 ![](images/arduino-setup/open-preferences.png)
 
-3. Paste the following url into the box labeled 'Additional Board Manager URLs':
+3. To use released versions of Kaleidoscope, paste the following url into the box labeled 'Additional Board Manager URLs':
    ```
    https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json
    ```
+
+   If you would prefer to be able to install an 'up to the minute' build of the `master` branch of Kaleidoscope from git, use this URL:
+   ```
+   https://raw.githubusercontent.com/keyboardio/arduino-kaleidoscope-master/main/package_kaleidoscope_master_index.json
+   ```
+
+   As a warning: the `master` builds may be less stable than release builds.
+
 ![](images/arduino-setup/add-boards-manager-link.png)
 
 4. Click ‘OK’ to close the dialog
