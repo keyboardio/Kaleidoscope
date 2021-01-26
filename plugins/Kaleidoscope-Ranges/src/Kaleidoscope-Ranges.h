@@ -20,6 +20,13 @@
 namespace kaleidoscope {
 namespace ranges {
 
+// NOTE: We need to keep the ranges stable, and backwards compatible!
+//
+// When adding, removing, or changing ranges, make sure that existing ranges are
+// never accidentally moved. If migrating keycodes that weren't previously using
+// the rang system, make sure you keep the old keycodes, even if they short
+// before ranges::FIRST, for the sake of remaining backwards compatible with
+// existing keymaps.
 enum : uint16_t {
   // Macro ranges pre-date Kaleidoscope-Ranges, so they're coming before
   // ranges::FIRST, because we want to keep the keycodes backwards compatible.
