@@ -21,6 +21,11 @@ namespace kaleidoscope {
 namespace ranges {
 
 enum : uint16_t {
+  // Macro ranges pre-date Kaleidoscope-Ranges, so they're coming before
+  // ranges::FIRST, because we want to keep the keycodes backwards compatible.
+  MACRO_FIRST = 24576,
+  MACRO_LAST  = MACRO_FIRST + 255,
+
   FIRST       = 0xc000,
   KALEIDOSCOPE_FIRST = FIRST,
   OS_FIRST,
@@ -49,8 +54,6 @@ enum : uint16_t {
   SC_LAST,
   REDIAL,
   TURBO,
-  MACRO_FIRST,
-  MACRO_LAST  = MACRO_FIRST + 255,
   DYNAMIC_MACRO_FIRST,
   DYNAMIC_MACRO_LAST = DYNAMIC_MACRO_FIRST + 31,
 
