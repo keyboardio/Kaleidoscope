@@ -59,14 +59,17 @@ void Layer_::setup() {
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
+    // MoveToLayer()
     if (keyToggledOn(keyState)) {
       move(keymapEntry.getKeyCode() - LAYER_MOVE_OFFSET);
     }
   } else if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
+    // layer shift keys
     uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
+      // Key_KeymapNext_Momentary
       if (keyToggledOn(keyState))
         activateNext();
       else if (keyToggledOff(keyState))
@@ -74,6 +77,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
 
     case KEYMAP_PREVIOUS:
+      // Key_KeymapPrevious_Momentary
       if (keyToggledOn(keyState))
         deactivateMostRecent();
       else if (keyToggledOff(keyState))
@@ -81,6 +85,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
 
     default:
+      // ShiftToLayer()
       /* The default case is when we are switching to a layer by its number, and
        * is a bit more complicated than switching there when the key toggles on,
        * and away when it toggles off.
@@ -104,6 +109,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
     }
   } else if (keyToggledOn(keyState)) {
+    // LockLayer()/UnlockLayer()
     uint8_t target = keymapEntry.getKeyCode();
     // switch keymap and stay there
     if (Layer.isActive(target))
