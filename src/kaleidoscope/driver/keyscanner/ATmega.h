@@ -105,15 +105,11 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
       OUTPUT_TOGGLE(_KeyScannerProps::matrix_row_pins[current_row]);
 
-      any_debounced_changes |= debounce(hot_pins, &matrix_state_[current_row].debouncer);
-
-      if (any_debounced_changes) {
-        for (uint8_t current_row = 0; current_row < _KeyScannerProps::matrix_rows; current_row++) {
-          matrix_state_[current_row].current = matrix_state_[current_row].debouncer.debounced_state;
-        }
-      }
+      matrix_state_[current_row].current ^=
+        debounce(hot_pins, matrix_state_[current_row].current, &matrix_state_[current_row].debouncer);
     }
   }
+
   void scanMatrix() {
     if (do_scan_) {
       do_scan_ = false;
@@ -164,15 +160,14 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
  protected:
   /*
-    each of these variables are storing the state for a row of keys
-
-    so for key 0, the counter is represented by db0[0] and db1[0]
-    and the state in debounced_state[0].
+    Each of these variables is storing the state for a row of keys.
+    So for key 0, the last scan state is in raw[0], and the number of
+    consecutive scans with key 0 in that same state is (n1[0] << 1) | n0[0].
   */
   struct debounce_t {
-    typename _KeyScannerProps::RowState db0;    // counter bit 0
-    typename _KeyScannerProps::RowState db1;    // counter bit 1
-    typename _KeyScannerProps::RowState debounced_state;  // debounced state
+    typename _KeyScannerProps::RowState n0;    // consecutive scans % 1
+    typename _KeyScannerProps::RowState n1;    // consecutive scans % 2
+    typename _KeyScannerProps::RowState raw;    // last key state
   };
 
   struct row_state_t {
@@ -209,29 +204,44 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     return hot_pins;
   }
 
+  /*
+   * Returns a row with bits set wherever a key's debounced state has changed.
+   *
+   * Changes are reported eagerly: if the state is stable and a new change is
+   * detected, immediately report that change.  Whenever the raw state changes,
+   * the counter is reset.
+   */
   static inline typename _KeyScannerProps::RowState debounce(
-    typename _KeyScannerProps::RowState sample, debounce_t *debouncer
+    typename _KeyScannerProps::RowState sample,
+    typename _KeyScannerProps::RowState current,
+    debounce_t *db
   ) {
-    typename _KeyScannerProps::RowState delta, changes;
+    // If the counter for a key is non-zero, it is still in a cooldown phase.
+    typename _KeyScannerProps::RowState unstable = db->n0 | db->n1;
 
-    // Use xor to detect changes from last stable state:
-    // if a key has changed, it's bit will be 1, otherwise 0
-    delta = sample ^ debouncer->debounced_state;
+    // Use xor to detect changes from last reported state:
+    // if a key has changed, its bit will be 1, otherwise 0
+    typename _KeyScannerProps::RowState delta = sample ^ current;
 
-    // Increment counters and reset any unchanged bits:
-    // increment bit 1 for all changed keys
-    debouncer->db1 = ((debouncer->db1) ^ (debouncer->db0)) & delta;
-    // increment bit 0 for all changed keys
-    debouncer->db0 = ~(debouncer->db0) & delta;
+    // Ignore any keys in their cooldown phase.
+    delta &= ~unstable;
 
-    // Calculate returned change set: if delta is still true
-    // and the counter has wrapped back to 0, the key is changed.
+    // Reset cooldown counter on any changed (raw) keys to 0.
+    typename _KeyScannerProps::RowState changed = sample ^ db->raw;
+    unstable |= changed;
+    db->n1 &= ~changed;
+    db->n0 &= ~changed;
 
-    changes = ~(~delta | (debouncer->db0) | (debouncer->db1));
-    // Update state: in this case use xor to flip any bit that is true in changes.
-    debouncer->debounced_state ^= changes;
+    // Increment cooldown counters for keys that are unstable:
+    // n1 = (n + 1) % 2
+    db->n1 = (db->n1 ^ db->n0) & unstable;
+    // n0 = (n + 1) % 1
+    db->n0 = ~db->n0 & unstable;
 
-    return changes;
+    // Save the raw sample for the next scan.
+    db->raw = sample;
+
+    return delta;
   }
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
