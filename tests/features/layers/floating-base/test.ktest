@@ -1,0 +1,165 @@
+VERSION 1
+
+KEYSWITCH A              0 0
+KEYSWITCH X              0 1
+
+KEYSWITCH LAYER_SHIFT_0  1 0
+KEYSWITCH LAYER_SHIFT_1  1 1
+KEYSWITCH LAYER_SHIFT_2  1 2
+
+KEYSWITCH LAYER_LOCK_0   2 0
+KEYSWITCH LAYER_LOCK_1   2 1
+KEYSWITCH LAYER_LOCK_2   2 2
+
+# ==============================================================================
+# Previously, if only layer 0 was active, and the user pressed and then released
+# `ShiftToLayer(0)`, the layer count would go to zero. This test would still
+# pass, however, because Kaleidoscope falls back on layer 0 values anyway.
+NAME Base layer stays active
+
+RUN 5 cycles
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+PRESS LAYER_SHIFT_0
+RUN 5 ms
+RELEASE LAYER_SHIFT_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# ==============================================================================
+NAME Lock layer 1
+
+# Activate Layer 1
+PRESS LAYER_LOCK_1
+RUN 5 ms
+RELEASE LAYER_LOCK_1
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only `B`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# ==============================================================================
+NAME Stack layer 0 on top of layer 1
+
+# Deactivate Layer 0: Now the layer stack should contain only layer 1.
+PRESS LAYER_LOCK_0
+RUN 5 ms
+RELEASE LAYER_LOCK_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only `B`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# Activate Layer 0: There should now be two layers in the stack, with layer 0 on
+# top of layer 1.
+PRESS LAYER_LOCK_0
+RUN 5 ms
+RELEASE LAYER_LOCK_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# Deactivate Layer 0: Back to just layer 1 active.
+PRESS LAYER_LOCK_0
+RUN 5 ms
+RELEASE LAYER_LOCK_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only `B`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# Hold Layer 0: Now the same test, but with a layer shift instead of a layer
+# lock. The stack should now have layer 0 on top of layer 1.
+PRESS LAYER_SHIFT_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# Release Layer 0 shift: Back to just layer 1 active.
+RELEASE LAYER_SHIFT_0
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only `B`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+
+# ==============================================================================
+NAME Default to layer 0
+
+# Unlock layer 1: This was the only active layer; layer 0 should activate
+# automatically in response.
+PRESS LAYER_LOCK_1
+RUN 5 ms
+RELEASE LAYER_LOCK_1
+RUN 5 ms
+
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+RUN 5 ms
+
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
