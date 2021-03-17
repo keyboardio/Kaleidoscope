@@ -33,7 +33,7 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	rm -d $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
 	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
 
-simulator-tests: configure-arduino-cli $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
+simulator-tests: setup
 	$(MAKE) -C tests all
 
 docker-simulator-tests:
