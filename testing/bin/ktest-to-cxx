@@ -50,6 +50,8 @@ sub load_from_text {
         my ( $key, $content, $comment, $error, $type );
         $line_num++;
         chomp $line;
+        my $raw_line = $line;
+        $raw_line =~ s/"/''/g;
 
         $line =~ s/^\s+//;
         $line =~ s/\s+$//;
@@ -181,7 +183,8 @@ sub load_from_text {
             content  => $content,
             comment  => $comment,
             data     => $data,
-            line_num => $line_num
+            line_num => $line_num,
+            raw_line => $raw_line
           };
 
     }
@@ -279,6 +282,8 @@ sub generate_script {
 
     $reports_expected = 0;
     for my $entry (@script_lines) {
+
+        #cxx("std::cerr << \"".$entry->{raw_line}."\" << std::endl;");
 
         if ( $entry->{comment} && ( !$entry->{action} ) ) {
             cxx_comment( $entry->{comment} );
