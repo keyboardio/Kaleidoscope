@@ -5,6 +5,7 @@
 /output/
 /examples/*/output/
 /out/
+/docs/plugins
 /docs/generated
 /docs/doxyoutput
 /docs/api
