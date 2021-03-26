@@ -122,11 +122,22 @@ _arduino_props := $(shell ${ARDUINO_CLI}  compile $(fqbn_arg) --show-properties 
 
 _arduino_prop = $(subst $1=,,$(subst 🔥, ,$(filter $1=%,$(_arduino_props))))
 
+_arduino_version = $(shell ${ARDUINO_CLI} version | sed 's/.*Version: \([0-9][0-9\.]*\).*/\1/')
+
+export ARDUINO_CLI_VERSION ?= $(_arduino_version)
+
+_arduino_build_property_flag = $(shell echo -e "0.14\n${ARDUINO_CLI_VERSION}" | sort -C -t. -k1,1n -k2,2n && echo "YES")
+
+ARDUINO_BUILD_PROP_FLAG := --build-properties
+ifeq ($(_arduino_build_property_flag),YES)
+ARDUINO_BUILD_PROP_FLAG := --build-property
+endif
+
 # How to use_arduino_prop
 # $(call _arduino_prop,recipe.hooks.sketch.prebuild.2.pattern)
 
 ifneq ($(KALEIDOSCOPE_CCACHE),) 
-ccache_wrapper_property := --build-properties "compiler.wrapper.cmd=ccache"
+ccache_wrapper_property := $(ARDUINO_BUILD_PROP_FLAG) "compiler.wrapper.cmd=ccache"
 endif
 
 .PHONY: configure-arduino-cli install-arduino-core-kaleidoscope install-arduino-core-avr
