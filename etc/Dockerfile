@@ -10,8 +10,12 @@ RUN ccache --set-config=cache_dir=/kaleidoscope-persist/ccache/cache
 
 RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | \
   sh
-RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli config init
+
+RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data \
+    ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS=https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json \
+    /bin/arduino-cli config init
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli update
+RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core update-index
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core install arduino:avr
 
 
