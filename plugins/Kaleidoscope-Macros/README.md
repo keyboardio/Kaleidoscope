@@ -215,3 +215,10 @@ To control when to send reports, the following steps can be used:
 >
 > It should return a macro sequence, or `MACRO_NONE` if nothing is to be played
 > back.
+
+## Limitations
+
+Due to technical and practical reasons, `Macros.type()` assumes a QWERTY layout
+on the host side, and so do all other parts that work with keycodes. If your
+operating system is set to a different layout, the strings and keycodes will
+need to be adjusted accordingly.
