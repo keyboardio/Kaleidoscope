@@ -59,14 +59,17 @@ void Layer_::setup() {
 
 void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
   if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
+    // MoveToLayer()
     if (keyToggledOn(keyState)) {
       move(keymapEntry.getKeyCode() - LAYER_MOVE_OFFSET);
     }
   } else if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
+    // layer shift keys
     uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
+      // Key_KeymapNext_Momentary
       if (keyToggledOn(keyState))
         activateNext();
       else if (keyToggledOff(keyState))
@@ -74,6 +77,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
 
     case KEYMAP_PREVIOUS:
+      // Key_KeymapPrevious_Momentary
       if (keyToggledOn(keyState))
         deactivateMostRecent();
       else if (keyToggledOff(keyState))
@@ -81,6 +85,7 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
 
     default:
+      // ShiftToLayer()
       /* The default case is when we are switching to a layer by its number, and
        * is a bit more complicated than switching there when the key toggles on,
        * and away when it toggles off.
@@ -104,8 +109,10 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
       break;
     }
   } else if (keyToggledOn(keyState)) {
+    // LockLayer()/UnlockLayer()
+    uint8_t target = keymapEntry.getKeyCode();
     // switch keymap and stay there
-    if (Layer.isActive(keymapEntry.getKeyCode()) && keymapEntry.getKeyCode())
+    if (Layer.isActive(target))
       deactivate(keymapEntry.getKeyCode());
     else
       activate(keymapEntry.getKeyCode());
@@ -130,22 +137,28 @@ void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
 }
 
 void Layer_::updateActiveLayers(void) {
+  // First, set every entry in the active layer keymap to point to the default
+  // layer (layer 0).
   memset(active_layer_keymap_, 0, Runtime.device().numKeys());
-  for (auto key_addr : KeyAddr::all()) {
-    int8_t layer_index = active_layer_count_;
-    while (layer_index > 0) {
-      uint8_t layer = active_layers_[layer_index - 1];
-      if (Layer.isActive(layer)) {
-        Key mappedKey = (*getKey)(layer, key_addr);
 
-        if (mappedKey != Key_Transparent) {
-          active_layer_keymap_[key_addr.toInt()] = layer;
-          break;
-        }
+  // For each key address, set its entry in the active layer keymap to the value
+  // of the top active layer that has a non-transparent entry for that address.
+  for (auto key_addr : KeyAddr::all()) {
+    for (uint8_t i = active_layer_count_; i > 0; --i) {
+      uint8_t layer = active_layers_[i - 1];
+      Key key = (*getKey)(layer, key_addr);
+
+      if (key != Key_Transparent) {
+        active_layer_keymap_[key_addr.toInt()] = layer;
+        break;
       }
-      layer_index--;
     }
   }
+  // Even if there are no active layers (a situation that should be prevented by
+  // `deactivate()`), each key will be mapped from the base layer (layer
+  // 0). Likewise, for any address where all active layers have a transparent
+  // entry, that key will be mapped from the base layer, even if the base layer
+  // has been deactivated.
 }
 
 void Layer_::move(uint8_t layer) {
@@ -177,7 +190,8 @@ void Layer_::activate(uint8_t layer) {
   if (isActive(layer))
     return;
 
-  // Otherwise, turn on its bit in layer_state_
+  // Otherwise, turn on its bit in layer_state_, and push it onto the active
+  // layer stack
   bitSet(layer_state_, layer);
   active_layers_[active_layer_count_++] = layer;
 
@@ -191,22 +205,28 @@ void Layer_::activate(uint8_t layer) {
 // Deactivate a given layer
 void Layer_::deactivate(uint8_t layer) {
   // If the target layer was already off, return
-  if (!bitRead(layer_state_, layer))
+  if (!isActive(layer))
     return;
+
+  // If the sole active layer is being deactivated, turn on the base layer and
+  // return so we always have at least one layer active.
+  if (active_layer_count_ <= 1) {
+    move(0);
+    return;
+  }
 
   // Turn off its bit in layer_state_
   bitClear(layer_state_, layer);
 
-  // Rearrange the activation order array...
-  uint8_t idx = 0;
-  for (uint8_t i = active_layer_count_; i > 0; i--) {
+  // Remove the target layer from the active layer stack, and shift any layers
+  // above it down to fill in the gap
+  for (uint8_t i = 0; i < active_layer_count_; ++i) {
     if (active_layers_[i] == layer) {
-      idx = i;
+      memmove(&active_layers_[i], &active_layers_[i + 1], active_layer_count_ - i);
+      --active_layer_count_;
       break;
     }
   }
-  memmove(&active_layers_[idx], &active_layers_[idx + 1], active_layer_count_ - idx);
-  active_layer_count_--;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
   // updated separately, when keys toggle on or off. See layers.h)
