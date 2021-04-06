@@ -22,12 +22,10 @@
 namespace kaleidoscope {
 namespace plugin {
 
-const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
+const ShapeShifter::dictionary_t *ShapeShifter::dictionary = nullptr;
 
-EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  // Only act on keys that toggle on to prevent cycles (if the dictionary has
-  // two keys mapped to each other).
-  if (!keyToggledOn(key_state))
+EventHandlerResult ShapeShifter::onKeyEvent(KeyEvent &event) {
+  if (dictionary == nullptr)
     return EventHandlerResult::OK;
 
   if (!dictionary)
@@ -41,7 +39,7 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
     orig = dictionary[i].original.readFromProgmem();
     i++;
   } while (orig != Key_NoKey &&
-           orig != mapped_key);
+           orig != event.key);
   i--;
 
   // If not found, bail out.
@@ -60,7 +58,7 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
   repl = dictionary[i].replacement.readFromProgmem();
 
   // If found, handle the alternate key instead
-  mapped_key = repl;
+  event.key = repl;
   return EventHandlerResult::OK;
 }
 
