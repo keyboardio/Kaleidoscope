@@ -17,10 +17,10 @@
 
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-EEPROM-Settings.h"
-#include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-HostOS.h"
+#include "Kaleidoscope-Ranges.h"
 
-#include "Macros.h"
+#include "AppSwitcher.h"
 
 /* *INDENT-OFF* */
 KEYMAPS(
@@ -32,7 +32,7 @@ KEYMAPS(
    Key_PageDown,   Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
 
    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
-   M(M_APPSWITCH),
+   AppSwitcher_Next,
 
    Key_skip,  Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_skip,
    Key_Enter, Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_Equals,
@@ -40,24 +40,13 @@ KEYMAPS(
    Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
-   M(M_APPCANCEL)
+   AppSwitcher_Prev
    ),
 )
 /* *INDENT-ON* */
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
-  case M_APPSWITCH:
-    return macroAppSwitch(keyState);
-  case M_APPCANCEL:
-    return macroAppCancel(keyState);
-  }
-  return MACRO_NONE;
-}
-
-KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
-                          HostOS,
-                          Macros);
+KALEIDOSCOPE_INIT_PLUGINS(HostOS,
+                          AppSwitcher);
 
 void setup() {
   Kaleidoscope.setup();
@@ -67,6 +56,5 @@ void setup() {
 }
 
 void loop() {
-  macroAppSwitchLoop();
   Kaleidoscope.loop();
 }
