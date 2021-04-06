@@ -30,12 +30,16 @@ static constexpr uint8_t uninitialized_mode_id = 255;
 uint8_t LEDControl::mode_id = uninitialized_mode_id;
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_ = nullptr;
-uint8_t LEDControl::syncDelay = 32;
-uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::enabled_ = true;
 
 LEDControl::LEDControl(void) {
 }
+uint8_t LEDControl::sync_interval_ = 32;
+uint16_t LEDControl::last_sync_time_ = 0;
+
+#ifndef NDEPRECATED
+uint8_t LEDControl::syncDelay = LEDControl::sync_interval_;
+#endif
 
 void LEDControl::next_mode(void) {
   mode_id++;
@@ -197,9 +201,15 @@ EventHandlerResult LEDControl::afterEachCycle() {
   if (!enabled_)
     return EventHandlerResult::OK;
 
-  if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
+  if (Runtime.hasTimeExpired(last_sync_time_, sync_interval_)) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    sync_interval_ = syncDelay;
+#pragma GCC diagnostic pop
+#endif
     syncLeds();
-    syncTimer += syncDelay;
+    last_sync_time_ += sync_interval_;
     update();
   }
 
