@@ -15,6 +15,7 @@
  */
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -41,6 +42,9 @@ Runtime_::setup(void) {
   kaleidoscope::Hooks::onSetup();
 
   device().setup();
+
+  // Clear the keyboard state array (all keys idle at start)
+  live_keys.clear();
 
   Layer.setup();
 }
