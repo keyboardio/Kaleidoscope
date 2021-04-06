@@ -27,7 +27,7 @@ namespace plugin {
 
 static constexpr uint8_t uninitialized_mode_id = 255;
 
-uint8_t LEDControl::mode_id = uninitialized_mode_id;
+uint8_t LEDControl::mode_id_ = uninitialized_mode_id;
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_ = nullptr;
 bool LEDControl::enabled_ = true;
@@ -41,25 +41,26 @@ uint16_t LEDControl::last_sync_time_ = 0;
 uint8_t LEDControl::syncDelay = LEDControl::sync_interval_;
 #endif
 
-void LEDControl::next_mode(void) {
-  mode_id++;
 
-  if (mode_id >= num_led_modes_) {
+void LEDControl::next_mode() {
+  ++mode_id_;
+
+  if (mode_id_ >= num_led_modes_) {
     return set_mode(0);
   }
 
-  return set_mode(mode_id);
+  return set_mode(mode_id_);
 }
 
-void LEDControl::prev_mode(void) {
-  if (mode_id == 0) {
+void LEDControl::prev_mode() {
+  if (mode_id_ == 0) {
     // wrap around
-    mode_id = num_led_modes_ - 1;
+    mode_id_ = num_led_modes_ - 1;
   } else {
-    mode_id--;
+    mode_id_--;
   }
 
-  return set_mode(mode_id);
+  return set_mode(mode_id_);
 }
 
 void
@@ -67,11 +68,11 @@ LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= num_led_modes_)
     return;
 
-  mode_id = mode_;
+  mode_id_ = mode_;
 
   // Cache the LED mode
   //
-  cur_led_mode_ = LEDModeManager::getLEDMode(mode_id);
+  cur_led_mode_ = LEDModeManager::getLEDMode(mode_id_);
 
   refreshAll();
 
@@ -141,7 +142,7 @@ EventHandlerResult LEDControl::onSetup() {
 
   LEDModeManager::setupPersistentLEDModes();
 
-  if (mode_id == uninitialized_mode_id) {
+  if (mode_id_ == uninitialized_mode_id) {
     set_mode(0);
   }
 
@@ -298,10 +299,10 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     } else if (peek == 'p') {
       ::LEDControl.prev_mode();
     } else {
-      uint8_t mode_id;
+      uint8_t mode_id_;
 
-      ::Focus.read(mode_id);
-      ::LEDControl.set_mode(mode_id);
+      ::Focus.read(mode_id_);
+      ::LEDControl.set_mode(mode_id_);
     }
     break;
   }

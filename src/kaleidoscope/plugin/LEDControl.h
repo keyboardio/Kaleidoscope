@@ -61,7 +61,7 @@ class LEDControl : public kaleidoscope::Plugin {
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
-    return mode_id;
+    return mode_id_;
   }
   static LEDMode *get_mode() {
     return cur_led_mode_;
@@ -133,9 +133,9 @@ class LEDControl : public kaleidoscope::Plugin {
   }
 
  private:
-  static uint8_t mode_id;
   static uint16_t last_sync_time_;
   static uint8_t sync_interval_;
+  static uint8_t mode_id_;
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
   static bool enabled_;
