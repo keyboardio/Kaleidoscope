@@ -95,7 +95,7 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t syncDelay;
 
   kaleidoscope::EventHandlerResult onSetup();
-  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
+  kaleidoscope::EventHandlerResult onKeyEvent(KeyEvent &event);
   kaleidoscope::EventHandlerResult beforeReportingState();
 
   static void disable();
@@ -117,7 +117,6 @@ class LEDControl : public kaleidoscope::Plugin {
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
   static bool enabled_;
-  static Key pending_next_prev_key_;
 };
 
 class FocusLEDCommand : public Plugin {

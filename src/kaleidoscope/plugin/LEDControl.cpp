@@ -18,6 +18,7 @@
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope_internal/LEDModeManager.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/LiveKeys.h"
 
 using namespace kaleidoscope::internal; // NOLINT(build/namespaces)
 
@@ -32,7 +33,6 @@ LEDMode *LEDControl::cur_led_mode_ = nullptr;
 uint8_t LEDControl::syncDelay = 32;
 uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::enabled_ = true;
-Key LEDControl::pending_next_prev_key_ = Key_NoKey;
 
 LEDControl::LEDControl(void) {
 }
@@ -156,16 +156,33 @@ void LEDControl::enable() {
   Runtime.device().syncLeds();
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
-    return kaleidoscope::EventHandlerResult::OK;
+kaleidoscope::EventHandlerResult LEDControl::onKeyEvent(KeyEvent &event) {
+  if (event.key.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
+    return EventHandlerResult::OK;
 
-  if (keyToggledOn(keyState)) {
-    if (mappedKey == Key_LEDEffectNext || mappedKey == Key_LEDEffectPrevious) {
-      // Handling of these keys is delayed into `beforeReportingState`
-      // so that we can incorporate the shift modifier state.
-      pending_next_prev_key_ = mappedKey;
-    } else if (mappedKey == Key_LEDToggle) {
+  if (keyToggledOn(event.state)) {
+    if (event.key == Key_LEDEffectNext || event.key == Key_LEDEffectPrevious) {
+      // First, check for an active shift key.
+      bool shift_active = false;
+      // This change should be back-ported to #904
+      for (Key active_key : live_keys.all()) {
+        if (active_key.isKeyboardShift()) {
+          shift_active = true;
+          break;
+        }
+      }
+      // Next, record which key (next or previous) was pressed as a boolean.
+      bool key_is_next = (event.key == Key_LEDEffectNext);
+      // This is basically an XOR with two booleans. If the "next" key was
+      // pressed and no shift key is active, or if the "previous" key was
+      // pressed and a shift key is active, we activate the next LED
+      // Mode. Otherwise, we activate the previous mode.
+      if (key_is_next != shift_active) {
+        next_mode();
+      } else {
+        prev_mode();
+      }
+    } else if (event.key == Key_LEDToggle) {
       if (enabled_)
         disable();
       else
@@ -176,23 +193,9 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
   return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
 }
 
-kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
+kaleidoscope::EventHandlerResult LEDControl::afterEachCycle() {
   if (!enabled_)
     return kaleidoscope::EventHandlerResult::OK;
-
-  if (pending_next_prev_key_ != Key_NoKey) {
-    bool is_shifted =
-      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
-      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
-
-    if ((pending_next_prev_key_ == Key_LEDEffectNext && !is_shifted) ||
-        (pending_next_prev_key_ == Key_LEDEffectPrevious && is_shifted)) {
-      next_mode();
-    } else {
-      prev_mode();
-    }
-    pending_next_prev_key_ = Key_NoKey;
-  }
 
   if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
     syncLeds();
