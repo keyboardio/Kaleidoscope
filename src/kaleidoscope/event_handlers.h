@@ -234,6 +234,15 @@ class SignatureCheckDummy {};
                 _NOT_ABORTABLE,                                           __NL__ \
                 (),(),(), /* non template */                              __NL__ \
                 (), (), ##__VA_ARGS__)                                    __NL__ \
+   /* Called immediately before the LEDs get updated. This is for */      __NL__ \
+   /* plugins that override the current LED mode. */                      __NL__ \
+   OPERATION(beforeSyncingLeds,                                           __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _NOT_ABORTABLE,                                              __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (), (), ##__VA_ARGS__)                                       __NL__ \
+   /* DEPRECATED                                                       */ __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \
@@ -332,6 +341,10 @@ class SignatureCheckDummy {};
    START(onLEDModeChange, 1)                                            __NL__ \
       OP(onLEDModeChange, 1)                                            __NL__ \
    END(onLEDModeChange, 1)                                              __NL__ \
+                                                                        __NL__ \
+   START(beforeSyncingLeds, 1)                                          __NL__ \
+      OP(beforeSyncingLeds, 1)                                          __NL__ \
+   END(beforeSyncingLeds, 1)                                            __NL__ \
                                                                         __NL__ \
    START(beforeReportingState, 1, 2)                                    __NL__ \
       OP(beforeReportingState, 1)                                       __NL__ \

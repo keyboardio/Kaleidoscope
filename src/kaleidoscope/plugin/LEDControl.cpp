@@ -124,6 +124,11 @@ void LEDControl::syncLeds(void) {
   if (!enabled_)
     return;
 
+  // This would be a good spot to introduce a new hook function so that a plugin
+  // that needs to override the color of an LED used by an LED mode can do so
+  // efficiently.
+  Hooks::beforeSyncingLeds();
+
   Runtime.device().syncLeds();
 }
 
