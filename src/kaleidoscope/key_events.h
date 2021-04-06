@@ -65,4 +65,10 @@
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
+
+#ifndef NDEPRECATED
+
+DEPRECATED(HANDLE_KEYSWITCH_EVENT)
 void handleKeyswitchEvent(Key mappedKey, kaleidoscope::Device::Props::KeyScannerProps::KeyAddr key_addr, uint8_t keyState);
+
+#endif

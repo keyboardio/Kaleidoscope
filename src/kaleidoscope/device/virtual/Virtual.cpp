@@ -24,7 +24,6 @@
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/MatrixAddr.h"
 #include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/key_events.h"
 
 
 #include "HIDReportObserver.h"

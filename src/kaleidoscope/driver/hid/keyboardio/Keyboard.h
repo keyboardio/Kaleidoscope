@@ -69,6 +69,9 @@ class BootKeyboardWrapper {
     BootKeyboard.releaseAll();
   }
 
+  bool isKeyPressed(uint8_t code) {
+    return BootKeyboard.isKeyPressed(code);
+  }
   bool isModifierActive(uint8_t code) {
     return BootKeyboard.isModifierActive(code);
   }
@@ -108,6 +111,9 @@ class NKROKeyboardWrapper {
     Keyboard.releaseAll();
   }
 
+  bool isKeyPressed(uint8_t code) {
+    return Keyboard.isKeyPressed(code);
+  }
   bool isModifierActive(uint8_t code) {
     return Keyboard.isModifierActive(code);
   }

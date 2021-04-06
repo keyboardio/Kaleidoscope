@@ -20,11 +20,14 @@
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
 #include "kaleidoscope/device/device.h"
-#include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope_internal/shortname.h"
 #include "kaleidoscope_internal/deprecations.h"
+
+#ifndef NDEPRECATED
+#include "kaleidoscope/LiveKeys.h"
+#endif
 
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
@@ -54,35 +57,30 @@ class Layer_ {
 
   void setup();
 
-  /* There are two lookup functions, because we have two caches, and different
-   * parts of the firmware will want to use either this or that (or perhaps
-   * both, in rare cases).
-   *
-   * First of all, we use caches because looking up a key through all the layers
-   * is costy, and the cost increases dramatically the more layers we have.
-   *
-   * Then, we have the `liveCompositeKeymap`, because to have layer behaviours
-   * we want, that is, if you hold a key on a layer, release the layer key but
-   * continue holding the other, we want for the layered keycode to continue
-   * repeating.
-   *
-   * At the same time, we want other keys to not be affected by the
-   * now-turned-off layer. So we update the keycode in the cache on-demand, when
-   * the key is pressed. (see the top of `handleKeyswitchEvent`).
-   *
-   * On the other hand, we also have plugins that scan the whole keymap, and do
-   * things based on that information, such as highlighting keys that changed
-   * between layers. These need to be able to look at a state of where the
-   * keymap *should* be, not necessarily where it is. The `liveCompositeKeymap`
-   * is not useful here. So we use `activeLayers` which we update whenever
-   * layers change (see `Layer.on` and `Layer.off`), and it updates the cache to
-   * show how the keymap should look, without the `liveCompositeKeymap`-induced
-   * behaviour.
-   *
-   * Thus, if we are curious about what a given key will do, use `lookup`. If we
-   * are curious what the active layer state describes the key as, use
-   * `lookupOnActiveLayer`.
-   */
+  // There are two lookup functions here, for historical reasons. Previously,
+  // Kaleidoscope would need to look up a value for each active keyswitch in
+  // every cycle, and pass that value on to the "event" handlers. Most of these
+  // lookups were for keys that were being held, not toggled on or off. Because
+  // these lookups were so frequent, a cache was used to speed them up.
+  //
+  // We no longer need to look up these values every cycle for keys that are
+  // held, because Kaleidoscope now only acts on key events that are actual
+  // toggle-on or toggle-off events, so the speed of the lookups here is not so
+  // critical. However, the old "live composite keymap" cache was also used by
+  // some plugins (and certain parts of Kaleidoscope itself) to override values
+  // in the keymap, and these plugins might use calls to `Layer.lookup()`,
+  // expecting to get the override values.
+  //
+  // Therefore, the `lookup()` function below first checks the `live_keys` array
+  // (the keyboard state array that has replaced the keymap cache). This should
+  // allow old code to continue working, until all the associated code (mostly
+  // the `onKeyswitchEvent()` handlers) is replaced, at which point we can
+  // remove dependence on `live_keys` entirely from this class.
+  //
+  // The `Runtime.lookupKey()` function replaces this one, for plugins that
+  // still want to do this same check.
+
+  DEPRECATED(LAYER_LOOKUP)
   static Key lookup(KeyAddr key_addr) {
     // First check the keyboard state array
     Key key = live_keys[key_addr];

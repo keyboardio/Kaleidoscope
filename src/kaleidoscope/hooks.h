@@ -23,13 +23,16 @@ class Key;
 }
 
 #include "kaleidoscope/KeyAddr.h"
+#include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/plugin.h"
 #include "kaleidoscope/event_handlers.h"
 
 // Forward declaration required to enable friend declarations
 // in class Hooks.
 class kaleidoscope_;
+#ifndef NDEPRECATED
 extern void handleKeyswitchEvent(kaleidoscope::Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+#endif
 
 namespace kaleidoscope {
 namespace plugin {
@@ -67,9 +70,11 @@ class Hooks {
   friend class ::kaleidoscope::plugin::LEDControl;
   friend void ::kaleidoscope::sketch_exploration::pluginsExploreSketch();
 
+#ifndef NDEPRECATED
   // ::handleKeyswitchEvent(...) calls Hooks::onKeyswitchEvent.
   friend void ::handleKeyswitchEvent(kaleidoscope::Key mappedKey,
                                      KeyAddr key_addr, uint8_t keyState);
+#endif
 
  private:
 

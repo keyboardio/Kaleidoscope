@@ -139,6 +139,7 @@ class SignatureCheckDummy {};
                (),(),(), /* non template */                               __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
+   /* DEPRECATED                                                       */ __NL__ \
    /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
    /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
    /* passed by reference for this reason), and decide whether         */ __NL__ \
@@ -148,7 +149,7 @@ class SignatureCheckDummy {};
    /* will stop processing there.                                      */ __NL__ \
    OPERATION(onKeyswitchEvent,                                            __NL__ \
               1,                                                          __NL__ \
-             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             DEPRECATED(ON_KEYSWITCH_EVENT_V1),                           __NL__ \
                _ABORTABLE,                                                __NL__ \
                 (),(),(), /* non template */                              __NL__ \
                (Key &mappedKey, KeyAddr key_addr, uint8_t keyState),      __NL__ \
@@ -238,7 +239,7 @@ class SignatureCheckDummy {};
    /* reported to the host.                                            */ __NL__ \
    OPERATION(beforeReportingState,                                        __NL__ \
              1,                                                           __NL__ \
-             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             DEPRECATED(BEFORE_REPORTING_STATE_V1),                       __NL__ \
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),(), /* non template */                               __NL__ \
                (),(),##__VA_ARGS__)                                       __NL__ \

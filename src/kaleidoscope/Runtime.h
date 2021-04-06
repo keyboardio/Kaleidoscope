@@ -19,6 +19,9 @@
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope/event_handler_result.h"
 #include "kaleidoscope/hooks.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/LiveKeys.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 
@@ -128,8 +131,82 @@ class Runtime_ {
     return kaleidoscope::Hooks::onFocusEvent(command);
   }
 
+  /** Handle a physical keyswitch event
+   *
+   * This method is called in response to physical keyswitch state changes. Its
+   * job is to call the `onKeyswitchEvent()` plugin handler functions, used by
+   * plugins that are particularly concerned about the timing of those
+   * events. It takes only one parameter, of type `KeyEvent`, which encapsulates
+   * the information about that event:
+   *
+   * - `event.key_addr`: The address of the key that was pressed or released.
+   * - `event.state`: The state of the keyswitch event (toggled on or off).
+   * - `event.key`: The `Key` value for this event.
+   * - `event.id`: A semi-unique ID value for the event.
+   *
+   * The ID value is used to help plugins that delay events to coordinate with
+   * each other so that they can avoid re-processing the same event, possibly
+   * causing endless loops.
+   */
+  void handleKeyswitchEvent(KeyEvent event);
+
+  /** Handle a logical key event
+   *
+   * This method triggers the handling of a logical "key event". Ususally that
+   * event is the result of a call to `handleKeyswitchEvent()`, but it can also
+   * be called by plugins that need to generate extra events without a 1:1
+   * mapping to physical keyswitch state transitions.
+   */
+  void handleKeyEvent(KeyEvent event);
+
+  /** Prepare a new set of USB HID reports
+   *
+   * This method gets called when a key event results in at least one new HID
+   * report being sent to the host, usually as a result of a call to
+   * `handleKeyEvent()`. It clears the keyboard report (after plugins have
+   * already responded to the new event that triggered the forthcoming report),
+   * then populates the new report based on the values stored in the `live_keys`
+   * state array.
+   */
+  void prepareKeyboardReport(const KeyEvent &event);
+
+  /** Add keycode(s) to a USB HID report
+   *
+   * This method gets called from `prepareKeyboardReport()` to add keycodes
+   * corresponding to active keys in the `live_keys` state array to the Keyboard
+   * & Consumer Control HID reports. It calls the `onAddToReport()` plugin
+   * handlers first to give them a chance to abort.
+   */
+  void addToReport(Key key);
+
+  /** Send the new USB HID report(s)
+   *
+   * This method is called by `handleKeyEvent()` after `prepareKeyboardReport()`
+   * is done. It uses the information about the new event to guard against
+   * modifier and mod-flags rollover issues, and calls the
+   * `beforeReportingState()` plugin handler functions before sending the
+   * complete Keyboard and Consumer Control HID reports.
+   */
+  void sendKeyboardReport(const KeyEvent &event);
+
+  /** Get the current value of a keymap entry
+   *
+   * Returns the `Key` value for a given `KeyAddr` entry in the current keymap,
+   * overridden by any active entry in the `live_keys` array.
+   */
+  Key lookupKey(KeyAddr key_addr) {
+    // First, check for an active key value in the `live_keys` array.
+    Key key = live_keys[key_addr];
+    // If that entry is clear, look up the entry from the active keymap layers.
+    if (key == Key_Transparent) {
+      key = Layer.lookupOnActiveLayer(key_addr);
+    }
+    return key;
+  }
+
  private:
   static uint32_t millis_at_cycle_start_;
+  static KeyAddr last_addr_toggled_on_;
 };
 
 extern kaleidoscope::Runtime_ Runtime;
