@@ -23,13 +23,12 @@ namespace plugin {
 
 bool WinKeyToggle::enabled_;
 
-EventHandlerResult WinKeyToggle::onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult WinKeyToggle::onKeyEvent(KeyEvent &event) {
   if (!enabled_)
     return EventHandlerResult::OK;
 
-  if (key == Key_LeftGui || key == Key_RightGui) {
-    key = Key_NoKey;
-    return EventHandlerResult::EVENT_CONSUMED;
+  if (event.key == Key_LeftGui || event.key == Key_RightGui) {
+    return EventHandlerResult::ABORT;
   }
 
   return EventHandlerResult::OK;
