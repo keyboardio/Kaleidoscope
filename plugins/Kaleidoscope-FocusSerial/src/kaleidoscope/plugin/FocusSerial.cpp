@@ -32,7 +32,7 @@ void FocusSerial::drain(void) {
       Runtime.serialPort().read();
 }
 
-EventHandlerResult FocusSerial::beforeReportingState() {
+EventHandlerResult FocusSerial::afterEachCycle() {
   if (Runtime.serialPort().available() == 0)
     return EventHandlerResult::OK;
 
