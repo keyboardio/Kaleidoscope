@@ -70,6 +70,9 @@ class KeyAddrBitfield {
     // assert(k.toInt() < size);
     bitWrite(data_[blockIndex(k)], bitIndex(k), value);
   }
+  void clear() {
+    memset(data_, 0, sizeof(data_));
+  }
 
   // This function returns the number of set bits in the bitfield up to and
   // including the bit at index `k`. Two important things to note: it doesn't
