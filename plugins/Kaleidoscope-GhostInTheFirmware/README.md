@@ -22,16 +22,16 @@ that.
 #include <Kaleidoscope-GhostInTheFirmware.h>
 #include <Kaleidoscope-Macros.h>
 
-const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
-  if (macro_index == 0 && keyToggledOn(key_state))
+const macro_t *macroAction(uint8_t macro_id, KeyEvent& event) {
+  if (macro_id == 0 && keyToggledOn(event.state))
     GhostInTheFirmware.activate();
 
   return MACRO_NONE;
 }
 
 static const kaleidoscope::plugin::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
-  {0, 0, 200, 50},
-  {0, 0, 0}
+  {KeyAddr(0, 0), 200, 50},
+  {KeyAddr::none(), 0, 0}
 };
 
 KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
@@ -59,13 +59,14 @@ methods and properties:
 ### `.ghost_keys`
 
 > Set this property to the sequence of keys to press, by assigning a sequence to
-> this variable. Each element is a quartett of `row`, `column`, a `pressTime`,
-> and a `delay`. Each of these will be pressed in different cycles, unlike
-> macros which play back within a single cycle.
->
-> The key at `row`, `column` will be held for `pressTime` milliseconds, and
-> after an additional `delay` milliseconds, the plugin will move on to the next
-> entry in the sequence.
+> this variable. Each element is a `GhostKey` object, comprised of a `KeyAddr`
+> (the location of a key on the keyboard), a duration of the key press (in
+> milliseconds), and a delay after the key release until the next one is pressed
+> (also in milliseconds).
+
+> This `ghost_keys` array *MUST* end with the sentinal value of
+> `{KeyAddr::none(), 0, 0}` to ensure that GhostInTheFirmware doesn't read past
+> the end of the array.
 >
 > The sequence *MUST* reside in `PROGMEM`.
 
