@@ -17,68 +17,77 @@
 
 #include <Kaleidoscope-TopsyTurvy.h>
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/LiveKeys.h"
 
 namespace kaleidoscope {
 namespace plugin {
 
 KeyAddr TopsyTurvy::tt_addr_ = KeyAddr::none();
-bool TopsyTurvy::shift_detected_ = false;
 
-EventHandlerResult TopsyTurvy::beforeEachCycle() {
-  // Clear the shift detection state before each scan cycle.
-  shift_detected_ = false;
-  return EventHandlerResult::OK;
-}
+EventHandlerResult TopsyTurvy::onKeyEvent(KeyEvent &event) {
+  if (keyToggledOff(event.state)) {
+    if (event.addr == tt_addr_)
+      tt_addr_.clear();
+    return EventHandlerResult::OK;
+  }
 
-EventHandlerResult TopsyTurvy::beforeReportingState() {
-  // If no TopsyTurvy key is active, there's nothing to do.
-  if (! tt_addr_.isValid())
+  if (event.key.isKeyboardModifier())
     return EventHandlerResult::OK;
 
-  // A TopsyTurvy key is active. That means we need to reverse the shift state,
-  // whether it was on or off.
-  if (shift_detected_) {
-    kaleidoscope::Runtime.hid().keyboard().releaseKey(Key_LeftShift);
-    kaleidoscope::Runtime.hid().keyboard().releaseKey(Key_RightShift);
+  if (isTopsyTurvyKey(event.key)) {
+    event.key.setRaw(event.key.getRaw() - ranges::TT_FIRST);
+    tt_addr_ = event.addr;
   } else {
-    kaleidoscope::Runtime.hid().keyboard().pressKey(Key_LeftShift);
+    live_keys.activate(tt_addr_, Key_NoKey);
+    tt_addr_.clear();
+  }
+
+  if (tt_addr_.isValid()) {
+    for (KeyAddr key_addr : KeyAddr::all()) {
+      if (key_addr == event.addr)
+        continue;
+
+      Key active_key = live_keys[key_addr];
+      if (active_key == Key_Transparent)
+        continue;
+
+      if (active_key.isKeyboardKey() && !active_key.isKeyboardModifier()) {
+        live_keys.activate(key_addr, Key_NoKey);
+      }
+    }
   }
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult TopsyTurvy::onKeyswitchEvent(Key &key,
-                                                KeyAddr key_addr,
-                                                uint8_t key_state) {
-  // If a modifer key (including combo modifiers, but not non-modifier keys with
-  // mod flags) is active, and it includes `shift` (either from its keycode or a
-  // mod flag), record that we detected an "intentional shift".
-  if (key.isKeyboardShift() && keyIsPressed(key_state))
-    shift_detected_ = true;
+EventHandlerResult TopsyTurvy::beforeReportingState(const KeyEvent &event) {
 
-  // If the active TopsyTurvy key toggles off, clear the stored address to
-  // record that.
-  if (keyToggledOff(key_state)) {
-    if (key_addr == tt_addr_) {
-      tt_addr_.clear();
-    }
+  if (!tt_addr_.isValid()) {
     return EventHandlerResult::OK;
   }
-
-  if (keyToggledOn(key_state)) {
-    if (isTopsyTurvyKey(key)) {
-      // If a TopsyTurvy key toggles on, store its address to indicate that it's
-      // active, and decode its key value to store in the active keys cache.
-      tt_addr_ = key_addr;
-      key = Key(key.getRaw() - ranges::TT_FIRST);
-    } else {
-      // If any other key toggles on, clear the active TopsyTurvy address.
-      tt_addr_.clear();
+  // If a TopsyTurvy key is being held, no other KeyboardKey should be able to
+  // toggle off, because those keys were masked. It's possible for other plugins
+  // to change that, but those types of complex plugin interactions can't be
+  // guaranteed to be safe, anyway. Therefore, we assume that if `tt_addr` is
+  // valid, it is also the last key pressed.
+  bool shift_detected = false;
+  for (KeyAddr key_addr : KeyAddr::all()) {
+    if (live_keys[key_addr].isKeyboardShift()) {
+      shift_detected = true;
+      break;
     }
   }
+
+  if (shift_detected) {
+    Runtime.hid().keyboard().releaseKey(Key_LeftShift);
+    Runtime.hid().keyboard().releaseKey(Key_RightShift);
+  } else {
+    Runtime.hid().keyboard().pressKey(Key_LeftShift);
+  }
+
   return EventHandlerResult::OK;
 }
 
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::TopsyTurvy TopsyTurvy;

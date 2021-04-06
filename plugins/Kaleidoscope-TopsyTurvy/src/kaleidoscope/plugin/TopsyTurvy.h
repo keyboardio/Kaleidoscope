@@ -29,9 +29,8 @@ class TopsyTurvy: public kaleidoscope::Plugin {
  public:
   TopsyTurvy(void) {}
 
-  EventHandlerResult beforeEachCycle();
-  EventHandlerResult beforeReportingState();
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult beforeReportingState(const KeyEvent &event);
 
   static bool isTopsyTurvyKey(Key key) {
     return (key >= ranges::TT_FIRST &&
@@ -40,8 +39,8 @@ class TopsyTurvy: public kaleidoscope::Plugin {
 
  private:
   static KeyAddr tt_addr_;
-  static bool shift_detected_;
 };
+
 }
 }
 
