@@ -71,7 +71,7 @@ LEDControl::set_mode(uint8_t mode_) {
 
   refreshAll();
 
-  kaleidoscope::Hooks::onLEDModeChange();
+  Hooks::onLEDModeChange();
 }
 
 void LEDControl::activate(LEDModeInterface *plugin) {
@@ -132,7 +132,7 @@ void LEDControl::syncLeds(void) {
   Runtime.device().syncLeds();
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onSetup() {
+EventHandlerResult LEDControl::onSetup() {
   set_all_leds_to({0, 0, 0});
 
   LEDModeManager::setupPersistentLEDModes();
@@ -156,7 +156,7 @@ void LEDControl::enable() {
   Runtime.device().syncLeds();
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onKeyEvent(KeyEvent &event) {
+EventHandlerResult LEDControl::onKeyEvent(KeyEvent &event) {
   if (event.key.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
     return EventHandlerResult::OK;
 
@@ -190,12 +190,12 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyEvent(KeyEvent &event) {
     }
   }
 
-  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-kaleidoscope::EventHandlerResult LEDControl::afterEachCycle() {
+EventHandlerResult LEDControl::afterEachCycle() {
   if (!enabled_)
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
 
   if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
     syncLeds();
@@ -203,7 +203,7 @@ kaleidoscope::EventHandlerResult LEDControl::afterEachCycle() {
     update();
   }
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
 EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {

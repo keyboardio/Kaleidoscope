@@ -94,9 +94,9 @@ class LEDControl : public kaleidoscope::Plugin {
 
   static uint8_t syncDelay;
 
-  kaleidoscope::EventHandlerResult onSetup();
-  kaleidoscope::EventHandlerResult onKeyEvent(KeyEvent &event);
-  kaleidoscope::EventHandlerResult beforeReportingState();
+  EventHandlerResult onSetup();
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult afterEachCycle();
 
   static void disable();
   static void enable();
