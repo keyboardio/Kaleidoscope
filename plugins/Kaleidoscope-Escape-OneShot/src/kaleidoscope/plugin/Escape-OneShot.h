@@ -27,7 +27,7 @@ class EscapeOneShot : public kaleidoscope::Plugin {
  public:
   EscapeOneShot(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
   void setCancelKey(Key cancel_key) {
     cancel_oneshot_key_ = cancel_key;
