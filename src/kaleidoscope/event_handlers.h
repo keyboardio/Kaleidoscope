@@ -154,6 +154,51 @@ class SignatureCheckDummy {};
                (Key &mappedKey, KeyAddr key_addr, uint8_t keyState),      __NL__ \
                (mappedKey, key_addr, keyState), ##__VA_ARGS__)            __NL__ \
                                                                           __NL__ \
+   /* Function called for every physical keyswitch event (toggle on or */ __NL__ \
+   /* off). The `event` parameter is passed by reference so its key    */ __NL__ \
+   /* value can be modified. If it returns EventHandlerResult::OK, the */ __NL__ \
+   /* next handler will be passed the event; otherwise Kaleidoscope    */ __NL__ \
+   /* will stop processing the event. Plugins that implement this      */ __NL__ \
+   /* handler must not process the same event id twice in order to     */ __NL__ \
+   /* prevent handler loops. Events may be aborted or queued for later */ __NL__ \
+   /* release (by calling `Runtime.handleKeyswitchEvent()`), but any   */ __NL__ \
+   /* plugin that does so must release events in ascending order,      */ __NL__ \
+   /* counting by ones.                                                */ __NL__ \
+   OPERATION(onKeyswitchEvent,                                            __NL__ \
+             2,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _ABORTABLE,                                                  __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (KeyEvent &event),                                           __NL__ \
+             (event), ##__VA_ARGS__)                                      __NL__ \
+                                                                          __NL__ \
+   /* Function called for every logical key event, including ones that */ __NL__ \
+   /* originate from a physical keyswitch and ones that are injected   */ __NL__ \
+   /* by plugins. The `event` parameter is passed by reference so its  */ __NL__ \
+   /* key value can be modified. If it returns EventHandlerResult::OK, */ __NL__ \
+   /* the next handler will be passed the event; otherwise             */ __NL__ \
+   /* Kaleidoscope will stop processing the event.                     */ __NL__ \
+   OPERATION(onKeyEvent,                                                  __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _ABORTABLE,                                                  __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (KeyEvent &event),                                           __NL__ \
+             (event), ##__VA_ARGS__)                                      __NL__ \
+                                                                          __NL__ \
+   /* Called when a new set of HID reports (Keyboard, Consumer         */ __NL__ \
+   /* Control, and System Control) is being constructed in response to */ __NL__ \
+   /* a key event. This is mainly useful for plugins that need to add  */ __NL__ \
+   /* values to HID reports based on special `Key` values other than   */ __NL__ \
+   /* the builtin ones.                                                */ __NL__ \
+   OPERATION(onAddToReport,                                               __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _ABORTABLE,                                                  __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (Key key),                                                   __NL__ \
+             (key), ##__VA_ARGS__)                                        __NL__ \
+                                                                          __NL__ \
                                                                           __NL__ \
    /* Called by an external plugin (such as Kaleidoscope-FocusSerial)  */ __NL__ \
    /* via Kaleidoscope::onFocusEvent. This is where Focus events can   */ __NL__ \
@@ -197,6 +242,17 @@ class SignatureCheckDummy {};
                _NOT_ABORTABLE,                                            __NL__ \
                (),(),(), /* non template */                               __NL__ \
                (),(),##__VA_ARGS__)                                       __NL__ \
+                                                                          __NL__ \
+   /* Called before reporting our state to the host. This is the       */ __NL__ \
+   /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
+   /* reported to the host.                                            */ __NL__ \
+   OPERATION(beforeReportingState,                                        __NL__ \
+             2,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _ABORTABLE,                                                  __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (const KeyEvent &event),                                     __NL__ \
+             (event), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
    /* Called at the very end of a cycle, after everything's            */ __NL__ \
    /* said and done.                                                   */ __NL__ \
@@ -251,9 +307,18 @@ class SignatureCheckDummy {};
       OP(beforeEachCycle, 1)                                            __NL__ \
    END(beforeEachCycle, 1)                                              __NL__ \
                                                                         __NL__ \
-   START(onKeyswitchEvent, 1)                                           __NL__ \
+   START(onKeyswitchEvent, 1, 2)                                        __NL__ \
       OP(onKeyswitchEvent, 1)                                           __NL__ \
-   END(onKeyswitchEvent, 1)                                             __NL__ \
+      OP(onKeyswitchEvent, 2)                                           __NL__ \
+   END(onKeyswitchEvent, 1, 2)                                          __NL__ \
+                                                                        __NL__ \
+   START(onKeyEvent, 1)                                                 __NL__ \
+      OP(onKeyEvent, 1)                                                 __NL__ \
+   END(onKeyEvent, 1)                                                   __NL__ \
+                                                                        __NL__ \
+   START(onAddToReport, 1)                                              __NL__ \
+      OP(onAddToReport, 1)                                              __NL__ \
+   END(onAddToReport, 1)                                                __NL__ \
                                                                         __NL__ \
    START(onFocusEvent, 1)                                               __NL__ \
       OP(onFocusEvent, 1)                                               __NL__ \
@@ -267,9 +332,10 @@ class SignatureCheckDummy {};
       OP(onLEDModeChange, 1)                                            __NL__ \
    END(onLEDModeChange, 1)                                              __NL__ \
                                                                         __NL__ \
-   START(beforeReportingState, 1)                                       __NL__ \
+   START(beforeReportingState, 1, 2)                                    __NL__ \
       OP(beforeReportingState, 1)                                       __NL__ \
-   END(beforeReportingState, 1)                                         __NL__ \
+      OP(beforeReportingState, 2)                                       __NL__ \
+   END(beforeReportingState, 1, 2)                                      __NL__ \
                                                                         __NL__ \
    START(afterEachCycle, 1)                                             __NL__ \
       OP(afterEachCycle, 1)                                             __NL__ \
