@@ -21,6 +21,7 @@
 //#include <assert.h>
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -43,7 +44,8 @@ class KeyAddrEventQueue {
 
  private:
   uint8_t    length_{0};
-  KeyAddr    addrs_[_capacity];
+  KeyEventId event_ids_[_capacity];  // NOLINT(runtime/arrays)
+  KeyAddr    addrs_[_capacity];      // NOLINT(runtime/arrays)
   _Timestamp timestamps_[_capacity]; // NOLINT(runtime/arrays)
   _Bitfield  release_event_bits_;
 
@@ -61,6 +63,11 @@ class KeyAddrEventQueue {
   // Queue entry access methods. Note: the caller is responsible for bounds
   // checking, because it's expected that a for loop will be used when searching
   // the queue, which will terminate when `index >= queue.length()`.
+  KeyEventId id(uint8_t index) const {
+    // assert(index < length_);
+    return event_ids_[index];
+  }
+
   KeyAddr addr(uint8_t index) const {
     // assert(index < length_);
     return addrs_[index];
@@ -82,11 +89,12 @@ class KeyAddrEventQueue {
 
   // Append a new event on the end of the queue. Note: the caller is responsible
   // for bounds checking; we don't guard against it here.
-  void append(KeyAddr k, uint8_t keyswitch_state) {
+  void append(const KeyEvent& event) {
     // assert(length_ < _capacity);
-    addrs_[length_]      = k;
+    event_ids_[length_]  = event.id();
+    addrs_[length_]      = event.addr;
     timestamps_[length_] = Runtime.millisAtCycleStart();
-    bitWrite(release_event_bits_, length_, keyToggledOff(keyswitch_state));
+    bitWrite(release_event_bits_, length_, keyToggledOff(event.state));
     ++length_;
   }
 
@@ -98,6 +106,7 @@ class KeyAddrEventQueue {
     // assert(length > n);
     --length_;
     for (uint8_t i{n}; i < length_; ++i) {
+      event_ids_[i]  = event_ids_[i + 1];
       addrs_[i]      = addrs_[i + 1];
       timestamps_[i] = timestamps_[i + 1];
     }
@@ -134,6 +143,16 @@ class KeyAddrEventQueue {
   void clear() {
     length_             = 0;
     release_event_bits_ = 0;
+  }
+
+  KeyEvent event(uint8_t i) const {
+    uint8_t state = isRelease(i) ? WAS_PRESSED : IS_PRESSED;
+    return KeyEvent{addr(i), state, Key_NoKey, id(i)};
+  }
+
+  // Only call this after `EventTracker::shouldIgnore()` returns `true`.
+  bool shouldAbort(const KeyEvent& event) const {
+    return (length_ != 0) && (event.id() - event_ids_[0] >= 0);
   }
 };
 
