@@ -23,24 +23,55 @@
 
 #define MAX_MODS_PER_LAYER 16
 
+// =============================================================================
+#define _DEPRECATED_MESSAGE_ACTIVEMODCOLOR_COLORS                              \
+  "The `ActiveModColorEffect` public class variables have been deprecated. \n" \
+  "Please use the following methods instead:                               \n" \
+  " - for `highlight_color` => `setHighlightColor(color)`                  \n" \
+  " - for `oneshot_color` => `setOneShotColor(color)`                      \n" \
+  " - for `sticky_color` => `setStickyColor(color)`"
+
 namespace kaleidoscope {
 namespace plugin {
 class ActiveModColorEffect : public kaleidoscope::Plugin {
  public:
   ActiveModColorEffect(void) {}
 
+  // When removing access to these variables, don't delete them. Instead, make
+  // them private, and add trailing underscores here and in
+  // LED-ActiveModColor.cpp.
+  DEPRECATED(ACTIVEMODCOLOR_COLORS)
   static cRGB highlight_color;
+  DEPRECATED(ACTIVEMODCOLOR_COLORS)
   static cRGB oneshot_color;
+  DEPRECATED(ACTIVEMODCOLOR_COLORS)
   static cRGB sticky_color;
+
+  static void setHighlightColor(cRGB color) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    highlight_color = color;
+#pragma GCC diagnostic pop
+  }
+  static void setOneShotColor(cRGB color) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    oneshot_color = color;
+#pragma GCC diagnostic pop
+  }
+  static void setOnestickyColor(cRGB color) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    sticky_color = color;
+#pragma GCC diagnostic pop
+  }
 
   static void highlightNormalModifiers(bool value) {
     highlight_normal_modifiers_ = value;
   }
 
-  EventHandlerResult onKeyswitchEvent(Key &key,
-                                      KeyAddr key_addr,
-                                      uint8_t key_state);
-  EventHandlerResult beforeReportingState();
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult beforeSyncingLeds();
 
  private:
   static bool highlight_normal_modifiers_;

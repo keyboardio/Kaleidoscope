@@ -47,7 +47,7 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 void setup() {
   Kaleidoscope.setup();
 
-  ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
+  ActiveModColorEffect.setHighlightColor(CRGB(0x00, 0xff, 0xff));
 }
 
 void loop() {

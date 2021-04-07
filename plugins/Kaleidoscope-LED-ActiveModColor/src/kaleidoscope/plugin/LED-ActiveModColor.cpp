@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-OneShot.h>
+#include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -30,30 +31,27 @@ cRGB ActiveModColorEffect::highlight_color = CRGB(160, 160, 160);
 cRGB ActiveModColorEffect::oneshot_color = CRGB(160, 160, 0);
 cRGB ActiveModColorEffect::sticky_color = CRGB(160, 0, 0);
 
-EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(
-  Key &key,
-  KeyAddr key_addr,
-  uint8_t key_state) {
+// -----------------------------------------------------------------------------
+EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
 
-  // If `key_addr` is not a physical key address, ignore it:
-  if (! key_addr.isValid()) {
+  // If `event.addr` is not a physical key address, ignore it:
+  if (! event.addr.isValid()) {
     return EventHandlerResult::OK;
   }
 
-  if (keyToggledOn(key_state)) {
-    // If a key toggles on, we check its value. If it's a OneShot key,
-    // it will get highlighted. Conditionally (if
-    // `highlight_normal_modifiers_` is set), we also highlight
-    // modifier and layer-shift keys.
-    if (::OneShot.isModifier(key) ||
-        ::OneShot.isLayerShift(key) ||
-        ::OneShot.isActive(key_addr)) {
-      mod_key_bits_.set(key_addr);
+  if (keyToggledOn(event.state)) {
+    // If a key toggles on, we check its value. If it's a OneShot key, it will
+    // get highlighted. Conditionally (if `highlight_normal_modifiers_` is set),
+    // we also highlight modifier and layer-shift keys.
+    if (event.key.isKeyboardModifier() ||
+        event.key.isLayerShift() ||
+        ::OneShot.isActive(event.addr)) {
+      mod_key_bits_.set(event.addr);
     }
-    if (key == OneShot_ActiveStickyKey) {
+    if (event.key == OneShot_ActiveStickyKey) {
       for (KeyAddr entry_addr : KeyAddr::all()) {
-        // Get the entry from the keymap cache
-        Key entry_key = Layer.lookup(entry_addr);
+        // Get the entry from the live keys array
+        Key entry_key = live_keys[entry_addr];
         // Skip empty entries
         if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
           continue;
@@ -62,25 +60,28 @@ EventHandlerResult ActiveModColorEffect::onKeyswitchEvent(
         mod_key_bits_.set(entry_addr);
       }
     }
-  } else if (keyToggledOff(key_state)) {
-    // Things get a bit ugly here because this plugin might come
-    // before OneShot in the order, so we can't just count on OneShot
-    // stopping the suppressed release event before we see it here.
-    if (mod_key_bits_.read(key_addr) && !::OneShot.isActive(key_addr)) {
-      mod_key_bits_.clear(key_addr);
-      ::LEDControl.refreshAt(key_addr);
+  } else { // if (keyToggledOff(event.state))
+    // Things get a bit ugly here because this plugin might come before OneShot
+    // in the order, so we can't just count on OneShot stopping the suppressed
+    // release event before we see it here.
+    if (mod_key_bits_.read(event.addr) && !::OneShot.isActive(event.addr)) {
+      mod_key_bits_.clear(event.addr);
+      ::LEDControl.refreshAt(event.addr);
     }
   }
 
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult ActiveModColorEffect::beforeReportingState() {
+// -----------------------------------------------------------------------------
+EventHandlerResult ActiveModColorEffect::beforeSyncingLeds() {
 
-  // This loop iterates through only the `key_addr`s that have their
-  // bits in the `mod_key_bits_` bitfield set.
+  // This loop iterates through only the `key_addr`s that have their bits in the
+  // `mod_key_bits_` bitfield set.
   for (KeyAddr key_addr : mod_key_bits_) {
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     if (::OneShot.isTemporary(key_addr)) {
       // Temporary OneShot keys get one color:
       ::LEDControl.setCrgbAt(key_addr, oneshot_color);
@@ -91,12 +92,13 @@ EventHandlerResult ActiveModColorEffect::beforeReportingState() {
       // Normal modifiers get a third color:
       ::LEDControl.setCrgbAt(key_addr, highlight_color);
     }
+#pragma GCC diagnostic pop
   }
 
   return EventHandlerResult::OK;
 }
 
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::ActiveModColorEffect ActiveModColorEffect;
