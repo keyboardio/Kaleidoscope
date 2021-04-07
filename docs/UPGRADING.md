@@ -7,6 +7,8 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 * [Upgrade notes](#upgrade-notes)
   + [New features](#new-features)
+    - [Event-driven main loop](#event-driven-main-loop)
+    - [Keyboard state array](#keyboard-state-array)
     - [New build system](#new-build-system)
     - [New device API](#new-device-api)
     - [New plugin API](#new-plugin-api)
@@ -34,6 +36,40 @@ any API we've included in a release. Typically, this means that any code that us
 
 
 ## New features
+
+### Event-driven main loop
+
+Kaleidoscope's main loop has been rewritten. It now responds to key toggle-on and toggle-off events, dealing with one event at a time (and possibly more than one in a given cycle). Instead of sending a keyboard HID report at the end of every scan cycle (and letting the HID module suppress duplicates), it now only sends HID reports in response to input events.
+
+Furthermore, there are now two functions for initiating the processing of key events:
+- `Runtime.handleKeyswitchEvent()` is the starting point for events that represent physical keyswitches toggling on or off.
+- `Runtime.handleKeyEvent()` is the starting point for "artificial" key events. It is also called at the end of `handleKeyswitchEvent()`.
+In general, if a plugin needs to generate a key event, it should call `handleKeyEvent()`, not `handleKeyswitchEvent()`.
+
+Each of the above functions calls its own set of plugin event handlers. When those event handlers are all done, event processing continues as `handleKeyEvent()` prepares a new keyboard HID report, then sends it:
+- `Runtime.prepareKeyboardReport()` first clears the HID report, then populates it based on the contents of the `live_keys[]` array. Note that the HID report is not cleared until _after_ the new plugin event handlers have been called.
+- `Runtime.sendKeyboardReport()`  handles generating extra HID reports required for keys with keyboard modifier flags to avoid certain bugs, then calls a new plugin event handler before finally sending the new HID report.
+These functions should rarely, if ever, need to be called by plugins.
+
+#### The `KeyEvent` data type
+
+There is a new `KeyEvent` type that encapsulates all the data relevant to a new key event, and it is used as the parameter for the new event-handling functions.
+- `event.addr` contains the `KeyAddr` associated with the event.
+- `event.state` contains the state bitfield (`uint8_t`), which can be tested with `keyToggledOn()`/`keyToggledOff()`.
+- `event.key` contains a `Key` value, usually looked up from the keymap.
+- `event.id` contains a pseudo-unique ID number of type `KeyEventId` (an 8-bit integer), used by certain plugins (see `onKeyswitchEvent()` below).
+
+#### New plugin event handlers
+##### `onKeyswitchEvent(KeyEvent &event)`
+##### `onKeyEvent(KeyEvent &event)`
+##### `onAddToReport(Key key)`
+##### `beforeReportingState(const KeyEvent &event)`
+
+#### For end-users
+
+Existing sketches should be mostly backwards-compatible, but some updates will be needed for sketches that use custom code. In particular, users of the Macros plugin are likely to need to make adjustments to the code in the user-defined `macroAction()` function, including that function's signature, the new version of which takes a `KeyEvent` parameter instead of just an event state value. In most cases, this will make the resulting code more straightforward without any loss of functionality.
+
+In addition to Macros, these changes might also affect user-defined code executed by the TapDance, Leader, and Syster plugins. Please see the documentation and examples for the affected plugins for details.
 
 ### Keyboard State array
 
@@ -86,10 +122,10 @@ It also comes with several convenience functions which can be used to make the i
 // Set a value in the keyboard state array to a specified Key value:
 live_keys.activate(key_addr, Key_X);
 
-// Set a value to Key_Unbound, deactivating the key:
+// Set a value to Key_Inactive, deactivating the key:
 live_keys.clear(key_addr);
 
-// Set all values in the array to Key_Unbound:
+// Set all values in the array to Key_Inactive:
 live_keys.clear();)
 
 // Set a value to Key_Masked, masking the key until its next release event:
@@ -688,9 +724,9 @@ The following headers and names have changed:
 
 ### Live Composite Keymap Cache
 
-The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `Runtime.updateActiveKey()` instead.
+The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `live_keys.activate()` instead.
 
-When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `Runtime.updateActiveKey()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
+When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `live_keys.activate()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
 
 Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
 
