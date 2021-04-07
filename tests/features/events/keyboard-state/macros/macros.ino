@@ -19,10 +19,6 @@
 
 #include "./common.h"
 
-#undef min
-#undef max
-#include <iostream>
-
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED
@@ -60,12 +56,13 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-const macro_t *macroAction(uint8_t index, uint8_t key_state) {
-  if (keyToggledOn(key_state)) {
+const macro_t *macroAction(uint8_t index, KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
     switch (index) {
     case 0:
-      Kaleidoscope.hid().keyboard().pressKey(Key_Y);
-      break;
+      return MACRO(D(Y));
+      //event.key = Key_Y;
+      //break;
     }
   }
   return MACRO_NONE;
