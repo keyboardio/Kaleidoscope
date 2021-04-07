@@ -1,3 +1,4 @@
+// -*- mode: c++ -*-
 /* Kaleidoscope - Firmware for computer input devices
  * Copyright (C) 2020  Keyboard.io, Inc.
  *

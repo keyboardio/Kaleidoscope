@@ -1,27 +1,26 @@
-NAME Issue 941 one keypress per cycle
+VERSION 1
 
 KEYSWITCH A 2 1
 KEYSWITCH S 2 2
 KEYSWITCH D 2 3
 
-RUN 10 ms
+# ==============================================================================
+NAME Issue 941 one keypress per cycle
 
+RUN 10 ms
 PRESS A
 RUN 1 cycle
 EXPECT keyboard-report Key_A # Report should contain only `A`
 
 RUN 10 ms
-
 PRESS S 
 RUN 1 cycle
-EXPECT keyboard-report Key_A, Key_S # Report should contain 'A' and 'S'
+EXPECT keyboard-report Key_A, Key_S # Report should contain `A` and `S`
 
 RUN 25 ms
-
 RELEASE A
-
 RUN 1 cycle
-EXPECT keyboard-report Key_S # Report should contain only 'S'
+EXPECT keyboard-report Key_S # Report should contain only `S`
 
 RELEASE S
 RUN 1 cycle
@@ -29,34 +28,25 @@ EXPECT keyboard-report empty # Report should be empty
 
 RUN 10 ms
 
-# TODO : this should be another test cycle "Simultaneous keypresses"
-# NAME Simultaneous keypresses
-
+# ==============================================================================
+NAME Issue 941 simultaneous keypresses
 
 # Press three keys in one scan cycle:
-
-RUN 10 ms
-
+RUN 5 ms
 PRESS A
 PRESS S
 PRESS D
-
-# This test is expected to fail if Kaleidoscope becomes event-driven;
-# instead, there will be three reports here: the first will contain `D`, the
-# second will add `S`, and the third will add `A` (I could have that wrong;
-# it should be in keyscan order).
-
 RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
 EXPECT keyboard-report Key_A, Key_S # Report should contain `A` and `S`
 EXPECT keyboard-report Key_A, Key_S, Key_D # Report should contain `A` , `S`, and `D`
 
 # Release all three in one scan cycle:
-
-RUN 25 ms
-
+RUN 5 ms
 RELEASE A
 RELEASE S
 RELEASE D
-
 RUN 1 cycles
+EXPECT keyboard-report Key_D, Key_S # Report should contain `A` and `S`
+EXPECT keyboard-report Key_D # Report should contain only `A`
 EXPECT keyboard-report empty # Report should be empty

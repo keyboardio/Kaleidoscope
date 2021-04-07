@@ -27,7 +27,7 @@ using ::testing::IsEmpty;
 class KeyboardReports : public VirtualDeviceTest {};
 
 TEST_F(KeyboardReports, HIDUsageTablev12KeycodesAdded) {
-  sim_.Press(1, 1); // VoiceCommand
+  sim_.Press(0, 0); // VoiceCommand
   auto state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->ConsumerControl().size(), 1);
@@ -35,7 +35,7 @@ TEST_F(KeyboardReports, HIDUsageTablev12KeycodesAdded) {
     state->HIDReports()->ConsumerControl(0).ActiveKeycodes(),
     Contains(Consumer_VoiceCommand));
 
-  sim_.Release(1, 1);  // VoiceCommand
+  sim_.Release(0, 0);  // VoiceCommand
   state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->ConsumerControl().size(), 1);
