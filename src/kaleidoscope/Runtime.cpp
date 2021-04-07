@@ -177,7 +177,7 @@ Runtime_::handleKeyEvent(KeyEvent event) {
 
   // If it's a built-in Layer key, we handle it here, and skip sending report(s)
   if (event.key.isLayerKey()) {
-    Layer.handleKeymapKeyswitchEvent(event.key, event.state);
+    Layer.handleLayerKeyEvent(event);
     //return;
   }
 

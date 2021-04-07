@@ -39,6 +39,10 @@
   "`Layer.eventHandler()` is deprecated.\n"                  __NL__ \
   "Please use `Layer.handleKeymapKeyswitchEvent()` instead."
 
+#define _DEPRECATED_MESSAGE_LAYER_HANDLE_KEYMAP_KEYSWITCH_EVENT  __NL__ \
+  "`Layer.handleKeymapKeyswitchEvent()` is deprecated.\n"        __NL__ \
+  "Please use `Layer.handleLayerKeyEvent()` instead."
+
 #define _DEPRECATED_MESSAGE_LAYER_LOOKUP                                      __NL__ \
   "`Layer.lookup(key_addr)` is deprecated.\n"                                 __NL__ \
   "Please use `Runtime.lookupKey(key_addr)` instead. Alternatively, if you\n" __NL__ \

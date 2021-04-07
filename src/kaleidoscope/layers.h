@@ -19,6 +19,7 @@
 #include <Arduino.h>
 #include "kaleidoscope/key_defs.h"
 #include "kaleidoscope/keymaps.h"
+#include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/device/device.h"
 #include "kaleidoscope_internal/device.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
@@ -109,10 +110,15 @@ class Layer_ {
   }
   static boolean isActive(uint8_t layer);
 
+  static void handleLayerKeyEvent(const KeyEvent &event);
+
+#ifndef NDEPRECATED
+  DEPRECATED(LAYER_HANDLE_KEYMAP_KEYSWITCH_EVENT)
   static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
 
   DEPRECATED(LAYER_EVENTHANDLER)
   static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
+#endif
 
   typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
   static GetKeyFunction getKey;
