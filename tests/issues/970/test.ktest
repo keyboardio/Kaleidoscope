@@ -1,6 +1,9 @@
-NAME Issue 970 Qukeys min prior interval overflow
+VERSION 1
 
 KEYSWITCH A 2 1
+
+# ==============================================================================
+NAME Issue 970 Qukeys min prior interval overflow
 
 PRESS A
 RUN 10 ms
@@ -8,18 +11,17 @@ RUN 10 ms
 RELEASE A
 RUN 1 cycle
 EXPECT keyboard-report Key_A # Report should contain only `A`
-RUN 2 cycles
 EXPECT keyboard-report empty # Report should be empty
 
 RUN 65536 ms
 
 PRESS A
-RUN 202 ms
+RUN 1 cycle
+RUN 200 ms  # hold timeout is 200 ms
+RUN 1 ms
 EXPECT keyboard-report Key_LeftGui # Report should contain only `LeftGui`
 
 RUN 10 ms
-
 RELEASE A
-# I'm not sure why it takes 2 cycles before the report is sent
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty

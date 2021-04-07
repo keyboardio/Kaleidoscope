@@ -22,7 +22,7 @@ PRESS A
 RUN 5 ms
 
 RELEASE A
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_A # Report should contain only A
 
@@ -43,8 +43,7 @@ PRESS A
 RUN 50 ms
 
 RELEASE A
-# I'm not sure why this takes 2 cycles instead of just one
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 
 # ==============================================================================
@@ -65,7 +64,7 @@ PRESS J
 RUN 5 ms
 
 RELEASE J
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_J # Report should contain only J
 
@@ -86,8 +85,7 @@ PRESS J
 RUN 50 ms
 
 RELEASE J
-# I'm not sure why this takes 2 cycles instead of just one
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 
 # ==============================================================================
@@ -108,7 +106,7 @@ PRESS B
 RUN 5 ms
 
 RELEASE B
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_B # Report should contain only B
 
@@ -129,6 +127,5 @@ PRESS B
 RUN 50 ms
 
 RELEASE B
-# I'm not sure why this takes 2 cycles instead of just one
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
