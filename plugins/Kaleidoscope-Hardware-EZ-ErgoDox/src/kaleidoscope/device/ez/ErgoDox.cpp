@@ -27,10 +27,12 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include "kaleidoscope/Runtime.h"
 #include <avr/wdt.h>
+
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
-#include "kaleidoscope/key_events.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -112,10 +114,12 @@ void __attribute__((optimize(3))) ErgoDox::readMatrix() {
 void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
   for (byte row = 0; row < matrix_rows; row++) {
     for (byte col = 0; col < matrix_columns; col++) {
-      uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
-                         (bitRead(keyState_[row], col) << 1);
-      if (keyState)
-        handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), keyState);
+      uint8_t key_state = (bitRead(previousKeyState_[row], col) << 0) |
+                          (bitRead(keyState_[row], col) << 1);
+      if (keyToggledOn(key_state) || keyToggledOff(key_state)) {
+        auto event = KeyEvent::next(KeyAddr(row, col), key_state);
+        kaleidoscope::Runtime.handleKeyswitchEvent(event);
+      }
     }
     previousKeyState_[row] = keyState_[row];
   }
