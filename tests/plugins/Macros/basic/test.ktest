@@ -1,0 +1,97 @@
+VERSION 1
+
+KEYSWITCH M_0  0 0
+KEYSWITCH M_1  0 1
+KEYSWITCH M_2  0 2
+KEYSWITCH M_3  0 3
+KEYSWITCH M_4  0 4
+KEYSWITCH X    1 0
+
+# ==============================================================================
+NAME Macro index 0
+
+RUN 5 ms
+PRESS M_0
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+RELEASE M_0
+RUN 1 cycle
+
+# ==============================================================================
+NAME Macro index 1
+
+RUN 5 ms
+PRESS M_1
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_B # Report should contain only `B`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_C # Report should contain only `C`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+RELEASE M_1
+RUN 1 cycle
+
+# ==============================================================================
+NAME Macro index 2
+
+RUN 5 ms
+PRESS M_3
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+EXPECT keyboard-report Key_A Key_C # Report should contain `A` & `C`
+EXPECT keyboard-report Key_A # Report should contain only `A`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_B # Report should contain only `B`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+RELEASE M_3
+RUN 1 cycle
+
+# ==============================================================================
+NAME Macro index 3
+
+RUN 5 ms
+PRESS M_4
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+EXPECT keyboard-report Key_A Key_B # Report should contain `A` & `B`
+
+RUN 5 ms
+RELEASE M_4
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain only `B`
+EXPECT keyboard-report empty # Report should be empty
+RUN 1 cycle
+
+# ==============================================================================
+NAME Macro index 255
+
+RUN 5 ms
+PRESS M_2
+RUN 1 cycle
+EXPECT keyboard-report Key_C # Report should contain only `C`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+RELEASE M_2
+RUN 1 cycle
+
+# ==============================================================================
+NAME Macros other key
+
+RUN 5 ms
+PRESS X
+RUN 1 cycle
+EXPECT keyboard-report Key_X # Report should contain only `X`
+
+RUN 5 ms
+RELEASE X
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty

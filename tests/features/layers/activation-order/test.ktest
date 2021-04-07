@@ -1,0 +1,145 @@
+VERSION 1
+
+KEYSWITCH TOP_LEFT    0  0
+KEYSWITCH TOP_RIGHT   0 15
+KEYSWITCH PALM_LEFT   3  6
+KEYSWITCH PALM_RIGHT  3  9
+KEYSWITCH LEFT_THUMB  3  7
+
+# ==============================================================================
+NAME Layer Activation Order base layer has not regressed
+
+RUN 4 ms
+PRESS TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_0
+
+RUN 4 ms
+RELEASE TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Layer Activation Order shift to layer 1
+
+RUN 4 ms
+PRESS PALM_LEFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE PALM_LEFT
+RUN 1 cycle
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Layer Activation Order shifting with caching
+
+RUN 4 ms
+PRESS TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_0
+
+# activate layer 1
+RUN 4 ms
+PRESS PALM_LEFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TOP_RIGHT
+RUN 1 cycle
+EXPECT keyboard-report Key_0 Key_1
+
+RUN 4 ms
+RELEASE TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE TOP_RIGHT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS TOP_RIGHT
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE TOP_RIGHT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# deactivate layer 1
+RUN 4 ms
+RELEASE PALM_LEFT
+RUN 1 cycle
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Layer Activation Order ordering
+
+# activate layer 2
+RUN 4 ms
+PRESS PALM_RIGHT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_2
+
+# activate layer 1 (on top of layer 2)
+RUN 4 ms
+PRESS PALM_LEFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TOP_RIGHT
+RUN 1 cycle
+EXPECT keyboard-report Key_1 Key_2
+
+RUN 4 ms
+RELEASE PALM_RIGHT
+RELEASE PALM_LEFT
+RELEASE TOP_RIGHT
+RELEASE TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Layer Activation Order layer 0 fallback
+
+# Use a Macro to deactivate layer 0
+RUN 4 ms
+PRESS LEFT_THUMB
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report Key_0
+
+RUN 4 ms
+RELEASE LEFT_THUMB
+RELEASE TOP_LEFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
