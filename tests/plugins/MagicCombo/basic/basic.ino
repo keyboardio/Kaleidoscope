@@ -19,10 +19,6 @@
 
 #include "./common.h"
 
-#undef min
-#undef max
-#include <iostream>
-
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED
@@ -45,11 +41,9 @@ KEYMAPS(
 // *INDENT-ON*
 
 void tapKeyA(uint8_t magic_combo_index) {
-  std::cerr << "tapKeyA" << std::endl;
-  handleKeyswitchEvent(Key_A, KeyAddr{1, 0}, IS_PRESSED | INJECTED);
-  Kaleidoscope.hid().keyboard().sendReport();
-  handleKeyswitchEvent(Key_NoKey, KeyAddr{1, 0}, WAS_PRESSED | INJECTED);
-  Kaleidoscope.hid().keyboard().sendReport();
+  KeyAddr k{1, 0};
+  Kaleidoscope.handleKeyEvent(KeyEvent{k, IS_PRESSED | INJECTED, Key_A});
+  Kaleidoscope.handleKeyEvent(KeyEvent{k, WAS_PRESSED | INJECTED});
 }
 
 USE_MAGIC_COMBOS({.action = tapKeyA, .keys = {R0C0, R0C1, R0C2}});
