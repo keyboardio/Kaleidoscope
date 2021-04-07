@@ -1,27 +1,34 @@
 VERSION 1
-NAME Keys Active When pressed
 
-# Comment lines end up as comments in the generated source
-KEYSWITCH switchA 2 1
-KEYSWITCH switchS 2 2
+KEYSWITCH A 2 1
+KEYSWITCH S 2 2
 
-PRESS switchA
-RUN 1 cycles
+# ==============================================================================
+NAME Keys active when pressed
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
 EXPECT keyboard-report Key_A # Key A should be pressed
 
-RELEASE switchA
+RUN 4 ms
+RELEASE A
 RUN 1 cycle
 EXPECT keyboard-report empty # No keys should be pressed
 
-
-PRESS switchA
-PRESS switchS
+RUN 4 ms
+PRESS A
+PRESS S
 RUN 1 ms
-EXPECT keyboard-report Key_A # TODO modflag rollover prevention inapropriately sends two reports here. It's not harmful, but is annoying 
+EXPECT keyboard-report Key_A # Key A should be pressed
 EXPECT keyboard-report Key_A, Key_S # A and S should be pressed
 
-RELEASE switchA
-RELEASE switchS
+RUN 4 ms
+RELEASE A
+RELEASE S
 RUN 1 cycle
+# A is released first because of scan order
+EXPECT keyboard-report Key_S # Key S should be pressed
 EXPECT keyboard-report empty # No keys should be pressed
 
+RUN 5 ms
