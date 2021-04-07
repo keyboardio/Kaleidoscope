@@ -25,8 +25,8 @@ KEYMAPS(
     (
         TOPSY(1), TOPSY(2), ___, ___, ___, ___, ___,
         Key_A, Key_B, ___, ___, ___, ___, ___,
-        Key_LeftShift, ___, ___, ___, ___, ___,
-        ___, ___, ___, ___, ___, ___, ___,
+        Key_LeftShift, Key_RightShift, Key_LeftAlt, Key_Meh, ___, ___,
+        LSHIFT(Key_X), LCTRL(Key_Y), ___, ___, ___, ___, ___,
         ___, ___, ___, ___,
         ___,
 

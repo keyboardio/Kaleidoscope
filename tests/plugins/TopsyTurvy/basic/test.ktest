@@ -5,6 +5,11 @@ KEYSWITCH TOPSY_2  0 1
 KEYSWITCH A        1 0
 KEYSWITCH B        1 1
 KEYSWITCH LSHIFT   2 0
+KEYSWITCH RSHIFT   2 1
+KEYSWITCH LALT     2 2
+KEYSWITCH MEH      2 3
+KEYSWITCH SHIFT_X  3 0
+KEYSWITCH CTRL_Y   3 1
 
 # ==============================================================================
 NAME TopsyTurvy without shift
@@ -39,5 +44,284 @@ EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
 RUN 5 ms
 RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover from shift
+
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover to shift
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy encompassing shift
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover from other
+
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # The report should contain `A`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover to other
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_A # The report should contain only `A`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy encompassing other
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_A # The report should contain only `A`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+
+# ==============================================================================
+NAME TopsyTurvy encompassed by other
+
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # The report should contain `A`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+
+# ==============================================================================
+NAME TopsyTurvy rollover from other with shift
+
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # The report should contain `shift` + `A`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover to other with shift
+
+RUN 5 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_1 # The report should contain only `1`
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_A # The report should contain `shift` + `A`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+RUN 5 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+RUN 5 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover to TopsyTurvy
+
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+PRESS TOPSY_2
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_2 # The report should contain `shift` + `2`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+RUN 5 ms
+RELEASE TOPSY_2
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy rollover from other modifier
+
+RUN 5 ms
+PRESS LALT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt # The report should contain `alt`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt Key_LeftShift # The report should contain `alt` + `shift`
+EXPECT keyboard-report Key_LeftAlt Key_LeftShift Key_1 # The report should contain `alt` + `shift` + `1`
+RUN 5 ms
+RELEASE LALT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_1 # The report should contain `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+# ==============================================================================
+NAME TopsyTurvy with other modifier
+
+RUN 5 ms
+PRESS LALT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt # The report should contain `alt`
+RUN 5 ms
+PRESS TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt Key_LeftShift # The report should contain `alt` + `shift`
+EXPECT keyboard-report Key_LeftAlt Key_LeftShift Key_1 # The report should contain `alt` + `shift` + `1`
+RUN 5 ms
+RELEASE TOPSY_1
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt Key_LeftShift # The report should contain `alt` + `shift`
+EXPECT keyboard-report Key_LeftAlt # The report should contain `alt`
+RUN 5 ms
+RELEASE LALT
 RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
