@@ -30,7 +30,7 @@ class AlphaSquareEffect : public Plugin,
 
   static uint16_t length;
 
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
   // This class' instance has dynamic lifetime
   //

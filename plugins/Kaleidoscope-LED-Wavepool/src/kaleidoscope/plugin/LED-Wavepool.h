@@ -34,7 +34,7 @@ class WavepoolEffect : public Plugin,
  public:
   WavepoolEffect(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
   // ms before idle animation starts after last keypress
   static uint16_t idle_timeout;
@@ -53,7 +53,7 @@ class WavepoolEffect : public Plugin,
     //
     explicit TransientLEDMode(const WavepoolEffect *parent);
 
-    EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
+    EventHandlerResult onKeyEvent(KeyEvent &event);
 
    protected:
 

@@ -61,40 +61,40 @@ void AlphaSquareEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
     ::LEDControl.setCrgbAt(key_addr, CRGB(0, 0, 0));
 }
 
-EventHandlerResult AlphaSquareEffect::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
+EventHandlerResult AlphaSquareEffect::onKeyEvent(KeyEvent &event) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
-  if (keyState & INJECTED)
+  if (event.state & INJECTED)
     return EventHandlerResult::OK;
 
-  if (mappedKey < Key_A || mappedKey > Key_0)
+  if (event.key < Key_A || event.key > Key_0)
     return EventHandlerResult::OK;
 
-  if (!keyIsPressed(keyState))
-    return EventHandlerResult::OK;
+  // if (!keyIsPressed(event.state))
+  //   return EventHandlerResult::OK;
 
   uint8_t display_col = 2;
   auto this_led_mode = ::LEDControl.get_mode<TransientLEDMode>();
 
   Key prev_key = this_led_mode->last_key_left_;
 
-  if (key_addr.col() < Runtime.device().matrix_columns / 2) {
-    this_led_mode->last_key_left_ = mappedKey;
+  if (event.addr.col() < Runtime.device().matrix_columns / 2) {
+    this_led_mode->last_key_left_ = event.key;
     this_led_mode->start_time_left_ = Runtime.millisAtCycleStart();
   } else {
     prev_key = this_led_mode->last_key_right_;
-    this_led_mode->last_key_right_ = mappedKey;
+    this_led_mode->last_key_right_ = event.key;
     this_led_mode->start_time_right_ = Runtime.millisAtCycleStart();
     display_col = 10;
   }
 
-  if (prev_key != mappedKey)
+  if (prev_key != event.key)
     ::AlphaSquare.clear(prev_key, display_col);
-  ::AlphaSquare.display(mappedKey, display_col);
+  ::AlphaSquare.display(event.key, display_col);
 
   return EventHandlerResult::OK;
 }

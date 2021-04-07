@@ -32,7 +32,7 @@ class FingerPainter : public LEDMode {
 
   static void toggle(void);
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();

@@ -133,36 +133,38 @@ void Heatmap::TransientLEDMode::resetMap() {
   highest_ = 1;
 }
 
-EventHandlerResult Heatmap::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+// It may be better to use `onKeyswitchEvent()` here
+EventHandlerResult Heatmap::onKeyEvent(KeyEvent &event) {
+  // If the keyboard has no LEDs, return
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
-  // this methode is called frequently by Kaleidoscope
-  // even if the module isn't activated
+  // If the event doesn't correspond to a physical key, skip it
+  if (!event.addr.isValid())
+    return EventHandlerResult::OK;
 
   // if it is a synthetic key, skip it
-  if (key_state & INJECTED)
+  if (event.state & INJECTED)
     return EventHandlerResult::OK;
 
   // if the key is not toggled on, skip it
-  if (!keyToggledOn(key_state))
+  if (!keyToggledOn(event.state))
     return EventHandlerResult::OK;
 
   // if the LED mode is not current, skip it
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
-  return ::LEDControl.get_mode<TransientLEDMode>()
-         ->onKeyswitchEvent(mapped_key, key_addr, key_state);
+  return ::LEDControl.get_mode<TransientLEDMode>()->onKeyEvent(event);
 }
 
-EventHandlerResult Heatmap::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult Heatmap::TransientLEDMode::onKeyEvent(KeyEvent &event) {
   // increment the heatmap_ value related to the key
-  heatmap_[key_addr.toInt()]++;
+  heatmap_[event.addr.toInt()]++;
 
   // check highest_
-  if (highest_ < heatmap_[key_addr.toInt()]) {
-    highest_ = heatmap_[key_addr.toInt()];
+  if (highest_ < heatmap_[event.addr.toInt()]) {
+    highest_ = heatmap_[event.addr.toInt()];
 
     // if highest_ (and so heatmap_ value related to the key)
     // is close to overflow: call shiftStats

@@ -29,7 +29,7 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
 
 void TriColor::TransientLEDMode::update(void) {
   for (auto key_addr : KeyAddr::all()) {
-    Key k = Layer.lookup(key_addr);
+    Key k = Layer.lookupOnActiveLayer(key_addr);
 
     // Special keys are always mod_color
     if (k.getFlags() != 0) {

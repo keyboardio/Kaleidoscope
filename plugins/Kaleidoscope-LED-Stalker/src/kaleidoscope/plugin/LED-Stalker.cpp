@@ -34,19 +34,20 @@ StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
     map_{}
 {}
 
-EventHandlerResult StalkerEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
+EventHandlerResult StalkerEffect::onKeyEvent(KeyEvent &event) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
-  if (!key_addr.isValid())
+  if (!event.addr.isValid())
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
-  if (keyIsPressed(keyState)) {
-    ::LEDControl.get_mode<TransientLEDMode>()->map_[key_addr.toInt()] = 0xff;
-  }
+  // The simplest thing to do is trigger on both press and release. The color
+  // will fade while the key is held, and get restored to full brightness when
+  // it's released.
+  ::LEDControl.get_mode<TransientLEDMode>()->map_[event.addr.toInt()] = 0xff;
 
   return EventHandlerResult::OK;
 }

@@ -45,20 +45,21 @@ WavepoolEffect::TransientLEDMode::TransientLEDMode(const WavepoolEffect *parent)
     page_(0)
 {}
 
-EventHandlerResult WavepoolEffect::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (!key_addr.isValid())
+EventHandlerResult WavepoolEffect::onKeyEvent(KeyEvent &event) {
+  if (!event.addr.isValid())
     return EventHandlerResult::OK;
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
-  return ::LEDControl.get_mode<TransientLEDMode>()
-         ->onKeyswitchEvent(mapped_key, key_addr, key_state);
+  return ::LEDControl.get_mode<TransientLEDMode>()->onKeyEvent(event);
 }
 
-EventHandlerResult WavepoolEffect::TransientLEDMode::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (keyIsPressed(key_state)) {
-    surface_[page_][pgm_read_byte(rc2pos + key_addr.toInt())] = 0x7f;
+EventHandlerResult WavepoolEffect::TransientLEDMode::onKeyEvent(KeyEvent &event) {
+  // It might be better to trigger on both toggle-on and toggle-off, but maybe
+  // just the former.
+  if (keyIsPressed(event.state)) {
+    surface_[page_][pgm_read_byte(rc2pos + event.addr.toInt())] = 0x7f;
     frames_since_event_ = 0;
   }
 
