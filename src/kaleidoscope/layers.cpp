@@ -152,18 +152,6 @@ Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
   return keyFromKeymap(layer, key_addr);
 }
 
-// Deprecated
-void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  // We could update the active keys cache here (as commented below), but I
-  // think that's unlikely to serve whatever purpose the caller had in
-  // mind. `Layer.lookup()` will still give the correct result, and without a
-  // `Key` value is specified, this function no longer serves a purpose.
-
-  // #include "kaleidoscope/LiveKeys.h"
-  // int8_t layer = active_layer_keymap_[key_addr.toInt()];
-  // live_keys.activate(key_addr, (*getKey)(layer, key_addr));
-}
-
 void Layer_::updateActiveLayers(void) {
   // First, set every entry in the active layer keymap to point to the default
   // layer (layer 0).
