@@ -19,10 +19,6 @@
 
 #include "./common.h"
 
-#undef min
-#undef max
-#include <iostream>
-
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED

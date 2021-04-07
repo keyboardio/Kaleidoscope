@@ -8,7 +8,6 @@ KEYSWITCH LL_1  2 0
 NAME TapDance issue 980 no overlap
 
 RUN 5 ms
-
 PRESS TD_0
 RUN 5 ms
 RELEASE TD_0
@@ -16,12 +15,11 @@ RUN 10 ms
 
 PRESS TD_0
 RUN 5 ms
-
 RELEASE TD_0
 RUN 5 ms
 
 PRESS X
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report Key_Y # The key should be mapped from layer 1 (Y), not layer 0 (X)
 RUN 5 ms
 
@@ -32,7 +30,6 @@ RUN 5 ms
 
 PRESS LL_1
 RUN 1 cycle
-
 RELEASE LL_1
 RUN 1 cycle
 
@@ -50,7 +47,7 @@ PRESS TD_0
 RUN 5 ms
 
 PRESS X
-RUN 2 cycles
+RUN 1 cycle
 EXPECT keyboard-report Key_Y # The key should be mapped from layer 1 (Y), not layer 0 (X)
 RUN 5 ms
 
@@ -64,6 +61,5 @@ RUN 5 ms
 
 PRESS LL_1
 RUN 1 cycle
-
 RELEASE LL_1
 RUN 1 cycle
