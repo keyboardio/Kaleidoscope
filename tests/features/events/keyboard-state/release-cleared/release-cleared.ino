@@ -64,16 +64,16 @@ namespace plugin {
 
 class ConvertXtoY : public kaleidoscope::Plugin {
  public:
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state) {
-    if (keyToggledOn(key_state)) {
-      if (key == Key_X)
-        key = Key_Y;
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (keyToggledOn(event.state)) {
+      if (event.key == Key_X)
+        event.key = Key_Y;
     }
     // It should be impossible to get a `Key_X` at this point, because the
     // previous block changes any `Key_X` to `Key_Y`, which results in the
     // active keys cache storing that value. On subsequent cycles (while the key
     // is still pressed), the `key` value should be `Key_Y`.
-    if (keyIsPressed(key_state) && key == Key_X) {
+    if (keyIsPressed(event.state) && event.key == Key_X) {
       std::cerr << "t=" << Runtime.millisAtCycleStart() << ": "
                 << "Error: we shouldn't see a key with value `X`" << std::endl;
     }
@@ -81,7 +81,7 @@ class ConvertXtoY : public kaleidoscope::Plugin {
     // active keys cache entry should be cleared. If it's not, then a subsequent
     // press of the same key without the layer shift in effect will still result
     // in `Key_Y` instead of `Key_A`.
-    if (keyToggledOff(key_state) && (key == Key_Y)) {
+    if (keyToggledOff(event.state) && (event.key == Key_Y)) {
       return EventHandlerResult::EVENT_CONSUMED;
     }
     return EventHandlerResult::OK;
