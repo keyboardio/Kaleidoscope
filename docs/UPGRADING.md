@@ -101,6 +101,7 @@ In practice, this boils down to implementing one or more of the following hook p
 - `beforeEachCycle()`: Called once, at the beginning of each cycle of the main loop. This is similar to the old "loop hook" with its `post_clear` argument set to false. Takes no arguments, must return `kaleidoscope::EventHandlerResult::OK`.
 - `onKeyswitchEvent`: Called for every non-idle key event. This replaces the old "event handler hook". It takes a key reference, a key address, and a key state. The key reference can be updated to change the key being processed, so that any plugin that processes it further, will see the updated key. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
 - `onFocusEvent`: Used to implement [bi-directional communication](#bidirectional-communication-for-plugins). This is called whenever the firmware receives a command from the host. The only argument is the command name. Can return `kaleidoscope::EventHandlerResult::OK` to let other plugins process the event further, or `kaleidoscope::EventHandlerResult::EVENT_CONSUMED` to stop processing.
+- `onNameQuery`: Used by the [Focus](#bidirecional-communication-for-plugins) plugin, when replying to a `plugins` command. Should either send the plugin name, or not be implemented at all, if the host knowing about the plugin isn't important.
 - `beforeReportingState`: Called without arguments, just before sending the keyboard and mouse reports to the host. Must return `kaleidoscope::EventHandlerResult::OK`.
 - `afterEachCycle`: Called without arguments at the very end of each cycle. This is the replacement for the "loop hook" with its `post_clear` argument set.
 
@@ -159,6 +160,10 @@ namespace kaleidoscope {
 class FocusExampleCommand : public Plugin {
  public:
   FocusExampleCommand() {}
+
+  EventHandlerResult onNameQuery() {
+    return ::Focus.sendName(F("FocusExampleCommand"));
+  }
 
   EventHandlerResult onFocusEvent(const char *command) {
     if (strcmp_P(command, PSTR("example")) != 0)
@@ -326,7 +331,7 @@ As a developer, one can continue using `millis()`, but migrating to `Kaleidoscop
 
 ### Repository rearchitecture
 
-To improve build times and to better highlight Kaleidoscope's many plugins, plugins have been move into directories inside the Kaleidoscope directory. 
+To improve build times and to better highlight Kaleidoscope's many plugins, plugins have been move into directories inside the Kaleidoscope directory.
 
 The "breaking change" part of this is that git checkouts of Kaleidoscope are no longer directly compatible with the Arduino IDE, since plugins aren't in a directory the IDE looks in. They are, of course, visible to tools using our commandline build infrastructure / Makefiles.
 

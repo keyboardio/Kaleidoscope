@@ -1,5 +1,5 @@
 /* DynamicTapDance -- Dynamic TapDance support for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2021  Keyboard.io, Inc
  * Copyright (C) 2019  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -84,6 +84,10 @@ bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr,
   }
 
   return true;
+}
+
+EventHandlerResult DynamicTapDance::onNameQuery() {
+  return ::Focus.sendName(F("DynamicTapDance"));
 }
 
 EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {

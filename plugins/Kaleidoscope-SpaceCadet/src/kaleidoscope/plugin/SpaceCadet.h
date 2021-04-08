@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc, Ben Gemperline
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -66,6 +66,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
   static uint16_t time_out;  //  The global timeout in milliseconds
   static SpaceCadet::KeyBinding * map;  // The map of key bindings
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:

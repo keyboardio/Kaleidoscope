@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-EEPROM-Keymap -- EEPROM-based keymap support.
- * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2019, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -32,6 +32,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   EEPROMKeymap(void) {}
 
   EventHandlerResult onSetup();
+  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 
   static void setup(uint8_t max);

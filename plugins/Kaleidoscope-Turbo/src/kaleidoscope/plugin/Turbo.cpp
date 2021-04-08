@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-Turbo.h>
 #include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -83,6 +84,10 @@ void Turbo::findKeyPositions() {
 EventHandlerResult Turbo::onSetup() {
   Turbo::findKeyPositions();
   return EventHandlerResult::OK;
+}
+
+EventHandlerResult Turbo::onNameQuery() {
+  return ::Focus.sendName(F("Turbo"));
 }
 
 EventHandlerResult Turbo::onLayerChange() {

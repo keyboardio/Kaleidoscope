@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Leader -- VIM-style leader keys
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-Leader.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
@@ -85,6 +86,10 @@ void Leader::inject(Key key, uint8_t key_state) {
 }
 
 // --- hooks ---
+EventHandlerResult Leader::onNameQuery() {
+  return ::Focus.sendName(F("Leader"));
+}
+
 EventHandlerResult Leader::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (keyState & INJECTED)
     return EventHandlerResult::OK;

@@ -1,5 +1,5 @@
 /* DynamicTapDance -- Dynamic TapDance support for Kaleidoscope
- * Copyright (C) 2019  Keyboard.io, Inc
+ * Copyright (C) 2019, 2021  Keyboard.io, Inc
  * Copyright (C) 2019  Dygma Lab S.L.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -27,6 +27,7 @@ class DynamicTapDance: public kaleidoscope::Plugin {
  public:
   DynamicTapDance() {}
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 
   static void setup(uint8_t dynamic_offset, uint16_t size);

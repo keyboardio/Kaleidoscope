@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,6 +17,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Cycle.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
@@ -51,6 +52,10 @@ void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
 }
 
 // --- hooks ---
+
+EventHandlerResult Cycle::onNameQuery() {
+  return ::Focus.sendName(F("Cycle"));
+}
 
 EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (key_state & INJECTED)

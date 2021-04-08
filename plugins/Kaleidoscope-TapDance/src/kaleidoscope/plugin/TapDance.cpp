@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-TapDance -- Tap-dance keys
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-TapDance.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -104,6 +105,10 @@ void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_
 }
 
 // --- hooks ---
+
+EventHandlerResult TapDance::onNameQuery() {
+  return ::Focus.sendName(F("TapDance"));
+}
 
 EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (keyState & INJECTED)

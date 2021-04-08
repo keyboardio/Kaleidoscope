@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2019  Keyboard.io, Inc.
+ * Copyright (C) 2016-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -72,6 +72,7 @@ class OneShot : public kaleidoscope::Plugin {
 
   static bool isModifierActive(Key key);
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);

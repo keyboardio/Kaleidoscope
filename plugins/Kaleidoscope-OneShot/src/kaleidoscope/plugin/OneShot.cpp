@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2019  Keyboard.io, Inc.
+ * Copyright (C) 2016-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-OneShot.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
@@ -75,6 +76,10 @@ void OneShot::activateOneShot(uint8_t idx) {
 void OneShot::cancelOneShot(uint8_t idx) {
   state_[idx].active = false;
   injectNormalKey(idx, WAS_PRESSED);
+}
+
+EventHandlerResult OneShot::onNameQuery() {
+  return ::Focus.sendName(F("OneShot"));
 }
 
 EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {

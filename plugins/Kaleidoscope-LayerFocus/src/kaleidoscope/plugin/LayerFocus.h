@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LayerFocus -- Focus commands to work with layers
- * Copyright (C) 2020  Keyboard.io, Inc
+ * Copyright (C) 2020, 2021  Keyboard.io, Inc
  * Copyright (C) 2020  DygmaLab, SE.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -27,6 +27,7 @@ class LayerFocus: public kaleidoscope::Plugin {
  public:
   LayerFocus() {}
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 };
 

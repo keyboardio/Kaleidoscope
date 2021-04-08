@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-MagicCombo -- Magic combo framework
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,12 +16,17 @@
  */
 
 #include <Kaleidoscope-MagicCombo.h>
+#include <Kaleidoscope-FocusSerial.h>
 
 namespace kaleidoscope {
 namespace plugin {
 
 uint16_t MagicCombo::min_interval = 500;
 uint16_t MagicCombo::start_time_ = 0;
+
+EventHandlerResult MagicCombo::onNameQuery() {
+  return ::Focus.sendName(F("MagicCombo"));
+}
 
 EventHandlerResult MagicCombo::beforeReportingState() {
   for (byte i = 0; i < magiccombo::combos_length; i++) {

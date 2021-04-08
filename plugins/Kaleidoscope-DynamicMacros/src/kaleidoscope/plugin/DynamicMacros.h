@@ -1,5 +1,5 @@
 /* DynamicMacros - Dynamic macro support for Kaleidoscope.
- * Copyright (C) 2019  Keyboard.io, Inc.
+ * Copyright (C) 2019, 2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -32,6 +32,7 @@ class DynamicMacros : public kaleidoscope::Plugin {
   DynamicMacros(void) {}
 
   EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 
   static void reserve_storage(uint16_t size);

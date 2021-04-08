@@ -127,6 +127,7 @@ class Qukeys : public kaleidoscope::Plugin {
   static constexpr int8_t layer_wildcard{-1};
 
   // Kaleidoscope hook functions.
+  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key,
                                       KeyAddr key_addr,
                                       uint8_t key_state);

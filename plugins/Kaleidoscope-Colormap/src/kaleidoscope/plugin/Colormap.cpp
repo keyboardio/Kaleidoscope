@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Colormap -- Per-layer colormap effect
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -34,6 +34,10 @@ void ColormapEffect::max_layers(uint8_t max_) {
 
   max_layers_ = max_;
   map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
+}
+
+EventHandlerResult ColormapEffect::onNameQuery() {
+  return ::Focus.sendName(F("ColormapEffect"));
 }
 
 void ColormapEffect::TransientLEDMode::onActivate(void) {

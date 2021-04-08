@@ -1,5 +1,5 @@
 /* Kaleidoscope-MouseKeys - Mouse keys for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,6 +18,7 @@
 
 #include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-MouseKeys.h"
+#include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -60,6 +61,10 @@ void MouseKeys_::scrollWheel(uint8_t keyCode) {
     kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, -wheelSpeed);
   else if (keyCode & KEY_MOUSE_RIGHT)
     kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, wheelSpeed);
+}
+
+EventHandlerResult MouseKeys_::onNameQuery() {
+  return ::Focus.sendName(F("MouseKeys"));
 }
 
 EventHandlerResult MouseKeys_::afterEachCycle() {

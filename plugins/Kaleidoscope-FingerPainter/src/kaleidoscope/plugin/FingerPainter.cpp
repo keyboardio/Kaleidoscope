@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-FingerPainter -- On-the-fly keyboard painting.
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -28,6 +28,10 @@ namespace plugin {
 
 uint16_t FingerPainter::color_base_;
 bool FingerPainter::edit_mode_;
+
+EventHandlerResult FingerPainter::onNameQuery() {
+  return ::Focus.sendName(F("FingerPainter"));
+}
 
 EventHandlerResult FingerPainter::onSetup() {
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);

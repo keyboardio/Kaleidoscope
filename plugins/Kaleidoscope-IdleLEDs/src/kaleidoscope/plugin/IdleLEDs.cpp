@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Idle-LEDs -- Turn off the LEDs when the keyboard's idle
- * Copyright (C) 2018, 2019, 2020  Keyboard.io, Inc
+ * Copyright (C) 2018, 2019, 2020, 2021  Keyboard.io, Inc
  * Copyright (C) 2019  Dygma, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -62,6 +62,10 @@ EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr,
 }
 
 uint16_t PersistentIdleLEDs::settings_base_;
+
+EventHandlerResult PersistentIdleLEDs::onNameQuery() {
+  return ::Focus.sendName(F("PersistentIdleLEDs"));
+}
 
 EventHandlerResult PersistentIdleLEDs::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(uint16_t));
