@@ -1,3 +1,4 @@
+// -*- mode: c++ -*-
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
  * Copyright (C) 2017-2019  Keyboard.io, Inc.
  *
@@ -41,7 +42,16 @@ typedef enum {
 typedef uint8_t macro_t;
 
 #define MACRO_NONE 0
-#define MACRO(...) ({static const macro_t __m[] PROGMEM = { __VA_ARGS__, MACRO_ACTION_END }; &__m[0]; })
+
+#define MACRO(...) (                                                    \
+    {                                                                   \
+      static const macro_t __m[] PROGMEM = {                            \
+        __VA_ARGS__,                                                    \
+        MACRO_ACTION_END                                                \
+      };                                                                \
+      &__m[0];                                                          \
+    })
+
 #define MACRODOWN(...) (keyToggledOn(keyState) ? MACRO(__VA_ARGS__) : MACRO_NONE)
 
 #define I(n)  MACRO_ACTION_STEP_INTERVAL, n

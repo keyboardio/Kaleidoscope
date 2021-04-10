@@ -34,8 +34,8 @@ enum {
 M(MACRO_MODEL01), M(MACRO_HELLO), M(MACRO_SPECIAL)
 
 // later in the Sketch:
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
   case MACRO_MODEL01:
     return MACRODOWN(I(25),
                      D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
@@ -43,12 +43,12 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
                      W(100),
                      T(0), T(1) );
   case MACRO_HELLO:
-    if (keyToggledOn(keyState)) {
+    if (keyToggledOn(event.state)) {
       return Macros.type(PSTR("Hello "), PSTR("world!"));
     }
     break;
   case MACRO_SPECIAL:
-    if (keyToggledOn(keyState)) {
+    if (keyToggledOn(event.state)) {
       // Do something special
     }
     break;
@@ -101,15 +101,28 @@ The plugin provides a `Macros` object, with the following methods and properties
 > easiest way to do that is to wrap the string in a `PSTR()` helper. See the
 > program code at the beginning of this documentation for an example!
 
-### `.row`, `.col`
+### `.press(key)`/`.release(key)`
 
-> The `row` and `col` properties describe the physical position a macro was
-> triggered from if it was triggered by a key. The playback functions
-> do not use these properties, but they are available, would one want to create
-> a macro that needs to know which key triggered it.
+> Used in `Macros.play()`, these methods press virtual keys in a small
+> supplemental `Key` array for the purpose of keeping keys active for complex
+> macro sequences where it's important to have overlapping key presses.
 >
-> When the macro was not triggered by a key the value of these properties are
-> unspecified.
+> `Macros.press(key)` sends a key press event, and will keep that virtual key
+> active until either `Macros.release(key)` is called, or a Macros key is
+> released. If you use `Macros.press(key)` in a macro, but also change the value
+> of `event.key`, you will need to make sure to also call `Macros.release(key)`
+> at some point to prevent that key from getting "stuck" on.
+
+### `.clear()`
+
+> Releases all virtual keys held by macros. This both empties the supplemental
+> `Key` array (see above) and sends a release event for each key stored there.
+
+### `.tap(key)`
+
+> Sends an immediate press and release event for `key` with no delay, using an
+> invalid key address.
+
 
 ## Macro helpers
 
@@ -164,7 +177,11 @@ In most cases, one is likely use normal keys for the steps, so the `D`, `U`, and
 `T` steps apply the `Key_` prefix. This allows us to write `MACRO(T(X))` instead
 of `MACRO(Tr(Key_X))` - making the macro definition shorter, and more readable.
 
-The compact variant (`Dc`, `Uc`, and `Tc`) prefix the argument with `Key_` too,
+The "raw" variants (`Dr`/`Ur`/`Tr`) use the full name of the `Key` object,
+without adding the `Key_` prefix to the argument given. `Tr(Key_X)` is the same
+as `T(X)`.
+
+The "compact" variants (`Dc`/`Uc`/`Tc`) prefix the argument with `Key_` too,
 but unlike `D`, `U`, and `T`, they ignore the `flags` component of the key, and
 as such, are limited to ordinary keys. Mouse keys, consumer- or system keys are
 not supported by this compact representation.
@@ -188,26 +205,9 @@ them in order.
   with `Key_`, and they ignore the `flags` component of a key, and as such, are
   limited to ordinary keys.
 
-### Controlling when to send reports
+## Overrideable functions
 
-While the plugin will - by default - send a report after every step, that is not
-always desirable. For this reason, we allow turning this implicit reporting off,
-and switching to explicit reporting instead. Note that the tap steps (`T()`,
-`Tr()`, and `Tc()`) will always send an implicit report, and so will
-`Macros.type()`.
-
-To control when to send reports, the following steps can be used:
-
-* `WITH_EXPLICIT_REPORT`: Prevents the plugin from sending an implicit report
-  after every step. To send a report, one needs to have a `SEND_REPORT` step
-  too.
-* `WITH_IMPLICIT_REPORT`: Enables sending an implicit report after every step
-  (the default).
-* `SEND_REPORT`: Send a report.
-
-## Overrideable methods
-
-### `macroAction(macroIndex, keyState)`
+### `macroAction(uint8_t macro_id, KeyEvent &event)`
 
 > The `macroAction` method is the brain of the macro support in Kaleidoscope:
 > this function tells the plugin what sequence to play when given a macro index
