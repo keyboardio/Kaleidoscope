@@ -1,6 +1,6 @@
 /* Kaleidoscope-Steno -- Steno protocols for Kaleidoscope
  * Copyright (C) 2017  Joseph Wasson
- * Copyright (C) 2017, 2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,6 +29,7 @@ class GeminiPR : public kaleidoscope::Plugin {
  public:
   GeminiPR(void) {}
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
  private:
   static uint8_t keys_held_;

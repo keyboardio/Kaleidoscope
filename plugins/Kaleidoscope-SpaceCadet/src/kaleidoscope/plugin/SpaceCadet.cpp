@@ -1,6 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc, Ben Gemperline
+ * Copyright (C) 2019-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +17,7 @@
  */
 
 #include <Kaleidoscope-SpaceCadet.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
@@ -69,6 +71,10 @@ void SpaceCadet::disable() {
 //Function to determine whether SpaceCadet is active (useful for Macros and other plugins)
 bool SpaceCadet::active() {
   return !disabled;
+}
+
+EventHandlerResult SpaceCadet::onNameQuery() {
+  return ::Focus.sendName(F("SpaceCadet"));
 }
 
 EventHandlerResult SpaceCadet::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {

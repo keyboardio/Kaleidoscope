@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -35,6 +35,7 @@ namespace kaleidoscope {
 namespace plugin {
 // Forward declaration to enable friend declarations.
 class LEDControl;
+class FocusSerial;
 }
 
 // Forward declaration to enable friend declarations.
@@ -61,6 +62,7 @@ class Hooks {
   // Runtime_ calls Hooks::onSetup, Hooks::beforeReportingState
   // and Hooks::afterEachCycle.
   friend class Runtime_;
+  friend class ::kaleidoscope::plugin::FocusSerial;
   friend class ::kaleidoscope::Layer_;
   friend class ::kaleidoscope::plugin::LEDControl;
   friend void ::kaleidoscope::sketch_exploration::pluginsExploreSketch();

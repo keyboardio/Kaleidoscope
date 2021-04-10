@@ -45,6 +45,7 @@ class Turbo : public kaleidoscope::Plugin {
   void activeColor(cRGB newVal);
 
   EventHandlerResult onSetup();
+  EventHandlerResult onNameQuery();
   EventHandlerResult onLayerChange();
   EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
   EventHandlerResult afterEachCycle();

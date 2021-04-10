@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Redial -- Redial support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc.
+ * Copyright (C) 2018-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-Redial.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
@@ -24,6 +25,10 @@ namespace plugin {
 Key Redial::key_to_redial_;
 Key Redial::last_key_;
 bool Redial::redial_held_ = false;
+
+EventHandlerResult Redial::onNameQuery() {
+  return ::Focus.sendName(F("Redial"));
+}
 
 EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
   if (mapped_key == Key_Redial) {

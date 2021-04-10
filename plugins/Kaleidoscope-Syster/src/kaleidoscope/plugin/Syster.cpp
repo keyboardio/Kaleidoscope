@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Syster -- Symbolic input system
- * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope-Syster.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
 
@@ -44,6 +45,10 @@ bool Syster::is_active(void) {
 }
 
 // --- hooks ---
+EventHandlerResult Syster::onNameQuery() {
+  return ::Focus.sendName(F("Syster"));
+}
+
 EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
   if (!is_active_) {
     if (!isSyster(mapped_key))

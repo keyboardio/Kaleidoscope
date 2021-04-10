@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -112,6 +112,16 @@ class SignatureCheckDummy {};
 } // namespace kaleidoscope
 
 #define _FOR_EACH_EVENT_HANDLER(OPERATION, ...)                           __NL__ \
+                                                                          __NL__ \
+   /* Called by Focus, when handling the `plugins` command. */            __NL__ \
+   /* Should send the plugin name if that makes sense, */                 __NL__ \
+   /* but can be no-op. */                                                __NL__ \
+   OPERATION(onNameQuery,                                                 __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _NOT_ABORTABLE,                                              __NL__ \
+             (), (), (),                                                  __NL__ \
+             (), (), ##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \
@@ -232,6 +242,10 @@ class SignatureCheckDummy {};
    START(onSetup, 1)                                                    __NL__ \
       OP(onSetup, 1)                                                    __NL__ \
    END(onSetup, 1)                                                      __NL__ \
+                                                                        __NL__ \
+   START(onNameQuery, 1)                                                __NL__ \
+      OP(onNameQuery, 1)                                                __NL__ \
+   END(onNameQuery, 1)                                                  __NL__ \
                                                                         __NL__ \
    START(beforeEachCycle, 1)                                            __NL__ \
       OP(beforeEachCycle, 1)                                            __NL__ \

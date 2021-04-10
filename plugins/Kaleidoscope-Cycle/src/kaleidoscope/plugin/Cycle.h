@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Cycle -- Key sequence cycling dead key for Kaleidoscope.
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016, 2017, 2018, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -36,6 +36,7 @@ class Cycle : public kaleidoscope::Plugin {
   static void replace(Key key);
   static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:

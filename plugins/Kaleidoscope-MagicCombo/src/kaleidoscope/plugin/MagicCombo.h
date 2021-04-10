@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-MagicCombo -- Magic combo framework
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -48,6 +48,7 @@ class MagicCombo : public kaleidoscope::Plugin {
 
   static uint16_t min_interval;
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult beforeReportingState();
 
  private:

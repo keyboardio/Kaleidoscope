@@ -20,12 +20,17 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/progmem_helpers.h"
 #include "kaleidoscope/layers.h"
 
 
 namespace kaleidoscope {
 namespace plugin {
+
+EventHandlerResult Qukeys::onNameQuery() {
+  return ::Focus.sendName(F("Qukeys"));
+}
 
 // This is the event handler. It ignores certain events, but mostly just adds
 // them to the Qukeys event queue.

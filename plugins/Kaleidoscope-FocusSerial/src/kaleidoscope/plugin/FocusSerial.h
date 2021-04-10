@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-FocusSerial -- Bidirectional communication plugin
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017, 2018, 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -27,6 +27,12 @@ class FocusSerial : public kaleidoscope::Plugin {
 
   bool handleHelp(const char *command,
                   const char *help_message);
+
+  EventHandlerResult sendName(const __FlashStringHelper *name) {
+    Runtime.serialPort().print(name);
+    Runtime.serialPort().print(NEWLINE);
+    return EventHandlerResult::OK;
+  }
 
   void send() {}
   void send(const cRGB color) {

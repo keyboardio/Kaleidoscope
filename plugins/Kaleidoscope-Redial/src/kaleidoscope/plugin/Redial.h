@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Redial -- Redial support for Kaleidoscope
- * Copyright (C) 2018, 2019  Keyboard.io, Inc.
+ * Copyright (C) 2018-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -31,6 +31,7 @@ class Redial : public kaleidoscope::Plugin {
 
   static bool shouldRemember(Key mappedKey);
 
+  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
 
  private:

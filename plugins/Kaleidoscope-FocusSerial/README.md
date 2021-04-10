@@ -22,6 +22,10 @@ class FocusTestCommand : public Plugin {
  public:
   FocusTestCommand() {}
 
+  EventHandlerResult onNameQuery() {
+    return ::Focus.sendName(F("FocusTestCommand"));
+  }
+
   EventHandlerResult onFocusEvent(const char *command) {
     if (strcmp_P(command, PSTR("test")) != 0)
       return EventHandlerResult::OK;
@@ -51,6 +55,13 @@ The plugin provides the `Focus` object, with a couple of helper methods aimed at
 Sends a list of variables over the wire. The difference between `.send()` and `.sendRaw()` is that the former puts a space between each variable, the latter does not. If one just wants to send a list of things, use the former. If one needs more control over the formatting, use the latter. In most cases, `.send()` is the recommended method to use.
 
 Both of them take a variable number of arguments, of almost any type: all built-in types can be sent, `cRGB`, `Key` and `bool` too in addition. For colors, `.send()` will write them as an `R G B` sequence; `Key` objects will be sent as the raw 16-bit keycode; and `bool` will be sent as either the string `true`, or `false`.
+
+### `.sendName(F("..."))`
+
+To be used with the `onNameQuery()` hook, this sends the plugin name given,
+followed by a newline, and returns `EventHandlerResult::OK`, so that
+`onNameQuery()` hooks can be implemented in a single line with the help of this
+function.
 
 ### `.read(variable)`
 
