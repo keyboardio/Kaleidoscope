@@ -21,7 +21,7 @@
 
 #pragma once
 
-#define Key_Turbo Key{kaleidoscope::ranges::TURBO }
+#define Key_Turbo Key{kaleidoscope::ranges::TURBO}
 
 namespace kaleidoscope {
 namespace plugin {
@@ -44,25 +44,21 @@ class Turbo : public kaleidoscope::Plugin {
   cRGB activeColor();
   void activeColor(cRGB newVal);
 
-  EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
-  EventHandlerResult onLayerChange();
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
- private:
-  void findKeyPositions();
+  EventHandlerResult beforeSyncingLeds();
 
+ private:
   static uint16_t interval_;
-  static uint16_t flashInterval_;
+  static uint16_t flash_interval_;
   static bool sticky_;
   static bool flash_;
-  static cRGB activeColor_;
+  static cRGB active_color_;
 
-  static bool enable;
-  static uint32_t startTime;
-  static uint32_t flashStartTime;
-  static KeyAddr keyPositions[4];
-  static uint16_t numKeys;
+  static bool active_;
+  static uint32_t start_time_;
+  static uint32_t flash_start_time_;
 };
 }
 }
