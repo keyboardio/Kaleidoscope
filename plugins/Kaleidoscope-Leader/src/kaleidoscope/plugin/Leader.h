@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
+#include "kaleidoscope/KeyEventTracker.h"
+#include "kaleidoscope/plugin.h"
 
 #define LEADER_MAX_SEQUENCE_LENGTH 4
 
@@ -47,11 +48,12 @@ class Leader : public kaleidoscope::Plugin {
   void inject(Key key, uint8_t key_state);
 
   EventHandlerResult onNameQuery();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
  private:
   static Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
+  static KeyEventTracker event_tracker_;
   static uint8_t sequence_pos_;
   static uint16_t start_time_;
 
