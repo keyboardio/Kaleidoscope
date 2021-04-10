@@ -39,17 +39,23 @@ class MouseKeys_ : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
-  EventHandlerResult beforeReportingState();
   EventHandlerResult afterEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static uint8_t mouseMoveIntent;
   static uint16_t move_start_time_;
   static uint16_t accel_start_time_;
   static uint16_t wheel_start_time_;
 
-  static void scrollWheel(uint8_t keyCode);
+  bool isMouseKey(const Key &key) const;
+  bool isMouseButtonKey(const Key &key) const;
+  bool isMouseMoveKey(const Key &key) const;
+  bool isMouseWarpKey(const Key &key) const;
+  bool isMouseWheelKey(const Key &key) const;
+
+  void sendMouseButtonReport(const KeyEvent &event) const;
+  void sendMouseWarpReport(const KeyEvent &event) const;
+
 };
 }
 }

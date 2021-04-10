@@ -24,8 +24,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t MouseKeys_::mouseMoveIntent;
-
 uint8_t MouseKeys_::speed = 1;
 uint16_t MouseKeys_::speedDelay = 1;
 
@@ -39,6 +37,9 @@ uint16_t MouseKeys_::move_start_time_;
 uint16_t MouseKeys_::accel_start_time_;
 uint16_t MouseKeys_::wheel_start_time_;
 
+// =============================================================================
+// Configuration functions
+
 void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
   MouseWrapper.warp_grid_size = grid_size;
 }
@@ -47,142 +48,43 @@ void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
   MouseWrapper.speedLimit = speed_limit;
 }
 
-void MouseKeys_::scrollWheel(uint8_t keyCode) {
-  if (!Runtime.hasTimeExpired(wheel_start_time_, wheelDelay))
-    return;
+// =============================================================================
+// Key variant tests
 
-  wheel_start_time_ = Runtime.millisAtCycleStart();
-
-  if (keyCode & KEY_MOUSE_UP)
-    kaleidoscope::Runtime.hid().mouse().move(0, 0, wheelSpeed);
-  else if (keyCode & KEY_MOUSE_DOWN)
-    kaleidoscope::Runtime.hid().mouse().move(0, 0, -wheelSpeed);
-  else if (keyCode & KEY_MOUSE_LEFT)
-    kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, -wheelSpeed);
-  else if (keyCode & KEY_MOUSE_RIGHT)
-    kaleidoscope::Runtime.hid().mouse().move(0, 0, 0, wheelSpeed);
+bool MouseKeys_::isMouseKey(const Key& key) const {
+  return (key.getFlags() == (SYNTHETIC | IS_MOUSE_KEY));
 }
 
+bool MouseKeys_::isMouseButtonKey(const Key& key) const {
+  uint8_t variant = key.getKeyCode() & (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP);
+  return variant == KEY_MOUSE_BUTTON;
+}
+
+bool MouseKeys_::isMouseMoveKey(const Key& key) const {
+  uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
+  uint8_t variant = key.getKeyCode() & mask;
+  return variant == 0;
+}
+
+bool MouseKeys_::isMouseWarpKey(const Key& key) const {
+  return (key.getKeyCode() & KEY_MOUSE_WARP) != 0;
+}
+
+bool MouseKeys_::isMouseWheelKey(const Key& key) const {
+  uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
+  uint8_t variant = key.getKeyCode() & mask;
+  return variant == KEY_MOUSE_WHEEL;
+}
+
+// =============================================================================
+// Event Handlers
+
+// -----------------------------------------------------------------------------
 EventHandlerResult MouseKeys_::onNameQuery() {
   return ::Focus.sendName(F("MouseKeys"));
 }
 
-EventHandlerResult MouseKeys_::afterEachCycle() {
-  kaleidoscope::Runtime.hid().mouse().sendReport();
-  kaleidoscope::Runtime.hid().mouse().releaseAllButtons();
-  mouseMoveIntent = 0;
-
-  return EventHandlerResult::OK;
-}
-
-EventHandlerResult MouseKeys_::beforeReportingState() {
-  if (mouseMoveIntent == 0) {
-    MouseWrapper.accelStep = 0;
-    return EventHandlerResult::OK;
-  }
-
-  if (!Runtime.hasTimeExpired(move_start_time_, speedDelay))
-    return EventHandlerResult::OK;
-
-  move_start_time_ = Runtime.millisAtCycleStart();
-
-  int8_t moveX = 0, moveY = 0;
-
-  if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
-    if (MouseWrapper.accelStep < 255 - accelSpeed) {
-      MouseWrapper.accelStep += accelSpeed;
-    }
-    accel_start_time_ = Runtime.millisAtCycleStart();
-  }
-
-  if (mouseMoveIntent & KEY_MOUSE_UP)
-    moveY -= speed;
-  if (mouseMoveIntent & KEY_MOUSE_DOWN)
-    moveY += speed;
-
-  if (mouseMoveIntent & KEY_MOUSE_LEFT)
-    moveX -= speed;
-  if (mouseMoveIntent & KEY_MOUSE_RIGHT)
-    moveX += speed;
-
-  MouseWrapper.move(moveX, moveY);
-
-  return EventHandlerResult::OK;
-}
-
-EventHandlerResult MouseKeys_::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | IS_MOUSE_KEY))
-    return EventHandlerResult::OK;
-
-  if (mappedKey.getKeyCode() & KEY_MOUSE_BUTTON && !(mappedKey.getKeyCode() & KEY_MOUSE_WARP)) {
-    uint8_t button = mappedKey.getKeyCode() & ~KEY_MOUSE_BUTTON;
-
-    if (keyIsPressed(keyState)) {
-      // Reset warp state on initial mouse button key-down only so we can use
-      // warp keys to drag-and-drop:
-      if (keyToggledOn(keyState)) {
-        MouseWrapper.reset_warping();
-      }
-
-      kaleidoscope::Runtime.hid().mouse().pressButtons(button);
-    } else if (keyToggledOff(keyState)) {
-      kaleidoscope::Runtime.hid().mouse().releaseButtons(button);
-      MouseWrapper.end_warping();
-    }
-  } else if (!(mappedKey.getKeyCode() & KEY_MOUSE_WARP)) {
-    if (keyToggledOn(keyState)) {
-      move_start_time_ = Runtime.millisAtCycleStart();
-      accel_start_time_ = Runtime.millisAtCycleStart();
-      wheel_start_time_ = Runtime.millisAtCycleStart() - wheelDelay;
-    }
-    if (keyIsPressed(keyState)) {
-      if (mappedKey.getKeyCode() & KEY_MOUSE_WHEEL) {
-        scrollWheel(mappedKey.getKeyCode());
-      } else {
-        mouseMoveIntent |= mappedKey.getKeyCode();
-      }
-    } else if (keyToggledOff(keyState)) {
-      /* If a mouse key toggles off, we want to explicitly stop moving (or
-       * scrolling) in that direction. We want to do this to support use-cases
-       * where we send multiple reports per cycle (such as macros), and can't
-       * rely on the main loop clearing the report for us. We do not want to
-       * clear the whole report either, because we want any other mouse keys
-       * to still have their desired effect. Therefore, we selectively stop
-       * movement or scrolling. */
-      mouseMoveIntent &= ~mappedKey.getKeyCode();
-      bool x = false, y = false, vWheel = false, hWheel = false;
-
-      if (mappedKey.getKeyCode() & KEY_MOUSE_UP ||
-          mappedKey.getKeyCode() & KEY_MOUSE_DOWN) {
-        if (mappedKey.getKeyCode() & KEY_MOUSE_WHEEL) {
-          vWheel = true;
-        } else {
-          y = true;
-        }
-      } else if (mappedKey.getKeyCode() & KEY_MOUSE_LEFT ||
-                 mappedKey.getKeyCode() & KEY_MOUSE_RIGHT) {
-        if (mappedKey.getKeyCode() & KEY_MOUSE_WHEEL) {
-          hWheel = true;
-        } else {
-          x = true;
-        }
-      }
-
-      kaleidoscope::Runtime.hid().mouse().stop(x, y, vWheel, hWheel);
-    }
-  } else if (keyToggledOn(keyState)) {
-    if (mappedKey.getKeyCode() & KEY_MOUSE_WARP && mappedKey.getFlags() & IS_MOUSE_KEY) {
-      MouseWrapper.warp(((mappedKey.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
-                        ((mappedKey.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00) |
-                        ((mappedKey.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
-                        ((mappedKey.getKeyCode() & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00) |
-                        ((mappedKey.getKeyCode() & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00));
-    }
-  }
-
-  return EventHandlerResult::EVENT_CONSUMED;
-}
-
+// -----------------------------------------------------------------------------
 EventHandlerResult MouseKeys_::onSetup(void) {
   kaleidoscope::Runtime.hid().mouse().setup();
   kaleidoscope::Runtime.hid().absoluteMouse().setup();
@@ -190,7 +92,155 @@ EventHandlerResult MouseKeys_::onSetup(void) {
   return EventHandlerResult::OK;
 }
 
+// -----------------------------------------------------------------------------
+EventHandlerResult MouseKeys_::afterEachCycle() {
+  // Check timeout for accel update interval.
+  if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
+    accel_start_time_ = Runtime.millisAtCycleStart();
+    // `accelStep` determines the movement speed of the mouse pointer, and gets
+    // reset to zero when no mouse movement keys is pressed (see below).
+    if (MouseWrapper.accelStep < 255 - accelSpeed) {
+      MouseWrapper.accelStep += accelSpeed;
+    }
+  }
+
+  // Check timeout for position update interval.
+  bool update_position = Runtime.hasTimeExpired(move_start_time_, speedDelay);
+  if (update_position) {
+    move_start_time_ = Runtime.millisAtCycleStart();
+    // Determine which mouse movement directions are active by searching through
+    // all the currently active keys for mouse movement keys, and adding them to
+    // a bitfield (`directions`).
+    uint8_t directions = 0;
+    int8_t vx = 0;
+    int8_t vy = 0;
+    for (Key key : live_keys.all()) {
+      if (isMouseKey(key) && isMouseMoveKey(key)) {
+        directions |= key.getKeyCode();
+      }
+    }
+
+    if (directions == 0) {
+      // If there are no mouse movement keys held, reset speed to zero.
+      MouseWrapper.accelStep = 0;
+    } else {
+      // For each active direction, add the mouse movement speed.
+      if (directions & KEY_MOUSE_LEFT)
+        vx -= speed;
+      if (directions & KEY_MOUSE_RIGHT)
+        vx += speed;
+      if (directions & KEY_MOUSE_UP)
+        vy -= speed;
+      if (directions & KEY_MOUSE_DOWN)
+        vy += speed;
+
+      // Prepare the mouse report.
+      MouseWrapper.move(vx, vy);
+      // Send the report.
+      Runtime.hid().mouse().sendReport();
+    }
+  }
+
+  // Check timeout for scroll report interval.
+  bool update_wheel = Runtime.hasTimeExpired(wheel_start_time_, wheelDelay);
+  if (update_wheel) {
+    wheel_start_time_ = Runtime.millisAtCycleStart();
+    // Determine which scroll wheel keys are active, and add their directions to
+    // a bitfield (`directions`).
+    uint8_t directions = 0;
+    int8_t vx = 0;
+    int8_t vy = 0;
+    for (Key key : live_keys.all()) {
+      if (isMouseKey(key) && isMouseWheelKey(key)) {
+        directions |= key.getKeyCode();
+      }
+    }
+
+    if (directions != 0) {
+      // Horizontal scroll wheel:
+      if (directions & KEY_MOUSE_LEFT)
+        vx -= wheelSpeed;
+      if (directions & KEY_MOUSE_RIGHT)
+        vx += wheelSpeed;
+      // Vertical scroll wheel (note coordinates are opposite movement):
+      if (directions & KEY_MOUSE_UP)
+        vy += wheelSpeed;
+      if (directions & KEY_MOUSE_DOWN)
+        vy -= wheelSpeed;
+
+      // Add scroll wheel changes to HID report.
+      Runtime.hid().mouse().move(0, 0, vy, vx);
+      // Send the report.
+      Runtime.hid().mouse().sendReport();
+    }
+  }
+
+  return EventHandlerResult::OK;
 }
+
+// -----------------------------------------------------------------------------
+EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
+  if (!isMouseKey(event.key))
+    return EventHandlerResult::OK;
+
+  if (isMouseButtonKey(event.key)) {
+    sendMouseButtonReport(event);
+
+  } else if (isMouseWarpKey(event.key)) {
+    if (keyToggledOn(event.state)) {
+      sendMouseWarpReport(event);
+    }
+
+  } else if (isMouseMoveKey(event.key)) {
+    // No report is sent here; that's handled in `afterEachCycle()`.
+    move_start_time_ = Runtime.millisAtCycleStart() - speedDelay;
+    accel_start_time_ = Runtime.millisAtCycleStart();
+
+  } else if (isMouseWheelKey(event.key)) {
+    // No report is sent here; that's handled in `afterEachCycle()`.
+    wheel_start_time_ = Runtime.millisAtCycleStart() - wheelDelay;
+  }
+
+  return EventHandlerResult::EVENT_CONSUMED;
 }
+
+// =============================================================================
+// HID report helper functions
+
+// -----------------------------------------------------------------------------
+void MouseKeys_::sendMouseButtonReport(const KeyEvent &event) const {
+  // Get ready to send a new mouse report by building it from live_keys. Note
+  // that this also clears the movement and scroll values, but since those are
+  // relative, that's what we want.
+  Runtime.hid().mouse().releaseAllButtons();
+
+  uint8_t buttons = 0;
+  for (KeyAddr key_addr : KeyAddr::all()) {
+    if (key_addr == event.addr)
+      continue;
+    Key key = live_keys[key_addr];
+    if (isMouseKey(key) && isMouseButtonKey(key)) {
+      buttons |= key.getKeyCode();
+    }
+  }
+  if (keyToggledOn(event.state))
+    buttons |= event.key.getKeyCode();
+  buttons &= ~KEY_MOUSE_BUTTON;
+  Runtime.hid().mouse().pressButtons(buttons);
+  Runtime.hid().mouse().sendReport();
+}
+
+// -----------------------------------------------------------------------------
+void MouseKeys_::sendMouseWarpReport(const KeyEvent &event) const {
+  MouseWrapper.warp(
+    ((event.key.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
+    ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00)        |
+    ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00)    |
+    ((event.key.getKeyCode() & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00)    |
+    ((event.key.getKeyCode() & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00));
+}
+
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::MouseKeys_ MouseKeys;
