@@ -327,11 +327,10 @@ void Qukeys::flushEvent(Key event_key) {
 // that qukey's primary and alternate `Key` values for use later. We do this
 // because it's much more efficient than doing that as a separate step.
 bool Qukeys::isQukey(KeyAddr k) {
-  // First, look up the value from the keymap. We need to do a full lookup, not
-  // just looking up the cached value (i.e. `Layer.lookup(k)`), because the
-  // cached value will be out of date if a layer change happened since the
-  // keyswitch toggled on.
-  Key key = Layer.lookupOnActiveLayer(k);
+  // First, look up the value from the keymap. This value should be
+  // correct in the cache, even if there's been a layer change since
+  // the key was pressed.
+  Key key = Layer.lookup(k);
 
   // Next, we check to see if this is a DualUse-type qukey (defined in the keymap)
   if (isDualUseKey(key)) {

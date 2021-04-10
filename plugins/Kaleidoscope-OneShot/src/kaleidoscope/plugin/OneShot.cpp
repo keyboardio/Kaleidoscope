@@ -19,274 +19,375 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/key_events.h"
+#include "kaleidoscope/layers.h"
 
 namespace kaleidoscope {
 namespace plugin {
 
-// ---- state ---------
+// ----------------------------------------------------------------------------
+// Configuration variables
 
-uint16_t OneShot::start_time_ = 0;
 uint16_t OneShot::time_out = 2500;
 uint16_t OneShot::hold_time_out = 250;
 int16_t OneShot::double_tap_time_out = -1;
-OneShot::key_state_t OneShot::state_[OneShot::ONESHOT_KEY_COUNT];
-Key OneShot::prev_key_;
-bool OneShot::should_cancel_ = false;
-bool OneShot::should_cancel_stickies_ = false;
 
-bool OneShot::isPressed() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (state_[i].pressed)
-      return true;
+// ----------------------------------------------------------------------------
+// State variables
+
+uint16_t OneShot::stickable_keys_ = -1;
+
+KeyAddrBitfield OneShot::temp_addrs_;
+KeyAddrBitfield OneShot::glue_addrs_;
+
+uint16_t OneShot::start_time_ = 0;
+KeyAddr OneShot::prev_key_addr_ = OneShot::invalid_key_addr;
+uint8_t OneShot::release_countdown_ = 0;
+
+
+// ============================================================================
+// Public interface
+
+// ----------------------------------------------------------------------------
+// Configuration functions
+
+void OneShot::enableStickability(Key key) {
+  uint8_t n = getKeyIndex(key);
+  stickable_keys_ |= (1 << n);
+}
+
+void OneShot::disableStickability(Key key) {
+  uint8_t n = getKeyIndex(key);
+  stickable_keys_ &= ~(1 << n);
+}
+
+void OneShot::enableStickabilityForModifiers() {
+  stickable_keys_ |= stickable_modifiers_mask;
+}
+
+void OneShot::disableStickabilityForModifiers() {
+  stickable_keys_ &= ~stickable_modifiers_mask;
+}
+
+void OneShot::enableStickabilityForLayers() {
+  stickable_keys_ |= stickable_layers_mask;
+}
+
+void OneShot::disableStickabilityForLayers() {
+  stickable_keys_ &= ~stickable_layers_mask;
+}
+
+// ----------------------------------------------------------------------------
+// Global tests for any OneShot key
+
+bool OneShot::isActive() {
+  for (KeyAddr key_addr __attribute__((unused)) : temp_addrs_) {
+    return true;
+  }
+  for (KeyAddr key_addr __attribute__((unused)) : glue_addrs_) {
+    return true;
   }
   return false;
 }
 
 bool OneShot::isSticky() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (state_[i].sticky)
+  for (KeyAddr key_addr : glue_addrs_) {
+    if (! temp_addrs_.read(key_addr)) {
       return true;
+    }
   }
   return false;
 }
 
-bool OneShot::isStickable(Key key) {
-  return state_[key.getRaw() - ranges::OS_FIRST].stickable;
-}
+// ----------------------------------------------------------------------------
+// Key-specific OneShot key tests
 
-// ---- OneShot stuff ----
-void OneShot::injectNormalKey(uint8_t idx, uint8_t key_state) {
-  Key key;
+// These functions are particularly useful for ActiveModColor, which
+// could potentially use three different color values for the three
+// states (sticky | active && !sticky | pressed && !active).
 
-  if (idx < 8) {
-    key = Key(Key_LeftControl.getKeyCode() + idx,
-              Key_LeftControl.getFlags());
-  } else {
-    key = Key(LAYER_SHIFT_OFFSET + idx - 8,
-              KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
+bool OneShot::isModifier(Key key) {
+  // Returns `true` if `key` is a modifier key, including modifiers
+  // with extra mod flags applied (e.g. `Key_Meh`).
+  if ((key.getFlags() & (SYNTHETIC | RESERVED)) != 0) {
+    return false;
   }
-
-  handleKeyswitchEvent(key, UnknownKeyswitchLocation, key_state | INJECTED);
+  return (key.getKeyCode() >= Key_LeftControl.getKeyCode() &&
+          key.getKeyCode() <= Key_RightGui.getKeyCode());
 }
 
-void OneShot::activateOneShot(uint8_t idx) {
-  injectNormalKey(idx, IS_PRESSED);
+bool OneShot::isLayerShift(Key key) {
+  // Returns `true` if `key` is a layer-shift key.
+  return (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
+          key.getKeyCode() >= LAYER_SHIFT_OFFSET &&
+          key.getKeyCode() < LAYER_MOVE_OFFSET);
 }
 
-void OneShot::cancelOneShot(uint8_t idx) {
-  state_[idx].active = false;
-  injectNormalKey(idx, WAS_PRESSED);
+bool OneShot::isStickable(Key key) {
+  int8_t n;
+  if (isModifier(key)) {
+    n = key.getKeyCode() - Key_LeftControl.getKeyCode();
+    return bitRead(stickable_keys_, n);
+  } else if (isLayerShift(key)) {
+    n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
+    if (n < oneshot_key_count) {
+      return bitRead(stickable_keys_, n);
+    }
+  }
+  return false;
 }
+
+bool OneShot::isTemporary(KeyAddr key_addr) {
+  return temp_addrs_.read(key_addr);
+}
+
+bool OneShot::isSticky(KeyAddr key_addr) {
+  return (glue_addrs_.read(key_addr) && !temp_addrs_.read(key_addr));
+}
+
+bool OneShot::isActive(KeyAddr key_addr) {
+  return (isTemporary(key_addr) || glue_addrs_.read(key_addr));
+}
+
+// ----------------------------------------------------------------------------
+// Other functions
+
+// Cancel all active OneShot keys (if `cancel_stickies` is true) or
+// just non-sticky active OneShot keys. This function is called by
+// Escape-OneShot to release active OneShot keys.
+void OneShot::cancel(bool cancel_stickies) {
+  if (cancel_stickies) {
+    for (KeyAddr key_addr : glue_addrs_) {
+      releaseKey(key_addr);
+    }
+  }
+  for (KeyAddr key_addr : temp_addrs_) {
+    if (glue_addrs_.read(key_addr)) {
+      releaseKey(key_addr);
+    } else {
+      temp_addrs_.clear(key_addr);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Plugin hook functions
 
 EventHandlerResult OneShot::onNameQuery() {
   return ::Focus.sendName(F("OneShot"));
 }
 
-EventHandlerResult OneShot::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  uint8_t idx = mapped_key.getRaw() - ranges::OS_FIRST;
+EventHandlerResult OneShot::onKeyswitchEvent(
+  Key &key, KeyAddr key_addr, uint8_t key_state) {
 
-  if (keyState & INJECTED)
+  // Ignore injected key events. This prevents re-processing events
+  // that the hook functions generate (by calling `injectNormalKey()`
+  // via one of the `*OneShot()` functions). There are more robust
+  // ways to do this, but since OneShot is intended to react to only
+  // physical keypresses, this is adequate.
+  if (key_state & INJECTED)
     return EventHandlerResult::OK;
 
-  if (!isActive()) {
-    if (!isOneShotKey_(mapped_key)) {
-      return EventHandlerResult::OK;
-    }
+  bool temp = temp_addrs_.read(key_addr);
+  bool glue = glue_addrs_.read(key_addr);
 
-    if (keyToggledOff(keyState)) {
-      state_[idx].pressed = false;
-    } else if (keyToggledOn(keyState)) {
-      start_time_ = Runtime.millisAtCycleStart();
-      state_[idx].position = key_addr.toInt();
-      state_[idx].pressed = true;
-      state_[idx].active = true;
-      prev_key_ = mapped_key;
+  if (keyToggledOn(key_state)) {
 
-      activateOneShot(idx);
-    }
-
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (isOneShotKey_(mapped_key)) {
-    if (state_[idx].sticky) {
-      if (keyToggledOn(keyState)) {  // maybe on _off instead?
-        prev_key_ = mapped_key;
-        state_[idx].sticky = false;
-        cancelOneShot(idx);
-        should_cancel_ = false;
+    if (!temp && !glue) {
+      // This key_addr is not in a OneShot state.
+      if (isOneShotKey(key)) {
+        // Replace the OneShot key with its corresponding normal key.
+        pressKey(key_addr, key);
+        return EventHandlerResult::ABORT;
+      } else if (!isModifier(key) && !isLayerShift(key)) {
+        // Only trigger release of temporary OneShot keys if the
+        // pressed key is neither a modifier nor a layer shift.
+        release_countdown_ = (1 << 1);
       }
-    } else {
-      if (keyToggledOff(keyState)) {
-        state_[idx].pressed = false;
-        if (Runtime.hasTimeExpired(start_time_, hold_time_out)) {
-          cancelOneShot(idx);
-          should_cancel_ = false;
-        }
-      }
+      // return EventHandlerResult::OK;
 
-      if (keyToggledOn(keyState)) {
-        state_[idx].pressed = true;
+    } else if (temp && glue) {
+      // This key_addr is in the temporary OneShot state.
+      if (key_addr == prev_key_addr_) {
+        // The same OneShot key has been pressed twice in a row. It
+        // will either become sticky (if it has been double-tapped),
+        // or it will be become a normal key. Either way, its `temp`
+        // state will be cleared.
+        temp_addrs_.clear(key_addr);
 
-        if (prev_key_ == mapped_key && isStickable(mapped_key)) {
-          uint16_t dtto = (double_tap_time_out == -1) ? time_out : double_tap_time_out;
-          if (!Runtime.hasTimeExpired(start_time_, dtto)) {
-            state_[idx].sticky = true;
-            prev_key_ = mapped_key;
-          }
+        // Derive the true double-tap timeout value if we're using the default.
+        uint16_t dtto = (double_tap_time_out < 0) ? time_out : double_tap_time_out;
+
+        // If the key is not stickable, or the double-tap timeout has
+        // expired, clear the `glue` state, as well; this OneShot key
+        // has been cancelled, and will become a normal key.
+        if (!isStickable(key) || hasTimedOut(dtto)) {
+          glue_addrs_.clear(key_addr);
         } else {
-          start_time_ = Runtime.millisAtCycleStart();
-
-          state_[idx].position = key_addr.toInt();
-          state_[idx].active = true;
-          prev_key_ = mapped_key;
-
-          activateOneShot(idx);
+          return EventHandlerResult::ABORT;
         }
+      } else {
+        // This is a temporary OneShot key, but has not been pressed
+        // twice in a row, so we need to clear its state.
+        temp_addrs_.clear(key_addr);
+        glue_addrs_.clear(key_addr);
+      }
+
+    } else if (!temp && glue) {
+      // This is a sticky OneShot key that has been pressed. Clear
+      // state now, so it will become a normal key.
+      glue_addrs_.clear(key_addr);
+
+    } else { // (temp && !glue)
+      // A key has been pressed that is in the "pending" OneShot
+      // state. Since this key should have entered the "temporary"
+      // OneShot state as soon as it was released (from its first
+      // press), it should only be possible to release a key that's in
+      // this state.
+    }
+    // Always record the address of a keypress. It might be useful for
+    // other plugins, so this could perhaps be tracked in the
+    // Kaleidoscope core.
+    prev_key_addr_ = key_addr;
+
+  } else if (keyToggledOff(key_state)) {
+
+    if (temp || glue) {
+      // Any key in the "pending" OneShot state needs its `glue` state
+      // bit set to make it "temporary". If it's in the "sticky"
+      // OneShot state, this is redundant, but we're trading time
+      // efficiency to get smaller binary size.
+      glue_addrs_.set(key_addr);
+      // This is an active OneShot key that has just been released. We
+      // need to stop that event from sending a report, and instead
+      // send a "hold" event. This is handled in the
+      // `beforeReportingState()` hook below.
+      //Layer.updateLiveCompositeKeymap(key_addr, key);
+      return EventHandlerResult::ABORT;
+    }
+
+  } else {
+    // This key is being held.
+    if (temp && !glue) {
+      // This key is in the "pending" OneShot state. We need to check
+      // its hold timeout, and turn it back into a normal key if it
+      // has timed out.
+      if (hasTimedOut(hold_time_out)) {
+        temp_addrs_.clear(key_addr);
       }
     }
 
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  // ordinary key here, with some event
-
-  if (keyIsPressed(keyState)) {
-    prev_key_ = mapped_key;
-    if (!(mapped_key >= Key_LeftControl && mapped_key <= Key_RightGui) &&
-        !(mapped_key.getFlags() == (KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP))) {
-      should_cancel_ = true;
+    if (isOneShotKey(key)) {
+      // whoops! someone cancelled a oneshot key while it was being
+      // held; reactivate it, but set it as a normal modifier
+      // instead. Or better yet, mask it, in case of a layer change.
     }
   }
 
   return EventHandlerResult::OK;
 }
 
+
+// For any active OneShot modifier keys, keep those modifiers active
+// in the keyboard HID report.
 EventHandlerResult OneShot::beforeReportingState() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
-    if (state_[i].active) {
-      activateOneShot(i);
-    }
+  for (KeyAddr key_addr : glue_addrs_) {
+    holdKey(key_addr);
   }
-
   return EventHandlerResult::OK;
 }
+
 
 EventHandlerResult OneShot::afterEachCycle() {
-  bool oneshot_active = false;
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (state_[i].active) {
-      oneshot_active = true;
-      break;
-    }
-  }
-  if (oneshot_active && hasTimedOut())
-    cancel();
-
-  bool is_cancelled = false;
-
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if (should_cancel_) {
-      if (state_[i].sticky) {
-        if (should_cancel_stickies_) {
-          is_cancelled = true;
-          state_[i].sticky = false;
-          cancelOneShot(i);
-          state_[i].pressed = false;
-        }
-      } else if (state_[i].active && !state_[i].pressed) {
-        is_cancelled = true;
-        cancelOneShot(i);
+  // If a normal, non-modifier key has been pressed, or if active,
+  // non-sticky OneShot keys have timed out, this is where they get
+  // released. Release is triggered when `release_countdown_` gets to
+  // 1, not 0, because most of the time it will be 0 (see below). It
+  // gets set to 2 on the press of a normal key when there are any
+  // active OneShot keys; that way, the OneShot keys will stay active
+  // long enough to apply to the newly-pressed key.
+  if ((release_countdown_ == 1) || hasTimedOut(time_out)) {
+    for (KeyAddr key_addr : temp_addrs_) {
+      if (glue_addrs_.read(key_addr)) {
+        releaseKey(key_addr);
       }
+      temp_addrs_.clear(key_addr);
     }
   }
-
-  if (is_cancelled) {
-    should_cancel_ = false;
-    should_cancel_stickies_ = false;
-  }
+  // Also, advance the counter for OneShot keys that have been
+  // cancelled by the press of a non-OneShot, non-modifier key. An
+  // unconditional bit shift should be more efficient than checking
+  // for zero to avoid underflow.
+  release_countdown_ >>= 1;
 
   return EventHandlerResult::OK;
 }
 
-void OneShot::inject(Key mapped_key, uint8_t key_state) {
-  onKeyswitchEvent(mapped_key, UnknownKeyswitchLocation, key_state);
+// ============================================================================
+// Private functions, not exposed to other plugins
+
+// ----------------------------------------------------------------------------
+// Helper functions for acting on OneShot key events
+
+uint8_t OneShot::getOneShotKeyIndex(Key oneshot_key) {
+  // The calling function is responsible for verifying that
+  // `oneshot_key` is an actual OneShot key (i.e. call
+  // `isOneShotKey(oneshot_key)` first).
+  uint8_t index = oneshot_key.getRaw() - ranges::OS_FIRST;
+  return index;
 }
 
-// --- glue code ---
+uint8_t OneShot::getKeyIndex(Key key) {
+  // Default to returning a value that's out of range. This should be
+  // harmless because we only use the returned index to reference a
+  // bit in a bitfield, not as a memory address.
+  uint8_t n{oneshot_key_count};
 
-bool OneShot::isActive(void) {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT; i++) {
-    if ((state_[i].active && !hasTimedOut()) ||
-        state_[i].pressed ||
-        state_[i].sticky)
-      return true;
+  if (isOneShotKey(key)) {
+    n = getOneShotKeyIndex(key);
+  } else if (isModifier(key)) {
+    n = key.getKeyCode() - Key_LeftControl.getKeyCode();
+  } else if (isLayerShift(key)) {
+    n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
   }
-  return false;
+  return n;
 }
 
-bool OneShot::isActive(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
-
-  return (state_[idx].active && !hasTimedOut()) ||
-         state_[idx].pressed ||
-         state_[idx].sticky;
-}
-
-bool OneShot::isSticky(Key key) {
-  uint8_t idx = key.getRaw() - ranges::OS_FIRST;
-
-  return state_[idx].sticky;
-}
-
-bool OneShot::isModifierActive(Key key) {
-  if (key < Key_LeftControl || key > Key_RightGui)
-    return false;
-
-  uint8_t idx = key.getKeyCode() - Key_LeftControl.getKeyCode();
-  return state_[idx].active;
-}
-
-void OneShot::cancel(bool with_stickies) {
-  should_cancel_ = true;
-  should_cancel_stickies_ = with_stickies;
-}
-
-void OneShot::enableStickability(Key key) {
-  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.getRaw() - ranges::OS_FIRST].stickable = true;
-}
-
-void OneShot::disableStickability(Key key) {
-  if (key >= ranges::OS_FIRST && key <= ranges::OS_LAST)
-    state_[key.getRaw() - ranges::OS_FIRST].stickable = false;
-}
-
-void OneShot::enableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
-    state_[i].stickable = true;
+Key OneShot::decodeOneShotKey(Key oneshot_key) {
+  // The calling function is responsible for verifying that
+  // `oneshot_key` is an actual OneShot key (i.e. call
+  // `isOneShotKey(oneshot_key)` first).
+  uint8_t n = getOneShotKeyIndex(oneshot_key);
+  if (n < oneshot_mod_count) {
+    return Key(Key_LeftControl.getKeyCode() + n,
+               Key_LeftControl.getFlags());
+  } else {
+    return Key(LAYER_SHIFT_OFFSET + n - oneshot_mod_count,
+               KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP);
   }
 }
 
-void OneShot::enableStickabilityForLayers() {
-  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
-    state_[i].stickable = true;
-  }
+// ------------------------------------------------------------------------------
+// Helper functions for sending key events for keys in OneShot states
+
+void OneShot::pressKey(KeyAddr key_addr, Key oneshot_key) {
+  Key key = decodeOneShotKey(oneshot_key);
+  prev_key_addr_ = key_addr;
+  start_time_ = Runtime.millisAtCycleStart();
+  temp_addrs_.set(key_addr);
+  handleKeyswitchEvent(key, key_addr, IS_PRESSED | INJECTED);
 }
 
-void OneShot::disableStickabilityForModifiers() {
-  for (uint8_t i = 0; i < ONESHOT_KEY_COUNT / 2; i++) {
-    state_[i].stickable = false;
-  }
+void OneShot::holdKey(KeyAddr key_addr) {
+  handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | IS_PRESSED | INJECTED);
 }
 
-void OneShot::disableStickabilityForLayers() {
-  for (uint8_t i = ONESHOT_KEY_COUNT / 2; i < ONESHOT_KEY_COUNT; i++) {
-    state_[i].stickable = false;
-  }
+void OneShot::releaseKey(KeyAddr key_addr) {
+  glue_addrs_.clear(key_addr);
+  temp_addrs_.clear(key_addr);
+  handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | INJECTED);
 }
 
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::OneShot OneShot;

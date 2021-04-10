@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-ActiveModColor -- Light up the LEDs under the active modifiers
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016-2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,6 +18,7 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyAddrBitfield.h"
 #include <Kaleidoscope-LEDControl.h>
 
 #define MAX_MODS_PER_LAYER 16
@@ -29,22 +30,21 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   ActiveModColorEffect(void) {}
 
   static cRGB highlight_color;
+  static cRGB oneshot_color;
   static cRGB sticky_color;
 
   static void highlightNormalModifiers(bool value) {
     highlight_normal_modifiers_ = value;
   }
 
+  EventHandlerResult onKeyswitchEvent(Key &key,
+                                      KeyAddr key_addr,
+                                      uint8_t key_state);
   EventHandlerResult beforeReportingState();
-  EventHandlerResult onLayerChange();
-  EventHandlerResult onSetup() {
-    return onLayerChange();
-  }
 
  private:
   static bool highlight_normal_modifiers_;
-  static KeyAddr mod_keys_[MAX_MODS_PER_LAYER];
-  static uint8_t mod_key_count_;
+  static KeyAddrBitfield mod_key_bits_;
 };
 }
 }
