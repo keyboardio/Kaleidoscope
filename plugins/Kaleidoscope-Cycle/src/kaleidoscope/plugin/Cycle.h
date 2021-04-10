@@ -37,11 +37,12 @@ class Cycle : public kaleidoscope::Plugin {
   static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
   EventHandlerResult onNameQuery();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
   static uint8_t toModFlag(uint8_t keyCode);
   static Key last_non_cycle_key_;
+  static KeyAddr cycle_key_addr_;
   static uint8_t cycle_count_;
   static uint8_t current_modifier_flags_;
 };
