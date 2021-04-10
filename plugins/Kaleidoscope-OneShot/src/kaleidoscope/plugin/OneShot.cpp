@@ -51,7 +51,6 @@ KeyAddrBitfield OneShot::glue_addrs_;
 
 uint16_t OneShot::start_time_ = 0;
 KeyAddr OneShot::prev_key_addr_ = OneShot::invalid_key_addr;
-uint8_t OneShot::release_countdown_ = 0;
 
 #ifndef ONESHOT_WITHOUT_METASTICKY
 KeyAddr OneShot::meta_sticky_key_addr_ {KeyAddr::invalid_state};
@@ -177,30 +176,28 @@ EventHandlerResult OneShot::onNameQuery() {
   return ::Focus.sendName(F("OneShot"));
 }
 
-EventHandlerResult OneShot::onKeyswitchEvent(
-  Key &key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
 
-  // Ignore injected key events. This prevents re-processing events
-  // that the hook functions generate (by calling `injectNormalKey()`
-  // via one of the `*OneShot()` functions). There are more robust
-  // ways to do this, but since OneShot is intended to react to only
-  // physical keypresses, this is adequate.
-  if (key_state & INJECTED)
+  // Ignore injected key events. This prevents re-processing events that the
+  // hook functions generate (by calling `injectNormalKey()` via one of the
+  // `*OneShot()` functions). There are more robust ways to do this, but since
+  // OneShot is intended to react to only physical keypresses, this is adequate.
+  if (event.state & INJECTED)
     return EventHandlerResult::OK;
 
-  bool temp = temp_addrs_.read(key_addr);
-  bool glue = glue_addrs_.read(key_addr);
+  bool temp = temp_addrs_.read(event.addr);
+  bool glue = glue_addrs_.read(event.addr);
 
-  if (keyToggledOn(key_state)) {
+  if (keyToggledOn(event.state)) {
 
     // Make all held keys sticky if `OneShot_ActiveStickyKey` toggles on.
-    if (key == OneShot_ActiveStickyKey) {
+    if (event.key == OneShot_ActiveStickyKey) {
       // Skip the stickify key itself
       for (KeyAddr entry_addr : KeyAddr::all()) {
-        if (entry_addr == key_addr) {
+        if (entry_addr == event.addr) {
           continue;
         }
-        // Get the entry from the keymap cache
+        // Get the entry from the keyboard state array
         Key entry_key = live_keys[entry_addr];
         // Skip empty entries
         if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
@@ -210,177 +207,147 @@ EventHandlerResult OneShot::onKeyswitchEvent(
         temp_addrs_.clear(entry_addr);
         glue_addrs_.set(entry_addr);
       }
+      prev_key_addr_ = event.addr;
       return EventHandlerResult::OK;
     }
 
     if (!temp && !glue) {
-      // This key_addr is not in a OneShot state.
+      // The key is in the "normal" state. The first thing we need to do is
+      // convert OneShot keys to their equivalent values, and record the fact
+      // that the key that just toggled on should transition to the "pending"
+      // state.
+      bool is_oneshot = false;
+      if (isOneShotKey(event.key)) {
+        event.key = decodeOneShotKey(event.key);
+        is_oneshot = true;
+      }
+
 #ifndef ONESHOT_WITHOUT_METASTICKY
-      if (meta_sticky_key_addr_.isValid()) {
+      bool is_meta_sticky_key_active = meta_sticky_key_addr_.isValid();
+      if (is_meta_sticky_key_active) {
         // If the meta key isn't sticky, release it
         bool ms_temp = temp_addrs_.read(meta_sticky_key_addr_);
         bool ms_glue = glue_addrs_.read(meta_sticky_key_addr_);
         if (ms_temp) {
           if (ms_glue) {
-            // ms key is temp one-shot
+            // The meta key is in the "one-shot" state; release it immediately.
             releaseKey(meta_sticky_key_addr_);
-            meta_sticky_key_addr_ = KeyAddr{KeyAddr::invalid_state};
           } else {
-            // ms key is held
+            // The meta key is in the "pending" state; cancel that, and let it
+            // deactivate on release.
             temp_addrs_.clear(meta_sticky_key_addr_);
           }
-        } else {
-          // ms key is sticky
         }
-        glue_addrs_.set(key_addr);
-        //prev_key_addr_ = key_addr;
-        start_time_ = Runtime.millisAtCycleStart();
-        //return EventHandlerResult::OK;
-
-      } else if (key == OneShot_MetaStickyKey) {
-        meta_sticky_key_addr_ = key_addr;
-        temp_addrs_.set(key_addr);
-        start_time_ = Runtime.millisAtCycleStart();
-      } else  // NOLINT
-#endif
-      // *INDENT-OFF*
-      // Because of the preceding #ifdef, indentation gets thrown off for astyle here.
-      // This is only an independent `if` block if `ONESHOT_WITHOUT_METASTICKY`
-      // is set (see above); otherwise it's an `else if`.
-      if (isOneShotKey(key) ||
-          (auto_modifiers_ && isModifier(key)) ||
-          (auto_layers_ && isLayerShift(key))) {
-        // Replace the OneShot key with its corresponding normal key.
-        pressKey(key_addr, key);
-        return EventHandlerResult::ABORT;
-      } else if (!isModifier(key) && !isLayerShift(key)) {
-
-        // Only trigger release of temporary OneShot keys if the
-        // pressed key is neither a modifier nor a layer shift.
-        release_countdown_ = (1 << 1);
+        glue_addrs_.set(event.addr);
+      } else if (event.key == OneShot_MetaStickyKey) {
+        meta_sticky_key_addr_ = event.addr;
+        temp_addrs_.set(event.addr);
       }
-      // *INDENT-ON*
+      if (is_meta_sticky_key_active || (event.key == OneShot_MetaStickyKey)) {
+        prev_key_addr_ = event.addr;
+        start_time_ = Runtime.millisAtCycleStart();
+        return EventHandlerResult::OK;
+      }
+#endif
+
+      if (is_oneshot ||
+          (auto_modifiers_ && event.key.isKeyboardModifier()) ||
+          (auto_layers_ && event.key.isLayerShift())) {
+        temp_addrs_.set(event.addr);
+        start_time_ = Runtime.millisAtCycleStart();
+      } else if (!event.key.isKeyboardModifier() &&
+                 !event.key.isLayerShift()) {
+        // Only trigger release of temporary one-shot keys if the pressed key is
+        // neither a modifier nor a layer shift. We need the actual release of
+        // those keys to happen after the current event is finished, however, so
+        // we trigger it by back-dating the start time, so that the timeout
+        // check will trigger in the afterEachCycle() hook.
+        start_time_ -= timeout_;
+      }
 
     } else if (temp && glue) {
-      // This key_addr is in the temporary OneShot state.
-      if (key_addr == prev_key_addr_) {
-        // The same OneShot key has been pressed twice in a row. It
-        // will either become sticky (if it has been double-tapped),
-        // or it will be become a normal key. Either way, its `temp`
-        // state will be cleared.
-        temp_addrs_.clear(key_addr);
+      // temporary one-shot
+      temp_addrs_.clear(event.addr);
 
-        // Derive the true double-tap timeout value if we're using the default.
-        uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
-
-        // If the key is not stickable, or the double-tap timeout has
-        // expired, clear the `glue` state, as well; this OneShot key
-        // has been cancelled, and will become a normal key.
-        if (!isStickable(key) || hasTimedOut(dtto)) {
-          glue_addrs_.clear(key_addr);
-        } else {
-          return EventHandlerResult::ABORT;
-        }
+      if (event.addr == prev_key_addr_ &&
+          isStickable(event.key) &&
+          !hasDoubleTapTimedOut()) {
+        // The same stickable key has been double-tapped within the double-tap
+        // timeout window. We cancel the second press event, emulating a single
+        // press-and-hold. This doesn't interfere with `prev_key_addr_`, since
+        // it's the same key again.
+        return EventHandlerResult::ABORT;
       } else {
-        // This is a temporary OneShot key, but has not been pressed
-        // twice in a row, so we need to clear its state.
-        temp_addrs_.clear(key_addr);
-        glue_addrs_.clear(key_addr);
+        // A second tap that's not a double-tap cancels the one-shot state
+        glue_addrs_.clear(event.addr);
       }
 
     } else if (!temp && glue) {
-      // This is a sticky OneShot key that has been pressed. Clear
-      // state now, so it will become a normal key.
-      glue_addrs_.clear(key_addr);
-      // Then replace the key toggled on event with a key held event.
-      holdKey(key_addr);
-      return EventHandlerResult::EVENT_CONSUMED;
+      // sticky state
+      temp_addrs_.clear(event.addr);
+      glue_addrs_.clear(event.addr);
 
-    } else { // (temp && !glue)
-      // A key has been pressed that is in the "pending" OneShot
-      // state. Since this key should have entered the "temporary"
-      // OneShot state as soon as it was released (from its first
-      // press), it should only be possible to release a key that's in
-      // this state.
+    } else { /* if (temp && !glue) */
+      // A key has been pressed that is in the "pending" one-shot state. Since
+      // this key should have entered the "temporary" one-shot state as soon as
+      // it was released (from its first press), it should only be possible to
+      // release a key that's in this state.
     }
-    // Always record the address of a keypress. It might be useful for
-    // other plugins, so this could perhaps be tracked in the
-    // Kaleidoscope core.
-    prev_key_addr_ = key_addr;
+    // Always record the address of a keypress. It might be useful for other
+    // plugins, so this could perhaps be tracked in the Kaleidoscope core.
+    prev_key_addr_ = event.addr;
 
-  } else if (keyToggledOff(key_state)) {
+  } else {
 
+    // Key toggled off
     if (temp || glue) {
-      // Any key in the "pending" OneShot state needs its `glue` state
-      // bit set to make it "temporary". If it's in the "sticky"
-      // OneShot state, this is redundant, but we're trading time
-      // efficiency to get smaller binary size.
-      glue_addrs_.set(key_addr);
-      // This is an active OneShot key that has just been released. We
-      // need to stop that event from sending a report, and instead
-      // send a "hold" event. This is handled in the
-      // `beforeReportingState()` hook below.
-      //Layer.updateLiveCompositeKeymap(key_addr, key);
+      // Any key in the "pending" one-shot state needs its `glue` state bit set
+      // to make it "temporary". If it's in the "sticky" OneShot state, this is
+      // redundant, but we're trading execution speed to get a smaller binary.
+      glue_addrs_.set(event.addr);
+      // This is an active one-shot key that has just been released. We need to
+      // stop that event from sending a report, and instead send a "hold"
+      // event. This is handled in the `beforeReportingState()` hook below.
       return EventHandlerResult::ABORT;
 #ifndef ONESHOT_WITHOUT_METASTICKY
-    } else if (key == OneShot_MetaStickyKey) {
-      meta_sticky_key_addr_ = KeyAddr{KeyAddr::invalid_state};
+    } else if (event.key == OneShot_MetaStickyKey) {
+      // Turn off the meta key if it's released in its "normal" state.
+      meta_sticky_key_addr_ = KeyAddr::none();
 #endif
     }
 
-  } else {
-    // This key is being held.
-    if (temp && !glue) {
-      // This key is in the "pending" OneShot state. We need to check
-      // its hold timeout, and turn it back into a normal key if it
-      // has timed out.
-      if (hasTimedOut(hold_timeout_)) {
-        temp_addrs_.clear(key_addr);
-      }
-    }
-
-    if (isOneShotKey(key)) {
-      // whoops! someone cancelled a oneshot key while it was being
-      // held; reactivate it, but set it as a normal modifier
-      // instead. Or better yet, mask it, in case of a layer change.
-    }
   }
 
   return EventHandlerResult::OK;
 }
 
-
-// For any active OneShot modifier keys, keep those modifiers active
-// in the keyboard HID report.
-EventHandlerResult OneShot::beforeReportingState() {
-  for (KeyAddr key_addr : glue_addrs_) {
-    holdKey(key_addr);
-  }
-  return EventHandlerResult::OK;
-}
-
-
+// ----------------------------------------------------------------------------
 EventHandlerResult OneShot::afterEachCycle() {
-  // If a normal, non-modifier key has been pressed, or if active,
-  // non-sticky OneShot keys have timed out, this is where they get
-  // released. Release is triggered when `release_countdown_` gets to
-  // 1, not 0, because most of the time it will be 0 (see below). It
-  // gets set to 2 on the press of a normal key when there are any
-  // active OneShot keys; that way, the OneShot keys will stay active
-  // long enough to apply to the newly-pressed key.
-  if ((release_countdown_ == 1) || hasTimedOut(timeout_)) {
-    for (KeyAddr key_addr : temp_addrs_) {
-      if (glue_addrs_.read(key_addr)) {
+
+  bool oneshot_expired = hasTimedOut(timeout_);
+  bool hold_expired = hasTimedOut(hold_timeout_);
+  bool any_temp_keys = false;
+
+  for (KeyAddr key_addr : temp_addrs_) {
+    any_temp_keys = true;
+
+    if (glue_addrs_.read(key_addr)) {
+      // Release keys in "one-shot" state that have timed out or been cancelled
+      // by another key press.
+      if (oneshot_expired)
         releaseKey(key_addr);
-      }
-      temp_addrs_.clear(key_addr);
+    } else {
+      // Cancel "pending" state of keys held longer than the hold timeout.
+      if (hold_expired)
+        temp_addrs_.clear(key_addr);
     }
   }
-  // Also, advance the counter for OneShot keys that have been
-  // cancelled by the press of a non-OneShot, non-modifier key. An
-  // unconditional bit shift should be more efficient than checking
-  // for zero to avoid underflow.
-  release_countdown_ >>= 1;
+
+  // Keep the start time from getting stale; if there are no keys waiting for a
+  // timeout, it's safe to advance the timer to the current time.
+  if (!any_temp_keys) {
+    start_time_ = Runtime.millisAtCycleStart();
+  }
 
   // Temporary fix for deprecated variables
 #ifndef NDEPRECATED
@@ -449,21 +416,26 @@ void OneShot::pressKey(KeyAddr key_addr, Key key) {
   prev_key_addr_ = key_addr;
   start_time_ = Runtime.millisAtCycleStart();
   temp_addrs_.set(key_addr);
-  handleKeyswitchEvent(key, key_addr, IS_PRESSED | INJECTED);
+  KeyEvent event{key_addr, IS_PRESSED | INJECTED, key};
+  Runtime.handleKeyEvent(event);
 }
 
 void OneShot::holdKey(KeyAddr key_addr) {
-  handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | IS_PRESSED | INJECTED);
+  KeyEvent event{key_addr, WAS_PRESSED | IS_PRESSED | INJECTED};
+  Runtime.handleKeyEvent(event);
 }
 
 void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
 
+#ifndef ONESHOT_WITHOUT_METASTICKY
   if (live_keys[key_addr] == OneShot_MetaStickyKey)
-    meta_sticky_key_addr_ = KeyAddr{KeyAddr::invalid_state};
+    meta_sticky_key_addr_ = KeyAddr::none();
+#endif
 
-  handleKeyswitchEvent(Key_NoKey, key_addr, WAS_PRESSED | INJECTED);
+  KeyEvent event{key_addr, WAS_PRESSED | INJECTED};
+  Runtime.handleKeyEvent(event);
 }
 
 // ------------------------------------------------------------------------------

@@ -208,19 +208,20 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Configuration variables (should probably be private)
+#ifndef NDEPRECATED
   DEPRECATED(ONESHOT_TIMEOUT)
   static uint16_t time_out;
   DEPRECATED(ONESHOT_HOLD_TIMEOUT)
   static uint16_t hold_time_out;
   DEPRECATED(ONESHOT_DOUBLE_TAP_TIMEOUT)
   static int16_t double_tap_time_out;
+#endif
 
   // --------------------------------------------------------------------------
   // Plugin hook functions
 
   EventHandlerResult onNameQuery();
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
-  EventHandlerResult beforeReportingState();
+  EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
  private:
@@ -251,7 +252,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
-  static uint8_t release_countdown_;
 
 #ifndef ONESHOT_WITHOUT_METASTICKY
   static KeyAddr meta_sticky_key_addr_;
@@ -261,6 +261,11 @@ class OneShot : public kaleidoscope::Plugin {
   // Internal utility functions
   static bool hasTimedOut(uint16_t ttl) {
     return Runtime.hasTimeExpired(start_time_, ttl);
+  }
+  static bool hasDoubleTapTimedOut() {
+    // Derive the true double-tap timeout value if we're using the default.
+    uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
+    return hasTimedOut(dtto);
   }
   static uint8_t getOneShotKeyIndex(Key oneshot_key);
   static uint8_t getKeyIndex(Key key);
