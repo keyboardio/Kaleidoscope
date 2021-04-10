@@ -28,12 +28,12 @@ EventHandlerResult Redial::onNameQuery() {
   return ::Focus.sendName(F("Redial"));
 }
 
-EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (keyToggledOn(key_state)) {
-    if (mapped_key == Key_Redial) {
-      mapped_key = last_key_;
-    } else if (shouldRemember(mapped_key)) {
-      last_key_ = mapped_key;
+EventHandlerResult Redial::onKeyEvent(KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    if (event.key == Key_Redial) {
+      event.key = last_key_;
+    } else if (shouldRemember(event.key)) {
+      last_key_ = event.key;
     }
   }
   return EventHandlerResult::OK;
