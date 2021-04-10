@@ -25,34 +25,35 @@ namespace plugin {
 uint16_t DynamicMacros::storage_base_;
 uint16_t DynamicMacros::storage_size_;
 uint16_t DynamicMacros::map_[];
+Key DynamicMacros::active_macro_keys_[];
 
-static void playMacroKeyswitchEvent(Key key, uint8_t keyswitch_state, bool explicit_report) {
-  handleKeyswitchEvent(key, UnknownKeyswitchLocation, keyswitch_state | INJECTED);
-
-  if (explicit_report)
-    return;
-
-  kaleidoscope::Runtime.hid().keyboard().sendReport();
-  kaleidoscope::Runtime.hid().mouse().sendReport();
-}
-
-static void playKeyCode(Key key, uint8_t keyStates, bool explicit_report) {
-  if (keyIsPressed(keyStates)) {
-    playMacroKeyswitchEvent(key, IS_PRESSED, explicit_report);
-  }
-  if (keyWasPressed(keyStates)) {
-    playMacroKeyswitchEvent(key, WAS_PRESSED, explicit_report);
+// =============================================================================
+// It might be possible to use Macros instead of reproducing it
+void DynamicMacros::press(Key key) {
+  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
+  for (Key &mkey : active_macro_keys_) {
+    if (mkey == Key_NoKey) {
+      mkey = key;
+      break;
+    }
   }
 }
 
-static void readKeyCodeAndPlay(uint16_t pos, uint8_t flags, uint8_t keyStates, bool explicit_report) {
-  Key key(Runtime.storage().read(pos++), // key_code
-          flags);
-
-  playKeyCode(key, keyStates, explicit_report);
+void DynamicMacros::release(Key key) {
+  for (Key &mkey : active_macro_keys_) {
+    if (mkey == key) {
+      mkey = Key_NoKey;
+    }
+  }
+  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
 }
 
-void DynamicMacros::updateDynamicMacroCache(void) {
+void DynamicMacros::tap(Key key) {
+  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
+  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
+}
+
+void DynamicMacros::updateDynamicMacroCache() {
   uint16_t pos = storage_base_;
   uint8_t current_id = 0;
   macro_t macro = MACRO_ACTION_END;
@@ -116,27 +117,22 @@ void DynamicMacros::updateDynamicMacroCache(void) {
   }
 }
 
+// public
 void DynamicMacros::play(uint8_t macro_id) {
   macro_t macro = MACRO_ACTION_END;
   uint8_t interval = 0;
-  uint8_t flags;
-  bool explicit_report = false;
   uint16_t pos;
+  Key key;
 
   pos = storage_base_ + map_[macro_id];
 
   while (true) {
     switch (macro = Runtime.storage().read(pos++)) {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
-      explicit_report = true;
-      break;
     case MACRO_ACTION_STEP_IMPLICIT_REPORT:
-      explicit_report = false;
-      break;
     case MACRO_ACTION_STEP_SEND_REPORT:
-      kaleidoscope::Runtime.hid().keyboard().sendReport();
-      kaleidoscope::Runtime.hid().mouse().sendReport();
       break;
+
     case MACRO_ACTION_STEP_INTERVAL:
       interval = Runtime.storage().read(pos++);
       break;
@@ -145,46 +141,59 @@ void DynamicMacros::play(uint8_t macro_id) {
       delay(wait);
       break;
     }
+
     case MACRO_ACTION_STEP_KEYDOWN:
-      flags = Runtime.storage().read(pos++);
-      readKeyCodeAndPlay(pos++, flags, IS_PRESSED, explicit_report);
+      key.setFlags(Runtime.storage().read(pos++));
+      key.setKeyCode(Runtime.storage().read(pos++));
+      press(key);
       break;
     case MACRO_ACTION_STEP_KEYUP:
-      flags = Runtime.storage().read(pos++);
-      readKeyCodeAndPlay(pos++, flags, WAS_PRESSED, explicit_report);
+      key.setFlags(Runtime.storage().read(pos++));
+      key.setKeyCode(Runtime.storage().read(pos++));
+      release(key);
       break;
     case MACRO_ACTION_STEP_TAP:
-      flags = Runtime.storage().read(pos++);
-      readKeyCodeAndPlay(pos++, flags, IS_PRESSED | WAS_PRESSED, false);
+      key.setFlags(Runtime.storage().read(pos++));
+      key.setKeyCode(Runtime.storage().read(pos++));
+      tap(key);
       break;
 
     case MACRO_ACTION_STEP_KEYCODEDOWN:
-      readKeyCodeAndPlay(pos++, 0, IS_PRESSED, explicit_report);
+      key.setFlags(0);
+      key.setKeyCode(Runtime.storage().read(pos++));
+      press(key);
       break;
     case MACRO_ACTION_STEP_KEYCODEUP:
-      readKeyCodeAndPlay(pos++, 0, WAS_PRESSED, explicit_report);
+      key.setFlags(0);
+      key.setKeyCode(Runtime.storage().read(pos++));
+      release(key);
       break;
     case MACRO_ACTION_STEP_TAPCODE:
-      readKeyCodeAndPlay(pos++, 0, IS_PRESSED | WAS_PRESSED, false);
+      key.setFlags(0);
+      key.setKeyCode(Runtime.storage().read(pos++));
+      tap(key);
       break;
 
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
-      uint8_t keyCode;
-      do {
-        flags = Runtime.storage().read(pos++);
-        keyCode = Runtime.storage().read(pos++);
-        playKeyCode(Key(keyCode, flags), IS_PRESSED | WAS_PRESSED, false);
+      while (true) {
+        key.setFlags(0);
+        key.setKeyCode(pgm_read_byte(pos++));
+        if (key == Key_NoKey)
+          break;
+        tap(key);
         delay(interval);
-      } while (!(flags == 0 && keyCode == 0));
+      }
       break;
     }
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
-      uint8_t keyCode;
-      do {
-        keyCode = Runtime.storage().read(pos++);
-        playKeyCode(Key(keyCode, 0), IS_PRESSED | WAS_PRESSED, false);
+      while (true) {
+        key.setFlags(0);
+        key.setKeyCode(pgm_read_byte(pos++));
+        if (key.getKeyCode() == 0)
+          break;
+        tap(key);
         delay(interval);
-      } while (keyCode != 0);
+      }
       break;
     }
 
@@ -197,12 +206,23 @@ void DynamicMacros::play(uint8_t macro_id) {
   }
 }
 
-EventHandlerResult DynamicMacros::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getRaw() < ranges::DYNAMIC_MACRO_FIRST || mappedKey.getRaw() > ranges::DYNAMIC_MACRO_LAST)
+bool isDynamicMacrosKey(Key key) {
+  return (key.getRaw() >= ranges::DYNAMIC_MACRO_FIRST &&
+          key.getRaw() <= ranges::DYNAMIC_MACRO_LAST);
+}
+
+// -----------------------------------------------------------------------------
+EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
+  if (!isDynamicMacrosKey(event.key))
     return EventHandlerResult::OK;
 
-  if (keyToggledOn(keyState)) {
-    play(mappedKey.getRaw() - ranges::DYNAMIC_MACRO_FIRST);
+  if (keyToggledOn(event.state)) {
+    uint8_t macro_id = event.key.getRaw() - ranges::DYNAMIC_MACRO_FIRST;
+    play(macro_id);
+  } else {
+    for (Key key : active_macro_keys_) {
+      release(key);
+    }
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
@@ -249,14 +269,14 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
+// public
 void DynamicMacros::reserve_storage(uint16_t size) {
   storage_base_ = ::EEPROMSettings.requestSlice(size);
   storage_size_ = size;
   updateDynamicMacroCache();
 }
 
-
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 kaleidoscope::plugin::DynamicMacros DynamicMacros;

@@ -24,15 +24,15 @@
 
 #define DM(n) Key(kaleidoscope::ranges::DYNAMIC_MACRO_FIRST + n)
 
+#define MAX_CONCURRENT_DYNAMIC_MACRO_KEYS 8
+
 namespace kaleidoscope {
 namespace plugin {
 
 class DynamicMacros : public kaleidoscope::Plugin {
  public:
-  DynamicMacros(void) {}
-
-  EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
   EventHandlerResult onNameQuery();
+  EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
 
   static void reserve_storage(uint16_t size);
@@ -43,10 +43,14 @@ class DynamicMacros : public kaleidoscope::Plugin {
   static uint16_t storage_base_;
   static uint16_t storage_size_;
   static uint16_t map_[31];
-  static void updateDynamicMacroCache(void);
+  static void updateDynamicMacroCache();
+  static Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
+  static void press(Key key);
+  static void release(Key key);
+  static void tap(Key key);
 };
 
-}
-}
+} // namespace plugin
+} // namespace kaleidoscope
 
 extern kaleidoscope::plugin::DynamicMacros DynamicMacros;
