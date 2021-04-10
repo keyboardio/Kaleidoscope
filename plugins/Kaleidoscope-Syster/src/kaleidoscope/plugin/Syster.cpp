@@ -49,54 +49,81 @@ EventHandlerResult Syster::onNameQuery() {
   return ::Focus.sendName(F("Syster"));
 }
 
-EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
+EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
   if (!is_active_) {
-    if (!isSyster(mapped_key))
+    // If Syster isn't actively matching an input sequence, we're only looking
+    // for the special Syster `Key` value; anything else gets passed through
+    // immediately.
+    if (!isSyster(event.key))
       return EventHandlerResult::OK;
 
-    if (keyToggledOn(keyState)) {
+    // It's a Syster Key; activate the plugin as soon as it toggles on, so we
+    // process rollover correctly.
+    if (keyToggledOn(event.state)) {
       is_active_ = true;
-      systerAction(StartAction, NULL);
+      systerAction(StartAction, nullptr);
     }
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (keyState & INJECTED)
+  // Always ignore events marked as artificially injected (it might actually be
+  // better to drop this, but it's not really clear).
+  if (event.state & INJECTED)
     return EventHandlerResult::OK;
 
-  if (isSyster(mapped_key)) {
+  // If a Syster key gets pressed while we're reading an input sequence, ignore
+  // it. This could be turned into a "reset" where we erase the abandoned input.
+  if (isSyster(event.key)) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (mapped_key == Key_Backspace && symbol_pos_ == 0) {
-    return EventHandlerResult::EVENT_CONSUMED;
+  // If the user presses a backspace key while at the beginning of the input
+  // string, suppress it to prevent erasing past the start of the sequence.
+  // Again, this could be changed to do a reset.
+  if (event.key == Key_Backspace && symbol_pos_ == 0) {
+    return EventHandlerResult::ABORT;
   }
 
-  if (keyToggledOff(keyState)) {
-    if (mapped_key == Key_Spacebar) {
-      for (uint8_t i = 0; i <= symbol_pos_; i++) {
-        handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-        handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-      }
+  // We only pay attention to key press events while parsing input.  If the user
+  // holds a key down long enough to trigger repeating characters in the OS,
+  // we'll end up erasing fewer characters than we should.  This could be
+  // addressed by immediately sending the corresponding release event, but
+  // that's probably too much trouble to be worthwhile.
+  if (keyToggledOn(event.state)) {
+    // Pressing the spacebar ends the input sequence.
+    if (event.key == Key_Spacebar) {
+      // First, we erase all the typed characters in the symbol sequence.
+      eraseChars(symbol_pos_);
 
-      systerAction(EndAction, NULL);
+      // Next, we call the user-defined end action.
+      systerAction(EndAction, nullptr);
 
+      // Then we null-terminate the `symbol_` string, and call the user-defined
+      // symbol action.
       symbol_[symbol_pos_] = 0;
       systerAction(SymbolAction, symbol_);
+
+      // Finally, we're done, so we reset, deactivating Syster until the next
+      // press of a Syster key.
       reset();
 
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-  }
+      // Returning ABORT here stops the spacebar from activating. Alternatively,
+      // we could remove this return statement, and instead allow the spacebar
+      // to take effect, resulting in a space in the output, which would follow
+      // any symbols produced by the symbol action.
+      return EventHandlerResult::ABORT;
 
-  if (keyToggledOn(keyState)) {
-    if (mapped_key == Key_Backspace) {
+    } else if (event.key == Key_Backspace) {
+      // If the user erases any typos, we keep the Syster symbol string in sync
+      // with what's on the screen.  Again, this doesn't account for a key held
+      // long enough to trigger repeat in the OS.
       if (symbol_pos_ > 0)
-        symbol_pos_--;
+        --symbol_pos_;
+
     } else {
-      const char c = keyToChar(mapped_key);
+      // An ordinary keypress, with Syster active.  We add its corresponding
+      // character to the symbol string.
+      const char c = keyToChar(event.key);
       if (c)
         symbol_[symbol_pos_++] = c;
     }
@@ -105,8 +132,35 @@ EventHandlerResult Syster::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, u
   return EventHandlerResult::OK;
 }
 
+} // namespace plugin
+
+void eraseChars(int8_t n) {
+  // For the `event.addr`, we could track the address of the Syster key, but it
+  // might be on a layer that's no longer active by the time this gets
+  // called. We could search the active keymap for an existing `Key_Backspace`,
+  // but there might not be one. We could hijack the first idle key we find in
+  // the keymap, but we probably don't need to. Even if some other plugin reacts
+  // by inserting another event between these two, it's very unlikely that will
+  // cause a user-visible error.
+  auto event = KeyEvent(KeyAddr::none(), INJECTED, Key_Backspace);
+  while (n > 0) {
+    event.state = IS_PRESSED | INJECTED;
+    Runtime.handleKeyEvent(event);
+    event.state = WAS_PRESSED | INJECTED;
+    Runtime.handleKeyEvent(event);
+    --n;
+  }
+  Runtime.handleKeyEvent(event);
+  // Change the event from a press to a release, but use the same id. This does
+  // come with a small risk that another plugin will be tracking events, but
+  // also ignoring event ids that it has seen before, but it's more likely to
+  // avoid an error than to cause one.
+  event.state = WAS_PRESSED | INJECTED;
+  Runtime.handleKeyEvent(event);
 }
-}
+
+} // namespace kaleidoscope
+
 
 __attribute__((weak)) const char keyToChar(Key key) {
   if (key.getFlags() != 0)

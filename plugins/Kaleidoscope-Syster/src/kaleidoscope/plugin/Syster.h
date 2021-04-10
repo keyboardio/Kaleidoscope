@@ -35,25 +35,29 @@ class Syster : public kaleidoscope::Plugin {
     SymbolAction
   } action_t;
 
-  Syster(void) {}
+  Syster() {}
 
-  static void reset(void);
+  static void reset();
 
-  bool is_active(void);
+  bool is_active();
 
   EventHandlerResult onNameQuery();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
   static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
   static uint8_t symbol_pos_;
   static bool is_active_;
 };
-}
 
-}
+} // namespace plugin
+
+void eraseChars(int8_t n);
+
+} // namespace kaleidoscope
 
 const char keyToChar(Key key);
+
 void systerAction(kaleidoscope::plugin::Syster::action_t action, const char *symbol);
 
 extern kaleidoscope::plugin::Syster Syster;
