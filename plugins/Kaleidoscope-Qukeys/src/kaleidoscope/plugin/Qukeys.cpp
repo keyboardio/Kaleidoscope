@@ -23,7 +23,9 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/progmem_helpers.h"
 #include "kaleidoscope/layers.h"
-
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/KeyEventTracker.h"
+#include "kaleidoscope/KeyAddrEventQueue.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -34,68 +36,37 @@ EventHandlerResult Qukeys::onNameQuery() {
 
 // This is the event handler. It ignores certain events, but mostly just adds
 // them to the Qukeys event queue.
-EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_state) {
-  // If k is not a physical key, ignore it; some other plugin injected it.
-  if (! k.isValid() || (key_state & INJECTED) != 0) {
+EventHandlerResult Qukeys::onKeyswitchEvent(KeyEvent &event) {
+  // If the plugin has already processed and released this event, ignore it.
+  // There's no need to update the event tracker explicitly.
+  if (event_tracker_.shouldIgnore(event)) {
+    // We should never get an event that's in our queue here, but just in case
+    // some other plugin sends one, abort.
+    if (event_queue_.shouldAbort(event))
+      return EventHandlerResult::ABORT;
     return EventHandlerResult::OK;
   }
 
-  // If the key was injected (from the queue being flushed), we need to ignore
-  // it.
-  if (flushing_queue_) {
+  // If event.addr is not a physical key, ignore it; some other plugin injected it.
+  if (! event.addr.isValid() || (event.state & INJECTED) != 0) {
     return EventHandlerResult::OK;
   }
 
   // If Qukeys is turned off, continue to next plugin.
   if (! active_) {
-    if (isDualUseKey(key)) {
-      key = queue_head_.primary_key;
+    if (isDualUseKey(event.key)) {
+      event.key = queue_head_.primary_key;
     }
     return EventHandlerResult::OK;
   }
 
-  // Deal with keyswitch state changes.
-  if (keyToggledOn(key_state) || keyToggledOff(key_state)) {
-    // If the user rolled over from a non-modifier key to a qukey, let the
-    // release event for that key skip the queue. This prevents unintended
-    // repeat characters for the tapped key, which would otherwise have its
-    // release event delayed.
-    if (keyToggledOff(key_state) && event_queue_.length() == 1 &&
-        k != event_queue_.addr(0) && !isModifierKey(key)) {
-      return EventHandlerResult::OK;
-    }
-    // If we can't trivially ignore the event, just add it to the queue.
-    event_queue_.append(k, key_state);
-    // In order to prevent overflowing the queue, process it now.
-    if (event_queue_.isFull()) {
-      processQueue();
-    }
-    // Any event that gets added to the queue gets re-processed later, so we
-    // need to abort processing now.
-    return EventHandlerResult::ABORT;
-  }
-
-  // The key is being held. We need to determine if we should block it because
-  // its key press event is still in the queue, waiting to be
-  // flushed. Therefore, we search the event queue for the same key. If the
-  // first event we find there is a key press, that means we need to suppress
-  // this hold, because it's still waiting on an earlier event.
-  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
-    if (event_queue_.addr(i) == k) {
-      // If the first matching event is a release, we do not suppress it,
-      // because its press event has already been flushed.
-      if (event_queue_.isRelease(i)) {
-        break;
-      }
-      // Otherwise, the first matching event was a key press, so we need to
-      // suppress it for now.
-      return EventHandlerResult::ABORT;
-    }
-  }
-
-  // Either this key doesn't have an event in the queue at all, or its first
-  // event in the queue is a release. We treat the key as a normal held key.
-  return EventHandlerResult::OK;
+  // If we can't trivially ignore the event, just add it to the queue.
+  event_queue_.append(event);
+  // In order to prevent overflowing the queue, process it now.
+  while (processQueue());
+  // Any event that gets added to the queue gets re-processed later, so we
+  // need to abort processing now.
+  return EventHandlerResult::ABORT;
 }
 
 
@@ -103,27 +74,8 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_sta
 // queue is ready to be flushed. It only allows one event to be flushed per
 // cycle, because the keyboard HID report can't store all of the information
 // necessary to correctly handle all of the rollover corner cases.
-EventHandlerResult Qukeys::beforeReportingState() {
-  // For keys that have been physically released, but whose release events are
-  // still waiting to be flushed from the queue, we need to restore them,
-  // because `handleKeyswitchEvent()` didn't get called for those KeyAddrs.
-  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
-    if (event_queue_.isRelease(i)) {
-      KeyAddr k = event_queue_.addr(i);
-      // Now for the tricky bit. Before "restoring" this key hold, we need to
-      // make sure that its key press event has already been flushed from the
-      // queue, so we need to search for a matching key press event preceding
-      // this release event. If we find one, we need to ignore it.
-      if (isKeyAddrInQueueBeforeIndex(k, i)) {
-        continue;
-      }
-      flushing_queue_ = true;
-      handleKeyswitchEvent(Key_NoKey, k, IS_PRESSED | WAS_PRESSED);
-      flushing_queue_ = false;
-    }
-  }
-
-  // Next, if there hasn't been a keypress in a while, update the prior keypress
+EventHandlerResult Qukeys::afterEachCycle() {
+  // If there hasn't been a keypress in a while, update the prior keypress
   // timestamp to avoid integer overflow issues:
   if (Runtime.hasTimeExpired(prior_keypress_timestamp_,
                              minimum_prior_interval_)) {
@@ -131,11 +83,13 @@ EventHandlerResult Qukeys::beforeReportingState() {
       Runtime.millisAtCycleStart() - (minimum_prior_interval_ + 1);
   }
 
-  // If any events get flushed from the queue, stop there; we can only safely
-  // send the one report per cycle.
-  if (processQueue()) {
+  // If there's nothing in the queue, there's nothing more to do.
+  if (event_queue_.isEmpty()) {
     return EventHandlerResult::OK;
   }
+
+  // Process as many events as we can from the queue.
+  while (processQueue());
 
   // If we get here, that means that the first event in the queue is a qukey
   // press. All that's left to do is to check if it's been held long enough that
@@ -161,11 +115,9 @@ EventHandlerResult Qukeys::beforeReportingState() {
 // overflow, but those are both rare cases, and should not cause any serious
 // problems even when they do come up.
 bool Qukeys::processQueue() {
-  // If the queue is empty, signal that the beforeReportingState() process
-  // should abort before checking for a hold timeout (since there's nothing to
-  // do).
+  // If there's nothing in the queue, abort.
   if (event_queue_.isEmpty()) {
-    return true;
+    return false;
   }
 
   // In other cases, we will want the KeyAddr of the first event in the queue.
@@ -194,6 +146,7 @@ bool Qukeys::processQueue() {
   // We now know that the first event is a key press. If it's not a qukey, or if
   // it's only there because the plugin was just turned off, we can flush it
   // immediately.
+  // Should be able to remove the `active_` check once `deactivate()` gets updated
   if (! isQukey(queue_head_addr) || ! active_) {
     flushEvent(queue_head_.primary_key);
     return true;
@@ -211,8 +164,8 @@ bool Qukeys::processQueue() {
   // key, so we don't need to do it repeatedly later.
   bool qukey_is_spacecadet = isModifierKey(queue_head_.primary_key);
 
-  // If the qukey press is followed a printable key too closely, it's not
-  // eligible to take on its alternate value unless it's a SpaceCadet-type key.
+  // If the qukey press followed a printable key too closely, it's not eligible
+  // to take on its alternate value unless it's a SpaceCadet-type key.
   if (!Runtime.hasTimeExpired(prior_keypress_timestamp_,
                               minimum_prior_interval_) &&
       !qukey_is_spacecadet) {
@@ -323,6 +276,7 @@ void Qukeys::flushEvent(Key event_key) {
   // First we record the address and state of the event:
   KeyAddr queue_head_addr = event_queue_.addr(0);
   uint8_t keyswitch_state = event_queue_.isRelease(0) ? WAS_PRESSED : IS_PRESSED;
+  KeyEvent event{queue_head_addr, keyswitch_state, event_key, event_queue_.id(0)};
 
   // If the flushed event is a keypress of a printable symbol, record its
   // timestamp. This lets us suppress some unintended alternate values seen by
@@ -334,12 +288,11 @@ void Qukeys::flushEvent(Key event_key) {
     prior_keypress_timestamp_ = event_queue_.timestamp(0);
   }
 
-  // Remove the head event from the queue:
+  // Remove the head event from the queue, then call `handleKeyswitchEvent()` to
+  // resume processing of the event. It's important to remove the event from the
+  // queue first; otherwise `onKeyswitchEvent()` will abort it.
   event_queue_.shift();
-  // This ensures that the flushed event will be ignored by the event handler hook:
-  flushing_queue_ = true;
-  handleKeyswitchEvent(event_key, queue_head_addr, keyswitch_state);
-  flushing_queue_ = false;
+  Runtime.handleKeyswitchEvent(event);
 }
 
 
@@ -350,7 +303,7 @@ bool Qukeys::isQukey(KeyAddr k) {
   // First, look up the value from the keymap. This value should be
   // correct in the cache, even if there's been a layer change since
   // the key was pressed.
-  Key key = Layer.lookup(k);
+  Key key = Runtime.lookupKey(k);
 
   // Next, we check to see if this is a DualUse-type qukey (defined in the keymap)
   if (isDualUseKey(key)) {
