@@ -113,25 +113,24 @@ KALEIDOSCOPE_INIT_PLUGINS(
   MouseKeys
 );
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
-  case MACRO_QWERTY:
-    // This macro is currently unused, but is kept around for compatibility
-    // reasons. We used to use it in place of `MoveToLayer(QWERTY)`, but no
-    // longer do. We keep it so that if someone still has the old layout with
-    // the macro in EEPROM, it will keep working after a firmware update.
-    Layer.move(QWERTY);
-    break;
-  case MACRO_VERSION_INFO:
-    if (keyToggledOn(keyState)) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    switch (macro_id) {
+    case MACRO_QWERTY:
+      // This macro is currently unused, but is kept around for compatibility
+      // reasons. We used to use it in place of `MoveToLayer(QWERTY)`, but no
+      // longer do. We keep it so that if someone still has the old layout with
+      // the macro in EEPROM, it will keep working after a firmware update.
+      Layer.move(QWERTY);
+      break;
+    case MACRO_VERSION_INFO:
       Macros.type(PSTR("Keyboardio Atreus - Kaleidoscope "));
       Macros.type(PSTR(BUILD_INFORMATION));
+      break;
+    default:
+      break;
     }
-    break;
-  default:
-    break;
   }
-
   return MACRO_NONE;
 }
 

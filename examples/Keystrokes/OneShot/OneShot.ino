@@ -68,8 +68,8 @@ void macroToggleOneShot() {
   OneShot.toggleAutoOneShot();
 }
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == TOGGLE_ONESHOT) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (macro_id == TOGGLE_ONESHOT) {
     macroToggleOneShot();
   }
 
