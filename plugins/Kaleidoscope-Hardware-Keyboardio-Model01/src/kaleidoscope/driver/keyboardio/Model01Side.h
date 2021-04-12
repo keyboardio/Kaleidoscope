@@ -23,10 +23,6 @@
 
 #pragma once
 
-namespace kaleidoscope {
-namespace driver {
-namespace keyboardio {
-
 #include <Arduino.h>
 #include "wire-protocol-constants.h"
 
@@ -45,6 +41,10 @@ struct cRGB {
 
 #define LEDS_PER_HAND 32
 #define LED_BYTES_PER_BANK sizeof(cRGB)  * LEDS_PER_HAND/LED_BANKS
+
+namespace kaleidoscope {
+namespace driver {
+namespace keyboardio {
 
 typedef union {
   cRGB leds[LEDS_PER_HAND];
