@@ -1,0 +1,89 @@
+VERSION 1
+
+KEYSWITCH L_GUI   0 0
+KEYSWITCH R_GUI   0 0
+KEYSWITCH A       1 0
+KEYSWITCH B       1 1
+KEYSWITCH C       1 2
+KEYSWITCH D       1 3
+KEYSWITCH TOGGLE  2 0
+
+# ==============================================================================
+NAME Win key enabled on start
+
+RUN 4 ms
+PRESS L_GUI
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui # report should contain `gui` (0xe3)
+
+RUN 4 ms
+RELEASE L_GUI
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Win key disabled after toggle
+
+RUN 4 ms
+PRESS TOGGLE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TOGGLE
+RUN 1 cycle
+
+RUN 4 ms
+PRESS L_GUI
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L_GUI
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME WinKeyToggle other keys not disabled
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME WinKeyToggle turns back on
+
+RUN 4 ms
+PRESS TOGGLE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TOGGLE
+RUN 1 cycle
+
+RUN 4 ms
+PRESS L_GUI
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui # report should contain `gui` (0xe3)
+
+RUN 4 ms
+RELEASE L_GUI
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
