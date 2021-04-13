@@ -67,9 +67,10 @@ class Keyboard_ {
     return HID().getLEDs();
   };
 
+ private:
   HID_KeyboardReport_Data_t report_;
   HID_KeyboardReport_Data_t last_report_;
- private:
+
   int sendReportUnchecked();
 };
 extern Keyboard_ Keyboard;
