@@ -3,6 +3,8 @@ top_dir         := $(abspath $(mkfile_dir)../..)
 
 include $(mkfile_dir)/shared.mk
 
+include_plugins_dir := -I${top_dir}/plugins \
+
 build_dir := ${top_dir}/_build/${testcase}
 
 LIB_DIR := ${build_dir}/lib
@@ -81,7 +83,7 @@ endif
 ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	$(QUIET) install -d "${OBJ_DIR}"
 	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) -o "$@" -c -std=c++14 \
-		${shared_includes} ${shared_defines} $<
+		${shared_includes} ${include_plugins_dir} ${shared_defines} $<
 
 clean:
 	$(QUIET) rm -f -- "${SRC_DIR}/generated-testcase.cpp"
