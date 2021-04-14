@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <stdint.h>  // for uint16_t
+
 // Included for definition of legacy Macros plugin key range:
 #include "kaleidoscope/key_defs.h"
 
