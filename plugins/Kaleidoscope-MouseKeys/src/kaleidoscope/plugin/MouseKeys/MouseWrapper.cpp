@@ -131,7 +131,7 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
 
   end_warping();
   // move by whole pixels, not subpixels
-  Kaleidoscope.hid().mouse().move(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel, 0);
+  Kaleidoscope.hid().mouse().move(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel);
   // save leftover subpixel movements for later
   remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
   remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;
