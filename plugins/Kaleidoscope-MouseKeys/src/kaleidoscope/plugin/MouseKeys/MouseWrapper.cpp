@@ -110,30 +110,12 @@ uint8_t MouseWrapper_::acceleration(uint8_t cycles) {
   }
 }
 
-// Get the diagonalized version of a value, i.e. value * sqrt(2) / 2. If the
-// value ends up being zero, return the original value instead.
-static int16_t diagonalize(int16_t value) {
-  // 99 / 140 closely approximates sqrt(2) / 2. Since integer division
-  // truncates towards zero we do not need to worry about truncation errors.
-  int16_t diagonalValue = value * 99 / 140;
-  return (diagonalValue == 0 ? value : diagonalValue);
-}
-
 void MouseWrapper_::move(int8_t x, int8_t y) {
   int16_t moveX = 0;
   int16_t moveY = 0;
   static int8_t remainderX = 0;
   static int8_t remainderY = 0;
   int16_t effectiveSpeedLimit = speedLimit;
-
-  if (x != 0 && y != 0) {
-    // For diagonal movements, we apply a diagonalized speed limit. The
-    // effective speed limit is set based on whether we are moving diagonally.
-    effectiveSpeedLimit = diagonalize(effectiveSpeedLimit);
-
-    x = diagonalize(x);
-    y = diagonalize(y);
-  }
 
   if (x != 0) {
     moveX = remainderX + (x * acceleration(accelStep));
