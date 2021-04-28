@@ -223,7 +223,8 @@ class Key {
   // worth singling them out.
   constexpr bool isLayerShift() const {
     return (isLayerKey() &&
-            (keyCode_ >= LAYER_SHIFT_OFFSET));
+            keyCode_ >= LAYER_SHIFT_OFFSET &&
+            keyCode_ < LAYER_MOVE_OFFSET);
   }
 
  private:
