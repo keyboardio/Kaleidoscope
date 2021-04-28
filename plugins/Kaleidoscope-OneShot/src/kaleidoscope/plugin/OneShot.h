@@ -144,8 +144,6 @@ class OneShot : public kaleidoscope::Plugin {
     return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST &&
             key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
-  static bool isModifier(Key key);
-  static bool isLayerShift(Key key);
 
   static bool isStickable(Key key); // inline?
 

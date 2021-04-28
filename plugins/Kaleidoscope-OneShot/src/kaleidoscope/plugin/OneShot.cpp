@@ -119,29 +119,12 @@ bool OneShot::isSticky() {
 // could potentially use three different color values for the three
 // states (sticky | active && !sticky | pressed && !active).
 
-bool OneShot::isModifier(Key key) {
-  // Returns `true` if `key` is a modifier key, including modifiers
-  // with extra mod flags applied (e.g. `Key_Meh`).
-  if ((key.getFlags() & (SYNTHETIC | RESERVED)) != 0) {
-    return false;
-  }
-  return (key.getKeyCode() >= Key_LeftControl.getKeyCode() &&
-          key.getKeyCode() <= Key_RightGui.getKeyCode());
-}
-
-bool OneShot::isLayerShift(Key key) {
-  // Returns `true` if `key` is a layer-shift key.
-  return (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP) &&
-          key.getKeyCode() >= LAYER_SHIFT_OFFSET &&
-          key.getKeyCode() < LAYER_MOVE_OFFSET);
-}
-
 bool OneShot::isStickable(Key key) {
   int8_t n;
-  if (isModifier(key)) {
+  if (key.isKeyboardModifier()) {
     n = key.getKeyCode() - Key_LeftControl.getKeyCode();
     return bitRead(stickable_keys_, n);
-  } else if (isLayerShift(key)) {
+  } else if (key.isLayerShift()) {
     n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
     if (n < oneshot_key_count) {
       return bitRead(stickable_keys_, n);
@@ -434,9 +417,9 @@ uint8_t OneShot::getKeyIndex(Key key) {
 
   if (isOneShotKey(key)) {
     n = getOneShotKeyIndex(key);
-  } else if (isModifier(key)) {
+  } else if (key.isKeyboardModifier()) {
     n = key.getKeyCode() - Key_LeftControl.getKeyCode();
-  } else if (isLayerShift(key)) {
+  } else if (key.isLayerShift()) {
     n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
   }
   return n;
