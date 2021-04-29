@@ -60,6 +60,13 @@
   "uses a `KeyEvent` as its second parameter, giving access to the address\n"  __NL__ \
   "of the event in the `event.addr` member variable."
 
+#define _DEPRECATED_MESSAGE_MACROS_MACRODOWN                                   __NL__ \
+  "The `MACRODOWN()` preprocessor macro is deprecated. Please use `MACRO()`\n" __NL__ \
+  "with a test for `keyToggledOn(event.state)` instead."
+
+DEPRECATED(MACROS_MACRODOWN)
+const macro_t* deprecatedMacroDown(uint8_t key_state, const macro_t* macro_p);
+
 #endif
 
 // =============================================================================

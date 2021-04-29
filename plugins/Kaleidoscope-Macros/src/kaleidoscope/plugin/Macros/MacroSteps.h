@@ -52,7 +52,10 @@ typedef uint8_t macro_t;
       &__m[0];                                                          \
     })
 
-#define MACRODOWN(...) (keyToggledOn(keyState) ? MACRO(__VA_ARGS__) : MACRO_NONE)
+#ifndef NDEPRECATED
+#define MACRODOWN(...)                                  \
+  deprecatedMacroDown(event.state, MACRO(__VA_ARGS__));
+#endif
 
 #define I(n)  MACRO_ACTION_STEP_INTERVAL, n
 #define W(n)  MACRO_ACTION_STEP_WAIT, n

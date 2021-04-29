@@ -37,11 +37,14 @@ M(MACRO_MODEL01), M(MACRO_HELLO), M(MACRO_SPECIAL)
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   switch (macro_id) {
   case MACRO_MODEL01:
-    return MACRODOWN(I(25),
-                     D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
-                     T(Spacebar),
-                     W(100),
-                     T(0), T(1) );
+    if (keyToggledOn(event.state)) {
+      return MACRO(I(25),
+                   D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
+                   T(Spacebar),
+                   W(100),
+                   T(0), T(1) );
+    }
+    break;
   case MACRO_HELLO:
     if (keyToggledOn(event.state)) {
       return Macros.type(PSTR("Hello "), PSTR("world!"));
@@ -128,8 +131,7 @@ The plugin provides a `Macros` object, with the following methods and properties
 
 Macros need to be able to simulate key down and key up events for any key - even
 keys that may not be on the keymap otherwise. For this reason and others, we
-need to define them in a special way, using the `MACRO` helper (or its
-`MACRODOWN()` variant, see below):
+need to define them in a special way, using the `MACRO` helper.
 
 ### `MACRO(steps...)`
 
@@ -140,20 +142,6 @@ need to define them in a special way, using the `MACRO` helper (or its
 > with a special step called END.  This is no longer required.  Existing macros
 > that end with END will still work correctly, but new code should not use END;
 > usage of END is deprecated.
-
-### `MACRODOWN(steps...)`
-
-> The same as the `MACRO()` helper above, but it will create a special sequence,
-> where the steps are only played back when the triggering key was just pressed.
-> That is, the macro will not be performed when the key is released, or held, or
-> not pressed at all.
->
-> Use this over `MACRO()` when you only want to perform an action when the key
-> actuates, and no action should be taken when it is held, released, or when it
-> is not pressed at all. For a lot of macros that emit a sequence without any
-> other side effects, `MACRODOWN()` is usually the better choice.
->
-> Can only be used from the `macroAction()` overrideable method.
 
 ## `MACRO` steps
 

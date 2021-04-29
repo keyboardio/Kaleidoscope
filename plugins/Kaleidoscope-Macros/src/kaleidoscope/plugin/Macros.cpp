@@ -33,6 +33,12 @@ __attribute__((weak))
 const macro_t *macroAction(uint8_t macro_id, uint8_t key_state) {
   return MACRO_NONE;
 }
+
+const macro_t* deprecatedMacroDown(uint8_t key_state, const macro_t* macro_p) {
+  if (keyToggledOn(key_state))
+    return macro_p;
+  return MACRO_NONE;
+}
 #pragma GCC diagnostic pop
 #endif
 
