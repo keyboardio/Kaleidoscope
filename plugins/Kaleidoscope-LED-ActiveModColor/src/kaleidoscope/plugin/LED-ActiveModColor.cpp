@@ -45,6 +45,7 @@ EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
     // we also highlight modifier and layer-shift keys.
     if (event.key.isKeyboardModifier() ||
         event.key.isLayerShift() ||
+        ::OneShot.isOneShotKey(event.key) ||
         ::OneShot.isActive(event.addr)) {
       mod_key_bits_.set(event.addr);
     }
