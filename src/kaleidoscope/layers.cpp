@@ -219,7 +219,7 @@ void Layer_::deactivate(uint8_t layer) {
   // above it down to fill in the gap
   for (uint8_t i = 0; i < active_layer_count_; ++i) {
     if (active_layers_[i] == layer) {
-      memmove(&active_layers_[i], &active_layers_[i + 1], active_layer_count_ - i);
+      memmove(&active_layers_[i], &active_layers_[i + 1], active_layer_count_ - (i + 1));
       --active_layer_count_;
       break;
     }
