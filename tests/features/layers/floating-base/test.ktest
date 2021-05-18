@@ -66,22 +66,6 @@ RUN 5 ms
 # ==============================================================================
 NAME Stack layer 0 on top of layer 1
 
-# Deactivate Layer 0: Now the layer stack should contain only layer 1.
-PRESS LAYER_LOCK_0
-RUN 5 ms
-RELEASE LAYER_LOCK_0
-RUN 5 ms
-
-PRESS A
-RUN 1 cycle
-EXPECT keyboard-report Key_B # Report should contain only `B`
-RUN 5 ms
-
-RELEASE A
-RUN 1 cycle
-EXPECT keyboard-report empty # Report should be empty
-RUN 5 ms
-
 # Activate Layer 0: There should now be two layers in the stack, with layer 0 on
 # top of layer 1.
 PRESS LAYER_LOCK_0
