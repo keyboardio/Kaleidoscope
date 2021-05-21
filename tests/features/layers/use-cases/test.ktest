@@ -1,0 +1,1218 @@
+VERSION 1
+
+KEYSWITCH L0                 0  0
+KEYSWITCH L1                 0  1
+KEYSWITCH L2                 0  2
+
+KEYSWITCH L01                1  0
+KEYSWITCH L02                1  1
+KEYSWITCH L12                1  2
+
+KEYSWITCH LAYER_SHIFT_0      2  0
+KEYSWITCH LAYER_SHIFT_1      2  1
+KEYSWITCH LAYER_SHIFT_2      2  2
+
+KEYSWITCH OTHER_SHIFT_0      2  0
+KEYSWITCH OTHER_SHIFT_1      2  1
+KEYSWITCH OTHER_SHIFT_2      2  2
+
+KEYSWITCH LAYER_LOCK_0       3  0
+KEYSWITCH LAYER_LOCK_1       3  1
+KEYSWITCH LAYER_LOCK_2       3  2
+
+KEYSWITCH LAYER_MOVE_0       0  7
+KEYSWITCH LAYER_MOVE_1       1  7
+KEYSWITCH LAYER_MOVE_2       2  7
+
+KEYSWITCH LAYER_SHIFT_NEXT   0 10
+KEYSWITCH LAYER_SHIFT_PREV   0 11
+
+# ==============================================================================
+NAME Startup layer state
+
+# ............................................................
+# verify layer 0 active
+RUN 4 ms
+PRESS L0
+RUN 1 cycle
+EXPECT keyboard-report Key_0 # Report should contain only `0`
+
+RUN 4 ms
+RELEASE L0
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ............................................................
+# verify layer 2 inactive
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Layer shift 1
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 0 active
+RUN 4 ms
+PRESS L0
+RUN 1 cycle
+EXPECT keyboard-report Key_0 # Report should contain only `0`
+
+RUN 4 ms
+RELEASE L0
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 on top
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Layer lock 1
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 0 active
+RUN 4 ms
+PRESS L0
+RUN 1 cycle
+EXPECT keyboard-report Key_0 # Report should contain only `0`
+
+RUN 4 ms
+RELEASE L0
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 on top
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Reset from layer shift
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Layer moves
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(1)`
+RUN 4 ms
+PRESS LAYER_MOVE_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(2)`
+RUN 4 ms
+PRESS LAYER_MOVE_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ............................................................
+# verify layer 2 active
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 on top of layer 0
+RUN 4 ms
+PRESS L02
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L02
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)`
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ............................................................
+# verify layer 2 inactive
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Layer lock promotion
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 2 on top of layer 1
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 active
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 2 on top of layer 1
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)`
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ............................................................
+# verify layer 2 inactive
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Layer lock promote base layer
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(0)`
+RUN 4 ms
+PRESS LAYER_LOCK_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_0
+RUN 1 cycle
+
+# ............................................................
+# verify layer 0 on top of layer 1
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_0 # Report should contain only `0`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)`
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+
+
+
+
+
+
+# ==============================================================================
+NAME Scenario A
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 2 on top of layer 1
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 inactive
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Scenario B
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+# ==============================================================================
+NAME Scenario C
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+# ==============================================================================
+NAME Scenario D
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 active
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+# ==============================================================================
+NAME Scenario E
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 2 on top of layer 1
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 active
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+# ==============================================================================
+NAME Scenario F
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 on top of layer 0
+RUN 4 ms
+PRESS L02
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L02
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+# ==============================================================================
+NAME Scenario G
+
+# ----------------------------------------------------------------------
+# press & hold `ShiftToLayer(1)`
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(1)`
+RUN 4 ms
+PRESS LAYER_LOCK_1
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_1
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# release `ShiftToLayer(1)`
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ............................................................
+# verify layer 2 on top of layer 0
+RUN 4 ms
+PRESS L02
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L02
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)` (reset layer state)
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME layer shift next
+
+# ----------------------------------------------------------------------
+# press & hold `Key_KeymapNext_Momentary`
+RUN 4 ms
+PRESS LAYER_SHIFT_NEXT
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 0
+RUN 4 ms
+PRESS L01
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L01
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `Key_KeymapNext_Momentary`
+RUN 4 ms
+RELEASE LAYER_SHIFT_NEXT
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME layer shift previous
+
+# ----------------------------------------------------------------------
+# tap `LockLayer(2)`
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# press & hold `Key_KeymapPrevious_Momentary`
+RUN 4 ms
+PRESS LAYER_SHIFT_PREV
+RUN 1 cycle
+
+# ............................................................
+# verify layer 1 on top of layer 2
+RUN 4 ms
+PRESS L12
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # Report should contain only `1`
+
+RUN 4 ms
+RELEASE L12
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# release `Key_KeymapPrevious_Momentary`
+RUN 4 ms
+RELEASE LAYER_SHIFT_PREV
+RUN 1 cycle
+
+# ............................................................
+# verify layer 2 on top of layer 0
+RUN 4 ms
+PRESS L02
+RUN 1 cycle
+EXPECT keyboard-report Key_2 # Report should contain only `2`
+
+RUN 4 ms
+RELEASE L02
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+# ----------------------------------------------------------------------
+# tap `MoveToLayer(0)`
+RUN 4 ms
+PRESS LAYER_MOVE_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LAYER_MOVE_0
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+RUN 5 ms
