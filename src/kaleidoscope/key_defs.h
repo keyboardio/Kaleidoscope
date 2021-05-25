@@ -285,6 +285,11 @@ typedef kaleidoscope::Key Key_;
 #define ___ Key_Transparent
 #define XXX Key_NoKey
 
+// For entries in the `live_keys[]` array for inactive keys and masked keys,
+// respectively:
+#define Key_Inactive Key_Transparent
+#define Key_Masked Key_NoKey
+
 #define KEY_BACKLIGHT_DOWN 0xf1
 #define KEY_BACKLIGHT_UP 0xf2
 #define Key_BacklightDown Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
