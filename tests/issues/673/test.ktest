@@ -1,0 +1,59 @@
+VERSION 1
+
+KEYSWITCH OS_SFT   0  0
+KEYSWITCH OS_CTL   0  1
+KEYSWITCH A        1  0
+KEYSWITCH B        1  1
+
+# ==============================================================================
+NAME Issue 673
+
+RUN 4 ms
+PRESS OS_CTL
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftControl # report: { e0 }
+
+RUN 4 ms
+RELEASE OS_CTL
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OS_CTL
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_CTL
+RUN 1 cycle
+
+RUN 100 ms
+
+RUN 4 ms
+PRESS OS_SFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftControl Key_LeftShift # report: { e0 e1 }
+
+RUN 4 ms
+RELEASE OS_SFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OS_SFT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_SFT
+RUN 1 cycle
+
+RUN 100 ms
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftControl Key_LeftShift Key_A # report: { 4 e0 e1 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftControl Key_LeftShift # report: { e0 e1 }
+
+RUN 5 ms
