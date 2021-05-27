@@ -222,6 +222,7 @@ class OneShot : public kaleidoscope::Plugin {
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult afterReportingState(const KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
  private:
