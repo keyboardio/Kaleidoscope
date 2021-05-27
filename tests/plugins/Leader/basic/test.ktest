@@ -5,6 +5,70 @@ KEYSWITCH A         1 0
 KEYSWITCH B         1 1
 KEYSWITCH C         1 2
 KEYSWITCH D         1 3
+KEYSWITCH C2        1 4
+
+# ==============================================================================
+NAME Leader sequence abort
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_D # report: { 7 }
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report empty # report: { }
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Leader sequence AB
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_Z # report should contain `Z` (0x1d)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
 
 # ==============================================================================
 NAME Leader sequence AC
@@ -43,6 +107,38 @@ RUN 5 ms
 EXPECT no keyboard-report # expect no more reports
 
 # ==============================================================================
+NAME Leader sequence BA
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # report should contain `Y` (0x1c)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
 NAME Leader sequence BC
 
 RUN 4 ms
@@ -70,6 +166,172 @@ EXPECT keyboard-report empty # report should be empty
 RUN 4 ms
 RELEASE C
 RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence C
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_Q # report should contain `Q` (0x13)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence BA rollover
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # report should contain `Y` (0x1c)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence C rollover
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_Q # report should contain `Q` (0x13)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_D # report should contain `D` (0x07)
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence C2 rollover
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C2
+RUN 1 cycle
+EXPECT keyboard-report Key_Q # report should contain `Q` (0x13)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_D # report should contain `D` (0x07)
+
+RUN 4 ms
+RELEASE C2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence ABD rollover
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_Z # report should contain `Z` (0x1d)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_D # report should contain `D` (0x07)
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
 
 RUN 5 ms
 EXPECT no keyboard-report # expect no more reports
