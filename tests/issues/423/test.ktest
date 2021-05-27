@@ -123,3 +123,55 @@ RUN 1 cycle
 EXPECT keyboard-report empty
 
 RUN 5 ms
+
+# ==============================================================================
+NAME OSM applies to whole Macro
+
+RUN 4 ms
+PRESS OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OS_SHIFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+# ------------------------------------------------------------------------------
+# Next, we press `space`, triggering both the resolution of the TapDance key and
+# the release of the OneShot key, in that order.
+RUN 4 ms
+PRESS SPACE
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # report: { 4 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_B # report: { 5 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_C # report: { 6 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty # report: { }
+EXPECT keyboard-report Key_Spacebar # report: { 2c }
+
+RUN 4 ms
+RELEASE SPACE
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+
+RUN 5 ms

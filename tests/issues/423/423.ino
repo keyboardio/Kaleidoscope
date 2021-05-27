@@ -15,6 +15,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-Macros.h>
 #include <Kaleidoscope-OneShot.h>
 #include <Kaleidoscope-TapDance.h>
 
@@ -46,13 +47,26 @@ void tapDanceAction(uint8_t tap_dance_index,
   switch (tap_dance_index) {
   case 0:
     return tapDanceActionKeys(tap_count, tap_dance_action,
-                              Key_Period, LSHIFT(Key_1));
+                              Key_Period, M(0), LSHIFT(Key_1));
   default:
     break;
   }
 }
 
-KALEIDOSCOPE_INIT_PLUGINS(OneShot, TapDance);
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    switch (macro_id) {
+    case 0:
+      Macros.type(PSTR("abc"));
+      break;
+    default:
+      break;
+    }
+  }
+  return MACRO_NONE;
+}
+
+KALEIDOSCOPE_INIT_PLUGINS(Macros, OneShot, TapDance);
 
 void setup() {
   Kaleidoscope.setup();
