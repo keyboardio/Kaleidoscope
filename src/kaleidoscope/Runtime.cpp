@@ -219,6 +219,11 @@ Runtime_::handleKeyEvent(KeyEvent event) {
 
   // Finally, send the new keyboard report
   sendKeyboardReport(event);
+
+  // Now that the report has been sent, let plugins act on it after the fact.
+  // This is useful for plugins that need to react to an event, but must wait
+  // until after that event is processed to do so.
+  Hooks::afterReportingState(event);
 }
 
 // ----------------------------------------------------------------------------
