@@ -1,0 +1,70 @@
+VERSION 1
+
+KEYSWITCH SFT_A  0 0
+KEYSWITCH SFT_B  0 1
+KEYSWITCH MEH_X  0 2
+KEYSWITCH A      1 0
+KEYSWITCH B      1 1
+KEYSWITCH LSFT   2 0
+KEYSWITCH RSFT   2 1
+
+# ==============================================================================
+NAME Key with modifier flag alone
+
+RUN 4 ms
+PRESS SFT_A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report Key_LeftShift Key_A # The report should contain `shift` + `A`
+
+RUN 4 ms
+RELEASE SFT_A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Key with multiple modifier flags alone
+
+RUN 4 ms
+PRESS MEH_X
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_LeftControl Key_LeftAlt # The report should contain three modifiers
+EXPECT keyboard-report Key_LeftShift Key_LeftControl Key_LeftAlt Key_X # The report should add `X`
+
+RUN 4 ms
+RELEASE MEH_X
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_LeftControl Key_LeftAlt # The report should contain three modifiers
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME No mod flags to mod flags
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # The report should contain `A`
+
+RUN 4 ms
+PRESS SFT_B
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # The report should contain `shift` + `A`
+EXPECT keyboard-report Key_LeftShift Key_A Key_B # The report should contain `shift`, `A` & `B`
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_B # The report should contain `shift` + `B`
+
+RUN 4 ms
+RELEASE SFT_B
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Escape-OneShot -- Turn ESC into a key that cancels OneShots, if active.
- * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2016-2020  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,16 +19,22 @@
 
 #include "kaleidoscope/Runtime.h"
 
+constexpr Key OneShotCancelKey {kaleidoscope::ranges::OS_CANCEL};
+
 namespace kaleidoscope {
 namespace plugin {
 class EscapeOneShot : public kaleidoscope::Plugin {
  public:
   EscapeOneShot(void) {}
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+
+  void setCancelKey(Key cancel_key) {
+    cancel_oneshot_key_ = cancel_key;
+  }
 
  private:
-  static bool did_escape_;
+  static Key cancel_oneshot_key_;
 };
 }
 }

@@ -19,6 +19,14 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/plugin/LEDMode.h"
 
+#ifndef NDEPRECATED
+
+#define _DEPRECATED_MESSAGE_LEDCONTROL_SYNCDELAY                              __NL__ \
+  "The `LEDControl.syncDelay` variable has been deprecated.\n"                __NL__ \
+  "Please use the `LEDControl.setInterval()` function instead."
+
+#endif
+
 #define LED_TOGGLE   B00000001  // Synthetic, internal
 
 #define Key_LEDEffectNext Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
@@ -53,7 +61,7 @@ class LEDControl : public kaleidoscope::Plugin {
   }
   static void set_mode(uint8_t mode_id);
   static uint8_t get_mode_index() {
-    return mode_id;
+    return mode_id_;
   }
   static LEDMode *get_mode() {
     return cur_led_mode_;
@@ -92,11 +100,24 @@ class LEDControl : public kaleidoscope::Plugin {
   //
   static void activate(LEDModeInterface *plugin);
 
+#ifndef NDEPRECATED
+  DEPRECATED(LEDCONTROL_SYNCDELAY)
   static uint8_t syncDelay;
+#endif
 
-  kaleidoscope::EventHandlerResult onSetup();
-  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState);
-  kaleidoscope::EventHandlerResult beforeReportingState();
+  static void setSyncInterval(uint8_t interval) {
+    sync_interval_ = interval;
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    syncDelay = interval;
+#pragma GCC diagnostic pop
+#endif
+  }
+
+  EventHandlerResult onSetup();
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult afterEachCycle();
 
   static void disable();
   static void enable();
@@ -112,12 +133,12 @@ class LEDControl : public kaleidoscope::Plugin {
   }
 
  private:
-  static uint16_t syncTimer;
-  static uint8_t mode_id;
+  static uint16_t last_sync_time_;
+  static uint8_t sync_interval_;
+  static uint8_t mode_id_;
   static uint8_t num_led_modes_;
   static LEDMode *cur_led_mode_;
   static bool enabled_;
-  static Key pending_next_prev_key_;
 };
 
 class FocusLEDCommand : public Plugin {

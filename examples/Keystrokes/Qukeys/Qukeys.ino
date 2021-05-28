@@ -49,10 +49,10 @@ KEYMAPS(
 // *INDENT-ON*
 
 // Defining a macro (on the "any" key: see above) to toggle Qukeys on and off
-const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
-  switch (macro_index) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
   case MACRO_TOGGLE_QUKEYS:
-    if (keyToggledOn(key_state))
+    if (keyToggledOn(event.state))
       Qukeys.toggle();
     break;
   }
@@ -74,6 +74,7 @@ void setup() {
   Qukeys.setOverlapThreshold(50);
   Qukeys.setMinimumHoldTime(100);
   Qukeys.setMinimumPriorInterval(80);
+  Qukeys.setMaxIntervalForTapRepeat(150);
 
   Kaleidoscope.setup();
 }

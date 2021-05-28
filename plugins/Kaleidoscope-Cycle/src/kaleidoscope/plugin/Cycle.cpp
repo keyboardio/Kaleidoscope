@@ -25,6 +25,7 @@ namespace kaleidoscope {
 namespace plugin {
 // --- state ---
 Key Cycle::last_non_cycle_key_;
+KeyAddr Cycle::cycle_key_addr_{KeyAddr::invalid_state};
 uint8_t Cycle::current_modifier_flags_;
 uint8_t Cycle::cycle_count_;
 
@@ -35,15 +36,12 @@ uint8_t Cycle::cycle_count_;
 // --- api ---
 
 void Cycle::replace(Key key) {
-  handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
-  kaleidoscope::Runtime.hid().keyboard().sendReport();
-  handleKeyswitchEvent(Key_Backspace, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
-  kaleidoscope::Runtime.hid().keyboard().sendReport();
-
-  handleKeyswitchEvent(key, UnknownKeyswitchLocation, IS_PRESSED | INJECTED);
-  kaleidoscope::Runtime.hid().keyboard().sendReport();
-  handleKeyswitchEvent(key, UnknownKeyswitchLocation, WAS_PRESSED | INJECTED);
-  kaleidoscope::Runtime.hid().keyboard().sendReport();
+  if (cycle_key_addr_ == KeyAddr{KeyAddr::invalid_state})
+    return;
+  Runtime.handleKeyEvent(KeyEvent{cycle_key_addr_, IS_PRESSED | INJECTED, Key_Backspace});
+  Runtime.handleKeyEvent(KeyEvent{cycle_key_addr_, WAS_PRESSED | INJECTED, Key_Backspace});
+  Runtime.handleKeyEvent(KeyEvent{cycle_key_addr_, IS_PRESSED | INJECTED, key});
+  Runtime.handleKeyEvent(KeyEvent{cycle_key_addr_, WAS_PRESSED | INJECTED, key});
 }
 
 void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
@@ -57,35 +55,29 @@ EventHandlerResult Cycle::onNameQuery() {
   return ::Focus.sendName(F("Cycle"));
 }
 
-EventHandlerResult Cycle::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (key_state & INJECTED)
+EventHandlerResult Cycle::onKeyEvent(KeyEvent &event) {
+  if (event.state & INJECTED)
     return EventHandlerResult::OK;
 
-  if (!keyIsPressed(key_state) && !keyWasPressed(key_state)) {
-    if (isCycle(mapped_key)) {
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-    return EventHandlerResult::OK;
-  }
-
-  if (!isCycle(mapped_key)) {
-    if (keyToggledOn(key_state)) {
-      current_modifier_flags_ |= toModFlag(mapped_key.getKeyCode());
-      last_non_cycle_key_.setKeyCode(mapped_key.getKeyCode());
+  if (!isCycle(event.key)) {
+    if (keyToggledOn(event.state)) {
+      current_modifier_flags_ |= toModFlag(event.key.getKeyCode());
+      last_non_cycle_key_.setKeyCode(event.key.getKeyCode());
       last_non_cycle_key_.setFlags(current_modifier_flags_);
       cycle_count_ = 0;
     }
-    if (keyToggledOff(key_state)) {
-      current_modifier_flags_ &= ~toModFlag(mapped_key.getKeyCode());
+    if (keyToggledOff(event.state)) {
+      current_modifier_flags_ &= ~toModFlag(event.key.getKeyCode());
     }
     return EventHandlerResult::OK;
   }
 
-  if (!keyToggledOff(key_state)) {
+  if (!keyToggledOff(event.state)) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   ++cycle_count_;
+  cycle_key_addr_ = event.addr;
   cycleAction(last_non_cycle_key_, cycle_count_);
   return EventHandlerResult::EVENT_CONSUMED;
 }

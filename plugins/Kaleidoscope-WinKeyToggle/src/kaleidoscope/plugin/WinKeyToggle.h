@@ -25,7 +25,7 @@ class WinKeyToggle: public kaleidoscope::Plugin {
  public:
   WinKeyToggle() {}
 
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
   void toggle() {
     enabled_ = !enabled_;
   }

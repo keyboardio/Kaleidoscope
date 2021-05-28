@@ -32,11 +32,7 @@ class ShapeShifter : public kaleidoscope::Plugin {
 
   static const dictionary_t *dictionary;
 
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
-  EventHandlerResult beforeReportingState();
-
- private:
-  static bool mod_active_;
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 };
 }
 

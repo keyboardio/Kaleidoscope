@@ -1,3 +1,4 @@
+// -*- mode: c++ -*-
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
  * Copyright (C) 2017-2018  Keyboard.io, Inc.
  *

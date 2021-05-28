@@ -1,0 +1,58 @@
+VERSION 1
+
+KEYSWITCH A 0 0
+KEYSWITCH LAYER_SHIFT 1 0
+
+# ==============================================================================
+# Keyboard state array
+NAME Keyboard state cleared
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+# Press and hold `ShiftToLayer(1)`, changing the `A` key to `X`
+PRESS LAYER_SHIFT
+
+RUN 4 ms
+# Press `X`, which gets converted to `Y` by the `ConvertXtoY` plugin defined in
+# the sketch. The plugin simply changes the value of the key, which causes it to
+# get set to `Key_Y` in the keyboard state array.
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # Report should contain only `Y`
+
+RUN 5 ms
+
+# Release the `X` key (on Layer 1), which has become a `Y` key in the keyboard
+# state array. This should clear its entry.
+RELEASE A
+# No report is expected here, however, because the release should trigger the
+# `ConvertXtoY` plugin to return `EVENT_CONSUMED`. The active keys cache should
+# be updated, but there shouldn't be a report.
+
+RUN 4 ms
+# Release `ShiftToLayer(1)`. This should restore the `A` key to its base layer
+# value on subsequent presses, unless the Macros key gets "stuck" in the
+# keyboard state array because it returns `EVENT_CONSUMED`.
+RELEASE LAYER_SHIFT
+RUN 1 cycle
+# Now we still don't expect a report, because pressing or releasing a
+# layer-change key doesn't trigger a keyboard HID report.
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty

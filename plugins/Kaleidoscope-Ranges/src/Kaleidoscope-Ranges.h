@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <stdint.h>  // for uint16_t
+
 // Included for definition of legacy Macros plugin key range:
 #include "kaleidoscope/key_defs.h"
 
@@ -78,6 +80,9 @@ enum : uint16_t {
   TURBO,
   DYNAMIC_MACRO_FIRST,
   DYNAMIC_MACRO_LAST = DYNAMIC_MACRO_FIRST + 31,
+  OS_META_STICKY,
+  OS_ACTIVE_STICKY,
+  OS_CANCEL,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START

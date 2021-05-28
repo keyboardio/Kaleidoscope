@@ -18,54 +18,63 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-GhostInTheFirmware.h>
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/progmem_helpers.h"
 
 namespace kaleidoscope {
 namespace plugin {
 const GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghost_keys;
-bool GhostInTheFirmware::is_active_;
-bool GhostInTheFirmware::is_pressed_;
-uint16_t GhostInTheFirmware::current_pos_;
-uint32_t GhostInTheFirmware::start_time_;
-uint16_t GhostInTheFirmware::press_timeout_;
-uint16_t GhostInTheFirmware::delay_timeout_;
+bool GhostInTheFirmware::is_active_ = false;
+uint16_t GhostInTheFirmware::current_pos_ = 0;
+uint16_t GhostInTheFirmware::start_time_;
 
 void GhostInTheFirmware::activate(void) {
   is_active_ = true;
 }
 
-EventHandlerResult GhostInTheFirmware::beforeReportingState() {
+EventHandlerResult GhostInTheFirmware::afterEachCycle() {
   if (!is_active_)
     return EventHandlerResult::OK;
 
-  if (press_timeout_ == 0) {
-    press_timeout_ = pgm_read_word(&(ghost_keys[current_pos_].pressTime));
-    delay_timeout_ = pgm_read_word(&(ghost_keys[current_pos_].delay));
+  // This stores the current GhostKey in the active sequence.
+  static GhostKey ghost_key{KeyAddr::none(), 0, 0};
 
-    if (press_timeout_ == 0) {
+  // When a ghost key has finished playing, it sets its delay to zero,
+  // indicating that it's time to read the next one from memory.
+  if (ghost_key.delay == 0) {
+    // Read the settings for the key from PROGMEM:
+    loadFromProgmem(ghost_keys[current_pos_], ghost_key);
+    // The end of the sequence is marked by a GhostKey with an invalid KeyAddr
+    // value (i.e. KeyAddr::none()). If we read this sentinel value, reset and
+    // deactivate.
+    if (!ghost_key.addr.isValid()) {
       current_pos_ = 0;
+      ghost_key.delay = 0;
       is_active_ = false;
       return EventHandlerResult::OK;
     }
-    is_pressed_ = true;
+    // If we're not at the end of the sequence, send the first keypress event,
+    // and start the timer.
+    Runtime.handleKeyEvent(KeyEvent(ghost_key.addr, IS_PRESSED));
     start_time_ = Runtime.millisAtCycleStart();
-  } else {
-    if (is_pressed_ && Runtime.hasTimeExpired(start_time_, press_timeout_)) {
-      is_pressed_ = false;
+
+  } else if (ghost_key.addr.isValid()) {
+    // If the ghost key's address is still valid, that means that the virtual
+    // key is still being held.
+    if (Runtime.hasTimeExpired(start_time_, ghost_key.press_time)) {
+      // The key press has timed out, so we send the release event.
+      Runtime.handleKeyEvent(KeyEvent(ghost_key.addr, WAS_PRESSED));
+      // Next, we invalidate the ghost key's address to prevent checking the
+      // hold timeout again, then restart the timer for checking the delay.
+      ghost_key.addr.clear();
       start_time_ = Runtime.millisAtCycleStart();
-
-      byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
-      byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
-
-      handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), WAS_PRESSED);
-    } else if (is_pressed_) {
-      byte row = pgm_read_byte(&(ghost_keys[current_pos_].row));
-      byte col = pgm_read_byte(&(ghost_keys[current_pos_].col));
-
-      handleKeyswitchEvent(Key_NoKey, KeyAddr(row, col), IS_PRESSED);
-    } else if (Runtime.hasTimeExpired(start_time_, delay_timeout_)) {
-      current_pos_++;
-      press_timeout_ = 0;
     }
+
+  } else if (Runtime.hasTimeExpired(start_time_, ghost_key.delay)) {
+    // The ghost key has been (virtually) pressed and released, and its delay
+    // has now elapsed, so we set the delay to zero and increment the index
+    // value to indicate that the next key should be loaded in the next cycle.
+    ghost_key.delay = 0;
+    ++current_pos_;
   }
 
   return EventHandlerResult::OK;

@@ -42,8 +42,8 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 0 && keyToggledOff(keyState)) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (macro_id == 0 && keyToggledOff(event.state)) {
     EEPROMKeymapProgrammer.activate();
   }
 

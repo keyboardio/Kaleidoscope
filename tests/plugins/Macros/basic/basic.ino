@@ -21,7 +21,7 @@
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
-      M(0), M(1), M(255), ___, ___, ___, ___,
+      M(0), M(1), M(255), M(2), M(3), ___, ___,
       Key_X, ___, ___, ___, ___, ___, ___,
       ___, ___, ___, ___, ___, ___,
       ___, ___, ___, ___, ___, ___, ___,
@@ -40,17 +40,21 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-const macro_t *macroAction(uint8_t index, uint8_t key_state) {
-  if (keyToggledOn(key_state)) {
-    switch (index) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    switch (macro_id) {
     case 0:
-      Kaleidoscope.hid().keyboard().pressKey(Key_A);
+      Macros.type(PSTR("a"));
       break;
     case 1:
-      Kaleidoscope.hid().keyboard().pressKey(Key_B);
+      Macros.type(PSTR("abc"));
       break;
+    case 2:
+      return MACRO(D(A), T(C), U(A), T(B));
+    case 3:
+      return MACRO(D(A), D(B));
     case 255:
-      Kaleidoscope.hid().keyboard().pressKey(Key_C);
+      Macros.type(PSTR("c"));
       break;
     }
   }

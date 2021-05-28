@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,9 +14,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope_internal/device.h"
+#include "kaleidoscope/hooks.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/LiveKeys.h"
 
 // The maximum number of layers allowed. `layer_state_`, which stores
 // the on/off status of the layers in a bitfield has only 32 bits, and
@@ -42,45 +45,47 @@ uint32_t Layer_::layer_state_;
 uint8_t Layer_::active_layer_count_ = 1;
 int8_t Layer_::active_layers_[31];
 
-Key Layer_::live_composite_keymap_[Runtime.device().numKeys()];
-uint8_t Layer_::active_layer_keymap_[Runtime.device().numKeys()];
+uint8_t Layer_::active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::setup() {
   // Explicitly set layer 0's state to 1
   bitSet(layer_state_, 0);
 
-  // Update the keymap cache, so we start with a non-empty state.
+  // Update the active layer cache (every entry will be `0` to start)
   Layer.updateActiveLayers();
-  for (auto key_addr : KeyAddr::all()) {
-    Layer.updateLiveCompositeKeymap(key_addr);
-  }
 }
 
-void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
-  if (keymapEntry.getKeyCode() >= LAYER_MOVE_OFFSET) {
-    // MoveToLayer()
-    if (keyToggledOn(keyState)) {
-      move(keymapEntry.getKeyCode() - LAYER_MOVE_OFFSET);
-    }
-  } else if (keymapEntry.getKeyCode() >= LAYER_SHIFT_OFFSET) {
-    // layer shift keys
-    uint8_t target = keymapEntry.getKeyCode() - LAYER_SHIFT_OFFSET;
+void Layer_::handleLayerKeyEvent(const KeyEvent &event) {
+  // The caller is responsible for checking that this is a Layer `Key`, so we
+  // skip checking for it here.
+  uint8_t key_code = event.key.getKeyCode();
+  uint8_t target_layer;
 
-    switch (target) {
+  if (key_code >= LAYER_MOVE_OFFSET) {
+    // MoveToLayer()
+    if (keyToggledOn(event.state)) {
+      target_layer = key_code - LAYER_MOVE_OFFSET;
+      move(target_layer);
+    }
+  } else if (key_code >= LAYER_SHIFT_OFFSET) {
+    // layer shift keys (two types)
+    target_layer = key_code - LAYER_SHIFT_OFFSET;
+
+    switch (target_layer) {
     case KEYMAP_NEXT:
       // Key_KeymapNext_Momentary
-      if (keyToggledOn(keyState))
+      if (keyToggledOn(event.state))
         activateNext();
-      else if (keyToggledOff(keyState))
+      else
         deactivateMostRecent();
       break;
 
     case KEYMAP_PREVIOUS:
       // Key_KeymapPrevious_Momentary
-      if (keyToggledOn(keyState))
+      if (keyToggledOn(event.state))
         deactivateMostRecent();
-      else if (keyToggledOff(keyState))
+      else
         activateNext();
       break;
 
@@ -100,46 +105,57 @@ void Layer_::handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        * that does turn the layer off, but with the other still being held, the
        * layer will toggle back on in the same cycle.
        */
-      if (keyIsPressed(keyState)) {
-        if (!Layer.isActive(target))
-          activate(target);
-      } else if (keyToggledOff(keyState)) {
-        deactivate(target);
+      if (keyToggledOn(event.state)) {
+        // Re-think this: maybe we want to bring an already-active layer to the
+        // top when a layer shift key is pressed.
+        if (!isActive(target_layer))
+          activate(target_layer);
+      } else {
+        // If there's another layer shift key keeping the target layer active,
+        // we need to abort before deactivating it.
+        for (Key key : live_keys.all()) {
+          if (key == event.key) {
+            return;
+          }
+        }
+        // No other layer shift key for the target layer is pressed; deactivate
+        // it now.
+        deactivate(target_layer);
       }
       break;
     }
-  } else if (keyToggledOn(keyState)) {
+  } else if (keyToggledOn(event.state)) {
     // LockLayer()/UnlockLayer()
-    uint8_t target = keymapEntry.getKeyCode();
+    target_layer = key_code;
     // switch keymap and stay there
-    if (Layer.isActive(target))
-      deactivate(keymapEntry.getKeyCode());
+    if (isActive(target_layer))
+      deactivate(target_layer);
     else
-      activate(keymapEntry.getKeyCode());
+      activate(target_layer);
   }
 }
 
-Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | SWITCH_TO_KEYMAP))
-    return mappedKey;
-
-  handleKeymapKeyswitchEvent(mappedKey, keyState);
-  return Key_NoKey;
+#ifndef NDEPRECATED
+void Layer_::handleKeymapKeyswitchEvent(Key key, uint8_t key_state) {
+  if (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))
+    handleLayerKeyEvent(KeyEvent(KeyAddr::none(), key_state, key));
 }
+
+Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
+  if (mappedKey.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))
+    handleLayerKeyEvent(KeyEvent(key_addr, keyState, mappedKey));
+  return mappedKey;
+}
+#endif
 
 Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
   return keyFromKeymap(layer, key_addr);
 }
 
-void Layer_::updateLiveCompositeKeymap(KeyAddr key_addr) {
-  int8_t layer = active_layer_keymap_[key_addr.toInt()];
-  live_composite_keymap_[key_addr.toInt()] = (*getKey)(layer, key_addr);
-}
-
 void Layer_::updateActiveLayers(void) {
   // First, set every entry in the active layer keymap to point to the default
   // layer (layer 0).
-  memset(active_layer_keymap_, 0, Runtime.device().numKeys());
+  memset(active_layer_keymap_, 0, kaleidoscope_internal::device.numKeys());
 
   // For each key address, set its entry in the active layer keymap to the value
   // of the top active layer that has a non-transparent entry for that address.

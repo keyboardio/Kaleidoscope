@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Qukeys -- Assign two keycodes to a single key
- * Copyright (C) 2017-2019  Michael Richters
+ * Copyright (C) 2017-2020  Michael Richters
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,9 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/progmem_helpers.h"
 #include "kaleidoscope/layers.h"
-
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/KeyEventTracker.h"
+#include "kaleidoscope/KeyAddrEventQueue.h"
 
 namespace kaleidoscope {
 namespace plugin {
@@ -34,68 +36,37 @@ EventHandlerResult Qukeys::onNameQuery() {
 
 // This is the event handler. It ignores certain events, but mostly just adds
 // them to the Qukeys event queue.
-EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_state) {
-  // If k is not a physical key, ignore it; some other plugin injected it.
-  if (! k.isValid() || (key_state & INJECTED) != 0) {
+EventHandlerResult Qukeys::onKeyswitchEvent(KeyEvent &event) {
+  // If the plugin has already processed and released this event, ignore it.
+  // There's no need to update the event tracker explicitly.
+  if (event_tracker_.shouldIgnore(event)) {
+    // We should never get an event that's in our queue here, but just in case
+    // some other plugin sends one, abort.
+    if (event_queue_.shouldAbort(event))
+      return EventHandlerResult::ABORT;
     return EventHandlerResult::OK;
   }
 
-  // If the key was injected (from the queue being flushed), we need to ignore
-  // it.
-  if (flushing_queue_) {
+  // If event.addr is not a physical key, ignore it; some other plugin injected it.
+  if (! event.addr.isValid() || (event.state & INJECTED) != 0) {
     return EventHandlerResult::OK;
   }
 
   // If Qukeys is turned off, continue to next plugin.
   if (! active_) {
-    if (isDualUseKey(key)) {
-      key = queue_head_.primary_key;
+    if (isDualUseKey(event.key)) {
+      event.key = queue_head_.primary_key;
     }
     return EventHandlerResult::OK;
   }
 
-  // Deal with keyswitch state changes.
-  if (keyToggledOn(key_state) || keyToggledOff(key_state)) {
-    // If the user rolled over from a non-modifier key to a qukey, let the
-    // release event for that key skip the queue. This prevents unintended
-    // repeat characters for the tapped key, which would otherwise have its
-    // release event delayed.
-    if (keyToggledOff(key_state) && event_queue_.length() == 1 &&
-        k != event_queue_.addr(0) && !isModifierKey(key)) {
-      return EventHandlerResult::OK;
-    }
-    // If we can't trivially ignore the event, just add it to the queue.
-    event_queue_.append(k, key_state);
-    // In order to prevent overflowing the queue, process it now.
-    if (event_queue_.isFull()) {
-      processQueue();
-    }
-    // Any event that gets added to the queue gets re-processed later, so we
-    // need to abort processing now.
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  // The key is being held. We need to determine if we should block it because
-  // its key press event is still in the queue, waiting to be
-  // flushed. Therefore, we search the event queue for the same key. If the
-  // first event we find there is a key press, that means we need to suppress
-  // this hold, because it's still waiting on an earlier event.
-  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
-    if (event_queue_.addr(i) == k) {
-      // If the first matching event is a release, we do not suppress it,
-      // because its press event has already been flushed.
-      if (event_queue_.isRelease(i)) {
-        break;
-      }
-      // Otherwise, the first matching event was a key press, so we need to
-      // suppress it for now.
-      return EventHandlerResult::EVENT_CONSUMED;
-    }
-  }
-
-  // Either this key doesn't have an event in the queue at all, or its first
-  // event in the queue is a release. We treat the key as a normal held key.
-  return EventHandlerResult::OK;
+  // If we can't trivially ignore the event, just add it to the queue.
+  event_queue_.append(event);
+  // In order to prevent overflowing the queue, process it now.
+  while (processQueue());
+  // Any event that gets added to the queue gets re-processed later, so we
+  // need to abort processing now.
+  return EventHandlerResult::ABORT;
 }
 
 
@@ -103,27 +74,8 @@ EventHandlerResult Qukeys::onKeyswitchEvent(Key& key, KeyAddr k, uint8_t key_sta
 // queue is ready to be flushed. It only allows one event to be flushed per
 // cycle, because the keyboard HID report can't store all of the information
 // necessary to correctly handle all of the rollover corner cases.
-EventHandlerResult Qukeys::beforeReportingState() {
-  // For keys that have been physically released, but whose release events are
-  // still waiting to be flushed from the queue, we need to restore them,
-  // because `handleKeyswitchEvent()` didn't get called for those KeyAddrs.
-  for (uint8_t i{0}; i < event_queue_.length(); ++i) {
-    if (event_queue_.isRelease(i)) {
-      KeyAddr k = event_queue_.addr(i);
-      // Now for the tricky bit. Before "restoring" this key hold, we need to
-      // make sure that its key press event has already been flushed from the
-      // queue, so we need to search for a matching key press event preceding
-      // this release event. If we find one, we need to ignore it.
-      if (isKeyAddrInQueueBeforeIndex(k, i)) {
-        continue;
-      }
-      flushing_queue_ = true;
-      handleKeyswitchEvent(Key_NoKey, k, IS_PRESSED | WAS_PRESSED);
-      flushing_queue_ = false;
-    }
-  }
-
-  // Next, if there hasn't been a keypress in a while, update the prior keypress
+EventHandlerResult Qukeys::afterEachCycle() {
+  // If there hasn't been a keypress in a while, update the prior keypress
   // timestamp to avoid integer overflow issues:
   if (Runtime.hasTimeExpired(prior_keypress_timestamp_,
                              minimum_prior_interval_)) {
@@ -131,11 +83,13 @@ EventHandlerResult Qukeys::beforeReportingState() {
       Runtime.millisAtCycleStart() - (minimum_prior_interval_ + 1);
   }
 
-  // If any events get flushed from the queue, stop there; we can only safely
-  // send the one report per cycle.
-  if (processQueue()) {
+  // If there's nothing in the queue, there's nothing more to do.
+  if (event_queue_.isEmpty()) {
     return EventHandlerResult::OK;
   }
+
+  // Process as many events as we can from the queue.
+  while (processQueue());
 
   // If we get here, that means that the first event in the queue is a qukey
   // press. All that's left to do is to check if it's been held long enough that
@@ -153,7 +107,6 @@ EventHandlerResult Qukeys::beforeReportingState() {
 
 // -----------------------------------------------------------------------------
 
-
 // This function contains most of the logic behind Qukeys. It gets called after
 // an event gets added to the queue, and again once per cycle. It returns `true`
 // if nothing more should be done, either because the queue is empty, or because
@@ -162,11 +115,9 @@ EventHandlerResult Qukeys::beforeReportingState() {
 // overflow, but those are both rare cases, and should not cause any serious
 // problems even when they do come up.
 bool Qukeys::processQueue() {
-  // If the queue is empty, signal that the beforeReportingState() process
-  // should abort before checking for a hold timeout (since there's nothing to
-  // do).
+  // If there's nothing in the queue, abort.
   if (event_queue_.isEmpty()) {
-    return true;
+    return false;
   }
 
   // In other cases, we will want the KeyAddr of the first event in the queue.
@@ -174,13 +125,28 @@ bool Qukeys::processQueue() {
 
   // If that first event is a key release, it can be flushed right away.
   if (event_queue_.isRelease(0)) {
-    flushEvent(Key_NoKey);
-    return true;
+    // We can't unconditionally flush the release event, because it might be
+    // second half of a tap-repeat event. If the queue is full, we won't bother to
+    // check, but otherwise, ift `tap_repeat_.addr` is set (and matches), we call
+    // `shouldWaitForTapRepeat()` to determine whether or not to flush the key
+    // release event.
+    if (event_queue_.isFull() ||
+        queue_head_addr != tap_repeat_.addr ||
+        !shouldWaitForTapRepeat()) {
+      flushEvent(Key_NoKey);
+      return true;
+    }
+    // We now know that we're waiting to determine if we're getting a tap-repeat
+    // sequence, so we can't flush the release event at the head of the queue.
+    // Warning: Returning false here is only okay because we already checked to
+    // make sure the queue isn't full.
+    return false;
   }
 
   // We now know that the first event is a key press. If it's not a qukey, or if
   // it's only there because the plugin was just turned off, we can flush it
   // immediately.
+  // Should be able to remove the `active_` check once `deactivate()` gets updated
   if (! isQukey(queue_head_addr) || ! active_) {
     flushEvent(queue_head_.primary_key);
     return true;
@@ -198,8 +164,8 @@ bool Qukeys::processQueue() {
   // key, so we don't need to do it repeatedly later.
   bool qukey_is_spacecadet = isModifierKey(queue_head_.primary_key);
 
-  // If the qukey press is followed a printable key too closely, it's not
-  // eligible to take on its alternate value unless it's a SpaceCadet-type key.
+  // If the qukey press followed a printable key too closely, it's not eligible
+  // to take on its alternate value unless it's a SpaceCadet-type key.
   if (!Runtime.hasTimeExpired(prior_keypress_timestamp_,
                               minimum_prior_interval_) &&
       !qukey_is_spacecadet) {
@@ -237,6 +203,13 @@ bool Qukeys::processQueue() {
       if (next_keypress_index == 0 || overlap_threshold_ == 0) {
         Key event_key = qukey_is_spacecadet ?
                         queue_head_.alternate_key : queue_head_.primary_key;
+        // A qukey just got released in primary state; this might turn out to be
+        // the beginning of a tap-repeat sequence, so we set the tap-repeat
+        // address and start time to the time of the initial press event before
+        // flushing it from the queue. This will come into play when processing
+        // the corresponding release event later.
+        tap_repeat_.addr = queue_head_addr;
+        tap_repeat_.start_time = event_queue_.timestamp(0);
         flushEvent(event_key);
         return true;
       }
@@ -303,6 +276,7 @@ void Qukeys::flushEvent(Key event_key) {
   // First we record the address and state of the event:
   KeyAddr queue_head_addr = event_queue_.addr(0);
   uint8_t keyswitch_state = event_queue_.isRelease(0) ? WAS_PRESSED : IS_PRESSED;
+  KeyEvent event{queue_head_addr, keyswitch_state, event_key, event_queue_.id(0)};
 
   // If the flushed event is a keypress of a printable symbol, record its
   // timestamp. This lets us suppress some unintended alternate values seen by
@@ -314,12 +288,11 @@ void Qukeys::flushEvent(Key event_key) {
     prior_keypress_timestamp_ = event_queue_.timestamp(0);
   }
 
-  // Remove the head event from the queue:
+  // Remove the head event from the queue, then call `handleKeyswitchEvent()` to
+  // resume processing of the event. It's important to remove the event from the
+  // queue first; otherwise `onKeyswitchEvent()` will abort it.
   event_queue_.shift();
-  // This ensures that the flushed event will be ignored by the event handler hook:
-  flushing_queue_ = true;
-  handleKeyswitchEvent(event_key, queue_head_addr, keyswitch_state);
-  flushing_queue_ = false;
+  Runtime.handleKeyswitchEvent(event);
 }
 
 
@@ -327,11 +300,10 @@ void Qukeys::flushEvent(Key event_key) {
 // that qukey's primary and alternate `Key` values for use later. We do this
 // because it's much more efficient than doing that as a separate step.
 bool Qukeys::isQukey(KeyAddr k) {
-  // First, look up the value from the keymap. We need to do a full lookup, not
-  // just looking up the cached value (i.e. `Layer.lookup(k)`), because the
-  // cached value will be out of date if a layer change happened since the
-  // keyswitch toggled on.
-  Key key = Layer.lookupOnActiveLayer(k);
+  // First, look up the value from the keymap. This value should be
+  // correct in the cache, even if there's been a layer change since
+  // the key was pressed.
+  Key key = Runtime.lookupKey(k);
 
   // Next, we check to see if this is a DualUse-type qukey (defined in the keymap)
   if (isDualUseKey(key)) {
@@ -418,6 +390,100 @@ bool Qukeys::isKeyAddrInQueueBeforeIndex(KeyAddr k, uint8_t index) const {
     }
   }
   return false;
+}
+
+
+// This question gets called early in `processQueue()` if a key release event is
+// at the head of the queue, and the `tap_repeat_.addr` is the same as that
+// event's KeyAddr. It returns true if `processQueue()` should wait for either
+// subsequent events or a timeout instead of proceeding to flush the key release
+// event immediately, and false if it is still waiting. It assumes that
+// `event_queue_[0]` is a release event, and that `event_queue_[0].addr ==
+// tap_repeat_.addr`. (The latter should only be set to a valid KeyAddr if a qukey
+// press event has been flushed with its primary Key value, and could still
+// represent the start of a double-tap or tap-repeat sequeunce.)
+bool Qukeys::shouldWaitForTapRepeat() {
+  // First, we set up a variable to store the queue index of a subsequent press
+  // of the same qukey addr, if any.
+  uint8_t second_press_index = 0;
+
+  // Next, we search the event queue (starting at index 1 because the first
+  // event in the queue is known), trying to find a matching sequeunce for
+  // either a double-tap, or a tap-repeat.
+  for (uint8_t i{1}; i < event_queue_.length(); ++i) {
+    if (event_queue_.isPress(i)) {
+      // Found a keypress event following the release of the initial primary
+      // qukey.
+      if (event_queue_.addr(i) == tap_repeat_.addr) {
+        // The same qukey toggled on twice in a row, and because of the timeout
+        // check below, we know it was quick enough that it could represent a
+        // tap-repeat sequence. Now we update the start time (which had been set
+        // to the timestamp of the first press event) to the timestamp of the
+        // first release event (currently at the head of the queue), because we
+        // want to compare the release times of the two taps to determine if
+        // it's actually a double-tap sequence instead (otherwise it could be
+        // too difficult to tap it fast enough).
+        tap_repeat_.start_time = event_queue_.timestamp(0);
+        // We also record the index of this second press event. If it turns out
+        // that we've got a tap-repeat sequence, we want to silently suppress the
+        // first release and second press by removing them from the queue
+        // without flushing them. We don't know yet whether we'll be doing so.
+        second_press_index = i;
+      } else {
+        // Some other key was pressed. For it to be a tap-repeat sequence, we
+        // require that the same key be pressed twice in a row, with no
+        // intervening presses of other keys. Therefore, we can return false to
+        // signal that the release event at the head of the queue can be
+        // flushed.
+        return false;
+      }
+
+    } else if (event_queue_.addr(i) == tap_repeat_.addr) {
+      // We've found a key release event in the queue, and it's the same key as
+      // the qukey at the head of the queue, so this is the second release that
+      // has occurred before timing out (see below for the timeout
+      // check). Therefore, this is a double-tap sequence (the second release
+      // happened very close to the first release), not a tap-repeat, so we
+      // clear the tap-repeat address, and return false to trigger the flush of
+      // the first release event.
+      tap_repeat_.addr = KeyAddr{KeyAddr::invalid_state};
+      return false;
+    }
+  }
+
+  // We've now searched the queue. Either we found only irrelevant key release
+  // events (for other keys that were pressed before the sequence began), or we
+  // found only a second key press event of the same qukey (but not a double
+  // tap). Next, we check the timeout. If we didn't find a second press event,
+  // the start time will still be that of the initial key press event (already
+  // flushed from the queue), but if the second press has been detected, the
+  // start time will be that of the key release event currently at the head of
+  // the queue.
+  if (Runtime.hasTimeExpired(tap_repeat_.start_time, tap_repeat_.timeout)) {
+    // Time has expired. The sequence represents either a single tap or a
+    // tap-repeat of the qukey's primary value. Either way, we can clear the
+    // stored address.
+    tap_repeat_.addr = KeyAddr{KeyAddr::invalid_state};
+
+    if (second_press_index > 0) {
+      // A second press was found (but it's release didn't come quick enough to
+      // be a double tap), so this is a tap-repeat event. To turn it into a
+      // single key press and hold, we need to remove the second press event and
+      // the first release event from the queue without flushing the
+      // events. Order matters here!
+      event_queue_.remove(second_press_index);
+      event_queue_.remove(0);
+    } else {
+      // The key was not pressed again, so the single tap has timed out. We
+      // return false to let the release event be flushed.
+      return false;
+    }
+  }
+
+  // We haven't found a double-tap sequence, and the timeout hasn't expired, so
+  // we return true to signal that we should just wait until we get another
+  // event, or until time runs out.
+  return true;
 }
 
 

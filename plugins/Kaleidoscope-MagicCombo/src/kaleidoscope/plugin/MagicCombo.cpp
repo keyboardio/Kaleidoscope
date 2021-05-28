@@ -28,7 +28,7 @@ EventHandlerResult MagicCombo::onNameQuery() {
   return ::Focus.sendName(F("MagicCombo"));
 }
 
-EventHandlerResult MagicCombo::beforeReportingState() {
+EventHandlerResult MagicCombo::afterEachCycle() {
   for (byte i = 0; i < magiccombo::combos_length; i++) {
     bool match = true;
     byte j;

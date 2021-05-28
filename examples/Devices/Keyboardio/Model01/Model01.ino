@@ -85,8 +85,8 @@ static kaleidoscope::plugin::LEDSolidColor solidBlue(0, 15, 100);
 static kaleidoscope::plugin::LEDSolidColor solidIndigo(0, 0, 100);
 static kaleidoscope::plugin::LEDSolidColor solidViolet(70, 0, 60);
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 1 && keyToggledOn(keyState)) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (macro_id == 1 && keyToggledOn(event.state)) {
     Kaleidoscope.serialPort().print("Keyboard.IO keyboard driver v0.00");
     return MACRO(I(25),
                  D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),

@@ -52,10 +52,10 @@ static void unicode(uint32_t character, uint8_t keyState) {
   }
 }
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
   case MACRO_KEYBOARD_EMOJI:
-    unicode(0x2328, keyState);
+    unicode(0x2328, event.state);
     break;
   }
   return MACRO_NONE;

@@ -22,31 +22,20 @@
 namespace kaleidoscope {
 namespace plugin {
 
-Key Redial::key_to_redial_;
 Key Redial::last_key_;
-bool Redial::redial_held_ = false;
 
 EventHandlerResult Redial::onNameQuery() {
   return ::Focus.sendName(F("Redial"));
 }
 
-EventHandlerResult Redial::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (mapped_key == Key_Redial) {
-    if (keyToggledOff(key_state))
-      key_to_redial_ = last_key_;
-
-    mapped_key = key_to_redial_;
-    redial_held_ = keyIsPressed(key_state);
-
-    return EventHandlerResult::OK;
+EventHandlerResult Redial::onKeyEvent(KeyEvent &event) {
+  if (keyToggledOn(event.state)) {
+    if (event.key == Key_Redial) {
+      event.key = last_key_;
+    } else if (shouldRemember(event.key)) {
+      last_key_ = event.key;
+    }
   }
-
-  if (keyToggledOn(key_state) && shouldRemember(mapped_key)) {
-    last_key_ = mapped_key;
-    if (!redial_held_)
-      key_to_redial_ = mapped_key;
-  }
-
   return EventHandlerResult::OK;
 }
 

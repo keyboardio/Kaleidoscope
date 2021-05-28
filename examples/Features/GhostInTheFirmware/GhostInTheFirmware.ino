@@ -20,115 +20,85 @@
 #include <Kaleidoscope-LED-Stalker.h>
 #include <Kaleidoscope-Macros.h>
 
+// This sketch is set up to demonstrate the GhostInTheFirmware plugin. The left
+// palm key will activate the plugin, virtually pressing each key on the bottom
+// row in sequence, and lighting up the keys using the Stalker LED effect. It
+// will type out the letters from A to N, but the right palm key can be used to
+// toggle the custom EventDropper plugin to suppress USB output.
+
 // *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED
-  (___, ___, ___, ___, ___, ___, M(0),
+  (___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___,
-   ___, ___, ___, ___, ___, ___, ___,
+   Key_A, Key_B, Key_C, Key_D, Key_E, Key_F, Key_G,
 
    ___, ___, ___, ___,
-   ___,
+   M(0),
 
    ___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
-   ___, ___, ___, ___, ___, ___, ___,
+   Key_H, Key_I, Key_J, Key_K, Key_L, Key_M, Key_N,
 
    ___, ___, ___, ___,
-   ___),
+   M(1)),
         )
 // *INDENT-ON*
 
-class EventDropper_ : public kaleidoscope::Plugin {
- public:
-  EventDropper_() {}
+namespace kaleidoscope {
+namespace plugin {
 
-  kaleidoscope::EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-    return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+class EventDropper : public Plugin {
+ public:
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (active_)
+      return EventHandlerResult::EVENT_CONSUMED;
+    return EventHandlerResult::OK;
   }
+  void toggle() {
+    active_ = !active_;
+  }
+ private:
+  bool active_ = false;
 };
 
-static EventDropper_ EventDropper;
+} // namespace plugin
+} // namespace kaleidoscope
 
-const macro_t *macroAction(uint8_t macro_index, uint8_t key_state) {
-  if (macro_index == 0 && keyToggledOn(key_state))
+kaleidoscope::plugin::EventDropper EventDropper;
+
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  if (macro_id == 0 && keyToggledOn(event.state))
     GhostInTheFirmware.activate();
+  if (macro_id == 1 && keyToggledOn(event.state))
+    EventDropper.toggle();
 
   return MACRO_NONE;
 }
 
 static const kaleidoscope::plugin::GhostInTheFirmware::GhostKey ghost_keys[] PROGMEM = {
-  {0, 6, 200, 50},
-  {0, 5, 200, 50},
-  {0, 4, 200, 50},
-  {0, 3, 200, 50},
-  {0, 2, 200, 50},
-  {0, 1, 200, 50},
-  {0, 0, 200, 50},
-  {1, 0, 200, 50},
-  {1, 1, 200, 50},
-  {1, 2, 200, 50},
-  {1, 3, 200, 50},
-  {1, 4, 200, 50},
-  {1, 5, 200, 50},
-  {1, 6, 200, 50},
-  {2, 6, 200, 50},
-  {2, 5, 200, 50},
-  {2, 4, 200, 50},
-  {2, 3, 200, 50},
-  {2, 2, 200, 50},
-  {2, 1, 200, 50},
-  {2, 0, 200, 50},
-  {3, 0, 200, 50},
-  {3, 1, 200, 50},
-  {3, 3, 200, 50},
-  {3, 4, 200, 50},
-  {3, 5, 200, 50},
-  {0, 7, 200, 50},
-  {1, 7, 200, 50},
-  {2, 7, 200, 50},
-  {3, 7, 200, 50},
-  {3, 6, 200, 50},
+  {KeyAddr(3, 0), 200, 50},
+  {KeyAddr(3, 1), 200, 50},
+  {KeyAddr(3, 2), 200, 50},
+  {KeyAddr(3, 3), 200, 50},
+  {KeyAddr(3, 4), 200, 50},
+  {KeyAddr(3, 5), 200, 50},
+  {KeyAddr(2, 6), 200, 50},
+  {KeyAddr(2, 9), 200, 50},
+  {KeyAddr(3, 10), 200, 50},
+  {KeyAddr(3, 11), 200, 50},
+  {KeyAddr(3, 12), 200, 50},
+  {KeyAddr(3, 13), 200, 50},
+  {KeyAddr(3, 14), 200, 50},
+  {KeyAddr(3, 15), 200, 50},
 
-  {3, 9, 200, 50},
-  {3, 8, 200, 50},
-  {2, 8, 200, 50},
-  {1, 8, 200, 50},
-  {0, 8, 200, 50},
-  {3, 10, 200, 50},
-  {3, 11, 200, 50},
-  {3, 12, 200, 50},
-  {3, 13, 200, 50},
-  {3, 14, 200, 50},
-  {3, 15, 200, 50},
-  {2, 15, 200, 50},
-  {2, 14, 200, 50},
-  {2, 13, 200, 50},
-  {2, 12, 200, 50},
-  {2, 11, 200, 50},
-  {2, 10, 200, 50},
-  {2, 9, 200, 50},
-  {1, 9, 200, 50},
-  {1, 10, 200, 50},
-  {1, 11, 200, 50},
-  {1, 12, 200, 50},
-  {1, 13, 200, 50},
-  {1, 14, 200, 50},
-  {1, 15, 200, 50},
-  {0, 15, 200, 50},
-  {0, 14, 200, 50},
-  {0, 13, 200, 50},
-  {0, 12, 200, 50},
-  {0, 11, 200, 50},
-  {0, 10, 200, 50},
-  {0, 9, 200, 50},
-
-  {0, 0, 0, 0}
+  {KeyAddr::none(), 0, 0}
 };
 
 KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
+                          LEDControl,
                           StalkerEffect,
                           Macros,
                           EventDropper);

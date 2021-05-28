@@ -77,10 +77,10 @@ KEYMAPS(
 
 KALEIDOSCOPE_INIT_PLUGINS(Macros);
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  switch (macroIndex) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  switch (macro_id) {
   case 0:
-    if (keyToggledOn(keyState))
+    if (keyToggledOn(event.state))
       Layer.deactivate(0);
     else
       Layer.activate(0);

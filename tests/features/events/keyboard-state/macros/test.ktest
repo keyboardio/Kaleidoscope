@@ -1,0 +1,47 @@
+VERSION 1
+
+KEYSWITCH A    0 0
+KEYSWITCH L_1  1 0
+
+# ==============================================================================
+# Keyboard state array
+NAME Keyboard state array cleared
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+# Press and hold `ShiftToLayer(1)`, changing the `A` key to `X`
+PRESS L_1
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Y # Report should contain only `Y`
+
+RUN 5 ms
+RELEASE L_1
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A`
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms

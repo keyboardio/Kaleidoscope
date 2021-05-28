@@ -23,29 +23,23 @@ namespace kaleidoscope {
 namespace plugin {
 class GhostInTheFirmware : public kaleidoscope::Plugin {
  public:
-  typedef struct {
-    byte row;
-    byte col;
-    uint16_t pressTime;
+  struct GhostKey {
+    KeyAddr addr;
+    uint16_t press_time;
     uint16_t delay;
-  } GhostKey;
+  };
   static const GhostKey *ghost_keys;
 
   GhostInTheFirmware(void) {}
 
   static void activate(void);
 
-  EventHandlerResult beforeReportingState();
+  EventHandlerResult afterEachCycle();
 
  private:
   static bool is_active_;
-  static bool is_pressed_;
   static uint16_t current_pos_;
-  static uint32_t start_time_;
-  static uint16_t press_timeout_;
-  static uint16_t delay_timeout_;
-
-  static void loopHook(bool is_post_clear);
+  static uint16_t start_time_;
 };
 }
 }

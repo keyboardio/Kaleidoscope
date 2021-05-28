@@ -16,25 +16,19 @@
  */
 
 #include <Kaleidoscope-ShapeShifter.h>
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/LiveKeys.h"
 
 namespace kaleidoscope {
 namespace plugin {
 
-const ShapeShifter::dictionary_t *ShapeShifter::dictionary = NULL;
-bool ShapeShifter::mod_active_;
+const ShapeShifter::dictionary_t *ShapeShifter::dictionary = nullptr;
 
-EventHandlerResult ShapeShifter::beforeReportingState() {
-  mod_active_ = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
-                kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
-  return EventHandlerResult::OK;
-}
-
-EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-  if (!dictionary)
+EventHandlerResult ShapeShifter::onKeyEvent(KeyEvent &event) {
+  if (dictionary == nullptr)
     return EventHandlerResult::OK;
 
-  // If Shift is not active, bail out early.
-  if (!mod_active_)
+  if (!dictionary)
     return EventHandlerResult::OK;
 
   Key orig, repl;
@@ -45,17 +39,26 @@ EventHandlerResult ShapeShifter::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
     orig = dictionary[i].original.readFromProgmem();
     i++;
   } while (orig != Key_NoKey &&
-           orig != mapped_key);
+           orig != event.key);
   i--;
 
   // If not found, bail out.
   if (orig == Key_NoKey)
     return EventHandlerResult::OK;
 
+  bool shift_detected = false;
+
+  for (KeyAddr k : KeyAddr::all()) {
+    if (live_keys[k].isKeyboardShift())
+      shift_detected = true;
+  }
+  if (! shift_detected)
+    return EventHandlerResult::OK;
+
   repl = dictionary[i].replacement.readFromProgmem();
 
   // If found, handle the alternate key instead
-  mapped_key = repl;
+  event.key = repl;
   return EventHandlerResult::OK;
 }
 

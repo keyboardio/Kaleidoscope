@@ -18,7 +18,11 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/LiveKeys.h"
 #include <Kaleidoscope-Ranges.h>
+#include "kaleidoscope/KeyAddr.h"
+#include "kaleidoscope/KeyAddrEventQueue.h"
+#include "kaleidoscope/KeyEventTracker.h"
 
 #define TD(n) Key(kaleidoscope::ranges::TD_FIRST + n)
 
@@ -47,31 +51,32 @@ class TapDance : public kaleidoscope::Plugin {
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
   EventHandlerResult onNameQuery();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState);
+  EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
+  static constexpr bool isTapDanceKey(Key key) {
+    return (key.getRaw() >= ranges::TD_FIRST &&
+            key.getRaw() <= ranges::TD_LAST);
+  }
+
  private:
-  static constexpr uint8_t TAPDANCE_KEY_COUNT = 16;
-  struct TapDanceState {
-    bool pressed: 1;
-    bool triggered: 1;
-    bool release_next: 1;
-    uint8_t count;
-  };
-  static TapDanceState state_[TAPDANCE_KEY_COUNT];
+  // The maximum number of events in the queue at a time.
+  static constexpr uint8_t queue_capacity_{8};
 
-  static uint16_t start_time_;
-  static Key last_tap_dance_key_;
-  static KeyAddr last_tap_dance_addr_;
+  // The event queue stores a series of press and release events.
+  KeyAddrEventQueue<queue_capacity_> event_queue_;
 
-  static void tap(void);
-  static void interrupt(KeyAddr key_addr);
-  static void timeout(void);
-  static void release(uint8_t tap_dance_index);
+  static KeyEventTracker event_tracker_;
+
+  // The number of taps in the current TapDance sequence.
+  static uint8_t tap_count_;
+
+  void flushQueue(KeyAddr ignored_addr = KeyAddr::none());
+
 };
-}
 
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action);

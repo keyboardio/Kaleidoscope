@@ -7,6 +7,8 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 * [Upgrade notes](#upgrade-notes)
   + [New features](#new-features)
+    - [Event-driven main loop](#event-driven-main-loop)
+    - [Keyboard state array](#keyboard-state-array)
     - [New build system](#new-build-system)
     - [New device API](#new-device-api)
     - [New plugin API](#new-plugin-api)
@@ -18,6 +20,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
     - [HostOS](#hostos)
     - [MagicCombo](#magiccombo)
+    - [OneShot](#oneshot)
     - [Qukeys](#qukeys)
     - [TypingBreaks](#typingbreaks)
     - [Redial](#redial)
@@ -33,6 +36,103 @@ any API we've included in a release. Typically, this means that any code that us
 
 
 ## New features
+
+### Event-driven main loop
+
+Kaleidoscope's main loop has been rewritten. It now responds to key toggle-on and toggle-off events, dealing with one event at a time (and possibly more than one in a given cycle). Instead of sending a keyboard HID report at the end of every scan cycle (and letting the HID module suppress duplicates), it now only sends HID reports in response to input events.
+
+Furthermore, there are now two functions for initiating the processing of key events:
+- `Runtime.handleKeyswitchEvent()` is the starting point for events that represent physical keyswitches toggling on or off.
+- `Runtime.handleKeyEvent()` is the starting point for "artificial" key events. It is also called at the end of `handleKeyswitchEvent()`.
+In general, if a plugin needs to generate a key event, it should call `handleKeyEvent()`, not `handleKeyswitchEvent()`.
+
+Each of the above functions calls its own set of plugin event handlers. When those event handlers are all done, event processing continues as `handleKeyEvent()` prepares a new keyboard HID report, then sends it:
+- `Runtime.prepareKeyboardReport()` first clears the HID report, then populates it based on the contents of the `live_keys[]` array. Note that the HID report is not cleared until _after_ the new plugin event handlers have been called.
+- `Runtime.sendKeyboardReport()`  handles generating extra HID reports required for keys with keyboard modifier flags to avoid certain bugs, then calls a new plugin event handler before finally sending the new HID report.
+These functions should rarely, if ever, need to be called by plugins.
+
+#### The `KeyEvent` data type
+
+There is a new `KeyEvent` type that encapsulates all the data relevant to a new key event, and it is used as the parameter for the new event-handling functions.
+- `event.addr` contains the `KeyAddr` associated with the event.
+- `event.state` contains the state bitfield (`uint8_t`), which can be tested with `keyToggledOn()`/`keyToggledOff()`.
+- `event.key` contains a `Key` value, usually looked up from the keymap.
+- `event.id` contains a pseudo-unique ID number of type `KeyEventId` (an 8-bit integer), used by certain plugins (see `onKeyswitchEvent()` below).
+
+#### New plugin event handlers
+##### `onKeyswitchEvent(KeyEvent &event)`
+##### `onKeyEvent(KeyEvent &event)`
+##### `onAddToReport(Key key)`
+##### `beforeReportingState(const KeyEvent &event)`
+
+#### For end-users
+
+Existing sketches should be mostly backwards-compatible, but some updates will be needed for sketches that use custom code. In particular, users of the Macros plugin are likely to need to make adjustments to the code in the user-defined `macroAction()` function, including that function's signature, the new version of which takes a `KeyEvent` parameter instead of just an event state value. In most cases, this will make the resulting code more straightforward without any loss of functionality.
+
+In addition to Macros, these changes might also affect user-defined code executed by the TapDance, Leader, and Syster plugins. Please see the documentation and examples for the affected plugins for details.
+
+### Keyboard State array
+
+The keymap cache (`Layer_::live_composite_keymap_[]`) has been replaced by a keyboard state array (`kaleidoscope::live_keys[]`). The top-level functions that handle keyswitch events have been updated to treat this new array as a representation of the current state of the keyboard, with corresponding `Key` values for any keys that are active (physically held or activated by a plugin).
+
+#### For end-users
+
+There should be no user-visible changes for anyone who simply uses core plugins. A few functions have been deprecated (`Layer.eventHandler()` & `Layer.updateLiveCompositeKeymap()`), but there are straightforward replacements for both.
+
+#### For developers
+
+The major changes are to the `handleKeyswitchEvent()` function, which has been reorganized in order to update the new keyboard state array with correct values at the appropriate times. In addition to that, two new facilities are available:
+
+##### `EventHandlerResult::ABORT`
+
+This is a new return value available to plugin event handlers, which is similar to `EVENT_CONSUMED` in that it causes the calling hook function to return early (stopping any subsequent handlers from seeing the event), but is treated differently by `handleKeyswitchEvent()`. If a handler returns `EVENT_CONSUMED`, the keyboard state array will still be updated by `handleKeyswitchEvent()`, but if it returns `ABORT`, it will not. In both cases, no further event processing will be done by the built-in event handler.
+
+##### `live_keys[key_addr]`
+
+This is the new facility for checking the value of an entry in the keyboard state array. It is indexed directly by `KeyAddr` values, without the need to convert them to integers first. For example, it could be used in a range-based `for` loop to check for values of interest:
+
+```c++
+for (KeyAddr key_addr : KeyAddr::all()) {
+  Key key = live_keys[key_addr];
+  if (key == Key_LeftShift || key == Key_RightShift) {
+    // do something special...
+  }
+}
+```
+
+Additionally, if the `KeyAddr` values are not needed, one can use the iterator from the new `KeyMap` class like so:
+
+```c++
+for (Key key : live_keys.all()) {
+  if (key == Key_X) {
+    // do something special...
+  }
+}
+```
+
+The `live_keys` object's subscript operator can also be used to set values in the keyboard state array:
+
+```c++
+live_keys[key_addr] = Key_X;
+```
+
+It also comes with several convenience functions which can be used to make the intention of the code clear:
+
+```c++
+// Set a value in the keyboard state array to a specified Key value:
+live_keys.activate(key_addr, Key_X);
+
+// Set a value to Key_Inactive, deactivating the key:
+live_keys.clear(key_addr);
+
+// Set all values in the array to Key_Inactive:
+live_keys.clear();)
+
+// Set a value to Key_Masked, masking the key until its next release event:
+live_keys.mask(key_addr);
+```
+
+In most cases, it won't be necessary for plugins or user sketches to call any of these functions directly, as the built-in event handler functions will manage the keyboard state array automatically.
 
 ### New build system
 
@@ -517,6 +617,44 @@ If your actions made use of the `left_hand` or `right_hand` arguments of
 more involved to get to, out of scope for this simple migration guide. Please
 open an issue, or ask for help on the forums, and we'll help you.
 
+### OneShot
+
+Older versions of the plugin were based on `Key` values; OneShot is now based on
+`KeyAddr` coordinates instead, in order to improve reliability and
+functionality.
+
+The following deprecated functions and variables will be removed after
+**2021-04-31**.
+
+#### Deprecated functions
+
+- `OneShot.inject(key, key_state)`: This `Key`-based function still works, but
+  because OneShot keys are now required to have a valid `KeyAddr`, it will now
+  look for an idle key, and use that, masking whatever value was mapped to that
+  key. Most of the reasons for using this function are better addressed by using
+  the newer features of the plugin, such as automatic one-shot modifiers. Use is
+  very strongly discouraged.
+- `OneShot.isActive(key)`: This `Key`-based function no longer makes sense now
+  that OneShot is `KeyAddr`-based. There is a `OneShot.isActive(key_addr)`
+  function that should be used instead. The deprecated function still works, but
+  its use is discouraged.
+- `OneShot.isSticky(key)`: This `Key`-based function no longer makes sense now
+  that OneShot is `KeyAddr`-based. There is a `OneShot.isSticky(key_addr)`
+  function that should be used instead. The deprecated function still works, but
+  its use is discouraged.
+- `OneShot.isPressed()`: This function no longer has any reason for existing. In
+  older versions, the Escape-OneShot companion plugin used it to solve a problem
+  that no longer exists. It now always returns `false`.
+- `OneShot.isModifierActive(key)`: This function still works, but is not
+  perfectly reliable, because it now returns positive results for keys other
+  than OneShot modifiers. It should not be used.
+
+#### Deprecated variables
+
+- `OneShot.time_out`: Use `OneShot.setTimeout()` instead.
+- `OneShot.hold_time_out`: Use `OneShot.setHoldTimeout()` instead.
+- `OneShot.double_tap_time_out`: Use `OneShot.setDoubleTapTimeout()` instead.
+
 ### Qukeys
 
 Older versions of the plugin used `row` and `col` indexing for defining `Qukey`
@@ -583,6 +721,14 @@ The following headers and names have changed:
 - [SpaceCadet](plugins/Kaleidoscope-SpaceCadet.md) had the `kaleidoscope::SpaceCadet::KeyBinding` type replaced by `kaleidoscope::plugin::SpaceCadet::KeyBinding`.
 - [Syster](plugins/Kaleidoscope-Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
 - [TapDance](plugins/Kaleidoscope-TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
+
+### Live Composite Keymap Cache
+
+The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `live_keys.activate()` instead.
+
+When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `live_keys.activate()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
+
+Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
 
 # Removed APIs
 

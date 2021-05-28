@@ -1,0 +1,115 @@
+VERSION 1
+
+KEYSWITCH TD_0  0 0
+KEYSWITCH TD_1  0 1
+
+# ==============================================================================
+NAME TapDance to TapDance rollover left to right
+
+RUN 5 ms
+PRESS TD_0
+RUN 5 ms
+PRESS TD_1
+RUN 1 cycle
+EXPECT keyboard-report Key_A # TD_0 should be interrupted, yielding `A`
+RUN 4 ms
+RELEASE TD_0
+RUN 5 ms
+RELEASE TD_1
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_A, Key_B # TD_1 should time out, yielding `B`
+EXPECT keyboard-report Key_B # TD_0 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 50ms
+
+RUN 5 ms
+PRESS TD_0
+RUN 5 ms
+PRESS TD_1
+RUN 1 cycle
+EXPECT keyboard-report Key_A # TD_0 should be interrupted, yielding `A`
+RUN 4 ms
+RELEASE TD_0
+RUN 5 ms
+RELEASE TD_1
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_A, Key_B # TD_1 should time out, yielding `B`
+EXPECT keyboard-report Key_B # TD_0 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 100ms
+
+# ==============================================================================
+NAME TapDance to TapDance rollover right to left
+
+RUN 5 ms
+PRESS TD_1
+RUN 5 ms
+PRESS TD_0
+RUN 1 cycle
+EXPECT keyboard-report Key_B # TD_1 should be interrupted, yielding `B`
+RUN 4 ms
+RELEASE TD_1
+RUN 5 ms
+RELEASE TD_0
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_B, Key_A # TD_0 should time out, yielding `A`
+EXPECT keyboard-report Key_A # TD_1 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 150ms
+
+RUN 5 ms
+PRESS TD_1
+RUN 5 ms
+PRESS TD_0
+RUN 1 cycle
+EXPECT keyboard-report Key_B # TD_1 should be interrupted, yielding `B`
+RUN 4 ms
+RELEASE TD_1
+RUN 5 ms
+RELEASE TD_0
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_B, Key_A # TD_0 should time out, yielding `A`
+EXPECT keyboard-report Key_A # TD_1 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 200ms
+
+# ==============================================================================
+NAME TapDance to TapDance rollover back and forth
+
+RUN 5 ms
+PRESS TD_0
+RUN 5 ms
+PRESS TD_1
+RUN 1 cycle
+EXPECT keyboard-report Key_A # TD_0 should be interrupted, yielding `A`
+RUN 4 ms
+RELEASE TD_0
+RUN 5 ms
+RELEASE TD_1
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_A, Key_B # TD_1 should time out, yielding `B`
+EXPECT keyboard-report Key_B # TD_0 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 250ms
+
+RUN 5 ms
+PRESS TD_1
+RUN 5 ms
+PRESS TD_0
+RUN 1 cycle
+EXPECT keyboard-report Key_B # TD_1 should be interrupted, yielding `B`
+RUN 4 ms
+RELEASE TD_1
+RUN 5 ms
+RELEASE TD_0
+RUN 16 ms  # timeout = 25ms
+RUN 1 cycle
+EXPECT keyboard-report Key_B, Key_A # TD_0 should time out, yielding `A`
+EXPECT keyboard-report Key_A # TD_1 should be released
+EXPECT keyboard-report empty # Empty report after TD_1 timeout
+RUN 13 ms  # t = 300ms

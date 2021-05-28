@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2019  Keyboard.io, Inc.
+ * Copyright (C) 2013-2020  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,11 +21,11 @@
 //#include <assert.h>
 
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
-namespace plugin {
 
 // This class defines a keyswitch event queue that stores both press and release
 // events, recording the key address, a timestamp, and the keyswitch state
@@ -44,7 +44,8 @@ class KeyAddrEventQueue {
 
  private:
   uint8_t    length_{0};
-  KeyAddr    addrs_[_capacity];
+  KeyEventId event_ids_[_capacity];  // NOLINT(runtime/arrays)
+  KeyAddr    addrs_[_capacity];      // NOLINT(runtime/arrays)
   _Timestamp timestamps_[_capacity]; // NOLINT(runtime/arrays)
   _Bitfield  release_event_bits_;
 
@@ -62,6 +63,11 @@ class KeyAddrEventQueue {
   // Queue entry access methods. Note: the caller is responsible for bounds
   // checking, because it's expected that a for loop will be used when searching
   // the queue, which will terminate when `index >= queue.length()`.
+  KeyEventId id(uint8_t index) const {
+    // assert(index < length_);
+    return event_ids_[index];
+  }
+
   KeyAddr addr(uint8_t index) const {
     // assert(index < length_);
     return addrs_[index];
@@ -83,26 +89,54 @@ class KeyAddrEventQueue {
 
   // Append a new event on the end of the queue. Note: the caller is responsible
   // for bounds checking; we don't guard against it here.
-  void append(KeyAddr k, uint8_t keyswitch_state) {
+  void append(const KeyEvent& event) {
     // assert(length_ < _capacity);
-    addrs_[length_]      = k;
+    event_ids_[length_]  = event.id();
+    addrs_[length_]      = event.addr;
     timestamps_[length_] = Runtime.millisAtCycleStart();
-    bitWrite(release_event_bits_, length_, keyToggledOff(keyswitch_state));
+    bitWrite(release_event_bits_, length_, keyToggledOff(event.state));
     ++length_;
   }
 
-  // Remove the first event from the head of the queue, shifting the
-  // others. This function actually shifts the queue by copying element values,
+  // Remove an event from the head of the queue, shifting the subsequent
+  // ones. This function actually shifts the queue by copying element values,
   // rather than using a ring buffer because we expect it will be called much
   // less often than the queue is searched via a for loop.
-  void shift() {
-    // assert(length > 0);
+  void remove(uint8_t n = 0) {
+    // assert(length > n);
     --length_;
-    for (uint8_t i{0}; i < length_; ++i) {
+    for (uint8_t i{n}; i < length_; ++i) {
+      event_ids_[i]  = event_ids_[i + 1];
       addrs_[i]      = addrs_[i + 1];
       timestamps_[i] = timestamps_[i + 1];
     }
+    // mask = all ones for bits >= n, zeros otherwise
+    _Bitfield mask = _Bitfield(~0) << n;
+    // use the inverse mask to get just the low bits (that won't be shifted)
+    _Bitfield low_bits = release_event_bits_ & ~mask;
+    // shift the event bits
     release_event_bits_ >>= 1;
+    // use the mask to zero the low bits, leaving only the shifted high bits
+    release_event_bits_ &= mask;
+    // add the low bits back in
+    release_event_bits_ |= low_bits;
+  }
+
+  void shift() {
+    remove(0);
+  }
+
+  void shift(uint8_t n) {
+    if (n >= length_) {
+      clear();
+      return;
+    }
+    length_ -= n;
+    for (uint8_t i{0}; i < length_; ++i) {
+      addrs_[i]      = addrs_[i + n];
+      timestamps_[i] = timestamps_[i + n];
+    }
+    release_event_bits_ >>= n;
   }
 
   // Empty the queue entirely.
@@ -110,7 +144,16 @@ class KeyAddrEventQueue {
     length_             = 0;
     release_event_bits_ = 0;
   }
+
+  KeyEvent event(uint8_t i) const {
+    uint8_t state = isRelease(i) ? WAS_PRESSED : IS_PRESSED;
+    return KeyEvent{addr(i), state, Key_NoKey, id(i)};
+  }
+
+  // Only call this after `EventTracker::shouldIgnore()` returns `true`.
+  bool shouldAbort(const KeyEvent& event) const {
+    return (length_ != 0) && (event.id() - event_ids_[0] >= 0);
+  }
 };
 
-}  // namespace plugin
 }  // namespace kaleidoscope

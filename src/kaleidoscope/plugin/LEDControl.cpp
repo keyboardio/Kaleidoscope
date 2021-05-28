@@ -18,6 +18,7 @@
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope_internal/LEDModeManager.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/LiveKeys.h"
 
 using namespace kaleidoscope::internal; // NOLINT(build/namespaces)
 
@@ -26,36 +27,40 @@ namespace plugin {
 
 static constexpr uint8_t uninitialized_mode_id = 255;
 
-uint8_t LEDControl::mode_id = uninitialized_mode_id;
+uint8_t LEDControl::mode_id_ = uninitialized_mode_id;
 uint8_t LEDControl::num_led_modes_ = LEDModeManager::numLEDModes();
 LEDMode *LEDControl::cur_led_mode_ = nullptr;
-uint8_t LEDControl::syncDelay = 32;
-uint16_t LEDControl::syncTimer = 0;
 bool LEDControl::enabled_ = true;
-Key LEDControl::pending_next_prev_key_ = Key_NoKey;
 
 LEDControl::LEDControl(void) {
 }
+uint8_t LEDControl::sync_interval_ = 32;
+uint16_t LEDControl::last_sync_time_ = 0;
 
-void LEDControl::next_mode(void) {
-  mode_id++;
+#ifndef NDEPRECATED
+uint8_t LEDControl::syncDelay = LEDControl::sync_interval_;
+#endif
 
-  if (mode_id >= num_led_modes_) {
+
+void LEDControl::next_mode() {
+  ++mode_id_;
+
+  if (mode_id_ >= num_led_modes_) {
     return set_mode(0);
   }
 
-  return set_mode(mode_id);
+  return set_mode(mode_id_);
 }
 
-void LEDControl::prev_mode(void) {
-  if (mode_id == 0) {
+void LEDControl::prev_mode() {
+  if (mode_id_ == 0) {
     // wrap around
-    mode_id = num_led_modes_ - 1;
+    mode_id_ = num_led_modes_ - 1;
   } else {
-    mode_id--;
+    mode_id_--;
   }
 
-  return set_mode(mode_id);
+  return set_mode(mode_id_);
 }
 
 void
@@ -63,15 +68,15 @@ LEDControl::set_mode(uint8_t mode_) {
   if (mode_ >= num_led_modes_)
     return;
 
-  mode_id = mode_;
+  mode_id_ = mode_;
 
   // Cache the LED mode
   //
-  cur_led_mode_ = LEDModeManager::getLEDMode(mode_id);
+  cur_led_mode_ = LEDModeManager::getLEDMode(mode_id_);
 
   refreshAll();
 
-  kaleidoscope::Hooks::onLEDModeChange();
+  Hooks::onLEDModeChange();
 }
 
 void LEDControl::activate(LEDModeInterface *plugin) {
@@ -124,15 +129,20 @@ void LEDControl::syncLeds(void) {
   if (!enabled_)
     return;
 
+  // This would be a good spot to introduce a new hook function so that a plugin
+  // that needs to override the color of an LED used by an LED mode can do so
+  // efficiently.
+  Hooks::beforeSyncingLeds();
+
   Runtime.device().syncLeds();
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onSetup() {
+EventHandlerResult LEDControl::onSetup() {
   set_all_leds_to({0, 0, 0});
 
   LEDModeManager::setupPersistentLEDModes();
 
-  if (mode_id == uninitialized_mode_id) {
+  if (mode_id_ == uninitialized_mode_id) {
     set_mode(0);
   }
 
@@ -151,16 +161,33 @@ void LEDControl::enable() {
   Runtime.device().syncLeds();
 }
 
-kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
-    return kaleidoscope::EventHandlerResult::OK;
+EventHandlerResult LEDControl::onKeyEvent(KeyEvent &event) {
+  if (event.key.getFlags() != (SYNTHETIC | IS_INTERNAL | LED_TOGGLE))
+    return EventHandlerResult::OK;
 
-  if (keyToggledOn(keyState)) {
-    if (mappedKey == Key_LEDEffectNext || mappedKey == Key_LEDEffectPrevious) {
-      // Handling of these keys is delayed into `beforeReportingState`
-      // so that we can incorporate the shift modifier state.
-      pending_next_prev_key_ = mappedKey;
-    } else if (mappedKey == Key_LEDToggle) {
+  if (keyToggledOn(event.state)) {
+    if (event.key == Key_LEDEffectNext || event.key == Key_LEDEffectPrevious) {
+      // First, check for an active shift key.
+      bool shift_active = false;
+      // This change should be back-ported to #904
+      for (Key active_key : live_keys.all()) {
+        if (active_key.isKeyboardShift()) {
+          shift_active = true;
+          break;
+        }
+      }
+      // Next, record which key (next or previous) was pressed as a boolean.
+      bool key_is_next = (event.key == Key_LEDEffectNext);
+      // This is basically an XOR with two booleans. If the "next" key was
+      // pressed and no shift key is active, or if the "previous" key was
+      // pressed and a shift key is active, we activate the next LED
+      // Mode. Otherwise, we activate the previous mode.
+      if (key_is_next != shift_active) {
+        next_mode();
+      } else {
+        prev_mode();
+      }
+    } else if (event.key == Key_LEDToggle) {
       if (enabled_)
         disable();
       else
@@ -168,34 +195,26 @@ kaleidoscope::EventHandlerResult LEDControl::onKeyswitchEvent(Key &mappedKey, Ke
     }
   }
 
-  return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::EVENT_CONSUMED;
 }
 
-kaleidoscope::EventHandlerResult LEDControl::beforeReportingState(void) {
+EventHandlerResult LEDControl::afterEachCycle() {
   if (!enabled_)
-    return kaleidoscope::EventHandlerResult::OK;
+    return EventHandlerResult::OK;
 
-  if (pending_next_prev_key_ != Key_NoKey) {
-    bool is_shifted =
-      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift) ||
-      kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_RightShift);
-
-    if ((pending_next_prev_key_ == Key_LEDEffectNext && !is_shifted) ||
-        (pending_next_prev_key_ == Key_LEDEffectPrevious && is_shifted)) {
-      next_mode();
-    } else {
-      prev_mode();
-    }
-    pending_next_prev_key_ = Key_NoKey;
-  }
-
-  if (Runtime.hasTimeExpired(syncTimer, syncDelay)) {
+  if (Runtime.hasTimeExpired(last_sync_time_, sync_interval_)) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    sync_interval_ = syncDelay;
+#pragma GCC diagnostic pop
+#endif
     syncLeds();
-    syncTimer += syncDelay;
+    last_sync_time_ += sync_interval_;
     update();
   }
 
-  return kaleidoscope::EventHandlerResult::OK;
+  return EventHandlerResult::OK;
 }
 
 EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
@@ -280,10 +299,10 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
     } else if (peek == 'p') {
       ::LEDControl.prev_mode();
     } else {
-      uint8_t mode_id;
+      uint8_t mode_id_;
 
-      ::Focus.read(mode_id);
-      ::LEDControl.set_mode(mode_id);
+      ::Focus.read(mode_id_);
+      ::LEDControl.set_mode(mode_id_);
     }
     break;
   }

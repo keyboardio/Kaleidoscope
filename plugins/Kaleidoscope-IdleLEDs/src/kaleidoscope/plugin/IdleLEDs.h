@@ -33,7 +33,7 @@ class IdleLEDs: public kaleidoscope::Plugin {
   static void setIdleTimeoutSeconds(uint32_t new_limit);
 
   EventHandlerResult beforeEachCycle();
-  EventHandlerResult onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
   static bool idle_;

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * AppSwitcher -- A Kaleidoscope Example
- * Copyright (C) 2016-2018  Keyboardio, Inc.
+ * Copyright (C) 2021  Keyboardio, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,13 +17,27 @@
 
 #pragma once
 
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope.h>
+#include "Kaleidoscope-Ranges.h"
 
-enum {
-  M_APPSWITCH,
-  M_APPCANCEL,
+constexpr Key AppSwitcher_Next{kaleidoscope::ranges::SAFE_START};
+constexpr uint16_t _prev_val = AppSwitcher_Next.getRaw() + 1;
+constexpr Key AppSwitcher_Prev{_prev_val};
+
+namespace kaleidoscope {
+namespace plugin {
+
+class AppSwitcher : public kaleidoscope::Plugin {
+
+ public:
+  EventHandlerResult onKeyEvent(KeyEvent &event);
+
+ private:
+  KeyAddr active_addr_ = KeyAddr::none();
+
 };
 
-const macro_t *macroAppSwitch(uint8_t keyState);
-const macro_t *macroAppCancel(uint8_t keyState);
-void macroAppSwitchLoop();
+} // namespace plugin
+} // namespace kaleidoscope
+
+extern kaleidoscope::plugin::AppSwitcher AppSwitcher;

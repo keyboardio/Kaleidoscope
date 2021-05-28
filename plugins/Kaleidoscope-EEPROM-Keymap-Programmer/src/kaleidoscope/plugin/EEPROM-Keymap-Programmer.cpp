@@ -53,27 +53,27 @@ void EEPROMKeymapProgrammer::cancel(void) {
   state_ = INACTIVE;
 }
 
-EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult EEPROMKeymapProgrammer::onKeyEvent(KeyEvent &event) {
   if (state_ == INACTIVE)
     return EventHandlerResult::OK;
 
   if (state_ == WAIT_FOR_KEY) {
-    if (keyToggledOn(key_state)) {
-      update_position_ = Layer.mostRecent() * Runtime.device().numKeys() + key_addr.toInt();
+    if (keyToggledOn(event.state)) {
+      update_position_ = Layer.mostRecent() * Runtime.device().numKeys() + event.addr.toInt();
     }
-    if (keyToggledOff(key_state)) {
-      if ((uint16_t)(Layer.mostRecent() * Runtime.device().numKeys() + key_addr.toInt()) == update_position_)
+    if (keyToggledOff(event.state)) {
+      if ((uint16_t)(Layer.mostRecent() * Runtime.device().numKeys() + event.addr.toInt()) == update_position_)
         nextState();
     }
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   if (state_ == WAIT_FOR_SOURCE_KEY) {
-    if (keyToggledOn(key_state)) {
-      new_key_ = Layer.getKeyFromPROGMEM(Layer.mostRecent(), key_addr);
+    if (keyToggledOn(event.state)) {
+      new_key_ = Layer.getKeyFromPROGMEM(Layer.mostRecent(), event.addr);
     }
-    if (keyToggledOff(key_state)) {
-      if (new_key_ == Layer.getKeyFromPROGMEM(Layer.mostRecent(), key_addr))
+    if (keyToggledOff(event.state)) {
+      if (new_key_ == Layer.getKeyFromPROGMEM(Layer.mostRecent(), event.addr))
         nextState();
     }
     return EventHandlerResult::EVENT_CONSUMED;
@@ -81,18 +81,18 @@ EventHandlerResult EEPROMKeymapProgrammer::onKeyswitchEvent(Key &mapped_key, Key
 
   // WAIT_FOR_CODE state
 
-  if (mapped_key < Key_1 || mapped_key > Key_0)
+  if (event.key < Key_1 || event.key > Key_0)
     return EventHandlerResult::OK;
 
-  if (!keyToggledOn(key_state)) {
+  if (!keyToggledOn(event.state)) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
   uint8_t n;
-  if (mapped_key.getKeyCode() == Key_0.getKeyCode())
+  if (event.key.getKeyCode() == Key_0.getKeyCode())
     n = 0;
   else
-    n = mapped_key.getKeyCode() - Key_1.getKeyCode() + 1;
+    n = event.key.getKeyCode() - Key_1.getKeyCode() + 1;
 
   new_key_.setRaw(new_key_.getRaw() * 10 + n);
 

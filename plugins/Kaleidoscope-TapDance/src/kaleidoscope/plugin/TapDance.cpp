@@ -18,89 +18,50 @@
 #include <Kaleidoscope-TapDance.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/layers.h"
+#include "kaleidoscope/KeyEventTracker.h"
 
 namespace kaleidoscope {
 namespace plugin {
 
-// --- state ---
-uint16_t TapDance::start_time_;
+// --- config ---
+
 uint16_t TapDance::time_out = 200;
-TapDance::TapDanceState TapDance::state_[TapDance::TAPDANCE_KEY_COUNT];
-Key TapDance::last_tap_dance_key_ = Key_NoKey;
-KeyAddr TapDance::last_tap_dance_addr_;
+uint8_t TapDance::tap_count_ = 0;
 
-// --- actions ---
-
-void TapDance::interrupt(KeyAddr key_addr) {
-  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
-
-  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Interrupt);
-  state_[idx].triggered = true;
-
-  last_tap_dance_key_ = Key_NoKey;
-
-  Runtime.hid().keyboard().sendReport();
-  Runtime.hid().keyboard().releaseAllKeys();
-
-  if (state_[idx].pressed)
-    return;
-
-  release(idx);
-}
-
-void TapDance::timeout(void) {
-  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
-
-  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Timeout);
-  state_[idx].triggered = true;
-
-  if (state_[idx].pressed)
-    return;
-
-  last_tap_dance_key_ = Key_NoKey;
-
-  release(idx);
-}
-
-void TapDance::release(uint8_t tap_dance_index) {
-  last_tap_dance_key_ = Key_NoKey;
-
-  state_[tap_dance_index].pressed = false;
-  state_[tap_dance_index].triggered = false;
-  state_[tap_dance_index].release_next = true;
-}
-
-void TapDance::tap(void) {
-  uint8_t idx = last_tap_dance_key_.getRaw() - ranges::TD_FIRST;
-
-  state_[idx].count++;
-  start_time_ = Runtime.millisAtCycleStart();
-
-  tapDanceAction(idx, last_tap_dance_addr_, state_[idx].count, Tap);
-}
+KeyEventTracker TapDance::event_tracker_;
 
 // --- api ---
+void TapDance::actionKeys(uint8_t tap_count,
+                          ActionType action,
+                          uint8_t max_keys,
+                          const Key tap_keys[]) {
+  if (event_queue_.isEmpty())
+    return;
 
-void TapDance::actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]) {
   if (tap_count > max_keys)
     tap_count = max_keys;
 
-  Key key = tap_keys[tap_count - 1].readFromProgmem();
+  KeyEvent event = event_queue_.event(0);
+  event.key = tap_keys[tap_count - 1].readFromProgmem();
 
-  switch (tap_dance_action) {
-  case Tap:
-    break;
-  case Interrupt:
-  case Timeout:
-    handleKeyswitchEvent(key, last_tap_dance_addr_, IS_PRESSED | INJECTED);
-    break;
-  case Hold:
-    handleKeyswitchEvent(key, last_tap_dance_addr_, IS_PRESSED | WAS_PRESSED | INJECTED);
-    break;
-  case Release:
-    kaleidoscope::Runtime.hid().keyboard().sendReport();
-    handleKeyswitchEvent(key, last_tap_dance_addr_, WAS_PRESSED | INJECTED);
-    break;
+  if (action == Interrupt || action == Timeout) {
+    event_queue_.shift();
+    Runtime.handleKeyswitchEvent(event);
+  } else if (action == Tap && tap_count == max_keys) {
+    tap_count_ = 0;
+    event_queue_.clear();
+    Runtime.handleKeyswitchEvent(event);
+  }
+}
+
+
+void TapDance::flushQueue(KeyAddr ignored_addr) {
+  while (! event_queue_.isEmpty()) {
+    KeyEvent queued_event = event_queue_.event(0);
+    event_queue_.shift();
+    if (queued_event.addr != ignored_addr)
+      Runtime.handleKeyswitchEvent(queued_event);
   }
 }
 
@@ -110,99 +71,80 @@ EventHandlerResult TapDance::onNameQuery() {
   return ::Focus.sendName(F("TapDance"));
 }
 
-EventHandlerResult TapDance::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t keyState) {
-  if (keyState & INJECTED)
+EventHandlerResult TapDance::onKeyswitchEvent(KeyEvent &event) {
+  // If the plugin has already processed and released this event, ignore it.
+  // There's no need to update the event tracker explicitly.
+  if (event_tracker_.shouldIgnore(event)) {
+    // We should never get an event that's in our queue here, but just in case
+    // some other plugin sends one, abort.
+    if (event_queue_.shouldAbort(event))
+      return EventHandlerResult::ABORT;
     return EventHandlerResult::OK;
+  }
 
-  if (mapped_key.getRaw() < ranges::TD_FIRST || mapped_key.getRaw() > ranges::TD_LAST) {
-    if (last_tap_dance_key_ == Key_NoKey)
+  // If event.addr is not a physical key, ignore it; some other plugin injected it.
+  if (! event.addr.isValid() || (event.state & INJECTED) != 0) {
+    return EventHandlerResult::OK;
+  }
+
+  if (keyToggledOff(event.state)) {
+    if (event_queue_.isEmpty())
       return EventHandlerResult::OK;
+    event_queue_.append(event);
+    return EventHandlerResult::ABORT;
+  }
 
-    if (keyToggledOn(keyState)) {
-      interrupt(key_addr);
-      mapped_key = Key_NoKey;
-    }
-
+  if (event_queue_.isEmpty() && !isTapDanceKey(event.key))
     return EventHandlerResult::OK;
+
+  KeyAddr td_addr = event_queue_.addr(0);
+  Key     td_key = Layer.lookupOnActiveLayer(td_addr);
+  uint8_t td_id = td_key.getRaw() - ranges::TD_FIRST;
+
+  if (! event_queue_.isEmpty() &&
+      event.addr != event_queue_.addr(0)) {
+    // Interrupt: Call `tapDanceAction()` first, so it will have access to the
+    // TapDance key press event that needs to be sent, then flush the queue.
+    tapDanceAction(td_id, td_addr, tap_count_, Interrupt);
+    flushQueue();
+    tap_count_ = 0;
+    // If the event isn't another TapDance key, let it proceed. If it is, fall
+    // through to the next block, which handles "Tap" actions.
+    if (! isTapDanceKey(event.key))
+      return EventHandlerResult::OK;
   }
 
-  uint8_t tap_dance_index = mapped_key.getRaw() - ranges::TD_FIRST;
-
-  if (keyToggledOff(keyState))
-    state_[tap_dance_index].pressed = false;
-
-  if (last_tap_dance_key_ != mapped_key) {
-    if (last_tap_dance_key_ == Key_NoKey) {
-      if (state_[tap_dance_index].triggered) {
-        if (keyToggledOff(keyState)) {
-          release(tap_dance_index);
-        }
-
-        return EventHandlerResult::EVENT_CONSUMED;
-      }
-
-      last_tap_dance_key_ = mapped_key;
-      last_tap_dance_addr_ = key_addr;
-
-      tap();
-
-      return EventHandlerResult::EVENT_CONSUMED;
-    } else {
-      if (keyToggledOff(keyState) && state_[tap_dance_index].count) {
-        release(tap_dance_index);
-        return EventHandlerResult::EVENT_CONSUMED;
-      }
-
-      if (!keyToggledOn(keyState)) {
-        return EventHandlerResult::EVENT_CONSUMED;
-      }
-
-      interrupt(key_addr);
-    }
-  }
-
-  // in sequence
-
-  if (keyToggledOff(keyState)) {
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  last_tap_dance_key_ = mapped_key;
-  last_tap_dance_addr_ = key_addr;
-  state_[tap_dance_index].pressed = true;
-
-  if (keyToggledOn(keyState)) {
-    tap();
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (state_[tap_dance_index].triggered)
-    tapDanceAction(tap_dance_index, key_addr, state_[tap_dance_index].count, Hold);
-
-  return EventHandlerResult::EVENT_CONSUMED;
+  // Tap: First flush the queue, ignoring the previous press and release events
+  // for the TapDance key, then add the new tap to the queue (it becomes the
+  // first entry).
+  flushQueue(event.addr);
+  event_queue_.append(event);
+  tapDanceAction(td_id, td_addr, ++tap_count_, Tap);
+  return EventHandlerResult::ABORT;
 }
 
 EventHandlerResult TapDance::afterEachCycle() {
-  for (uint8_t i = 0; i < TAPDANCE_KEY_COUNT; i++) {
-    if (!state_[i].release_next)
-      continue;
-
-    tapDanceAction(i, last_tap_dance_addr_, state_[i].count, Release);
-    state_[i].count = 0;
-    state_[i].release_next = false;
-  }
-
-  if (last_tap_dance_key_ == Key_NoKey)
+  // If there's no active TapDance sequence, there's nothing to do.
+  if (event_queue_.isEmpty())
     return EventHandlerResult::OK;
 
-  if (Runtime.hasTimeExpired(start_time_, time_out))
-    timeout();
+  // The first event in the queue is now guaranteed to be a TapDance key.
+  KeyAddr td_addr = event_queue_.addr(0);
+  Key     td_key = Layer.lookupOnActiveLayer(td_addr);
+  uint8_t td_id = td_key.getRaw() - ranges::TD_FIRST;
 
+  // Check for timeout
+  uint16_t start_time = event_queue_.timestamp(0);
+  if (Runtime.hasTimeExpired(start_time, time_out)) {
+    tapDanceAction(td_id, td_addr, tap_count_, Timeout);
+    flushQueue();
+    tap_count_ = 0;
+  }
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 __attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
                                           kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {

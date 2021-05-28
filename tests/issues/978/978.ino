@@ -18,10 +18,6 @@
 
 #include "./common.h"
 
-#undef min
-#undef max
-#include <iostream>
-
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED
@@ -48,9 +44,12 @@ namespace plugin {
 
 class IdleKeyDetector : public kaleidoscope::Plugin {
  public:
-  EventHandlerResult onKeyswitchEvent(Key &key, KeyAddr key_addr, uint8_t key_state) {
-    if (key_addr == KeyAddr{0, 0} && key_state == 0) {
-      handleKeyswitchEvent(Key_X, key_addr, IS_PRESSED | WAS_PRESSED);
+  // handleKeyswitchEvent() is going to mask the underlying issue if it recurs,
+  // but leaving this here is better than nothing.
+  EventHandlerResult onKeyswitchEvent(KeyEvent &event) {
+    if (event.addr == KeyAddr{0, 0} && event.state == 0) {
+      event.key = Key_X;
+      event.state = IS_PRESSED;
     }
     return EventHandlerResult::OK;
   }

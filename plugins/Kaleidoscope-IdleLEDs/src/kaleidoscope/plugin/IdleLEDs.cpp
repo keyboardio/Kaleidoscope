@@ -49,8 +49,7 @@ EventHandlerResult IdleLEDs::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult IdleLEDs::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
-
+EventHandlerResult IdleLEDs::onKeyEvent(KeyEvent &event) {
   if (idle_) {
     ::LEDControl.enable();
     idle_ = false;

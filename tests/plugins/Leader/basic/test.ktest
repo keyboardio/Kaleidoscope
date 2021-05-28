@@ -1,0 +1,107 @@
+VERSION 1
+
+KEYSWITCH LEAD_0    0 0
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+KEYSWITCH C         1 2
+KEYSWITCH D         1 3
+
+# ==============================================================================
+NAME Leader sequence AC
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_X # report should contain `X` (0x1b)
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_Y # report should contain `Y` (0x1c)
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_Z # report should contain `Z` (0x1d)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence BC
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_X # report should contain `X` (0x1b)
+EXPECT keyboard-report empty # report should be empty
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Leader sequence timeout
+
+RUN 4 ms
+PRESS LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 24 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_C # report should contain `C` (0x06)
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports

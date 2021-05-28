@@ -39,16 +39,21 @@ uint16_t TypingBreaks::left_hand_keys_;
 uint16_t TypingBreaks::right_hand_keys_;
 uint16_t TypingBreaks::settings_base_;
 
-EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_addr, uint8_t key_state) {
+EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
   uint32_t lock_length = settings.lock_length * 1000;
   uint32_t idle_time_limit = settings.idle_time_limit * 1000;
   uint32_t lock_time_out = settings.lock_time_out * 1000;
+
+  // Let key release events through regardless, so the last key pressed (and any
+  // other held keys) finish getting processed when they're released.
+  if (keyToggledOff(event.state))
+    return EventHandlerResult::OK;
 
   // If we are locked...
   if (keyboard_locked_) {
     // ...and the lock has not expired yet
     if (!Runtime.hasTimeExpired(lock_start_time_, lock_length)) {
-      return EventHandlerResult::EVENT_CONSUMED;  // remain locked
+      return EventHandlerResult::ABORT;
     }
 
     // ...otherwise clear the lock
@@ -90,14 +95,12 @@ EventHandlerResult TypingBreaks::onKeyswitchEvent(Key &mapped_key, KeyAddr key_a
 
   // So it seems we did not need to lock up. In this case, lets increase key
   // counters if need be.
+  if (event.addr.col() <= Runtime.device().matrix_columns / 2)
+    left_hand_keys_++;
+  else
+    right_hand_keys_++;
 
-  if (keyToggledOn(key_state)) {
-    if (key_addr.col() <= Runtime.device().matrix_columns / 2)
-      left_hand_keys_++;
-    else
-      right_hand_keys_++;
-    last_key_time_ = Runtime.millisAtCycleStart();
-  }
+  last_key_time_ = Runtime.millisAtCycleStart();
 
   return EventHandlerResult::OK;
 }
