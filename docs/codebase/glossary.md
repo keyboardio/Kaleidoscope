@@ -51,6 +51,13 @@ An ordered list of all the currently-active layers, in the order they should be 
 
 A representation of the current state of the keyboard's keys, where non-transparent entries indicate keys that are active (logically—usually, but not necessarily, physically held). Represented in the code by the `LiveKeys` type (and the `live_keys` object).
 
+#### Active/inactive keys
+
+In the `live_keys[]` array, an _active_ key usually corresponds to a keyswitch that is physically pressed.  In the common case of HID Keyboard keys, an active key will result in one or more keycodes being inserted in any new HID report.  In some cases, an key can be active when its physical keyswitch is not pressed (e.g. OneShot keys that have been tapped), and in other cases a key might be _inactive_ even though its keyswitch is pressed (e.g. a Qukeys key whose value has not yet been resolved).  Inactive keys are represented in the `live_keys[]` array by the special value `Key_Inactive`.
+
+#### Masked keys
+
+In the `live_keys[]` array, a _masked_ key is one whose next key press (either physical or logical) will be ignored.  A masked key is automatically unmasked the next time it toggles off.  Masked keys are represented by the special value `Key_Masked`.
 
 ## Keyswitch state
 
