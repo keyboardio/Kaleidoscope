@@ -375,7 +375,9 @@ sub generate_expect_report {
     $reports_expected++;
 
     if ( $report->{data}->{count} == 0 ) {
-        cxx_comment( $report->{comment} );
+        if ( $report->{comment} ) {
+            cxx_comment( $report->{comment} );
+        }
         cxx_comment(
 "We don't expect any report here, and have told the tests to check that"
         );
