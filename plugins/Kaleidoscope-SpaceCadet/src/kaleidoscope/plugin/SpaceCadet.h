@@ -73,7 +73,12 @@ class SpaceCadet : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  static bool disabled;
+  enum Mode : uint8_t {
+    ON,
+    OFF,
+    NO_DELAY,
+  };
+  static uint8_t mode_;
 
   static KeyEventTracker event_tracker_;
 

@@ -46,7 +46,7 @@ uint16_t SpaceCadet::time_out = 200;
 // -----------------------------------------------------------------------------
 // State variables
 
-bool SpaceCadet::disabled = false;
+uint8_t SpaceCadet::mode_ = SpaceCadet::Mode::ON;
 
 // These variables are used to keep track of any pending unresolved SpaceCadet
 // key that has been pressed. If `pending_map_index_` is negative, it means
@@ -82,17 +82,17 @@ SpaceCadet::SpaceCadet() {
 // Function to determine whether SpaceCadet is active (useful for Macros and
 // other plugins).
 bool SpaceCadet::active() {
-  return !disabled;
+  return mode_ == Mode::ON;
 }
 
 // Function to enable SpaceCadet behavior
 void SpaceCadet::enable() {
-  disabled = false;
+  mode_ = Mode::ON;
 }
 
 // Function to disable SpaceCadet behavior
 void SpaceCadet::disable() {
-  disabled = true;
+  mode_ = Mode::OFF;
 }
 
 // =============================================================================
@@ -134,7 +134,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
   }
 
   // Do nothing if disabled, but keep the event tracker current.
-  if (disabled)
+  if (mode_ != Mode::ON)
     return EventHandlerResult::OK;
 
   if (!event_queue_.isEmpty()) {
