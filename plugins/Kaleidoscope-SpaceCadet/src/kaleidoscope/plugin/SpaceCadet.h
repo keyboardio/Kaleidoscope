@@ -60,9 +60,15 @@ class SpaceCadet : public kaleidoscope::Plugin {
   SpaceCadet(void);
 
   // Methods
-  static void enable(void);
-  static void disable(void);
-  static bool active(void);
+  static void enable() {
+    mode_ = Mode::ON;
+  }
+  static void disable() {
+    mode_ = Mode::OFF;
+  }
+  static bool active() {
+    return (mode_ == Mode::ON);
+  }
 
   // Publically accessible variables
   static uint16_t time_out;  //  The global timeout in milliseconds

@@ -78,23 +78,6 @@ SpaceCadet::SpaceCadet() {
   map = initialmap;
 }
 
-// -----------------------------------------------------------------------------
-// Function to determine whether SpaceCadet is active (useful for Macros and
-// other plugins).
-bool SpaceCadet::active() {
-  return mode_ == Mode::ON;
-}
-
-// Function to enable SpaceCadet behavior
-void SpaceCadet::enable() {
-  mode_ = Mode::ON;
-}
-
-// Function to disable SpaceCadet behavior
-void SpaceCadet::disable() {
-  mode_ = Mode::OFF;
-}
-
 // =============================================================================
 // Event handler hook functions
 
