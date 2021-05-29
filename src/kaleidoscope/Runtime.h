@@ -124,7 +124,7 @@ class Runtime_ {
   static bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
     _Timestamp current_time = millis_at_cycle_start_;
     _Timestamp elapsed_time = current_time - start_time;
-    return (elapsed_time > ttl);
+    return (elapsed_time >= ttl);
   }
 
   EventHandlerResult onFocusEvent(const char *command) {
