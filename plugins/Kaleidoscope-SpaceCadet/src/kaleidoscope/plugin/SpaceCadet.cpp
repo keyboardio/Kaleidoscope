@@ -117,7 +117,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
   }
 
   // Do nothing if disabled, but keep the event tracker current.
-  if (mode_ != Mode::ON)
+  if (mode_ == Mode::OFF)
     return EventHandlerResult::OK;
 
   if (!event_queue_.isEmpty()) {
@@ -145,7 +145,13 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
     // Check for a SpaceCadet key
     pending_map_index_ = getSpaceCadetKeyIndex(event.key);
     if (pending_map_index_ >= 0) {
-      // A SpaceCadet key was pressed
+      // A SpaceCadet key has just toggled on. First, if we're in no-delay mode,
+      // we need to send the event unchanged (with the primary `Key` value),
+      // bypassing other `onKeyswitchEvent()` handlers.
+      if (mode_ == Mode::NO_DELAY)
+        Runtime.handleKeyEvent(event);
+      // Queue the press event and abort; this press event will be resolved
+      // later.
       event_queue_.append(event);
       return EventHandlerResult::ABORT;
     }
@@ -194,6 +200,11 @@ void SpaceCadet::flushQueue() {
 void SpaceCadet::flushEvent(bool is_tap) {
   KeyEvent event = event_queue_.event(0);
   if (is_tap && pending_map_index_ >= 0) {
+    // If we're in no-delay mode, we should first send the release of the
+    // modifier key as a courtesy before sending the tap event.
+    if (mode_ == Mode::NO_DELAY) {
+      Runtime.handleKeyEvent(KeyEvent(event.addr, WAS_PRESSED));
+    }
     event.key = map[pending_map_index_].output;
   }
   event_queue_.shift();

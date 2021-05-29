@@ -66,8 +66,11 @@ class SpaceCadet : public kaleidoscope::Plugin {
   static void disable() {
     mode_ = Mode::OFF;
   }
+  static void enableWithoutDelay() {
+    mode_ = Mode::NO_DELAY;
+  }
   static bool active() {
-    return (mode_ == Mode::ON);
+    return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
   }
 
   // Publically accessible variables
