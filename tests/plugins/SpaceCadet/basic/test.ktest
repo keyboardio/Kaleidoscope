@@ -28,7 +28,6 @@ PRESS LSHIFT
 RUN 1 cycle
 
 RUN 10 ms
-RUN 1 cycle
 EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
 
 RUN 5 ms
@@ -45,7 +44,6 @@ PRESS RSHIFT
 RUN 1 cycle
 
 RUN 20 ms
-RUN 1 cycle
 EXPECT keyboard-report Key_RightShift # Report should contain `shift` (0xE5)
 
 RUN 5 ms
@@ -112,7 +110,6 @@ RUN 1 cycle
 EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
 
 RUN 20 ms
-RUN 1 cycle
 EXPECT keyboard-report Key_LeftShift Key_RightShift # Report should contain both `shift` keycodes (0xE1, 0xE5)
 
 RUN 5 ms

@@ -11,9 +11,8 @@ RUN 5 ms
 
 PRESS TD_0
 RUN 1 cycle
-RUN 25 ms # timeout is 25 ms
 
-RUN 1 cycle
+RUN 25 ms # timeout is 25 ms
 EXPECT keyboard-report Key_A # The report should contain only `A`
 
 RUN 20 ms

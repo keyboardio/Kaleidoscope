@@ -18,7 +18,6 @@ RUN 65536 ms
 PRESS A
 RUN 1 cycle
 RUN 200 ms  # hold timeout is 200 ms
-RUN 1 ms
 EXPECT keyboard-report Key_LeftGui # Report should contain only `LeftGui`
 
 RUN 10 ms

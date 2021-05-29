@@ -14,8 +14,7 @@ RUN 5 ms
 PRESS MC0
 RUN 10 ms
 # With MagicCombo.min_interval set to 20(ms), we need to wait that long before
-# it will trigger, plus one.
-RUN 1 ms
+# it will trigger.
 EXPECT keyboard-report Key_A # The report should contain only `A`
 EXPECT keyboard-report empty # Report should be empty
 RUN 5 ms
