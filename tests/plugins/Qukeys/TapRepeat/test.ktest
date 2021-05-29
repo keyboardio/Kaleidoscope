@@ -26,7 +26,7 @@ RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_A # Report should contain only A
 
-RUN 16 ms
+RUN 15 ms
 EXPECT keyboard-report empty # Report should be empty
 
 RUN 100 ms
@@ -68,7 +68,7 @@ RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_J # Report should contain only J
 
-RUN 16 ms
+RUN 15 ms
 EXPECT keyboard-report empty # Report should be empty
 
 RUN 100 ms
@@ -110,7 +110,7 @@ RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 EXPECT keyboard-report Key_B # Report should contain only B
 
-RUN 16 ms
+RUN 15 ms
 EXPECT keyboard-report empty # Report should be empty
 
 RUN 100 ms

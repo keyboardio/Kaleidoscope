@@ -35,28 +35,22 @@ EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 RUN 4 ms
 PRESS TURBO
 RUN 1 cycle
-
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
 RUN 10 ms
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
 RUN 10 ms
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
 RUN 10 ms
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
 RUN 10 ms
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
@@ -88,13 +82,11 @@ PRESS A
 RUN 1 cycle
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
-RUN 7 ms
-RUN 1 ms
+RUN 5 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 
 RUN 10 ms
-RUN 1 ms
 EXPECT keyboard-report empty # report should be empty
 EXPECT keyboard-report Key_A # report should contain `A` (0x04)
 

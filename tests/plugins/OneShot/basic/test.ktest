@@ -15,7 +15,6 @@ EXPECT keyboard-report Key_LeftShift # The report should contain `shift`
 RUN 5 ms
 RELEASE OS_shift
 RUN 45 ms
-RUN 1 cycle
 EXPECT keyboard-report empty # Report should be empty
 
 # ==============================================================================
