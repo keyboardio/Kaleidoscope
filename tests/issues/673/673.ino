@@ -15,15 +15,14 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-Leader.h>
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope-OneShot.h>
 
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED
     (
-        LEAD(0), ___, ___, ___, ___, ___, ___,
-        Key_A, Key_B, Key_C, Key_D, Key_C, ___, ___,
+        OSM(LeftShift), OSM(LeftControl), ___, ___, ___, ___, ___,
+        Key_A, Key_B, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___,
@@ -39,41 +38,13 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(Leader);
-
-static void leaderAB(uint8_t id) {
-  Macros.type(PSTR("z"));
-}
-
-static void leaderAC(uint8_t id) {
-  Macros.type(PSTR("xyz"));
-}
-
-static void leaderBA(uint8_t id) {
-  Macros.type(PSTR("y"));
-}
-
-static void leaderBC(uint8_t id) {
-  Macros.type(PSTR("x"));
-}
-
-static void leaderC(uint8_t id) {
-  Macros.type(PSTR("q"));
-}
-
-// *INDENT-OFF*
-static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
-  LEADER_DICT( {LEADER_SEQ(LEAD(0), Key_A, Key_B), leaderAB},
-               {LEADER_SEQ(LEAD(0), Key_A, Key_C), leaderAC},
-               {LEADER_SEQ(LEAD(0), Key_B, Key_A), leaderBA},
-               {LEADER_SEQ(LEAD(0), Key_B, Key_C), leaderBC},
-               {LEADER_SEQ(LEAD(0), Key_C),        leaderC }  );
-// *INDENT-ON*
+KALEIDOSCOPE_INIT_PLUGINS(OneShot);
 
 void setup() {
   Kaleidoscope.setup();
-  Leader.time_out = 20;
-  Leader.dictionary = leader_dictionary;
+  OneShot.setTimeout(50);
+  OneShot.setHoldTimeout(20);
+  OneShot.setDoubleTapTimeout(20);
 }
 
 void loop() {

@@ -23,7 +23,7 @@
 KEYMAPS(
     [0] = KEYMAP_STACKED
     (
-        Key_LeftShift, Key_RightShift, ___, ___, ___, ___, ___,
+        Key_LeftShift, Key_RightShift, Key_RightGui, ___, ___, ___, ___,
         Key_A, Key_B, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___, ___,

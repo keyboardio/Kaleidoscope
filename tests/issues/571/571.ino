@@ -15,15 +15,14 @@
  */
 
 #include <Kaleidoscope.h>
-#include <Kaleidoscope-Leader.h>
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope-TapDance.h>
 
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED
     (
-        LEAD(0), ___, ___, ___, ___, ___, ___,
-        Key_A, Key_B, Key_C, Key_D, Key_C, ___, ___,
+        TD(0), ___, ___, ___, ___, ___, ___,
+        Key_Tab, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___,
@@ -39,41 +38,27 @@ KEYMAPS(
 )
 // *INDENT-ON*
 
-KALEIDOSCOPE_INIT_PLUGINS(Leader);
-
-static void leaderAB(uint8_t id) {
-  Macros.type(PSTR("z"));
+void tapDanceAction(uint8_t tap_dance_index,
+                    KeyAddr key_addr,
+                    uint8_t tap_count,
+                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+  switch (tap_dance_index) {
+  case 0:
+    return tapDanceActionKeys(tap_count, tap_dance_action,
+                              Key_LeftControl, LGUI(Key_LeftBracket));
+  case 1:
+    return tapDanceActionKeys(tap_count, tap_dance_action,
+                              Key_RightControl, LGUI(Key_RightBracket));
+  default:
+    break;
+  }
 }
 
-static void leaderAC(uint8_t id) {
-  Macros.type(PSTR("xyz"));
-}
-
-static void leaderBA(uint8_t id) {
-  Macros.type(PSTR("y"));
-}
-
-static void leaderBC(uint8_t id) {
-  Macros.type(PSTR("x"));
-}
-
-static void leaderC(uint8_t id) {
-  Macros.type(PSTR("q"));
-}
-
-// *INDENT-OFF*
-static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
-  LEADER_DICT( {LEADER_SEQ(LEAD(0), Key_A, Key_B), leaderAB},
-               {LEADER_SEQ(LEAD(0), Key_A, Key_C), leaderAC},
-               {LEADER_SEQ(LEAD(0), Key_B, Key_A), leaderBA},
-               {LEADER_SEQ(LEAD(0), Key_B, Key_C), leaderBC},
-               {LEADER_SEQ(LEAD(0), Key_C),        leaderC }  );
-// *INDENT-ON*
+KALEIDOSCOPE_INIT_PLUGINS(TapDance);
 
 void setup() {
   Kaleidoscope.setup();
-  Leader.time_out = 20;
-  Leader.dictionary = leader_dictionary;
+  TapDance.time_out = 25;
 }
 
 void loop() {
