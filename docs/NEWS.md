@@ -12,6 +12,40 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### Layer changes updated
+
+Layer change key handling has been updated to be more consistent with activation
+ordering.  In most common cases there will be no obvious difference; layer move,
+lock, and shift keys still generally function the same way.  The details now
+vary by type in the edge cases, however.
+
+Layer lock keys (i.e. `LockLayer(N)`) will change slightly.  Whenever a layer
+lock key toggles on, it will put the target layer on the top of the active layer
+stack, unless that layer is already at the top of the stack, in which case it
+will be deactivated.  This means that if layers `A`, `B`, and `C` are on the
+stack, with `A` on top, pressing `LockLayer(B)` will move layer `B` to the top
+of the stack, above `A`, rather than deactivating it.  As a result, if you use
+layers that have no transparent entries, every press of a layer lock key will
+result in a user-visible change.
+
+Layer shift keys will now work independently of locked layers.  This means that
+if layers `A`, `B` and `C` are (locked) on the stack, with `A` on top, pressing
+`ShiftToLayer(B)` will keep a temporary version of layer `B` on top, but when
+that layer shift key is released, the layer stack will return to the same state
+it had been in before the layer shift key was pressed, with layers `A`, `B`, and
+`C` still active, and in the same order.  However, since it is assumed that
+users won't forget about keys that they are holding, pressing a second layer
+shift key for the same target layer will not result in promoting that shifted
+layer to the top of the stack.
+
+A consequence of this is that releasing a layer shift key will no longer
+deactivate a layer that is locked, either from pressing a `LockLayer()` or
+`MoveToLayer()` key.  This allows users to configure keymaps such that layer `N`
+could be reached by holding `ShiftToLayer(N)`, then kept active and on top by
+tapping `LockLayer(N)` or `MoveToLayer(N)`, which could be mapped on Layer `N`.
+That layer would continue to stay active after the release of the
+`ShiftToLayer(N)` key.
+
 ### OneShot public functions
 
 The OneShot plugin now allows other plugins to control the OneShot state of
