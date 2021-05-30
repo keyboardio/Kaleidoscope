@@ -208,6 +208,10 @@ To make it easier to port Kaleidoscope, we introduced the `ATMegaKeyboard` base 
 
 ## New plugins
 
+### AutoShift
+
+The [AutoShift](plugins/Kaleidoscope-AutoShift.md) plugin provides an alternative way to get shifted symbols, by long-pressing keys instead of using a separate `shift` key.
+
 ### DynamicMacros
 
 The [DynamicMacros](plugins/Kaleidoscope-DynamicMacros.md) plugin provides a way to use and update macros via the Focus API, through Chrysalis.
