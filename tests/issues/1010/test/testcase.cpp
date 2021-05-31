@@ -25,6 +25,9 @@ namespace testing {
 
 class Issue1010 : public ::testing::Test {
  public:
+
+  static constexpr uint8_t MAX_CS_KEYS = 64;
+
   enum : uint16_t {
     MACRO_FIRST = (SYNTHETIC | 0b00100000) << 8,
     MACRO_LAST  = MACRO_FIRST + 255,
@@ -62,6 +65,8 @@ class Issue1010 : public ::testing::Test {
     OS_META_STICKY,
     OS_ACTIVE_STICKY,
     OS_CANCEL,
+    CS_FIRST,
+    CS_LAST  = CS_FIRST + MAX_CS_KEYS,
 
     SAFE_START,
     KALEIDOSCOPE_SAFE_START = SAFE_START
@@ -140,6 +145,11 @@ TEST_F(Issue1010, RangesHaveNotChanged) {
             uint16_t(kaleidoscope::ranges::OS_ACTIVE_STICKY));
   ASSERT_EQ(uint16_t(Issue1010::OS_CANCEL),
             uint16_t(kaleidoscope::ranges::OS_CANCEL));
+  ASSERT_EQ(uint16_t(Issue1010::CS_FIRST),
+            uint16_t(kaleidoscope::ranges::CS_FIRST));
+  ASSERT_EQ(uint16_t(Issue1010::CS_LAST),
+            uint16_t(kaleidoscope::ranges::CS_LAST));
+
   ASSERT_EQ(uint16_t(Issue1010::SAFE_START),
             uint16_t(kaleidoscope::ranges::SAFE_START));
   ASSERT_EQ(uint16_t(Issue1010::KALEIDOSCOPE_SAFE_START),
