@@ -238,6 +238,10 @@ To make it easier to port Kaleidoscope, we introduced the `ATMegaKeyboard` base 
 
 ## New plugins
 
+### CharShift
+
+The [CharShift](plugins/Kaleidoscope-CharShift.md) plugin allows independent assignment of symbols to keys depending on whether or not a `shift` key is held.
+
 ### AutoShift
 
 The [AutoShift](plugins/Kaleidoscope-AutoShift.md) plugin provides an alternative way to get shifted symbols, by long-pressing keys instead of using a separate `shift` key.
