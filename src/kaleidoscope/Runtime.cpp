@@ -102,6 +102,11 @@ Runtime_::handleKeyswitchEvent(KeyEvent event) {
     // When a key toggles off, set the event's key value to whatever the key's
     // current value is in the live keys state array.
     event.key = live_keys[event.addr];
+    // If that key was masked, unmask it and return.
+    if (event.key == Key_Masked) {
+      live_keys.clear(event.addr);
+      return;
+    }
   } else if (event.key == Key_NoKey) {
     // When a key toggles on, unless the event already has a key value (i.e. we
     // were called by a plugin rather than `actOnMatrixScan()`), we look up the
