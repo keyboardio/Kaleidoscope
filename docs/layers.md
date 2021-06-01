@@ -40,9 +40,9 @@ explore a few use-cases.
 ## Layer keys
 
 - `LockLayer(n)`: Locking a layer will activate it when the key toggles on, and
-  the layer will remain active until unlocked (with `UnlockLayer(n)`), even if
-  we release the layer key meanwhile. Think of it like a `Caps lock` or `Num
-  lock` key.
+  the layer will remain active until unlocked (with `UnlockLayer(n)` or by
+  pressing `LockLayer(n)` again), even if we release the layer key
+  meanwhile. Think of it like a `Caps lock` or `Num lock` key.
 - `ShiftToLayer(n)`: Unlike `LockLayer`, this only activates the layer until the
   key is held. Once the key is released, the layer deactivates. This behaviour
   is very similar to that of modifiers.
@@ -68,7 +68,7 @@ less hand movement is required!
 
 ### Shifted layers
 
-There are many great examples for shifted layers, such as a symbols layer. Lets
+There are many great examples for shifted layers, such as a symbols layer. Let's
 say we have a number of often used symbols which we want easy access to,
 preferably near the home row. For example, the various parentheses, brackets and
 the like are often used in programming. Having them on the home row is
@@ -77,7 +77,7 @@ time, for a symbol or two. As such, locking the layer would be
 counter-productive. Instead, we use a layer shift key, like if it was a
 modifier.
 
-As a concrete example, lets imagine a small, ortholinear keyboard, like the
+As a concrete example, let's imagine a small, ortholinear keyboard, like the
 Planck. On the bottom row, on the right side of the space bar, we'd have a layer
 shift key (lets call that `Fn` for now), that takes us to the symbol layer. On
 the symbol layer, we'd have `{`, `}`, `[`, `]`, `(`, and `)` on the home row. To
@@ -97,13 +97,13 @@ layer.
 ### Moving to layers
 
 Moving to a layer is very similar to locking one. The only difference is that
-moving disables all other layers. This in turn, has a few consequences: to go
-back to wherever we came from, we can't use `UnlockLayer(n)`, because no other
-layers are active. We explicitly have to use _another_ `MoveToLayer(n)` key if
-we want to move elsewhere.
+moving disables all other layers. This in turn, has consequences: we can't
+return to the previous layer state by repeating the same key.  Unlocking a layer
+that has been activated by `MoveToLayer(n)` will instead cause Kaleidoscope to
+fall back to the default base layer.
 
 The major advantage of moving to a layer - as opposed to locking one - is the
-cognitive load. With moving, there is no transparency. There is only one layer
+cognitive load. With moving, there is no transparency.[^1] There is only one layer
 active at any given time. It's a simpler concept to grasp.
 
 ## Layers, transparency, and how lookup works
@@ -120,7 +120,7 @@ layer, and see if there's a non-transparent key there. If there is, it will use
 that. If there isn't, it will start walking backwards on the stack of _active_
 layers to find the highest one with a non-transparent key. The first one it
 finds is whose key it will use. If it finds none, then a transparent key will
-act like a blank one, and do nothing.
+act like a blank one, and do nothing.[^1]
 
 It is important to note that transparent keys are looked up from active layers
 only, from most recently activated to least. Lets consider that we have three
@@ -140,3 +140,7 @@ look there first. If we activate layer 1 as well, then - since now layer 1 is
 the most recently activated layer - the firmware will look the code up from
 layer 1, without looking at layer 2. It would only look at layer 2 if the key
 was transparent on layer 1.
+
+[^1]: Except that the base layer is always active implicitly, so if all active
+    layers are transparent for a particular key, its value will come from the
+    base layer.
