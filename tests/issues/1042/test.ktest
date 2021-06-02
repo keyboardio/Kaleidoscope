@@ -1,0 +1,82 @@
+VERSION 1
+
+KEYSWITCH LEAD   0 0
+KEYSWITCH Q      1 1
+KEYSWITCH W      1 2
+KEYSWITCH E      1 3
+KEYSWITCH R      1 4
+KEYSWITCH T      1 5
+KEYSWITCH Z      3 1
+
+# ==============================================================================
+NAME Leader prefix sequence
+
+RUN 4 ms
+PRESS LEAD
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LEAD
+RUN 1 cycle
+
+RUN 4 ms
+PRESS Q
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE Q
+RUN 1 cycle
+
+RUN 4 ms
+PRESS W
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE W
+RUN 1 cycle
+
+RUN 4 ms
+PRESS Z
+RUN 1 cycle
+EXPECT keyboard-report Key_Y
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE Z
+RUN 1 cycle
+
+RUN 4 ms
+PRESS W
+RUN 1 cycle
+EXPECT keyboard-report Key_W
+
+RUN 4 ms
+RELEASE W
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
