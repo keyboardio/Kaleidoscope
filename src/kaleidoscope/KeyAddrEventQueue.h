@@ -147,7 +147,7 @@ class KeyAddrEventQueue {
 
   KeyEvent event(uint8_t i) const {
     uint8_t state = isRelease(i) ? WAS_PRESSED : IS_PRESSED;
-    return KeyEvent{addr(i), state, Key_NoKey, id(i)};
+    return KeyEvent{addr(i), state, Key_Undefined, id(i)};
   }
 
   // Only call this after `EventTracker::shouldIgnore()` returns `true`.

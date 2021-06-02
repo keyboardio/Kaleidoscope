@@ -107,7 +107,7 @@ Runtime_::handleKeyswitchEvent(KeyEvent event) {
       live_keys.clear(event.addr);
       return;
     }
-  } else if (event.key == Key_NoKey) {
+  } else if (event.key == Key_Undefined) {
     // When a key toggles on, unless the event already has a key value (i.e. we
     // were called by a plugin rather than `actOnMatrixScan()`), we look up the
     // value from the current keymap (overridden by `live_keys`).
@@ -116,24 +116,6 @@ Runtime_::handleKeyswitchEvent(KeyEvent event) {
 
   // Run the plugin event handlers
   auto result = Hooks::onKeyswitchEvent(event);
-
-  // If an event handler changed `event.key` to `Key_Masked` in order to mask
-  // that keyswitch, we need to propagate that, but since `handleKeyEvent()`
-  // will recognize that value as the signal to do a fresh lookup, so we need to
-  // set that value in `live_keys` now. The alternative would be changing it to
-  // some other sentinel value, and have `handleKeyEvent()` change it back to
-  // `Key_Masked`, but I think this makes more sense.
-  //
-  // Note: It is still important to let events with `Key_Masked` fall through to
-  // `handleKeyEvent()`, because some plugins might still care about the event
-  // regardless of its `Key` value, and more importantly, that's where we clear
-  // masked keys that have toggled off. Alternatively, we could call
-  // `live_keys.clear(addr)` for toggle-off events here, and `mask(addr)` for
-  // toggle-on events, then return, short-cutting the call to
-  // `handleKeyEvent()`. It should work, but some plugins might be able to use
-  // that information.
-  if (event.key == Key_Masked)
-    live_keys.mask(event.addr);
 
   // Now we check the result from the plugin event handlers, and stop processing
   // if it was anything other than `OK`.
@@ -152,7 +134,7 @@ Runtime_::handleKeyEvent(KeyEvent event) {
   // For events that didn't begin with `handleKeyswitchEvent()`, we need to look
   // up the `Key` value from the keymap (maybe overridden by `live_keys`).
   if (event.addr.isValid()) {
-    if (keyToggledOff(event.state) || event.key == Key_NoKey) {
+    if (keyToggledOff(event.state) || event.key == Key_Undefined) {
       event.key = lookupKey(event.addr);
     }
   }
@@ -177,6 +159,7 @@ Runtime_::handleKeyEvent(KeyEvent event) {
   if (result != EventHandlerResult::OK ||
       event.key == Key_Masked ||
       event.key == Key_NoKey ||
+      event.key == Key_Undefined ||
       event.key == Key_Transparent)
     return;
 
@@ -213,6 +196,7 @@ Runtime_::handleKeyEvent(KeyEvent event) {
   if (old_result != EventHandlerResult::OK ||
       event.key == Key_Masked ||
       event.key == Key_NoKey ||
+      event.key == Key_Undefined ||
       event.key == Key_Transparent)
     return;
 #endif

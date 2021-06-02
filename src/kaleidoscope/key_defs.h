@@ -293,6 +293,10 @@ typedef kaleidoscope::Key Key_;
 #define Key_Inactive Key_Transparent
 #define Key_Masked Key_NoKey
 
+// The default value for new events.  Used to signal that a keymap lookup should
+// be done.
+#define Key_Undefined Key_Transparent
+
 #define KEY_BACKLIGHT_DOWN 0xf1
 #define KEY_BACKLIGHT_UP 0xf2
 #define Key_BacklightDown Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
