@@ -264,6 +264,19 @@ class SignatureCheckDummy {};
              (const KeyEvent &event),                                     __NL__ \
              (event), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
+   /* Called after reporting our state to the host. This is the last   */ __NL__ \
+   /* point at which a plugin can do something in response to an event */ __NL__ \
+   /* before the next event is processed, if multiple events occur in  */ __NL__ \
+   /* and are processed in a single cycle (usually due to delayed      */ __NL__ \
+   /* events or generated events).                                     */ __NL__ \
+   OPERATION(afterReportingState,                                         __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _NOT_ABORTABLE,                                              __NL__ \
+             (),(),(), /* non template */                                 __NL__ \
+             (const KeyEvent &event),                                     __NL__ \
+             (event), ##__VA_ARGS__)                                      __NL__ \
+                                                                          __NL__ \
    /* Called at the very end of a cycle, after everything's            */ __NL__ \
    /* said and done.                                                   */ __NL__ \
    OPERATION(afterEachCycle,                                              __NL__ \
@@ -350,6 +363,10 @@ class SignatureCheckDummy {};
       OP(beforeReportingState, 1)                                       __NL__ \
       OP(beforeReportingState, 2)                                       __NL__ \
    END(beforeReportingState, 1, 2)                                      __NL__ \
+                                                                        __NL__ \
+   START(afterReportingState, 1)                                        __NL__ \
+      OP(afterReportingState, 1)                                        __NL__ \
+   END(afterReportingState, 1)                                          __NL__ \
                                                                         __NL__ \
    START(afterEachCycle, 1)                                             __NL__ \
       OP(afterEachCycle, 1)                                             __NL__ \

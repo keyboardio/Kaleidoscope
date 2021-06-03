@@ -7,6 +7,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
 
 * [Upgrade notes](#upgrade-notes)
   + [New features](#new-features)
+    - [New event handler](#new-event-handler)
     - [Event-driven main loop](#event-driven-main-loop)
     - [Keyboard state array](#keyboard-state-array)
     - [New build system](#new-build-system)
@@ -36,6 +37,10 @@ any API we've included in a release. Typically, this means that any code that us
 
 
 ## New features
+
+### New event handler
+
+One more `KeyEvent` handler has been added: `afterReportingState(const KeyEvent &event)`.  This handler gets called after HID reports are sent for an event, providing a point for plugins to act after an event has been fully processed by `Runtime.handleKeyEvent()`.
 
 ### Event-driven main loop
 

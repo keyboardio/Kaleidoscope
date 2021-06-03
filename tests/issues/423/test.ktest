@@ -1,0 +1,177 @@
+VERSION 1
+
+KEYSWITCH SPACE      0  0
+KEYSWITCH A          0  1
+KEYSWITCH TD_0       1  0
+KEYSWITCH OS_SHIFT   1  1
+
+# ==============================================================================
+NAME Back and forth
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_Period # report: { 37 }
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OS_SHIFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+# ------------------------------------------------------------------------------
+# Next, we press `space`, triggering both the resolution of the TapDance key and
+# the release of the OneShot key, in that order.
+RUN 4 ms
+PRESS SPACE
+RUN 1 cycle
+# First, the TapDance key is resolved, adding `.` to the report. This event also
+# triggers the release of the OneShot key, which shouldn't happen until after
+# the `.` press is processed.
+EXPECT keyboard-report Key_LeftShift Key_Period # report: { 37 e1 }
+# Now the OneShot key is released, removing `shift` from the report.
+EXPECT keyboard-report Key_Period # report: { 37 }
+# The TapDance `.` key has been released, so its release comes next.
+EXPECT keyboard-report empty # report: { }
+# Finally, we get the report for the press of the `space` key.
+EXPECT keyboard-report Key_Spacebar # report: { 2c }
+
+RUN 4 ms
+RELEASE SPACE
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OS_SHIFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # report: { 4 e1 }
+EXPECT keyboard-report Key_A # report: { 4 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Single rollover
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS SPACE
+RUN 1 cycle
+EXPECT keyboard-report Key_Period # report: { 37 }
+EXPECT keyboard-report Key_Period Key_Spacebar # report: { 37 2c }
+
+RUN 4 ms
+PRESS OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_Period Key_Spacebar Key_LeftShift # report: { 2c 37 e1 }
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+EXPECT keyboard-report Key_Spacebar Key_LeftShift # report: { 2c e1 }
+
+RUN 4 ms
+RELEASE SPACE
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # report: { 4 e1 }
+
+RUN 4 ms
+RELEASE OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OSM applies to whole Macro
+
+RUN 4 ms
+PRESS OS_SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OS_SHIFT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+RUN 4 ms
+PRESS TD_0
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TD_0
+RUN 1 cycle
+
+# ------------------------------------------------------------------------------
+# Next, we press `space`, triggering both the resolution of the TapDance key and
+# the release of the OneShot key, in that order.
+RUN 4 ms
+PRESS SPACE
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # report: { 4 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_B # report: { 5 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_C # report: { 6 e1 }
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty # report: { }
+EXPECT keyboard-report Key_Spacebar # report: { 2c }
+
+RUN 4 ms
+RELEASE SPACE
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+
+RUN 5 ms
