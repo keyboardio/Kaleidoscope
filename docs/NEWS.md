@@ -12,6 +12,13 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### SpaceCadet "no-delay" mode
+
+SpaceCadet can now be enabled in "no-delay" mode, wherein the primary (modifier)
+value of the key will be sent to the host immediately when the key is pressed.
+If the SpaceCadet key is released before the timeout, the modifier is released,
+and then the alternate (symbol) value is sent.  To activate "no-delay" mode, call `SpaceCadet.enableWithoutDelay()`.
+
 ### New Qukeys features
 
 #### Tap-repeat

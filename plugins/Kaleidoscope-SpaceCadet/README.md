@@ -133,6 +133,13 @@ properties:
 > is disabled. This is useful for interfacing with other plugins or macros,
 > especially where SpaceCadet functionality isn't always desired.
 
+### `.enableWithoutDelay()`
+
+> This method enables the SpaceCadet plugin in "no-delay" mode. In this mode,
+> SpaceCadet immediately sends the primary (modifier) value of the SpaceCadet
+> key when it is pressed. If it is then released before timing out, it sends the
+> alternate "tap" value, replacing the modifier.
+
 ### `Key_SpaceCadetEnable`
 
 > This provides a key for placing on a keymap for enabling the SpaceCadet
