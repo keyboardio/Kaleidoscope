@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -20,6 +20,7 @@
 #include "kaleidoscope/event_handler_result.h"
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/PointerEvent.h"
 #include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/layers.h"
 
