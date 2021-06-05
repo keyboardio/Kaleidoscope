@@ -173,6 +173,21 @@ class SignatureCheckDummy {};
              (KeyEvent &event),                                           __NL__ \
              (event), ##__VA_ARGS__)                                      __NL__ \
                                                                           __NL__ \
+  /* Function called for every physical pointer sensor event (motion   */ __NL__ \
+  /* and/or scrolling). The `event` parameter is passed by reference   */ __NL__ \
+  /* so all of its properties (key, motion, scrolling) can be changed. */ __NL__ \
+  /* If it returns EventHandlerResult::OK, the next handler will be    */ __NL__ \
+  /* passed the event; otherwise Kaleidoscope will stop processing it. */ __NL__ \
+  /* Plugins that implement this handler must not process the same     */ __NL__ \
+  /* event twice in order to prevent handler loops.                    */ __NL__ \
+  OPERATION(onPointerSensorEvent,                                         __NL__ \
+            2,                                                            __NL__ \
+            _CURRENT_IMPLEMENTATION,                                      __NL__ \
+            _ABORTABLE,                                                   __NL__ \
+            (), (), (), /* non template */                                __NL__ \
+            (PointerEvent &event),                                        __NL__ \
+            (event), ##_VA_ARGS__)                                        __NL__ \
+                                                                          __NL__ \
    /* Function called for every logical key event, including ones that */ __NL__ \
    /* originate from a physical keyswitch and ones that are injected   */ __NL__ \
    /* by plugins. The `event` parameter is passed by reference so its  */ __NL__ \
