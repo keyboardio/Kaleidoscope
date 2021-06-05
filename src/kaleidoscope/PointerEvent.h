@@ -33,7 +33,7 @@ struct PointerEvent {
                Key key = Key_NoKey, PointerEventId id = last_id_)
     : addr(addr), x(x), y(y), h(h), v(v), key(key), id_(id) {}
 
-  PointerEventEvent() : id_(last_id_) {}
+  PointerEvent() : id_(last_id_) {}
 
   // For use by sensor creating a new event from a physical sensor event.
   static PointerEvent next(KeyAddr addr, int8_t x, int8_t y, int8_t h, int8_t v) {
