@@ -31,13 +31,6 @@ uint16_t OneShot::timeout_ = 2500;
 uint16_t OneShot::hold_timeout_ = 250;
 int16_t OneShot::double_tap_timeout_ = -1;
 
-// Deprecated
-#ifndef NDEPRECATED
-uint16_t OneShot::time_out = 2500;
-uint16_t OneShot::hold_time_out = 250;
-int16_t OneShot::double_tap_time_out = -1;
-#endif
-
 // ----------------------------------------------------------------------------
 // State variables
 
@@ -354,16 +347,6 @@ EventHandlerResult OneShot::afterEachCycle() {
     start_time_ = Runtime.millisAtCycleStart();
   }
 
-  // Temporary fix for deprecated variables
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  timeout_ = time_out;
-  hold_timeout_ = hold_time_out;
-  double_tap_timeout_ = double_tap_time_out;
-#pragma GCC diagnostic pop
-#endif
-
   return EventHandlerResult::OK;
 }
 
@@ -444,66 +427,6 @@ void OneShot::releaseKey(KeyAddr key_addr) {
 }
 
 // ------------------------------------------------------------------------------
-// Deprecated functions
-#ifndef NDEPRECATED
-void OneShot::inject(Key key, uint8_t key_state) {
-  if (isOneShotKey(key)) {
-    key = decodeOneShotKey(key);
-  }
-  // Find an idle keyswitch to use for the injected OneShot key and activate
-  // it. This is an ugly hack, but it will work. It does mean that whatever key
-  // is used will be unavailable for its normal function until the injected
-  // OneShot key is deactivated, so use of `inject()` is strongly discouraged.
-  for (KeyAddr key_addr : KeyAddr::all()) {
-    if (live_keys[key_addr] == Key_Transparent) {
-      pressKey(key_addr, key);
-      glue_addrs_.set(key_addr);
-      break;
-    }
-  }
-}
-
-bool OneShot::isModifierActive(Key key) {
-  // This actually works for any `Key` value, not just modifiers. Because we're
-  // just searching the keymap cache, it's also possible to return a false
-  // positive (a plugin might have altered the cache for an idle `KeyAddr`), or
-  // a false negative (a plugin might be inserting a modifier without a valid
-  // `KeyAddr`), but as this is a deprecated function, I think this is good
-  // enough.
-  for (KeyAddr key_addr : KeyAddr::all()) {
-    if (live_keys[key_addr] == key) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool OneShot::isActive(Key key) {
-  if (isOneShotKey(key)) {
-    key = decodeOneShotKey(key);
-  }
-  for (KeyAddr key_addr : glue_addrs_) {
-    if (live_keys[key_addr] == key) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool OneShot::isSticky(Key key) {
-  if (isOneShotKey(key)) {
-    key = decodeOneShotKey(key);
-  }
-  for (KeyAddr key_addr : glue_addrs_) {
-    if (live_keys[key_addr] == key &&
-        !temp_addrs_.read(key_addr)) {
-      return true;
-    }
-  }
-  return false;
-}
-#endif
-
 
 } // namespace plugin
 } // namespace kaleidoscope

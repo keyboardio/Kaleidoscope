@@ -628,10 +628,9 @@ Older versions of the plugin were based on `Key` values; OneShot is now based on
 `KeyAddr` coordinates instead, in order to improve reliability and
 functionality.
 
-The following deprecated functions and variables will be removed after
-**2021-04-31**.
+The following deprecated functions and variables were removed on **2021-06-04**.
 
-#### Deprecated functions
+#### Removed functions
 
 - `OneShot.inject(key, key_state)`: This `Key`-based function still works, but
   because OneShot keys are now required to have a valid `KeyAddr`, it will now
@@ -654,7 +653,7 @@ The following deprecated functions and variables will be removed after
   perfectly reliable, because it now returns positive results for keys other
   than OneShot modifiers. It should not be used.
 
-#### Deprecated variables
+#### Removed variables
 
 - `OneShot.time_out`: Use `OneShot.setTimeout()` instead.
 - `OneShot.hold_time_out`: Use `OneShot.setHoldTimeout()` instead.

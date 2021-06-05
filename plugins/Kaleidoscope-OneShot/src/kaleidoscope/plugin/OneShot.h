@@ -22,37 +22,6 @@
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/KeyAddrBitfield.h"
 
-// ----------------------------------------------------------------------------
-// Deprecation warning messages
-#define _DEPRECATED_MESSAGE_ONESHOT_TIMEOUT                                     \
-  "The `OneShot.time_out` variable is deprecated. Please use the\n"             \
-  "`OneShot.setTimeout()` function instead."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_HOLD_TIMEOUT                                \
-  "The `OneShot.hold_time_out` variable is deprecated. Please use the\n"        \
-  "`OneShot.setHoldTimeout()` function instead."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_DOUBLE_TAP_TIMEOUT                          \
-  "The `OneShot.double_tap_time_out` variable is deprecated. Please use the\n"  \
-  "`OneShot.setDoubleTapTimeout()` function instead."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_INJECT                                      \
-  "The `OneShot.inject(key, key_state)` function has been deprecated."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_ISACTIVE_KEY                                \
-  "The `OneShot.isActive(key)` function is deprecated. Please use\n"            \
-  "`OneShot.isActive(key_addr)` instead, if possible."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_ISSTICKY_KEY                                \
-  "The `OneShot.isSticky(key)` function is deprecated. Please use\n"            \
-  "`OneShot.isSticky(key_addr)` instead, if possible."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_ISPRESSED                                   \
-  "The `OneShot.isPressed()` function is deprecated. This function now\n"       \
-  "always returns false."
-
-#define _DEPRECATED_MESSAGE_ONESHOT_ISMODIFIERACTIVE                            \
-  "The `OneShot.isModifierActive()` function is deprecated."
 
 // ----------------------------------------------------------------------------
 // Keymap macros
@@ -156,66 +125,19 @@ class OneShot : public kaleidoscope::Plugin {
   static void cancel(bool with_stickies = false);
 
   // --------------------------------------------------------------------------
-  // Deprecated functions
-#ifndef NDEPRECATED
-  DEPRECATED(ONESHOT_INJECT)
-  void inject(Key key, uint8_t key_state);
-
-  DEPRECATED(ONESHOT_ISMODIFIERACTIVE)
-  static bool isModifierActive(Key key);
-
-  DEPRECATED(ONESHOT_ISACTIVE_KEY)
-  static bool isActive(Key oneshot_key);
-
-  DEPRECATED(ONESHOT_ISSTICKY_KEY)
-  static bool isSticky(Key oneshot_key);
-
-  DEPRECATED(ONESHOT_ISPRESSED)
-  static bool isPressed() {
-    return false;
-  }
-#endif
-
-  // --------------------------------------------------------------------------
   // Timeout onfiguration functions
   static void setTimeout(uint16_t ttl) {
     timeout_ = ttl;
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    time_out = ttl;
-#pragma GCC diagnostic pop
-#endif
   }
   static void setHoldTimeout(uint16_t ttl) {
     hold_timeout_ = ttl;
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    hold_time_out = ttl;
-#pragma GCC diagnostic pop
-#endif
   }
   static void setDoubleTapTimeout(int16_t ttl) {
     double_tap_timeout_ = ttl;
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    double_tap_time_out = ttl;
-#pragma GCC diagnostic pop
-#endif
   }
 
   // --------------------------------------------------------------------------
   // Configuration variables (should probably be private)
-#ifndef NDEPRECATED
-  DEPRECATED(ONESHOT_TIMEOUT)
-  static uint16_t time_out;
-  DEPRECATED(ONESHOT_HOLD_TIMEOUT)
-  static uint16_t hold_time_out;
-  DEPRECATED(ONESHOT_DOUBLE_TAP_TIMEOUT)
-  static int16_t double_tap_time_out;
-#endif
 
   // --------------------------------------------------------------------------
   // Plugin hook functions
