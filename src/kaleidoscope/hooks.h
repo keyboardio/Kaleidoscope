@@ -24,6 +24,7 @@ class Key;
 
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/PointerEvent.h"
 #include "kaleidoscope/plugin.h"
 #include "kaleidoscope/event_handlers.h"
 
