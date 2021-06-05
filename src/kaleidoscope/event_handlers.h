@@ -186,7 +186,7 @@ class SignatureCheckDummy {};
             _ABORTABLE,                                                   __NL__ \
             (), (), (), /* non template */                                __NL__ \
             (PointerEvent &event),                                        __NL__ \
-            (event), ##_VA_ARGS__)                                        __NL__ \
+            (event), ##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
    /* Function called for every logical key event, including ones that */ __NL__ \
    /* originate from a physical keyswitch and ones that are injected   */ __NL__ \
