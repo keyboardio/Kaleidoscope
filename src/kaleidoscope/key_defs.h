@@ -221,7 +221,7 @@ class Key {
   // they are used chorded to change the result of typing those other
   // keys. They're even more similar to `shift` keys. For both reasons, it's
   // worth singling them out.
-  constexpr bool isLayerShift() const {
+  constexpr bool __attribute__((always_inline)) isLayerShift() const {
     return (isLayerKey() &&
             keyCode_ >= LAYER_SHIFT_OFFSET &&
             keyCode_ < LAYER_MOVE_OFFSET);
