@@ -29,7 +29,8 @@
   "Please use the following methods instead:                               \n" \
   " - for `highlight_color` => `setHighlightColor(color)`                  \n" \
   " - for `oneshot_color` => `setOneShotColor(color)`                      \n" \
-  " - for `sticky_color` => `setStickyColor(color)`"
+  " - for `sticky_color` => `setStickyColor(color)`                        \n" \
+  "These variables will be removed after 2021-08-01."
 
 namespace kaleidoscope {
 namespace plugin {
