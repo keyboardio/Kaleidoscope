@@ -27,13 +27,13 @@ amount of custom code one has to write will be minimal.
 A `Device` is the topmost level component, it is the interface the rest of
 Kaleidoscope will work with. The [`kaleidoscope::device::Base`][k:d:Base] class
 is the ancestor of _all_ devices, everything derives from this. Devices that use
-an `ATMega32U4` MCU we also have the
-[`kaleidoscope::device::ATMega32U4Keyboard`][k:d:a32u4] class, which sets up
-some of the components that is common to all `ATMega32U4`-based devices (such as
+an `ATmega32U4` MCU we also have the
+[`kaleidoscope::device::ATmega32U4Keyboard`][k:d:a32u4] class, which sets up
+some of the components that is common to all `ATmega32U4`-based devices (such as
 the _MCU_ and the _Storage_).
 
- [k:d:Base]:../src/kaleidoscope/device/Base.h
- [k:d:a32u4]: ../src/kaleidoscope/device/ATMega32U4.h
+ [k:d:Base]: ../../src/kaleidoscope/device/Base.h
+ [k:d:a32u4]: ../../src/kaleidoscope/device/ATmega32U4Keyboard.h
 
 As hinted at above, a device - or rather, it's `Props` - describe the components
 used for the device, such as the MCU, the Bootloader, the Storage driver, LEDs,
@@ -42,7 +42,7 @@ in `Props` - the defaults are all no-ops.
 
 All devices must also come with a `Props` struct, deriving from [`kaleidoscope::device::BaseProps`][k:d:BaseProps].
 
- [k:d:BaseProps]: ../src/kaleidoscope/device/Base.h
+ [k:d:BaseProps]: ../../src/kaleidoscope/device/Base.h
 
 As an example, the most basic device we can have, that does nothing, would look
 like this:
@@ -66,16 +66,16 @@ components the device ends up using.
 
 The heart of any device will be the main controller unit, or _MCU_ for short.
 The [`kaleidoscope::driver::mcu::Base`][k:d:m:Base] class is the ancestor of our
-MCU drivers, including [`mcu::ATMega32U4`][k:d:m:a32u4].
+MCU drivers, including [`kaleidoscope::driver::mcu::ATmega32U4`][k:d:m:a32u4].
 
- [k:d:m:Base]: ../src/kaleidoscope/driver/mcu/Base.h
- [k:d:m:a32u4]: ../src/kaleidoscope/driver/mcu/ATMega32U4.h
+ [k:d:m:Base]: ../../src/kaleidoscope/driver/mcu/Base.h
+ [k:d:m:a32u4]: ../../src/kaleidoscope/driver/mcu/ATmega32U4.h
 
 The core firmware will use the `detachFromHost()` and `attachToHost()` methods
 of the MCU driver, along with `setup()`, but the driver - like any other
 driver - is free to have other methods, to be used by individual devices.
 
-For example, the [`ATMega32U4`][k:d:m:a32u4] driver implements a `disableJTAG()`
+For example, the [`ATmega32U4`][k:d:m:a32u4] driver implements a `disableJTAG()`
 and a `disableClockDivision()` method, which some of our devices use in their
 constructors.
 
@@ -88,16 +88,16 @@ thing that allows us to re-program the keyboard without additional hardware
 (aptly called a programmer). As such, the [`base class`][k:d:b:Base] has a
 single method, `rebootBootloader()`, which our bootloader components implement.
 
- [k:d:b:Base]: ../src/kaleidoscope/bootloader/Base.h
+ [k:d:b:Base]: ../../src/kaleidoscope/driver/bootloader/Base.h
 
-Kaleidoscope currently supports [`Catalina`][k:d:b:Catalina],
+Kaleidoscope currently supports [`Caterina`][k:d:b:Caterina],
 [`HalfKay`][k:d:b:HalfKay], and [`FLIP`][k:d:b:FLIP] bootloaders. Please consult
 them for more information. In many cases, setting up the bootloader in the
 device props is all one needs to do.
 
- [k:d:b:Catalina]: ../src/kaleidoscope/driver/bootloader/avr/Catalina.h
- [k:d:b:HalfKay]: ../src/kaleidoscope/driver/bootloader/avr/HalfKay.h
- [k:d:b:FLIP]: ../src/kaleidoscope/driver/bootloader/avr/FLIP.h
+ [k:d:b:Caterina]: ../../src/kaleidoscope/driver/bootloader/avr/Caterina.h
+ [k:d:b:HalfKay]: ../../src/kaleidoscope/driver/bootloader/avr/HalfKay.h
+ [k:d:b:FLIP]: ../../src/kaleidoscope/driver/bootloader/avr/FLIP.h
 
 Like the _MCU_ component, the _bootloader_ does not use Props, either.
 
@@ -113,40 +113,40 @@ to flash new firmware.
 The Storage API resembles the Arduino EEPROM API very closely. In fact, our
 [`AVREEPROM`][k:d:s:AVREEPROM] class is but a thin wrapper around that!
 
- [k:d:s:Base]: ../src/kaleidoscope/driver/storage/Base.h
+ [k:d:s:Base]: ../../src/kaleidoscope/driver/storage/Base.h
  [chrysalis]: https://github.com/keyboardio/Chrysalis
- [k:d:s:AVREEPROM]: ../src/kaleidoscope/driver/storage/AVREEPROM.h
+ [k:d:s:AVREEPROM]: ../../src/kaleidoscope/driver/storage/AVREEPROM.h
 
 The `Storage` component does use Props, one that describes the length - or
-size - of it. We provide an [`ATMega32U4EEPROMProps`][k:d:s:a32u4props] helper,
-which is preconfigured for the 1k EEPROM size of the ATMega32U4.
+size - of it. We provide an [`ATmega32U4EEPROMProps`][k:d:s:a32u4props] helper,
+which is preconfigured for the 1k EEPROM size of the ATmega32U4.
 
- [k:d:s:a32u4props]: ../src/kaleidoscope/driver/storage/ATMega32U4EEPROMProps.h
+ [k:d:s:a32u4props]: ../../src/kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h
 
 ### LEDs
 
 [`kaleidoscope::driver::led::Base`][k:d:l:Base]
 
- [k:d:l:Base]: ../src/kaleidoscope/driver/led/Base.h
+ [k:d:l:Base]: ../../src/kaleidoscope/driver/led/Base.h
 
 ### Keyscanner
 
 [`kaleidoscope::driver::keyscanner::Base`][k:d:ks:Base]
 
- [k:d:ks:Base]: ../src/kaleidoscope/driver/keyscanner/Base.h
+ [k:d:ks:Base]: ../../src/kaleidoscope/driver/keyscanner/Base.h
 
 ## Helpers
 
-[`kaleidoscope::device::ATMega32U4Keyboard`][k:d:a32u4k]
-[`kaleidoscope::driver::keyscanner::AVR`][k:d:ks:avr]
+[`kaleidoscope::device::ATmega32U4Keyboard`][k:d:a32u4k]
+[`kaleidoscope::driver::keyscanner::ATmega`][k:d:ks:atm]
 
- [k:d:a32u4k]: ../src/kaleidoscope/device/ATMega32U4Keyboard.h
- [k:d:ks:avr]: ../src/kaleidoscope/driver/keyscanner/AVR.h
+ [k:d:a32u4k]: ../../src/kaleidoscope/device/ATmega32U4Keyboard.h
+ [k:d:ks:atm]: ../../src/kaleidoscope/driver/keyscanner/ATmega.h
 
 ## Putting it all together
 
 To put things into perspective, and show a simple example, we'll build an
-imaginary mini keypad: `ATMega32U4` with `Caterina` as bootloader, no LEDs, and
+imaginary mini keypad: `ATmega32U4` with `Caterina` as bootloader, no LEDs, and
 four keys only.
 
 ### `ImaginaryKeypad.h`
@@ -157,9 +157,9 @@ four keys only.
 #ifdef ARDUINO_AVR_IMAGINARY_KEYPAD
 
 #include <Arduino.h>
-#include "kaleidoscope/driver/keyscanner/AVR.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
-#include "kaleidoscope/device/ATMega32U4Keyboard.h"
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 namespace kaleidoscope {
 namespace device {
