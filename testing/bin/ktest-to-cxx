@@ -352,14 +352,14 @@ sub generate_press {
     my $e = shift;
 
     # TODO handle multuple presses
-    cxx( "PressKey(key_addr_" . $e->{data}->{switch} . ");", $e->{comment} );
+    cxx( "PressKey(key_addr_" . $e->{data}->{switch} . "); // ", $e->{comment} );
 }
 
 sub generate_release {
     my $e = shift;
 
     # TODO handle multiple releases
-    cxx( "ReleaseKey(key_addr_" . $e->{data}->{switch} . ");", $e->{comment} );
+    cxx( "ReleaseKey(key_addr_" . $e->{data}->{switch} . "); // ", $e->{comment} );
 }
 
 sub generate_expect_report {
