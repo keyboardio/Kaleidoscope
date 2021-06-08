@@ -22,7 +22,8 @@
 #define _DEPRECATED_MESSAGE_ENABLEWAKEUP                                    \
   "The HostPowerManagement.enableWakeup() call is not necessary anymore,\n" \
   "the firmware supports wakeup by default now. The line can be safely\n"   \
-  "removed."
+  "removed.\n"                                                          \
+  "This function will be removed after 2021-08-01."
 
 namespace kaleidoscope {
 namespace plugin {
