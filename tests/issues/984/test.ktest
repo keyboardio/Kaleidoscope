@@ -1,0 +1,62 @@
+VERSION 1
+
+KEYSWITCH OSM   0  0
+KEYSWITCH A     1  0
+KEYSWITCH B     1  1
+KEYSWITCH ESC   2  0
+
+# ==============================================================================
+NAME Escape OneShot modifier
+
+RUN 4 ms
+PRESS OSM
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OSM
+RUN 1 cycle
+
+RUN 4 ms
+PRESS ESC
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 4 ms
+RELEASE ESC
+RUN 1 cycle
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Escape sticky OneShot modifier
+
+RUN 4 ms
+PRESS OSM
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE OSM
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OSM
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OSM
+RUN 1 cycle
+
+RUN 5000 ms
+
+RUN 4 ms
+PRESS ESC
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 4 ms
+RELEASE ESC
+RUN 1 cycle
+
+RUN 5 ms
