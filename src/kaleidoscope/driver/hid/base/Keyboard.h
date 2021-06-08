@@ -54,6 +54,9 @@ class NoBootKeyboard {
   bool wasAnyModifierActive() {
     return false;
   }
+  bool isKeyPressed(uint8_t code) {
+    return false;
+  }
 
   uint8_t getLeds() {
     return 0;
@@ -81,6 +84,9 @@ class NoNKROKeyboard {
     return false;
   }
   bool wasAnyModifierActive() {
+    return false;
+  }
+  bool isKeyPressed(uint8_t code) {
     return false;
   }
 
