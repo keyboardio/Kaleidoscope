@@ -6,6 +6,11 @@
 
 enum { MACRO_TOGGLE_QUKEYS };
 
+// To define DualUse Qukeys in the keymap itself, we can use `SFT_T(key)`,
+// `CTL_T(key)`, `ALT_T(key)`, `GUI_T(key)`, and `LT(layer, key)`, as defined
+// for the home row on the right side of the keymap (and one of the palm keys)
+// below.
+
 // *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED
@@ -63,6 +68,9 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 KALEIDOSCOPE_INIT_PLUGINS(Qukeys, Macros);
 
 void setup() {
+  // The following Qukey definitions are for the left side of the home row (and
+  // the left palm key) of the Keyboardio Model01 keyboard.  For other
+  // keyboards, the `KeyAddr(row, col)` coordinates will need adjustment.
   QUKEYS(
     kaleidoscope::plugin::Qukey(0, KeyAddr(2, 1), Key_LeftGui),      // A/cmd
     kaleidoscope::plugin::Qukey(0, KeyAddr(2, 2), Key_LeftAlt),      // S/alt
