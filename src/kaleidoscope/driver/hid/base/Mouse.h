@@ -35,10 +35,6 @@ class NoMouse {
   void press(uint8_t buttons) {}
   void release(uint8_t buttons) {}
   void click(uint8_t buttons) {}
-  HID_MouseReport_Data_t getReport() {
-    static HID_MouseReport_Data_t report;
-    return report;
-  }
 };
 
 struct MouseProps {

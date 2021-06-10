@@ -76,9 +76,6 @@ class MouseWrapper {
   void click(uint8_t buttons) {
     Mouse.click(buttons);
   }
-  HID_MouseReport_Data_t getReport() {
-    return Mouse.getReport();
-  }
 };
 
 struct MouseProps: public base::MouseProps {
