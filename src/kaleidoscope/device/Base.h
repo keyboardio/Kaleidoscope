@@ -25,7 +25,7 @@
 #include "kaleidoscope_internal/deprecations.h"
 #include "kaleidoscope/macro_helpers.h"
 
-#include "kaleidoscope/driver/hid/Keyboardio.h"
+#include "kaleidoscope/driver/hid/Base.h"
 #include "kaleidoscope/driver/keyscanner/None.h"
 #include "kaleidoscope/driver/led/None.h"
 #include "kaleidoscope/driver/mcu/None.h"
@@ -53,8 +53,8 @@ namespace kaleidoscope {
 namespace device {
 
 struct BaseProps {
-  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
-  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
+  typedef kaleidoscope::driver::hid::BaseProps HIDProps;
+  typedef kaleidoscope::driver::hid::Base<HIDProps> HID;
   typedef kaleidoscope::driver::keyscanner::BaseProps KeyScannerProps;
   typedef kaleidoscope::driver::keyscanner::None KeyScanner;
   typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;

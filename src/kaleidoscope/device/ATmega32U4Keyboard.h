@@ -23,6 +23,7 @@
 #include "kaleidoscope/device/Base.h"
 
 #include "kaleidoscope/driver/mcu/ATmega32U4.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/keyscanner/ATmega.h"
 #include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"
 #include "kaleidoscope/driver/storage/AVREEPROM.h"
@@ -31,6 +32,8 @@ namespace kaleidoscope {
 namespace device {
 
 struct ATmega32U4KeyboardProps : kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
   typedef kaleidoscope::driver::mcu::ATmega32U4Props MCUProps;
   typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   typedef kaleidoscope::driver::storage::ATmega32U4EEPROMProps StorageProps;

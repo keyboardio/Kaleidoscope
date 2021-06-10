@@ -26,6 +26,7 @@
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/bootloader/samd/Bossac.h"
 #include "kaleidoscope/driver/storage/Flash.h"
@@ -156,6 +157,8 @@ struct RaiseStorageProps : public kaleidoscope::driver::storage::FlashProps {
 struct RaiseSideFlasherProps : public kaleidoscope::util::flasher::BaseProps {};
 
 struct RaiseProps : kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
   typedef RaiseLEDDriverProps  LEDDriverProps;
   typedef RaiseLEDDriver LEDDriver;
   typedef RaiseKeyScannerProps KeyScannerProps;
