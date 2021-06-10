@@ -1,0 +1,76 @@
+VERSION 1
+
+KEYSWITCH QML   1  1
+KEYSWITCH A     0  1
+KEYSWITCH MLB   3  6
+
+
+# ==============================================================================
+NAME Foo
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS MLB
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_B
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+
+RUN 4 ms
+RELEASE MLB
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Qukeys ModLayer
+
+RUN 4 ms
+PRESS QML
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui
+EXPECT keyboard-report Key_LeftGui Key_B
+EXPECT keyboard-report Key_LeftGui
+
+RUN 4 ms
+RELEASE QML
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
