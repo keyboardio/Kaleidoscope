@@ -50,6 +50,20 @@ class MouseWrapper {
   void move(int8_t x, int8_t y, int8_t vWheel, int8_t hWheel) {
     Mouse.move(x, y, vWheel, hWheel);
   }
+  void stop(bool x, bool y, bool vWheel = false, bool hWheel = false) {
+    HID_MouseReport_Data_t report = Mouse.getReport();
+
+    if (x)
+      report.xAxis = 0;
+    if (y)
+      report.yAxis = 0;
+    if (vWheel)
+      report.vWheel = 0;
+    if (hWheel)
+      report.hWheel = 0;
+    move(report.xAxis, report.yAxis, report.vWheel, report.hWheel);
+  }
+
   void releaseAll() {
     Mouse.releaseAll();
   }
@@ -61,9 +75,6 @@ class MouseWrapper {
   }
   void click(uint8_t buttons) {
     Mouse.click(buttons);
-  }
-  HID_MouseReport_Data_t getReport() {
-    return Mouse.getReport();
   }
 };
 

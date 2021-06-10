@@ -23,7 +23,7 @@
 
 #include <stddef.h>
 
-#ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#if defined(KALEIDOSCOPE_VIRTUAL_BUILD) || defined(ARDUINO_ARCH_STM32)
 #include <new>
 #else
 

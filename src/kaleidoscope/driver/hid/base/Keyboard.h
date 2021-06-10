@@ -20,6 +20,10 @@
 
 #include "kaleidoscope/key_defs.h"
 
+#ifndef HID_BOOT_PROTOCOL
+#define HID_BOOT_PROTOCOL 0
+#endif
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {

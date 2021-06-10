@@ -22,6 +22,7 @@
 #include KALEIDOSCOPE_HARDWARE_H
 
 #include "kaleidoscope/driver/bootloader/None.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/led/Base.h"
 
 namespace kaleidoscope {
@@ -110,6 +111,8 @@ class VirtualLEDDriver
 // the physical keyboard.
 //
 struct VirtualProps : public kaleidoscope::DeviceProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
   typedef typename kaleidoscope::DeviceProps::KeyScannerProps
   KeyScannerProps;
   typedef VirtualKeyScanner
