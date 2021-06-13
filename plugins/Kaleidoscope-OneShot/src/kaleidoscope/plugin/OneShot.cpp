@@ -118,7 +118,12 @@ bool OneShot::isSticky() {
 // could potentially use three different color values for the three
 // states (sticky | active && !sticky | pressed && !active).
 
+__attribute__((weak))
 bool OneShot::isStickable(Key key) {
+  return isStickableDefault(key);
+}
+
+bool OneShot::isStickableDefault(Key key) {
   int8_t n;
   if (key.isKeyboardModifier()) {
     n = key.getKeyCode() - Key_LeftControl.getKeyCode();

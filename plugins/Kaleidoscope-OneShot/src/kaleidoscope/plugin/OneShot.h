@@ -153,7 +153,10 @@ class OneShot : public kaleidoscope::Plugin {
             key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
 
-  static bool isStickable(Key key); // inline?
+  /// Determine if the given `key` is allowed to become sticky.
+  static bool isStickable(Key key);
+
+  static bool isStickableDefault(Key key);
 
   static bool isTemporary(KeyAddr key_addr); // inline?
   static bool isSticky(KeyAddr key_addr); // inline?
