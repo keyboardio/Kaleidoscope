@@ -145,12 +145,41 @@ bool OneShot::isTemporary(KeyAddr key_addr) {
   return temp_addrs_.read(key_addr);
 }
 
+bool OneShot::isPending(KeyAddr key_addr) {
+  return (glue_addrs_.read(key_addr) && temp_addrs_.read(key_addr));
+}
+
 bool OneShot::isSticky(KeyAddr key_addr) {
   return (glue_addrs_.read(key_addr) && !temp_addrs_.read(key_addr));
 }
 
 bool OneShot::isActive(KeyAddr key_addr) {
   return (isTemporary(key_addr) || glue_addrs_.read(key_addr));
+}
+
+// ----------------------------------------------------------------------------
+// Public state-setting functions
+
+void OneShot::setPending(KeyAddr key_addr) {
+  temp_addrs_.set(key_addr);
+  glue_addrs_.clear(key_addr);
+  start_time_ = Runtime.millisAtCycleStart();
+}
+
+void OneShot::setOneShot(KeyAddr key_addr) {
+  temp_addrs_.set(key_addr);
+  glue_addrs_.set(key_addr);
+  start_time_ = Runtime.millisAtCycleStart();
+}
+
+void OneShot::setSticky(KeyAddr key_addr) {
+  temp_addrs_.clear(key_addr);
+  glue_addrs_.set(key_addr);
+}
+
+void OneShot::clear(KeyAddr key_addr) {
+  temp_addrs_.clear(key_addr);
+  glue_addrs_.clear(key_addr);
 }
 
 // ----------------------------------------------------------------------------
