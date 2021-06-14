@@ -133,7 +133,7 @@ bool OneShot::isStickable(Key key) {
     return true;
 #endif
   }
-  return false;
+  return true;
 }
 
 bool OneShot::isTemporary(KeyAddr key_addr) {
