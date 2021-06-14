@@ -63,6 +63,11 @@ The `ActiveModColorEffect` object provides the following methods:
 
 * [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
 * [Kaleidoscope-OneShot](Kaleidoscope-OneShot.md)
+* [Kaleidoscope-OneShotMetaKeys](Kaleidoscope-OneShotMetaKeys.md)
+
+The `ActiveModColorEffect` plugin doesn't require that either OneShot or
+OneShotMetaKeys plugins are registered with `KALEIDOSCOPE_INIT_PLUGINS()` in
+order to work, but it does depend on their header files.
 
 ## Further reading
 

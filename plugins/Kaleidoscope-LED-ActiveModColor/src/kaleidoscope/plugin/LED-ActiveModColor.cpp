@@ -17,6 +17,7 @@
 
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-OneShot.h>
+#include <Kaleidoscope-OneShotMetaKeys.h>
 #include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope/keyswitch_state.h"
