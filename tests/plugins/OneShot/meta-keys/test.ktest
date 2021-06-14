@@ -1,0 +1,325 @@
+VERSION 1
+
+KEYSWITCH OS_META     0  0
+KEYSWITCH OS_ACTIVE   0  1
+KEYSWITCH A           1  0
+KEYSWITCH B           1  1
+
+# ==============================================================================
+NAME OneShot meta sticky
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot meta sticky rollover
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot meta sticky overlap
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot meta sticky overlap to rollover
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot meta sticky sticky
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS OS_META
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_META
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_B
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot active sticky
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+PRESS OS_ACTIVE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_ACTIVE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot active sticky two keys
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B
+
+RUN 4 ms
+PRESS OS_ACTIVE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OS_ACTIVE
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_B
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
