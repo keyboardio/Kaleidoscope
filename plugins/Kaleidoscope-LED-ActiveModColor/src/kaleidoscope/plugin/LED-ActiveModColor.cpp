@@ -55,7 +55,7 @@ EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
         // Get the entry from the live keys array
         Key entry_key = live_keys[entry_addr];
         // Skip empty entries
-        if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
+        if (entry_key == Key_Inactive || entry_key == Key_Masked) {
           continue;
         }
         // Highlight everything else
