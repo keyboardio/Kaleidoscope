@@ -52,10 +52,6 @@ KeyAddrBitfield OneShot::glue_addrs_;
 uint16_t OneShot::start_time_ = 0;
 KeyAddr OneShot::prev_key_addr_ = OneShot::invalid_key_addr;
 
-#ifndef ONESHOT_WITHOUT_METASTICKY
-KeyAddr OneShot::meta_sticky_key_addr_ {KeyAddr::invalid_state};
-#endif
-
 
 // ============================================================================
 // Public interface
@@ -133,10 +129,6 @@ bool OneShot::isStickableDefault(Key key) {
     if (n < oneshot_key_count) {
       return bitRead(stickable_keys_, n);
     }
-#ifndef ONESHOT_WITHOUT_METASTICKY
-  } else if (key == OneShot_MetaStickyKey) {
-    return true;
-#endif
   }
   return true;
 }
@@ -224,27 +216,6 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
 
   if (keyToggledOn(event.state)) {
 
-    // Make all held keys sticky if `OneShot_ActiveStickyKey` toggles on.
-    if (event.key == OneShot_ActiveStickyKey) {
-      // Skip the stickify key itself
-      for (KeyAddr entry_addr : KeyAddr::all()) {
-        if (entry_addr == event.addr) {
-          continue;
-        }
-        // Get the entry from the keyboard state array
-        Key entry_key = live_keys[entry_addr];
-        // Skip empty entries
-        if (entry_key == Key_Transparent || entry_key == Key_NoKey) {
-          continue;
-        }
-        // Make everything else sticky
-        temp_addrs_.clear(entry_addr);
-        glue_addrs_.set(entry_addr);
-      }
-      prev_key_addr_ = event.addr;
-      return EventHandlerResult::OK;
-    }
-
     if (!temp && !glue) {
       // The key is in the "normal" state. The first thing we need to do is
       // convert OneShot keys to their equivalent values, and record the fact
@@ -255,34 +226,6 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
         event.key = decodeOneShotKey(event.key);
         is_oneshot = true;
       }
-
-#ifndef ONESHOT_WITHOUT_METASTICKY
-      bool is_meta_sticky_key_active = meta_sticky_key_addr_.isValid();
-      if (is_meta_sticky_key_active) {
-        // If the meta key isn't sticky, release it
-        bool ms_temp = temp_addrs_.read(meta_sticky_key_addr_);
-        bool ms_glue = glue_addrs_.read(meta_sticky_key_addr_);
-        if (ms_temp) {
-          if (ms_glue) {
-            // The meta key is in the "one-shot" state; release it immediately.
-            releaseKey(meta_sticky_key_addr_);
-          } else {
-            // The meta key is in the "pending" state; cancel that, and let it
-            // deactivate on release.
-            temp_addrs_.clear(meta_sticky_key_addr_);
-          }
-        }
-        glue_addrs_.set(event.addr);
-      } else if (event.key == OneShot_MetaStickyKey) {
-        meta_sticky_key_addr_ = event.addr;
-        temp_addrs_.set(event.addr);
-      }
-      if (is_meta_sticky_key_active || (event.key == OneShot_MetaStickyKey)) {
-        prev_key_addr_ = event.addr;
-        start_time_ = Runtime.millisAtCycleStart();
-        return EventHandlerResult::OK;
-      }
-#endif
 
       if (is_oneshot ||
           (auto_modifiers_ && event.key.isKeyboardModifier()) ||
@@ -343,11 +286,6 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
       // stop that event from sending a report, and instead send a "hold"
       // event. This is handled in the `beforeReportingState()` hook below.
       return EventHandlerResult::ABORT;
-#ifndef ONESHOT_WITHOUT_METASTICKY
-    } else if (event.key == OneShot_MetaStickyKey) {
-      // Turn off the meta key if it's released in its "normal" state.
-      meta_sticky_key_addr_ = KeyAddr::none();
-#endif
     }
 
   }
@@ -467,11 +405,6 @@ void OneShot::holdKey(KeyAddr key_addr) {
 void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
-
-#ifndef ONESHOT_WITHOUT_METASTICKY
-  if (live_keys[key_addr] == OneShot_MetaStickyKey)
-    meta_sticky_key_addr_ = KeyAddr::none();
-#endif
 
   KeyEvent event{key_addr, WAS_PRESSED | INJECTED};
   Runtime.handleKeyEvent(event);

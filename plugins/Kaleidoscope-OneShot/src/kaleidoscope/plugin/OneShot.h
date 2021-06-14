@@ -68,11 +68,6 @@
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
 
-// ----------------------------------------------------------------------------
-// Key constants
-constexpr Key OneShot_MetaStickyKey {kaleidoscope::ranges::OS_META_STICKY};
-constexpr Key OneShot_ActiveStickyKey {kaleidoscope::ranges::OS_ACTIVE_STICKY};
-
 namespace kaleidoscope {
 namespace plugin {
 
@@ -298,10 +293,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
-
-#ifndef ONESHOT_WITHOUT_METASTICKY
-  static KeyAddr meta_sticky_key_addr_;
-#endif
 
   // --------------------------------------------------------------------------
   // Internal utility functions
