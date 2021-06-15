@@ -21,7 +21,7 @@
 KEYMAPS(
     [0] = KEYMAP_STACKED
     (
-        Key_Insert, ___, ___, ___, ___, ___, ___,
+        Key_Insert, OSM(LeftAlt), OSM(RightAlt), ___, ___, ___, ___,
         Key_A, Key_B, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___, ___,
@@ -50,6 +50,12 @@ class OneShotInsert : public Plugin {
     return EventHandlerResult::OK;
   }
 };
+
+bool OneShot::isStickable(Key key) {
+  if (key == Key_LeftAlt)
+    return false;
+  return OneShot::isStickableDefault(key);
+}
 
 } // namespace plugin
 } // namespace kaleidoscope
