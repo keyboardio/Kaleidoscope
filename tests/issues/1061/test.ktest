@@ -1,0 +1,100 @@
+VERSION 1
+
+KEYSWITCH INSERT   0  0
+KEYSWITCH A        1  0
+KEYSWITCH B        1  1
+
+# ==============================================================================
+NAME OneShot insert timeout
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 45 ms
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot insert interrupt
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert Key_A
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot insert sticky
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 100 ms
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
