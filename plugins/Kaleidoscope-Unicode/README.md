@@ -116,6 +116,11 @@ On OS X/macOS, you'll need to change the input method to be "Unicode Hex Input".
 You can do this by going to System Preferences > Keyboard > Input Sources, clicking
 the `+` button, selecting it from the list, then setting it as the active input method.
 
+On Windows, you will need to change a registry key to enable the input method
+our unicode plugin uses. Under `HKEY_Current_User/Control Panel/Input Method`,
+set `EnableHexNumpad` to `"1"`. If the key does not exist, you need to create
+it, and use `REG_SZ` as the type.
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
