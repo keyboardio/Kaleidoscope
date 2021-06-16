@@ -42,7 +42,7 @@ void Unicode::start(void) {
     kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_KeypadAdd);
     kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
-  case hostos::OSX:
+  case hostos::MACOS:
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftAlt);
     break;
   default:
@@ -56,7 +56,7 @@ void Unicode::input(void) {
   case hostos::LINUX:
     break;
   case hostos::WINDOWS:
-  case hostos::OSX:
+  case hostos::MACOS:
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftAlt);
     break;
   default:
@@ -75,7 +75,7 @@ void Unicode::end(void) {
     kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   case hostos::WINDOWS:
-  case hostos::OSX:
+  case hostos::MACOS:
     kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftAlt);
     kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
