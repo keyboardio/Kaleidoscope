@@ -121,15 +121,22 @@ bool OneShot::isStickable(Key key) {
 
 bool OneShot::isStickableDefault(Key key) {
   int8_t n;
+  // If the key is either a keyboard modifier or a layer shift, we check to see
+  // if it has been set to be non-stickable.
   if (key.isKeyboardModifier()) {
     n = key.getKeyCode() - Key_LeftControl.getKeyCode();
     return bitRead(stickable_keys_, n);
   } else if (key.isLayerShift()) {
     n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
+    // We only keep track of the stickability of the first 8 layers.
     if (n < oneshot_key_count) {
       return bitRead(stickable_keys_, n);
     }
   }
+  // The default is for all keys to be "stickable"; if the default was false,
+  // any user code or other plugin that uses `setPending()` to turn a key into a
+  // OneShot would need to override `isStickable()` in order to make that key
+  // stickable (the default `OSM()` behaviour).
   return true;
 }
 
