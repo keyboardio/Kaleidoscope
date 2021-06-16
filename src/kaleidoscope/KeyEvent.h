@@ -32,7 +32,7 @@ struct KeyEvent {
  public:
   // Constructor for plugin use when regenerating an event with specific ID:
   KeyEvent(KeyAddr addr, uint8_t state,
-           Key key = Key_NoKey, KeyEventId id = last_id_)
+           Key key = Key_Undefined, KeyEventId id = last_id_)
     : addr(addr), state(state), key(key), id_(id) {}
 
   KeyEvent() : id_(last_id_) {}
@@ -40,7 +40,7 @@ struct KeyEvent {
   // For use by keyscanner creating a new event from a physical keyswitch toggle
   // on or off.
   static KeyEvent next(KeyAddr addr, uint8_t state) {
-    return KeyEvent(addr, state, Key_NoKey, ++last_id_);
+    return KeyEvent(addr, state, Key_Undefined, ++last_id_);
   }
 
   KeyEventId id() const {
@@ -54,7 +54,7 @@ struct KeyEvent {
 
   KeyAddr addr = KeyAddr::none();
   uint8_t state = 0;
-  Key key = Key_NoKey;
+  Key key = Key_Undefined;
 
  private:
   // serial number of the event:
