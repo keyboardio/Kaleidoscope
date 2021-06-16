@@ -46,25 +46,6 @@ will have a yellow LED highlight; when sticky, a red highlight. When it is in a
 "held" state, but will be deactivated when released like any non-one-shot key,
 it will have a white highlight. (These colors are configurable.)
 
-## Special OneShot keys
-
-OneShot also comes with two special keys that can make any key on your keyboard
-sticky: `OneShot_MetaStickyKey` & `OneShot_ActiveStickyKey`. These are both
-`Key` values that can be used as entries in your sketch's keymap.
-
-### `OneShot_MetaStickyKey`
-
-This special OneShot key behaves like other OneShot keys, but its affect is to
-make the next key pressed sticky. Tap `OneShot_MetaStickyKey`, then tap `X`, and
-`X` will become sticky. Tap `X` again to deactivate it.
-
-### `OneShot_ActiveStickyKey`
-
-This special key doesn't act like a OneShot key, but instead makes any key(s)
-currently held (or otherwise active) sticky. Press (and hold) `X`, tap
-`OneShot_ActiveStickyKey`, then release `X`, and `X` will stay active until it
-is tapped again to deactivate it.
-
 ## Using the plugin
 
 After adding one-shot keys to the keymap, all one needs to do, is enable the

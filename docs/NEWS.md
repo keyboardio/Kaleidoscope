@@ -12,6 +12,29 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### OneShot public functions
+
+The OneShot plugin now allows other plugins to control the OneShot state of
+individual keys, by calling one of the following:
+
+- `OneShot.setPending(key_addr)`: Put the key at `key_addr` in the "pending"
+  OneShot state.  This will make that key act like any other OneShot key until
+  it is cancelled by a subsequent keypress.  Once a key is in this state,
+  OneShot will manage it from that point on, including making the key "sticky"
+  if it is double-tapped.
+- `OneShot.setSticky(key_addr)`: Put the key at `key_addr` in the "sticky"
+  OneShot state.  The key will be released by OneShot when it is tapped again.
+- `OneShot.setOneShot(key_addr)`: Put the key at `key_addr` in the "one-shot"
+  state.  This is normally the state OneShot key will be in after it has been
+  tapped.  Calling `setPending()` is more likely to be useful.
+- `OneShot.clear(key_addr)`: Clear the OneShot state of the key at `key_addr`.
+
+Note: Any plugin that calls one of these OneShot methods must either be
+registered in `KALEIDOSCOPE_INIT_PLUGINS()` after OneShot, or it must add the
+`INJECTED` bit to the keyswitch state of the event (i.e. `event.state |=
+INJECTED`) to prevent OneShot from prematurely advancing keys to the next
+OneShot state.
+
 ### SpaceCadet "no-delay" mode
 
 SpaceCadet can now be enabled in "no-delay" mode, wherein the primary (modifier)

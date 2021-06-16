@@ -1,0 +1,168 @@
+VERSION 1
+
+KEYSWITCH INSERT   0  0
+KEYSWITCH LALT     0  1
+KEYSWITCH RALT     0  2
+KEYSWITCH A        1  0
+KEYSWITCH B        1  1
+
+# ==============================================================================
+NAME OneShot insert timeout
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 45 ms
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot insert interrupt
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert Key_A
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot insert sticky
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_Insert
+
+RUN 100 ms
+
+RUN 4 ms
+PRESS INSERT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE INSERT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot left alt not sticky
+
+RUN 4 ms
+PRESS LALT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftAlt
+
+RUN 4 ms
+RELEASE LALT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS LALT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE LALT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME OneShot right alt sticky
+
+RUN 4 ms
+PRESS RALT
+RUN 1 cycle
+EXPECT keyboard-report Key_RightAlt
+
+RUN 4 ms
+RELEASE RALT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS RALT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE RALT
+RUN 1 cycle
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_RightAlt Key_A
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_RightAlt
+
+RUN 100 ms
+
+RUN 4 ms
+PRESS RALT
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE RALT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms

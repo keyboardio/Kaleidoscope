@@ -68,11 +68,6 @@
 #define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
 #define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
 
-// ----------------------------------------------------------------------------
-// Key constants
-constexpr Key OneShot_MetaStickyKey {kaleidoscope::ranges::OS_META_STICKY};
-constexpr Key OneShot_ActiveStickyKey {kaleidoscope::ranges::OS_ACTIVE_STICKY};
-
 namespace kaleidoscope {
 namespace plugin {
 
@@ -153,11 +148,48 @@ class OneShot : public kaleidoscope::Plugin {
             key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
 
-  static bool isStickable(Key key); // inline?
+  /// Determine if the given `key` is allowed to become sticky.
+  static bool isStickable(Key key);
+
+  static bool isStickableDefault(Key key);
 
   static bool isTemporary(KeyAddr key_addr); // inline?
+  static bool isPending(KeyAddr key_addr);
   static bool isSticky(KeyAddr key_addr); // inline?
   static bool isActive(KeyAddr key_addr); // inline?
+
+  // --------------------------------------------------------------------------
+  // Public OneShot state control
+
+  /// Put a key in the "pending" OneShot state.
+  ///
+  /// This function puts the key at `key_addr` in the "pending" OneShot state.
+  /// This is appropriate to use when a key toggles on and you want it to behave
+  /// like a OneShot key starting with the current event, and lasting until the
+  /// key becomes inactive (cancelled by a subsequent keypress).
+  static void setPending(KeyAddr key_addr);
+
+  /// Put a key directly in the "one-shot" state.
+  ///
+  /// This function puts the key at `key_addr` in the "one-shot" state.  This is
+  /// usually the state of a OneShot key after it is released, but before it is
+  /// cancelled by a subsequent keypress.  In most cases, you probably want to
+  /// use `setPending()` instead, rather than calling this function explicitly,
+  /// as OneShot will automatically cause any key in the "pending" state to
+  /// progress to this state when it is (physically) released.
+  static void setOneShot(KeyAddr key_addr);
+
+  /// Put a key in the "sticky" OneShot state.
+  ///
+  /// This function puts the key at `key_addr` in the "sticky" OneShot state.
+  /// It will remain active until it is pressed again.
+  static void setSticky(KeyAddr key_addr);
+
+  /// Clear any OneShot state for a key.
+  ///
+  /// This function clears any OneShot state of the key at `key_addr`.  It does
+  /// not, however, release the key if it is held.
+  static void clear(KeyAddr key_addr);
 
   // --------------------------------------------------------------------------
   // Utility function for other plugins to cancel OneShot keys
@@ -261,10 +293,6 @@ class OneShot : public kaleidoscope::Plugin {
 
   static uint16_t start_time_;
   static KeyAddr prev_key_addr_;
-
-#ifndef ONESHOT_WITHOUT_METASTICKY
-  static KeyAddr meta_sticky_key_addr_;
-#endif
 
   // --------------------------------------------------------------------------
   // Internal utility functions

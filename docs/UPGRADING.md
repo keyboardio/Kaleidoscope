@@ -16,6 +16,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Bidirectional communication for plugins](#bidirectional-communication-for-plugins)
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
+    - [OneShot meta keys](#oneshot-meta-keys)
     - [git checkouts aren't compatible with Arduino IDE (GUI)]([#repository-rearchitecture)
     - [Layer system switched to activation-order](#layer-system-switched-to-activation-order)
     - [The `RxCy` macros and peeking into the keyswitch state](#the-rxcy-macros-and-peeking-into-the-keyswitch-state)
@@ -433,6 +434,10 @@ As an end-user, there's nothing one needs to do. Consistent timing helpers are p
 As a developer, one can continue using `millis()`, but migrating to `Kaleidoscope.millisAtCycleStart()` is recommended. The new method will return the same value for the duration of the main loop cycle, making time-based synchronization between plugins a lot easier.
 
 ## Breaking changes
+
+### OneShot meta keys
+
+The special OneShot keys `OneShot_MetaStickyKey` & `OneShot_ActiveStickyKey` are no longer handled by the OneShot plugin directly, but instead by a separate OneShotMetaKeys plugin. If you use these keys in your sketch, you will need to add the new plugin, and register it after OneShot in `KALEIDOSCOPE_INIT_PLUGINS()` for those keys to work properly.
 
 ### Repository rearchitecture
 
