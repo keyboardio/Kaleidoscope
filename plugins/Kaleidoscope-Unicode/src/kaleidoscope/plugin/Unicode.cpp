@@ -21,17 +21,18 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint8_t Unicode::input_delay_;
+Key Unicode::linux_key_ = Key_U;
 
 void Unicode::start(void) {
   switch (::HostOS.os()) {
   case hostos::LINUX:
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftControl);
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
-    kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_U);
+    kaleidoscope::Runtime.hid().keyboard().pressRawKey(linux_key_);
     kaleidoscope::Runtime.hid().keyboard().sendReport();
     kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftControl);
     kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftShift);
-    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_U);
+    kaleidoscope::Runtime.hid().keyboard().releaseRawKey(linux_key_);
     kaleidoscope::Runtime.hid().keyboard().sendReport();
     break;
   case hostos::WINDOWS:

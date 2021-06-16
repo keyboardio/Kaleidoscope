@@ -39,7 +39,15 @@ class Unicode : public kaleidoscope::Plugin {
   static uint8_t input_delay() {
     return input_delay_;
   }
+
+  static void setLinuxKey(const Key key) {
+    linux_key_ = key;
+  }
+  static Key getLinuxKey() {
+    return linux_key_;
+  }
  private:
+  static Key linux_key_;
   static uint8_t input_delay_;
 };
 }
