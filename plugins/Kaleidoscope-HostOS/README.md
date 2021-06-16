@@ -25,8 +25,8 @@ void someFunction(void) {
   if (HostOS.os() == kaleidoscope::hostos::LINUX) {
     // do something linux-y
   }
-  if (HostOS.os() == kaleidoscope::hostos::OSX) {
-    // do something OSX-y
+  if (HostOS.os() == kaleidoscope::hostos::MACOS) {
+    // do something macOS-y
   }
 }
 
@@ -55,9 +55,12 @@ The extension provides the following methods on the `HostOS` singleton:
 The OS type (i.e. the return type of `.os()` and the arguments to `.os(type)`) will be one of the following:
 
    - `kaleidoscope::hostos::LINUX`
-   - `kaleidoscope::hostos::OSX`
+   - `kaleidoscope::hostos::MACOS`
    - `kaleidoscope::hostos::WINDOWS`
    - `kaleidoscope::hostos::OTHER`
+
+For compability reasons, `kaleidoscope::hostos::OSX` is an alias to
+`kaleidoscope::hostos::MACOS`.
 
 ## Focus commands
 
