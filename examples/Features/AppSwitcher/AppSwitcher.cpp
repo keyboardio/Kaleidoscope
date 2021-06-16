@@ -40,7 +40,7 @@ EventHandlerResult AppSwitcher::onKeyEvent(KeyEvent &event) {
 
     // If AppSwitcher was not already active, hold its modifier first.
     if (!active_addr_.isValid()) {
-      if (::HostOS.os() == hostos::OSX) {
+      if (::HostOS.os() == hostos::MACOS) {
         event.key = Key_LeftGui;
       } else {
         event.key = Key_LeftAlt;
