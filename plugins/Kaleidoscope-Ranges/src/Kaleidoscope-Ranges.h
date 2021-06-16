@@ -41,6 +41,8 @@ namespace ranges {
 // important for compatibility with existing Chrysalis keymaps, despite the fact
 // that it makes the code more obtuse here.
 
+constexpr uint8_t MAX_CS_KEYS = 64;
+
 enum : uint16_t {
   // Macro ranges pre-date Kaleidoscope-Ranges, so they're coming before
   // ranges::FIRST, because we want to keep the keycodes backwards compatible.
@@ -83,6 +85,8 @@ enum : uint16_t {
   OS_META_STICKY,
   OS_ACTIVE_STICKY,
   OS_CANCEL,
+  CS_FIRST,
+  CS_LAST  = CS_FIRST + MAX_CS_KEYS,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START

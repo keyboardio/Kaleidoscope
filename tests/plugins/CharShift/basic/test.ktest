@@ -1,0 +1,212 @@
+VERSION 1
+
+KEYSWITCH LSHIFT    0  0
+KEYSWITCH RSHIFT    0  1
+KEYSWITCH x         1  0
+KEYSWITCH Y         1  1
+KEYSWITCH CS_ab     2  0
+KEYSWITCH CS_cD     2  1
+KEYSWITCH CS_Ef     2  2
+KEYSWITCH CS_GH     2  3
+
+# ==============================================================================
+NAME CharShift lower lower
+
+RUN 4 ms
+PRESS CS_ab
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
+
+RUN 4 ms
+RELEASE CS_ab
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+PRESS CS_ab
+RUN 1 cycle
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_B # report: { 5 }
+
+RUN 4 ms
+RELEASE CS_ab
+RUN 1 cycle
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME CharShift lower upper
+
+RUN 4 ms
+PRESS CS_cD
+RUN 1 cycle
+EXPECT keyboard-report Key_C # report: { 6 }
+
+RUN 4 ms
+RELEASE CS_cD
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+PRESS CS_cD
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_D # report: { e1 7 }
+
+RUN 4 ms
+RELEASE CS_cD
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME CharShift upper lower
+
+RUN 4 ms
+PRESS CS_Ef
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_E # report: { e1 8 }
+
+RUN 4 ms
+RELEASE CS_Ef
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+PRESS CS_Ef
+RUN 1 cycle
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_F # report: { 9 }
+
+RUN 4 ms
+RELEASE CS_Ef
+RUN 1 cycle
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME CharShift upper upper
+
+RUN 4 ms
+PRESS CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_G # report: { e1 10 }
+
+RUN 4 ms
+RELEASE CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+PRESS CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_H # report: { e1 11 }
+
+RUN 4 ms
+RELEASE CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Rollover from normal to CharShift upper
+
+RUN 4 ms
+PRESS x
+RUN 1 cycle
+EXPECT keyboard-report Key_X
+
+RUN 4 ms
+PRESS CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_X Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_X Key_LeftShift Key_G # report: { e1 10 }
+
+RUN 4 ms
+RELEASE x
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_G # report: { e1 10 }
+
+RUN 4 ms
+RELEASE CS_GH
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Rollover from shifted to CharShift lower
+
+RUN 4 ms
+PRESS Y
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_Y
+
+RUN 4 ms
+PRESS CS_ab
+RUN 1 cycle
+EXPECT keyboard-report Key_Y
+EXPECT keyboard-report Key_Y Key_A
+
+RUN 4 ms
+RELEASE Y
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+
+RUN 4 ms
+RELEASE CS_ab
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
