@@ -67,6 +67,8 @@ class Issue1010 : public ::testing::Test {
     OS_CANCEL,
     CS_FIRST,
     CS_LAST  = CS_FIRST + MAX_CS_KEYS,
+    ML_FIRST,
+    ML_LAST     = ML_FIRST + 255,
 
     SAFE_START,
     KALEIDOSCOPE_SAFE_START = SAFE_START
@@ -149,6 +151,10 @@ TEST_F(Issue1010, RangesHaveNotChanged) {
             uint16_t(kaleidoscope::ranges::CS_FIRST));
   ASSERT_EQ(uint16_t(Issue1010::CS_LAST),
             uint16_t(kaleidoscope::ranges::CS_LAST));
+  ASSERT_EQ(uint16_t(Issue1010::ML_FIRST),
+            uint16_t(kaleidoscope::ranges::ML_FIRST));
+  ASSERT_EQ(uint16_t(Issue1010::ML_LAST),
+            uint16_t(kaleidoscope::ranges::ML_LAST));
 
   ASSERT_EQ(uint16_t(Issue1010::SAFE_START),
             uint16_t(kaleidoscope::ranges::SAFE_START));
