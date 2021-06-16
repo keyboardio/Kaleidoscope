@@ -95,7 +95,7 @@ void Unicode::typeCode(uint32_t unicode) {
     if (digit == 0) {
       if (on_zero_start == false) {
         Key key;
-        if (::HostOS.os() == hostos::WINDOWS) {
+        if (::HostOS.os() != hostos::OSX) {
           key = hexToKeysWithNumpad(digit);
         } else {
           key = hexToKey(digit);
@@ -109,7 +109,7 @@ void Unicode::typeCode(uint32_t unicode) {
       }
     } else {
       Key key;
-      if (::HostOS.os() == hostos::WINDOWS) {
+      if (::HostOS.os() != hostos::OSX) {
         key = hexToKeysWithNumpad(digit);
       } else {
         key = hexToKey(digit);
