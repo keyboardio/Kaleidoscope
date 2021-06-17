@@ -218,8 +218,7 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
           (auto_layers_ && event.key.isLayerShift())) {
         temp_addrs_.set(event.addr);
         start_time_ = Runtime.millisAtCycleStart();
-      } else if (!event.key.isKeyboardModifier() &&
-                 !event.key.isLayerShift()) {
+      } else if (!event.key.isMomentary()) {
         // Only trigger release of temporary one-shot keys if the pressed key is
         // neither a modifier nor a layer shift. We need the actual release of
         // those keys to happen after the current event is finished, however, so
