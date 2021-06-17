@@ -238,6 +238,10 @@ To make it easier to port Kaleidoscope, we introduced the `ATMegaKeyboard` base 
 
 ## New plugins
 
+### ModLayer
+
+The [ModLayer](plugins/Kaleidoscope-ModLayer.md) plugin provides `Key` values that combine a single keyboard modifier and a layer shift in one key.
+
 ### CharShift
 
 The [CharShift](plugins/Kaleidoscope-CharShift.md) plugin allows independent assignment of symbols to keys depending on whether or not a `shift` key is held.
