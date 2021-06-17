@@ -86,6 +86,8 @@ class CharShift : public Plugin {
     readKeyPair_ = f;
   }
 
+  friend class CharShiftConfig;
+
  private:
   // A pointer to an array of `KeyPair` objects in PROGMEM
   static KeyPair const * progmem_keypairs_;
@@ -110,10 +112,34 @@ class CharShift : public Plugin {
   static KeyPair readKeyPairFromProgmem(uint8_t n);
 };
 
+class CharShiftConfig: public Plugin {
+ public:
+  CharShiftConfig() {}
+
+  EventHandlerResult onNameQuery();
+  EventHandlerResult onFocusEvent(const char *command);
+
+  static void setup(uint8_t dynamic_offset, uint8_t max_pairs);
+
+ private:
+  static uint8_t max_pairs_;
+  static uint16_t storage_base_;
+  static uint8_t dynamic_offset_;
+
+  static uint8_t numEEPROMPairs() {
+    return max_pairs_;
+  }
+  static CharShift::KeyPair readKeyPairFromEEPROM(uint8_t n);
+
+  static uint8_t numPairs();
+  static CharShift::KeyPair readKeyPair(uint8_t n);
+};
+
 } // namespace plugin
 } // namespace kaleidoscope
 
 extern kaleidoscope::plugin::CharShift CharShift;
+extern kaleidoscope::plugin::CharShiftConfig CharShiftConfig;
 
 /// Define an array of `KeyPair` objects in PROGMEM
 ///
