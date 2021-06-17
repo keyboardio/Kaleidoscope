@@ -50,6 +50,9 @@ EventHandlerResult CharShift::onSetup() {
 EventHandlerResult CharShift::onNameQuery() {
   return ::Focus.sendName(F("CharShift"));
 }
+EventHandlerResult CharShift::onFocusEvent(const char *command) {
+  return storage_->onFocusEvent(command);
+}
 
 // -----------------------------------------------------------------------------
 EventHandlerResult CharShift::onKeyEvent(KeyEvent &event) {
