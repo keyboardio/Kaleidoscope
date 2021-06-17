@@ -76,11 +76,24 @@ class CharShift : public Plugin {
     num_keypairs_ = _num_keypairs;
   }
 
+  typedef uint8_t (*GetNumKeyPairsFunction)();
+  typedef KeyPair (*ReadKeyPairFunction)(uint8_t n);
+
+  static void setNumKeyPairsFunction(GetNumKeyPairsFunction f) {
+    numKeyPairs_ = f;
+  }
+  static void setReadKeyPairFunction(ReadKeyPairFunction f) {
+    readKeyPair_ = f;
+  }
+
  private:
   // A pointer to an array of `KeyPair` objects in PROGMEM
   static KeyPair const * progmem_keypairs_;
   // The size of the PROGMEM array of `KeyPair` objects
   static uint8_t num_keypairs_;
+
+  static GetNumKeyPairsFunction numKeyPairs_;
+  static ReadKeyPairFunction readKeyPair_;
 
   // If a `shift` key needs to be suppressed in `beforeReportingState()`
   static bool reverse_shift_state_;
@@ -90,18 +103,6 @@ class CharShift : public Plugin {
 
   /// Look up the `KeyPair` specified by the given keymap entry
   static KeyPair decodeCharShiftKey(Key key);
-
-  /// Get the total number of KeyPairs defined
-  ///
-  /// This function can be overridden in order to store the `KeyPair` array in
-  /// EEPROM instead of PROGMEM.
-  static uint8_t numKeyPairs();
-
-  /// Get the `KeyPair` at the specified index from the defined `KeyPair` array
-  ///
-  /// This function can be overridden in order to store the `KeyPair` array in
-  /// EEPROM instead of PROGMEM.
-  static KeyPair readKeyPair(uint8_t n);
 
   // Default for `keypairsCount()`: size of the PROGMEM array
   static uint8_t numProgmemKeyPairs();

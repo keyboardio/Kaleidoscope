@@ -34,6 +34,10 @@ namespace plugin {
 // CharShift class variables
 CharShift::KeyPair const * CharShift::progmem_keypairs_{nullptr};
 uint8_t CharShift::num_keypairs_{0};
+CharShift::GetNumKeyPairsFunction CharShift::numKeyPairs_ =
+    CharShift::numProgmemKeyPairs;
+CharShift::ReadKeyPairFunction CharShift::readKeyPair_ =
+    CharShift::readKeyPairFromProgmem;
 
 bool CharShift::reverse_shift_state_{false};
 
@@ -117,22 +121,10 @@ bool CharShift::isCharShiftKey(Key key) {
 
 CharShift::KeyPair CharShift::decodeCharShiftKey(Key key) {
   uint8_t i = key.getRaw() - ranges::CS_FIRST;
-  if (i < numKeyPairs()) {
-    return readKeyPair(i);
+  if (i < numKeyPairs_()) {
+    return readKeyPair_(i);
   }
   return {Key_NoKey, Key_NoKey};
-}
-
-// This should be overridden if the KeyPairs array is stored in EEPROM
-__attribute__((weak))
-uint8_t CharShift::numKeyPairs() {
-  return numProgmemKeyPairs();
-}
-
-// This should be overridden if the KeyPairs array is stored in EEPROM
-__attribute__((weak))
-CharShift::KeyPair CharShift::readKeyPair(uint8_t n) {
-  return readKeyPairFromProgmem(n);
 }
 
 uint8_t CharShift::numProgmemKeyPairs() {
