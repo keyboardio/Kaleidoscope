@@ -157,9 +157,13 @@ void Runtime_::handleKeyEvent(KeyEvent event) {
       event.key == Key_Transparent)
     return;
 
-  // If it's a built-in Layer key, we handle it here, and skip sending report(s)
-  if (event.key.isLayerKey()) {
+  // Built-in layer change keys are handled by the Layer object.
+  if (event.key.isLayerKey() || event.key.isModLayerKey()) {
     Layer.handleLayerKeyEvent(event);
+  }
+  // If the event is for a layer change key, there's no need to send a HID
+  // report, so we return early.
+  if (event.key.isLayerKey()) {
     return;
   }
 
@@ -225,6 +229,11 @@ void Runtime_::addToReport(Key key) {
   auto result = Hooks::onAddToReport(key);
   if (result == EventHandlerResult::ABORT)
     return;
+
+  if (key.isModLayerKey()) {
+    uint8_t mod = key.getKeyCode() % 8;
+    key         = Key(Key_LeftControl.getRaw() + mod);
+  }
 
   if (key.isKeyboardKey()) {
     // The only incidental Keyboard modifiers that are allowed are the ones on

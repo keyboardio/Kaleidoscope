@@ -59,6 +59,11 @@ void Layer_::handleLayerKeyEvent(const KeyEvent &event) {
   // The caller is responsible for checking that this is a Layer `Key`, so we
   // skip checking for it here.
   uint8_t key_code = event.key.getKeyCode();
+
+  // If this is a ModLayer key, we need to convert it into a layer shift first.
+  if (event.key.isModLayerKey())
+    key_code = (key_code / 8) + LAYER_SHIFT_OFFSET;
+
   uint8_t target_layer;
 
   if (key_code >= LAYER_MOVE_OFFSET) {

@@ -53,6 +53,12 @@
 #define SWITCH_TO_KEYMAP 0b00000100
 #define IS_CONSUMER      0b00001000
 
+// consumer: 01..1...
+// sysctl:   01..0001
+// layer:    01000100
+// modlayer: 01000110
+// macros:   01100000
+
 // HID Usage Types: Because these constants, like the ones above, are
 // used in the flags byte of the Key class, they can't overlap any of
 // the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
@@ -180,6 +186,9 @@ class Key {
   constexpr bool isLayerKey() const {
     return (flags_ == (SYNTHETIC | SWITCH_TO_KEYMAP));
   }
+  constexpr bool isModLayerKey() const {
+    return (flags_ == (SYNTHETIC | SWITCH_TO_KEYMAP | IS_INTERNAL));
+  }
 
   // ---------------------------------------------------------------------------
   // Additional utility functions for builtin `Key` variants
@@ -206,19 +215,26 @@ class Key {
   // used in a conceptually different way: to get a different symbol in the
   // output. We don't normally think "type `shift`+`1`"; we think "type `!`".
   constexpr bool isKeyboardShift() const {
-    return (isKeyboardModifier() &&
-            ((keyCode_ == HID_KEYBOARD_LEFT_SHIFT ||
-              keyCode_ == HID_KEYBOARD_RIGHT_SHIFT) ||
-             ((flags_ & SHIFT_HELD) != 0)));
+    return ((isKeyboardModifier() &&
+             ((keyCode_ == HID_KEYBOARD_LEFT_SHIFT ||
+               keyCode_ == HID_KEYBOARD_RIGHT_SHIFT) ||
+              ((flags_ & SHIFT_HELD) != 0))) ||
+            (isModLayerKey() &&
+             (keyCode_ % 8) % 4 == 1));
   }
   // Layer shift keys are conceptually similar to Keyboard modifier keys in that
   // they are used chorded to change the result of typing those other
   // keys. They're even more similar to `shift` keys. For both reasons, it's
   // worth singling them out.
   constexpr bool __attribute__((always_inline)) isLayerShift() const {
-    return (isLayerKey() &&
-            keyCode_ >= LAYER_SHIFT_OFFSET &&
-            keyCode_ < LAYER_MOVE_OFFSET);
+    return ((isLayerKey() &&
+             keyCode_ >= LAYER_SHIFT_OFFSET &&
+             keyCode_ < LAYER_MOVE_OFFSET) ||
+            isModLayerKey());
+  }
+
+  constexpr bool isMomentary() const {
+    return (isKeyboardModifier() || isLayerShift());
   }
 
  private:
@@ -252,6 +268,14 @@ constexpr Key convertToKey(Key k) {
 
 constexpr Key addFlags(Key k, uint8_t add_flags) {
   return Key(k.getKeyCode(), k.getFlags() | add_flags);
+}
+
+// =============================================================================
+/// Generate a ModLayer key (unchecked)
+constexpr Key modLayerKey(Key modifier, uint8_t layer) {
+  uint8_t mod  = modifier.getRaw() - Key_LeftControl.getRaw();
+  uint8_t code = mod + (layer * 8);
+  return Key(code, SYNTHETIC | SWITCH_TO_KEYMAP | IS_INTERNAL);
 }
 
 }  // namespace kaleidoscope
