@@ -17,29 +17,42 @@
 
 #include "kaleidoscope/plugin/CharShift.h"
 
+#include <Kaleidoscope-Ranges.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
 
+#include "kaleidoscope/KeyAddr.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/progmem_helpers.h"
 #include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace plugin {
+namespace charshift {
 
 // =============================================================================
-// CharShiftConfig class variables
+// Storage class variables
 
-uint8_t CharShiftConfig::max_pairs_;
-uint8_t CharShiftConfig::dynamic_offset_;
-uint16_t CharShiftConfig::storage_base_;
+uint8_t Storage::num_keypairs_;
+
+CharShift::KeyPair const * ProgmemStorage::keypairs_{nullptr};
+
+uint16_t EEPROMStorage::storage_base_;
+
 
 // =============================================================================
-// Event handlers
+// Progmem Storage
 
-EventHandlerResult CharShiftConfig::onNameQuery() {
-  return ::Focus.sendName(F("CharShiftConfig"));
+CharShift::KeyPair ProgmemStorage::readKeyPair(uint8_t n) {
+  return cloneFromProgmem(keypairs_[n]);
 }
 
-EventHandlerResult CharShiftConfig::onFocusEvent(const char *command) {
+
+// =============================================================================
+// EEPROM Storage
+EventHandlerResult EEPROMStorage::onFocusEvent(const char *command) {
   if (::Focus.handleHelp(command, PSTR("charshift.map")))
     return EventHandlerResult::OK;
 
@@ -49,7 +62,7 @@ EventHandlerResult CharShiftConfig::onFocusEvent(const char *command) {
   if (::Focus.isEOL()) {
     // We dump key by key, rather than pairs, because the end result is the
     // same, and dumping one by one is less code.
-    for (uint16_t i = 0; i < max_pairs_ * 2; i += 2) {
+    for (uint16_t i = 0; i < num_keypairs_ * 2; i += 2) {
       Key k;
 
       Runtime.storage().get(storage_base_ + i, k);
@@ -73,19 +86,13 @@ EventHandlerResult CharShiftConfig::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-// =============================================================================
-// Support functions
+void EEPROMStorage::setup(uint8_t num_keypairs) {
+  num_keypairs_ = num_keypairs;
 
-void CharShiftConfig::setup(uint8_t dynamic_offset, uint8_t max_pairs) {
-  dynamic_offset_ = dynamic_offset;
-  max_pairs_ = max_pairs;
-
-  storage_base_ = ::EEPROMSettings.requestSlice(max_pairs * 4);
-  ::CharShift.setNumKeyPairsFunction(numPairs);
-  ::CharShift.setReadKeyPairFunction(readKeyPair);
+  storage_base_ = ::EEPROMSettings.requestSlice(num_keypairs * 4);
 }
 
-CharShift::KeyPair CharShiftConfig::readKeyPairFromEEPROM(uint8_t n) {
+CharShift::KeyPair EEPROMStorage::readKeyPair(uint8_t n) {
   uint16_t pos = storage_base_ + n * 4; // 4: Size of a keypair.
   uint16_t raw_lower = Runtime.storage().read(pos);
   uint16_t raw_upper = Runtime.storage().read(pos + 2);
@@ -93,18 +100,8 @@ CharShift::KeyPair CharShiftConfig::readKeyPairFromEEPROM(uint8_t n) {
   return CharShift::KeyPair(Key(raw_lower), Key(raw_upper));
 }
 
-uint8_t CharShiftConfig::numPairs() {
-  return CharShift::numProgmemKeyPairs() + numEEPROMPairs();
 }
 
-CharShift::KeyPair CharShiftConfig::readKeyPair(uint8_t n) {
-  if (n < dynamic_offset_) {
-    return CharShift::readKeyPairFromProgmem(n);
-  }
-  return readKeyPairFromEEPROM(n - dynamic_offset_);
-}
 
 } // namespace plugin
 } // namespace kaleidoscope
-
-kaleidoscope::plugin::CharShiftConfig CharShiftConfig;

@@ -32,20 +32,21 @@ namespace plugin {
 
 // =============================================================================
 // CharShift class variables
-CharShift::KeyPair const * CharShift::progmem_keypairs_{nullptr};
-uint8_t CharShift::num_keypairs_{0};
-CharShift::GetNumKeyPairsFunction CharShift::numKeyPairs_ =
-    CharShift::numProgmemKeyPairs;
-CharShift::ReadKeyPairFunction CharShift::readKeyPair_ =
-    CharShift::readKeyPairFromProgmem;
-
+charshift::Storage * CharShift::storage_;
 bool CharShift::reverse_shift_state_{false};
 
+static auto progmem_storage_ = charshift::ProgmemStorage();
 
 // =============================================================================
 // Event handlers
 
 // -----------------------------------------------------------------------------
+EventHandlerResult CharShift::onSetup() {
+  if (!storage_) {
+    storage_ = &progmem_storage_;
+  }
+  return EventHandlerResult::OK;
+}
 EventHandlerResult CharShift::onNameQuery() {
   return ::Focus.sendName(F("CharShift"));
 }
@@ -121,18 +122,10 @@ bool CharShift::isCharShiftKey(Key key) {
 
 CharShift::KeyPair CharShift::decodeCharShiftKey(Key key) {
   uint8_t i = key.getRaw() - ranges::CS_FIRST;
-  if (i < numKeyPairs_()) {
-    return readKeyPair_(i);
+  if (i < storage_->numKeyPairs()) {
+    return storage_->readKeyPair(i);
   }
   return {Key_NoKey, Key_NoKey};
-}
-
-uint8_t CharShift::numProgmemKeyPairs() {
-  return num_keypairs_;
-}
-
-CharShift::KeyPair CharShift::readKeyPairFromProgmem(uint8_t n) {
-  return cloneFromProgmem(progmem_keypairs_[n]);
 }
 
 } // namespace plugin
