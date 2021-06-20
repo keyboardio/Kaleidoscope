@@ -21,10 +21,8 @@
 #include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/LiveKeys.h"
 
-// The maximum number of layers allowed. `layer_state_`, which stores
-// the on/off status of the layers in a bitfield has only 32 bits, and
-// that should be enough for almost any layout.
-#define MAX_LAYERS sizeof(uint32_t) * 8;
+// The maximum number of layers allowed.
+#define MAX_LAYERS 32;
 
 // The following definitions of layer_count and keymaps_linear
 // are used if the user does not define a keymap within the sketch
@@ -41,7 +39,6 @@ __attribute__((weak))
 extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 
 namespace kaleidoscope {
-uint32_t Layer_::layer_state_;
 uint8_t Layer_::active_layer_count_ = 1;
 int8_t Layer_::active_layers_[31];
 
@@ -49,9 +46,6 @@ uint8_t Layer_::active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 Layer_::GetKeyFunction Layer_::getKey = &Layer_::getKeyFromPROGMEM;
 
 void Layer_::setup() {
-  // Explicitly set layer 0's state to 1
-  bitSet(layer_state_, 0);
-
   // Update the active layer cache (every entry will be `0` to start)
   Layer.updateActiveLayers();
 }
@@ -181,12 +175,9 @@ void Layer_::move(uint8_t layer) {
   // We do pretty much what activate() does, except we do everything
   // unconditionally, to make sure all parts of the firmware are aware of the
   // layer change.
-  layer_state_ = 0;
-
   if (layer >= layer_count) {
     layer = 0;
   }
-  bitSet(layer_state_, layer);
   active_layer_count_ = 1;
   active_layers_[0] = layer;
 
@@ -206,9 +197,7 @@ void Layer_::activate(uint8_t layer) {
   if (isActive(layer))
     return;
 
-  // Otherwise, turn on its bit in layer_state_, and push it onto the active
-  // layer stack
-  bitSet(layer_state_, layer);
+  // Otherwise, push it onto the active layer stack
   active_layers_[active_layer_count_++] = layer;
 
   // Update the keymap cache (but not live_composite_keymap_; that gets
@@ -231,9 +220,6 @@ void Layer_::deactivate(uint8_t layer) {
     return;
   }
 
-  // Turn off its bit in layer_state_
-  bitClear(layer_state_, layer);
-
   // Remove the target layer from the active layer stack, and shift any layers
   // above it down to fill in the gap
   for (uint8_t i = 0; i < active_layer_count_; ++i) {
@@ -252,7 +238,11 @@ void Layer_::deactivate(uint8_t layer) {
 }
 
 boolean Layer_::isActive(uint8_t layer) {
-  return bitRead(layer_state_, layer);
+  for (int8_t i = 0; i < active_layer_count_; ++i) {
+    if (active_layers_[i] == layer)
+      return true;
+  }
+  return false;
 }
 
 void Layer_::activateNext(void) {

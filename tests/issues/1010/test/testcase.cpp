@@ -134,6 +134,12 @@ TEST_F(Issue1010, RangesHaveNotChanged) {
             uint16_t(kaleidoscope::ranges::DYNAMIC_MACRO_FIRST));
   ASSERT_EQ(uint16_t(Issue1010::DYNAMIC_MACRO_LAST),
             uint16_t(kaleidoscope::ranges::DYNAMIC_MACRO_LAST));
+  ASSERT_EQ(uint16_t(Issue1010::OS_META_STICKY),
+            uint16_t(kaleidoscope::ranges::OS_META_STICKY));
+  ASSERT_EQ(uint16_t(Issue1010::OS_ACTIVE_STICKY),
+            uint16_t(kaleidoscope::ranges::OS_ACTIVE_STICKY));
+  ASSERT_EQ(uint16_t(Issue1010::OS_CANCEL),
+            uint16_t(kaleidoscope::ranges::OS_CANCEL));
   ASSERT_EQ(uint16_t(Issue1010::SAFE_START),
             uint16_t(kaleidoscope::ranges::SAFE_START));
   ASSERT_EQ(uint16_t(Issue1010::KALEIDOSCOPE_SAFE_START),

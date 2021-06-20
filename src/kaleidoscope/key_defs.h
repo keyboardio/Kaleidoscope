@@ -195,7 +195,7 @@ class Key {
   // modifier keys like `LSHIFT(Key_RightAlt)` and `Key_Meh`. It will not match
   // a key with only modifier flags (e.g. `LCTRL(RALT(Key_NoKey))`); this is an
   // intentional feature so that plugins can distinguish between the two.
-  constexpr bool isKeyboardModifier() const {
+  constexpr bool __attribute__((always_inline)) isKeyboardModifier() const {
     return (isKeyboardKey() &&
             (keyCode_ >= HID_KEYBOARD_FIRST_MODIFIER &&
              keyCode_ <= HID_KEYBOARD_LAST_MODIFIER));
@@ -221,7 +221,7 @@ class Key {
   // they are used chorded to change the result of typing those other
   // keys. They're even more similar to `shift` keys. For both reasons, it's
   // worth singling them out.
-  constexpr bool isLayerShift() const {
+  constexpr bool __attribute__((always_inline)) isLayerShift() const {
     return (isLayerKey() &&
             keyCode_ >= LAYER_SHIFT_OFFSET &&
             keyCode_ < LAYER_MOVE_OFFSET);

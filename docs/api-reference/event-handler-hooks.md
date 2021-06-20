@@ -183,6 +183,14 @@ abortable. That is, if it returns a result other than `OK` it will stop the
 subsequent handlers from getting called, and if it returns `ABORT`, it will also
 stop the report from being sent.]
 
+### `afterReportingState(const KeyEvent &event)`
+
+This gets called after the HID report is sent.  This handler allows a plugin to
+react to an event, but wait until after that event has been fully processed to
+do so.  For example, the OneShot plugin releases keys that are in the "one-shot"
+state in response to key press events, but it does so after those triggering
+press events take place.
+
 ## Other events
 
 ### `onLayerChange()`

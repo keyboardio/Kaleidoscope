@@ -169,8 +169,10 @@ __attribute__((weak)) const char keyToChar(Key key) {
   switch (key.getKeyCode()) {
   case Key_A.getKeyCode() ... Key_Z.getKeyCode():
     return 'a' + (key.getKeyCode() - Key_A.getKeyCode());
-  case Key_1.getKeyCode() ... Key_0.getKeyCode():
+  case Key_1.getKeyCode() ... Key_9.getKeyCode():
     return '1' + (key.getKeyCode() - Key_1.getKeyCode());
+  case Key_0.getKeyCode():
+    return '0';
   }
 
   return 0;

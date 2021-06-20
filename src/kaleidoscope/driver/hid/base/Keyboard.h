@@ -20,6 +20,10 @@
 
 #include "kaleidoscope/key_defs.h"
 
+#ifndef HID_BOOT_PROTOCOL
+#define HID_BOOT_PROTOCOL 0
+#endif
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {
@@ -54,6 +58,9 @@ class NoBootKeyboard {
   bool wasAnyModifierActive() {
     return false;
   }
+  bool isKeyPressed(uint8_t code) {
+    return false;
+  }
 
   uint8_t getLeds() {
     return 0;
@@ -81,6 +88,9 @@ class NoNKROKeyboard {
     return false;
   }
   bool wasAnyModifierActive() {
+    return false;
+  }
+  bool isKeyPressed(uint8_t code) {
     return false;
   }
 

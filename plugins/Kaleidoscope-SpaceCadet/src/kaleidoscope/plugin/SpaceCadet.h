@@ -60,9 +60,18 @@ class SpaceCadet : public kaleidoscope::Plugin {
   SpaceCadet(void);
 
   // Methods
-  static void enable(void);
-  static void disable(void);
-  static bool active(void);
+  static void enable() {
+    mode_ = Mode::ON;
+  }
+  static void disable() {
+    mode_ = Mode::OFF;
+  }
+  static void enableWithoutDelay() {
+    mode_ = Mode::NO_DELAY;
+  }
+  static bool active() {
+    return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
+  }
 
   // Publically accessible variables
   static uint16_t time_out;  //  The global timeout in milliseconds
@@ -73,7 +82,12 @@ class SpaceCadet : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  static bool disabled;
+  enum Mode : uint8_t {
+    ON,
+    OFF,
+    NO_DELAY,
+  };
+  static uint8_t mode_;
 
   static KeyEventTracker event_tracker_;
 

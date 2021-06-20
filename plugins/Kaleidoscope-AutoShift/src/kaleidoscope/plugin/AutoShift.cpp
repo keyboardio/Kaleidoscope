@@ -1,0 +1,212 @@
+/* -*- mode: c++ -*-
+ * Kaleidoscope-AutoShift -- Automatic shift on long press
+ * Copyright (C) 2021  Keyboard.io, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "kaleidoscope/plugin/AutoShift.h"
+
+#include "kaleidoscope/KeyAddr.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/Runtime.h"
+
+namespace kaleidoscope {
+namespace plugin {
+
+// =============================================================================
+// AutoShift static class variables
+
+// Configuration settings that can be saved to persistent storage.
+AutoShift::Settings AutoShift::settings_ = {
+  .enabled = true,
+  .timeout = 175,
+  .enabled_categories = AutoShift::Categories::printableKeys(),
+};
+
+// The event tracker ensures that the `onKeyswitchEvent()` handler will follow
+// the rules in order to avoid interference with other plugins and prevent
+// processing the same event more than once.
+KeyEventTracker AutoShift::event_tracker_;
+
+// If there's a delayed keypress from AutoShift, this stored event will contain
+// a valid `KeyAddr`.  The default constructor produces an event addr of
+// `KeyAddr::none()`, so the plugin will start in an inactive state.
+KeyEvent pending_event_;
+
+// =============================================================================
+// AutoShift functions
+
+void AutoShift::disable() {
+  settings_.enabled = false;
+  if (pending_event_.addr.isValid()) {
+    Runtime.handleKeyswitchEvent(pending_event_);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Test for whether or not to apply AutoShift to a given `Key`.  This function
+// can be overridden from the user sketch.
+__attribute__((weak))
+bool AutoShift::isAutoShiftable(Key key) {
+  return enabledForKey(key);
+}
+
+// The default method that determines whether a particular key is an auto-shift
+// candidate.  Used by `isAutoShiftable()`, separate to allow re-use when the
+// caller is overridden.
+bool AutoShift::enabledForKey(Key key) {
+  // We only support auto-shifting keyboard keys.  We could also explicitly
+  // ignore modifier keys, but there's no need to do so, as none of the code
+  // below matches modifiers.
+  if (!key.isKeyboardKey())
+    return false;
+
+  // We compare only the keycode, and disregard any modifier flags applied to
+  // the key.  This simplifies the comparison, and also allows AutoShift to
+  // apply to keys like `RALT(Key_E)`.
+  uint8_t keycode = key.getKeyCode();
+
+  if (isEnabled(Categories::allKeys())) {
+    if (keycode < HID_KEYBOARD_FIRST_MODIFIER)
+      return true;
+  }
+  if (isEnabled(Categories::letterKeys())) {
+    if (keycode >= Key_A.getKeyCode() && keycode <= Key_Z.getKeyCode())
+      return true;
+  }
+  if (isEnabled(Categories::numberKeys())) {
+    if (keycode >= Key_1.getKeyCode() && keycode <= Key_0.getKeyCode())
+      return true;
+  }
+  if (isEnabled(Categories::symbolKeys())) {
+    if ((keycode >= Key_Minus.getKeyCode() && keycode <= Key_Slash.getKeyCode()) ||
+        (keycode == Key_NonUsBackslashAndPipe.getKeyCode()))
+      return true;
+  }
+  if (isEnabled(Categories::arrowKeys())) {
+    if (keycode >= Key_RightArrow.getKeyCode() &&
+        keycode <= Key_LeftArrow.getKeyCode())
+      return true;
+  }
+  if (isEnabled(Categories::functionKeys())) {
+    if ((keycode >= Key_F1.getKeyCode() && keycode <= Key_F12.getKeyCode()) ||
+        (keycode >= Key_F13.getKeyCode() && keycode <= Key_F24.getKeyCode()))
+      return true;
+  }
+
+  return false;
+}
+
+// =============================================================================
+// Event handler hook functions
+
+// -----------------------------------------------------------------------------
+EventHandlerResult AutoShift::onKeyswitchEvent(KeyEvent &event) {
+  // If AutoShift has already processed and released this event, ignore it.
+  // There's no need to update the event tracker in this one case.
+  if (event_tracker_.shouldIgnore(event)) {
+    // We should never get an event that's in our queue here, but just in case
+    // some other plugin sends one, abort.
+    if (queue_.shouldAbort(event))
+      return EventHandlerResult::ABORT;
+    return EventHandlerResult::OK;
+  }
+
+  // If event.addr is not a physical key, ignore it; some other plugin injected
+  // it.  This check should be unnecessary.
+  if (!event.addr.isValid() || (event.state & INJECTED) != 0) {
+    return EventHandlerResult::OK;
+  }
+
+  // Do nothing if disabled.
+  if (!settings_.enabled)
+    return EventHandlerResult::OK;
+
+  if (!queue_.isEmpty()) {
+    // There's an unresolved AutoShift key press.
+    if (queue_.isFull()) {
+      flushQueue();
+    } else if (event.addr == queue_.addr(0)) {
+      flushEvent(false);
+      flushQueue();
+    }
+    if (queue_.isEmpty())
+      return EventHandlerResult::OK;
+    queue_.append(event);
+    return EventHandlerResult::ABORT;
+  }
+
+  if (keyToggledOn(event.state) && isAutoShiftable(event.key)) {
+    queue_.append(event);
+    return EventHandlerResult::ABORT;
+  }
+
+  return EventHandlerResult::OK;
+}
+
+// -----------------------------------------------------------------------------
+EventHandlerResult AutoShift::afterEachCycle() {
+  // If there's a pending AutoShift event, and it has timed out, we need to
+  // release the event with the `shift` flag applied.
+  if (!queue_.isEmpty() &&
+      Runtime.hasTimeExpired(queue_.timestamp(0), settings_.timeout)) {
+    // Toggle the state of the `SHIFT_HELD` bit in the modifier flags for the
+    // key for the pending event.
+    flushEvent(true);
+    flushQueue();
+  }
+  return EventHandlerResult::OK;
+}
+
+void AutoShift::flushQueue() {
+  while (!queue_.isEmpty()) {
+    if (queue_.isRelease(0) || checkForRelease()) {
+      flushEvent(false);
+    } else {
+      return;
+    }
+  }
+}
+
+bool AutoShift::checkForRelease() const {
+  KeyAddr queue_head_addr = queue_.addr(0);
+  for (uint8_t i = 1; i < queue_.length(); ++i) {
+    if (queue_.addr(i) == queue_head_addr) {
+      // This key's release is also in the queue
+      return true;
+    }
+  }
+  return false;
+}
+
+void AutoShift::flushEvent(bool is_long_press) {
+  if (queue_.isEmpty())
+    return;
+  KeyEvent event = queue_.event(0);
+  if (is_long_press) {
+    event.key = Runtime.lookupKey(event.addr);
+    uint8_t flags = event.key.getFlags();
+    flags ^= SHIFT_HELD;
+    event.key.setFlags(flags);
+  }
+  queue_.shift();
+  Runtime.handleKeyswitchEvent(event);
+}
+
+} // namespace plugin
+} // namespace kaleidoscope
+
+kaleidoscope::plugin::AutoShift AutoShift;

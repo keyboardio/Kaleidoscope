@@ -1,0 +1,141 @@
+VERSION 1
+
+KEYSWITCH LSHIFT    0 0
+KEYSWITCH RSHIFT    0 1
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+
+# ==============================================================================
+NAME SpaceCadet tap
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_X # Report should contain `X` (0x1B)
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME SpaceCadet hold
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+
+RUN 10 ms # timeout = 10 ms (for this key)
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME SpaceCadet hold with global timeout
+
+RUN 4 ms
+PRESS RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_RightShift # Report should contain `shift` (0xE5)
+
+RUN 20 ms # timeout = 20 ms
+RELEASE RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME SpaceCadet interrupt
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # Report should add `A` (0x04, 0xE1)
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain only `A` (0x04)
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME SpaceCadet interrupt SpaceCadet with tap
+
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+
+RUN 4 ms
+PRESS RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_RightShift # Report should add `shift` (0xE5)
+
+RUN 4 ms
+RELEASE RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+EXPECT keyboard-report Key_LeftShift Key_Y # Report should add `Y` (0x1C)
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift` (0xE1)
+
+RUN 4 ms
+RELEASE LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME SpaceCadet interrupt SpaceCadet with hold
+
+# First, press left shift. It takes effect immediately, because SpaceCadet is in
+# "no-delay" mode.
+RUN 4 ms
+PRESS LSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+
+# Before left shift times out (timeout=10ms), press right shift, which also
+# takes effect without delay.
+RUN 4 ms
+PRESS RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_RightShift # report: { e1 e5 }
+
+# Next, release left shift after it times out (so it's not a "tap"), but before
+# the right shift times out. This does not generate a report, because the right
+# shift might still become a "tap" if it's released soon enough.
+RUN 10 ms
+RELEASE LSHIFT
+
+# Next, the right shift times out, resolving to its modifier state. This allows
+# the left shift to be released, because the right shift can't be a "tap".
+RUN 10 ms
+EXPECT keyboard-report Key_RightShift # Report should contain `shift` (0xE5)
+
+# Last, release the right shift as normal.
+RUN 4 ms
+RELEASE RSHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms

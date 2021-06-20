@@ -26,33 +26,41 @@
 // Deprecation warning messages
 #define _DEPRECATED_MESSAGE_ONESHOT_TIMEOUT                                     \
   "The `OneShot.time_out` variable is deprecated. Please use the\n"             \
-  "`OneShot.setTimeout()` function instead."
+  "`OneShot.setTimeout()` function instead.\n"                                  \
+  "This variable will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_HOLD_TIMEOUT                                \
   "The `OneShot.hold_time_out` variable is deprecated. Please use the\n"        \
-  "`OneShot.setHoldTimeout()` function instead."
+  "`OneShot.setHoldTimeout()` function instead.\n"                              \
+  "This variable will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_DOUBLE_TAP_TIMEOUT                          \
   "The `OneShot.double_tap_time_out` variable is deprecated. Please use the\n"  \
-  "`OneShot.setDoubleTapTimeout()` function instead."
+  "`OneShot.setDoubleTapTimeout()` function instead.\n"                         \
+  "This variable will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_INJECT                                      \
-  "The `OneShot.inject(key, key_state)` function has been deprecated."
+  "The `OneShot.inject(key, key_state)` function has been deprecated.\n"        \
+  "This function will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_ISACTIVE_KEY                                \
   "The `OneShot.isActive(key)` function is deprecated. Please use\n"            \
-  "`OneShot.isActive(key_addr)` instead, if possible."
+  "`OneShot.isActive(key_addr)` instead, if possible.\n"                        \
+  "This function will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_ISSTICKY_KEY                                \
   "The `OneShot.isSticky(key)` function is deprecated. Please use\n"            \
-  "`OneShot.isSticky(key_addr)` instead, if possible."
+  "`OneShot.isSticky(key_addr)` instead, if possible.\n"                        \
+  "This function will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_ISPRESSED                                   \
   "The `OneShot.isPressed()` function is deprecated. This function now\n"       \
-  "always returns false."
+  "always returns false.\n"                                                     \
+  "This function will be removed after 2021-08-01."
 
 #define _DEPRECATED_MESSAGE_ONESHOT_ISMODIFIERACTIVE                            \
-  "The `OneShot.isModifierActive()` function is deprecated."
+  "The `OneShot.isModifierActive()` function is deprecated.\n"                  \
+  "This function will be removed after 2021-08-01."
 
 // ----------------------------------------------------------------------------
 // Keymap macros
@@ -222,6 +230,7 @@ class OneShot : public kaleidoscope::Plugin {
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult afterReportingState(const KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
  private:

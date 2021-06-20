@@ -1,0 +1,124 @@
+VERSION 1
+
+KEYSWITCH OSL  0  0  # 0: OSL(1)
+KEYSWITCH QK   0  1  # 1: SFT_T(A)
+KEYSWITCH C    0  2  # 1: Key_C
+KEYSWITCH A    2  1  # 0: Key_A, Qukey(Key_LeftGui)
+KEYSWITCH H    2 10  # 0: Key_H
+KEYSWITCH Y    1 10  # 0: Key_Y
+KEYSWITCH K    2 12  # 0: CTL_T(K)
+
+KEYSWITCH OSG  0 10  # 0: OSM(LeftGui)
+KEYSWITCH LS   0 11  # 0: LSHIFT(Key_LeftShift)
+KEYSWITCH RS   0 12  # 0: LSHIFT(Key_RightShift)
+
+# ==============================================================================
+NAME Chrysalis 566 and 605
+
+RUN 4 ms
+PRESS OSL # OSL(1)
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE OSL
+RUN 1 cycle
+
+RUN 4 ms
+PRESS QK # SFT_T(A)
+RUN 1 cycle
+
+RUN 4 ms
+PRESS C # 1: Key_C
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+EXPECT keyboard-report Key_LeftShift Key_C
+EXPECT keyboard-report Key_LeftShift
+
+RUN 4 ms
+RELEASE QK
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Chrysalis 688
+
+# plain key press
+RUN 4 ms
+PRESS H # Key_H
+RUN 1 cycle
+EXPECT keyboard-report Key_H
+
+# qukey press
+RUN 4 ms
+PRESS K # CTL_T(K)
+RUN 1 cycle
+
+# plain key release
+RUN 9 ms
+RELEASE H
+RUN 1 cycle
+# There should be no report here
+
+# plain key press
+RUN 4 ms
+PRESS Y # Key_Y
+RUN 1 cycle
+
+# plain key release
+RUN 4 ms
+RELEASE Y
+RUN 1 cycle
+# This event resolves the qukey's state and flushes the queue
+EXPECT keyboard-report Key_H Key_LeftControl
+EXPECT keyboard-report Key_LeftControl
+EXPECT keyboard-report Key_LeftControl Key_Y
+EXPECT keyboard-report Key_LeftControl
+
+# qukey release
+RUN 4 ms
+RELEASE K
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Chrysalis 427 workaround
+
+RUN 4 ms
+PRESS OSG # OSM(LeftGui)
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui
+
+RUN 4 ms
+RELEASE OSG
+RUN 1 cycle
+
+RUN 4 ms
+PRESS LS # LSHIFT(Key_LeftShift)
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui Key_LeftShift
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftGui Key_LeftShift Key_H
+EXPECT keyboard-report Key_LeftShift Key_H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+
+RUN 4 ms
+RELEASE LS
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms

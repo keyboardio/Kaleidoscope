@@ -12,6 +12,13 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### SpaceCadet "no-delay" mode
+
+SpaceCadet can now be enabled in "no-delay" mode, wherein the primary (modifier)
+value of the key will be sent to the host immediately when the key is pressed.
+If the SpaceCadet key is released before the timeout, the modifier is released,
+and then the alternate (symbol) value is sent.  To activate "no-delay" mode, call `SpaceCadet.enableWithoutDelay()`.
+
 ### New Qukeys features
 
 #### Tap-repeat
@@ -207,6 +214,10 @@ For more information, please see the hardware plugins' documentation.
 To make it easier to port Kaleidoscope, we introduced the `ATMegaKeyboard` base class. For any board that's based on the ATMega MCU and a simple matrix, this might be a good foundation to develop the hardware plugin upon.
 
 ## New plugins
+
+### AutoShift
+
+The [AutoShift](plugins/Kaleidoscope-AutoShift.md) plugin provides an alternative way to get shifted symbols, by long-pressing keys instead of using a separate `shift` key.
 
 ### DynamicMacros
 

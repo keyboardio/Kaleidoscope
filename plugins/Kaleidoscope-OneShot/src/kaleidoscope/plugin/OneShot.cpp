@@ -322,6 +322,11 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
 }
 
 // ----------------------------------------------------------------------------
+EventHandlerResult OneShot::afterReportingState(const KeyEvent& event) {
+  return afterEachCycle();
+}
+
+// ----------------------------------------------------------------------------
 EventHandlerResult OneShot::afterEachCycle() {
 
   bool oneshot_expired = hasTimedOut(timeout_);
