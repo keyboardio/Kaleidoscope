@@ -77,7 +77,7 @@ The plugin provides a `DynamicTapDance` object, with the following methods and p
 
 ## Focus commands
 
-The plugin provides one Focus command: `tapdance.ap`.
+The plugin provides one Focus command: `tapdance.map`.
 
 ### `tapdance.map [dances...]`
 
@@ -87,7 +87,7 @@ The plugin provides one Focus command: `tapdance.ap`.
 > storage space, even data after the final marker.
 >
 > With arguments, it replaces the current set of dynamic dances with the newly
-> given ones. Dances are terminated by an end marker, and the last macro must be
+> given ones. Dances are terminated by an end marker, and the last dance must be
 > terminated by an additional one. It is up to the caller to make sure these
 > rules are obeyed.
 >
