@@ -214,7 +214,7 @@ flash: ensure-device-port-defined
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
-	@$(shell read)
+	@$(shell read _)
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
 	  --input-dir "${OUTPUT_PATH}" \
 	  --port $(KALEIDOSCOPE_DEVICE_PORT) $(ARDUINO_VERBOSE)
