@@ -24,8 +24,8 @@ the output will be unshifted.
 
 The `AutoShift` object provides three methods for turning itself on and off:
 
-- To turn the plugin off, call `AutoShift.enable()`.
-- To turn the plugin on, call `AutoShift.disable()`.
+- To turn the plugin on, call `AutoShift.enable()`.
+- To turn the plugin off, call `AutoShift.disable()`.
 - To toggle the plugin's state, call `AutoShift.toggle()`.
 
 Note: Disabling the AutoShift plugin does not affect which `Key` categories it
