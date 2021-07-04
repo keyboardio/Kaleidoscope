@@ -137,17 +137,26 @@ EventHandlerResult AutoShift::onKeyswitchEvent(KeyEvent &event) {
 
   if (!queue_.isEmpty()) {
     // There's an unresolved AutoShift key press.
-    if (queue_.isFull()) {
+    if (keyToggledOn(event.state) ||
+        event.addr == queue_.addr(0) ||
+        queue_.isFull()) {
+      // If a new key toggled on, the unresolved key toggled off (it was a
+      // "tap"), or if the queue is full, we clear the queue, and the key event
+      // does not get modified.
       flushEvent(false);
       flushQueue();
+    } else {
+      // Otherwise, add the release event to the queue.  We do this so that
+      // rollover from a modifier to an auto-shifted key will result in the
+      // modifier being applied to the key.
+      queue_.append(event);
+      return EventHandlerResult::ABORT;
     }
-    if (queue_.isEmpty())
-      return EventHandlerResult::OK;
-    queue_.append(event);
-    return EventHandlerResult::ABORT;
   }
 
   if (keyToggledOn(event.state) && isAutoShiftable(event.key)) {
+    // The key is eligible to be auto-shifted, so we add it to the queue and
+    // defer processing of the event.
     queue_.append(event);
     return EventHandlerResult::ABORT;
   }
