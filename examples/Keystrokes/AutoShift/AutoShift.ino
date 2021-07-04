@@ -46,6 +46,9 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   return MACRO_NONE;
 }
 
+// This sketch uses the AutoShiftConfig plugin, which enables run-time
+// configuration of AutoShift configuration settings.  All of the plugins marked
+// "for AutoShiftConfig" are optional; AutoShift itself will work without them.
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,        // for AutoShiftConfig
   EEPROMKeymap,          // for AutoShiftConfig

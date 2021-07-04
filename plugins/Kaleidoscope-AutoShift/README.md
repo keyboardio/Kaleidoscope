@@ -24,8 +24,8 @@ the output will be unshifted.
 
 The `AutoShift` object provides three methods for turning itself on and off:
 
-- To turn the plugin off, call `AutoShift.enable()`.
-- To turn the plugin on, call `AutoShift.disable()`.
+- To turn the plugin on, call `AutoShift.enable()`.
+- To turn the plugin off, call `AutoShift.disable()`.
 - To toggle the plugin's state, call `AutoShift.toggle()`.
 
 Note: Disabling the AutoShift plugin does not affect which `Key` categories it
@@ -77,6 +77,20 @@ bool AutoShift::isAutoShiftable(Key key) {
 As you can see, this method takes a `Key` as its input and returns either `true`
 (for keys eligible to be auto-shifted) or `false` (for keys AutoShift will leave
 alone).
+
+## Plugin compatibility
+
+If you're using AutoShift in a sketch that also includes the Qukeys and/or
+SpaceCadet plugins, make sure to register AutoShift after those other plugins in
+order to prevent auto-shifts from getting clobbered.  The recommended order is
+as follows:
+
+```c++
+KALEIDOSCOPE_INIT_PLUGINS(Qukeys, SpaceCadet, AutoShift)
+```
+
+It's not generally recommended to use AutoShift on the same key(s) handled by
+either Qukeys or SpaceCadet, as this can result in confusing behaviour.
 
 ## Further reading
 

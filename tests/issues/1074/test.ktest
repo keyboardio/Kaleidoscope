@@ -1,0 +1,54 @@
+VERSION 1
+
+KEYSWITCH LSHIFT    0 0
+KEYSWITCH RSHIFT    0 1
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+KEYSWITCH C         1 2
+KEYSWITCH D         1 3
+KEYSWITCH E         1 4
+
+# ==============================================================================
+NAME AutoShift overflow
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B # report: { 4 5 }
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B Key_C # report: { 4 5 6 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B Key_C Key_D # report: { 4 5 6 7 }
+EXPECT keyboard-report Key_B Key_C Key_D # report: { 5 6 7 }
+EXPECT keyboard-report Key_C Key_D # report: { 6 7 }
+EXPECT keyboard-report Key_D # report: { 7 }
+EXPECT keyboard-report empty
+
+RUN 5 ms
