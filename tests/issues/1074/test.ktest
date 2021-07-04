@@ -18,29 +18,29 @@ RUN 1 cycle
 RUN 4 ms
 PRESS B
 RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
 
 RUN 4 ms
 PRESS C
 RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B # report: { 4 5 }
 
 RUN 4 ms
 PRESS D
 RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B Key_C # report: { 4 5 6 }
 
 RUN 4 ms
 RELEASE A
 RUN 1 cycle
-EXPECT keyboard-report Key_A # report: { 4 }
 
 RUN 4 ms
 RELEASE B
 RUN 1 cycle
-EXPECT keyboard-report Key_A Key_B # report: { 4 5 }
 
 RUN 4 ms
 RELEASE C
 RUN 1 cycle
-EXPECT keyboard-report Key_A Key_B Key_C # report: { 4 5 6 }
 
 RUN 4 ms
 RELEASE D
