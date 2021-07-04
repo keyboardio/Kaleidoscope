@@ -138,8 +138,6 @@ EventHandlerResult AutoShift::onKeyswitchEvent(KeyEvent &event) {
   if (!queue_.isEmpty()) {
     // There's an unresolved AutoShift key press.
     if (queue_.isFull()) {
-      flushQueue();
-    } else if (event.addr == queue_.addr(0)) {
       flushEvent(false);
       flushQueue();
     }
