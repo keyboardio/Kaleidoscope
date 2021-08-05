@@ -18,6 +18,7 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
+#include <Kaleidoscope-Ranges.h>
 
 constexpr Key OneShotCancelKey {kaleidoscope::ranges::OS_CANCEL};
 
