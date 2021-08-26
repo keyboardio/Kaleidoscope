@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * kaleidoscope::device::Base -- Kaleidoscope device Base class
- * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -73,6 +73,13 @@ class Base {
   class NoOpSerial {
    public:
     NoOpSerial() {}
+    void begin(uint32_t baud) {}
+    size_t print(...) {}
+    size_t println(...) {}
+    int peek() { return 0; }
+    long parseInt() { return 0; }
+    int available() { return 0; }
+    int read() { return 0; }
   };
 
   static NoOpSerial noop_serial_;
