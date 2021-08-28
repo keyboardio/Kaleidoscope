@@ -22,12 +22,17 @@
 #include <Arduino.h>
 
 #include "kaleidoscope/device/Base.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace gd32 {
 
-struct EvalProps : kaleidoscope::device::BaseProps {
+struct EvalStorageProps: kaleidoscope::driver::storage::GD32FlashProps {};
+
+struct EvalProps: kaleidoscope::device::BaseProps {
+  typedef EvalStorageProps StorageProps;
+  typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
   static constexpr const char *short_name = "GD32Eval";
 };
 
