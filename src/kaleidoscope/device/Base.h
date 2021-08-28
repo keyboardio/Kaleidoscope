@@ -77,7 +77,7 @@ class Base {
     size_t print(...) {}
     size_t println(...) {}
     int peek() { return 0; }
-    long parseInt() { return 0; }
+    long parseInt() { return 0; } // NOLINT(runtime/int)
     int available() { return 0; }
     int read() { return 0; }
   };
