@@ -23,6 +23,7 @@
 
 #include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/storage/GD32Flash.h"
+#include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -31,6 +32,7 @@ namespace gd32 {
 struct EvalStorageProps: kaleidoscope::driver::storage::GD32FlashProps {};
 
 struct EvalProps: kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
   typedef EvalStorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
   static constexpr const char *short_name = "GD32Eval";
