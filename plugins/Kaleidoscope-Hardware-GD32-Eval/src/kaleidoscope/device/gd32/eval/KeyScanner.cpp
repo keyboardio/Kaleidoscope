@@ -65,17 +65,17 @@ void KeyScanner::readMatrix() {
 void KeyScanner::actOnMatrixScan() {
   if (bitRead(keyState, 0) != bitRead(previousKeyState, 0)) {
     ThisType::handleKeyswitchEvent(
-        Key_NoKey,
-        typename Props_::KeyAddr(0, 0),
-        keyState
-     );
+      Key_NoKey,
+      typename Props_::KeyAddr(0, 0),
+      keyState
+    );
   }
   if (bitRead(keyState, 1) != bitRead(previousKeyState, 1)) {
     ThisType::handleKeyswitchEvent(
-        Key_NoKey,
-        typename Props_::KeyAddr(0, 1),
-        keyState
-     );
+      Key_NoKey,
+      typename Props_::KeyAddr(0, 1),
+      keyState
+    );
   }
 }
 
