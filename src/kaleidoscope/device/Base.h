@@ -76,10 +76,18 @@ class Base {
     void begin(uint32_t baud) {}
     size_t print(...) {}
     size_t println(...) {}
-    int peek() { return 0; }
-    long parseInt() { return 0; } // NOLINT(runtime/int)
-    int available() { return 0; }
-    int read() { return 0; }
+    int peek() {
+      return 0;
+    }
+    long parseInt() { // NOLINT(runtime/int)
+      return 0;
+    }
+    int available() {
+      return 0;
+    }
+    int read() {
+      return 0;
+    }
   };
 
   static NoOpSerial noop_serial_;
