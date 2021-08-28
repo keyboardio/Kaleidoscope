@@ -25,6 +25,8 @@
 #include "kaleidoscope/driver/storage/GD32Flash.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
+#include "kaleidoscope/device/gd32/eval/KeyScanner.h"
+
 namespace kaleidoscope {
 namespace device {
 namespace gd32 {
@@ -33,6 +35,8 @@ struct EvalStorageProps: kaleidoscope::driver::storage::GD32FlashProps {};
 
 struct EvalProps: kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
+  typedef eval::KeyScannerProps KeyScannerProps;
+  typedef eval::KeyScanner KeyScanner;
   typedef EvalStorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
   static constexpr const char *short_name = "GD32Eval";
