@@ -31,6 +31,10 @@ namespace eval {
 struct KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
   static constexpr uint8_t matrix_rows = 1;
   static constexpr uint8_t matrix_columns = 2;
+
+  static constexpr uint8_t matrix_row_pins[] = { PA3  };
+  static constexpr uint8_t matrix_col_pins[] = { PE4, PD12 };
+
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 
@@ -45,25 +49,44 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
   static void actOnMatrixScan();
 
   static bool isKeyswitchPressed(KeyAddr key_addr) {
-    if (key_addr.row() != 0)
-      return false;
-    return bitRead(keyState, key_addr.col());
+    //return bitRead(keyState, key_addr.col());
+    return false;
   }
   static uint8_t pressedKeyswitchCount() {
-    return __builtin_popcount(keyState);
+    //return __builtin_popcount(keyState);
+    return 0;
   }
 
   static bool wasKeyswitchPressed(KeyAddr key_addr) {
-    if (key_addr.row() != 0)
-      return false;
-    return bitRead(previousKeyState, key_addr.col());
+    //return bitRead(previousKeyState, key_addr.col());
+    return false;
   }
   static uint8_t previousPressedKeyswitchCount() {
-    return __builtin_popcount(previousKeyState);
+    //return __builtin_popcount(previousKeyState);
+    return 0;
   }
- protected:
-  static uint8_t keyState, previousKeyState;
-  static int prevPinState[2];
+ private:
+  /*
+    each of these variables are storing the state for a row of keys
+
+    so for key 0, the counter is represented by db0[0] and db1[0]
+    and the state in debounced_state[0].
+  */
+  struct debounce_t {
+    uint16_t db0;    // counter bit 0
+    uint16_t db1;    // counter bit 1
+    uint16_t debounced_state;  // debounced state
+  };
+
+  struct col_state_t {
+    uint16_t previous;
+    uint16_t current;
+    debounce_t debouncer;
+  };
+  static col_state_t matrix_state_[Props_::matrix_columns];
+
+  static inline uint16_t debounce(uint16_t sample, debounce_t *debouncer);
+  static uint16_t readRows();
 };
 
 } // namespace eval

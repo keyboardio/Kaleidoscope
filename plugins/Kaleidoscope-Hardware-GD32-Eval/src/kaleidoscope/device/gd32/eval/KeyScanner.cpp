@@ -26,16 +26,20 @@ namespace device {
 namespace gd32 {
 namespace eval {
 
-uint8_t KeyScanner::keyState;
-uint8_t KeyScanner::previousKeyState;
-int KeyScanner::prevPinState[2];
+KeyScanner::col_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_columns];
+const uint8_t KeyScannerProps::matrix_rows;
+const uint8_t KeyScannerProps::matrix_columns;
+constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
+constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
 void KeyScanner::setup() {
-  pinMode(PA3, INPUT);
-  pinMode(PB13, INPUT);
+  for (uint8_t i = 0; i < Props_::matrix_columns; i++) {
+    pinMode(Props_::matrix_row_pins[i], INPUT_PULLUP);
+  }
 
-  prevPinState[0] = HIGH;
-  prevPinState[1] = HIGH;
+  for (uint8_t i = 0; i < Props_::matrix_rows; i++) {
+    pinMode(Props_::matrix_row_pins[i], INPUT);
+  }
 }
 
 void KeyScanner::scanMatrix() {
@@ -43,39 +47,73 @@ void KeyScanner::scanMatrix() {
   actOnMatrixScan();
 }
 
+uint16_t KeyScanner::readRows() {
+  uint16_t hot_pins = 0;
+
+  for (uint8_t i = 0; i < Props_::matrix_rows; i++) {
+    uint8_t rowPin = Props_::matrix_row_pins[i];
+    pinMode(rowPin, INPUT_PULLUP);
+    uint8_t v = !!digitalRead(rowPin);
+    pinMode(rowPin, INPUT);
+    hot_pins |= v << i;
+  }
+
+  return hot_pins;
+}
+
+uint16_t KeyScanner::debounce(uint16_t sample, debounce_t *debouncer) {
+  uint16_t delta, changes;
+
+  // Use xor to detect changes from last stable state:
+  // if a key has changed, it's bit will be 1, otherwise 0
+  delta = sample ^ debouncer->debounced_state;
+
+  // Increment counters and reset any unchanged bits:
+  // increment bit 1 for all changed keys
+  debouncer->db1 = ((debouncer->db1) ^ (debouncer->db0)) & delta;
+  // increment bit 0 for all changed keys
+  debouncer->db0 = ~(debouncer->db0) & delta;
+
+  // Calculate returned change set: if delta is still true
+  // and the counter has wrapped back to 0, the key is changed.
+
+  changes = ~(~delta | (debouncer->db0) | (debouncer->db1));
+  // Update state: in this case use xor to flip any bit that is true in changes.
+  debouncer->debounced_state ^= changes;
+
+  return changes;
+}
+
 void KeyScanner::readMatrix() {
-  int b1, b2;
+  uint16_t any_debounced_changes = 0;
 
-  b1 = digitalRead(PA3);
-  b2 = digitalRead(PB13);
+  for (uint8_t col = 0; col < Props_::matrix_columns; col++) {
+    uint8_t colPin = Props_::matrix_col_pins[col];
+    pinMode(colPin, OUTPUT);
+    digitalWrite(colPin, LOW);
 
-  previousKeyState = keyState;
+    uint16_t hot_pins = readRows();
+    pinMode(colPin, INPUT);
 
-  if ((b1 != prevPinState[0]) && (b1 == HIGH)) {
-    bitSet(keyState, 0);
+    any_debounced_changes |= debounce(hot_pins, &matrix_state_[col].debouncer);
+
+    if (any_debounced_changes) {
+      for (uint8_t i = 0; i < Props_::matrix_columns; i++) {
+        matrix_state_[i].current = matrix_state_[i].debouncer.debounced_state;
+      }
+    }
   }
-  prevPinState[0] = b1;
-
-  if ((b2 != prevPinState[1]) && (b2 == HIGH)) {
-    bitSet(keyState, 1);
-  }
-  prevPinState[1] = b2;
 }
 
 void KeyScanner::actOnMatrixScan() {
-  if (bitRead(keyState, 0) != bitRead(previousKeyState, 0)) {
-    ThisType::handleKeyswitchEvent(
-      Key_NoKey,
-      typename Props_::KeyAddr(0, 0),
-      keyState
-    );
-  }
-  if (bitRead(keyState, 1) != bitRead(previousKeyState, 1)) {
-    ThisType::handleKeyswitchEvent(
-      Key_NoKey,
-      typename Props_::KeyAddr(0, 1),
-      keyState
-    );
+  for (byte col = 0; col < Props_::matrix_columns; col++) {
+    for (byte row = 0; row < Props_::matrix_rows; row++) {
+      uint8_t keyState = (bitRead(matrix_state_[col].previous, row) << 0) | (bitRead(matrix_state_[col].current, row) << 1);
+      if (keyState) {
+        ThisType::handleKeyswitchEvent(Key_NoKey, typename Props_::KeyAddr(row, col), keyState);
+      }
+    }
+    matrix_state_[col].previous = matrix_state_[col].current;
   }
 }
 
