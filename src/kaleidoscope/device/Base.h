@@ -90,7 +90,7 @@ class Base {
     }
   };
 
-  static NoOpSerial noop_serial_;
+  NoOpSerial noop_serial_;
 
  public:
   Base() {}
