@@ -40,7 +40,7 @@ class NoBootKeyboard {
   void setProtocol(uint8_t protocol) {}
   void setDefaultProtocol(uint8_t protocol) {}
 
-  void sendReport();
+  void sendReport() {}
 
   void press(uint8_t code) {}
   void release(uint8_t code) {}
