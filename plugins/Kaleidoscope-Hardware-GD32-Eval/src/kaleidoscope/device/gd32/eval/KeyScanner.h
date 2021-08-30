@@ -48,23 +48,11 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
   static void readMatrix();
   static void actOnMatrixScan();
 
-  static bool isKeyswitchPressed(KeyAddr key_addr) {
-    //return bitRead(keyState, key_addr.col());
-    return false;
-  }
-  static uint8_t pressedKeyswitchCount() {
-    //return __builtin_popcount(keyState);
-    return 0;
-  }
+  static bool isKeyswitchPressed(KeyAddr key_addr);
+  static uint8_t pressedKeyswitchCount();
 
-  static bool wasKeyswitchPressed(KeyAddr key_addr) {
-    //return bitRead(previousKeyState, key_addr.col());
-    return false;
-  }
-  static uint8_t previousPressedKeyswitchCount() {
-    //return __builtin_popcount(previousKeyState);
-    return 0;
-  }
+  static bool wasKeyswitchPressed(KeyAddr key_addr);
+  static uint8_t previousPressedKeyswitchCount();
  private:
   /*
     each of these variables are storing the state for a row of keys

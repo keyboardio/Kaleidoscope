@@ -117,6 +117,32 @@ void KeyScanner::actOnMatrixScan() {
   }
 }
 
+bool KeyScanner::isKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(matrix_state_[key_addr.col()].current, key_addr.row()) != 0);
+}
+
+uint8_t KeyScanner::pressedKeyswitchCount() {
+  uint8_t count = 0;
+
+  for (int8_t c = 0; c < _KeyScannerProps::matrix_columns; c++) {
+    count += __builtin_popcount(matrix_state_[r].current);
+  }
+  return count;
+}
+
+bool KeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
+  return (bitRead(matrix_state_[key_addr.col()].previous, key_addr.row()) != 0);
+}
+
+uint8_t KeyScanner::previousPressedKeyswitchCount() {
+  uint8_t count = 0;
+
+  for (int8_t c = 0; c < _KeyScannerProps::matrix_columns; c++) {
+    count += __builtin_popcount(matrix_state_[r].previous);
+  }
+  return count;
+}
+
 } // namespace eval
 } // namespace gd32
 } // namespace device
