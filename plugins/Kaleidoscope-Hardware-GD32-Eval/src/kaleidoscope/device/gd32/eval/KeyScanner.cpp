@@ -18,6 +18,7 @@
 #ifdef ARDUINO_GD32F303ZE_EVAL
 
 #include "Arduino.h"
+#include "HardwareTimer.h"
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/device/gd32/eval/KeyScanner.h"
 
@@ -36,7 +37,7 @@ const uint8_t KeyScannerProps::matrix_columns;
 constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
 constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
-static scan_irq() {
+static void scan_irq() {
   KeyScanner::do_scan = true;
 }
 
@@ -139,8 +140,8 @@ bool KeyScanner::isKeyswitchPressed(KeyAddr key_addr) {
 uint8_t KeyScanner::pressedKeyswitchCount() {
   uint8_t count = 0;
 
-  for (int8_t c = 0; c < _KeyScannerProps::matrix_columns; c++) {
-    count += __builtin_popcount(matrix_state_[r].current);
+  for (int8_t c = 0; c < Props_::matrix_columns; c++) {
+    count += __builtin_popcount(matrix_state_[c].current);
   }
   return count;
 }
@@ -152,8 +153,8 @@ bool KeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
 uint8_t KeyScanner::previousPressedKeyswitchCount() {
   uint8_t count = 0;
 
-  for (int8_t c = 0; c < _KeyScannerProps::matrix_columns; c++) {
-    count += __builtin_popcount(matrix_state_[r].previous);
+  for (int8_t c = 0; c < Props_::matrix_columns; c++) {
+    count += __builtin_popcount(matrix_state_[c].previous);
   }
   return count;
 }
