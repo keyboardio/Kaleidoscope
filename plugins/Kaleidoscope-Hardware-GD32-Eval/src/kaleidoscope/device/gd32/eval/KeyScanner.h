@@ -43,6 +43,8 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
   typedef KeyScanner ThisType;
   typedef KeyScannerProps Props_;
  public:
+  static bool do_scan;
+
   static void setup();
   static void scanMatrix();
   static void readMatrix();

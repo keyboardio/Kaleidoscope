@@ -26,11 +26,19 @@ namespace device {
 namespace gd32 {
 namespace eval {
 
+static HardwareTimer timer;
+
 KeyScanner::col_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_columns];
+bool KeyScanner::do_scan;
+
 const uint8_t KeyScannerProps::matrix_rows;
 const uint8_t KeyScannerProps::matrix_columns;
 constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
 constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
+
+static scan_irq() {
+  KeyScanner::do_scan = true;
+}
 
 void KeyScanner::setup() {
   for (uint8_t i = 0; i < Props_::matrix_columns; i++) {
@@ -40,10 +48,17 @@ void KeyScanner::setup() {
   for (uint8_t i = 0; i < Props_::matrix_rows; i++) {
     pinMode(Props_::matrix_row_pins[i], INPUT);
   }
+
+  timer.setPeriodTime(5, FORMAT_MS);
+  timer.attachInterrupt(scan_irq);
+  timer.start();
 }
 
 void KeyScanner::scanMatrix() {
-  readMatrix();
+  if (do_scan) {
+    do_scan = false;
+    readMatrix();
+  }
   actOnMatrixScan();
 }
 
