@@ -11,5 +11,6 @@
 /docs/api
 /_build/
 /results/
+/testing/googletest
 generated-testcase.cpp
 .arduino

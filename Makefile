@@ -8,13 +8,15 @@ ifneq ($(TEST_PATH),)
 TEST_PATH_ARG="TEST_PATH='$(TEST_PATH)'"
 endif
 
+GTEST_RELEASE=1.11.0
+
 
 DEFAULT_GOAL: smoke-sketches
 
 PLUGIN_TEST_SUPPORT_DIR ?= $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/build-tools/
 PLUGIN_TEST_BIN_DIR ?= $(PLUGIN_TEST_SUPPORT_DIR)/../toolchain/$(shell gcc --print-multiarch)/bin
 
-setup: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml  install-arduino-core-avr
+setup: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml testing/googletest/.git install-arduino-core-avr
 	@:
 
 
@@ -32,6 +34,10 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true --recurse-submodules=":(exclude)avr/libraries/Kaleidoscope" --recurse-submodules=build-tools --recurse-submodules=toolchain --recurse-submodules=avr/libraries/ git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio
 	rm -d $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
 	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
+
+testing/googletest/.git:
+	rm -rf testing/googletest
+	git clone -b "release-$(GTEST_RELEASE)" https://github.com/google/googletest.git testing/googletest
 
 simulator-tests:
 	$(MAKE) -C tests all
