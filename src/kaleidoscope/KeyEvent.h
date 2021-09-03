@@ -23,8 +23,7 @@
 
 namespace kaleidoscope {
 
-// It's important that this is a signed integer, not unsigned. It should be
-// `int8_t`, but I changed it to 32 for debugging purposes.
+// It's important that this is a signed integer, not unsigned.
 typedef int8_t KeyEventId;
 
 struct KeyEvent {

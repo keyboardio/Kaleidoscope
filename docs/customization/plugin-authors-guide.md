@@ -250,12 +250,209 @@ kaleidoscope::plugin::MyPlugin;
 
 In the above example, the private member variable `start_time_` and the constant `timeout` are the same type of unsigned integer (`uint16_t`), and we've used the additional boolean `timer_running_` to keep from checking for timeouts when `start_time_` isn't valid.  This plugin does something (unspecified) 500 milliseconds after a `Key_X` toggles on.
 
-## Creating artificial events
+## Creating additional events
+
+Another thing we might want a plugin to do is generate "extra" events that don't correspond to physical state changes.  An example of this is the Macros plugin, which might turn a single keypress into a series of HID reports sent to the host.  Let's build a simple plugin to illustrate how this is done, by making a key type a string of characters, rather than a single one.
+
+For the sake of simplicity, let's make the key `H` result in the string `Hi!` being typed (from the point of view of the host computer).  To do this, we'll make a plugin with an `onKeyEvent()` handler (because we want it to respond to a particular keypress event), which will call `Runtime.handleKeyEvent()` to generate new events sent to the host.
+
+The first thing we need to understand to do this is how to use the `KeyEvent()` constructor to create a new `KeyEvent` object.  For example:
+
+```c++
+KeyEvent event = KeyEvent(KeyAddr::none(), IS_PRESSED, Key_H);
+```
+
+This creates a `KeyEvent` where `event.addr` is an invalid address that doesn't correspond to a physical keyswitch, `event.state` has only the `IS_PRESSED` bit set, but not `WAS_PRESSED`, which corresponds to a key toggle-on event, and `event.key` is set to `Key_H`.
+
+We can then cause Kaleidoscope to process this event, including calling plugin handlers, by calling `Runtime.handleKeyEvent(event)`:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+
+      // Create and send the `H` (shift + h)
+      KeyEvent new_event = KeyEvent(KeyAddr::none(), IS_PRESSED, LSHIFT(Key_H));
+      Runtime.handleKeyEvent(new_event);
+
+      // Change the key value and send `i`
+      new_event.key = Key_I;
+      Runtime.handleKeyEvent(new_event);
+
+      // Change the key value and send `!` (shift + 1)
+      new_event.key = LSHIFT(Key_1);
+      Runtime.handleKeyEvent(new_event);
+
+      return EventHandlerResult::ABORT;
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+A few shortcuts were taken with this plugin that are worth pointing out.  First, you may have noticed that we didn't send any key _release_ events, just three presses.  This works, but there's a small chance that it could cause problems for some plugin that's trying to match key presses and releases.  To be nice (or pedantic, if you will), we could also send the matching release events, but this is probably not necessary in this case, because we've used an invalid key address (`KeyAddr::none()`) for these generated events.  This means that Kaleidoscope will not be recording these events as held keys.  If we had used valid key addresses (corresponding to physical keyswitches) instead, it would be more important to send matching release events to keep keys from getting "stuck" on.  For example, we could just use the address of the `H` key that was pressed:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+
+      KeyEvent new_event = KeyEvent(event.addr, IS_PRESSED, LSHIFT(Key_H));
+      Runtime.handleKeyEvent(new_event);
+
+      new_event.key = Key_I;
+      Runtime.handleKeyEvent(new_event);
+
+      new_event.key = LSHIFT(Key_1);
+      Runtime.handleKeyEvent(new_event);
+
+      return EventHandlerResult::ABORT;
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+This new version has the curious property that if the `H` key is held long enough, it will result in repeating `!!!!` characters on the host, until the key is released, which will clear it.  In fact, instead of creating a whole new `KeyEvent` object, we could further simplify this plugin by simply modifying the `event` object that we already have, instead:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+      event.key = LSHIFT(Key_H);
+      Runtime.handleKeyEvent(event);
+
+      event.key = Key_I;
+      Runtime.handleKeyEvent(event);
+
+      event.key = LSHIFT(Key_1);
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+Note that, with this version, we've only sent two extra events, then changed the `event.key` value, and returned `OK` instead of `ABORT`.  This is basically the same as the above pluging that turned `Y` into `X`, but with two extra events sent first.
+
+As one extra precaution, it would be wise to mark the generated event(s) as "injected" to let other plugins know that these events should be ignored.  This is a convention that is used by many existing Kaleidoscope plugins.  We do this by setting the `INJECTED` bit in the `event.state` variable:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+      event.state |= INJECTED;
+
+      event.key = LSHIFT(Key_H);
+      Runtime.handleKeyEvent(event);
+
+      event.key = Key_I;
+      Runtime.handleKeyEvent(event);
+
+      event.key = LSHIFT(Key_1);
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+If we wanted to be especially careful, we could also add the corresponding release events:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+      event.key = LSHIFT(Key_H);
+      event.state = INJECTED | IS_PRESSED;
+      Runtime.handleKeyEvent(event);
+      event.state = INJECTED | WAS_PRESSED;
+      Runtime.handleKeyEvent(event);
+
+      event.key = Key_I;
+      event.state = INJECTED | IS_PRESSED;
+      Runtime.handleKeyEvent(event);
+      event.state = INJECTED | WAS_PRESSED;
+      Runtime.handleKeyEvent(event);
+
+      event.key = LSHIFT(Key_1);
+      event.state = INJECTED | IS_PRESSED;
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+### Avoiding infinite loops
+
+One very important consideration for any plugin that calls `Runtime.handleKeyEvent()` from an `onKeyEvent()` handler is recursion.  `Runtime.handleKeyEvent()` will call all plugins' `onKeyEvent()` handlers, including the one that generated the event.  Therefore, we need to take some measures to short-circuit the resulting recursive call so that our plugin doesn't cause an infinite loop.
+
+Suppose the example plugin above was changed to type the string `hi!` instead of `Hi!`.  When sending the first generated event, with `event.key` set to `Key_H`, our plugin would recognize that event as one that should be acted on, and make another call to `Runtime.handleKeyEvent()`, which would again call `MyPlugin.onKeyEvent()`, and so on until the MCU ran out of memory on the stack.
+
+The simplest mechanism used by many plugins that mark their generated events "injected" is to simply ignore all generated events:
+
+```c++
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    if ((event.state & INJECTED) != 0)
+      return EventHandlerResult::OK;
+
+    if (event.key == Key_H && keyToggledOn(event.state)) {
+      event.state |= INJECTED;
+
+      event.key = LSHIFT(Key_H);
+      Runtime.handleKeyEvent(event);
+
+      event.key = Key_I;
+      Runtime.handleKeyEvent(event);
+
+      event.key = LSHIFT(Key_1);
+    }
+    return EventHandlerResult::OK;
+  }
+```
+
+There are other techniques to avoid inifinite loops, employed by plugins whose injected events should be processed by other plugins, but since most of those will be using the `onKeyswitchEvent()` handler instead of `onKeyEvent()`, we'll cover that later in this guide.
+
+## Physical keyswitch events
+
+Most plugins that respond to key events can do their work using the `onKeyEvent()` handler, but in some cases, it's necessary to use the `onKeyswitchEvent()` handler instead.  These event handlers are strictly intended for physical keyswitch events, and plugins that implement the `onKeyswitchEvent()` handler must abide by certain rules in order to work well with each other.  As a result, such a plugin is a bit more complex, but there are helper mechanisms to make things easier:
+
+```c++
+#include "kaleidoscope/KeyEventTracker.h"
+
+namespace kaleidoscope {
+namespace plugin {
+
+class MyKeyswitchPlugin : public Plugin {
+ public:
+  EventHandlerResult onKeyswitchEvent(KeyEvent &event) {
+    if (event_tracker_.shouldIgnore(event))
+      return EventHandlerResult::OK;
+    // Plugin logic goes here...
+    return EventHandlerResult::OK;
+  }
+ private:
+  KeyEventTracker event_tracker_;
+};
+
+} // namespace kaleidoscope
+} // namespace plugin
+
+kaleidoscope::plugin::MyKeyswitchPlugin;
+```
+
+We've just added a `KeyEventTracker` object to our plugin, and made the first line of its `onKeyswitchEvent()` handler call that event tracker's `shouldIgnore()` method, returning `OK` if it returns `true` (thereby ignoring the event).  Every plugin that implements `onKeyswitchEvent()` should follow this template to avoid plugin interaction bugs, including possible infinite loops.
+
+The main reason for this event tracker mechanism is that plugins with `onKeyswitchEvent()` handlers often delay events because some aspect of those events (usually `event.key`) needs to be determined by subsequent events or timeouts.  To do this, event information is stored, and the event is later regenerated by the plugin, which calls `Runtime.handleKeyswitchEvent()` so that the other `onKeyswitchEvent()` handlers can process it.
+
+We need to prevent infinite loops, but simply marking the regenerated event `INJECTED` is no good, because it would prevent the other plugins from acting on it, so we instead keep track of a monotonically increasing event id number and use the `KeyEventTracker` helper class to ignore events that our plugin has already recieved, so that when the plugin regenerates an event with the same event id, it (and all the plugins before it) can ignore that event, but the subsequent plugins, which haven't seen that event yet, will recongize it as new and process the event accordingly.
+
+### Regenerating stored events
+
+When a plugin that implements `onKeyswitchEvent()` regenerates a stored event later so that it can be processed by the next plugin in the chain, it must use the correct event id value (the same one used by the original event).  This is an object of type `EventId`, and is retrieved by calling `event.id()` (unlike the other properties of a `KeyEvent` object the event id is not directly accessible).
+
+```c++
+KeyEventId stored_id = event.id();
+```
+
+When reconstructing an event to allow it to proceed, we then use the four-argument version of the `KeyEvent` constructor:
+
+```c++
+KeyEvent event = KeyEvent(addr, state, key, stored_id);
+```
+
+In the above, `addr` and `state` are usually also the same as the original event's values, and `key` is most often the thing that changes.  If your plugin wants a keymap lookup to take place, the value `Key_Undefined` can be used instead of explicitly doing the lookup itself.
 
 ## Controlling LEDs
 
 ## HID reports
-
-## Physical keyswitch events
 
 ## Layer changes
