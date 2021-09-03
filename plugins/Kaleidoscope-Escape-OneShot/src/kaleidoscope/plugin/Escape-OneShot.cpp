@@ -33,7 +33,7 @@ EventHandlerResult EscapeOneShot::onKeyEvent(KeyEvent &event) {
   // sticky. Last, only if there are no OneShot keys currently being held.
   if (event.key == cancel_oneshot_key_ &&
       keyToggledOn(event.state) &&
-      (event.state & INJECTED) == 0 &&
+      !keyIsInjected(event.state) &&
       ::OneShot.isActive()) {
     // Cancel all OneShot keys
     ::OneShot.cancel(true);

@@ -56,7 +56,7 @@ EventHandlerResult Cycle::onNameQuery() {
 }
 
 EventHandlerResult Cycle::onKeyEvent(KeyEvent &event) {
-  if (event.state & INJECTED)
+  if (keyIsInjected(event.state))
     return EventHandlerResult::OK;
 
   if (!isCycle(event.key)) {
