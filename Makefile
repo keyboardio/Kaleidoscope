@@ -114,7 +114,7 @@ $(SMOKE_SKETCHES): force
 build-arduino-nightly-package:
 	perl bin/build-arduino-package \
 		--kaleidoscope-tag=master \
-		--version `date +%Y.%m.%d%H%M%S` \
+		--version `date +%Y.%-m.%-d%H%M%S` \
 		--index-filename-slug=kaleidoscope_master \
 		--only-one-platform-revision \
 		--push \
