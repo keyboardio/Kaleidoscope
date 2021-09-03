@@ -144,7 +144,7 @@ EventHandlerResult Heatmap::onKeyEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
 
   // if it is a synthetic key, skip it
-  if (event.state & INJECTED)
+  if (keyIsInjected(event.state))
     return EventHandlerResult::OK;
 
   // if the key is not toggled on, skip it

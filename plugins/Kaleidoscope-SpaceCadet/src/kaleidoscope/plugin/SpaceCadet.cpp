@@ -100,7 +100,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
 
   // If event.addr is not a physical key, ignore it; some other plugin injected
   // it. This check should be unnecessary.
-  if (!event.addr.isValid() || (event.state & INJECTED) != 0) {
+  if (!event.addr.isValid() || keyIsInjected(event.state)) {
     return EventHandlerResult::OK;
   }
 

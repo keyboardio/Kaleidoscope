@@ -68,7 +68,7 @@ EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
 
   // Always ignore events marked as artificially injected (it might actually be
   // better to drop this, but it's not really clear).
-  if (event.state & INJECTED)
+  if (keyIsInjected(event.state))
     return EventHandlerResult::OK;
 
   // If a Syster key gets pressed while we're reading an input sequence, ignore

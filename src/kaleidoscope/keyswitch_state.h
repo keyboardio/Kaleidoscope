@@ -50,3 +50,9 @@
  *   "key-up" event.
  */
 #define keyToggledOff(keyState) (keyWasPressed(keyState) && ! keyIsPressed(keyState))
+
+/* keyIsInjected(): This is true if the key was marked as injected by another
+ * plugin, i.e. it was generated artificially instead of corresponding to a
+ * "real" keypress.
+ */
+#define keyIsInjected(keyState) ((keyState) & INJECTED)

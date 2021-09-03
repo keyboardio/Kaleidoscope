@@ -44,7 +44,7 @@ namespace plugin {
 class OneShotInsert : public Plugin {
  public:
   EventHandlerResult onKeyEvent(KeyEvent &event) {
-    if (keyToggledOn(event.state) && (event.state & INJECTED) == 0 &&
+    if (keyToggledOn(event.state) && !keyIsInjected(event.state) &&
         event.key == Key_Insert && live_keys[event.addr] != event.key)
       ::OneShot.setPending(event.addr);
     return EventHandlerResult::OK;

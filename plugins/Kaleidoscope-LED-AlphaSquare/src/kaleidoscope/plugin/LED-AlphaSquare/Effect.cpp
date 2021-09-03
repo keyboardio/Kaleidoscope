@@ -68,7 +68,7 @@ EventHandlerResult AlphaSquareEffect::onKeyEvent(KeyEvent &event) {
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return EventHandlerResult::OK;
 
-  if (event.state & INJECTED)
+  if (keyIsInjected(event.state))
     return EventHandlerResult::OK;
 
   if (event.key < Key_A || event.key > Key_0)
