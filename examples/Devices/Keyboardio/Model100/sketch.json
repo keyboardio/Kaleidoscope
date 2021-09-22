@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:gd32:model100",
+    "port": ""
+  }
+}
