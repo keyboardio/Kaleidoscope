@@ -1,5 +1,5 @@
-/* kaleidoscope::driver::keyboardio::Model01Side
- * Copyright (C) 2015-2020  Keyboard.io, Inc
+/* kaleidoscope::driver::keyboardio::Model100Side
+ * Copyright (C) 2021  Keyboard.io, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include <Arduino.h>
-#include "Model01Side.h"
+#include "Model100Side.h"
 
 extern "C" {
 #include "kaleidoscope/device/keyboardio/twi.h"
@@ -40,7 +40,7 @@ namespace keyboardio {
 
 uint8_t twi_uninitialized = 1;
 
-Model01Side::Model01Side(byte setAd01) {
+Model100Side::Model100Side(byte setAd01) {
   ad01 = setAd01;
   addr = SCANNER_I2C_ADDR_BASE | ad01;
   if (twi_uninitialized--) {
@@ -49,7 +49,7 @@ Model01Side::Model01Side(byte setAd01) {
 }
 
 // Returns the relative controller addresss. The expected range is 0-3
-uint8_t Model01Side::controllerAddress() {
+uint8_t Model100Side::controllerAddress() {
   return ad01;
 }
 
@@ -70,7 +70,7 @@ uint8_t Model01Side::controllerAddress() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model01Side::setKeyscanInterval(byte delay) {
+byte Model100Side::setKeyscanInterval(byte delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 
@@ -81,18 +81,18 @@ byte Model01Side::setKeyscanInterval(byte delay) {
 
 
 // returns -1 on error, otherwise returns the scanner version integer
-int Model01Side::readVersion() {
+int Model100Side::readVersion() {
   return readRegister(TWI_CMD_VERSION);
 }
 
 // returns -1 on error, otherwise returns the scanner keyscan interval
-int Model01Side::readKeyscanInterval() {
+int Model100Side::readKeyscanInterval() {
   return readRegister(TWI_CMD_KEYSCAN_INTERVAL);
 }
 
 
 // returns -1 on error, otherwise returns the LED SPI Frequncy
-int Model01Side::readLEDSPIFrequency() {
+int Model100Side::readLEDSPIFrequency() {
   return readRegister(TWI_CMD_LED_SPI_FREQUENCY);
 }
 
@@ -101,7 +101,7 @@ int Model01Side::readLEDSPIFrequency() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model01Side::setLEDSPIFrequency(byte frequency) {
+byte Model100Side::setLEDSPIFrequency(byte frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 
@@ -110,7 +110,7 @@ byte Model01Side::setLEDSPIFrequency(byte frequency) {
 
 
 
-int Model01Side::readRegister(uint8_t cmd) {
+int Model100Side::readRegister(uint8_t cmd) {
 
   byte return_value = 0;
 
@@ -138,7 +138,7 @@ int Model01Side::readRegister(uint8_t cmd) {
 
 
 // gives information on the key that was just pressed or released.
-bool Model01Side::readKeys() {
+bool Model100Side::readKeys() {
 
   uint8_t rxBuffer[5];
 
@@ -155,11 +155,11 @@ bool Model01Side::readKeys() {
   }
 }
 
-keydata_t Model01Side::getKeyData() {
+keydata_t Model100Side::getKeyData() {
   return keyData;
 }
 
-void Model01Side::sendLEDData() {
+void Model100Side::sendLEDData() {
   sendLEDBank(nextLEDBank++);
   if (nextLEDBank == LED_BANKS) {
     nextLEDBank = 0;
@@ -168,7 +168,7 @@ void Model01Side::sendLEDData() {
 
 auto constexpr gamma8 = kaleidoscope::driver::color::gamma_correction;
 
-void Model01Side::sendLEDBank(byte bank) {
+void Model100Side::sendLEDBank(byte bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
   data[0]  = TWI_CMD_LED_BASE + bank;
   for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
@@ -187,7 +187,7 @@ void Model01Side::sendLEDBank(byte bank) {
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
-void Model01Side::setAllLEDsTo(cRGB color) {
+void Model100Side::setAllLEDsTo(cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
                     pgm_read_byte(&gamma8[color.b]),
                     pgm_read_byte(&gamma8[color.g]),
@@ -196,7 +196,7 @@ void Model01Side::setAllLEDsTo(cRGB color) {
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
-void Model01Side::setOneLEDTo(byte led, cRGB color) {
+void Model100Side::setOneLEDTo(byte led, cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
                     led,
                     pgm_read_byte(&gamma8[color.b]),

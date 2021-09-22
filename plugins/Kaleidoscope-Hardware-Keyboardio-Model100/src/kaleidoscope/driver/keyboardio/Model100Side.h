@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
-/* kaleidoscope::driver::keyboardio::Model01Side
- * Copyright (C) 2015-2020  Keyboard.io, Inc
+/* kaleidoscope::driver::keyboardio::Model100Side
+ * Copyright (C) 2021 Keyboard.io, Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,10 +60,10 @@ typedef union {
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 // used to configure interrupts, configuration for a particular controller
-class Model01Side {
+class Model100Side {
  public:
-  explicit Model01Side(byte setAd01);
-  ~Model01Side() {}
+  explicit Model100Side(byte setAd01);
+  ~Model100Side() {}
 
   int readVersion();
 
@@ -98,7 +98,7 @@ class Model01Side {
   int readRegister(uint8_t cmd);
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01Side;
+class Model100Side;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 } // namespace keyboardio

@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2020  Keyboard.io, Inc
+ * Kaleidoscope-Hardware-Model100 -- Keyboardio Model 100 hardware support for Kaleidoscope
+ * Copyright (C) 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,10 +15,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ARDUINO_AVR_MODEL01
+#ifdef ARDUINO_GD32_keyboardio_model_100
 
 #include "Arduino.h"                                 // for PROGMEM
-#include "kaleidoscope/device/keyboardio/Model01.h"  // for Model01LEDDriver...
+#include "kaleidoscope/device/keyboardio/Model100.h"  // for Model100LEDDriver...
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
@@ -31,23 +31,23 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-constexpr uint8_t Model01LEDDriverProps::key_led_map[] PROGMEM;
+constexpr uint8_t Model100LEDDriverProps::key_led_map[] PROGMEM;
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-/********* Model01Hands *********/
+/********* Model100Hands *********/
 
-struct Model01Hands {
-  static driver::keyboardio::Model01Side leftHand;
-  static driver::keyboardio::Model01Side rightHand;
+struct Model100Hands {
+  static driver::keyboardio::Model100Side leftHand;
+  static driver::keyboardio::Model100Side rightHand;
 
   static void setup();
 };
 
-driver::keyboardio::Model01Side Model01Hands::leftHand(0);
-driver::keyboardio::Model01Side Model01Hands::rightHand(3);
+driver::keyboardio::Model100Side Model100Hands::leftHand(0);
+driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
-void Model01Hands::setup(void) {
+void Model100Hands::setup(void) {
   // This lets the keyboard pull up to 1.6 amps from the host.
   // That violates the USB spec. But it sure is pretty looking
   DDRE |= _BV(6);
@@ -59,29 +59,29 @@ void Model01Hands::setup(void) {
 }
 
 /********* LED Driver *********/
-bool Model01LEDDriver::isLEDChanged = true;
+bool Model100LEDDriver::isLEDChanged = true;
 
-void Model01LEDDriver::setBrightness(uint8_t brightness) {
-  Model01Hands::leftHand.setBrightness(brightness);
-  Model01Hands::rightHand.setBrightness(brightness);
+void Model100LEDDriver::setBrightness(uint8_t brightness) {
+  Model100Hands::leftHand.setBrightness(brightness);
+  Model100Hands::rightHand.setBrightness(brightness);
   isLEDChanged = true;
 }
 
-uint8_t Model01LEDDriver::getBrightness() {
-  return Model01Hands::leftHand.getBrightness();
+uint8_t Model100LEDDriver::getBrightness() {
+  return Model100Hands::leftHand.getBrightness();
 }
 
-void Model01LEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
+void Model100LEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
   if (i < 32) {
     cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
-    Model01Hands::leftHand.ledData.leds[i] = crgb;
+    Model100Hands::leftHand.ledData.leds[i] = crgb;
   } else if (i < 64) {
     cRGB oldColor = getCrgbAt(i);
     isLEDChanged |= !(oldColor.r == crgb.r && oldColor.g == crgb.g && oldColor.b == crgb.b);
 
-    Model01Hands::rightHand.ledData.leds[i - 32] = crgb;
+    Model100Hands::rightHand.ledData.leds[i - 32] = crgb;
   } else {
     // TODO(anyone):
     // how do we want to handle debugging assertions about crazy user
@@ -89,18 +89,18 @@ void Model01LEDDriver::setCrgbAt(uint8_t i, cRGB crgb) {
   }
 }
 
-cRGB Model01LEDDriver::getCrgbAt(uint8_t i) {
+cRGB Model100LEDDriver::getCrgbAt(uint8_t i) {
   if (i >= 64)
     return {0, 0, 0};
 
   if (i < 32) {
-    return Model01Hands::leftHand.ledData.leds[i];
+    return Model100Hands::leftHand.ledData.leds[i];
   } else {
-    return Model01Hands::rightHand.ledData.leds[i - 32];
+    return Model100Hands::rightHand.ledData.leds[i - 32];
   }
 }
 
-void Model01LEDDriver::syncLeds() {
+void Model100LEDDriver::syncLeds() {
   if (!isLEDChanged)
     return;
 
@@ -110,63 +110,60 @@ void Model01LEDDriver::syncLeds() {
   // we run into a race condition with updating the next bank
   // on an ATTiny before it's done writing the previous one to memory
 
-  Model01Hands::leftHand.sendLEDData();
-  Model01Hands::rightHand.sendLEDData();
+  Model100Hands::leftHand.sendLEDData();
+  Model100Hands::rightHand.sendLEDData();
 
-  Model01Hands::leftHand.sendLEDData();
-  Model01Hands::rightHand.sendLEDData();
+  Model100Hands::leftHand.sendLEDData();
+  Model100Hands::rightHand.sendLEDData();
 
-  Model01Hands::leftHand.sendLEDData();
-  Model01Hands::rightHand.sendLEDData();
+  Model100Hands::leftHand.sendLEDData();
+  Model100Hands::rightHand.sendLEDData();
 
-  Model01Hands::leftHand.sendLEDData();
-  Model01Hands::rightHand.sendLEDData();
+  Model100Hands::leftHand.sendLEDData();
+  Model100Hands::rightHand.sendLEDData();
 
   isLEDChanged = false;
 }
 
-boolean Model01LEDDriver::ledPowerFault() {
-  if (PINB & _BV(4)) {
-    return true;
-  } else {
-    return false;
-  }
+boolean Model100LEDDriver::ledPowerFault() {
+	// TODO remove - obsolete
 }
 
 /********* Key scanner *********/
 
-driver::keyboardio::keydata_t Model01KeyScanner::leftHandState;
-driver::keyboardio::keydata_t Model01KeyScanner::rightHandState;
-driver::keyboardio::keydata_t Model01KeyScanner::previousLeftHandState;
-driver::keyboardio::keydata_t Model01KeyScanner::previousRightHandState;
+driver::keyboardio::keydata_t Model100KeyScanner::leftHandState;
+driver::keyboardio::keydata_t Model100KeyScanner::rightHandState;
+driver::keyboardio::keydata_t Model100KeyScanner::previousLeftHandState;
+driver::keyboardio::keydata_t Model100KeyScanner::previousRightHandState;
 
-void Model01KeyScanner::enableScannerPower(void) {
-  // Turn on power to the LED net
-  DDRC |= _BV(7);
-  PORTC |= _BV(7);
+void Model100KeyScanner::enableScannerPower(void) {
+  // Turn on power to the 5V net
+  //
+  pinMode(PC13, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PC13, LOW);
 }
 
-void Model01KeyScanner::setup() {
+void Model100KeyScanner::setup() {
   wdt_disable();
   delay(100);
   enableScannerPower();
 }
 
-void Model01KeyScanner::readMatrix() {
+void Model100KeyScanner::readMatrix() {
   //scan the Keyboard matrix looking for connections
   previousLeftHandState = leftHandState;
   previousRightHandState = rightHandState;
 
-  if (Model01Hands::leftHand.readKeys()) {
-    leftHandState = Model01Hands::leftHand.getKeyData();
+  if (Model100Hands::leftHand.readKeys()) {
+    leftHandState = Model100Hands::leftHand.getKeyData();
   }
 
-  if (Model01Hands::rightHand.readKeys()) {
-    rightHandState = Model01Hands::rightHand.getKeyData();
+  if (Model100Hands::rightHand.readKeys()) {
+    rightHandState = Model100Hands::rightHand.getKeyData();
   }
 }
 
-void Model01KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
+void Model100KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
   if ((colState != colPrevState) || (colState != 0)) {
     for (byte col = 0; col < 8; col++) {
       // Build up the key state for row, col
@@ -182,7 +179,7 @@ void Model01KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState,
   }
 }
 
-void Model01KeyScanner::actOnMatrixScan() {
+void Model100KeyScanner::actOnMatrixScan() {
   for (byte row = 0; row < 4; row++) {
     actOnHalfRow(row, leftHandState.rows[row], previousLeftHandState.rows[row], 7);
     actOnHalfRow(row, rightHandState.rows[row], previousRightHandState.rows[row], 15);
@@ -190,17 +187,17 @@ void Model01KeyScanner::actOnMatrixScan() {
 }
 
 
-void Model01KeyScanner::scanMatrix() {
+void Model100KeyScanner::scanMatrix() {
   readMatrix();
   actOnMatrixScan();
 }
 
-void Model01KeyScanner::setKeyscanInterval(uint8_t interval) {
-  Model01Hands::leftHand.setKeyscanInterval(interval);
-  Model01Hands::rightHand.setKeyscanInterval(interval);
+void Model100KeyScanner::setKeyscanInterval(uint8_t interval) {
+  Model100Hands::leftHand.setKeyscanInterval(interval);
+  Model100Hands::rightHand.setKeyscanInterval(interval);
 }
 
-bool Model01KeyScanner::isKeyswitchPressed(KeyAddr key_addr) {
+bool Model100KeyScanner::isKeyswitchPressed(KeyAddr key_addr) {
   auto row = key_addr.row();
   auto col = key_addr.col();
   if (col <= 7) {
@@ -210,7 +207,7 @@ bool Model01KeyScanner::isKeyswitchPressed(KeyAddr key_addr) {
   }
 }
 
-bool Model01KeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
+bool Model100KeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
   auto row = key_addr.row();
   auto col = key_addr.col();
   if (col <= 7) {
@@ -220,27 +217,25 @@ bool Model01KeyScanner::wasKeyswitchPressed(KeyAddr key_addr) {
   }
 }
 
-uint8_t Model01KeyScanner::pressedKeyswitchCount() {
+uint8_t Model100KeyScanner::pressedKeyswitchCount() {
   return __builtin_popcountl(leftHandState.all) + __builtin_popcountl(rightHandState.all);
 }
 
-uint8_t Model01KeyScanner::previousPressedKeyswitchCount() {
+uint8_t Model100KeyScanner::previousPressedKeyswitchCount() {
   return __builtin_popcountl(previousLeftHandState.all) + __builtin_popcountl(previousRightHandState.all);
 }
 
 /********* Hardware plugin *********/
 
-void Model01::setup() {
-  Model01Hands::setup();
-  kaleidoscope::device::Base<Model01Props>::setup();
-
-  TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
+void Model100::setup() {
+  Model100Hands::setup();
+  kaleidoscope::device::Base<Model100Props>::setup();
 }
 
-void Model01::enableHardwareTestMode() {
+void Model100::enableHardwareTestMode() {
   // Toggle the programming LEDS on
-  PORTD |= (1 << 5);
-  PORTB |= (1 << 0);
+  // TODO PORTD |= (1 << 5);
+  // TOOD PORTB |= (1 << 0);
 
   // Disable the debouncer on the ATTinys
   KeyScanner::setKeyscanInterval(2);

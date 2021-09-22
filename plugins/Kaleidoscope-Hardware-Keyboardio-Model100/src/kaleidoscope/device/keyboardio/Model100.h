@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Model01 -- Keyboard.io Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2020  Keyboard.io, Inc
+ * Kaleidoscope-Hardware-Model100 -- Keyboardio Model100 hardware support for Kaleidoscope
+ * Copyright (C) 2017-2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_AVR_MODEL01
+#ifdef ARDUINO_GD32_keyboardio_model_100
 
 #include <Arduino.h>
 
@@ -32,15 +32,15 @@ struct cRGB {
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/driver/keyboardio/Model01Side.h"
+#include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/led/Base.h"
-#include "kaleidoscope/driver/bootloader/avr/Caterina.h"
+#include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
+struct Model100LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 64;
   static constexpr uint8_t key_led_map[] PROGMEM = {
     3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60,
@@ -51,7 +51,7 @@ struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriverProps> {
+class Model100LEDDriver : public kaleidoscope::driver::led::Base<Model100LEDDriverProps> {
  public:
   static void syncLeds();
   static void setCrgbAt(uint8_t i, cRGB crgb);
@@ -66,19 +66,19 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
   static bool isLEDChanged;
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01LEDDriver;
+class Model100LEDDriver;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
+struct Model100KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
   static constexpr uint8_t matrix_rows = 4;
   static constexpr uint8_t matrix_columns = 16;
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01KeyScannerProps> {
+class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model100KeyScannerProps> {
  private:
-  typedef Model01KeyScanner ThisType;
+  typedef Model100KeyScanner ThisType;
  public:
   static void setup();
   static void scanMatrix();
@@ -103,21 +103,21 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void enableScannerPower();
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01KeyScanner;
+class Model100KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
-  typedef Model01LEDDriverProps  LEDDriverProps;
-  typedef Model01LEDDriver LEDDriver;
-  typedef Model01KeyScannerProps KeyScannerProps;
-  typedef Model01KeyScanner KeyScanner;
-  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
-  static constexpr const char *short_name = "kbio01";
+struct Model100Props : public kaleidoscope::device::BaseKeyboardProps {
+  typedef Model100LEDDriverProps  LEDDriverProps;
+  typedef Model100LEDDriver LEDDriver;
+  typedef Model100KeyScannerProps KeyScannerProps;
+  typedef Model100KeyScanner KeyScanner;
+  typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
+  static constexpr const char *short_name = "kbio100";
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
+class Model100 : public kaleidoscope::device::Base<Model100Props> {
  public:
   void setup();
 
@@ -129,7 +129,7 @@ class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
 } // namespace keyboardio
 } // namespace device
 
-EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model01)
+EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model100)
 
 }
 

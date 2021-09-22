@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Keyboardio-Model01 -- Keyboardio Model01 hardware support for Kaleidoscope
- * Copyright (C) 2017-2019  Keyboard.io, Inc
+ * Kaleidoscope-Hardware-Keyboardio-Model100 -- Keyboardio Model100 hardware support for Kaleidoscope
+ * Copyright (C) 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Model01.h"
+#include "kaleidoscope/device/keyboardio/Model100.h"
