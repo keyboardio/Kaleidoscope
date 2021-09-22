@@ -435,6 +435,13 @@ As a developer, one can continue using `millis()`, but migrating to `Kaleidoscop
 
 ## Breaking changes
 
+###
+
+`kaleidoscope-builder` has been removed.
+
+We replaced it with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation. 
+
+
 ### OneShot meta keys
 
 The special OneShot keys `OneShot_MetaStickyKey` & `OneShot_ActiveStickyKey` are no longer handled by the OneShot plugin directly, but instead by a separate OneShotMetaKeys plugin. If you use these keys in your sketch, you will need to add the new plugin, and register it after OneShot in `KALEIDOSCOPE_INIT_PLUGINS()` for those keys to work properly.
