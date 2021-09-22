@@ -126,7 +126,7 @@ void Model100LEDDriver::syncLeds() {
 }
 
 boolean Model100LEDDriver::ledPowerFault() {
-	// TODO remove - obsolete
+  // TODO remove - obsolete
 }
 
 /********* Key scanner *********/
