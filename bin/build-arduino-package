@@ -16,81 +16,74 @@ use Cwd qw/abs_path cwd/;
 use JSON::PP;
 use Getopt::Long;
 
-my $avr_platform_template = {
-    'archiveFileName'   => $filename,
-    'toolsDependencies' => [
-        {
-            "packager" => "arduino",
-            "name"     => "avr-gcc",
-            "version"  => "7.3.0-atmel3.6.1-arduino7"
-        },
-        {
-            "packager" => "arduino",
-            "name"     => "avrdude",
-            "version"  => "6.3.0-arduino17"
-        }
-    ],
-    'url'      => $build_base_url . '/' . $filename,
-    'name'     => "Kaleidoscope keyboards",
-    'version'  => $version,
-    'checksum' => 'SHA-256:' . $sha256,
-    'size'     => $size,
-    'boards'   => [
-        { 'name' => 'Keyboardio Model 01' }, { 'name' => 'Keyboardio Atreus' }
-    ],
-    'architecture' => 'avr',
-    'category'     => 'Contributed',
-    'help'         => {
-        'online' => 'https://community.keyboard.io'
-    }
-};
-
-my $gd32_platform_template = {
-    'archiveFileName'   => $filename,
-    'url'               => $build_base_url . '/' . $filename,
-    'name'              => "Kaleidoscope keyboards (GD32)",
-    'version'           => $version,
-    'checksum'          => 'SHA-256:' . $sha256,
-    'size'              => $size,
-    'architecture'      => 'gd32',
-    'toolsDependencies' => [
-        {
-            'name'     => 'xpack-arm-none-eabi-gcc',
-            'packager' => 'GD32Community',
-            'version'  => '9.3.1-1.3'
-        },
-        {
-            'packager' => 'GD32Community',
-            'version'  => '0.11.0-1',
-            'name'     => 'xpack-openocd'
-        },
-        {
-            'name'     => 'dfu-util',
-            'version'  => '0.10.0-arduino1',
-            'packager' => 'GD32Community'
-        }
-    ],
-    'version' => '0.0.1',
-    'name'    => 'Kaleidoscope Keyboards (GD32)',
-    'boards'  => [
-        {
-            'name' => 'Keyboardio Model 100'
-        }
-    ],
-    'category' => 'Contributed',
-    'help'     => {
-        'online' => 'https://community.keyboard.io'
-    }
-};
-
 my $sha256 = 0;
 my $size   = 0;
 
+my $platforms_template = {
+    avr => {
+        'toolsDependencies' => [
+            {
+                "packager" => "arduino",
+                "name"     => "avr-gcc",
+                "version"  => "7.3.0-atmel3.6.1-arduino7"
+            },
+            {
+                "packager" => "arduino",
+                "name"     => "avrdude",
+                "version"  => "6.3.0-arduino17"
+            }
+        ],
+        'name'   => "Kaleidoscope keyboards",
+        'boards' => [
+            { 'name' => 'Keyboardio Model 01' },
+            { 'name' => 'Keyboardio Atreus' }
+        ],
+        'architecture' => 'avr',
+        'category'     => 'Contributed',
+        'help'         => {
+            'online' => 'https://community.keyboard.io'
+        }
+    },
+    gd32 => {
+        'name'              => "Kaleidoscope keyboards (GD32)",
+        'architecture'      => 'gd32',
+        'toolsDependencies' => [
+            {
+                'name'     => 'xpack-arm-none-eabi-gcc',
+                'packager' => 'GD32Community',
+                'version'  => '9.3.1-1.3'
+            },
+            {
+                'packager' => 'GD32Community',
+                'version'  => '0.11.0-1',
+                'name'     => 'xpack-openocd'
+            },
+            {
+                'name'     => 'dfu-util',
+                'version'  => '0.10.0-arduino1',
+                'packager' => 'GD32Community'
+            }
+        ],
+        'version' => '0.0.1',
+        'name'    => 'Kaleidoscope Keyboards (GD32)',
+        'boards'  => [
+            {
+                'name' => 'Keyboardio Model 100'
+            }
+        ],
+        'category' => 'Contributed',
+        'help'     => {
+            'online' => 'https://community.keyboard.io'
+        }
+    }
+};
 my $version             = '';
 my $tag                 = 'master';
 my $kaleidoscope_tag    = 'master';
 my $working_dir         = tempdir( CLEANUP => 0 );
 my $index_filename_slug = 'keyboardio';
+my $output_dir          = $working_dir . '/boards_manager_repo';
+my $builds_dir          = $output_dir . '/builds';
 
 my $only_latest_platform = 0;
 
@@ -116,8 +109,7 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
-my $checkout_dir = "Kaleidoscope-$version";
-my $filename     = $checkout_dir . ".tar.bz2";
+my $checkout_dir = 'kaleidoscope-checkout';
 
 my $build_base_url = $boards_repo . "/master/builds/";
 $build_base_url =~ s|^ssh://git\@github.com|https://raw.githubusercontent.com|;
@@ -126,68 +118,58 @@ $build_base_url =~ s|^https?://github.com|https://raw.githubusercontent.com|;
 print "Working directory: $working_dir\n";
 chdir($working_dir);
 
-clone_repos();
+clone_repos( $tag, $bundle_repo, $checkout_dir, $boards_repo );
 
-print "cd $checkout_dir\n";
-chdir($checkout_dir);
-my @bundle_dirs_to_remove =
-  qw|toolchain etc doc avr/build-tools avr/bootloaders/*/lufa avr/libraries/Kaleidoscope/testing avr/libraries/Kaleidoscope/tests avr/libraries/Kaleidoscope/docs|;
-
-foreach my $dir_to_remove (@bundle_dirs_to_remove) {
-    print "rm -rf $dir_to_remove\n";
-    `rm -rf $dir_to_remove`;
-}
-
-chdir("avr/libraries/Kaleidoscope");
-
-checkout_kaleidoscope($kaleidoscope_tag);
-
-lift_plugins_to_arduino_libs();
-set_plugin_versions();
-
-chdir($working_dir);
-`mv $checkout_dir/avr $checkout_dir/$checkout_dir`
-  ;    # A hack to get consistent naming with the old setup
-`find $checkout_dir -name .git |xargs rm -rf`;
-`tar cjvf $filename -C $checkout_dir/ $checkout_dir `;
-
-$sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
-chomp($sha256);
-die "There was a problem generating the sha256" unless ($sha256);
-
-$size = -s $filename;
-`mkdir -p boardsmanager/builds`;
+chdir( $working_dir . "/" . $checkout_dir );
 if ($only_latest_platform) {
-    `rm -rf boardsmanager/builds/*`;
+    `rm -rf $builds_dir/*`;
 }
-`cp $filename boardsmanager/builds/`;
 
-update_index_file();
+foreach my $arch (qw(avr gd32)) {
 
-chdir('boardsmanager');
+    remove_unneeded_files($arch);
 
-commit_results();
+    # Get the specified Kaleidoscope build and all its plugins as libraries
+    # into the checkout
+    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
+    checkout_kaleidoscope($kaleidoscope_tag);
 
-if ($push_package_repo) {
-    `git push`;
+    lift_plugins_to_arduino_libs();
+    set_plugin_versions( $working_dir, $checkout_dir, $arch, $version );
+
+    chdir($working_dir);
+
+    my $release_dir = "Kaleidoscope-$arch-$version";
+    my $filename    = $release_dir . ".tar.bz2";
+
+    build_archive( $arch, $checkout_dir, $release_dir, $filename );
+    deploy_build( $builds_dir, $filename );
+
 }
-else {
 
-    print
-"Now, you need to cd to $working_dir/boardsmanager check the content and push it\n";
-}
+update_index_file( $output_dir, $index_filename );
+chdir("$output_dir");
+commit_results($index_filename);
+finalize_action($push_package_repo);
 
 exit 0;
 
 sub set_plugin_versions {
-    chdir("$working_dir/$checkout_dir/avr/libraries");
+    my $working_dir  = shift;
+    my $checkout_dir = shift;
+    my $arch         = shift;
+    my $version      = shift;
+    chdir("$working_dir/$checkout_dir/$arch/libraries");
     `perl -pi -e's/version=0.0.0/version=$version/' */library.properties`;
 }
 
 sub clone_repos {
-
+    my $tag          = shift;
+    my $bundle_repo  = shift;
+    my $checkout_dir = shift;
+    my $boards_repo  = shift;
 `git clone --depth=1 --quiet --recurse-submodules --branch $tag $bundle_repo $checkout_dir`;
-    `git clone $boards_repo boardsmanager`;
+    `git clone $boards_repo $output_dir`;
 }
 
 sub checkout_kaleidoscope {
@@ -205,31 +187,99 @@ sub lift_plugins_to_arduino_libs {
 }
 
 sub update_index_file {
+    my $output_dir     = shift;
+    my $index_filename = shift;
 
     my $json = JSON::PP->new->allow_nonref;
     local $/;
-    open( my $fh, '<', 'boardsmanager/' . $index_filename )
-      || die "Could not open boardsmanager/$index_filename $!";
+
+    my $index_path = $output_dir . '/' . $index_filename;
+
+    open( my $fh, '<', $index_path )
+      || die "Could not open $index_path $!";
     my $json_text = <$fh>;
     my $data      = decode_json($json_text);
     if ($only_latest_platform) {
         @{ $data->{'packages'}->[0]->{'platforms'} } =
-          ( $avr_platform_template, $gd32_platform_template );
+          ( $platforms_template->{'avr'}, $platforms_template->{'gd32'} );
     }
     else {
         push @{ $data->{'packages'}->[0]->{'platforms'} },
-          $avr_platform_template,
-          $gd32_platform_template;
+          $platforms_template->{'avr'},
+          $platforms_template->{'gd32'};
     }
     my $json_out = $json->canonical->pretty->encode($data);
-    open( my $out_fh, '>', 'boardsmanager/' . $index_filename );
+    open( my $out_fh, '>', $index_path );
     print $out_fh $json_out;
     close($out_fh);
 }
 
 sub commit_results {
-
+    my $index_filename = shift;
     `git add $index_filename`;
     `git add builds`;
     `git commit -a -m 'Built by $executed_as'`;
+}
+
+sub remove_unneeded_files {
+    my $arch = shift;
+
+    my @bundle_dirs_to_remove = (
+        "etc",
+        "doc",
+        $arch . '/bootloaders/*/lufa',
+        "$arch/libraries/Kaleidoscope/testing",
+        "$arch/libraries/Kaleidoscope/tests",
+        "$arch/libraries/Kaleidoscope/docs"
+    );
+
+    foreach my $dir_to_remove (@bundle_dirs_to_remove) {
+        print "rm -rf $dir_to_remove\n";
+        `rm -rf $dir_to_remove`;
+    }
+}
+
+sub deploy_build {
+    my $builds_dir = shift;
+    my $filename   = shift;
+    `mkdir -p $builds_dir`;
+    `cp $filename $builds_dir/`;
+}
+
+sub build_archive {
+    my $arch         = shift;
+    my $checkout_dir = shift;
+    my $release_dir  = shift;
+    my $filename     = shift;
+
+    `mv $checkout_dir/$arch $checkout_dir/$release_dir`;
+    ;    # A hack to get consistent naming with the old setup
+    `find $checkout_dir/$release_dir -name .git |xargs rm -rf`;
+    `tar cjvf $filename -C $checkout_dir/ $release_dir `;
+
+    $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
+    chomp($sha256);
+    die "There was a problem generating the sha256" unless ($sha256);
+    $size = -s $filename;
+
+    $platforms_template->{$arch}->{'archiveFileName'} = $filename;
+    $platforms_template->{$arch}->{'url'} = $build_base_url . '/' . $filename;
+    $platforms_template->{$arch}->{'version'}  = $version;
+    $platforms_template->{$arch}->{'checksum'} = 'SHA-256:' . $sha256;
+    $platforms_template->{$arch}->{'size'}     = $size;
+
+}
+
+sub finalize_action {
+    my $do_push = shift;
+
+    if ($do_push) {
+        `git push`;
+    }
+    else {
+
+        print
+          "Now, you need to cd to $output_dir check the content and push it\n";
+    }
+
 }
