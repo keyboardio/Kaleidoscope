@@ -105,16 +105,16 @@ GetOptions(
 
 my $index_filename = 'package_' . $index_filename_slug . '_index.json';
 
+my $main_branch_name = 'main';
+
 if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
 my $checkout_dir = 'kaleidoscope-checkout';
 
-my $build_base_url = $boards_repo . "/master/builds";
-$build_base_url =~ s|^ssh://git\@github.com|https://raw.githubusercontent.com|;
-$build_base_url =~ s|^https?://github.com|https://raw.githubusercontent.com|;
-
+my $build_base_url = $boards_repo . "/raw/$main_branch_name/builds";
+$build_base_url =~ s|^ssh://git\@github.com|https://github.com|;
 print "Working directory: $working_dir\n";
 chdir($working_dir);
 
