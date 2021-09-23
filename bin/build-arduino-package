@@ -199,6 +199,13 @@ sub update_index_file {
       || die "Could not open $index_path $!";
     my $json_text = <$fh>;
     my $data      = decode_json($json_text);
+
+    my $this_packager = $data->{'packages'}->[0]->{'name'};
+    foreach my $tool (@{$platforms_template->{'gd32'}->{'toolsDependencies'}}) {
+		# we need to set the packager of these tools to ourself, since that's what arduino expects
+	    $tool->{"packager"} = $this_packager;
+	}
+
     if ($only_latest_platform) {
         @{ $data->{'packages'}->[0]->{'platforms'} } =
           ( $platforms_template->{'avr'}, $platforms_template->{'gd32'} );
