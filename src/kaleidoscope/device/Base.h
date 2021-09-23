@@ -74,8 +74,12 @@ class Base {
    public:
     NoOpSerial() {}
     void begin(uint32_t baud) {}
-    size_t print(...) { return 0; }
-    size_t println(...) { return 0; }
+    size_t print(...) {
+      return 0;
+    }
+    size_t println(...) {
+      return 0;
+    }
     int peek() {
       return 0;
     }
