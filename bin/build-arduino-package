@@ -111,7 +111,7 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
 
 my $checkout_dir = 'kaleidoscope-checkout';
 
-my $build_base_url = $boards_repo . "/master/builds/";
+my $build_base_url = $boards_repo . "/master/builds";
 $build_base_url =~ s|^ssh://git\@github.com|https://raw.githubusercontent.com|;
 $build_base_url =~ s|^https?://github.com|https://raw.githubusercontent.com|;
 
