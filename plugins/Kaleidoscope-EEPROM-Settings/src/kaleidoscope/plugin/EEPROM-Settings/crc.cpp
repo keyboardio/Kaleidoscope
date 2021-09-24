@@ -66,4 +66,4 @@ CRC_::update(const void *data, uint8_t len) {
   crc &= 0xffff;
 }
 
-CRC_ CRC;
+CRC_ CRCCalculator;

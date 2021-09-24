@@ -101,7 +101,7 @@ void EEPROMSettings::ignoreHardcodedLayers(bool value) {
 void EEPROMSettings::seal(void) {
   sealed_ = true;
 
-  CRC.finalize();
+  CRCCalculator.finalize();
 
   if (settings_.version != VERSION_CURRENT) {
     is_valid_ = false;
@@ -109,9 +109,9 @@ void EEPROMSettings::seal(void) {
   }
 
   if (settings_.crc == 0xffff) {
-    settings_.crc = CRC.crc;
+    settings_.crc = CRCCalculator.crc;
     update();
-  } else if (settings_.crc != CRC.crc) {
+  } else if (settings_.crc != CRCCalculator.crc) {
     return;
   }
 
@@ -134,7 +134,7 @@ uint16_t EEPROMSettings::requestSlice(uint16_t size) {
   uint16_t start = next_start_;
   next_start_ += size;
 
-  CRC.update((const void *)&size, sizeof(size));
+  CRCCalculator.update((const void *)&size, sizeof(size));
 
   return start;
 }
@@ -159,7 +159,7 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
     DEFAULT_LAYER,
     IS_VALID,
     GET_VERSION,
-    CRC,
+    GET_CRC,
   } sub_command;
 
   if (::Focus.handleHelp(command, PSTR("settings.defaultLayer\nsettings.valid?\nsettings.version\nsettings.crc")))
@@ -175,7 +175,7 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   else if (strcmp_P(command + 9, PSTR("version")) == 0)
     sub_command = GET_VERSION;
   else if (strcmp_P(command + 9, PSTR("crc")) == 0)
-    sub_command = CRC;
+    sub_command = GET_CRC;
   else
     return EventHandlerResult::OK;
 
@@ -196,8 +196,8 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   case GET_VERSION:
     ::Focus.send(::EEPROMSettings.version());
     break;
-  case CRC:
-    ::Focus.sendRaw(::CRC.crc, F("/"), ::EEPROMSettings.crc());
+  case GET_CRC:
+    ::Focus.sendRaw(::CRCCalculator.crc, F("/"), ::EEPROMSettings.crc());
     break;
   }
 

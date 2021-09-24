@@ -43,4 +43,4 @@ class CRC_ {
   void reflect(uint8_t len);
 };
 
-extern CRC_ CRC;
+extern CRC_ CRCCalculator;
