@@ -26,7 +26,11 @@
  * this workaround.
  */
 
+#ifndef _INIT_HID_GETSHORTNAME
+
 #define _INIT_HID_GETSHORTNAME                        __NL__ \
   uint8_t HID_::getShortName(char *name) {            __NL__ \
     return Kaleidoscope.device().getShortName(name);  __NL__ \
   }
+
+#endif
