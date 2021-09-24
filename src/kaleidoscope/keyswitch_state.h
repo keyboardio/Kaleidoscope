@@ -19,9 +19,9 @@
 
 #include <Arduino.h>
 
-#define INJECTED    B10000000
-#define IS_PRESSED  B00000010
-#define WAS_PRESSED B00000001
+#define INJECTED    0b10000000
+#define IS_PRESSED  0b00000010
+#define WAS_PRESSED 0b00000001
 
 /* keyIsPressed(): This is true if the key is pressed during this scan cycle.
  * This will be true for several consecutive cycles even for a single tap of
