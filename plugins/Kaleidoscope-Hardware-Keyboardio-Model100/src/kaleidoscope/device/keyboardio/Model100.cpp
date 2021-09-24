@@ -23,8 +23,6 @@
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include <KeyboardioHID.h>
-#include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
@@ -50,12 +48,12 @@ driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 void Model100Hands::setup(void) {
   // This lets the keyboard pull up to 1.6 amps from the host.
   // That violates the USB spec. But it sure is pretty looking
-  DDRE |= _BV(6);
-  PORTE &= ~_BV(6);
+// TODO   DDRE |= _BV(6);
+// TODO   PORTE &= ~_BV(6);
 
   // Set B4, the overcurrent check to an input with an internal pull-up
-  DDRB &= ~_BV(4);	// set bit, input
-  PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
+// TODO   DDRB &= ~_BV(4);	// set bit, input
+// TODO   PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
 }
 
 /********* LED Driver *********/
@@ -144,7 +142,7 @@ void Model100KeyScanner::enableScannerPower(void) {
 }
 
 void Model100KeyScanner::setup() {
-  wdt_disable();
+  // TODO wdt_disable();
   delay(100);
   enableScannerPower();
 }

@@ -29,11 +29,11 @@ struct cRGB {
   uint8_t r;
 };
 
-#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
@@ -106,7 +106,7 @@ class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model10
 class Model100KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model100Props : public kaleidoscope::device::BaseKeyboardProps {
+struct Model100Props : public kaleidoscope::device::BaseProps {
   typedef Model100LEDDriverProps  LEDDriverProps;
   typedef Model100LEDDriver LEDDriver;
   typedef Model100KeyScannerProps KeyScannerProps;
