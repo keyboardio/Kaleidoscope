@@ -15,7 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ARDUINO_GD32_keyboardio_model_100
+#ifdef ARDUINO_keyboardio_model_100
 
 #include "Arduino.h"                                 // for PROGMEM
 #include "kaleidoscope/device/keyboardio/Model100.h"  // for Model100LEDDriver...

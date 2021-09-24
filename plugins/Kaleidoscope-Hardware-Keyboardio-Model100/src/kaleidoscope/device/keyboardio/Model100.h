@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_GD32_keyboardio_model_100
+#ifdef ARDUINO_keyboardio_model_100
 
 #include <Arduino.h>
 
