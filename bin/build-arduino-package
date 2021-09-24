@@ -16,8 +16,7 @@ use Cwd qw/abs_path cwd/;
 use JSON::PP;
 use Getopt::Long;
 
-my $sha256 = 0;
-my $size   = 0;
+my @ARCHES = 	(qw(avr gd32));
 
 my $platforms_template = {
     avr => {
@@ -87,16 +86,17 @@ my $builds_dir          = $output_dir . '/builds';
 
 my $only_latest_platform = 0;
 
-my $bundle_repo =
-  'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
-my $boards_repo       = 'https://github.com/keyboardio/boardsmanager';
+my $bundle_repo = 'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
+my $gd32_core_repo = 'https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio';
+my $package_repo       = 'https://github.com/keyboardio/boardsmanager';
+
 my $push_package_repo = 0;
 
 GetOptions(
     "bundle-tag=s"               => \$tag,
     "kaleidoscope-tag=s"         => \$kaleidoscope_tag,
     "bundle-repo=s"              => \$bundle_repo,
-    "output-repo=s"              => \$boards_repo,
+    "output-repo=s"              => \$package_repo,
     "index-filename-slug=s"      => \$index_filename_slug,
     "version=s"                  => \$version,
     "only-one-platform-revision" => \$only_latest_platform,
@@ -113,19 +113,19 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
 
 my $checkout_dir = 'kaleidoscope-checkout';
 
-my $build_base_url = $boards_repo . "/raw/$main_branch_name/builds";
+my $build_base_url = $package_repo . "/raw/$main_branch_name/builds";
 $build_base_url =~ s|^ssh://git\@github.com|https://github.com|;
 print "Working directory: $working_dir\n";
 chdir($working_dir);
 
-clone_repos( $tag, $bundle_repo, $checkout_dir, $boards_repo );
+clone_repos( $tag, $bundle_repo, $gd32_core_repo, $checkout_dir, $package_repo );
 
 chdir( $working_dir . "/" . $checkout_dir );
 if ($only_latest_platform) {
     `rm -rf $builds_dir/*`;
 }
 
-foreach my $arch (qw(avr gd32)) {
+foreach my $arch (@ARCHES) {
 
     remove_unneeded_files($arch);
 
@@ -166,10 +166,17 @@ sub set_plugin_versions {
 sub clone_repos {
     my $tag          = shift;
     my $bundle_repo  = shift;
+    my $gd32_repo = shift;
     my $checkout_dir = shift;
-    my $boards_repo  = shift;
+    my $package_repo  = shift;
+    my $gd32_tag = $tag;
+    if ($gd32_tag eq 'master') {
+	    $gd32_tag = 'main';
+    }
 `git clone --depth=1 --quiet --recurse-submodules --branch $tag $bundle_repo $checkout_dir`;
-    `git clone $boards_repo $output_dir`;
+
+`git clone --depth=1 --quiet --recurse-submodules --branch $gd32_tag $gd32_repo $checkout_dir/gd32`;
+    `git clone $package_repo $output_dir`;
 }
 
 sub checkout_kaleidoscope {
@@ -264,10 +271,10 @@ sub build_archive {
     `find $checkout_dir/$release_dir -name .git |xargs rm -rf`;
     `tar cjvf $filename -C $checkout_dir/ $release_dir `;
 
-    $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
+    my $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
     chomp($sha256);
     die "There was a problem generating the sha256" unless ($sha256);
-    $size = -s $filename;
+    my $size = -s $filename;
 
     $platforms_template->{$arch}->{'archiveFileName'} = $filename;
     $platforms_template->{$arch}->{'url'} = $build_base_url . '/' . $filename;
