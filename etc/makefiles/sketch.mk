@@ -209,12 +209,21 @@ ensure-device-port-defined:
 	echo ;\
 	exit -1;fi
 
-flash: ensure-device-port-defined
+ifneq ($(FQBN),)
+fqbn_arg = --fqbn $(FQBN)
+endif
+
+ifneq ($(KALEIDOSCOPE_DEVICE_PORT),)
+port_arg = --port $(KALEIDOSCOPE_DEVICE_PORT)
+endif
+
+
+flash: 
 	$(info $(unescaped_flashing_instructions))
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
 	@$(shell read _)
-	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
+	$(QUIET) $(ARDUINO_CLI) upload $(fqbn_arg) \
 	  --input-dir "${OUTPUT_PATH}" \
-	  --port $(KALEIDOSCOPE_DEVICE_PORT) $(ARDUINO_VERBOSE)
+	  $(port_arg) $(ARDUINO_VERBOSE)
