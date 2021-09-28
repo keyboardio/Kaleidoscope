@@ -96,6 +96,7 @@ class Model100Side {
   byte nextLEDBank = 0;
   void sendLEDBank(byte bank);
   int readRegister(uint8_t cmd);
+  uint8_t writeData(uint8_t* data, uint8_t length);
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model100Side;
