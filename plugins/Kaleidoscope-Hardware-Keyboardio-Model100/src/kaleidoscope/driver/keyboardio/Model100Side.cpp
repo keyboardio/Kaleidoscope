@@ -41,9 +41,6 @@ uint8_t twi_uninitialized = 1;
 Model100Side::Model100Side(byte setAd01) {
   ad01 = setAd01;
   addr = SCANNER_I2C_ADDR_BASE | ad01;
-  if (twi_uninitialized--) {
-// TODO twi_init();
-  }
 }
 
 // Returns the relative controller addresss. The expected range is 0-3
@@ -130,32 +127,35 @@ int Model100Side::readRegister(uint8_t cmd) {
   uint8_t rxBuffer[1] = {0};
 
   // perform blocking read into buffer
-  uint8_t read ; // TODO = twi_readFrom(addr, rxBuffer, ELEMENTS(rxBuffer), true);
-  if (read > 0) {
-    return rxBuffer[0];
-  } else {
-    return -1;
-  }
 
+  Wire.requestFrom(addr, 1);    // request 1 byte from the keyscanner
+  if (Wire.available()) {
+	return Wire.read();
+  } else {
+	return -1;
+  }
+  
 }
 
 
 // gives information on the key that was just pressed or released.
 bool Model100Side::readKeys() {
 
-  uint8_t rxBuffer[5] = {0};
-
+   uint8_t row_counter = 0;
   // perform blocking read into buffer
-  uint8_t read ; // TODO = twi_readFrom(addr, rxBuffer, ELEMENTS(rxBuffer), true);
-  if (rxBuffer[0] == TWI_REPLY_KEYDATA) {
-    keyData.rows[0] = rxBuffer[1];
-    keyData.rows[1] = rxBuffer[2];
-    keyData.rows[2] = rxBuffer[3];
-    keyData.rows[3] = rxBuffer[4];
-    return true;
-  } else {
-    return false;
+  uint8_t read = 0;
+  Wire.requestFrom(addr, 5);    // request 1 byte from the keyscanner
+  if (Wire.available()) {
+	read = Wire.read();
+	if (TWI_REPLY_KEYDATA == read) {
+
+	while (Wire.available()) {
+		keyData.rows[row_counter++] = Wire.read();
+	}
+	return true;
+	}
   }
+  return false;
 }
 
 keydata_t Model100Side::getKeyData() {
