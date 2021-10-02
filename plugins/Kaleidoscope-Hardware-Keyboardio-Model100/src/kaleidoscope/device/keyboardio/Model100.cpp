@@ -54,12 +54,12 @@ void Model100Hands::setup(void) {
 // TODO   PORTE &= ~_BV(6);
 
 
-// Turn on the switched 5V network. 
-// TODO - make sure this happens at least 100ms after USB connect 
+// Turn on the switched 5V network.
+// TODO - make sure this happens at least 100ms after USB connect
 // to satisfy inrush limits
-pinMode(PC13, OUTPUT_OPEN_DRAIN);
-digitalWrite(PC13, LOW);
-Wire.begin();
+  pinMode(PC13, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PC13, LOW);
+  Wire.begin();
   // Set B4, the overcurrent check to an input with an internal pull-up
 // TODO   DDRB &= ~_BV(4);	// set bit, input
 // TODO   PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
@@ -109,7 +109,7 @@ cRGB Model100LEDDriver::getCrgbAt(uint8_t i) {
 
 void Model100LEDDriver::syncLeds() {
   if (!isLEDChanged)
-   return;
+    return;
   // LED Data is stored in four "banks" for each side
   // We send it all at once to make it look nicer.
   // We alternate left and right hands because otherwise

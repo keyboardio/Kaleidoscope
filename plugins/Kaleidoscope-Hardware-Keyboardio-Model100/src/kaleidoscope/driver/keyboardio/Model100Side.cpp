@@ -67,7 +67,7 @@ uint8_t Model100Side::controllerAddress() {
 // https://www.arduino.cc/en/Reference/WireEndTransmission
 byte Model100Side::setKeyscanInterval(byte delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
-  uint8_t result = writeData( data, ELEMENTS(data));
+  uint8_t result = writeData(data, ELEMENTS(data));
   return result;
 }
 
@@ -103,9 +103,9 @@ byte Model100Side::setLEDSPIFrequency(byte frequency) {
 }
 
 
-uint8_t Model100Side::writeData(uint8_t *data,uint8_t length) {
+uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
   Wire.beginTransmission(addr);
-  Wire.write( data, length);
+  Wire.write(data, length);
   uint8_t result = Wire.endTransmission();
   return result;
 }
@@ -130,30 +130,30 @@ int Model100Side::readRegister(uint8_t cmd) {
 
   Wire.requestFrom(addr, 1);    // request 1 byte from the keyscanner
   if (Wire.available()) {
-	return Wire.read();
+    return Wire.read();
   } else {
-	return -1;
+    return -1;
   }
-  
+
 }
 
 
 // gives information on the key that was just pressed or released.
 bool Model100Side::readKeys() {
 
-   uint8_t row_counter = 0;
+  uint8_t row_counter = 0;
   // perform blocking read into buffer
   uint8_t read = 0;
   Wire.requestFrom(addr, 5);    // request 1 byte from the keyscanner
   if (Wire.available()) {
-	read = Wire.read();
-	if (TWI_REPLY_KEYDATA == read) {
+    read = Wire.read();
+    if (TWI_REPLY_KEYDATA == read) {
 
-	while (Wire.available()) {
-		keyData.rows[row_counter++] = Wire.read();
-	}
-	return true;
-	}
+      while (Wire.available()) {
+        keyData.rows[row_counter++] = Wire.read();
+      }
+      return true;
+    }
   }
   return false;
 }
@@ -180,9 +180,9 @@ void Model100Side::sendLEDBank(byte bank) {
      * that results in a considerably smoother curve. */
     uint8_t c = ledData.bytes[bank][i];
     if (c > brightness_adjustment_)
-     c -= brightness_adjustment_;
+      c -= brightness_adjustment_;
     else
-    c = 0;
+      c = 0;
 
     data[i + 1] = c;
   }
@@ -192,8 +192,8 @@ void Model100Side::sendLEDBank(byte bank) {
 void Model100Side::setAllLEDsTo(cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
                     color.b,
-		    color.g,
-	  	    color.r
+                    color.g,
+                    color.r
                    };
   uint8_t result  = writeData(data, ELEMENTS(data));
 }
@@ -202,8 +202,8 @@ void Model100Side::setOneLEDTo(byte led, cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
                     led,
                     color.b,
-		    color.g,
-	  	    color.r
+                    color.g,
+                    color.r
                    };
   uint8_t result  = writeData(data, ELEMENTS(data));
 
