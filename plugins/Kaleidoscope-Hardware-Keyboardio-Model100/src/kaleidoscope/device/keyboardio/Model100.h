@@ -21,6 +21,10 @@
 
 #define _INIT_HID_GETSHORTNAME // warning "TODO: remove this directive once we have HID"
 
+#ifndef EEPROM_EMULATION_SIZE
+#define EEPROM_EMULATION_SIZE 4096
+#endif
+
 #include <Arduino.h>
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
@@ -33,7 +37,7 @@ struct cRGB {
 
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
-//TODO #include "kaleidoscope/driver/storage/GD32Flash.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 #include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/device/Base.h"
@@ -43,7 +47,9 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-// TODO struct Model100StorageProps: kaleidoscope::driver::storage::GD32FlashProps {};
+struct Model100StorageProps: public kaleidoscope::driver::storage::GD32FlashProps {
+  static constexpr uint16_t length = EEPROM_EMULATION_SIZE;
+};
 
 
 struct Model100LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
@@ -117,8 +123,8 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
   typedef Model100LEDDriver LEDDriver;
   typedef Model100KeyScannerProps KeyScannerProps;
   typedef Model100KeyScanner KeyScanner;
-  // TODO typedef Model100StorageProps StorageProps;
-  // TODO typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
+  typedef Model100StorageProps StorageProps;
+  typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
 
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
   static constexpr const char *short_name = "kbio100";
