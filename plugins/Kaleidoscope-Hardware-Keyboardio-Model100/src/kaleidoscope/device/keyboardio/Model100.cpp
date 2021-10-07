@@ -48,21 +48,7 @@ driver::keyboardio::Model100Side Model100Hands::leftHand(0);
 driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
 void Model100Hands::setup(void) {
-  // This lets the keyboard pull up to 1.6 amps from the host.
-  // That violates the USB spec. But it sure is pretty looking
-// TODO   DDRE |= _BV(6);
-// TODO   PORTE &= ~_BV(6);
-
-
-// Turn on the switched 5V network.
-// TODO - make sure this happens at least 100ms after USB connect
-// to satisfy inrush limits
-  pinMode(PC13, OUTPUT_OPEN_DRAIN);
-  digitalWrite(PC13, LOW);
   Wire.begin();
-  // Set B4, the overcurrent check to an input with an internal pull-up
-// TODO   DDRB &= ~_BV(4);	// set bit, input
-// TODO   PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
 }
 
 /********* LED Driver *********/
@@ -143,11 +129,22 @@ driver::keyboardio::keydata_t Model100KeyScanner::previousLeftHandState;
 driver::keyboardio::keydata_t Model100KeyScanner::previousRightHandState;
 
 void Model100KeyScanner::enableScannerPower(void) {
+// Turn on the switched 5V network.
+//  make sure this happens at least 100ms after USB connect
+// to satisfy inrush limits
+  //
+  pinMode(PB9, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PB9, LOW);
+}
+
+void Model100KeyScanner::disableScannerPower(void) {
   // Turn on power to the 5V net
   //
-  pinMode(PC13, OUTPUT_OPEN_DRAIN);
-  digitalWrite(PC13, LOW);
+  pinMode(PB9, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PB9, HIGH);
 }
+
+
 
 void Model100KeyScanner::setup() {
   // TODO wdt_disable();
@@ -234,6 +231,7 @@ uint8_t Model100KeyScanner::previousPressedKeyswitchCount() {
 /********* Hardware plugin *********/
 
 void Model100::setup() {
+  Model100KeyScanner::setup();
   Model100Hands::setup();
   kaleidoscope::device::Base<Model100Props>::setup();
 }
