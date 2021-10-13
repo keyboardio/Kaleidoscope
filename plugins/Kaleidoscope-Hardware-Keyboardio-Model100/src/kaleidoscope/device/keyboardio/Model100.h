@@ -113,6 +113,7 @@ class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model10
 
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();
+  static void disableScannerPower();
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model100KeyScanner;
