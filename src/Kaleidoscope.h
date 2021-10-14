@@ -18,6 +18,7 @@
 
 #include <Arduino.h>
 
+#if 0
 //end of add your includes here
 #ifdef __cplusplus
 extern "C" {
@@ -26,6 +27,7 @@ void loop();
 void setup();
 #ifdef __cplusplus
 } // extern "C"
+#endif
 #endif
 
 //add your function definitions for the project KeyboardIO here
