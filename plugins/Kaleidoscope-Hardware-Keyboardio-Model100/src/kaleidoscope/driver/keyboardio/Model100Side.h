@@ -78,9 +78,12 @@ class Model100Side {
   void setAllLEDsTo(cRGB color);
   keydata_t getKeyData();
   bool readKeys();
-  LEDData_t ledData;
-  uint8_t controllerAddress();
 
+  LEDData_t ledData;
+
+  uint8_t controllerAddress();
+  bool isDeviceAvailable();
+  void markDeviceUnavailable();
   void setBrightness(uint8_t brightness) {
     brightness_adjustment_ = 255 - brightness;
   }
@@ -93,6 +96,10 @@ class Model100Side {
   int addr;
   int ad01;
   keydata_t keyData;
+  // a value of 0 is "device seen" - anything else is how many cycles before we should 
+  // check for the device
+  uint16_t unavailable_device_check_countdown_ = 1;
+  static const uint16_t UNAVAILABLE_DEVICE_COUNTDOWN_MAX = 0xFFFFU;
   byte nextLEDBank = 0;
   void sendLEDBank(byte bank);
   int readRegister(uint8_t cmd);
