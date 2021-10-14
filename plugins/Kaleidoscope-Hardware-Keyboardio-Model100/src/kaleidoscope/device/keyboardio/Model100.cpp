@@ -48,12 +48,12 @@ driver::keyboardio::Model100Side Model100Hands::leftHand(0);
 driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
 void Model100Hands::setup(void) {
-	delay(100);
+  delay(100);
   pinMode(PB9, OUTPUT_OPEN_DRAIN);
   digitalWrite(PB9, LOW);
   delay(105); // TODO remove this when we remove it from the attiny code
   Wire.begin();
-    Wire.setClock(400000);
+  Wire.setClock(400000);
 
 }
 

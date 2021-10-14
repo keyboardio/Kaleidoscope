@@ -96,7 +96,7 @@ class Model100Side {
   int addr;
   int ad01;
   keydata_t keyData;
-  // a value of 0 is "device seen" - anything else is how many cycles before we should 
+  // a value of 0 is "device seen" - anything else is how many cycles before we should
   // check for the device
   uint16_t unavailable_device_check_countdown_ = 1;
   static const uint16_t UNAVAILABLE_DEVICE_COUNTDOWN_MAX = 0xFFFFU;

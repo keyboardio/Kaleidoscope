@@ -107,49 +107,51 @@ byte Model100Side::setLEDSPIFrequency(byte frequency) {
 // This method will verify that the device is around and ready to talk.
 bool Model100Side::isDeviceAvailable() {
 // if we don’t know the device is around,
-	return true;
-    // if the counter is zero, that's the special value that means "we know it's there"
-    if (unavailable_device_check_countdown_ == 0) {
-        return true;
-    }
+  return true;
+  // if the counter is zero, that's the special value that means "we know it's there"
+  if (unavailable_device_check_countdown_ == 0) {
+    return true;
+  }
 
-    // if the time to check counter is 1, check for the device
+  // if the time to check counter is 1, check for the device
 
-    else if ( --unavailable_device_check_countdown_ == 0 ) {
-        uint8_t wire_result;
-        Wire.beginTransmission(addr);
-        wire_result = Wire.endTransmission();
-        //if the check succeeds
-        if (wire_result == 0) {
-	    unavailable_device_check_countdown_ = 0; // TODO this is already true
-            return true;
-        } else {
-		Wire.beginTransmission (wire_result);
-        	wire_result = Wire.endTransmission();
-
-            // set the time to check counter to max
-            unavailable_device_check_countdown_ = UNAVAILABLE_DEVICE_COUNTDOWN_MAX;
-            return false;
-        }
+  else if (--unavailable_device_check_countdown_ == 0) {
+    uint8_t wire_result;
+    Wire.beginTransmission(addr);
+    wire_result = Wire.endTransmission();
+    //if the check succeeds
+    if (wire_result == 0) {
+      unavailable_device_check_countdown_ = 0; // TODO this is already true
+      return true;
     } else {
-        // we've decremented the counter, but it's not time to probe for the device yet.
-        return false;
+      Wire.beginTransmission(wire_result);
+      wire_result = Wire.endTransmission();
+
+      // set the time to check counter to max
+      unavailable_device_check_countdown_ = UNAVAILABLE_DEVICE_COUNTDOWN_MAX;
+      return false;
     }
+  } else {
+    // we've decremented the counter, but it's not time to probe for the device yet.
+    return false;
+  }
 
 }
 
 void Model100Side::markDeviceUnavailable() {
-     unavailable_device_check_countdown_ = 1; // We think there was a comms problem. Check on the next cycle
+  unavailable_device_check_countdown_ = 1; // We think there was a comms problem. Check on the next cycle
 }
 
 uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
-  if (isDeviceAvailable() == false ) {
-	  return 1;
+  if (isDeviceAvailable() == false) {
+    return 1;
   }
   Wire.beginTransmission(addr);
   Wire.write(data, length);
   uint8_t result = Wire.endTransmission();
-  if (result) { markDeviceUnavailable(); }
+  if (result) {
+    markDeviceUnavailable();
+  }
   return result;
 }
 
@@ -160,7 +162,7 @@ int Model100Side::readRegister(uint8_t cmd) {
 
   // If the setup failed, return. This means there was a problem asking for the register
   if (result) {
-	return -1;
+    return -1;
   }
 
   delayMicroseconds(15); // TODO We may be able to drop this in the future
@@ -185,18 +187,18 @@ int Model100Side::readRegister(uint8_t cmd) {
 
 // gives information on the key that was just pressed or released.
 bool Model100Side::readKeys() {
-  if (isDeviceAvailable() == false ) {
-	  return false;
+  if (isDeviceAvailable() == false) {
+    return false;
   }
 
   uint8_t row_counter = 0;
   // perform blocking read into buffer
   uint8_t read = 0;
-  uint8_t bytes_returned =0;
+  uint8_t bytes_returned = 0;
   bytes_returned = Wire.requestFrom(addr, 5);    // request 5 bytes from the keyscanner
- if (bytes_returned < 5) {
-	return false;
- }
+  if (bytes_returned < 5) {
+    return false;
+  }
   if (Wire.available()) {
     read = Wire.read();
     if (TWI_REPLY_KEYDATA == read) {
