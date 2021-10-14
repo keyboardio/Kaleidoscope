@@ -53,6 +53,8 @@ void Model100Hands::setup(void) {
   digitalWrite(PB9, LOW);
   delay(105); // TODO remove this when we remove it from the attiny code
   Wire.begin();
+    Wire.setClock(400000);
+
 }
 
 /********* LED Driver *********/
