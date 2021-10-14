@@ -123,10 +123,6 @@ void Model100LEDDriver::syncLeds() {
   isLEDChanged = false;
 }
 
-boolean Model100LEDDriver::ledPowerFault() {
-  // TODO remove - obsolete
-}
-
 /********* Key scanner *********/
 
 driver::keyboardio::keydata_t Model100KeyScanner::leftHandState;
