@@ -37,11 +37,10 @@ struct cRGB {
 
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/driver/storage/GD32Flash.h"
+#include "kaleidoscope/driver/hid/RCMComposite.h"
 #include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/device/Base.h"
-#include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -124,9 +123,8 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
   typedef Model100KeyScannerProps KeyScannerProps;
   typedef Model100KeyScanner KeyScanner;
   typedef Model100StorageProps StorageProps;
-  typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
-
-  typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
+  typedef kaleidoscope::driver::hid::RCMCompositeProps HIDProps;
+  typedef kaleidoscope::driver::hid::RCMComposite<HIDProps> HID;
   static constexpr const char *short_name = "kbio100";
 };
 
@@ -135,6 +133,10 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
 class Model100 : public kaleidoscope::device::Base<Model100Props> {
  public:
   void setup();
+
+  auto serialPort() -> decltype(kaleidoscope::driver::hid::rcmcomposite::CompositeSerial) & {
+    return kaleidoscope::driver::hid::rcmcomposite::CompositeSerial;
+  }
 
   static void enableHardwareTestMode();
 };
