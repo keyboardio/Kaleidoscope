@@ -57,23 +57,22 @@ class BootKeyboardWrapper {
   }
 
   bool isKeyPressed(uint8_t code) {
-    //return BootKeyboard.isKeyPressed(code);
-    return 0;
+    return RCMKeyboard.isKeyPressed(code);
+  }
+  bool wasKeyPressed(uint8_t code) {
+    return RCMKeyboard.wasKeyPressed(code);
   }
   bool isModifierActive(uint8_t code) {
-    //return BootKeyboard.isModifierActive(code);
-    return 0;
+    return RCMKeyboard.isModifierActive(code);
   }
   bool wasModifierActive(uint8_t code) {
-    //return BootKeyboard.wasModifierActive(code);
-    return 0;
+    return RCMKeyboard.wasModifierActive(code);
   }
   bool isAnyModifierActive() {
-    //return BootKeyboard.isAnyModifierActive();
-    return 0;
+    return RCMKeyboard.isAnyModifierActive();
   }
   bool wasAnyModifierActive() {
-    //return BootKeyboard.wasAnyModifierActive();
+    return RCMKeyboard.wasAnyModifierActive();
     return 0;
   }
 
