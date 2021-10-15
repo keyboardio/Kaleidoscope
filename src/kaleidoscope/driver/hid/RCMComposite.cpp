@@ -1,5 +1,5 @@
-/* -*- mode: c++ -*-
- * Kaleidoscope - Firmware for computer input devices
+// -*- mode: c++ -*-
+/* Kaleidoscope - Firmware for computer input devices
  * Copyright (C) 2021  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -15,17 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef KBIO_TEST
-
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+#include "kaleidoscope/driver/hid/RCMComposite.h"
 
 namespace kaleidoscope {
-namespace device {
-namespace stm32 {
+namespace driver {
+namespace hid {
+namespace rcmcomposite {
 
-} // namespace stm32
-} // namespace device
+USBHID RCMHID;
+HIDKeyboard RCMKeyboard(RCMHID);
+USBCompositeSerial CompositeSerial;
+
+} // namespace rcmcomposite
+} // namespace hid
+} // namespace driver
 } // namespace kaleidoscope
-
-#endif // ifdef KBIO_TEST

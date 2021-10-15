@@ -22,16 +22,25 @@
 #include <Arduino.h>
 
 #include "kaleidoscope/device/Base.h"
+#include "kaleidoscope/driver/hid/RCMComposite.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace stm32 {
 
-struct TestProps: kaleidoscope::device::BaseProps {
+struct TestProps: public kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::hid::RCMCompositeProps HIDProps;
+  typedef kaleidoscope::driver::hid::RCMComposite<HIDProps> HID;
+
   static constexpr const char *short_name = "KBIOTest";
 };
 
-class Test: public kaleidoscope::device::Base<TestProps> {};
+class Test: public kaleidoscope::device::Base<TestProps> {
+ public:
+  auto serialPort() -> decltype(kaleidoscope::driver::hid::rcmcomposite::CompositeSerial) & {
+    return kaleidoscope::driver::hid::rcmcomposite::CompositeSerial;
+  }
+};
 
 #define PER_KEY_DATA(dflt,                                           \
          R0C0, R0C1                                                  \
