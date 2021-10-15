@@ -46,8 +46,8 @@ template <typename _Props>
 class RCMComposite: public Base<_Props> {
  public:
   void setup() {
-    //rcmcomposite::RCMHID.begin(rcmcomposite::CompositeSerial, HID_KEYBOARD_MOUSE);
-    rcmcomposite::RCMHID.begin(HID_KEYBOARD_MOUSE);
+    rcmcomposite::RCMHID.begin(rcmcomposite::CompositeSerial, HID_KEYBOARD);
+    while(!USBComposite);
   }
 };
 

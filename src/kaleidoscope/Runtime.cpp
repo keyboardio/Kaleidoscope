@@ -30,6 +30,11 @@ Runtime_::Runtime_(void) {
 // ----------------------------------------------------------------------------
 void
 Runtime_::setup(void) {
+  kaleidoscope::sketch_exploration::pluginsExploreSketch();
+  kaleidoscope::Hooks::onSetup();
+
+  device().setup();
+
   // We are explicitly initializing the Serial port as early as possible to
   // (temporarily, hopefully) work around an issue on OSX. If we initialize
   // Serial too late, no matter what we do, we'll end up reading garbage from
@@ -38,12 +43,7 @@ Runtime_::setup(void) {
   //
   // TODO(anyone): Figure out a way we can get rid of this, and fix the bug
   // properly.
-  device().serialPort().begin(9600);
-
-  kaleidoscope::sketch_exploration::pluginsExploreSketch();
-  kaleidoscope::Hooks::onSetup();
-
-  device().setup();
+  //device().serialPort().begin(9600);
 
   // Clear the keyboard state array (all keys idle at start)
   live_keys.clear();
