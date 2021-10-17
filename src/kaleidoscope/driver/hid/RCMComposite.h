@@ -23,7 +23,7 @@
 #include "kaleidoscope/driver/hid/Base.h"
 
 #include "rcmcomposite/Keyboard.h"
-//#include "rcmcomposite/Mouse.h"
+#include "rcmcomposite/Mouse.h"
 
 namespace kaleidoscope {
 namespace driver {
@@ -38,7 +38,8 @@ extern USBCompositeSerial CompositeSerial;
 const uint8_t report_description_[] = {
   HID_BOOT_KEYBOARD_REPORT_DESCRIPTOR(),
   HID_KEYBOARD_REPORT_DESCRIPTOR(2),
-  HID_CONSUMER_REPORT_DESCRIPTOR(3)
+  HID_CONSUMER_REPORT_DESCRIPTOR(3),
+  HID_MOUSE_REPORT_DESCRIPTOR(4)
 };
 
 }
@@ -46,8 +47,8 @@ const uint8_t report_description_[] = {
 struct RCMCompositeProps: public BaseProps {
   typedef rcmcomposite::KeyboardProps KeyboardProps;
   typedef rcmcomposite::Keyboard<KeyboardProps> Keyboard;
-  //  typedef rcmcomposite::MouseProps MouseProps;
-  //  typedef rcmcomposite::Mouse<MouseProps> Mouse;
+  typedef rcmcomposite::MouseProps MouseProps;
+  typedef rcmcomposite::Mouse<MouseProps> Mouse;
 };
 
 template <typename _Props>

@@ -26,6 +26,7 @@ USBHID RCMHID;
 HIDKeyboard RCMBootKeyboard(RCMHID, 0);
 HIDKeyboard RCMKeyboard(RCMHID);
 HIDConsumer RCMConsumer(RCMHID);
+HIDMouse RCMMouse(RCMHID);
 USBCompositeSerial CompositeSerial;
 
 } // namespace rcmcomposite
