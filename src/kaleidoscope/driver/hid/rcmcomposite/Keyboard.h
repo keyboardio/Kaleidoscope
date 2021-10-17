@@ -27,8 +27,9 @@ namespace driver {
 namespace hid {
 namespace rcmcomposite {
 
-extern USBHID RCMHID;
+extern HIDKeyboard RCMBootKeyboard;
 extern HIDKeyboard RCMKeyboard;
+extern HIDConsumer RCMConsumer;
 
 class BootKeyboardWrapper {
  public:
@@ -38,6 +39,56 @@ class BootKeyboardWrapper {
 
   uint8_t getProtocol() {
     return 0;
+  }
+  void setProtocol(uint8_t protocol) {}
+  void setDefaultProtocol(uint8_t protocol) {}
+
+  void sendReport() {
+    RCMBootKeyboard.sendReport();
+  }
+
+  void press(uint8_t code) {
+    RCMBootKeyboard.press(code);
+  }
+  void release(uint8_t code) {
+    RCMBootKeyboard.release(code);
+  }
+  void releaseAll() {
+    RCMBootKeyboard.releaseAll();
+  }
+
+  bool isKeyPressed(uint8_t code) {
+    return RCMBootKeyboard.isKeyPressed(code);
+  }
+  bool wasKeyPressed(uint8_t code) {
+    return RCMBootKeyboard.wasKeyPressed(code);
+  }
+  bool isModifierActive(uint8_t code) {
+    return RCMBootKeyboard.isModifierActive(code);
+  }
+  bool wasModifierActive(uint8_t code) {
+    return RCMBootKeyboard.wasModifierActive(code);
+  }
+  bool isAnyModifierActive() {
+    return RCMBootKeyboard.isAnyModifierActive();
+  }
+  bool wasAnyModifierActive() {
+    return RCMBootKeyboard.wasAnyModifierActive();
+  }
+
+  uint8_t getLeds() {
+    return RCMBootKeyboard.getLEDs();
+  }
+};
+
+class SixKROKeyboardWrapper {
+ public:
+  SixKROKeyboardWrapper() {}
+
+  void begin() {}
+
+  uint8_t getProtocol() {
+    return 1;
   }
   void setProtocol(uint8_t protocol) {}
   void setDefaultProtocol(uint8_t protocol) {}
@@ -73,7 +124,6 @@ class BootKeyboardWrapper {
   }
   bool wasAnyModifierActive() {
     return RCMKeyboard.wasAnyModifierActive();
-    return 0;
   }
 
   uint8_t getLeds() {
@@ -81,8 +131,32 @@ class BootKeyboardWrapper {
   }
 };
 
+class ConsumerControlWrapper {
+ public:
+  ConsumerControlWrapper() {}
+
+  void begin() {
+    RCMConsumer.begin();
+  }
+
+  void sendReport() {
+  }
+  void releaseAll() {
+    RCMConsumer.release();
+  }
+
+  void press(uint16_t code) {
+    RCMConsumer.press(code);
+  }
+  void release(uint16_t code) {
+    RCMConsumer.release();
+  }
+};
+
 struct KeyboardProps: public base::KeyboardProps {
   typedef BootKeyboardWrapper BootKeyboard;
+  typedef SixKROKeyboardWrapper NKROKeyboard;
+  typedef ConsumerControlWrapper ConsumerControl;
 };
 
 template <typename _Props>

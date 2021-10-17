@@ -23,7 +23,9 @@ namespace hid {
 namespace rcmcomposite {
 
 USBHID RCMHID;
+HIDKeyboard RCMBootKeyboard(RCMHID, 0);
 HIDKeyboard RCMKeyboard(RCMHID);
+HIDConsumer RCMConsumer(RCMHID);
 USBCompositeSerial CompositeSerial;
 
 } // namespace rcmcomposite

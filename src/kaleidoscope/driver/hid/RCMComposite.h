@@ -31,8 +31,16 @@ namespace hid {
 
 namespace rcmcomposite {
 extern USBHID RCMHID;
-extern HIDKeyboard RCMKeyboard;
+extern HIDKeyboard RCMBootKeyboard;
+extern HIDConsumer RCMConsumer;
 extern USBCompositeSerial CompositeSerial;
+
+const uint8_t report_description_[] = {
+  HID_BOOT_KEYBOARD_REPORT_DESCRIPTOR(),
+  HID_KEYBOARD_REPORT_DESCRIPTOR(2),
+  HID_CONSUMER_REPORT_DESCRIPTOR(3)
+};
+
 }
 
 struct RCMCompositeProps: public BaseProps {
@@ -46,8 +54,12 @@ template <typename _Props>
 class RCMComposite: public Base<_Props> {
  public:
   void setup() {
-    rcmcomposite::RCMHID.begin(rcmcomposite::CompositeSerial, HID_KEYBOARD);
+    rcmcomposite::RCMHID.begin(rcmcomposite::CompositeSerial,
+                               rcmcomposite::report_description_,
+                               sizeof(rcmcomposite::report_description_));
     while(!USBComposite);
+
+    rcmcomposite::RCMBootKeyboard.begin();
   }
 };
 
