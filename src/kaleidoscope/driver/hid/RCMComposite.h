@@ -30,16 +30,14 @@ namespace driver {
 namespace hid {
 
 namespace rcmcomposite {
+
 extern USBHID RCMHID;
-extern HIDKeyboard RCMBootKeyboard;
-extern HIDConsumer RCMConsumer;
 extern USBCompositeSerial CompositeSerial;
 
 const uint8_t report_description_[] = {
   HID_BOOT_KEYBOARD_REPORT_DESCRIPTOR(),
-  HID_KEYBOARD_REPORT_DESCRIPTOR(2),
-  HID_CONSUMER_REPORT_DESCRIPTOR(3),
-  HID_MOUSE_REPORT_DESCRIPTOR(4)
+  HID_CONSUMER_REPORT_DESCRIPTOR(),
+  HID_MOUSE_REPORT_DESCRIPTOR()
 };
 
 }

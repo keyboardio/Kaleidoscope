@@ -28,7 +28,6 @@ namespace hid {
 namespace rcmcomposite {
 
 extern HIDKeyboard RCMBootKeyboard;
-extern HIDKeyboard RCMKeyboard;
 extern HIDConsumer RCMConsumer;
 
 class BootKeyboardWrapper {
@@ -81,56 +80,6 @@ class BootKeyboardWrapper {
   }
 };
 
-class SixKROKeyboardWrapper {
- public:
-  SixKROKeyboardWrapper() {}
-
-  void begin() {}
-
-  uint8_t getProtocol() {
-    return 1;
-  }
-  void setProtocol(uint8_t protocol) {}
-  void setDefaultProtocol(uint8_t protocol) {}
-
-  void sendReport() {
-    RCMKeyboard.sendReport();
-  }
-
-  void press(uint8_t code) {
-    RCMKeyboard.press(code);
-  }
-  void release(uint8_t code) {
-    RCMKeyboard.release(code);
-  }
-  void releaseAll() {
-    RCMKeyboard.releaseAll();
-  }
-
-  bool isKeyPressed(uint8_t code) {
-    return RCMKeyboard.isKeyPressed(code);
-  }
-  bool wasKeyPressed(uint8_t code) {
-    return RCMKeyboard.wasKeyPressed(code);
-  }
-  bool isModifierActive(uint8_t code) {
-    return RCMKeyboard.isModifierActive(code);
-  }
-  bool wasModifierActive(uint8_t code) {
-    return RCMKeyboard.wasModifierActive(code);
-  }
-  bool isAnyModifierActive() {
-    return RCMKeyboard.isAnyModifierActive();
-  }
-  bool wasAnyModifierActive() {
-    return RCMKeyboard.wasAnyModifierActive();
-  }
-
-  uint8_t getLeds() {
-    return RCMKeyboard.getLEDs();
-  }
-};
-
 class ConsumerControlWrapper {
  public:
   ConsumerControlWrapper() {}
@@ -155,7 +104,6 @@ class ConsumerControlWrapper {
 
 struct KeyboardProps: public base::KeyboardProps {
   typedef BootKeyboardWrapper BootKeyboard;
-  typedef SixKROKeyboardWrapper NKROKeyboard;
   typedef ConsumerControlWrapper ConsumerControl;
 };
 
