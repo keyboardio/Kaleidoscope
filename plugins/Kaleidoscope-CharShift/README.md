@@ -31,12 +31,12 @@ plugin that changes the event's `Key` value to that of an CharShift key.
 
 To use CharShift, we must first define `KeyPair` objects, which can then be
 referenced by entries in the keymap.  This is easiest to do by using the
-`UNKEYS()` preprocessor macro in the sketch's `setup()` function, as follows:
+`CS_KEYS()` preprocessor macro in the sketch's `setup()` function, as follows:
 
 ```c++
 void setup() {
   Kaleidoscope.setup();
-  UNKEYS(
+  CS_KEYS(
     kaleidoscope::plugin::KeyPair(Key_Comma, Key_Semicolon),                   // `,`/`;`
     kaleidoscope::plugin::KeyPair(Key_Period, LSHIFT(Key_Semicolon)),          // `.`/`:`
     kaleidoscope::plugin::KeyPair(LSHIFT(Key_9), Key_LeftBracket),             // `(`/`[`
@@ -52,10 +52,10 @@ doesn't have the `shift` modifier flag (i.e. `LSHIFT()`) applied to it, the held
 `shift` modifier will be suppressed when the key is pressed, allowing the
 "unshifted" symbol to be produced.
 
-These `KeyPair`s can be referred to in the sketch's keymap by using the `UK()`
+These `KeyPair`s can be referred to in the sketch's keymap by using the `CS()`
 preprocessor macro, which takes an integer argument, referring to items in the
-`UNKEYS()` array, starting with zero.  With the example above, an entry of
-`UK(2)` will output `(` when pressed without `shift`, and `[` if `shift` is
+`CS_KEYS()` array, starting with zero.  With the example above, an entry of
+`CS(2)` will output `(` when pressed without `shift`, and `[` if `shift` is
 being held.
 
 ## Further reading
