@@ -46,11 +46,6 @@ namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
-struct Model100StorageProps: public kaleidoscope::driver::storage::GD32FlashProps {
-  static constexpr uint16_t length = EEPROM_EMULATION_SIZE;
-};
-
-
 struct Model100LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 64;
   static constexpr uint8_t key_led_map[] PROGMEM = {
@@ -122,7 +117,6 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
   typedef Model100LEDDriver LEDDriver;
   typedef Model100KeyScannerProps KeyScannerProps;
   typedef Model100KeyScanner KeyScanner;
-  typedef Model100StorageProps StorageProps;
   typedef kaleidoscope::driver::hid::RCMCompositeProps HIDProps;
   typedef kaleidoscope::driver::hid::RCMComposite<HIDProps> HID;
   static constexpr const char *short_name = "kbio100";

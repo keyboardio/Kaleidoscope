@@ -25,7 +25,6 @@
 #include <Arduino.h>
 #include "Model100Side.h"
 #include <Wire.h>
-#include <utility/twi.h>
 
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 
