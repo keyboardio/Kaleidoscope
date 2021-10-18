@@ -58,6 +58,25 @@ preprocessor macro, which takes an integer argument, referring to items in the
 `CS(2)` will output `(` when pressed without `shift`, and `[` if `shift` is
 being held.
 
+## Adding CharShift keys in Chrysalis
+
+As of this writing, CharShift keys can't be defined in Chrysalis; they can only
+be defined in a custom sketch (see above).  This doesn't mean that you can't use
+them in Chrysalis-defined keymaps, however.  To add a CharShift key in
+Chrysalis, select `Custom key code`, and add the offset `53631` to the index number of the
+CharShift key.
+
+In other words, where you would use `CS(2)` in a Kaleidoscope sketch, you would
+need to use `53633` (`53631 + 2`) as the custom key code in Chrysalis.  Any
+CharShift keys referenced in this way still need to be defined in a custom
+Kaleidoscope sketch (see above), but they can still be used in a Chrysalis
+keymap.
+
+In general, the formula for the Chrysalis custom key code corresponding to the
+CharShift key with index `N` is:
+
+`CS(N)` ⟹ `53631 + N`
+
 ## Further reading
 
 Starting from the [example][plugin:example] is the recommended way of getting
