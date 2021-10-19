@@ -37,10 +37,10 @@ referenced by entries in the keymap.  This is easiest to do by using the
 void setup() {
   Kaleidoscope.setup();
   CS_KEYS(
-    kaleidoscope::plugin::KeyPair(Key_Comma, Key_Semicolon),                   // `,`/`;`
-    kaleidoscope::plugin::KeyPair(Key_Period, LSHIFT(Key_Semicolon)),          // `.`/`:`
-    kaleidoscope::plugin::KeyPair(LSHIFT(Key_9), Key_LeftBracket),             // `(`/`[`
-    kaleidoscope::plugin::KeyPair(LSHIFT(Key_Comma), LSHIFT(Key_LeftBracket)), // `<`/`{`
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, Key_Semicolon),                   // `,`/`;`
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Period, LSHIFT(Key_Semicolon)),          // `.`/`:`
+    kaleidoscope::plugin::CharShift::KeyPair(LSHIFT(Key_9), Key_LeftBracket),             // `(`/`[`
+    kaleidoscope::plugin::CharShift::KeyPair(LSHIFT(Key_Comma), LSHIFT(Key_LeftBracket)), // `<`/`{`
   );
 }
 ```
