@@ -37,7 +37,7 @@ class BootKeyboardWrapper {
   void begin() {}
 
   uint8_t getProtocol() {
-    return 1;
+    return 0;
   }
   void setProtocol(uint8_t protocol) {}
   void setDefaultProtocol(uint8_t protocol) {}

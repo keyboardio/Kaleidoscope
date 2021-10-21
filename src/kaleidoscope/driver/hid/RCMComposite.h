@@ -35,7 +35,7 @@ extern USBHID RCMHID;
 extern USBCompositeSerial CompositeSerial;
 
 const uint8_t report_description_[] = {
-  HID_KEYBOARD_REPORT_DESCRIPTOR(),
+  HID_BOOT_KEYBOARD_REPORT_DESCRIPTOR(),
   HID_CONSUMER_REPORT_DESCRIPTOR(),
   HID_MOUSE_REPORT_DESCRIPTOR()
 };
