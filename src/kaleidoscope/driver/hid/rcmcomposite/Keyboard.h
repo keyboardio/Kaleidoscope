@@ -27,56 +27,56 @@ namespace driver {
 namespace hid {
 namespace rcmcomposite {
 
-extern HIDKeyboard RCMBootKeyboard;
+extern HIDKeyboard RCMKeyboard;
 extern HIDConsumer RCMConsumer;
 
-class BootKeyboardWrapper {
+class KeyboardWrapper {
  public:
-  BootKeyboardWrapper() {}
+  KeyboardWrapper() {}
 
   void begin() {}
 
   uint8_t getProtocol() {
-    return 0;
+    return 1;
   }
   void setProtocol(uint8_t protocol) {}
   void setDefaultProtocol(uint8_t protocol) {}
 
   void sendReport() {
-    RCMBootKeyboard.sendReport();
+    RCMKeyboard.sendReport();
   }
 
   void press(uint8_t code) {
-    RCMBootKeyboard.press(code);
+    RCMKeyboard.press(code);
   }
   void release(uint8_t code) {
-    RCMBootKeyboard.release(code);
+    RCMKeyboard.release(code);
   }
   void releaseAll() {
-    RCMBootKeyboard.releaseAll();
+    RCMKeyboard.releaseAll();
   }
 
   bool isKeyPressed(uint8_t code) {
-    return RCMBootKeyboard.isKeyPressed(code);
+    return RCMKeyboard.isKeyPressed(code);
   }
   bool wasKeyPressed(uint8_t code) {
-    return RCMBootKeyboard.wasKeyPressed(code);
+    return RCMKeyboard.wasKeyPressed(code);
   }
   bool isModifierActive(uint8_t code) {
-    return RCMBootKeyboard.isModifierActive(code);
+    return RCMKeyboard.isModifierActive(code);
   }
   bool wasModifierActive(uint8_t code) {
-    return RCMBootKeyboard.wasModifierActive(code);
+    return RCMKeyboard.wasModifierActive(code);
   }
   bool isAnyModifierActive() {
-    return RCMBootKeyboard.isAnyModifierActive();
+    return RCMKeyboard.isAnyModifierActive();
   }
   bool wasAnyModifierActive() {
-    return RCMBootKeyboard.wasAnyModifierActive();
+    return RCMKeyboard.wasAnyModifierActive();
   }
 
   uint8_t getLeds() {
-    return RCMBootKeyboard.getLEDs();
+    return RCMKeyboard.getLEDs();
   }
 };
 
@@ -103,7 +103,7 @@ class ConsumerControlWrapper {
 };
 
 struct KeyboardProps: public base::KeyboardProps {
-  typedef BootKeyboardWrapper BootKeyboard;
+  typedef KeyboardWrapper NKROKeyboard;
   typedef ConsumerControlWrapper ConsumerControl;
 };
 
