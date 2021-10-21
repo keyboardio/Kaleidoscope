@@ -58,7 +58,7 @@ class RCMComposite: public Base<_Props> {
                                sizeof(rcmcomposite::report_description_));
     while(!USBComposite);
 
-    rcmcomposite::RCMBootKeyboard.begin();
+    rcmcomposite::RCMKeyboard.begin();
   }
 };
 
