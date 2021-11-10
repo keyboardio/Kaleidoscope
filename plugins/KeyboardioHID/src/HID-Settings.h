@@ -155,10 +155,6 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 
 #define USB_EP_SIZE 64
 
-#define TRANSFER_PGM            0x80
-#define TRANSFER_RELEASE        0x40
-#define TRANSFER_ZERO           0x20
-
 // bmRequestType
 #define REQUEST_HOSTTODEVICE    0x00
 #define REQUEST_DEVICETOHOST    0x80
