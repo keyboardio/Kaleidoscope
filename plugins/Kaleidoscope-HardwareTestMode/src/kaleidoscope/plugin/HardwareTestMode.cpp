@@ -47,29 +47,28 @@ void HardwareTestMode::setLeds(cRGB color) {
 }
 
 void HardwareTestMode::testLeds(void) {
-  constexpr cRGB red = CRGB(201, 0, 0);
-  constexpr cRGB blue = CRGB(0, 0, 201);
-  constexpr cRGB green = CRGB(0, 201, 0);
+  constexpr cRGB red = CRGB(255, 0, 0);
+  constexpr cRGB blue = CRGB(0, 0, 255);
+  constexpr cRGB green = CRGB(0, 255, 0);
   constexpr cRGB brightWhite = CRGB(160, 160, 160);
 
+  // rainbow for 10 seconds
+  uint8_t rainbow_hue=0;
+  for (uint8_t i = 0; i < 254; i++) {
+ 	 cRGB rainbow = hsvToRgb(rainbow_hue, 255, 255);
+
+  rainbow_hue += 1;
+  if (rainbow_hue >= 255) {
+    rainbow_hue -= 255;
+  }
+  ::LEDControl.set_all_leds_to(rainbow);
+  ::LEDControl.syncLeds();
+  }
   setLeds(brightWhite);
   setLeds(blue);
   setLeds(green);
   setLeds(red);
 
-  // This works under the assumption that LEDRainbowEffect
-  // has been registered with KALEIDOSCOPE_INIT_PLUGINS in
-  // the sketch. Otherwise LEDRainbowEffect would not be
-  // known to LEDControl.
-  //
-  ::LEDControl.activate(&::LEDRainbowEffect);
-
-  // rainbow for 10 seconds
-  ::LEDRainbowEffect.update_delay(5);
-  for (uint8_t i = 0; i < 254; i++) {
-    ::LEDControl.update();
-    ::LEDControl.syncLeds();
-  }
 }
 
 
