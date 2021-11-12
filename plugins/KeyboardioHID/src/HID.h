@@ -59,6 +59,7 @@
 #define HID_REPORT_TYPE_OUTPUT  2
 #define HID_REPORT_TYPE_FEATURE 3
 
+#pragma pack(push, 1)
 typedef struct {
   uint8_t len;      // 9
   uint8_t dtype;    // 0x21
@@ -76,6 +77,7 @@ typedef struct {
   HIDDescDescriptor   desc;
   EndpointDescriptor  in;
 } HIDDescriptor;
+#pragma pack(pop)
 
 class HIDSubDescriptor {
  public:
