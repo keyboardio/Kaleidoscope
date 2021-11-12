@@ -179,6 +179,7 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 #define REQUEST_HOSTTODEVICE_CLASS_INTERFACE    (REQUEST_HOSTTODEVICE | REQUEST_CLASS | REQUEST_INTERFACE)
 #define REQUEST_DEVICETOHOST_STANDARD_INTERFACE (REQUEST_DEVICETOHOST | REQUEST_STANDARD | REQUEST_INTERFACE)
 
+#pragma pack(push, 1)
 //      Interface
 typedef struct
 {
@@ -203,6 +204,7 @@ typedef struct
         uint16_t packetSize;
         uint8_t interval;
 } EndpointDescriptor;
+#pragma pack(pop)
 
 #else
 

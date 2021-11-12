@@ -68,13 +68,12 @@ static const uint8_t mouse_hid_descriptor_[] PROGMEM = {
 };
 
 Mouse_::Mouse_() {
-}
-
-void Mouse_::begin() {
   static HIDSubDescriptor node(mouse_hid_descriptor_,
                                sizeof(mouse_hid_descriptor_));
   HID().AppendDescriptor(&node);
+}
 
+void Mouse_::begin() {
   end();
 }
 
