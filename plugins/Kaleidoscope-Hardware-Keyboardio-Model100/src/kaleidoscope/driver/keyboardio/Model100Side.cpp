@@ -24,10 +24,8 @@
 
 #include <Arduino.h>
 #include "Model100Side.h"
-
-extern "C" {
-#include "kaleidoscope/device/keyboardio/twi.h"
-}
+#include <Wire.h>
+#include <utility/twi.h>
 
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 
@@ -43,9 +41,7 @@ uint8_t twi_uninitialized = 1;
 Model100Side::Model100Side(byte setAd01) {
   ad01 = setAd01;
   addr = SCANNER_I2C_ADDR_BASE | ad01;
-  if (twi_uninitialized--) {
-    twi_init();
-  }
+  markDeviceUnavailable();
 }
 
 // Returns the relative controller addresss. The expected range is 0-3
@@ -72,8 +68,7 @@ uint8_t Model100Side::controllerAddress() {
 // https://www.arduino.cc/en/Reference/WireEndTransmission
 byte Model100Side::setKeyscanInterval(byte delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
-
+  uint8_t result = writeData(data, ELEMENTS(data));
   return result;
 }
 
@@ -103,34 +98,84 @@ int Model100Side::readLEDSPIFrequency() {
 // https://www.arduino.cc/en/Reference/WireEndTransmission
 byte Model100Side::setLEDSPIFrequency(byte frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
+  uint8_t result  = writeData(data, ELEMENTS(data));
 
   return result;
 }
 
 
+// GD32 I2C implements timeouts which will cause a stall when a device does not answer.
+// This method will verify that the device is around and ready to talk.
+bool Model100Side::isDeviceAvailable() {
+  return true;
+  // if the counter is zero, that's the special value that means "we know it's there"
+  if (unavailable_device_check_countdown_ == 0) {
+    return true;
+  }
+
+  // if the time to check counter is 1, check for the device
+
+  else if (--unavailable_device_check_countdown_ == 0) {
+    uint8_t wire_result;
+    Wire.beginTransmission(addr);
+    wire_result = Wire.endTransmission();
+    //if the check succeeds
+    if (wire_result == 0) {
+      // unavailable_device_check_countdown_ = 0; // TODO this is already true
+      return true;
+    } else {
+      // set the time to check counter to max
+      unavailable_device_check_countdown_ = UNAVAILABLE_DEVICE_COUNTDOWN_MAX;
+      return false;
+    }
+  } else {
+    // we've decremented the counter, but it's not time to probe for the device yet.
+    return false;
+  }
+
+}
+
+void Model100Side::markDeviceUnavailable() {
+  unavailable_device_check_countdown_ = 1; // We think there was a comms problem. Check on the next cycle
+}
+
+uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
+  if (isDeviceAvailable() == false) {
+    return 1;
+  }
+  Wire.beginTransmission(addr);
+  Wire.write(data, length);
+  uint8_t result = Wire.endTransmission();
+  if (result) {
+    markDeviceUnavailable();
+  }
+  return result;
+}
 
 int Model100Side::readRegister(uint8_t cmd) {
-
   byte return_value = 0;
-
   uint8_t data[] = {cmd};
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
+  uint8_t result  = writeData(data, ELEMENTS(data));
 
+  // If the setup failed, return. This means there was a problem asking for the register
+  if (result) {
+    return -1;
+  }
 
-
-  delayMicroseconds(15); // We may be able to drop this in the future
+  delayMicroseconds(50); // TODO We may be able to drop this in the future
   // but will need to verify with correctly
   // sized pull-ups on both the left and right
   // hands' i2c SDA and SCL lines
 
-  uint8_t rxBuffer[1];
+  uint8_t rxBuffer[1] = {0};
 
   // perform blocking read into buffer
-  uint8_t read = twi_readFrom(addr, rxBuffer, ELEMENTS(rxBuffer), true);
-  if (read > 0) {
-    return rxBuffer[0];
+
+  Wire.requestFrom(addr, 1);    // request 1 byte from the keyscanner
+  if (Wire.available()) {
+    return Wire.read();
   } else {
+    markDeviceUnavailable();
     return -1;
   }
 
@@ -139,20 +184,28 @@ int Model100Side::readRegister(uint8_t cmd) {
 
 // gives information on the key that was just pressed or released.
 bool Model100Side::readKeys() {
-
-  uint8_t rxBuffer[5];
-
-  // perform blocking read into buffer
-  uint8_t read = twi_readFrom(addr, rxBuffer, ELEMENTS(rxBuffer), true);
-  if (rxBuffer[0] == TWI_REPLY_KEYDATA) {
-    keyData.rows[0] = rxBuffer[1];
-    keyData.rows[1] = rxBuffer[2];
-    keyData.rows[2] = rxBuffer[3];
-    keyData.rows[3] = rxBuffer[4];
-    return true;
-  } else {
+  if (isDeviceAvailable() == false) {
     return false;
   }
+
+  uint8_t row_counter = 0;
+  // perform blocking read into buffer
+  uint8_t read = 0;
+  uint8_t bytes_returned = 0;
+  bytes_returned = Wire.requestFrom(addr, 5);    // request 5 bytes from the keyscanner
+  if (bytes_returned < 5) {
+    return false;
+  }
+  if (Wire.available()) {
+    read = Wire.read();
+    if (TWI_REPLY_KEYDATA == read) {
+      while (Wire.available()) {
+        keyData.rows[row_counter++] = Wire.read();
+      }
+      return true;
+    }
+  }
+  return false;
 }
 
 keydata_t Model100Side::getKeyData() {
@@ -184,7 +237,7 @@ void Model100Side::sendLEDBank(byte bank) {
 
     data[i + 1] = pgm_read_byte(&gamma8[c]);
   }
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
+  uint8_t result  = writeData(data, ELEMENTS(data));
 }
 
 void Model100Side::setAllLEDsTo(cRGB color) {
@@ -193,7 +246,7 @@ void Model100Side::setAllLEDsTo(cRGB color) {
                     pgm_read_byte(&gamma8[color.g]),
                     pgm_read_byte(&gamma8[color.r])
                    };
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
+  uint8_t result  = writeData(data, ELEMENTS(data));
 }
 
 void Model100Side::setOneLEDTo(byte led, cRGB color) {
@@ -203,7 +256,7 @@ void Model100Side::setOneLEDTo(byte led, cRGB color) {
                     pgm_read_byte(&gamma8[color.g]),
                     pgm_read_byte(&gamma8[color.r])
                    };
-  uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
+  uint8_t result  = writeData(data, ELEMENTS(data));
 
 }
 

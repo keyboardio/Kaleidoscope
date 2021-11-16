@@ -15,16 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ARDUINO_GD32_keyboardio_model_100
+#ifdef ARDUINO_keyboardio_model_100
 
 #include "Arduino.h"                                 // for PROGMEM
 #include "kaleidoscope/device/keyboardio/Model100.h"  // for Model100LEDDriver...
 #include "kaleidoscope/key_events.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
+#include "Wire.h"
+
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include <KeyboardioHID.h>
-#include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
@@ -48,14 +48,13 @@ driver::keyboardio::Model100Side Model100Hands::leftHand(0);
 driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
 void Model100Hands::setup(void) {
-  // This lets the keyboard pull up to 1.6 amps from the host.
-  // That violates the USB spec. But it sure is pretty looking
-  DDRE |= _BV(6);
-  PORTE &= ~_BV(6);
+  delay(100);
+  pinMode(PB9, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PB9, LOW);
+  delay(105); // TODO remove this when we remove it from the attiny code
+  Wire.begin();
+  Wire.setClock(400000);
 
-  // Set B4, the overcurrent check to an input with an internal pull-up
-  DDRB &= ~_BV(4);	// set bit, input
-  PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
 }
 
 /********* LED Driver *********/
@@ -103,7 +102,6 @@ cRGB Model100LEDDriver::getCrgbAt(uint8_t i) {
 void Model100LEDDriver::syncLeds() {
   if (!isLEDChanged)
     return;
-
   // LED Data is stored in four "banks" for each side
   // We send it all at once to make it look nicer.
   // We alternate left and right hands because otherwise
@@ -125,10 +123,6 @@ void Model100LEDDriver::syncLeds() {
   isLEDChanged = false;
 }
 
-boolean Model100LEDDriver::ledPowerFault() {
-  // TODO remove - obsolete
-}
-
 /********* Key scanner *********/
 
 driver::keyboardio::keydata_t Model100KeyScanner::leftHandState;
@@ -137,16 +131,26 @@ driver::keyboardio::keydata_t Model100KeyScanner::previousLeftHandState;
 driver::keyboardio::keydata_t Model100KeyScanner::previousRightHandState;
 
 void Model100KeyScanner::enableScannerPower(void) {
-  // Turn on power to the 5V net
+// Turn on the switched 5V network.
+//  make sure this happens at least 100ms after USB connect
+// to satisfy inrush limits
   //
-  pinMode(PC13, OUTPUT_OPEN_DRAIN);
-  digitalWrite(PC13, LOW);
+  pinMode(PB9, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PB9, LOW);
 }
 
+void Model100KeyScanner::disableScannerPower(void) {
+  // Turn on power to the 5V net
+  //
+  pinMode(PB9, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PB9, HIGH);
+}
+
+
+
 void Model100KeyScanner::setup() {
-  wdt_disable();
-  delay(100);
   enableScannerPower();
+  delay(250);
 }
 
 void Model100KeyScanner::readMatrix() {
@@ -228,6 +232,7 @@ uint8_t Model100KeyScanner::previousPressedKeyswitchCount() {
 /********* Hardware plugin *********/
 
 void Model100::setup() {
+  Model100KeyScanner::setup();
   Model100Hands::setup();
   kaleidoscope::device::Base<Model100Props>::setup();
 }
