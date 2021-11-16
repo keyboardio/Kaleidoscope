@@ -219,7 +219,6 @@ void Model100Side::sendLEDData() {
   }
 }
 
-auto constexpr gamma8 = kaleidoscope::driver::color::gamma_correction;
 
 void Model100Side::sendLEDBank(byte bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
@@ -235,16 +234,16 @@ void Model100Side::sendLEDBank(byte bank) {
     else
       c = 0;
 
-    data[i + 1] = pgm_read_byte(&gamma8[c]);
+    data[i + 1] = c;
   }
   uint8_t result  = writeData(data, ELEMENTS(data));
 }
 
 void Model100Side::setAllLEDsTo(cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
-                    pgm_read_byte(&gamma8[color.b]),
-                    pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.r])
+                    color.b,
+                    color.g,
+                    color.r
                    };
   uint8_t result  = writeData(data, ELEMENTS(data));
 }
@@ -252,9 +251,9 @@ void Model100Side::setAllLEDsTo(cRGB color) {
 void Model100Side::setOneLEDTo(byte led, cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
                     led,
-                    pgm_read_byte(&gamma8[color.b]),
-                    pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.r])
+                    color.b,
+                    color.g,
+                    color.r
                    };
   uint8_t result  = writeData(data, ELEMENTS(data));
 
