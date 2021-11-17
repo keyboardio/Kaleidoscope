@@ -53,16 +53,16 @@ void HardwareTestMode::testLeds(void) {
   constexpr cRGB brightWhite = CRGB(160, 160, 160);
 
   // rainbow for 10 seconds
-  uint8_t rainbow_hue=0;
+  uint8_t rainbow_hue = 0;
   for (uint8_t i = 0; i < 254; i++) {
- 	 cRGB rainbow = hsvToRgb(rainbow_hue, 255, 255);
+    cRGB rainbow = hsvToRgb(rainbow_hue, 255, 255);
 
-  rainbow_hue += 1;
-  if (rainbow_hue >= 255) {
-    rainbow_hue -= 255;
-  }
-  ::LEDControl.set_all_leds_to(rainbow);
-  ::LEDControl.syncLeds();
+    rainbow_hue += 1;
+    if (rainbow_hue >= 255) {
+      rainbow_hue -= 255;
+    }
+    ::LEDControl.set_all_leds_to(rainbow);
+    ::LEDControl.syncLeds();
   }
   setLeds(brightWhite);
   setLeds(blue);
