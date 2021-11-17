@@ -78,6 +78,7 @@ my $platforms_template = {
 };
 my $version             = '';
 my $tag                 = 'master';
+my $gd32_tag	= 'main';
 my $kaleidoscope_tag    = 'master';
 my $working_dir         = tempdir( CLEANUP => 0 );
 my $index_filename_slug = 'keyboardio';
@@ -94,6 +95,7 @@ my $push_package_repo = 0;
 
 GetOptions(
     "bundle-tag=s"               => \$tag,
+    "arch-gd32-tag=s"               => \$gd32_tag,
     "kaleidoscope-tag=s"         => \$kaleidoscope_tag,
     "bundle-repo=s"              => \$bundle_repo,
     "output-repo=s"              => \$package_repo,
@@ -114,11 +116,10 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
 my $checkout_dir = 'kaleidoscope-checkout';
 
 my $build_base_url = $package_repo . "/raw/$main_branch_name/builds";
-$build_base_url =~ s|^ssh://git\@github.com|https://github.com|;
 print "Working directory: $working_dir\n";
 chdir($working_dir);
 
-clone_repos( $tag, $bundle_repo, $gd32_core_repo, $checkout_dir, $package_repo );
+clone_repos( $tag, $gd32_tag, $bundle_repo, $gd32_core_repo, $checkout_dir, $package_repo );
 
 chdir( $working_dir . "/" . $checkout_dir );
 if ($only_latest_platform) {
@@ -165,14 +166,11 @@ sub set_plugin_versions {
 
 sub clone_repos {
     my $tag          = shift;
+    my $gd32_tag = shift;
     my $bundle_repo  = shift;
     my $gd32_repo = shift;
     my $checkout_dir = shift;
     my $package_repo  = shift;
-    my $gd32_tag = $tag;
-    if ($gd32_tag eq 'master') {
-	    $gd32_tag = 'main';
-    }
 `git clone --depth=1 --quiet --recurse-submodules --branch $tag $bundle_repo $checkout_dir`;
 
 `git clone --depth=1 --quiet --recurse-submodules --branch $gd32_tag $gd32_repo $checkout_dir/gd32`;
@@ -202,8 +200,7 @@ sub update_index_file {
 
     my $index_path = $output_dir . '/' . $index_filename;
 
-    open( my $fh, '<', $index_path )
-      || die "Could not open $index_path $!";
+    open( my $fh, '<', $index_path ) || die "Could not open $index_path $!";
     my $json_text = <$fh>;
     my $data      = decode_json($json_text);
 
@@ -268,7 +265,7 @@ sub build_archive {
 
     `mv $checkout_dir/$arch $checkout_dir/$release_dir`;
     ;    # A hack to get consistent naming with the old setup
-    `find $checkout_dir/$release_dir -name .git |xargs rm -rf`;
+    `find "$checkout_dir/$release_dir" -name .git |xargs rm -rf`;
     `tar cjvf $filename -C $checkout_dir/ $release_dir `;
 
     my $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
@@ -291,9 +288,7 @@ sub finalize_action {
         `git push`;
     }
     else {
-
-        print
-          "Now, you need to cd to $output_dir check the content and push it\n";
+        print "Now, you need to cd to $output_dir check the content and push it\n";
     }
 
 }
