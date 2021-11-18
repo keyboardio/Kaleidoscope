@@ -23,12 +23,35 @@ void setup () {
 }
 ```
 
+If one wishes to configure the plugin at run-time via [Focus][plugin:focus], the
+optional `EscapeOneShotConfig` plugin must also be enabled:
+
+ [plugin:focus]: Kaleidoscope-FocusSerial.md
+
+```c++
+#include <Kaleidoscope.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-FocusSerial.h>
+#include <Kaleidoscope-OneShot.h>
+#include <Kaleidoscope-Escape-OneShot.h>
+
+KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          Focus,
+                          OneShot,
+                          EscapeOneShot,
+                          EscapeOneShotConfig);
+
+void setup () {
+  Kaleidoscope.setup ();
+}
+```
+
 The plugin only makes sense when using one-shot keys.
 
 ## Plugin methods
 
-The plugin provides the `EscapeOneShot` object, which has one public
-configuration method:
+The plugin provides the `EscapeOneShot` object, which has the following public
+configuration methods:
 
 ### `.setCancelKey(key)`
 
@@ -39,9 +62,44 @@ configuration method:
 > modifiers), there is the special `OneShotCancelKey`, which will not
 > have any side effects.
 
+### `.getCancelKey(key)`
+
+> Returns the `Key` value that will trigger deactivation of one-shot (including
+> sticky) keys.
+
+### `.enable()`, `.disable()`, `.toggle()`, and `.isEnabled()`
+
+> Enables, disables, toggles, and returns the enabled state of the plugin,
+> respectively.
+>
+> By default, the plugin starts enabled.
+
+## Focus commands
+
+The plugin provides two Focus commands: `escape_oneshot.enabled`, and
+`escape_oneshot.cancel_key`.
+
+### `escape_oneshot.enabled [0|1]`
+
+> Without arguments, returns whether the plugin is enabled or not.
+>
+> With an argument, enables or disables it.
+
+### `escape_oneshot.cancel_key [keycode]`
+
+> Without an argument, returns the raw 16-bit keycode of the cancel key set.
+>
+> With an argument - a raw 16-bit keycode -, sets the cancel key to the one
+> corresponding to the given code.
+
 ## Dependencies
 
 * [Kaleidoscope-OneShot](Kaleidoscope-OneShot.md)
+
+### Optional dependencies
+
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)
 
 ## Further reading
 

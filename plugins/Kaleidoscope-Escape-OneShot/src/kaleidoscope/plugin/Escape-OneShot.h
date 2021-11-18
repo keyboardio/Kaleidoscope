@@ -50,6 +50,8 @@ class EscapeOneShot : public kaleidoscope::Plugin {
     return !settings_.disabled;
   }
 
+  friend class EscapeOneShotConfig;
+
  private:
   struct Settings {
     bool disabled;
@@ -57,9 +59,20 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   };
   static Settings settings_;
 };
+
+class EscapeOneShotConfig : public Plugin {
+ public:
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onNameQuery();
+
+
+ private:
+  static uint16_t settings_base_;
 };
 
 }
 }
 
 extern kaleidoscope::plugin::EscapeOneShot EscapeOneShot;
+extern kaleidoscope::plugin::EscapeOneShotConfig EscapeOneShotConfig;
