@@ -20,7 +20,10 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
+// DEPRECATED: `OneShotCancelKey` doesn't match our normal naming, and should
+// eventually be removed.
 constexpr Key OneShotCancelKey {kaleidoscope::ranges::OS_CANCEL};
+constexpr Key Key_OneShotCancel {kaleidoscope::ranges::OS_CANCEL};
 
 namespace kaleidoscope {
 namespace plugin {

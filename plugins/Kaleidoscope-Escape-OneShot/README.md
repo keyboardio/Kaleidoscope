@@ -5,6 +5,9 @@ effect - or act as the normal `Esc` key if none are active, or if any of them
 are still held. For those times when one accidentally presses a one-shot key, or
 change their minds.
 
+Additionally, the special `Key_OneShotCancel` key will also count as a oneshot
+cancel key, would one want a dedicated key for the purpose.
+
 ## Using the plugin
 
 To use the plugin, one needs to include the header, and activate it. No further
@@ -59,7 +62,7 @@ configuration methods:
 > (including sticky) keys. The default is to use `Key_Escape` (the
 > normal `Esc` key), but if you would rather have a dedicated key (so
 > that you can use `Key_Escape` in combination with one-shot
-> modifiers), there is the special `OneShotCancelKey`, which will not
+> modifiers), there is the special `Key_OneShotCancel`, which will not
 > have any side effects.
 
 ### `.getCancelKey(key)`
