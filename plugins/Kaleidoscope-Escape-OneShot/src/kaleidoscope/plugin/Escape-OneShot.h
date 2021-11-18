@@ -40,24 +40,11 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   static Key getCancelKey() {
     return settings_.cancel_oneshot_key;
   }
-  static void enable() {
-    settings_.disabled = false;
-  }
-  static void disable() {
-    settings_.disabled = true;
-  }
-  static void toggle() {
-    settings_.disabled = !settings_.disabled;
-  }
-  static bool isEnabled() {
-    return !settings_.disabled;
-  }
 
   friend class EscapeOneShotConfig;
 
  private:
   struct Settings {
-    bool disabled;
     Key cancel_oneshot_key;
   };
   static Settings settings_;
@@ -68,7 +55,6 @@ class EscapeOneShotConfig : public Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult onNameQuery();
-
 
  private:
   static uint16_t settings_base_;

@@ -29,15 +29,12 @@ uint16_t EscapeOneShotConfig::settings_base_;
 
 EventHandlerResult EscapeOneShotConfig::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(EscapeOneShot::settings_));
-  struct {
-    uint8_t b;
-    uint16_t w;
-  } checker;
+  uint16_t checker;
 
   Runtime.storage().get(settings_base_, checker);
 
   // Check if we have an empty eeprom...
-  if (checker.b == 0xff && checker.w == 0xffff) {
+  if (checker == 0xffff) {
     // ...if the eeprom was empty, store the default settings.
     Runtime.storage().put(settings_base_, EscapeOneShot::settings_);
     Runtime.storage().commit();
@@ -52,48 +49,18 @@ EventHandlerResult EscapeOneShotConfig::onNameQuery() {
 }
 
 EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *command) {
-  enum {
-    ENABLED,
-    CANCEL_KEY
-  } subCommand;
-
-  if (::Focus.handleHelp(command, PSTR("escape_oneshot.enabled\n"
-                                       "escape_oneshot.cancel_key")))
+  if (::Focus.handleHelp(command, PSTR("escape_oneshot.cancel_key")))
     return EventHandlerResult::OK;
 
-  if (strncmp_P(command, PSTR("escape_oneshot."), 15) != 0)
-    return EventHandlerResult::OK;
-  if (strcmp_P(command + 15, PSTR("enabled")) == 0)
-    subCommand = ENABLED;
-  else if (strcmp_P(command + 15, PSTR("cancel_key")) == 0)
-    subCommand = CANCEL_KEY;
-  else
+  if (strcmp_P(command, PSTR("escape_oneshot.cancel_key")) != 0)
     return EventHandlerResult::OK;
 
-  switch (subCommand) {
-  case ENABLED:
-    if (::Focus.isEOL()) {
-      ::Focus.send(::EscapeOneShot.isEnabled());
-    } else {
-      uint8_t v;
-      ::Focus.read(v);
-      if (v != 0) {
-        ::EscapeOneShot.enable();
-      } else {
-        ::EscapeOneShot.disable();
-      }
-    }
-    break;
-
-  case CANCEL_KEY:
-    if (::Focus.isEOL()) {
-      ::Focus.send(::EscapeOneShot.getCancelKey());
-    } else {
-      Key k;
-      ::Focus.read(k);
-      ::EscapeOneShot.setCancelKey(k);
-    }
-    break;
+  if (::Focus.isEOL()) {
+    ::Focus.send(::EscapeOneShot.getCancelKey());
+  } else {
+    Key k;
+    ::Focus.read(k);
+    ::EscapeOneShot.setCancelKey(k);
   }
 
   Runtime.storage().put(settings_base_, EscapeOneShot::settings_);
