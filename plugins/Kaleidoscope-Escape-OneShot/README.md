@@ -70,23 +70,9 @@ configuration methods:
 > Returns the `Key` value that will trigger deactivation of one-shot (including
 > sticky) keys.
 
-### `.enable()`, `.disable()`, `.toggle()`, and `.isEnabled()`
-
-> Enables, disables, toggles, and returns the enabled state of the plugin,
-> respectively.
->
-> By default, the plugin starts enabled.
-
 ## Focus commands
 
-The plugin provides two Focus commands: `escape_oneshot.enabled`, and
-`escape_oneshot.cancel_key`.
-
-### `escape_oneshot.enabled [0|1]`
-
-> Without arguments, returns whether the plugin is enabled or not.
->
-> With an argument, enables or disables it.
+The plugin provides a single Focus command: `escape_oneshot.cancel_key`.
 
 ### `escape_oneshot.cancel_key [keycode]`
 
