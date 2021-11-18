@@ -75,7 +75,7 @@
 // Support for USB quirks, like changing the key state report protocol
 #include "Kaleidoscope-USB-Quirks.h"
 
-/** This 'enum' is a list of all the macros used by the Model 01's firmware
+/** This 'enum' is a list of all the macros used by the Model 100's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
   *
@@ -94,7 +94,7 @@ enum { MACRO_VERSION_INFO,
 
 
 
-/** The Model 01's key layouts are defined as 'keymaps'. By default, there are three
+/** The Model 100's key layouts are defined as 'keymaps'. By default, there are three
   * keymaps: The standard QWERTY keymap, the "Function layer" keymap and the "Numpad"
   * keymap.
   *
@@ -288,7 +288,7 @@ KEYMAPS(
 
 static void versionInfoMacro(uint8_t key_state) {
   if (keyToggledOn(key_state)) {
-    Macros.type(PSTR("Keyboardio Model 01 - Kaleidoscope "));
+    Macros.type(PSTR("Keyboardio Model 100 - Kaleidoscope "));
     Macros.type(PSTR(BUILD_INFORMATION));
   }
 }
@@ -339,7 +339,7 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 
 // These 'solid' color effect definitions define a rainbow of
 // LED color modes calibrated to draw 500mA or less on the
-// Keyboardio Model 01.
+// Keyboardio Model 100.
 
 
 static kaleidoscope::plugin::LEDSolidColor solidRed(160, 0, 0);
@@ -374,7 +374,7 @@ void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::
   toggleLedsOnSuspendResume(event);
 }
 
-/** This 'enum' is a list of all the magic combos used by the Model 01's
+/** This 'enum' is a list of all the magic combos used by the Model 100's
  * firmware The names aren't particularly important. What is important is that
  * each is unique.
  *
