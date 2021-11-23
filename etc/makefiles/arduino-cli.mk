@@ -164,6 +164,7 @@ arduino-update-cores:
 
 install-arduino-core-kaleidoscope: arduino-update-cores
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr"
+	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32"
 
 install-arduino-core-avr: arduino-update-cores
 	$(QUIET) $(ARDUINO_CLI) core install "arduino:avr"

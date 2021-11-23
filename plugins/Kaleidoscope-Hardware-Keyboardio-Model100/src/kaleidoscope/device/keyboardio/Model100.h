@@ -17,7 +17,11 @@
 
 #pragma once
 
-#ifdef ARDUINO_GD32_keyboardio_model_100
+#ifdef ARDUINO_keyboardio_model_100
+
+#ifndef EEPROM_EMULATION_SIZE
+#define EEPROM_EMULATION_SIZE 4096
+#endif
 
 #include <Arduino.h>
 
@@ -29,16 +33,23 @@ struct cRGB {
   uint8_t r;
 };
 
-#include "kaleidoscope/device/ATmega32U4Keyboard.h"
 
 #include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 #include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/device/Base.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
+
+struct Model100StorageProps: public kaleidoscope::driver::storage::GD32FlashProps {
+  static constexpr uint16_t length = EEPROM_EMULATION_SIZE;
+};
+
 
 struct Model100LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 64;
@@ -60,7 +71,6 @@ class Model100LEDDriver : public kaleidoscope::driver::led::Base<Model100LEDDriv
   static uint8_t getBrightness();
 
   static void enableHighPowerLeds();
-  static boolean ledPowerFault();
 
  private:
   static bool isLEDChanged;
@@ -101,16 +111,23 @@ class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model10
 
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();
+  static void disableScannerPower();
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model100KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-struct Model100Props : public kaleidoscope::device::BaseKeyboardProps {
+struct Model100Props : public kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
+
   typedef Model100LEDDriverProps  LEDDriverProps;
   typedef Model100LEDDriver LEDDriver;
   typedef Model100KeyScannerProps KeyScannerProps;
   typedef Model100KeyScanner KeyScanner;
+  typedef Model100StorageProps StorageProps;
+  typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
+
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
   static constexpr const char *short_name = "kbio100";
 };
