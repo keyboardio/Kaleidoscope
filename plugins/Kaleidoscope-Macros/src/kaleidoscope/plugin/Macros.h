@@ -92,6 +92,8 @@ struct MacroKeyEvent {
 #define MAX_CONCURRENT_MACRO_KEYS 8
 #endif
 
+#define MACRO_SOURCE_PROGMEM 0
+
 namespace kaleidoscope {
 namespace plugin {
 
@@ -126,7 +128,14 @@ class Macros : public kaleidoscope::Plugin {
   void tap(Key key) const;
 
   /// Play a macro sequence of key events
-  void play(const macro_t* macro_ptr);
+  void play(const macro_t* macro_ptr, uint8_t source = MACRO_SOURCE_PROGMEM);
+
+  typedef uint8_t (*readMacroByteFunction)(const macro_t *ptr, uint8_t source);
+  static readMacroByteFunction readMacroByte;
+
+  static uint8_t readMacroByteFromPROGMEM(const macro_t *ptr, uint8_t source) {
+    return pgm_read_byte(ptr++);
+  }
 
   // Templates provide a `type()` function that takes a variable number of
   // `char*` (string) arguments, in the form of a list of strings stored in
