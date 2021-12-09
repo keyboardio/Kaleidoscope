@@ -140,68 +140,6 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 #define EP_TYPE_INTERRUPT_IN EPTYPE(USB_TRX_IN, USB_EP_ATTR_INT);
 #define EP_TYPE_INTERRUPT_OUT EPTYPE(USB_TRX_OUT, USB_EP_ATTR_INT);
 
-// TODO(@algernon): Most of these would belong to the core, into USBCore.h and
-// USBAPI.h. Move them there, eventually.
-
-#define USB_ENDPOINT_TYPE_INTERRUPT USB_EP_ATTR_INT
-
-#define D_INTERFACE(_n,_numEndpoints,_class,_subClass,_protocol) \
-{ 9, 4, _n, 0, _numEndpoints, _class,_subClass, _protocol, 0 }
-
-#define D_ENDPOINT(_addr,_attr,_packetSize, _interval) \
-{ 7, 5, _addr,_attr,_packetSize, _interval }
-
-#define USB_ENDPOINT_IN(addr)                  (lowByte((addr) | 0x80))
-
-#define USB_EP_SIZE 64
-
-// bmRequestType
-#define REQUEST_HOSTTODEVICE    0x00
-#define REQUEST_DEVICETOHOST    0x80
-#define REQUEST_DIRECTION               0x80
-
-#define REQUEST_STANDARD                0x00
-#define REQUEST_CLASS                   0x20
-#define REQUEST_VENDOR                  0x40
-#define REQUEST_TYPE                    0x60
-
-#define REQUEST_DEVICE                  0x00
-#define REQUEST_INTERFACE               0x01
-#define REQUEST_ENDPOINT                0x02
-#define REQUEST_OTHER                   0x03
-#define REQUEST_RECIPIENT               0x03
-
-#define REQUEST_DEVICETOHOST_CLASS_INTERFACE    (REQUEST_DEVICETOHOST | REQUEST_CLASS | REQUEST_INTERFACE)
-#define REQUEST_HOSTTODEVICE_CLASS_INTERFACE    (REQUEST_HOSTTODEVICE | REQUEST_CLASS | REQUEST_INTERFACE)
-#define REQUEST_DEVICETOHOST_STANDARD_INTERFACE (REQUEST_DEVICETOHOST | REQUEST_STANDARD | REQUEST_INTERFACE)
-
-#pragma pack(push, 1)
-//      Interface
-typedef struct
-{
-        uint8_t len;         // 9
-        uint8_t dtype;       // 4
-        uint8_t number;
-        uint8_t alternate;
-        uint8_t numEndpoints;
-        uint8_t interfaceClass;
-        uint8_t interfaceSubClass;
-        uint8_t protocol;
-        uint8_t iInterface;
-} InterfaceDescriptor;
-
-//      Endpoint
-typedef struct
-{
-        uint8_t len;         // 7
-        uint8_t dtype;       // 5
-        uint8_t addr;
-        uint8_t attr;
-        uint16_t packetSize;
-        uint8_t interval;
-} EndpointDescriptor;
-#pragma pack(pop)
-
 #else
 
 #error "Unsupported architecture"
