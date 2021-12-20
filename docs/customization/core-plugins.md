@@ -3,7 +3,9 @@
 This is an annotated list of some of Kaleidoscope's most important core plugins. You may also want to consult the [automatically generated list of all plugins bundled with Kaleidoscope](../plugin_list).
 
 
-You can find a list of third-party plugins not distributed as part of Kaleidoscope at https://community.keyboard.io/c/programming/Discuss-Plugins-one-thread-per-plugin
+You can find a list of third-party plugins not distributed as part of Kaleidoscope [on the forums][forum:plugin-list].
+
+ [forum:plugin-list]:  https://community.keyboard.io/c/programming/discuss-kaleidoscope-plugins-one-thread-per-plugin/
 
 ## EEPROM-Keymap
 
@@ -114,4 +116,3 @@ There is one additional value the tapDanceAction parameter can ``take: kaleidosc
 [TopsyTurvy Documentation](../plugins/Kaleidoscope-TopsyTurvy.md)
 
 TopsyTurvy is a plugin that inverts the behaviour of the Shift key for some selected keys. That is, if configured so, it will input ``!`` when pressing the ``1`` key without ``Shift``, but with the modifier pressed, it will input the original ``1`` symbol.
-
