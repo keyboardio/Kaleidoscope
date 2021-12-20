@@ -48,7 +48,7 @@ driver::keyboardio::Model100Side Model100Hands::leftHand(0);
 driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
 void Model100Hands::setup(void) {
-Model100KeyScanner::enableScannerPower();
+  Model100KeyScanner::enableScannerPower();
   Wire.begin();
   Wire.setClock(400000);
 
