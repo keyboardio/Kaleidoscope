@@ -1,0 +1,55 @@
+VERSION 1
+
+KEYSWITCH M_0    0 0
+KEYSWITCH SHIFT  1 0
+
+# ==============================================================================
+NAME Macro without shift
+
+RUN 5 ms
+PRESS M_0
+RUN 1 cycle
+EXPECT keyboard-report Key_RightAlt # Report should contain only `AltGr`
+EXPECT keyboard-report Key_RightAlt Key_7 # Report should contain `AltGr` & `7`
+EXPECT keyboard-report Key_RightAlt # Report should contain only `AltGr`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_E # Report should contain only `E`
+
+RUN 5 ms
+RELEASE M_0
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report
+
+# ==============================================================================
+NAME Macro with shift
+
+RUN 5 ms
+PRESS SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain `shift`
+
+RUN 5 ms
+PRESS M_0
+RUN 1 cycle
+EXPECT keyboard-report Key_RightAlt # Report should contain only `AltGr`
+EXPECT keyboard-report Key_RightAlt Key_7 # Report should contain `AltGr` & `7`
+EXPECT keyboard-report Key_RightAlt # Report should contain only `AltGr`
+EXPECT keyboard-report empty # Report should be empty
+EXPECT keyboard-report Key_LeftShift # Report should contain only `shift`
+EXPECT keyboard-report Key_LeftShift Key_E # Report should contain `shift` & `E`
+
+RUN 5 ms
+RELEASE M_0
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain only `shift`
+
+RUN 5 ms
+RELEASE SHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report
