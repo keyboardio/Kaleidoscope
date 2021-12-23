@@ -116,6 +116,8 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
 my $checkout_dir = 'kaleidoscope-checkout';
 
 my $build_base_url = $package_repo . "/raw/$main_branch_name/builds";
+$build_base_url =~ s|ssh://git@|https://|;
+
 print "Working directory: $working_dir\n";
 chdir($working_dir);
 
