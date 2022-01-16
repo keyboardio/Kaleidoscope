@@ -47,7 +47,7 @@ Next step: [Add keyboard support to Arduino](#add-keyboard-support-to-arduino)
    Snap:        https://snapcraft.io/arduino
    Arch:        sudo pacman -S arduino
    ``` 
-   Unfortunately, the version of the Arduino IDE packaged in Ubuntu is unmaintained and too old to use.
+   Unfortunately, the version of the Arduino IDE packaged in Ubuntu is unmaintained and too old to use, and the version packaged in Debian has been heavily modified and might not be able to compile your keyboard's firmware.
 
 2. Assuming you're using the tar archive, and untarring in the download directory:
 
