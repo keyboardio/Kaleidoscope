@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Spaceadet.h"
+#include "kaleidoscope/device/keyboardio/Spacecadet.h"

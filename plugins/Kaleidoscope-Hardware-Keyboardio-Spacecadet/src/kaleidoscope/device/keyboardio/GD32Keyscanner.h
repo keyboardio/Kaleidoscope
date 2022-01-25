@@ -30,7 +30,6 @@ namespace keyscanner {
 
 struct GD32Props: kaleidoscope::driver::keyscanner::BaseProps {
   static const uint16_t keyscan_interval = 1500;
-  static const uint16_t next_scan_after = 0;
   typedef uint32_t RowState;
 
   /*
@@ -46,6 +45,7 @@ template <typename _KeyScannerProps>
 class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
  private:
   typedef GD32<_KeyScannerProps> ThisType;
+  uint16_t next_scan_after_ ;
 
  public:
   void setup() {
@@ -59,7 +59,7 @@ class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     );
 
     for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
-      pinmode(_KeyScannerProps::matrix_col_pins[i], INPUT_PULLUP);
+      pinMode(_KeyScannerProps::matrix_col_pins[i], INPUT_PULLUP);
     }
 
     for (uint8_t i = 0; i < _KeyScannerProps::matrix_rows; i++) {
@@ -68,6 +68,7 @@ class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     }
 
     setScanCycleTime(_KeyScannerProps::keyscan_interval);
+    next_scan_after_ = 0;
   }
 
 
@@ -77,14 +78,6 @@ class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
 
   */
   void setScanCycleTime(uint16_t c) {
-    TCCR1B = _BV(WGM13);
-    TCCR1A = 0;
-
-    const uint32_t cycles = (F_CPU / 2000000) * c;
-
-    ICR1 = cycles;
-    TCCR1B = _BV(WGM13) | _BV(CS10);
-    TIMSK1 = _BV(TOIE1);
   }
 
   __attribute__((optimize(3)))
@@ -108,8 +101,8 @@ class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   }
   void scanMatrix() {
 
-    if (micros() > _KeyScannerProps::next_scan_after || micros < _KeyScannerProps::keyscan_interval) {
-      _KeyScannerProps::next_scan_after = micros() + _KeyScannerProps::keyscan_interval;
+    if (micros() > next_scan_after_ || micros() < _KeyScannerProps::keyscan_interval) {
+      next_scan_after_ = micros() + _KeyScannerProps::keyscan_interval;
       readMatrix();
     }
     actOnMatrixScan();
@@ -197,7 +190,7 @@ class GD32: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
     for (uint8_t i = 0; i < _KeyScannerProps::matrix_columns; i++) {
     // TODO - do we need this on gd32?
     asm("NOP"); // We need to pause a beat before reading or we may read before the pin is hot
-      hot_pins |= (!READ_PIN(_KeyScannerProps::matrix_col_pins[i]) << i);
+      hot_pins |= (!digitalRead(_KeyScannerProps::matrix_col_pins[i]) << i);
     }
 
     return hot_pins;

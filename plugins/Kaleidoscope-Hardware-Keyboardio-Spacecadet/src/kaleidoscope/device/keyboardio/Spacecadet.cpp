@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Spacecadet -- Keyboardio Model 100 hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-Spacecadet -- Keyboardio Spacecadet hardware support for Kaleidoscope
  * Copyright (C) 2021  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -29,8 +29,8 @@
 // Here, we set up aliases to the device's KeyScanner and KeyScannerProps
 // in the global namespace within the scope of this file. We'll use these
 // aliases to simplify some template initialization code below.
-using KeyScannerProps = typename kaleidoscope::device::keyboardio::AtreusProps::KeyScannerProps;
-using KeyScanner = typename kaleidoscope::device::keyboardio::AtreusProps::KeyScanner;
+using KeyScannerProps = typename kaleidoscope::device::keyboardio::SpacecadetProps::KeyScannerProps;
+using KeyScanner = typename kaleidoscope::device::keyboardio::SpacecadetProps::KeyScanner;
 
 
 
@@ -51,29 +51,6 @@ constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 // `KeyScanner` here refers to the alias set up above, just like in the
 // `KeyScannerProps` case above.
 template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
-
-// We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
-// cannot be in a header-only driver, and must be placed here.
-//
-// Timer1 is responsible for setting a property on the KeyScanner, which will
-// tell it to do a scan. We use this to make sure that scans happen at roughly
-// the intervals we want. We do the scan outside of the interrupt scope for
-// practical reasons: guarding every codepath against interrupts that can be
-// reached from the scan is far too tedious, for very little gain.
-ISR(TIMER1_OVF_vect) {
-  Runtime.device().keyScanner().do_scan_ = true;
-}
-
-
-
-
-
-/********* Hardware plugin *********/
-
-void Spacecadet::setup() {
-  SpacecadetKeyScanner::setup();
-  kaleidoscope::device::Base<SpacecadetProps>::setup();
-}
 
 
 
