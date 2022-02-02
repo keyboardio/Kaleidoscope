@@ -58,7 +58,8 @@ The plugin provides a `DynamicMacros` object, with the following methods and pro
 
 > Reserves `size` bytes of storage for dynamic macros. This must be called from
 > the `setup()` method of your sketch, otherwise dynamic macros will not
-> function.
+> function. Two bytes of this are used for internal tracking, the remainder is used
+> for your macro map.
 
 ### `.play(macro_id)`
 
@@ -73,21 +74,28 @@ please refer to the documentation therein.
 
 ## Focus commands
 
-The plugin provides two Focus commands: `macros.map` and `macros.trigger`.
+The plugin provides the following Focus commands:
 
 ### `macros.map [macros...]`
 
 > Without arguments, displays all the stored macros. Each macro is terminated by
-> an end marker (`MACRO_ACTION_END`), and the last macro is followed by an
-> additional marker. The plugin will send back the entire dynamic macro storage
-> space, even the data after the final marker.
+> an end marker (`MACRO_ACTION_END`). The plugin will send back only the used
+> dynamic macro storage space.
 
 > With arguments, it replaces the current set of dynamic macros with the newly
-> given ones. Macros are terminated by an end marker, and the last macro must be
-> terminated by an additional one.
+> given ones. Macros are terminated by an end marker.
 
 > In both cases, the data sent or expected is a sequence of 8-bit values, a
 > memory dump.
+
+### `macros.appendMap [macros...]`
+
+> Append to the current macro map. This is provided to allow for macro maps that
+> exceed the serial input buffer for a single line.
+
+### `macros.reset`
+
+> Clear all previously defined macros.
 
 ### `macros.trigger macro_id`
 

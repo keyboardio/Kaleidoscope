@@ -42,8 +42,12 @@ class DynamicMacros : public kaleidoscope::Plugin {
  private:
   static uint16_t storage_base_;
   static uint16_t storage_size_;
+  static uint16_t used_size_base_;
+  static uint16_t used_size_;
   static uint16_t map_[31];
   static void updateDynamicMacroCache();
+  static void resetMap();
+  static void readMap();
   static Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
   static void press(Key key);
   static void release(Key key);
