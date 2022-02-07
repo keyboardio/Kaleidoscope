@@ -29,6 +29,136 @@ that's done is a call to `Macros.type()`, or a `MACRO()` or `MACRODOWN()`
 sequence is returned.
 
 
+## Using `MACRO()` and `MACRODOWN()`
+
+The preprocessor macro `MACRODOWN()` has been deprecated, because the event
+handler for Macros is no longer called every cycle, but only when a key is
+either pressed or released.  Instead of using `return MACRODOWN()`, you should
+test for a toggle-on event in `macroAction()` and use `MACRO()` instead.  If you
+previously had something like the following in your `macroAction()` function:
+
+```c++
+switch(macro_id) {
+case MY_MACRO:
+  return MACRODOWN(T(X), T(Y), T(Z));
+}
+```
+
+...you should replace that with:
+
+```c++
+switch(macro_id) {
+case MY_MACRO:
+  if (keyToggledOn(event.state))
+    return MACRO(T(X), T(Y), T(Z));
+}
+```
+
+...or, for a group of macros that should only fire on keypress:
+
+```c++
+if (keyToggledOn(event.state)) {
+  switch(macro_id) {
+  case MY_MACRO:
+    return MACRO(T(X), T(Y), T(Z));
+  case MY_OTHER_MACRO:
+    return MACRO(T(A), T(B), T(C));
+  }
+}
+```
+
+## Releasing keys with `Macros.release()` or `U()`/`Ur()`/`Uc()`
+
+Macros now operates by manipulating keys on a small supplemental virtual
+keyboard when using `Macros.press()` and `Macros.release()` (which are called by
+`D()` and `U()`, _et al_, respectively).  This means that it has no built-in
+facility for releasing other keys that are held on the keyboard.  For example,
+if you had a Macro that removed `shift` keycodes from the HID report in the
+past, it won't work.  For example:
+
+```c++
+  case KEY_COMMA:
+    if (keyToggledOn(event.state)) {
+      if (Kaleidoscope.hid().keyboard().wasModifierKeyActive(Key_LeftShift)) {
+        return MACRO(U(LeftShift), T(Comma), D(LeftShift));
+      } else {
+        return MACRO(T(M));
+      }
+    }
+```
+
+In this case, holding a physical `Key_LeftShift` and pressing `M(KEY_COMMA)`
+will not cause the held `shift` to be released, and you'll get a `<` instead of
+the intended `,` (depending on the OS keymap).  To accomplish this, you'll need
+a small plugin like the following in your sketch:
+
+```c++
+namespace kaleidoscope {
+namespace plugin {
+
+// When activated, this plugin will suppress any `shift` key (including modifier
+// combos with `shift` a flag) before it's added to the HID report.
+class ShiftBlocker : public Plugin {
+
+ public:
+  EventHandlerResult onAddToReport(Key key) {
+    if (active_ && key.isKeyboardShift())
+      return EventHandlerResult::ABORT;
+    return EventHandlerResult::OK;
+  }
+
+  void enable() {
+    active_ = true;
+  }
+  void disable() {
+    active_ = false;
+  }
+
+ private:
+  bool active_{false};
+
+};
+
+} // namespace plugin
+} // namespace kaleidoscope
+
+kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
+```
+
+You may also need to define a function to test for held `shift` keys:
+
+```c++
+bool isShiftKeyHeld() {
+  for (Key key : kaleidoscope:live_keys.all()) {
+    if (key.isKeyboardShift())
+      return true;
+  }
+  return false;
+}
+```
+
+Then, in your `macroAction()` function:
+
+```c++
+  if (keyToggledOn(event.state)) {
+    switch (macro_id) {
+    case MY_MACRO:
+      if (isShiftKeyHeld()) {
+        ShiftBlocker.enable();
+        Macros.tap(Key_Comma);
+        ShiftBlocker.disable();
+      } else {
+        Macros.tap(Key_M);
+      }
+      return MACRO_NONE;
+    }
+  }
+```
+
+In many simple cases, such as the above example, an even better solution is to
+use the CharShift plugin instead of Macros.
+
+
 ## Code that calls `handleKeyswitchEvent()` or `pressKey()`
 
 It is very likely that if you have custom code that calls
