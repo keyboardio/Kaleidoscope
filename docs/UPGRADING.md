@@ -17,6 +17,7 @@ If any of this does not make sense to you, or you have trouble updating your .in
     - [Consistent timing](#consistent-timing)
   + [Breaking changes](#breaking-changes)
     - [Macros](#macros)
+    - [Removed `kaleidoscope-builder`](#removed-kaleidoscope-builder)
     - [OneShot meta keys](#oneshot-meta-keys)
     - [git checkouts aren't compatible with Arduino IDE (GUI)]([#repository-rearchitecture)
     - [Layer system switched to activation-order](#layer-system-switched-to-activation-order)
