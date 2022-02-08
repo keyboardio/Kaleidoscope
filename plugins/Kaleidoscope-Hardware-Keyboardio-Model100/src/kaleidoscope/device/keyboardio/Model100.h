@@ -138,6 +138,10 @@ class Model100 : public kaleidoscope::device::Base<Model100Props> {
  public:
   void setup();
 
+  auto serialPort() -> decltype(Serial) & {
+    return Serial;
+  }
+
   static void enableHardwareTestMode();
 };
 
