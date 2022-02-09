@@ -27,8 +27,8 @@ namespace plugin {
 char FocusSerial::command_[32];
 
 void FocusSerial::drain(void) {
-    while (Runtime.serialPort().available() && Runtime.serialPort().peek() != '\n')
-      Runtime.serialPort().read();
+  while (Runtime.serialPort().available() && Runtime.serialPort().peek() != '\n')
+    Runtime.serialPort().read();
 }
 
 EventHandlerResult FocusSerial::afterEachCycle() {
