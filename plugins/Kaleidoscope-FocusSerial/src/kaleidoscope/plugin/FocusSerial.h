@@ -97,7 +97,6 @@ class FocusSerial : public kaleidoscope::Plugin {
  private:
   static char command_[32];
 
-  static void drain(void);
   static void printBool(bool b);
 };
 }

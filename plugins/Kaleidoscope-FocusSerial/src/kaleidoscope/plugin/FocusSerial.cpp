@@ -26,12 +26,6 @@ namespace plugin {
 
 char FocusSerial::command_[32];
 
-void FocusSerial::drain(void) {
-  if (Runtime.serialPort().available())
-    while (Runtime.serialPort().peek() != '\n')
-      Runtime.serialPort().read();
-}
-
 EventHandlerResult FocusSerial::afterEachCycle() {
   // If the serial buffer is empty, we don't have any work to do
   if (Runtime.serialPort().available() == 0)
@@ -51,12 +45,16 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 
   Runtime.onFocusEvent(command_);
 
+  while (Runtime.serialPort().available()) {
+    char c =  Runtime.serialPort().read();
+    if (c == NEWLINE) {
+      // newline serves as an end-of-command marker
+      // don't drain the buffer past there
+      break;
+    }
+  }
   Runtime.serialPort().println(F("\r\n."));
 
-  drain();
-
-  if (Runtime.serialPort().peek() == '\n')
-    Runtime.serialPort().read();
 
   return EventHandlerResult::OK;
 }
