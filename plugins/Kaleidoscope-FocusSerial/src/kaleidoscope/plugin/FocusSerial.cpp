@@ -32,6 +32,8 @@ EventHandlerResult FocusSerial::afterEachCycle() {
     return EventHandlerResult::OK;
 
   uint8_t i = 0;
+  memset(command_, 0, sizeof(command_));
+
   do {
     command_[i++] = Runtime.serialPort().read();
 
