@@ -38,13 +38,13 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   do {
     command_[i++] = Runtime.serialPort().read();
   } while (command_[i - 1] != SEPARATOR
-		  && i < sizeof(command_) 
-		  && Runtime.serialPort().available() 
-		  && (Runtime.serialPort().peek() != NEWLINE ));
+           && i < sizeof(command_)
+           && Runtime.serialPort().available()
+           && (Runtime.serialPort().peek() != NEWLINE));
 
 
   // If this was a command with a space-delimited payload, strip the space delimiter off
-  if (command_[i - 1] == SEPARATOR )
+  if (command_[i - 1] == SEPARATOR)
     command_[i - 1] = '\0';
 
 
