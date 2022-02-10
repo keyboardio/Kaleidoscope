@@ -45,6 +45,12 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   if (command_[i - 1] == SEPARATOR )
     command_[i - 1] = '\0';
 
+
+  // If there was no command, there's nothing to do
+  if (command_[0] == '\0') {
+    return EventHandlerResult::OK;
+  }
+
   Runtime.onFocusEvent(command_);
 
   while (Runtime.serialPort().available()) {
