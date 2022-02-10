@@ -42,8 +42,6 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   } while (command_[i - 1] != ' ' && i < 32);
   if (command_[i - 1] == ' ')
     command_[i - 1] = '\0';
-  else
-    command_[i] = '\0';
 
   Runtime.onFocusEvent(command_);
 

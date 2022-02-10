@@ -25,6 +25,10 @@ class FocusSerial : public kaleidoscope::Plugin {
  public:
   FocusSerial(void) {}
 
+  static constexpr char COMMENT = '#';
+  static constexpr char SEPARATOR = ' ';
+  static constexpr char NEWLINE = '\n';
+
   bool handleHelp(const char *command,
                   const char *help_message);
 
@@ -83,12 +87,9 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
 
   bool isEOL() {
-    return Runtime.serialPort().peek() == '\n';
+    return Runtime.serialPort().peek() == NEWLINE;
   }
 
-  static constexpr char COMMENT = '#';
-  static constexpr char SEPARATOR = ' ';
-  static constexpr char NEWLINE = '\n';
 
   /* Hooks */
   EventHandlerResult afterEachCycle();
