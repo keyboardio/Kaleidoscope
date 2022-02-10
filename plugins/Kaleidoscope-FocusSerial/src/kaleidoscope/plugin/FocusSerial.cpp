@@ -25,36 +25,45 @@ namespace kaleidoscope {
 namespace plugin {
 
 char FocusSerial::command_[32];
+uint8_t FocusSerial::buf_cursor_ = 0;
 
 EventHandlerResult FocusSerial::afterEachCycle() {
   // If the serial buffer is empty, we don't have any work to do
-  if (Runtime.serialPort().available() == 0)
+  if (Runtime.serialPort().available() == 0) {
     return EventHandlerResult::OK;
-
-
-  uint8_t i = 0;
-  memset(command_, 0, sizeof(command_));
+    }
 
   do {
-    command_[i++] = Runtime.serialPort().read();
-  } while (command_[i - 1] != SEPARATOR
-           && i < sizeof(command_)
+    command_[buf_cursor_++] = Runtime.serialPort().read();
+  } while ( command_[buf_cursor_ - 1] != SEPARATOR
+           && buf_cursor_ < sizeof(command_)
            && Runtime.serialPort().available()
            && (Runtime.serialPort().peek() != NEWLINE));
 
 
-  // If this was a command with a space-delimited payload, strip the space delimiter off
-  if (command_[i - 1] == SEPARATOR)
-    command_[i - 1] = '\0';
-
-
   // If there was no command, there's nothing to do
   if (command_[0] == '\0') {
+    buf_cursor_ = 0;
+    memset(command_, 0, sizeof(command_));
     return EventHandlerResult::OK;
   }
 
-  Runtime.onFocusEvent(command_);
+  if ( (command_[buf_cursor_ - 1] != SEPARATOR)  && (Runtime.serialPort().peek() != NEWLINE)
+	 && buf_cursor_ < sizeof(command_)
+		  ) {
+	// We don't have enough command to work with yet.
+	// Let's leave the buffer around for another cycle
+  	return EventHandlerResult::OK;
+  }
 
+  // If this was a command with a space-delimited payload, 
+  // strip the space delimiter off
+  if ( (command_[buf_cursor_ - 1] == SEPARATOR) ) {
+    command_[buf_cursor_ - 1] = '\0';
+  }
+
+  // Then process the command
+  Runtime.onFocusEvent(command_);
   while (Runtime.serialPort().available()) {
     char c =  Runtime.serialPort().read();
     if (c == NEWLINE) {
@@ -65,9 +74,10 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   }
   // End of command processing is signalled with a CRLF followed by a single period
   Runtime.serialPort().println(F("\r\n."));
-
-
+  buf_cursor_ = 0;
+  memset(command_, 0, sizeof(command_));
   return EventHandlerResult::OK;
+
 }
 
 bool FocusSerial::handleHelp(const char *command,
