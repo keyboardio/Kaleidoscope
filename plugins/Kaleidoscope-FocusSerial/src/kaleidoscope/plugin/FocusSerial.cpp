@@ -63,6 +63,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
       break;
     }
   }
+  // End of command processing is signalled with a CRLF followed by a single period
   Runtime.serialPort().println(F("\r\n."));
 
 
