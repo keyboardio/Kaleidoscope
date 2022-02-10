@@ -40,7 +40,9 @@ EventHandlerResult FocusSerial::afterEachCycle() {
     if (Runtime.serialPort().peek() == '\n')
       break;
   } while (command_[i - 1] != ' ' && i < 32);
-  if (command_[i - 1] == ' ')
+
+  // If this was a command with a space-delimited payload, strip the space delimiter off
+  if (command_[i - 1] == SEPARATOR )
     command_[i - 1] = '\0';
 
   Runtime.onFocusEvent(command_);
