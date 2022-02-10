@@ -31,15 +31,17 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   if (Runtime.serialPort().available() == 0)
     return EventHandlerResult::OK;
 
+
   uint8_t i = 0;
   memset(command_, 0, sizeof(command_));
 
   do {
     command_[i++] = Runtime.serialPort().read();
+  } while (command_[i - 1] != SEPARATOR
+		  && i < sizeof(command_) 
+		  && Runtime.serialPort().available() 
+		  && (Runtime.serialPort().peek() != NEWLINE ));
 
-    if (Runtime.serialPort().peek() == '\n')
-      break;
-  } while (command_[i - 1] != ' ' && i < 32);
 
   // If this was a command with a space-delimited payload, strip the space delimiter off
   if (command_[i - 1] == SEPARATOR )
