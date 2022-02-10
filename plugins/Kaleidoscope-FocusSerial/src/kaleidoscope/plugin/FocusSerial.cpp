@@ -33,6 +33,7 @@ void FocusSerial::drain(void) {
 }
 
 EventHandlerResult FocusSerial::afterEachCycle() {
+  // If the serial buffer is empty, we don't have any work to do
   if (Runtime.serialPort().available() == 0)
     return EventHandlerResult::OK;
 
