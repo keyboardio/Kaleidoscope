@@ -31,11 +31,11 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   // If the serial buffer is empty, we don't have any work to do
   if (Runtime.serialPort().available() == 0) {
     return EventHandlerResult::OK;
-    }
+  }
 
   do {
     command_[buf_cursor_++] = Runtime.serialPort().read();
-  } while ( command_[buf_cursor_ - 1] != SEPARATOR
+  } while (command_[buf_cursor_ - 1] != SEPARATOR
            && buf_cursor_ < sizeof(command_)
            && Runtime.serialPort().available()
            && (Runtime.serialPort().peek() != NEWLINE));
@@ -48,17 +48,17 @@ EventHandlerResult FocusSerial::afterEachCycle() {
     return EventHandlerResult::OK;
   }
 
-  if ( (command_[buf_cursor_ - 1] != SEPARATOR)  && (Runtime.serialPort().peek() != NEWLINE)
-	 && buf_cursor_ < sizeof(command_)
-		  ) {
-	// We don't have enough command to work with yet.
-	// Let's leave the buffer around for another cycle
-  	return EventHandlerResult::OK;
+  if ((command_[buf_cursor_ - 1] != SEPARATOR)  && (Runtime.serialPort().peek() != NEWLINE)
+      && buf_cursor_ < sizeof(command_)
+     ) {
+    // We don't have enough command to work with yet.
+    // Let's leave the buffer around for another cycle
+    return EventHandlerResult::OK;
   }
 
-  // If this was a command with a space-delimited payload, 
+  // If this was a command with a space-delimited payload,
   // strip the space delimiter off
-  if ( (command_[buf_cursor_ - 1] == SEPARATOR) ) {
+  if ((command_[buf_cursor_ - 1] == SEPARATOR)) {
     command_[buf_cursor_ - 1] = '\0';
   }
 
