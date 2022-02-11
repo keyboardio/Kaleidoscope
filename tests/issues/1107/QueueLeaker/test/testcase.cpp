@@ -45,53 +45,13 @@ class KeyAddrEventQueueLeak : public VirtualDeviceTest {
 };
 
 TEST_F(KeyAddrEventQueueLeak, TimeIsConsistent) {
-  assertTimeElapses(1);
-  assertTimeElapses(1);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
-  assertTimeElapses(10);
+  // Basic test every cycle
+  for (int i = 0; i < 10; ++i)
+    assertTimeElapses(1);
+
+  // Guarantee underflow in case of signed integer length
+  for (int i = 0; i < 50; ++i)
+    assertTimeElapses(10);
 }
 
 }  // namespace
