@@ -164,6 +164,25 @@ sub load_from_text {
                 }
 
             },
+            delay => sub {
+                my $content = shift;
+                if ( $content =~ /^(\d+)\s*(\w*?)$/ ) {
+                    my $count = $1;
+                    my $unit  = $2;
+                    if ( $unit =~ /milli|ms/ ) {
+                        return { millis => $count };
+                    }
+                    else {
+                        die
+"Line $line_num: failed to parse a 'delay' clause: $content";
+                    }
+                }
+                else {
+                    die
+"Line $line_num: failed to parse a 'delay' clause: $content";
+                }
+
+            },
 
         };
 
@@ -322,6 +341,7 @@ sub generate_script {
             elsif ( $action eq 'press' )   { generate_press($entry) }
             elsif ( $action eq 'release' ) { generate_release($entry); }
             elsif ( $action eq 'run' )     { generate_run($entry) }
+            elsif ( $action eq 'delay' )   { generate_delay($entry) }
             elsif ( $action eq 'expect' )  { generate_expect_report($entry); }
             else {
                 die "$action unknown on line $entry->{line_num}";
@@ -345,6 +365,16 @@ sub generate_run {
     }
     elsif ( $action->{data}->{'millis'} ) {
         cxx( 'sim_.RunForMillis(' . $action->{data}->{'millis'} . ');' );
+    }
+}
+
+sub generate_delay {
+    my $action = shift;
+    if ( $action->{'comment'} ) {
+        cxx_comment( $action->{'comment'} );
+    }
+    if ( $action->{data}->{'millis'} ) {
+        cxx( 'delay(' . $action->{data}->{'millis'} . ');' );
     }
 }
 
