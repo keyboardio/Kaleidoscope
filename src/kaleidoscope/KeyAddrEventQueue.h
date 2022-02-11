@@ -103,6 +103,8 @@ class KeyAddrEventQueue {
   // rather than using a ring buffer because we expect it will be called much
   // less often than the queue is searched via a for loop.
   void remove(uint8_t n = 0) {
+    if (n >= length_ || length_ == 0)
+      return;
     // assert(length > n);
     --length_;
     for (uint8_t i{n}; i < length_; ++i) {

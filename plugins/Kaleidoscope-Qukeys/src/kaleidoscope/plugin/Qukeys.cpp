@@ -88,9 +88,6 @@ EventHandlerResult Qukeys::afterEachCycle() {
     return EventHandlerResult::OK;
   }
 
-  // Process as many events as we can from the queue.
-  while (processQueue());
-
   // If we get here, that means that the first event in the queue is a qukey
   // press. All that's left to do is to check if it's been held long enough that
   // it has timed out.
@@ -101,6 +98,10 @@ EventHandlerResult Qukeys::afterEachCycle() {
                     queue_head_.primary_key : queue_head_.alternate_key;
     flushEvent(event_key);
   }
+
+  // Process as many events as we can from the queue.
+  while (processQueue());
+
   return EventHandlerResult::OK;
 }
 
