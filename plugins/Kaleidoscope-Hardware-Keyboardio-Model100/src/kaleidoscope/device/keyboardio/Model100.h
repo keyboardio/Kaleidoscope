@@ -40,6 +40,7 @@ struct cRGB {
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/hid/Keyboardio.h"
+#include "kaleidoscope/driver/hid/Base.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
 
 namespace kaleidoscope {
@@ -117,14 +118,25 @@ class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model10
 class Model100KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+
+// Disable AbsoluteMouse by substituting in the noop base class until
+// our usb enumeration is fixed
+struct Model100HIDProps: public kaleidoscope::driver::hid::KeyboardioProps {
+  typedef kaleidoscope::driver::hid::base::AbsoluteMouseProps AbsoluteMouseProps;
+  typedef kaleidoscope::driver::hid::base::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
+};
+
+
 struct Model100Props : public kaleidoscope::device::BaseProps {
-  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef Model100HIDProps HIDProps;
   typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
 
   typedef Model100LEDDriverProps  LEDDriverProps;
   typedef Model100LEDDriver LEDDriver;
+
   typedef Model100KeyScannerProps KeyScannerProps;
   typedef Model100KeyScanner KeyScanner;
+
   typedef Model100StorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
 
