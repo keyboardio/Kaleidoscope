@@ -119,10 +119,6 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 #define TRANSFER_PGM                0
 #define TRANSFER_RELEASE            0
 
-#define HID_REPORT_TYPE_INPUT       1
-#define HID_REPORT_TYPE_OUTPUT      2
-#define HID_REPORT_TYPE_FEATURE     3
-
 #elif defined(ARDUINO_ARCH_GD32)
 
 #include "USBCore.h"
