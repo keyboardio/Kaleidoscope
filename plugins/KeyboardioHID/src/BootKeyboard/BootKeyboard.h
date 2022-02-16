@@ -28,7 +28,6 @@ THE SOFTWARE.
 
 #include <Arduino.h>
 #include "HID.h"
-#include "HID-Settings.h"
 #include "HIDTables.h"
 #include "HIDAliases.h"
 
