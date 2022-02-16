@@ -124,7 +124,12 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 #include "USBCore.h"
 
 #define EPTYPE_DESCRIPTOR_SIZE      unsigned int
+
+
+// Should eventually get defined upstream
+#ifndef USB_DEVICE_CLASS_HUMAN_INTERFACE
 #define USB_DEVICE_CLASS_HUMAN_INTERFACE       0x03
+#endif
 
 #define EP_TYPE_INTERRUPT_IN EPTYPE(USB_TRX_IN, USB_EP_ATTR_INT);
 #define EP_TYPE_INTERRUPT_OUT EPTYPE(USB_TRX_OUT, USB_EP_ATTR_INT);
