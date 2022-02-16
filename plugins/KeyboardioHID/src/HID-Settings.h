@@ -77,13 +77,9 @@ void USB_PackMessages(bool pack);
 
 #if defined(ARDUINO_ARCH_AVR)
 
-#include "PluggableUSB.h"
-
 #define EPTYPE_DESCRIPTOR_SIZE      uint8_t
 
 #elif defined(ARDUINO_ARCH_SAM)
-
-#include "USB/PluggableUSB.h"
 
 #define EPTYPE_DESCRIPTOR_SIZE      uint32_t
 #define EP_TYPE_INTERRUPT_IN        (UOTGHS_DEVEPTCFG_EPSIZE_512_BYTE | \
@@ -105,8 +101,6 @@ void USB_PackMessages(bool pack);
 #define USB_Flush                   USBD_Flush
 
 #elif defined(ARDUINO_ARCH_SAMD)
-
-#include "USB/PluggableUSB.h"
 
 #define EPTYPE_DESCRIPTOR_SIZE      uint32_t
 #define EP_TYPE_INTERRUPT_IN        USB_ENDPOINT_TYPE_INTERRUPT | USB_ENDPOINT_IN(0);
@@ -131,7 +125,6 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 
 #elif defined(ARDUINO_ARCH_GD32)
 
-#include "api/PluggableUSB.h"
 #include "USBCore.h"
 
 #define EPTYPE_DESCRIPTOR_SIZE      unsigned int
