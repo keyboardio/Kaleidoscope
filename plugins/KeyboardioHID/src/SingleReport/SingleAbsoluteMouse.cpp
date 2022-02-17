@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 #include "SingleAbsoluteMouse.h"
 #include "HIDReportObserver.h"
+#include "HID-Settings.h"
 
 static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)         54 */
@@ -37,9 +38,16 @@ static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
   D_END_COLLECTION                             /* End */
 };
 
+#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
+static const uint8_t SINGLE_ABSOLUTEMOUSE_EP_SIZE = 6;
+#else
+static const uint8_t SINGLE_ABSOLUTEMOUSE_EP_SIZE = USB_EP_SIZE;
+#endif
+
+
 
 SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
-  epType[0] = EP_TYPE_INTERRUPT_IN;
+  epType[0] = EP_TYPE_INTERRUPT_IN(SINGLE_ABSOLUTEMOUSE_EP_SIZE);
   PluggableUSB().plug(this);
 }
 
@@ -48,7 +56,7 @@ int SingleAbsoluteMouse_::getInterface(uint8_t* interfaceCount) {
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_NONE, HID_PROTOCOL_NONE),
     D_HIDREPORT(sizeof(_hidSingleReportDescriptorAbsoluteMouse)),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, SINGLE_ABSOLUTEMOUSE_EP_SIZE, 0x01)
   };
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
