@@ -131,8 +131,11 @@ int USB_SendControl(uint8_t x, const void* y, uint8_t z);
 #define USB_DEVICE_CLASS_HUMAN_INTERFACE       0x03
 #endif
 
-#define EP_TYPE_INTERRUPT_IN EPTYPE(USB_TRX_IN, USB_EP_ATTR_INT);
-#define EP_TYPE_INTERRUPT_OUT EPTYPE(USB_TRX_OUT, USB_EP_ATTR_INT);
+
+constexpr uint16_t EP_TYPE_INTERRUPT_IN(uint8_t buffer_size) { return EPDesc(USB_TRX_IN, USB_EP_ATTR_INT, buffer_size).val; }
+constexpr uint16_t EP_TYPE_INTERRUPT_OUT(uint8_t buffer_size) { return EPDesc(USB_TRX_OUT, USB_EP_ATTR_INT, buffer_size).val; }
+
+
 
 #else
 
