@@ -119,11 +119,10 @@ class Model100KeyScanner;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 
-// Disable AbsoluteMouse by substituting in the noop base class until
-// our usb enumeration is fixed
+// If we need to override HID props:
 struct Model100HIDProps: public kaleidoscope::driver::hid::KeyboardioProps {
-  typedef kaleidoscope::driver::hid::base::AbsoluteMouseProps AbsoluteMouseProps;
-  typedef kaleidoscope::driver::hid::base::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
+  //typedef kaleidoscope::driver::hid::base::AbsoluteMouseProps AbsoluteMouseProps;
+  //typedef kaleidoscope::driver::hid::base::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
 };
 
 
