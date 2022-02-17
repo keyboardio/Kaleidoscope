@@ -64,6 +64,7 @@ THE SOFTWARE.
   D_REPORT_COUNT, 0x01,                     /* REPORT_COUNT (1) */          \
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
 
+#pragma pack(push, 1)
 typedef union {
   // Absolute mouse report: 8 buttons, 2 absolute axis, wheel
   struct {
@@ -73,6 +74,7 @@ typedef union {
     int8_t wheel;
   };
 } HID_MouseAbsoluteReport_Data_t;
+#pragma pack(pop)
 
 class AbsoluteMouseAPI {
  public:
