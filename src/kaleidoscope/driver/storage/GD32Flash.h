@@ -28,7 +28,7 @@ namespace driver {
 namespace storage {
 
 struct GD32FlashProps : kaleidoscope::driver::storage::BaseProps {
-  static constexpr uint16_t length = 10240;
+  static constexpr uint16_t length = 16384;
 };
 
 template <typename _StorageProps>
