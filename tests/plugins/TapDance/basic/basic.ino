@@ -46,8 +46,13 @@ void tapDanceAction(uint8_t tap_dance_index,
                     kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
   switch (tap_dance_index) {
   case 0:
-    return tapDanceActionKeys(tap_count, tap_dance_action,
-                              Key_A, Key_B, Key_C);
+    if (tap_dance_action == TapDance.Hold) {
+      return tapDanceActionKeys(tap_count, tap_dance_action,
+                                Key_A, Key_H, Key_C);
+    } else {
+      return tapDanceActionKeys(tap_count, tap_dance_action,
+                                Key_A, Key_B, Key_C);
+    }
   default:
     break;
   }

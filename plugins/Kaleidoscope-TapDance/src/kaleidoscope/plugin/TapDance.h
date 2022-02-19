@@ -36,13 +36,13 @@ namespace kaleidoscope {
 namespace plugin {
 class TapDance : public kaleidoscope::Plugin {
  public:
-  typedef enum {
+  enum ActionType {
     Tap,
     Hold,
     Interrupt,
     Timeout,
     Release,
-  } ActionType;
+  };
 
   TapDance(void) {}
 
