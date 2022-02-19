@@ -89,7 +89,7 @@ RUN 10 ms
 PRESS TD_0
 RUN 1 cycle
 RUN 25 ms
-EXPECT keyboard-report Key_B # The report should contain `B`
+EXPECT keyboard-report Key_H # The report should contain `H`
 
 RUN 10 ms
 RELEASE TD_0
