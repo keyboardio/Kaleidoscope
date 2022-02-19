@@ -45,7 +45,7 @@ void TapDance::actionKeys(uint8_t tap_count,
   KeyEvent event = event_queue_.event(0);
   event.key = tap_keys[tap_count - 1].readFromProgmem();
 
-  if (action == Interrupt || action == Timeout) {
+  if (action == Interrupt || action == Timeout || action == Hold) {
     event_queue_.shift();
     Runtime.handleKeyswitchEvent(event);
   } else if (action == Tap && tap_count == max_keys) {
@@ -136,7 +136,20 @@ EventHandlerResult TapDance::afterEachCycle() {
   // Check for timeout
   uint16_t start_time = event_queue_.timestamp(0);
   if (Runtime.hasTimeExpired(start_time, time_out)) {
-    tapDanceAction(td_id, td_addr, tap_count_, Timeout);
+    // We start with the assumption that the TapDance key is still being held.
+    ActionType action = Hold;
+    // Now we search for a release event for the TapDance key, starting from the
+    // second event in the queue (the first one being its press event).
+    for (uint8_t i{1}; i < event_queue_.length(); ++i) {
+      // It should be safe to assume that if we find a second event for the same
+      // address, it's a release, so we skip the test for it.
+      if (event_queue_.addr(i) == td_addr) {
+        action = Timeout;
+        // We don't need to bother breaking here because this is basically
+        // guaranteed to be the last event in the queue.
+      }
+    }
+    tapDanceAction(td_id, td_addr, tap_count_, action);
     flushQueue();
     tap_count_ = 0;
   }
