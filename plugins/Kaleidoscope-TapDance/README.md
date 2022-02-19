@@ -32,20 +32,22 @@ timer expires, then the tap-dance key will trigger an action first, perform it,
 and only then will the firmware continue handling the interrupting key press.
 This is to preserve the order of keys pressed.
 
-In both of these cases, the [`tapDanceAction`][tdaction] will be called, with
-`tapDanceIndex` set to the index of the tap-dance action (as set in the keymap),
-the `tapCount`, and `tapDanceAction` set to either
-`kaleidoscope::plugin::TapDance::Interrupt`, or
-`kaleidoscope::plugin::TapDance::Timeout`. If we continue holding the key, then
-as long as it is held, the same function will be called with `tapDanceAction`
-set to `kaleidoscope::plugin::TapDance::Hold`. When the key is released, after
-either an `Interrupt` or `Timeout` action was triggered, the function will be
-called with `tapDanceAction` set to `kaleidoscope::plugin::TapDance::Release`.
+In both of these cases, the user-defined `tapDanceAction()` function will be
+called, with `tap_dance_index` set to the index of the tap-dance action (as set
+in the keymap), the `tap_count`, and `tap_dance_action` set to one of the
+following values:
+
+- `kaleidoscope::plugin::TapDance::Hold`, if the tap-dance key is still being
+  held when its timeout expires.
+- `kaleidoscope::plugin::TapDance::Timeout`, if the tap-dance key has been
+  released when its timeout expires.
+- `kaleidoscope::plugin::TapDance::Interrupt`, if another key is pressed before
+  the tap-dance key's timeout expires.
 
 These actions allow us to create sophisticated tap-dance setups, where one can
 tap a key twice and hold it, and have it repeat, for example.
 
-There is one additional value the `tapDanceAction` parameter can take:
+There is one additional value the `tap_dance_action` parameter can take:
 `kaleidoscope::plugin::TapDance::Tap`. It is called with this argument for each
 and every tap, even if no action is to be triggered yet. This is so that we can
 have a way to do some side-effects, like light up LEDs to show progress, and so
