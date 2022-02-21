@@ -37,6 +37,11 @@ uint16_t MouseKeys_::move_start_time_;
 uint16_t MouseKeys_::accel_start_time_;
 uint16_t MouseKeys_::wheel_start_time_;
 
+uint8_t MouseKeys_::move_direction_ = 0;
+uint8_t MouseKeys_::wheel_direction_ = 0;
+uint8_t MouseKeys_::pending_move_direction_ = 0;
+uint8_t MouseKeys_::pending_wheel_direction_ = 0;
+
 // =============================================================================
 // Configuration functions
 
@@ -105,75 +110,12 @@ EventHandlerResult MouseKeys_::afterEachCycle() {
   }
 
   // Check timeout for position update interval.
-  bool update_position = Runtime.hasTimeExpired(move_start_time_, speedDelay);
-  if (update_position) {
-    move_start_time_ = Runtime.millisAtCycleStart();
-    // Determine which mouse movement directions are active by searching through
-    // all the currently active keys for mouse movement keys, and adding them to
-    // a bitfield (`directions`).
-    uint8_t directions = 0;
-    int8_t vx = 0;
-    int8_t vy = 0;
-    for (Key key : live_keys.all()) {
-      if (isMouseKey(key) && isMouseMoveKey(key)) {
-        directions |= key.getKeyCode();
-      }
-    }
-
-    if (directions == 0) {
-      // If there are no mouse movement keys held, reset speed to zero.
-      MouseWrapper.accelStep = 0;
-    } else {
-      // For each active direction, add the mouse movement speed.
-      if (directions & KEY_MOUSE_LEFT)
-        vx -= speed;
-      if (directions & KEY_MOUSE_RIGHT)
-        vx += speed;
-      if (directions & KEY_MOUSE_UP)
-        vy -= speed;
-      if (directions & KEY_MOUSE_DOWN)
-        vy += speed;
-
-      // Prepare the mouse report.
-      MouseWrapper.move(vx, vy);
-      // Send the report.
-      Runtime.hid().mouse().sendReport();
-    }
-  }
+  if (Runtime.hasTimeExpired(move_start_time_, speedDelay))
+    sendMouseMoveReport();
 
   // Check timeout for scroll report interval.
-  bool update_wheel = Runtime.hasTimeExpired(wheel_start_time_, wheelDelay);
-  if (update_wheel) {
-    wheel_start_time_ = Runtime.millisAtCycleStart();
-    // Determine which scroll wheel keys are active, and add their directions to
-    // a bitfield (`directions`).
-    uint8_t directions = 0;
-    int8_t vx = 0;
-    int8_t vy = 0;
-    for (Key key : live_keys.all()) {
-      if (isMouseKey(key) && isMouseWheelKey(key)) {
-        directions |= key.getKeyCode();
-      }
-    }
-
-    if (directions != 0) {
-      // Horizontal scroll wheel:
-      if (directions & KEY_MOUSE_LEFT)
-        vx -= wheelSpeed;
-      if (directions & KEY_MOUSE_RIGHT)
-        vx += wheelSpeed;
-      // Vertical scroll wheel (note coordinates are opposite movement):
-      if (directions & KEY_MOUSE_UP)
-        vy += wheelSpeed;
-      if (directions & KEY_MOUSE_DOWN)
-        vy -= wheelSpeed;
-
-      // Add scroll wheel changes to HID report.
-      Runtime.hid().mouse().move(0, 0, vy, vx);
-      // Send the report.
-      Runtime.hid().mouse().sendReport();
-    }
-  }
+  if (Runtime.hasTimeExpired(wheel_start_time_, wheelDelay))
+    sendMouseWheelReport();
 
   return EventHandlerResult::OK;
 }
@@ -183,6 +125,9 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
   if (!isMouseKey(event.key))
     return EventHandlerResult::OK;
 
+  pending_move_direction_ = 0;
+  pending_wheel_direction_ = 0;
+
   if (isMouseButtonKey(event.key)) {
     sendMouseButtonReport(event);
 
@@ -190,18 +135,58 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
     if (keyToggledOn(event.state)) {
       sendMouseWarpReport(event);
     }
-
-  } else if (isMouseMoveKey(event.key)) {
-    // No report is sent here; that's handled in `afterEachCycle()`.
-    move_start_time_ = Runtime.millisAtCycleStart() - speedDelay;
-    accel_start_time_ = Runtime.millisAtCycleStart();
-
-  } else if (isMouseWheelKey(event.key)) {
-    // No report is sent here; that's handled in `afterEachCycle()`.
-    wheel_start_time_ = Runtime.millisAtCycleStart() - wheelDelay;
   }
 
-  return EventHandlerResult::EVENT_CONSUMED;
+  // Reports for mouse cursor and wheel movement keys are sent from the
+  // `afterReportingState()` handler (when first toggled on) and
+  // `afterEachCycle()` handler (when held).  We need to return `OK` here so
+  // that processing of events for these keys will complete.
+  return EventHandlerResult::OK;
+}
+
+// -----------------------------------------------------------------------------
+EventHandlerResult MouseKeys_::afterReportingState(const KeyEvent &event) {
+  if (!isMouseKey(event.key))
+    return EventHandlerResult::OK;
+
+  // A mouse key event has been successfully registered, and we have now
+  // gathered all the information on held mouse movement and wheel keys, so it's
+  // safe to update the direction information.
+  move_direction_ = pending_move_direction_;
+  wheel_direction_ = pending_wheel_direction_;
+  pending_move_direction_ = 0;
+  pending_wheel_direction_ = 0;
+
+  if (isMouseMoveKey(event.key)) {
+    // When a cursor movement key toggles on, set the acceleration start time in
+    // order to get consistent behavior.
+    accel_start_time_ = Runtime.millisAtCycleStart();
+    sendMouseMoveReport();
+
+  } else if (isMouseWheelKey(event.key)) {
+    sendMouseWheelReport();
+  }
+
+  return EventHandlerResult::OK;
+}
+
+// -----------------------------------------------------------------------------
+// This handler is responsible for gathering information on which mouse cursor
+// and wheel movement keys are currently pressed, so the direction(s) of motion
+// will be up to date at the end of processing a mouse key event.  We add bits
+// to the `pending` directions only; these get copied later if the event isn't
+// aborted.
+EventHandlerResult MouseKeys_::onAddToReport(Key key) {
+  if (!isMouseKey(key))
+    return EventHandlerResult::OK;
+
+  if (isMouseMoveKey(key))
+    pending_move_direction_ |= key.getKeyCode();
+
+  if (isMouseWheelKey(key))
+    pending_wheel_direction_ |= key.getKeyCode();
+
+  return EventHandlerResult::OK;
 }
 
 // =============================================================================
@@ -238,6 +223,60 @@ void MouseKeys_::sendMouseWarpReport(const KeyEvent &event) const {
     ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00)    |
     ((event.key.getKeyCode() & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00)    |
     ((event.key.getKeyCode() & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00));
+}
+
+// -----------------------------------------------------------------------------
+void MouseKeys_::sendMouseMoveReport() {
+  move_start_time_ = Runtime.millisAtCycleStart();
+
+  int8_t vx = 0;
+  int8_t vy = 0;
+
+  if (move_direction_ == 0) {
+    // If there are no mouse movement keys held, reset speed to zero.
+    MouseWrapper.accelStep = 0;
+  } else {
+    // For each active direction, add the mouse movement speed.
+    if (move_direction_ & KEY_MOUSE_LEFT)
+      vx -= speed;
+    if (move_direction_ & KEY_MOUSE_RIGHT)
+      vx += speed;
+    if (move_direction_ & KEY_MOUSE_UP)
+      vy -= speed;
+    if (move_direction_ & KEY_MOUSE_DOWN)
+      vy += speed;
+
+    // Prepare the mouse report.
+    MouseWrapper.move(vx, vy);
+    // Send the report.
+    Runtime.hid().mouse().sendReport();
+  }
+}
+
+// -----------------------------------------------------------------------------
+void MouseKeys_::sendMouseWheelReport() {
+  wheel_start_time_ = Runtime.millisAtCycleStart();
+
+  int8_t vx = 0;
+  int8_t vy = 0;
+
+  if (wheel_direction_ != 0) {
+    // Horizontal scroll wheel:
+    if (wheel_direction_ & KEY_MOUSE_LEFT)
+      vx -= wheelSpeed;
+    if (wheel_direction_ & KEY_MOUSE_RIGHT)
+      vx += wheelSpeed;
+    // Vertical scroll wheel (note coordinates are opposite movement):
+    if (wheel_direction_ & KEY_MOUSE_UP)
+      vy += wheelSpeed;
+    if (wheel_direction_ & KEY_MOUSE_DOWN)
+      vy -= wheelSpeed;
+
+    // Add scroll wheel changes to HID report.
+    Runtime.hid().mouse().move(0, 0, vy, vx);
+    // Send the report.
+    Runtime.hid().mouse().sendReport();
+  }
 }
 
 } // namespace plugin
