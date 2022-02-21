@@ -49,10 +49,14 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   static uint16_t accel_start_time_;
   static uint16_t wheel_start_time_;
 
-  static uint8_t move_direction_;
-  static uint8_t wheel_direction_;
-  static uint8_t pending_move_direction_;
-  static uint8_t pending_wheel_direction_;
+  // Mouse cursor and wheel movement directions are stored in a single bitfield
+  // to save space.  The low four bits are for cursor movement, and the high
+  // four are for wheel movement.
+  static constexpr uint8_t wheel_offset_ = 4;
+  static constexpr uint8_t wheel_mask_ = 0b11110000;
+  static constexpr uint8_t move_mask_  = 0b00001111;
+  static uint8_t directions_;
+  static uint8_t pending_directions_;
 
   bool isMouseKey(const Key &key) const;
   bool isMouseButtonKey(const Key &key) const;

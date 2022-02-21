@@ -37,10 +37,8 @@ uint16_t MouseKeys_::move_start_time_;
 uint16_t MouseKeys_::accel_start_time_;
 uint16_t MouseKeys_::wheel_start_time_;
 
-uint8_t MouseKeys_::move_direction_ = 0;
-uint8_t MouseKeys_::wheel_direction_ = 0;
-uint8_t MouseKeys_::pending_move_direction_ = 0;
-uint8_t MouseKeys_::pending_wheel_direction_ = 0;
+uint8_t MouseKeys_::directions_ = 0;
+uint8_t MouseKeys_::pending_directions_ = 0;
 
 // =============================================================================
 // Configuration functions
@@ -125,8 +123,7 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
   if (!isMouseKey(event.key))
     return EventHandlerResult::OK;
 
-  pending_move_direction_ = 0;
-  pending_wheel_direction_ = 0;
+  pending_directions_ = 0;
 
   if (isMouseButtonKey(event.key)) {
     sendMouseButtonReport(event);
@@ -152,10 +149,8 @@ EventHandlerResult MouseKeys_::afterReportingState(const KeyEvent &event) {
   // A mouse key event has been successfully registered, and we have now
   // gathered all the information on held mouse movement and wheel keys, so it's
   // safe to update the direction information.
-  move_direction_ = pending_move_direction_;
-  wheel_direction_ = pending_wheel_direction_;
-  pending_move_direction_ = 0;
-  pending_wheel_direction_ = 0;
+  directions_ = pending_directions_;
+  pending_directions_ = 0;
 
   if (isMouseMoveKey(event.key)) {
     // When a cursor movement key toggles on, set the acceleration start time in
@@ -181,10 +176,10 @@ EventHandlerResult MouseKeys_::onAddToReport(Key key) {
     return EventHandlerResult::OK;
 
   if (isMouseMoveKey(key))
-    pending_move_direction_ |= key.getKeyCode();
+    pending_directions_ |= key.getKeyCode();
 
   if (isMouseWheelKey(key))
-    pending_wheel_direction_ |= key.getKeyCode();
+    pending_directions_ |= (key.getKeyCode() << wheel_offset_);
 
   return EventHandlerResult::OK;
 }
@@ -231,19 +226,20 @@ void MouseKeys_::sendMouseMoveReport() {
 
   int8_t vx = 0;
   int8_t vy = 0;
+  uint8_t direction = directions_ & move_mask_;
 
-  if (move_direction_ == 0) {
+  if (direction == 0) {
     // If there are no mouse movement keys held, reset speed to zero.
     MouseWrapper.accelStep = 0;
   } else {
     // For each active direction, add the mouse movement speed.
-    if (move_direction_ & KEY_MOUSE_LEFT)
+    if (direction & KEY_MOUSE_LEFT)
       vx -= speed;
-    if (move_direction_ & KEY_MOUSE_RIGHT)
+    if (direction & KEY_MOUSE_RIGHT)
       vx += speed;
-    if (move_direction_ & KEY_MOUSE_UP)
+    if (direction & KEY_MOUSE_UP)
       vy -= speed;
-    if (move_direction_ & KEY_MOUSE_DOWN)
+    if (direction & KEY_MOUSE_DOWN)
       vy += speed;
 
     // Prepare the mouse report.
@@ -259,17 +255,18 @@ void MouseKeys_::sendMouseWheelReport() {
 
   int8_t vx = 0;
   int8_t vy = 0;
+  uint8_t direction = directions_ >> wheel_offset_;
 
-  if (wheel_direction_ != 0) {
+  if (direction != 0) {
     // Horizontal scroll wheel:
-    if (wheel_direction_ & KEY_MOUSE_LEFT)
+    if (direction & KEY_MOUSE_LEFT)
       vx -= wheelSpeed;
-    if (wheel_direction_ & KEY_MOUSE_RIGHT)
+    if (direction & KEY_MOUSE_RIGHT)
       vx += wheelSpeed;
     // Vertical scroll wheel (note coordinates are opposite movement):
-    if (wheel_direction_ & KEY_MOUSE_UP)
+    if (direction & KEY_MOUSE_UP)
       vy += wheelSpeed;
-    if (wheel_direction_ & KEY_MOUSE_DOWN)
+    if (direction & KEY_MOUSE_DOWN)
       vy -= wheelSpeed;
 
     // Add scroll wheel changes to HID report.
