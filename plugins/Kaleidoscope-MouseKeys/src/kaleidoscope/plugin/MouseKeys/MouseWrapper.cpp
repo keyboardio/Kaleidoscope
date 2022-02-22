@@ -36,13 +36,13 @@ uint8_t MouseWrapper::accelStep;
 uint8_t MouseWrapper::speedLimit = 127;
 uint8_t MouseWrapper::subpixelsPerPixel = 16;
 
-void MouseWrapper::warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
+void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
   uint16_t y_center = top + height / 2;
   Kaleidoscope.hid().absoluteMouse().moveTo(x_center, y_center, 0);
 }
 
-void MouseWrapper::begin_warping() {
+void MouseWrapper::beginWarping() {
   section_left = WARP_ABS_LEFT;
   section_top = WARP_ABS_TOP;
   next_width = MAX_WARP_WIDTH;
@@ -50,23 +50,23 @@ void MouseWrapper::begin_warping() {
   is_warping = true;
 }
 
-void MouseWrapper::end_warping() {
+void MouseWrapper::endWarping() {
   is_warping = false;
 }
 
-void MouseWrapper::reset_warping() {
+void MouseWrapper::resetWarping() {
   if (is_warping == true) {
-    begin_warping();
+    beginWarping();
   }
 }
 
 void MouseWrapper::warp(uint8_t warp_cmd) {
   if (is_warping == false) {
-    begin_warping();
+    beginWarping();
   }
 
   if (warp_cmd & WARP_END) {
-    end_warping();
+    endWarping();
     return;
   }
 
@@ -78,7 +78,7 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
     section_left += next_width;
     section_top += next_height;
 
-    warp_jump(section_left, section_top, next_height, next_width);
+    warpJump(section_left, section_top, next_height, next_width);
 
     return;
   }
@@ -95,7 +95,7 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
     section_left += next_width;
   }
 
-  warp_jump(section_left, section_top, next_height, next_width);
+  warpJump(section_left, section_top, next_height, next_width);
 }
 
 // To approximate a sine wave, this uses two parabolas. Acceleration begins
@@ -130,7 +130,7 @@ void MouseWrapper::move(int8_t x, int8_t y) {
     else if (moveY < -effectiveSpeedLimit) moveY = -effectiveSpeedLimit;
   }
 
-  end_warping();
+  endWarping();
   // move by whole pixels, not subpixels
   Kaleidoscope.hid().mouse().move(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel);
   // save leftover subpixel movements for later

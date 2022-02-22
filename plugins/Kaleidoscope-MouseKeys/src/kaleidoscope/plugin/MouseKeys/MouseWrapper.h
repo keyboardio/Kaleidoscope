@@ -46,8 +46,8 @@ class MouseWrapper {
  public:
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
-  static void end_warping();
-  static void reset_warping();
+  static void endWarping();
+  static void resetWarping();
 
   static uint8_t accelStep;
   static uint8_t speedLimit;
@@ -62,8 +62,8 @@ class MouseWrapper {
   static boolean is_warping;
 
   static uint8_t acceleration(uint8_t cycles);
-  static void begin_warping();
-  static void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
+  static void beginWarping();
+  static void warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
 
 } // namespace mousekeys
