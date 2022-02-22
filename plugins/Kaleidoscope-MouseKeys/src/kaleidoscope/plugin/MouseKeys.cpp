@@ -34,7 +34,10 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t MouseKeys::speed       = 1;
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+uint8_t MouseKeys::speed = 1;
 uint16_t MouseKeys::speedDelay = 1;
 
 uint8_t MouseKeys::accelSpeed  = 1;
@@ -42,6 +45,8 @@ uint16_t MouseKeys::accelDelay = 64;
 
 uint8_t MouseKeys::wheelSpeed  = 1;
 uint16_t MouseKeys::wheelDelay = 50;
+#pragma GCC diagnostic pop
+#endif
 
 // =============================================================================
 // Configuration functions
