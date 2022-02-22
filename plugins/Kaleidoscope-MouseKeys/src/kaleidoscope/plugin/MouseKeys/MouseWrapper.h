@@ -42,7 +42,7 @@ namespace kaleidoscope {
 namespace plugin {
 namespace mousekeys {
 
-class MouseWrapper_ {
+class MouseWrapper {
  public:
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
@@ -68,7 +68,7 @@ class MouseWrapper_ {
 
 } // namespace mousekeys
 
-extern mousekeys::MouseWrapper_ MouseWrapper;
+extern mousekeys::MouseWrapper MouseWrapper;
 
 } // namespace plugin
 } // namespace kaleidoscope
