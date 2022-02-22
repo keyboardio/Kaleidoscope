@@ -23,6 +23,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
+namespace mousekeys {
 
 uint8_t MouseWrapper_::warp_grid_size = MOUSE_WARP_GRID_2X2;
 uint16_t MouseWrapper_::next_width;
@@ -136,7 +137,10 @@ void MouseWrapper_::move(int8_t x, int8_t y) {
   remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
   remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;
 }
-}
-}
 
-kaleidoscope::plugin::MouseWrapper_ MouseWrapper;
+} // namespace mousekeys
+
+mousekeys::MouseWrapper_ MouseWrapper;
+
+} // namespace plugin
+} // namespace kaleidoscope

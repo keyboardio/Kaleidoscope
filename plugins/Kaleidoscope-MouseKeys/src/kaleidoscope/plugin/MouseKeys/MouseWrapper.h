@@ -40,6 +40,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
+namespace mousekeys {
 
 class MouseWrapper_ {
  public:
@@ -66,7 +67,10 @@ class MouseWrapper_ {
   static void begin_warping();
   static void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
-}
-}
 
-extern kaleidoscope::plugin::MouseWrapper_ MouseWrapper;
+} // namespace mousekeys
+
+extern mousekeys::MouseWrapper_ MouseWrapper;
+
+} // namespace plugin
+} // namespace kaleidoscope
