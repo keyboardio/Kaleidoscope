@@ -44,8 +44,6 @@ namespace mousekeys {
 
 class MouseWrapper_ {
  public:
-  MouseWrapper_() {}
-
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
   static void end_warping();
