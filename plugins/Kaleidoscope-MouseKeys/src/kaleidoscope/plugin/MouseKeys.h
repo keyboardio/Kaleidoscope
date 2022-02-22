@@ -69,7 +69,8 @@ class MouseKeys : public kaleidoscope::Plugin {
   void sendMouseWheelReport();
 
 };
-}
-}
+
+} // namespace plugin
+} // namespace kaleidoscope
 
 extern kaleidoscope::plugin::MouseKeys MouseKeys;
