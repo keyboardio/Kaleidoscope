@@ -23,7 +23,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class MouseKeys_ : public kaleidoscope::Plugin {
+class MouseKeys : public kaleidoscope::Plugin {
  public:
   static uint8_t speed;
   static uint16_t speedDelay;
@@ -72,4 +72,4 @@ class MouseKeys_ : public kaleidoscope::Plugin {
 }
 }
 
-extern kaleidoscope::plugin::MouseKeys_ MouseKeys;
+extern kaleidoscope::plugin::MouseKeys MouseKeys;

@@ -24,57 +24,57 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t MouseKeys_::speed = 1;
-uint16_t MouseKeys_::speedDelay = 1;
+uint8_t MouseKeys::speed = 1;
+uint16_t MouseKeys::speedDelay = 1;
 
-uint8_t MouseKeys_::accelSpeed = 1;
-uint16_t MouseKeys_::accelDelay = 64;
+uint8_t MouseKeys::accelSpeed = 1;
+uint16_t MouseKeys::accelDelay = 64;
 
-uint8_t MouseKeys_::wheelSpeed = 1;
-uint16_t MouseKeys_::wheelDelay = 50;
+uint8_t MouseKeys::wheelSpeed = 1;
+uint16_t MouseKeys::wheelDelay = 50;
 
-uint16_t MouseKeys_::move_start_time_;
-uint16_t MouseKeys_::accel_start_time_;
-uint16_t MouseKeys_::wheel_start_time_;
+uint16_t MouseKeys::move_start_time_;
+uint16_t MouseKeys::accel_start_time_;
+uint16_t MouseKeys::wheel_start_time_;
 
-uint8_t MouseKeys_::directions_ = 0;
-uint8_t MouseKeys_::pending_directions_ = 0;
-uint8_t MouseKeys_::buttons_ = 0;
+uint8_t MouseKeys::directions_ = 0;
+uint8_t MouseKeys::pending_directions_ = 0;
+uint8_t MouseKeys::buttons_ = 0;
 
 // =============================================================================
 // Configuration functions
 
-void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
+void MouseKeys::setWarpGridSize(uint8_t grid_size) {
   MouseWrapper.warp_grid_size = grid_size;
 }
 
-void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
+void MouseKeys::setSpeedLimit(uint8_t speed_limit) {
   MouseWrapper.speed_limit = speed_limit;
 }
 
 // =============================================================================
 // Key variant tests
 
-bool MouseKeys_::isMouseKey(const Key& key) const {
+bool MouseKeys::isMouseKey(const Key& key) const {
   return (key.getFlags() == (SYNTHETIC | IS_MOUSE_KEY));
 }
 
-bool MouseKeys_::isMouseButtonKey(const Key& key) const {
+bool MouseKeys::isMouseButtonKey(const Key& key) const {
   uint8_t variant = key.getKeyCode() & (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP);
   return variant == KEY_MOUSE_BUTTON;
 }
 
-bool MouseKeys_::isMouseMoveKey(const Key& key) const {
+bool MouseKeys::isMouseMoveKey(const Key& key) const {
   uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
   uint8_t variant = key.getKeyCode() & mask;
   return variant == 0;
 }
 
-bool MouseKeys_::isMouseWarpKey(const Key& key) const {
+bool MouseKeys::isMouseWarpKey(const Key& key) const {
   return (key.getKeyCode() & KEY_MOUSE_WARP) != 0;
 }
 
-bool MouseKeys_::isMouseWheelKey(const Key& key) const {
+bool MouseKeys::isMouseWheelKey(const Key& key) const {
   uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
   uint8_t variant = key.getKeyCode() & mask;
   return variant == KEY_MOUSE_WHEEL;
@@ -84,12 +84,12 @@ bool MouseKeys_::isMouseWheelKey(const Key& key) const {
 // Event Handlers
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys_::onNameQuery() {
+EventHandlerResult MouseKeys::onNameQuery() {
   return ::Focus.sendName(F("MouseKeys"));
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys_::onSetup(void) {
+EventHandlerResult MouseKeys::onSetup(void) {
   kaleidoscope::Runtime.hid().mouse().setup();
   kaleidoscope::Runtime.hid().absoluteMouse().setup();
 
@@ -97,7 +97,7 @@ EventHandlerResult MouseKeys_::onSetup(void) {
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys_::afterEachCycle() {
+EventHandlerResult MouseKeys::afterEachCycle() {
   // Check timeout for accel update interval.
   if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
     accel_start_time_ = Runtime.millisAtCycleStart();
@@ -120,7 +120,7 @@ EventHandlerResult MouseKeys_::afterEachCycle() {
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
+EventHandlerResult MouseKeys::onKeyEvent(KeyEvent &event) {
   if (!isMouseKey(event.key))
     return EventHandlerResult::OK;
 
@@ -145,7 +145,7 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys_::afterReportingState(const KeyEvent &event) {
+EventHandlerResult MouseKeys::afterReportingState(const KeyEvent &event) {
   if (!isMouseKey(event.key))
     return EventHandlerResult::OK;
 
@@ -180,7 +180,7 @@ EventHandlerResult MouseKeys_::afterReportingState(const KeyEvent &event) {
 // will be up to date at the end of processing a mouse key event.  We add bits
 // to the `pending` directions only; these get copied later if the event isn't
 // aborted.
-EventHandlerResult MouseKeys_::onAddToReport(Key key) {
+EventHandlerResult MouseKeys::onAddToReport(Key key) {
   if (!isMouseKey(key))
     return EventHandlerResult::OK;
 
@@ -200,14 +200,14 @@ EventHandlerResult MouseKeys_::onAddToReport(Key key) {
 // HID report helper functions
 
 // -----------------------------------------------------------------------------
-void MouseKeys_::sendMouseButtonReport() const {
+void MouseKeys::sendMouseButtonReport() const {
   Runtime.hid().mouse().releaseAllButtons();
   Runtime.hid().mouse().pressButtons(buttons_);
   Runtime.hid().mouse().sendReport();
 }
 
 // -----------------------------------------------------------------------------
-void MouseKeys_::sendMouseWarpReport(const KeyEvent &event) const {
+void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
   MouseWrapper.warp(
     ((event.key.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
     ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00)        |
@@ -217,7 +217,7 @@ void MouseKeys_::sendMouseWarpReport(const KeyEvent &event) const {
 }
 
 // -----------------------------------------------------------------------------
-void MouseKeys_::sendMouseMoveReport() {
+void MouseKeys::sendMouseMoveReport() {
   move_start_time_ = Runtime.millisAtCycleStart();
 
   int8_t vx = 0;
@@ -246,7 +246,7 @@ void MouseKeys_::sendMouseMoveReport() {
 }
 
 // -----------------------------------------------------------------------------
-void MouseKeys_::sendMouseWheelReport() {
+void MouseKeys::sendMouseWheelReport() {
   wheel_start_time_ = Runtime.millisAtCycleStart();
 
   int8_t vx = 0;
@@ -275,4 +275,4 @@ void MouseKeys_::sendMouseWheelReport() {
 } // namespace plugin
 } // namespace kaleidoscope
 
-kaleidoscope::plugin::MouseKeys_ MouseKeys;
+kaleidoscope::plugin::MouseKeys MouseKeys;
