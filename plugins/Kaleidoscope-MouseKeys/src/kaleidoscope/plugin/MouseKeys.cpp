@@ -49,7 +49,7 @@ void MouseKeys_::setWarpGridSize(uint8_t grid_size) {
 }
 
 void MouseKeys_::setSpeedLimit(uint8_t speed_limit) {
-  MouseWrapper.speedLimit = speed_limit;
+  MouseWrapper.speed_limit = speed_limit;
 }
 
 // =============================================================================
@@ -101,10 +101,10 @@ EventHandlerResult MouseKeys_::afterEachCycle() {
   // Check timeout for accel update interval.
   if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
     accel_start_time_ = Runtime.millisAtCycleStart();
-    // `accelStep` determines the movement speed of the mouse pointer, and gets
+    // `accel_step` determines the movement speed of the mouse pointer, and gets
     // reset to zero when no mouse movement keys is pressed (see below).
-    if (MouseWrapper.accelStep < 255 - accelSpeed) {
-      MouseWrapper.accelStep += accelSpeed;
+    if (MouseWrapper.accel_step < 255 - accelSpeed) {
+      MouseWrapper.accel_step += accelSpeed;
     }
   }
 
@@ -226,7 +226,7 @@ void MouseKeys_::sendMouseMoveReport() {
 
   if (direction == 0) {
     // If there are no mouse movement keys held, reset speed to zero.
-    MouseWrapper.accelStep = 0;
+    MouseWrapper.accel_step = 0;
   } else {
     // For each active direction, add the mouse movement speed.
     if (direction & KEY_MOUSE_LEFT)

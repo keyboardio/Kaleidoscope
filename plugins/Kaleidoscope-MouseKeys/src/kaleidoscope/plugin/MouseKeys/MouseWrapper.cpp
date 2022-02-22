@@ -32,9 +32,9 @@ uint16_t MouseWrapper::section_top;
 uint16_t MouseWrapper::section_left;
 boolean MouseWrapper::is_warping;
 
-uint8_t MouseWrapper::accelStep;
-uint8_t MouseWrapper::speedLimit = 127;
-uint8_t MouseWrapper::subpixelsPerPixel = 16;
+uint8_t MouseWrapper::accel_step;
+uint8_t MouseWrapper::speed_limit = 127;
+uint8_t MouseWrapper::subpixels_per_pixel = 16;
 
 void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
@@ -116,26 +116,26 @@ void MouseWrapper::move(int8_t x, int8_t y) {
   int16_t moveY = 0;
   static int8_t remainderX = 0;
   static int8_t remainderY = 0;
-  int16_t effectiveSpeedLimit = speedLimit;
+  int16_t effectiveSpeedLimit = speed_limit;
 
   if (x != 0) {
-    moveX = remainderX + (x * acceleration(accelStep));
+    moveX = remainderX + (x * acceleration(accel_step));
     if (moveX > effectiveSpeedLimit) moveX = effectiveSpeedLimit;
     else if (moveX < -effectiveSpeedLimit) moveX = -effectiveSpeedLimit;
   }
 
   if (y != 0) {
-    moveY = remainderY + (y * acceleration(accelStep));
+    moveY = remainderY + (y * acceleration(accel_step));
     if (moveY > effectiveSpeedLimit) moveY = effectiveSpeedLimit;
     else if (moveY < -effectiveSpeedLimit) moveY = -effectiveSpeedLimit;
   }
 
   endWarping();
   // move by whole pixels, not subpixels
-  Kaleidoscope.hid().mouse().move(moveX / subpixelsPerPixel, moveY / subpixelsPerPixel);
+  Kaleidoscope.hid().mouse().move(moveX / subpixels_per_pixel, moveY / subpixels_per_pixel);
   // save leftover subpixel movements for later
-  remainderX = moveX - moveX / subpixelsPerPixel * subpixelsPerPixel;
-  remainderY = moveY - moveY / subpixelsPerPixel * subpixelsPerPixel;
+  remainderX = moveX - moveX / subpixels_per_pixel * subpixels_per_pixel;
+  remainderY = moveY - moveY / subpixels_per_pixel * subpixels_per_pixel;
 }
 
 } // namespace mousekeys
