@@ -106,16 +106,6 @@ class KeyAddrBitfield {
   // ----------------------------------------------------------------------------
   // Iterator!
  public:
-  class Iterator;
-  friend class KeyAddrBitfield::Iterator;
-
-  Iterator begin() const {
-    return Iterator{*this, 0};
-  }
-  Iterator end() const {
-    return Iterator{*this, total_blocks};
-  }
-
   class Iterator {
    public:
     Iterator(const KeyAddrBitfield &bitfield, uint8_t x)
@@ -170,6 +160,15 @@ class KeyAddrBitfield {
     KeyAddr index_;
 
   }; // class Iterator {
+
+  friend class Iterator;
+
+  Iterator begin() const {
+    return Iterator{*this, 0};
+  }
+  Iterator end() const {
+    return Iterator{*this, total_blocks};
+  }
 
 } __attribute__((packed)); // class KeyAddrBitfield {
 
