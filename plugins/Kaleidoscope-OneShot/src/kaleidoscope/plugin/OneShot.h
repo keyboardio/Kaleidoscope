@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2021  Keyboard.io, Inc.
+ * Copyright (C) 2016-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -33,60 +33,60 @@ namespace plugin {
 class OneShot : public kaleidoscope::Plugin {
  public:
   // Constructor
-  OneShot() {}
+  // OneShot() {}
 
   // --------------------------------------------------------------------------
   // Configuration functions
 
-  static inline void enableStickablity() {}
-  static void enableStickability(Key key);
+  void enableStickablity() {}
+  void enableStickability(Key key);
   template <typename... Keys>
-  static void enableStickability(Key key, Keys&&... keys) {
+  void enableStickability(Key key, Keys&&... keys) {
     enableStickability(key);
     enableStickability(keys...);
   }
-  static void enableStickabilityForModifiers();
-  static void enableStickabilityForLayers();
+  void enableStickabilityForModifiers();
+  void enableStickabilityForLayers();
 
-  static inline void disableStickability() {}
-  static void disableStickability(Key key);
+  void disableStickability() {}
+  void disableStickability(Key key);
   template <typename... Keys>
-  static void disableStickability(Key key, Keys&&... keys) {
+  void disableStickability(Key key, Keys&&... keys) {
     disableStickability(key);
     disableStickability(keys...);
   }
-  static void disableStickabilityForModifiers();
-  static void disableStickabilityForLayers();
+  void disableStickabilityForModifiers();
+  void disableStickabilityForLayers();
 
-  static void enableAutoModifiers() {
+  void enableAutoModifiers() {
     auto_modifiers_ = true;
   }
-  static void enableAutoLayers() {
+  void enableAutoLayers() {
     auto_layers_ = true;
   }
-  static void enableAutoOneShot() {
+  void enableAutoOneShot() {
     enableAutoModifiers();
     enableAutoLayers();
   }
 
-  static void disableAutoModifiers() {
+  void disableAutoModifiers() {
     auto_modifiers_ = false;
   }
-  static void disableAutoLayers() {
+  void disableAutoLayers() {
     auto_layers_ = false;
   }
-  static void disableAutoOneShot() {
+  void disableAutoOneShot() {
     disableAutoModifiers();
     disableAutoLayers();
   }
 
-  static void toggleAutoModifiers() {
+  void toggleAutoModifiers() {
     auto_modifiers_ = ! auto_modifiers_;
   }
-  static void toggleAutoLayers() {
+  void toggleAutoLayers() {
     auto_layers_ = ! auto_layers_;
   }
-  static void toggleAutoOneShot() {
+  void toggleAutoOneShot() {
     if (auto_modifiers_ || auto_layers_) {
       disableAutoOneShot();
     } else {
@@ -97,25 +97,25 @@ class OneShot : public kaleidoscope::Plugin {
   // --------------------------------------------------------------------------
   // Global test functions
 
-  static bool isActive();
-  static bool isSticky();
+  bool isActive() const;
+  bool isSticky() const;
 
   // --------------------------------------------------------------------------
   // Single-key test functions
-  static bool isOneShotKey(Key key) {
+  bool isOneShotKey(Key key) const {
     return (key.getRaw() >= kaleidoscope::ranges::OS_FIRST &&
             key.getRaw() <= kaleidoscope::ranges::OS_LAST);
   }
 
   /// Determine if the given `key` is allowed to become sticky.
-  static bool isStickable(Key key);
+  bool isStickable(Key key) const;
 
-  static bool isStickableDefault(Key key);
+  bool isStickableDefault(Key key) const;
 
-  static bool isTemporary(KeyAddr key_addr); // inline?
-  static bool isPending(KeyAddr key_addr);
-  static bool isSticky(KeyAddr key_addr); // inline?
-  static bool isActive(KeyAddr key_addr); // inline?
+  bool isTemporary(KeyAddr key_addr) const; // inline?
+  bool isPending(KeyAddr key_addr) const;
+  bool isSticky(KeyAddr key_addr) const; // inline?
+  bool isActive(KeyAddr key_addr) const; // inline?
 
   // --------------------------------------------------------------------------
   // Public OneShot state control
@@ -126,7 +126,7 @@ class OneShot : public kaleidoscope::Plugin {
   /// This is appropriate to use when a key toggles on and you want it to behave
   /// like a OneShot key starting with the current event, and lasting until the
   /// key becomes inactive (cancelled by a subsequent keypress).
-  static void setPending(KeyAddr key_addr);
+  void setPending(KeyAddr key_addr);
 
   /// Put a key directly in the "one-shot" state.
   ///
@@ -136,33 +136,33 @@ class OneShot : public kaleidoscope::Plugin {
   /// use `setPending()` instead, rather than calling this function explicitly,
   /// as OneShot will automatically cause any key in the "pending" state to
   /// progress to this state when it is (physically) released.
-  static void setOneShot(KeyAddr key_addr);
+  void setOneShot(KeyAddr key_addr);
 
   /// Put a key in the "sticky" OneShot state.
   ///
   /// This function puts the key at `key_addr` in the "sticky" OneShot state.
   /// It will remain active until it is pressed again.
-  static void setSticky(KeyAddr key_addr);
+  void setSticky(KeyAddr key_addr);
 
   /// Clear any OneShot state for a key.
   ///
   /// This function clears any OneShot state of the key at `key_addr`.  It does
   /// not, however, release the key if it is held.
-  static void clear(KeyAddr key_addr);
+  void clear(KeyAddr key_addr);
 
   // --------------------------------------------------------------------------
   // Utility function for other plugins to cancel OneShot keys
-  static void cancel(bool with_stickies = false);
+  void cancel(bool with_stickies = false);
 
   // --------------------------------------------------------------------------
   // Timeout onfiguration functions
-  static void setTimeout(uint16_t ttl) {
+  void setTimeout(uint16_t ttl) {
     timeout_ = ttl;
   }
-  static void setHoldTimeout(uint16_t ttl) {
+  void setHoldTimeout(uint16_t ttl) {
     hold_timeout_ = ttl;
   }
-  static void setDoubleTapTimeout(int16_t ttl) {
+  void setDoubleTapTimeout(int16_t ttl) {
     double_tap_timeout_ = ttl;
   }
 
@@ -187,39 +187,39 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Configuration variables
-  static uint16_t timeout_;
-  static uint16_t hold_timeout_;
-  static int16_t double_tap_timeout_;
+  uint16_t timeout_{2500};
+  uint16_t hold_timeout_{250};
+  int16_t double_tap_timeout_{-1};
 
   // --------------------------------------------------------------------------
   // State variables
-  static uint16_t stickable_keys_;
-  static bool auto_modifiers_;
-  static bool auto_layers_;
+  uint16_t stickable_keys_{uint16_t(-1)};
+  bool auto_modifiers_{false};
+  bool auto_layers_{false};
 
-  static KeyAddrBitfield temp_addrs_;
-  static KeyAddrBitfield glue_addrs_;
+  KeyAddrBitfield temp_addrs_;
+  KeyAddrBitfield glue_addrs_;
 
-  static uint16_t start_time_;
-  static KeyAddr prev_key_addr_;
+  uint16_t start_time_{0};
+  KeyAddr prev_key_addr_{invalid_key_addr};
 
   // --------------------------------------------------------------------------
   // Internal utility functions
-  static bool hasTimedOut(uint16_t ttl) {
+  bool hasTimedOut(uint16_t ttl) const {
     return Runtime.hasTimeExpired(start_time_, ttl);
   }
-  static bool hasDoubleTapTimedOut() {
+  bool hasDoubleTapTimedOut() const {
     // Derive the true double-tap timeout value if we're using the default.
     uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
     return hasTimedOut(dtto);
   }
-  static uint8_t getOneShotKeyIndex(Key oneshot_key);
-  static uint8_t getKeyIndex(Key key);
-  static Key decodeOneShotKey(Key oneshot_key);
+  uint8_t getOneShotKeyIndex(Key oneshot_key) const;
+  uint8_t getKeyIndex(Key key) const;
+  Key decodeOneShotKey(Key oneshot_key) const;
 
-  static void pressKey(KeyAddr key_addr, Key oneshot_key);
-  static void holdKey(KeyAddr key_addr);
-  static void releaseKey(KeyAddr key_addr);
+  void pressKey(KeyAddr key_addr, Key oneshot_key);
+  void holdKey(KeyAddr key_addr) const;
+  void releaseKey(KeyAddr key_addr);
 };
 
 } // namespace plugin
