@@ -89,6 +89,7 @@ bool OneShot::isStickable(Key key) const {
   return isStickableDefault(key);
 }
 
+__attribute__((always_inline)) inline
 bool OneShot::isStickableDefault(Key key) const {
   int8_t n;
   // If the key is either a keyboard modifier or a layer shift, we check to see
@@ -369,6 +370,7 @@ void OneShot::holdKey(KeyAddr key_addr) const {
   Runtime.handleKeyEvent(event);
 }
 
+__attribute__((always_inline)) inline
 void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
