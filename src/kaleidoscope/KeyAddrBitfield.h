@@ -109,16 +109,16 @@ class KeyAddrBitfield {
   class Iterator;
   friend class KeyAddrBitfield::Iterator;
 
-  Iterator begin() {
+  Iterator begin() const {
     return Iterator{*this, 0};
   }
-  Iterator end() {
+  Iterator end() const {
     return Iterator{*this, total_blocks};
   }
 
   class Iterator {
    public:
-    Iterator(KeyAddrBitfield &bitfield, uint8_t x)
+    Iterator(const KeyAddrBitfield &bitfield, uint8_t x)
       : bitfield_(bitfield), block_index_(x) {}
 
     bool operator!=(const Iterator &other) {
@@ -163,7 +163,7 @@ class KeyAddrBitfield {
     }
 
    private:
-    KeyAddrBitfield &bitfield_;
+    const KeyAddrBitfield &bitfield_;
     uint8_t block_index_;    // index of the block
     uint8_t bit_index_{0}; // bit index in the block
     uint8_t block_;
