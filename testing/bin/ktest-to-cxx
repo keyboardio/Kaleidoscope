@@ -422,7 +422,7 @@ sub generate_expect_report {
             : ( $report->{data}->{keys} )
         )
     );
-    cxx(    "ExpectReport(Keycodes{$codes}, \""
+    cxx(    "ExpectKeyboardReport(Keycodes{$codes}, \""
           . ( $report->{comment} || 'No explanatory comment specified' )
           . "\");" );
     cxx("");

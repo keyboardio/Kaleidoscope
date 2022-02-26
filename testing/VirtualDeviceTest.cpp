@@ -39,7 +39,7 @@ void VirtualDeviceTest::LoadState() {
 void VirtualDeviceTest::ClearState() {
   output_state_ = nullptr;
   input_timestamps_.clear();
-  expected_reports_.clear();
+  expected_keyboard_reports_.clear();
 }
 
 const HIDState* VirtualDeviceTest::HIDReports() const {
@@ -69,77 +69,78 @@ void VirtualDeviceTest::ReleaseKey(KeyAddr addr) {
 
 
 // =============================================================================
-void VirtualDeviceTest::ExpectReport(Keycodes keys,
-                                     std::string description) {
+void VirtualDeviceTest::ExpectKeyboardReport(Keycodes keys,
+                                             std::string description) {
   size_t report_timestamp{Runtime.millisAtCycleStart()};
-  ClearReport();
+  ClearKeyboardReport();
   for (Key key : keys) {
-    AddToReport(key);
+    AddToKeyboardReport(key);
   }
   ExpectedKeyboardReport new_report(report_timestamp,
                                     current_keyboard_keycodes_,
                                     description);
-  expected_reports_.push_back(new_report);
+  expected_keyboard_reports_.push_back(new_report);
 }
 
 // =============================================================================
-void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
-                                     RemoveKeycodes removed_keys,
-                                     std::string description) {
+void VirtualDeviceTest::ExpectKeyboardReport(AddKeycodes added_keys,
+                                             RemoveKeycodes removed_keys,
+                                             std::string description) {
   uint32_t report_timestamp = Runtime.millisAtCycleStart();
   for (Key key : added_keys) {
-    AddToReport(key);
+    AddToKeyboardReport(key);
   }
   for (Key key : removed_keys) {
-    RemoveFromReport(key);
+    RemoveFromKeyboardReport(key);
   }
   ExpectedKeyboardReport new_report(report_timestamp,
                                     current_keyboard_keycodes_,
                                     description);
-  expected_reports_.push_back(new_report);
+  expected_keyboard_reports_.push_back(new_report);
 }
 
 // -----------------------------------------------------------------------------
-void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
-                                     std::string description) {
-  ExpectReport(added_keys, RemoveKeycodes{}, description);
+void VirtualDeviceTest::ExpectKeyboardReport(AddKeycodes added_keys,
+                                             std::string description) {
+  ExpectKeyboardReport(added_keys, RemoveKeycodes{}, description);
 }
-void VirtualDeviceTest::ExpectReport(RemoveKeycodes removed_keys,
-                                     std::string description) {
-  ExpectReport(AddKeycodes{}, removed_keys, description);
+void VirtualDeviceTest::ExpectKeyboardReport(RemoveKeycodes removed_keys,
+                                             std::string description) {
+  ExpectKeyboardReport(AddKeycodes{}, removed_keys, description);
 }
 
 // =============================================================================
-void VirtualDeviceTest::ClearReport() {
+void VirtualDeviceTest::ClearKeyboardReport() {
   current_keyboard_keycodes_.clear();
 }
-void VirtualDeviceTest::AddToReport(Key key) {
+void VirtualDeviceTest::AddToKeyboardReport(Key key) {
   current_keyboard_keycodes_.insert(key.getKeyCode());
 }
-void VirtualDeviceTest::RemoveFromReport(Key key) {
+void VirtualDeviceTest::RemoveFromKeyboardReport(Key key) {
   current_keyboard_keycodes_.erase(key.getKeyCode());
 }
 
 // =============================================================================
 void VirtualDeviceTest::CheckReports() const {
-  int observed_report_count = HIDReports()->Keyboard().size();
-  int expected_report_count = expected_reports_.size();
+  int observed_keyboard_report_count = HIDReports()->Keyboard().size();
+  int expected_keyboard_report_count = expected_keyboard_reports_.size();
 
-  EXPECT_EQ(observed_report_count, expected_report_count);
+  EXPECT_EQ(observed_keyboard_report_count, expected_keyboard_report_count);
 
-  int max_count = std::max(observed_report_count, expected_report_count);
+  int max_count = std::max(observed_keyboard_report_count,
+                           expected_keyboard_report_count);
 
-  for (int i = 0; i < observed_report_count; ++i) {
+  for (int i = 0; i < observed_keyboard_report_count; ++i) {
     auto observed_report = HIDReports()->Keyboard(i);
     auto observed_keycodes = observed_report.ActiveKeycodes();
 
-    if (i < expected_report_count) {
-      auto expected_report = expected_reports_[i];
+    if (i < expected_keyboard_report_count) {
+      auto expected_report = expected_keyboard_reports_[i];
       auto expected_keycodes = expected_report.Keycodes();
 
       EXPECT_THAT(observed_keycodes,
                   ::testing::ElementsAreArray(expected_keycodes))
-          << expected_reports_[i].Message() << " (i=" << i << ")";
+          << expected_keyboard_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
           << "Report timestamps don't match (i=" << i << ")";
 

@@ -103,22 +103,22 @@ class VirtualDeviceTest : public ::testing::Test {
   // keycode changes in a single report; others only a single keycode. Some run
   // the simulator for a specified number of milliseconds or cycles first. These
   // expected-value reports are all stored in a vector:
-  std::vector<ExpectedKeyboardReport> expected_reports_ = {};
+  std::vector<ExpectedKeyboardReport> expected_keyboard_reports_ = {};
 
-  void ExpectReport(AddKeycodes added_keys,
-                    RemoveKeycodes removed_keys,
-                    std::string description);
+  void ExpectKeyboardReport(AddKeycodes added_keys,
+                            RemoveKeycodes removed_keys,
+                            std::string description);
 
-  void ExpectReport(Keycodes added_keys, std::string description);
-  void ExpectReport(AddKeycodes added_keys, std::string description);
-  void ExpectReport(RemoveKeycodes removed_keys, std::string description);
+  void ExpectKeyboardReport(Keycodes added_keys, std::string description);
+  void ExpectKeyboardReport(AddKeycodes added_keys, std::string description);
+  void ExpectKeyboardReport(RemoveKeycodes removed_keys, std::string description);
 
   // ---------------------------------------------------------------------------
   std::set<uint8_t> current_keyboard_keycodes_ = {};
   // Manage the set of keycodes expected in the next report
-  void ClearReport();
-  void AddToReport(Key key);
-  void RemoveFromReport(Key key);
+  void ClearKeyboardReport();
+  void AddToKeyboardReport(Key key);
+  void RemoveFromKeyboardReport(Key key);
 
   // ---------------------------------------------------------------------------
   // Compare accumulated observed and expected reports, matching both timestamps
