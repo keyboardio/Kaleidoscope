@@ -124,6 +124,7 @@ class VirtualDeviceTest : public ::testing::Test {
   // Compare accumulated observed and expected reports, matching both timestamps
   // and keycodes.
   void CheckReports() const;
+  void CheckKeyboardReports() const;
 
 };
 

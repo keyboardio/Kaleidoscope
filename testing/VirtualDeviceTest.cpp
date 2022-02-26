@@ -122,6 +122,10 @@ void VirtualDeviceTest::RemoveFromKeyboardReport(Key key) {
 
 // =============================================================================
 void VirtualDeviceTest::CheckReports() const {
+  CheckKeyboardReports();
+}
+
+void VirtualDeviceTest::CheckKeyboardReports() const {
   int observed_keyboard_report_count = HIDReports()->Keyboard().size();
   int expected_keyboard_report_count = expected_keyboard_reports_.size();
 
