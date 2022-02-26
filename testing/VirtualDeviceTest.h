@@ -19,6 +19,7 @@
 #include <cstddef>
 
 #include "testing/ExpectedKeyboardReport.h"
+#include "testing/ExpectedMouseReport.h"
 #include "testing/SimHarness.h"
 #include "testing/State.h"
 
@@ -113,6 +114,11 @@ class VirtualDeviceTest : public ::testing::Test {
   void ExpectKeyboardReport(AddKeycodes added_keys, std::string description);
   void ExpectKeyboardReport(RemoveKeycodes removed_keys, std::string description);
 
+  std::vector<ExpectedMouseReport> expected_mouse_reports_ = {};
+
+  void ExpectMouseReport(uint8_t buttons, int8_t x, int8_t y,
+                         int8_t v, int8_t h, std::string description);
+
   // ---------------------------------------------------------------------------
   std::set<uint8_t> current_keyboard_keycodes_ = {};
   // Manage the set of keycodes expected in the next report
@@ -125,6 +131,7 @@ class VirtualDeviceTest : public ::testing::Test {
   // and keycodes.
   void CheckReports() const;
   void CheckKeyboardReports() const;
+  void CheckMouseReports() const;
 
 };
 
