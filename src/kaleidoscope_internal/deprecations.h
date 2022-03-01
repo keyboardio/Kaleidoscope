@@ -29,11 +29,6 @@
 
 /* Messages */
 
-#define _DEPRECATED_MESSAGE_HANDLE_KEYSWITCH_EVENT                            __NL__ \
-  "`handleKeyswitchEvent()` has been deprecated.\n"                           __NL__ \
-  "Please use `Runtime.handleKeyEvent()` instead.\n"                          __NL__ \
-  "This function will be removed after 2021-08-01."
-
 #define _DEPRECATED_MESSAGE_ON_KEYSWITCH_EVENT_V1                             __NL__ \
   "The `onKeyswitchEvent()` event handler is deprecated.\n"                   __NL__ \
   "Please replace it with an `onKeyEvent()` handler. See the documentation\n" __NL__ \

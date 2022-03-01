@@ -19,7 +19,6 @@
 
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/key_events.h"
 #include "kaleidoscope/KeyAddrBitfield.h"
 
 // ----------------------------------------------------------------------------

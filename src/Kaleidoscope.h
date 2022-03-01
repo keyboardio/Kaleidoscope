@@ -81,7 +81,8 @@ void setup();
 
 #include "kaleidoscope/KeyAddr.h"
 #include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/key_events.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/layers.h"
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
 #include "kaleidoscope/macro_map.h"

@@ -21,7 +21,6 @@
 #include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
 
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.
