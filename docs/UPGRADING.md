@@ -1060,6 +1060,24 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### Obsolete active macros array removed
+
+The deprecated `Macros.active_macro_count` variable was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+The deprecated `Macros.active_macros[]` array was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+The deprecated `Macros.addActiveMacroKey()` function was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+#### Pre-`KeyEvent` Macros API
+
+This is a brief summary of specific elements that were removed.  There is a more comprehensive guide to upgrading existing Macros user code in the [Breaking Changes](#breaking-changes) section, under [Macros](#macros).
+
+Support for deprecated form of the `macroAction(uint8_t macro_id, uint8_t key_state)` function was removed on **2022-03-03**.  This old form must be replaced with the new `macroAction(uint8_t macro_id, KeyEvent &event)` for macros to continue working.
+
+The `Macros.key_addr` public variable was removed on **2022-03-03**.  To get access to the key address of a Macros key event, simply refer to `event.addr` from within the new `macroAction(macro_id, event)` function.
+
+The deprecated `MACRODOWN()` preprocessor macro was removed on **2022-03-03**.  Since most macros are meant to be triggered only by keypress events (not key release), and because `macroAction()` does not get called every cycle for held keys, it's better to simply do one test for `keyToggledOn(event.state)` first, then use `MACRO()` instead.
+
 #### ActiveModColor public variables
 
 The following deprecated `ActiveModColorEffect` public variables were removed on **2022-03-03**.  Please use the following methods instead:
