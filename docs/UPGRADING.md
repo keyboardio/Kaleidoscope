@@ -1092,6 +1092,10 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### `EEPROMSettings.version(uint8_t version)`
+
+This deprecated function was removed on **2022-03-03**.  The information stored is not longer intended for user code to set, but instead is used internally.
+
 #### Model01-TestMode plugin
 
 This deprecated plugin was removed on **2022-03-03**.  Please use the more generic HardwareTestMode plugin instead.

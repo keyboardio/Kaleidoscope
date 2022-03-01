@@ -19,10 +19,6 @@
 
 #include "kaleidoscope/Runtime.h"
 
-#define _DEPRECATED_MESSAGE_EEPROMSETTINGS_VERSION_SET            \
-  "The EEPROMSettings.version(uint8_t version) method has been deprecated,\n" \
-  "and is a no-op now. Please see the NEWS file for more information."
-
 namespace kaleidoscope {
 namespace plugin {
 class EEPROMSettings : public kaleidoscope::Plugin {
@@ -50,7 +46,6 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static uint8_t version(void) {
     return settings_.version;
   }
-  static void version(uint8_t) DEPRECATED(EEPROMSETTINGS_VERSION_SET) {}
 
   static uint16_t requestSlice(uint16_t size);
   static void seal(void);
