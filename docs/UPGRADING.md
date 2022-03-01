@@ -1060,6 +1060,14 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### ActiveModColor public variables
+
+The following deprecated `ActiveModColorEffect` public variables were removed on **2022-03-03**.  Please use the following methods instead:
+
+ - For `ActiveModColor.highlight_color`, use `ActiveModColor.setHighlightColor(color)`
+ - For `ActiveModColor.oneshot_color`, use `ActiveModColor.setOneShotColor(color)`
+ - For `ActiveModColor.sticky_color`, use `ActiveModColor.setStickyColor(color)`
+
 #### OneShot public variables
 
 The following deprecated `OneShot` public variables were removed on **2022-03-03**.  Please use the following methods instead:
