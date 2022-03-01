@@ -1029,6 +1029,12 @@ The masking API has been removed on **2021-01-01**
 
 ## Deprecated APIs and their replacements
 
+### Leader plugin
+
+The `Leader.inject()` function is deprecated.  Please call `Runtime.handleKeyEvent()` directly instead.
+
+Direct access to the `Leader.time_out` configuration variable is deprecated.  Please use the `Leader.setTimeout(ms)` function instead.
+
 ### Source code and namespace rearrangement
 
 With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.

@@ -21,6 +21,19 @@
 #include "kaleidoscope/KeyEventTracker.h"
 #include "kaleidoscope/plugin.h"
 
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#define _DEPRECATED_MESSAGE_LEADER_INJECT                               \
+  "The `Leader.inject()` function is deprecated. Please call\n"         \
+  "`kaleidoscope::Runtime.handleKeyEvent()` directly instead.\n"        \
+  "This function will be removed after 2022-09-01."
+
+#define _DEPRECATED_MESSAGE_LEADER_TIME_OUT                             \
+  "The `Leader.time_out` variable is deprecated. Please use the\n"      \
+  "`Leader.setTimeout()` function instead.\n"                           \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
+
 #define LEADER_MAX_SEQUENCE_LENGTH 4
 
 #define LEAD(n) Key(kaleidoscope::ranges::LEAD_FIRST + n)
@@ -43,9 +56,24 @@ class Leader : public kaleidoscope::Plugin {
   static const dictionary_t *dictionary;
 
   static void reset(void);
+
+#ifndef NDEPRECATED
+  DEPRECATED(LEADER_TIME_OUT)
   static uint16_t time_out;
 
+  DEPRECATED(LEADER_INJECT)
   void inject(Key key, uint8_t key_state);
+#endif
+
+  static void setTimeout(uint16_t timeout) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    time_out = timeout;
+#pragma GCC diagnostic pop
+#endif
+    timeout_ = timeout;
+  }
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
@@ -56,6 +84,7 @@ class Leader : public kaleidoscope::Plugin {
   static KeyEventTracker event_tracker_;
   static uint8_t sequence_pos_;
   static uint16_t start_time_;
+  static uint16_t timeout_;
 
   static int8_t lookup(void);
 };
