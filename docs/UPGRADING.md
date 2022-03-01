@@ -983,38 +983,6 @@ Older versions of the plugin were based on `Key` values; OneShot is now based on
 `KeyAddr` coordinates instead, in order to improve reliability and
 functionality.
 
-The following deprecated functions and variables will be removed after
-**2021-04-31**.
-
-#### Deprecated functions
-
-- `OneShot.inject(key, key_state)`: This `Key`-based function still works, but
-  because OneShot keys are now required to have a valid `KeyAddr`, it will now
-  look for an idle key, and use that, masking whatever value was mapped to that
-  key. Most of the reasons for using this function are better addressed by using
-  the newer features of the plugin, such as automatic one-shot modifiers. Use is
-  very strongly discouraged.
-- `OneShot.isActive(key)`: This `Key`-based function no longer makes sense now
-  that OneShot is `KeyAddr`-based. There is a `OneShot.isActive(key_addr)`
-  function that should be used instead. The deprecated function still works, but
-  its use is discouraged.
-- `OneShot.isSticky(key)`: This `Key`-based function no longer makes sense now
-  that OneShot is `KeyAddr`-based. There is a `OneShot.isSticky(key_addr)`
-  function that should be used instead. The deprecated function still works, but
-  its use is discouraged.
-- `OneShot.isPressed()`: This function no longer has any reason for existing. In
-  older versions, the Escape-OneShot companion plugin used it to solve a problem
-  that no longer exists. It now always returns `false`.
-- `OneShot.isModifierActive(key)`: This function still works, but is not
-  perfectly reliable, because it now returns positive results for keys other
-  than OneShot modifiers. It should not be used.
-
-#### Deprecated variables
-
-- `OneShot.time_out`: Use `OneShot.setTimeout()` instead.
-- `OneShot.hold_time_out`: Use `OneShot.setHoldTimeout()` instead.
-- `OneShot.double_tap_time_out`: Use `OneShot.setDoubleTapTimeout()` instead.
-
 ### Qukeys
 
 Older versions of the plugin used `row` and `col` indexing for defining `Qukey`
@@ -1091,6 +1059,28 @@ When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first
 Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
 
 # Removed APIs
+
+#### OneShot public variables
+
+The following deprecated `OneShot` public variables were removed on **2022-03-03**.  Please use the following methods instead:
+
+ - For `OneShot.time_out`, use `OneShot.setTimeout(ms)`
+ - For `OneShot.hold_time_out`, use `OneShot.setHoldTimeout(ms)`
+ - For `OneShot.double_tap_time_out`, use `OneShot.setDoubleTapTimeout(ms)`
+
+#### Deprecated OneShot API functions
+
+OneShot was completely rewritten in early 2021, and now is based on `KeyAddr` values (as if it keeps physical keys pressed) rather than `Key` values (with no corresponding physical key location).  This allows it to operate on any `Key` value, not just modifiers and layer shifts.
+
+The deprecated `OneShot.inject(key, key_state)` function was removed on **2022-03-03**.  Its use was very strongly discouraged, and is now unavailable.  See below for alternatives.
+
+The deprecated `OneShot.isActive(key)` function was removed on **2022-03-03**.  There is a somewhat equivalent `OneShot.isActive(KeyAddr addr)` function to use when the address of a key that might be currently held active by OneShot is known.  Any code that needs information about active keys is better served by not querying OneShot specifically.
+
+The deprecated `OneShot.isSticky(key)` function was removed on **2022-03-03**.  There is a somewhat equivalent `OneShot.isStick(KeyAddr addr)` function to use when the address of a key that may be in the one-shot sticky state is known.
+
+The deprecated `OneShot.isPressed()` function was removed on **2022-03-03**.  It was already devoid of functionality, and references to it can be safely removed.
+
+The deprecated `OneShot.isModifierActive(key)` function was removed on **2022-03-03**.  OneShot modifiers are now indistinguishable from other modifier keys, so it is better for client code to do a more general search of `live_keys` or to use another mechanism for tracking this state.
 
 #### `HostPowerManagement.enableWakeup()`
 
