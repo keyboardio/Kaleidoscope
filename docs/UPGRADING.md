@@ -1092,6 +1092,10 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### `HostPowerManagement.enableWakeup()`
+
+This deprecated function was removed on **2022-03-03**.  The firmware now supports wakeup by default, so any references to it can be safely removed.
+
 #### `EEPROMSettings.version(uint8_t version)`
 
 This deprecated function was removed on **2022-03-03**.  The information stored is not longer intended for user code to set, but instead is used internally.
