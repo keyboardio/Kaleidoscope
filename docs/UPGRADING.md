@@ -1092,6 +1092,10 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### Model01-TestMode plugin
+
+This deprecated plugin was removed on **2022-03-03**.  Please use the more generic HardwareTestMode plugin instead.
+
 ### Removed on 2020-10-10
 
 ### Deprecation of the HID facade
