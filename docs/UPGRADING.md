@@ -1060,6 +1060,10 @@ Second, the `Layer.eventHandler()` function has been deprecated. There wasn't mu
 
 # Removed APIs
 
+#### `LEDControl.syncDelay` configuration variable
+
+Direct access to this configuration variable was removed on **2022-03-03**.  Please use `LEDControl.setInterval()` to set the interval between LED updates instead.
+
 #### Obsolete active macros array removed
 
 The deprecated `Macros.active_macro_count` variable was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.

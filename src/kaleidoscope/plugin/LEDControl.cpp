@@ -37,11 +37,6 @@ LEDControl::LEDControl(void) {
 uint8_t LEDControl::sync_interval_ = 32;
 uint16_t LEDControl::last_sync_time_ = 0;
 
-#ifndef NDEPRECATED
-uint8_t LEDControl::syncDelay = LEDControl::sync_interval_;
-#endif
-
-
 void LEDControl::next_mode() {
   ++mode_id_;
 
@@ -203,12 +198,6 @@ EventHandlerResult LEDControl::afterEachCycle() {
     return EventHandlerResult::OK;
 
   if (Runtime.hasTimeExpired(last_sync_time_, sync_interval_)) {
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    sync_interval_ = syncDelay;
-#pragma GCC diagnostic pop
-#endif
     syncLeds();
     last_sync_time_ += sync_interval_;
     update();
