@@ -175,7 +175,13 @@ HID_::HID_() : PluggableUSBModule(1, 1, epType),
   protocol(HID_REPORT_PROTOCOL), idle(1) {
   setReportData.reportId = 0;
   setReportData.leds = 0;
+
+#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(USB_EP_SIZE);
+#else
+  epType[0] = EP_TYPE_INTERRUPT_IN;
+#endif
+
   PluggableUSB().plug(this);
 }
 

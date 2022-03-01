@@ -47,7 +47,13 @@ static const uint8_t SINGLE_ABSOLUTEMOUSE_EP_SIZE = USB_EP_SIZE;
 
 
 SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
+
+#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(SINGLE_ABSOLUTEMOUSE_EP_SIZE);
+#else
+  epType[0] = EP_TYPE_INTERRUPT_IN;
+#endif
+
   PluggableUSB().plug(this);
 }
 

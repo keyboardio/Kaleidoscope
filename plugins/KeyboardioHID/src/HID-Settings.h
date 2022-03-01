@@ -26,6 +26,8 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
+#include <PluggableUSB.h>
+
 #define HID_REPORTID_NONE 0
 
 #ifndef HID_REPORTID_MOUSE
