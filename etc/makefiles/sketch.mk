@@ -167,9 +167,20 @@ else
 local_cflags_property =
 endif
 
-compile:
+# If you set KALEIDOSCOPE_LOCAL_LIB_DIR to the name of a directory, 
+# all of the Arduino libraries inside that directory should be used 
+# in preference to any library with the same name further dow the search path
+
+ifneq ($(KALEIDOSCOPE_LOCAL_LIB_DIR),)
+_arduino_local_libraries_prop =  --libraries "${KALEIDOSCOPE_LOCAL_LIB_DIR}"
+endif
+
+compile: 
+
+
 	$(QUIET) install -d "${OUTPUT_PATH}"
 	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} --warnings all ${ccache_wrapper_property} ${local_cflags_property} \
+	  ${_arduino_local_libraries_prop} \
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
