@@ -58,19 +58,6 @@ Runtime_::loop(void) {
 
   kaleidoscope::Hooks::beforeEachCycle();
 
-#ifndef NDEPRECATED
-  // For backwards compatibility. Some plugins rely on the handler for
-  // `beforeReportingState()` being called every cycle. In most cases, they can
-  // simply switch to using `afterEachCycle()`, but we don't want to simply
-  // break those plugins.
-  kaleidoscope::Hooks::beforeReportingState();
-  // Also for backwards compatibility. If user code calls any code that directly
-  // changes the HID report(s) at any point between an event being detected and
-  // the end of `handleKeyEvent()` (most likely from `beforeReportingState()`),
-  // we need to make sure that report doesn't just get discarded.
-  hid().keyboard().sendReport();
-#endif
-
   // Next, we scan the keyswitches. Any toggle-on or toggle-off events will
   // trigger a call to `handleKeyswitchEvent()`, which in turn will
   // (conditionally) result in a HID report. Note that each event gets handled
@@ -186,21 +173,6 @@ Runtime_::handleKeyEvent(KeyEvent event) {
   // one, based on the contents of the `live_keys` state array.
   prepareKeyboardReport(event);
 
-#ifndef NDEPRECATED
-  // Deprecated handlers might depend on values in the report, so we wait until
-  // the new report is otherwise complete before calling them.
-  auto old_result = Hooks::onKeyswitchEvent(event.key, event.addr, event.state);
-  if (old_result == EventHandlerResult::ABORT)
-    return;
-
-  if (old_result != EventHandlerResult::OK ||
-      event.key == Key_Masked ||
-      event.key == Key_NoKey ||
-      event.key == Key_Undefined ||
-      event.key == Key_Transparent)
-    return;
-#endif
-
   // Finally, send the new keyboard report
   sendKeyboardReport(event);
 
@@ -234,24 +206,6 @@ Runtime_::prepareKeyboardReport(const KeyEvent &event) {
     // If the key is idle or masked, we can ignore it.
     if (key == Key_Inactive || key == Key_Masked)
       continue;
-
-#ifndef NDEPRECATED
-    // Only run hooks for plugin keys. If a plugin needs to do something every
-    // cycle, it can use one of the every-cycle hooks and search for active keys
-    // of interest.
-    auto result = Hooks::onKeyswitchEvent(key, key_addr, IS_PRESSED | WAS_PRESSED);
-    if (result == EventHandlerResult::ABORT)
-      continue;
-
-    if (key_addr == event.addr) {
-      // update active keys cache?
-      if (keyToggledOn(event.state)) {
-        live_keys.activate(event.addr, key);
-      } else {
-        live_keys.clear(event.addr);
-      }
-    }
-#endif
 
     addToReport(key);
   }
@@ -321,11 +275,6 @@ Runtime_::sendKeyboardReport(const KeyEvent &event) {
   if (keyToggledOn(event.state)) {
     addToReport(event.key);
   }
-
-#ifndef NDEPRECATED
-  // Call old pre-report handlers:
-  Hooks::beforeReportingState();
-#endif
 
   // Call new pre-report handlers:
   if (Hooks::beforeReportingState(event) == EventHandlerResult::ABORT)
