@@ -1052,6 +1052,14 @@ The following headers and names have changed:
 
 # Removed APIs
 
+### Removed on 2022-03-03
+
+#### Pre-`KeyEvent` event handler hooks
+
+The old event handler `onKeyswitchEvent(Key &key, KeyAddr addr, uint8_t state)` was removed on **2022-03-03**.  It has been replaced with the new `onKeyEvent(KeyEvent &event)` handler (and, in some special cases the `onKeyswitchEvent(KeyEvent &event)` handler).  Plugins using the deprecated handler will need to be rewritten to use the new one(s).
+
+The old event handler `beforeReportingState()` was removed on **2022-03-03**.  It has been replaced with the new `beforeReportingState(KeyEvent &event)` handler.  However, the new handler will be called only when a report is being sent (generally in response to a key event), not every cycle, like the old one.  It was common practice in the past for plugins to rely on `beforeReportingState()` being called every cycle, so when adapting to the `KeyEvent` API, it's important to check for code that should be moved to `afterEachCycle()` instead.
+
 #### `::handleKeyswitchEvent(Key key, KeyAddr key_addr, uint8_t state)`
 
 The old master function for processing key "events" was removed on **2022-03-03**.  Functions that were calling this function should be rewritten to call `kaleidoscope::Runtime.handleKeyEvent(KeyEvent event)` instead.

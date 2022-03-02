@@ -139,22 +139,6 @@ class SignatureCheckDummy {};
                (),(),(), /* non template */                               __NL__ \
                (), (), ##__VA_ARGS__)                                     __NL__ \
                                                                           __NL__ \
-   /* DEPRECATED                                                       */ __NL__ \
-   /* Function called for every non-idle key, every cycle, so it       */ __NL__ \
-   /* can decide what to do with it. It can modify the key (which is   */ __NL__ \
-   /* passed by reference for this reason), and decide whether         */ __NL__ \
-   /* further handles should be tried. If it returns                   */ __NL__ \
-   /* EventHandlerResult::OK, other handlers will also get a chance    */ __NL__ \
-   /* to react to the event. If it returns anything else, Kaleidoscope */ __NL__ \
-   /* will stop processing there.                                      */ __NL__ \
-   OPERATION(onKeyswitchEvent,                                            __NL__ \
-              1,                                                          __NL__ \
-             DEPRECATED(ON_KEYSWITCH_EVENT_V1),                           __NL__ \
-               _ABORTABLE,                                                __NL__ \
-                (),(),(), /* non template */                              __NL__ \
-               (Key &mappedKey, KeyAddr key_addr, uint8_t keyState),      __NL__ \
-               (mappedKey, key_addr, keyState), ##__VA_ARGS__)            __NL__ \
-                                                                          __NL__ \
    /* Function called for every physical keyswitch event (toggle on or */ __NL__ \
    /* off). The `event` parameter is passed by reference so its key    */ __NL__ \
    /* value can be modified. If it returns EventHandlerResult::OK, the */ __NL__ \
@@ -166,7 +150,7 @@ class SignatureCheckDummy {};
    /* plugin that does so must release events in ascending order,      */ __NL__ \
    /* counting by ones.                                                */ __NL__ \
    OPERATION(onKeyswitchEvent,                                            __NL__ \
-             2,                                                           __NL__ \
+             1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
              _ABORTABLE,                                                  __NL__ \
              (),(),(), /* non template */                                 __NL__ \
@@ -242,22 +226,12 @@ class SignatureCheckDummy {};
              _NOT_ABORTABLE,                                              __NL__ \
              (),(),(), /* non template */                                 __NL__ \
              (), (), ##__VA_ARGS__)                                       __NL__ \
-   /* DEPRECATED                                                       */ __NL__ \
-   /* Called before reporting our state to the host. This is the       */ __NL__ \
-   /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
-   /* reported to the host.                                            */ __NL__ \
-   OPERATION(beforeReportingState,                                        __NL__ \
-             1,                                                           __NL__ \
-             DEPRECATED(BEFORE_REPORTING_STATE_V1),                       __NL__ \
-               _NOT_ABORTABLE,                                            __NL__ \
-               (),(),(), /* non template */                               __NL__ \
-               (),(),##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
    /* Called before reporting our state to the host. This is the       */ __NL__ \
    /* last point in a cycle where a plugin can alter what gets         */ __NL__ \
    /* reported to the host.                                            */ __NL__ \
    OPERATION(beforeReportingState,                                        __NL__ \
-             2,                                                           __NL__ \
+             1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
              _ABORTABLE,                                                  __NL__ \
              (),(),(), /* non template */                                 __NL__ \
@@ -330,10 +304,9 @@ class SignatureCheckDummy {};
       OP(beforeEachCycle, 1)                                            __NL__ \
    END(beforeEachCycle, 1)                                              __NL__ \
                                                                         __NL__ \
-   START(onKeyswitchEvent, 1, 2)                                        __NL__ \
+   START(onKeyswitchEvent, 1)                                           __NL__ \
       OP(onKeyswitchEvent, 1)                                           __NL__ \
-      OP(onKeyswitchEvent, 2)                                           __NL__ \
-   END(onKeyswitchEvent, 1, 2)                                          __NL__ \
+   END(onKeyswitchEvent, 1)                                             __NL__ \
                                                                         __NL__ \
    START(onKeyEvent, 1)                                                 __NL__ \
       OP(onKeyEvent, 1)                                                 __NL__ \
@@ -359,10 +332,9 @@ class SignatureCheckDummy {};
       OP(beforeSyncingLeds, 1)                                          __NL__ \
    END(beforeSyncingLeds, 1)                                            __NL__ \
                                                                         __NL__ \
-   START(beforeReportingState, 1, 2)                                    __NL__ \
+   START(beforeReportingState, 1)                                       __NL__ \
       OP(beforeReportingState, 1)                                       __NL__ \
-      OP(beforeReportingState, 2)                                       __NL__ \
-   END(beforeReportingState, 1, 2)                                      __NL__ \
+   END(beforeReportingState, 1)                                         __NL__ \
                                                                         __NL__ \
    START(afterReportingState, 1)                                        __NL__ \
       OP(afterReportingState, 1)                                        __NL__ \
