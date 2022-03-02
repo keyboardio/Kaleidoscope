@@ -26,7 +26,6 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <PluggableUSB.h>
 
 #define HID_REPORTID_NONE 0
 
@@ -79,9 +78,13 @@ void USB_PackMessages(bool pack);
 
 #if defined(ARDUINO_ARCH_AVR)
 
+#include <PluggableUSB.h>
+
 #define EPTYPE_DESCRIPTOR_SIZE      uint8_t
 
 #elif defined(ARDUINO_ARCH_SAM)
+
+#include <PluggableUSB.h>
 
 #define EPTYPE_DESCRIPTOR_SIZE      uint32_t
 #define EP_TYPE_INTERRUPT_IN        (UOTGHS_DEVEPTCFG_EPSIZE_512_BYTE | \
@@ -103,6 +106,8 @@ void USB_PackMessages(bool pack);
 #define USB_Flush                   USBD_Flush
 
 #elif defined(ARDUINO_ARCH_SAMD)
+
+#include <PluggableUSB.h>
 
 #define EPTYPE_DESCRIPTOR_SIZE      uint32_t
 #define EP_TYPE_INTERRUPT_IN        USB_ENDPOINT_TYPE_INTERRUPT | USB_ENDPOINT_IN(0);
