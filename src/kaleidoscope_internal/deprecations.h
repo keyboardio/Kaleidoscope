@@ -51,11 +51,3 @@
   "every scan cycle, it should be moved to the `afterEachCycle()` event\n"     __NL__ \
   "handler instead.\n"                                                         __NL__ \
   "This function will be removed after 2021-08-01."
-
-#define _DEPRECATED_MESSAGE_HID_KEYBOARD_PRESSKEY_TOGGLEDON                    __NL__ \
-  "The `Keyboard::pressKey(key, toggled_on)` function is deprecated.\n"        __NL__ \
-  "Please use `Keyboard::pressKey(key)` without the second argument\n"         __NL__ \
-  "instead. The version with two arguments handled rollover events, and\n"     __NL__ \
-  "this is now handled more completely by the event handling functions in\n"   __NL__ \
-  "`Runtime`.\n"                                                               __NL__ \
-  "This function will be removed after 2021-08-01."

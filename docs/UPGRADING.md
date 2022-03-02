@@ -1052,6 +1052,10 @@ The following headers and names have changed:
 
 # Removed APIs
 
+#### `Keyboard::pressKey(Key key, bool toggled_on)`
+
+This deprecated function was removed on **2022-03-03**.  Its purpose was to handle rollover events for keys that include modifier flags, and that handling is now done elsewhere.  Any code that called it should now simply call `Keyboard::pressKey(Key key)` instead, dropping the second argument.
+
 #### Old layer key event handler functions
 
 The deprecated `Layer.handleKeymapKeyswitchEvent()` function was removed on **2022-03-03**.  Any code that called it should now call `Layer.handleLayerKeyEvent()` instead, with `event.addr` set to the appropriate `KeyAddr` value if possible, and `KeyAddr::none()` otherwise.
