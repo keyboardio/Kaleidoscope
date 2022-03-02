@@ -129,19 +129,6 @@ void Layer_::handleLayerKeyEvent(const KeyEvent &event) {
   }
 }
 
-#ifndef NDEPRECATED
-void Layer_::handleKeymapKeyswitchEvent(Key key, uint8_t key_state) {
-  if (key.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))
-    handleLayerKeyEvent(KeyEvent(KeyAddr::none(), key_state, key));
-}
-
-Key Layer_::eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState) {
-  if (mappedKey.getFlags() == (SYNTHETIC | SWITCH_TO_KEYMAP))
-    handleLayerKeyEvent(KeyEvent(key_addr, keyState, mappedKey));
-  return mappedKey;
-}
-#endif
-
 Key Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr) {
   return keyFromKeymap(layer, key_addr);
 }

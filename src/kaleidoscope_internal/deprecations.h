@@ -29,33 +29,6 @@
 
 /* Messages */
 
-#define _DEPRECATED_MESSAGE_LAYER_UPDATELIVECOMPOSITEKEYMAP                   __NL__ \
-  "`Layer.updateLiveCompositeKeymap()` is deprecated.\n"                      __NL__ \
-  "The 'live composite keymap' cache has been replaced with the\n"            __NL__ \
-  "'active keys' cache, which now represents the state of the active\n"       __NL__ \
-  "keys at any given time. It is probably not necessary to directly\n"        __NL__ \
-  "update that cache from a plugin, but if you need to, please use\n"         __NL__ \
-  "the `live_keys.activate(key_addr, key)` function instead.\n"               __NL__ \
-  "This function will be removed after 2021-08-01."
-
-#define _DEPRECATED_MESSAGE_LAYER_EVENTHANDLER                                __NL__ \
-  "`Layer.eventHandler()` is deprecated.\n"                                   __NL__ \
-  "Please use `Layer.handleKeymapKeyswitchEvent()` instead.\n"                __NL__ \
-  "This function will be removed after 2021-08-01."
-
-#define _DEPRECATED_MESSAGE_LAYER_HANDLE_KEYMAP_KEYSWITCH_EVENT               __NL__ \
-  "`Layer.handleKeymapKeyswitchEvent()` is deprecated.\n"                     __NL__ \
-  "Please use `Layer.handleLayerKeyEvent()` instead.\n"                       __NL__ \
-  "This function will be removed after 2021-08-01."
-
-#define _DEPRECATED_MESSAGE_LAYER_LOOKUP                                      __NL__ \
-  "`Layer.lookup(key_addr)` is deprecated.\n"                                 __NL__ \
-  "Please use `Runtime.lookupKey(key_addr)` instead. Alternatively, if you\n" __NL__ \
-  "need to look up the current keymap entry without regard to current live\n" __NL__ \
-  "key state(s) (i.e. the `live_keys` array, which normally overrides the\n"  __NL__ \
-  "keymap), you can use `Layer.lookupOnActiveLayer(key_addr)`.\n"             __NL__ \
-  "This function will be removed after 2021-08-01."
-
 #define _DEPRECATED_MESSAGE_HANDLE_KEYSWITCH_EVENT                            __NL__ \
   "`handleKeyswitchEvent()` has been deprecated.\n"                           __NL__ \
   "Please use `Runtime.handleKeyEvent()` instead.\n"                          __NL__ \

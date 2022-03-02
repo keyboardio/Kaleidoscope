@@ -26,10 +26,6 @@
 #include "kaleidoscope_internal/shortname.h"
 #include "kaleidoscope_internal/deprecations.h"
 
-#ifndef NDEPRECATED
-#include "kaleidoscope/LiveKeys.h"
-#endif
-
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
 
@@ -81,19 +77,6 @@ class Layer_ {
   // The `Runtime.lookupKey()` function replaces this one, for plugins that
   // still want to do this same check.
 
-#ifndef NDEPRECATED
-  DEPRECATED(LAYER_LOOKUP)
-  static Key lookup(KeyAddr key_addr) {
-    // First check the keyboard state array
-    Key key = live_keys[key_addr];
-    // If that entry is clear, look up the entry from the active keymap layers
-    if (key == Key_Transparent) {
-      key = lookupOnActiveLayer(key_addr);
-    }
-    return key;
-  }
-#endif
-
   static Key lookupOnActiveLayer(KeyAddr key_addr) {
     uint8_t layer = active_layer_keymap_[key_addr.toInt()];
     return (*getKey)(layer, key_addr);
@@ -115,27 +98,10 @@ class Layer_ {
 
   static void handleLayerKeyEvent(const KeyEvent &event);
 
-#ifndef NDEPRECATED
-  DEPRECATED(LAYER_HANDLE_KEYMAP_KEYSWITCH_EVENT)
-  static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState);
-
-  DEPRECATED(LAYER_EVENTHANDLER)
-  static Key eventHandler(Key mappedKey, KeyAddr key_addr, uint8_t keyState);
-#endif
-
   typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
   static GetKeyFunction getKey;
 
   static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
-
-#ifndef NDEPRECATED
-  DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
-  static void updateLiveCompositeKeymap(KeyAddr key_addr, Key mappedKey) {
-    live_keys.activate(key_addr, mappedKey);
-  }
-  DEPRECATED(LAYER_UPDATELIVECOMPOSITEKEYMAP)
-  static void updateLiveCompositeKeymap(KeyAddr key_addr) {}
-#endif
 
   static void updateActiveLayers(void);
 

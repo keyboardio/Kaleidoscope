@@ -1050,15 +1050,19 @@ The following headers and names have changed:
 - [Syster](plugins/Kaleidoscope-Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
 - [TapDance](plugins/Kaleidoscope-TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
-### Live Composite Keymap Cache
-
-The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `live_keys.activate()` instead.
-
-When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `live_keys.activate()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
-
-Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
-
 # Removed APIs
+
+#### Old layer key event handler functions
+
+The deprecated `Layer.handleKeymapKeyswitchEvent()` function was removed on **2022-03-03**.  Any code that called it should now call `Layer.handleLayerKeyEvent()` instead, with `event.addr` set to the appropriate `KeyAddr` value if possible, and `KeyAddr::none()` otherwise.
+
+The deprecated `Layer.eventHandler(key, addr, state)` function was removed on **2022-03-03**.  Any code that refers to it should now call call `handleLayerKeyEvent(KeyEvent(addr, state, key))` instead.
+
+#### Keymap cache functions
+
+The deprecated `Layer.updateLiveCompositeKeymap()` function was removed on **2022-03-03**.  Plugin and user code probably shouldn't have been calling this directly, so there's no direct replacement for it.  If a plugin needs to make changes to the `live_keys` structure (equivalent in some circumstances to the old "live composite keymap"), it can call `live_keys.activate(addr, key)`, but there are probably better ways to accomplish this goal (e.g. simply changing the value of `event.key` from an `onKeyEvent(event)` handler).
+
+The deprecated `Layer.lookup(addr)` function was removed on **2022-03-03**.  Please use `Runtime.lookupKey(addr)` instead in most circumstances.  Alternatively, if you need information about the current state of the keymap regardless of any currently active keys (which may have values that override the keymap), use `Layer.lookupOnActiveLayer(addr)` instead.
 
 #### `LEDControl.syncDelay` configuration variable
 
