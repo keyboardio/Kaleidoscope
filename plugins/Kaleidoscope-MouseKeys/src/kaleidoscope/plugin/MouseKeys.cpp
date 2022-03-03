@@ -39,6 +39,7 @@ uint16_t MouseKeys_::wheel_start_time_;
 
 uint8_t MouseKeys_::directions_ = 0;
 uint8_t MouseKeys_::pending_directions_ = 0;
+uint8_t MouseKeys_::buttons_ = 0;
 
 // =============================================================================
 // Configuration functions
@@ -126,7 +127,9 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
   pending_directions_ = 0;
 
   if (isMouseButtonKey(event.key)) {
-    sendMouseButtonReport(event);
+    // Clear button state; it will be repopulated by `onAddToReport()`, and the
+    // report will be sent by `afterReportingState()`.
+    buttons_ = 0;
 
   } else if (isMouseWarpKey(event.key)) {
     if (keyToggledOn(event.state)) {
@@ -145,6 +148,12 @@ EventHandlerResult MouseKeys_::onKeyEvent(KeyEvent &event) {
 EventHandlerResult MouseKeys_::afterReportingState(const KeyEvent &event) {
   if (!isMouseKey(event.key))
     return EventHandlerResult::OK;
+
+  // If a mouse button key has toggled on or off, we send a mouse report with
+  // the updated information.
+  if (isMouseButtonKey(event.key)) {
+    sendMouseButtonReport();
+  }
 
   // A mouse key event has been successfully registered, and we have now
   // gathered all the information on held mouse movement and wheel keys, so it's
@@ -175,6 +184,9 @@ EventHandlerResult MouseKeys_::onAddToReport(Key key) {
   if (!isMouseKey(key))
     return EventHandlerResult::OK;
 
+  if (isMouseButtonKey(key))
+    buttons_ |= (key.getKeyCode() & ~KEY_MOUSE_BUTTON);
+
   if (isMouseMoveKey(key))
     pending_directions_ |= key.getKeyCode();
 
@@ -188,25 +200,9 @@ EventHandlerResult MouseKeys_::onAddToReport(Key key) {
 // HID report helper functions
 
 // -----------------------------------------------------------------------------
-void MouseKeys_::sendMouseButtonReport(const KeyEvent &event) const {
-  // Get ready to send a new mouse report by building it from live_keys. Note
-  // that this also clears the movement and scroll values, but since those are
-  // relative, that's what we want.
+void MouseKeys_::sendMouseButtonReport() const {
   Runtime.hid().mouse().releaseAllButtons();
-
-  uint8_t buttons = 0;
-  for (KeyAddr key_addr : KeyAddr::all()) {
-    if (key_addr == event.addr)
-      continue;
-    Key key = live_keys[key_addr];
-    if (isMouseKey(key) && isMouseButtonKey(key)) {
-      buttons |= key.getKeyCode();
-    }
-  }
-  if (keyToggledOn(event.state))
-    buttons |= event.key.getKeyCode();
-  buttons &= ~KEY_MOUSE_BUTTON;
-  Runtime.hid().mouse().pressButtons(buttons);
+  Runtime.hid().mouse().pressButtons(buttons_);
   Runtime.hid().mouse().sendReport();
 }
 

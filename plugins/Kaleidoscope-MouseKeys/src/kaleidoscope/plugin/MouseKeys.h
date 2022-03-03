@@ -57,6 +57,7 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   static constexpr uint8_t move_mask_  = 0b00001111;
   static uint8_t directions_;
   static uint8_t pending_directions_;
+  static uint8_t buttons_;
 
   bool isMouseKey(const Key &key) const;
   bool isMouseButtonKey(const Key &key) const;
@@ -64,7 +65,7 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   bool isMouseWarpKey(const Key &key) const;
   bool isMouseWheelKey(const Key &key) const;
 
-  void sendMouseButtonReport(const KeyEvent &event) const;
+  void sendMouseButtonReport() const;
   void sendMouseWarpReport(const KeyEvent &event) const;
   void sendMouseMoveReport();
   void sendMouseWheelReport();
