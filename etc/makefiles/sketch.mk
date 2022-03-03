@@ -47,12 +47,6 @@ HEX_FILE_WITH_BOOTLOADER_PATH 	:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX)-with-boot
 ELF_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 LIB_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).a
 
-
-KALEIDOSCOPE_PLATFORM_LIB_DIR := $(abspath $(KALEIDOSCOPE_DIR)/..)
-
-
-
-
 ifeq ($(FQBN),)
 possible_fqbns = $(shell $(ARDUINO_CLI) board list --format=json |grep FQBN| grep -v "keyboardio:virtual"|cut -d: -f 2-)
 
@@ -173,10 +167,21 @@ else
 local_cflags_property =
 endif
 
-compile:
+# If you set KALEIDOSCOPE_LOCAL_LIB_DIR to the name of a directory, 
+# all of the Arduino libraries inside that directory should be used 
+# in preference to any library with the same name further dow the search path
+
+ifneq ($(KALEIDOSCOPE_LOCAL_LIB_DIR),)
+_arduino_local_libraries_prop =  --libraries "${KALEIDOSCOPE_LOCAL_LIB_DIR}"
+endif
+
+compile: 
+
+
 	$(QUIET) install -d "${OUTPUT_PATH}"
 	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} --warnings all ${ccache_wrapper_property} ${local_cflags_property} \
-	  --libraries "${KALEIDOSCOPE_PLATFORM_LIB_DIR}" \
+	  ${_arduino_local_libraries_prop} \
+	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
 	  --output-dir "${OUTPUT_PATH}" \
