@@ -17,7 +17,6 @@
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
 
 // =============================================================================
 // Default `macroAction()` function definitions
@@ -25,22 +24,6 @@ __attribute__((weak))
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   return MACRO_NONE;
 }
-
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-__attribute__((weak))
-const macro_t *macroAction(uint8_t macro_id, uint8_t key_state) {
-  return MACRO_NONE;
-}
-
-const macro_t* deprecatedMacroDown(uint8_t key_state, const macro_t* macro_p) {
-  if (keyToggledOn(key_state))
-    return macro_p;
-  return MACRO_NONE;
-}
-#pragma GCC diagnostic pop
-#endif
 
 // =============================================================================
 // `Macros` plugin code
@@ -52,15 +35,6 @@ constexpr uint8_t release_state = WAS_PRESSED | INJECTED;
 
 // Initialized to zeroes (i.e. `Key_NoKey`)
 Key Macros::active_macro_keys_[];
-
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-MacroKeyEvent Macros::active_macros[];
-byte Macros::active_macro_count;
-KeyAddr Macros::key_addr = KeyAddr::none();
-#pragma GCC diagnostic pop
-#endif
 
 // -----------------------------------------------------------------------------
 // Public helper functions
@@ -311,35 +285,11 @@ EventHandlerResult Macros::onKeyEvent(KeyEvent &event) {
   if (!isMacrosKey(event.key))
     return EventHandlerResult::OK;
 
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  // Set `Macros.key_addr` so that code in the `macroAction()` function can have
-  // access to it. This is not such a good solution, but it's done this way for
-  // backwards compatability. At some point, we should introduce a new
-  // `macroAction(KeyEvent)` function.
-  if (event.addr.isValid()) {
-    key_addr = event.addr;
-  } else {
-    key_addr = KeyAddr::none();
-  }
-#pragma GCC diagnostic pop
-#endif
-
   // Decode the macro ID from the Macros `Key` value.
   uint8_t macro_id = event.key.getRaw() - ranges::MACRO_FIRST;
 
   // Call the new `macroAction(event)` function.
   const macro_t* macro_ptr = macroAction(macro_id, event);
-
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  // If the new `macroAction()` returned nothing, try the legacy version.
-  if (macro_ptr == MACRO_NONE)
-    macro_ptr = macroAction(macro_id, event.state);
-#pragma GCC diagnostic pop
-#endif
 
   // Play back the macro pointed to by `macroAction()`
   play(macro_ptr);

@@ -28,9 +28,9 @@ namespace plugin {
 KeyAddrBitfield ActiveModColorEffect::mod_key_bits_;
 bool ActiveModColorEffect::highlight_normal_modifiers_ = true;
 
-cRGB ActiveModColorEffect::highlight_color = CRGB(160, 160, 160);
-cRGB ActiveModColorEffect::oneshot_color = CRGB(160, 160, 0);
-cRGB ActiveModColorEffect::sticky_color = CRGB(160, 0, 0);
+cRGB ActiveModColorEffect::highlight_color_ = CRGB(160, 160, 160);
+cRGB ActiveModColorEffect::oneshot_color_ = CRGB(160, 160, 0);
+cRGB ActiveModColorEffect::sticky_color_ = CRGB(160, 0, 0);
 
 // -----------------------------------------------------------------------------
 EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
@@ -81,20 +81,16 @@ EventHandlerResult ActiveModColorEffect::beforeSyncingLeds() {
   // This loop iterates through only the `key_addr`s that have their bits in the
   // `mod_key_bits_` bitfield set.
   for (KeyAddr key_addr : mod_key_bits_) {
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     if (::OneShot.isTemporary(key_addr)) {
       // Temporary OneShot keys get one color:
-      ::LEDControl.setCrgbAt(key_addr, oneshot_color);
+      ::LEDControl.setCrgbAt(key_addr, oneshot_color_);
     } else if (::OneShot.isSticky(key_addr)) {
       // Sticky OneShot keys get another color:
-      ::LEDControl.setCrgbAt(key_addr, sticky_color);
+      ::LEDControl.setCrgbAt(key_addr, sticky_color_);
     } else if (highlight_normal_modifiers_) {
       // Normal modifiers get a third color:
-      ::LEDControl.setCrgbAt(key_addr, highlight_color);
+      ::LEDControl.setCrgbAt(key_addr, highlight_color_);
     }
-#pragma GCC diagnostic pop
   }
 
   return EventHandlerResult::OK;

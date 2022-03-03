@@ -19,7 +19,6 @@
 
 #include "Arduino.h"                                 // for PROGMEM
 #include "kaleidoscope/device/keyboardio/Model01.h"  // for Model01LEDDriver...
-#include "kaleidoscope/key_events.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD

@@ -23,48 +23,20 @@
 
 #define MAX_MODS_PER_LAYER 16
 
-// =============================================================================
-#define _DEPRECATED_MESSAGE_ACTIVEMODCOLOR_COLORS                              \
-  "The `ActiveModColorEffect` public class variables have been deprecated. \n" \
-  "Please use the following methods instead:                               \n" \
-  " - for `highlight_color` => `setHighlightColor(color)`                  \n" \
-  " - for `oneshot_color` => `setOneShotColor(color)`                      \n" \
-  " - for `sticky_color` => `setStickyColor(color)`                        \n" \
-  "These variables will be removed after 2021-08-01."
-
 namespace kaleidoscope {
 namespace plugin {
 class ActiveModColorEffect : public kaleidoscope::Plugin {
  public:
   ActiveModColorEffect(void) {}
 
-  // When removing access to these variables, don't delete them. Instead, make
-  // them private, and add trailing underscores here and in
-  // LED-ActiveModColor.cpp.
-  DEPRECATED(ACTIVEMODCOLOR_COLORS)
-  static cRGB highlight_color;
-  DEPRECATED(ACTIVEMODCOLOR_COLORS)
-  static cRGB oneshot_color;
-  DEPRECATED(ACTIVEMODCOLOR_COLORS)
-  static cRGB sticky_color;
-
   static void setHighlightColor(cRGB color) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    highlight_color = color;
-#pragma GCC diagnostic pop
+    highlight_color_ = color;
   }
   static void setOneShotColor(cRGB color) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    oneshot_color = color;
-#pragma GCC diagnostic pop
+    oneshot_color_ = color;
   }
   static void setOnestickyColor(cRGB color) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    sticky_color = color;
-#pragma GCC diagnostic pop
+    sticky_color_ = color;
   }
 
   static void highlightNormalModifiers(bool value) {
@@ -77,6 +49,10 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
  private:
   static bool highlight_normal_modifiers_;
   static KeyAddrBitfield mod_key_bits_;
+
+  static cRGB highlight_color_;
+  static cRGB oneshot_color_;
+  static cRGB sticky_color_;
 };
 }
 }

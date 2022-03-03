@@ -19,7 +19,6 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
 #include "kaleidoscope/KeyEventTracker.h"
 
 namespace kaleidoscope {
@@ -30,7 +29,10 @@ Key Leader::sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
 KeyEventTracker Leader::event_tracker_;
 uint8_t Leader::sequence_pos_;
 uint16_t Leader::start_time_ = 0;
+#ifndef NDEPRECATED
 uint16_t Leader::time_out = 1000;
+#endif
+uint16_t Leader::timeout_ = 1000;
 const Leader::dictionary_t *Leader::dictionary;
 
 // --- helpers ---
@@ -83,10 +85,11 @@ void Leader::reset(void) {
   sequence_[0] = Key_NoKey;
 }
 
-// DEPRECATED
+#ifndef NDEPRECATED
 void Leader::inject(Key key, uint8_t key_state) {
   Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), key_state | INJECTED, key));
 }
+#endif
 
 // --- hooks ---
 EventHandlerResult Leader::onNameQuery() {
@@ -142,8 +145,16 @@ EventHandlerResult Leader::afterEachCycle() {
   if (!isActive())
     return EventHandlerResult::OK;
 
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   if (Runtime.hasTimeExpired(start_time_, time_out))
     reset();
+#pragma GCC diagnostic pop
+#else
+  if (Runtime.hasTimeExpired(start_time_, timeout_))
+    reset();
+#endif
 
   return EventHandlerResult::OK;
 }

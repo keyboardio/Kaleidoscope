@@ -21,68 +21,10 @@
 #include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
-
-// =============================================================================
-// Deprecated Macros code
-#ifndef NDEPRECATED
-
-#define _DEPRECATED_MESSAGE_MACROS_ACTIVE_MACRO_COUNT                          __NL__ \
-  "The `Macros.active_macro_count` variable is deprecated. It no longer has\n" __NL__ \
-  "any functional purpose, and can be safely removed from your code."
-
-#define _DEPRECATED_MESSAGE_MACROS_ACTIVE_MACROS                               __NL__ \
-  "The `Macros.active_macros` array is deprecated. It no longer serves any\n"  __NL__ \
-  "functional purpose, and can be safely removed from your code."
-
-#define _DEPRECATED_MESSAGE_MACROS_ADD_ACTIVE_MACRO_KEY                        __NL__ \
-  "The `Macros.addActiveMacroKey()` function is deprecated. It no longer\n"    __NL__ \
-  "has any functional purpose, and can be safely removed from your code."
-
-#define _DEPRECATED_MESSAGE_MACRO_ACTION_FUNCTION_V1                           __NL__ \
-  "The old `macroAction(macro_id, key_state)` is deprecated.\n"                __NL__ \
-  "Please define the new `macroAction()` function instead:\n"                  __NL__ \
-  "\n"                                                                         __NL__ \
-  "const macro_t* macroAction(uint8_t macro_id, KeyEvent &event);\n"           __NL__ \
-  "\n"                                                                         __NL__ \
-  "In the body of the new function, replace the `key_state` value with\n"      __NL__ \
-  "`event.state`. Also, note that the new function gives you access to the\n"  __NL__ \
-  "`KeyAddr` of the Macros key event (`event.addr`), and the `Key` value\n"    __NL__ \
-  "(`event.key`). Because the event is passed by reference, it is now\n"       __NL__ \
-  "possible to assign to `event.key` on a toggled-on event, causing that\n"    __NL__ \
-  "`Key` value to persist after the macro finishes playing, leaving that\n"    __NL__ \
-  "value active until the key is released."
-
-#define _DEPRECATED_MESSAGE_MACROS_KEY_ADDR                                    __NL__ \
-  "The `Macros.key_addr` public variable is deprecated.\n"                     __NL__ \
-  "Instead of using this to get the `KeyAddr` of the current macro from\n"     __NL__ \
-  "`macroAction()`, please use the new version of `macroAction()`, which\n"    __NL__ \
-  "uses a `KeyEvent` as its second parameter, giving access to the address\n"  __NL__ \
-  "of the event in the `event.addr` member variable."
-
-#define _DEPRECATED_MESSAGE_MACROS_MACRODOWN                                   __NL__ \
-  "The `MACRODOWN()` preprocessor macro is deprecated. Please use `MACRO()`\n" __NL__ \
-  "with a test for `keyToggledOn(event.state)` instead."
-
-DEPRECATED(MACROS_MACRODOWN)
-const macro_t* deprecatedMacroDown(uint8_t key_state, const macro_t* macro_p);
-
-#endif
 
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.
 const macro_t* macroAction(uint8_t macro_id, KeyEvent &event);
-
-#ifndef NDEPRECATED
-DEPRECATED(MACRO_ACTION_FUNCTION_V1)
-const macro_t* macroAction(uint8_t macro_id, uint8_t key_state);
-
-struct MacroKeyEvent {
-  byte key_code;
-  byte key_id;
-  byte key_state;
-};
-#endif
 
 // The number of simultaneously-active `Key` values that a macro can have
 // running during a call to `Macros.play()`. I don't know if it's actually
@@ -161,17 +103,6 @@ class Macros : public kaleidoscope::Plugin {
     return false;
   }
 
-#ifndef NDEPRECATED
- public:
-  DEPRECATED(MACROS_ACTIVE_MACROS)
-  static MacroKeyEvent active_macros[0];
-  DEPRECATED(MACROS_ACTIVE_MACRO_COUNT)
-  static uint8_t active_macro_count;
-  DEPRECATED(MACROS_ADD_ACTIVE_MACRO_KEY)
-  static void addActiveMacroKey(uint8_t macro_id, KeyAddr key_addr, uint8_t key_state) {}
-  DEPRECATED(MACROS_KEY_ADDR)
-  static KeyAddr key_addr;
-#endif
 };
 
 } // namespace plugin

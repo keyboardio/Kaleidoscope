@@ -19,12 +19,6 @@
 
 #include "kaleidoscope/Runtime.h"
 
-#define _DEPRECATED_MESSAGE_ENABLEWAKEUP                                    \
-  "The HostPowerManagement.enableWakeup() call is not necessary anymore,\n" \
-  "the firmware supports wakeup by default now. The line can be safely\n"   \
-  "removed.\n"                                                          \
-  "This function will be removed after 2021-08-01."
-
 namespace kaleidoscope {
 namespace plugin {
 class HostPowerManagement : public kaleidoscope::Plugin {
@@ -36,8 +30,6 @@ class HostPowerManagement : public kaleidoscope::Plugin {
   } Event;
 
   HostPowerManagement(void) {}
-
-  void enableWakeup(void) DEPRECATED(ENABLEWAKEUP) {}
 
   EventHandlerResult beforeEachCycle();
 

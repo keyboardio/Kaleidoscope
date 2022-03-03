@@ -19,7 +19,6 @@
 
 #include "Arduino.h"                                 // for PROGMEM
 #include "kaleidoscope/device/keyboardio/Model100.h"  // for Model100LEDDriver...
-#include "kaleidoscope/key_events.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 
 #include "Wire.h"

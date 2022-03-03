@@ -275,42 +275,6 @@ based on `Key` values; it has since be rewritten to be based on
 > not a one-shot key is still pressed any more. This function was
 > mainly used by LED-ActiveModColor, which no longer needs it.
 
-## Plugin properties **[DEPRECATED]**
-
-Along with the methods listed above, the `OneShot` object has the
-following properties, too. [Note: these have all been deprecated,
-please use the `.set*Timeout()` methods above instead.]
-
-### `.time_out`
-
-> Set this property to the number of milliseconds to wait before timing out and
-> cancelling the one-shot effect (unless interrupted or cancelled before by any
-> other means).
->
-> Defaults to 2500.
-
-### `.hold_time_out`
-
-> Set this property to the number of milliseconds to wait before considering a
-> held one-shot key as intentionally held. In this case, the one-shot effect
-> will not trigger when the key is released. In other words, holding a one-shot
-> key at least this long, and then releasing it, will not trigger the one-shot
-> effect.
->
-> Defaults to 200.
-
-### `.double_tap_time_out`
-
-> Set this property to the number of milliseconds within which a second
-> uninterrupted tap of the same one-shot key will be treated as a sticky-tap.
-> Only takes effect when `.double_tap_sticky` is set.
->
->
-> Setting the property to `-1` will make the double-tap timeout use `.time_out`
-> for its calculations.
->
-> Defaults to -1.
-
 ## Dependencies
 
 * [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)

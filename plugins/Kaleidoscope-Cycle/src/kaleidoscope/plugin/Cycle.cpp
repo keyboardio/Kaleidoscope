@@ -19,7 +19,6 @@
 #include <Kaleidoscope-Cycle.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/key_events.h"
 
 namespace kaleidoscope {
 namespace plugin {

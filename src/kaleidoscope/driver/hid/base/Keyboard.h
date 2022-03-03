@@ -178,11 +178,6 @@ class Keyboard {
     }
   }
 
-  DEPRECATED(HID_KEYBOARD_PRESSKEY_TOGGLEDON)
-  void pressKey(Key pressed_key, bool toggled_on) __attribute__((noinline)) {
-    pressKey(pressed_key);
-  }
-
   void pressKey(Key pressed_key) __attribute__((noinline)) {
     pressModifiers(pressed_key);
     pressRawKey(pressed_key);

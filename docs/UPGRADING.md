@@ -983,38 +983,6 @@ Older versions of the plugin were based on `Key` values; OneShot is now based on
 `KeyAddr` coordinates instead, in order to improve reliability and
 functionality.
 
-The following deprecated functions and variables will be removed after
-**2021-04-31**.
-
-#### Deprecated functions
-
-- `OneShot.inject(key, key_state)`: This `Key`-based function still works, but
-  because OneShot keys are now required to have a valid `KeyAddr`, it will now
-  look for an idle key, and use that, masking whatever value was mapped to that
-  key. Most of the reasons for using this function are better addressed by using
-  the newer features of the plugin, such as automatic one-shot modifiers. Use is
-  very strongly discouraged.
-- `OneShot.isActive(key)`: This `Key`-based function no longer makes sense now
-  that OneShot is `KeyAddr`-based. There is a `OneShot.isActive(key_addr)`
-  function that should be used instead. The deprecated function still works, but
-  its use is discouraged.
-- `OneShot.isSticky(key)`: This `Key`-based function no longer makes sense now
-  that OneShot is `KeyAddr`-based. There is a `OneShot.isSticky(key_addr)`
-  function that should be used instead. The deprecated function still works, but
-  its use is discouraged.
-- `OneShot.isPressed()`: This function no longer has any reason for existing. In
-  older versions, the Escape-OneShot companion plugin used it to solve a problem
-  that no longer exists. It now always returns `false`.
-- `OneShot.isModifierActive(key)`: This function still works, but is not
-  perfectly reliable, because it now returns positive results for keys other
-  than OneShot modifiers. It should not be used.
-
-#### Deprecated variables
-
-- `OneShot.time_out`: Use `OneShot.setTimeout()` instead.
-- `OneShot.hold_time_out`: Use `OneShot.setHoldTimeout()` instead.
-- `OneShot.double_tap_time_out`: Use `OneShot.setDoubleTapTimeout()` instead.
-
 ### Qukeys
 
 Older versions of the plugin used `row` and `col` indexing for defining `Qukey`
@@ -1061,6 +1029,12 @@ The masking API has been removed on **2021-01-01**
 
 ## Deprecated APIs and their replacements
 
+### Leader plugin
+
+The `Leader.inject()` function is deprecated.  Please call `Runtime.handleKeyEvent()` directly instead.
+
+Direct access to the `Leader.time_out` configuration variable is deprecated.  Please use the `Leader.setTimeout(ms)` function instead.
+
 ### Source code and namespace rearrangement
 
 With the move towards a monorepo-based source, some headers have moved to a new location, and plenty of plugins moved to a new namespace (`kaleidoscope::plugin`). This means that the old headers, and some old names are deprecated. The old names no longer work.
@@ -1082,23 +1056,107 @@ The following headers and names have changed:
 - [Syster](plugins/Kaleidoscope-Syster.md) had the `kaleidoscope::Syster::action_t` type replaced by `kaleidoscope::plugin::Syster::action_t`.
 - [TapDance](plugins/Kaleidoscope-TapDance.md) had the `kaleidoscope::TapDance::ActionType` type replaced by `kaleidoscope::plugin::TapDance::ActionType`.
 
-### Live Composite Keymap Cache
-
-The live composite keymap, which contained a lazily-updated version of the current keymap, has been replaced. The `Layer.updateLiveCompositeKeymap()` functions have been deprecated, and depending on the purpose of the caller, it might be appropriate to use `live_keys.activate()` instead.
-
-When `handleKeyswitchEvent()` is looking up a `Key` value for an event, it first checks the value in the active keys cache before calling `Layer.lookup()` to get the value from the keymap. In the vast majority of cases, it won't be necessary to call `live_keys.activate()` manually, however, because simply changing the value of the `Key` parameter of an `onKeyswitchEvent()` handler will have the same effect.
-
-Second, the `Layer.eventHandler()` function has been deprecated. There wasn't much need for this to be available to plugins, and it's possible to call `Layer.handleKeymapKeyswitchEvent()` directly instead.
-
 # Removed APIs
+
+### Removed on 2022-03-03
+
+#### Pre-`KeyEvent` event handler hooks
+
+The old event handler `onKeyswitchEvent(Key &key, KeyAddr addr, uint8_t state)` was removed on **2022-03-03**.  It has been replaced with the new `onKeyEvent(KeyEvent &event)` handler (and, in some special cases the `onKeyswitchEvent(KeyEvent &event)` handler).  Plugins using the deprecated handler will need to be rewritten to use the new one(s).
+
+The old event handler `beforeReportingState()` was removed on **2022-03-03**.  It has been replaced with the new `beforeReportingState(KeyEvent &event)` handler.  However, the new handler will be called only when a report is being sent (generally in response to a key event), not every cycle, like the old one.  It was common practice in the past for plugins to rely on `beforeReportingState()` being called every cycle, so when adapting to the `KeyEvent` API, it's important to check for code that should be moved to `afterEachCycle()` instead.
+
+#### `::handleKeyswitchEvent(Key key, KeyAddr key_addr, uint8_t state)`
+
+The old master function for processing key "events" was removed on **2022-03-03**.  Functions that were calling this function should be rewritten to call `kaleidoscope::Runtime.handleKeyEvent(KeyEvent event)` instead.
+
+#### `Keyboard::pressKey(Key key, bool toggled_on)`
+
+This deprecated function was removed on **2022-03-03**.  Its purpose was to handle rollover events for keys that include modifier flags, and that handling is now done elsewhere.  Any code that called it should now simply call `Keyboard::pressKey(Key key)` instead, dropping the second argument.
+
+#### Old layer key event handler functions
+
+The deprecated `Layer.handleKeymapKeyswitchEvent()` function was removed on **2022-03-03**.  Any code that called it should now call `Layer.handleLayerKeyEvent()` instead, with `event.addr` set to the appropriate `KeyAddr` value if possible, and `KeyAddr::none()` otherwise.
+
+The deprecated `Layer.eventHandler(key, addr, state)` function was removed on **2022-03-03**.  Any code that refers to it should now call call `handleLayerKeyEvent(KeyEvent(addr, state, key))` instead.
+
+#### Keymap cache functions
+
+The deprecated `Layer.updateLiveCompositeKeymap()` function was removed on **2022-03-03**.  Plugin and user code probably shouldn't have been calling this directly, so there's no direct replacement for it.  If a plugin needs to make changes to the `live_keys` structure (equivalent in some circumstances to the old "live composite keymap"), it can call `live_keys.activate(addr, key)`, but there are probably better ways to accomplish this goal (e.g. simply changing the value of `event.key` from an `onKeyEvent(event)` handler).
+
+The deprecated `Layer.lookup(addr)` function was removed on **2022-03-03**.  Please use `Runtime.lookupKey(addr)` instead in most circumstances.  Alternatively, if you need information about the current state of the keymap regardless of any currently active keys (which may have values that override the keymap), use `Layer.lookupOnActiveLayer(addr)` instead.
+
+#### `LEDControl.syncDelay` configuration variable
+
+Direct access to this configuration variable was removed on **2022-03-03**.  Please use `LEDControl.setInterval()` to set the interval between LED updates instead.
+
+#### Obsolete active macros array removed
+
+The deprecated `Macros.active_macro_count` variable was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+The deprecated `Macros.active_macros[]` array was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+The deprecated `Macros.addActiveMacroKey()` function was removed on **2022-03-03**.  Any references to it are obsolete, and can simply be removed.
+
+#### Pre-`KeyEvent` Macros API
+
+This is a brief summary of specific elements that were removed.  There is a more comprehensive guide to upgrading existing Macros user code in the [Breaking Changes](#breaking-changes) section, under [Macros](#macros).
+
+Support for deprecated form of the `macroAction(uint8_t macro_id, uint8_t key_state)` function was removed on **2022-03-03**.  This old form must be replaced with the new `macroAction(uint8_t macro_id, KeyEvent &event)` for macros to continue working.
+
+The `Macros.key_addr` public variable was removed on **2022-03-03**.  To get access to the key address of a Macros key event, simply refer to `event.addr` from within the new `macroAction(macro_id, event)` function.
+
+The deprecated `MACRODOWN()` preprocessor macro was removed on **2022-03-03**.  Since most macros are meant to be triggered only by keypress events (not key release), and because `macroAction()` does not get called every cycle for held keys, it's better to simply do one test for `keyToggledOn(event.state)` first, then use `MACRO()` instead.
+
+#### ActiveModColor public variables
+
+The following deprecated `ActiveModColorEffect` public variables were removed on **2022-03-03**.  Please use the following methods instead:
+
+ - For `ActiveModColor.highlight_color`, use `ActiveModColor.setHighlightColor(color)`
+ - For `ActiveModColor.oneshot_color`, use `ActiveModColor.setOneShotColor(color)`
+ - For `ActiveModColor.sticky_color`, use `ActiveModColor.setStickyColor(color)`
+
+#### OneShot public variables
+
+The following deprecated `OneShot` public variables were removed on **2022-03-03**.  Please use the following methods instead:
+
+ - For `OneShot.time_out`, use `OneShot.setTimeout(ms)`
+ - For `OneShot.hold_time_out`, use `OneShot.setHoldTimeout(ms)`
+ - For `OneShot.double_tap_time_out`, use `OneShot.setDoubleTapTimeout(ms)`
+
+#### Deprecated OneShot API functions
+
+OneShot was completely rewritten in early 2021, and now is based on `KeyAddr` values (as if it keeps physical keys pressed) rather than `Key` values (with no corresponding physical key location).  This allows it to operate on any `Key` value, not just modifiers and layer shifts.
+
+The deprecated `OneShot.inject(key, key_state)` function was removed on **2022-03-03**.  Its use was very strongly discouraged, and is now unavailable.  See below for alternatives.
+
+The deprecated `OneShot.isActive(key)` function was removed on **2022-03-03**.  There is a somewhat equivalent `OneShot.isActive(KeyAddr addr)` function to use when the address of a key that might be currently held active by OneShot is known.  Any code that needs information about active keys is better served by not querying OneShot specifically.
+
+The deprecated `OneShot.isSticky(key)` function was removed on **2022-03-03**.  There is a somewhat equivalent `OneShot.isStick(KeyAddr addr)` function to use when the address of a key that may be in the one-shot sticky state is known.
+
+The deprecated `OneShot.isPressed()` function was removed on **2022-03-03**.  It was already devoid of functionality, and references to it can be safely removed.
+
+The deprecated `OneShot.isModifierActive(key)` function was removed on **2022-03-03**.  OneShot modifiers are now indistinguishable from other modifier keys, so it is better for client code to do a more general search of `live_keys` or to use another mechanism for tracking this state.
+
+#### `HostPowerManagement.enableWakeup()`
+
+This deprecated function was removed on **2022-03-03**.  The firmware now supports wakeup by default, so any references to it can be safely removed.
+
+#### `EEPROMSettings.version(uint8_t version)`
+
+This deprecated function was removed on **2022-03-03**.  The information stored is not longer intended for user code to set, but instead is used internally.
+
+#### Model01-TestMode plugin
+
+This deprecated plugin was removed on **2022-03-03**.  Please use the more generic HardwareTestMode plugin instead.
 
 ### Removed on 2020-10-10
 
-### Deprecation of the HID facade
+#### Deprecation of the HID facade
 
 With the new Device APIs it became possible to replace the HID facade (the `kaleidoscope::hid` family of functions) with a driver. As such, the old APIs are deprecated, and was removed on 2020-10-10. Please use `Kaleidoscope.hid()` instead.
 
-### Implementation of type Key internally changed from C++ union to class
+#### Implementation of type Key internally changed from C++ union to class
 
 The deprecated functions were removed on 2020-10-10.
 
