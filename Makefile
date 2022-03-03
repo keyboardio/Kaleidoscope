@@ -44,6 +44,20 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	-rm -d $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
 	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
 
+update:
+	# Clear out our hacked up symlinked Kaleidoscope
+	-rm -rf $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
+	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio; git pull; \
+		git submodule update --init --recursive
+	-rm -rf $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
+	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
+	# Clear out our hacked up Kaleidoscope
+	-rm -rf $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
+	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32; git pull; \
+		git submodule update --init --recursive
+	-rm -rf $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
+	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
+
 simulator-tests:
 	$(MAKE) -C tests all
 
