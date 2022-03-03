@@ -1152,11 +1152,11 @@ This deprecated plugin was removed on **2022-03-03**.  Please use the more gener
 
 ### Removed on 2020-10-10
 
-### Deprecation of the HID facade
+#### Deprecation of the HID facade
 
 With the new Device APIs it became possible to replace the HID facade (the `kaleidoscope::hid` family of functions) with a driver. As such, the old APIs are deprecated, and was removed on 2020-10-10. Please use `Kaleidoscope.hid()` instead.
 
-### Implementation of type Key internally changed from C++ union to class
+#### Implementation of type Key internally changed from C++ union to class
 
 The deprecated functions were removed on 2020-10-10.
 
