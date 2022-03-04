@@ -187,21 +187,21 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Configuration variables
-  uint16_t timeout_{2500};
-  uint16_t hold_timeout_{250};
-  int16_t double_tap_timeout_{-1};
+  uint16_t timeout_ = 2500;
+  uint16_t hold_timeout_ = 250;
+  int16_t double_tap_timeout_ = -1;
 
-  uint16_t stickable_keys_{uint16_t(-1)};
-  bool auto_modifiers_{false};
-  bool auto_layers_{false};
+  uint16_t stickable_keys_ = -1;
+  bool auto_modifiers_ = false;
+  bool auto_layers_ = false;
 
   // --------------------------------------------------------------------------
   // State variables
   KeyAddrBitfield temp_addrs_;
   KeyAddrBitfield glue_addrs_;
 
-  uint16_t start_time_{0};
-  KeyAddr prev_key_addr_{invalid_key_addr};
+  uint16_t start_time_ = 0;
+  KeyAddr prev_key_addr_ = invalid_key_addr;
 
   // --------------------------------------------------------------------------
   // Internal utility functions
