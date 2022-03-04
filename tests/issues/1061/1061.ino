@@ -51,10 +51,10 @@ class OneShotInsert : public Plugin {
   }
 };
 
-bool OneShot::isStickable(Key key) {
+bool OneShot::isStickable(Key key) const {
   if (key == Key_LeftAlt)
     return false;
-  return OneShot::isStickableDefault(key);
+  return isStickableDefault(key);
 }
 
 } // namespace plugin
