@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-OneShot -- One-shot modifiers and layers
- * Copyright (C) 2016-2021  Keyboard.io, Inc.
+ * Copyright (C) 2016-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -22,28 +22,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-
-// ----------------------------------------------------------------------------
-// Configuration variables
-
-uint16_t OneShot::timeout_ = 2500;
-uint16_t OneShot::hold_timeout_ = 250;
-int16_t OneShot::double_tap_timeout_ = -1;
-
-// ----------------------------------------------------------------------------
-// State variables
-
-uint16_t OneShot::stickable_keys_ = -1;
-
-bool OneShot::auto_modifiers_ = false;
-bool OneShot::auto_layers_ = false;
-
-KeyAddrBitfield OneShot::temp_addrs_;
-KeyAddrBitfield OneShot::glue_addrs_;
-
-uint16_t OneShot::start_time_ = 0;
-KeyAddr OneShot::prev_key_addr_ = OneShot::invalid_key_addr;
-
 
 // ============================================================================
 // Public interface
@@ -80,7 +58,7 @@ void OneShot::disableStickabilityForLayers() {
 // ----------------------------------------------------------------------------
 // Global tests for any OneShot key
 
-bool OneShot::isActive() {
+bool OneShot::isActive() const {
   for (KeyAddr key_addr __attribute__((unused)) : temp_addrs_) {
     return true;
   }
@@ -90,7 +68,7 @@ bool OneShot::isActive() {
   return false;
 }
 
-bool OneShot::isSticky() {
+bool OneShot::isSticky() const {
   for (KeyAddr key_addr : glue_addrs_) {
     if (! temp_addrs_.read(key_addr)) {
       return true;
@@ -107,11 +85,11 @@ bool OneShot::isSticky() {
 // states (sticky | active && !sticky | pressed && !active).
 
 __attribute__((weak))
-bool OneShot::isStickable(Key key) {
+bool OneShot::isStickable(Key key) const {
   return isStickableDefault(key);
 }
 
-bool OneShot::isStickableDefault(Key key) {
+bool OneShot::isStickableDefault(Key key) const {
   int8_t n;
   // If the key is either a keyboard modifier or a layer shift, we check to see
   // if it has been set to be non-stickable.
@@ -132,19 +110,19 @@ bool OneShot::isStickableDefault(Key key) {
   return true;
 }
 
-bool OneShot::isTemporary(KeyAddr key_addr) {
+bool OneShot::isTemporary(KeyAddr key_addr) const {
   return temp_addrs_.read(key_addr);
 }
 
-bool OneShot::isPending(KeyAddr key_addr) {
+bool OneShot::isPending(KeyAddr key_addr) const {
   return (glue_addrs_.read(key_addr) && temp_addrs_.read(key_addr));
 }
 
-bool OneShot::isSticky(KeyAddr key_addr) {
+bool OneShot::isSticky(KeyAddr key_addr) const {
   return (glue_addrs_.read(key_addr) && !temp_addrs_.read(key_addr));
 }
 
-bool OneShot::isActive(KeyAddr key_addr) {
+bool OneShot::isActive(KeyAddr key_addr) const {
   return (isTemporary(key_addr) || glue_addrs_.read(key_addr));
 }
 
@@ -334,7 +312,7 @@ EventHandlerResult OneShot::afterEachCycle() {
 // ----------------------------------------------------------------------------
 // Helper functions for acting on OneShot key events
 
-uint8_t OneShot::getOneShotKeyIndex(Key oneshot_key) {
+uint8_t OneShot::getOneShotKeyIndex(Key oneshot_key) const {
   // The calling function is responsible for verifying that
   // `oneshot_key` is an actual OneShot key (i.e. call
   // `isOneShotKey(oneshot_key)` first).
@@ -342,7 +320,7 @@ uint8_t OneShot::getOneShotKeyIndex(Key oneshot_key) {
   return index;
 }
 
-uint8_t OneShot::getKeyIndex(Key key) {
+uint8_t OneShot::getKeyIndex(Key key) const {
   // Default to returning a value that's out of range. This should be
   // harmless because we only use the returned index to reference a
   // bit in a bitfield, not as a memory address.
@@ -358,7 +336,7 @@ uint8_t OneShot::getKeyIndex(Key key) {
   return n;
 }
 
-Key OneShot::decodeOneShotKey(Key oneshot_key) {
+Key OneShot::decodeOneShotKey(Key oneshot_key) const {
   // The calling function is responsible for verifying that
   // `oneshot_key` is an actual OneShot key (i.e. call
   // `isOneShotKey(oneshot_key)` first).
@@ -386,11 +364,12 @@ void OneShot::pressKey(KeyAddr key_addr, Key key) {
   Runtime.handleKeyEvent(event);
 }
 
-void OneShot::holdKey(KeyAddr key_addr) {
+void OneShot::holdKey(KeyAddr key_addr) const {
   KeyEvent event{key_addr, WAS_PRESSED | IS_PRESSED | INJECTED};
   Runtime.handleKeyEvent(event);
 }
 
+__attribute__((always_inline)) inline
 void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
