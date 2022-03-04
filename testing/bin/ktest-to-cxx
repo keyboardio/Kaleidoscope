@@ -138,6 +138,76 @@ sub load_from_text {
                         keys        => [@keys]
                     };
                 }
+                if ( $content =~ /^no mouse-report/ ) {
+                    return {
+                        report_type => 'mouse',
+                        count       => 0
+                    };
+                }
+                if ( $content =~ /^mouse-report\s+(.*)$/ ) {
+                    my $report_data = $1;
+                    my @args  = split( /,?\s+/, lc $report_data );
+                    my $mouse_report_data = {};
+                    $mouse_report_data->{buttons} = [];
+                    $mouse_report_data->{x} = "0";
+                    $mouse_report_data->{y} = "0";
+                    $mouse_report_data->{v} = "0";
+                    $mouse_report_data->{h} = "0";
+                    if ( scalar(@args) == 1 && $args[0] =~ /^empty$/i ) {
+                        @args = ();
+                    }
+                    for my $arg (@args) {
+                        if ( $arg =~ /(\w+)=([\w\d\-\+]+)/ ) {
+                            my $field = $1;
+                            my $value = $2;
+                            if ( $field =~ /button/ ) {
+                                if ( $value =~ /^l/ ) {
+                                    $value = 'MouseReport::kButtonLeft';
+                                }
+                                elsif ( $value =~ /^r/ ) {
+                                    $value = 'MouseReport::kButtonRight';
+                                }
+                                elsif ( $value =~ /^m/ ) {
+                                    $value = 'MouseReport::kButtonMiddle';
+                                }
+                                elsif ( $value =~ /^n/ ) {
+                                    $value = 'MouseReport::kButtonNext';
+                                }
+                                elsif ( $value =~ /^p/ ) {
+                                    $value = 'MouseReport::kButtonPrev';
+                                }
+                                else {
+                                    die
+"Couldn't parse mouse button value from $content at line $line_num";
+                                }
+                                push @{ $mouse_report_data->{buttons} }, $value;
+                            }
+                            elsif ( $field =~ /x/ ) {
+                                $mouse_report_data->{x} = $value;
+                            }
+                            elsif ( $field =~ /y/ ) {
+                                $mouse_report_data->{y} = $value;
+                            }
+                            elsif ( $field =~ /v/ ) {
+                                $mouse_report_data->{v} = $value;
+                            }
+                            elsif ( $field =~ /h/ ) {
+                                $mouse_report_data->{h} = $value;
+                            }
+                            else {
+                                die "Don't know how parse $content at line $line_num";
+                            }
+                        }
+                        else {
+                            die "Don't know how parse $content at line $line_num";
+                        }
+                    }
+                    return {
+                        count       => 1,            # We expect one report here
+                        report_type => 'mouse',
+                        data        => $mouse_report_data,
+                    }
+                }
                 else {
                     die "Don't know how parse $content at line $line_num";
                 }
@@ -394,15 +464,22 @@ sub generate_release {
 
 sub generate_expect_report {
     my $report = shift;
-    if (  !$report->{data}->{report_type}
-        || $report->{data}->{report_type} ne 'keyboard' )
-    {
+    if ( $report->{data}->{report_type} eq 'keyboard' ) {
+        generate_expect_keyboard_report($report);
+    }
+    elsif ( $report->{data}->{report_type} eq 'mouse' ) {
+        generate_expect_mouse_report($report);
+    }
+    else {
         die
-"Don't know how to work with expectaions of reports other than 'keyboard' reports at line #"
+"Don't know how to handle expectaions of report types other than 'keyboard' and 'mouse' at line #"
           . $report->{line_num} . "\n";
-
     }
     $reports_expected++;
+}
+
+sub generate_expect_keyboard_report {
+    my $report = shift;
 
     if ( $report->{data}->{count} == 0 ) {
         if ( $report->{comment} ) {
@@ -422,9 +499,40 @@ sub generate_expect_report {
             : ( $report->{data}->{keys} )
         )
     );
-    cxx(    "ExpectReport(Keycodes{$codes}, \""
+    cxx(    "ExpectKeyboardReport(Keycodes{$codes}, \""
           . ( $report->{comment} || 'No explanatory comment specified' )
           . "\");" );
+    cxx("");
+}
+
+sub generate_expect_mouse_report {
+    my $report = shift;
+
+    if ( $report->{data}->{count} == 0 ) {
+        if ( $report->{comment} ) {
+            cxx_comment( $report->{comment} );
+        }
+        cxx_comment(
+"We don't expect any report here, and have told the tests to check that"
+        );
+        return;
+    }
+
+    my $buttons_code = "0";
+    my @buttons = ( ref( $report->{data}->{data}{buttons} )
+                    ? @{ $report->{data}->{data}{buttons} }
+                    : ( $report->{data}->{data}{buttons} ) );
+    for my $button_value (@buttons) {
+        $buttons_code .= " | $button_value";
+    }
+    cxx("ExpectMouseReport($buttons_code, "
+        . $report->{data}{data}{x} . ", "
+        . $report->{data}{data}{y} . ", "
+        . $report->{data}{data}{v} . ", "
+        . $report->{data}{data}{h} . ", "
+        . "\""
+        . ( $report->{comment} || 'No explanatory comment specified' )
+        . "\");" );
     cxx("");
 }
 

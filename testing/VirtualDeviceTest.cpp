@@ -19,6 +19,8 @@
 #include "HIDReportObserver.h"
 #include "testing/HIDState.h"
 
+#include <bitset>
+
 namespace kaleidoscope {
 namespace testing {
 
@@ -39,7 +41,8 @@ void VirtualDeviceTest::LoadState() {
 void VirtualDeviceTest::ClearState() {
   output_state_ = nullptr;
   input_timestamps_.clear();
-  expected_reports_.clear();
+  expected_keyboard_reports_.clear();
+  expected_mouse_reports_.clear();
 }
 
 const HIDState* VirtualDeviceTest::HIDReports() const {
@@ -69,77 +72,96 @@ void VirtualDeviceTest::ReleaseKey(KeyAddr addr) {
 
 
 // =============================================================================
-void VirtualDeviceTest::ExpectReport(Keycodes keys,
-                                     std::string description) {
+void VirtualDeviceTest::ExpectKeyboardReport(Keycodes keys,
+                                             std::string description) {
   size_t report_timestamp{Runtime.millisAtCycleStart()};
-  ClearReport();
+  ClearKeyboardReport();
   for (Key key : keys) {
-    AddToReport(key);
+    AddToKeyboardReport(key);
   }
   ExpectedKeyboardReport new_report(report_timestamp,
                                     current_keyboard_keycodes_,
                                     description);
-  expected_reports_.push_back(new_report);
+  expected_keyboard_reports_.push_back(new_report);
 }
 
 // =============================================================================
-void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
-                                     RemoveKeycodes removed_keys,
-                                     std::string description) {
+void VirtualDeviceTest::ExpectKeyboardReport(AddKeycodes added_keys,
+                                             RemoveKeycodes removed_keys,
+                                             std::string description) {
   uint32_t report_timestamp = Runtime.millisAtCycleStart();
   for (Key key : added_keys) {
-    AddToReport(key);
+    AddToKeyboardReport(key);
   }
   for (Key key : removed_keys) {
-    RemoveFromReport(key);
+    RemoveFromKeyboardReport(key);
   }
   ExpectedKeyboardReport new_report(report_timestamp,
                                     current_keyboard_keycodes_,
                                     description);
-  expected_reports_.push_back(new_report);
+  expected_keyboard_reports_.push_back(new_report);
 }
 
 // -----------------------------------------------------------------------------
-void VirtualDeviceTest::ExpectReport(AddKeycodes added_keys,
-                                     std::string description) {
-  ExpectReport(added_keys, RemoveKeycodes{}, description);
+void VirtualDeviceTest::ExpectKeyboardReport(AddKeycodes added_keys,
+                                             std::string description) {
+  ExpectKeyboardReport(added_keys, RemoveKeycodes{}, description);
 }
-void VirtualDeviceTest::ExpectReport(RemoveKeycodes removed_keys,
-                                     std::string description) {
-  ExpectReport(AddKeycodes{}, removed_keys, description);
+void VirtualDeviceTest::ExpectKeyboardReport(RemoveKeycodes removed_keys,
+                                             std::string description) {
+  ExpectKeyboardReport(AddKeycodes{}, removed_keys, description);
 }
 
 // =============================================================================
-void VirtualDeviceTest::ClearReport() {
+void VirtualDeviceTest::ClearKeyboardReport() {
   current_keyboard_keycodes_.clear();
 }
-void VirtualDeviceTest::AddToReport(Key key) {
+void VirtualDeviceTest::AddToKeyboardReport(Key key) {
   current_keyboard_keycodes_.insert(key.getKeyCode());
 }
-void VirtualDeviceTest::RemoveFromReport(Key key) {
+void VirtualDeviceTest::RemoveFromKeyboardReport(Key key) {
   current_keyboard_keycodes_.erase(key.getKeyCode());
 }
 
 // =============================================================================
+void VirtualDeviceTest::ExpectMouseReport(uint8_t buttons,
+                                          int8_t x, int8_t y,
+                                          int8_t v, int8_t h,
+                                          std::string description) {
+  uint32_t report_timestamp = Runtime.millisAtCycleStart();
+  ExpectedMouseReport new_report(report_timestamp,
+                                 buttons, x, y, v, h,
+                                 description);
+  expected_mouse_reports_.push_back(new_report);
+}
+
+
+// =============================================================================
 void VirtualDeviceTest::CheckReports() const {
-  int observed_report_count = HIDReports()->Keyboard().size();
-  int expected_report_count = expected_reports_.size();
+  CheckKeyboardReports();
+  CheckMouseReports();
+}
 
-  EXPECT_EQ(observed_report_count, expected_report_count);
+void VirtualDeviceTest::CheckKeyboardReports() const {
+  int observed_keyboard_report_count = HIDReports()->Keyboard().size();
+  int expected_keyboard_report_count = expected_keyboard_reports_.size();
 
-  int max_count = std::max(observed_report_count, expected_report_count);
+  EXPECT_EQ(observed_keyboard_report_count, expected_keyboard_report_count);
 
-  for (int i = 0; i < observed_report_count; ++i) {
+  int max_count = std::max(observed_keyboard_report_count,
+                           expected_keyboard_report_count);
+
+  for (int i = 0; i < observed_keyboard_report_count; ++i) {
     auto observed_report = HIDReports()->Keyboard(i);
     auto observed_keycodes = observed_report.ActiveKeycodes();
 
-    if (i < expected_report_count) {
-      auto expected_report = expected_reports_[i];
+    if (i < expected_keyboard_report_count) {
+      auto expected_report = expected_keyboard_reports_[i];
       auto expected_keycodes = expected_report.Keycodes();
 
       EXPECT_THAT(observed_keycodes,
                   ::testing::ElementsAreArray(expected_keycodes))
-          << expected_reports_[i].Message() << " (i=" << i << ")";
+          << expected_keyboard_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
           << "Report timestamps don't match (i=" << i << ")";
 
@@ -151,6 +173,48 @@ void VirtualDeviceTest::CheckReports() const {
         std::cerr << int(keycode) << " ";
       }
       std::cerr << "}" << std::dec << std::endl;
+    }
+  }
+}
+
+void VirtualDeviceTest::CheckMouseReports() const {
+  int observed_mouse_report_count = HIDReports()->Mouse().size();
+  int expected_mouse_report_count = expected_mouse_reports_.size();
+
+  EXPECT_EQ(observed_mouse_report_count, expected_mouse_report_count);
+
+  int max_count = std::max(observed_mouse_report_count,
+                           expected_mouse_report_count);
+
+  for (int i = 0; i < observed_mouse_report_count; ++i) {
+    auto observed_report = HIDReports()->Mouse(i);
+
+    if (i < expected_mouse_report_count) {
+      auto expected_report = expected_mouse_reports_[i];
+
+      EXPECT_EQ(observed_report.Buttons(), expected_report.Buttons())
+          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.XAxis(), expected_report.XAxis())
+          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.YAxis(), expected_report.YAxis())
+          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.VWheel(), expected_report.VWheel())
+          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.HWheel(), expected_report.HWheel())
+          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+      EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
+          << "Report timestamps don't match (i=" << i << ")";
+
+    } else {
+      std::bitset<8> observed_buttons{observed_report.Buttons()};
+      std::cerr << "Unexpected mouse report at "
+                << observed_report.Timestamp() << "ms: {"
+                << " buttons: " << observed_buttons
+                << " x: " << int(observed_report.XAxis())
+                << " y: " << int(observed_report.YAxis())
+                << " v: " << int(observed_report.VWheel())
+                << " h: " << int(observed_report.HWheel())
+                << " }" << std::endl;
     }
   }
 }

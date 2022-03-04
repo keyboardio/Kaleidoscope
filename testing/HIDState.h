@@ -19,6 +19,7 @@
 #include "testing/AbsoluteMouseReport.h"
 #include "testing/ConsumerControlReport.h"
 #include "testing/KeyboardReport.h"
+#include "testing/MouseReport.h"
 #include "testing/SystemControlReport.h"
 
 // Out of order due to macro conflicts.
@@ -42,6 +43,9 @@ class HIDState {
   const std::vector<KeyboardReport>& Keyboard() const;
   const KeyboardReport& Keyboard(size_t i) const;
 
+  const std::vector<MouseReport>& Mouse() const;
+  const MouseReport& Mouse(size_t i) const;
+
   const std::vector<SystemControlReport>& SystemControl() const;
   const SystemControlReport& SystemControl(size_t i) const;
 
@@ -51,6 +55,7 @@ class HIDState {
   std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   std::vector<ConsumerControlReport> consumer_control_reports_;
   std::vector<KeyboardReport> keyboard_reports_;
+  std::vector<MouseReport> mouse_reports_;
   std::vector<SystemControlReport> system_control_reports_;
 };
 
@@ -68,11 +73,13 @@ class HIDStateBuilder {
   static void ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report);
   static void ProcessConsumerControlReport(const ConsumerControlReport& report);
   static void ProcessKeyboardReport(const KeyboardReport& report);
+  static void ProcessMouseReport(const MouseReport& report);
   static void ProcessSystemControlReport(const SystemControlReport& report);
 
   static std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   static std::vector<ConsumerControlReport> consumer_control_reports_;
   static std::vector<KeyboardReport> keyboard_reports_;
+  static std::vector<MouseReport> mouse_reports_;
   static std::vector<SystemControlReport> system_control_reports_;
 };
 
