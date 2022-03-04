@@ -28,21 +28,18 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
-		--recurse-submodules=":(exclude)avr/libraries/Kaleidoscope" \
-		--recurse-submodules=":(exclude)gd32/libraries/Kaleidoscope" \
-		--recurse-submodules=avr/libraries/ \
-		--recurse-submodules=gd32/ \
-		--recurse-submodules=gd32/libraries/ \
+		--recurse-submodules \
 		git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio \
 		$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio
-	-rm -d $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
-	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/libraries/Kaleidoscope
 	git clone -c core.symlinks=true \
-		--recurse-submodules=":(exclude)libraries/Kaleidoscope" \
-		--recurse-submodules=libraries/ \
+		--recurse-submodules \
 		git://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
-	-rm -d $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
-	ln -s $(KALEIDOSCOPE_DIR) $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32/libraries/Kaleidoscope
+
+update:
+	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio; git pull; \
+		git submodule update --init --recursive
+	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32; git pull; \
+		git submodule update --init --recursive
 
 simulator-tests:
 	$(MAKE) -C tests all

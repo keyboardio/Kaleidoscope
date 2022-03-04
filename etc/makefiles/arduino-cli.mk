@@ -35,7 +35,8 @@ ARDUINO_CONTENT ?= $(KALEIDOSCOPE_DIR)/.arduino
 export ARDUINO_DIRECTORIES_DATA ?= $(ARDUINO_CONTENT)/data
 export ARDUINO_DIRECTORIES_DOWNLOADS ?= $(ARDUINO_CONTENT)/downloads
 export ARDUINO_CLI_CONFIG ?= $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml
-export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS ?= https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json
+export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS ?= https://raw.githubusercontent.com/keyboardio/boardsmanager/master/devel/package_kaleidoscope_devel_index.json
+
 
 # If it looks like Kaleidoscope is inside a "traditional" Arduino hardware directory 
 # in the user's homedir, let's use that.
@@ -163,9 +164,15 @@ arduino-update-cores:
 
 
 install-arduino-core-kaleidoscope: arduino-update-cores
-	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr"
-	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32"
+	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr-tools-only"
+	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32-tools-only"
 
 install-arduino-core-avr: arduino-update-cores
 	$(QUIET) $(ARDUINO_CLI) core install "arduino:avr"
+
+
+install-arduino-core-deps:
+	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr-tools-only"
+	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32-tools-only"
+
 
