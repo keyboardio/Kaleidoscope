@@ -34,6 +34,8 @@ echo "The bundle is coming from ${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio"
 tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 	--exclude .arduino/data \
 	--exclude .arduino/downloads \
+	--exclude .arduino/user/hardware/keyboardio/avr/libraries/Kaleidoscope \
+	--exclude .arduino/user/hardware/keyboardio/gd32/libraries/Kaleidoscope \
 	--exclude bin/arduino-cli \
 	--exclude .docker_xfer \
 	--exclude .git \
