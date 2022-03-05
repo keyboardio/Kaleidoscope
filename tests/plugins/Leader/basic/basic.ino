@@ -72,7 +72,7 @@ static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROG
 
 void setup() {
   Kaleidoscope.setup();
-  Leader.time_out = 20;
+  Leader.setTimeout(20);
   Leader.dictionary = leader_dictionary;
 }
 
