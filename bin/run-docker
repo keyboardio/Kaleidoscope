@@ -22,7 +22,7 @@ fi
 
 if [ ! -d ./.arduino/user/hardware ]; then
 	echo "Running tests in Docker requires that your Arduino environment be installed in .arduino inside the top-level Kaleidoscope directory. To set this up, run 'make setup'"
-  exit -1
+  exit 1
 fi
 
 echo "Preparing Kaleidoscope..."
