@@ -12,11 +12,13 @@ RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/inst
   sh
 
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data \
-    ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS=https://raw.githubusercontent.com/keyboardio/boardsmanager/master/package_keyboardio_index.json \
+    ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS=https://raw.githubusercontent.com/keyboardio/boardsmanager/master/devel/package_kaleidoscope_devel_index.json \
     /bin/arduino-cli config init
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli update
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core update-index
 RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core install arduino:avr
+RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core install "keyboardio:avr-tools-only"
+RUN ARDUINO_DIRECTORIES_DATA=/arduino-cli/data /bin/arduino-cli core install "keyboardio:gd32-tools-only"
 
 
 COPY docker-entrypoint.sh /usr/local/bin/entrypoint

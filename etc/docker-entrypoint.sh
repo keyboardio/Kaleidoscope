@@ -10,9 +10,6 @@ install -d /kaleidoscope/ \
 echo "Syncing Kaleidoscope..."
 tar xf /kaleidoscope-src/kaleidoscope.tar -C /kaleidoscope/
 
-echo "Syncing the bundle..."
-tar xf /kaleidoscope-src/bundle.tar -C /kaleidoscope/.arduino/user/hardware/keyboardio
-
 
 cd /kaleidoscope/
 export ARDUINO_DIRECTORIES_DATA=/arduino-cli/data
