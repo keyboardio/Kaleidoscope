@@ -77,7 +77,7 @@ The plugin provides the `Leader` object, with the following methods and properti
 > are final actions, where one does not wish to continue the leader sequence
 > further in the hopes of finding a longer match.
 
-### `.time_out`
+### `.setTimeout(ms)`
 
 > The number of milliseconds to wait before a sequence times out. Once the
 > sequence timed out, if there is a partial match with an action, that will be
