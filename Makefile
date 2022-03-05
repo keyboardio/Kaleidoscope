@@ -48,7 +48,7 @@ docker-simulator-tests:
 	ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "make simulator-tests $(TEST_PATH_ARG)"
 
 docker-clean:
-	ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "make clean"
+	_NO_SYNC_KALEIDOSCOPE=1 ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "rm -rf -- testing/googletest/build/\* _build/\* /kaleidoscope-persist/temp/\*"
 
 docker-bash:
 	ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "bash"

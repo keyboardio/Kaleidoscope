@@ -25,10 +25,15 @@ if [ ! -d ./.arduino/user/hardware ]; then
   exit 1
 fi
 
-echo "Preparing Kaleidoscope..."
+
 
 XFER_DIR="$(pwd)/.docker_xfer"
 mkdir -p "${XFER_DIR}"
+
+if [ -z $_NO_SYNC_KALEIDOSCOPE ]; then 
+
+echo "Preparing Kaleidoscope..."
+
 
 echo "The bundle is coming from ${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio"
 tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
@@ -43,6 +48,9 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 	--exclude testing/googletest/build  \
 	.
 
+fi
+
+
 echo "Building the docker image..."
 docker build -q -t kaleidoscope/docker etc
 # We do want word splitting since there are multiple options here
@@ -55,6 +63,7 @@ docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
        --mount type=volume,source=kaleidoscope-build,destination=/kaleidoscope/_build,consistency=delegated \
        --env ARDUINO_DIRECTORIES_DATA=/arduino-cli/data \
        --env ARDUINO_DIRECTORIES_USER=/kaleidoscope/.arduino/user/ \
+       --env _NO_SYNC_KALEIDOSCOPE=${_NO_SYNC_KALEIDOSCOPE} \
        kaleidoscope/docker "$*"
 
 
