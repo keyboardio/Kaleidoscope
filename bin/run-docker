@@ -30,7 +30,7 @@ fi
 XFER_DIR="$(pwd)/.docker_xfer"
 mkdir -p "${XFER_DIR}"
 
-if [ -z $_NO_SYNC_KALEIDOSCOPE ]; then 
+if [ -z "$_NO_SYNC_KALEIDOSCOPE" ]; then 
 
 echo "Preparing Kaleidoscope..."
 
