@@ -19,13 +19,28 @@ else
     ARDUINO_LOCAL_LIB_PATH="${ARDUINO_LOCAL_LIB_PATH:-${HOME}/Arduino}"
 fi
 
-echo "Preparing Kaleidoscope and the bundle..."
+
+if [ ! -d ./.arduino/user/hardware ]; then
+	echo "Running tests in Docker requires that your Arduino environment be installed in .arduino inside the top-level Kaleidoscope directory. To set this up, run 'make setup'"
+  exit 1
+fi
+
+
 
 XFER_DIR="$(pwd)/.docker_xfer"
 mkdir -p "${XFER_DIR}"
 
+if [ -z "$_NO_SYNC_KALEIDOSCOPE" ]; then 
+
+echo "Preparing Kaleidoscope..."
+
+
+echo "The bundle is coming from ${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio"
 tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 	--exclude .arduino/data \
+	--exclude .arduino/downloads \
+	--exclude .arduino/user/hardware/keyboardio/avr/libraries/Kaleidoscope \
+	--exclude .arduino/user/hardware/keyboardio/gd32/libraries/Kaleidoscope \
 	--exclude bin/arduino-cli \
 	--exclude .docker_xfer \
 	--exclude .git \
@@ -33,9 +48,8 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 	--exclude testing/googletest/build  \
 	.
 
-echo "The bundle is coming from ${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio"
-(cd "${ARDUINO_DIRECTORIES_USER}/hardware/keyboardio" && tar  -cf "${XFER_DIR}/bundle.tar" \
-	--exclude .git --exclude avr/libraries/Kaleidoscope .)
+fi
+
 
 echo "Building the docker image..."
 docker build -q -t kaleidoscope/docker etc
@@ -49,6 +63,7 @@ docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
        --mount type=volume,source=kaleidoscope-build,destination=/kaleidoscope/_build,consistency=delegated \
        --env ARDUINO_DIRECTORIES_DATA=/arduino-cli/data \
        --env ARDUINO_DIRECTORIES_USER=/kaleidoscope/.arduino/user/ \
+       --env _NO_SYNC_KALEIDOSCOPE=${_NO_SYNC_KALEIDOSCOPE} \
        kaleidoscope/docker "$*"
 
 

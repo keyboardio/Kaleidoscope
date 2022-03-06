@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export EXAMPLE=$1
+export EXAMPLE="$1"
 EXNAME=$(echo "${EXAMPLE}" |cut -c 3-)
 cd examples ||exit; \
 install -d dirname "${EXAMPLE}"
