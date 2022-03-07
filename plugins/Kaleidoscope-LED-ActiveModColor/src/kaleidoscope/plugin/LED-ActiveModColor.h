@@ -35,7 +35,7 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   static void setOneShotColor(cRGB color) {
     oneshot_color_ = color;
   }
-  static void setOnestickyColor(cRGB color) {
+  static void setStickyColor(cRGB color) {
     sticky_color_ = color;
   }
 
