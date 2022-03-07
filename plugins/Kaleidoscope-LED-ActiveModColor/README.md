@@ -32,24 +32,26 @@ with the LEDs, and apply the highlight over those.
 ## Plugin properties
 
 The plugin provides the `ActiveModColorEffect` object, which has the following
-properties:
+configuration methods.  These methods all take a `cRGB` object, which can be
+written as `CRGB(r, g, b)`, where `r`, `g`, and `b` are all 8-bit integers
+(0-255).  For example, `CRGB(50, 0, 50)` would be a purple-ish color.
 
-### `.highlight_color`
+### `.setHighlightColor(color)`
 
-> The color to use for highlighting normal modifier keys and
-> layer-shift keys. Defaults to a white color.
+> Sets the color (a `cRGB` object) to use for highlighting normal modifier keys
+> and layer-shift keys. Defaults to a white color.
 
-### `.oneshot_color`
+### `.setOneShotColor(color)`
 
-> The color to use for highlighting active one-shot keys. These are
-> the keys that will time out or deactivate when a subsequent key is
-> pressed. Defaults to a yellow color.
+> Sets the color (a `cRGB` object) to use for highlighting active one-shot
+> keys. These are the keys that will time out or deactivate when a subsequent
+> key is pressed. Defaults to a yellow color.
 
-### `.sticky_color`
+### `.setStickyColor(color)`
 
-> The color to use for highlighting "sticky" one-shot keys. These keys
-> will remain active until they are pressed again. Defaults to a red
-> color.
+> Sets the color (a `cRGB` object) to use for highlighting "sticky" one-shot
+> keys. These keys will remain active until they are pressed again. Defaults to
+> a red color.
 
 ## Plugin methods
 
