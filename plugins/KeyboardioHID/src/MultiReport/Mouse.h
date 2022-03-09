@@ -48,6 +48,9 @@ class Mouse_ {
   Mouse_();
   void begin();
   void end();
+  // Note: the following `click()` method is unlike the `move()`, `press()`, and
+  // `release()` methods, in that it doesn't merely modify the pending report,
+  // but also calls `sendReport()` at least twice.
   void click(uint8_t b = MOUSE_LEFT);
   void move(int8_t x, int8_t y, int8_t v_wheel = 0, int8_t h_wheel = 0);
   void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default

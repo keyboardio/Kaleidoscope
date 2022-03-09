@@ -83,9 +83,19 @@ void Mouse_::end() {
 }
 
 void Mouse_::click(uint8_t b) {
+  // If one or more of the buttons to be clicked was already pressed, we need to
+  // send a report to release it first, to guarantee that this will be a "click"
+  // and not merely a release.
+  if (report_.buttons & b) {
+    release(b);
+    sendReport();
+  }
+  // Next, send a report with the button(s) pressed:
   press(b);
   sendReport();
+  // Finally, send the report with the button(s) released:
   release(b);
+  sendReport();
 }
 
 void Mouse_::move(int8_t x, int8_t y, int8_t v_wheel, int8_t h_wheel) {
