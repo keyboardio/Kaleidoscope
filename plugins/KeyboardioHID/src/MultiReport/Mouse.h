@@ -69,7 +69,7 @@ class Mouse_ {
 
  protected:
   HID_MouseReport_Data_t report_;
-  HID_MouseReport_Data_t last_report_;
+  uint8_t prev_report_buttons_ = 0;
 
  private:
   void sendReportUnchecked();
