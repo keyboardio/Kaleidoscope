@@ -1,0 +1,49 @@
+VERSION 1
+
+KEYSWITCH MOVE_UP       0  0
+KEYSWITCH MOVE_DOWN     0  1
+KEYSWITCH MOVE_LEFT     0  2
+KEYSWITCH MOVE_RIGHT    0  3
+
+KEYSWITCH SCROLL_UP     1  0
+KEYSWITCH SCROLL_DOWN   1  1
+KEYSWITCH SCROLL_LEFT   1  2
+KEYSWITCH SCROLL_RIGHT  1  3
+
+KEYSWITCH BUTTON_L      2  0
+KEYSWITCH BUTTON_M      2  1
+KEYSWITCH BUTTON_R      2  2
+
+KEYSWITCH MACRO_0       3  0
+KEYSWITCH MACRO_1       3  1
+
+# ==============================================================================
+NAME Mouse button key tap in Macros
+
+RUN 3 ms
+PRESS MACRO_0
+RUN 1 cycle
+EXPECT mouse-report button=R
+EXPECT mouse-report empty
+
+RUN 5 ms
+RELEASE MACRO_0
+RUN 1 cycle
+EXPECT no mouse-report
+
+RUN 5 ms
+
+# ==============================================================================
+NAME Mouse scroll key tap in Macros
+
+RUN 4 ms
+PRESS MACRO_1
+RUN 1 cycle
+EXPECT mouse-report v=1
+
+RUN 5 ms
+RELEASE MACRO_1
+RUN 1 cycle
+EXPECT no mouse-report
+
+RUN 5 ms
