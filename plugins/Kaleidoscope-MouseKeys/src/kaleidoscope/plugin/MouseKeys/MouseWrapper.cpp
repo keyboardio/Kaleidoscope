@@ -137,9 +137,8 @@ void MouseWrapper::move(int8_t x, int8_t y) {
   remainderY = moveY - moveY / subpixels_per_pixel * subpixels_per_pixel;
 }
 
+MouseWrapper wrapper;
+
 } // namespace mousekeys
-
-mousekeys::MouseWrapper MouseWrapper;
-
 } // namespace plugin
 } // namespace kaleidoscope

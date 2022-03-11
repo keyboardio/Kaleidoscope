@@ -67,9 +67,8 @@ class MouseWrapper {
   static void warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
 
+extern MouseWrapper wrapper;
+
 } // namespace mousekeys
-
-extern mousekeys::MouseWrapper MouseWrapper;
-
 } // namespace plugin
 } // namespace kaleidoscope

@@ -16,8 +16,10 @@
 
 #include <Arduino.h>
 
+#include "MouseKeys.h"
+#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
+
 #include "kaleidoscope/Runtime.h"
-#include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "kaleidoscope/keyswitch_state.h"
 
@@ -37,11 +39,11 @@ uint16_t MouseKeys::wheelDelay = 50;
 // Configuration functions
 
 void MouseKeys::setWarpGridSize(uint8_t grid_size) {
-  MouseWrapper.warp_grid_size = grid_size;
+  mousekeys::wrapper.warp_grid_size = grid_size;
 }
 
 void MouseKeys::setSpeedLimit(uint8_t speed_limit) {
-  MouseWrapper.speed_limit = speed_limit;
+  mousekeys::wrapper.speed_limit = speed_limit;
 }
 
 // =============================================================================
@@ -95,8 +97,8 @@ EventHandlerResult MouseKeys::afterEachCycle() {
     accel_start_time_ = Runtime.millisAtCycleStart();
     // `accel_step` determines the movement speed of the mouse pointer, and gets
     // reset to zero when no mouse movement keys is pressed (see below).
-    if (MouseWrapper.accel_step < 255 - accelSpeed) {
-      MouseWrapper.accel_step += accelSpeed;
+    if (mousekeys::wrapper.accel_step < 255 - accelSpeed) {
+      mousekeys::wrapper.accel_step += accelSpeed;
     }
   }
 
@@ -200,7 +202,7 @@ void MouseKeys::sendMouseButtonReport() const {
 
 // -----------------------------------------------------------------------------
 void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
-  MouseWrapper.warp(
+  mousekeys::wrapper.warp(
     ((event.key.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
     ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00)        |
     ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00)    |
@@ -218,7 +220,7 @@ void MouseKeys::sendMouseMoveReport() {
 
   if (direction == 0) {
     // If there are no mouse movement keys held, reset speed to zero.
-    MouseWrapper.accel_step = 0;
+    mousekeys::wrapper.accel_step = 0;
   } else {
     // For each active direction, add the mouse movement speed.
     if (direction & KEY_MOUSE_LEFT)
@@ -231,7 +233,7 @@ void MouseKeys::sendMouseMoveReport() {
       vy += speed;
 
     // Prepare the mouse report.
-    MouseWrapper.move(vx, vy);
+    mousekeys::wrapper.move(vx, vy);
     // Send the report.
     Runtime.hid().mouse().sendReport();
   }

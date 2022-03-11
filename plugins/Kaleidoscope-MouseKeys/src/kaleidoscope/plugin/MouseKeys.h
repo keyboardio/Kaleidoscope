@@ -19,7 +19,6 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/plugin/MouseKeys/MouseKeyDefs.h"
 #include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
 
 namespace kaleidoscope {
 namespace plugin {
