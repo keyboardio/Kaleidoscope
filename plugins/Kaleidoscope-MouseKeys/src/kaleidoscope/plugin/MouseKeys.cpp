@@ -33,14 +33,6 @@ uint16_t MouseKeys::accelDelay = 64;
 uint8_t MouseKeys::wheelSpeed = 1;
 uint16_t MouseKeys::wheelDelay = 50;
 
-uint16_t MouseKeys::move_start_time_;
-uint16_t MouseKeys::accel_start_time_;
-uint16_t MouseKeys::wheel_start_time_;
-
-uint8_t MouseKeys::directions_ = 0;
-uint8_t MouseKeys::pending_directions_ = 0;
-uint8_t MouseKeys::buttons_ = 0;
-
 // =============================================================================
 // Configuration functions
 

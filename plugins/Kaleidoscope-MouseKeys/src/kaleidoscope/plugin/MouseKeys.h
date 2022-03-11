@@ -43,9 +43,9 @@ class MouseKeys : public kaleidoscope::Plugin {
   EventHandlerResult afterReportingState(const KeyEvent &event);
 
  private:
-  static uint16_t move_start_time_;
-  static uint16_t accel_start_time_;
-  static uint16_t wheel_start_time_;
+  uint16_t move_start_time_ = 0;
+  uint16_t accel_start_time_ = 0;
+  uint16_t wheel_start_time_ = 0;
 
   // Mouse cursor and wheel movement directions are stored in a single bitfield
   // to save space.  The low four bits are for cursor movement, and the high
@@ -53,9 +53,9 @@ class MouseKeys : public kaleidoscope::Plugin {
   static constexpr uint8_t wheel_offset_ = 4;
   static constexpr uint8_t wheel_mask_ = 0b11110000;
   static constexpr uint8_t move_mask_  = 0b00001111;
-  static uint8_t directions_;
-  static uint8_t pending_directions_;
-  static uint8_t buttons_;
+  uint8_t directions_ = 0;
+  uint8_t pending_directions_ = 0;
+  uint8_t buttons_ = 0;
 
   bool isMouseKey(const Key &key) const;
   bool isMouseButtonKey(const Key &key) const;
