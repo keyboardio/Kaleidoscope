@@ -34,7 +34,6 @@ boolean MouseWrapper::is_warping;
 
 uint8_t MouseWrapper::accel_step;
 uint8_t MouseWrapper::speed_limit = 127;
-uint8_t MouseWrapper::subpixels_per_pixel = 16;
 
 void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;

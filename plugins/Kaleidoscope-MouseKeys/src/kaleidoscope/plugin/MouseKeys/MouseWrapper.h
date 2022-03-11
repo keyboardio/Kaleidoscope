@@ -49,7 +49,7 @@ class MouseWrapper {
 
   static uint8_t accel_step;
   static uint8_t speed_limit;
-  static uint8_t subpixels_per_pixel;
+  static constexpr uint8_t subpixels_per_pixel = 16;
   static uint8_t warp_grid_size;
 
  private:
