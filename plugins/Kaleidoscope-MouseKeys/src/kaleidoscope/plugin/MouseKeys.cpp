@@ -17,7 +17,7 @@
 #include <Arduino.h>
 
 #include "MouseKeys.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
+#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
 
 #include "kaleidoscope/Runtime.h"
 #include "Kaleidoscope-FocusSerial.h"

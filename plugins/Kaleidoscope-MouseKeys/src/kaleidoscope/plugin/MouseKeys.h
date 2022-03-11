@@ -17,8 +17,8 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseKeyDefs.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
+#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"
 
 namespace kaleidoscope {
 namespace plugin {
