@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2018  Keyboard.io, Inc.
+ * Copyright (C) 2013-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,6 +15,8 @@
  */
 
 #pragma once
+
+#include <stdint.h>
 
 namespace kaleidoscope {
 
@@ -41,7 +43,7 @@ namespace kaleidoscope {
 //       further handlers. There is currently no specification for what should
 //       happen if this is returned.
 
-enum class EventHandlerResult {
+enum class EventHandlerResult : uint8_t {
   OK,
   EVENT_CONSUMED,
   ABORT,
