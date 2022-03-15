@@ -29,11 +29,11 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
 		--recurse-submodules \
-		git://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio \
+		https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio \
 		$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio
 	git clone -c core.symlinks=true \
 		--recurse-submodules \
-		git://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
+		https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
 
 update:
 	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio; git pull; \
