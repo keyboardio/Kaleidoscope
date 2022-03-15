@@ -17,7 +17,7 @@
 #pragma once
 
 #include "Arduino.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"
 
 // Warping commands
 
@@ -40,19 +40,16 @@
 
 namespace kaleidoscope {
 namespace plugin {
+namespace mousekeys {
 
-class MouseWrapper_ {
+class MouseWrapper {
  public:
-  MouseWrapper_() {}
-
   static void move(int8_t x, int8_t y);
   static void warp(uint8_t warp_cmd);
-  static void end_warping();
-  static void reset_warping();
 
-  static uint8_t accelStep;
-  static uint8_t speedLimit;
-  static uint8_t subpixelsPerPixel;
+  static uint8_t accel_step;
+  static uint8_t speed_limit;
+  static constexpr uint8_t subpixels_per_pixel = 16;
   static uint8_t warp_grid_size;
 
  private:
@@ -63,10 +60,15 @@ class MouseWrapper_ {
   static boolean is_warping;
 
   static uint8_t acceleration(uint8_t cycles);
-  static void begin_warping();
-  static void warp_jump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
-};
-}
-}
 
-extern kaleidoscope::plugin::MouseWrapper_ MouseWrapper;
+  static void beginWarping();
+  static void endWarping();
+  static void resetWarping();
+  static void warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
+};
+
+extern MouseWrapper wrapper;
+
+} // namespace mousekeys
+} // namespace plugin
+} // namespace kaleidoscope

@@ -17,16 +17,13 @@
 #pragma once
 
 #include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseKeyDefs.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWarpModes.h"
-#include "kaleidoscope/plugin/MouseKeys/MouseWrapper.h"
+#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"
 
 namespace kaleidoscope {
 namespace plugin {
-class MouseKeys_ : public kaleidoscope::Plugin {
+class MouseKeys : public kaleidoscope::Plugin {
  public:
-  MouseKeys_(void) {}
-
   static uint8_t speed;
   static uint16_t speedDelay;
   static uint8_t accelSpeed;
@@ -45,9 +42,9 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   EventHandlerResult afterReportingState(const KeyEvent &event);
 
  private:
-  static uint16_t move_start_time_;
-  static uint16_t accel_start_time_;
-  static uint16_t wheel_start_time_;
+  uint16_t move_start_time_ = 0;
+  uint16_t accel_start_time_ = 0;
+  uint16_t wheel_start_time_ = 0;
 
   // Mouse cursor and wheel movement directions are stored in a single bitfield
   // to save space.  The low four bits are for cursor movement, and the high
@@ -55,9 +52,9 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   static constexpr uint8_t wheel_offset_ = 4;
   static constexpr uint8_t wheel_mask_ = 0b11110000;
   static constexpr uint8_t move_mask_  = 0b00001111;
-  static uint8_t directions_;
-  static uint8_t pending_directions_;
-  static uint8_t buttons_;
+  uint8_t directions_ = 0;
+  uint8_t pending_directions_ = 0;
+  uint8_t buttons_ = 0;
 
   bool isMouseKey(const Key &key) const;
   bool isMouseButtonKey(const Key &key) const;
@@ -71,7 +68,8 @@ class MouseKeys_ : public kaleidoscope::Plugin {
   void sendMouseWheelReport();
 
 };
-}
-}
 
-extern kaleidoscope::plugin::MouseKeys_ MouseKeys;
+} // namespace plugin
+} // namespace kaleidoscope
+
+extern kaleidoscope::plugin::MouseKeys MouseKeys;
