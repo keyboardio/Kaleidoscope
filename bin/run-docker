@@ -51,10 +51,10 @@ tar  -cf "${XFER_DIR}/kaleidoscope.tar"  \
 fi
 
 if [ -z "$DOCKER_LIVE_KALEIDOSCOPE_DIR" ]; then 
-	_KALEIDOSCOPE_MOUNT="type=tmpfs,destination=/kaleidoscope:exec"
+	_KALEIDOSCOPE_MOUNT="--mount type=tmpfs,destination=/kaleidoscope:exec"
 else
 	echo "Kaleidoscope is mounted read/write inside docker"
-	_KALEIDOSCOPE_MOUNT="type=bind,source=$(pwd),destination=/kaleidoscope,consistency=cached"
+	_KALEIDOSCOPE_MOUNT="-v $(pwd):/kaleidoscope:"
 fi
 
 
@@ -63,7 +63,7 @@ docker build -q -t kaleidoscope/docker etc
 # We do want word splitting since there are multiple options here
 # shellcheck disable=SC2086   
 docker run --rm $DOCKER_RUN_INTERACTIVE_OPTS \
-       --mount ${_KALEIDOSCOPE_MOUNT} \
+       ${_KALEIDOSCOPE_MOUNT} \
        --mount type=bind,source="${XFER_DIR}",destination=/kaleidoscope-src,consistency=delegated,readonly \
        --mount type=volume,source=kaleidoscope-persist,destination=/kaleidoscope-persist,consistency=delegated \
        --mount type=volume,source=kaleidoscope-googletest-build,destination=/kaleidoscope/testing/googletest/build,consistency=delegated \
