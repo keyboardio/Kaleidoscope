@@ -148,6 +148,11 @@ class MouseKeys : public kaleidoscope::Plugin {
     uint16_t cursor_accel_duration = 1000;
   };
 
+  // ---------------------------------------------------------------------------
+  // This lets the MouseKeysConfig plugin access the internal config variables
+  // directly. Mainly useful for calls to `Runtime.storage.get()`/`.put()`.
+  friend class MouseKeysConfig;
+
  private:
   static constexpr uint8_t cursor_update_interval_ = 4;
 
@@ -183,7 +188,21 @@ class MouseKeys : public kaleidoscope::Plugin {
   uint8_t cursorDelta() const;
 };
 
-}  // namespace plugin
-}  // namespace kaleidoscope
+// =============================================================================
+// Plugin for configuration of MouseKeys via Focus and persistent storage of
+// settins in EEPROM (i.e. Chrysalis).
+class MouseKeysConfig : public Plugin {
+ public:
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+ private:
+  // The base address in persistent storage for configuration data:
+  uint16_t settings_addr_;
+};
+
+} // namespace plugin
+} // namespace kaleidoscope
 
 extern kaleidoscope::plugin::MouseKeys MouseKeys;
+extern kaleidoscope::plugin::MouseKeysConfig MouseKeysConfig;
