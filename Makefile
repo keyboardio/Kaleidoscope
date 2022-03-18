@@ -58,7 +58,7 @@ run-tests: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt bu
 	@: # blah
 
 build-gtest-gmock:
-	(cd testing/googletest && cmake -H. -Bbuild -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)/$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)/$(call _arduino_prop,compiler.cpp.cmd)  .)
+	(cd testing/googletest && cmake -H. -Bbuild -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd)  .)
 	$(MAKE) -C testing/googletest
 
 adjust-git-timestamps:

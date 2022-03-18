@@ -15,6 +15,7 @@ export FQBN	?= keyboardio:virtual:model01
 
 TESTS		?= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 
+include $(top_dir)/etc/makefiles/arduino-cli.mk
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for
 # Kaliedoscope's makefiles
@@ -54,7 +55,7 @@ googletest: ${top_dir}/testing/googletest/build/Makefile
 
 ${top_dir}/testing/googletest/build/Makefile:
 	$(info googletest Makefile is being remade)
-	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake ..
+	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) ..
 
 ${libcommon_a}:
 	${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
