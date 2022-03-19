@@ -29,9 +29,9 @@ EventHandlerResult MagicCombo::onNameQuery() {
 }
 
 EventHandlerResult MagicCombo::afterEachCycle() {
-  for (byte i = 0; i < magiccombo::combos_length; i++) {
+  for (uint8_t i = 0; i < magiccombo::combos_length; i++) {
     bool match = true;
-    byte j;
+    uint8_t j;
 
     for (j = 0; j < MAX_COMBO_LENGTH; j++) {
       int8_t comboKey = pgm_read_byte(&(magiccombo::combos[i].keys[j]));

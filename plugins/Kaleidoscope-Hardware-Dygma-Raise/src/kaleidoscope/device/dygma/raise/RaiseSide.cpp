@@ -87,7 +87,7 @@ uint8_t RaiseSide::controllerAddress() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte RaiseSide::setKeyscanInterval(byte delay) {
+uint8_t RaiseSide::setKeyscanInterval(uint8_t delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
   return twi_.writeTo(data, ELEMENTS(data));
 }
@@ -106,7 +106,7 @@ int RaiseSide::readSLEDCurrent() {
   return readRegister(TWI_CMD_SLED_CURRENT);
 }
 
-byte RaiseSide::setSLEDCurrent(byte current) {
+uint8_t RaiseSide::setSLEDCurrent(uint8_t current) {
   uint8_t data[] = {TWI_CMD_SLED_CURRENT, current};
   return twi_.writeTo(data, ELEMENTS(data));
 }
@@ -131,14 +131,14 @@ int RaiseSide::readLEDSPIFrequency() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte RaiseSide::setLEDSPIFrequency(byte frequency) {
+uint8_t RaiseSide::setLEDSPIFrequency(uint8_t frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
   return twi_.writeTo(data, ELEMENTS(data));
 }
 
 // returns -1 on error, otherwise returns the value of the hall sensor integer
 int RaiseSide::readJoint() {
-  byte return_value = 0;
+  uint8_t return_value = 0;
 
   uint8_t data[] = {TWI_CMD_JOINED};
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));
@@ -160,7 +160,7 @@ int RaiseSide::readJoint() {
 }
 
 int RaiseSide::readRegister(uint8_t cmd) {
-  byte return_value = 0;
+  uint8_t return_value = 0;
 
   uint8_t data[] = {cmd};
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));

@@ -40,7 +40,7 @@ namespace keyboardio {
 
 uint8_t twi_uninitialized = 1;
 
-Model01Side::Model01Side(byte setAd01) {
+Model01Side::Model01Side(uint8_t setAd01) {
   ad01 = setAd01;
   addr = SCANNER_I2C_ADDR_BASE | ad01;
   if (twi_uninitialized--) {
@@ -70,7 +70,7 @@ uint8_t Model01Side::controllerAddress() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model01Side::setKeyscanInterval(byte delay) {
+uint8_t Model01Side::setKeyscanInterval(uint8_t delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 
@@ -101,7 +101,7 @@ int Model01Side::readLEDSPIFrequency() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model01Side::setLEDSPIFrequency(byte frequency) {
+uint8_t Model01Side::setLEDSPIFrequency(uint8_t frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 
@@ -112,7 +112,7 @@ byte Model01Side::setLEDSPIFrequency(byte frequency) {
 
 int Model01Side::readRegister(uint8_t cmd) {
 
-  byte return_value = 0;
+  uint8_t return_value = 0;
 
   uint8_t data[] = {cmd};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
@@ -168,7 +168,7 @@ void Model01Side::sendLEDData() {
 
 auto constexpr gamma8 = kaleidoscope::driver::color::gamma_correction;
 
-void Model01Side::sendLEDBank(byte bank) {
+void Model01Side::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
   data[0]  = TWI_CMD_LED_BASE + bank;
   for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
@@ -196,7 +196,7 @@ void Model01Side::setAllLEDsTo(cRGB color) {
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
-void Model01Side::setOneLEDTo(byte led, cRGB color) {
+void Model01Side::setOneLEDTo(uint8_t led, cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
                     led,
                     pgm_read_byte(&gamma8[color.b]),

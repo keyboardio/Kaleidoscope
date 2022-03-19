@@ -123,8 +123,8 @@ class ATmega: public kaleidoscope::driver::keyscanner::Base<_KeyScannerProps> {
   }
 
   void __attribute__((optimize(3))) actOnMatrixScan() {
-    for (byte row = 0; row < _KeyScannerProps::matrix_rows; row++) {
-      for (byte col = 0; col < _KeyScannerProps::matrix_columns; col++) {
+    for (uint8_t row = 0; row < _KeyScannerProps::matrix_rows; row++) {
+      for (uint8_t col = 0; col < _KeyScannerProps::matrix_columns; col++) {
         uint8_t keyState = (bitRead(matrix_state_[row].previous, col) << 0) | (bitRead(matrix_state_[row].current, col) << 1);
         if (keyState) {
           ThisType::handleKeyswitchEvent(Key_NoKey, typename _KeyScannerProps::KeyAddr(row, col), keyState);

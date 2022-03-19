@@ -310,8 +310,8 @@ void RaiseKeyScanner::readMatrix() {
 }
 
 void RaiseKeyScanner::actOnMatrixScan() {
-  for (byte row = 0; row < Props_::matrix_rows; row++) {
-    for (byte col = 0; col < Props_::left_columns; col++) {
+  for (uint8_t row = 0; row < Props_::matrix_rows; row++) {
+    for (uint8_t col = 0; col < Props_::left_columns; col++) {
       uint8_t keynum = (row * Props_::left_columns) + col;
       uint8_t keyState;
 

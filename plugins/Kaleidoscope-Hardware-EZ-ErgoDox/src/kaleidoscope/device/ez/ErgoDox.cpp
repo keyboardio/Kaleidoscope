@@ -112,8 +112,8 @@ void __attribute__((optimize(3))) ErgoDox::readMatrix() {
 }
 
 void __attribute__((optimize(3))) ErgoDox::actOnMatrixScan() {
-  for (byte row = 0; row < matrix_rows; row++) {
-    for (byte col = 0; col < matrix_columns; col++) {
+  for (uint8_t row = 0; row < matrix_rows; row++) {
+    for (uint8_t col = 0; col < matrix_columns; col++) {
       uint8_t key_state = (bitRead(previousKeyState_[row], col) << 0) |
                           (bitRead(keyState_[row], col) << 1);
       if (keyToggledOn(key_state) || keyToggledOff(key_state)) {

@@ -48,7 +48,7 @@ namespace keyboardio {
 
 typedef union {
   cRGB leds[LEDS_PER_HAND];
-  byte bytes[LED_BANKS][LED_BYTES_PER_BANK];
+  uint8_t bytes[LED_BANKS][LED_BYTES_PER_BANK];
 } LEDData_t;
 
 typedef union {
@@ -62,19 +62,19 @@ typedef union {
 // used to configure interrupts, configuration for a particular controller
 class Model01Side {
  public:
-  explicit Model01Side(byte setAd01);
+  explicit Model01Side(uint8_t setAd01);
   ~Model01Side() {}
 
   int readVersion();
 
-  byte setKeyscanInterval(byte delay);
+  uint8_t setKeyscanInterval(uint8_t delay);
   int readKeyscanInterval();
 
-  byte setLEDSPIFrequency(byte frequency);
+  uint8_t setLEDSPIFrequency(uint8_t frequency);
   int readLEDSPIFrequency();
 
   void sendLEDData();
-  void setOneLEDTo(byte led, cRGB color);
+  void setOneLEDTo(uint8_t led, cRGB color);
   void setAllLEDsTo(cRGB color);
   keydata_t getKeyData();
   bool readKeys();
@@ -93,8 +93,8 @@ class Model01Side {
   int addr;
   int ad01;
   keydata_t keyData;
-  byte nextLEDBank = 0;
-  void sendLEDBank(byte bank);
+  uint8_t nextLEDBank = 0;
+  void sendLEDBank(uint8_t bank);
   int readRegister(uint8_t cmd);
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

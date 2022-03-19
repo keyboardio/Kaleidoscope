@@ -122,8 +122,8 @@ void KeyScanner::readMatrix() {
 }
 
 void KeyScanner::actOnMatrixScan() {
-  for (byte col = 0; col < Props_::matrix_columns; col++) {
-    for (byte row = 0; row < Props_::matrix_rows; row++) {
+  for (uint8_t col = 0; col < Props_::matrix_columns; col++) {
+    for (uint8_t row = 0; row < Props_::matrix_rows; row++) {
       uint8_t keyState = (bitRead(matrix_state_[col].previous, row) << 0) | (bitRead(matrix_state_[col].current, row) << 1);
       if (keyState) {
         ThisType::handleKeyswitchEvent(Key_NoKey, typename Props_::KeyAddr(row, col), keyState);

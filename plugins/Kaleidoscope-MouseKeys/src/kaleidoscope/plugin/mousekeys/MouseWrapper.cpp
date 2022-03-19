@@ -30,7 +30,7 @@ uint16_t MouseWrapper::next_width;
 uint16_t MouseWrapper::next_height;
 uint16_t MouseWrapper::section_top;
 uint16_t MouseWrapper::section_left;
-boolean MouseWrapper::is_warping;
+bool MouseWrapper::is_warping;
 
 uint8_t MouseWrapper::accel_step;
 uint8_t MouseWrapper::speed_limit = 127;

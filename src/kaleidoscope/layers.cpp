@@ -224,7 +224,7 @@ void Layer_::deactivate(uint8_t layer) {
   kaleidoscope::Hooks::onLayerChange();
 }
 
-boolean Layer_::isActive(uint8_t layer) {
+bool Layer_::isActive(uint8_t layer) {
   for (int8_t i = 0; i < active_layer_count_; ++i) {
     if (active_layers_[i] == layer)
       return true;

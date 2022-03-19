@@ -112,7 +112,7 @@ class Model100KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model10
   static driver::keyboardio::keydata_t previousLeftHandState;
   static driver::keyboardio::keydata_t previousRightHandState;
 
-  static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
+  static void actOnHalfRow(uint8_t row, uint8_t colState, uint8_t colPrevState, uint8_t startPos);
 };
 #else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model100KeyScanner;
