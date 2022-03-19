@@ -45,7 +45,7 @@ To make our plugin do anything useful, we need to add [[event-handler-hooks]] to
 ```c++
 class MyPlugin : public Plugin {
  public:
-  EventHanderResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult onKeyEvent(KeyEvent &event);
 };
 ```
 
