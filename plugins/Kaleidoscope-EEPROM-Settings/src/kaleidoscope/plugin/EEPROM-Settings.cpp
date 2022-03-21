@@ -233,6 +233,7 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
         ::Focus.read(d);
         Runtime.storage().update(i, d);
       }
+      Runtime.storage().commit();
     }
 
     break;
