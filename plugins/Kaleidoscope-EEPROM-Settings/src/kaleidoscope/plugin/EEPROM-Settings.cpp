@@ -246,7 +246,7 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
     break;
   case ERASE: {
     for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
-      Runtime.storage().update(i, 255);
+      Runtime.storage().update(i, EEPROM_UNINITIALIZED_BYTE);
     }
     Runtime.storage().commit();
     Runtime.device().rebootBootloader();

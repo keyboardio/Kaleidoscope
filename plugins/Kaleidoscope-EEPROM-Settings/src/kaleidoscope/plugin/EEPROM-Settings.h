@@ -28,9 +28,12 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
 
+  /* EEPROM is filled with 0xff when uninitialized, and we use that in a few
+   * places. */
+  static constexpr uint8_t EEPROM_UNINITIALIZED_BYTE = 0xff;
   /* EEPROM is filled with 0xff when uninitialized, so a version with that value
    * means we do not have an EEPROM version defined yet. */
-  static constexpr uint8_t VERSION_UNDEFINED = 0xff;
+  static constexpr uint8_t VERSION_UNDEFINED = EEPROM_UNINITIALIZED_BYTE;
   /* A version set to zero is likely some kind of corruption, we do not normally
    * clear the byte. */
   static constexpr uint8_t VERSION_IMPOSSIBLE_ZERO = 0x00;
