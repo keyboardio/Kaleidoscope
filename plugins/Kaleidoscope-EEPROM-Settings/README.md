@@ -172,6 +172,11 @@ following commands:
 
 > Returns the amount of free bytes in `EEPROM`.
 
+### `eeprom.erase`
+
+> Erases the entire `EEPROM`, and reboots the keyboard to make sure the erase is
+> picked up by every single plugin.
+
 ## Dependencies
 
 * (Kaleidoscope-FocusSerial)[Kaleidoscope-FocusSerial.md]

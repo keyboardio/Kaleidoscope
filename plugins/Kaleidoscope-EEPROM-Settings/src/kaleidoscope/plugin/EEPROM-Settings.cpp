@@ -208,15 +208,18 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   enum {
     CONTENTS,
     FREE,
+    ERASE,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("eeprom.contents\neeprom.free")))
+  if (::Focus.handleHelp(command, PSTR("eeprom.contents\neeprom.free\neeprom.erase")))
     return EventHandlerResult::OK;
 
   if (strcmp_P(command, PSTR("eeprom.contents")) == 0)
     sub_command = CONTENTS;
   else if (strcmp_P(command, PSTR("eeprom.free")) == 0)
     sub_command = FREE;
+  else if (strcmp_P(command, PSTR("eeprom.erase")) == 0)
+    sub_command = ERASE;
   else
     return EventHandlerResult::OK;
 
@@ -240,8 +243,15 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   case FREE:
     ::Focus.send(Runtime.storage().length() - ::EEPROMSettings.used());
     break;
+  case ERASE: {
+    for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
+      Runtime.storage().update(i, 255);
+    }
+    Runtime.storage().commit();
+    Runtime.device().rebootBootloader();
+    break;
   }
-
+  }
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
