@@ -18,6 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-ActiveModColor.h>
+#include <Kaleidoscope-OneShot.h>
 
 // *INDENT-OFF*
 KEYMAPS(
@@ -36,18 +37,26 @@ KEYMAPS(
                Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,
     Key_skip,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_Minus,
 
-    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
+    OSM(RightShift), OSM(RightAlt), Key_Spacebar, OSM(RightControl),
     Key_skip),
 )
 // *INDENT-ON*
 
+// OneShot is included to illustrate the different colors highlighting sticky
+// and one-shot keys.  LEDOff is included because we need an LED mode active to
+// allow highlighted keys to return to "normal" when released (or timed out).
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
-                          ActiveModColorEffect);
+                          LEDOff,
+                          ActiveModColorEffect,
+                          OneShot);
 
 void setup() {
   Kaleidoscope.setup();
 
   ActiveModColorEffect.setHighlightColor(CRGB(0x00, 0xff, 0xff));
+
+  // Uncomment the following to enable OneShot on normal modifier keys:
+  // OneShot.enableAutoOneShot();
 }
 
 void loop() {
