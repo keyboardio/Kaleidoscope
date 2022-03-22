@@ -30,7 +30,7 @@ uint16_t MouseWrapper::next_width;
 uint16_t MouseWrapper::next_height;
 uint16_t MouseWrapper::section_top;
 uint16_t MouseWrapper::section_left;
-boolean MouseWrapper::is_warping;
+bool MouseWrapper::is_warping;
 
 uint8_t MouseWrapper::accel_step;
 uint8_t MouseWrapper::speed_limit = 127;
@@ -38,7 +38,7 @@ uint8_t MouseWrapper::speed_limit = 127;
 void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
   uint16_t y_center = top + height / 2;
-  Kaleidoscope.hid().absoluteMouse().moveTo(x_center, y_center, 0);
+  Runtime.hid().absoluteMouse().moveTo(x_center, y_center, 0);
 }
 
 void MouseWrapper::beginWarping() {
@@ -131,7 +131,7 @@ void MouseWrapper::move(int8_t x, int8_t y) {
 
   endWarping();
   // move by whole pixels, not subpixels
-  Kaleidoscope.hid().mouse().move(moveX / subpixels_per_pixel, moveY / subpixels_per_pixel);
+  Runtime.hid().mouse().move(moveX / subpixels_per_pixel, moveY / subpixels_per_pixel);
   // save leftover subpixel movements for later
   remainderX = moveX - moveX / subpixels_per_pixel * subpixels_per_pixel;
   remainderY = moveY - moveY / subpixels_per_pixel * subpixels_per_pixel;

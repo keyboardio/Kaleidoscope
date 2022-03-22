@@ -22,7 +22,8 @@
 
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
-#define SYSTER Key(kaleidoscope::ranges::SYSTER)
+constexpr Key Key_Syster = Key(kaleidoscope::ranges::SYSTER);
+constexpr Key SYSTER = Key_Syster;
 
 namespace kaleidoscope {
 namespace plugin {

@@ -60,7 +60,7 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
   static uint8_t getBrightness();
 
   static void enableHighPowerLeds();
-  static boolean ledPowerFault();
+  static bool ledPowerFault();
 
  private:
   static bool isLEDChanged;

@@ -57,7 +57,7 @@ class MouseWrapper {
   static uint16_t next_height;
   static uint16_t section_top;
   static uint16_t section_left;
-  static boolean is_warping;
+  static bool is_warping;
 
   static uint8_t acceleration(uint8_t cycles);
 

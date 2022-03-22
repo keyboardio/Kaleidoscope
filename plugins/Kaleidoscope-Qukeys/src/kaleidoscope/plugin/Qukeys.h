@@ -24,20 +24,28 @@
 #include "kaleidoscope/KeyEventTracker.h"
 
 // DualUse Key definitions for Qukeys in the keymap
-#define MT(mod, key) Key(                                               \
-    kaleidoscope::ranges::DUM_FIRST +                                   \
-    (((Key_ ## mod).getKeyCode() - Key_LeftControl.getKeyCode()) << 8) +          \
-    (Key_ ## key).getKeyCode()                                               \
-)
+#define MT(mod, key) kaleidoscope::plugin::ModTapKey(Key_ ## mod, Key_ ## key)
+
 #define SFT_T(key) MT(LeftShift, key)
 #define CTL_T(key) MT(LeftControl, key)
 #define ALT_T(key) MT(LeftAlt, key)
 #define GUI_T(key) MT(LeftGui, key)
 
-#define LT(layer, key) Key(kaleidoscope::ranges::DUL_FIRST + (layer << 8) + (Key_ ## key).getKeyCode())
+#define LT(layer, key) kaleidoscope::plugin::LayerTapKey(layer, Key_ ## key)
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key ModTapKey(Key mod_key, Key tap_key) {
+  uint8_t mod = mod_key.getKeyCode() - HID_KEYBOARD_FIRST_MODIFIER;
+  return Key(kaleidoscope::ranges::DUM_FIRST +
+             (mod << 8) + tap_key.getKeyCode());
+}
+
+constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {
+  return Key(kaleidoscope::ranges::DUL_FIRST +
+             (layer << 8) + tap_key.getKeyCode());
+}
 
 // Data structure for an individual qukey
 struct Qukey {

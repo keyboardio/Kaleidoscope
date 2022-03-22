@@ -94,7 +94,7 @@ class Layer_ {
   static uint8_t mostRecent() {
     return active_layers_[active_layer_count_ - 1];
   }
-  static boolean isActive(uint8_t layer);
+  static bool isActive(uint8_t layer);
 
   static void handleLayerKeyEvent(const KeyEvent &event);
 

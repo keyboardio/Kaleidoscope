@@ -38,7 +38,7 @@ namespace keyboardio {
 
 uint8_t twi_uninitialized = 1;
 
-Model100Side::Model100Side(byte setAd01) {
+Model100Side::Model100Side(uint8_t setAd01) {
   ad01 = setAd01;
   addr = SCANNER_I2C_ADDR_BASE | ad01;
   markDeviceUnavailable();
@@ -66,7 +66,7 @@ uint8_t Model100Side::controllerAddress() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model100Side::setKeyscanInterval(byte delay) {
+uint8_t Model100Side::setKeyscanInterval(uint8_t delay) {
   uint8_t data[] = {TWI_CMD_KEYSCAN_INTERVAL, delay};
   uint8_t result = writeData(data, ELEMENTS(data));
   return result;
@@ -96,7 +96,7 @@ int Model100Side::readLEDSPIFrequency() {
 //
 // returns the Wire.endTransmission code (0 = success)
 // https://www.arduino.cc/en/Reference/WireEndTransmission
-byte Model100Side::setLEDSPIFrequency(byte frequency) {
+uint8_t Model100Side::setLEDSPIFrequency(uint8_t frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
   uint8_t result  = writeData(data, ELEMENTS(data));
 
@@ -153,7 +153,7 @@ uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
 }
 
 int Model100Side::readRegister(uint8_t cmd) {
-  byte return_value = 0;
+  uint8_t return_value = 0;
   uint8_t data[] = {cmd};
   uint8_t result  = writeData(data, ELEMENTS(data));
 
@@ -220,7 +220,7 @@ void Model100Side::sendLEDData() {
 }
 
 
-void Model100Side::sendLEDBank(byte bank) {
+void Model100Side::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
   data[0]  = TWI_CMD_LED_BASE + bank;
   for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
@@ -248,7 +248,7 @@ void Model100Side::setAllLEDsTo(cRGB color) {
   uint8_t result  = writeData(data, ELEMENTS(data));
 }
 
-void Model100Side::setOneLEDTo(byte led, cRGB color) {
+void Model100Side::setOneLEDTo(uint8_t led, cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ONE_TO,
                     led,
                     color.b,

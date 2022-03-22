@@ -41,7 +41,7 @@ void DynamicTapDance::updateDynamicTapDanceCache() {
   map_[0] = 0;
 
   while (pos < storage_base_ + storage_size_) {
-    uint16_t raw_key = Kaleidoscope.storage().read(pos);
+    uint16_t raw_key = Runtime.storage().read(pos);
     pos += 2;
     Key key(raw_key);
 
@@ -67,7 +67,7 @@ bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr,
     return false;
 
   Key key;
-  Kaleidoscope.storage().get(storage_base_ + pos, key);
+  Runtime.storage().get(storage_base_ + pos, key);
 
   switch (tap_dance_action) {
   case TapDance::Tap:
@@ -103,7 +103,7 @@ EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {
     if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < storage_size_; i += 2) {
         Key k;
-        Kaleidoscope.storage().get(storage_base_ + i, k);
+        Runtime.storage().get(storage_base_ + i, k);
         ::Focus.send(k);
       }
     } else {
@@ -113,10 +113,10 @@ EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {
         Key k;
         ::Focus.read(k);
 
-        Kaleidoscope.storage().put(storage_base_ + pos, k);
+        Runtime.storage().put(storage_base_ + pos, k);
         pos += 2;
       }
-      Kaleidoscope.storage().commit();
+      Runtime.storage().commit();
       updateDynamicTapDanceCache();
     }
   }

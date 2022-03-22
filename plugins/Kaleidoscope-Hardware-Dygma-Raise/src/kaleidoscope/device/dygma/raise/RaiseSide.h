@@ -43,7 +43,7 @@ namespace raise {
 
 typedef union {
   cRGB leds[LEDS_PER_HAND];
-  byte bytes[LED_BANKS][LED_BYTES_PER_BANK];
+  uint8_t bytes[LED_BANKS][LED_BYTES_PER_BANK];
 } LEDData_t;
 
 // return what bank the led is in
@@ -56,19 +56,19 @@ typedef union {
 
 class RaiseSide {
  public:
-  explicit RaiseSide(byte ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
+  explicit RaiseSide(uint8_t ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
 
   int readVersion();
   int readSLEDVersion();
   int readSLEDCurrent();
-  byte setSLEDCurrent(byte current);
+  uint8_t setSLEDCurrent(uint8_t current);
   int readJoint();
   int readLayout();
 
-  byte setKeyscanInterval(byte delay);
+  uint8_t setKeyscanInterval(uint8_t delay);
   int readKeyscanInterval();
 
-  byte setLEDSPIFrequency(byte frequency);
+  uint8_t setLEDSPIFrequency(uint8_t frequency);
   int readLEDSPIFrequency();
 
   bool moreKeysWaiting();

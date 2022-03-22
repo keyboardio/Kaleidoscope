@@ -29,7 +29,7 @@ namespace kaleidoscope {
 // when calling this function (e.g. `bitfieldSize<uint16_t>(n)`). The default `UnitType`
 // is `byte` (i.e. `uint8_t`, which is almost always what we want, so most of the time we
 // can also drop that template parameter (e.g. `bitfieldSize(n)`).
-template <typename _UnitType = byte, typename _WidthType>
+template <typename _UnitType = uint8_t, typename _WidthType>
 constexpr _WidthType bitfieldSize(_WidthType n) {
   return ((n - 1) / (8 * sizeof(_UnitType))) + 1;
 }

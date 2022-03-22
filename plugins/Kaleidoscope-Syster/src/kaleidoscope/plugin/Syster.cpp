@@ -29,9 +29,6 @@ char Syster::symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
 uint8_t Syster::symbol_pos_;
 bool Syster::is_active_;
 
-// --- helpers ---
-#define isSyster(k) (k == kaleidoscope::ranges::SYSTER)
-
 // --- api ---
 void Syster::reset(void) {
   symbol_pos_ = 0;
@@ -53,7 +50,7 @@ EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
     // If Syster isn't actively matching an input sequence, we're only looking
     // for the special Syster `Key` value; anything else gets passed through
     // immediately.
-    if (!isSyster(event.key))
+    if (event.key != Key_Syster)
       return EventHandlerResult::OK;
 
     // It's a Syster Key; activate the plugin as soon as it toggles on, so we
@@ -72,7 +69,7 @@ EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
 
   // If a Syster key gets pressed while we're reading an input sequence, ignore
   // it. This could be turned into a "reset" where we erase the abandoned input.
-  if (isSyster(event.key)) {
+  if (event.key == Key_Syster) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 

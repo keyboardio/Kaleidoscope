@@ -229,7 +229,7 @@ class Keyboard {
     return nkro_keyboard_.isKeyPressed(key.getKeyCode());
   }
 
-  boolean isModifierKeyActive(Key modifier_key) {
+  bool isModifierKeyActive(Key modifier_key) {
     if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
       return boot_keyboard_.isModifierActive(modifier_key.getKeyCode());
     }
@@ -237,7 +237,7 @@ class Keyboard {
     return nkro_keyboard_.isModifierActive(modifier_key.getKeyCode());
   }
 
-  boolean wasModifierKeyActive(Key modifier_key) {
+  bool wasModifierKeyActive(Key modifier_key) {
     if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
       return boot_keyboard_.wasModifierActive(modifier_key.getKeyCode());
     }
@@ -245,7 +245,7 @@ class Keyboard {
     return nkro_keyboard_.wasModifierActive(modifier_key.getKeyCode());
   }
 
-  boolean isAnyModifierKeyActive() {
+  bool isAnyModifierKeyActive() {
     if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
       return boot_keyboard_.isAnyModifierActive();
     }
@@ -253,7 +253,7 @@ class Keyboard {
     return nkro_keyboard_.isAnyModifierActive();
   }
 
-  boolean wasAnyModifierKeyActive() {
+  bool wasAnyModifierKeyActive() {
     if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
       return boot_keyboard_.wasAnyModifierActive();
     }
@@ -290,7 +290,7 @@ class Keyboard {
   // the upcoming USB HID report and passes them through to KeyboardioHID
   // immediately
 
-  void pressModifiers(byte flags) {
+  void pressModifiers(uint8_t flags) {
     if (flags & SHIFT_HELD) {
       pressRawKey(Key_LeftShift);
     }
@@ -312,7 +312,7 @@ class Keyboard {
   // the upcoming USB HID report and passes them through to KeyboardioHID
   // immediately
 
-  void releaseModifiers(byte flags) {
+  void releaseModifiers(uint8_t flags) {
     if (flags & SHIFT_HELD) {
       releaseRawKey(Key_LeftShift);
     }

@@ -124,7 +124,7 @@ void Model01LEDDriver::syncLeds() {
   isLEDChanged = false;
 }
 
-boolean Model01LEDDriver::ledPowerFault() {
+bool Model01LEDDriver::ledPowerFault() {
   if (PINB & _BV(4)) {
     return true;
   } else {
@@ -165,9 +165,9 @@ void Model01KeyScanner::readMatrix() {
   }
 }
 
-void Model01KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
+void Model01KeyScanner::actOnHalfRow(uint8_t row, uint8_t colState, uint8_t colPrevState, uint8_t startPos) {
   if ((colState != colPrevState) || (colState != 0)) {
-    for (byte col = 0; col < 8; col++) {
+    for (uint8_t col = 0; col < 8; col++) {
       // Build up the key state for row, col
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
                           (bitRead(colState,     0) << 1));
@@ -182,7 +182,7 @@ void Model01KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState,
 }
 
 void Model01KeyScanner::actOnMatrixScan() {
-  for (byte row = 0; row < 4; row++) {
+  for (uint8_t row = 0; row < 4; row++) {
     actOnHalfRow(row, leftHandState.rows[row], previousLeftHandState.rows[row], 7);
     actOnHalfRow(row, rightHandState.rows[row], previousRightHandState.rows[row], 15);
   }

@@ -19,11 +19,11 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/plugin/LEDMode.h"
 
-#define LED_TOGGLE   0b00000001  // Synthetic, internal
+constexpr uint8_t LED_TOGGLE = 0b00000001;  // Synthetic, internal
 
-#define Key_LEDEffectNext Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
-#define Key_LEDEffectPrevious Key(1, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
-#define Key_LEDToggle Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE)
+constexpr Key Key_LEDEffectNext = Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
+constexpr Key Key_LEDEffectPrevious = Key(1, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
+constexpr Key Key_LEDToggle = Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
 
 namespace kaleidoscope {
 namespace plugin {

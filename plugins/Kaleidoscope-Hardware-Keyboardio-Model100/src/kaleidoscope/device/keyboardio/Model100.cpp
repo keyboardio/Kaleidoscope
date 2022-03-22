@@ -163,9 +163,9 @@ void Model100KeyScanner::readMatrix() {
   }
 }
 
-void Model100KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos) {
+void Model100KeyScanner::actOnHalfRow(uint8_t row, uint8_t colState, uint8_t colPrevState, uint8_t startPos) {
   if ((colState != colPrevState) || (colState != 0)) {
-    for (byte col = 0; col < 8; col++) {
+    for (uint8_t col = 0; col < 8; col++) {
       // Build up the key state for row, col
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
                           (bitRead(colState,     0) << 1));
@@ -180,7 +180,7 @@ void Model100KeyScanner::actOnHalfRow(byte row, byte colState, byte colPrevState
 }
 
 void Model100KeyScanner::actOnMatrixScan() {
-  for (byte row = 0; row < 4; row++) {
+  for (uint8_t row = 0; row < 4; row++) {
     actOnHalfRow(row, leftHandState.rows[row], previousLeftHandState.rows[row], 7);
     actOnHalfRow(row, rightHandState.rows[row], previousRightHandState.rows[row], 15);
   }

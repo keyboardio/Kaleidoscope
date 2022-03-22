@@ -22,12 +22,16 @@
 
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"
 
-#define DM(n) Key(kaleidoscope::ranges::DYNAMIC_MACRO_FIRST + n)
+#define DM(n) ::kaleidoscope::plugin::DynamicMacrosKey(n)
 
 #define MAX_CONCURRENT_DYNAMIC_MACRO_KEYS 8
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key DynamicMacrosKey(uint8_t n) {
+  return Key(kaleidoscope::ranges::DYNAMIC_MACRO_FIRST + n);
+}
 
 class DynamicMacros : public kaleidoscope::Plugin {
  public:

@@ -24,11 +24,20 @@
 // ----------------------------------------------------------------------------
 // Keymap macros
 
-#define OSM(kc) Key(kaleidoscope::ranges::OSM_FIRST + (Key_ ## kc).getKeyCode() - Key_LeftControl.getKeyCode())
-#define OSL(n) Key(kaleidoscope::ranges::OSL_FIRST + n)
+#define OSM(k) ::kaleidoscope::plugin::OneShotModifierKey(Key_ ## k)
+#define OSL(n) ::kaleidoscope::plugin::OneShotLayerKey(n)
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key OneShotModifierKey(Key mod_key) {
+  return Key(kaleidoscope::ranges::OSM_FIRST +
+             mod_key.getKeyCode() - HID_KEYBOARD_FIRST_MODIFIER);
+}
+
+constexpr Key OneShotLayerKey(uint8_t layer) {
+  return Key(kaleidoscope::ranges::OSL_FIRST + layer);
+}
 
 class OneShot : public kaleidoscope::Plugin {
  public:

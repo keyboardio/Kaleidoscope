@@ -27,8 +27,8 @@
 #define SPACECADET_MAP_END (kaleidoscope::plugin::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
-#define Key_SpaceCadetEnable  Key(kaleidoscope::ranges::SC_FIRST)
-#define Key_SpaceCadetDisable Key(kaleidoscope::ranges::SC_LAST)
+constexpr Key Key_SpaceCadetEnable = Key(kaleidoscope::ranges::SC_FIRST);
+constexpr Key Key_SpaceCadetDisable = Key(kaleidoscope::ranges::SC_LAST);
 
 namespace kaleidoscope {
 namespace plugin {
