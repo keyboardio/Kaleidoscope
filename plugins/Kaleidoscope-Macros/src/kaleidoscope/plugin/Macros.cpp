@@ -35,6 +35,7 @@ constexpr uint8_t release_state = WAS_PRESSED | INJECTED;
 
 // Initialized to zeroes (i.e. `Key_NoKey`)
 Key Macros::active_macro_keys_[];
+Macros::readMacroByteFunction Macros::readMacroByte = &Macros::readMacroByteFromPROGMEM;
 
 // -----------------------------------------------------------------------------
 // Public helper functions
@@ -80,7 +81,7 @@ void Macros::tap(Key key) const {
   Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), release_state, key});
 }
 
-void Macros::play(const macro_t *macro_p) {
+void Macros::play(const macro_t *macro_p, uint8_t source) {
   macro_t macro = MACRO_ACTION_END;
   uint8_t interval = 0;
   Key key;
@@ -89,7 +90,7 @@ void Macros::play(const macro_t *macro_p) {
     return;
 
   while (true) {
-    switch (macro = pgm_read_byte(macro_p++)) {
+    switch (macro = readMacroByte(macro_p, source)) {
     // These are unlikely to be useful now that we have KeyEvent. I think the
     // whole `explicit_report` came about as a result of scan-order bugs.
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
@@ -100,50 +101,50 @@ void Macros::play(const macro_t *macro_p) {
 
     // Timing
     case MACRO_ACTION_STEP_INTERVAL:
-      interval = pgm_read_byte(macro_p++);
+      interval = readMacroByte(macro_p, source);
       break;
     case MACRO_ACTION_STEP_WAIT: {
-      uint8_t wait = pgm_read_byte(macro_p++);
+      uint8_t wait = readMacroByte(macro_p, source);
       delay(wait);
       break;
     }
 
     case MACRO_ACTION_STEP_KEYDOWN:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setFlags(readMacroByte(macro_p, source));
+      key.setKeyCode(readMacroByte(macro_p, source));
       press(key);
       break;
     case MACRO_ACTION_STEP_KEYUP:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setFlags(readMacroByte(macro_p, source));
+      key.setKeyCode(readMacroByte(macro_p, source));
       release(key);
       break;
     case MACRO_ACTION_STEP_TAP:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setFlags(readMacroByte(macro_p, source));
+      key.setKeyCode(readMacroByte(macro_p, source));
       tap(key);
       break;
 
     case MACRO_ACTION_STEP_KEYCODEDOWN:
       key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setKeyCode(readMacroByte(macro_p, source));
       press(key);
       break;
     case MACRO_ACTION_STEP_KEYCODEUP:
       key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setKeyCode(readMacroByte(macro_p, source));
       release(key);
       break;
     case MACRO_ACTION_STEP_TAPCODE:
       key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
+      key.setKeyCode(readMacroByte(macro_p, source));
       tap(key);
       break;
 
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(macro_p++));
+        key.setKeyCode(readMacroByte(macro_p, source));
         if (key == Key_NoKey)
           break;
         tap(key);
@@ -154,7 +155,7 @@ void Macros::play(const macro_t *macro_p) {
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(macro_p++));
+        key.setKeyCode(readMacroByte(macro_p, source));
         if (key.getKeyCode() == 0)
           break;
         tap(key);

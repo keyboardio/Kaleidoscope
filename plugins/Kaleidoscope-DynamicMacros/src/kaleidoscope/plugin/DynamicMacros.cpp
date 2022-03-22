@@ -24,33 +24,6 @@ namespace plugin {
 uint16_t DynamicMacros::storage_base_;
 uint16_t DynamicMacros::storage_size_;
 uint16_t DynamicMacros::map_[];
-Key DynamicMacros::active_macro_keys_[];
-
-// =============================================================================
-// It might be possible to use Macros instead of reproducing it
-void DynamicMacros::press(Key key) {
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
-  for (Key &mkey : active_macro_keys_) {
-    if (mkey == Key_NoKey) {
-      mkey = key;
-      break;
-    }
-  }
-}
-
-void DynamicMacros::release(Key key) {
-  for (Key &mkey : active_macro_keys_) {
-    if (mkey == key) {
-      mkey = Key_NoKey;
-    }
-  }
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
-}
-
-void DynamicMacros::tap(Key key) {
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
-}
 
 void DynamicMacros::updateDynamicMacroCache() {
   uint16_t pos = storage_base_;
@@ -117,92 +90,29 @@ void DynamicMacros::updateDynamicMacroCache() {
 }
 
 // public
-void DynamicMacros::play(uint8_t macro_id) {
-  macro_t macro = MACRO_ACTION_END;
-  uint8_t interval = 0;
-  uint16_t pos;
-  Key key;
+void DynamicMacros::setup(uint16_t storage_size) {
+  Macros::readMacroByte = &DynamicMacros::readMacroByte;
 
-  pos = storage_base_ + map_[macro_id];
+  reserve_storage(storage_size);
+}
 
-  while (true) {
-    switch (macro = Runtime.storage().read(pos++)) {
-    case MACRO_ACTION_STEP_EXPLICIT_REPORT:
-    case MACRO_ACTION_STEP_IMPLICIT_REPORT:
-    case MACRO_ACTION_STEP_SEND_REPORT:
-      break;
+uint8_t DynamicMacros::readMacroByteFromEEPROM(const macro_t *ptr, uint8_t source) {
+  int idx = (int)*(ptr++);
+  return Runtime.storage().read(idx);
+}
 
-    case MACRO_ACTION_STEP_INTERVAL:
-      interval = Runtime.storage().read(pos++);
-      break;
-    case MACRO_ACTION_STEP_WAIT: {
-      uint8_t wait = Runtime.storage().read(pos++);
-      delay(wait);
-      break;
-    }
-
-    case MACRO_ACTION_STEP_KEYDOWN:
-      key.setFlags(Runtime.storage().read(pos++));
-      key.setKeyCode(Runtime.storage().read(pos++));
-      press(key);
-      break;
-    case MACRO_ACTION_STEP_KEYUP:
-      key.setFlags(Runtime.storage().read(pos++));
-      key.setKeyCode(Runtime.storage().read(pos++));
-      release(key);
-      break;
-    case MACRO_ACTION_STEP_TAP:
-      key.setFlags(Runtime.storage().read(pos++));
-      key.setKeyCode(Runtime.storage().read(pos++));
-      tap(key);
-      break;
-
-    case MACRO_ACTION_STEP_KEYCODEDOWN:
-      key.setFlags(0);
-      key.setKeyCode(Runtime.storage().read(pos++));
-      press(key);
-      break;
-    case MACRO_ACTION_STEP_KEYCODEUP:
-      key.setFlags(0);
-      key.setKeyCode(Runtime.storage().read(pos++));
-      release(key);
-      break;
-    case MACRO_ACTION_STEP_TAPCODE:
-      key.setFlags(0);
-      key.setKeyCode(Runtime.storage().read(pos++));
-      tap(key);
-      break;
-
-    case MACRO_ACTION_STEP_TAP_SEQUENCE: {
-      while (true) {
-        key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
-        if (key == Key_NoKey)
-          break;
-        tap(key);
-        delay(interval);
-      }
-      break;
-    }
-    case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
-      while (true) {
-        key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
-        if (key.getKeyCode() == 0)
-          break;
-        tap(key);
-        delay(interval);
-      }
-      break;
-    }
-
-    case MACRO_ACTION_END:
-    default:
-      return;
-    }
-
-    delay(interval);
+uint8_t DynamicMacros::readMacroByte(const macro_t *ptr, uint8_t source) {
+  if (source == MACRO_SOURCE_PROGMEM) {
+    return Macros::readMacroByteFromPROGMEM(ptr, source);
+  } else {
+    return readMacroByteFromEEPROM(ptr, source);
   }
+}
+
+void DynamicMacros::play(uint8_t macro_id) {
+  uint16_t pos = storage_base_ + map_[macro_id];
+
+  ::Macros.play((const macro_t *)&pos, MACRO_SOURCE_EEPROM);
 }
 
 bool isDynamicMacrosKey(Key key) {
@@ -219,9 +129,7 @@ EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
     uint8_t macro_id = event.key.getRaw() - ranges::DYNAMIC_MACRO_FIRST;
     play(macro_id);
   } else {
-    for (Key key : active_macro_keys_) {
-      release(key);
-    }
+    ::Macros.release(event.key);
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
