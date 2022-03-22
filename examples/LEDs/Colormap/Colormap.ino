@@ -20,6 +20,7 @@
 #include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
+#include <Kaleidoscope-LEDControl.h>
 
 // *INDENT-OFF*
 KEYMAPS(

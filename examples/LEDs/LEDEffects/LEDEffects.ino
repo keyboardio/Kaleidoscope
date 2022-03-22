@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LEDEffects.h>
 
 // *INDENT-OFF*
