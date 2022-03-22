@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/LayerFocus.h>
+#include "kaleidoscope/plugin/LayerFocus.h"  // IWYU pragma: export

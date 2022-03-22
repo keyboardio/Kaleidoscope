@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Cycle.h>
+#include "kaleidoscope/plugin/Cycle.h"  // IWYU pragma: export

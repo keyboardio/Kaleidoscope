@@ -18,15 +18,15 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <KeyboardioHID.h>
 #include <Wire.h>
 
-#include "kaleidoscope/util/crc16.h"
+#include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+#include "kaleidoscope/util/crc16.h"
 
 #define I2C_CLOCK_KHZ 100
 #define I2C_FLASH_CLOCK_KHZ 100 // flashing doesn't work reliably at higher clock speeds

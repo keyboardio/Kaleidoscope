@@ -15,8 +15,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-HostOS.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include "kaleidoscope/plugin/HostOS-Focus.h"
+
+#include <Arduino.h>                            // for PSTR, strcmp_P
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <stdint.h>                             // for uint8_t
+
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin/HostOS.h"         // for HostOS, Type
 
 namespace kaleidoscope {
 namespace plugin {

@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/CharShift.h>
+#include "kaleidoscope/plugin/CharShift.h"  // IWYU pragma: export

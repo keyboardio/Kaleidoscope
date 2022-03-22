@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/WinKeyToggle.h>
+#include "kaleidoscope/plugin/WinKeyToggle.h"  // IWYU pragma: export

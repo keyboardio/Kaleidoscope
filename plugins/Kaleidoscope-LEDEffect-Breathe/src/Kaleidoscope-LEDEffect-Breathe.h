@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-Breathe.h"
+#include "kaleidoscope/plugin/LEDEffect-Breathe.h"  // IWYU pragma: export

@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Qukeys.h>
+#include "kaleidoscope/plugin/Qukeys.h"  // IWYU pragma: export

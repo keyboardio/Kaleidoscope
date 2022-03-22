@@ -18,7 +18,9 @@
 #ifdef __AVR__
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include <Kaleidoscope-FirmwareDump.h>
+#include "kaleidoscope/plugin/FirmwareDump.h"
+
+#include <Arduino.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include <avr/boot.h>
 

@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/PersistentLEDMode.h>
+#include "kaleidoscope/plugin/PersistentLEDMode.h"  // IWYU pragma: export

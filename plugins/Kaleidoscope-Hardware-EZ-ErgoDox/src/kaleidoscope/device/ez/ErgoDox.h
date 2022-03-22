@@ -35,9 +35,9 @@ struct cRGB {
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
+#include "kaleidoscope/driver/keyscanner/Base.h"
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/LED-ActiveModColor.h>
+#include "kaleidoscope/plugin/LED-ActiveModColor.h"  // IWYU pragma: export

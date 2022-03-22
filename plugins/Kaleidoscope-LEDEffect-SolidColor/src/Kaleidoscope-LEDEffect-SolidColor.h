@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-SolidColor.h"
+#include "kaleidoscope/plugin/LEDEffect-SolidColor.h"  // IWYU pragma: export

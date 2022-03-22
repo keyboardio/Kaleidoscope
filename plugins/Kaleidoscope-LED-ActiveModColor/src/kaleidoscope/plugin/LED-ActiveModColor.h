@@ -17,9 +17,11 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/KeyAddrBitfield.h"
-#include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/device/device.h"         // for cRGB
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 #define MAX_MODS_PER_LAYER 16
 

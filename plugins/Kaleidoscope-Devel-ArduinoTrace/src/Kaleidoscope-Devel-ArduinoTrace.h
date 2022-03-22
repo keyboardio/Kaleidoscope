@@ -17,14 +17,13 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-
 #ifndef ARDUINOTRACE_SERIAL
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 #define ARDUINOTRACE_SERIAL DebugStderr
 #endif
 #endif
 
-#include "ArduinoTrace.h"
+#include "ArduinoTrace.h"    // for ARDUINOTRACE_INIT
+#include <HardwareSerial.h>  // for DebugStderrSerial, DebugStderr
 
 ARDUINOTRACE_INIT(9600)

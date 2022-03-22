@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-Chase.h"
+#include "kaleidoscope/plugin/LEDEffect-Chase.h"  // IWYU pragma: export

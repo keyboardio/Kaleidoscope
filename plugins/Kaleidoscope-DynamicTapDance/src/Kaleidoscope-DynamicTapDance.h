@@ -17,5 +17,4 @@
 
 #pragma once
 
-#include "Kaleidoscope-TapDance.h"
-#include "kaleidoscope/plugin/DynamicTapDance.h"
+#include "kaleidoscope/plugin/DynamicTapDance.h"  // IWYU pragma: export

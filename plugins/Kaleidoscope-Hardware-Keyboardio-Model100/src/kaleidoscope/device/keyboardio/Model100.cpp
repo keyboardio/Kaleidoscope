@@ -17,14 +17,12 @@
 
 #ifdef ARDUINO_keyboardio_model_100
 
-#include "Arduino.h"                                 // for PROGMEM
-#include "kaleidoscope/device/keyboardio/Model100.h"  // for Model100LEDDriver...
-#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+#include "kaleidoscope/device/keyboardio/Model100.h"
 
-#include "Wire.h"
+#include <Arduino.h>                                   // for PROGMEM
+#include <Wire.h>                                      // for Wire
 
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // For Base<>
 
 namespace kaleidoscope {
 namespace device {

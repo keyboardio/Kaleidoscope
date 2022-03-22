@@ -24,4 +24,4 @@
 #define KALEIDOSCOPE_HARDWARE_ATREUS_PINOUT_ASTAR 1
 #endif
 
-#include "kaleidoscope/device/technomancy/Atreus.h"
+#include "kaleidoscope/device/technomancy/Atreus.h"  // IWYU pragma: export

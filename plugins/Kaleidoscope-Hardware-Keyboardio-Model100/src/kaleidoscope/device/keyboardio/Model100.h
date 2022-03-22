@@ -34,14 +34,14 @@ struct cRGB {
 };
 
 
-#include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/driver/storage/GD32Flash.h"
-#include "kaleidoscope/driver/keyboardio/Model100Side.h"
-#include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/device/Base.h"
-#include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/hid/Base.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
+#include "kaleidoscope/driver/hid/Base.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
+#include "kaleidoscope/driver/keyboardio/Model100Side.h"
+#include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 
 namespace kaleidoscope {
 namespace device {

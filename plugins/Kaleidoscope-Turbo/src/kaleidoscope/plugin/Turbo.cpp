@@ -15,11 +15,23 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Turbo.h>
-#include <Kaleidoscope-LEDControl.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/layers.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/Turbo.h"
+
+#include <Arduino.h>                                      // for F, __FlashS...
+#include <Kaleidoscope-FocusSerial.h>                     // for Focus, Focu...
+#include <stdint.h>                                       // for uint16_t
+
+#include "kaleidoscope/KeyAddr.h"                         // for MatrixAddr
+#include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<...
+#include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
+#include "kaleidoscope/KeyMap.h"                          // for KeyMap
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
+#include "kaleidoscope/Runtime.h"                         // for Runtime
+#include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
+#include "kaleidoscope/event_handler_result.h"            // for EventHandle...
+#include "kaleidoscope/key_defs.h"                        // for Key
+#include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
+#include "kaleidoscope/plugin/LEDControl.h"               // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

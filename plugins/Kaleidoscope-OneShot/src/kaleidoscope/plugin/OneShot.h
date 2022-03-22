@@ -17,9 +17,16 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/KeyAddrBitfield.h"
+#include <Kaleidoscope-Ranges.h>                // for OS_FIRST, OS_LAST
+#include <stdint.h>                             // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftControl
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 // ----------------------------------------------------------------------------
 // Keymap macros

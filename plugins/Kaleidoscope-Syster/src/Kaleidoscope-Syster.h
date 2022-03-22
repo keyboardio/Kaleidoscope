@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Syster.h>
+#include "kaleidoscope/plugin/Syster.h"  // IWYU pragma: export

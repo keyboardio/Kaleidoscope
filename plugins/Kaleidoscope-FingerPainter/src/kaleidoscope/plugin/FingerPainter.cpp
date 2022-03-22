@@ -15,13 +15,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-FingerPainter.h>
+#include "kaleidoscope/plugin/FingerPainter.h"
 
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include <Kaleidoscope-LEDControl.h>
-#include <Kaleidoscope-LED-Palette-Theme.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include <Arduino.h>                            // for PSTR, strcmp_P, F
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
+#include <stdint.h>                             // for uint16_t, uint8_t
+#include <string.h>                             // for memcmp
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for Device, cRGB, Virtual...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOff
 
 namespace kaleidoscope {
 namespace plugin {

@@ -19,9 +19,9 @@
 
 #ifdef ARDUINO_GD32F303ZE_EVAL
 
-#include <Arduino.h>
-
 #include "kaleidoscope/device/gd32/eval/KeyScanner.h"
+
+#include <Arduino.h>
 
 namespace kaleidoscope {
 namespace device {

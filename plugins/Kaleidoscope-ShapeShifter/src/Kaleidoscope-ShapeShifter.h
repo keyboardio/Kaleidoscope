@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/ShapeShifter.h>
+#include "kaleidoscope/plugin/ShapeShifter.h"  // IWYU pragma: export

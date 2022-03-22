@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"
+#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"  // IWYU pragma: export

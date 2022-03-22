@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/FingerPainter.h>
+#include "kaleidoscope/plugin/FingerPainter.h"  // IWYU pragma: export

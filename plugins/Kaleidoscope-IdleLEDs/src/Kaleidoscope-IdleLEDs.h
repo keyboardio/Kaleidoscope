@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/IdleLEDs.h>
+#include "kaleidoscope/plugin/IdleLEDs.h"  // IWYU pragma: export

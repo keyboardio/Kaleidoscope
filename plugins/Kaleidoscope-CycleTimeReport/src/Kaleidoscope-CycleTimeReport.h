@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/CycleTimeReport.h>
+#include "kaleidoscope/plugin/CycleTimeReport.h"  // IWYU pragma: export

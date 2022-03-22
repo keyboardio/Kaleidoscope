@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/FocusSerial.h>
+#include "kaleidoscope/plugin/FocusSerial.h"  // IWYU pragma: export

@@ -18,6 +18,8 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_GHEAVY_BUTTERSTICK
 
+#include "kaleidoscope/device/gheavy/ButterStick.h"
+
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 

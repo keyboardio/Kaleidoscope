@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Turbo.h>
+#include "kaleidoscope/plugin/Turbo.h"  // IWYU pragma: export

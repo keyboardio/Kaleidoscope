@@ -27,7 +27,10 @@
 #ifdef ARDUINO_AVR_ERGODOX
 
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
+
+#include <Arduino.h>
 #include <avr/wdt.h>
+
 #include "kaleidoscope/device/avr/pins_and_ports.h"
 #include "kaleidoscope/device/ez/ErgoDox/i2cmaster.h"
 

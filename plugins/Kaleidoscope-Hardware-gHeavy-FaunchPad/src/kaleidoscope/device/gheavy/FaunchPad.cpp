@@ -18,6 +18,8 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_GHEAVY_FAUNCHPAD
 
+#include "kaleidoscope/device/gheavy/FaunchPad.h"
+
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"
 

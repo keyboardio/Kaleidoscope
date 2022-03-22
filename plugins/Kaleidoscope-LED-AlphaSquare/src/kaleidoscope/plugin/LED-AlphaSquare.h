@@ -17,8 +17,13 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-LEDControl.h>
+#include <stdint.h>                 // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"   // for KeyAddr
+#include "kaleidoscope/key_defs.h"  // for Key
+#include "kaleidoscope/plugin.h"    // for Plugin
+
+struct cRGB;
 
 #define SYM4x4(                                                   \
                p00, p01, p02, p03,                                \

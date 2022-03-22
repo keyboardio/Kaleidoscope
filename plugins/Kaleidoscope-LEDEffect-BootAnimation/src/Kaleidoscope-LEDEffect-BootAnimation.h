@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LEDEffect-BootAnimation.h"
+#include "kaleidoscope/plugin/LEDEffect-BootAnimation.h"  // IWYU pragma: export

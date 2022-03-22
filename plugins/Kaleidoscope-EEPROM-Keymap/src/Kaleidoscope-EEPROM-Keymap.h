@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/EEPROM-Keymap.h>
+#include "kaleidoscope/plugin/EEPROM-Keymap.h"  // IWYU pragma: export

@@ -14,12 +14,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-// Mouse-related methods
-//
-//
-#include <Kaleidoscope.h>
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
+
+#include <stdint.h>                                            // for uint16_t
+
+#include "kaleidoscope/Runtime.h"                              // for Runtime
+#include "kaleidoscope/device/device.h"                        // for Base<>...
+#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for Absolu...
+#include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"      // for MOUSE_...
 
 namespace kaleidoscope {
 namespace plugin {

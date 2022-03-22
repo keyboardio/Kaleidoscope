@@ -14,9 +14,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-Macros.h"
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/Macros.h"
+
+#include <Arduino.h>                                // for pgm_read_byte, delay
+#include <Kaleidoscope-FocusSerial.h>               // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>                    // for MACRO_FIRST
+#include <stdint.h>                                 // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
+#include "kaleidoscope/Runtime.h"                   // for Runtime, Runtime_
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                  // for Key, LSHIFT, Key_...
+#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE
 
 // =============================================================================
 // Default `macroAction()` function definitions

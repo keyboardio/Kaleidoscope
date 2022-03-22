@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/OneShotMetaKeys.h>
+#include "kaleidoscope/plugin/OneShotMetaKeys.h"  // IWYU pragma: export

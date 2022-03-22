@@ -17,7 +17,9 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/LED-AlphaSquare.h>
+#include <stdint.h>                               // for uint16_t
+
+#include "kaleidoscope/plugin/LED-AlphaSquare.h"  // for SYM4x4
 
 namespace kaleidoscope {
 namespace plugin {

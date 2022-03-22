@@ -14,7 +14,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"
+
+#include <Arduino.h>                                  // for byte
+#include <stdint.h>                                   // for uint8_t, uint16_t
+
+#include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"               // for Base<>::LEDRang...
+#include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
 
 namespace kaleidoscope {
 namespace plugin {

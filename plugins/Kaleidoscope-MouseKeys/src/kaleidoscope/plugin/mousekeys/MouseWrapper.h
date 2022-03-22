@@ -16,8 +16,7 @@
 
 #pragma once
 
-#include "Arduino.h"
-#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"
+#include <stdint.h>  // for uint16_t, uint8_t, int8_t
 
 // Warping commands
 

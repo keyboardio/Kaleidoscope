@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/kbdfans/KBD4x.h"
+#include "kaleidoscope/device/kbdfans/KBD4x.h"  // IWYU pragma: export

@@ -17,8 +17,13 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-Ranges.h>                // for OS_CANCEL
+#include <stdint.h>                             // for uint16_t
+
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 // DEPRECATED: `OneShotCancelKey` doesn't match our normal naming, and should
 // eventually be removed.

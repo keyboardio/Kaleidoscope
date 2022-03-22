@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/TypingBreaks.h>
+#include "kaleidoscope/plugin/TypingBreaks.h"  // IWYU pragma: export

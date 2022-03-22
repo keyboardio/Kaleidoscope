@@ -15,8 +15,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <kaleidoscope/plugin/HostOS.h>
-#include <Kaleidoscope-EEPROM-Settings.h>
+#include "kaleidoscope/plugin/HostOS.h"
+
+#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
+
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 
 namespace kaleidoscope {
 namespace plugin {

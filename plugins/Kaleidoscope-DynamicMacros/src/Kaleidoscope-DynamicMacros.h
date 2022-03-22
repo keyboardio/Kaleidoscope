@@ -16,5 +16,6 @@
 
 #pragma once
 
-#include "Kaleidoscope-Macros.h"
-#include "kaleidoscope/plugin/DynamicMacros.h"
+#include <Kaleidoscope-Macros.h> // IWYU pragma: keep
+
+#include "kaleidoscope/plugin/DynamicMacros.h"  // IWYU pragma: export

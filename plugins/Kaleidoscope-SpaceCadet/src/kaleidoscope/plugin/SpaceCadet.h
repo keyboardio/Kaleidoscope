@@ -18,10 +18,15 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/KeyEventTracker.h"
-#include "kaleidoscope/KeyAddrEventQueue.h"
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-Ranges.h>                // for SC_FIRST, SC_LAST
+#include <stdint.h>                             // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"       // for KeyEventTracker
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END (kaleidoscope::plugin::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }

@@ -17,11 +17,14 @@
 
 #include "kaleidoscope/plugin/AutoShift.h"
 
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyAddr.h"          // for KeyAddr, MatrixAddr
+#include "kaleidoscope/KeyEvent.h"         // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"  // for KeyEventTracker
+#include "kaleidoscope/Runtime.h"          // for Runtime, Runtime_
+#include "kaleidoscope/key_defs.h"         // for Key, Key_0, Key_1, Key_A
+#include "kaleidoscope/keyswitch_state.h"  // for keyToggledOn, keyIsInjected
+
+// IWYU pragma: no_include "HIDAliases.h"
 
 namespace kaleidoscope {
 namespace plugin {

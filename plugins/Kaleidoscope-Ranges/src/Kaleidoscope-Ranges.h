@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint16_t
+#include <stdint.h>                 // for uint16_t, uint8_t
 
 // Included for definition of legacy Macros plugin key range:
-#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/key_defs.h"  // for SYNTHETIC
 
 namespace kaleidoscope {
 namespace ranges {

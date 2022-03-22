@@ -17,13 +17,12 @@
 
 #pragma once
 
-#include <Kaleidoscope-OneShot.h>
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-Ranges.h>                // for OS_ACTIVE_STICKY, OS_...
 
-#include "kaleidoscope/event_handler_result.h"
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/plugin.h"
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 // ----------------------------------------------------------------------------
 // Key constants

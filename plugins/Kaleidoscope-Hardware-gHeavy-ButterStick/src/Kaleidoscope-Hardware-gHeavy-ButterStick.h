@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/gheavy/ButterStick.h"
+#include "kaleidoscope/device/gheavy/ButterStick.h"  // IWYU pragma: export

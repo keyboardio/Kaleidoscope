@@ -17,12 +17,17 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/LiveKeys.h"
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/KeyAddrEventQueue.h"
-#include "kaleidoscope/KeyEventTracker.h"
+#include <Arduino.h>                            // for PROGMEM
+#include <Kaleidoscope-Ranges.h>                // for TD_FIRST, TD_LAST
+#include <stdint.h>                             // for uint8_t, uint16_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"       // for KeyEventTracker
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 #define TD(n) kaleidoscope::plugin::TapDanceKey(n)
 

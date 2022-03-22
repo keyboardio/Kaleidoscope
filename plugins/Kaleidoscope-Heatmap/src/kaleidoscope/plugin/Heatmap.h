@@ -17,8 +17,16 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-LEDControl.h>
+#include <stdint.h>                                      // for uint16_t
+
+#include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
+#include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
+#include "kaleidoscope/device/device.h"                  // for cRGB, Device
+#include "kaleidoscope/event_handler_result.h"           // for EventHandler...
+#include "kaleidoscope/plugin.h"                         // for Plugin
+#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransi...
+#include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
+#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInter...
 
 namespace kaleidoscope {
 namespace plugin {

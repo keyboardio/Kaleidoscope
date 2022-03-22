@@ -18,10 +18,17 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/KeyAddrEventQueue.h"
-#include "kaleidoscope/KeyEventTracker.h"
+#include <Arduino.h>                            // for PROGMEM
+#include <Kaleidoscope-Ranges.h>                // for DUM_FIRST
+#include <stdint.h>                             // for uint8_t, uint16_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"       // for KeyEventTracker
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key) kaleidoscope::plugin::ModTapKey(Key_ ## mod, Key_ ## key)

@@ -17,6 +17,6 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/TriColor.h>
-#include <kaleidoscope/plugin/Miami.h>
-#include <kaleidoscope/plugin/Jukebox.h>
+#include "kaleidoscope/plugin/Jukebox.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/Miami.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/TriColor.h"  // IWYU pragma: export

@@ -15,8 +15,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LEDEffects.h>
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/plugin/TriColor.h"
+
+#include "kaleidoscope/KeyAddr.h"            // for KeyAddr, MatrixAddr, Mat...
+#include "kaleidoscope/device/device.h"      // for cRGB
+#include "kaleidoscope/key_defs.h"           // for Key, Key_0, Key_A, Key_E...
+#include "kaleidoscope/layers.h"             // for Layer, Layer_
+#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

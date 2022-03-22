@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/dygma/Raise.h"
+#include "kaleidoscope/device/dygma/Raise.h"  // IWYU pragma: export

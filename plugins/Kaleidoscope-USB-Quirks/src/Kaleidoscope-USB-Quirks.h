@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/USB-Quirks.h>
+#include "kaleidoscope/plugin/USB-Quirks.h"  // IWYU pragma: export

@@ -17,8 +17,9 @@
 
 #ifdef ARDUINO_GD32F303ZE_EVAL
 
-#include "Arduino.h"
-#include "HardwareTimer.h"
+#include <Arduino.h>
+#include <HardwareTimer.h>
+
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/device/gd32/eval/KeyScanner.h"
 

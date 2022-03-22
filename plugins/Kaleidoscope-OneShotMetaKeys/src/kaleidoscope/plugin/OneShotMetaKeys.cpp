@@ -15,16 +15,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-OneShotMetaKeys.h>
+#include "kaleidoscope/plugin/OneShotMetaKeys.h"
 
-#include <Kaleidoscope-FocusSerial.h>
-#include <Kaleidoscope-OneShot.h>
+#include <Arduino.h>                            // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <Kaleidoscope-OneShot.h>               // for OneShot
 
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/LiveKeys.h"
+#include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
+#include "kaleidoscope/KeyAddrMap.h"            // for KeyAddrMap<>::Iterator
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/KeyMap.h"                // for KeyMap
+#include "kaleidoscope/LiveKeys.h"              // for LiveKeys, live_keys
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Inactive
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, keyToggledOff
 
 namespace kaleidoscope {
 namespace plugin {

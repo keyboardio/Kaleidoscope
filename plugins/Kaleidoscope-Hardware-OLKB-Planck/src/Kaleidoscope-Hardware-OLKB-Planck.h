@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/olkb/Planck.h"
+#include "kaleidoscope/device/olkb/Planck.h"  // IWYU pragma: export
