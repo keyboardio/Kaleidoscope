@@ -20,7 +20,7 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
-#define Key_Cycle Key(kaleidoscope::ranges::CYCLE)
+constexpr Key Key_Cycle = Key(kaleidoscope::ranges::CYCLE);
 
 #define cycleThrough(...) ({                                \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };     \

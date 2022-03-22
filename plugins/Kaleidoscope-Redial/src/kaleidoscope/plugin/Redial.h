@@ -20,7 +20,7 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
-#define Key_Redial Key(kaleidoscope::ranges::REDIAL)
+constexpr Key Key_Redial = Key(kaleidoscope::ranges::REDIAL);
 
 namespace kaleidoscope {
 namespace plugin {

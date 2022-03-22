@@ -24,7 +24,7 @@
 #include "kaleidoscope/KeyAddrEventQueue.h"
 #include "kaleidoscope/KeyEventTracker.h"
 
-#define TD(n) Key(kaleidoscope::ranges::TD_FIRST + n)
+#define TD(n) kaleidoscope::plugin::TapDanceKey(n)
 
 #define tapDanceActionKeys(tap_count, tap_dance_action, ...) ({         \
       static const Key __k[] PROGMEM = { __VA_ARGS__ };                 \
@@ -34,6 +34,11 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key TapDanceKey(uint8_t n) {
+  return Key(kaleidoscope::ranges::TD_FIRST + n);
+}
+
 class TapDance : public kaleidoscope::Plugin {
  public:
   enum ActionType {

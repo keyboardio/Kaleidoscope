@@ -36,13 +36,17 @@
 
 #define LEADER_MAX_SEQUENCE_LENGTH 4
 
-#define LEAD(n) Key(kaleidoscope::ranges::LEAD_FIRST + n)
+#define LEAD(n) kaleidoscope::plugin::LeaderKey(n)
 
 #define LEADER_SEQ(...) { __VA_ARGS__, Key_NoKey }
 #define LEADER_DICT(...) { __VA_ARGS__, {{Key_NoKey}, NULL} }
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key LeaderKey(uint8_t n) {
+  return Key(kaleidoscope::ranges::LEAD_FIRST + n);
+}
 
 class Leader : public kaleidoscope::Plugin {
  public:

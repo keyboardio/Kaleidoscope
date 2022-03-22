@@ -21,7 +21,7 @@
 
 #pragma once
 
-#define Key_Turbo Key{kaleidoscope::ranges::TURBO}
+constexpr Key Key_Turbo = Key(kaleidoscope::ranges::TURBO);
 
 namespace kaleidoscope {
 namespace plugin {

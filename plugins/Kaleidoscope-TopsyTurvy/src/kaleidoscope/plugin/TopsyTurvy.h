@@ -20,10 +20,14 @@
 #include "kaleidoscope/Runtime.h"
 #include <Kaleidoscope-Ranges.h>
 
-#define TOPSY(k) Key(kaleidoscope::ranges::TT_FIRST + (Key_ ## k).getKeyCode())
+#define TOPSY(k) ::kaleidoscope::plugin::TopsyTurvyKey(Key_ ## k)
 
 namespace kaleidoscope {
 namespace plugin {
+
+constexpr Key TopsyTurvyKey(Key key) {
+  return Key(kaleidoscope::ranges::TT_FIRST + key.getKeyCode());
+}
 
 class TopsyTurvy: public kaleidoscope::Plugin {
  public:
