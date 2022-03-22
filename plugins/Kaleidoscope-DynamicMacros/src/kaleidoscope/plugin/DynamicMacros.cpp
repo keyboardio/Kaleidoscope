@@ -176,7 +176,7 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
+        key.setKeyCode(Runtime.storage().read(pos++));
         if (key == Key_NoKey)
           break;
         tap(key);
@@ -187,7 +187,7 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
+        key.setKeyCode(Runtime.storage().read(pos++));
         if (key.getKeyCode() == 0)
           break;
         tap(key);
