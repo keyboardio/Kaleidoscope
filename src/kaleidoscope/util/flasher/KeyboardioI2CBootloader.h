@@ -21,10 +21,11 @@
 // TODO(@algernon): We should support AVR here, too.
 #ifdef __SAMD21G18A__
 
+#include <stdint.h>
 #include <Wire.h>
 
-#include "kaleidoscope/util/flasher/Base.h"
 #include "kaleidoscope/util/crc16.h"
+#include "kaleidoscope/util/flasher/Base.h"
 
 namespace kaleidoscope {
 namespace util {

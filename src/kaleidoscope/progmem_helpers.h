@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <Arduino.h>  // for memcpy_P
+
 // Load any intrinsic data type or trivial class stored in PROGMEM into an
 // object of that type in memory.
 template <typename _Type>

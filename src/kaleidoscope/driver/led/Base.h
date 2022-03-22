@@ -21,6 +21,9 @@
 #error cRGB and CRGB *must* be defined before including this header!
 #endif
 
+#include <Arduino.h>  // for PROGMEM, pgm_read_byte
+#include <stdint.h>   // for uint8_t
+
 namespace kaleidoscope {
 namespace driver {
 namespace led {

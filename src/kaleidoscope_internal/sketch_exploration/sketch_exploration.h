@@ -17,7 +17,7 @@
 #pragma once
 
 #include "kaleidoscope_internal/sketch_exploration/keymap_exploration.h"
-#include "kaleidoscope_internal/sketch_exploration/plugin_exploration.h"
+#include "kaleidoscope_internal/sketch_exploration/plugin_exploration.h"  // IWYU pragma: keep
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Read carefully

@@ -15,15 +15,25 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// IWYU pragma: private, include "kaleidoscope/device/device.h"
+
 #pragma once
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// Compile-time (emulated) hardware header:
 #include KALEIDOSCOPE_HARDWARE_H
 
-#include "kaleidoscope/driver/bootloader/None.h"
-#include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/led/Base.h"
+// From system:
+#include <stdint.h>                                    // for uint8_t
+// From Arduino libraries:
+#include <HardwareSerial.h>                            // for Serial
+// From Kaleidoscope:
+#include "kaleidoscope/device/Base.h"                  // for Base
+#include "kaleidoscope/driver/bootloader/None.h"       // for None
+#include "kaleidoscope/driver/hid/Keyboardio.h"        // for Keyboardio
+#include "kaleidoscope/driver/keyscanner/Base.h"       // for Base
+#include "kaleidoscope/driver/mcu/None.h"              // for None
 
 namespace kaleidoscope {
 namespace device {

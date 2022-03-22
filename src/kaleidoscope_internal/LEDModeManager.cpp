@@ -15,7 +15,8 @@
  */
 
 #include "kaleidoscope_internal/LEDModeManager.h"
-#include "kaleidoscope/plugin/LEDMode.h"
+
+#include "kaleidoscope/plugin/LEDMode.h"  // for LEDMode
 
 namespace kaleidoscope {
 namespace internal {

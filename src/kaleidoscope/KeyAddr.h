@@ -16,6 +16,6 @@
 
 #pragma once
 
-#include "kaleidoscope/device/device.h"
+#include "kaleidoscope/device/device.h"  // for Device
 
 typedef kaleidoscope::Device::KeyAddr KeyAddr;

@@ -22,11 +22,9 @@
 // library KeyboardioHID. It replaces all hardware related stuff
 // with stub implementations.
 
-// Include KeyboardioHID's HID.h header
-//
+// From KeyboardioHID:
 #include "HID.h"
-
-#include "HIDReportObserver.h"
+#include "HIDReportObserver.h"  // for HIDReportObserver
 
 #if defined(USBCON)
 

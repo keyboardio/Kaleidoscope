@@ -20,6 +20,8 @@
 
 #ifdef ARDUINO_ARCH_SAMD
 
+#include <Arduino.h>
+
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {

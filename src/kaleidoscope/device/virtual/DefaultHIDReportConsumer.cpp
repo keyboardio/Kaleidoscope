@@ -16,16 +16,24 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "DefaultHIDReportConsumer.h"
-#include "MultiReport/Keyboard.h"
-#include "Logging.h"
+#include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"
 
-#include "virtual_io.h"
+// From KeyboardioHID:
+#include <HID-Settings.h>                         // for HID_REPORTID_NKRO_K...
+#include <MultiReport/Keyboard.h>                 // for HID_KeyboardReport_...
+// From system:
+#include <stdint.h>                               // for uint8_t
+// From Arduino core:
+#include <virtual_io.h>                           // for logUSBEvent_keyboard
+
+// From Kaleidoscope:
+#include "kaleidoscope/device/virtual/Logging.h"  // for log_info, logging
 
 #undef min
 #undef max
 
-#include <sstream>
+#include <sstream>                                // for operator<<, strings...
+#include <string>                                 // for char_traits, operator+
 
 namespace kaleidoscope {
 

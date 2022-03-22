@@ -16,9 +16,12 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope_internal/device.h"
+#include <stdint.h>                        // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"          // for KeyAddr
+#include "kaleidoscope/device/device.h"    // for Device
+#include "kaleidoscope/key_defs.h"         // for Key
+#include "kaleidoscope_internal/device.h"  // for device
 
 extern const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns];
 

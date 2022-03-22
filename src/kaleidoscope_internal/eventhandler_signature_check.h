@@ -16,10 +16,10 @@
 
 #pragma once
 
-#include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/plugin.h"
-#include "kaleidoscope_internal/type_traits/has_member.h"
-#include "kaleidoscope_internal/type_traits/has_method.h"
+#include "kaleidoscope/event_handlers.h"                   // for _PROCESS_E...
+#include "kaleidoscope/macro_helpers.h"                    // for __NL__
+#include "kaleidoscope_internal/type_traits/has_member.h"  // for DEFINE_HAS...
+#include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS...
 
 // *************************************************************************
 // *************************************************************************

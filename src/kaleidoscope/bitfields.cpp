@@ -14,9 +14,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Arduino.h>
+#include "kaleidoscope/bitfields.h"
 
-#include "bitfields.h"
+#include <Arduino.h>  // for pgm_read_byte
+#include <stdint.h>   // for uint8_t
 
 namespace kaleidoscope {
 namespace bitfields {

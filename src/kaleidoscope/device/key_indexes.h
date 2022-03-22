@@ -17,7 +17,9 @@
 
 #pragma once
 
-#include "kaleidoscope/KeyAddr.h"
+#include <stdint.h>                // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"  // for KeyAddr
 
 /* To be used by the hardware implementations, `keyIndex` tells us the index of
  * a key, from which we can figure out the row and column as needed. The index

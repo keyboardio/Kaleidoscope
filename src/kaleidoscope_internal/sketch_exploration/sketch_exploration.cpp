@@ -15,7 +15,6 @@
  */
 
 namespace kaleidoscope {
-\
 namespace sketch_exploration {
 
 // This empty weak symbol is necessary if the KEYMAP(...) macro

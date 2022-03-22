@@ -14,12 +14,22 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope_internal/device.h"
-#include "kaleidoscope/hooks.h"
-#include "kaleidoscope/layers.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/LiveKeys.h"
+#include <stdint.h>                               // for uint8_t, int8_t
+#include <string.h>                               // for memmove, memset
+
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/KeyAddrMap.h"              // for KeyAddrMap<>::Iterator
+#include "kaleidoscope/KeyEvent.h"                // for KeyEvent
+#include "kaleidoscope/KeyMap.h"                  // for KeyMap
+#include "kaleidoscope/LiveKeys.h"                // for LiveKeys, live_keys
+#include "kaleidoscope/MatrixAddr.h"              // for MatrixAddr, MatrixA...
+#include "kaleidoscope/device/virtual/Virtual.h"  // for Device
+#include "kaleidoscope/hooks.h"                   // for Hooks
+#include "kaleidoscope/key_defs.h"                // for Key, LAYER_MOVE_OFFSET
+#include "kaleidoscope/keymaps.h"                 // for keyFromKeymap
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOn
+#include "kaleidoscope/layers.h"                  // for Layer_, Layer, Laye...
+#include "kaleidoscope_internal/device.h"         // for device
 
 // The maximum number of layers allowed.
 #define MAX_LAYERS 32;

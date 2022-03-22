@@ -33,8 +33,8 @@
 
 #pragma once
 
-#include "kaleidoscope/hardware/avr/pins_and_ports.h"
 #include "kaleidoscope/driver/led/Color.h"
+#include "kaleidoscope/hardware/avr/pins_and_ports.h"
 #include "ws2812/config.h"
 
 namespace kaleidoscope {

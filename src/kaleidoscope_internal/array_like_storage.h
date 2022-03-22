@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <stdint.h>  // for uint8_t
 
 namespace kaleidoscope {
 namespace internal {

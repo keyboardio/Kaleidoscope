@@ -16,8 +16,17 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/plugin/LEDMode.h"
+#include <stdint.h>                                // for uint8_t, uint16_t
+
+#include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                 // for KeyEvent
+#include "kaleidoscope/Runtime.h"                  // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"            // for cRGB, Device, Base...
+#include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                 // for Key, IS_INTERNAL
+#include "kaleidoscope/plugin.h"                   // for Plugin
+#include "kaleidoscope/plugin/LEDMode.h"           // for LEDMode
+#include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
 
 constexpr uint8_t LED_TOGGLE = 0b00000001;  // Synthetic, internal
 
@@ -27,8 +36,6 @@ constexpr Key Key_LEDToggle = Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_T
 
 namespace kaleidoscope {
 namespace plugin {
-
-class LEDMode;
 
 class LEDControl : public kaleidoscope::Plugin {
  public:

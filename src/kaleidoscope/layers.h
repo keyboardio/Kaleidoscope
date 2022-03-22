@@ -16,15 +16,18 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/keymaps.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/device/device.h"
-#include "kaleidoscope_internal/device.h"
-#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
-#include "kaleidoscope_internal/shortname.h"
-#include "kaleidoscope_internal/deprecations.h"
+#include <Arduino.h>                                // for PROGMEM
+#include <stdint.h>                                 // for uint8_t, int8_t
+
+#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
+#include "kaleidoscope/device/device.h"             // for Device
+#include "kaleidoscope/key_defs.h"                  // for Key
+#include "kaleidoscope/keymaps.h"                   // IWYU pragma: keep
+#include "kaleidoscope/macro_helpers.h"             // for __NL__
+#include "kaleidoscope_internal/device.h"           // for device
+#include "kaleidoscope_internal/shortname.h"        // for _INIT_HID_GETSHOR...
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"  // for _INIT_SKETCH_EXPL...
 
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {

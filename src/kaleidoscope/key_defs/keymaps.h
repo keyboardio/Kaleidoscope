@@ -16,9 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>
-
-#include "kaleidoscope_internal/deprecations.h"
+#include <stdint.h>  // for uint8_t
 
 static const uint8_t LAYER_OP_OFFSET = 42;
 static const uint8_t LAYER_SHIFT_OFFSET = LAYER_OP_OFFSET;

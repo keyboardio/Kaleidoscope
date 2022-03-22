@@ -16,8 +16,7 @@
 
 #pragma once
 
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/KeyEvent.h"              // for KeyEvent, KeyEventId
+#include "kaleidoscope/KeyEvent.h"  // for KeyEvent, KeyEventId
 
 namespace kaleidoscope {
 

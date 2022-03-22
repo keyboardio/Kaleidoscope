@@ -16,12 +16,17 @@
 
 #pragma once
 
-#include "kaleidoscope_internal/array_like_storage.h"
-#include "kaleidoscope/plugin.h"
-#include "kaleidoscope/plugin/LEDMode.h"
-#include "kaleidoscope_internal/type_traits/has_method.h"
+#include <Arduino.h>                                       // for PROGMEM
+#include <stddef.h>                                        // for size_t
+#include <stdint.h>                                        // for uint8_t
+// IWYU pragma: no_include <new>
 
-#include <stddef.h>
+#include "kaleidoscope/macro_helpers.h"                    // for __NL__
+#include "kaleidoscope/plugin.h"                           // for Plugin
+#include "kaleidoscope/plugin/LEDMode.h"                   // for LEDMode
+#include "kaleidoscope/plugin/LEDModeInterface.h"          // for LEDModeInt...
+#include "kaleidoscope_internal/array_like_storage.h"  // IWYU pragma: keep
+#include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS...
 
 #if defined(KALEIDOSCOPE_VIRTUAL_BUILD) || defined(ARDUINO_ARCH_STM32)
 #include <new>

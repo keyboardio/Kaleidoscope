@@ -17,10 +17,14 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include <KeyboardioHID.h>
+#include <stdint.h>                                      // for uint8_t, int8_t
 
-#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"
+#include <KeyboardioHID.h>
+// From KeyboardioHID:
+#include "DeviceAPIs/AbsoluteMouseAPI.hpp"               // for AbsoluteMous...
+#include "SingleReport/SingleAbsoluteMouse.h"            // for SingleAbsolu...
+// From Kaleidoscope:
+#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
 
 namespace kaleidoscope {
 namespace driver {

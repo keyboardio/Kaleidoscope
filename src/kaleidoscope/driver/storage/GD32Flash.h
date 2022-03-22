@@ -19,9 +19,10 @@
 
 #if defined(ARDUINO_ARCH_GD32) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
+#include <FlashAsEEPROM.h>
+#include <FlashStorage.h>
+
 #include "kaleidoscope/driver/storage/Base.h"
-#include "FlashStorage.h"
-#include "FlashAsEEPROM.h"
 
 namespace kaleidoscope {
 namespace driver {

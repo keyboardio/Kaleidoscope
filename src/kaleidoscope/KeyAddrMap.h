@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include "kaleidoscope_internal/device.h"
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/key_defs.h"
+#include <stdint.h>                // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"  // for KeyAddr
 
 namespace kaleidoscope {
 

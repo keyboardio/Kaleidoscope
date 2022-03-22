@@ -18,8 +18,9 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include "utility"
-#include "stdio.h"
+#include <stdio.h>  // for fprintf, stderr, stdout
+#include <utility>  // IWYU pragma: keep
+// IWYU pragma: no_include <__utility/forward.h>
 
 namespace kaleidoscope {
 namespace logging {

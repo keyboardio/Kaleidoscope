@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include "kaleidoscope_internal/type_traits/type_traits"
+#include "kaleidoscope_internal/type_traits/type_traits"  // IWYU pragma: keep
+// IWYU pragma: no_include <type_traits>
 
 namespace kaleidoscope {
 namespace sketch_exploration {

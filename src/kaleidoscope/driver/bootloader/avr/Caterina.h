@@ -20,8 +20,8 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include "kaleidoscope/driver/bootloader/None.h"
-#include "kaleidoscope/driver/bootloader/Base.h"
+#include "kaleidoscope/driver/bootloader/Base.h"  // IWYU pragma: keep
+#include "kaleidoscope/driver/bootloader/None.h"  // for None
 
 namespace kaleidoscope {
 namespace driver {

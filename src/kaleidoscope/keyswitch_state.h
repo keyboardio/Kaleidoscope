@@ -17,8 +17,6 @@
 #pragma once
 // switch debouncing and status
 
-#include <Arduino.h>
-
 #define INJECTED    0b10000000
 #define IS_PRESSED  0b00000010
 #define WAS_PRESSED 0b00000001
