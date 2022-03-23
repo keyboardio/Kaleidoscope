@@ -90,9 +90,13 @@ bool FocusSerial::handleHelp(const char *command,
 }
 
 EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
-  if (handleHelp(command, PSTR("help\nplugins")))
+  if (handleHelp(command, PSTR("help\ndevice.reset\nplugins")))
     return EventHandlerResult::OK;
 
+  if (strcmp_P(command, PSTR("device.reset")) == 0) {
+    Runtime.device().rebootBootloader();
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
   if (strcmp_P(command, PSTR("plugins")) == 0) {
     kaleidoscope::Hooks::onNameQuery();
     return EventHandlerResult::EVENT_CONSUMED;
