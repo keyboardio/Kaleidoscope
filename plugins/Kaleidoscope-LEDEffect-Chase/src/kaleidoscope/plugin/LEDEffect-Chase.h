@@ -72,7 +72,8 @@ class LEDChaseEffect : public Plugin,
   uint8_t distance_ = 5;
   uint8_t update_delay_ = 150;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDChaseEffect LEDChaseEffect;

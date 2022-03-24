@@ -49,7 +49,7 @@ void HostOS::os(hostos::Type new_os) {
   Runtime.storage().commit();
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::HostOS HostOS;

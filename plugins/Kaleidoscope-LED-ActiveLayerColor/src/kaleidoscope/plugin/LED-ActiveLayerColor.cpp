@@ -72,7 +72,7 @@ EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDActiveLayerColorEffect LEDActiveLayerColorEffect;

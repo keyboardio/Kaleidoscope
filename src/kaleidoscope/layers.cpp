@@ -256,6 +256,6 @@ void Layer_::forEachActiveLayer(forEachHandler h) {
   }
 }
 
-}
+}  // namespace kaleidoscope
 
 kaleidoscope::Layer_ Layer;

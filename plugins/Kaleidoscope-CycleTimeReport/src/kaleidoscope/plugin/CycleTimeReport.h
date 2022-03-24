@@ -38,8 +38,9 @@ class CycleTimeReport : public kaleidoscope::Plugin {
   static uint16_t last_report_time_;
   static uint32_t loop_start_time_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 void cycleTimeReport(void);
 

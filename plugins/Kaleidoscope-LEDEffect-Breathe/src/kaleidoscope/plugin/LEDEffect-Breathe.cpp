@@ -36,7 +36,8 @@ void LEDBreatheEffect::TransientLEDMode::update(void) {
   cRGB color = breath_compute(parent_->hue, parent_->saturation);
   ::LEDControl.set_all_leds_to(color);
 }
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDBreatheEffect LEDBreatheEffect;

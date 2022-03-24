@@ -46,7 +46,7 @@ EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::FocusHostOSCommand FocusHostOSCommand;

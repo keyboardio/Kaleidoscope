@@ -79,6 +79,6 @@ template <typename _Props>
 class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {};
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
+}  // namespace mcu
+}  // namespace driver
+}  // namespace kaleidoscope

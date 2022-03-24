@@ -426,8 +426,8 @@ class Base {
   Storage storage_;
 };
 
-}
-}
+}  // namespace device
+}  // namespace kaleidoscope
 
 // EXPORT_DEVICE exports a device type from a specific namespace to
 // the 'kaleidoscope' namespace as type 'Device'. The corresponding

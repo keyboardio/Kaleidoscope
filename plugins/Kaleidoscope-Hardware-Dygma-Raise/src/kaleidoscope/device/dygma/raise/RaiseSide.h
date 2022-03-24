@@ -104,9 +104,9 @@ class RaiseSide {
   int readRegister(uint8_t cmd);
 };
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

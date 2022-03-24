@@ -45,7 +45,8 @@ class NumPad : public kaleidoscope::Plugin {
   static KeyAddr numpadLayerToggleKeyAddr;
   static bool numpadActive;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::NumPad NumPad;

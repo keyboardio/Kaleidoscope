@@ -82,8 +82,8 @@ class WavepoolEffect : public Plugin,
   };
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::WavepoolEffect WavepoolEffect;
 

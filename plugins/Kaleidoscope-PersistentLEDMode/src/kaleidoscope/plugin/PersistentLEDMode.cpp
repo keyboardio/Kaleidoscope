@@ -58,7 +58,7 @@ EventHandlerResult PersistentLEDMode::onLEDModeChange() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::PersistentLEDMode PersistentLEDMode;

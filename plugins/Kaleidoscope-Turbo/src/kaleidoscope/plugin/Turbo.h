@@ -65,7 +65,8 @@ class Turbo : public kaleidoscope::Plugin {
   static uint32_t start_time_;
   static uint32_t flash_start_time_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Turbo Turbo;

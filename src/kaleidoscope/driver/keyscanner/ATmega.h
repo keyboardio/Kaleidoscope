@@ -237,6 +237,6 @@ template <typename _KeyScannerProps>
 class ATmega : public keyscanner::None {};
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
+}  // namespace keyscanner
+}  // namespace driver
+}  // namespace kaleidoscope

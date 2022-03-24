@@ -53,8 +53,9 @@ class Cycle : public kaleidoscope::Plugin {
   static uint8_t cycle_count_;
   static uint8_t current_modifier_flags_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 void cycleAction(Key previous_key, uint8_t cycle_count);
 

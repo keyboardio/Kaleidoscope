@@ -38,5 +38,5 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 };
 
-} // end namespace plugin
-} // end namespace kaleidoscope
+} // namespace plugin
+} // namespace kaleidoscope

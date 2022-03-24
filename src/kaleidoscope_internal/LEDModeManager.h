@@ -46,7 +46,8 @@ namespace plugin {
 // Forward declarations to avoid header inclusions
 class LEDControl;
 class LEDModeInterface;
-} // end namespace plugin
+
+} // namespace plugin
 
 namespace internal {
 namespace led_mode_management {
@@ -311,7 +312,7 @@ struct TransientLEDModeMaxSize<PluginPtr__> {
   static constexpr size_t value = TransientLEDModeSize<PluginPtr__, ledModePluginType(PluginPtr__())>::value;
 };
 
-} // end namespace led_mode_management
+} // namespace led_mode_management
 
 class LEDModeManager {
  public:
@@ -379,8 +380,8 @@ class LEDModeManager {
   static uint8_t led_mode_buffer_[];
 };
 
-} // end namespace internal
-} // end namespace kaleidoscope
+} // namespace internal
+} // namespace kaleidoscope
 
 // Some auxiliary macros that are mapped to the list of
 // plugins defined via KALEIDOSCOPE_INIT_PLUGINS follow.

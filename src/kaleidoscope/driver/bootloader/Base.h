@@ -29,6 +29,6 @@ class Base {
   static void rebootBootloader() {}
 };
 
-}
-}
-}
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope

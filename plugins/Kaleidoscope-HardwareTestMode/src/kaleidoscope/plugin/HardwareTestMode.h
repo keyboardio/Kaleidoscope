@@ -45,7 +45,8 @@ class HardwareTestMode : public kaleidoscope::Plugin {
   static void waitForKeypress();
   static void setLeds(cRGB color);
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::HardwareTestMode HardwareTestMode;

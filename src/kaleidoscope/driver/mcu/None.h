@@ -31,6 +31,6 @@ namespace mcu {
  */
 class None : public kaleidoscope::driver::mcu::Base<BaseProps> {};
 
-}
-}
-}
+}  // namespace mcu
+}  // namespace driver
+}  // namespace kaleidoscope

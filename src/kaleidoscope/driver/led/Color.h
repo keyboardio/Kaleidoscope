@@ -51,7 +51,7 @@ struct BGR {
   uint8_t r;
 };
 
-}
-}
-}
-}
+}  // namespace color
+}  // namespace led
+}  // namespace driver
+}  // namespace kaleidoscope

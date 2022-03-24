@@ -158,9 +158,8 @@ cRGB Rainbow::compute(uint8_t *step) {
   return hsvToRgb(255 - *step, 255, *step);
 }
 
-}
-}
-
-}
+}  // namespace stalker
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::StalkerEffect StalkerEffect;

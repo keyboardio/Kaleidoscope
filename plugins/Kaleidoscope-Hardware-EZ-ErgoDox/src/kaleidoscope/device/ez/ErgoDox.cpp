@@ -210,9 +210,9 @@ uint8_t ErgoDox::pressedKeyswitchCount() {
   return count;
 }
 
-}
-}
-}
+}  // namespace ez
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

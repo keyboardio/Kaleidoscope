@@ -27,7 +27,8 @@ class USBQuirks: public kaleidoscope::Plugin {
 
   void toggleKeyboardProtocol();
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::USBQuirks USBQuirks;

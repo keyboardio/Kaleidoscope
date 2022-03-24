@@ -62,5 +62,5 @@ void TriColor::TransientLEDMode::update(void) {
   }
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope

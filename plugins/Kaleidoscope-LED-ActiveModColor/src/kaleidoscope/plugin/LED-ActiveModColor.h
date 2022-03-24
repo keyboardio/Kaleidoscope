@@ -56,7 +56,8 @@ class ActiveModColorEffect : public kaleidoscope::Plugin {
   static cRGB oneshot_color_;
   static cRGB sticky_color_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::ActiveModColorEffect ActiveModColorEffect;

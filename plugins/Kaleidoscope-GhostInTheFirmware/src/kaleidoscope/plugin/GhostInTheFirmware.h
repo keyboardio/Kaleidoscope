@@ -45,7 +45,8 @@ class GhostInTheFirmware : public kaleidoscope::Plugin {
   static uint16_t current_pos_;
   static uint16_t start_time_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;

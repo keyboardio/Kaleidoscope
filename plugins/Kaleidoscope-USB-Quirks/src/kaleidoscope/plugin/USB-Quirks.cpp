@@ -36,7 +36,7 @@ void USBQuirks::toggleKeyboardProtocol() {
   Runtime.attachToHost();
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::USBQuirks USBQuirks;

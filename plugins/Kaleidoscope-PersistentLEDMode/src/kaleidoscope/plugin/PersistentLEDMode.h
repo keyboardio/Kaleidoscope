@@ -37,7 +37,7 @@ class PersistentLEDMode: public kaleidoscope::Plugin {
   static uint8_t cached_mode_index_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::PersistentLEDMode PersistentLEDMode;

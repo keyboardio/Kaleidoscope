@@ -28,7 +28,8 @@ class FocusHostOSCommand : public kaleidoscope::Plugin {
   FocusHostOSCommand() {}
   EventHandlerResult onFocusEvent(const char *command);
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::FocusHostOSCommand FocusHostOSCommand;

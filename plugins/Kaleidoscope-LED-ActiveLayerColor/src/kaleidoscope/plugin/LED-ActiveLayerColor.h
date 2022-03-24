@@ -67,7 +67,8 @@ class LEDActiveLayerColorEffect : public Plugin,
 
   static const cRGB *colormap_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDActiveLayerColorEffect LEDActiveLayerColorEffect;

@@ -67,7 +67,8 @@ class ColormapEffect : public Plugin,
   static uint8_t max_layers_;
   static uint16_t map_base_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::ColormapEffect ColormapEffect;

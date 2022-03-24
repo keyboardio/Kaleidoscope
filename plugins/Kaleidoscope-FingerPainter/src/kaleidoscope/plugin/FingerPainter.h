@@ -50,7 +50,8 @@ class FingerPainter : public LEDMode {
   static uint16_t color_base_;
   static bool edit_mode_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::FingerPainter FingerPainter;

@@ -92,5 +92,5 @@ enum : uint16_t {
   KALEIDOSCOPE_SAFE_START = SAFE_START
 };
 
-}
-}
+}  // namespace ranges
+}  // namespace kaleidoscope

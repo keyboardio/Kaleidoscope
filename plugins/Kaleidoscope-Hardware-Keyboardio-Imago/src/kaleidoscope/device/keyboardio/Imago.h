@@ -120,11 +120,11 @@ class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
          R3C0, R3C1, R3C2, R3C3, R3C4, R3C5, R3C6, R3C7, R3C8, R3C9, R3C10, R3C11, R3C12, R3C13, XXX,   R3C15, \
          R4C0, R4C1, R4C2, R4C3, XXX,  R4C5, R4C6, R4C7, R4C8, XXX,  R4C10, R4C11, R4C12, R4C13, XXX,   R4C15
 
-}
-}
+}  // namespace keyboardio
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::keyboardio::Imago)
 
-}
+}  // namespace kaleidoscope
 
 #endif

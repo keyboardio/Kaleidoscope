@@ -29,6 +29,6 @@ struct ATmega32U4EEPROMProps : kaleidoscope::driver::storage::AVREEPROMProps {
   static constexpr uint16_t length = 1024;
 };
 
-}
-}
-}
+}  // namespace storage
+}  // namespace driver
+}  // namespace kaleidoscope

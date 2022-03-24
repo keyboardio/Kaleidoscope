@@ -111,7 +111,7 @@ EventHandlerResult AlphaSquareEffect::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::AlphaSquareEffect AlphaSquareEffect;

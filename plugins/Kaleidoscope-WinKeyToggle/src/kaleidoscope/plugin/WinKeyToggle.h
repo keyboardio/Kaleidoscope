@@ -34,7 +34,8 @@ class WinKeyToggle: public kaleidoscope::Plugin {
  private:
   static bool enabled_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::WinKeyToggle WinKeyToggle;

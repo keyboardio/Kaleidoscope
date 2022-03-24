@@ -38,5 +38,5 @@ class AccessTransientLEDMode {
   uint8_t led_mode_id_ = 255; /* 255 means uninitialized */
 };
 
-} // end namespace plugin
-} // end namespace kaleidoscope
+} // namespace plugin
+} // namespace kaleidoscope

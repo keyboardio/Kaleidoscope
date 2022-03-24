@@ -27,7 +27,8 @@ namespace kaleidoscope {
 namespace internal {
 // Forward declaration
 class LEDModeManager;
-} // end namespace internal
+
+} // namespace internal
 
 namespace plugin {
 
@@ -108,5 +109,5 @@ class LEDMode : public kaleidoscope::Plugin,
   }
 };
 
-} // end namespace plugin
-} // end namespace kaleidoscope
+} // namespace plugin
+} // namespace kaleidoscope

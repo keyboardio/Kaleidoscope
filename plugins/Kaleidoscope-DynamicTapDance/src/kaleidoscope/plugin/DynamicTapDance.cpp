@@ -140,7 +140,7 @@ void DynamicTapDance::setup(uint8_t dynamic_offset, uint16_t size) {
   updateDynamicTapDanceCache();
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::DynamicTapDance DynamicTapDance;

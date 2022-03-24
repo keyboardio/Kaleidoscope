@@ -58,8 +58,8 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 __attribute__((weak)) void cycleTimeReport(void) {
   Focus.send(Focus.COMMENT, F("average loop time:"), CycleTimeReport.average_loop_time,

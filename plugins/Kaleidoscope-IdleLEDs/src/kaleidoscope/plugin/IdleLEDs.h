@@ -55,8 +55,8 @@ class PersistentIdleLEDs : public IdleLEDs {
   static uint16_t settings_base_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::IdleLEDs IdleLEDs;
 extern kaleidoscope::plugin::PersistentIdleLEDs PersistentIdleLEDs;

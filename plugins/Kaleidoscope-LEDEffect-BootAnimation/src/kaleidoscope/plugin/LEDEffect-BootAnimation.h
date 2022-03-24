@@ -43,7 +43,8 @@ class BootAnimationEffect : public kaleidoscope::Plugin {
   static uint16_t start_time_;
   static uint8_t current_index_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::BootAnimationEffect BootAnimationEffect;

@@ -160,7 +160,7 @@ EventHandlerResult Turbo::onNameQuery() {
   return ::Focus.sendName(F("Turbo"));
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::Turbo Turbo;

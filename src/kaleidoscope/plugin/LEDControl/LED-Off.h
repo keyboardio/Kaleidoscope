@@ -33,7 +33,7 @@ class LEDOff : public LEDMode {
   void onActivate(void) final;
   void refreshAt(KeyAddr key_addr) final;
 };
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDOff LEDOff;

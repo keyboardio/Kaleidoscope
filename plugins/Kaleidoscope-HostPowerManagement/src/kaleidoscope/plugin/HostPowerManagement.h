@@ -38,12 +38,13 @@ class HostPowerManagement : public kaleidoscope::Plugin {
   static bool was_suspended_;
   static bool initial_suspend_;
 };
-}
+
+}  // namespace plugin
 
 // Backwards compatibility
 typedef plugin::HostPowerManagement HostPowerManagement;
 
-}
+}  // namespace kaleidoscope
 
 void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event);
 

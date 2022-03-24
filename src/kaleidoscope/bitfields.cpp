@@ -49,6 +49,6 @@ bool _BaseBitfield::isBitSetPROGMEM_P(const void *bit_field, uint8_t raw_pos) {
   return the_byte & (0x1 << bit_pos);
 }
 
-} // end namespace internal
-} // end namespace bitfields
-} // end namespace kaleidoscope
+} // namespace internal
+} // namespace bitfields
+} // namespace kaleidoscope

@@ -57,7 +57,7 @@ class Caterina : public kaleidoscope::driver::bootloader::Base {
 typedef bootloader::None Caterina;
 #endif // #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
-}
+}  // namespace avr
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope

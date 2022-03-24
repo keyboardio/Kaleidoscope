@@ -36,8 +36,8 @@ class SAMD : public kaleidoscope::driver::mcu::Base<BaseProps> {
   }
 };
 
-}
-}
-}
+}  // namespace mcu
+}  // namespace driver
+}  // namespace kaleidoscope
 
 #endif

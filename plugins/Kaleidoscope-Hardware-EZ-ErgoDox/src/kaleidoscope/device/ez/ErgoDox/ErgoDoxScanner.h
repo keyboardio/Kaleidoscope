@@ -50,8 +50,8 @@ class ErgoDoxScanner {
   uint8_t initExpander();
 };
 
-}
-}
-}
+}  // namespace ez
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

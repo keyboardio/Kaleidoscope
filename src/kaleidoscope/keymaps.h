@@ -32,4 +32,4 @@ Key keyFromKeymap(uint8_t layer, KeyAddr key_addr) {
   return keymaps_linear[layer][key_addr.toInt()].readFromProgmem();
 }
 
-}
+}  // namespace kaleidoscope

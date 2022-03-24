@@ -263,8 +263,8 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::EEPROMSettings EEPROMSettings;
 kaleidoscope::plugin::FocusSettingsCommand FocusSettingsCommand;

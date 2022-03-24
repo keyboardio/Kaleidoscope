@@ -62,8 +62,8 @@ EventHandlerResult GeminiPR::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
-}
+}  // namespace steno
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::steno::GeminiPR GeminiPR;

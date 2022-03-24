@@ -50,7 +50,7 @@ class DynamicTapDance: public kaleidoscope::Plugin {
   static void updateDynamicTapDanceCache();
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::DynamicTapDance DynamicTapDance;

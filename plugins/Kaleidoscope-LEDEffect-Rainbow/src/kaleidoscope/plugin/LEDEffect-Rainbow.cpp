@@ -96,8 +96,8 @@ void LEDRainbowWaveEffect::update_delay(byte delay) {
   rainbow_update_delay = delay;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDRainbowEffect LEDRainbowEffect;
 kaleidoscope::plugin::LEDRainbowWaveEffect LEDRainbowWaveEffect;

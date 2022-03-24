@@ -55,7 +55,8 @@ class LEDBreatheEffect : public Plugin,
     uint8_t last_update_ = 0;
   };
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDBreatheEffect LEDBreatheEffect;

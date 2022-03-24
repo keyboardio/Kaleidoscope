@@ -186,7 +186,7 @@ struct KeyboardProps: public base::KeyboardProps {
 template <typename _Props>
 class Keyboard: public base::Keyboard<_Props> {};
 
-}
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

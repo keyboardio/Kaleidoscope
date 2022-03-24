@@ -141,7 +141,7 @@ class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
 
 EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model01)
 
-}
+}  // namespace kaleidoscope
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \

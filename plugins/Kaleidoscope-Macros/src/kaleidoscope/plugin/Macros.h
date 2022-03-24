@@ -108,7 +108,7 @@ class Macros : public kaleidoscope::Plugin {
 
 };
 
-} // namespace plugin
-} // namespace kaleidosocpe
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Macros Macros;

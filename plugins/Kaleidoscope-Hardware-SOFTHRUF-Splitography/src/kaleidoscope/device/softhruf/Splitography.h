@@ -96,11 +96,11 @@ class Splitography;
     r2c0 ,r2c1 ,r2c2 ,r2c3 ,r2c4 ,r2c5 ,r2c6 ,r2c7 ,r2c8 ,r2c9 ,r2c10 ,r2c11,  \
     dflt ,dflt ,dflt ,dflt ,r3c4 ,r3c5 ,r3c6 ,r3c7 ,dflt ,dflt ,dflt  ,dflt
 
-}
-}
+}  // namespace softhruf
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::softhruf::Splitography)
 
-}
+}  // namespace kaleidoscope
 
 #endif

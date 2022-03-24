@@ -52,7 +52,7 @@ template <typename _DeviceProps>
 class ATmega32U4Keyboard;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

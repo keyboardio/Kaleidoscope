@@ -77,9 +77,9 @@ class SideFlash : public kaleidoscope::Plugin {
   }
 };
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

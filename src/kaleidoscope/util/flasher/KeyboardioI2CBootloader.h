@@ -220,8 +220,8 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
 
 };
 
-}
-}
-}
+}  // namespace flasher
+}  // namespace util
+}  // namespace kaleidoscope
 
 #endif

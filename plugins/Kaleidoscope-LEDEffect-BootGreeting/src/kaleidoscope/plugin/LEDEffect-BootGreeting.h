@@ -45,7 +45,8 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
   static KeyAddr key_addr_;
   static uint16_t start_time;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::BootGreetingEffect BootGreetingEffect;

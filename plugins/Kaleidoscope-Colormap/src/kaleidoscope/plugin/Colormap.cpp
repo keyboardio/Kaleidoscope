@@ -72,7 +72,7 @@ EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
                                            map_base_, max_layers_);
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::ColormapEffect ColormapEffect;

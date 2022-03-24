@@ -244,8 +244,8 @@ void RaiseSide::sendLEDBank(uint8_t bank) {
   uint8_t result = twi_.writeTo(data, ELEMENTS(data));
 }
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 #endif

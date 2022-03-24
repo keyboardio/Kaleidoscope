@@ -52,8 +52,9 @@ class Unicode : public kaleidoscope::Plugin {
   static Key linux_key_;
   static uint8_t input_delay_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 Key hexToKey(uint8_t hex);
 Key hexToKeysWithNumpad(uint8_t hex);

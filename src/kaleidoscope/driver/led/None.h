@@ -43,6 +43,6 @@ namespace led {
  */
 class None : public kaleidoscope::driver::led::Base<BaseProps> {};
 
-}
-}
-}
+}  // namespace led
+}  // namespace driver
+}  // namespace kaleidoscope

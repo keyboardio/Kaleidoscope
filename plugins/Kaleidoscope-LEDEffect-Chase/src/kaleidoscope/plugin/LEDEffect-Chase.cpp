@@ -69,7 +69,7 @@ void LEDChaseEffect::TransientLEDMode::update(void) {
     ::LEDControl.setCrgbAt(pos2, CRGB(0, 0, 255));
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDChaseEffect LEDChaseEffect;

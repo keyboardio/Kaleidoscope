@@ -230,8 +230,8 @@ class Qukeys : public kaleidoscope::Plugin {
 // shift keys. Used for determining if a qukey is a SpaceCadet-type key.
 bool isModifierKey(Key key);
 
-} // namespace plugin {
-} // namespace kaleidoscope {
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Qukeys Qukeys;
 

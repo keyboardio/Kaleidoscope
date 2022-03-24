@@ -65,8 +65,8 @@ class EscapeOneShotConfig : public Plugin {
   static uint16_t settings_base_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::EscapeOneShot EscapeOneShot;
 extern kaleidoscope::plugin::EscapeOneShotConfig EscapeOneShotConfig;

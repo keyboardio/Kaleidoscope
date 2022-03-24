@@ -81,7 +81,7 @@ EventHandlerResult NumPad::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::NumPad NumPad;

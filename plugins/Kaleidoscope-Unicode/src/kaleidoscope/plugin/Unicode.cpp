@@ -142,8 +142,8 @@ void Unicode::type(uint32_t unicode) {
   end();
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 __attribute__((weak)) Key hexToKey(uint8_t hex) {
   uint8_t m;

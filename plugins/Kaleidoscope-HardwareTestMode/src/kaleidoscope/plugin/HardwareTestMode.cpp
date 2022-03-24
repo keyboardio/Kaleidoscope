@@ -132,7 +132,7 @@ void HardwareTestMode::runTests() {
   testMatrix();
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::HardwareTestMode HardwareTestMode;

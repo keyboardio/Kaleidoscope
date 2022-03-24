@@ -118,7 +118,7 @@ void FocusSerial::printBool(bool b) {
   Runtime.serialPort().print((b) ? F("true") : F("false"));
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::FocusSerial Focus;

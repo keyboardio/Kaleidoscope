@@ -32,10 +32,10 @@ class Focus : public kaleidoscope::Plugin {
   EventHandlerResult onFocusEvent(const char *command);
 };
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 extern kaleidoscope::device::dygma::raise::Focus RaiseFocus;
 
