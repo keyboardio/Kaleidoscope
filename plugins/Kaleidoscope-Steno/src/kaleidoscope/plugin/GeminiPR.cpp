@@ -15,9 +15,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Steno.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/GeminiPR.h"
+
+#include <Arduino.h>                            // for F, __FlashStringHelper
+#include <HardwareSerial.h>                     // for HardwareSerial
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <stdint.h>                             // for uint8_t
+#include <string.h>                             // for memset
+
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn
 
 namespace kaleidoscope {
 namespace plugin {

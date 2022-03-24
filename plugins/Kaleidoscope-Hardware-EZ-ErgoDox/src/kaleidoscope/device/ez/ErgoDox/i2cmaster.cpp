@@ -10,11 +10,10 @@
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include <inttypes.h>
-#include <compat/twi.h>
-
 #include "kaleidoscope/device/ez/ErgoDox/i2cmaster.h"
 
+#include <compat/twi.h>
+#include <inttypes.h>
 
 /* define CPU frequency in Mhz here if not defined in Makefile */
 #ifndef F_CPU

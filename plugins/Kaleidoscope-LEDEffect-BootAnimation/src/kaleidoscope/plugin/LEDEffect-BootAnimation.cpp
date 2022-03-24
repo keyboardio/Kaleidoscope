@@ -15,8 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-BootAnimation.h"
-#include "kaleidoscope/layers.h"
+#include "Kaleidoscope/plugin/LEDEffect-BootAnimation.h"
+
+#include <Arduino.h>                            // for PROGMEM, pgm_read_byte
+#include <stdint.h>                             // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for CRGB, cRGB
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_O, Key_A, Key_B
+#include "kaleidoscope/layers.h"                // for Layer, Layer_
+#include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

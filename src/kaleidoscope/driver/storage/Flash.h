@@ -27,9 +27,10 @@
 
 #ifdef __SAMD21G18A__
 
-#include "kaleidoscope/driver/storage/Base.h"
-#include <FlashStorage.h>
 #include <FlashAsEEPROM.h>
+#include <FlashStorage.h>
+
+#include "kaleidoscope/driver/storage/Base.h"
 
 // We need to undefine Flash, because `FlashStorage` defines it as a macro, yet,
 // we want to use it as a class name.

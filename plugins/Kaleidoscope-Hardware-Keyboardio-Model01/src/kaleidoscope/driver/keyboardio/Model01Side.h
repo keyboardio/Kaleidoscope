@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include "wire-protocol-constants.h"
+// System headers
+#include <stdint.h>  // for uint8_t, uint32_t
 
 // We allow cRGB/CRGB to be defined already when this is included.
 //
@@ -97,8 +97,6 @@ class Model01Side {
   void sendLEDBank(uint8_t bank);
   int readRegister(uint8_t cmd);
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model01Side;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 } // namespace keyboardio

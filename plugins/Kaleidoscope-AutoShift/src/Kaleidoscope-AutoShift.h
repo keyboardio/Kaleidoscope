@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/AutoShift.h>
+#include "kaleidoscope/plugin/AutoShift.h"  // IWYU pragma: export

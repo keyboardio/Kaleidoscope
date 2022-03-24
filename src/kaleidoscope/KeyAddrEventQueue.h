@@ -17,13 +17,15 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <Arduino.h>                       // for bitRead, bitWrite
+#include <stdint.h>                        // for uint8_t, uint16_t
 //#include <assert.h>
 
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/KeyAddr.h"          // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"         // for KeyEvent, KeyEventId
+#include "kaleidoscope/Runtime.h"          // for Runtime, Runtime_
+#include "kaleidoscope/key_defs.h"         // for Key_Undefined
+#include "kaleidoscope/keyswitch_state.h"  // for IS_PRESSED, WAS_PRESSED
 
 namespace kaleidoscope {
 

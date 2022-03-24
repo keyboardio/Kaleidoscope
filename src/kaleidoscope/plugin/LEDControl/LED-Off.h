@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include "Kaleidoscope-LEDControl.h"
+#include "kaleidoscope/KeyAddr.h"         // for KeyAddr
+#include "kaleidoscope/plugin/LEDMode.h"  // for LEDMode
 
 namespace kaleidoscope {
 namespace plugin {

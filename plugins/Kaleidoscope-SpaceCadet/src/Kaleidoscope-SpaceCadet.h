@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/SpaceCadet.h>
+#include "kaleidoscope/plugin/SpaceCadet.h"  // IWYU pragma: export

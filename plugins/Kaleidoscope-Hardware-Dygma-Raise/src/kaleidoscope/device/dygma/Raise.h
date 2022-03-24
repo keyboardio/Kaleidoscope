@@ -25,12 +25,12 @@
 
 #define CRGB(r,g,b) (cRGB){b, g, r}
 
-#include "kaleidoscope/driver/keyscanner/Base.h"
-#include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/led/Base.h"
-#include "kaleidoscope/driver/bootloader/samd/Bossac.h"
-#include "kaleidoscope/driver/storage/Flash.h"
 #include "kaleidoscope/device/Base.h"
+#include "kaleidoscope/driver/bootloader/samd/Bossac.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
+#include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/driver/storage/Flash.h"
 #include "kaleidoscope/util/flasher/KeyboardioI2CBootloader.h"
 
 namespace kaleidoscope {

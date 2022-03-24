@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/macro_helpers.h"  // for __NL__, UNWRAP, ADD_TEMPLATE...
 
 #define DEFINE_HAS_METHOD_TRAITS(PREFIX,                                       \
                                  TMPL_PARAM_TYPE_LIST, TMPL_PARAM_LIST,        \

@@ -18,8 +18,9 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
+#include "kaleidoscope/device/dygma/raise/RaiseSide.h"
+
 #include <Arduino.h>
-#include "RaiseSide.h"
 
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 

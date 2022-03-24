@@ -17,4 +17,4 @@
  */
 
 #pragma once
-#include "kaleidoscope/device/ez/ErgoDox.h"
+#include "kaleidoscope/device/ez/ErgoDox.h"  // IWYU pragma: export

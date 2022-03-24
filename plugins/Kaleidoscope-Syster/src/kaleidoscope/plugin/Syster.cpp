@@ -15,11 +15,18 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-Syster.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/Syster.h"
 
-#undef SYSTER
+#include <Arduino.h>                            // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <stdint.h>                             // for int8_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Backspace
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, WAS_PRESSED
 
 namespace kaleidoscope {
 namespace plugin {

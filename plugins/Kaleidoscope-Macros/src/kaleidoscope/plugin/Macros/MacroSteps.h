@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <stdint.h>  // for uint8_t
+
 typedef enum {
   MACRO_ACTION_END,
 

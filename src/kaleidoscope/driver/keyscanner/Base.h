@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <stdint.h>                   // for uint8_t
 
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/MatrixAddr.h"
+#include "kaleidoscope/MatrixAddr.h"  // for MatrixAddr
+#include "kaleidoscope/key_defs.h"    // for Key
 
 namespace kaleidoscope {
 namespace driver {

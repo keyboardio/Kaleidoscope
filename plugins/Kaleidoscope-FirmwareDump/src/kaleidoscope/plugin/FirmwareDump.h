@@ -23,7 +23,10 @@
 
 #ifdef __AVR__
 
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>                             // for uint16_t
+
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 namespace kaleidoscope {
 namespace plugin {

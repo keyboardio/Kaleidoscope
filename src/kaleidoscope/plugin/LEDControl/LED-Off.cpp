@@ -16,6 +16,8 @@
 
 #include "kaleidoscope/plugin/LEDControl/LED-Off.h"
 
+#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
+
 namespace kaleidoscope {
 namespace plugin {
 void LEDOff::onActivate(void) {

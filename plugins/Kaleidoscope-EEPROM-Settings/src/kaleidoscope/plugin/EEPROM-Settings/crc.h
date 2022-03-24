@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <stdint.h>  // for uint8_t, uint16_t
 
 class CRC_ {
  public:

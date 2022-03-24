@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/softhruf/Splitography.h"
+#include "kaleidoscope/device/softhruf/Splitography.h"  // IWYU pragma: export

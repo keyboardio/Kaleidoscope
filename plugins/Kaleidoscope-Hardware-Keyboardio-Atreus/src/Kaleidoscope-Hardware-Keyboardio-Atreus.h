@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Atreus2.h"
+#include "kaleidoscope/device/keyboardio/Atreus2.h"  // IWYU pragma: export

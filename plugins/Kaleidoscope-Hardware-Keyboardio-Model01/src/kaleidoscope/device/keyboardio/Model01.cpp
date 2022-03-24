@@ -17,14 +17,24 @@
 
 #ifdef ARDUINO_AVR_MODEL01
 
-#include "Arduino.h"                                 // for PROGMEM
-#include "kaleidoscope/device/keyboardio/Model01.h"  // for Model01LEDDriver...
-#include "kaleidoscope/driver/keyscanner/Base_Impl.h"
+#include "kaleidoscope/device/keyboardio/Model01.h"
+
+// System headers
+#include <stdint.h>                                  // for uint8_t
+
+// Arduino headers
+#include <Arduino.h>                                 // for PROGMEM
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
+// Kaleidoscope headers
+#include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // IWYU pragma: keep
+
+// Kaleidoscope-Hardware-Keyboardio-Model01 headers
+#include "kaleidoscope/driver/keyboardio/Model01Side.h"
 
 namespace kaleidoscope {
 namespace device {

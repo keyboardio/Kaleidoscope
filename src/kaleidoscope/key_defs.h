@@ -16,16 +16,18 @@
 
 #pragma once
 
+#include <Arduino.h>                        // for pgm_read_byte, INPUT
 #include <stdint.h>                         // for uint8_t, uint16_t
 
-#include <Arduino.h>                        // for pgm_read_byte, INPUT
-
 #include "kaleidoscope/HIDTables.h"         // for HID_KEYBOARD_LEFT_CONTROL
-#include "kaleidoscope/key_defs/keyboard.h"
-#include "kaleidoscope/key_defs/sysctl.h"
-#include "kaleidoscope/key_defs/consumerctl.h"
-#include "kaleidoscope/key_defs/keymaps.h"  // for LAYER_SHIFT_OFFSET
+
+// IWYU pragma: begin_exports
 #include "kaleidoscope/key_defs/aliases.h"
+#include "kaleidoscope/key_defs/consumerctl.h"
+#include "kaleidoscope/key_defs/keyboard.h"
+#include "kaleidoscope/key_defs/keymaps.h"  // for LAYER_MOVE_OFFSET, LAYER_...
+#include "kaleidoscope/key_defs/sysctl.h"
+// IWYU pragma: end_exports
 
 // -----------------------------------------------------------------------------
 // Constant keycode values

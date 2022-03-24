@@ -22,12 +22,14 @@
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+#include "kaleidoscope/driver/keyboardio/Model100Side.h"
+
 #include <Arduino.h>
-#include "Model100Side.h"
 #include <Wire.h>
 #include <utility/twi.h>
 
 #include "kaleidoscope/driver/color/GammaCorrection.h"
+#include "kaleidoscope/driver/keyboardio/wire-protocol-constants.h"
 
 namespace kaleidoscope {
 namespace driver {

@@ -19,14 +19,13 @@
 
 #if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
-#include <Arduino.h>
-#include "kaleidoscope/device/Base.h"
-
-#include "kaleidoscope/driver/mcu/ATmega32U4.h"
-#include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/keyscanner/ATmega.h"
-#include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+// IWYU pragma: begin_exports
+#include "kaleidoscope/device/Base.h"                           // for BaseP...
+#include "kaleidoscope/driver/hid/Keyboardio.h"                 // for Keybo...
+#include "kaleidoscope/driver/mcu/ATmega32U4.h"                 // for ATmeg...
+#include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"  // for ATmeg...
+#include "kaleidoscope/driver/storage/AVREEPROM.h"              // for AVREE...
+// IWYU pragma: end_exports
 
 namespace kaleidoscope {
 namespace device {

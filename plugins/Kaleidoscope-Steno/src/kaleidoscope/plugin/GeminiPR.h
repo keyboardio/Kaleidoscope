@@ -17,10 +17,14 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-Ranges.h>                // for STENO_FIRST
+#include <stdint.h>                             // for uint8_t
 
 #define S(n) Key(kaleidoscope::plugin::steno::geminipr::n)
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                // for Plugin
+
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/NumPad.h"
+#include "kaleidoscope/plugin/NumPad.h"  // IWYU pragma: export

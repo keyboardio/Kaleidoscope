@@ -33,7 +33,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <stdint.h>  // for uint16_t, uint8_t
 
 static inline uint16_t _crc16_update(uint16_t crc, uint8_t data) __attribute__((always_inline, unused));
 static inline uint16_t _crc16_update(uint16_t crc, uint8_t data) {

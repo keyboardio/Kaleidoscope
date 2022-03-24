@@ -15,12 +15,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/plugin/AutoShift.h"
+#include "kaleidoscope/plugin/AutoShift.h"  // IWYU pragma: associated
 
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include <Arduino.h>                              // for PSTR, strcmp_P, str...
+#include <Kaleidoscope-EEPROM-Settings.h>         // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>             // for Focus, FocusSerial
+#include <stdint.h>                               // for uint16_t, uint8_t
 
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
+#include "kaleidoscope/device/Base.h"             // for Base<>::Storage
+#include "kaleidoscope/device/virtual/Virtual.h"  // for VirtualProps::Storage
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
 
 namespace kaleidoscope {
 namespace plugin {

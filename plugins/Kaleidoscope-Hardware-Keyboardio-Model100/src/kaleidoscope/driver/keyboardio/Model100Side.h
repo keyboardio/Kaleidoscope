@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <Arduino.h>
-#include "wire-protocol-constants.h"
+#include <Arduino.h>  // for byte
+#include <stdint.h>   // for uint8_t, uint32_t
 
 // We allow cRGB/CRGB to be defined already when this is included.
 //
@@ -105,8 +105,6 @@ class Model100Side {
   int readRegister(uint8_t cmd);
   uint8_t writeData(uint8_t* data, uint8_t length);
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Model100Side;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 } // namespace keyboardio

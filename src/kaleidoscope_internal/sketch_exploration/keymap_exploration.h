@@ -16,7 +16,10 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs.h"
+#include <stdint.h>                 // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"   // for KeyAddr
+#include "kaleidoscope/key_defs.h"  // for Key, Key_NoKey
 
 namespace kaleidoscope { // NOLINT(build/namespaces)
 namespace sketch_exploration { // NOLINT(build/namespaces)
@@ -174,11 +177,6 @@ struct HasKey {
 
   Key k_;
 };
-
-// This class is actually defined and implemented in _INIT_KEYMAP_EXPLORATION
-// which is invoked by KALEIDOSCOPE_INIT_PLUGINS
-//
-class KeymapInterface;
 
 extern void pluginsExploreSketch();
 

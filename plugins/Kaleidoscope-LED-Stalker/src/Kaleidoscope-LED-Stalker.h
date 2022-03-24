@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/LED-Stalker.h>
+#include "kaleidoscope/plugin/LED-Stalker.h"  // IWYU pragma: export

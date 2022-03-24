@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/storage/Base.h"
+#include "kaleidoscope/driver/storage/Base.h"  // for Base, BaseProps (ptr o...
 
 namespace kaleidoscope {
 namespace driver {

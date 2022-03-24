@@ -29,10 +29,10 @@
 
 #include <avr/wdt.h>
 
-#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
-#include "kaleidoscope/keyswitch_state.h"
 #include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace device {

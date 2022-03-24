@@ -18,7 +18,7 @@
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
-#include <stdint.h>
+#include <stdint.h>  // for uint8_t
 
 namespace kaleidoscope {
 

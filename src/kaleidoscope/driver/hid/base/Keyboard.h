@@ -16,9 +16,10 @@
  */
 
 #pragma once
-#include <Arduino.h>
 
-#include "kaleidoscope/key_defs.h"
+#include <stdint.h>                 // for uint8_t
+
+#include "kaleidoscope/key_defs.h"  // for Key, Key_LeftAlt, Key_LeftControl
 
 #ifndef HID_BOOT_PROTOCOL
 #define HID_BOOT_PROTOCOL 0

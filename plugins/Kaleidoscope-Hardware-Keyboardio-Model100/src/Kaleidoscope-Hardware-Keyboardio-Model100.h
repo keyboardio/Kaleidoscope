@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Model100.h"
+#include "kaleidoscope/device/keyboardio/Model100.h"  // IWYU pragma: export

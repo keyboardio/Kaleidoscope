@@ -16,7 +16,9 @@
 
 #pragma once
 
-#include "kaleidoscope/KeyAddrMap.h"
+#include "kaleidoscope/KeyAddr.h"     // for KeyAddr
+#include "kaleidoscope/KeyAddrMap.h"  // for KeyAddrMap
+#include "kaleidoscope/key_defs.h"    // for Key
 
 namespace kaleidoscope {
 

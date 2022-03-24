@@ -15,6 +15,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// IWYU pragma: private, include "kaleidoscope/device/device.h"
+
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Model01.h"
+#include "kaleidoscope/device/keyboardio/Model01.h"  // IWYU pragma: export

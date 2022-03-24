@@ -16,12 +16,10 @@
  */
 
 #pragma once
-#include <Arduino.h>
-#include "kaleidoscope/key_defs.h"
 
-#include "base/Keyboard.h"
-#include "base/Mouse.h"
-#include "base/AbsoluteMouse.h"
+#include "base/AbsoluteMouse.h"  // for AbsoluteMouse, AbsoluteMouseProps
+#include "base/Keyboard.h"       // for Keyboard, KeyboardProps
+#include "base/Mouse.h"          // for Mouse, MouseProps
 
 namespace kaleidoscope {
 namespace driver {

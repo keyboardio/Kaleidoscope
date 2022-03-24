@@ -16,11 +16,13 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include <Kaleidoscope-Ranges.h>
+#include <Kaleidoscope-Ranges.h>                // for DYNAMIC_MACRO_FIRST
+#include <stdint.h>                             // for uint16_t, uint8_t
 
-#include "kaleidoscope/plugin/Macros/MacroSteps.h"
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 #define DM(n) ::kaleidoscope::plugin::DynamicMacrosKey(n)
 

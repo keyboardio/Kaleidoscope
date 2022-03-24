@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/GeminiPR.h>
+#include "kaleidoscope/plugin/GeminiPR.h"  // IWYU pragma: export

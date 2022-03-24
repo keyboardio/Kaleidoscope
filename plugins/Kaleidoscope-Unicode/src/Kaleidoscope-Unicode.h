@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Unicode.h>
+#include "kaleidoscope/plugin/Unicode.h"  // IWYU pragma: export

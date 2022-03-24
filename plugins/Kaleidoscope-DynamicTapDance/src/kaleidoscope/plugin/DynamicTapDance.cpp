@@ -15,12 +15,21 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-DynamicTapDance.h"
+#include "kaleidoscope/plugin/DynamicTapDance.h"
 
-#include <Kaleidoscope-EEPROM-Settings.h>
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope/Runtime.h"
-#include "kaleidoscope/KeyEvent.h"
+#include <Arduino.h>                            // for PSTR, F, __FlashStrin...
+#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <stdint.h>                             // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"       // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/plugin/TapDance.h"       // for TapDance, TapDance::A...
 
 namespace kaleidoscope {
 namespace plugin {

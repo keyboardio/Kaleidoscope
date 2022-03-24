@@ -18,8 +18,8 @@
 
 #include <stdint.h>                 // for uint8_t, int8_t
 
-#include "kaleidoscope/key_defs.h"  // for Key, Key_NoKey
 #include "kaleidoscope/KeyAddr.h"   // for KeyAddr
+#include "kaleidoscope/key_defs.h"  // for Key_Undefined, Key
 
 namespace kaleidoscope {
 

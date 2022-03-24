@@ -15,8 +15,20 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-LED-AlphaSquare.h>
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/LED-AlphaSquare/Effect.h"
+
+#include <stdint.h>                               // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                // for KeyEvent
+#include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"           // for Device, CRGB
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                // for Key, Key_NoKey, Key_0
+#include "kaleidoscope/keyswitch_state.h"         // for keyIsInjected
+#include "kaleidoscope/plugin/LEDControl.h"       // for LEDControl
+
+#include "kaleidoscope/plugin/LED-AlphaSquare.h"  // for AlphaSquare
 
 namespace kaleidoscope {
 namespace plugin {

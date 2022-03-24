@@ -17,8 +17,10 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-LEDControl.h>
+#include "kaleidoscope/device/device.h"            // for cRGB
+#include "kaleidoscope/plugin.h"                   // for Plugin
+#include "kaleidoscope/plugin/LEDMode.h"           // for LEDMode
+#include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
 
 namespace kaleidoscope {
 namespace plugin {

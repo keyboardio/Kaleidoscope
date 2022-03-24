@@ -27,7 +27,7 @@
 
 #ifdef ARDUINO_AVR_ERGODOX
 
-#include <Arduino.h>
+#include <stdint.h>
 
 namespace kaleidoscope {
 namespace device {

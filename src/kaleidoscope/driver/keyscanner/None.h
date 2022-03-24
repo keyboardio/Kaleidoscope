@@ -17,9 +17,7 @@
 
 #pragma once
 
-#include <Arduino.h>
-
-#include "kaleidoscope/driver/keyscanner/Base.h"
+#include "kaleidoscope/driver/keyscanner/Base.h"  // for BaseProps, Base
 
 namespace kaleidoscope {
 namespace driver {

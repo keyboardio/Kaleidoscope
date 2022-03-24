@@ -14,9 +14,23 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-DynamicMacros.h"
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/plugin/DynamicMacros.h"
+
+#include <Arduino.h>                                // for delay, PSTR, strc...
+#include <Kaleidoscope-FocusSerial.h>               // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>                    // for DYNAMIC_MACRO_FIRST
+
+#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
+#include "kaleidoscope/Runtime.h"                   // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"             // for VirtualProps::Sto...
+#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED
+#include "kaleidoscope/plugin/EEPROM-Settings.h"    // for EEPROMSettings
+
+// This is a special exception to the rule of only including a plugin's
+// top-level header file, because DynamicMacros doesn't depend on the Macros
+// plugin itself; it's just using the same macro step definitions.
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for MACRO_ACTION_END
 
 namespace kaleidoscope {
 namespace plugin {
@@ -176,7 +190,7 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
+        key.setKeyCode(Runtime.storage().read(pos++));
         if (key == Key_NoKey)
           break;
         tap(key);
@@ -187,7 +201,7 @@ void DynamicMacros::play(uint8_t macro_id) {
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
       while (true) {
         key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(pos++));
+        key.setKeyCode(Runtime.storage().read(pos++));
         if (key.getKeyCode() == 0)
           break;
         tap(key);

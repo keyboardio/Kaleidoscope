@@ -16,4 +16,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/HardwareTestMode.h"
+#include "kaleidoscope/plugin/HardwareTestMode.h"  // IWYU pragma: export

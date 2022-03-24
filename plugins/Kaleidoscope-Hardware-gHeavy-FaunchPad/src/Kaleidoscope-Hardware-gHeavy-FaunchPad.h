@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/gheavy/FaunchPad.h"
+#include "kaleidoscope/device/gheavy/FaunchPad.h"  // IWYU pragma: export

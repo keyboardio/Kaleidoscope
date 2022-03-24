@@ -15,11 +15,14 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-OneShot.h>
-#include <Kaleidoscope-Escape-OneShot.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/plugin/Escape-OneShot.h"
+
+#include <Kaleidoscope-OneShot.h>               // for OneShot
+
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Escape, Key_...
+#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyTog...
 
 namespace kaleidoscope {
 namespace plugin {

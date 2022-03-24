@@ -16,6 +16,8 @@
 
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"
 
+#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
+
 cRGB
 breath_compute(uint8_t hue, uint8_t saturation, uint8_t phase_offset) {
 

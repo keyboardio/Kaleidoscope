@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Redial.h>
+#include "kaleidoscope/plugin/Redial.h"  // IWYU pragma: export

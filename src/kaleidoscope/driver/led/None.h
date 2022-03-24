@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <stdint.h>                        // for uint8_t
+
 #ifndef CRGB
 
 struct cRGB {
@@ -27,7 +29,7 @@ struct cRGB {
 
 #endif
 
-#include "kaleidoscope/driver/led/Base.h"
+#include "kaleidoscope/driver/led/Base.h"  // for Base, BaseProps (ptr only)
 
 namespace kaleidoscope {
 namespace driver {

@@ -16,9 +16,10 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs.h"    // for Key, Key_NoKey, Key_Transparent
 #include "kaleidoscope/KeyAddr.h"     // for KeyAddr
+#include "kaleidoscope/KeyAddrMap.h"  // for KeyAddrMap<>::Iterator, KeyAddrMap
 #include "kaleidoscope/KeyMap.h"      // for KeyMap
+#include "kaleidoscope/key_defs.h"    // for Key, Key_Masked, Key_Inactive
 
 namespace kaleidoscope {
 

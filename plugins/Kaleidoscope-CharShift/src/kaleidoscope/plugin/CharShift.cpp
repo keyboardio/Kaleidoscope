@@ -17,15 +17,21 @@
 
 #include "kaleidoscope/plugin/CharShift.h"
 
-#include <Kaleidoscope-Ranges.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include <Arduino.h>                                      // for F, __FlashS...
+#include <Kaleidoscope-FocusSerial.h>                     // for Focus, Focu...
+#include <Kaleidoscope-Ranges.h>                          // for CS_FIRST
 
-#include "kaleidoscope/KeyAddr.h"
-#include "kaleidoscope/key_defs.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/progmem_helpers.h"
-#include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<...
+#include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
+#include "kaleidoscope/KeyMap.h"                          // for KeyMap
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
+#include "kaleidoscope/Runtime.h"                         // for Runtime
+#include "kaleidoscope/device/Base.h"                     // for Base<>::HID
+#include "kaleidoscope/device/virtual/Virtual.h"          // for VirtualProp...
+#include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
+#include "kaleidoscope/key_defs.h"                        // for Key, Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
+#include "kaleidoscope/progmem_helpers.h"                 // for cloneFromPr...
 
 namespace kaleidoscope {
 namespace plugin {

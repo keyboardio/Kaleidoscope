@@ -17,12 +17,20 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>
-#include "kaleidoscope/KeyEventTracker.h"
-#include "kaleidoscope/plugin.h"
+#include <Kaleidoscope-Ranges.h>                 // for LEAD_FIRST
+#include <stddef.h>                              // for NULL
+#include <stdint.h>                              // for uint16_t, uint8_t
+
+#include "kaleidoscope/KeyEvent.h"               // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"        // for KeyEventTracker
+#include "kaleidoscope/event_handler_result.h"   // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"               // for Key, Key_NoKey
+#include "kaleidoscope/plugin.h"                 // for Plugin
 
 // -----------------------------------------------------------------------------
 // Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
 #define _DEPRECATED_MESSAGE_LEADER_INJECT                               \
   "The `Leader.inject()` function is deprecated. Please call\n"         \
   "`kaleidoscope::Runtime.handleKeyEvent()` directly instead.\n"        \

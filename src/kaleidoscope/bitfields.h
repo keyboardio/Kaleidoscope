@@ -16,8 +16,9 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
+#include <Arduino.h>  // for PROGMEM
+#include <stddef.h>   // for size_t
+#include <stdint.h>   // for uint8_t
 
 namespace kaleidoscope {
 namespace bitfields {

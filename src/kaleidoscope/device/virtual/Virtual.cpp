@@ -18,20 +18,28 @@
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/device/virtual/Virtual.h"
-#include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"
-#include "kaleidoscope/device/virtual/Logging.h"
 
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/MatrixAddr.h"
-#include "kaleidoscope/key_defs.h"
+// From system:
+#include <stdint.h>                               // for uint8_t, uint16_t
+#include <stdlib.h>                               // for exit, size_t
 
+// From Arduino:
+#include <EEPROM.h>                               // for EEPROMClass, EERef
+#include <virtual_io.h>                           // for getLineOfInput, isI...
 
-#include "HIDReportObserver.h"
-#include "virtual_io.h"
-#include "EEPROM.h"
+// From KeyboardioHID:
+#include <HIDReportObserver.h>                    // for HIDReportObserver
 
-#include <sstream>
-#include <string>
+// From Kaleidoscope:
+#include "kaleidoscope/KeyAddr.h"                 // for MatrixAddr, MatrixA...
+#include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"  // for DefaultHIDReportCon...
+#include "kaleidoscope/device/virtual/Logging.h"  // for log_error, logging
+#include "kaleidoscope/key_defs.h"                // for Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"         // for IS_PRESSED, WAS_PRE...
+
+// These must come after other headers:
+#include <sstream>                                // for operator<<, string
+#include <string>                                 // for operator==, char_tr...
 
 // FIXME: This relates to virtual/cores/arduino/EEPROM.h.
 //        EEPROM static data must be defined here as only

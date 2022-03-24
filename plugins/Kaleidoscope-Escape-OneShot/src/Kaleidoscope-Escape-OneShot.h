@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Escape-OneShot.h>
+#include "kaleidoscope/plugin/Escape-OneShot.h"  // IWYU pragma: export

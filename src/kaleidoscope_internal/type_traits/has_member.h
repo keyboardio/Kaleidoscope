@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/macro_helpers.h"  // for __NL__
 
 // The following code has been stolen from
 //

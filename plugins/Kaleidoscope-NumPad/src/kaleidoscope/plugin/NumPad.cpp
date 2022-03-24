@@ -14,8 +14,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-NumPad.h"
-#include "kaleidoscope/layers.h"
+#include "kaleidoscope/plugin/NumPad.h"
+
+#include <stdint.h>                                   // for uint8_t
+
+#include "kaleidoscope/KeyAddr.h"                     // for KeyAddr, Matrix...
+#include "kaleidoscope/device/device.h"               // for cRGB, CRGB
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                    // for Key, KEY_FLAGS
+#include "kaleidoscope/layers.h"                      // for Layer, Layer_
+#include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for breath_compute
 
 namespace kaleidoscope {
 namespace plugin {

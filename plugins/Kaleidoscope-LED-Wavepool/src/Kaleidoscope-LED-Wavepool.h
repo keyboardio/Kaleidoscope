@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/LED-Wavepool.h>
+#include "kaleidoscope/plugin/LED-Wavepool.h"  // IWYU pragma: export

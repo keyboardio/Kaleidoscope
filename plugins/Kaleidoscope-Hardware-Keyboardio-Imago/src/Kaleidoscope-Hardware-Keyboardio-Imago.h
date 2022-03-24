@@ -18,4 +18,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/keyboardio/Imago.h"
+#include "kaleidoscope/device/keyboardio/Imago.h"  // IWYU pragma: export

@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/TopsyTurvy.h>
+#include "kaleidoscope/plugin/TopsyTurvy.h"  // IWYU pragma: export

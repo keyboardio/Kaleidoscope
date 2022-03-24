@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/EEPROM-Settings.h>
+#include "kaleidoscope/plugin/EEPROM-Settings.h"  // IWYU pragma: export

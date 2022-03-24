@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Leader.h>
+#include "kaleidoscope/plugin/Leader.h"  // IWYU pragma: export

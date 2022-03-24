@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/OneShot.h>
+#include "kaleidoscope/plugin/OneShot.h"  // IWYU pragma: export

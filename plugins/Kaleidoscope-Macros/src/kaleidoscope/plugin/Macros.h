@@ -16,11 +16,14 @@
 
 #pragma once
 
-#include "kaleidoscope/Runtime.h"
+#include <stdint.h>                                 // for uint8_t
 
-#include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"
-#include "kaleidoscope/plugin/Macros/MacroSteps.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "Kaleidoscope-Ranges.h"                    // for MACRO_FIRST, MACR...
+#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                  // for Key
+#include "kaleidoscope/plugin.h"                    // for Plugin
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE
 
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.

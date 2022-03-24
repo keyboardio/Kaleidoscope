@@ -18,14 +18,17 @@
 
 #include "kaleidoscope/plugin/Qukeys.h"
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-#include <Kaleidoscope-FocusSerial.h>
-#include "kaleidoscope/progmem_helpers.h"
-#include "kaleidoscope/layers.h"
-#include "kaleidoscope/KeyEvent.h"
-#include "kaleidoscope/KeyEventTracker.h"
-#include "kaleidoscope/KeyAddrEventQueue.h"
+#include <Arduino.h>                         // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>             // for DUL_FIRST, DUM_FIRST
+
+#include "kaleidoscope/KeyAddrEventQueue.h"  // for KeyAddrEventQueue
+#include "kaleidoscope/KeyEvent.h"           // for KeyEvent
+#include "kaleidoscope/KeyEventTracker.h"    // for KeyEventTracker
+#include "kaleidoscope/Runtime.h"            // for Runtime, Runtime_
+#include "kaleidoscope/keyswitch_state.h"    // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/layers.h"             // for Layer, Layer_
+#include "kaleidoscope/progmem_helpers.h"    // for cloneFromProgmem
 
 namespace kaleidoscope {
 namespace plugin {

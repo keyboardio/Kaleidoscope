@@ -18,9 +18,11 @@
 
 #ifdef ARDUINO_SAMD_RAISE
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-FocusSerial.h>
 #include "kaleidoscope/device/dygma/raise/Focus.h"
+
+#include <Kaleidoscope-FocusSerial.h>
+
+#include "kaleidoscope/Runtime.h"
 
 namespace kaleidoscope {
 namespace device {

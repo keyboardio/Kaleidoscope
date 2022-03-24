@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <Arduino.h>  // IWYU pragma: keep
+
 #include "kaleidoscope/driver/bootloader/Base.h"
 
 namespace kaleidoscope {

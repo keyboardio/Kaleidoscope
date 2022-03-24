@@ -17,10 +17,12 @@
 
 #pragma once
 
+#include <stdint.h>                            // for uint16_t, uint8_t
 #if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
-#include "kaleidoscope/driver/storage/Base.h"
-#include <EEPROM.h>
+#include <EEPROM.h>                            // for EEPROM, EEPROMClass
+
+#include "kaleidoscope/driver/storage/Base.h"  // for Base, BaseProps
 
 namespace kaleidoscope {
 namespace driver {

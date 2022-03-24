@@ -15,8 +15,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-MagicCombo.h>
-#include <Kaleidoscope-FocusSerial.h>
+#include "kaleidoscope/plugin/MagicCombo.h"
+
+#include <Arduino.h>                            // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <stdint.h>                             // for uint16_t, int8_t, uin...
+
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for Device
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 
 namespace kaleidoscope {
 namespace plugin {

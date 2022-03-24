@@ -15,8 +15,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-WinKeyToggle.h>
+#include "kaleidoscope/plugin/WinKeyToggle.h"
+
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftGui, Key...
 
 namespace kaleidoscope {
 namespace plugin {

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/mcu/Base.h"
+#include "kaleidoscope/driver/mcu/Base.h"  // for Base, BaseProps (ptr only)
 
 namespace kaleidoscope {
 namespace driver {

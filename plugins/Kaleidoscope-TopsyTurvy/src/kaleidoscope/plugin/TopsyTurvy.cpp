@@ -15,9 +15,19 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Kaleidoscope-TopsyTurvy.h>
-#include "kaleidoscope/keyswitch_state.h"
-#include "kaleidoscope/LiveKeys.h"
+#include "kaleidoscope/plugin/TopsyTurvy.h"
+
+#include <Kaleidoscope-Ranges.h>                          // for TT_FIRST
+
+#include "kaleidoscope/KeyAddr.h"                         // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
+#include "kaleidoscope/Runtime.h"                         // for Runtime
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID
+#include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
+#include "kaleidoscope/event_handler_result.h"            // for EventHandle...
+#include "kaleidoscope/key_defs.h"                        // for Key, Key_Le...
+#include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
 
 namespace kaleidoscope {
 namespace plugin {

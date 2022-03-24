@@ -17,7 +17,8 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <Arduino.h>  // for PROGMEM, F
+#include <stddef.h>   // for size_t
 
 #ifndef ARDUINOTRACE_ENABLE
 #define ARDUINOTRACE_ENABLE 1

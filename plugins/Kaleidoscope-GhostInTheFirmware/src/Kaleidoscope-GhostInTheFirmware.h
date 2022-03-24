@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/GhostInTheFirmware.h>
+#include "kaleidoscope/plugin/GhostInTheFirmware.h"  // IWYU pragma: export

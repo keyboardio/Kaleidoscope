@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/Heatmap.h>
+#include "kaleidoscope/plugin/Heatmap.h"  // IWYU pragma: export

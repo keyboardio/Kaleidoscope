@@ -16,10 +16,11 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <Arduino.h>               // for bitClear, bitRead, bitSet, bitWrite
+#include <stdint.h>                // for uint8_t
+#include <string.h>                // for memset
 
-#include "kaleidoscope/KeyAddr.h"
-
+#include "kaleidoscope/KeyAddr.h"  // for KeyAddr
 
 namespace kaleidoscope {
 

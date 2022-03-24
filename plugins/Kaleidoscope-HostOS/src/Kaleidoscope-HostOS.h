@@ -17,5 +17,5 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/HostOS.h>
-#include <kaleidoscope/plugin/HostOS-Focus.h>
+#include "kaleidoscope/plugin/HostOS-Focus.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/HostOS.h"  // IWYU pragma: export

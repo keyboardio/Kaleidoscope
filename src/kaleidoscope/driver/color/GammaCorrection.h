@@ -17,7 +17,8 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <Arduino.h>  // for PROGMEM
+#include <stdint.h>   // for uint8_t
 
 namespace kaleidoscope {
 namespace driver {

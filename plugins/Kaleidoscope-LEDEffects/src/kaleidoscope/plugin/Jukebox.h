@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/TriColor.h>
+#include "kaleidoscope/plugin/TriColor.h"  // for TriColor
 
 extern kaleidoscope::plugin::TriColor JukeboxEffect;
 extern kaleidoscope::plugin::TriColor JukeboxAlternateEffect;

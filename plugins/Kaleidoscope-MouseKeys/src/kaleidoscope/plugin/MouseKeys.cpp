@@ -14,14 +14,22 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Arduino.h>
+#include "kaleidoscope/plugin/MouseKeys.h"
 
-#include "MouseKeys.h"
-#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
+#include <Arduino.h>                                           // for F, __F...
+#include <Kaleidoscope-FocusSerial.h>                          // for Focus
+#include <stdint.h>                                            // for uint8_t
 
-#include "kaleidoscope/Runtime.h"
-#include "Kaleidoscope-FocusSerial.h"
-#include "kaleidoscope/keyswitch_state.h"
+#include "kaleidoscope/KeyEvent.h"                             // for KeyEvent
+#include "kaleidoscope/Runtime.h"                              // for Runtime
+#include "kaleidoscope/device/device.h"                        // for Base<>...
+#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for Absolu...
+#include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse
+#include "kaleidoscope/event_handler_result.h"                 // for EventH...
+#include "kaleidoscope/key_defs.h"                             // for Key
+#include "kaleidoscope/keyswitch_state.h"                      // for keyTog...
+#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"        // for KEY_MO...
+#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseW...
 
 namespace kaleidoscope {
 namespace plugin {

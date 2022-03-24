@@ -21,8 +21,9 @@
 
 #include <Arduino.h>
 
-#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
+#include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
+#include "kaleidoscope/driver/keyscanner/ATmega.h"
 
 namespace kaleidoscope {
 namespace device {

@@ -15,11 +15,16 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
-#include "kaleidoscope/Runtime.h"
-#include <Kaleidoscope-Ranges.h>
-
 #pragma once
+
+#include <Kaleidoscope-Ranges.h>                // for TURBO
+#include <stdint.h>                             // for uint16_t, uint32_t
+
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/device/device.h"         // for cRGB
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 constexpr Key Key_Turbo = Key(kaleidoscope::ranges::TURBO);
 

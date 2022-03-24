@@ -16,6 +16,7 @@
  */
 
 #include <Kaleidoscope.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-GhostInTheFirmware.h>
 #include <Kaleidoscope-LED-Stalker.h>
 #include <Kaleidoscope-Macros.h>

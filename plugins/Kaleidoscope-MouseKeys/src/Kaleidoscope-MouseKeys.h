@@ -16,4 +16,5 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/MouseKeys.h"
+#include "kaleidoscope/plugin/MouseKeys.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"  // IWYU pragma: export

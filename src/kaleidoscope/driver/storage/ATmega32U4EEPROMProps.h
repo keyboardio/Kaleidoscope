@@ -17,7 +17,9 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/storage/AVREEPROM.h"
+#include <stdint.h>                                 // for uint16_t
+
+#include "kaleidoscope/driver/storage/AVREEPROM.h"  // for AVREEPROMProps
 
 namespace kaleidoscope {
 namespace driver {

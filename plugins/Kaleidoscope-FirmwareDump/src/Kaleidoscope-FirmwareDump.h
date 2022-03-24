@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include <kaleidoscope/plugin/FirmwareDump.h>
+#include "kaleidoscope/plugin/FirmwareDump.h"  // IWYU pragma: export

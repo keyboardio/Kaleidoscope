@@ -14,10 +14,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// IWYU pragma: private, include "kaleidoscope/KeyAddr.h"
+
 #pragma once
 
-#include <limits.h>
-#include <stdint.h>
+#include <stdint.h>  // for uint8_t, int8_t
 
 namespace kaleidoscope {
 

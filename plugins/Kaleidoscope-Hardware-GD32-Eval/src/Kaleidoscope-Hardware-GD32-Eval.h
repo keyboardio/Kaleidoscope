@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "kaleidoscope/device/gd32/Eval.h"
+#include "kaleidoscope/device/gd32/Eval.h"  // IWYU pragma: export
