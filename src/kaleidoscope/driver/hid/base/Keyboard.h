@@ -333,7 +333,7 @@ class Keyboard {
 
 };
 
-}
-}
-}
-}
+}  // namespace base
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

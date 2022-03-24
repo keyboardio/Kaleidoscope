@@ -58,8 +58,8 @@ class AVREEPROM : public kaleidoscope::driver::storage::Base<_StorageProps> {
   }
 };
 
-}
-}
-}
+}  // namespace storage
+}  // namespace driver
+}  // namespace kaleidoscope
 
 #endif

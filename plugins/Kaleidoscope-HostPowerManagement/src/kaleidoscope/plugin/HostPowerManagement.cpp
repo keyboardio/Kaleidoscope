@@ -57,8 +57,8 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 __attribute__((weak)) void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event) {
 }

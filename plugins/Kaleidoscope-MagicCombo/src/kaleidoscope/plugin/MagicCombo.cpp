@@ -65,7 +65,7 @@ EventHandlerResult MagicCombo::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::MagicCombo MagicCombo;

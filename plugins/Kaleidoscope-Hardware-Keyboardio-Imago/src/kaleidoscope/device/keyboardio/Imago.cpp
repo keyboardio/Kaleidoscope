@@ -217,8 +217,8 @@ void Imago::setup() {
 
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

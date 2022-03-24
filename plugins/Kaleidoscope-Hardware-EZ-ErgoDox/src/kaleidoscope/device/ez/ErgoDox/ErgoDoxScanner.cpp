@@ -170,9 +170,9 @@ ErgoDoxScanner::reattachExpanderOnError() {
   start_time = millis();
 }
 
-}
-}
-}
+}  // namespace ez
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

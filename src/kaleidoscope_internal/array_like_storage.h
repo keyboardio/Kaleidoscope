@@ -110,5 +110,5 @@ struct ArrayLikeStorage<StoredType__, false /* not of appropriate type */> {
   typedef StoredType__ ContentType;
 } __attribute__((packed));
 
-} // end namespace internal
-} // end namespace kaleidoscope
+} // namespace internal
+} // namespace kaleidoscope

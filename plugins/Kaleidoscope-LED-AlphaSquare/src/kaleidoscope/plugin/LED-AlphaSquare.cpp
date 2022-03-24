@@ -147,7 +147,7 @@ bool AlphaSquare::isSymbolPart(uint16_t symbol,
   return false;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::AlphaSquare AlphaSquare;

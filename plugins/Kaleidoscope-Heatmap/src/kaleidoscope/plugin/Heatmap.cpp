@@ -241,7 +241,7 @@ void Heatmap::TransientLEDMode::update(void) {
   }
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::Heatmap HeatmapEffect;

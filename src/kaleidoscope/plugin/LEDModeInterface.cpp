@@ -25,5 +25,5 @@ void LEDModeInterface::activate() {
   LEDControl::activate(this);
 }
 
-} // end namespace plugin
-} // end namespace kaleidoscope
+} // namespace plugin
+} // namespace kaleidoscope

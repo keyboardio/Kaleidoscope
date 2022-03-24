@@ -50,7 +50,7 @@ class TopsyTurvy: public kaleidoscope::Plugin {
   static KeyAddr tt_addr_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::TopsyTurvy TopsyTurvy;

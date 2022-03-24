@@ -62,9 +62,9 @@ class MagicCombo : public kaleidoscope::Plugin {
 namespace magiccombo {
 extern const MagicCombo::Combo combos[];
 extern const uint8_t combos_length;
-}
 
-}
-}
+}  // namespace magiccombo
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::MagicCombo MagicCombo;

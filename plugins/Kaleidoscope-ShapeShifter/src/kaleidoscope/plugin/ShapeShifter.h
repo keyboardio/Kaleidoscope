@@ -37,8 +37,8 @@ class ShapeShifter : public kaleidoscope::Plugin {
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
 };
-}
 
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::ShapeShifter ShapeShifter;

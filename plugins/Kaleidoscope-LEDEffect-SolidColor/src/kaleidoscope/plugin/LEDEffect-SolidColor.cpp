@@ -36,5 +36,5 @@ void LEDSolidColor::TransientLEDMode::refreshAt(KeyAddr key_addr) {
                               parent_->b_));
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope

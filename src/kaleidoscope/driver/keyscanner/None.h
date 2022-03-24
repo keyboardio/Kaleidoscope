@@ -31,6 +31,6 @@ namespace keyscanner {
  */
 class None : public kaleidoscope::driver::keyscanner::Base<BaseProps> {};
 
-}
-}
-}
+}  // namespace keyscanner
+}  // namespace driver
+}  // namespace kaleidoscope

@@ -62,6 +62,6 @@ class Base {
 
 };
 
-}
-}
-}
+}  // namespace keyscanner
+}  // namespace driver
+}  // namespace kaleidoscope

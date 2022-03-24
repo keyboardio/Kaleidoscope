@@ -129,7 +129,7 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::FingerPainter FingerPainter;

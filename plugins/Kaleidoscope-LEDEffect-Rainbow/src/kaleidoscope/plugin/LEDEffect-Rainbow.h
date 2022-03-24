@@ -112,8 +112,9 @@ class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
   uint8_t rainbow_update_delay = 40; // delay between updates (ms)
   uint8_t rainbow_value = 50;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDRainbowEffect LEDRainbowEffect;
 extern kaleidoscope::plugin::LEDRainbowWaveEffect LEDRainbowWaveEffect;

@@ -89,7 +89,7 @@ struct MouseProps: public base::MouseProps {
 template <typename _Props>
 class Mouse: public base::Mouse<_Props> {};
 
-}
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

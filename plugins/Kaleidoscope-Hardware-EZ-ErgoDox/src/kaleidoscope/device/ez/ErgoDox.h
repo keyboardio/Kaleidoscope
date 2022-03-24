@@ -134,11 +134,12 @@ class ErgoDox;
     r0c11, r1c11, r2c11, r3c11, r4c11, r5c11,                           \
     r0c12, r1c12, r2c12, r3c12, r4c12, r5c12,                           \
     r0c13, r1c13, r2c13, r3c13, r4c13, dflt
-}
-}
+
+}  // namespace ez
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::ez::ErgoDox)
 
-}
+}  // namespace kaleidoscope
 
 #endif

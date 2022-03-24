@@ -45,6 +45,6 @@ class Base {
   void attachToHost() {}
 };
 
-}
-}
-}
+}  // namespace mcu
+}  // namespace driver
+}  // namespace kaleidoscope

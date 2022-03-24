@@ -73,7 +73,7 @@ struct AbsoluteMouseProps: public base::AbsoluteMouseProps {
 template <typename _Props>
 class AbsoluteMouse: public base::AbsoluteMouse<_Props> {};
 
-}
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

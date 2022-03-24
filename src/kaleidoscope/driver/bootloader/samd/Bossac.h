@@ -41,9 +41,9 @@ class Bossac : public kaleidoscope::driver::bootloader::Base {
   }
 };
 
-}
-}
-}
-}
+}  // namespace samd
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope
 
 #endif

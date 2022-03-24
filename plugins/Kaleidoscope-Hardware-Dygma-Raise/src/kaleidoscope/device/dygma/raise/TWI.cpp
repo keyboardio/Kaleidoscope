@@ -90,10 +90,9 @@ void TWI::init(uint16_t clock_khz) {
   Wire.setClock(clock_khz * 1000);
 }
 
-
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

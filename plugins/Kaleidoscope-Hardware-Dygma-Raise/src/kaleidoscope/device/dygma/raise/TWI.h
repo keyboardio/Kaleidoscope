@@ -44,8 +44,9 @@ class TWI {
   uint8_t crc_errors_;
 };
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
+
 #endif

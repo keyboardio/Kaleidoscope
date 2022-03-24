@@ -57,7 +57,8 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   static uint16_t update_position_;  // layer, row, col
   static Key new_key_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::EEPROMKeymapProgrammer EEPROMKeymapProgrammer;

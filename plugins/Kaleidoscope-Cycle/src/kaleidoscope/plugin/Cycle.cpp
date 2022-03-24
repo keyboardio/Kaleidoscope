@@ -110,8 +110,8 @@ uint8_t Cycle::toModFlag(uint8_t keyCode) {
   }
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 __attribute__((weak))
 void cycleAction(Key previous_key, uint8_t cycle_count) {

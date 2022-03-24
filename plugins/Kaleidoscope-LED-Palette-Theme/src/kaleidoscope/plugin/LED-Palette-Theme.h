@@ -50,7 +50,7 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   static uint16_t palette_base_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDPaletteTheme LEDPaletteTheme;

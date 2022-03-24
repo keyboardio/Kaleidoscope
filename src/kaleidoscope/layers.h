@@ -119,6 +119,6 @@ class Layer_ {
   static int8_t active_layers_[31];
   static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
 };
-}
+}  // namespace kaleidoscope
 
 extern kaleidoscope::Layer_ Layer;

@@ -146,6 +146,6 @@ class Base {
   typedef _LEDDriverProps Props_;
 };
 
-}
-}
-}
+}  // namespace led
+}  // namespace driver
+}  // namespace kaleidoscope

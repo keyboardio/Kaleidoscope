@@ -500,7 +500,7 @@ bool isModifierKey(Key key) {
   return (key.isKeyboardModifier() || key.isLayerShift());
 }
 
-} // namespace plugin {
-} // namespace kaleidoscope {
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::Qukeys Qukeys;

@@ -41,8 +41,8 @@ class FirmwareDump : public kaleidoscope::Plugin {
   uint16_t bootloader_size_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::FirmwareDump FirmwareDump;
 

@@ -58,5 +58,6 @@ class LEDSolidColor : public Plugin,
 
   uint8_t r_, g_, b_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope

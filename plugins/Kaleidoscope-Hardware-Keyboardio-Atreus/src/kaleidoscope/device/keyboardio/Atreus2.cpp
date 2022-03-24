@@ -59,9 +59,9 @@ ISR(TIMER1_OVF_vect) {
   Runtime.device().keyScanner().do_scan_ = true;
 }
 
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

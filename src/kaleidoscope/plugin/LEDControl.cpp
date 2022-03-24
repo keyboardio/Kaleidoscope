@@ -330,8 +330,8 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDControl LEDControl;
 kaleidoscope::plugin::FocusLEDCommand FocusLEDCommand;

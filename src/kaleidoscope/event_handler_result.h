@@ -50,4 +50,4 @@ enum class EventHandlerResult : uint8_t {
   ERROR,
 };
 
-}
+}  // namespace kaleidoscope

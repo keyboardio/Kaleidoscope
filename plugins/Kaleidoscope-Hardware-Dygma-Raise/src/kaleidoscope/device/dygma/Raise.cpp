@@ -475,8 +475,8 @@ void Raise::settings::keyscanInterval(uint16_t interval) {
   RaiseHands::keyscanInterval(interval);
 }
 
-}
-}
-}
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

@@ -263,4 +263,4 @@ bool operator<=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
 
 #endif
 
-} // end namespace kaleidoscope
+} // namespace kaleidoscope

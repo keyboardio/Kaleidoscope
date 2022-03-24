@@ -31,6 +31,6 @@ namespace storage {
  */
 class None : public kaleidoscope::driver::storage::Base<BaseProps> {};
 
-}
-}
-}
+}  // namespace storage
+}  // namespace driver
+}  // namespace kaleidoscope

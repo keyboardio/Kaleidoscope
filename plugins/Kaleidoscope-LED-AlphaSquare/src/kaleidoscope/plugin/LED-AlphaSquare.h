@@ -91,7 +91,7 @@ class AlphaSquare : public kaleidoscope::Plugin {
   static cRGB color;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::AlphaSquare AlphaSquare;

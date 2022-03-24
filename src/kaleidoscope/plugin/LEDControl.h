@@ -136,9 +136,9 @@ class FocusLEDCommand : public Plugin {
   EventHandlerResult onFocusEvent(const char *command);
 };
 
-}
+}  // namespace plugin
 
-}
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDControl LEDControl;
 extern kaleidoscope::plugin::FocusLEDCommand FocusLEDCommand;

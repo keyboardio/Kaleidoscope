@@ -108,7 +108,8 @@ class FocusSerial : public kaleidoscope::Plugin {
   static uint8_t buf_cursor_;
   static void printBool(bool b);
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::FocusSerial Focus;

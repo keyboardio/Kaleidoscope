@@ -69,10 +69,10 @@ void FLIP::rebootBootloader() {
   // happens before the watchdog reboots us
 }
 
-}
-}
-}
-}
+}  // namespace avr
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope
 
 #endif
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

@@ -42,7 +42,7 @@ class FLIP : public kaleidoscope::driver::bootloader::Base {
 typedef bootloader::None FLIP;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
-}
+}  // namespace avr
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope

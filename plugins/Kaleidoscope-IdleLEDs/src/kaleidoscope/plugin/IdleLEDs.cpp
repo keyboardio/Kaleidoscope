@@ -116,8 +116,8 @@ EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::IdleLEDs IdleLEDs;
 kaleidoscope::plugin::PersistentIdleLEDs PersistentIdleLEDs;

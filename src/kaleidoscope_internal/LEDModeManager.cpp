@@ -37,7 +37,7 @@ kaleidoscope::plugin::LEDMode *cur_led_mode = nullptr;
 
 bool current_led_mode_dynamic = false;
 
-}
+}  // namespace
 
 kaleidoscope::plugin::LEDMode *LEDModeManager::getLEDMode(uint8_t mode_id) {
 
@@ -102,5 +102,5 @@ kaleidoscope::plugin::LEDMode *LEDModeManager::getLEDMode(uint8_t mode_id) {
   return cur_led_mode;
 }
 
-} // end namespace internal
-} // end namespace kaleidoscope
+} // namespace internal
+} // namespace kaleidoscope

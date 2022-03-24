@@ -70,7 +70,7 @@ class AbsoluteMouse {
   }
 };
 
-}
-}
-}
-}
+}  // namespace base
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

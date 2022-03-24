@@ -57,6 +57,6 @@ class Base {
   }
 };
 
-}
-}
-}
+}  // namespace flasher
+}  // namespace util
+}  // namespace kaleidoscope

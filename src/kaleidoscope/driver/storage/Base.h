@@ -56,6 +56,6 @@ class Base {
   void commit() {}
 };
 
-}
-}
-}
+}  // namespace storage
+}  // namespace driver
+}  // namespace kaleidoscope

@@ -78,4 +78,4 @@ class Hooks {
 #undef DEFINE_WEAK_HOOK_FUNCTION
 };
 
-}
+}  // namespace kaleidoscope

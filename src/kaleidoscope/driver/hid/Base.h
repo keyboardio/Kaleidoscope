@@ -61,6 +61,6 @@ class Base {
   }
 };
 
-}
-}
-}
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

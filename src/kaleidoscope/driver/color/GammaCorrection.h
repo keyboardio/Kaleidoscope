@@ -44,5 +44,5 @@ const uint8_t PROGMEM gamma_correction[] = {
 };
 
 }
-}
-}
+}  // namespace driver
+}  // namespace kaleidoscope

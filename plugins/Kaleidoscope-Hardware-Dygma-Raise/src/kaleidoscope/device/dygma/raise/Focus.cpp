@@ -127,10 +127,10 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
   return EventHandlerResult::OK;
 }
 
-}
-}
-}
-}
+}  // namespace raise
+}  // namespace dygma
+}  // namespace device
+}  // namespace kaleidoscope
 
 kaleidoscope::device::dygma::raise::Focus RaiseFocus;
 

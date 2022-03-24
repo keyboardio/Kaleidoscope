@@ -56,5 +56,6 @@ class TriColor : public Plugin,
   cRGB mod_color_;
   cRGB esc_color_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope

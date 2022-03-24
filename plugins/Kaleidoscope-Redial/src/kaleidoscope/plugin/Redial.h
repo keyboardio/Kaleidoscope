@@ -42,7 +42,7 @@ class Redial : public kaleidoscope::Plugin {
   static Key last_key_;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Redial Redial;

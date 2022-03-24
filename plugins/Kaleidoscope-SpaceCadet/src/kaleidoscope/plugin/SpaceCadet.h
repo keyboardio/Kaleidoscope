@@ -109,8 +109,8 @@ class SpaceCadet : public kaleidoscope::Plugin {
   void flushEvent(bool is_tap = false);
   void flushQueue();
 };
-}
 
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::SpaceCadet SpaceCadet;

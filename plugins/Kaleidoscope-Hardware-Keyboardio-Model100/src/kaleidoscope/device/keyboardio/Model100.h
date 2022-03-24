@@ -163,7 +163,7 @@ class Model100 : public kaleidoscope::device::Base<Model100Props> {
 
 EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model100)
 
-}
+}  // namespace kaleidoscope
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \

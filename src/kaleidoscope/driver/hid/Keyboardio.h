@@ -38,6 +38,6 @@ struct KeyboardioProps: public BaseProps {
 template <typename _Props>
 class Keyboardio: public Base<_Props> {};
 
-}
-}
-}
+}  // namespace hid
+}  // namespace driver
+}  // namespace kaleidoscope

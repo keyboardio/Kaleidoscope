@@ -75,7 +75,8 @@ class Heatmap : public Plugin,
     friend class Heatmap;
   };
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Heatmap HeatmapEffect;

@@ -237,8 +237,8 @@ void WavepoolEffect::TransientLEDMode::update(void) {
 
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::WavepoolEffect WavepoolEffect;
 

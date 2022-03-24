@@ -31,6 +31,6 @@ namespace bootloader {
  */
 class None : public kaleidoscope::driver::bootloader::Base {};
 
-}
-}
-}
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope

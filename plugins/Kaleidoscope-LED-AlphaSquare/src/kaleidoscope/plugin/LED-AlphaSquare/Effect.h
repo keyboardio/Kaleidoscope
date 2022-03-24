@@ -57,7 +57,8 @@ class AlphaSquareEffect : public Plugin,
     friend class AlphaSquareEffect;
   };
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::AlphaSquareEffect AlphaSquareEffect;

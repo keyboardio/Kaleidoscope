@@ -164,6 +164,6 @@ class WS2812 {
   }
 
 };
-}
-}
-}
+}  // namespace led
+}  // namespace driver
+}  // namespace kaleidoscope

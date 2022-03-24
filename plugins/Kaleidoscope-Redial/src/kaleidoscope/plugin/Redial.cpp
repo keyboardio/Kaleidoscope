@@ -54,7 +54,7 @@ __attribute__((weak)) bool Redial::shouldRemember(Key mapped_key) {
   return false;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::Redial Redial;

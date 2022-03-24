@@ -91,7 +91,7 @@ EventHandlerResult BootGreetingEffect::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::BootGreetingEffect BootGreetingEffect;

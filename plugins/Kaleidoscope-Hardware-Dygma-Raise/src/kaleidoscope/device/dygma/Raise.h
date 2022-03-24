@@ -223,13 +223,12 @@ class Raise: public kaleidoscope::device::Base<RaiseProps> {
   } settings;
 };
 
-
-}
-}
+}  // namespace dygma
+}  // namespace device
 
 typedef kaleidoscope::device::dygma::Raise Device;
 
-}
+}  // namespace kaleidoscope
 
 #define PER_KEY_DATA(dflt,                                                                                  \
   r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                r0c9,  r0c10, r0c11, r0c12, r0c13, r0c14, r0c15, \

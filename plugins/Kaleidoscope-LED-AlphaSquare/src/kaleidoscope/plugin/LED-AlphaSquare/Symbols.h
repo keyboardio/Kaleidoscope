@@ -31,8 +31,8 @@ static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
                                           0, 1, 0, 0,
                                           0, 1, 1, 0,
                                           1, 0, 0, 1);
-}
-}
-}
 
-}
+}  // namespace symbols
+}  // namespace alpha_square
+}  // namespace plugin
+}  // namespace kaleidoscope

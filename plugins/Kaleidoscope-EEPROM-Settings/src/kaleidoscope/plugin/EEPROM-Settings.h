@@ -94,8 +94,9 @@ class FocusEEPROMCommand : public kaleidoscope::Plugin {
 
   EventHandlerResult onFocusEvent(const char *command);
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::EEPROMSettings EEPROMSettings;
 extern kaleidoscope::plugin::FocusSettingsCommand FocusSettingsCommand;

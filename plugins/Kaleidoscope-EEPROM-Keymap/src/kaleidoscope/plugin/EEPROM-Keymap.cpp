@@ -163,7 +163,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::EEPROMKeymap EEPROMKeymap;

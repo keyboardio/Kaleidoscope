@@ -257,7 +257,8 @@ void Model01::enableHardwareTestMode() {
 
 #endif
 
-}
-}
-}
+}  // namespace keyboardio
+}  // namespace device
+}  // namespace kaleidoscope
+
 #endif

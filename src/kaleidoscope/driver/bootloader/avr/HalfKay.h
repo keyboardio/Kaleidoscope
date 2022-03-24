@@ -73,7 +73,7 @@ class HalfKay : public kaleidoscope::driver::bootloader::Base {
 typedef bootloader::None HalfKay;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-}
-}
-}
-}
+}  // namespace avr
+}  // namespace bootloader
+}  // namespace driver
+}  // namespace kaleidoscope

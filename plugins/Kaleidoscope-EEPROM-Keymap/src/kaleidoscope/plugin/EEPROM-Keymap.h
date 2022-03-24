@@ -59,7 +59,8 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static void printKey(Key key);
   static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr));
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::EEPROMKeymap EEPROMKeymap;

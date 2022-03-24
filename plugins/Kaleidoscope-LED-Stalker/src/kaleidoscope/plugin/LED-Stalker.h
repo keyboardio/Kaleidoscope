@@ -101,8 +101,8 @@ class Rainbow : public StalkerEffect::ColorComputer {
   cRGB compute(uint8_t *step) final;
 };
 
-}
-}
-}
+}  // namespace stalker
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::StalkerEffect StalkerEffect;

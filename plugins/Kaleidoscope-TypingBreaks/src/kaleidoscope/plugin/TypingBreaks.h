@@ -55,8 +55,9 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   static uint16_t settings_base_;
 };
-}
-}
+
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::TypingBreaks TypingBreaks;
 

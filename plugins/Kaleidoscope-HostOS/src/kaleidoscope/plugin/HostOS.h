@@ -54,9 +54,11 @@ class HostOS : public kaleidoscope::Plugin {
   uint16_t eeprom_slice_;
   bool is_configured_ = false;
 };
-}
+
+}  // namespace plugin
 
 namespace hostos = plugin::hostos;
-}
+
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::HostOS HostOS;

@@ -86,7 +86,7 @@ EventHandlerResult GhostInTheFirmware::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::GhostInTheFirmware GhostInTheFirmware;

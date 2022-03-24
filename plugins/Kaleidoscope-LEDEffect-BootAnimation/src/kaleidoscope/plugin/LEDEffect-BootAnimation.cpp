@@ -94,7 +94,7 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::BootAnimationEffect BootAnimationEffect;

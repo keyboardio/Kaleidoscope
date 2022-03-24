@@ -32,7 +32,7 @@ class LayerFocus: public kaleidoscope::Plugin {
   EventHandlerResult onFocusEvent(const char *command);
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LayerFocus LayerFocus;

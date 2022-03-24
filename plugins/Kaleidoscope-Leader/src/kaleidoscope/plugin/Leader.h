@@ -100,8 +100,8 @@ class Leader : public kaleidoscope::Plugin {
 
   static int8_t lookup(void);
 };
-}
 
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Leader Leader;
