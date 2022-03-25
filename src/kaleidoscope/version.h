@@ -1,5 +1,7 @@
 // -*- mode: c++ -*-
 
+// clang-format off
+
 #pragma once
 
 // We use `include-what-you-use`, which uses `clang` to help manage header

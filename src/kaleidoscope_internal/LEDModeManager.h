@@ -383,6 +383,8 @@ class LEDModeManager {
 } // namespace internal
 } // namespace kaleidoscope
 
+// clang-format off
+
 // Some auxiliary macros that are mapped to the list of
 // plugins defined via KALEIDOSCOPE_INIT_PLUGINS follow.
 

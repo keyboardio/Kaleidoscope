@@ -72,6 +72,7 @@ void DefaultHIDReportConsumer::processHIDReport(
   if (!anything) {
     keypresses << "none";
   } else {
+    // clang-format off
     FOREACHBIT(report_data.modifiers, keypresses,
                "lctrl ", "lshift ", "lalt ", "lgui ",
                "rctrl ", "rshift ", "ralt ", "rgui ")
@@ -114,6 +115,7 @@ void DefaultHIDReportConsumer::processHIDReport(
     FOREACHBIT(report_data.keys[16], keypresses,
                "volup ", "voldn ", "capslock_l ", "numlock_l ",
                "scrolllock_l ", "num, ", "num= ", "(other) ")
+    // clang-format on
 
     for (int i = 17; i < KEY_BYTES; i++) {
       // A little imprecise, in two ways:

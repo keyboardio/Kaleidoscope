@@ -43,10 +43,12 @@ struct EvalProps: kaleidoscope::device::BaseProps {
 
 class Eval: public kaleidoscope::device::Base<EvalProps> {};
 
+// clang-format off
 #define PER_KEY_DATA(dflt,                                           \
          R0C0, R0C1                                                  \
   )                                                                  \
          R0C0, R0C1
+// clang-format on
 
 } // namespace gd32
 } // namespace device

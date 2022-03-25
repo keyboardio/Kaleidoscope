@@ -58,11 +58,14 @@ class FaunchPad;
 
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// clang-format off
 #define PER_KEY_DATA(dflt,                              \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7 \
   )                                                     \
          R0C0, R0C1, R0C2, R0C3,                        \
          R0C4, R0C5, R0C6, R0C7
+// clang-format on
+
 } // namespace gheavy
 } // namespace device
 

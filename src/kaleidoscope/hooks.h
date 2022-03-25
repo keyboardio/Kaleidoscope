@@ -64,6 +64,7 @@ class Hooks {
   // The following private functions are just to be called by classes
   // and functions that are declared as friends above.
 
+  // clang-format off
 #define DEFINE_WEAK_HOOK_FUNCTION(                                             \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
     SHOULD_EXIT_IF_RESULT_NOT_OK,                                              \
@@ -76,6 +77,8 @@ class Hooks {
   _FOR_EACH_EVENT_HANDLER(DEFINE_WEAK_HOOK_FUNCTION)
 
 #undef DEFINE_WEAK_HOOK_FUNCTION
+  // clang-format on
+
 };
 
 }  // namespace kaleidoscope

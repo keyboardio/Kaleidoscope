@@ -44,6 +44,7 @@ using kaleidoscope::driver::led::no_led;
 
 struct RaiseLEDDriverProps : public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 132;
+  // clang-format off
   static constexpr uint8_t key_led_map[] = {
     // ISO & ANSI (ANSI has no LED at 20, but this key can never be pressed so we can have just one map).
     0,  1,  2,  3,  4,  5,      6,      no_led,        no_led,  6 + LHK,  5 + LHK,  4 + LHK,  3 + LHK,  2 + LHK,  1 + LHK,  0 + LHK,
@@ -51,7 +52,7 @@ struct RaiseLEDDriverProps : public kaleidoscope::driver::led::BaseProps {
     13, 14, 15, 16, 17, 18,     no_led, no_led,        no_led, 21 + LHK, 20 + LHK, 19 + LHK, 18 + LHK, 17 + LHK, 16 + LHK, 15 + LHK,
     19, 20, 21, 22, 23, 24,     25,     no_led,        no_led,   no_led, 27 + LHK, 26 + LHK, 25 + LHK, 24 + LHK, 23 + LHK, 22 + LHK,
     26, 27, 28, 29, 30, no_led, 31,     32,          35 + LHK, 34 + LHK, 33 + LHK, 32 + LHK, 31 + LHK, 30 + LHK, 29 + LHK, 28 + LHK
-  };
+  };  // clang-format on
 };
 #undef LHK
 
@@ -76,6 +77,7 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
   // led_count + 1, to account for the Neuron's LED. The last one is the
   // Neuron's LED, never send that to SLED.
   static constexpr uint8_t led_map[][RaiseLEDDriverProps::led_count + 1] = {
+    // clang-format off
     // ISO
     {
       // left side - 33 keys includes LP
@@ -108,7 +110,7 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
       34 + LPH, 35 + LPH, 36 + LPH, 37 + LPH, 38 + LPH, 39 + LPH, 40 + LPH, 41 + LPH, 42 + LPH, 43 + LPH, 44 + LPH, 45 + LPH, 46 + LPH, 47 + LPH, 48 + LPH, 49 + LPH, 50 + LPH, 51 + LPH,
       52 + LPH, 53 + LPH, 54 + LPH, 55 + LPH, 56 + LPH, 57 + LPH, 58 + LPH, 59 + LPH, 60 + LPH, 61 + LPH, 62 + LPH, 63 + LPH, 64 + LPH, 65 + LPH, 0xff
     }
-  };
+  };  // clang-format on
 };
 
 struct RaiseKeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
@@ -229,6 +231,8 @@ class Raise: public kaleidoscope::device::Base<RaiseProps> {
 typedef kaleidoscope::device::dygma::Raise Device;
 
 }  // namespace kaleidoscope
+
+// clang-format off
 
 #define PER_KEY_DATA(dflt,                                                                                  \
   r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                r0c9,  r0c10, r0c11, r0c12, r0c13, r0c14, r0c15, \

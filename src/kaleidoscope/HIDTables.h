@@ -16,6 +16,7 @@
 
 #pragma once
 
+// clang-format off
 
 // These mappings were extracted and transcribed from
 // https://www.usb.org/sites/default/files/hut1_2.pdf

@@ -26,6 +26,8 @@
  * prior written authorization from the authors.
  */
 
+// clang-format off
+
 #pragma once
 
 #define EVAL0(...) __VA_ARGS__

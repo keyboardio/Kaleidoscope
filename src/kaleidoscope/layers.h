@@ -29,6 +29,8 @@
 #include "kaleidoscope_internal/shortname.h"        // for _INIT_HID_GETSHOR...
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"  // for _INIT_SKETCH_EXPL...
 
+// clang-format off
+
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
 
@@ -47,6 +49,8 @@
   START_KEYMAPS                                                         __NL__ \
      layers                                                             __NL__ \
   END_KEYMAPS
+
+// clang-format on
 
 extern uint8_t layer_count;
 

@@ -208,6 +208,8 @@ extern void pluginsExploreSketch();
 //
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+// clang-format off
+
 // This macro defines a Sketch interface class that is passed to the
 // exploreSketch<_Sketch>(...)-hook.
 //
@@ -301,6 +303,8 @@ extern void pluginsExploreSketch();
     };                                                                         \
   } /* namespace sketch_exploration */                                         \
   } /* namespace kaleidoscope */
+
+// clang-format on
 
 } // namespace sketch_exploration
 } // namespace kaleidoscope

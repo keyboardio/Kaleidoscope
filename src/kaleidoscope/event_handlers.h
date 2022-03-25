@@ -14,6 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// clang-format off
+
 #pragma once
 
 // This file defines the names and argument signatures for all event handlers

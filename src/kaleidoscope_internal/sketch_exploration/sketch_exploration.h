@@ -14,6 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// clang-format off
+
 #pragma once
 
 #include "kaleidoscope_internal/sketch_exploration/keymap_exploration.h"

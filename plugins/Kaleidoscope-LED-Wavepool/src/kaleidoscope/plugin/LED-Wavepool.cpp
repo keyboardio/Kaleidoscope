@@ -44,10 +44,12 @@ int16_t WavepoolEffect::ripple_hue = WavepoolEffect::rainbow_hue; // automatic h
 
 // map native keyboard coordinates (16x4) into geometric space (14x5)
 PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[Runtime.device().numKeys()] = {
+  // clang-format off
   0,  1,  2,  3,  4,  5,  6,     59, 66,    7,  8,  9, 10, 11, 12, 13,
   14, 15, 16, 17, 18, 19, 34,    60, 65,   35, 22, 23, 24, 25, 26, 27,
   28, 29, 30, 31, 32, 33, 48,    61, 64,   49, 36, 37, 38, 39, 40, 41,
   42, 43, 44, 45, 46, 47,     58, 62, 63, 67,    50, 51, 52, 53, 54, 55,
+  // clang-format on
 };
 
 WavepoolEffect::TransientLEDMode::TransientLEDMode(const WavepoolEffect *parent)
@@ -162,11 +164,14 @@ void WavepoolEffect::TransientLEDMode::update(void) {
         uint8_t offset = (y * WP_WID) + x;
 
         int16_t value;
-        int8_t offsets[] = { -WP_WID,    WP_WID,
-                             -1,         1,
-                             -WP_WID - 1, -WP_WID + 1,
-                             WP_WID - 1,  WP_WID + 1
-                           };
+        int8_t offsets[] = {
+          // clang-format off
+          -WP_WID,      WP_WID,
+          -1,           1,
+          -WP_WID - 1,  -WP_WID + 1,
+          WP_WID - 1,   WP_WID + 1
+          // clang-format on
+        };
         // don't wrap around edges or go out of bounds
         if (y == 0) {
           offsets[0] = 0;

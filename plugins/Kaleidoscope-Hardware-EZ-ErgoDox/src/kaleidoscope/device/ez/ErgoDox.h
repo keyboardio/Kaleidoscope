@@ -96,6 +96,8 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
 class ErgoDox;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// clang-format off
+
 #define PER_KEY_DATA_STACKED(dflt,                                    \
     /* left hand, spatial positions */                                  \
     r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                           \

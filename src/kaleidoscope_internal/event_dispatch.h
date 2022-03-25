@@ -31,6 +31,8 @@
  * generated code in an entirely different namespace.
  */
 
+// clang-format off
+
 #pragma once
 
 #include "kaleidoscope/event_handlers.h"

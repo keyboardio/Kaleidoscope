@@ -68,6 +68,8 @@ class Splitography: public kaleidoscope::device::ATmega32U4Keyboard<Splitography
 class Splitography;
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// clang-format off
+
 #define PER_KEY_DATA(dflt,                                                       \
       r0c0 ,r0c1 ,r0c2 ,r0c3 ,r0c4 ,r0c5   ,r0c6 ,r0c7 ,r0c8 ,r0c9 ,r0c10 ,r0c11   \
      ,r1c0 ,r1c1 ,r1c2 ,r1c3 ,r1c4 ,r1c5   ,r1c6 ,r1c7 ,r1c8 ,r1c9 ,r1c10 ,r1c11   \
@@ -95,6 +97,8 @@ class Splitography;
     r1c0 ,r1c1 ,r1c2 ,r1c3 ,r1c4 ,r1c5 ,r1c6 ,r1c7 ,r1c8 ,r1c9 ,r1c10 ,r1c11,  \
     r2c0 ,r2c1 ,r2c2 ,r2c3 ,r2c4 ,r2c5 ,r2c6 ,r2c7 ,r2c8 ,r2c9 ,r2c10 ,r2c11,  \
     dflt ,dflt ,dflt ,dflt ,r3c4 ,r3c5 ,r3c6 ,r3c7 ,dflt ,dflt ,dflt  ,dflt
+
+// clang-format on
 
 }  // namespace softhruf
 }  // namespace device

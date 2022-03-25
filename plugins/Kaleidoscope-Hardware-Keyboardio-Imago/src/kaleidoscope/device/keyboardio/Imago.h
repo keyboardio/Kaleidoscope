@@ -43,11 +43,13 @@ using kaleidoscope::driver::led::no_led;
 struct ImagoLEDDriverProps: public kaleidoscope::driver::led::BaseProps {
   static constexpr uint8_t led_count = 78;
   static constexpr uint8_t key_led_map[/* 5*16 */] PROGMEM = {
-    104,    0,     1,     2,     3,    4,    5,     6,    7,     8,    9,   10,   11,   115,   12,   116,
+    // clang-format off
+    104,   0,     1,     2,     3,    4,    5,     6,    7,     8,    9,   10,   11,   115,   12,   116,
     91,   13, no_led,   15,    16,   17,   18,    19,   20,    21,   22,   23,   24,   102,   15,   103,
     78,   26,    27,    28,    29,   30,   31, no_led,  33,    34,   35,   36,   37,    89,   38, no_led,
     65,   39,    40,    41,    42,   43,   44,    45,   46,    47,   48,   49,   50,    51, no_led,  90,
     52,   66,    53,    54, no_led,  56,   57,    71,   59, no_led,  61,   62,   63,    64, no_led,  77
+    // clang-format on
   };
 };
 
@@ -107,6 +109,7 @@ class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
 };
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// clang-format off
 #define PER_KEY_DATA(dflt,                                              \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7, R0C8, R0C9, R0C10, R0C11, R0C12, R0C13, R0C14, R0C15, \
          R1C0, R1C1,       R1C3, R1C4, R1C5, R1C6, R1C7, R1C8, R1C9, R1C10, R1C11, R1C12, R1C13, R1C14, R1C15, \
@@ -119,6 +122,7 @@ class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
          R2C0, R2C1, R2C2, R2C3, R2C4, R2C5, R2C6, XXX,  R2C8, R2C9, R2C10, R2C11, R2C12, R2C13, R2C14, XXX  , \
          R3C0, R3C1, R3C2, R3C3, R3C4, R3C5, R3C6, R3C7, R3C8, R3C9, R3C10, R3C11, R3C12, R3C13, XXX,   R3C15, \
          R4C0, R4C1, R4C2, R4C3, XXX,  R4C5, R4C6, R4C7, R4C8, XXX,  R4C10, R4C11, R4C12, R4C13, XXX,   R4C15
+// clang-format on
 
 }  // namespace keyboardio
 }  // namespace device

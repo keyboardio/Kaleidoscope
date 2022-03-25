@@ -58,12 +58,15 @@ class ButterStick;
 
 #endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
+// clang-format off
 #define PER_KEY_DATA(dflt,                                           \
          R0C0, R0C1, R0C2, R0C3, R0C4, R0C5, R0C6, R0C7, R0C8, R0C9, \
          R1C0, R1C1, R1C2, R1C3, R1C4, R1C5, R1C6, R1C7, R1C8, R1C9  \
   )                                                                  \
          R0C9, R0C8, R0C7, R0C6, R0C5, R0C4, R0C3, R0C2, R0C1, R0C0, \
          R1C9, R1C8, R1C7, R1C6, R1C5, R1C4, R1C3, R1C2, R1C1, R1C0
+// clang-format on
+
 } // namespace gheavy
 } // namespace device
 

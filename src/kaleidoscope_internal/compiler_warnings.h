@@ -14,7 +14,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// clang-format off
+
 #pragma once
+
+#include "kaleidoscope/macro_helpers.h"  // for __NL__
 
 // Please note that due to a bug in older gcc versions the following
 // warning suppressions mechanism does not work for gcc versions below 6.1.

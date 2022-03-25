@@ -156,6 +156,8 @@ struct Plugins__ {
 } // namespace sketch_exploration
 } // namespace kaleidoscope
 
+// clang-format off
+
 #define _FIX_PLUGIN_TYPE_AND_NAME_AMBIGUITIES(T) T
 
 #define _INIT_PLUGIN_EXPLORATION(...)                                          \
