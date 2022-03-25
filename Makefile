@@ -88,17 +88,13 @@ adjust-git-timestamps:
 find-filename-conflicts:
 	bin/find-filename-conflicts
 
-.PHONY: astyle test cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
+.PHONY: format check-formatting cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
 
-astyle:
-	find ./* -type f \( -name  '*.h' -o -name '*.cpp' -o -name '*.ino' \) | grep -v "testing/googletest" | xargs -n 1 astyle --project
+format:
+	bin/format-code.sh
 
-check-astyle: astyle
-	if ! git diff --exit-code; then \
-  	 >&2 echo "'astyle' found code style differences. Please make astyle and commit your changes"; \
-	 exit 1; \
-	fi; \
-	exit 0;
+check-formatting:
+	bin/format-code.sh --check
 
 cpplint-noisy:
 	-bin/cpplint.py  --filter=-legal/copyright,-build/include,-readability/namespace,-whitespace/line_length,-runtime/references  --recursive --extensions=cpp,h,ino src examples

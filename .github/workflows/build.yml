@@ -6,6 +6,7 @@ env:
   LC_ALL: C
   KALEIDOSCOPE_CCACHE: 1
   ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
+  CLANG_FORMAT_CMD: clang-format-12
 jobs:
   smoke-sketches:
     runs-on: ubuntu-latest
@@ -25,12 +26,11 @@ jobs:
     - run: sudo apt-get install ccache
     - run: make setup
     - run: make -j $(nproc) simulator-tests
-  check-astyle:
+  check-formatting:
     runs-on: ubuntu-latest
     steps:
-    - run: sudo apt-get install astyle
     - uses: actions/checkout@v2
-    - run: make check-astyle
+    - run: make check-formatting
   check-shellcheck:
     runs-on: ubuntu-latest
     steps:

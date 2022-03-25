@@ -1,0 +1,47 @@
+# -*- mode: yaml -*-
+---
+BasedOnStyle: Google
+---
+Language: Cpp
+
+AlignConsecutiveAssignments: Consecutive
+## clang-format-15
+# AlignConsecutiveAssignments:
+#   Enabled: true
+#   AlignCompound: true
+#   PadOperators: true
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: AcrossEmptyLines
+AlignEscapedNewlines: Right
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: true
+AttributeMacros:
+  - __attribute__((weak))
+  - __attribute__((always_inline))
+  - __attribute__((noinline))
+  - __attribute__((packed))
+  - __attribute__((optimize(3)))
+  - __attribute__((unused))
+BinPackArguments: false
+BinPackParameters: false
+# BraceWrapping:
+#   SplitEmptyFunction: false
+#   SplitEmptyRecord: true
+#   SplitEmptyNamespace: true
+# BreakBeforeBraces: Custom
+ColumnLimit: 0
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+DerivePointerAlignment: false
+FixNamespaceComments: true
+IndentCaseLabels: false
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 2
+# PackConstructorInitializers: CurrentLine
+PointerAlignment: Right
+# ReferenceAlignment: Right
+ReflowComments: false
+SortIncludes: false
+SpaceAfterTemplateKeyword: false
