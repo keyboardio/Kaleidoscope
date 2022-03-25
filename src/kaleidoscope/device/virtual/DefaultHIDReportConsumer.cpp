@@ -63,11 +63,16 @@ void DefaultHIDReportConsumer::processHIDReport(
   std::stringstream keypresses;
   bool anything = false;
 
-  if (report_data.modifiers) anything = true;
-  else for (int i = 0; i < KEY_BYTES; i++) if (report_data.keys[i]) {
+  if (report_data.modifiers) {
+    anything = true;
+  } else {
+    for (int i = 0; i < KEY_BYTES; i++) {
+      if (report_data.keys[i]) {
         anything = true;
         break;
       }
+    }
+  }
 
   if (!anything) {
     keypresses << "none";
