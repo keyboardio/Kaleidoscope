@@ -86,9 +86,7 @@ adjust-git-timestamps:
 	bin/set-timestamps-from-git
 
 find-filename-conflicts:
-	@if [ -d "bin" ]; then \
-		bin/find-filename-conflicts; \
-	fi
+	bin/find-filename-conflicts
 
 .PHONY: astyle test cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
 
