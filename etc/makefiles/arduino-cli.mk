@@ -62,7 +62,7 @@ arduino_env = ARDUINO_DIRECTORIES_USER=$(ARDUINO_DIRECTORIES_USER) \
 
 ifeq ($(ARDUINO_CLI_PATH),) 
 
-system_arduino_cli ?= $(shell command -v arduino-cli || true)
+system_arduino_cli := $(shell command -v arduino-cli || true)
 
 ifeq ($(system_arduino_cli),) 
 export ARDUINO_CLI_PATH ?= $(KALEIDOSCOPE_BIN_DIR)/arduino-cli
@@ -104,11 +104,11 @@ _arduino_props := $(shell ${ARDUINO_CLI}  compile $(fqbn_arg) --show-properties 
 
 _arduino_prop = $(subst $1=,,$(subst 🔥, ,$(filter $1=%,$(_arduino_props))))
 
-_arduino_version = $(shell ${ARDUINO_CLI} version | sed 's/.*Version: \([0-9][0-9\.]*\).*/\1/')
+_arduino_version := $(shell ${ARDUINO_CLI} version | sed 's/.*Version: \([0-9][0-9\.]*\).*/\1/')
 
 export ARDUINO_CLI_VERSION ?= $(_arduino_version)
 
-_arduino_build_property_flag = $(shell echo -e "0.14\n${ARDUINO_CLI_VERSION}" | sort -C -t. -k1,1n -k2,2n && echo "YES")
+_arduino_build_property_flag := $(shell echo -e "0.14\n${ARDUINO_CLI_VERSION}" | sort -C -t. -k1,1n -k2,2n && echo "YES")
 
 ARDUINO_BUILD_PROP_FLAG := --build-properties
 ifeq ($(_arduino_build_property_flag),YES)
