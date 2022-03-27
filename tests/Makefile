@@ -34,6 +34,8 @@ export FQBN	?= keyboardio:virtual:model01
 
 TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 
+KALEIDOSCOPE_CCACHE = 1
+
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for
