@@ -1,3 +1,24 @@
+# Reset a bunch of historical GNU make implicit rules that we never
+# use, but which have a disastrous impact on performance
+#
+# --no-builtin-rules in MAKEFLAGS apparently came in with GNU Make 4,
+# which is newer than what Apple ships
+MAKEFLAGS += --no-builtin-rules
+
+# These lines reset the implicit rules we really care about
+%:: %,v
+
+%:: RCS/%,v
+
+%:: RCS/%
+
+%:: s.%
+
+%:: SCCS/s.%
+
+.SUFFIXES:
+
+
 include $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/etc/makefiles/arduino-cli.mk
 
 # Set up an argument for passing to the simulator tests in docker
