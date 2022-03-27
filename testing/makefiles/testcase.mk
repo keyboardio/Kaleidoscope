@@ -1,3 +1,24 @@
+# Reset a bunch of historical GNU make implicit rules that we never
+# use, but which have a disastrous impact on performance
+#
+# --no-builtin-rules in MAKEFLAGS apparently came in with GNU Make 4,
+# which is newer than what Apple ships
+MAKEFLAGS += --no-builtin-rules
+
+# These lines reset the implicit rules we really care about
+%:: %,v
+
+%:: RCS/%,v
+
+%:: RCS/%
+
+%:: s.%
+
+%:: SCCS/s.%
+
+.SUFFIXES:
+
+
 mkfile_dir 	:= $(dir $(lastword ${MAKEFILE_LIST}))
 top_dir         := $(abspath $(mkfile_dir)../..)
 
@@ -57,7 +78,7 @@ compile-sketch: ${TEST_OBJS}
 	@install -d "${BIN_DIR}" "${LIB_DIR}"
 	$(QUIET) env LIBONLY=yes VERBOSE=${VERBOSE}  \
 		OUTPUT_PATH="${LIB_DIR}" \
-		$(MAKE) -f ${top_dir}/testing/makefiles/delegate.mk compile
+		$(MAKE) -f ${top_dir}/etc/makefiles/sketch.mk compile
 	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) -o "${BIN_DIR}/${BIN_FILE}" \
 		-lpthread -g -w ${TEST_OBJS} \
 		-L"${COMMON_LIB_DIR}" -lcommon \

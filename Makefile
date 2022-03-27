@@ -1,3 +1,24 @@
+# Reset a bunch of historical GNU make implicit rules that we never
+# use, but which have a disastrous impact on performance
+#
+# --no-builtin-rules in MAKEFLAGS apparently came in with GNU Make 4,
+# which is newer than what Apple ships
+MAKEFLAGS += --no-builtin-rules
+
+# These lines reset the implicit rules we really care about
+%:: %,v
+
+%:: RCS/%,v
+
+%:: RCS/%
+
+%:: s.%
+
+%:: SCCS/s.%
+
+.SUFFIXES:
+
+
 include $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/etc/makefiles/arduino-cli.mk
 
 # Set up an argument for passing to the simulator tests in docker
@@ -65,9 +86,7 @@ adjust-git-timestamps:
 	bin/set-timestamps-from-git
 
 find-filename-conflicts:
-	@if [ -d "bin" ]; then \
-		bin/find-filename-conflicts; \
-	fi
+	bin/find-filename-conflicts
 
 .PHONY: astyle test cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
 
@@ -89,7 +108,7 @@ cpplint:
 	bin/cpplint.py  --quiet --filter=-whitespace,-legal/copyright,-build/include,-readability/namespace,-runtime/references  --recursive --extensions=cpp,h,ino src examples
 
 
-SHELL_FILES = $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
+SHELL_FILES := $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
 
 shellcheck:
 	@if [ -d "bin" ]; then \
@@ -97,7 +116,7 @@ shellcheck:
 	fi
 
 
-SMOKE_SKETCHES=$(sort $(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi))
+SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi))
 
 smoke-sketches: $(SMOKE_SKETCHES)
 	@echo "Smoke-tested all the sketches"

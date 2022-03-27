@@ -1,3 +1,22 @@
+# Reset a bunch of historical GNU make implicit rules that we never
+# use, but which have a disastrous impact on performance
+#
+# --no-builtin-rules in MAKEFLAGS apparently came in with GNU Make 4,
+# which is newer than what Apple ships
+MAKEFLAGS += --no-builtin-rules
+
+# These lines reset the implicit rules we really care about
+%:: %,v
+
+%:: RCS/%,v
+
+%:: RCS/%
+
+%:: s.%
+
+%:: SCCS/s.%
+
+.SUFFIXES:
 
 tests_dir	:= $(abspath $(dir $(lastword ${MAKEFILE_LIST})))
 
@@ -13,7 +32,7 @@ TEST_PATH 	?= ./
 
 export FQBN	?= keyboardio:virtual:model01
 
-TESTS		?= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
+TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
