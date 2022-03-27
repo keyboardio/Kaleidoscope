@@ -99,20 +99,6 @@ endif
 
 
 
-# Flashing related config
-ifneq ($(FQBN),)
-ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
-KALEIDOSCOPE_DEVICE_PORT := $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
-endif
-endif
-
-flashing_instructions	:= $(call _arduino_prop,build.flashing_instructions)
-ifeq ($(flashing_instructions),)
-flashing_instructions	:= "If your keyboard needs you to do something to put it in flashing mode, do that now."
-endif
-
-unescaped_flashing_instructions := $(shell printf $(flashing_instructions) )
-
 DEFAULT_GOAL: compile
 
 
@@ -137,7 +123,6 @@ size-map: ${ELF_FILE_PATH}
 		$(call _arduino_prop,compiler.size-map.flags) \
 		"${ELF_FILE_PATH}"
 
-flash: ${HEX_FILE_PATH}
 
 ${ELF_FILE_PATH}: compile
 ${HEX_FILE_PATH}: compile
@@ -203,32 +188,19 @@ endif
 #TODO (arduino team) I'd love to do this with their json output
 #but it's short some of the data we kind of need
 
-.PHONY: ensure-device-port-defined
+flashing_instructions = $(call _arduino_prop,build.flashing_instructions)
 
-ensure-device-port-defined:  kaleidoscope-hardware-configured
-	@if [ -z $(KALEIDOSCOPE_DEVICE_PORT) ]; then \
-	echo "ERROR: Unable to detect keyboard serial port.";\
-	echo ;\
-	echo "Arduino should autodetect it, but you could also set";\
-	echo "KALEIDOSCOPE_DEVICE_PORT to your keyboard's serial port.";\
-	echo ;\
-	exit -1;fi
-
-ifneq ($(FQBN),)
-fqbn_arg = --fqbn $(FQBN)
+flash: ${HEX_FILE_PATH}
+ifneq ($(flashing_instructions),)
+	$(info $(shell printf $(flashing_instructions)))
+else
+	$(info If your keyboard needs you to do something to put it in flashing mode, do that now.)
 endif
-
-ifneq ($(KALEIDOSCOPE_DEVICE_PORT),)
-port_arg = --port $(KALEIDOSCOPE_DEVICE_PORT)
-endif
-
-
-flash: compile
-	$(info $(unescaped_flashing_instructions))
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
 	@$(shell read _)
-	$(QUIET) $(ARDUINO_CLI) upload $(fqbn_arg) \
-	  --input-dir "${OUTPUT_PATH}" \
-	  $(port_arg) $(ARDUINO_VERBOSE)
+	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
+	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1 echo "--port" ) \
+	--input-dir "${OUTPUT_PATH}" \
+	$(ARDUINO_VERBOSE)
