@@ -55,26 +55,7 @@ endif
 # Otherwise, use the arduino-cli bundle
 export ARDUINO_DIRECTORIES_USER ?= $(ARDUINO_CONTENT)/user
 
-# If we're not calling setup, we should freak out if the hardware
-# definitions don't exist
 
-ifneq ($(MAKECMDGOALS),setup)
-
-ifeq ($(wildcard $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt),)
- 
-$(info Kaleidoscope hardware definitions not found in)
-$(info $(ARDUINO_DIRECTORIES_USER))
-$(info )
-$(info You may be able to resolve this issue by running the following command)
-$(info to initialize Kaleidoscope )
-$(info )
-$(info $(MAKE) -C $(KALEIDOSCOPE_DIR) setup )
-$(info )
-$(error )
-
-endif
-
-endif
 
 arduino_env = ARDUINO_DIRECTORIES_USER=$(ARDUINO_DIRECTORIES_USER) \
 	      ARDUINO_DIRECTORIES_DATA=$(ARDUINO_DIRECTORIES_DATA)
@@ -176,3 +157,20 @@ install-arduino-core-deps:
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32-tools-only"
 
 
+# If we're not calling setup, we should freak out if the hardware
+# definitions don't exist
+
+.PHONY: kaleidoscope-hardware-configured
+
+kaleidoscope-hardware-configured: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/platform.txt
+
+$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/platform.txt:
+	$(info Kaleidoscope hardware definitions not found in)
+	$(info $(ARDUINO_DIRECTORIES_USER))
+	$(info )
+	$(info You may be able to resolve this issue by running the following command)
+	$(info to initialize Kaleidoscope )
+	$(info )
+	$(info $(MAKE) -C $(KALEIDOSCOPE_DIR) setup )
+	$(info )
+	$(error )

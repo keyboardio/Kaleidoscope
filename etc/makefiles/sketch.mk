@@ -123,7 +123,7 @@ DEFAULT_GOAL: compile
 .PHONY: compile configure-arduino-cli install-arduino-core-kaleidoscope install-arduino-core-avr 
 .PHONY: disassemble decompile size-map flash clean all test
 
-all: compile
+all: compile 
 	@: ## Do not remove this line, otherwise `make all` will trigger the `%` rule too.
 
 
@@ -175,7 +175,7 @@ ifneq ($(KALEIDOSCOPE_LOCAL_LIB_DIR),)
 _arduino_local_libraries_prop =  --libraries "${KALEIDOSCOPE_LOCAL_LIB_DIR}"
 endif
 
-compile: 
+compile: kaleidoscope-hardware-configured
 
 
 	$(QUIET) install -d "${OUTPUT_PATH}"
@@ -205,7 +205,7 @@ endif
 
 .PHONY: ensure-device-port-defined
 
-ensure-device-port-defined:  
+ensure-device-port-defined:  kaleidoscope-hardware-configured
 	@if [ -z $(KALEIDOSCOPE_DEVICE_PORT) ]; then \
 	echo "ERROR: Unable to detect keyboard serial port.";\
 	echo ;\
@@ -223,7 +223,7 @@ port_arg = --port $(KALEIDOSCOPE_DEVICE_PORT)
 endif
 
 
-flash: 
+flash: compile
 	$(info $(unescaped_flashing_instructions))
 	$(info )
 	$(info When you're ready to proceed, press 'Enter'.)
