@@ -48,7 +48,7 @@ ELF_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
 LIB_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).a
 
 ifeq ($(FQBN),)
-possible_fqbns = $(shell $(ARDUINO_CLI) board list --format=json |grep FQBN| grep -v "keyboardio:virtual"|cut -d: -f 2-)
+possible_fqbns := $(shell $(ARDUINO_CLI) board list --format=json |grep FQBN| grep -v "keyboardio:virtual"|cut -d: -f 2-)
 
 possible_fqbn = $(firstword $(possible_fqbns))
 
@@ -102,7 +102,7 @@ endif
 # Flashing related config
 ifneq ($(FQBN),)
 ifeq ($(KALEIDOSCOPE_DEVICE_PORT),)
-KALEIDOSCOPE_DEVICE_PORT = $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
+KALEIDOSCOPE_DEVICE_PORT := $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
 endif
 endif
 
@@ -111,7 +111,7 @@ ifeq ($(flashing_instructions),)
 flashing_instructions	:= "If your keyboard needs you to do something to put it in flashing mode, do that now."
 endif
 
-unescaped_flashing_instructions = $(shell printf $(flashing_instructions) )
+unescaped_flashing_instructions := $(shell printf $(flashing_instructions) )
 
 DEFAULT_GOAL: compile
 
