@@ -162,7 +162,7 @@ clean:
 
 
 ifneq ($(LOCAL_CFLAGS),)
-local_cflags_property = --build-properties "compiler.cpp.extra_flags=${LOCAL_CFLAGS}"
+local_cflags_property = --build-property "compiler.cpp.extra_flags=${LOCAL_CFLAGS}"
 else
 local_cflags_property =
 endif
