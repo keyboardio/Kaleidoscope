@@ -34,8 +34,6 @@ export FQBN	?= keyboardio:virtual:model01
 
 TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 
-KALEIDOSCOPE_CCACHE = 1
-
 # The clutter up the test output on Make 4.0 and newer
 MAKEFLAGS += --no-print-directory
 
