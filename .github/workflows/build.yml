@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 env:
   LC_ALL: C
-  KALEIDOSCOPE_CCACHE: 1
   ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
   CLANG_FORMAT_CMD: clang-format-12
 jobs:
