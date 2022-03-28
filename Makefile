@@ -18,6 +18,11 @@ MAKEFLAGS += --no-builtin-rules
 
 .SUFFIXES:
 
+# GNU Make earlier than 4.0 don't have the output-sync option, but we need it
+# to make parallel simulator test output readable. (otherwise it gets interleaved)
+ifeq ($(shell test $(firstword $(subst ., ,$(MAKE_VERSION))) -ge 4; echo $$?),0)
+SUBDIR_MAKEFLAGS+=--output-sync=target
+endif
 
 include $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/etc/makefiles/arduino-cli.mk
 

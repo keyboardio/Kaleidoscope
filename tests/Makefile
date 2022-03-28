@@ -94,6 +94,3 @@ Makefile:
 
 ${TESTS}: ${libcommon_a} googletest
 	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build run
-
-%+run:
-	$(QUIET) ${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $* testcase=$* run
