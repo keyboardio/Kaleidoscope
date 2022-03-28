@@ -79,13 +79,13 @@ ${top_dir}/testing/googletest/build/Makefile:
 	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) ..
 
 ${libcommon_a}:
-	${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
+	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
 
 Makefile:
 	@:
 
 ${TESTS}: ${libcommon_a} googletest
-	${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build
+	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ generate-testcase build run
 
 %+run:
-	${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $* testcase=$* run
+	$(QUIET) ${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $* testcase=$* run
