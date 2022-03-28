@@ -437,6 +437,16 @@ As a developer, one can continue using `millis()`, but migrating to `Kaleidoscop
 
 ## Breaking changes
 
+### Sketch preprocssing system
+
+We used to support the ability to amend all compiled sketches by
+adding code to
+`src/kaleidoscope_internal/sketch_preprocessing/sketch_header.h`
+and `src/kaleidoscope_internal/sketch_preprocessing/sketch_footer.h`.
+The functionality was never used by Kaleidoscope itself and frequently
+pulled the (empty) header files from the wrong copy of Kaleidoscope.
+If you need this functionality, please open a GitHub issue.
+
 ### Macros
 
 This is a guide to upgrading existing Macros code to use the new version of
