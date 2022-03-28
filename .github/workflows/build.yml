@@ -16,11 +16,8 @@ jobs:
       with:
         path: ${{ github.workspace}}/.arduino/downloads
         key: ${{ runner.os }}-arduino-downloads
-    - run: sudo apt update  
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
-    - run: make -j $(nproc) smoke-sketches
+    - run: KALEIDOSCOPE_TEMP_PATH=${{ github.workspace}}/.kaleidoscope-temp make -j $(nproc) smoke-sketches
   run-google-tests:
     runs-on: ubuntu-20.04
     steps:
@@ -34,7 +31,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
-    - run: make -j $(nproc) simulator-tests
+    - run: KALEIDOSCOPE_CCACHE=1 make -j $(nproc) --output-sync=recurse simulator-tests
   check-formatting:
     runs-on: ubuntu-latest
     steps:
