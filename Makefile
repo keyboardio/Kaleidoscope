@@ -50,10 +50,12 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
 		--recurse-submodules \
+		--shallow-submodules \
 		https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio \
 		$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio
 	git clone -c core.symlinks=true \
 		--recurse-submodules \
+		--shallow-submodules \
 		https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
 
 update:
