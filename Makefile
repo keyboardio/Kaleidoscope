@@ -21,7 +21,9 @@ MAKEFLAGS += --no-builtin-rules
 # GNU Make earlier than 4.0 don't have the output-sync option, but we need it
 # to make parallel simulator test output readable. (otherwise it gets interleaved)
 ifeq ($(shell test $(firstword $(subst ., ,$(MAKE_VERSION))) -ge 4; echo $$?),0)
-SUBDIR_MAKEFLAGS+=--output-sync=target
+MAKEFLAGS+=--output-sync=target
+else
+_using_old_make=1
 endif
 
 include $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/etc/makefiles/arduino-cli.mk
@@ -73,6 +75,9 @@ update:
 		git submodule update --init --recursive
 
 simulator-tests:
+ifneq ($(_using_old_make),)
+	$(info You're using an older version of GNU Make that doesn't offer the --output-sync option. If you're running the test suite in parallel, output may be garbled. You might consider using GNU Make 4.0 or later instead)
+endif
 	$(MAKE) -C tests all
 
 docker-simulator-tests:

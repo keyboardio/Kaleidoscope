@@ -36,6 +36,10 @@ TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname
 
 KALEIDOSCOPE_CCACHE = 1
 
+# The clutter up the test output on Make 4.0 and newer
+MAKEFLAGS += --no-print-directory
+
+
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for

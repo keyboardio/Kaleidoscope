@@ -69,6 +69,7 @@ build: $(if $(HAS_KTEST_FILE), generate-testcase) compile-sketch
 all: run
 
 run: ${BIN_DIR}/${BIN_FILE}
+	$(info )
 	$(info Running test $(testcase))
 	$(QUIET) "${BIN_DIR}/${BIN_FILE}" -t -q
 
