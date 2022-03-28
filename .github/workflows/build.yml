@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 env:
   LC_ALL: C
-  KALEIDOSCOPE_CCACHE: 1
   ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
   CLANG_FORMAT_CMD: clang-format-12
 jobs:
@@ -12,20 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
-## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
-## This makes sure we're using the current version of the library.
-    - run: sudo apt-get install ccache
+    - name: Cache arduino dep downloads
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace}}/.arduino/downloads
+        key: ${{ runner.os }}-arduino-downloads
     - run: make setup
-    - run: make -j $(nproc) smoke-sketches
+    - run: KALEIDOSCOPE_TEMP_PATH=${{ github.workspace}}/.kaleidoscope-temp make -j $(nproc) smoke-sketches
   run-google-tests:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
-#    - uses: mxschmitt/action-tmate@v3
-    - run: sudo apt-get install ccache
+    - name: Cache arduino dep downloads
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace}}/.arduino/downloads
+        key: ${{ runner.os }}-arduino-downloads
+    - run: sudo apt update 
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
-    - run: make -j $(nproc) simulator-tests
+    - run: KALEIDOSCOPE_CCACHE=1 make -j $(nproc) --output-sync=recurse simulator-tests
   check-formatting:
     runs-on: ubuntu-latest
     steps:

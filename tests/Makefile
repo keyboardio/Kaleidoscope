@@ -34,7 +34,9 @@ export FQBN	?= keyboardio:virtual:model01
 
 TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname {} \;)
 
-KALEIDOSCOPE_CCACHE = 1
+# The clutter up the test output on Make 4.0 and newer
+MAKEFLAGS += --no-print-directory
+
 
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
@@ -44,48 +46,53 @@ include $(top_dir)/etc/makefiles/arduino-cli.mk
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 
 
-.PHONY: clean cmake-clean all googletest generate-testcases
+.PHONY: clean cmake-clean all googletest
 
 
-generate-testcases:
-	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} generate-testcase; \
-	done
+all: ${libcommon_a} googletest ${TESTS} 
+	@:
 
-all: ${TESTS} run-all
+cmake-clean:
+	rm -rf "${top_dir}"/testing/googletest/build/*
 
 run-all: ${TESTS}
 	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} run || ERROR=$$?; \
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk \
+			-C $${test} \
+			testcase=$${test} run || ERROR=$$?; \
 	done; \
 	if [ -n $${ERROR} ]; then exit $${ERROR}; fi
 
 
 
-cmake-clean:
-	rm -rf "${top_dir}"/testing/googletest/build/*
-
 clean: cmake-clean
 	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} clean; \
+		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk \
+			-C $${test} \
+			testcase=$${test} clean; \
 	done
 	rm -rf "${build_dir}"/*
 
 googletest: ${top_dir}/testing/googletest/build/Makefile
-	cd ${top_dir}/testing/googletest/build && $(MAKE)
+	${MAKE} -C ${top_dir}/testing/googletest/build
 
 ${top_dir}/testing/googletest/build/Makefile:
 	$(info googletest Makefile is being remade)
-	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) ..
+	# This can fail if we're running in parallel, but that'd be harmless
+	-install -d ${top_dir}/testing/googletest/build
+	$(QUIET) cmake \
+	  -S ${top_dir}/testing/googletest \
+	  -B ${top_dir}/testing/googletest/build \
+	  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) \
+	  -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) \
+	  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+	  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 ${libcommon_a}:
-	${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
+	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
 
 Makefile:
 	@:
 
 ${TESTS}: ${libcommon_a} googletest
-	${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build
-
-%+run:
-	${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $* testcase=$* run
+	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build run
