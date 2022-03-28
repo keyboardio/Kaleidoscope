@@ -86,7 +86,9 @@ ${top_dir}/testing/googletest/build/Makefile:
 	  -S ${top_dir}/testing/googletest \
 	  -B ${top_dir}/testing/googletest/build \
 	  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) \
-	  -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd)
+	  -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) \
+	  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+	  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
 ${libcommon_a}:
 	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
