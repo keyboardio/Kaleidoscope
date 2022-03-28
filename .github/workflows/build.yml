@@ -11,18 +11,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
-## We delete the Bundle's version of Kaleidoscope, and symlink ourselves in.
-## This makes sure we're using the current version of the library.
-    - run: sudo apt-get install ccache
+    - name: Cache arduino dep downloads
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace}}/.arduino/downloads
+        key: ${{ runner.os }}-arduino-downloads
+    - run: sudo apt update  
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
     - run: make -j $(nproc) smoke-sketches
   run-google-tests:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
-#    - uses: mxschmitt/action-tmate@v3
-    - run: sudo apt-get install ccache
+    - name: Cache arduino dep downloads
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace}}/.arduino/downloads
+        key: ${{ runner.os }}-arduino-downloads
+    - run: sudo apt update 
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
     - run: make -j $(nproc) simulator-tests
   check-formatting:

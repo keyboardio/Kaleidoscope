@@ -92,7 +92,6 @@ compile-sketch: ${TEST_OBJS}
 
 
 # If we have a test.ktest file, it should be processed into a c++ testcase
-
 .PHONY: generate-testcase
 generate-testcase: $(if $(HAS_KTEST_FILE), ${SRC_DIR}/generated-testcase.cpp)
 
