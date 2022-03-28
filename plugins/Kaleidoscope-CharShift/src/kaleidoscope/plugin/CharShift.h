@@ -29,6 +29,10 @@
 namespace kaleidoscope {
 namespace plugin {
 
+namespace charshift {
+class Storage;
+}
+
 // =============================================================================
 /// Kaleidoscope plugin for independently assigning shifted symbols
 ///
@@ -41,9 +45,11 @@ namespace plugin {
 class CharShift : public Plugin {
 
  public:
+  EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeReportingState(const KeyEvent &event);
+  EventHandlerResult onFocusEvent(const char *command);
 
   // ---------------------------------------------------------------------------
   /// A structure that stores CharShift key pair values
@@ -68,24 +74,15 @@ class CharShift : public Plugin {
     KeyPair() = default;
   };
 
-  /// Configure the KeyPairs array in PROGMEM
-  ///
-  /// This function configures the PROGMEM array of `KeyPair` objects,
-  /// automatically setting the internal count variable from the size of the
-  /// `keypairs` array given, which must be a fixed-sized array, not a pointer.
-  /// Generally, it will be called via the `KEYPAIRS()` preprocessor macro, not
-  /// directly by user code.
-  template <uint8_t _num_keypairs>
-  static void setProgmemKeyPairs(KeyPair const(&keypairs)[_num_keypairs]) {
-    progmem_keypairs_ = keypairs;
-    num_keypairs_ = _num_keypairs;
+  charshift::Storage &storage() {
+    return *storage_;
+  }
+  void setStorage(charshift::Storage *st) {
+    storage_ = st;
   }
 
  private:
-  // A pointer to an array of `KeyPair` objects in PROGMEM
-  static KeyPair const * progmem_keypairs_;
-  // The size of the PROGMEM array of `KeyPair` objects
-  static uint8_t num_keypairs_;
+  static charshift::Storage *storage_;
 
   // If a `shift` key needs to be suppressed in `beforeReportingState()`
   static bool reverse_shift_state_;
@@ -95,24 +92,63 @@ class CharShift : public Plugin {
 
   /// Look up the `KeyPair` specified by the given keymap entry
   static KeyPair decodeCharShiftKey(Key key);
-
-  /// Get the total number of KeyPairs defined
-  ///
-  /// This function can be overridden in order to store the `KeyPair` array in
-  /// EEPROM instead of PROGMEM.
-  static uint8_t numKeyPairs();
-
-  /// Get the `KeyPair` at the specified index from the defined `KeyPair` array
-  ///
-  /// This function can be overridden in order to store the `KeyPair` array in
-  /// EEPROM instead of PROGMEM.
-  static KeyPair readKeyPair(uint8_t n);
-
-  // Default for `keypairsCount()`: size of the PROGMEM array
-  static uint8_t numProgmemKeyPairs();
-  // Default for `readKeypair(i)`: fetch the value from PROGMEM
-  static KeyPair readKeyPairFromProgmem(uint8_t n);
 };
+
+namespace charshift {
+
+class Storage {
+ public:
+  Storage() {}
+
+  static uint8_t numKeyPairs() {
+    return num_keypairs_;
+  }
+  static CharShift::KeyPair readKeyPair(uint8_t n) {
+    return CharShift::KeyPair(Key_NoKey, Key_NoKey);
+  }
+
+  EventHandlerResult onFocusEvent(const char *command) {
+    return EventHandlerResult::OK;
+  }
+
+ protected:
+  static uint8_t num_keypairs_;
+};
+
+class ProgmemStorage: public Storage {
+ public:
+
+  static CharShift::KeyPair readKeyPair(uint8_t n);
+
+  /// Configure the KeyPairs array in PROGMEM
+  ///
+  /// This function configures the PROGMEM array of `KeyPair` objects,
+  /// automatically setting the internal count variable from the size of the
+  /// `keypairs` array given, which must be a fixed-sized array, not a pointer.
+  /// Generally, it will be called via the `KEYPAIRS()` preprocessor macro, not
+  /// directly by user code.
+  template <uint8_t _num_keypairs>
+  static void setKeyPairs(CharShift::KeyPair const(&keypairs)[_num_keypairs]) {
+    keypairs_ = keypairs;
+    num_keypairs_ = _num_keypairs;
+  }
+
+ private:
+  // A pointer to an array of `KeyPair` objects in PROGMEM
+  static CharShift::KeyPair const *keypairs_;
+};
+
+class EEPROMStorage: public Storage {
+ public:
+  void setup(uint8_t num_pairs);
+  static CharShift::KeyPair readKeyPair(uint8_t n);
+
+  EventHandlerResult onFocusEvent(const char *command);
+ private:
+  static uint16_t storage_base_;
+};
+
+}
 
 } // namespace plugin
 } // namespace kaleidoscope
@@ -129,7 +165,7 @@ extern kaleidoscope::plugin::CharShift CharShift;
     static kaleidoscope::plugin::CharShift::KeyPair const kp_table[] PROGMEM = { \
       keypairs                                                          \
     };                                                                  \
-    CharShift.setProgmemKeyPairs(kp_table);                             \
+    CharShift.storage().setKeyPairs(kp_table);                          \
 }
 
 /// Define an `KeyPair` entry in a keymap
