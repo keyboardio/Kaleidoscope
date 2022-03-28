@@ -47,8 +47,9 @@ KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 .PHONY: clean cmake-clean all googletest
 
 
+all: ${libcommon_a} googletest ${TESTS} 
+	@:
 
-all: ${TESTS} run-all
 cmake-clean:
 	rm -rf "${top_dir}"/testing/googletest/build/*
 
