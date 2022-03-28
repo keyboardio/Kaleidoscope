@@ -34,7 +34,7 @@ struct BaseProps {
   typedef base::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
 };
 
-template <typename _Props>
+template<typename _Props>
 class Base {
  private:
   typename _Props::Keyboard keyboard_;

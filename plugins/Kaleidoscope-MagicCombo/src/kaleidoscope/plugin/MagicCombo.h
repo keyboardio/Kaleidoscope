@@ -17,24 +17,24 @@
 
 #pragma once
 
-#include <Arduino.h>                            // for PROGMEM
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>  // for PROGMEM
+#include <stdint.h>   // for uint16_t, uint8_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
 
 #define MAX_COMBO_LENGTH 5
 
-#define USE_MAGIC_COMBOS(...)                                             \
-  namespace kaleidoscope {                                                \
-  namespace plugin {                                                      \
-  namespace magiccombo {                                                  \
-  const kaleidoscope::plugin::MagicCombo::Combo combos[] PROGMEM =        \
-    {__VA_ARGS__};                                                        \
-                                                                          \
-  const uint8_t combos_length = sizeof(combos) / sizeof(*combos);         \
-  }                                                                       \
-  }                                                                       \
+#define USE_MAGIC_COMBOS(...)                                      \
+  namespace kaleidoscope {                                         \
+  namespace plugin {                                               \
+  namespace magiccombo {                                           \
+  const kaleidoscope::plugin::MagicCombo::Combo combos[] PROGMEM = \
+    {__VA_ARGS__};                                                 \
+                                                                   \
+  const uint8_t combos_length = sizeof(combos) / sizeof(*combos);  \
+  }                                                                \
+  }                                                                \
   }
 
 namespace kaleidoscope {

@@ -44,16 +44,16 @@ struct FlashProps : kaleidoscope::driver::storage::BaseProps {
   static constexpr uint16_t length = EEPROM_EMULATION_SIZE;
 };
 
-template <typename _StorageProps>
-class Flash: public kaleidoscope::driver::storage::Base<_StorageProps> {
+template<typename _StorageProps>
+class Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
  public:
   template<typename T>
-  T& get(uint16_t offset, T& t) {
+  T &get(uint16_t offset, T &t) {
     return EEPROM.get(offset, t);
   }
 
   template<typename T>
-  const T& put(uint16_t offset, T& t) {
+  const T &put(uint16_t offset, T &t) {
     EEPROM.put(offset, t);
   }
 

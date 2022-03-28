@@ -18,7 +18,7 @@
 #include "kaleidoscope/plugin/HostPowerManagement.h"
 
 #include <Arduino.h>  // IWYU pragma: keep
-#include <stdint.h>                             // for uint8_t
+#include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 
@@ -29,7 +29,7 @@ extern uint8_t _usbSuspendState;
 namespace kaleidoscope {
 namespace plugin {
 
-bool HostPowerManagement::was_suspended_ = false;
+bool HostPowerManagement::was_suspended_   = false;
 bool HostPowerManagement::initial_suspend_ = true;
 
 EventHandlerResult HostPowerManagement::beforeEachCycle() {

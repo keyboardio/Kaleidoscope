@@ -29,19 +29,20 @@ namespace gd32 {
 namespace eval {
 
 struct KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
-  static constexpr uint8_t matrix_rows = 1;
+  static constexpr uint8_t matrix_rows    = 1;
   static constexpr uint8_t matrix_columns = 2;
 
-  static constexpr uint8_t matrix_row_pins[] = { PA3  };
-  static constexpr uint8_t matrix_col_pins[] = { PE4, PD12 };
+  static constexpr uint8_t matrix_row_pins[] = {PA3};
+  static constexpr uint8_t matrix_col_pins[] = {PE4, PD12};
 
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 
-class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps> {
+class KeyScanner : public kaleidoscope::driver::keyscanner::Base<KeyScannerProps> {
  private:
   typedef KeyScanner ThisType;
   typedef KeyScannerProps Props_;
+
  public:
   static bool do_scan;
 
@@ -55,6 +56,7 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
 
   static bool wasKeyswitchPressed(KeyAddr key_addr);
   static uint8_t previousPressedKeyswitchCount();
+
  private:
   /*
     each of these variables are storing the state for a row of keys
@@ -63,8 +65,8 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
     and the state in debounced_state[0].
   */
   struct debounce_t {
-    uint16_t db0;    // counter bit 0
-    uint16_t db1;    // counter bit 1
+    uint16_t db0;              // counter bit 0
+    uint16_t db1;              // counter bit 1
     uint16_t debounced_state;  // debounced state
   };
 
@@ -79,9 +81,9 @@ class KeyScanner: public kaleidoscope::driver::keyscanner::Base<KeyScannerProps>
   static uint16_t readRows();
 };
 
-} // namespace eval
-} // namespace gd32
-} // namespace device
-} // namespace kaleidoscope
+}  // namespace eval
+}  // namespace gd32
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

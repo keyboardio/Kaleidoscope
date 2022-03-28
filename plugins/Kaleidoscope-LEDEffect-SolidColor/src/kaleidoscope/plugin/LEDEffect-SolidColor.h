@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                                // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
 #include "kaleidoscope/plugin.h"                   // for Plugin
@@ -26,18 +26,15 @@
 namespace kaleidoscope {
 namespace plugin {
 class LEDSolidColor : public Plugin,
-  public LEDModeInterface {
+                      public LEDModeInterface {
  public:
-
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
-    : r_(r), g_(g), b_(b)
-  {}
+    : r_(r), g_(g), b_(b) {}
 
   // This class' instance has dynamic lifetime
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -50,12 +47,10 @@ class LEDSolidColor : public Plugin,
     void refreshAt(KeyAddr key_addr) final;
 
    private:
-
     const LEDSolidColor *parent_;
   };
 
  private:
-
   uint8_t r_, g_, b_;
 };
 

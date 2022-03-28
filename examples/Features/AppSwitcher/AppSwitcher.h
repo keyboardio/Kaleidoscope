@@ -34,10 +34,9 @@ class AppSwitcher : public kaleidoscope::Plugin {
 
  private:
   KeyAddr active_addr_ = KeyAddr::none();
-
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::AppSwitcher AppSwitcher;

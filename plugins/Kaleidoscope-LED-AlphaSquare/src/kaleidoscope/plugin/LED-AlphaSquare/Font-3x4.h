@@ -14,6 +14,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// clang-format off
 
 #pragma once
 

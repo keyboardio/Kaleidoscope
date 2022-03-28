@@ -48,50 +48,44 @@ extern bool verboseOutputEnabled();
 #ifdef KALEIDOSCOPE_HARDWARE_VIRTUAL_NO_LOGGING
 
 template<typename... Args__>
-inline
-void log_debug(Args__&&... args) {}
+inline void log_debug(Args__ &&...args) {}
 
 template<typename... Args__>
-inline
-void log_info(Args__&&... args) {}
+inline void log_info(Args__ &&...args) {}
 
-#else // #ifdef KALEIDOSCOPE_HARDWARE_VIRTUAL_NO_LOGGING
+#else  // #ifdef KALEIDOSCOPE_HARDWARE_VIRTUAL_NO_LOGGING
 
 template<typename... Args__>
-inline
-void log_debug(Args__&&... args) {
+inline void log_debug(Args__ &&...args) {
   if (verboseOutputEnabled()) {
     fprintf(stdout, std::forward<Args__>(args)...);
   }
 }
 
 template<typename... Args__>
-inline
-void log_info(Args__&&... args) {
+inline void log_info(Args__ &&...args) {
   if (verboseOutputEnabled()) {
     fprintf(stdout, std::forward<Args__>(args)...);
   }
 }
 
-#endif // #ifdef KALEIDOSCOPE_HARDWARE_VIRTUAL_NO_LOGGING
+#endif  // #ifdef KALEIDOSCOPE_HARDWARE_VIRTUAL_NO_LOGGING
 
 template<typename... Args__>
-inline
-void log_error(Args__&&... args) {
+inline void log_error(Args__ &&...args) {
   fprintf(stderr, std::forward<Args__>(args)...);
 }
 
 template<typename... Args__>
-inline
-void log_critical(Args__&&... args) {
+inline void log_critical(Args__ &&...args) {
   fprintf(stderr, std::forward<Args__>(args)...);
 }
 
-} // namespace logging
-} // namespace kaleidoscope
+}  // namespace logging
+}  // namespace kaleidoscope
 
 // Re-enable diagnostic for literal format strings.
 //
 #pragma GCC diagnostic pop
 
-#endif // ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifdef KALEIDOSCOPE_VIRTUAL_BUILD

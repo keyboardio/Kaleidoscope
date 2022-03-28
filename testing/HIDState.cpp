@@ -27,43 +27,43 @@
 namespace kaleidoscope {
 namespace testing {
 
-const std::vector<AbsoluteMouseReport>& HIDState::AbsoluteMouse() const {
+const std::vector<AbsoluteMouseReport> &HIDState::AbsoluteMouse() const {
   return absolute_mouse_reports_;
 }
 
-const AbsoluteMouseReport& HIDState::AbsoluteMouse(size_t i) const {
+const AbsoluteMouseReport &HIDState::AbsoluteMouse(size_t i) const {
   return absolute_mouse_reports_.at(i);
 }
 
-const std::vector<ConsumerControlReport>& HIDState::ConsumerControl() const {
+const std::vector<ConsumerControlReport> &HIDState::ConsumerControl() const {
   return consumer_control_reports_;
 }
 
-const ConsumerControlReport& HIDState::ConsumerControl(size_t i) const {
+const ConsumerControlReport &HIDState::ConsumerControl(size_t i) const {
   return consumer_control_reports_.at(i);
 }
 
-const std::vector<KeyboardReport>& HIDState::Keyboard() const {
+const std::vector<KeyboardReport> &HIDState::Keyboard() const {
   return keyboard_reports_;
 }
 
-const KeyboardReport& HIDState::Keyboard(size_t i) const {
+const KeyboardReport &HIDState::Keyboard(size_t i) const {
   return keyboard_reports_.at(i);
 }
 
-const std::vector<MouseReport>& HIDState::Mouse() const {
+const std::vector<MouseReport> &HIDState::Mouse() const {
   return mouse_reports_;
 }
 
-const MouseReport& HIDState::Mouse(size_t i) const {
+const MouseReport &HIDState::Mouse(size_t i) const {
   return mouse_reports_.at(i);
 }
 
-const std::vector<SystemControlReport>& HIDState::SystemControl() const {
+const std::vector<SystemControlReport> &HIDState::SystemControl() const {
   return system_control_reports_;
 }
 
-const SystemControlReport& HIDState::SystemControl(size_t i) const {
+const SystemControlReport &HIDState::SystemControl(size_t i) const {
   return system_control_reports_.at(i);
 }
 
@@ -71,7 +71,7 @@ namespace internal {
 
 // static
 void HIDStateBuilder::ProcessHidReport(
-  uint8_t id, const void* data, int len, int result) {
+  uint8_t id, const void *data, int len, int result) {
   switch (id) {
   case HID_REPORTID_KEYBOARD: {
     LOG(ERROR) << "Dropped BootKeyboardReport: unimplemented";
@@ -112,11 +112,11 @@ std::unique_ptr<HIDState> HIDStateBuilder::Snapshot() {
   // Populate state.
   // TODO: Grab a copy of current instantaneous state, like:
   //  key states, layer stack, led states
-  hid_state->absolute_mouse_reports_ = std::move(absolute_mouse_reports_);
+  hid_state->absolute_mouse_reports_   = std::move(absolute_mouse_reports_);
   hid_state->consumer_control_reports_ = std::move(consumer_control_reports_);
-  hid_state->keyboard_reports_ = std::move(keyboard_reports_);
-  hid_state->mouse_reports_ = std::move(mouse_reports_);
-  hid_state->system_control_reports_ = std::move(system_control_reports_);
+  hid_state->keyboard_reports_         = std::move(keyboard_reports_);
+  hid_state->mouse_reports_            = std::move(mouse_reports_);
+  hid_state->system_control_reports_   = std::move(system_control_reports_);
 
   Clear();  // Clear global state.
   return hid_state;
@@ -132,27 +132,27 @@ void HIDStateBuilder::Clear() {
 }
 
 // static
-void HIDStateBuilder::ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report) {
+void HIDStateBuilder::ProcessAbsoluteMouseReport(const AbsoluteMouseReport &report) {
   absolute_mouse_reports_.push_back(report);
 }
 
 // static
-void HIDStateBuilder::ProcessConsumerControlReport(const ConsumerControlReport& report) {
+void HIDStateBuilder::ProcessConsumerControlReport(const ConsumerControlReport &report) {
   consumer_control_reports_.push_back(report);
 }
 
 // static
-void HIDStateBuilder::ProcessKeyboardReport(const KeyboardReport& report) {
+void HIDStateBuilder::ProcessKeyboardReport(const KeyboardReport &report) {
   keyboard_reports_.push_back(report);
 }
 
 // static
-void HIDStateBuilder::ProcessMouseReport(const MouseReport& report) {
+void HIDStateBuilder::ProcessMouseReport(const MouseReport &report) {
   mouse_reports_.push_back(report);
 }
 
 // static
-void HIDStateBuilder::ProcessSystemControlReport(const SystemControlReport& report) {
+void HIDStateBuilder::ProcessSystemControlReport(const SystemControlReport &report) {
   system_control_reports_.push_back(report);
 }
 
@@ -167,6 +167,6 @@ std::vector<MouseReport> HIDStateBuilder::mouse_reports_;
 // static
 std::vector<SystemControlReport> HIDStateBuilder::system_control_reports_;
 
-}  // namesapce internal
+}  // namespace internal
 }  // namespace testing
 }  // namespace kaleidoscope

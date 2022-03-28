@@ -23,7 +23,7 @@
 #ifndef KALEIDOSCOPE_BOOTLOADER_FLIP_WORKAROUND
 #error To use the FLIP bootloader driver, KALEIDOSCOPE_BOOTLOADER_FLIP_WORKAROUND *must* be defined prior to including this header!
 #endif
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #include "kaleidoscope/driver/bootloader/Base.h"  // IWYU pragma: keep
 #include "kaleidoscope/driver/bootloader/None.h"  // for None
@@ -38,9 +38,9 @@ class FLIP : public kaleidoscope::driver::bootloader::Base {
  public:
   static void rebootBootloader();
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 typedef bootloader::None FLIP;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace avr
 }  // namespace bootloader

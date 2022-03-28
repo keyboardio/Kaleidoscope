@@ -18,10 +18,10 @@
 
 #include "kaleidoscope/plugin/IdleLEDs.h"
 
-#include <Arduino.h>                            // for F, PSTR, __FlashStrin...
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint32_t, uint16_t
+#include <Arduino.h>                       // for F, PSTR, __FlashStrin...
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint32_t, uint16_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -32,7 +32,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint32_t IdleLEDs::idle_time_limit = 600000; // 10 minutes
+uint32_t IdleLEDs::idle_time_limit = 600000;  // 10 minutes
 uint32_t IdleLEDs::start_time_     = 0;
 bool IdleLEDs::idle_;
 

@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/HostOS.h"
 
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for VirtualProps::Storage

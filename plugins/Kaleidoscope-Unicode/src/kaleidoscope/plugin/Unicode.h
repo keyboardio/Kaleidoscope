@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint8_t, uint32_t
+#include <stdint.h>  // for uint8_t, uint32_t
 
 #include "kaleidoscope/key_defs.h"  // for Key
 #include "kaleidoscope/plugin.h"    // for Plugin
@@ -48,6 +48,7 @@ class Unicode : public kaleidoscope::Plugin {
   static Key getLinuxKey() {
     return linux_key_;
   }
+
  private:
   static Key linux_key_;
   static uint8_t input_delay_;

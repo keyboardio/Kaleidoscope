@@ -22,15 +22,16 @@
 #ifdef ARDUINO_AVR_MODEL01
 
 // System headers
-#include <stdint.h>                                       // for uint8_t
+#include <stdint.h>  // for uint8_t
 // Arduino headers
-#include <Arduino.h>                                      // for PROGMEM
+#include <Arduino.h>  // for PROGMEM
 
 // Kaleidoscope headers
-#include "kaleidoscope/MatrixAddr.h"                      // for MatrixAddr
-#include "kaleidoscope/macro_helpers.h"                   // for RESTRICT_AR...
+#include "kaleidoscope/MatrixAddr.h"     // for MatrixAddr
+#include "kaleidoscope/macro_helpers.h"  // for RESTRICT_AR...
 
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 
 struct cRGB {
   uint8_t b;
@@ -44,19 +45,21 @@ struct cRGB {
 #include "kaleidoscope/driver/led/Base.h"                 // for BaseProps
 
 // Kaleidoscope-Hardware-Keyboardio-Model01 headers
-#include "kaleidoscope/driver/keyboardio/Model01Side.h"   // for keydata_t
+#include "kaleidoscope/driver/keyboardio/Model01Side.h"  // for keydata_t
 
 namespace kaleidoscope {
 namespace device {
 namespace keyboardio {
 
 struct Model01LEDDriverProps : public kaleidoscope::driver::led::BaseProps {
-  static constexpr uint8_t led_count = 64;
+  static constexpr uint8_t led_count             = 64;
   static constexpr uint8_t key_led_map[] PROGMEM = {
+    // clang-format off
     3, 4, 11, 12, 19, 20, 26, 27,     36, 37, 43, 44, 51, 52, 59, 60,
     2, 5, 10, 13, 18, 21, 25, 28,     35, 38, 42, 45, 50, 53, 58, 61,
-    1, 6, 9, 14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62,
-    0, 7, 8, 15, 16, 23, 31, 30,     33, 32, 40, 47, 48, 55, 56, 63,
+    1, 6, 9,  14, 17, 22, 24, 29,     34, 39, 41, 46, 49, 54, 57, 62,
+    0, 7, 8,  15, 16, 23, 31, 30,     33, 32, 40, 47, 48, 55, 56, 63,
+    // clang-format on
   };
 };
 
@@ -75,12 +78,12 @@ class Model01LEDDriver : public kaleidoscope::driver::led::Base<Model01LEDDriver
  private:
   static bool isLEDChanged;
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model01LEDDriver;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
-  static constexpr uint8_t matrix_rows = 4;
+  static constexpr uint8_t matrix_rows    = 4;
   static constexpr uint8_t matrix_columns = 16;
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
@@ -89,6 +92,7 @@ struct Model01KeyScannerProps : public kaleidoscope::driver::keyscanner::BasePro
 class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01KeyScannerProps> {
  private:
   typedef Model01KeyScanner ThisType;
+
  public:
   static void setup();
   static void scanMatrix();
@@ -112,12 +116,12 @@ class Model01KeyScanner : public kaleidoscope::driver::keyscanner::Base<Model01K
   static void actOnHalfRow(byte row, byte colState, byte colPrevState, byte startPos);
   static void enableScannerPower();
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class Model01KeyScanner;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct Model01Props : public kaleidoscope::device::ATmega32U4KeyboardProps {
-  typedef Model01LEDDriverProps  LEDDriverProps;
+  typedef Model01LEDDriverProps LEDDriverProps;
   typedef Model01LEDDriver LEDDriver;
   typedef Model01KeyScannerProps KeyScannerProps;
   typedef Model01KeyScanner KeyScanner;
@@ -134,14 +138,16 @@ class Model01 : public kaleidoscope::device::ATmega32U4Keyboard<Model01Props> {
   static void enableHardwareTestMode();
 };
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-} // namespace keyboardio
-} // namespace device
+}  // namespace keyboardio
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::keyboardio::Model01)
 
 }  // namespace kaleidoscope
+
+// clang-format off
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
                r0c0, r0c1, r0c2, r0c3, r0c4, r0c5, r0c6,                \

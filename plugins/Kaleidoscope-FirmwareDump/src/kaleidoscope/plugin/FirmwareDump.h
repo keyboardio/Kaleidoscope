@@ -23,7 +23,7 @@
 
 #ifdef __AVR__
 
-#include <stdint.h>                             // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
@@ -37,6 +37,7 @@ class FirmwareDump : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *command);
+
  private:
   uint16_t bootloader_size_;
 };

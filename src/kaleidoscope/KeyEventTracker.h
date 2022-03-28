@@ -97,7 +97,6 @@ class KeyEventTracker {
     }
     return false;
   }
-
 };
 
 }  // namespace kaleidoscope

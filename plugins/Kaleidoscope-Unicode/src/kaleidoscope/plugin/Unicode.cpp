@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/Unicode.h"
 
-#include <Arduino.h>                                      // for delay
-#include <Kaleidoscope-HostOS.h>                          // for HostOS, LINUX
-#include <stdint.h>                                       // for uint8_t
+#include <Arduino.h>              // for delay
+#include <Kaleidoscope-HostOS.h>  // for HostOS, LINUX
+#include <stdint.h>               // for uint8_t
 
 #include "kaleidoscope/Runtime.h"                         // for Runtime
 #include "kaleidoscope/device/device.h"                   // for Base<>::HID
@@ -155,7 +155,7 @@ __attribute__((weak)) Key hexToKey(uint8_t hex) {
   } else {
     m = Key_A.getKeyCode() + (hex - 0xA);
   }
-  return { m, KEY_FLAGS };
+  return {m, KEY_FLAGS};
 }
 
 __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
@@ -190,7 +190,7 @@ __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
       break;
     }
   }
-  return { m, KEY_FLAGS };
+  return {m, KEY_FLAGS};
 }
 
 __attribute__((weak)) void unicodeCustomStart(void) {

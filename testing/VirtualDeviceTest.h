@@ -38,16 +38,19 @@ namespace testing {
 // differentiated types for those polymorphic functions.
 class AddKeycodes : public std::set<Key> {
  public:
-  AddKeycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+  AddKeycodes(std::initializer_list<Key> list)
+    : std::set<Key>(list) {}
 };
 class RemoveKeycodes : public std::set<Key> {
  public:
-  RemoveKeycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+  RemoveKeycodes(std::initializer_list<Key> list)
+    : std::set<Key>(list) {}
 };
 
 class Keycodes : public std::set<Key> {
  public:
-  Keycodes(std::initializer_list<Key> list) : std::set<Key>(list) {}
+  Keycodes(std::initializer_list<Key> list)
+    : std::set<Key>(list) {}
 };
 
 
@@ -78,7 +81,7 @@ class VirtualDeviceTest : public ::testing::Test {
   void ClearState();
 
   // Get a pointer to the current list of observed HID reports
-  const HIDState* HIDReports() const;
+  const HIDState *HIDReports() const;
 
   // Get the timestamp of a logged Keyboard HID report
   uint32_t ReportTimestamp(size_t index) const;
@@ -116,8 +119,7 @@ class VirtualDeviceTest : public ::testing::Test {
 
   std::vector<ExpectedMouseReport> expected_mouse_reports_ = {};
 
-  void ExpectMouseReport(uint8_t buttons, int8_t x, int8_t y,
-                         int8_t v, int8_t h, std::string description);
+  void ExpectMouseReport(uint8_t buttons, int8_t x, int8_t y, int8_t v, int8_t h, std::string description);
 
   // ---------------------------------------------------------------------------
   std::set<uint8_t> current_keyboard_keycodes_ = {};
@@ -132,7 +134,6 @@ class VirtualDeviceTest : public ::testing::Test {
   void CheckReports() const;
   void CheckKeyboardReports() const;
   void CheckMouseReports() const;
-
 };
 
 }  // namespace testing

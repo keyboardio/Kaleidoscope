@@ -29,7 +29,11 @@ namespace testing {
 class ExpectedMouseReport {
  public:
   ExpectedMouseReport(uint32_t timestamp,
-                      uint8_t buttons, int8_t x, int8_t y, int8_t v, int8_t h,
+                      uint8_t buttons,
+                      int8_t x,
+                      int8_t y,
+                      int8_t v,
+                      int8_t h,
                       std::string message = "");
 
   uint8_t Buttons() const;
@@ -40,7 +44,7 @@ class ExpectedMouseReport {
 
   uint32_t Timestamp() const;
 
-  const std::string & Message() const;
+  const std::string &Message() const;
 
  private:
   uint32_t timestamp_;

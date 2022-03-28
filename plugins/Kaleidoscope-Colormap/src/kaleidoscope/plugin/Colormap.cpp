@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/Colormap.h"
 
-#include <Arduino.h>                            // for F, PSTR, __FlashStrin...
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>                         // for F, PSTR, __FlashStrin...
+#include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
+#include <Kaleidoscope-LED-Palette-Theme.h>  // for LEDPaletteTheme
+#include <stdint.h>                          // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -40,7 +40,7 @@ void ColormapEffect::max_layers(uint8_t max_) {
     return;
 
   max_layers_ = max_;
-  map_base_ = ::LEDPaletteTheme.reserveThemes(max_layers_);
+  map_base_   = ::LEDPaletteTheme.reserveThemes(max_layers_);
 }
 
 EventHandlerResult ColormapEffect::onNameQuery() {
@@ -68,8 +68,7 @@ EventHandlerResult ColormapEffect::onLayerChange() {
 }
 
 EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
-  return ::LEDPaletteTheme.themeFocusEvent(command, PSTR("colormap.map"),
-                                           map_base_, max_layers_);
+  return ::LEDPaletteTheme.themeFocusEvent(command, PSTR("colormap.map"), map_base_, max_layers_);
 }
 
 }  // namespace plugin

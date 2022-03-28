@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/CharShift.h"
 
-#include <Arduino.h>                                      // for F, __FlashS...
-#include <Kaleidoscope-FocusSerial.h>                     // for Focus, Focu...
-#include <Kaleidoscope-Ranges.h>                          // for CS_FIRST
+#include <Arduino.h>                   // for F, __FlashS...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, Focu...
+#include <Kaleidoscope-Ranges.h>       // for CS_FIRST
 
 #include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<...
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
@@ -38,7 +38,7 @@ namespace plugin {
 
 // =============================================================================
 // CharShift class variables
-CharShift::KeyPair const * CharShift::progmem_keypairs_{nullptr};
+CharShift::KeyPair const *CharShift::progmem_keypairs_{nullptr};
 uint8_t CharShift::num_keypairs_{0};
 
 bool CharShift::reverse_shift_state_{false};
@@ -131,13 +131,15 @@ CharShift::KeyPair CharShift::decodeCharShiftKey(Key key) {
 
 // This should be overridden if the KeyPairs array is stored in EEPROM
 __attribute__((weak))
-uint8_t CharShift::numKeyPairs() {
+uint8_t
+CharShift::numKeyPairs() {
   return numProgmemKeyPairs();
 }
 
 // This should be overridden if the KeyPairs array is stored in EEPROM
 __attribute__((weak))
-CharShift::KeyPair CharShift::readKeyPair(uint8_t n) {
+CharShift::KeyPair
+CharShift::readKeyPair(uint8_t n) {
   return readKeyPairFromProgmem(n);
 }
 
@@ -149,7 +151,7 @@ CharShift::KeyPair CharShift::readKeyPairFromProgmem(uint8_t n) {
   return cloneFromProgmem(progmem_keypairs_[n]);
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::CharShift CharShift;

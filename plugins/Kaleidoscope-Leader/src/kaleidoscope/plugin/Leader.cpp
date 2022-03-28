@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/Leader.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                // for LEAD_FIRST, LEAD_LAST
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for LEAD_FIRST, LEAD_LAST
+#include <stdint.h>                    // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -47,16 +47,16 @@ const Leader::dictionary_t *Leader::dictionary;
 // --- helpers ---
 
 #define PARTIAL_MATCH -1
-#define NO_MATCH -2
+#define NO_MATCH      -2
 
-#define isLeader(k) (k.getRaw() >= ranges::LEAD_FIRST && k.getRaw() <= ranges::LEAD_LAST)
-#define isActive() (sequence_[0] != Key_NoKey)
+#define isLeader(k)   (k.getRaw() >= ranges::LEAD_FIRST && k.getRaw() <= ranges::LEAD_LAST)
+#define isActive()    (sequence_[0] != Key_NoKey)
 
 // --- actions ---
 int8_t Leader::lookup(void) {
   bool match;
 
-  for (uint8_t seq_index = 0; ; seq_index++) {
+  for (uint8_t seq_index = 0;; seq_index++) {
     match = true;
 
     if (dictionary[seq_index].sequence[0].readFromProgmem() == Key_NoKey)
@@ -75,8 +75,7 @@ int8_t Leader::lookup(void) {
     if (!match)
       continue;
 
-    seq_key
-      = dictionary[seq_index].sequence[sequence_pos_ + 1].readFromProgmem();
+    seq_key = dictionary[seq_index].sequence[sequence_pos_ + 1].readFromProgmem();
     if (seq_key == Key_NoKey) {
       return seq_index;
     } else {
@@ -91,7 +90,7 @@ int8_t Leader::lookup(void) {
 
 void Leader::reset(void) {
   sequence_pos_ = 0;
-  sequence_[0] = Key_NoKey;
+  sequence_[0]  = Key_NoKey;
 }
 
 #ifndef NDEPRECATED
@@ -118,8 +117,8 @@ EventHandlerResult Leader::onKeyswitchEvent(KeyEvent &event) {
     if (!isLeader(event.key))
       return EventHandlerResult::OK;
 
-    start_time_ = Runtime.millisAtCycleStart();
-    sequence_pos_ = 0;
+    start_time_              = Runtime.millisAtCycleStart();
+    sequence_pos_            = 0;
     sequence_[sequence_pos_] = event.key;
 
     return EventHandlerResult::ABORT;
@@ -131,9 +130,9 @@ EventHandlerResult Leader::onKeyswitchEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
   }
 
-  start_time_ = Runtime.millisAtCycleStart();
+  start_time_              = Runtime.millisAtCycleStart();
   sequence_[sequence_pos_] = event.key;
-  int8_t action_index = lookup();
+  int8_t action_index      = lookup();
 
   if (action_index == NO_MATCH) {
     reset();
@@ -143,7 +142,7 @@ EventHandlerResult Leader::onKeyswitchEvent(KeyEvent &event) {
     return EventHandlerResult::ABORT;
   }
 
-  action_t leaderAction = (action_t) pgm_read_ptr((void const **) & (dictionary[action_index].action));
+  action_t leaderAction = (action_t)pgm_read_ptr((void const **)&(dictionary[action_index].action));
   (*leaderAction)(action_index);
   reset();
 

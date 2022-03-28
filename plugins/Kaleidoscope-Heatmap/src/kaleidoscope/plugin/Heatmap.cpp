@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/Heatmap.h"
 
-#include <Arduino.h>                            // for pgm_read_byte, PROGMEM
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>  // for pgm_read_byte, PROGMEM
+#include <stdint.h>   // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -36,19 +36,18 @@ namespace plugin {
 static const cRGB heat_colors_default_[] PROGMEM = {{0, 0, 0}, {25, 255, 25}, {25, 255, 255}, {25, 25, 255}};
 
 // colors from cold to hot
-const cRGB *Heatmap::heat_colors = heat_colors_default_;
+const cRGB *Heatmap::heat_colors    = heat_colors_default_;
 uint8_t Heatmap::heat_colors_length = 4;
 // number of millisecond to wait between each heatmap computation
 uint16_t Heatmap::update_delay = 1000;
 
 Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
-  : // store the number of times each key has been strock
+  :  // store the number of times each key has been strock
     heatmap_{},
     // max of heatmap_ (we divide by it so we start at 1)
     highest_(1),
     // last heatmap computation time
-    last_heatmap_comp_time_(Runtime.millisAtCycleStart())
-{}
+    last_heatmap_comp_time_(Runtime.millisAtCycleStart()) {}
 
 cRGB Heatmap::TransientLEDMode::computeColor(float v) {
   // compute the color corresponding to a value between 0 and 1
@@ -98,7 +97,7 @@ cRGB Heatmap::TransientLEDMode::computeColor(float v) {
     // static_cast<int>(5.9) → 5
     idx1 = static_cast<int>(val);
     idx2 = idx1 + 1;
-    fb = val - static_cast<float>(idx1);
+    fb   = val - static_cast<float>(idx1);
   }
 
   uint8_t r = static_cast<uint8_t>((pgm_read_byte(&(heat_colors[idx2].r)) - pgm_read_byte(&(heat_colors[idx1].r))) * fb + pgm_read_byte(&(heat_colors[idx1].r)));

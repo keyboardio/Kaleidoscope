@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint16_t, uint32_t
+#include <stdint.h>  // for uint16_t, uint32_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

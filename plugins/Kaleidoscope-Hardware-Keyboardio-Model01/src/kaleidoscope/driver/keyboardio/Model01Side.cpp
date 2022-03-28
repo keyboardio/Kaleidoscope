@@ -40,7 +40,7 @@ namespace driver {
 namespace keyboardio {
 
 #define SCANNER_I2C_ADDR_BASE 0x58
-#define ELEMENTS(arr)  (sizeof(arr) / sizeof((arr)[0]))
+#define ELEMENTS(arr)         (sizeof(arr) / sizeof((arr)[0]))
 
 uint8_t twi_uninitialized = 1;
 
@@ -82,8 +82,6 @@ uint8_t Model01Side::setKeyscanInterval(uint8_t delay) {
 }
 
 
-
-
 // returns -1 on error, otherwise returns the scanner version integer
 int Model01Side::readVersion() {
   return readRegister(TWI_CMD_VERSION);
@@ -113,7 +111,6 @@ uint8_t Model01Side::setLEDSPIFrequency(uint8_t frequency) {
 }
 
 
-
 int Model01Side::readRegister(uint8_t cmd) {
 
   uint8_t return_value = 0;
@@ -122,8 +119,7 @@ int Model01Side::readRegister(uint8_t cmd) {
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 
 
-
-  delayMicroseconds(15); // We may be able to drop this in the future
+  delayMicroseconds(15);  // We may be able to drop this in the future
   // but will need to verify with correctly
   // sized pull-ups on both the left and right
   // hands' i2c SDA and SCL lines
@@ -137,7 +133,6 @@ int Model01Side::readRegister(uint8_t cmd) {
   } else {
     return -1;
   }
-
 }
 
 
@@ -174,8 +169,8 @@ auto constexpr gamma8 = kaleidoscope::driver::color::gamma_correction;
 
 void Model01Side::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
-  data[0]  = TWI_CMD_LED_BASE + bank;
-  for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
+  data[0] = TWI_CMD_LED_BASE + bank;
+  for (uint8_t i = 0; i < LED_BYTES_PER_BANK; i++) {
     /* While the ATTiny controller does have a global brightness command, it is
      * limited to 32 levels, and those aren't nicely spread out either. For this
      * reason, we're doing our own brightness adjustment on this side, because
@@ -195,8 +190,7 @@ void Model01Side::setAllLEDsTo(cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
                     pgm_read_byte(&gamma8[color.b]),
                     pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.r])
-                   };
+                    pgm_read_byte(&gamma8[color.r])};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
@@ -205,14 +199,12 @@ void Model01Side::setOneLEDTo(uint8_t led, cRGB color) {
                     led,
                     pgm_read_byte(&gamma8[color.b]),
                     pgm_read_byte(&gamma8[color.g]),
-                    pgm_read_byte(&gamma8[color.r])
-                   };
+                    pgm_read_byte(&gamma8[color.r])};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
-
 }
 
-} // namespace keyboardio
-} // namespace driver
-} // namespace kaleidoscope
+}  // namespace keyboardio
+}  // namespace driver
+}  // namespace kaleidoscope
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

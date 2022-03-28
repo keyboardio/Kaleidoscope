@@ -16,16 +16,16 @@
 
 #include "kaleidoscope/plugin/DynamicMacros.h"
 
-#include <Arduino.h>                                // for delay, PSTR, strc...
-#include <Kaleidoscope-FocusSerial.h>               // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                    // for DYNAMIC_MACRO_FIRST
+#include <Arduino.h>                   // for delay, PSTR, strc...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for DYNAMIC_MACRO_FIRST
 
-#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
-#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
-#include "kaleidoscope/Runtime.h"                   // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"             // for VirtualProps::Sto...
-#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED
-#include "kaleidoscope/plugin/EEPROM-Settings.h"    // for EEPROMSettings
+#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                // for KeyEvent
+#include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"           // for VirtualProps::Sto...
+#include "kaleidoscope/keyswitch_state.h"         // for INJECTED, IS_PRESSED
+#include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
 
 // This is a special exception to the rule of only including a plugin's
 // top-level header file, because DynamicMacros doesn't depend on the Macros
@@ -67,9 +67,9 @@ void DynamicMacros::tap(Key key) {
 }
 
 void DynamicMacros::updateDynamicMacroCache() {
-  uint16_t pos = storage_base_;
-  uint8_t current_id = 0;
-  macro_t macro = MACRO_ACTION_END;
+  uint16_t pos              = storage_base_;
+  uint8_t current_id        = 0;
+  macro_t macro             = MACRO_ACTION_END;
   bool previous_macro_ended = false;
 
   map_[0] = 0;
@@ -103,7 +103,7 @@ void DynamicMacros::updateDynamicMacroCache() {
       previous_macro_ended = false;
       uint8_t keyCode, flags;
       do {
-        flags = Runtime.storage().read(pos++);
+        flags   = Runtime.storage().read(pos++);
         keyCode = Runtime.storage().read(pos++);
       } while (!(flags == 0 && keyCode == 0));
       break;
@@ -132,7 +132,7 @@ void DynamicMacros::updateDynamicMacroCache() {
 
 // public
 void DynamicMacros::play(uint8_t macro_id) {
-  macro_t macro = MACRO_ACTION_END;
+  macro_t macro    = MACRO_ACTION_END;
   uint8_t interval = 0;
   uint16_t pos;
   Key key;
@@ -289,7 +289,7 @@ void DynamicMacros::reserve_storage(uint16_t size) {
   updateDynamicMacroCache();
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::DynamicMacros DynamicMacros;

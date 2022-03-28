@@ -17,16 +17,16 @@
 
 #include "kaleidoscope/plugin/LED-AlphaSquare/Effect.h"
 
-#include <stdint.h>                               // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
-#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
-#include "kaleidoscope/KeyEvent.h"                // for KeyEvent
-#include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"           // for Device, CRGB
-#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"                // for Key, Key_NoKey, Key_0
-#include "kaleidoscope/keyswitch_state.h"         // for keyIsInjected
-#include "kaleidoscope/plugin/LEDControl.h"       // for LEDControl
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
+#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"         // for Device, CRGB
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey, Key_0
+#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected
+#include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 #include "kaleidoscope/plugin/LED-AlphaSquare.h"  // for AlphaSquare
 
@@ -35,10 +35,9 @@ namespace plugin {
 
 uint16_t AlphaSquareEffect::length = 1000;
 
-AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect */*parent*/) // NOLINT(readability/casting)
+AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect * /*parent*/)  // NOLINT(readability/casting)
   : last_key_left_(Key_NoKey),
-    last_key_right_(Key_NoKey)
-{}
+    last_key_right_(Key_NoKey) {}
 
 void AlphaSquareEffect::TransientLEDMode::update(void) {
   if (!Runtime.has_leds)
@@ -59,14 +58,14 @@ void AlphaSquareEffect::TransientLEDMode::update(void) {
 void AlphaSquareEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
   bool timed_out;
   uint8_t display_col = 2;
-  Key key = last_key_left_;
+  Key key             = last_key_left_;
 
   if (key_addr.col() < Runtime.device().matrix_columns / 2) {
     timed_out = Runtime.hasTimeExpired(start_time_left_, length);
   } else {
-    key = last_key_right_;
+    key         = last_key_right_;
     display_col = 10;
-    timed_out = Runtime.hasTimeExpired(start_time_right_, length);
+    timed_out   = Runtime.hasTimeExpired(start_time_right_, length);
   }
 
   if (!::AlphaSquare.isSymbolPart(key, KeyAddr(0, display_col), key_addr) || timed_out)
@@ -90,18 +89,18 @@ EventHandlerResult AlphaSquareEffect::onKeyEvent(KeyEvent &event) {
   //   return EventHandlerResult::OK;
 
   uint8_t display_col = 2;
-  auto this_led_mode = ::LEDControl.get_mode<TransientLEDMode>();
+  auto this_led_mode  = ::LEDControl.get_mode<TransientLEDMode>();
 
   Key prev_key = this_led_mode->last_key_left_;
 
   if (event.addr.col() < Runtime.device().matrix_columns / 2) {
-    this_led_mode->last_key_left_ = event.key;
+    this_led_mode->last_key_left_   = event.key;
     this_led_mode->start_time_left_ = Runtime.millisAtCycleStart();
   } else {
-    prev_key = this_led_mode->last_key_right_;
-    this_led_mode->last_key_right_ = event.key;
+    prev_key                         = this_led_mode->last_key_right_;
+    this_led_mode->last_key_right_   = event.key;
     this_led_mode->start_time_right_ = Runtime.millisAtCycleStart();
-    display_col = 10;
+    display_col                      = 10;
   }
 
   if (prev_key != event.key)

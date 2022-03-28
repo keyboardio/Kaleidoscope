@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/USB-Quirks.h"
 
-#include <Arduino.h>                                      // for delay
-#include <stdint.h>                                       // for uint8_t
+#include <Arduino.h>  // for delay
+#include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope/Runtime.h"                         // for Runtime
 #include "kaleidoscope/device/device.h"                   // for Base<>::HID

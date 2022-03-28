@@ -29,10 +29,11 @@ namespace raise {
 
 class TWI {
  public:
-  explicit TWI(int addr) : addr_(addr), crc_errors_(0) {}
+  explicit TWI(int addr)
+    : addr_(addr), crc_errors_(0) {}
 
   uint8_t writeTo(uint8_t *data, size_t length);
-  uint8_t readFrom(uint8_t* data, size_t length);
+  uint8_t readFrom(uint8_t *data, size_t length);
   void disable();
   void init(uint16_t clock_khz);
   uint8_t crc_errors() {

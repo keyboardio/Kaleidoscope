@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                                // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/plugin.h"                   // for Plugin
 #include "kaleidoscope/plugin/LEDMode.h"           // for LEDMode
@@ -25,18 +25,17 @@
 namespace kaleidoscope {
 namespace plugin {
 class LEDBreatheEffect : public Plugin,
-  public LEDModeInterface {
+                         public LEDModeInterface {
  public:
   LEDBreatheEffect(void) {}
 
-  uint8_t hue = 170;
+  uint8_t hue        = 170;
   uint8_t saturation = 255;
 
   // This class' instance has dynamic lifetime
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -48,11 +47,10 @@ class LEDBreatheEffect : public Plugin,
     void update(void) final;
 
    private:
-
     const LEDBreatheEffect *parent_;
 
     static constexpr uint8_t update_interval_ = 50;
-    uint8_t last_update_ = 0;
+    uint8_t last_update_                      = 0;
   };
 };
 

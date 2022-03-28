@@ -28,7 +28,7 @@ constexpr KeyAddr key_addr_A{2, 1};
 class ReportTimestamps : public VirtualDeviceTest {};
 
 TEST_F(ReportTimestamps, Keyboard) {
-  int delay = 10;
+  int delay        = 10;
   int current_time = 0;
 
   sim_.RunForMillis(delay);
@@ -40,7 +40,7 @@ TEST_F(ReportTimestamps, Keyboard) {
 
   ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
   EXPECT_THAT(state->HIDReports()->Keyboard(0).Timestamp(), current_time)
-      << "Report timestamp is the same as the simulator clock as of the end of the last cycle";
+    << "Report timestamp is the same as the simulator clock as of the end of the last cycle";
 
   sim_.RunForMillis(delay);
   current_time += delay;
@@ -51,7 +51,7 @@ TEST_F(ReportTimestamps, Keyboard) {
 
   ASSERT_EQ(state->HIDReports()->Keyboard().size(), 1);
   EXPECT_THAT(state->HIDReports()->Keyboard(0).Timestamp(), current_time)
-      << "Report timestamp is the same as the simulator clock as of the end of the last cycle";
+    << "Report timestamp is the same as the simulator clock as of the end of the last cycle";
 }
 
 }  // namespace

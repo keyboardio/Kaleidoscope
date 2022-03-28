@@ -21,7 +21,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class USBQuirks: public kaleidoscope::Plugin {
+class USBQuirks : public kaleidoscope::Plugin {
  public:
   USBQuirks() {}
 

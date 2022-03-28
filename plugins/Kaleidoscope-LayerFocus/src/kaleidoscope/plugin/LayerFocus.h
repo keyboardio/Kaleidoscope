@@ -24,7 +24,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-class LayerFocus: public kaleidoscope::Plugin {
+class LayerFocus : public kaleidoscope::Plugin {
  public:
   LayerFocus() {}
 

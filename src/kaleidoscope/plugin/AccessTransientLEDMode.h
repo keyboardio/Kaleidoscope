@@ -23,7 +23,6 @@ namespace plugin {
 
 class AccessTransientLEDMode {
  public:
-
   // This method is called when a plugin's LED mode is activated.
   // Derived plugins may reimplement it to store the id of their
   // exported LED mode. A plugin can thus check
@@ -34,9 +33,8 @@ class AccessTransientLEDMode {
   }
 
  protected:
-
   uint8_t led_mode_id_ = 255; /* 255 means uninitialized */
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope

@@ -33,7 +33,7 @@ class State {
  public:
   static std::unique_ptr<State> Snapshot();
 
-  const HIDState* HIDReports() const;
+  const HIDState *HIDReports() const;
 
  private:
   std::unique_ptr<HIDState> hid_state_;

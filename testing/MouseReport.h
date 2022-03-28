@@ -31,7 +31,7 @@ class MouseReport {
 
   static constexpr uint8_t kHidReportType = HID_REPORTID_MOUSE;
 
-  MouseReport(const void* data);
+  MouseReport(const void *data);
 
 
   static constexpr uint8_t kButtonLeft   = MOUSE_LEFT;
@@ -53,4 +53,4 @@ class MouseReport {
 };
 
 }  // namespace testing
-}  // namespce kaleidoscope
+}  // namespace kaleidoscope

@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/Redial.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

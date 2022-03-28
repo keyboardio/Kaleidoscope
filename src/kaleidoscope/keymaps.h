@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                        // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"          // for KeyAddr
 #include "kaleidoscope/device/device.h"    // for Device
@@ -27,8 +27,7 @@ extern const Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * ka
 
 namespace kaleidoscope {
 
-inline
-Key keyFromKeymap(uint8_t layer, KeyAddr key_addr) {
+inline Key keyFromKeymap(uint8_t layer, KeyAddr key_addr) {
   return keymaps_linear[layer][key_addr.toInt()].readFromProgmem();
 }
 

@@ -16,9 +16,9 @@
 
 #include "kaleidoscope/plugin/MouseKeys.h"
 
-#include <Arduino.h>                                           // for F, __F...
-#include <Kaleidoscope-FocusSerial.h>                          // for Focus
-#include <stdint.h>                                            // for uint8_t
+#include <Arduino.h>                   // for F, __F...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/KeyEvent.h"                             // for KeyEvent
 #include "kaleidoscope/Runtime.h"                              // for Runtime
@@ -34,13 +34,13 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint8_t MouseKeys::speed = 1;
+uint8_t MouseKeys::speed       = 1;
 uint16_t MouseKeys::speedDelay = 1;
 
-uint8_t MouseKeys::accelSpeed = 1;
+uint8_t MouseKeys::accelSpeed  = 1;
 uint16_t MouseKeys::accelDelay = 64;
 
-uint8_t MouseKeys::wheelSpeed = 1;
+uint8_t MouseKeys::wheelSpeed  = 1;
 uint16_t MouseKeys::wheelDelay = 50;
 
 // =============================================================================
@@ -57,27 +57,27 @@ void MouseKeys::setSpeedLimit(uint8_t speed_limit) {
 // =============================================================================
 // Key variant tests
 
-bool MouseKeys::isMouseKey(const Key& key) const {
+bool MouseKeys::isMouseKey(const Key &key) const {
   return (key.getFlags() == (SYNTHETIC | IS_MOUSE_KEY));
 }
 
-bool MouseKeys::isMouseButtonKey(const Key& key) const {
+bool MouseKeys::isMouseButtonKey(const Key &key) const {
   uint8_t variant = key.getKeyCode() & (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP);
   return variant == KEY_MOUSE_BUTTON;
 }
 
-bool MouseKeys::isMouseMoveKey(const Key& key) const {
-  uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
+bool MouseKeys::isMouseMoveKey(const Key &key) const {
+  uint8_t mask    = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
   uint8_t variant = key.getKeyCode() & mask;
   return variant == 0;
 }
 
-bool MouseKeys::isMouseWarpKey(const Key& key) const {
+bool MouseKeys::isMouseWarpKey(const Key &key) const {
   return (key.getKeyCode() & KEY_MOUSE_WARP) != 0;
 }
 
-bool MouseKeys::isMouseWheelKey(const Key& key) const {
-  uint8_t mask = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
+bool MouseKeys::isMouseWheelKey(const Key &key) const {
+  uint8_t mask    = (KEY_MOUSE_BUTTON | KEY_MOUSE_WARP | KEY_MOUSE_WHEEL);
   uint8_t variant = key.getKeyCode() & mask;
   return variant == KEY_MOUSE_WHEEL;
 }
@@ -160,7 +160,7 @@ EventHandlerResult MouseKeys::afterReportingState(const KeyEvent &event) {
   // A mouse key event has been successfully registered, and we have now
   // gathered all the information on held mouse movement and wheel keys, so it's
   // safe to update the direction information.
-  directions_ = pending_directions_;
+  directions_         = pending_directions_;
   pending_directions_ = 0;
 
   if (isMouseMoveKey(event.key)) {
@@ -212,9 +212,9 @@ void MouseKeys::sendMouseButtonReport() const {
 void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
   mousekeys::wrapper.warp(
     ((event.key.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
-    ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00)        |
-    ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00)    |
-    ((event.key.getKeyCode() & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00)    |
+    ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00) |
+    ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
+    ((event.key.getKeyCode() & KEY_MOUSE_LEFT) ? WARP_LEFT : 0x00) |
     ((event.key.getKeyCode() & KEY_MOUSE_RIGHT) ? WARP_RIGHT : 0x00));
 }
 
@@ -222,8 +222,8 @@ void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
 void MouseKeys::sendMouseMoveReport() {
   move_start_time_ = Runtime.millisAtCycleStart();
 
-  int8_t vx = 0;
-  int8_t vy = 0;
+  int8_t vx         = 0;
+  int8_t vy         = 0;
   uint8_t direction = directions_ & move_mask_;
 
   if (direction == 0) {
@@ -251,8 +251,8 @@ void MouseKeys::sendMouseMoveReport() {
 void MouseKeys::sendMouseWheelReport() {
   wheel_start_time_ = Runtime.millisAtCycleStart();
 
-  int8_t vx = 0;
-  int8_t vy = 0;
+  int8_t vx         = 0;
+  int8_t vy         = 0;
   uint8_t direction = directions_ >> wheel_offset_;
 
   if (direction != 0) {
@@ -274,7 +274,7 @@ void MouseKeys::sendMouseWheelReport() {
   }
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::MouseKeys MouseKeys;

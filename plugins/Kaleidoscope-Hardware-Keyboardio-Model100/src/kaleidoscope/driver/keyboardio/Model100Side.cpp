@@ -36,7 +36,7 @@ namespace driver {
 namespace keyboardio {
 
 #define SCANNER_I2C_ADDR_BASE 0x58
-#define ELEMENTS(arr)  (sizeof(arr) / sizeof((arr)[0]))
+#define ELEMENTS(arr)         (sizeof(arr) / sizeof((arr)[0]))
 
 uint8_t twi_uninitialized = 1;
 
@@ -75,8 +75,6 @@ uint8_t Model100Side::setKeyscanInterval(uint8_t delay) {
 }
 
 
-
-
 // returns -1 on error, otherwise returns the scanner version integer
 int Model100Side::readVersion() {
   return readRegister(TWI_CMD_VERSION);
@@ -100,7 +98,7 @@ int Model100Side::readLEDSPIFrequency() {
 // https://www.arduino.cc/en/Reference/WireEndTransmission
 uint8_t Model100Side::setLEDSPIFrequency(uint8_t frequency) {
   uint8_t data[] = {TWI_CMD_LED_SPI_FREQUENCY, frequency};
-  uint8_t result  = writeData(data, ELEMENTS(data));
+  uint8_t result = writeData(data, ELEMENTS(data));
 
   return result;
 }
@@ -134,11 +132,10 @@ bool Model100Side::isDeviceAvailable() {
     // we've decremented the counter, but it's not time to probe for the device yet.
     return false;
   }
-
 }
 
 void Model100Side::markDeviceUnavailable() {
-  unavailable_device_check_countdown_ = 1; // We think there was a comms problem. Check on the next cycle
+  unavailable_device_check_countdown_ = 1;  // We think there was a comms problem. Check on the next cycle
 }
 
 uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
@@ -156,15 +153,15 @@ uint8_t Model100Side::writeData(uint8_t *data, uint8_t length) {
 
 int Model100Side::readRegister(uint8_t cmd) {
   uint8_t return_value = 0;
-  uint8_t data[] = {cmd};
-  uint8_t result  = writeData(data, ELEMENTS(data));
+  uint8_t data[]       = {cmd};
+  uint8_t result       = writeData(data, ELEMENTS(data));
 
   // If the setup failed, return. This means there was a problem asking for the register
   if (result) {
     return -1;
   }
 
-  delayMicroseconds(50); // TODO We may be able to drop this in the future
+  delayMicroseconds(50);  // TODO We may be able to drop this in the future
   // but will need to verify with correctly
   // sized pull-ups on both the left and right
   // hands' i2c SDA and SCL lines
@@ -173,14 +170,13 @@ int Model100Side::readRegister(uint8_t cmd) {
 
   // perform blocking read into buffer
 
-  Wire.requestFrom(addr, 1);    // request 1 byte from the keyscanner
+  Wire.requestFrom(addr, 1);  // request 1 byte from the keyscanner
   if (Wire.available()) {
     return Wire.read();
   } else {
     markDeviceUnavailable();
     return -1;
   }
-
 }
 
 
@@ -192,9 +188,9 @@ bool Model100Side::readKeys() {
 
   uint8_t row_counter = 0;
   // perform blocking read into buffer
-  uint8_t read = 0;
+  uint8_t read           = 0;
   uint8_t bytes_returned = 0;
-  bytes_returned = Wire.requestFrom(addr, 5);    // request 5 bytes from the keyscanner
+  bytes_returned         = Wire.requestFrom(addr, 5);  // request 5 bytes from the keyscanner
   if (bytes_returned < 5) {
     return false;
   }
@@ -224,8 +220,8 @@ void Model100Side::sendLEDData() {
 
 void Model100Side::sendLEDBank(uint8_t bank) {
   uint8_t data[LED_BYTES_PER_BANK + 1];
-  data[0]  = TWI_CMD_LED_BASE + bank;
-  for (uint8_t i = 0 ; i < LED_BYTES_PER_BANK; i++) {
+  data[0] = TWI_CMD_LED_BASE + bank;
+  for (uint8_t i = 0; i < LED_BYTES_PER_BANK; i++) {
     /* While the ATTiny controller does have a global brightness command, it is
      * limited to 32 levels, and those aren't nicely spread out either. For this
      * reason, we're doing our own brightness adjustment on this side, because
@@ -238,16 +234,15 @@ void Model100Side::sendLEDBank(uint8_t bank) {
 
     data[i + 1] = c;
   }
-  uint8_t result  = writeData(data, ELEMENTS(data));
+  uint8_t result = writeData(data, ELEMENTS(data));
 }
 
 void Model100Side::setAllLEDsTo(cRGB color) {
   uint8_t data[] = {TWI_CMD_LED_SET_ALL_TO,
                     color.b,
                     color.g,
-                    color.r
-                   };
-  uint8_t result  = writeData(data, ELEMENTS(data));
+                    color.r};
+  uint8_t result = writeData(data, ELEMENTS(data));
 }
 
 void Model100Side::setOneLEDTo(uint8_t led, cRGB color) {
@@ -255,14 +250,12 @@ void Model100Side::setOneLEDTo(uint8_t led, cRGB color) {
                     led,
                     color.b,
                     color.g,
-                    color.r
-                   };
-  uint8_t result  = writeData(data, ELEMENTS(data));
-
+                    color.r};
+  uint8_t result = writeData(data, ELEMENTS(data));
 }
 
-} // namespace keyboardio
-} // namespace driver
-} // namespace kaleidoscope
+}  // namespace keyboardio
+}  // namespace driver
+}  // namespace kaleidoscope
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

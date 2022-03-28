@@ -17,14 +17,14 @@
 
 #pragma once
 
-#include <stdint.h>                                 // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include <KeyboardioHID.h>
 // From KeyboardioHID:
-#include "BootKeyboard/BootKeyboard.h"              // for BootKeyboard, Boo...
-#include "MultiReport/ConsumerControl.h"            // for ConsumerControl
-#include "MultiReport/Keyboard.h"                   // for Keyboard, Keyboard_
-#include "MultiReport/SystemControl.h"              // for SystemControl
+#include "BootKeyboard/BootKeyboard.h"    // for BootKeyboard, Boo...
+#include "MultiReport/ConsumerControl.h"  // for ConsumerControl
+#include "MultiReport/Keyboard.h"         // for Keyboard, Keyboard_
+#include "MultiReport/SystemControl.h"    // for SystemControl
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, Keyboar...
 
@@ -176,15 +176,15 @@ class SystemControlWrapper {
   }
 };
 
-struct KeyboardProps: public base::KeyboardProps {
+struct KeyboardProps : public base::KeyboardProps {
   typedef BootKeyboardWrapper BootKeyboard;
   typedef NKROKeyboardWrapper NKROKeyboard;
   typedef ConsumerControlWrapper ConsumerControl;
   typedef SystemControlWrapper SystemControl;
 };
 
-template <typename _Props>
-class Keyboard: public base::Keyboard<_Props> {};
+template<typename _Props>
+class Keyboard : public base::Keyboard<_Props> {};
 
 }  // namespace keyboardio
 }  // namespace hid

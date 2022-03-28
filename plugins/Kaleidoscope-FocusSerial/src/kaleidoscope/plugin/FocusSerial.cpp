@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/FocusSerial.h"
 
-#include <Arduino.h>                            // for __FlashStringHelper, F
-#include <HardwareSerial.h>                     // for HardwareSerial
-#include <stdint.h>                             // for uint8_t
-#include <string.h>                             // for memset
+#include <Arduino.h>         // for __FlashStringHelper, F
+#include <HardwareSerial.h>  // for HardwareSerial
+#include <stdint.h>          // for uint8_t
+#include <string.h>          // for memset
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -44,10 +44,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 
   do {
     command_[buf_cursor_++] = Runtime.serialPort().read();
-  } while (command_[buf_cursor_ - 1] != SEPARATOR
-           && buf_cursor_ < sizeof(command_)
-           && Runtime.serialPort().available()
-           && (Runtime.serialPort().peek() != NEWLINE));
+  } while (command_[buf_cursor_ - 1] != SEPARATOR && buf_cursor_ < sizeof(command_) && Runtime.serialPort().available() && (Runtime.serialPort().peek() != NEWLINE));
 
 
   // If there was no command, there's nothing to do
@@ -57,9 +54,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
     return EventHandlerResult::OK;
   }
 
-  if ((command_[buf_cursor_ - 1] != SEPARATOR)  && (Runtime.serialPort().peek() != NEWLINE)
-      && buf_cursor_ < sizeof(command_)
-     ) {
+  if ((command_[buf_cursor_ - 1] != SEPARATOR) && (Runtime.serialPort().peek() != NEWLINE) && buf_cursor_ < sizeof(command_)) {
     // We don't have enough command to work with yet.
     // Let's leave the buffer around for another cycle
     return EventHandlerResult::OK;
@@ -74,7 +69,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   // Then process the command
   Runtime.onFocusEvent(command_);
   while (Runtime.serialPort().available()) {
-    char c =  Runtime.serialPort().read();
+    char c = Runtime.serialPort().read();
     if (c == NEWLINE) {
       // newline serves as an end-of-command marker
       // don't drain the buffer past there
@@ -86,7 +81,6 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   buf_cursor_ = 0;
   memset(command_, 0, sizeof(command_));
   return EventHandlerResult::OK;
-
 }
 
 bool FocusSerial::handleHelp(const char *command,

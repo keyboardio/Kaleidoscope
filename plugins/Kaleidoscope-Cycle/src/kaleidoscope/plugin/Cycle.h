@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for CYCLE
-#include <stdint.h>                             // for uint8_t
+#include <Kaleidoscope-Ranges.h>  // for CYCLE
+#include <stdint.h>               // for uint8_t
 
 #include "Arduino.h"                            // for PROGMEM
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
@@ -29,10 +29,10 @@
 
 constexpr Key Key_Cycle = Key(kaleidoscope::ranges::CYCLE);
 
-#define cycleThrough(...) ({                                \
-      static const Key __k[] PROGMEM = { __VA_ARGS__ };     \
-      Cycle.replace(sizeof(__k) / sizeof(Key), &__k[0]); \
-    })
+#define cycleThrough(...) ({                         \
+  static const Key __k[] PROGMEM = {__VA_ARGS__};    \
+  Cycle.replace(sizeof(__k) / sizeof(Key), &__k[0]); \
+})
 
 namespace kaleidoscope {
 namespace plugin {

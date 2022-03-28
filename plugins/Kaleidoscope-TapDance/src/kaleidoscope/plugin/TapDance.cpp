@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/TapDance.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                // for TD_FIRST
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for TD_FIRST
+#include <stdint.h>                    // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
@@ -37,7 +37,7 @@ namespace plugin {
 
 // --- config ---
 
-uint16_t TapDance::time_out = 200;
+uint16_t TapDance::time_out  = 200;
 uint8_t TapDance::tap_count_ = 0;
 
 KeyEventTracker TapDance::event_tracker_;
@@ -54,7 +54,7 @@ void TapDance::actionKeys(uint8_t tap_count,
     tap_count = max_keys;
 
   KeyEvent event = event_queue_.event(0);
-  event.key = tap_keys[tap_count - 1].readFromProgmem();
+  event.key      = tap_keys[tap_count - 1].readFromProgmem();
 
   if (action == Interrupt || action == Timeout || action == Hold) {
     event_queue_.shift();
@@ -68,7 +68,7 @@ void TapDance::actionKeys(uint8_t tap_count,
 
 
 void TapDance::flushQueue(KeyAddr ignored_addr) {
-  while (! event_queue_.isEmpty()) {
+  while (!event_queue_.isEmpty()) {
     KeyEvent queued_event = event_queue_.event(0);
     event_queue_.shift();
     if (queued_event.addr != ignored_addr)
@@ -94,7 +94,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(KeyEvent &event) {
   }
 
   // If event.addr is not a physical key, ignore it; some other plugin injected it.
-  if (! event.addr.isValid() || keyIsInjected(event.state)) {
+  if (!event.addr.isValid() || keyIsInjected(event.state)) {
     return EventHandlerResult::OK;
   }
 
@@ -109,10 +109,10 @@ EventHandlerResult TapDance::onKeyswitchEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
 
   KeyAddr td_addr = event_queue_.addr(0);
-  Key     td_key = Layer.lookupOnActiveLayer(td_addr);
-  uint8_t td_id = td_key.getRaw() - ranges::TD_FIRST;
+  Key td_key      = Layer.lookupOnActiveLayer(td_addr);
+  uint8_t td_id   = td_key.getRaw() - ranges::TD_FIRST;
 
-  if (! event_queue_.isEmpty() &&
+  if (!event_queue_.isEmpty() &&
       event.addr != event_queue_.addr(0)) {
     // Interrupt: Call `tapDanceAction()` first, so it will have access to the
     // TapDance key press event that needs to be sent, then flush the queue.
@@ -121,7 +121,7 @@ EventHandlerResult TapDance::onKeyswitchEvent(KeyEvent &event) {
     tap_count_ = 0;
     // If the event isn't another TapDance key, let it proceed. If it is, fall
     // through to the next block, which handles "Tap" actions.
-    if (! isTapDanceKey(event.key))
+    if (!isTapDanceKey(event.key))
       return EventHandlerResult::OK;
   }
 
@@ -141,8 +141,8 @@ EventHandlerResult TapDance::afterEachCycle() {
 
   // The first event in the queue is now guaranteed to be a TapDance key.
   KeyAddr td_addr = event_queue_.addr(0);
-  Key     td_key = Layer.lookupOnActiveLayer(td_addr);
-  uint8_t td_id = td_key.getRaw() - ranges::TD_FIRST;
+  Key td_key      = Layer.lookupOnActiveLayer(td_addr);
+  uint8_t td_id   = td_key.getRaw() - ranges::TD_FIRST;
 
   // Check for timeout
   uint16_t start_time = event_queue_.timestamp(0);
@@ -170,8 +170,7 @@ EventHandlerResult TapDance::afterEachCycle() {
 }  // namespace plugin
 }  // namespace kaleidoscope
 
-__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
-                                          kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
+__attribute__((weak)) void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
 }
 
 kaleidoscope::plugin::TapDance TapDance;

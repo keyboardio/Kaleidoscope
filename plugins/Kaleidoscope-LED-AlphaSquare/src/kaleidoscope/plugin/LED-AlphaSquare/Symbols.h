@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                               // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/plugin/LED-AlphaSquare.h"  // for SYM4x4
 
@@ -26,11 +26,14 @@ namespace plugin {
 namespace alpha_square {
 namespace symbols {
 
+// clang-format off
+
 /* λ */
 static constexpr uint16_t Lambda = SYM4x4(1, 0, 0, 0,
                                           0, 1, 0, 0,
                                           0, 1, 1, 0,
                                           1, 0, 0, 1);
+// clang-format on
 
 }  // namespace symbols
 }  // namespace alpha_square

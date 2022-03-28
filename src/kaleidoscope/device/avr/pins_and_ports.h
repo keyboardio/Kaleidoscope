@@ -24,7 +24,7 @@
 #if !defined(__ASSEMBLER__) && !defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 #include <avr/io.h>
 #endif
-#define PORT_SHIFTER 4 // this may be 4 for all AVR chips
+#define PORT_SHIFTER 4  // this may be 4 for all AVR chips
 
 // If you want to add more to this list, reference the PINx definitions in these header
 // files: https://github.com/vancegroup-mirrors/avr-libc/tree/master/avr-libc/include/avr
@@ -62,7 +62,7 @@
 /* I/O pins */
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define PINDEF(port, pin) ((PIN##port##_ADDRESS << PORT_SHIFTER) | pin)
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #define PINDEF(port, pin) 0
 #define PORTA
 #define PORTB
@@ -70,7 +70,7 @@
 #define PORTD
 #define PORTE
 #define PORTF
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 #ifdef PORTA
 #define PIN_A0 PINDEF(A, 0)
@@ -134,28 +134,29 @@
 #endif
 
 /* converting pins to ports */
-enum { PIN_OFFSET, DDR_OFFSET, PORT_OFFSET};
+enum { PIN_OFFSET,
+       DDR_OFFSET,
+       PORT_OFFSET };
 
-#define PIN_ADDRESS_MASK 0xF
+#define PIN_ADDRESS_MASK       0xF
 
 #define PIN_ADDRESS(p, offset) _SFR_IO8(ADDRESS_BASE + (p >> PORT_SHIFTER) + offset)
-#define PIN_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PIN_OFFSET )
-#define DDR_REG_FOR_PIN(pin) PIN_ADDRESS(pin, DDR_OFFSET )
-#define PORT_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PORT_OFFSET )
-#define PIN_NUM_FOR_PIN(pin) ( pin & PIN_ADDRESS_MASK )
-#define PIN_MASK_FOR_PIN(pin) _BV(PIN_NUM_FOR_PIN(pin))
+#define PIN_REG_FOR_PIN(pin)   PIN_ADDRESS(pin, PIN_OFFSET)
+#define DDR_REG_FOR_PIN(pin)   PIN_ADDRESS(pin, DDR_OFFSET)
+#define PORT_REG_FOR_PIN(pin)  PIN_ADDRESS(pin, PORT_OFFSET)
+#define PIN_NUM_FOR_PIN(pin)   (pin & PIN_ADDRESS_MASK)
+#define PIN_MASK_FOR_PIN(pin)  _BV(PIN_NUM_FOR_PIN(pin))
 
-#define DDR_INPUT(pin) (DDR_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
-#define DDR_OUTPUT(pin) (DDR_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
-
-
-#define ENABLE_PULLUP(pin) (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
-#define DISABLE_PULLUP(pin) (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+#define DDR_INPUT(pin)         (DDR_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+#define DDR_OUTPUT(pin)        (DDR_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
 
 
-#define OUTPUT_HIGH(pin) (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
-#define OUTPUT_LOW(pin) (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
-#define OUTPUT_TOGGLE(pin) (PORT_REG_FOR_PIN(pin) ^= (PIN_MASK_FOR_PIN(pin)))
+#define ENABLE_PULLUP(pin)     (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
+#define DISABLE_PULLUP(pin)    (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
 
-#define READ_PIN(pin) (!!(PIN_REG_FOR_PIN(pin) & PIN_MASK_FOR_PIN(pin)))
 
+#define OUTPUT_HIGH(pin)       (PORT_REG_FOR_PIN(pin) |= (PIN_MASK_FOR_PIN(pin)))
+#define OUTPUT_LOW(pin)        (PORT_REG_FOR_PIN(pin) &= ~(PIN_MASK_FOR_PIN(pin)))
+#define OUTPUT_TOGGLE(pin)     (PORT_REG_FOR_PIN(pin) ^= (PIN_MASK_FOR_PIN(pin)))
+
+#define READ_PIN(pin)          (!!(PIN_REG_FOR_PIN(pin) & PIN_MASK_FOR_PIN(pin)))

@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>    // for MACRO_FIRST
-#include <stdint.h>                 // for uint8_t
+#include <Kaleidoscope-Ranges.h>  // for MACRO_FIRST
+#include <stdint.h>               // for uint8_t
 
 #include "kaleidoscope/key_defs.h"  // for Key
 

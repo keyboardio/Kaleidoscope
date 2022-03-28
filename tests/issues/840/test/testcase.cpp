@@ -27,13 +27,13 @@ using ::testing::IsEmpty;
 class Issue840 : public VirtualDeviceTest {};
 
 TEST_F(Issue840, HasNotRegressed) {
-  sim_.Press(2, 1); // Press System_PowerDown
+  sim_.Press(2, 1);  // Press System_PowerDown
   auto state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->SystemControl().size(), 1);
   EXPECT_THAT(state->HIDReports()->SystemControl(0), Contains(System_PowerDown));
 
-  sim_.Press(3, 5); // Press System_Sleep
+  sim_.Press(3, 5);  // Press System_Sleep
   state = RunCycle();
 
   ASSERT_EQ(state->HIDReports()->SystemControl().size(), 1);

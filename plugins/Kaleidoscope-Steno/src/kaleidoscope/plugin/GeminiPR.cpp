@@ -17,11 +17,11 @@
 
 #include "kaleidoscope/plugin/GeminiPR.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <HardwareSerial.h>                     // for HardwareSerial
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint8_t
-#include <string.h>                             // for memset
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <HardwareSerial.h>            // for HardwareSerial
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint8_t
+#include <string.h>                    // for memset
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_

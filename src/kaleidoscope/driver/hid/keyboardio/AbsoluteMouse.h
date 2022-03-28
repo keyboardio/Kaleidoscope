@@ -17,12 +17,12 @@
 
 #pragma once
 
-#include <stdint.h>                                      // for uint8_t, int8_t
+#include <stdint.h>  // for uint8_t, int8_t
 
 #include <KeyboardioHID.h>
 // From KeyboardioHID:
-#include "DeviceAPIs/AbsoluteMouseAPI.hpp"               // for AbsoluteMous...
-#include "SingleReport/SingleAbsoluteMouse.h"            // for SingleAbsolu...
+#include "DeviceAPIs/AbsoluteMouseAPI.hpp"     // for AbsoluteMous...
+#include "SingleReport/SingleAbsoluteMouse.h"  // for SingleAbsolu...
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
 
@@ -66,12 +66,12 @@ class AbsoluteMouseWrapper {
   }
 };
 
-struct AbsoluteMouseProps: public base::AbsoluteMouseProps {
+struct AbsoluteMouseProps : public base::AbsoluteMouseProps {
   typedef AbsoluteMouseWrapper AbsoluteMouse;
 };
 
-template <typename _Props>
-class AbsoluteMouse: public base::AbsoluteMouse<_Props> {};
+template<typename _Props>
+class AbsoluteMouse : public base::AbsoluteMouse<_Props> {};
 
 }  // namespace keyboardio
 }  // namespace hid

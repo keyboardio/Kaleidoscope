@@ -26,7 +26,7 @@ namespace kaleidoscope {
 namespace driver {
 namespace hid {
 
-struct KeyboardioProps: public BaseProps {
+struct KeyboardioProps : public BaseProps {
   typedef keyboardio::KeyboardProps KeyboardProps;
   typedef keyboardio::Keyboard<KeyboardProps> Keyboard;
   typedef keyboardio::MouseProps MouseProps;
@@ -35,8 +35,8 @@ struct KeyboardioProps: public BaseProps {
   typedef keyboardio::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
 };
 
-template <typename _Props>
-class Keyboardio: public Base<_Props> {};
+template<typename _Props>
+class Keyboardio : public Base<_Props> {};
 
 }  // namespace hid
 }  // namespace driver

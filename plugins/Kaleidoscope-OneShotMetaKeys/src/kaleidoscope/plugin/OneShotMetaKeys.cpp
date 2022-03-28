@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/OneShotMetaKeys.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-OneShot.h>               // for OneShot
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-OneShot.h>      // for OneShot
 
 #include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
 #include "kaleidoscope/KeyAddrMap.h"            // for KeyAddrMap<>::Iterator
@@ -92,7 +92,7 @@ bool OneShotMetaKeys::isMetaStickyActive() {
   return false;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::OneShotMetaKeys OneShotMetaKeys;

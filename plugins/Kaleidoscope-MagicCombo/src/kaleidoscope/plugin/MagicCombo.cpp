@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/MagicCombo.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t, int8_t, uin...
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint16_t, int8_t, uin...
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for Device
@@ -29,7 +29,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint16_t MagicCombo::min_interval = 500;
-uint16_t MagicCombo::start_time_ = 0;
+uint16_t MagicCombo::start_time_  = 0;
 
 EventHandlerResult MagicCombo::onNameQuery() {
   return ::Focus.sendName(F("MagicCombo"));
@@ -55,7 +55,7 @@ EventHandlerResult MagicCombo::afterEachCycle() {
       match = false;
 
     if (match && Runtime.hasTimeExpired(start_time_, min_interval)) {
-      ComboAction action = (ComboAction) pgm_read_ptr((void const **) & (magiccombo::combos[i].action));
+      ComboAction action = (ComboAction)pgm_read_ptr((void const **)&(magiccombo::combos[i].action));
 
       (*action)(i);
       start_time_ = Runtime.millisAtCycleStart();

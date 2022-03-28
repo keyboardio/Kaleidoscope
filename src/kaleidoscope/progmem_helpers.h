@@ -21,16 +21,16 @@
 
 // Load any intrinsic data type or trivial class stored in PROGMEM into an
 // object of that type in memory.
-template <typename _Type>
-void loadFromProgmem(_Type const& pgm_object, _Type& object) {
+template<typename _Type>
+void loadFromProgmem(_Type const &pgm_object, _Type &object) {
   memcpy_P(&object, &pgm_object, sizeof(object));
 }
 
 // Copy an object from PROGMEM to RAM. This works as long as the type has a
 // suitable constructor that does not require arguments (i.e. "trivial classes")
 // or if `_Type` is an intrinsic data type.
-template <typename _Type>
-_Type cloneFromProgmem(_Type const& pgm_object) {
+template<typename _Type>
+_Type cloneFromProgmem(_Type const &pgm_object) {
   _Type object;
   memcpy_P(&object, &pgm_object, sizeof(object));
   return object;

@@ -16,16 +16,16 @@
 
 #pragma once
 
-#include <Arduino.h>                                       // for PROGMEM
-#include <stddef.h>                                        // for size_t
-#include <stdint.h>                                        // for uint8_t
+#include <Arduino.h>  // for PROGMEM
+#include <stddef.h>   // for size_t
+#include <stdint.h>   // for uint8_t
 // IWYU pragma: no_include <new>
 
 #include "kaleidoscope/macro_helpers.h"                    // for __NL__
 #include "kaleidoscope/plugin.h"                           // for Plugin
 #include "kaleidoscope/plugin/LEDMode.h"                   // for LEDMode
 #include "kaleidoscope/plugin/LEDModeInterface.h"          // for LEDModeInt...
-#include "kaleidoscope_internal/array_like_storage.h"  // IWYU pragma: keep
+#include "kaleidoscope_internal/array_like_storage.h"      // IWYU pragma: keep
 #include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS...
 
 #if defined(KALEIDOSCOPE_VIRTUAL_BUILD) || defined(ARDUINO_ARCH_STM32)
@@ -35,7 +35,7 @@
 // To enable placement new, we need to supply a global operator
 // function.
 //
-inline void* operator new (size_t, void* __p) throw() {
+inline void *operator new(size_t, void *__p) throw() {
   return __p;
 }
 #endif
@@ -47,12 +47,13 @@ namespace plugin {
 class LEDControl;
 class LEDModeInterface;
 
-} // namespace plugin
+}  // namespace plugin
 
 namespace internal {
 namespace led_mode_management {
 
-template<bool T> struct Bool2Type {};
+template<bool T>
+struct Bool2Type {};
 
 // Functions of this type allocate a new LED mode within a global
 // buffer and give it access to it's parent plugin.
@@ -68,11 +69,9 @@ template<bool T> struct Bool2Type {};
 // a polymorphic class with only one method, that is accessed directly
 // instead of the detour via the vtable.
 //
-typedef kaleidoscope::plugin::LEDMode*
-(*LEDModeFactoryFunc)(void *raw_buffer,
-                      kaleidoscope::plugin::LEDModeInterface *parent_plugin,
-                      uint8_t mode_id
-                     );
+typedef kaleidoscope::plugin::LEDMode *(*LEDModeFactoryFunc)(void *raw_buffer,
+                                                             kaleidoscope::plugin::LEDModeInterface *parent_plugin,
+                                                             uint8_t mode_id);
 
 template<typename ParentPlugin__>
 inline void registerLEDModeActivated(Bool2Type<true>,
@@ -89,8 +88,11 @@ inline void registerLEDModeActivated(Bool2Type<false>,
 }
 
 DEFINE_HAS_METHOD_TRAITS(Plugin,
-                         /* registerLEDModeActivated not templated */ (), (),
-                         registerLEDModeActivated, void, (uint8_t led_mode_id))
+                         /* registerLEDModeActivated not templated */ (),
+                         (),
+                         registerLEDModeActivated,
+                         void,
+                         (uint8_t led_mode_id))
 
 // A templated implementation of LEDModeFactoryFunc.
 //
@@ -111,12 +113,11 @@ template<typename ParentPlugin__>
 static kaleidoscope::plugin::LEDMode *
 generateLEDMode(void *raw_buffer,
                 kaleidoscope::plugin::LEDModeInterface *parent_plugin,
-                uint8_t mode_id
-               ) {
+                uint8_t mode_id) {
   // We know the type of the parent plugin via the template parameter
   // ParentPlugin__, thus it is safe to cast to the actual type.
   //
-  auto parent_plugin_actual = static_cast<ParentPlugin__*>(parent_plugin);
+  auto parent_plugin_actual = static_cast<ParentPlugin__ *>(parent_plugin);
 
   // Types defined by template parameters like ParentPlugin__ must
   // be declared explicitly using the "typename" keyword.
@@ -127,18 +128,17 @@ generateLEDMode(void *raw_buffer,
 
   // Generate a transient LED mode within the LED mode buffer.
   //
-  auto led_mode_ptr
-    = new (raw_buffer) TLM{parent_plugin_actual};
+  auto led_mode_ptr = new (raw_buffer) TLM{parent_plugin_actual};
 
-  constexpr bool accesses_transient_led_mode
-    = Plugin_HasMethod_registerLEDModeActivated<ParentPlugin__>::value;
+  constexpr bool accesses_transient_led_mode = Plugin_HasMethod_registerLEDModeActivated<ParentPlugin__>::value;
 
   // Register the newly created LED mode with its parent plugin.
   // Please note that this call is optimized away by the compiler
   // for all those plugins that do not reimplement registerLEDModeActivated.
   //
   registerLEDModeActivated(Bool2Type<accesses_transient_led_mode>(),
-                           parent_plugin_actual, mode_id);
+                           parent_plugin_actual,
+                           mode_id);
 
   return led_mode_ptr;
 }
@@ -158,7 +158,7 @@ struct LEDModeFactory {
   }
 
   kaleidoscope::plugin::LEDMode *getPersistentLEDMode() const {
-    return static_cast<kaleidoscope::plugin::LEDMode*>(parent_plugin_);
+    return static_cast<kaleidoscope::plugin::LEDMode *>(parent_plugin_);
   }
 
   kaleidoscope::plugin::LEDMode *generateTransientLEDMode(
@@ -177,10 +177,12 @@ struct LEDModeFactory {
 // The traits class remove_pointer is part of the C++ standard library
 // but not present on Arduino.
 //
-template< class T > struct remove_pointer                    {
+template<class T>
+struct remove_pointer {
   typedef T type;
 };
-template< class T > struct remove_pointer<T*>                {
+template<class T>
+struct remove_pointer<T *> {
   typedef T type;
 };
 
@@ -237,7 +239,7 @@ constexpr bool pluginControlsLEDMode(int led_mode_plugin_type) {
 template<int LEDModePluginType__>
 struct GenerateLEDModeFactory {
 
-  static constexpr LEDModeFactory apply(kaleidoscope::Plugin */* non LED mode plugin*/) {
+  static constexpr LEDModeFactory apply(kaleidoscope::Plugin * /* non LED mode plugin*/) {
     return LEDModeFactory{nullptr, nullptr};
   }
 };
@@ -253,7 +255,7 @@ struct GenerateLEDModeFactory<PluginType_TransientLEDMode> {
   static constexpr LEDModeFactory apply(Plugin__ *plugin) {
     return LEDModeFactory{
       plugin,
-      generateLEDMode<Plugin__> // pointer to template instantiation of
+      generateLEDMode<Plugin__>  // pointer to template instantiation of
       // generateLEDMode<...>
     };
   }
@@ -295,10 +297,9 @@ struct TransientLEDModeSize<PluginPtr__, PluginType_TransientLEDMode> {
 // in this check as it is an empty class (size == 1 byte) and
 // thus does not affect the maximum size computation.
 //
-template<typename PluginPtr__, typename...MorePluginPtrs__>
+template<typename PluginPtr__, typename... MorePluginPtrs__>
 struct TransientLEDModeMaxSize {
-  static constexpr size_t this_size
-    = TransientLEDModeSize<PluginPtr__, ledModePluginType(PluginPtr__())>::value;
+  static constexpr size_t this_size = TransientLEDModeSize<PluginPtr__, ledModePluginType(PluginPtr__())>::value;
 
   static constexpr size_t nested_size = TransientLEDModeMaxSize<MorePluginPtrs__...>::value;
 
@@ -312,11 +313,10 @@ struct TransientLEDModeMaxSize<PluginPtr__> {
   static constexpr size_t value = TransientLEDModeSize<PluginPtr__, ledModePluginType(PluginPtr__())>::value;
 };
 
-} // namespace led_mode_management
+}  // namespace led_mode_management
 
 class LEDModeManager {
  public:
-
   // Everything in this class private on purpose.
   //
   // Only the class LEDControl is supposed to gain
@@ -352,8 +352,6 @@ class LEDModeManager {
 #endif
 
  private:
-
-
   // For the sake of convenience make type LEDModeFactory
   // available in class namespace
   //
@@ -375,13 +373,15 @@ class LEDModeManager {
     persistent_led_mode->setup();
   }
 
-  static void setupLEDMode(kaleidoscope::Plugin */*not_a_persistent_led_mode*/) {}
+  static void setupLEDMode(kaleidoscope::Plugin * /*not_a_persistent_led_mode*/) {}
 
   static uint8_t led_mode_buffer_[];
 };
 
-} // namespace internal
-} // namespace kaleidoscope
+}  // namespace internal
+}  // namespace kaleidoscope
+
+// clang-format off
 
 // Some auxiliary macros that are mapped to the list of
 // plugins defined via KALEIDOSCOPE_INIT_PLUGINS follow.

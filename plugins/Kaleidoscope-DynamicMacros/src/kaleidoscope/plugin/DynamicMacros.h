@@ -16,15 +16,15 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for DYNAMIC_MACRO_FIRST
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Kaleidoscope-Ranges.h>  // for DYNAMIC_MACRO_FIRST
+#include <stdint.h>               // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#define DM(n) ::kaleidoscope::plugin::DynamicMacrosKey(n)
+#define DM(n)                             ::kaleidoscope::plugin::DynamicMacrosKey(n)
 
 #define MAX_CONCURRENT_DYNAMIC_MACRO_KEYS 8
 
@@ -56,7 +56,7 @@ class DynamicMacros : public kaleidoscope::Plugin {
   static void tap(Key key);
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::DynamicMacros DynamicMacros;

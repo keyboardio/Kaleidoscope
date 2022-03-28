@@ -35,10 +35,10 @@ struct BaseProps {
 
   // C++ does not allow empty constexpr arrays
   //
-  static constexpr uint8_t key_led_map[] PROGMEM = { no_led };
+  static constexpr uint8_t key_led_map[] PROGMEM = {no_led};
 };
 
-template <typename _LEDDriverProps>
+template<typename _LEDDriverProps>
 class Base {
  public:
   Base() {}
@@ -48,8 +48,7 @@ class Base {
   void setCrgbAt(uint8_t i, cRGB color) {}
   cRGB getCrgbAt(uint8_t i) {
     cRGB c = {
-      0, 0, 0
-    };
+      0, 0, 0};
     return c;
   }
   void setBrightness(uint8_t brightness) {}
@@ -76,9 +75,12 @@ class Base {
   class LEDRangeIterator {
    private:
     uint8_t offset_;
+
    public:
-    LEDRangeIterator() : offset_(0) {}
-    explicit LEDRangeIterator(uint8_t offset) : offset_(offset) {}
+    LEDRangeIterator()
+      : offset_(0) {}
+    explicit LEDRangeIterator(uint8_t offset)
+      : offset_(offset) {}
 
     typedef LEDRangeIterator ThisType;
 
@@ -91,9 +93,9 @@ class Base {
       return *this;
     }
 
-    ThisType operator++(int) { // postfix ++
+    ThisType operator++(int) {  // postfix ++
       ThisType copy(*this);
-      ++*this;         // call the prefix increment
+      ++*this;  // call the prefix increment
       return copy;
     }
 
@@ -102,9 +104,9 @@ class Base {
       return *this;
     }
 
-    ThisType operator--(int) { // postfix ++
+    ThisType operator--(int) {  // postfix ++
       ThisType copy(*this);
-      --*this;         // call the prefix increment
+      --*this;  // call the prefix increment
       return copy;
     }
 

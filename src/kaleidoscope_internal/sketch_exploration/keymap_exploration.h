@@ -16,13 +16,13 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"   // for KeyAddr
 #include "kaleidoscope/key_defs.h"  // for Key, Key_NoKey
 
-namespace kaleidoscope { // NOLINT(build/namespaces)
-namespace sketch_exploration { // NOLINT(build/namespaces)
+namespace kaleidoscope {        // NOLINT(build/namespaces)
+namespace sketch_exploration {  // NOLINT(build/namespaces)
 
 // A simple keymap adaptor class that makes the keymap conveniently accessible.
 // at compiletime.
@@ -30,17 +30,14 @@ namespace sketch_exploration { // NOLINT(build/namespaces)
 template<uint8_t _n_layers, uint8_t _layer_size>
 class KeymapAdaptor {
  private:
-
-  const Key(&keymap_)[_n_layers][_layer_size];
+  const Key (&keymap_)[_n_layers][_layer_size];
 
  public:
-
-  static constexpr uint8_t n_layers = _n_layers;
+  static constexpr uint8_t n_layers   = _n_layers;
   static constexpr uint8_t layer_size = _layer_size;
 
-  explicit constexpr KeymapAdaptor(const Key(&keymap)[_n_layers][_layer_size])
-    :  keymap_{keymap}
-  {}
+  explicit constexpr KeymapAdaptor(const Key (&keymap)[_n_layers][_layer_size])
+    : keymap_{keymap} {}
 
   constexpr Key getKey(uint8_t layer, uint8_t offset) const {
     return keymap_[layer][offset];
@@ -54,8 +51,7 @@ class KeymapAdaptor {
 //
 class EmptyKeymapAdaptor {
  public:
-
-  static constexpr uint8_t n_layers = 0;
+  static constexpr uint8_t n_layers   = 0;
   static constexpr uint8_t layer_size = 0;
 
   constexpr Key getKey(uint8_t layer, uint8_t offset) const {
@@ -74,36 +70,32 @@ class EmptyKeymapAdaptor {
 template<uint8_t _n_layers, uint8_t _layer_size, typename _Accumulation>
 class AccumulationHelper : public KeymapAdaptor<_n_layers, _layer_size> {
  private:
-
   const _Accumulation &op_;
 
  private:
-
   typedef typename _Accumulation::ResultType ResultType;
 
   constexpr ResultType accumulateOnLayer(uint8_t layer, uint8_t offset) const {
     return (offset >= _layer_size)
-           ?  op_.init_value
-           :  op_.apply(this->getKey(layer, offset),
-                        this->accumulateOnLayer(layer, offset + 1));
+             ? op_.init_value
+             : op_.apply(this->getKey(layer, offset),
+                         this->accumulateOnLayer(layer, offset + 1));
   }
 
   constexpr ResultType accumulate(uint8_t layer) const {
     return (layer >= _n_layers)
-           ?   op_.init_value
-           :   op_.apply(this->accumulateOnLayer(layer, 0),
+             ? op_.init_value
+             : op_.apply(this->accumulateOnLayer(layer, 0),
                          this->accumulate(layer + 1));
   }
 
  public:
-
   typedef KeymapAdaptor<_n_layers, _layer_size> ParentType;
 
-  constexpr AccumulationHelper(const Key(&keymap)[_n_layers][_layer_size],
+  constexpr AccumulationHelper(const Key (&keymap)[_n_layers][_layer_size],
                                const _Accumulation &op)
-    :   ParentType{keymap},
-        op_{op}
-  {}
+    : ParentType{keymap},
+      op_{op} {}
 
   constexpr ResultType apply() const {
     return this->accumulate(0);
@@ -115,16 +107,13 @@ class AccumulationHelper : public KeymapAdaptor<_n_layers, _layer_size> {
 template<typename _Accumulation>
 class EmptyKeymapAccumulationHelper {
  private:
-
   const _Accumulation &op_;
 
   typedef typename _Accumulation::ResultType ResultType;
 
  public:
-
   explicit constexpr EmptyKeymapAccumulationHelper(const _Accumulation &op)
-    :   op_{op}
-  {}
+    : op_{op} {}
 
   constexpr ResultType apply() const {
     return op_.init_value;
@@ -150,7 +139,8 @@ struct NumKeysEqual {
   typedef uint8_t ResultType;
   static constexpr ResultType init_value = 0;
 
-  explicit constexpr NumKeysEqual(Key k) : k_{k} {}
+  explicit constexpr NumKeysEqual(Key k)
+    : k_{k} {}
 
   constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? r + 1 : r;
@@ -166,7 +156,8 @@ struct HasKey {
   typedef bool ResultType;
   static constexpr ResultType init_value = false;
 
-  explicit constexpr HasKey(Key k) : k_{k} {}
+  explicit constexpr HasKey(Key k)
+    : k_{k} {}
 
   constexpr ResultType apply(Key test_key, ResultType r) const {
     return (test_key == k_) ? true : r;
@@ -207,6 +198,8 @@ extern void pluginsExploreSketch();
 // This ensures that they can not be instantiated and called at runtime.
 //
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// clang-format off
 
 // This macro defines a Sketch interface class that is passed to the
 // exploreSketch<_Sketch>(...)-hook.
@@ -302,5 +295,7 @@ extern void pluginsExploreSketch();
   } /* namespace sketch_exploration */                                         \
   } /* namespace kaleidoscope */
 
-} // namespace sketch_exploration
-} // namespace kaleidoscope
+// clang-format on
+
+}  // namespace sketch_exploration
+}  // namespace kaleidoscope

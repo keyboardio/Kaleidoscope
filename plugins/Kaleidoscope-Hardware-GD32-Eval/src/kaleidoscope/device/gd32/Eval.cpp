@@ -24,8 +24,8 @@ namespace kaleidoscope {
 namespace device {
 namespace gd32 {
 
-} // namespace gd32
-} // namespace device
-} // namespace kaleidoscope
+}  // namespace gd32
+}  // namespace device
+}  // namespace kaleidoscope
 
-#endif // ifdef ARDUINO_GD32F303ZE_EVAL
+#endif  // ifdef ARDUINO_GD32F303ZE_EVAL

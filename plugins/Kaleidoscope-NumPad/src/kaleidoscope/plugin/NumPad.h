@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -39,7 +39,6 @@ class NumPad : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-
   void setKeyboardLEDColors(void);
 
   static KeyAddr numpadLayerToggleKeyAddr;

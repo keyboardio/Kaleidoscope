@@ -35,11 +35,11 @@ namespace device {
 namespace dygma {
 namespace raise {
 
-#define LED_BANKS 9
+#define LED_BANKS          9
 
-#define LEDS_PER_HAND 72
-#define LPH LEDS_PER_HAND
-#define LEDS_PER_BANK 8
+#define LEDS_PER_HAND      72
+#define LPH                LEDS_PER_HAND
+#define LEDS_PER_BANK      8
 #define LED_BYTES_PER_BANK (sizeof(cRGB) * LEDS_PER_BANK)
 
 typedef union {
@@ -57,7 +57,8 @@ typedef union {
 
 class RaiseSide {
  public:
-  explicit RaiseSide(uint8_t ad01) : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
+  explicit RaiseSide(uint8_t ad01)
+    : ad01_(ad01), twi_(i2c_addr_base_ | ad01) {}
 
   int readVersion();
   int readSLEDVersion();

@@ -34,20 +34,20 @@ class HIDStateBuilder;
 
 class HIDState {
  public:
-  const std::vector<AbsoluteMouseReport>& AbsoluteMouse() const;
-  const AbsoluteMouseReport& AbsoluteMouse(size_t i) const;
+  const std::vector<AbsoluteMouseReport> &AbsoluteMouse() const;
+  const AbsoluteMouseReport &AbsoluteMouse(size_t i) const;
 
-  const std::vector<ConsumerControlReport>& ConsumerControl() const;
-  const ConsumerControlReport& ConsumerControl(size_t i) const;
+  const std::vector<ConsumerControlReport> &ConsumerControl() const;
+  const ConsumerControlReport &ConsumerControl(size_t i) const;
 
-  const std::vector<KeyboardReport>& Keyboard() const;
-  const KeyboardReport& Keyboard(size_t i) const;
+  const std::vector<KeyboardReport> &Keyboard() const;
+  const KeyboardReport &Keyboard(size_t i) const;
 
-  const std::vector<MouseReport>& Mouse() const;
-  const MouseReport& Mouse(size_t i) const;
+  const std::vector<MouseReport> &Mouse() const;
+  const MouseReport &Mouse(size_t i) const;
 
-  const std::vector<SystemControlReport>& SystemControl() const;
-  const SystemControlReport& SystemControl(size_t i) const;
+  const std::vector<SystemControlReport> &SystemControl() const;
+  const SystemControlReport &SystemControl(size_t i) const;
 
  private:
   friend class internal::HIDStateBuilder;
@@ -64,17 +64,17 @@ namespace internal {
 class HIDStateBuilder {
  public:
   static void ProcessHidReport(
-    uint8_t id, const void* data, int len, int result);
+    uint8_t id, const void *data, int len, int result);
 
   static std::unique_ptr<HIDState> Snapshot();
 
  private:
   static void Clear();
-  static void ProcessAbsoluteMouseReport(const AbsoluteMouseReport& report);
-  static void ProcessConsumerControlReport(const ConsumerControlReport& report);
-  static void ProcessKeyboardReport(const KeyboardReport& report);
-  static void ProcessMouseReport(const MouseReport& report);
-  static void ProcessSystemControlReport(const SystemControlReport& report);
+  static void ProcessAbsoluteMouseReport(const AbsoluteMouseReport &report);
+  static void ProcessConsumerControlReport(const ConsumerControlReport &report);
+  static void ProcessKeyboardReport(const KeyboardReport &report);
+  static void ProcessMouseReport(const MouseReport &report);
+  static void ProcessSystemControlReport(const SystemControlReport &report);
 
   static std::vector<AbsoluteMouseReport> absolute_mouse_reports_;
   static std::vector<ConsumerControlReport> consumer_control_reports_;

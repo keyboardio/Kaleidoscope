@@ -19,7 +19,7 @@
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <avr/wdt.h>
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif                                            // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/driver/bootloader/Base.h"  // IWYU pragma: keep
 #include "kaleidoscope/driver/bootloader/None.h"  // for None
 
@@ -40,7 +40,7 @@ class Caterina : public kaleidoscope::driver::bootloader::Base {
     // Caterina.c:
     // https://github.com/arduino/ArduinoCore-avr/blob/5755ddea49fa69d6c505c772ebee5af5078e2ebf/bootloaders/caterina/Caterina.c#L130-L133
 
-    uint16_t bootKey = 0x7777;
+    uint16_t bootKey           = 0x7777;
     uint16_t *const bootKeyPtr = reinterpret_cast<uint16_t *>(0x0800);
 
     // Stash the magic key
@@ -49,13 +49,13 @@ class Caterina : public kaleidoscope::driver::bootloader::Base {
     // Set a watchdog timer
     wdt_enable(WDTO_120MS);
 
-    while (true) {} // This infinite loop ensures nothing else
+    while (true) {}  // This infinite loop ensures nothing else
     // happens before the watchdog reboots us
   }
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 typedef bootloader::None Caterina;
-#endif // #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace avr
 }  // namespace bootloader

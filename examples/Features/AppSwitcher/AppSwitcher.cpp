@@ -64,16 +64,16 @@ EventHandlerResult AppSwitcher::onKeyEvent(KeyEvent &event) {
     // have any effect. Then we turn the event for that key's press into an
     // event for the release of the AppSwitcher's modifier key.
     live_keys.mask(event.addr);
-    event.addr = active_addr_;
+    event.addr  = active_addr_;
     event.state = WAS_PRESSED | INJECTED;
-    event.key = live_keys[event.addr];
+    event.key   = live_keys[event.addr];
     // Turn off AppSwitcher:
     active_addr_.clear();
   }
   return EventHandlerResult::OK;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::AppSwitcher AppSwitcher;

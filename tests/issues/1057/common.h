@@ -23,11 +23,11 @@
 namespace kaleidoscope {
 namespace testing {
 
-constexpr uint16_t QUKEYS_HOLD_TIMEOUT = 200;
-constexpr uint8_t QUKEYS_OVERLAP_THRESHOLD = 0;
-constexpr uint8_t QUKEYS_MINIMUM_HOLD_TIME = 0;
-constexpr uint8_t QUKEYS_MIN_PRIOR_INTERVAL = 0;
+constexpr uint16_t QUKEYS_HOLD_TIMEOUT               = 200;
+constexpr uint8_t QUKEYS_OVERLAP_THRESHOLD           = 0;
+constexpr uint8_t QUKEYS_MINIMUM_HOLD_TIME           = 0;
+constexpr uint8_t QUKEYS_MIN_PRIOR_INTERVAL          = 0;
 constexpr uint8_t QUKEYS_MAX_INTERVAL_FOR_TAP_REPEAT = 0;
 
-} // namespace testing
-} // namespace kaleidoscope
+}  // namespace testing
+}  // namespace kaleidoscope

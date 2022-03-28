@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                      // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/device/device.h"  // for cRGB
 

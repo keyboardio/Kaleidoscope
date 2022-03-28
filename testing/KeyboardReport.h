@@ -31,7 +31,7 @@ class KeyboardReport {
 
   static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
 
-  KeyboardReport(const void* data);
+  KeyboardReport(const void *data);
 
   uint32_t Timestamp() const;
   std::vector<uint8_t> ActiveKeycodes() const;

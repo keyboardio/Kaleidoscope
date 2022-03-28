@@ -34,13 +34,14 @@ struct cRGB {
   uint8_t g;
   uint8_t r;
 };
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 #endif
 
-#define LED_BANKS 4
+#define LED_BANKS          4
 
-#define LEDS_PER_HAND 32
-#define LED_BYTES_PER_BANK sizeof(cRGB)  * LEDS_PER_HAND/LED_BANKS
+#define LEDS_PER_HAND      32
+#define LED_BYTES_PER_BANK sizeof(cRGB) * LEDS_PER_HAND / LED_BANKS
 
 namespace kaleidoscope {
 namespace driver {
@@ -97,8 +98,8 @@ class Model01Side {
   void sendLEDBank(uint8_t bank);
   int readRegister(uint8_t cmd);
 };
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-} // namespace keyboardio
-} // namespace driver
-} // namespace kaleidoscope
+}  // namespace keyboardio
+}  // namespace driver
+}  // namespace kaleidoscope

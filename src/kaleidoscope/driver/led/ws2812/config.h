@@ -39,48 +39,48 @@
 #define w_totalperiod 1250
 
 // Fixed cycles used by the inner loop
-#define w_fixedlow    2
-#define w_fixedhigh   4
-#define w_fixedtotal  8
+#define w_fixedlow   2
+#define w_fixedhigh  4
+#define w_fixedtotal 8
 
 // Insert NOPs to match the timing, if possible
-#define w_zerocycles    (((F_CPU/1000)*w_zeropulse          )/1000000)
-#define w_onecycles     (((F_CPU/1000)*w_onepulse    +500000)/1000000)
-#define w_totalcycles   (((F_CPU/1000)*w_totalperiod +500000)/1000000)
+#define w_zerocycles  (((F_CPU / 1000) * w_zeropulse) / 1000000)
+#define w_onecycles   (((F_CPU / 1000) * w_onepulse + 500000) / 1000000)
+#define w_totalcycles (((F_CPU / 1000) * w_totalperiod + 500000) / 1000000)
 
 // w1 - nops between rising edge and falling edge - low
-#define w1 (w_zerocycles-w_fixedlow)
+#define w1 (w_zerocycles - w_fixedlow)
 // w2   nops between fe low and fe high
-#define w2 (w_onecycles-w_fixedhigh-w1)
+#define w2 (w_onecycles - w_fixedhigh - w1)
 // w3   nops to complete loop
-#define w3 (w_totalcycles-w_fixedtotal-w1-w2)
+#define w3 (w_totalcycles - w_fixedtotal - w1 - w2)
 
-#if w1>0
+#if w1 > 0
 #define w1_nops w1
 #else
-#define w1_nops  0
+#define w1_nops 0
 #endif
 
 // The only critical timing parameter is the minimum pulse length of the "0"
 // Warn or throw error if this timing can not be met with current F_CPU settings.
-#define w_lowtime ((w1_nops+w_fixedlow)*1000000)/(F_CPU/1000)
-#if w_lowtime>550
+#define w_lowtime ((w1_nops + w_fixedlow) * 1000000) / (F_CPU / 1000)
+#if w_lowtime > 550
 #error "Light_ws2812: Sorry, the clock speed is too low. Did you set F_CPU correctly?"
-#elif w_lowtime>450
+#elif w_lowtime > 450
 #warning "Light_ws2812: The timing is critical and may only work on WS2812B, not on WS2812(S)."
 #warning "Please consider a higher clockspeed, if possible"
 #endif
 
-#if w2>0
+#if w2 > 0
 #define w2_nops w2
 #else
-#define w2_nops  0
+#define w2_nops 0
 #endif
 
-#if w3>0
+#if w3 > 0
 #define w3_nops w3
 #else
-#define w3_nops  0
+#define w3_nops 0
 #endif
 
 #define w_nop1  "nop      \n\t"

@@ -31,7 +31,7 @@ bool verboseOutputEnabled() {
   return __verboseOutputEnabled;
 }
 
-} // namespace logging
-} // namespace kaleidoscope
+}  // namespace logging
+}  // namespace kaleidoscope
 
-#endif // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD

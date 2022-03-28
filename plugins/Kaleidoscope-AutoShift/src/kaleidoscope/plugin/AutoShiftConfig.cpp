@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/AutoShift.h"  // IWYU pragma: associated
 
-#include <Arduino.h>                              // for PSTR, strcmp_P, str...
-#include <Kaleidoscope-EEPROM-Settings.h>         // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>             // for Focus, FocusSerial
-#include <stdint.h>                               // for uint16_t, uint8_t
+#include <Arduino.h>                       // for PSTR, strcmp_P, str...
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
 #include "kaleidoscope/device/Base.h"             // for Base<>::Storage
@@ -118,7 +118,7 @@ EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::AutoShiftConfig AutoShiftConfig;

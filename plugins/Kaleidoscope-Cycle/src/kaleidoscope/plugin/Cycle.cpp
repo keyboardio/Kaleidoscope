@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/Cycle.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                // for CYCLE
-#include <stdint.h>                             // for uint8_t
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for CYCLE
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -113,8 +113,7 @@ uint8_t Cycle::toModFlag(uint8_t keyCode) {
 }  // namespace plugin
 }  // namespace kaleidoscope
 
-__attribute__((weak))
-void cycleAction(Key previous_key, uint8_t cycle_count) {
+__attribute__((weak)) void cycleAction(Key previous_key, uint8_t cycle_count) {
 }
 
 kaleidoscope::plugin::Cycle Cycle;

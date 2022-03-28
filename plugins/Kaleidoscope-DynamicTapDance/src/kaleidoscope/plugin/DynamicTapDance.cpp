@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/DynamicTapDance.h"
 
-#include <Arduino.h>                            // for PSTR, F, __FlashStrin...
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>                       // for PSTR, F, __FlashStrin...
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -42,12 +42,12 @@ uint8_t DynamicTapDance::dance_count_;
 constexpr uint8_t DynamicTapDance::reserved_tap_dance_key_count_;
 
 void DynamicTapDance::updateDynamicTapDanceCache() {
-  uint16_t pos = storage_base_;
-  uint8_t current_id = 0;
+  uint16_t pos              = storage_base_;
+  uint8_t current_id        = 0;
   bool previous_dance_ended = false;
 
   dance_count_ = 0;
-  map_[0] = 0;
+  map_[0]      = 0;
 
   while (pos < storage_base_ + storage_size_) {
     uint16_t raw_key = Runtime.storage().read(pos);
@@ -68,9 +68,8 @@ void DynamicTapDance::updateDynamicTapDanceCache() {
   }
 }
 
-bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr,
-                            uint8_t tap_count, TapDance::ActionType tap_dance_action) {
-  uint16_t pos = map_[tap_dance_index - offset_] + ((tap_count - 1) * 2);
+bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, TapDance::ActionType tap_dance_action) {
+  uint16_t pos      = map_[tap_dance_index - offset_] + ((tap_count - 1) * 2);
   uint16_t next_pos = map_[tap_dance_index - offset_ + 1];
   if (next_pos <= pos || (tap_dance_index > offset_ + dance_count_))
     return false;
@@ -136,7 +135,7 @@ EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {
 void DynamicTapDance::setup(uint8_t dynamic_offset, uint16_t size) {
   storage_base_ = ::EEPROMSettings.requestSlice(size);
   storage_size_ = size;
-  offset_ = dynamic_offset;
+  offset_       = dynamic_offset;
   updateDynamicTapDanceCache();
 }
 

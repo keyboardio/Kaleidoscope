@@ -25,7 +25,8 @@ namespace led {
 namespace color {
 
 struct RGB {
-  RGB(uint8_t r_, uint8_t g_, uint8_t b_) : r(r_), g(g_), b(b_) {}
+  RGB(uint8_t r_, uint8_t g_, uint8_t b_)
+    : r(r_), g(g_), b(b_) {}
   RGB() {}
 
   uint8_t r;
@@ -34,7 +35,8 @@ struct RGB {
 };
 
 struct GRB {
-  GRB(uint8_t r_, uint8_t g_, uint8_t b_) : g(g_), r(r_), b(b_) {}
+  GRB(uint8_t r_, uint8_t g_, uint8_t b_)
+    : g(g_), r(r_), b(b_) {}
   GRB() {}
 
   uint8_t g;
@@ -43,7 +45,8 @@ struct GRB {
 };
 
 struct BGR {
-  BGR(uint8_t r_, uint8_t g_, uint8_t b_) : b(b_), g(g_), r(r_) {}
+  BGR(uint8_t r_, uint8_t g_, uint8_t b_)
+    : b(b_), g(g_), r(r_) {}
   BGR() {}
 
   uint8_t b;

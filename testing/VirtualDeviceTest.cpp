@@ -45,7 +45,7 @@ void VirtualDeviceTest::ClearState() {
   expected_mouse_reports_.clear();
 }
 
-const HIDState* VirtualDeviceTest::HIDReports() const {
+const HIDState *VirtualDeviceTest::HIDReports() const {
   if (output_state_ == nullptr) return nullptr;
   return output_state_->HIDReports();
 }
@@ -125,12 +125,18 @@ void VirtualDeviceTest::RemoveFromKeyboardReport(Key key) {
 
 // =============================================================================
 void VirtualDeviceTest::ExpectMouseReport(uint8_t buttons,
-                                          int8_t x, int8_t y,
-                                          int8_t v, int8_t h,
+                                          int8_t x,
+                                          int8_t y,
+                                          int8_t v,
+                                          int8_t h,
                                           std::string description) {
   uint32_t report_timestamp = Runtime.millisAtCycleStart();
   ExpectedMouseReport new_report(report_timestamp,
-                                 buttons, x, y, v, h,
+                                 buttons,
+                                 x,
+                                 y,
+                                 v,
+                                 h,
                                  description);
   expected_mouse_reports_.push_back(new_report);
 }
@@ -152,18 +158,18 @@ void VirtualDeviceTest::CheckKeyboardReports() const {
                            expected_keyboard_report_count);
 
   for (int i = 0; i < observed_keyboard_report_count; ++i) {
-    auto observed_report = HIDReports()->Keyboard(i);
+    auto observed_report   = HIDReports()->Keyboard(i);
     auto observed_keycodes = observed_report.ActiveKeycodes();
 
     if (i < expected_keyboard_report_count) {
-      auto expected_report = expected_keyboard_reports_[i];
+      auto expected_report   = expected_keyboard_reports_[i];
       auto expected_keycodes = expected_report.Keycodes();
 
       EXPECT_THAT(observed_keycodes,
                   ::testing::ElementsAreArray(expected_keycodes))
-          << expected_keyboard_reports_[i].Message() << " (i=" << i << ")";
+        << expected_keyboard_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
-          << "Report timestamps don't match (i=" << i << ")";
+        << "Report timestamps don't match (i=" << i << ")";
 
     } else {
 
@@ -193,17 +199,17 @@ void VirtualDeviceTest::CheckMouseReports() const {
       auto expected_report = expected_mouse_reports_[i];
 
       EXPECT_EQ(observed_report.Buttons(), expected_report.Buttons())
-          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+        << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.XAxis(), expected_report.XAxis())
-          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+        << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.YAxis(), expected_report.YAxis())
-          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+        << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.VWheel(), expected_report.VWheel())
-          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+        << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.HWheel(), expected_report.HWheel())
-          << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
+        << expected_mouse_reports_[i].Message() << " (i=" << i << ")";
       EXPECT_EQ(observed_report.Timestamp(), expected_report.Timestamp())
-          << "Report timestamps don't match (i=" << i << ")";
+        << "Report timestamps don't match (i=" << i << ")";
 
     } else {
       std::bitset<8> observed_buttons{observed_report.Buttons()};

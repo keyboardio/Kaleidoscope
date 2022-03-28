@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for SYSTER
-#include <stdint.h>                             // for int8_t, uint8_t
+#include <Kaleidoscope-Ranges.h>  // for SYSTER
+#include <stdint.h>               // for int8_t, uint8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -28,7 +28,7 @@
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
 constexpr Key Key_Syster = Key(kaleidoscope::ranges::SYSTER);
-constexpr Key SYSTER = Key_Syster;
+constexpr Key SYSTER     = Key_Syster;
 
 namespace kaleidoscope {
 namespace plugin {
@@ -56,11 +56,11 @@ class Syster : public kaleidoscope::Plugin {
   static bool is_active_;
 };
 
-} // namespace plugin
+}  // namespace plugin
 
 void eraseChars(int8_t n);
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 const char keyToChar(Key key);
 

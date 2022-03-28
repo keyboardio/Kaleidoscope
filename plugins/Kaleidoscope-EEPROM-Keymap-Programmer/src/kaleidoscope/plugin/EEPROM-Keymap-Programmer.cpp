@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/EEPROM-Keymap-Programmer.h"
 
-#include <Arduino.h>                            // for PSTR, strcmp_P
-#include <Kaleidoscope-EEPROM-Keymap.h>         // for EEPROMKeymap
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>                     // for PSTR, strcmp_P
+#include <Kaleidoscope-EEPROM-Keymap.h>  // for EEPROMKeymap
+#include <Kaleidoscope-FocusSerial.h>    // for Focus, FocusSerial
+#include <stdint.h>                      // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -60,8 +60,8 @@ void EEPROMKeymapProgrammer::nextState(void) {
 
 void EEPROMKeymapProgrammer::cancel(void) {
   update_position_ = 0;
-  new_key_ = Key_NoKey;
-  state_ = INACTIVE;
+  new_key_         = Key_NoKey;
+  state_           = INACTIVE;
 }
 
 EventHandlerResult EEPROMKeymapProgrammer::onKeyEvent(KeyEvent &event) {

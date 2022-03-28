@@ -57,7 +57,7 @@ constexpr size_t strlen(const char *str) {
   return str[0] ? strlen(str + 1) + 1 : 0;
 }
 
-template <char... chars>
+template<char... chars>
 struct string {
 #if ARDUINOTRACE_ENABLE_PROGMEM
   const __FlashStringHelper *data() {
@@ -72,52 +72,47 @@ struct string {
 #endif
 };
 
-template <typename TSourceString, size_t remainingLength,
-          char... collectedChars>
+template<typename TSourceString, size_t remainingLength, char... collectedChars>
 struct string_maker {
   using result =
-    typename string_maker < TSourceString, remainingLength - 1,
-    TSourceString::data()[remainingLength - 1],
-    collectedChars... >::result;
+    typename string_maker<TSourceString, remainingLength - 1, TSourceString::data()[remainingLength - 1], collectedChars...>::result;
 };
 
 #if ARDUINOTRACE_ENABLE_FULLPATH == 0
-template <typename TSourceString, size_t remainingLength,
-          char... collectedChars>
+template<typename TSourceString, size_t remainingLength, char... collectedChars>
 struct string_maker<TSourceString, remainingLength, '/', collectedChars...> {
   using result = string<collectedChars..., '\0'>;
 };
 
-template <typename TSourceString, size_t remainingLength,
-          char... collectedChars>
+template<typename TSourceString, size_t remainingLength, char... collectedChars>
 struct string_maker<TSourceString, remainingLength, '\\', collectedChars...> {
   using result = string<collectedChars..., '\0'>;
 };
 #endif
 
-template <typename TSourceString, char... collectedChars>
+template<typename TSourceString, char... collectedChars>
 struct string_maker<TSourceString, 0, collectedChars...> {
   using result = string<collectedChars..., '\0'>;
 };
 
-template <typename TStringSource>
+template<typename TStringSource>
 using make_string =
   typename string_maker<TStringSource, strlen(TStringSource::data())>::result;
 
 struct Initializer {
-  template <typename TSerial>
+  template<typename TSerial>
   Initializer(TSerial &serial, int bauds) {
     serial.begin(bauds);
     while (!serial) continue;
   }
 };
 
-template <typename TFilename, typename TPrefix>
+template<typename TFilename, typename TPrefix>
 struct Printer {
-  template <typename TSerial, typename TValue>
+  template<typename TSerial, typename TValue>
   Printer(TSerial &serial, const TValue &content) {
-    serial.print(make_string<TFilename> {}.data());
-    serial.print(make_string<TPrefix> {}.data());
+    serial.print(make_string<TFilename>{}.data());
+    serial.print(make_string<TPrefix>{}.data());
     serial.println(content);
     serial.flush();
   }
@@ -154,7 +149,7 @@ struct Printer {
 
 #define ARDUINOTRACE_INITIALIZE(id, bauds)                          \
   ArduinoTrace::Initializer ARDUINOTRACE_CONCAT(__initializer, id)( \
-      ARDUINOTRACE_SERIAL, bauds);
+    ARDUINOTRACE_SERIAL, bauds);
 
 #define ARDUINOTRACE_TRACE_PREFIX(line) ":" ARDUINOTRACE_STRINGIFY(line) ": "
 
@@ -172,19 +167,16 @@ struct Printer {
 // Call this macro anywhere, including at global scope.
 // However, if you use it at global scope, you need to call ARDUINOTRACE_INIT()
 // first, otherwise, the Serial port will not be ready.
-#define TRACE()                                           \
-  ARDUINOTRACE_PRINT(__COUNTER__, __FILE__,               \
-                     ARDUINOTRACE_TRACE_PREFIX(__LINE__), \
-                     ARDUINOTRACE_FUNCTION_NAME)
+#define TRACE() \
+  ARDUINOTRACE_PRINT(__COUNTER__, __FILE__, ARDUINOTRACE_TRACE_PREFIX(__LINE__), ARDUINOTRACE_FUNCTION_NAME)
 
 // Prints the value of a variable.
 //
 // This function will print the name and the value of the variable to the
 // Serial. If you use it at global scope, you need to call ARDUINOTRACE_INIT()
 // first, otherwise, the Serial port will not be ready.
-#define DUMP(variable)                      \
-  ARDUINOTRACE_PRINT(__COUNTER__, __FILE__, \
-                     ARDUINOTRACE_DUMP_PREFIX(__LINE__, variable), variable)
+#define DUMP(variable) \
+  ARDUINOTRACE_PRINT(__COUNTER__, __FILE__, ARDUINOTRACE_DUMP_PREFIX(__LINE__, variable), variable)
 
 #else  // ie ARDUINOTRACE_ENABLE == 0
 

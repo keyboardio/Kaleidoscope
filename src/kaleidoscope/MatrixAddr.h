@@ -25,15 +25,13 @@ namespace kaleidoscope {
 template<uint8_t rows__, uint8_t cols__>
 class MatrixAddr {
  private:
-
   uint8_t offset_;
 
  public:
-
   typedef MatrixAddr<rows__, cols__> ThisType;
 
-  static constexpr uint8_t rows = rows__;
-  static constexpr uint8_t cols = cols__;
+  static constexpr uint8_t rows        = rows__;
+  static constexpr uint8_t cols        = cols__;
   static constexpr uint8_t upper_limit = rows__ * cols__;
 
   static constexpr uint8_t invalid_state = 255;
@@ -43,7 +41,8 @@ class MatrixAddr {
                 "MatrixAddr<rows, cols> exceeds the supported total number \n"
                 "of 255 keys");
 
-  constexpr MatrixAddr() : offset_(invalid_state) {}
+  constexpr MatrixAddr()
+    : offset_(invalid_state) {}
 
   constexpr MatrixAddr(uint8_t row, uint8_t col)
     : offset_(row * cols + col) {}
@@ -58,8 +57,8 @@ class MatrixAddr {
   //       ridiculously bad assembler code for each copy construction,
   //       that would bloat the default firmware by 1K of PROGMEM!
   //
-  constexpr MatrixAddr(const ThisType &other) = default; // NOLINT(runtime/explicit)
-  constexpr MatrixAddr(ThisType &&other) = default; // NOLINT(runtime/explicit)
+  constexpr MatrixAddr(const ThisType &other) = default;  // NOLINT(runtime/explicit)
+  constexpr MatrixAddr(ThisType &&other)      = default;  // NOLINT(runtime/explicit)
   //constexpr MatrixAddr(const ThisType &other) : offset_(other.offset_) {}
   //constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
 
@@ -140,9 +139,9 @@ class MatrixAddr {
     return *this;
   }
 
-  ThisType operator++(int) { // postfix ++
+  ThisType operator++(int) {  // postfix ++
     ThisType copy(*this);
-    ++*this;         // call the prefix increment
+    ++*this;  // call the prefix increment
     return copy;
   }
 
@@ -151,34 +150,34 @@ class MatrixAddr {
     return *this;
   }
 
-  ThisType operator--(int) { // postfix ++
+  ThisType operator--(int) {  // postfix ++
     ThisType copy(*this);
-    --*this;         // call the prefix increment
+    --*this;  // call the prefix increment
     return copy;
   }
 
   template<typename MatrixAddr__>
-  ThisType &operator+(const MatrixAddr__ & other) {
+  ThisType &operator+(const MatrixAddr__ &other) {
     *this = ThisType(this->row() + other.row(),
                      this->col() + other.col());
     return *this;
   }
 
   template<typename MatrixAddr__>
-  ThisType &operator-(const MatrixAddr__ & other) {
+  ThisType &operator-(const MatrixAddr__ &other) {
     *this = ThisType(this->row() - other.row(),
                      this->col() - other.col());
     return *this;
   }
 
   template<typename MatrixAddr__>
-  ThisType &operator+=(const MatrixAddr__ & other) {
+  ThisType &operator+=(const MatrixAddr__ &other) {
     *this = *this + other;
     return *this;
   }
 
   template<typename MatrixAddr__>
-  ThisType &operator-=(const MatrixAddr__ & other) {
+  ThisType &operator-=(const MatrixAddr__ &other) {
     *this = *this - other;
     return *this;
   }
@@ -230,37 +229,36 @@ class MatrixAddr {
 #ifdef MATRIX_ADDR_TESTING
 
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator==(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
+bool operator==(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
   return (a1.row() == a2.row()) && (a1.col() == a2.col());
 }
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator!=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
+bool operator!=(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
   return !operator==(a1, a2);
 }
 
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator>(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
-  return (a1.row() > a2.row())
-         || ((a1.row() == a2.row()) && (a1.col() > a2.col()));
+bool operator>(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
+  return (a1.row() > a2.row()) || ((a1.row() == a2.row()) && (a1.col() > a2.col()));
 }
 
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator<(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
+bool operator<(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
   // This could be optimized if necessary
   return !operator>(a1, a2) && !operator==(a1, a2);
 }
 
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator>=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
+bool operator>=(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
   // This could be optimized if necessary
   return operator>(a1, a2) || operator==(a1, a2);
 }
 
 template<typename MatrixAddr1__, typename MatrixAddr2__>
-bool operator<=(const MatrixAddr1__ & a1, const MatrixAddr2__ & a2) {
+bool operator<=(const MatrixAddr1__ &a1, const MatrixAddr2__ &a2) {
   return !operator>(a1, a2);
 }
 
 #endif
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

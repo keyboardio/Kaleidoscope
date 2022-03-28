@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                      // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/device/device.h"  // for cRGB
 #include "kaleidoscope/plugin.h"         // for Plugin
@@ -26,11 +26,10 @@ namespace plugin {
 
 class HardwareTestMode : public kaleidoscope::Plugin {
  public:
-
   typedef struct {
     uint8_t bad : 1,
-            tested : 1,
-            cyclesSinceStateChange: 6;
+      tested : 1,
+      cyclesSinceStateChange : 6;
   } chatter_data;
   static uint8_t actionKey;
 
@@ -38,6 +37,7 @@ class HardwareTestMode : public kaleidoscope::Plugin {
 
   static void runTests();
   static void setActionKey(uint8_t key);
+
  private:
   static void testLeds();
   static void testMatrix();

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint8_t, int8_t
+#include <stdint.h>  // for uint8_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"   // for KeyAddr
 #include "kaleidoscope/key_defs.h"  // for Key_Undefined, Key
@@ -30,11 +30,11 @@ struct KeyEvent {
 
  public:
   // Constructor for plugin use when regenerating an event with specific ID:
-  KeyEvent(KeyAddr addr, uint8_t state,
-           Key key = Key_Undefined, KeyEventId id = last_id_)
+  KeyEvent(KeyAddr addr, uint8_t state, Key key = Key_Undefined, KeyEventId id = last_id_)
     : addr(addr), state(state), key(key), id_(id) {}
 
-  KeyEvent() : id_(last_id_) {}
+  KeyEvent()
+    : id_(last_id_) {}
 
   // For use by keyscanner creating a new event from a physical keyswitch toggle
   // on or off.
@@ -47,13 +47,13 @@ struct KeyEvent {
   }
   void swapId(KeyEvent &other) {
     KeyEventId tmp_id = id_;
-    id_ = other.id_;
-    other.id_ = tmp_id;
+    id_               = other.id_;
+    other.id_         = tmp_id;
   }
 
-  KeyAddr addr = KeyAddr::none();
+  KeyAddr addr  = KeyAddr::none();
   uint8_t state = 0;
-  Key key = Key_Undefined;
+  Key key       = Key_Undefined;
 
  private:
   // serial number of the event:

@@ -16,10 +16,10 @@
 
 #include "kaleidoscope/plugin/Macros.h"
 
-#include <Arduino.h>                                // for pgm_read_byte, delay
-#include <Kaleidoscope-FocusSerial.h>               // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                    // for MACRO_FIRST
-#include <stdint.h>                                 // for uint8_t
+#include <Arduino.h>                   // for pgm_read_byte, delay
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for MACRO_FIRST
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
@@ -32,7 +32,8 @@
 // =============================================================================
 // Default `macroAction()` function definitions
 __attribute__((weak))
-const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+const macro_t *
+macroAction(uint8_t macro_id, KeyEvent &event) {
   return MACRO_NONE;
 }
 
@@ -41,7 +42,7 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 namespace kaleidoscope {
 namespace plugin {
 
-constexpr uint8_t press_state = IS_PRESSED | INJECTED;
+constexpr uint8_t press_state   = IS_PRESSED | INJECTED;
 constexpr uint8_t release_state = WAS_PRESSED | INJECTED;
 
 // Initialized to zeroes (i.e. `Key_NoKey`)
@@ -92,7 +93,7 @@ void Macros::tap(Key key) const {
 }
 
 void Macros::play(const macro_t *macro_p) {
-  macro_t macro = MACRO_ACTION_END;
+  macro_t macro    = MACRO_ACTION_END;
   uint8_t interval = 0;
   Key key;
 
@@ -300,7 +301,7 @@ EventHandlerResult Macros::onKeyEvent(KeyEvent &event) {
   uint8_t macro_id = event.key.getRaw() - ranges::MACRO_FIRST;
 
   // Call the new `macroAction(event)` function.
-  const macro_t* macro_ptr = macroAction(macro_id, event);
+  const macro_t *macro_ptr = macroAction(macro_id, event);
 
   // Play back the macro pointed to by `macroAction()`
   play(macro_ptr);
@@ -346,7 +347,7 @@ EventHandlerResult Macros::onNameQuery() {
   return ::Focus.sendName(F("Macros"));
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::Macros Macros;

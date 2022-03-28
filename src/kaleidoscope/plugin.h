@@ -29,4 +29,4 @@ class Plugin {
   // their documentation!
 };
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

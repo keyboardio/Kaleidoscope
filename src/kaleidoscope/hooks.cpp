@@ -30,6 +30,7 @@ namespace kaleidoscope {
 // that we can compile sketches that use no plugins, without them having to use
 // KALEIDOSCOPE_INIT_PLUGINS() with a dummy plugin.
 
+// clang-format off
 #define INSTANTIATE_WEAK_HOOK_FUNCTION(                                        \
     HOOK_NAME, HOOK_VERSION, DEPRECATION_TAG,                                  \
     SHOULD_EXIT_IF_RESULT_NOT_OK,                                              \
@@ -43,6 +44,7 @@ namespace kaleidoscope {
    }
 
 _FOR_EACH_EVENT_HANDLER(INSTANTIATE_WEAK_HOOK_FUNCTION)
+// clang-format on
 
 #undef INSTANTIATE_WEAK_HOOK_FUNCTION
 
@@ -55,9 +57,9 @@ class Sketch;
 //
 template<>
 __attribute__((weak))
-EventHandlerResult Hooks::exploreSketch
-<sketch_exploration::Sketch>() {
+EventHandlerResult
+Hooks::exploreSketch<sketch_exploration::Sketch>() {
   return EventHandlerResult::OK;
 }
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

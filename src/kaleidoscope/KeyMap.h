@@ -24,4 +24,4 @@ namespace kaleidoscope {
 
 typedef KeyAddrMap<Key, KeyAddr::upper_limit> KeyMap;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

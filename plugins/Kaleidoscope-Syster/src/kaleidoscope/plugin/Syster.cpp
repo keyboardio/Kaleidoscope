@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/Syster.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for int8_t, uint8_t
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for int8_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -39,8 +39,8 @@ bool Syster::is_active_;
 // --- api ---
 void Syster::reset(void) {
   symbol_pos_ = 0;
-  symbol_[0] = 0;
-  is_active_ = false;
+  symbol_[0]  = 0;
+  is_active_  = false;
 }
 
 bool Syster::is_active(void) {
@@ -135,7 +135,7 @@ EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-} // namespace plugin
+}  // namespace plugin
 
 void eraseChars(int8_t n) {
   // For the `event.addr`, we could track the address of the Syster key, but it
@@ -162,7 +162,7 @@ void eraseChars(int8_t n) {
   Runtime.handleKeyEvent(event);
 }
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 
 __attribute__((weak)) const char keyToChar(Key key) {
@@ -170,9 +170,9 @@ __attribute__((weak)) const char keyToChar(Key key) {
     return 0;
 
   switch (key.getKeyCode()) {
-  case Key_A.getKeyCode() ... Key_Z.getKeyCode():
+  case Key_A.getKeyCode()... Key_Z.getKeyCode():
     return 'a' + (key.getKeyCode() - Key_A.getKeyCode());
-  case Key_1.getKeyCode() ... Key_9.getKeyCode():
+  case Key_1.getKeyCode()... Key_9.getKeyCode():
     return '1' + (key.getKeyCode() - Key_1.getKeyCode());
   case Key_0.getKeyCode():
     return '0';

@@ -21,23 +21,25 @@ namespace testing {
 
 ExpectedMouseReport::ExpectedMouseReport(uint32_t timestamp,
                                          uint8_t buttons,
-                                         int8_t x, int8_t y,
-                                         int8_t v, int8_t h,
+                                         int8_t x,
+                                         int8_t y,
+                                         int8_t v,
+                                         int8_t h,
                                          std::string message) {
-  timestamp_ = timestamp;
+  timestamp_           = timestamp;
   report_data_.buttons = buttons;
-  report_data_.xAxis = x;
-  report_data_.yAxis = y;
-  report_data_.vWheel = v;
-  report_data_.hWheel = h;
-  failure_message_ = message;
+  report_data_.xAxis   = x;
+  report_data_.yAxis   = y;
+  report_data_.vWheel  = v;
+  report_data_.hWheel  = h;
+  failure_message_     = message;
 }
 
 uint32_t ExpectedMouseReport::Timestamp() const {
   return timestamp_;
 }
 
-const std::string & ExpectedMouseReport::Message() const {
+const std::string &ExpectedMouseReport::Message() const {
   return failure_message_;
 }
 

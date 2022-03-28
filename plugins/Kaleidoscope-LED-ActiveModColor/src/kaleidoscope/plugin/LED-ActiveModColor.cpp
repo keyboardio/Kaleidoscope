@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/LED-ActiveModColor.h"
 
-#include <Kaleidoscope-OneShot.h>               // for OneShot
-#include <Kaleidoscope-OneShotMetaKeys.h>       // for OneShot_ActiveStickyKey
+#include <Kaleidoscope-OneShot.h>          // for OneShot
+#include <Kaleidoscope-OneShotMetaKeys.h>  // for OneShot_ActiveStickyKey
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyA...
@@ -37,14 +37,14 @@ KeyAddrBitfield ActiveModColorEffect::mod_key_bits_;
 bool ActiveModColorEffect::highlight_normal_modifiers_ = true;
 
 cRGB ActiveModColorEffect::highlight_color_ = CRGB(160, 160, 160);
-cRGB ActiveModColorEffect::oneshot_color_ = CRGB(160, 160, 0);
-cRGB ActiveModColorEffect::sticky_color_ = CRGB(160, 0, 0);
+cRGB ActiveModColorEffect::oneshot_color_   = CRGB(160, 160, 0);
+cRGB ActiveModColorEffect::sticky_color_    = CRGB(160, 0, 0);
 
 // -----------------------------------------------------------------------------
 EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
 
   // If `event.addr` is not a physical key address, ignore it:
-  if (! event.addr.isValid()) {
+  if (!event.addr.isValid()) {
     return EventHandlerResult::OK;
   }
 
@@ -70,7 +70,7 @@ EventHandlerResult ActiveModColorEffect::onKeyEvent(KeyEvent &event) {
         mod_key_bits_.set(entry_addr);
       }
     }
-  } else { // if (keyToggledOff(event.state))
+  } else {  // if (keyToggledOff(event.state))
     // Things get a bit ugly here because this plugin might come before OneShot
     // in the order, so we can't just count on OneShot stopping the suppressed
     // release event before we see it here.
@@ -104,7 +104,7 @@ EventHandlerResult ActiveModColorEffect::beforeSyncingLeds() {
   return EventHandlerResult::OK;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::ActiveModColorEffect ActiveModColorEffect;

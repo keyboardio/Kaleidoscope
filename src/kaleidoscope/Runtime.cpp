@@ -16,8 +16,8 @@
 
 #include "kaleidoscope/Runtime.h"
 
-#include <Arduino.h>                                      // for millis
-#include <HardwareSerial.h>                               // for HardwareSerial
+#include <Arduino.h>         // for millis
+#include <HardwareSerial.h>  // for HardwareSerial
 
 #include "kaleidoscope/KeyAddr.h"                         // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
@@ -36,8 +36,7 @@ Runtime_::Runtime_(void) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::setup(void) {
+void Runtime_::setup(void) {
   // We are explicitly initializing the Serial port as early as possible to
   // (temporarily, hopefully) work around an issue on OSX. If we initialize
   // Serial too late, no matter what we do, we'll end up reading garbage from
@@ -60,8 +59,7 @@ Runtime_::setup(void) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::loop(void) {
+void Runtime_::loop(void) {
   millis_at_cycle_start_ = millis();
 
   kaleidoscope::Hooks::beforeEachCycle();
@@ -79,8 +77,7 @@ Runtime_::loop(void) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::handleKeyswitchEvent(KeyEvent event) {
+void Runtime_::handleKeyswitchEvent(KeyEvent event) {
 
   // This function strictly handles physical key events. Any event without a
   // valid `KeyAddr` gets ignored.
@@ -123,8 +120,7 @@ Runtime_::handleKeyswitchEvent(KeyEvent event) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::handleKeyEvent(KeyEvent event) {
+void Runtime_::handleKeyEvent(KeyEvent event) {
 
   // For events that didn't begin with `handleKeyswitchEvent()`, we need to look
   // up the `Key` value from the keymap (maybe overridden by `live_keys`).
@@ -191,8 +187,7 @@ Runtime_::handleKeyEvent(KeyEvent event) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::prepareKeyboardReport(const KeyEvent &event) {
+void Runtime_::prepareKeyboardReport(const KeyEvent &event) {
   // before building the new report, start clean
   device().hid().keyboard().releaseAllKeys();
 
@@ -220,8 +215,7 @@ Runtime_::prepareKeyboardReport(const KeyEvent &event) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::addToReport(Key key) {
+void Runtime_::addToReport(Key key) {
   // First, call any relevant plugin handlers, to give them a chance to add
   // other values to the HID report directly and/or to abort the automatic
   // adding of keycodes below.
@@ -252,8 +246,7 @@ Runtime_::addToReport(Key key) {
 }
 
 // ----------------------------------------------------------------------------
-void
-Runtime_::sendKeyboardReport(const KeyEvent &event) {
+void Runtime_::sendKeyboardReport(const KeyEvent &event) {
   // If the keycode for this key is already in the report, we need to send an
   // extra report without that keycode in order to correctly process the
   // rollover. It might be better to exempt modifiers from this rule, but it's
@@ -294,6 +287,6 @@ Runtime_::sendKeyboardReport(const KeyEvent &event) {
 
 Runtime_ Runtime;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 kaleidoscope::Runtime_ &Kaleidoscope = kaleidoscope::Runtime;

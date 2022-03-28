@@ -34,8 +34,8 @@ namespace plugin {
 
 // Configuration settings that can be saved to persistent storage.
 AutoShift::Settings AutoShift::settings_ = {
-  .enabled = true,
-  .timeout = 175,
+  .enabled            = true,
+  .timeout            = 175,
   .enabled_categories = AutoShift::Categories::printableKeys(),
 };
 
@@ -62,8 +62,7 @@ void AutoShift::disable() {
 // -----------------------------------------------------------------------------
 // Test for whether or not to apply AutoShift to a given `Key`.  This function
 // can be overridden from the user sketch.
-__attribute__((weak))
-bool AutoShift::isAutoShiftable(Key key) {
+__attribute__((weak)) bool AutoShift::isAutoShiftable(Key key) {
   return enabledForKey(key);
 }
 
@@ -207,7 +206,7 @@ void AutoShift::flushEvent(bool is_long_press) {
     return;
   KeyEvent event = queue_.event(0);
   if (is_long_press) {
-    event.key = Runtime.lookupKey(event.addr);
+    event.key     = Runtime.lookupKey(event.addr);
     uint8_t flags = event.key.getFlags();
     flags ^= SHIFT_HELD;
     event.key.setFlags(flags);
@@ -216,7 +215,7 @@ void AutoShift::flushEvent(bool is_long_press) {
   Runtime.handleKeyswitchEvent(event);
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::AutoShift AutoShift;

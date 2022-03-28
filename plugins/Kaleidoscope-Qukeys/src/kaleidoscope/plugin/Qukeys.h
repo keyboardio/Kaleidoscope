@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <Arduino.h>                            // for PROGMEM
-#include <Kaleidoscope-Ranges.h>                // for DUM_FIRST
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>              // for PROGMEM
+#include <Kaleidoscope-Ranges.h>  // for DUM_FIRST
+#include <stdint.h>               // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
@@ -31,14 +31,14 @@
 #include "kaleidoscope/plugin.h"                // for Plugin
 
 // DualUse Key definitions for Qukeys in the keymap
-#define MT(mod, key) kaleidoscope::plugin::ModTapKey(Key_ ## mod, Key_ ## key)
+#define MT(mod, key)   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
 
-#define SFT_T(key) MT(LeftShift, key)
-#define CTL_T(key) MT(LeftControl, key)
-#define ALT_T(key) MT(LeftAlt, key)
-#define GUI_T(key) MT(LeftGui, key)
+#define SFT_T(key)     MT(LeftShift, key)
+#define CTL_T(key)     MT(LeftControl, key)
+#define ALT_T(key)     MT(LeftAlt, key)
+#define GUI_T(key)     MT(LeftGui, key)
 
-#define LT(layer, key) kaleidoscope::plugin::LayerTapKey(layer, Key_ ## key)
+#define LT(layer, key) kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -66,13 +66,11 @@ struct Qukey {
   // This is the constructor that should be used when creating a Qukey object in
   // the PROGMEM array that will be used by Qukeys (i.e. in the `QUKEYS()`
   // macro).
-  constexpr
-  Qukey(int8_t layer, KeyAddr k, Key alternate_key)
+  constexpr Qukey(int8_t layer, KeyAddr k, Key alternate_key)
     : layer(layer), addr(k), alternate_key(alternate_key) {}
   // This constructor is here so that we can create an empty Qukey object in RAM
   // into which we can copy the values from a PROGMEM Qukey object.
   Qukey() = default;
-
 };
 
 
@@ -143,9 +141,9 @@ class Qukeys : public kaleidoscope::Plugin {
   // template function that takes as its sole argument an array reference of
   // size `_qukeys_count`, so there's no need to use `sizeof` to calculate the
   // correct size, and pass it as a separate parameter.
-  template <uint8_t _qukeys_count>
-  void configureQukeys(Qukey const(&qukeys)[_qukeys_count]) {
-    qukeys_ = qukeys;
+  template<uint8_t _qukeys_count>
+  void configureQukeys(Qukey const (&qukeys)[_qukeys_count]) {
+    qukeys_       = qukeys;
     qukeys_count_ = _qukeys_count;
   }
 
@@ -160,7 +158,7 @@ class Qukeys : public kaleidoscope::Plugin {
 
  private:
   // An array of Qukey objects in PROGMEM.
-  Qukey const * qukeys_{nullptr};
+  Qukey const *qukeys_{nullptr};
   uint8_t qukeys_count_{0};
 
   // The maximum number of events in the queue at a time.
@@ -239,9 +237,9 @@ extern kaleidoscope::plugin::Qukeys Qukeys;
 // guarantee that the count is set correctly. This is considerably less
 // important than it used to be, with the `configureQukeys()` function taking
 // care of guaranteeing the correct count setting.
-#define QUKEYS(qukey_defs...) {                                         \
-    static kaleidoscope::plugin::Qukey const qk_table[] PROGMEM = {     \
-      qukey_defs                                                        \
-    };                                                                  \
-    Qukeys.configureQukeys(qk_table);                                   \
-}
+#define QUKEYS(qukey_defs...)                                       \
+  {                                                                 \
+    static kaleidoscope::plugin::Qukey const qk_table[] PROGMEM = { \
+      qukey_defs};                                                  \
+    Qukeys.configureQukeys(qk_table);                               \
+  }

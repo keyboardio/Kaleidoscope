@@ -32,7 +32,7 @@ namespace samd {
 class Bossac : public kaleidoscope::driver::bootloader::Base {
  public:
   static void rebootBootloader() {
-    __attribute__((__aligned__(4)))	UsbDeviceDescriptor EP[USB_EPT_NUM];
+    __attribute__((__aligned__(4))) UsbDeviceDescriptor EP[USB_EPT_NUM];
 
     USB->DEVICE.CTRLA.bit.SWRST = 1;
     memset(EP, 0, sizeof(EP));

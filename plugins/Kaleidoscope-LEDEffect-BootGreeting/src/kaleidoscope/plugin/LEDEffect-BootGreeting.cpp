@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/LEDEffect-BootGreeting.h"
 
-#include <stdint.h>                                   // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                     // for KeyAddr, Matrix...
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
@@ -34,10 +34,10 @@ namespace plugin {
 bool BootGreetingEffect::done_ = false;
 KeyAddr BootGreetingEffect::key_addr_;
 KeyAddr BootGreetingEffect::user_key_addr;
-Key BootGreetingEffect::search_key = Key_LEDEffectNext;
-uint8_t BootGreetingEffect::hue = 170;
+Key BootGreetingEffect::search_key      = Key_LEDEffectNext;
+uint8_t BootGreetingEffect::hue         = 170;
 uint16_t BootGreetingEffect::start_time = 0;
-uint16_t BootGreetingEffect::timeout = 9200;
+uint16_t BootGreetingEffect::timeout    = 9200;
 
 BootGreetingEffect::BootGreetingEffect(KeyAddr key_addr) {
   user_key_addr = key_addr;
@@ -46,7 +46,7 @@ BootGreetingEffect::BootGreetingEffect(KeyAddr key_addr) {
 void BootGreetingEffect::findLed(void) {
   if (user_key_addr.isValid()) {
     key_addr_ = user_key_addr;
-    done_ = true;
+    done_     = true;
     return;
   }
 

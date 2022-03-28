@@ -27,7 +27,7 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
-  LEDOff(void) { }
+  LEDOff(void) {}
 
  protected:
   void onActivate(void) final;

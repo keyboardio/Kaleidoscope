@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                                      // for uint8_t, uin...
+#include <stdint.h>  // for uint8_t, uin...
 
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
 #include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
@@ -28,13 +28,13 @@
 #include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
 #include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInter...
 
-#define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect;})
+#define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect; })
 
 namespace kaleidoscope {
 namespace plugin {
 class StalkerEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                      public LEDModeInterface,
+                      public AccessTransientLEDMode {
  public:
   class ColorComputer {
    public:
@@ -53,7 +53,6 @@ class StalkerEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -61,11 +60,9 @@ class StalkerEffect : public Plugin,
     explicit TransientLEDMode(const StalkerEffect *parent);
 
    protected:
-
     void update() final;
 
    private:
-
     const StalkerEffect *parent_;
 
     uint16_t step_start_time_;
@@ -80,9 +77,11 @@ namespace stalker {
 class Haunt : public StalkerEffect::ColorComputer {
  public:
   explicit Haunt(const cRGB highlight_color);
-  Haunt(void) : Haunt(CRGB(0x40, 0x80, 0x80)) {}
+  Haunt(void)
+    : Haunt(CRGB(0x40, 0x80, 0x80)) {}
 
   cRGB compute(uint8_t *step) final;
+
  private:
   static cRGB highlight_color_;
 };

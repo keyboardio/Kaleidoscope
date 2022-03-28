@@ -27,7 +27,7 @@ namespace {
 // internal state of the LED mode management lives in
 // an anonymous namespace.
 
-uint8_t cur_mode_id = 255; // We use 255 as a flag value that signals
+uint8_t cur_mode_id = 255;  // We use 255 as a flag value that signals
 // uninitialized. That's why we can only have
 // LED mode ids in the range [0..254].
 
@@ -86,7 +86,7 @@ kaleidoscope::plugin::LEDMode *LEDModeManager::getLEDMode(uint8_t mode_id) {
   //
   if (fac.isPersistentLEDMode()) {
     current_led_mode_dynamic = false;
-    cur_led_mode = fac.getPersistentLEDMode();
+    cur_led_mode             = fac.getPersistentLEDMode();
   } else {
     current_led_mode_dynamic = true;
 
@@ -102,5 +102,5 @@ kaleidoscope::plugin::LEDMode *LEDModeManager::getLEDMode(uint8_t mode_id) {
   return cur_led_mode;
 }
 
-} // namespace internal
-} // namespace kaleidoscope
+}  // namespace internal
+}  // namespace kaleidoscope

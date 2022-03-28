@@ -28,8 +28,8 @@
 namespace kaleidoscope {
 namespace plugin {
 class LEDActiveLayerColorEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                                  public LEDModeInterface,
+                                  public AccessTransientLEDMode {
  public:
   LEDActiveLayerColorEffect(void) {}
 
@@ -40,7 +40,6 @@ class LEDActiveLayerColorEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -48,12 +47,10 @@ class LEDActiveLayerColorEffect : public Plugin,
     explicit TransientLEDMode(const LEDActiveLayerColorEffect *parent);
 
    protected:
-
     void onActivate(void) final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:
-
     const LEDActiveLayerColorEffect *parent_;
 
     cRGB active_color_;
@@ -64,7 +61,6 @@ class LEDActiveLayerColorEffect : public Plugin,
   };
 
  private:
-
   static const cRGB *colormap_;
 };
 

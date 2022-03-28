@@ -33,14 +33,15 @@ struct cRGB {
   uint8_t r, g, b;
 };
 
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 #include "kaleidoscope/driver/bootloader/avr/HalfKay.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include "kaleidoscope/device/ez/ErgoDox/ErgoDoxScanner.h"
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 namespace kaleidoscope {
 namespace device {
@@ -48,10 +49,9 @@ namespace ez {
 
 struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : kaleidoscope::driver::keyscanner::BaseProps {
-    static constexpr uint8_t matrix_rows = 14;
+    static constexpr uint8_t matrix_rows    = 14;
     static constexpr uint8_t matrix_columns = 6;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
-
   };
   typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
   static constexpr const char *short_name = "ErgoDox-EZ";
@@ -92,9 +92,11 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   static void debounceRow(uint8_t change, uint8_t row);
   static void readMatrixRow(uint8_t row);
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+
+// clang-format off
 
 #define PER_KEY_DATA_STACKED(dflt,                                    \
     /* left hand, spatial positions */                                  \

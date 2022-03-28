@@ -17,11 +17,11 @@
 
 #pragma once
 
-#include <stdint.h>                              // for int8_t, uint8_t
+#include <stdint.h>  // for int8_t, uint8_t
 
 #include <KeyboardioHID.h>
 // From KeyboardioHID:
-#include "MultiReport/Mouse.h"                   // for HID_MouseReport_Data_t
+#include "MultiReport/Mouse.h"  // for HID_MouseReport_Data_t
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/Mouse.h"  // for Mouse, MouseProps
 
@@ -82,12 +82,12 @@ class MouseWrapper {
   }
 };
 
-struct MouseProps: public base::MouseProps {
+struct MouseProps : public base::MouseProps {
   typedef MouseWrapper Mouse;
 };
 
-template <typename _Props>
-class Mouse: public base::Mouse<_Props> {};
+template<typename _Props>
+class Mouse : public base::Mouse<_Props> {};
 
 }  // namespace keyboardio
 }  // namespace hid

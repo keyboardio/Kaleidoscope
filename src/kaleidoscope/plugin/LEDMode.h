@@ -16,11 +16,11 @@
 
 #pragma once
 
-#include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
-#include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
-#include "kaleidoscope/plugin.h"                   // for Plugin
+#include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult
+#include "kaleidoscope/plugin.h"                         // for Plugin
 #include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // IWYU pragma: keep
-#include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
+#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInterface
 
 namespace kaleidoscope {
 
@@ -28,7 +28,7 @@ namespace internal {
 // Forward declaration
 class LEDModeManager;
 
-} // namespace internal
+}  // namespace internal
 
 namespace plugin {
 
@@ -45,11 +45,11 @@ namespace plugin {
 * update, and possibly @ref refreshAt too.
 */
 class LEDMode : public kaleidoscope::Plugin,
-  public LEDModeInterface {
+                public LEDModeInterface {
   friend class LEDControl;
   friend class kaleidoscope::internal::LEDModeManager;
- protected:
 
+ protected:
   // These methods should only be called by LEDControl.
 
   /** One-time setup, called at keyboard boot.
@@ -96,7 +96,6 @@ class LEDMode : public kaleidoscope::Plugin,
   virtual void refreshAt(KeyAddr key_addr) {}
 
  public:
-
   /** Plugin initialization.
    *
    * Called via `Runtime.use()`, registers the LED mode, and does the
@@ -109,5 +108,5 @@ class LEDMode : public kaleidoscope::Plugin,
   }
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope

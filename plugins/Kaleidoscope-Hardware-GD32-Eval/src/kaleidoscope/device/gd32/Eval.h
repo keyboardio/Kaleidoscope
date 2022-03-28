@@ -30,9 +30,9 @@ namespace kaleidoscope {
 namespace device {
 namespace gd32 {
 
-struct EvalStorageProps: kaleidoscope::driver::storage::GD32FlashProps {};
+struct EvalStorageProps : kaleidoscope::driver::storage::GD32FlashProps {};
 
-struct EvalProps: kaleidoscope::device::BaseProps {
+struct EvalProps : kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
   typedef eval::KeyScannerProps KeyScannerProps;
   typedef eval::KeyScanner KeyScanner;
@@ -41,18 +41,20 @@ struct EvalProps: kaleidoscope::device::BaseProps {
   static constexpr const char *short_name = "GD32Eval";
 };
 
-class Eval: public kaleidoscope::device::Base<EvalProps> {};
+class Eval : public kaleidoscope::device::Base<EvalProps> {};
 
+// clang-format off
 #define PER_KEY_DATA(dflt,                                           \
          R0C0, R0C1                                                  \
   )                                                                  \
          R0C0, R0C1
+// clang-format on
 
-} // namespace gd32
-} // namespace device
+}  // namespace gd32
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::gd32::Eval)
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 #endif

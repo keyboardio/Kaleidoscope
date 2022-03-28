@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for REDIAL
+#include <Kaleidoscope-Ranges.h>  // for REDIAL
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

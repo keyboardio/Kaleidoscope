@@ -18,8 +18,8 @@
 
 #include "kaleidoscope/plugin/PersistentLEDMode.h"
 
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <stdint.h>                        // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for VirtualProps::Storage

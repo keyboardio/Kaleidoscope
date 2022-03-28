@@ -28,8 +28,7 @@
 
 #include "crc.h"
 
-void
-CRC_::reflect(uint8_t len) {
+void CRC_::reflect(uint8_t len) {
   uint8_t i;
   uint16_t newCRC;
 
@@ -42,8 +41,7 @@ CRC_::reflect(uint8_t len) {
   crc = newCRC;
 }
 
-void
-CRC_::update(const void *data, uint8_t len) {
+void CRC_::update(const void *data, uint8_t len) {
   const uint8_t *d = (const uint8_t *)data;
   uint8_t i;
   bool bit;

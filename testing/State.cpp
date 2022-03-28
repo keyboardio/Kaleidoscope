@@ -21,12 +21,12 @@ namespace testing {
 
 // static
 std::unique_ptr<State> State::Snapshot() {
-  auto state = std::make_unique<State>();
+  auto state        = std::make_unique<State>();
   state->hid_state_ = internal::HIDStateBuilder::Snapshot();
   return state;
 }
 
-const HIDState* State::HIDReports() const {
+const HIDState *State::HIDReports() const {
   return hid_state_.get();
 }
 

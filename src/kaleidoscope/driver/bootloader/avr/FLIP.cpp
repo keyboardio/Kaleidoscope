@@ -46,14 +46,14 @@ namespace avr {
 // http://www.fourwalledcubicle.com/files/LUFA/Doc/120730/html/_page__software_bootloader_start.html
 
 #define BOOTLOADER_RESET_KEY 0xB007B007
-static uint32_t reset_key  __attribute__((section(".noinit")));
+static uint32_t reset_key __attribute__((section(".noinit")));
 
 /*
  * This function runs before main(), and jumps to the bootloader after a reset
  * initiated by .resetDevice().
  */
 static void _bootloader_jump_after_watchdog_reset()
-__attribute__((used, naked, section(".init3")));
+  __attribute__((used, naked, section(".init3")));
 static void _bootloader_jump_after_watchdog_reset() {
   if ((MCUSR & (1 << WDRF)) && reset_key == BOOTLOADER_RESET_KEY) {
     reset_key = 0;
@@ -65,7 +65,7 @@ static void _bootloader_jump_after_watchdog_reset() {
 void FLIP::rebootBootloader() {
   reset_key = BOOTLOADER_RESET_KEY;
   wdt_enable(WDTO_250MS);
-  while (true) {} // This infinite loop ensures nothing else
+  while (true) {}  // This infinite loop ensures nothing else
   // happens before the watchdog reboots us
 }
 
@@ -75,4 +75,4 @@ void FLIP::rebootBootloader() {
 }  // namespace kaleidoscope
 
 #endif
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

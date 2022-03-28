@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/device/device.h"         // for cRGB
@@ -44,7 +44,8 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   EventHandlerResult onFocusEvent(const char *command);
   EventHandlerResult themeFocusEvent(const char *command,
                                      const char *expected_command,
-                                     uint16_t theme_base, uint8_t max_themes);
+                                     uint16_t theme_base,
+                                     uint8_t max_themes);
 
  private:
   static uint16_t palette_base_;
