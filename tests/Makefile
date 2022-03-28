@@ -53,6 +53,8 @@ generate-testcases:
 	done
 
 all: ${TESTS} run-all
+cmake-clean:
+	rm -rf "${top_dir}"/testing/googletest/build/*
 
 run-all: ${TESTS}
 	@for test in ${TESTS}; do \
@@ -63,9 +65,6 @@ run-all: ${TESTS}
 	if [ -n $${ERROR} ]; then exit $${ERROR}; fi
 
 
-
-cmake-clean:
-	rm -rf "${top_dir}"/testing/googletest/build/*
 
 clean: cmake-clean
 	@for test in ${TESTS}; do \
