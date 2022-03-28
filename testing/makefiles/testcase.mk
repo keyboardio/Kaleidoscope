@@ -69,6 +69,7 @@ build: ${BIN_DIR}/${BIN_FILE} compile-sketch
 all: run
 
 run: ${BIN_DIR}/${BIN_FILE}
+	$(info Running test $(testcase))
 	$(QUIET) "${BIN_DIR}/${BIN_FILE}" -t -q
 
 ${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} 
@@ -95,7 +96,9 @@ generate-testcase: $(if $(HAS_KTEST_FILE), ${SRC_DIR}/generated-testcase.cpp)
 
 ${SRC_DIR}/generated-testcase.cpp: test.ktest
 ifneq (,$(wildcard test.ktest))
-	$(info Compiling ${testcase} ktest script into ${SRC_DIR}/generated-testcase.cpp)
+ifdef VERBOSE
+	$(QUIET) $(info Compiling ${testcase} ktest script into ${SRC_DIR}/generated-testcase.cpp)
+endif
 	$(QUIET) install -d "${SRC_DIR}"
 	$(QUIET) perl ${top_dir}/testing/bin/ktest-to-cxx \
 		--ktest=test.ktest \
