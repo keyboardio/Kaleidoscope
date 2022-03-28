@@ -44,13 +44,9 @@ include $(top_dir)/etc/makefiles/arduino-cli.mk
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 
 
-.PHONY: clean cmake-clean all googletest generate-testcases
+.PHONY: clean cmake-clean all googletest
 
 
-generate-testcases:
-	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk -C $${test} testcase=$${test} generate-testcase; \
-	done
 
 all: ${TESTS} run-all
 cmake-clean:
