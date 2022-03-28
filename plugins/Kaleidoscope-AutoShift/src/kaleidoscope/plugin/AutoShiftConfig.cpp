@@ -37,13 +37,11 @@ uint16_t AutoShiftConfig::settings_base_;
 
 EventHandlerResult AutoShiftConfig::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(AutoShift::settings_));
-  uint32_t checker;
 
-  Runtime.storage().get(settings_base_, checker);
-
-  // Check if we have an empty eeprom...
-  if (checker == 0xffffffff) {
-    // ...if the eeprom was empty, store the default settings.
+  if (Runtime.storage().isSliceUninitialized(
+        settings_base_,
+        sizeof(AutoShift::settings_))) {
+    // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, AutoShift::settings_);
     Runtime.storage().commit();
   }

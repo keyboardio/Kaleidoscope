@@ -34,13 +34,11 @@ uint16_t EscapeOneShotConfig::settings_base_;
 
 EventHandlerResult EscapeOneShotConfig::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(EscapeOneShot::settings_));
-  uint16_t checker;
 
-  Runtime.storage().get(settings_base_, checker);
-
-  // Check if we have an empty eeprom...
-  if (checker == 0xffff) {
-    // ...if the eeprom was empty, store the default settings.
+  if (Runtime.storage().isSliceUninitialized(
+        settings_base_,
+        sizeof(EscapeOneShot::settings_))) {
+    // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, EscapeOneShot::settings_);
     Runtime.storage().commit();
   }
