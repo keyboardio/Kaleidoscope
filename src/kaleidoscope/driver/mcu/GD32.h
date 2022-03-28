@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <Arduino.h> // NVIC_Reset 
+#include <USBCore.h> // For connect, disconnect, USBCore
 #include "kaleidoscope/driver/mcu/Base.h"  // for Base, BaseProps
 
 namespace kaleidoscope {
@@ -31,10 +33,10 @@ template<typename _Props>
 class GD32 : public kaleidoscope::driver::mcu::Base<_Props> {
  public:
   void detachFromHost() {
-    USBCore::disconnect();
+    USBCore().disconnect();
   }
   void attachToHost() {
-    USBCore::connect();
+    USBCore().connect();
   }
 
 

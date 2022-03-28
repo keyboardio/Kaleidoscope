@@ -239,6 +239,7 @@ void Model100::enableHardwareTestMode() {
 }
 
 void Model100::rebootBootloader() {
+    USBCore().disconnect();
     NVIC_SystemReset();
 }
 
