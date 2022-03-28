@@ -76,11 +76,17 @@ clean: cmake-clean
 	rm -rf "${build_dir}"/*
 
 googletest: ${top_dir}/testing/googletest/build/Makefile
-	cd ${top_dir}/testing/googletest/build && $(MAKE)
+	${MAKE} -C ${top_dir}/testing/googletest/build
 
 ${top_dir}/testing/googletest/build/Makefile:
 	$(info googletest Makefile is being remade)
-	install -d ${top_dir}/testing/googletest/build && cd ${top_dir}/testing/googletest/build && cmake  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) ..
+	# This can fail if we're running in parallel, but that'd be harmless
+	-install -d ${top_dir}/testing/googletest/build
+	$(QUIET) cmake \
+	  -S ${top_dir}/testing/googletest \
+	  -B ${top_dir}/testing/googletest/build \
+	  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) \
+	  -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd)
 
 ${libcommon_a}:
 	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
