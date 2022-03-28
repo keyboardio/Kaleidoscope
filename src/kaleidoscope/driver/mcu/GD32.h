@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Arduino.h> // NVIC_Reset 
-#include <USBCore.h> // For connect, disconnect, USBCore
+#include <Arduino.h>                       // NVIC_Reset
+#include <USBCore.h>                       // For connect, disconnect, USBCore
 #include "kaleidoscope/driver/mcu/Base.h"  // for Base, BaseProps
 
 namespace kaleidoscope {
