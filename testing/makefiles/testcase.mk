@@ -64,7 +64,7 @@ endif
 
 TEST_OBJS=$(patsubst $(SRC_DIR)/%.cpp,${OBJ_DIR}/%.o,$(TEST_FILES))
 
-build: ${BIN_DIR}/${BIN_FILE} compile-sketch
+build: $(if $(HAS_KTEST_FILE), generate-testcase) compile-sketch
 
 all: run
 
@@ -72,9 +72,10 @@ run: ${BIN_DIR}/${BIN_FILE}
 	$(info Running test $(testcase))
 	$(QUIET) "${BIN_DIR}/${BIN_FILE}" -t -q
 
-${BIN_DIR}/${BIN_FILE}: ${TEST_OBJS} 
+${BIN_DIR}/${BIN_FILE}: compile-sketch
 
 # We force sketch recompiliation because otherwise, make won't pick up changes to...anything on the arduino side
+.PHONY: compile-sketch
 compile-sketch: ${TEST_OBJS}
 	@install -d "${BIN_DIR}" "${LIB_DIR}"
 	$(QUIET) env LIBONLY=yes VERBOSE=${VERBOSE}  \
@@ -91,8 +92,8 @@ compile-sketch: ${TEST_OBJS}
 
 # If we have a test.ktest file, it should be processed into a c++ testcase
 
+.PHONY: generate-testcase
 generate-testcase: $(if $(HAS_KTEST_FILE), ${SRC_DIR}/generated-testcase.cpp)
-
 
 ${SRC_DIR}/generated-testcase.cpp: test.ktest
 ifneq (,$(wildcard test.ktest))
