@@ -78,6 +78,7 @@ compile-sketch: ${TEST_OBJS}
 	@install -d "${BIN_DIR}" "${LIB_DIR}"
 	$(QUIET) env LIBONLY=yes VERBOSE=${VERBOSE}  \
 		OUTPUT_PATH="${LIB_DIR}" \
+		_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS='--build-property upload.maximum_size=""' \
 		$(MAKE) -f ${top_dir}/etc/makefiles/sketch.mk compile
 	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) -o "${BIN_DIR}/${BIN_FILE}" \
 		-lpthread -g -w ${TEST_OBJS} \
