@@ -100,8 +100,8 @@ void Mouse_::click(uint8_t b) {
 }
 
 void Mouse_::move(int8_t x, int8_t y, int8_t v_wheel, int8_t h_wheel) {
-  report_.xAxis = x;
-  report_.yAxis = y;
+  report_.xAxis  = x;
+  report_.yAxis  = y;
   report_.vWheel = v_wheel;
   report_.hWheel = h_wheel;
 }

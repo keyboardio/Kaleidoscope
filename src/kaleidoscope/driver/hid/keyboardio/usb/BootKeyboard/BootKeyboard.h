@@ -71,9 +71,9 @@ class BootKeyboard_ : public PluggableUSBModule {
   HID_BootKeyboardReport_Data_t report_, last_report_;
 
   // Implementation of the PUSBListNode
-  int getInterface(uint8_t* interfaceCount);
-  int getDescriptor(USBSetup& setup);
-  bool setup(USBSetup& setup);
+  int getInterface(uint8_t *interfaceCount);
+  int getDescriptor(USBSetup &setup);
+  bool setup(USBSetup &setup);
 
   EPTYPE_DESCRIPTOR_SIZE epType[1];
   uint8_t protocol;

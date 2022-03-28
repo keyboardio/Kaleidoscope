@@ -19,18 +19,13 @@
 
 #include "kaleidoscope/device/virtual/Virtual.h"
 
-// From Arduino:
 #include <EEPROM.h>  // for EEPROMClass, EERef
-// From KeyboardioHID:
-#include <HIDReportObserver.h>  // for HIDReportObserver
-// From system:
 #include <stdint.h>      // for uint8_t, uint16_t
 #include <stdlib.h>      // for exit, size_t
 #include <virtual_io.h>  // for getLineOfInput, isInte...
 #include <sstream>       // for operator<<, string
 #include <string>        // for operator==, char_traits
 
-// From Kaleidoscope:
 #include "kaleidoscope/KeyAddr.h"                                  // for MatrixAddr, MatrixAddr...
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"  // for DefaultHIDReportConsumer
 #include "kaleidoscope/device/virtual/Logging.h"                   // for log_error, logging

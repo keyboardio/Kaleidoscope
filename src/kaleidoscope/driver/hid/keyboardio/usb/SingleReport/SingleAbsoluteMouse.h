@@ -40,14 +40,14 @@ class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI 
 
  protected:
   // Implementation of the PUSBListNode
-  int getInterface(uint8_t* interfaceCount);
-  int getDescriptor(USBSetup& setup);
-  bool setup(USBSetup& setup);
+  int getInterface(uint8_t *interfaceCount);
+  int getDescriptor(USBSetup &setup);
+  bool setup(USBSetup &setup);
 
   EPTYPE_DESCRIPTOR_SIZE epType[1];
   uint8_t protocol;
   uint8_t idle;
 
-  inline void sendReport(void* data, int length) override;
+  inline void sendReport(void *data, int length) override;
 };
 extern SingleAbsoluteMouse_ SingleAbsoluteMouse;

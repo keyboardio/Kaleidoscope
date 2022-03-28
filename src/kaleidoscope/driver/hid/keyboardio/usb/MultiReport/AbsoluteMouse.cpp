@@ -49,7 +49,7 @@ AbsoluteMouse_::AbsoluteMouse_() {
 }
 
 
-void AbsoluteMouse_::sendReport(void* data, int length) {
+void AbsoluteMouse_::sendReport(void *data, int length) {
   HID().SendReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length);
 }
 

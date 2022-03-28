@@ -122,11 +122,11 @@ void USB_PackMessages(bool pack);
 #define USB_Send               USBDevice.send
 #define USB_Flush              USBDevice.flush
 
-int USB_SendControl(void* y, uint8_t z);
-int USB_SendControl(uint8_t x, const void* y, uint8_t z);
+int USB_SendControl(void *y, uint8_t z);
+int USB_SendControl(uint8_t x, const void *y, uint8_t z);
 
-#define TRANSFER_PGM     0
-#define TRANSFER_RELEASE 0
+#define TRANSFER_PGM           0
+#define TRANSFER_RELEASE       0
 
 #elif defined(ARDUINO_ARCH_GD32)
 
@@ -148,7 +148,6 @@ constexpr uint16_t EP_TYPE_INTERRUPT_IN(uint8_t buffer_size) {
 constexpr uint16_t EP_TYPE_INTERRUPT_OUT(uint8_t buffer_size) {
   return EPDesc(USB_TRX_OUT, USB_EP_ATTR_INT, buffer_size).val;
 }
-
 
 
 #else

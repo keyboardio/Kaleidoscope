@@ -142,7 +142,7 @@ void Gamepad_::dPad2(int8_t d) {
   report_.dPad2 = d;
 }
 
-void Gamepad_::sendReport(void* data, int length) {
+void Gamepad_::sendReport(void *data, int length) {
   HID().SendReport(HID_REPORTID_GAMEPAD, data, length);
 }
 

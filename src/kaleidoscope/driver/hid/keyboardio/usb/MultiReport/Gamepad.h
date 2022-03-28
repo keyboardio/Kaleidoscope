@@ -31,15 +31,15 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
 
 // Dpad directions
-#define GAMEPAD_DPAD_CENTERED 0
-#define GAMEPAD_DPAD_UP 1
-#define GAMEPAD_DPAD_UP_RIGHT 2
-#define GAMEPAD_DPAD_RIGHT 3
+#define GAMEPAD_DPAD_CENTERED   0
+#define GAMEPAD_DPAD_UP         1
+#define GAMEPAD_DPAD_UP_RIGHT   2
+#define GAMEPAD_DPAD_RIGHT      3
 #define GAMEPAD_DPAD_DOWN_RIGHT 4
-#define GAMEPAD_DPAD_DOWN 5
-#define GAMEPAD_DPAD_DOWN_LEFT 6
-#define GAMEPAD_DPAD_LEFT 7
-#define GAMEPAD_DPAD_UP_LEFT 8
+#define GAMEPAD_DPAD_DOWN       5
+#define GAMEPAD_DPAD_DOWN_LEFT  6
+#define GAMEPAD_DPAD_LEFT       7
+#define GAMEPAD_DPAD_UP_LEFT    8
 
 
 typedef union {
@@ -83,17 +83,17 @@ typedef union {
     uint8_t button31 : 1;
     uint8_t button32 : 1;
 
-    int16_t	xAxis;
-    int16_t	yAxis;
+    int16_t xAxis;
+    int16_t yAxis;
 
-    int16_t	rxAxis;
-    int16_t	ryAxis;
+    int16_t rxAxis;
+    int16_t ryAxis;
 
-    int8_t	zAxis;
-    int8_t	rzAxis;
+    int8_t zAxis;
+    int8_t rzAxis;
 
-    uint8_t	dPad1 : 4;
-    uint8_t	dPad2 : 4;
+    uint8_t dPad1 : 4;
+    uint8_t dPad2 : 4;
   };
 } HID_GamepadReport_Data_t;
 
@@ -118,7 +118,8 @@ class Gamepad_ {
   void dPad1(int8_t d);
   void dPad2(int8_t d);
 
-  void sendReport(void* data, int length);
+  void sendReport(void *data, int length);
+
  protected:
   HID_GamepadReport_Data_t report_;
 };

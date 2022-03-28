@@ -90,7 +90,7 @@ void SystemControl_::press(uint8_t s) {
 }
 
 
-void SystemControl_::sendReport(void* data, int length) {
+void SystemControl_::sendReport(void *data, int length) {
   HID().SendReport(HID_REPORTID_SYSTEMCONTROL, data, length);
 }
 

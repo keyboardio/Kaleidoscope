@@ -23,22 +23,21 @@
 
 #if defined(USBCON)
 
-HID_& HID() {
+HID_ &HID() {
   static HID_ obj;
   return obj;
 }
 
-int HID_::getInterface(uint8_t* interfaceCount) {
-  *interfaceCount += 1; // uses 1
+int HID_::getInterface(uint8_t *interfaceCount) {
+  *interfaceCount += 1;  // uses 1
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_NONE, HID_PROTOCOL_NONE),
     D_HIDREPORT(descriptorSize),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)
-  };
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)};
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
 
-int HID_::getDescriptor(USBSetup& setup) {
+int HID_::getDescriptor(USBSetup &setup) {
   // Check if this is a HID Class Descriptor request
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
@@ -53,7 +52,7 @@ int HID_::getDescriptor(USBSetup& setup) {
   }
 
   int total = 0;
-  HIDSubDescriptor* node;
+  HIDSubDescriptor *node;
   USB_PackMessages(true);
   for (node = rootNode; node; node = node->next) {
     int res = USB_SendControl(TRANSFER_PGM, node->data, node->length);
@@ -71,7 +70,8 @@ int HID_::getDescriptor(USBSetup& setup) {
 }
 
 __attribute__((weak))
-uint8_t HID_::getShortName(char *name) {
+uint8_t
+HID_::getShortName(char *name) {
   name[0] = 'k';
   name[1] = 'b';
   name[2] = 'i';
@@ -94,13 +94,13 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node) {
   descriptorSize += node->length;
 }
 
-int HID_::SendReport(uint8_t id, const void* data, int len) {
+int HID_::SendReport(uint8_t id, const void *data, int len) {
   auto result = SendReport_(id, data, len);
   HIDReportObserver::observeReport(id, data, len, result);
   return result;
 }
 
-int HID_::SendReport_(uint8_t id, const void* data, int len) {
+int HID_::SendReport_(uint8_t id, const void *data, int len) {
   /* On SAMD, we need to send the whole report in one batch; sending the id, and
    * the report itself separately does not work, the report never arrives. Due
    * to this, we merge the two into a single buffer, and send that.
@@ -122,12 +122,12 @@ int HID_::SendReport_(uint8_t id, const void* data, int len) {
 #endif
 }
 
-bool HID_::setup(USBSetup& setup) {
+bool HID_::setup(USBSetup &setup) {
   if (pluggedInterface != setup.wIndex) {
     return false;
   }
 
-  uint8_t request = setup.bRequest;
+  uint8_t request     = setup.bRequest;
   uint8_t requestType = setup.bmRequestType;
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
@@ -196,11 +196,14 @@ bool HID_::setup(USBSetup& setup) {
   return false;
 }
 
-HID_::HID_() : PluggableUSBModule(1, 1, epType),
-  rootNode(NULL), descriptorSize(0),
-  protocol(HID_REPORT_PROTOCOL), idle(1) {
+HID_::HID_()
+  : PluggableUSBModule(1, 1, epType),
+    rootNode(NULL),
+    descriptorSize(0),
+    protocol(HID_REPORT_PROTOCOL),
+    idle(1) {
   setReportData.reportId = 0;
-  setReportData.leds = 0;
+  setReportData.leds     = 0;
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(USB_EP_SIZE);

@@ -37,7 +37,7 @@ class AbsoluteMouse_ : public AbsoluteMouseAPI {
 
  protected:
   // Sending is public in the base class for advanced users.
-  virtual void sendReport(void* data, int length);
+  virtual void sendReport(void *data, int length);
 };
 
 extern AbsoluteMouse_ AbsoluteMouse;

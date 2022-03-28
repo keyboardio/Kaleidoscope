@@ -82,26 +82,26 @@ static const uint8_t BOOT_KEYBOARD_EP_SIZE = USB_EP_SIZE;
 #endif
 
 
-BootKeyboard_::BootKeyboard_(uint8_t protocol_) : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(1), leds(0) {
+BootKeyboard_::BootKeyboard_(uint8_t protocol_)
+  : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(1), leds(0) {
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
-  epType[0] = EP_TYPE_INTERRUPT_IN(BOOT_KEYBOARD_EP_SIZE); // This is an 8 byte report, so ask for an 8 byte buffer, so reports aren't split
+  epType[0] = EP_TYPE_INTERRUPT_IN(BOOT_KEYBOARD_EP_SIZE);  // This is an 8 byte report, so ask for an 8 byte buffer, so reports aren't split
 #else
   epType[0] = EP_TYPE_INTERRUPT_IN;
 #endif
   PluggableUSB().plug(this);
 }
 
-int BootKeyboard_::getInterface(uint8_t* interfaceCount) {
-  *interfaceCount += 1; // uses 1
+int BootKeyboard_::getInterface(uint8_t *interfaceCount) {
+  *interfaceCount += 1;  // uses 1
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT_INTERFACE, HID_PROTOCOL_KEYBOARD),
     D_HIDREPORT(sizeof(boot_keyboard_hid_descriptor_)),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, BOOT_KEYBOARD_EP_SIZE, 0x01)
-  };
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, BOOT_KEYBOARD_EP_SIZE, 0x01)};
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
 
-int BootKeyboard_::getDescriptor(USBSetup& setup) {
+int BootKeyboard_::getDescriptor(USBSetup &setup) {
   // Check if this is a HID Class Descriptor request
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
@@ -133,13 +133,12 @@ void BootKeyboard_::end() {
 }
 
 
-
-bool BootKeyboard_::setup(USBSetup& setup) {
+bool BootKeyboard_::setup(USBSetup &setup) {
   if (pluggedInterface != setup.wIndex) {
     return false;
   }
 
-  uint8_t request = setup.bRequest;
+  uint8_t request     = setup.bRequest;
   uint8_t requestType = setup.bmRequestType;
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
@@ -264,10 +263,10 @@ size_t BootKeyboard_::press(uint8_t k) {
     // Add k to the key report only if it's not already present
     // and if there is an empty slot.
     for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
-      if (report_.keycodes[i] != k) { // is k already in list?
-        if (0 == report_.keycodes[i]) { // have we found an empty slot?
+      if (report_.keycodes[i] != k) {    // is k already in list?
+        if (0 == report_.keycodes[i]) {  // have we found an empty slot?
           report_.keycodes[i] = k;
-          done = 1;
+          done                = 1;
           break;
         }
       } else {
@@ -313,7 +312,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 
     while (current < sizeof(report_.keycodes)) {
       if (report_.keycodes[current]) {
-        uint8_t tmp = report_.keycodes[nextpos];
+        uint8_t tmp               = report_.keycodes[nextpos];
         report_.keycodes[nextpos] = report_.keycodes[current];
         report_.keycodes[current] = tmp;
         ++nextpos;
@@ -354,7 +353,6 @@ bool BootKeyboard_::wasKeyPressed(uint8_t k) {
   }
   return false;
 }
-
 
 
 /* Returns true if the modifer key passed in will be sent during this key report

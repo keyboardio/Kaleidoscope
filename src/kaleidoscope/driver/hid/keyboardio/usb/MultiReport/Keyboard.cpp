@@ -94,7 +94,8 @@ void Keyboard_::end() {
 
 int Keyboard_::sendReportUnchecked() {
   return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD,
-                          &last_report_, sizeof(last_report_));
+                          &last_report_,
+                          sizeof(last_report_));
 }
 
 // Sending the current HID report to the host:

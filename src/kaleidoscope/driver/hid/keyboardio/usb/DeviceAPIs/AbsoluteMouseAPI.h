@@ -93,7 +93,7 @@ class AbsoluteMouseAPI {
   inline bool isPressed(uint8_t b = MOUSE_LEFT);
 
   // Sending is public in the base class for advanced users.
-  virtual void sendReport(void* data, int length) {}
+  virtual void sendReport(void *data, int length) {}
 
  protected:
   uint16_t x_axis_;

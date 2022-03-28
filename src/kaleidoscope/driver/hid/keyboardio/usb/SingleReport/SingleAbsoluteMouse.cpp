@@ -46,8 +46,8 @@ static const uint8_t SINGLE_ABSOLUTEMOUSE_EP_SIZE = USB_EP_SIZE;
 #endif
 
 
-
-SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
+SingleAbsoluteMouse_::SingleAbsoluteMouse_()
+  : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(SINGLE_ABSOLUTEMOUSE_EP_SIZE);
@@ -58,17 +58,16 @@ SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType),
   PluggableUSB().plug(this);
 }
 
-int SingleAbsoluteMouse_::getInterface(uint8_t* interfaceCount) {
-  *interfaceCount += 1; // uses 1
+int SingleAbsoluteMouse_::getInterface(uint8_t *interfaceCount) {
+  *interfaceCount += 1;  // uses 1
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_NONE, HID_PROTOCOL_NONE),
     D_HIDREPORT(sizeof(_hidSingleReportDescriptorAbsoluteMouse)),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, SINGLE_ABSOLUTEMOUSE_EP_SIZE, 0x01)
-  };
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, SINGLE_ABSOLUTEMOUSE_EP_SIZE, 0x01)};
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
 
-int SingleAbsoluteMouse_::getDescriptor(USBSetup& setup) {
+int SingleAbsoluteMouse_::getDescriptor(USBSetup &setup) {
   // Check if this is a HID Class Descriptor request
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
@@ -89,12 +88,12 @@ int SingleAbsoluteMouse_::getDescriptor(USBSetup& setup) {
   return USB_SendControl(TRANSFER_PGM, _hidSingleReportDescriptorAbsoluteMouse, sizeof(_hidSingleReportDescriptorAbsoluteMouse));
 }
 
-bool SingleAbsoluteMouse_::setup(USBSetup& setup) {
+bool SingleAbsoluteMouse_::setup(USBSetup &setup) {
   if (pluggedInterface != setup.wIndex) {
     return false;
   }
 
-  uint8_t request = setup.bRequest;
+  uint8_t request     = setup.bRequest;
   uint8_t requestType = setup.bmRequestType;
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
@@ -124,7 +123,7 @@ bool SingleAbsoluteMouse_::setup(USBSetup& setup) {
   return false;
 }
 
-void SingleAbsoluteMouse_::sendReport(void* data, int length) {
+void SingleAbsoluteMouse_::sendReport(void *data, int length) {
   auto result = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, length);
   HIDReportObserver::observeReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length, result);
 }
