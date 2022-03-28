@@ -121,11 +121,10 @@ EventHandlerResult TypingBreaks::onNameQuery() {
 EventHandlerResult TypingBreaks::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
 
-  // If idleTime is max, assume that EEPROM is uninitialized, and store the
-  // defaults.
-  uint32_t idle_time;
-  Runtime.storage().get(settings_base_, idle_time);
-  if (idle_time == 0xffffffff) {
+  if (Runtime.storage().isSliceUninitialized(
+        settings_base_,
+        sizeof(settings))) {
+    // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, settings);
     Runtime.storage().commit();
   }

@@ -25,6 +25,7 @@ namespace storage {
 
 struct BaseProps {
   static constexpr uint16_t length = 0;
+  static constexpr uint8_t uninitialized_byte = 0xff;
 };
 
 template <typename _StorageProps>
@@ -47,6 +48,14 @@ class Base {
   void write(int idx, uint8_t val) {}
 
   void update(int idx, uint8_t val) {}
+
+  bool isSliceUninitialized(uint16_t offset, uint16_t size) {
+    for (uint16_t o = offset; o < offset + size; o++) {
+      if (read(o) != _StorageProps::uninitialized_byte)
+        return false;
+    }
+    return true;
+  }
 
   const uint16_t length() {
     return _StorageProps::length;
