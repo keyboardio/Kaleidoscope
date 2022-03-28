@@ -29,6 +29,7 @@ THE SOFTWARE.
 
 // See Appendix B of USB HID spec
 static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
+  // clang-format off
   //  Keyboard
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
   D_USAGE, D_USAGE_KEYBOARD,
@@ -71,6 +72,7 @@ static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
   D_USAGE_MAXIMUM, 0xff,
   D_INPUT, (D_DATA | D_ARRAY | D_ABSOLUTE),
   D_END_COLLECTION
+  // clang-format off
 };
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES

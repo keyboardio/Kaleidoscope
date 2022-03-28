@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
 #include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
+// clang-format off
 
 #define DESCRIPTOR_ABS_MOUSE_BUTTONS \
   /* 8 Buttons */                                                         \
@@ -63,6 +64,8 @@ THE SOFTWARE.
   D_REPORT_SIZE, 0x08,                      /* REPORT_SIZE (8) */           \
   D_REPORT_COUNT, 0x01,                     /* REPORT_COUNT (1) */          \
   D_INPUT, (D_DATA|D_VARIABLE|D_RELATIVE),
+
+// clang-format on
 
 #pragma pack(push, 1)
 typedef union {

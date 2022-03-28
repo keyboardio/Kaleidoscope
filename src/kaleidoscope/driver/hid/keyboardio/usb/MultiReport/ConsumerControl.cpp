@@ -27,20 +27,22 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t consumer_control_hid_descriptor_[] PROGMEM = {
-  /* Consumer Control (Sound/Media keys) */
-  D_USAGE_PAGE, 0x0C,                           /* usage page (consumer device) */
-  D_USAGE, 0x01,                                /* usage -- consumer control */
-  D_COLLECTION, D_APPLICATION,                  /* collection (application) */
-  D_REPORT_ID, HID_REPORTID_CONSUMERCONTROL,    /* report id */
-  /* 4 Media Keys */
-  D_LOGICAL_MINIMUM, 0x00,                      /* logical minimum */
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x03,   /* logical maximum (3ff) */
-  D_USAGE_MINIMUM, 0x00,                        /* usage minimum (0) */
-  D_MULTIBYTE(D_USAGE_MAXIMUM), 0xFF, 0x03,     /* usage maximum (3ff) */
-  D_REPORT_COUNT, 0x04,                         /* report count (4) */
-  D_REPORT_SIZE, 0x10,                          /* report size (16) */
-  D_INPUT, 0x00,                                /* input */
-  D_END_COLLECTION /* end collection */
+  // clang-format off
+  // Consumer Control (Sound/Media keys)
+  D_USAGE_PAGE, 0x0C,                          // usage page (consumer device)
+  D_USAGE, 0x01,                               // usage -- consumer control
+  D_COLLECTION, D_APPLICATION,                 // collection (application)
+  D_REPORT_ID, HID_REPORTID_CONSUMERCONTROL,   // report id
+  // 4 Media Keys
+  D_LOGICAL_MINIMUM, 0x00,                     // logical minimum
+  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x03,  // logical maximum (3ff)
+  D_USAGE_MINIMUM, 0x00,                       // usage minimum (0)
+  D_MULTIBYTE(D_USAGE_MAXIMUM), 0xFF, 0x03,    // usage maximum (3ff)
+  D_REPORT_COUNT, 0x04,                        // report count (4)
+  D_REPORT_SIZE, 0x10,                         // report size (16)
+  D_INPUT, 0x00,                               // input
+  D_END_COLLECTION                             // end collection
+  // clang-format on
 };
 
 ConsumerControl_::ConsumerControl_() {

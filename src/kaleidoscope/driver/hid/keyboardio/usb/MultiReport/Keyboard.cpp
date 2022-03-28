@@ -27,14 +27,15 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
-  //  NKRO Keyboard
+  // clang-format off
+  // NKRO Keyboard
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
   D_USAGE, D_USAGE_KEYBOARD,
   D_COLLECTION, D_APPLICATION,
   D_REPORT_ID, HID_REPORTID_NKRO_KEYBOARD,
   D_USAGE_PAGE, D_PAGE_KEYBOARD,
 
-  /* Key modifier byte */
+  // Key modifier byte
   D_USAGE_MINIMUM, HID_KEYBOARD_FIRST_MODIFIER,
   D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
   D_LOGICAL_MINIMUM, 0x00,
@@ -43,7 +44,7 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_REPORT_COUNT, 0x08,
   D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
-  /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
+  // 5 LEDs for num lock etc, 3 left for advanced, custom usage
   D_USAGE_PAGE, D_PAGE_LEDS,
   D_USAGE_MINIMUM, 0x01,
   D_USAGE_MAXIMUM, 0x08,
@@ -51,7 +52,7 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_REPORT_SIZE, 0x01,
   D_OUTPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
-  /* NKRO Keyboard */
+  // NKRO Keyboard
   D_USAGE_PAGE, D_PAGE_KEYBOARD,
 
   // Padding 4 bits, to skip NO_EVENT & 3 error states.
@@ -73,6 +74,7 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_INPUT, (D_CONSTANT),
 
   D_END_COLLECTION,
+  // clang-format on
 };
 
 Keyboard_::Keyboard_() {
