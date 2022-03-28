@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/OneShot.h"
 
-#include <Arduino.h>                            // for bitRead, F, __FlashSt...
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>                // for OS_FIRST
-#include <stdint.h>                             // for uint8_t, int8_t
+#include <Arduino.h>                   // for bitRead, F, __FlashSt...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for OS_FIRST
+#include <stdint.h>                    // for uint8_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyA...
@@ -80,7 +80,7 @@ bool OneShot::isActive() const {
 
 bool OneShot::isSticky() const {
   for (KeyAddr key_addr : glue_addrs_) {
-    if (! temp_addrs_.read(key_addr)) {
+    if (!temp_addrs_.read(key_addr)) {
       return true;
     }
   }
@@ -94,8 +94,7 @@ bool OneShot::isSticky() const {
 // could potentially use three different color values for the three
 // states (sticky | active && !sticky | pressed && !active).
 
-__attribute__((weak))
-bool OneShot::isStickable(Key key) const {
+__attribute__((weak)) bool OneShot::isStickable(Key key) const {
   return isStickableDefault(key);
 }
 
@@ -189,7 +188,7 @@ EventHandlerResult OneShot::onNameQuery() {
   return ::Focus.sendName(F("OneShot"));
 }
 
-EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
+EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
 
   // Ignore injected key events. This prevents re-processing events that the
   // hook functions generate (by calling `injectNormalKey()` via one of the
@@ -210,7 +209,7 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
       // state.
       bool is_oneshot = false;
       if (isOneShotKey(event.key)) {
-        event.key = decodeOneShotKey(event.key);
+        event.key  = decodeOneShotKey(event.key);
         is_oneshot = true;
       }
 
@@ -274,14 +273,13 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent& event) {
       // event. This is handled in the `beforeReportingState()` hook below.
       return EventHandlerResult::ABORT;
     }
-
   }
 
   return EventHandlerResult::OK;
 }
 
 // ----------------------------------------------------------------------------
-EventHandlerResult OneShot::afterReportingState(const KeyEvent& event) {
+EventHandlerResult OneShot::afterReportingState(const KeyEvent &event) {
   return afterEachCycle();
 }
 
@@ -289,8 +287,8 @@ EventHandlerResult OneShot::afterReportingState(const KeyEvent& event) {
 EventHandlerResult OneShot::afterEachCycle() {
 
   bool oneshot_expired = hasTimedOut(timeout_);
-  bool hold_expired = hasTimedOut(hold_timeout_);
-  bool any_temp_keys = false;
+  bool hold_expired    = hasTimedOut(hold_timeout_);
+  bool any_temp_keys   = false;
 
   for (KeyAddr key_addr : temp_addrs_) {
     any_temp_keys = true;
@@ -368,7 +366,7 @@ void OneShot::pressKey(KeyAddr key_addr, Key key) {
     key = decodeOneShotKey(key);
   }
   prev_key_addr_ = key_addr;
-  start_time_ = Runtime.millisAtCycleStart();
+  start_time_    = Runtime.millisAtCycleStart();
   temp_addrs_.set(key_addr);
   KeyEvent event{key_addr, IS_PRESSED | INJECTED, key};
   Runtime.handleKeyEvent(event);
@@ -379,8 +377,7 @@ void OneShot::holdKey(KeyAddr key_addr) const {
   Runtime.handleKeyEvent(event);
 }
 
-__attribute__((always_inline)) inline
-void OneShot::releaseKey(KeyAddr key_addr) {
+__attribute__((always_inline)) inline void OneShot::releaseKey(KeyAddr key_addr) {
   glue_addrs_.clear(key_addr);
   temp_addrs_.clear(key_addr);
 
@@ -388,7 +385,7 @@ void OneShot::releaseKey(KeyAddr key_addr) {
   Runtime.handleKeyEvent(event);
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::OneShot OneShot;

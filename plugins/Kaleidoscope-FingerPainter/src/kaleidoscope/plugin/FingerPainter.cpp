@@ -17,11 +17,11 @@
 
 #include "kaleidoscope/plugin/FingerPainter.h"
 
-#include <Arduino.h>                            // for PSTR, strcmp_P, F
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
-#include <stdint.h>                             // for uint16_t, uint8_t
-#include <string.h>                             // for memcmp
+#include <Arduino.h>                         // for PSTR, strcmp_P, F
+#include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
+#include <Kaleidoscope-LED-Palette-Theme.h>  // for LEDPaletteTheme
+#include <stdint.h>                          // for uint16_t, uint8_t
+#include <string.h>                          // for memcmp
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -71,8 +71,8 @@ EventHandlerResult FingerPainter::onKeyEvent(KeyEvent &event) {
   // TODO(anyone): The following works only for keyboards with LEDs for each key.
 
   uint8_t color_index = ::LEDPaletteTheme
-                        .lookupColorIndexAtPosition(color_base_,
-                                                    Runtime.device().getLedIndex(event.addr));
+                          .lookupColorIndexAtPosition(color_base_,
+                                                      Runtime.device().getLedIndex(event.addr));
 
   // Find the next color in the palette that is different.
   // But do not loop forever!

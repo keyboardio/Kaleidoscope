@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                               // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
@@ -46,6 +46,6 @@ void Base<kaleidoscope::Device::Props::KeyScannerProps>::handleKeyswitchEvent(
   }
 }
 
-} // namespace keyscanner
-} // namespace driver
-} // namespace kaleidoscope
+}  // namespace keyscanner
+}  // namespace driver
+}  // namespace kaleidoscope

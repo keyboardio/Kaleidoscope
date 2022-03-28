@@ -28,10 +28,11 @@ namespace device {
 namespace dygma {
 namespace raise {
 
-template <typename _Firmware>
+template<typename _Firmware>
 class SideFlash : public kaleidoscope::Plugin {
  private:
   _Firmware firmware;
+
  public:
   EventHandlerResult onFocusEvent(const char *command) {
     if (::Focus.handleHelp(command, PSTR("hardware.flash_left_side\nhardware.flash_right_side\nhardware.verify_left_side\nhardware.verify_right_side")))
@@ -40,8 +41,8 @@ class SideFlash : public kaleidoscope::Plugin {
     if (strncmp_P(command, PSTR("hardware."), 9) != 0)
       return EventHandlerResult::OK;
 
-    auto sideFlasher = Runtime.device().sideFlasher();
-    uint8_t left_boot_address = Runtime.device().side.left_boot_address;
+    auto sideFlasher           = Runtime.device().sideFlasher();
+    uint8_t left_boot_address  = Runtime.device().side.left_boot_address;
     uint8_t right_boot_address = Runtime.device().side.right_boot_address;
     enum {
       FLASH,
@@ -51,16 +52,16 @@ class SideFlash : public kaleidoscope::Plugin {
 
     if (strcmp_P(command + 9, PSTR("flash_left_side")) == 0) {
       sub_command = FLASH;
-      address = left_boot_address;
+      address     = left_boot_address;
     } else if (strcmp_P(command + 9, PSTR("flash_right_side")) == 0) {
       sub_command = FLASH;
-      address = right_boot_address;
+      address     = right_boot_address;
     } else if (strcmp_P(command + 9, PSTR("verify_left_side")) == 0) {
       sub_command = VERIFY;
-      address = left_boot_address;
+      address     = left_boot_address;
     } else if (strcmp_P(command + 9, PSTR("verify_right_side")) == 0) {
       sub_command = VERIFY;
-      address = right_boot_address;
+      address     = right_boot_address;
     } else {
       return EventHandlerResult::OK;
     }

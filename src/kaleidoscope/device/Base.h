@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <stdint.h>                               // for uint8_t, int8_t
-#include <string.h>                               // for size_t, strlen, memcpy
+#include <stdint.h>  // for uint8_t, int8_t
+#include <string.h>  // for size_t, strlen, memcpy
 
 #include "kaleidoscope/driver/bootloader/None.h"  // for None
 #include "kaleidoscope/driver/hid/Base.h"         // for Base, BaseProps
@@ -87,7 +87,7 @@ class Base {
     int peek() {
       return 0;
     }
-    long parseInt() { // NOLINT(runtime/int)
+    long parseInt() {  // NOLINT(runtime/int)
       return 0;
     }
     int available() {
@@ -118,9 +118,9 @@ class Base {
   typedef typename _DeviceProps::StorageProps StorageProps;
   typedef typename _DeviceProps::Storage Storage;
 
-  static constexpr uint8_t matrix_rows = KeyScannerProps::matrix_rows;
+  static constexpr uint8_t matrix_rows    = KeyScannerProps::matrix_rows;
   static constexpr uint8_t matrix_columns = KeyScannerProps::matrix_columns;
-  static constexpr uint8_t led_count = LEDDriverProps::led_count;
+  static constexpr uint8_t led_count      = LEDDriverProps::led_count;
   static constexpr auto LEDs() -> decltype(LEDDriver::LEDs()) & {
     return LEDDriver::LEDs();
   }
@@ -439,10 +439,10 @@ class Base {
 // e.g. Model01 as device and Model01Props as properties class.
 //
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#define EXPORT_DEVICE(DEVICE)                                                  \
-  typedef DEVICE##Props DeviceProps;                                           \
+#define EXPORT_DEVICE(DEVICE)        \
+  typedef DEVICE##Props DeviceProps; \
   typedef DEVICE Device;
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#define EXPORT_DEVICE(DEVICE)                                                  \
+#else  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#define EXPORT_DEVICE(DEVICE) \
   typedef DEVICE##Props DeviceProps;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

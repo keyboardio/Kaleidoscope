@@ -41,10 +41,11 @@ struct AbsoluteMouseProps {
   typedef NoAbsoluteMouse AbsoluteMouse;
 };
 
-template <typename _Props>
+template<typename _Props>
 class AbsoluteMouse {
  private:
   typename _Props::AbsoluteMouse absolute_mouse_;
+
  public:
   AbsoluteMouse() {}
 

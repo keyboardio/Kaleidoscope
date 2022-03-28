@@ -18,9 +18,9 @@
 
 #include "kaleidoscope/plugin/SpaceCadet.h"
 
-#include <Arduino.h>                            // for F, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t, int8_t, uin...
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint16_t, int8_t, uin...
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
@@ -48,7 +48,7 @@ SpaceCadet::KeyBinding::KeyBinding(Key input, Key output, uint16_t timeout)
 // -----------------------------------------------------------------------------
 // Plugin configuration variables
 
-SpaceCadet::KeyBinding * SpaceCadet::map;
+SpaceCadet::KeyBinding *SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 200;
 
 // -----------------------------------------------------------------------------
@@ -80,8 +80,7 @@ SpaceCadet::SpaceCadet() {
     {Key_LeftControl, Key_LeftBracket, 250},
     {Key_RightControl, Key_RightBracket, 250},
     */
-    SPACECADET_MAP_END
-  };
+    SPACECADET_MAP_END};
 
   map = initialmap;
 }
@@ -219,7 +218,7 @@ void SpaceCadet::flushEvent(bool is_tap) {
   Runtime.handleKeyswitchEvent(event);
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::SpaceCadet SpaceCadet;

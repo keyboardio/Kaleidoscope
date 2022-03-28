@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                                // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                 // for KeyEvent
@@ -30,9 +30,9 @@
 
 constexpr uint8_t LED_TOGGLE = 0b00000001;  // Synthetic, internal
 
-constexpr Key Key_LEDEffectNext = Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
+constexpr Key Key_LEDEffectNext     = Key(0, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
 constexpr Key Key_LEDEffectPrevious = Key(1, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
-constexpr Key Key_LEDToggle = Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
+constexpr Key Key_LEDToggle         = Key(2, KEY_FLAGS | SYNTHETIC | IS_INTERNAL | LED_TOGGLE);
 
 namespace kaleidoscope {
 namespace plugin {
@@ -67,8 +67,7 @@ class LEDControl : public kaleidoscope::Plugin {
   }
   template<typename LEDMode__>
   static LEDMode__ *get_mode() {
-    return static_cast<LEDMode__*>(cur_led_mode_);
-
+    return static_cast<LEDMode__ *>(cur_led_mode_);
   }
 
   static void refreshAll() {

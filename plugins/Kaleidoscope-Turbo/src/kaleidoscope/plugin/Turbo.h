@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for TURBO
-#include <stdint.h>                             // for uint16_t, uint32_t
+#include <Kaleidoscope-Ranges.h>  // for TURBO
+#include <stdint.h>               // for uint16_t, uint32_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/device/device.h"         // for cRGB

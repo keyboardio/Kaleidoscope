@@ -20,15 +20,15 @@
 #include "kaleidoscope/device/keyboardio/Model01.h"
 
 // System headers
-#include <stdint.h>                                  // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 // Arduino headers
-#include <Arduino.h>                                 // for PROGMEM
+#include <Arduino.h>  // for PROGMEM
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <KeyboardioHID.h>
 #include <avr/wdt.h>
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 // Kaleidoscope headers
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // IWYU pragma: keep
@@ -63,8 +63,8 @@ void Model01Hands::setup(void) {
   PORTE &= ~_BV(6);
 
   // Set B4, the overcurrent check to an input with an internal pull-up
-  DDRB &= ~_BV(4);	// set bit, input
-  PORTB &= ~_BV(4);	// set bit, enable pull-up resistor
+  DDRB &= ~_BV(4);   // set bit, input
+  PORTB &= ~_BV(4);  // set bit, enable pull-up resistor
 }
 
 /********* LED Driver *********/
@@ -163,7 +163,7 @@ void Model01KeyScanner::setup() {
 
 void Model01KeyScanner::readMatrix() {
   //scan the Keyboard matrix looking for connections
-  previousLeftHandState = leftHandState;
+  previousLeftHandState  = leftHandState;
   previousRightHandState = rightHandState;
 
   if (Model01Hands::leftHand.readKeys()) {
@@ -180,12 +180,12 @@ void Model01KeyScanner::actOnHalfRow(uint8_t row, uint8_t colState, uint8_t colP
     for (uint8_t col = 0; col < 8; col++) {
       // Build up the key state for row, col
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
-                          (bitRead(colState,     0) << 1));
+                          (bitRead(colState, 0) << 1));
       if (keyState)
         ThisType::handleKeyswitchEvent(Key_NoKey, KeyAddr(row, startPos - col), keyState);
 
       // Throw away the data we've just used, so we can read the next column
-      colState = colState >> 1;
+      colState     = colState >> 1;
       colPrevState = colPrevState >> 1;
     }
   }
@@ -243,7 +243,7 @@ void Model01::setup() {
   Model01Hands::setup();
   kaleidoscope::device::Base<Model01Props>::setup();
 
-  TWBR = 12; // This is 400mhz, which is the fastest we can drive the ATTiny
+  TWBR = 12;  // This is 400mhz, which is the fastest we can drive the ATTiny
 }
 
 void Model01::enableHardwareTestMode() {

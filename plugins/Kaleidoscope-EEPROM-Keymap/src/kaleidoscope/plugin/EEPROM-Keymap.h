@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -57,7 +57,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   static Key parseKey(void);
   static void printKey(Key key);
-  static void dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr));
+  static void dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr));
 };
 
 }  // namespace plugin

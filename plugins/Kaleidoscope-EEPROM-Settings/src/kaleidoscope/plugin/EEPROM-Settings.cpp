@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/EEPROM-Settings.h"
 
-#include <Arduino.h>                                  // for PSTR, strcmp_P, F
-#include <Kaleidoscope-FocusSerial.h>                 // for Focus, FocusSerial
-#include <stdint.h>                                   // for uint16_t, uint8_t
+#include <Arduino.h>                   // for PSTR, strcmp_P, F
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for VirtualProps::S...
@@ -47,7 +47,7 @@ EventHandlerResult EEPROMSettings::onSetup() {
          uninitialized state, we do not override them, to avoid overwriting user
          settings. */
       settings_.ignore_hardcoded_layers = false;
-      settings_.default_layer = 0;
+      settings_.default_layer           = 0;
     }
 
     /* If the version is undefined, we'll set it to our current one. */

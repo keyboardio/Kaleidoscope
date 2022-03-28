@@ -17,8 +17,8 @@
 
 #include "Kaleidoscope/plugin/LEDEffect-BootAnimation.h"
 
-#include <Arduino.h>                            // for PROGMEM, pgm_read_byte
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Arduino.h>  // for PROGMEM, pgm_read_byte
+#include <stdint.h>   // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -31,11 +31,11 @@
 namespace kaleidoscope {
 namespace plugin {
 
-bool BootAnimationEffect::done_ = false;
-cRGB BootAnimationEffect::color = CRGB(150, 0, 0);
-uint16_t BootAnimationEffect::start_time_ = 0;
-uint16_t BootAnimationEffect::timeout = 1000;
-uint8_t BootAnimationEffect::current_index_ = 0;
+bool BootAnimationEffect::done_                          = false;
+cRGB BootAnimationEffect::color                          = CRGB(150, 0, 0);
+uint16_t BootAnimationEffect::start_time_                = 0;
+uint16_t BootAnimationEffect::timeout                    = 1000;
+uint8_t BootAnimationEffect::current_index_              = 0;
 const uint8_t BootAnimationEffect::greeting_[11] PROGMEM = {
   Key_K.getKeyCode(),
   Key_E.getKeyCode(),
@@ -47,8 +47,7 @@ const uint8_t BootAnimationEffect::greeting_[11] PROGMEM = {
   Key_D.getKeyCode(),
   Key_Period.getKeyCode(),
   Key_I.getKeyCode(),
-  Key_O.getKeyCode()
-};
+  Key_O.getKeyCode()};
 
 EventHandlerResult BootAnimationEffect::onSetup() {
   return EventHandlerResult::OK;
@@ -67,8 +66,8 @@ EventHandlerResult BootAnimationEffect::afterEachCycle() {
 
   for (auto key_addr : KeyAddr::all()) {
     Key k = Layer.lookupOnActiveLayer(key_addr);
-    Key g(pgm_read_byte(&greeting_[current_index_]), // key_code
-          0);                                        // flags
+    Key g(pgm_read_byte(&greeting_[current_index_]),  // key_code
+          0);                                         // flags
 
     if (k == g) {
       key_addr_found = key_addr;

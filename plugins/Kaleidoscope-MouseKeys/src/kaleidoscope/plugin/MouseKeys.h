@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -45,7 +45,7 @@ class MouseKeys : public kaleidoscope::Plugin {
   EventHandlerResult afterReportingState(const KeyEvent &event);
 
  private:
-  uint16_t move_start_time_ = 0;
+  uint16_t move_start_time_  = 0;
   uint16_t accel_start_time_ = 0;
   uint16_t wheel_start_time_ = 0;
 
@@ -53,11 +53,11 @@ class MouseKeys : public kaleidoscope::Plugin {
   // to save space.  The low four bits are for cursor movement, and the high
   // four are for wheel movement.
   static constexpr uint8_t wheel_offset_ = 4;
-  static constexpr uint8_t wheel_mask_ = 0b11110000;
-  static constexpr uint8_t move_mask_  = 0b00001111;
-  uint8_t directions_ = 0;
-  uint8_t pending_directions_ = 0;
-  uint8_t buttons_ = 0;
+  static constexpr uint8_t wheel_mask_   = 0b11110000;
+  static constexpr uint8_t move_mask_    = 0b00001111;
+  uint8_t directions_                    = 0;
+  uint8_t pending_directions_            = 0;
+  uint8_t buttons_                       = 0;
 
   bool isMouseKey(const Key &key) const;
   bool isMouseButtonKey(const Key &key) const;
@@ -69,10 +69,9 @@ class MouseKeys : public kaleidoscope::Plugin {
   void sendMouseWarpReport(const KeyEvent &event) const;
   void sendMouseMoveReport();
   void sendMouseWheelReport();
-
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::MouseKeys MouseKeys;

@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/ShapeShifter.h"
 
-#include <stdint.h>                             // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -58,7 +58,7 @@ EventHandlerResult ShapeShifter::onKeyEvent(KeyEvent &event) {
     if (live_keys[k].isKeyboardShift())
       shift_detected = true;
   }
-  if (! shift_detected)
+  if (!shift_detected)
     return EventHandlerResult::OK;
 
   repl = dictionary[i].replacement.readFromProgmem();

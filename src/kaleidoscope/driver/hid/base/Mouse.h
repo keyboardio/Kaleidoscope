@@ -42,10 +42,11 @@ struct MouseProps {
   typedef NoMouse Mouse;
 };
 
-template <typename _Props>
+template<typename _Props>
 class Mouse {
  private:
   typename _Props::Mouse mouse_;
+
  public:
   Mouse() {}
 

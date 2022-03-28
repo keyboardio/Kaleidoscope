@@ -19,8 +19,8 @@
 
 #include "kaleidoscope/device/keyboardio/Model100.h"
 
-#include <Arduino.h>                                   // for PROGMEM
-#include <Wire.h>                                      // for Wire
+#include <Arduino.h>  // for PROGMEM
+#include <Wire.h>     // for Wire
 
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // For Base<>
 
@@ -48,7 +48,6 @@ void Model100Hands::setup(void) {
   Model100KeyScanner::enableScannerPower();
   Wire.begin();
   Wire.setClock(400000);
-
 }
 
 /********* LED Driver *********/
@@ -125,9 +124,9 @@ driver::keyboardio::keydata_t Model100KeyScanner::previousLeftHandState;
 driver::keyboardio::keydata_t Model100KeyScanner::previousRightHandState;
 
 void Model100KeyScanner::enableScannerPower(void) {
-// Turn on the switched 5V network.
-//  make sure this happens at least 100ms after USB connect
-// to satisfy inrush limits
+  // Turn on the switched 5V network.
+  //  make sure this happens at least 100ms after USB connect
+  // to satisfy inrush limits
   //
   pinMode(PB9, OUTPUT_OPEN_DRAIN);
   digitalWrite(PB9, LOW);
@@ -141,7 +140,6 @@ void Model100KeyScanner::disableScannerPower(void) {
 }
 
 
-
 void Model100KeyScanner::setup() {
   enableScannerPower();
   delay(250);
@@ -149,7 +147,7 @@ void Model100KeyScanner::setup() {
 
 void Model100KeyScanner::readMatrix() {
   //scan the Keyboard matrix looking for connections
-  previousLeftHandState = leftHandState;
+  previousLeftHandState  = leftHandState;
   previousRightHandState = rightHandState;
 
   if (Model100Hands::leftHand.readKeys()) {
@@ -166,12 +164,12 @@ void Model100KeyScanner::actOnHalfRow(uint8_t row, uint8_t colState, uint8_t col
     for (uint8_t col = 0; col < 8; col++) {
       // Build up the key state for row, col
       uint8_t keyState = ((bitRead(colPrevState, 0) << 0) |
-                          (bitRead(colState,     0) << 1));
+                          (bitRead(colState, 0) << 1));
       if (keyState)
         ThisType::handleKeyswitchEvent(Key_NoKey, KeyAddr(row, startPos - col), keyState);
 
       // Throw away the data we've just used, so we can read the next column
-      colState = colState >> 1;
+      colState     = colState >> 1;
       colPrevState = colPrevState >> 1;
     }
   }

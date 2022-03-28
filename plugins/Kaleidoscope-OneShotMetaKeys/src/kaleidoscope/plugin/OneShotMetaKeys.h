@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for OS_ACTIVE_STICKY, OS_...
+#include <Kaleidoscope-Ranges.h>  // for OS_ACTIVE_STICKY, OS_...
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -26,8 +26,8 @@
 
 // ----------------------------------------------------------------------------
 // Key constants
-constexpr Key OneShot_MetaStickyKey {kaleidoscope::ranges::OS_META_STICKY};
-constexpr Key OneShot_ActiveStickyKey {kaleidoscope::ranges::OS_ACTIVE_STICKY};
+constexpr Key OneShot_MetaStickyKey{kaleidoscope::ranges::OS_META_STICKY};
+constexpr Key OneShot_ActiveStickyKey{kaleidoscope::ranges::OS_ACTIVE_STICKY};
 
 namespace kaleidoscope {
 namespace plugin {
@@ -42,10 +42,9 @@ class OneShotMetaKeys : public kaleidoscope::Plugin {
 
  private:
   static bool isMetaStickyActive();
-
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::OneShotMetaKeys OneShotMetaKeys;

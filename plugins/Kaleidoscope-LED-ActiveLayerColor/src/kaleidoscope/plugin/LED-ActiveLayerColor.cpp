@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/LED-ActiveLayerColor.h"
 
-#include <Arduino.h>                            // for pgm_read_byte
-#include <stdint.h>                             // for uint8_t
+#include <Arduino.h>  // for pgm_read_byte
+#include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -34,8 +34,7 @@ const cRGB *LEDActiveLayerColorEffect::colormap_;
 LEDActiveLayerColorEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerColorEffect *parent)
   : parent_(parent),
-    active_color_{0, 0, 0}
-{}
+    active_color_{0, 0, 0} {}
 
 void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
   colormap_ = colormap;

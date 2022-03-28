@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for TD_FIRST, TD_LAST
-#include <Kaleidoscope-TapDance.h>              // for TapDance, TapDance::A...
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Kaleidoscope-Ranges.h>    // for TD_FIRST, TD_LAST
+#include <Kaleidoscope-TapDance.h>  // for TapDance, TapDance::A...
+#include <stdint.h>                 // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -28,7 +28,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-class DynamicTapDance: public kaleidoscope::Plugin {
+class DynamicTapDance : public kaleidoscope::Plugin {
  public:
   DynamicTapDance() {}
 
@@ -37,8 +37,7 @@ class DynamicTapDance: public kaleidoscope::Plugin {
 
   static void setup(uint8_t dynamic_offset, uint16_t size);
 
-  static bool dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
-                    TapDance::ActionType tap_dance_action);
+  static bool dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, TapDance::ActionType tap_dance_action);
 
  private:
   static uint16_t storage_base_;

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                               // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/plugin/LED-AlphaSquare.h"  // for SYM4x4
 

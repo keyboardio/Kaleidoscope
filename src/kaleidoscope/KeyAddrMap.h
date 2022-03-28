@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"  // for KeyAddr
 
@@ -41,13 +41,13 @@ class KeyAddrMap {
 
   // To set the value of an entry:
   // key_array[key_addr] = Key_X;
-  _ContentType& operator[](KeyAddr key_addr) {
+  _ContentType &operator[](KeyAddr key_addr) {
     return values_[key_addr.toInt()];
   }
 
   // To get the value of an entry:
   // Key key = key_array[key_addr];
-  const _ContentType& operator[](KeyAddr key_addr) const {
+  const _ContentType &operator[](KeyAddr key_addr) const {
     return values_[key_addr.toInt()];
   }
 
@@ -82,17 +82,18 @@ class KeyAddrMap {
     bool operator!=(const Iterator &other) const {
       return key_addr_ != other.key_addr_;
     }
-    _ContentType& operator*() const {
+    _ContentType &operator*() const {
       return map_[key_addr_];
     }
-    Iterator& operator++() {
+    Iterator &operator++() {
       ++key_addr_;
       return *this;
     }
+
    private:
     ThisType &map_;
     KeyAddr key_addr_;
   };
 };
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

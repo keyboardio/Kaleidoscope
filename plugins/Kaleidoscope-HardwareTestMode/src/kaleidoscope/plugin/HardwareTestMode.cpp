@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/HardwareTestMode.h"
 
-#include <stdint.h>                                       // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                         // for MatrixAddr
 #include "kaleidoscope/Runtime.h"                         // for Runtime
@@ -41,7 +41,7 @@ void HardwareTestMode::waitForKeypress() {
   while (1) {
     Runtime.device().readMatrix();
     if (Runtime.device().isKeyswitchPressed(actionKey) &&
-        ! Runtime.device().wasKeyswitchPressed(actionKey)) {
+        !Runtime.device().wasKeyswitchPressed(actionKey)) {
       break;
     }
   }
@@ -54,9 +54,9 @@ void HardwareTestMode::setLeds(cRGB color) {
 }
 
 void HardwareTestMode::testLeds(void) {
-  constexpr cRGB red = CRGB(255, 0, 0);
-  constexpr cRGB blue = CRGB(0, 0, 255);
-  constexpr cRGB green = CRGB(0, 255, 0);
+  constexpr cRGB red         = CRGB(255, 0, 0);
+  constexpr cRGB blue        = CRGB(0, 0, 255);
+  constexpr cRGB green       = CRGB(0, 255, 0);
   constexpr cRGB brightWhite = CRGB(160, 160, 160);
 
   // rainbow for 10 seconds
@@ -75,18 +75,16 @@ void HardwareTestMode::testLeds(void) {
   setLeds(blue);
   setLeds(green);
   setLeds(red);
-
 }
-
 
 
 void HardwareTestMode::testMatrix() {
   // Reset bad keys from previous tests.
   chatter_data state[Runtime.device().numKeys()] = {{0, 0, 0}};
 
-  constexpr cRGB red = CRGB(201, 0, 0);
-  constexpr cRGB blue = CRGB(0, 0, 201);
-  constexpr cRGB green = CRGB(0, 201, 0);
+  constexpr cRGB red    = CRGB(201, 0, 0);
+  constexpr cRGB blue   = CRGB(0, 0, 201);
+  constexpr cRGB green  = CRGB(0, 201, 0);
   constexpr cRGB yellow = CRGB(201, 100, 0);
 
   while (1) {
@@ -95,7 +93,7 @@ void HardwareTestMode::testMatrix() {
       uint8_t keynum = key_addr.toInt();
 
       // If the key is toggled on
-      if (Runtime.device().isKeyswitchPressed(key_addr) && ! Runtime.device().wasKeyswitchPressed(key_addr)) {
+      if (Runtime.device().isKeyswitchPressed(key_addr) && !Runtime.device().wasKeyswitchPressed(key_addr)) {
         // And it's too soon (in terms of cycles between changes)
         state[keynum].tested = 1;
         if (state[keynum].cyclesSinceStateChange < CHATTER_CYCLE_LIMIT) {
@@ -113,7 +111,7 @@ void HardwareTestMode::testMatrix() {
         Runtime.device().setCrgbAt(key_addr, red);
       } else if (state[keynum].tested == 0) {
         Runtime.device().setCrgbAt(key_addr, yellow);
-      } else if (! Runtime.device().isKeyswitchPressed(key_addr)) {
+      } else if (!Runtime.device().isKeyswitchPressed(key_addr)) {
         // If the key is not currently pressed and was not just released and is not marked bad
         Runtime.device().setCrgbAt(key_addr, blue);
       }

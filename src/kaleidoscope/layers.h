@@ -16,17 +16,17 @@
 
 #pragma once
 
-#include <Arduino.h>                                // for PROGMEM
-#include <stdint.h>                                 // for uint8_t, int8_t
+#include <Arduino.h>  // for PROGMEM
+#include <stdint.h>   // for uint8_t, int8_t
 
-#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
-#include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
-#include "kaleidoscope/device/device.h"             // for Device
-#include "kaleidoscope/key_defs.h"                  // for Key
-#include "kaleidoscope/keymaps.h"                   // IWYU pragma: keep
-#include "kaleidoscope/macro_helpers.h"             // for __NL__
-#include "kaleidoscope_internal/device.h"           // for device
-#include "kaleidoscope_internal/shortname.h"        // for _INIT_HID_GETSHOR...
+#include "kaleidoscope/KeyAddr.h"                                         // for KeyAddr
+#include "kaleidoscope/KeyEvent.h"                                        // for KeyEvent
+#include "kaleidoscope/device/device.h"                                   // for Device
+#include "kaleidoscope/key_defs.h"                                        // for Key
+#include "kaleidoscope/keymaps.h"                                         // IWYU pragma: keep
+#include "kaleidoscope/macro_helpers.h"                                   // for __NL__
+#include "kaleidoscope_internal/device.h"                                 // for device
+#include "kaleidoscope_internal/shortname.h"                              // for _INIT_HID_GETSHOR...
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"  // for _INIT_SKETCH_EXPL...
 
 // clang-format off
@@ -105,7 +105,7 @@ class Layer_ {
 
   static void handleLayerKeyEvent(const KeyEvent &event);
 
-  typedef Key(*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
+  typedef Key (*GetKeyFunction)(uint8_t layer, KeyAddr key_addr);
   static GetKeyFunction getKey;
 
   static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr key_addr);
@@ -113,7 +113,7 @@ class Layer_ {
   static void updateActiveLayers(void);
 
  private:
-  using forEachHandler = void(*)(uint8_t index, uint8_t layer);
+  using forEachHandler = void (*)(uint8_t index, uint8_t layer);
 
  public:
   static void forEachActiveLayer(forEachHandler h);

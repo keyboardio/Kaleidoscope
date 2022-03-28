@@ -16,5 +16,5 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/Macros.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/Macros.h"               // IWYU pragma: export
 #include "kaleidoscope/plugin/Macros/MacroKeyDefs.h"  // IWYU pragma: export

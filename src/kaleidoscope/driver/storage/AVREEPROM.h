@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include <stdint.h>                            // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 #if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
-#include <EEPROM.h>                            // for EEPROM, EEPROMClass
+#include <EEPROM.h>  // for EEPROM, EEPROMClass
 
 #include "kaleidoscope/driver/storage/Base.h"  // for Base, BaseProps
 
@@ -32,16 +32,16 @@ struct AVREEPROMProps : kaleidoscope::driver::storage::BaseProps {
   static constexpr uint16_t length = 0;
 };
 
-template <typename _StorageProps>
+template<typename _StorageProps>
 class AVREEPROM : public kaleidoscope::driver::storage::Base<_StorageProps> {
  public:
   template<typename T>
-  static T& get(uint16_t offset, T& t) {
+  static T &get(uint16_t offset, T &t) {
     return EEPROM.get(offset, t);
   }
 
   template<typename T>
-  static const T& put(uint16_t offset, T& t) {
+  static const T &put(uint16_t offset, T &t) {
     return EEPROM.put(offset, t);
   }
 

@@ -33,13 +33,13 @@ namespace gheavy {
 
 struct ButterStickProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    static constexpr uint8_t matrix_rows = 2;
+    static constexpr uint8_t matrix_rows    = 2;
     static constexpr uint8_t matrix_columns = 10;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-    static constexpr uint8_t matrix_row_pins[matrix_rows] = { PIN_F4, PIN_F5 };
-    static constexpr uint8_t matrix_col_pins[matrix_columns] = { PIN_B0, PIN_B1, PIN_B2, PIN_B3, PIN_B4, PIN_B5, PIN_B6, PIN_B7, PIN_C6, PIN_C7 };
-#endif // KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows]    = {PIN_F4, PIN_F5};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_B0, PIN_B1, PIN_B2, PIN_B3, PIN_B4, PIN_B5, PIN_B6, PIN_B7, PIN_C6, PIN_C7};
+#endif  // KALEIDOSCOPE_VIRTUAL_BUILD
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
@@ -47,8 +47,8 @@ struct ButterStickProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class ButterStick: public kaleidoscope::device::ATmega32U4Keyboard<ButterStickProps> {};
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class ButterStick : public kaleidoscope::device::ATmega32U4Keyboard<ButterStickProps> {};
+#else  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 /* Device definition omitted for virtual device builds.
  * We need to forward declare the device name, though, as there are
  * some legacy extern references to boards whose definition
@@ -56,7 +56,7 @@ class ButterStick: public kaleidoscope::device::ATmega32U4Keyboard<ButterStickPr
  */
 class ButterStick;
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 // clang-format off
 #define PER_KEY_DATA(dflt,                                           \
@@ -67,11 +67,11 @@ class ButterStick;
          R1C9, R1C8, R1C7, R1C6, R1C5, R1C4, R1C3, R1C2, R1C1, R1C0
 // clang-format on
 
-} // namespace gheavy
-} // namespace device
+}  // namespace gheavy
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::gheavy::ButterStick)
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 #endif

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/key_defs.h"  // for Key, Key_LeftAlt, Key_LeftControl
 
@@ -128,13 +128,14 @@ struct KeyboardProps {
   typedef NoSystemControl SystemControl;
 };
 
-template <typename _Props>
+template<typename _Props>
 class Keyboard {
  private:
   typename _Props::BootKeyboard boot_keyboard_;
   typename _Props::NKROKeyboard nkro_keyboard_;
   typename _Props::ConsumerControl consumer_control_;
   typename _Props::SystemControl system_control_;
+
  public:
   Keyboard() {}
 
@@ -330,7 +331,6 @@ class Keyboard {
       releaseRawKey(Key_LeftGui);
     }
   }
-
 };
 
 }  // namespace base

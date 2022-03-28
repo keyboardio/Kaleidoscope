@@ -33,13 +33,13 @@ namespace gheavy {
 
 struct FaunchPadProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    static constexpr uint8_t matrix_rows = 2;
+    static constexpr uint8_t matrix_rows    = 2;
     static constexpr uint8_t matrix_columns = 4;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-    static constexpr uint8_t matrix_row_pins[matrix_rows] = { PIN_F4, PIN_F5 };
-    static constexpr uint8_t matrix_col_pins[matrix_columns] = { PIN_B3, PIN_B2, PIN_B1, PIN_B0 };
-#endif // KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows]    = {PIN_F4, PIN_F5};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_B3, PIN_B2, PIN_B1, PIN_B0};
+#endif  // KALEIDOSCOPE_VIRTUAL_BUILD
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
@@ -47,8 +47,8 @@ struct FaunchPadProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class FaunchPad: public kaleidoscope::device::ATmega32U4Keyboard<FaunchPadProps> {};
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class FaunchPad : public kaleidoscope::device::ATmega32U4Keyboard<FaunchPadProps> {};
+#else  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 /* Device definition omitted for virtual device builds.
  * We need to forward declare the device name, though, as there are
  * some legacy extern references to boards whose definition
@@ -56,7 +56,7 @@ class FaunchPad: public kaleidoscope::device::ATmega32U4Keyboard<FaunchPadProps>
  */
 class FaunchPad;
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 // clang-format off
 #define PER_KEY_DATA(dflt,                              \
@@ -66,11 +66,11 @@ class FaunchPad;
          R0C4, R0C5, R0C6, R0C7
 // clang-format on
 
-} // namespace gheavy
-} // namespace device
+}  // namespace gheavy
+}  // namespace device
 
 EXPORT_DEVICE(kaleidoscope::device::gheavy::FaunchPad)
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 #endif

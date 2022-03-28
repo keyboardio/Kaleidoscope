@@ -31,7 +31,7 @@ class AbsoluteMouseReport {
 
   static constexpr uint8_t kHidReportType = HID_REPORTID_MOUSE_ABSOLUTE;
 
-  AbsoluteMouseReport(const void* data);
+  AbsoluteMouseReport(const void *data);
 
   uint32_t Timestamp() const;
   std::vector<uint8_t> Buttons() const;
@@ -45,4 +45,4 @@ class AbsoluteMouseReport {
 };
 
 }  // namespace testing
-}  // namespce kaleidoscope
+}  // namespace kaleidoscope

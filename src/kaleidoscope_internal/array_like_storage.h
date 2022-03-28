@@ -29,54 +29,49 @@ namespace internal {
 //
 template<typename StoredType__,
          bool IsAppropriateType__,
-         bool...MoreTypeInfo__>
+         bool... MoreTypeInfo__>
 class ArrayLikeStorage {
 
  public:
-
   typedef ArrayLikeStorage<StoredType__, MoreTypeInfo__...> NestedArray;
 
-  template<typename...MoreEntities__>
-  constexpr ArrayLikeStorage(StoredType__ entry, MoreEntities__...more_entities)
+  template<typename... MoreEntities__>
+  constexpr ArrayLikeStorage(StoredType__ entry, MoreEntities__... more_entities)
     : entry_(entry),
       nested_array_(more_entities...) {}
 
-  static constexpr uint8_t n_entries
-    = NestedArray::n_entries + 1;
+  static constexpr uint8_t n_entries = NestedArray::n_entries + 1;
 
   typedef StoredType__ ContentType;
 
  private:
   StoredType__ entry_;
   NestedArray nested_array_;
-} __attribute__((packed)); // Make sure that there are no padding
+} __attribute__((packed));  // Make sure that there are no padding
 // bytes added by the compiler.
 // This is important to let the class
 // have the same layout as a POD array.
 
 
 template<typename StoredType__,
-         bool...MoreTypeInfo__>
+         bool... MoreTypeInfo__>
 class ArrayLikeStorage<StoredType__,
-        false /* Not of appropriate type */,
-        MoreTypeInfo__...> {
+                       false /* Not of appropriate type */,
+                       MoreTypeInfo__...> {
 
  public:
-
   typedef ArrayLikeStorage<StoredType__, MoreTypeInfo__...> NestedArray;
 
-  template<typename AnyType__, typename...MoreEntities__>
-  constexpr ArrayLikeStorage(AnyType__/* non-matching entity */,
-                             MoreEntities__...more_entities)
+  template<typename AnyType__, typename... MoreEntities__>
+  constexpr ArrayLikeStorage(AnyType__ /* non-matching entity */,
+                             MoreEntities__... more_entities)
     : nested_array_(more_entities...) {}
 
-  static constexpr uint8_t n_entries
-    = NestedArray::n_entries;
+  static constexpr uint8_t n_entries = NestedArray::n_entries;
 
   typedef StoredType__ ContentType;
 
  private:
-
   NestedArray nested_array_;
 } __attribute__((packed));
 
@@ -84,10 +79,8 @@ template<typename StoredType__>
 struct ArrayLikeStorage<StoredType__, true /* is of appropriate type */> {
 
  public:
-
   explicit constexpr ArrayLikeStorage(StoredType__ entry)
-    : entry_(entry)
-  {}
+    : entry_(entry) {}
 
   static constexpr uint8_t n_entries = 1;
 
@@ -101,14 +94,13 @@ template<typename StoredType__>
 struct ArrayLikeStorage<StoredType__, false /* not of appropriate type */> {
 
  public:
-
   template<typename AnyType__>
-  explicit constexpr ArrayLikeStorage(AnyType__/* non-matching entity */) {}
+  explicit constexpr ArrayLikeStorage(AnyType__ /* non-matching entity */) {}
 
   static constexpr uint8_t n_entries = 0;
 
   typedef StoredType__ ContentType;
 } __attribute__((packed));
 
-} // namespace internal
-} // namespace kaleidoscope
+}  // namespace internal
+}  // namespace kaleidoscope

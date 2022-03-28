@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/CycleTimeReport.h"
 
-#include <Arduino.h>                            // for micros, F, __FlashStr...
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t, uint32_t
+#include <Arduino.h>                   // for micros, F, __FlashStr...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint16_t, uint32_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -62,8 +62,7 @@ EventHandlerResult CycleTimeReport::afterEachCycle() {
 }  // namespace kaleidoscope
 
 __attribute__((weak)) void cycleTimeReport(void) {
-  Focus.send(Focus.COMMENT, F("average loop time:"), CycleTimeReport.average_loop_time,
-             Focus.NEWLINE);
+  Focus.send(Focus.COMMENT, F("average loop time:"), CycleTimeReport.average_loop_time, Focus.NEWLINE);
 }
 
 kaleidoscope::plugin::CycleTimeReport CycleTimeReport;

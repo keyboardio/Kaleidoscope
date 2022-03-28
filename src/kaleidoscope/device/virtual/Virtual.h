@@ -25,15 +25,15 @@
 #include KALEIDOSCOPE_HARDWARE_H
 
 // From system:
-#include <stdint.h>                                    // for uint8_t
+#include <stdint.h>  // for uint8_t
 // From Arduino libraries:
-#include <HardwareSerial.h>                            // for Serial
+#include <HardwareSerial.h>  // for Serial
 // From Kaleidoscope:
-#include "kaleidoscope/device/Base.h"                  // for Base
-#include "kaleidoscope/driver/bootloader/None.h"       // for None
-#include "kaleidoscope/driver/hid/Keyboardio.h"        // for Keyboardio
-#include "kaleidoscope/driver/keyscanner/Base.h"       // for Base
-#include "kaleidoscope/driver/mcu/None.h"              // for None
+#include "kaleidoscope/device/Base.h"             // for Base
+#include "kaleidoscope/driver/bootloader/None.h"  // for None
+#include "kaleidoscope/driver/hid/Keyboardio.h"   // for Keyboardio
+#include "kaleidoscope/driver/keyscanner/Base.h"  // for Base
+#include "kaleidoscope/driver/mcu/None.h"         // for None
 
 namespace kaleidoscope {
 namespace device {
@@ -42,12 +42,10 @@ namespace virt {
 class VirtualKeyScanner
   : public kaleidoscope::driver::keyscanner::Base<kaleidoscope::DeviceProps::KeyScannerProps> {
  private:
-
   typedef VirtualKeyScanner ThisType;
   typedef kaleidoscope::driver::keyscanner::Base<kaleidoscope::DeviceProps::KeyScannerProps> ParentType;
 
  public:
-
   typedef typename ParentType::KeyAddr KeyAddr;
 
   enum class KeyState {
@@ -56,7 +54,7 @@ class VirtualKeyScanner
     Tap
   };
 
-  static constexpr uint8_t matrix_rows = kaleidoscope::DeviceProps::KeyScannerProps::matrix_rows;
+  static constexpr uint8_t matrix_rows    = kaleidoscope::DeviceProps::KeyScannerProps::matrix_rows;
   static constexpr uint8_t matrix_columns = kaleidoscope::DeviceProps::KeyScannerProps::matrix_columns;
 
   VirtualKeyScanner();
@@ -83,27 +81,23 @@ class VirtualKeyScanner
   KeyState getKeystate(KeyAddr keyAddr) const;
 
  private:
-
   bool anythingHeld();
 
  private:
-
-  uint8_t  n_pressed_switches_,
-           n_previously_pressed_switches_;
+  uint8_t n_pressed_switches_,
+    n_previously_pressed_switches_;
 
   bool read_matrix_enabled_;
 
-  KeyState keystates_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
-  KeyState keystates_prev_[matrix_rows * matrix_columns]; // NOLINT(runtime/arrays)
-
+  KeyState keystates_[matrix_rows * matrix_columns];       // NOLINT(runtime/arrays)
+  KeyState keystates_prev_[matrix_rows * matrix_columns];  // NOLINT(runtime/arrays)
 };
 
 class VirtualLEDDriver
   : public driver::led::Base<kaleidoscope::DeviceProps::LEDDriverProps> {
  public:
-
   typedef driver::led::Base<kaleidoscope::DeviceProps::LEDDriverProps>
-  ParentType;
+    ParentType;
 
   static constexpr uint8_t led_count = kaleidoscope::DeviceProps::LEDDriverProps::led_count;
 
@@ -113,8 +107,7 @@ class VirtualLEDDriver
   cRGB getCrgbAt(uint8_t i) const;
 
  private:
-
-  cRGB led_states_[led_count]; // NOLINT(runtime/arrays)
+  cRGB led_states_[led_count];  // NOLINT(runtime/arrays)
 };
 
 // This overrides only the drivers and keeps the driver props of
@@ -124,42 +117,41 @@ struct VirtualProps : public kaleidoscope::DeviceProps {
   typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
   typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
   typedef typename kaleidoscope::DeviceProps::KeyScannerProps
-  KeyScannerProps;
+    KeyScannerProps;
   typedef VirtualKeyScanner
-  KeyScanner;
+    KeyScanner;
   typedef KeyScannerProps::KeyAddr
-  KeyAddr;
+    KeyAddr;
 
   typedef typename kaleidoscope::DeviceProps::LEDDriverProps
-  LEDDriverProps;
+    LEDDriverProps;
   typedef VirtualLEDDriver
-  LEDDriver;
+    LEDDriver;
 
   typedef kaleidoscope::driver::mcu::None MCU;
 
   typedef kaleidoscope::driver::bootloader::None
-  BootLoader;
+    BootLoader;
 
   typedef typename kaleidoscope::DeviceProps::StorageProps
-  StorageProps;
+    StorageProps;
   typedef typename kaleidoscope::DeviceProps::Storage
-  Storage;
+    Storage;
 };
 
 class VirtualDevice
   : public kaleidoscope::device::Base<device::virt::VirtualProps> {
  public:
-
   auto serialPort() -> decltype(Serial) & {
     return Serial;
   }
 };
 
-} // namespace virt
-} // namespace device
+}  // namespace virt
+}  // namespace device
 
 typedef device::virt::VirtualDevice Device;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
-#endif // ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifdef KALEIDOSCOPE_VIRTUAL_BUILD

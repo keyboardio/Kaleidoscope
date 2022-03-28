@@ -21,7 +21,6 @@ namespace plugin {
 
 class LEDModeInterface {
  public:
-
   void activate();
 
   // This auxiliary class helps to generate a verbose error message
@@ -38,5 +37,5 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope

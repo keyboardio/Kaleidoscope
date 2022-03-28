@@ -23,13 +23,13 @@ namespace kaleidoscope {
 namespace driver {
 namespace mcu {
 
-struct ATmega32U4Props: public kaleidoscope::driver::mcu::BaseProps {
-  static constexpr bool disable_jtag = false;
+struct ATmega32U4Props : public kaleidoscope::driver::mcu::BaseProps {
+  static constexpr bool disable_jtag           = false;
   static constexpr bool disable_clock_division = false;
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-template <typename _Props>
+template<typename _Props>
 class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {
  public:
   void detachFromHost() {
@@ -75,9 +75,9 @@ class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {
   }
 };
 #else
-template <typename _Props>
+template<typename _Props>
 class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {};
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace mcu
 }  // namespace driver

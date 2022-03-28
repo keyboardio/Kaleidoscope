@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for SC_FIRST, SC_LAST
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Kaleidoscope-Ranges.h>  // for SC_FIRST, SC_LAST
+#include <stdint.h>               // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -29,10 +29,11 @@
 #include "kaleidoscope/plugin.h"                // for Plugin
 
 #ifndef SPACECADET_MAP_END
-#define SPACECADET_MAP_END (kaleidoscope::plugin::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
+#define SPACECADET_MAP_END \
+  (kaleidoscope::plugin::SpaceCadet::KeyBinding) { Key_NoKey, Key_NoKey, 0 }
 #endif
 
-constexpr Key Key_SpaceCadetEnable = Key(kaleidoscope::ranges::SC_FIRST);
+constexpr Key Key_SpaceCadetEnable  = Key(kaleidoscope::ranges::SC_FIRST);
 constexpr Key Key_SpaceCadetDisable = Key(kaleidoscope::ranges::SC_LAST);
 
 namespace kaleidoscope {
@@ -79,8 +80,8 @@ class SpaceCadet : public kaleidoscope::Plugin {
   }
 
   // Publically accessible variables
-  static uint16_t time_out;  //  The global timeout in milliseconds
-  static SpaceCadet::KeyBinding * map;  // The map of key bindings
+  static uint16_t time_out;            //  The global timeout in milliseconds
+  static SpaceCadet::KeyBinding *map;  // The map of key bindings
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);

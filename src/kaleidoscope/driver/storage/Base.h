@@ -24,20 +24,20 @@ namespace driver {
 namespace storage {
 
 struct BaseProps {
-  static constexpr uint16_t length = 0;
+  static constexpr uint16_t length            = 0;
   static constexpr uint8_t uninitialized_byte = 0xff;
 };
 
-template <typename _StorageProps>
+template<typename _StorageProps>
 class Base {
  public:
   template<typename T>
-  static T& get(uint16_t offset, T& t) {
+  static T &get(uint16_t offset, T &t) {
     return t;
   }
 
   template<typename T>
-  static const T& put(uint16_t offset, T& t) {
+  static const T &put(uint16_t offset, T &t) {
     return t;
   }
 

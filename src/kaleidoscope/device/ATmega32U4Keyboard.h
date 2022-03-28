@@ -40,17 +40,17 @@ struct ATmega32U4KeyboardProps : kaleidoscope::device::BaseProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-template <typename _DeviceProps>
+template<typename _DeviceProps>
 class ATmega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
  public:
   auto serialPort() -> decltype(Serial) & {
     return Serial;
   }
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-template <typename _DeviceProps>
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+template<typename _DeviceProps>
 class ATmega32U4Keyboard;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace device
 }  // namespace kaleidoscope

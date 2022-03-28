@@ -24,9 +24,9 @@
 namespace kaleidoscope {
 namespace testing {
 
-KeyboardReport::KeyboardReport(const void* data) {
-  const ReportData& report_data =
-    *static_cast<const ReportData*>(data);
+KeyboardReport::KeyboardReport(const void *data) {
+  const ReportData &report_data =
+    *static_cast<const ReportData *>(data);
   memcpy(&report_data_, &report_data, sizeof(report_data_));
   timestamp_ = Runtime.millisAtCycleStart();
 }
@@ -37,7 +37,7 @@ uint32_t KeyboardReport::Timestamp() const {
 
 std::vector<uint8_t> KeyboardReport::ActiveKeycodes() const {
   auto keycodes = ActiveNonModifierKeycodes();
-  auto mods = ActiveModifierKeycodes();
+  auto mods     = ActiveModifierKeycodes();
   keycodes.insert(keycodes.end(), mods.begin(), mods.end());
   return keycodes;
 }
@@ -62,7 +62,7 @@ std::vector<uint8_t> KeyboardReport::ActiveNonModifierKeycodes() const {
   std::vector<uint8_t> active_keycodes;
 
   for (uint8_t i = 0; i < HID_LAST_KEY; ++i) {
-    uint8_t bit = 1 << (uint8_t(i) % 8);
+    uint8_t bit     = 1 << (uint8_t(i) % 8);
     uint8_t keycode = report_data_.keys[i / 8] & bit;
     if (keycode) active_keycodes.push_back(i);
   }

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
@@ -74,8 +74,8 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   static bool sealed_;
 
   static struct settings {
-    uint8_t default_layer: 7;
-    bool ignore_hardcoded_layers: 1;
+    uint8_t default_layer : 7;
+    bool ignore_hardcoded_layers : 1;
     uint8_t version;
     uint16_t crc;
   } settings_;

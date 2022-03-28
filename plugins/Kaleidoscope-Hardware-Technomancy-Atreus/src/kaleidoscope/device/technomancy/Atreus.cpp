@@ -36,7 +36,7 @@
 // in the global namespace within the scope of this file. We'll use these
 // aliases to simplify some template initialization code below.
 using KeyScannerProps = typename kaleidoscope::device::technomancy::AtreusProps::KeyScannerProps;
-using KeyScanner = typename kaleidoscope::device::technomancy::AtreusProps::KeyScanner;
+using KeyScanner      = typename kaleidoscope::device::technomancy::AtreusProps::KeyScanner;
 
 
 namespace kaleidoscope {
@@ -55,7 +55,8 @@ constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
 // `KeyScanner` here refers to the alias set up above, just like in the
 // `KeyScannerProps` case above.
-template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
+template<>
+KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
 
 // We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
 // cannot be in a header-only driver, and must be placed here.
@@ -69,9 +70,9 @@ ISR(TIMER1_OVF_vect) {
   Runtime.device().keyScanner().do_scan_ = true;
 }
 
-} // namespace technomancy
-} // namespace device
-} // namespace kaleidoscope
+}  // namespace technomancy
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

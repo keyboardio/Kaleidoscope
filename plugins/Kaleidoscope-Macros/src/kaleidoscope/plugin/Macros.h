@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                                 // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "Kaleidoscope-Ranges.h"                    // for MACRO_FIRST, MACR...
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
@@ -27,7 +27,7 @@
 
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.
-const macro_t* macroAction(uint8_t macro_id, KeyEvent &event);
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event);
 
 // The number of simultaneously-active `Key` values that a macro can have
 // running during a call to `Macros.play()`. I don't know if it's actually
@@ -42,7 +42,6 @@ namespace plugin {
 
 class Macros : public kaleidoscope::Plugin {
  public:
-
   /// Send a key press event from a Macro
   ///
   /// Generates a new `KeyEvent` and calls `Runtime.handleKeyEvent()` with the
@@ -71,17 +70,17 @@ class Macros : public kaleidoscope::Plugin {
   void tap(Key key) const;
 
   /// Play a macro sequence of key events
-  void play(const macro_t* macro_ptr);
+  void play(const macro_t *macro_ptr);
 
   // Templates provide a `type()` function that takes a variable number of
   // `char*` (string) arguments, in the form of a list of strings stored in
   // PROGMEM, of the form `Macros.type(PSTR("Hello "), PSTR("world!"))`.
-  inline const macro_t* type() const {
+  inline const macro_t *type() const {
     return MACRO_NONE;
   }
-  const macro_t* type(const char* string) const;
-  template <typename... Strings>
-  const macro_t* type(const char* first, Strings&&... strings) const {
+  const macro_t *type(const char *string) const;
+  template<typename... Strings>
+  const macro_t *type(const char *first, Strings &&...strings) const {
     type(first);
     return type(strings...);
   }
@@ -105,7 +104,6 @@ class Macros : public kaleidoscope::Plugin {
       return true;
     return false;
   }
-
 };
 
 }  // namespace plugin

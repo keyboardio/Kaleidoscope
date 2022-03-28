@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/NumPad.h"
 
-#include <stdint.h>                                   // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                     // for KeyAddr, Matrix...
 #include "kaleidoscope/device/device.h"               // for cRGB, CRGB
@@ -31,7 +31,7 @@ namespace plugin {
 
 // public:
 uint8_t NumPad::numPadLayer;
-cRGB NumPad::color = CRGB(160, 0, 0);
+cRGB NumPad::color       = CRGB(160, 0, 0);
 uint8_t NumPad::lock_hue = 170;
 
 // private:
@@ -46,7 +46,7 @@ void NumPad::setKeyboardLEDColors(void) {
   ::LEDControl.set_mode(::LEDControl.get_mode_index());
 
   for (auto key_addr : KeyAddr::all()) {
-    Key k = Layer.lookupOnActiveLayer(key_addr);
+    Key k         = Layer.lookupOnActiveLayer(key_addr);
     Key layer_key = Layer.getKey(numPadLayer, key_addr);
 
     if (k == LockLayer(numPadLayer)) {
@@ -73,7 +73,7 @@ EventHandlerResult NumPad::afterEachCycle() {
       numpadActive = false;
     }
   } else {
-    if (!numpadActive)  {
+    if (!numpadActive) {
       numpadActive = true;
     }
     setKeyboardLEDColors();

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                                      // for uint8_t, uin...
+#include <stdint.h>  // for uint8_t, uin...
 
 #include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
 #include "kaleidoscope/event_handler_result.h"           // for EventHandler...
@@ -29,8 +29,8 @@
 namespace kaleidoscope {
 namespace plugin {
 class ColormapEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                       public LEDModeInterface,
+                       public AccessTransientLEDMode {
  public:
   ColormapEffect(void) {}
 
@@ -44,21 +44,20 @@ class ColormapEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    explicit TransientLEDMode(const ColormapEffect *parent) : parent_(parent) {}
+    explicit TransientLEDMode(const ColormapEffect *parent)
+      : parent_(parent) {}
 
    protected:
-
     friend class ColormapEffect;
 
     void onActivate(void) final;
     void refreshAt(KeyAddr key_addr) final;
-   private:
 
+   private:
     const ColormapEffect *parent_;
   };
 

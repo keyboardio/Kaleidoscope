@@ -32,19 +32,19 @@ namespace device {
 namespace kbdfans {
 
 struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
-  struct MCUProps: public kaleidoscope::driver::mcu::ATmega32U4Props {
-    static constexpr bool disable_jtag = true;
+  struct MCUProps : public kaleidoscope::driver::mcu::ATmega32U4Props {
+    static constexpr bool disable_jtag           = true;
     static constexpr bool disable_clock_division = true;
   };
   typedef kaleidoscope::driver::mcu::ATmega32U4<MCUProps> MCU;
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    static constexpr uint8_t matrix_rows = 4;
+    static constexpr uint8_t matrix_rows    = 4;
     static constexpr uint8_t matrix_columns = 12;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-    static constexpr uint8_t matrix_row_pins[matrix_rows] = {PIN_D0, PIN_D1, PIN_D2, PIN_D3};
-    static constexpr uint8_t matrix_col_pins[matrix_columns] = { PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7 };
-#endif // KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows]    = {PIN_D0, PIN_D1, PIN_D2, PIN_D3};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_F0, PIN_F1, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_B3, PIN_B1, PIN_B0, PIN_D5, PIN_B7, PIN_C7};
+#endif  // KALEIDOSCOPE_VIRTUAL_BUILD
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef kaleidoscope::driver::bootloader::avr::FLIP Bootloader;
@@ -52,8 +52,8 @@ struct KBD4xProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {};
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+class KBD4x : public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {};
+#else  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 /* Device definition omitted for virtual device builds.
  * We need to forward declare the device name, though, as there are
  * some legacy extern references to boards whose definition
@@ -61,7 +61,7 @@ class KBD4x: public kaleidoscope::device::ATmega32U4Keyboard<KBD4xProps> {};
  */
 class KBD4x;
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 // clang-format off
 #define PER_KEY_DATA(dflt,                                                       \

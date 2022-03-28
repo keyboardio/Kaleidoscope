@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <Arduino.h>                            // for __FlashStringHelper
-#include <HardwareSerial.h>                     // for HardwareSerial
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>         // for __FlashStringHelper
+#include <HardwareSerial.h>  // for HardwareSerial
+#include <stdint.h>          // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for cRGB
@@ -33,9 +33,9 @@ class FocusSerial : public kaleidoscope::Plugin {
  public:
   FocusSerial(void) {}
 
-  static constexpr char COMMENT = '#';
+  static constexpr char COMMENT   = '#';
   static constexpr char SEPARATOR = ' ';
-  static constexpr char NEWLINE = '\n';
+  static constexpr char NEWLINE   = '\n';
 
   bool handleHelp(const char *command,
                   const char *help_message);
@@ -57,19 +57,19 @@ class FocusSerial : public kaleidoscope::Plugin {
     printBool(b);
     Runtime.serialPort().print(SEPARATOR);
   }
-  template <typename V>
+  template<typename V>
   void send(V v) {
     Runtime.serialPort().print(v);
     Runtime.serialPort().print(SEPARATOR);
   }
-  template <typename Var, typename... Vars>
+  template<typename Var, typename... Vars>
   void send(Var v, Vars... vars) {
     send(v);
     send(vars...);
   }
 
   void sendRaw() {}
-  template <typename Var, typename... Vars>
+  template<typename Var, typename... Vars>
   void sendRaw(Var v, Vars... vars) {
     Runtime.serialPort().print(v);
     sendRaw(vars...);

@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <Arduino.h>                            // for PROGMEM
-#include <Kaleidoscope-Ranges.h>                // for TD_FIRST, TD_LAST
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>              // for PROGMEM
+#include <Kaleidoscope-Ranges.h>  // for TD_FIRST, TD_LAST
+#include <stdint.h>               // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
@@ -29,13 +29,12 @@
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#define TD(n) kaleidoscope::plugin::TapDanceKey(n)
+#define TD(n)                                                kaleidoscope::plugin::TapDanceKey(n)
 
-#define tapDanceActionKeys(tap_count, tap_dance_action, ...) ({         \
-      static const Key __k[] PROGMEM = { __VA_ARGS__ };                 \
-      TapDance.actionKeys(tap_count, tap_dance_action,                  \
-                          sizeof (__k) / sizeof (Key), &__k[0]);        \
-    })
+#define tapDanceActionKeys(tap_count, tap_dance_action, ...) ({                         \
+  static const Key __k[] PROGMEM = {__VA_ARGS__};                                       \
+  TapDance.actionKeys(tap_count, tap_dance_action, sizeof(__k) / sizeof(Key), &__k[0]); \
+})
 
 namespace kaleidoscope {
 namespace plugin {
@@ -82,13 +81,11 @@ class TapDance : public kaleidoscope::Plugin {
   static uint8_t tap_count_;
 
   void flushQueue(KeyAddr ignored_addr = KeyAddr::none());
-
 };
 
 }  // namespace plugin
 }  // namespace kaleidoscope
 
-void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count,
-                    kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
+void tapDanceAction(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action);
 
 extern kaleidoscope::plugin::TapDance TapDance;

@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/TypingBreaks.h"
 
-#include <Arduino.h>                            // for PSTR, strcmp_P, F
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint32_t, uint16_t
+#include <Arduino.h>                       // for PSTR, strcmp_P, F
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint32_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -33,12 +33,11 @@ namespace kaleidoscope {
 namespace plugin {
 
 TypingBreaks::settings_t TypingBreaks::settings = {
-  .idle_time_limit = 300, //  5m
-  .lock_time_out = 2700,  //  45m
-  .lock_length = 300,    //   5m
-  .left_hand_max_keys = 0,
-  .right_hand_max_keys = 0
-};
+  .idle_time_limit     = 300,   //  5m
+  .lock_time_out       = 2700,  //  45m
+  .lock_length         = 300,   //   5m
+  .left_hand_max_keys  = 0,
+  .right_hand_max_keys = 0};
 
 bool TypingBreaks::keyboard_locked_{false};
 uint32_t TypingBreaks::session_start_time_;
@@ -49,9 +48,9 @@ uint16_t TypingBreaks::right_hand_keys_;
 uint16_t TypingBreaks::settings_base_;
 
 EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
-  uint32_t lock_length = settings.lock_length * 1000;
+  uint32_t lock_length     = settings.lock_length * 1000;
   uint32_t idle_time_limit = settings.idle_time_limit * 1000;
-  uint32_t lock_time_out = settings.lock_time_out * 1000;
+  uint32_t lock_time_out   = settings.lock_time_out * 1000;
 
   // Let key release events through regardless, so the last key pressed (and any
   // other held keys) finish getting processed when they're released.
@@ -68,7 +67,7 @@ EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
     // ...otherwise clear the lock
     keyboard_locked_ = false;
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = Runtime.millisAtCycleStart();
+    session_start_time_                = Runtime.millisAtCycleStart();
 
     TypingBreak(false);
   }
@@ -79,7 +78,7 @@ EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
   if (Runtime.hasTimeExpired(last_key_time_, idle_time_limit)) {
     // No, we are not. Clear timers and start over.
     left_hand_keys_ = right_hand_keys_ = 0;
-    session_start_time_ = Runtime.millisAtCycleStart();
+    session_start_time_                = Runtime.millisAtCycleStart();
   }
 
   // If we have a limit on the either hand, and we reached it, lock up!
@@ -133,11 +132,11 @@ EventHandlerResult TypingBreaks::onSetup() {
   return EventHandlerResult::OK;
 }
 
-#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,      \
+#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
                                            "typingbreaks.idleTimeLimit\n" \
-                                           "typingbreaks.lockTimeOut\n" \
-                                           "typingbreaks.lockLength\n"  \
-                                           "typingbreaks.leftMaxKeys\n" \
+                                           "typingbreaks.lockTimeOut\n"   \
+                                           "typingbreaks.lockLength\n"    \
+                                           "typingbreaks.leftMaxKeys\n"   \
                                            "typingbreaks.rightMaxKeys")
 
 EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {

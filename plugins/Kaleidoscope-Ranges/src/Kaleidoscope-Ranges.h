@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 // Included for definition of legacy Macros plugin key range:
 #include "kaleidoscope/key_defs.h"  // for SYNTHETIC
@@ -52,30 +52,30 @@ enum : uint16_t {
   MACRO_FIRST = (SYNTHETIC | 0b00100000) << 8,
   MACRO_LAST  = MACRO_FIRST + 255,
 
-  FIRST       = 0xc000,
+  FIRST              = 0xc000,
   KALEIDOSCOPE_FIRST = FIRST,
   OS_FIRST,
-  OSM_FIRST   = OS_FIRST,
-  OSM_LAST    = OSM_FIRST + 7,
+  OSM_FIRST = OS_FIRST,
+  OSM_LAST  = OSM_FIRST + 7,
   OSL_FIRST,
-  OSL_LAST    = OSL_FIRST + 7,
-  OS_LAST     = OSL_LAST,
+  OSL_LAST = OSL_FIRST + 7,
+  OS_LAST  = OSL_LAST,
   DU_FIRST,
-  DUM_FIRST   = DU_FIRST,
-  DUM_LAST    = DUM_FIRST + (8 << 8),
+  DUM_FIRST = DU_FIRST,
+  DUM_LAST  = DUM_FIRST + (8 << 8),
   DUL_FIRST,
-  DUL_LAST    = DUL_FIRST + (8 << 8),
-  DU_LAST     = DUL_LAST,
+  DUL_LAST = DUL_FIRST + (8 << 8),
+  DU_LAST  = DUL_LAST,
   TD_FIRST,
-  TD_LAST     = TD_FIRST + 15,
+  TD_LAST = TD_FIRST + 15,
   LEAD_FIRST,
-  LEAD_LAST   = LEAD_FIRST + 7,
+  LEAD_LAST = LEAD_FIRST + 7,
   CYCLE,
   SYSTER,
   TT_FIRST,
-  TT_LAST     = TT_FIRST + 255,
+  TT_LAST = TT_FIRST + 255,
   STENO_FIRST,
-  STENO_LAST  = STENO_FIRST + 42,
+  STENO_LAST = STENO_FIRST + 42,
   SC_FIRST,
   SC_LAST,
   REDIAL,
@@ -86,7 +86,7 @@ enum : uint16_t {
   OS_ACTIVE_STICKY,
   OS_CANCEL,
   CS_FIRST,
-  CS_LAST  = CS_FIRST + MAX_CS_KEYS,
+  CS_LAST = CS_FIRST + MAX_CS_KEYS,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START

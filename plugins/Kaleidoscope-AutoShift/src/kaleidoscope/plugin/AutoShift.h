@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -63,16 +63,17 @@ class AutoShift : public Plugin {
     uint8_t raw_bits_{0};
 
     // constants for bits in the `raw_bits_` bitfield
-    static constexpr uint8_t LETTERS    = 1 << 0;
-    static constexpr uint8_t NUMBERS    = 1 << 1;
-    static constexpr uint8_t SYMBOLS    = 1 << 2;
-    static constexpr uint8_t ARROWS     = 1 << 3;
-    static constexpr uint8_t FUNCTIONS  = 1 << 4;
-    static constexpr uint8_t ALL        = 1 << 7;
+    static constexpr uint8_t LETTERS   = 1 << 0;
+    static constexpr uint8_t NUMBERS   = 1 << 1;
+    static constexpr uint8_t SYMBOLS   = 1 << 2;
+    static constexpr uint8_t ARROWS    = 1 << 3;
+    static constexpr uint8_t FUNCTIONS = 1 << 4;
+    static constexpr uint8_t ALL       = 1 << 7;
 
    public:
     // Basic un-checked constructor
-    constexpr Categories(uint8_t raw_bits) : raw_bits_(raw_bits) {}
+    constexpr Categories(uint8_t raw_bits)
+      : raw_bits_(raw_bits) {}
 
     static constexpr Categories letterKeys() {
       return Categories(LETTERS);
@@ -276,8 +277,8 @@ class AutoShiftConfig : public Plugin {
   static uint16_t settings_base_;
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::AutoShift AutoShift;
 extern kaleidoscope::plugin::AutoShiftConfig AutoShiftConfig;

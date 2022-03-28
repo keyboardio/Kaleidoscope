@@ -14,8 +14,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>                               // for uint8_t, int8_t
-#include <string.h>                               // for memmove, memset
+#include <stdint.h>  // for uint8_t, int8_t
+#include <string.h>  // for memmove, memset
 
 #include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
 #include "kaleidoscope/KeyAddrMap.h"              // for KeyAddrMap<>::Iterator
@@ -45,8 +45,7 @@
 __attribute__((weak))
 uint8_t layer_count = 0;
 
-__attribute__((weak))
-extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
+__attribute__((weak)) extern constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 
 namespace kaleidoscope {
 uint8_t Layer_::active_layer_count_ = 1;
@@ -153,7 +152,7 @@ void Layer_::updateActiveLayers(void) {
   for (auto key_addr : KeyAddr::all()) {
     for (uint8_t i = active_layer_count_; i > 0; --i) {
       uint8_t layer = active_layers_[i - 1];
-      Key key = (*getKey)(layer, key_addr);
+      Key key       = (*getKey)(layer, key_addr);
 
       if (key != Key_Transparent) {
         active_layer_keymap_[key_addr.toInt()] = layer;
@@ -176,7 +175,7 @@ void Layer_::move(uint8_t layer) {
     layer = 0;
   }
   active_layer_count_ = 1;
-  active_layers_[0] = layer;
+  active_layers_[0]   = layer;
 
   updateActiveLayers();
 

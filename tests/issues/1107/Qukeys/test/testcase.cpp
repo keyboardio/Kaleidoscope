@@ -34,7 +34,8 @@ using ::testing::IsEmpty;
 class QukeysIssue1107 : public VirtualDeviceTest {
  protected:
   std::set<uint8_t> expected_keycodes_ = {};
-  std::unique_ptr<State> state_ = nullptr;
+  std::unique_ptr<State> state_        = nullptr;
+
  public:
   void testDelayedTimeout() {
     state_ = RunCycle();
@@ -44,7 +45,7 @@ class QukeysIssue1107 : public VirtualDeviceTest {
     state_ = RunCycle();
 
     ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 0)
-        << "There should be no HID report after the qukey is pressed";
+      << "There should be no HID report after the qukey is pressed";
 
     // Record time at start
     uint32_t start = Kaleidoscope.millisAtCycleStart();
@@ -61,10 +62,10 @@ class QukeysIssue1107 : public VirtualDeviceTest {
     uint32_t end = Kaleidoscope.millisAtCycleStart();
 
     ASSERT_EQ((end - start), (QUKEYS_HOLD_TIMEOUT + 2))
-        << "Only one millisecond should be registered elapsed per cycle";
+      << "Only one millisecond should be registered elapsed per cycle";
 
     ASSERT_EQ(state_->HIDReports()->Keyboard().size(), 2)
-        << "There should be two HID reports after the release of a timed-out qukey";
+      << "There should be two HID reports after the release of a timed-out qukey";
   }
 };
 

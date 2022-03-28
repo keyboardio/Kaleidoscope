@@ -27,14 +27,14 @@ namespace testing {
 class ExpectedKeyboardReport {
  public:
   ExpectedKeyboardReport(uint32_t timestamp,
-                         const std::set<uint8_t> & keycodes,
+                         const std::set<uint8_t> &keycodes,
                          std::string message = "");
 
-  const std::set<uint8_t> & Keycodes() const;
+  const std::set<uint8_t> &Keycodes() const;
 
   uint32_t Timestamp() const;
 
-  const std::string & Message() const;
+  const std::string &Message() const;
 
  private:
   uint32_t timestamp_;

@@ -160,9 +160,9 @@ uint8_t KeyScanner::previousPressedKeyswitchCount() {
   return count;
 }
 
-} // namespace eval
-} // namespace gd32
-} // namespace device
-} // namespace kaleidoscope
+}  // namespace eval
+}  // namespace gd32
+}  // namespace device
+}  // namespace kaleidoscope
 
 #endif

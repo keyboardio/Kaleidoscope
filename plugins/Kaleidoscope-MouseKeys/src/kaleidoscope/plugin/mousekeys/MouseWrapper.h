@@ -20,20 +20,20 @@
 
 // Warping commands
 
-#define WARP_END 1
-#define WARP_UP 2
-#define WARP_DOWN 4
-#define WARP_LEFT 8
+#define WARP_END   1
+#define WARP_UP    2
+#define WARP_DOWN  4
+#define WARP_LEFT  8
 #define WARP_RIGHT 16
 
 // apparently, the mac discards 15% of the value space for mouse movement.
 // need to test this on other platforms
 
-#define MAX_WARP_WIDTH 32767
+#define MAX_WARP_WIDTH  32767
 #define MAX_WARP_HEIGHT 32767
 
-#define WARP_ABS_TOP 0
-#define WARP_ABS_LEFT 0
+#define WARP_ABS_TOP    0
+#define WARP_ABS_LEFT   0
 
 // Mouse acceleration
 
@@ -68,6 +68,6 @@ class MouseWrapper {
 
 extern MouseWrapper wrapper;
 
-} // namespace mousekeys
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace mousekeys
+}  // namespace plugin
+}  // namespace kaleidoscope

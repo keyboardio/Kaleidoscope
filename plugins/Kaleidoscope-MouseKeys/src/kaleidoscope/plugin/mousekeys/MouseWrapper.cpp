@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
 
-#include <stdint.h>                                            // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/Runtime.h"                              // for Runtime
 #include "kaleidoscope/device/device.h"                        // for Base<>...
@@ -46,10 +46,10 @@ void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16
 
 void MouseWrapper::beginWarping() {
   section_left = WARP_ABS_LEFT;
-  section_top = WARP_ABS_TOP;
-  next_width = MAX_WARP_WIDTH;
-  next_height = MAX_WARP_HEIGHT;
-  is_warping = true;
+  section_top  = WARP_ABS_TOP;
+  next_width   = MAX_WARP_WIDTH;
+  next_height  = MAX_WARP_HEIGHT;
+  is_warping   = true;
 }
 
 void MouseWrapper::endWarping() {
@@ -108,28 +108,32 @@ uint8_t MouseWrapper::acceleration(uint8_t cycles) {
     return 1 + (c2 >> 7);
   } else {
     uint16_t remaining_cycles = 256 - cycles;
-    uint16_t c2 = remaining_cycles * remaining_cycles;
+    uint16_t c2               = remaining_cycles * remaining_cycles;
     return 255 - (c2 >> 7);
   }
 }
 
 void MouseWrapper::move(int8_t x, int8_t y) {
-  int16_t moveX = 0;
-  int16_t moveY = 0;
-  static int8_t remainderX = 0;
-  static int8_t remainderY = 0;
+  int16_t moveX               = 0;
+  int16_t moveY               = 0;
+  static int8_t remainderX    = 0;
+  static int8_t remainderY    = 0;
   int16_t effectiveSpeedLimit = speed_limit;
 
   if (x != 0) {
     moveX = remainderX + (x * acceleration(accel_step));
-    if (moveX > effectiveSpeedLimit) moveX = effectiveSpeedLimit;
-    else if (moveX < -effectiveSpeedLimit) moveX = -effectiveSpeedLimit;
+    if (moveX > effectiveSpeedLimit)
+      moveX = effectiveSpeedLimit;
+    else if (moveX < -effectiveSpeedLimit)
+      moveX = -effectiveSpeedLimit;
   }
 
   if (y != 0) {
     moveY = remainderY + (y * acceleration(accel_step));
-    if (moveY > effectiveSpeedLimit) moveY = effectiveSpeedLimit;
-    else if (moveY < -effectiveSpeedLimit) moveY = -effectiveSpeedLimit;
+    if (moveY > effectiveSpeedLimit)
+      moveY = effectiveSpeedLimit;
+    else if (moveY < -effectiveSpeedLimit)
+      moveY = -effectiveSpeedLimit;
   }
 
   endWarping();
@@ -142,6 +146,6 @@ void MouseWrapper::move(int8_t x, int8_t y) {
 
 MouseWrapper wrapper;
 
-} // namespace mousekeys
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace mousekeys
+}  // namespace plugin
+}  // namespace kaleidoscope

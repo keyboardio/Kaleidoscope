@@ -17,14 +17,14 @@
 
 #include "kaleidoscope/plugin/LED-AlphaSquare.h"
 
-#include <Arduino.h>                                       // for bitRead
-#include <stdint.h>                                        // for uint16_t
+#include <Arduino.h>  // for bitRead
+#include <stdint.h>   // for uint16_t
 
-#include "kaleidoscope/KeyAddr.h"                          // for KeyAddr
-#include "kaleidoscope/Runtime.h"                          // for Runtime
-#include "kaleidoscope/device/device.h"                    // for cRGB
-#include "kaleidoscope/key_defs.h"                         // for Key, Key_A
-#include "kaleidoscope/plugin/LEDControl.h"                // for LEDControl
+#include "kaleidoscope/KeyAddr.h"            // for KeyAddr
+#include "kaleidoscope/Runtime.h"            // for Runtime
+#include "kaleidoscope/device/device.h"      // for cRGB
+#include "kaleidoscope/key_defs.h"           // for Key, Key_A
+#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 
 #include "kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h"  // for ALPHASQUAR...
 
@@ -67,8 +67,7 @@ static const uint16_t alphabet[] PROGMEM = {
   ALPHASQUARE_SYMBOL_7,
   ALPHASQUARE_SYMBOL_8,
   ALPHASQUARE_SYMBOL_9,
-  ALPHASQUARE_SYMBOL_0
-};
+  ALPHASQUARE_SYMBOL_0};
 
 
 cRGB AlphaSquare::color = {0x80, 0x80, 0x80};
@@ -80,7 +79,7 @@ void AlphaSquare::display(Key key, KeyAddr key_addr, cRGB key_color) {
   if (key < Key_A || key > Key_0)
     return;
 
-  uint8_t index = key.getKeyCode() - Key_A.getKeyCode();
+  uint8_t index   = key.getKeyCode() - Key_A.getKeyCode();
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
   display(symbol, key_addr, key_color);
@@ -122,7 +121,7 @@ bool AlphaSquare::isSymbolPart(Key key,
   if (key < Key_A || key > Key_0)
     return false;
 
-  uint8_t index = key.getKeyCode() - Key_A.getKeyCode();
+  uint8_t index   = key.getKeyCode() - Key_A.getKeyCode();
   uint16_t symbol = pgm_read_word(&alphabet[index]);
 
   return isSymbolPart(symbol, displayLedAddr, key_addr);

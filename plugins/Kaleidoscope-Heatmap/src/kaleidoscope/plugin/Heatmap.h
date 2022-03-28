@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                                      // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
 #include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
@@ -31,8 +31,8 @@
 namespace kaleidoscope {
 namespace plugin {
 class Heatmap : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                public LEDModeInterface,
+                public AccessTransientLEDMode {
  public:
   Heatmap(void) {}
 
@@ -48,7 +48,6 @@ class Heatmap : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -60,11 +59,9 @@ class Heatmap : public Plugin,
     EventHandlerResult beforeEachCycle();
 
    protected:
-
     void update() final;
 
    private:
-
     uint16_t heatmap_[Runtime.device().numKeys()];
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;

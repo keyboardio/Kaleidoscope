@@ -17,6 +17,6 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LED-AlphaSquare.h"  // IWYU pragma: export
-#include "kaleidoscope/plugin/LED-AlphaSquare/Effect.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/LED-AlphaSquare.h"          // IWYU pragma: export
+#include "kaleidoscope/plugin/LED-AlphaSquare/Effect.h"   // IWYU pragma: export
 #include "kaleidoscope/plugin/LED-AlphaSquare/Symbols.h"  // IWYU pragma: export

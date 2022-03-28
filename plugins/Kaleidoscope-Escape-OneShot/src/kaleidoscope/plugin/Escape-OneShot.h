@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for OS_CANCEL
-#include <stdint.h>                             // for uint16_t
+#include <Kaleidoscope-Ranges.h>  // for OS_CANCEL
+#include <stdint.h>               // for uint16_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -27,8 +27,8 @@
 
 // DEPRECATED: `OneShotCancelKey` doesn't match our normal naming, and should
 // eventually be removed.
-constexpr Key OneShotCancelKey {kaleidoscope::ranges::OS_CANCEL};
-constexpr Key Key_OneShotCancel {kaleidoscope::ranges::OS_CANCEL};
+constexpr Key OneShotCancelKey{kaleidoscope::ranges::OS_CANCEL};
+constexpr Key Key_OneShotCancel{kaleidoscope::ranges::OS_CANCEL};
 
 namespace kaleidoscope {
 namespace plugin {

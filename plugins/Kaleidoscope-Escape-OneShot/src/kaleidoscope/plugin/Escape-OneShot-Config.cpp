@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/Escape-OneShot.h"  // IWYU pragma: associated
 
-#include <Arduino.h>                            // for PSTR, F, __FlashStrin...
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint16_t
+#include <Arduino.h>                       // for PSTR, F, __FlashStrin...
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
@@ -71,7 +71,7 @@ EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::EscapeOneShotConfig EscapeOneShotConfig;

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                        // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #ifndef CRGB
 
@@ -25,7 +25,8 @@ struct cRGB {
   uint8_t r, g, b;
 };
 
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 
 #endif
 

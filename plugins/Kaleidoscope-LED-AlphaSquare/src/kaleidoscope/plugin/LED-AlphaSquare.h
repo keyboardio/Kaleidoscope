@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                 // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"   // for KeyAddr
 #include "kaleidoscope/key_defs.h"  // for Key
@@ -42,7 +42,6 @@ namespace kaleidoscope {
 namespace plugin {
 class AlphaSquare : public kaleidoscope::Plugin {
  public:
-
   AlphaSquare(void) {}
 
   static void display(Key key, KeyAddr key_addr, cRGB key_color);

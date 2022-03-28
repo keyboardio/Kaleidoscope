@@ -26,7 +26,7 @@ void SimHarness::RunCycle() {
   if (CycleTime() > 1) {
     // We incrememnt the time before running the loop so that
     // millisAtCycleStart ends up where we want it to
-    for (size_t i = 1; i < CycleTime() ; i++) {
+    for (size_t i = 1; i < CycleTime(); i++) {
       // The current millis implementation gets us 1 milli per call to millis.
       millis();
     }

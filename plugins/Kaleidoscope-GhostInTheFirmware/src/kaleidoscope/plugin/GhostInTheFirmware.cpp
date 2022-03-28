@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/GhostInTheFirmware.h"
 
-#include <stdint.h>                             // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -29,7 +29,7 @@
 namespace kaleidoscope {
 namespace plugin {
 const GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghost_keys;
-bool GhostInTheFirmware::is_active_ = false;
+bool GhostInTheFirmware::is_active_       = false;
 uint16_t GhostInTheFirmware::current_pos_ = 0;
 uint16_t GhostInTheFirmware::start_time_;
 
@@ -53,9 +53,9 @@ EventHandlerResult GhostInTheFirmware::afterEachCycle() {
     // value (i.e. KeyAddr::none()). If we read this sentinel value, reset and
     // deactivate.
     if (!ghost_key.addr.isValid()) {
-      current_pos_ = 0;
+      current_pos_    = 0;
       ghost_key.delay = 0;
-      is_active_ = false;
+      is_active_      = false;
       return EventHandlerResult::OK;
     }
     // If we're not at the end of the sequence, send the first keypress event,

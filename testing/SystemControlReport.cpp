@@ -24,9 +24,9 @@
 namespace kaleidoscope {
 namespace testing {
 
-SystemControlReport::SystemControlReport(const void* data) {
-  const ReportData& report_data =
-    *static_cast<const ReportData*>(data);
+SystemControlReport::SystemControlReport(const void *data) {
+  const ReportData &report_data =
+    *static_cast<const ReportData *>(data);
   memcpy(&report_data_, &report_data, sizeof(report_data_));
   if (report_data_.key != 0) {
     this->push_back(report_data_.key);

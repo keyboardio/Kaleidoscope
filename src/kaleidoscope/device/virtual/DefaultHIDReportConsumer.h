@@ -24,11 +24,9 @@ namespace kaleidoscope {
 
 class DefaultHIDReportConsumer {
  public:
-
-  static void processHIDReport(uint8_t id, const void *data,
-                               int len, int result);
+  static void processHIDReport(uint8_t id, const void *data, int len, int result);
 };
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
-#endif // ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifdef KALEIDOSCOPE_VIRTUAL_BUILD

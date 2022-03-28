@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint32_t, uint16_t
+#include <stdint.h>  // for uint32_t, uint16_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -27,7 +27,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-class IdleLEDs: public kaleidoscope::Plugin {
+class IdleLEDs : public kaleidoscope::Plugin {
  public:
   IdleLEDs(void) {}
 
@@ -51,6 +51,7 @@ class PersistentIdleLEDs : public IdleLEDs {
   EventHandlerResult onFocusEvent(const char *command);
 
   static void setIdleTimeoutSeconds(uint32_t new_limit);
+
  private:
   static uint16_t settings_base_;
 };

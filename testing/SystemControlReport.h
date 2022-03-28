@@ -31,7 +31,7 @@ class SystemControlReport : public std::vector<uint8_t> {
 
   static constexpr uint8_t kHidReportType = HID_REPORTID_SYSTEMCONTROL;
 
-  SystemControlReport(const void* data);
+  SystemControlReport(const void *data);
 
   uint32_t Timestamp() const;
   uint8_t ActiveKeycode() const;

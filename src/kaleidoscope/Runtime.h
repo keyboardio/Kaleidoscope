@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>                             // for uint32_t
+#include <stdint.h>  // for uint32_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -125,7 +125,7 @@ class Runtime_ {
    *          of x ms, the value of ttl must not be larger than
    *          std::numeric_limits<uint16_t>::max() - x.
    */
-  template <typename _Timestamp, typename _Timeout>
+  template<typename _Timestamp, typename _Timeout>
   static bool hasTimeExpired(_Timestamp start_time, _Timeout ttl) {
     _Timestamp current_time = millis_at_cycle_start_;
     _Timestamp elapsed_time = current_time - start_time;
@@ -216,4 +216,4 @@ class Runtime_ {
 
 extern kaleidoscope::Runtime_ Runtime;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

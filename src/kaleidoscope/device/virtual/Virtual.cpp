@@ -20,26 +20,26 @@
 #include "kaleidoscope/device/virtual/Virtual.h"
 
 // From system:
-#include <stdint.h>                               // for uint8_t, uint16_t
-#include <stdlib.h>                               // for exit, size_t
+#include <stdint.h>  // for uint8_t, uint16_t
+#include <stdlib.h>  // for exit, size_t
 
 // From Arduino:
-#include <EEPROM.h>                               // for EEPROMClass, EERef
-#include <virtual_io.h>                           // for getLineOfInput, isI...
+#include <EEPROM.h>      // for EEPROMClass, EERef
+#include <virtual_io.h>  // for getLineOfInput, isI...
 
 // From KeyboardioHID:
-#include <HIDReportObserver.h>                    // for HIDReportObserver
+#include <HIDReportObserver.h>  // for HIDReportObserver
 
 // From Kaleidoscope:
-#include "kaleidoscope/KeyAddr.h"                 // for MatrixAddr, MatrixA...
+#include "kaleidoscope/KeyAddr.h"                                  // for MatrixAddr, MatrixA...
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"  // for DefaultHIDReportCon...
-#include "kaleidoscope/device/virtual/Logging.h"  // for log_error, logging
-#include "kaleidoscope/key_defs.h"                // for Key_NoKey
-#include "kaleidoscope/keyswitch_state.h"         // for IS_PRESSED, WAS_PRE...
+#include "kaleidoscope/device/virtual/Logging.h"                   // for log_error, logging
+#include "kaleidoscope/key_defs.h"                                 // for Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"                          // for IS_PRESSED, WAS_PRE...
 
 // These must come after other headers:
-#include <sstream>                                // for operator<<, string
-#include <string>                                 // for operator==, char_tr...
+#include <sstream>  // for operator<<, string
+#include <string>   // for operator==, char_tr...
 
 // FIXME: This relates to virtual/cores/arduino/EEPROM.h.
 //        EEPROM static data must be defined here as only
@@ -60,16 +60,16 @@ namespace kaleidoscope {
 namespace device {
 namespace virt {
 
-using namespace kaleidoscope::logging; // NOLINT(build/namespaces)
+using namespace kaleidoscope::logging;  // NOLINT(build/namespaces)
 
 //##############################################################################
 // VirtualKeyScanner
 //##############################################################################
 
 VirtualKeyScanner::VirtualKeyScanner()
-  :  n_pressed_switches_{0},
-     n_previously_pressed_switches_{0},
-     read_matrix_enabled_{true} {
+  : n_pressed_switches_{0},
+    n_previously_pressed_switches_{0},
+    read_matrix_enabled_{true} {
 }
 
 void VirtualKeyScanner::setup() {
@@ -77,7 +77,7 @@ void VirtualKeyScanner::setup() {
   HIDReportObserver::resetHook(&DefaultHIDReportConsumer::processHIDReport);
 
   for (auto key_addr : KeyAddr::all()) {
-    keystates_[key_addr.toInt()] = KeyState::NotPressed;
+    keystates_[key_addr.toInt()]      = KeyState::NotPressed;
     keystates_prev_[key_addr.toInt()] = KeyState::NotPressed;
   }
 }
@@ -174,9 +174,9 @@ void VirtualKeyScanner::readMatrix() {
     std::getline(sline, token, ' ');
 
     if (token == "") {
-      break;   // end of line
+      break;  // end of line
     } else if (token == "#") {
-      break;   // skip the rest of the line
+      break;  // skip the rest of the line
     } else if ((token == "?" || token == "help") && isInteractive()) {
       printHelp();
     } else if (token == "Q") {
@@ -202,9 +202,8 @@ void VirtualKeyScanner::readMatrix() {
           continue;
         } else {
           key_addr = KeyAddr(
-                       (uint8_t)std::stoi(token.substr(1, commapos - 1)),
-                       (uint8_t)std::stoi(token.substr(commapos + 1, token.length() - commapos - 1))
-                     );
+            (uint8_t)std::stoi(token.substr(1, commapos - 1)),
+            (uint8_t)std::stoi(token.substr(commapos + 1, token.length() - commapos - 1)));
 
           if (!key_addr.isValid()) {
             log_error("Bad coordinates: %s\n", token.c_str());
@@ -214,24 +213,23 @@ void VirtualKeyScanner::readMatrix() {
       } else {
         // TODO(anyone): Is there a device independent
         //       way to determine KeyAddr from key names?
-//         key_addr = getRCfromPhysicalKey(token);
-//
-//         if (!key_addr.isValid()) {
-//           log_error("Unrecognized command: %s\n", token.c_str());
-//           continue;
-//         }
+        //         key_addr = getRCfromPhysicalKey(token);
+        //
+        //         if (!key_addr.isValid()) {
+        //           log_error("Unrecognized command: %s\n", token.c_str());
+        //           continue;
+        //         }
       }
 
       keystates_[key_addr.toInt()] =
-        (mode == M_DOWN) ? KeyState::Pressed :
-        (mode == M_UP) ? KeyState::NotPressed :
-        KeyState::Tap;
+        (mode == M_DOWN) ? KeyState::Pressed : (mode == M_UP) ? KeyState::NotPressed
+                                                              : KeyState::Tap;
     }
   }
 }
 void VirtualKeyScanner::actOnMatrixScan() {
 
-  n_pressed_switches_ = 0;
+  n_pressed_switches_            = 0;
   n_previously_pressed_switches_ = 0;
 
   for (auto key_addr : KeyAddr::all()) {
@@ -273,7 +271,7 @@ void VirtualKeyScanner::actOnMatrixScan() {
     if (keystates_[key_addr.toInt()] == KeyState::Tap) {
       key_state = WAS_PRESSED & ~IS_PRESSED;
       handleKeyswitchEvent(Key_NoKey, key_addr, key_state);
-      keystates_[key_addr.toInt()] = KeyState::NotPressed;
+      keystates_[key_addr.toInt()]      = KeyState::NotPressed;
       keystates_prev_[key_addr.toInt()] = KeyState::NotPressed;
     }
   }
@@ -285,7 +283,6 @@ uint8_t VirtualKeyScanner::pressedKeyswitchCount() const {
 bool VirtualKeyScanner::isKeyswitchPressed(KeyAddr key_addr) const {
   if (keystates_[key_addr.toInt()] == KeyState::NotPressed) {
     return false;
-
   }
   return true;
 }
@@ -296,7 +293,6 @@ uint8_t VirtualKeyScanner::previousPressedKeyswitchCount() const {
 bool VirtualKeyScanner::wasKeyswitchPressed(KeyAddr key_addr) const {
   if (keystates_prev_[key_addr.toInt()] == KeyState::NotPressed) {
     return false;
-
   }
 
   return true;
@@ -335,7 +331,7 @@ void VirtualLEDDriver::syncLeds() {
 
   for (int i = 0; i < led_count; i++) {
     const cRGB state = led_states_[i];
-    ss << (unsigned int) state.r << "." << (unsigned int) state.g << "." << (unsigned int) state.b << " ";
+    ss << (unsigned int)state.r << "." << (unsigned int)state.g << "." << (unsigned int)state.b << " ";
   }
 
   ss << std::endl;
@@ -358,11 +354,10 @@ cRGB VirtualLEDDriver::getCrgbAt(uint8_t i) const {
   return led_states_[i];
 }
 
-} // namespace virt
-} // namespace device
+}  // namespace virt
+}  // namespace device
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope
 
 
-
-#endif // ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifdef KALEIDOSCOPE_VIRTUAL_BUILD

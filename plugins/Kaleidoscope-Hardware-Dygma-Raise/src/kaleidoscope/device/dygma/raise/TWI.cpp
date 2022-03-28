@@ -32,7 +32,7 @@ uint8_t TWI::writeTo(uint8_t *data, size_t length) {
   Wire.beginTransmission(addr_);
 
   // calc cksum
-  uint16_t crc16 = 0xffff;
+  uint16_t crc16  = 0xffff;
   uint8_t *buffer = data;
   for (uint8_t i = 0; i < length; i++) {
     crc16 = _crc_ccitt_update(crc16, *buffer);
@@ -50,12 +50,12 @@ uint8_t TWI::writeTo(uint8_t *data, size_t length) {
   return 0;
 }
 
-uint8_t TWI::readFrom(uint8_t* data, size_t length) {
+uint8_t TWI::readFrom(uint8_t *data, size_t length) {
   uint8_t counter = 0;
   uint32_t timeout;
   uint8_t *buffer = data;
 
-  if (!Wire.requestFrom(addr_, length + 2, true)) { // + 2 for the cksum
+  if (!Wire.requestFrom(addr_, length + 2, true)) {  // + 2 for the cksum
     // in case slave is not responding - return 0 (0 length of received data).
     return 0;
   }
@@ -65,7 +65,7 @@ uint8_t TWI::readFrom(uint8_t* data, size_t length) {
     counter++;
   }
 
-  uint16_t crc16 = 0xffff;
+  uint16_t crc16    = 0xffff;
   uint16_t rx_cksum = (Wire.read() << 8) + Wire.read();
   for (uint8_t i = 0; i < length; i++) {
     crc16 = _crc_ccitt_update(crc16, *buffer);

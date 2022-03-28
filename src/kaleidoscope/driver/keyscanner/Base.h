@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                   // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/MatrixAddr.h"  // for MatrixAddr
 #include "kaleidoscope/key_defs.h"    // for Key
@@ -27,12 +27,12 @@ namespace driver {
 namespace keyscanner {
 
 struct BaseProps {
-  static constexpr uint8_t matrix_rows = 0;
+  static constexpr uint8_t matrix_rows    = 0;
   static constexpr uint8_t matrix_columns = 0;
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 };
 
-template <typename _KeyScannerProps>
+template<typename _KeyScannerProps>
 class Base {
  public:
   Base() {}
@@ -59,7 +59,6 @@ class Base {
   bool wasKeyswitchPressed(KeyAddr key_addr) {
     return false;
   }
-
 };
 
 }  // namespace keyscanner

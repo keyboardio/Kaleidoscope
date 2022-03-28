@@ -28,8 +28,8 @@ namespace plugin {
 
 TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   base_color_ = base_color;
-  mod_color_ = mod_color;
-  esc_color_ = esc_color;
+  mod_color_  = mod_color;
+  esc_color_  = esc_color;
 }
 
 void TriColor::TransientLEDMode::update(void) {
@@ -45,12 +45,12 @@ void TriColor::TransientLEDMode::update(void) {
     cRGB color = parent_->mod_color_;
 
     switch (k.getKeyCode()) {
-    case Key_A.getKeyCode() ... Key_0.getKeyCode():
+    case Key_A.getKeyCode()... Key_0.getKeyCode():
     case Key_Spacebar.getKeyCode():
-    case Key_KeypadDivide.getKeyCode() ... Key_KeypadSubtract.getKeyCode():
-    case Key_Keypad1.getKeyCode() ... Key_KeypadDot.getKeyCode():
-    case Key_F1.getKeyCode() ... Key_F4.getKeyCode():
-    case Key_F9.getKeyCode() ... Key_F12.getKeyCode():
+    case Key_KeypadDivide.getKeyCode()... Key_KeypadSubtract.getKeyCode():
+    case Key_Keypad1.getKeyCode()... Key_KeypadDot.getKeyCode():
+    case Key_F1.getKeyCode()... Key_F4.getKeyCode():
+    case Key_F9.getKeyCode()... Key_F12.getKeyCode():
       color = parent_->base_color_;
       break;
     case Key_Escape.getKeyCode():

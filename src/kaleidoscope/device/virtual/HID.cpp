@@ -34,7 +34,7 @@ HID_ &HID() {
 }
 
 int HID_::getInterface(uint8_t *interfaceCount) {
-  *interfaceCount += 1; // uses 1
+  *interfaceCount += 1;  // uses 1
   return 0;
 }
 
@@ -67,12 +67,15 @@ bool HID_::setup(USBSetup &setup) {
   return true;
 }
 
-HID_::HID_(void) : PluggableUSBModule(1, 1, epType),
-  rootNode(NULL), descriptorSize(0),
-  protocol(HID_REPORT_PROTOCOL), idle(1) {
+HID_::HID_(void)
+  : PluggableUSBModule(1, 1, epType),
+    rootNode(NULL),
+    descriptorSize(0),
+    protocol(HID_REPORT_PROTOCOL),
+    idle(1) {
   setReportData.reportId = 0;
-  setReportData.leds = 0;
-  epType[0] = EP_TYPE_INTERRUPT_IN;
+  setReportData.leds     = 0;
+  epType[0]              = EP_TYPE_INTERRUPT_IN;
   //PluggableUSB().plug(this);
 }
 
@@ -82,4 +85,4 @@ int HID_::begin(void) {
 
 #endif /* if defined(USBCON) */
 
-#endif // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // #ifdef KALEIDOSCOPE_VIRTUAL_BUILD

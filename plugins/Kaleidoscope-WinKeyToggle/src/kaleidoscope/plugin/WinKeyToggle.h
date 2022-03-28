@@ -23,7 +23,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class WinKeyToggle: public kaleidoscope::Plugin {
+class WinKeyToggle : public kaleidoscope::Plugin {
  public:
   WinKeyToggle() {}
 
@@ -31,6 +31,7 @@ class WinKeyToggle: public kaleidoscope::Plugin {
   void toggle() {
     enabled_ = !enabled_;
   }
+
  private:
   static bool enabled_;
 };

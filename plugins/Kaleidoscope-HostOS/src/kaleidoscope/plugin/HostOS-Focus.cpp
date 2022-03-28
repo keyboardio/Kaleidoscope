@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/HostOS-Focus.h"
 
-#include <Arduino.h>                            // for PSTR, strcmp_P
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint8_t
+#include <Arduino.h>                   // for PSTR, strcmp_P
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin/HostOS.h"         // for HostOS, Type
@@ -40,7 +40,7 @@ EventHandlerResult FocusHostOSCommand::onFocusEvent(const char *command) {
   } else {
     uint8_t new_os;
     ::Focus.read(new_os);
-    ::HostOS.os((hostos::Type) new_os);
+    ::HostOS.os((hostos::Type)new_os);
   }
 
   return EventHandlerResult::EVENT_CONSUMED;

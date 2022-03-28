@@ -24,8 +24,8 @@ namespace bitfields {
 namespace internal {
 
 bool _BaseBitfield::isBitSetP(const void *bit_field, uint8_t raw_pos) {
-  uint8_t byte_id = raw_pos >> 3;
-  uint8_t bit_pos = raw_pos & 0x7;
+  uint8_t byte_id      = raw_pos >> 3;
+  uint8_t bit_pos      = raw_pos & 0x7;
   const uint8_t *bytes = reinterpret_cast<const uint8_t *>(bit_field);
   return bytes[byte_id] & (0x1 << bit_pos);
 }
@@ -33,7 +33,7 @@ bool _BaseBitfield::isBitSetP(const void *bit_field, uint8_t raw_pos) {
 void _BaseBitfield::setBitP(void *bit_field, uint8_t raw_pos, uint8_t val) {
   uint8_t byte_id = raw_pos >> 3;
   uint8_t bit_pos = raw_pos & 0x7;
-  uint8_t *bytes = reinterpret_cast<uint8_t *>(bit_field);
+  uint8_t *bytes  = reinterpret_cast<uint8_t *>(bit_field);
   if (val) {
     bytes[byte_id] |= (0x1 << bit_pos);
   } else {
@@ -42,13 +42,13 @@ void _BaseBitfield::setBitP(void *bit_field, uint8_t raw_pos, uint8_t val) {
 }
 
 bool _BaseBitfield::isBitSetPROGMEM_P(const void *bit_field, uint8_t raw_pos) {
-  uint8_t byte_id = raw_pos >> 3;
-  uint8_t bit_pos = raw_pos & 0x7;
+  uint8_t byte_id      = raw_pos >> 3;
+  uint8_t bit_pos      = raw_pos & 0x7;
   const uint8_t *bytes = reinterpret_cast<const uint8_t *>(bit_field);
-  uint8_t the_byte = pgm_read_byte(&(bytes[byte_id]));
+  uint8_t the_byte     = pgm_read_byte(&(bytes[byte_id]));
   return the_byte & (0x1 << bit_pos);
 }
 
-} // namespace internal
-} // namespace bitfields
-} // namespace kaleidoscope
+}  // namespace internal
+}  // namespace bitfields
+}  // namespace kaleidoscope

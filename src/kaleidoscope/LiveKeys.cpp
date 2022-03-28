@@ -20,4 +20,4 @@ namespace kaleidoscope {
 
 LiveKeys live_keys;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

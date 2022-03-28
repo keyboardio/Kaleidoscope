@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/LED-Palette-Theme.h"
 
-#include <Arduino.h>                            // for strcmp_P, PSTR
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>                       // for strcmp_P, PSTR
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -58,7 +58,7 @@ void LEDPaletteTheme::refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_
     return;
 
   uint16_t map_base = theme_base + (theme * Runtime.device().led_count / 2);
-  uint8_t pos = Runtime.device().getLedIndex(key_addr);
+  uint8_t pos       = Runtime.device().getLedIndex(key_addr);
 
   cRGB color = lookupColorAtPosition(map_base, pos);
   ::LEDControl.setCrgbAt(key_addr, color);
@@ -100,10 +100,10 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
   indexes = Runtime.storage().read(map_base + position / 2);
   if (position % 2) {
     uint8_t other = indexes >> 4;
-    indexes = (other << 4) + color_index;
+    indexes       = (other << 4) + color_index;
   } else {
     uint8_t other = indexes & ~0xf0;
-    indexes = (color_index << 4) + other;
+    indexes       = (color_index << 4) + other;
   }
   Runtime.storage().update(map_base + position / 2, indexes);
   Runtime.storage().commit();

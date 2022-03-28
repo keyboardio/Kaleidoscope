@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/Turbo.h"
 
-#include <Arduino.h>                                      // for F, __FlashS...
-#include <Kaleidoscope-FocusSerial.h>                     // for Focus, Focu...
-#include <stdint.h>                                       // for uint16_t
+#include <Arduino.h>                   // for F, __FlashS...
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, Focu...
+#include <stdint.h>                    // for uint16_t
 
 #include "kaleidoscope/KeyAddr.h"                         // for MatrixAddr
 #include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<...
@@ -36,14 +36,14 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t Turbo::interval_ = 10;
+uint16_t Turbo::interval_       = 10;
 uint16_t Turbo::flash_interval_ = 69;
-bool Turbo::sticky_ = false;
-bool Turbo::flash_ = true;
-cRGB Turbo::active_color_ = CRGB(160, 0, 0);
+bool Turbo::sticky_             = false;
+bool Turbo::flash_              = true;
+cRGB Turbo::active_color_       = CRGB(160, 0, 0);
 
-bool Turbo::active_ = false;
-uint32_t Turbo::start_time_ = 0;
+bool Turbo::active_               = false;
+uint32_t Turbo::start_time_       = 0;
 uint32_t Turbo::flash_start_time_ = 0;
 
 uint16_t Turbo::interval() {
@@ -91,7 +91,7 @@ EventHandlerResult Turbo::onKeyEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
 
   if (keyToggledOn(event.state)) {
-    active_ = true;
+    active_     = true;
     start_time_ = Runtime.millisAtCycleStart() - interval_;
   } else {
     active_ = false;
@@ -138,13 +138,13 @@ EventHandlerResult Turbo::afterEachCycle() {
 EventHandlerResult Turbo::beforeSyncingLeds() {
   if (flash_ && active_) {
     static bool leds_on = false;
-    cRGB color = CRGB(0, 0, 0);
+    cRGB color          = CRGB(0, 0, 0);
     if (leds_on) {
       color = active_color_;
     }
     if (Runtime.hasTimeExpired(flash_start_time_, flash_interval_)) {
       flash_start_time_ = Runtime.millisAtCycleStart();
-      leds_on = !leds_on;
+      leds_on           = !leds_on;
     }
     for (KeyAddr key_addr : KeyAddr::all()) {
       Key key = live_keys[key_addr];

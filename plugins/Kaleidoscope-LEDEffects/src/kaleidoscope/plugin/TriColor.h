@@ -25,16 +25,16 @@
 namespace kaleidoscope {
 namespace plugin {
 class TriColor : public Plugin,
-  public LEDModeInterface {
+                 public LEDModeInterface {
  public:
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);
-  TriColor(cRGB base_color, cRGB mod_color) : TriColor(base_color, mod_color, mod_color) {}
+  TriColor(cRGB base_color, cRGB mod_color)
+    : TriColor(base_color, mod_color, mod_color) {}
 
   // This class' instance has dynamic lifetime
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -43,11 +43,9 @@ class TriColor : public Plugin,
       : parent_(parent) {}
 
    protected:
-
     void update(void) final;
 
    private:
-
     const TriColor *parent_;
   };
 

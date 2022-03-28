@@ -71,7 +71,6 @@ TEST_F(SimulatorTiming, LongTimeElapses) {
 TEST_F(SimulatorTiming, 3msPerCycleTestRunCycles) {
 
 
-
   sim_.SetCycleTime(3);
   // Record time at start
   uint32_t start = Kaleidoscope.millisAtCycleStart();
@@ -79,7 +78,7 @@ TEST_F(SimulatorTiming, 3msPerCycleTestRunCycles) {
   sim_.RunCycles(1);
   // Record time at end
   uint32_t end = Kaleidoscope.millisAtCycleStart();
-  ASSERT_EQ((end - start), 3) << "Start was " << start << " and end was " <<  end;
+  ASSERT_EQ((end - start), 3) << "Start was " << start << " and end was " << end;
 
 
   // Record time at start
@@ -88,9 +87,7 @@ TEST_F(SimulatorTiming, 3msPerCycleTestRunCycles) {
   sim_.RunCycles(10);
   // Record time at end
   end = Kaleidoscope.millisAtCycleStart();
-  ASSERT_EQ((end - start), 30) << "Start was " << start << " and end was " <<  end;
-
-
+  ASSERT_EQ((end - start), 30) << "Start was " << start << " and end was " << end;
 }
 
 
@@ -103,7 +100,6 @@ TEST_F(SimulatorTiming, 4msPerCycleTestRunForMillis) {
   // Record time at end
   uint32_t end = Kaleidoscope.millisAtCycleStart();
   ASSERT_EQ((end - start), 40);
-
 }
 
 }  // namespace

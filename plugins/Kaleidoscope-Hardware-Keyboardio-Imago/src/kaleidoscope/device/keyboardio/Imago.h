@@ -27,7 +27,8 @@ struct cRGB {
   uint8_t r;
 };
 
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"
@@ -40,8 +41,8 @@ namespace keyboardio {
 
 using kaleidoscope::driver::led::no_led;
 
-struct ImagoLEDDriverProps: public kaleidoscope::driver::led::BaseProps {
-  static constexpr uint8_t led_count = 78;
+struct ImagoLEDDriverProps : public kaleidoscope::driver::led::BaseProps {
+  static constexpr uint8_t led_count                       = 78;
   static constexpr uint8_t key_led_map[/* 5*16 */] PROGMEM = {
     // clang-format off
     104,   0,     1,     2,     3,    4,    5,     6,    7,     8,    9,   10,   11,   115,   12,   116,
@@ -62,14 +63,14 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static cRGB getCrgbAt(uint8_t i);
   static void setBrightness(uint8_t brightness) {
     brightness_adjustment_ = 255 - brightness;
-    isLEDChanged = true;
+    isLEDChanged           = true;
   }
   static uint8_t getBrightness() {
     return 255 - brightness_adjustment_;
   }
 
-  static cRGB led_data[117]; // 117 is the number of LEDs the chip drives
-  // until we clean stuff up a bit, it's easiest to just have the whole struct around
+  static cRGB led_data[117];  // 117 is the number of LEDs the chip drives
+                              // until we clean stuff up a bit, it's easiest to just have the whole struct around
 
  private:
   static uint8_t brightness_adjustment_;
@@ -81,19 +82,19 @@ class ImagoLEDDriver : public kaleidoscope::driver::led::Base<ImagoLEDDriverProp
   static void setAllPwmTo(uint8_t);
   static void twiSend(uint8_t addr, uint8_t Reg_Add, uint8_t Reg_Dat);
 };
-#else // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ImagoLEDDriver;
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   struct KeyScannerProps : public kaleidoscope::driver::keyscanner::ATmegaProps {
-    static constexpr uint8_t matrix_rows = 5;
+    static constexpr uint8_t matrix_rows    = 5;
     static constexpr uint8_t matrix_columns = 16;
     typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-    static constexpr uint8_t matrix_row_pins[matrix_rows] = {PIN_F6, PIN_F5, PIN_F4, PIN_F1, PIN_F0};
-    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_B2, PIN_B7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7, PIN_D6,  PIN_D4, PIN_D5, PIN_D3, PIN_D2, PIN_E6, PIN_F7};
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+    static constexpr uint8_t matrix_row_pins[matrix_rows]    = {PIN_F6, PIN_F5, PIN_F4, PIN_F1, PIN_F0};
+    static constexpr uint8_t matrix_col_pins[matrix_columns] = {PIN_B2, PIN_B7, PIN_E2, PIN_C7, PIN_C6, PIN_B6, PIN_B5, PIN_B4, PIN_D7, PIN_D6, PIN_D4, PIN_D5, PIN_D3, PIN_D2, PIN_E6, PIN_F7};
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
   };
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef ImagoLEDDriverProps LEDDriverProps;
@@ -103,11 +104,11 @@ struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-class Imago: public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
+class Imago : public kaleidoscope::device::ATmega32U4Keyboard<ImagoProps> {
  public:
   void setup();
 };
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 // clang-format off
 #define PER_KEY_DATA(dflt,                                              \

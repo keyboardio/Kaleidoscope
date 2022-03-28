@@ -23,7 +23,8 @@
 
 #include "kaleidoscope/device/dygma/raise/RaiseSide.h"
 
-#define CRGB(r,g,b) (cRGB){b, g, r}
+#define CRGB(r, g, b) \
+  (cRGB) { b, g, r }
 
 #include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/bootloader/samd/Bossac.h"
@@ -67,6 +68,7 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
   static uint8_t getBrightness();
 
   static void updateNeuronLED();
+
  private:
   static bool isLEDChangedNeuron;
   static uint8_t isLEDChangedLeft[LED_BANKS];
@@ -114,11 +116,11 @@ class RaiseLEDDriver : public kaleidoscope::driver::led::Base<RaiseLEDDriverProp
 };
 
 struct RaiseKeyScannerProps : public kaleidoscope::driver::keyscanner::BaseProps {
-  static constexpr uint8_t matrix_rows = 5;
+  static constexpr uint8_t matrix_rows    = 5;
   static constexpr uint8_t matrix_columns = 16;
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
 
-  static constexpr uint8_t left_columns = 8;
+  static constexpr uint8_t left_columns  = 8;
   static constexpr uint8_t right_columns = matrix_columns - left_columns;
 };
 
@@ -126,6 +128,7 @@ class RaiseKeyScanner : public kaleidoscope::driver::keyscanner::Base<RaiseKeySc
  private:
   typedef RaiseKeyScanner ThisType;
   typedef RaiseKeyScannerProps Props_;
+
  public:
   static void setup();
   static void scanMatrix();
@@ -161,7 +164,7 @@ struct RaiseSideFlasherProps : public kaleidoscope::util::flasher::BaseProps {};
 struct RaiseProps : kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
   typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
-  typedef RaiseLEDDriverProps  LEDDriverProps;
+  typedef RaiseLEDDriverProps LEDDriverProps;
   typedef RaiseLEDDriver LEDDriver;
   typedef RaiseKeyScannerProps KeyScannerProps;
   typedef RaiseKeyScanner KeyScanner;
@@ -174,9 +177,10 @@ struct RaiseProps : kaleidoscope::device::BaseProps {
   static constexpr const char *short_name = "raise";
 };
 
-class Raise: public kaleidoscope::device::Base<RaiseProps> {
+class Raise : public kaleidoscope::device::Base<RaiseProps> {
  private:
   static RaiseProps::SideFlasher SideFlasher;
+
  public:
   static void setup();
 
@@ -208,7 +212,7 @@ class Raise: public kaleidoscope::device::Base<RaiseProps> {
     void prepareForFlash();
 
     // Side bootloader addresses
-    static constexpr uint8_t left_boot_address = 0x50;
+    static constexpr uint8_t left_boot_address  = 0x50;
     static constexpr uint8_t right_boot_address = 0x51;
   } side;
 

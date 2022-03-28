@@ -45,7 +45,7 @@ namespace kaleidoscope {
 class LiveKeys {
  public:
   // For array-style subscript addressing of entries in a read-only context:
-  const Key& operator[](KeyAddr key_addr) const {
+  const Key &operator[](KeyAddr key_addr) const {
     if (key_addr.isValid()) {
       return key_map_[key_addr];
     }
@@ -55,7 +55,7 @@ class LiveKeys {
 
   // For array-style subscript addressing of entries by reference. The client
   // code can alter values in the array this way.
-  Key& operator[](KeyAddr key_addr) {
+  Key &operator[](KeyAddr key_addr) {
     if (key_addr.isValid()) {
       return key_map_[key_addr];
     }
@@ -92,7 +92,7 @@ class LiveKeys {
   /// Returns an iterator for use in range-based for loops:
   ///
   ///   for (Key key : live_keys.all()) {...}
-  KeyMap& all() {
+  KeyMap &all() {
     return key_map_;
   }
 
@@ -103,4 +103,4 @@ class LiveKeys {
 
 extern LiveKeys live_keys;
 
-} // namespace kaleidoscope
+}  // namespace kaleidoscope

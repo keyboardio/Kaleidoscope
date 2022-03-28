@@ -37,7 +37,7 @@ void testIndexedAccess() {
 template<typename MA__>
 std::string typenameString() {
   std::string nameString;
-  char * name = 0;
+  char *name = 0;
   int status;
   name = abi::__cxa_demangle(typeid(MA__).name(), 0, 0, &status);
   if (name != 0) {
@@ -54,7 +54,7 @@ void testRelation() {
   std::cout << "MA1:" << typenameString<MA1__>() << std::endl;
   logType<MA1__>();
 
-  std::cout << "MA2:" << typenameString<MA2__>()  << std::endl;
+  std::cout << "MA2:" << typenameString<MA2__>() << std::endl;
   logType<MA2__>();
 
   MA1__ mAddr1(3, 5);

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for TT_FIRST, TT_LAST
+#include <Kaleidoscope-Ranges.h>  // for TT_FIRST, TT_LAST
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -25,7 +25,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#define TOPSY(k) ::kaleidoscope::plugin::TopsyTurvyKey(Key_ ## k)
+#define TOPSY(k) ::kaleidoscope::plugin::TopsyTurvyKey(Key_##k)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -34,7 +34,7 @@ constexpr Key TopsyTurvyKey(Key key) {
   return Key(kaleidoscope::ranges::TT_FIRST + key.getKeyCode());
 }
 
-class TopsyTurvy: public kaleidoscope::Plugin {
+class TopsyTurvy : public kaleidoscope::Plugin {
  public:
   TopsyTurvy(void) {}
 

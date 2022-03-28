@@ -18,8 +18,7 @@
 
 #include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
 
-cRGB
-breath_compute(uint8_t hue, uint8_t saturation, uint8_t phase_offset) {
+cRGB breath_compute(uint8_t hue, uint8_t saturation, uint8_t phase_offset) {
 
   using kaleidoscope::Runtime;
 
@@ -46,8 +45,8 @@ breath_compute(uint8_t hue, uint8_t saturation, uint8_t phase_offset) {
     i = 255 - i;
   }
 
-  i = i << 1;
-  uint8_t ii = (i * i) >> 8;
+  i           = i << 1;
+  uint8_t ii  = (i * i) >> 8;
   uint8_t iii = (ii * i) >> 8;
 
   i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
@@ -59,8 +58,7 @@ breath_compute(uint8_t hue, uint8_t saturation, uint8_t phase_offset) {
 
 
 // From http://web.mit.edu/storborg/Public/hsvtorgb.c - talk to Scott about licensing
-cRGB
-hsvToRgb(uint16_t h, uint16_t s, uint16_t v) {
+cRGB hsvToRgb(uint16_t h, uint16_t s, uint16_t v) {
   cRGB color;
 
   /* HSV to RGB conversion function with only integer

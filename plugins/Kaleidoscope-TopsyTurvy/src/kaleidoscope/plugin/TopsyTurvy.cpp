@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/TopsyTurvy.h"
 
-#include <Kaleidoscope-Ranges.h>                          // for TT_FIRST
+#include <Kaleidoscope-Ranges.h>  // for TT_FIRST
 
 #include "kaleidoscope/KeyAddr.h"                         // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
@@ -97,7 +97,7 @@ EventHandlerResult TopsyTurvy::beforeReportingState(const KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::TopsyTurvy TopsyTurvy;

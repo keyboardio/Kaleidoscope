@@ -31,11 +31,11 @@ namespace kaleidoscope {
 namespace util {
 namespace flasher {
 
-template <typename _Props>
-class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
+template<typename _Props>
+class KeyboardioI2CBootloader : kaleidoscope::util::flasher::Base<_Props> {
  public:
-  template <typename T>
-  static bool flash(uint8_t address, T& firmware) {
+  template<typename T>
+  static bool flash(uint8_t address, T &firmware) {
     if (!verify(address, firmware)) {
       return false;
     }
@@ -53,8 +53,8 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     return command(address, _Props::command.execute) == 0 ? true : false;
   }
 
-  template <typename T>
-  static bool verify(uint8_t address, T& firmware) {
+  template<typename T>
+  static bool verify(uint8_t address, T &firmware) {
     CRCAndVersion crc_and_version = get_version(address, firmware);
     return (crc_and_version.version != 0xff) && (crc_and_version.crc != 0xffff);
   }
@@ -75,15 +75,16 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
 
   static uint8_t read_crc16(uint8_t addr,
                             CRCAndVersion *crc_and_version,
-                            uint16_t offset, uint16_t length) {
+                            uint16_t offset,
+                            uint16_t length) {
     uint8_t result;
 
     Wire.beginTransmission(addr);
     Wire.write(_Props::command.get_version_and_crc);
-    Wire.write(offset & 0xff); // addr (lo)
-    Wire.write(offset >> 8); // addr (hi)
-    Wire.write(length & 0xff); // len (lo)
-    Wire.write(length >> 8); // len (hi)
+    Wire.write(offset & 0xff);  // addr (lo)
+    Wire.write(offset >> 8);    // addr (hi)
+    Wire.write(length & 0xff);  // len (lo)
+    Wire.write(length >> 8);    // len (hi)
     result = Wire.endTransmission(false);
     if (result != 0) {
       return result;
@@ -93,7 +94,7 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     delay(100);
 
     Wire.requestFrom(addr, 3);
-    uint8_t v = Wire.read();
+    uint8_t v                = Wire.read();
     crc_and_version->version = v;
     if (Wire.available() == 0) {
       return 0xFF;
@@ -110,8 +111,8 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     return result;
   }
 
-  template <typename T>
-  static CRCAndVersion get_version(uint8_t addr, T& firmware) {
+  template<typename T>
+  static CRCAndVersion get_version(uint8_t addr, T &firmware) {
     static CRCAndVersion crc_and_version = {0xff, 0xff};
 
     // This here to resolve some weird I2C startup bug.
@@ -119,15 +120,13 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     // address and the CRC request (0x06), the CRC parameters are never written
     // doing a read first seems to let things settle in a way that allows the
     // right to respond correctly
-    Wire.requestFrom(addr, (uint8_t) 3);
+    Wire.requestFrom(addr, (uint8_t)3);
     while (Wire.available()) {
       // throw away the info, as cksum calculation request has yet to be issued.
       Wire.read();
     }
 
-    int result = read_crc16(addr, &crc_and_version,
-                            firmware.offsets[0] + 4,
-                            firmware.length - 4);
+    int result = read_crc16(addr, &crc_and_version, firmware.offsets[0] + 4, firmware.length - 4);
     return crc_and_version;
   }
 
@@ -142,8 +141,8 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     return result != 0;
   }
 
-  template <typename T>
-  static bool write_firmware(uint8_t addr, T& firmware) {
+  template<typename T>
+  static bool write_firmware(uint8_t addr, T &firmware) {
     uint8_t result;
     uint8_t o = 0;
 
@@ -180,7 +179,7 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
         // write the CRC16, little end first
         Wire.write(crc16 & 0xff);
         Wire.write(crc16 >> 8);
-        Wire.write(0x00); // dummy end uint8_t
+        Wire.write(0x00);  // dummy end uint8_t
         result = Wire.endTransmission();
         // got something other than NACK. Start over.
         if (result != 3) {
@@ -193,16 +192,15 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
     return true;
   }
 
-  template <typename T>
-  static bool verify_firmware(uint8_t addr, T& firmware) {
+  template<typename T>
+  static bool verify_firmware(uint8_t addr, T &firmware) {
     uint8_t result = 3;
     CRCAndVersion crc_and_version;
 
     while (result != 0) {
       // skip the first 4 uint8_ts, are they were probably overwritten by the
       // reset vector preservation
-      result = read_crc16(addr, &crc_and_version,
-                          firmware.offsets[0] + 4, firmware.length - 4);
+      result = read_crc16(addr, &crc_and_version, firmware.offsets[0] + 4, firmware.length - 4);
       if (result != 0) {
         delay(100);
         continue;
@@ -217,7 +215,6 @@ class KeyboardioI2CBootloader: kaleidoscope::util::flasher::Base<_Props> {
 
     return crc_and_version.crc == check_crc16;
   }
-
 };
 
 }  // namespace flasher

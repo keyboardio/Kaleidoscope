@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <stdint.h>                                      // for uint16_t
+#include <stdint.h>  // for uint16_t
 
 #include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
@@ -31,8 +31,8 @@
 namespace kaleidoscope {
 namespace plugin {
 class AlphaSquareEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                          public LEDModeInterface,
+                          public AccessTransientLEDMode {
  public:
   AlphaSquareEffect(void) {}
 

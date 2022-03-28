@@ -25,12 +25,12 @@ extern "C" {
 void loop();
 void setup();
 #ifdef __cplusplus
-} // extern "C"
+}  // extern "C"
 #endif
 
 //add your function definitions for the project KeyboardIO here
 
-#define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
+#define TS(X)  //Serial.print(micros() );Serial.print("\t");Serial.println(X);
 
 #include <stdio.h>
 #include <math.h>
@@ -47,36 +47,32 @@ void setup();
 //       host_keymap-keymaps on different layers (see key_defs.h for its
 //       default definition.
 
-#define CONVERT_AND_CHECK_KEY(KEY)                                             \
-   (                                                                           \
-   (                                                                           \
-      struct {                                                                 \
-         static_assert(CONVERT_TO_KEY(KEY) != kaleidoscope::bad_keymap_key,    \
-                       "Bad key definition: \'" #KEY "\'");                    \
-      }                                                                        \
-   ){},                                                                        \
-   CONVERT_TO_KEY(KEY)                                                         \
-   )
+#define CONVERT_AND_CHECK_KEY(KEY)                                         \
+  (                                                                        \
+    (                                                                      \
+      struct {                                                             \
+        static_assert(CONVERT_TO_KEY(KEY) != kaleidoscope::bad_keymap_key, \
+                      "Bad key definition: \'" #KEY "\'");                 \
+      }){},                                                                \
+    CONVERT_TO_KEY(KEY))
 
 #ifdef PER_KEY_DATA_STACKED
-#define KEYMAP_STACKED(...)                                                    \
-   {                                                                           \
-      MAP_LIST(                                                                \
-         CONVERT_AND_CHECK_KEY,                                                \
-         PER_KEY_DATA_STACKED(XXX, __VA_ARGS__)                                \
-      )                                                                        \
-   }
+#define KEYMAP_STACKED(...)                   \
+  {                                           \
+    MAP_LIST(                                 \
+      CONVERT_AND_CHECK_KEY,                  \
+      PER_KEY_DATA_STACKED(XXX, __VA_ARGS__)) \
+  }
 
 #endif
 
 #ifdef PER_KEY_DATA
-#define KEYMAP(...)                                                            \
-   {                                                                           \
-      MAP_LIST(                                                                \
-         CONVERT_AND_CHECK_KEY,                                                \
-         PER_KEY_DATA(XXX, __VA_ARGS__)                                        \
-      )                                                                        \
-   }
+#define KEYMAP(...)                   \
+  {                                   \
+    MAP_LIST(                         \
+      CONVERT_AND_CHECK_KEY,          \
+      PER_KEY_DATA(XXX, __VA_ARGS__)) \
+  }
 #endif
 
 #include "kaleidoscope/KeyAddr.h"
@@ -122,10 +118,9 @@ void setup();
  */
 #if defined(KALEIDOSCOPE_REQUIRED_API_VERSION) && (KALEIDOSCOPE_REQUIRED_API_VERSION != KALEIDOSCOPE_API_VERSION)
 #define xstr(a) str(a)
-#define str(a) #a
+#define str(a)  #a
 static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
-              "Kaleidoscope API version mismatch! We have version " xstr(KALEIDOSCOPE_API_VERSION)
-              " available, but version " xstr(KALEIDOSCOPE_REQUIRED_API_VERSION) " is required.");
+              "Kaleidoscope API version mismatch! We have version " xstr(KALEIDOSCOPE_API_VERSION) " available, but version " xstr(KALEIDOSCOPE_REQUIRED_API_VERSION) " is required.");
 #endif
 
 // Use this function macro to register plugins with Kaleidoscope's

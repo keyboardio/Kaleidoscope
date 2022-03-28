@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for CS_FIRST
-#include <stdint.h>                             // for uint8_t
+#include <Kaleidoscope-Ranges.h>  // for CS_FIRST
+#include <stdint.h>               // for uint8_t
 
 #include "Arduino.h"                            // for PROGMEM
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -59,7 +59,8 @@ class CharShift : public Plugin {
     ///
     /// This constructor is used when defining an array of `KeyPair` objects in
     /// PROGMEM (though it can also be used elsewhere).
-    constexpr KeyPair(Key lower, Key upper) : lower(lower), upper(upper) {}
+    constexpr KeyPair(Key lower, Key upper)
+      : lower(lower), upper(upper) {}
 
     /// Constructor for reading from PROGMEM
     ///
@@ -75,15 +76,15 @@ class CharShift : public Plugin {
   /// `keypairs` array given, which must be a fixed-sized array, not a pointer.
   /// Generally, it will be called via the `KEYPAIRS()` preprocessor macro, not
   /// directly by user code.
-  template <uint8_t _num_keypairs>
-  static void setProgmemKeyPairs(KeyPair const(&keypairs)[_num_keypairs]) {
+  template<uint8_t _num_keypairs>
+  static void setProgmemKeyPairs(KeyPair const (&keypairs)[_num_keypairs]) {
     progmem_keypairs_ = keypairs;
-    num_keypairs_ = _num_keypairs;
+    num_keypairs_     = _num_keypairs;
   }
 
  private:
   // A pointer to an array of `KeyPair` objects in PROGMEM
-  static KeyPair const * progmem_keypairs_;
+  static KeyPair const *progmem_keypairs_;
   // The size of the PROGMEM array of `KeyPair` objects
   static uint8_t num_keypairs_;
 
@@ -114,8 +115,8 @@ class CharShift : public Plugin {
   static KeyPair readKeyPairFromProgmem(uint8_t n);
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::CharShift CharShift;
 
@@ -125,12 +126,12 @@ extern kaleidoscope::plugin::CharShift CharShift;
 /// defines them as an array in PROGMEM, and configures `CharShift` to use that
 /// array, automatically setting the count correctly to prevent out-of-bounds
 /// lookups.
-#define CS_KEYS(keypairs...) {                                          \
+#define CS_KEYS(keypairs...)                                                     \
+  {                                                                              \
     static kaleidoscope::plugin::CharShift::KeyPair const kp_table[] PROGMEM = { \
-      keypairs                                                          \
-    };                                                                  \
-    CharShift.setProgmemKeyPairs(kp_table);                             \
-}
+      keypairs};                                                                 \
+    CharShift.setProgmemKeyPairs(kp_table);                                      \
+  }
 
 /// Define an `KeyPair` entry in a keymap
 ///

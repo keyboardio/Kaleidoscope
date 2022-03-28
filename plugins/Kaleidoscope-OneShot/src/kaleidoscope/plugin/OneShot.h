@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>                // for OS_FIRST, OS_LAST
-#include <stdint.h>                             // for uint16_t, uint8_t
+#include <Kaleidoscope-Ranges.h>  // for OS_FIRST, OS_LAST
+#include <stdint.h>               // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield
@@ -31,7 +31,7 @@
 // ----------------------------------------------------------------------------
 // Keymap macros
 
-#define OSM(k) ::kaleidoscope::plugin::OneShotModifierKey(Key_ ## k)
+#define OSM(k) ::kaleidoscope::plugin::OneShotModifierKey(Key_##k)
 #define OSL(n) ::kaleidoscope::plugin::OneShotLayerKey(n)
 
 namespace kaleidoscope {
@@ -56,8 +56,8 @@ class OneShot : public kaleidoscope::Plugin {
 
   void enableStickablity() {}
   void enableStickability(Key key);
-  template <typename... Keys>
-  void enableStickability(Key key, Keys&&... keys) {
+  template<typename... Keys>
+  void enableStickability(Key key, Keys &&...keys) {
     enableStickability(key);
     enableStickability(keys...);
   }
@@ -66,8 +66,8 @@ class OneShot : public kaleidoscope::Plugin {
 
   void disableStickability() {}
   void disableStickability(Key key);
-  template <typename... Keys>
-  void disableStickability(Key key, Keys&&... keys) {
+  template<typename... Keys>
+  void disableStickability(Key key, Keys &&...keys) {
     disableStickability(key);
     disableStickability(keys...);
   }
@@ -97,10 +97,10 @@ class OneShot : public kaleidoscope::Plugin {
   }
 
   void toggleAutoModifiers() {
-    auto_modifiers_ = ! auto_modifiers_;
+    auto_modifiers_ = !auto_modifiers_;
   }
   void toggleAutoLayers() {
-    auto_layers_ = ! auto_layers_;
+    auto_layers_ = !auto_layers_;
   }
   void toggleAutoOneShot() {
     if (auto_modifiers_ || auto_layers_) {
@@ -128,10 +128,10 @@ class OneShot : public kaleidoscope::Plugin {
 
   bool isStickableDefault(Key key) const;
 
-  bool isTemporary(KeyAddr key_addr) const; // inline?
+  bool isTemporary(KeyAddr key_addr) const;  // inline?
   bool isPending(KeyAddr key_addr) const;
-  bool isSticky(KeyAddr key_addr) const; // inline?
-  bool isActive(KeyAddr key_addr) const; // inline?
+  bool isSticky(KeyAddr key_addr) const;  // inline?
+  bool isActive(KeyAddr key_addr) const;  // inline?
 
   // --------------------------------------------------------------------------
   // Public OneShot state control
@@ -191,32 +191,31 @@ class OneShot : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-
   // --------------------------------------------------------------------------
   // Constants
-  static constexpr uint8_t oneshot_key_count = 16;
-  static constexpr uint8_t oneshot_mod_count = 8;
-  static constexpr uint8_t oneshot_layer_count = oneshot_key_count - oneshot_mod_count;
+  static constexpr uint8_t oneshot_key_count         = 16;
+  static constexpr uint8_t oneshot_mod_count         = 8;
+  static constexpr uint8_t oneshot_layer_count       = oneshot_key_count - oneshot_mod_count;
   static constexpr uint16_t stickable_modifiers_mask = uint16_t(uint16_t(-1) >> oneshot_layer_count);
-  static constexpr uint16_t stickable_layers_mask = uint16_t(uint16_t(-1) << oneshot_mod_count);
-  static constexpr KeyAddr invalid_key_addr = KeyAddr(KeyAddr::invalid_state);
+  static constexpr uint16_t stickable_layers_mask    = uint16_t(uint16_t(-1) << oneshot_mod_count);
+  static constexpr KeyAddr invalid_key_addr          = KeyAddr(KeyAddr::invalid_state);
 
   // --------------------------------------------------------------------------
   // Configuration variables
-  uint16_t timeout_ = 2500;
-  uint16_t hold_timeout_ = 250;
+  uint16_t timeout_           = 2500;
+  uint16_t hold_timeout_      = 250;
   int16_t double_tap_timeout_ = -1;
 
   uint16_t stickable_keys_ = -1;
-  bool auto_modifiers_ = false;
-  bool auto_layers_ = false;
+  bool auto_modifiers_     = false;
+  bool auto_layers_        = false;
 
   // --------------------------------------------------------------------------
   // State variables
   KeyAddrBitfield temp_addrs_;
   KeyAddrBitfield glue_addrs_;
 
-  uint16_t start_time_ = 0;
+  uint16_t start_time_   = 0;
   KeyAddr prev_key_addr_ = invalid_key_addr;
 
   // --------------------------------------------------------------------------
@@ -238,7 +237,7 @@ class OneShot : public kaleidoscope::Plugin {
   void releaseKey(KeyAddr key_addr);
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::OneShot OneShot;

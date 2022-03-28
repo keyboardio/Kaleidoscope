@@ -20,8 +20,8 @@
 
 #ifdef ARDUINO_AVR_MODEL01
 
-#include <Arduino.h>                                     // for PROGMEM
-#include <stdint.h>                                      // for uint8_t, int...
+#include <Arduino.h>  // for PROGMEM
+#include <stdint.h>   // for uint8_t, int...
 
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
 #include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
@@ -38,8 +38,8 @@
 namespace kaleidoscope {
 namespace plugin {
 class WavepoolEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                       public LEDModeInterface,
+                       public AccessTransientLEDMode {
  public:
   WavepoolEffect(void) {}
 
@@ -55,7 +55,6 @@ class WavepoolEffect : public Plugin,
   //
   class TransientLEDMode : public LEDMode {
    public:
-
     // Please note that storing the parent ptr is only required
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
@@ -65,11 +64,9 @@ class WavepoolEffect : public Plugin,
     EventHandlerResult onKeyEvent(KeyEvent &event);
 
    protected:
-
     void update() final;
 
    private:
-
     uint8_t frames_since_event_;
     int8_t surface_[2][WP_WID * WP_HGT];
     uint8_t page_;

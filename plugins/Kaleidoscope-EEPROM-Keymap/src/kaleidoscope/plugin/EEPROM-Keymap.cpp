@@ -17,10 +17,10 @@
 
 #include "kaleidoscope/plugin/EEPROM-Keymap.h"
 
-#include <Arduino.h>                            // for PSTR, strcmp_P, F
-#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
-#include <Kaleidoscope-FocusSerial.h>           // for Focus, FocusSerial
-#include <stdint.h>                             // for uint8_t, uint16_t
+#include <Arduino.h>                       // for PSTR, strcmp_P, F
+#include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
+#include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
+#include <stdint.h>                        // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -57,7 +57,7 @@ void EEPROMKeymap::setup(uint8_t max) {
 }
 
 void EEPROMKeymap::max_layers(uint8_t max) {
-  max_layers_ = max;
+  max_layers_  = max;
   keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * Runtime.device().numKeys() * 2);
 }
 
@@ -67,8 +67,8 @@ Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
 
   uint16_t pos = ((layer * Runtime.device().numKeys()) + key_addr.toInt()) * 2;
 
-  return Key(Runtime.storage().read(keymap_base_ + pos + 1), // key_code
-             Runtime.storage().read(keymap_base_ + pos));    // flags
+  return Key(Runtime.storage().read(keymap_base_ + pos + 1),  // key_code
+             Runtime.storage().read(keymap_base_ + pos));     // flags
 }
 
 Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
@@ -91,7 +91,7 @@ void EEPROMKeymap::updateKey(uint16_t base_pos, Key key) {
   Runtime.storage().update(keymap_base_ + base_pos * 2 + 1, key.getKeyCode());
 }
 
-void EEPROMKeymap::dumpKeymap(uint8_t layers, Key(*getkey)(uint8_t, KeyAddr)) {
+void EEPROMKeymap::dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr)) {
   for (uint8_t layer = 0; layer < layers; layer++) {
     for (auto key_addr : KeyAddr::all()) {
       Key k = (*getkey)(layer, key_addr);
@@ -134,7 +134,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     // we actully want.
     //
     dumpKeymap(progmem_layers_,
-               static_cast<Key(*)(uint8_t, KeyAddr)>(Layer_::getKeyFromPROGMEM));
+               static_cast<Key (*)(uint8_t, KeyAddr)>(Layer_::getKeyFromPROGMEM));
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
@@ -146,7 +146,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     // tell the compiler which overload of getKey
     // we actually want.
     //
-    dumpKeymap(max_layers_, static_cast<Key(*)(uint8_t, KeyAddr)>(getKey));
+    dumpKeymap(max_layers_, static_cast<Key (*)(uint8_t, KeyAddr)>(getKey));
   } else {
     uint16_t i = 0;
 

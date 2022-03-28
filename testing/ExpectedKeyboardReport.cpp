@@ -22,12 +22,12 @@ namespace testing {
 ExpectedKeyboardReport::ExpectedKeyboardReport(uint32_t timestamp,
                                                const std::set<uint8_t> &keycodes,
                                                std::string message) {
-  timestamp_ = timestamp;
-  keycodes_ = std::set<uint8_t>(keycodes);
+  timestamp_       = timestamp;
+  keycodes_        = std::set<uint8_t>(keycodes);
   failure_message_ = message;
 }
 
-const std::set<uint8_t> & ExpectedKeyboardReport::Keycodes() const {
+const std::set<uint8_t> &ExpectedKeyboardReport::Keycodes() const {
   return keycodes_;
 }
 
@@ -35,7 +35,7 @@ uint32_t ExpectedKeyboardReport::Timestamp() const {
   return timestamp_;
 }
 
-const std::string & ExpectedKeyboardReport::Message() const {
+const std::string &ExpectedKeyboardReport::Message() const {
   return failure_message_;
 }
 

@@ -24,7 +24,7 @@ extern "C" {
 #include "twi.h"
 }
 
-#define ELEMENTS(arr)  (sizeof(arr) / sizeof((arr)[0]))
+#define ELEMENTS(arr)   (sizeof(arr) / sizeof((arr)[0]))
 
 #define LED_DRIVER_ADDR 0x30
 
@@ -32,7 +32,7 @@ extern "C" {
 // in the global namespace within the scope of this file. We'll use these
 // aliases to simplify some template initialization code below.
 using KeyScannerProps = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScannerProps;
-using KeyScanner = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScanner;
+using KeyScanner      = typename kaleidoscope::device::keyboardio::ImagoProps::KeyScanner;
 
 namespace kaleidoscope {
 namespace device {
@@ -42,18 +42,18 @@ constexpr uint8_t ImagoLEDDriverProps::key_led_map[] PROGMEM;
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
-static constexpr uint8_t CMD_SET_REGISTER = 0xFD;
-static constexpr uint8_t CMD_WRITE_ENABLE = 0xFE;
+static constexpr uint8_t CMD_SET_REGISTER  = 0xFD;
+static constexpr uint8_t CMD_WRITE_ENABLE  = 0xFE;
 static constexpr uint8_t WRITE_ENABLE_ONCE = 0b11000101;
 
-static constexpr uint8_t LED_REGISTER_PWM0 = 0x00;
-static constexpr uint8_t LED_REGISTER_PWM1 = 0x01;
-static constexpr uint8_t LED_REGISTER_DATA0 = 0x02;
-static constexpr uint8_t LED_REGISTER_DATA1 = 0x03;
+static constexpr uint8_t LED_REGISTER_PWM0    = 0x00;
+static constexpr uint8_t LED_REGISTER_PWM1    = 0x01;
+static constexpr uint8_t LED_REGISTER_DATA0   = 0x02;
+static constexpr uint8_t LED_REGISTER_DATA1   = 0x03;
 static constexpr uint8_t LED_REGISTER_CONTROL = 0x04;
 
-static constexpr uint8_t LED_REGISTER_PWM0_SIZE = 0xB4;
-static constexpr uint8_t LED_REGISTER_PWM1_SIZE = 0xAB;
+static constexpr uint8_t LED_REGISTER_PWM0_SIZE  = 0xB4;
+static constexpr uint8_t LED_REGISTER_PWM1_SIZE  = 0xAB;
 static constexpr uint8_t LED_REGISTER_DATA0_SIZE = 0xB4;
 static constexpr uint8_t LED_REGISTER_DATA1_SIZE = 0xAB;
 
@@ -71,7 +71,8 @@ constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
 // `KeyScanner` here refers to the alias set up above, just like in the
 // `KeyScannerProps` case above.
-template<> KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
+template<>
+KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] = {};
 
 // We set up the TIMER1 interrupt vector here. Due to dependency reasons, this
 // cannot be in a header-only driver, and must be placed here.
@@ -92,17 +93,17 @@ uint8_t ImagoLEDDriver::brightness_adjustment_;
 void ImagoLEDDriver::setup() {
   setAllPwmTo(0xFF);
   selectRegister(LED_REGISTER_CONTROL);
-  twiSend(LED_DRIVER_ADDR, 0x01, 0xFF); //global current
-  twiSend(LED_DRIVER_ADDR, 0x00, 0x01); //normal operation
+  twiSend(LED_DRIVER_ADDR, 0x01, 0xFF);  //global current
+  twiSend(LED_DRIVER_ADDR, 0x00, 0x01);  //normal operation
 }
 
 void ImagoLEDDriver::twiSend(uint8_t addr, uint8_t Reg_Add, uint8_t Reg_Dat) {
-  uint8_t data[] = {Reg_Add, Reg_Dat };
+  uint8_t data[] = {Reg_Add, Reg_Dat};
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
 void ImagoLEDDriver::unlockRegister(void) {
-  twiSend(LED_DRIVER_ADDR, CMD_WRITE_ENABLE, WRITE_ENABLE_ONCE); //unlock
+  twiSend(LED_DRIVER_ADDR, CMD_WRITE_ENABLE, WRITE_ENABLE_ONCE);  //unlock
 }
 
 void ImagoLEDDriver::selectRegister(uint8_t page) {
@@ -139,18 +140,18 @@ uint8_t ImagoLEDDriver::adjustBrightness(uint8_t value) {
 }
 
 void ImagoLEDDriver::syncLeds() {
-//  if (!isLEDChanged)
-//   return;
+  //  if (!isLEDChanged)
+  //   return;
 
   uint8_t data[LED_REGISTER_DATA_LARGEST + 1];
-  data[0] = 0;// the address of the first byte to copy in
+  data[0]          = 0;  // the address of the first byte to copy in
   uint8_t last_led = 0;
 
   // Write the first LED bank
   selectRegister(LED_REGISTER_DATA0);
 
   for (auto i = 1; i < LED_REGISTER_DATA0_SIZE; i += 3) {
-    data[i] = adjustBrightness(led_data[last_led].b);
+    data[i]     = adjustBrightness(led_data[last_led].b);
     data[i + 1] = adjustBrightness(led_data[last_led].g);
     data[i + 2] = adjustBrightness(led_data[last_led].r);
     last_led++;
@@ -170,7 +171,7 @@ void ImagoLEDDriver::syncLeds() {
   selectRegister(LED_REGISTER_DATA1);
 
   for (auto i = 1; i < LED_REGISTER_DATA1_SIZE; i += 3) {
-    data[i] = adjustBrightness(led_data[last_led].b);
+    data[i]     = adjustBrightness(led_data[last_led].b);
     data[i + 1] = adjustBrightness(led_data[last_led].g);
     data[i + 2] = adjustBrightness(led_data[last_led].r);
     last_led++;
@@ -186,11 +187,10 @@ void ImagoLEDDriver::setAllPwmTo(uint8_t step) {
   selectRegister(LED_REGISTER_PWM0);
 
   uint8_t data[0xB5] = {};
-  data[0] = 0;
+  data[0]            = 0;
   // PWM Register 0 is 0x00 to 0xB3
   for (auto i = 1; i <= 0xB4; i++) {
     data[i] = step;
-
   }
   twi_writeTo(LED_DRIVER_ADDR, data, 0xB5, 1, 0);
 
@@ -198,7 +198,6 @@ void ImagoLEDDriver::setAllPwmTo(uint8_t step) {
   // PWM Register 1 is 0x00 to 0xAA
   for (auto i = 1; i <= LED_REGISTER_PWM1_SIZE; i++) {
     data[i] = step;
-
   }
   twi_writeTo(LED_DRIVER_ADDR, data, 0xAC, 1, 0);
 }
@@ -215,7 +214,7 @@ void Imago::setup() {
   kaleidoscope::device::ATmega32U4Keyboard<ImagoProps>::setup();
 }
 
-#endif // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace keyboardio
 }  // namespace device

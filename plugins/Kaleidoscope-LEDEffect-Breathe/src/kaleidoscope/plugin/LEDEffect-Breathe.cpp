@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/LEDEffect-Breathe.h"
 
-#include <stdint.h>                                   // for uint8_t
+#include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for cRGB
