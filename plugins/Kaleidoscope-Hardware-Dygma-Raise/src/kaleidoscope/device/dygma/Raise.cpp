@@ -20,7 +20,6 @@
 
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LEDControl.h>
-#include <KeyboardioHID.h>
 #include <Wire.h>
 
 #include "kaleidoscope/Runtime.h"

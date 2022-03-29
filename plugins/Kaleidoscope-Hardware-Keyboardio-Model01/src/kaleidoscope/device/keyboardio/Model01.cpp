@@ -25,7 +25,6 @@
 #include <stdint.h>  // for uint8_t
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-#include <KeyboardioHID.h>
 #include <avr/wdt.h>
 #endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
