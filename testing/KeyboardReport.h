@@ -19,8 +19,8 @@
 #include <cstdint>  // for uint8_t, uint32_t
 #include <vector>   // for vector
 
-#include "HID-Settings.h"          // for HID_REPORTID_NKRO_KEYBOARD
-#include "MultiReport/Keyboard.h"  // for HID_KeyboardReport_Data_t
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
 
 namespace kaleidoscope {
 namespace testing {

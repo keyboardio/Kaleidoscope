@@ -22,8 +22,8 @@
 #include <bitset>  // for bitset
 #include <vector>  // for vector
 
-#include "HIDReportObserver.h"       // for HIDReportObserver
 #include "kaleidoscope/Runtime.h"    // for Runtime, Runtime_
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"  // for HIDReportObserver
 #include "testing/HIDState.h"        // for HIDState, HIDStateBuilder
 #include "testing/KeyboardReport.h"  // for KeyboardReport
 #include "testing/MouseReport.h"     // for MouseReport

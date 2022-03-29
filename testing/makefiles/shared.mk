@@ -16,7 +16,6 @@ shared_includes := \
 		-I${top_dir}/src \
 		-I${top_dir}/plugins/Kaleidoscope-Hardware-Keyboardio-Model01/src \
 		-I${arduino_platform_path}/cores/arduino \
-		-I${arduino_platform_path}/libraries/KeyboardioHID/src \
 		-I${top_dir}/testing/googletest/googlemock/include \
 		-I${top_dir}/testing/googletest/googletest/include \
 

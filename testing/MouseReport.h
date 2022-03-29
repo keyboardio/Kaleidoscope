@@ -18,9 +18,9 @@
 
 #include <cstdint>  // for uint8_t, int8_t, uint32_t
 
-#include "HID-Settings.h"       // for HID_REPORTID_MOUSE
-#include "MouseButtons.h"       // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUSE_R...
-#include "MultiReport/Mouse.h"  // for HID_MouseReport_Data_t
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"       // for HID_REPORTID_MOUSE
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"       // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUSE_R...
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"  // for HID_MouseReport_Data_t
 
 namespace kaleidoscope {
 namespace testing {

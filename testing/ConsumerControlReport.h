@@ -19,8 +19,8 @@
 #include <cstdint>  // for uint32_t, uint16_t, uint8_t
 #include <vector>   // for vector
 
-#include "HID-Settings.h"                 // for HID_REPORTID_CONSUMERCONTROL
-#include "MultiReport/ConsumerControl.h"  // for HID_ConsumerControlReport_Data_t
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/ConsumerControl.h"
 
 namespace kaleidoscope {
 namespace testing {
