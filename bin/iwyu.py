@@ -232,10 +232,6 @@ def main():
     virtual_model01_dir = os.path.join(virtual_hardware_dir, 'variants', 'model01')
     logging.debug("Using virtual Model01 dir: %s", virtual_model01_dir)
 
-    virtual_keyboardiohid_dir = os.path.join(
-        virtual_hardware_dir, 'libraries', 'KeyboardioHID', 'src')
-    logging.debug("Using virtual KeyboardioHID dir: %s", virtual_keyboardiohid_dir)
-
     # ----------------------------------------------------------------------
     # Create the long list of options passed to `clang` via `include-what-you-use`.
     # First, we tell it we're using C++:
@@ -283,7 +279,6 @@ def main():
         kaleidoscope_src_dir,
         virtual_arduino_core_dir,
         virtual_model01_dir,
-        virtual_keyboardiohid_dir,
     ]
     # Include plugin source dirs for plugins that depend on other plugins:
     includes += glob.glob(os.path.join(kaleidoscope_dir, 'plugins', '*', 'src'))
