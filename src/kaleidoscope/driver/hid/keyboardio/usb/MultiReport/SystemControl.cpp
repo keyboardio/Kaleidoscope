@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "SystemControl.h"
-#include "DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t system_control_hid_descriptor_[] PROGMEM = {
   //TODO limit to system keys only?

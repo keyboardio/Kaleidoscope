@@ -17,11 +17,10 @@
 
 #pragma once
 
-#include <KeyboardioHID.h>  // for HID_MouseReport_Data_t, (anonymous union...
 #include <stdint.h>         // for int8_t, uint8_t
 
-// From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/Mouse.h"  // for Mouse, MouseProps
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"
 
 namespace kaleidoscope {
 namespace driver {

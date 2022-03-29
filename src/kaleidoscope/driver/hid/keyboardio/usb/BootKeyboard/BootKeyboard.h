@@ -27,9 +27,10 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "HID.h"
-#include "HIDTables.h"
-#include "HIDAliases.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"
+#include "kaleidoscope/HIDTables.h"
 
 typedef union {
   // Low level key report: up to 6 keys and shift, ctrl etc at once

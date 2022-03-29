@@ -27,9 +27,9 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "HID.h"
-#include "HID-Settings.h"
-#include "../MouseButtons.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
 
 typedef union {
   // Mouse report: 8 buttons, position, wheel

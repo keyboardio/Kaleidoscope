@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "AbsoluteMouse.h"
-#include "DescriptorPrimitives.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/AbsoluteMouse.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t absolute_mouse_hid_descriptor_[] PROGMEM = {
   /*  Mouse absolute */

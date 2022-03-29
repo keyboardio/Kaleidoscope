@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "HIDTables.h"
+#include "kaleidoscope/HIDTables.h"
 
 #define HID_FIRST_KEY HID_KEYBOARD_NO_EVENT
 #define HID_LAST_KEY HID_KEYPAD_HEXADECIMAL
