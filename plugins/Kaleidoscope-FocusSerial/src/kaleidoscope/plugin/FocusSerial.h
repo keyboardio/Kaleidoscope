@@ -42,7 +42,9 @@ class FocusSerial : public kaleidoscope::Plugin {
 
   EventHandlerResult sendName(const __FlashStringHelper *name) {
     Runtime.serialPort().print(name);
+    delayAfterPrint();
     Runtime.serialPort().print(NEWLINE);
+    delayAfterPrint();
     return EventHandlerResult::OK;
   }
 
@@ -55,12 +57,16 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
   void send(const bool b) {
     printBool(b);
+    delayAfterPrint();
     Runtime.serialPort().print(SEPARATOR);
+    delayAfterPrint();
   }
   template<typename V>
   void send(V v) {
     Runtime.serialPort().print(v);
+    delayAfterPrint();
     Runtime.serialPort().print(SEPARATOR);
+    delayAfterPrint();
   }
   template<typename Var, typename... Vars>
   void send(Var v, Vars... vars) {
@@ -72,6 +78,7 @@ class FocusSerial : public kaleidoscope::Plugin {
   template<typename Var, typename... Vars>
   void sendRaw(Var v, Vars... vars) {
     Runtime.serialPort().print(v);
+    delayAfterPrint();
     sendRaw(vars...);
   }
 
@@ -107,6 +114,12 @@ class FocusSerial : public kaleidoscope::Plugin {
   static char command_[32];
   static uint8_t buf_cursor_;
   static void printBool(bool b);
+
+  // This is a hacky workaround for the host seemingly dropping characters
+  // when a client spams its serial port too quickly
+  // Verified on GD32 and macOS 12.3 2022-03-29
+  static constexpr uint8_t focus_delay_us_after_character_ = 100;
+  static void delayAfterPrint() { delayMicroseconds(focus_delay_us_after_character_); }
 };
 
 }  // namespace plugin
