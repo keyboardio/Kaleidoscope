@@ -19,8 +19,8 @@
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"
 
 // From KeyboardioHID:
-#include <HID-Settings.h>          // for HID_REPORTID_NKRO_KEYBOARD
-#include <MultiReport/Keyboard.h>  // for HID_KeyboardReport_Data_t, (anonymous u...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
 // From system:
 #include <stdint.h>  // for uint8_t
 // From Arduino core:

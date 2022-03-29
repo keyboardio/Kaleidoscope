@@ -22,13 +22,12 @@
 // library KeyboardioHID. It replaces all hardware related stuff
 // with stub implementations.
 
+#include <PluggableUSB.h>       // for USBSetup, EP_TYPE_INTERRUPT_IN, PluggableUSBModule
 #include <stddef.h>  // for NULL
 #include <stdint.h>  // for uint8_t
 
-// From KeyboardioHID:
-#include "HID.h"                // for HID_, HIDSubDescriptor, HID_::(anonymous), HID, HID_REPOR...
-#include "HIDReportObserver.h"  // for HIDReportObserver
-#include "PluggableUSB.h"       // for USBSetup, EP_TYPE_INTERRUPT_IN, PluggableUSBModule
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 #if defined(USBCON)
 

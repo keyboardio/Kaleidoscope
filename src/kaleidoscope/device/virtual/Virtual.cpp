@@ -34,6 +34,7 @@
 #include "kaleidoscope/KeyAddr.h"                                  // for MatrixAddr, MatrixAddr...
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"  // for DefaultHIDReportConsumer
 #include "kaleidoscope/device/virtual/Logging.h"                   // for log_error, logging
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 #include "kaleidoscope/key_defs.h"                                 // for Key_NoKey
 #include "kaleidoscope/keyswitch_state.h"                          // for IS_PRESSED, WAS_PRESSED
 
