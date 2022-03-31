@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2021  Keyboard.io, Inc.
+ * Copyright (C) 2021-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,14 +17,15 @@
 
 #pragma once
 
-#ifdef ARDUINO_GD32F303ZE_EVAL
+#ifdef ARDUINO_GD32F303CC_GENERIC
 
 #include <Arduino.h>
 
 #include "kaleidoscope/device/Base.h"
-#include "kaleidoscope/device/gd32/eval/KeyScanner.h"
-#include "kaleidoscope/driver/bootloader/gd32/Base.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/storage/GD32Flash.h"
+#include "kaleidoscope/driver/bootloader/gd32/Base.h"
+#include "kaleidoscope/driver/mcu/GD32.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -33,15 +34,26 @@ namespace gd32 {
 struct EvalStorageProps : kaleidoscope::driver::storage::GD32FlashProps {};
 
 struct EvalProps : kaleidoscope::device::BaseProps {
+  typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
+  typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
+
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
-  typedef eval::KeyScannerProps KeyScannerProps;
-  typedef eval::KeyScanner KeyScanner;
   typedef EvalStorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
+
+  typedef kaleidoscope::driver::mcu::GD32Props MCUProps;
+  typedef kaleidoscope::driver::mcu::GD32<MCUProps> MCU;
+
   static constexpr const char *short_name = "GD32Eval";
 };
 
-class Eval : public kaleidoscope::device::Base<EvalProps> {};
+class Eval : public kaleidoscope::device::Base<EvalProps> {
+ public:
+  auto serialPort() -> decltype(Serial) & {
+    return Serial;
+  }
+  static void rebootBootloader();
+};
 
 // clang-format off
 #define PER_KEY_DATA(dflt,                                           \
@@ -57,4 +69,4 @@ EXPORT_DEVICE(kaleidoscope::device::gd32::Eval)
 
 }  // namespace kaleidoscope
 
-#endif
+#endif  // ifdef ARDUINO_GD32F303CC_GENERIC
