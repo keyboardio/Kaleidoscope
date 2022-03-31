@@ -238,6 +238,11 @@ void Model100::enableHardwareTestMode() {
   KeyScanner::setKeyscanInterval(2);
 }
 
+void Model100::rebootBootloader() {
+  USBCore().disconnect();
+  NVIC_SystemReset();
+}
+
 #endif
 
 }  // namespace keyboardio

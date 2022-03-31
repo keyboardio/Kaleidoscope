@@ -43,6 +43,8 @@ struct cRGB {
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/storage/GD32Flash.h"
+#include "kaleidoscope/driver/mcu/GD32.h"
+
 
 namespace kaleidoscope {
 namespace device {
@@ -145,6 +147,9 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
 
   typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
   static constexpr const char *short_name = "kbio100";
+
+  typedef kaleidoscope::driver::mcu::GD32Props MCUProps;
+  typedef kaleidoscope::driver::mcu::GD32<MCUProps> MCU;
 };
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
@@ -156,7 +161,7 @@ class Model100 : public kaleidoscope::device::Base<Model100Props> {
   auto serialPort() -> decltype(Serial) & {
     return Serial;
   }
-
+  static void rebootBootloader();
   static void enableHardwareTestMode();
 };
 
