@@ -37,6 +37,11 @@ Runtime_::Runtime_(void) {
 
 // ----------------------------------------------------------------------------
 void Runtime_::setup(void) {
+  // Before doing anything else, initialize the device, so that whatever the
+  // rest of the hooks we'll call do, they'll be able to rely on an initialized
+  // device.
+  device().setup();
+
   // We are explicitly initializing the Serial port as early as possible to
   // (temporarily, hopefully) work around an issue on OSX. If we initialize
   // Serial too late, no matter what we do, we'll end up reading garbage from
@@ -49,8 +54,6 @@ void Runtime_::setup(void) {
 
   kaleidoscope::sketch_exploration::pluginsExploreSketch();
   kaleidoscope::Hooks::onSetup();
-
-  device().setup();
 
   // Clear the keyboard state array (all keys idle at start)
   live_keys.clear();
