@@ -38,9 +38,6 @@ class GD32Flash : public EEPROMClass<_StorageProps::length> {
   void setup() {
     EEPROMClass<_StorageProps::length>::begin();
   }
-  void commit() {
-    EEPROMClass<_StorageProps::length>::commit();
-  }
 };
 
 }  // namespace storage
