@@ -160,8 +160,8 @@ bool HID_::setup(USBSetup& setup) {
 
       if (length == sizeof(setReportData)) {
         USB_RecvControl(&setReportData, length);
-      } else if (length == sizeof(setReportData.leds)) {
-        USB_RecvControl(&setReportData.leds, length);
+      } else if (length == sizeof(setReportData.leds_wrapper.leds)) {
+        USB_RecvControl(&setReportData.leds_wrapper.leds, length);
         setReportData.reportId = 0;
       }
     }
@@ -174,7 +174,7 @@ HID_::HID_() : PluggableUSBModule(1, 1, epType),
   rootNode(NULL), descriptorSize(0),
   protocol(HID_REPORT_PROTOCOL), idle(1) {
   setReportData.reportId = 0;
-  setReportData.leds = 0;
+  setReportData.leds_wrapper.leds = 0;
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(USB_EP_SIZE);
