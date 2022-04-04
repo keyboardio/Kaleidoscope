@@ -21,7 +21,7 @@
 // This example demonstrates how a plugin can gather information about
 // the keymap at compile time, e.g. to adapt its behavior, safe resources, ...
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -42,7 +42,7 @@ KEYMAPS(
    Key_NoKey
   ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 using namespace kaleidoscope::sketch_exploration; // NOLINT(build/namespaces)
 

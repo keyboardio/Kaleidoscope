@@ -18,7 +18,7 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Macros.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -39,7 +39,7 @@ KEYMAPS(
    M(0)
    ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 namespace kaleidoscope {
 namespace plugin {

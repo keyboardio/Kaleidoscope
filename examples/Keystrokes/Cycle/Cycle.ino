@@ -18,7 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Cycle.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
@@ -37,7 +37,7 @@ KEYMAPS(
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_Cycle),
 )
-// *INDENT-ON*
+// clang-format on
 
 void cycleAction(Key previous_key, uint8_t cycle_count) {
   if (previous_key == Key_E) {

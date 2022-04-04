@@ -24,14 +24,14 @@ enum {
 };
 
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
     [_DEFAULT] = KEYMAP(
       Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Y, Key_U, Key_I, Key_O, Key_P,
       Key_A, Key_S, Key_D, Key_F, Key_G, Key_H, Key_J, Key_K, Key_L, Key_Semicolon
     )
 );
-/* *INDENT-ON* */
+// clang-format on
 
 void setup() {
   Kaleidoscope.setup();

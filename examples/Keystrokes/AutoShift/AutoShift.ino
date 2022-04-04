@@ -12,7 +12,7 @@ enum {
   TOGGLE_AUTOSHIFT,
 };
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -33,7 +33,7 @@ KEYMAPS(
       XXX
    ),
 )
-// *INDENT-ON*
+// clang-format on
 
 // Defining a macro (on the "any" key: see above) to turn AutoShift on and off
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {

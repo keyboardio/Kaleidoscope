@@ -57,7 +57,7 @@ enum {
   UPPER
 };
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
   (
@@ -98,7 +98,7 @@ KEYMAPS(
       ,___      ,___           ,MoveToLayer(QWERTY) ,Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
    )
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,

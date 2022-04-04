@@ -24,7 +24,7 @@ enum {
   _STENO,
 };
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 
 /* Steno (GeminiPR)
@@ -45,7 +45,7 @@ KEYMAPS(
                                ,S(A)  ,S(O)     ,S(E)   ,S(U)
   )
 );
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(GeminiPR);
 

@@ -20,7 +20,7 @@
 #include <Kaleidoscope-LED-AlphaSquare.h>
 #include <Kaleidoscope-Macros.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -40,7 +40,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 )
-// *INDENT-ON*
+// clang-format on
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   if (!keyToggledOn(event.state))

@@ -58,7 +58,7 @@ TestLEDMode::onFocusEvent(const char *command) {
 
 example::TestLEDMode TestLEDMode;
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -78,7 +78,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(Focus, LEDPaletteTheme, TestLEDMode, EEPROMSettings);
 

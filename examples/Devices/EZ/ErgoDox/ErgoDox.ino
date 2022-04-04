@@ -19,7 +19,7 @@
 
 #include "Kaleidoscope.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -46,7 +46,7 @@ KEYMAPS(
       Key_PageDown, Key_Tab, Key_Enter
   ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 void setup() {
   Kaleidoscope.setup();

@@ -20,7 +20,7 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-HostPowerManagement.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -41,7 +41,7 @@ KEYMAPS(
     Key_NoKey
   ),
 )
-// *INDENT-ON*
+// clang-format on
 
 void hostPowerManagementEventHandler(kaleidoscope::plugin::HostPowerManagement::Event event) {
   switch (event) {

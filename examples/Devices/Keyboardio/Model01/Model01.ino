@@ -32,7 +32,7 @@
 
 #define NUMPAD_KEYMAP 2
 
-
+// clang-format off
 #define GENERIC_FN2  KEYMAP_STACKED ( \
          ___,      Key_F1,        Key_F2,      Key_F3,     Key_F4,          Key_F5,          XXX,            \
         Key_Tab,  Key_mouseBtnM, Key_mouseUp, ___,        Key_mouseWarpNW, Key_mouseWarpNE, Consumer_ScanNextTrack, \
@@ -48,9 +48,6 @@
         Key_RightShift, Key_RightAlt, Key_mouseBtnR, Key_RightControl, \
         ___\
 )
-
-
-
 
 #define NUMPAD KEYMAP  (\
          ___, ___, ___, ___, ___, ___, ___,                           ___, ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, ___, \
@@ -75,7 +72,7 @@ KEYMAPS(
   GENERIC_FN2,
   NUMPAD
 )
-
+// clang-format on
 
 static kaleidoscope::plugin::LEDSolidColor solidRed(60, 0, 0);
 static kaleidoscope::plugin::LEDSolidColor solidOrange(60, 20, 0);

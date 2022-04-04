@@ -168,7 +168,7 @@ enum { PRIMARY, NUMPAD, FUNCTION }; // layers
 /* This comment temporarily turns off astyle's indent enforcement
  *   so we can make the keymaps actually resemble the physical key layout better
  */
-// *INDENT-OFF*
+// clang-format off
 
 KEYMAPS(
 
@@ -279,7 +279,7 @@ KEYMAPS(
 ) // KEYMAPS(
 
 /* Re-enable astyle's indent enforcement */
-// *INDENT-ON*
+// clang-format on
 
 /** versionInfoMacro handles the 'firmware version info' macro
  *  When a key bound to the macro is pressed, this macro

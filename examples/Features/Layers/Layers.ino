@@ -21,7 +21,7 @@
 
 enum { PRIMARY, NUMPAD, FUNCTION }; // layers
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [PRIMARY] = KEYMAP_STACKED
   (___,          Key_1, Key_2, Key_3, Key_4, Key_5, XXX,
@@ -68,7 +68,7 @@ KEYMAPS(
    ___, ___, Key_Enter, ___,
    ___)
 )
-// *INDENT-OFF*
+// clang-format on
 
 namespace kaleidoscope {
 class LayerDumper: public Plugin {

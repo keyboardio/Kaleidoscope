@@ -27,7 +27,7 @@
 // will type out the letters from A to N, but the right palm key can be used to
 // toggle the custom EventDropper plugin to suppress USB output.
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, ___,
@@ -46,7 +46,7 @@ KEYMAPS(
    ___, ___, ___, ___,
    M(1)),
         )
-// *INDENT-ON*
+// clang-format on
 
 namespace kaleidoscope {
 namespace plugin {

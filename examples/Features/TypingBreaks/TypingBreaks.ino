@@ -19,7 +19,7 @@
 #include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-TypingBreaks.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -39,7 +39,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, TypingBreaks);
 

@@ -20,7 +20,7 @@
 #include <Kaleidoscope-LED-ActiveModColor.h>
 #include <Kaleidoscope-OneShot.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -40,7 +40,7 @@ KEYMAPS(
     OSM(RightShift), OSM(RightAlt), Key_Spacebar, OSM(RightControl),
     Key_skip),
 )
-// *INDENT-ON*
+// clang-format on
 
 // OneShot is included to illustrate the different colors highlighting sticky
 // and one-shot keys.  LEDOff is included because we need an LED mode active to

@@ -19,7 +19,7 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-ActiveLayerColor.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -58,7 +58,7 @@ KEYMAPS(
     ShiftToLayer(0)
   )
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           LEDActiveLayerColorEffect);

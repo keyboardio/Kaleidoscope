@@ -11,7 +11,7 @@ enum { MACRO_TOGGLE_QUKEYS };
 // for the home row on the right side of the keymap (and one of the palm keys)
 // below.
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -51,7 +51,7 @@ KEYMAPS(
       ___
    ),
 )
-// *INDENT-ON*
+// clang-format on
 
 // Defining a macro (on the "any" key: see above) to toggle Qukeys on and off
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {

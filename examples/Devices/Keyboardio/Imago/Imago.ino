@@ -54,7 +54,7 @@ enum {  _QWERTY,
      };
 
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 
 [_QWERTY] = KEYMAP(
@@ -67,7 +67,7 @@ Key_F5,	Key_LeftControl,Key_LeftAlt,	Key_LeftGui, 	Key_Backspace,     Key_LeftAr
 
 
 ));
-/* *INDENT-ON* */
+// clang-format on
 
 
 

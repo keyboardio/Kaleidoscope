@@ -24,7 +24,7 @@ enum {
   TOGGLE_ONESHOT,
 };
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (___, M(1), M(2), M(3), M(4), M(5), ___,
@@ -61,7 +61,7 @@ KEYMAPS(
     ___, ___, ___, ___,
     ___),
 )
-// *INDENT-ON*
+// clang-format on
 
 // Example macro for typing a string of characters.
 void macroTypeString(KeyEvent &event) {

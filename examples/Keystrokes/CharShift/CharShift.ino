@@ -4,7 +4,7 @@
 
 #include <Kaleidoscope-CharShift.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -25,7 +25,7 @@ KEYMAPS(
       XXX
    ),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(CharShift);
 

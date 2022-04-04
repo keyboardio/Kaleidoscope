@@ -37,7 +37,7 @@ enum {
 #define Key_Star LSHIFT(Key_8)
 #define Key_Plus LSHIFT(Key_Equals)
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
   (
@@ -78,7 +78,7 @@ KEYMAPS(
       ,___      ,___           ,M(QWERTY),Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
    )
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(Macros);
 

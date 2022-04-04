@@ -20,7 +20,7 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-Heatmap.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_LEDEffectNext, Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
@@ -39,7 +39,7 @@ KEYMAPS(
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           HeatmapEffect);

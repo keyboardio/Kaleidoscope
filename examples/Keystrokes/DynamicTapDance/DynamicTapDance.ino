@@ -22,7 +22,7 @@
 #include <Kaleidoscope-TapDance.h>
 #include <Kaleidoscope-DynamicTapDance.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -42,7 +42,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, TD(2),
     TD(1)),
 )
-// *INDENT-ON*
+// clang-format on
 
 enum {
   TD_TAB_ESC,

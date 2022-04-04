@@ -18,7 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-TapDance.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -38,7 +38,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     TD(1)),
 )
-// *INDENT-ON*
+// clang-format on
 
 static void tapDanceEsc(uint8_t tap_dance_index, uint8_t tap_count, kaleidoscope::plugin::TapDance::ActionType tap_dance_action) {
   tapDanceActionKeys(tap_count, tap_dance_action, Key_Escape, Key_Tab);
