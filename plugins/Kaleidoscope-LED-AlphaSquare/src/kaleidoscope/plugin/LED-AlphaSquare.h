@@ -19,11 +19,10 @@
 
 #include <stdint.h>  // for uint16_t, uint8_t
 
-#include "kaleidoscope/KeyAddr.h"   // for KeyAddr
-#include "kaleidoscope/key_defs.h"  // for Key
-#include "kaleidoscope/plugin.h"    // for Plugin
-
-struct cRGB;
+#include "kaleidoscope/KeyAddr.h"        // for KeyAddr
+#include "kaleidoscope/device/device.h"  // for cRGB
+#include "kaleidoscope/key_defs.h"       // for Key
+#include "kaleidoscope/plugin.h"         // for Plugin
 
 // clang-format off
 #define SYM4x4(                                                   \

@@ -17,21 +17,20 @@
 
 #include "kaleidoscope/plugin/CharShift.h"
 
-#include <Arduino.h>                   // for F, __FlashS...
-#include <Kaleidoscope-FocusSerial.h>  // for Focus, Focu...
-#include <Kaleidoscope-Ranges.h>       // for CS_FIRST
+#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
+#include <Kaleidoscope-Ranges.h>       // for CS_FIRST, CS_LAST
 
-#include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<...
+#include "kaleidoscope/KeyAddrMap.h"                      // for KeyAddrMap<>::Iterator, KeyAddrMap
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
 #include "kaleidoscope/KeyMap.h"                          // for KeyMap
-#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
-#include "kaleidoscope/Runtime.h"                         // for Runtime
-#include "kaleidoscope/device/Base.h"                     // for Base<>::HID
-#include "kaleidoscope/device/virtual/Virtual.h"          // for VirtualProp...
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys, live_keys
+#include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
-#include "kaleidoscope/key_defs.h"                        // for Key, Key_NoKey
+#include "kaleidoscope/key_defs.h"                        // for Key, Key_NoKey, Key_LeftShift
 #include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
-#include "kaleidoscope/progmem_helpers.h"                 // for cloneFromPr...
+#include "kaleidoscope/progmem_helpers.h"                 // for cloneFromProgmem
 
 namespace kaleidoscope {
 namespace plugin {

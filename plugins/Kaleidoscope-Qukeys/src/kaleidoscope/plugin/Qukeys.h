@@ -19,8 +19,8 @@
 #pragma once
 
 #include <Arduino.h>              // for PROGMEM
-#include <Kaleidoscope-Ranges.h>  // for DUM_FIRST
-#include <stdint.h>               // for uint8_t, uint16_t
+#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST
+#include <stdint.h>               // for uint8_t, uint16_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue

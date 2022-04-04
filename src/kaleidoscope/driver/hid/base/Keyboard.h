@@ -19,7 +19,7 @@
 
 #include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/key_defs.h"  // for Key, Key_LeftAlt, Key_LeftControl
+#include "kaleidoscope/key_defs.h"  // for Key, Key_LeftAlt, Key_LeftControl, Key_LeftGui, Key_L...
 
 #ifndef HID_BOOT_PROTOCOL
 #define HID_BOOT_PROTOCOL 0

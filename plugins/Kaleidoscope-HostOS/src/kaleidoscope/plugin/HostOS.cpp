@@ -20,8 +20,8 @@
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
 namespace kaleidoscope {
 namespace plugin {

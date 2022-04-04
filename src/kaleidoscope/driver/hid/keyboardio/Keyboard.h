@@ -17,16 +17,11 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, uint16_t
+#include <KeyboardioHID.h>  // for BootKeyboard, BootKeyboard_, Keyboard
+#include <stdint.h>         // for uint8_t, uint16_t
 
-#include <KeyboardioHID.h>
-// From KeyboardioHID:
-#include "BootKeyboard/BootKeyboard.h"    // for BootKeyboard, Boo...
-#include "MultiReport/ConsumerControl.h"  // for ConsumerControl
-#include "MultiReport/Keyboard.h"         // for Keyboard, Keyboard_
-#include "MultiReport/SystemControl.h"    // for SystemControl
 // From Kaleidoscope:
-#include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, Keyboar...
+#include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, KeyboardProps
 
 namespace kaleidoscope {
 namespace driver {

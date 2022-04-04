@@ -19,11 +19,10 @@
 
 #include "kaleidoscope/device/keyboardio/Model01.h"
 
-// System headers
-#include <stdint.h>  // for uint8_t
-
 // Arduino headers
 #include <Arduino.h>  // for PROGMEM
+// System headers
+#include <stdint.h>  // for uint8_t
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <KeyboardioHID.h>

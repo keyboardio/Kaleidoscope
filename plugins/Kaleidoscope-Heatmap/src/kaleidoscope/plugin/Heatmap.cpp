@@ -18,14 +18,14 @@
 #include "kaleidoscope/plugin/Heatmap.h"
 
 #include <Arduino.h>  // for pgm_read_byte, PROGMEM
-#include <stdint.h>   // for uint16_t, uint8_t
+#include <stdint.h>   // for uint16_t, uint8_t, INT16_MAX
 
-#include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
+#include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAddr<>::Range, KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for cRGB
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyTog...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyToggledOn
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 namespace kaleidoscope {

@@ -17,7 +17,7 @@
 #pragma once
 
 #include "kaleidoscope/KeyAddr.h"                        // for KeyAddr
-#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult, EventHandlerResult...
 #include "kaleidoscope/plugin.h"                         // for Plugin
 #include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // IWYU pragma: keep
 #include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInterface

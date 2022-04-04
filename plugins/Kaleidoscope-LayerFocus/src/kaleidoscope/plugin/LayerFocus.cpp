@@ -18,11 +18,11 @@
 
 #include "kaleidoscope/plugin/LayerFocus.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P, F
+#include <Arduino.h>                   // for PSTR, strcmp_P, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint8_t
 
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 
 namespace kaleidoscope {

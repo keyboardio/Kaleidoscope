@@ -20,13 +20,13 @@
 
 #include <Arduino.h>                   // for F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>       // for DUL_FIRST, DUM_FIRST
+#include <Kaleidoscope-Ranges.h>       // for DUL_FIRST, DUM_FIRST, DUL_LAST, DUM_LAST
 
 #include "kaleidoscope/KeyAddrEventQueue.h"  // for KeyAddrEventQueue
 #include "kaleidoscope/KeyEvent.h"           // for KeyEvent
 #include "kaleidoscope/KeyEventTracker.h"    // for KeyEventTracker
 #include "kaleidoscope/Runtime.h"            // for Runtime, Runtime_
-#include "kaleidoscope/keyswitch_state.h"    // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/keyswitch_state.h"    // for IS_PRESSED, WAS_PRESSED, keyIsInjected
 #include "kaleidoscope/layers.h"             // for Layer, Layer_
 #include "kaleidoscope/progmem_helpers.h"    // for cloneFromProgmem
 

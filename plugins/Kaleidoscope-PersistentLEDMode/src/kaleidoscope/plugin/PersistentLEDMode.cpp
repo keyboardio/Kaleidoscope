@@ -22,8 +22,8 @@
 #include <stdint.h>                        // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 namespace kaleidoscope {

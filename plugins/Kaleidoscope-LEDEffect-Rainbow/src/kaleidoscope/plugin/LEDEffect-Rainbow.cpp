@@ -20,7 +20,7 @@
 #include <stdint.h>   // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"               // for Base<>::LEDRang...
+#include "kaleidoscope/device/device.h"               // for Base<>::LEDRangeIterator, Base<>::L...
 #include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
 

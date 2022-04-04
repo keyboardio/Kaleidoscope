@@ -23,7 +23,8 @@
 #endif
 #endif
 
-#include "ArduinoTrace.h"    // for ARDUINOTRACE_INIT
 #include <HardwareSerial.h>  // for DebugStderrSerial, DebugStderr
+
+#include "ArduinoTrace.h"  // for ARDUINOTRACE_INIT
 
 ARDUINOTRACE_INIT(9600)

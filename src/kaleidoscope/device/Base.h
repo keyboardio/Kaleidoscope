@@ -23,14 +23,14 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, int8_t
+#include <stdint.h>  // for uint8_t, int8_t, uint32_t
 #include <string.h>  // for size_t, strlen, memcpy
 
 #include "kaleidoscope/driver/bootloader/None.h"  // for None
 #include "kaleidoscope/driver/hid/Base.h"         // for Base, BaseProps
 #include "kaleidoscope/driver/keyscanner/Base.h"  // for BaseProps
 #include "kaleidoscope/driver/keyscanner/None.h"  // for None
-#include "kaleidoscope/driver/led/None.h"         // for cRGB, BaseProps, CRGB
+#include "kaleidoscope/driver/led/None.h"         // for cRGB, BaseProps, CRGB, None
 #include "kaleidoscope/driver/mcu/Base.h"         // for BaseProps
 #include "kaleidoscope/driver/mcu/None.h"         // for None
 #include "kaleidoscope/driver/storage/Base.h"     // for BaseProps

@@ -42,8 +42,8 @@ struct cRGB {
 #include "kaleidoscope/driver/keyboardio/Model100Side.h"
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/led/Base.h"
-#include "kaleidoscope/driver/storage/GD32Flash.h"
 #include "kaleidoscope/driver/mcu/GD32.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 
 
 namespace kaleidoscope {

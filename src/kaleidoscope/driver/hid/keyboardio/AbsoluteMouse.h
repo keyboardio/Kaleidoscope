@@ -17,14 +17,10 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, int8_t
+#include <KeyboardioHID.h>  // for SingleAbsoluteMouse_, SingleAbso...
+#include <stdint.h>         // for uint8_t, int8_t, uint16_t
 
-#include <KeyboardioHID.h>
-// From KeyboardioHID:
-#include "DeviceAPIs/AbsoluteMouseAPI.hpp"     // for AbsoluteMous...
-#include "SingleReport/SingleAbsoluteMouse.h"  // for SingleAbsolu...
-// From Kaleidoscope:
-#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
+#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse, AbsoluteMouseProps
 
 // IWYU pragma: no_include "DeviceAPIs/AbsoluteMouseAPI.hpp"
 

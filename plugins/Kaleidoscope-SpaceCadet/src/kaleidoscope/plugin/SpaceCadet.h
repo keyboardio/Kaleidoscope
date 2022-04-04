@@ -19,7 +19,7 @@
 #pragma once
 
 #include <Kaleidoscope-Ranges.h>  // for SC_FIRST, SC_LAST
-#include <stdint.h>               // for uint16_t, uint8_t
+#include <stdint.h>               // for uint16_t, uint8_t, int8_t
 
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent

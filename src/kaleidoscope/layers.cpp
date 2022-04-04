@@ -17,19 +17,18 @@
 #include <stdint.h>  // for uint8_t, int8_t
 #include <string.h>  // for memmove, memset
 
-#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
-#include "kaleidoscope/KeyAddrMap.h"              // for KeyAddrMap<>::Iterator
-#include "kaleidoscope/KeyEvent.h"                // for KeyEvent
-#include "kaleidoscope/KeyMap.h"                  // for KeyMap
-#include "kaleidoscope/LiveKeys.h"                // for LiveKeys, live_keys
-#include "kaleidoscope/MatrixAddr.h"              // for MatrixAddr, MatrixA...
-#include "kaleidoscope/device/virtual/Virtual.h"  // for Device
-#include "kaleidoscope/hooks.h"                   // for Hooks
-#include "kaleidoscope/key_defs.h"                // for Key, LAYER_MOVE_OFFSET
-#include "kaleidoscope/keymaps.h"                 // for keyFromKeymap
-#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOn
-#include "kaleidoscope/layers.h"                  // for Layer_, Layer, Laye...
-#include "kaleidoscope_internal/device.h"         // for device
+#include "kaleidoscope/KeyAddr.h"          // for MatrixAddr, MatrixAddr<>::Range, KeyAddr
+#include "kaleidoscope/KeyAddrMap.h"       // for KeyAddrMap<>::Iterator, KeyAddrMap
+#include "kaleidoscope/KeyEvent.h"         // for KeyEvent
+#include "kaleidoscope/KeyMap.h"           // for KeyMap
+#include "kaleidoscope/LiveKeys.h"         // for LiveKeys, live_keys
+#include "kaleidoscope/device/device.h"    // for Device
+#include "kaleidoscope/hooks.h"            // for Hooks
+#include "kaleidoscope/key_defs.h"         // for Key, LAYER_MOVE_OFFSET, LAYER_SHIFT_OFFSET
+#include "kaleidoscope/keymaps.h"          // for keyFromKeymap
+#include "kaleidoscope/keyswitch_state.h"  // for keyToggledOn
+#include "kaleidoscope/layers.h"           // for Layer_, Layer, Layer_::GetKeyFunction, Layer_:...
+#include "kaleidoscope_internal/device.h"  // for device
 
 // The maximum number of layers allowed.
 #define MAX_LAYERS 32;

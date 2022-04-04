@@ -30,7 +30,7 @@ struct cRGB {
 
 #endif
 
-#include "kaleidoscope/driver/led/Base.h"  // for Base, BaseProps (ptr only)
+#include "kaleidoscope/driver/led/Base.h"  // for Base, BaseProps
 
 namespace kaleidoscope {
 namespace driver {

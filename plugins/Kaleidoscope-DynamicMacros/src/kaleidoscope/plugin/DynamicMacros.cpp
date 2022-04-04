@@ -16,21 +16,20 @@
 
 #include "kaleidoscope/plugin/DynamicMacros.h"
 
-#include <Arduino.h>                   // for delay, PSTR, strc...
+#include <Arduino.h>                   // for delay, PSTR, strcmp_P, F, __FlashStri...
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>       // for DYNAMIC_MACRO_FIRST
+#include <Kaleidoscope-Ranges.h>       // for DYNAMIC_MACRO_FIRST, DYNAMIC_MACRO_LAST
 
 #include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"           // for VirtualProps::Sto...
-#include "kaleidoscope/keyswitch_state.h"         // for INJECTED, IS_PRESSED
+#include "kaleidoscope/device/device.h"           // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/keyswitch_state.h"         // for INJECTED, IS_PRESSED, WAS_PRESSED
 #include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
-
 // This is a special exception to the rule of only including a plugin's
 // top-level header file, because DynamicMacros doesn't depend on the Macros
 // plugin itself; it's just using the same macro step definitions.
-#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for MACRO_ACTION_END
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for MACRO_ACTION_END, MACRO_ACTION_STEP_E...
 
 namespace kaleidoscope {
 namespace plugin {

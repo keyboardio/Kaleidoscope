@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/TypingBreaks.h"
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, F
+#include <Arduino.h>                       // for PSTR, strcmp_P, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint32_t, uint16_t
@@ -25,8 +25,8 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/keyswitch_state.h"       // for keyToggledOff
 
 namespace kaleidoscope {

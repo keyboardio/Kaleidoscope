@@ -17,9 +17,9 @@
 
 #include "kaleidoscope/plugin/TriColor.h"
 
-#include "kaleidoscope/KeyAddr.h"            // for KeyAddr, MatrixAddr, Mat...
+#include "kaleidoscope/KeyAddr.h"            // for KeyAddr, MatrixAddr, MatrixAddr<>::Range
 #include "kaleidoscope/device/device.h"      // for cRGB
-#include "kaleidoscope/key_defs.h"           // for Key, Key_0, Key_A, Key_E...
+#include "kaleidoscope/key_defs.h"           // for Key, Key_0, Key_A, Key_Escape, Key_F1, Key_F12
 #include "kaleidoscope/layers.h"             // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 

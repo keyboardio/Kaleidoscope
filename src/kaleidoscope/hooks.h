@@ -19,7 +19,7 @@
 #include "kaleidoscope/KeyEvent.h"                 // IWYU pragma: keep
 #include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
 #include "kaleidoscope/event_handlers.h"           // for _FOR_EACH_EVENT_HANDLER
-#include "kaleidoscope/macro_helpers.h"            // for __NL__, MAKE_TEMPLATE...
+#include "kaleidoscope/macro_helpers.h"            // for __NL__, MAKE_TEMPLATE_SIGNATURE, UNWRAP
 #include "kaleidoscope_internal/event_dispatch.h"  // IWYU pragma: keep
 
 namespace kaleidoscope {

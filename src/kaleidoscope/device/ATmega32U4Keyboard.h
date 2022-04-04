@@ -20,11 +20,11 @@
 #if defined(__AVR__) || defined(KALEIDOSCOPE_VIRTUAL_BUILD)
 
 // IWYU pragma: begin_exports
-#include "kaleidoscope/device/Base.h"                           // for BaseP...
-#include "kaleidoscope/driver/hid/Keyboardio.h"                 // for Keybo...
-#include "kaleidoscope/driver/mcu/ATmega32U4.h"                 // for ATmeg...
-#include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"  // for ATmeg...
-#include "kaleidoscope/driver/storage/AVREEPROM.h"              // for AVREE...
+#include "kaleidoscope/device/Base.h"                           // for BaseProps
+#include "kaleidoscope/driver/hid/Keyboardio.h"                 // for Keyboardio, KeyboardioProps
+#include "kaleidoscope/driver/mcu/ATmega32U4.h"                 // for ATmega32U4, ATmega32U4Props
+#include "kaleidoscope/driver/storage/ATmega32U4EEPROMProps.h"  // for ATmega32U4EEPROMProps
+#include "kaleidoscope/driver/storage/AVREEPROM.h"              // for AVREEPROM
 // IWYU pragma: end_exports
 
 namespace kaleidoscope {
@@ -48,8 +48,6 @@ class ATmega32U4Keyboard : public kaleidoscope::device::Base<_DeviceProps> {
   }
 };
 #else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
-template<typename _DeviceProps>
-class ATmega32U4Keyboard;
 #endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 
 }  // namespace device

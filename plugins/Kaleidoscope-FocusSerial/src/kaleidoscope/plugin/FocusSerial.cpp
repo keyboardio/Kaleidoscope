@@ -17,13 +17,13 @@
 
 #include "kaleidoscope/plugin/FocusSerial.h"
 
-#include <Arduino.h>         // for __FlashStringHelper, F
+#include <Arduino.h>         // for PSTR, __FlashStringHelper, F, strcmp_P
 #include <HardwareSerial.h>  // for HardwareSerial
 #include <stdint.h>          // for uint8_t
 #include <string.h>          // for memset
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/hooks.h"                 // for Hooks
 
 #ifdef __AVR__
