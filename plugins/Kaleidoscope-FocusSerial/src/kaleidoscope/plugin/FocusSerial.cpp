@@ -37,6 +37,8 @@ char FocusSerial::command_[32];
 uint8_t FocusSerial::buf_cursor_ = 0;
 
 EventHandlerResult FocusSerial::afterEachCycle() {
+  // GD32 doesn't currently autoflush the very last packet. So manually flush here
+  Runtime.serialPort().flush();
   // If the serial buffer is empty, we don't have any work to do
   if (Runtime.serialPort().available() == 0) {
     return EventHandlerResult::OK;
