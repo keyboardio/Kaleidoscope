@@ -70,7 +70,7 @@ class FocusHelpCommand : public Plugin {
   }
 };
 
-}
+}  // namespace kaleidoscope
 
 kaleidoscope::FocusTestCommand FocusTestCommand;
 kaleidoscope::FocusHelpCommand FocusHelpCommand;

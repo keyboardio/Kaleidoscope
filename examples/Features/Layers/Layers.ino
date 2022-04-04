@@ -19,7 +19,11 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-MouseKeys.h>
 
-enum { PRIMARY, NUMPAD, FUNCTION }; // layers
+enum {
+  PRIMARY,
+  NUMPAD,
+  FUNCTION,
+};  // layers
 
 // clang-format off
 KEYMAPS(
@@ -71,7 +75,7 @@ KEYMAPS(
 // clang-format on
 
 namespace kaleidoscope {
-class LayerDumper: public Plugin {
+class LayerDumper : public Plugin {
  public:
   LayerDumper() {}
 
@@ -89,7 +93,7 @@ class LayerDumper: public Plugin {
   }
 };
 
-}
+}  // namespace kaleidoscope
 
 kaleidoscope::LayerDumper LayerDumper;
 

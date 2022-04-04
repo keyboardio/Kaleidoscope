@@ -64,11 +64,10 @@ class ShiftBlocker : public Plugin {
 
  private:
   bool active_{false};
-
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
 

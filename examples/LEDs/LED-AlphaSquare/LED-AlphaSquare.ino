@@ -57,12 +57,12 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
         col = 10;
 
       for (uint8_t step = 0; step <= 0xf0; step += 8) {
-        AlphaSquare.color = { step, step, step };
+        AlphaSquare.color = {step, step, step};
         AlphaSquare.display({i, 0}, col);
         delay(10);
       }
       for (uint8_t step = 0xff; step >= 8; step -= 8) {
-        AlphaSquare.color = { step, step, step };
+        AlphaSquare.color = {step, step, step};
         AlphaSquare.display({i, 0}, col);
         delay(10);
       }
@@ -74,14 +74,14 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
     delay(100);
 
     for (uint8_t step = 0; step <= 0xf0; step += 8) {
-      AlphaSquare.color = { step, step, step };
+      AlphaSquare.color = {step, step, step};
       AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 2);
       AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 10);
       delay(10);
     }
 
     for (uint8_t step = 0xff; step >= 8; step -= 8) {
-      AlphaSquare.color = { step, step, step };
+      AlphaSquare.color = {step, step, step};
       AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 2);
       AlphaSquare.display(kaleidoscope::plugin::alpha_square::symbols::Lambda, 10);
       delay(10);
@@ -102,7 +102,7 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 void setup() {
   Kaleidoscope.setup();
 
-  AlphaSquare.color = { 0xcb, 0xc0, 0xff };
+  AlphaSquare.color = {0xcb, 0xc0, 0xff};
 }
 
 void loop() {

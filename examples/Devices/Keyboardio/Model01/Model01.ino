@@ -86,10 +86,17 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   if (macro_id == 1 && keyToggledOn(event.state)) {
     Kaleidoscope.serialPort().print("Keyboard.IO keyboard driver v0.00");
     return MACRO(I(25),
-                 D(LeftShift), T(M), U(LeftShift), T(O), T(D), T(E), T(L),
+                 D(LeftShift),
+                 T(M),
+                 U(LeftShift),
+                 T(O),
+                 T(D),
+                 T(E),
+                 T(L),
                  T(Spacebar),
                  W(100),
-                 T(0), T(1));
+                 T(0),
+                 T(1));
   }
   return MACRO_NONE;
 }
@@ -105,16 +112,24 @@ static void enterHardwareTestMode(uint8_t combo_index) {
 /** Magic combo list, a list of key combo and action pairs the firmware should
  * recognise.
  */
-USE_MAGIC_COMBOS({
-  .action = enterHardwareTestMode,
-  // Left Fn + Prog + LED
-  .keys = { R3C6, R0C0, R0C6 }
-});
+USE_MAGIC_COMBOS({.action = enterHardwareTestMode,
+                  // Left Fn + Prog + LED
+                  .keys = {R3C6, R0C0, R0C6}});
 
 KALEIDOSCOPE_INIT_PLUGINS(HardwareTestMode,
-                          LEDControl, LEDOff,
-                          solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
-                          LEDBreatheEffect, LEDRainbowEffect, LEDChaseEffect, NumPad,
+                          LEDControl,
+                          LEDOff,
+                          solidRed,
+                          solidOrange,
+                          solidYellow,
+                          solidGreen,
+                          solidBlue,
+                          solidIndigo,
+                          solidViolet,
+                          LEDBreatheEffect,
+                          LEDRainbowEffect,
+                          LEDChaseEffect,
+                          NumPad,
                           Macros,
                           MouseKeys,
                           MagicCombo);

@@ -66,8 +66,7 @@ KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
 void setup() {
   static const cRGB layerColormap[] PROGMEM = {
     CRGB(128, 0, 0),
-    CRGB(0, 128, 0)
-  };
+    CRGB(0, 128, 0)};
 
   Kaleidoscope.setup();
   LEDActiveLayerColorEffect.setColormap(layerColormap);

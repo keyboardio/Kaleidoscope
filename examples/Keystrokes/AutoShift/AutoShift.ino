@@ -56,8 +56,8 @@ KALEIDOSCOPE_INIT_PLUGINS(
   FocusEEPROMCommand,    // for AutoShiftConfig
   FocusSettingsCommand,  // for AutoShiftConfig
   AutoShift,
-  AutoShiftConfig,       // for AutoShiftConfig
-  Macros                 // for toggle AutoShift Macro
+  AutoShiftConfig,  // for AutoShiftConfig
+  Macros            // for toggle AutoShift Macro
 );
 
 void setup() {

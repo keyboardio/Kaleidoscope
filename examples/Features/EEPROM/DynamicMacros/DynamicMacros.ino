@@ -46,8 +46,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
   EEPROMKeymap,
   DynamicMacros,
-  Focus
-);
+  Focus);
 
 void setup() {
   Kaleidoscope.setup();

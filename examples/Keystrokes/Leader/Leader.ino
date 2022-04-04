@@ -50,8 +50,8 @@ static void leaderTestAA(uint8_t seq_index) {
 }
 
 static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
-LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderTestA},
-{LEADER_SEQ(LEAD(0), Key_A, Key_A), leaderTestAA});
+  LEADER_DICT({LEADER_SEQ(LEAD(0), Key_A), leaderTestA},
+              {LEADER_SEQ(LEAD(0), Key_A, Key_A), leaderTestAA});
 
 KALEIDOSCOPE_INIT_PLUGINS(Leader);
 

@@ -61,12 +61,13 @@ class EventDropper : public Plugin {
   void toggle() {
     active_ = !active_;
   }
+
  private:
   bool active_ = false;
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::EventDropper EventDropper;
 
@@ -95,8 +96,7 @@ static const kaleidoscope::plugin::GhostInTheFirmware::GhostKey ghost_keys[] PRO
   {KeyAddr(3, 14), 200, 50},
   {KeyAddr(3, 15), 200, 50},
 
-  {KeyAddr::none(), 0, 0}
-};
+  {KeyAddr::none(), 0, 0}};
 
 KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
                           LEDControl,
@@ -107,7 +107,7 @@ KALEIDOSCOPE_INIT_PLUGINS(GhostInTheFirmware,
 void setup() {
   Kaleidoscope.setup();
 
-  StalkerEffect.variant = STALKER(BlazingTrail);
+  StalkerEffect.variant         = STALKER(BlazingTrail);
   GhostInTheFirmware.ghost_keys = ghost_keys;
 }
 

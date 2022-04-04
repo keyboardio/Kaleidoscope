@@ -31,9 +31,9 @@ KALEIDOSCOPE_INIT_PLUGINS(CharShift);
 
 void setup() {
   CS_KEYS(
-    kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, Key_Semicolon),              // CS(0)
-    kaleidoscope::plugin::CharShift::KeyPair(Key_Period, LSHIFT(Key_Semicolon)),     // CS(1)
-    kaleidoscope::plugin::CharShift::KeyPair(LSHIFT(Key_Comma), LSHIFT(Key_Period)), // CS(2)
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, Key_Semicolon),               // CS(0)
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Period, LSHIFT(Key_Semicolon)),      // CS(1)
+    kaleidoscope::plugin::CharShift::KeyPair(LSHIFT(Key_Comma), LSHIFT(Key_Period)),  // CS(2)
   );
   Kaleidoscope.setup();
 }

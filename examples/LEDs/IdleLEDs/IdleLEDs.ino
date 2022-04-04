@@ -56,7 +56,7 @@ void setup() {
 
   Kaleidoscope.setup();
 
-  PersistentIdleLEDs.setIdleTimeoutSeconds(300); // 5 minutes
+  PersistentIdleLEDs.setIdleTimeoutSeconds(300);  // 5 minutes
 
   LEDRainbowWaveEffect.activate();
 }

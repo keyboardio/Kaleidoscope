@@ -28,9 +28,8 @@ void toggleWinKey(uint8_t index) {
 }
 
 USE_MAGIC_COMBOS([WINKEYTOGGLE] = {
-  .action = toggleWinKey,
-  .keys = {R3C6, R3C9}
-});
+                   .action = toggleWinKey,
+                   .keys   = {R3C6, R3C9}});
 
 // clang-format off
 KEYMAPS(

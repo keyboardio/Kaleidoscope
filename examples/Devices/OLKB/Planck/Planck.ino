@@ -20,14 +20,15 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Macros.h"
 
-enum {  _QWERTY,
-        _COLEMAK,
-        _DVORAK,
-        _LOWER,
-        _RAISE,
-        _PLOVER,
-        _ADJUST
-     };
+enum {
+  _QWERTY,
+  _COLEMAK,
+  _DVORAK,
+  _LOWER,
+  _RAISE,
+  _PLOVER,
+  _ADJUST
+};
 
 
 // clang-format off

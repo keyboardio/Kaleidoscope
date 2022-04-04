@@ -71,7 +71,7 @@ void macroTypeString(KeyEvent &event) {
 }
 
 // Example macro for macro step sequence.
-const macro_t* macroSteps(KeyEvent &event) {
+const macro_t *macroSteps(KeyEvent &event) {
   if (keyToggledOn(event.state)) {
     // Note that the following sequence leaves two keys down (`Key_RightAlt` and
     // `Key_C`). These virtual keys will remain in effect until the Macros key
@@ -82,7 +82,7 @@ const macro_t* macroSteps(KeyEvent &event) {
 }
 
 // Example macro that sets `event.key`.
-const macro_t* macroNewSentence1(KeyEvent &event) {
+const macro_t *macroNewSentence1(KeyEvent &event) {
   if (keyToggledOn(event.state)) {
     event.key = OSM(LeftShift);
     return MACRO(Tc(Period), Tc(Spacebar), Tc(Spacebar));
@@ -114,7 +114,7 @@ void macroNewSentence3(KeyEvent &event) {
 
 // Macro that auto-repeats?
 
-const macro_t* macroAction(uint8_t macro_id, KeyEvent &event) {
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   switch (macro_id) {
 
   case 0:
