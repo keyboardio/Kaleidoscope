@@ -98,7 +98,7 @@ build-gtest-gmock:
 	$(MAKE) -C testing/googletest
 
 find-filename-conflicts:
-	bin/find-filename-conflicts
+	bin/find-filename-conflicts.py src plugins/*
 
 .PHONY: format check-formatting cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
 
