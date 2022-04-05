@@ -27,8 +27,10 @@
 #include <Arduino.h>  // for PROGMEM
 
 // Kaleidoscope headers
-#include "kaleidoscope/MatrixAddr.h"     // for MatrixAddr
 #include "kaleidoscope/macro_helpers.h"  // for RESTRICT_AR...
+#include "kaleidoscope/MatrixAddr.h"     // IWYU pragma: keep
+
+// IWYU pragma: no_include "kaleidoscope/KeyAddr.h"
 
 #define CRGB(r, g, b) \
   (cRGB) { b, g, r }

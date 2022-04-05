@@ -26,6 +26,8 @@
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
 
+// IWYU pragma: no_include "DeviceAPIs/AbsoluteMouseAPI.hpp"
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {

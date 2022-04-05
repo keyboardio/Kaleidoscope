@@ -19,7 +19,6 @@
 #include <Arduino.h>  // for PROGMEM
 #include <stddef.h>   // for size_t
 #include <stdint.h>   // for uint8_t
-// IWYU pragma: no_include <new>
 
 #include "kaleidoscope/macro_helpers.h"                    // for __NL__
 #include "kaleidoscope/plugin.h"                           // for Plugin
@@ -29,7 +28,7 @@
 #include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS...
 
 #if defined(KALEIDOSCOPE_VIRTUAL_BUILD) || defined(ARDUINO_ARCH_STM32)
-#include <new>
+#include <new>  // for operator new
 #else
 
 // To enable placement new, we need to supply a global operator
@@ -44,8 +43,8 @@ namespace kaleidoscope {
 
 namespace plugin {
 // Forward declarations to avoid header inclusions
-class LEDControl;
-class LEDModeInterface;
+class LEDControl;        // IWYU pragma: keep
+class LEDModeInterface;  // IWYU pragma: keep
 
 }  // namespace plugin
 

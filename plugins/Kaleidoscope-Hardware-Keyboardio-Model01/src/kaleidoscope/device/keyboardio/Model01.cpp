@@ -32,9 +32,10 @@
 
 // Kaleidoscope headers
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // IWYU pragma: keep
+// IWYU pragma: no_include "kaleidoscope/device/device.h"
 
 // Kaleidoscope-Hardware-Keyboardio-Model01 headers
-#include "kaleidoscope/driver/keyboardio/Model01Side.h"
+#include "kaleidoscope/driver/keyboardio/Model01Side.h"  // IWYU pragma: keep
 
 namespace kaleidoscope {
 namespace device {

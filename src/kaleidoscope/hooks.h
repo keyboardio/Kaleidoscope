@@ -24,8 +24,8 @@
 
 namespace kaleidoscope {
 // Forward declarations to enable friend declarations.
-class Layer_;
-class Runtime_;
+class Layer_;    // IWYU pragma: keep
+class Runtime_;  // IWYU pragma: keep
 
 namespace plugin {
 // Forward declarations to enable friend declarations.

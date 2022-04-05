@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "kaleidoscope/macro_helpers.h"
+#include "kaleidoscope/macro_helpers.h"  // IWYU pragma: keep
 
 #define DEPRECATED(tag)                                                 \
   __attribute__((deprecated(_DEPRECATE(_DEPRECATED_MESSAGE_ ## tag))))

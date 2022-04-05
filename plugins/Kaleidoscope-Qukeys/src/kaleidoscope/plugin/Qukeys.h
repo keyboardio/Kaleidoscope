@@ -30,6 +30,8 @@
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
 #include "kaleidoscope/plugin.h"                // for Plugin
 
+// IWYU pragma: no_include "HIDAliases.h"
+
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key)   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
 

@@ -27,6 +27,8 @@
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
+// IWYU pragma: no_include "WString.h"
+
 namespace kaleidoscope {
 namespace plugin {
 class FocusSerial : public kaleidoscope::Plugin {

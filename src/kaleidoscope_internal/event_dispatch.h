@@ -37,9 +37,10 @@
 
 #include "kaleidoscope/event_handlers.h"
 #include "kaleidoscope/macro_helpers.h"
-#include "kaleidoscope/plugin.h"
+#include "kaleidoscope/plugin.h"  // IWYU pragma: keep
 #include "kaleidoscope_internal/eventhandler_signature_check.h"
-#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"
+#include "kaleidoscope_internal/sketch_exploration/plugin_exploration.h"
+#include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"  // IWYU pragma: keep
 
 // Some words about the design of hook routing:
 //

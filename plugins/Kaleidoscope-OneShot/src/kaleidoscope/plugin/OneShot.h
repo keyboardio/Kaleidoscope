@@ -28,6 +28,8 @@
 #include "kaleidoscope/key_defs.h"              // for Key, Key_LeftControl
 #include "kaleidoscope/plugin.h"                // for Plugin
 
+// IWYU pragma: no_include "HIDAliases.h"
+
 // ----------------------------------------------------------------------------
 // Keymap macros
 
