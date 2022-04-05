@@ -80,7 +80,7 @@ static const uint8_t BOOT_KEYBOARD_EP_SIZE = USB_EP_SIZE;
 #endif
 
 
-BootKeyboard_::BootKeyboard_(uint8_t protocol_) : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(1), leds_wrapper.leds(0) {
+BootKeyboard_::BootKeyboard_(uint8_t protocol_) : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(1), leds(0) {
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(BOOT_KEYBOARD_EP_SIZE); // This is an 8 byte report, so ask for an 8 byte buffer, so reports aren't split
 #else
@@ -213,7 +213,7 @@ bool BootKeyboard_::setup(USBSetup& setup) {
 }
 
 uint8_t BootKeyboard_::getLeds() {
-  return leds_wrapper.leds;
+  return leds;
 }
 
 uint8_t BootKeyboard_::getProtocol() {
