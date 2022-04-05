@@ -123,14 +123,8 @@ cpplint-noisy:
 cpplint:
 	bin/cpplint.py --config=.cpplint --quiet --recursive src plugins examples
 
-
-SHELL_FILES := $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
-
 shellcheck:
-	@if [ -d "bin" ]; then \
-		shellcheck ${SHELL_FILES}; \
-	fi
-
+	bin/check-shell-scripts.sh
 
 SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi))
 
