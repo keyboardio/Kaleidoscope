@@ -193,8 +193,8 @@ bool BootKeyboard_::setup(USBSetup& setup) {
       int length = setup.wLength;
 
       if (setup.wValueH == HID_REPORT_TYPE_OUTPUT) {
-        if (length == sizeof(leds_wrapper.leds)) {
-          USB_RecvControl(&leds_wrapper.leds, length);
+        if (length == sizeof(leds)) {
+          USB_RecvControl(&leds, length);
           return true;
         }
       }

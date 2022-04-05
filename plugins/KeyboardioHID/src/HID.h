@@ -96,7 +96,7 @@ class HID_ : public PluggableUSBModule {
   int SendReport(uint8_t id, const void* data, int len);
   void AppendDescriptor(HIDSubDescriptor* node);
   uint8_t getLEDs() {
-    return setReportData.leds_wrapper.leds;
+    return setReportData.leds;
   };
 
  protected:
@@ -117,13 +117,7 @@ class HID_ : public PluggableUSBModule {
   uint8_t idle;
   struct {
     uint8_t reportId;
-    /* this wrapper union is here because on GD32, the USB endpoint reading code *only* works with 
-     * chunks of data that are multiples of 16 bits
-     */
-    union {
-	    uint8_t leds;
-	    uint8_t padding_[2];
-    } leds_wrapper;
+    uint8_t leds;
   } setReportData;
 };
 

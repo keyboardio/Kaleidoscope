@@ -77,19 +77,7 @@ class BootKeyboard_ : public PluggableUSBModule {
   EPTYPE_DESCRIPTOR_SIZE epType[1];
   uint8_t protocol;
   uint8_t idle;
-  union {
-  	uint8_t leds;
-	uint8_t padding_[2];
-	} leds_wrapper;
-        /*
-         * Create union for the ‘leds’ field that has a backing
-         * buffers that is modulo 16 bits in size.
-         *
-         * This is currently necessary because on GD 32 this field is read
-         * directly from the USB peripheral with ‘usbd_ep_data_read’,
-         * which can only read in 16-bit chunks (as of version 2.1.2
-         * of the firmware library).
-         */
 
+  uint8_t leds;
 };
 extern BootKeyboard_ BootKeyboard;
