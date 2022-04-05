@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+: "${KALEIDOSCOPE_DIR:=$(pwd)}"
+cd "${KALEIDOSCOPE_DIR}" || exit 1
+
+git ls-files -m | grep -E '\.(h|cpp)$' | xargs "${KALEIDOSCOPE_DIR}"/bin/iwyu.py
