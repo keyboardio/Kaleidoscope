@@ -106,10 +106,18 @@ find-filename-conflicts:
 .PHONY: format check-formatting cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
 
 format:
-	bin/format-code.sh
+	bin/format-code.py \
+		--exclude-dir 'testing/googletest' \
+		--exclude-file 'generated-testcase.cpp' \
+		src plugins examples testing
 
 check-formatting:
-	bin/format-code.sh --check
+	bin/format-code.py \
+		--exclude-dir 'testing/googletest' \
+		--exclude-file 'generated-testcase.cpp' \
+		--check \
+		--verbose \
+		src plugins examples testing
 
 cpplint-noisy:
 	-bin/cpplint.py  --filter=-legal/copyright,-build/include,-readability/namespace,-whitespace/line_length,-runtime/references  --recursive --extensions=cpp,h,ino src examples
