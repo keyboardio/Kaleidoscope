@@ -1,0 +1,9 @@
+set noparent
+
+extensions=cpp,h,ino
+
+filter=-build/include
+filter=-legal/copyright
+filter=-readability/namespace
+filter=-runtime/references
+filter=-whitespace/line_length
