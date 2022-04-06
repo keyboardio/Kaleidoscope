@@ -231,8 +231,8 @@ void Model100::setup() {
 
 void Model100::enableHardwareTestMode() {
   // Toggle the programming LEDS on
-  // TODO PORTD |= (1 << 5);
-  // TOOD PORTB |= (1 << 0);
+  // TODO(anyone): PORTD |= (1 << 5);
+  // TOOD(anyone): PORTB |= (1 << 0);
 
   // Disable the debouncer on the ATTinys
   KeyScanner::setKeyscanInterval(2);
