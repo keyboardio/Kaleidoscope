@@ -32,11 +32,11 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
     - run: KALEIDOSCOPE_CCACHE=1 make -j $(nproc) --output-sync=recurse simulator-tests
-  check-formatting:
+  check-code-style:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: make check-formatting
+    - run: make check-code-style
   check-shellcheck:
     runs-on: ubuntu-latest
     steps:

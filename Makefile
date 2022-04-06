@@ -108,8 +108,8 @@ format:
 		--exclude-file 'generated-testcase.cpp' \
 		src plugins examples testing
 
-.PHONY: check-formatting
-check-formatting:
+.PHONY: check-code-style
+check-code-style:
 	bin/format-code.py \
 		--exclude-dir 'testing/googletest' \
 		--exclude-file 'generated-testcase.cpp' \
