@@ -36,7 +36,7 @@ ifneq ($(TEST_PATH),)
 TEST_PATH_ARG="TEST_PATH='$(TEST_PATH)'"
 endif
 
-DEFAULT_GOAL: smoke-sketches
+.DEFAULT_GOAL := smoke-sketches
 
 .PHONY: setup
 setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
