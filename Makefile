@@ -113,6 +113,7 @@ check-formatting:
 	bin/format-code.py \
 		--exclude-dir 'testing/googletest' \
 		--exclude-file 'generated-testcase.cpp' \
+		--force \
 		--check \
 		--verbose \
 		src plugins examples testing
