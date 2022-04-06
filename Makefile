@@ -117,6 +117,11 @@ check-formatting:
 		--verbose \
 		src plugins examples testing
 
+.PHONY: check-includes
+check-includes:
+	bin/iwyu.py -v src plugins
+	bin/format-code.py -f -v --check src plugins
+
 .PHONY: cpplint-noisy
 cpplint-noisy:
 	-bin/cpplint.py --config=.cpplint-noisy --recursive src plugins examples
