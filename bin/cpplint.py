@@ -83,6 +83,7 @@ Syntax: cpplint.py [--verbose=#] [--output=emacs|eclipse|vs7|junit|sed|gsed]
                    [--exclude=path]
                    [--extensions=hpp,cpp,...]
                    [--includeorder=default|standardcfirst]
+                   [--config=filename]
                    [--quiet]
                    [--version]
         <file> [file] ...
@@ -228,6 +229,9 @@ Syntax: cpplint.py [--verbose=#] [--output=emacs|eclipse|vs7|junit|sed|gsed]
       standardcfirst means to instead use an allow-list of known c headers and
       treat all others as separate group of "other system headers". The C headers
       included are those of the C-standard lib and closely related ones.
+
+    config=filename
+      Search for config files with the specified name instead of CPPLINT.cfg
 
     headers=x,y,...
       The header extensions that cpplint will treat as .h in checks. Values are
@@ -875,6 +879,9 @@ _line_length = 80
 
 # This allows to use different include order rule than default
 _include_order = "default"
+
+# This allows different config files to be used
+_config_filename = "CPPLINT.cfg"
 
 try:
   unicode
@@ -6526,7 +6533,7 @@ def ProcessConfigOverrides(filename):
     if not base_name:
       break  # Reached the root directory.
 
-    cfg_file = os.path.join(abs_path, "CPPLINT.cfg")
+    cfg_file = os.path.join(abs_path, _config_filename)
     abs_filename = abs_path
     if not os.path.isfile(cfg_file):
       continue
@@ -6746,6 +6753,7 @@ def ParseArguments(args):
                                                  'recursive',
                                                  'headers=',
                                                  'includeorder=',
+                                                 'config=',
                                                  'quiet'])
   except getopt.GetoptError:
     PrintUsage('Invalid arguments.')
@@ -6804,6 +6812,9 @@ def ParseArguments(args):
       recursive = True
     elif opt == '--includeorder':
       ProcessIncludeOrderOption(val)
+    elif opt == '--config':
+      global _config_filename
+      _config_filename = val
 
   if not filenames:
     PrintUsage('No files were specified.')
