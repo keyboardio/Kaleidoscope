@@ -39,19 +39,12 @@ endif
 .DEFAULT_GOAL := smoke-sketches
 
 .PHONY: setup
-setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
+setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope checkout-platform prepare-virtual
 	@:
 
 .PHONY: checkout-platform
 checkout-platform: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt
 	@:
-
-.PHONY: prepare-virtual
-prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt
-	@:
-
-$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
-	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
@@ -66,6 +59,13 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 		--shallow-submodules \
 		--recurse-submodules=':(exclude)libraries/Kaleidoscope' \
 		https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
+
+.PHONY: prepare-virtual
+prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt
+	@:
+
+$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
+	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
 
 .PHONY: update
 update:
@@ -92,11 +92,6 @@ docker-clean:
 .PHONY: docker-bash
 docker-bash:
 	_NO_SYNC_KALEIDOSCOPE=1 DOCKER_LIVE_KALEIDOSCOPE_DIR=1 ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "bash"
-
-.PHONY: run-tests
-run-tests: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt build-gtest-gmock
-	$(MAKE) -c tests
-	@: # blah
 
 build-gtest-gmock:
 	(cd testing/googletest && cmake -H. -Bbuild -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd)  .)
@@ -140,15 +135,15 @@ SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -typ
 smoke-sketches: $(SMOKE_SKETCHES)
 	@echo "Smoke-tested all the sketches"
 
+.PHONY: force
+$(SMOKE_SKETCHES): force
+	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
+
 .PHONY: clean
 clean: 
 	$(MAKE) -C tests clean
 	rm -rf -- "testing/googletest/build/*"
 	rm -rf -- "_build/*"
-
-.PHONY: force
-$(SMOKE_SKETCHES): force
-	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
 
 build-arduino-nightly-package:
 	perl bin/build-arduino-package \
