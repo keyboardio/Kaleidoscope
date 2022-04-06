@@ -2398,7 +2398,7 @@ New code should not contain calls to deprecated interface points. Use the new in
 
 Coding style and formatting are pretty arbitrary, but a project is much easier to follow if everyone uses the same style. Individuals may not agree with every aspect of the formatting rules, and some of the rules may take some getting used to, but it is important that all project contributors follow the style rules so that they can all read and understand everyone's code easily.
 
-To help you format code correctly, we use "Artistic Style" 3.0. The `make astyle` target is available in the Kaleidoscope and plugin Makefiles. Our CI infrastructure enforces `astyle`'s decisions.
+To help format code in compliance with this style guide, we use `clang-format`, which many editors can be configured to call automatically.  There is also `make format` target available in the Kaleidoscope Makefile that will use `clang-format` to format all the core and plugin code.  Our CI infrastructure checks to ensure that code has been formatted to these specifications.
 
 ### Line Length
 
