@@ -36,14 +36,11 @@ ifneq ($(TEST_PATH),)
 TEST_PATH_ARG="TEST_PATH='$(TEST_PATH)'"
 endif
 
-
 DEFAULT_GOAL: smoke-sketches
-
 
 .PHONY: setup
 setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
 	@:
-
 
 .PHONY: checkout-platform
 checkout-platform: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt
@@ -55,7 +52,6 @@ prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
 	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
-
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
@@ -110,7 +106,6 @@ build-gtest-gmock:
 find-filename-conflicts:
 	bin/find-filename-conflicts.py src plugins/*
 
-
 .PHONY: format
 format:
 	bin/format-code.py \
@@ -145,7 +140,6 @@ SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -typ
 smoke-sketches: $(SMOKE_SKETCHES)
 	@echo "Smoke-tested all the sketches"
 
-
 .PHONY: clean
 clean: 
 	$(MAKE) -C tests clean
@@ -155,7 +149,6 @@ clean:
 .PHONY: force
 $(SMOKE_SKETCHES): force
 	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
-
 
 build-arduino-nightly-package:
 	perl bin/build-arduino-package \

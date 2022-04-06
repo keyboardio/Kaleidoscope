@@ -37,16 +37,11 @@ TESTS		:= $(shell cd $(tests_dir); find ${TEST_PATH} -name '*.ino' -exec dirname
 # The clutter up the test output on Make 4.0 and newer
 MAKEFLAGS += --no-print-directory
 
-
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for
 # Kaliedoscope's makefiles
-
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
-
-
-
 
 .PHONY: all
 all: ${libcommon_a} googletest ${TESTS} 
@@ -63,8 +58,6 @@ run-all: ${TESTS}
 			testcase=$${test} run || ERROR=$$?; \
 	done; \
 	if [ -n $${ERROR} ]; then exit $${ERROR}; fi
-
-
 
 .PHONY: clean
 clean: cmake-clean
