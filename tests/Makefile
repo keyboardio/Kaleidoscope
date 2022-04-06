@@ -46,12 +46,13 @@ include $(top_dir)/etc/makefiles/arduino-cli.mk
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 
 
-.PHONY: clean cmake-clean all googletest
 
 
+.PHONY: all
 all: ${libcommon_a} googletest ${TESTS} 
 	@:
 
+.PHONY: cmake-clean
 cmake-clean:
 	rm -rf "${top_dir}"/testing/googletest/build/*
 
@@ -65,6 +66,7 @@ run-all: ${TESTS}
 
 
 
+.PHONY: clean
 clean: cmake-clean
 	@for test in ${TESTS}; do \
 		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk \
@@ -73,6 +75,7 @@ clean: cmake-clean
 	done
 	rm -rf "${build_dir}"/*
 
+.PHONY: googletest
 googletest: ${top_dir}/testing/googletest/build/Makefile
 	${MAKE} -C ${top_dir}/testing/googletest/build
 
