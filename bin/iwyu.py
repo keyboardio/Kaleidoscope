@@ -113,6 +113,15 @@ def parse_args(args):
         default='.iwyu_ignore',
     )
     parser.add_argument(
+        '-I',
+        '--include',
+        dest='include_dirs',
+        metavar='<dir>',
+        help=
+        """Add <dir> to the list of directories that will be searched for header files.""",
+        action='append',
+    )
+    parser.add_argument(
         'targets',
         metavar="<target>",
         nargs='+',
@@ -256,6 +265,8 @@ def main():
     ]
     # Include plugin source dirs for plugins that depend on other plugins:
     includes += glob.glob(os.path.join(kaleidoscope_dir, 'plugins', '*', 'src'))
+    # Include dirs specified on the command line:
+    includes += map(os.path.abspath, opts.include_dirs)
     clang_opts += ['-I' + _ for _ in includes]
 
     # ----------------------------------------------------------------------
