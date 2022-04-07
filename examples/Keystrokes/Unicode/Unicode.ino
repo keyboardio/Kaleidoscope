@@ -23,7 +23,7 @@
 
 enum { MACRO_KEYBOARD_EMOJI };
 
-// *INDENT-OFF*
+// clang-format off
 
 KEYMAPS(
   [0] = KEYMAP_STACKED
@@ -44,7 +44,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 )
-// *INDENT-ON*
+// clang-format on
 
 static void unicode(uint32_t character, uint8_t keyState) {
   if (keyToggledOn(keyState)) {

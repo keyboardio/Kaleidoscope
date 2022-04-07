@@ -22,7 +22,7 @@
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-IdleLEDs.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -42,7 +42,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           EEPROMSettings,
@@ -56,7 +56,7 @@ void setup() {
 
   Kaleidoscope.setup();
 
-  PersistentIdleLEDs.setIdleTimeoutSeconds(300); // 5 minutes
+  PersistentIdleLEDs.setIdleTimeoutSeconds(300);  // 5 minutes
 
   LEDRainbowWaveEffect.activate();
 }

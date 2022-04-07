@@ -21,7 +21,7 @@
 #include <Kaleidoscope-Escape-OneShot.h>
 #include <Kaleidoscope-FocusSerial.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -61,7 +61,7 @@ KEYMAPS(
     ___
   ),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           Focus,

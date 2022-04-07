@@ -18,7 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-SpaceCadet.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -38,7 +38,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_skip),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(SpaceCadet);
 
@@ -49,14 +49,14 @@ void setup() {
   //Setting is {KeyThatWasPressed, AlternativeKeyToSend, TimeoutInMS}
   //Note: must end with the SPACECADET_MAP_END delimiter
   static kaleidoscope::plugin::SpaceCadet::KeyBinding spacecadetmap[] = {
-    {Key_LeftShift, Key_LeftParen, 250}
-    , {Key_RightShift, Key_RightParen, 250}
-    , {Key_LeftGui, Key_LeftCurlyBracket, 250}
-    , {Key_RightAlt, Key_RightCurlyBracket, 250}
-    , {Key_LeftAlt, Key_RightCurlyBracket, 250}
-    , {Key_LeftControl, Key_LeftBracket, 250}
-    , {Key_RightControl, Key_RightBracket, 250}
-    , SPACECADET_MAP_END
+    {Key_LeftShift, Key_LeftParen, 250},
+    {Key_RightShift, Key_RightParen, 250},
+    {Key_LeftGui, Key_LeftCurlyBracket, 250},
+    {Key_RightAlt, Key_RightCurlyBracket, 250},
+    {Key_LeftAlt, Key_RightCurlyBracket, 250},
+    {Key_LeftControl, Key_LeftBracket, 250},
+    {Key_RightControl, Key_RightBracket, 250},
+    SPACECADET_MAP_END,
   };
   //Set the map.
   SpaceCadet.map = spacecadetmap;

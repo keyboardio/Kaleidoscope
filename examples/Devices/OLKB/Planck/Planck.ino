@@ -20,17 +20,18 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Macros.h"
 
-enum {  _QWERTY,
-        _COLEMAK,
-        _DVORAK,
-        _LOWER,
-        _RAISE,
-        _PLOVER,
-        _ADJUST
-     };
+enum {
+  _QWERTY,
+  _COLEMAK,
+  _DVORAK,
+  _LOWER,
+  _RAISE,
+  _PLOVER,
+  _ADJUST
+};
 
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 
 /* Qwerty
@@ -161,7 +162,7 @@ KEYMAPS(
 //    ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___
 //)
 );
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(Macros);
 

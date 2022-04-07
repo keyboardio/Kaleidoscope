@@ -50,11 +50,12 @@
 #include "Kaleidoscope-USB-Quirks.h"
 
 
-enum {  _QWERTY,
-     };
+enum {
+  _QWERTY,
+};
 
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 
 [_QWERTY] = KEYMAP(
@@ -67,8 +68,7 @@ Key_F5,	Key_LeftControl,Key_LeftAlt,	Key_LeftGui, 	Key_Backspace,     Key_LeftAr
 
 
 ));
-/* *INDENT-ON* */
-
+// clang-format on
 
 
 // These 'solid' color effect definitions define a rainbow of
@@ -133,51 +133,57 @@ static void toggleKeyboardProtocol(uint8_t combo_index) {
 /** Magic combo list, a list of key combo and action pairs the firmware should
  * recognise.
  */
-USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
-                  // Left Fn + Esc + Shift
-                  .keys = { R3C6, R2C6, R3C7 }
-                 });
+USE_MAGIC_COMBOS(
+  {.action = toggleKeyboardProtocol,
+   // Left Fn + Esc + Shift
+   .keys = {R3C6, R2C6, R3C7}});
 
 
-KALEIDOSCOPE_INIT_PLUGINS(Macros,
+KALEIDOSCOPE_INIT_PLUGINS(
+  Macros,
 
-                          // LEDControl provides support for other LED modes
-                          LEDControl,
+  // LEDControl provides support for other LED modes
+  LEDControl,
 
 
-                          // The rainbow effect changes the color of all of the keyboard's keys at the same time
-                          // running through all the colors of the rainbow.
-                          LEDRainbowEffect,
+  // The rainbow effect changes the color of all of the keyboard's keys at the same time
+  // running through all the colors of the rainbow.
+  LEDRainbowEffect,
 
-                          // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
-                          // and slowly moves the rainbow across your keyboard
-                          LEDRainbowWaveEffect,
+  // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
+  // and slowly moves the rainbow across your keyboard
+  LEDRainbowWaveEffect,
 
-                          // The chase effect follows the adventure of a blue pixel which chases a red pixel across
-                          // your keyboard. Spoiler: the blue pixel never catches the red pixel
-                          LEDChaseEffect,
+  // The chase effect follows the adventure of a blue pixel which chases a red pixel across
+  // your keyboard. Spoiler: the blue pixel never catches the red pixel
+  LEDChaseEffect,
 
-                          // These static effects turn your keyboard's LEDs a variety of colors
-                          solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
+  // These static effects turn your keyboard's LEDs a variety of colors
+  solidRed,
+  solidOrange,
+  solidYellow,
+  solidGreen,
+  solidBlue,
+  solidIndigo,
+  solidViolet,
 
-                          // The breathe effect slowly pulses all of the LEDs on your keyboard
-                          LEDBreatheEffect,
+  // The breathe effect slowly pulses all of the LEDs on your keyboard
+  LEDBreatheEffect,
 
-                          // The HostPowerManagement plugin allows us to turn LEDs off when then host
-                          // goes to sleep, and resume them when it wakes up.
-                          HostPowerManagement,
+  // The HostPowerManagement plugin allows us to turn LEDs off when then host
+  // goes to sleep, and resume them when it wakes up.
+  HostPowerManagement,
 
-                          // The MagicCombo plugin lets you use key combinations to trigger custom
-                          // actions - a bit like Macros, but triggered by pressing multiple keys at the
-                          // same time.
-                          MagicCombo,
+  // The MagicCombo plugin lets you use key combinations to trigger custom
+  // actions - a bit like Macros, but triggered by pressing multiple keys at the
+  // same time.
+  MagicCombo,
 
-                          // The USBQuirks plugin lets you do some things with USB that we aren't
-                          // comfortable - or able - to do automatically, but can be useful
-                          // nevertheless. Such as toggling the key report protocol between Boot (used
-                          // by BIOSes) and Report (NKRO).
-                          USBQuirks
-                         );
+  // The USBQuirks plugin lets you do some things with USB that we aren't
+  // comfortable - or able - to do automatically, but can be useful
+  // nevertheless. Such as toggling the key report protocol between Boot (used
+  // by BIOSes) and Report (NKRO).
+  USBQuirks);
 
 void setup() {
   Kaleidoscope.setup();

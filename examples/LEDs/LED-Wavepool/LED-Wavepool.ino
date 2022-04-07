@@ -20,6 +20,7 @@
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Wavepool.h>
 
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
         (
@@ -46,12 +47,13 @@ KALEIDOSCOPE_INIT_PLUGINS(
   LEDOff,
   WavepoolEffect
 );
+// clang-format on
 
 void setup() {
   Kaleidoscope.setup();
 
   WavepoolEffect.idle_timeout = 5000;  // 5 seconds
-  WavepoolEffect.ripple_hue = WavepoolEffect.rainbow_hue;
+  WavepoolEffect.ripple_hue   = WavepoolEffect.rainbow_hue;
   WavepoolEffect.activate();
 }
 

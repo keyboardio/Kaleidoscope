@@ -21,7 +21,7 @@
 // This example demonstrates how a plugin can gather information about
 // the keymap at compile time, e.g. to adapt its behavior, safe resources, ...
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -42,9 +42,9 @@ KEYMAPS(
    Key_NoKey
   ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
-using namespace kaleidoscope::sketch_exploration; // NOLINT(build/namespaces)
+using namespace kaleidoscope::sketch_exploration;  // NOLINT(build/namespaces)
 
 class BPlugin : public kaleidoscope::Plugin {};
 class CPlugin : public kaleidoscope::Plugin {};
@@ -54,7 +54,8 @@ class CPlugin : public kaleidoscope::Plugin {};
 class APlugin : public kaleidoscope::Plugin {
 
  public:
-  APlugin() : has_key_1_{false} {}
+  APlugin()
+    : has_key_1_{false} {}
 
   template<typename _Sketch>
   kaleidoscope::EventHandlerResult exploreSketch() {
@@ -72,7 +73,7 @@ class APlugin : public kaleidoscope::Plugin {
 
     constexpr bool has_key_1 = K::collect(HasKey{Key_1});
     static_assert(has_key_1, "Error querying key existence");
-    has_key_1_ = has_key_1; // Assign the temporary that was computed
+    has_key_1_ = has_key_1;  // Assign the temporary that was computed
     // at compile time.
 
     constexpr Key max_key = K::collect(MaxKeyRaw{});
@@ -81,7 +82,7 @@ class APlugin : public kaleidoscope::Plugin {
     static_assert(K::getKey(0 /*layer*/, KeyAddr{2, 3}) == Key_D,
                   "Key lookup failed");
 
-    constexpr auto n_layers = K::nLayers();
+    constexpr auto n_layers   = K::nLayers();
     constexpr auto layer_size = K::layerSize();
 
     // Plugin exploration
@@ -117,7 +118,6 @@ class APlugin : public kaleidoscope::Plugin {
   }
 
  private:
-
   bool has_key_1_;
 };
 
@@ -127,8 +127,7 @@ BPlugin b_plugin;
 KALEIDOSCOPE_INIT_PLUGINS(
   a_plugin1,
   b_plugin,
-  a_plugin2
-)
+  a_plugin2)
 
 void setup() {
   Kaleidoscope.setup();

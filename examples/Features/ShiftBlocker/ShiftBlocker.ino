@@ -18,7 +18,7 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-Macros.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -39,7 +39,7 @@ KEYMAPS(
    M(0)
    ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 namespace kaleidoscope {
 namespace plugin {
@@ -64,11 +64,10 @@ class ShiftBlocker : public Plugin {
 
  private:
   bool active_{false};
-
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
 

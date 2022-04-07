@@ -24,7 +24,7 @@
 #include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/plugin.h"
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (Key_NoKey,    Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
@@ -43,7 +43,7 @@ KEYMAPS(
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    LEAD(0)),
 )
-// *INDENT-ON*
+// clang-format on
 
 namespace kaleidoscope {
 namespace plugin {
@@ -74,7 +74,7 @@ class LeaderPrefix : public Plugin {
       if (keyToggledOn(event.state) && isLeaderKey(event.key)) {
         // A Leader key toggled on, so we set our state to "active", and set the
         // arg value to zero.
-        active_ = true;
+        active_     = true;
         leader_arg_ = 0;
       }
       // Whether or not the plugin just became active, there's nothing more to
@@ -122,8 +122,16 @@ class LeaderPrefix : public Plugin {
  private:
   // The "digit keys": these are the keys on the number row of the Model01.
   KeyAddr digit_addrs_[10] = {
-    KeyAddr(0, 14), KeyAddr(0, 1), KeyAddr(0, 2), KeyAddr(0, 3), KeyAddr(0, 4),
-    KeyAddr(0, 5), KeyAddr(0, 10), KeyAddr(0, 11), KeyAddr(0, 12), KeyAddr(0, 13),
+    KeyAddr(0, 14),
+    KeyAddr(0, 1),
+    KeyAddr(0, 2),
+    KeyAddr(0, 3),
+    KeyAddr(0, 4),
+    KeyAddr(0, 5),
+    KeyAddr(0, 10),
+    KeyAddr(0, 11),
+    KeyAddr(0, 12),
+    KeyAddr(0, 13),
   };
 
   // This event tracker is necessary to prevent re-processing events.  Any
@@ -144,8 +152,8 @@ class LeaderPrefix : public Plugin {
   }
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 // This creates our plugin object.
 kaleidoscope::plugin::LeaderPrefix LeaderPrefix;
@@ -172,9 +180,9 @@ void leaderTestPrefix(uint8_t seq_index) {
 }
 
 static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
-LEADER_DICT({LEADER_SEQ(LEAD(0), Key_X), leaderTestX},
-{LEADER_SEQ(LEAD(0), Key_X, Key_X), leaderTestXX},
-{LEADER_SEQ(LEAD(0), Key_Z), leaderTestPrefix});
+  LEADER_DICT({LEADER_SEQ(LEAD(0), Key_X), leaderTestX},
+              {LEADER_SEQ(LEAD(0), Key_X, Key_X), leaderTestXX},
+              {LEADER_SEQ(LEAD(0), Key_Z), leaderTestPrefix});
 
 // The order matters here; LeaderPrefix won't work unless it precedes Leader in
 // this list.  If there are other plugins in the list, these two should ideally

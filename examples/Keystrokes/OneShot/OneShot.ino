@@ -24,7 +24,7 @@ enum {
   TOGGLE_ONESHOT,
 };
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -62,7 +62,7 @@ KEYMAPS(
     ___, ___, ___, ___,
     ___),
 )
-// *INDENT-ON*
+// clang-format on
 
 void macroToggleOneShot() {
   OneShot.toggleAutoOneShot();

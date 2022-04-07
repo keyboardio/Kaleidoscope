@@ -22,7 +22,7 @@
 
 #include "AppSwitcher.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -43,7 +43,7 @@ KEYMAPS(
    AppSwitcher_Prev
    ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(HostOS,
                           AppSwitcher);

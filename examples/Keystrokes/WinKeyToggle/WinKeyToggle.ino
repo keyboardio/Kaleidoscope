@@ -28,11 +28,10 @@ void toggleWinKey(uint8_t index) {
 }
 
 USE_MAGIC_COMBOS([WINKEYTOGGLE] = {
-  .action = toggleWinKey,
-  .keys = {R3C6, R3C9}
-});
+                   .action = toggleWinKey,
+                   .keys   = {R3C6, R3C9}});
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -52,7 +51,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(MagicCombo, WinKeyToggle);
 

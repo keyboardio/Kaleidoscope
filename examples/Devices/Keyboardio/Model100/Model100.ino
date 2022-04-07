@@ -88,10 +88,10 @@
   * a macro key is pressed.
   */
 
-enum { MACRO_VERSION_INFO,
-       MACRO_ANY
-     };
-
+enum {
+  MACRO_VERSION_INFO,
+  MACRO_ANY,
+};
 
 
 /** The Model 100's key layouts are defined as 'keymaps'. By default, there are three
@@ -142,7 +142,11 @@ enum { MACRO_VERSION_INFO,
   *
   */
 
-enum { PRIMARY, NUMPAD, FUNCTION }; // layers
+enum {
+  PRIMARY,
+  NUMPAD,
+  FUNCTION,
+};  // layers
 
 
 /**
@@ -164,11 +168,10 @@ enum { PRIMARY, NUMPAD, FUNCTION }; // layers
 // #define PRIMARY_KEYMAP_CUSTOM
 
 
-
 /* This comment temporarily turns off astyle's indent enforcement
  *   so we can make the keymaps actually resemble the physical key layout better
  */
-// *INDENT-OFF*
+// clang-format off
 
 KEYMAPS(
 
@@ -279,7 +282,7 @@ KEYMAPS(
 ) // KEYMAPS(
 
 /* Re-enable astyle's indent enforcement */
-// *INDENT-ON*
+// clang-format on
 
 /** versionInfoMacro handles the 'firmware version info' macro
  *  When a key bound to the macro is pressed, this macro
@@ -334,7 +337,6 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   }
   return MACRO_NONE;
 }
-
 
 
 // These 'solid' color effect definitions define a rainbow of
@@ -412,12 +414,10 @@ static void enterHardwareTestMode(uint8_t combo_index) {
  */
 USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   // Left Fn + Esc + Shift
-                  .keys = { R3C6, R2C6, R3C7 }
-}, {
-  .action = enterHardwareTestMode,
-  // Left Fn + Prog + LED
-  .keys = { R3C6, R0C0, R0C6 }
-});
+                  .keys = {R3C6, R2C6, R3C7}},
+                 {.action = enterHardwareTestMode,
+                  // Left Fn + Prog + LED
+                  .keys = {R3C6, R0C0, R0C6}});
 
 // First, tell Kaleidoscope which plugins you want to use.
 // The order can be important. For example, LED effects are
@@ -468,7 +468,13 @@ KALEIDOSCOPE_INIT_PLUGINS(
   LEDChaseEffect,
 
   // These static effects turn your keyboard's LEDs a variety of colors
-  solidRed, solidOrange, solidYellow, solidGreen, solidBlue, solidIndigo, solidViolet,
+  solidRed,
+  solidOrange,
+  solidYellow,
+  solidGreen,
+  solidBlue,
+  solidIndigo,
+  solidViolet,
 
   // The breathe effect slowly pulses all of the LEDs on your keyboard
   LEDBreatheEffect,
@@ -510,8 +516,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // comfortable - or able - to do automatically, but can be useful
   // nevertheless. Such as toggling the key report protocol between Boot (used
   // by BIOSes) and Report (NKRO).
-  USBQuirks
-);
+  USBQuirks);
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up

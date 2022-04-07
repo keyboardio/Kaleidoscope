@@ -18,7 +18,7 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-ShapeShifter.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -38,7 +38,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 static const kaleidoscope::plugin::ShapeShifter::dictionary_t shape_shift_dictionary[] PROGMEM = {
   {Key_1, Key_2},

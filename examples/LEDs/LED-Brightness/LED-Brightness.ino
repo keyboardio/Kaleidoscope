@@ -20,7 +20,7 @@
 #include <Kaleidoscope-LEDEffect-Rainbow.h>
 #include <Kaleidoscope-Macros.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -40,7 +40,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     M(1)),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           Macros,

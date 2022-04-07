@@ -21,7 +21,7 @@
 #include <Kaleidoscope-EEPROM-Keymap-Programmer.h>
 #include <Kaleidoscope-Macros.h>
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (M(0),              Key_1, Key_2, Key_3, Key_4, Key_5, Key_NoKey,
@@ -40,7 +40,7 @@ KEYMAPS(
    Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
    Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   if (macro_id == 0 && keyToggledOff(event.state)) {

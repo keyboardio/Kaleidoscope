@@ -31,7 +31,7 @@ enum {
 
 #define MO(n) ShiftToLayer(n)
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 
 /* Qwerty
@@ -71,7 +71,7 @@ KEYMAPS(
   ,___          ,___   ,___   ,___   ,___       ,___      ,___   ,___   ,___   ,___   ,___
 )
 );
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(Macros);
 

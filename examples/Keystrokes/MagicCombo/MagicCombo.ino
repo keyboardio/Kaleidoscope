@@ -29,7 +29,7 @@ void kindOfMagic(uint8_t combo_index) {
 
 USE_MAGIC_COMBOS([KIND_OF_MAGIC] = {.action = kindOfMagic, .keys = {R3C6, R3C9}});
 
-// *INDENT-OFF*
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -49,7 +49,7 @@ KEYMAPS(
     Key_RightShift, Key_RightAlt, Key_Spacebar, Key_RightControl,
     Key_NoKey),
 )
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(MagicCombo, Macros);
 
