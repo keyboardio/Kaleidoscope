@@ -99,7 +99,7 @@ endif
 
 
 
-DEFAULT_GOAL: compile
+.DEFAULT_GOAL := compile
 
 
 #$(SKETCH_FILE_PATH):

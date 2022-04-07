@@ -36,23 +36,15 @@ ifneq ($(TEST_PATH),)
 TEST_PATH_ARG="TEST_PATH='$(TEST_PATH)'"
 endif
 
+.DEFAULT_GOAL := smoke-sketches
 
-DEFAULT_GOAL: smoke-sketches
-
-
-setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt 
+.PHONY: setup
+setup: $(ARDUINO_CLI_PATH) $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml install-arduino-core-avr install-arduino-core-kaleidoscope checkout-platform prepare-virtual
 	@:
 
-
+.PHONY: checkout-platform
 checkout-platform: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt
 	@:
-
-prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt
-	@:
-
-$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
-	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
-
 
 $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 	git clone -c core.symlinks=true \
@@ -68,89 +60,96 @@ $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/avr/boards.txt:
 		--recurse-submodules=':(exclude)libraries/Kaleidoscope' \
 		https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32
 
+.PHONY: prepare-virtual
+prepare-virtual: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt
+	@:
+
+$(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt:
+	$(MAKE) -C $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio prepare-virtual
+
+.PHONY: update
 update:
 	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio; git pull; \
 		git submodule update --init --recursive
 	cd $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/gd32; git pull; \
 		git submodule update --init --recursive
 
+.PHONY: simulator-tests
 simulator-tests:
 ifneq ($(_using_old_make),)
 	$(info You're using an older version of GNU Make that doesn't offer the --output-sync option. If you're running the test suite in parallel, output may be garbled. You might consider using GNU Make 4.0 or later instead)
 endif
 	$(MAKE) -C tests all
 
+.PHONY: docker-simulator-tests
 docker-simulator-tests:
 	ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "make simulator-tests $(TEST_PATH_ARG)"
 
+.PHONY: docker-clean
 docker-clean:
 	_NO_SYNC_KALEIDOSCOPE=1 ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "rm -rf -- testing/googletest/build/* _build/* /kaleidoscope-persist/temp/*"
 
+.PHONY: docker-bash
 docker-bash:
 	_NO_SYNC_KALEIDOSCOPE=1 DOCKER_LIVE_KALEIDOSCOPE_DIR=1 ARDUINO_DIRECTORIES_USER="$(ARDUINO_DIRECTORIES_USER)" ./bin/run-docker "bash"
-
-run-tests: $(ARDUINO_DIRECTORIES_USER)/hardware/keyboardio/virtual/boards.txt build-gtest-gmock
-	$(MAKE) -c tests
-	@: # blah
 
 build-gtest-gmock:
 	(cd testing/googletest && cmake -H. -Bbuild -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd)  .)
 	$(MAKE) -C testing/googletest
 
-adjust-git-timestamps:
-	bin/set-timestamps-from-git
-
+.PHONY: find-filename-conflicts
 find-filename-conflicts:
-	bin/find-filename-conflicts
+	bin/find-filename-conflicts.py src plugins/*
 
-.PHONY: format check-formatting cpplint cpplint-noisy shellcheck smoke-examples find-filename-conflicts prepare-virtual checkout-platform adjust-git-timestamps docker-bash docker-simulator-tests run-tests simulator-tests setup
-
+.PHONY: format
 format:
 	bin/format-code.py \
 		--exclude-dir 'testing/googletest' \
 		--exclude-file 'generated-testcase.cpp' \
 		src plugins examples testing
 
-check-formatting:
+.PHONY: check-code-style
+check-code-style:
 	bin/format-code.py \
 		--exclude-dir 'testing/googletest' \
 		--exclude-file 'generated-testcase.cpp' \
+		--force \
 		--check \
 		--verbose \
 		src plugins examples testing
 
+.PHONY: check-includes
+check-includes:
+	bin/iwyu.py -v src plugins
+	bin/format-code.py -f -v --check src plugins
+
+.PHONY: cpplint-noisy
 cpplint-noisy:
 	-bin/cpplint.py --config=.cpplint-noisy --recursive src plugins examples
 
 
+.PHONY: cpplint
 cpplint:
 	bin/cpplint.py --config=.cpplint --quiet --recursive src plugins examples
 
-
-SHELL_FILES := $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
-
+.PHONY: shellcheck
 shellcheck:
-	@if [ -d "bin" ]; then \
-		shellcheck ${SHELL_FILES}; \
-	fi
-
+	bin/check-shell-scripts.sh
 
 SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi))
 
 smoke-sketches: $(SMOKE_SKETCHES)
 	@echo "Smoke-tested all the sketches"
 
-.PHONY: force all clean test
+.PHONY: force
+$(SMOKE_SKETCHES): force
+	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
 
+.PHONY: clean
 clean: 
 	$(MAKE) -C tests clean
 	rm -rf -- "testing/googletest/build/*"
 	rm -rf -- "_build/*"
-
-
-$(SMOKE_SKETCHES): force
-	$(MAKE) -C $@ -f $(KALEIDOSCOPE_ETC_DIR)/makefiles/sketch.mk compile
-
 
 build-arduino-nightly-package:
 	perl bin/build-arduino-package \

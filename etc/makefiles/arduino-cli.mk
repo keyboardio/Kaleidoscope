@@ -114,9 +114,10 @@ endif
 .PHONY: configure-arduino-cli install-arduino-core-kaleidoscope install-arduino-core-avr
 .PHONY: stupid-workaround-for-make-inclusion-semantics
 
-stupid-workaround-for-make-inclusion-semantics: DEFAULT_GOAL
+stupid-workaround-for-make-inclusion-semantics:
 	@: # This is here so that the sketch makefile including this file doesn't
 	@: # default to arduino-cli installation as its priamry target
+	@echo "No default target specified; aborting. Please set the .DEFAULT_GOAL variable in your makefile."
 
 $(KALEIDOSCOPE_BIN_DIR)/arduino-cli:
 	$(QUIET) curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR="$(KALEIDOSCOPE_BIN_DIR)" sh
