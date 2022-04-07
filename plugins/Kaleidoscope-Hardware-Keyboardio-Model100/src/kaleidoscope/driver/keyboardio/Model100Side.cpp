@@ -108,14 +108,11 @@ uint8_t Model100Side::setLEDSPIFrequency(uint8_t frequency) {
 // This method will verify that the device is around and ready to talk.
 bool Model100Side::isDeviceAvailable() {
   return true;
-  // if the counter is zero, that's the special value that means "we know it's there"
   if (unavailable_device_check_countdown_ == 0) {
+    // if the counter is zero, that's the special value that means "we know it's there"
     return true;
-  }
-
-  // if the time to check counter is 1, check for the device
-
-  else if (--unavailable_device_check_countdown_ == 0) {
+  } else if (--unavailable_device_check_countdown_ == 0) {
+    // if the time to check counter was 1, check for the device
     uint8_t wire_result;
     Wire.beginTransmission(addr);
     wire_result = Wire.endTransmission();
@@ -161,7 +158,7 @@ int Model100Side::readRegister(uint8_t cmd) {
     return -1;
   }
 
-  delayMicroseconds(50);  // TODO We may be able to drop this in the future
+  delayMicroseconds(50);  // TODO(anyone): We may be able to drop this in the future
   // but will need to verify with correctly
   // sized pull-ups on both the left and right
   // hands' i2c SDA and SCL lines

@@ -72,7 +72,7 @@ class AutoShift : public Plugin {
 
    public:
     // Basic un-checked constructor
-    constexpr Categories(uint8_t raw_bits)
+    explicit constexpr Categories(uint8_t raw_bits)
       : raw_bits_(raw_bits) {}
 
     static constexpr Categories letterKeys() {

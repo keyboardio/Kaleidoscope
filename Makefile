@@ -112,11 +112,11 @@ check-formatting:
 	bin/format-code.sh --check
 
 cpplint-noisy:
-	-bin/cpplint.py  --filter=-legal/copyright,-build/include,-readability/namespace,-whitespace/line_length,-runtime/references  --recursive --extensions=cpp,h,ino src examples
+	-bin/cpplint.py --config=.cpplint-noisy --recursive src plugins examples
 
 
 cpplint:
-	bin/cpplint.py  --quiet --filter=-whitespace,-legal/copyright,-build/include,-readability/namespace,-runtime/references  --recursive --extensions=cpp,h,ino src examples
+	bin/cpplint.py --config=.cpplint --quiet --recursive src plugins examples
 
 
 SHELL_FILES := $(shell if [ -d bin ]; then egrep -n -r -l "(env (ba)?sh)|(/bin/(ba)?sh)" bin; fi)
