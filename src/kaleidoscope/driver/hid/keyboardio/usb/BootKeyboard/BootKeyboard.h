@@ -26,11 +26,11 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"
-#include "kaleidoscope/HIDTables.h"
+#include <stddef.h>  // for size_t
+#include <stdint.h>  // for uint8_t
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"  // for USBSetup, EPTYPE_DESCRI...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"          // for HID_REPORT_PROTOCOL
 
 typedef union {
   // Low level key report: up to 6 keys and shift, ctrl etc at once

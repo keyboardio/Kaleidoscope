@@ -26,9 +26,7 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include <stdint.h>  // for uint8_t, int16_t, int8_t, uint32_t
 
 // Dpad directions
 #define GAMEPAD_DPAD_CENTERED   0

@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include <Arduino.h>  // IWYU pragma: keep
 
 #ifdef ARDUINO_ARCH_SAMD
 

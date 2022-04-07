@@ -24,8 +24,13 @@ THE SOFTWARE.
 */
 
 #include "kaleidoscope/driver/hid/keyboardio/usb/BootKeyboard/BootKeyboard.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
+
+#include <string.h>  // for memcmp, memcpy
+
+#include "Arduino.h"                                                      // for PROGMEM
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"  // for D_REPORT_COUNT
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"            // for HID_KEYBOARD_FI...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"     // for HIDReportObserver
 
 // See Appendix B of USB HID spec
 static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {

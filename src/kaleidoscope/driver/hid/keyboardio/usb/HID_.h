@@ -18,9 +18,11 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include <Arduino.h>  // for highByte, lowByte
+#include <stddef.h>   // for NULL
+#include <stdint.h>   // for uint8_t, uint16_t
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"  // for USBSetup, EPTYPE_DESCRI...
 
 #if defined(USBCON)
 

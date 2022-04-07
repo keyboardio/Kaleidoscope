@@ -26,11 +26,10 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
+#include <stdint.h>  // for uint8_t, uint16_t
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"  // for D_DATA, D_INPUT
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"          // for MOUSE_LEFT
 
 // clang-format off
 
@@ -104,4 +103,4 @@ class AbsoluteMouseAPI {
   inline int16_t qadd16(int16_t base, int16_t increment);
 };
 
-#include "AbsoluteMouseAPI.hpp"
+#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.hpp"  // IWYU pragma: export

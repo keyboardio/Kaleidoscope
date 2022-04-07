@@ -19,6 +19,7 @@
 #ifndef KEYBOARDIOHID_BUILD_WITHOUT_HID
 
 #include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
+
 #include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
 
 #if defined(USBCON)
@@ -173,11 +174,11 @@ bool HID_::setup(USBSetup &setup) {
       if (length == sizeof(setReportData)) {
         USB_RecvControl(&raw_report_data, length);
         setReportData.reportId = raw_report_data[0];
-        setReportData.leds = raw_report_data[1];
+        setReportData.leds     = raw_report_data[1];
       } else if (length == sizeof(setReportData.leds)) {
         USB_RecvControl(&raw_report_data, length);
         setReportData.reportId = 0;
-        setReportData.leds = raw_report_data[0];
+        setReportData.leds     = raw_report_data[0];
       }
       // Once the GD32 core bug is fixed, we can replace the above code with the
       // original code below:

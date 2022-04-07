@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include <stdint.h>         // for int8_t, uint8_t
+#include <stdint.h>  // for int8_t, uint8_t
 
-#include "kaleidoscope/driver/hid/base/Mouse.h"  // for Mouse, MouseProps
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"
+#include "kaleidoscope/driver/hid/base/Mouse.h"                        // for Mouse, MouseProps
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"  // for HID_MouseReport_Da...
 
 namespace kaleidoscope {
 namespace driver {

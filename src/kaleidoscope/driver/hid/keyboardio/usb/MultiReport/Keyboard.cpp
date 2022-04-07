@@ -24,7 +24,14 @@ THE SOFTWARE.
 */
 
 #include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
+
+#include <Arduino.h>  // for PROGMEM, byte
+#include <string.h>   // for memcmp, memcpy
+
+#include "kaleidoscope/HIDTables.h"                                       // for HID_KEYBOARD_A_...
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"  // for D_REPORT_COUNT
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"          // for HID_REPORTID_NK...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"            // for HID_KEYBOARD_FI...
 
 static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   // clang-format off

@@ -26,10 +26,10 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.h"
+#include <stdint.h>  // for uint8_t
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.h"  // for Absolute...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"                 // for USBSetup
 
 
 class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI {

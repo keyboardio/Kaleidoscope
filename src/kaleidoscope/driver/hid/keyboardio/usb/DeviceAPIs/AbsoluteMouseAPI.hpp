@@ -26,7 +26,7 @@ THE SOFTWARE.
 #pragma once
 
 AbsoluteMouseAPI::AbsoluteMouseAPI()
-    : x_axis_(0), y_axis_(0), buttons_(0) {}
+  : x_axis_(0), y_axis_(0), buttons_(0) {}
 
 void AbsoluteMouseAPI::buttons(uint8_t b) {
   if (b != buttons_) {
@@ -73,9 +73,9 @@ void AbsoluteMouseAPI::moveTo(uint16_t x, uint16_t y, signed char wheel) {
   y_axis_ = y;
   HID_MouseAbsoluteReport_Data_t report;
   report.buttons = buttons_;
-  report.xAxis = x;
-  report.yAxis = y;
-  report.wheel = wheel;
+  report.xAxis   = x;
+  report.yAxis   = y;
+  report.wheel   = wheel;
   sendReport(&report, sizeof(report));
 }
 

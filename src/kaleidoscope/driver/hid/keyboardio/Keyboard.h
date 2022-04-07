@@ -17,13 +17,13 @@
 
 #pragma once
 
-#include <stdint.h>         // for uint8_t, uint16_t
+#include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, Keyboar...
-#include "kaleidoscope/driver/hid/keyboardio/usb/BootKeyboard/BootKeyboard.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/ConsumerControl.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"
+#include "kaleidoscope/driver/hid/base/Keyboard.h"                               // for Keyboard
+#include "kaleidoscope/driver/hid/keyboardio/usb/BootKeyboard/BootKeyboard.h"    // for BootKeyb...
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/ConsumerControl.h"  // for Consumer...
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"         // for Keyboard
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"    // for SystemCo...
 
 namespace kaleidoscope {
 namespace driver {

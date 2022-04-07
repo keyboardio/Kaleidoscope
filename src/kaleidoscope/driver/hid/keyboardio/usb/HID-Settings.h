@@ -27,6 +27,8 @@ THE SOFTWARE.
 #pragma once
 
 
+// IWYU pragma: no_include "PluggableUSB.h"
+
 #define HID_REPORTID_NONE 0
 
 #ifndef HID_REPORTID_MOUSE
@@ -37,11 +39,14 @@ THE SOFTWARE.
 #define HID_REPORTID_KEYBOARD 2
 #endif
 
+/* Commented out so that IWYU won't remove it:
+   -------------------------------------------
 #ifndef HID_REPORTID_RAWHID
 // This will not work properly in most cases.
 // The number is just kept from the old number counting.
 //#define HID_REPORTID_RAWHID 3
 #endif
+// ------------------------------------------- */
 
 #ifndef HID_REPORTID_CONSUMERCONTROL
 #define HID_REPORTID_CONSUMERCONTROL 4
@@ -78,7 +83,7 @@ void USB_PackMessages(bool pack);
 
 #if defined(ARDUINO_ARCH_AVR)
 
-#include <PluggableUSB.h>
+#include <PluggableUSB.h>  // IWYU pragma: export
 
 #define EPTYPE_DESCRIPTOR_SIZE uint8_t
 

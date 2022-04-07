@@ -24,7 +24,13 @@ THE SOFTWARE.
 */
 
 #include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
+
+#include <Arduino.h>  // for PROGMEM
+
+#include "kaleidoscope/HIDTables.h"                                       // for HID_SYSTEM_WAKE_UP
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"  // for D_ABSOLUTE, D_A...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"          // for HID_REPORTID_SY...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"                  // for HID, HID_, HIDS...
 
 static const uint8_t system_control_hid_descriptor_[] PROGMEM = {
   // clang-format off

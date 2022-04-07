@@ -24,7 +24,13 @@ THE SOFTWARE.
 */
 
 #include "kaleidoscope/driver/hid/keyboardio/usb/SingleReport/SingleAbsoluteMouse.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
+
+#include <Arduino.h>  // for PROGMEM
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"         // for D_APPLIC...
+#include "kaleidoscope/driver/hid/keyboardio/usb/DeviceAPIs/AbsoluteMouseAPI.h"  // for Absolute...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"            // for HIDRepor...
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"                         // for HIDDescr...
 
 static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
   // clang-format off

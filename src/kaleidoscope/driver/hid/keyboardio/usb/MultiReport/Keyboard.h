@@ -26,12 +26,10 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include <stddef.h>  // for size_t
+#include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/HIDTables.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HIDAliases.h"
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"  // for HID, HID_
 
 #define KEY_BYTES 28
 

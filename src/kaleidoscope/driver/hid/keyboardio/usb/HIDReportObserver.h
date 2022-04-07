@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <stdint.h>
+#include <stdint.h>  // for uint8_t
 
 class HIDReportObserver {
  public:

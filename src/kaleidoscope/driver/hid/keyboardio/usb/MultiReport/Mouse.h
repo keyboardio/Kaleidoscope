@@ -26,10 +26,9 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
+#include <stdint.h>  // for int8_t, uint8_t
+
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"  // for MOUSE_LEFT
 
 typedef union {
   // Mouse report: 8 buttons, position, wheel

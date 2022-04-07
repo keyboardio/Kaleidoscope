@@ -26,9 +26,7 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID_.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
+#include <stdint.h>  // for uint16_t
 
 typedef union {
   // Every usable Consumer key possible, up to 4 keys presses possible
