@@ -22,16 +22,16 @@
 #include <EEPROM.h>      // for EEPROMClass, EERef
 #include <stdint.h>      // for uint8_t, uint16_t
 #include <stdlib.h>      // for exit, size_t
-#include <virtual_io.h>  // for getLineOfInput, isInte...
+#include <virtual_io.h>  // for getLineOfInput
 #include <sstream>       // for operator<<, string
-#include <string>        // for operator==, char_traits
+#include <string>        // for operator==, char_t...
 
-#include "kaleidoscope/KeyAddr.h"                                  // for MatrixAddr, MatrixAddr...
-#include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"  // for DefaultHIDReportConsumer
-#include "kaleidoscope/device/virtual/Logging.h"                   // for log_error, logging
-#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"
-#include "kaleidoscope/key_defs.h"         // for Key_NoKey
-#include "kaleidoscope/keyswitch_state.h"  // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/KeyAddr.h"                                      // for MatrixAddr, Matrix...
+#include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"      // for DefaultHIDReportCo...
+#include "kaleidoscope/device/virtual/Logging.h"                       // for log_error, logging
+#include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"  // for HIDReportObserver
+#include "kaleidoscope/key_defs.h"                                     // for Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"                              // for IS_PRESSED, WAS_PR...
 
 // FIXME: This relates to virtual/cores/arduino/EEPROM.h.
 //        EEPROM static data must be defined here as only

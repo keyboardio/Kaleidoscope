@@ -27,7 +27,7 @@
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/KeyEventTracker.h"       // for KeyEventTracker
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent, HID_KEYBOARD_FIRST_...
 #include "kaleidoscope/plugin.h"                // for Plugin
 
 // IWYU pragma: no_include "HIDAliases.h"

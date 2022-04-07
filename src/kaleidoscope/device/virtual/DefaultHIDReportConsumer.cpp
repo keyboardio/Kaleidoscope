@@ -18,22 +18,18 @@
 
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"
 
-// From KeyboardioHID:
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"
-// From system:
-#include <stdint.h>  // for uint8_t
-// From Arduino core:
-#include <virtual_io.h>  // for logUSBEvent_keyboard
+#include <stdint.h>      // for uint8_t
+#include <virtual_io.h>  // for logUSBEvent_key...
 
-// From Kaleidoscope:
-#include "kaleidoscope/device/virtual/Logging.h"  // for log_info, logging
+#include "kaleidoscope/device/virtual/Logging.h"                          // for log_info, logging
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"          // for HID_REPORTID_NK...
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Keyboard.h"  // for HID_KeyboardRep...
 
 #undef min
 #undef max
 
-#include <sstream>  // for operator<<, stringstream, basic_ostream
-#include <string>   // for char_traits, operator+, basic_string
+#include <sstream>  // for operator<<, str...
+#include <string>   // for char_traits
 
 namespace kaleidoscope {
 

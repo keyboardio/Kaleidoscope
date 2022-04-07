@@ -21,7 +21,7 @@
 #include "kaleidoscope/KeyEvent.h"         // for KeyEvent
 #include "kaleidoscope/KeyEventTracker.h"  // for KeyEventTracker
 #include "kaleidoscope/Runtime.h"          // for Runtime, Runtime_
-#include "kaleidoscope/key_defs.h"         // for Key, Key_0, Key_1, Key_A, Key_F1, Key_F12, Key...
+#include "kaleidoscope/key_defs.h"         // for Key, HID_KEYBOARD_FIRST_MODIFIER, Key_0, Key_1
 #include "kaleidoscope/keyswitch_state.h"  // for keyToggledOn, keyIsInjected
 
 // IWYU pragma: no_include "HIDAliases.h"
