@@ -3,4 +3,6 @@
 : "${KALEIDOSCOPE_DIR:=$(pwd)}"
 cd "${KALEIDOSCOPE_DIR}" || exit 1
 
-git ls-files -m | grep -E '\.(h|cpp)$' | xargs "${KALEIDOSCOPE_DIR}"/bin/iwyu.py
+# Process sources first, then headers to minimize errors from removed includes
+git ls-files -m | grep -E '\.(cpp|ino)$' | xargs "${KALEIDOSCOPE_DIR}"/bin/iwyu.py
+git ls-files -m | grep -E '\.h$' | xargs "${KALEIDOSCOPE_DIR}"/bin/iwyu.py

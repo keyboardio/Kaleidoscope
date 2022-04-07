@@ -296,12 +296,24 @@ def main():
 
     # ----------------------------------------------------------------------
     regex = re.compile(opts.regex)
+    # Process source files first, then header files, because a source file might have been
+    # relying on a header included by its associated header, but which that header does not
+    # need on its own.  In this case, if we process the header first, IWYU won't be able to
+    # parse the source file, and we'll get an error, but if we do them in the other order,
+    # it'll be fine.
+    source_files = []
+    header_files = []
+    for target_file in (_ for t in targets for _ in build_target_list(t, regex)):
+        if target_file.endswith('.cpp') or target_file.endswith('.ino'):
+            source_files.append(target_file)
+        else:
+            header_files.append(target_file)
     exit_code = 0
-    for src in (_ for t in targets for _ in build_target_list(t, regex)):
-        if src in ignores:
-            logging.info("Skipping ignored file: %s", os.path.relpath(src))
+    for target_file in source_files + header_files:
+        if target_file in ignores:
+            logging.info("Skipping ignored file: %s", os.path.relpath(target_file))
             continue
-        if not run_iwyu(os.path.relpath(src), iwyu_cmd, fix_includes_cmd):
+        if not run_iwyu(os.path.relpath(target_file), iwyu_cmd, fix_includes_cmd):
             exit_code = 1
     return exit_code
 
