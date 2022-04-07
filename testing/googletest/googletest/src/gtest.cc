@@ -3240,6 +3240,10 @@ bool ShouldUseColor(bool stdout_is_tty) {
     // console there does support colors.
     return stdout_is_tty;
 #else
+    // In case we're running from `make --output-sync`, we need to check
+    // MAKE_TERMOUT to determine if the output is going to a terminal.
+    const char* const make_termout = posix::GetEnv("MAKE_TERMOUT");
+    if (make_termout != nullptr) stdout_is_tty = true;
     // On non-Windows platforms, we rely on the TERM variable.
     const char* const term = posix::GetEnv("TERM");
     const bool term_supports_color =

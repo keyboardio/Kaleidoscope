@@ -361,7 +361,7 @@ sub generate_script {
     # We should do this better, inside the core. But until we do
     # I'd rather stick the macro in the code generator so nobody
     # gets to use it from regular tests, boxing us in
-    cxx('#define GTEST_COUT std::cerr << "[ INFO     ] "');
+    cxx('#define GTEST_COUT std::cout << "[ INFO     ] "');
 
     generate_start_new_test('KtestSourceFilename');
     cxx(
