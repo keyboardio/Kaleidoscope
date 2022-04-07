@@ -181,14 +181,14 @@ bool HID_::setup(USBSetup& setup) {
       }
       // Once the GD32 core bug is fixed, we can replace the above code with the
       // original code below:
-      // ------------------------------------------------------------
-      // if (length == sizeof(setReportData)) {
-      //   USB_RecvControl(&setReportData, length);
-      // } else if (length == sizeof(setReportData.leds)) {
-      //   USB_RecvControl(&setReportData.leds, length);
-      //   setReportData.reportId = 0;
-      // }
-      // ------------------------------------------------------------
+      /* ------------------------------------------------------------
+      if (length == sizeof(setReportData)) {
+        USB_RecvControl(&setReportData, length);
+      } else if (length == sizeof(setReportData.leds)) {
+        USB_RecvControl(&setReportData.leds, length);
+        setReportData.reportId = 0;
+      }
+      // ------------------------------------------------------------ */
       return true;
     }
   }
