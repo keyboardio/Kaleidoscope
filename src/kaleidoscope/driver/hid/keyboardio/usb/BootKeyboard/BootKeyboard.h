@@ -45,7 +45,7 @@ typedef union {
 
 class BootKeyboard_ : public PluggableUSBModule {
  public:
-  BootKeyboard_(uint8_t protocol_ = HID_REPORT_PROTOCOL);
+  explicit BootKeyboard_(uint8_t protocol_ = HID_REPORT_PROTOCOL);
   size_t press(uint8_t k);
   void begin();
   void end();

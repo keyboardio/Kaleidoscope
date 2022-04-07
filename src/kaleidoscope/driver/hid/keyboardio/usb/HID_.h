@@ -16,8 +16,7 @@
   SOFTWARE.
  */
 
-#ifndef HID_h
-#define HID_h
+#pragma once
 
 #include <stdint.h>
 #include <Arduino.h>
@@ -97,7 +96,7 @@ class HID_ : public PluggableUSBModule {
   void AppendDescriptor(HIDSubDescriptor* node);
   uint8_t getLEDs() {
     return setReportData.leds;
-  };
+  }
 
  protected:
   // Implementation of the PluggableUSBModule
@@ -129,5 +128,3 @@ HID_& HID();
 #define D_HIDREPORT(length) { 9, 0x21, 0x01, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }
 
 #endif // USBCON
-
-#endif // HID_h

@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/keyboardio/usb/DescriptorPrimitives.h"
 
 static const uint8_t system_control_hid_descriptor_[] PROGMEM = {
-  //TODO limit to system keys only?
+  //TODO(anyone) limit to system keys only?
   /*  System Control (Power Down, Sleep, Wakeup, ...) */
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop) */
   D_USAGE, 0x80,                                /* USAGE (System Control) */
