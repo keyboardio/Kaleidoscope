@@ -1,3 +1,4 @@
+examples
 src/Kaleidoscope.h
 src/Kaleidoscope-LEDControl.h
 src/kaleidoscope/HIDTables.h
@@ -10,3 +11,4 @@ src/kaleidoscope/driver/storage/GD32Flash.h
 plugins/Kaleidoscope-FirmwareDump/**
 plugins/Kaleidoscope-HostOS/src/kaleidoscope/plugin/HostOS.h
 plugins/Kaleidoscope-Hardware-EZ-ErgoDox/src/kaleidoscope/device/ez/ErgoDox/i2cmaster.h
+testing/googletest
