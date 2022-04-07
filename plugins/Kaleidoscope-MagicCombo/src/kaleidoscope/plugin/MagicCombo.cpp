@@ -17,13 +17,13 @@
 
 #include "kaleidoscope/plugin/MagicCombo.h"
 
-#include <Arduino.h>                   // for F, __FlashStringHelper
+#include <Arduino.h>                   // for F, __FlashStringHelper, pgm_read_byte
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <stdint.h>                    // for uint16_t, int8_t, uin...
+#include <stdint.h>                    // for uint16_t, int8_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for Device
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
 namespace kaleidoscope {
 namespace plugin {

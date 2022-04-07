@@ -21,13 +21,13 @@
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <Kaleidoscope-OneShot.h>      // for OneShot
 
-#include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAdd...
-#include "kaleidoscope/KeyAddrMap.h"            // for KeyAddrMap<>::Iterator
+#include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAddr<>::Range, KeyAddr
+#include "kaleidoscope/KeyAddrMap.h"            // for KeyAddrMap<>::Iterator, KeyAddrMap
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/KeyMap.h"                // for KeyMap
 #include "kaleidoscope/LiveKeys.h"              // for LiveKeys, live_keys
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Inactive
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Inactive, Key_Masked
 #include "kaleidoscope/keyswitch_state.h"       // for INJECTED, keyToggledOff
 
 namespace kaleidoscope {

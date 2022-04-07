@@ -19,11 +19,10 @@
 
 #include "kaleidoscope/device/keyboardio/Model01.h"
 
-// System headers
-#include <stdint.h>  // for uint8_t
-
 // Arduino headers
 #include <Arduino.h>  // for PROGMEM
+// System headers
+#include <stdint.h>  // for uint8_t
 
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #include <KeyboardioHID.h>
@@ -32,9 +31,10 @@
 
 // Kaleidoscope headers
 #include "kaleidoscope/driver/keyscanner/Base_Impl.h"  // IWYU pragma: keep
+// IWYU pragma: no_include "kaleidoscope/device/device.h"
 
 // Kaleidoscope-Hardware-Keyboardio-Model01 headers
-#include "kaleidoscope/driver/keyboardio/Model01Side.h"
+#include "kaleidoscope/driver/keyboardio/Model01Side.h"  // IWYU pragma: keep
 
 namespace kaleidoscope {
 namespace device {

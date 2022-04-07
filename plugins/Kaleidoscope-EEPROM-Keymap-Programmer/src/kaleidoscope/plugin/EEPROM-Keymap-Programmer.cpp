@@ -25,10 +25,10 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for Device, Base<>::Storage
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_0, Key_1
-#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn, keyTogg...
+#include "kaleidoscope/device/device.h"         // for Device, Base<>::Storage, VirtualProps::St...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::E...
+#include "kaleidoscope/key_defs.h"              // for Key, Key_0, Key_1, Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn, keyToggledOff
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 
 namespace kaleidoscope {

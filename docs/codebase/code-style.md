@@ -390,6 +390,10 @@ If a plugin library has symbols meant to be exported, and more than one header f
 #include "kaleidoscope/plugin/something/Helper.h"
 ```
 
+### Automated header includes checking
+
+We have an automated wrapper for the `include-what-you-use` program from LLVM that processes most Kaleidoscope source files and updates their header includes to comply with the style guide.  It requires at least version 0.18 of `include-what-you-use` in order to function properly (because earlier versions do not return a useful exit code, so determining if there was an error was difficult).  It can be run by using the `make check-includes` target in the Kaleidoscope Makefile.
+
 <!-- TODO: Finish converting the rest... -->
 
 ## Scoping

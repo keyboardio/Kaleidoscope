@@ -17,15 +17,17 @@
 
 #pragma once
 
-#include <Arduino.h>         // for __FlashStringHelper
+#include <Arduino.h>         // for delayMicroseconds
 #include <HardwareSerial.h>  // for HardwareSerial
 #include <stdint.h>          // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for cRGB
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+
+// IWYU pragma: no_include "WString.h"
 
 namespace kaleidoscope {
 namespace plugin {

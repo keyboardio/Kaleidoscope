@@ -22,10 +22,10 @@
 #include <Arduino.h>
 
 #include "kaleidoscope/device/Base.h"
-#include "kaleidoscope/driver/hid/Keyboardio.h"
-#include "kaleidoscope/driver/storage/GD32Flash.h"
 #include "kaleidoscope/driver/bootloader/gd32/Base.h"
+#include "kaleidoscope/driver/hid/Keyboardio.h"
 #include "kaleidoscope/driver/mcu/GD32.h"
+#include "kaleidoscope/driver/storage/GD32Flash.h"
 
 namespace kaleidoscope {
 namespace device {

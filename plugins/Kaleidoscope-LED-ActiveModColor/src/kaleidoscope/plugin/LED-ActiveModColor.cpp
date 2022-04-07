@@ -20,13 +20,13 @@
 #include <Kaleidoscope-OneShot.h>          // for OneShot
 #include <Kaleidoscope-OneShotMetaKeys.h>  // for OneShot_ActiveStickyKey
 
-#include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
-#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyA...
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr, MatrixAddr<>::Range
+#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyAddrBitfield::Iterator
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/LiveKeys.h"              // for LiveKeys, live_keys
 #include "kaleidoscope/device/device.h"         // for CRGB, cRGB
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Inactive
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Inactive, Key_Masked
 #include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 

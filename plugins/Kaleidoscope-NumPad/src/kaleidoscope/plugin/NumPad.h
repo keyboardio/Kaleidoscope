@@ -19,10 +19,9 @@
 #include <stdint.h>  // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/device/device.h"         // for cRGB
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
-
-struct cRGB;
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,16 +16,16 @@
 
 #include "kaleidoscope/plugin/LEDControl.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P
+#include <Arduino.h>                   // for PSTR, strcmp_P, strncmp_P
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 
-#include "kaleidoscope/KeyAddrMap.h"               // for KeyAddrMap<>::Iter...
+#include "kaleidoscope/KeyAddrMap.h"               // for KeyAddrMap<>::Iterator, KeyAddrMap
 #include "kaleidoscope/KeyEvent.h"                 // for KeyEvent
 #include "kaleidoscope/KeyMap.h"                   // for KeyMap
 #include "kaleidoscope/LiveKeys.h"                 // for LiveKeys, live_keys
 #include "kaleidoscope/hooks.h"                    // for Hooks
 #include "kaleidoscope/keyswitch_state.h"          // for keyToggledOn
-#include "kaleidoscope_internal/LEDModeManager.h"  // for LEDModeManager
+#include "kaleidoscope_internal/LEDModeManager.h"  // for LEDModeManager, LEDModeFactory
 
 using namespace kaleidoscope::internal;  // NOLINT(build/namespaces)
 

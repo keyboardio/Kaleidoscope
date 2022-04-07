@@ -19,12 +19,12 @@
 #include <Arduino.h>         // for millis
 #include <HardwareSerial.h>  // for HardwareSerial
 
-#include "kaleidoscope/KeyAddr.h"                         // for KeyAddr
+#include "kaleidoscope/KeyAddr.h"                         // for KeyAddr, MatrixAddr, MatrixAddr...
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
-#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
-#include "kaleidoscope/device/device.h"                   // for Base<>::HID
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys, live_keys
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
-#include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
+#include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff, keyToggledOn
 #include "kaleidoscope/layers.h"                          // for Layer, Layer_
 
 namespace kaleidoscope {

@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include "kaleidoscope/driver/hid/Base.h"  // for Base, BaseProps
-#include "keyboardio/AbsoluteMouse.h"      // for AbsoluteMouse, AbsoluteMou...
-#include "keyboardio/Keyboard.h"           // for Keyboard, KeyboardProps
-#include "keyboardio/Mouse.h"              // for Mouse, MouseProps
+#include "kaleidoscope/driver/hid/Base.h"                      // for Base, BaseProps
+#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for AbsoluteMouse, AbsoluteMou...
+#include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"       // for Keyboard, KeyboardProps
+#include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse, MouseProps
 
 namespace kaleidoscope {
 namespace driver {

@@ -21,8 +21,8 @@
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_0, Key_1, Key_A
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_0, Key_1, Key_A, Key_Z
 #include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn
 
 namespace kaleidoscope {

@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "kaleidoscope/event_handlers.h"                   // for _PROCESS_E...
-#include "kaleidoscope/macro_helpers.h"                    // for __NL__
-#include "kaleidoscope_internal/type_traits/has_member.h"  // for DEFINE_HAS...
-#include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS...
+#include "kaleidoscope/event_handlers.h"                   // for _PROCESS_EVENT_HANDLER_VERSIONS
+#include "kaleidoscope/macro_helpers.h"                    // for __NL__, VERBOSE_STATIC_ASSERT_...
+#include "kaleidoscope_internal/type_traits/has_member.h"  // for DEFINE_HAS_MEMBER_TRAITS
+#include "kaleidoscope_internal/type_traits/has_method.h"  // for DEFINE_HAS_METHOD_TRAITS
 
 // *************************************************************************
 // *************************************************************************

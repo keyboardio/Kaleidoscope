@@ -21,14 +21,16 @@
 
 #ifdef ARDUINO_AVR_MODEL01
 
-// System headers
-#include <stdint.h>  // for uint8_t
 // Arduino headers
 #include <Arduino.h>  // for PROGMEM
+// System headers
+#include <stdint.h>  // for uint8_t
 
+#include "kaleidoscope/MatrixAddr.h"  // IWYU pragma: keep
 // Kaleidoscope headers
-#include "kaleidoscope/MatrixAddr.h"     // for MatrixAddr
-#include "kaleidoscope/macro_helpers.h"  // for RESTRICT_AR...
+#include "kaleidoscope/macro_helpers.h"  // for RESTRICT_ARGS_COUNT
+
+// IWYU pragma: no_include "kaleidoscope/KeyAddr.h"
 
 #define CRGB(r, g, b) \
   (cRGB) { b, g, r }
@@ -39,13 +41,12 @@ struct cRGB {
   uint8_t r;
 };
 
-#include "kaleidoscope/device/ATmega32U4Keyboard.h"       // for ATmega32U4K...
+#include "kaleidoscope/device/ATmega32U4Keyboard.h"       // for ATmega32U4KeyboardProps, EXPORT...
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"  // for Caterina
-#include "kaleidoscope/driver/keyscanner/Base.h"          // for BaseProps
-#include "kaleidoscope/driver/led/Base.h"                 // for BaseProps
-
 // Kaleidoscope-Hardware-Keyboardio-Model01 headers
 #include "kaleidoscope/driver/keyboardio/Model01Side.h"  // for keydata_t
+#include "kaleidoscope/driver/keyscanner/Base.h"         // for BaseProps
+#include "kaleidoscope/driver/led/Base.h"                // for BaseProps
 
 namespace kaleidoscope {
 namespace device {

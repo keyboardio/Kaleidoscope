@@ -25,7 +25,7 @@
 #include "kaleidoscope/KeyEvent.h"         // for KeyEvent, KeyEventId
 #include "kaleidoscope/Runtime.h"          // for Runtime, Runtime_
 #include "kaleidoscope/key_defs.h"         // for Key_Undefined
-#include "kaleidoscope/keyswitch_state.h"  // for IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/keyswitch_state.h"  // for IS_PRESSED, WAS_PRESSED, keyToggledOff
 
 namespace kaleidoscope {
 

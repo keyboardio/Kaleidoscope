@@ -19,7 +19,7 @@
 #include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"            // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"      // for CRGB, Device, Base<>::LE...
+#include "kaleidoscope/device/device.h"      // for CRGB, Device, Base<>::LEDRangeIterator
 #include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 
 namespace kaleidoscope {

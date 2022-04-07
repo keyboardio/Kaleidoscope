@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/FingerPainter.h"
 
-#include <Arduino.h>                         // for PSTR, strcmp_P, F
+#include <Arduino.h>                         // for PSTR, strcmp_P, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
 #include <Kaleidoscope-LED-Palette-Theme.h>  // for LEDPaletteTheme
 #include <stdint.h>                          // for uint16_t, uint8_t
@@ -26,8 +26,8 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for Device, cRGB, Virtual...
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for Device, cRGB, VirtualProps::Storage, Base...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/keyswitch_state.h"       // for keyToggledOff
 
 namespace kaleidoscope {

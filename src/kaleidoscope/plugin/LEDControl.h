@@ -21,9 +21,9 @@
 #include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                 // for KeyEvent
 #include "kaleidoscope/Runtime.h"                  // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"            // for cRGB, Device, Base...
+#include "kaleidoscope/device/device.h"            // for cRGB, Device, Base<>::LEDDriver, Virtu...
 #include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"                 // for Key, IS_INTERNAL
+#include "kaleidoscope/key_defs.h"                 // for Key, IS_INTERNAL, KEY_FLAGS, SYNTHETIC
 #include "kaleidoscope/plugin.h"                   // for Plugin
 #include "kaleidoscope/plugin/LEDMode.h"           // for LEDMode
 #include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface

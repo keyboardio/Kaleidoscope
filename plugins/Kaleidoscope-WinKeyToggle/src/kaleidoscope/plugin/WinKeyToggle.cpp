@@ -18,8 +18,8 @@
 #include "kaleidoscope/plugin/WinKeyToggle.h"
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftGui, Key...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftGui, Key_RightGui
 
 namespace kaleidoscope {
 namespace plugin {

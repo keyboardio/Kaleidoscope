@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/Macros.h"
 
-#include <Arduino.h>                   // for pgm_read_byte, delay
+#include <Arduino.h>                   // for pgm_read_byte, delay, F, PROGMEM, __F...
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <Kaleidoscope-Ranges.h>       // for MACRO_FIRST
 #include <stdint.h>                    // for uint8_t
@@ -24,10 +24,10 @@
 #include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
 #include "kaleidoscope/Runtime.h"                   // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"                  // for Key, LSHIFT, Key_...
-#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED
-#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE
+#include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult, EventHandlerResul...
+#include "kaleidoscope/key_defs.h"                  // for Key, LSHIFT, Key_NoKey, Key_0, Key_1
+#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE, MACRO_ACTION_END
 
 // =============================================================================
 // Default `macroAction()` function definitions

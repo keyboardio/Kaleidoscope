@@ -17,18 +17,18 @@
 
 #include "kaleidoscope/plugin/OneShot.h"
 
-#include <Arduino.h>                   // for bitRead, F, __FlashSt...
+#include <Arduino.h>                   // for bitRead, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <Kaleidoscope-Ranges.h>       // for OS_FIRST
 #include <stdint.h>                    // for uint8_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
-#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyA...
+#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield, KeyAddrBitfield::Iterator
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftControl
-#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_LeftControl, LAYER_SHIFT_OFFSET
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED, WAS_PRESSED, keyIsI...
 
 namespace kaleidoscope {
 namespace plugin {

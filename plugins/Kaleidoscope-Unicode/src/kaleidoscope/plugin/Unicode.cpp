@@ -18,13 +18,13 @@
 #include "kaleidoscope/plugin/Unicode.h"
 
 #include <Arduino.h>              // for delay
-#include <Kaleidoscope-HostOS.h>  // for HostOS, LINUX
-#include <stdint.h>               // for uint8_t
+#include <Kaleidoscope-HostOS.h>  // for HostOS, LINUX, MACOS, WINDOWS, OSX
+#include <stdint.h>               // for uint8_t, uint32_t, int8_t
 
-#include "kaleidoscope/Runtime.h"                         // for Runtime
-#include "kaleidoscope/device/device.h"                   // for Base<>::HID
+#include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
-#include "kaleidoscope/key_defs.h"                        // for Key, Key_Le...
+#include "kaleidoscope/key_defs.h"                        // for Key, Key_LeftAlt, KEY_FLAGS, Key_A
 
 namespace kaleidoscope {
 namespace plugin {

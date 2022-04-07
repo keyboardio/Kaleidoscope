@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, int8_t
+#include <stdint.h>  // for uint8_t, int8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"                  // for Runtime, Runtime_
 #include "kaleidoscope/plugin.h"                   // for Plugin

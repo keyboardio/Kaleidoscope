@@ -25,7 +25,7 @@
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::E...
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/keyswitch_state.h"       // for keyToggledOn
 

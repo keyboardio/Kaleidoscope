@@ -20,8 +20,8 @@
 #include <Arduino.h>  // for delay
 #include <stdint.h>   // for uint8_t
 
-#include "kaleidoscope/Runtime.h"                         // for Runtime
-#include "kaleidoscope/device/device.h"                   // for Base<>::HID
+#include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
 
 namespace kaleidoscope {

@@ -17,15 +17,15 @@
 
 #include "kaleidoscope/plugin/EEPROM-Settings.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P, F
+#include <Arduino.h>                   // for PSTR, strcmp_P, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"               // for VirtualProps::S...
-#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
-#include "kaleidoscope/layers.h"                      // for Layer, Layer_
-#include "kaleidoscope/plugin/EEPROM-Settings/crc.h"  // for CRCCalculator
+#include "kaleidoscope/device/device.h"               // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult, EventHandlerRes...
+#include "kaleidoscope/layers.h"                      // for Layer, Layer_, layer_count
+#include "kaleidoscope/plugin/EEPROM-Settings/crc.h"  // for CRCCalculator, CRC_
 
 namespace kaleidoscope {
 namespace plugin {

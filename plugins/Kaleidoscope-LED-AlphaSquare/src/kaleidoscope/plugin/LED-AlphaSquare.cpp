@@ -17,16 +17,15 @@
 
 #include "kaleidoscope/plugin/LED-AlphaSquare.h"
 
-#include <Arduino.h>  // for bitRead
-#include <stdint.h>   // for uint16_t
+#include <Arduino.h>  // for bitRead, pgm_read_word, PROGMEM
+#include <stdint.h>   // for uint16_t, uint8_t
 
-#include "kaleidoscope/KeyAddr.h"            // for KeyAddr
-#include "kaleidoscope/Runtime.h"            // for Runtime
-#include "kaleidoscope/device/device.h"      // for cRGB
-#include "kaleidoscope/key_defs.h"           // for Key, Key_A
-#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
-
-#include "kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h"  // for ALPHASQUAR...
+#include "kaleidoscope/KeyAddr.h"                          // for KeyAddr, MatrixAddr
+#include "kaleidoscope/Runtime.h"                          // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                    // for cRGB
+#include "kaleidoscope/key_defs.h"                         // for Key, Key_A, Key_0
+#include "kaleidoscope/plugin/LED-AlphaSquare/Font-4x4.h"  // for ALPHASQUARE_SYMBOL_0, ALPHASQU...
+#include "kaleidoscope/plugin/LEDControl.h"                // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

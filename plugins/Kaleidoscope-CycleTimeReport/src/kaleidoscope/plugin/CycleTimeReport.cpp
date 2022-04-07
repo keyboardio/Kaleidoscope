@@ -17,12 +17,12 @@
 
 #include "kaleidoscope/plugin/CycleTimeReport.h"
 
-#include <Arduino.h>                   // for micros, F, __FlashStr...
+#include <Arduino.h>                   // for micros, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint16_t, uint32_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
 namespace kaleidoscope {
 namespace plugin {

@@ -16,13 +16,13 @@
 
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
 
-#include <stdint.h>  // for uint16_t
+#include <stdint.h>  // for uint16_t, uint8_t, int8_t
 
-#include "kaleidoscope/Runtime.h"                              // for Runtime
-#include "kaleidoscope/device/device.h"                        // for Base<>...
-#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for Absolu...
+#include "kaleidoscope/Runtime.h"                              // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                        // for Base<>::HID, VirtualProps:...
+#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for AbsoluteMouse
 #include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse
-#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"      // for MOUSE_...
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"      // for MOUSE_WARP_GRID_2X2
 
 namespace kaleidoscope {
 namespace plugin {

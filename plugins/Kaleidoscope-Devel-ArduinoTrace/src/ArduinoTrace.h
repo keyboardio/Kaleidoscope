@@ -17,8 +17,10 @@
 
 #pragma once
 
-#include <Arduino.h>  // for PROGMEM, F
+#include <Arduino.h>  // for PROGMEM
 #include <stddef.h>   // for size_t
+
+// IWYU pragma: no_include "WString.h"
 
 #ifndef ARDUINOTRACE_ENABLE
 #define ARDUINOTRACE_ENABLE 1

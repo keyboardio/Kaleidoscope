@@ -19,8 +19,8 @@
 #include "kaleidoscope/device/virtual/DefaultHIDReportConsumer.h"
 
 // From KeyboardioHID:
-#include <HID-Settings.h>          // for HID_REPORTID_NKRO_K...
-#include <MultiReport/Keyboard.h>  // for HID_KeyboardReport_...
+#include <HID-Settings.h>          // for HID_REPORTID_NKRO_KEYBOARD
+#include <MultiReport/Keyboard.h>  // for HID_KeyboardReport_Data_t, (anonymous u...
 // From system:
 #include <stdint.h>  // for uint8_t
 // From Arduino core:
@@ -32,8 +32,8 @@
 #undef min
 #undef max
 
-#include <sstream>  // for operator<<, strings...
-#include <string>   // for char_traits, operator+
+#include <sstream>  // for operator<<, stringstream, basic_ostream
+#include <string>   // for char_traits, operator+, basic_string
 
 namespace kaleidoscope {
 

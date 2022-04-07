@@ -24,9 +24,8 @@
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/Base.h"           // for Base<>::Storage
-#include "kaleidoscope/device/device.h"         // for cRGB, VirtualProps::S...
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for cRGB, VirtualProps::Storage, Device, Base...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 namespace kaleidoscope {

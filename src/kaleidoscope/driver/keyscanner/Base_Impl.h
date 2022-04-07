@@ -21,10 +21,10 @@
 
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
-#include "kaleidoscope/device/virtual/Virtual.h"  // for Device
+#include "kaleidoscope/device/device.h"           // for Device
 #include "kaleidoscope/driver/keyscanner/Base.h"  // for Base
 #include "kaleidoscope/key_defs.h"                // for Key
-#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOff, keyT...
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOff, keyToggledOn
 
 namespace kaleidoscope {
 namespace driver {

@@ -18,10 +18,10 @@
 
 #include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/KeyAddr.h"                     // for KeyAddr, Matrix...
+#include "kaleidoscope/KeyAddr.h"                     // for KeyAddr, MatrixAddr, MatrixAddr<>::...
 #include "kaleidoscope/device/device.h"               // for cRGB, CRGB
-#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"                    // for Key, KEY_FLAGS
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult, EventHandlerRes...
+#include "kaleidoscope/key_defs.h"                    // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                      // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for breath_compute

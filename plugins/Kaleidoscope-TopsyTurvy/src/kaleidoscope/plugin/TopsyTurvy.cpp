@@ -19,14 +19,14 @@
 
 #include <Kaleidoscope-Ranges.h>  // for TT_FIRST
 
-#include "kaleidoscope/KeyAddr.h"                         // for KeyAddr
+#include "kaleidoscope/KeyAddr.h"                         // for KeyAddr, MatrixAddr, MatrixAddr...
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
-#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys
-#include "kaleidoscope/Runtime.h"                         // for Runtime
-#include "kaleidoscope/device/device.h"                   // for Base<>::HID
+#include "kaleidoscope/LiveKeys.h"                        // for LiveKeys, live_keys
+#include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
-#include "kaleidoscope/event_handler_result.h"            // for EventHandle...
-#include "kaleidoscope/key_defs.h"                        // for Key, Key_Le...
+#include "kaleidoscope/event_handler_result.h"            // for EventHandlerResult, EventHandle...
+#include "kaleidoscope/key_defs.h"                        // for Key, Key_LeftShift, Key_NoKey
 #include "kaleidoscope/keyswitch_state.h"                 // for keyToggledOff
 
 namespace kaleidoscope {

@@ -17,16 +17,16 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, uin...
+#include <stdint.h>  // for uint8_t, uint16_t
 
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
-#include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
-#include "kaleidoscope/device/device.h"                  // for cRGB, CRGB
-#include "kaleidoscope/event_handler_result.h"           // for EventHandler...
+#include "kaleidoscope/Runtime.h"                        // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                  // for cRGB, CRGB, Device
+#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                         // for Plugin
-#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransi...
+#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransientLEDMode
 #include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
-#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInter...
+#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInterface
 
 #define STALKER(v, ...) ({static kaleidoscope::plugin::stalker::v _effect __VA_ARGS__; &_effect; })
 

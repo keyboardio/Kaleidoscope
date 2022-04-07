@@ -21,16 +21,16 @@
 #ifdef ARDUINO_AVR_MODEL01
 
 #include <Arduino.h>  // for PROGMEM
-#include <stdint.h>   // for uint8_t, int...
+#include <stdint.h>   // for uint8_t, int16_t, int8_t, INT16_MAX
 
 #include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
-#include "kaleidoscope/Runtime.h"                        // for Runtime, Run...
+#include "kaleidoscope/Runtime.h"                        // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"                  // for Device
-#include "kaleidoscope/event_handler_result.h"           // for EventHandler...
+#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                         // for Plugin
-#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransi...
+#include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransientLEDMode
 #include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
-#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInter...
+#include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInterface
 
 #define WP_WID 14
 #define WP_HGT 5

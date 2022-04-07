@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>  // for OS_ACTIVE_STICKY, OS_...
+#include <Kaleidoscope-Ranges.h>  // for OS_ACTIVE_STICKY, OS_META_STICKY
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

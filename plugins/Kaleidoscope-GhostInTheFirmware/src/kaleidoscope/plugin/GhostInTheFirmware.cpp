@@ -22,7 +22,7 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/keyswitch_state.h"       // for IS_PRESSED, WAS_PRESSED
 #include "kaleidoscope/progmem_helpers.h"       // for loadFromProgmem
 

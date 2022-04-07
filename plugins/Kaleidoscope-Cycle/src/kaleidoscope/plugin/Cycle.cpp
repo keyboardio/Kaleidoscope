@@ -25,9 +25,9 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr, MatrixAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Backspace
-#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::E...
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Backspace, CTRL_HELD, GUI_HELD
+#include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED, WAS_PRESSED, keyTog...
 
 namespace kaleidoscope {
 namespace plugin {

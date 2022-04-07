@@ -19,8 +19,10 @@
 
 #include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/MatrixAddr.h"  // for MatrixAddr
+#include "kaleidoscope/MatrixAddr.h"  // IWYU pragma: keep
 #include "kaleidoscope/key_defs.h"    // for Key
+
+// IWYU pragma: no_include "kaleidoscope/KeyAddr.h"
 
 namespace kaleidoscope {
 namespace driver {

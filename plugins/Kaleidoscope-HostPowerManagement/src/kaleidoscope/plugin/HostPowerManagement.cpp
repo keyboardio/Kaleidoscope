@@ -20,7 +20,7 @@
 #include <Arduino.h>  // IWYU pragma: keep
 #include <stdint.h>   // for uint8_t
 
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
 // This is a terrible hack until Arduino#6964 gets implemented.
 // It makes the `_usbSuspendState` symbol available to us.

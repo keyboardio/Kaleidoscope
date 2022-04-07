@@ -14,10 +14,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/event_handlers.h"        // for _FOR_EACH_EVENT_HANDLER
 #include "kaleidoscope/hooks.h"                 // for Hooks
-#include "kaleidoscope/macro_helpers.h"         // for __NL__, MAKE_TEMPLATE...
+#include "kaleidoscope/macro_helpers.h"         // for __NL__, MAKE_TEMPLATE_SIGNATURE, UNWRAP
 
 namespace kaleidoscope {
 

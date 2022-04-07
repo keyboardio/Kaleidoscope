@@ -20,9 +20,9 @@
 #include <Kaleidoscope-OneShot.h>  // for OneShot
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Escape, Key_...
-#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyTog...
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::E...
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Escape, Key_NoKey
+#include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyToggledOn
 
 namespace kaleidoscope {
 namespace plugin {

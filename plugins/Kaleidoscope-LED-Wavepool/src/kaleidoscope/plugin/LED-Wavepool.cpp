@@ -20,14 +20,14 @@
 
 #include "kaleidoscope/plugin/LED-Wavepool.h"
 
-#include <Arduino.h>  // for pgm_read_byte
-#include <stdint.h>   // for int8_t, uint8_t
+#include <Arduino.h>  // for pgm_read_byte, PROGMEM, abs
+#include <stdint.h>   // for int8_t, uint8_t, int16_t, intptr_t
 
-#include "kaleidoscope/KeyAddr.h"                     // for MatrixAddr, Key...
+#include "kaleidoscope/KeyAddr.h"                     // for MatrixAddr, KeyAddr, MatrixAddr<>::...
 #include "kaleidoscope/KeyEvent.h"                    // for KeyEvent
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for Device, cRGB
-#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult, EventHandlerRes...
 #include "kaleidoscope/keyswitch_state.h"             // for keyIsPressed
 #include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb

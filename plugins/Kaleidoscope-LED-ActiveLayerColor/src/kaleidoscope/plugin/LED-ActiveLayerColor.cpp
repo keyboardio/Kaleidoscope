@@ -22,7 +22,7 @@
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 

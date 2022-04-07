@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "Kaleidoscope-Hardware-Keyboardio-Model01.h"
+#include "Kaleidoscope-Hardware-Keyboardio-Model01.h"  // IWYU pragma: keep

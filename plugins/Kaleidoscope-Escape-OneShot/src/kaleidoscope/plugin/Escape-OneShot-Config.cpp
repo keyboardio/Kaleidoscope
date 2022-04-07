@@ -17,14 +17,14 @@
 
 #include "kaleidoscope/plugin/Escape-OneShot.h"  // IWYU pragma: associated
 
-#include <Arduino.h>                       // for PSTR, F, __FlashStrin...
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper, strcmp_P
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/key_defs.h"              // for Key
 
 namespace kaleidoscope {

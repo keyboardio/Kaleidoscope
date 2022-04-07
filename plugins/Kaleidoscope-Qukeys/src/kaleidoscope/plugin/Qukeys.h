@@ -19,8 +19,8 @@
 #pragma once
 
 #include <Arduino.h>              // for PROGMEM
-#include <Kaleidoscope-Ranges.h>  // for DUM_FIRST
-#include <stdint.h>               // for uint8_t, uint16_t
+#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST
+#include <stdint.h>               // for uint8_t, uint16_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyAddrEventQueue.h"     // for KeyAddrEventQueue
@@ -29,6 +29,8 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
 #include "kaleidoscope/plugin.h"                // for Plugin
+
+// IWYU pragma: no_include "HIDAliases.h"
 
 // DualUse Key definitions for Qukeys in the keymap
 #define MT(mod, key)   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)

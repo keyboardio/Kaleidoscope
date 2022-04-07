@@ -64,6 +64,7 @@ class KeyAddrMap {
   // for (Key &key : key_map) {...}
  private:
   class Iterator;
+
   friend class ThisType::Iterator;
 
  public:
