@@ -198,12 +198,12 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
 
 #define GLUE2_AUX(...) GLUE2(__VA_ARGS__)
 
-#define TEST1(UNUSED, A, B, C, D,                                              \
-                      E, F, G, H,                                              \
-                      I, J, K, L,                                              \
-                      M, N, O, P,                                              \
-                      Q, ...) Q
-#define TEST(...) TEST1(__VA_ARGS__)
+#define HAS_MORE_THAN_2_ARGS_1(UNUSED, A, B, C, D,                             \
+                                       E, F, G, H,                             \
+                                       I, J, K, L,                             \
+                                       M, N, O, P,                             \
+                                       Q, ...) Q
+#define HAS_MORE_THAN_2_ARGS(...) HAS_MORE_THAN_2_ARGS_1(__VA_ARGS__)
 #define CHOICE(UNUSED, ...) ,##__VA_ARGS__, 1, 1, 1, 1,                        \
                                             1, 1, 1, 1,                        \
                                             1, 1, 1, 1,                        \
@@ -212,5 +212,5 @@ int array[] = { A, B, RESTRICT_ARGS_COUNT(C, 3, B_MACRO, ##__VA_ARGS__) };
 #define SELECT_ON_EMPTY_SIGNATURE(MACRO_BASE_NAME, UNUSED, ...)                \
    GLUE2_AUX(                                                                  \
       MACRO_BASE_NAME,                                                         \
-      TEST(CHOICE(1,##__VA_ARGS__))                                            \
+      HAS_MORE_THAN_2_ARGS(CHOICE(1,##__VA_ARGS__))                            \
    )(__VA_ARGS__)
