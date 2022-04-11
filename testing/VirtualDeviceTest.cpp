@@ -16,10 +16,19 @@
 
 #include "testing/VirtualDeviceTest.h"
 
-#include "HIDReportObserver.h"
-#include "testing/HIDState.h"
+// IWYU pragma: no_include <__algorithm/max.h>
+// IWYU pragma: no_include <__tree>
 
-#include <bitset>
+#include <bitset>  // for bitset
+#include <vector>  // for vector
+
+#include "HIDReportObserver.h"       // for HIDReportObserver
+#include "kaleidoscope/Runtime.h"    // for Runtime, Runtime_
+#include "testing/HIDState.h"        // for HIDState, HIDStateBuilder
+#include "testing/KeyboardReport.h"  // for KeyboardReport
+#include "testing/MouseReport.h"     // for MouseReport
+#include "testing/gtest.h"           // for Message, TestPartResult, EXPECT_EQ, ElementsAreArray
+#include "testing/iostream.h"        // for operator<<, basic_ostream, char_traits, string, cerr
 
 namespace kaleidoscope {
 namespace testing {

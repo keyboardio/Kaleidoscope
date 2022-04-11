@@ -15,7 +15,6 @@
  */
 
 #include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
 
 #include "testing/setup-googletest.h"
 

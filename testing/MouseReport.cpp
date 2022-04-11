@@ -16,12 +16,9 @@
 
 #include "testing/MouseReport.h"
 
-#include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
+#include <cstring>  // for memcpy
 
-#include <cstring>
-
-#include "MouseButtons.h"
+#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
 
 namespace kaleidoscope {
 namespace testing {

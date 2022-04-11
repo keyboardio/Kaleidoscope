@@ -16,12 +16,14 @@
 
 #include "testing/HIDState.h"
 
-#include "HID-Settings.h"
+// IWYU pragma: no_include <__utility/move.h>
 
-#include "testing/fix-macros.h"
+#include <utility>  // IWYU pragma: keep
+#include <vector>   // for vector
 
-// TODO(epan): Add proper logging.
-#include <iostream>
+#include "HID-Settings.h"      // for HID_REPORTID_CONSUMERCONTROL, HID_REPORTID_GAMEPAD, HID_RE...
+#include "testing/iostream.h"  // for operator<<, char_traits, cout, ostream, basic_ostream
+
 #define LOG(x) std::cout
 
 namespace kaleidoscope {

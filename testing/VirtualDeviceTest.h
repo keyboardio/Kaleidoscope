@@ -16,18 +16,24 @@
 
 #pragma once
 
-#include <cstddef>
+// IWYU pragma: no_include <__memory/unique_ptr.h>
 
-#include "testing/ExpectedKeyboardReport.h"
-#include "testing/ExpectedMouseReport.h"
-#include "testing/SimHarness.h"
-#include "testing/State.h"
+#include <cstddef>           // for size_t
+#include <cstdint>           // for uint32_t, int8_t, uint8_t
+#include <initializer_list>  // for initializer_list
+#include <memory>            // IWYU pragma: keep
+#include <set>               // for set
+#include <vector>            // for vector
 
-// Out of order due to macro conflicts.
-#include "testing/fix-macros.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
-#include <memory>
+#include "kaleidoscope/KeyAddr.h"            // for KeyAddr
+#include "kaleidoscope/key_defs.h"           // for Key
+#include "testing/ExpectedKeyboardReport.h"  // for ExpectedKeyboardReport
+#include "testing/ExpectedMouseReport.h"     // for ExpectedMouseReport
+#include "testing/HIDState.h"                // for HIDState
+#include "testing/SimHarness.h"              // for SimHarness
+#include "testing/State.h"                   // for State
+#include "testing/gtest.h"                   // for Test
+#include "testing/iostream.h"                // for string
 
 namespace kaleidoscope {
 namespace testing {

@@ -16,10 +16,9 @@
 
 #include "testing/SystemControlReport.h"
 
-#include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
+#include <cstring>  // for memcpy
 
-#include <cstring>
+#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
 
 namespace kaleidoscope {
 namespace testing {

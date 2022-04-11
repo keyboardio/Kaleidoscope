@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
+ * Copyright (C) 2022  Keyboardio, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,12 +14,12 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// No `#pragma once` since these undefs need to have every time a Kaleidoscope/
-// Arduino header is included before non-Kaleidoscope/Arduino header. The undefs
-// are needed, due to naming conflicts between Arduino and Googletest.
+#pragma once
 
-#undef min
+// In order to include certain standard library files, we need to undefine some
+// macros that Arduino.h unwisely exports.  Rahter than including <iostream>
+// directly, any simulator code should instead include "testing/iostream.h".
 #undef max
-#undef T
-#undef U
-#undef TEST
+#undef min
+
+#include <iostream>  // IWYU pragma: export

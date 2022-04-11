@@ -16,6 +16,9 @@
 
 #include "testing/ExpectedMouseReport.h"
 
+#include "MultiReport/Mouse.h"    // for (anonymous union)::(anonymous)
+#include "testing/MouseReport.h"  // for MouseReport::ReportData
+
 namespace kaleidoscope {
 namespace testing {
 

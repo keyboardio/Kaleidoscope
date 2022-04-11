@@ -16,11 +16,11 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <cstddef>  // for size_t
+#include <cstdint>  // for uint8_t
 
-#include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
+#include "kaleidoscope/KeyAddr.h"  // for KeyAddr
+#include "testing/gtest.h"         // IWYU pragma: keep
 
 namespace kaleidoscope {
 namespace testing {

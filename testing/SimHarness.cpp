@@ -16,8 +16,10 @@
 
 #include "testing/SimHarness.h"
 
-#include "testing/fix-macros.h"
-#include <iostream>
+#include <Arduino.h>  // for millis
+
+#include "kaleidoscope/Runtime.h"        // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"  // for Device, VirtualProps::KeyScanner
 
 namespace kaleidoscope {
 namespace testing {
