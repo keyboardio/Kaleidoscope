@@ -172,7 +172,9 @@ def main():
             return 1
 
     # Locate `clang-format` executable:
-    clang_format_exe = shutil.which('clang-format')
+    clang_format_exe = os.getenv('KALEIDOSCOPE_CODE_FORMATTER')
+    if clang_format_exe is None:
+        clang_format_exe = shutil.which('clang-format')
     logging.debug("Found `clang-format` executable: %s", clang_format_exe)
     clang_format_cmd = [clang_format_exe, '-i']
     if opts.loglevel <= logging.INFO:
