@@ -132,6 +132,7 @@ Our style guide is based on the [Google C++ style guide][goog:c++-guide] which w
     - [Vertical Whitespace](#vertical-whitespace)
   - [Exceptions to the Rules](#exceptions-to-the-rules)
     - [Existing Non-conformant Code](#existing-non-conformant-code)
+  - [Maintenance Tools](#maintenance-tools)
   - [Parting Words](#parting-words)
 
 ## Background
@@ -3154,6 +3155,40 @@ The coding conventions described above are mandatory. However, like all good rul
 > You may diverge from the rules when dealing with code that does not conform to this style guide.
 
 If you find yourself modifying code that was written to specifications other than those presented by this guide, you may have to diverge from these rules in order to stay consistent with the local conventions in that code. If you are in doubt about how to do this, ask the original author or the person currently responsible for the code. Remember that *consistency* includes local consistency, too.
+
+## Maintenance Tools
+
+Kaleidoscope uses some automated tools to enforce compliance with this code style guide.  Primarily, we use `clang-format` to format source files, `cpplint` to check for potential problems, and `include-what-you-use` to update header includes.  These are invoked using python scripts that supply all of the necessary command-line parameters to both utilities.  For convenience, there are also some shell scripts and makefile targets that further simplify the process of running these utilities properly.
+
+### Code Formatting
+
+We use `clang-format`(version 12 or higher) to automatically format Kaleidoscope source files.  There is a top-level `.clang-format` config file that contains the settings that best match the style described in this guide.  However, there are some files in the repository that are, for one reason or another, exempt from formatting in this way, so we use a wrapper script, `format-code.py`, instead of invoking it directly.
+
+`format-code.py` takes a list of target filenames, either as command-line parameters or from standard input (if reading from a pipe, with each line treated as a filename), and formats those files.  If given a directory target, it will recursively search that directory for source files, and format all of the ones it finds.
+
+By default, `format-code.py` will first check for unstaged changes in the Kaleidoscope git working tree, and exit before formatting source files if any are found.  This is meant to make it easier for developers to see the changes made by the formatter in isolation.  It can be given the `--force` option to skip this check.
+
+It also has a `--check` option, which will cause `format-code.py` to check for unstaged git working tree changes after running `clang-format` on the target source files, and return an error code if there are any, allowing us to automatically verify that code submitted complies with the formatting rules.
+
+The easiest way to invoke the formatter on the whole repository is by running `make format` at the top level of the Kaleidoscope repository.
+
+For automated checking of PRs in a CI tool, there is also `make check-code-style`.
+
+### Linting
+
+We use a copy of `cpplint.py` (with a modification that allows us to set the config file) to check for potential problems in the code.  This can be invoked by running `make cpplint` at the top level of the Kaleidoscope repository.
+
+### Header Includes
+
+We use `include-what-you-use` (version 18 or higher) to automatically manage header includes in Kaleidoscope source files.  Because of the peculiarities of Kaleidoscope's build system, we use a wrapper script, `iwyu.py`, instead of invoking it directly.
+
+`iwyu.py` takes a list of target filenames, either as command-line parameters or from standard input (if reading from a pipe, with each line treated as a filename), and makes changes to the header includes.  If given a directory target, it will recursively search that directory for source files, and run `include-what-you-use` on all of the ones it finds.
+
+A number of files can't be processed this way, and are enumerated in `.iwyu_ignore`.  Files in the `testing` directory (for the test simulator) require different include path items, so cannot be combined in the same call to `iwyu.py`.
+
+The easiest way to invoke `iwyu.py` is by running `make check-includes`, which will check all files that differ between the git working tree and the current master branch of the main Kaleidoscope repository, update their headers, and return a non-zero exit code if there were any errors processing the file(s) or any changes made.
+
+For automated checking of header includes in a CI tool, there is also `make check-all-includes`, that checks the whole repository, not just the current branch's changes.
 
 ## Parting Words
 
