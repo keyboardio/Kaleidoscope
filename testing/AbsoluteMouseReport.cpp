@@ -19,8 +19,8 @@
 #include <cstring>  // for memcpy
 #include <vector>   // for vector
 
-#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"
-#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
+#include "kaleidoscope/Runtime.h"                                 // for Runtime, Runtime_
+#include "kaleidoscope/driver/hid/keyboardio/usb/MouseButtons.h"  // for MOUSE_LEFT, MOUSE_MIDDLE
 
 namespace kaleidoscope {
 namespace testing {

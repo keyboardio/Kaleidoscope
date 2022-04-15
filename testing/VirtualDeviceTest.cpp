@@ -22,13 +22,13 @@
 #include <bitset>  // for bitset
 #include <vector>  // for vector
 
-#include "kaleidoscope/Runtime.h"    // for Runtime, Runtime_
+#include "kaleidoscope/Runtime.h"                                      // for Runtime, Runtime_
 #include "kaleidoscope/driver/hid/keyboardio/usb/HIDReportObserver.h"  // for HIDReportObserver
-#include "testing/HIDState.h"        // for HIDState, HIDStateBuilder
-#include "testing/KeyboardReport.h"  // for KeyboardReport
-#include "testing/MouseReport.h"     // for MouseReport
-#include "testing/gtest.h"           // for Message, TestPartResult, EXPECT_EQ, ElementsAreArray
-#include "testing/iostream.h"        // for operator<<, basic_ostream, char_traits, string, cerr
+#include "testing/HIDState.h"                                          // for HIDState, HIDState...
+#include "testing/KeyboardReport.h"                                    // for KeyboardReport
+#include "testing/MouseReport.h"                                       // for MouseReport
+#include "testing/gtest.h"                                             // for Message, TestPartR...
+#include "testing/iostream.h"                                          // for operator<<, char_t...
 
 namespace kaleidoscope {
 namespace testing {

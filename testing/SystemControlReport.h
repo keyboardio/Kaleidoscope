@@ -16,11 +16,11 @@
 
 #pragma once
 
-#include <cstdint>  // for uint8_t, uint32_t
+#include <cstdint>  // for uint8_t
 #include <vector>   // for vector
 
-#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"               // for HID_REPORTID_SYSTEMCONTROL
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"  // for HID_SystemControlReport_Data_t
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"               // for HID_REPORT...
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/SystemControl.h"  // for HID_System...
 
 namespace kaleidoscope {
 namespace testing {

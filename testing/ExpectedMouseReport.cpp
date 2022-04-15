@@ -16,8 +16,8 @@
 
 #include "testing/ExpectedMouseReport.h"
 
-#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"    // for (anonymous union)::(anonymous)
-#include "testing/MouseReport.h"  // for MouseReport::ReportData
+#include "kaleidoscope/driver/hid/keyboardio/usb/MultiReport/Mouse.h"  // for (anonymous union):...
+#include "testing/MouseReport.h"                                       // for MouseReport::Repor...
 
 namespace kaleidoscope {
 namespace testing {

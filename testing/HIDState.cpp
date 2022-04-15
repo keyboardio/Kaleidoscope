@@ -21,8 +21,8 @@
 #include <utility>  // IWYU pragma: keep
 #include <vector>   // for vector
 
-#include "HID-Settings.h"      // for HID_REPORTID_CONSUMERCONTROL, HID_REPORTID_GAMEPAD, HID_RE...
-#include "testing/iostream.h"  // for operator<<, char_traits, cout, ostream, basic_ostream
+#include "kaleidoscope/driver/hid/keyboardio/usb/HID-Settings.h"  // for HID_REPORTID_CONSUMERCO...
+#include "testing/iostream.h"                                     // for operator<<, char_traits
 
 #define LOG(x) std::cout
 
