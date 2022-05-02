@@ -135,7 +135,6 @@ void Model100KeyScanner::enableScannerPower(void) {
   digitalWrite(PB14, LOW);
   pinMode(PB15, INPUT);
   digitalWrite(PB15, LOW);
-
 }
 
 void Model100KeyScanner::disableScannerPower(void) {
