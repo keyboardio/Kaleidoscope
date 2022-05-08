@@ -244,3 +244,9 @@ properties available:
 
 > This method changes the size of the grid used for [warping](#warping). The
 > following are valid sizes: `MOUSE_WARP_GRID_2X2`, `MOUSE_WARP_GRID_3X3`
+
+## Further reading
+
+There is an [example][plugin:example] that demonstrates how to use this plugin.
+
+[plugin:example]: /examples/Features/MouseKeys/MouseKeys.ino
