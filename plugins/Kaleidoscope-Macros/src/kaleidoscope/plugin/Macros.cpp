@@ -154,7 +154,7 @@ void Macros::play(const macro_t *macro_p) {
 
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       while (true) {
-        key.setFlags(0);
+        key.setFlags(pgm_read_byte(macro_p++));
         key.setKeyCode(pgm_read_byte(macro_p++));
         if (key == Key_NoKey)
           break;
