@@ -188,7 +188,7 @@ void DynamicMacros::play(uint8_t macro_id) {
 
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
       while (true) {
-        key.setFlags(0);
+        key.setFlags(Runtime.storage().read(pos++));
         key.setKeyCode(Runtime.storage().read(pos++));
         if (key == Key_NoKey)
           break;
@@ -238,6 +238,17 @@ EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
+}
+
+EventHandlerResult DynamicMacros::beforeReportingState(const KeyEvent &event) {
+  // Here we add keycodes to the HID report for keys held in a macro sequence.
+  // This is necessary because Kaleidoscope doesn't know about the supplemental
+  // `active_macro_keys_[]` array.
+  for (Key key : active_macro_keys_) {
+    if (key != Key_NoKey)
+      Runtime.addToReport(key);
+  }
+  return EventHandlerResult::OK;
 }
 
 EventHandlerResult DynamicMacros::onNameQuery() {

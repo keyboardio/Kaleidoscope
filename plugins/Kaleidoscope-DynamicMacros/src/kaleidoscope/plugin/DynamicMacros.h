@@ -39,6 +39,7 @@ class DynamicMacros : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult beforeReportingState(const KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
 
   static void reserve_storage(uint16_t size);
