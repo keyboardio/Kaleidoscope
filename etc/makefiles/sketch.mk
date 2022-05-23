@@ -45,6 +45,7 @@ OUTPUT_FILE_PREFIX 		:= $(SKETCH_BASE_NAME)-$(GIT_VERSION)
 HEX_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).hex
 HEX_FILE_WITH_BOOTLOADER_PATH 	:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX)-with-bootloader.hex
 ELF_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).elf
+BIN_FILE_PATH				:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).bin
 LIB_FILE_PATH 			:= $(OUTPUT_PATH)/$(OUTPUT_FILE_PREFIX).a
 
 ifeq ($(FQBN),)
@@ -175,8 +176,10 @@ compile: kaleidoscope-hardware-configured
 ifeq ($(LIBONLY),)
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.hex" "${HEX_FILE_PATH}"
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.elf" "${ELF_FILE_PATH}"
+	$(QUIET) if [ -e "${BUILD_PATH}/${SKETCH_FILENAME}.bin" ]; then cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.bin" "${BIN_FILE_PATH}"; else :; fi
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.hex"
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.elf"
+	$(QUIET) if [ -e "${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.bin" ]; then ln -sf "${OUTPUT_FILE_PREFIX}.bin" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.bin"; else :; fi
 else    
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.a" "${LIB_FILE_PATH}"
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.a"
