@@ -38,6 +38,14 @@ class GD32Flash : public EEPROMClass<_StorageProps::length> {
   void setup() {
     EEPROMClass<_StorageProps::length>::begin();
   }
+
+  bool isSliceUninitialized(uint16_t offset, uint16_t size) {
+    for (uint16_t o = offset; o < offset + size; o++) {
+      if (this->read(o) != _StorageProps::uninitialized_byte)
+        return false;
+    }
+    return true;
+  }
 };
 
 }  // namespace storage
