@@ -104,7 +104,9 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
 
   bool isEOL() {
-    return Runtime.serialPort().peek() == NEWLINE;
+    int i = Runtime.serialPort().peek();
+
+    return (i == NEWLINE || i == -1);
   }
 
 
