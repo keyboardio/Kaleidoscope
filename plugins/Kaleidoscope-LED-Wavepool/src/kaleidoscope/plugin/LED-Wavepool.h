@@ -18,7 +18,7 @@
 
 #pragma once
 
-#ifdef ARDUINO_AVR_MODEL01
+#if defined(ARDUINO_AVR_MODEL01) || defined(ARDUINO_keyboardio_model_100)
 
 #include <Arduino.h>  // for PROGMEM
 #include <stdint.h>   // for uint8_t, int16_t, int8_t, INT16_MAX
