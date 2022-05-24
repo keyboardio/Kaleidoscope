@@ -1,5 +1,5 @@
 /* DynamicMacros - Dynamic macro support for Kaleidoscope.
- * Copyright (C) 2019, 2021  Keyboard.io, Inc.
+ * Copyright (C) 2019-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -50,7 +50,8 @@ class DynamicMacros : public kaleidoscope::Plugin {
   static uint16_t storage_base_;
   static uint16_t storage_size_;
   static uint16_t map_[31];
-  static void updateDynamicMacroCache();
+  static uint8_t macro_count_;
+  static uint8_t updateDynamicMacroCache();
   static Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
   static void press(Key key);
   static void release(Key key);

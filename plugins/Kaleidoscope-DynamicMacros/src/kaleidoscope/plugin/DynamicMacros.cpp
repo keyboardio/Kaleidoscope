@@ -1,5 +1,5 @@
 /* DynamicMacros - Dynamic macro support for Kaleidoscope.
- * Copyright (C) 2019, 2021  Keyboard.io, Inc.
+ * Copyright (C) 2019-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,6 +37,7 @@ namespace plugin {
 uint16_t DynamicMacros::storage_base_;
 uint16_t DynamicMacros::storage_size_;
 uint16_t DynamicMacros::map_[];
+uint8_t DynamicMacros::macro_count_;
 Key DynamicMacros::active_macro_keys_[];
 
 // =============================================================================
@@ -65,11 +66,10 @@ void DynamicMacros::tap(Key key) {
   Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
 }
 
-void DynamicMacros::updateDynamicMacroCache() {
-  uint16_t pos              = storage_base_;
-  uint8_t current_id        = 0;
-  macro_t macro             = MACRO_ACTION_END;
-  bool previous_macro_ended = false;
+uint8_t DynamicMacros::updateDynamicMacroCache() {
+  uint16_t pos       = storage_base_;
+  uint8_t current_id = 0;
+  macro_t macro      = MACRO_ACTION_END;
 
   map_[0] = 0;
 
@@ -79,7 +79,6 @@ void DynamicMacros::updateDynamicMacroCache() {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
     case MACRO_ACTION_STEP_IMPLICIT_REPORT:
     case MACRO_ACTION_STEP_SEND_REPORT:
-      previous_macro_ended = false;
       break;
 
     case MACRO_ACTION_STEP_INTERVAL:
@@ -87,19 +86,16 @@ void DynamicMacros::updateDynamicMacroCache() {
     case MACRO_ACTION_STEP_KEYCODEDOWN:
     case MACRO_ACTION_STEP_KEYCODEUP:
     case MACRO_ACTION_STEP_TAPCODE:
-      previous_macro_ended = false;
       pos++;
       break;
 
     case MACRO_ACTION_STEP_KEYDOWN:
     case MACRO_ACTION_STEP_KEYUP:
     case MACRO_ACTION_STEP_TAP:
-      previous_macro_ended = false;
       pos += 2;
       break;
 
     case MACRO_ACTION_STEP_TAP_SEQUENCE: {
-      previous_macro_ended = false;
       uint8_t keyCode, flags;
       do {
         flags   = Runtime.storage().read(pos++);
@@ -109,7 +105,6 @@ void DynamicMacros::updateDynamicMacroCache() {
     }
 
     case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
-      previous_macro_ended = false;
       uint8_t keyCode, flags;
       do {
         keyCode = Runtime.storage().read(pos++);
@@ -119,14 +114,17 @@ void DynamicMacros::updateDynamicMacroCache() {
 
     case MACRO_ACTION_END:
       map_[++current_id] = pos - storage_base_;
-
-      if (previous_macro_ended)
-        return;
-
-      previous_macro_ended = true;
       break;
+
+    default:
+      // When we encounter an unknown step type, stop processing. Whatever we
+      // encounter after is unknown, and there's no guarantee we can parse it
+      // properly.
+      return current_id;
     }
   }
+
+  return current_id;
 }
 
 // public
@@ -135,6 +133,11 @@ void DynamicMacros::play(uint8_t macro_id) {
   uint8_t interval = 0;
   uint16_t pos;
   Key key;
+
+  // If the requested ID is higher than the number of macros we found during the
+  // cache update, bail out. Our map beyond `macro_count_` is unreliable.
+  if (macro_id >= macro_count_)
+    return;
 
   pos = storage_base_ + map_[macro_id];
 
@@ -279,7 +282,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
         Runtime.storage().update(storage_base_ + pos++, b);
       }
       Runtime.storage().commit();
-      updateDynamicMacroCache();
+      macro_count_ = updateDynamicMacroCache();
     }
   }
 
@@ -296,7 +299,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
 void DynamicMacros::reserve_storage(uint16_t size) {
   storage_base_ = ::EEPROMSettings.requestSlice(size);
   storage_size_ = size;
-  updateDynamicMacroCache();
+  macro_count_  = updateDynamicMacroCache();
 }
 
 }  // namespace plugin
