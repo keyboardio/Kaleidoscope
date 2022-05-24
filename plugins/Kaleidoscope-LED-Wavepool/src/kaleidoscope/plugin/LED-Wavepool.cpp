@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ARDUINO_AVR_MODEL01
+#if defined(ARDUINO_AVR_MODEL01) || defined(ARDUINO_keyboardio_model_100)
 
 #include "kaleidoscope/plugin/LED-Wavepool.h"
 
