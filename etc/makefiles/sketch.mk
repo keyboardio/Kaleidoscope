@@ -165,7 +165,7 @@ compile: kaleidoscope-hardware-configured
 
 
 	$(QUIET) install -d "${OUTPUT_PATH}"
-	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} --warnings all ${ccache_wrapper_property} ${local_cflags_property} \
+	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
 	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} \
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
@@ -193,6 +193,8 @@ endif
 
 flashing_instructions = $(call _arduino_prop,build.flashing_instructions)
 
+_device_port = $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1)
+
 flash: ${HEX_FILE_PATH}
 ifneq ($(flashing_instructions),)
 	$(info $(shell printf $(flashing_instructions)))
@@ -203,6 +205,7 @@ endif
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
 	@$(shell read _)
+	$(QUIET) echo "device.reset" > $(_device_port)
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
 	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1 echo "--port" ) \
 	--input-dir "${OUTPUT_PATH}" \
