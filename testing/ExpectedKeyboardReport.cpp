@@ -16,6 +16,9 @@
 
 #include "testing/ExpectedKeyboardReport.h"
 
+#include <cstdint>  // for uint8_t, uint32_t
+#include <set>      // for set
+
 namespace kaleidoscope {
 namespace testing {
 

@@ -28,15 +28,19 @@
 
 # For more information, please refer to <http://unlicense.org/>
 # ------------------------------------------------------------------------------
-"""This script runs clang-format on Kaleidoscope's codebase."""
+"""This script runs clang-format on a Kaleidoscope repository."""
 
 import argparse
-import glob
 import logging
 import os
 import re
+import shutil
 import subprocess
 import sys
+
+sys.dont_write_bytecode = True
+
+from common import check_git_diff, setup_logging, split_on_newlines, split_on_nulls
 
 
 # ==============================================================================
@@ -44,7 +48,7 @@ def parse_args(args):
     """Parse command line parameters
 
     Args:
-      args (List[str]): command line parameters as list of strings
+      args (list[str]): command line parameters as list of strings
           (for example  ``["--help"]``).
 
     Returns:
@@ -56,216 +60,216 @@ def parse_args(args):
         clang-format.  By default, it operates on Arduino C++ source files with
         extensions: *.{cpp,h,hpp,inc,ino}.""")
     parser.add_argument(
-        '-v',
-        '--verbose',
-        dest='loglevel',
-        help="Verbose output",
-        action='store_const',
-        const=logging.INFO,
-    )
-    parser.add_argument(
         '-q',
         '--quiet',
         dest='loglevel',
-        help="Suppress all non-error output",
         action='store_const',
         const=logging.ERROR,
+        default=logging.WARNING,
+        help="""
+        Suppress output except warnings and errors.""",
+    )
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action='store_const',
+        dest='loglevel',
+        const=logging.INFO,
+        help="""
+        Output verbose debugging information.""",
+    )
+    parser.add_argument(
+        '-d',
+        '--debug',
+        action='store_const',
+        dest='loglevel',
+        const=logging.DEBUG,
+        help="""
+        Save output from `include-what-you-use` for processed files beside the originals, with
+        a '.iwyu' suffix, for debugging purposes.""",
     )
     parser.add_argument(
         '-X',
         '--exclude-dir',
-        metavar="<path>",
-        dest='exclude_dirs',
-        help="Exclude dir from search (path relative to the pwd)",
         action='append',
+        dest='exclude_dirs',
         default=[],
+        metavar="<path>",
+        help="""
+        Exclude dir from search (path relative to the pwd)""",
     )
     parser.add_argument(
         '-x',
         '--exclude-file',
-        metavar="<file>",
-        dest='exclude_files',
-        help="Exclude <file> (base name only, not a full path) from formatting",
         action='append',
+        dest='exclude_files',
         default=[],
+        metavar="<file>",
+        help="""
+        Exclude <file> (base name only, not a full path) from formatting""",
     )
     parser.add_argument(
-        '-e',
+        '-r',
         '--regex',
-        metavar="<regex>",
-        dest='src_re_str',
-        help="Regular expression for matching source file names",
+        dest='regex',
         default=r'\.(cpp|h|hpp|inc|ino)$',
+        metavar="<regex>",
+        help="""
+        Regular expression for matching source file names""",
+    )
+    parser.add_argument(
+        '-z',
+        '-0',
+        action='store_const',
+        dest='input_splitter',
+        const=split_on_nulls,
+        default=split_on_newlines,
+        help="""
+        When reading target filenames from standard input, break on NULL characters instead
+        of newlines.""",
     )
     parser.add_argument(
         '-f',
         '--force',
         action='store_true',
-        help="Format code even if there are unstaged changes",
+        help="""
+        Format code even if there are unstaged changes""",
     )
     parser.add_argument(
         '--check',
         action='store_true',
-        help="Check for changes after formatting",
+        help="""
+        Check for changes after formatting by running `git diff --exit-code`.  If there are any
+        changes after formatting, a non-zero exit code is returned.""",
     )
     parser.add_argument(
         'targets',
         metavar="<search_dir>",
-        nargs='+',
-        help="""A list of files and/or directories to search for source files to format""",
+        nargs='*',
+        help="""
+        A list of files and/or directories to search for source files to format.""",
     )
     return parser.parse_args(args)
 
 
 # ==============================================================================
-def setup_logging(loglevel):
-    """Setup basic logging
-
-    Args:
-      loglevel (int): minimum loglevel for emitting messages
+def main():
+    """Parse command-line arguments and format source files.
     """
-    logformat = "%(message)s"
-    logging.basicConfig(
-        level=loglevel,
-        stream=sys.stdout,
-        format=logformat,
-        datefmt="",
-    )
-    return logging.getLogger()
+    # Parse command-line argumets:
+    opts = parse_args(sys.argv[1:])
+    # Set up logging system:
+    setup_logging(opts.loglevel)
 
+    # ----------------------------------------------------------------------
+    # Unless we've been given the `--force` option, check for unstaged changes to avoid
+    # clobbering any work in progress:
+    exit_code = 0
+    if not opts.force:
+        changed_files = check_git_diff()
+        if len(changed_files) > 0:
+            logging.error("Working tree has unstaged changes; aborting")
+            return 1
 
-# ==============================================================================
-def format_code(path, opts, clang_format_cmd):
-    """Run clang-format on a directory."""
-    logging.info("Formatting code in %s...", path)
+    # Locate `clang-format` executable:
+    clang_format_exe = os.getenv('KALEIDOSCOPE_CODE_FORMATTER')
+    if clang_format_exe is None:
+        clang_format_exe = shutil.which('clang-format')
+    logging.debug("Found `clang-format` executable: %s", clang_format_exe)
+    clang_format_cmd = [clang_format_exe, '-i']
+    if opts.loglevel <= logging.INFO:
+        clang_format_cmd.append('--verbose')
 
-    src_regex = re.compile(opts.src_re_str)
+    # ----------------------------------------------------------------------
+    # Read targets from command line:
+    targets = opts.targets
+    logging.debug("CLI target parameters: %s", targets)
 
-    src_files = []
+    # If stdin is a pipe, read target filenames from it:
+    if not sys.stdin.isatty():
+        targets += opts.input_splitter(sys.stdin.read())
+    logging.debug("All targets: %s", targets)
 
-    for root, dirs, files in os.walk(path):
-        for exclude_path in opts.exclude_dirs:
-            exclude_path = exclude_path.rstrip(os.path.sep)
-            if os.path.dirname(exclude_path) == root:
-                exclude_dir = os.path.basename(exclude_path)
-                if exclude_dir in dirs:
-                    dirs.remove(exclude_dir)
+    # Prepare exclusion lists.  The file excludes are basenames only, and the dirs get
+    # converted to absolute path names.
+    exclude_files = set(opts.exclude_files)
+    exclude_dirs = set(os.path.abspath(_) for _ in opts.exclude_dirs)
 
-        for name in files:
-            if name in opts.exclude_files:
-                continue
-            if src_regex.search(name):
-                src_files.append(os.path.join(root, name))
+    # Convert target paths to absolute, and remove any that are excluded:
+    target_paths = set(os.path.abspath(_) for _ in targets if _ not in exclude_dirs)
+    logging.debug("Target paths: %s", target_paths)
 
-    proc = subprocess.run(clang_format_cmd + src_files)
+    # Build separate sets of target files and dirs.  Later, we'll search target dirs and add
+    # matching target files to the files set.
+    target_files = set()
+    target_dirs = set()
+    for t in target_paths:
+        if os.path.isfile(t):
+            target_files.add(os.path.abspath(t))
+        elif os.path.isdir(t):
+            target_dirs.add(os.path.abspath(t))
+    logging.debug("Target files after separating: %s", target_files)
+    logging.debug("Target dirs after separating: %s", target_dirs)
+
+    # Remove excluded filenames:
+    target_files -= set(_ for _ in target_files if os.path.basename(_) in exclude_files)
+
+    # Remove files and dirs in excluded dirs:
+    target_files -= set(_ for _ in target_files for x in exclude_dirs if _.startswith(x))
+    target_dirs -= set(_ for _ in target_dirs for x in exclude_dirs if _.startswith(x))
+
+    # Compile regex for matching files to be formatted:
+    target_matcher = re.compile(opts.regex)
+
+    # Remove target files that don't match the regex:
+    logging.debug("Target files before matching regex: %s", target_files)
+    target_files = set(_ for _ in target_files if target_matcher.search(_))
+    logging.debug("Target files after matching regex: %s", target_files)
+
+    # Search target dirs for non-excluded files, and add them to `target_files`:
+    logging.debug("Searching target dirs: %s", target_dirs)
+    for path in target_dirs:
+        for root, dirs, files in os.walk(path):
+            # Prune excluded dirs
+            for x in exclude_dirs:
+                if x in (os.path.join(root, _) for _ in dirs):
+                    dirs.remove(os.path.basename(x))
+            # Add non-excluded files
+            for f in files:
+                if target_matcher.search(f) and f not in exclude_files:
+                    target_files.add(os.path.join(root, f))
+
+    if len(target_files) == 0:
+        logging.error("No target files found; exiting.")
+        return 1
+
+    # Run clang-format on target files:
+    proc = subprocess.run(clang_format_cmd + sorted(target_files))
     if proc.returncode != 0:
         logging.error("Error: clang-format returned non-zero status: %s", proc.returncode)
-    return
+        return proc.returncode
+    else:
+        logging.info("Finished formatting target files.")
 
-
-# ==============================================================================
-def build_file_list(path, src_regex):
-    """Docstring"""
-
-    # If the specified path is a filename, return it (as a list), regardless of
-    # whether or not it matches the regex.
-    if os.path.isfile(path):
-        return [path]
-
-    # If the specified path is not valid, just return an empty list.
-    if not os.path.isdir(path):
-        return []
-
-    # The specified path is a directory, so we search recursively for files
-    # contained therein that match the specified regular expression.
-    source_files = []
-    for root, dirs, files in os.walk(path):
-        # First, ignore all dotfiles (and directories).
-        dotfiles = set(glob.glob('.*'))
-        dirs = set(dirs) - dotfiles
-        files = set(dirs) - dotfiles
-
-        # Check for a list of file glob patterns that should be excluded.
-        if IWYU_IGNORE_FILE in files:
-            with open(os.path.join(root, IWYU_IGNORE_FILE)) as f:
-                for pattern in f.read().splitlines():
-                    matches = set(glob.glob(os.path.join(root, pattern)))
-                    dirs = set(dirs) - matches
-                    files = set(files) - matches
-
-        # Add all matching files to the list of source files to be formatted.
-        for f in filter(src_regex.search, files):
-            source_files.append(os.path.join(root, f))
-
-    return source_files
-
-
-# ==============================================================================
-def warn_if_output(byte_str, msg):
-    """Convert a string of bytes to a UTF-8 string, break it on newlines.  If
-    there is any output, print a warning message, followed by each line,
-    indented by four spaces."""
-    lines = byte_str.decode('utf-8').splitlines()
-    if '' in lines:
-        lines.remove('')
-    if len(lines) > 0:
-        logging.warning('%s', msg)
-        for line in lines:
-            logging.warning('    %s', line)
-    return
-
-
-# ==============================================================================
-def main(cli_args):
-    """Parse command-line arguments and format source files."""
-    args = parse_args(cli_args)
-    if args.loglevel is None:
-        args.loglevel = logging.WARNING
-    setup_logging(args.loglevel)
-
-    clang_format = os.getenv('CLANG_FORMAT_CMD')
-    if clang_format is None:
-        clang_format = 'clang-format'
-
-    clang_format_cmd = [clang_format, '-i']
-
-    git_diff_cmd = ['git', 'diff', '--exit-code']
-
-    proc = subprocess.run(git_diff_cmd + ['--name-only'], capture_output=True)
-    if proc.returncode != 0:
-        warn_if_output(proc.stdout, 'Warning: you have unstaged changes to these files:')
-        if not args.force:
-            logging.warning(
-                'Formatting aborted. Stage your changes or use --force to override.')
-            sys.exit(proc.returncode)
-
-    if args.loglevel >= logging.WARNING:
-        git_diff_cmd.append('--quiet')
-    elif args.loglevel <= logging.INFO:
-        git_diff_cmd.append('--name-only')
-
-    for path in args.targets:
-        format_code(path, args, clang_format_cmd)
-
-    if args.check:
+    # If we've been asked to check for changes made by the formatter:
+    if opts.check:
         logging.warning('Checking for changes made by the formatter...')
+        changed_files = check_git_diff()
+        if len(changed_files) == 0:
+            logging.warning("No files changed.  Congratulations!")
+        else:
+            logging.warning("Found files with changes after formatting:")
+            exit_code = 1
+        for f in changed_files:
+            logging.warning("    %s", f)
 
-        proc = subprocess.run(git_diff_cmd + ['--cached'], capture_output=True)
-        if proc.returncode != 0:
-            logging.warning(
-                'Warning: Your working tree has staged changes. ' +
-                'Committed changes might not pass this check.')
-            warn_if_output(proc.stdout, 'The following files have unstaged changes:')
-
-        proc = subprocess.run(git_diff_cmd, capture_output=True)
-        if proc.returncode != 0:
-            warn_if_output(proc.stdout, 'The following files have changes:')
-            logging.error(
-                'Check failed: Please commit formatting changes before submitting.')
-            sys.exit(proc.returncode)
-    return
+    return exit_code
 
 
 # ==============================================================================
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        logging.info("Aborting")
+        sys.exit(1)

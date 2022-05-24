@@ -16,13 +16,12 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs.h"
-#include "testing/SystemControlReport.h"
+// For some reason, the `MATCHER_P` macro confuses IWYU into trying to include
+// this file in itself, so we need to block it with the following:
+// IWYU pragma: no_include "testing/matchers.h"
 
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
-#include "testing/fix-macros.h"
-#include "gmock/gmock.h"
+#include "kaleidoscope/key_defs.h"  // for Key
+#include "testing/gtest.h"          // for GMOCK_PP_INTERNAL_FOR_EACH_IMPL_1, GMOCK_PP_INTERNAL_...
 
 namespace kaleidoscope {
 namespace testing {

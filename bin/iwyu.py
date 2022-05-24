@@ -28,7 +28,9 @@
 
 # For more information, please refer to <http://unlicense.org/>
 # ------------------------------------------------------------------------------
-"""This is a script for maintenance of the headers included in Kaleidoscope source
+"""Run `include-what-you-use` on Kaleidoscope sources
+
+This is a script for maintenance of the headers included in Kaleidoscope source
 files.  It is not currently possible to run this automatically on all
 Kaleidoscope source files, because of the peculiarities therein.  It uses
 llvm/clang to determine which headers should be included in a given file, but
@@ -55,12 +57,25 @@ import shutil
 import subprocess
 import sys
 
+sys.dont_write_bytecode = True
+
+from common import cwd, setup_logging, split_on_newlines, split_on_nulls
+
 
 # ==============================================================================
 def parse_args(args):
+    """Parse command line parameters
+
+    Args:
+      args (list[str]): command line parameters as list of strings
+          (for example  ``["--help"]``).
+
+    Returns:
+      :obj:`argparse.Namespace`: command line parameters namespace
+    """
     parser = argparse.ArgumentParser(
-        description=
-        """Run `include-what-you-use` on source files given as command-line arguments and/or read
+        description="""
+        Run `include-what-you-use` on source files given as command-line arguments and/or read
         from standard input.  When reading target filenames from standard input, they should be
         either absolute or relative to the current directory, and each line of input (minus the
         line-ending character(s) is treated as a filename.""")
@@ -68,78 +83,93 @@ def parse_args(args):
         '-q',
         '--quiet',
         dest='loglevel',
-        help="Suppress output except warnings and errors.",
         action='store_const',
         const=logging.ERROR,
         default=logging.WARNING,
+        help="""
+        Suppress output except warnings and errors.""",
     )
     parser.add_argument(
         '-v',
         '--verbose',
-        dest='loglevel',
-        help="Output verbose debugging information.",
         action='store_const',
+        dest='loglevel',
         const=logging.INFO,
+        help="""
+        Output verbose debugging information.""",
     )
     parser.add_argument(
         '-d',
         '--debug',
-        dest='loglevel',
-        help="""Save output from `include-what-you-use` for processed files beside the
-             originals, with a '.iwyu' suffix, for debugging purposes.""",
         action='store_const',
+        dest='loglevel',
         const=logging.DEBUG,
+        help="""
+        Save output from `include-what-you-use` for processed files beside the originals, with
+        a '.iwyu' suffix, for debugging purposes.""",
     )
     parser.add_argument(
         '-r',
         '--regex',
+        action='store',
         dest='regex',
-        help="""A regular expression for matching filenames Only the basename of the file is
+        default=r'\.(h|cpp)$',
+        help="""
+        A regular expression for matching filenames Only the basename of the file is
         matched, and the regex is only used when searching a directory for files to process,
         not on target filenames specified in arguments or read from standard input.""",
-        action='store',
-        default=r'\.(h|cpp)$',
     )
     parser.add_argument(
         '-i',
         '--ignores_file',
-        dest='ignores_file',
-        metavar='<ignores_file>',
-        help=
-        """The name of a file (relative to KALEIDOSCOPE_DIR) that contains a list of glob
-        patterns that will be ignored when a target directory is searched for filenames that
-        match <regex>.""",
         action='store',
+        dest='ignores_file',
         default='.iwyu_ignore',
+        metavar='<ignores_file>',
+        help="""
+        The name of a file (relative to KALEIDOSCOPE_DIR) that contains a list of glob patterns
+        that will be ignored when a target directory is searched for filenames that match
+        <regex>.""",
+    )
+    parser.add_argument(
+        '-I',
+        '--include',
+        action='append',
+        dest='include_dirs',
+        metavar='<dir>',
+        help="""
+        Add <dir> to the list of directories that will be searched for header files.""",
+    )
+    parser.add_argument(
+        '-z',
+        '-0',
+        action='store_const',
+        dest='input_splitter',
+        const=split_on_nulls,
+        default=split_on_newlines,
+        help="""
+        When reading target filenames from standard input, break on NULL characters instead
+        of newlines.""",
+    )
+    parser.add_argument(
+        '--update_comments',
+        action='store_true',
+        help="""
+        Call `include-what-you-use` with `--update_comments` to always rewrite its 'for'
+        comments regarding which symbols are used.""",
     )
     parser.add_argument(
         'targets',
+        nargs='*',
         metavar="<target>",
-        nargs='+',
-        help=
-        """A list of target files and/or directories to search for source files to format.  Any
+        help="""
+        A list of target files and/or directories to search for source files to format.  Any
         target file will be processed, regardless of the filename.  Any target directory will
         be recursively searched for files matching the regular expression given by --regex.
         Filenames and directories beginning with a '.' will always be excluded from the search,
         but can still be processed if specified as a command-line target.""",
     )
     return parser.parse_args(args)
-
-
-# ==============================================================================
-def setup_logging(loglevel):
-    """Set up basic logging
-
-    Args:
-      :int:loglevel: minimum loglevel for emitting messages
-    """
-    logformat = "%(message)s"
-    logging.basicConfig(
-        level=loglevel,
-        stream=sys.stdout,
-        format=logformat,
-        datefmt="",
-    )
 
 
 # ==============================================================================
@@ -153,12 +183,13 @@ def main():
     # ----------------------------------------------------------------------
     # Find include-what-you-use:
     iwyu = shutil.which('include-what-you-use')
-    logging.info("Found `include-what-you-use` executable: %s", iwyu)
+    logging.debug("Found `include-what-you-use` executable: %s", iwyu)
     iwyu_opts = [
         '--no_fwd_decls',  # No forward declarations
         '--max_line_length=100',
-        '--update_comments',
     ]
+    if opts.update_comments:
+        iwyu_opts.append('--update_comments')
     # Prepend '-Xiwyu' to each `include-what-you-use` option:
     iwyu_opts = [_ for opt in iwyu_opts for _ in ('-Xiwyu', opt)]
 
@@ -256,6 +287,9 @@ def main():
     ]
     # Include plugin source dirs for plugins that depend on other plugins:
     includes += glob.glob(os.path.join(kaleidoscope_dir, 'plugins', '*', 'src'))
+    # Include dirs specified on the command line, if any:
+    if opts.include_dirs:
+        includes += [os.path.abspath(_) for _ in opts.include_dirs]
     clang_opts += ['-I' + _ for _ in includes]
 
     # ----------------------------------------------------------------------
@@ -265,19 +299,23 @@ def main():
 
     fix_includes_cmd = [
         fix_includes,
-        '--update_comments',
         '--nosafe_headers',
         '--reorder',
         '--separate_project_includes=' + kaleidoscope_src_dir,  # Does this help?
     ]
+    if opts.update_comments:
+        fix_includes_cmd.append('--update_comments')
     logging.debug("Using `fix_includes` command: %s", ' \\\n\t'.join(fix_includes_cmd))
 
     # ----------------------------------------------------------------------
     targets = opts.targets
-    # If stdin is a pipe, read pathname targets, one per line.  This allows us to
-    # connect the output of `find` to our input conveniently:
+    # If stdin is a pipe, read pathname targets, one per line.  This allows us to connect the
+    # output of `find` to our input conveniently:
     if not sys.stdin.isatty():
-        targets += sys.stdin.read().splitlines()
+        logging.debug("Reading targets from STDIN...")
+        targets += opts.input_splitter(sys.stdin.read())
+        for t in targets:
+            logging.debug("    Target path: %s", t)
 
     # ----------------------------------------------------------------------
     iwyu_ignores_file = os.path.join(kaleidoscope_dir, opts.ignores_file)
@@ -285,93 +323,142 @@ def main():
 
     # ----------------------------------------------------------------------
     regex = re.compile(opts.regex)
+    # Process source files first, then header files, because a source file might have been
+    # relying on a header included by its associated header, but which that header does not
+    # need on its own.  In this case, if we process the header first, IWYU won't be able to
+    # parse the source file, and we'll get an error, but if we do them in the other order,
+    # the source file will get all the includes it needs before the header removes any of them.
+    source_files = []
+    header_files = []
+    for target_file in (_ for t in targets for _ in build_target_list(t, regex, ignores)):
+        if target_file.endswith('.cpp') or target_file.endswith('.ino'):
+            source_files.append(target_file)
+        else:
+            header_files.append(target_file)
+
+    # If there's an error processing any file, return an error code.
     exit_code = 0
-    for src in (_ for t in targets for _ in build_target_list(t, regex)):
-        if src in ignores:
-            logging.info("Skipping ignored file: %s", os.path.relpath(src))
-            continue
-        if not run_iwyu(os.path.relpath(src), iwyu_cmd, fix_includes_cmd):
+    for target_file in source_files + header_files:
+        # Run IWYU and fix_headers:
+        if not run_iwyu(os.path.relpath(target_file), iwyu_cmd, fix_includes_cmd):
             exit_code = 1
+
     return exit_code
 
 
 # ==============================================================================
-def build_target_list(path, src_regex):
-    """Docstring"""
-    logging.debug("Searching target: %s", path)
+def build_target_list(target, regex, ignores):
+    """Build the list of target files, starting from a file or directory.
 
-    # If the specified path is a filename, return it (as a list), regardless of
-    # whether or not it matches the regex.
-    if os.path.isfile(path):
-        return [path]
+    Parameters:
+        target (str): The name of the file or directory to search
+        regex (Pattern): A compiled regular expression to match target file names
+        ignores (list): A list of (absolute) file names to be excluded from the target list
+    Returns:
+        targets (list): A list of (absolute) file names to be processed
+
+    Given a filename or directory (`path`), returns a list of target filenames to run IWYU
+    on.  Target filenames will all be absolute, but `path` can be relative to the current
+    directory.  All target filenames will match `regex`, and any items in `ignores` will be
+    excluded.  If an element of the `ignores` list is a directory, all files and directories
+    beneath it will be excluded from the search.
+    """
+    logging.debug("Searching target: %s", target)
+
+    # Convert all paths to absolute.
+    root = os.path.abspath(target)
+
+    # If `path` is a file, and it matches `regex`, add it to the target list.
+    if os.path.isfile(target) and regex.search(target) and root not in ignores:
+        return [root]
 
     # If the specified path is not valid, just return an empty list.
-    if not os.path.isdir(path):
-        logging.error("Error: File not found: %s", path)
+    if not os.path.isdir(target):
+        logging.error("Error: File not found: %s", target)
         return []
+
+    # Start with an empty list.
+    targets = []
 
     # The specified path is a directory, so we search recursively for files
     # contained therein that match the specified regular expression.
-    targets = []
-    for root, dirs, files in os.walk(os.path.abspath(path)):
-        logging.debug("Searching dir: %s", root)
+    for path, dirs, files in os.walk(root):
+        logging.debug("Searching dir: %s", os.path.relpath(path))
         # First, ignore all dotfiles (and directories).
-        dotfiles = set(glob.glob('.*'))
-        dirs = set(dirs) - dotfiles
-        files = set(files) - dotfiles
+        for x in (os.path.basename(_)
+                  for _ in ignores + glob.glob(os.path.join(path, '.*'))
+                  if os.path.dirname(_) == path):
+            if x in dirs:
+                logging.info("Skipping ignored dir: %s", os.path.join(path, x))
+                dirs.remove(x)
+            if x in files:
+                logging.info("Skipping ignored file: %s", os.path.join(path, x))
+                files.remove(x)
 
         logging.debug("Files found: %s", ', '.join(files))
         # Add all matching files to the list of source files to be formatted.
-        for f in filter(src_regex.search, files):
-            logging.debug("Source file found: %s", f)
-            targets.append(os.path.join(root, f))
+        for f in (_ for _ in files if regex.search(_)):
+            t = os.path.join(path, f)
+            logging.debug("Source file found: %s", t)
+            targets.append(t)
 
-    return [os.path.abspath(_) for _ in targets]
+    return targets
 
 
 # ==============================================================================
 def build_ignores_list(ignores_file_path):
+    """Build a list of files and dirs to exclude from processing by IWYU
+
+    Parameters:
+        ignores_file_path (str): The name of the file to read ignores globs from
+    Returns:
+        ignores_list (list): A list of (absolute) file names to exclude from processing
+
+    Reads `ignores_file` and expands each line as a glob, returning a list of all the target
+    file names to be excluded from processing.  Each path in the file is treated as a relative
+    pathname (unless it is already absolute), relative to the directory in which `ignores_file`
+    is located.
+    """
     logging.debug("Searching for ignores file: %s", ignores_file_path)
     # If the ignores file doesn't exist, return an empty list:
     if not os.path.isfile(ignores_file_path):
         logging.debug("Ignores file not found")
         return []
+
     ignores_list = []
     with open(ignores_file_path) as f:
         for line in f.read().splitlines():
-            logging.debug("Ignoring files like: %s", line)
+            # Lines starting with `#` are treated as comments.
             if line.startswith('#'):
                 continue
+            logging.debug("Ignoring files like: %s", line)
             ignores_list += glob.glob(line, recursive=True)
+
+    # Get the dir of the ignores file so we can construct absolute pathnames.
     ignores_file_dir = os.path.dirname(ignores_file_path)
     with cwd(ignores_file_dir):
         ignores_list[:] = [os.path.abspath(_) for _ in ignores_list]
+
     logging.debug("Ignores list:\n\t%s", "\n\t".join(ignores_list))
     return ignores_list
 
 
-# ------------------------------------------------------------------------------
-from contextlib import contextmanager
-
-
-@contextmanager
-def cwd(path):
-    """A simple function change directory, an automatically restore the previous working
-    directory when done, using `with cwd(temp_dir):`"""
-    old_wd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(old_wd)
-
-
 # ==============================================================================
 def run_iwyu(source_file, iwyu_cmd, fix_includes_cmd):
-    """Run `include-what-you-use` on <source_file>, an update that file's header includes by
+    """Run IWYU and fix_includes on a single source file
+    
+    Parameters:
+        source_file (str): The name of a file to run IWYU on
+        iwyu_cmd (list): The command name and options list for `include-what-you-use`
+        fix_includes_cmd (list): The command name and options list for `fix_headers.py`
+    Returns:
+        True on success, False if either IWYU or fix_headers returns an error code
+    
+    Run `include-what-you-use` on <source_file>, an update that file's header includes by
     sending the output to `fix_includes.py`.  If either command returns an error code, return
-    `False`, otherwise return `True`."""
-    logging.info("Processing file: %s", source_file)
+    `False`, otherwise return `True`.
+    """
+    logging.info("Fixing headers in file: %s", source_file)
 
     # Run IWYU on <source_file>
     iwyu_proc = subprocess.run(iwyu_cmd + [source_file], capture_output=True, check=False)

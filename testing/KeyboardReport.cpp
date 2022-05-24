@@ -16,10 +16,11 @@
 
 #include "testing/KeyboardReport.h"
 
-#include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
+#include <cstring>  // for memcpy
+#include <vector>   // for vector<>::iterator, vector
 
-#include <cstring>
+#include "kaleidoscope/Runtime.h"   // for Runtime, Runtime_
+#include "kaleidoscope/key_defs.h"  // for HID_KEYBOARD_FIRST_MODIFIER, HID_LAST_KEY
 
 namespace kaleidoscope {
 namespace testing {

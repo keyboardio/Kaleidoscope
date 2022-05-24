@@ -1,6 +1,43 @@
 #!/usr/bin/env bash
 
+# In case it hasn't been set, assume we're being run from the root of the local
+# Kaleidoscope repository.
 : "${KALEIDOSCOPE_DIR:=$(pwd)}"
-cd "${KALEIDOSCOPE_DIR}" || exit 1
 
-git ls-files -m | grep -E '\.(h|cpp)$' | xargs "${KALEIDOSCOPE_DIR}"/bin/iwyu.py
+# This variable is a git ref that should point to the current master branch of
+# the primary Kaleidoscope repository.  In most cases, this would be
+# `origin/master`.
+: "${KALEIDOSCOPE_MERGE_BASE:=origin/master}"
+
+# Don't do anything if the working tree has unstaged changes, to avoid
+# unintentional combining of contentful changes with formatting changes.
+if ! git diff -z --exit-code --quiet; then
+    echo "Working tree has unstaged changes; aborting."
+    exit 1
+fi
+
+# Run git-diff so we only run IWYU on files that differ from `master`.  This
+# isn't necessarily what we want, but if the current branch has been rebased, it
+# shouldn't touch any extra files.
+git diff -z --name-only "${KALEIDOSCOPE_MERGE_BASE}" -- src plugins \
+    | "${KALEIDOSCOPE_DIR}/bin/iwyu.py" -z -v
+
+# After running it on Kaleidoscope source files, run it on the test simulator,
+# which requires some additional include dirs.
+git diff -z --name-only "${KALEIDOSCOPE_MERGE_BASE}" -- testing \
+    | "${KALEIDOSCOPE_DIR}/bin/iwyu.py" \
+          -z -v \
+          -I="${KALEIDOSCOPE_DIR}" \
+          -I="${KALEIDOSCOPE_DIR}/testing/googletest/googlemock/include" \
+          -I="${KALEIDOSCOPE_DIR}/testing/googletest/googletest/include"
+
+# Always run clang-format after IWYU, because they have different indentation
+# rules for comments added by IWYU.
+git diff -z --name-only "${KALEIDOSCOPE_MERGE_BASE}" -- src plugins testing \
+    | "${KALEIDOSCOPE_DIR}/bin/format-code.py" \
+          -z -v \
+          --exclude-dir='testing/googletest' \
+          --exclude-file='generated-testcase.cpp' \
+          --force \
+          --check \
+          --verbose

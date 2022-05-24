@@ -16,15 +16,18 @@
 
 #pragma once
 
-#include "testing/AbsoluteMouseReport.h"
-#include "testing/ConsumerControlReport.h"
-#include "testing/KeyboardReport.h"
-#include "testing/MouseReport.h"
-#include "testing/SystemControlReport.h"
+// IWYU pragma: no_include <__memory/unique_ptr.h>
 
-// Out of order due to macro conflicts.
-#include "testing/fix-macros.h"
-#include <memory>
+#include <stddef.h>  // for size_t
+#include <stdint.h>  // for uint8_t
+#include <memory>    // IWYU pragma: keep
+#include <vector>    // for vector
+
+#include "testing/AbsoluteMouseReport.h"    // for AbsoluteMouseReport
+#include "testing/ConsumerControlReport.h"  // for ConsumerControlReport
+#include "testing/KeyboardReport.h"         // for KeyboardReport
+#include "testing/MouseReport.h"            // for MouseReport
+#include "testing/SystemControlReport.h"    // for SystemControlReport
 
 namespace kaleidoscope {
 namespace testing {

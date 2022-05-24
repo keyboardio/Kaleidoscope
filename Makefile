@@ -113,20 +113,27 @@ check-code-style:
 	bin/format-code.py \
 		--exclude-dir 'testing/googletest' \
 		--exclude-file 'generated-testcase.cpp' \
-		--force \
 		--check \
 		--verbose \
 		src plugins examples testing
 
 .PHONY: check-includes
 check-includes:
+	bin/fix-header-includes
+
+.PHONY: check-all-includes
+check-all-includes:
 	bin/iwyu.py -v src plugins
-	bin/format-code.py -f -v --check src plugins
+	bin/iwyu.py -v \
+		-I=$(KALEIDOSCOPE_DIR) \
+		-I=$(KALEIDOSCOPE_DIR)/testing/googletest/googlemock/include \
+		-I=$(KALEIDOSCOPE_DIR)/testing/googletest/googletest/include \
+		testing
+	bin/format-code.py -f -v --check src plugins testing
 
 .PHONY: cpplint-noisy
 cpplint-noisy:
 	-bin/cpplint.py --config=.cpplint-noisy --recursive src plugins examples
-
 
 .PHONY: cpplint
 cpplint:

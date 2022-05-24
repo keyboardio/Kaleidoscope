@@ -16,10 +16,10 @@
 
 #include "testing/ConsumerControlReport.h"
 
-#include "Kaleidoscope.h"
-#include "testing/fix-macros.h"
+#include <cstring>  // for memcpy
+#include <vector>   // for vector
 
-#include <cstring>
+#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
 
 namespace kaleidoscope {
 namespace testing {

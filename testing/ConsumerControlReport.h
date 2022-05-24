@@ -16,11 +16,11 @@
 
 #pragma once
 
-#include <cstdint>
-#include <vector>
+#include <cstdint>  // for uint32_t, uint16_t, uint8_t
+#include <vector>   // for vector
 
-#include "HID-Settings.h"
-#include "MultiReport/ConsumerControl.h"
+#include "HID-Settings.h"                 // for HID_REPORTID_CONSUMERCONTROL
+#include "MultiReport/ConsumerControl.h"  // for HID_ConsumerControlReport_Data_t
 
 namespace kaleidoscope {
 namespace testing {

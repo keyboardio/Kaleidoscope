@@ -16,12 +16,10 @@
 
 #pragma once
 
-#include <cstdint>
-#include <vector>
-#include <set>
-#include <string>
+#include <cstdint>  // for int8_t, uint32_t, uint8_t
 
-#include "MouseReport.h"
+#include "MouseReport.h"       // for MouseReport, MouseReport::ReportData
+#include "testing/iostream.h"  // for string
 
 namespace kaleidoscope {
 namespace testing {

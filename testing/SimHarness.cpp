@@ -16,8 +16,10 @@
 
 #include "testing/SimHarness.h"
 
-#include "testing/fix-macros.h"
-#include <iostream>
+#include <Arduino.h>  // for millis
+
+#include "kaleidoscope/Runtime.h"        // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"  // for Device, VirtualProps::KeyScanner
 
 namespace kaleidoscope {
 namespace testing {
@@ -31,7 +33,7 @@ void SimHarness::RunCycle() {
       millis();
     }
   }
-  Kaleidoscope.loop();
+  kaleidoscope::Runtime.loop();
 }
 
 void SimHarness::RunCycles(size_t n) {
@@ -39,20 +41,20 @@ void SimHarness::RunCycles(size_t n) {
 }
 
 void SimHarness::RunForMillis(size_t t) {
-  auto start_time = Kaleidoscope.millisAtCycleStart();
-  while (Kaleidoscope.millisAtCycleStart() - start_time < t) {
+  auto start_time = kaleidoscope::Runtime.millisAtCycleStart();
+  while (kaleidoscope::Runtime.millisAtCycleStart() - start_time < t) {
     RunCycle();
   }
 }
 
 void SimHarness::Press(KeyAddr key_addr) {
-  Kaleidoscope.device().keyScanner().setKeystate(
+  kaleidoscope::Runtime.device().keyScanner().setKeystate(
     key_addr,
     kaleidoscope::Device::Props::KeyScanner::KeyState::Pressed);
 }
 
 void SimHarness::Release(KeyAddr key_addr) {
-  Kaleidoscope.device().keyScanner().setKeystate(
+  kaleidoscope::Runtime.device().keyScanner().setKeystate(
     key_addr,
     kaleidoscope::Device::Props::KeyScanner::KeyState::NotPressed);
 }

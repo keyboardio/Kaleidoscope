@@ -18,17 +18,16 @@
 
 #pragma once
 
-#include "kaleidoscope/key_defs/keyboard.h"
-#include "Kaleidoscope.h"
+#include <Kaleidoscope.h>  // IWYU pragma: keep
 
-// Out of order because `fix-macros.h` clears the preprocessor environment for
-// gtest and gmock.
-#include "testing/fix-macros.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+// Kaleidoscope.h includes Arduino, which unwisely defines `min` and `max` as
+// preprocessor macros.  We need to undefine these macros before including any
+// files from the standard library.
+#undef min
+#undef max
 
-#include "testing/matchers.h"
-#include "testing/VirtualDeviceTest.h"
+#include "testing/VirtualDeviceTest.h"  // IWYU pragma: keep
+#include "testing/matchers.h"           // IWYU pragma: keep
 
 #define SETUP_GOOGLETEST()                                         \
   void executeTestFunction() {                                     \
