@@ -165,7 +165,7 @@ compile: kaleidoscope-hardware-configured
 
 
 	$(QUIET) install -d "${OUTPUT_PATH}"
-	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} --warnings all ${ccache_wrapper_property} ${local_cflags_property} \
+	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
 	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} \
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
