@@ -272,7 +272,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
     } else {
       uint16_t pos = 0;
 
-      while (!::Focus.isEOL()) {
+      while (!::Focus.isEOL() && pos < storage_size_) {
         uint8_t b;
         ::Focus.read(b);
 
