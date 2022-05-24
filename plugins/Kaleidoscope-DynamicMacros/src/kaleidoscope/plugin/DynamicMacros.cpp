@@ -141,7 +141,7 @@ void DynamicMacros::play(uint8_t macro_id) {
 
   pos = storage_base_ + map_[macro_id];
 
-  while (true) {
+  while (pos < storage_base_ + storage_size_) {
     switch (macro = Runtime.storage().read(pos++)) {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
     case MACRO_ACTION_STEP_IMPLICIT_REPORT:
