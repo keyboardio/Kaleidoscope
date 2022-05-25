@@ -12,6 +12,16 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### KeyboardioHID converted to a driver
+
+The KeyboardioHID library used by most Kaleidoscope keyboards as the interface
+is no longer a separate Arduino library in a separate repository.  It has been
+incorporated into the main Kaleidoscope repository as a driver, but is
+functionally unchanged.  This will make it easier for developers to synchronize
+changes at different levels in the codebase.  No new features were introduced,
+and this should not directly affect end users, but it is a major reorganization
+of the codebase.
+
 ### ModLayer keys
 
 There is a new type of built-in key that activates both a layer shift and a
