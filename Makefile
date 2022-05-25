@@ -129,7 +129,9 @@ check-all-includes:
 		-I=$(KALEIDOSCOPE_DIR)/testing/googletest/googlemock/include \
 		-I=$(KALEIDOSCOPE_DIR)/testing/googletest/googletest/include \
 		testing
-	bin/format-code.py -f -v --check src plugins testing
+	bin/format-code.py -f -v --check \
+		--exclude-dir 'testing/googletest' \
+		src plugins testing
 
 .PHONY: cpplint-noisy
 cpplint-noisy:
