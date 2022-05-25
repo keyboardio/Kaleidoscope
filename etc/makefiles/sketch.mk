@@ -207,9 +207,6 @@ endif
 	$(info Your FQBN is $(FQBN))
 	$(info I think the device port is: )
 	$(info '$(_device_port)')
-	$(info That should match this)
-	$(info '$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)')
-	$(info I ran "$(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1")
 	@$(shell read _)
 # If we have a device serial port available, try to trigger a Kaliedoscope reset
 ifneq ($(_device_port),) 
