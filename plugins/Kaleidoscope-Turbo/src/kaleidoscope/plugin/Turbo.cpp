@@ -1,6 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Turbo
  * Copyright (C) 2018 ash lea
+ * Copyright (C) 2022 Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -82,22 +83,37 @@ void Turbo::activeColor(cRGB newVal) {
 }
 
 EventHandlerResult Turbo::onKeyEvent(KeyEvent &event) {
+  // If any key toggles off, reset its LED to normal.
   if (active_ && flash_ && keyToggledOff(event.state)) {
     if (event.key.isKeyboardKey())
       LEDControl::refreshAt(event.addr);
   }
 
+  // Ignore any non-Turbo key events.
   if (event.key != Key_Turbo)
     return EventHandlerResult::OK;
 
-  if (keyToggledOn(event.state)) {
-    active_     = true;
-    start_time_ = Runtime.millisAtCycleStart() - interval_;
-  } else {
+
+  if (active_) {
+    // If Turbo is active, and in "sticky" mode, we abort the event when a Turbo
+    // key toggles off, leaving it in the active keys array.  This means that a
+    // layer change won't hide an active Turbo key.
+    if (sticky_ && keyToggledOff(event.state)) {
+      return EventHandlerResult::ABORT;
+    }
+    // If not in "sticky" mode and a Turbo key toggles off, or if in "sticky"
+    // mode and a Turbo key toggles on, we deactivate Turbo.
     active_ = false;
     if (flash_)
       LEDControl::refreshAll();
+
+  } else if (keyToggledOn(event.state)) {
+    // If Turbo is inactive, turn it on when a Turbo key is pressed.
+    active_     = true;
+    start_time_ = Runtime.millisAtCycleStart() - interval_;
   }
+
+  // We assume that other plugins don't need to know about Turbo key events.
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
