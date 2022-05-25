@@ -24,7 +24,7 @@ void setup() {
     Kaleidoscope.setup();
 
     Turbo.interval(30);
-    Turbo.toggle(true);
+    Turbo.sticky(true);
     Turbo.flash(true);
     Turbo.flashInterval(80);
     Turbo.activeColor(CRGB(0x64, 0x96, 0xed));
@@ -50,7 +50,6 @@ The `Turbo` object has the following user-configurable properties:
 
 ### `.sticky([bool])`
 > This method makes the Turbo functionality sticky, so it remains in effect not only while
->
 > it is held, but after it is released too, until it is toggled off with another tap. Without
 > arguments, the method enables the sticky functionality. Passing a boolean argument
 > sets stickiness to the given value.
