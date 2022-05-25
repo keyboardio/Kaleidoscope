@@ -208,6 +208,7 @@ endif
 # If we have a device serial port available, try to trigger a Kaliedoscope reset
 ifneq ($(_device_port),) 
 	$(QUIET) echo "device.reset" > $(_device_port)
+	sleep 2
 endif
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
 	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1 echo "--port" ) \
