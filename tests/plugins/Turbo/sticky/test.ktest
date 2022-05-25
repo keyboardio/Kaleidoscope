@@ -1,0 +1,138 @@
+VERSION 1
+
+KEYSWITCH TURBO    0 0
+KEYSWITCH R_GUI    0 1
+KEYSWITCH L_SHIFT  0 2
+KEYSWITCH A        1 0
+KEYSWITCH B        1 1
+KEYSWITCH C        1 2
+KEYSWITCH D        1 3
+
+# ==============================================================================
+NAME Turbo no regression
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Turbo second
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 4 ms
+PRESS TURBO
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 20 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 10 ms
+RELEASE TURBO
+RUN 10 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 20 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 20 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 9 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 20 ms
+EXPECT no keyboard-report
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # report should contain `B` (0x05)
+
+RUN 5 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_B # report should contain `B` (0x05)
+
+RUN 20 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_B # report should contain `B` (0x05)
+
+RUN 4 ms
+PRESS TURBO
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TURBO
+RUN 1 cycle
+
+RUN 20 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
+
+# ==============================================================================
+NAME Turbo first
+
+RUN 4 ms
+PRESS TURBO
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TURBO
+RUN 1 cycle
+
+RUN 5 ms
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 5 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 20 ms
+EXPECT keyboard-report empty # report should be empty
+EXPECT keyboard-report Key_A # report should contain `A` (0x04)
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty # report should be empty
+
+RUN 25 ms
+
+RUN 4 ms
+PRESS TURBO
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE TURBO
+RUN 1 cycle
+
+RUN 5 ms
+EXPECT no keyboard-report # expect no more reports
