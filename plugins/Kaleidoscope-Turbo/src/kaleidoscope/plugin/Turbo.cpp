@@ -129,16 +129,9 @@ EventHandlerResult Turbo::afterEachCycle() {
       // Send the empty report to register the release of all the held keys.
       Runtime.hid().keyboard().sendReport();
 
-      // Just in case the Turbo key has been wiped from `live_keys[]` without
-      // `onKeyEvent()` being called with a toggle-off:
-      active_ = false;
-
       // Go through the `live_keys[]` array and add any Keyboard HID keys to the
       // new report.
       for (Key key : live_keys.all()) {
-        if (key == Key_Turbo) {
-          active_ = true;
-        }
         if (key.isKeyboardKey()) {
           Runtime.addToReport(key);
         }
