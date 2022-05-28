@@ -1,0 +1,231 @@
+VERSION 1
+
+KEYSWITCH PREFIX_B  0 0
+KEYSWITCH CTRL      1 0
+KEYSWITCH SHIFT     1 1
+KEYSWITCH H         2 0
+KEYSWITCH J         2 1
+KEYSWITCH K         2 2
+
+# ==============================================================================
+NAME Prefix layer passthrough
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # press Ctrl
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
+EXPECT keyboard-report Key_H # press H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report empty # release H
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+# ==============================================================================
+NAME Prefix layer explicit
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS J
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # press Ctrl
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
+EXPECT keyboard-report Key_DownArrow # press J
+
+RUN 4 ms
+RELEASE J
+RUN 1 cycle
+EXPECT keyboard-report empty # release J
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+# ==============================================================================
+NAME Prefix layer masked
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS K
+RUN 1 cycle
+EXPECT no keyboard-report # press K (masked)
+
+RUN 4 ms
+RELEASE K
+RUN 1 cycle
+EXPECT no keyboard-report # release K (masked)
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+# ==============================================================================
+NAME Prefix layer same modifier first
+
+RUN 4 ms
+PRESS CTRL
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # press Ctrl
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report Key_LCtrl Key_H # press H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # release H
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+RUN 4 ms
+RELEASE CTRL
+RUN 1 cycle
+EXPECT keyboard-report empty # release Ctrl
+
+# ==============================================================================
+NAME Prefix layer same modifier second
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS CTRL
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # press Ctrl
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report Key_LCtrl Key_H # press H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl # release H
+
+RUN 4 ms
+RELEASE CTRL
+RUN 1 cycle
+EXPECT keyboard-report empty # release Ctrl
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+# ==============================================================================
+NAME Prefix layer different modifier first
+
+RUN 4 ms
+PRESS SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift # press Shift
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift Key_LCtrl # press Ctrl
+EXPECT keyboard-report Key_LCtrl # release pressed shift
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report Key_LShift # restoring pressed Shift
+EXPECT keyboard-report Key_LShift Key_H # press H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift # release H
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+RUN 4 ms
+RELEASE SHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # release Ctrl
+
+# ==============================================================================
+NAME Prefix layer different modifier second
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS SHIFT
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift # press Shift
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift Key_LCtrl # press Ctrl
+EXPECT keyboard-report Key_LCtrl # release pressed shift
+EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
+EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report Key_LShift # restoring pressed Shift
+EXPECT keyboard-report Key_LShift Key_H # press H
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report Key_LShift # release H
+
+RUN 4 ms
+RELEASE SHIFT
+RUN 1 cycle
+EXPECT keyboard-report empty # release Ctrl
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
