@@ -15,7 +15,7 @@ the box, without any further configuration:
 
 /* ... */
 
-void setup (void) {
+void setup () {
   Kaleidoscope.setup ();
   TRACE()
 }

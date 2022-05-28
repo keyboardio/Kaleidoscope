@@ -34,7 +34,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void EEPROMKeymapProgrammer::nextState(void) {
+void EEPROMKeymapProgrammer::nextState() {
   switch (state_) {
   case INACTIVE:
     state_ = WAIT_FOR_KEY;
@@ -54,7 +54,7 @@ void EEPROMKeymapProgrammer::nextState(void) {
   }
 }
 
-void EEPROMKeymapProgrammer::cancel(void) {
+void EEPROMKeymapProgrammer::cancel() {
   update_position_ = 0;
   new_key_         = Key_NoKey;
   state_           = INACTIVE;

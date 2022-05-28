@@ -32,11 +32,11 @@ class NumPad : public kaleidoscope::Plugin {
   static cRGB color;
   static uint8_t lock_hue;
 
-  EventHandlerResult onSetup(void);
+  EventHandlerResult onSetup();
   EventHandlerResult afterEachCycle();
 
  private:
-  void setKeyboardLEDColors(void);
+  void setKeyboardLEDColors();
 
   static KeyAddr numpadLayerToggleKeyAddr;
   static bool numpadActive;

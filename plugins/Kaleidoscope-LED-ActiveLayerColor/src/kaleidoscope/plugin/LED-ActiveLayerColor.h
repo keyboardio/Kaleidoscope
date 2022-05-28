@@ -45,7 +45,7 @@ class LEDActiveLayerColorEffect : public Plugin,
     explicit TransientLEDMode(const LEDActiveLayerColorEffect *parent);
 
    protected:
-    void onActivate(void) final;
+    void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

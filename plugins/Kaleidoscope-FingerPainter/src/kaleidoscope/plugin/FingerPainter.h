@@ -33,7 +33,7 @@ namespace plugin {
 //
 class FingerPainter : public LEDMode {
  public:
-  void toggle(void);
+  void toggle();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
@@ -41,7 +41,7 @@ class FingerPainter : public LEDMode {
   EventHandlerResult onNameQuery();
 
  protected:
-  void update(void) final;
+  void update() final;
   void refreshAt(KeyAddr key_addr) final;
 
  private:

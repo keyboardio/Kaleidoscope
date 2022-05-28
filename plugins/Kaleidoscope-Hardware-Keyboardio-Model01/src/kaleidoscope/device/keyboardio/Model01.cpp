@@ -56,7 +56,7 @@ struct Model01Hands {
 driver::keyboardio::Model01Side Model01Hands::leftHand(0);
 driver::keyboardio::Model01Side Model01Hands::rightHand(3);
 
-void Model01Hands::setup(void) {
+void Model01Hands::setup() {
   // This lets the keyboard pull up to 1.6 amps from the host.
   // That violates the USB spec. But it sure is pretty looking
   DDRE |= _BV(6);
@@ -149,7 +149,7 @@ driver::keyboardio::keydata_t Model01KeyScanner::rightHandState;
 driver::keyboardio::keydata_t Model01KeyScanner::previousLeftHandState;
 driver::keyboardio::keydata_t Model01KeyScanner::previousRightHandState;
 
-void Model01KeyScanner::enableScannerPower(void) {
+void Model01KeyScanner::enableScannerPower() {
   // Turn on power to the LED net
   DDRC |= _BV(7);
   PORTC |= _BV(7);

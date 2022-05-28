@@ -47,7 +47,7 @@ uint16_t Leader::time_out = 1000;
 #define isActive()    (sequence_[0] != Key_NoKey)
 
 // --- actions ---
-int8_t Leader::lookup(void) {
+int8_t Leader::lookup() {
   bool match;
 
   for (uint8_t seq_index = 0;; seq_index++) {
@@ -82,7 +82,7 @@ int8_t Leader::lookup(void) {
 
 // --- api ---
 
-void Leader::reset(void) {
+void Leader::reset() {
   sequence_pos_ = 0;
   sequence_[0]  = Key_NoKey;
 }

@@ -69,7 +69,7 @@ class Leader : public kaleidoscope::Plugin {
 
   const dictionary_t *dictionary;
 
-  void reset(void);
+  void reset();
 
 #ifndef NDEPRECATED
   DEPRECATED(LEADER_TIME_OUT)
@@ -100,7 +100,7 @@ class Leader : public kaleidoscope::Plugin {
   uint16_t start_time_ = 0;
   uint16_t timeout_    = 1000;
 
-  int8_t lookup(void);
+  int8_t lookup();
 };
 
 }  // namespace plugin

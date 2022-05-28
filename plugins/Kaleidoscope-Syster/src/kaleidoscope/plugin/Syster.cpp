@@ -32,13 +32,13 @@ namespace kaleidoscope {
 namespace plugin {
 
 // --- api ---
-void Syster::reset(void) {
+void Syster::reset() {
   symbol_pos_ = 0;
   symbol_[0]  = 0;
   is_active_  = false;
 }
 
-bool Syster::is_active(void) {
+bool Syster::is_active() {
   return is_active_;
 }
 

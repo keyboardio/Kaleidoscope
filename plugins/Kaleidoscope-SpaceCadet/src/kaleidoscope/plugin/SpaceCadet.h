@@ -72,7 +72,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
     }
   };
 
-  SpaceCadet(void);
+  SpaceCadet();
 
   // Methods
   void enable() {

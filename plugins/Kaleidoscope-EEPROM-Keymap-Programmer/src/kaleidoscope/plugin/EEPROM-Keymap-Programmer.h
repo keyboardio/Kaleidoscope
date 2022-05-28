@@ -34,11 +34,11 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   } mode_t;
   mode_t mode;
 
-  void activate(void) {
+  void activate() {
     nextState();
   }
-  void nextState(void);
-  void cancel(void);
+  void nextState();
+  void cancel();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);

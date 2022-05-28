@@ -96,7 +96,7 @@ uint8_t WavepoolEffect::TransientLEDMode::wp_rand() {
   return (Runtime.millisAtCycleStart() / MS_PER_FRAME) + pgm_read_byte((const uint8_t *)offset);
 }
 
-void WavepoolEffect::TransientLEDMode::update(void) {
+void WavepoolEffect::TransientLEDMode::update() {
 
   // limit the frame rate; one frame every 64 ms
   static uint8_t prev_time = 0;

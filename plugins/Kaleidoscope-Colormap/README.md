@@ -28,7 +28,7 @@ KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           ColormapEffect,
                           Focus);
 
-void setup(void) {
+void setup() {
   Kaleidoscope.setup();
 
   ColormapEffect.max_layers(1);

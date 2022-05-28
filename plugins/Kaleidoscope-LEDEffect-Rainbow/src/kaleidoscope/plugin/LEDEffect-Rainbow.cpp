@@ -27,7 +27,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDRainbowEffect::TransientLEDMode::update(void) {
+void LEDRainbowEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 
@@ -58,7 +58,7 @@ void LEDRainbowEffect::update_delay(byte delay) {
 
 // ---------
 
-void LEDRainbowWaveEffect::TransientLEDMode::update(void) {
+void LEDRainbowWaveEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 

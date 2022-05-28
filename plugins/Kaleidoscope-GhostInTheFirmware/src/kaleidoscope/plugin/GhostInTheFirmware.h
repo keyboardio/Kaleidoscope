@@ -34,7 +34,7 @@ class GhostInTheFirmware : public kaleidoscope::Plugin {
   };
   const GhostKey *ghost_keys;
 
-  void activate(void);
+  void activate();
 
   EventHandlerResult afterEachCycle();
 

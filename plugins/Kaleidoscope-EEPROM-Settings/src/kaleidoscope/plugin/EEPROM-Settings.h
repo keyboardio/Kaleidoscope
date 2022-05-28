@@ -44,17 +44,17 @@ class EEPROMSettings : public kaleidoscope::Plugin {
    * fall back to not using it. */
   static constexpr uint8_t VERSION_CURRENT = 0x01;
 
-  void update(void);
-  bool isValid(void);
-  void invalidate(void);
-  uint8_t version(void) {
+  void update();
+  bool isValid();
+  void invalidate();
+  uint8_t version() {
     return settings_.version;
   }
 
   uint16_t requestSlice(uint16_t size);
-  void seal(void);
-  uint16_t crc(void);
-  uint16_t used(void);
+  void seal();
+  uint16_t crc();
+  uint16_t used();
 
   uint8_t default_layer(uint8_t layer);
   uint8_t default_layer() {

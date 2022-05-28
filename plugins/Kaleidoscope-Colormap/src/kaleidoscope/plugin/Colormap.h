@@ -52,7 +52,7 @@ class ColormapEffect : public Plugin,
    protected:
     friend class ColormapEffect;
 
-    void onActivate(void) final;
+    void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

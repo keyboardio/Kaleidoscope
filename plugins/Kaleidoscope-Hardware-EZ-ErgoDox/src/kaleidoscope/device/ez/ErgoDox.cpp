@@ -40,7 +40,7 @@ namespace ez {
 
 static bool do_scan_ = 1;
 
-void ErgoDox::setup(void) {
+void ErgoDox::setup() {
   wdt_disable();
   delay(100);
 

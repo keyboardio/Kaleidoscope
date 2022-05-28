@@ -60,9 +60,9 @@ struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
  public:
-  void scanMatrix(void);
-  void readMatrix(void);
-  void actOnMatrixScan(void);
+  void scanMatrix();
+  void readMatrix();
+  void actOnMatrixScan();
   void setup();
 
   bool isKeyswitchPressed(KeyAddr key_addr);

@@ -35,7 +35,7 @@ class CRC_ {
   uint16_t crc = 0;
 
   void update(const void *data, uint8_t len);
-  void finalize(void) {
+  void finalize() {
     reflect(16);
   }
   void reflect(uint8_t len);

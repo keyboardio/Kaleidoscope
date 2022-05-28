@@ -43,7 +43,7 @@ class TriColor : public Plugin,
       : parent_(parent) {}
 
    protected:
-    void update(void) final;
+    void update() final;
 
    private:
     const TriColor *parent_;

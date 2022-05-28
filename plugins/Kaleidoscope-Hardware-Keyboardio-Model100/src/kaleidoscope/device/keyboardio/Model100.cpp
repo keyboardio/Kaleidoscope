@@ -44,7 +44,7 @@ struct Model100Hands {
 driver::keyboardio::Model100Side Model100Hands::leftHand(0);
 driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
-void Model100Hands::setup(void) {
+void Model100Hands::setup() {
   Model100KeyScanner::enableScannerPower();
   Wire.begin();
   Wire.setClock(400000);
@@ -123,7 +123,7 @@ driver::keyboardio::keydata_t Model100KeyScanner::rightHandState;
 driver::keyboardio::keydata_t Model100KeyScanner::previousLeftHandState;
 driver::keyboardio::keydata_t Model100KeyScanner::previousRightHandState;
 
-void Model100KeyScanner::enableScannerPower(void) {
+void Model100KeyScanner::enableScannerPower() {
   // Turn on the switched 5V network.
   //  make sure this happens at least 100ms after USB connect
   // to satisfy inrush limits
@@ -137,7 +137,7 @@ void Model100KeyScanner::enableScannerPower(void) {
   digitalWrite(PB15, LOW);
 }
 
-void Model100KeyScanner::disableScannerPower(void) {
+void Model100KeyScanner::disableScannerPower() {
   // Turn on power to the 5V net
   //
   pinMode(PB9, OUTPUT_OPEN_DRAIN);

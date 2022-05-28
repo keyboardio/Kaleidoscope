@@ -32,7 +32,7 @@ TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   esc_color_  = esc_color;
 }
 
-void TriColor::TransientLEDMode::update(void) {
+void TriColor::TransientLEDMode::update() {
   for (auto key_addr : KeyAddr::all()) {
     Key k = Layer.lookupOnActiveLayer(key_addr);
 

@@ -107,7 +107,7 @@ cRGB Heatmap::TransientLEDMode::computeColor(float v) {
   return {b, g, r};
 }
 
-void Heatmap::TransientLEDMode::shiftStats(void) {
+void Heatmap::TransientLEDMode::shiftStats() {
   // this method is called when:
   // 1. a value in heatmap_ reach INT8_MAX
   // 2. highest_ reach heat_colors_length*512 (see Heatmap::loopHook)
@@ -121,7 +121,7 @@ void Heatmap::TransientLEDMode::shiftStats(void) {
   highest_ = highest_ >> 1;
 }
 
-void Heatmap::resetMap(void) {
+void Heatmap::resetMap() {
 
   if (::LEDControl.get_mode_index() != led_mode_id_)
     return;
@@ -210,7 +210,7 @@ EventHandlerResult Heatmap::TransientLEDMode::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void Heatmap::TransientLEDMode::update(void) {
+void Heatmap::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 

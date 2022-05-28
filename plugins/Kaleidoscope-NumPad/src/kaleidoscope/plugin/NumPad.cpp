@@ -38,11 +38,11 @@ uint8_t NumPad::lock_hue = 170;
 KeyAddr NumPad::numpadLayerToggleKeyAddr;
 bool NumPad::numpadActive = false;
 
-EventHandlerResult NumPad::onSetup(void) {
+EventHandlerResult NumPad::onSetup() {
   return EventHandlerResult::OK;
 }
 
-void NumPad::setKeyboardLEDColors(void) {
+void NumPad::setKeyboardLEDColors() {
   ::LEDControl.set_mode(::LEDControl.get_mode_index());
 
   for (auto key_addr : KeyAddr::all()) {

@@ -40,7 +40,7 @@ class BootGreetingEffect : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  static void findLed(void);
+  static void findLed();
   static bool done_;
   static KeyAddr key_addr_;
   static uint16_t start_time;

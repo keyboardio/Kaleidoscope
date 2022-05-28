@@ -23,7 +23,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDSolidColor::TransientLEDMode::onActivate(void) {
+void LEDSolidColor::TransientLEDMode::onActivate() {
   ::LEDControl.set_all_leds_to(parent_->r_,
                                parent_->g_,
                                parent_->b_);

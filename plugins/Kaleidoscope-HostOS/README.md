@@ -21,7 +21,7 @@ The extension provides a `HostOS` singleton object.
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-HostOS.h>
 
-void someFunction(void) {
+void someFunction() {
   if (HostOS.os() == kaleidoscope::hostos::LINUX) {
     // do something linux-y
   }
@@ -32,7 +32,7 @@ void someFunction(void) {
 
 KALEIDOSCOPE_INIT_PLUGINS(HostOS)
 
-void setup(void) {
+void setup() {
   Kaleidoscope.setup ();
 }
 ```

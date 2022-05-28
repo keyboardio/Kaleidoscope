@@ -26,7 +26,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult HostOS::onSetup(void) {
+EventHandlerResult HostOS::onSetup() {
   if (is_configured_)
     return EventHandlerResult::OK;
 

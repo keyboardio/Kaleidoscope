@@ -32,7 +32,7 @@ namespace plugin {
 uint8_t Unicode::input_delay_;
 Key Unicode::linux_key_ = Key_U;
 
-void Unicode::start(void) {
+void Unicode::start() {
   switch (::HostOS.os()) {
   case hostos::LINUX:
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftControl);
@@ -61,7 +61,7 @@ void Unicode::start(void) {
   }
 }
 
-void Unicode::input(void) {
+void Unicode::input() {
   switch (::HostOS.os()) {
   case hostos::LINUX:
     break;
@@ -76,7 +76,7 @@ void Unicode::input(void) {
   delay(input_delay_);
 }
 
-void Unicode::end(void) {
+void Unicode::end() {
   switch (::HostOS.os()) {
   case hostos::LINUX:
     kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Spacebar);
@@ -193,13 +193,13 @@ __attribute__((weak)) Key hexToKeysWithNumpad(uint8_t hex) {
   return {m, KEY_FLAGS};
 }
 
-__attribute__((weak)) void unicodeCustomStart(void) {
+__attribute__((weak)) void unicodeCustomStart() {
 }
 
-__attribute__((weak)) void unicodeCustomEnd(void) {
+__attribute__((weak)) void unicodeCustomEnd() {
 }
 
-__attribute__((weak)) void unicodeCustomInput(void) {
+__attribute__((weak)) void unicodeCustomInput() {
 }
 
 kaleidoscope::plugin::Unicode Unicode;

@@ -42,7 +42,7 @@ class LEDBreatheEffect : public Plugin,
       : parent_(parent) {}
 
    protected:
-    void update(void) final;
+    void update() final;
 
    private:
     const LEDBreatheEffect *parent_;

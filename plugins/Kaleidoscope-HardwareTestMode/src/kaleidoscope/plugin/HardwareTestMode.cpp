@@ -53,7 +53,7 @@ void HardwareTestMode::setLeds(cRGB color) {
   waitForKeypress();
 }
 
-void HardwareTestMode::testLeds(void) {
+void HardwareTestMode::testLeds() {
   constexpr cRGB red         = CRGB(255, 0, 0);
   constexpr cRGB blue        = CRGB(0, 0, 255);
   constexpr cRGB green       = CRGB(0, 255, 0);

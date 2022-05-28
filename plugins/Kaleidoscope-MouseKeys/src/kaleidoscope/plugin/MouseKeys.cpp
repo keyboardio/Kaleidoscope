@@ -91,7 +91,7 @@ EventHandlerResult MouseKeys::onNameQuery() {
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys::onSetup(void) {
+EventHandlerResult MouseKeys::onSetup() {
   kaleidoscope::Runtime.hid().mouse().setup();
   kaleidoscope::Runtime.hid().absoluteMouse().setup();
 

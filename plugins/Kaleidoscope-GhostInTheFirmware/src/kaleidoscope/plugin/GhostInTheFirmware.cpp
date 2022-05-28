@@ -29,7 +29,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void GhostInTheFirmware::activate(void) {
+void GhostInTheFirmware::activate() {
   is_active_ = true;
 }
 

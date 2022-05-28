@@ -37,7 +37,7 @@ class Heatmap : public Plugin,
   static uint16_t update_delay;
   static const cRGB *heat_colors;
   static uint8_t heat_colors_length;
-  void resetMap(void);
+  void resetMap();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeEachCycle();
@@ -64,7 +64,7 @@ class Heatmap : public Plugin,
     uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
 
-    void shiftStats(void);
+    void shiftStats();
     cRGB computeColor(float v);
 
     friend class Heatmap;

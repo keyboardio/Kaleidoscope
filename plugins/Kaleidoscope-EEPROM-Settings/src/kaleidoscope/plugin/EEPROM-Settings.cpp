@@ -65,11 +65,11 @@ EventHandlerResult EEPROMSettings::beforeEachCycle() {
   return EventHandlerResult::OK;
 }
 
-bool EEPROMSettings::isValid(void) {
+bool EEPROMSettings::isValid() {
   return is_valid_;
 }
 
-uint16_t EEPROMSettings::crc(void) {
+uint16_t EEPROMSettings::crc() {
   if (sealed_)
     return settings_.crc;
   return 0;
@@ -100,7 +100,7 @@ void EEPROMSettings::ignoreHardcodedLayers(bool value) {
   update();
 }
 
-void EEPROMSettings::seal(void) {
+void EEPROMSettings::seal() {
   sealed_ = true;
 
   CRCCalculator.finalize();
@@ -141,15 +141,15 @@ uint16_t EEPROMSettings::requestSlice(uint16_t size) {
   return start;
 }
 
-void EEPROMSettings::invalidate(void) {
+void EEPROMSettings::invalidate() {
   is_valid_ = false;
 }
 
-uint16_t EEPROMSettings::used(void) {
+uint16_t EEPROMSettings::used() {
   return next_start_;
 }
 
-void EEPROMSettings::update(void) {
+void EEPROMSettings::update() {
   Runtime.storage().put(0, settings_);
   Runtime.storage().commit();
   is_valid_ = true;
