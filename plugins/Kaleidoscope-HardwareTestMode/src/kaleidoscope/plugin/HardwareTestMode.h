@@ -33,8 +33,6 @@ class HardwareTestMode : public kaleidoscope::Plugin {
   } chatter_data;
   static uint8_t actionKey;
 
-  HardwareTestMode(void) {}
-
   static void runTests();
   static void setActionKey(uint8_t key);
 

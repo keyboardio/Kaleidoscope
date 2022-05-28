@@ -35,8 +35,6 @@ namespace ez {
 
 class ErgoDoxScanner {
  public:
-  ErgoDoxScanner() {}
-
   void begin();
   void toggleATMegaRow(int row);
   void selectExtenderRow(int row);

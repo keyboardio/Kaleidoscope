@@ -32,8 +32,6 @@ namespace kaleidoscope {
 namespace plugin {
 class Turbo : public kaleidoscope::Plugin {
  public:
-  Turbo() {}
-
   uint16_t interval();
   void interval(uint16_t newVal);
 

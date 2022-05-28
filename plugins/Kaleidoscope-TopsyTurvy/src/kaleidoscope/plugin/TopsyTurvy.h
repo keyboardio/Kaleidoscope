@@ -36,8 +36,6 @@ constexpr Key TopsyTurvyKey(Key key) {
 
 class TopsyTurvy : public kaleidoscope::Plugin {
  public:
-  TopsyTurvy(void) {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeReportingState(const KeyEvent &event);
 

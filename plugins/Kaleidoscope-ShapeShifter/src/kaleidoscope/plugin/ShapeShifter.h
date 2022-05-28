@@ -31,8 +31,6 @@ class ShapeShifter : public kaleidoscope::Plugin {
     Key original, replacement;
   } dictionary_t;
 
-  ShapeShifter(void) {}
-
   static const dictionary_t *dictionary;
 
   EventHandlerResult onKeyEvent(KeyEvent &event);

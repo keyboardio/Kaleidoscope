@@ -28,8 +28,6 @@ namespace plugin {
 
 class NumPad : public kaleidoscope::Plugin {
  public:
-  NumPad(void) {}
-
   static uint8_t numPadLayer;
   static cRGB color;
   static uint8_t lock_hue;

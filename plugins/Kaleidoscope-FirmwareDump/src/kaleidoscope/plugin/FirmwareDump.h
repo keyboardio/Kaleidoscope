@@ -33,8 +33,6 @@ namespace plugin {
 
 class FirmwareDump : public kaleidoscope::Plugin {
  public:
-  FirmwareDump() {}
-
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *command);
 

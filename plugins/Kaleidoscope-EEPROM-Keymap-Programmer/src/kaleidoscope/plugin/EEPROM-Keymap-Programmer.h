@@ -34,8 +34,6 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   } mode_t;
   static mode_t mode;
 
-  EEPROMKeymapProgrammer(void) {}
-
   static void activate(void) {
     nextState();
   }

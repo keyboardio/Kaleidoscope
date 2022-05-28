@@ -33,8 +33,6 @@ namespace kaleidoscope {
 namespace plugin {
 class FocusSerial : public kaleidoscope::Plugin {
  public:
-  FocusSerial(void) {}
-
   static constexpr char COMMENT   = '#';
   static constexpr char SEPARATOR = ' ';
   static constexpr char NEWLINE   = '\n';

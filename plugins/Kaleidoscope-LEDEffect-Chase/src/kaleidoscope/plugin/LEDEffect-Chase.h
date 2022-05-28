@@ -28,8 +28,6 @@ namespace plugin {
 class LEDChaseEffect : public Plugin,
                        public LEDModeInterface {
  public:
-  LEDChaseEffect(void) {}
-
   uint8_t update_delay() {
     return update_delay_;
   }

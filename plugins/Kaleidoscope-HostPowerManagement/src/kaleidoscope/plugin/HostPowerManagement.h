@@ -30,8 +30,6 @@ class HostPowerManagement : public kaleidoscope::Plugin {
     Resume,
   } Event;
 
-  HostPowerManagement(void) {}
-
   EventHandlerResult beforeEachCycle();
 
  private:

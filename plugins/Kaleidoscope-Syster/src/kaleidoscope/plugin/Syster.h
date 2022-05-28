@@ -41,8 +41,6 @@ class Syster : public kaleidoscope::Plugin {
     SymbolAction
   } action_t;
 
-  Syster() {}
-
   static void reset();
 
   bool is_active();

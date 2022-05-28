@@ -23,8 +23,6 @@ namespace kaleidoscope {
 namespace plugin {
 class USBQuirks : public kaleidoscope::Plugin {
  public:
-  USBQuirks() {}
-
   void toggleKeyboardProtocol();
 };
 

@@ -50,9 +50,6 @@ constexpr Key OneShotLayerKey(uint8_t layer) {
 
 class OneShot : public kaleidoscope::Plugin {
  public:
-  // Constructor
-  // OneShot() {}
-
   // --------------------------------------------------------------------------
   // Configuration functions
 

@@ -20,8 +20,6 @@ Nevertheless, a very simple example is shown below:
 namespace kaleidoscope {
 class FocusTestCommand : public Plugin {
  public:
-  FocusTestCommand() {}
-
   EventHandlerResult onNameQuery() {
     return ::Focus.sendName(F("FocusTestCommand"));
   }

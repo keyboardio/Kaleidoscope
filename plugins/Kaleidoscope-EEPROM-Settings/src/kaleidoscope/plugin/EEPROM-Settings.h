@@ -26,8 +26,6 @@ namespace kaleidoscope {
 namespace plugin {
 class EEPROMSettings : public kaleidoscope::Plugin {
  public:
-  EEPROMSettings(void) {}
-
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
 

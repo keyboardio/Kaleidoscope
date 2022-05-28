@@ -35,8 +35,6 @@ namespace plugin {
 
 class EscapeOneShot : public kaleidoscope::Plugin {
  public:
-  EscapeOneShot(void) {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
   static void setCancelKey(Key cancel_key) {

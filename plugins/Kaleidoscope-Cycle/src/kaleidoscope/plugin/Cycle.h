@@ -38,8 +38,6 @@ namespace kaleidoscope {
 namespace plugin {
 class Cycle : public kaleidoscope::Plugin {
  public:
-  Cycle(void) {}
-
   static void replace(Key key);
   static void replace(uint8_t cycle_size, const Key cycle_steps[]);
 

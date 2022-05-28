@@ -53,8 +53,6 @@ class TapDance : public kaleidoscope::Plugin {
     Release,
   };
 
-  TapDance(void) {}
-
   static uint16_t time_out;
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);

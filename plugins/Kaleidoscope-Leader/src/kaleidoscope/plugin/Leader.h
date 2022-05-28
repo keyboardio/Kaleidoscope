@@ -67,7 +67,6 @@ class Leader : public kaleidoscope::Plugin {
     action_t action;
   } dictionary_t;
 
-  Leader(void) {}
   static const dictionary_t *dictionary;
 
   static void reset(void);

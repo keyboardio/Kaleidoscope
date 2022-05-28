@@ -29,8 +29,6 @@ namespace kaleidoscope {
 namespace plugin {
 class ActiveModColorEffect : public kaleidoscope::Plugin {
  public:
-  ActiveModColorEffect(void) {}
-
   static void setHighlightColor(cRGB color) {
     highlight_color_ = color;
   }

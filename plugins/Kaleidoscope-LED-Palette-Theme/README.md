@@ -20,9 +20,6 @@ full extent, we need to create our own plugin on top of it.
 namespace example {
 
 class TestLEDMode : public LEDMode {
- public:
-  TestLEDMode() {}
-
  protected:
   void setup(void) final;
   void update(void) final;

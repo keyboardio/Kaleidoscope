@@ -33,8 +33,6 @@ namespace plugin {
 //
 class FingerPainter : public LEDMode {
  public:
-  FingerPainter(void) {}
-
   static void toggle(void);
 
   EventHandlerResult onKeyEvent(KeyEvent &event);

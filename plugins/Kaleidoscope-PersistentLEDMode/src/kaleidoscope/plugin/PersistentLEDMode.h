@@ -28,8 +28,6 @@ namespace plugin {
 
 class PersistentLEDMode : public kaleidoscope::Plugin {
  public:
-  PersistentLEDMode() {}
-
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
   EventHandlerResult onLEDModeChange();

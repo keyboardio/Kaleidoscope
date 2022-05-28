@@ -41,8 +41,6 @@ namespace kaleidoscope {
 namespace plugin {
 class AlphaSquare : public kaleidoscope::Plugin {
  public:
-  AlphaSquare(void) {}
-
   static void display(Key key, KeyAddr key_addr, cRGB key_color);
   static void display(Key key, KeyAddr key_addr);
   static void display(Key key) {

@@ -26,8 +26,6 @@ namespace kaleidoscope {
 namespace plugin {
 class Unicode : public kaleidoscope::Plugin {
  public:
-  Unicode(void) {}
-
   static void start(void);
   static void input(void);
   static void end(void);

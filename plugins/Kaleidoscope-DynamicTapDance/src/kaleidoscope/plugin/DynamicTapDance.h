@@ -30,8 +30,6 @@ namespace plugin {
 
 class DynamicTapDance : public kaleidoscope::Plugin {
  public:
-  DynamicTapDance() {}
-
   EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 

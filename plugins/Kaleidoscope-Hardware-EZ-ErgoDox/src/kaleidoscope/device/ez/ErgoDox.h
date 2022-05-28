@@ -60,8 +60,6 @@ struct ErgoDoxProps : public kaleidoscope::device::ATmega32U4KeyboardProps {
 #ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
  public:
-  ErgoDox(void) {}
-
   void scanMatrix(void);
   void readMatrix(void);
   void actOnMatrixScan(void);

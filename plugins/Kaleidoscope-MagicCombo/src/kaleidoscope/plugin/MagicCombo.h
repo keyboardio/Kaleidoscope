@@ -48,8 +48,6 @@ class MagicCombo : public kaleidoscope::Plugin {
     int8_t keys[MAX_COMBO_LENGTH + 1];
   } Combo;
 
-  MagicCombo(void) {}
-
   static uint16_t min_interval;
 
   EventHandlerResult onNameQuery();

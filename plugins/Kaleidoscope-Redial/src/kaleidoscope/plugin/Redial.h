@@ -31,8 +31,6 @@ namespace plugin {
 
 class Redial : public kaleidoscope::Plugin {
  public:
-  Redial(void) {}
-
   static bool shouldRemember(Key mappedKey);
 
   EventHandlerResult onNameQuery();

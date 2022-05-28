@@ -25,8 +25,6 @@ namespace kaleidoscope {
 namespace plugin {
 class WinKeyToggle : public kaleidoscope::Plugin {
  public:
-  WinKeyToggle() {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
   void toggle() {
     enabled_ = !enabled_;

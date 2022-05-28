@@ -28,8 +28,6 @@ namespace plugin {
 
 class TypingBreaks : public kaleidoscope::Plugin {
  public:
-  TypingBreaks(void) {}
-
   typedef struct settings_t {
     uint16_t idle_time_limit;
     uint16_t lock_time_out;

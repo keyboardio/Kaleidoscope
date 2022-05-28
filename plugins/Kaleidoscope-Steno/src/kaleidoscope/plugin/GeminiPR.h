@@ -31,8 +31,6 @@ namespace plugin {
 namespace steno {
 class GeminiPR : public kaleidoscope::Plugin {
  public:
-  GeminiPR(void) {}
-
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
 

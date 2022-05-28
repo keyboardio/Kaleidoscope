@@ -41,8 +41,6 @@ class StalkerEffect : public Plugin,
     virtual cRGB compute(uint8_t *step) = 0;
   };
 
-  StalkerEffect(void) {}
-
   static ColorComputer *variant;
   static uint16_t step_length;
   static cRGB inactive_color;

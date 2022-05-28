@@ -34,8 +34,6 @@ class Heatmap : public Plugin,
                 public LEDModeInterface,
                 public AccessTransientLEDMode {
  public:
-  Heatmap(void) {}
-
   static uint16_t update_delay;
   static const cRGB *heat_colors;
   static uint8_t heat_colors_length;

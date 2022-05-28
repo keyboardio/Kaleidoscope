@@ -28,8 +28,6 @@ namespace kaleidoscope {
 namespace plugin {
 class BootAnimationEffect : public kaleidoscope::Plugin {
  public:
-  BootAnimationEffect(void) {}
-
   static uint16_t timeout;
   static cRGB color;
 
