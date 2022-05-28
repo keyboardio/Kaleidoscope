@@ -38,9 +38,6 @@ namespace plugin {
 // --- config ---
 
 uint16_t TapDance::time_out  = 200;
-uint8_t TapDance::tap_count_ = 0;
-
-KeyEventTracker TapDance::event_tracker_;
 
 // --- api ---
 void TapDance::actionKeys(uint8_t tap_count,

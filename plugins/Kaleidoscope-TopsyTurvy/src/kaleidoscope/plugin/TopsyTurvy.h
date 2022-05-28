@@ -45,7 +45,7 @@ class TopsyTurvy : public kaleidoscope::Plugin {
   }
 
  private:
-  static KeyAddr tt_addr_;
+  KeyAddr tt_addr_ = KeyAddr::none();
 };
 
 }  // namespace plugin

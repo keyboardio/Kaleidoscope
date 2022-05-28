@@ -30,11 +30,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-struct EEPROMSettings::settings EEPROMSettings::settings_;
-bool EEPROMSettings::is_valid_;
-bool EEPROMSettings::sealed_;
-uint16_t EEPROMSettings::next_start_ = sizeof(EEPROMSettings::settings);
-
 EventHandlerResult EEPROMSettings::onSetup() {
   Runtime.storage().get(0, settings_);
 

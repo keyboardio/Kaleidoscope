@@ -34,12 +34,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t DynamicMacros::storage_base_;
-uint16_t DynamicMacros::storage_size_;
-uint16_t DynamicMacros::map_[];
-uint8_t DynamicMacros::macro_count_;
-Key DynamicMacros::active_macro_keys_[];
-
 // =============================================================================
 // It might be possible to use Macros instead of reproducing it
 void DynamicMacros::press(Key key) {

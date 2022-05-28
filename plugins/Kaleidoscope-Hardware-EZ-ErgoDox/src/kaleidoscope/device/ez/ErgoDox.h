@@ -78,17 +78,17 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
   void setStatusLED(uint8_t led, bool state = true);
   void setStatusLEDBrightness(uint8_t led, uint8_t brightness);
 
-  static uint8_t debounce;
+  uint8_t debounce = 5;
 
  private:
-  static ErgoDoxScanner scanner_;
-  static uint8_t previousKeyState_[matrix_rows];
-  static uint8_t keyState_[matrix_rows];
-  static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
+  ErgoDoxScanner scanner_;
+  uint8_t previousKeyState_[matrix_rows];
+  uint8_t keyState_[matrix_rows];
+  uint8_t debounce_matrix_[matrix_rows][matrix_columns];
 
-  static uint8_t debounceMaskForRow(uint8_t row);
-  static void debounceRow(uint8_t change, uint8_t row);
-  static void readMatrixRow(uint8_t row);
+  uint8_t debounceMaskForRow(uint8_t row);
+  void debounceRow(uint8_t change, uint8_t row);
+  void readMatrixRow(uint8_t row);
 };
 #else   // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 class ErgoDox;

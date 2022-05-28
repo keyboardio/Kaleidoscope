@@ -54,7 +54,7 @@ class MagicCombo : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  static uint16_t start_time_;
+  uint16_t start_time_ = 0;
 };
 
 namespace magiccombo {

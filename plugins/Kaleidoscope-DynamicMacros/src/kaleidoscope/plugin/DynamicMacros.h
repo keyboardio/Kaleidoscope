@@ -42,20 +42,20 @@ class DynamicMacros : public kaleidoscope::Plugin {
   EventHandlerResult beforeReportingState(const KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
 
-  static void reserve_storage(uint16_t size);
+  void reserve_storage(uint16_t size);
 
   void play(uint8_t seq_id);
 
  private:
-  static uint16_t storage_base_;
-  static uint16_t storage_size_;
-  static uint16_t map_[32];
-  static uint8_t macro_count_;
-  static uint8_t updateDynamicMacroCache();
-  static Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
-  static void press(Key key);
-  static void release(Key key);
-  static void tap(Key key);
+  uint16_t storage_base_;
+  uint16_t storage_size_;
+  uint16_t map_[32];
+  uint8_t macro_count_;
+  uint8_t updateDynamicMacroCache();
+  Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
+  void press(Key key);
+  void release(Key key);
+  void tap(Key key);
 };
 
 }  // namespace plugin

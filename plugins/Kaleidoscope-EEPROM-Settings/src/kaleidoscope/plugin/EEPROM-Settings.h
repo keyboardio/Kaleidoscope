@@ -44,34 +44,34 @@ class EEPROMSettings : public kaleidoscope::Plugin {
    * fall back to not using it. */
   static constexpr uint8_t VERSION_CURRENT = 0x01;
 
-  static void update(void);
-  static bool isValid(void);
-  static void invalidate(void);
-  static uint8_t version(void) {
+  void update(void);
+  bool isValid(void);
+  void invalidate(void);
+  uint8_t version(void) {
     return settings_.version;
   }
 
-  static uint16_t requestSlice(uint16_t size);
-  static void seal(void);
-  static uint16_t crc(void);
-  static uint16_t used(void);
+  uint16_t requestSlice(uint16_t size);
+  void seal(void);
+  uint16_t crc(void);
+  uint16_t used(void);
 
-  static uint8_t default_layer(uint8_t layer);
-  static uint8_t default_layer() {
+  uint8_t default_layer(uint8_t layer);
+  uint8_t default_layer() {
     return settings_.default_layer;
   }
-  static void ignoreHardcodedLayers(bool value);
-  static bool ignoreHardcodedLayers() {
+  void ignoreHardcodedLayers(bool value);
+  bool ignoreHardcodedLayers() {
     return settings_.ignore_hardcoded_layers;
   }
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;
-  static uint16_t next_start_;
-  static bool is_valid_;
-  static bool sealed_;
+  uint16_t next_start_ = sizeof(EEPROMSettings::settings);
+  bool is_valid_;
+  bool sealed_;
 
-  static struct settings {
+  struct settings {
     uint8_t default_layer : 7;
     bool ignore_hardcoded_layers : 1;
     uint8_t version;
@@ -81,15 +81,11 @@ class EEPROMSettings : public kaleidoscope::Plugin {
 
 class FocusSettingsCommand : public kaleidoscope::Plugin {
  public:
-  FocusSettingsCommand() {}
-
   EventHandlerResult onFocusEvent(const char *command);
 };
 
 class FocusEEPROMCommand : public kaleidoscope::Plugin {
  public:
-  FocusEEPROMCommand() {}
-
   EventHandlerResult onFocusEvent(const char *command);
 };
 

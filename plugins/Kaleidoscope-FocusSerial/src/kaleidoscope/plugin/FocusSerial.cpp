@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-char FocusSerial::command_[32];
-uint8_t FocusSerial::buf_cursor_ = 0;
-
 EventHandlerResult FocusSerial::afterEachCycle() {
   // GD32 doesn't currently autoflush the very last packet. So manually flush here
   Runtime.serialPort().flush();

@@ -37,7 +37,7 @@ class Redial : public kaleidoscope::Plugin {
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static Key last_key_;
+  Key last_key_;
 };
 
 }  // namespace plugin

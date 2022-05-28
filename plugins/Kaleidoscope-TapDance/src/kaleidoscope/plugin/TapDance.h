@@ -73,10 +73,10 @@ class TapDance : public kaleidoscope::Plugin {
   // The event queue stores a series of press and release events.
   KeyAddrEventQueue<queue_capacity_> event_queue_;
 
-  static KeyEventTracker event_tracker_;
+  KeyEventTracker event_tracker_;
 
   // The number of taps in the current TapDance sequence.
-  static uint8_t tap_count_;
+  uint8_t tap_count_ = 0;
 
   void flushQueue(KeyAddr ignored_addr = KeyAddr::none());
 };

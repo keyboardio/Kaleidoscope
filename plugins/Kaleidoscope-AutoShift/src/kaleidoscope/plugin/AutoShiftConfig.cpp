@@ -32,20 +32,18 @@ namespace plugin {
 // =============================================================================
 // AutoShift configurator
 
-uint16_t AutoShiftConfig::settings_base_;
-
 EventHandlerResult AutoShiftConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(AutoShift::settings_));
+  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(AutoShift::Settings));
 
   if (Runtime.storage().isSliceUninitialized(
         settings_base_,
-        sizeof(AutoShift::settings_))) {
+        sizeof(AutoShift::Settings))) {
     // If our slice is uninitialized, set sensible defaults.
-    Runtime.storage().put(settings_base_, AutoShift::settings_);
+    Runtime.storage().put(settings_base_, ::AutoShift.settings_);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_base_, AutoShift::settings_);
+  Runtime.storage().get(settings_base_, ::AutoShift.settings_);
   return EventHandlerResult::OK;
 }
 
@@ -112,7 +110,7 @@ EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
     break;
   }
 
-  Runtime.storage().put(settings_base_, AutoShift::settings_);
+  Runtime.storage().put(settings_base_, ::AutoShift.settings_);
   Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }

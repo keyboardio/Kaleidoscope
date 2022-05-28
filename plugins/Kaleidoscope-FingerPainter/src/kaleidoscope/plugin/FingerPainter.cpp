@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t FingerPainter::color_base_;
-bool FingerPainter::edit_mode_;
-
 EventHandlerResult FingerPainter::onNameQuery() {
   return ::Focus.sendName(F("FingerPainter"));
 }

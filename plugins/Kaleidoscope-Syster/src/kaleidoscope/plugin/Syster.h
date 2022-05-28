@@ -41,7 +41,7 @@ class Syster : public kaleidoscope::Plugin {
     SymbolAction
   } action_t;
 
-  static void reset();
+  void reset();
 
   bool is_active();
 
@@ -49,9 +49,9 @@ class Syster : public kaleidoscope::Plugin {
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
-  static uint8_t symbol_pos_;
-  static bool is_active_;
+  char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
+  uint8_t symbol_pos_;
+  bool is_active_ = false;
 };
 
 }  // namespace plugin

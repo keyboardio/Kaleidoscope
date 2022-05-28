@@ -37,16 +37,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t Turbo::interval_       = 10;
-uint16_t Turbo::flash_interval_ = 69;
-bool Turbo::sticky_             = false;
-bool Turbo::flash_              = true;
-cRGB Turbo::active_color_       = CRGB(160, 0, 0);
-
-bool Turbo::active_               = false;
-uint32_t Turbo::start_time_       = 0;
-uint32_t Turbo::flash_start_time_ = 0;
-
 uint16_t Turbo::interval() {
   return interval_;
 }

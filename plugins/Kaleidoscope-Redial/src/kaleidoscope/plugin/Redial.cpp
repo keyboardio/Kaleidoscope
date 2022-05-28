@@ -28,8 +28,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-Key Redial::last_key_;
-
 EventHandlerResult Redial::onNameQuery() {
   return ::Focus.sendName(F("Redial"));
 }

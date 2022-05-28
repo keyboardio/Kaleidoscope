@@ -29,7 +29,6 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint16_t MagicCombo::min_interval = 500;
-uint16_t MagicCombo::start_time_  = 0;
 
 EventHandlerResult MagicCombo::onNameQuery() {
   return ::Focus.sendName(F("MagicCombo"));

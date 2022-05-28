@@ -37,10 +37,10 @@ class EscapeOneShot : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
-  static void setCancelKey(Key cancel_key) {
+  void setCancelKey(Key cancel_key) {
     settings_.cancel_oneshot_key = cancel_key;
   }
-  static Key getCancelKey() {
+  Key getCancelKey() {
     return settings_.cancel_oneshot_key;
   }
 
@@ -50,7 +50,9 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   struct Settings {
     Key cancel_oneshot_key;
   };
-  static Settings settings_;
+  Settings settings_ = {
+    .cancel_oneshot_key = Key_Escape
+  };
 };
 
 class EscapeOneShotConfig : public Plugin {
@@ -60,7 +62,7 @@ class EscapeOneShotConfig : public Plugin {
   EventHandlerResult onNameQuery();
 
  private:
-  static uint16_t settings_base_;
+  uint16_t settings_base_;
 };
 
 }  // namespace plugin

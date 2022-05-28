@@ -31,11 +31,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-// --- state ---
-char Syster::symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
-uint8_t Syster::symbol_pos_;
-bool Syster::is_active_;
-
 // --- api ---
 void Syster::reset(void) {
   symbol_pos_ = 0;

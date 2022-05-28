@@ -28,10 +28,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-const GhostInTheFirmware::GhostKey *GhostInTheFirmware::ghost_keys;
-bool GhostInTheFirmware::is_active_       = false;
-uint16_t GhostInTheFirmware::current_pos_ = 0;
-uint16_t GhostInTheFirmware::start_time_;
 
 void GhostInTheFirmware::activate(void) {
   is_active_ = true;

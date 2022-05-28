@@ -51,19 +51,6 @@ SpaceCadet::KeyBinding::KeyBinding(Key input, Key output, uint16_t timeout)
 SpaceCadet::KeyBinding *SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 200;
 
-// -----------------------------------------------------------------------------
-// State variables
-
-uint8_t SpaceCadet::mode_ = SpaceCadet::Mode::ON;
-
-// These variables are used to keep track of any pending unresolved SpaceCadet
-// key that has been pressed. If `pending_map_index_` is negative, it means
-// there is no such pending keypress. Otherwise, it holds the value of the index
-// of that key in the array.
-int8_t SpaceCadet::pending_map_index_ = -1;
-
-KeyEventTracker SpaceCadet::event_tracker_;
-
 // =============================================================================
 // SpaceCadet functions
 

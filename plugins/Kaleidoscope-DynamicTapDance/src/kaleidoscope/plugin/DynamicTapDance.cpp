@@ -34,13 +34,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t DynamicTapDance::storage_base_;
-uint16_t DynamicTapDance::storage_size_;
-uint16_t DynamicTapDance::map_[];
-uint8_t DynamicTapDance::offset_;
-uint8_t DynamicTapDance::dance_count_;
-constexpr uint8_t DynamicTapDance::reserved_tap_dance_key_count_;
-
 void DynamicTapDance::updateDynamicTapDanceCache() {
   uint16_t pos              = storage_base_;
   uint8_t current_id        = 0;

@@ -53,15 +53,15 @@ class Turbo : public kaleidoscope::Plugin {
   EventHandlerResult beforeSyncingLeds();
 
  private:
-  static uint16_t interval_;
-  static uint16_t flash_interval_;
-  static bool sticky_;
-  static bool flash_;
-  static cRGB active_color_;
+  uint16_t interval_       = 10;
+  uint16_t flash_interval_ = 69;
+  bool sticky_             = false;
+  bool flash_              = true;
+  cRGB active_color_       = CRGB(160, 0, 0);
 
-  static bool active_;
-  static uint32_t start_time_;
-  static uint32_t flash_start_time_;
+  bool active_               = false;
+  uint32_t start_time_       = 0;
+  uint32_t flash_start_time_ = 0;
 };
 
 }  // namespace plugin

@@ -66,16 +66,16 @@ class SpaceCadet : public kaleidoscope::Plugin {
   SpaceCadet(void);
 
   // Methods
-  static void enable() {
+  void enable() {
     mode_ = Mode::ON;
   }
-  static void disable() {
+  void disable() {
     mode_ = Mode::OFF;
   }
-  static void enableWithoutDelay() {
+  void enableWithoutDelay() {
     mode_ = Mode::NO_DELAY;
   }
-  static bool active() {
+  bool active() {
     return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
   }
 
@@ -93,7 +93,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
     OFF,
     NO_DELAY,
   };
-  static uint8_t mode_;
+  uint8_t mode_;
 
   static KeyEventTracker event_tracker_;
 
@@ -103,7 +103,11 @@ class SpaceCadet : public kaleidoscope::Plugin {
   // The event queue stores a series of press and release events.
   KeyAddrEventQueue<queue_capacity_> event_queue_;
 
-  static int8_t pending_map_index_;
+  // This variable is used to keep track of any pending unresolved SpaceCadet
+  // key that has been pressed. If `pending_map_index_` is negative, it means
+  // there is no such pending keypress. Otherwise, it holds the value of the
+  // index of that key in the array.
+  int8_t pending_map_index_ = -1;
 
   int8_t getSpaceCadetKeyIndex(Key key) const;
 
