@@ -52,10 +52,10 @@ namespace plugin {
 class MagicCombo : public kaleidoscope::Plugin {
  public:
   typedef void (*ComboAction)(uint8_t combo_index);
-  typedef struct {
+  struct Combo {
     ComboAction action;
     int8_t keys[MAX_COMBO_LENGTH + 1];
-  } Combo;
+  };
 
 #ifndef NDEPRECATED
   DEPRECATED(MAGICCOMBO_MIN_INTERVAL)

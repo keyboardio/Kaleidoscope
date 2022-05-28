@@ -35,11 +35,11 @@ namespace plugin {
 
 class Syster : public kaleidoscope::Plugin {
  public:
-  typedef enum {
+  enum action_t : uint8_t {
     StartAction,
     EndAction,
     SymbolAction
-  } action_t;
+  };
 
   void reset();
 

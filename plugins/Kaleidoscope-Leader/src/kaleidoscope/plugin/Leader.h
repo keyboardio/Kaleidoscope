@@ -62,10 +62,10 @@ constexpr Key LeaderKey(uint8_t n) {
 class Leader : public kaleidoscope::Plugin {
  public:
   typedef void (*action_t)(uint8_t seq_index);
-  typedef struct {
+  struct dictionary_t {
     Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
     action_t action;
-  } dictionary_t;
+  };
 
   const dictionary_t *dictionary;
 

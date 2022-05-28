@@ -27,9 +27,9 @@ namespace plugin {
 
 class ShapeShifter : public kaleidoscope::Plugin {
  public:
-  typedef struct {
+  struct dictionary_t {
     Key original, replacement;
-  } dictionary_t;
+  };
 
   const dictionary_t *dictionary = nullptr;
 
