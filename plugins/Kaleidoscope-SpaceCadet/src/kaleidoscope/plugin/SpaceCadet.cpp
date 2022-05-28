@@ -48,8 +48,10 @@ SpaceCadet::KeyBinding::KeyBinding(Key input, Key output, uint16_t timeout)
 // -----------------------------------------------------------------------------
 // Plugin configuration variables
 
+#ifndef NDEPRECATED
 SpaceCadet::KeyBinding *SpaceCadet::map;
 uint16_t SpaceCadet::time_out = 200;
+#endif
 
 // =============================================================================
 // SpaceCadet functions
@@ -69,7 +71,7 @@ SpaceCadet::SpaceCadet() {
     */
     SPACECADET_MAP_END};
 
-  map = initialmap;
+  setMap(initialmap);
 }
 
 // =============================================================================
@@ -161,7 +163,14 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
     return EventHandlerResult::OK;
 
   // Get timeout value for the pending key.
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   uint16_t pending_timeout = time_out;
+#pragma GCC diagnostic pop
+#else
+  uint16_t pending_timeout = timeout_;
+#endif
   if (map[pending_map_index_].timeout != 0)
     pending_timeout = map[pending_map_index_].timeout;
   uint16_t start_time = event_queue_.timestamp(0);

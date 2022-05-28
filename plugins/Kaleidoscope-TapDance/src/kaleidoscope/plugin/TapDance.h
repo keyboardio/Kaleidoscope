@@ -28,6 +28,15 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
+#define _DEPRECATED_MESSAGE_TAPDANCE_TIME_OUT                        \
+  "The `TapDance.time_out` variable is deprecated. Please use the\n" \
+  "`TapDance.setTimeout()` function instead.\n"                      \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
 
 #define TD(n)                                                kaleidoscope::plugin::TapDanceKey(n)
 
@@ -53,7 +62,20 @@ class TapDance : public kaleidoscope::Plugin {
     Release,
   };
 
+#ifndef NDEPRECATED
+  DEPRECATED(TAPDANCE_TIME_OUT)
   static uint16_t time_out;
+#endif
+
+  void setTimeout(uint16_t timeout) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    time_out = timeout;
+#pragma GCC diagnostic pop
+#endif
+    timeout_ = timeout;
+  }
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
@@ -77,6 +99,9 @@ class TapDance : public kaleidoscope::Plugin {
 
   // The number of taps in the current TapDance sequence.
   uint8_t tap_count_ = 0;
+
+  // Time to wait for another input event before resolving a TapDance sequence.
+  uint16_t timeout_ = 200;
 
   void flushQueue(KeyAddr ignored_addr = KeyAddr::none());
 };

@@ -59,7 +59,7 @@ void setup() {
     SPACECADET_MAP_END,
   };
   //Set the map.
-  SpaceCadet.map = spacecadetmap;
+  SpaceCadet.setMap(spacecadetmap);
 }
 
 void loop() {

@@ -102,12 +102,12 @@ void setup() {
 The plugin provides a `TapDance` object, but to implement the actions, we need
 to define a function ([`tapDanceAction`][tdaction]) outside of the object. A
 handler, of sorts. Nevertheless, the plugin provides one macro that is
-particularly useful: `tapDanceActionKeys`. Apart from that, it provides one
-property only:
+particularly useful: `tapDanceActionKeys`. Apart from that, it provides only one
+configuration method:
 
-### `.time_out`
+### `.setTimeout(timeout)`
 
-> The number of loop iterations to wait before a tap-dance sequence times out.
+> Set the number of milliseconds to wait before a tap-dance sequence times out.
 > Once the sequence timed out, the action for it will trigger, even without an
 > interruptor. Defaults to 5, and the timer resets with every tap of the same
 
