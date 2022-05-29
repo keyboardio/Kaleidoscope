@@ -11,29 +11,59 @@ plugin, which also provides palette editing capabilities.
  [plugin:focusserial]: Kaleidoscope-FocusSerial.md
  [plugin:l-p-t]: Kaleidoscope-LED-Palette-Theme.md
 
+It is also possible to set up a default palette and colormap, using the
+`DefaultColormap` plugin, also provided by this package. See below for its
+documentation.
+
 ## Using the extension
 
 To use the extension, include the header, tell it the number of layers you have,
-register the `Focus` hooks, and it will do the rest.
+register the `Focus` hooks, and it will do the rest. We'll also set up a default
+for both the palette, and the colormap.
 
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-EEPROM-Settings.h>
+#include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-Colormap.h>
 #include <Kaleidoscope-FocusSerial.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
+                          LEDControl,
                           LEDPaletteTheme,
                           ColormapEffect,
+                          DefaultColormap,
                           Focus);
+
+PALETTE(
+ /* A list of 16 cRGB colors... */
+)
+
+COLORMAPS(
+ [0] = COLORMAP(
+  // List of palette indexes for each key, using the same layout
+  // as the `KEYMAP` macro does for keys.
+ ),
+ [1] = COLORMAP_STACKED(
+  // List of palette indexes for each key, using the same layout
+  // as the `KEYMAP_STACKED` macro does for keys.
+ )
+)
 
 void setup() {
   Kaleidoscope.setup();
 
   ColormapEffect.max_layers(1);
+  DefaultColormap.setup();
 }
 ```
+
+The `PALETTE` and `COLORMAPS` macros are only used for the `DefaultColormap`
+plugin, `ColormapEffect` itself makes no use of them. The `PALETTE` must always
+contain a full 16-color palette. `COLORMAPS` can define colormaps for as many
+layers as one wishes, but the `DefaultColormap` plugin will only copy over as
+many as `ColormapEffect` is configured to support.
 
 ## Plugin methods
 
@@ -43,6 +73,19 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 
 > Tells the extension to reserve space in EEPROM for up to `max` layers. Can
 > only be called once, any subsequent call will be a no-op.
+
+Also provided is an optional `DefaultColormap` plugin, with two methods:
+
+### `.setup()`
+
+> Intended to be called from the `setup()` method of the sketch, it checks if
+> the `ColormapEffect` plugin is initialized, and if not, then copies the
+> palette and the colormap over from the firmware to EEPROM.
+
+### `.install()`
+
+> Same as `.setup()` above, but without the initialized check. Intended to be
+> used when one wants to restore the colormap to factory settings.
 
 ## Focus commands
 
@@ -54,6 +97,14 @@ The extension provides an `ColormapEffect` singleton object, with a single metho
 > give the full map, the plugin will process as many arguments as available, and
 > ignore anything past the last key on the last layer (as set by the
 > `.max_layers()` method).
+
+If the `DefaultColormap` plugin is also in use, an additional focus command is
+made available:
+
+### `colormap.install`
+
+> Copies the default colormap and palette built into the firmware into EEPROM,
+> effectively performing a factory reset for both.
 
 ## Dependencies
 

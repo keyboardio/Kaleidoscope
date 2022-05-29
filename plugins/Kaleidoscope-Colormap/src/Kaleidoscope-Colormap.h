@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Colormap -- Per-layer colormap effect
- * Copyright (C) 2016, 2017  Keyboard.io, Inc
+ * Copyright (C) 2016-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,4 +17,5 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/Colormap.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/Colormap.h"         // IWYU pragma: export
+#include "kaleidoscope/plugin/DefaultColormap.h"  // IWYU pragma: export
