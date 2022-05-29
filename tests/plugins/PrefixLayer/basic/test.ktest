@@ -102,6 +102,8 @@ PRESS H
 RUN 1 cycle
 EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
 EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
+EXPECT keyboard-report Key_LCtrl # press Ctrl
 EXPECT keyboard-report Key_LCtrl Key_H # press H
 
 RUN 4 ms
@@ -137,6 +139,8 @@ PRESS H
 RUN 1 cycle
 EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
 EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
+EXPECT keyboard-report Key_LCtrl # press Ctrl
 EXPECT keyboard-report Key_LCtrl Key_H # press H
 
 RUN 4 ms
@@ -170,10 +174,10 @@ EXPECT no keyboard-report # no report after pressing PREFIX_B
 RUN 4 ms
 PRESS H
 RUN 1 cycle
-EXPECT keyboard-report Key_LShift Key_LCtrl # press Ctrl
-EXPECT keyboard-report Key_LCtrl # release pressed shift
+EXPECT keyboard-report Key_LCtrl # release pressed Shift and press Ctrl
 EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
 EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
 EXPECT keyboard-report Key_LShift # restoring pressed Shift
 EXPECT keyboard-report Key_LShift Key_H # press H
 
@@ -208,10 +212,10 @@ EXPECT keyboard-report Key_LShift # press Shift
 RUN 4 ms
 PRESS H
 RUN 1 cycle
-EXPECT keyboard-report Key_LShift Key_LCtrl # press Ctrl
-EXPECT keyboard-report Key_LCtrl # release pressed shift
+EXPECT keyboard-report Key_LCtrl # release pressed Shift and press Ctrl
 EXPECT keyboard-report Key_LCtrl Key_B # press B, Ctrl held
 EXPECT keyboard-report Key_LCtrl # release B, Ctrl held
+EXPECT keyboard-report empty # release Ctrl
 EXPECT keyboard-report Key_LShift # restoring pressed Shift
 EXPECT keyboard-report Key_LShift Key_H # press H
 

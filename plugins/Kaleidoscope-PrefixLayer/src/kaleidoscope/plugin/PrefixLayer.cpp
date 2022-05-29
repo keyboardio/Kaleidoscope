@@ -45,22 +45,21 @@ EventHandlerResult PrefixLayer::onKeyEvent(KeyEvent &event) {
 
   for (uint8_t i = 0; i < prefix_layers_length_; i++) {
     if (Layer.isActive(prefix_layers_[i].layer)) {
-      clear_modifiers_ = true;
-      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), IS_PRESSED | INJECTED, prefix_layers_[i].prefix});
-      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), WAS_PRESSED | INJECTED, prefix_layers_[i].prefix});
-      clear_modifiers_ = false;
+      current_prefix_ = prefix_layers_[i].prefix;
+      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), IS_PRESSED | INJECTED, current_prefix_});
+      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), WAS_PRESSED | INJECTED, current_prefix_});
+      current_prefix_ = Key_NoKey;
     }
   }
 
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult PrefixLayer::beforeReportingState(const KeyEvent &event) {
-  if (clear_modifiers_) {
-    for (uint8_t i = HID_KEYBOARD_FIRST_MODIFIER; i <= HID_KEYBOARD_LAST_MODIFIER; i++) {
-      Runtime.hid().keyboard().releaseKey(Key(i, KEY_FLAGS));
+EventHandlerResult PrefixLayer::onAddToReport(Key key) {
+  if (current_prefix_ != Key_NoKey) {
+    if (current_prefix_ != key) {
+      return EventHandlerResult::ABORT;
     }
-    Runtime.hid().keyboard().pressModifiers(event.key);
   }
 
   return EventHandlerResult::OK;

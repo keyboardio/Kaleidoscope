@@ -31,7 +31,7 @@ namespace plugin {
 class PrefixLayer : public Plugin {
  public:
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult beforeReportingState(const KeyEvent &event);
+  EventHandlerResult onAddToReport(Key key);
 
   struct Entry {
     uint8_t layer;
@@ -48,7 +48,7 @@ class PrefixLayer : public Plugin {
  private:
   const Entry *prefix_layers_ PROGMEM = {};
   uint8_t prefix_layers_length_       = 0;
-  bool clear_modifiers_               = false;
+  Key current_prefix_                 = Key_NoKey;
 };
 
 }  // namespace plugin
