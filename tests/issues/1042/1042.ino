@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Leader.h>
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope-MacroSupport.h>
 
 #include <Kaleidoscope-Ranges.h>
 #include "kaleidoscope/KeyEventTracker.h"
@@ -114,19 +114,19 @@ kaleidoscope::plugin::LeaderPrefix LeaderPrefix;
 auto &serial_port = Kaleidoscope.serialPort();
 
 static void leaderTestX(uint8_t seq_index) {
-  Macros.tap(Key_A);
+  MacroSupport.tap(Key_A);
 }
 
 static void leaderTestXX(uint8_t seq_index) {
-  Macros.tap(Key_B);
+  MacroSupport.tap(Key_B);
 }
 
 void leaderTestPrefix(uint8_t seq_index) {
   uint8_t prefix_arg = LeaderPrefix.arg();
   // DUMP(prefix_arg);
-  Macros.tap(Key_Y);
+  MacroSupport.tap(Key_Y);
   while (prefix_arg-- > 0)
-    Macros.tap(Key_X);
+    MacroSupport.tap(Key_X);
 }
 
 static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =
