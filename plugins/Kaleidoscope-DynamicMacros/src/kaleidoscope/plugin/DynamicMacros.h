@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include <Kaleidoscope-MacroSupport.h>
-#include <Kaleidoscope-Ranges.h>  // for DYNAMIC_MACRO_FIRST
-#include <stdint.h>               // for uint16_t, uint8_t
+#include <Kaleidoscope-MacroSupport.h>  // for MacroSupport
+#include <Kaleidoscope-Ranges.h>        // for DYNAMIC_MACRO_FIRST
+#include <stdint.h>                     // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

@@ -16,15 +16,15 @@
 
 #include "kaleidoscope/plugin/MacroSupport.h"
 
-#include <Arduino.h>                   // for pgm_read_byte, delay, F, PROGMEM, __F...
+#include <Arduino.h>                   // for F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResul...
-#include "kaleidoscope/key_defs.h"              // for Key, LSHIFT, Key_NoKey, Key_0, Key_1
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/keyswitch_state.h"       // for INJECTED, IS_PRESSED, WAS_PRESSED
 
 // =============================================================================

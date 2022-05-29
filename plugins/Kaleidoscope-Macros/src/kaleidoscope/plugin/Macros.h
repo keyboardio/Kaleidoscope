@@ -16,10 +16,10 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t
+#include <Kaleidoscope-MacroSupport.h>  // for MacroSupport
+#include <Kaleidoscope-Ranges.h>        // for MACRO_FIRST, MACRO_LAST
+#include <stdint.h>                     // for uint8_t
 
-#include <Kaleidoscope-MacroSupport.h>
-#include <Kaleidoscope-Ranges.h>                    // for MACRO_FIRST, MACRO_LAST
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"                  // for Key

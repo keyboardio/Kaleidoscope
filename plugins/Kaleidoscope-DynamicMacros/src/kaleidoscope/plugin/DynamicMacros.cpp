@@ -23,7 +23,7 @@
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"           // for VirtualProps::Storage, Base<>::Storage
-#include "kaleidoscope/keyswitch_state.h"         // for INJECTED, IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOn
 #include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
 // This is a special exception to the rule of only including a plugin's
 // top-level header file, because DynamicMacros doesn't depend on the Macros
