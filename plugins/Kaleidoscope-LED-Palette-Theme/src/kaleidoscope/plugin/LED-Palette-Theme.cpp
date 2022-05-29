@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Palette-Theme -- Palette-based LED theme foundation
- * Copyright (C) 2017, 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2017-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -105,7 +105,21 @@ void LEDPaletteTheme::updateColorIndexAtPosition(uint16_t map_base, uint16_t pos
     indexes       = (color_index << 4) + other;
   }
   Runtime.storage().update(map_base + position / 2, indexes);
-  Runtime.storage().commit();
+}
+
+void LEDPaletteTheme::updatePaletteColor(uint8_t palette_index, cRGB color) {
+  color.r ^= 0xff;
+  color.g ^= 0xff;
+  color.b ^= 0xff;
+
+  Runtime.storage().put(palette_base_ + palette_index * sizeof(color), color);
+}
+
+bool LEDPaletteTheme::isThemeUninitialized(uint16_t theme_base, uint8_t max_themes) {
+  bool paletteEmpty = Runtime.storage().isSliceUninitialized(palette_base_, 16 * sizeof(cRGB));
+  bool themeEmpty   = Runtime.storage().isSliceUninitialized(theme_base, max_themes * Runtime.device().led_count / 2);
+
+  return paletteEmpty && themeEmpty;
 }
 
 EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
@@ -135,11 +149,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
     cRGB color;
 
     ::Focus.read(color);
-    color.r ^= 0xff;
-    color.g ^= 0xff;
-    color.b ^= 0xff;
-
-    Runtime.storage().put(palette_base_ + i * sizeof(color), color);
+    updatePaletteColor(i, color);
     i++;
   }
   Runtime.storage().commit();
