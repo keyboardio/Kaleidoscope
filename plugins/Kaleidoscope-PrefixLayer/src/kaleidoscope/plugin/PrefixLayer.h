@@ -41,11 +41,14 @@ class PrefixLayer : public Plugin {
       : layer(layer), prefix(prefix) {}
   };
 
-  static const Entry *prefix_layers;
-  static uint8_t prefix_layers_length;
+  void setPrefixLayers(const Entry *prefix_layers);
+  const Entry *getPrefixLayers();
+  uint8_t getPrefixLayersLength();
 
  private:
-  static bool clear_modifiers_;
+  const Entry *prefix_layers_ PROGMEM = {};
+  uint8_t prefix_layers_length_       = 0;
+  bool clear_modifiers_               = false;
 };
 
 }  // namespace plugin

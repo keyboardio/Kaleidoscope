@@ -31,11 +31,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-static const PrefixLayer::Entry prefix_layers_default_[] PROGMEM = {};
-const PrefixLayer::Entry *PrefixLayer::prefix_layers             = prefix_layers_default_;
-uint8_t PrefixLayer::prefix_layers_length                        = 0;
-bool PrefixLayer::clear_modifiers_                               = false;
-
 EventHandlerResult PrefixLayer::onKeyEvent(KeyEvent &event) {
   if (event.state & INJECTED)
     return EventHandlerResult::OK;
@@ -48,11 +43,11 @@ EventHandlerResult PrefixLayer::onKeyEvent(KeyEvent &event) {
   if (event.key.isKeyboardModifier())
     return EventHandlerResult::OK;
 
-  for (uint8_t i = 0; i < prefix_layers_length; i++) {
-    if (Layer.isActive(prefix_layers[i].layer)) {
+  for (uint8_t i = 0; i < prefix_layers_length_; i++) {
+    if (Layer.isActive(prefix_layers_[i].layer)) {
       clear_modifiers_ = true;
-      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), IS_PRESSED | INJECTED, prefix_layers[i].prefix});
-      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), WAS_PRESSED | INJECTED, prefix_layers[i].prefix});
+      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), IS_PRESSED | INJECTED, prefix_layers_[i].prefix});
+      Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), WAS_PRESSED | INJECTED, prefix_layers_[i].prefix});
       clear_modifiers_ = false;
     }
   }
@@ -69,6 +64,19 @@ EventHandlerResult PrefixLayer::beforeReportingState(const KeyEvent &event) {
   }
 
   return EventHandlerResult::OK;
+}
+
+void PrefixLayer::setPrefixLayers(const PrefixLayer::Entry *prefix_layers) {
+  prefix_layers_        = prefix_layers;
+  prefix_layers_length_ = sizeof(prefix_layers) / sizeof(PrefixLayer::Entry);
+}
+
+const PrefixLayer::Entry *PrefixLayer::getPrefixLayers() {
+  return prefix_layers_;
+}
+
+uint8_t PrefixLayer::getPrefixLayersLength() {
+  return prefix_layers_length_;
 }
 
 }  // namespace plugin

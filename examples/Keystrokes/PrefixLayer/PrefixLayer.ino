@@ -61,8 +61,7 @@ KALEIDOSCOPE_INIT_PLUGINS(PrefixLayer);
 void setup() {
   Kaleidoscope.setup();
   /* Configure the previously-defined prefix layers. */
-  PrefixLayer.prefix_layers        = prefix_layers;
-  PrefixLayer.prefix_layers_length = 1;
+  PrefixLayer.setPrefixLayers(prefix_layers);
 }
 
 void loop() {
