@@ -56,10 +56,8 @@ EventHandlerResult PrefixLayer::onKeyEvent(KeyEvent &event) {
 }
 
 EventHandlerResult PrefixLayer::onAddToReport(Key key) {
-  if (current_prefix_ != Key_NoKey) {
-    if (current_prefix_ != key) {
-      return EventHandlerResult::ABORT;
-    }
+  if (current_prefix_ != Key_NoKey && current_prefix_ != key && key.isKeyboardModifier()) {
+    return EventHandlerResult::ABORT;
   }
 
   return EventHandlerResult::OK;
