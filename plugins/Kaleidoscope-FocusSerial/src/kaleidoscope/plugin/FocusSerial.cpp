@@ -19,7 +19,6 @@
 
 #include <Arduino.h>         // for PSTR, __FlashStringHelper, F, strcmp_P
 #include <HardwareSerial.h>  // for HardwareSerial
-#include <stdint.h>          // for uint8_t
 #include <string.h>          // for memset
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_

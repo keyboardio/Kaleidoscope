@@ -20,7 +20,6 @@
 #include <Arduino.h>                       // for PSTR, F, __FlashStringHelper, strcmp_P
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
-#include <stdint.h>                        // for uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage

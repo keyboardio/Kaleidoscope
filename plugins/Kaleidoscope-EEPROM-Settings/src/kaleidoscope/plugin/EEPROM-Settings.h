@@ -24,6 +24,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
 class EEPROMSettings : public kaleidoscope::Plugin {
  private:
   struct Settings {
@@ -75,6 +76,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;
+
   uint16_t next_start_ = sizeof(EEPROMSettings::Settings);
   bool is_valid_;
   bool sealed_;

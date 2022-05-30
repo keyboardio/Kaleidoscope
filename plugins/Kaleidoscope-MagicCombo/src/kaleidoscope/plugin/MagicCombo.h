@@ -88,15 +88,15 @@ class MagicCombo : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  uint16_t start_time_ = 0;
+  uint16_t start_time_   = 0;
   uint16_t min_interval_ = 500;
 };
 
 namespace magiccombo {
 extern const MagicCombo::Combo combos[];
 extern const uint8_t combos_length;
-
 }  // namespace magiccombo
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 

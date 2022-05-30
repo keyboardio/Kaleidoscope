@@ -162,7 +162,7 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
   if (event_queue_.isEmpty())
     return EventHandlerResult::OK;
 
-  // Get timeout value for the pending key.
+    // Get timeout value for the pending key.
 #ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

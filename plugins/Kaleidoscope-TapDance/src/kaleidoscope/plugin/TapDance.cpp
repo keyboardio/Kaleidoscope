@@ -38,7 +38,7 @@ namespace plugin {
 // --- config ---
 
 #ifndef NDEPRECATED
-uint16_t TapDance::time_out  = 200;
+uint16_t TapDance::time_out = 200;
 #endif
 
 // --- api ---

@@ -18,7 +18,7 @@
 #pragma once
 
 #include <Kaleidoscope-Ranges.h>  // for SYSTER
-#include <stdint.h>               // for int8_t, uint8_t
+#include <stdint.h>               // for uint8_t, int8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult

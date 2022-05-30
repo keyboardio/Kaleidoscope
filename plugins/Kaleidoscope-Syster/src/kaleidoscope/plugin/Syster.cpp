@@ -19,7 +19,7 @@
 
 #include <Arduino.h>                   // for F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <stdint.h>                    // for int8_t, uint8_t
+#include <stdint.h>                    // for int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent

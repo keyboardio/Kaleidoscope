@@ -21,7 +21,7 @@
 #include <stdint.h>               // for uint16_t, uint32_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/device/device.h"         // for cRGB
+#include "kaleidoscope/device/device.h"         // for cRGB, CRGB
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
