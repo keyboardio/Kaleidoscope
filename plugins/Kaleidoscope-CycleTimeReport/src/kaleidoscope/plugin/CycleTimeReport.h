@@ -21,6 +21,15 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
+#define _DEPRECATED_MESSAGE_CYCLETIMEREPORT_AVG_TIME                      \
+  "The `CycleTimeReport.average_loop_time` variable is deprecated. See\n" \
+  "the current documentation for CycleTimeReport for details.\n"          \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
 
 namespace kaleidoscope {
 namespace plugin {
@@ -32,7 +41,10 @@ class CycleTimeReport : public kaleidoscope::Plugin {
   EventHandlerResult beforeEachCycle();
   EventHandlerResult afterEachCycle();
 
+#ifndef NDEPRECATED
+  DEPRECATED(CYCLETIMEREPORT_AVG_TIME)
   static uint32_t average_loop_time;
+#endif
 
  private:
   static uint16_t last_report_time_;
