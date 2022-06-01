@@ -16,7 +16,7 @@ the box, without any further configuration:
 
 KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
 
-void setup (void) {
+void setup () {
   Kaleidoscope.serialPort().begin(9600);
   Kaleidoscope.setup ();
 }
@@ -25,25 +25,23 @@ void setup (void) {
 ## Plugin methods
 
 The plugin provides a single object, `CycleTimeReport`, with the following
-property. All times are in milliseconds.
+methods:
 
-### `.average_loop_time`
+### `.setReportInterval(interval)`
 
-> A read-only by contract value, the average time of main loop lengths between
-> two reports.
+> Sets the length of time between reports to `interval` milliseconds.  The
+> default is `1000`, so it will report once per second.
 
-## Overrideable methods
+### `.report(mean_cycle_time)`
 
-### `cycleTimeReport()`
-
-> Reports the average loop time. By default, it does so over `Serial`, every
-> time when the report period is up.
+> Reports the average (mean) cycle time since the previous report.  This method
+> is called automatically, once per report interval (see above).  By default, it
+> does so over `Serial`.
 >
 > It can be overridden, to change how the report looks, or to make the report
 > toggleable, among other things.
 >
-> It takes no arguments, and returns nothing, but has access to
-> `CycleTimeReport.average_loop_time` above.
+> It takes no arguments, and returns nothing.
 
 ## Further reading
 
