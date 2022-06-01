@@ -189,6 +189,7 @@ bool HID_::setup(USBSetup& setup) {
       //   setReportData.reportId = 0;
       // }
       // ------------------------------------------------------------
+      return true;
     }
   }
 

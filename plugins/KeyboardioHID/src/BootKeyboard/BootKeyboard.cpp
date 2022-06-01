@@ -152,21 +152,23 @@ bool BootKeyboard_::setup(USBSetup& setup) {
     }
     if (request == HID_GET_PROTOCOL) {
       // TODO improve
-#ifdef __AVR__
+#if defined(__AVR__)
       UEDATX = protocol;
-#endif
-#ifdef ARDUINO_ARCH_SAM
+#elif defined(ARDUINO_ARCH_SAM)
       USBDevice.armSend(0, &protocol, 1);
+#else
+      USB_SendControl(TRANSFER_RELEASE, &protocol, sizeof(protocol));
 #endif
       return true;
     }
     if (request == HID_GET_IDLE) {
       // TODO improve
-#ifdef __AVR__
+#if defined(__AVR__)
       UEDATX = idle;
-#endif
-#ifdef ARDUINO_ARCH_SAM
+#elif defined(ARDUINO_ARCH_SAM)
       USBDevice.armSend(0, &idle, 1);
+#else
+      USB_SendControl(TRANSFER_RELEASE, &idle, sizeof(idle));
 #endif
       return true;
     }
@@ -191,6 +193,7 @@ bool BootKeyboard_::setup(USBSetup& setup) {
     if (request == HID_SET_REPORT) {
       // Check if data has the correct length afterwards
       int length = setup.wLength;
+      
 
       // ------------------------------------------------------------
       // Workaround for a bug in the GD32 core:
@@ -206,7 +209,11 @@ bool BootKeyboard_::setup(USBSetup& setup) {
           USB_RecvControl(&raw_report_data, length);
           leds = raw_report_data[0];
           return true;
-        }
+//        } else {
+//	  char tmp[8];
+//	  USB_RecvControl(&tmp, length);
+//	  return true;
+	}	
       }
       // Once the GD32 core bug is fixed, we can replace the above code with the
       // original code below:
