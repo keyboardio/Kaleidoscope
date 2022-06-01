@@ -17,31 +17,49 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint32_t, uint16_t
+#include <stdint.h>  // for uint16_t, uint32_t
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
+#define _DEPRECATED_MESSAGE_CYCLETIMEREPORT_AVG_TIME                      \
+  "The `CycleTimeReport.average_loop_time` variable is deprecated. See\n" \
+  "the current documentation for CycleTimeReport for details.\n"          \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
 
 namespace kaleidoscope {
 namespace plugin {
 class CycleTimeReport : public kaleidoscope::Plugin {
  public:
-  CycleTimeReport() {}
-
-  EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
-  EventHandlerResult afterEachCycle();
 
+#ifndef NDEPRECATED
+  DEPRECATED(CYCLETIMEREPORT_AVG_TIME)
   static uint32_t average_loop_time;
+#endif
+
+  /// Set the length of time between reports (in milliseconds)
+  void setReportInterval(uint16_t interval) {
+    report_interval_ = interval;
+  }
+
+  /// Report the given mean cycle time in microseconds
+  void report(uint16_t mean_cycle_time);
 
  private:
-  static uint16_t last_report_time_;
-  static uint32_t loop_start_time_;
+  // Interval between reports, in milliseconds
+  uint16_t report_interval_ = 1000;
+
+  // Timestamps recording when the last report was sent
+  uint16_t last_report_millis_ = 0;
+  uint32_t last_report_micros_ = 0;
 };
 
 }  // namespace plugin
 }  // namespace kaleidoscope
-
-void cycleTimeReport(void);
 
 extern kaleidoscope::plugin::CycleTimeReport CycleTimeReport;

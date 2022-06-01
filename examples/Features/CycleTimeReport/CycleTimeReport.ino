@@ -40,11 +40,20 @@ KEYMAPS(
 )
 // clang-format on
 
+// Override CycleTimeReport's reporting function:
+void kaleidoscope::plugin::CycleTimeReport::report(uint16_t mean_cycle_time) {
+  Serial.print(F("average loop time = "));
+  Serial.println(mean_cycle_time, DEC);
+}
+
 KALEIDOSCOPE_INIT_PLUGINS(CycleTimeReport);
 
 void setup() {
   Kaleidoscope.serialPort().begin(9600);
   Kaleidoscope.setup();
+
+  // Change the report interval to 2 seconds:
+  CycleTimeReport.setReportInterval(2000);
 }
 
 void loop() {

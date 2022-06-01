@@ -26,43 +26,40 @@
 
 namespace kaleidoscope {
 namespace plugin {
-uint16_t CycleTimeReport::last_report_time_;
-uint32_t CycleTimeReport::loop_start_time_;
-uint32_t CycleTimeReport::average_loop_time;
-
-EventHandlerResult CycleTimeReport::onSetup() {
-  last_report_time_ = Runtime.millisAtCycleStart();
-  return EventHandlerResult::OK;
-}
 
 EventHandlerResult CycleTimeReport::beforeEachCycle() {
-  loop_start_time_ = micros();
+  // A counter storing the number of cycles since the last mean cycle time
+  // report was sent:
+  static uint16_t elapsed_cycles = 0;
+
+  // We only compute the mean cycle time once per report interval.
+  if (Runtime.hasTimeExpired(last_report_millis_, report_interval_)) {
+    uint32_t elapsed_time    = micros() - last_report_micros_;
+    uint32_t mean_cycle_time = elapsed_time / elapsed_cycles;
+
+    report(mean_cycle_time);
+
+    // Reset the cycle counter and timestamps.
+    elapsed_cycles = 0;
+    last_report_millis_ += report_interval_;
+    last_report_micros_ = micros();
+  }
+
+  // Increment the cycle counter unconditionally.
+  ++elapsed_cycles;
+
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult CycleTimeReport::afterEachCycle() {
-  uint32_t loop_time = micros() - loop_start_time_;
-
-  if (average_loop_time)
-    average_loop_time = (average_loop_time + loop_time) / 2;
-  else
-    average_loop_time = loop_time;
-
-  if (Runtime.hasTimeExpired(last_report_time_, uint16_t(1000))) {
-    cycleTimeReport();
-
-    average_loop_time = 0;
-    last_report_time_ = Runtime.millisAtCycleStart();
-  }
-
-  return EventHandlerResult::OK;
+__attribute__((weak)) void CycleTimeReport::report(uint16_t mean_cycle_time) {
+  Focus.send(Focus.COMMENT,
+             F("mean cycle time:"),
+             mean_cycle_time,
+             F("µs"),
+             Focus.NEWLINE);
 }
 
 }  // namespace plugin
 }  // namespace kaleidoscope
-
-__attribute__((weak)) void cycleTimeReport(void) {
-  Focus.send(Focus.COMMENT, F("average loop time:"), CycleTimeReport.average_loop_time, Focus.NEWLINE);
-}
 
 kaleidoscope::plugin::CycleTimeReport CycleTimeReport;
