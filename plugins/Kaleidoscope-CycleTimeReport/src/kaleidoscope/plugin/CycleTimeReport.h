@@ -35,8 +35,6 @@ namespace kaleidoscope {
 namespace plugin {
 class CycleTimeReport : public kaleidoscope::Plugin {
  public:
-  CycleTimeReport() {}
-
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
   EventHandlerResult afterEachCycle();
