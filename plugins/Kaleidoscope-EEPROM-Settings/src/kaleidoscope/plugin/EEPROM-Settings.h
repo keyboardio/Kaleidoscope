@@ -25,6 +25,14 @@
 namespace kaleidoscope {
 namespace plugin {
 class EEPROMSettings : public kaleidoscope::Plugin {
+ private:
+  struct Settings {
+    uint8_t default_layer : 7;
+    bool ignore_hardcoded_layers : 1;
+    uint8_t version;
+    uint16_t crc;
+  };
+
  public:
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
@@ -67,16 +75,11 @@ class EEPROMSettings : public kaleidoscope::Plugin {
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;
-  uint16_t next_start_ = sizeof(EEPROMSettings::settings);
+  uint16_t next_start_ = sizeof(EEPROMSettings::Settings);
   bool is_valid_;
   bool sealed_;
 
-  struct settings {
-    uint8_t default_layer : 7;
-    bool ignore_hardcoded_layers : 1;
-    uint8_t version;
-    uint16_t crc;
-  } settings_;
+  Settings settings_;
 };
 
 class FocusSettingsCommand : public kaleidoscope::Plugin {
