@@ -82,8 +82,8 @@ class ErgoDox : public kaleidoscope::device::ATmega32U4Keyboard<ErgoDoxProps> {
 
  private:
   ErgoDoxScanner scanner_;
-  uint8_t previousKeyState_[matrix_rows];
-  uint8_t keyState_[matrix_rows];
+  uint8_t previousKeyState_[matrix_rows];  // NOLINT(runtime/arrays)
+  uint8_t keyState_[matrix_rows];          // NOLINT(runtime/arrays)
   uint8_t debounce_matrix_[matrix_rows][matrix_columns];
 
   uint8_t debounceMaskForRow(uint8_t row);

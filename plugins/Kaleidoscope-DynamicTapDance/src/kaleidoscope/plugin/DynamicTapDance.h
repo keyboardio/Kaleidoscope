@@ -41,7 +41,7 @@ class DynamicTapDance : public kaleidoscope::Plugin {
   uint16_t storage_base_;
   uint16_t storage_size_;
   static constexpr uint8_t reserved_tap_dance_key_count_ = ranges::TD_LAST - ranges::TD_FIRST + 1;
-  uint16_t map_[reserved_tap_dance_key_count_];
+  uint16_t map_[reserved_tap_dance_key_count_];  // NOLINT(runtime/arrays)
   uint8_t dance_count_;
   uint8_t offset_;
   void updateDynamicTapDanceCache();
