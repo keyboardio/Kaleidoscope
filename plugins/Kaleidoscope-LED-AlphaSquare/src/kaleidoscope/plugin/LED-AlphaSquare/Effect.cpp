@@ -38,7 +38,7 @@ AlphaSquareEffect::TransientLEDMode::TransientLEDMode(AlphaSquareEffect * /*pare
   : last_key_left_(Key_NoKey),
     last_key_right_(Key_NoKey) {}
 
-void AlphaSquareEffect::TransientLEDMode::update(void) {
+void AlphaSquareEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 

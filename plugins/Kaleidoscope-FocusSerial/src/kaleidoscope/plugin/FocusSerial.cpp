@@ -19,7 +19,6 @@
 
 #include <Arduino.h>         // for PSTR, __FlashStringHelper, F, strcmp_P
 #include <HardwareSerial.h>  // for HardwareSerial
-#include <stdint.h>          // for uint8_t
 #include <string.h>          // for memset
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -32,9 +31,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-
-char FocusSerial::command_[32];
-uint8_t FocusSerial::buf_cursor_ = 0;
 
 EventHandlerResult FocusSerial::afterEachCycle() {
   // GD32 doesn't currently autoflush the very last packet. So manually flush here

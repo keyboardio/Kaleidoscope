@@ -38,20 +38,18 @@ namespace kaleidoscope {
 namespace plugin {
 class Cycle : public kaleidoscope::Plugin {
  public:
-  Cycle(void) {}
-
-  static void replace(Key key);
-  static void replace(uint8_t cycle_size, const Key cycle_steps[]);
+  void replace(Key key);
+  void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static uint8_t toModFlag(uint8_t keyCode);
-  static Key last_non_cycle_key_;
-  static KeyAddr cycle_key_addr_;
-  static uint8_t cycle_count_;
-  static uint8_t current_modifier_flags_;
+  uint8_t toModFlag(uint8_t keyCode);
+  Key last_non_cycle_key_;
+  KeyAddr cycle_key_addr_{KeyAddr::invalid_state};
+  uint8_t cycle_count_;
+  uint8_t current_modifier_flags_;
 };
 
 }  // namespace plugin

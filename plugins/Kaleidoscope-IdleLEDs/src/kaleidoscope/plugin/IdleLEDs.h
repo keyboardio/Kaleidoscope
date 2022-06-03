@@ -29,8 +29,6 @@ namespace plugin {
 
 class IdleLEDs : public kaleidoscope::Plugin {
  public:
-  IdleLEDs(void) {}
-
   static uint32_t idle_time_limit;
 
   static uint32_t idleTimeoutSeconds();

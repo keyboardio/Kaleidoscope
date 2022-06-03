@@ -27,14 +27,12 @@ namespace plugin {
 class LEDRainbowEffect : public Plugin,
                          public LEDModeInterface {
  public:
-  LEDRainbowEffect(void) {}
-
   void brightness(uint8_t);
-  uint8_t brightness(void) {
+  uint8_t brightness() {
     return rainbow_value;
   }
   void update_delay(uint8_t);
-  uint8_t update_delay(void) {
+  uint8_t update_delay() {
     return rainbow_update_delay;
   }
 
@@ -70,14 +68,12 @@ class LEDRainbowEffect : public Plugin,
 
 class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
  public:
-  LEDRainbowWaveEffect(void) {}
-
   void brightness(uint8_t);
-  uint8_t brightness(void) {
+  uint8_t brightness() {
     return rainbow_value;
   }
   void update_delay(uint8_t);
-  uint8_t update_delay(void) {
+  uint8_t update_delay() {
     return rainbow_update_delay;
   }
 

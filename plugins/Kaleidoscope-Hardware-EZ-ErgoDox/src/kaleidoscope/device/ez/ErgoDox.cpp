@@ -38,15 +38,9 @@ namespace kaleidoscope {
 namespace device {
 namespace ez {
 
-ErgoDoxScanner ErgoDox::scanner_;
-uint8_t ErgoDox::previousKeyState_[matrix_rows];
-uint8_t ErgoDox::keyState_[matrix_rows];
-uint8_t ErgoDox::debounce_matrix_[matrix_rows][matrix_columns];
-uint8_t ErgoDox::debounce = 5;
-
 static bool do_scan_ = 1;
 
-void ErgoDox::setup(void) {
+void ErgoDox::setup() {
   wdt_disable();
   delay(100);
 

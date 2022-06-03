@@ -32,15 +32,13 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
     CODE,
     COPY,
   } mode_t;
-  static mode_t mode;
+  mode_t mode;
 
-  EEPROMKeymapProgrammer(void) {}
-
-  static void activate(void) {
+  void activate() {
     nextState();
   }
-  static void nextState(void);
-  static void cancel(void);
+  void nextState();
+  void cancel();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
@@ -52,10 +50,10 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
     WAIT_FOR_CODE,
     WAIT_FOR_SOURCE_KEY,
   } state_t;
-  static state_t state_;
+  state_t state_;
 
-  static uint16_t update_position_;  // layer, row, col
-  static Key new_key_;
+  uint16_t update_position_;  // layer, row, col
+  Key new_key_;
 };
 
 }  // namespace plugin

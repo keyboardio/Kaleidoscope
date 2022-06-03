@@ -34,8 +34,6 @@ class AlphaSquareEffect : public Plugin,
                           public LEDModeInterface,
                           public AccessTransientLEDMode {
  public:
-  AlphaSquareEffect(void) {}
-
   static uint16_t length;
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
@@ -47,7 +45,7 @@ class AlphaSquareEffect : public Plugin,
     explicit TransientLEDMode(AlphaSquareEffect *parent);
 
    protected:
-    void update(void) final;
+    void update() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

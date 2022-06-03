@@ -32,8 +32,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-KeyAddr TopsyTurvy::tt_addr_ = KeyAddr::none();
-
 EventHandlerResult TopsyTurvy::onKeyEvent(KeyEvent &event) {
   if (keyToggledOff(event.state)) {
     if (event.addr == tt_addr_)

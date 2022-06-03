@@ -41,8 +41,6 @@ class StalkerEffect : public Plugin,
     virtual cRGB compute(uint8_t *step) = 0;
   };
 
-  StalkerEffect(void) {}
-
   static ColorComputer *variant;
   static uint16_t step_length;
   static cRGB inactive_color;
@@ -77,7 +75,7 @@ namespace stalker {
 class Haunt : public StalkerEffect::ColorComputer {
  public:
   explicit Haunt(const cRGB highlight_color);
-  Haunt(void)
+  Haunt()
     : Haunt(CRGB(0x40, 0x80, 0x80)) {}
 
   cRGB compute(uint8_t *step) final;
@@ -88,14 +86,14 @@ class Haunt : public StalkerEffect::ColorComputer {
 
 class BlazingTrail : public StalkerEffect::ColorComputer {
  public:
-  BlazingTrail(void);
+  BlazingTrail();
 
   cRGB compute(uint8_t *step) final;
 };
 
 class Rainbow : public StalkerEffect::ColorComputer {
  public:
-  Rainbow(void);
+  Rainbow();
 
   cRGB compute(uint8_t *step) final;
 };

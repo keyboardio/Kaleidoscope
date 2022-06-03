@@ -75,16 +75,15 @@ void setup() {
     , SPACECADET_MAP_END
   };
   //Set the map.
-  SpaceCadet.map = spacecadetmap;
+  SpaceCadet.setMap(spacecadetmap);
 }
 ```
 
 ##   Plugin methods
 
-The plugin provides the `SpaceCadet` object, with the following methods and
-properties:
+The plugin provides the `SpaceCadet` object, with the following methods:
 
-### `.map`
+### `.setMap(map)`
 
 > Set the key map. This takes an array of
 > `kaleidoscope::plugin::SpaceCadet::KeyBinding` objects with the special
@@ -103,9 +102,9 @@ properties:
 > optional and may be set per-key or left out entirely (or set to `0`) to use
 > the default timeout value.
 
-### `.time_out`
+### `.setTimeout(timeout)`
 
-> Set this property to the number of milliseconds to wait before considering a
+> Sets the number of milliseconds to wait before considering a
 > held key in isolation as its secondary role. That is, we'd have to hold a
 > `Shift` key this long, by itself, to trigger the `Shift` role in itself. This
 > timeout setting can be overridden by an individual key in the keymap, but if

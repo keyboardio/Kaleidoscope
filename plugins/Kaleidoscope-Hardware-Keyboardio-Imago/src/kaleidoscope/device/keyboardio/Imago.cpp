@@ -102,7 +102,7 @@ void ImagoLEDDriver::twiSend(uint8_t addr, uint8_t Reg_Add, uint8_t Reg_Dat) {
   uint8_t result = twi_writeTo(addr, data, ELEMENTS(data), 1, 0);
 }
 
-void ImagoLEDDriver::unlockRegister(void) {
+void ImagoLEDDriver::unlockRegister() {
   twiSend(LED_DRIVER_ADDR, CMD_WRITE_ENABLE, WRITE_ENABLE_ONCE);  //unlock
 }
 

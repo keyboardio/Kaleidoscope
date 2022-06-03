@@ -37,10 +37,9 @@ namespace plugin {
 
 // --- config ---
 
-uint16_t TapDance::time_out  = 200;
-uint8_t TapDance::tap_count_ = 0;
-
-KeyEventTracker TapDance::event_tracker_;
+#ifndef NDEPRECATED
+uint16_t TapDance::time_out = 200;
+#endif
 
 // --- api ---
 void TapDance::actionKeys(uint8_t tap_count,
@@ -146,7 +145,20 @@ EventHandlerResult TapDance::afterEachCycle() {
 
   // Check for timeout
   uint16_t start_time = event_queue_.timestamp(0);
-  if (Runtime.hasTimeExpired(start_time, time_out)) {
+  // To avoid confusing editors with unmatched braces, we use a temporary
+  // boolean, until the deprecated code can be removed.
+  bool timed_out = false;
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  if (Runtime.hasTimeExpired(start_time, time_out))
+    timed_out = true;
+#pragma GCC diagnostic pop
+#else
+  if (Runtime.hasTimeExpired(start_time, timeout_))
+    timed_out = true;
+#endif
+  if (timed_out) {
     // We start with the assumption that the TapDance key is still being held.
     ActionType action = Hold;
     // Now we search for a release event for the TapDance key, starting from the

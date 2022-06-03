@@ -29,8 +29,6 @@ namespace plugin {
 
 class LEDPaletteTheme : public kaleidoscope::Plugin {
  public:
-  LEDPaletteTheme(void) {}
-
   static uint16_t reserveThemes(uint8_t max_themes);
   static void updateHandler(uint16_t theme_base, uint8_t theme);
   static void refreshAt(uint16_t theme_base, uint8_t theme, KeyAddr key_addr);

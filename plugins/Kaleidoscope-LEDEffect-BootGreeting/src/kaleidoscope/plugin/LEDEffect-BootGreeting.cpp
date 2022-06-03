@@ -43,7 +43,7 @@ BootGreetingEffect::BootGreetingEffect(KeyAddr key_addr) {
   user_key_addr = key_addr;
 }
 
-void BootGreetingEffect::findLed(void) {
+void BootGreetingEffect::findLed() {
   if (user_key_addr.isValid()) {
     key_addr_ = user_key_addr;
     done_     = true;

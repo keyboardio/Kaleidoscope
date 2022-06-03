@@ -20,7 +20,6 @@
 #include <Arduino.h>                       // for PSTR, F, __FlashStringHelper, strcmp_P
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
-#include <stdint.h>                        // for uint16_t
 
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"         // for VirtualProps::Storage, Base<>::Storage
@@ -30,20 +29,18 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t EscapeOneShotConfig::settings_base_;
-
 EventHandlerResult EscapeOneShotConfig::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(EscapeOneShot::settings_));
 
   if (Runtime.storage().isSliceUninitialized(
         settings_base_,
-        sizeof(EscapeOneShot::settings_))) {
+        sizeof(EscapeOneShot::Settings))) {
     // If our slice is uninitialized, set sensible defaults.
-    Runtime.storage().put(settings_base_, EscapeOneShot::settings_);
+    Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_base_, EscapeOneShot::settings_);
+  Runtime.storage().get(settings_base_, ::EscapeOneShot.settings_);
   return EventHandlerResult::OK;
 }
 
@@ -66,7 +63,7 @@ EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *command) {
     ::EscapeOneShot.setCancelKey(k);
   }
 
-  Runtime.storage().put(settings_base_, EscapeOneShot::settings_);
+  Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
   Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }

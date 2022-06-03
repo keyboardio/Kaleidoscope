@@ -29,25 +29,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-// =============================================================================
-// AutoShift static class variables
-
-// Configuration settings that can be saved to persistent storage.
-AutoShift::Settings AutoShift::settings_ = {
-  .enabled            = true,
-  .timeout            = 175,
-  .enabled_categories = AutoShift::Categories::printableKeys(),
-};
-
-// The event tracker ensures that the `onKeyswitchEvent()` handler will follow
-// the rules in order to avoid interference with other plugins and prevent
-// processing the same event more than once.
-KeyEventTracker AutoShift::event_tracker_;
-
-// If there's a delayed keypress from AutoShift, this stored event will contain
-// a valid `KeyAddr`.  The default constructor produces an event addr of
-// `KeyAddr::none()`, so the plugin will start in an inactive state.
-KeyEvent pending_event_;
 
 // =============================================================================
 // AutoShift functions

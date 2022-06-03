@@ -22,6 +22,15 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
+#define _DEPRECATED_MESSAGE_MAGICCOMBO_MIN_INTERVAL                        \
+  "The `MagicCombo.min_interval` variable is deprecated. Please use the\n" \
+  "`MagicCombo.setMinInterval()` function instead.\n"                      \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
 
 #define MAX_COMBO_LENGTH 5
 
@@ -43,27 +52,51 @@ namespace plugin {
 class MagicCombo : public kaleidoscope::Plugin {
  public:
   typedef void (*ComboAction)(uint8_t combo_index);
-  typedef struct {
+  struct Combo {
     ComboAction action;
     int8_t keys[MAX_COMBO_LENGTH + 1];
-  } Combo;
+  };
 
-  MagicCombo(void) {}
-
+#ifndef NDEPRECATED
+  DEPRECATED(MAGICCOMBO_MIN_INTERVAL)
   static uint16_t min_interval;
+#endif
+
+  void setMinInterval(uint16_t interval) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    min_interval = interval;
+#pragma GCC diagnostic pop
+#else
+    min_interval_ = interval;
+#endif
+  }
+
+  uint16_t getMinInterval() {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    return min_interval;
+#pragma GCC diagnostic pop
+#else
+    return min_interval_;
+#endif
+  }
 
   EventHandlerResult onNameQuery();
   EventHandlerResult afterEachCycle();
 
  private:
-  static uint16_t start_time_;
+  uint16_t start_time_   = 0;
+  uint16_t min_interval_ = 500;
 };
 
 namespace magiccombo {
 extern const MagicCombo::Combo combos[];
 extern const uint8_t combos_length;
-
 }  // namespace magiccombo
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 

@@ -41,8 +41,6 @@ class WavepoolEffect : public Plugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
-  WavepoolEffect(void) {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
   // ms before idle animation starts after last keypress

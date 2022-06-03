@@ -21,14 +21,11 @@
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::E...
-#include "kaleidoscope/key_defs.h"              // for Key, Key_Escape, Key_NoKey
+#include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/keyswitch_state.h"       // for keyIsInjected, keyToggledOn
 
 namespace kaleidoscope {
 namespace plugin {
-
-EscapeOneShot::Settings EscapeOneShot::settings_ = {
-  .cancel_oneshot_key = Key_Escape};
 
 EventHandlerResult EscapeOneShot::onKeyEvent(KeyEvent &event) {
   // We only act on an escape key (or `cancel_oneshot_key_`, if that has been

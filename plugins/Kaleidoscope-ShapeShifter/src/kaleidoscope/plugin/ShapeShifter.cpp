@@ -28,8 +28,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-const ShapeShifter::dictionary_t *ShapeShifter::dictionary = nullptr;
-
 EventHandlerResult ShapeShifter::onKeyEvent(KeyEvent &event) {
   if (dictionary == nullptr)
     return EventHandlerResult::OK;

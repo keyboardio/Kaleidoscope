@@ -15,7 +15,7 @@ them.
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl, JukeBoxEffect);
 
-void setup(void) {
+void setup() {
   Kaleidoscope.setup();
 }
 ```

@@ -41,10 +41,9 @@ typedef enum {
 
 class HostOS : public kaleidoscope::Plugin {
  public:
-  HostOS() {}
   EventHandlerResult onSetup();
 
-  hostos::Type os(void) {
+  hostos::Type os() {
     return os_;
   }
   void os(hostos::Type new_os);

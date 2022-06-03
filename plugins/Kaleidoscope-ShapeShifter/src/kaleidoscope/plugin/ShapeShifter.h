@@ -27,13 +27,11 @@ namespace plugin {
 
 class ShapeShifter : public kaleidoscope::Plugin {
  public:
-  typedef struct {
+  struct dictionary_t {
     Key original, replacement;
-  } dictionary_t;
+  };
 
-  ShapeShifter(void) {}
-
-  static const dictionary_t *dictionary;
+  const dictionary_t *dictionary = nullptr;
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
 };

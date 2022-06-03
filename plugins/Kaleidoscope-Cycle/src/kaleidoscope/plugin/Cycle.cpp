@@ -31,11 +31,6 @@
 
 namespace kaleidoscope {
 namespace plugin {
-// --- state ---
-Key Cycle::last_non_cycle_key_;
-KeyAddr Cycle::cycle_key_addr_{KeyAddr::invalid_state};
-uint8_t Cycle::current_modifier_flags_;
-uint8_t Cycle::cycle_count_;
 
 // --- helpers ---
 

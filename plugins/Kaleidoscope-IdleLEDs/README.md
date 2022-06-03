@@ -25,7 +25,7 @@ the box, without any further configuration:
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl, IdleLEDs, LEDEffectRainbowWave);
 
-void setup (void) {
+void setup () {
   Kaleidoscope.setup ();
 }
 ```
@@ -54,7 +54,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   LEDEffectRainbowWave
 );
 
-void setup (void) {
+void setup () {
   Kaleidoscope.setup ();
 }
 ```

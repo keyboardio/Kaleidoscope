@@ -28,8 +28,9 @@
 namespace kaleidoscope {
 namespace plugin {
 
+#ifndef NDEPRECATED
 uint16_t MagicCombo::min_interval = 500;
-uint16_t MagicCombo::start_time_  = 0;
+#endif
 
 EventHandlerResult MagicCombo::onNameQuery() {
   return ::Focus.sendName(F("MagicCombo"));
@@ -54,7 +55,7 @@ EventHandlerResult MagicCombo::afterEachCycle() {
     if (j != Runtime.device().pressedKeyswitchCount())
       match = false;
 
-    if (match && Runtime.hasTimeExpired(start_time_, min_interval)) {
+    if (match && Runtime.hasTimeExpired(start_time_, getMinInterval())) {
       ComboAction action = (ComboAction)pgm_read_ptr((void const **)&(magiccombo::combos[i].action));
 
       (*action)(i);

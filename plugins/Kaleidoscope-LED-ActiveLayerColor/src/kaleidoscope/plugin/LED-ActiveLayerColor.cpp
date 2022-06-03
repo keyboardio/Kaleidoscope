@@ -52,7 +52,7 @@ cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
   return color;
 }
 
-void LEDActiveLayerColorEffect::TransientLEDMode::onActivate(void) {
+void LEDActiveLayerColorEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 

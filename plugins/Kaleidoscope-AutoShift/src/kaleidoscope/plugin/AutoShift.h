@@ -134,17 +134,17 @@ class AutoShift : public Plugin {
   // Configuration functions
 
   /// Returns `true` if AutoShift is active, `false` otherwise
-  static bool enabled() {
+  bool enabled() {
     return settings_.enabled;
   }
   /// Activates the AutoShift plugin (held keys will trigger auto-shift)
-  static void enable() {
+  void enable() {
     settings_.enabled = true;
   }
   /// Deactivates the AutoShift plugin (held keys will not trigger auto-shift)
-  static void disable();
+  void disable();
   /// Turns AutoShift on if it's off, and vice versa
-  static void toggle() {
+  void toggle() {
     if (settings_.enabled) {
       disable();
     } else {
@@ -153,16 +153,16 @@ class AutoShift : public Plugin {
   }
 
   /// Returns the hold time required to trigger auto-shift (in ms)
-  static uint16_t timeout() {
+  uint16_t timeout() {
     return settings_.timeout;
   }
   /// Sets the hold time required to trigger auto-shift (in ms)
-  static void setTimeout(uint16_t new_timeout) {
+  void setTimeout(uint16_t new_timeout) {
     settings_.timeout = new_timeout;
   }
 
   /// Returns the set of categories currently eligible for auto-shift
-  static Categories enabledCategories() {
+  Categories enabledCategories() {
     return settings_.enabled_categories;
   }
   /// Adds `category` to the set eligible for auto-shift
@@ -175,19 +175,19 @@ class AutoShift : public Plugin {
   ///  - `AutoShift::Categories::functionKeys()`
   ///  - `AutoShift::Categories::printableKeys()`
   ///  - `AutoShift::Categories::allKeys()`
-  static void enable(Categories category) {
+  void enable(Categories category) {
     settings_.enabled_categories.add(category);
   }
   /// Removes a `Key` category from the set eligible for auto-shift
-  static void disable(Categories category) {
+  void disable(Categories category) {
     settings_.enabled_categories.remove(category);
   }
   /// Replaces the list of `Key` categories eligible for auto-shift
-  static void setEnabled(Categories categories) {
+  void setEnabled(Categories categories) {
     settings_.enabled_categories = categories;
   }
   /// Returns `true` if the given category is eligible for auto-shift
-  static bool isEnabled(Categories category) {
+  bool isEnabled(Categories category) {
     return settings_.enabled_categories.contains(category);
   }
 
@@ -225,7 +225,7 @@ class AutoShift : public Plugin {
   ///
   /// This function can be overridden by the user sketch to configure which keys
   /// can trigger auto-shift.
-  static bool isAutoShiftable(Key key);
+  bool isAutoShiftable(Key key);
 
   // ---------------------------------------------------------------------------
   // Event handlers
@@ -237,19 +237,19 @@ class AutoShift : public Plugin {
   /// A container for AutoShift configuration settings
   struct Settings {
     /// The overall state of the plugin (on/off)
-    bool enabled;
+    bool enabled = true;
     /// The length of time (ms) a key must be held to trigger auto-shift
-    uint16_t timeout;
+    uint16_t timeout = 175;
     /// The set of `Key` categories eligible to be auto-shifted
-    Categories enabled_categories;
+    Categories enabled_categories = AutoShift::Categories::printableKeys();
   };
-  static Settings settings_;
+  Settings settings_;
 
   // ---------------------------------------------------------------------------
   // Key event queue state variables
 
   // A device for processing only new events
-  static KeyEventTracker event_tracker_;
+  KeyEventTracker event_tracker_;
 
   // The maximum number of events in the queue at a time.
   static constexpr uint8_t queue_capacity_{4};
@@ -257,12 +257,17 @@ class AutoShift : public Plugin {
   // The event queue stores a series of press and release events.
   KeyAddrEventQueue<queue_capacity_> queue_;
 
+  // If there's a delayed keypress from AutoShift, this stored event will
+  // contain a valid `KeyAddr`.  The default constructor produces an event addr
+  // of `KeyAddr::none()`, so the plugin will start in an inactive state.
+  KeyEvent pending_event_;
+
   void flushQueue();
   void flushEvent(bool is_long_press = false);
   bool checkForRelease() const;
 
   /// The default function for `isAutoShiftable()`
-  static bool enabledForKey(Key key);
+  bool enabledForKey(Key key);
 };
 
 // =============================================================================
@@ -274,7 +279,7 @@ class AutoShiftConfig : public Plugin {
 
  private:
   // The base address in persistent storage for configuration data
-  static uint16_t settings_base_;
+  uint16_t settings_base_;
 };
 
 }  // namespace plugin

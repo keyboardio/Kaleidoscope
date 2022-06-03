@@ -19,7 +19,7 @@
 
 #include <Arduino.h>                   // for F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <stdint.h>                    // for int8_t, uint8_t
+#include <stdint.h>                    // for int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
@@ -31,19 +31,14 @@
 namespace kaleidoscope {
 namespace plugin {
 
-// --- state ---
-char Syster::symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
-uint8_t Syster::symbol_pos_;
-bool Syster::is_active_;
-
 // --- api ---
-void Syster::reset(void) {
+void Syster::reset() {
   symbol_pos_ = 0;
   symbol_[0]  = 0;
   is_active_  = false;
 }
 
-bool Syster::is_active(void) {
+bool Syster::is_active() {
   return is_active_;
 }
 

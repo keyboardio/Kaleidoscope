@@ -30,23 +30,21 @@ namespace plugin {
 
 class DynamicTapDance : public kaleidoscope::Plugin {
  public:
-  DynamicTapDance() {}
-
   EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
 
-  static void setup(uint8_t dynamic_offset, uint16_t size);
+  void setup(uint8_t dynamic_offset, uint16_t size);
 
-  static bool dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, TapDance::ActionType tap_dance_action);
+  bool dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, TapDance::ActionType tap_dance_action);
 
  private:
-  static uint16_t storage_base_;
-  static uint16_t storage_size_;
+  uint16_t storage_base_;
+  uint16_t storage_size_;
   static constexpr uint8_t reserved_tap_dance_key_count_ = ranges::TD_LAST - ranges::TD_FIRST + 1;
-  static uint16_t map_[reserved_tap_dance_key_count_];
-  static uint8_t dance_count_;
-  static uint8_t offset_;
-  static void updateDynamicTapDanceCache();
+  uint16_t map_[reserved_tap_dance_key_count_];  // NOLINT(runtime/arrays)
+  uint8_t dance_count_;
+  uint8_t offset_;
+  void updateDynamicTapDanceCache();
 };
 
 }  // namespace plugin

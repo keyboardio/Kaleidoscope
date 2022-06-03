@@ -47,7 +47,7 @@ EventHandlerResult ColormapEffect::onNameQuery() {
   return ::Focus.sendName(F("ColormapEffect"));
 }
 
-void ColormapEffect::TransientLEDMode::onActivate(void) {
+void ColormapEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 

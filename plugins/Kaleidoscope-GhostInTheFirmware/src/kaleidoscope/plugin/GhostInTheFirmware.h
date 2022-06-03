@@ -32,18 +32,16 @@ class GhostInTheFirmware : public kaleidoscope::Plugin {
     uint16_t press_time;
     uint16_t delay;
   };
-  static const GhostKey *ghost_keys;
+  const GhostKey *ghost_keys;
 
-  GhostInTheFirmware(void) {}
-
-  static void activate(void);
+  void activate();
 
   EventHandlerResult afterEachCycle();
 
  private:
-  static bool is_active_;
-  static uint16_t current_pos_;
-  static uint16_t start_time_;
+  bool is_active_       = false;
+  uint16_t current_pos_ = 0;
+  uint16_t start_time_;
 };
 
 }  // namespace plugin

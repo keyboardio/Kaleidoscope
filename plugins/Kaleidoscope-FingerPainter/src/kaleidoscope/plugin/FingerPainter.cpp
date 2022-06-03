@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-uint16_t FingerPainter::color_base_;
-bool FingerPainter::edit_mode_;
-
 EventHandlerResult FingerPainter::onNameQuery() {
   return ::Focus.sendName(F("FingerPainter"));
 }
@@ -45,7 +42,7 @@ EventHandlerResult FingerPainter::onSetup() {
   return EventHandlerResult::OK;
 }
 
-void FingerPainter::update(void) {
+void FingerPainter::update() {
   ::LEDPaletteTheme.updateHandler(color_base_, 0);
 }
 
@@ -53,7 +50,7 @@ void FingerPainter::refreshAt(KeyAddr key_addr) {
   ::LEDPaletteTheme.refreshAt(color_base_, 0, key_addr);
 }
 
-void FingerPainter::toggle(void) {
+void FingerPainter::toggle() {
   edit_mode_ = !edit_mode_;
 }
 

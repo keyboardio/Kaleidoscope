@@ -43,7 +43,7 @@ class LEDSolidColor : public Plugin,
       : parent_(parent) {}
 
    protected:
-    void onActivate(void) final;
+    void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

@@ -21,7 +21,7 @@
 #include <stdint.h>               // for uint16_t, uint32_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/device/device.h"         // for cRGB
+#include "kaleidoscope/device/device.h"         // for cRGB, CRGB
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
@@ -32,8 +32,6 @@ namespace kaleidoscope {
 namespace plugin {
 class Turbo : public kaleidoscope::Plugin {
  public:
-  Turbo() {}
-
   uint16_t interval();
   void interval(uint16_t newVal);
 
@@ -55,15 +53,15 @@ class Turbo : public kaleidoscope::Plugin {
   EventHandlerResult beforeSyncingLeds();
 
  private:
-  static uint16_t interval_;
-  static uint16_t flash_interval_;
-  static bool sticky_;
-  static bool flash_;
-  static cRGB active_color_;
+  uint16_t interval_       = 10;
+  uint16_t flash_interval_ = 69;
+  bool sticky_             = false;
+  bool flash_              = true;
+  cRGB active_color_       = CRGB(160, 0, 0);
 
-  static bool active_;
-  static uint32_t start_time_;
-  static uint32_t flash_start_time_;
+  bool active_               = false;
+  uint32_t start_time_       = 0;
+  uint32_t flash_start_time_ = 0;
 };
 
 }  // namespace plugin

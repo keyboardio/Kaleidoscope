@@ -24,10 +24,17 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class EEPROMSettings : public kaleidoscope::Plugin {
- public:
-  EEPROMSettings(void) {}
 
+class EEPROMSettings : public kaleidoscope::Plugin {
+ private:
+  struct Settings {
+    uint8_t default_layer : 7;
+    bool ignore_hardcoded_layers : 1;
+    uint8_t version;
+    uint16_t crc;
+  };
+
+ public:
   EventHandlerResult onSetup();
   EventHandlerResult beforeEachCycle();
 
@@ -46,52 +53,44 @@ class EEPROMSettings : public kaleidoscope::Plugin {
    * fall back to not using it. */
   static constexpr uint8_t VERSION_CURRENT = 0x01;
 
-  static void update(void);
-  static bool isValid(void);
-  static void invalidate(void);
-  static uint8_t version(void) {
+  void update();
+  bool isValid();
+  void invalidate();
+  uint8_t version() {
     return settings_.version;
   }
 
-  static uint16_t requestSlice(uint16_t size);
-  static void seal(void);
-  static uint16_t crc(void);
-  static uint16_t used(void);
+  uint16_t requestSlice(uint16_t size);
+  void seal();
+  uint16_t crc();
+  uint16_t used();
 
-  static uint8_t default_layer(uint8_t layer);
-  static uint8_t default_layer() {
+  uint8_t default_layer(uint8_t layer);
+  uint8_t default_layer() {
     return settings_.default_layer;
   }
-  static void ignoreHardcodedLayers(bool value);
-  static bool ignoreHardcodedLayers() {
+  void ignoreHardcodedLayers(bool value);
+  bool ignoreHardcodedLayers() {
     return settings_.ignore_hardcoded_layers;
   }
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;
-  static uint16_t next_start_;
-  static bool is_valid_;
-  static bool sealed_;
 
-  static struct settings {
-    uint8_t default_layer : 7;
-    bool ignore_hardcoded_layers : 1;
-    uint8_t version;
-    uint16_t crc;
-  } settings_;
+  uint16_t next_start_ = sizeof(EEPROMSettings::Settings);
+  bool is_valid_;
+  bool sealed_;
+
+  Settings settings_;
 };
 
 class FocusSettingsCommand : public kaleidoscope::Plugin {
  public:
-  FocusSettingsCommand() {}
-
   EventHandlerResult onFocusEvent(const char *command);
 };
 
 class FocusEEPROMCommand : public kaleidoscope::Plugin {
  public:
-  FocusEEPROMCommand() {}
-
   EventHandlerResult onFocusEvent(const char *command);
 };
 

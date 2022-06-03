@@ -18,7 +18,7 @@
 #pragma once
 
 #include <Kaleidoscope-Ranges.h>  // for SYSTER
-#include <stdint.h>               // for int8_t, uint8_t
+#include <stdint.h>               // for uint8_t, int8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
@@ -35,15 +35,13 @@ namespace plugin {
 
 class Syster : public kaleidoscope::Plugin {
  public:
-  typedef enum {
+  enum action_t : uint8_t {
     StartAction,
     EndAction,
     SymbolAction
-  } action_t;
+  };
 
-  Syster() {}
-
-  static void reset();
+  void reset();
 
   bool is_active();
 
@@ -51,9 +49,9 @@ class Syster : public kaleidoscope::Plugin {
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
-  static uint8_t symbol_pos_;
-  static bool is_active_;
+  char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];
+  uint8_t symbol_pos_;
+  bool is_active_ = false;
 };
 
 }  // namespace plugin

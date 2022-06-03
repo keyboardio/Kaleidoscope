@@ -31,15 +31,13 @@ namespace plugin {
 
 class Redial : public kaleidoscope::Plugin {
  public:
-  Redial(void) {}
-
   static bool shouldRemember(Key mappedKey);
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  private:
-  static Key last_key_;
+  Key last_key_;
 };
 
 }  // namespace plugin

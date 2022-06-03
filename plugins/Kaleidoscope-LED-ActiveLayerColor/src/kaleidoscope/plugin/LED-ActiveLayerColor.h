@@ -31,8 +31,6 @@ class LEDActiveLayerColorEffect : public Plugin,
                                   public LEDModeInterface,
                                   public AccessTransientLEDMode {
  public:
-  LEDActiveLayerColorEffect(void) {}
-
   EventHandlerResult onLayerChange();
   void setColormap(const cRGB colormap[]);
 
@@ -47,7 +45,7 @@ class LEDActiveLayerColorEffect : public Plugin,
     explicit TransientLEDMode(const LEDActiveLayerColorEffect *parent);
 
    protected:
-    void onActivate(void) final;
+    void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

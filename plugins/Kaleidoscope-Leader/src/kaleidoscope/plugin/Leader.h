@@ -62,15 +62,14 @@ constexpr Key LeaderKey(uint8_t n) {
 class Leader : public kaleidoscope::Plugin {
  public:
   typedef void (*action_t)(uint8_t seq_index);
-  typedef struct {
+  struct dictionary_t {
     Key sequence[LEADER_MAX_SEQUENCE_LENGTH + 1];
     action_t action;
-  } dictionary_t;
+  };
 
-  Leader(void) {}
-  static const dictionary_t *dictionary;
+  const dictionary_t *dictionary;
 
-  static void reset(void);
+  void reset();
 
 #ifndef NDEPRECATED
   DEPRECATED(LEADER_TIME_OUT)
@@ -80,7 +79,7 @@ class Leader : public kaleidoscope::Plugin {
   void inject(Key key, uint8_t key_state);
 #endif
 
-  static void setTimeout(uint16_t timeout) {
+  void setTimeout(uint16_t timeout) {
 #ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -95,13 +94,13 @@ class Leader : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  static Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
-  static KeyEventTracker event_tracker_;
-  static uint8_t sequence_pos_;
-  static uint16_t start_time_;
-  static uint16_t timeout_;
+  Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];
+  KeyEventTracker event_tracker_;
+  uint8_t sequence_pos_;
+  uint16_t start_time_ = 0;
+  uint16_t timeout_    = 1000;
 
-  static int8_t lookup(void);
+  int8_t lookup();
 };
 
 }  // namespace plugin

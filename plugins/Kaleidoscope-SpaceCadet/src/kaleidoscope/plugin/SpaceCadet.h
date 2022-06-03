@@ -27,6 +27,15 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/plugin.h"                // for Plugin
+// -----------------------------------------------------------------------------
+// Deprecation warning messages
+#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
+
+#define _DEPRECATED_MESSAGE_SPACECADET_TIME_OUT                        \
+  "The `SpaceCadet.time_out` variable is deprecated. Please use the\n" \
+  "`SpaceCadet.setTimeout()` function instead.\n"                      \
+  "This variable will be removed after 2022-09-01."
+// -----------------------------------------------------------------------------
 
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END \
@@ -63,25 +72,43 @@ class SpaceCadet : public kaleidoscope::Plugin {
     }
   };
 
-  SpaceCadet(void);
+  SpaceCadet();
 
   // Methods
-  static void enable() {
+  void enable() {
     mode_ = Mode::ON;
   }
-  static void disable() {
+  void disable() {
     mode_ = Mode::OFF;
   }
-  static void enableWithoutDelay() {
+  void enableWithoutDelay() {
     mode_ = Mode::NO_DELAY;
   }
-  static bool active() {
+  bool active() {
     return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
   }
 
+#ifndef NDEPRECATED
   // Publically accessible variables
+  DEPRECATED(SPACECADET_TIME_OUT)
   static uint16_t time_out;            //  The global timeout in milliseconds
   static SpaceCadet::KeyBinding *map;  // The map of key bindings
+#endif
+
+  void setTimeout(uint16_t timeout) {
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    time_out = timeout;
+#pragma GCC diagnostic pop
+#else
+    timeout_ = timeout;
+#endif
+  }
+
+  void setMap(KeyBinding *bindings) {
+    map = bindings;
+  }
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
@@ -93,9 +120,19 @@ class SpaceCadet : public kaleidoscope::Plugin {
     OFF,
     NO_DELAY,
   };
-  static uint8_t mode_;
+  uint8_t mode_;
 
-  static KeyEventTracker event_tracker_;
+#ifdef NDEPRECATED
+  // Global timeout in milliseconds
+  uint16_t timeout_ = 200;
+
+  // The map of keybindings
+  KeyBinding *map = nullptr;
+  // When DEPRECATED public `map[]` variable is removed, this variable name
+  // should be given a trailing underscore to conform to code style guide.
+#endif
+
+  KeyEventTracker event_tracker_;
 
   // The maximum number of events in the queue at a time.
   static constexpr uint8_t queue_capacity_{4};
@@ -103,7 +140,11 @@ class SpaceCadet : public kaleidoscope::Plugin {
   // The event queue stores a series of press and release events.
   KeyAddrEventQueue<queue_capacity_> event_queue_;
 
-  static int8_t pending_map_index_;
+  // This variable is used to keep track of any pending unresolved SpaceCadet
+  // key that has been pressed. If `pending_map_index_` is negative, it means
+  // there is no such pending keypress. Otherwise, it holds the value of the
+  // index of that key in the array.
+  int8_t pending_map_index_ = -1;
 
   int8_t getSpaceCadetKeyIndex(Key key) const;
 

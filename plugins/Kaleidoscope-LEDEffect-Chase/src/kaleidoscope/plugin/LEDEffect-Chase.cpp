@@ -25,7 +25,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-void LEDChaseEffect::TransientLEDMode::update(void) {
+void LEDChaseEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 

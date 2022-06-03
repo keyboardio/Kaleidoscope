@@ -33,8 +33,6 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
     EXTEND
   };
 
-  EEPROMKeymap(void) {}
-
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *command);
@@ -43,7 +41,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   static void max_layers(uint8_t max);
 
-  static uint16_t keymap_base(void);
+  static uint16_t keymap_base();
 
   static Key getKey(uint8_t layer, KeyAddr key_addr);
   static Key getKeyExtended(uint8_t layer, KeyAddr key_addr);
@@ -55,7 +53,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static uint8_t max_layers_;
   static uint8_t progmem_layers_;
 
-  static Key parseKey(void);
+  static Key parseKey();
   static void printKey(Key key);
   static void dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr));
 };

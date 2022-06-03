@@ -36,14 +36,6 @@ namespace kaleidoscope {
 namespace plugin {
 
 // =============================================================================
-// CharShift class variables
-CharShift::KeyPair const *CharShift::progmem_keypairs_{nullptr};
-uint8_t CharShift::num_keypairs_{0};
-
-bool CharShift::reverse_shift_state_{false};
-
-
-// =============================================================================
 // Event handlers
 
 // -----------------------------------------------------------------------------

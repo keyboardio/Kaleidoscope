@@ -82,7 +82,7 @@ Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
   return getKey(layer - progmem_layers_, key_addr);
 }
 
-uint16_t EEPROMKeymap::keymap_base(void) {
+uint16_t EEPROMKeymap::keymap_base() {
   return keymap_base_;
 }
 

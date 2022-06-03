@@ -59,7 +59,7 @@ EventHandlerResult StalkerEffect::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-void StalkerEffect::TransientLEDMode::update(void) {
+void StalkerEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
 
@@ -111,7 +111,7 @@ cRGB Haunt::compute(uint8_t *step) {
 }
 
 // BlazingTrail
-BlazingTrail::BlazingTrail(void) {
+BlazingTrail::BlazingTrail() {
 }
 constexpr uint8_t hue_start = 50.0 / 360 * 0xff;
 constexpr uint8_t hue_end   = 0;
@@ -144,7 +144,7 @@ cRGB BlazingTrail::compute(uint8_t *step) {
 }
 
 // Rainbow
-Rainbow::Rainbow(void) {
+Rainbow::Rainbow() {
 }
 
 cRGB Rainbow::compute(uint8_t *step) {

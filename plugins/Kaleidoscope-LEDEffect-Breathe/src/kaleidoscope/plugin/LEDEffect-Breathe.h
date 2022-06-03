@@ -27,8 +27,6 @@ namespace plugin {
 class LEDBreatheEffect : public Plugin,
                          public LEDModeInterface {
  public:
-  LEDBreatheEffect(void) {}
-
   uint8_t hue        = 170;
   uint8_t saturation = 255;
 
@@ -44,7 +42,7 @@ class LEDBreatheEffect : public Plugin,
       : parent_(parent) {}
 
    protected:
-    void update(void) final;
+    void update() final;
 
    private:
     const LEDBreatheEffect *parent_;

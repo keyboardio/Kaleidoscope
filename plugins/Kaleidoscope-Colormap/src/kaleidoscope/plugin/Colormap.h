@@ -32,8 +32,6 @@ class ColormapEffect : public Plugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
-  ColormapEffect(void) {}
-
   void max_layers(uint8_t max_);
 
   EventHandlerResult onLayerChange();
@@ -54,7 +52,7 @@ class ColormapEffect : public Plugin,
    protected:
     friend class ColormapEffect;
 
-    void onActivate(void) final;
+    void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:

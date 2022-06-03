@@ -42,9 +42,9 @@ that are part of a combination.
 ## Plugin properties
 
 The extension provides a `MagicCombo` singleton object, with the following
-property:
+method:
 
-### `.min_interval`
+### `.setMinInterval(min_interval)`
 
 > Restrict the magic action to fire at most once every `min_interval`
 > milliseconds.

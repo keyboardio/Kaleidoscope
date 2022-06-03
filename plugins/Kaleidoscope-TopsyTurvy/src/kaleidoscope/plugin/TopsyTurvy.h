@@ -36,8 +36,6 @@ constexpr Key TopsyTurvyKey(Key key) {
 
 class TopsyTurvy : public kaleidoscope::Plugin {
  public:
-  TopsyTurvy(void) {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeReportingState(const KeyEvent &event);
 
@@ -47,7 +45,7 @@ class TopsyTurvy : public kaleidoscope::Plugin {
   }
 
  private:
-  static KeyAddr tt_addr_;
+  KeyAddr tt_addr_ = KeyAddr::none();
 };
 
 }  // namespace plugin

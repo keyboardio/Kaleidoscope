@@ -24,7 +24,7 @@ the box, without any further configuration:
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings, TypingBreaks);
 
-void setup (void) {
+void setup () {
   Kaleidoscope.setup ();
 
   TypingBreaks.settings.idle_time_limit = 60;

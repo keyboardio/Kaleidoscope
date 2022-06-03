@@ -26,11 +26,9 @@ namespace kaleidoscope {
 namespace plugin {
 class Unicode : public kaleidoscope::Plugin {
  public:
-  Unicode(void) {}
-
-  static void start(void);
-  static void input(void);
-  static void end(void);
+  static void start();
+  static void input();
+  static void end();
 
   static void type(uint32_t unicode);
   static void typeCode(uint32_t unicode);
@@ -60,8 +58,8 @@ class Unicode : public kaleidoscope::Plugin {
 Key hexToKey(uint8_t hex);
 Key hexToKeysWithNumpad(uint8_t hex);
 
-void unicodeCustomStart(void);
-void unicodeCustomEnd(void);
-void unicodeCustomInput(void);
+void unicodeCustomStart();
+void unicodeCustomEnd();
+void unicodeCustomInput();
 
 extern kaleidoscope::plugin::Unicode Unicode;

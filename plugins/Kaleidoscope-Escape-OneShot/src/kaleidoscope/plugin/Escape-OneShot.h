@@ -22,7 +22,7 @@
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/key_defs.h"              // for Key, Key_Escape
 #include "kaleidoscope/plugin.h"                // for Plugin
 
 // DEPRECATED: `OneShotCancelKey` doesn't match our normal naming, and should
@@ -35,14 +35,12 @@ namespace plugin {
 
 class EscapeOneShot : public kaleidoscope::Plugin {
  public:
-  EscapeOneShot(void) {}
-
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
-  static void setCancelKey(Key cancel_key) {
+  void setCancelKey(Key cancel_key) {
     settings_.cancel_oneshot_key = cancel_key;
   }
-  static Key getCancelKey() {
+  Key getCancelKey() {
     return settings_.cancel_oneshot_key;
   }
 
@@ -52,7 +50,7 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   struct Settings {
     Key cancel_oneshot_key;
   };
-  static Settings settings_;
+  Settings settings_ = {.cancel_oneshot_key = Key_Escape};
 };
 
 class EscapeOneShotConfig : public Plugin {
@@ -62,7 +60,7 @@ class EscapeOneShotConfig : public Plugin {
   EventHandlerResult onNameQuery();
 
  private:
-  static uint16_t settings_base_;
+  uint16_t settings_base_;
 };
 
 }  // namespace plugin
