@@ -233,3 +233,40 @@ RUN 4 ms
 RELEASE PREFIX_B
 RUN 1 cycle
 EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+# ==============================================================================
+NAME Prefix layer rollover from letter
+
+RUN 4 ms
+PRESS K
+RUN 1 cycle
+EXPECT keyboard-report Key_K # press K
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after pressing PREFIX_B
+
+RUN 4 ms
+PRESS H
+RUN 1 cycle
+EXPECT keyboard-report Key_K Key_LCtrl # hold K and press Ctrl
+EXPECT keyboard-report Key_K Key_LCtrl Key_B # press B, hold K & Ctrl
+EXPECT keyboard-report Key_K Key_LCtrl # release B, hold K & Ctrl
+EXPECT keyboard-report Key_K # release Ctrl
+EXPECT keyboard-report Key_K Key_H # hold K, press H
+
+RUN 4 ms
+RELEASE K
+RUN 1 cycle
+EXPECT keyboard-report Key_H # release K
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report # no report after releasing PREFIX_B
+
+RUN 4 ms
+RELEASE H
+RUN 1 cycle
+EXPECT keyboard-report empty # release H
