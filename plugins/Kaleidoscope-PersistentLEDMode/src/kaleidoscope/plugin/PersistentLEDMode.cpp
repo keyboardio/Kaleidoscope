@@ -40,9 +40,7 @@ EventHandlerResult PersistentLEDMode::onSetup() {
   Runtime.storage().get(settings_base_, settings_);
 
   // If our slice is uninitialized, then return early, without touching the
-  // current mode. We want auto_save by default, but because EEPROM is
-  // uninitialized (0xff), that'll be set anyway, so we don't need to. This
-  // saves us a storage commit.
+  // current mode.
   if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(settings_)))
     return EventHandlerResult::OK;
 
@@ -52,9 +50,6 @@ EventHandlerResult PersistentLEDMode::onSetup() {
 }
 
 EventHandlerResult PersistentLEDMode::onLEDModeChange() {
-  if (!settings_.auto_save)
-    return EventHandlerResult::OK;
-
   if (settings_.default_mode_index == ::LEDControl.get_mode_index())
     return EventHandlerResult::OK;
 
@@ -63,61 +58,6 @@ EventHandlerResult PersistentLEDMode::onLEDModeChange() {
   Runtime.storage().commit();
 
   return EventHandlerResult::OK;
-}
-
-EventHandlerResult PersistentLEDMode::onFocusEvent(const char *command) {
-  enum {
-    AUTO_SAVE,
-    DEFAULT_MODE,
-  } sub_command;
-
-  if (::Focus.handleHelp(command, PSTR("led_mode.default\nled_mode.auto_save")))
-    return EventHandlerResult::OK;
-
-  if (strncmp_P(command, PSTR("led_mode."), 9) != 0)
-    return EventHandlerResult::OK;
-
-  if (strcmp_P(command + 9, PSTR("default")) == 0)
-    sub_command = DEFAULT_MODE;
-  else if (strcmp_P(command + 9, PSTR("auto_save")) == 0)
-    sub_command = AUTO_SAVE;
-  else
-    return EventHandlerResult::OK;
-
-  switch (sub_command) {
-  case DEFAULT_MODE: {
-    if (::Focus.isEOL()) {
-      ::Focus.send(settings_.default_mode_index);
-    } else {
-      uint8_t idx;
-      ::Focus.read(idx);
-      settings_.default_mode_index = idx;
-      ::LEDControl.set_mode(idx);
-      Runtime.storage().put(settings_base_, settings_);
-      Runtime.storage().commit();
-    }
-    break;
-  }
-
-  case AUTO_SAVE: {
-    if (::Focus.isEOL()) {
-      ::Focus.send(settings_.auto_save);
-    } else {
-      uint8_t v;
-      ::Focus.read(v);
-      setAutoSave(v != 0);
-    }
-    break;
-  }
-  }
-
-  return EventHandlerResult::EVENT_CONSUMED;
-}
-
-void PersistentLEDMode::setAutoSave(bool state) {
-  settings_.auto_save = state;
-  Runtime.storage().put(settings_base_, settings_);
-  Runtime.storage().commit();
 }
 
 EventHandlerResult PersistentLEDMode::onNameQuery() {
