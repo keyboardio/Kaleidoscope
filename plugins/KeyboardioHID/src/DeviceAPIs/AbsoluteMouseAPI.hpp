@@ -54,8 +54,6 @@ int16_t AbsoluteMouseAPI::qadd16(int16_t base, int16_t increment) {
 }
 
 void AbsoluteMouseAPI::begin() {
-  // release all buttons
-  end();
 }
 
 void AbsoluteMouseAPI::end() {

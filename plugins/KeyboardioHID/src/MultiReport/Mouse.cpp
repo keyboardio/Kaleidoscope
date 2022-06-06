@@ -74,7 +74,6 @@ Mouse_::Mouse_() {
 }
 
 void Mouse_::begin() {
-  end();
 }
 
 void Mouse_::end() {

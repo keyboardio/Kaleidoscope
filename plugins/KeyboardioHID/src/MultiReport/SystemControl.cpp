@@ -51,8 +51,6 @@ SystemControl_::SystemControl_() {
 }
 
 void SystemControl_::begin() {
-  // release all buttons
-  end();
 }
 
 void SystemControl_::end() {

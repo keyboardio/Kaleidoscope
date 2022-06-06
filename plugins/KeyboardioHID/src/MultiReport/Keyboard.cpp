@@ -82,10 +82,6 @@ Keyboard_::Keyboard_() {
 }
 
 void Keyboard_::begin() {
-  // Force API to send a clean report.  This is important for and HID bridge
-  // where the receiver stays on, while the sender is resetted.
-  releaseAll();
-  sendReportUnchecked();
 }
 
 

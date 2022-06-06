@@ -81,8 +81,6 @@ Gamepad_::Gamepad_() {
 }
 
 void Gamepad_::begin() {
-  // release all buttons
-  end();
 }
 
 void Gamepad_::end() {

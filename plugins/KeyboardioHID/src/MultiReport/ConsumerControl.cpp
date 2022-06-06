@@ -50,8 +50,6 @@ ConsumerControl_::ConsumerControl_() {
 }
 
 void ConsumerControl_::begin() {
-  // release all buttons
-  end();
 }
 
 void ConsumerControl_::end() {
