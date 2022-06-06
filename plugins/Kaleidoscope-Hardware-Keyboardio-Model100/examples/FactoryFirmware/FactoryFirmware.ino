@@ -32,9 +32,6 @@
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
 
-// Support for "Numpad" mode, which is mostly just the Numpad specific LED mode
-#include "Kaleidoscope-NumPad.h"
-
 // Support for the "Boot greeting" effect, which pulses the 'LED' button for 10s
 // when the keyboard is connected to a computer (or that computer is powered on)
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
@@ -67,7 +64,7 @@
 #include "Kaleidoscope-IdleLEDs.h"
 
 // Support for setting a default LED mode
-#include "Kaleidoscope-PersistentLEDMode.h"
+#include "Kaleidoscope-DefaultLEDModeConfig.h"
 
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-HardwareTestMode.h"
@@ -297,6 +294,64 @@ KEYMAPS(
    ___)
 ) // KEYMAPS(
 
+// Define an EGA palette. Conveniently, that's exactly 16 colors, just like the
+// limit of LEDPaletteTheme.
+//
+// We have black and white swapped compared to a normal palette, because of
+// technical reasons: colormap defaults to the last color of the palette.
+PALETTE(
+  CRGB(0xff, 0xff, 0xff),  // [0x0] white
+  CRGB(0x00, 0x00, 0xaa),  // [0x1] blue
+  CRGB(0x00, 0xaa, 0x00),  // [0x2] green
+  CRGB(0x00, 0xaa, 0xaa),  // [0x3] cyan
+  CRGB(0xaa, 0x00, 0x00),  // [0x4] red
+  CRGB(0xaa, 0x00, 0xaa),  // [0x5] magenta
+  CRGB(0xaa, 0x55, 0x00),  // [0x6] brown
+  CRGB(0xaa, 0xaa, 0xaa),  // [0x7] light gray
+  CRGB(0x55, 0x55, 0x55),  // [0x8] dark gray
+  CRGB(0x55, 0x55, 0xff),  // [0x9] bright blue
+  CRGB(0x55, 0xff, 0x55),  // [0xa] bright green
+  CRGB(0x55, 0xff, 0xff),  // [0xb] bright cyan
+  CRGB(0xff, 0x55, 0x55),  // [0xc] bright red
+  CRGB(0xff, 0x55, 0xff),  // [0xd] bright magenta
+  CRGB(0xff, 0xff, 0x55),  // [0xe] yellow
+  CRGB(0x00, 0x00, 0x00)   // [0xf] black
+)  // PALETTE
+
+COLORMAPS(
+  // Our Primary layer has all LEDs off
+  [PRIMARY] = COLORMAP_STACKED(
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf,
+    0xf,
+
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+         0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+    0xf, 0xf, 0xf, 0xf,
+    0xf),
+  // For the Numpad layer, we set the num lock key to blue, and the numpad keys
+  // to red.
+  [NUMPAD] = COLORMAP_STACKED(
+      0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+      0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+      0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+      0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
+      0xf, 0xf, 0xf, 0xf,
+      0xf,
+
+      0xf, 0xf, 0x4, 0x4, 0x4, 0x4, 0x1,
+      0xf, 0xf, 0x4, 0x4, 0x4, 0x4, 0xf,
+           0xf, 0x4, 0x4, 0x4, 0x4, 0xf,
+      0xf, 0xf, 0x4, 0x4, 0x4, 0x4, 0x4,
+      0xf, 0xf, 0xf, 0xf,
+      0xf)
+)
+
 /* Re-enable astyle's indent enforcement */
 // clang-format on
 
@@ -508,10 +563,9 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // The Colormap effect makes it possible to set up per-layer colormaps
   ColormapEffect,
-
-  // The numpad plugin is responsible for lighting up the 'numpad' mode
-  // with a custom LED effect
-  NumPad,
+  // The default colormap plugin allows us to set up a default palette &
+  // colormap.
+  DefaultColormap,
 
   // The macros plugin adds support for macros
   Macros,
@@ -550,7 +604,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   PersistentIdleLEDs,
 
   // Enables setting a default LED mode without compiling new firmware.
-  PersistentLEDMode,
+  DefaultLEDModeConfig,
 
   // Enables dynamic, Chrysalis-editable macros.
   DynamicMacros);
@@ -562,10 +616,6 @@ KALEIDOSCOPE_INIT_PLUGINS(
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
-
-  // While we hope to improve this in the future, the NumPad plugin
-  // needs to be explicitly told which keymap layer is your numpad layer
-  NumPad.numPadLayer = NUMPAD;
 
   // We configure the AlphaSquare effect to use RED letters
   AlphaSquare.color = CRGB(255, 0, 0);
@@ -598,6 +648,13 @@ void setup() {
   // For Dynamic Macros, we need to reserve storage space for the editable
   // macros. A kilobyte is a reasonable default.
   DynamicMacros.reserve_storage(1024);
+
+  // Install a default palette & colormap if none are present
+  DefaultColormap.setup();
+
+  // If our EEPROM is uninitialized, default to the ColormapEffect as our
+  // default LED mode.
+  DefaultLEDModeConfig.activateLEDModeIfUnconfigured(&ColormapEffect);
 }
 
 /** loop is the second of the standard Arduino sketch functions.
