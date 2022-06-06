@@ -31,18 +31,11 @@ class PersistentLEDMode : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
   EventHandlerResult onLEDModeChange();
-  EventHandlerResult onFocusEvent(const char *command);
-
-  void setAutoSave(bool state);
-  bool getAutoSave() {
-    return settings_.auto_save == 1;
-  }
 
  private:
   static uint16_t settings_base_;
   static struct settings {
-    uint8_t auto_save : 1;
-    uint8_t default_mode_index : 7;
+    uint8_t default_mode_index;
   } settings_;
 };
 
