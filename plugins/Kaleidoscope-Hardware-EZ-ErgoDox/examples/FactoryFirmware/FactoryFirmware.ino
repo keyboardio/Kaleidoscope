@@ -30,7 +30,7 @@
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Qukeys.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -105,7 +105,7 @@ KEYMAPS(
       XXX, XXX, XXX
   ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
@@ -114,8 +114,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   FocusEEPROMCommand,
   FocusSettingsCommand,
   Qukeys,
-  MouseKeys
-);
+  MouseKeys);
 
 void blinkAllStatusLEDs() {
   for (auto i = 0; i <= 3; i++) {

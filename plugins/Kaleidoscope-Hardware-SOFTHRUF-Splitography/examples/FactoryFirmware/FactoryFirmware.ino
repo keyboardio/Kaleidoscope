@@ -43,56 +43,56 @@ enum {
   QWERTY_2
 };
 
-#define QWERTY1 Key(QWERTY_1)
-#define QWERTY2 Key(QWERTY_2)
+#define QWERTY1   Key(QWERTY_1)
+#define QWERTY2   Key(QWERTY_2)
 
 #define MO(layer) ShiftToLayer(layer)
 #define TO(layer) LockLayer(layer)
 
-#define K_STP Consumer_Stop
-#define K_PRV Consumer_ScanPreviousTrack
-#define K_NXT Consumer_ScanNextTrack
-#define K_PLY Consumer_PlaySlashPause
+#define K_STP     Consumer_Stop
+#define K_PRV     Consumer_ScanPreviousTrack
+#define K_NXT     Consumer_ScanNextTrack
+#define K_PLY     Consumer_PlaySlashPause
 
 // Key aliases
-#define Key_PgUp Key_PageUp
+#define Key_PgUp   Key_PageUp
 #define Key_PageDn Key_PageDown
-#define Key_PgDn Key_PageDown
-#define Key_Del Key_Delete
-#define Key_Grave Key_Backtick
-#define K_APP   Key_PcApplication
-#define K_SCRLK Key_ScrollLock
-#define K_CPSLK Key_CapsLock
-#define K_PAUSE Key_Pause
-#define K_PRSCR Key_PrintScreen
-#define K_MUTE Consumer_Mute
-#define K_VUp  Consumer_VolumeIncrement
-#define K_VDn  Consumer_VolumeDecrement
-#define K_PST  LCTRL(Key_V)
-#define K_CPY  LCTRL(Key_LeftControl)
-#define K_CUT  LCTRL(Key_X)
-#define K_UDO  LCTRL(Key_Z)
+#define Key_PgDn   Key_PageDown
+#define Key_Del    Key_Delete
+#define Key_Grave  Key_Backtick
+#define K_APP      Key_PcApplication
+#define K_SCRLK    Key_ScrollLock
+#define K_CPSLK    Key_CapsLock
+#define K_PAUSE    Key_Pause
+#define K_PRSCR    Key_PrintScreen
+#define K_MUTE     Consumer_Mute
+#define K_VUp      Consumer_VolumeIncrement
+#define K_VDn      Consumer_VolumeDecrement
+#define K_PST      LCTRL(Key_V)
+#define K_CPY      LCTRL(Key_LeftControl)
+#define K_CUT      LCTRL(Key_X)
+#define K_UDO      LCTRL(Key_Z)
 
-#define KP_0 Key_Keypad0
-#define KP_1 Key_Keypad1
-#define KP_2 Key_Keypad2
-#define KP_3 Key_Keypad3
-#define KP_4 Key_Keypad4
-#define KP_5 Key_Keypad5
-#define KP_6 Key_Keypad6
-#define KP_7 Key_Keypad7
-#define KP_8 Key_Keypad8
-#define KP_9 Key_Keypad9
+#define KP_0       Key_Keypad0
+#define KP_1       Key_Keypad1
+#define KP_2       Key_Keypad2
+#define KP_3       Key_Keypad3
+#define KP_4       Key_Keypad4
+#define KP_5       Key_Keypad5
+#define KP_6       Key_Keypad6
+#define KP_7       Key_Keypad7
+#define KP_8       Key_Keypad8
+#define KP_9       Key_Keypad9
 
-#define Key_Up Key_UpArrow
-#define Key_Dn Key_DownArrow
-#define Key_Left Key_LeftArrow
-#define Key_Rgt Key_RightArrow
-#define KP_SLS Key_KeypadDivide
-#define KP_STR Key_KeypadMultiply
-#define Key_Plus Key_KeypadAdd
+#define Key_Up     Key_UpArrow
+#define Key_Dn     Key_DownArrow
+#define Key_Left   Key_LeftArrow
+#define Key_Rgt    Key_RightArrow
+#define KP_SLS     Key_KeypadDivide
+#define KP_STR     Key_KeypadMultiply
+#define Key_Plus   Key_KeypadAdd
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
 /* QWERTY
  * ,-------------------------.      ,--------------------------.
@@ -203,7 +203,7 @@ KEYMAPS(
                                    ,Key_C ,Key_V    ,Key_N ,Key_M
   )
 );
-/* *INDENT-ON* */
+// clang-format on
 
 namespace kaleidoscope {
 namespace plugin {
@@ -233,20 +233,19 @@ class MultiSwitcher : public kaleidoscope::Plugin {
  private:
   uint8_t switch_state_ = 0;
 };
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::MultiSwitcher MultiSwitcher;
 
 KALEIDOSCOPE_INIT_PLUGINS(
-    GeminiPR,
-    MultiSwitcher,
-    Focus,
-    EEPROMSettings,
-    EEPROMKeymap,
-    FocusEEPROMCommand,
-    FocusSettingsCommand
-);
+  GeminiPR,
+  MultiSwitcher,
+  Focus,
+  EEPROMSettings,
+  EEPROMKeymap,
+  FocusEEPROMCommand,
+  FocusSettingsCommand);
 
 void setup() {
   Kaleidoscope.setup();

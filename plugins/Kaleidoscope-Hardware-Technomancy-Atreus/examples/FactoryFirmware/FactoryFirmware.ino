@@ -32,12 +32,12 @@ enum {
 };
 
 #define Key_Exclamation LSHIFT(Key_1)
-#define Key_At LSHIFT(Key_2)
-#define Key_Hash LSHIFT(Key_3)
-#define Key_Dollar LSHIFT(Key_4)
-#define Key_And LSHIFT(Key_7)
-#define Key_Star LSHIFT(Key_8)
-#define Key_Plus LSHIFT(Key_Equals)
+#define Key_At          LSHIFT(Key_2)
+#define Key_Hash        LSHIFT(Key_3)
+#define Key_Dollar      LSHIFT(Key_4)
+#define Key_And         LSHIFT(Key_7)
+#define Key_Star        LSHIFT(Key_8)
+#define Key_Plus        LSHIFT(Key_Equals)
 
 enum {
   _QW,
@@ -45,7 +45,7 @@ enum {
   _LW
 };
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [_QW] = KEYMAP_STACKED
   (
@@ -86,7 +86,7 @@ KEYMAPS(
       ,___      ,___           ,M(QW)  ,Key_PrintScreen ,Key_ScrollLock ,Consumer_PlaySlashPause
    )
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
@@ -94,8 +94,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Focus,
   FocusEEPROMCommand,
   FocusSettingsCommand,
-  Macros
-);
+  Macros);
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   switch (macro_id) {
