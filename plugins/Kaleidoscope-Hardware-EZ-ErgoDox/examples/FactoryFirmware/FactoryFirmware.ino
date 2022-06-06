@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * ErgoDox -- Chrysalis-enabled Sketch for ErgoDox-compatible boards (minimal)
- * Copyright (C) 2019, 2020  Keyboard.io, Inc
+ * ErgoDox -- Chrysalis-enabled Sketch for ErgoDox-compatible boards
+ * Copyright (C) 2019-2022  Keyboard.io, Inc
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@
 #include "Kaleidoscope-FocusSerial.h"
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Qukeys.h"
+#include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
+#include "Kaleidoscope-DynamicMacros.h"
 
 // clang-format off
 KEYMAPS(
@@ -114,6 +117,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   FocusEEPROMCommand,
   FocusSettingsCommand,
   Qukeys,
+  OneShot,
+  EscapeOneShot,
+  EscapeOneShotConfig,
+  DynamicMacros,
   MouseKeys);
 
 void blinkAllStatusLEDs() {
@@ -136,6 +143,7 @@ void setup() {
   Kaleidoscope.setup();
 
   EEPROMKeymap.setup(5);
+  DynamicMacros.reserve_storage(256);
 
   blinkAllStatusLEDs();
 }

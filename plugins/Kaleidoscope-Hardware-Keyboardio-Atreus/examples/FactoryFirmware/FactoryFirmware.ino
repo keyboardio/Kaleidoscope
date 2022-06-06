@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Atreus -- Chrysalis-enabled Sketch for the Keyboardio Atreus
- * Copyright (C) 2018, 2019  Keyboard.io, Inc
+ * Copyright (C) 2018-2022  Keyboard.io, Inc
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
+#include "Kaleidoscope-DynamicMacros.h"
 #include "Kaleidoscope-Qukeys.h"
 #include "Kaleidoscope-SpaceCadet.h"
 
@@ -108,7 +110,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Qukeys,
   SpaceCadet,
   OneShot,
+  EscapeOneShot,
+  EscapeOneShotConfig,
   Macros,
+  DynamicMacros,
   MouseKeys);
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
@@ -134,8 +139,10 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 
 void setup() {
   Kaleidoscope.setup();
+
   SpaceCadet.disable();
-  EEPROMKeymap.setup(10);
+  EEPROMKeymap.setup(7);
+  DynamicMacros.reserve_storage(256);
 }
 
 void loop() {

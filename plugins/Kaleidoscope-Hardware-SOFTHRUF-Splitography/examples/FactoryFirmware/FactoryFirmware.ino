@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
- * Splitography-Sketch -- A complete, functional sketch for Splitography
- * Copyright (C) 2018-2020  Gergely Nagy
+ * Splitography-Sketch -- Chrysalis-enabled sketch for the Splitography
+ * Copyright (C) 2018-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,17 @@
  *  https://github.com/sdothum/qmk_firmware/blob/d865c82efa19beb7cb593e7d3affb2311017833e/keyboards/splitography/keymaps/default/keymap.c
  */
 
-
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-EEPROM-Settings.h"
 #include "Kaleidoscope-EEPROM-Keymap.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "Kaleidoscope-Ranges.h"
 #include "Kaleidoscope-Steno.h"
+#include "Kaleidoscope-MouseKeys.h"
+#include "Kaleidoscope-Qukeys.h"
+#include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
+#include "Kaleidoscope-DynamicMacros.h"
 
 // Layers
 enum {
@@ -238,6 +242,12 @@ class MultiSwitcher : public kaleidoscope::Plugin {
 
 kaleidoscope::plugin::MultiSwitcher MultiSwitcher;
 
+#include "Kaleidoscope-MouseKeys.h"
+#include "Kaleidoscope-Qukeys.h"
+#include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
+#include "Kaleidoscope-DynamicMacros.h"
+
 KALEIDOSCOPE_INIT_PLUGINS(
   GeminiPR,
   MultiSwitcher,
@@ -245,11 +255,19 @@ KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
   EEPROMKeymap,
   FocusEEPROMCommand,
-  FocusSettingsCommand);
+  FocusSettingsCommand,
+  MouseKeys,
+  Qukeys,
+  OneShot,
+  EscapeOneShot,
+  EscapeOneShotConfig,
+  DynamicMacros);
 
 void setup() {
   Kaleidoscope.setup();
-  EEPROMKeymap.setup(6);
+
+  EEPROMKeymap.setup(8);
+  DynamicMacros.reserve_storage(256);
 }
 
 void loop() {
