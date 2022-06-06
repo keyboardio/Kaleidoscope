@@ -50,11 +50,7 @@ class Base {
   void update(int idx, uint8_t val) {}
 
   bool isSliceUninitialized(uint16_t offset, uint16_t size) {
-    for (uint16_t o = offset; o < offset + size; o++) {
-      if (read(o) != _StorageProps::uninitialized_byte)
-        return false;
-    }
-    return true;
+    return false;
   }
 
   const uint16_t length() {

@@ -56,6 +56,14 @@ class AVREEPROM : public kaleidoscope::driver::storage::Base<_StorageProps> {
   void update(int idx, uint8_t val) {
     EEPROM.update(idx, val);
   }
+
+  bool isSliceUninitialized(uint16_t offset, uint16_t size) {
+    for (uint16_t o = offset; o < offset + size; o++) {
+      if (this->read(o) != _StorageProps::uninitialized_byte)
+        return false;
+    }
+    return true;
+  }
 };
 
 }  // namespace storage
