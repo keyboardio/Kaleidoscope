@@ -1,5 +1,5 @@
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
- * Copyright (C) 2017-2021  Keyboard.io, Inc.
+ * Copyright (C) 2017-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,12 +21,10 @@
 #include <Kaleidoscope-Ranges.h>       // for MACRO_FIRST
 #include <stdint.h>                    // for uint8_t
 
-#include "kaleidoscope/KeyAddr.h"                   // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
-#include "kaleidoscope/Runtime.h"                   // for Runtime, Runtime_
 #include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult, EventHandlerResul...
 #include "kaleidoscope/key_defs.h"                  // for Key, LSHIFT, Key_NoKey, Key_0, Key_1
-#include "kaleidoscope/keyswitch_state.h"           // for INJECTED, IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/keyswitch_state.h"           // for keyToggledOff
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE, MACRO_ACTION_END
 
 // =============================================================================
@@ -42,55 +40,8 @@ macroAction(uint8_t macro_id, KeyEvent &event) {
 namespace kaleidoscope {
 namespace plugin {
 
-constexpr uint8_t press_state   = IS_PRESSED | INJECTED;
-constexpr uint8_t release_state = WAS_PRESSED | INJECTED;
-
-// Initialized to zeroes (i.e. `Key_NoKey`)
-Key Macros::active_macro_keys_[];
-
 // -----------------------------------------------------------------------------
 // Public helper functions
-
-void Macros::press(Key key) {
-  Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), press_state, key});
-  // This key may remain active for several subsequent events, so we need to
-  // store it in the active macro keys array.
-  for (Key &macro_key : active_macro_keys_) {
-    if (macro_key == Key_NoKey) {
-      macro_key = key;
-      break;
-    }
-  }
-}
-
-void Macros::release(Key key) {
-  // Before sending the release event, we need to remove the key from the active
-  // macro keys array, or it will get inserted into the report anyway.
-  for (Key &macro_key : active_macro_keys_) {
-    if (macro_key == key) {
-      macro_key = Key_NoKey;
-    }
-  }
-  Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), release_state, key});
-}
-
-void Macros::clear() {
-  // Clear the active macro keys array.
-  for (Key &macro_key : active_macro_keys_) {
-    if (macro_key == Key_NoKey)
-      continue;
-    Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), release_state, macro_key});
-    macro_key = Key_NoKey;
-  }
-}
-
-void Macros::tap(Key key) const {
-  // No need to call `press()` & `release()`, because we're immediately
-  // releasing the key after pressing it. It is possible for some other plugin
-  // to insert an event in between, but very unlikely.
-  Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), press_state, key});
-  Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), release_state, key});
-}
 
 void Macros::play(const macro_t *macro_p) {
   macro_t macro    = MACRO_ACTION_END;
@@ -307,39 +258,24 @@ EventHandlerResult Macros::onKeyEvent(KeyEvent &event) {
   play(macro_ptr);
 
   if (keyToggledOff(event.state) || !isMacrosKey(event.key)) {
-    // If we toggled off or if the value of `event.key` has changed, send
-    // release events for any active macro keys. Simply clearing
-    // `active_macro_keys_` might be sufficient, but it's probably better to
-    // send the toggle off events so that other plugins get a chance to act on
-    // them.
+    // If a Macros key toggled off or if the value of `event.key` has been
+    // changed by the user-defined `macroAction()` function, we clear the array
+    // of active macro keys so that they won't get "stuck on".  There won't be a
+    // subsequent event that Macros will recognize as actionable, so we need to
+    // do it here.
     clear();
-
-    // Return `OK` to let Kaleidoscope finish processing this event as
-    // normal. This is so that, if the user-defined `macroAction(id, &event)`
-    // function changes the value of `event.key`, it will take effect properly.
-    return EventHandlerResult::OK;
   }
 
-  // No other plugin should be handling Macros keys, and there's nothing more
-  // for Kaleidoscope to do with a key press of a Macros key, so we return
-  // `EVENT_CONSUMED`, causing Kaleidoscope to update `live_keys[]` correctly,
-  // ensuring that the above block will clear `active_macro_keys_` on release,
-  // but not allowing any other plugins to change the `event.key` value, which
-  // would interfere.
-  //return EventHandlerResult::EVENT_CONSUMED;
-  return EventHandlerResult::OK;
-}
-
-EventHandlerResult Macros::beforeReportingState(const KeyEvent &event) {
-  // Do this in beforeReportingState(), instead of `onAddToReport()` because
-  // `live_keys` won't get updated until after the macro sequence is played from
-  // the keypress. This could be changed by either updating `live_keys` manually
-  // ahead of time, or by executing the macro sequence on key release instead of
-  // key press. This is probably the simplest solution.
-  for (Key key : active_macro_keys_) {
-    if (key != Key_NoKey)
-      Runtime.addToReport(key);
-  }
+  // Return `OK` to let Kaleidoscope finish processing this event as normal.
+  // This is so that, if the user-defined `macroAction(id, &event)` function
+  // changes the value of `event.key`, it will take effect properly.  Note that
+  // we're counting on other plugins to not subsequently change the value of
+  // `event.key` if a Macros key has toggled on, because that would leave any
+  // keys in the supplemental array "stuck on".  We could return
+  // `EVENT_CONSUMED` if `event.key` is still a Macros key, but that would lead
+  // to other undesirable plugin interactions (e.g. OneShot keys wouldn't be
+  // triggered to turn off when a Macros key toggles on, assuming that Macros
+  // comes first in `KALEIDOSCOPE_INIT_PLUGINS()`).
   return EventHandlerResult::OK;
 }
 

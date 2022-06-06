@@ -1,5 +1,5 @@
 /* Kaleidoscope-Macros - Macro keys for Kaleidoscope.
- * Copyright (C) 2017-2021  Keyboard.io, Inc.
+ * Copyright (C) 2017-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,9 +16,10 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t
+#include <Kaleidoscope-MacroSupport.h>  // for MacroSupport
+#include <Kaleidoscope-Ranges.h>        // for MACRO_FIRST, MACRO_LAST
+#include <stdint.h>                     // for uint8_t
 
-#include "Kaleidoscope-Ranges.h"                    // for MACRO_FIRST, MACRO_LAST
 #include "kaleidoscope/KeyEvent.h"                  // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"      // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"                  // for Key
@@ -28,14 +29,6 @@
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event);
-
-// The number of simultaneously-active `Key` values that a macro can have
-// running during a call to `Macros.play()`. I don't know if it's actually
-// possible to override this by defining it in a sketch before including
-// "Kaleidoscope-Macros.h", but probably not.
-#if !defined(MAX_CONCURRENT_MACRO_KEYS)
-#define MAX_CONCURRENT_MACRO_KEYS 8
-#endif
 
 namespace kaleidoscope {
 namespace plugin {
@@ -48,26 +41,34 @@ class Macros : public kaleidoscope::Plugin {
   /// specified `key`, then stores that `key` in an array of active macro key
   /// values. This allows the macro to press one key and keep it active when a
   /// subsequent key event is sent as part of the same macro sequence.
-  void press(Key key);
+  inline void press(Key key) {
+    ::MacroSupport.press(key);
+  }
 
   /// Send a key release event from a Macro
   ///
   /// Generates a new `KeyEvent` and calls `Runtime.handleKeyEvent()` with the
   /// specified `key`, then removes that key from the array of active macro
   /// keys (see `Macros.press()`).
-  void release(Key key);
+  inline void release(Key key) {
+    ::MacroSupport.release(key);
+  }
 
   /// Clear all virtual keys held by Macros
   ///
   /// This function clears the active macro keys array, sending a release event
   /// for each key stored there.
-  void clear();
+  inline void clear() {
+    ::MacroSupport.clear();
+  }
 
   /// Send a key "tap event" from a Macro
   ///
   /// Generates two new `KeyEvent` objects, one each to press and release the
   /// specified `key`, passing both in sequence to `Runtime.handleKeyEvent()`.
-  void tap(Key key) const;
+  inline void tap(Key key) const {
+    ::MacroSupport.tap(key);
+  }
 
   /// Play a macro sequence of key events
   void play(const macro_t *macro_ptr);
@@ -89,12 +90,11 @@ class Macros : public kaleidoscope::Plugin {
   // Event handlers
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult beforeReportingState(const KeyEvent &event);
+  EventHandlerResult beforeReportingState(const KeyEvent &event) {
+    return ::MacroSupport.beforeReportingState(event);
+  }
 
  private:
-  // An array of key values that are active while a macro sequence is playing
-  static Key active_macro_keys_[MAX_CONCURRENT_MACRO_KEYS];
-
   // Translate and ASCII character value to a corresponding `Key`
   Key lookupAsciiCode(uint8_t ascii_code) const;
 

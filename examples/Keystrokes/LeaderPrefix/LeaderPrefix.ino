@@ -17,7 +17,7 @@
 
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-Leader.h>
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoscope-MacroSupport.h>
 
 #include <Kaleidoscope-Ranges.h>
 #include "kaleidoscope/KeyEventTracker.h"
@@ -176,7 +176,7 @@ void leaderTestPrefix(uint8_t seq_index) {
   uint8_t prefix_arg = LeaderPrefix.arg();
   // Use a Macros helper function to tap the `X` key repeatedly.
   while (prefix_arg-- > 0)
-    Macros.tap(Key_X);
+    MacroSupport.tap(Key_X);
 }
 
 static const kaleidoscope::plugin::Leader::dictionary_t leader_dictionary[] PROGMEM =

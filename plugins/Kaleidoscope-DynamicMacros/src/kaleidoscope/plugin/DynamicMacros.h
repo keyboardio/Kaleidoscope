@@ -16,17 +16,16 @@
 
 #pragma once
 
-#include <Kaleidoscope-Ranges.h>  // for DYNAMIC_MACRO_FIRST
-#include <stdint.h>               // for uint16_t, uint8_t
+#include <Kaleidoscope-MacroSupport.h>  // for MacroSupport
+#include <Kaleidoscope-Ranges.h>        // for DYNAMIC_MACRO_FIRST
+#include <stdint.h>                     // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#define DM(n)                             ::kaleidoscope::plugin::DynamicMacrosKey(n)
-
-#define MAX_CONCURRENT_DYNAMIC_MACRO_KEYS 8
+#define DM(n) ::kaleidoscope::plugin::DynamicMacrosKey(n)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -39,8 +38,10 @@ class DynamicMacros : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult beforeReportingState(const KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult beforeReportingState(const KeyEvent &event) {
+    return ::MacroSupport.beforeReportingState(event);
+  }
 
   void reserve_storage(uint16_t size);
 
@@ -52,10 +53,11 @@ class DynamicMacros : public kaleidoscope::Plugin {
   uint16_t map_[32];
   uint8_t macro_count_;
   uint8_t updateDynamicMacroCache();
-  Key active_macro_keys_[MAX_CONCURRENT_DYNAMIC_MACRO_KEYS];
-  void press(Key key);
-  void release(Key key);
-  void tap(Key key);
+
+  inline void press(Key key) { ::MacroSupport.press(key); }
+  inline void release(Key key) { ::MacroSupport.release(key); }
+  inline void tap(Key key) const { ::MacroSupport.tap(key); }
+  inline void clear() { ::MacroSupport.clear(); }
 };
 
 }  // namespace plugin

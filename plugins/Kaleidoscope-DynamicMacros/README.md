@@ -19,9 +19,9 @@ except the amount of storage available on the keyboard.
 
 ## Using the plugin
 
-To use the plugin, we need to include the header, tell the firmware to `use` the
-plugin, and reserve storage space for the macros. This is best illustrated with
-an example:
+To use the plugin, we need to include the header, initialize the plugin with
+`KALEIDOSCOPE_INIT_PLUGINS()`, and reserve storage space for the macros. This is
+best illustrated with an example:
 
 ```c++
 #include <Kaleidoscope.h>
@@ -96,5 +96,6 @@ The plugin provides two Focus commands: `macros.map` and `macros.trigger`.
 
 ## Dependencies
 
+* [Kaleidoscope-MacroSupport](Kaleidoscope-MacroSupport.md)
 * [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
 * [Kaleidoscope-FocusSerial](Kaleidoscope-FocusSerial.md)

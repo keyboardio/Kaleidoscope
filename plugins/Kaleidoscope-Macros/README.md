@@ -14,10 +14,10 @@ In Kaleidoscope, macros are implemented via this plugin. You can define upto 256
 
 ## Using the plugin
 
-To use the plugin, we need to include the header, tell the firmware to `use` the
-plugin, place macros on the keymap, and create a special handler function
-(`macroAction`) that will tell the plugin what shall happen when macro keys are
-pressed. It is best illustrated with an example:
+To use the plugin, we need to include the header, initialize the plugins with
+`KALEIDOSCOPE_INIT_PLUGINS()`, place macros on the keymap, and create a special
+handler function (`macroAction()`) that will determine what happens when macro
+keys are pressed. It is best illustrated with an example:
 
 ```c++
 #include <Kaleidoscope.h>
@@ -210,3 +210,7 @@ Due to technical and practical reasons, `Macros.type()` assumes a QWERTY layout
 on the host side, and so do all other parts that work with keycodes. If your
 operating system is set to a different layout, the strings and keycodes will
 need to be adjusted accordingly.
+
+## Dependencies
+
+* [Kaleidoscope-MacroSupport](Kaleidoscope-MacroSupport.md)

@@ -20,11 +20,10 @@
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <Kaleidoscope-Ranges.h>       // for DYNAMIC_MACRO_FIRST, DYNAMIC_MACRO_LAST
 
-#include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"           // for VirtualProps::Storage, Base<>::Storage
-#include "kaleidoscope/keyswitch_state.h"         // for INJECTED, IS_PRESSED, WAS_PRESSED
+#include "kaleidoscope/keyswitch_state.h"         // for keyToggledOn
 #include "kaleidoscope/plugin/EEPROM-Settings.h"  // for EEPROMSettings
 // This is a special exception to the rule of only including a plugin's
 // top-level header file, because DynamicMacros doesn't depend on the Macros
@@ -35,31 +34,6 @@ namespace kaleidoscope {
 namespace plugin {
 
 // =============================================================================
-// It might be possible to use Macros instead of reproducing it
-void DynamicMacros::press(Key key) {
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
-  for (Key &mkey : active_macro_keys_) {
-    if (mkey == Key_NoKey) {
-      mkey = key;
-      break;
-    }
-  }
-}
-
-void DynamicMacros::release(Key key) {
-  for (Key &mkey : active_macro_keys_) {
-    if (mkey == key) {
-      mkey = Key_NoKey;
-    }
-  }
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
-}
-
-void DynamicMacros::tap(Key key) {
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), IS_PRESSED | INJECTED, key));
-  Runtime.handleKeyEvent(KeyEvent(KeyAddr::none(), WAS_PRESSED | INJECTED, key));
-}
-
 uint8_t DynamicMacros::updateDynamicMacroCache() {
   uint16_t pos       = storage_base_;
   uint8_t current_id = 0;
@@ -222,6 +196,7 @@ bool isDynamicMacrosKey(Key key) {
 
 // -----------------------------------------------------------------------------
 EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
+  // Ignore everything except DynamicMacros keys
   if (!isDynamicMacrosKey(event.key))
     return EventHandlerResult::OK;
 
@@ -229,23 +204,10 @@ EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
     uint8_t macro_id = event.key.getRaw() - ranges::DYNAMIC_MACRO_FIRST;
     play(macro_id);
   } else {
-    for (Key key : active_macro_keys_) {
-      release(key);
-    }
+    clear();
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
-}
-
-EventHandlerResult DynamicMacros::beforeReportingState(const KeyEvent &event) {
-  // Here we add keycodes to the HID report for keys held in a macro sequence.
-  // This is necessary because Kaleidoscope doesn't know about the supplemental
-  // `active_macro_keys_[]` array.
-  for (Key key : active_macro_keys_) {
-    if (key != Key_NoKey)
-      Runtime.addToReport(key);
-  }
-  return EventHandlerResult::OK;
 }
 
 EventHandlerResult DynamicMacros::onNameQuery() {
