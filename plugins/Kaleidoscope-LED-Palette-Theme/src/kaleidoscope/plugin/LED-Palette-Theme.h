@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-LED-Palette-Theme -- Palette-based LED theme foundation
- * Copyright (C) 2017, 2018  Keyboard.io, Inc
+ * Copyright (C) 2017-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,6 +37,7 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   static const cRGB lookupColorAtPosition(uint16_t theme_base, uint16_t position);
   static void updateColorIndexAtPosition(uint16_t theme_base, uint16_t position, uint8_t color_index);
 
+  static void updatePaletteColor(uint8_t palette_index, cRGB color);
   static const cRGB lookupPaletteColor(uint8_t palette_index);
 
   EventHandlerResult onFocusEvent(const char *command);
@@ -44,6 +45,7 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
                                      const char *expected_command,
                                      uint16_t theme_base,
                                      uint8_t max_themes);
+  static bool isThemeUninitialized(uint16_t theme_base, uint8_t max_themes);
 
  private:
   static uint16_t palette_base_;
