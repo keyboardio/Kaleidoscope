@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, uint16_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
-#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"  // for MOUSE_WARP_GRID_2X2
 
 // Mouse acceleration
 
@@ -63,9 +63,9 @@ class MouseWrapper {
   void warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };
 
-} // namespace mousekeys
+}  // namespace mousekeys
 
 extern mousekeys::MouseWrapper MouseWrapper;
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope

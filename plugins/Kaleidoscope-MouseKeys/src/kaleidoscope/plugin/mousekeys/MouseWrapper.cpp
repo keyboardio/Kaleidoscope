@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
 
-#include <stdint.h>  // for uint16_t, uint8_t, int8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"                              // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"                        // for Base<>::HID, VirtualProps:...
@@ -95,9 +95,9 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
   warpJump(section_left, section_top, next_height, next_width);
 }
 
-} // namespace mousekeys
+}  // namespace mousekeys
 
 mousekeys::MouseWrapper MouseWrapper;
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope

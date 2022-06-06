@@ -22,43 +22,42 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
-
 // =============================================================================
 // Deprecated MousKeys code
 #include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_SET_SPEED_LIMIT                             \
-  "The `MouseKeys.setSpeedLimit()` function is deprecated.  It no longer has\n"   \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_SET_SPEED_LIMIT                           \
+  "The `MouseKeys.setSpeedLimit()` function is deprecated.  It no longer has\n" \
   "any function, and can be safely removed."
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_SPEED                                       \
-  "Direct access to the `MouseKeys.speed` variable has been deprecated.\n"        \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_SPEED                                  \
+  "Direct access to the `MouseKeys.speed` variable has been deprecated.\n"   \
+  "Please refer to the MouseKeys documentation for instructions on how to\n" \
   "configure the plugin.\n"
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_SPEED_DELAY                                 \
-  "Direct access to the `MouseKeys.speedDelay` variable has been deprecated.\n"   \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_SPEED_DELAY                               \
+  "Direct access to the `MouseKeys.speedDelay` variable has been deprecated.\n" \
+  "Please refer to the MouseKeys documentation for instructions on how to\n"    \
   "configure the plugin.\n"
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_ACCEL_SPEED                                 \
-  "Direct access to the `MouseKeys.accelSpeed` variable has been deprecated.\n"   \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_ACCEL_SPEED                               \
+  "Direct access to the `MouseKeys.accelSpeed` variable has been deprecated.\n" \
+  "Please refer to the MouseKeys documentation for instructions on how to\n"    \
   "configure the plugin.\n"
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_ACCEL_DELAY                                 \
-  "Direct access to the `MouseKeys.accelDelay` variable has been deprecated.\n"   \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_ACCEL_DELAY                               \
+  "Direct access to the `MouseKeys.accelDelay` variable has been deprecated.\n" \
+  "Please refer to the MouseKeys documentation for instructions on how to\n"    \
   "configure the plugin.\n"
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_WHEEL_SPEED                                 \
-  "Direct access to the `MouseKeys.wheelSpeed` variable has been deprecated.\n"   \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_WHEEL_SPEED                               \
+  "Direct access to the `MouseKeys.wheelSpeed` variable has been deprecated.\n" \
+  "Please refer to the MouseKeys documentation for instructions on how to\n"    \
   "configure the plugin.\n"
 
-#define _DEPRECATED_MESSAGE_MOUSEKEYS_WHEEL_DELAY                                 \
-  "Direct access to the `MouseKeys.wheelDelay` variable has been deprecated.\n"   \
-  "Please refer to the MouseKeys documentation for instructions on how to\n"      \
+#define _DEPRECATED_MESSAGE_MOUSEKEYS_WHEEL_DELAY                               \
+  "Direct access to the `MouseKeys.wheelDelay` variable has been deprecated.\n" \
+  "Please refer to the MouseKeys documentation for instructions on how to\n"    \
   "configure the plugin.\n"
 
 
@@ -66,7 +65,6 @@ namespace kaleidoscope {
 namespace plugin {
 class MouseKeys : public kaleidoscope::Plugin {
  public:
-
 #ifndef NDEPRECATED
   DEPRECATED(MOUSEKEYS_SPEED)
   static uint8_t speed;
@@ -201,8 +199,8 @@ class MouseKeysConfig : public Plugin {
   uint16_t settings_addr_;
 };
 
-} // namespace plugin
-} // namespace kaleidoscope
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::MouseKeys MouseKeys;
 extern kaleidoscope::plugin::MouseKeysConfig MouseKeysConfig;

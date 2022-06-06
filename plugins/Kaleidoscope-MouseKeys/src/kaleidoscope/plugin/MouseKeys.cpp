@@ -29,7 +29,7 @@
 #include "kaleidoscope/key_defs.h"                             // for Key, SYNTHETIC
 #include "kaleidoscope/keyswitch_state.h"                      // for keyToggledOn
 #include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"        // for KEY_MOUSE_BUTTON, KEY_MOUS...
-#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseWrapper, wrapper, WAR...
+#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseWrapper, WARP_DOWN
 
 namespace kaleidoscope {
 namespace plugin {
@@ -37,7 +37,7 @@ namespace plugin {
 #ifndef NDEPRECATED
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-uint8_t MouseKeys::speed = 1;
+uint8_t MouseKeys::speed       = 1;
 uint16_t MouseKeys::speedDelay = 1;
 
 uint8_t MouseKeys::accelSpeed  = 1;
@@ -226,6 +226,7 @@ void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
 void MouseKeys::sendMouseMoveReport() const {
   int8_t dx = 0;
   int8_t dy = 0;
+
   uint8_t direction = directions_ & cursor_mask_;
 
   if (direction != 0) {
@@ -252,7 +253,7 @@ void MouseKeys::sendMouseMoveReport() const {
 // Get the current point on the acceleration curve's x axis, translating time
 // elapsed since mouse movement started to a value between 0 and 255.
 uint8_t MouseKeys::accelStep() const {
-  uint16_t elapsed_time = Runtime.millisAtCycleStart() - cursor_start_time_;
+  uint16_t elapsed_time   = Runtime.millisAtCycleStart() - cursor_start_time_;
   uint16_t accel_duration = settings_.cursor_accel_duration;
   if (elapsed_time > accel_duration)
     return 255;
@@ -271,6 +272,7 @@ uint8_t accelFactor(uint8_t accel_step) {
     return 1 + (y >> 7);
   } else {
     uint16_t remaining_steps = 256 - accel_step;
+
     uint16_t y = remaining_steps * remaining_steps;
     return 255 - (y >> 7);
   }
@@ -303,9 +305,9 @@ uint8_t MouseKeys::cursorDelta() const {
   // difference between the starting speed and the full speed, then add the
   // starting speed (multiplied by the full value of the scaling factor) to get
   // the current speed.
-  uint8_t max_speed = settings_.cursor_base_speed;
-  uint8_t min_speed = settings_.cursor_init_speed;
-  uint8_t speed_range = max_speed - min_speed;
+  uint8_t max_speed       = settings_.cursor_base_speed;
+  uint8_t min_speed       = settings_.cursor_init_speed;
+  uint8_t speed_range     = max_speed - min_speed;
   uint16_t subpixel_speed = (speed_range * accel_factor);
   subpixel_speed += (min_speed * 256);
 
@@ -346,6 +348,7 @@ uint8_t MouseKeys::cursorDelta() const {
 void MouseKeys::sendMouseWheelReport() const {
   int8_t dh = 0;
   int8_t dv = 0;
+
   uint8_t direction = directions_ >> wheel_offset_;
 
   if (direction != 0) {
