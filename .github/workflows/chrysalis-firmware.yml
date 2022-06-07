@@ -20,5 +20,5 @@ jobs:
         path: ${{ github.workspace}}/.arduino/downloads
         key: ${{ runner.os }}-arduino-downloads
     - run: make setup
-    - run: arduino-cli core list
+    - run: bin/arduino-cli core list
     - run: git rev-parse HEAD
