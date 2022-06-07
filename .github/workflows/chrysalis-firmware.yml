@@ -1,0 +1,24 @@
+name: Build firmware for Chrysalis
+
+on:
+  push:
+    branches:
+      - examples/factory-firmware
+
+env:
+  LC_ALL: C
+  ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
+  ARDUINO_DIRECTORIES_DATA: ${{ github.workspace }}/.arduino/data
+jobs:
+  compile-chrysalis-firmware:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache arduino dep downloads
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace}}/.arduino/downloads
+        key: ${{ runner.os }}-arduino-downloads
+    - run: make setup
+    - run: arduino-cli core list
+    - run: git rev-parse HEAD
