@@ -2,8 +2,8 @@ name: Build
 
 on:
   push:
-    - branches-ignore:
-        - examples/factory-firmware
+    branches-ignore:
+      - examples/factory-firmware
   pull_request:
 
 env:
