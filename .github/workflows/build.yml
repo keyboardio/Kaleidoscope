@@ -1,6 +1,10 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    - branches-ignore:
+        - examples/factory-firmware
+  pull_request:
 
 env:
   LC_ALL: C
@@ -27,7 +31,7 @@ jobs:
       with:
         path: ${{ github.workspace}}/.arduino/downloads
         key: ${{ runner.os }}-arduino-downloads
-    - run: sudo apt update 
+    - run: sudo apt update
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
     - run: make setup
@@ -51,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: make find-filename-conflicts 
+    - run: make find-filename-conflicts
   publish-arduino-package-on-every-commit:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -62,5 +66,5 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEPLOY }}
     - run: git config --global user.email "nobody@keyboard.io"
     - run: git config --global user.name "Automated release publisher"
-    - run: make setup 
+    - run: make setup
     - run: make build-arduino-nightly-package
