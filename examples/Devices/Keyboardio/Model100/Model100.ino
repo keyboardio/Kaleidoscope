@@ -1,5 +1,5 @@
 // -*- mode: c++ -*-
-// Copyright 2016 Keyboardio, inc. <jesse@keyboard.io>
+// Copyright 2016-2022 Keyboardio, inc. <jesse@keyboard.io>
 // See "LICENSE" for license details
 
 #ifndef BUILD_INFORMATION
@@ -63,6 +63,9 @@
 // Support for an LED mode that lets one configure per-layer color maps
 #include "Kaleidoscope-Colormap.h"
 
+// Support for turning the LEDs off after a certain amount of time
+#include "Kaleidoscope-IdleLEDs.h"
+
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-HardwareTestMode.h"
 
@@ -74,6 +77,16 @@
 
 // Support for USB quirks, like changing the key state report protocol
 #include "Kaleidoscope-USB-Quirks.h"
+
+// Support for secondary actions on keys
+#include "Kaleidoscope-Qukeys.h"
+
+// Support for one-shot modifiers and layer keys
+#include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
+
+// Support for dynamic, Chrysalis-editable macros
+#include "Kaleidoscope-DynamicMacros.h"
 
 /** This 'enum' is a list of all the macros used by the Model 100's firmware
   * The names aren't particularly important. What is important is that each
@@ -516,7 +529,25 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // comfortable - or able - to do automatically, but can be useful
   // nevertheless. Such as toggling the key report protocol between Boot (used
   // by BIOSes) and Report (NKRO).
-  USBQuirks);
+  USBQuirks,
+
+  // The Qukeys plugin enables the "Secondary action" functionality in
+  // Chrysalis. Keys with secondary actions will have their primary action
+  // performed when tapped, but the secondary action when held.
+  Qukeys,
+
+  // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
+  // held" functionality for layer keys.
+  OneShot,
+  EscapeOneShot,
+  EscapeOneShotConfig,
+
+  // Turns LEDs off after a configurable amount of idle time.
+  IdleLEDs,
+  PersistentIdleLEDs,
+
+  // Enables dynamic, Chrysalis-editable macros.
+  DynamicMacros);
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up
@@ -525,6 +556,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
+
+  // Set the hue of the boot greeting effect to something that will result in a
+  // nice green color.
+  BootGreetingEffect.hue = 85;
 
   // While we hope to improve this in the future, the NumPad plugin
   // needs to be explicitly told which keymap layer is your numpad layer
@@ -552,16 +587,20 @@ void setup() {
   LEDOff.activate();
 
   // To make the keymap editable without flashing new firmware, we store
-  // additional layers in EEPROM. For now, we reserve space for five layers. If
+  // additional layers in EEPROM. For now, we reserve space for eight layers. If
   // one wants to use these layers, just set the default layer to one in EEPROM,
   // by using the `settings.defaultLayer` Focus command, or by using the
   // `keymap.onlyCustom` command to use EEPROM layers only.
-  EEPROMKeymap.setup(5);
+  EEPROMKeymap.setup(8);
 
   // We need to tell the Colormap plugin how many layers we want to have custom
-  // maps for. To make things simple, we set it to five layers, which is how
+  // maps for. To make things simple, we set it to eight layers, which is how
   // many editable layers we have (see above).
-  ColormapEffect.max_layers(5);
+  ColormapEffect.max_layers(8);
+
+  // For Dynamic Macros, we need to reserve storage space for the editable
+  // macros. A kilobyte is a reasonable default.
+  DynamicMacros.reserve_storage(1024);
 }
 
 /** loop is the second of the standard Arduino sketch functions.
