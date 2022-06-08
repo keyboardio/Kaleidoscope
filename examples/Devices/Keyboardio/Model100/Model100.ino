@@ -557,6 +557,10 @@ void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
 
+  // Set the hue of the boot greeting effect to something that will result in a
+  // nice green color.
+  BootGreetingEffect.hue = 85;
+
   // While we hope to improve this in the future, the NumPad plugin
   // needs to be explicitly told which keymap layer is your numpad layer
   NumPad.numPadLayer = NUMPAD;
