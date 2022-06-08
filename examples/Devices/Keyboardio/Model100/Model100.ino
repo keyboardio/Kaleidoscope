@@ -583,16 +583,16 @@ void setup() {
   LEDOff.activate();
 
   // To make the keymap editable without flashing new firmware, we store
-  // additional layers in EEPROM. For now, we reserve space for five layers. If
+  // additional layers in EEPROM. For now, we reserve space for eight layers. If
   // one wants to use these layers, just set the default layer to one in EEPROM,
   // by using the `settings.defaultLayer` Focus command, or by using the
   // `keymap.onlyCustom` command to use EEPROM layers only.
-  EEPROMKeymap.setup(5);
+  EEPROMKeymap.setup(8);
 
   // We need to tell the Colormap plugin how many layers we want to have custom
-  // maps for. To make things simple, we set it to five layers, which is how
+  // maps for. To make things simple, we set it to eight layers, which is how
   // many editable layers we have (see above).
-  ColormapEffect.max_layers(5);
+  ColormapEffect.max_layers(8);
 
   // For Dynamic Macros, we need to reserve storage space for the editable
   // macros. A kilobyte is a reasonable default.
