@@ -415,6 +415,17 @@ static void toggleKeyboardProtocol(uint8_t combo_index) {
 }
 
 /**
+ * Toggles between using the built-in keymap, and the EEPROM-stored one.
+ */
+static void toggleKeymapSource(uint8_t combo_index) {
+  if (Layer.getKey == Layer.getKeyFromPROGMEM) {
+    Layer.getKey = EEPROMKeymap.getKey;
+  } else {
+    Layer.getKey = Layer.getKeyFromPROGMEM;
+  }
+}
+
+/**
  *  This enters the hardware test mode
  */
 static void enterHardwareTestMode(uint8_t combo_index) {
@@ -430,7 +441,10 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   .keys = {R3C6, R2C6, R3C7}},
                  {.action = enterHardwareTestMode,
                   // Left Fn + Prog + LED
-                  .keys = {R3C6, R0C0, R0C6}});
+                  .keys = {R3C6, R0C0, R0C6}},
+                 {.action = toggleKeymapSource,
+                  // Left Fn + Prog + Shift
+                  .keys = {R3C6, R0C0, R3C7}});
 
 // First, tell Kaleidoscope which plugins you want to use.
 // The order can be important. For example, LED effects are
