@@ -160,3 +160,5 @@ enum { PIN_OFFSET,
 #define OUTPUT_TOGGLE(pin)     (PORT_REG_FOR_PIN(pin) ^= (PIN_MASK_FOR_PIN(pin)))
 
 #define READ_PIN(pin)          (!!(PIN_REG_FOR_PIN(pin) & PIN_MASK_FOR_PIN(pin)))
+
+#define NO_PIN                 (uint8_t)(~0)
