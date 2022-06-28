@@ -80,7 +80,6 @@ void loop() {
 
   Kaleidoscope.loop();
 
-  /*
   report = Sensor.readReport();
 
   if (report.dx != -1) {
@@ -95,5 +94,4 @@ void loop() {
   if (report.dy != -1 || report.dx != -1) {
     Serial.println();
   }
-  */
 }
