@@ -19,7 +19,6 @@
 
 #include "adns5050.h"
 #include "Arduino.h"
-#include "pins_and_ports.h"
 
 // Registers
 // clang-format off
