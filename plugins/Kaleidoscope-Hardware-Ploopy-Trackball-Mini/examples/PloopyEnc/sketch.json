@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:avr:ploopy_mini",
+    "port": ""
+  }
+}
