@@ -2,7 +2,7 @@
 set -e
 
 echo "* Building"
-make OUTPUT_PATH=$(pwd)/_build >/dev/null
+make OUTPUT_PATH=$(pwd)/_build >/dev/null 2>LOG
 
 echo "* Jumping to bootloader..."
 DEVICE=/dev/ttyACM1 focus device.reset
