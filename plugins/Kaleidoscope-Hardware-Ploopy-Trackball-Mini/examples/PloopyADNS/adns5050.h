@@ -20,7 +20,7 @@
 #pragma once
 
 #include <stdbool.h>
-#include "kaleidoscope/device/avr/pins_and_ports.h"
+#include "pins_and_ports.h"
 
 // CPI values
 // clang-format off
