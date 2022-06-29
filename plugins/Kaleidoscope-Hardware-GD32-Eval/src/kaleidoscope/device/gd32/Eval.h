@@ -37,7 +37,7 @@ struct EvalProps : kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::hid::KeyboardioProps HIDProps;
   typedef kaleidoscope::driver::hid::Keyboardio<HIDProps> HID;
 
-  typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
+  typedef kaleidoscope::driver::bootloader::gd32::Base Bootloader;
   typedef EvalStorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
 

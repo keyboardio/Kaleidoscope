@@ -99,7 +99,7 @@ struct ImagoProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
   typedef ImagoLEDDriverProps LEDDriverProps;
   typedef ImagoLEDDriver LEDDriver;
-  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina Bootloader;
   static constexpr const char *short_name = "imago";
 };
 

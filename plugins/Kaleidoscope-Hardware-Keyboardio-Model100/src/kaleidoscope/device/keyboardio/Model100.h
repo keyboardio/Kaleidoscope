@@ -141,7 +141,7 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
   typedef Model100StorageProps StorageProps;
   typedef kaleidoscope::driver::storage::GD32Flash<StorageProps> Storage;
 
-  typedef kaleidoscope::driver::bootloader::gd32::Base BootLoader;
+  typedef kaleidoscope::driver::bootloader::gd32::Base Bootloader;
   static constexpr const char *short_name = "kbio100";
 
   typedef kaleidoscope::driver::mcu::GD32Props MCUProps;

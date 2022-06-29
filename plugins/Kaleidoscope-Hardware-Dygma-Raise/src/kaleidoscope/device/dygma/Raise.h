@@ -170,7 +170,7 @@ struct RaiseProps : kaleidoscope::device::BaseProps {
   typedef RaiseKeyScanner KeyScanner;
   typedef RaiseStorageProps StorageProps;
   typedef kaleidoscope::driver::storage::Flash<StorageProps> Storage;
-  typedef kaleidoscope::driver::bootloader::samd::Bossac BootLoader;
+  typedef kaleidoscope::driver::bootloader::samd::Bossac Bootloader;
 
   typedef RaiseSideFlasherProps SideFlasherProps;
   typedef kaleidoscope::util::flasher::KeyboardioI2CBootloader<SideFlasherProps> SideFlasher;
