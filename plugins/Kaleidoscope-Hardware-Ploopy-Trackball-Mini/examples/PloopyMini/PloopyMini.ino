@@ -10,9 +10,11 @@
 #include "kaleidoscope/driver/sensor/ADNS5050.h"
 
 struct PTBMProps : kaleidoscope::driver::sensor::ADNS5050BaseProps {
-  static constexpr uint8_t clock_pin = PIN_B7;
-  static constexpr uint8_t io_pin = PIN_C6;
-  static constexpr uint8_t chip_select_pin = PIN_B4;
+  struct pin {
+    static constexpr uint8_t SCLK = PIN_B7;
+    static constexpr uint8_t SDIO = PIN_C6;
+    static constexpr uint8_t NCS = PIN_B4;
+  };
 };
 
 typedef kaleidoscope::driver::sensor::ADNS5050<PTBMProps> SensorT;
@@ -36,8 +38,9 @@ void deltaY() {
 
 void getPID() {
   uint8_t pid = Sensor.readRegister(Sensor.Register::PRODUCT_ID);
-  Serial.print("pid = ");
-  Serial.println(pid);
+  uint8_t rid = Sensor.readRegister(Sensor.Register::REVISION_ID);
+  uint8_t pid2 = Sensor.readRegister(Sensor.Register::PRODUCT_ID2);
+  Focus.send("pid=", pid, "rid=", rid, "pid2=", pid2, "\n");
 }
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
