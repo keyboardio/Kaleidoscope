@@ -21,6 +21,29 @@
 #include "Arduino.h"
 #include "pins_and_ports.h"
 
+#include <util/delay.h>
+
+#define wait_ms(ms)                             \
+  do {                                          \
+    if (__builtin_constant_p(ms)) {             \
+      _delay_ms(ms);                            \
+    } else {                                    \
+      for (uint16_t i = ms; i > 0; i--) {       \
+        _delay_ms(1);                           \
+      }                                         \
+    }                                           \
+  } while (0)
+#define wait_us(us)                             \
+  do {                                          \
+    if (__builtin_constant_p(us)) {             \
+      _delay_us(us);                            \
+    } else {                                    \
+      for (uint16_t i = us; i > 0; i--) {       \
+        _delay_us(1);                           \
+      }                                         \
+    }                                           \
+  } while (0)
+
 // Registers
 // clang-format off
 #define REG_PRODUCT_ID     0x00
@@ -56,7 +79,7 @@ void adns5050_init(void) {
 
     // wait maximum time before adns is ready.
     // this ensures that the adns is actuall ready after reset.
-    delay(55);
+    wait_ms(55);
 
     // read a burst from the adns and then discard it.
     // gets the adns ready for write commands
@@ -69,7 +92,7 @@ void adns5050_init(void) {
 // synchronization signal to the master.
 void adns5050_sync(void) {
     OUTPUT_LOW(ADNS5050_CS_PIN);
-    delayMicroseconds(1);
+    wait_us(1);
     OUTPUT_HIGH(ADNS5050_CS_PIN);
 }
 
@@ -89,12 +112,12 @@ uint8_t adns5050_serial_read(void) {
 
     for (uint8_t i = 0; i < 8; ++i) {
         OUTPUT_LOW(ADNS5050_SCLK_PIN);
-        delayMicroseconds(1);
+        wait_us(1);
 
         byte = (byte << 1) | READ_PIN(ADNS5050_SDIO_PIN);
 
         OUTPUT_HIGH(ADNS5050_SCLK_PIN);
-        delayMicroseconds(1);
+        wait_us(1);
     }
 
     return byte;
@@ -111,7 +134,7 @@ void adns5050_serial_write(uint8_t data) {
         else
             OUTPUT_LOW(ADNS5050_SDIO_PIN);
 
-        delayMicroseconds(2);
+        wait_us(2);
 
         OUTPUT_HIGH(ADNS5050_SCLK_PIN);
     }
@@ -119,7 +142,7 @@ void adns5050_serial_write(uint8_t data) {
     // tSWR. See page 15 of the ADNS spec sheet.
     // Technically, this is only necessary if the next operation is an SDIO
     // read. This is not guaranteed to be the case, but we're being lazy.
-    delayMicroseconds(4);
+    wait_us(4);
 
     // Note that tSWW is never necessary. All write operations require at
     // least 32us, which exceeds tSWW, so there's never a need to wait for it.
@@ -135,7 +158,7 @@ uint8_t adns5050_read_reg(uint8_t reg_addr) {
     // We don't need a minimum tSRAD here. That's because a 4ms wait time is
     // already included in adns5050_serial_write(), so we're good.
     // See page 10 and 15 of the ADNS spec sheet.
-    // delayMicroseconds(4);
+    // wait_us(4);
 
     uint8_t byte = adns5050_serial_read();
 
@@ -143,7 +166,7 @@ uint8_t adns5050_read_reg(uint8_t reg_addr) {
     // Technically, this is only necessary if the next operation is an SDIO
     // read or write. This is not guaranteed to be the case.
     // Honestly, this wait could probably be removed.
-    delayMicroseconds(1);
+    wait_us(1);
 
     adns5050_cs_deselect();
 
@@ -165,11 +188,12 @@ report_adns5050_t adns5050_read_burst(void) {
     data.dy = 0;
 
     adns5050_serial_write(REG_MOTION_BURST);
+    wait_us(4);
 
     // We don't need a minimum tSRAD here. That's because a 4ms wait time is
     // already included in adns5050_serial_write(), so we're good.
     // See page 10 and 15 of the ADNS spec sheet.
-    // delayMicroseconds(4);
+    // wait_us(4);
 
     uint8_t x = adns5050_serial_read();
     uint8_t y = adns5050_serial_read();

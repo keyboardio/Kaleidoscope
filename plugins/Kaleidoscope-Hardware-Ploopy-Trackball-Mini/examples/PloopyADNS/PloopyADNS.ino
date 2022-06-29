@@ -34,7 +34,7 @@ void rebootBootloader() {
 }
 
 static constexpr uint8_t direct_pins[5] = {PIN_D4, PIN_D2, PIN_E6, PIN_B6, PIN_D7};
-static constexpr uint8_t unused_pins[12] = {PIN_B5, PIN_C7, PIN_D0, PIN_D1, PIN_D3, PIN_D5, PIN_D6, PIN_F1, PIN_F3, PIN_F5, PIN_F6, PIN_F7};
+static constexpr uint8_t unused_pins[14] = {PIN_B5, PIN_C7, PIN_D0, PIN_D1, PIN_D3, PIN_D5, PIN_D6, PIN_F1, PIN_F3, PIN_F5, PIN_F6, PIN_F7, PIN_F0, PIN_F4};
 
 void mcuSetup() {
   wdt_disable();
@@ -68,7 +68,10 @@ void setup() {
   buttonSetup();
 
   adns5050_init();
-  adns5050_sync();
+  //delay(100);
+  //adns5050_sync();
+  adns5050_set_cpi(CPI375);
+  //adns5050_read_burst();
 
   while (!Serial);
 
@@ -97,7 +100,21 @@ void handleSerial() {
 void loop() {
   handleSerial();
 
-  //report_adns5050_t r = adns505
+#if 1
+  report_adns5050_t r = adns5050_read_burst();
+  if (r.dx != 0 || r.dy != 0) {
+    Serial.println(r.dx);
+    Serial.println(r.dy);
+  }
+#else
 
-  delay(250);
+  uint8_t dx = adns5050_read_reg(0x03); // DELTA_X
+  uint8_t dy = adns5050_read_reg(0x04); // DELTA_Y
+
+  Serial.print(dx);
+  Serial.print(",");
+  Serial.println(dy);
+#endif
+
+  delay(10);
 }
