@@ -28,9 +28,11 @@ namespace driver {
 namespace sensor {
 
 struct ADNS5050BaseProps {
-  static constexpr uint8_t clock_pin = NO_PIN;
-  static constexpr uint8_t io_pin = NO_PIN;
-  static constexpr uint8_t chip_select_pin = NO_PIN;
+  struct pin {
+    static constexpr uint8_t SCLK = NO_PIN;
+    static constexpr uint8_t SDIO = NO_PIN;
+    static constexpr uint8_t NCS = NO_PIN;
+  };
 };
 
 template <typename _Props>
@@ -58,39 +60,39 @@ class ADNS5050 {
   };
 
   void setup() {
-    static_assert(_Props::clock_pin != NO_PIN, "No clock pin specified!");
-    static_assert(_Props::io_pin != NO_PIN, "No IO pin specified!");
-    static_assert(_Props::chip_select_pin != NO_PIN, "No chip select pin specified!");
+    static_assert(_Props::pin::SCLK != NO_PIN, "No clock pin specified!");
+    static_assert(_Props::pin::SDIO != NO_PIN, "No IO pin specified!");
+    static_assert(_Props::pin::NCS != NO_PIN, "No chip select pin specified!");
 
-    DDR_OUTPUT(_Props::clock_pin);
-    DDR_OUTPUT(_Props::io_pin);
-    DDR_OUTPUT(_Props::chip_select_pin);
+    DDR_OUTPUT(_Props::pin::SCLK);
+    DDR_OUTPUT(_Props::pin::SDIO);
+    DDR_OUTPUT(_Props::pin::NCS);
 
     // 0x5a is chip reset (datasheet page 26)
     writeRegister(Register::CHIP_RESET, 0x5a);
     delay(55);
 
     // read an initial report from the sensor, and discard it.
-    readReport();
+    // readReport();
   }
 
   void sync() {
-    cs_select();
+    OUTPUT_LOW(_Props::pin::NCS);
     delayMicroseconds(1);
-    cs_deselect();
+    OUTPUT_HIGH(_Props::pin::NCS);
   }
 
   Report readReport() {
     Report report;
 
-    cs_select();
+    OUTPUT_LOW(_Props::pin::NCS);
 
     serialWrite(Register::MOTION_BURST);
 
     uint8_t x = serialRead();
     uint8_t y = serialRead();
 
-    cs_deselect();
+    OUTPUT_HIGH(_Props::pin::NCS);
 
     report.dx = convertTwosComp(x);
     report.dy = convertTwosComp(y);
@@ -123,6 +125,14 @@ class ADNS5050 {
   }
 
  public:
+  struct Timeout {
+    static constexpr uint16_t WAKEUP = 55000;
+    static constexpr uint16_t SWW = 30;
+    static constexpr uint16_t SWR = 20;
+    static constexpr uint16_t SRW = 1;
+    static constexpr uint16_t SRR = 1;
+    static constexpr uint16_t SRAD = 4;
+  };
   enum class Register {
     PRODUCT_ID = 0x00,
     REVISION_ID = 0x01,
@@ -143,18 +153,18 @@ class ADNS5050 {
   }
 
   uint8_t serialRead() {
-    DDR_INPUT(_Props::io_pin);
+    DDR_INPUT(_Props::pin::SDIO);
     delayMicroseconds(1);
 
     uint8_t byte;
 
     for (uint8_t i = 0; i < 8; i++) {
-      OUTPUT_LOW(_Props::clock_pin);
+      OUTPUT_LOW(_Props::pin::SCLK);
       delayMicroseconds(1);
 
-      byte = (byte  << 1) | READ_PIN(_Props::io_pin);
+      byte = (byte  << 1) | READ_PIN(_Props::pin::SDIO);
 
-      OUTPUT_HIGH(_Props::clock_pin);
+      OUTPUT_HIGH(_Props::pin::SCLK);
       delayMicroseconds(1);
     }
 
@@ -162,22 +172,22 @@ class ADNS5050 {
   }
 
   void serialWrite(uint8_t data) {
-    DDR_OUTPUT(_Props::io_pin);
+    DDR_OUTPUT(_Props::pin::SDIO);
     delayMicroseconds(1);
 
     for (int8_t i = 7; i >= 0; i--) {
-      OUTPUT_LOW(_Props::clock_pin);
+      OUTPUT_LOW(_Props::pin::SCLK);
       delayMicroseconds(1);
 
       if (data && (1 << i)) {
-        OUTPUT_HIGH(_Props::io_pin);
+        OUTPUT_HIGH(_Props::pin::SDIO);
       } else {
-        OUTPUT_LOW(_Props::io_pin);
+        OUTPUT_LOW(_Props::pin::SDIO);
       }
 
       delayMicroseconds(2);
 
-      OUTPUT_HIGH(_Props::clock_pin);
+      OUTPUT_HIGH(_Props::pin::SCLK);
       delayMicroseconds(1);
     }
 
@@ -188,33 +198,23 @@ class ADNS5050 {
   }
 
   uint8_t readRegister(Register reg) {
-    cs_select();
+    OUTPUT_LOW(_Props::pin::NCS);
 
     serialWrite(reg);
     uint8_t byte = serialRead();
 
     delayMicroseconds(1);
 
-    cs_deselect();
+    OUTPUT_HIGH(_Props::pin::NCS);
 
     return byte;
   }
   void writeRegister(Register reg, uint8_t data) {
-    cs_select();
+    OUTPUT_LOW(_Props::pin::NCS);
     serialWrite(0b10000000 | (uint8_t)reg);
     serialWrite(data);
-    cs_deselect();
+    OUTPUT_HIGH(_Props::pin::NCS);
   }
-
-  void cs_select() {
-    OUTPUT_LOW(_Props::chip_select_pin);
-    delayMicroseconds(1);
-  }
-  void cs_deselect() {
-    OUTPUT_HIGH(_Props::chip_select_pin);
-    delayMicroseconds(1);
-  }
-
 };
 
 }  // namespace sensor
