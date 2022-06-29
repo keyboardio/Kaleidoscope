@@ -45,7 +45,7 @@ struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   };
 
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
-  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina Bootloader;
   static constexpr const char *short_name = "atreus";
 };
 

@@ -67,9 +67,9 @@ struct AtreusProps : kaleidoscope::device::ATmega32U4KeyboardProps {
   typedef kaleidoscope::driver::keyscanner::ATmega<KeyScannerProps> KeyScanner;
 
 #ifdef KALEIDOSCOPE_HARDWARE_ATREUS_PINOUT_LEGACY_TEENSY2
-  typedef kaleidoscope::driver::bootloader::avr::HalfKay BootLoader;
+  typedef kaleidoscope::driver::bootloader::avr::HalfKay Bootloader;
 #else
-  typedef kaleidoscope::driver::bootloader::avr::Caterina BootLoader;
+  typedef kaleidoscope::driver::bootloader::avr::Caterina Bootloader;
 #endif
   static constexpr const char *short_name = "atreus";
 };

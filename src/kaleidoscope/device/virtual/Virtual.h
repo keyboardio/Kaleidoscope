@@ -131,7 +131,7 @@ struct VirtualProps : public kaleidoscope::DeviceProps {
   typedef kaleidoscope::driver::mcu::None MCU;
 
   typedef kaleidoscope::driver::bootloader::None
-    BootLoader;
+    Bootloader;
 
   typedef typename kaleidoscope::DeviceProps::StorageProps
     StorageProps;
