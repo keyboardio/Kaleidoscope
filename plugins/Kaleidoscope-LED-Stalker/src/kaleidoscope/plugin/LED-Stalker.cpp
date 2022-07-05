@@ -34,7 +34,7 @@ namespace plugin {
 StalkerEffect::ColorComputer *StalkerEffect::variant;
 uint16_t StalkerEffect::step_length = 50;
 cRGB StalkerEffect::inactive_color  = (cRGB){
-  0, 0, 0};
+   0, 0, 0};
 
 StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
   : parent_(parent),

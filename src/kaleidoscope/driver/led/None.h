@@ -26,7 +26,9 @@ struct cRGB {
 };
 
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 
 #endif
 

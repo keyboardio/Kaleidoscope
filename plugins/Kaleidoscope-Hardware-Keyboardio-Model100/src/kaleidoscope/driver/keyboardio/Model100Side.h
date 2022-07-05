@@ -35,7 +35,9 @@ struct cRGB {
   uint8_t r;
 };
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 #endif
 
 #define LED_BANKS          4

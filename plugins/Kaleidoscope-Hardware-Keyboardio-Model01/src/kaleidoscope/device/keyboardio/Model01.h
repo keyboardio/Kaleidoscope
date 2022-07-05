@@ -33,7 +33,9 @@
 // IWYU pragma: no_include "kaleidoscope/KeyAddr.h"
 
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 
 struct cRGB {
   uint8_t b;

@@ -63,7 +63,7 @@ class MatrixAddr {
   //constexpr MatrixAddr(ThisType &&other) : offset_(other.offset_) {}
 
   ThisType &operator=(const ThisType &) = default;
-  ThisType &operator=(ThisType &&) = default;
+  ThisType &operator=(ThisType &&)      = default;
 
   template<typename MatrixAddr__>
   explicit constexpr MatrixAddr(const MatrixAddr__ &other)
