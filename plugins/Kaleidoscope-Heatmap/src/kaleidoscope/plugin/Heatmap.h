@@ -37,6 +37,7 @@ class Heatmap : public Plugin,
   static uint16_t update_delay;
   static const cRGB *heat_colors;
   static uint8_t heat_colors_length;
+
   void resetMap();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
@@ -60,15 +61,18 @@ class Heatmap : public Plugin,
     void update() final;
 
    private:
-    uint16_t heatmap_[Runtime.device().numKeys()];
-    uint16_t highest_;
     uint16_t last_heatmap_comp_time_;
+    const Heatmap *parent_;
 
     void shiftStats();
     cRGB computeColor(float v);
 
     friend class Heatmap;
   };
+
+ private:
+  static uint16_t heatmap_[Runtime.device().numKeys()];
+  static uint16_t highest_;
 };
 
 }  // namespace plugin
