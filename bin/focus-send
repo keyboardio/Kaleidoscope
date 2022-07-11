@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# focus-test - Trivial Focus testing tool
-# Copyright (C) 2018  Keyboard.io, Inc.
+# focus-send - Trivial Focus testing tool
+# Copyright (C) 2018-2022  Keyboard.io, Inc.
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
