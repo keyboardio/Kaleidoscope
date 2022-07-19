@@ -85,11 +85,9 @@ extern uint8_t colormap_layers;
 class DefaultColormap : public Plugin {
  public:
   static void setup();
+  static void install();
 
   EventHandlerResult onFocusEvent(const char *command);
-
- private:
-  static void install();
 };
 
 }  // namespace plugin
