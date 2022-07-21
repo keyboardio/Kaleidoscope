@@ -94,6 +94,9 @@ class FocusSerial : public kaleidoscope::Plugin {
     color.g = Runtime.serialPort().parseInt();
     color.b = Runtime.serialPort().parseInt();
   }
+  void read(char &c) {
+    c = static_cast<char>(Runtime.serialPort().read());
+  }
   void read(uint8_t &u8) {
     u8 = Runtime.serialPort().parseInt();
   }
