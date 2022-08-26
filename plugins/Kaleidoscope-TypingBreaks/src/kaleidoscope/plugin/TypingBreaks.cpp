@@ -132,11 +132,11 @@ EventHandlerResult TypingBreaks::onSetup() {
   return EventHandlerResult::OK;
 }
 
-#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
-                                           "typingbreaks.idleTimeLimit\n" \
-                                           "typingbreaks.lockTimeOut\n"   \
-                                           "typingbreaks.lockLength\n"    \
-                                           "typingbreaks.leftMaxKeys\n"   \
+#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,          \
+                                           "typingbreaks.idleTimeLimit\r\n" \
+                                           "typingbreaks.lockTimeOut\r\n"   \
+                                           "typingbreaks.lockLength\r\n"    \
+                                           "typingbreaks.leftMaxKeys\r\n"   \
                                            "typingbreaks.rightMaxKeys")
 
 EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
@@ -148,10 +148,10 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
     RIGHT_MAX,
   } subCommand;
 
-  if (::Focus.handleHelp(command, PSTR("typingbreaks.idleTimeLimit\n"
-                                       "typingbreaks.lockTimeOut\n"
-                                       "typingbreaks.lockLength\n"
-                                       "typingbreaks.leftMaxKeys\n"
+  if (::Focus.handleHelp(command, PSTR("typingbreaks.idleTimeLimit\r\n"
+                                       "typingbreaks.lockTimeOut\r\n"
+                                       "typingbreaks.lockLength\r\n"
+                                       "typingbreaks.leftMaxKeys\r\n"
                                        "typingbreaks.rightMaxKeys")))
     return EventHandlerResult::OK;
 

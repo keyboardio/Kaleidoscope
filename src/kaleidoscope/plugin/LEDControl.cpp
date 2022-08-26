@@ -224,10 +224,10 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
-  if (::Focus.handleHelp(command, PSTR("led.at\n"
-                                       "led.setAll\n"
-                                       "led.mode\n"
-                                       "led.brightness\n"
+  if (::Focus.handleHelp(command, PSTR("led.at\r\n"
+                                       "led.setAll\r\n"
+                                       "led.mode\r\n"
+                                       "led.brightness\r\n"
                                        "led.theme")))
     return EventHandlerResult::OK;
 
