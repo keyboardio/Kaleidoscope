@@ -132,7 +132,7 @@ EventHandlerResult TypingBreaks::onSetup() {
   return EventHandlerResult::OK;
 }
 
-#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,        \
+#define FOCUS_HOOK_TYPINGBREAKS FOCUS_HOOK(TypingBreaks.focusHook,          \
                                            "typingbreaks.idleTimeLimit\r\n" \
                                            "typingbreaks.lockTimeOut\r\n"   \
                                            "typingbreaks.lockLength\r\n"    \
