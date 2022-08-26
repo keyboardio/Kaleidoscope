@@ -34,7 +34,7 @@ namespace raise {
 #endif
 
 EventHandlerResult Focus::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("hardware.version\nhardware.side_power\nhardware.side_ver\nhardware.sled_ver\nhardware.sled_current\nhardware.layout\nhardware.joint\nhardware.keyscan\nhardware.crc_errors\nhardware.firmware")))
+  if (::Focus.handleHelp(command, PSTR("hardware.version\r\nhardware.side_power\r\nhardware.side_ver\r\nhardware.sled_ver\r\nhardware.sled_current\r\nhardware.layout\r\nhardware.joint\r\nhardware.keyscan\r\nhardware.crc_errors\r\nhardware.firmware")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("hardware."), 9) != 0)
@@ -65,7 +65,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
   if (strcmp_P(command + 9, PSTR("side_ver")) == 0) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftVersion());
-    ::Focus.send("\nright:");
+    ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightVersion());
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -73,7 +73,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
   if (strcmp_P(command + 9, PSTR("crc_errors")) == 0) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftCRCErrors());
-    ::Focus.send("\nright:");
+    ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightCRCErrors());
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -81,7 +81,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
   if (strcmp_P(command + 9, PSTR("sled_ver")) == 0) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftSLEDVersion());
-    ::Focus.send("\nright:");
+    ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightSLEDVersion());
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -90,7 +90,7 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
     if (::Focus.isEOL()) {
       ::Focus.send("left:");
       ::Focus.send(Runtime.device().side.leftSLEDCurrent());
-      ::Focus.send("\nright:");
+      ::Focus.send("\r\nright:");
       ::Focus.send(Runtime.device().side.rightSLEDCurrent());
       return EventHandlerResult::EVENT_CONSUMED;
     } else {

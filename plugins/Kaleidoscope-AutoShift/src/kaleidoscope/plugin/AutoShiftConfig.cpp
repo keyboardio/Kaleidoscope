@@ -54,8 +54,8 @@ EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
     CATEGORIES,
   } subCommand;
 
-  if (::Focus.handleHelp(command, PSTR("autoshift.enabled\n"
-                                       "autoshift.timeout\n"
+  if (::Focus.handleHelp(command, PSTR("autoshift.enabled\r\n"
+                                       "autoshift.timeout\r\n"
                                        "autoshift.categories")))
     return EventHandlerResult::OK;
 

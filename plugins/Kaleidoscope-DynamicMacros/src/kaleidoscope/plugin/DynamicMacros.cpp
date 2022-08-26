@@ -215,7 +215,7 @@ EventHandlerResult DynamicMacros::onNameQuery() {
 }
 
 EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("macros.map\nmacros.trigger")))
+  if (::Focus.handleHelp(command, PSTR("macros.map\r\nmacros.trigger")))
     return EventHandlerResult::OK;
 
   if (strncmp_P(command, PSTR("macros."), 7) != 0)

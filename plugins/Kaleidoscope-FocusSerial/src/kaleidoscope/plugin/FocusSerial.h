@@ -43,7 +43,7 @@ class FocusSerial : public kaleidoscope::Plugin {
   EventHandlerResult sendName(const __FlashStringHelper *name) {
     Runtime.serialPort().print(name);
     delayAfterPrint();
-    Runtime.serialPort().print(NEWLINE);
+    Runtime.serialPort().println();
     delayAfterPrint();
     return EventHandlerResult::OK;
   }

@@ -91,7 +91,7 @@ bool FocusSerial::handleHelp(const char *command,
 }
 
 EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
-  if (handleHelp(command, PSTR("help\ndevice.reset\nplugins")))
+  if (handleHelp(command, PSTR("help\r\ndevice.reset\r\nplugins")))
     return EventHandlerResult::OK;
 
   if (strcmp_P(command, PSTR("device.reset")) == 0) {
