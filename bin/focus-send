@@ -46,7 +46,7 @@ exec < "${DEVICE}"
 # shellcheck disable=SC2086 # intentional word splitting
 stty $STTY_ARGS
 
-wait_dot () {
+read_reply () {
     while read -r line; do
         if [ "${line}" = "." ]; then
             break
@@ -58,6 +58,6 @@ wait_dot () {
 # Flush any invalid commands out of input buffer.
 # This could happen after a failed upload.
 echo ' ' > "${DEVICE}"
-wait_dot
+read_reply > /dev/null
 echo "$@" >"${DEVICE}"
-wait_dot
+read_reply
