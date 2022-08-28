@@ -17,14 +17,22 @@ set -e
 
 OS=$(uname -s)
 
+# igncr absorbs CR from Focus CRLF line endings
+# -echo is needed because raw doesn't turn it off on Linux
+STTY_ARGS="9600 raw igncr -echo"
+
 case ${OS} in
     Linux)
         DEVICE="${DEVICE:-/dev/ttyACM0}"
-        stty -F "${DEVICE}" 9600 raw -echo
         ;;
     Darwin)
+        # bash on macOS has a bug that randomly drops serial input
+        if [ -n "$BASH_VERSION" ] && [ -x /bin/dash ]; then
+            # Prevent loop in case someone exported it
+            export -n BASH_VERSION
+            exec /bin/dash "$0" "$@"
+        fi
         DEVICE="${DEVICE:-/dev/cu.usbmodemCkbio01E}"
-        stty -f "${DEVICE}" 9600 raw -echo
         ;;
     *)
         echo "Error Unknown OS : ${OS}" >&2
@@ -32,14 +40,24 @@ case ${OS} in
         ;;
 esac
 
+# Redirect prior to running stty, because macOS sometimes resets termios
+# state upon last close of a terminal device.
+exec < "${DEVICE}"
+# shellcheck disable=SC2086 # intentional word splitting
+stty $STTY_ARGS
 
-exec 3<"${DEVICE}"
+read_reply () {
+    while read -r line; do
+        if [ "${line}" = "." ]; then
+            break
+        fi
+        echo "${line}"
+    done
+}
+
+# Flush any invalid commands out of input buffer.
+# This could happen after a failed upload.
+echo ' ' > "${DEVICE}"
+read_reply > /dev/null
 echo "$@" >"${DEVICE}"
-
-while read -r line <&3; do
-    line="$(echo -n "${line}" | tr -d '\r')"
-    if [ "${line}" == "." ]; then
-        break
-    fi
-    echo "${line}"
-done
+read_reply
