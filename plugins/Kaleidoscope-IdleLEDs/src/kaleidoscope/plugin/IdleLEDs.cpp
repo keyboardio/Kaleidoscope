@@ -18,7 +18,7 @@
 
 #include "kaleidoscope/plugin/IdleLEDs.h"
 
-#include <Arduino.h>                       // for F, PSTR, __FlashStringHelper, strcmp_P
+#include <Arduino.h>                       // for F, PSTR, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint32_t, uint16_t
@@ -100,10 +100,10 @@ void PersistentIdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
 EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *command) {
   const char *cmd = PSTR("idleleds.time_limit");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(command, cmd))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

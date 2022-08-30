@@ -25,7 +25,7 @@ class FocusTestCommand : public Plugin {
   }
 
   EventHandlerResult onFocusEvent(const char *command) {
-    if (strcmp_P(command, PSTR("test")) != 0)
+    if (!::Focus.inputMatchesCommand(command, PSTR("test")))
       return EventHandlerResult::OK;
 
     ::Focus.send(F("Congratulations, the test command works!"));

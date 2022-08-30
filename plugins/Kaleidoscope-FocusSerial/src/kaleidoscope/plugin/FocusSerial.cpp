@@ -77,24 +77,19 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-bool FocusSerial::handleHelp(const char *command,
-                             const char *help_message) {
-  if (strcmp_P(command, PSTR("help")) != 0)
-    return false;
-
-  Runtime.serialPort().println((const __FlashStringHelper *)help_message);
-  return true;
-}
-
 EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
-  if (handleHelp(command, PSTR("help\r\ndevice.reset\r\nplugins")))
-    return EventHandlerResult::OK;
+  const char *cmd_help    = PSTR("help");
+  const char *cmd_reset   = PSTR("device.reset");
+  const char *cmd_plugins = PSTR("plugins");
 
-  if (strcmp_P(command, PSTR("device.reset")) == 0) {
+  if (inputMatchesHelp(command))
+    return printHelp(cmd_help, cmd_reset, cmd_plugins);
+
+  if (inputMatchesCommand(command, cmd_reset)) {
     Runtime.device().rebootBootloader();
     return EventHandlerResult::EVENT_CONSUMED;
   }
-  if (strcmp_P(command, PSTR("plugins")) == 0) {
+  if (inputMatchesCommand(command, cmd_plugins)) {
     kaleidoscope::Hooks::onNameQuery();
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -102,8 +97,25 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
   return EventHandlerResult::OK;
 }
 
+#ifndef NDEPRECATED
+bool FocusSerial::handleHelp(const char *command, const char *help_message) {
+  if (!inputMatchesHelp(command)) return false;
+
+  printHelp(help_message);
+  return true;
+}
+#endif
+
 void FocusSerial::printBool(bool b) {
   Runtime.serialPort().print((b) ? F("true") : F("false"));
+}
+
+bool FocusSerial::inputMatchesHelp(const char *input) {
+  return inputMatchesCommand(input, PSTR("help"));
+}
+
+bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
+  return strcmp_P(input, expected) == 0;
 }
 
 }  // namespace plugin

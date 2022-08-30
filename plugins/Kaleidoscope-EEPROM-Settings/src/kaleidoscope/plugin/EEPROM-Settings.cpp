@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/EEPROM-Settings.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                   // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint16_t, uint8_t
 
@@ -164,19 +164,21 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
     GET_CRC,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("settings.defaultLayer\r\nsettings.valid?\r\nsettings.version\r\nsettings.crc")))
-    return EventHandlerResult::OK;
+  const char *cmd_defaultLayer = PSTR("settings.defaultLayer");
+  const char *cmd_isValid      = PSTR("settings.valid?");
+  const char *cmd_version      = PSTR("settings.version");
+  const char *cmd_crc          = PSTR("settings.crc");
 
-  if (strncmp_P(command, PSTR("settings."), 9) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc);
 
-  if (strcmp_P(command + 9, PSTR("defaultLayer")) == 0)
+  if (::Focus.inputMatchesCommand(command, cmd_defaultLayer))
     sub_command = DEFAULT_LAYER;
-  else if (strcmp_P(command + 9, PSTR("valid?")) == 0)
+  else if (::Focus.inputMatchesCommand(command, cmd_isValid))
     sub_command = IS_VALID;
-  else if (strcmp_P(command + 9, PSTR("version")) == 0)
+  else if (::Focus.inputMatchesCommand(command, cmd_version))
     sub_command = GET_VERSION;
-  else if (strcmp_P(command + 9, PSTR("crc")) == 0)
+  else if (::Focus.inputMatchesCommand(command, cmd_crc))
     sub_command = GET_CRC;
   else
     return EventHandlerResult::OK;
@@ -213,14 +215,18 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
     ERASE,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("eeprom.contents\r\neeprom.free\r\neeprom.erase")))
-    return EventHandlerResult::OK;
+  const char *cmd_contents = PSTR("eeprom.contents");
+  const char *cmd_free     = PSTR("eeprom.free");
+  const char *cmd_erase    = PSTR("eeprom.erase");
 
-  if (strcmp_P(command, PSTR("eeprom.contents")) == 0)
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd_contents, cmd_free, cmd_erase);
+
+  if (::Focus.inputMatchesCommand(command, cmd_contents))
     sub_command = CONTENTS;
-  else if (strcmp_P(command, PSTR("eeprom.free")) == 0)
+  else if (::Focus.inputMatchesCommand(command, cmd_free))
     sub_command = FREE;
-  else if (strcmp_P(command, PSTR("eeprom.erase")) == 0)
+  else if (::Focus.inputMatchesCommand(command, cmd_erase))
     sub_command = ERASE;
   else
     return EventHandlerResult::OK;

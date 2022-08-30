@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/DefaultLEDModeConfig.h"
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t
@@ -51,10 +51,10 @@ EventHandlerResult DefaultLEDModeConfig::onSetup() {
 EventHandlerResult DefaultLEDModeConfig::onFocusEvent(const char *command) {
   const char *cmd = PSTR("led_mode.default");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(command, cmd))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

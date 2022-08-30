@@ -78,10 +78,10 @@ EventHandlerResult DefaultColormap::onFocusEvent(const char *command) {
 
   const char *cmd = PSTR("colormap.install");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(command, cmd))
     return EventHandlerResult::OK;
 
   install();
