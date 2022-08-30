@@ -46,10 +46,13 @@ fn main() {
         Some(d) => d,
     };
 
-    let mut port = serialport::new(&device, 11520).open().unwrap_or_else(|e| {
-        eprintln!("Failed to open \"{}\". Error: {}", &device, e);
-        ::std::process::exit(1);
-    });
+    let mut port = serialport::new(&device, 11520)
+        .timeout(Duration::from_millis(100))
+        .open()
+        .unwrap_or_else(|e| {
+            eprintln!("Failed to open \"{}\". Error: {}", &device, e);
+            ::std::process::exit(1);
+        });
 
     flush(&mut port);
 
@@ -121,6 +124,7 @@ fn send_request(
 ) -> Result<(), std::io::Error> {
     let request = [vec![command], args].concat().join(" ") + "\n";
 
+    port.write_data_terminal_ready(true).unwrap();
     port.write_all(request.as_bytes())
 }
 
@@ -133,6 +137,9 @@ fn wait_for_data(port: &dyn SerialPort) {
 fn read_reply(port: &mut Box<dyn SerialPort>) -> Result<String, std::io::Error> {
     let mut buffer: Vec<u8> = vec![0; 1024];
     let mut result: String = String::from("");
+
+    port.read_data_set_ready().unwrap();
+
     loop {
         match port.read(buffer.as_mut_slice()) {
             Ok(t) => {
