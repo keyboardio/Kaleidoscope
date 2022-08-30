@@ -19,13 +19,6 @@ use std::io::{self, Write};
 use std::thread;
 use std::time::Duration;
 
-#[cfg(all(target_family = "unix", not(target_os = "macos")))]
-const DEFAULT_DEVICE: &str = "/dev/ttyACM0";
-#[cfg(target_os = "macos")]
-const DEFAULT_DEVICE: &str = "/dev/cu.usbmodemCkbio01E";
-#[cfg(target_family = "windows")]
-const DEFAULT_DEVICE: &str = "COM1";
-
 #[derive(Parser)]
 #[clap(version, about)]
 struct Cli {
@@ -35,10 +28,9 @@ struct Cli {
         env,
         hide_env = true,
         value_name = "PATH",
-        help = "The device to connect to",
-        default_value = DEFAULT_DEVICE,
+        help = "The device to connect to"
     )]
-    device: String,
+    device: Option<String>,
 
     command: String,
     args: Vec<String>,
@@ -46,13 +38,18 @@ struct Cli {
 
 fn main() {
     let opts = Cli::parse();
-
-    let mut port = serialport::new(&opts.device, 11520)
-        .open()
-        .unwrap_or_else(|e| {
-            eprintln!("Failed to open \"{}\". Error: {}", opts.device, e);
+    let device = match opts.device() {
+        None => {
+            eprintln!("No device found to connect to");
             ::std::process::exit(1);
-        });
+        }
+        Some(d) => d,
+    };
+
+    let mut port = serialport::new(&device, 11520).open().unwrap_or_else(|e| {
+        eprintln!("Failed to open \"{}\". Error: {}", &device, e);
+        ::std::process::exit(1);
+    });
 
     flush(&mut port);
 
@@ -63,6 +60,50 @@ fn main() {
 
     let reply = read_reply(&mut port).expect("failed to read the reply");
     println!("{}", reply);
+}
+
+impl Cli {
+    fn device(self: &Cli) -> Option<String> {
+        const SUPPORTED: [[u16; 2]; 3] = [
+            // Keyboardio Model100
+            [0x3496, 0x0006],
+            // Keyboardio Atreus
+            [0x1209, 0x2303],
+            // Keyboardio Model01
+            [0x1209, 0x2301],
+        ];
+
+        // If we had a device explicitly specified, use that.
+        if let Some(device) = &self.device {
+            return Some(device.to_string());
+        }
+
+        // Otherwise list the serial ports, and return the first USB serial port
+        // that has a vid/pid that matches any of the Keyboardio devices.
+        let ports_ = serialport::available_ports();
+        if ports_.is_err() {
+            return None;
+        }
+        let ports = ports_.unwrap();
+        if ports.is_empty() {
+            return None;
+        }
+
+        for port in ports.iter() {
+            if let serialport::SerialPortType::UsbPort(port_info) = &port.port_type {
+                for p in SUPPORTED.iter() {
+                    let [vid, pid] = p;
+                    if port_info.vid == *vid && port_info.pid == *pid {
+                        return Some(port.port_name.to_string());
+                    }
+                }
+            }
+        }
+
+        // If we found no supported devices, bail out. The user can still
+        // specify a device directly, if we fail to autodetect one.
+        None
+    }
 }
 
 // Send an empty command, and consume any replies. This should clear any pending

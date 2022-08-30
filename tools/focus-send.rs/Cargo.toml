@@ -9,7 +9,6 @@ rust-version = "1.59.0"
 
 [dependencies.serialport]
 version = "4.2.0"
-default_features = false
 
 [dependencies.clap]
 version = "3.2.17"
