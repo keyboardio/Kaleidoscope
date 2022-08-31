@@ -66,14 +66,28 @@ fn main() {
 }
 
 impl Cli {
-    fn device(self: &Cli) -> Option<String> {
-        const SUPPORTED: [[u16; 2]; 3] = [
+    fn device(&self) -> Option<String> {
+        #[derive(PartialEq)]
+        struct DeviceDescriptor {
+            vid: u16,
+            pid: u16,
+        }
+        const SUPPORTED_KEYBOARDS: [DeviceDescriptor; 3] = [
             // Keyboardio Model100
-            [0x3496, 0x0006],
+            DeviceDescriptor {
+                vid: 0x3496,
+                pid: 0x0006,
+            },
             // Keyboardio Atreus
-            [0x1209, 0x2303],
+            DeviceDescriptor {
+                vid: 0x1209,
+                pid: 0x2303,
+            },
             // Keyboardio Model01
-            [0x1209, 0x2301],
+            DeviceDescriptor {
+                vid: 0x1209,
+                pid: 0x2301,
+            },
         ];
 
         // If we had a device explicitly specified, use that.
@@ -83,29 +97,26 @@ impl Cli {
 
         // Otherwise list the serial ports, and return the first USB serial port
         // that has a vid/pid that matches any of the Keyboardio devices.
-        let ports_ = serialport::available_ports();
-        if ports_.is_err() {
-            return None;
-        }
-        let ports = ports_.unwrap();
-        if ports.is_empty() {
-            return None;
-        }
-
-        for port in ports.iter() {
-            if let serialport::SerialPortType::UsbPort(port_info) = &port.port_type {
-                for p in SUPPORTED.iter() {
-                    let [vid, pid] = p;
-                    if port_info.vid == *vid && port_info.pid == *pid {
-                        return Some(port.port_name.to_string());
+        serialport::available_ports()
+            .ok()?
+            .iter()
+            .filter_map(|p| match &p.port_type {
+                serialport::SerialPortType::UsbPort(port_info) => {
+                    struct MinimalPortInfo {
+                        ids: DeviceDescriptor,
+                        port: String,
                     }
+                    Some(MinimalPortInfo {
+                        ids: DeviceDescriptor {
+                            vid: port_info.vid,
+                            pid: port_info.pid,
+                        },
+                        port: p.port_name.to_string(),
+                    })
                 }
-            }
-        }
-
-        // If we found no supported devices, bail out. The user can still
-        // specify a device directly, if we fail to autodetect one.
-        None
+                _ => None,
+            })
+            .find_map(|p| SUPPORTED_KEYBOARDS.contains(&p.ids).then(|| p.port))
     }
 }
 
