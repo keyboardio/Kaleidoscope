@@ -38,13 +38,10 @@ struct Cli {
 
 fn main() {
     let opts = Cli::parse();
-    let device = match opts.device() {
-        None => {
-            eprintln!("No device found to connect to");
-            ::std::process::exit(1);
-        }
-        Some(d) => d,
-    };
+    let device = opts.device().unwrap_or_else(|| {
+        eprintln!("No device found to connect to");
+        ::std::process::exit(1);
+    });
 
     let mut port = serialport::new(&device, 11520)
         .timeout(Duration::from_millis(100))
@@ -135,7 +132,7 @@ fn send_request(
 ) -> Result<(), std::io::Error> {
     let request = [vec![command], args].concat().join(" ") + "\n";
 
-    port.write_data_terminal_ready(true).unwrap();
+    port.write_data_terminal_ready(true)?;
     port.write_all(request.as_bytes())
 }
 
@@ -147,14 +144,14 @@ fn wait_for_data(port: &dyn SerialPort) {
 
 fn read_reply(port: &mut Box<dyn SerialPort>) -> Result<String, std::io::Error> {
     let mut buffer: Vec<u8> = vec![0; 1024];
-    let mut result: String = String::from("");
+    let mut reply = vec![];
 
-    port.read_data_set_ready().unwrap();
+    port.read_data_set_ready()?;
 
     loop {
         match port.read(buffer.as_mut_slice()) {
             Ok(t) => {
-                result = result + &String::from_utf8_lossy(&buffer[..t]);
+                reply.extend(&buffer[..t]);
             }
             Err(ref e) if e.kind() == io::ErrorKind::TimedOut => {
                 break;
@@ -167,7 +164,7 @@ fn read_reply(port: &mut Box<dyn SerialPort>) -> Result<String, std::io::Error> 
         thread::sleep(Duration::from_millis(100));
     }
 
-    Ok(cleanup_reply(result))
+    Ok(cleanup_reply(String::from_utf8_lossy(&reply).to_string()))
 }
 
 fn cleanup_reply(reply: String) -> String {
