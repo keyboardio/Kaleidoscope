@@ -32,6 +32,11 @@
 namespace kaleidoscope {
 namespace plugin {
 
+EventHandlerResult FocusSerial::onSetup() {
+  const char *focus_command_help_ = PSTR("help");
+  return EventHandlerResult::OK;
+}
+
 EventHandlerResult FocusSerial::afterEachCycle() {
   int c;
   // GD32 doesn't currently autoflush the very last packet. So manually flush here
@@ -77,24 +82,63 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
+
+bool FocusSerial::inputMatchesCommand(const char *input, const char *to_match) {
+  if (strncmp_P(input, to_match, strlen_P(to_match)) == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool FocusSerial::inputMatchesSubcommand(const char *input, const char *command_to_match, const char *subcommand_to_match) {
+  if (strcmp_P(input + strlen_P(command_to_match), subcommand_to_match) == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool FocusSerial::handleHelp(const char *command,
                              const char *help_message) {
-  if (strcmp_P(command, PSTR("help")) != 0)
+  if (!inputMatchesCommand(command, focus_command_help_))
     return false;
 
   Runtime.serialPort().println((const __FlashStringHelper *)help_message);
   return true;
 }
 
+
+bool FocusSerial::handleHelp(const char *command,
+                             uint8_t help_message_count,
+                             ...) {
+
+  if (!inputMatchesCommand(command, focus_command_help_))
+    return false;
+
+  va_list messages;
+  va_start(messages, help_message_count);
+
+  for (int i = 0; i < help_message_count; ++i) {
+    char *message = va_arg(messages, char *);
+    Runtime.serialPort().print((const __FlashStringHelper *)message);
+  }
+  Runtime.serialPort().println();
+  va_end(messages);
+  return true;
+}
+
 EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
-  if (handleHelp(command, PSTR("help\r\ndevice.reset\r\nplugins")))
+  const char *focus_command_device_reset_ = PSTR("device.reset");
+  const char *focus_command_plugins_      = PSTR("plugins");
+  if (handleHelp(command, 5, focus_command_help_, Focus.CRLF, focus_command_device_reset_, Focus.CRLF, focus_command_plugins_))
     return EventHandlerResult::OK;
 
-  if (strcmp_P(command, PSTR("device.reset")) == 0) {
+  if (inputMatchesCommand(command, focus_command_device_reset_)) {
     Runtime.device().rebootBootloader();
     return EventHandlerResult::EVENT_CONSUMED;
   }
-  if (strcmp_P(command, PSTR("plugins")) == 0) {
+  if (inputMatchesCommand(command, focus_command_plugins_)) {
     kaleidoscope::Hooks::onNameQuery();
     return EventHandlerResult::EVENT_CONSUMED;
   }

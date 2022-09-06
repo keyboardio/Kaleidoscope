@@ -36,10 +36,20 @@ class FocusSerial : public kaleidoscope::Plugin {
   static constexpr char COMMENT   = '#';
   static constexpr char SEPARATOR = ' ';
   static constexpr char NEWLINE   = '\n';
+  static constexpr char CR        = '\r';
+  static constexpr char *CRLF     = "\r\n";
 
   bool handleHelp(const char *command,
                   const char *help_message);
+  bool handleHelp(const char *command,
+                  uint8_t help_message_count,
+                  ...);
 
+  bool inputMatchesCommand(const char *input, const char *to_match);
+  bool inputMatchesSubcommand(const char *input, const char *command_to_match, const char *subcommand_to_match);
+
+
+  EventHandlerResult onSetup(void);
   EventHandlerResult sendName(const __FlashStringHelper *name) {
     Runtime.serialPort().print(name);
     delayAfterPrint();
@@ -118,13 +128,16 @@ class FocusSerial : public kaleidoscope::Plugin {
  private:
   char command_[32];
   uint8_t buf_cursor_ = 0;
+  const char *focus_command_help_;
   void printBool(bool b);
 
   // This is a hacky workaround for the host seemingly dropping characters
   // when a client spams its serial port too quickly
   // Verified on GD32 and macOS 12.3 2022-03-29
   static constexpr uint8_t focus_delay_us_after_character_ = 100;
-  void delayAfterPrint() { delayMicroseconds(focus_delay_us_after_character_); }
+  void delayAfterPrint() {
+    delayMicroseconds(focus_delay_us_after_character_);
+  }
 };
 
 }  // namespace plugin

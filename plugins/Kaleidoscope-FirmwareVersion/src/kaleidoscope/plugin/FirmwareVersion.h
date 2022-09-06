@@ -32,21 +32,22 @@ namespace plugin {
 class FirmwareVersion : public Plugin {
  public:
   EventHandlerResult onFocusEvent(const char *command) {
-    if (::Focus.handleHelp(command, PSTR("version")))
+    const char *focus_command_version_ = PSTR("version");
+    if (::Focus.handleHelp(command, focus_command_version_))
       return EventHandlerResult::OK;
 
-    if (strcmp_P(command, PSTR("version")) != 0)
+    if (::Focus.inputMatchesCommand(command, focus_command_version_)) {
       return EventHandlerResult::OK;
 
 #ifdef KALEIDOSCOPE_FIRMWARE_VERSION
-    ::Focus.send(F(KALEIDOSCOPE_FIRMWARE_VERSION));
+      ::Focus.send(F(KALEIDOSCOPE_FIRMWARE_VERSION));
 #else
-    ::Focus.send(F("0.0.0"));
+      ::Focus.send(F("0.0.0"));
 #endif
 
-    return EventHandlerResult::OK;
-  }
-};
+      return EventHandlerResult::OK;
+    }
+  };
 
 }  // namespace plugin
 }  // namespace kaleidoscope

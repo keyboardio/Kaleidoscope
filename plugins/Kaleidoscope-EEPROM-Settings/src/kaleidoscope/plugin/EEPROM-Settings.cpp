@@ -164,8 +164,16 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
     GET_CRC,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("settings.defaultLayer\r\nsettings.valid?\r\nsettings.version\r\nsettings.crc")))
+
+  const char *focus_command_settings_      = PSTR("settings");
+  const char *focus_command_default_layer_ = PSTR("defaultLayer");
+  const char *focus_command_is_valid_      = PSTR("valid?");
+  const char *focus_command_version_       = PSTR("version");
+  const char *focus_command_crc_           = PSTR("crc");
+
+  if (::Focus.handleHelp(command, 11, focus_command_settings_, focus_command_default_layer_, Focus.CRLF, focus_command_settings_, focus_command_is_valid_, Focus.CRLF, focus_command_settings_, focus_command_version_, Focus.CRLF, focus_command_settings_, focus_command_crc_))
     return EventHandlerResult::OK;
+
 
   if (strncmp_P(command, PSTR("settings."), 9) != 0)
     return EventHandlerResult::OK;

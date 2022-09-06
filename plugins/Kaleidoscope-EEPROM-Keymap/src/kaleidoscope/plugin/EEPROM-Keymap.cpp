@@ -38,12 +38,14 @@ uint8_t EEPROMKeymap::progmem_layers_;
 EventHandlerResult EEPROMKeymap::onSetup() {
   ::EEPROMSettings.onSetup();
   progmem_layers_ = layer_count;
+
   return EventHandlerResult::OK;
 }
 
 EventHandlerResult EEPROMKeymap::onNameQuery() {
   return ::Focus.sendName(F("EEPROMKeymap"));
 }
+
 
 void EEPROMKeymap::setup(uint8_t max) {
   layer_count = max;
@@ -101,14 +103,22 @@ void EEPROMKeymap::dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr)) {
   }
 }
 
-EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("keymap.custom\r\nkeymap.default\r\nkeymap.onlyCustom")))
+
+EventHandlerResult EEPROMKeymap::onFocusEvent(const char *input) {
+  const char *primary_focus_command_  = PSTR("keymap.");
+  const char *custom_subcommand_      = PSTR("custom");
+  const char *default_subcommand_     = PSTR("default");
+  const char *only_custom_subcommand_ = PSTR("onlyCustom");
+
+
+  if (::Focus.handleHelp(input, 8, primary_focus_command_, custom_subcommand_, Focus.CRLF, primary_focus_command_, default_subcommand_, Focus.CRLF, primary_focus_command_, only_custom_subcommand_))
     return EventHandlerResult::OK;
 
-  if (strncmp_P(command, PSTR("keymap."), 7) != 0)
+  if (!::Focus.inputMatchesCommand(input, primary_focus_command_))
     return EventHandlerResult::OK;
 
-  if (strcmp_P(command + 7, PSTR("onlyCustom")) == 0) {
+
+  if (::Focus.inputMatchesSubcommand(input, primary_focus_command_, only_custom_subcommand_)) {
     if (::Focus.isEOL()) {
       ::Focus.send((uint8_t)::EEPROMSettings.ignoreHardcodedLayers());
     } else {
@@ -128,7 +138,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 7, PSTR("default")) == 0) {
+  if (::Focus.inputMatchesSubcommand(input, primary_focus_command_, default_subcommand_)) {
     // By using a cast to the appropriate function type,
     // tell the compiler which overload of getKeyFromPROGMEM
     // we actully want.
@@ -138,9 +148,9 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 7, PSTR("custom")) != 0)
+  if (!::Focus.inputMatchesSubcommand(input, primary_focus_command_, custom_subcommand_)) {
     return EventHandlerResult::OK;
-
+  }
   if (::Focus.isEOL()) {
     // By using a cast to the appropriate function type,
     // tell the compiler which overload of getKey
