@@ -31,7 +31,7 @@ KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
 void setup() {
   Kaleidoscope.setup();
 
-  DefaultLEDModeConfig.activeLEDModeIfUnconfigured(
+  DefaultLEDModeConfig.activateLEDModeIfUnconfigured(
     &LEDRainbowWaveEffect
   );
 }
