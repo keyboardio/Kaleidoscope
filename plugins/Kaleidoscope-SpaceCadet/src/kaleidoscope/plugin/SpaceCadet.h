@@ -27,15 +27,6 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/plugin.h"                // for Plugin
-// -----------------------------------------------------------------------------
-// Deprecation warning messages
-#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
-
-#define _DEPRECATED_MESSAGE_SPACECADET_TIME_OUT                        \
-  "The `SpaceCadet.time_out` variable is deprecated. Please use the\n" \
-  "`SpaceCadet.setTimeout()` function instead.\n"                      \
-  "This variable will be removed after 2022-09-01."
-// -----------------------------------------------------------------------------
 
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END \
@@ -88,26 +79,12 @@ class SpaceCadet : public kaleidoscope::Plugin {
     return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
   }
 
-#ifndef NDEPRECATED
-  // Publically accessible variables
-  DEPRECATED(SPACECADET_TIME_OUT)
-  static uint16_t time_out;            //  The global timeout in milliseconds
-  static SpaceCadet::KeyBinding *map;  // The map of key bindings
-#endif
-
   void setTimeout(uint16_t timeout) {
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    time_out = timeout;
-#pragma GCC diagnostic pop
-#else
     timeout_ = timeout;
-#endif
   }
 
   void setMap(KeyBinding *bindings) {
-    map = bindings;
+    map_ = bindings;
   }
 
   EventHandlerResult onNameQuery();
@@ -122,15 +99,11 @@ class SpaceCadet : public kaleidoscope::Plugin {
   };
   uint8_t mode_;
 
-#ifdef NDEPRECATED
   // Global timeout in milliseconds
   uint16_t timeout_ = 200;
 
   // The map of keybindings
-  KeyBinding *map = nullptr;
-  // When DEPRECATED public `map[]` variable is removed, this variable name
-  // should be given a trailing underscore to conform to code style guide.
-#endif
+  KeyBinding *map_ = nullptr;
 
   KeyEventTracker event_tracker_;
 

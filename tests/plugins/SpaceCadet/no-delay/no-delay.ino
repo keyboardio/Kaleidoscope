@@ -57,8 +57,8 @@ void setup() {
     SPACECADET_MAP_END
   };
   //Set the map.
-  SpaceCadet.map = spacecadetmap;
-  SpaceCadet.time_out = 20;
+  SpaceCadet.setMap(spacecadetmap);
+  SpaceCadet.setTimeout(20);
 
   SpaceCadet.enableWithoutDelay();
 }

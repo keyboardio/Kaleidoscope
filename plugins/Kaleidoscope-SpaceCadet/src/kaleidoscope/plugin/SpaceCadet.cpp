@@ -43,17 +43,6 @@ SpaceCadet::KeyBinding::KeyBinding(Key input, Key output, uint16_t timeout)
   : input(input), output(output), timeout(timeout) {}
 
 // =============================================================================
-// Space Cadet class variables
-
-// -----------------------------------------------------------------------------
-// Plugin configuration variables
-
-#ifndef NDEPRECATED
-SpaceCadet::KeyBinding *SpaceCadet::map;
-uint16_t SpaceCadet::time_out = 200;
-#endif
-
-// =============================================================================
 // SpaceCadet functions
 
 // Constructor
@@ -163,16 +152,9 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
     return EventHandlerResult::OK;
 
     // Get timeout value for the pending key.
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  uint16_t pending_timeout = time_out;
-#pragma GCC diagnostic pop
-#else
   uint16_t pending_timeout = timeout_;
-#endif
-  if (map[pending_map_index_].timeout != 0)
-    pending_timeout = map[pending_map_index_].timeout;
+  if (map_[pending_map_index_].timeout != 0)
+    pending_timeout = map_[pending_map_index_].timeout;
   uint16_t start_time = event_queue_.timestamp(0);
 
   if (Runtime.hasTimeExpired(start_time, pending_timeout)) {
@@ -186,8 +168,8 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
 // Private helper function(s)
 
 int8_t SpaceCadet::getSpaceCadetKeyIndex(Key key) const {
-  for (uint8_t i = 0; !map[i].isEmpty(); ++i) {
-    if (map[i].input == key) {
+  for (uint8_t i = 0; !map_[i].isEmpty(); ++i) {
+    if (map_[i].input == key) {
       return i;
     }
   }
@@ -208,7 +190,7 @@ void SpaceCadet::flushEvent(bool is_tap) {
     if (mode_ == Mode::NO_DELAY) {
       Runtime.handleKeyEvent(KeyEvent(event.addr, WAS_PRESSED));
     }
-    event.key = map[pending_map_index_].output;
+    event.key = map_[pending_map_index_].output;
   }
   event_queue_.shift();
   Runtime.handleKeyswitchEvent(event);
