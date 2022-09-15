@@ -43,17 +43,6 @@ SpaceCadet::KeyBinding::KeyBinding(Key input, Key output, uint16_t timeout)
   : input(input), output(output), timeout(timeout) {}
 
 // =============================================================================
-// Space Cadet class variables
-
-// -----------------------------------------------------------------------------
-// Plugin configuration variables
-
-#ifndef NDEPRECATED
-SpaceCadet::KeyBinding *SpaceCadet::map;
-uint16_t SpaceCadet::time_out = 200;
-#endif
-
-// =============================================================================
 // SpaceCadet functions
 
 // Constructor
@@ -113,7 +102,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
   }
 
   // Do nothing if disabled, but keep the event tracker current.
-  if (mode_ == Mode::OFF)
+  if (settings_.mode == Mode::OFF)
     return EventHandlerResult::OK;
 
   if (!event_queue_.isEmpty()) {
@@ -144,7 +133,7 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
       // A SpaceCadet key has just toggled on. First, if we're in no-delay mode,
       // we need to send the event unchanged (with the primary `Key` value),
       // bypassing other `onKeyswitchEvent()` handlers.
-      if (mode_ == Mode::NO_DELAY)
+      if (settings_.mode == Mode::NO_DELAY)
         Runtime.handleKeyEvent(event);
       // Queue the press event and abort; this press event will be resolved
       // later.
@@ -162,17 +151,10 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
   if (event_queue_.isEmpty())
     return EventHandlerResult::OK;
 
-    // Get timeout value for the pending key.
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  uint16_t pending_timeout = time_out;
-#pragma GCC diagnostic pop
-#else
-  uint16_t pending_timeout = timeout_;
-#endif
-  if (map[pending_map_index_].timeout != 0)
-    pending_timeout = map[pending_map_index_].timeout;
+  // Get timeout value for the pending key.
+  uint16_t pending_timeout = settings_.timeout;
+  if (map_[pending_map_index_].timeout != 0)
+    pending_timeout = map_[pending_map_index_].timeout;
   uint16_t start_time = event_queue_.timestamp(0);
 
   if (Runtime.hasTimeExpired(start_time, pending_timeout)) {
@@ -186,8 +168,8 @@ EventHandlerResult SpaceCadet::afterEachCycle() {
 // Private helper function(s)
 
 int8_t SpaceCadet::getSpaceCadetKeyIndex(Key key) const {
-  for (uint8_t i = 0; !map[i].isEmpty(); ++i) {
-    if (map[i].input == key) {
+  for (uint8_t i = 0; !map_[i].isEmpty(); ++i) {
+    if (map_[i].input == key) {
       return i;
     }
   }
@@ -205,10 +187,10 @@ void SpaceCadet::flushEvent(bool is_tap) {
   if (is_tap && pending_map_index_ >= 0) {
     // If we're in no-delay mode, we should first send the release of the
     // modifier key as a courtesy before sending the tap event.
-    if (mode_ == Mode::NO_DELAY) {
+    if (settings_.mode == Mode::NO_DELAY) {
       Runtime.handleKeyEvent(KeyEvent(event.addr, WAS_PRESSED));
     }
-    event.key = map[pending_map_index_].output;
+    event.key = map_[pending_map_index_].output;
   }
   event_queue_.shift();
   Runtime.handleKeyswitchEvent(event);

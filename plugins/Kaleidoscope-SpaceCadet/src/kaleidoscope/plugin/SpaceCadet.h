@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc, Ben Gemperline
- * Copyright (C) 2019-2021  Keyboard.io, Inc
+ * Copyright (C) 2019-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -27,15 +27,6 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/plugin.h"                // for Plugin
-// -----------------------------------------------------------------------------
-// Deprecation warning messages
-#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
-
-#define _DEPRECATED_MESSAGE_SPACECADET_TIME_OUT                        \
-  "The `SpaceCadet.time_out` variable is deprecated. Please use the\n" \
-  "`SpaceCadet.setTimeout()` function instead.\n"                      \
-  "This variable will be removed after 2022-09-01."
-// -----------------------------------------------------------------------------
 
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END \
@@ -48,7 +39,11 @@ constexpr Key Key_SpaceCadetDisable = Key(kaleidoscope::ranges::SC_LAST);
 namespace kaleidoscope {
 namespace plugin {
 
+class SpaceCadetConfig;
+
 class SpaceCadet : public kaleidoscope::Plugin {
+  friend class SpaceCadetConfig;
+
  public:
   // Internal Class
   // Declarations for the modifier key mapping
@@ -76,61 +71,53 @@ class SpaceCadet : public kaleidoscope::Plugin {
 
   // Methods
   void enable() {
-    mode_ = Mode::ON;
+    settings_.mode = Mode::ON;
   }
   void disable() {
-    mode_ = Mode::OFF;
+    settings_.mode = Mode::OFF;
   }
   void enableWithoutDelay() {
-    mode_ = Mode::NO_DELAY;
+    settings_.mode = Mode::NO_DELAY;
   }
   bool active() {
-    return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
+    return (settings_.mode == Mode::ON || settings_.mode == Mode::NO_DELAY);
+  }
+  bool activeWithoutDelay() {
+    return settings_.mode == Mode::NO_DELAY;
   }
 
-#ifndef NDEPRECATED
-  // Publically accessible variables
-  DEPRECATED(SPACECADET_TIME_OUT)
-  static uint16_t time_out;            //  The global timeout in milliseconds
-  static SpaceCadet::KeyBinding *map;  // The map of key bindings
-#endif
-
   void setTimeout(uint16_t timeout) {
-#ifndef NDEPRECATED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    time_out = timeout;
-#pragma GCC diagnostic pop
-#else
-    timeout_ = timeout;
-#endif
+    settings_.timeout = timeout;
+  }
+
+  uint16_t getTimeout() {
+    return settings_.timeout;
   }
 
   void setMap(KeyBinding *bindings) {
-    map = bindings;
+    map_ = bindings;
   }
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
- private:
+ protected:
   enum Mode : uint8_t {
     ON,
     OFF,
     NO_DELAY,
   };
-  uint8_t mode_;
+  struct {
+    Mode mode;
 
-#ifdef NDEPRECATED
-  // Global timeout in milliseconds
-  uint16_t timeout_ = 200;
+    // Global timeout in milliseconds
+    uint16_t timeout = 200;
+  } settings_;
 
+ private:
   // The map of keybindings
-  KeyBinding *map = nullptr;
-  // When DEPRECATED public `map[]` variable is removed, this variable name
-  // should be given a trailing underscore to conform to code style guide.
-#endif
+  KeyBinding *map_ = nullptr;
 
   KeyEventTracker event_tracker_;
 
@@ -152,7 +139,23 @@ class SpaceCadet : public kaleidoscope::Plugin {
   void flushQueue();
 };
 
+class SpaceCadetConfig : public kaleidoscope::Plugin {
+ public:
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+  void disableSpaceCadetIfUnconfigured();
+
+ private:
+  struct Settings {
+    SpaceCadet::Mode mode;
+    uint16_t timeout;
+  };
+  uint16_t settings_base_;
+};
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::SpaceCadet SpaceCadet;
+extern kaleidoscope::plugin::SpaceCadetConfig SpaceCadetConfig;
