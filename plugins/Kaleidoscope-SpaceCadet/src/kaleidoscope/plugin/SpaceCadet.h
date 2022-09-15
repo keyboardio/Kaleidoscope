@@ -1,7 +1,7 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-SpaceCadet -- Space Cadet Shift Extended
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc, Ben Gemperline
- * Copyright (C) 2019-2021  Keyboard.io, Inc
+ * Copyright (C) 2019-2022  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -39,7 +39,11 @@ constexpr Key Key_SpaceCadetDisable = Key(kaleidoscope::ranges::SC_LAST);
 namespace kaleidoscope {
 namespace plugin {
 
+class SpaceCadetConfig;
+
 class SpaceCadet : public kaleidoscope::Plugin {
+  friend class SpaceCadetConfig;
+
  public:
   // Internal Class
   // Declarations for the modifier key mapping
@@ -67,20 +71,27 @@ class SpaceCadet : public kaleidoscope::Plugin {
 
   // Methods
   void enable() {
-    mode_ = Mode::ON;
+    settings_.mode = Mode::ON;
   }
   void disable() {
-    mode_ = Mode::OFF;
+    settings_.mode = Mode::OFF;
   }
   void enableWithoutDelay() {
-    mode_ = Mode::NO_DELAY;
+    settings_.mode = Mode::NO_DELAY;
   }
   bool active() {
-    return (mode_ == Mode::ON || mode_ == Mode::NO_DELAY);
+    return (settings_.mode == Mode::ON || settings_.mode == Mode::NO_DELAY);
+  }
+  bool activeWithoutDelay() {
+    return settings_.mode == Mode::NO_DELAY;
   }
 
   void setTimeout(uint16_t timeout) {
-    timeout_ = timeout;
+    settings_.timeout = timeout;
+  }
+
+  uint16_t getTimeout() {
+    return settings_.timeout;
   }
 
   void setMap(KeyBinding *bindings) {
@@ -91,17 +102,20 @@ class SpaceCadet : public kaleidoscope::Plugin {
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
- private:
+ protected:
   enum Mode : uint8_t {
     ON,
     OFF,
     NO_DELAY,
   };
-  uint8_t mode_;
+  struct {
+    Mode mode;
 
-  // Global timeout in milliseconds
-  uint16_t timeout_ = 200;
+    // Global timeout in milliseconds
+    uint16_t timeout = 200;
+  } settings_;
 
+ private:
   // The map of keybindings
   KeyBinding *map_ = nullptr;
 
@@ -125,7 +139,23 @@ class SpaceCadet : public kaleidoscope::Plugin {
   void flushQueue();
 };
 
+class SpaceCadetConfig : public kaleidoscope::Plugin {
+ public:
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+  void disableSpaceCadetIfUnconfigured();
+
+ private:
+  struct Settings {
+    SpaceCadet::Mode mode;
+    uint16_t timeout;
+  };
+  uint16_t settings_base_;
+};
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::SpaceCadet SpaceCadet;
+extern kaleidoscope::plugin::SpaceCadetConfig SpaceCadetConfig;
