@@ -273,8 +273,13 @@ class FocusExampleCommand : public Plugin {
     return ::Focus.sendName(F("FocusExampleCommand"));
   }
 
-  EventHandlerResult onFocusEvent(const char *command) {
-    if (strcmp_P(command, PSTR("example")) != 0)
+  EventHandlerResult onFocusEvent(const char *input) {
+    const char *cmd = PSTR("example");
+
+    if (::Focus.inputMatchesHelp(input))
+      return ::Focus.printHelp(cmd);
+
+    if (!::Focus.inputMatchesCommand(input, cmd))
       return EventHandlerResult::OK;
 
     ::Focus.send(F("This is an example response. Hello world!"));
@@ -348,8 +353,8 @@ class ExamplePlugin : public Plugin {
  public:
   ExamplePlugin();
 
-  EventHandlerResult onFocusEvent(const char *command) {
-    if (strcmp_P(command, PSTR("example.toggle")) != 0)
+  EventHandlerResult onFocusEvent(const char *input) {
+    if (!::Focus.inputMatchesCommand(input, PSTR("example.toggle")))
       return EventHandlerResult::OK;
 
     example_toggle_ = !example_toggle_;
@@ -408,8 +413,8 @@ class ExampleOptionalCommand : public Plugin {
  public:
   ExampleOptionalCommand() {}
 
-  EventHandlerResult onFocusEvent(const char *command) {
-    if (strcmp_P(command, PSTR("optional")) != 0)
+  EventHandlerResult onFocusEvent(const char *input) {
+    if (!::Focus.inputMatchesCommand(input, PSTR("optional")))
       return EventHandlerResult::OK;
 
     ::Focus.send(Layer.getLayerState());
@@ -793,7 +798,7 @@ void macroNewSentence(KeyEvent &event) {
 
 `kaleidoscope-builder` has been removed.
 
-We replaced it with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation. 
+We replaced it with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
 
 ### OneShot meta keys
 
