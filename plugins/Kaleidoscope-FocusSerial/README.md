@@ -25,7 +25,12 @@ class FocusTestCommand : public Plugin {
   }
 
   EventHandlerResult onFocusEvent(const char *input) {
-    if (!::Focus.inputMatchesCommand(input, PSTR("test")))
+    const char *cmd = PSTR("test");
+
+    if (::Focus.inputMatchesHelp(input))
+      return ::Focus.printHelp(cmd);
+
+    if (!::Focus.inputMatchesCommand(input, cmd))
       return EventHandlerResult::OK;
 
     ::Focus.send(F("Congratulations, the test command works!"));
@@ -46,6 +51,18 @@ void setup () {
 ## Plugin methods
 
 The plugin provides the `Focus` object, with a couple of helper methods aimed at developers. Terminating the response with a dot on its own line is handled implicitly by `FocusSerial`, one does not need to do that explicitly.
+
+### `.inputMatchesHelp(input)`
+
+Returns `true` if the given `input` matches the `help` command. To be used at the top of `onFocusEvent()`, followed by `.printHelp(...)`.
+
+### `.printHelp(...)`
+
+Given a series of strings (stored in `PROGMEM`, via `PSTR()`), prints them one per line. Assumes it is run as part of handling the `help` command. Returns `EventHandlerResult::OK`.
+
+### `.inputMatchesCommand(input, command)`
+
+Returns `true` if the `input` matches the expected `command`, false otherwise. A convenience function over `strcmp_P()`.
 
 ### `.send(...)`
 ### `.sendRaw(...)`
