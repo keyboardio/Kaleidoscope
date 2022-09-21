@@ -132,8 +132,8 @@ class Runtime_ {
     return (elapsed_time >= ttl);
   }
 
-  EventHandlerResult onFocusEvent(const char *command) {
-    return kaleidoscope::Hooks::onFocusEvent(command);
+  EventHandlerResult onFocusEvent(const char *input) {
+    return kaleidoscope::Hooks::onFocusEvent(input);
   }
 
   /** Handle a physical keyswitch event

@@ -214,14 +214,14 @@ EventHandlerResult DynamicMacros::onNameQuery() {
   return ::Focus.sendName(F("DynamicMacros"));
 }
 
-EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
+EventHandlerResult DynamicMacros::onFocusEvent(const char *input) {
   const char *cmd_map     = PSTR("macros.map");
   const char *cmd_trigger = PSTR("macros.trigger");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_map, cmd_trigger);
 
-  if (::Focus.inputMatchesCommand(command, cmd_map)) {
+  if (::Focus.inputMatchesCommand(input, cmd_map)) {
     if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < storage_size_; i++) {
         uint8_t b;
@@ -241,7 +241,7 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
       macro_count_ = updateDynamicMacroCache();
     }
     return EventHandlerResult::EVENT_CONSUMED;
-  } else if (::Focus.inputMatchesCommand(command, cmd_trigger)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_trigger)) {
     uint8_t id = 0;
     ::Focus.read(id);
     play(id);

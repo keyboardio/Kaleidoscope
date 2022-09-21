@@ -78,8 +78,8 @@ EventHandlerResult ColormapEffect::onLayerChange() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult ColormapEffect::onFocusEvent(const char *command) {
-  return ::LEDPaletteTheme.themeFocusEvent(command, PSTR("colormap.map"), map_base_, max_layers_);
+EventHandlerResult ColormapEffect::onFocusEvent(const char *input) {
+  return ::LEDPaletteTheme.themeFocusEvent(input, PSTR("colormap.map"), map_base_, max_layers_);
 }
 
 }  // namespace plugin

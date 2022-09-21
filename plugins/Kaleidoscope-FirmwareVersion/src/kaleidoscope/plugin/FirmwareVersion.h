@@ -31,13 +31,13 @@ namespace plugin {
 
 class FirmwareVersion : public Plugin {
  public:
-  EventHandlerResult onFocusEvent(const char *command) {
+  EventHandlerResult onFocusEvent(const char *input) {
     const char *cmd_version = PSTR("version");
 
-    if (::Focus.inputMatchesHelp(command))
+    if (::Focus.inputMatchesHelp(input))
       return ::Focus.printHelp(cmd_version);
 
-    if (!::Focus.inputMatchesCommand(command, cmd_version))
+    if (!::Focus.inputMatchesCommand(input, cmd_version))
       return EventHandlerResult::OK;
 
 #ifdef KALEIDOSCOPE_FIRMWARE_VERSION

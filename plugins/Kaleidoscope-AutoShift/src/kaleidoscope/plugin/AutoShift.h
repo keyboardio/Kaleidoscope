@@ -275,7 +275,7 @@ class AutoShift : public Plugin {
 class AutoShiftConfig : public Plugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
  private:
   // The base address in persistent storage for configuration data

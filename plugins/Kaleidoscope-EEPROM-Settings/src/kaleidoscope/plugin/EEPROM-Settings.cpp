@@ -156,7 +156,7 @@ void EEPROMSettings::update() {
 }
 
 /** Focus **/
-EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
+EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
   enum {
     DEFAULT_LAYER,
     IS_VALID,
@@ -169,16 +169,16 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   const char *cmd_version      = PSTR("settings.version");
   const char *cmd_crc          = PSTR("settings.crc");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc);
 
-  if (::Focus.inputMatchesCommand(command, cmd_defaultLayer))
+  if (::Focus.inputMatchesCommand(input, cmd_defaultLayer))
     sub_command = DEFAULT_LAYER;
-  else if (::Focus.inputMatchesCommand(command, cmd_isValid))
+  else if (::Focus.inputMatchesCommand(input, cmd_isValid))
     sub_command = IS_VALID;
-  else if (::Focus.inputMatchesCommand(command, cmd_version))
+  else if (::Focus.inputMatchesCommand(input, cmd_version))
     sub_command = GET_VERSION;
-  else if (::Focus.inputMatchesCommand(command, cmd_crc))
+  else if (::Focus.inputMatchesCommand(input, cmd_crc))
     sub_command = GET_CRC;
   else
     return EventHandlerResult::OK;
@@ -208,7 +208,7 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
+EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *input) {
   enum {
     CONTENTS,
     FREE,
@@ -219,14 +219,14 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *command) {
   const char *cmd_free     = PSTR("eeprom.free");
   const char *cmd_erase    = PSTR("eeprom.erase");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_contents, cmd_free, cmd_erase);
 
-  if (::Focus.inputMatchesCommand(command, cmd_contents))
+  if (::Focus.inputMatchesCommand(input, cmd_contents))
     sub_command = CONTENTS;
-  else if (::Focus.inputMatchesCommand(command, cmd_free))
+  else if (::Focus.inputMatchesCommand(input, cmd_free))
     sub_command = FREE;
-  else if (::Focus.inputMatchesCommand(command, cmd_erase))
+  else if (::Focus.inputMatchesCommand(input, cmd_erase))
     sub_command = ERASE;
   else
     return EventHandlerResult::OK;

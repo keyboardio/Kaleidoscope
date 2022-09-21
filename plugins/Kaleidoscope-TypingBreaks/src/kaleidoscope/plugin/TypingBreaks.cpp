@@ -139,7 +139,7 @@ EventHandlerResult TypingBreaks::onSetup() {
                                            "typingbreaks.leftMaxKeys\r\n"   \
                                            "typingbreaks.rightMaxKeys")
 
-EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
+EventHandlerResult TypingBreaks::onFocusEvent(const char *input) {
   enum {
     IDLE_TIME_LIMIT,
     LOCK_TIMEOUT,
@@ -153,22 +153,22 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *command) {
   const char *cmd_lockLength    = PSTR("typingbreaks.lockLength");
   const char *cmd_leftMaxKeys   = PSTR("typingbreaks.leftMaxKeys");
   const char *cmd_rightMaxKeys  = PSTR("typingbreaks.rightMaxKeys");
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_idleTimeLimit,
                              cmd_lockTimeOut,
                              cmd_lockLength,
                              cmd_leftMaxKeys,
                              cmd_rightMaxKeys);
 
-  if (::Focus.inputMatchesCommand(command, cmd_idleTimeLimit))
+  if (::Focus.inputMatchesCommand(input, cmd_idleTimeLimit))
     subCommand = IDLE_TIME_LIMIT;
-  else if (::Focus.inputMatchesCommand(command, cmd_lockTimeOut))
+  else if (::Focus.inputMatchesCommand(input, cmd_lockTimeOut))
     subCommand = LOCK_TIMEOUT;
-  else if (::Focus.inputMatchesCommand(command, cmd_lockLength))
+  else if (::Focus.inputMatchesCommand(input, cmd_lockLength))
     subCommand = LOCK_LENGTH;
-  else if (::Focus.inputMatchesCommand(command, cmd_leftMaxKeys))
+  else if (::Focus.inputMatchesCommand(input, cmd_leftMaxKeys))
     subCommand = LEFT_MAX;
-  else if (::Focus.inputMatchesCommand(command, cmd_rightMaxKeys))
+  else if (::Focus.inputMatchesCommand(input, cmd_rightMaxKeys))
     subCommand = RIGHT_MAX;
   else
     return EventHandlerResult::OK;

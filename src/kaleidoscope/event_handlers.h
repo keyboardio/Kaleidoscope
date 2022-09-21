@@ -199,8 +199,8 @@ class SignatureCheckDummy {};
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
                 _ABORTABLE,                                               __NL__ \
                 (),(),(), /* non template */                              __NL__ \
-                (const char *command),                                    __NL__ \
-                (command), ##__VA_ARGS__)                                 __NL__ \
+                (const char *input),                                      __NL__ \
+                (input), ##__VA_ARGS__)                                   __NL__ \
                                                                           __NL__ \
    /* Called when the layer state changes. Which layes changed are    */  __NL__ \
    /* not passed as arguments. If one needs that info, they should    */  __NL__ \

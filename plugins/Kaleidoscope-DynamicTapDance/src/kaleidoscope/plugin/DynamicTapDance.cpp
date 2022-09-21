@@ -93,13 +93,13 @@ EventHandlerResult DynamicTapDance::onNameQuery() {
   return ::Focus.sendName(F("DynamicTapDance"));
 }
 
-EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {
+EventHandlerResult DynamicTapDance::onFocusEvent(const char *input) {
   const char *cmd_map = PSTR("tapdance.map");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_map);
 
-  if (!::Focus.inputMatchesCommand(command, cmd_map))
+  if (!::Focus.inputMatchesCommand(input, cmd_map))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

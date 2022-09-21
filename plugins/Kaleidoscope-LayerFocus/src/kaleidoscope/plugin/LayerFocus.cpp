@@ -32,45 +32,45 @@ EventHandlerResult LayerFocus::onNameQuery() {
   return ::Focus.sendName(F("LayerFocus"));
 }
 
-EventHandlerResult LayerFocus::onFocusEvent(const char *command) {
+EventHandlerResult LayerFocus::onFocusEvent(const char *input) {
   const char *cmd_activate   = PSTR("layer.activate");
   const char *cmd_deactivate = PSTR("layer.deactivate");
   const char *cmd_isActive   = PSTR("layer.isActive");
   const char *cmd_moveTo     = PSTR("layer.moveTo");
   const char *cmd_state      = PSTR("layer.state");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_activate,
                              cmd_deactivate,
                              cmd_isActive,
                              cmd_moveTo,
                              cmd_state);
 
-  if (::Focus.inputMatchesCommand(command, cmd_activate)) {
+  if (::Focus.inputMatchesCommand(input, cmd_activate)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.activate(layer);
     }
-  } else if (::Focus.inputMatchesCommand(command, cmd_deactivate)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_deactivate)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.deactivate(layer);
     }
-  } else if (::Focus.inputMatchesCommand(command, cmd_isActive)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_isActive)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Focus.send(::Layer.isActive(layer));
     }
-  } else if (::Focus.inputMatchesCommand(command, cmd_moveTo)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_moveTo)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.move(layer);
     }
-  } else if (::Focus.inputMatchesCommand(command, cmd_state)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_state)) {
     if (::Focus.isEOL()) {
       for (uint8_t i = 0; i < 32; i++) {
         ::Focus.send(::Layer.isActive(i) ? 1 : 0);

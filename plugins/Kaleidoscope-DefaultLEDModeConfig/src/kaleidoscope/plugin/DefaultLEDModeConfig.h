@@ -30,7 +30,7 @@ class DefaultLEDModeConfig : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   void activateLEDModeIfUnconfigured(LEDModeInterface *plugin);
 

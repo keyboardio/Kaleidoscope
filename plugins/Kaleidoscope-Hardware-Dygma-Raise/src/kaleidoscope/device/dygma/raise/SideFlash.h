@@ -34,12 +34,13 @@ class SideFlash : public kaleidoscope::Plugin {
   _Firmware firmware;
 
  public:
-  EventHandlerResult onFocusEvent(const char *command) {
+  EventHandlerResult onFocusEvent(const char *input) {
     const char *cmd_flash_left   = PSTR("hardware.flash_left_side");
     const char *cmd_flash_right  = PSTR("hardware.flash_right_side");
     const char *cmd_verify_left  = PSTR("hardware.verify_left_side");
     const char *cmd_verify_right = PSTR("hardware.verify_right_side");
-    if (::Focus.inputMatchesHelp(command))
+
+    if (::Focus.inputMatchesHelp(input))
       return ::Focus.printHelp(cmd_flash_left, cmd_flash_right, cmd_verify_left, cmd_verify_right);
 
     auto sideFlasher           = Runtime.device().sideFlasher();
@@ -51,16 +52,16 @@ class SideFlash : public kaleidoscope::Plugin {
     } sub_command;
     uint8_t address = 0;
 
-    if (::Focus.inputMatchesCommand(command, cmd_flash_left)) {
+    if (::Focus.inputMatchesCommand(input, cmd_flash_left)) {
       sub_command = FLASH;
       address     = left_boot_address;
-    } else if (::Focus.inputMatchesCommand(command, cmd_flash_right)) {
+    } else if (::Focus.inputMatchesCommand(input, cmd_flash_right)) {
       sub_command = FLASH;
       address     = right_boot_address;
-    } else if (::Focus.inputMatchesCommand(command, cmd_verify_left)) {
+    } else if (::Focus.inputMatchesCommand(input, cmd_verify_left)) {
       sub_command = VERIFY;
       address     = left_boot_address;
-    } else if (::Focus.inputMatchesCommand(command, cmd_verify_right)) {
+    } else if (::Focus.inputMatchesCommand(input, cmd_verify_right)) {
       sub_command = VERIFY;
       address     = right_boot_address;
     } else {

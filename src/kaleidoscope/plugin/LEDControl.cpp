@@ -212,7 +212,7 @@ EventHandlerResult LEDControl::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
+EventHandlerResult FocusLEDCommand::onFocusEvent(const char *input) {
   enum {
     SETALL,
     MODE,
@@ -230,22 +230,22 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   const char *cmd_brightness = PSTR("led.brightness");
   const char *cmd_theme      = PSTR("led.theme");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_at,
                              cmd_setAll,
                              cmd_mode,
                              cmd_brightness,
                              cmd_theme);
 
-  if (::Focus.inputMatchesCommand(command, cmd_at))
+  if (::Focus.inputMatchesCommand(input, cmd_at))
     subCommand = AT;
-  else if (::Focus.inputMatchesCommand(command, cmd_setAll))
+  else if (::Focus.inputMatchesCommand(input, cmd_setAll))
     subCommand = SETALL;
-  else if (::Focus.inputMatchesCommand(command, cmd_mode))
+  else if (::Focus.inputMatchesCommand(input, cmd_mode))
     subCommand = MODE;
-  else if (::Focus.inputMatchesCommand(command, cmd_theme))
+  else if (::Focus.inputMatchesCommand(input, cmd_theme))
     subCommand = THEME;
-  else if (::Focus.inputMatchesCommand(command, cmd_brightness))
+  else if (::Focus.inputMatchesCommand(input, cmd_brightness))
     subCommand = BRIGHTNESS;
   else
     return EventHandlerResult::OK;

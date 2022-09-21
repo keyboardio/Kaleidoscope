@@ -94,7 +94,7 @@ EventHandlerResult FingerPainter::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
+EventHandlerResult FingerPainter::onFocusEvent(const char *input) {
   enum {
     TOGGLE,
     CLEAR,
@@ -103,12 +103,12 @@ EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
   const char *cmd_toggle = PSTR("fingerpainter.toggle");
   const char *cmd_clear  = PSTR("fingerpainter.clear");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_toggle, cmd_clear);
 
-  if (::Focus.inputMatchesCommand(command, cmd_toggle))
+  if (::Focus.inputMatchesCommand(input, cmd_toggle))
     sub_command = TOGGLE;
-  else if (::Focus.inputMatchesCommand(command, cmd_clear))
+  else if (::Focus.inputMatchesCommand(input, cmd_clear))
     sub_command = CLEAR;
   else
     return EventHandlerResult::OK;

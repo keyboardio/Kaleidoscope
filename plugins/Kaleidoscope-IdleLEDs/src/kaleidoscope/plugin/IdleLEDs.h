@@ -46,7 +46,7 @@ class PersistentIdleLEDs : public IdleLEDs {
  public:
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   static void setIdleTimeoutSeconds(uint32_t new_limit);
 

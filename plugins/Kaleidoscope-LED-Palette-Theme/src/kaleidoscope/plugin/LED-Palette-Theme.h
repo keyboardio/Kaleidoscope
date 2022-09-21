@@ -40,9 +40,9 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
   static void updatePaletteColor(uint8_t palette_index, cRGB color);
   static const cRGB lookupPaletteColor(uint8_t palette_index);
 
-  EventHandlerResult onFocusEvent(const char *command);
-  EventHandlerResult themeFocusEvent(const char *command,
-                                     const char *expected_command,
+  EventHandlerResult onFocusEvent(const char *input);
+  EventHandlerResult themeFocusEvent(const char *input,
+                                     const char *expected_input,
                                      uint16_t theme_base,
                                      uint8_t max_themes);
   static bool isThemeUninitialized(uint16_t theme_base, uint8_t max_themes);

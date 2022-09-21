@@ -38,7 +38,7 @@ class DynamicMacros : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult beforeReportingState(const KeyEvent &event) {
     return ::MacroSupport.beforeReportingState(event);
   }

@@ -47,14 +47,14 @@ void SpaceCadetConfig::disableSpaceCadetIfUnconfigured() {
     ::SpaceCadet.disable();
 }
 
-EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *command) {
+EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *input) {
   const char *cmd_mode    = PSTR("spacecadet.mode");
   const char *cmd_timeout = PSTR("spacecadet.timeout");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_mode, cmd_timeout);
 
-  if (::Focus.inputMatchesCommand(command, cmd_mode)) {
+  if (::Focus.inputMatchesCommand(input, cmd_mode)) {
     if (::Focus.isEOL()) {
       ::Focus.send(::SpaceCadet.settings_.mode);
     } else {
@@ -76,7 +76,7 @@ EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *command) {
       Runtime.storage().put(settings_base_, ::SpaceCadet.settings_);
       Runtime.storage().commit();
     }
-  } else if (::Focus.inputMatchesCommand(command, cmd_timeout)) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_timeout)) {
     if (::Focus.isEOL()) {
       ::Focus.send(::SpaceCadet.settings_.timeout);
     } else {

@@ -27,7 +27,7 @@ class TestLEDMode : public kaleidoscope::plugin::LEDMode {
  public:
   TestLEDMode() {}
 
-  kaleidoscope::EventHandlerResult onFocusEvent(const char *command);
+  kaleidoscope::EventHandlerResult onFocusEvent(const char *input);
 
  protected:
   void setup() final;
@@ -48,8 +48,8 @@ void TestLEDMode::update(void) {
 }
 
 kaleidoscope::EventHandlerResult
-TestLEDMode::onFocusEvent(const char *command) {
-  return LEDPaletteTheme.themeFocusEvent(command, PSTR("testLedMode.map"), map_base_, 1);
+TestLEDMode::onFocusEvent(const char *input) {
+  return LEDPaletteTheme.themeFocusEvent(input, PSTR("testLedMode.map"), map_base_, 1);
 }
 
 }  // namespace example

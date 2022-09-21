@@ -40,7 +40,7 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult onSetup();
 
  private:

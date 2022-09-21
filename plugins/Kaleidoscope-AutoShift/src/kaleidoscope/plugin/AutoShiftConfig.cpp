@@ -47,7 +47,7 @@ EventHandlerResult AutoShiftConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
+EventHandlerResult AutoShiftConfig::onFocusEvent(const char *input) {
   enum {
     ENABLED,
     TIMEOUT,
@@ -58,14 +58,14 @@ EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
   const char *cmd_timeout    = PSTR("autoshift.timeout");
   const char *cmd_categories = PSTR("autoshift.categories");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_enabled, cmd_timeout, cmd_categories);
 
-  if (::Focus.inputMatchesCommand(command, cmd_enabled))
+  if (::Focus.inputMatchesCommand(input, cmd_enabled))
     subCommand = ENABLED;
-  else if (::Focus.inputMatchesCommand(command, cmd_timeout))
+  else if (::Focus.inputMatchesCommand(input, cmd_timeout))
     subCommand = TIMEOUT;
-  else if (::Focus.inputMatchesCommand(command, cmd_categories))
+  else if (::Focus.inputMatchesCommand(input, cmd_categories))
     subCommand = CATEGORIES;
   else
     return EventHandlerResult::OK;

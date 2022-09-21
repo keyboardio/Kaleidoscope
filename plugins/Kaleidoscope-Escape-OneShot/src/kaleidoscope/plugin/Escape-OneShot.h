@@ -56,7 +56,7 @@ class EscapeOneShot : public kaleidoscope::Plugin {
 class EscapeOneShotConfig : public Plugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult onNameQuery();
 
  private:

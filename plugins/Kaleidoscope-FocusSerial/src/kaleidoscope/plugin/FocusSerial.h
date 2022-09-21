@@ -48,7 +48,7 @@ class FocusSerial : public kaleidoscope::Plugin {
 
 #ifndef NDEPRECATED
   DEPRECATED(FOCUS_HANDLEHELP)
-  bool handleHelp(const char *command, const char *help_message);
+  bool handleHelp(const char *input, const char *help_message);
 #endif
 
   bool inputMatchesHelp(const char *input);
@@ -137,10 +137,10 @@ class FocusSerial : public kaleidoscope::Plugin {
 
   /* Hooks */
   EventHandlerResult afterEachCycle();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
  private:
-  char command_[32];
+  char input_[32];
   uint8_t buf_cursor_ = 0;
   void printBool(bool b);
 

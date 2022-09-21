@@ -31,13 +31,13 @@ EventHandlerResult LayerNames::onNameQuery() {
   return ::Focus.sendName(F("LayerNames"));
 }
 
-EventHandlerResult LayerNames::onFocusEvent(const char *command) {
+EventHandlerResult LayerNames::onFocusEvent(const char *input) {
   const char *cmd_layerNames = PSTR("keymap.layerNames");
 
-  if (::Focus.inputMatchesHelp(command))
+  if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_layerNames);
 
-  if (!::Focus.inputMatchesCommand(command, cmd_layerNames))
+  if (!::Focus.inputMatchesCommand(input, cmd_layerNames))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

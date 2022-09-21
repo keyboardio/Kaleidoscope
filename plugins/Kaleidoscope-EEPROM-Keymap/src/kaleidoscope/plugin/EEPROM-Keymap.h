@@ -35,7 +35,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   static void setup(uint8_t max);
 
