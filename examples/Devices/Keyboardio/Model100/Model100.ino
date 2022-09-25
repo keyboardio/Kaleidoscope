@@ -2,16 +2,10 @@
 // Copyright 2016-2022 Keyboardio, inc. <jesse@keyboard.io>
 // See "LICENSE" for license details
 
-#ifndef BUILD_INFORMATION
-#define BUILD_INFORMATION "locally built on " __DATE__ " at " __TIME__
-#endif
-
-
 /**
  * These #include directives pull in the Kaleidoscope firmware core,
  * as well as the Kaleidoscope plugins we use in the Model 100's firmware
  */
-
 
 // The Kaleidoscope core
 #include "Kaleidoscope.h"
@@ -22,6 +16,9 @@
 
 // Support for communicating with the host via a simple Serial protocol
 #include "Kaleidoscope-FocusSerial.h"
+
+// Support for querying the firmware version via Focus
+#include "Kaleidoscope-FirmwareVersion.h"
 
 // Support for keys that move the mouse
 #include "Kaleidoscope-MouseKeys.h"
@@ -66,6 +63,9 @@
 // Support for turning the LEDs off after a certain amount of time
 #include "Kaleidoscope-IdleLEDs.h"
 
+// Support for setting and saving the default LED mode
+#include "Kaleidoscope-DefaultLEDModeConfig.h"
+
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-HardwareTestMode.h"
 
@@ -87,6 +87,15 @@
 
 // Support for dynamic, Chrysalis-editable macros
 #include "Kaleidoscope-DynamicMacros.h"
+
+// Support for SpaceCadet keys
+#include "Kaleidoscope-SpaceCadet.h"
+
+// Support for editable layer names
+#include "Kaleidoscope-LayerNames.h"
+
+// Support for the GeminiPR Stenography protocol
+#include "Kaleidoscope-Steno.h"
 
 /** This 'enum' is a list of all the macros used by the Model 100's firmware
   * The names aren't particularly important. What is important is that each
@@ -225,16 +234,16 @@ KEYMAPS(
 
   [PRIMARY] = KEYMAP_STACKED
   (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
-   Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_G, Key_Tab,
-   Key_PageUp,   Key_A, Key_R, Key_S, Key_T, Key_D,
-   Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_Backtick, Key_Q, Key_W, Key_F, Key_P, Key_B, Key_Tab,
+   Key_PageUp,   Key_A, Key_R, Key_S, Key_T, Key_G,
+   Key_PageDown, Key_Z, Key_X, Key_C, Key_D, Key_V, Key_Escape,
    Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
    ShiftToLayer(FUNCTION),
 
    M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
    Key_Enter,     Key_J, Key_L, Key_U,     Key_Y,         Key_Semicolon, Key_Equals,
-                  Key_H, Key_N, Key_E,     Key_I,         Key_O,         Key_Quote,
-   Key_RightAlt,  Key_K, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+                  Key_M, Key_N, Key_E,     Key_I,         Key_O,         Key_Quote,
+   Key_RightAlt,  Key_K, Key_H, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
    Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
    ShiftToLayer(FUNCTION)),
 
@@ -304,8 +313,8 @@ KEYMAPS(
 
 static void versionInfoMacro(uint8_t key_state) {
   if (keyToggledOn(key_state)) {
-    Macros.type(PSTR("Keyboardio Model 100 - Kaleidoscope "));
-    Macros.type(PSTR(BUILD_INFORMATION));
+    Macros.type(PSTR("Keyboardio Model 100 - Firmware version "));
+    Macros.type(PSTR(KALEIDOSCOPE_FIRMWARE_VERSION));
   }
 }
 
@@ -415,6 +424,17 @@ static void toggleKeyboardProtocol(uint8_t combo_index) {
 }
 
 /**
+ * Toggles between using the built-in keymap, and the EEPROM-stored one.
+ */
+static void toggleKeymapSource(uint8_t combo_index) {
+  if (Layer.getKey == Layer.getKeyFromPROGMEM) {
+    Layer.getKey = EEPROMKeymap.getKey;
+  } else {
+    Layer.getKey = Layer.getKeyFromPROGMEM;
+  }
+}
+
+/**
  *  This enters the hardware test mode
  */
 static void enterHardwareTestMode(uint8_t combo_index) {
@@ -430,7 +450,10 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   .keys = {R3C6, R2C6, R3C7}},
                  {.action = enterHardwareTestMode,
                   // Left Fn + Prog + LED
-                  .keys = {R3C6, R0C0, R0C6}});
+                  .keys = {R3C6, R0C0, R0C6}},
+                 {.action = toggleKeymapSource,
+                  // Left Fn + Prog + Shift
+                  .keys = {R3C6, R0C0, R3C7}});
 
 // First, tell Kaleidoscope which plugins you want to use.
 // The order can be important. For example, LED effects are
@@ -440,6 +463,12 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // editable keymap in EEPROM.
   EEPROMSettings,
   EEPROMKeymap,
+
+  // SpaceCadet can turn your shifts into parens on tap, while keeping them as
+  // Shifts when held. SpaceCadetConfig lets Chrysalis configure some aspects of
+  // the plugin.
+  SpaceCadet,
+  SpaceCadetConfig,
 
   // Focus allows bi-directional communication with the host, and is the
   // interface through which the keymap in EEPROM can be edited.
@@ -547,7 +576,23 @@ KALEIDOSCOPE_INIT_PLUGINS(
   PersistentIdleLEDs,
 
   // Enables dynamic, Chrysalis-editable macros.
-  DynamicMacros);
+  DynamicMacros,
+
+  // The FirmwareVersion plugin lets Chrysalis query the version of the firmware
+  // programmatically.
+  FirmwareVersion,
+
+  // The LayerNames plugin allows Chrysalis to display - and edit - custom layer
+  // names, to be shown instead of the default indexes.
+  LayerNames,
+
+  // Enables setting, saving (via Chrysalis), and restoring (on boot) the
+  // default LED mode.
+  DefaultLEDModeConfig,
+
+  // Enables the GeminiPR Stenography protocol. Unused by default, but with the
+  // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
+  GeminiPR);
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up
@@ -581,11 +626,6 @@ void setup() {
   // https://github.com/keyboardio/Kaleidoscope/blob/master/docs/plugins/LED-Stalker.md
   StalkerEffect.variant = STALKER(BlazingTrail);
 
-  // We want to make sure that the firmware starts with LED effects off
-  // This avoids over-taxing devices that don't have a lot of power to share
-  // with USB devices
-  LEDOff.activate();
-
   // To make the keymap editable without flashing new firmware, we store
   // additional layers in EEPROM. For now, we reserve space for eight layers. If
   // one wants to use these layers, just set the default layer to one in EEPROM,
@@ -601,6 +641,25 @@ void setup() {
   // For Dynamic Macros, we need to reserve storage space for the editable
   // macros. A kilobyte is a reasonable default.
   DynamicMacros.reserve_storage(1024);
+
+  // If there's a default layer set in EEPROM, we should set that as the default
+  // here.
+  Layer.move(EEPROMSettings.default_layer());
+
+  // To avoid any surprises, SpaceCadet is turned off by default. However, it
+  // can be permanently enabled via Chrysalis, so we should only disable it if
+  // no configuration exists.
+  SpaceCadetConfig.disableSpaceCadetIfUnconfigured();
+
+  // Editable layer names are stored in EEPROM too, and we reserve 16 bytes per
+  // layer for them. We need one extra byte per layer for bookkeeping, so we
+  // reserve 17 / layer in total.
+  LayerNames.reserve_storage(17 * 8);
+
+  // Unless configured otherwise with Chrysalis, we want to make sure that the
+  // firmware starts with LED effects off. This avoids over-taxing devices that
+  // don't have a lot of power to share with USB devices
+  DefaultLEDModeConfig.activateLEDModeIfUnconfigured(&LEDOff);
 }
 
 /** loop is the second of the standard Arduino sketch functions.
