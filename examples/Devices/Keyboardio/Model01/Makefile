@@ -1,6 +1,8 @@
 # This makefile for a Kaleidoscope sketch pulls in all the targets
 # required to build the example
 
+# Compile without deprecated code to save space
+LOCAL_CFLAGS ?= -DNDEPRECATED -DONESHOT_WITHOUT_METASTICKY
 
 
 
