@@ -207,7 +207,7 @@ endif
 	@$(shell read _)
 # If we have a device serial port available, try to trigger a Kaliedoscope reset
 ifneq ($(_device_port),)
-	$(QUIET) DEVICE=$(_device_port) $(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset"
+	-$(QUIET) DEVICE=$(_device_port) $(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset"
 	sleep 2
 endif
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
