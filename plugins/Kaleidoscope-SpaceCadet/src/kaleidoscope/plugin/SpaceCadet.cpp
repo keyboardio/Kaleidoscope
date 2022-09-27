@@ -193,7 +193,7 @@ void SpaceCadet::flushEvent(bool is_tap) {
     event.key = map_[pending_map_index_].output;
   }
   event_queue_.shift();
-  Runtime.handleKeyswitchEvent(event);
+  Runtime.handleKeyEvent(event);
 }
 
 }  // namespace plugin
