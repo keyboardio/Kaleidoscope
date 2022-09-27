@@ -45,7 +45,7 @@ EventHandlerResult LayerNames::onFocusEvent(const char *command) {
 
       if (name_size == 0 || name_size == 255) break;
 
-      if (pos + name_size >= storage_size) break;
+      if (pos + name_size >= storage_size_) break;
 
       ::Focus.send(name_size);
 
@@ -68,7 +68,7 @@ EventHandlerResult LayerNames::onFocusEvent(const char *command) {
       ::Focus.read(spc);
 
       // If we'd overflow our storage space, don't, close it and break out;
-      if (pos + name_size + 1 > storage_size) {
+      if (pos + name_size + 1 > storage_size_) {
         Runtime.storage().update(storage_base_ + pos, 0);
         break;
       }
