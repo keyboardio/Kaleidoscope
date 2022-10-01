@@ -23,15 +23,17 @@ namespace kaleidoscope {
 namespace plugin {
 
 class LEDDigitalRainEffect : public Plugin,
-  public LEDModeInterface,
-  public AccessTransientLEDMode {
+                             public LEDModeInterface,
+                             public AccessTransientLEDMode {
  public:
   LEDDigitalRainEffect() {}
 
   /**
    * Color channel enum.
    */
-  enum class ColorChannel {RED, GREEN, BLUE};
+  enum class ColorChannel { RED,
+                            GREEN,
+                            BLUE };
 
   /**
    * Get or set the number milliseconds it takes for a drop to decay
@@ -121,7 +123,7 @@ class LEDDigitalRainEffect : public Plugin,
   class TransientLEDMode : public LEDMode {
    public:
     TransientLEDMode(const LEDDigitalRainEffect *parent)
-      : parent_(parent) {};
+      : parent_(parent){};
 
    protected:
     virtual void update() final;
@@ -174,15 +176,15 @@ class LEDDigitalRainEffect : public Plugin,
    * Values which the public accessors get and set,
    * and their defaults.
    */
-  uint16_t decay_ms_ = 2000;
-  uint16_t drop_ms_ = 180;
+  uint16_t decay_ms_            = 2000;
+  uint16_t drop_ms_             = 180;
   uint8_t new_drop_probability_ = 18;
-  uint8_t tint_shade_ratio_ = 0xd0;
-  uint8_t maximum_tint_ = 0xc0;
-  ColorChannel color_channel_ = ColorChannel::GREEN;
+  uint8_t tint_shade_ratio_     = 0xd0;
+  uint8_t maximum_tint_         = 0xc0;
+  ColorChannel color_channel_   = ColorChannel::GREEN;
 };
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDDigitalRainEffect LEDDigitalRainEffect;

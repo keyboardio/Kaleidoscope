@@ -97,12 +97,10 @@ cRGB LEDDigitalRainEffect::TransientLEDMode::get_color_from_intensity_(uint8_t i
   // At high intensities start at light green
   // but drop off very quickly to full green
   if (intensity > parent_->tint_shade_ratio_) {
-    boost = (uint8_t)((uint16_t) parent_->maximum_tint_
-                      * (intensity - parent_->tint_shade_ratio_)
-                      / (0xff - parent_->tint_shade_ratio_));
+    boost = (uint8_t)((uint16_t)parent_->maximum_tint_ * (intensity - parent_->tint_shade_ratio_) / (0xff - parent_->tint_shade_ratio_));
     return get_color_from_components_(0xff, boost);
   }
-  return get_color_from_components_((uint8_t)((uint16_t) 0xff * intensity / parent_->tint_shade_ratio_), 0);
+  return get_color_from_components_((uint8_t)((uint16_t)0xff * intensity / parent_->tint_shade_ratio_), 0);
 }
 
 cRGB LEDDigitalRainEffect::TransientLEDMode::get_color_from_components_(uint8_t primary, uint8_t secondary) {
@@ -118,7 +116,7 @@ cRGB LEDDigitalRainEffect::TransientLEDMode::get_color_from_components_(uint8_t 
   }
 }
 
-}
-}
+}  // namespace plugin
+}  // namespace kaleidoscope
 
 kaleidoscope::plugin::LEDDigitalRainEffect LEDDigitalRainEffect;

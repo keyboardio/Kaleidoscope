@@ -19,7 +19,7 @@
 #include "Kaleidoscope-LEDControl.h"
 #include "Kaleidoscope-LEDEffect-DigitalRain.h"
 
-// *INDENT-OFF*
+// clang-format off
 
 KEYMAPS(
   [0] = KEYMAP_STACKED
@@ -40,17 +40,14 @@ KEYMAPS(
    XXX)
 ) // KEYMAPS(
 
-// *INDENT-ON*
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
-
   // LEDControl provides support for other LED modes
   LEDControl,
 
   // Support for DigitalRain
-  LEDDigitalRainEffect
-
-  );
+  LEDDigitalRainEffect);
 
 
 void setup() {
