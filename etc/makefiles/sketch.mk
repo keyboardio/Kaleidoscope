@@ -205,8 +205,8 @@ endif
 	$(info )
 	@$(shell read _)
 	# If we have a device serial port available, try to trigger a Kaliedoscope reset
-	-$(QUIET) DEVICE=$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1) && \
-		[ -e $$DEVICE ] && \
+	-$(QUIET) export DEVICE=$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1) && \
+		[ -e "$$DEVICE" ] && \
 		$(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset" && \
 		sleep 2
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
