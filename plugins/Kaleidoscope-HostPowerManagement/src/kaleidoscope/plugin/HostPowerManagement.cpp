@@ -20,6 +20,10 @@
 #include <Arduino.h>  // IWYU pragma: keep
 #include <stdint.h>   // for uint8_t
 
+#ifdef ARDUINO_ARCH_GD32
+#include "USBCore.h"
+#endif
+
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
 // This is a terrible hack until Arduino#6964 gets implemented.
@@ -47,6 +51,22 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
   } else {
     if (initial_suspend_)
       initial_suspend_ = false;
+    if (was_suspended_) {
+      was_suspended_ = false;
+      hostPowerManagementEventHandler(Resume);
+    }
+  }
+#endif
+
+#ifdef ARDUINO_ARCH_GD32
+  if (USBCore().isSuspended()) {
+    if (!was_suspended_) {
+      was_suspended_ = true;
+      hostPowerManagementEventHandler(Suspend);
+    } else {
+      hostPowerManagementEventHandler(Sleep);
+    }
+  } else {
     if (was_suspended_) {
       was_suspended_ = false;
       hostPowerManagementEventHandler(Resume);
