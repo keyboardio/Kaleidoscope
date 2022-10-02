@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/DynamicMacros.h"
 
-#include <Arduino.h>                   // for delay, PSTR, strcmp_P, F, __FlashStri...
+#include <Arduino.h>                   // for delay, PSTR, F, __FlashStri...
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <Kaleidoscope-Ranges.h>       // for DYNAMIC_MACRO_FIRST, DYNAMIC_MACRO_LAST
 
@@ -214,14 +214,14 @@ EventHandlerResult DynamicMacros::onNameQuery() {
   return ::Focus.sendName(F("DynamicMacros"));
 }
 
-EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("macros.map\r\nmacros.trigger")))
-    return EventHandlerResult::OK;
+EventHandlerResult DynamicMacros::onFocusEvent(const char *input) {
+  const char *cmd_map     = PSTR("macros.map");
+  const char *cmd_trigger = PSTR("macros.trigger");
 
-  if (strncmp_P(command, PSTR("macros."), 7) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_map, cmd_trigger);
 
-  if (strcmp_P(command + 7, PSTR("map")) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_map)) {
     if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < storage_size_; i++) {
         uint8_t b;
@@ -240,15 +240,16 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *command) {
       Runtime.storage().commit();
       macro_count_ = updateDynamicMacroCache();
     }
-  }
-
-  if (strcmp_P(command + 7, PSTR("trigger")) == 0) {
+    return EventHandlerResult::EVENT_CONSUMED;
+  } else if (::Focus.inputMatchesCommand(input, cmd_trigger)) {
     uint8_t id = 0;
     ::Focus.read(id);
     play(id);
+
+    return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  return EventHandlerResult::EVENT_CONSUMED;
+  return EventHandlerResult::OK;
 }
 
 // public

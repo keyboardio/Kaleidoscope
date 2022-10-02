@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/Escape-OneShot.h"  // IWYU pragma: associated
 
-#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper, strcmp_P
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 
@@ -48,11 +48,12 @@ EventHandlerResult EscapeOneShotConfig::onNameQuery() {
   return ::Focus.sendName(F("EscapeOneShot"));
 }
 
-EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("escape_oneshot.cancel_key")))
-    return EventHandlerResult::OK;
+EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *input) {
+  const char *cmd_cancel_key = PSTR("escape_oneshot.cancel_key");
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_cancel_key);
 
-  if (strcmp_P(command, PSTR("escape_oneshot.cancel_key")) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd_cancel_key))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

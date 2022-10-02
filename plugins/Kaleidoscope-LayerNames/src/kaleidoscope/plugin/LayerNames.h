@@ -27,7 +27,7 @@ namespace plugin {
 class LayerNames : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   void reserve_storage(uint16_t size);
 

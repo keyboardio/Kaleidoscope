@@ -33,24 +33,37 @@ namespace raise {
 #define RAISE_FIRMWARE_VERSION "<unknown>"
 #endif
 
-EventHandlerResult Focus::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("hardware.version\r\nhardware.side_power\r\nhardware.side_ver\r\nhardware.sled_ver\r\nhardware.sled_current\r\nhardware.layout\r\nhardware.joint\r\nhardware.keyscan\r\nhardware.crc_errors\r\nhardware.firmware")))
-    return EventHandlerResult::OK;
+EventHandlerResult Focus::onFocusEvent(const char *input) {
+  const char *cmd_version      = PSTR("hardware.version");
+  const char *cmd_side_power   = PSTR("hardware.side_power");
+  const char *cmd_side_ver     = PSTR("hardware.side_ver");
+  const char *cmd_sled_ver     = PSTR("hardware.sled_ver");
+  const char *cmd_sled_current = PSTR("hardware.sled_current");
+  const char *cmd_layout       = PSTR("hardware.layout");
+  const char *cmd_joint        = PSTR("hardware.joint");
+  const char *cmd_keyscan      = PSTR("hardware.keyscan");
+  const char *cmd_crc_errors   = PSTR("hardware.crc_errors");
+  const char *cmd_firmware     = PSTR("hardware.firmware");
 
-  if (strncmp_P(command, PSTR("hardware."), 9) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_version,
+                             cmd_side_power,
+                             cmd_side_ver,
+                             cmd_sled_ver,
+                             cmd_sled_current,
+                             cmd_layout,
+                             cmd_joint,
+                             cmd_keyscan,
+                             cmd_crc_errors,
+                             cmd_firmware);
 
-  if (strcmp_P(command + 9, PSTR("version")) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_version)) {
     ::Focus.send("Dygma Raise");
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("firmware")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_firmware)) {
     ::Focus.send(RAISE_FIRMWARE_VERSION);
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("side_power")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_side_power)) {
     if (::Focus.isEOL()) {
       ::Focus.send(Runtime.device().side.getPower());
       return EventHandlerResult::EVENT_CONSUMED;
@@ -60,33 +73,25 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
       Runtime.device().side.setPower(power);
       return EventHandlerResult::EVENT_CONSUMED;
     }
-  }
-
-  if (strcmp_P(command + 9, PSTR("side_ver")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_side_ver)) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftVersion());
     ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightVersion());
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("crc_errors")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_crc_errors)) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftCRCErrors());
     ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightCRCErrors());
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("sled_ver")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_sled_ver)) {
     ::Focus.send("left:");
     ::Focus.send(Runtime.device().side.leftSLEDVersion());
     ::Focus.send("\r\nright:");
     ::Focus.send(Runtime.device().side.rightSLEDVersion());
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("sled_current")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_sled_current)) {
     if (::Focus.isEOL()) {
       ::Focus.send("left:");
       ::Focus.send(Runtime.device().side.leftSLEDCurrent());
@@ -99,20 +104,14 @@ EventHandlerResult Focus::onFocusEvent(const char *command) {
       Runtime.device().side.setSLEDCurrent(current);
       return EventHandlerResult::EVENT_CONSUMED;
     }
-  }
-
-  if (strcmp_P(command + 9, PSTR("layout")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_layout)) {
     static const auto ANSI = Runtime.device().settings.Layout::ANSI;
     ::Focus.send(Runtime.device().settings.layout() == ANSI ? "ANSI" : "ISO");
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("joint")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_joint)) {
     ::Focus.send(Runtime.device().settings.joint());
     return EventHandlerResult::EVENT_CONSUMED;
-  }
-
-  if (strcmp_P(command + 9, PSTR("keyscan")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_keyscan)) {
     if (::Focus.isEOL()) {
       ::Focus.send(Runtime.device().settings.keyscanInterval());
       return EventHandlerResult::EVENT_CONSUMED;

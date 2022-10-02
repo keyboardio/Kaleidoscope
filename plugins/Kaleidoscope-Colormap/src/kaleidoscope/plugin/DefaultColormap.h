@@ -87,7 +87,7 @@ class DefaultColormap : public Plugin {
   static void setup();
   static void install();
 
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 };
 
 }  // namespace plugin

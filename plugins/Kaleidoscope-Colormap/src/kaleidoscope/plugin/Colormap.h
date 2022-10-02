@@ -36,7 +36,7 @@ class ColormapEffect : public Plugin,
 
   EventHandlerResult onLayerChange();
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   static bool isUninitialized();
   static void updateColorIndexAtPosition(uint8_t layer, uint16_t position, uint8_t palette_index);

@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/LED-Palette-Theme.h"
 
-#include <Arduino.h>                       // for strcmp_P, PSTR
+#include <Arduino.h>                       // for PSTR
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t
@@ -122,16 +122,16 @@ bool LEDPaletteTheme::isThemeUninitialized(uint16_t theme_base, uint8_t max_them
   return paletteEmpty && themeEmpty;
 }
 
-EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
+EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   const char *cmd = PSTR("palette");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
@@ -159,17 +159,17 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *command,
-                                                    const char *expected_command,
+EventHandlerResult LEDPaletteTheme::themeFocusEvent(const char *input,
+                                                    const char *expected_input,
                                                     uint16_t theme_base,
                                                     uint8_t max_themes) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
-  if (::Focus.handleHelp(command, expected_command))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(expected_input);
 
-  if (strcmp_P(command, expected_command) != 0)
+  if (!::Focus.inputMatchesCommand(input, expected_input))
     return EventHandlerResult::OK;
 
   uint16_t max_index = (max_themes * Runtime.device().led_count) / 2;

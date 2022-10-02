@@ -31,7 +31,7 @@ namespace plugin {
 class DynamicTapDance : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   void setup(uint8_t dynamic_offset, uint16_t size);
 

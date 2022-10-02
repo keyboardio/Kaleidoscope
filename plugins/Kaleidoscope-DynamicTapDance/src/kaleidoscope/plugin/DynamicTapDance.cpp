@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/DynamicTapDance.h"
 
-#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper, strcmp_P
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint16_t, uint8_t
@@ -93,33 +93,33 @@ EventHandlerResult DynamicTapDance::onNameQuery() {
   return ::Focus.sendName(F("DynamicTapDance"));
 }
 
-EventHandlerResult DynamicTapDance::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("tapdance.map")))
+EventHandlerResult DynamicTapDance::onFocusEvent(const char *input) {
+  const char *cmd_map = PSTR("tapdance.map");
+
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_map);
+
+  if (!::Focus.inputMatchesCommand(input, cmd_map))
     return EventHandlerResult::OK;
 
-  if (strncmp_P(command, PSTR("tapdance."), 9) != 0)
-    return EventHandlerResult::OK;
-
-  if (strcmp_P(command + 9, PSTR("map")) == 0) {
-    if (::Focus.isEOL()) {
-      for (uint16_t i = 0; i < storage_size_; i += 2) {
-        Key k;
-        Runtime.storage().get(storage_base_ + i, k);
-        ::Focus.send(k);
-      }
-    } else {
-      uint16_t pos = 0;
-
-      while (!::Focus.isEOL()) {
-        Key k;
-        ::Focus.read(k);
-
-        Runtime.storage().put(storage_base_ + pos, k);
-        pos += 2;
-      }
-      Runtime.storage().commit();
-      updateDynamicTapDanceCache();
+  if (::Focus.isEOL()) {
+    for (uint16_t i = 0; i < storage_size_; i += 2) {
+      Key k;
+      Runtime.storage().get(storage_base_ + i, k);
+      ::Focus.send(k);
     }
+  } else {
+    uint16_t pos = 0;
+
+    while (!::Focus.isEOL()) {
+      Key k;
+      ::Focus.read(k);
+
+      Runtime.storage().put(storage_base_ + pos, k);
+      pos += 2;
+    }
+    Runtime.storage().commit();
+    updateDynamicTapDanceCache();
   }
 
   return EventHandlerResult::EVENT_CONSUMED;

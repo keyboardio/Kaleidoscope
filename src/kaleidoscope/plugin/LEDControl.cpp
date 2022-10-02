@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/LEDControl.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P, strncmp_P
+#include <Arduino.h>                   // for PSTR, strncmp_P
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 
 #include "kaleidoscope/KeyAddrMap.h"               // for KeyAddrMap<>::Iterator, KeyAddrMap
@@ -212,7 +212,7 @@ EventHandlerResult LEDControl::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
+EventHandlerResult FocusLEDCommand::onFocusEvent(const char *input) {
   enum {
     SETALL,
     MODE,
@@ -224,24 +224,28 @@ EventHandlerResult FocusLEDCommand::onFocusEvent(const char *command) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
-  if (::Focus.handleHelp(command, PSTR("led.at\r\n"
-                                       "led.setAll\r\n"
-                                       "led.mode\r\n"
-                                       "led.brightness\r\n"
-                                       "led.theme")))
-    return EventHandlerResult::OK;
+  const char *cmd_at         = PSTR("led.at");
+  const char *cmd_setAll     = PSTR("led.setAll");
+  const char *cmd_mode       = PSTR("led.mode");
+  const char *cmd_brightness = PSTR("led.brightness");
+  const char *cmd_theme      = PSTR("led.theme");
 
-  if (strncmp_P(command, PSTR("led."), 4) != 0)
-    return EventHandlerResult::OK;
-  if (strcmp_P(command + 4, PSTR("at")) == 0)
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_at,
+                             cmd_setAll,
+                             cmd_mode,
+                             cmd_brightness,
+                             cmd_theme);
+
+  if (::Focus.inputMatchesCommand(input, cmd_at))
     subCommand = AT;
-  else if (strcmp_P(command + 4, PSTR("setAll")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_setAll))
     subCommand = SETALL;
-  else if (strcmp_P(command + 4, PSTR("mode")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_mode))
     subCommand = MODE;
-  else if (strcmp_P(command + 4, PSTR("theme")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_theme))
     subCommand = THEME;
-  else if (strcmp_P(command + 4, PSTR("brightness")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_brightness))
     subCommand = BRIGHTNESS;
   else
     return EventHandlerResult::OK;

@@ -86,12 +86,12 @@ class EEPROMSettings : public kaleidoscope::Plugin {
 
 class FocusSettingsCommand : public kaleidoscope::Plugin {
  public:
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 };
 
 class FocusEEPROMCommand : public kaleidoscope::Plugin {
  public:
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 };
 
 }  // namespace plugin

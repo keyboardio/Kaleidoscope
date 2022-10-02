@@ -24,7 +24,7 @@ class TestLEDMode : public LEDMode {
   void setup() final;
   void update() final;
 
-  kaleidoscope::EventHandlerResult onFocusEvent(const char *command);
+  kaleidoscope::EventHandlerResult onFocusEvent(const char *input);
 
  private:
   static uint16_t map_base_;
@@ -41,8 +41,8 @@ void TestLEDMode::update() {
 }
 
 kaleidoscope::EventHandlerResult
-TestLEDMode::onFocusEvent(const char *command) {
-  return LEDPaletteTheme.themeFocusEvent(command, PSTR("testLedMode.map"), map_base_, 1);
+TestLEDMode::onFocusEvent(const char *input) {
+  return LEDPaletteTheme.themeFocusEvent(input, PSTR("testLedMode.map"), map_base_, 1);
 }
 
 }

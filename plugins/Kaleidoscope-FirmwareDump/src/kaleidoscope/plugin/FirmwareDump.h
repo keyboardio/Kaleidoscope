@@ -34,7 +34,7 @@ namespace plugin {
 class FirmwareDump : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
  private:
   uint16_t bootloader_size_;

@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/FingerPainter.h"
 
-#include <Arduino.h>                         // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                         // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
 #include <Kaleidoscope-LED-Palette-Theme.h>  // for LEDPaletteTheme
 #include <stdint.h>                          // for uint16_t, uint8_t
@@ -94,21 +94,21 @@ EventHandlerResult FingerPainter::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult FingerPainter::onFocusEvent(const char *command) {
+EventHandlerResult FingerPainter::onFocusEvent(const char *input) {
   enum {
     TOGGLE,
     CLEAR,
   } sub_command;
 
-  if (::Focus.handleHelp(command, PSTR("fingerpainter.toggle\r\nfingerpainter.clear")))
-    return EventHandlerResult::OK;
+  const char *cmd_toggle = PSTR("fingerpainter.toggle");
+  const char *cmd_clear  = PSTR("fingerpainter.clear");
 
-  if (strncmp_P(command, PSTR("fingerpainter."), 14) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_toggle, cmd_clear);
 
-  if (strcmp_P(command + 14, PSTR("toggle")) == 0)
+  if (::Focus.inputMatchesCommand(input, cmd_toggle))
     sub_command = TOGGLE;
-  else if (strcmp_P(command + 14, PSTR("clear")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_clear))
     sub_command = CLEAR;
   else
     return EventHandlerResult::OK;

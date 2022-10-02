@@ -18,7 +18,7 @@
 
 #include "kaleidoscope/plugin/PersistentLEDMode.h"
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t

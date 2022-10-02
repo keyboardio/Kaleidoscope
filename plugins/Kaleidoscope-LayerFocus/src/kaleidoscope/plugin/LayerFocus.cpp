@@ -18,7 +18,7 @@
 
 #include "kaleidoscope/plugin/LayerFocus.h"
 
-#include <Arduino.h>                   // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                   // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint8_t
 
@@ -32,39 +32,45 @@ EventHandlerResult LayerFocus::onNameQuery() {
   return ::Focus.sendName(F("LayerFocus"));
 }
 
-EventHandlerResult LayerFocus::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("layer.activate\r\nlayer.deactivate\r\nlayer.isActive"
-                                       "\r\nlayer.moveTo\r\nlayer.state")))
-    return EventHandlerResult::OK;
+EventHandlerResult LayerFocus::onFocusEvent(const char *input) {
+  const char *cmd_activate   = PSTR("layer.activate");
+  const char *cmd_deactivate = PSTR("layer.deactivate");
+  const char *cmd_isActive   = PSTR("layer.isActive");
+  const char *cmd_moveTo     = PSTR("layer.moveTo");
+  const char *cmd_state      = PSTR("layer.state");
 
-  if (strncmp_P(command, PSTR("layer."), 6) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_activate,
+                             cmd_deactivate,
+                             cmd_isActive,
+                             cmd_moveTo,
+                             cmd_state);
 
-  if (strcmp_P(command + 6, PSTR("activate")) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_activate)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.activate(layer);
     }
-  } else if (strcmp_P(command + 6, PSTR("deactivate")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_deactivate)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.deactivate(layer);
     }
-  } else if (strcmp_P(command + 6, PSTR("isActive")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_isActive)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Focus.send(::Layer.isActive(layer));
     }
-  } else if (strcmp_P(command + 6, PSTR("moveTo")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_moveTo)) {
     if (!::Focus.isEOL()) {
       uint8_t layer;
       ::Focus.read(layer);
       ::Layer.move(layer);
     }
-  } else if (strcmp_P(command + 6, PSTR("state")) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_state)) {
     if (::Focus.isEOL()) {
       for (uint8_t i = 0; i < 32; i++) {
         ::Focus.send(::Layer.isActive(i) ? 1 : 0);
@@ -80,6 +86,8 @@ EventHandlerResult LayerFocus::onFocusEvent(const char *command) {
           ::Layer.activate(i);
       }
     }
+  } else {
+    return EventHandlerResult::OK;
   }
 
   return EventHandlerResult::EVENT_CONSUMED;

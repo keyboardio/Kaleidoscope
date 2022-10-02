@@ -50,13 +50,13 @@ EventHandlerResult FirmwareDump::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult FirmwareDump::onFocusEvent(const char *command) {
+EventHandlerResult FirmwareDump::onFocusEvent(const char *input) {
   const char *cmd = PSTR("firmware.dump");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;
 
   uint16_t flash_size = (FLASHEND + 1L);

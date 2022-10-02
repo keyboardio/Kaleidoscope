@@ -41,7 +41,7 @@ class EEPROMKeymapProgrammer : public kaleidoscope::Plugin {
   void cancel();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
  private:
   typedef enum {

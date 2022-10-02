@@ -132,7 +132,7 @@ class FocusLEDCommand : public Plugin {
  public:
   FocusLEDCommand() {}
 
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 };
 
 }  // namespace plugin

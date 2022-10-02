@@ -72,16 +72,16 @@ void DefaultColormap::install() {
   ::LEDControl.refreshAll();
 }
 
-EventHandlerResult DefaultColormap::onFocusEvent(const char *command) {
+EventHandlerResult DefaultColormap::onFocusEvent(const char *input) {
   if (!Runtime.has_leds)
     return EventHandlerResult::OK;
 
   const char *cmd = PSTR("colormap.install");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;
 
   install();

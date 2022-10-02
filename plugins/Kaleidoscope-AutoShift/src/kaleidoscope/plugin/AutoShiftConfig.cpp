@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/AutoShift.h"  // IWYU pragma: associated
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, strncmp_P
+#include <Arduino.h>                       // for PSTR
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t
@@ -47,25 +47,25 @@ EventHandlerResult AutoShiftConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult AutoShiftConfig::onFocusEvent(const char *command) {
+EventHandlerResult AutoShiftConfig::onFocusEvent(const char *input) {
   enum {
     ENABLED,
     TIMEOUT,
     CATEGORIES,
   } subCommand;
 
-  if (::Focus.handleHelp(command, PSTR("autoshift.enabled\r\n"
-                                       "autoshift.timeout\r\n"
-                                       "autoshift.categories")))
-    return EventHandlerResult::OK;
+  const char *cmd_enabled    = PSTR("autoshift.enabled");
+  const char *cmd_timeout    = PSTR("autoshift.timeout");
+  const char *cmd_categories = PSTR("autoshift.categories");
 
-  if (strncmp_P(command, PSTR("autoshift."), 10) != 0)
-    return EventHandlerResult::OK;
-  if (strcmp_P(command + 10, PSTR("enabled")) == 0)
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_enabled, cmd_timeout, cmd_categories);
+
+  if (::Focus.inputMatchesCommand(input, cmd_enabled))
     subCommand = ENABLED;
-  else if (strcmp_P(command + 10, PSTR("timeout")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_timeout))
     subCommand = TIMEOUT;
-  else if (strcmp_P(command + 10, PSTR("categories")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_categories))
     subCommand = CATEGORIES;
   else
     return EventHandlerResult::OK;

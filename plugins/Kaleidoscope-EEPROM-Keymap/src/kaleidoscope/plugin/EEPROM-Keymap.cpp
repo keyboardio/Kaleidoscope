@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/EEPROM-Keymap.h"
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                       // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t
@@ -101,14 +101,15 @@ void EEPROMKeymap::dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr)) {
   }
 }
 
-EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("keymap.custom\r\nkeymap.default\r\nkeymap.onlyCustom")))
-    return EventHandlerResult::OK;
+EventHandlerResult EEPROMKeymap::onFocusEvent(const char *input) {
+  const char *cmd_custom     = PSTR("keymap.custom");
+  const char *cmd_default    = PSTR("keymap.default");
+  const char *cmd_onlyCustom = PSTR("keymap.onlyCustom");
 
-  if (strncmp_P(command, PSTR("keymap."), 7) != 0)
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_custom, cmd_default, cmd_onlyCustom);
 
-  if (strcmp_P(command + 7, PSTR("onlyCustom")) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_onlyCustom)) {
     if (::Focus.isEOL()) {
       ::Focus.send((uint8_t)::EEPROMSettings.ignoreHardcodedLayers());
     } else {
@@ -128,7 +129,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 7, PSTR("default")) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_default)) {
     // By using a cast to the appropriate function type,
     // tell the compiler which overload of getKeyFromPROGMEM
     // we actully want.
@@ -138,7 +139,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *command) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  if (strcmp_P(command + 7, PSTR("custom")) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd_custom))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

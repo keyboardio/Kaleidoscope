@@ -19,7 +19,7 @@
 #include "SpaceCadet.h"
 #include "kaleidoscope/plugin/SpaceCadet.h"
 
-#include <Arduino.h>                       // for F, __FlashStringHelper
+#include <Arduino.h>                       // for PSTR
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <stdint.h>                        // for uint16_t, int8_t, uint8_t
@@ -47,19 +47,14 @@ void SpaceCadetConfig::disableSpaceCadetIfUnconfigured() {
     ::SpaceCadet.disable();
 }
 
-EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *command) {
+EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *input) {
   const char *cmd_mode    = PSTR("spacecadet.mode");
   const char *cmd_timeout = PSTR("spacecadet.timeout");
 
-  // Note: These two calls are intentionally separate, because we want the side
-  // effects. If we were to use `||`, only one of them would run.
-  bool help_handled = ::Focus.handleHelp(command, cmd_mode);
-  help_handled |= ::Focus.handleHelp(command, cmd_timeout);
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_mode, cmd_timeout);
 
-  if (help_handled)
-    return EventHandlerResult::OK;
-
-  if (strcmp_P(command, cmd_mode) == 0) {
+  if (::Focus.inputMatchesCommand(input, cmd_mode)) {
     if (::Focus.isEOL()) {
       ::Focus.send(::SpaceCadet.settings_.mode);
     } else {
@@ -81,7 +76,7 @@ EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *command) {
       Runtime.storage().put(settings_base_, ::SpaceCadet.settings_);
       Runtime.storage().commit();
     }
-  } else if (strcmp_P(command, cmd_timeout) == 0) {
+  } else if (::Focus.inputMatchesCommand(input, cmd_timeout)) {
     if (::Focus.isEOL()) {
       ::Focus.send(::SpaceCadet.settings_.timeout);
     } else {

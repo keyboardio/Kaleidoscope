@@ -142,7 +142,7 @@ class SpaceCadet : public kaleidoscope::Plugin {
 class SpaceCadetConfig : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 
   void disableSpaceCadetIfUnconfigured();
 

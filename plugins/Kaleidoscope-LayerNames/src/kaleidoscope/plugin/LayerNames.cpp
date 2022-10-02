@@ -16,7 +16,7 @@
 
 #include "kaleidoscope/plugin/LayerNames.h"
 
-#include <Arduino.h>                   // for delay, PSTR, strcmp_P, F, __FlashStri...
+#include <Arduino.h>                   // for delay, PSTR, F, __FlashStri...
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 
 #include "kaleidoscope/Runtime.h"                 // for Runtime, Runtime_
@@ -31,11 +31,13 @@ EventHandlerResult LayerNames::onNameQuery() {
   return ::Focus.sendName(F("LayerNames"));
 }
 
-EventHandlerResult LayerNames::onFocusEvent(const char *command) {
-  if (::Focus.handleHelp(command, PSTR("keymap.layerNames")))
-    return EventHandlerResult::OK;
+EventHandlerResult LayerNames::onFocusEvent(const char *input) {
+  const char *cmd_layerNames = PSTR("keymap.layerNames");
 
-  if (strcmp_P(command, PSTR("keymap.layerNames")) != 0)
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd_layerNames);
+
+  if (!::Focus.inputMatchesCommand(input, cmd_layerNames))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

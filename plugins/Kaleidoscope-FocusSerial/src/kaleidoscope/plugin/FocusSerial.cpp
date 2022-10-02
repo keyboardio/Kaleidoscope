@@ -51,17 +51,17 @@ EventHandlerResult FocusSerial::afterEachCycle() {
     if (c == SEPARATOR) {
       break;
     }
-    command_[buf_cursor_++] = c;
-  } while (buf_cursor_ < (sizeof(command_) - 1) && Runtime.serialPort().available());
+    input_[buf_cursor_++] = c;
+  } while (buf_cursor_ < (sizeof(input_) - 1) && Runtime.serialPort().available());
 
-  if ((c != SEPARATOR) && (Runtime.serialPort().peek() != NEWLINE) && buf_cursor_ < (sizeof(command_) - 1)) {
+  if ((c != SEPARATOR) && (Runtime.serialPort().peek() != NEWLINE) && buf_cursor_ < (sizeof(input_) - 1)) {
     // We don't have enough command to work with yet.
     // Let's leave the buffer around for another cycle
     return EventHandlerResult::OK;
   }
 
   // Then process the command
-  Runtime.onFocusEvent(command_);
+  Runtime.onFocusEvent(input_);
   while (Runtime.serialPort().available()) {
     c = Runtime.serialPort().read();
     if (c == NEWLINE) {
@@ -73,28 +73,23 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   // End of command processing is signalled with a CRLF followed by a single period
   Runtime.serialPort().println(F("\r\n."));
   buf_cursor_ = 0;
-  memset(command_, 0, sizeof(command_));
+  memset(input_, 0, sizeof(input_));
   return EventHandlerResult::OK;
 }
 
-bool FocusSerial::handleHelp(const char *command,
-                             const char *help_message) {
-  if (strcmp_P(command, PSTR("help")) != 0)
-    return false;
+EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
+  const char *cmd_help    = PSTR("help");
+  const char *cmd_reset   = PSTR("device.reset");
+  const char *cmd_plugins = PSTR("plugins");
 
-  Runtime.serialPort().println((const __FlashStringHelper *)help_message);
-  return true;
-}
+  if (inputMatchesHelp(input))
+    return printHelp(cmd_help, cmd_reset, cmd_plugins);
 
-EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
-  if (handleHelp(command, PSTR("help\r\ndevice.reset\r\nplugins")))
-    return EventHandlerResult::OK;
-
-  if (strcmp_P(command, PSTR("device.reset")) == 0) {
+  if (inputMatchesCommand(input, cmd_reset)) {
     Runtime.device().rebootBootloader();
     return EventHandlerResult::EVENT_CONSUMED;
   }
-  if (strcmp_P(command, PSTR("plugins")) == 0) {
+  if (inputMatchesCommand(input, cmd_plugins)) {
     kaleidoscope::Hooks::onNameQuery();
     return EventHandlerResult::EVENT_CONSUMED;
   }
@@ -102,8 +97,25 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *command) {
   return EventHandlerResult::OK;
 }
 
+#ifndef NDEPRECATED
+bool FocusSerial::handleHelp(const char *input, const char *help_message) {
+  if (!inputMatchesHelp(input)) return false;
+
+  printHelp(help_message);
+  return true;
+}
+#endif
+
 void FocusSerial::printBool(bool b) {
   Runtime.serialPort().print((b) ? F("true") : F("false"));
+}
+
+bool FocusSerial::inputMatchesHelp(const char *input) {
+  return inputMatchesCommand(input, PSTR("help"));
+}
+
+bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
+  return strcmp_P(input, expected) == 0;
 }
 
 }  // namespace plugin

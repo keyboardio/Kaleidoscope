@@ -27,7 +27,7 @@ namespace plugin {
 class LayerFocus : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onNameQuery();
-  EventHandlerResult onFocusEvent(const char *command);
+  EventHandlerResult onFocusEvent(const char *input);
 };
 
 }  // namespace plugin
