@@ -122,11 +122,11 @@ class LEDDigitalRainEffect : public Plugin,
 
   class TransientLEDMode : public LEDMode {
    public:
-    TransientLEDMode(const LEDDigitalRainEffect *parent)
-      : parent_(parent){};
+    explicit TransientLEDMode(const LEDDigitalRainEffect *parent)
+      : parent_(parent) {}
 
    protected:
-    virtual void update() final;
+    void update() final;
 
    private:
     /**
