@@ -36,10 +36,18 @@ namespace plugin {
 bool HostPowerManagement::was_suspended_   = false;
 bool HostPowerManagement::initial_suspend_ = true;
 
-EventHandlerResult HostPowerManagement::beforeEachCycle() {
+bool HostPowerManagement::isSuspended() {
+#if defined(__AVR__)
+  return USBDevice.isSuspended();
+#elif defined(ARDUINO_ARCH_GD32)
+  return USBCore().isSuspended();
+#else
+  return false;
+#endif
+}
 
-#ifdef __AVR__
-  if ((_usbSuspendState & (1 << SUSPI))) {
+EventHandlerResult HostPowerManagement::beforeEachCycle() {
+  if (isSuspended()) {
     if (!initial_suspend_) {
       if (!was_suspended_) {
         was_suspended_ = true;
@@ -56,23 +64,6 @@ EventHandlerResult HostPowerManagement::beforeEachCycle() {
       hostPowerManagementEventHandler(Resume);
     }
   }
-#endif
-
-#ifdef ARDUINO_ARCH_GD32
-  if (USBCore().isSuspended()) {
-    if (!was_suspended_) {
-      was_suspended_ = true;
-      hostPowerManagementEventHandler(Suspend);
-    } else {
-      hostPowerManagementEventHandler(Sleep);
-    }
-  } else {
-    if (was_suspended_) {
-      was_suspended_ = false;
-      hostPowerManagementEventHandler(Resume);
-    }
-  }
-#endif
 
   return EventHandlerResult::OK;
 }
