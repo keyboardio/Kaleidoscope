@@ -54,8 +54,7 @@ void SystemControl_::begin() {
 }
 
 void SystemControl_::end() {
-  uint8_t report = 0x00;
-  sendReport(&report, sizeof(report));
+  releaseAll();
 }
 
 void SystemControl_::write(uint8_t s) {
@@ -64,11 +63,12 @@ void SystemControl_::write(uint8_t s) {
 }
 
 void SystemControl_::release() {
-  begin();
+  releaseAll();
 }
 
 void SystemControl_::releaseAll() {
-  begin();
+  uint8_t report = 0x00;
+  sendReport(&report, sizeof(report));
 }
 
 void SystemControl_::press(uint8_t s) {
