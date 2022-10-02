@@ -191,9 +191,8 @@ endif
 #TODO (arduino team) I'd love to do this with their json output
 #but it's short some of the data we kind of need
 
-flashing_instructions = $(call _arduino_prop,build.flashing_instructions)
 
-_device_port = $(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1)
+flashing_instructions = $(call _arduino_prop,build.flashing_instructions)
 
 flash: ${HEX_FILE_PATH}
 ifneq ($(flashing_instructions),)
@@ -205,11 +204,11 @@ endif
 	$(info When you're ready to proceed, press 'Enter'.)
 	$(info )
 	@$(shell read _)
-# If we have a device serial port available, try to trigger a Kaliedoscope reset
-ifneq ($(_device_port),)
-	-$(QUIET) DEVICE=$(_device_port) $(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset"
-	sleep 2
-endif
+	# If we have a device serial port available, try to trigger a Kaliedoscope reset
+	-$(QUIET) DEVICE=$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1) && \
+		[ -e $$DEVICE ] && \
+		$(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset" && \
+		sleep 2
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
 	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1 echo "--port" ) \
 	--input-dir "${OUTPUT_PATH}" \
