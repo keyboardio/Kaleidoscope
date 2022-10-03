@@ -96,6 +96,18 @@ properties. All times are in seconds.
 
 > Get or set the `.settings.right_hand_max_keys` property.
 
+### `typingbreaks.leftKeys`
+
+> Get the current counter of keys pressed on the left half of the keyboard.
+
+### `typingbreaks.rightKeys`
+
+> Get the current counter of keys pressed on the right half of the keyboard.
+
+### `typingbreaks.lockSecsRemaining`
+
+> Get the duration the keyboard remains locked in seconds.
+
 ## Dependencies
 
 * [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
