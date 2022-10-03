@@ -103,7 +103,7 @@ EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
 
   // So it seems we did not need to lock up. In this case, lets increase key
   // counters if need be.
-  if (event.addr.col() <= Runtime.device().matrix_columns / 2)
+  if (event.addr.col() < Runtime.device().matrix_columns / 2)
     left_hand_keys_++;
   else
     right_hand_keys_++;
