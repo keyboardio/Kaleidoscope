@@ -26,15 +26,10 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 
-// This is a terrible hack until Arduino#6964 gets implemented.
-// It makes the `_usbSuspendState` symbol available to us.
-extern uint8_t _usbSuspendState;
-
 namespace kaleidoscope {
 namespace plugin {
 
-bool HostPowerManagement::was_suspended_   = false;
-bool HostPowerManagement::initial_suspend_ = true;
+bool HostPowerManagement::was_suspended_ = false;
 
 bool HostPowerManagement::isSuspended() {
 #if defined(__AVR__)
@@ -48,17 +43,13 @@ bool HostPowerManagement::isSuspended() {
 
 EventHandlerResult HostPowerManagement::beforeEachCycle() {
   if (isSuspended()) {
-    if (!initial_suspend_) {
-      if (!was_suspended_) {
-        was_suspended_ = true;
-        hostPowerManagementEventHandler(Suspend);
-      } else {
-        hostPowerManagementEventHandler(Sleep);
-      }
+    if (!was_suspended_) {
+      was_suspended_ = true;
+      hostPowerManagementEventHandler(Suspend);
+    } else {
+      hostPowerManagementEventHandler(Sleep);
     }
   } else {
-    if (initial_suspend_)
-      initial_suspend_ = false;
     if (was_suspended_) {
       was_suspended_ = false;
       hostPowerManagementEventHandler(Resume);
