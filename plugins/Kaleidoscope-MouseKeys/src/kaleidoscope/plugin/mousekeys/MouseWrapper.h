@@ -47,6 +47,7 @@ namespace mousekeys {
 class MouseWrapper {
  public:
   void warp(uint8_t warp_cmd);
+  void endWarping();
 
   uint8_t warp_grid_size = MOUSE_WARP_GRID_2X2;
 
@@ -58,7 +59,6 @@ class MouseWrapper {
   bool is_warping = false;
 
   void beginWarping();
-  void endWarping();
   void resetWarping();
   void warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width);
 };

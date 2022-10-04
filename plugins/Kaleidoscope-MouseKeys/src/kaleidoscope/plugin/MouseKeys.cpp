@@ -129,10 +129,15 @@ EventHandlerResult MouseKeys::onKeyEvent(KeyEvent &event) {
     // Clear button state; it will be repopulated by `onAddToReport()`, and the
     // report will be sent by `afterReportingState()`.
     buttons_ = 0;
+  }
 
-  } else if (isMouseWarpKey(event.key)) {
-    if (keyToggledOn(event.state)) {
+  if (keyToggledOn(event.state)) {
+    if (isMouseWarpKey(event.key)) {
+      // If a mouse warp key toggles on, we immediately send the warp report.
       sendMouseWarpReport(event);
+    } else {
+      // If any non-warp mouse key toggles on, we cancel warping.
+      MouseWrapper.endWarping();
     }
   }
 
