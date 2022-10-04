@@ -37,21 +37,23 @@ void setup() {
 The plugin provides a number of keys one can put on the keymap, that allow
 control of the mouse. They can be divided into a few groups:
 
+### Mouse buttons
+
+Mouse button keys are straightforward; pressing one is the same as pressing the
+corresponding button on a physical mouse.  You can hold a mouse button key to
+perform drag gestures, as you might expect.  MouseKeys supports five mouse
+buttons: left, right, middle, previous, and next.
+
+* `Key_mouseBtnL`, `Key_mouseBtnM`, `Key_mouseBtnR`, `Key_mouseBtnP`,
+  `Key_mouseBtnN`: The left, middle, right, previous, and next mouse buttons,
+  respectively.
+
+
 ### Cursor movement
 
-The simplest set of keys are the mouse cursor movement keys. These move the
-cursor one direction or the other, with speed and acceleration factored in. When
-a mouse cursor movement key is held down, it will move `.speed` pixels each
-`.speedDelay` milliseconds without acceleration. But when `.accelSpeed` is
-non-zero (and it is not zero by default,
-see [below](#accelspeed-and-acceldelay)), the speed will increase by
-`.accelSpeed` every `.accelDelay` milliseconds. Thus, unless configured
-otherwise, holding a direction will move that way at increasing speed.
-
-One can hold more than one key down at the same time, and the cursor will move
-towards a direction that is the combination of the keys held. For example,
-holding the "mouse up" and "mouse right" keys together will move the cursor
-diagonally up and right.
+When a cursor movement key is pressed, the mouse cursor will begin to move
+slowly, then accelerate to full speed.  Both the full speed and the time it
+takes to reach full speed are configurable.
 
 The cursor movement keys are as follows:
 
@@ -60,24 +62,16 @@ The cursor movement keys are as follows:
 * `Key_mouseUpL`, `Key_mouseUpR`, `Key_mouseDnL`, `Key_mouseDnR`: Move the
   cursor up-left, up-right, down-left, down-right, respectively.
 
-### Scroll wheel
+### Scroll wheels
 
-Controlling the scroll wheel is similarly simple. It does not have acceleration,
-but one can control the speed with the `.wheelSpeed` and `.wheelDelay`
-properties (see below).
+Controlling the scroll wheel is similarly simple.  It does not have
+acceleration, but one can control the speed with the
+`MouseKeys.setScrollInterval()` function, which controls the length of time
+between scroll events.
 
 * `Key_mouseScrollUp`, `Key_mouseScrollDn`: Scroll the mouse wheel up or down,
   respectively.
 * `Key_mouseScrollL`, `Key_mouseScrollR`: Scroll the mouse wheel left or right,
-  respectively.
-
-### Buttons
-
-Buttons are even simpler than movement: there is no movement speed, nor
-acceleration involved. One just presses them.
-
-* `Key_mouseBtnL`, `Key_mouseBtnM`, `Key_mouseBtnR`, `Key_mouseBtnP`,
-  `Key_mouseBtnN`: The left, middle, right, previous, and next mouse buttons,
   respectively.
 
 ## Warping
@@ -210,37 +204,32 @@ the following additions:
 The plugin provides a `MouseKeys` object, with the following methods and
 properties available:
 
-### `.speed` and `.speedDelay`
+### `.setCursorInitSpeed(speed)`/`.getCursorInitSpeed()`
 
-> These two control the speed of the mouse cursor, when a movement key is held.
-> The former, `.speed`, controls the amount of pixels the cursor moves, when it
-> has to move, and defaults to 1. The latter, `.speedDelay` is the amount of
-> time - in milliseconds - to wait between two movements, and defaults to 0, no
-> delay.
+> Controls (or returns) the current starting speed value for mouse cursor
+> movement.  When a mouse movement key is pressed, the cursor starts moving at
+> this speed, then accelerates.  The number is abstract, but linear, with higher
+> numbers representing faster speeds.  Default starting speed is `1`.
 
-### `.accelSpeed` and `.accelDelay`
+### `.setCursorBaseSpeed(speed)`/`.getCursorBaseSpeed()`
 
-> These two properties control the speed of acceleration. The former,
-> `.accelSpeed`, controls how much the speed shall be increased at each step,
-> while the second, `.accelDelay`, controls how often (in milliseconds)
-> acceleration should be applied.
->
-> They default to 1 pixel and 50 milliseconds, respectively.
+> Controls (or returns) the current top speed value for mouse cursor movement.
+> When a mouse movement key is pressed, the cursor accelerates until it reaches
+> this speed.  The number is abstract, but linear, with higher numbers
+> representing faster speeds.  Default full-speed value is `50`.
 
-### `.wheelSpeed` and `.wheelDelay`
+### `.setCursorAccelDuration(duration)`/`.getCursorAccelDuration()`
 
-> The last two properties supported by the plugin control the mouse wheel
-> scrolling speed. The former, `.wheelSpeed`, controls the amount of ticks the
-> wheel shall scroll, and defaults to 1. The second, `.wheelDelay`, controls the
-> delay between two scroll events, and defaults to 50 milliseconds.
+> Controls (or returns) the current time it takes for the mouse cursor to reach
+> full speed (in milliseconds), starting from when the first movement key is
+> pressed.  Default value is `800` ms.
 
-### `.setSpeedLimit`
+### `.setScrollInterval(interval)`/`.getScrollInterval()`
 
-> This method sets the maximum speed after which acceleration stops.
-> The default is 127, and the minimum value is 16 (things will not work
-> properly below 16).
+> Controls (or returns) the current scrolling speed, by setting the time between
+> mouse scroll reports (in milliseconds).  Default value is `50` ms.
 
-### `.setWarpGridSize`
+### `.setWarpGridSize(size)`
 
 > This method changes the size of the grid used for [warping](#warping). The
 > following are valid sizes: `MOUSE_WARP_GRID_2X2`, `MOUSE_WARP_GRID_3X3`

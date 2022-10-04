@@ -1,5 +1,5 @@
 /* Kaleidoscope-MouseKeys - Mouse keys for Kaleidoscope.
- * Copyright (C) 2017-2021  Keyboard.io, Inc.
+ * Copyright (C) 2017-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,11 +29,14 @@
 #include "kaleidoscope/key_defs.h"                             // for Key, SYNTHETIC
 #include "kaleidoscope/keyswitch_state.h"                      // for keyToggledOn
 #include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"        // for KEY_MOUSE_BUTTON, KEY_MOUS...
-#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseWrapper, wrapper, WAR...
+#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseWrapper, WARP_DOWN
 
 namespace kaleidoscope {
 namespace plugin {
 
+#ifndef NDEPRECATED
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 uint8_t MouseKeys::speed       = 1;
 uint16_t MouseKeys::speedDelay = 1;
 
@@ -42,16 +45,14 @@ uint16_t MouseKeys::accelDelay = 64;
 
 uint8_t MouseKeys::wheelSpeed  = 1;
 uint16_t MouseKeys::wheelDelay = 50;
+#pragma GCC diagnostic pop
+#endif
 
 // =============================================================================
 // Configuration functions
 
 void MouseKeys::setWarpGridSize(uint8_t grid_size) {
-  mousekeys::wrapper.warp_grid_size = grid_size;
-}
-
-void MouseKeys::setSpeedLimit(uint8_t speed_limit) {
-  mousekeys::wrapper.speed_limit = speed_limit;
+  MouseWrapper.warp_grid_size = grid_size;
 }
 
 // =============================================================================
@@ -92,7 +93,6 @@ EventHandlerResult MouseKeys::onNameQuery() {
 
 // -----------------------------------------------------------------------------
 EventHandlerResult MouseKeys::onSetup() {
-  kaleidoscope::Runtime.hid().mouse().setup();
   kaleidoscope::Runtime.hid().absoluteMouse().setup();
 
   return EventHandlerResult::OK;
@@ -100,23 +100,20 @@ EventHandlerResult MouseKeys::onSetup() {
 
 // -----------------------------------------------------------------------------
 EventHandlerResult MouseKeys::afterEachCycle() {
-  // Check timeout for accel update interval.
-  if (Runtime.hasTimeExpired(accel_start_time_, accelDelay)) {
-    accel_start_time_ = Runtime.millisAtCycleStart();
-    // `accel_step` determines the movement speed of the mouse pointer, and gets
-    // reset to zero when no mouse movement keys is pressed (see below).
-    if (mousekeys::wrapper.accel_step < 255 - accelSpeed) {
-      mousekeys::wrapper.accel_step += accelSpeed;
-    }
-  }
+  if (directions_ == 0)
+    return EventHandlerResult::OK;
 
   // Check timeout for position update interval.
-  if (Runtime.hasTimeExpired(move_start_time_, speedDelay))
+  if (Runtime.hasTimeExpired(last_cursor_update_time_, cursor_update_interval_)) {
     sendMouseMoveReport();
+    last_cursor_update_time_ += cursor_update_interval_;
+  }
 
   // Check timeout for scroll report interval.
-  if (Runtime.hasTimeExpired(wheel_start_time_, wheelDelay))
+  if (Runtime.hasTimeExpired(last_wheel_update_time_, settings_.wheel_update_interval)) {
     sendMouseWheelReport();
+    last_wheel_update_time_ += settings_.wheel_update_interval;
+  }
 
   return EventHandlerResult::OK;
 }
@@ -132,10 +129,15 @@ EventHandlerResult MouseKeys::onKeyEvent(KeyEvent &event) {
     // Clear button state; it will be repopulated by `onAddToReport()`, and the
     // report will be sent by `afterReportingState()`.
     buttons_ = 0;
+  }
 
-  } else if (isMouseWarpKey(event.key)) {
-    if (keyToggledOn(event.state)) {
+  if (keyToggledOn(event.state)) {
+    if (isMouseWarpKey(event.key)) {
+      // If a mouse warp key toggles on, we immediately send the warp report.
       sendMouseWarpReport(event);
+    } else {
+      // If any non-warp mouse key toggles on, we cancel warping.
+      MouseWrapper.endWarping();
     }
   }
 
@@ -157,20 +159,27 @@ EventHandlerResult MouseKeys::afterReportingState(const KeyEvent &event) {
     sendMouseButtonReport();
   }
 
+  // If no mouse move keys were active before this event, and a mouse movement
+  // key toggled on, we need to set the move start time so that acceleration can
+  // begin correctly.
+  if ((directions_ & cursor_mask_) == 0) {
+    cursor_start_time_ = Runtime.millisAtCycleStart();
+  }
+
   // A mouse key event has been successfully registered, and we have now
   // gathered all the information on held mouse movement and wheel keys, so it's
   // safe to update the direction information.
   directions_         = pending_directions_;
   pending_directions_ = 0;
 
-  if (isMouseMoveKey(event.key)) {
-    // When a cursor movement key toggles on, set the acceleration start time in
-    // order to get consistent behavior.
-    accel_start_time_ = Runtime.millisAtCycleStart();
-    sendMouseMoveReport();
-
-  } else if (isMouseWheelKey(event.key)) {
-    sendMouseWheelReport();
+  if (keyToggledOn(event.state)) {
+    if (isMouseMoveKey(event.key)) {
+      sendMouseMoveReport();
+      last_cursor_update_time_ = Runtime.millisAtCycleStart();
+    } else if (isMouseWheelKey(event.key)) {
+      sendMouseWheelReport();
+      last_wheel_update_time_ = Runtime.millisAtCycleStart();
+    }
   }
 
   return EventHandlerResult::OK;
@@ -210,7 +219,7 @@ void MouseKeys::sendMouseButtonReport() const {
 
 // -----------------------------------------------------------------------------
 void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
-  mousekeys::wrapper.warp(
+  MouseWrapper.warp(
     ((event.key.getKeyCode() & KEY_MOUSE_WARP_END) ? WARP_END : 0x00) |
     ((event.key.getKeyCode() & KEY_MOUSE_UP) ? WARP_UP : 0x00) |
     ((event.key.getKeyCode() & KEY_MOUSE_DOWN) ? WARP_DOWN : 0x00) |
@@ -219,57 +228,148 @@ void MouseKeys::sendMouseWarpReport(const KeyEvent &event) const {
 }
 
 // -----------------------------------------------------------------------------
-void MouseKeys::sendMouseMoveReport() {
-  move_start_time_ = Runtime.millisAtCycleStart();
+void MouseKeys::sendMouseMoveReport() const {
+  int8_t dx = 0;
+  int8_t dy = 0;
 
-  int8_t vx         = 0;
-  int8_t vy         = 0;
-  uint8_t direction = directions_ & move_mask_;
+  uint8_t direction = directions_ & cursor_mask_;
 
-  if (direction == 0) {
-    // If there are no mouse movement keys held, reset speed to zero.
-    mousekeys::wrapper.accel_step = 0;
-  } else {
-    // For each active direction, add the mouse movement speed.
+  if (direction != 0) {
+    // Calculate
+    uint8_t delta = cursorDelta();
+    // For each active direction, add the move update interval value to
+    // normalize speed of motion regardless of the frequency of updates.
     if (direction & KEY_MOUSE_LEFT)
-      vx -= speed;
+      dx -= delta;
     if (direction & KEY_MOUSE_RIGHT)
-      vx += speed;
+      dx += delta;
     if (direction & KEY_MOUSE_UP)
-      vy -= speed;
+      dy -= delta;
     if (direction & KEY_MOUSE_DOWN)
-      vy += speed;
+      dy += delta;
 
-    // Prepare the mouse report.
-    mousekeys::wrapper.move(vx, vy);
     // Send the report.
+    Runtime.hid().mouse().move(dx, dy, 0, 0);
     Runtime.hid().mouse().sendReport();
   }
 }
 
 // -----------------------------------------------------------------------------
-void MouseKeys::sendMouseWheelReport() {
-  wheel_start_time_ = Runtime.millisAtCycleStart();
+// Get the current point on the acceleration curve's x axis, translating time
+// elapsed since mouse movement started to a value between 0 and 255.
+uint8_t MouseKeys::accelStep() const {
+  uint16_t elapsed_time   = Runtime.millisAtCycleStart() - cursor_start_time_;
+  uint16_t accel_duration = settings_.cursor_accel_duration;
+  if (elapsed_time > accel_duration)
+    return 255;
+  uint16_t accel_step = (uint32_t(elapsed_time) * 256) / accel_duration;
+  return uint8_t(accel_step);
+}
 
-  int8_t vx         = 0;
-  int8_t vy         = 0;
+// -----------------------------------------------------------------------------
+// Compute the acceleration factor for mouse movement.  When a movement key is
+// first pressed, the cursor starts out slow then accelerates to full speed.
+// The speed during acceleration follows an approximation of a sigmoid function,
+// using two parabolas for simplicity.
+uint8_t accelFactor(uint8_t accel_step) {
+  if (accel_step < 128) {
+    uint16_t y = accel_step * accel_step;
+    return 1 + (y >> 7);
+  } else {
+    uint16_t remaining_steps = 256 - accel_step;
+
+    uint16_t y = remaining_steps * remaining_steps;
+    return 255 - (y >> 7);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Compute the distance the mouse cursor should move in subpixels, return the
+// number of pixels the mouse should move (in active directions), and store the
+// remaining subpixels for the next move.
+uint8_t MouseKeys::cursorDelta() const {
+  // When the cursor speed is slow, it can be moving less than one pixel per
+  // update, so we need to calculate movement in "subpixels" and store the
+  // remaining subpixels to add to the next update's movement.
+  static uint8_t subpixel_remainder{0};
+
+  // First, we calculate where we are on the "time" axis of the acceleration
+  // curve, based on the time passed since the first cursor movement key was
+  // pressed.
+  uint8_t accel_step = accelStep();
+
+  // Next, we translate that into a speed scaling factor (from 1-255).  If we
+  // had an FPU, we would do this in floating point, with a scale between 0 and
+  // 1, so this is how we emulate that using only integer (i.e. fixed-point)
+  // arithmetic.
+  uint8_t accel_factor = accelFactor(accel_step);
+
+  // We want the cursor to start out with some minimum speed, otherwise the user
+  // presses a movement key and then waits for a while before the cursor moves
+  // even one pixel.  We need to multiply our speed-scaling factor by the
+  // difference between the starting speed and the full speed, then add the
+  // starting speed (multiplied by the full value of the scaling factor) to get
+  // the current speed.
+  uint8_t max_speed       = settings_.cursor_base_speed;
+  uint8_t min_speed       = settings_.cursor_init_speed;
+  uint8_t speed_range     = max_speed - min_speed;
+  uint16_t subpixel_speed = (speed_range * accel_factor);
+  subpixel_speed += (min_speed * 256);
+
+  // We want to end up with small numbers of pixels, otherwise the speed will be
+  // too fast to be useful.  But we also want to be able to make fine
+  // adjustments to the speed, so `settings_.cursor_base_speed` should be
+  // allowed to have a reasonbly high value, using all eight bits.  This means
+  // that "decimal point" needs to be somewhere in the high byte of this 16-bit
+  // value.  In order to store only eight bits of subpixel remainder, we need to
+  // do a shift first.  This amount is arbitrary, but seems like a reasonable
+  // compromise.
+  subpixel_speed >>= 4;
+
+  // `max_speed` and `accel_factor` can both be up to 255.  So we can't
+  // just multiply by `cursor_update_interval_ without risk of overflow.  The
+  // update interval should be some low number, anyway (8 or less, I think), and
+  // should probably be fixed as a constexpr, so we could just leave it out.
+  subpixel_speed *= cursor_update_interval_;
+
+  // There's no risk of overflow here: (255 * 255) + 255 = 65535
+  subpixel_speed += subpixel_remainder;
+
+  // Set minimum speed
+  subpixel_speed += 64;
+
+  // This shift should be more than eight pixels; a single update of 100 pixels
+  // is a huge jump.  See above.
+  uint8_t pixel_speed = subpixel_speed >> 8;
+  // Truncate to get only lower 8 bits.
+  subpixel_remainder = subpixel_speed;
+  //subpixel_remainder = subpixel_speed - (uint16_t(pixel_speed) << 8);
+  return pixel_speed;
+}
+
+// -----------------------------------------------------------------------------
+// Wheel speed should be controlled by changing the update interval, not by
+// setting `wheel_speed_`.
+void MouseKeys::sendMouseWheelReport() const {
+  int8_t dh = 0;
+  int8_t dv = 0;
+
   uint8_t direction = directions_ >> wheel_offset_;
 
   if (direction != 0) {
     // Horizontal scroll wheel:
     if (direction & KEY_MOUSE_LEFT)
-      vx -= wheelSpeed;
+      dh -= 1;
     if (direction & KEY_MOUSE_RIGHT)
-      vx += wheelSpeed;
+      dh += 1;
     // Vertical scroll wheel (note coordinates are opposite movement):
     if (direction & KEY_MOUSE_UP)
-      vy += wheelSpeed;
+      dv += 1;
     if (direction & KEY_MOUSE_DOWN)
-      vy -= wheelSpeed;
+      dv -= 1;
 
-    // Add scroll wheel changes to HID report.
-    Runtime.hid().mouse().move(0, 0, vy, vx);
     // Send the report.
+    Runtime.hid().mouse().move(0, 0, dv, dh);
     Runtime.hid().mouse().sendReport();
   }
 }

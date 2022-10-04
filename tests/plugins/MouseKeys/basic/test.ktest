@@ -21,15 +21,33 @@ RUN 3 ms
 PRESS MOVE_UP
 RUN 1 cycle
 
-RUN 15 ms
+RUN 4 ms
 EXPECT mouse-report y=-1
-RUN 1 cycle
-
-RUN 15 ms
+RUN 8 ms
 EXPECT mouse-report y=-1
-RUN 1 cycle
+RUN 8 ms
+EXPECT mouse-report y=-1
+RUN 4 ms
+EXPECT mouse-report y=-1
+RUN 4 ms
+EXPECT mouse-report y=-1
+RUN 4 ms
+EXPECT mouse-report y=-1
+RUN 4 ms
+EXPECT mouse-report y=-1
+RUN 4 ms
+EXPECT mouse-report y=-2
+RUN 4 ms
+EXPECT mouse-report y=-2
+RUN 4 ms
+EXPECT mouse-report y=-2
+RUN 4 ms
+EXPECT mouse-report y=-2
+RUN 4 ms
+EXPECT mouse-report y=-2
+RUN 4 ms
+EXPECT mouse-report y=-3
 
-RUN 5 ms
 RELEASE MOVE_UP
 RUN 1 cycle
 EXPECT no mouse-report

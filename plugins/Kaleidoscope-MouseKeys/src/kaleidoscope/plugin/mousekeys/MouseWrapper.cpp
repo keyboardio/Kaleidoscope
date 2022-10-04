@@ -1,5 +1,5 @@
 /* Kaleidoscope-MouseKeys - Mouse keys for Kaleidoscope.
- * Copyright (C) 2017-2018  Keyboard.io, Inc.
+ * Copyright (C) 2017-2022  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,27 +16,22 @@
 
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
 
-#include <stdint.h>  // for uint16_t, uint8_t, int8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"                              // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"                        // for Base<>::HID, VirtualProps:...
 #include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for AbsoluteMouse
-#include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse
-#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"      // for MOUSE_WARP_GRID_2X2
 
 namespace kaleidoscope {
 namespace plugin {
 namespace mousekeys {
 
-uint8_t MouseWrapper::warp_grid_size = MOUSE_WARP_GRID_2X2;
-uint16_t MouseWrapper::next_width;
-uint16_t MouseWrapper::next_height;
-uint16_t MouseWrapper::section_top;
-uint16_t MouseWrapper::section_left;
-bool MouseWrapper::is_warping;
-
-uint8_t MouseWrapper::accel_step;
-uint8_t MouseWrapper::speed_limit = 127;
+// uint8_t MouseWrapper::warp_grid_size = MOUSE_WARP_GRID_2X2;
+// uint16_t MouseWrapper::next_width;
+// uint16_t MouseWrapper::next_height;
+// uint16_t MouseWrapper::section_top;
+// uint16_t MouseWrapper::section_left;
+// bool MouseWrapper::is_warping;
 
 void MouseWrapper::warpJump(uint16_t left, uint16_t top, uint16_t height, uint16_t width) {
   uint16_t x_center = left + width / 2;
@@ -100,52 +95,9 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
   warpJump(section_left, section_top, next_height, next_width);
 }
 
-// To approximate a sine wave, this uses two parabolas. Acceleration begins
-// slowly, grows rapidly in the middle, and slows again near the top.
-uint8_t MouseWrapper::acceleration(uint8_t cycles) {
-  if (cycles < 128) {
-    uint16_t c2 = cycles * cycles;
-    return 1 + (c2 >> 7);
-  } else {
-    uint16_t remaining_cycles = 256 - cycles;
-    uint16_t c2               = remaining_cycles * remaining_cycles;
-    return 255 - (c2 >> 7);
-  }
-}
-
-void MouseWrapper::move(int8_t x, int8_t y) {
-  int16_t moveX               = 0;
-  int16_t moveY               = 0;
-  static int8_t remainderX    = 0;
-  static int8_t remainderY    = 0;
-  int16_t effectiveSpeedLimit = speed_limit;
-
-  if (x != 0) {
-    moveX = remainderX + (x * acceleration(accel_step));
-    if (moveX > effectiveSpeedLimit)
-      moveX = effectiveSpeedLimit;
-    else if (moveX < -effectiveSpeedLimit)
-      moveX = -effectiveSpeedLimit;
-  }
-
-  if (y != 0) {
-    moveY = remainderY + (y * acceleration(accel_step));
-    if (moveY > effectiveSpeedLimit)
-      moveY = effectiveSpeedLimit;
-    else if (moveY < -effectiveSpeedLimit)
-      moveY = -effectiveSpeedLimit;
-  }
-
-  endWarping();
-  // move by whole pixels, not subpixels
-  Runtime.hid().mouse().move(moveX / subpixels_per_pixel, moveY / subpixels_per_pixel);
-  // save leftover subpixel movements for later
-  remainderX = moveX - moveX / subpixels_per_pixel * subpixels_per_pixel;
-  remainderY = moveY - moveY / subpixels_per_pixel * subpixels_per_pixel;
-}
-
-MouseWrapper wrapper;
-
 }  // namespace mousekeys
+
+mousekeys::MouseWrapper MouseWrapper;
+
 }  // namespace plugin
 }  // namespace kaleidoscope

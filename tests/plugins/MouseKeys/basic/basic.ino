@@ -42,6 +42,8 @@ KALEIDOSCOPE_INIT_PLUGINS(MouseKeys);
 
 void setup() {
   Kaleidoscope.setup();
+
+  MouseKeys.setCursorAccelDuration(200);
 }
 
 void loop() {
