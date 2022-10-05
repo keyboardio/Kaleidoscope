@@ -34,12 +34,9 @@ namespace plugin {
 
 EventHandlerResult MouseKeysConfig::onSetup() {
   settings_addr_ = ::EEPROMSettings.requestSlice(sizeof(MouseKeys::Settings));
-  uint32_t checker;
 
-  Runtime.storage().get(settings_addr_, checker);
-
-  // If the EEPROM is empty, storre the default settings.
-  if (checker == 0xffffffff) {
+  // If the EEPROM is empty, store the default settings.
+  if (Runtime.storage().isSliceUninitialized(settings_addr_, sizeof(MouseKeys::Settings))) {
     Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
     Runtime.storage().commit();
   }
@@ -49,43 +46,36 @@ EventHandlerResult MouseKeysConfig::onSetup() {
 }
 
 // -----------------------------------------------------------------------------
-EventHandlerResult MouseKeysConfig::onFocusEvent(const char *command) {
-  // If the focus command is a request for help, provide the list of valid
-  // commands.
-  if (::Focus.handleHelp(command, PSTR("mousekeys.scroll_interval\n"
-                                       "mousekeys.init_speed\n"
-                                       "mousekeys.base_speed\n"
-                                       "mousekeys.accel_duration")))
-    return EventHandlerResult::OK;
-
-  // The length of the string `mousekeys.`:
-  constexpr uint8_t base_cmd_len = 10;
-
-  // If this is not a MouseKeys command, do nothing.
-  if (strncmp_P(command, PSTR("mousekeys."), base_cmd_len) != 0)
-    return EventHandlerResult::OK;
-  // Otherwise, advance the pointer to the subcommand.
-  command += base_cmd_len;
-
+EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
   enum Command : uint8_t {
     SCROLL_INTERVAL,
     INIT_SPEED,
     BASE_SPEED,
     ACCEL_DURATION,
-  };
-  Command cmd;
+  } cmd;
+  const char *cmd_scroll_interval = PSTR("mousekeys.scroll_interval");
+  const char *cmd_initial_speed   = PSTR("mousekeys.init_speed");
+  const char *cmd_base_speed      = PSTR("mousekeys.base_speed");
+  const char *cmd_accel_duration  = PSTR("mousekeys.accel_duration");
 
-  // Parse the (sub)command.  If it's not a valid command, abort.
-  if (strcmp_P(command, PSTR("scroll_interval")) == 0)
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(
+      cmd_scroll_interval,
+      cmd_initial_speed,
+      cmd_base_speed,
+      cmd_accel_duration);
+
+  if (::Focus.inputMatchesCommand(input, cmd_scroll_interval))
     cmd = Command::SCROLL_INTERVAL;
-  else if (strcmp_P(command, PSTR("init_speed")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_initial_speed))
     cmd = Command::INIT_SPEED;
-  else if (strcmp_P(command, PSTR("base_speed")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_base_speed))
     cmd = Command::BASE_SPEED;
-  else if (strcmp_P(command, PSTR("accel_duration")) == 0)
+  else if (::Focus.inputMatchesCommand(input, cmd_accel_duration))
     cmd = Command::ACCEL_DURATION;
   else
-    return EventHandlerResult::ABORT;
+    // allow other plugins to process this event.
+    return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
     // If there is no argument given, we send back the current value of the
@@ -105,6 +95,8 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *command) {
       val = ::MouseKeys.getCursorAccelDuration();
       break;
     default:
+      // if a valid command is issued but there is no 0-arg handler for it,
+      // we stop processing the event.
       return EventHandlerResult::ABORT;
     }
     ::Focus.send(val);
