@@ -25,10 +25,13 @@ illustrated with an example:
 Key_mouseUp, Key_mouseDn, Key_mouseL, Key_mouseR,
 Key_mouseBtnL, Key_mouseBtnR
 
-KALEIDOSCOPE_INIT_PLUGINS(MouseKeys);
+KALEIDOSCOPE_INIT_PLUGINS(
+  MouseKeys,
+  MouseKeysConfig // optionally add this to make the configuration runtime editable via focus commands. 
+);
 
 void setup() {
-  Kaleidoscope.setup ();
+  Kaleidoscope.setup();
 }
 ```
 
