@@ -147,6 +147,9 @@ the keyboard responds.
 
 ## Further reading
 
-Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
+- The [`focus-send` script][focus-send] in the Kaleidoscope repo make use of this protocol.
+
+- Starting from the [example][plugin:example] is the recommended way of getting started with the plugin.
 
   [plugin:example]: /examples/Features/FocusSerial/FocusSerial.ino
+  [focus-send]: https://github.com/keyboardio/Kaleidoscope/blob/master/bin/focus-send

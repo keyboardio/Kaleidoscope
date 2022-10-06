@@ -20,10 +20,24 @@ Additionally, by leveraging a few plugins, we can store configuration in EEPROM 
 There are a few important Kaleidoscope plugins for putting settings in EEPROM:
 
   <!-- - [Kaleidoscope-EEPROM-Keymap-Programmer][] - is this worth mentioning in this context? -->
-  - Kaleidoscope-Focus] - This plugin is what enables communication between your keyboard and programs running on your computer; all the following plugins require you to be using this if you want to be able to change your settings from the computer without re-flashing.
+  - Kaleidoscope-Focus - This plugin is what enables communication between your keyboard and programs running on your computer; all the following plugins require you to be using this if you want to be able to change your settings from the computer without re-flashing.
   - Kaleidoscope-EEPROM-Settings - This is a plugin that doesn't do much by itself, but most of the other EEPROM plugins will need active to be able to make use of EEPROM storage.
   - Kaleidoscope-EEPROM-Keymap - This plugin uses Focus and EEPROM-Settings to allow either overriding or fully replacing the programmed-in keymap without reflashing (by means of a program like Chrysalis running on your computer).
   - Kaleidoscope-Colormap - This plugin allows you to use a computer-side program to set a (static -- i.e. the keys won't change colour over time) LED theme for each layer.
 
 All these plugins have minimal installation that can be found in their respective READMEs.
 After following the instructions for each and adding them together, you should be able to download a program that knows how to communicate with the keyboard (i.e. [Chrysalis](https://github.com/keyboardio/Chrysalis) and you can start customizing settings without having to do any more programming!
+
+# Migrating EEPROM contents between firmware changes
+
+When you flash new firmware that adds or removes plugins utilizing EEPROM storage, your configuration stored on the keyboard is likely to break.
+This is, because the stored data from the old firmware does not align with the storage layout of the new firmware.
+
+> Don't worry, your config is not gone - flashing the old firmware will provide you a functioning configuration again.
+
+To work around this breakage, the configuration can be extracted via [Focus commands][focus] before flashing - and restored after flashing.
+Currently this is not part of the flashing process, but can easily be done with helper scripts [`eeprom-backup.sh`][eeprom_backup] and [`eeprom-restore.sh`][eeprom_restore].
+
+[eeprom_backup]: https://github.com/keyboardio/Kaleidoscope/blob/master/bin/eeprom-backup.sh
+[eeprom_restore]: https://github.com/keyboardio/Kaleidoscope/blob/master/bin/eeprom-restore.sh
+[focus]: ../plugins/Kaleidoscope-FocusSerial.md
