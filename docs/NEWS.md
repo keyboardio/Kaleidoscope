@@ -12,6 +12,23 @@ See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading 
 
 ## New features
 
+### ModLayer keys
+
+There is a new type of built-in key that activates both a layer shift and a
+keyboard modifier simultaneously, and keeps both active until the key is
+released.  Basically, it's a combination of a single modifier key (any one of
+the standard eight) and a `ShiftToLayer(N)` key (for any layer in the range
+0-31).
+
+A ModLayer key `key` will return `true` for the test functions
+`key.isKeyboardModifier()`, `key.isLayerKey()`, and `key.isLayerShift()`.  As
+such, it can be turned into a OneShot key by either
+`OneShot.enableAutoModifiers()` or `OneShot.enableAutoLayers()`.
+
+An additional umbrella test function has also been added: `key.isMomentary()`,
+which returns `true` for any key that is either a keyboard modifier or a layer
+shift (including ModLayer keys).
+
 ### Layer changes updated
 
 Layer change key handling has been updated to be more consistent with activation
