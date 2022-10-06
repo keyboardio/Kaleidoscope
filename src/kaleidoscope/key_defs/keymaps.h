@@ -80,3 +80,6 @@ static const uint8_t LAYER_MOVE_OFFSET  = LAYER_SHIFT_OFFSET + LAYER_OP_OFFSET;
  * this is a one-way operation.
  */
 #define MoveToLayer(n) Key(n + LAYER_MOVE_OFFSET, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
+
+// Shorthand for keymap entry (e.g. `ML(LeftAlt, 3)`)
+#define ML(mod, layer) kaleidoscope::modLayerKey(Key_##mod, layer)
