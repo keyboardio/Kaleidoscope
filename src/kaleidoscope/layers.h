@@ -30,6 +30,9 @@
 #include "kaleidoscope_internal/sketch_exploration/sketch_exploration.h"  // for _INIT_SKETCH_EX...
 
 // clang-format off
+#ifndef MAX_ACTIVE_LAYERS
+#define MAX_ACTIVE_LAYERS 16
+#endif
 
 #define START_KEYMAPS                                                   __NL__ \
    constexpr Key keymaps_linear[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] PROGMEM = {
@@ -120,8 +123,12 @@ class Layer_ {
 
  private:
   static uint8_t active_layer_count_;
-  static int8_t active_layers_[31];
+  static int8_t active_layers_[MAX_ACTIVE_LAYERS];
   static uint8_t active_layer_keymap_[kaleidoscope_internal::device.numKeys()];
+
+  static int8_t stackPosition(uint8_t layer);
+  static void remove(uint8_t stack_index);
+  static uint8_t unshifted(uint8_t layer);
 };
 }  // namespace kaleidoscope
 
