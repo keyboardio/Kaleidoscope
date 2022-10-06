@@ -102,7 +102,8 @@ class Layer_ {
   static void move(uint8_t layer);
 
   static uint8_t mostRecent() {
-    return active_layers_[active_layer_count_ - 1];
+    uint8_t top_layer = active_layers_[active_layer_count_ - 1];
+    return unshifted(top_layer);
   }
   static bool isActive(uint8_t layer);
 
