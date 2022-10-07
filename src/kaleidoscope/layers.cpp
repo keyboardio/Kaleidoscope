@@ -248,7 +248,7 @@ void Layer_::activateNext() {
 }
 
 void Layer_::deactivateMostRecent() {
-  uint8_t layer = unshifted(active_layers_[active_layer_count_ - 1]);
+  uint8_t layer = active_layers_[active_layer_count_ - 1];
   deactivate(layer);
 }
 
