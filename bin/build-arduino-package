@@ -59,7 +59,7 @@ my $platforms_template = {
             },
             {
                 'name'     => 'dfu-util',
-                'version'  => '0.10.0-arduino1',
+                'version'  => '0.11.0-arduino3',
                 'packager' => 'keyboardio'
             }
         ],
