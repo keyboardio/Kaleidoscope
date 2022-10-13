@@ -42,6 +42,11 @@ EventHandlerResult MouseKeysConfig::onSetup() {
   }
 
   Runtime.storage().get(settings_addr_, ::MouseKeys.settings_);
+
+  // We need to set the grid size explicitly, because behind the scenes, that's
+  // stored in MouseWrapper.
+  ::MouseKeys.setWarpGridSize(::MouseKeys.settings_.warp_grid_size);
+
   return EventHandlerResult::OK;
 }
 
@@ -52,18 +57,21 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
     INIT_SPEED,
     BASE_SPEED,
     ACCEL_DURATION,
+    WARP_GRID_SIZE,
   } cmd;
   const char *cmd_scroll_interval = PSTR("mousekeys.scroll_interval");
   const char *cmd_initial_speed   = PSTR("mousekeys.init_speed");
   const char *cmd_base_speed      = PSTR("mousekeys.base_speed");
   const char *cmd_accel_duration  = PSTR("mousekeys.accel_duration");
+  const char *cmd_warp_grid_size  = PSTR("mousekeys.warp_grid_size");
 
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(
       cmd_scroll_interval,
       cmd_initial_speed,
       cmd_base_speed,
-      cmd_accel_duration);
+      cmd_accel_duration,
+      cmd_warp_grid_size);
 
   if (::Focus.inputMatchesCommand(input, cmd_scroll_interval))
     cmd = Command::SCROLL_INTERVAL;
@@ -73,6 +81,8 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
     cmd = Command::BASE_SPEED;
   else if (::Focus.inputMatchesCommand(input, cmd_accel_duration))
     cmd = Command::ACCEL_DURATION;
+  else if (::Focus.inputMatchesCommand(input, cmd_warp_grid_size))
+    cmd = Command::WARP_GRID_SIZE;
   else
     // allow other plugins to process this event.
     return EventHandlerResult::OK;
@@ -93,6 +103,9 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
       break;
     case Command::ACCEL_DURATION:
       val = ::MouseKeys.getCursorAccelDuration();
+      break;
+    case Command::WARP_GRID_SIZE:
+      val = ::MouseKeys.getWarpGridSize();
       break;
     default:
       // if a valid command is issued but there is no 0-arg handler for it,
@@ -119,6 +132,9 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
       break;
     case Command::ACCEL_DURATION:
       ::MouseKeys.setCursorAccelDuration(arg);
+      break;
+    case Command::WARP_GRID_SIZE:
+      ::MouseKeys.setWarpGridSize(arg);
       break;
     }
   }

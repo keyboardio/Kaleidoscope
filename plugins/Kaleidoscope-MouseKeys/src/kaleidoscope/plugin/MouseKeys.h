@@ -84,6 +84,7 @@ class MouseKeys : public kaleidoscope::Plugin {
 #endif
 
   void setWarpGridSize(uint8_t grid_size);
+  uint8_t getWarpGridSize();
 
   /// Get the current mouse (full) speed setting
   ///
@@ -144,6 +145,7 @@ class MouseKeys : public kaleidoscope::Plugin {
     uint8_t cursor_init_speed      = 1;
     uint8_t cursor_base_speed      = 50;
     uint16_t cursor_accel_duration = 1000;
+    uint8_t warp_grid_size         = 2;
   };
 
   // ---------------------------------------------------------------------------
