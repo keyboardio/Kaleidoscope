@@ -461,16 +461,13 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
 // The order can be important. For example, LED effects are
 // added in the order they're listed here.
 KALEIDOSCOPE_INIT_PLUGINS(
+  // ----------------------------------------------------------------------
+  // Chrysalis plugins
+
   // The EEPROMSettings & EEPROMKeymap plugins make it possible to have an
   // editable keymap in EEPROM.
   EEPROMSettings,
   EEPROMKeymap,
-
-  // SpaceCadet can turn your shifts into parens on tap, while keeping them as
-  // Shifts when held. SpaceCadetConfig lets Chrysalis configure some aspects of
-  // the plugin.
-  SpaceCadet,
-  SpaceCadetConfig,
 
   // Focus allows bi-directional communication with the host, and is the
   // interface through which the keymap in EEPROM can be edited.
@@ -485,13 +482,67 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // both debugging, and in backing up one's EEPROM contents.
   FocusEEPROMCommand,
 
+  // The FirmwareVersion plugin lets Chrysalis query the version of the firmware
+  // programmatically.
+  FirmwareVersion,
+
+  // The LayerNames plugin allows Chrysalis to display - and edit - custom layer
+  // names, to be shown instead of the default indexes.
+  LayerNames,
+
+  // Enables setting, saving (via Chrysalis), and restoring (on boot) the
+  // default LED mode.
+  DefaultLEDModeConfig,
+
+  // Enables controlling (and saving) the brightness of the LEDs via Focus.
+  LEDBrightnessConfig,
+
+  // ----------------------------------------------------------------------
+  // Keystroke-handling plugins
+
+  // The Qukeys plugin enables the "Secondary action" functionality in
+  // Chrysalis. Keys with secondary actions will have their primary action
+  // performed when tapped, but the secondary action when held.
+  Qukeys,
+
+  // SpaceCadet can turn your shifts into parens on tap, while keeping them as
+  // Shifts when held. SpaceCadetConfig lets Chrysalis configure some aspects of
+  // the plugin.
+  SpaceCadet,
+  SpaceCadetConfig,
+
+  // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
+  // held" functionality for layer keys.
+  OneShot,
+  OneShotConfig,
+  EscapeOneShot,
+  EscapeOneShotConfig,
+
+  // The macros plugin adds support for macros
+  Macros,
+
+  // Enables dynamic, Chrysalis-editable macros.
+  DynamicMacros,
+
+  // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
+  MouseKeys,
+  MouseKeysConfig,
+
+  // The MagicCombo plugin lets you use key combinations to trigger custom
+  // actions - a bit like Macros, but triggered by pressing multiple keys at the
+  // same time.
+  MagicCombo,
+
+  // Enables the GeminiPR Stenography protocol. Unused by default, but with the
+  // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
+  GeminiPR,
+
+  // ----------------------------------------------------------------------
+  // LED mode plugins
+
   // The boot greeting effect pulses the LED button for 10 seconds after the
   // keyboard is first connected
   BootGreetingEffect,
-
-  // The hardware test mode, which can be invoked by tapping Prog, LED and the
-  // left Fn button at the same time.
-  HardwareTestMode,
 
   // LEDControl provides support for other LED modes
   LEDControl,
@@ -541,23 +592,16 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // with a custom LED effect
   NumPad,
 
-  // The macros plugin adds support for macros
-  Macros,
-
-  // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
-  // The MouseKeysConfig plugin lets Chrysalis configure some aspects of the
-  // plugin.
-  MouseKeys,
-  MouseKeysConfig,
-
   // The HostPowerManagement plugin allows us to turn LEDs off when then host
   // goes to sleep, and resume them when it wakes up.
   HostPowerManagement,
 
-  // The MagicCombo plugin lets you use key combinations to trigger custom
-  // actions - a bit like Macros, but triggered by pressing multiple keys at the
-  // same time.
-  MagicCombo,
+  // Turns LEDs off after a configurable amount of idle time.
+  IdleLEDs,
+  PersistentIdleLEDs,
+
+  // ----------------------------------------------------------------------
+  // Miscellaneous plugins
 
   // The USBQuirks plugin lets you do some things with USB that we aren't
   // comfortable - or able - to do automatically, but can be useful
@@ -565,43 +609,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // by BIOSes) and Report (NKRO).
   USBQuirks,
 
-  // The Qukeys plugin enables the "Secondary action" functionality in
-  // Chrysalis. Keys with secondary actions will have their primary action
-  // performed when tapped, but the secondary action when held.
-  Qukeys,
-
-  // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
-  // held" functionality for layer keys.
-  OneShot,
-  OneShotConfig,
-  EscapeOneShot,
-  EscapeOneShotConfig,
-
-  // Turns LEDs off after a configurable amount of idle time.
-  IdleLEDs,
-  PersistentIdleLEDs,
-
-  // Enables dynamic, Chrysalis-editable macros.
-  DynamicMacros,
-
-  // The FirmwareVersion plugin lets Chrysalis query the version of the firmware
-  // programmatically.
-  FirmwareVersion,
-
-  // The LayerNames plugin allows Chrysalis to display - and edit - custom layer
-  // names, to be shown instead of the default indexes.
-  LayerNames,
-
-  // Enables setting, saving (via Chrysalis), and restoring (on boot) the
-  // default LED mode.
-  DefaultLEDModeConfig,
-
-  // Enables controlling (and saving) the brightness of the LEDs via Focus.
-  LEDBrightnessConfig,
-
-  // Enables the GeminiPR Stenography protocol. Unused by default, but with the
-  // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
-  GeminiPR);
+  // The hardware test mode, which can be invoked by tapping Prog, LED and the
+  // left Fn button at the same time.
+  HardwareTestMode  //,
+);
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up
