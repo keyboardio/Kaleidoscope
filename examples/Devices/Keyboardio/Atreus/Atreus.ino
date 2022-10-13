@@ -103,24 +103,75 @@ KEYMAPS(
 // clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
-  EscapeOneShot,
+  // ----------------------------------------------------------------------
+  // Chrysalis plugins
+
+  // The EEPROMSettings & EEPROMKeymap plugins make it possible to have an
+  // editable keymap in EEPROM.
   EEPROMSettings,
   EEPROMKeymap,
+
+  // Focus allows bi-directional communication with the host, and is the
+  // interface through which the keymap in EEPROM can be edited.
   Focus,
-  FocusEEPROMCommand,
+
+  // FocusSettingsCommand adds a few Focus commands, intended to aid in
+  // changing some settings of the keyboard, such as the default layer (via the
+  // `settings.defaultLayer` command)
   FocusSettingsCommand,
-  Qukeys,
-  SpaceCadet,
-  OneShot,
-  Macros,
-  DynamicMacros,
-  MouseKeys,
-  EscapeOneShotConfig,
+
+  // FocusEEPROMCommand adds a set of Focus commands, which are very helpful in
+  // both debugging, and in backing up one's EEPROM contents.
+  FocusEEPROMCommand,
+
+  // The FirmwareVersion plugin lets Chrysalis query the version of the firmware
+  // programmatically.
   FirmwareVersion,
+
+  // The LayerNames plugin allows Chrysalis to display - and edit - custom layer
+  // names, to be shown instead of the default indexes.
   LayerNames,
+
+  // ----------------------------------------------------------------------
+  // Keystroke-handling plugins
+
+  // The Qukeys plugin enables the "Secondary action" functionality in
+  // Chrysalis. Keys with secondary actions will have their primary action
+  // performed when tapped, but the secondary action when held.
+  Qukeys,
+
+  // SpaceCadet can turn your shifts into parens on tap, while keeping them as
+  // Shifts when held. SpaceCadetConfig lets Chrysalis configure some aspects of
+  // the plugin.
+  SpaceCadet,
   SpaceCadetConfig,
+
+  // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
+  // held" functionality for layer keys.
+  OneShot,
   OneShotConfig,
-  MouseKeysConfig);
+  EscapeOneShot,
+  EscapeOneShotConfig,
+
+  // The macros plugin adds support for macros
+  Macros,
+
+  // Enables dynamic, Chrysalis-editable macros.
+  DynamicMacros,
+
+  // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
+  MouseKeys,
+  MouseKeysConfig  //,
+
+  // The MagicCombo plugin lets you use key combinations to trigger custom
+  // actions - a bit like Macros, but triggered by pressing multiple keys at the
+  // same time.
+  // MagicCombo,
+
+  // Enables the GeminiPR Stenography protocol. Unused by default, but with the
+  // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
+  // GeminiPR,
+);
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   if (keyToggledOn(event.state)) {
