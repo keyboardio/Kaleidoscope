@@ -180,6 +180,10 @@ class OneShot : public kaleidoscope::Plugin {
   void setDoubleTapTimeout(int16_t ttl) {
     double_tap_timeout_ = ttl;
   }
+  
+  void setStickyTimeOutSeconds(uint16_t ttl) {
+	sticky_time_out_ = ttl * 1000;
+  }
 
   // --------------------------------------------------------------------------
   // Plugin hook functions
@@ -204,6 +208,7 @@ class OneShot : public kaleidoscope::Plugin {
   uint16_t timeout_           = 2500;
   uint16_t hold_timeout_      = 250;
   int16_t double_tap_timeout_ = -1;
+  uint32_t sticky_time_out_   = -1;
 
   uint16_t stickable_keys_ = -1;
   bool auto_modifiers_     = false;
@@ -222,10 +227,17 @@ class OneShot : public kaleidoscope::Plugin {
   bool hasTimedOut(uint16_t ttl) const {
     return Runtime.hasTimeExpired(start_time_, ttl);
   }
+  bool hasTimedOut32(uint32_t ttl) const {
+	return Runtime.hasTimeExpired(start_time_, ttl);
+  }
   bool hasDoubleTapTimedOut() const {
     // Derive the true double-tap timeout value if we're using the default.
     uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
     return hasTimedOut(dtto);
+  }
+  bool hasStickyTimedOut() const {
+	// uint32_t dtto = (sticky_time_out_ < 0) ? timeout_ : sticky_time_out_;
+	return hasTimedOut32(sticky_time_out_);
   }
   uint8_t getOneShotKeyIndex(Key oneshot_key) const;
   uint8_t getKeyIndex(Key key) const;
