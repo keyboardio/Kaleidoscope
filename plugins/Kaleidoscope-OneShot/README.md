@@ -65,6 +65,13 @@ void setup() {
 }
 ```
 
+To enable configuring the plugin via [Focus][focus] (including via
+[Chrysalis][chrysalis]), one will also need the `OneShotConfig` plugin enabled
+in addition.
+
+ [focus]: Kaleidoscope-FocusSerial.md
+ [chrysalis]: https://github.com/keyboardio/Chrysalis
+
 ## Keymap markup
 
 There are two macros the plugin provides:
@@ -230,7 +237,7 @@ modifiers and one-shot layer keys. It has the following methods:
 > Immediately deactivates the one-shot status of any _temporary_
 > one-shot keys. Any keys still being physically held will continue to
 > function as normal modifier/layer-shift keys.
-> 
+>
 > If `with_stickies` is `true` (the default is `false`), _sticky_
 > one-shot keys will also be deactivated, in the same way.
 
@@ -275,9 +282,43 @@ based on `Key` values; it has since be rewritten to be based on
 > not a one-shot key is still pressed any more. This function was
 > mainly used by LED-ActiveModColor, which no longer needs it.
 
+## Focus commands
+
+When the `OneShotConfig` plugin is enabled, the following Focus commands become
+available:
+
+### `.timeout`
+### `.hold_timeout`
+### `.double_tap_timeout`
+
+> These correspond to the `.setTimeout()`, `.setHoldTimeout()`, and
+> `.setDoubleTapTimeout()` methods, and can be used to query or set the
+> respective timeout value. When used without an argument, the command will
+> print the current timeout value. When used with one, it will update it.
+
+### `.auto_modifiers`
+### `.auto_layers`
+
+> Corresponds to the `.enableAutoModifiers()` and `.enableAutoLayers()` methods.
+> Used without an argument, the command will print the current status of the
+> setting, otherwise it will update it.
+>
+> A value of `1` means the setting is enabled, a value of `0` means it is disabled.
+
+### `.stickable_keys`
+
+> Can be used to query or set the bitmap used for controlling the stickability
+> of the oneshot modifier and layer keys. Constructing the bitmap is
+> complicated, and is best done through Chrysalis.
+
 ## Dependencies
 
 * [Kaleidoscope-Ranges](Kaleidoscope-Ranges.md)
+
+If the `OneShotConfig` plugin is enabled, additional dependencies are:
+
+* [Kaleidoscope-EEPROM-Settings](Kaleidoscope-EEPROM-Settings.md)
+* [Kaleidoscope-FocusSerial][focus]
 
 ## Further reading
 

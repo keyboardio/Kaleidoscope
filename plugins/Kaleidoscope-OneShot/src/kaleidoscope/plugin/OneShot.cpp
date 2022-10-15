@@ -41,28 +41,28 @@ namespace plugin {
 
 void OneShot::enableStickability(Key key) {
   uint8_t n = getKeyIndex(key);
-  stickable_keys_ |= (1 << n);
+  settings_.stickable_keys |= (1 << n);
 }
 
 void OneShot::disableStickability(Key key) {
   uint8_t n = getKeyIndex(key);
-  stickable_keys_ &= ~(1 << n);
+  settings_.stickable_keys &= ~(1 << n);
 }
 
 void OneShot::enableStickabilityForModifiers() {
-  stickable_keys_ |= stickable_modifiers_mask;
+  settings_.stickable_keys |= stickable_modifiers_mask;
 }
 
 void OneShot::disableStickabilityForModifiers() {
-  stickable_keys_ &= ~stickable_modifiers_mask;
+  settings_.stickable_keys &= ~stickable_modifiers_mask;
 }
 
 void OneShot::enableStickabilityForLayers() {
-  stickable_keys_ |= stickable_layers_mask;
+  settings_.stickable_keys |= stickable_layers_mask;
 }
 
 void OneShot::disableStickabilityForLayers() {
-  stickable_keys_ &= ~stickable_layers_mask;
+  settings_.stickable_keys &= ~stickable_layers_mask;
 }
 
 // ----------------------------------------------------------------------------
@@ -104,12 +104,12 @@ bool OneShot::isStickableDefault(Key key) const {
   // if it has been set to be non-stickable.
   if (key.isKeyboardModifier()) {
     n = key.getKeyCode() - Key_LeftControl.getKeyCode();
-    return bitRead(stickable_keys_, n);
+    return bitRead(settings_.stickable_keys, n);
   } else if (key.isLayerShift()) {
     n = oneshot_mod_count + key.getKeyCode() - LAYER_SHIFT_OFFSET;
     // We only keep track of the stickability of the first 8 layers.
     if (n < oneshot_key_count) {
-      return bitRead(stickable_keys_, n);
+      return bitRead(settings_.stickable_keys, n);
     }
   }
   // The default is for all keys to be "stickable"; if the default was false,
@@ -214,8 +214,8 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
       }
 
       if (is_oneshot ||
-          (auto_modifiers_ && event.key.isKeyboardModifier()) ||
-          (auto_layers_ && event.key.isLayerShift())) {
+          (settings_.auto_modifiers && event.key.isKeyboardModifier()) ||
+          (settings_.auto_layers && event.key.isLayerShift())) {
         temp_addrs_.set(event.addr);
         start_time_ = Runtime.millisAtCycleStart();
       } else if (!event.key.isMomentary()) {
@@ -224,7 +224,7 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
         // those keys to happen after the current event is finished, however, so
         // we trigger it by back-dating the start time, so that the timeout
         // check will trigger in the afterEachCycle() hook.
-        start_time_ -= timeout_;
+        start_time_ -= settings_.timeout;
       }
 
     } else if (temp && glue) {
@@ -285,8 +285,8 @@ EventHandlerResult OneShot::afterReportingState(const KeyEvent &event) {
 // ----------------------------------------------------------------------------
 EventHandlerResult OneShot::afterEachCycle() {
 
-  bool oneshot_expired = hasTimedOut(timeout_);
-  bool hold_expired    = hasTimedOut(hold_timeout_);
+  bool oneshot_expired = hasTimedOut(settings_.timeout);
+  bool hold_expired    = hasTimedOut(settings_.hold_timeout);
   bool any_temp_keys   = false;
 
   for (KeyAddr key_addr : temp_addrs_) {
