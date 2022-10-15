@@ -198,6 +198,8 @@ class OneShot : public kaleidoscope::Plugin {
   EventHandlerResult afterReportingState(const KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
+  friend class OneShotConfig;
+
  private:
   // --------------------------------------------------------------------------
   // Constants
@@ -256,7 +258,22 @@ class OneShot : public kaleidoscope::Plugin {
   void releaseKey(KeyAddr key_addr);
 };
 
+// =============================================================================
+// Plugin for configuration of OneShot via Focus and persistent storage of
+// settins in EEPROM (i.e. Chrysalis).
+class OneShotConfig : public Plugin {
+ public:
+  EventHandlerResult onNameQuery();
+  EventHandlerResult onSetup();
+  EventHandlerResult onFocusEvent(const char *command);
+
+ private:
+  // The base address in persistent storage for configuration data:
+  uint16_t settings_addr_;
+};
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::OneShot OneShot;
+extern kaleidoscope::plugin::OneShotConfig OneShotConfig;
