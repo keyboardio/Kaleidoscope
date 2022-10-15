@@ -74,10 +74,10 @@ class OneShot : public kaleidoscope::Plugin {
   void disableStickabilityForLayers();
 
   void enableAutoModifiers() {
-    auto_modifiers_ = true;
+    settings_.auto_modifiers = true;
   }
   void enableAutoLayers() {
-    auto_layers_ = true;
+    settings_.auto_layers = true;
   }
   void enableAutoOneShot() {
     enableAutoModifiers();
@@ -85,10 +85,10 @@ class OneShot : public kaleidoscope::Plugin {
   }
 
   void disableAutoModifiers() {
-    auto_modifiers_ = false;
+    settings_.auto_modifiers = false;
   }
   void disableAutoLayers() {
-    auto_layers_ = false;
+    settings_.auto_layers = false;
   }
   void disableAutoOneShot() {
     disableAutoModifiers();
@@ -96,13 +96,13 @@ class OneShot : public kaleidoscope::Plugin {
   }
 
   void toggleAutoModifiers() {
-    auto_modifiers_ = !auto_modifiers_;
+    settings_.auto_modifiers = !settings_.auto_modifiers;
   }
   void toggleAutoLayers() {
-    auto_layers_ = !auto_layers_;
+    settings_.auto_layers = !settings_.auto_layers;
   }
   void toggleAutoOneShot() {
-    if (auto_modifiers_ || auto_layers_) {
+    if (settings_.auto_modifiers || settings_.auto_layers) {
       disableAutoOneShot();
     } else {
       enableAutoOneShot();
@@ -172,13 +172,22 @@ class OneShot : public kaleidoscope::Plugin {
   // --------------------------------------------------------------------------
   // Timeout onfiguration functions
   void setTimeout(uint16_t ttl) {
-    timeout_ = ttl;
+    settings_.timeout = ttl;
+  }
+  uint16_t getTimeout() {
+    return settings_.timeout;
   }
   void setHoldTimeout(uint16_t ttl) {
-    hold_timeout_ = ttl;
+    settings_.hold_timeout = ttl;
+  }
+  uint16_t getHoldTimeout() {
+    return settings_.hold_timeout;
   }
   void setDoubleTapTimeout(int16_t ttl) {
-    double_tap_timeout_ = ttl;
+    settings_.double_tap_timeout = ttl;
+  }
+  int16_t getDoubleTapTimeout() {
+    return settings_.double_tap_timeout;
   }
 
   // --------------------------------------------------------------------------
@@ -201,13 +210,22 @@ class OneShot : public kaleidoscope::Plugin {
 
   // --------------------------------------------------------------------------
   // Configuration variables
-  uint16_t timeout_           = 2500;
-  uint16_t hold_timeout_      = 250;
-  int16_t double_tap_timeout_ = -1;
+  struct Settings {
+    uint16_t timeout;
+    uint16_t hold_timeout;
+    int16_t double_tap_timeout;
 
-  uint16_t stickable_keys_ = -1;
-  bool auto_modifiers_     = false;
-  bool auto_layers_        = false;
+    uint16_t stickable_keys;
+    bool auto_modifiers;
+    bool auto_layers;
+  } settings_ = {
+    .timeout            = 2500,
+    .hold_timeout       = 250,
+    .double_tap_timeout = -1,
+    .stickable_keys     = -1,
+    .auto_modifiers     = false,
+    .auto_layers        = false,
+  };
 
   // --------------------------------------------------------------------------
   // State variables
@@ -224,7 +242,9 @@ class OneShot : public kaleidoscope::Plugin {
   }
   bool hasDoubleTapTimedOut() const {
     // Derive the true double-tap timeout value if we're using the default.
-    uint16_t dtto = (double_tap_timeout_ < 0) ? timeout_ : double_tap_timeout_;
+    uint16_t dtto = (settings_.double_tap_timeout < 0)
+                      ? settings_.timeout
+                      : settings_.double_tap_timeout;
     return hasTimedOut(dtto);
   }
   uint8_t getOneShotKeyIndex(Key oneshot_key) const;
