@@ -213,21 +213,15 @@ class OneShot : public kaleidoscope::Plugin {
   // --------------------------------------------------------------------------
   // Configuration variables
   struct Settings {
-    uint16_t timeout;
-    uint16_t hold_timeout;
-    int16_t double_tap_timeout;
+    uint16_t timeout           = 2500;
+    uint16_t hold_timeout      = 250;
+    int16_t double_tap_timeout = -1;
 
-    uint16_t stickable_keys;
-    bool auto_modifiers;
-    bool auto_layers;
-  } settings_ = {
-    .timeout            = 2500,
-    .hold_timeout       = 250,
-    .double_tap_timeout = -1,
-    .stickable_keys     = -1,
-    .auto_modifiers     = false,
-    .auto_layers        = false,
+    uint16_t stickable_keys = -1;
+    bool auto_modifiers     = false;
+    bool auto_layers        = false;
   };
+  Settings settings_;
 
   // --------------------------------------------------------------------------
   // State variables
