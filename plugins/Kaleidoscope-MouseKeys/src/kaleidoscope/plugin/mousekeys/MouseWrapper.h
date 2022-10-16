@@ -49,8 +49,6 @@ class MouseWrapper {
   void warp(uint8_t warp_cmd);
   void endWarping();
 
-  uint8_t warp_grid_size = MOUSE_WARP_GRID_2X2;
-
  private:
   uint16_t next_width;
   uint16_t next_height;

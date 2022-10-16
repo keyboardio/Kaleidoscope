@@ -15,6 +15,7 @@
  */
 
 #include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"
+#include "kaleidoscope/plugin/MouseKeys.h"
 
 #include <stdint.h>  // for uint16_t, uint8_t
 
@@ -67,8 +68,8 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
     return;
   }
 
-  next_width /= warp_grid_size;
-  next_height /= warp_grid_size;
+  next_width /= ::MouseKeys.getWarpGridSize();
+  next_height /= ::MouseKeys.getWarpGridSize();
 
   // WARP_UP + WARP_DOWN means "zoom in" to center sector
   if (warp_cmd & WARP_UP && warp_cmd & WARP_DOWN) {
@@ -81,13 +82,13 @@ void MouseWrapper::warp(uint8_t warp_cmd) {
   }
 
   if (warp_cmd & WARP_DOWN) {
-    section_top += next_height * (warp_grid_size - 1);
+    section_top += next_height * (::MouseKeys.getWarpGridSize() - 1);
   } else if (!(warp_cmd & WARP_UP)) {
     section_top += next_height;
   }
 
   if (warp_cmd & WARP_RIGHT) {
-    section_left += next_width * (warp_grid_size - 1);
+    section_left += next_width * (::MouseKeys.getWarpGridSize() - 1);
   } else if (!(warp_cmd & WARP_LEFT)) {
     section_left += next_width;
   }

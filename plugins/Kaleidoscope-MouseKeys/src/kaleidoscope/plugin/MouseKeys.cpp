@@ -54,14 +54,10 @@ uint16_t MouseKeys::wheelDelay = 50;
 void MouseKeys::setWarpGridSize(uint8_t grid_size) {
   // Sanity check the grid size here, so we do not need to do that at the call
   // sites. When given an invalid grid size, just don't touch the setting.
-  if (grid_size < 2 || grid_size > 3) return;
+  if (grid_size != MOUSE_WARP_GRID_2X2 &&
+      grid_size != MOUSE_WARP_GRID_3X3) return;
 
-  MouseWrapper.warp_grid_size = grid_size;
-  settings_.warp_grid_size    = grid_size;
-}
-
-uint8_t MouseKeys::getWarpGridSize() {
-  return MouseWrapper.warp_grid_size;
+  settings_.warp_grid_size = grid_size;
 }
 
 // =============================================================================
