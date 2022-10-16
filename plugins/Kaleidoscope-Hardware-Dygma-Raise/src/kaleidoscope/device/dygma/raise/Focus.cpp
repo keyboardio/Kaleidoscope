@@ -56,6 +56,10 @@ EventHandlerResult Focus::onFocusEvent(const char *input) {
                              cmd_keyscan,
                              cmd_crc_errors,
                              cmd_firmware);
+  if (::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_side_power,
+                                 cmd_sled_current,
+                                 cmd_keyscan);
 
   if (::Focus.inputMatchesCommand(input, cmd_version)) {
     ::Focus.send("Dygma Raise");

@@ -58,8 +58,9 @@ EventHandlerResult AutoShiftConfig::onFocusEvent(const char *input) {
   const char *cmd_timeout    = PSTR("autoshift.timeout");
   const char *cmd_categories = PSTR("autoshift.categories");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd_enabled, cmd_timeout, cmd_categories);
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_enabled, cmd_timeout, cmd_categories);
 
   if (::Focus.inputMatchesCommand(input, cmd_enabled))
     subCommand = ENABLED;

@@ -51,8 +51,9 @@ EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *input) {
   const char *cmd_mode    = PSTR("spacecadet.mode");
   const char *cmd_timeout = PSTR("spacecadet.timeout");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd_mode, cmd_timeout);
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_mode, cmd_timeout);
 
   if (::Focus.inputMatchesCommand(input, cmd_mode)) {
     if (::Focus.isEOL()) {

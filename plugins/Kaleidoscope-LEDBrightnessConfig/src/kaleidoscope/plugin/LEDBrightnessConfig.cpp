@@ -46,13 +46,14 @@ EventHandlerResult LEDBrightnessConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult LEDBrightnessConfig::onFocusEvent(const char *command) {
+EventHandlerResult LEDBrightnessConfig::onFocusEvent(const char *input) {
   const char *cmd = PSTR("led.brightness");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
+  if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {

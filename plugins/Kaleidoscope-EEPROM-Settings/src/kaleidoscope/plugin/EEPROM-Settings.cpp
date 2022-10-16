@@ -171,6 +171,8 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
 
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc);
+  if (::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_defaultLayer);
 
   if (::Focus.inputMatchesCommand(input, cmd_defaultLayer))
     sub_command = DEFAULT_LAYER;

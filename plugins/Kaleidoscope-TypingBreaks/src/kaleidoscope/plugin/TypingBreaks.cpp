@@ -161,6 +161,12 @@ EventHandlerResult TypingBreaks::onFocusEvent(const char *input) {
                              cmd_leftKeys,
                              cmd_rightKeys,
                              cmd_lockSecsRem);
+  if (::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_idleTimeLimit,
+                                 cmd_lockTimeOut,
+                                 cmd_lockLength,
+                                 cmd_leftMaxKeys,
+                                 cmd_rightMaxKeys);
 
   if (::Focus.inputMatchesCommand(input, cmd_idleTimeLimit))
     subCommand = IDLE_TIME_LIMIT;

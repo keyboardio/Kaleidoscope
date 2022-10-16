@@ -51,8 +51,9 @@ EventHandlerResult DefaultLEDModeConfig::onSetup() {
 EventHandlerResult DefaultLEDModeConfig::onFocusEvent(const char *input) {
   const char *cmd = PSTR("led_mode.default");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd);
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd);
 
   if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;

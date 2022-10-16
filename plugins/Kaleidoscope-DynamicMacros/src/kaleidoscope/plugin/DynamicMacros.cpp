@@ -220,6 +220,8 @@ EventHandlerResult DynamicMacros::onFocusEvent(const char *input) {
 
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_map, cmd_trigger);
+  if (::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_map);
 
   if (::Focus.inputMatchesCommand(input, cmd_map)) {
     if (::Focus.isEOL()) {

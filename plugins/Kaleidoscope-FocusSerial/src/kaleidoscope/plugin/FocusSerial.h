@@ -52,6 +52,7 @@ class FocusSerial : public kaleidoscope::Plugin {
 #endif
 
   bool inputMatchesHelp(const char *input);
+  bool inputMatchesBackup(const char *input);
   bool inputMatchesCommand(const char *input, const char *expected);
 
   EventHandlerResult printHelp() {
@@ -62,6 +63,15 @@ class FocusSerial : public kaleidoscope::Plugin {
     Runtime.serialPort().println((const __FlashStringHelper *)h1);
     delayAfterPrint();
     return printHelp(vars...);
+  }
+  EventHandlerResult printCommands() {
+    return EventHandlerResult::OK;
+  }
+  template<typename... Vars>
+  EventHandlerResult printCommands(const char *c1, Vars... vars) {
+    Runtime.serialPort().println((const __FlashStringHelper *)c1);
+    delayAfterPrint();
+    return printCommands(vars...);
   }
 
   EventHandlerResult sendName(const __FlashStringHelper *name) {

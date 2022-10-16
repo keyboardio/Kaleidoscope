@@ -100,8 +100,9 @@ void PersistentIdleLEDs::setIdleTimeoutSeconds(uint32_t new_limit) {
 EventHandlerResult PersistentIdleLEDs::onFocusEvent(const char *input) {
   const char *cmd = PSTR("idleleds.time_limit");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd);
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd);
 
   if (!::Focus.inputMatchesCommand(input, cmd))
     return EventHandlerResult::OK;

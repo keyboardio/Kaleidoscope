@@ -108,6 +108,8 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *input) {
 
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_custom, cmd_default, cmd_onlyCustom);
+  if (::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(cmd_custom, cmd_onlyCustom);
 
   if (::Focus.inputMatchesCommand(input, cmd_onlyCustom)) {
     if (::Focus.isEOL()) {

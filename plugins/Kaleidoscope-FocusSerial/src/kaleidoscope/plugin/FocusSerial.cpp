@@ -81,9 +81,10 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
   const char *cmd_help    = PSTR("help");
   const char *cmd_reset   = PSTR("device.reset");
   const char *cmd_plugins = PSTR("plugins");
+  const char *cmd_backup  = PSTR("backup");
 
   if (inputMatchesHelp(input))
-    return printHelp(cmd_help, cmd_reset, cmd_plugins);
+    return printHelp(cmd_help, cmd_reset, cmd_plugins, cmd_backup);
 
   if (inputMatchesCommand(input, cmd_reset)) {
     Runtime.device().rebootBootloader();
@@ -112,6 +113,10 @@ void FocusSerial::printBool(bool b) {
 
 bool FocusSerial::inputMatchesHelp(const char *input) {
   return inputMatchesCommand(input, PSTR("help"));
+}
+
+bool FocusSerial::inputMatchesBackup(const char *input) {
+  return inputMatchesCommand(input, PSTR("backup"));
 }
 
 bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {

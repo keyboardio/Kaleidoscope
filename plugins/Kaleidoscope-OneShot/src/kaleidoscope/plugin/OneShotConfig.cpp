@@ -62,8 +62,9 @@ EventHandlerResult OneShotConfig::onFocusEvent(const char *input) {
   const char *cmd_auto_mods          = PSTR("oneshot.auto_mods");
   const char *cmd_auto_layers        = PSTR("oneshot.auto_layers");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(
       cmd_timeout,
       cmd_hold_timeout,
       cmd_double_tap_timeout,

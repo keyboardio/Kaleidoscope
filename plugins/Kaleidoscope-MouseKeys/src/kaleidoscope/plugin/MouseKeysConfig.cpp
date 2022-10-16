@@ -58,8 +58,9 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
   const char *cmd_base_speed      = PSTR("mousekeys.base_speed");
   const char *cmd_accel_duration  = PSTR("mousekeys.accel_duration");
 
-  if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(
+  if (::Focus.inputMatchesHelp(input) ||
+      ::Focus.inputMatchesBackup(input))
+    return ::Focus.printCommands(
       cmd_scroll_interval,
       cmd_initial_speed,
       cmd_base_speed,
