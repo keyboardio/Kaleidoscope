@@ -144,7 +144,7 @@ In most cases, it won't be necessary for plugins or user sketches to call any of
 
 ### New build system
 
-In this release, we replace kaleidoscope-builder with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
+In this release, we replace kaleidoscope-builder with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaleidoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
 
 ### New device API
 
@@ -798,7 +798,7 @@ void macroNewSentence(KeyEvent &event) {
 
 `kaleidoscope-builder` has been removed.
 
-We replaced it with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaliedoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
+We replaced it with a new Makefile based build system that uses `arduino-cli` instead of of the full Arduino IDE. This means that you can now check out development copies of Kaleidoscope into any directory, using the `KALEIDOSCOPE_DIR` environment variable to point to your installation.
 
 ### OneShot meta keys
 

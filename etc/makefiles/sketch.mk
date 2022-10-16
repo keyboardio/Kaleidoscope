@@ -206,7 +206,7 @@ endif
 	@$(shell read _)
 	# Earlier Model 100 firmware didn't implement 1200bps touch
 ifeq ($(FQBN),keyboardio:gd32:keyboardio_model_100)
-	# If we have a device serial port available, try to trigger a Kaliedoscope reset
+	# If we have a device serial port available, try to trigger a Kaleidoscope reset
 	-$(QUIET) export DEVICE=$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1) && \
 		[ -e "$$DEVICE" ] && \
 		$(KALEIDOSCOPE_DIR)/bin/focus-send "device.reset" && \
