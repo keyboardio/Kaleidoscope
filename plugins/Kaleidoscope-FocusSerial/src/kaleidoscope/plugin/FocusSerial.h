@@ -133,6 +133,9 @@ class FocusSerial : public kaleidoscope::Plugin {
   /* Hooks */
   EventHandlerResult afterEachCycle();
   EventHandlerResult onFocusEvent(const char *input);
+  EventHandlerResult onSetup() {
+    Runtime.serialPort().setTimeout(10);
+  }
 
  private:
   char input_[32];
