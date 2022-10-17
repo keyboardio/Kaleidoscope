@@ -128,12 +128,7 @@ class FocusSerial : public kaleidoscope::Plugin {
     u16 = Runtime.serialPort().parseInt();
   }
 
-  bool isEOL() {
-    int i = Runtime.serialPort().peek();
-
-    return (i == NEWLINE || i == -1);
-  }
-
+  bool isEOL();
 
   /* Hooks */
   EventHandlerResult afterEachCycle();
