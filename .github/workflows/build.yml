@@ -33,7 +33,7 @@ jobs:
     - run: make setup
     - run: KALEIDOSCOPE_CCACHE=1 make -j $(nproc) --output-sync=recurse simulator-tests
   check-code-style:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - run: KALEIDOSCOPE_CODE_FORMATTER=clang-format-14 make check-code-style
