@@ -26,11 +26,11 @@ AttributeMacros:
   - __attribute__((unused))
 BinPackArguments: false
 BinPackParameters: false
-# BraceWrapping:
-#   SplitEmptyFunction: false
-#   SplitEmptyRecord: true
-#   SplitEmptyNamespace: true
-# BreakBeforeBraces: Custom
+BraceWrapping:
+  SplitEmptyFunction: false
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+BreakBeforeBraces: Custom
 ColumnLimit: 0
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
@@ -39,9 +39,9 @@ FixNamespaceComments: true
 IndentCaseLabels: false
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 2
-# PackConstructorInitializers: CurrentLine
+PackConstructorInitializers: NextLine
 PointerAlignment: Right
-# ReferenceAlignment: Right
+ReferenceAlignment: Right
 ReflowComments: false
 SortIncludes: false
 SpaceAfterTemplateKeyword: false

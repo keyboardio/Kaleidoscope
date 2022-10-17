@@ -5,7 +5,7 @@ on: [push, pull_request]
 env:
   LC_ALL: C
   ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
-  CLANG_FORMAT_CMD: clang-format-12
+  CLANG_FORMAT_CMD: clang-format-14
 jobs:
   smoke-sketches:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: KALEIDOSCOPE_CODE_FORMATTER=clang-format-12 make check-code-style
+    - run: KALEIDOSCOPE_CODE_FORMATTER=clang-format-14 make check-code-style
   check-shellcheck:
     runs-on: ubuntu-latest
     steps:
