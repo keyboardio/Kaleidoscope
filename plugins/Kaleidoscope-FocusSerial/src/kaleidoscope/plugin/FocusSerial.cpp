@@ -119,9 +119,9 @@ bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
 }
 
 bool FocusSerial::isEOL() {
-  int c = -1;
+  int c        = -1;
   auto timeout = Runtime.serialPort().getTimeout();
-  auto start = millis();
+  auto start   = millis();
 
   // Duplicate some of Stream::timedPeek because it's protected
   do {
