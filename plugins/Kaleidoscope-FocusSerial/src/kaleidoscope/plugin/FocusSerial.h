@@ -128,14 +128,16 @@ class FocusSerial : public kaleidoscope::Plugin {
     u16 = Runtime.serialPort().parseInt();
   }
 
-  bool isEOL();
+  bool isEOL() {
+    int i = Runtime.serialPort().peek();
+
+    return (i == NEWLINE || i == -1);
+  }
+
 
   /* Hooks */
   EventHandlerResult afterEachCycle();
   EventHandlerResult onFocusEvent(const char *input);
-  EventHandlerResult onSetup() {
-    Runtime.serialPort().setTimeout(10);
-  }
 
  private:
   char input_[32];
