@@ -118,6 +118,23 @@ bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
   return strcmp_P(input, expected) == 0;
 }
 
+bool FocusSerial::isEOL() {
+  int c        = -1;
+  auto timeout = Runtime.serialPort().getTimeout();
+  auto start   = millis();
+
+  // Duplicate some of Stream::timedPeek because it's protected
+  do {
+    c = Runtime.serialPort().peek();
+    if (c == NEWLINE) {
+      return true;
+    } else if (c >= 0) {
+      return false;
+    }
+  } while ((millis() - start) < timeout);
+  return true;
+}
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 
