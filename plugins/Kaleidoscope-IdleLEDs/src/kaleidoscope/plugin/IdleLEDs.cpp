@@ -82,7 +82,7 @@ EventHandlerResult PersistentIdleLEDs::onSetup() {
   uint16_t idle_time;
   Runtime.storage().get(settings_base_, idle_time);
   if (idle_time == 0xffff) {
-    idle_time = idle_time_limit;
+    idle_time = idle_time_limit / 1000;
   }
   setIdleTimeoutSeconds(idle_time);
 
