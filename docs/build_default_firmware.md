@@ -44,6 +44,8 @@ If something goes wrong, the status bar turns orange and displays an error messa
 
 # Install the firmware
 
+(If you are updating the firmware on a Keyboardio Model 100 for the first time, at this point, you may need to disconnect the keyboard from your computer, hold down the `Prog` key and plug the keyboard back in to put it into programming mode. Once you plug the keyboard back in, the `Prog` key will glow red. You may then continue with this tutorial.)
+
 If your keyboard has a programming interlock key, you'll need to hold it down now. On the Keyboardio Model 01, this is the `Prog` key. On the Keyboardio Atreus, this is the `Esc` key.
 
 Without releasing that key, click on the "right arrow" button in the sketch window menu bar. This starts the firmware installation process.
