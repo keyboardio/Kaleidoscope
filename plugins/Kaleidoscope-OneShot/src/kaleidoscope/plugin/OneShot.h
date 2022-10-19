@@ -219,7 +219,7 @@ class OneShot : public kaleidoscope::Plugin {
   KeyAddrBitfield temp_addrs_;
   KeyAddrBitfield glue_addrs_;
 
-  uint16_t start_time_   = 0;
+  uint32_t start_time_   = 0;
   KeyAddr prev_key_addr_ = invalid_key_addr;
 
   // --------------------------------------------------------------------------
