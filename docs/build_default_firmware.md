@@ -60,5 +60,5 @@ If the process is successful, Arduino will tell you that in the status area. Som
 
 On Windows, you may also see the message "the device Model 01 is undergoing additional configuration." 
 
-If you have any trouble flashing your keyboard's firmware, check to see if the issue is addressed on the [Troubleshooting Firmware Upload Issues](https://github.com/keyboardio/Kaleidoscope/wiki/Troubleshooting-Firmware-Upload-Issues)
+If you have any trouble flashing your keyboard's firmware, check to see if the issue is addressed on the [Troubleshooting Firmware Upload Issues](https://github.com/keyboardio/Kaleidoscope/wiki/Troubleshooting-Firmware-Upload-Issues) page. Note that if you already have any customized data in the keyboard's EEPROM, any layout differences between the keyboard's original and current firmware may cause issues. See [Using EEPROM](customization/eeprom.md) for ways to correct any problems.
 
