@@ -66,6 +66,9 @@
 // Support for setting and saving the default LED mode
 #include "Kaleidoscope-DefaultLEDModeConfig.h"
 
+// Support for changing the brightness of the LEDs
+#include "Kaleidoscope-LEDBrightnessConfig.h"
+
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-HardwareTestMode.h"
 
@@ -380,12 +383,11 @@ static kaleidoscope::plugin::LEDSolidColor solidViolet(130, 0, 120);
 void toggleLedsOnSuspendResume(kaleidoscope::plugin::HostPowerManagement::Event event) {
   switch (event) {
   case kaleidoscope::plugin::HostPowerManagement::Suspend:
+  case kaleidoscope::plugin::HostPowerManagement::Sleep:
     LEDControl.disable();
     break;
   case kaleidoscope::plugin::HostPowerManagement::Resume:
     LEDControl.enable();
-    break;
-  case kaleidoscope::plugin::HostPowerManagement::Sleep:
     break;
   }
 }
@@ -543,7 +545,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Macros,
 
   // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
+  // The MouseKeysConfig plugin lets Chrysalis configure some aspects of the
+  // plugin.
   MouseKeys,
+  MouseKeysConfig,
 
   // The HostPowerManagement plugin allows us to turn LEDs off when then host
   // goes to sleep, and resume them when it wakes up.
@@ -568,6 +573,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // Enables the "Sticky" behavior for modifiers, and the "Layer shift when
   // held" functionality for layer keys.
   OneShot,
+  OneShotConfig,
   EscapeOneShot,
   EscapeOneShotConfig,
 
@@ -589,6 +595,9 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // Enables setting, saving (via Chrysalis), and restoring (on boot) the
   // default LED mode.
   DefaultLEDModeConfig,
+
+  // Enables controlling (and saving) the brightness of the LEDs via Focus.
+  LEDBrightnessConfig,
 
   // Enables the GeminiPR Stenography protocol. Unused by default, but with the
   // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
