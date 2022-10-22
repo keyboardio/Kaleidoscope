@@ -35,7 +35,7 @@
 #include "Kaleidoscope-Qukeys.h"
 #include "Kaleidoscope-SpaceCadet.h"
 
-/* *INDENT-OFF* */
+// clang-format off
 KEYMAPS(
   [0] = KEYMAP_STACKED
   (
@@ -110,7 +110,7 @@ KEYMAPS(
       XXX, XXX, XXX
   ),
 )
-/* *INDENT-ON* */
+// clang-format on
 
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
@@ -125,8 +125,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   EscapeOneShotConfig,
   DynamicMacros,
   MouseKeys,
-  FirmwareVersion
-);
+  FirmwareVersion);
 
 void blinkAllStatusLEDs() {
   for (auto i = 0; i <= 3; i++) {
