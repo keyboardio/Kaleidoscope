@@ -22,6 +22,8 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+
+#include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"  // for warp modes
 // =============================================================================
 // Deprecated MousKeys code
 #include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
@@ -84,6 +86,9 @@ class MouseKeys : public kaleidoscope::Plugin {
 #endif
 
   void setWarpGridSize(uint8_t grid_size);
+  uint8_t getWarpGridSize() {
+    return settings_.warp_grid_size;
+  }
 
   /// Get the current mouse (full) speed setting
   ///
@@ -144,6 +149,7 @@ class MouseKeys : public kaleidoscope::Plugin {
     uint8_t cursor_init_speed      = 1;
     uint8_t cursor_base_speed      = 50;
     uint16_t cursor_accel_duration = 1000;
+    uint8_t warp_grid_size         = MOUSE_WARP_GRID_2X2;
   };
 
   // ---------------------------------------------------------------------------

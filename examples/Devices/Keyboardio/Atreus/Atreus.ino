@@ -117,7 +117,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   MouseKeys,
   EscapeOneShotConfig,
   FirmwareVersion,
-  LayerNames);
+  LayerNames,
+  SpaceCadetConfig,
+  OneShotConfig,
+  MouseKeysConfig);
 
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   if (keyToggledOn(event.state)) {

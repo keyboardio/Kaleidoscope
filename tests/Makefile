@@ -42,7 +42,7 @@ include $(top_dir)/etc/makefiles/arduino-cli.mk
 .DEFAULT_GOAL := all
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for
-# Kaliedoscope's makefiles
+# Kaleidoscope's makefiles
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 
 .PHONY: all
