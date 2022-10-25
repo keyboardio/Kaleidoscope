@@ -205,6 +205,6 @@ endif
 	$(info )
 	@$(shell read _)
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
-	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) |cut -d' ' -f 1 | xargs -n 1 echo "--port" ) \
+	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) | awk '{ print "--port", $$1; exit }' ) \
 	--input-dir "${OUTPUT_PATH}" \
 	$(ARDUINO_VERBOSE)
