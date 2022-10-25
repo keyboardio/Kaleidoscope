@@ -145,7 +145,6 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
 
 void setup() {
   Kaleidoscope.setup();
-  SpaceCadet.disable();
   EEPROMKeymap.setup(9);
 
   DynamicMacros.reserve_storage(48);
@@ -153,6 +152,11 @@ void setup() {
   LayerNames.reserve_storage(63);
 
   Layer.move(EEPROMSettings.default_layer());
+
+  // To avoid any surprises, SpaceCadet is turned off by default. However, it
+  // can be permanently enabled via Chrysalis, so we should only disable it if
+  // no configuration exists.
+  SpaceCadetConfig.disableSpaceCadetIfUnconfigured();
 }
 
 void loop() {
