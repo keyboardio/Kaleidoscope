@@ -117,6 +117,8 @@ void EEPROMSettings::seal() {
     return;
   }
 
+  is_valid_ = true;
+
   /* If we have a default layer set, switch to it.
    *
    * We check if the layer is smaller than IGNORE_HARDCODED_LAYER (0x7e),
