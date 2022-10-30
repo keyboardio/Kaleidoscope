@@ -59,6 +59,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   uint8_t version() {
     return settings_.version;
   }
+  void accept_invalid();
 
   uint16_t requestSlice(uint16_t size);
   void seal();
@@ -80,6 +81,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   uint16_t next_start_ = sizeof(EEPROMSettings::Settings);
   bool is_valid_;
   bool sealed_;
+  void fallback_layers();
 
   Settings settings_;
 };

@@ -30,6 +30,11 @@
 namespace kaleidoscope {
 namespace plugin {
 
+void EEPROMSettings::fallback_layers() {
+  settings_.ignore_hardcoded_layers = false;
+  settings_.default_layer           = 0;
+}
+
 EventHandlerResult EEPROMSettings::onSetup() {
   Runtime.storage().get(0, settings_);
 
@@ -41,8 +46,7 @@ EventHandlerResult EEPROMSettings::onSetup() {
          and setting sensible defaults is safe. If either of them is not at it's
          uninitialized state, we do not override them, to avoid overwriting user
          settings. */
-      settings_.ignore_hardcoded_layers = false;
-      settings_.default_layer           = 0;
+      fallback_layers();
     }
 
     /* If the version is undefined, we'll set it to our current one. */
@@ -107,17 +111,17 @@ void EEPROMSettings::seal() {
 
   if (settings_.version != VERSION_CURRENT) {
     is_valid_ = false;
-    return;
-  }
-
-  if (settings_.crc == 0xffff) {
+  } else if (settings_.crc == 0xffff) {
     settings_.crc = CRCCalculator.crc;
     update();
-  } else if (settings_.crc != CRCCalculator.crc) {
-    return;
+  } else if (settings_.crc == CRCCalculator.crc) {
+    is_valid_ = true;
   }
 
-  is_valid_ = true;
+  // Fall back to hardcoded layers if settings might be corrupt
+  if (!is_valid_) {
+    fallback_layers();
+  }
 
   /* If we have a default layer set, switch to it.
    *
@@ -147,6 +151,13 @@ void EEPROMSettings::invalidate() {
   is_valid_ = false;
 }
 
+// Accept possibly corrupt settings, hopefully after user review
+void EEPROMSettings::accept_invalid() {
+  is_valid_     = true;
+  settings_.crc = ::CRCCalculator.crc;
+  update();
+}
+
 uint16_t EEPROMSettings::used() {
   return next_start_;
 }
@@ -164,15 +175,17 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
     IS_VALID,
     GET_VERSION,
     GET_CRC,
+    ACCEPT_INVALID,
   } sub_command;
 
-  const char *cmd_defaultLayer = PSTR("settings.defaultLayer");
-  const char *cmd_isValid      = PSTR("settings.valid?");
-  const char *cmd_version      = PSTR("settings.version");
-  const char *cmd_crc          = PSTR("settings.crc");
+  const char *cmd_defaultLayer  = PSTR("settings.defaultLayer");
+  const char *cmd_isValid       = PSTR("settings.valid?");
+  const char *cmd_version       = PSTR("settings.version");
+  const char *cmd_crc           = PSTR("settings.crc");
+  const char *cmd_acceptInvalid = PSTR("settings.acceptInvalid");
 
   if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc);
+    return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc, cmd_acceptInvalid);
 
   if (::Focus.inputMatchesCommand(input, cmd_defaultLayer))
     sub_command = DEFAULT_LAYER;
@@ -182,6 +195,8 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
     sub_command = GET_VERSION;
   else if (::Focus.inputMatchesCommand(input, cmd_crc))
     sub_command = GET_CRC;
+  else if (::Focus.inputMatchesCommand(input, cmd_acceptInvalid))
+    sub_command = ACCEPT_INVALID;
   else
     return EventHandlerResult::OK;
 
@@ -204,6 +219,17 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
     break;
   case GET_CRC:
     ::Focus.sendRaw(::CRCCalculator.crc, F("/"), ::EEPROMSettings.crc());
+    break;
+  case ACCEPT_INVALID:
+    if (::Focus.isEOL()) {
+      break;
+    } else {
+      uint8_t v;
+      ::Focus.read(v);
+      if (v == 1) {
+        ::EEPROMSettings.accept_invalid();
+      }
+    }
     break;
   }
 
