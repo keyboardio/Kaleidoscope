@@ -81,7 +81,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   uint16_t next_start_ = sizeof(EEPROMSettings::Settings);
   bool is_valid_;
   bool sealed_;
-  void fallback_layers();
+  inline void fallback_layers();
 
   Settings settings_;
 };

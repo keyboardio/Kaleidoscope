@@ -166,16 +166,13 @@ following commands:
 
 > Returns either `true` or `false`, depending on whether the sealed settings are
 > to be considered valid or not.
+>
+> When given an argument of `1`, accepts the current settings as valid, regardless of whether the settings layout matches.
+> Accepting also stores the current checksum, so it will be considered valid in the future.
 
 ### `settings.version`
 
 > Returns the version of the settings.
-
-### `settings.acceptInvalid 1`
-
-> Accepts the current settings as valid, regardless of whether the settings layout matches.
-> Also stores the current checksum, so it will be considered valid in the future.
-> The argument of `1` is required, to prevent accidental activation.
 
 ### `eeprom.contents`
 

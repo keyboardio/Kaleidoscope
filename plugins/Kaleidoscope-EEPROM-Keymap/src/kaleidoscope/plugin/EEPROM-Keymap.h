@@ -40,8 +40,6 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
 
   static void setup(uint8_t max);
 
-  static void max_layers(uint8_t max);
-
   static uint16_t keymap_base();
 
   static Key getKey(uint8_t layer, KeyAddr key_addr);
@@ -53,12 +51,12 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static uint16_t keymap_base_;
   static uint8_t max_layers_;
   static uint8_t progmem_layers_;
-  static bool ignore_hardcoded_;
 
   static Key parseKey();
   static void printKey(Key key);
   static void dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr));
-  static void set_layers(bool ignore_hardcoded);
+  static inline void max_layers(uint8_t max);
+  static inline void set_layers(bool ignore_hardcoded);
 };
 
 }  // namespace plugin
