@@ -45,6 +45,11 @@ EventHandlerResult AutoShiftConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
+void AutoShiftConfig::disableAutoShiftIfUnconfigured() {
+  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(AutoShift::settings_)))
+    ::AutoShift.disable();
+}
+
 EventHandlerResult AutoShiftConfig::onFocusEvent(const char *input) {
   enum {
     ENABLED,

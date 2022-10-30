@@ -276,6 +276,7 @@ class AutoShiftConfig : public Plugin {
  public:
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *input);
+  void disableAutoShiftIfUnconfigured();
 
  private:
   // The base address in persistent storage for configuration data
