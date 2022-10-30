@@ -35,15 +35,13 @@ namespace plugin {
 EventHandlerResult AutoShiftConfig::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSlice(sizeof(AutoShift::Settings));
 
-  if (Runtime.storage().isSliceUninitialized(
+  if (!Runtime.storage().isSliceUninitialized(
         settings_base_,
         sizeof(AutoShift::Settings))) {
-    // If our slice is uninitialized, set sensible defaults.
-    Runtime.storage().put(settings_base_, ::AutoShift.settings_);
-    Runtime.storage().commit();
+    // If our slice is initialized, load the settings
+    Runtime.storage().get(settings_base_, ::AutoShift.settings_);
   }
 
-  Runtime.storage().get(settings_base_, ::AutoShift.settings_);
   return EventHandlerResult::OK;
 }
 
