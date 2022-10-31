@@ -151,8 +151,6 @@ void setup() {
 
   LayerNames.reserve_storage(63);
 
-  Layer.move(EEPROMSettings.default_layer());
-
   // To avoid any surprises, SpaceCadet is turned off by default. However, it
   // can be permanently enabled via Chrysalis, so we should only disable it if
   // no configuration exists.

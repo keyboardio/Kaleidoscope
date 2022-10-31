@@ -34,6 +34,7 @@ namespace plugin {
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
 uint8_t EEPROMKeymap::progmem_layers_;
+bool EEPROMKeymap::sealed_;
 
 EventHandlerResult EEPROMKeymap::onSetup() {
   progmem_layers_ = layer_count;
@@ -55,13 +56,9 @@ inline void EEPROMKeymap::set_layers(bool ignore_hardcoded) {
 }
 
 void EEPROMKeymap::setup(uint8_t max) {
-  max_layers(max);
-  set_layers(::EEPROMSettings.ignoreHardcodedLayers());
-}
-
-inline void EEPROMKeymap::max_layers(uint8_t max) {
   max_layers_  = max;
   keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * Runtime.device().numKeys() * 2);
+  set_layers(::EEPROMSettings.ignoreHardcodedLayers());
 }
 
 /*
@@ -70,7 +67,10 @@ inline void EEPROMKeymap::max_layers(uint8_t max) {
  * to avoid scrambled keymaps in some firmware update situations.
  */
 EventHandlerResult EEPROMKeymap::beforeEachCycle() {
-  set_layers(::EEPROMSettings.ignoreHardcodedLayers());
+  if (!sealed_) {
+    sealed_ = true;
+    set_layers(::EEPROMSettings.ignoreHardcodedLayers());
+  }
   return EventHandlerResult::OK;
 }
 
