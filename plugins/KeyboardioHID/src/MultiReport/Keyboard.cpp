@@ -64,13 +64,15 @@ static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   D_LOGICAL_MINIMUM, 0x00,
   D_LOGICAL_MAXIMUM, 0x01,
   D_REPORT_SIZE, 0x01,
-  D_REPORT_COUNT, (HID_LAST_KEY - HID_KEYBOARD_A_AND_A),
+  D_REPORT_COUNT, (KEY_BITS - 4),
   D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
-  // Padding (3 bits) to round up the report to byte boundary.
-  D_REPORT_SIZE, 0x03,
+#if (KEY_BITS % 8)
+  // Padding to round up the report to byte boundary.
+  D_REPORT_SIZE, (8 - (KEY_BITS % 8)),
   D_REPORT_COUNT, 0x01,
   D_INPUT, (D_CONSTANT),
+#endif
 
   D_END_COLLECTION,
 };

@@ -33,7 +33,8 @@ THE SOFTWARE.
 #include "HIDTables.h"
 #include "HIDAliases.h"
 
-#define KEY_BYTES 28
+#define KEY_BITS (4 + HID_LAST_KEY - HID_KEYBOARD_A_AND_A + 1)
+#define KEY_BYTES ((KEY_BITS + 7) / 8)
 
 typedef union {
   // Modifiers + keymap
