@@ -62,10 +62,6 @@ int HID_::getDescriptor(USBSetup& setup) {
     total += res;
   }
 
-  // Reset the protocol on reenumeration. Normally the host should not assume the state of the protocol
-  // due to the USB specs, but Windows and Linux just assumes its in report mode.
-  protocol = HID_REPORT_PROTOCOL;
-
   USB_PackMessages(false);
   return total;
 }

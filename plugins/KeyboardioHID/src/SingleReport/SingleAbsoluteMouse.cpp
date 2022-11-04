@@ -81,10 +81,6 @@ int SingleAbsoluteMouse_::getDescriptor(USBSetup& setup) {
     return 0;
   }
 
-  // Reset the protocol on reenumeration. Normally the host should not assume the state of the protocol
-  // due to the USB specs, but Windows and Linux just assumes its in report mode.
-  protocol = HID_REPORT_PROTOCOL;
-
   return USB_SendControl(TRANSFER_PGM, _hidSingleReportDescriptorAbsoluteMouse, sizeof(_hidSingleReportDescriptorAbsoluteMouse));
 }
 
@@ -102,15 +98,13 @@ bool SingleAbsoluteMouse_::setup(USBSetup& setup) {
       return true;
     }
     if (request == HID_GET_PROTOCOL) {
-      // TODO: Send8(protocol);
-      return true;
+      return false;
     }
   }
 
   if (requestType == REQUEST_HOSTTODEVICE_CLASS_INTERFACE) {
     if (request == HID_SET_PROTOCOL) {
-      protocol = setup.wValueL;
-      return true;
+      return false;
     }
     if (request == HID_SET_IDLE) {
       idle = setup.wValueL;

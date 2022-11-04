@@ -65,6 +65,7 @@ class BootKeyboard_ : public PluggableUSBModule {
   void setProtocol(uint8_t protocol);
 
   uint8_t default_protocol;
+  void checkReset();
 
  protected:
   HID_BootKeyboardReport_Data_t report_, last_report_;
