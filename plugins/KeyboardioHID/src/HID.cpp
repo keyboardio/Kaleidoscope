@@ -136,8 +136,7 @@ bool HID_::setup(USBSetup& setup) {
       return true;
     }
     if (request == HID_GET_PROTOCOL) {
-      // TODO: Send8(protocol);
-      return true;
+      return false;
     }
     if (request == HID_GET_IDLE) {
       // TODO: Send8(idle);
@@ -146,10 +145,7 @@ bool HID_::setup(USBSetup& setup) {
 
   if (requestType == REQUEST_HOSTTODEVICE_CLASS_INTERFACE) {
     if (request == HID_SET_PROTOCOL) {
-      // The USB Host tells us if we are in boot or report mode.
-      // This only works with a real boot compatible device.
-      protocol = setup.wValueL;
-      return true;
+      return false;
     }
     if (request == HID_SET_IDLE) {
       idle = setup.wValueH;
