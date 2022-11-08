@@ -139,7 +139,8 @@ bool HID_::setup(USBSetup& setup) {
       return false;
     }
     if (request == HID_GET_IDLE) {
-      // TODO: Send8(idle);
+      USB_SendControl(TRANSFER_RELEASE, &idle, sizeof(idle));
+      return true;
     }
   }
 
@@ -194,7 +195,7 @@ bool HID_::setup(USBSetup& setup) {
 
 HID_::HID_() : PluggableUSBModule(1, 1, epType),
   rootNode(NULL), descriptorSize(0),
-  protocol(HID_REPORT_PROTOCOL), idle(1) {
+  protocol(HID_REPORT_PROTOCOL), idle(0) {
   setReportData.reportId = 0;
   setReportData.leds = 0;
 
