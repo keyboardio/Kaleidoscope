@@ -17,7 +17,8 @@
 
 #include "kaleidoscope/plugin/TopsyTurvy.h"
 
-#include <Kaleidoscope-Ranges.h>  // for TT_FIRST
+#include <Kaleidoscope-FocusSerial.h>                     // for Focus
+#include <Kaleidoscope-Ranges.h>                          // for TT_FIRST
 
 #include "kaleidoscope/KeyAddr.h"                         // for KeyAddr, MatrixAddr, MatrixAddr...
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
@@ -31,6 +32,10 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
+EventHandlerResult TopsyTurvy::onNameQuery() {
+  return ::Focus.sendName(F("TopsyTurvy"));
+}
 
 EventHandlerResult TopsyTurvy::onKeyEvent(KeyEvent &event) {
   if (keyToggledOff(event.state)) {
