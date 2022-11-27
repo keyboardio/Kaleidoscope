@@ -17,8 +17,8 @@
 
 #include "kaleidoscope/plugin/TopsyTurvy.h"
 
-#include <Kaleidoscope-FocusSerial.h>                     // for Focus
-#include <Kaleidoscope-Ranges.h>                          // for TT_FIRST
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <Kaleidoscope-Ranges.h>       // for TT_FIRST
 
 #include "kaleidoscope/KeyAddr.h"                         // for KeyAddr, MatrixAddr, MatrixAddr...
 #include "kaleidoscope/KeyEvent.h"                        // for KeyEvent
