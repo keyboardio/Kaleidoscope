@@ -37,6 +37,7 @@ constexpr Key TopsyTurvyKey(Key key) {
 class TopsyTurvy : public kaleidoscope::Plugin {
  public:
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult onNameQuery();
   EventHandlerResult beforeReportingState(const KeyEvent &event);
 
   static bool isTopsyTurvyKey(Key key) {
