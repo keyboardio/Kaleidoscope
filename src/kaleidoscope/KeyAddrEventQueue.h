@@ -154,9 +154,20 @@ class KeyAddrEventQueue {
     return KeyEvent{addr(i), state, Key_Undefined, id(i)};
   }
 
-  // Only call this after `EventTracker::shouldIgnore()` returns `true`.
+  // Only call this after `KeyEventTracker::shouldIgnore()` returns `true`.
   bool shouldAbort(const KeyEvent &event) const {
-    return (length_ != 0) && (event.id() - event_ids_[0] >= 0);
+    // If the queue is empty, don't abort.
+    if (length_ == 0)
+      return false;
+    // The compiler doesn't let us preserve the type of our integers here, so we
+    // need to convert the difference back to int8_t to avoid a bug when it
+    // overflows and the new event id is negative, but the old id is positive.
+    KeyEventId offset = event.id() - event_ids_[0];
+    // If the offset is negative, the event being processed is older than the
+    // first event in the queue.  This shouldn't happen because the caller
+    // should first check `KeyEventTracker::shouldIgnore()`, and only call this
+    // function if that function returns `false`.
+    return offset >= 0;
   }
 };
 
