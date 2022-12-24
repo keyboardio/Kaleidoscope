@@ -1,0 +1,355 @@
+VERSION 1
+
+KEYSWITCH BLANK  0  0  # Key_NoKey
+KEYSWITCH QX     0  1  # SFT_T(X)
+KEYSWITCH QA     0  2  # SFT_T(A)
+
+# ==============================================================================
+NAME Event ID Overflow
+
+RUN 1 ms
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+PRESS BLANK
+RUN 1 cycle
+RELEASE BLANK
+RUN 1 cycle
+
+# This next event has an ID of 127 (at the time of writing, we're still using a
+# signed 8-bit ID, starting from zero).
+
+PRESS QA
+RUN 1 cycle
+
+# This event has an ID of -128 (integer overflow).
+
+PRESS QX # SFT_T(X)
+RUN 1 cycle
+
+# This next event will cause Qukeys to flush the first event(127) to get flushed
+# from the queue.  While it is being flushed (by calling
+# Runtime.handleKeyEvent() again), the first event in the queue will be (-128).
+# If we're not careful, integer type promotion will cause an incorrect result,
+# aborting that event.
+
+RELEASE QX
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+EXPECT keyboard-report Key_LeftShift Key_X
+EXPECT keyboard-report Key_LeftShift
+
+RUN 5 ms
+
+RELEASE QA
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 5 ms
