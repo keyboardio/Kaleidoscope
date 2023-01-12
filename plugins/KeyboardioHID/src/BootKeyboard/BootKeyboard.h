@@ -81,4 +81,4 @@ class BootKeyboard_ : public PluggableUSBModule {
 
   uint8_t leds;
 };
-extern BootKeyboard_ BootKeyboard;
+extern BootKeyboard_& BootKeyboard();

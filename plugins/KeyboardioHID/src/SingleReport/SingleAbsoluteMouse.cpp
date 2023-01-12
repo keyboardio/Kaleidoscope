@@ -24,6 +24,7 @@ THE SOFTWARE.
 */
 
 #include "SingleAbsoluteMouse.h"
+#include "BootKeyboard/BootKeyboard.h"
 #include "HIDReportObserver.h"
 #include "HID-Settings.h"
 
@@ -48,6 +49,8 @@ static const uint8_t SINGLE_ABSOLUTEMOUSE_EP_SIZE = USB_EP_SIZE;
 
 SingleAbsoluteMouse_::SingleAbsoluteMouse_() : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(1) {
 
+  // Invoke BootKeyboard constructor so it will be the first HID interface
+  (void)BootKeyboard();
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(SINGLE_ABSOLUTEMOUSE_EP_SIZE);
 #else

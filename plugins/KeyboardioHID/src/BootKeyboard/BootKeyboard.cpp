@@ -415,4 +415,7 @@ void BootKeyboard_::checkReset() {
 }
 
 __attribute__((weak))
-BootKeyboard_ BootKeyboard;
+BootKeyboard_& BootKeyboard() {
+  static BootKeyboard_ obj;
+  return obj;
+};
