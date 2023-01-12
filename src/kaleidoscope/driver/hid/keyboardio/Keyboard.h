@@ -43,52 +43,52 @@ class BootKeyboardWrapper {
  public:
   BootKeyboardWrapper() {}
   void begin() {
-    BootKeyboard.begin();
+    BootKeyboard().begin();
   }
 
   uint8_t getProtocol() {
-    return BootKeyboard.getProtocol();
+    return BootKeyboard().getProtocol();
   }
   void setProtocol(uint8_t protocol) {
-    BootKeyboard.setProtocol(protocol);
+    BootKeyboard().setProtocol(protocol);
   }
   void setDefaultProtocol(uint8_t protocol) {
-    BootKeyboard.default_protocol = protocol;
+    BootKeyboard().default_protocol = protocol;
     setProtocol(protocol);
   }
 
   void sendReport() {
-    BootKeyboard.sendReport();
+    BootKeyboard().sendReport();
   }
 
   void press(uint8_t code) {
-    BootKeyboard.press(code);
+    BootKeyboard().press(code);
   }
   void release(uint8_t code) {
-    BootKeyboard.release(code);
+    BootKeyboard().release(code);
   }
   void releaseAll() {
-    BootKeyboard.releaseAll();
+    BootKeyboard().releaseAll();
   }
 
   bool isKeyPressed(uint8_t code) {
-    return BootKeyboard.isKeyPressed(code);
+    return BootKeyboard().isKeyPressed(code);
   }
   bool isModifierActive(uint8_t code) {
-    return BootKeyboard.isModifierActive(code);
+    return BootKeyboard().isModifierActive(code);
   }
   bool wasModifierActive(uint8_t code) {
-    return BootKeyboard.wasModifierActive(code);
+    return BootKeyboard().wasModifierActive(code);
   }
   bool isAnyModifierActive() {
-    return BootKeyboard.isAnyModifierActive();
+    return BootKeyboard().isAnyModifierActive();
   }
   bool wasAnyModifierActive() {
-    return BootKeyboard.wasAnyModifierActive();
+    return BootKeyboard().wasAnyModifierActive();
   }
 
   uint8_t getLeds() {
-    return BootKeyboard.getLeds();
+    return BootKeyboard().getLeds();
   }
 };
 
