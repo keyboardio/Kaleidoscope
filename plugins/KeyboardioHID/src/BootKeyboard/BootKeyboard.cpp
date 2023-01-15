@@ -394,24 +394,13 @@ bool BootKeyboard_::wasAnyModifierActive() {
 }
 
 /*
- * Check whether the device has seen a bus reset. Unfortunately, the most
- * portable way is to poll for changes in the host-selected configuration. This
- * needs to be periodically called from the keyboard driver to poll for a reset
- * condition.
+ * Hook function to reset any needed state after a USB reset.
+ *
+ * Right now, it sets the protocol back to the default (report protocol), as
+ * required by the HID specification.
  */
-void BootKeyboard_::checkReset() {
-  static bool was_configed;
-
-  if (was_configed) {
-    if (!USB_Configured()) {
-      was_configed = false;
-      protocol = default_protocol;
-    }
-  } else {
-    if (USB_Configured()) {
-      was_configed = true;
-    }
-  }
+void BootKeyboard_::onUSBReset() {
+  protocol = default_protocol;
 }
 
 __attribute__((weak))
