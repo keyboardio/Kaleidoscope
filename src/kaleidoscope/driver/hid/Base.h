@@ -48,6 +48,10 @@ class Base {
     keyboard().setup();
   }
 
+  void onUSBReset() {
+    keyboard().onUSBReset();
+  }
+
   auto keyboard() -> decltype(keyboard_) & {
     return keyboard_;
   }

@@ -73,6 +73,10 @@ class ATmega32U4 : public kaleidoscope::driver::mcu::Base<_Props> {
     if (_Props::disable_clock_division)
       disableClockDivision();
   }
+
+  bool USBConfigured() {
+    return USBDevice.configured();
+  }
 };
 #else
 template<typename _Props>
