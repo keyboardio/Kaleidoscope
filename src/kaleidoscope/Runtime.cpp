@@ -32,6 +32,8 @@ namespace kaleidoscope {
 uint32_t Runtime_::millis_at_cycle_start_;
 KeyAddr Runtime_::last_addr_toggled_on_ = KeyAddr::none();
 
+static void onUSBReset();
+
 Runtime_::Runtime_(void) {
 }
 
@@ -41,6 +43,7 @@ void Runtime_::setup(void) {
   // rest of the hooks we'll call do, they'll be able to rely on an initialized
   // device.
   device().setup();
+  device().setUSBResetHook(onUSBReset);
 
   // We are explicitly initializing the Serial port as early as possible to
   // (temporarily, hopefully) work around an issue on OSX. If we initialize
@@ -301,6 +304,14 @@ void Runtime_::sendKeyboardReport(const KeyEvent &event) {
 }
 
 Runtime_ Runtime;
+
+/*
+ * Static hook function for USB reset handler. Has to be here, because there's
+ * no good way to get the global Runtime object from inside the driver object.
+ */
+static void onUSBReset() {
+  Runtime.device().hid().onUSBReset();
+}
 
 }  // namespace kaleidoscope
 

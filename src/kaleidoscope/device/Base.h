@@ -315,6 +315,15 @@ class Base {
   }
 
   /**
+   * Set the hook function to be called on USB reset
+   *
+   * @param hook function to call on USB reset
+   */
+  void setUSBResetHook(void (*hook)()) {
+    mcu_.setUSBResetHook(hook);
+  }
+
+  /**
    * @defgroup kaleidoscope_hardware_keyswitch_state Kaleidoscope::Hardware/Key-switch state
    *
    * These methods offer a way to peek at the key switch states, for those cases

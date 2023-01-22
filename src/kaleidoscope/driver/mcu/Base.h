@@ -68,6 +68,8 @@ class Base {
     }
     return false;
   }
+
+  void setUSBResetHook(void (*hook)()) {}
 };
 
 }  // namespace mcu
