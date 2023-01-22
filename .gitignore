@@ -1,5 +1,7 @@
 *~
+.DS_Store
 .arduino
+.vscode
 /.docker_xfer
 .#*
 /output/
@@ -12,4 +14,3 @@
 /_build/
 /results/
 generated-testcase.cpp
-.arduino
