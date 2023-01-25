@@ -305,6 +305,16 @@ class Base {
   /** @} */
 
   /**
+   * Poll the USB device for a USB reset.
+   *
+   * @return true if a USB reset has occurred
+   * @return false if a USB reset has not occurred
+   */
+  bool pollUSBReset() {
+    return mcu_.pollUSBReset();
+  }
+
+  /**
    * @defgroup kaleidoscope_hardware_keyswitch_state Kaleidoscope::Hardware/Key-switch state
    *
    * These methods offer a way to peek at the key switch states, for those cases

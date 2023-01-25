@@ -66,6 +66,8 @@ class NoBootKeyboard {
   uint8_t getLeds() {
     return 0;
   }
+
+  void onUSBReset() {}
 };
 
 class NoNKROKeyboard {
@@ -279,6 +281,10 @@ class Keyboard {
   }
   void setDefaultProtocol(uint8_t protocol) {
     boot_keyboard_.setDefaultProtocol(protocol);
+  }
+
+  void onUSBReset() {
+    boot_keyboard_.onUSBReset();
   }
 
  private:

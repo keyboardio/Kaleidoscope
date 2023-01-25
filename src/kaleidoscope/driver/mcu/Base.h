@@ -43,6 +43,31 @@ class Base {
    * Must restore the link detachFromHost severed.
    */
   void attachToHost() {}
+
+  virtual bool USBConfigured() {
+    return true;
+  }
+
+  /**
+   * Poll the USB device for a bus reset.
+   *
+   * This default implementation uses a change in USBConfigured() as a proxy
+   * for actually detecting a bus reset.
+   */
+  bool pollUSBReset() {
+    static bool was_configured;
+    if (was_configured) {
+      if (!USBConfigured()) {
+        was_configured = false;
+        return true;
+      }
+    } else {
+      if (USBConfigured()) {
+        was_configured = true;
+      }
+    }
+    return false;
+  }
 };
 
 }  // namespace mcu

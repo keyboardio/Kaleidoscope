@@ -90,6 +90,10 @@ class BootKeyboardWrapper {
   uint8_t getLeds() {
     return BootKeyboard().getLeds();
   }
+
+  void onUSBReset() {
+    BootKeyboard().onUSBReset();
+  }
 };
 
 class NKROKeyboardWrapper {

@@ -38,6 +38,9 @@ class GD32 : public kaleidoscope::driver::mcu::Base<_Props> {
   void attachToHost() {
     USBCore().connect();
   }
+  bool USBConfigured() {
+    return USBCore().configured();
+  }
 
 
   void setup() {

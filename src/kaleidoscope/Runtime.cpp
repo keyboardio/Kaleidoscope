@@ -65,6 +65,9 @@ void Runtime_::setup(void) {
 void Runtime_::loop(void) {
   millis_at_cycle_start_ = millis();
 
+  if (device().pollUSBReset()) {
+    device().hid().onUSBReset();
+  }
   kaleidoscope::Hooks::beforeEachCycle();
 
   // Next, we scan the keyswitches. Any toggle-on or toggle-off events will
