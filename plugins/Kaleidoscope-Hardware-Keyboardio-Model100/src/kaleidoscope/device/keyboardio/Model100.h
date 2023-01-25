@@ -152,8 +152,6 @@ struct Model100Props : public kaleidoscope::device::BaseProps {
 
 class Model100 : public kaleidoscope::device::Base<Model100Props> {
  public:
-  void setup();
-
   auto serialPort() -> decltype(Serial) & {
     return Serial;
   }

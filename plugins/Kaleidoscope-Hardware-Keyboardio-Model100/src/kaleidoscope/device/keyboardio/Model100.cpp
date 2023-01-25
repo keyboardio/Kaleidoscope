@@ -46,6 +46,7 @@ driver::keyboardio::Model100Side Model100Hands::rightHand(3);
 
 void Model100Hands::setup() {
   Model100KeyScanner::enableScannerPower();
+  delay(70);
   Wire.begin();
   Wire.setClock(400000);
 }
@@ -146,8 +147,7 @@ void Model100KeyScanner::disableScannerPower() {
 
 
 void Model100KeyScanner::setup() {
-  enableScannerPower();
-  delay(250);
+  Model100Hands::setup();
 }
 
 void Model100KeyScanner::readMatrix() {
@@ -227,12 +227,6 @@ uint8_t Model100KeyScanner::previousPressedKeyswitchCount() {
 }
 
 /********* Hardware plugin *********/
-
-void Model100::setup() {
-  Model100KeyScanner::setup();
-  Model100Hands::setup();
-  kaleidoscope::device::Base<Model100Props>::setup();
-}
 
 void Model100::enableHardwareTestMode() {
   // Toggle the programming LEDS on
