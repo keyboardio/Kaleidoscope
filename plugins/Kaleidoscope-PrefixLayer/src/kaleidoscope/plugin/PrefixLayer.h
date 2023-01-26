@@ -41,7 +41,12 @@ class PrefixLayer : public Plugin {
       : layer(layer), prefix(prefix) {}
   };
 
-  void setPrefixLayers(const Entry *prefix_layers);
+  template<uint8_t _prefix_layers_count>
+  void setPrefixLayers(Entry const (&prefix_layers)[_prefix_layers_count]) {
+    prefix_layers_        = prefix_layers;
+    prefix_layers_length_ = _prefix_layers_count;
+  }
+
   const Entry *getPrefixLayers();
   uint8_t getPrefixLayersLength();
 
