@@ -41,6 +41,12 @@ class GD32 : public kaleidoscope::driver::mcu::Base<_Props> {
   bool USBConfigured() {
     return USBCore().configured();
   }
+  bool pollUSBReset() {
+    return false;
+  }
+  void setUSBResetHook(void (*hook)()) {
+    USBCore().setResetHook(hook);
+  }
 
 
   void setup() {
