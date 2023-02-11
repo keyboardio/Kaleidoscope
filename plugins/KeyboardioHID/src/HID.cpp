@@ -152,37 +152,12 @@ bool HID_::setup(USBSetup& setup) {
     if (request == HID_SET_REPORT) {
       uint16_t length = setup.wLength;
 
-      // ------------------------------------------------------------
-      // Workaround for a bug in the GD32 core:
-      //
-      // On GD32, when we call `USV_RecvControl`, it casts the (void*) pointer
-      // we give it to `uint16_t*`, which means that it will alway write an even
-      // number of bytes to that pointer.  Because we might be trying to just
-      // read the `leds` byte, and we don't want to overwrite the next byte in
-      // memory, instead of giving it the pointer to the `setReportData` member
-      // variable directly, we have it write into to temporary `raw_report_data`
-      // array that's guaranteed to be big enough, then copy the data from that
-      // array into `setReportData`:
-      uint8_t raw_report_data[sizeof(setReportData) + 1];
       if (length == sizeof(setReportData)) {
-        USB_RecvControl(&raw_report_data, length);
-        setReportData.reportId = raw_report_data[0];
-        setReportData.leds = raw_report_data[1];
+        USB_RecvControl(&setReportData, length);
       } else if (length == sizeof(setReportData.leds)) {
-        USB_RecvControl(&raw_report_data, length);
+        USB_RecvControl(&setReportData.leds, length);
         setReportData.reportId = 0;
-        setReportData.leds = raw_report_data[0];
       }
-      // Once the GD32 core bug is fixed, we can replace the above code with the
-      // original code below:
-      // ------------------------------------------------------------
-      // if (length == sizeof(setReportData)) {
-      //   USB_RecvControl(&setReportData, length);
-      // } else if (length == sizeof(setReportData.leds)) {
-      //   USB_RecvControl(&setReportData.leds, length);
-      //   setReportData.reportId = 0;
-      // }
-      // ------------------------------------------------------------
       return true;
     }
   }
