@@ -100,6 +100,9 @@
 // Support for the GeminiPR Stenography protocol
 #include "Kaleidoscope-Steno.h"
 
+// Support for using long-press to auto-shift keys
+#include "Kaleidoscope-AutoShift.h"
+
 /** This 'enum' is a list of all the macros used by the Model 100's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
@@ -601,7 +604,11 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // Enables the GeminiPR Stenography protocol. Unused by default, but with the
   // plugin enabled, it becomes configurable - and then usable - via Chrysalis.
-  GeminiPR);
+  GeminiPR,
+
+  // Allows using long-press to auto-shift keys (configurable via Chrysalis).
+  AutoShift,
+  AutoShiftConfig);
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up
@@ -669,6 +676,10 @@ void setup() {
   // firmware starts with LED effects off. This avoids over-taxing devices that
   // don't have a lot of power to share with USB devices
   DefaultLEDModeConfig.activateLEDModeIfUnconfigured(&LEDOff);
+
+  // Unless configured otherwise, we want to have the long-press auto-shifting
+  // feature turned off, to avoid surprises.
+  AutoShiftConfig.disableAutoShiftIfUnconfigured();
 }
 
 /** loop is the second of the standard Arduino sketch functions.
