@@ -40,7 +40,7 @@
 // Client code should not include specific hardware device headers directly.
 //
 // `KALEIDOSCOPE_HARDWARE_H` gets defined during the build process like this:
-// The fully-qualified board name (fqbn) is read from the `sketch.json` file (in
+// The fully-qualified board name (fqbn) is read from the `sketch.yaml` file (in
 // the same directory as the sketch's *.ino file), and that tells Arduino which
 // core to use and which definition to read from `boards.txt`, which adds
 // compiler flags that set `KALEIDOSCOPE_HARDWARE_H` to the appropriate header
