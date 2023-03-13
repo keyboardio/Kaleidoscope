@@ -81,7 +81,7 @@ void Layer_::handleLayerKeyEvent(const KeyEvent &event) {
     case KEYMAP_NEXT:
     case KEYMAP_PREVIOUS:
       if (keyToggledOn(event.state)) {
-        uint8_t top_layer = active_layers_[active_layer_count_ - 1];
+        uint8_t top_layer = unshifted(active_layers_[active_layer_count_ - 1]);
         if (target_layer == KEYMAP_NEXT) {
           // Key_KeymapNext_Momentary
           target_layer = top_layer + 1;
