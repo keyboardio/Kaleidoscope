@@ -28,7 +28,7 @@ KEYMAPS(
         ___,
 
         ___, Key_KeymapNext_Momentary, Key_KeymapPrevious_Momentary, ___, ___, ___, ___,
-        ___, ___, ___, ___, ___, ___, ___,
+        ___, Key_KeymapNext_Momentary, Key_KeymapPrevious_Momentary, ___, ___, ___, ___,
         ShiftToLayer(0), ShiftToLayer(1), ShiftToLayer(2), ___, ___, ___,
         ___, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___,
