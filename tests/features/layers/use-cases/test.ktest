@@ -27,6 +27,9 @@ KEYSWITCH LAYER_MOVE_2       2  7
 KEYSWITCH LAYER_SHIFT_NEXT   0 10
 KEYSWITCH LAYER_SHIFT_PREV   0 11
 
+KEYSWITCH LAYER_SHIFT_NEXT1  1 10
+KEYSWITCH LAYER_SHIFT_PREV1  1 11
+
 # ==============================================================================
 NAME Startup layer state
 
@@ -1140,6 +1143,62 @@ RELEASE LAYER_SHIFT_NEXT
 RUN 1 cycle
 
 # ............................................................
+# verify layer 1 inactive
+RUN 4 ms
+PRESS L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
+RUN 5 ms
+
+
+# ==============================================================================
+NAME Double layer shift next
+
+# ----------------------------------------------------------------------
+# press two `Key_KeymapNext_Momentary` keys
+PRESS LAYER_SHIFT_NEXT
+RUN 5 ms
+PRESS LAYER_SHIFT_NEXT1
+RUN 5 ms
+
+# ----------------------------------------------------------------------
+# verify that layer 2 is active
+PRESS L2
+RUN 1 cycle
+EXPECT keyboard-report Key_2
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# ----------------------------------------------------------------------
+# release `Key_KeymapNext_Momentary` keys
+RUN 4 ms
+RELEASE LAYER_SHIFT_NEXT1
+RELEASE LAYER_SHIFT_NEXT
+RUN 1 cycle
+
+# ----------------------------------------------------------------------
+# verify layer 2 inactive
+RUN 4 ms
+PRESS L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE L2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ----------------------------------------------------------------------
 # verify layer 1 inactive
 RUN 4 ms
 PRESS L1
