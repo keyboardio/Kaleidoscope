@@ -279,6 +279,8 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
 
 // ----------------------------------------------------------------------------
 EventHandlerResult OneShot::afterReportingState(const KeyEvent &event) {
+  if (keyIsInjected(event.state))
+    return EventHandlerResult::OK;
   return afterEachCycle();
 }
 
