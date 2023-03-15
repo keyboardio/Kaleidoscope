@@ -118,7 +118,19 @@ void Layer_::handleLayerKeyEvent(const KeyEvent &event) {
     // LockLayer()/UnlockLayer()
     target_layer = key_code;
 
-    if (stackPosition(target_layer) == active_layer_count_ - 1) {
+    // First, we find the top non-shifted layer in the stack:
+    int8_t top_locked_layer = -1;
+    for (uint8_t i = 0; i < active_layer_count_; ++i) {
+      if (active_layers_[i] < LAYER_SHIFT_OFFSET) {
+        top_locked_layer = active_layers_[i];
+      }
+    }
+
+    // If the top locked layer is the target layer, we remove it from the stack.
+    // Otherwise, we activate it.  We disregard shifted layers so that it's
+    // possible to set up a layer toggle key on a shifted layer that will
+    // actually deactivate the target layer as expected, with a single tap.
+    if (top_locked_layer == target_layer) {
       deactivate(target_layer);
     } else {
       activate(target_layer);
