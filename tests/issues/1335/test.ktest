@@ -1,0 +1,32 @@
+VERSION 1
+
+KEYSWITCH OS_shift  0 0
+KEYSWITCH M_xy      0 1
+
+# ==============================================================================
+NAME OneShot Macro
+
+RUN 4 ms
+
+PRESS OS_shift
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift
+
+RUN 5 ms
+RELEASE OS_shift
+
+RUN 4 ms
+PRESS M_xy
+RUN 1 cycle
+# Macros key `xy` keypress is being processed
+EXPECT keyboard-report Key_LeftShift Key_X
+EXPECT keyboard-report Key_LeftShift
+EXPECT keyboard-report Key_LeftShift Key_Y
+EXPECT keyboard-report Key_LeftShift
+# The Macro is done playing, so now OneShot releases the one-shot shift key
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE M_xy
+RUN 1 cycle
+EXPECT no keyboard-report

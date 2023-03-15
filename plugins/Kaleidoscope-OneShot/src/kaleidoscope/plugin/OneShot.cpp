@@ -194,7 +194,7 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
   // hook functions generate (by calling `injectNormalKey()` via one of the
   // `*OneShot()` functions). There are more robust ways to do this, but since
   // OneShot is intended to react to only physical keypresses, this is adequate.
-  if (keyIsInjected(event.state))
+  if (!event.addr.isValid() || keyIsInjected(event.state))
     return EventHandlerResult::OK;
 
   bool temp = temp_addrs_.read(event.addr);
@@ -279,6 +279,8 @@ EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
 
 // ----------------------------------------------------------------------------
 EventHandlerResult OneShot::afterReportingState(const KeyEvent &event) {
+  if (!event.addr.isValid() || keyIsInjected(event.state))
+    return EventHandlerResult::OK;
   return afterEachCycle();
 }
 
