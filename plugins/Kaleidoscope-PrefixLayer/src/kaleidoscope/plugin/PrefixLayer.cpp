@@ -63,11 +63,6 @@ EventHandlerResult PrefixLayer::onAddToReport(Key key) {
   return EventHandlerResult::OK;
 }
 
-void PrefixLayer::setPrefixLayers(const PrefixLayer::Entry *prefix_layers) {
-  prefix_layers_        = prefix_layers;
-  prefix_layers_length_ = sizeof(prefix_layers) / sizeof(PrefixLayer::Entry);
-}
-
 const PrefixLayer::Entry *PrefixLayer::getPrefixLayers() {
   return prefix_layers_;
 }

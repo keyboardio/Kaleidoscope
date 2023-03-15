@@ -1,0 +1,87 @@
+VERSION 1
+
+KEYSWITCH PREFIX_A  0 0
+KEYSWITCH PREFIX_B  0 1
+KEYSWITCH PREFIX_C  0 2
+KEYSWITCH X         1 0
+
+# ==============================================================================
+NAME First prefix layer
+
+RUN 4 ms
+PRESS PREFIX_A
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+PRESS X
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report Key_LCtrl Key_A
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+
+RUN 4 ms
+RELEASE X
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE PREFIX_A
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ==============================================================================
+NAME Second prefix layer
+
+RUN 4 ms
+PRESS PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+PRESS X
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report Key_LCtrl Key_B
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+
+RUN 4 ms
+RELEASE X
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE PREFIX_B
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# ==============================================================================
+NAME Third prefix layer
+
+RUN 4 ms
+PRESS PREFIX_C
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+PRESS X
+RUN 1 cycle
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report Key_LCtrl Key_C
+EXPECT keyboard-report Key_LCtrl
+EXPECT keyboard-report empty
+EXPECT keyboard-report Key_X
+
+RUN 4 ms
+RELEASE X
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+RUN 4 ms
+RELEASE PREFIX_C
+RUN 1 cycle
+EXPECT no keyboard-report
