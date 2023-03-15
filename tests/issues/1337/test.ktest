@@ -1,0 +1,131 @@
+VERSION 1
+
+KEYSWITCH LAYER_NUMBER   0 0
+KEYSWITCH LAYER_SHIFT_1  1 0
+KEYSWITCH LAYER_LOCK_2   2 0
+
+# ==============================================================================
+NAME Layer Shift to Unlock
+
+# Verify that layer 0 is on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_0
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Shift to layer 1
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 1 is active
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Lock layer 2
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 2 is on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_2
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Release layer shift
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 2 is still on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_2
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Shift to layer 1 again
+RUN 4 ms
+PRESS LAYER_SHIFT_1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 1 is on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Unlock layer 2
+RUN 4 ms
+PRESS LAYER_LOCK_2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+RUN 4 ms
+RELEASE LAYER_LOCK_2
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 1 is still on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_1
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Release layer shift
+RUN 4 ms
+RELEASE LAYER_SHIFT_1
+RUN 1 cycle
+EXPECT no keyboard-report
+
+# Verify that layer 0 is on top
+RUN 4 ms
+PRESS LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report Key_0
+
+RUN 4 ms
+RELEASE LAYER_NUMBER
+RUN 1 cycle
+EXPECT keyboard-report empty
