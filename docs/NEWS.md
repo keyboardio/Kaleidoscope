@@ -1,6 +1,6 @@
 # Kaleidoscope v2.0
 
-> Currently at 1.92-beta, in development!
+> Currently at 1.99.8, in development!
 
 See [UPGRADING.md](UPGRADING.md) for more detailed instructions about upgrading from earlier versions (even earlier betas). This is just a list of noteworthy changes.
 
