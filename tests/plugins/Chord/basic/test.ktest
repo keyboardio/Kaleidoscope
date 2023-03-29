@@ -1,0 +1,85 @@
+VERSION 1
+
+KEYSWITCH A  0 0
+KEYSWITCH B  0 1
+KEYSWITCH C  0 2
+KEYSWITCH D  0 3
+
+# ==============================================================================
+NAME Chord simple
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+PRESS B
+RUN 1 cycle
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_E # Report should contain E
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+NAME Chord timeout
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+PRESS B
+RUN 1 cycle
+RUN 50 ms
+EXPECT keyboard-report Key_E # Report should contain E
+RELEASE A
+RUN 1 cycle
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+
+NAME Chord Modifier
+RUN 5 ms
+PRESS B
+RUN 1 cycle
+PRESS C
+RUN 1 cycle
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain shift
+EXPECT keyboard-report Key_LeftShift Key_D # Report should contain shift + D
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # Report should contain only shift again
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RELEASE B
+
+NAME Chord Modifier Timeout
+RUN 5 ms
+PRESS B
+RUN 1 cycle
+PRESS C
+RUN 1 cycle
+RUN 50 ms
+EXPECT keyboard-report Key_LeftShift # Report should contain shift
+PRESS A
+RUN 1 cycle
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift Key_A # Report should contain shift + A
+EXPECT keyboard-report Key_LeftShift # Report should contain only shift again
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
+RELEASE B
+
+NAME Chord not a subset
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+PRESS B
+RUN 1 cycle
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_F # Report should contain F without release/timeout
+RUN 100 ms # F should remain held
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report empty # Report should be empty
