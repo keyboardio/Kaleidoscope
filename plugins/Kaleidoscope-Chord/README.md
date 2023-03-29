@@ -51,3 +51,7 @@ chord is held.
 > wait for timeout, F), since otherwise it would be interpreted as a space.
 >
 > Defaults to `50`.
+
+## Further reading
+
+The [example](/examples/Keystrokes/Chord/Chord.ino) can help to learn how to use this plugin.
