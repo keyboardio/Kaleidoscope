@@ -296,6 +296,10 @@ class AutoShift : public Plugin {
   // An array of LongPress objects in PROGMEM.
   LongPress const *explicitmappings_{nullptr};
   uint8_t explicitmappings_count_{0};
+
+  // A cache of the current explicit config key values, so we
+  // don't have to keep looking them up from PROGMEM.
+  LongPress mapped_key_ = {.key = Key_Transparent, .alternate_key = Key_Transparent};
 };
 
 // =============================================================================

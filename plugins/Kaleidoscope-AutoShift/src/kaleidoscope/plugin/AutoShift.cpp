@@ -104,11 +104,16 @@ bool AutoShift::isExplicitlyMapped(Key key) {
   for (uint8_t i{0}; i < explicitmappings_count_; ++i) {
     LongPress mappedKey = cloneFromProgmem(explicitmappings_[i]);
     if (mappedKey.key == key) {
-        return true;
+      // cache the mapped key to not have to search it again
+      mapped_key_.key           = mappedKey.key;
+      mapped_key_.alternate_key = mappedKey.alternate_key;
+      return true;
     }
   }
 
-  // If no matches were found, return false
+  // If no matches were found, clear mapped_key_ and return false
+  mapped_key_.key           = Key_Transparent;
+  mapped_key_.alternate_key = Key_Transparent;
   return false;
 }
 
@@ -209,17 +214,10 @@ void AutoShift::flushEvent(bool is_long_press) {
     event.key = Runtime.lookupKey(event.addr);
 
     // If we have an explicit mapping for that key, apply that.
-    bool mapped= false;
-    for (uint8_t i{0}; i < explicitmappings_count_; ++i) {
-      LongPress mappedKey = cloneFromProgmem(explicitmappings_[i]);
-      if (mappedKey.key == event.key) {
-        event.key = mappedKey.alternate_key;
-        mapped= true;
-      }
-    }
-
-    // If there was no explicit mapping, just add the shift modifier
-    if (!mapped) {
+    if (mapped_key_.key != Key_Transparent) {
+      event.key = mapped_key_.alternate_key;
+    } else {
+      // If there was no explicit mapping, just add the shift modifier
       // event.key = longpresses[event.key]
       uint8_t flags = event.key.getFlags();
       flags ^= SHIFT_HELD;
