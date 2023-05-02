@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:gd32:keyboardio_alto",
+    "port": ""
+  }
+}
