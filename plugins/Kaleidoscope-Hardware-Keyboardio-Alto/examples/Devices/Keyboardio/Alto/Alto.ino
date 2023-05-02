@@ -152,7 +152,7 @@ Key_Esc, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, Key_9, Key_0, K
 Key_Tab, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Y, Key_U, Key_I, Key_O, Key_P, Key_LeftBracket, Key_RightBracket, Key_LeftArrow, Key_Backspace, Key_F1,
 Key_LeftControl, Key_A, Key_S, Key_D, Key_F, Key_G, Key_H, Key_J, Key_K, Key_L, Key_Semicolon, Key_Quote, Key_Enter, Key_F2,
 Key_F4, Key_LeftShift, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_N, Key_M, Key_Comma, Key_Period, Key_Slash, Key_RightShift, Key_F3,
-	Key_Space) // XXX TODO where are our two missing keys in the list
+	Key_Space) 
 
 
 
