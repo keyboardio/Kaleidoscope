@@ -109,26 +109,33 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
 
   const char peek() {
+    manageFlowControl();
     return Runtime.serialPort().peek();
   }
 
   void read(Key &key) {
+    manageFlowControl();
     key.setRaw(Runtime.serialPort().parseInt());
   }
   void read(cRGB &color) {
+    manageFlowControl();
     color.r = Runtime.serialPort().parseInt();
     color.g = Runtime.serialPort().parseInt();
     color.b = Runtime.serialPort().parseInt();
   }
   void read(char &c) {
+    manageFlowControl();
     Runtime.serialPort().readBytes(&c, 1);
   }
   void read(uint8_t &u8) {
+    manageFlowControl();
     u8 = Runtime.serialPort().parseInt();
   }
   void read(uint16_t &u16) {
+    manageFlowControl();
     u16 = Runtime.serialPort().parseInt();
   }
+
 
   bool isEOL();
 
