@@ -61,7 +61,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 
   do {
     // If there's a newline pending, don't read it
-    if (Runtime.serialPort().peek() == NEWLINE) {
+    if (peek() == NEWLINE) {
       break;
     }
     c = Runtime.serialPort().read();
@@ -136,14 +136,16 @@ bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
   return strcmp_P(input, expected) == 0;
 }
 
+
 bool FocusSerial::isEOL() {
   int c        = -1;
   auto timeout = Runtime.serialPort().getTimeout();
   auto start   = millis();
 
+
   // Duplicate some of Stream::timedPeek because it's protected
   do {
-    c = Runtime.serialPort().peek();
+    c = peek();
     if (c == NEWLINE) {
       return true;
     } else if (c >= 0) {
