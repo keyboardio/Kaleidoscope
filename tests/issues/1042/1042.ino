@@ -24,8 +24,6 @@
 #include "kaleidoscope/LiveKeys.h"
 #include "kaleidoscope/plugin.h"
 
-#include <Kaleidoscope-Devel-ArduinoTrace.h>
-
 // *INDENT-OFF*
 KEYMAPS(
   [0] = KEYMAP_STACKED
