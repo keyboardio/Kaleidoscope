@@ -59,7 +59,7 @@ EventHandlerResult LayerNames::onFocusEvent(const char *input) {
   } else {
     uint16_t pos = 0;
 
-    while (pos < storage_size_) {
+    while (pos < storage_size_ && !::Focus.isEOL()) {
       uint8_t name_size;
       ::Focus.read(name_size);
 

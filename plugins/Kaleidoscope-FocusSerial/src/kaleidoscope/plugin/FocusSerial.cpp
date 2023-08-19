@@ -32,10 +32,28 @@
 namespace kaleidoscope {
 namespace plugin {
 
+bool xon = true;
+
+void FocusSerial::manageFlowControl() {
+  uint8_t avail = Runtime.serialPort().available();
+  if (xon == true) {
+    if (avail > RECV_BUFFER_THRESHOLD) {
+      Runtime.serialPort().write(XOFF);  // Send XOFF to stop data
+      xon = false;
+    }
+  } else {
+    if (avail < RECV_BUFFER_RESUME) {
+      Runtime.serialPort().write(XON);  // Send XON to resume data
+      xon = true;
+    }
+  }
+}
+
 EventHandlerResult FocusSerial::afterEachCycle() {
   int c;
   // GD32 doesn't currently autoflush the very last packet. So manually flush here
   Runtime.serialPort().flush();
+
   // If the serial buffer is empty, we don't have any work to do
   if (Runtime.serialPort().available() == 0) {
     return EventHandlerResult::OK;
@@ -43,7 +61,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 
   do {
     // If there's a newline pending, don't read it
-    if (Runtime.serialPort().peek() == NEWLINE) {
+    if (peek() == NEWLINE) {
       break;
     }
     c = Runtime.serialPort().read();
@@ -118,14 +136,16 @@ bool FocusSerial::inputMatchesCommand(const char *input, const char *expected) {
   return strcmp_P(input, expected) == 0;
 }
 
+
 bool FocusSerial::isEOL() {
   int c        = -1;
   auto timeout = Runtime.serialPort().getTimeout();
   auto start   = millis();
 
+
   // Duplicate some of Stream::timedPeek because it's protected
   do {
-    c = Runtime.serialPort().peek();
+    c = peek();
     if (c == NEWLINE) {
       return true;
     } else if (c >= 0) {

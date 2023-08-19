@@ -19,7 +19,7 @@ jobs:
     - run: make setup
     - run: KALEIDOSCOPE_TEMP_PATH=${{ github.workspace}}/.kaleidoscope-temp make -j $(nproc) smoke-sketches
   run-google-tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Cache arduino dep downloads

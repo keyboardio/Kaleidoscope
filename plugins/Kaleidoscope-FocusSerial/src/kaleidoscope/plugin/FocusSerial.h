@@ -46,6 +46,8 @@ class FocusSerial : public kaleidoscope::Plugin {
   static constexpr char SEPARATOR = ' ';
   static constexpr char NEWLINE   = '\n';
 
+  void manageFlowControl();
+
 #ifndef NDEPRECATED
   DEPRECATED(FOCUS_HANDLEHELP)
   bool handleHelp(const char *input, const char *help_message);
@@ -107,26 +109,33 @@ class FocusSerial : public kaleidoscope::Plugin {
   }
 
   const char peek() {
+    manageFlowControl();
     return Runtime.serialPort().peek();
   }
 
   void read(Key &key) {
+    manageFlowControl();
     key.setRaw(Runtime.serialPort().parseInt());
   }
   void read(cRGB &color) {
+    manageFlowControl();
     color.r = Runtime.serialPort().parseInt();
     color.g = Runtime.serialPort().parseInt();
     color.b = Runtime.serialPort().parseInt();
   }
   void read(char &c) {
+    manageFlowControl();
     Runtime.serialPort().readBytes(&c, 1);
   }
   void read(uint8_t &u8) {
+    manageFlowControl();
     u8 = Runtime.serialPort().parseInt();
   }
   void read(uint16_t &u16) {
+    manageFlowControl();
     u16 = Runtime.serialPort().parseInt();
   }
+
 
   bool isEOL();
 
@@ -135,6 +144,11 @@ class FocusSerial : public kaleidoscope::Plugin {
   EventHandlerResult onFocusEvent(const char *input);
 
  private:
+  static constexpr char XOFF                     = 0x13;
+  static constexpr char XON                      = 0x11;
+  static constexpr uint8_t RECV_BUFFER_RESUME    = 4;
+  static constexpr uint8_t RECV_BUFFER_THRESHOLD = 32;
+
   char input_[32];
   uint8_t buf_cursor_ = 0;
   void printBool(bool b);
