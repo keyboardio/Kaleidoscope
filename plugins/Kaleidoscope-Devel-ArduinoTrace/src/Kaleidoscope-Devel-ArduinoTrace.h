@@ -19,7 +19,7 @@
 
 #ifndef ARDUINOTRACE_SERIAL
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-#define ARDUINOTRACE_SERIAL DebugStderr
+#define ARDUINOTRACE_SERIAL DebugStderr()
 #endif
 #endif
 
