@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-LED-ActiveLayerColor -- Light up the LEDs based on the active layers
+ * Kaleidoscope-LED-ActiveLayerKeys -- Light up the LEDs based on the keys specified in the active layer
  * Copyright (C) 2016, 2017, 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under it under
@@ -27,7 +27,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class LEDActiveLayerColorEffect : public Plugin,
+class LEDActiveLayerKeysEffect : public Plugin,
                                   public LEDModeInterface,
                                   public AccessTransientLEDMode {
  public:
@@ -42,20 +42,20 @@ class LEDActiveLayerColorEffect : public Plugin,
     // for those LED modes that require access to
     // members of their parent class. Most LED modes can do without.
     //
-    explicit TransientLEDMode(const LEDActiveLayerColorEffect *parent);
+    explicit TransientLEDMode(const LEDActiveLayerKeysEffect *parent);
 
    protected:
     void onActivate() final;
     void refreshAt(KeyAddr key_addr) final;
 
    private:
-    const LEDActiveLayerColorEffect *parent_;
+    const LEDActiveLayerKeysEffect *parent_;
 
     cRGB active_color_;
 
     cRGB getActiveColor();
 
-    friend class LEDActiveLayerColorEffect;
+    friend class LEDActiveLayerKeysEffect;
   };
 
  private:
@@ -65,4 +65,4 @@ class LEDActiveLayerColorEffect : public Plugin,
 }  // namespace plugin
 }  // namespace kaleidoscope
 
-extern kaleidoscope::plugin::LEDActiveLayerColorEffect LEDActiveLayerColorEffect;
+extern kaleidoscope::plugin::LEDActiveLayerKeysEffect LEDActiveLayerKeysEffect;

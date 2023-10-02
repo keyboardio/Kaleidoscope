@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-LED-ActiveLayerColor -- Light up the LEDs based on the active layers
+ * Kaleidoscope-LED-ActiveLayerKeys -- Light up the LEDs based on the keys specified in the active layer
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under

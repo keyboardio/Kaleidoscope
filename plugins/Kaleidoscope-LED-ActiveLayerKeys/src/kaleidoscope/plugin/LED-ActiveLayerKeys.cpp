@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-LED-ActiveLayerColor -- Light up the LEDs based on the active layers
+ * Kaleidoscope-LED-ActiveLayerKeys -- Light up the LEDs based on the keys specified in the active layer
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under it under
@@ -29,18 +29,18 @@
 namespace kaleidoscope {
 namespace plugin {
 
-const cRGB *LEDActiveLayerColorEffect::colormap_;
+const cRGB *LEDActiveLayerKeysEffect::colormap_;
 
-LEDActiveLayerColorEffect::TransientLEDMode::TransientLEDMode(
-  const LEDActiveLayerColorEffect *parent)
+LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
+  const LEDActiveLayerKeysEffect *parent)
   : parent_(parent),
     active_color_{0, 0, 0} {}
 
-void LEDActiveLayerColorEffect::setColormap(const cRGB colormap[]) {
+void LEDActiveLayerKeysEffect::setColormap(const cRGB colormap[]) {
   colormap_ = colormap;
 }
 
-cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
+cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getActiveColor() {
   cRGB color;
 
   uint8_t top_layer = ::Layer.mostRecent();
@@ -52,7 +52,7 @@ cRGB LEDActiveLayerColorEffect::TransientLEDMode::getActiveColor() {
   return color;
 }
 
-void LEDActiveLayerColorEffect::TransientLEDMode::onActivate() {
+void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 
@@ -60,11 +60,11 @@ void LEDActiveLayerColorEffect::TransientLEDMode::onActivate() {
   ::LEDControl.set_all_leds_to(active_color_);
 }
 
-void LEDActiveLayerColorEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
+void LEDActiveLayerKeysEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
   ::LEDControl.setCrgbAt(key_addr, active_color_);
 }
 
-EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {
+EventHandlerResult LEDActiveLayerKeysEffect::onLayerChange() {
   if (::LEDControl.get_mode_index() == led_mode_id_)
     ::LEDControl.get_mode<TransientLEDMode>()->onActivate();
 
@@ -74,4 +74,4 @@ EventHandlerResult LEDActiveLayerColorEffect::onLayerChange() {
 }  // namespace plugin
 }  // namespace kaleidoscope
 
-kaleidoscope::plugin::LEDActiveLayerColorEffect LEDActiveLayerColorEffect;
+kaleidoscope::plugin::LEDActiveLayerKeysEffect LEDActiveLayerKeysEffect;
