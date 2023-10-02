@@ -56,8 +56,19 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 
+  uint8_t top_layer = ::Layer.mostRecent();
   active_color_ = getActiveColor();
-  ::LEDControl.set_all_leds_to(active_color_);
+
+  for (auto key_addr : KeyAddr::all()) {
+    Key k         = Layer.lookupOnActiveLayer(key_addr);
+    Key layer_key = Layer.getKey(top_layer, key_addr);
+
+    if ((k != layer_key) || (k == Key_NoKey) || (k.getFlags() != KEY_FLAGS)) {
+      ::LEDControl.refreshAt(KeyAddr(key_addr));
+    } else {
+      ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
+    }
+  }
 }
 
 void LEDActiveLayerKeysEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
