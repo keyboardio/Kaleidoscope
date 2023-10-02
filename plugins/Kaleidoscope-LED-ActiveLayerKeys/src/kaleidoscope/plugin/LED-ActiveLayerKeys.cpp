@@ -15,7 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kaleidoscope/plugin/LED-ActiveLayerColor.h"
+#include "kaleidoscope/plugin/LED-ActiveLayerKeys.h"
 
 #include <Arduino.h>  // for pgm_read_byte
 #include <stdint.h>   // for uint8_t

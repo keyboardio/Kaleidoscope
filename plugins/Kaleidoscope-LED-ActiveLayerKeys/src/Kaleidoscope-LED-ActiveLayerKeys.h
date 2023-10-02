@@ -17,4 +17,4 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin/LED-ActiveLayerColor.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/LED-ActiveLayerKeys.h"  // IWYU pragma: export
