@@ -1,4 +1,4 @@
-# LED-ActiveLayerColor
+# LED-ActiveLayerKeys
 
 A simple way to light up the keyboard in uniform colors, depending on what layer
 one's on. Unlike [Colormap](Kaleidoscope-Colormap.md), all keys will be the same color. But
@@ -14,25 +14,25 @@ Then, one needs to configure a color map:
 ```c++
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
-#include <Kaleidoscope-LED-ActiveLayerColor.h>
+#include <Kaleidoscope-LED-ActiveLayerKeys.h>
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
-                          LEDActiveLayerColorEffect);
+                          LEDActiveLayerKeysEffect);
 
 void setup () {
   static const cRGB layerColormap[] PROGMEM = {
-    CRGB(128, 0, 0),
-    CRGB(0, 128, 0)
+    CRGB(0xd0, 0x08, 0x8a),
+    CRGB(0x99, 0x11, 0xb5),
   };
 
   Kaleidoscope.setup();
-  LEDActiveLayerColorEffect.setColormap(layerColormap);
+  LEDActiveLayerKeysEffect.setColormap(layerColormap);
 }
 ```
 
 ## Plugin properties
 
-The plugin provides the `LEDActiveLayerColorEffect` object, which has the following
+The plugin provides the `LEDActiveLayerKeysEffect` object, which has the following
 method:
 
 ### `.setColormap(colormap)`
@@ -44,10 +44,3 @@ method:
 ## Dependencies
 
 * [Kaleidoscope-LEDControl](Kaleidoscope-LEDControl.md)
-
-## Further reading
-
-Starting from the [example][plugin:example] is the recommended way of getting
-started with the plugin.
-
- [plugin:example]: /examples/LEDs/LED-ActiveLayerColor/LED-ActiveLayerColor.ino
