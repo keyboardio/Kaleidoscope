@@ -64,7 +64,9 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
     Key k         = Layer.lookupOnActiveLayer(key_addr);
     Key layer_key = Layer.getKey(top_layer, key_addr);
 
-    if ((k != layer_key) || (k == Key_NoKey) || (k.getFlags() != KEY_FLAGS)) {
+    // TODO: Whatever it means, (k.getFlags() != KEY_FLAGS) results in a lot of
+    //       keys (macros, keys w/ modifiers, etc) not having rgb set
+    if ((k != layer_key) || (k == Key_NoKey)) {
       // TODO: refreshAt somehow seems to apply `active_color_` rather than
       //       refreshing whatever the previous color was :/
       // ::LEDControl.refreshAt(KeyAddr(key_addr));
