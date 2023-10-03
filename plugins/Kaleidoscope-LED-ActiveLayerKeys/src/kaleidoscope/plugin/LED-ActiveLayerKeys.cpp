@@ -63,7 +63,7 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
     Key k         = Layer.lookupOnActiveLayer(key_addr);
     Key layer_key = Layer.getKey(top_layer, key_addr);
 
-    if ((k != layer_key) || (k == Key_NoKey)) {
+    if ((k != layer_key) || (k == Key_NoKey) || (k == Key_Transparent)) {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), {0, 0, 0});
     } else {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
