@@ -58,19 +58,13 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
 
   uint8_t top_layer = ::Layer.mostRecent();
   active_color_ = getActiveColor();
-  cRGB non_layer_color = CRGB(0xff, 0x80, 0x00);
 
   for (auto key_addr : KeyAddr::all()) {
     Key k         = Layer.lookupOnActiveLayer(key_addr);
     Key layer_key = Layer.getKey(top_layer, key_addr);
 
-    // TODO: Whatever it means, (k.getFlags() != KEY_FLAGS) results in a lot of
-    //       keys (macros, keys w/ modifiers, etc) not having rgb set
     if ((k != layer_key) || (k == Key_NoKey)) {
-      // TODO: refreshAt somehow seems to apply `active_color_` rather than
-      //       refreshing whatever the previous color was :/
-      // ::LEDControl.refreshAt(KeyAddr(key_addr));
-      ::LEDControl.setCrgbAt(KeyAddr(key_addr), non_layer_color);
+      ::LEDControl.setCrgbAt(KeyAddr(key_addr), {0, 0, 0});
     } else {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
     }
