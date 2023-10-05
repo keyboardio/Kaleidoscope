@@ -46,14 +46,11 @@ class LEDActiveLayerKeysEffect : public Plugin,
 
    protected:
     void onActivate() final;
-    void refreshAt(KeyAddr key_addr) final;
 
    private:
     const LEDActiveLayerKeysEffect *parent_;
 
-    cRGB active_color_;
-
-    cRGB getActiveColor();
+    cRGB getLayerColor(uint8_t layer);
 
     friend class LEDActiveLayerKeysEffect;
   };

@@ -21,9 +21,9 @@
 #include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
-#include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
+#include "kaleidoscope/Runtime.h"               // for Runtime
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
-#include "kaleidoscope/layers.h"                // for Layer, Layer_
+#include "kaleidoscope/layers.h"                // for Layer
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
 
 namespace kaleidoscope {
@@ -33,21 +33,18 @@ const cRGB *LEDActiveLayerKeysEffect::colormap_;
 
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
-  : parent_(parent),
-    active_color_{0, 0, 0} {}
+  : parent_(parent) {}
 
 void LEDActiveLayerKeysEffect::setColormap(const cRGB colormap[]) {
   colormap_ = colormap;
 }
 
-cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getActiveColor() {
+cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getLayerColor(uint8_t layer) {
   cRGB color;
 
-  uint8_t top_layer = ::Layer.mostRecent();
-
-  color.r = pgm_read_byte(&(parent_->colormap_[top_layer].r));
-  color.g = pgm_read_byte(&(parent_->colormap_[top_layer].g));
-  color.b = pgm_read_byte(&(parent_->colormap_[top_layer].b));
+  color.r = pgm_read_byte(&(parent_->colormap_[layer].r));
+  color.g = pgm_read_byte(&(parent_->colormap_[layer].g));
+  color.b = pgm_read_byte(&(parent_->colormap_[layer].b));
 
   return color;
 }
@@ -57,22 +54,16 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
     return;
 
   uint8_t top_layer = ::Layer.mostRecent();
-  active_color_ = getActiveColor();
+  cRGB active_color_ = getLayerColor(top_layer);
 
   for (auto key_addr : KeyAddr::all()) {
     Key k         = Layer.lookupOnActiveLayer(key_addr);
     Key layer_key = Layer.getKey(top_layer, key_addr);
 
-    if ((k != layer_key) || (k == Key_NoKey) || (k == Key_Transparent)) {
-      ::LEDControl.setCrgbAt(KeyAddr(key_addr), {0, 0, 0});
-    } else {
+    if ((k == layer_key) && (k != Key_NoKey) && (k != Key_Transparent)) {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
     }
   }
-}
-
-void LEDActiveLayerKeysEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
-  ::LEDControl.setCrgbAt(key_addr, active_color_);
 }
 
 EventHandlerResult LEDActiveLayerKeysEffect::onLayerChange() {
