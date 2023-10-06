@@ -1,10 +1,10 @@
 # LED-ActiveLayerKeys
 
-A simple way to light up the keyboard in uniform colors, depending on what layer
-one's on. Unlike [Colormap](Kaleidoscope-Colormap.md), all keys will be the same color. But
-this plugin uses considerably less resources, and is easier to set up as well. A
-perfect solution when one wants to quickly see what layer they're on, with
-minimal resources and time investment.
+A simple way to light up all keys in the top layer in uniform colors. Unlike
+[Colormap](Kaleidoscope-Colormap.md), all keys will be the same color. But this
+plugin uses considerably less resources, and is easier to set up as well. A
+perfect solution when one wants to quickly see what layer they're on and which
+keys are on that layer, with minimal resources and time investment.
 
 ## Using the plugin
 
@@ -12,17 +12,18 @@ To use the plugin, one needs to include the header, and activate the effect.
 Then, one needs to configure a color map:
 
 ```c++
-#include <Kaleidoscope.h>
-#include <Kaleidoscope-LEDControl.h>
-#include <Kaleidoscope-LED-ActiveLayerKeys.h>
+#include "Kaleidoscope.h"
+#include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-LED-ActiveLayerKeys.h"
 
 KALEIDOSCOPE_INIT_PLUGINS(LEDControl,
                           LEDActiveLayerKeysEffect);
 
 void setup () {
   static const cRGB layerColormap[] PROGMEM = {
-    CRGB(0xd0, 0x08, 0x8a),
-    CRGB(0x99, 0x11, 0xb5),
+    CRGB(0xff, 0x00, 0x00),  // red, for the first layer
+    CRGB(0x00, 0xff, 0x00),  // green, for the second layer
+    CRGB(0x00, 0x00, 0xff),  // blue, for the third layer
   };
 
   Kaleidoscope.setup();
