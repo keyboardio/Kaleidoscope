@@ -42,9 +42,15 @@ void LEDActiveLayerKeysEffect::setColormap(const cRGB colormap[]) {
 cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getLayerColor(uint8_t layer) {
   cRGB color;
 
-  color.r = pgm_read_byte(&(parent_->colormap_[layer].r));
-  color.g = pgm_read_byte(&(parent_->colormap_[layer].g));
-  color.b = pgm_read_byte(&(parent_->colormap_[layer].b));
+  if (layer < sizeof(parent_->colormap_)/sizeof(*parent_->colormap_)) {
+    color.r = pgm_read_byte(&(parent_->colormap_[layer].r));
+    color.g = pgm_read_byte(&(parent_->colormap_[layer].g));
+    color.b = pgm_read_byte(&(parent_->colormap_[layer].b));
+  } else {
+    color.r = 0;
+    color.g = 0;
+    color.b = 0;
+  }
 
   return color;
 }

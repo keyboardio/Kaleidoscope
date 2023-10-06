@@ -39,8 +39,9 @@ method:
 ### `.setColormap(colormap)`
 
 > Sets the colormap to the supplied map. Each element of the map should be a
-> `cRGB` color, and the array must have the same amount of items as there are
-> layers. The map should reside in PROGMEM.
+> `cRGB` color, and the map should reside in PROGMEM. The array should have the
+> same amount of items as there are layers. Any layer that doesn't have a
+> matching entry in the array, will have leds turned off.
 
 ## Dependencies
 
