@@ -28,11 +28,15 @@
 namespace kaleidoscope {
 namespace plugin {
 class LEDActiveLayerKeysEffect : public Plugin,
-                                  public LEDModeInterface,
-                                  public AccessTransientLEDMode {
+                                 public LEDModeInterface,
+                                 public AccessTransientLEDMode {
  public:
   EventHandlerResult onLayerChange();
-  void setColormap(const cRGB colormap[]);
+  template<uint8_t _colormap_size>
+  void setColormap(cRGB const (&colormap)[_colormap_size]) {
+    colormap_      = colormap;
+    colormap_size_ = _colormap_size;
+  }
 
   // This class' instance has dynamic lifetime
   //
@@ -56,7 +60,9 @@ class LEDActiveLayerKeysEffect : public Plugin,
   };
 
  private:
-  static const cRGB *colormap_;
+  // An array of Colormap entries in PROGMEM.
+  cRGB const *colormap_{nullptr};
+  uint8_t colormap_size_{0};
 };
 
 }  // namespace plugin
