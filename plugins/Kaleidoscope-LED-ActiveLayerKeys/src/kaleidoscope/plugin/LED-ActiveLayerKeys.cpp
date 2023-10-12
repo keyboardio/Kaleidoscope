@@ -29,6 +29,8 @@
 namespace kaleidoscope {
 namespace plugin {
 
+cRGB LEDActiveLayerKeysEffect::default_layer_color_ = CRGB(0, 0, 0);
+
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
   : parent_(parent) {}
@@ -41,7 +43,7 @@ cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getLayerColor(uint8_t layer) {
     color.g = pgm_read_byte(&(parent_->colormap_[layer].g));
     color.b = pgm_read_byte(&(parent_->colormap_[layer].b));
   } else {
-    color = CRGB(0, 0, 0);
+    color = LEDActiveLayerKeysEffect::default_layer_color_;
   }
 
   return color;

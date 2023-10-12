@@ -37,6 +37,9 @@ class LEDActiveLayerKeysEffect : public Plugin,
     colormap_      = colormap;
     colormap_size_ = _colormap_size;
   }
+  static void setDefaultColor(cRGB color) {
+    default_layer_color_ = color;
+  }
 
   // This class' instance has dynamic lifetime
   //
@@ -63,6 +66,8 @@ class LEDActiveLayerKeysEffect : public Plugin,
   // An array of Colormap entries in PROGMEM.
   cRGB const *colormap_{nullptr};
   uint8_t colormap_size_{0};
+
+  static cRGB default_layer_color_;
 };
 
 }  // namespace plugin
