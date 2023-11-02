@@ -33,10 +33,13 @@ cRGB LEDActiveLayerKeysEffect::default_layer_color_ = CRGB(0, 0, 0);
 
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
-  : parent_(parent) {}
+  : parent_(parent),
+    active_color_{0, 0, 0} {}
 
-cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getLayerColor(uint8_t layer) {
+cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getActiveColor() {
   cRGB color;
+
+  uint8_t layer = ::Layer.mostRecent();
 
   if (layer < parent_->colormap_size_) {
     color.r = pgm_read_byte(&(parent_->colormap_[layer].r));
@@ -53,16 +56,22 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 
-  uint8_t top_layer  = ::Layer.mostRecent();
-  cRGB active_color_ = getLayerColor(top_layer);
+  active_color_ = getActiveColor();
 
   for (auto key_addr : KeyAddr::all()) {
-    Key k         = Layer.lookupOnActiveLayer(key_addr);
-    Key layer_key = Layer.getKey(top_layer, key_addr);
+    refreshAt(key_addr);
+  }
+}
 
-    if ((k == layer_key) && (k != Key_NoKey) && (k != Key_Transparent)) {
-      ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
-    }
+void LEDActiveLayerKeysEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
+  uint8_t top_layer = ::Layer.mostRecent();
+  Key k             = Layer.lookupOnActiveLayer(key_addr);
+  Key layer_key     = Layer.getKey(top_layer, key_addr);
+
+  if ((k == layer_key) && (k != Key_NoKey) && (k != Key_Transparent)) {
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
+  } else {
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), {0, 0, 0});
   }
 }
 
