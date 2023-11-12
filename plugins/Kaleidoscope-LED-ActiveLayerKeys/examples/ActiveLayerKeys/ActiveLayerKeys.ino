@@ -89,6 +89,8 @@ void setup() {
 
   Kaleidoscope.setup();
   LEDActiveLayerKeysEffect.setColormap(layerColormap);
+  // Light up leds of keys on lower layers as well
+  LEDActiveLayerKeysEffect.lightLowerLayers(true);
   LEDActiveLayerKeysEffect.activate();
 }
 
