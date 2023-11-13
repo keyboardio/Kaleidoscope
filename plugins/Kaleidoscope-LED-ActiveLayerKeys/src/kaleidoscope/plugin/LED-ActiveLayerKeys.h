@@ -37,6 +37,9 @@ class LEDActiveLayerKeysEffect : public Plugin,
     colormap_      = colormap;
     colormap_size_ = _colormap_size;
   }
+  static void lightLowerLayers(bool show) {
+    light_lower_layers = show;
+  }
   static void setDefaultColor(cRGB color) {
     default_layer_color_ = color;
   }
@@ -53,9 +56,12 @@ class LEDActiveLayerKeysEffect : public Plugin,
 
    protected:
     void onActivate() final;
+    void refreshAt(KeyAddr key_addr) final;
 
    private:
     const LEDActiveLayerKeysEffect *parent_;
+
+    cRGB active_color_;
 
     cRGB getLayerColor(uint8_t layer);
 
@@ -68,6 +74,7 @@ class LEDActiveLayerKeysEffect : public Plugin,
   uint8_t colormap_size_{0};
 
   static cRGB default_layer_color_;
+  static bool light_lower_layers;
 };
 
 }  // namespace plugin

@@ -27,6 +27,8 @@ void setup () {
   };
 
   Kaleidoscope.setup();
+  // By default, only LEDs for keys on the topmost layer are lit.
+  //LEDActiveLayerKeysEffect.lightLowerLayers(false);
   LEDActiveLayerKeysEffect.setColormap(layerColormap);
 }
 ```
@@ -34,7 +36,7 @@ void setup () {
 ## Plugin properties
 
 The plugin provides the `LEDActiveLayerKeysEffect` object, which has the following
-method:
+methods:
 
 ### `.setColormap(colormap)`
 
@@ -42,6 +44,12 @@ method:
 > `cRGB` color, and the map should reside in PROGMEM. The array should have the
 > same amount of items as there are layers. Any layer that doesn't have a
 > matching entry in the array, will have leds turned off.
+
+### `.lightLowerLayers(boolean)`
+
+> By default, this plugin only lights up LEDs keys on the topmost layer. This
+> method allows overriding this default, to have the plugin change the leds of
+> all non-blocked keys to the color of their respective layers.
 
 ## Dependencies
 

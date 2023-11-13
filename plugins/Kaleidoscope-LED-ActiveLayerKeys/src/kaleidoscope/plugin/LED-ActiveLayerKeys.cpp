@@ -30,10 +30,12 @@ namespace kaleidoscope {
 namespace plugin {
 
 cRGB LEDActiveLayerKeysEffect::default_layer_color_ = CRGB(0, 0, 0);
+bool LEDActiveLayerKeysEffect::light_lower_layers   = false;
 
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
-  : parent_(parent) {}
+  : parent_(parent),
+    active_color_{0, 0, 0} {}
 
 cRGB LEDActiveLayerKeysEffect::TransientLEDMode::getLayerColor(uint8_t layer) {
   cRGB color;
@@ -53,16 +55,27 @@ void LEDActiveLayerKeysEffect::TransientLEDMode::onActivate() {
   if (!Runtime.has_leds)
     return;
 
-  uint8_t top_layer  = ::Layer.mostRecent();
-  cRGB active_color_ = getLayerColor(top_layer);
+  uint8_t top_layer = ::Layer.mostRecent();
+  active_color_     = getLayerColor(top_layer);
 
   for (auto key_addr : KeyAddr::all()) {
-    Key k         = Layer.lookupOnActiveLayer(key_addr);
-    Key layer_key = Layer.getKey(top_layer, key_addr);
+    refreshAt(key_addr);
+  }
+}
 
-    if ((k == layer_key) && (k != Key_NoKey) && (k != Key_Transparent)) {
-      ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
-    }
+void LEDActiveLayerKeysEffect::TransientLEDMode::refreshAt(KeyAddr key_addr) {
+  uint8_t top_layer = ::Layer.mostRecent();
+  Key k             = Layer.lookupOnActiveLayer(key_addr);
+  Key layer_key     = Layer.getKey(top_layer, key_addr);
+
+  if ((k == layer_key) && (k != Key_NoKey) && (k != Key_Transparent)) {
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), active_color_);
+  } else if ((light_lower_layers) && (k != Key_Transparent)) {
+    uint8_t key_layer = Layer.lookupActiveLayer(key_addr);
+    cRGB layer_color  = getLayerColor(key_layer);
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), layer_color);
+  } else {
+    ::LEDControl.setCrgbAt(KeyAddr(key_addr), {0, 0, 0});
   }
 }
 
