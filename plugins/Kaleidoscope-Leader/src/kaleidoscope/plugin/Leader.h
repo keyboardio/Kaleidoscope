@@ -47,9 +47,11 @@
 
 #define LEADER_SEQ(...) \
   { __VA_ARGS__, Key_NoKey }
-#define LEADER_DICT(...)               \
-  {                                    \
-    __VA_ARGS__, { {Key_NoKey}, NULL } \
+#define LEADER_DICT(...) \
+  {                      \
+    __VA_ARGS__, {       \
+      {Key_NoKey}, NULL  \
+    }                    \
   }
 
 namespace kaleidoscope {

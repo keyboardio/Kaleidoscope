@@ -28,7 +28,9 @@ struct cRGB {
 };
 
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 
 #include "kaleidoscope/device/ATmega32U4Keyboard.h"
 #include "kaleidoscope/driver/bootloader/avr/Caterina.h"

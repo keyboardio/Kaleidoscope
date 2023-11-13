@@ -140,10 +140,14 @@ struct Printer {
 #define ARDUINOTRACE_PRINT(id, file, prefix, content)                         \
   {                                                                           \
     struct __filename {                                                       \
-      constexpr static char const *data() { return file; }                    \
+      constexpr static char const *data() {                                   \
+        return file;                                                          \
+      }                                                                       \
     };                                                                        \
     struct __prefix {                                                         \
-      constexpr static char const *data() { return prefix; }                  \
+      constexpr static char const *data() {                                   \
+        return prefix;                                                        \
+      }                                                                       \
     };                                                                        \
     ArduinoTrace::Printer<__filename, __prefix> __tracer(ARDUINOTRACE_SERIAL, \
                                                          content);            \

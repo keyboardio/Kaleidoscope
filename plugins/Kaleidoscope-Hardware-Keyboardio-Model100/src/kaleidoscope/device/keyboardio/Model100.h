@@ -22,7 +22,9 @@
 #include <Arduino.h>
 
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 
 struct cRGB {
   uint8_t b;

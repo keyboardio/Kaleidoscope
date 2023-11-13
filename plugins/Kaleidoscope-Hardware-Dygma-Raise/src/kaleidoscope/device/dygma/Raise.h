@@ -24,7 +24,9 @@
 #include "kaleidoscope/device/dygma/raise/RaiseSide.h"
 
 #define CRGB(r, g, b) \
-  (cRGB) { b, g, r }
+  (cRGB) {            \
+    b, g, r           \
+  }
 
 #include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/bootloader/samd/Bossac.h"
