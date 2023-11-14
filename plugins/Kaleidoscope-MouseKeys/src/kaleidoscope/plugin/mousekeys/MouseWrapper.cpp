@@ -19,9 +19,9 @@
 
 #include <stdint.h>  // for uint16_t, uint8_t
 
-#include "kaleidoscope/Runtime.h"                              // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"                        // for Base<>::HID, VirtualProps:...
-#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for AbsoluteMouse
+#include "kaleidoscope/Runtime.h"                        // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                  // for Base<>::HID, VirtualProps:...
+#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
 
 namespace kaleidoscope {
 namespace plugin {
