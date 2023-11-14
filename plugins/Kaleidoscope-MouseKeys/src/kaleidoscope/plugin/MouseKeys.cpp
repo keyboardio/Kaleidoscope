@@ -20,16 +20,16 @@
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint8_t, uint16_t, int8_t
 
-#include "kaleidoscope/KeyEvent.h"                             // for KeyEvent
-#include "kaleidoscope/Runtime.h"                              // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"                        // for Base<>::HID, VirtualProps:...
-#include "kaleidoscope/driver/hid/keyboardio/AbsoluteMouse.h"  // for AbsoluteMouse
-#include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse
-#include "kaleidoscope/event_handler_result.h"                 // for EventHandlerResult, EventH...
-#include "kaleidoscope/key_defs.h"                             // for Key, SYNTHETIC
-#include "kaleidoscope/keyswitch_state.h"                      // for keyToggledOn
-#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"        // for KEY_MOUSE_BUTTON, KEY_MOUS...
-#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"        // for MouseWrapper, WARP_DOWN
+#include "kaleidoscope/KeyEvent.h"                       // for KeyEvent
+#include "kaleidoscope/Runtime.h"                        // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"                  // for Base<>::HID, VirtualProps:...
+#include "kaleidoscope/driver/hid/base/AbsoluteMouse.h"  // for AbsoluteMouse
+#include "kaleidoscope/driver/hid/base/Mouse.h"          // for Mouse
+#include "kaleidoscope/event_handler_result.h"           // for EventHandlerResult, EventH...
+#include "kaleidoscope/key_defs.h"                       // for Key, SYNTHETIC
+#include "kaleidoscope/keyswitch_state.h"                // for keyToggledOn
+#include "kaleidoscope/plugin/mousekeys/MouseKeyDefs.h"  // for KEY_MOUSE_BUTTON, KEY_MOUS...
+#include "kaleidoscope/plugin/mousekeys/MouseWrapper.h"  // for MouseWrapper, WARP_DOWN
 
 namespace kaleidoscope {
 namespace plugin {
