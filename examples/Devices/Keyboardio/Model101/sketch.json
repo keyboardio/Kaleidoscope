@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "adafruit:nrf52:itsybitsy52840",
+    "port": ""
+  }
+}
