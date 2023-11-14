@@ -5,12 +5,12 @@ on: [push, pull_request]
 env:
   LC_ALL: C
   ARDUINO_DIRECTORIES_USER: ${{ github.workspace }}/.arduino/user
-  CLANG_FORMAT_CMD: clang-format-12
+  CLANG_FORMAT_CMD: clang-format-15
 jobs:
   smoke-sketches:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache arduino dep downloads
       uses: actions/cache@v2
       with:
@@ -21,7 +21,7 @@ jobs:
   run-google-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache arduino dep downloads
       uses: actions/cache@v2
       with:
@@ -35,28 +35,28 @@ jobs:
   check-code-style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: KALEIDOSCOPE_CODE_FORMATTER=clang-format-12 make check-code-style
+    - uses: actions/checkout@v4
+    - run: KALEIDOSCOPE_CODE_FORMATTER=clang-format-15 make check-code-style
   check-shellcheck:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - run: make shellcheck
   check-cpplint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - run: make cpplint
   find-filename-conflicts:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - run: make find-filename-conflicts 
   publish-arduino-package-on-every-commit:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: webfactory/ssh-agent@v0.4.1
       with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEPLOY }}
