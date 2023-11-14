@@ -22,6 +22,8 @@
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"       // for Keyboard, KeyboardProps
 #include "kaleidoscope/driver/hid/keyboardio/Mouse.h"          // for Mouse, MouseProps
 
+#define KALEIDOSCOPE_HID_DRIVER_KEYBOARDIOHID
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {
