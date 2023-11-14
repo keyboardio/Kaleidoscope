@@ -273,9 +273,7 @@ constexpr Key addFlags(Key k, uint8_t add_flags) {
 // =============================================================================
 /// Generate a ModLayer key (unchecked)
 constexpr Key modLayerKey(Key modifier, uint8_t layer) {
-  uint8_t mod  = modifier.getRaw() - Key_LeftControl.getRaw();
-  uint8_t code = mod + (layer * 8);
-  return Key(code, SYNTHETIC | SWITCH_TO_KEYMAP | IS_INTERNAL);
+  return Key(modifier.getRaw() - Key_LeftControl.getRaw() + (layer * 8), SYNTHETIC | SWITCH_TO_KEYMAP | IS_INTERNAL);
 }
 
 }  // namespace kaleidoscope
