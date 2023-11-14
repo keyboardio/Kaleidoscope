@@ -56,6 +56,7 @@
                                                                         __NL__ \
   _INIT_SKETCH_EXPLORATION                                              __NL__ \
   _INIT_HID_GETSHORTNAME
+  // TODO(jesse): re-enable GETSHORTNAME once we figure out how to do that for non-keyboardiohid devices
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
