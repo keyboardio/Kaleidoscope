@@ -30,17 +30,14 @@ namespace plugin {
 
 // Data structure for an individual qukey
 struct Overlay {
-  // The layer this qukey is mapped on.
   int8_t layer;
-  // The keyswitch address of the qukey.
   KeyAddr addr;
-  // The alternake Key value this qukey should use (when held).
-  cRGB color;
+  uint8_t palette_index;
 
   // This is the constructor that should be used when creating a Overlay that
   // will be used by ColormapOverlay
-  constexpr Overlay(int8_t layer, KeyAddr k, cRGB color)
-    : layer(layer), addr(k), color(color) {}
+  constexpr Overlay(int8_t layer, KeyAddr k, uint8_t palette_index)
+    : layer(layer), addr(k), palette_index(palette_index) {}
 };
 
 class ColormapOverlay : public kaleidoscope::Plugin {
@@ -64,7 +61,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
  private:
   Overlay const *overlays_;
   uint8_t overlay_count_;
-  cRGB *selectedColor;
+  cRGB selectedColor;
 
   bool hasOverlay(KeyAddr k);
   void setKeyboardLEDColors();

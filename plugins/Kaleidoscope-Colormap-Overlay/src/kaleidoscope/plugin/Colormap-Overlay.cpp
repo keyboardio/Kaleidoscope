@@ -24,6 +24,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
 
 namespace kaleidoscope {
 namespace plugin {
@@ -35,7 +36,7 @@ bool ColormapOverlay::hasOverlay(KeyAddr k) {
     if (overlay.addr == k) {
       if ((overlay.layer == layer_index) ||
           (overlay.layer == layer_wildcard)) {
-        selectedColor = &overlay.color;
+        selectedColor = ::LEDPaletteTheme.lookupPaletteColor(overlay.palette_index);
         return true;
       }
     }
@@ -51,7 +52,7 @@ EventHandlerResult ColormapOverlay::onSetup() {
 void ColormapOverlay::setKeyboardLEDColors() {
   for (auto key_addr : KeyAddr::all()) {
     if (ColormapOverlay::hasOverlay(key_addr)) {
-      ::LEDControl.setCrgbAt(KeyAddr(key_addr), *selectedColor);
+      ::LEDControl.setCrgbAt(KeyAddr(key_addr), selectedColor);
     } else {
       ::LEDControl.refreshAt(KeyAddr(key_addr));
     }
