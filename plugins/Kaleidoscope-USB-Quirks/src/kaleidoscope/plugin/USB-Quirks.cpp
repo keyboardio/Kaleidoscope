@@ -23,16 +23,62 @@
 #include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"                   // for Base<>::HID, VirtualProps::HID
 #include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
+#include "kaleidoscope/key_defs.h"                        // for Key
+#include "kaleidoscope/plugin/LEDControl.h"               // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {
 
-void USBQuirks::toggleKeyboardProtocol() {
-  uint8_t new_protocol = !Runtime.hid().keyboard().getProtocol();
+KeyAddr USBQuirks::key_boot_addr = KeyAddr::none();
+KeyAddr USBQuirks::key_nkro_addr = KeyAddr::none();
 
+static KeyAddr findKey(Key search_key) {
+  for (auto key_addr : KeyAddr::all()) {
+    Key k = Layer.lookupOnActiveLayer(key_addr);
+
+    if (k == search_key) {
+      return key_addr;
+    }
+  }
+  return KeyAddr::none();
+}
+
+void USBQuirks::setKeys(Key boot_led, Key nkro_led) {
+  key_boot_addr = findKey(boot_led);
+  key_nkro_addr = findKey(nkro_led);
+}
+
+EventHandlerResult USBQuirks::onSetup() {
+  setKeys(Key_B, Key_N);
+  return EventHandlerResult::OK;
+}
+
+void USBQuirks::toggleKeyboardProtocol() {
+  KeyAddr key_addr;
+  uint8_t new_bootonly = !Runtime.hid().keyboard().getBootOnly();
+
+  if (new_bootonly) {
+    key_addr = key_boot_addr;
+  } else {
+    key_addr = key_nkro_addr;
+  }
+  ::LEDControl.disable();
+  if (key_addr.isValid()) {
+    ::LEDControl.setCrgbAt(key_addr, CRGB(0, 0, 255));
+  }
+  Runtime.device().syncLeds();
+  /*
+   * Release keys, because after detach, Windows 10 remembers keys that
+   * were pressed (from the MagicCombo that activated this function).
+   */
+  Runtime.hid().keyboard().releaseAllKeys();
+  Runtime.hid().keyboard().sendReport();
+  delay(10);
   Runtime.detachFromHost();
-  Runtime.hid().keyboard().setDefaultProtocol(new_protocol);
+  Runtime.hid().keyboard().setBootOnly(new_bootonly);
   delay(1000);
+  ::LEDControl.set_all_leds_to(CRGB(0, 0, 0));
+  ::LEDControl.enable();
   Runtime.attachToHost();
 }
 

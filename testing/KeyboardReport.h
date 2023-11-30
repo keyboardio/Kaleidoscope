@@ -19,17 +19,17 @@
 #include <cstdint>  // for uint8_t, uint32_t
 #include <vector>   // for vector
 
-#include "HID-Settings.h"          // for HID_REPORTID_NKRO_KEYBOARD
-#include "MultiReport/Keyboard.h"  // for HID_KeyboardReport_Data_t
+#include "HID-Settings.h"               // for HID_REPORTID_NKRO_KEYBOARD
+#include "BootKeyboard/BootKeyboard.h"  // for HID_KeyboardReport_Data_t
 
 namespace kaleidoscope {
 namespace testing {
 
 class KeyboardReport {
  public:
-  typedef HID_KeyboardReport_Data_t ReportData;
+  typedef HID_BootKeyboardReport_Data_t ReportData;
 
-  static constexpr uint8_t kHidReportType = HID_REPORTID_NKRO_KEYBOARD;
+  static constexpr uint8_t kHidReportType = HID_REPORTID_KEYBOARD;
 
   KeyboardReport(const void *data);
 

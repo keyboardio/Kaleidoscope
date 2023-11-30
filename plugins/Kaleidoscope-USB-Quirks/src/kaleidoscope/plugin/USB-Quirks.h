@@ -17,13 +17,22 @@
 
 #pragma once
 
-#include "kaleidoscope/plugin.h"  // for Plugin
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"              // for Key
+#include "kaleidoscope/plugin.h"                // for Plugin
 
 namespace kaleidoscope {
 namespace plugin {
 class USBQuirks : public kaleidoscope::Plugin {
  public:
   void toggleKeyboardProtocol();
+  EventHandlerResult onSetup();
+  static void setKeys(Key boot_led, Key nkro_led);
+
+ private:
+  static KeyAddr key_boot_addr;
+  static KeyAddr key_nkro_addr;
 };
 
 }  // namespace plugin

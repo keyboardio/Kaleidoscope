@@ -38,8 +38,11 @@ class NoBootKeyboard {
   uint8_t getProtocol() {
     return 1;
   }
-  void setProtocol(uint8_t protocol) {}
-  void setDefaultProtocol(uint8_t protocol) {}
+
+  uint8_t getBootOnly() {
+    return 0;
+  }
+  void setBootOnly(uint8_t bootonly) {}
 
   void sendReport() {}
 
@@ -70,38 +73,6 @@ class NoBootKeyboard {
   void onUSBReset() {}
 };
 
-class NoNKROKeyboard {
- public:
-  NoNKROKeyboard() {}
-  void begin() {}
-
-  void sendReport() {}
-
-  void press(uint8_t code) {}
-  void release(uint8_t code) {}
-  void releaseAll() {}
-
-  bool isModifierActive(Key key) {
-    return false;
-  }
-  bool wasModifierActive(Key key) {
-    return false;
-  }
-  bool isAnyModifierActive() {
-    return false;
-  }
-  bool wasAnyModifierActive() {
-    return false;
-  }
-  bool isKeyPressed(uint8_t code) {
-    return false;
-  }
-
-  uint8_t getLeds() {
-    return 0;
-  }
-};
-
 class NoConsumerControl {
  public:
   NoConsumerControl() {}
@@ -125,7 +96,6 @@ class NoSystemControl {
 
 struct KeyboardProps {
   typedef NoBootKeyboard BootKeyboard;
-  typedef NoNKROKeyboard NKROKeyboard;
   typedef NoConsumerControl ConsumerControl;
   typedef NoSystemControl SystemControl;
 };
@@ -134,7 +104,6 @@ template<typename _Props>
 class Keyboard {
  private:
   typename _Props::BootKeyboard boot_keyboard_;
-  typename _Props::NKROKeyboard nkro_keyboard_;
   typename _Props::ConsumerControl consumer_control_;
   typename _Props::SystemControl system_control_;
 
@@ -143,24 +112,19 @@ class Keyboard {
 
   void setup() __attribute__((noinline)) {
     boot_keyboard_.begin();
-    nkro_keyboard_.begin();
     consumer_control_.begin();
     system_control_.begin();
   }
 
   void sendReport() __attribute__((noinline)) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.sendReport();
-      return;
+    boot_keyboard_.sendReport();
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
+      consumer_control_.sendReport();
     }
-    nkro_keyboard_.sendReport();
-    consumer_control_.sendReport();
   }
   void releaseAllKeys() __attribute__((noinline)) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.releaseAll();
-    } else {
-      nkro_keyboard_.releaseAll();
+    boot_keyboard_.releaseAll();
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
       consumer_control_.releaseAll();
     }
   }
@@ -204,21 +168,11 @@ class Keyboard {
   // pressRawKey takes a Key object and calles KeyboardioHID's ".press" method
   // with its keycode. It does no processing of any flags or modifiers on the key
   void pressRawKey(Key pressed_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.press(pressed_key.getKeyCode());
-      return;
-    }
-
-    nkro_keyboard_.press(pressed_key.getKeyCode());
+    boot_keyboard_.press(pressed_key.getKeyCode());
   }
 
   void releaseRawKey(Key released_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.release(released_key.getKeyCode());
-      return;
-    }
-
-    nkro_keyboard_.release(released_key.getKeyCode());
+    boot_keyboard_.release(released_key.getKeyCode());
   }
 
   void releaseKey(Key released_key) {
@@ -227,60 +181,38 @@ class Keyboard {
   }
 
   bool isKeyPressed(Key key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.isKeyPressed(key.getKeyCode());
-    }
-    return nkro_keyboard_.isKeyPressed(key.getKeyCode());
+    return boot_keyboard_.isKeyPressed(key.getKeyCode());
   }
 
   bool isModifierKeyActive(Key modifier_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.isModifierActive(modifier_key.getKeyCode());
-    }
-
-    return nkro_keyboard_.isModifierActive(modifier_key.getKeyCode());
+    return boot_keyboard_.isModifierActive(modifier_key.getKeyCode());
   }
 
   bool wasModifierKeyActive(Key modifier_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.wasModifierActive(modifier_key.getKeyCode());
-    }
-
-    return nkro_keyboard_.wasModifierActive(modifier_key.getKeyCode());
+    return boot_keyboard_.wasModifierActive(modifier_key.getKeyCode());
   }
 
   bool isAnyModifierKeyActive() {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.isAnyModifierActive();
-    }
-
-    return nkro_keyboard_.isAnyModifierActive();
+    return boot_keyboard_.isAnyModifierActive();
   }
 
   bool wasAnyModifierKeyActive() {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.wasAnyModifierActive();
-    }
-
-    return nkro_keyboard_.wasAnyModifierActive();
+    return boot_keyboard_.wasAnyModifierActive();
   }
 
   uint8_t getKeyboardLEDs() {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      return boot_keyboard_.getLeds();
-    }
-
-    return nkro_keyboard_.getLeds();
+    return boot_keyboard_.getLeds();
   }
 
   uint8_t getProtocol() {
     return boot_keyboard_.getProtocol();
   }
-  void setProtocol(uint8_t protocol) {
-    boot_keyboard_.setProtocol(protocol);
+
+  uint8_t getBootOnly() {
+    return boot_keyboard_.getBootOnly();
   }
-  void setDefaultProtocol(uint8_t protocol) {
-    boot_keyboard_.setDefaultProtocol(protocol);
+  void setBootOnly(uint8_t bootonly) {
+    boot_keyboard_.setBootOnly(bootonly);
   }
 
   void onUSBReset() {

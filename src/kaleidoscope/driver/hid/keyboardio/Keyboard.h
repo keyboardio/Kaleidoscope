@@ -23,6 +23,11 @@
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, KeyboardProps
 
+#if !BOOTKB_HYBRID
+#error "This version of Kaleidoscope requires KeyboardioHID with BOOTKB_HYBRID"
+#error "Please update your KeyboardioHID"
+#endif
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {
@@ -49,12 +54,12 @@ class BootKeyboardWrapper {
   uint8_t getProtocol() {
     return BootKeyboard().getProtocol();
   }
-  void setProtocol(uint8_t protocol) {
-    BootKeyboard().setProtocol(protocol);
+
+  uint8_t getBootOnly() {
+    return BootKeyboard().getBootOnly();
   }
-  void setDefaultProtocol(uint8_t protocol) {
-    BootKeyboard().default_protocol = protocol;
-    setProtocol(protocol);
+  void setBootOnly(uint8_t bootonly) {
+    BootKeyboard().setBootOnly(bootonly);
   }
 
   void sendReport() {
@@ -93,48 +98,6 @@ class BootKeyboardWrapper {
 
   void onUSBReset() {
     BootKeyboard().onUSBReset();
-  }
-};
-
-class NKROKeyboardWrapper {
- public:
-  NKROKeyboardWrapper() {}
-  void begin() {
-    Keyboard.begin();
-  }
-
-  void sendReport() {
-    Keyboard.sendReport();
-  }
-
-  void press(uint8_t code) {
-    Keyboard.press(code);
-  }
-  void release(uint8_t code) {
-    Keyboard.release(code);
-  }
-  void releaseAll() {
-    Keyboard.releaseAll();
-  }
-
-  bool isKeyPressed(uint8_t code) {
-    return Keyboard.isKeyPressed(code);
-  }
-  bool isModifierActive(uint8_t code) {
-    return Keyboard.isModifierActive(code);
-  }
-  bool wasModifierActive(uint8_t code) {
-    return Keyboard.wasModifierActive(code);
-  }
-  bool isAnyModifierActive() {
-    return Keyboard.isAnyModifierActive();
-  }
-  bool wasAnyModifierActive() {
-    return Keyboard.wasAnyModifierActive();
-  }
-
-  uint8_t getLeds() {
-    return Keyboard.getLEDs();
   }
 };
 
@@ -177,7 +140,6 @@ class SystemControlWrapper {
 
 struct KeyboardProps : public base::KeyboardProps {
   typedef BootKeyboardWrapper BootKeyboard;
-  typedef NKROKeyboardWrapper NKROKeyboard;
   typedef ConsumerControlWrapper ConsumerControl;
   typedef SystemControlWrapper SystemControl;
 };

@@ -64,7 +64,7 @@ std::vector<uint8_t> KeyboardReport::ActiveNonModifierKeycodes() const {
 
   for (uint8_t i = 0; i < HID_LAST_KEY; ++i) {
     uint8_t bit     = 1 << (uint8_t(i) % 8);
-    uint8_t keycode = report_data_.keys[i / 8] & bit;
+    uint8_t keycode = report_data_.nkro_keys[i / 8] & bit;
     if (keycode) active_keycodes.push_back(i);
   }
 
