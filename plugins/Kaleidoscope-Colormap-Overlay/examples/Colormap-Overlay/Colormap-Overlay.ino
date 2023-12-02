@@ -80,8 +80,7 @@ PALETTE(
   [PALETTE_UNUSED_9]  = CRGB(0x00, 0x00, 0x00),
   [PALETTE_UNUSED_10] = CRGB(0x00, 0x00, 0x00),
   [PALETTE_UNUSED_11] = CRGB(0x00, 0x00, 0x00),
-  [PALETTE_UNUSED_12] = CRGB(0x00, 0x00, 0x00)
-)
+  [PALETTE_UNUSED_12] = CRGB(0x00, 0x00, 0x00))
 
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           LEDControl,
@@ -100,8 +99,7 @@ void setup() {
     kaleidoscope::plugin::Overlay(0, KeyAddr(2, 6), PALETTE_YELLOW),
     // Disable leds on the palm keys
     kaleidoscope::plugin::Overlay(0, KeyAddr(3, 6), PALETTE_BLACK),
-    kaleidoscope::plugin::Overlay(0, KeyAddr(3, 9), PALETTE_BLACK),
-  )
+    kaleidoscope::plugin::Overlay(0, KeyAddr(3, 9), PALETTE_BLACK))
 
   ColormapOverlay.setup();
   DefaultColormap.setup();
