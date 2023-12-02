@@ -55,6 +55,9 @@ EventHandlerResult ColormapOverlay::onSetup() {
 }
 
 void ColormapOverlay::setKeyboardLEDColors() {
+  if (!Runtime.has_leds)
+    return;
+
   for (auto key_addr : KeyAddr::all()) {
     if (ColormapOverlay::hasOverlay(key_addr)) {
       ::LEDControl.setCrgbAt(KeyAddr(key_addr), selectedColor);
