@@ -42,6 +42,7 @@ struct Overlay {
 
 class ColormapOverlay : public kaleidoscope::Plugin {
  public:
+  static void setup();
   // Function for defining the array of overlays. It's a template function that
   // takes as its sole argument an array reference of size `_overlay_count`, so
   // there's no need to use `sizeof` to calculate the correct size, and pass it
@@ -59,6 +60,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
+  static uint16_t map_base_;
   Overlay const *overlays_;
   uint8_t overlay_count_;
   cRGB selectedColor;
