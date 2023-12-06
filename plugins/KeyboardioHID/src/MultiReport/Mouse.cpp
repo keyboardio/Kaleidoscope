@@ -31,6 +31,8 @@ static const uint8_t mouse_hid_descriptor_[] PROGMEM = {
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,           // USAGE_PAGE (Generic Desktop)
   D_USAGE, D_USAGE_MOUSE,                         // USAGE (Mouse)
   D_COLLECTION, D_APPLICATION,                    // COLLECTION (Application)
+  D_USAGE, D_USAGE_POINTER,                       // USAGE (Pointer)
+  D_COLLECTION, D_PHYSICAL,                       // COLLECTION (Physical)
   D_REPORT_ID, HID_REPORTID_MOUSE,                // REPORT_ID (Mouse)
 
   /* 8 Buttons */
@@ -56,7 +58,7 @@ static const uint8_t mouse_hid_descriptor_[] PROGMEM = {
 
   /* Horizontal wheel */
   D_USAGE_PAGE, D_PAGE_CONSUMER,                  // USAGE_PAGE (Consumer)
-  D_PAGE_ORDINAL, 0x38, 0x02,                     // PAGE (AC Pan)
+  D_MULTIBYTE(D_USAGE), 0x38, 0x02,               // USAGE (AC Pan)
   D_LOGICAL_MINIMUM, 0x81,                        // LOGICAL_MINIMUM (-127)
   D_LOGICAL_MAXIMUM, 0x7f,                        // LOGICAL_MAXIMUM (127)
   D_REPORT_SIZE, 0x08,                            // REPORT_SIZE (8)
@@ -64,6 +66,7 @@ static const uint8_t mouse_hid_descriptor_[] PROGMEM = {
   D_INPUT, (D_DATA | D_VARIABLE | D_RELATIVE),    // INPUT (Data,Var,Rel)
 
   /* End */
+  D_END_COLLECTION,                               // END_COLLECTION
   D_END_COLLECTION                                // END_COLLECTION
 };
 

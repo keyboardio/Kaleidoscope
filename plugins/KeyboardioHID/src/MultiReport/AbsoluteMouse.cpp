@@ -31,12 +31,15 @@ static const uint8_t absolute_mouse_hid_descriptor_[] PROGMEM = {
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)   54 */
   D_USAGE, D_USAGE_MOUSE,                       /* USAGE (Mouse) */
   D_COLLECTION, D_APPLICATION,                  /* COLLECTION (Application) */
+  D_USAGE, D_USAGE_POINTER,                     /* USAGE (Pointer) */
+  D_COLLECTION, D_PHYSICAL,                     /* COLLECTION (Physical)*/
   D_REPORT_ID, HID_REPORTID_MOUSE_ABSOLUTE,     /*  REPORT_ID */
 
   DESCRIPTOR_ABS_MOUSE_BUTTONS
   DESCRIPTOR_ABS_MOUSE_XY
   DESCRIPTOR_ABS_MOUSE_WHEEL
 
+  D_END_COLLECTION,
   D_END_COLLECTION                               /* End */
 };
 

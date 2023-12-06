@@ -32,10 +32,13 @@ static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
   D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,         /* USAGE_PAGE (Generic Desktop)         54 */
   D_USAGE, D_USAGE_MOUSE,                             /* USAGE (Mouse) */
   D_COLLECTION, D_APPLICATION,                        /* COLLECTION (Application) */
+  D_USAGE, D_USAGE_POINTER,                           /* USAGE (Pointer) */
+  D_COLLECTION, D_PHYSICAL,                           /* COLLECTION (Physical)*/
 
   DESCRIPTOR_ABS_MOUSE_BUTTONS
   DESCRIPTOR_ABS_MOUSE_XY
   DESCRIPTOR_ABS_MOUSE_WHEEL
+  D_END_COLLECTION,
   D_END_COLLECTION                             /* End */
 };
 
