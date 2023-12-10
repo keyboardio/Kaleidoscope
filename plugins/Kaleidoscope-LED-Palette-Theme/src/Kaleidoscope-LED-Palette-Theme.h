@@ -18,3 +18,4 @@
 #pragma once
 
 #include "kaleidoscope/plugin/LED-Palette-Theme.h"  // IWYU pragma: export
+#include "kaleidoscope/plugin/DefaultPalette.h"     // IWYU pragma: export
