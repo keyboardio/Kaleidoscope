@@ -83,7 +83,7 @@ compile-sketch: ${TEST_OBJS}
 		OUTPUT_PATH="${LIB_DIR}" \
 		_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS='--build-property upload.maximum_size=""' \
 		$(MAKE) -f ${top_dir}/etc/makefiles/sketch.mk compile
-	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) -o "${BIN_DIR}/${BIN_FILE}" \
+	$(QUIET) $(COMPILER_WRAPPER) $(call _arduino_prop,compiler.cpp.cmd) $(call _arduino_prop,compiler.cpp.elf.flags) -o "${BIN_DIR}/${BIN_FILE}" \
 		-lpthread -g -w ${TEST_OBJS} \
 		-L"${COMMON_LIB_DIR}" -lcommon \
 		"${LIB_DIR}/${LIB_FILE}" \
