@@ -47,7 +47,8 @@ SKETCH_FILE=$(wildcard *.ino)
 BIN_FILE=$(subst .ino,,$(SKETCH_FILE))
 LIB_FILE=${BIN_FILE}-latest.a
 
-TEST_FILES=$(sort $(wildcard $(SRC_DIR)/*.cpp))
+# Immediate assignment prevents duplicates after append from HAS_KTEST_FILE
+TEST_FILES:=$(sort $(wildcard $(SRC_DIR)/*.cpp))
 
 # If we have a ktest file and no generated testcase, 
 # we want to turn it into a generated testcase
