@@ -23,6 +23,11 @@
 // From Kaleidoscope:
 #include "kaleidoscope/driver/hid/base/Keyboard.h"  // for Keyboard, KeyboardProps
 
+#if !BOOTKB_AS_PADDING
+#error "This version of Kaleidoscope requires KeyboardioHID with BOOTKB_AS_PADDING"
+#error "Please update your KeyboardioHID"
+#endif
+
 namespace kaleidoscope {
 namespace driver {
 namespace hid {

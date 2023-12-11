@@ -149,17 +149,15 @@ class Keyboard {
   }
 
   void sendReport() __attribute__((noinline)) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.sendReport();
-      return;
+    boot_keyboard_.sendReport();
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
+      nkro_keyboard_.sendReport();
+      consumer_control_.sendReport();
     }
-    nkro_keyboard_.sendReport();
-    consumer_control_.sendReport();
   }
   void releaseAllKeys() __attribute__((noinline)) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.releaseAll();
-    } else {
+    boot_keyboard_.releaseAll();
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
       nkro_keyboard_.releaseAll();
       consumer_control_.releaseAll();
     }
@@ -204,21 +202,17 @@ class Keyboard {
   // pressRawKey takes a Key object and calles KeyboardioHID's ".press" method
   // with its keycode. It does no processing of any flags or modifiers on the key
   void pressRawKey(Key pressed_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.press(pressed_key.getKeyCode());
-      return;
+    boot_keyboard_.press(pressed_key.getKeyCode());
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
+      nkro_keyboard_.press(pressed_key.getKeyCode());
     }
-
-    nkro_keyboard_.press(pressed_key.getKeyCode());
   }
 
   void releaseRawKey(Key released_key) {
-    if (boot_keyboard_.getProtocol() == HID_BOOT_PROTOCOL) {
-      boot_keyboard_.release(released_key.getKeyCode());
-      return;
+    boot_keyboard_.release(released_key.getKeyCode());
+    if (boot_keyboard_.getProtocol() != HID_BOOT_PROTOCOL) {
+      nkro_keyboard_.release(released_key.getKeyCode());
     }
-
-    nkro_keyboard_.release(released_key.getKeyCode());
   }
 
   void releaseKey(Key released_key) {

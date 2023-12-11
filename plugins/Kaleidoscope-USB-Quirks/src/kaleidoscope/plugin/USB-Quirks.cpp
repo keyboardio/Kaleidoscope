@@ -28,12 +28,8 @@ namespace kaleidoscope {
 namespace plugin {
 
 void USBQuirks::toggleKeyboardProtocol() {
-  uint8_t new_protocol = !Runtime.hid().keyboard().getProtocol();
-
-  Runtime.detachFromHost();
-  Runtime.hid().keyboard().setDefaultProtocol(new_protocol);
-  delay(1000);
-  Runtime.attachToHost();
+  // Do nothing, because the old behavior might cause HID-aware hosts to
+  // receive no input, now that we mark the Boot Keyboard report as padding
 }
 
 }  // namespace plugin
