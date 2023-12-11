@@ -19,13 +19,13 @@ clean:
 	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 copy-plugin-readmes:
-	install -d plugins
+	-install -d plugins
 	(cd ../plugins; \
 		ls -d * |xargs -n 1 -I % cp %/README.md ../docs/plugins/%.md )
 
 
 examples:
-	install -d examples
+	-install -d examples
 	(cd ../examples; \
 		find . -type f \( -name \*ino -or -name \*h -or -name \*cpp \) \
 	) | \
