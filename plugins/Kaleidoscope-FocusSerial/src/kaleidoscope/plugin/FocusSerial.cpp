@@ -113,14 +113,16 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
   if (inputMatchesCommand(input, cmd_bytes)) {
+    uint8_t buf[64];
     uint16_t n;
     read(n);
-    for (uint16_t i = 0; i < n; i++) {
-      sendRaw('A');
+    memset(buf, 'A', sizeof(buf));
+    while (n > 0) {
+      size_t wrote = Runtime.serialPort().write(buf, min(sizeof(buf), n));
+      n -= wrote;
     }
     return EventHandlerResult::EVENT_CONSUMED;
   }
-
   return EventHandlerResult::OK;
 }
 
