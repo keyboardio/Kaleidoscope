@@ -99,6 +99,7 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
   const char *cmd_help    = PSTR("help");
   const char *cmd_reset   = PSTR("device.reset");
   const char *cmd_plugins = PSTR("plugins");
+  const char *cmd_bytes   = PSTR("sendbytes");
 
   if (inputMatchesHelp(input))
     return printHelp(cmd_help, cmd_reset, cmd_plugins);
@@ -109,6 +110,14 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
   }
   if (inputMatchesCommand(input, cmd_plugins)) {
     kaleidoscope::Hooks::onNameQuery();
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
+  if (inputMatchesCommand(input, cmd_bytes)) {
+    uint16_t n;
+    read(n);
+    for (uint16_t i = 0; i < n; i++) {
+      sendRaw('A');
+    }
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
