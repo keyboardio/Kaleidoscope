@@ -39,11 +39,13 @@ void FocusSerial::manageFlowControl() {
   if (xon == true) {
     if (avail > RECV_BUFFER_THRESHOLD) {
       Runtime.serialPort().write(XOFF);  // Send XOFF to stop data
+      Runtime.serialPort().flush();
       xon = false;
     }
   } else {
     if (avail < RECV_BUFFER_RESUME) {
       Runtime.serialPort().write(XON);  // Send XON to resume data
+      Runtime.serialPort().flush();
       xon = true;
     }
   }
@@ -65,6 +67,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
       break;
     }
     c = Runtime.serialPort().read();
+    manageFlowControl();
     // Don't store the separator; just stash it
     if (c == SEPARATOR) {
       break;
@@ -82,6 +85,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   Runtime.onFocusEvent(input_);
   while (Runtime.serialPort().available()) {
     c = Runtime.serialPort().read();
+    manageFlowControl();
     if (c == NEWLINE) {
       // newline serves as an end-of-command marker
       // don't drain the buffer past there
