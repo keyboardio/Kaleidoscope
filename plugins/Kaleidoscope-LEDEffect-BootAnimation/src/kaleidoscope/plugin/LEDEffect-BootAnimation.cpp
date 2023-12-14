@@ -15,7 +15,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Kaleidoscope-LEDEffect-BootAnimation.h"
+#include "kaleidoscope/plugin/LEDEffect-BootAnimation.h"
 
 #include <Arduino.h>  // for PROGMEM, pgm_read_byte
 #include <stdint.h>   // for uint16_t, uint8_t
