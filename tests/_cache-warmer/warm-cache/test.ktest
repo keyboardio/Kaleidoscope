@@ -1,0 +1,13 @@
+VERSION 1
+
+KEYSWITCH A 2 1
+KEYSWITCH S 2 2
+
+# ==============================================================================
+NAME Warm the cache
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Key A should be pressed
+
