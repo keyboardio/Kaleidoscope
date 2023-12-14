@@ -28,7 +28,7 @@ LIB_DIR		:= ${build_dir}/lib
 
 libcommon_a	:= ${top_dir}/_build/lib/libcommon.a
 
-TEST_PATH 	?= ./
+TEST_PATH 	?= .
 
 export FQBN	?= keyboardio:virtual:model01
 
