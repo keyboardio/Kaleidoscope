@@ -28,7 +28,7 @@ LIB_DIR		:= ${build_dir}/lib
 
 libcommon_a	:= ${top_dir}/_build/lib/libcommon.a
 
-TEST_PATH 	?= ./
+TEST_PATH 	?= .
 
 export FQBN	?= keyboardio:virtual:model01
 
@@ -46,29 +46,65 @@ include $(top_dir)/etc/makefiles/arduino-cli.mk
 KALEIDOSCOPE_ETC_DIR ?= $(top_dir)/etc
 
 .PHONY: all
-all: ${libcommon_a} googletest ${TESTS} 
+all: ${libcommon_a} googletest run-all
 	@:
 
 .PHONY: cmake-clean
 cmake-clean:
 	rm -rf "${top_dir}"/testing/googletest/build/*
 
-run-all: ${TESTS}
-	@for test in ${TESTS}; do \
-		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk \
-			-C $${test} \
-			testcase=$${test} run || ERROR=$$?; \
+.PHONY: run-all
+run-all: run-cache-warmer run-other-tests aggregate-test-results
+
+.PHONY: run-cache-warmer
+run-cache-warmer: generate-all-plugins-header $(filter ./_cache-warmer/%,${TESTS})
+
+.PHONY: run-other-tests
+run-other-tests: run-cache-warmer
+	@$(MAKE) $(filter-out ./_cache-warmer/%,${TESTS})
+
+
+${TESTS}: ${libcommon_a} googletest
+	$(QUIET) { \
+		$(MAKE) -s -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build run; \
+		if [ $$? -ne 0 ]; then \
+			hash=$$(echo "$$@" | shasum | cut -f1 -d' '); \
+			echo "$@ failed" > ${build_dir}/test_failures_$$hash.log; \
+		fi; \
+	}
+
+
+.PHONY: aggregate-test-results
+aggregate-test-results: run-other-tests
+	$(QUIET) TEST_ERRORS=0; \
+	for file in ${build_dir}/test_failures_*.log; do \
+		if [ -f "$$file" ]; then \
+			TEST_ERRORS=$$((TEST_ERRORS + 1)); \
+			cat "$$file" >> ${build_dir}/combined_test_failures.log; \
+			rm -f "$$file"; \
+		fi; \
 	done; \
-	if [ -n $${ERROR} ]; then exit $${ERROR}; fi
+	if [ -f ${build_dir}/combined_test_failures.log ]; then \
+		echo "Test failures: $$TEST_ERRORS"; \
+		cat ${build_dir}/combined_test_failures.log; \
+		rm -f ${build_dir}/combined_test_failures.log; \
+		exit 1; \
+	else \
+		echo "All tests passed."; \
+	fi
+
+
+
+
 
 .PHONY: clean
 clean: cmake-clean
-	@for test in ${TESTS}; do \
+	$(QUIET) for test in ${TESTS}; do \
 		${MAKE} -s -f ${top_dir}/testing/makefiles/testcase.mk \
 			-C $${test} \
 			testcase=$${test} clean; \
 	done
-	rm -rf "${build_dir}"/*
+	$(QUIET)  rm -rf "${build_dir}"/*
 
 .PHONY: googletest
 googletest: ${top_dir}/testing/googletest/build/Makefile
@@ -92,5 +128,19 @@ ${libcommon_a}:
 Makefile:
 	@:
 
-${TESTS}: ${libcommon_a} googletest
-	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/testcase.mk -C $@ testcase=$@ build run
+
+
+.PHONY: generate-all-plugins-header
+generate-all-plugins-header:
+	$(QUIET) echo "// This file is generated automatically. Do not edit." > _cache-warmer/warm-cache/generated-all-plugins.h
+	$(QUIET) for dir in ../plugins/*; do \
+		if [ -d "$$dir" ]; then \
+			header_path="$$dir/$$(basename $$dir).h"; \
+			header_src_path="$$dir/src/$$(basename $$dir).h"; \
+			header="$$(basename $$dir).h"; \
+			if [ -f "$$header_path" -o -f "$$header_src_path" ]; then \
+				echo '#include "'$$header'"' >> _cache-warmer/warm-cache/generated-all-plugins.h; \
+			fi; \
+		fi; \
+	done
+

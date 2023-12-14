@@ -18,7 +18,7 @@
 #pragma once
 
 #ifdef KALEIDOSCOPE_VIRTUAL_BUILD
-#error "Firmware Dump is not available for virtual builds"
+#warning "Firmware Dump is not available for virtual builds"
 #else
 
 #ifdef __AVR__
