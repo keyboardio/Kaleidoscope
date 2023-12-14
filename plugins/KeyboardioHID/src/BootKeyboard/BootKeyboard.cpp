@@ -66,7 +66,7 @@ static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
   D_REPORT_COUNT, 0x6,
   D_REPORT_SIZE, 0x8,
   D_LOGICAL_MINIMUM, 0x0,
-  D_LOGICAL_MAXIMUM, 0xff,
+  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xff, 0x0, // make sure it's not negative
   D_USAGE_PAGE, D_PAGE_KEYBOARD,
   D_USAGE_MINIMUM, 0x0,
   D_USAGE_MAXIMUM, 0xff,
