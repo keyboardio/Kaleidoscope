@@ -129,7 +129,7 @@ bool HID_::setup(USBSetup &setup) {
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
     if (request == HID_GET_REPORT) {
-      // TODO: HID_GetReport();
+      // TODO(anyone): HID_GetReport();
       return true;
     }
     if (request == HID_GET_PROTOCOL) {
