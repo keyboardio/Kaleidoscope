@@ -28,50 +28,82 @@ THE SOFTWARE.
 
 static const uint8_t nkro_keyboard_hid_descriptor_[] PROGMEM = {
   //  NKRO Keyboard
-  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
-  D_USAGE, D_USAGE_KEYBOARD,
-  D_COLLECTION, D_APPLICATION,
-  D_REPORT_ID, HID_REPORTID_NKRO_KEYBOARD,
-  D_USAGE_PAGE, D_PAGE_KEYBOARD,
+  D_USAGE_PAGE,
+  D_PAGE_GENERIC_DESKTOP,
+  D_USAGE,
+  D_USAGE_KEYBOARD,
+  D_COLLECTION,
+  D_APPLICATION,
+  D_REPORT_ID,
+  HID_REPORTID_NKRO_KEYBOARD,
+  D_USAGE_PAGE,
+  D_PAGE_KEYBOARD,
 
   /* Key modifier byte */
-  D_USAGE_MINIMUM, HID_KEYBOARD_FIRST_MODIFIER,
-  D_USAGE_MAXIMUM, HID_KEYBOARD_LAST_MODIFIER,
-  D_LOGICAL_MINIMUM, 0x00,
-  D_LOGICAL_MAXIMUM, 0x01,
-  D_REPORT_SIZE, 0x01,
-  D_REPORT_COUNT, 0x08,
-  D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+  D_USAGE_MINIMUM,
+  HID_KEYBOARD_FIRST_MODIFIER,
+  D_USAGE_MAXIMUM,
+  HID_KEYBOARD_LAST_MODIFIER,
+  D_LOGICAL_MINIMUM,
+  0x00,
+  D_LOGICAL_MAXIMUM,
+  0x01,
+  D_REPORT_SIZE,
+  0x01,
+  D_REPORT_COUNT,
+  0x08,
+  D_INPUT,
+  (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
   /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
-  D_USAGE_PAGE, D_PAGE_LEDS,
-  D_USAGE_MINIMUM, 0x01,
-  D_USAGE_MAXIMUM, 0x08,
-  D_REPORT_COUNT, 0x08,
-  D_REPORT_SIZE, 0x01,
-  D_OUTPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+  D_USAGE_PAGE,
+  D_PAGE_LEDS,
+  D_USAGE_MINIMUM,
+  0x01,
+  D_USAGE_MAXIMUM,
+  0x08,
+  D_REPORT_COUNT,
+  0x08,
+  D_REPORT_SIZE,
+  0x01,
+  D_OUTPUT,
+  (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
   /* NKRO Keyboard */
-  D_USAGE_PAGE, D_PAGE_KEYBOARD,
+  D_USAGE_PAGE,
+  D_PAGE_KEYBOARD,
 
   // Padding 4 bits, to skip NO_EVENT & 3 error states.
-  D_REPORT_SIZE, 0x04,
-  D_REPORT_COUNT, 0x01,
-  D_INPUT, (D_CONSTANT),
+  D_REPORT_SIZE,
+  0x04,
+  D_REPORT_COUNT,
+  0x01,
+  D_INPUT,
+  (D_CONSTANT),
 
-  D_USAGE_MINIMUM, HID_KEYBOARD_A_AND_A,
-  D_USAGE_MAXIMUM, HID_LAST_KEY,
-  D_LOGICAL_MINIMUM, 0x00,
-  D_LOGICAL_MAXIMUM, 0x01,
-  D_REPORT_SIZE, 0x01,
-  D_REPORT_COUNT, (KEY_BITS - 4),
-  D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+  D_USAGE_MINIMUM,
+  HID_KEYBOARD_A_AND_A,
+  D_USAGE_MAXIMUM,
+  HID_LAST_KEY,
+  D_LOGICAL_MINIMUM,
+  0x00,
+  D_LOGICAL_MAXIMUM,
+  0x01,
+  D_REPORT_SIZE,
+  0x01,
+  D_REPORT_COUNT,
+  (KEY_BITS - 4),
+  D_INPUT,
+  (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
 #if (KEY_BITS % 8)
   // Padding to round up the report to byte boundary.
-  D_REPORT_SIZE, (8 - (KEY_BITS % 8)),
-  D_REPORT_COUNT, 0x01,
-  D_INPUT, (D_CONSTANT),
+  D_REPORT_SIZE,
+  (8 - (KEY_BITS % 8)),
+  D_REPORT_COUNT,
+  0x01,
+  D_INPUT,
+  (D_CONSTANT),
 #endif
 
   D_END_COLLECTION,
@@ -94,7 +126,8 @@ void Keyboard_::end() {
 
 int Keyboard_::sendReportUnchecked() {
   return HID().SendReport(HID_REPORTID_NKRO_KEYBOARD,
-                          &last_report_, sizeof(last_report_));
+                          &last_report_,
+                          sizeof(last_report_));
 }
 
 // Sending the current HID report to the host:

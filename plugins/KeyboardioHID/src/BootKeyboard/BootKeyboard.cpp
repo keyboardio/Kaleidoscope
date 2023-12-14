@@ -31,48 +31,79 @@ THE SOFTWARE.
 // See Appendix B of USB HID spec
 static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
   //  Keyboard
-  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,
-  D_USAGE, D_USAGE_KEYBOARD,
+  D_USAGE_PAGE,
+  D_PAGE_GENERIC_DESKTOP,
+  D_USAGE,
+  D_USAGE_KEYBOARD,
 
-  D_COLLECTION, D_APPLICATION,
+  D_COLLECTION,
+  D_APPLICATION,
   // Modifiers
-  D_USAGE_PAGE, D_PAGE_KEYBOARD,
-  D_USAGE_MINIMUM, 0xe0,
-  D_USAGE_MAXIMUM, 0xe7,
-  D_LOGICAL_MINIMUM, 0x0,
-  D_LOGICAL_MAXIMUM, 0x1,
-  D_REPORT_SIZE, 0x1,
-  D_REPORT_COUNT, 0x8,
-  D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+  D_USAGE_PAGE,
+  D_PAGE_KEYBOARD,
+  D_USAGE_MINIMUM,
+  0xe0,
+  D_USAGE_MAXIMUM,
+  0xe7,
+  D_LOGICAL_MINIMUM,
+  0x0,
+  D_LOGICAL_MAXIMUM,
+  0x1,
+  D_REPORT_SIZE,
+  0x1,
+  D_REPORT_COUNT,
+  0x8,
+  D_INPUT,
+  (D_DATA | D_VARIABLE | D_ABSOLUTE),
 
   // Reserved byte
-  D_REPORT_COUNT, 0x1,
-  D_REPORT_SIZE, 0x8,
-  D_INPUT, (D_CONSTANT),
+  D_REPORT_COUNT,
+  0x1,
+  D_REPORT_SIZE,
+  0x8,
+  D_INPUT,
+  (D_CONSTANT),
 
   // LEDs
-  D_REPORT_COUNT, 0x5,
-  D_REPORT_SIZE, 0x1,
-  D_USAGE_PAGE, D_PAGE_LEDS,
-  D_USAGE_MINIMUM, 0x1,
-  D_USAGE_MAXIMUM, 0x5,
-  D_OUTPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
+  D_REPORT_COUNT,
+  0x5,
+  D_REPORT_SIZE,
+  0x1,
+  D_USAGE_PAGE,
+  D_PAGE_LEDS,
+  D_USAGE_MINIMUM,
+  0x1,
+  D_USAGE_MAXIMUM,
+  0x5,
+  D_OUTPUT,
+  (D_DATA | D_VARIABLE | D_ABSOLUTE),
   // Pad LEDs up to a byte
-  D_REPORT_COUNT, 0x1,
-  D_REPORT_SIZE, 0x3,
-  D_OUTPUT, (D_CONSTANT),
+  D_REPORT_COUNT,
+  0x1,
+  D_REPORT_SIZE,
+  0x3,
+  D_OUTPUT,
+  (D_CONSTANT),
 
   // Non-modifiers
-  D_REPORT_COUNT, 0x6,
-  D_REPORT_SIZE, 0x8,
-  D_LOGICAL_MINIMUM, 0x0,
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xff, 0x0, // make sure it's not negative
-  D_USAGE_PAGE, D_PAGE_KEYBOARD,
-  D_USAGE_MINIMUM, 0x0,
-  D_USAGE_MAXIMUM, 0xff,
-  D_INPUT, (D_DATA | D_ARRAY | D_ABSOLUTE),
-  D_END_COLLECTION
-};
+  D_REPORT_COUNT,
+  0x6,
+  D_REPORT_SIZE,
+  0x8,
+  D_LOGICAL_MINIMUM,
+  0x0,
+  D_MULTIBYTE(D_LOGICAL_MAXIMUM),
+  0xff,
+  0x0,  // make sure it's not negative
+  D_USAGE_PAGE,
+  D_PAGE_KEYBOARD,
+  D_USAGE_MINIMUM,
+  0x0,
+  D_USAGE_MAXIMUM,
+  0xff,
+  D_INPUT,
+  (D_DATA | D_ARRAY | D_ABSOLUTE),
+  D_END_COLLECTION};
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
 static const uint8_t BOOT_KEYBOARD_EP_SIZE = 8;
@@ -81,26 +112,26 @@ static const uint8_t BOOT_KEYBOARD_EP_SIZE = USB_EP_SIZE;
 #endif
 
 
-BootKeyboard_::BootKeyboard_(uint8_t protocol_) : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(0), leds(0) {
+BootKeyboard_::BootKeyboard_(uint8_t protocol_)
+  : PluggableUSBModule(1, 1, epType), default_protocol(protocol_), protocol(protocol_), idle(0), leds(0) {
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
-  epType[0] = EP_TYPE_INTERRUPT_IN(BOOT_KEYBOARD_EP_SIZE); // This is an 8 byte report, so ask for an 8 byte buffer, so reports aren't split
+  epType[0] = EP_TYPE_INTERRUPT_IN(BOOT_KEYBOARD_EP_SIZE);  // This is an 8 byte report, so ask for an 8 byte buffer, so reports aren't split
 #else
   epType[0] = EP_TYPE_INTERRUPT_IN;
 #endif
   PluggableUSB().plug(this);
 }
 
-int BootKeyboard_::getInterface(uint8_t* interfaceCount) {
-  *interfaceCount += 1; // uses 1
+int BootKeyboard_::getInterface(uint8_t *interfaceCount) {
+  *interfaceCount += 1;  // uses 1
   HIDDescriptor hidInterface = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT_INTERFACE, HID_PROTOCOL_KEYBOARD),
     D_HIDREPORT(sizeof(boot_keyboard_hid_descriptor_)),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, BOOT_KEYBOARD_EP_SIZE, 0x01)
-  };
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, BOOT_KEYBOARD_EP_SIZE, 0x01)};
   return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
 }
 
-int BootKeyboard_::getDescriptor(USBSetup& setup) {
+int BootKeyboard_::getDescriptor(USBSetup &setup) {
   // Check if this is a HID Class Descriptor request
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
@@ -128,13 +159,12 @@ void BootKeyboard_::end() {
 }
 
 
-
-bool BootKeyboard_::setup(USBSetup& setup) {
+bool BootKeyboard_::setup(USBSetup &setup) {
   if (pluggedInterface != setup.wIndex) {
     return false;
   }
 
-  uint8_t request = setup.bRequest;
+  uint8_t request     = setup.bRequest;
   uint8_t requestType = setup.bmRequestType;
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
@@ -178,7 +208,7 @@ bool BootKeyboard_::setup(USBSetup& setup) {
     if (request == HID_SET_REPORT) {
       // Check if data has the correct length afterwards
       int length = setup.wLength;
-      
+
       if (setup.wValueH == HID_REPORT_TYPE_OUTPUT) {
         if (length == sizeof(leds)) {
           USB_RecvControl(&leds, length);
@@ -239,10 +269,10 @@ size_t BootKeyboard_::press(uint8_t k) {
     // Add k to the key report only if it's not already present
     // and if there is an empty slot.
     for (uint8_t i = 0; i < sizeof(report_.keycodes); i++) {
-      if (report_.keycodes[i] != k) { // is k already in list?
-        if (0 == report_.keycodes[i]) { // have we found an empty slot?
+      if (report_.keycodes[i] != k) {    // is k already in list?
+        if (0 == report_.keycodes[i]) {  // have we found an empty slot?
           report_.keycodes[i] = k;
-          done = 1;
+          done                = 1;
           break;
         }
       } else {
@@ -288,7 +318,7 @@ size_t BootKeyboard_::release(uint8_t k) {
 
     while (current < sizeof(report_.keycodes)) {
       if (report_.keycodes[current]) {
-        uint8_t tmp = report_.keycodes[nextpos];
+        uint8_t tmp               = report_.keycodes[nextpos];
         report_.keycodes[nextpos] = report_.keycodes[current];
         report_.keycodes[current] = tmp;
         ++nextpos;
@@ -329,7 +359,6 @@ bool BootKeyboard_::wasKeyPressed(uint8_t k) {
   }
   return false;
 }
-
 
 
 /* Returns true if the modifer key passed in will be sent during this key report
@@ -379,7 +408,8 @@ void BootKeyboard_::onUSBReset() {
 }
 
 __attribute__((weak))
-BootKeyboard_& BootKeyboard() {
+BootKeyboard_ &
+BootKeyboard() {
   static BootKeyboard_ obj;
   return obj;
 };

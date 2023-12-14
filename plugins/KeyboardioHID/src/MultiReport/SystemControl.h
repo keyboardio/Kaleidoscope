@@ -45,13 +45,12 @@ class SystemControl_ {
   void press(uint8_t s);
   void release();
   void releaseAll();
-  void sendReport(void* data, int length);
+  void sendReport(void *data, int length);
 
   SystemControl_();
 
  protected:
 };
-
 
 
 extern SystemControl_ SystemControl;

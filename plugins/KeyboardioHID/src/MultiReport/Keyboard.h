@@ -33,14 +33,14 @@ THE SOFTWARE.
 #include "HIDTables.h"
 #include "HIDAliases.h"
 
-#define KEY_BITS (4 + HID_LAST_KEY - HID_KEYBOARD_A_AND_A + 1)
+#define KEY_BITS  (4 + HID_LAST_KEY - HID_KEYBOARD_A_AND_A + 1)
 #define KEY_BYTES ((KEY_BITS + 7) / 8)
 
 typedef union {
   // Modifiers + keymap
   struct {
     uint8_t modifiers;
-    uint8_t keys[KEY_BYTES ];
+    uint8_t keys[KEY_BYTES];
   };
   uint8_t allkeys[1 + KEY_BYTES];
 } HID_KeyboardReport_Data_t;
@@ -54,7 +54,7 @@ class Keyboard_ {
 
   size_t press(uint8_t k);
   size_t release(uint8_t k);
-  void  releaseAll();
+  void releaseAll();
   int sendReport();
 
   bool isKeyPressed(uint8_t k);

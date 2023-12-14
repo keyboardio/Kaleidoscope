@@ -53,9 +53,9 @@ class Mouse_ {
   // but also calls `sendReport()` at least twice.
   void click(uint8_t b = MOUSE_LEFT);
   void move(int8_t x, int8_t y, int8_t v_wheel = 0, int8_t h_wheel = 0);
-  void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
-  void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
-  bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
+  void press(uint8_t b = MOUSE_LEFT);      // press LEFT by default
+  void release(uint8_t b = MOUSE_LEFT);    // release LEFT by default
+  bool isPressed(uint8_t b = MOUSE_LEFT);  // check LEFT by default
 
   /** getReport returns the current report.
    *
