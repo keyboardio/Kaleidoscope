@@ -54,7 +54,7 @@ if [ -z "$DOCKER_LIVE_KALEIDOSCOPE_DIR" ]; then
 	_KALEIDOSCOPE_MOUNT="--mount type=tmpfs,destination=/kaleidoscope:exec"
 else
 	echo "Kaleidoscope is mounted read/write inside docker"
-	_KALEIDOSCOPE_MOUNT="-v $(pwd):/kaleidoscope:"
+	_KALEIDOSCOPE_MOUNT="-v $(pwd):/kaleidoscope"
 fi
 
 
