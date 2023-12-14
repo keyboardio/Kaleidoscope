@@ -1,0 +1,3 @@
+To expand the macros in a c++ source file on OSX:
+
+gcc -D __AVR_ATmega32U4__ -DF_CPU=16000000L -O -I/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/ -I /Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/ -I/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/leonardo -I/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/HID/ -I. -E $FILE 

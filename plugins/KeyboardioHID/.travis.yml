@@ -1,0 +1,18 @@
+language: c
+before_install:
+- pushd ..
+- wget http://downloads.arduino.cc/arduino-1.6.7-linux64.tar.xz
+- tar xf arduino-1.6.7-linux64.tar.xz
+- popd
+script:
+- git clone https://github.com/keyboardio/Arduino-HID ../HID
+- make smoke ARDUINO_PATH=../arduino-1.6.7 ARDUINO_LOCAL_LIB_PATH=..
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+  slack:
+    secure: geVAHVhYQ5bY7ja5vx1Tgxc5y64WLuXVEWKmw4LqiThFYCjtpdWkHGiZJfhUwkVI11u5w8w1FUmrB7ZP4EUGoXhCK/z1mvVMVJ9+fS+WoaqcTHFJi0hGbvXaFPD7QA+ef7TLrFcU643kf6KHN/P+dVVndLyhctXZqOZHHwXmKZNMt8qM5Gh5h41HOi0YjT9yFafSU0qf5jphF5qvjlxKsVJF+WxtMSU4xMYxzq7rf80bPi2pu4ijgqR5+Haaa71DJ1V2TA4wZ+BFTBo2YUJIGZ8qDlqmb7RdF/u72G/8HbT/Hzj55blrpBXU/BPkokGOPJlIGHPV76ESpJI0ZUILRifmkZY6ylMjl/hutDYPNjhMq8Z/UKSLN6pJQAq0PjqAoHCtPsXTbRMT0lhVt2itkCPwAXVgszTrE6INsNylY/soaDu66Sjmz2zQH8sC6hbL8SrZ0xGs1Q+e3q5WMETPIAS9f4n2YCxkIz4ORoL9IrOXUcebVNriiWKzOBt6bleWPJlGc6yVYkkUhvURH+jEp6v2Y5SqsaJVTD3I5Gq/H/0PJBtPdzu470yQ3/FD4g6M0AmWx8DCuvl1O295QOZbUtujpIowTm7PynFrAgW3ptSidjzWjzZaHc0iQJBiNi86dg3GomoEEOPzx8hnX7fhFgsR+Ixqfzx0srrQYqleQGY=
+cache:
+  ccache: true
