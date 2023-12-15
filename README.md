@@ -16,7 +16,7 @@ If you prefer to work from the command line or intend to work on Kaleidscope its
 
 1. Open a commandline shell and navigate to where you want to check out Kaleidoscope.
 
-For the purposes of this tutorial, we'll assume your checkout is in a directory called `kaleidoscope` inside a directory called `git` in your home directory.
+For the purposes of this tutorial, we'll assume your checkout is in a directory called `Kaleidoscope` inside a directory called `git` in your home directory.
 
 ```sh
 $ mkdir ${HOME}/git
