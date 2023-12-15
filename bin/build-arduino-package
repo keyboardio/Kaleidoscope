@@ -131,11 +131,11 @@ if ($only_latest_platform) {
 
 foreach my $arch (@ARCHES) {
 
-    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
 
     # Get the specified Kaleidoscope build and all its plugins as libraries
     # into the checkout
     checkout_kaleidoscope($kaleidoscope_tag, "$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
+    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
     remove_unneeded_files($arch);
     lift_plugins_to_arduino_libs();
     set_plugin_versions( $working_dir, $checkout_dir, $arch, $version );
