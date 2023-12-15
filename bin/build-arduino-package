@@ -87,6 +87,7 @@ my $builds_dir          = $output_dir . '/builds';
 
 my $only_latest_platform = 0;
 
+my $kaleidoscope_repo = "https://github.com/keyboardio/Kaleidoscope";
 my $bundle_repo = 'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
 my $gd32_core_repo = 'https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio';
 my $package_repo       = 'https://github.com/keyboardio/boardsmanager';
@@ -130,13 +131,12 @@ if ($only_latest_platform) {
 
 foreach my $arch (@ARCHES) {
 
-    remove_unneeded_files($arch);
+    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
 
     # Get the specified Kaleidoscope build and all its plugins as libraries
     # into the checkout
-    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
-    checkout_kaleidoscope($kaleidoscope_tag);
-
+    checkout_kaleidoscope($kaleidoscope_tag, "$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
+    remove_unneeded_files($arch);
     lift_plugins_to_arduino_libs();
     set_plugin_versions( $working_dir, $checkout_dir, $arch, $version );
 
@@ -181,7 +181,8 @@ sub clone_repos {
 
 sub checkout_kaleidoscope {
     my $tag = shift;
-    `git checkout --quiet $tag`;
+    my $checkout_dir = shift;
+    `git clone --depth=1 --quiet --recurse-submodules --branch $tag $kaleidoscope_repo $checkout_dir`;
 }
 
 sub lift_plugins_to_arduino_libs {
