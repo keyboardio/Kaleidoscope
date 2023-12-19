@@ -1,0 +1,72 @@
+VERSION 1
+
+KEYSWITCH A  0 0
+KEYSWITCH B  0 1
+KEYSWITCH C  0 2
+KEYSWITCH D  0 3
+KEYSWITCH CYCLE 0 4
+
+# ==============================================================================
+NAME Cycle simple_replace
+RUN 5 ms
+PRESS A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # Report should contain A
+RELEASE A
+RUN 1 cycle
+PRESS CYCLE
+EXPECT keyboard-report empty # Report should be empty
+RUN 1 cycle
+RELEASE CYCLE
+RUN 1 cycle
+EXPECT keyboard-report Key_Backspace # Report should contain Backspace
+EXPECT keyboard-report empty # Report should be empty after Backspace
+EXPECT keyboard-report Key_1 # Report should contain 1
+EXPECT keyboard-report empty # Report should be empty after 1
+
+NAME Cycle cycleThrough_with_loop
+RUN 5 ms
+PRESS B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Report should contain B
+RELEASE B
+RUN 1 cycle
+PRESS CYCLE
+EXPECT keyboard-report empty # Report should be empty
+RUN 1 cycle
+RELEASE CYCLE
+RUN 1 cycle
+EXPECT keyboard-report Key_Backspace # Report should contain Backspace for first key
+EXPECT keyboard-report empty # Report should be empty after Backspace for first key
+EXPECT keyboard-report Key_1 # Report should contain 1
+EXPECT keyboard-report empty # Report should be empty after 1
+RUN 1 cycle
+PRESS CYCLE
+RUN 1 cycle
+RELEASE CYCLE
+RUN 1 cycle
+EXPECT keyboard-report Key_Backspace # Report should contain Backspace for second key
+EXPECT keyboard-report empty # Report should be empty after Backspace for second key
+EXPECT keyboard-report Key_2 # Report should contain 2
+EXPECT keyboard-report empty # Report should be empty after 2
+RUN 1 cycle
+PRESS CYCLE
+RUN 1 cycle
+RELEASE CYCLE
+RUN 1 cycle
+EXPECT keyboard-report Key_Backspace # Report should contain Backspace for zeroth key
+EXPECT keyboard-report empty # Report should be empty after Backspace for zeroth key
+EXPECT keyboard-report Key_B # Report should contain B again
+EXPECT keyboard-report empty # Report should be empty after B again
+
+NAME Cycle does_not_activate
+RUN 5 ms
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_C # Report should contain C
+RELEASE C
+RUN 1 cycle
+PRESS CYCLE
+EXPECT keyboard-report empty # Report should be empty
+RUN 1 cycle
+RELEASE CYCLE
