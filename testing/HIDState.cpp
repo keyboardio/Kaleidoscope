@@ -76,7 +76,7 @@ void HIDStateBuilder::ProcessHidReport(
   uint8_t id, const void *data, int len, int result) {
   switch (id) {
   case HID_REPORTID_KEYBOARD: {
-    LOG(ERROR) << "Dropped BootKeyboardReport: unimplemented";
+    ProcessKeyboardReport(KeyboardReport{data});
     break;
   }
   case HID_REPORTID_GAMEPAD: {
@@ -100,7 +100,7 @@ void HIDStateBuilder::ProcessHidReport(
     break;
   }
   case HID_REPORTID_NKRO_KEYBOARD: {
-    ProcessKeyboardReport(KeyboardReport{data});
+    LOG(ERROR) << "Dropped NKROKeyboardReport: unimplemented";
     break;
   }
   default:
