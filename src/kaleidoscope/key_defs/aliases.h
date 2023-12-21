@@ -65,3 +65,12 @@
 
 #define MEH(k)    LCTRL(LSHIFT(LALT((k))))
 #define HYPER(k)  LGUI(MEH((k)))
+
+// Apple's "globe" key (Consumer Control version).  This key will bring up the
+// emoji tool on MacOS, just like tapping on the `fn` key on an Apple keyboard.
+// Unfortunately, it does not act as the `fn` "modifier" when held, however;
+// that key has no equivalent in the USB HID tables, so there's no way for a
+// third-party keyboard to emulate it.  This alias is included here because it
+// doesn't have any obvious relationship to the "next keyboard layout select"
+// canonical name in the HID tables.
+#define Key_Apple_Globe Consumer_AC_NextKeyboardLayoutSelect
