@@ -54,7 +54,7 @@ EventHandlerResult ColormapOverlay::onSetup() {
   return EventHandlerResult::OK;
 }
 
-void ColormapOverlay::setKeyboardLEDColors() {
+void ColormapOverlay::setLEDOverlayColors() {
   if (!Runtime.has_leds)
     return;
 
@@ -68,7 +68,7 @@ void ColormapOverlay::setKeyboardLEDColors() {
 }
 
 EventHandlerResult ColormapOverlay::beforeSyncingLeds() {
-  setKeyboardLEDColors();
+  setLEDOverlayColors();
 
   return EventHandlerResult::OK;
 }

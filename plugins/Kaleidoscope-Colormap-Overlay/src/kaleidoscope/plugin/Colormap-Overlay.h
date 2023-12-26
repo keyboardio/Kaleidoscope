@@ -66,7 +66,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   cRGB selectedColor;
 
   bool hasOverlay(KeyAddr k);
-  void setKeyboardLEDColors();
+  void setLEDOverlayColors();
 };
 
 }  // namespace plugin
