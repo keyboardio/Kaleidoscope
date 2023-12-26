@@ -57,7 +57,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   static constexpr int8_t layer_wildcard{-1};
 
   EventHandlerResult onSetup();
-  EventHandlerResult afterEachCycle();
+  EventHandlerResult beforeSyncingLeds();
 
  private:
   static uint16_t map_base_;

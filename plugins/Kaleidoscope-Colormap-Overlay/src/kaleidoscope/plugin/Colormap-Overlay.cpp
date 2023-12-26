@@ -67,7 +67,7 @@ void ColormapOverlay::setKeyboardLEDColors() {
   }
 }
 
-EventHandlerResult ColormapOverlay::afterEachCycle() {
+EventHandlerResult ColormapOverlay::beforeSyncingLeds() {
   setKeyboardLEDColors();
 
   return EventHandlerResult::OK;
