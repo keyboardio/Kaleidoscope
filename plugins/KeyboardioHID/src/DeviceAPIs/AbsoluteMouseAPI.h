@@ -30,39 +30,49 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "MouseButtons.h"
-#include "DescriptorPrimitives.h"
+#include "tusb_hid.h"
 
-
-#define DESCRIPTOR_ABS_MOUSE_BUTTONS                          \
-  /* 8 Buttons */                                             \
-  D_USAGE_PAGE, D_PAGE_BUTTON, /* USAGE_PAGE (Button) */      \
-    D_USAGE_MINIMUM, 0x01,     /* USAGE_MINIMUM (Button 1) */ \
-    D_USAGE_MAXIMUM, 0x08,     /* USAGE_MAXIMUM (Button 8) */ \
-    D_LOGICAL_MINIMUM, 0x00,   /* LOGICAL_MINIMUM (0) */      \
-    D_LOGICAL_MAXIMUM, 0x01,   /* LOGICAL_MAXIMUM (1) */      \
-    D_REPORT_COUNT, 0x08,      /* REPORT_COUNT (8) */         \
-    D_REPORT_SIZE, 0x01,       /* REPORT_SIZE (1) */          \
-    D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-#define DESCRIPTOR_ABS_MOUSE_XY                                                     \
-  /* X, Y */                                                                        \
-  D_USAGE_PAGE, D_PAGE_GENERIC_DESKTOP,          /* USAGE_PAGE (Generic Desktop) */ \
-    D_USAGE, 0x30,                               /* USAGE (X) */                    \
-    D_USAGE, 0x31,                               /* USAGE (Y) */                    \
-    D_MULTIBYTE(D_LOGICAL_MINIMUM), 0x00, 0x00,  /* Logical Minimum (0) */          \
-    D_MULTIBYTE(D_LOGICAL_MAXIMUM), 0xFF, 0x7f,  /* Logical Maximum (32767) */      \
-    D_REPORT_SIZE, 0x10,                         /* Report Size (16), */            \
-    D_REPORT_COUNT, 0x02,                        /* Report Count (2), */            \
-    D_INPUT, (D_DATA | D_VARIABLE | D_ABSOLUTE), /* Input (Data, Variable, Absolute) */
-
-#define DESCRIPTOR_ABS_MOUSE_WHEEL                        \
-  /* Wheel */                                             \
-  D_USAGE, 0x38,             /* USAGE (Wheel) */          \
-    D_LOGICAL_MINIMUM, 0x81, /* LOGICAL_MINIMUM (-127) */ \
-    D_LOGICAL_MAXIMUM, 0x7f, /* LOGICAL_MAXIMUM (127) */  \
-    D_REPORT_SIZE, 0x08,     /* REPORT_SIZE (8) */        \
-    D_REPORT_COUNT, 0x01,    /* REPORT_COUNT (1) */       \
-    D_INPUT, (D_DATA | D_VARIABLE | D_RELATIVE),
+#define DESCRIPTOR_ABSOLUTE_MOUSE(...)                 \
+  HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \
+    HID_USAGE(HID_USAGE_DESKTOP_MOUSE),                \
+    HID_COLLECTION(HID_COLLECTION_APPLICATION),        \
+                                                       \
+    /* Report ID, if any */                            \
+    __VA_ARGS__                                        \
+                                                       \
+    HID_USAGE(HID_USAGE_DESKTOP_POINTER),              \
+    HID_COLLECTION(HID_COLLECTION_PHYSICAL),           \
+                                                       \
+    /* Buttons */                                      \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_BUTTON),             \
+    HID_USAGE_MIN(1),                                  \
+    HID_USAGE_MAX(8),                                  \
+    HID_LOGICAL_MIN(0),                                \
+    HID_LOGICAL_MAX(1),                                \
+    HID_REPORT_COUNT(8),                               \
+    HID_REPORT_SIZE(1),                                \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
+                                                       \
+    /* X, Y */                                         \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),            \
+    HID_USAGE(HID_USAGE_DESKTOP_X),                    \
+    HID_USAGE(HID_USAGE_DESKTOP_Y),                    \
+    HID_LOGICAL_MIN_N(0, 2),                           \
+    HID_LOGICAL_MAX_N(0x7fff, 2),                      \
+    HID_REPORT_SIZE(16),                               \
+    HID_REPORT_COUNT(2),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
+                                                       \
+    /* Wheel */                                        \
+    HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                \
+    HID_LOGICAL_MIN(-127),                             \
+    HID_LOGICAL_MAX(127),                              \
+    HID_REPORT_SIZE(8),                                \
+    HID_REPORT_COUNT(1),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
+                                                       \
+    HID_COLLECTION_END,                                \
+    HID_COLLECTION_END
 
 #pragma pack(push, 1)
 typedef union {
