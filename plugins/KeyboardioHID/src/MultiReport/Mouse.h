@@ -30,6 +30,52 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "../MouseButtons.h"
+#include "tusb_hid.h"
+
+#define DESCRIPTOR_MOUSE(...)                          \
+  /*  Mouse relative */                                \
+  HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \
+    HID_USAGE(HID_USAGE_DESKTOP_MOUSE),                \
+    HID_COLLECTION(HID_COLLECTION_APPLICATION),        \
+    HID_USAGE(HID_USAGE_DESKTOP_POINTER),              \
+    HID_COLLECTION(HID_COLLECTION_PHYSICAL),           \
+                                                       \
+    /* Report ID, if any */                            \
+    __VA_ARGS__                                        \
+                                                       \
+    /* 8 Buttons */                                    \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_BUTTON),             \
+    HID_USAGE_MIN(1),                                  \
+    HID_USAGE_MAX(8),                                  \
+    HID_LOGICAL_MIN(0),                                \
+    HID_LOGICAL_MAX(1),                                \
+    HID_REPORT_COUNT(8),                               \
+    HID_REPORT_SIZE(1),                                \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
+                                                       \
+    /* X, Y, Wheel */                                  \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),            \
+    HID_USAGE(HID_USAGE_DESKTOP_X),                    \
+    HID_USAGE(HID_USAGE_DESKTOP_Y),                    \
+    HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                \
+    HID_LOGICAL_MIN(-127),                             \
+    HID_LOGICAL_MAX(127),                              \
+    HID_REPORT_SIZE(8),                                \
+    HID_REPORT_COUNT(3),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
+                                                       \
+    /* Horizontal wheel */                             \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),           \
+    HID_USAGE_N(0x0238, 2),                            \
+    HID_LOGICAL_MIN(-127),                             \
+    HID_LOGICAL_MAX(127),                              \
+    HID_REPORT_SIZE(8),                                \
+    HID_REPORT_COUNT(1),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
+                                                       \
+    /* End */                                          \
+    HID_COLLECTION_END,                                \
+    HID_COLLECTION_END
 
 typedef union {
   // Mouse report: 8 buttons, position, wheel
