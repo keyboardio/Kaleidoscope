@@ -24,36 +24,9 @@ THE SOFTWARE.
 */
 
 #include "SystemControl.h"
-#include "DescriptorPrimitives.h"
 
 static const uint8_t system_control_hid_descriptor_[] PROGMEM = {
-  //TODO(anyone) limit to system keys only?
-  /*  System Control (Power Down, Sleep, Wakeup, ...) */
-  D_USAGE_PAGE,
-  D_PAGE_GENERIC_DESKTOP, /* USAGE_PAGE (Generic Desktop) */
-  D_USAGE,
-  0x80, /* USAGE (System Control) */
-  D_COLLECTION,
-  D_APPLICATION, /* COLLECTION (Application) */
-  D_REPORT_ID,
-  HID_REPORTID_SYSTEMCONTROL, /* REPORT_ID */
-  /* 1 system key */
-  D_LOGICAL_MINIMUM,
-  0x00, /* LOGICAL_MINIMUM (0) */
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM),
-  0xff,
-  0x00, /* LOGICAL_MAXIMUM (255) */
-  D_USAGE_MINIMUM,
-  0x00, /* USAGE_MINIMUM (Undefined) */
-  D_USAGE_MAXIMUM,
-  0xff, /* USAGE_MAXIMUM (System Menu Down) */
-  D_REPORT_COUNT,
-  0x01, /* REPORT_COUNT (1) */
-  D_REPORT_SIZE,
-  0x08, /* REPORT_SIZE (8) */
-  D_INPUT,
-  (D_DATA | D_ARRAY | D_ABSOLUTE), /* INPUT (Data,Ary,Abs) */
-  D_END_COLLECTION                 /* END_COLLECTION */
+  DESCRIPTOR_SYSTEM_CONTROL(HID_REPORT_ID(HID_REPORTID_SYSTEMCONTROL)),
 };
 
 SystemControl_::SystemControl_() {
