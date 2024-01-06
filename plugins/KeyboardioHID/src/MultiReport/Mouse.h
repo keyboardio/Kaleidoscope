@@ -49,8 +49,8 @@ THE SOFTWARE.
     HID_USAGE_MAX(8),                                  \
     HID_LOGICAL_MIN(0),                                \
     HID_LOGICAL_MAX(1),                                \
-    HID_REPORT_COUNT(8),                               \
     HID_REPORT_SIZE(1),                                \
+    HID_REPORT_COUNT(8),                               \
     HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
                                                        \
     /* X, Y, Wheel */                                  \
@@ -67,9 +67,6 @@ THE SOFTWARE.
     /* Horizontal wheel */                             \
     HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),           \
     HID_USAGE_N(0x0238, 2),                            \
-    HID_LOGICAL_MIN(-127),                             \
-    HID_LOGICAL_MAX(127),                              \
-    HID_REPORT_SIZE(8),                                \
     HID_REPORT_COUNT(1),                               \
     HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
                                                        \
