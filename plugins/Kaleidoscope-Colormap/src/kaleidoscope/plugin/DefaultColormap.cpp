@@ -18,21 +18,18 @@
 #include "kaleidoscope/plugin/Colormap.h"  // for Colormap
 #include "kaleidoscope/plugin/DefaultColormap.h"
 
-#include <Arduino.h>                         // for F, PSTR, __FlashStringHelper
-#include <Kaleidoscope-FocusSerial.h>        // for Focus, FocusSerial
-#include <Kaleidoscope-LEDControl.h>         // for LEDControl
-#include <Kaleidoscope-LED-Palette-Theme.h>  // for LEDPaletteTheme
-#include <stdint.h>                          // for uint8_t, uint16_t
+#include <Arduino.h>                   // for PSTR
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <Kaleidoscope-LEDControl.h>   // for LEDControl
+#include <stdint.h>                    // for uint8_t
 
-#include "kaleidoscope/KeyAddr.h"  // for KeyAddr
-#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
+#include "kaleidoscope/Runtime.h"  // for Runtime
+#include "kaleidoscope/plugin/DefaultPalette.h"
 
 namespace kaleidoscope {
 namespace plugin {
 
 namespace defaultcolormap {
-__attribute__((weak)) extern const cRGB palette[]                                                                                                = {};
-__attribute__((weak)) extern bool palette_defined                                                                                                = false;
 __attribute__((weak)) extern const uint8_t colormaps[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = {};
 __attribute__((weak)) extern uint8_t colormap_layers                                                                                             = 0;
 }  // namespace defaultcolormap
@@ -46,17 +43,7 @@ void DefaultColormap::setup() {
 }
 
 void DefaultColormap::install() {
-  if (!defaultcolormap::palette_defined) return;
-
-  for (uint8_t i = 0; i < 16; i++) {
-    cRGB color;
-
-    color.r = pgm_read_byte(&(defaultcolormap::palette[i].r));
-    color.g = pgm_read_byte(&(defaultcolormap::palette[i].g));
-    color.b = pgm_read_byte(&(defaultcolormap::palette[i].b));
-
-    ::LEDPaletteTheme.updatePaletteColor(i, color);
-  }
+  DefaultPalette::setup();
 
   if (defaultcolormap::colormap_layers == 0) return;
 

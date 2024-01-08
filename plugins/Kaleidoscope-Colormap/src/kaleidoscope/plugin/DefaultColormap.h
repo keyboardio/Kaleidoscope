@@ -21,7 +21,6 @@
 #include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope_internal/device.h"       // for device
-#include "kaleidoscope/device/device.h"         // for cRGB
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
 
@@ -59,25 +58,9 @@ namespace plugin {
   }
 #endif
 
-#define PALETTE(p0, p1, p2, p3, p4, p5, p6, p7,           \
-                p8, p9, pa, pb, pc, pd, pe, pf)           \
-  namespace kaleidoscope {                                \
-  namespace plugin {                                      \
-  namespace defaultcolormap {                             \
-    const cRGB palette[] PROGMEM = {                      \
-      p0, p1, p2, p3, p4, p5, p6, p7,                     \
-      p8, p9, pa, pb, pc, pd, pe, pf                      \
-    };                                                    \
-    bool palette_defined = true;                          \
-  } /* defaultcolormap */                                 \
-  } /* plugin */                                          \
-  } /* kaleidoscope */
-
 // clang-format on
 
 namespace defaultcolormap {
-extern bool palette_defined;
-extern const cRGB palette[];
 extern const uint8_t colormaps[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns];
 extern uint8_t colormap_layers;
 }  // namespace defaultcolormap
