@@ -1,11 +1,11 @@
 # Colormap-Overlay
 
-The `ColormapOverlay` extension provides an easier way to apply color to
-specific combinations of keys and layers, regardless of the active LED mode.
-Colors are picked from a 16-color palette, provided by the
-[LED-Palette-Theme][plugin:l-p-t] plugin. The overlays are stored in `EEPROM`,
-and can be easily changed via the [FocusSerial][plugin:focusserial] plugin,
-which also provides palette editing capabilities.
+This plugin provides an easier way to apply color to specific combinations of
+keys and layers, regardless of the active LED mode. Colors are picked from a
+16-color palette, provided by the [LED-Palette-Theme][plugin:l-p-t] plugin. The
+overlays are stored in `EEPROM`, and can be easily changed via the
+[FocusSerial][plugin:focusserial] plugin, which also provides palette editing
+capabilities.
 
  [plugin:focusserial]: Kaleidoscope-FocusSerial.md
  [plugin:l-p-t]: Kaleidoscope-LED-Palette-Theme.md
@@ -37,7 +37,6 @@ key coordinates refer to the relevant header file:
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
-#include <Kaleidoscope-Colormap.h>  // DefaultColorMap
 #include <Kaleidoscope-Colormap-Overlay.h>
 #include <Kaleidoscope-FocusSerial.h>
 
@@ -48,7 +47,7 @@ PALETTE(
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           LEDControl,
                           ColormapOverlay,
-                          DefaultColormap,
+                          DefaultPalette,
                           Focus);
 
 void setup() {
@@ -62,7 +61,7 @@ void setup() {
   )
 
   ColormapOverlay.setup();
-  DefaultColormap.setup();
+  DefaultPalette.setup();
 }
 ```
 

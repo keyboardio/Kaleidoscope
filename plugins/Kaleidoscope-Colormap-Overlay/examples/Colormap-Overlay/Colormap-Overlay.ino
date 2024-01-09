@@ -18,7 +18,6 @@
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
-#include <Kaleidoscope-Colormap.h>  // DefaultColorMap
 #include <Kaleidoscope-Colormap-Overlay.h>
 
 // clang-format off
@@ -64,10 +63,10 @@ enum {
 };
 
 PALETTE(
-  [PALETTE_RED]    = CRGB(0xff, 0x00, 0x00),
-  [PALETTE_GREEN]  = CRGB(0x00, 0xff, 0x00),
-  [PALETTE_YELLOW] = CRGB(0x00, 0x00, 0xff),
-  [PALETTE_BLACK]  = CRGB(0x00, 0x00, 0x00),
+  [PALETTE_RED]   = CRGB(0xff, 0x00, 0x00),
+  [PALETTE_GREEN] = CRGB(0x00, 0xff, 0x00),
+  [PALETTE_BLUE]  = CRGB(0x00, 0x00, 0xff),
+  [PALETTE_BLACK] = CRGB(0x00, 0x00, 0x00),
   // unused
   [PALETTE_UNUSED_1]  = CRGB(0x00, 0x00, 0x00),
   [PALETTE_UNUSED_2]  = CRGB(0x00, 0x00, 0x00),
@@ -85,7 +84,7 @@ PALETTE(
 KALEIDOSCOPE_INIT_PLUGINS(EEPROMSettings,
                           LEDControl,
                           ColormapOverlay,
-                          DefaultColormap);
+                          DefaultPalette);
 
 void setup() {
   Kaleidoscope.setup();
@@ -95,14 +94,14 @@ void setup() {
     kaleidoscope::plugin::Overlay(0, KeyAddr(0, 9), PALETTE_GREEN),
     // Make numlock red
     kaleidoscope::plugin::Overlay(0, KeyAddr(0, 15), PALETTE_RED),
-    // Make escape yellow
-    kaleidoscope::plugin::Overlay(0, KeyAddr(2, 6), PALETTE_YELLOW),
+    // Make escape blue
+    kaleidoscope::plugin::Overlay(0, KeyAddr(2, 6), PALETTE_BLUE),
     // Disable leds on the palm keys
     kaleidoscope::plugin::Overlay(0, KeyAddr(3, 6), PALETTE_BLACK),
     kaleidoscope::plugin::Overlay(0, KeyAddr(3, 9), PALETTE_BLACK))
 
   ColormapOverlay.setup();
-  DefaultColormap.setup();
+  DefaultPalette.setup();
 }
 
 void loop() {
