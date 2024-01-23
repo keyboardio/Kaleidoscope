@@ -18,12 +18,12 @@
 
 #include <stdint.h>  // for uint8_t
 
-#include "kaleidoscope/KeyAddr.h"                         // for MatrixAddr, MatrixAddr<>::Range
-#include "kaleidoscope/Runtime.h"                         // for Runtime, Runtime_
-#include "kaleidoscope/device/device.h"                   // for Device, cRGB, CRGB, Base<>::HID
-#include "kaleidoscope/driver/hid/keyboardio/Keyboard.h"  // for Keyboard
-#include "kaleidoscope/plugin/LEDControl.h"               // for LEDControl
-#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"      // for hsvToRgb
+#include "kaleidoscope/KeyAddr.h"                     // for MatrixAddr, MatrixAddr<>::Range
+#include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
+#include "kaleidoscope/device/device.h"               // for Device, cRGB, CRGB, Base<>::HID
+#include "kaleidoscope/driver/hid/base/Keyboard.h"    // for Keyboard
+#include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
+#include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
 
 namespace kaleidoscope {
 namespace plugin {
