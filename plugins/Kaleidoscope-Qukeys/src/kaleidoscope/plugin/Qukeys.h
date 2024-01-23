@@ -46,9 +46,8 @@ namespace kaleidoscope {
 namespace plugin {
 
 constexpr Key ModTapKey(Key mod_key, Key tap_key) {
-  uint8_t mod = mod_key.getKeyCode() - HID_KEYBOARD_FIRST_MODIFIER;
   return Key(kaleidoscope::ranges::DUM_FIRST +
-             (mod << 8) + tap_key.getKeyCode());
+             ((mod_key.getKeyCode() - HID_KEYBOARD_FIRST_MODIFIER) << 8) + tap_key.getKeyCode());
 }
 
 constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {

@@ -50,7 +50,7 @@ class KeyAddrBitfield {
   static constexpr uint8_t bitIndex(KeyAddr k) {
     return k.toInt() % block_size;
   }
-  static constexpr KeyAddr index(uint8_t block_index, uint8_t bit_index) {
+  static KeyAddr index(uint8_t block_index, uint8_t bit_index) {
     uint8_t offset = (block_index * block_size) + bit_index;
     return KeyAddr(offset);
   }
