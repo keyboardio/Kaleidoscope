@@ -1073,6 +1073,12 @@ The following headers and names have changed:
 
 # Removed APIs
 
+### Removed on 2023-11-13
+
+#### FocusLEDCommand
+
+The brightness functionality of this API lives on in the LEDBrightnessConfig plugin.
+
 ### Removed on 2022-03-03
 
 #### Pre-`KeyEvent` event handler hooks

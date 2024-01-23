@@ -27,16 +27,6 @@
 #include "kaleidoscope/plugin.h"                   // for Plugin
 #include "kaleidoscope/plugin/LEDMode.h"           // for LEDMode
 #include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
-// -----------------------------------------------------------------------------
-// Deprecation warning messages
-#include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
-
-#define _DEPRECATED_MESSAGE_FOCUSLEDCOMMAND                                  \
-  "The `FocusLEDCommand` plugin is deprecated. For its most useful\n"        \
-  "functionality - led.brightness -, please see the `LEDBrightnessConfig`\n" \
-  "plugin.\n"                                                                \
-  "This plugin will be removed after 2023-01-01."
-// -----------------------------------------------------------------------------
 
 constexpr uint8_t LED_TOGGLE = 0b00000001;  // Synthetic, internal
 
@@ -138,17 +128,9 @@ class LEDControl : public kaleidoscope::Plugin {
   static bool enabled_;
 };
 
-DEPRECATED(FOCUSLEDCOMMAND)
-class FocusLEDCommand : public Plugin {
- public:
-  FocusLEDCommand() {}
-
-  EventHandlerResult onFocusEvent(const char *input);
-};
 
 }  // namespace plugin
 
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::LEDControl LEDControl;
-extern kaleidoscope::plugin::FocusLEDCommand FocusLEDCommand;
