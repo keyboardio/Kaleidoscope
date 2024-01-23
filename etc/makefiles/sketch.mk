@@ -161,12 +161,20 @@ ifneq ($(KALEIDOSCOPE_LOCAL_LIB_DIR),)
 _arduino_local_libraries_prop =  --libraries "${KALEIDOSCOPE_LOCAL_LIB_DIR}"
 endif
 
+# Check if the .kaleidoscope_board file exists
+ifneq ("$(wildcard ${SKETCH_DIR}/.kaleidoscope_board)","")
+    # Read the content of the file
+    KALEIDOSCOPE_BOARD_CONTENT := $(shell cat ${SKETCH_DIR}/.kaleidoscope_board)
+
+    # Set the kaleidoscope_board_config variable
+    kaleidoscope_board_config := --build-property compiler.cpp.extra_flags=-DKALEIDOSCOPE_HARDWARE_H=\"$(KALEIDOSCOPE_BOARD_CONTENT)\"
+endif
+
+
 compile: kaleidoscope-hardware-configured
-
-
 	-$(QUIET) install -d "${OUTPUT_PATH}"
 	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
-	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} \
+	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} ${kaleidoscope_board_config}\
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
