@@ -55,10 +55,10 @@
 typedef struct {
   uint8_t len;    // 9
   uint8_t dtype;  // 0x21
-  uint8_t addr;
   uint8_t versionL;  // 0x101
   uint8_t versionH;  // 0x101
   uint8_t country;
+  uint8_t numDescs;
   uint8_t desctype;  // 0x22 report
   uint8_t descLenL;
   uint8_t descLenH;
