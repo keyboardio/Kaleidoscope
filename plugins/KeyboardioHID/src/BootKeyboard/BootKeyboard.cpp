@@ -37,50 +37,11 @@ static const uint8_t hybrid_keyboard_hid_descriptor_[] PROGMEM = {
 };
 
 BootKeyboard_::BootKeyboard_(uint8_t bootkb_only_)
-  : PluggableUSBModule(1, 1, epType), protocol(HID_REPORT_PROTOCOL), idle(0), leds(0), bootkb_only(bootkb_only) {
-#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
-  epType[0] = EP_TYPE_INTERRUPT_IN(USB_EP_SIZE);
-#else
-  epType[0] = EP_TYPE_INTERRUPT_IN;
-#endif
-  PluggableUSB().plug(this);
-}
+  : bootkb_only(bootkb_only_) {
 
-int BootKeyboard_::getInterface(uint8_t *interfaceCount) {
-  *interfaceCount += 1;  // uses 1
-  size_t desclen;
-  if (bootkb_only) {
-    desclen = sizeof(boot_keyboard_hid_descriptor_);
-  } else {
-    desclen = sizeof(hybrid_keyboard_hid_descriptor_);
-  }
-  HIDDescriptor hidInterface = {
-    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT, HID_PROTOCOL_KEYBOARD),
-    D_HIDREPORT(desclen),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01),
-  };
-  return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
-}
-
-int BootKeyboard_::getDescriptor(USBSetup &setup) {
-  // Check if this is a HID Class Descriptor request
-  if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
-    return 0;
-  }
-  if (setup.wValueH != HID_REPORT_DESCRIPTOR_TYPE) {
-    return 0;
-  }
-
-  // In a HID Class Descriptor wIndex cointains the interface number
-  if (setup.wIndex != pluggedInterface) {
-    return 0;
-  }
-
-  if (bootkb_only) {
-    return USB_SendControl(TRANSFER_PGM, boot_keyboard_hid_descriptor_, sizeof(boot_keyboard_hid_descriptor_));
-  } else {
-    return USB_SendControl(TRANSFER_PGM, hybrid_keyboard_hid_descriptor_, sizeof(hybrid_keyboard_hid_descriptor_));
-  }
+  itfProtocol = HID_PROTOCOL_KEYBOARD;
+  setBootOnly(bootkb_only);
+  plug();
 }
 
 
@@ -94,74 +55,8 @@ void BootKeyboard_::end() {
 }
 
 
-bool BootKeyboard_::setup(USBSetup &setup) {
-  if (pluggedInterface != setup.wIndex) {
-    return false;
-  }
-
-  uint8_t request     = setup.bRequest;
-  uint8_t requestType = setup.bmRequestType;
-
-  if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
-    if (request == HID_GET_REPORT) {
-      // TODO(anyone): HID_GetReport();
-      return true;
-    }
-    if (request == HID_GET_PROTOCOL) {
-      // TODO(anyone) improve
-#if defined(__AVR__)
-      UEDATX = protocol;
-#elif defined(ARDUINO_ARCH_SAM)
-      USBDevice.armSend(0, &protocol, 1);
-#else
-      USB_SendControl(TRANSFER_RELEASE, &protocol, sizeof(protocol));
-#endif
-      return true;
-    }
-    if (request == HID_GET_IDLE) {
-      // TODO(anyone) improve
-#if defined(__AVR__)
-      UEDATX = idle;
-#elif defined(ARDUINO_ARCH_SAM)
-      USBDevice.armSend(0, &idle, 1);
-#else
-      USB_SendControl(TRANSFER_RELEASE, &idle, sizeof(idle));
-#endif
-      return true;
-    }
-  }
-
-  if (requestType == REQUEST_HOSTTODEVICE_CLASS_INTERFACE) {
-    if (request == HID_SET_PROTOCOL) {
-      protocol = setup.wValueL;
-      return true;
-    }
-    if (request == HID_SET_IDLE) {
-      idle = setup.wValueL;
-      return true;
-    }
-    if (request == HID_SET_REPORT) {
-      // Check if data has the correct length afterwards
-      int length = setup.wLength;
-
-      if (setup.wValueH == HID_REPORT_TYPE_OUTPUT) {
-        if (length == sizeof(leds)) {
-          USB_RecvControl(&leds, length);
-          return true;
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
 uint8_t BootKeyboard_::getLeds() {
-  return leds;
-}
-
-uint8_t BootKeyboard_::getProtocol() {
-  return protocol;
+  return outReport[0];
 }
 
 uint8_t BootKeyboard_::getBootOnly() {
@@ -180,6 +75,13 @@ uint8_t BootKeyboard_::getBootOnly() {
  */
 void BootKeyboard_::setBootOnly(uint8_t bootonly) {
   bootkb_only = bootonly;
+  if (bootkb_only) {
+    reportDesc     = boot_keyboard_hid_descriptor_;
+    descriptorSize = sizeof(boot_keyboard_hid_descriptor_);
+  } else {
+    reportDesc     = hybrid_keyboard_hid_descriptor_;
+    descriptorSize = sizeof(hybrid_keyboard_hid_descriptor_);
+  }
 }
 
 
@@ -224,7 +126,7 @@ int BootKeyboard_::sendReportUnchecked() {
   } else {
     reportlen = sizeof(out_report);
   }
-  int returnCode = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, &out_report, reportlen);
+  int returnCode = SendReport(0, &out_report, reportlen);
   HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, &out_report, reportlen, returnCode);
   return returnCode;
 }

@@ -53,8 +53,8 @@
 
 #pragma pack(push, 1)
 typedef struct {
-  uint8_t len;    // 9
-  uint8_t dtype;  // 0x21
+  uint8_t len;       // 9
+  uint8_t dtype;     // 0x21
   uint8_t versionL;  // 0x101
   uint8_t versionH;  // 0x101
   uint8_t country;
@@ -70,54 +70,6 @@ typedef struct {
   EndpointDescriptor in;
 } HIDDescriptor;
 #pragma pack(pop)
-
-class HIDSubDescriptor {
- public:
-  HIDSubDescriptor *next = NULL;
-  HIDSubDescriptor(const void *d, const uint16_t l)
-    : data(d), length(l) {}
-
-  const void *data;
-  const uint16_t length;
-};
-
-class HID_ : public PluggableUSBModule {
- public:
-  HID_();
-  int begin();
-  int SendReport(uint8_t id, const void *data, int len);
-  void AppendDescriptor(HIDSubDescriptor *node);
-  uint8_t getLEDs() {
-    return setReportData.leds;
-  }
-
- protected:
-  // Implementation of the PluggableUSBModule
-  int getInterface(uint8_t *interfaceCount);
-  int getDescriptor(USBSetup &setup);
-  bool setup(USBSetup &setup);
-  uint8_t getShortName(char *name);
-
-  int SendReport_(uint8_t id, const void *data, int len);
-
- private:
-  EPTYPE_DESCRIPTOR_SIZE epType[1];
-
-  HIDSubDescriptor *rootNode;
-  uint16_t descriptorSize;
-
-  uint8_t protocol;
-  uint8_t idle;
-  struct {
-    uint8_t reportId;
-    uint8_t leds;
-  } setReportData;
-};
-
-// Replacement for global singleton.
-// This function prevents static-initialization-order-fiasco
-// https://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use
-HID_ &HID();
 
 #define D_HIDREPORT(length) \
   { 9, 0x21, 0x11, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }

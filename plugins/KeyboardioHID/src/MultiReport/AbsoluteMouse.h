@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
+#include "MultiHIDD.h"
 #include "../DeviceAPIs/AbsoluteMouseAPI.h"
 
 class AbsoluteMouse_ : public AbsoluteMouseAPI {
