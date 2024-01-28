@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include <Arduino.h>
 #include "HID.h"
+#include "HIDD.h"
 #include "HIDTables.h"
 #include "HIDAliases.h"
 
@@ -172,7 +173,7 @@ typedef union {
 } HID_BootKeyboardReport_Data_t;
 
 
-class BootKeyboard_ : public PluggableUSBModule {
+class BootKeyboard_ : public HIDD {
  public:
   /*
    * Change to `bootkb_only_ = 1` if you need to default to only sending
@@ -195,7 +196,6 @@ class BootKeyboard_ : public PluggableUSBModule {
   bool wasKeyPressed(uint8_t k);
 
   uint8_t getLeds();
-  uint8_t getProtocol();
 
   uint8_t getBootOnly();
   void setBootOnly(uint8_t bootonly);
@@ -204,17 +204,6 @@ class BootKeyboard_ : public PluggableUSBModule {
 
  protected:
   HID_NKRO_KeyboardReport_Data_t report_, last_report_;
-
-  // Implementation of the PUSBListNode
-  int getInterface(uint8_t *interfaceCount);
-  int getDescriptor(USBSetup &setup);
-  bool setup(USBSetup &setup);
-
-  EPTYPE_DESCRIPTOR_SIZE epType[1];
-  uint8_t protocol;
-  uint8_t idle;
-
-  uint8_t leds;
 
   uint8_t bootkb_only;
 

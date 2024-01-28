@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "HIDTables.h"
+#include "MultiHIDD.h"
 #include "tusb_hid.h"
 
 #define DESCRIPTOR_SYSTEM_CONTROL(...)                  \
