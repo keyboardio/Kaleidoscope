@@ -33,7 +33,7 @@ static const uint8_t _hidSingleReportDescriptorAbsoluteMouse[] PROGMEM = {
 };
 
 SingleAbsoluteMouse_::SingleAbsoluteMouse_()
-  : HIDD(HID_REPORT_PROTOCOL, 0, HID_PROTOCOL_NONE, 6, 1, _hidSingleReportDescriptorAbsoluteMouse, sizeof(_hidSingleReportDescriptorAbsoluteMouse)) {
+  : HIDD(_hidSingleReportDescriptorAbsoluteMouse, sizeof(_hidSingleReportDescriptorAbsoluteMouse), sizeof(HID_MouseAbsoluteReport_Data_t)) {
 
   // Invoke BootKeyboard constructor so it will be the first HID interface
   (void)BootKeyboard();
