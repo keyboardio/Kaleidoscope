@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "MultiHIDD.h"
 #include "../MouseButtons.h"
 #include "tusb_hid.h"
 

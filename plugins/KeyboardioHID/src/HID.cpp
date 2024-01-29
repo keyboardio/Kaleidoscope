@@ -20,7 +20,6 @@
 
 #include "HID.h"
 #include "HIDReportObserver.h"
-#include "MultiHIDD.h"
 #include "BootKeyboard/BootKeyboard.h"
 
 #if defined(USBCON)
