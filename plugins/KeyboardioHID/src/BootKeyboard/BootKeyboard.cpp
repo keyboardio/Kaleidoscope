@@ -55,7 +55,7 @@ int BootKeyboard_::getInterface(uint8_t *interfaceCount) {
     desclen = sizeof(hybrid_keyboard_hid_descriptor_);
   }
   HIDDescriptor hidInterface = {
-    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT_INTERFACE, HID_PROTOCOL_KEYBOARD),
+    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT, HID_PROTOCOL_KEYBOARD),
     D_HIDREPORT(desclen),
     D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01),
   };

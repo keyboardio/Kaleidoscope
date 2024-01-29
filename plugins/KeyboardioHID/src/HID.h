@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include "HID-Settings.h"
+#include "tusb_hid.h"
 
 #if defined(USBCON)
 
@@ -39,10 +40,6 @@
 #define HID_REPORT_DESCRIPTOR_TYPE   0x22
 #define HID_PHYSICAL_DESCRIPTOR_TYPE 0x23
 
-// HID subclass HID1.11 Page 8 4.2 Subclass
-#define HID_SUBCLASS_NONE           0
-#define HID_SUBCLASS_BOOT_INTERFACE 1
-
 // HID Keyboard/Mouse bios compatible protocols HID1.11 Page 9 4.3 Protocols
 #define HID_PROTOCOL_NONE     0
 #define HID_PROTOCOL_KEYBOARD 1
@@ -52,11 +49,6 @@
 // "protocol" variable is used for this purpose.
 #define HID_BOOT_PROTOCOL   0
 #define HID_REPORT_PROTOCOL 1
-
-// HID Request Type HID1.11 Page 51 7.2.1 Get_Report Request
-#define HID_REPORT_TYPE_INPUT   1
-#define HID_REPORT_TYPE_OUTPUT  2
-#define HID_REPORT_TYPE_FEATURE 3
 
 #pragma pack(push, 1)
 typedef struct {

@@ -64,12 +64,6 @@ THE SOFTWARE.
 #endif
 
 
-// Nico has submitted these definitions upstream, but they're not merged yet
-// HID Request Type HID1.11 Page 51 7.2.1 Get_Report Request
-#define HID_REPORT_TYPE_INPUT   1
-#define HID_REPORT_TYPE_OUTPUT  2
-#define HID_REPORT_TYPE_FEATURE 3
-
 // Controls whether to pack messages or not. When set, any sends will be delayed
 // until packing is toggled off, and sent then. This is a no-op on AVR, but is
 // required for SAMD. We place a forward-declaration here to be able to avoid
