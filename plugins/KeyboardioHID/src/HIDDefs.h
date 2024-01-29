@@ -1,6 +1,5 @@
 /*
   Copyright (c) 2015, Arduino LLC
-  Copyright (c) 2024 Keyboard.io, Inc
   Original code (pre-library): Copyright (c) 2011, Peter Barrett
 
   Permission to use, copy, modify, and/or distribute this software for
@@ -19,36 +18,27 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <Arduino.h>
-#include "HIDDefs.h"
-#include "HID-Settings.h"
+#include "tusb_hid.h"
 
-#if defined(USBCON)
+// HID 'Driver'
+// ------------
+#define HID_GET_REPORT               0x01
+#define HID_GET_IDLE                 0x02
+#define HID_GET_PROTOCOL             0x03
+#define HID_SET_REPORT               0x09
+#define HID_SET_IDLE                 0x0A
+#define HID_SET_PROTOCOL             0x0B
 
-#define _USING_HID
+#define HID_HID_DESCRIPTOR_TYPE      0x21
+#define HID_REPORT_DESCRIPTOR_TYPE   0x22
+#define HID_PHYSICAL_DESCRIPTOR_TYPE 0x23
 
-#pragma pack(push, 1)
-typedef struct {
-  uint8_t len;       // 9
-  uint8_t dtype;     // 0x21
-  uint8_t versionL;  // 0x101
-  uint8_t versionH;  // 0x101
-  uint8_t country;
-  uint8_t numDescs;
-  uint8_t desctype;  // 0x22 report
-  uint8_t descLenL;
-  uint8_t descLenH;
-} HIDDescDescriptor;
+// HID Keyboard/Mouse bios compatible protocols HID1.11 Page 9 4.3 Protocols
+#define HID_PROTOCOL_NONE     0
+#define HID_PROTOCOL_KEYBOARD 1
+#define HID_PROTOCOL_MOUSE    2
 
-typedef struct {
-  InterfaceDescriptor hid;
-  HIDDescDescriptor desc;
-  EndpointDescriptor in;
-} HIDDescriptor;
-#pragma pack(pop)
-
-#define D_HIDREPORT(length) \
-  { 9, 0x21, 0x11, 0x01, 0, 1, 0x22, lowByte(length), highByte(length) }
-
-#endif  // USBCON
+// Normal or bios protocol (Keyboard/Mouse) HID1.11 Page 54 7.2.5 Get_Protocol Request
+// "protocol" variable is used for this purpose.
+#define HID_BOOT_PROTOCOL   0
+#define HID_REPORT_PROTOCOL 1

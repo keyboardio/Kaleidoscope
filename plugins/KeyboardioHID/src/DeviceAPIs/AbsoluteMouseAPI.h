@@ -27,10 +27,8 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "HID.h"
-#include "HID-Settings.h"
+#include "HIDDefs.h"
 #include "MouseButtons.h"
-#include "tusb_hid.h"
 
 #define DESCRIPTOR_ABSOLUTE_MOUSE(...)                 \
   HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \
