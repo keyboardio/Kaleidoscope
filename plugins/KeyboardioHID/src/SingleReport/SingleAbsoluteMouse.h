@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HIDD.h"
 #include "HID-Settings.h"
-#include "../DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"
 
 
 class SingleAbsoluteMouse_ : public HIDD, public AbsoluteMouseAPI {

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"
 
 class AbsoluteMouse_ : public AbsoluteMouseAPI {
  public:
