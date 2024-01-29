@@ -27,8 +27,8 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "HIDDefs.h"
-#include "MouseButtons.h"
+#include "kaleidoscope/HIDDefs.h"
+#include "kaleidoscope/MouseButtons.h"
 
 #define DESCRIPTOR_ABSOLUTE_MOUSE(...)                 \
   HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \

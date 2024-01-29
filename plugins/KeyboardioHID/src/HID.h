@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 #include <Arduino.h>
-#include "HIDDefs.h"
+#include "kaleidoscope/HIDDefs.h"
 #include "HIDD.h"
 #include "HID-Settings.h"
 
