@@ -39,13 +39,12 @@ THE SOFTWARE.
 class HIDD : public PluggableUSBModule {
  public:
   HIDD(
-    uint8_t _protocol       = HID_REPORT_PROTOCOL,
-    uint8_t _idle           = 0,
-    uint8_t _itfProtocol    = HID_PROTOCOL_NONE,
-    uint8_t _inReportLen    = USB_EP_SIZE,
-    uint8_t _interval       = 1,
     const void *_reportDesc = NULL,
-    uint16_t descriptorSize = 0);
+    uint16_t descriptorSize = 0,
+    uint8_t _inReportLen    = USB_EP_SIZE,
+    uint8_t _itfProtocol    = HID_ITF_PROTOCOL_NONE,
+    uint8_t _interval       = 1,
+    uint8_t _idle           = 0);
   virtual int SendReport(uint8_t id, const void *data, int len);
   uint8_t getProtocol() {
     return protocol;
@@ -61,16 +60,17 @@ class HIDD : public PluggableUSBModule {
     PluggableUSB().plug(this);
   }
 
-  /* Current HID protocol: Boot or Report */
-  uint8_t protocol;
-  uint8_t idle;
-  /* Interface protocol, for interface descriptor (only boot devices) */
-  uint8_t itfProtocol;
-  uint8_t inReportLen;
-  uint8_t outReportLen;
-  uint8_t interval;
   const void *reportDesc;
   uint16_t descriptorSize;
+  uint8_t inReportLen;
+  /* Interface protocol, for interface descriptor (only boot devices) */
+  uint8_t itfProtocol;
+  uint8_t interval;
+  uint8_t idle;
+  uint8_t outReportLen;
+
+  /* Current HID protocol: Boot or Report */
+  uint8_t protocol;
 
   uint8_t outReport[HIDD_MAX_OUTPUT_REPORT];
   virtual void setReportCB(const void *data, uint16_t len) {

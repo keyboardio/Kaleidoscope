@@ -28,21 +28,21 @@ THE SOFTWARE.
 #include "HID-Settings.h"
 
 HIDD::HIDD(
-  uint8_t _protocol,
-  uint8_t _idle,
-  uint8_t _itfProtocol,
-  uint8_t _inReportLen,
-  uint8_t _interval,
   const void *_reportDesc,
-  uint16_t _descriptorSize)
-  : PluggableUSBModule(1, 1, epType),
-    protocol(_protocol),
-    idle(_idle),
-    itfProtocol(_itfProtocol),
-    inReportLen(_inReportLen),
-    interval(_interval),
-    reportDesc(_reportDesc),
-    descriptorSize(_descriptorSize) {
+  uint16_t _descriptorSize,
+  uint8_t _inReportLen,
+  uint8_t _itfProtocol,
+  uint8_t _interval,
+  uint8_t _idle)
+  : PluggableUSBModule(1, 1, epType) {
+
+  reportDesc     = _reportDesc;
+  descriptorSize = _descriptorSize;
+  inReportLen    = _inReportLen;
+  itfProtocol    = _itfProtocol;
+  interval       = _interval;
+  idle           = _idle;
+  protocol       = HID_PROTOCOL_REPORT;
 
 #ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
   epType[0] = EP_TYPE_INTERRUPT_IN(inReportLen);
@@ -54,7 +54,7 @@ HIDD::HIDD(
 /* PluggableUSB implementation: interface, etc. descriptors for config */
 int HIDD::getInterface(uint8_t *interfaceCount) {
   uint8_t itfSubClass;
-  if (itfProtocol != HID_PROTOCOL_NONE) {
+  if (itfProtocol != HID_ITF_PROTOCOL_NONE) {
     itfSubClass = HID_SUBCLASS_BOOT;
   } else {
     itfSubClass = HID_SUBCLASS_NONE;
@@ -72,7 +72,7 @@ int HIDD::getInterface(uint8_t *interfaceCount) {
     D_HIDREPORT(descriptorSize),
     D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, epSize, interval),
   };
-  ++*interfaceCount;
+  *interfaceCount += 1;
   return USB_SendControl(0, &descSet, sizeof(descSet));
 }
 
