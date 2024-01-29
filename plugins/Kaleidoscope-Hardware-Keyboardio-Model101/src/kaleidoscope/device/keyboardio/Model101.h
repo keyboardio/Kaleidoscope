@@ -36,6 +36,7 @@ struct cRGB {
 #include "kaleidoscope/device/Base.h"
 #include "kaleidoscope/driver/bootloader/Base.h"
 #include "kaleidoscope/driver/hid/Base.h"
+#include "kaleidoscope/driver/hid/TinyUSB.h"
 #include "kaleidoscope/driver/keyscanner/Simple.h"
 #include "kaleidoscope/driver/led/Base.h"
 #include "kaleidoscope/driver/mcu/Base.h"
@@ -62,7 +63,7 @@ struct Model101KeyScannerProps : public kaleidoscope::driver::keyscanner::Simple
 
 
 // If we need to override HID props:
-struct Model101HIDProps : public kaleidoscope::driver::hid::BaseProps {
+struct Model101HIDProps : public kaleidoscope::driver::hid::TinyUSBProps {
   //typedef kaleidoscope::driver::hid::base::AbsoluteMouseProps AbsoluteMouseProps;
   //typedef kaleidoscope::driver::hid::base::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
 };
@@ -70,7 +71,7 @@ struct Model101HIDProps : public kaleidoscope::driver::hid::BaseProps {
 
 struct Model101Props : public kaleidoscope::device::BaseProps {
   typedef Model101HIDProps HIDProps;
-  typedef kaleidoscope::driver::hid::Base<HIDProps> HID;
+  typedef kaleidoscope::driver::hid::TinyUSB<HIDProps> HID;
 
   typedef kaleidoscope::driver::led::BaseProps LEDDriverProps;
   typedef kaleidoscope::driver::led::Base<LEDDriverProps> LEDDriver;
