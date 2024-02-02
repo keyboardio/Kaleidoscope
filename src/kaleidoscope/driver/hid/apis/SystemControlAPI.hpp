@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2024 Keyboard.io, Inc
+Copyright (c) 2015-2018 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -23,23 +23,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Include guard
 #pragma once
 
-#include <Arduino.h>
-#include "HID.h"
-#include "HID-Settings.h"
-#include "HIDTables.h"
-#include "kaleidoscope/driver/hid/apis/SystemControlAPI.h"
+SystemControlAPI::SystemControlAPI() {
+}
 
-class SystemControl_ : public SystemControlAPI {
- public:
-  SystemControl_();
+void SystemControlAPI::begin() {
+}
 
- protected:
-  void sendReport(void *data, int length);
-  bool wakeupHost(uint8_t s);
-};
+void SystemControlAPI::end() {
+  releaseAll();
+}
 
+void SystemControlAPI::write(uint8_t s) {
+  press(s);
+  release();
+}
 
-extern SystemControl_ SystemControl;
+void SystemControlAPI::release() {
+  releaseAll();
+}
+
+void SystemControlAPI::releaseAll() {
+  uint8_t report = 0x00;
+  sendReport(&report, sizeof(report));
+}
+
+void SystemControlAPI::press(uint8_t s) {
+  if (!wakeupHost(s)) {
+    sendReport(&s, sizeof(s));
+  }
+}
