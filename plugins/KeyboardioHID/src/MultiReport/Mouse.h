@@ -29,95 +29,13 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "kaleidoscope/MouseButtons.h"
-#include "tusb_hid.h"
+#include "kaleidoscope/driver/hid/apis/MouseAPI.h"
 
-#define DESCRIPTOR_MOUSE(...)                          \
-  /*  Mouse relative */                                \
-  HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \
-    HID_USAGE(HID_USAGE_DESKTOP_MOUSE),                \
-    HID_COLLECTION(HID_COLLECTION_APPLICATION),        \
-    HID_USAGE(HID_USAGE_DESKTOP_POINTER),              \
-    HID_COLLECTION(HID_COLLECTION_PHYSICAL),           \
-                                                       \
-    /* Report ID, if any */                            \
-    __VA_ARGS__                                        \
-                                                       \
-    /* 8 Buttons */                                    \
-    HID_USAGE_PAGE(HID_USAGE_PAGE_BUTTON),             \
-    HID_USAGE_MIN(1),                                  \
-    HID_USAGE_MAX(8),                                  \
-    HID_LOGICAL_MIN(0),                                \
-    HID_LOGICAL_MAX(1),                                \
-    HID_REPORT_SIZE(1),                                \
-    HID_REPORT_COUNT(8),                               \
-    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
-                                                       \
-    /* X, Y, Wheel [-127, 127] */                      \
-    HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),            \
-    HID_USAGE(HID_USAGE_DESKTOP_X),                    \
-    HID_USAGE(HID_USAGE_DESKTOP_Y),                    \
-    HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                \
-    HID_LOGICAL_MIN(0x81),                             \
-    HID_LOGICAL_MAX(0x7f),                             \
-    HID_REPORT_SIZE(8),                                \
-    HID_REPORT_COUNT(3),                               \
-    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
-                                                       \
-    /* Horizontal wheel */                             \
-    HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),           \
-    HID_USAGE_N(0x0238, 2),                            \
-    HID_REPORT_COUNT(1),                               \
-    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
-                                                       \
-    /* End */                                          \
-    HID_COLLECTION_END,                                \
-    HID_COLLECTION_END
-
-typedef union {
-  // Mouse report: 8 buttons, position, wheel
-  struct {
-    uint8_t buttons;
-    int8_t xAxis;
-    int8_t yAxis;
-    int8_t vWheel;
-    int8_t hWheel;
-  };
-} HID_MouseReport_Data_t;
-
-
-class Mouse_ {
+class Mouse_ : public MouseAPI {
  public:
   Mouse_();
-  void begin();
-  void end();
-  // Note: the following `click()` method is unlike the `move()`, `press()`, and
-  // `release()` methods, in that it doesn't merely modify the pending report,
-  // but also calls `sendReport()` at least twice.
-  void click(uint8_t b = MOUSE_LEFT);
-  void move(int8_t x, int8_t y, int8_t v_wheel = 0, int8_t h_wheel = 0);
-  void press(uint8_t b = MOUSE_LEFT);      // press LEFT by default
-  void release(uint8_t b = MOUSE_LEFT);    // release LEFT by default
-  bool isPressed(uint8_t b = MOUSE_LEFT);  // check LEFT by default
-
-  /** getReport returns the current report.
-   *
-   * The current report is the one to be send next time sendReport() is called.
-   *
-   * @returns A copy of the report.
-   */
-  const HID_MouseReport_Data_t getReport() {
-    return report_;
-  }
-  void sendReport();
-
-  void releaseAll();
 
  protected:
-  HID_MouseReport_Data_t report_;
-  uint8_t prev_report_buttons_ = 0;
-
- private:
   void sendReportUnchecked();
 };
 extern Mouse_ Mouse;
