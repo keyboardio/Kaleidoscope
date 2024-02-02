@@ -35,28 +35,8 @@ SystemControl_::SystemControl_() {
   HID().AppendDescriptor(&node);
 }
 
-void SystemControl_::begin() {
-}
 
-void SystemControl_::end() {
-  releaseAll();
-}
-
-void SystemControl_::write(uint8_t s) {
-  press(s);
-  release();
-}
-
-void SystemControl_::release() {
-  releaseAll();
-}
-
-void SystemControl_::releaseAll() {
-  uint8_t report = 0x00;
-  sendReport(&report, sizeof(report));
-}
-
-void SystemControl_::press(uint8_t s) {
+bool SystemControl_::wakeupHost(uint8_t s) {
   if (s == HID_SYSTEM_WAKE_UP) {
 #ifdef __AVR__
     USBDevice.wakeupHost();
@@ -67,9 +47,9 @@ void SystemControl_::press(uint8_t s) {
     // errors. So we simply reimplement the same thing here.
     USB->DEVICE.CTRLB.bit.UPRSM = 1;
 #endif
-  } else {
-    sendReport(&s, sizeof(s));
+    return true;
   }
+  return false;
 }
 
 
