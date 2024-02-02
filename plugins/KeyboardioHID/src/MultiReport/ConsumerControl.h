@@ -29,58 +29,14 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "tusb_hid.h"
 
-#define DESCRIPTOR_CONSUMER_CONTROL(...)            \
-  HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),          \
-                                                    \
-    /* Consumer Control (Sound/Media keys) */       \
-    HID_USAGE(HID_USAGE_CONSUMER_CONTROL),          \
-    HID_COLLECTION(HID_COLLECTION_APPLICATION),     \
-                                                    \
-    /* Report ID, if any */                         \
-    __VA_ARGS__                                     \
-                                                    \
-      /* 4 Media Keys */                            \
-      HID_LOGICAL_MIN(0),                           \
-    HID_LOGICAL_MAX_N(0x3ff, 2),                    \
-    HID_USAGE_MIN(0),                               \
-    HID_USAGE_MAX_N(0x3ff, 2),                      \
-    HID_REPORT_COUNT(4),                            \
-    HID_REPORT_SIZE(16),                            \
-    HID_INPUT(HID_DATA | HID_ARRAY | HID_ABSOLUTE), \
-    HID_COLLECTION_END
+#include "kaleidoscope/driver/hid/apis/ConsumerControlAPI.h"
 
-typedef union {
-  // Every usable Consumer key possible, up to 4 keys presses possible
-  uint16_t keys[4];
-  struct {
-    uint16_t key1;
-    uint16_t key2;
-    uint16_t key3;
-    uint16_t key4;
-  };
-} HID_ConsumerControlReport_Data_t;
-
-
-class ConsumerControl_ {
+class ConsumerControl_ : public ConsumerControlAPI {
  public:
   ConsumerControl_();
-  void begin();
-  void end();
-  void write(uint16_t m);
-  void press(uint16_t m);
-  void release(uint16_t m);
-  void releaseAll();
-
-  // Sending is public in the base class for advanced users.
-  void sendReport();
 
  protected:
-  HID_ConsumerControlReport_Data_t report_;
-  HID_ConsumerControlReport_Data_t last_report_;
-
- private:
   void sendReportUnchecked();
 };
 extern ConsumerControl_ ConsumerControl;

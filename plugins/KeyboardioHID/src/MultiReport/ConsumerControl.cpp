@@ -35,59 +35,8 @@ ConsumerControl_::ConsumerControl_() {
   HID().AppendDescriptor(&node);
 }
 
-void ConsumerControl_::begin() {
-}
-
-void ConsumerControl_::end() {
-  memset(&report_, 0, sizeof(report_));
-  sendReport();
-}
-
-void ConsumerControl_::write(uint16_t m) {
-  press(m);
-  release(m);
-}
-
-void ConsumerControl_::press(uint16_t m) {
-  // search for a free spot
-  for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-    if (report_.keys[i] == 0x00) {
-      report_.keys[i] = m;
-      break;
-    }
-  }
-}
-
-void ConsumerControl_::release(uint16_t m) {
-  // search and release the keypress
-  for (uint8_t i = 0; i < sizeof(HID_ConsumerControlReport_Data_t) / 2; i++) {
-    if (report_.keys[i] == m) {
-      report_.keys[i] = 0x00;
-      // no break to delete multiple keys
-    }
-  }
-}
-
-void ConsumerControl_::releaseAll() {
-  memset(&report_, 0, sizeof(report_));
-}
-
 void ConsumerControl_::sendReportUnchecked() {
   HID().SendReport(HID_REPORTID_CONSUMERCONTROL, &report_, sizeof(report_));
-}
-
-void ConsumerControl_::sendReport() {
-  // If the last report is different than the current report, then we need to
-  // send a report.  We guard sendReport like this so that calling code doesn't
-  // end up spamming the host with empty reports if sendReport is called in a
-  // tight loop.
-
-  // if the previous report is the same, return early without a new report.
-  if (memcmp(&last_report_, &report_, sizeof(report_)) == 0)
-    return;
-
-  sendReportUnchecked();
-  memcpy(&last_report_, &report_, sizeof(report_));
 }
 
 ConsumerControl_ ConsumerControl;
