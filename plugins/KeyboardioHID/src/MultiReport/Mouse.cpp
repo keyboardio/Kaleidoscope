@@ -35,70 +35,8 @@ Mouse_::Mouse_() {
   HID().AppendDescriptor(&node);
 }
 
-void Mouse_::begin() {
-}
-
-void Mouse_::end() {
-  releaseAll();
-  sendReport();
-}
-
-void Mouse_::click(uint8_t b) {
-  // If one or more of the buttons to be clicked was already pressed, we need to
-  // send a report to release it first, to guarantee that this will be a "click"
-  // and not merely a release.
-  if (report_.buttons & b) {
-    release(b);
-    sendReport();
-  }
-  // Next, send a report with the button(s) pressed:
-  press(b);
-  sendReport();
-  // Finally, send the report with the button(s) released:
-  release(b);
-  sendReport();
-}
-
-void Mouse_::move(int8_t x, int8_t y, int8_t v_wheel, int8_t h_wheel) {
-  report_.xAxis  = x;
-  report_.yAxis  = y;
-  report_.vWheel = v_wheel;
-  report_.hWheel = h_wheel;
-}
-
-void Mouse_::releaseAll() {
-  memset(&report_, 0, sizeof(report_));
-}
-
-void Mouse_::press(uint8_t b) {
-  report_.buttons |= b;
-}
-
-void Mouse_::release(uint8_t b) {
-  report_.buttons &= ~b;
-}
-
-bool Mouse_::isPressed(uint8_t b) {
-  if ((b & report_.buttons) > 0)
-    return true;
-  return false;
-}
-
 void Mouse_::sendReportUnchecked() {
   HID().SendReport(HID_REPORTID_MOUSE, &report_, sizeof(report_));
-}
-
-void Mouse_::sendReport() {
-  // If the button state has not changed, and neither the cursor nor the wheel
-  // is being told to move, there is no need to send a report.  This check
-  // prevents us from sending lots of no-op reports if the caller is in a loop
-  // and not checking or buggy.
-  if (report_.buttons != prev_report_buttons_ ||
-      report_.xAxis != 0 || report_.yAxis != 0 ||
-      report_.vWheel != 0 || report_.hWheel != 0) {
-    sendReportUnchecked();
-    prev_report_buttons_ = report_.buttons;
-  }
 }
 
 Mouse_ Mouse;
