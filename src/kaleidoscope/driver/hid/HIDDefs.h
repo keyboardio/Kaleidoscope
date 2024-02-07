@@ -17,4 +17,8 @@
 
 #pragma once
 
+#ifndef USE_TINYUSB
 #include "tusb_hid.h"
+#else
+#include "class/hid/hid.h"
+#endif
