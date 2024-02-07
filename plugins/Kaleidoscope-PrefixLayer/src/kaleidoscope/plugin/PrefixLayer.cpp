@@ -44,8 +44,8 @@ EventHandlerResult PrefixLayer::onKeyEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
 
   for (uint8_t i = 0; i < prefix_layers_length_; i++) {
-    if (Layer.isActive(prefix_layers_[i].layer)) {
-      current_prefix_ = prefix_layers_[i].prefix;
+    if (Layer.isActive(pgm_read_byte(&prefix_layers_[i].layer))) {
+      current_prefix_ = prefix_layers_[i].prefix.readFromProgmem();
       Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), IS_PRESSED | INJECTED, current_prefix_});
       Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), WAS_PRESSED | INJECTED, current_prefix_});
       current_prefix_ = Key_NoKey;
