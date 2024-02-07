@@ -54,23 +54,17 @@ HIDD::HIDD(
 /* PluggableUSB implementation: interface, etc. descriptors for config */
 int HIDD::getInterface(uint8_t *interfaceCount) {
   uint8_t itfSubClass;
+
   if (itfProtocol != HID_ITF_PROTOCOL_NONE) {
     itfSubClass = HID_SUBCLASS_BOOT;
   } else {
     itfSubClass = HID_SUBCLASS_NONE;
   }
 
-  uint8_t epSize;
-#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
-  epSize = inReportLen;
-#else
-  epSize = USB_EP_SIZE;
-#endif
-
   HIDDescriptor descSet = {
     D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, itfSubClass, itfProtocol),
     D_HIDREPORT(descriptorSize),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, epSize, interval),
+    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, inReportLen, interval),
   };
   *interfaceCount += 1;
   return USB_SendControl(0, &descSet, sizeof(descSet));
