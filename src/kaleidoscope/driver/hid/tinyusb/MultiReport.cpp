@@ -15,32 +15,38 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include "kaleidoscope/driver/hid/Base.h"                   // for Base, BaseProps
-#include "kaleidoscope/driver/hid/tinyusb/AbsoluteMouse.h"  // for AbsoluteMouse, AbsoluteMou...
-#include "kaleidoscope/driver/hid/tinyusb/MultiReport.h"
-
 #ifdef USE_TINYUSB
+
+#include <stdint.h>  // for uint8_t, int8_t, uint16_t
+
+#include "Adafruit_TinyUSB.h"
+#include "MultiReport.h"
 
 namespace kaleidoscope {
 namespace driver {
 namespace hid {
+namespace tinyusb {
 
-struct TinyUSBProps : public BaseProps {
-  typedef tinyusb::KeyboardProps KeyboardProps;
-  typedef tinyusb::Keyboard<KeyboardProps> Keyboard;
-  typedef tinyusb::MouseProps MouseProps;
-  typedef tinyusb::Mouse<MouseProps> Mouse;
-  typedef tinyusb::AbsoluteMouseProps AbsoluteMouseProps;
-  typedef tinyusb::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
+static const uint8_t TUSBMultiReportDesc[] = {
+  DESCRIPTOR_CONSUMER_CONTROL(HID_REPORT_ID(RID_CONSUMER_CONTROL)),
+  DESCRIPTOR_MOUSE(HID_REPORT_ID(RID_MOUSE)),
+  DESCRIPTOR_SYSTEM_CONTROL(HID_REPORT_ID(RID_SYSTEM_CONTROL)),
 };
 
-template<typename _Props>
-class TinyUSB : public Base<_Props> {};
 
+TUSBMultiReport_::TUSBMultiReport_()
+  : Adafruit_USBD_HID(TUSBMultiReportDesc, sizeof(TUSBMultiReportDesc), HID_ITF_PROTOCOL_NONE, 1) {
+}
+
+
+TUSBMultiReport_ &TUSBMultiReport() {
+  static TUSBMultiReport_ obj;
+  return obj;
+}
+
+}  // namespace tinyusb
 }  // namespace hid
 }  // namespace driver
 }  // namespace kaleidoscope
 
-#endif /* USE_TINY_USB */
+#endif /* USE_TINYUSB */
