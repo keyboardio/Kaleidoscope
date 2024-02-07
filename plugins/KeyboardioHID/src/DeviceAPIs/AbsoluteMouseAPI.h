@@ -63,10 +63,10 @@ THE SOFTWARE.
     HID_REPORT_COUNT(2),                               \
     HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
                                                        \
-    /* Wheel */                                        \
+    /* Wheel [-127, 127] */                            \
     HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                \
-    HID_LOGICAL_MIN(-127),                             \
-    HID_LOGICAL_MAX(127),                              \
+    HID_LOGICAL_MIN(0x81),                             \
+    HID_LOGICAL_MAX(0x7f),                             \
     HID_REPORT_SIZE(8),                                \
     HID_REPORT_COUNT(1),                               \
     HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
