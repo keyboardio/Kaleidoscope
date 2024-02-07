@@ -513,7 +513,6 @@ KALEIDOSCOPE_INIT_PLUGINS(
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
-
 }
 
 /** loop is the second of the standard Arduino sketch functions.
