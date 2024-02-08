@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "kaleidoscope/HIDDefs.h"
 #include "kaleidoscope/HIDTables.h"
-#include "HIDAliases.h"
+#include "kaleidoscope/HIDAliases.h"
 
 // Declare the hybrid boot keyboard feature so Kaleidoscope can depend on it
 #define BOOTKB_HYBRID   1

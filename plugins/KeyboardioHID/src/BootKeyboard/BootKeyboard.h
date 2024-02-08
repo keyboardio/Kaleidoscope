@@ -30,8 +30,6 @@ THE SOFTWARE.
 #include "kaleidoscope/driver/hid/apis/BootKeyboardAPI.h"
 #include "HID.h"
 #include "HIDD.h"
-#include "HIDTables.h"
-#include "HIDAliases.h"
 
 
 class BootKeyboard_ : public HIDD, public BootKeyboardAPI {
