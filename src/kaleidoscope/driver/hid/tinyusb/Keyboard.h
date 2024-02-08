@@ -52,7 +52,7 @@ class BootKeyboard_ : public BootKeyboardAPI, public Adafruit_USBD_HID {
   }
   void onUSBReset() override {}
   uint8_t getProtocol() override {
-    return protocol;
+    return Adafruit_USBD_HID::getProtocol();
   }
   uint8_t getLeds() {
     return leds;
@@ -68,10 +68,8 @@ class BootKeyboard_ : public BootKeyboardAPI, public Adafruit_USBD_HID {
   }
   void setReportDescriptor(uint8_t bootkb_only) override;
 
-  static uint8_t protocol;
   static uint8_t leds;
 
-  friend void tud_hid_set_protocol_cb(uint8_t instance, uint8_t protocol);
   friend void boot_keyboard_set_report_cb(uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer, uint16_t bufsize);
 };
 

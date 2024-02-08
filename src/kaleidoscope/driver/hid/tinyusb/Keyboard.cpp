@@ -32,8 +32,7 @@ static uint8_t HybridKeyboardDesc[] = {
   DESCRIPTOR_HYBRID_KEYBOARD(),
 };
 
-uint8_t BootKeyboard_::leds     = 0;
-uint8_t BootKeyboard_::protocol = HID_PROTOCOL_REPORT;
+uint8_t BootKeyboard_::leds = 0;
 
 void boot_keyboard_set_report_cb(
   uint8_t report_id,
@@ -72,12 +71,6 @@ void BootKeyboard_::setReportDescriptor(uint8_t bootkb_only) {
 BootKeyboard_ &BootKeyboard() {
   static BootKeyboard_ obj;
   return obj;
-}
-
-void tud_hid_set_protocol_cb(uint8_t instance, uint8_t protocol) {
-  /* Adafruit_USBD_HID doesn't have a good way to check this now */
-  (void)instance;
-  BootKeyboard_::protocol = protocol;
 }
 
 }  // namespace tinyusb
