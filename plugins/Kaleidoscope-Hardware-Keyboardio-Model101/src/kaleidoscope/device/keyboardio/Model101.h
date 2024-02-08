@@ -57,7 +57,7 @@ struct Model101KeyScannerProps : public kaleidoscope::driver::keyscanner::Simple
   static constexpr uint8_t matrix_columns = 16;
   typedef MatrixAddr<matrix_rows, matrix_columns> KeyAddr;
   static constexpr uint8_t matrix_row_pins[matrix_rows]    = {A0, A1, A2, A3};
-  static constexpr uint8_t matrix_col_pins[matrix_columns] = {A4, A5, SCK, MOSI, MISO, 1, 0, 2, 22, 23, 5, 6, 9, 10, 11, 12};
+  static constexpr uint8_t matrix_col_pins[matrix_columns] = {A4, A5, SCK, MOSI, MISO, 2, 0, 1, 21, 22, 7, 9, 10, 11, 12, 13};
 };
 
 
