@@ -53,10 +53,10 @@ void boot_keyboard_set_report_cb(
 
 BootKeyboard_::BootKeyboard_(uint8_t bootkb_only_)
   : BootKeyboardAPI(bootkb_only_),
-    Adafruit_USBD_HID(bootkb_only_ ? BootKeyboardDesc : HybridKeyboardDesc,
-                      bootkb_only_ ? sizeof(BootKeyboardDesc) : sizeof(HybridKeyboardDesc),
-                      HID_ITF_PROTOCOL_KEYBOARD,
-                      1) {
+    HIDD(bootkb_only_ ? BootKeyboardDesc : HybridKeyboardDesc,
+         bootkb_only_ ? sizeof(BootKeyboardDesc) : sizeof(HybridKeyboardDesc),
+         HID_ITF_PROTOCOL_KEYBOARD,
+         1) {
   setReportCallback(NULL, boot_keyboard_set_report_cb);
 }
 

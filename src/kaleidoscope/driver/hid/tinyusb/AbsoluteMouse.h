@@ -22,6 +22,7 @@
 #include <stdint.h>  // for uint8_t, int8_t, uint16_t
 
 #include "Adafruit_TinyUSB.h"
+#include "HIDD.h"
 #include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"  // for AbsoluteMouse, AbsoluteMouseProps
 
 // IWYU pragma: no_include "DeviceAPIs/AbsoluteMouseAPI.hpp"
@@ -35,16 +36,16 @@ static const uint8_t AbsoluteMouseDesc[] = {
   DESCRIPTOR_ABSOLUTE_MOUSE(),
 };
 
-class TUSBAbsoluteMouse : public AbsoluteMouseAPI, public Adafruit_USBD_HID {
+class TUSBAbsoluteMouse : public AbsoluteMouseAPI, public HIDD {
  public:
   TUSBAbsoluteMouse()
-    : Adafruit_USBD_HID(AbsoluteMouseDesc, sizeof(AbsoluteMouseDesc), HID_ITF_PROTOCOL_NONE, 1) {}
+    : HIDD(AbsoluteMouseDesc, sizeof(AbsoluteMouseDesc), HID_ITF_PROTOCOL_NONE, 1) {}
   void begin() {
-    (void)Adafruit_USBD_HID::begin();
+    (void)HIDD::begin();
     AbsoluteMouseAPI::begin();
   }
   void sendReport(void *data, int length) override {
-    (void)Adafruit_USBD_HID::sendReport(0, data, length);
+    (void)HIDD::sendReport(0, data, length);
   }
 };
 
