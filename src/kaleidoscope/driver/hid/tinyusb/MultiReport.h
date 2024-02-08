@@ -94,14 +94,6 @@ class TUSBSystemControl : public SystemControlAPI {
   }
 };
 
-struct KeyboardProps : public base::KeyboardProps {
-  typedef TUSBConsumerControl ConsumerControl;
-  typedef TUSBSystemControl SystemControl;
-};
-
-template<typename _Props>
-class Keyboard : public base::Keyboard<_Props> {};
-
 struct MouseProps : public base::MouseProps {
   typedef TUSBMouse Mouse;
 };

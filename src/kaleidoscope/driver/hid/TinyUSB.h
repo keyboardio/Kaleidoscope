@@ -19,6 +19,7 @@
 
 #include "kaleidoscope/driver/hid/Base.h"                   // for Base, BaseProps
 #include "kaleidoscope/driver/hid/tinyusb/AbsoluteMouse.h"  // for AbsoluteMouse, AbsoluteMou...
+#include "kaleidoscope/driver/hid/tinyusb/Keyboard.h"
 #include "kaleidoscope/driver/hid/tinyusb/MultiReport.h"
 
 #ifdef USE_TINYUSB
@@ -32,8 +33,12 @@ struct TinyUSBProps : public BaseProps {
   typedef tinyusb::Keyboard<KeyboardProps> Keyboard;
   typedef tinyusb::MouseProps MouseProps;
   typedef tinyusb::Mouse<MouseProps> Mouse;
+#if CFG_TUD_HID > 2
   typedef tinyusb::AbsoluteMouseProps AbsoluteMouseProps;
   typedef tinyusb::AbsoluteMouse<AbsoluteMouseProps> AbsoluteMouse;
+#else
+#warning "omitting AbsoluteMouse because CFG_TUD_HID is too small"
+#endif
 };
 
 template<typename _Props>
