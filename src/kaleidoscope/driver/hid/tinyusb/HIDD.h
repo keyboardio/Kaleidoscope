@@ -15,34 +15,43 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #ifdef USE_TINYUSB
 
 #include <stdint.h>  // for uint8_t, int8_t, uint16_t
 
 #include "Adafruit_TinyUSB.h"
-#include "MultiReport.h"
+#include "kaleidoscope/driver/hid/Base.h"
+#include "kaleidoscope/driver/hid/base/Keyboard.h"
+#include "kaleidoscope/driver/hid/apis/ConsumerControlAPI.h"
+#include "kaleidoscope/driver/hid/apis/MouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/SystemControlAPI.h"
+
+// IWYU pragma: no_include "DeviceAPIs/AbsoluteMouseAPI.hpp"
 
 namespace kaleidoscope {
 namespace driver {
 namespace hid {
 namespace tinyusb {
 
-static const uint8_t TUSBMultiReportDesc[] = {
-  DESCRIPTOR_CONSUMER_CONTROL(HID_REPORT_ID(RID_CONSUMER_CONTROL)),
-  DESCRIPTOR_MOUSE(HID_REPORT_ID(RID_MOUSE)),
-  DESCRIPTOR_SYSTEM_CONTROL(HID_REPORT_ID(RID_SYSTEM_CONTROL)),
+class HIDD : public Adafruit_USBD_HID {
+ public:
+  HIDD(uint8_t const *desc_report,
+       uint16_t len,
+       uint8_t protocol    = HID_ITF_PROTOCOL_NONE,
+       uint8_t interval_ms = 4)
+    : Adafruit_USBD_HID(desc_report, len, protocol, interval_ms) {}
+  bool sendReport(uint8_t report_id, void const *report, uint8_t len) {
+    if (TinyUSBDevice.suspended()) {
+      TinyUSBDevice.remoteWakeup();
+    }
+    if (!ready()) {
+      return false;
+    }
+    return Adafruit_USBD_HID::sendReport(report_id, report, len);
+  }
 };
-
-
-TUSBMultiReport_::TUSBMultiReport_()
-  : HIDD(TUSBMultiReportDesc, sizeof(TUSBMultiReportDesc), HID_ITF_PROTOCOL_NONE, 1) {
-}
-
-
-TUSBMultiReport_ &TUSBMultiReport() {
-  static TUSBMultiReport_ obj;
-  return obj;
-}
 
 }  // namespace tinyusb
 }  // namespace hid

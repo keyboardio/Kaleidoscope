@@ -27,6 +27,7 @@
 #include "kaleidoscope/driver/hid/apis/ConsumerControlAPI.h"
 #include "kaleidoscope/driver/hid/apis/MouseAPI.h"
 #include "kaleidoscope/driver/hid/apis/SystemControlAPI.h"
+#include "HIDD.h"
 
 // IWYU pragma: no_include "DeviceAPIs/AbsoluteMouseAPI.hpp"
 
@@ -41,11 +42,11 @@ enum MultiReportIDs {
   RID_SYSTEM_CONTROL,
 };
 
-class TUSBMultiReport_ : public Adafruit_USBD_HID {
+class TUSBMultiReport_ : public HIDD {
  public:
   TUSBMultiReport_();
   void sendReport(uint8_t report_id, const void *data, uint8_t len) {
-    (void)Adafruit_USBD_HID::sendReport(report_id, data, len);
+    (void)HIDD::sendReport(report_id, data, len);
   }
 };
 
