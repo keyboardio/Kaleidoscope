@@ -125,6 +125,13 @@ class SignatureCheckDummy {};
              (), (), (),                                                  __NL__ \
              (), (), ##__VA_ARGS__)                                       __NL__ \
                                                                           __NL__ \
+   OPERATION(onLedEffectQuery,                                            __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _NOT_ABORTABLE,                                              __NL__ \
+             (), (), (),                                                  __NL__ \
+             (), (), ##__VA_ARGS__)                                       __NL__ \
+                                                                          __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
@@ -297,6 +304,10 @@ class SignatureCheckDummy {};
    START(onSetup, 1)                                                    __NL__ \
       OP(onSetup, 1)                                                    __NL__ \
    END(onSetup, 1)                                                      __NL__ \
+                                                                        __NL__ \
+   START(onLedEffectQuery, 1)                                           __NL__ \
+      OP(onLedEffectQuery, 1)                                           __NL__ \
+   END(onLedEffectQuery, 1)                                             __NL__ \
                                                                         __NL__ \
    START(onNameQuery, 1)                                                __NL__ \
       OP(onNameQuery, 1)                                                __NL__ \
