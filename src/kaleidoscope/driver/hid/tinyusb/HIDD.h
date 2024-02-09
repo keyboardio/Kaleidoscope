@@ -42,10 +42,23 @@ class HIDD : public Adafruit_USBD_HID {
        uint8_t protocol    = HID_ITF_PROTOCOL_NONE,
        uint8_t interval_ms = 4)
     : Adafruit_USBD_HID(desc_report, len, protocol, interval_ms) {}
+
+ protected:
   bool sendReport(uint8_t report_id, void const *report, uint8_t len) {
     if (TinyUSBDevice.suspended()) {
       TinyUSBDevice.remoteWakeup();
+      /* Block (with timeout) to avoid dropping events on resume */
+      for (int timeout = 250; timeout--;) {
+        if (ready()) {
+          break;
+        }
+        delay(1);
+      }
     }
+    /*
+     * Might need an additional timeout here, in case bus is resumed but host
+     * isn't polling, and the FIFO or peripheral is full
+     */
     if (!ready()) {
       return false;
     }
