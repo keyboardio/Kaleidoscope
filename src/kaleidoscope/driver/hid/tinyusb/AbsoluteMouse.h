@@ -32,14 +32,9 @@ namespace driver {
 namespace hid {
 namespace tinyusb {
 
-static const uint8_t AbsoluteMouseDesc[] = {
-  DESCRIPTOR_ABSOLUTE_MOUSE(),
-};
-
-class TUSBAbsoluteMouse : public AbsoluteMouseAPI, public HIDD {
+class TUSBAbsoluteMouse_ : public AbsoluteMouseAPI, public HIDD {
  public:
-  TUSBAbsoluteMouse()
-    : HIDD(AbsoluteMouseDesc, sizeof(AbsoluteMouseDesc), HID_ITF_PROTOCOL_NONE, 1) {}
+  TUSBAbsoluteMouse_();
   void begin() {
     (void)HIDD::begin();
     AbsoluteMouseAPI::begin();
@@ -49,8 +44,35 @@ class TUSBAbsoluteMouse : public AbsoluteMouseAPI, public HIDD {
   }
 };
 
+extern TUSBAbsoluteMouse_ &TUSBAbsoluteMouse();
+
+class AbsoluteMouseWrapper {
+ public:
+  AbsoluteMouseWrapper() {}
+
+  void begin() {
+    TUSBAbsoluteMouse().begin();
+  }
+  void move(int8_t x, int8_t y, int8_t wheel) {
+    TUSBAbsoluteMouse().move(x, y, wheel);
+  }
+  void moveTo(uint16_t x, uint16_t y, uint8_t wheel) {
+    TUSBAbsoluteMouse().moveTo(x, y, wheel);
+  }
+
+  void click(uint8_t buttons) {
+    TUSBAbsoluteMouse().click(buttons);
+  }
+  void press(uint8_t buttons) {
+    TUSBAbsoluteMouse().press(buttons);
+  }
+  void release(uint8_t buttons) {
+    TUSBAbsoluteMouse().release(buttons);
+  }
+};
+
 struct AbsoluteMouseProps : public base::AbsoluteMouseProps {
-  typedef TUSBAbsoluteMouse AbsoluteMouse;
+  typedef AbsoluteMouseWrapper AbsoluteMouse;
 };
 
 template<typename _Props>
