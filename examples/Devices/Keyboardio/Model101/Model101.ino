@@ -331,8 +331,8 @@ static void versionInfoMacro(uint8_t key_state) {
 
 static void anyKeyMacro(KeyEvent &event) {
   if (keyToggledOn(event.state)) {
-    event.key.setKeyCode(Key_A.getKeyCode() + (uint8_t)(millis() % 36));
-    event.key.setFlags(0);
+    /* Move here for easier testing */
+    USBQuirks.toggleKeyboardProtocol();
   }
 }
 
