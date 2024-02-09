@@ -39,7 +39,7 @@ struct cRGB {
 #include "kaleidoscope/driver/hid/TinyUSB.h"
 #include "kaleidoscope/driver/keyscanner/Simple.h"
 #include "kaleidoscope/driver/led/Base.h"
-#include "kaleidoscope/driver/mcu/Base.h"
+#include "kaleidoscope/driver/mcu/TinyUSB.h"
 #include "kaleidoscope/driver/storage/Base.h"
 
 
@@ -85,8 +85,8 @@ struct Model101Props : public kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::bootloader::Base Bootloader;
   static constexpr const char *short_name = "kbio101";
 
-  typedef kaleidoscope::driver::mcu::BaseProps MCUProps;
-  typedef kaleidoscope::driver::mcu::Base<MCUProps> MCU;
+  typedef kaleidoscope::driver::mcu::TinyUSBProps MCUProps;
+  typedef kaleidoscope::driver::mcu::TinyUSB<MCUProps> MCU;
 };
 
 class Model101 : public kaleidoscope::device::Base<Model101Props> {
