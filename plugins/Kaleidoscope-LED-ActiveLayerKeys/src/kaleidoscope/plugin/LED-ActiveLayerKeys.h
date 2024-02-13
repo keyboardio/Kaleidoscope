@@ -32,6 +32,8 @@ class LEDActiveLayerKeysEffect : public Plugin,
                                  public AccessTransientLEDMode {
  public:
   EventHandlerResult onLayerChange();
+  EventHandlerResult onLedEffectQuery();
+
   template<uint8_t _colormap_size>
   void setColormap(cRGB const (&colormap)[_colormap_size]) {
     colormap_      = colormap;

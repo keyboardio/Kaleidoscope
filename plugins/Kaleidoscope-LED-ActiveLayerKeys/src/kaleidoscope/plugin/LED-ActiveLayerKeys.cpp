@@ -25,12 +25,17 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/layers.h"                // for Layer
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include "kaleidoscope/plugin/FocusSerial.h"    // for Focus
 
 namespace kaleidoscope {
 namespace plugin {
 
 cRGB LEDActiveLayerKeysEffect::default_layer_color_ = CRGB(0, 0, 0);
 bool LEDActiveLayerKeysEffect::light_lower_layers   = false;
+
+EventHandlerResult LEDActiveLayerKeysEffect::onLedEffectQuery() {
+  return ::Focus.sendName(F("LEDActiveLayerKeysEffect"));
+}
 
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
