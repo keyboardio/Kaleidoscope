@@ -93,6 +93,10 @@ void LEDRainbowWaveEffect::TransientLEDMode::update() {
   }
 }
 
+EventHandlerResult LEDRainbowWaveEffect::onLedEffectQuery() {
+  return ::Focus.sendName(F("LEDRainbowWaveEffect"));
+}
+
 void LEDRainbowWaveEffect::brightness(byte brightness) {
   rainbow_value = brightness;
 }

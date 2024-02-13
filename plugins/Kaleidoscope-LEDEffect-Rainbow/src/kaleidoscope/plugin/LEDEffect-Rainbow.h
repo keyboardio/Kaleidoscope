@@ -70,6 +70,8 @@ class LEDRainbowEffect : public Plugin,
 
 class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
  public:
+  EventHandlerResult onLedEffectQuery();
+
   void brightness(uint8_t);
   uint8_t brightness() {
     return rainbow_value;
