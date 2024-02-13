@@ -37,6 +37,7 @@ class AlphaSquareEffect : public Plugin,
   static uint16_t length;
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult onLedEffectQuery();
 
   // This class' instance has dynamic lifetime
   //

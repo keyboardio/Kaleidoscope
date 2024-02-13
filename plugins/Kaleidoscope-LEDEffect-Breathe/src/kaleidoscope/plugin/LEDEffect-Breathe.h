@@ -30,6 +30,8 @@ class LEDBreatheEffect : public Plugin,
   uint8_t hue        = 170;
   uint8_t saturation = 255;
 
+  EventHandlerResult onLedEffectQuery();
+
   // This class' instance has dynamic lifetime
   //
   class TransientLEDMode : public LEDMode {

@@ -16,12 +16,18 @@
 
 #include "kaleidoscope/plugin/LEDEffect-SolidColor.h"
 
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+
 #include "kaleidoscope/KeyAddr.h"            // for KeyAddr
 #include "kaleidoscope/device/device.h"      // for CRGB
 #include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {
+
+EventHandlerResult LEDSolidColor::onLedEffectQuery() {
+  return ::Focus.sendName(F("SolidColor"));
+}
 
 void LEDSolidColor::TransientLEDMode::onActivate() {
   ::LEDControl.set_all_leds_to(parent_->r_,

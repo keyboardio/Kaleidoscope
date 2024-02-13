@@ -32,6 +32,7 @@ class LEDActiveLayerColorEffect : public Plugin,
                                   public AccessTransientLEDMode {
  public:
   EventHandlerResult onLayerChange();
+  EventHandlerResult onLedEffectQuery();
   void setColormap(const cRGB colormap[]);
 
   // This class' instance has dynamic lifetime

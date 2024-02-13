@@ -41,6 +41,8 @@ class StalkerEffect : public Plugin,
     virtual cRGB compute(uint8_t *step) = 0;
   };
 
+  EventHandlerResult onLedEffectQuery();
+
   static ColorComputer *variant;
   static uint16_t step_length;
   static cRGB inactive_color;

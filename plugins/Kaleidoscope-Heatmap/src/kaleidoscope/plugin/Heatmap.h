@@ -41,6 +41,7 @@ class Heatmap : public Plugin,
   void resetMap();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
+  EventHandlerResult onLedEffectQuery();
   EventHandlerResult beforeEachCycle();
 
   // This class' instance has dynamic lifetime

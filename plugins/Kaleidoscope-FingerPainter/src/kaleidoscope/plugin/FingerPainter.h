@@ -38,7 +38,9 @@ class FingerPainter : public LEDMode {
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult onSetup();
+  EventHandlerResult onLedEffectQuery();
   EventHandlerResult onNameQuery();
+  EventHandlerResult onLedEffectQuery();
 
  protected:
   void update() final;

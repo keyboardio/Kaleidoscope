@@ -17,6 +17,8 @@
 
 #include "kaleidoscope/plugin/TriColor.h"
 
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+
 #include "kaleidoscope/KeyAddr.h"            // for KeyAddr, MatrixAddr, MatrixAddr<>::Range
 #include "kaleidoscope/device/device.h"      // for cRGB
 #include "kaleidoscope/key_defs.h"           // for Key, Key_0, Key_A, Key_Escape, Key_F1, Key_F12
@@ -25,6 +27,10 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
+EventHandlerResult TriColor::onLedEffectQuery() {
+  return ::Focus.sendName(F("TriColor"));
+}
 
 TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   base_color_ = base_color;

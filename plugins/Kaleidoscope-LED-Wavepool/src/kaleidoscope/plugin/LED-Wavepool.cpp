@@ -20,8 +20,9 @@
 
 #include "kaleidoscope/plugin/LED-Wavepool.h"
 
-#include <Arduino.h>  // for pgm_read_byte, PROGMEM, abs
-#include <stdint.h>   // for int8_t, uint8_t, int16_t, intptr_t
+#include <Arduino.h>                   // for pgm_read_byte, PROGMEM, abs
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <stdint.h>                    // for int8_t, uint8_t, int16_t, intptr_t
 
 #include "kaleidoscope/KeyAddr.h"                     // for MatrixAddr, KeyAddr, MatrixAddr<>::...
 #include "kaleidoscope/KeyEvent.h"                    // for KeyEvent
@@ -41,6 +42,10 @@ namespace plugin {
 
 uint16_t WavepoolEffect::idle_timeout = 5000;                         // 5 seconds
 int16_t WavepoolEffect::ripple_hue    = WavepoolEffect::rainbow_hue;  // automatic hue
+
+EventHandlerResult WavepoolEffect::onLedEffectQuery() {
+  return ::Focus.sendName(F("WavepoolEffect"));
+}
 
 // map native keyboard coordinates (16x4) into geometric space (14x5)
 PROGMEM const uint8_t WavepoolEffect::TransientLEDMode::rc2pos[Runtime.device().numKeys()] = {

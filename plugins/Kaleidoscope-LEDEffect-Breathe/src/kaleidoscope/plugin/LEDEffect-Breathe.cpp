@@ -16,7 +16,8 @@
 
 #include "kaleidoscope/plugin/LEDEffect-Breathe.h"
 
-#include <stdint.h>  // for uint8_t
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for cRGB
@@ -25,6 +26,11 @@
 
 namespace kaleidoscope {
 namespace plugin {
+
+EventHandlerResult LEDBreatheEffect::onLedEffectQuery() {
+  return ::Focus.sendName(F("LEDBreatheEffect"));
+}
+
 void LEDBreatheEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;

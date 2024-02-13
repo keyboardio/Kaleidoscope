@@ -17,8 +17,9 @@
 
 #include "kaleidoscope/plugin/LED-ActiveLayerColor.h"
 
-#include <Arduino.h>  // for pgm_read_byte
-#include <stdint.h>   // for uint8_t
+#include <Arduino.h>                   // for pgm_read_byte
+#include <Kaleidoscope-FocusSerial.h>  // for Focus
+#include <stdint.h>                    // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/Runtime.h"               // for Runtime, Runtime_
@@ -30,6 +31,10 @@ namespace kaleidoscope {
 namespace plugin {
 
 const cRGB *LEDActiveLayerColorEffect::colormap_;
+
+EventHandlerResult LEDActiveLayerColorEffect::onLedEffectQuery() {
+  return ::Focus.sendName(F("LEDActiveLayerColorEffect"));
+}
 
 LEDActiveLayerColorEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerColorEffect *parent)
