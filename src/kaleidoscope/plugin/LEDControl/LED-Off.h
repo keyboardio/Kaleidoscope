@@ -16,8 +16,9 @@
 
 #pragma once
 
-#include "kaleidoscope/KeyAddr.h"         // for KeyAddr
-#include "kaleidoscope/plugin/LEDMode.h"  // for LEDMode
+#include "kaleidoscope/KeyAddr.h"               // for KeyAddr
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/plugin/LEDMode.h"        // for LEDMode
 
 namespace kaleidoscope {
 namespace plugin {
@@ -27,6 +28,7 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
+  EventHandlerResult onLedEffectQuery();
   LEDOff(void) {}
 
  protected:

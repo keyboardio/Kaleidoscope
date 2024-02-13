@@ -16,7 +16,9 @@
 
 #include "kaleidoscope/plugin/LEDControl/LED-Off.h"
 
-#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
+#include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include "kaleidoscope/plugin/FocusSerial.h"    // for Focus
 
 namespace kaleidoscope {
 namespace plugin {
@@ -26,6 +28,10 @@ void LEDOff::onActivate(void) {
 
 void LEDOff::refreshAt(KeyAddr key_addr) {
   ::LEDControl.setCrgbAt(key_addr, {0, 0, 0});
+}
+
+EventHandlerResult LEDOff::onLedEffectQuery() {
+  return ::Focus.sendName(F("LEDOff"));
 }
 }  // namespace plugin
 }  // namespace kaleidoscope
