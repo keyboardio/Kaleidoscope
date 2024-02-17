@@ -54,6 +54,8 @@ $ cd examples/Devices/Keyboardio/Atreus
 $ make compile
 ```
 
+If you're running an Apple Silicon Mac and you get an error on this step about "bad CPU type in executable", install Rosetta2 by running `softwareupdate --install-rosetta` and try again.
+
 5.  Install your firmware
 
 ```sh
