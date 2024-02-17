@@ -37,10 +37,6 @@ EventHandlerResult FingerPainter::onNameQuery() {
   return ::Focus.sendName(F("FingerPainter"));
 }
 
-EventHandlerResult FingerPainter::onLedEffectQuery() {
-  return ::Focus.sendName(F("FingerPainterEffect"));
-}
-
 EventHandlerResult FingerPainter::onSetup() {
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);
   return EventHandlerResult::OK;
