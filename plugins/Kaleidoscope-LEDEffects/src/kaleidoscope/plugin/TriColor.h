@@ -27,6 +27,10 @@ namespace plugin {
 class TriColor : public Plugin,
                  public LEDModeInterface {
  public:
+  TriColor() {
+    ledModeName = "TriColorEffect";
+  }
+
   EventHandlerResult onLedEffectQuery();
 
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);

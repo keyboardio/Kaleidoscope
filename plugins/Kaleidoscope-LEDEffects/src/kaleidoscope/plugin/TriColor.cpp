@@ -28,10 +28,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult TriColor::onLedEffectQuery() {
-  return ::Focus.sendName(F("TriColor"));
-}
-
 TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
   base_color_ = base_color;
   mod_color_  = mod_color;
