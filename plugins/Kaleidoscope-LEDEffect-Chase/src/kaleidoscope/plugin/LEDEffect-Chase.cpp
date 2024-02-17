@@ -26,10 +26,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult LEDChaseEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDChaseEffect"));
-}
-
 void LEDChaseEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
