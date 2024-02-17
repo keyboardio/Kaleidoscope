@@ -27,10 +27,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult LEDBreatheEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDBreatheEffect"));
-}
-
 void LEDBreatheEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
