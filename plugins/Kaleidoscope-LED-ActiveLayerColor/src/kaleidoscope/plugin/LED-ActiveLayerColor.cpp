@@ -32,10 +32,6 @@ namespace plugin {
 
 const cRGB *LEDActiveLayerColorEffect::colormap_;
 
-EventHandlerResult LEDActiveLayerColorEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDActiveLayerColorEffect"));
-}
-
 LEDActiveLayerColorEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerColorEffect *parent)
   : parent_(parent),
