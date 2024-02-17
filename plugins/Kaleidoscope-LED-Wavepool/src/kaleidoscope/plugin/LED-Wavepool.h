@@ -41,8 +41,11 @@ class WavepoolEffect : public Plugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
+  WavepoolEffect() {
+    ledModeName = "WavepoolEffect";
+  }
+
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onLedEffectQuery();
 
   // ms before idle animation starts after last keypress
   static uint16_t idle_timeout;
