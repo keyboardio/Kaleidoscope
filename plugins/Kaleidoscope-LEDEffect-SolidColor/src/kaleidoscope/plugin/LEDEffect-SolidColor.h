@@ -28,10 +28,15 @@ namespace plugin {
 class LEDSolidColor : public Plugin,
                       public LEDModeInterface {
  public:
-  EventHandlerResult onLedEffectQuery();
-
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
-    : r_(r), g_(g), b_(b) {}
+    : r_(r), g_(g), b_(b) {
+    ledModeName = "SolidColorEffect";
+  }
+
+  LEDSolidColor(char *color, uint8_t r, uint8_t g, uint8_t b)
+    : r_(r), g_(g), b_(b) {
+    ledModeName = strcat("SolidColorEffect: /* TODO */ ", color);
+  }
 
   // This class' instance has dynamic lifetime
   //

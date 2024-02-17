@@ -25,10 +25,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult LEDSolidColor::onLedEffectQuery() {
-  return ::Focus.sendName(F("SolidColor"));
-}
-
 void LEDSolidColor::TransientLEDMode::onActivate() {
   ::LEDControl.set_all_leds_to(parent_->r_,
                                parent_->g_,
