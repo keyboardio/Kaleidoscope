@@ -48,10 +48,6 @@ void LEDRainbowEffect::TransientLEDMode::update() {
   ::LEDControl.set_all_leds_to(rainbow);
 }
 
-EventHandlerResult LEDRainbowEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDRainbowEffect"));
-}
-
 void LEDRainbowEffect::brightness(byte brightness) {
   rainbow_value = brightness;
 }
@@ -91,10 +87,6 @@ void LEDRainbowWaveEffect::TransientLEDMode::update() {
   if (rainbow_hue >= 255) {
     rainbow_hue -= 255;
   }
-}
-
-EventHandlerResult LEDRainbowWaveEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDRainbowWaveEffect"));
 }
 
 void LEDRainbowWaveEffect::brightness(byte brightness) {
