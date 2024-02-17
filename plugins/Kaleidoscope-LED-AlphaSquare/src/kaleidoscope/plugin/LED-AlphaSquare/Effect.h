@@ -34,10 +34,13 @@ class AlphaSquareEffect : public Plugin,
                           public LEDModeInterface,
                           public AccessTransientLEDMode {
  public:
+  AlphaSquareEffect() {
+    ledModeName = "AlphaSquareEffect";
+  }
+
   static uint16_t length;
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onLedEffectQuery();
 
   // This class' instance has dynamic lifetime
   //
