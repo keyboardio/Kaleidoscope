@@ -16,12 +16,25 @@
 
 #pragma once
 
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "Kaleidoscope-FocusSerial.h"           // for Focus
+
 namespace kaleidoscope {
 namespace plugin {
 
 class LEDModeInterface {
  public:
+  LEDModeInterface() : ledModeName{0} {}
+  LEDModeInterface(char* _ledModeName) : ledModeName{_ledModeName} {}
   void activate();
+
+  kaleidoscope::EventHandlerResult onLedEffectQuery() {
+    if (ledModeName == 0) {
+      // If no name was defined, don't return anything
+      return EventHandlerResult::OK;
+    }
+    return ::Focus.sendName(F(ledModeName));
+  }
 
   // This auxiliary class helps to generate a verbose error message
   // in case that there is no TransientLEDMode typedef or nested
@@ -35,6 +48,9 @@ class LEDModeInterface {
   // lifetime is handled dynamically.
   //
   typedef NoLEDMode DynamicLEDMode;
+
+ protected:
+  char *ledModeName;
 };
 
 }  // namespace plugin
