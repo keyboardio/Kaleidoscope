@@ -28,8 +28,7 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
-  EventHandlerResult onLedEffectQuery();
-  LEDOff(void) {}
+  LEDOff(void) { ledModeName = "LEDOff"; }
 
  protected:
   void onActivate(void) final;

@@ -29,10 +29,6 @@ void LEDOff::onActivate(void) {
 void LEDOff::refreshAt(KeyAddr key_addr) {
   ::LEDControl.setCrgbAt(key_addr, {0, 0, 0});
 }
-
-EventHandlerResult LEDOff::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDOff"));
-}
 }  // namespace plugin
 }  // namespace kaleidoscope
 
