@@ -33,10 +33,6 @@ namespace plugin {
 cRGB LEDActiveLayerKeysEffect::default_layer_color_ = CRGB(0, 0, 0);
 bool LEDActiveLayerKeysEffect::light_lower_layers   = false;
 
-EventHandlerResult LEDActiveLayerKeysEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("LEDActiveLayerKeysEffect"));
-}
-
 LEDActiveLayerKeysEffect::TransientLEDMode::TransientLEDMode(
   const LEDActiveLayerKeysEffect *parent)
   : parent_(parent),
