@@ -47,10 +47,6 @@ EventHandlerResult ColormapEffect::onNameQuery() {
   return ::Focus.sendName(F("ColormapEffect"));
 }
 
-EventHandlerResult ColormapEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("ColormapEffect"));
-}
-
 bool ColormapEffect::isUninitialized() {
   return ::LEDPaletteTheme.isThemeUninitialized(map_base_, max_layers_);
 }
