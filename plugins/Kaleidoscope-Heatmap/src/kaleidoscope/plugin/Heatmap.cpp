@@ -45,10 +45,6 @@ uint16_t Heatmap::update_delay = 1000;
 uint16_t Heatmap::highest_ = 1;
 uint16_t Heatmap::heatmap_[];
 
-EventHandlerResult Heatmap::onLedEffectQuery() {
-  return ::Focus.sendName(F("HeatmapEffect"));
-}
-
 Heatmap::TransientLEDMode::TransientLEDMode(const Heatmap *parent)
   :  // last heatmap computation time
     last_heatmap_comp_time_(Runtime.millisAtCycleStart()),

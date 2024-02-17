@@ -34,6 +34,10 @@ class Heatmap : public Plugin,
                 public LEDModeInterface,
                 public AccessTransientLEDMode {
  public:
+  Heatmap() {
+    ledModeName = "HeatmapEffect";
+  }
+
   static uint16_t update_delay;
   static const cRGB *heat_colors;
   static uint8_t heat_colors_length;
@@ -41,7 +45,6 @@ class Heatmap : public Plugin,
   void resetMap();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onLedEffectQuery();
   EventHandlerResult beforeEachCycle();
 
   // This class' instance has dynamic lifetime
