@@ -38,10 +38,6 @@ uint16_t StalkerEffect::step_length = 50;
 cRGB StalkerEffect::inactive_color  = (cRGB){
   0, 0, 0};
 
-EventHandlerResult StalkerEffect::onLedEffectQuery() {
-  return ::Focus.sendName(F("StalkerEffect"));
-}
-
 StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
   : parent_(parent),
     step_start_time_(0),

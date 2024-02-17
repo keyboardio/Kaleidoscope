@@ -36,12 +36,14 @@ class StalkerEffect : public Plugin,
                       public LEDModeInterface,
                       public AccessTransientLEDMode {
  public:
+  StalkerEffect() {
+    ledModeName = "StalkerEffect";
+  }
+
   class ColorComputer {
    public:
     virtual cRGB compute(uint8_t *step) = 0;
   };
-
-  EventHandlerResult onLedEffectQuery();
 
   static ColorComputer *variant;
   static uint16_t step_length;
