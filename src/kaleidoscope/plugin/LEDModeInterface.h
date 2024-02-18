@@ -25,7 +25,7 @@ namespace plugin {
 class LEDModeInterface {
  public:
   LEDModeInterface() : ledModeName{0} {}
-  LEDModeInterface(char* _ledModeName) : ledModeName{_ledModeName} {}
+  explicit LEDModeInterface(char* _ledModeName) : ledModeName{_ledModeName} {}
   void activate();
 
   kaleidoscope::EventHandlerResult onLedEffectQuery() {
