@@ -35,9 +35,7 @@ class LEDSolidColor : public Plugin,
 
   LEDSolidColor(char *color, uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
-    char *format = "SolidColorEffect: %s";
-    int size     = strlen(format) - 2 + strlen(color);
-    snprintf(ledModeName, size, format, color);
+    ledModeName = color;
   }
 
   // This class' instance has dynamic lifetime
