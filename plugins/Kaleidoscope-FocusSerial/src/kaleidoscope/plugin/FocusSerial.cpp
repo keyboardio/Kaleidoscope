@@ -80,7 +80,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
   const char *cmd_help      = PSTR("help");
   const char *cmd_reset     = PSTR("device.reset");
-  const char *cmd_led_modes = PSTR("led_modes");
+  const char *cmd_led_modes = PSTR("led.modes");
   const char *cmd_plugins   = PSTR("plugins");
 
   if (inputMatchesHelp(input))
