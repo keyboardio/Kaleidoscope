@@ -27,9 +27,8 @@ namespace plugin {
 class TriColor : public Plugin,
                  public LEDModeInterface {
  public:
-  TriColor() {
-    ledModeName = "TriColorEffect";
-  }
+  TriColor() { ledModeName = "TriColorEffect"; }
+  TriColor(char *customName) { ledModeName = customName; }
 
   EventHandlerResult onLedEffectQuery();
 

@@ -41,9 +41,8 @@ class WavepoolEffect : public Plugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
-  WavepoolEffect() {
-    ledModeName = "WavepoolEffect";
-  }
+  WavepoolEffect() { ledModeName = "WavepoolEffect"; }
+  WavepoolEffect(char *customName) { ledModeName = customName; }
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
 

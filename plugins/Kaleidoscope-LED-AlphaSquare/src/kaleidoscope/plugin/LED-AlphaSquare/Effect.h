@@ -34,9 +34,8 @@ class AlphaSquareEffect : public Plugin,
                           public LEDModeInterface,
                           public AccessTransientLEDMode {
  public:
-  AlphaSquareEffect() {
-    ledModeName = "AlphaSquareEffect";
-  }
+  AlphaSquareEffect() { ledModeName = "AlphaSquareEffect"; }
+  AlphaSquareEffect(char *customName) { ledModeName = customName; }
 
   static uint16_t length;
 

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <stdint.h>  // for uint8_t
+#include <string.h>  // for strlen
 
 #include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
 #include "kaleidoscope/plugin.h"                   // for Plugin
@@ -33,9 +34,9 @@ class LEDSolidColor : public Plugin,
     ledModeName = "SolidColorEffect";
   }
 
-  LEDSolidColor(char *color, uint8_t r, uint8_t g, uint8_t b)
+  LEDSolidColor(char *customName, uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
-    ledModeName = color;
+    ledModeName = customName;
   }
 
   // This class' instance has dynamic lifetime

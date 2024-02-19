@@ -33,9 +33,8 @@ namespace plugin {
 //
 class FingerPainter : public LEDMode {
  public:
-  FingerPainter() {
-    ledModeName = "FingerPainterEffect";
-  }
+  FingerPainter() { ledModeName = "FingerPainterEffect"; }
+  FingerPainter(char *customName) { ledModeName = customName; }
 
   void toggle();
 
