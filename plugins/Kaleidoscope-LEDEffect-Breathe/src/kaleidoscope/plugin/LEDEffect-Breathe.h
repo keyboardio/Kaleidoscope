@@ -28,7 +28,7 @@ class LEDBreatheEffect : public Plugin,
                          public LEDModeInterface {
  public:
   LEDBreatheEffect() { ledModeName = "LEDBreathe"; }
-  LEDBreatheEffect(char *customName) { ledModeName = customName; }
+  explicit LEDBreatheEffect(char *customName) { ledModeName = customName; }
 
   uint8_t hue        = 170;
   uint8_t saturation = 255;

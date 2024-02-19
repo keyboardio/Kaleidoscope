@@ -28,7 +28,7 @@ class TriColor : public Plugin,
                  public LEDModeInterface {
  public:
   TriColor() { ledModeName = "TriColor"; }
-  TriColor(char *customName) { ledModeName = customName; }
+  explicit TriColor(char *customName) { ledModeName = customName; }
 
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color);
   TriColor(cRGB base_color, cRGB mod_color)

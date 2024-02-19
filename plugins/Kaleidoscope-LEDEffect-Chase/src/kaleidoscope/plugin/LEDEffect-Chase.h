@@ -29,7 +29,7 @@ class LEDChaseEffect : public Plugin,
                        public LEDModeInterface {
  public:
   LEDChaseEffect() { ledModeName = "LEDChase"; }
-  LEDChaseEffect(char *customName) { ledModeName = customName; }
+  explicit LEDChaseEffect(char *customName) { ledModeName = customName; }
 
   uint8_t update_delay() {
     return update_delay_;
