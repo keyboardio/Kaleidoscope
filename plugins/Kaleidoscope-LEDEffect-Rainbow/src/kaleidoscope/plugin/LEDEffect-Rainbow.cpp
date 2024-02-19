@@ -16,9 +16,8 @@
 
 #include "kaleidoscope/plugin/LEDEffect-Rainbow.h"
 
-#include <Arduino.h>                   // for byte
-#include <Kaleidoscope-FocusSerial.h>  // for Focus
-#include <stdint.h>                    // for uint8_t, uint16_t
+#include <Arduino.h>  // for byte
+#include <stdint.h>   // for uint8_t, uint16_t
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for Base<>::LEDRangeIterator, Base<>::L...

@@ -17,7 +17,6 @@
 #pragma once
 
 #include <stdint.h>  // for uint8_t
-#include <string.h>  // for strlen
 
 #include "kaleidoscope/KeyAddr.h"                  // for KeyAddr
 #include "kaleidoscope/plugin.h"                   // for Plugin

@@ -17,9 +17,8 @@
 
 #include "kaleidoscope/plugin/Heatmap.h"
 
-#include <Arduino.h>                   // for pgm_read_byte, PROGMEM
-#include <Kaleidoscope-FocusSerial.h>  // for Focus
-#include <stdint.h>                    // for uint16_t, uint8_t, INT16_MAX
+#include <Arduino.h>  // for pgm_read_byte, PROGMEM
+#include <stdint.h>   // for uint16_t, uint8_t, INT16_MAX
 
 #include "kaleidoscope/KeyAddr.h"               // for MatrixAddr, MatrixAddr<>::Range, KeyAddr
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent

@@ -17,8 +17,7 @@
 
 #include "kaleidoscope/plugin/LED-AlphaSquare/Effect.h"
 
-#include <Kaleidoscope-FocusSerial.h>  // for Focus
-#include <stdint.h>                    // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/KeyAddr.h"                 // for KeyAddr
 #include "kaleidoscope/KeyEvent.h"                // for KeyEvent

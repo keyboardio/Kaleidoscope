@@ -25,7 +25,6 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
 #include "kaleidoscope/layers.h"                // for Layer
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
-#include "kaleidoscope/plugin/FocusSerial.h"    // for Focus
 
 namespace kaleidoscope {
 namespace plugin {

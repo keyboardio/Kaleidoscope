@@ -16,8 +16,6 @@
 
 #include "kaleidoscope/plugin/LEDEffect-SolidColor.h"
 
-#include <Kaleidoscope-FocusSerial.h>  // for Focus
-
 #include "kaleidoscope/KeyAddr.h"            // for KeyAddr
 #include "kaleidoscope/device/device.h"      // for CRGB
 #include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl

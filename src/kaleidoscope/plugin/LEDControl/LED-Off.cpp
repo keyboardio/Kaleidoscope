@@ -16,9 +16,7 @@
 
 #include "kaleidoscope/plugin/LEDControl/LED-Off.h"
 
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult, EventHandlerResult::OK
-#include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
-#include "kaleidoscope/plugin/FocusSerial.h"    // for Focus
+#include "kaleidoscope/plugin/LEDControl.h"  // for LEDControl
 
 namespace kaleidoscope {
 namespace plugin {

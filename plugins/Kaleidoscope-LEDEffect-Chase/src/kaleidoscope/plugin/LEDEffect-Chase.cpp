@@ -16,8 +16,7 @@
 
 #include "kaleidoscope/plugin/LEDEffect-Chase.h"
 
-#include <Kaleidoscope-FocusSerial.h>  // for Focus
-#include <stdint.h>                    // for uint16_t, uint8_t
+#include <stdint.h>  // for uint16_t, uint8_t
 
 #include "kaleidoscope/Runtime.h"            // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"      // for CRGB, Device, Base<>::LEDRangeIterator
