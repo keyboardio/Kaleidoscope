@@ -132,8 +132,6 @@ $(ARDUINO_DIRECTORIES_DATA)/arduino-cli.yaml:
 arduino-update-cores:
 	$(QUIET) $(ARDUINO_CLI) core update-index
 
-
-
 install-arduino-core-kaleidoscope: arduino-update-cores
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr-tools-only"
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32-tools-only"
@@ -145,6 +143,20 @@ install-arduino-core-avr: arduino-update-cores
 install-arduino-core-deps:
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:avr-tools-only"
 	$(QUIET) $(ARDUINO_CLI) core install "keyboardio:gd32-tools-only"
+
+
+# On arm64 macs, we need rosetta to function
+.PHONY: check-rosetta
+check-rosetta:
+	$(QUIET) if [ "$$(uname)" = "Darwin" ]; then \
+		if [ "$$(uname -m)" = "arm64" ]; then \
+			if ! pgrep oahd >/dev/null 2>&1; then \
+				echo "Rosetta 2 is required but not installed. Please install Rosetta 2 and try again."; \
+				exit 1; \
+			fi; \
+		fi; \
+	fi
+
 
 
 # If we're not calling setup, we should freak out if the hardware

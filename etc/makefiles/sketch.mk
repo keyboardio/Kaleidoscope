@@ -171,7 +171,7 @@ ifneq ("$(wildcard ${SKETCH_DIR}/.kaleidoscope_board)","")
 endif
 
 
-compile: kaleidoscope-hardware-configured
+compile: kaleidoscope-hardware-configured check-rosetta
 	-$(QUIET) install -d "${OUTPUT_PATH}"
 	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
 	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} ${kaleidoscope_board_config}\
