@@ -78,19 +78,19 @@ EventHandlerResult FocusSerial::afterEachCycle() {
 }
 
 EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
-  const char *cmd_help        = PSTR("help");
-  const char *cmd_reset       = PSTR("device.reset");
-  const char *cmd_led_effects = PSTR("led_effects");
-  const char *cmd_plugins     = PSTR("plugins");
+  const char *cmd_help      = PSTR("help");
+  const char *cmd_reset     = PSTR("device.reset");
+  const char *cmd_led_modes = PSTR("led_modes");
+  const char *cmd_plugins   = PSTR("plugins");
 
   if (inputMatchesHelp(input))
-    return printHelp(cmd_help, cmd_reset, cmd_led_effects, cmd_plugins);
+    return printHelp(cmd_help, cmd_reset, cmd_led_modes, cmd_plugins);
 
   if (inputMatchesCommand(input, cmd_reset)) {
     Runtime.device().rebootBootloader();
     return EventHandlerResult::EVENT_CONSUMED;
   }
-  if (inputMatchesCommand(input, cmd_led_effects)) {
+  if (inputMatchesCommand(input, cmd_led_modes)) {
     kaleidoscope::Hooks::onLedEffectQuery();
     return EventHandlerResult::EVENT_CONSUMED;
   }
