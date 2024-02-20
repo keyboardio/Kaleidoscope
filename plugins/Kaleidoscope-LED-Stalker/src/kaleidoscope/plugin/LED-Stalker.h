@@ -45,8 +45,6 @@ class StalkerEffect : public Plugin,
   static uint16_t step_length;
   static cRGB inactive_color;
 
-  EventHandlerResult onKeyEvent(KeyEvent &event);
-
   // This class' instance has dynamic lifetime
   //
   class TransientLEDMode : public LEDMode {
