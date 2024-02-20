@@ -32,8 +32,8 @@ class LEDModeInterface {
 
   kaleidoscope::EventHandlerResult onLedEffectQuery() {
     if (ledModeName == 0) {
-      // If no name was defined, don't return anything
-      return EventHandlerResult::OK;
+      // If no name was defined, return a default string
+      return ::Focus.sendName(F("[unnamed led mode]"));
     }
     return ::Focus.sendName(F(ledModeName));
   }
