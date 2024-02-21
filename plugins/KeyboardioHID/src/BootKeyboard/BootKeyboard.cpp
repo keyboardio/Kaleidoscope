@@ -39,7 +39,7 @@ static const uint8_t hybrid_keyboard_hid_descriptor_[] PROGMEM = {
 BootKeyboard_::BootKeyboard_(uint8_t bootkb_only_)
   : BootKeyboardAPI(bootkb_only_) {
 
-  itfProtocol = HID_PROTOCOL_KEYBOARD;
+  itfProtocol = HID_ITF_PROTOCOL_KEYBOARD;
   setBootOnly(bootkb_only);
   plug();
 }
@@ -81,7 +81,7 @@ int BootKeyboard_::SendReport(const void *data, int len) {
  * required by the HID specification.
  */
 void BootKeyboard_::onUSBReset() {
-  protocol = HID_REPORT_PROTOCOL;
+  protocol = HID_PROTOCOL_REPORT;
 }
 
 __attribute__((weak))

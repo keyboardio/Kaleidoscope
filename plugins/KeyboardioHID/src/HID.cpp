@@ -35,7 +35,7 @@ int HID_::getDescriptor(USBSetup &setup) {
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
   }
-  if (setup.wValueH != HID_REPORT_DESCRIPTOR_TYPE) {
+  if (setup.wValueH != HID_DESC_TYPE_REPORT) {
     return 0;
   }
 
