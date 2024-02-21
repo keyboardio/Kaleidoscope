@@ -93,7 +93,7 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
   if (inputMatchesCommand(input, cmd_led_modes)) {
     char *ledModeName;
     kaleidoscope::Hooks::onLedEffectQuery(ledModeName);
-    ::Focus.sendName(F(ledModeName));
+    ::Focus.send(ledModeName, '\n');
     return EventHandlerResult::EVENT_CONSUMED;
   }
   if (inputMatchesCommand(input, cmd_plugins)) {
