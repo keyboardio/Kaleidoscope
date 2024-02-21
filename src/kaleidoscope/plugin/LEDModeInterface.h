@@ -32,7 +32,7 @@ class LEDModeInterface {
   EventHandlerResult onLedEffectQuery(char *(&_ledModeName)) {
     if (ledModeName == 0) {
       // If no name was defined, return a default string
-      _ledModeName = (char *)"[unnamed led mode]";
+      _ledModeName = const_cast<char *>("[unnamed led mode]");
     } else {
       _ledModeName = ledModeName;
     }
