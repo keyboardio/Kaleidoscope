@@ -26,7 +26,6 @@ THE SOFTWARE.
 #include "BootKeyboard.h"
 #include "HIDReportObserver.h"
 #include "HID-Settings.h"
-#include "tusb_hid.h"
 
 static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
   DESCRIPTOR_BOOT_KEYBOARD(),
