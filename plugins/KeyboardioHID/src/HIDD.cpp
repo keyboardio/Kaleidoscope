@@ -76,7 +76,7 @@ int HIDD::getDescriptor(USBSetup &setup) {
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
   }
-  if (setup.wValueH != HID_REPORT_DESCRIPTOR_TYPE) {
+  if (setup.wValueH != HID_DESC_TYPE_REPORT) {
     return 0;
   }
 
@@ -98,12 +98,12 @@ bool HIDD::setup(USBSetup &setup) {
   uint8_t requestType = setup.bmRequestType;
 
   if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
-    if (request == HID_GET_REPORT) {
+    if (request == HID_REQ_CONTROL_GET_REPORT) {
       // TODO(anyone): HID_GetReport();
       return true;
     }
-    if (request == HID_GET_PROTOCOL) {
-      if (itfProtocol == HID_PROTOCOL_NONE) {
+    if (request == HID_REQ_CONTROL_GET_PROTOCOL) {
+      if (itfProtocol == HID_ITF_PROTOCOL_NONE) {
         return false;
       }
       // AVR optimization; possibly not needed elsewhere
@@ -116,7 +116,7 @@ bool HIDD::setup(USBSetup &setup) {
 #endif
       return true;
     }
-    if (request == HID_GET_IDLE) {
+    if (request == HID_REQ_CONTROL_GET_IDLE) {
       // AVR optimization; possibly not needed elsewhere
 #if defined(__AVR__)
       UEDATX = idle;
@@ -130,18 +130,18 @@ bool HIDD::setup(USBSetup &setup) {
   }
 
   if (requestType == REQUEST_HOSTTODEVICE_CLASS_INTERFACE) {
-    if (request == HID_SET_PROTOCOL) {
-      if (itfProtocol == HID_PROTOCOL_NONE) {
+    if (request == HID_REQ_CONTROL_SET_PROTOCOL) {
+      if (itfProtocol == HID_ITF_PROTOCOL_NONE) {
         return false;
       }
       protocol = setup.wValueL;
       return true;
     }
-    if (request == HID_SET_IDLE) {
+    if (request == HID_REQ_CONTROL_SET_IDLE) {
       idle = setup.wValueL;
       return true;
     }
-    if (request == HID_SET_REPORT) {
+    if (request == HID_REQ_CONTROL_SET_REPORT) {
       // Check if data has the correct length afterwards
       int length = setup.wLength;
 

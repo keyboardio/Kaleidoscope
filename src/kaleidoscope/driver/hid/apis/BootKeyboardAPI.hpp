@@ -96,7 +96,7 @@ int BootKeyboardAPI::sendReportUnchecked() {
   convertReport(out_report.boot_keycodes, out_report.nkro_keys);
   size_t reportlen;
   // Send only boot report if host requested boot protocol, or if configured as boot-only
-  if (getProtocol() == HID_BOOT_PROTOCOL || bootkb_only) {
+  if (getProtocol() == HID_PROTOCOL_BOOT || bootkb_only) {
     reportlen = BOOT_REPORT_LEN;
   } else {
     reportlen = sizeof(out_report);
