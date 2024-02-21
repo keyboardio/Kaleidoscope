@@ -17,7 +17,6 @@
 #pragma once
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "Kaleidoscope-FocusSerial.h"           // for Focus
 
 namespace kaleidoscope {
 namespace plugin {
@@ -30,12 +29,14 @@ class LEDModeInterface {
     : ledModeName{_ledModeName} {}
   void activate();
 
-  kaleidoscope::EventHandlerResult onLedEffectQuery() {
+  EventHandlerResult onLedEffectQuery(char *(&_ledModeName)) {
     if (ledModeName == 0) {
       // If no name was defined, return a default string
-      return ::Focus.sendName(F("[unnamed led mode]"));
+      _ledModeName = (char *)"[unnamed led mode]";
+    } else {
+      _ledModeName = ledModeName;
     }
-    return ::Focus.sendName(F(ledModeName));
+    return EventHandlerResult::OK;
   }
 
   // This auxiliary class helps to generate a verbose error message
