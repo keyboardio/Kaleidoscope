@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "tusb_hid.h"
 
 // Dpad directions
 #define GAMEPAD_DPAD_CENTERED   0
