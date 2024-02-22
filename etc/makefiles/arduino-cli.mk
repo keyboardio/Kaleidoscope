@@ -100,7 +100,7 @@ endif
 # emoji, since it accurately represents our feelings on this 
 # state of affairs. Later, when finding props, we need to reverse 
 # this process, turning fire into space.
-_arduino_props := $(shell ${ARDUINO_CLI}  compile $(fqbn_arg) --show-properties "$(_arduino_props_sketch_arg)"|perl -p -e"s/ /🔥/g")
+_arduino_props := $(shell ${ARDUINO_CLI}  compile $(fqbn_arg) --show-properties=expanded "$(_arduino_props_sketch_arg)"|perl -p -e"s/ /🔥/g")
 
 _arduino_prop = $(subst $1=,,$(subst 🔥, ,$(filter $1=%,$(_arduino_props))))
 
