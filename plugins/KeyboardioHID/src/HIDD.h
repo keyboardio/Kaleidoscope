@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include <stdint.h>
 
 #include "HIDArch.h" /* unfortunately needed for EPTYPE_DESCRIPTOR_SIZE */
-#include "kaleidoscope/HIDDefs.h"
+#include "kaleidoscope/driver/hid/HIDDefs.h"
 
 /* Maximum length of output report sent by host */
 #define HIDD_MAX_OUTPUT_REPORT 2

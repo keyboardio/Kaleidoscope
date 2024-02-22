@@ -27,7 +27,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "kaleidoscope/HIDDefs.h"
+#include "kaleidoscope/driver/hid/HIDDefs.h"
 
 #define DESCRIPTOR_CONSUMER_CONTROL(...)            \
   HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),          \

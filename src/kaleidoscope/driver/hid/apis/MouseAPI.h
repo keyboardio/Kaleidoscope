@@ -27,7 +27,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Arduino.h>
-#include "kaleidoscope/HIDDefs.h"
+#include "kaleidoscope/driver/hid/HIDDefs.h"
 #include "kaleidoscope/MouseButtons.h"
 
 #define DESCRIPTOR_MOUSE(...)                          \
