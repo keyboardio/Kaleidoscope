@@ -26,7 +26,7 @@ THE SOFTWARE.
 // Include guard
 #pragma once
 
-#include "kaleidoscope/HIDDefs.h"
+#include "kaleidoscope/driver/hid/HIDDefs.h"
 
 #define DESCRIPTOR_SYSTEM_CONTROL(...)                  \
   /* TODO(anyone) limit to system keys only? */         \
