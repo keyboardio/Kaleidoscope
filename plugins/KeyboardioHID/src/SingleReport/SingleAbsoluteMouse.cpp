@@ -41,7 +41,7 @@ SingleAbsoluteMouse_::SingleAbsoluteMouse_()
 }
 
 void SingleAbsoluteMouse_::sendReport(void *data, int length) {
-  auto result = SendReport(0, data, length);
+  auto result = HIDD::SendReport(0, data, length);
   HIDReportObserver::observeReport(HID_REPORTID_MOUSE_ABSOLUTE, data, length, result);
 }
 
