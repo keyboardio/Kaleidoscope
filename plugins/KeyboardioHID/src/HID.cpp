@@ -1,5 +1,6 @@
 /*
    Copyright (c) 2015, Arduino LLC
+   Copyright (c) 2024 Keyboard.io, Inc
    Original code (pre-library): Copyright (c) 2011, Peter Barrett
 
    Permission to use, copy, modify, and/or distribute this software for
