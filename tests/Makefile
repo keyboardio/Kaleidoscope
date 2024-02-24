@@ -38,6 +38,12 @@ MAKEFLAGS += --no-print-directory
 
 include $(top_dir)/etc/makefiles/arduino-cli.mk
 
+
+
+ifneq ($(KALEIDOSCOPE_CCACHE),)
+_compiler_wrappers :=  -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+endif
+
 .DEFAULT_GOAL := all
 
 # If we start off in tests to run make all, the sketch makefiles guess the wrong location for
@@ -118,8 +124,7 @@ ${top_dir}/testing/googletest/build/Makefile:
 	  -B ${top_dir}/testing/googletest/build \
 	  -DCMAKE_C_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.c.cmd) \
 	  -DCMAKE_CXX_COMPILER=$(call _arduino_prop,compiler.path)$(call _arduino_prop,compiler.cpp.cmd) \
-	  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-	  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+	  $(_compiler_wrappers)
 
 Makefile:
 	@:
