@@ -22,19 +22,32 @@ MAKEFLAGS += --no-builtin-rules
 mkfile_dir 	:= $(dir $(lastword ${MAKEFILE_LIST}))
 top_dir         := $(abspath $(mkfile_dir)../..)
 
-include $(mkfile_dir)/shared.mk
+
+# need to set this before we get the FQBN
+SKETCH_FILE	:= $(wildcard *.ino)
+FQBN     	= $(shell cat sketch.yaml|grep default_fqbn | cut -d " " -f 2)
+
+pathsafe_fqbn   := $(subst :,_,${FQBN})
+
+build_root       := ${top_dir}/_build/$(pathsafe_fqbn)
+
+
+export KALEIDOSCOPE_TEMP_PATH := ${build_root}/kaleidoscope
 
 include_plugins_dir := -I${top_dir}/plugins \
 
-build_dir := ${top_dir}/_build/${testcase}
+build_dir := ${build_root}/${testcase}
 
 LIB_DIR := ${build_dir}/lib
 OBJ_DIR := ${build_dir}/obj
 BIN_DIR	:= ${build_dir}/bin
 
-COMMON_LIB_DIR	:= ${top_dir}/_build/lib
+COMMON_LIB_DIR	:= ${build_root}/lib
+libcommon_a     := ${COMMON_LIB_DIR}/libcommon.a
 
+shared_mk := $(mkfile_dir)/shared.mk
 include $(top_dir)/etc/makefiles/arduino-cli.mk
+include $(shared_mk)
 
 ifneq ($(KALEIDOSCOPE_CCACHE),)
 COMPILER_WRAPPER := ccache
@@ -43,7 +56,6 @@ endif
 
 SRC_DIR	:= test
 
-SKETCH_FILE=$(wildcard *.ino)
 BIN_FILE=$(subst .ino,,$(SKETCH_FILE))
 LIB_FILE=${BIN_FILE}-latest.a
 
@@ -78,7 +90,7 @@ ${BIN_DIR}/${BIN_FILE}: compile-sketch
 
 # We force sketch recompiliation because otherwise, make won't pick up changes to...anything on the arduino side
 .PHONY: compile-sketch
-compile-sketch: ${TEST_OBJS}
+compile-sketch: ${libcommon_a} ${TEST_OBJS}
 	-@install -d "${BIN_DIR}" "${LIB_DIR}"
 	$(QUIET) env LIBONLY=yes VERBOSE=${VERBOSE}  \
 		OUTPUT_PATH="${LIB_DIR}" \
@@ -90,6 +102,9 @@ compile-sketch: ${TEST_OBJS}
 		"${LIB_DIR}/${LIB_FILE}" \
 		-L"${top_dir}/testing/googletest/build/lib" \
 		-lgtest -lgmock -lpthread -lm
+
+${libcommon_a}:
+	$(QUIET) ${MAKE} -f ${top_dir}/testing/makefiles/libcommon.mk -C ${top_dir}/testing
 
 
 # If we have a test.ktest file, it should be processed into a c++ testcase

@@ -1,0 +1,6 @@
+{
+  "cpu": {
+    "fqbn": "keyboardio:virtual:keyboardio_atreus",
+    "port": ""
+  }
+}
