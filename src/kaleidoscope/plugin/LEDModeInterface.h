@@ -26,7 +26,7 @@ class LEDModeInterface {
  public:
   LEDModeInterface()
     : ledModeName{0} {}
-  explicit LEDModeInterface(char *_ledModeName)
+  explicit LEDModeInterface(const char *_ledModeName)
     : ledModeName{_ledModeName} {}
   void activate();
 
@@ -54,7 +54,7 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 
  protected:
-  char *ledModeName;
+  const char *ledModeName;
 };
 
 }  // namespace plugin
