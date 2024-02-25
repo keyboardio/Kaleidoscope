@@ -26,8 +26,8 @@
 namespace kaleidoscope {
 namespace plugin {
 
-TriColor::TriColor(__FlashStringHelper *customName, cRGB base_color, cRGB mod_color, cRGB esc_color) {
-  ledModeName = customName;
+TriColor::TriColor(const __FlashStringHelper *_ledModeName, cRGB base_color, cRGB mod_color, cRGB esc_color) {
+  ledModeName = _ledModeName;
   base_color_ = base_color;
   mod_color_  = mod_color;
   esc_color_  = esc_color;
