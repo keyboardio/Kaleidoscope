@@ -77,7 +77,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void ledModeHandler_(const char *name) {
+void ledModeHandler_(const __FlashStringHelper *name) {
   Runtime.serialPort().println(name);
 }
 

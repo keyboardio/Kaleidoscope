@@ -20,12 +20,12 @@
 #include "kaleidoscope/device/device.h"    // for CRGB
 #include "kaleidoscope/plugin/TriColor.h"  // for TriColor
 
-kaleidoscope::plugin::TriColor JukeboxEffect("Jukebox",
+kaleidoscope::plugin::TriColor JukeboxEffect(F("Jukebox"),
                                              CRGB(0xc8, 0xe8, 0xee),  /* TM */
                                              CRGB(0xc3, 0xee, 0x8c),  /* VCO */
                                              CRGB(0x21, 0x38, 0xd7)); /* RN */
 
-kaleidoscope::plugin::TriColor JukeboxAlternateEffect("JukeboxAlternate",
+kaleidoscope::plugin::TriColor JukeboxAlternateEffect(F("JukeboxAlternate"),
                                                       CRGB(0xc8, 0xe8, 0xee),  /* TM */
                                                       CRGB(0x21, 0x38, 0xd7),  /* RN */
                                                       CRGB(0xc3, 0xee, 0x8c)); /* VCO */

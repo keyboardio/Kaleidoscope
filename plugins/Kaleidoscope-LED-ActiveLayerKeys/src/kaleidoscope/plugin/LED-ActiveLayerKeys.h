@@ -31,11 +31,10 @@ class LEDActiveLayerKeysEffect : public Plugin,
                                  public LEDModeInterface,
                                  public AccessTransientLEDMode {
  public:
-  LEDActiveLayerKeysEffect() { ledModeName = "ActiveLayerKeys"; }
-  explicit LEDActiveLayerKeysEffect(char *customName) { ledModeName = customName; }
+  LEDActiveLayerKeysEffect() { ledModeName = F("ActiveLayerKeys"); }
+  explicit LEDActiveLayerKeysEffect(__FlashStringHelper *customName) { ledModeName = customName; }
 
   EventHandlerResult onLayerChange();
-
   template<uint8_t _colormap_size>
   void setColormap(cRGB const (&colormap)[_colormap_size]) {
     colormap_      = colormap;

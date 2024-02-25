@@ -33,8 +33,8 @@ namespace plugin {
 //
 class FingerPainter : public LEDMode {
  public:
-  FingerPainter() { ledModeName = "FingerPainter"; }
-  explicit FingerPainter(char *customName) { ledModeName = customName; }
+  FingerPainter() { ledModeName = F("FingerPainter"); }
+  explicit FingerPainter(__FlashStringHelper *customName) { ledModeName = customName; }
 
   void toggle();
 

@@ -26,8 +26,8 @@ class LEDDigitalRainEffect : public Plugin,
                              public LEDModeInterface,
                              public AccessTransientLEDMode {
  public:
-  LEDDigitalRainEffect() { ledModeName = "DigitalRain"; }
-  explicit LEDDigitalRainEffect(char *customName) { ledModeName = customName; }
+  LEDDigitalRainEffect() { ledModeName = F("DigitalRain"); }
+  explicit LEDDigitalRainEffect(__FlashStringHelper *customName) { ledModeName = customName; }
 
   /**
    * Color channel enum.

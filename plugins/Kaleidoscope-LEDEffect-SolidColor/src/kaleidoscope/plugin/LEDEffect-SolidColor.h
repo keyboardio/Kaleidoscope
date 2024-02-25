@@ -30,10 +30,10 @@ class LEDSolidColor : public Plugin,
  public:
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
-    ledModeName = "SolidColor";
+    ledModeName = F("SolidColor");
   }
 
-  LEDSolidColor(char *customName, uint8_t r, uint8_t g, uint8_t b)
+  LEDSolidColor(__FlashStringHelper *customName, uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
     ledModeName = customName;
   }

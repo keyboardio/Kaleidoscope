@@ -31,8 +31,8 @@ class LEDActiveLayerColorEffect : public Plugin,
                                   public LEDModeInterface,
                                   public AccessTransientLEDMode {
  public:
-  LEDActiveLayerColorEffect() { ledModeName = "ActiveLayerColor"; }
-  explicit LEDActiveLayerColorEffect(char *customName) { ledModeName = customName; }
+  LEDActiveLayerColorEffect() { ledModeName = F("ActiveLayerColor"); }
+  explicit LEDActiveLayerColorEffect(__FlashStringHelper *customName) { ledModeName = customName; }
 
   EventHandlerResult onLayerChange();
   void setColormap(const cRGB colormap[]);
