@@ -37,6 +37,9 @@
 #define _ABORTABLE true
 #define _NOT_ABORTABLE false
 
+// Define the callback for the LED mode hook handler
+typedef void (*LedModeCallback)(const char*);
+
 #define _CURRENT_IMPLEMENTATION
 
 //******************************************************************************
@@ -133,8 +136,8 @@ class SignatureCheckDummy {};
              _CURRENT_IMPLEMENTATION,                                     __NL__ \
              _NOT_ABORTABLE,                                              __NL__ \
              (), (), (), /* non template */                               __NL__ \
-             (char *(&_ledModeName)),                                     __NL__ \
-             (_ledModeName), ##__VA_ARGS__)                               __NL__ \
+             (LedModeCallback callback),                                  __NL__ \
+             (callback), ##__VA_ARGS__)                                   __NL__ \
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \

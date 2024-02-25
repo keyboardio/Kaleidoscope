@@ -17,6 +17,7 @@
 #pragma once
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handlers.h"        // for LedModeCallback
 
 namespace kaleidoscope {
 namespace plugin {
@@ -29,12 +30,12 @@ class LEDModeInterface {
     : ledModeName{_ledModeName} {}
   void activate();
 
-  EventHandlerResult onLedEffectQuery(char *(&_ledModeName)) {
+  EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
     if (ledModeName == 0) {
       // If no name was defined, return a default string
-      _ledModeName = const_cast<char *>("[unnamed led mode]");
+      callback(const_cast<char *>("[unnamed led mode]"));
     } else {
-      _ledModeName = ledModeName;
+      callback(ledModeName);
     }
     return EventHandlerResult::OK;
   }
