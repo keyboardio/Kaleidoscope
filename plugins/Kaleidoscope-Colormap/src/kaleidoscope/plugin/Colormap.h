@@ -33,7 +33,7 @@ class ColormapEffect : public Plugin,
                        public AccessTransientLEDMode {
  public:
   ColormapEffect() { ledModeName = F("Colormap"); }
-  explicit ColormapEffect(__FlashStringHelper *customName) { ledModeName = customName; }
+  explicit ColormapEffect(const __FlashStringHelper *customName) { ledModeName = customName; }
 
   void max_layers(uint8_t max_);
 

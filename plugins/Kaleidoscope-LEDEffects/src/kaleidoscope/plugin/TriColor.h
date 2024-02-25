@@ -27,10 +27,10 @@ namespace plugin {
 class TriColor : public Plugin,
                  public LEDModeInterface {
  public:
-  TriColor(__FlashStringHelper *customName, cRGB base_color, cRGB mod_color, cRGB esc_color);
+  TriColor(const __FlashStringHelper *customName, cRGB base_color, cRGB mod_color, cRGB esc_color);
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color)
     : TriColor(F("TriColor"), base_color, mod_color, esc_color) {}
-  TriColor(__FlashStringHelper *customName, cRGB base_color, cRGB mod_color)
+  TriColor(const __FlashStringHelper *customName, cRGB base_color, cRGB mod_color)
     : TriColor(customName, base_color, mod_color, mod_color) {}
   TriColor(cRGB base_color, cRGB mod_color)
     : TriColor(F("TriColor"), base_color, mod_color, mod_color) {}
