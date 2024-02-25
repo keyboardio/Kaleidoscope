@@ -20,5 +20,6 @@
 #include "kaleidoscope/device/device.h"    // for CRGB
 #include "kaleidoscope/plugin/TriColor.h"  // for TriColor
 
-kaleidoscope::plugin::TriColor MiamiEffect(CRGB(0x4e, 0xd6, 0xd6),  /* Cyan */
+kaleidoscope::plugin::TriColor MiamiEffect("Miami",
+                                           CRGB(0x4e, 0xd6, 0xd6),  /* Cyan */
                                            CRGB(0xaf, 0x67, 0xfa)); /* Magenta */
