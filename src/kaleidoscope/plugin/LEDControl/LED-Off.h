@@ -27,7 +27,7 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
-  LEDOff() { ledModeName = "LEDOff"; }
+  LEDOff() { ledModeName = "Off"; }
   explicit LEDOff(char *customName) { ledModeName = customName; }
 
  protected:

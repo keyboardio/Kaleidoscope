@@ -31,7 +31,7 @@ class LEDActiveLayerKeysEffect : public Plugin,
                                  public LEDModeInterface,
                                  public AccessTransientLEDMode {
  public:
-  LEDActiveLayerKeysEffect() { ledModeName = "LEDActiveLayerKeys"; }
+  LEDActiveLayerKeysEffect() { ledModeName = "ActiveLayerKeys"; }
   explicit LEDActiveLayerKeysEffect(char *customName) { ledModeName = customName; }
 
   EventHandlerResult onLayerChange();

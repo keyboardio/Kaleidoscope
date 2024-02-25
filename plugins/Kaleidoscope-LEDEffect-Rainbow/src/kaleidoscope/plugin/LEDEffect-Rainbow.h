@@ -27,7 +27,7 @@ namespace plugin {
 class LEDRainbowEffect : public Plugin,
                          public LEDModeInterface {
  public:
-  LEDRainbowEffect() { ledModeName = "LEDRainbow"; }
+  LEDRainbowEffect() { ledModeName = "Rainbow"; }
   explicit LEDRainbowEffect(char *customName) { ledModeName = customName; }
 
   void brightness(uint8_t);
@@ -71,7 +71,7 @@ class LEDRainbowEffect : public Plugin,
 
 class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
  public:
-  LEDRainbowWaveEffect() { ledModeName = "LEDRainbowWave"; }
+  LEDRainbowWaveEffect() { ledModeName = "RainbowWave"; }
   explicit LEDRainbowWaveEffect(char *customName) { ledModeName = customName; }
 
   void brightness(uint8_t);
