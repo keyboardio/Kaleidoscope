@@ -48,7 +48,7 @@ class BootKeyboard_ : public HIDD, public BootKeyboardAPI {
   }
 
  protected:
-  int SendReport(const void *data, int len) override;
+  int SendHIDReport(const void *data, int len) override;
   void setReportDescriptor(uint8_t bootkb_only) override;
 };
 extern BootKeyboard_ &BootKeyboard();

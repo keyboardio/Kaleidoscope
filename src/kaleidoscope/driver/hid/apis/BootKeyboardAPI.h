@@ -202,7 +202,7 @@ class BootKeyboardAPI {
   virtual void onUSBReset() = 0;
 
  protected:
-  virtual int SendReport(const void *data, int len)     = 0;
+  virtual int SendHIDReport(const void *data, int len)  = 0;
   virtual void setReportDescriptor(uint8_t bootkb_only) = 0;
   virtual uint8_t getProtocol()                         = 0;
 

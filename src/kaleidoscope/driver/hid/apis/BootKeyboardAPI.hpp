@@ -101,7 +101,7 @@ int BootKeyboardAPI::sendReportUnchecked() {
   } else {
     reportlen = sizeof(out_report);
   }
-  int returnCode = SendReport(&out_report, reportlen);
+  int returnCode = SendHIDReport(&out_report, reportlen);
   return returnCode;
 }
 
