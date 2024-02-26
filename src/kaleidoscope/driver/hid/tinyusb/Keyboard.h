@@ -59,7 +59,7 @@ class BootKeyboard_ : public BootKeyboardAPI, public Adafruit_USBD_HID {
   }
 
  protected:
-  int SendReport(const void *data, int len) override {
+  int SendHIDReport(const void *data, int len) override {
     if (Adafruit_USBD_HID::sendReport(0, data, len)) {
       return len;
     } else {
