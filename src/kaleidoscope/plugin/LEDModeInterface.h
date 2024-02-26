@@ -27,17 +27,17 @@ namespace plugin {
 class LEDModeInterface {
  public:
   LEDModeInterface()
-    : ledModeName{0} {}
+    : led_mode_name_{0} {}
   explicit LEDModeInterface(const __FlashStringHelper *_ledModeName)
-    : ledModeName{_ledModeName} {}
+    : led_mode_name_{_ledModeName} {}
   void activate();
 
   EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
-    if (ledModeName == 0) {
+    if (led_mode_name_ == 0) {
       // If no name was defined, return a default string
       callback(F("[unnamed led mode]"));
     } else {
-      callback(ledModeName);
+      callback(led_mode_name_);
     }
     return EventHandlerResult::OK;
   }
@@ -56,7 +56,7 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 
  protected:
-  const __FlashStringHelper *ledModeName;
+  const __FlashStringHelper *led_mode_name_;
 };
 
 }  // namespace plugin

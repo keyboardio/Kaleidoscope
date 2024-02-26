@@ -28,8 +28,8 @@ namespace plugin {
 class LEDChaseEffect : public Plugin,
                        public LEDModeInterface {
  public:
-  LEDChaseEffect() { ledModeName = F("Chase"); }
-  explicit LEDChaseEffect(const __FlashStringHelper *customName) { ledModeName = customName; }
+  LEDChaseEffect() { led_mode_name_ = F("Chase"); }
+  explicit LEDChaseEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
 
   uint8_t update_delay() {
     return update_delay_;

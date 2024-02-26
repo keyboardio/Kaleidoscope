@@ -34,8 +34,8 @@ class Heatmap : public Plugin,
                 public LEDModeInterface,
                 public AccessTransientLEDMode {
  public:
-  Heatmap() { ledModeName = F("Heatmap"); }
-  explicit Heatmap(const __FlashStringHelper *customName) { ledModeName = customName; }
+  Heatmap() { led_mode_name_ = F("Heatmap"); }
+  explicit Heatmap(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
 
   static uint16_t update_delay;
   static const cRGB *heat_colors;

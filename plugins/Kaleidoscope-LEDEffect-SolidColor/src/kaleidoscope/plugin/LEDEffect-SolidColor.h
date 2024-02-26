@@ -30,12 +30,12 @@ class LEDSolidColor : public Plugin,
  public:
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
-    ledModeName = F("SolidColor");
+    led_mode_name_ = F("SolidColor");
   }
 
   LEDSolidColor(const __FlashStringHelper *customName, uint8_t r, uint8_t g, uint8_t b)
     : r_(r), g_(g), b_(b) {
-    ledModeName = customName;
+    led_mode_name_ = customName;
   }
 
   // This class' instance has dynamic lifetime

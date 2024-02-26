@@ -132,7 +132,7 @@ class SignatureCheckDummy {};
                                                                           __NL__ \
    /* Called by Focus, when handling the `led.modes` command. */          __NL__ \
    /* Is implemented in LEDModeInterface.h, but depends on */             __NL__ \
-   /* the LED plugin to set `ledModeName`. */                             __NL__ \
+   /* the LED plugin to set `led_mode_name_`. */                          __NL__ \
    OPERATION(onLedEffectQuery,                                            __NL__ \
              1,                                                           __NL__ \
              _CURRENT_IMPLEMENTATION,                                     __NL__ \

@@ -34,8 +34,8 @@ class AlphaSquareEffect : public Plugin,
                           public LEDModeInterface,
                           public AccessTransientLEDMode {
  public:
-  AlphaSquareEffect() { ledModeName = F("AlphaSquare"); }
-  explicit AlphaSquareEffect(const __FlashStringHelper *customName) { ledModeName = customName; }
+  AlphaSquareEffect() { led_mode_name_ = F("AlphaSquare"); }
+  explicit AlphaSquareEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
 
   static uint16_t length;
 
