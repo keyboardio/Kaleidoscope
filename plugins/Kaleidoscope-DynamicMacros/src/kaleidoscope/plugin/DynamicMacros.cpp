@@ -113,8 +113,8 @@ void DynamicMacros::play(uint8_t macro_id) {
     // Keycode variants of actions don't have flags to set, but we want to make sure
     // we're still initializing them properly.
 
-    key.setFlags((macro == MACRO_ACTION_STEP_KEYCODEDOWN || macro == MACRO_ACTION_STEP_KEYCODEUP || MACRO_ACTION_STEP_TAPCODE) ? 0
-                                                                                                                               : Runtime.storage().read(pos++));
+    key.setFlags((macro == MACRO_ACTION_STEP_KEYCODEDOWN || macro == MACRO_ACTION_STEP_KEYCODEUP || macro == MACRO_ACTION_STEP_TAPCODE) ? 0
+                                                                                                                                        : Runtime.storage().read(pos++));
 
     key.setKeyCode(Runtime.storage().read(pos++));
 
