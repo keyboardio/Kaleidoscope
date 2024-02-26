@@ -51,6 +51,35 @@ void Macros::play(const macro_t *macro_p) {
   if (macro_p == MACRO_NONE)
     return;
 
+
+  // Define a lambda function for common key operations to reduce redundancy
+  auto setKeyAndAction = [this, &key, &macro, &macro_p]() {
+    // Keycode variants of actions don't have flags to set, but we want to make sure
+    // we're still initializing them properly.
+
+    key.setFlags((macro == MACRO_ACTION_STEP_KEYCODEDOWN || macro == MACRO_ACTION_STEP_KEYCODEUP || macro == MACRO_ACTION_STEP_TAPCODE) ? 0
+                                                                                                                                        : pgm_read_byte(macro_p++));
+    key.setKeyCode(pgm_read_byte(macro_p++));
+
+    switch (macro) {
+    case MACRO_ACTION_STEP_KEYCODEDOWN:
+    case MACRO_ACTION_STEP_KEYDOWN:
+      this->press(key);
+      break;
+    case MACRO_ACTION_STEP_KEYCODEUP:
+    case MACRO_ACTION_STEP_KEYUP:
+      this->release(key);
+      break;
+    case MACRO_ACTION_STEP_TAP:
+    case MACRO_ACTION_STEP_TAPCODE:
+      this->tap(key);
+      break;
+    default:
+      break;
+    }
+  };
+
+
   while (true) {
     switch (macro = pgm_read_byte(macro_p++)) {
     // These are unlikely to be useful now that we have KeyEvent. I think the
@@ -72,53 +101,21 @@ void Macros::play(const macro_t *macro_p) {
     }
 
     case MACRO_ACTION_STEP_KEYDOWN:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      press(key);
-      break;
     case MACRO_ACTION_STEP_KEYUP:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      release(key);
-      break;
     case MACRO_ACTION_STEP_TAP:
-      key.setFlags(pgm_read_byte(macro_p++));
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      tap(key);
-      break;
-
     case MACRO_ACTION_STEP_KEYCODEDOWN:
-      key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      press(key);
-      break;
     case MACRO_ACTION_STEP_KEYCODEUP:
-      key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      release(key);
-      break;
     case MACRO_ACTION_STEP_TAPCODE:
-      key.setFlags(0);
-      key.setKeyCode(pgm_read_byte(macro_p++));
-      tap(key);
+      setKeyAndAction();
       break;
 
-    case MACRO_ACTION_STEP_TAP_SEQUENCE: {
+    case MACRO_ACTION_STEP_TAP_SEQUENCE:
+    case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
+      bool isKeycodeSequence = macro == MACRO_ACTION_STEP_TAP_CODE_SEQUENCE;
       while (true) {
-        key.setFlags(pgm_read_byte(macro_p++));
+        key.setFlags(isKeycodeSequence ? 0 : pgm_read_byte(macro_p++));
         key.setKeyCode(pgm_read_byte(macro_p++));
         if (key == Key_NoKey)
-          break;
-        tap(key);
-        delay(interval);
-      }
-      break;
-    }
-    case MACRO_ACTION_STEP_TAP_CODE_SEQUENCE: {
-      while (true) {
-        key.setFlags(0);
-        key.setKeyCode(pgm_read_byte(macro_p++));
-        if (key.getKeyCode() == 0)
           break;
         tap(key);
         delay(interval);
