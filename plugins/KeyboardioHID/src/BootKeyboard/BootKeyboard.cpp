@@ -68,7 +68,7 @@ void BootKeyboard_::setReportDescriptor(uint8_t bootkb_only) {
   }
 }
 
-int BootKeyboard_::SendReport(const void *data, int len) {
+int BootKeyboard_::SendHIDReport(const void *data, int len) {
   int returnCode = HIDD::SendReport(0, data, len);
   HIDReportObserver::observeReport(HID_REPORTID_KEYBOARD, data, len, returnCode);
 }
