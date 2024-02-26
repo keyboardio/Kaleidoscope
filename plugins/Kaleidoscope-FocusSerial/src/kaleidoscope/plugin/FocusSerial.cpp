@@ -77,7 +77,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void ledModeHandler_(const __FlashStringHelper *name) {
+void sendLedModeCallback_(const __FlashStringHelper *name) {
   Runtime.serialPort().println(name);
 }
 
@@ -95,7 +95,7 @@ EventHandlerResult FocusSerial::onFocusEvent(const char *input) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
   if (inputMatchesCommand(input, cmd_led_modes)) {
-    kaleidoscope::Hooks::onLedEffectQuery(ledModeHandler_);
+    kaleidoscope::Hooks::onLedEffectQuery(sendLedModeCallback_);
     return EventHandlerResult::EVENT_CONSUMED;
   }
   if (inputMatchesCommand(input, cmd_plugins)) {
