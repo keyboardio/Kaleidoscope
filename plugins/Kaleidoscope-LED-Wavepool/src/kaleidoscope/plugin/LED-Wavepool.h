@@ -42,7 +42,7 @@ class WavepoolEffect : public Plugin,
                        public AccessTransientLEDMode {
  public:
   WavepoolEffect() { led_mode_name_ = F("Wavepool"); }
-  explicit WavepoolEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
+  explicit WavepoolEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
 

@@ -37,7 +37,7 @@ class StalkerEffect : public Plugin,
                       public AccessTransientLEDMode {
  public:
   StalkerEffect() { led_mode_name_ = F("Stalker"); }
-  explicit StalkerEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
+  explicit StalkerEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   class ColorComputer {
    public:

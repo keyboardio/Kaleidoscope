@@ -28,8 +28,8 @@ class LEDModeInterface {
  public:
   LEDModeInterface()
     : led_mode_name_{0} {}
-  explicit LEDModeInterface(const __FlashStringHelper *_ledModeName)
-    : led_mode_name_{_ledModeName} {}
+  explicit LEDModeInterface(const __FlashStringHelper *led_mode_name)
+    : led_mode_name_{led_mode_name} {}
   void activate();
 
   EventHandlerResult onLedEffectQuery(LedModeCallback callback) {

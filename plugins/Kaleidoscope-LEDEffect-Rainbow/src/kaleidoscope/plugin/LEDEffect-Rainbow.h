@@ -28,7 +28,7 @@ class LEDRainbowEffect : public Plugin,
                          public LEDModeInterface {
  public:
   LEDRainbowEffect() { led_mode_name_ = F("Rainbow"); }
-  explicit LEDRainbowEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
+  explicit LEDRainbowEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   void brightness(uint8_t);
   uint8_t brightness() {
@@ -72,7 +72,7 @@ class LEDRainbowEffect : public Plugin,
 class LEDRainbowWaveEffect : public Plugin, public LEDModeInterface {
  public:
   LEDRainbowWaveEffect() { led_mode_name_ = F("RainbowWave"); }
-  explicit LEDRainbowWaveEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
+  explicit LEDRainbowWaveEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   void brightness(uint8_t);
   uint8_t brightness() {

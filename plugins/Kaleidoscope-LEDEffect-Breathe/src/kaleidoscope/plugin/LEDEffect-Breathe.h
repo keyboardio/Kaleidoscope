@@ -28,7 +28,7 @@ class LEDBreatheEffect : public Plugin,
                          public LEDModeInterface {
  public:
   LEDBreatheEffect() { led_mode_name_ = F("Breathe"); }
-  explicit LEDBreatheEffect(const __FlashStringHelper *customName) { led_mode_name_ = customName; }
+  explicit LEDBreatheEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   uint8_t hue        = 170;
   uint8_t saturation = 255;
