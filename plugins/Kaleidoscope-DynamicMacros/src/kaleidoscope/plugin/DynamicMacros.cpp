@@ -68,7 +68,7 @@ uint8_t DynamicMacros::updateDynamicMacroCache() {
       do {
         flags   = Runtime.storage().read(pos++);
         keyCode = Runtime.storage().read(pos++);
-      } while (!(flags == 0 && keyCode == 0));
+      } while (!(flags == 0 && keyCode == 0) && (pos < storage_base_ + storage_size_));
       break;
     }
 
