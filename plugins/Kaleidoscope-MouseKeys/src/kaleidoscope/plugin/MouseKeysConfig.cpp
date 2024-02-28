@@ -33,12 +33,12 @@ namespace plugin {
 // MouseKeys configurator
 
 EventHandlerResult MouseKeysConfig::onSetup() {
-  settings_addr_ = ::EEPROMSettings.requestSliceAndData(&::MouseKeys.settings_, sizeof(MouseKeys::settings_));
+  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::MouseKeys.settings_, sizeof(MouseKeys::settings_));
 
 
   // If the EEPROM is empty, store the default settings.
-  if (!::EEPROMSettings.isSliceValid(settings_addr_, sizeof(::MouseKeys.settings_))) {
-    Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
+  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(::MouseKeys.settings_))) {
+    Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
     Runtime.storage().commit();
   }
 
@@ -141,7 +141,7 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
 
   // Update settings stored in EEPROM, and indicate that this Focus event has
   // been handled successfully.
-  Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
+  Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
   Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }

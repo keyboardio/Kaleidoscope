@@ -38,7 +38,7 @@ EventHandlerResult PersistentLEDMode::onSetup() {
   settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings_, sizeof(settings_));
 
   // If the EEPROM is empty, store the default settings.
-  if (::EEPROMSettings.isSliceValid(settings_addr_, sizeof(settings_))) {
+  if (::EEPROMSettings.isSliceValid(settings_base_, sizeof(settings_))) {
     ::LEDControl.set_mode(settings_.default_mode_index);
   }
 
