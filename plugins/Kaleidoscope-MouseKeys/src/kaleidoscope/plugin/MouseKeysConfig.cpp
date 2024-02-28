@@ -33,15 +33,15 @@ namespace plugin {
 // MouseKeys configurator
 
 EventHandlerResult MouseKeysConfig::onSetup() {
-  settings_addr_ = ::EEPROMSettings.requestSlice(sizeof(MouseKeys::Settings));
+  settings_addr_ = ::EEPROMSettings.requestSliceAndData(&::MouseKeys.settings_, sizeof(MouseKeys::settings_));
+
 
   // If the EEPROM is empty, store the default settings.
-  if (Runtime.storage().isSliceUninitialized(settings_addr_, sizeof(MouseKeys::Settings))) {
+  if (!::EEPROMSettings.isSliceValid(settings_addr_, sizeof(::MouseKeys.settings_))) {
     Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_addr_, ::MouseKeys.settings_);
 
   // We need to set the grid size explicitly, because behind the scenes, that's
   // stored in MouseWrapper.

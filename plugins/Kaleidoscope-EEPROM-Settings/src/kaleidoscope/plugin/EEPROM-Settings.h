@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, uint16_t
-
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stddef.h>                             // for size_t
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
 
@@ -73,6 +73,9 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   bool ignoreHardcodedLayers() {
     return settings_.ignore_hardcoded_layers;
   }
+
+  uint16_t requestSliceAndData(void *data, size_t size);
+  bool isSliceValid(uint16_t start, size_t size);
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;

@@ -35,16 +35,12 @@ uint16_t PersistentLEDMode::settings_base_;
 struct PersistentLEDMode::settings PersistentLEDMode::settings_;
 
 EventHandlerResult PersistentLEDMode::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings_));
+  settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings_, sizeof(settings_));
 
-  Runtime.storage().get(settings_base_, settings_);
-
-  // If our slice is uninitialized, then return early, without touching the
-  // current mode.
-  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(settings_)))
-    return EventHandlerResult::OK;
-
-  ::LEDControl.set_mode(settings_.default_mode_index);
+  // If the EEPROM is empty, store the default settings.
+  if (::EEPROMSettings.isSliceValid(settings_addr_, sizeof(settings_))) {
+    ::LEDControl.set_mode(settings_.default_mode_index);
+  }
 
   return EventHandlerResult::OK;
 }
