@@ -127,8 +127,9 @@ void EEPROMSettings::seal() {
    * - When the EEPROM is uninitialized (0x7f)
    * - When such layer switching is explicitly turned off (0x7e)
    */
-  if (settings_.default_layer < IGNORE_HARDCODED_LAYER)
+  if (settings_.default_layer < IGNORE_HARDCODED_LAYER && settings_.default_layer < layer_count) {
     Layer.move(settings_.default_layer);
+  }
 }
 
 uint16_t EEPROMSettings::requestSlice(uint16_t size) {
