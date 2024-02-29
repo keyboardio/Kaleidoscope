@@ -47,12 +47,7 @@ EventHandlerResult EEPROMKeymap::onNameQuery() {
 
 void EEPROMKeymap::setup(uint8_t max) {
   layer_count = max;
-  if (::EEPROMSettings.ignoreHardcodedLayers()) {
     Layer.getKey = getKey;
-  } else {
-    layer_count += progmem_layers_;
-    Layer.getKey = getKeyExtended;
-  }
   max_layers(max);
 }
 
@@ -69,17 +64,6 @@ Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
 
   return Key(Runtime.storage().read(keymap_base_ + pos + 1),  // key_code
              Runtime.storage().read(keymap_base_ + pos));     // flags
-}
-
-Key EEPROMKeymap::getKeyExtended(uint8_t layer, KeyAddr key_addr) {
-
-  // If the layer is within PROGMEM bounds, look it up from there
-  if (layer < progmem_layers_) {
-    return Layer.getKeyFromPROGMEM(layer, key_addr);
-  }
-
-  // If the layer is outside of PROGMEM, look up from EEPROM
-  return getKey(layer - progmem_layers_, key_addr);
 }
 
 uint16_t EEPROMKeymap::keymap_base() {
@@ -104,30 +88,9 @@ void EEPROMKeymap::dumpKeymap(uint8_t layers, Key (*getkey)(uint8_t, KeyAddr)) {
 EventHandlerResult EEPROMKeymap::onFocusEvent(const char *input) {
   const char *cmd_custom     = PSTR("keymap.custom");
   const char *cmd_default    = PSTR("keymap.default");
-  const char *cmd_onlyCustom = PSTR("keymap.onlyCustom");
 
   if (::Focus.inputMatchesHelp(input))
-    return ::Focus.printHelp(cmd_custom, cmd_default, cmd_onlyCustom);
-
-  if (::Focus.inputMatchesCommand(input, cmd_onlyCustom)) {
-    if (::Focus.isEOL()) {
-      ::Focus.send((uint8_t)::EEPROMSettings.ignoreHardcodedLayers());
-    } else {
-      bool v;
-
-      ::Focus.read((uint8_t &)v);
-      ::EEPROMSettings.ignoreHardcodedLayers(v);
-
-      layer_count = max_layers_;
-      if (v) {
-        Layer.getKey = getKey;
-      } else {
-        layer_count += progmem_layers_;
-        Layer.getKey = getKeyExtended;
-      }
-    }
-    return EventHandlerResult::EVENT_CONSUMED;
-  }
+    return ::Focus.printHelp(cmd_custom, cmd_default);
 
   if (::Focus.inputMatchesCommand(input, cmd_default)) {
     // By using a cast to the appropriate function type,
