@@ -35,13 +35,11 @@ EventHandlerResult EEPROMSettings::onSetup() {
 
   /* If the version is undefined, set up sensible defaults. */
   if (settings_.version == VERSION_UNDEFINED) {
-    if (settings_.default_layer == 127 &&
-        settings_.ignore_hardcoded_layers) {
+    if (settings_.default_layer == 127 ) {
       /* If both of these are set, that means that the EEPROM is uninitialized,
          and setting sensible defaults is safe. If either of them is not at it's
          uninitialized state, we do not override them, to avoid overwriting user
          settings. */
-      settings_.ignore_hardcoded_layers = false;
       settings_.default_layer           = 0;
     }
 
@@ -81,24 +79,10 @@ uint8_t EEPROMSettings::default_layer(uint8_t layer) {
     settings_.default_layer = layer;
   }
 
-  /*
-   * We set default_layer to IGNORE_HARDCODED_LAYER (instead of `value`) because
-   * due to compatibility reasons, we might get passed 0xff, yet, we want to set
-   * a different value to signal an explicit "no default".
-   */
-  if (layer >= IGNORE_HARDCODED_LAYER) {
-    settings_.default_layer = IGNORE_HARDCODED_LAYER;
-  }
   update();
   return settings_.default_layer;
 }
 
-void EEPROMSettings::ignoreHardcodedLayers(bool value) {
-  settings_.ignore_hardcoded_layers = value;
-  if (settings_.default_layer > IGNORE_HARDCODED_LAYER)
-    settings_.default_layer = IGNORE_HARDCODED_LAYER;
-  update();
-}
 
 void EEPROMSettings::seal() {
   sealed_ = true;
@@ -119,6 +103,7 @@ void EEPROMSettings::seal() {
 
   is_valid_ = true;
 
+<<<<<<< Updated upstream
   /* If we have a default layer set, switch to it.
    *
    * We check if the layer is smaller than IGNORE_HARDCODED_LAYER (0x7e),
@@ -130,6 +115,20 @@ void EEPROMSettings::seal() {
   if (settings_.default_layer < IGNORE_HARDCODED_LAYER && settings_.default_layer < layer_count) {
     Layer.move(settings_.default_layer);
   }
+||||||| Stash base
+  /* If we have a default layer set, switch to it.
+   *
+   * We check if the layer is smaller than IGNORE_HARDCODED_LAYER (0x7e),
+   * because we want to avoid setting a default layer in two cases:
+   *
+   * - When the EEPROM is uninitialized (0x7f)
+   * - When such layer switching is explicitly turned off (0x7e)
+   */
+  if (settings_.default_layer < IGNORE_HARDCODED_LAYER)
+    Layer.move(settings_.default_layer);
+=======
+  Layer.move(settings_.default_layer);
+>>>>>>> Stashed changes
 }
 
 uint16_t EEPROMSettings::requestSlice(uint16_t size) {

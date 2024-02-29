@@ -29,7 +29,7 @@ class EEPROMSettings : public kaleidoscope::Plugin {
  private:
   struct Settings {
     uint8_t default_layer : 7;
-    bool ignore_hardcoded_layers : 1;
+    bool _unused : 1;
     uint8_t version;
     uint16_t crc;
   };
@@ -68,10 +68,6 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   uint8_t default_layer(uint8_t layer);
   uint8_t default_layer() {
     return settings_.default_layer;
-  }
-  void ignoreHardcodedLayers(bool value);
-  bool ignoreHardcodedLayers() {
-    return settings_.ignore_hardcoded_layers;
   }
 
  private:

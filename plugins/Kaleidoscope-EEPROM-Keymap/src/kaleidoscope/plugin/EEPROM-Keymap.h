@@ -44,7 +44,6 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static uint16_t keymap_base();
 
   static Key getKey(uint8_t layer, KeyAddr key_addr);
-  static Key getKeyExtended(uint8_t layer, KeyAddr key_addr);
 
   static void updateKey(uint16_t base_pos, Key key);
 
