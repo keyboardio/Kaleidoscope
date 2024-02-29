@@ -263,7 +263,7 @@ class OneShotConfig : public Plugin {
 
  private:
   // The base address in persistent storage for configuration data:
-  uint16_t settings_addr_;
+  uint16_t settings_base_;
 };
 
 }  // namespace plugin

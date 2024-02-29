@@ -20,6 +20,8 @@
 #include <Arduino.h>                   // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint16_t, uint8_t
+#include <stddef.h>                    // for size_t
+
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for VirtualProps::Storage, Base<>::Storage
@@ -156,6 +158,32 @@ void EEPROMSettings::update() {
   Runtime.storage().put(0, settings_);
   Runtime.storage().commit();
   is_valid_ = true;
+}
+
+// get a settings slice from the storage and stick it in the untyped struct
+// Returns the slice start address or 0 if the  if the EEPROM is not initialized or the settings are invalid)
+uint16_t EEPROMSettings::requestSliceAndData(void *data, size_t size) {
+
+  // Request the slice for the struct from storage
+  uint16_t start = requestSlice(size);
+  if (isSliceValid(start, size)) {
+    Runtime.storage().get(start, data);
+  }
+  return start;
+}
+
+bool EEPROMSettings::isSliceValid(uint16_t start, size_t size) {
+
+  // If our slice is uninitialized, then return early.
+  if (Runtime.storage().isSliceUninitialized(start, size)) {
+    return false;
+  }
+
+  // If the slice of storage is initialized, but settings are invalid, then return early.
+  if (!isValid()) {
+    return false;
+  }
+  return true;
 }
 
 /** Focus **/

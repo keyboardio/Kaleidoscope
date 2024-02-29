@@ -34,9 +34,7 @@ uint16_t LEDBrightnessConfig::settings_base_;
 struct LEDBrightnessConfig::settings LEDBrightnessConfig::settings_;
 
 EventHandlerResult LEDBrightnessConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings_));
-
-  Runtime.storage().get(settings_base_, settings_);
+  settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings_, sizeof(settings_));
 
   // We do not need to treat uninitialized slices in any special way, because
   // uninitialized defaults to `255`, which happens to be our desired default
