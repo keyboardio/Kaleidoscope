@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <Arduino.h>  // for __FlashStringHelper, F
+#include <Arduino.h>  // for PROGMEM
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/event_handlers.h"        // for LedModeCallback
@@ -28,14 +28,14 @@ class LEDModeInterface {
  public:
   LEDModeInterface()
     : led_mode_name_{0} {}
-  explicit LEDModeInterface(const __FlashStringHelper *led_mode_name)
+  explicit LEDModeInterface(const char *led_mode_name)
     : led_mode_name_{led_mode_name} {}
   void activate();
 
   EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
     if (led_mode_name_ == 0) {
       // If no name was defined, return a default string
-      callback(F("[unnamed led mode]"));
+      callback("[unnamed led mode]");
     } else {
       callback(led_mode_name_);
     }
@@ -56,7 +56,7 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 
  protected:
-  const __FlashStringHelper *led_mode_name_;
+  const char *led_mode_name_ PROGMEM = {"[unnamed led mode]"};
 };
 
 }  // namespace plugin

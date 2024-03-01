@@ -27,13 +27,13 @@ namespace plugin {
 class TriColor : public Plugin,
                  public LEDModeInterface {
  public:
-  TriColor(const __FlashStringHelper *led_mode_name, cRGB base_color, cRGB mod_color, cRGB esc_color);
+  TriColor(const char *led_mode_name, cRGB base_color, cRGB mod_color, cRGB esc_color);
   TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color)
-    : TriColor(F("TriColor"), base_color, mod_color, esc_color) {}
-  TriColor(const __FlashStringHelper *led_mode_name, cRGB base_color, cRGB mod_color)
+    : TriColor("TriColor", base_color, mod_color, esc_color) {}
+  TriColor(const char *led_mode_name, cRGB base_color, cRGB mod_color)
     : TriColor(led_mode_name, base_color, mod_color, mod_color) {}
   TriColor(cRGB base_color, cRGB mod_color)
-    : TriColor(F("TriColor"), base_color, mod_color, mod_color) {}
+    : TriColor("TriColor", base_color, mod_color, mod_color) {}
 
   // This class' instance has dynamic lifetime
   //

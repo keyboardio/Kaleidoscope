@@ -31,8 +31,8 @@ class LEDActiveLayerKeysEffect : public Plugin,
                                  public LEDModeInterface,
                                  public AccessTransientLEDMode {
  public:
-  LEDActiveLayerKeysEffect() { led_mode_name_ = F("ActiveLayerKeys"); }
-  explicit LEDActiveLayerKeysEffect(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
+  LEDActiveLayerKeysEffect() { led_mode_name_ = "ActiveLayerKeys"; }
+  explicit LEDActiveLayerKeysEffect(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
 
   EventHandlerResult onLayerChange();
   template<uint8_t _colormap_size>

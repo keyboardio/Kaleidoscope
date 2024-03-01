@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/FocusSerial.h"
 
-#include <Arduino.h>         // for PSTR, __FlashStringHelper, F, strcmp_P
+#include <Arduino.h>         // for PSTR, F, strcmp_P
 #include <HardwareSerial.h>  // for HardwareSerial
 #include <string.h>          // for memset
 
@@ -77,7 +77,7 @@ EventHandlerResult FocusSerial::afterEachCycle() {
   return EventHandlerResult::OK;
 }
 
-void sendLedModeCallback_(const __FlashStringHelper *name) {
+void sendLedModeCallback_(const char *name) {
   Runtime.serialPort().println(name);
 }
 

@@ -27,8 +27,8 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
-  LEDOff() { led_mode_name_ = F("Off"); }
-  explicit LEDOff(const __FlashStringHelper *led_mode_name) { led_mode_name_ = led_mode_name; }
+  LEDOff() { led_mode_name_ = "Off"; }
+  explicit LEDOff(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
 
  protected:
   void onActivate() final;

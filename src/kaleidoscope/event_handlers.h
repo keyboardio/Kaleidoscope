@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include <Arduino.h>  // for __FlashStringHelper
-
 // This file defines the names and argument signatures for all event handlers
 // in the Kaleidoscope core.
 //
@@ -40,7 +38,7 @@
 #define _NOT_ABORTABLE false
 
 // Define the callback for the LED mode hook handler
-typedef void (*LedModeCallback)(const __FlashStringHelper*);
+typedef void (*LedModeCallback)(const char*);
 
 #define _CURRENT_IMPLEMENTATION
 
