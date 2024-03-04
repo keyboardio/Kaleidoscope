@@ -74,7 +74,7 @@ void setup() {
 
   Layer.getKey = EEPROMKeymap.getKey;
 
-  EEPROMKeymap.max_layers(1);
+  EEPROMKeymap.setup(1);
   EEPROMSettings.seal();
 }
 ```

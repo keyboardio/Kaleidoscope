@@ -65,6 +65,8 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > any.
 >
 > Setting it to `126` or anything higher disables the automatic switching.
+>
+> This setting is forced to `0` (but not written to EEPROM) if invalid settings are detected, to ensure a usable key layout.
 
 ### `ignoreHardcodedLayers([true|false])`
 
@@ -80,6 +82,8 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 > implemented by the [EEPROM-Keymap][EEPROM-Keymap.md] plugin.
 >
 > Defaults to `false`.
+>
+> This setting is forced to `false` (but not written to EEPROM) if invalid settings are detected, to ensure a usable key layout.
 
 ### `seal()`
 
@@ -118,6 +122,11 @@ The plugin provides the `EEPROMSettings` object, which has the following methods
 >
 > This is for internal use only, end-users should not need to care about it.
 
+### `accept_invalid()`
+
+> Accepts and stores the calculated settings CRC as valid, even if different from the previously stored CRC.
+> Use this to allow a user to accept existing invalid settings, even if possibly corrupted by an EEPROM layout change.
+
 ### `crc()`
 
 > Returns the CRC checksum of the layout. Should only be used after calling
@@ -146,6 +155,8 @@ following commands:
 >
 > This is the Focus counterpart of the `default_layer()` method documented
 > above.
+>
+> This setting is forced to `0` (but not stored) if invalid settings are detected, to ensure a usable key layout.
 
 ### `settings.crc`
 
@@ -155,6 +166,9 @@ following commands:
 
 > Returns either `true` or `false`, depending on whether the sealed settings are
 > to be considered valid or not.
+>
+> When given an argument of `1`, accepts the current settings as valid, regardless of whether the settings layout matches.
+> Accepting also stores the current checksum, so it will be considered valid in the future.
 
 ### `settings.version`
 

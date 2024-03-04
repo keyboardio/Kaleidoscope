@@ -6,7 +6,7 @@ In short, this plugin allows us to change our keymaps, without having to compile
 
  [plugin:focusSerial]: Kaleidoscope-FocusSerial.md
 
-By default, the plugin extends the keymap in PROGMEM: it will only look for keys in EEPROM if looking up from a layer that's higher than the last one in PROGMEM. This behaviour can be changed either via `Focus` (see below), or by calling `EEPROMSettings.use_eeprom_layers_only` (see the [EEPROMSettings](Kaleidoscope-EEPROM-Settings.md) documentation for more information).
+By default, the plugin extends the keymap in PROGMEM: it will only look for keys in EEPROM if looking up from a layer that's higher than the last one in PROGMEM. This behaviour can be changed either via `Focus` (see below), or by calling `EEPROMSettings.ignoreHardcodedLayers` (see the [EEPROMSettings](Kaleidoscope-EEPROM-Settings.md) documentation for more information).
 
 ## Using the plugin
 
@@ -39,7 +39,7 @@ The plugin provides the `EEPROMKeymap` object, which has the following method:
 
 ## Focus commands
 
-The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and `keymap.useCustom`.
+The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and `keymap.onlyCustom`.
 
 ### `keymap.default`
 
@@ -58,6 +58,8 @@ The plugin provides three Focus commands: `keymap.default`, `keymap.custom`, and
 > Without arguments, returns whether the firmware uses both the default and the custom layers (the default, `0`) or custom (EEPROM-stored) layers only (`1`).
 >
 > With an argument, sets whether to use custom layers only, or extend the built-in layers instead.
+>
+> This setting is forced to `0` (but not written to EEPROM) if invalid settings are detected.
 
 ## Dependencies
 

@@ -32,6 +32,11 @@
 namespace kaleidoscope {
 namespace plugin {
 
+inline void EEPROMSettings::fallback_layers() {
+  settings_.ignore_hardcoded_layers = false;
+  settings_.default_layer           = 0;
+}
+
 EventHandlerResult EEPROMSettings::onSetup() {
   Runtime.storage().get(0, settings_);
 
@@ -43,8 +48,7 @@ EventHandlerResult EEPROMSettings::onSetup() {
          and setting sensible defaults is safe. If either of them is not at it's
          uninitialized state, we do not override them, to avoid overwriting user
          settings. */
-      settings_.ignore_hardcoded_layers = false;
-      settings_.default_layer           = 0;
+      fallback_layers();
     }
 
     /* If the version is undefined, we'll set it to our current one. */
@@ -109,17 +113,16 @@ void EEPROMSettings::seal() {
 
   if (settings_.version != VERSION_CURRENT) {
     is_valid_ = false;
-    return;
+  } else if (settings_.crc == 0xffff) {
+    accept_invalid();
+  } else if (settings_.crc == CRCCalculator.crc) {
+    is_valid_ = true;
   }
 
-  if (settings_.crc == 0xffff) {
-    settings_.crc = CRCCalculator.crc;
-    update();
-  } else if (settings_.crc != CRCCalculator.crc) {
-    return;
+  // Fall back to hardcoded layers if settings might be corrupt
+  if (!is_valid_) {
+    fallback_layers();
   }
-
-  is_valid_ = true;
 
   /* If we have a default layer set, switch to it.
    *
@@ -148,6 +151,12 @@ uint16_t EEPROMSettings::requestSlice(uint16_t size) {
 
 void EEPROMSettings::invalidate() {
   is_valid_ = false;
+}
+
+// Accept possibly corrupt settings, hopefully after user review
+void EEPROMSettings::accept_invalid() {
+  settings_.crc = ::CRCCalculator.crc;
+  update();
 }
 
 uint16_t EEPROMSettings::used() {
@@ -194,6 +203,7 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
     GET_VERSION,
     GET_CRC,
   } sub_command;
+  uint8_t v;
 
   const char *cmd_defaultLayer = PSTR("settings.defaultLayer");
   const char *cmd_isValid      = PSTR("settings.valid?");
@@ -219,14 +229,20 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
     if (::Focus.isEOL()) {
       ::Focus.send(::EEPROMSettings.default_layer());
     } else {
-      uint8_t layer;
-      ::Focus.read(layer);
-      ::EEPROMSettings.default_layer(layer);
+      ::Focus.read(v);
+      ::EEPROMSettings.default_layer(v);
     }
     break;
   }
   case IS_VALID:
-    ::Focus.send(::EEPROMSettings.isValid());
+    // `isEOL()` not needed, because `read()` will store 0 on early EOL
+    ::Focus.read(v);
+    if (v == 1) {
+      // Accept possibly corrupt settings, hopefully after user review
+      ::EEPROMSettings.accept_invalid();
+    } else {
+      ::Focus.send(::EEPROMSettings.isValid());
+    }
     break;
   case GET_VERSION:
     ::Focus.send(::EEPROMSettings.version());

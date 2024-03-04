@@ -34,9 +34,9 @@ namespace plugin {
 uint16_t EEPROMKeymap::keymap_base_;
 uint8_t EEPROMKeymap::max_layers_;
 uint8_t EEPROMKeymap::progmem_layers_;
+bool EEPROMKeymap::sealed_;
 
 EventHandlerResult EEPROMKeymap::onSetup() {
-  ::EEPROMSettings.onSetup();
   progmem_layers_ = layer_count;
   return EventHandlerResult::OK;
 }
@@ -45,20 +45,33 @@ EventHandlerResult EEPROMKeymap::onNameQuery() {
   return ::Focus.sendName(F("EEPROMKeymap"));
 }
 
-void EEPROMKeymap::setup(uint8_t max) {
-  layer_count = max;
-  if (::EEPROMSettings.ignoreHardcodedLayers()) {
+inline void EEPROMKeymap::set_layers(bool ignore_hardcoded) {
+  layer_count = max_layers_;
+  if (ignore_hardcoded) {
     Layer.getKey = getKey;
   } else {
     layer_count += progmem_layers_;
     Layer.getKey = getKeyExtended;
   }
-  max_layers(max);
 }
 
-void EEPROMKeymap::max_layers(uint8_t max) {
+void EEPROMKeymap::setup(uint8_t max) {
   max_layers_  = max;
   keymap_base_ = ::EEPROMSettings.requestSlice(max_layers_ * Runtime.device().numKeys() * 2);
+  set_layers(::EEPROMSettings.ignoreHardcodedLayers());
+}
+
+/*
+ * EEPROMSettings.ignoreHardcodedLayers() might change, for example,
+ * if EEPROMSettings.seal() detects corruption. Force hardcoded layers
+ * to avoid scrambled keymaps in some firmware update situations.
+ */
+EventHandlerResult EEPROMKeymap::beforeEachCycle() {
+  if (!sealed_) {
+    sealed_ = true;
+    set_layers(::EEPROMSettings.ignoreHardcodedLayers());
+  }
+  return EventHandlerResult::OK;
 }
 
 Key EEPROMKeymap::getKey(uint8_t layer, KeyAddr key_addr) {
@@ -117,14 +130,7 @@ EventHandlerResult EEPROMKeymap::onFocusEvent(const char *input) {
 
       ::Focus.read((uint8_t &)v);
       ::EEPROMSettings.ignoreHardcodedLayers(v);
-
-      layer_count = max_layers_;
-      if (v) {
-        Layer.getKey = getKey;
-      } else {
-        layer_count += progmem_layers_;
-        Layer.getKey = getKeyExtended;
-      }
+      set_layers(v);
     }
     return EventHandlerResult::EVENT_CONSUMED;
   }

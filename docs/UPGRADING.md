@@ -442,6 +442,13 @@ As a developer, one can continue using `millis()`, but migrating to `Kaleidoscop
 
 ## Breaking changes
 
+### `EEPROMSettings` key layout fallback
+
+When detecting stored settings that might be incompatible with the current firmware, `EEPROMSettings` will attempt to fall back to a usable key layout by temporarily forcing `settings.defaultLayer 0` and `keymap.onlyCustom 0`.
+These have the effect of loading the hardcoded firmware key layout, regardless of what the previous settings were.
+This should reduce the incidence of scrambled key layouts when using Arduino to upgrade to custom firmware from Chrysalis firmware, for example.
+
+This fallback can be a breaking change for people who have relied on being able to use non-Chrysalis means to upgrade to firmware that has a different, but compatible layout.
 ### Sketch preprocssing system
 
 We used to support the ability to amend all compiled sketches by
