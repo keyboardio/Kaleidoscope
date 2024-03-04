@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -63,12 +63,6 @@ THE SOFTWARE.
 #define HID_REPORTID_NKRO_KEYBOARD 8
 #endif
 
-
-// Nico has submitted these definitions upstream, but they're not merged yet
-// HID Request Type HID1.11 Page 51 7.2.1 Get_Report Request
-#define HID_REPORT_TYPE_INPUT   1
-#define HID_REPORT_TYPE_OUTPUT  2
-#define HID_REPORT_TYPE_FEATURE 3
 
 // Controls whether to pack messages or not. When set, any sends will be delayed
 // until packing is toggled off, and sent then. This is a no-op on AVR, but is
