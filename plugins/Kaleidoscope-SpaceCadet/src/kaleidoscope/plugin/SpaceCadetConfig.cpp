@@ -31,20 +31,16 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult SpaceCadetConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(SpaceCadet::settings_));
-
-  // If our slice is uninitialized, then return early.
-  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(SpaceCadet::settings_)))
-    return EventHandlerResult::OK;
-
-  Runtime.storage().get(settings_base_, ::SpaceCadet.settings_);
+  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::SpaceCadet.settings_, sizeof(SpaceCadet::settings_));
 
   return EventHandlerResult::OK;
 }
 
 void SpaceCadetConfig::disableSpaceCadetIfUnconfigured() {
-  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(SpaceCadet::settings_)))
+  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(SpaceCadet::settings_)) ||
+      (::SpaceCadet.settings_.mode != SpaceCadet::Mode::ON && ::SpaceCadet.settings_.mode != SpaceCadet::Mode::NO_DELAY)) {
     ::SpaceCadet.disable();
+  }
 }
 
 EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *input) {

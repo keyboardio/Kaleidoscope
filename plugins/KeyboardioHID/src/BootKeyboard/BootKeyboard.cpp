@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -24,163 +24,16 @@ THE SOFTWARE.
 */
 
 #include "BootKeyboard.h"
-#include "DescriptorPrimitives.h"
 #include "HIDReportObserver.h"
 #include "HID-Settings.h"
+#include "tusb_hid.h"
 
-// See Appendix B of USB HID spec
 static const uint8_t boot_keyboard_hid_descriptor_[] PROGMEM = {
-  //  Keyboard
-  D_USAGE_PAGE,
-  D_PAGE_GENERIC_DESKTOP,
-  D_USAGE,
-  D_USAGE_KEYBOARD,
-
-  D_COLLECTION,
-  D_APPLICATION,
-
-  // LEDs
-  D_REPORT_COUNT,
-  0x8,
-  D_REPORT_SIZE,
-  0x1,
-  D_USAGE_PAGE,
-  D_PAGE_LEDS,
-  D_USAGE_MINIMUM,
-  0x1,
-  D_USAGE_MAXIMUM,
-  0x8,
-  D_LOGICAL_MINIMUM,
-  0x0,
-  D_LOGICAL_MAXIMUM,
-  0x1,
-  D_OUTPUT,
-  (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-  // Modifiers
-  D_USAGE_PAGE,
-  D_PAGE_KEYBOARD,
-  D_USAGE_MINIMUM,
-  HID_KEYBOARD_FIRST_MODIFIER,
-  D_USAGE_MAXIMUM,
-  HID_KEYBOARD_LAST_MODIFIER,
-  // D_LOGICAL_MINIMUM, 0x0, // redundant; already 0
-  // D_LOGICAL_MAXIMUM, 0x1, // redundant; already 1
-  // D_REPORT_SIZE, 0x1, // redundant; already 1
-  // D_REPORT_COUNT, 0x8, // redundant; already 8
-  D_INPUT,
-  (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-  // Reserved byte
-  D_REPORT_COUNT,
-  0x1,
-  D_REPORT_SIZE,
-  0x8,
-  D_INPUT,
-  (D_CONSTANT),
-
-  // Non-modifiers
-  D_REPORT_COUNT,
-  BOOT_KEY_BYTES,
-  // D_REPORT_SIZE, 0x8, // redundant; already 8
-  // D_LOGICAL_MINIMUM, HID_FIRST_KEY, // redundant; already 0
-  D_MULTIBYTE(D_LOGICAL_MAXIMUM),
-  HID_LAST_KEY,
-  0x0,  // make sure it's not negative
-  // D_USAGE_PAGE, D_PAGE_KEYBOARD, // redundant; already KEYBOARD
-  D_USAGE_MINIMUM,
-  HID_FIRST_KEY,
-  D_USAGE_MAXIMUM,
-  HID_LAST_KEY,
-  D_INPUT,
-  (D_DATA | D_ARRAY | D_ABSOLUTE),
-  D_END_COLLECTION,
+  DESCRIPTOR_BOOT_KEYBOARD(),
 };
 
 static const uint8_t hybrid_keyboard_hid_descriptor_[] PROGMEM = {
-  //  Hybrid Boot/NKRO Keyboard
-  D_USAGE_PAGE,
-  D_PAGE_GENERIC_DESKTOP,
-  D_USAGE,
-  D_USAGE_KEYBOARD,
-
-  D_COLLECTION,
-  D_APPLICATION,
-
-  /* 5 LEDs for num lock etc, 3 left for advanced, custom usage */
-  D_USAGE_PAGE,
-  D_PAGE_LEDS,
-  D_USAGE_MINIMUM,
-  0x01,
-  D_USAGE_MAXIMUM,
-  0x08,
-  D_LOGICAL_MINIMUM,
-  0x00,
-  D_LOGICAL_MAXIMUM,
-  0x01,
-  D_REPORT_SIZE,
-  0x01,
-  D_REPORT_COUNT,
-  0x08,
-  D_OUTPUT,
-  (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-  D_USAGE_PAGE,
-  D_PAGE_KEYBOARD,
-
-  /* Key modifier byte for both boot and NKRO */
-  D_USAGE_MINIMUM,
-  HID_KEYBOARD_FIRST_MODIFIER,
-  D_USAGE_MAXIMUM,
-  HID_KEYBOARD_LAST_MODIFIER,
-  // D_LOGICAL_MINIMUM, 0x00, // redundant; already 0
-  // D_LOGICAL_MAXIMUM, 0x01, // redundant; already 1
-  // D_REPORT_SIZE, 0x01, // redundant; already 1
-  // D_REPORT_COUNT, 0x08, // redundant; already 8
-  D_INPUT,
-  (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-  /* Send rest of boot report as padding, so HID-aware hosts will ignore */
-  D_REPORT_SIZE,
-  0x8,
-  D_REPORT_COUNT,
-  0x7,
-  D_INPUT,
-  (D_CONSTANT),
-
-  /* NKRO key bitmap */
-
-  // Padding 4 bits, to skip NO_EVENT & 3 error states.
-  D_REPORT_SIZE,
-  0x1,
-  D_REPORT_COUNT,
-  0x04,
-  D_INPUT,
-  (D_CONSTANT),
-
-  // Actual non-modifier keys
-  D_USAGE_MINIMUM,
-  HID_KEYBOARD_A_AND_A,
-  D_USAGE_MAXIMUM,
-  HID_LAST_KEY,
-  // D_LOGICAL_MINIMUM, 0x00, // redundant; already 0
-  // D_LOGICAL_MAXIMUM, 0x01, // redundant; already 1
-  // D_REPORT_SIZE, 0x01, // redundant; already 1
-  D_REPORT_COUNT,
-  (NKRO_KEY_BITS - 4),
-  D_INPUT,
-  (D_DATA | D_VARIABLE | D_ABSOLUTE),
-
-#if (NKRO_KEY_BITS % 8)
-  // Padding to round up the report to byte boundary.
-  // D_REPORT_SIZE, 0x01, // redundant; already 1
-  D_REPORT_COUNT,
-  (8 - (NKRO_KEY_BITS % 8)),
-  D_INPUT,
-  (D_CONSTANT),
-#endif
-
-  D_END_COLLECTION,
+  DESCRIPTOR_HYBRID_KEYBOARD(),
 };
 
 BootKeyboard_::BootKeyboard_(uint8_t bootkb_only_)
@@ -202,7 +55,7 @@ int BootKeyboard_::getInterface(uint8_t *interfaceCount) {
     desclen = sizeof(hybrid_keyboard_hid_descriptor_);
   }
   HIDDescriptor hidInterface = {
-    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT_INTERFACE, HID_PROTOCOL_KEYBOARD),
+    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_BOOT, HID_PROTOCOL_KEYBOARD),
     D_HIDREPORT(desclen),
     D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01),
   };

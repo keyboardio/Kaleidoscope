@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -29,6 +29,27 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
+#include "tusb_hid.h"
+
+#define DESCRIPTOR_CONSUMER_CONTROL(...)            \
+  HID_USAGE_PAGE(HID_USAGE_PAGE_CONSUMER),          \
+                                                    \
+    /* Consumer Control (Sound/Media keys) */       \
+    HID_USAGE(HID_USAGE_CONSUMER_CONTROL),          \
+    HID_COLLECTION(HID_COLLECTION_APPLICATION),     \
+                                                    \
+    /* Report ID, if any */                         \
+    __VA_ARGS__                                     \
+                                                    \
+      /* 4 Media Keys */                            \
+      HID_LOGICAL_MIN(0),                           \
+    HID_LOGICAL_MAX_N(0x3ff, 2),                    \
+    HID_USAGE_MIN(0),                               \
+    HID_USAGE_MAX_N(0x3ff, 2),                      \
+    HID_REPORT_COUNT(4),                            \
+    HID_REPORT_SIZE(16),                            \
+    HID_INPUT(HID_DATA | HID_ARRAY | HID_ABSOLUTE), \
+    HID_COLLECTION_END
 
 typedef union {
   // Every usable Consumer key possible, up to 4 keys presses possible

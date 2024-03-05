@@ -118,19 +118,18 @@ EventHandlerResult TypingBreaks::onNameQuery() {
 }
 
 EventHandlerResult TypingBreaks::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
+  settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings, sizeof(settings));
 
-  if (Runtime.storage().isSliceUninitialized(
-        settings_base_,
-        sizeof(settings))) {
+  // If the EEPROM is empty, store the default settings.
+  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(settings))) {
     // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, settings);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_base_, settings);
   return EventHandlerResult::OK;
 }
+
 
 EventHandlerResult TypingBreaks::onFocusEvent(const char *input) {
   enum {
