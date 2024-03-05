@@ -41,7 +41,7 @@ uint8_t DynamicMacros::updateDynamicMacroCache() {
 
   map_[0] = 0;
 
-  while (pos < storage_base_ + storage_size_) {
+  while (pos < storage_base_ + storage_size_ && current_id < MAX_MACRO_COUNT_) {
     macro = Runtime.storage().read(pos++);
     switch (macro) {
     case MACRO_ACTION_STEP_EXPLICIT_REPORT:
