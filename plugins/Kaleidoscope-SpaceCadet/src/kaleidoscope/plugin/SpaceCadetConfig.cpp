@@ -37,8 +37,10 @@ EventHandlerResult SpaceCadetConfig::onSetup() {
 }
 
 void SpaceCadetConfig::disableSpaceCadetIfUnconfigured() {
-  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(SpaceCadet::settings_)))
+  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(SpaceCadet::settings_)) ||
+      (::SpaceCadet.settings_.mode != SpaceCadet::Mode::ON && ::SpaceCadet.settings_.mode != SpaceCadet::Mode::NO_DELAY)) {
     ::SpaceCadet.disable();
+  }
 }
 
 EventHandlerResult SpaceCadetConfig::onFocusEvent(const char *input) {
