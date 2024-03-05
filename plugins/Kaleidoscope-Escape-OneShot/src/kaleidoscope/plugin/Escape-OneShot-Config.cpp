@@ -58,10 +58,10 @@ EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *input) {
     Key k;
     ::Focus.read(k);
     ::EscapeOneShot.setCancelKey(k);
+    Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
+    Runtime.storage().commit();
   }
 
-  Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
-  Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
