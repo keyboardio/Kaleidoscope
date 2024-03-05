@@ -76,7 +76,7 @@ uint8_t DynamicMacros::updateDynamicMacroCache() {
       uint8_t keyCode, flags;
       do {
         keyCode = Runtime.storage().read(pos++);
-      } while (keyCode != 0);
+      } while ((pos < (storage_base_ + storage_size_)) && keyCode != 0);
       break;
     }
 
@@ -170,7 +170,7 @@ void DynamicMacros::play(uint8_t macro_id) {
       while (true) {
         key.setFlags(isKeycodeSequence ? 0 : storage.read(pos++));
         key.setKeyCode(storage.read(pos++));
-        if (key == Key_NoKey)
+        if (key == Key_NoKey || pos >= storage_base_ + storage_size_)
           break;
         tap(key);
         delay(interval);
