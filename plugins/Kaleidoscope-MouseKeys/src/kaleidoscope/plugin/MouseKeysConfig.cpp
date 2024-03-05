@@ -137,12 +137,13 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
       ::MouseKeys.setWarpGridSize(arg);
       break;
     }
+    // Update settings stored in EEPROM, and indicate that this Focus event has
+    // been handled successfully.
+    Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
+    Runtime.storage().commit();
   }
 
-  // Update settings stored in EEPROM, and indicate that this Focus event has
-  // been handled successfully.
-  Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
-  Runtime.storage().commit();
+
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
