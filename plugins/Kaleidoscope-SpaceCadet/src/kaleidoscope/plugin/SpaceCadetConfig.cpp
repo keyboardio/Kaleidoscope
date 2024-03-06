@@ -31,7 +31,10 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult SpaceCadetConfig::onSetup() {
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::SpaceCadet::settings_), &settings_base_, &::SpaceCadet.settings_);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::SpaceCadet.settings_), &settings_base_, &::SpaceCadet.settings_);
+  if (!success || (::SpaceCadet.settings_.mode != SpaceCadet::Mode::ON && ::SpaceCadet.settings_.mode != SpaceCadet::Mode::NO_DELAY)) {
+    ::SpaceCadet.disable();
+  }
 
   return EventHandlerResult::OK;
 }

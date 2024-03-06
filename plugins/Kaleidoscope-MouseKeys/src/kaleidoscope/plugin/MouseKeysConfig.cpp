@@ -33,7 +33,7 @@ namespace plugin {
 // MouseKeys configurator
 
 EventHandlerResult MouseKeysConfig::onSetup() {
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::MouseKeys::settings_), &settings_base_, &::MouseKeys.settings_);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::MouseKeys.settings_), &settings_base_, &::MouseKeys.settings_);
 
   if (!success) {
     Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
