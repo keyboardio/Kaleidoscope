@@ -53,7 +53,7 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   Settings settings_ = {.cancel_oneshot_key = Key_Escape};
 };
 
-class EscapeOneShotConfig : public Plugin, FocusPlugin {
+class EscapeOneShotConfig : public Plugin, public FocusPlugin {
  public:
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *input);
