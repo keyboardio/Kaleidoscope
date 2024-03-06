@@ -118,10 +118,9 @@ EventHandlerResult TypingBreaks::onNameQuery() {
 }
 
 EventHandlerResult TypingBreaks::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings, sizeof(settings));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(settings), &settings_base_, &settings);
 
-  // If the EEPROM is empty, store the default settings.
-  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(settings))) {
+  if (!success) {
     // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, settings);
     Runtime.storage().commit();

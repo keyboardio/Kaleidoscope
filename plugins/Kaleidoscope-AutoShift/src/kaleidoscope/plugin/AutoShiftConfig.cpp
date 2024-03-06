@@ -33,7 +33,7 @@ namespace plugin {
 // AutoShift configurator
 
 EventHandlerResult AutoShiftConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::AutoShift.settings_, sizeof(AutoShift::settings_));
+  ::EEPROMSettings.requestSliceAndLoadData(sizeof(::AutoShift.settings_), &settings_base_, &::AutoShift.settings_);
   return EventHandlerResult::OK;
 }
 

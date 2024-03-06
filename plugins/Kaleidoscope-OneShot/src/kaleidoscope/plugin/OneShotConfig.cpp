@@ -30,10 +30,9 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult OneShotConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::OneShot.settings_, sizeof(::OneShot.settings_));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::OneShot.settings_), &settings_base_, &::OneShot.settings_);
 
-  // If the EEPROM is empty, store the default settings.
-  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(::OneShot.settings_))) {
+  if (!success) {
     Runtime.storage().put(settings_base_, ::OneShot.settings_);
     Runtime.storage().commit();
   }

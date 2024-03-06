@@ -73,8 +73,8 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   bool ignoreHardcodedLayers() {
     return settings_.ignore_hardcoded_layers;
   }
+  bool requestSliceAndLoadData(size_t size, uint16_t *startAddress, void *data);
 
-  uint16_t requestSliceAndData(void *data, size_t size);
   bool isSliceValid(uint16_t start, size_t size);
 
  private:
