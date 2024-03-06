@@ -31,7 +31,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult SpaceCadetConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::SpaceCadet.settings_, sizeof(SpaceCadet::settings_));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::SpaceCadet::settings_), &settings_base_, &::SpaceCadet.settings_);
 
   return EventHandlerResult::OK;
 }

@@ -77,12 +77,11 @@ EventHandlerResult PersistentIdleLEDs::onNameQuery() {
 EventHandlerResult PersistentIdleLEDs::onSetup() {
   uint16_t idle_time;
 
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&idle_time, sizeof(idle_time));
-
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(idle_time), &settings_base_, &idle_time);
 
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
-  if (idle_time == 0xffff) {
+  if (idle_time == 0xffff || !success) {
     idle_time = idle_time_limit / 1000;
   }
   setIdleTimeoutSeconds(idle_time);

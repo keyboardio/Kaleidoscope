@@ -30,8 +30,8 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult EscapeOneShotConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::EscapeOneShot.settings_, sizeof(::EscapeOneShot.settings_));
-  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(::EscapeOneShot.settings_))) {
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::EscapeOneShot.settings_), &settings_base_, &::EscapeOneShot.settings_);
+  if (!success) {
     // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
     Runtime.storage().commit();

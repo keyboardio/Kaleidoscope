@@ -33,11 +33,9 @@ namespace plugin {
 // MouseKeys configurator
 
 EventHandlerResult MouseKeysConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&::MouseKeys.settings_, sizeof(MouseKeys::settings_));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::MouseKeys::settings_), &settings_base_, &::MouseKeys.settings_);
 
-
-  // If the EEPROM is empty, store the default settings.
-  if (!::EEPROMSettings.isSliceValid(settings_base_, sizeof(::MouseKeys.settings_))) {
+  if (!success) {
     Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
     Runtime.storage().commit();
   }

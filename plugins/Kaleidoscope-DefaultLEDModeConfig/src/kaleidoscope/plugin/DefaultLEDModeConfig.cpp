@@ -34,8 +34,8 @@ uint16_t DefaultLEDModeConfig::settings_base_;
 struct DefaultLEDModeConfig::settings DefaultLEDModeConfig::settings_;
 
 EventHandlerResult DefaultLEDModeConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSliceAndData(&settings_, sizeof(settings_));
-  if (::EEPROMSettings.isSliceValid(settings_base_, sizeof(settings_))) {
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(settings_), &settings_base_, &settings_);
+  if (success) {
     ::LEDControl.set_mode(settings_.default_mode_index);
   }
   return EventHandlerResult::OK;
