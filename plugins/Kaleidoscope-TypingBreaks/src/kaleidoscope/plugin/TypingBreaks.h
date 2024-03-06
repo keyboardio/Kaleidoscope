@@ -22,11 +22,11 @@
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 namespace kaleidoscope {
 namespace plugin {
 
-class TypingBreaks : public kaleidoscope::Plugin {
+class TypingBreaks : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   typedef struct settings_t {
     uint16_t idle_time_limit;
@@ -38,10 +38,12 @@ class TypingBreaks : public kaleidoscope::Plugin {
 
   static settings_t settings;
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult onSetup();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("TypingBreaks"); }
 
  private:
   static bool keyboard_locked_;

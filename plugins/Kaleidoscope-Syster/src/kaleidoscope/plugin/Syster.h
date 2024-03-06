@@ -24,7 +24,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 #define SYSTER_MAX_SYMBOL_LENGTH 32
 
 constexpr Key Key_Syster = Key(kaleidoscope::ranges::SYSTER);
@@ -33,7 +33,7 @@ constexpr Key SYSTER     = Key_Syster;
 namespace kaleidoscope {
 namespace plugin {
 
-class Syster : public kaleidoscope::Plugin {
+class Syster : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   enum action_t : uint8_t {
     StartAction,
@@ -45,8 +45,10 @@ class Syster : public kaleidoscope::Plugin {
 
   bool is_active();
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("Syster"); }
 
  private:
   char symbol_[SYSTER_MAX_SYMBOL_LENGTH + 1];

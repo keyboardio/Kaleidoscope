@@ -22,17 +22,19 @@
 #include "kaleidoscope/event_handler_result.h"     // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                   // for Plugin
 #include "kaleidoscope/plugin/LEDModeInterface.h"  // for LEDModeInterface
-
+#include "kaleidoscope/plugin/FocusPlugin.h"       // for FocusPlugin
 namespace kaleidoscope {
 namespace plugin {
 
-class DefaultLEDModeConfig : public kaleidoscope::Plugin {
+class DefaultLEDModeConfig : public kaleidoscope::Plugin, FocusPlugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   void activateLEDModeIfUnconfigured(LEDModeInterface *plugin);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("DefaultLEDModeConfig"); }
 
  private:
   static uint16_t settings_base_;

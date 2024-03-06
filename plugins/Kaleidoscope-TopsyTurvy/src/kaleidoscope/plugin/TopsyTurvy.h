@@ -24,7 +24,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 #define TOPSY(k) ::kaleidoscope::plugin::TopsyTurvyKey(Key_##k)
 
 namespace kaleidoscope {
@@ -34,16 +34,18 @@ constexpr Key TopsyTurvyKey(Key key) {
   return Key(kaleidoscope::ranges::TT_FIRST + key.getKeyCode());
 }
 
-class TopsyTurvy : public kaleidoscope::Plugin {
+class TopsyTurvy : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   EventHandlerResult onKeyEvent(KeyEvent &event);
-  EventHandlerResult onNameQuery();
   EventHandlerResult beforeReportingState(const KeyEvent &event);
 
   static bool isTopsyTurvyKey(Key key) {
     return (key >= ranges::TT_FIRST &&
             key <= ranges::TT_LAST);
   }
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("TopsyTurvy"); }
 
  private:
   KeyAddr tt_addr_ = KeyAddr::none();

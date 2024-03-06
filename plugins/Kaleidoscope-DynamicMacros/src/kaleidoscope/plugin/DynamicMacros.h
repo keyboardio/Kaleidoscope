@@ -24,7 +24,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 #define DM(n) ::kaleidoscope::plugin::DynamicMacrosKey(n)
 
 namespace kaleidoscope {
@@ -34,9 +34,8 @@ constexpr Key DynamicMacrosKey(uint8_t n) {
   return Key(kaleidoscope::ranges::DYNAMIC_MACRO_FIRST + n);
 }
 
-class DynamicMacros : public kaleidoscope::Plugin {
+class DynamicMacros : public kaleidoscope::Plugin, public FocusPlugin {
  public:
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult beforeReportingState(const KeyEvent &event) {
@@ -46,6 +45,12 @@ class DynamicMacros : public kaleidoscope::Plugin {
   void reserve_storage(uint16_t size);
 
   void play(uint8_t seq_id);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("LEDBrightnessConfig");
+  }
+
 
  private:
   static const uint8_t MAX_MACRO_COUNT_ = 32;

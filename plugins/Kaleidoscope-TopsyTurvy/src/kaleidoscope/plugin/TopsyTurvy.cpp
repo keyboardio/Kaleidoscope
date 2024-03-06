@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult TopsyTurvy::onNameQuery() {
-  return ::Focus.sendName(F("TopsyTurvy"));
-}
 
 EventHandlerResult TopsyTurvy::onKeyEvent(KeyEvent &event) {
   if (keyToggledOff(event.state)) {

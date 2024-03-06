@@ -63,13 +63,7 @@ SpaceCadet::SpaceCadet() {
   setMap(initialmap);
 }
 
-// =============================================================================
-// Event handler hook functions
 
-// -----------------------------------------------------------------------------
-EventHandlerResult SpaceCadet::onNameQuery() {
-  return ::Focus.sendName(F("SpaceCadet"));
-}
 
 // -----------------------------------------------------------------------------
 EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {

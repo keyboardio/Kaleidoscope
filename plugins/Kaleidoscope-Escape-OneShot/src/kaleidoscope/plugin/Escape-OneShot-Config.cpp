@@ -40,10 +40,6 @@ EventHandlerResult EscapeOneShotConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult EscapeOneShotConfig::onNameQuery() {
-  return ::Focus.sendName(F("EscapeOneShot"));
-}
-
 EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *input) {
   const char *cmd_cancel_key = PSTR("escape_oneshot.cancel_key");
   if (::Focus.inputMatchesHelp(input))

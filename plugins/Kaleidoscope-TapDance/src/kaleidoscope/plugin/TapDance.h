@@ -28,6 +28,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 // -----------------------------------------------------------------------------
 // Deprecation warning messages
 #include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
@@ -52,7 +53,7 @@ constexpr Key TapDanceKey(uint8_t n) {
   return Key(kaleidoscope::ranges::TD_FIRST + n);
 }
 
-class TapDance : public kaleidoscope::Plugin {
+class TapDance : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   enum ActionType {
     Tap,
@@ -79,7 +80,6 @@ class TapDance : public kaleidoscope::Plugin {
 
   void actionKeys(uint8_t tap_count, ActionType tap_dance_action, uint8_t max_keys, const Key tap_keys[]);
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
@@ -87,6 +87,9 @@ class TapDance : public kaleidoscope::Plugin {
     return (key.getRaw() >= ranges::TD_FIRST &&
             key.getRaw() <= ranges::TD_LAST);
   }
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("TapDance"); }
 
  private:
   // The maximum number of events in the queue at a time.

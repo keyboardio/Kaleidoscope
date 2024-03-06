@@ -207,9 +207,6 @@ EventHandlerResult DynamicMacros::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult DynamicMacros::onNameQuery() {
-  return ::Focus.sendName(F("DynamicMacros"));
-}
 
 EventHandlerResult DynamicMacros::onFocusEvent(const char *input) {
   const char *cmd_map     = PSTR("macros.map");

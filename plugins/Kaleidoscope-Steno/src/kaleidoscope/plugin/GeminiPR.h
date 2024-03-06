@@ -24,15 +24,17 @@
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
 namespace steno {
-class GeminiPR : public kaleidoscope::Plugin {
+class GeminiPR : public kaleidoscope::Plugin, public FocusPlugin {
  public:
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("GeminiPR"); }
 
  private:
   static uint8_t keys_held_;

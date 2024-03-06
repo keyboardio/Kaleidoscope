@@ -36,9 +36,6 @@ namespace steno {
 uint8_t GeminiPR::keys_held_;
 uint8_t GeminiPR::state_[6];
 
-EventHandlerResult GeminiPR::onNameQuery() {
-  return ::Focus.sendName(F("GeminiPR"));
-}
 
 EventHandlerResult GeminiPR::onKeyEvent(KeyEvent &event) {
   if (event.key < geminipr::START || event.key > geminipr::END)

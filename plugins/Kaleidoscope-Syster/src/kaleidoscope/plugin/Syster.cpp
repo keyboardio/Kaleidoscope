@@ -43,9 +43,7 @@ bool Syster::is_active() {
 }
 
 // --- hooks ---
-EventHandlerResult Syster::onNameQuery() {
-  return ::Focus.sendName(F("Syster"));
-}
+
 
 EventHandlerResult Syster::onKeyEvent(KeyEvent &event) {
   if (!is_active_) {

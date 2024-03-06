@@ -18,11 +18,11 @@
 
 #include <stdint.h>  // for uint8_t, uint16_t
 
-#include "kaleidoscope/KeyEvent.h"              // for KeyEvent
-#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
-#include "kaleidoscope/key_defs.h"              // for Key
-#include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/KeyEvent.h"                         // for KeyEvent
+#include "kaleidoscope/event_handler_result.h"             // for EventHandlerResult
+#include "kaleidoscope/key_defs.h"                         // for Key
+#include "kaleidoscope/plugin.h"                           // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"               // for FocusPlugin
 #include "kaleidoscope/plugin/mousekeys/MouseWarpModes.h"  // for warp modes
 // =============================================================================
 // Deprecated MousKeys code
@@ -65,7 +65,7 @@
 
 namespace kaleidoscope {
 namespace plugin {
-class MouseKeys : public kaleidoscope::Plugin {
+class MouseKeys : public kaleidoscope::Plugin, public FocusPlugin {
  public:
 #ifndef NDEPRECATED
   DEPRECATED(MOUSEKEYS_SPEED)
@@ -136,7 +136,6 @@ class MouseKeys : public kaleidoscope::Plugin {
   }
 
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
   EventHandlerResult afterEachCycle();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onAddToReport(Key key);
@@ -156,6 +155,9 @@ class MouseKeys : public kaleidoscope::Plugin {
   // This lets the MouseKeysConfig plugin access the internal config variables
   // directly. Mainly useful for calls to `Runtime.storage.get()`/`.put()`.
   friend class MouseKeysConfig;
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("MouseKeys"); }
 
  private:
   static constexpr uint8_t cursor_update_interval_ = 4;

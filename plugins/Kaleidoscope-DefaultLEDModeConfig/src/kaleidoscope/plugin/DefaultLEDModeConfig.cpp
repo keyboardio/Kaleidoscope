@@ -65,10 +65,6 @@ EventHandlerResult DefaultLEDModeConfig::onFocusEvent(const char *input) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult DefaultLEDModeConfig::onNameQuery() {
-  return ::Focus.sendName(F("DefaultLEDModeConfig"));
-}
-
 void DefaultLEDModeConfig::activateLEDModeIfUnconfigured(LEDModeInterface *plugin) {
   if (!Runtime.storage().isSliceUninitialized(settings_base_, sizeof(settings_)))
     return;

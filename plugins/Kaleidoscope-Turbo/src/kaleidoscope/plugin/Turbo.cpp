@@ -155,9 +155,6 @@ EventHandlerResult Turbo::beforeSyncingLeds() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult Turbo::onNameQuery() {
-  return ::Focus.sendName(F("Turbo"));
-}
 
 }  // namespace plugin
 }  // namespace kaleidoscope

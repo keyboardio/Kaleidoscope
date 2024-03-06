@@ -41,9 +41,6 @@ EventHandlerResult EEPROMKeymap::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult EEPROMKeymap::onNameQuery() {
-  return ::Focus.sendName(F("EEPROMKeymap"));
-}
 
 void EEPROMKeymap::setup(uint8_t max) {
   layer_count = max;

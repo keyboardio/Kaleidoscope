@@ -25,21 +25,23 @@
 #include "kaleidoscope/plugin/AccessTransientLEDMode.h"  // for AccessTransientLEDMode
 #include "kaleidoscope/plugin/LEDMode.h"                 // for LEDMode
 #include "kaleidoscope/plugin/LEDModeInterface.h"        // for LEDModeInterface
+#include "kaleidoscope/plugin/FocusPlugin.h"             // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
 class ColormapEffect : public Plugin,
+                       public FocusPlugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
   void max_layers(uint8_t max_);
 
   EventHandlerResult onLayerChange();
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   static bool isUninitialized();
   static void updateColorIndexAtPosition(uint8_t layer, uint16_t position, uint8_t palette_index);
+
 
   // This class' instance has dynamic lifetime
   //
@@ -61,6 +63,11 @@ class ColormapEffect : public Plugin,
    private:
     const ColormapEffect *parent_;
   };
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("ColormapEffect");
+  }
 
  private:
   static uint8_t top_layer_;

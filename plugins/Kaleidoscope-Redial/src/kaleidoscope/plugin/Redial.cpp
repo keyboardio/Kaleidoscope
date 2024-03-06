@@ -28,9 +28,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult Redial::onNameQuery() {
-  return ::Focus.sendName(F("Redial"));
-}
 
 EventHandlerResult Redial::onKeyEvent(KeyEvent &event) {
   if (keyToggledOn(event.state)) {

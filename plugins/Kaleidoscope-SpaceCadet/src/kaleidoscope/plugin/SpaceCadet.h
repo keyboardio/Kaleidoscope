@@ -27,7 +27,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 #ifndef SPACECADET_MAP_END
 #define SPACECADET_MAP_END                         \
   (kaleidoscope::plugin::SpaceCadet::KeyBinding) { \
@@ -43,7 +43,7 @@ namespace plugin {
 
 class SpaceCadetConfig;
 
-class SpaceCadet : public kaleidoscope::Plugin {
+class SpaceCadet : public kaleidoscope::Plugin, public FocusPlugin {
   friend class SpaceCadetConfig;
 
  public:
@@ -100,11 +100,14 @@ class SpaceCadet : public kaleidoscope::Plugin {
     map_ = bindings;
   }
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
 
  protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("SpaceCadet");
+  }
+
   enum Mode : uint8_t {
     ON,
     OFF,

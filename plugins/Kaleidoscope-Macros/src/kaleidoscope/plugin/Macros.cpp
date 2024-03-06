@@ -276,9 +276,6 @@ EventHandlerResult Macros::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult Macros::onNameQuery() {
-  return ::Focus.sendName(F("Macros"));
-}
 
 }  // namespace plugin
 }  // namespace kaleidoscope

@@ -25,12 +25,12 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 constexpr Key Key_Turbo = Key(kaleidoscope::ranges::TURBO);
 
 namespace kaleidoscope {
 namespace plugin {
-class Turbo : public kaleidoscope::Plugin {
+class Turbo : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   uint16_t interval();
   void interval(uint16_t newVal);
@@ -47,10 +47,12 @@ class Turbo : public kaleidoscope::Plugin {
   cRGB activeColor();
   void activeColor(cRGB newVal);
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
   EventHandlerResult beforeSyncingLeds();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("Turbo"); }
 
  private:
   uint16_t interval_       = 10;

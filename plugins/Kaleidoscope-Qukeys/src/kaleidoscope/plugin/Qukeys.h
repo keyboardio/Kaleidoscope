@@ -29,6 +29,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 // IWYU pragma: no_include "HIDAliases.h"
 
@@ -75,7 +76,7 @@ struct Qukey {
 };
 
 
-class Qukeys : public kaleidoscope::Plugin {
+class Qukeys : public kaleidoscope::Plugin, public FocusPlugin {
 
  public:
   // Methods for turning the plugin on and off.
@@ -153,9 +154,11 @@ class Qukeys : public kaleidoscope::Plugin {
   static constexpr int8_t layer_wildcard{-1};
 
   // Kaleidoscope hook functions.
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("Qukeys"); }
 
  private:
   // An array of Qukey objects in PROGMEM.

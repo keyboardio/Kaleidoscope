@@ -43,9 +43,6 @@ void ColormapEffect::max_layers(uint8_t max_) {
   map_base_   = ::LEDPaletteTheme.reserveThemes(max_layers_);
 }
 
-EventHandlerResult ColormapEffect::onNameQuery() {
-  return ::Focus.sendName(F("ColormapEffect"));
-}
 
 bool ColormapEffect::isUninitialized() {
   return ::LEDPaletteTheme.isThemeUninitialized(map_base_, max_layers_);

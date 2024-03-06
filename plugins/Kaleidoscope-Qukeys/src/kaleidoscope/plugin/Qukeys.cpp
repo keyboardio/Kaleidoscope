@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult Qukeys::onNameQuery() {
-  return ::Focus.sendName(F("Qukeys"));
-}
 
 // This is the event handler. It ignores certain events, but mostly just adds
 // them to the Qukeys event queue.

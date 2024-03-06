@@ -25,7 +25,7 @@
 #include "kaleidoscope/key_defs.h"                  // for Key
 #include "kaleidoscope/plugin.h"                    // for Plugin
 #include "kaleidoscope/plugin/Macros/MacroSteps.h"  // for macro_t, MACRO_NONE
-
+#include "kaleidoscope/plugin/FocusPlugin.h"        // for FocusPlugin
 // =============================================================================
 // Define this function in a Kaleidoscope sketch in order to trigger Macros.
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event);
@@ -33,7 +33,7 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event);
 namespace kaleidoscope {
 namespace plugin {
 
-class Macros : public kaleidoscope::Plugin {
+class Macros : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   /// Send a key press event from a Macro
   ///
@@ -88,11 +88,13 @@ class Macros : public kaleidoscope::Plugin {
 
   // ---------------------------------------------------------------------------
   // Event handlers
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeReportingState(const KeyEvent &event) {
     return ::MacroSupport.beforeReportingState(event);
   }
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("Macros"); }
 
  private:
   // Translate and ASCII character value to a corresponding `Key`

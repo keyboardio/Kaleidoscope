@@ -24,7 +24,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Escape
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 // DEPRECATED: `OneShotCancelKey` doesn't match our normal naming, and should
 // eventually be removed.
 constexpr Key OneShotCancelKey{kaleidoscope::ranges::OS_CANCEL};
@@ -53,11 +53,13 @@ class EscapeOneShot : public kaleidoscope::Plugin {
   Settings settings_ = {.cancel_oneshot_key = Key_Escape};
 };
 
-class EscapeOneShotConfig : public Plugin {
+class EscapeOneShotConfig : public Plugin, FocusPlugin {
  public:
   EventHandlerResult onSetup();
   EventHandlerResult onFocusEvent(const char *input);
-  EventHandlerResult onNameQuery();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("EscapeOneShot"); }
 
  private:
   uint16_t settings_base_;

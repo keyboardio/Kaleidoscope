@@ -28,9 +28,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult LayerFocus::onNameQuery() {
-  return ::Focus.sendName(F("LayerFocus"));
-}
 
 EventHandlerResult LayerFocus::onFocusEvent(const char *input) {
   const char *cmd_activate   = PSTR("layer.activate");

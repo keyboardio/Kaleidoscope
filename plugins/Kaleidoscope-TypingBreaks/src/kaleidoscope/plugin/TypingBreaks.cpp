@@ -113,9 +113,6 @@ EventHandlerResult TypingBreaks::onKeyEvent(KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult TypingBreaks::onNameQuery() {
-  return ::Focus.sendName(F("TypingBreaks"));
-}
 
 EventHandlerResult TypingBreaks::onSetup() {
   bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(settings), &settings_base_, &settings);

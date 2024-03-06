@@ -77,9 +77,6 @@ void TapDance::flushQueue(KeyAddr ignored_addr) {
 
 // --- hooks ---
 
-EventHandlerResult TapDance::onNameQuery() {
-  return ::Focus.sendName(F("TapDance"));
-}
 
 EventHandlerResult TapDance::onKeyswitchEvent(KeyEvent &event) {
   // If the plugin has already processed and released this event, ignore it.

@@ -91,10 +91,7 @@ bool MouseKeys::isMouseWheelKey(const Key &key) const {
 // =============================================================================
 // Event Handlers
 
-// -----------------------------------------------------------------------------
-EventHandlerResult MouseKeys::onNameQuery() {
-  return ::Focus.sendName(F("MouseKeys"));
-}
+
 
 // -----------------------------------------------------------------------------
 EventHandlerResult MouseKeys::onSetup() {

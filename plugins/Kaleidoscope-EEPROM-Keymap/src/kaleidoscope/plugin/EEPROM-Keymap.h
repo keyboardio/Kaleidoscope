@@ -23,10 +23,12 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "Kaleidoscope-FocusSerial.h"           // for getting focus in our path
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
-class EEPROMKeymap : public kaleidoscope::Plugin {
+class EEPROMKeymap : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   enum class Mode {
     CUSTOM,
@@ -34,7 +36,6 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   };
 
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   static void setup(uint8_t max);
@@ -47,6 +48,9 @@ class EEPROMKeymap : public kaleidoscope::Plugin {
   static Key getKeyExtended(uint8_t layer, KeyAddr key_addr);
 
   static void updateKey(uint16_t base_pos, Key key);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override { F("EEPROMKeymap"); }
 
  private:
   static uint16_t keymap_base_;
