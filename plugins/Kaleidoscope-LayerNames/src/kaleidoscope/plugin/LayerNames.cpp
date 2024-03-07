@@ -27,9 +27,6 @@ namespace plugin {
 
 // =============================================================================
 
-EventHandlerResult LayerNames::onNameQuery() {
-  return ::Focus.sendName(F("LayerNames"));
-}
 
 EventHandlerResult LayerNames::onFocusEvent(const char *input) {
   const char *cmd_layerNames = PSTR("keymap.layerNames");

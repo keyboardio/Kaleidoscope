@@ -184,10 +184,6 @@ void OneShot::cancel(bool cancel_stickies) {
 // ----------------------------------------------------------------------------
 // Plugin hook functions
 
-EventHandlerResult OneShot::onNameQuery() {
-  return ::Focus.sendName(F("OneShot"));
-}
-
 EventHandlerResult OneShot::onKeyEvent(KeyEvent &event) {
 
   // Ignore injected key events. This prevents re-processing events that the

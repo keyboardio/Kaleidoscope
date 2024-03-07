@@ -89,9 +89,6 @@ bool DynamicTapDance::dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t t
   return true;
 }
 
-EventHandlerResult DynamicTapDance::onNameQuery() {
-  return ::Focus.sendName(F("DynamicTapDance"));
-}
 
 EventHandlerResult DynamicTapDance::onFocusEvent(const char *input) {
   const char *cmd_map = PSTR("tapdance.map");

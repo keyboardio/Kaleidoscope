@@ -34,7 +34,6 @@ class Redial : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   static bool shouldRemember(Key mappedKey);
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  protected:

@@ -25,6 +25,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
@@ -38,10 +39,9 @@ namespace plugin {
 /// normally produced with the `shift` modifier.  Crucially, when `shift` is
 /// held, and the `Key` to be output does not have the `shift` modifier flag
 /// applied to it, the held `shift` modifier will be suppressed.
-class CharShift : public Plugin {
+class CharShift : public Plugin, public FocusPlugin {
 
  public:
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult beforeReportingState(const KeyEvent &event);
 
@@ -80,6 +80,11 @@ class CharShift : public Plugin {
   void setProgmemKeyPairs(KeyPair const (&keypairs)[_num_keypairs]) {
     progmem_keypairs_ = keypairs;
     num_keypairs_     = _num_keypairs;
+  }
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("CharShift");
   }
 
  private:

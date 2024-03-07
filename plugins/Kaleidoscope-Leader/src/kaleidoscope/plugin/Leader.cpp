@@ -94,9 +94,7 @@ void Leader::inject(Key key, uint8_t key_state) {
 #endif
 
 // --- hooks ---
-EventHandlerResult Leader::onNameQuery() {
-  return ::Focus.sendName(F("Leader"));
-}
+
 
 EventHandlerResult Leader::onKeyswitchEvent(KeyEvent &event) {
   // If the plugin has already processed and released this event, ignore it.

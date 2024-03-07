@@ -20,6 +20,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 // =============================================================================
 // The number of simultaneously-active `Key` values that a macro can have
@@ -33,7 +34,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-class MacroSupport : public Plugin {
+class MacroSupport : public Plugin, public FocusPlugin {
  public:
   /// Send a key press event from a Macro
   ///
@@ -64,8 +65,13 @@ class MacroSupport : public Plugin {
 
   // ---------------------------------------------------------------------------
   // Event handlers
-  EventHandlerResult onNameQuery();
   EventHandlerResult beforeReportingState(const KeyEvent &event);
+
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("MacroSupport");
+  }
 
  private:
   // An array of key values that are active while a macro sequence is playing

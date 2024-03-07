@@ -33,9 +33,6 @@
 namespace kaleidoscope {
 namespace plugin {
 
-EventHandlerResult FingerPainter::onNameQuery() {
-  return ::Focus.sendName(F("FingerPainter"));
-}
 
 EventHandlerResult FingerPainter::onSetup() {
   color_base_ = ::LEDPaletteTheme.reserveThemes(1);

@@ -95,10 +95,6 @@ EventHandlerResult MacroSupport::beforeReportingState(const KeyEvent &event) {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult MacroSupport::onNameQuery() {
-  return ::Focus.sendName(F("MacroSupport"));
-}
-
 }  // namespace plugin
 }  // namespace kaleidoscope
 

@@ -32,9 +32,6 @@ namespace plugin {
 uint16_t MagicCombo::min_interval = 500;
 #endif
 
-EventHandlerResult MagicCombo::onNameQuery() {
-  return ::Focus.sendName(F("MagicCombo"));
-}
 
 EventHandlerResult MagicCombo::afterEachCycle() {
   for (uint8_t i = 0; i < magiccombo::combos_length; i++) {

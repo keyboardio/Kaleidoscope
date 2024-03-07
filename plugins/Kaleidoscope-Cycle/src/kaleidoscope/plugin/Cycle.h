@@ -26,6 +26,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 constexpr Key Key_Cycle = Key(kaleidoscope::ranges::CYCLE);
 
@@ -36,13 +37,17 @@ constexpr Key Key_Cycle = Key(kaleidoscope::ranges::CYCLE);
 
 namespace kaleidoscope {
 namespace plugin {
-class Cycle : public kaleidoscope::Plugin {
+class Cycle : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   void replace(Key key);
   void replace(uint8_t cycle_size, const Key cycle_steps[]);
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("Cycle");
+  }
 
  private:
   uint8_t toModFlag(uint8_t keyCode);

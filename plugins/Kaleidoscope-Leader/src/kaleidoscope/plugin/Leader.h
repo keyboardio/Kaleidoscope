@@ -26,6 +26,8 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_NoKey
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
+
 // -----------------------------------------------------------------------------
 // Deprecation warning messages
 #include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
@@ -61,7 +63,7 @@ constexpr Key LeaderKey(uint8_t n) {
   return Key(kaleidoscope::ranges::LEAD_FIRST + n);
 }
 
-class Leader : public kaleidoscope::Plugin {
+class Leader : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   typedef void (*action_t)(uint8_t seq_index);
   struct dictionary_t {
@@ -91,9 +93,13 @@ class Leader : public kaleidoscope::Plugin {
     timeout_ = timeout;
   }
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult afterEachCycle();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("Leader");
+  }
 
  private:
   Key sequence_[LEADER_MAX_SEQUENCE_LENGTH + 1];

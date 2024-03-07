@@ -20,16 +20,21 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
 
-class LayerNames : public kaleidoscope::Plugin {
+class LayerNames : public kaleidoscope::Plugin, public FocusPlugin {
  public:
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   void reserve_storage(uint16_t size);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("LayerNames");
+  }
 
  private:
   uint16_t storage_base_;

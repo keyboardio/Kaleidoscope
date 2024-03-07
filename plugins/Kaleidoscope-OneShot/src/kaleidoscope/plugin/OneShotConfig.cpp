@@ -40,9 +40,6 @@ EventHandlerResult OneShotConfig::onSetup() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult OneShotConfig::onNameQuery() {
-  return ::Focus.sendName(F("OneShotConfig"));
-}
 
 EventHandlerResult OneShotConfig::onFocusEvent(const char *input) {
   enum Command : uint8_t {

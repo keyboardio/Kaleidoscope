@@ -23,6 +23,7 @@
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
@@ -42,13 +43,17 @@ class IdleLEDs : public kaleidoscope::Plugin {
   static uint32_t start_time_;
 };
 
-class PersistentIdleLEDs : public IdleLEDs {
+class PersistentIdleLEDs : public IdleLEDs, public FocusPlugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   static void setIdleTimeoutSeconds(uint32_t new_limit);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("PersistentIdleLEDs");
+  }
 
  private:
   static uint16_t settings_base_;

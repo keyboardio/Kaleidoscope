@@ -22,15 +22,19 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
-
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 namespace kaleidoscope {
 namespace plugin {
 
-class PersistentLEDMode : public kaleidoscope::Plugin {
+class PersistentLEDMode : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
   EventHandlerResult onLEDModeChange();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("PersistentLEDMode");
+  }
 
  private:
   static uint16_t settings_base_;

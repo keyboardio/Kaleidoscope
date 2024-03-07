@@ -38,10 +38,6 @@ namespace plugin {
 // =============================================================================
 // Event handlers
 
-// -----------------------------------------------------------------------------
-EventHandlerResult CharShift::onNameQuery() {
-  return ::Focus.sendName(F("CharShift"));
-}
 
 // -----------------------------------------------------------------------------
 EventHandlerResult CharShift::onKeyEvent(KeyEvent &event) {

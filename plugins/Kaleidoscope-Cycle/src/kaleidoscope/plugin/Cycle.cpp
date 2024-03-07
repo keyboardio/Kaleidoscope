@@ -54,9 +54,6 @@ void Cycle::replace(uint8_t cycle_size, const Key cycle_steps[]) {
 
 // --- hooks ---
 
-EventHandlerResult Cycle::onNameQuery() {
-  return ::Focus.sendName(F("Cycle"));
-}
 
 EventHandlerResult Cycle::onKeyEvent(KeyEvent &event) {
   if (keyIsInjected(event.state))

@@ -62,9 +62,6 @@ EventHandlerResult LEDBrightnessConfig::onFocusEvent(const char *command) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
-EventHandlerResult LEDBrightnessConfig::onNameQuery() {
-  return ::Focus.sendName(F("LEDBrightnessConfig"));
-}
 
 }  // namespace plugin
 }  // namespace kaleidoscope

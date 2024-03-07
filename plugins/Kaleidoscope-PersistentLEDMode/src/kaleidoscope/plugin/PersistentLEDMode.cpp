@@ -55,9 +55,6 @@ EventHandlerResult PersistentLEDMode::onLEDModeChange() {
   return EventHandlerResult::OK;
 }
 
-EventHandlerResult PersistentLEDMode::onNameQuery() {
-  return ::Focus.sendName(F("PersistentLEDMode"));
-}
 
 }  // namespace plugin
 }  // namespace kaleidoscope

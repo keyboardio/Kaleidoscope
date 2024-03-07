@@ -23,6 +23,7 @@
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin/LEDMode.h"        // for LEDMode
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
@@ -31,18 +32,21 @@ namespace plugin {
 // as there is no benefit of transforming it into a dynamic
 // LED mode in terms of PROGMEM or RAM.
 //
-class FingerPainter : public LEDMode {
+class FingerPainter : public LEDMode, public FocusPlugin {
  public:
   void toggle();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);
   EventHandlerResult onFocusEvent(const char *input);
   EventHandlerResult onSetup();
-  EventHandlerResult onNameQuery();
 
  protected:
   void update() final;
   void refreshAt(KeyAddr key_addr) final;
+
+  const __FlashStringHelper *getPluginName() const override {
+    return F("FingerPainter");
+  }
 
  private:
   uint16_t color_base_;

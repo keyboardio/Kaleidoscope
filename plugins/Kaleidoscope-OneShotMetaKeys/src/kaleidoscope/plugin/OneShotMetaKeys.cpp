@@ -39,9 +39,7 @@ namespace plugin {
 // ----------------------------------------------------------------------------
 // Plugin hook functions
 
-EventHandlerResult OneShotMetaKeys::onNameQuery() {
-  return ::Focus.sendName(F("OneShotMetaKeys"));
-}
+
 
 EventHandlerResult OneShotMetaKeys::onKeyEvent(KeyEvent &event) {
   // Ignore key release and injected events.

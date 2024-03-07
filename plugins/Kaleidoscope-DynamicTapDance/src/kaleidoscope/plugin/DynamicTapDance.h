@@ -24,18 +24,23 @@
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 namespace kaleidoscope {
 namespace plugin {
 
-class DynamicTapDance : public kaleidoscope::Plugin {
+class DynamicTapDance : public kaleidoscope::Plugin, public FocusPlugin {
  public:
-  EventHandlerResult onNameQuery();
   EventHandlerResult onFocusEvent(const char *input);
 
   void setup(uint8_t dynamic_offset, uint16_t size);
 
   bool dance(uint8_t tap_dance_index, KeyAddr key_addr, uint8_t tap_count, TapDance::ActionType tap_dance_action);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("DynamicTapDance");
+  }
 
  private:
   uint16_t storage_base_;

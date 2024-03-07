@@ -70,9 +70,6 @@ EventHandlerResult IdleLEDs::onKeyEvent(KeyEvent &event) {
 
 uint16_t PersistentIdleLEDs::settings_base_;
 
-EventHandlerResult PersistentIdleLEDs::onNameQuery() {
-  return ::Focus.sendName(F("PersistentIdleLEDs"));
-}
 
 EventHandlerResult PersistentIdleLEDs::onSetup() {
   uint16_t idle_time;

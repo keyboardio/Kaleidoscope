@@ -23,6 +23,7 @@
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
 
 // ----------------------------------------------------------------------------
 // Key constants
@@ -32,13 +33,17 @@ constexpr Key OneShot_ActiveStickyKey{kaleidoscope::ranges::OS_ACTIVE_STICKY};
 namespace kaleidoscope {
 namespace plugin {
 
-class OneShotMetaKeys : public kaleidoscope::Plugin {
+class OneShotMetaKeys : public kaleidoscope::Plugin, public FocusPlugin {
  public:
   // --------------------------------------------------------------------------
   // Plugin hook functions
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult onKeyEvent(KeyEvent &event);
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("OneShotMetaKeys");
+  }
 
  private:
   static bool isMetaStickyActive();

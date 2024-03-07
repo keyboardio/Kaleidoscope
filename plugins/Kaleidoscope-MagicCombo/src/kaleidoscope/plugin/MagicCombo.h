@@ -22,6 +22,8 @@
 
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/plugin/FocusPlugin.h"    // for FocusPlugin
+
 // -----------------------------------------------------------------------------
 // Deprecation warning messages
 #include "kaleidoscope_internal/deprecations.h"  // for DEPRECATED
@@ -49,7 +51,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-class MagicCombo : public kaleidoscope::Plugin {
+class MagicCombo : public kaleidoscope::Plugin, FocusPlugin {
  public:
   typedef void (*ComboAction)(uint8_t combo_index);
   struct Combo {
@@ -84,8 +86,12 @@ class MagicCombo : public kaleidoscope::Plugin {
 #endif
   }
 
-  EventHandlerResult onNameQuery();
   EventHandlerResult afterEachCycle();
+
+ protected:
+  const __FlashStringHelper *getPluginName() const override {
+    return F("MagicCombo");
+  }
 
  private:
   uint16_t start_time_   = 0;
