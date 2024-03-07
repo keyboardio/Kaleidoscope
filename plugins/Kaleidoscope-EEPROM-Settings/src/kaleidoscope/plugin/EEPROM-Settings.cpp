@@ -160,24 +160,6 @@ void EEPROMSettings::update() {
   is_valid_ = true;
 }
 
-// get a settings slice from the storage and stick it in the untyped struct
-// startAddress is the address of the start of the slice
-// Returns true if the load was successful and false otherwise.
-// Takes the size of storage we want, a pointer to the start address, and a pointer to the data structure for settings
-
-
-bool EEPROMSettings::requestSliceAndLoadData(size_t size, uint16_t *startAddress, void *data) {
-  // Request the slice for the struct from storage
-  uint16_t start = requestSlice(size);
-  *startAddress  = start;
-
-  if (!Runtime.storage().isSliceUninitialized(start, size)) {
-    Runtime.storage().get(start, data);
-    return true;  // Data was loaded successfully
-  } else {
-  }
-  return false;  // Data was not loaded
-}
 
 bool EEPROMSettings::isSliceValid(uint16_t start, size_t size) {
 
