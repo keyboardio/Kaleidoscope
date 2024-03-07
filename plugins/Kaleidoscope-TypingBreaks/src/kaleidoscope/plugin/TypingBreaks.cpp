@@ -118,7 +118,7 @@ EventHandlerResult TypingBreaks::onNameQuery() {
 }
 
 EventHandlerResult TypingBreaks::onSetup() {
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(settings), &settings_base_, &settings);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings);
 
   if (!success) {
     // If our slice is uninitialized, set sensible defaults.

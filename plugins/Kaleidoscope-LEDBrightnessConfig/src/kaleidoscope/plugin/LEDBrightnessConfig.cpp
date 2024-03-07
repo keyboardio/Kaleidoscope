@@ -34,7 +34,7 @@ uint16_t LEDBrightnessConfig::settings_base_;
 struct LEDBrightnessConfig::settings LEDBrightnessConfig::settings_;
 
 EventHandlerResult LEDBrightnessConfig::onSetup() {
-  if (!::EEPROMSettings.requestSliceAndLoadData(sizeof(settings_), &settings_base_, &settings_)) {
+  if (!::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings_)) {
     settings_.brightness = 255;
   }
   ::LEDControl.setBrightness(settings_.brightness);

@@ -35,7 +35,7 @@ uint16_t PersistentLEDMode::settings_base_;
 struct PersistentLEDMode::settings PersistentLEDMode::settings_;
 
 EventHandlerResult PersistentLEDMode::onSetup() {
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(settings_), &settings_base_, &settings_);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings_);
 
   if (success) {
     ::LEDControl.set_mode(settings_.default_mode_index);

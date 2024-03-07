@@ -1,0 +1,7 @@
+Things inside this directory are tools and scripts intended for interactive testing with a specific device attached. At this time, they're not intended for automated testing under CI.
+
+Things that might be here include tests of the focus protocol or tests of on-device EEPROM/Storage.
+
+These tests may require locally installed tools.
+
+(There are dragons in this directory and we deemed it better to keep this stuff around in the hopes of eventually getting it automated than throwing it away.)

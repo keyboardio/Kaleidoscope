@@ -30,7 +30,7 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult OneShotConfig::onSetup() {
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(::OneShot.settings_), &settings_base_, &::OneShot.settings_);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &::OneShot.settings_);
 
   if (!success) {
     Runtime.storage().put(settings_base_, ::OneShot.settings_);

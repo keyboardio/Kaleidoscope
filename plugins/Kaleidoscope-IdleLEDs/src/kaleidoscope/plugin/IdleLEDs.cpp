@@ -77,7 +77,7 @@ EventHandlerResult PersistentIdleLEDs::onNameQuery() {
 EventHandlerResult PersistentIdleLEDs::onSetup() {
   uint16_t idle_time;
 
-  bool success = ::EEPROMSettings.requestSliceAndLoadData(sizeof(idle_time), &settings_base_, &idle_time);
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &idle_time);
 
   // If idleTime is max, assume that EEPROM is uninitialized, and store the
   // defaults.
