@@ -48,7 +48,7 @@ class DynamicMacros : public kaleidoscope::Plugin, public FocusPlugin {
 
  protected:
   const __FlashStringHelper *getPluginName() const override {
-    return F("LEDBrightnessConfig");
+    return F("DynamicMacros");
   }
 
 

@@ -52,7 +52,7 @@ class Turbo : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult beforeSyncingLeds();
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("Turbo"); }
+  const __FlashStringHelper *getPluginName() const override { return F("Turbo"); }
 
  private:
   uint16_t interval_       = 10;

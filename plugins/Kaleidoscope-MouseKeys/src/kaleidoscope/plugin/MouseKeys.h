@@ -157,7 +157,7 @@ class MouseKeys : public kaleidoscope::Plugin, public FocusPlugin {
   friend class MouseKeysConfig;
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("MouseKeys"); }
+  const __FlashStringHelper *getPluginName() const override { return F("MouseKeys"); }
 
  private:
   static constexpr uint8_t cursor_update_interval_ = 4;

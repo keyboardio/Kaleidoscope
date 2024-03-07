@@ -38,7 +38,7 @@ class Redial : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("Redial"); }
+  const __FlashStringHelper *getPluginName() const override { return F("Redial"); }
 
  private:
   Key last_key_;

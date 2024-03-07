@@ -89,7 +89,7 @@ class TapDance : public kaleidoscope::Plugin, public FocusPlugin {
   }
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("TapDance"); }
+  const __FlashStringHelper *getPluginName() const override { return F("TapDance"); }
 
  private:
   // The maximum number of events in the queue at a time.

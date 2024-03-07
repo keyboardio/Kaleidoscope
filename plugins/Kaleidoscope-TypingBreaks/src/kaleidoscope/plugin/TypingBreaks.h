@@ -43,7 +43,7 @@ class TypingBreaks : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult onSetup();
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("TypingBreaks"); }
+  const __FlashStringHelper *getPluginName() const override { return F("TypingBreaks"); }
 
  private:
   static bool keyboard_locked_;

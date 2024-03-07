@@ -158,7 +158,7 @@ class Qukeys : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult afterEachCycle();
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("Qukeys"); }
+  const __FlashStringHelper *getPluginName() const override { return F("Qukeys"); }
 
  private:
   // An array of Qukey objects in PROGMEM.

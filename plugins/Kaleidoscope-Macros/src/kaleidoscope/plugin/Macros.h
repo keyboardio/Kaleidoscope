@@ -94,7 +94,7 @@ class Macros : public kaleidoscope::Plugin, public FocusPlugin {
   }
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("Macros"); }
+  const __FlashStringHelper *getPluginName() const override { return F("Macros"); }
 
  private:
   // Translate and ASCII character value to a corresponding `Key`

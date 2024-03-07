@@ -45,7 +45,7 @@ class TopsyTurvy : public kaleidoscope::Plugin, public FocusPlugin {
   }
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("TopsyTurvy"); }
+  const __FlashStringHelper *getPluginName() const override { return F("TopsyTurvy"); }
 
  private:
   KeyAddr tt_addr_ = KeyAddr::none();

@@ -34,7 +34,7 @@ class GeminiPR : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("GeminiPR"); }
+  const __FlashStringHelper *getPluginName() const override { return F("GeminiPR"); }
 
  private:
   static uint8_t keys_held_;

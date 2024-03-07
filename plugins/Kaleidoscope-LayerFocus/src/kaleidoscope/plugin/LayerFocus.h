@@ -29,7 +29,7 @@ class LayerFocus : public kaleidoscope::Plugin, public FocusPlugin {
   EventHandlerResult onFocusEvent(const char *input);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("LayerFocus"); }
+  const __FlashStringHelper *getPluginName() const override { return F("LayerFocus"); }
 };
 
 }  // namespace plugin

@@ -50,7 +50,7 @@ class EEPROMKeymap : public kaleidoscope::Plugin, public FocusPlugin {
   static void updateKey(uint16_t base_pos, Key key);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("EEPROMKeymap"); }
+  const __FlashStringHelper *getPluginName() const override { return F("EEPROMKeymap"); }
 
  private:
   static uint16_t keymap_base_;

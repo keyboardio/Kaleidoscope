@@ -59,7 +59,7 @@ class EscapeOneShotConfig : public Plugin, public FocusPlugin {
   EventHandlerResult onFocusEvent(const char *input);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("EscapeOneShot"); }
+  const __FlashStringHelper *getPluginName() const override { return F("EscapeOneShot"); }
 
  private:
   uint16_t settings_base_;

@@ -34,7 +34,7 @@ class DefaultLEDModeConfig : public kaleidoscope::Plugin, FocusPlugin {
   void activateLEDModeIfUnconfigured(LEDModeInterface *plugin);
 
  protected:
-  const __FlashStringHelper *getPluginName() const override { F("DefaultLEDModeConfig"); }
+  const __FlashStringHelper *getPluginName() const override { return F("DefaultLEDModeConfig"); }
 
  private:
   static uint16_t settings_base_;
