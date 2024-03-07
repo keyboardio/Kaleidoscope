@@ -81,7 +81,9 @@ class EEPROMSettings : public kaleidoscope::Plugin {
 
 
   template<typename T>
-  bool requestSliceAndLoadData(size_t size, uint16_t *startAddress, T *data) {
+  bool requestSliceAndLoadData(uint16_t *startAddress, T *data) {
+    // Request the slice for the struct from storage
+    size_t size    = sizeof(T);
     uint16_t start = requestSlice(size);
     *startAddress  = start;
 
