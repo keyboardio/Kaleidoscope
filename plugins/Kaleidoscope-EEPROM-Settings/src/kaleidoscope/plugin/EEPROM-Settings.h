@@ -88,8 +88,8 @@ class EEPROMSettings : public kaleidoscope::Plugin {
     *startAddress  = start;
 
     // Load the data if the slice is initialized
-    Runtime.storage().get(start, *data);  // Directly load data into the provided address
     if (!Runtime.storage().isSliceUninitialized(start, size)) {
+      Runtime.storage().get(start, *data);  // Directly load data into the provided address
       return true;
     }
 
