@@ -56,7 +56,7 @@ class LEDModeInterface {
   typedef NoLEDMode DynamicLEDMode;
 
  protected:
-  const char *led_mode_name_ PROGMEM = {"[unnamed led mode]"};
+  const char *led_mode_name_ PROGMEM;
 };
 
 }  // namespace plugin
