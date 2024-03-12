@@ -52,6 +52,7 @@ constexpr uint8_t MAX_TT_KEYS        = 255;
 constexpr uint8_t MAX_STENO_KEYS     = 42;
 constexpr uint8_t MAX_DYNAMIC_MACROS = 31;
 constexpr uint8_t MAX_CS_KEYS        = 64;
+constexpr uint8_t MAX_QK_KEYS        = 64;
 
 enum : uint16_t {
   // Macro ranges pre-date Kaleidoscope-Ranges, so they're coming before
@@ -97,6 +98,8 @@ enum : uint16_t {
   OS_CANCEL,
   CS_FIRST,
   CS_LAST = CS_FIRST + MAX_CS_KEYS,
+  QK_FIRST,
+  QK_LAST = QK_FIRST + MAX_QK_KEYS,
 
   SAFE_START,
   KALEIDOSCOPE_SAFE_START = SAFE_START
