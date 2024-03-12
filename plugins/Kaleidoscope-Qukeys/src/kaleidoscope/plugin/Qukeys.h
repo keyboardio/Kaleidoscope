@@ -19,7 +19,7 @@
 #pragma once
 
 #include <Arduino.h>              // for PROGMEM
-#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST
+#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST, QK_FIRST
 #include <stdint.h>               // for uint8_t, uint16_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
@@ -244,3 +244,10 @@ extern kaleidoscope::plugin::Qukeys Qukeys;
       qukey_defs};                                                  \
     Qukeys.configureQukeys(qk_table);                               \
   }
+
+/// This defines a `Key` object that will be handled by the Qukey plugin.
+/// The argument `n` is the index number of the `Qukey` in the array (starting
+/// at zero).
+constexpr kaleidoscope::Key QK(uint8_t n) {
+  return kaleidoscope::Key(kaleidoscope::ranges::QK_FIRST + n);
+}

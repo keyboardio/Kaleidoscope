@@ -66,6 +66,7 @@ class Issue1010 : public ::testing::Test {
     OS_CANCEL,
     CS_FIRST,
     CS_LAST = CS_FIRST + MAX_CS_KEYS,
+    // TODO(EvyBongers): add new ranges
 
     SAFE_START,
     KALEIDOSCOPE_SAFE_START = SAFE_START
@@ -148,6 +149,7 @@ TEST_F(Issue1010, RangesHaveNotChanged) {
             uint16_t(kaleidoscope::ranges::CS_FIRST));
   ASSERT_EQ(uint16_t(Issue1010::CS_LAST),
             uint16_t(kaleidoscope::ranges::CS_LAST));
+  // TODO(EvyBongers): add tests for new ranges
 
   ASSERT_EQ(uint16_t(Issue1010::SAFE_START),
             uint16_t(kaleidoscope::ranges::SAFE_START));
