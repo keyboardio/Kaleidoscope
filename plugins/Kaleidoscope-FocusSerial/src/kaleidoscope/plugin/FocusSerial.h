@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Arduino.h>         // for delayMicroseconds
+#include <Arduino.h>         // for __FlashStringHelper, delayMicroseconds
 #include <HardwareSerial.h>  // for HardwareSerial
 #include <stdint.h>          // for uint8_t, uint16_t
 

@@ -26,10 +26,11 @@
 namespace kaleidoscope {
 namespace plugin {
 
-TriColor::TriColor(cRGB base_color, cRGB mod_color, cRGB esc_color) {
-  base_color_ = base_color;
-  mod_color_  = mod_color;
-  esc_color_  = esc_color;
+TriColor::TriColor(const char *led_mode_name, cRGB base_color, cRGB mod_color, cRGB esc_color) {
+  led_mode_name_ = led_mode_name;
+  base_color_    = base_color;
+  mod_color_     = mod_color;
+  esc_color_     = esc_color;
 }
 
 void TriColor::TransientLEDMode::update() {

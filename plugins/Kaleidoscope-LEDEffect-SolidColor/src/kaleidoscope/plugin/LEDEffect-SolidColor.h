@@ -29,7 +29,14 @@ class LEDSolidColor : public Plugin,
                       public LEDModeInterface {
  public:
   LEDSolidColor(uint8_t r, uint8_t g, uint8_t b)
-    : r_(r), g_(g), b_(b) {}
+    : r_(r), g_(g), b_(b) {
+    led_mode_name_ = "SolidColor";
+  }
+
+  LEDSolidColor(const char *led_mode_name, uint8_t r, uint8_t g, uint8_t b)
+    : r_(r), g_(g), b_(b) {
+    led_mode_name_ = led_mode_name;
+  }
 
   // This class' instance has dynamic lifetime
   //

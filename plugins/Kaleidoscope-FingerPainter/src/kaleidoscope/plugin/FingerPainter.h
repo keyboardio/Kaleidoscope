@@ -33,6 +33,9 @@ namespace plugin {
 //
 class FingerPainter : public LEDMode {
  public:
+  FingerPainter() { led_mode_name_ = "FingerPainter"; }
+  explicit FingerPainter(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
+
   void toggle();
 
   EventHandlerResult onKeyEvent(KeyEvent &event);

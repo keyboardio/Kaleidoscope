@@ -27,10 +27,11 @@ namespace plugin {
 //
 class LEDOff : public LEDMode {
  public:
-  LEDOff(void) {}
+  LEDOff() { led_mode_name_ = "Off"; }
+  explicit LEDOff(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
 
  protected:
-  void onActivate(void) final;
+  void onActivate() final;
   void refreshAt(KeyAddr key_addr) final;
 };
 }  // namespace plugin

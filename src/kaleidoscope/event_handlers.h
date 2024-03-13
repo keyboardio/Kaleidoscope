@@ -37,6 +37,9 @@
 #define _ABORTABLE true
 #define _NOT_ABORTABLE false
 
+// Define the callback for the LED mode hook handler
+typedef void (*LedModeCallback)(const char*);
+
 #define _CURRENT_IMPLEMENTATION
 
 //******************************************************************************
@@ -124,6 +127,17 @@ class SignatureCheckDummy {};
              _NOT_ABORTABLE,                                              __NL__ \
              (), (), (),                                                  __NL__ \
              (), (), ##__VA_ARGS__)                                       __NL__ \
+                                                                          __NL__ \
+   /* Called by Focus, when handling the `led.modes` command. */          __NL__ \
+   /* Is implemented in LEDModeInterface.h, but depends on */             __NL__ \
+   /* the LED plugin to set `led_mode_name_`. */                          __NL__ \
+   OPERATION(onLedEffectQuery,                                            __NL__ \
+             1,                                                           __NL__ \
+             _CURRENT_IMPLEMENTATION,                                     __NL__ \
+             _NOT_ABORTABLE,                                              __NL__ \
+             (), (), (), /* non template */                               __NL__ \
+             (LedModeCallback callback),                                  __NL__ \
+             (callback), ##__VA_ARGS__)                                   __NL__ \
                                                                           __NL__ \
    OPERATION(onSetup,                                                     __NL__ \
              1,                                                           __NL__ \
@@ -297,6 +311,10 @@ class SignatureCheckDummy {};
    START(onSetup, 1)                                                    __NL__ \
       OP(onSetup, 1)                                                    __NL__ \
    END(onSetup, 1)                                                      __NL__ \
+                                                                        __NL__ \
+   START(onLedEffectQuery, 1)                                           __NL__ \
+      OP(onLedEffectQuery, 1)                                           __NL__ \
+   END(onLedEffectQuery, 1)                                             __NL__ \
                                                                         __NL__ \
    START(onNameQuery, 1)                                                __NL__ \
       OP(onNameQuery, 1)                                                __NL__ \
