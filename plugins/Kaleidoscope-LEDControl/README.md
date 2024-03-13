@@ -89,6 +89,8 @@ effects. It is also a building block for plugins that control LEDs.
 > See [[event-handler-hooks]]
 
 ### `.setup(void)`
+
+
 ### `.onKeyEvent(KeyEvent &event)`
 
 > See [[event-handler-hooks]]
