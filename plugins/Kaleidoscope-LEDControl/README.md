@@ -21,6 +21,10 @@ effects. It is also a building block for plugins that control LEDs.
 
 ### `.get_mode()`
 
+> Returns the current LED mode.
+
+### `.get_mode<typename>()`
+
 
 ### `.set_mode(uint8_t mode_id)`
 
@@ -54,6 +58,7 @@ effects. It is also a building block for plugins that control LEDs.
 
 ### `.syncLeds(void)`
 
+> Force an update of all LEDs.
 
 ### `.set_all_leds_to(uint8_t r, uint8_t g, uint8_t b)`
 
