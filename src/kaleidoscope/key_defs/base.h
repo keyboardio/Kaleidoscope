@@ -32,23 +32,3 @@
 // The default value for new events.  Used to signal that a keymap lookup should
 // be done.
 #define Key_Undefined Key_Transparent
-
-#define LCTRL(k)      kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
-#define LALT(k)       kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
-#define RALT(k)       kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
-#define LSHIFT(k)     kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
-#define LGUI(k)       kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
-
-#define SYSTEM_KEY(code, hid_type) \
-  Key(code, SYNTHETIC | IS_SYSCTL | (hid_type & HID_TYPE_MASK))
-
-/* Most Consumer keys are more then 8bit, the highest Consumer hid code
-   uses 10bit. By using the 11bit as flag to indicate a consumer keys was activate we can
-   use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
-   use the CONSUMER(key) macro this will return the 10bit keycode.
-*/
-constexpr uint16_t CONSUMER_KEYCODE_MASK = 0x03FF;
-#define CONSUMER(key) (key.getRaw() & CONSUMER_KEYCODE_MASK)
-#define CONSUMER_KEY(code, hid_type)   \
-  Key((code & CONSUMER_KEYCODE_MASK) | \
-      ((SYNTHETIC | IS_CONSUMER | (hid_type & HID_TYPE_MASK)) << 8))

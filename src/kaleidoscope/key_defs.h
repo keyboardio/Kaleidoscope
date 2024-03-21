@@ -249,6 +249,35 @@ typedef kaleidoscope::Key Key;
 typedef kaleidoscope::Key Key_;
 
 
+#define LCTRL(k)  kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
+#define LALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
+#define RALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
+#define LSHIFT(k) kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
+#define LGUI(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
+// To make it easier to create custom shortcuts, that do not interfere with
+// system ones, an old trick is to use many modifiers. To make this easier,
+// Ctrl+Shift+Alt is commonly abbreviated as "Meh", while Ctrl+Shift+Alt+GUI is
+// often called "Hyper". To support this, we offer the `Key_Meh` and `Key_Hyper`
+// aliases, along with `MEH(k)` and `HYPER(k)` to go with them.
+
+#define MEH(k)   LCTRL(LSHIFT(LALT((k))))
+#define HYPER(k) LGUI(MEH((k)))
+
+#define SYSTEM_KEY(code, hid_type) \
+  Key(code, SYNTHETIC | IS_SYSCTL | (hid_type & HID_TYPE_MASK))
+
+/* Most Consumer keys are more then 8bit, the highest Consumer hid code
+   uses 10bit. By using the 11bit as flag to indicate a consumer keys was activate we can
+   use the 10 lsb as the HID Consumer code. If you need to get the keycode of a Consumer key
+   use the CONSUMER(key) macro this will return the 10bit keycode.
+*/
+constexpr uint16_t CONSUMER_KEYCODE_MASK = 0x03FF;
+#define CONSUMER(key) (key.getRaw() & CONSUMER_KEYCODE_MASK)
+#define CONSUMER_KEY(code, hid_type)   \
+  Key((code & CONSUMER_KEYCODE_MASK) | \
+      ((SYNTHETIC | IS_CONSUMER | (hid_type & HID_TYPE_MASK)) << 8))
+
+
 namespace kaleidoscope {
 constexpr Key bad_keymap_key{0, RESERVED};
 }

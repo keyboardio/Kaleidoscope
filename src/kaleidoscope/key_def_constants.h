@@ -23,6 +23,25 @@
 #define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
 #define HID_KEYBOARD_LAST_MODIFIER  HID_KEYBOARD_RIGHT_GUI
 
+static const uint8_t LAYER_OP_OFFSET    = 42;
+static const uint8_t LAYER_SHIFT_OFFSET = LAYER_OP_OFFSET;
+static const uint8_t LAYER_MOVE_OFFSET  = LAYER_SHIFT_OFFSET + LAYER_OP_OFFSET;
+;
+
+// Layer number constants
+#define KEYMAP_0 0
+#define KEYMAP_1 1
+#define KEYMAP_2 2
+#define KEYMAP_3 3
+#define KEYMAP_4 4
+#define KEYMAP_5 5
+#define KEYMAP_6 6
+#define KEYMAP_7 7
+
+// Previous/next layer key constants
+#define KEYMAP_PREVIOUS 33
+#define KEYMAP_NEXT     34
+
 // -----------------------------------------------------------------------------
 // Constant flags values
 #define KEY_FLAGS  0b00000000
@@ -63,5 +82,18 @@
 #define HID_TYPE_RTC  0b00000000
 #define HID_TYPE_SEL  0b00000000
 #define HID_TYPE_SV   0b00000000
+#define HID_TYPE_DV   0b00000000
+#define HID_TYPE_CP   0b00000000
+
 // Mask defining the allowed usage type flag bits:
 #define HID_TYPE_MASK 0b00110000
+
+
+// These legacy keycodes are defined for compatibility with existing ancient
+// keymaps. They should not be used in new keymaps.
+// We should formally remove them.
+
+#define KEY_BACKLIGHT_DOWN 0xf1
+#define KEY_BACKLIGHT_UP   0xf2
+#define KEY_RIGHT_FN2      0xfe
+#define KEY_LEFT_FN2       0xff
