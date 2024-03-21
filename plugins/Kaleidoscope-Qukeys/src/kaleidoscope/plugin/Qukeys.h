@@ -33,14 +33,16 @@
 // IWYU pragma: no_include "HIDAliases.h"
 
 // DualUse Key definitions for Qukeys in the keymap
-#define MT(mod, key)   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
+#define MT(mod, key)                   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
 
-#define SFT_T(key)     MT(LeftShift, key)
-#define CTL_T(key)     MT(LeftControl, key)
-#define ALT_T(key)     MT(LeftAlt, key)
-#define GUI_T(key)     MT(LeftGui, key)
+#define SFT_T(key)                     MT(LeftShift, key)
+#define CTL_T(key)                     MT(LeftControl, key)
+#define ALT_T(key)                     MT(LeftAlt, key)
+#define GUI_T(key)                     MT(LeftGui, key)
 
-#define LT(layer, key) kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
+#define LT(layer, key)                 kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
+
+#define QK(primary_key, secondary_key) kaleidoscope::plugin::Qukey(primary_key, secondary_key)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -53,6 +55,11 @@ constexpr Key ModTapKey(Key mod_key, Key tap_key) {
 constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {
   return Key(kaleidoscope::ranges::DUL_FIRST +
              (layer << 8) + tap_key.getKeyCode());
+}
+
+constexpr Key Qukey(Key primary_key, Key secondary_key) {
+  return Key(kaleidoscope::ranges::QK_FIRST +
+             (primary_key.getKeyCode() + secondary_key.getKeyCode());
 }
 
 // Data structure for an individual qukey
