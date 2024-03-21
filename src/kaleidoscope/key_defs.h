@@ -1,5 +1,5 @@
 /* Kaleidoscope - Firmware for computer input devices
- * Copyright (C) 2013-2020  Keyboard.io, Inc.
+ * Copyright (C) 2013-2024  Keyboard.io, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -16,67 +16,22 @@
 
 #pragma once
 
-#include <Arduino.h>  // for pgm_read_byte, INPUT
+#if not defined(KALEIDOSCOPE_GENERATE_KEY_DEFINITIONS)
+#include <Arduino.h>  // for pgm_read_byte
+#endif                // KALEIDOSCOPE_GENERATE_KEY_DEFINITIONS
 #include <stdint.h>   // for uint8_t, uint16_t
 
 #include "kaleidoscope/HIDTables.h"  // for HID_KEYBOARD_LEFT_CONTROL, HID_KEYBOARD_RIGHT...
 // IWYU pragma: begin_exports
+#include "kaleidoscope/key_def_constants.h"
+#include "kaleidoscope/key_defs/base.h"
 #include "kaleidoscope/key_defs/aliases.h"
 #include "kaleidoscope/key_defs/consumerctl.h"
 #include "kaleidoscope/key_defs/keyboard.h"
 #include "kaleidoscope/key_defs/keymaps.h"  // for LAYER_MOVE_OFFSET, LAYER_SHIFT_OFFSET
 #include "kaleidoscope/key_defs/sysctl.h"
+#include "kaleidoscope/key_defs/legacy.h"
 // IWYU pragma: end_exports
-
-// -----------------------------------------------------------------------------
-// Constant keycode values
-#define HID_FIRST_KEY               HID_KEYBOARD_NO_EVENT
-#define HID_LAST_KEY                HID_KEYPAD_HEXADECIMAL
-#define HID_KEYBOARD_FIRST_MODIFIER HID_KEYBOARD_LEFT_CONTROL
-#define HID_KEYBOARD_LAST_MODIFIER  HID_KEYBOARD_RIGHT_GUI
-
-// -----------------------------------------------------------------------------
-// Constant flags values
-#define KEY_FLAGS  0b00000000
-#define CTRL_HELD  0b00000001
-#define LALT_HELD  0b00000010
-#define RALT_HELD  0b00000100
-#define SHIFT_HELD 0b00001000
-#define GUI_HELD   0b00010000
-
-#define SYNTHETIC  0b01000000
-#define RESERVED   0b10000000
-
-// we assert that synthetic keys can never have keys held, so we reuse the _HELD bits
-#define IS_SYSCTL        0b00000001
-#define IS_INTERNAL      0b00000010
-#define SWITCH_TO_KEYMAP 0b00000100
-#define IS_CONSUMER      0b00001000
-
-// consumer: 01..1...
-// sysctl:   01..0001
-// layer:    01000100
-// modlayer: 01000110
-// macros:   01100000
-
-// HID Usage Types: Because these constants, like the ones above, are
-// used in the flags byte of the Key class, they can't overlap any of
-// the above bits. Nor can we use `SYNTHETIC` and `RESERVED` to encode
-// the HID usage type of a keycode, which leaves us with only two
-// bits. Since we don't currently do anything different based on HID
-// usage type, these are currently all set to zeroes.
-#define HID_TYPE_CA   0b00000000
-#define HID_TYPE_CL   0b00000000
-#define HID_TYPE_LC   0b00000000
-#define HID_TYPE_MC   0b00000000
-#define HID_TYPE_NARY 0b00000000
-#define HID_TYPE_OOC  0b00000000
-#define HID_TYPE_OSC  0b00000000
-#define HID_TYPE_RTC  0b00000000
-#define HID_TYPE_SEL  0b00000000
-#define HID_TYPE_SV   0b00000000
-// Mask defining the allowed usage type flag bits:
-#define HID_TYPE_MASK 0b00110000
 
 
 // =============================================================================
@@ -163,11 +118,13 @@ class Key {
     return this->getRaw() < other.getRaw();
   }
 
+// This needs to be elided when generating key definitions, as it's not
+// available unless we're building for an Arduino target.
+#if not defined(KALEIDOSCOPE_GENERATE_KEY_DEFINITIONS)
   Key readFromProgmem() const {
-    return Key{pgm_read_byte(&(this->getKeyCode())),
-               pgm_read_byte(&(this->getFlags()))};
+    return Key{pgm_read_byte(&(this->getKeyCode())), pgm_read_byte(&(this->getFlags()))};
   }
-
+#endif
   // ---------------------------------------------------------------------------
   // Builtin Key variant test functions
   //
@@ -279,7 +236,7 @@ constexpr Key modLayerKey(Key modifier, uint8_t layer) {
 }  // namespace kaleidoscope
 
 // Redefine this macro to enable using alternative char-string to Key
-// conversions per layer. This is, howerver, only necessary in rare cases
+// conversions per layer. This is, however, only necessary in rare cases
 // (e.g. to use individual host_keymap language maps on
 // different layers, see kaleidoscope/host_keymap/host_keymap.h for an example).
 //
@@ -291,35 +248,20 @@ constexpr Key modLayerKey(Key modifier, uint8_t layer) {
 typedef kaleidoscope::Key Key;
 typedef kaleidoscope::Key Key_;
 
-#define LCTRL(k)        kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
-#define LALT(k)         kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
-#define RALT(k)         kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
-#define LSHIFT(k)       kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
-#define LGUI(k)         kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
 
-#define Key_NoKey       Key(0, KEY_FLAGS)
-#define Key_skip        Key(0, KEY_FLAGS)
-#define Key_Transparent Key(0xffff)
-#define ___             Key_Transparent
-#define XXX             Key_NoKey
+#define LCTRL(k)  kaleidoscope::addFlags(CONVERT_TO_KEY(k), CTRL_HELD)
+#define LALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), LALT_HELD)
+#define RALT(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), RALT_HELD)
+#define LSHIFT(k) kaleidoscope::addFlags(CONVERT_TO_KEY(k), SHIFT_HELD)
+#define LGUI(k)   kaleidoscope::addFlags(CONVERT_TO_KEY(k), GUI_HELD)
+// To make it easier to create custom shortcuts, that do not interfere with
+// system ones, an old trick is to use many modifiers. To make this easier,
+// Ctrl+Shift+Alt is commonly abbreviated as "Meh", while Ctrl+Shift+Alt+GUI is
+// often called "Hyper". To support this, we offer the `Key_Meh` and `Key_Hyper`
+// aliases, along with `MEH(k)` and `HYPER(k)` to go with them.
 
-// For entries in the `live_keys[]` array for inactive keys and masked keys,
-// respectively:
-#define Key_Inactive Key_Transparent
-#define Key_Masked   Key_NoKey
-
-// The default value for new events.  Used to signal that a keymap lookup should
-// be done.
-#define Key_Undefined      Key_Transparent
-
-#define KEY_BACKLIGHT_DOWN 0xf1
-#define KEY_BACKLIGHT_UP   0xf2
-#define Key_BacklightDown  Key(KEY_BACKLIGHT_DOWN, KEY_FLAGS)
-#define Key_BacklightUp    Key(KEY_BACKLIGHT_UP, KEY_FLAGS)
-#define KEY_RIGHT_FN2      0xfe
-#define Key_RFN2           Key(KEY_RIGHT_FN2, KEY_FLAGS)
-#define KEY_LEFT_FN2       0xff
-#define Key_LFN2           Key(KEY_LEFT_FN2, KEY_FLAGS)
+#define MEH(k)   LCTRL(LSHIFT(LALT((k))))
+#define HYPER(k) LGUI(MEH((k)))
 
 #define SYSTEM_KEY(code, hid_type) \
   Key(code, SYNTHETIC | IS_SYSCTL | (hid_type & HID_TYPE_MASK))
@@ -334,6 +276,7 @@ constexpr uint16_t CONSUMER_KEYCODE_MASK = 0x03FF;
 #define CONSUMER_KEY(code, hid_type)   \
   Key((code & CONSUMER_KEYCODE_MASK) | \
       ((SYNTHETIC | IS_CONSUMER | (hid_type & HID_TYPE_MASK)) << 8))
+
 
 namespace kaleidoscope {
 constexpr Key bad_keymap_key{0, RESERVED};
