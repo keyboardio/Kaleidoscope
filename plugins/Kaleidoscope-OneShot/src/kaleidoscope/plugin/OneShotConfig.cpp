@@ -30,15 +30,13 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult OneShotConfig::onSetup() {
-  settings_addr_ = ::EEPROMSettings.requestSlice(sizeof(::OneShot.settings_));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &::OneShot.settings_);
 
-  // If the EEPROM is empty, store the default settings.
-  if (Runtime.storage().isSliceUninitialized(settings_addr_, sizeof(::OneShot.settings_))) {
-    Runtime.storage().put(settings_addr_, ::OneShot.settings_);
+  if (!success) {
+    Runtime.storage().put(settings_base_, ::OneShot.settings_);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_addr_, ::OneShot.settings_);
   return EventHandlerResult::OK;
 }
 
@@ -144,7 +142,7 @@ EventHandlerResult OneShotConfig::onFocusEvent(const char *input) {
     default:
       return EventHandlerResult::ABORT;
     }
-    Runtime.storage().put(settings_addr_, ::OneShot.settings_);
+    Runtime.storage().put(settings_base_, ::OneShot.settings_);
     Runtime.storage().commit();
   }
 

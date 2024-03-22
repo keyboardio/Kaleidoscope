@@ -16,12 +16,31 @@
 
 #pragma once
 
+#include <Arduino.h>  // for PROGMEM
+
+#include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
+#include "kaleidoscope/event_handlers.h"        // for LedModeCallback
+
 namespace kaleidoscope {
 namespace plugin {
 
 class LEDModeInterface {
  public:
+  LEDModeInterface()
+    : led_mode_name_{0} {}
+  explicit LEDModeInterface(const char *led_mode_name)
+    : led_mode_name_{led_mode_name} {}
   void activate();
+
+  EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
+    if (led_mode_name_ == 0) {
+      // If no name was defined, return a default string
+      callback("[unnamed led mode]");
+    } else {
+      callback(led_mode_name_);
+    }
+    return EventHandlerResult::OK;
+  }
 
   // This auxiliary class helps to generate a verbose error message
   // in case that there is no TransientLEDMode typedef or nested
@@ -35,6 +54,9 @@ class LEDModeInterface {
   // lifetime is handled dynamically.
   //
   typedef NoLEDMode DynamicLEDMode;
+
+ protected:
+  const char *led_mode_name_ PROGMEM;
 };
 
 }  // namespace plugin

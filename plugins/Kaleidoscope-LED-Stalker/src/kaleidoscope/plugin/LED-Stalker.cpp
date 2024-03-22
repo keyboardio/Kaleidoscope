@@ -22,6 +22,7 @@
 
 #include "kaleidoscope/KeyAddr.h"                     // for MatrixAddr, KeyAddr, MatrixAddr<>::...
 #include "kaleidoscope/KeyEvent.h"                    // for KeyEvent
+#include "kaleidoscope/LiveKeys.h"                    // for live_keys
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for cRGB, CRGB
 #include "kaleidoscope/event_handler_result.h"        // for EventHandlerResult, EventHandlerRes...
@@ -41,24 +42,6 @@ StalkerEffect::TransientLEDMode::TransientLEDMode(const StalkerEffect *parent)
     step_start_time_(0),
     map_{} {}
 
-EventHandlerResult StalkerEffect::onKeyEvent(KeyEvent &event) {
-  if (!Runtime.has_leds)
-    return EventHandlerResult::OK;
-
-  if (!event.addr.isValid())
-    return EventHandlerResult::OK;
-
-  if (::LEDControl.get_mode_index() != led_mode_id_)
-    return EventHandlerResult::OK;
-
-  // The simplest thing to do is trigger on both press and release. The color
-  // will fade while the key is held, and get restored to full brightness when
-  // it's released.
-  ::LEDControl.get_mode<TransientLEDMode>()->map_[event.addr.toInt()] = 0xff;
-
-  return EventHandlerResult::OK;
-}
-
 void StalkerEffect::TransientLEDMode::update() {
   if (!Runtime.has_leds)
     return;
@@ -71,6 +54,12 @@ void StalkerEffect::TransientLEDMode::update() {
 
   for (auto key_addr : KeyAddr::all()) {
     uint8_t step = map_[key_addr.toInt()];
+
+    // If key is active (held), set its animation position to the start
+    if (live_keys[key_addr] != Key_Inactive) {
+      step = 0xff;
+    }
+
     if (step) {
       ::LEDControl.setCrgbAt(key_addr, parent_->variant->compute(&step));
     }

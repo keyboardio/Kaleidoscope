@@ -102,7 +102,8 @@ EventHandlerResult SpaceCadet::onKeyswitchEvent(KeyEvent &event) {
   }
 
   // Do nothing if disabled, but keep the event tracker current.
-  if (settings_.mode == Mode::OFF)
+  // Treat all invalid modes as ::OFF, just in case we've got bad data in settings_
+  if (settings_.mode != Mode::ON && settings_.mode != Mode::NO_DELAY)
     return EventHandlerResult::OK;
 
   if (!event_queue_.isEmpty()) {

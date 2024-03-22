@@ -20,6 +20,8 @@
 #include <Arduino.h>                   // for PSTR, F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
 #include <stdint.h>                    // for uint16_t, uint8_t
+#include <stddef.h>                    // for size_t
+
 
 #include "kaleidoscope/Runtime.h"                     // for Runtime, Runtime_
 #include "kaleidoscope/device/device.h"               // for VirtualProps::Storage, Base<>::Storage
@@ -127,8 +129,9 @@ void EEPROMSettings::seal() {
    * - When the EEPROM is uninitialized (0x7f)
    * - When such layer switching is explicitly turned off (0x7e)
    */
-  if (settings_.default_layer < IGNORE_HARDCODED_LAYER)
+  if (settings_.default_layer < IGNORE_HARDCODED_LAYER && settings_.default_layer < layer_count) {
     Layer.move(settings_.default_layer);
+  }
 }
 
 uint16_t EEPROMSettings::requestSlice(uint16_t size) {
@@ -157,15 +160,23 @@ void EEPROMSettings::update() {
   is_valid_ = true;
 }
 
+
+bool EEPROMSettings::isSliceValid(uint16_t start, size_t size) {
+
+  // If our slice is uninitialized, then return early.
+  if (Runtime.storage().isSliceUninitialized(start, size)) {
+    return false;
+  }
+
+  // If the slice of storage is initialized, but settings are invalid, then return early.
+  if (!isValid()) {
+    return false;
+  }
+  return true;
+}
+
 /** Focus **/
 EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
-  enum {
-    DEFAULT_LAYER,
-    IS_VALID,
-    GET_VERSION,
-    GET_CRC,
-  } sub_command;
-
   const char *cmd_defaultLayer = PSTR("settings.defaultLayer");
   const char *cmd_isValid      = PSTR("settings.valid?");
   const char *cmd_version      = PSTR("settings.version");
@@ -174,19 +185,7 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_defaultLayer, cmd_isValid, cmd_version, cmd_crc);
 
-  if (::Focus.inputMatchesCommand(input, cmd_defaultLayer))
-    sub_command = DEFAULT_LAYER;
-  else if (::Focus.inputMatchesCommand(input, cmd_isValid))
-    sub_command = IS_VALID;
-  else if (::Focus.inputMatchesCommand(input, cmd_version))
-    sub_command = GET_VERSION;
-  else if (::Focus.inputMatchesCommand(input, cmd_crc))
-    sub_command = GET_CRC;
-  else
-    return EventHandlerResult::OK;
-
-  switch (sub_command) {
-  case DEFAULT_LAYER: {
+  if (::Focus.inputMatchesCommand(input, cmd_defaultLayer)) {
     if (::Focus.isEOL()) {
       ::Focus.send(::EEPROMSettings.default_layer());
     } else {
@@ -194,29 +193,20 @@ EventHandlerResult FocusSettingsCommand::onFocusEvent(const char *input) {
       ::Focus.read(layer);
       ::EEPROMSettings.default_layer(layer);
     }
-    break;
-  }
-  case IS_VALID:
+  } else if (::Focus.inputMatchesCommand(input, cmd_isValid)) {
     ::Focus.send(::EEPROMSettings.isValid());
-    break;
-  case GET_VERSION:
+  } else if (::Focus.inputMatchesCommand(input, cmd_version)) {
     ::Focus.send(::EEPROMSettings.version());
-    break;
-  case GET_CRC:
+  } else if (::Focus.inputMatchesCommand(input, cmd_crc)) {
     ::Focus.sendRaw(::CRCCalculator.crc, F("/"), ::EEPROMSettings.crc());
-    break;
+  } else {
+    return EventHandlerResult::OK;
   }
 
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
 EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *input) {
-  enum {
-    CONTENTS,
-    FREE,
-    ERASE,
-  } sub_command;
-
   const char *cmd_contents = PSTR("eeprom.contents");
   const char *cmd_free     = PSTR("eeprom.free");
   const char *cmd_erase    = PSTR("eeprom.erase");
@@ -224,17 +214,7 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *input) {
   if (::Focus.inputMatchesHelp(input))
     return ::Focus.printHelp(cmd_contents, cmd_free, cmd_erase);
 
-  if (::Focus.inputMatchesCommand(input, cmd_contents))
-    sub_command = CONTENTS;
-  else if (::Focus.inputMatchesCommand(input, cmd_free))
-    sub_command = FREE;
-  else if (::Focus.inputMatchesCommand(input, cmd_erase))
-    sub_command = ERASE;
-  else
-    return EventHandlerResult::OK;
-
-  switch (sub_command) {
-  case CONTENTS: {
+  if (::Focus.inputMatchesCommand(input, cmd_contents)) {
     if (::Focus.isEOL()) {
       for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
         uint8_t d = Runtime.storage().read(i);
@@ -248,21 +228,18 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *input) {
       }
       Runtime.storage().commit();
     }
-
-    break;
-  }
-  case FREE:
+  } else if (::Focus.inputMatchesCommand(input, cmd_free)) {
     ::Focus.send(Runtime.storage().length() - ::EEPROMSettings.used());
-    break;
-  case ERASE: {
+  } else if (::Focus.inputMatchesCommand(input, cmd_erase)) {
     for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
       Runtime.storage().update(i, EEPROMSettings::EEPROM_UNINITIALIZED_BYTE);
     }
     Runtime.storage().commit();
     Runtime.device().rebootBootloader();
-    break;
+  } else {
+    return EventHandlerResult::OK;
   }
-  }
+
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

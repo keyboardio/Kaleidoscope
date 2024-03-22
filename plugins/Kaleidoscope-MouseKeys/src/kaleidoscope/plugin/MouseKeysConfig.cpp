@@ -33,15 +33,13 @@ namespace plugin {
 // MouseKeys configurator
 
 EventHandlerResult MouseKeysConfig::onSetup() {
-  settings_addr_ = ::EEPROMSettings.requestSlice(sizeof(MouseKeys::Settings));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &::MouseKeys.settings_);
 
-  // If the EEPROM is empty, store the default settings.
-  if (Runtime.storage().isSliceUninitialized(settings_addr_, sizeof(MouseKeys::Settings))) {
-    Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
+  if (!success) {
+    Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_addr_, ::MouseKeys.settings_);
 
   // We need to set the grid size explicitly, because behind the scenes, that's
   // stored in MouseWrapper.
@@ -137,12 +135,13 @@ EventHandlerResult MouseKeysConfig::onFocusEvent(const char *input) {
       ::MouseKeys.setWarpGridSize(arg);
       break;
     }
+    // Update settings stored in EEPROM, and indicate that this Focus event has
+    // been handled successfully.
+    Runtime.storage().put(settings_base_, ::MouseKeys.settings_);
+    Runtime.storage().commit();
   }
 
-  // Update settings stored in EEPROM, and indicate that this Focus event has
-  // been handled successfully.
-  Runtime.storage().put(settings_addr_, ::MouseKeys.settings_);
-  Runtime.storage().commit();
+
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

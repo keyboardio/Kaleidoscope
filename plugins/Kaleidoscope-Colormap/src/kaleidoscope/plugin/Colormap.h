@@ -32,6 +32,9 @@ class ColormapEffect : public Plugin,
                        public LEDModeInterface,
                        public AccessTransientLEDMode {
  public:
+  ColormapEffect() { led_mode_name_ = "Colormap"; }
+  explicit ColormapEffect(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
+
   void max_layers(uint8_t max_);
 
   EventHandlerResult onLayerChange();

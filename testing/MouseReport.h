@@ -1,5 +1,6 @@
 /* -*- mode: c++ -*-
  * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
+ * Copyright (C) 2024  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,9 +19,9 @@
 
 #include <cstdint>  // for uint8_t, int8_t, uint32_t
 
-#include "HID-Settings.h"       // for HID_REPORTID_MOUSE
-#include "MouseButtons.h"       // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUSE_R...
-#include "MultiReport/Mouse.h"  // for HID_MouseReport_Data_t
+#include "HID-Settings.h"                           // for HID_REPORTID_MOUSE
+#include "kaleidoscope/MouseButtons.h"              // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUSE_R...
+#include "kaleidoscope/driver/hid/apis/MouseAPI.h"  // for HID_MouseReport_Data_t
 
 namespace kaleidoscope {
 namespace testing {

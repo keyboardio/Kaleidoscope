@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -30,26 +30,15 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 #include "HIDTables.h"
+#include "kaleidoscope/driver/hid/apis/SystemControlAPI.h"
 
-typedef union {
-  // Every usable system control key possible
-  uint8_t key;
-} HID_SystemControlReport_Data_t;
-
-
-class SystemControl_ {
+class SystemControl_ : public SystemControlAPI {
  public:
-  void begin();
-  void end();
-  void write(uint8_t s);
-  void press(uint8_t s);
-  void release();
-  void releaseAll();
-  void sendReport(void *data, int length);
-
   SystemControl_();
 
  protected:
+  void sendReport(void *data, int length);
+  bool wakeupHost(uint8_t s);
 };
 
 

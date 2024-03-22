@@ -17,10 +17,11 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t, uint16_t
-
+#include <stdint.h>                             // for uint8_t, uint16_t
+#include <stddef.h>                             // for size_t
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/plugin.h"                // for Plugin
+#include "kaleidoscope/Runtime.h"               // for Runtime
 
 namespace kaleidoscope {
 namespace plugin {
@@ -73,6 +74,29 @@ class EEPROMSettings : public kaleidoscope::Plugin {
   bool ignoreHardcodedLayers() {
     return settings_.ignore_hardcoded_layers;
   }
+  // get a settings slice from the storage and stick it in the settings struct
+  // Takes a pointer to the start address, and a pointer to the data structure for settings
+  // startAddress is the address of the start of the slice, to be returned to the caller
+  // Returns true if the slice is initialized and false otherwise.
+
+
+  template<typename T>
+  bool requestSliceAndLoadData(uint16_t *startAddress, T *data) {
+    // Request the slice for the struct from storage
+    size_t size    = sizeof(T);
+    uint16_t start = requestSlice(size);
+    *startAddress  = start;
+
+    // Load the data if the slice is initialized
+    if (!Runtime.storage().isSliceUninitialized(start, size)) {
+      Runtime.storage().get(start, *data);  // Directly load data into the provided address
+      return true;
+    }
+
+    return false;
+  }
+
+  bool isSliceValid(uint16_t start, size_t size);
 
  private:
   static constexpr uint8_t IGNORE_HARDCODED_LAYER = 0x7e;

@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 #ifdef ARDUINO_AVR_KEYBOARDIO_ATREUS
 
 #include "kaleidoscope/Runtime.h"
@@ -40,6 +39,8 @@ namespace keyboardio {
 // resolved as `KeyScannerProps::matrix_rows`.
 const uint8_t KeyScannerProps::matrix_rows;
 const uint8_t KeyScannerProps::matrix_columns;
+
+#ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 constexpr uint8_t KeyScannerProps::matrix_row_pins[matrix_rows];
 constexpr uint8_t KeyScannerProps::matrix_col_pins[matrix_columns];
 
@@ -59,10 +60,9 @@ KeyScanner::row_state_t KeyScanner::matrix_state_[KeyScannerProps::matrix_rows] 
 ISR(TIMER1_OVF_vect) {
   Runtime.device().keyScanner().do_scan_ = true;
 }
-
+#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD
 }  // namespace keyboardio
 }  // namespace device
 }  // namespace kaleidoscope
 
 #endif
-#endif  // ifndef KALEIDOSCOPE_VIRTUAL_BUILD

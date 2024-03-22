@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <Arduino.h>
 #include "HID.h"
 #include "HID-Settings.h"
-#include "../DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"
 
 class AbsoluteMouse_ : public AbsoluteMouseAPI {
  public:

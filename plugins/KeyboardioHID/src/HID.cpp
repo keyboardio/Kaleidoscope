@@ -1,5 +1,6 @@
 /*
    Copyright (c) 2015, Arduino LLC
+   Copyright (c) 2024 Keyboard.io, Inc
    Original code (pre-library): Copyright (c) 2011, Peter Barrett
 
    Permission to use, copy, modify, and/or distribute this software for
@@ -29,21 +30,13 @@ HID_ &HID() {
   return obj;
 }
 
-int HID_::getInterface(uint8_t *interfaceCount) {
-  *interfaceCount += 1;  // uses 1
-  HIDDescriptor hidInterface = {
-    D_INTERFACE(pluggedInterface, 1, USB_DEVICE_CLASS_HUMAN_INTERFACE, HID_SUBCLASS_NONE, HID_PROTOCOL_NONE),
-    D_HIDREPORT(descriptorSize),
-    D_ENDPOINT(USB_ENDPOINT_IN(pluggedEndpoint), USB_ENDPOINT_TYPE_INTERRUPT, USB_EP_SIZE, 0x01)};
-  return USB_SendControl(0, &hidInterface, sizeof(hidInterface));
-}
-
+/* Override to send all report descriptors */
 int HID_::getDescriptor(USBSetup &setup) {
   // Check if this is a HID Class Descriptor request
   if (setup.bmRequestType != REQUEST_DEVICETOHOST_STANDARD_INTERFACE) {
     return 0;
   }
-  if (setup.wValueH != HID_REPORT_DESCRIPTOR_TYPE) {
+  if (setup.wValueH != HID_DESC_TYPE_REPORT) {
     return 0;
   }
 
@@ -92,98 +85,17 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node) {
 }
 
 int HID_::SendReport(uint8_t id, const void *data, int len) {
-  auto result = SendReport_(id, data, len);
+  auto result = HIDD::SendReport(id, data, len);
   HIDReportObserver::observeReport(id, data, len, result);
   return result;
 }
 
-int HID_::SendReport_(uint8_t id, const void *data, int len) {
-  /* On SAMD, we need to send the whole report in one batch; sending the id, and
-   * the report itself separately does not work, the report never arrives. Due
-   * to this, we merge the two into a single buffer, and send that.
-   *
-   * While the same would work for other architectures, AVR included, doing so
-   * costs RAM, which is something scarce on AVR. So on that platform, we opt to
-   * send the id and the report separately instead. */
-#ifdef ARDUINO_ARCH_SAMD
-  uint8_t p[64];
-  p[0] = id;
-  memcpy(&p[1], data, len);
-  return USB_Send(pluggedEndpoint, p, len + 1);
-#else
-  auto ret = USB_Send(pluggedEndpoint, &id, 1);
-  if (ret < 0) return ret;
-  auto ret2 = USB_Send(pluggedEndpoint | TRANSFER_RELEASE, data, len);
-  if (ret2 < 0) return ret2;
-  return ret + ret2;
-#endif
-}
-
-bool HID_::setup(USBSetup &setup) {
-  if (pluggedInterface != setup.wIndex) {
-    return false;
-  }
-
-  uint8_t request     = setup.bRequest;
-  uint8_t requestType = setup.bmRequestType;
-
-  if (requestType == REQUEST_DEVICETOHOST_CLASS_INTERFACE) {
-    if (request == HID_GET_REPORT) {
-      // TODO(anyone): HID_GetReport();
-      return true;
-    }
-    if (request == HID_GET_PROTOCOL) {
-      return false;
-    }
-    if (request == HID_GET_IDLE) {
-      USB_SendControl(TRANSFER_RELEASE, &idle, sizeof(idle));
-      return true;
-    }
-  }
-
-  if (requestType == REQUEST_HOSTTODEVICE_CLASS_INTERFACE) {
-    if (request == HID_SET_PROTOCOL) {
-      return false;
-    }
-    if (request == HID_SET_IDLE) {
-      idle = setup.wValueH;
-      return true;
-    }
-    if (request == HID_SET_REPORT) {
-      uint16_t length = setup.wLength;
-
-      if (length == sizeof(setReportData)) {
-        USB_RecvControl(&setReportData, length);
-      } else if (length == sizeof(setReportData.leds)) {
-        USB_RecvControl(&setReportData.leds, length);
-        setReportData.reportId = 0;
-      }
-      return true;
-    }
-  }
-
-  return false;
-}
-
 HID_::HID_()
-  : PluggableUSBModule(1, 1, epType),
-    rootNode(NULL),
-    descriptorSize(0),
-    protocol(HID_REPORT_PROTOCOL),
-    idle(0) {
+  : rootNode(NULL) {
   // Invoke BootKeyboard constructor so it will be the first HID interface
   (void)BootKeyboard();
-
-  setReportData.reportId = 0;
-  setReportData.leds     = 0;
-
-#ifdef ARCH_HAS_CONFIGURABLE_EP_SIZES
-  epType[0] = EP_TYPE_INTERRUPT_IN(USB_EP_SIZE);
-#else
-  epType[0] = EP_TYPE_INTERRUPT_IN;
-#endif
-
-  PluggableUSB().plug(this);
+  inReportLen = USB_EP_SIZE;
+  plug();
 }
 
 int HID_::begin() {

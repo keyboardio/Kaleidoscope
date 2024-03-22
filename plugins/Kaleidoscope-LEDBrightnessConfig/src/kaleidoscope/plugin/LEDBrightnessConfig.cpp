@@ -17,7 +17,7 @@
 
 #include "kaleidoscope/plugin/LEDBrightnessConfig.h"
 
-#include <Arduino.h>                       // for PSTR, strcmp_P, F, __FlashStringHelper
+#include <Arduino.h>                       // for PSTR, strcmp_P, F
 #include <Kaleidoscope-EEPROM-Settings.h>  // for EEPROMSettings
 #include <Kaleidoscope-FocusSerial.h>      // for Focus, FocusSerial
 #include <stdint.h>                        // for uint8_t, uint16_t
@@ -34,13 +34,9 @@ uint16_t LEDBrightnessConfig::settings_base_;
 struct LEDBrightnessConfig::settings LEDBrightnessConfig::settings_;
 
 EventHandlerResult LEDBrightnessConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings_));
-
-  Runtime.storage().get(settings_base_, settings_);
-
-  // We do not need to treat uninitialized slices in any special way, because
-  // uninitialized defaults to `255`, which happens to be our desired default
-  // brightness, too.
+  if (!::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings_)) {
+    settings_.brightness = 255;
+  }
   ::LEDControl.setBrightness(settings_.brightness);
 
   return EventHandlerResult::OK;
@@ -49,11 +45,10 @@ EventHandlerResult LEDBrightnessConfig::onSetup() {
 EventHandlerResult LEDBrightnessConfig::onFocusEvent(const char *command) {
   const char *cmd = PSTR("led.brightness");
 
-  if (::Focus.handleHelp(command, cmd))
-    return EventHandlerResult::OK;
+  if (::Focus.inputMatchesHelp(command))
+    return ::Focus.printHelp(cmd);
 
-  if (strcmp_P(command, cmd) != 0)
-    return EventHandlerResult::OK;
+  if (strcmp_P(command, cmd) != 0) return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
     ::Focus.send(settings_.brightness);

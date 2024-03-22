@@ -48,9 +48,10 @@ class DynamicMacros : public kaleidoscope::Plugin {
   void play(uint8_t seq_id);
 
  private:
+  static const uint8_t MAX_MACRO_COUNT_ = 32;
   uint16_t storage_base_;
   uint16_t storage_size_;
-  uint16_t map_[32];
+  uint16_t map_[MAX_MACRO_COUNT_];
   uint8_t macro_count_;
   uint8_t updateDynamicMacroCache();
 

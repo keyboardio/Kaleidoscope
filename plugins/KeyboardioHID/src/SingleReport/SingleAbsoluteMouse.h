@@ -28,26 +28,17 @@ THE SOFTWARE.
 
 #include <Arduino.h>
 #include "HID.h"
+#include "HIDD.h"
 #include "HID-Settings.h"
-#include "../DeviceAPIs/AbsoluteMouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"
 
 
-class SingleAbsoluteMouse_ : public PluggableUSBModule, public AbsoluteMouseAPI {
+class SingleAbsoluteMouse_ : public HIDD, public AbsoluteMouseAPI {
  public:
   SingleAbsoluteMouse_();
   uint8_t getLeds();
-  uint8_t getProtocol();
 
  protected:
-  // Implementation of the PUSBListNode
-  int getInterface(uint8_t *interfaceCount);
-  int getDescriptor(USBSetup &setup);
-  bool setup(USBSetup &setup);
-
-  EPTYPE_DESCRIPTOR_SIZE epType[1];
-  uint8_t protocol;
-  uint8_t idle;
-
   inline void sendReport(void *data, int length) override;
 };
 extern SingleAbsoluteMouse_ SingleAbsoluteMouse;

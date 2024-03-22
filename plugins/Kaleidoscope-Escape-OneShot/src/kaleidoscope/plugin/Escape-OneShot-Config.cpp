@@ -30,17 +30,13 @@ namespace kaleidoscope {
 namespace plugin {
 
 EventHandlerResult EscapeOneShotConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(EscapeOneShot::settings_));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &::EscapeOneShot.settings_);
+  // if (!success) {
+  // If our slice is uninitialized, set sensible defaults.
+  // Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
+  //Runtime.storage().commit();
+  //}
 
-  if (Runtime.storage().isSliceUninitialized(
-        settings_base_,
-        sizeof(EscapeOneShot::Settings))) {
-    // If our slice is uninitialized, set sensible defaults.
-    Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
-    Runtime.storage().commit();
-  }
-
-  Runtime.storage().get(settings_base_, ::EscapeOneShot.settings_);
   return EventHandlerResult::OK;
 }
 
@@ -62,10 +58,10 @@ EventHandlerResult EscapeOneShotConfig::onFocusEvent(const char *input) {
     Key k;
     ::Focus.read(k);
     ::EscapeOneShot.setCancelKey(k);
+    Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
+    Runtime.storage().commit();
   }
 
-  Runtime.storage().put(settings_base_, ::EscapeOneShot.settings_);
-  Runtime.storage().commit();
   return EventHandlerResult::EVENT_CONSUMED;
 }
 

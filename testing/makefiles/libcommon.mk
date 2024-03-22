@@ -1,10 +1,11 @@
 mkfile_dir      := $(dir $(lastword ${MAKEFILE_LIST}))
 top_dir         := $(abspath $(mkfile_dir)../..)
+shared_mk := $(mkfile_dir)/shared.mk
 
-include $(mkfile_dir)/shared.mk
+pathsafe_fqbn := $(subst :,_,${FQBN})
 
 
-build_dir := ${top_dir}/_build
+build_dir := ${top_dir}/_build/$(pathsafe_fqbn)
 
 LIB_DIR := ${build_dir}/lib
 OBJ_DIR := ${build_dir}/obj
@@ -39,3 +40,4 @@ clean:
 	$(QUIET) rm -rf -- "${build_dir}"
 
 include $(top_dir)/etc/makefiles/arduino-cli.mk
+include $(shared_mk)

@@ -1,5 +1,6 @@
 /* -*- mode: c++ -*-
  * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
+ * Copyright (C) 2024  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,8 +20,8 @@
 #include <cstdint>  // for uint16_t, uint32_t, uint8_t, int8_t
 #include <vector>   // for vector
 
-#include "DeviceAPIs/AbsoluteMouseAPI.h"  // for HID_MouseAbsoluteReport_Data_t
-#include "HID-Settings.h"                 // for HID_REPORTID_MOUSE_ABSOLUTE
+#include "kaleidoscope/driver/hid/apis/AbsoluteMouseAPI.h"  // for HID_MouseAbsoluteReport_Data_t
+#include "HID-Settings.h"                                   // for HID_REPORTID_MOUSE_ABSOLUTE
 
 namespace kaleidoscope {
 namespace testing {

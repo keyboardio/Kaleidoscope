@@ -36,6 +36,9 @@ class StalkerEffect : public Plugin,
                       public LEDModeInterface,
                       public AccessTransientLEDMode {
  public:
+  StalkerEffect() { led_mode_name_ = "Stalker"; }
+  explicit StalkerEffect(const char *led_mode_name) { led_mode_name_ = led_mode_name; }
+
   class ColorComputer {
    public:
     virtual cRGB compute(uint8_t *step) = 0;
@@ -44,8 +47,6 @@ class StalkerEffect : public Plugin,
   static ColorComputer *variant;
   static uint16_t step_length;
   static cRGB inactive_color;
-
-  EventHandlerResult onKeyEvent(KeyEvent &event);
 
   // This class' instance has dynamic lifetime
   //

@@ -7,14 +7,20 @@ shared_defines := \
                 -DKEYBOARDIOHID_BUILD_WITHOUT_HID=1 \
                 -DUSBCON=dummy \
                 -DARDUINO_ARCH_AVR=1 \
-                -DARDUINO_AVR_MODEL01 \
-                '-DKALEIDOSCOPE_HARDWARE_H="Kaleidoscope-Hardware-Keyboardio-Model01.h"' \
-                '-DUSB_PRODUCT="Model 01"'
+		$(call _arduino_prop,build.extra_flags) \
+                -DARDUINO_$(call _arduino_prop,build.board) \
+                -DUSB_PRODUCT='$(call _arduino_prop,build.usb_product)'
+
+# Extract the kaleidoscope_hardware_h from shared defines
+_hardware_h := $(shell echo $(shared_defines) | sed -n 's/.*-DKALEIDOSCOPE_HARDWARE_H="\([^"]*\)".*/\1/p')
+
+# Find the directory containing the file
+_hardware_plugin_path := $(shell find $(top_dir)/plugins/ -type f -name "$(_hardware_h)" -exec dirname {} \;)
 
 shared_includes := \
 		-I${top_dir} \
 		-I${top_dir}/src \
-		-I${top_dir}/plugins/Kaleidoscope-Hardware-Keyboardio-Model01/src \
+		-I${_hardware_plugin_path} \
 		-I${arduino_platform_path}/cores/keyboardio \
 		-I${top_dir}/plugins/KeyboardioHID/src \
 		-I${top_dir}/testing/googletest/googlemock/include \

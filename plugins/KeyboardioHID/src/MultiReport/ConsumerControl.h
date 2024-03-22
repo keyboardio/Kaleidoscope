@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2018 Keyboard.io, Inc
+Copyright (c) 2015-2024 Keyboard.io, Inc
 
 See the readme for credit to other people.
 
@@ -30,36 +30,13 @@ THE SOFTWARE.
 #include "HID.h"
 #include "HID-Settings.h"
 
-typedef union {
-  // Every usable Consumer key possible, up to 4 keys presses possible
-  uint16_t keys[4];
-  struct {
-    uint16_t key1;
-    uint16_t key2;
-    uint16_t key3;
-    uint16_t key4;
-  };
-} HID_ConsumerControlReport_Data_t;
+#include "kaleidoscope/driver/hid/apis/ConsumerControlAPI.h"
 
-
-class ConsumerControl_ {
+class ConsumerControl_ : public ConsumerControlAPI {
  public:
   ConsumerControl_();
-  void begin();
-  void end();
-  void write(uint16_t m);
-  void press(uint16_t m);
-  void release(uint16_t m);
-  void releaseAll();
-
-  // Sending is public in the base class for advanced users.
-  void sendReport();
 
  protected:
-  HID_ConsumerControlReport_Data_t report_;
-  HID_ConsumerControlReport_Data_t last_report_;
-
- private:
   void sendReportUnchecked();
 };
 extern ConsumerControl_ ConsumerControl;

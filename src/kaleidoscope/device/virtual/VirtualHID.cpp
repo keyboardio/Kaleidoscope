@@ -1,5 +1,6 @@
 /*
    Copyright (c) 2015, Arduino LLC
+   Copyright (C) 2024 Keyboard.io, Inc
    Original code (pre-library): Copyright (c) 2011, Peter Barrett
 
    Permission to use, copy, modify, and/or distribute this software for
@@ -37,11 +38,6 @@ HID_ &HID() {
   return obj;
 }
 
-int HID_::getInterface(uint8_t *interfaceCount) {
-  *interfaceCount += 1;  // uses 1
-  return 0;
-}
-
 int HID_::getDescriptor(USBSetup &setup) {
   return 1;
 }
@@ -67,20 +63,7 @@ int HID_::SendReport(uint8_t id, const void *data, int len) {
   return 1;
 }
 
-bool HID_::setup(USBSetup &setup) {
-  return true;
-}
-
-HID_::HID_(void)
-  : PluggableUSBModule(1, 1, epType),
-    rootNode(NULL),
-    descriptorSize(0),
-    protocol(HID_REPORT_PROTOCOL),
-    idle(1) {
-  setReportData.reportId = 0;
-  setReportData.leds     = 0;
-  epType[0]              = EP_TYPE_INTERRUPT_IN;
-  //PluggableUSB().plug(this);
+HID_::HID_(void) {
 }
 
 int HID_::begin(void) {

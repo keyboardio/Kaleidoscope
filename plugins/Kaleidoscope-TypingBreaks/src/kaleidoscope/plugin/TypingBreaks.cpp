@@ -118,19 +118,17 @@ EventHandlerResult TypingBreaks::onNameQuery() {
 }
 
 EventHandlerResult TypingBreaks::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings));
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings);
 
-  if (Runtime.storage().isSliceUninitialized(
-        settings_base_,
-        sizeof(settings))) {
+  if (!success) {
     // If our slice is uninitialized, set sensible defaults.
     Runtime.storage().put(settings_base_, settings);
     Runtime.storage().commit();
   }
 
-  Runtime.storage().get(settings_base_, settings);
   return EventHandlerResult::OK;
 }
+
 
 EventHandlerResult TypingBreaks::onFocusEvent(const char *input) {
   enum {

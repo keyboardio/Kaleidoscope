@@ -1,5 +1,6 @@
 /* -*- mode: c++ -*-
  * Copyright (C) 2020  Eric Paniagua (epaniagua@google.com)
+ * Copyright (C) 2024  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,8 +20,8 @@
 #include <cstring>  // for memcpy
 #include <vector>   // for vector
 
-#include "MouseButtons.h"          // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUS...
-#include "kaleidoscope/Runtime.h"  // for Runtime, Runtime_
+#include "kaleidoscope/MouseButtons.h"  // for MOUSE_LEFT, MOUSE_MIDDLE, MOUSE_NEXT, MOUSE_PREV, MOUS...
+#include "kaleidoscope/Runtime.h"       // for Runtime, Runtime_
 
 namespace kaleidoscope {
 namespace testing {

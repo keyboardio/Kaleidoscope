@@ -34,17 +34,10 @@ uint16_t DefaultLEDModeConfig::settings_base_;
 struct DefaultLEDModeConfig::settings DefaultLEDModeConfig::settings_;
 
 EventHandlerResult DefaultLEDModeConfig::onSetup() {
-  settings_base_ = ::EEPROMSettings.requestSlice(sizeof(settings_));
-
-  Runtime.storage().get(settings_base_, settings_);
-
-  // If our slice is uninitialized, then return early, without touching the
-  // current mode.
-  if (Runtime.storage().isSliceUninitialized(settings_base_, sizeof(settings_)))
-    return EventHandlerResult::OK;
-
-  ::LEDControl.set_mode(settings_.default_mode_index);
-
+  bool success = ::EEPROMSettings.requestSliceAndLoadData(&settings_base_, &settings_);
+  if (success) {
+    ::LEDControl.set_mode(settings_.default_mode_index);
+  }
   return EventHandlerResult::OK;
 }
 
