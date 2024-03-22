@@ -1,6 +1,6 @@
 /* -*- mode: c++ -*-
  * Kaleidoscope-Hardware-Model101 -- Keyboardio Model101 hardware support for Kaleidoscope
- * Copyright (C) 2017-2021  Keyboard.io, Inc
+ * Copyright (C) 2017-2024  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
