@@ -42,7 +42,7 @@
 
 #define LT(layer, key)                 kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
 
-#define QK(primary_key, secondary_key) kaleidoscope::plugin::Qukey(primary_key, secondary_key)
+#define QK(primary_key, secondary_key) kaleidoscope::plugin::Qkey(primary_key, secondary_key)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -57,7 +57,7 @@ constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {
              (layer << 8) + tap_key.getKeyCode());
 }
 
-constexpr Key Qukey(Key primary_key, Key secondary_key) {
+constexpr Key Qkey(Key primary_key, Key secondary_key) {
   return Key(kaleidoscope::ranges::QK_FIRST +
              (primary_key.getKeyCode() + secondary_key.getKeyCode());
 }
