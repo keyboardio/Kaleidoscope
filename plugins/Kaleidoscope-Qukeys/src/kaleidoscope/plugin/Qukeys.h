@@ -251,10 +251,3 @@ extern kaleidoscope::plugin::Qukeys Qukeys;
       qukey_defs};                                                  \
     Qukeys.configureQukeys(qk_table);                               \
   }
-
-/// This defines a `Key` object that will be handled by the Qukey plugin.
-/// The argument `n` is the index number of the `Qukey` in the array (starting
-/// at zero).
-constexpr kaleidoscope::Key QK(uint8_t n) {
-  return kaleidoscope::Key(kaleidoscope::ranges::QK_FIRST + n);
-}
