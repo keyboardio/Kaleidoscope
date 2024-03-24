@@ -318,9 +318,11 @@ bool Qukeys::isQukey(KeyAddr k) {
   if (key >= ranges::QK_FIRST && key <= ranges::QK_LAST) {
     key.setRaw(key.getRaw() - ranges::QK_FIRST);
 
-    queue_head_.primary_key = key;
-    // TODO(EvyBongers): retrieve the stored qkey value
-    //queue_head_.alternate_key = qukey.alternate_key;
+    // TODO(EvyBongers): retrieve the stored qkey index
+    Key qkey = cloneFromProgmem(qkeys_[i]);
+
+    queue_head_.primary_key   = key;
+    queue_head_.alternate_key = qkey;
     return true;
   }
 

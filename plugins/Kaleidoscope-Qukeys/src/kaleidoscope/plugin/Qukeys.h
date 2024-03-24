@@ -57,11 +57,6 @@ constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {
              (layer << 8) + tap_key.getKeyCode());
 }
 
-constexpr Key Qkey(Key tap_key, Key qkey) {
-  // TODO(EvyBongers): store the qkey value somewhere, somehow
-  return Key(kaleidoscope::ranges::QK_FIRST + tap_key.getRaw());
-}
-
 // Data structure for an individual qukey
 struct Qukey {
   // The layer this qukey is mapped on.
@@ -145,6 +140,13 @@ class Qukeys : public kaleidoscope::Plugin {
     minimum_prior_interval_ = min_interval;
   }
 
+  // Function to store a Qkey
+  uint8_t storeQkey(Key alt_key) {
+    qkeys_[qkeys_count_] = alt_key;
+    ++qkeys_count_;
+    return (qkeys_count_ - 1);
+  }
+
   // Function for defining the array of qukeys data (in PROGMEM). It's a
   // template function that takes as its sole argument an array reference of
   // size `_qukeys_count`, so there's no need to use `sizeof` to calculate the
@@ -165,6 +167,10 @@ class Qukeys : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
+  // An array of Qkeys in PROGMEM.
+  Key const *qkeys_ PROGMEM;
+  uint8_t qkeys_count_{0};
+
   // An array of Qukey objects in PROGMEM.
   Qukey const *qukeys_{nullptr};
   uint8_t qukeys_count_{0};
@@ -240,6 +246,12 @@ bool isModifierKey(Key key);
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Qukeys Qukeys;
+
+constexpr Key Qkey(Key tap_key, Key qkey) {
+  uint8_t qkey_index = Qukeys.storeQkey(qkey);
+  // TODO(EvyBongers): store the qkey index somewhere, somehow
+  return Key(kaleidoscope::ranges::QK_FIRST + tap_key.getRaw());
+}
 
 // Macro for use in sketch file to simplify definition of the qukeys array and
 // guarantee that the count is set correctly. This is considerably less
