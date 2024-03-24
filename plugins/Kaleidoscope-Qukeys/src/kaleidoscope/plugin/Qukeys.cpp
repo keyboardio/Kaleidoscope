@@ -316,8 +316,12 @@ bool Qukeys::isQukey(KeyAddr k) {
 
   // Then, we check to see if this is a Qukey using the new API (defined in the keymap)
   if (key >= ranges::QK_FIRST && key <= ranges::QK_LAST) {
-    // TODO(EvyBongers)
-    return false;  // for now
+    key.setRaw(key.getRaw() - ranges::QK_FIRST);
+
+    queue_head_.primary_key = key;
+    // TODO(EvyBongers): retrieve the stored qkey value
+    //queue_head_.alternate_key = qukey.alternate_key;
+    return true;
   }
 
   // Last, we check the qukeys array for a match

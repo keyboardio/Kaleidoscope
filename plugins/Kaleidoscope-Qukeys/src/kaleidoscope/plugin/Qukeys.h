@@ -57,10 +57,9 @@ constexpr Key LayerTapKey(uint8_t layer, Key tap_key) {
              (layer << 8) + tap_key.getKeyCode());
 }
 
-constexpr Key Qkey(Key primary_key, Key secondary_key) {
-  return Key(kaleidoscope::ranges::QK_FIRST +
-             // TODO(EvyBongers): this is going to need review
-             primary_key.getKeyCode() + secondary_key.getKeyCode());
+constexpr Key Qkey(Key tap_key, Key qkey) {
+  // TODO(EvyBongers): store the qkey value somewhere, somehow
+  return Key(kaleidoscope::ranges::QK_FIRST + tap_key.getRaw());
 }
 
 // Data structure for an individual qukey
