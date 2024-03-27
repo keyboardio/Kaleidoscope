@@ -25,47 +25,60 @@ namespace testing {
 
 class Issue1010 : public ::testing::Test {
  public:
-  static constexpr uint8_t MAX_CS_KEYS = 64;
+  static constexpr uint8_t MAX_MACROS         = 255;
+  static constexpr uint8_t MAX_OSM_KEYS       = 7;
+  static constexpr uint8_t MAX_OSL_KEYS       = 7;
+  static constexpr uint16_t MAX_DUM_KEYS      = 2048;
+  static constexpr uint16_t MAX_DUL_KEYS      = 2048;
+  static constexpr uint8_t MAX_TD_KEYS        = 15;
+  static constexpr uint8_t MAX_LEAD_KEYS      = 7;
+  static constexpr uint8_t MAX_TT_KEYS        = 255;
+  static constexpr uint8_t MAX_STENO_KEYS     = 42;
+  static constexpr uint8_t MAX_DYNAMIC_MACROS = 31;
+  static constexpr uint8_t MAX_CS_KEYS        = 64;
+  static constexpr uint8_t MAX_QK_KEYS        = 64;
 
   enum : uint16_t {
     MACRO_FIRST = (SYNTHETIC | 0b00100000) << 8,
-    MACRO_LAST  = MACRO_FIRST + 255,
+    MACRO_LAST  = MACRO_FIRST + MAX_MACROS,
 
     FIRST              = 0xc000,
     KALEIDOSCOPE_FIRST = FIRST,
     OS_FIRST,
     OSM_FIRST = OS_FIRST,
-    OSM_LAST  = OSM_FIRST + 7,
+    OSM_LAST  = OSM_FIRST + MAX_OSM_KEYS,
     OSL_FIRST,
-    OSL_LAST = OSL_FIRST + 7,
+    OSL_LAST = OSL_FIRST + MAX_OSL_KEYS,
     OS_LAST  = OSL_LAST,
     DU_FIRST,
     DUM_FIRST = DU_FIRST,
-    DUM_LAST  = DUM_FIRST + (8 << 8),
+    DUM_LAST  = DUM_FIRST + MAX_DUM_KEYS,
     DUL_FIRST,
-    DUL_LAST = DUL_FIRST + (8 << 8),
+    DUL_LAST = DUL_FIRST + MAX_DUL_KEYS,
     DU_LAST  = DUL_LAST,
     TD_FIRST,
-    TD_LAST = TD_FIRST + 15,
+    TD_LAST = TD_FIRST + MAX_TD_KEYS,
     LEAD_FIRST,
-    LEAD_LAST = LEAD_FIRST + 7,
+    LEAD_LAST = LEAD_FIRST + MAX_LEAD_KEYS,
     CYCLE,
     SYSTER,
     TT_FIRST,
-    TT_LAST = TT_FIRST + 255,
+    TT_LAST = TT_FIRST + MAX_TT_KEYS,
     STENO_FIRST,
-    STENO_LAST = STENO_FIRST + 42,
+    STENO_LAST = STENO_FIRST + MAX_STENO_KEYS,
     SC_FIRST,
     SC_LAST,
     REDIAL,
     TURBO,
     DYNAMIC_MACRO_FIRST,
-    DYNAMIC_MACRO_LAST = DYNAMIC_MACRO_FIRST + 31,
+    DYNAMIC_MACRO_LAST = DYNAMIC_MACRO_FIRST + MAX_DYNAMIC_MACROS,
     OS_META_STICKY,
     OS_ACTIVE_STICKY,
     OS_CANCEL,
     CS_FIRST,
     CS_LAST = CS_FIRST + MAX_CS_KEYS,
+    QK_FIRST,
+    QK_LAST = QK_FIRST + MAX_QK_KEYS,
 
     SAFE_START,
     KALEIDOSCOPE_SAFE_START = SAFE_START
@@ -148,6 +161,10 @@ TEST_F(Issue1010, RangesHaveNotChanged) {
             uint16_t(kaleidoscope::ranges::CS_FIRST));
   ASSERT_EQ(uint16_t(Issue1010::CS_LAST),
             uint16_t(kaleidoscope::ranges::CS_LAST));
+  ASSERT_EQ(uint16_t(Issue1010::QK_FIRST),
+            uint16_t(kaleidoscope::ranges::QK_FIRST));
+  ASSERT_EQ(uint16_t(Issue1010::QK_LAST),
+            uint16_t(kaleidoscope::ranges::QK_LAST));
 
   ASSERT_EQ(uint16_t(Issue1010::SAFE_START),
             uint16_t(kaleidoscope::ranges::SAFE_START));

@@ -20,7 +20,7 @@
 
 #include <Arduino.h>                   // for F, __FlashStringHelper
 #include <Kaleidoscope-FocusSerial.h>  // for Focus, FocusSerial
-#include <Kaleidoscope-Ranges.h>       // for DUL_FIRST, DUM_FIRST, DUL_LAST, DUM_LAST
+#include <Kaleidoscope-Ranges.h>       // for DUL_FIRST, DUM_FIRST, DUL_LAST, DUM_LAST, QK_FIRST, QK_LAST
 
 #include "kaleidoscope/KeyAddrEventQueue.h"  // for KeyAddrEventQueue
 #include "kaleidoscope/KeyEvent.h"           // for KeyEvent
@@ -311,6 +311,18 @@ bool Qukeys::isQukey(KeyAddr k) {
 
   // Next, we check to see if this is a DualUse-type qukey (defined in the keymap)
   if (isDualUseKey(key)) {
+    return true;
+  }
+
+  // Then, we check to see if this is a Qukey using the new API (defined in the keymap)
+  if (key >= ranges::QK_FIRST && key <= ranges::QK_LAST) {
+    uint8_t qkey_index = key.getRaw() - ranges::QK_FIRST;
+
+    key.setRaw(cloneFromProgmem(qkeys_[i])[0].getRaw());
+    Key qkey = cloneFromProgmem(qkeys_[i])[1];
+
+    queue_head_.primary_key   = key;
+    queue_head_.alternate_key = qkey;
     return true;
   }
 

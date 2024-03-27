@@ -19,7 +19,7 @@
 #pragma once
 
 #include <Arduino.h>              // for PROGMEM
-#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST
+#include <Kaleidoscope-Ranges.h>  // for DUL_FIRST, DUM_FIRST, QK_FIRST
 #include <stdint.h>               // for uint8_t, uint16_t, int8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
@@ -33,14 +33,16 @@
 // IWYU pragma: no_include "HIDAliases.h"
 
 // DualUse Key definitions for Qukeys in the keymap
-#define MT(mod, key)   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
+#define MT(mod, key)                   kaleidoscope::plugin::ModTapKey(Key_##mod, Key_##key)
 
-#define SFT_T(key)     MT(LeftShift, key)
-#define CTL_T(key)     MT(LeftControl, key)
-#define ALT_T(key)     MT(LeftAlt, key)
-#define GUI_T(key)     MT(LeftGui, key)
+#define SFT_T(key)                     MT(LeftShift, key)
+#define CTL_T(key)                     MT(LeftControl, key)
+#define ALT_T(key)                     MT(LeftAlt, key)
+#define GUI_T(key)                     MT(LeftGui, key)
 
-#define LT(layer, key) kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
+#define LT(layer, key)                 kaleidoscope::plugin::LayerTapKey(layer, Key_##key)
+
+#define QK(primary_key, secondary_key) kaleidoscope::plugin::Qkey(primary_key, secondary_key)
 
 namespace kaleidoscope {
 namespace plugin {
@@ -138,6 +140,14 @@ class Qukeys : public kaleidoscope::Plugin {
     minimum_prior_interval_ = min_interval;
   }
 
+  // Function to store a Qkey
+  uint8_t storeQkey(Key primary_key, Key alt_key) {
+    qkeys_[qkeys_count_][0] = primary_key;
+    qkeys_[qkeys_count_][1] = alt_key;
+    ++qkeys_count_;
+    return (qkeys_count_ - 1);
+  }
+
   // Function for defining the array of qukeys data (in PROGMEM). It's a
   // template function that takes as its sole argument an array reference of
   // size `_qukeys_count`, so there's no need to use `sizeof` to calculate the
@@ -222,6 +232,10 @@ class Qukeys : public kaleidoscope::Plugin {
     uint8_t timeout{200};
   } tap_repeat_;
   bool shouldWaitForTapRepeat();
+
+  // An array of Qkeys in PROGMEM.
+  uint8_t qkeys_count_{0};
+  Key const qkeys_[][2] PROGMEM;
 };
 
 // This function returns true for any key that we expect to be used chorded with
@@ -233,6 +247,11 @@ bool isModifierKey(Key key);
 }  // namespace kaleidoscope
 
 extern kaleidoscope::plugin::Qukeys Qukeys;
+
+constexpr Key Qkey(Key tap_key, Key qkey) {
+  uint8_t qkey_index = Qukeys.storeQkey(tap_key, qkey);
+  return Key(kaleidoscope::ranges::QK_FIRST + qkey_index);
+}
 
 // Macro for use in sketch file to simplify definition of the qukeys array and
 // guarantee that the count is set correctly. This is considerably less
