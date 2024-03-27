@@ -316,10 +316,10 @@ bool Qukeys::isQukey(KeyAddr k) {
 
   // Then, we check to see if this is a Qukey using the new API (defined in the keymap)
   if (key >= ranges::QK_FIRST && key <= ranges::QK_LAST) {
-    key.setRaw(key.getRaw() - ranges::QK_FIRST);
+    uint8_t qkey_index = key.getRaw() - ranges::QK_FIRST;
 
-    // TODO(EvyBongers): retrieve the stored qkey index
-    Key qkey = cloneFromProgmem(qkeys_[i]);
+    key.setRaw(cloneFromProgmem(qkeys_[i])[0].getRaw());
+    Key qkey = cloneFromProgmem(qkeys_[i])[1];
 
     queue_head_.primary_key   = key;
     queue_head_.alternate_key = qkey;

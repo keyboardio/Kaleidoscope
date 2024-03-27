@@ -141,8 +141,9 @@ class Qukeys : public kaleidoscope::Plugin {
   }
 
   // Function to store a Qkey
-  uint8_t storeQkey(Key alt_key) {
-    qkeys_[qkeys_count_] = alt_key;
+  uint8_t storeQkey(Key primary_key, Key alt_key) {
+    qkeys_[qkeys_count_][0] = primary_key;
+    qkeys_[qkeys_count_][1] = alt_key;
     ++qkeys_count_;
     return (qkeys_count_ - 1);
   }
@@ -167,10 +168,6 @@ class Qukeys : public kaleidoscope::Plugin {
   EventHandlerResult afterEachCycle();
 
  private:
-  // An array of Qkeys in PROGMEM.
-  Key const *qkeys_ PROGMEM;
-  uint8_t qkeys_count_{0};
-
   // An array of Qukey objects in PROGMEM.
   Qukey const *qukeys_{nullptr};
   uint8_t qukeys_count_{0};
@@ -235,6 +232,10 @@ class Qukeys : public kaleidoscope::Plugin {
     uint8_t timeout{200};
   } tap_repeat_;
   bool shouldWaitForTapRepeat();
+
+  // An array of Qkeys in PROGMEM.
+  uint8_t qkeys_count_{0};
+  Key const qkeys_[][2] PROGMEM;
 };
 
 // This function returns true for any key that we expect to be used chorded with
@@ -248,9 +249,8 @@ bool isModifierKey(Key key);
 extern kaleidoscope::plugin::Qukeys Qukeys;
 
 constexpr Key Qkey(Key tap_key, Key qkey) {
-  uint8_t qkey_index = Qukeys.storeQkey(qkey);
-  // TODO(EvyBongers): store the qkey index somewhere, somehow
-  return Key(kaleidoscope::ranges::QK_FIRST + tap_key.getRaw());
+  uint8_t qkey_index = Qukeys.storeQkey(tap_key, qkey);
+  return Key(kaleidoscope::ranges::QK_FIRST + qkey_index);
 }
 
 // Macro for use in sketch file to simplify definition of the qukeys array and
