@@ -35,7 +35,7 @@ uint16_t LEDPaletteTheme::palette_base_;
 
 uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
   if (!palette_base_)
-    palette_base_ = ::EEPROMSettings.requestSlice(16 * sizeof(cRGB));
+    palette_base_ = ::EEPROMSettings.requestSlice(24 * sizeof(cRGB));
 
   return ::EEPROMSettings.requestSlice(max_themes * Runtime.device().led_count / 2);
 }
@@ -116,7 +116,7 @@ void LEDPaletteTheme::updatePaletteColor(uint8_t palette_index, cRGB color) {
 }
 
 bool LEDPaletteTheme::isThemeUninitialized(uint16_t theme_base, uint8_t max_themes) {
-  bool paletteEmpty = Runtime.storage().isSliceUninitialized(palette_base_, 16 * sizeof(cRGB));
+  bool paletteEmpty = Runtime.storage().isSliceUninitialized(palette_base_, 24 * sizeof(cRGB));
   bool themeEmpty   = Runtime.storage().isSliceUninitialized(theme_base, max_themes * Runtime.device().led_count / 2);
 
   return paletteEmpty && themeEmpty;
@@ -135,7 +135,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
-    for (uint8_t i = 0; i < 16; i++) {
+    for (uint8_t i = 0; i < 24; i++) {
       cRGB color;
 
       color = lookupPaletteColor(i);
@@ -145,7 +145,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
   }
 
   uint8_t i = 0;
-  while (i < 16 && !::Focus.isEOL()) {
+  while (i < 24 && !::Focus.isEOL()) {
     cRGB color;
 
     ::Focus.read(color);
