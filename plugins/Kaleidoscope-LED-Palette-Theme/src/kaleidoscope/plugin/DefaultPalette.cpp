@@ -31,7 +31,7 @@ __attribute__((weak)) extern bool palette_defined = false;
 void DefaultPalette::setup() {
   if (!ledpalette::palette_defined) return;
 
-  for (uint8_t i = 0; i < 24; i++) {
+  for (uint8_t i = 0; i < LEDPaletteTheme::getPaletteSize(); i++) {
     cRGB color;
 
     color.r = pgm_read_byte(&(ledpalette::palette[i].r));
