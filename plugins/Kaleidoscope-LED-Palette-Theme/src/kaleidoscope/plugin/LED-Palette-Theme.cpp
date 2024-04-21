@@ -32,10 +32,11 @@ namespace kaleidoscope {
 namespace plugin {
 
 uint16_t LEDPaletteTheme::palette_base_;
+uint8_t LEDPaletteTheme::palette_size_ = 24;
 
 uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
   if (!palette_base_)
-    palette_base_ = ::EEPROMSettings.requestSlice(24 * sizeof(cRGB));
+    palette_base_ = ::EEPROMSettings.requestSlice(palette_size_ * sizeof(cRGB));
 
   return ::EEPROMSettings.requestSlice(max_themes * Runtime.device().led_count / 2);
 }
@@ -116,10 +117,14 @@ void LEDPaletteTheme::updatePaletteColor(uint8_t palette_index, cRGB color) {
 }
 
 bool LEDPaletteTheme::isThemeUninitialized(uint16_t theme_base, uint8_t max_themes) {
-  bool paletteEmpty = Runtime.storage().isSliceUninitialized(palette_base_, 24 * sizeof(cRGB));
+  bool paletteEmpty = Runtime.storage().isSliceUninitialized(palette_base_, palette_size_ * sizeof(cRGB));
   bool themeEmpty   = Runtime.storage().isSliceUninitialized(theme_base, max_themes * Runtime.device().led_count / 2);
 
   return paletteEmpty && themeEmpty;
+}
+
+uint8_t LEDPaletteTheme::getPaletteSize() {
+  return LEDPaletteTheme::palette_size_;
 }
 
 EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
@@ -135,7 +140,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
-    for (uint8_t i = 0; i < 24; i++) {
+    for (uint8_t i = 0; i < palette_size_; i++) {
       cRGB color;
 
       color = lookupPaletteColor(i);
@@ -145,7 +150,7 @@ EventHandlerResult LEDPaletteTheme::onFocusEvent(const char *input) {
   }
 
   uint8_t i = 0;
-  while (i < 24 && !::Focus.isEOL()) {
+  while (i < palette_size_ && !::Focus.isEOL()) {
     cRGB color;
 
     ::Focus.read(color);

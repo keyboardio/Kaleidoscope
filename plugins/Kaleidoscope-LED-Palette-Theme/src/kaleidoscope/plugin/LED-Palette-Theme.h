@@ -47,8 +47,11 @@ class LEDPaletteTheme : public kaleidoscope::Plugin {
                                      uint8_t max_themes);
   static bool isThemeUninitialized(uint16_t theme_base, uint8_t max_themes);
 
+  static uint8_t getPaletteSize();
+
  private:
   static uint16_t palette_base_;
+  static uint8_t palette_size_;
 };
 
 }  // namespace plugin
