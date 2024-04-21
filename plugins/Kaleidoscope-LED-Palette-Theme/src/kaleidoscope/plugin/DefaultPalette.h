@@ -19,8 +19,9 @@
 
 #include <Arduino.h>  // for PROGMEM
 
-#include "kaleidoscope/device/device.h"  // for cRGB
-#include "kaleidoscope/plugin.h"         // for Plugin
+#include "kaleidoscope/device/device.h"             // for cRGB, CRGB
+#include "kaleidoscope/plugin.h"                    // for Plugin
+#include "kaleidoscope/plugin/LED-Palette-Theme.h"  // for LEDPaletteTheme
 
 namespace kaleidoscope {
 namespace plugin {
@@ -28,6 +29,18 @@ namespace plugin {
 namespace ledpalette {
 extern bool palette_defined;
 extern const cRGB palette[];
+
+template<uint8_t _color_count>
+void configurePalette(cRGB const (&colors)[_color_count]) {
+  for (uint8_t i = 0; i < LEDPaletteTheme::getPaletteSize(); i++) {
+    if (i < _color_count) {
+      palette[i] = colors[i];
+    } else {
+      palette[i] = CRGB(0x00, 0x00, 0x00);
+    }
+  }
+  bool palette_defined = true;
+}
 }  // namespace ledpalette
 
 class DefaultPalette : public Plugin {
