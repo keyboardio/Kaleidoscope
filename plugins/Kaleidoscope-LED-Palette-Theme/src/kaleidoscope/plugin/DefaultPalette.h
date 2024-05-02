@@ -55,14 +55,14 @@ class DefaultPalette : public Plugin {
 
 #define PALETTE(p00, p01, p02, p03, p04, p05, p06, p07,   \
                 p08, p09, p0a, p0b, p0c, p0d, p0e, p0f,   \
-                p10, p11, p12, p13, p14, p15, p16, p17)   \
+                ...)                                      \
   namespace kaleidoscope {                                \
   namespace plugin {                                      \
   namespace ledpalette {                                  \
     const cRGB palette[] PROGMEM = {                      \
       p00, p01, p02, p03, p04, p05, p06, p07,             \
-      p08, p09, p0a, p0b, p0c, p0d, p0e, p0f,             \
-      p10, p11, p12, p13, p14, p15, p16, p17              \
+      p08, p09, p0a, p0b, p0c, p0d, p0e, p0f              \
+      __VA_OPT__(,) __VA_ARGS__                           \
     };                                                    \
     bool palette_defined = true;                          \
   } /* defaultcolormap */                                 \
