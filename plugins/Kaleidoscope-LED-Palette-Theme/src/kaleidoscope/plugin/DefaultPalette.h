@@ -19,9 +19,8 @@
 
 #include <Arduino.h>  // for PROGMEM
 
-#include "kaleidoscope/device/device.h"             // for cRGB, CRGB
-#include "kaleidoscope/plugin.h"                    // for Plugin
-#include "kaleidoscope/plugin/LED-Palette-Theme.h"  // for LEDPaletteTheme
+#include "kaleidoscope/device/device.h"  // for cRGB
+#include "kaleidoscope/plugin.h"         // for Plugin
 
 namespace kaleidoscope {
 namespace plugin {
@@ -29,18 +28,6 @@ namespace plugin {
 namespace ledpalette {
 extern bool palette_defined;
 extern const cRGB palette[];
-
-template<uint8_t _color_count>
-void configurePalette(cRGB const (&colors)[_color_count]) {
-  for (uint8_t i = 0; i < LEDPaletteTheme::getPaletteSize(); i++) {
-    if (i < _color_count) {
-      palette[i] = colors[i];
-    } else {
-      palette[i] = CRGB(0x00, 0x00, 0x00);
-    }
-  }
-  bool palette_defined = true;
-}
 }  // namespace ledpalette
 
 class DefaultPalette : public Plugin {
@@ -53,14 +40,14 @@ class DefaultPalette : public Plugin {
 
 // clang-format off
 
-#define PALETTE(p00, p01, p02, p03, p04, p05, p06, p07,   \
-                p08, p09, p0a, p0b, p0c, p0d, p0e, ...)   \
+#define PALETTE(p0, p1, p2, p3, p4, p5, p6, p7,           \
+                p8, p9, pa, pb, pc, pd, pe, ...)          \
   namespace kaleidoscope {                                \
   namespace plugin {                                      \
   namespace ledpalette {                                  \
     const cRGB palette[] PROGMEM = {                      \
-      p00, p01, p02, p03, p04, p05, p06, p07,             \
-      p08, p09, p0a, p0b, p0c, p0d, p0e, ##__VA_ARGS__    \
+      p0, p1, p2, p3, p4, p5, p6, p7,                     \
+      p8, p9, pa, pb, pc, pd, pe, ##__VA_ARGS__           \
     };                                                    \
     bool palette_defined = true;                          \
   } /* defaultcolormap */                                 \
