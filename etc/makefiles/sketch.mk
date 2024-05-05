@@ -188,6 +188,7 @@ ifeq ($(LIBONLY),)
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.hex" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.hex"
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.elf" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.elf"
 	$(QUIET) if [ -e "${OUTPUT_PATH}/${OUTPUT_FILE_PREFIX}.bin" ]; then ln -sf "${OUTPUT_FILE_PREFIX}.bin" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.bin"; else :; fi
+	$(QUIET) if [ -e "${BIN_FILE_PATH}" ]; then echo "Firmware build at ${BIN_FILE_PATH}"; else echo "Firmware build at ${HEX_FILE_PATH}"; fi
 else    
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.a" "${LIB_FILE_PATH}"
 	$(QUIET) ln -sf "${OUTPUT_FILE_PREFIX}.a" "${OUTPUT_PATH}/${SKETCH_BASE_NAME}-latest.a"
