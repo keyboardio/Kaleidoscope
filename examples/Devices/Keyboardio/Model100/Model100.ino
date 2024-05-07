@@ -652,6 +652,7 @@ void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
 
+  // clang-format off
   COLORMAP_OVERLAYS(
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 11), 23),  // 7
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 11), 23),  // 4
@@ -671,6 +672,7 @@ void setup() {
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 14), 23),  // divide
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 15), 23),  // enter
   ) // COLORMAP_OVERLAYS(
+  // clang-format on
 
   // Set the hue of the boot greeting effect to something that will result in a
   // nice green color.
