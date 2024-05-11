@@ -306,8 +306,11 @@ KEYMAPS(
    ___)
 ) // KEYMAPS(
 
-#define RGB_UNSET  CRGB(0x00, 0x00, 0x00)
-#define RGB_RED    CRGB(0xff, 0x00, 0x00)
+/* Re-enable astyle's indent enforcement */
+// clang-format on
+
+#define RGB_UNSET CRGB(0x00, 0x00, 0x00)
+#define RGB_RED   CRGB(0xff, 0x00, 0x00)
 
 PALETTE(
   RGB_UNSET,
@@ -333,11 +336,7 @@ PALETTE(
   RGB_UNSET,
   RGB_UNSET,
   RGB_UNSET,
-  RGB_RED
-) // PALETTE(
-
-/* Re-enable astyle's indent enforcement */
-// clang-format on
+  RGB_RED)  // PALETTE(
 
 /** versionInfoMacro handles the 'firmware version info' macro
  *  When a key bound to the macro is pressed, this macro
@@ -652,7 +651,6 @@ void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
 
-  // clang-format off
   COLORMAP_OVERLAYS(
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 11), 23),  // 7
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 11), 23),  // 4
@@ -671,8 +669,7 @@ void setup() {
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(2, 14), 23),  // equals
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 14), 23),  // divide
     kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 15), 23),  // enter
-  ) // COLORMAP_OVERLAYS(
-  // clang-format on
+    )                                                           // COLORMAP_OVERLAYS(
 
   // Set the hue of the boot greeting effect to something that will result in a
   // nice green color.
