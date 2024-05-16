@@ -1,0 +1,134 @@
+VERSION 1
+
+KEYSWITCH LSHIFT    0 0
+KEYSWITCH RSHIFT    0 1
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+KEYSWITCH B2        1 2
+KEYSWITCH 1         2 0
+
+# ==============================================================================
+NAME LongPress AutoShift tap
+# This tests that short tapping any of the keys should always produce the
+# normal key
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # report: { 5 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS B2
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B2
+RUN 1 cycle
+EXPECT keyboard-report Key_B # report: { 5 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS 1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # report: { 1e }
+
+RUN 4 ms
+RELEASE 1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME AutoShift long press
+# This tests that a long-press on an autoshiftable key produces a shift +
+# the key
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report Key_LeftShift Key_A # report: { 4 e1 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_LeftShift # report: { e1 }
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Key overrides AutoShift
+# Test that an explicit configuration of a LongPress always overrides the
+# auto-shift behaviour on the same key.
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Y # report: { 28 }
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Addr overrides LongPress explicit on Key
+# This tests that an explicit configuration on a KeyAddr takes precedence
+# over an explicit configuration on a Key that was defined later (the first
+# matching LongPressKey entry wins).
+
+RUN 4 ms
+PRESS B2
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Z # report: { 29 }
+
+RUN 4 ms
+RELEASE B2
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress AutoShift no modification
+# Test that long-pressing a number keys produces that number as no
+# auto-shift was defined for number keys and no explicit long-press
+# behaviour was configured for that key either
+
+RUN 4 ms
+PRESS 1
+RUN 1 cycle
+EXPECT keyboard-report Key_1 # report: { 1e }
+
+# Timeout is 20ms
+RUN 20 ms
+
+RUN 4 ms
+RELEASE 1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
