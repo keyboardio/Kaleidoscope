@@ -26,7 +26,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#include "kaleidoscope/plugin/LongPressAutoShift.h"  // for longpress::AutoShiftCategories
+#include "kaleidoscope/plugin/AutoShift.h"  // for longpress::AutoShiftCategories
 #include "kaleidoscope/plugin/LongPressConstants.h"  // for ALL_LAYERS
 
 namespace kaleidoscope {
