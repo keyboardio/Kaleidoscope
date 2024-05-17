@@ -204,6 +204,9 @@ endif
 
 flashing_instructions = $(call _arduino_prop,build.flashing_instructions)
 
+# Filter out board options from FQBN because board list omits them
+fqbn_no_opts := $(shell echo $(FQBN) | sed 's/:[a-z_][0-9a-z_.]*=.*$$//')
+
 flash: ${HEX_FILE_PATH}
 ifneq ($(flashing_instructions),)
 	$(info $(shell printf $(flashing_instructions)))
@@ -215,6 +218,6 @@ endif
 	$(info )
 	@$(shell read _)
 	$(QUIET) $(ARDUINO_CLI) upload --fqbn $(FQBN) \
-	$(shell $(ARDUINO_CLI) board list --format=text | grep $(FQBN) | awk '{ print "--port", $$1; exit }' ) \
+	$(shell $(ARDUINO_CLI) board list --format=text | grep $(fqbn_no_opts) | awk '{ print "--port", $$1; exit }' ) \
 	--input-dir "${OUTPUT_PATH}" \
 	$(ARDUINO_VERBOSE)
