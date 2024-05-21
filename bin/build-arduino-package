@@ -114,44 +114,43 @@ if ( $version eq '' && $tag =~ /^v(\d.*)$/ ) {
     $version = $1;
 }
 
-my $checkout_dir = 'kaleidoscope-checkout';
+my $checkout_dir = 'bundle-build-checkout';
 
 my $build_base_url = $package_repo . "/raw/$main_branch_name/builds";
 $build_base_url =~ s|ssh://git@|https://|;
 
 print "Working directory: $working_dir\n";
-chdir($working_dir);
+set_cwd($working_dir);
 
 clone_repos( $tag, $gd32_tag, $bundle_repo, $gd32_core_repo, $checkout_dir, $package_repo );
 
-chdir( $working_dir . "/" . $checkout_dir );
+set_cwd( $working_dir . "/" . $checkout_dir );
 if ($only_latest_platform) {
+	print "Removing old builds from $builds_dir\n";
     `rm -rf $builds_dir/*`;
 }
 
 foreach my $arch (@ARCHES) {
+    my $release_dir = "Kaleidoscope-$arch-$version";
+    my $filename    = $release_dir . ".tar.bz2";
 
 
     # Get the specified Kaleidoscope build and all its plugins as libraries
     # into the checkout
     checkout_kaleidoscope($kaleidoscope_tag, "$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
-    chdir("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
+    set_cwd("$working_dir/$checkout_dir");
     remove_unneeded_files($arch);
+    set_cwd("$working_dir/$checkout_dir/$arch/libraries/Kaleidoscope");
     lift_plugins_to_arduino_libs();
     set_plugin_versions( $working_dir, $checkout_dir, $arch, $version );
-
-    chdir($working_dir);
-
-    my $release_dir = "Kaleidoscope-$arch-$version";
-    my $filename    = $release_dir . ".tar.bz2";
-
+    set_cwd($working_dir);
     build_archive( $arch, $checkout_dir, $release_dir, $filename );
     deploy_build( $builds_dir, $filename );
 
 }
 
 update_index_file( $output_dir, $index_filename );
-chdir("$output_dir");
+set_cwd("$output_dir");
 commit_results($index_filename);
 finalize_action($push_package_repo);
 
@@ -162,7 +161,7 @@ sub set_plugin_versions {
     my $checkout_dir = shift;
     my $arch         = shift;
     my $version      = shift;
-    chdir("$working_dir/$checkout_dir/$arch/libraries");
+    set_cwd("$working_dir/$checkout_dir/$arch/libraries");
     `perl -pi -e's/version=0.0.0/version=$version/' */library.properties`;
 }
 
@@ -173,8 +172,10 @@ sub clone_repos {
     my $gd32_repo = shift;
     my $checkout_dir = shift;
     my $package_repo  = shift;
+    print "Checking out AVR cores to $checkout_dir\n";
 `git clone --depth=1 --quiet --recurse-submodules --branch $tag $bundle_repo $checkout_dir`;
 
+print "Checking out GD32 core to $checkout_dir/gd32\n";
 `git clone --depth=1 --quiet --recurse-submodules --branch $gd32_tag $gd32_repo $checkout_dir/gd32`;
     `git clone $package_repo $output_dir`;
 }
@@ -182,13 +183,14 @@ sub clone_repos {
 sub checkout_kaleidoscope {
     my $tag = shift;
     my $checkout_dir = shift;
+    print "Checking out Kaleidoscope to $checkout_dir\n";
     `git clone --depth=1 --quiet --recurse-submodules --branch $tag $kaleidoscope_repo $checkout_dir`;
 }
 
 sub lift_plugins_to_arduino_libs {
     if ( -d 'plugins' ) {
-        chdir("plugins");
-
+        set_cwd("plugins");
+	print "Lifting plugins from ".`pwd`." to ../../\n";
         # move the plugins to be fullfledged arduino libraries
         `mv * ../../`;
     }
@@ -269,7 +271,7 @@ sub build_archive {
     `mv $checkout_dir/$arch $checkout_dir/$release_dir`;
     ;    # A hack to get consistent naming with the old setup
     `find "$checkout_dir/$release_dir" -name .git |xargs rm -rf`;
-    `tar cjvf $filename -C $checkout_dir/ $release_dir `;
+    `tar cjf $filename -C $checkout_dir/ $release_dir `;
 
     my $sha256 = `sha256sum $filename | cut -d' ' -f 1 `;
     chomp($sha256);
@@ -294,4 +296,10 @@ sub finalize_action {
         print "Now, you need to cd to $output_dir check the content and push it\n";
     }
 
+}
+
+sub set_cwd {
+	my $dir = shift;
+	print "cd $dir\n";
+	chdir($dir);
 }
