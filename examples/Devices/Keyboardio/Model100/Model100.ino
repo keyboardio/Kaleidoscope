@@ -29,9 +29,6 @@
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
 
-// Support for "Numpad" mode, which is mostly just the Numpad specific LED mode
-#include "Kaleidoscope-NumPad.h"
-
 // Support for the "Boot greeting" effect, which pulses the 'LED' button for 10s
 // when the keyboard is connected to a computer (or that computer is powered on)
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
@@ -62,6 +59,9 @@
 
 // Support for turning the LEDs off after a certain amount of time
 #include "Kaleidoscope-IdleLEDs.h"
+
+// Support for overlaying colors
+#include "Kaleidoscope-Colormap-Overlay.h"
 
 // Support for setting and saving the default LED mode
 #include "Kaleidoscope-DefaultLEDModeConfig.h"
@@ -308,6 +308,37 @@ KEYMAPS(
 
 /* Re-enable astyle's indent enforcement */
 // clang-format on
+
+#define RGB_UNSET CRGB(0x00, 0x00, 0x00)
+#define RGB_RED   CRGB(0xff, 0x00, 0x00)
+
+// Set up a default palette to be use for the Colormap and Colormap-Overlay
+// plugins
+PALETTE(
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_UNSET,
+  RGB_RED)  // PALETTE(
 
 /** versionInfoMacro handles the 'firmware version info' macro
  *  When a key bound to the macro is pressed, this macro
@@ -588,9 +619,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // The Colormap effect makes it possible to set up per-layer colormaps
   ColormapEffect,
 
-  // The numpad plugin is responsible for lighting up the 'numpad' mode
-  // with a custom LED effect
-  NumPad,
+  // The colormap overlay plugin provides a way to set LED colors regardless of
+  // the active LED effect. This is used for lighting up the keys assigned in
+  // the factory 'numpad' mode
+  ColormapOverlay,
 
   // The HostPowerManagement plugin allows us to turn LEDs off when then host
   // goes to sleep, and resume them when it wakes up.
@@ -622,13 +654,43 @@ void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
 
+  // Add colormap overlays for all keys of the numpad. This makes sure that
+  // all keys of the numpad light up once the numpad layer is active.
+  //
+  // The call signature is:
+  // kaleidoscope::plugin::Overlay(<layer>, <key_address>, <palette_index>)
+  //
+  // Key address matrix: https://github.com/keyboardio/Kaleidoscope/blob/master/plugins/Kaleidoscope-Hardware-Keyboardio-Model100/src/kaleidoscope/device/keyboardio/Model100.h#L175-L205
+  //
+  // (0, 0) (0, 1) (0, 2) (0, 3) (0, 4) (0, 5) (0, 6) | (0, 9) (0, 10) (0, 11) (0, 12) (0, 13) (0, 14) (0, 15)
+  // (1, 0) (1, 1) (1, 2) (1, 3) (1, 4) (1, 5) (1, 6) | (1, 9) (1, 10) (1, 11) (1, 12) (1, 13) (1, 14) (1, 15)
+  // (2, 0) (2, 1) (2, 2) (2, 3) (2, 4) (2, 5)        |        (2, 10) (2, 11) (2, 12) (2, 13) (2, 14) (2, 15)
+  // (3, 0) (3, 1) (3, 2) (3, 3) (3, 4) (3, 5) (2, 6) | (2, 9) (3, 10) (3, 11) (3, 12) (3, 13) (3, 14) (3, 15)
+  //                      (0, 7) (1, 7) (2, 7) (3, 7) | (3, 8) (2, 8)  (1, 8)  (0, 8)
+  //                                           (3, 6) | (3, 9)
+  COLORMAP_OVERLAYS(
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 11), 23),  // 7
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 11), 23),  // 4
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(2, 11), 23),  // 1
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 11), 23),  // 0
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 12), 23),  // 8
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 12), 23),  // 5
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(2, 12), 23),  // 2
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 12), 23),  // period
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 13), 23),  // 9
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 13), 23),  // 6
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(2, 13), 23),  // 3
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 13), 23),  // multiply
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(0, 14), 23),  // substract
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(1, 14), 23),  // add
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(2, 14), 23),  // equals
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 14), 23),  // divide
+    kaleidoscope::plugin::Overlay(NUMPAD, KeyAddr(3, 15), 23),  // enter
+    )                                                           // COLORMAP_OVERLAYS(
+
   // Set the hue of the boot greeting effect to something that will result in a
   // nice green color.
   BootGreetingEffect.hue = 85;
-
-  // While we hope to improve this in the future, the NumPad plugin
-  // needs to be explicitly told which keymap layer is your numpad layer
-  NumPad.numPadLayer = NUMPAD;
 
   // We configure the AlphaSquare effect to use RED letters
   AlphaSquare.color = CRGB(255, 0, 0);
@@ -657,6 +719,7 @@ void setup() {
   // maps for. To make things simple, we set it to eight layers, which is how
   // many editable layers we have (see above).
   ColormapEffect.max_layers(8);
+  DefaultColormap.setup();
 
   // For Dynamic Macros, we need to reserve storage space for the editable
   // macros. A kilobyte is a reasonable default.
