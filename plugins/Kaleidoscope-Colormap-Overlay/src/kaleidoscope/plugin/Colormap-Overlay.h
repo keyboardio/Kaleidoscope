@@ -87,7 +87,6 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 #define COLORMAP_OVERLAYS_MAP(layers...)                                \
   namespace kaleidoscope {                                              \
   namespace plugin {                                                    \
-  namespace defaultcolormap {                                           \
   const uint8_t overlays_[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = { \
       layers                                                            \
   };                                                                    \
