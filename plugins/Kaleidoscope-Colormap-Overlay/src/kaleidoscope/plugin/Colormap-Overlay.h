@@ -30,7 +30,7 @@ namespace plugin {
 
 // Data structure for an individual qukey
 struct Overlay {
-  int8_t layer;
+  uint8_t layer;
   KeyAddr addr;
   uint8_t palette_index;
 
