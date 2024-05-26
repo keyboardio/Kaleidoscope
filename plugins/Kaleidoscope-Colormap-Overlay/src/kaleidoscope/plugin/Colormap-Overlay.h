@@ -53,6 +53,17 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     overlay_count_ = _overlay_count;
   }
 
+  template<uint8_t _layer_count>
+  void configureOverlays(uint8_t const (&overlays)[_layer_count][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns]) {
+    overlays_      = Overlay[];
+    overlay_count_ = 0;
+    for (int layer_ = 0; layer_ < _layer_count; layer_++) {
+      for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
+        overlays_[overlay_count_] = Overlay(layer_, /* TODO(EvyBongers) */, overlays[layer_][key_index_]);
+        overlay_count_++;
+      }
+    }
+  }
   // A wildcard value for a qukey that exists on every layer.
   static constexpr int8_t layer_wildcard{-1};
 
@@ -68,6 +79,37 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   bool hasOverlay(KeyAddr k);
   void setLEDOverlayColors();
 };
+
+// clang-format off
+
+#define COLORMAP_OVERLAYS_MAP(layers...)                                \
+  namespace kaleidoscope {                                              \
+  namespace plugin {                                                    \
+  namespace defaultcolormap {                                           \
+  const uint8_t overlays_[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = { \
+      layers                                                            \
+  };                                                                    \
+  ColormapOverlay.configureOverlays(overlays_);                         \
+  } /* plugin */                                                        \
+  } /* kaleidoscope */
+
+#define __IDENTITY__(X) X
+
+#ifdef PER_KEY_DATA_STACKED
+#define COLORMAP_OVERLAY_STACKED(...)                                   \
+  {                                                                     \
+    MAP_LIST(__IDENTITY__, PER_KEY_DATA_STACKED(0, __VA_ARGS__))        \
+  }
+#endif
+
+#ifdef PER_KEY_DATA
+#define COLORMAP_OVERLAY(...)                            \
+  {                                                      \
+    MAP_LIST(__IDENTITY__, PER_KEY_DATA(0, __VA_ARGS__)) \
+  }
+#endif
+
+// clang-format on
 
 }  // namespace plugin
 }  // namespace kaleidoscope
