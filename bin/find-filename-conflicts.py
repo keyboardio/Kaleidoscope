@@ -45,26 +45,24 @@ find and print all of them.
 If no conflict is found, the script just prints its status message and exits
 with zero."""
 
+from itertools import chain
 import os
 import re
 import sys
 
-cpp_regex = re.compile('.*\.cpp')
+suffixes = re.compile(r'\.c(?:pp)?$')
 
 
-def find_duplicates(root):
+def find_duplicates(roots):
     """Search for files with the same basename, but in different directories in
-    the tree under <root>.  Prints a message for each conflict found, and
+    the trees under <roots>.  Prints a message for each conflict found, and
     returns a count of the number of non-unique basenames."""
 
     # Search the specified tree for matching basenames:
     basenames = {}
-    for dir_path, dirs, files in os.walk(root):
-        for file_name in files:
-            if cpp_regex.match(file_name):
-                if file_name not in basenames:
-                    basenames[file_name] = []
-                basenames[file_name].append(dir_path)
+    for dir_path, dirs, files in chain.from_iterable(map(os.walk, roots)):
+        for file_name in filter(suffixes.search, files):
+            basenames.setdefault(file_name, []).append(dir_path)
 
     conflict_count = 0
     for file_name, dirs in basenames.items():
@@ -84,9 +82,7 @@ def find_duplicates(root):
 
 def main(args):
     print('Searching for conflicting filenames...')
-    exit_code = 0
-    for path in args:
-        exit_code += find_duplicates(path)
+    exit_code = find_duplicates(args)
     if exit_code != 0:
         sys.exit(exit_code)
     print('No filename conflicts found.')
