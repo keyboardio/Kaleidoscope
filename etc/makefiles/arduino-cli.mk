@@ -75,7 +75,7 @@ endif
 export ARDUINO_CLI ?= $(arduino_env) $(ARDUINO_CLI_PATH)
 
 ifneq ($(VERBOSE),) 
-$(info Using ardino-cli from $(ARDUINO_CLI_PATH))
+$(info Using arduino-cli from $(ARDUINO_CLI_PATH))
 endif
 
 ifneq ($(FQBN),)
