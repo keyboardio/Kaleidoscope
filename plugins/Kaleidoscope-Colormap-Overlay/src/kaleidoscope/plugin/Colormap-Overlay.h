@@ -59,15 +59,17 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     overlay_count_ = 0;
     for (int layer_ = 0; layer_ < _layer_count; layer_++) {
       for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
-        uint8_t color_index_ = overlays[layer_][key_index_];
-        // TODO(EvyBongers): validate the color index?
-        overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
-        overlay_count_++;
+        int8_t color_index_ = overlays[layer_][key_index_];
+        if (color_index_ != no_color_overlay) {
+          overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
+          overlay_count_++;
+        }
       }
     }
   }
   // A wildcard value for an overlay that applies on every layer.
   static constexpr int8_t layer_wildcard{-1};
+  static constexpr int8_t no_color_overlay{-1};
 
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
@@ -87,7 +89,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 #define COLORMAP_OVERLAYS_MAP(layers...)                                \
   namespace kaleidoscope {                                              \
   namespace plugin {                                                    \
-  const uint8_t overlays_[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = { \
+  const int8_t overlays_[][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns] = { \
       layers                                                            \
   };                                                                    \
   ColormapOverlay.configureOverlays(overlays_);                         \
