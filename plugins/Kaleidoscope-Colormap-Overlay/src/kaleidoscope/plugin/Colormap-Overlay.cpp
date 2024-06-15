@@ -35,19 +35,24 @@ void ColormapOverlay::setup() {
 }
 
 bool ColormapOverlay::hasOverlay(KeyAddr k) {
+  uint8_t top_layer   = Layer.mostRecent();
   uint8_t layer_index = Layer.lookupActiveLayer(k);
+
+  bool found_match_on_lower_layer = false;
   for (uint8_t i{0}; i < overlay_count_; ++i) {
     Overlay overlay = overlays_[i];
     if (overlay.addr == k) {
-      if ((overlay.layer == layer_index) ||
-          (overlay.layer == layer_wildcard)) {
+      if ((overlay.layer == top_layer) || (overlay.layer == layer_wildcard)) {
         selectedColor = ::LEDPaletteTheme.lookupPaletteColor(overlay.palette_index);
         return true;
+      } else if (overlay.layer == layer_index) {
+        selectedColor              = ::LEDPaletteTheme.lookupPaletteColor(overlay.palette_index);
+        found_match_on_lower_layer = true;
       }
     }
   }
 
-  return false;
+  return found_match_on_lower_layer;
 }
 
 EventHandlerResult ColormapOverlay::onSetup() {
