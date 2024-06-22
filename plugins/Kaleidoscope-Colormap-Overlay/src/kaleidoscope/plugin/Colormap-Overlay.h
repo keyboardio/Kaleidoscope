@@ -24,6 +24,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
 
 namespace kaleidoscope {
 namespace plugin {
@@ -60,7 +61,8 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     for (int layer_ = 0; layer_ < _layer_count; layer_++) {
       for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
         int8_t color_index_ = overlays[layer_][key_index_];
-        if (color_index_ != no_color_overlay) {
+        if (color_index_ >= 0 && color_index_ < ::LEDPaletteTheme.getPaletteSize() &&
+            color_index_ != no_color_overlay) {
           overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
           overlay_count_++;
         }
