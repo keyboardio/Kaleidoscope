@@ -55,8 +55,8 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   }
 
   template<uint8_t _layer_count>
-  void configureOverlays(uint8_t const (&overlays)[_layer_count][kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns]) {
-    overlays_      = Overlay[];
+  void configureOverlays(uint8_t **overlays) {
+    overlays_      = nullptr;
     overlay_count_ = 0;
     for (int layer_ = 0; layer_ < _layer_count; layer_++) {
       for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
