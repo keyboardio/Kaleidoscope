@@ -1,0 +1,200 @@
+VERSION 1
+
+KEYSWITCH LSHIFT    0 0
+KEYSWITCH RSHIFT    0 1
+KEYSWITCH A         1 0
+KEYSWITCH B         1 1
+KEYSWITCH C         1 2
+KEYSWITCH D         1 3
+KEYSWITCH E         2 0
+KEYSWITCH LAYER1    0 6
+
+# ==============================================================================
+NAME LongPress tap
+# Check that a short tap produces the normal key value
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report Key_A # report: { 4 }
+EXPECT keyboard-report empty
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report Key_B # report: { 5 }
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Addr on all layers
+# Check that a long pres configured on a KeyAddr on all layers produces the
+# correct key value on all layers
+
+RUN 4 ms
+PRESS A
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Z # report: { 29 }
+
+RUN 4 ms
+RELEASE A
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Now switch to the other layer and do the same
+
+RUN 4 ms
+PRESS LAYER1
+PRESS A
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Z # report: { 29 }
+
+RUN 4 ms
+RELEASE A
+RELEASE LAYER1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Key
+# Check that a long pres configured on a Key on all layers produces the
+# correct key value on all layers
+
+RUN 4 ms
+PRESS B
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Y # report: { 28 }
+
+RUN 4 ms
+RELEASE B
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Now switch to the other layer and do the same
+
+RUN 4 ms
+PRESS LAYER1
+PRESS B
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_Y # report: { 28 }
+
+RUN 4 ms
+RELEASE B
+RELEASE LAYER1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Addr on single layers
+# Check that a long press configured on a KeyAddr on a single layers produces the
+# correct key value only on that layer
+
+RUN 4 ms
+PRESS C
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_X # report: { 27 }
+
+RUN 4 ms
+RELEASE C
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Now switch to the other layer and do the same
+
+RUN 4 ms
+PRESS LAYER1
+PRESS C
+RUN 1 cycle
+EXPECT keyboard-report Key_C # report: { 5 }
+
+# Timeout is 20ms
+RUN 20 ms
+
+RUN 4 ms
+RELEASE C
+RELEASE LAYER1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress explicit on Key
+# Check that a long press configured on a Key on all layers produces the
+# correct key value on all layers
+
+# This key reacts to long-press on layer 1
+
+RUN 4 ms
+PRESS LAYER1
+PRESS D
+RUN 1 cycle
+
+# Timeout is 20ms
+RUN 20 ms
+EXPECT keyboard-report Key_W # report: { 26 }
+
+RUN 4 ms
+RELEASE D
+RELEASE LAYER1
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+# Now switch to the other layer and do the same
+
+RUN 4 ms
+PRESS D
+RUN 1 cycle
+EXPECT keyboard-report Key_D # report: { 6 }
+
+# Timeout is 20ms
+RUN 20 ms
+
+RUN 4 ms
+RELEASE D
+RUN 1 cycle
+EXPECT keyboard-report empty
+
+
+# ==============================================================================
+NAME LongPress no modification
+# long-pressing a key for which no long-press behaviour was configured
+# should only produce the normal key value
+
+RUN 4 ms
+PRESS E
+RUN 1 cycle
+EXPECT keyboard-report Key_E # report: { 7 }
+
+# Timeout is 20ms
+RUN 20 ms
+
+RUN 4 ms
+RELEASE E
+RUN 1 cycle
+EXPECT keyboard-report empty
+
