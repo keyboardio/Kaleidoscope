@@ -18,24 +18,6 @@
 
 #include <stdint.h>  // for uint8_t
 
-static const uint8_t LAYER_OP_OFFSET    = 42;
-static const uint8_t LAYER_SHIFT_OFFSET = LAYER_OP_OFFSET;
-static const uint8_t LAYER_MOVE_OFFSET  = LAYER_SHIFT_OFFSET + LAYER_OP_OFFSET;
-;
-
-// Layer number constants
-#define KEYMAP_0 0
-#define KEYMAP_1 1
-#define KEYMAP_2 2
-#define KEYMAP_3 3
-#define KEYMAP_4 4
-#define KEYMAP_5 5
-#define KEYMAP_6 6
-#define KEYMAP_7 7
-
-// Previous/next layer key constants
-#define KEYMAP_PREVIOUS 33
-#define KEYMAP_NEXT     34
 
 // Layer lock keys
 #define Key_Keymap0 Key(KEYMAP_0, KEY_FLAGS | SYNTHETIC | SWITCH_TO_KEYMAP)
