@@ -29,9 +29,10 @@
 namespace kaleidoscope {
 namespace plugin {
 uint16_t ColormapOverlay::map_base_;
+const uint8_t no_themes_ = 1;
 
 void ColormapOverlay::setup() {
-  map_base_ = ::LEDPaletteTheme.reserveThemes(1);
+  map_base_ = ::LEDPaletteTheme.reserveThemes(no_themes_);
 }
 
 bool ColormapOverlay::hasOverlay(KeyAddr k) {
@@ -71,6 +72,10 @@ EventHandlerResult ColormapOverlay::beforeSyncingLeds() {
   setLEDOverlayColors();
 
   return EventHandlerResult::OK;
+}
+
+EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
+  return ::LEDPaletteTheme.themeFocusEvent(input, PSTR("colormap.overlay"), map_base_, no_themes_);
 }
 
 }  // namespace plugin
