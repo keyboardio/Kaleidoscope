@@ -16,69 +16,115 @@ use Cwd qw/abs_path cwd/;
 use JSON::PP;
 use Getopt::Long;
 
-my @ARCHES = 	(qw(avr gd32));
+my @ARCHES = 	(qw(avr gd32 nrf52));
 
-my $platforms_template = {
-    avr => {
-        'toolsDependencies' => [
-            {
-                "packager" => "arduino",
-                "name"     => "avr-gcc",
-                "version"  => "7.3.0-atmel3.6.1-arduino7"
-            },
-            {
-                "packager" => "arduino",
-                "name"     => "avrdude",
-                "version"  => "6.3.0-arduino17"
-            }
-        ],
-        'name'   => "Kaleidoscope keyboards",
-        'boards' => [
-            { 'name' => 'Keyboardio Model 01' },
-            { 'name' => 'Keyboardio Atreus' }
-        ],
-        'architecture' => 'avr',
-        'category'     => 'Contributed',
-        'help'         => {
-            'online' => 'https://community.keyboard.io'
-        }
+my $platforms_template_json = <<EOF;
+{
+  "avr": {
+    "name": "Kaleidoscope keyboards",
+    "boards": [
+      {
+        "name": "Keyboardio Model 01"
+      },
+      {
+        "name": "Keyboardio Atreus"
+      }
+    ],
+    "help": {
+      "online": "https://community.keyboard.io"
     },
-    gd32 => {
-        'name'              => "Kaleidoscope keyboards (GD32)",
-        'architecture'      => 'gd32',
-        'toolsDependencies' => [
-            {
-                'name'     => 'xpack-arm-none-eabi-gcc',
-                'packager' => 'keyboardio',
-                'version'  => '9.3.1-1.3'
-            },
-            {
-                'packager' => 'keyboardio',
-                'version'  => '0.11.0-1',
-                'name'     => 'xpack-openocd'
-            },
-            {
-                'name'     => 'dfu-util',
-                'version'  => '0.11.0-arduino3',
-                'packager' => 'keyboardio'
-            }
-        ],
-        'version' => '0.0.1',
-        'name'    => 'Kaleidoscope Keyboards (GD32)',
-        'boards'  => [
-            {
-                'name' => 'Keyboardio Model 100'
-            }
-        ],
-        'category' => 'Contributed',
-        'help'     => {
-            'online' => 'https://community.keyboard.io'
-        }
-    }
-};
+    "architecture": "avr",
+    "category": "Contributed",
+    "toolsDependencies": [
+      {
+        "packager": "arduino",
+        "version": "7.3.0-atmel3.6.1-arduino7",
+        "name": "avr-gcc"
+      },
+      {
+        "name": "avrdude",
+        "version": "6.3.0-arduino17",
+        "packager": "arduino"
+      }
+    ]
+  },
+  "gd32": {
+    "name": "Kaleidoscope Keyboards (GD32)",
+    "boards": [
+      {
+        "name": "Keyboardio Model 100"
+      }
+    ],
+    "version": "0.0.1",
+    "architecture": "gd32",
+    "help": {
+      "online": "https://community.keyboard.io"
+    },
+    "category": "Contributed",
+    "toolsDependencies": [
+      {
+        "packager": "keyboardio",
+        "version": "9.3.1-1.3",
+        "name": "xpack-arm-none-eabi-gcc"
+      },
+      {
+        "name": "xpack-openocd",
+        "packager": "keyboardio",
+        "version": "0.11.0-1"
+      },
+      {
+        "name": "dfu-util",
+        "version": "0.11.0-arduino3",
+        "packager": "keyboardio"
+      }
+    ]
+  },
+  "nrf52": {
+    "name": "Keyboardio nRF52",
+    "architecture": "nrf52",
+    "version": "1.6.1",
+    "category": "Kaleidoscope",
+    "help": {
+      "online": "https://community.keyboard.io"
+    },
+    "boards": [
+      {
+        "name": "Keyboardio Preonic"
+      }
+    ],
+    "toolsDependencies": [
+      {
+        "packager": "adafruit",
+        "name": "arm-none-eabi-gcc",
+        "version": "9-2019q4"
+      },
+      {
+        "packager": "adafruit",
+        "name": "nrfjprog",
+        "version": "9.4.0"
+      },
+      {
+        "packager": "adafruit",
+        "name": "CMSIS",
+        "version": "5.7.0"
+      },
+      {
+        "packager": "arduino",
+        "name": "openocd",
+        "version": "0.11.0-arduino2"
+      }
+    ]
+  }
+}
+EOF
+
+
+my $platforms_template = decode_json($platforms_template_json);
+
 my $version             = '';
 my $tag                 = 'master';
-my $gd32_tag	= 'main';
+my $gd32_tag		= 'main';
+my $nrf52_tag 		= 'master';
 my $kaleidoscope_tag    = 'master';
 my $working_dir         = tempdir( CLEANUP => 0 );
 my $index_filename_slug = 'keyboardio';
@@ -90,6 +136,8 @@ my $only_latest_platform = 0;
 my $kaleidoscope_repo = "https://github.com/keyboardio/Kaleidoscope";
 my $bundle_repo = 'https://github.com/keyboardio/Kaleidoscope-Bundle-Keyboardio';
 my $gd32_core_repo = 'https://github.com/keyboardio/ArduinoCore-GD32-Keyboardio';
+my $nrf52_core_repo = 'https://github.com/keyboardio/Keyboardio_nRF52_Arduino';
+
 my $package_repo       = 'https://github.com/keyboardio/boardsmanager';
 
 my $push_package_repo = 0;
@@ -97,6 +145,7 @@ my $push_package_repo = 0;
 GetOptions(
     "bundle-tag=s"               => \$tag,
     "arch-gd32-tag=s"               => \$gd32_tag,
+    "arch-nrf52-tag=s"		=> \$nrf52_tag,
     "kaleidoscope-tag=s"         => \$kaleidoscope_tag,
     "bundle-repo=s"              => \$bundle_repo,
     "output-repo=s"              => \$package_repo,
@@ -122,7 +171,7 @@ $build_base_url =~ s|ssh://git@|https://|;
 print "Working directory: $working_dir\n";
 set_cwd($working_dir);
 
-clone_repos( $tag, $gd32_tag, $bundle_repo, $gd32_core_repo, $checkout_dir, $package_repo );
+clone_repos( $tag, $gd32_tag, $nrf52_tag, $bundle_repo, $gd32_core_repo, $nrf52_core_repo, $checkout_dir, $package_repo );
 
 set_cwd( $working_dir . "/" . $checkout_dir );
 if ($only_latest_platform) {
@@ -168,8 +217,10 @@ sub set_plugin_versions {
 sub clone_repos {
     my $tag          = shift;
     my $gd32_tag = shift;
+    my $nrf52_tag = shift;
     my $bundle_repo  = shift;
     my $gd32_repo = shift;
+    my $nrf52_repo = shift;
     my $checkout_dir = shift;
     my $package_repo  = shift;
     print "Checking out AVR cores to $checkout_dir\n";
@@ -177,7 +228,13 @@ sub clone_repos {
 
 print "Checking out GD32 core to $checkout_dir/gd32\n";
 `git clone --depth=1 --quiet --recurse-submodules --branch $gd32_tag $gd32_repo $checkout_dir/gd32`;
-    `git clone $package_repo $output_dir`;
+
+print "Checking out nRF52 core to $checkout_dir/nrf52\n";
+`git clone --depth=1 --quiet --recurse-submodules --branch $nrf52_tag $nrf52_repo $checkout_dir/nrf52`;
+
+print "Checking out package repo to $output_dir\n";
+`git clone $package_repo $output_dir`;
+
 }
 
 sub checkout_kaleidoscope {
@@ -217,12 +274,13 @@ sub update_index_file {
 
     if ($only_latest_platform) {
         @{ $data->{'packages'}->[0]->{'platforms'} } =
-          ( $platforms_template->{'avr'}, $platforms_template->{'gd32'} );
+          ( $platforms_template->{'avr'}, $platforms_template->{'gd32'}, $platforms_template->{'nrf52'});
     }
     else {
         push @{ $data->{'packages'}->[0]->{'platforms'} },
           $platforms_template->{'avr'},
-          $platforms_template->{'gd32'};
+          $platforms_template->{'gd32'}, 
+          $platforms_template->{'nrf52'};
     }
     my $json_out = $json->canonical->pretty->encode($data);
     open( my $out_fh, '>', $index_path );
