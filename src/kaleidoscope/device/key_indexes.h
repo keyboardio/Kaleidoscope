@@ -32,6 +32,11 @@ constexpr uint8_t keyIndex(uint8_t row, uint8_t col) {
   return KeyAddr(row, col).toInt() + 1;
 }
 
+/* A compat shim to be able to use zmk style key indexes*/
+constexpr uint8_t RC(uint8_t row, uint8_t col) {
+  return keyIndex(row, col);
+}
+
 constexpr uint8_t R0C0   = keyIndex(0, 0);
 constexpr uint8_t R0C1   = keyIndex(0, 1);
 constexpr uint8_t R0C2   = keyIndex(0, 2);
