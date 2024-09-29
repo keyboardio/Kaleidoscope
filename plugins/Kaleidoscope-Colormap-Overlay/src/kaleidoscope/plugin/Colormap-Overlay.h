@@ -75,6 +75,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
+  EventHandlerResult onFocusEvent(const char *input);
 
  private:
   static uint16_t map_base_;
