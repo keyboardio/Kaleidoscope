@@ -83,7 +83,7 @@ my $platforms_template_json = <<EOF;
     "name": "Keyboardio nRF52",
     "architecture": "nrf52",
     "version": "1.6.1",
-    "category": "Kaleidoscope",
+    "category": "Contributed",
     "help": {
       "online": "https://community.keyboard.io"
     },
