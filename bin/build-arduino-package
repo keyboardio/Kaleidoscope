@@ -94,17 +94,17 @@ my $platforms_template_json = <<EOF;
     ],
     "toolsDependencies": [
       {
-        "packager": "adafruit",
+        "packager": "keyboardio",
         "name": "arm-none-eabi-gcc",
         "version": "9-2019q4"
       },
       {
-        "packager": "adafruit",
+        "packager": "keyboardio",
         "name": "nrfjprog",
         "version": "9.4.0"
       },
       {
-        "packager": "adafruit",
+        "packager": "keyboardio",
         "name": "CMSIS",
         "version": "5.7.0"
       },
