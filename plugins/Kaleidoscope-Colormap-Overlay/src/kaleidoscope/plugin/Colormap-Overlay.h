@@ -119,6 +119,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
+  EventHandlerResult onFocusEvent(const char *input);
 
   ~ColormapOverlay() {
     if (overlays_ != nullptr) {
@@ -128,7 +129,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
  private:
   static uint16_t map_base_;
-  Overlay *overlays_;
+  Overlay *overlays_;  // TODO: store overlays in EEPROM
   uint8_t overlay_count_;
   cRGB selectedColor;
 
