@@ -66,13 +66,17 @@ void setup() {
 
   LONGPRESS(
     // Key at 1,0 should produce a Z on long press on all layers
-    kaleidoscope::plugin::LongPressKey(   KeyAddr(1, 0), Key_Z),
+    kaleidoscope::plugin::LongPressKey(kaleidoscope::plugin::longpress::ALL_LAYERS,
+                                       KeyAddr(1, 0), Key_Z),
     // Keys generating a B should produce a Y on long press on all layers
-    kaleidoscope::plugin::LongPressKey(   Key_B,         Key_Y),
+    kaleidoscope::plugin::LongPressKey(kaleidoscope::plugin::longpress::ALL_LAYERS,
+                                       Key_B,         Key_Y),
     // Key at 1,2 should produce a X on long press on the first layer
-    kaleidoscope::plugin::LongPressKey(0, KeyAddr(1, 2), Key_X),
+    kaleidoscope::plugin::LongPressKey(0,
+                                       KeyAddr(1, 2), Key_X),
     // Keys generating a D should produce a W on long press on the second layer
-    kaleidoscope::plugin::LongPressKey(1, Key_D,         Key_W),
+    kaleidoscope::plugin::LongPressKey(1,
+                                       Key_D,         Key_W),
   )
 }
 

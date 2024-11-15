@@ -49,9 +49,9 @@ void setup() {
     // ATTENTION! The order matters here! The first matching entry wins.
 
     // overrides the long-press for a logical Key (in the next line)
-    kaleidoscope::plugin::LongPressKey(KeyAddr(1, 2), Key_Z),
+    kaleidoscope::plugin::LongPressKey(kaleidoscope::plugin::longpress::ALL_LAYERS, KeyAddr(1, 2), Key_Z),
     // overrides the auto-shift functionality
-    kaleidoscope::plugin::LongPressKey(Key_B,         Key_Y),
+    kaleidoscope::plugin::LongPressKey(kaleidoscope::plugin::longpress::ALL_LAYERS, Key_B,         Key_Y),
   )
 }
 
