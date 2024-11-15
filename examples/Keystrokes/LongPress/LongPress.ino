@@ -77,7 +77,7 @@ void setup() {
 
     // instead of shifting, produce a backslash on long pressing slash on
     // all layers
-    kaleidoscope::plugin::LongPressKey(Key_Slash, Key_Backslash), )
+    kaleidoscope::plugin::LongPressKey(kaleidoscope::plugin::longpress::ALL_LAYERS, Key_Slash, Key_Backslash), )
 
   // Set the LongPress trigger time to 150ms:
   LongPress.setTimeout(150);

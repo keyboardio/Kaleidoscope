@@ -26,7 +26,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key
 #include "kaleidoscope/plugin.h"                // for Plugin
 
-#include "kaleidoscope/plugin/AutoShift.h"  // for longpress::AutoShiftCategories
+#include "kaleidoscope/plugin/LongPressAutoShift.h"  // for longpress::AutoShiftCategories
 #include "kaleidoscope/plugin/LongPressConstants.h"  // for ALL_LAYERS
 
 namespace kaleidoscope {
@@ -49,28 +49,14 @@ struct LongPressKey {
   // This is the constructor that should be used when creating a
   // LongPressKey object for a physical KeyAddr in the PROGMEM array
   // that will be used by explicit mappings (i.e. in the `LONGPRESS()`
-  // macro) on all layers (a shortcut for specifying ALL_LAYERS).
-  constexpr LongPressKey(KeyAddr addr, Key longpress_result)
-    : layer(kaleidoscope::plugin::longpress::ALL_LAYERS), addr(addr), key(Key_Transparent), longpress_result(longpress_result) {}
-
-  // This is the constructor that should be used when creating a
-  // LongPressKey object for a physical KeyAddr in the PROGMEM array
-  // that will be used by explicit mappings (i.e. in the `LONGPRESS()`
-  // macro) on a specific layer.
+  // macro).
   constexpr LongPressKey(uint8_t layer, KeyAddr addr, Key longpress_result)
     : layer(layer), addr(addr), key(Key_Transparent), longpress_result(longpress_result) {}
 
   // This is the constructor that should be used when creating a
   // LongPressKey object for a logical Key in the PROGMEM array
   // that will be used by explicit mappings (i.e. in the `LONGPRESS()`
-  // macro) on all layers (a shortcut for specifying ALL_LAYERS).
-  constexpr LongPressKey(Key key, Key longpress_result)
-    : layer(kaleidoscope::plugin::longpress::ALL_LAYERS), addr(KeyAddr::none()), key(key), longpress_result(longpress_result) {}
-
-  // This is the constructor that should be used when creating a
-  // LongPressKey object for a logical Key in the PROGMEM array
-  // that will be used by explicit mappings (i.e. in the `LONGPRESS()`
-  // macro) on a specific layer.
+  // macro).
   constexpr LongPressKey(uint8_t layer, Key key, Key longpress_result)
     : layer(layer), addr(KeyAddr::none()), key(key), longpress_result(longpress_result) {}
 
