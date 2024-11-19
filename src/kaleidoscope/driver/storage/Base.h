@@ -59,6 +59,13 @@ class Base {
 
   void setup() {}
   void commit() {}
+
+  void erase() {
+    for (uint16_t i = 0; i < length(); i++) {
+      update(i, _StorageProps::uninitialized_byte);
+    }
+    commit();
+  }
 };
 
 }  // namespace storage
