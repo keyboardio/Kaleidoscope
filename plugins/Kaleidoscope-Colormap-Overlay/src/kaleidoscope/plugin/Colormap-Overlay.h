@@ -35,6 +35,9 @@ struct Overlay {
   KeyAddr addr;
   uint8_t palette_index;
 
+  // Default constructor required for array allocation
+  constexpr Overlay() : layer(0), addr(KeyAddr::none()), palette_index(0) {}
+
   // This is the constructor that should be used when creating a Overlay that
   // will be used by ColormapOverlay
   constexpr Overlay(int8_t layer, KeyAddr k, uint8_t palette_index)
@@ -50,24 +53,58 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   // as a separate parameter.
   template<uint8_t _overlay_count>
   void configureOverlays(Overlay const (&overlays)[_overlay_count]) {
-    overlays_      = overlays;
+    // Delete old overlays if they exist
+    if (overlays_ != nullptr) {
+      delete[] overlays_;
+    }
+
+    // Allocate and copy new overlays
+    Overlay* new_overlays = new Overlay[_overlay_count];
+    for (uint8_t i = 0; i < _overlay_count; i++) {
+      new_overlays[i] = overlays[i];
+    }
+
+    overlays_ = new_overlays;
     overlay_count_ = _overlay_count;
   }
 
   template<uint8_t _layer_count>
   void configureOverlays(uint8_t **overlays) {
-    overlays_      = nullptr;
-    overlay_count_ = 0;
+    // First count how many overlays we'll need
+    uint8_t count = 0;
     for (int layer_ = 0; layer_ < _layer_count; layer_++) {
       for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
         int8_t color_index_ = overlays[layer_][key_index_];
         if (color_index_ >= 0 && color_index_ < ::LEDPaletteTheme.getPaletteSize() &&
             color_index_ != no_color_overlay) {
-          overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
-          overlay_count_++;
+          count++;
         }
       }
     }
+
+    // Allocate memory for the overlays
+    Overlay* new_overlays = new Overlay[count];
+    uint8_t overlay_index = 0;
+
+    // Fill in the overlays
+    for (int layer_ = 0; layer_ < _layer_count; layer_++) {
+      for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
+        int8_t color_index_ = overlays[layer_][key_index_];
+        if (color_index_ >= 0 && color_index_ < ::LEDPaletteTheme.getPaletteSize() &&
+            color_index_ != no_color_overlay) {
+          new_overlays[overlay_index++] = Overlay(layer_, KeyAddr(key_index_), color_index_);
+        }
+      }
+    }
+
+    // Delete old overlays if they exist
+    if (overlays_ != nullptr) {
+      delete[] overlays_;
+    }
+
+    // Update member variables
+    overlays_ = new_overlays;
+    overlay_count_ = count;
   }
   // A wildcard value for an overlay that applies on every layer.
   static constexpr int8_t layer_wildcard{-1};
@@ -75,6 +112,12 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
+
+  ~ColormapOverlay() {
+    if (overlays_ != nullptr) {
+      delete[] overlays_;
+    }
+  }
 
  private:
   static uint16_t map_base_;
