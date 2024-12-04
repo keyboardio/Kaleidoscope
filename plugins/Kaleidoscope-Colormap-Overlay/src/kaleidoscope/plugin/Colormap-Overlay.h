@@ -78,7 +78,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
  private:
   static uint16_t map_base_;
-  Overlay const *overlays_;
+  Overlay* overlays_;  
   uint8_t overlay_count_;
   cRGB selectedColor;
 
