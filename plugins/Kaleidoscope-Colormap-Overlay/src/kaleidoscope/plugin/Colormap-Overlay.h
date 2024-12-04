@@ -36,7 +36,8 @@ struct Overlay {
   uint8_t palette_index;
 
   // Default constructor required for array allocation
-  constexpr Overlay() : layer(0), addr(KeyAddr::none()), palette_index(0) {}
+  constexpr Overlay()
+    : layer(0), addr(KeyAddr::none()), palette_index(0) {}
 
   // This is the constructor that should be used when creating a Overlay that
   // will be used by ColormapOverlay
@@ -59,12 +60,12 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     }
 
     // Allocate and copy new overlays
-    Overlay* new_overlays = new Overlay[_overlay_count];
+    Overlay *new_overlays = new Overlay[_overlay_count];
     for (uint8_t i = 0; i < _overlay_count; i++) {
       new_overlays[i] = overlays[i];
     }
 
-    overlays_ = new_overlays;
+    overlays_      = new_overlays;
     overlay_count_ = _overlay_count;
   }
 
@@ -83,7 +84,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     }
 
     // Allocate memory for the overlays
-    Overlay* new_overlays = new Overlay[count];
+    Overlay *new_overlays = new Overlay[count];
     uint8_t overlay_index = 0;
 
     // Fill in the overlays
@@ -103,7 +104,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     }
 
     // Update member variables
-    overlays_ = new_overlays;
+    overlays_      = new_overlays;
     overlay_count_ = count;
   }
   // A wildcard value for an overlay that applies on every layer.
