@@ -52,7 +52,7 @@ from os import PathLike
 from pathlib import Path
 from shutil import copy2, copytree, rmtree
 
-from sphinx.util import status_iterator
+from sphinx.util.display import status_iterator
 
 def find_examples_docs(src_dir, target_dir):
     """Yield tuples of (source, dest) filenames.
