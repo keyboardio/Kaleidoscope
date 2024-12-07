@@ -10,7 +10,7 @@ This package contains the "core" of Kaleidoscope and a number of [example firmwa
 
 If you want to use Kaleidoscope to customize or compile a "sketch" to power a supported keyboard, the fastest way to get started is to use the Arduino IDE. You can find [setup instructions](https://kaleidoscope.readthedocs.io/en/latest/quick_start.html) on [kaleidoscope.readthedocs.io](https://kaleidoscope.readthedocs.io)
 
-If you prefer to work from the command line or intend to work on Kaleidscope itself, please follow the instructions below. It's important to note that the Arduino IDE needs the source code laid out in a slightly different arrangement than you'll find in this repository. If you want to use the Arduino IDE, you should follow [these instructions](https://kaleidoscope.readthedocs.io/en/latest/quick_start.html) instead. Even if you're using the command line, you may want to refer to the docs for troubleshooting steps.
+If you prefer to work from the command line or intend to work on Kaleidoscope itself, please follow the instructions below. It's important to note that the Arduino IDE needs the source code laid out in a slightly different arrangement than you'll find in this repository. If you want to use the Arduino IDE, you should follow [these instructions](https://kaleidoscope.readthedocs.io/en/latest/quick_start.html) instead. Even if you're using the command line, you may want to refer to the docs for troubleshooting steps.
 
 # Use git to check out a copy of Kaleidoscope
 
