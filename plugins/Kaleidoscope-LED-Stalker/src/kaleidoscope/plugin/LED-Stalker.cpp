@@ -83,9 +83,15 @@ Haunt::Haunt(const cRGB highlight_color) {
 }
 
 cRGB Haunt::compute(uint8_t *step) {
-  cRGB color = CRGB((uint8_t)min(*step * highlight_color_.r / 255, 255),
-                    (uint8_t)min(*step * highlight_color_.g / 255, 255),
-                    (uint8_t)min(*step * highlight_color_.b / 255, 255));
+  // Calculate scaled RGB values, capped at 255
+  uint16_t r = (*step * highlight_color_.r) / 255;
+  uint16_t g = (*step * highlight_color_.g) / 255;
+  uint16_t b = (*step * highlight_color_.b) / 255;
+
+  cRGB color = CRGB(
+    (uint8_t)(r < 255 ? r : 255),
+    (uint8_t)(g < 255 ? g : 255),
+    (uint8_t)(b < 255 ? b : 255));
 
   if (*step >= 0xf0)
     *step -= 1;
