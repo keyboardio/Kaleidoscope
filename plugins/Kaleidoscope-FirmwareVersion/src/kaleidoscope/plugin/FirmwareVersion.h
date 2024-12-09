@@ -41,9 +41,9 @@ class FirmwareVersion : public Plugin {
       return EventHandlerResult::OK;
 
 #ifdef KALEIDOSCOPE_FIRMWARE_VERSION
-    ::Focus.send(F(KALEIDOSCOPE_FIRMWARE_VERSION));
+    ::Focus.sendRaw(F(KALEIDOSCOPE_FIRMWARE_VERSION));
 #else
-    ::Focus.send(F("0.0.0"));
+    ::Focus.sendRaw(F("0.0.0"));
 #endif
 
     return EventHandlerResult::OK;
