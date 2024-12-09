@@ -18,6 +18,8 @@
 
 #include <cstddef>  // for size_t
 #include <cstdint>  // for uint8_t
+#include <vector>
+#include <string>
 
 #include "kaleidoscope/KeyAddr.h"  // for KeyAddr
 #include "testing/gtest.h"         // IWYU pragma: keep
@@ -36,6 +38,23 @@ class SimHarness {
   void Release(uint8_t row, uint8_t col);
   void SetCycleTime(uint8_t millis);
   uint8_t CycleTime() const;
+
+  // Serial support
+  void ProcessSerialInput();
+  void SendString(const std::string &str) {
+    SendSerialData(reinterpret_cast<const uint8_t *>(str.c_str()), str.length());
+  }
+  void SendSerialData(const uint8_t *data, size_t length);
+  std::vector<uint8_t> GetSerialOutput();
+  std::string GetSerialOutputAsString() {
+    auto output = GetSerialOutput();
+    return std::string(output.begin(), output.end());
+  }
+
+  // Focus protocol helpers
+  std::string SendFocusCommand(const std::string &command);
+  static bool IsFocusResponse(const std::string &response);
+  static std::string StripFocusTerminator(const std::string &response);
 
  private:
   uint8_t millis_per_cycle_ = 1;
