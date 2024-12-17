@@ -75,6 +75,63 @@ uint8_t SimHarness::CycleTime() const {
   return millis_per_cycle_;
 }
 
+// Serial support implementation
+void SimHarness::ProcessSerialInput() {
+  // This will be called by RunCycle() to process any pending serial input
+  // The actual processing is handled by the virtual HardwareSerial implementation
+}
+
+void SimHarness::SendSerialData(const uint8_t *data, size_t length) {
+  // Get direct access to the virtual device's serial port
+  auto &serial = Serial;
+  serial.injectInput(data, length);
+}
+
+std::vector<uint8_t> SimHarness::GetSerialOutput() {
+  // Get direct access to the virtual device's serial port
+  auto &serial = Serial;
+  return serial.getOutputBuffer();
+}
+
+// Focus protocol helper implementations
+std::string SimHarness::SendFocusCommand(const std::string &command) {
+  // Ensure command ends with newline
+  std::string cmd = command;
+  if (cmd.empty() || cmd.back() != '\n') {
+    cmd += '\n';
+  }
+
+  // Send command
+  SendString(cmd);
+
+  // Run cycles until we get a complete response
+  // (ends with \r\n.\r\n)
+  std::string response;
+  size_t max_cycles = 100;  // Prevent infinite loops
+  size_t cycles     = 0;
+
+  while (cycles++ < max_cycles) {
+    RunCycle();
+    response = GetSerialOutputAsString();
+    if (IsFocusResponse(response)) break;
+  }
+
+  return StripFocusTerminator(response);
+}
+
+bool SimHarness::IsFocusResponse(const std::string &response) {
+  static const std::string terminator = "\r\n.\r\n";
+  return response.length() >= terminator.length() &&
+         response.substr(response.length() - terminator.length()) == terminator;
+}
+
+std::string SimHarness::StripFocusTerminator(const std::string &response) {
+  static const std::string terminator = "\r\n.\r\n";
+  if (IsFocusResponse(response)) {
+    return response.substr(0, response.length() - terminator.length());
+  }
+  return response;
+}
 
 }  // namespace testing
 }  // namespace kaleidoscope
