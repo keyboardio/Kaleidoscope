@@ -231,10 +231,8 @@ EventHandlerResult FocusEEPROMCommand::onFocusEvent(const char *input) {
   } else if (::Focus.inputMatchesCommand(input, cmd_free)) {
     ::Focus.send(Runtime.storage().length() - ::EEPROMSettings.used());
   } else if (::Focus.inputMatchesCommand(input, cmd_erase)) {
-    for (uint16_t i = 0; i < Runtime.storage().length(); i++) {
-      Runtime.storage().update(i, EEPROMSettings::EEPROM_UNINITIALIZED_BYTE);
-    }
-    Runtime.storage().commit();
+
+    Runtime.storage().erase();
     Runtime.device().rebootBootloader();
   } else {
     return EventHandlerResult::OK;

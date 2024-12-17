@@ -46,6 +46,12 @@ class GD32Flash : public EEPROMClass<_StorageProps::length> {
     }
     return true;
   }
+  void erase() {
+    for (uint16_t i = 0; i < this->length(); i++) {
+      this->update(i, _StorageProps::uninitialized_byte);
+    }
+    this->commit();
+  }
 };
 
 }  // namespace storage
