@@ -180,7 +180,7 @@ compile: kaleidoscope-hardware-configured check-rosetta
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
-	  --output-dir "${OUTPUT_PATH}" \
+	  --output-dir "${OUTPUT_PATH}" -j 0 \
 	  "${SKETCH_FILE_PATH}"
 ifeq ($(LIBONLY),)
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.hex" "${HEX_FILE_PATH}"
