@@ -173,13 +173,14 @@ endif
 
 compile: kaleidoscope-hardware-configured check-rosetta
 	-$(QUIET) install -d "${OUTPUT_PATH}"
-	$(QUIET) $(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
+	$(QUIET) \
+	ARDUINO_BUILD_CACHE_EXTRA_PATHS="${BUILD_PATH}" \
+	$(ARDUINO_CLI) compile --fqbn "${FQBN}" ${ARDUINO_VERBOSE} ${ccache_wrapper_property} ${local_cflags_property} \
 	  ${_arduino_local_libraries_prop} ${_ARDUINO_CLI_COMPILE_CUSTOM_FLAGS} ${kaleidoscope_board_config}\
 	  --library "${KALEIDOSCOPE_DIR}" \
 	  --libraries "${KALEIDOSCOPE_DIR}/plugins/" \
 	  --build-path "${BUILD_PATH}" \
 	  --output-dir "${OUTPUT_PATH}" \
-	  --build-cache-path "${CORE_CACHE_PATH}" \
 	  "${SKETCH_FILE_PATH}"
 ifeq ($(LIBONLY),)
 	$(QUIET) cp "${BUILD_PATH}/${SKETCH_FILE_NAME}.hex" "${HEX_FILE_PATH}"
