@@ -32,7 +32,7 @@ pathsafe_fqbn   := $(subst :,_,${FQBN})
 build_root       := ${top_dir}/_build/$(pathsafe_fqbn)
 
 
-export KALEIDOSCOPE_TEMP_PATH := ${build_root}/kaleidoscope
+export KALEIDOSCOPE_TEMP_PATH := ${build_root}/${testcase}/kaleidoscope-temp
 
 include_plugins_dir := -I${top_dir}/plugins \
 
