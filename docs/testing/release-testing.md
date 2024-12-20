@@ -2,7 +2,7 @@
 
 Before a new release of Kaleidoscope, the following test process should be run through on all supported operating systems.
 
-Always run all of the [automated tests](automated-testing.md) to verify there are no regressions.
+Always run all of the [running tests](automated-testing.md) to verify there are no regressions.
 
 (As of August 2017, this whole thing really applies to Model01-Firmware, but we hope to generalize it to Kaleidoscope)
 
