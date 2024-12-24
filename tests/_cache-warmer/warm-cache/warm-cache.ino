@@ -15,7 +15,6 @@
  */
 
 #include <Kaleidoscope.h>
-#include "generated-all-plugins.h"
 // *INDENT-OFF*
 KEYMAPS(
     [0] = KEYMAP_STACKED

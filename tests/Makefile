@@ -62,7 +62,7 @@ cmake-clean:
 run-all: run-cache-warmer run-other-tests aggregate-test-results
 
 .PHONY: run-cache-warmer
-run-cache-warmer: generate-all-plugins-header $(filter ./_cache-warmer/%,${TESTS})
+run-cache-warmer: $(filter ./_cache-warmer/%,${TESTS})
 
 .PHONY: run-other-tests
 run-other-tests: run-cache-warmer
