@@ -30,8 +30,6 @@ to figure out our layout!
 
 Applies a color effect to the keyboard, inspired by the popular Miami keyset:
 
-![Miami](extras/MiamiEffect.png)
-
 Alphas, punctuation, numbers, the space bar, the numbers and the dot on the
 keypad, and half the function keys will be in a cyan-ish color, the rest in
 magenta.
@@ -39,8 +37,6 @@ magenta.
 ### `JukeboxEffect`
 
 Applies a color effect to the keyboard, inspired by the JukeBox keyset:
-
-![Jukebox](extras/JukeboxEffect.png)
 
 Alphas, punctuation, numbers, the space bar, the numbers and the dot on the
 keypad, and half the function keys will be in a beige-ish color, the rest in
