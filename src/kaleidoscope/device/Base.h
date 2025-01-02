@@ -133,6 +133,14 @@ class Base {
   }
 
   /**
+  * @returns the number of LEDs on the keyboard.
+  */
+  static constexpr uint8_t numLEDs() {
+    return led_count;
+  }
+
+
+  /**
    * Returns the HID driver used by the keyboard.
    */
   HID &hid() {
