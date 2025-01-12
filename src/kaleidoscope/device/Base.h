@@ -43,8 +43,9 @@
 #include "kaleidoscope/driver/storage/None.h"     // for None
 #include "kaleidoscope/driver/ble/None.h"         // for None
 
-#include "kaleidoscope/driver/speaker/Base.h"  // for BaseProps
-#include "kaleidoscope/driver/speaker/None.h"  // for None
+#include "kaleidoscope/driver/battery_gauge/None.h"  // for None
+#include "kaleidoscope/driver/speaker/Base.h"        // for BaseProps
+#include "kaleidoscope/driver/speaker/None.h"        // for None
 
 
 // Connection mode for host HID and Serial
@@ -86,6 +87,8 @@ struct BaseProps {
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
   typedef kaleidoscope::driver::storage::None Storage;
   typedef kaleidoscope::driver::ble::None BLE;
+  typedef kaleidoscope::driver::battery_gauge::BaseProps BatteryGaugeProps;
+  typedef kaleidoscope::driver::battery_gauge::None BatteryGauge;
   typedef kaleidoscope::driver::speaker::BaseProps SpeakerProps;
   typedef kaleidoscope::driver::speaker::None Speaker;
   
@@ -141,6 +144,8 @@ class Base {
   typedef typename _DeviceProps::StorageProps StorageProps;
   typedef typename _DeviceProps::Storage Storage;
   typedef typename _DeviceProps::BLE BLE;
+  typedef typename _DeviceProps::BatteryGaugeProps BatteryGaugeProps;
+  typedef typename _DeviceProps::BatteryGauge BatteryGauge;
   typedef typename _DeviceProps::SpeakerProps SpeakerProps;
   typedef typename _DeviceProps::Speaker Speaker;
 
@@ -208,6 +213,12 @@ class Base {
     return ble_;
   }
 
+  /**
+   * Returns the battery gauge driver
+   */
+  BatteryGauge &batteryGauge() {
+    return battery_gauge_;
+  }
 
   /**
    * Returns the speaker driver
@@ -461,6 +472,8 @@ class Base {
   void setup() {
     bootloader_.setup();
     mcu_.setup();
+
+
     // BLE has to come before HID, because SoftDevice needs initialization
     ble_.setup();
     hid_.setup();
@@ -468,6 +481,8 @@ class Base {
     key_scanner_.setup();
     led_driver_.setup();
     speaker_.setup();
+        // Battery gauge comes before BLE because BLE reports battery level
+    battery_gauge_.setup();
   }
 
   /**
@@ -595,6 +610,7 @@ class Base {
   BLE ble_;
   uint8_t host_connection_mode_;
   uint8_t primary_host_connection_mode_;
+  BatteryGauge battery_gauge_;
   Speaker speaker_;
 };
 
