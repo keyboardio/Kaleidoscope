@@ -41,14 +41,14 @@ using namespace logging;  // NOLINT(build/namespaces)
 
 // For each bit set in 'bitfield', output the corresponding string to 'stream'
 #define FOREACHBIT(bitfield, stream, str0, str1, str2, str3, str4, str5, str6, str7) \
-  if ((bitfield)&1 << 0) stream << str0;                                             \
-  if ((bitfield)&1 << 1) stream << str1;                                             \
-  if ((bitfield)&1 << 2) stream << str2;                                             \
-  if ((bitfield)&1 << 3) stream << str3;                                             \
-  if ((bitfield)&1 << 4) stream << str4;                                             \
-  if ((bitfield)&1 << 5) stream << str5;                                             \
-  if ((bitfield)&1 << 6) stream << str6;                                             \
-  if ((bitfield)&1 << 7) stream << str7;
+  if ((bitfield) & 1 << 0) stream << str0;                                           \
+  if ((bitfield) & 1 << 1) stream << str1;                                           \
+  if ((bitfield) & 1 << 2) stream << str2;                                           \
+  if ((bitfield) & 1 << 3) stream << str3;                                           \
+  if ((bitfield) & 1 << 4) stream << str4;                                           \
+  if ((bitfield) & 1 << 5) stream << str5;                                           \
+  if ((bitfield) & 1 << 6) stream << str6;                                           \
+  if ((bitfield) & 1 << 7) stream << str7;
 
 void DefaultHIDReportConsumer::processHIDReport(
   uint8_t id, const void *data, int len, int result) {
