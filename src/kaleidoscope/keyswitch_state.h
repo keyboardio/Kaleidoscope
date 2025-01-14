@@ -28,12 +28,12 @@
  * If you want an event which fires only once when a key is pressed, use
  *   keyToggledOn() or keyToggledOff() (defined below).
  */
-#define keyIsPressed(keyState) ((keyState)&IS_PRESSED)
+#define keyIsPressed(keyState) ((keyState) & IS_PRESSED)
 
 /* keyWasPressed(): This is true if the key was pressed during the previous
      scan cycle, regardless of whether it is pressed or not in this scan cycle.
  */
-#define keyWasPressed(keyState) ((keyState)&WAS_PRESSED)
+#define keyWasPressed(keyState) ((keyState) & WAS_PRESSED)
 
 /* keyToggledOn(): This is true if the key is newly pressed during this scan
  *   cycle, i.e. was not pressed in the previous scan cycle but is now.
@@ -53,4 +53,4 @@
  * plugin, i.e. it was generated artificially instead of corresponding to a
  * "real" keypress.
  */
-#define keyIsInjected(keyState) ((keyState)&INJECTED)
+#define keyIsInjected(keyState) ((keyState) & INJECTED)
