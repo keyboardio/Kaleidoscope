@@ -117,7 +117,7 @@ class WS2812 {
               w_nop8
 #endif
 #if (w1_nops & 16)
-                w_nop16
+        w_nop16
 #endif
         "       sbrs  %1,7  \n\t"  //  '1' [03] '0' [02]
         "       out   %2,%4 \n\t"  //  '1' [--] '0' [03] - fe-low
@@ -135,7 +135,7 @@ class WS2812 {
               w_nop8
 #endif
 #if (w2_nops & 16)
-                w_nop16
+        w_nop16
 #endif
         "       out   %2,%4 \n\t"  //  '1' [+1] '0' [+1] - fe-high
 #if (w3_nops & 1)
@@ -151,7 +151,7 @@ class WS2812 {
               w_nop8
 #endif
 #if (w3_nops & 16)
-                w_nop16
+        w_nop16
 #endif
 
         "       dec   %0    \n\t"  //  '1' [+2] '0' [+2]
