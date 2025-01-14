@@ -66,8 +66,7 @@ EventHandlerResult Qukeys::onKeyswitchEvent(KeyEvent &event) {
   // If we can't trivially ignore the event, just add it to the queue.
   event_queue_.append(event);
   // In order to prevent overflowing the queue, process it now.
-  while (processQueue())
-    ;
+  while (processQueue());
   // Any event that gets added to the queue gets re-processed later, so we
   // need to abort processing now.
   return EventHandlerResult::ABORT;
@@ -103,8 +102,7 @@ EventHandlerResult Qukeys::afterEachCycle() {
   }
 
   // Process as many events as we can from the queue.
-  while (processQueue())
-    ;
+  while (processQueue());
 
   return EventHandlerResult::OK;
 }
