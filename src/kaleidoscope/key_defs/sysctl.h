@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "kaleidoscope/key_def_constants.h"
 // System control mappings
 
 #define System_PowerDown                        SYSTEM_KEY(HID_SYSTEM_POWER_DOWN, HID_TYPE_OSC)
