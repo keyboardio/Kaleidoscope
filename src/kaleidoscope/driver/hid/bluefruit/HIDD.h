@@ -25,6 +25,10 @@
 #ifdef ARDUINO_ARCH_NRF52
 
 #include <bluefruit.h>
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "task.h"
+#include "semphr.h"
 
 namespace kaleidoscope {
 namespace driver {
@@ -43,11 +47,112 @@ enum {
   RID_ABS_MOUSE,
 };
 
+enum class ReportType {
+  BootKeyboard,
+  BootMouse,
+  Input
+};
+
+struct QueuedReport {
+  ReportType type;
+  uint8_t report_id;
+  uint8_t data[32];  // Max HID report size
+  uint8_t length;
+  uint16_t retries_left;
+};
+
 class HIDD : public BLEHidGeneric {
  public:
   HIDD();
-  err_t begin();
+  err_t begin() override;
+  void end();
   void setLEDcb(BLECharacteristic::write_cb_t fp);
+
+  /**
+   * Send a boot keyboard report with retries
+   * @param data Report data
+   * @param length Length of report
+   * @return true if report was successfully queued
+   */
+  bool sendBootKeyboardReport(const void *data, uint8_t length);
+
+  /**
+   * Send a boot mouse report with retries
+   * @param data Report data
+   * @param length Length of report
+   * @return true if report was successfully queued
+   */
+  bool sendBootMouseReport(const void *data, uint8_t length);
+
+  /**
+   * Send an input report with retries
+   * @param report_id Report ID
+   * @param data Report data
+   * @param length Length of report
+   * @return true if report was successfully queued
+   */
+  bool sendInputReport(uint8_t report_id, const void *data, uint8_t length);
+
+  /**
+   * Clear all pending reports from the queue
+   * Called when disconnecting or changing connection state
+   */
+  void clearReportQueue();
+
+  /**
+   * Check if there are any reports waiting to be sent
+   * @return true if there are reports in the queue
+   */
+  bool hasQueuedReports() const;
+
+  /**
+   * Start processing reports from the queue
+   * Called when a BLE connection is established
+   */
+  void startReportProcessing();
+
+  /**
+   * Stop processing reports from the queue
+   * Called when BLE connection is lost or terminated
+   */
+  void stopReportProcessing();
+
+ private:
+  static constexpr size_t QUEUE_SIZE               = 512;  // Absurdly large queue size
+  static constexpr uint16_t MAX_BLE_NOTIFY_RETRIES = 500;
+  static constexpr uint8_t RETRY_DELAY_MS          = 10;  // Time between retries
+  static constexpr uint8_t KEYSTROKE_INTERVAL_MS   = 1;
+  ;  // Min time between keystrokes
+  // Queue storage and handle
+  StaticQueue_t queue_buffer_;
+  uint8_t queue_storage_[QUEUE_SIZE * sizeof(QueuedReport)];
+  QueueHandle_t queue_handle_;
+
+  // Task management
+  static TaskHandle_t report_task_handle_;
+
+  /**
+   * FreeRTOS task function that processes queued reports
+   * Runs continuously but sleeps when no reports are available
+   * @param pvParameters Pointer to the HIDD instance
+   */
+  static void processReportQueue_(void *pvParameters);
+
+  /**
+   * Process the next report in the queue
+   * @return true if report was sent successfully
+   */
+  bool processNextReport_();
+
+  /**
+   * Queue a report for sending with retry logic
+   * @param type Type of report (Boot Keyboard, Boot Mouse, or Input)
+   * @param report_id Report ID (used for Input reports)
+   * @param data Report data
+   * @param length Length of report
+   * @return true if report was successfully queued
+   */
+  bool queueReport_(ReportType type, uint8_t report_id, const void *data, uint8_t length);
 };
 
 extern HIDD blehid;
