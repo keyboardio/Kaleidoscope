@@ -618,4 +618,59 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
-                     END OF TERMS AND CONDITIONS
+
+
+Additional Permissions:
+
+As an additional permission under Section 7 of the GNU General Public
+License Version 3, you may link this software against a Vendor-provided 
+Hardware Specific Software Module under the terms of the MCU Vendor 
+Firmware Library Additional Permission Version 1.0.
+
+
+The MCU Vendor Firmware Library Additional Permission Version 1.0
+
+This Device Firmware Library Additional Permission (the "Permission")
+is an additional permission under section 7 of the GNU General
+Public License, version 3 ("GPLv3"). It applies to a given work
+that bears a notice placed by the copyright holder(s) of the work
+stating that the file is governed by GPLv3 along with this Permission.
+
+A. Definitions.
+
+An "Affiliate" is any entity that you control, that you are controlled
+by, that is under common control with you, or in which you have a
+substantial financial interest, or is the successor to or assignee
+of such an entity.
+
+A "Hardware Specific Software Module" is object code (a) that is
+provided by the Manufacturer of a Third-Party Hardware Component
+to interface with and/or control that component, (b) for which
+neither you nor your Affiliates are able to obtain Corresponding
+Source, and (c) that is equally available under substantially similar
+terms for all products  that incorporate the Third-Party Hardware
+Component.
+
+A "Manufacturer" is any entity that is not you or your Affiliate,
+that manufactures Third-Party Hardware Components.
+
+A "Third-Party Hardware Component" is a physical computing component
+that is (a) primarily designed for incorporation into a User Product,
+and (b) produced by a Manufacturer.
+
+B. Grant of Additional Permission.
+
+If you propagate a covered work formed by combining a Hardware
+Specific Software Module with the Program, you are not required to
+convey Corresponding Source for the Hardware Specific Software
+Module as otherwise required by GPLv3§6.
+
+  C. No Weakening of Copyleft.
+
+The availability of this Additional Permission does not imply any
+general presumption that third-party software is unaffected by the
+copyleft requirements of this License. For example, you are still
+required to convey Corresponding Source under GPLv3§6 for any object
+code in the covered work that is not the Hardware Specific Software
+Module.
+
