@@ -149,7 +149,7 @@ Stream &BLEBluefruit::serialPort() {
 
 void BLEBluefruit::setBatteryLevel(uint8_t level) {
   if (level > 100) level = 100;
-  blebas.write(level);
+  blebas.notify(level);
 }
 
 void BLEBluefruit::selectDevice(uint8_t device_id) {
