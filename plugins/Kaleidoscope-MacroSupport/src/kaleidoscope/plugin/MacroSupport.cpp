@@ -82,6 +82,13 @@ void MacroSupport::tap(Key key) const {
   // releasing the key after pressing it. It is possible for some other plugin
   // to insert an event in between, but very unlikely.
   Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), press_state, key});
+  // Because some HID implementations coalesce reports sent within a short
+  // period of time, we need to insert a small delay between programmatic press and
+  // release events.
+  // In particular, Windows BLE HID can turn a press and release inside the same
+  // transmission interval into a no-op, causing dropped keystrokes.
+
+  delay(25);
   Runtime.handleKeyEvent(KeyEvent{KeyAddr::none(), release_state, key});
 }
 
