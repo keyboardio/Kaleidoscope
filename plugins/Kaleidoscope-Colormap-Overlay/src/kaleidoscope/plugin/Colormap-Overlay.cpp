@@ -30,6 +30,7 @@
 #include "kaleidoscope/key_defs.h"              // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include <Kaleidoscope-FocusSerial.h>           // for Focus
 #include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
 
 namespace kaleidoscope {
