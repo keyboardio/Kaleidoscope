@@ -112,7 +112,25 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
     return EventHandlerResult::EVENT_CONSUMED;
   }
 
-  // TODO: read all input, loop over all layers and keys, for each read specified index and when it's >=0 store overlay in EEPROM
+  overlays_      = nullptr;
+  overlay_count_ = 0;
+  uint16_t i     = 0;
+  while (!::Focus.isEOL() && (i < (uint16_t)Runtime.device().numKeys() * layer_count)) {
+    int8_t color_index_;
+
+    // Ref: plugins/Kaleidoscope-FocusSerial/src/kaleidoscope/plugin/FocusSerial.h:99-115
+    // -> No overload for signed integers
+    // Ref: src/kaleidoscope/device/Base.h:90-92
+    // -> parseInt() seems to support signed values?
+    ::Focus.read(color_index_);
+    if (color_index_ >= 0) {
+      uint8_t key_index_ = i % Runtime.device().numKeys();
+      uint8_t layer_     = (i - key_index_) / Runtime.device().numKeys();
+
+      overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
+      overlay_count_++;
+    }
+  }
   Runtime.storage().commit();
 
   ::LEDControl.refreshAll();
