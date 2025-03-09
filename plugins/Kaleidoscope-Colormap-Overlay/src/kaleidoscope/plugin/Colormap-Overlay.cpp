@@ -99,11 +99,12 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
     return EventHandlerResult::OK;
 
   if (::Focus.isEOL()) {
-    for (uint8_t layer = 0; layer < defaultcolormap::colormap_layers; layer++) {
-      for (int8_t i = 0; i < Runtime.device().numKeys(); i++) {
+    for (uint8_t layer = 0; layer < layer_count; layer++) {
+      for (int8_t key_index_ = 0; key_index_ < Runtime.device().numKeys(); key_index_++) {
+        KeyAddr k = KeyAddr(key_index_);
         for (uint8_t overlay_index{0}; overlay_index < overlay_count_; ++overlay_index) {
           Overlay overlay = overlays_[overlay_index];
-          if ((overlay.addr == k) && (overlay.layer == top_layer)) {
+          if ((overlay.addr == k) && (overlay.layer == layer)) {
             ::Focus.send(overlay.palette_index);
           }
         }

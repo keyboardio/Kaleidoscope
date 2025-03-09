@@ -79,8 +79,8 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   void configureOverlays(uint8_t **overlays) {
     // First count how many overlays we'll need
     uint8_t count = 0;
-    for (int layer_ = 0; layer_ < _layer_count; layer_++) {
-      for (int key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
+    for (uint8_t layer_ = 0; layer_ < _layer_count; layer_++) {
+      for (uint8_t key_index_ = 0; key_index_ < kaleidoscope_internal::device.matrix_rows * kaleidoscope_internal::device.matrix_columns; key_index_++) {
         int8_t color_index_ = overlays[layer_][key_index_];
         if (color_index_ >= 0 && color_index_ < ::LEDPaletteTheme.getPaletteSize() &&
             color_index_ != no_color_overlay) {
@@ -113,6 +113,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
     overlays_      = new_overlays;
     overlay_count_ = count;
   }
+
   // A wildcard value for an overlay that applies on every layer.
   static constexpr int8_t layer_wildcard{-1};
   static constexpr int8_t no_color_overlay{-1};
