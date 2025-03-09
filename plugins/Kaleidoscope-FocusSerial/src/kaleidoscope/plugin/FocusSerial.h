@@ -118,6 +118,12 @@ class FocusSerial : public kaleidoscope::Plugin {
   void read(uint16_t &u16) {
     u16 = Runtime.serialPort().parseInt();
   }
+  void read(int8_t &i8) {
+    i8 = Runtime.serialPort().parseInt();
+  }
+  void read(int16_t &i16) {
+    i16 = Runtime.serialPort().parseInt();
+  }
 
   bool isEOL();
 
