@@ -94,9 +94,9 @@ cRGB Haunt::compute(uint8_t *step) {
   uint16_t b = (*step * highlight_color_.b) / 255;
 
   cRGB color = CRGB(
-    (uint8_t)(r < 255 ? r : 255),
-    (uint8_t)(g < 255 ? g : 255),
-    (uint8_t)(b < 255 ? b : 255));
+    (r < 255 ? (uint8_t)r : 255),
+    (g < 255 ? (uint8_t)g : 255),
+    (b < 255 ? (uint8_t)b : 255));
 
   if (*step >= 0xf0)
     *step -= 1;
