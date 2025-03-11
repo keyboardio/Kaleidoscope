@@ -1,6 +1,6 @@
 set noparent
 
-extensions=cpp,h,ino
+extensions=cpp,h,ino,c,hpp
 
 filter=-build/include
 filter=-legal/copyright
