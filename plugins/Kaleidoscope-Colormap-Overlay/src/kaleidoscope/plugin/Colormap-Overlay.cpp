@@ -100,7 +100,7 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
 
   if (::Focus.isEOL()) {
     for (uint8_t layer = 0; layer < layer_count; layer++) {
-      for (int8_t key_index_ = 0; key_index_ < Runtime.device().numKeys(); key_index_++) {
+      for (uint8_t key_index_ = 0; key_index_ < Runtime.device().numKeys(); key_index_++) {
         KeyAddr k = KeyAddr(key_index_);
         for (uint8_t overlay_index{0}; overlay_index < overlay_count_; ++overlay_index) {
           Overlay overlay = overlays_[overlay_index];
