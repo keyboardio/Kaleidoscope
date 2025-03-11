@@ -39,9 +39,13 @@ namespace plugin {
 uint16_t LEDPaletteTheme::palette_base_;
 uint8_t LEDPaletteTheme::palette_size_ = 24;
 
-uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
+void LEDPaletteTheme::reservePalette() {
   if (!palette_base_)
     palette_base_ = ::EEPROMSettings.requestSlice(palette_size_ * sizeof(cRGB));
+}
+
+uint16_t LEDPaletteTheme::reserveThemes(uint8_t max_themes) {
+  reservePalette();
 
   return ::EEPROMSettings.requestSlice(max_themes * Runtime.device().led_count / 2);
 }
