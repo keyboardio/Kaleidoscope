@@ -42,12 +42,12 @@ BLEUartWrapper BLEBluefruit::bleuart;
 void BLEBluefruit::setup() {
 
   // Configure MTU and queue sizes. This should happen before 'begin'
-  Bluefruit.configPrphConn(MTU_SIZE,              // MTU size
-                          EVENT_LENGTH,           // Event length
-                          HVN_QUEUE_SIZE,        // HVN queue size
-                          WRITE_CMD_QUEUE_SIZE); // Write CMD queue size
+  Bluefruit.configPrphConn(MTU_SIZE,               // MTU size
+                           EVENT_LENGTH,           // Event length
+                           HVN_QUEUE_SIZE,         // HVN queue size
+                           WRITE_CMD_QUEUE_SIZE);  // Write CMD queue size
 
-//  Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
+  //  Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
 
   if (!Bluefruit.begin()) {
     DEBUG_BLE_MSG("Failed to initialize Bluefruit");
@@ -202,15 +202,13 @@ void BLEBluefruit::stop_advertising_cb() {
 }
 
 void BLEBluefruit::connect_cb(uint16_t conn_handle) {
-  BLEConnection* conn = Bluefruit.Connection(conn_handle);
+  BLEConnection *conn = Bluefruit.Connection(conn_handle);
   if (!conn) {
     DEBUG_BLE_MSG("ERROR: Could not get connection object");
     return;
   }
 
   Bluefruit.Security.setMITM(true);
-
-
 }
 
 void BLEBluefruit::secured_cb(uint16_t conn_handle) {
@@ -230,28 +228,26 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
 
   // Get actual connection parameters
   uint16_t actual_interval = conn->getConnectionInterval();
-  uint16_t actual_latency = conn->getSlaveLatency();
-  uint16_t actual_timeout = conn->getSupervisionTimeout();
-  
+  uint16_t actual_latency  = conn->getSlaveLatency();
+  uint16_t actual_timeout  = conn->getSupervisionTimeout();
+
   DEBUG_BLE_MSG("Connection parameters:");
   char msg[64];
-  snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f)); // Convert from units to ms
+  snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f));  // Convert from units to ms
   DEBUG_BLE_MSG(msg);
   snprintf(msg, sizeof(msg), "Latency: %d", actual_latency);
   DEBUG_BLE_MSG(msg);
-  snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10); // Convert to ms
+  snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10);  // Convert to ms
   DEBUG_BLE_MSG(msg);
 
   // Check if parameters match our requested values
   if ((actual_interval * 1.25f) > CONN_INTERVAL_MAX_MS) {
-    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms",
-             static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
+    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms", static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
     DEBUG_BLE_MSG(msg);
   }
 
   if (actual_latency > SLAVE_LATENCY) {
-    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d",
-             actual_latency, SLAVE_LATENCY);
+    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d", actual_latency, SLAVE_LATENCY);
     DEBUG_BLE_MSG(msg);
   }
 
@@ -276,7 +272,7 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   // TODO(jesse): Move this to "before connection" code
   Bluefruit.Periph.setConnSupervisionTimeout(100);
 
-  //requestConnectionParameter is used to try to force a negotiation after connection is established 
+  //requestConnectionParameter is used to try to force a negotiation after connection is established
 
   conn->requestConnectionParameter(CONN_INTERVAL_MIN_MS, SLAVE_LATENCY, SUPERVISION_TIMEOUT_MS);
 
@@ -285,27 +281,25 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
 
   // Get actual connection parameters
   actual_interval = conn->getConnectionInterval();
-  actual_latency = conn->getSlaveLatency();
-  actual_timeout = conn->getSupervisionTimeout();
-  
+  actual_latency  = conn->getSlaveLatency();
+  actual_timeout  = conn->getSupervisionTimeout();
+
   DEBUG_BLE_MSG("Connection parameters:");
-  snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f)); // Convert from units to ms
+  snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f));  // Convert from units to ms
   DEBUG_BLE_MSG(msg);
   snprintf(msg, sizeof(msg), "Latency: %d", actual_latency);
   DEBUG_BLE_MSG(msg);
-  snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10); // Convert to ms
+  snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10);  // Convert to ms
   DEBUG_BLE_MSG(msg);
 
   // Check if parameters match our requested values
   if ((actual_interval * 1.25f) > CONN_INTERVAL_MAX_MS) {
-    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms",
-             static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
+    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms", static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
     DEBUG_BLE_MSG(msg);
   }
 
   if (actual_latency > SLAVE_LATENCY) {
-    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d",
-             actual_latency, SLAVE_LATENCY);
+    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d", actual_latency, SLAVE_LATENCY);
     DEBUG_BLE_MSG(msg);
   }
 
@@ -314,16 +308,15 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   Hooks::onHostConnectionStatusChanged(current_device_id, kaleidoscope::HostConnectionStatus::Connected);
   kaleidoscope::driver::hid::bluefruit::blehid.clearReportQueue();
   kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
-
 }
 
 void BLEBluefruit::pairing_complete_cb(uint16_t conn_handle, uint8_t auth_status) {
   DEBUG_BLE_MSG("Pairing complete, auth_status = ", auth_status);
 
   // Send pairing status before trying to get connection object
-  Hooks::onHostConnectionStatusChanged(current_device_id, 
-    auth_status == 0 ? kaleidoscope::HostConnectionStatus::PairingSuccess 
-                     : kaleidoscope::HostConnectionStatus::PairingFailed);
+  Hooks::onHostConnectionStatusChanged(current_device_id,
+                                       auth_status == 0 ? kaleidoscope::HostConnectionStatus::PairingSuccess
+                                                        : kaleidoscope::HostConnectionStatus::PairingFailed);
 
   if (auth_status != 0) {
     DEBUG_BLE_MSG("Pairing failed");
@@ -351,19 +344,19 @@ void BLEBluefruit::disconnect_cb(uint16_t conn_handle, uint8_t reason) {
 
   // Error 0x516 indicates advertising failed - this can happen during rapid state changes
   // We track consecutive failures to prevent getting stuck in a retry loop
-  static uint8_t failure_count = 0;
+  static uint8_t failure_count      = 0;
   static uint32_t last_failure_time = 0;
-  
+
   if (reason == 0x516) {
     DEBUG_BLE_MSG("Nordic error 0x516: Advertising procedure failed");
-    
+
     // Reset failure count if more than 5 seconds have passed
     uint32_t now = millis();
     if ((now - last_failure_time) > 5000) {
       failure_count = 0;
     }
     last_failure_time = now;
-    
+
     if (++failure_count >= 3) {
       DEBUG_BLE_MSG("Multiple advertising failures detected, stopping retry loop");
       failure_count = 0;
@@ -420,7 +413,7 @@ void BLEBluefruit::printBLEAddress(const char *prefix, const uint8_t *addr) {
     if (i > 0) Serial.print(":");
   }
   Serial.println("");
-#endif // DEBUG_BLE
+#endif  // DEBUG_BLE
 }
 
 void BLEBluefruit::configureAdvertising() {
@@ -439,9 +432,9 @@ void BLEBluefruit::configureAdvertising() {
   // Configure advertising timing parameters for optimal discovery and power usage
   Bluefruit.Advertising.restartOnDisconnect(true);
   // Interval between 20ms (32*0.625) and 152.5ms (244*0.625)
-  Bluefruit.Advertising.setInterval(32, 244);    
+  Bluefruit.Advertising.setInterval(32, 244);
   // Time in fast advertising mode before switching to slow mode
-  Bluefruit.Advertising.setFastTimeout(30);      
+  Bluefruit.Advertising.setFastTimeout(30);
 
   // Log current advertising configuration for debugging connection issues
   DEBUG_BLE_MSG("Advertising configured for device slot: ", current_device_id);
@@ -467,9 +460,9 @@ void BLEBluefruit::disconnect() {
     uint16_t conn_handle = Bluefruit.connHandle();
     DEBUG_BLE_MSG("Connected to handle: ", conn_handle, " - Initiating disconnect...");
 
-  // Send a BLE-specific null keyboard report before disconnecting to prevent stuck keys
-  kaleidoscope::Runtime.device().setHostConnectionMode(MODE_BLE);
-  kaleidoscope::Runtime.device().hid().keyboard().releaseAllKeys();
+    // Send a BLE-specific null keyboard report before disconnecting to prevent stuck keys
+    kaleidoscope::Runtime.device().setHostConnectionMode(MODE_BLE);
+    kaleidoscope::Runtime.device().hid().keyboard().releaseAllKeys();
 
     if (Bluefruit.disconnect(conn_handle)) {
     } else {
