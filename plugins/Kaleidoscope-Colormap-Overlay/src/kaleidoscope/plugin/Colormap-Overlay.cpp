@@ -38,7 +38,12 @@ namespace plugin {
 uint16_t ColormapOverlay::map_base_;
 
 void ColormapOverlay::setup() {
-  // TODO: check if a call to ::LEDPaletteTheme.reserveThemes() is actually needed
+  // It appears that a call to ::LEDPaletteTheme.reserveThemes() is needed
+  // because it's where palette_base_ gets initialized. Since this plugin (and
+  // possibly others) don't actually use themes, requesting memory for storing
+  // themes doesn't make much sense. Maybe initialisation of palette_base_
+  // could be moved to a setup() method, though maybe the palette should be
+  // split from palette theme altogether?
   map_base_ = ::LEDPaletteTheme.reserveThemes(1);
 }
 
