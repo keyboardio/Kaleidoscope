@@ -30,12 +30,15 @@
 #include "kaleidoscope/key_defs.h"              // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include <Kaleidoscope.h>                       // for Kaleidoscope
 #include <Kaleidoscope-FocusSerial.h>           // for Focus
 #include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
+#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
 
 namespace kaleidoscope {
 namespace plugin {
 uint16_t ColormapOverlay::map_base_;
+uint8_t ColormapOverlay::max_overlays_ = 64;  // TODO(EvyBongers): figure this out. How determine a good maximum?
 
 void ColormapOverlay::setup() {
   // It appears that a call to ::LEDPaletteTheme.reserveThemes() is needed
@@ -45,6 +48,18 @@ void ColormapOverlay::setup() {
   // could be moved to a setup() method, though maybe the palette should be
   // split from palette theme altogether?
   map_base_ = ::LEDPaletteTheme.reserveThemes(1);
+
+  overlays_base_ = ::EEPROMSettings.requestSlice(max_overlays_ * sizeof(Overlay));
+
+  ::EEPROMSettings.seal();
+
+  if (!::EEPROMSettings.isValid()) {
+    // TODO(EvyBongers): figure this out. What to do when the settings are out of sync...
+
+    return;
+  }
+
+  Kaleidoscope.storage().get(overlays_base_, overlays_);
 }
 
 bool ColormapOverlay::hasOverlay(KeyAddr k) {
@@ -135,7 +150,7 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
       uint8_t layer_     = (i - key_index_) / Runtime.device().numKeys();
 
       overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
-      overlay_count_++;
+      overlay_count_++;  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
     }
   }
   Runtime.storage().commit();

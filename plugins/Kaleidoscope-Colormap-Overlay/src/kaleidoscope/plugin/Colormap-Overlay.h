@@ -22,7 +22,8 @@
 
 #pragma once
 
-#include <stdint.h>  // for uint8_t
+#include <Arduino.h>  // for PROGMEM
+#include <stdint.h>   // for uint8_t
 
 #include "kaleidoscope/KeyAddr.h"               // for KeyAddr
 #include "kaleidoscope/device/device.h"         // for cRGB
@@ -35,7 +36,7 @@
 namespace kaleidoscope {
 namespace plugin {
 
-// Data structure for an individual qukey
+// Data structure for an individual color overlay
 struct Overlay {
   uint8_t layer;
   KeyAddr addr;
@@ -58,7 +59,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   // takes as its sole argument an array reference of size `_overlay_count`, so
   // there's no need to use `sizeof` to calculate the correct size, and pass it
   // as a separate parameter.
-  template<uint8_t _overlay_count>
+  template<uint8_t _overlay_count>  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
   void configureOverlays(Overlay const (&overlays)[_overlay_count]) {
     // Delete old overlays if they exist
     if (overlays_ != nullptr) {
@@ -84,7 +85,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
         int8_t color_index_ = overlays[layer_][key_index_];
         if (color_index_ >= 0 && color_index_ < ::LEDPaletteTheme.getPaletteSize() &&
             color_index_ != no_color_overlay) {
-          count++;
+          count++;  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
         }
       }
     }
@@ -130,8 +131,10 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
  private:
   static uint16_t map_base_;
-  Overlay *overlays_;  // TODO: store overlays in EEPROM
-  uint8_t overlay_count_;
+  static uint16_t overlays_base_;
+  static uint8_t max_overlays_;
+  Overlay *overlays_;      // TODO(EvyBongers): does this have to be static in order to work?
+  uint8_t overlay_count_;  // TODO(EvyBongers): if so, this one probably as well?
   cRGB selectedColor;
 
   bool hasOverlay(KeyAddr k);
