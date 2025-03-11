@@ -34,10 +34,8 @@
 
 namespace kaleidoscope {
 namespace plugin {
-uint16_t ColormapOverlay::map_base_;
-
 void ColormapOverlay::setup() {
-  map_base_ = ::LEDPaletteTheme.reserveThemes(1);
+  ::LEDPaletteTheme.reservePalette();
 }
 
 bool ColormapOverlay::hasOverlay(KeyAddr k) {
