@@ -195,9 +195,10 @@ uint8_t twi_readFrom(uint8_t address, uint8_t* data, uint8_t length, uint8_t sen
       TWDR = twi_slarw;
     } while (TWCR & _BV(TWWC));
     TWCR = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE);	// enable INTs, but not START
-  } else
+  } else {
     // send start condition
     TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTA);
+  }
 
   // wait for read operation to complete
   while (TWI_MRX == twi_state) {
@@ -275,9 +276,10 @@ uint8_t twi_writeTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t wait
       TWDR = twi_slarw;
     } while (TWCR & _BV(TWWC));
     TWCR = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE);	// enable INTs, but not START
-  } else
+  } else {
     // send start condition
     TWCR = _BV(TWINT) | _BV(TWEA) | _BV(TWEN) | _BV(TWIE) | _BV(TWSTA);	// enable INTs
+  }
 
   // wait for write operation to complete
   while (wait && (TWI_MTX == twi_state)) {
@@ -418,9 +420,9 @@ ISR(TWI_vect) {
       TWDR = twi_masterBuffer[twi_masterBufferIndex++];
       twi_reply(1);
     } else {
-      if (twi_sendStop)
+      if (twi_sendStop) {
         twi_stop();
-      else {
+      } else {
         twi_inRepStart = true;	// we're gonna send the START
         // don't enable the interrupt. We'll generate the start, but we
         // avoid handling the interrupt until we're in the next transaction,
@@ -459,9 +461,9 @@ ISR(TWI_vect) {
   case TW_MR_DATA_NACK: // data received, nack sent
     // put final byte into buffer
     twi_masterBuffer[twi_masterBufferIndex++] = TWDR;
-    if (twi_sendStop)
+    if (twi_sendStop) {
       twi_stop();
-    else {
+    } else {
       twi_inRepStart = true;	// we're gonna send the START
       // don't enable the interrupt. We'll generate the start, but we
       // avoid handling the interrupt until we're in the next transaction,
