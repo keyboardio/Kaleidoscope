@@ -19,8 +19,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include <Kaleidoscope.h>
 #include <Kaleidoscope-LEDControl.h>
+#include <Kaleidoscope-EEPROM-Settings.h>
 #include <Kaleidoscope-LED-Palette-Theme.h>
 #include <Kaleidoscope-Colormap-Overlay.h>
 
