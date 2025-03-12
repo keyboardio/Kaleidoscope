@@ -38,7 +38,10 @@
 namespace kaleidoscope {
 namespace plugin {
 uint16_t ColormapOverlay::map_base_;
+uint16_t ColormapOverlay::overlays_base_;
 uint8_t ColormapOverlay::max_overlays_ = 64;  // TODO(EvyBongers): figure this out. How determine a good maximum?
+Overlay *ColormapOverlay::overlays_;
+uint8_t ColormapOverlay::overlay_count_;
 
 void ColormapOverlay::setup() {
   // It appears that a call to ::LEDPaletteTheme.reserveThemes() is needed

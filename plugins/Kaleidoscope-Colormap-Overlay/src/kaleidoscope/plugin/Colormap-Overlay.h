@@ -133,8 +133,8 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   static uint16_t map_base_;
   static uint16_t overlays_base_;
   static uint8_t max_overlays_;
-  Overlay *overlays_;      // TODO(EvyBongers): does this have to be static in order to work?
-  uint8_t overlay_count_;  // TODO(EvyBongers): if so, this one probably as well?
+  static Overlay *overlays_;
+  static uint8_t overlay_count_;
   cRGB selectedColor;
 
   bool hasOverlay(KeyAddr k);
