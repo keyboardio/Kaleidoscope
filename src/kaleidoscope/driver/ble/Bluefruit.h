@@ -114,6 +114,13 @@ class BLEBluefruit : public Base {
   static void stopAdvertising();
   static void disconnect();
 
+  // Handle BLE-specific key events
+  kaleidoscope::EventHandlerResult onKeyEvent(kaleidoscope::KeyEvent &event);
+  
+ private:
+  // Helper method to handle BLE operation keys
+  kaleidoscope::EventHandlerResult handleBLEOperationKey(uint8_t keyCode);
+
   // Connection parameter constants for keyboard optimization
   static constexpr uint16_t CONN_INTERVAL_MIN_MS   = 12;
   static constexpr uint16_t CONN_INTERVAL_MAX_MS   = 24;
