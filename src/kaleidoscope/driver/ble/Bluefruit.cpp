@@ -27,6 +27,9 @@
 #include "kaleidoscope/Runtime.h"
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope/host_connection_status.h"
+#include "kaleidoscope/KeyEvent.h"
+#include "kaleidoscope/key_defs/ble.h"
+#include "kaleidoscope/keyswitch_state.h"
 
 namespace kaleidoscope {
 namespace driver {
@@ -486,6 +489,71 @@ void BLEBluefruit::unbond() {
   ble_gap_addr_t peer_addr = conn->getPeerAddr();
   printBLEAddress("Removing bond to: ", peer_addr.addr);
   bond_remove_key(BLE_GAP_ROLE_PERIPH, &peer_addr);
+}
+
+// Event handler for BLE-specific key events
+kaleidoscope::EventHandlerResult BLEBluefruit::onKeyEvent(kaleidoscope::KeyEvent &event) {
+  // Only process key toggled on events
+  if (!keyToggledOn(event.state))
+    return kaleidoscope::EventHandlerResult::OK;
+
+  // Get the keycode first to do a fast check if it's in our range
+  uint8_t keyCode = event.key.getKeyCode();
+  
+  // Quick check if this is a BLE-related key based on keycode ranges
+  // This avoids unnecessary flag checks for non-BLE keys
+  bool is_ble_operation = (keyCode >= BLE_TOGGLE && 
+                           keyCode <= BLE_PAIR);
+  bool is_device_selection = (keyCode >= BLE_SELECT_DEVICE_1 && 
+                             keyCode <= BLE_SELECT_DEVICE_4);
+  
+  if (!is_ble_operation && !is_device_selection)
+    return kaleidoscope::EventHandlerResult::OK;
+
+  // Now check that this is actually a SYNTHETIC key 
+  // (this guards against regular keys with same keycode values)
+  if (!(event.key.getFlags() & SYNTHETIC))
+    return kaleidoscope::EventHandlerResult::OK;
+
+  // Handle BLE operation keys
+  if (is_ble_operation) {
+    return handleBLEOperationKey(keyCode);
+  }
+  
+  // Handle device selection keys
+  if (is_device_selection) {
+    uint8_t device_id = keyCode - BLE_SELECT_DEVICE_1 + 1;
+    selectDevice(device_id);
+    kaleidoscope::Runtime.device().setHostConnectionMode(MODE_BLE);
+    return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+  }
+
+  return kaleidoscope::EventHandlerResult::OK;
+}
+
+// Helper method to handle BLE operation keys
+kaleidoscope::EventHandlerResult BLEBluefruit::handleBLEOperationKey(uint8_t keyCode) {
+  switch (keyCode) {
+    case BLE_TOGGLE:
+      DEBUG_BLE_MSG("BLE key: Toggle connection mode");
+      kaleidoscope::Runtime.device().toggleHostConnectionMode();
+      return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+    
+    case BLE_OFF:
+      DEBUG_BLE_MSG("BLE key: Turn off BLE");
+      stopAdvertising();
+      disconnect();
+      kaleidoscope::Runtime.device().setHostConnectionMode(MODE_USB);
+      return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+    
+    case BLE_PAIR:
+      DEBUG_BLE_MSG("BLE key: Start pairing");
+      startDiscoverableAdvertising();
+      return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
+      
+    default:
+      return kaleidoscope::EventHandlerResult::OK;
+  }
 }
 
 }  // namespace ble
