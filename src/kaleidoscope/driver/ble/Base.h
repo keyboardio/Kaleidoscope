@@ -24,6 +24,12 @@
 #pragma once
 
 #include <Arduino.h>
+#include "kaleidoscope/event_handler_result.h"
+
+// Forward declaration to avoid circular dependency
+namespace kaleidoscope {
+class KeyEvent;
+}
 
 namespace kaleidoscope {
 namespace driver {
@@ -42,6 +48,11 @@ class Base {
   }
   Stream &serialPort() {
     return noserial_;
+  }
+  
+  // Default implementation of onKeyEvent that does nothing
+  EventHandlerResult onKeyEvent(KeyEvent &event) {
+    return EventHandlerResult::OK;
   }
 
  private:
