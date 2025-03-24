@@ -48,6 +48,18 @@
 #include "kaleidoscope/driver/speaker/Base.h"          // for BaseProps
 #include "kaleidoscope/driver/speaker/None.h"          // for None
 
+// Forward declarations for event handling
+#include "kaleidoscope/event_handler_result.h"         // for EventHandlerResult
+#include "kaleidoscope/host_connection_status.h"       // for HostConnectionStatus
+
+// Forward declaration needed by event handlers
+namespace kaleidoscope {
+class KeyEvent;
+}
+
+// Forward declaration for LedModeCallback
+typedef void (*LedModeCallback)(const char*);
+
 
 // Connection mode for host HID and Serial
 enum HostConnectionMode {
@@ -618,6 +630,134 @@ class Base {
   void updateSpeaker() {
     speaker_.update();
   }
+  
+  // Event handler implementations that route to drivers
+  // Currently only the necessary handlers are implemented
+  // More can be added as needed
+ 
+  /** 
+   * Event handler for setup
+   */
+  EventHandlerResult onSetup() {
+    return EventHandlerResult::OK;
+  }
+  
+ 
+  /** 
+   * Event handler for exploreSketch
+   */
+  EventHandlerResult exploreSketch() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+    * Event handler for key events
+    * This method routes key events to appropriate drivers
+    */
+    EventHandlerResult onKeyEvent(KeyEvent &event) {
+    EventHandlerResult result;
+
+    // Currently only route to BLE driver
+    result = ble_.onKeyEvent(event);
+    if (result != EventHandlerResult::OK) {
+      return result;
+    }
+
+    return EventHandlerResult::OK;
+  }
+
+  
+  /**
+   * Event handler for keyswitch events
+   */
+  EventHandlerResult onKeyswitchEvent(kaleidoscope::KeyEvent &event) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for focus events
+   */
+  EventHandlerResult onFocusEvent(const char *input) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for layer changes
+   */
+  EventHandlerResult onLayerChange() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for LED mode changes
+   */
+  EventHandlerResult onLEDModeChange() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler called before syncing LEDs
+   */
+  EventHandlerResult beforeSyncingLeds() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler called before reporting state to host
+   */
+  EventHandlerResult beforeReportingState(const KeyEvent &event) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler called after reporting state to host
+   */
+  EventHandlerResult afterReportingState(const KeyEvent &event) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for host connection status changes
+   */
+  EventHandlerResult onHostConnectionStatusChanged(uint8_t device_id, kaleidoscope::HostConnectionStatus status) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for adding keys to HID report
+   */
+  EventHandlerResult onAddToReport(Key key) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler called at the beginning of each cycle
+   */
+  EventHandlerResult beforeEachCycle() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler called at the end of each cycle
+   */
+  EventHandlerResult afterEachCycle() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for name queries
+   */
+  EventHandlerResult onNameQuery() {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for LED effect queries
+   */
+  EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
+    return EventHandlerResult::OK;
+  }
+  
 
  protected:
   HID hid_;
