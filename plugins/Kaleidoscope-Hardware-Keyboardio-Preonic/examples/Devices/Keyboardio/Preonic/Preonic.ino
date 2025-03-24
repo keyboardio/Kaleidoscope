@@ -82,7 +82,8 @@ enum {
   MACRO_BT_SELECT_3,  // Select slot 3
   MACRO_BT_SELECT_4,  // Select slot 4
   MACRO_BT_PAIR,      // Start pairing for selected slot
-  MACRO_BT_OFF
+  MACRO_BT_OFF,
+  MACRO_BATTERY_LEVEL // Report current battery level
 };
 
 // Define our magic combo
@@ -151,7 +152,7 @@ KEYMAPS(
     Key_LEDEffectNext,___,           Consumer_VolumeIncrement,___,            ___,             ___,             ___,             ___,             ___,                        ___,             ___,             ___,
     ___,            Consumer_ScanPreviousTrack,Consumer_VolumeDecrement,Consumer_ScanNextTrack,___,             ___,             ___,             ___,             ___,                        ___,             ___,             ___,
     Key_ToggleKeyclick,___,             Consumer_Mute,   ___,                    ___,             ___,             ___,             ___,             ___,                        ___,             ___,             ___,
-    ___,            ___,             ___,             ___,                    ___,             ___,             ___,             ___,             ___,                        ___,             ___,              ___
+    M(MACRO_BATTERY_LEVEL), ___,        ___,             ___,                    ___,             ___,             ___,             ___,             ___,                        ___,             ___,              ___
   )
 );
 
@@ -355,6 +356,22 @@ static void anyKeyMacro(KeyEvent &event) {
 
  */
 
+// Helper function to report battery level
+static void batteryLevelMacro(uint8_t key_state) {
+  if (keyToggledOn(key_state)) {
+    // Get the battery level
+    uint8_t battery_level = kaleidoscope::Runtime.device().batteryGauge().getBatteryLevel();
+    
+    // Report battery level with a message
+    Macros.type(PSTR("Battery level: "));
+    
+    // Convert battery percentage to a string and type it
+    char percentage[5];
+    snprintf(percentage, sizeof(percentage), "%d%%", battery_level);
+    Macros.type(percentage);
+  }
+}
+
 const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   switch (macro_id) {
   case MACRO_VERSION_INFO:
@@ -403,6 +420,9 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
       kaleidoscope::Runtime.device().ble().disconnect();
       kaleidoscope::Runtime.device().setHostConnectionMode(MODE_USB);
     }
+    break;
+  case MACRO_BATTERY_LEVEL:
+    batteryLevelMacro(event.state);
     break;
   }
   return MACRO_NONE;
