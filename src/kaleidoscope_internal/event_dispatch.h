@@ -161,6 +161,18 @@
                                                                           __NL__ \
      MAKE_TEMPLATE_SIGNATURE(UNWRAP TMPL_PARAM_TYPE_LIST)                 __NL__ \
      EventHandlerResult Hooks::HOOK_NAME SIGNATURE {                      __NL__ \
+                                                                          __NL__ \
+        EventHandlerResult device_result = EventHandlerResult::OK;        __NL__ \
+                                                                          __NL__ \
+          device_result = ::kaleidoscope::Runtime.device().HOOK_NAME      __NL__ \
+            ARGS_LIST;                                                    __NL__ \
+                                                                          __NL__ \
+          /* If the device consumed the event, return early */            __NL__ \
+          if (device_result != EventHandlerResult::OK) {                  __NL__ \
+            return device_result;                                         __NL__ \
+          }                                                               __NL__ \
+                                                                          __NL__ \
+        /* Dispatch to plugins if the device didn't handle it */          __NL__ \
         return kaleidoscope_internal::EventDispatcher::template           __NL__ \
         apply<kaleidoscope_internal                                       __NL__ \
            ::_NAME4(EventHandler_, HOOK_NAME, _v, HOOK_VERSION)           __NL__ \
