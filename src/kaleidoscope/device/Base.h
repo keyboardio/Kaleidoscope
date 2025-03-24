@@ -82,8 +82,8 @@ struct BaseProps {
   typedef kaleidoscope::driver::storage::BaseProps StorageProps;
   typedef kaleidoscope::driver::storage::None Storage;
   typedef kaleidoscope::driver::ble::None BLE;
-  static constexpr const char *short_name = USB_PRODUCT;
-  static constexpr const bool isHybridHostConnection    = false;
+  static constexpr const char *short_name            = USB_PRODUCT;
+  static constexpr const bool isHybridHostConnection = false;
 };
 
 template<typename _DeviceProps>
