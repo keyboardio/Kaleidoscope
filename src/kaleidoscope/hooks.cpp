@@ -26,6 +26,7 @@
 #include "kaleidoscope/macro_helpers.h"         // for __NL__, MAKE_TEMPLATE_SIGNATURE, UNWRAP
 
 namespace kaleidoscope {
+  
 
 // The following weak symbols are overwritten by using the
 // KALEIDOSCOPE_INIT_PLUGINS(...) macro in the firmware sketch. Their only
@@ -51,8 +52,6 @@ namespace kaleidoscope {
 
 _FOR_EACH_EVENT_HANDLER(INSTANTIATE_WEAK_HOOK_FUNCTION)
 // clang-format on
-
-#undef INSTANTIATE_WEAK_HOOK_FUNCTION
 
 namespace sketch_exploration {
 class Sketch;
