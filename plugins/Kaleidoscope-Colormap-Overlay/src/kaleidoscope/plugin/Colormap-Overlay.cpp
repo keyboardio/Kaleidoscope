@@ -37,20 +37,13 @@
 
 namespace kaleidoscope {
 namespace plugin {
-uint16_t ColormapOverlay::map_base_;
 uint16_t ColormapOverlay::overlays_base_;
 uint8_t ColormapOverlay::max_overlays_ = 64;  // TODO(EvyBongers): figure this out. How determine a good maximum?
 Overlay *ColormapOverlay::overlays_;
 uint8_t ColormapOverlay::overlay_count_;
 
 void ColormapOverlay::setup() {
-  // It appears that a call to ::LEDPaletteTheme.reserveThemes() is needed
-  // because it's where palette_base_ gets initialized. Since this plugin (and
-  // possibly others) don't actually use themes, requesting memory for storing
-  // themes doesn't make much sense. Maybe initialisation of palette_base_
-  // could be moved to a setup() method, though maybe the palette should be
-  // split from palette theme altogether?
-  map_base_ = ::LEDPaletteTheme.reserveThemes(1);
+  ::LEDPaletteTheme.reservePalette();
 
   overlays_base_ = ::EEPROMSettings.requestSlice(max_overlays_ * sizeof(Overlay));
 

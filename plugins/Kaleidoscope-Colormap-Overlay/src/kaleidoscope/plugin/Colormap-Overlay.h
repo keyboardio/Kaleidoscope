@@ -130,7 +130,6 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   }
 
  private:
-  static uint16_t map_base_;
   static uint16_t overlays_base_;
   static uint8_t max_overlays_;
   static Overlay *overlays_;
