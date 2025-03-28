@@ -796,16 +796,17 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       disableLEDPower();
     }
 
+    // Check if the battery gauge has an alert
+    if (batteryGauge().hasAlert()) {
+       updateBatteryLevel();
+       batteryGauge().clearAlert();
+    }
+
     // Handle any pending GPIOTE events
     if (input_event_pending_) {
       input_event_pending_ = false;
       last_activity_time_  = millis();  // Update activity time on GPIOTE event
 
-      // Check if the battery gauge has an alert
-      if (batteryGauge().hasAlert()) {
-        updateBatteryLevel();
-        batteryGauge().clearAlert();
-      }
     } else if (shouldEnterDeepSleep()) {
       // Check if we should enter deep sleep
       // Only enter deep sleep if no keys are pressed and we're not connected via USB
