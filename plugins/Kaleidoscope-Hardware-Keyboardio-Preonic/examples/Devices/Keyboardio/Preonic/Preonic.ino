@@ -363,12 +363,65 @@ static void batteryLevelMacro(uint8_t key_state) {
     uint8_t battery_level = kaleidoscope::Runtime.device().batteryGauge().getBatteryLevel();
     
     // Report battery level with a message
-    Macros.type(PSTR("Battery level: "));
+    Macros.type(PSTR("Battery Status:\n"));
     
-    // Convert battery percentage to a string and type it
+    // Battery percentage
     char percentage[5];
     snprintf(percentage, sizeof(percentage), "%d%%", battery_level);
+    Macros.type(PSTR("Level: "));
     Macros.type(percentage);
+    Macros.type(PSTR("\n"));
+
+    // Battery voltage
+    char voltage[8];
+    snprintf(voltage, sizeof(voltage), "%.2fV", kaleidoscope::Runtime.device().batteryGauge().getVoltage() / 1000.0f);
+    Macros.type(PSTR("Voltage: "));
+    Macros.type(voltage);
+    Macros.type(PSTR("\n"));
+
+    // Charge rate
+    int16_t charge_rate = kaleidoscope::Runtime.device().batteryGauge().getChargeRate();
+    char rate[8];
+    snprintf(rate, sizeof(rate), "%.2f%%/hr", charge_rate * 0.208f);
+    Macros.type(PSTR("Charge Rate: "));
+    Macros.type(rate);
+    Macros.type(PSTR("\n"));
+
+    // Alert status
+    Macros.type(PSTR("Alerts: "));
+    if (kaleidoscope::Runtime.device().batteryGauge().hasLowBatteryAlert()) {
+      Macros.type(PSTR("Low Battery "));
+    }
+    if (kaleidoscope::Runtime.device().batteryGauge().hasChangeAlert()) {
+      Macros.type(PSTR("Level Changed "));
+    }
+    if (kaleidoscope::Runtime.device().batteryGauge().hasLowVoltageAlert()) {
+      Macros.type(PSTR("Low Voltage "));
+    }
+    if (kaleidoscope::Runtime.device().batteryGauge().hasHighVoltageAlert()) {
+      Macros.type(PSTR("High Voltage "));
+    }
+    if (!kaleidoscope::Runtime.device().batteryGauge().hasLowBatteryAlert() &&
+        !kaleidoscope::Runtime.device().batteryGauge().hasChangeAlert() &&
+        !kaleidoscope::Runtime.device().batteryGauge().hasLowVoltageAlert() &&
+        !kaleidoscope::Runtime.device().batteryGauge().hasHighVoltageAlert()) {
+      Macros.type(PSTR("None"));
+    }
+    Macros.type(PSTR("\n"));
+
+    // Hibernate status
+    if (kaleidoscope::Runtime.device().batteryGauge().isHibernating()) {
+      Macros.type(PSTR("Status: Hibernating\n"));
+    } else {
+      Macros.type(PSTR("Status: Active\n"));
+    }
+
+    // Firmware version
+    char version[6];
+    snprintf(version, sizeof(version), "0x%04X", kaleidoscope::Runtime.device().batteryGauge().getVersion());
+    Macros.type(PSTR("Firmware: "));
+    Macros.type(version);
+    Macros.type(PSTR("\n"));
   }
 }
 
