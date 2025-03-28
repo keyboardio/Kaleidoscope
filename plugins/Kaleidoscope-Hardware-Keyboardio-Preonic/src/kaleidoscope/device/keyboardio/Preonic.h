@@ -686,6 +686,96 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     twi_state_.enabled = false;
   }
 
+  /**
+   * @brief Check if recovery mode keys are being held
+   * @return true if recovery mode should be entered
+   */
+  bool checkRecoveryMode() {
+    // Configure GPIO pins directly for key detection
+    // This avoids initializing the full key scanner
+    for (uint8_t i = 0; i < KeyScannerProps::matrix_rows; i++) {
+      pinMode(KeyScannerProps::matrix_row_pins[i], OUTPUT);
+      digitalWrite(KeyScannerProps::matrix_row_pins[i], HIGH);
+    }
+    for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
+      pinMode(KeyScannerProps::matrix_col_pins[i], INPUT_PULLUP);
+    }
+    
+    uint32_t start_time = millis();
+    bool recovery_keys_held = false;
+    
+    while (millis() - start_time < 5000) {
+
+      // Simple matrix scan without debouncing
+      uint8_t pressed_count = 0;
+      bool r1c0_pressed = false;
+      bool r1c11_pressed = false;
+      bool r5c11_pressed = false;
+      
+      for (uint8_t row = 0; row < KeyScannerProps::matrix_rows; row++) {
+        digitalWrite(KeyScannerProps::matrix_row_pins[row], LOW);
+        delayMicroseconds(10);
+        
+        for (uint8_t col = 0; col < KeyScannerProps::matrix_columns; col++) {
+          if (!digitalRead(KeyScannerProps::matrix_col_pins[col])) {
+            pressed_count++;
+            
+            // Check for recovery mode keys
+            if (row == 1 && col == 0) r1c0_pressed = true;
+            if (row == 1 && col == 11) r1c11_pressed = true;
+            if (row == 5 && col == 11) r5c11_pressed = true;
+          }
+        }
+        digitalWrite(KeyScannerProps::matrix_row_pins[row], HIGH);
+      }
+
+      // Check if any other keys are pressed
+      if (pressed_count > 3) {
+        return false;
+      }
+      
+      // Check if required keys are held
+      if (!r1c0_pressed || !r1c11_pressed || !r5c11_pressed) {
+        return false;
+      }
+
+    if (recovery_keys_held == false) {
+          ledDriver().setup();
+      ledDriver().setBrightness(100);
+      // Set all the LEDs to yellow
+      for (uint8_t i = 0; i < PreonicProps::LEDDriverProps::led_count; i++) {
+        setCrgbAt(i, CRGB(255, 255, 0));
+      }
+      syncLeds();
+    }
+      recovery_keys_held = true;
+      delay(10); // Small delay to prevent busy-waiting
+    }
+    return recovery_keys_held;
+  }
+
+  /**
+   * @brief Handle recovery mode operations
+   */
+  void handleRecoveryMode() {
+
+    // Set all LEDs to red
+    for (uint8_t i = 0; i < PreonicProps::LEDDriverProps::led_count; i++) {
+      setCrgbAt(i, CRGB(255, 0, 0));
+    }
+    syncLeds();
+    delay(1000);
+    storage().setup();
+    storage().erase();
+    // Set the leds to green and then pause for 2 seconds
+    for (uint8_t i = 0; i < PreonicProps::LEDDriverProps::led_count; i++) {
+      setCrgbAt(i, CRGB(0, 255, 0));
+    }
+    syncLeds();
+    delay(2000);
+    
+    NVIC_SystemReset();
+  }
 
   bool enterDeepSleep() {
     disableLEDPower();
@@ -865,11 +955,14 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
 
   void setup() {
-
-
-    //while (!Serial) delay(10);  // Wait for Serial
-    //Serial.println("Preonic starting up...");
-    // setupGPIOTE();
+        pinMode(PIN_LED_ENABLE, OUTPUT);
+    enableLEDPower();
+    // Check for recovery mode before full initialization
+    if (checkRecoveryMode()) {
+      // Handle recovery mode - this will reboot when done
+      handleRecoveryMode();
+      // We never get here due to the reboot
+    }
 
     // Work around some BSP problems with TinyUSB and Serial1 logging
 #if CFG_LOGGER == 1
@@ -881,8 +974,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     //    disableUnusedPeripherals(); // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
     // Turn on the LED power
-    pinMode(PIN_LED_ENABLE, OUTPUT);
-    enableLEDPower();
+
 
     device::Base<PreonicProps>::setup();
     last_activity_time_ = millis();
