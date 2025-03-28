@@ -93,11 +93,9 @@ void BLEBluefruit::setup() {
   }
 
   // Configure Battery Service
-  blebas.setPermission(SECMODE_ENC_NO_MITM, SECMODE_NO_ACCESS);
   if (!blebas.begin()) {
     DEBUG_BLE_MSG("Failed to start Battery Service");
   }
-  setBatteryLevel(100);
 
   // Configure UART Service
   bleuart.setPermission(SECMODE_ENC_NO_MITM, SECMODE_ENC_NO_MITM);
