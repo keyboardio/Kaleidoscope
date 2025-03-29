@@ -138,7 +138,10 @@ class MAX17048 : public Base<_Props> {
    */
   uint8_t getBatteryLevel() const override {
     if (!initialized_) return 0;
-    return static_cast<uint8_t>(lipo_.getSOC());
+    float soc = lipo_.getSOC();
+    // Convert to integer with rounding by adding 0.5 before truncation
+    uint8_t level = static_cast<uint8_t>(soc + 0.5f);
+    return (level > 100) ? 100 : level;
   }
 
   /**

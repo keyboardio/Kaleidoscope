@@ -24,7 +24,6 @@
 
 #ifdef ARDUINO_PREONIC
 
-
 #include <Arduino.h>
 
 #define CRGB(r, g, b) \
@@ -204,8 +203,8 @@ struct PreonicSpeakerProps : public kaleidoscope::driver::speaker::PiezoProps {
 struct PreonicBatteryGaugeProps : public kaleidoscope::driver::battery_gauge::MAX17048Props {
   static constexpr uint8_t alert_pin = PIN_BATT_ALERT;  // Pin connected to MAX17048 ALERT output
   // Battery configuration for Preonic's 3.7V LiPo
-  static constexpr uint16_t battery_voltage_min    = 3300;  // 3.3V cutoff
-  static constexpr uint16_t battery_voltage_max    = 4200;  // 4.2V max
+  static constexpr uint16_t battery_voltage_min    = 2900;  // 2.9V cutoff
+  static constexpr uint16_t battery_voltage_max    = 4100;  // 4.2V max
   static constexpr uint8_t battery_alert_threshold = 15;    // Alert at 15%
 };
 
@@ -244,6 +243,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static uint32_t last_activity_time_;                      // Used for deep sleep
   static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 10000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
+  static uint32_t last_battery_update_;                     // Last battery level update time
+  static constexpr uint32_t BATTERY_UPDATE_INTERVAL = 300000;  // 5 minutes in milliseconds
 
   /**
    * @brief Structure to track timer and RTC states for sleep/wake
@@ -875,27 +876,32 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
 
   void betweenCycles() {
+    uint32_t now = millis();
     // Handle speaker updates
     // TODO(jesse): move this into a hook
     updateSpeaker();
 
     // Manage LED power based on LED activity
-    if (ledDriver().areAnyLEDsOn() || ((millis() - ledDriver().LEDsLastOn()) < 1000)) {
+    if (ledDriver().areAnyLEDsOn() || ((now - ledDriver().LEDsLastOn()) < 1000)) {
       enableLEDPower();
     } else {
       disableLEDPower();
     }
 
-    // Check if the battery gauge has an alert
-    if (batteryGauge().hasAlert()) {
-       updateBatteryLevel();
-       batteryGauge().clearAlert();
+    // Check if we should update battery level (every 5m or on alert)
+    // In theory, we shouldn't need to do this every 5m. But I don't totally trust the alert updates yet.
+    if (batteryGauge().hasAlert() || (now - last_battery_update_ >= BATTERY_UPDATE_INTERVAL)) {
+      updateBatteryLevel();
+      if (batteryGauge().hasAlert()) {
+        batteryGauge().clearAlert();
+      }
+      last_battery_update_ = now;
     }
 
     // Handle any pending GPIOTE events
     if (input_event_pending_) {
       input_event_pending_ = false;
-      last_activity_time_  = millis();  // Update activity time on GPIOTE event
+      last_activity_time_  = now;  // Update activity time on GPIOTE event
 
     } else if (shouldEnterDeepSleep()) {
       // Check if we should enter deep sleep
