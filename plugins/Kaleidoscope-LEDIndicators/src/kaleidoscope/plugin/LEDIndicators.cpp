@@ -282,6 +282,55 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
 }
 
 
+// Handle power events
+EventHandlerResult LEDIndicators::onPowerEvent(PowerEvent event, uint16_t voltage_mv) {
+  if (!Runtime.has_leds)
+    return EventHandlerResult::OK;
+
+  // Use all indicator slots for battery events
+  switch (event) {
+  case PowerEvent::BatteryWarningOn:
+    // Show red flashing on all LEDs for battery warning
+    for (uint8_t i = 0; i < num_indicator_slots; i++) {
+      KeyAddr led_addr = getLEDForSlot(i);
+      if (led_addr.isValid()) {
+        // Red solid for battery warning (all LEDs)
+        // Shows for 1 second every 10 seconds, as defined in the requirements
+        showIndicator(led_addr, IndicatorEffect::Solid, color_red, color_off, 1000, 0);
+      }
+    }
+    break;
+
+  case PowerEvent::BatteryWarningOff:
+    // Clear any battery warning indicators
+    for (uint8_t i = 0; i < num_indicator_slots; i++) {
+      KeyAddr led_addr = getLEDForSlot(i);
+      if (led_addr.isValid()) {
+        clearIndicator(led_addr);
+      }
+    }
+    break;
+
+  case PowerEvent::BatteryShutdown:
+    // Show solid red on all LEDs for shutdown (will stay on for 10 seconds before shutdown)
+    for (uint8_t i = 0; i < num_indicator_slots; i++) {
+      KeyAddr led_addr = getLEDForSlot(i);
+      if (led_addr.isValid()) {
+        // Solid red for battery critical shutdown
+        showIndicator(led_addr, IndicatorEffect::Solid, color_red, color_off, 10000, 0);
+      }
+    }
+    break;
+
+  case PowerEvent::PowerSourceUSB:
+  case PowerEvent::PowerSourceBattery:
+    // Power source changes don't need visual indicators
+    break;
+  }
+
+  return EventHandlerResult::OK;
+}
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 

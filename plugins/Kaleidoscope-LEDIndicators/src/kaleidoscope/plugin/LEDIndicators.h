@@ -28,6 +28,7 @@
 #include "kaleidoscope/plugin.h"
 #include "kaleidoscope/host_connection_status.h"
 #include "kaleidoscope/Runtime.h"
+#include "kaleidoscope/power_event.h"  // for PowerEvent enum
 #include "kaleidoscope/plugin/LEDControl.h"
 #include "kaleidoscope/KeyAddr.h"  // for KeyAddr::none()
 
@@ -143,6 +144,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
   EventHandlerResult onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status);
+  EventHandlerResult onPowerEvent(PowerEvent event, uint16_t voltage_mv);
 
  private:
   static constexpr uint8_t MAX_SLOTS = 8;  // Maximum number of slots supported
