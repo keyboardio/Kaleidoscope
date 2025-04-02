@@ -23,6 +23,7 @@
 // clang-format off
 
 #include "kaleidoscope/host_connection_status.h"
+#include "kaleidoscope/power_event.h"
 #pragma once
 
 // This file defines the names and argument signatures for all event handlers
@@ -302,7 +303,17 @@ class SignatureCheckDummy {};
              _NOT_ABORTABLE,                                            __NL__ \
              (),(),(), /* non template */                               __NL__ \
              (uint8_t device_id, kaleidoscope::HostConnectionStatus status),          __NL__ \
-             (device_id, status), ##__VA_ARGS__)
+             (device_id, status), ##__VA_ARGS__)                        __NL__ \
+                                                                         __NL__ \
+   /* Called when power-related events occur, such as battery warnings, */     __NL__ \
+   /* battery shutdown, power source changes, etc. */                    __NL__ \
+   OPERATION(onPowerEvent,                                               __NL__ \
+             1,                                                          __NL__ \
+             _CURRENT_IMPLEMENTATION,                                    __NL__ \
+             _NOT_ABORTABLE,                                             __NL__ \
+             (),(),(), /* non template */                                __NL__ \
+             (kaleidoscope::PowerEvent event, uint16_t voltage_mv),      __NL__ \
+             (event, voltage_mv), ##__VA_ARGS__)
 
 // The following function macro lists event handler/hook method names and
 // available versions. It is used to auto-generate code that is
@@ -386,4 +397,8 @@ class SignatureCheckDummy {};
                                                                         __NL__ \
    START(onHostConnectionStatusChanged, 1)                               __NL__ \
       OP(onHostConnectionStatusChanged, 1)                               __NL__ \
-   END(onHostConnectionStatusChanged, 1)                                 
+   END(onHostConnectionStatusChanged, 1)                                 __NL__ \
+                                                                         __NL__ \
+   START(onPowerEvent, 1)                                                __NL__ \
+      OP(onPowerEvent, 1)                                                __NL__ \
+   END(onPowerEvent, 1)                                                  
