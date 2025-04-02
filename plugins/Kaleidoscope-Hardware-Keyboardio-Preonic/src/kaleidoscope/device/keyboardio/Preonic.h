@@ -55,6 +55,7 @@ struct cRGB {
 #include "kaleidoscope/driver/speaker/Piezo.h"
 #include "nrfx_gpiote.h"
 #include "kaleidoscope/driver/battery_gauge/MAX17048.h"
+#include "kaleidoscope/driver/battery_charger/BQ24075.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -203,9 +204,33 @@ struct PreonicSpeakerProps : public kaleidoscope::driver::speaker::PiezoProps {
 struct PreonicBatteryGaugeProps : public kaleidoscope::driver::battery_gauge::MAX17048Props {
   static constexpr uint8_t alert_pin = PIN_BATT_ALERT;  // Pin connected to MAX17048 ALERT output
   // Battery configuration for Preonic's 3.7V LiPo
-  static constexpr uint16_t battery_voltage_min    = 2900;  // 2.9V cutoff
-  static constexpr uint16_t battery_voltage_max    = 4100;  // 4.2V max
+  static constexpr uint16_t battery_voltage_min    = 3100;  // 2.9V cutoff
+  static constexpr uint16_t battery_voltage_max    = 4200;  // 4.2V max
   static constexpr uint8_t battery_alert_threshold = 15;    // Alert at 15%
+};
+
+struct PreonicBatteryChargerProps : public kaleidoscope::driver::battery_charger::BQ24075Props {
+  static constexpr uint8_t power_good_pin = PIN_POWER_GOOD;       // Pin connected to BQ24075 PGOOD output
+  static constexpr uint8_t charge_status_pin = PIN_CHARGE_STATUS; // Pin connected to BQ24075 CHG output
+  
+  // SYSOFF is connected to a physical switch, not controlled by MCU
+  static constexpr uint8_t sysoff_pin = 0;  // Not MCU controlled
+  
+  // Configuration details (for reference):
+  // - ISET resistor: 1.6kΩ (sets charge current to 556mA)
+  // - ILIM resistor: 1.6kΩ (sets input current limit to 968mA)
+  // - CE: Connected to ground (charge enabled)
+  // - TMR: Floating (safety timer enabled, 5hr)
+  // - EN1: Connected to VCC unregulated (High)
+  // - EN2: Connected to GND (Low)
+  // - EN1 High + EN2 Low = USB500 Mode (500mA max)
+  // - OUT: Connected to VCC unregulated
+  // - BAT: Connected to battery with 10μF capacitor to GND
+  // - TS: Connected to battery NTC
+  
+  // If ISET monitoring is needed, uncomment and define:
+  // static constexpr uint8_t iset_pin = PIN_ISET_MONITOR;
+  static constexpr float iset_resistance = 1600.0f; // 1.6kΩ ISET resistor
 };
 
 struct PreonicProps : public kaleidoscope::device::BaseProps {
@@ -236,6 +261,9 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
 
   typedef PreonicBatteryGaugeProps BatteryGaugeProps;
   typedef kaleidoscope::driver::battery_gauge::MAX17048<BatteryGaugeProps> BatteryGauge;
+  
+  typedef PreonicBatteryChargerProps BatteryChargerProps;
+  typedef kaleidoscope::driver::battery_charger::BQ24075<BatteryChargerProps> BatteryCharger;
 };
 
 class Preonic : public kaleidoscope::device::Base<PreonicProps> {
