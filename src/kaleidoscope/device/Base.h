@@ -51,7 +51,7 @@
 // Forward declarations for event handling
 #include "kaleidoscope/event_handler_result.h"         // for EventHandlerResult
 #include "kaleidoscope/host_connection_status.h"       // for HostConnectionStatus
-
+#include "kaleidoscope/power_event.h" 		      // for PowerEvent
 // Forward declaration needed by event handlers
 namespace kaleidoscope {
 class KeyEvent;
@@ -748,6 +748,13 @@ class Base {
    * Event handler for LED effect queries
    */
   EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
+    return EventHandlerResult::OK;
+  }
+  
+  /**
+   * Event handler for power events such as battery warnings, shutdown, and power source changes
+   */
+  EventHandlerResult onPowerEvent(kaleidoscope::PowerEvent event, uint16_t voltage_mv) {
     return EventHandlerResult::OK;
   }
   
