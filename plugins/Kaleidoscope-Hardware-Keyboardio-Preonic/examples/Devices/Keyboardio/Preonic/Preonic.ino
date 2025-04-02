@@ -372,6 +372,13 @@ static void batteryLevelMacro(uint8_t key_state) {
     Macros.type(percentage);
     Macros.type(PSTR("\n"));
 
+    // Raw battery level
+    char raw_level[5];
+    snprintf(raw_level, sizeof(raw_level), "%d", kaleidoscope::Runtime.device().batteryGauge().getRawBatteryLevel());
+    Macros.type(PSTR("Raw Level: "));
+    Macros.type(raw_level);
+    Macros.type(PSTR("\n"));
+
     // Battery voltage
     char voltage[8];
     snprintf(voltage, sizeof(voltage), "%.2fV", kaleidoscope::Runtime.device().batteryGauge().getVoltage() / 1000.0f);
@@ -386,6 +393,43 @@ static void batteryLevelMacro(uint8_t key_state) {
     Macros.type(PSTR("Charge Rate: "));
     Macros.type(rate);
     Macros.type(PSTR("\n"));
+
+    // Charging status
+    Macros.type(PSTR("Power Source: "));
+    if (kaleidoscope::Runtime.device().batteryCharger().hasPower()) {
+      Macros.type(PSTR("Connected\n"));
+      
+      Macros.type(PSTR("Charging Status: "));
+      uint8_t charging_state = kaleidoscope::Runtime.device().batteryCharger().getChargingState();
+      
+      // Using defined enum values from BQ24075
+      typedef kaleidoscope::driver::battery_charger::BQ24075<kaleidoscope::device::keyboardio::PreonicBatteryChargerProps> BQ24075;
+      
+      switch (charging_state) {
+        case BQ24075::CHARGING:
+          Macros.type(PSTR("Charging\n"));
+          break;
+        case BQ24075::CHARGE_COMPLETE:
+          Macros.type(PSTR("Charge Complete\n"));
+          break;
+        case BQ24075::CHARGE_FAULT:
+          Macros.type(PSTR("Fault Detected\n"));
+          break;
+        case BQ24075::NO_BATTERY:
+          Macros.type(PSTR("No Battery\n"));
+          break;
+        case BQ24075::BATTERY_DISCONNECTED:
+          Macros.type(PSTR("Battery Disconnected\n"));
+          break;
+        default:
+          Macros.type(PSTR("Not Charging\n"));
+          break;
+      }
+      
+      // No need to print static configuration values in the status report
+    } else {
+      Macros.type(PSTR("Battery\n"));
+    }
 
     // Alert status
     Macros.type(PSTR("Alerts: "));
@@ -419,7 +463,7 @@ static void batteryLevelMacro(uint8_t key_state) {
     // Firmware version
     char version[6];
     snprintf(version, sizeof(version), "0x%04X", kaleidoscope::Runtime.device().batteryGauge().getVersion());
-    Macros.type(PSTR("Firmware: "));
+    Macros.type(PSTR("Gauge IC: "));
     Macros.type(version);
     Macros.type(PSTR("\n"));
   }
