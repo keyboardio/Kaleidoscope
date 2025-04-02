@@ -148,6 +148,69 @@ class BQ24075 : public Base<_Props> {
   }
 
  public:
+  /** @brief Actively wait and monitor for CHG pin flashing
+   * 
+   * This method actively monitors the CHG pin for a specified duration
+   * to detect the flashing pattern that indicates a fault.
+   * 
+   * @param timeout_ms Maximum time to wait for flashing detection (default: 5000ms)
+   * @param check_interval_ms How often to check the pin state (default: 5ms)
+   * @return true if flashing is detected within the timeout period
+   */
+  bool waitForChgFlashing(uint32_t timeout_ms = 5000, uint32_t check_interval_ms = 5) {
+    if (!initialized_ || !_Props::charge_status_pin)
+      return false;
+    
+    // Reset detection state
+    chg_toggle_count_ = 0;
+    fault_detected_ = false;
+    last_chg_state_ = digitalRead(_Props::charge_status_pin) == LOW;
+    last_chg_toggle_time_ = millis();
+    
+    uint32_t start_time = millis();
+    uint32_t last_check_time = start_time;
+    
+    // Monitor until timeout or fault detected
+    while (millis() - start_time < timeout_ms) {
+      uint32_t current_time = millis();
+      
+      // Only check at the specified interval to avoid busy-waiting
+      if (current_time - last_check_time >= check_interval_ms) {
+        bool current_state = digitalRead(_Props::charge_status_pin) == LOW;
+        
+        // Detect state change
+        if (current_state != last_chg_state_) {
+          // Calculate time between toggles
+          unsigned long toggle_interval = current_time - last_chg_toggle_time_;
+          
+          // If toggle interval is around 500ms (2Hz), increment counter
+          if (toggle_interval > 300 && toggle_interval < 700) {
+            chg_toggle_count_++;
+            
+            // If we see 4 toggles with the right timing, it's a fault
+            if (chg_toggle_count_ >= 4) {
+              fault_detected_ = true;
+              return true;
+            }
+          } else {
+            // Reset count if timing is wrong
+            chg_toggle_count_ = 0;
+          }
+          
+          last_chg_toggle_time_ = current_time;
+          last_chg_state_ = current_state;
+        }
+        
+        last_check_time = current_time;
+      }
+      
+      // Small delay to prevent busy-waiting
+      delay(1);
+    }
+    
+    return false;
+  }
+
   /** @brief Charging state enumeration
    * 
    * Detailed states of the battery charger
