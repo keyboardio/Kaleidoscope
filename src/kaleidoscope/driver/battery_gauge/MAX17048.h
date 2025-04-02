@@ -129,19 +129,88 @@ class MAX17048 : public Base<_Props> {
   }
 
   /**
-   * @brief Get the current battery level
+   * @brief Get the raw battery level directly from the gauge
    *
    * Returns the battery's state of charge as calculated by
-   * the MAX17048's ModelGauge algorithm.
+   * the MAX17048's ModelGauge algorithm without any compensation.
+   * Note that this value may never reach 100% even when fully charged.
    *
-   * @return Battery level as a percentage (0-100), returns 0 if uninitialized
+   * @return Raw battery level as a percentage (0-100), returns 0 if uninitialized
    */
-  uint8_t getBatteryLevel() const override {
+  uint8_t getRawBatteryLevel() const {
     if (!initialized_) return 0;
     float soc = lipo_.getSOC();
     // Convert to integer with rounding by adding 0.5 before truncation
     uint8_t level = static_cast<uint8_t>(soc + 0.5f);
     return (level > 100) ? 100 : level;
+  }
+
+  /**
+   * @brief Get the current battery level with compensation
+   *
+   * Returns the battery's state of charge with compensation applied
+   * to allow reporting 100% when the battery is fully charged.
+   * The compensation is applied only at higher charge levels.
+   *
+   * @return Compensated battery level as a percentage (0-100%), returns 0 if uninitialized
+   */
+  uint8_t getBatteryLevel() const override {
+    if (!initialized_) return 0;
+    
+    // Get the raw battery level
+    uint8_t raw_level = getRawBatteryLevel();
+    
+    // Apply compensation only at higher charge levels
+    if (raw_level >= 95) {
+      // At 95% or higher, report as 100%
+      return 100;
+    } else if (raw_level >= 90) {
+      // Between 90-94%, add 5% to the reading
+      return raw_level + 5;
+    } else if (raw_level >= 85) {
+      // Between 85-89%, add 3% to the reading
+      return raw_level + 3;
+    } else if (raw_level >= 80) {
+      // Between 80-84%, add 2% to the reading
+      return raw_level + 2;
+    }
+    
+    // Below 80%, return the raw level without compensation
+    return raw_level;
+  }
+
+  /**
+   * @brief Get a compensated battery level that can reach 100%
+   * 
+   * This method applies compensation to the raw battery level reading
+   * to allow reporting 100% when the battery is fully charged.
+   * The compensation is applied only at higher charge levels.
+   * 
+   * @return uint8_t Compensated battery level (0-100%)
+   */
+  uint8_t getCompensatedBatteryLevel() const {
+    if (!initialized_) return 0;
+    
+    // Get the raw battery level
+    uint8_t raw_level = getBatteryLevel();
+    
+    // Apply compensation only at higher charge levels
+    if (raw_level >= 95) {
+      // At 95% or higher, report as 100%
+      return 100;
+    } else if (raw_level >= 90) {
+      // Between 90-94%, add 5% to the reading
+      return raw_level + 5;
+    } else if (raw_level >= 85) {
+      // Between 85-89%, add 3% to the reading
+      return raw_level + 3;
+    } else if (raw_level >= 80) {
+      // Between 80-84%, add 2% to the reading
+      return raw_level + 2;
+    }
+    
+    // Below 80%, return the raw level without compensation
+    return raw_level;
   }
 
   /**
@@ -156,7 +225,7 @@ class MAX17048 : public Base<_Props> {
     if (!initialized_) return 0;
     // The CRATE register LSB is 0.208%/hr
     // We want raw units, so no conversion needed
-    return static_cast<int16_t>(lipo_.getChangeRate() / 0.208f);  // TODO(jesse): Replace with direct register read
+    return static_cast<int16_t>(lipo_.getChangeRate() / 0.208f); 
   }
 
   /**
