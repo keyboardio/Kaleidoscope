@@ -32,6 +32,7 @@
 #include "kaleidoscope/hooks.h"                 // for Hooks
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Transparent
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
+#include "kaleidoscope/power_event.h"           // for PowerEvent
 #include "kaleidoscope_internal/device.h"       // for device
 
 namespace kaleidoscope {
