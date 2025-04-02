@@ -891,8 +891,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   // Battery monitoring methods
   void updateBatteryLevel() {
     uint8_t new_level = batteryGauge().getBatteryLevel();
-    if (new_level != last_battery_level_) {
-      last_battery_level_ = new_level;
+    if (new_level != ble().getBatteryLevel()) {
       ble().setBatteryLevel(new_level);
     }
   }
@@ -1012,6 +1011,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     device::Base<PreonicProps>::setup();
     last_activity_time_ = millis();
+    updateBatteryLevel();
   }
 
   Stream &serialPort() {

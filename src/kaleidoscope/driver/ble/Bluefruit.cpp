@@ -36,6 +36,8 @@ namespace driver {
 namespace ble {
 
 uint8_t BLEBluefruit::current_device_id = 0;
+uint8_t BLEBluefruit::battery_level = 0;
+
 ble_gap_addr_t BLEBluefruit::base_addr;
 
 BLEDis BLEBluefruit::bledis;
@@ -150,7 +152,12 @@ Stream &BLEBluefruit::serialPort() {
 
 void BLEBluefruit::setBatteryLevel(uint8_t level) {
   if (level > 100) level = 100;
+  battery_level = level;
   blebas.notify(level);
+}
+
+uint8_t BLEBluefruit::getBatteryLevel() {
+  return battery_level;
 }
 
 void BLEBluefruit::selectDevice(uint8_t device_id) {

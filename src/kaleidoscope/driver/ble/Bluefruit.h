@@ -110,6 +110,7 @@ class BLEBluefruit : public Base {
   bool connected();
   Stream &serialPort();
   void setBatteryLevel(uint8_t level);
+  uint8_t getBatteryLevel();
   static void selectDevice(uint8_t device_id);
   static void stopAdvertising();
   static void disconnect();
@@ -137,6 +138,7 @@ class BLEBluefruit : public Base {
  private:
   static constexpr uint8_t SECURITY_MODE_ENCRYPTED = 1;
   static constexpr uint8_t SECURITY_LEVEL_MIN      = 1;
+  static uint8_t battery_level;
 
   static bool getConnectionSecurity(uint16_t conn_handle, ble_gap_conn_sec_t &sec);
 
