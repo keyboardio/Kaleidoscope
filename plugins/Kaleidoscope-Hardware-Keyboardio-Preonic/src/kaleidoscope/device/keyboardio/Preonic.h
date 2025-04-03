@@ -56,6 +56,7 @@ struct cRGB {
 #include "nrfx_gpiote.h"
 #include "kaleidoscope/driver/battery_gauge/MAX17048.h"
 #include "kaleidoscope/driver/battery_charger/BQ24075.h"
+#include "kaleidoscope/power_event.h"
 
 namespace kaleidoscope {
 namespace device {
@@ -268,11 +269,34 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
 
 class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  private:
+  // Deep sleep timers
   static uint32_t last_activity_time_;                      // Used for deep sleep
   static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 10000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
   static uint32_t last_battery_update_;                     // Last battery level update time
   static constexpr uint32_t BATTERY_UPDATE_INTERVAL = 300000;  // 5 minutes in milliseconds
+
+  // Battery monitoring variables and thresholds
+  static uint16_t last_battery_voltage_mv_;
+  static uint32_t last_battery_check_time_;
+  static uint32_t last_warning_time_;
+  static bool warning_active_;
+  static bool shutdown_active_;
+  static constexpr uint32_t BATTERY_CHECK_INTERVAL_MS = 10000;    // Check battery every 10 seconds
+  static constexpr uint32_t WARNING_INTERVAL_MS = 10000;          // Warning flash interval (10 seconds)
+  static constexpr uint32_t WARNING_DURATION_MS = 1000;           // Warning flash duration (1 second)
+  static constexpr uint32_t SHUTDOWN_DURATION_MS = 10000;         // Shutdown indication duration (10 seconds)
+  static constexpr uint16_t BATTERY_WARNING_THRESHOLD_MV = 3300;  // 3.3V
+  static constexpr uint16_t BATTERY_SHUTDOWN_THRESHOLD_MV = 3100; // 3.1V
+  
+  // Battery status enum
+  enum class BatteryStatus {
+    Normal,     // Battery level is good
+    Warning,    // Battery is low (warning threshold)
+    Critical,   // Battery is critically low (shutdown threshold)
+    Shutdown    // Battery is too low, system will shut down
+  };
+  static BatteryStatus battery_status_;
 
   /**
    * @brief Structure to track timer and RTC states for sleep/wake
@@ -895,6 +919,103 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       ble().setBatteryLevel(new_level);
     }
   }
+  
+  /**
+   * @brief Check if battery voltage is below warning threshold
+   * @return true if battery is below warning threshold
+   */
+  bool isBatteryBelowWarningThreshold(uint16_t voltage_mv) {
+    return voltage_mv <= BATTERY_WARNING_THRESHOLD_MV;
+  }
+  
+  /**
+   * @brief Check if battery voltage is below shutdown threshold
+   * @return true if battery is below shutdown threshold
+   */
+  bool isBatteryBelowShutdownThreshold(uint16_t voltage_mv) {
+    return voltage_mv <= BATTERY_SHUTDOWN_THRESHOLD_MV;
+  }
+  
+  /**
+   * @brief Trigger low battery warning
+   * @param active true to activate warning, false to deactivate
+   */
+  void triggerBatteryWarning(bool active);
+  
+  /**
+   * @brief Trigger battery shutdown sequence
+   */
+  void triggerBatteryShutdown();
+  
+  /**
+   * @brief Put the system into deep sleep or system off state
+   */
+  void systemOff() {
+    // Disable interrupts during shutdown
+    noInterrupts();
+    
+    // Disable all peripherals
+    NRF_SAADC->ENABLE = 0;
+    
+    // Use system off functionality to fully power down
+    sd_power_system_off();
+  }
+  
+  /**
+   * @brief Update battery status based on current voltage
+   * @param voltage_mv Current battery voltage in millivolts
+   */
+  void updateBatteryStatus(uint16_t voltage_mv) {
+    // Get current time
+    uint32_t now = millis();
+    
+    // Check if it's time to check the battery
+    if (now - last_battery_check_time_ >= BATTERY_CHECK_INTERVAL_MS) {
+      // Update the battery voltage
+      last_battery_voltage_mv_ = voltage_mv;
+      last_battery_check_time_ = now;
+      
+      // Only check thresholds if running on battery
+      if (!mcu_.USBConfigured()) {
+        // Check for shutdown threshold
+        if (isBatteryBelowShutdownThreshold(voltage_mv)) {
+          battery_status_ = BatteryStatus::Shutdown;
+          triggerBatteryShutdown();
+        }
+        // Check for warning threshold
+        else if (isBatteryBelowWarningThreshold(voltage_mv)) {
+          if (battery_status_ != BatteryStatus::Warning) {
+            battery_status_ = BatteryStatus::Warning;
+            // Reset warning timing to ensure immediate warning
+            last_warning_time_ = now - WARNING_INTERVAL_MS;
+          }
+        }
+        // Normal operation
+        else {
+          battery_status_ = BatteryStatus::Normal;
+          warning_active_ = false;
+        }
+      } else {
+        // On USB power, battery status is normal
+        battery_status_ = BatteryStatus::Normal;
+        warning_active_ = false;
+      }
+    }
+    
+    // Handle warning indication timing
+    if (battery_status_ == BatteryStatus::Warning) {
+      if (!warning_active_ && (now - last_warning_time_ >= WARNING_INTERVAL_MS)) {
+        // Start a new warning period
+        warning_active_ = true;
+        last_warning_time_ = now;
+        triggerBatteryWarning(true);
+      } else if (warning_active_ && (now - last_warning_time_ >= WARNING_DURATION_MS)) {
+        // End the current warning period
+        warning_active_ = false;
+        triggerBatteryWarning(false);
+      }
+    }
+  }
 
 
  public:
@@ -915,7 +1036,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       disableLEDPower();
     }
 
-    // Check if we should update battery level (every 5m or on alert)
+    // Update battery monitoring - this handles both warning and shutdown thresholds
+    // Use the MAX17048 battery gauge to provide the voltage reading
+    uint16_t battery_voltage = batteryGauge().getVoltage();
+    updateBatteryStatus(battery_voltage);
+
+    // Check if we should update battery level for BLE (every 5m or on alert)
     // In theory, we shouldn't need to do this every 5m. But I don't totally trust the alert updates yet.
     if (batteryGauge().hasAlert() || (now - last_battery_update_ >= BATTERY_UPDATE_INTERVAL)) {
       updateBatteryLevel();
@@ -1011,6 +1137,11 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     device::Base<PreonicProps>::setup();
     last_activity_time_ = millis();
+    last_battery_check_time_ = millis();
+    last_warning_time_ = millis();
+    warning_active_ = false;
+    shutdown_active_ = false;
+    battery_status_ = BatteryStatus::Normal;
     updateBatteryLevel();
   }
 

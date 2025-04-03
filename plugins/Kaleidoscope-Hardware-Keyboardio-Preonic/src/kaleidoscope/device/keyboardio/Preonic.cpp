@@ -73,6 +73,14 @@ uint32_t Preonic::last_battery_update_ = 0;  // Initialize to 0 to force first u
 // Battery state tracking
 uint8_t Preonic::last_battery_level_ = 0;
 
+// Battery monitoring variables
+uint16_t Preonic::last_battery_voltage_mv_ = 0;
+uint32_t Preonic::last_battery_check_time_ = 0;
+uint32_t Preonic::last_warning_time_ = 0;
+bool Preonic::warning_active_ = false;
+bool Preonic::shutdown_active_ = false;
+Preonic::BatteryStatus Preonic::battery_status_ = Preonic::BatteryStatus::Normal;
+
 //// `KeyScanner` here refers to the alias set up above, just like in the
 //// `KeyScannerProps` case above.
 template<>
@@ -82,6 +90,42 @@ KeyScanner::row_state_t
 
 template<>
 uint32_t kaleidoscope::driver::keyscanner::NRF52KeyScanner<kaleidoscope::device::keyboardio::PreonicKeyScannerProps>::next_scan_at_ = 0;
+
+// Battery event handling implementations - moved to .cpp to avoid circular dependencies
+
+/**
+ * @brief Trigger low battery warning
+ * @param active true to activate warning, false to deactivate
+ */
+void Preonic::triggerBatteryWarning(bool active) {
+  // Use kaleidoscope::Runtime.handlePowerEvent() to trigger the warning event
+  if (active) {
+    kaleidoscope::Runtime.handlePowerEvent(kaleidoscope::PowerEvent::BatteryWarningOn, last_battery_voltage_mv_);
+  } else {
+    kaleidoscope::Runtime.handlePowerEvent(kaleidoscope::PowerEvent::BatteryWarningOff, last_battery_voltage_mv_);
+  }
+}
+
+/**
+ * @brief Trigger battery shutdown sequence
+ */
+void Preonic::triggerBatteryShutdown() {
+  if (shutdown_active_)
+    return;
+    
+  shutdown_active_ = true;
+  
+  // Indicate shutdown (all LEDs red for 10 seconds)
+  kaleidoscope::Runtime.handlePowerEvent(kaleidoscope::PowerEvent::BatteryShutdown, last_battery_voltage_mv_);
+  
+  // Wait for the shutdown indication period
+  delay(SHUTDOWN_DURATION_MS);
+  
+  // Shutdown the system
+  // This will disconnect the battery via the system off pin if available
+  // on the device, otherwise we'll enter deep sleep
+  systemOff();
+}
 
 }  // namespace keyboardio
 }  // namespace device

@@ -63,8 +63,8 @@ class Hooks {
   // The following friend declarations restrict access to
   // the hook routing system.
 
-  // Runtime_ calls Hooks::onSetup, Hooks::beforeReportingState
-  // and Hooks::afterEachCycle.
+  // Runtime_ calls various hooks including Hooks::onSetup, Hooks::beforeReportingState,
+  // Hooks::afterEachCycle, and Hooks::onPowerEvent.
   friend class Layer_;
   friend class Runtime_;
   friend class plugin::FocusSerial;
