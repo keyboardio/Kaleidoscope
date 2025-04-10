@@ -133,7 +133,8 @@ automatically become a OneShot key when pressed, by applying modifier flags to
 #### Two new special OneShot keys
 
 OneShot can now also turn _any_ key into a sticky key, using either of two
-special `Key` values that can be inserted in the keymap.
+special `Key` values that can be inserted in the keymap. Configure the
+`OneShotMetaKeys` plugin to use these.
 
 ##### `OneShot_MetaStickyKey`
 
@@ -150,6 +151,14 @@ affecting a subsequent key, it affects any keys already held when it is
 pressed. Press `X`, press `OneShot_ActiveStickyKey`, and release `X`, and `X`
 will be sticky until it is pressed again to deactivate it. Again, it works on
 any key value, so use with caution.
+
+Additionally, when you add the `EscapeOneShot` plugin, this key will act as a
+toggle when you press it again while holding no other keys.
+
+##### `Key_OneShotCancel`
+
+When you configure the `EscapeOneShot` plugin, this key cancels all OneShot
+keys.
 
 #### LED-ActiveModColor highlighting
 

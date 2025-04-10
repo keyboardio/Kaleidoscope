@@ -7,7 +7,8 @@ to make any key on the keyboard (not just modifiers and layer shift keys)
 These are both `Key` values that can be used as entries in your sketch's keymap.
 
 Any keys made sticky in this way can be released just like OneShot modifier
-keys, by tapping them again to cancel the effect.
+keys, by tapping them again to cancel the effect. You can also use the
+`EscapeOneShot` plugin to cancel sticky keys without having to remember them.
 
 ## The `OneShot_MetaStickyKey`
 
@@ -24,6 +25,10 @@ This special key doesn't act like a OneShot key, but instead makes any key(s)
 currently held (or otherwise active) sticky. Press (and hold) `X`, tap
 `OneShot_ActiveStickyKey`, then release `X`, and `X` will stay active until it
 is tapped again to deactivate it.
+
+Additionally, if you add the `EscapeOneShot` plugin, then it acts as a toggle
+when no other keys are held. This saves having to remember which keys you've
+made sticky.
 
 ## Using the plugin
 
