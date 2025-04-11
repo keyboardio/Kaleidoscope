@@ -3,7 +3,13 @@
 The `LEDBrightnessControl` plugin provides a way to change the brightness of all
 LEDs on a keyboard.
 
+Two new keys can be added to your keymap to make LEDs brighter or dimmer.
+Holding Shift reverses the function.
+
 ## Using the plugin
+
+Add `Key_LEDBrightnessUp` and/or `Key_LEDBrightnessDown` to your keymap,
+and configure as follows.
 
 ```c++
 #include <Kaleidoscope.h>
@@ -26,9 +32,11 @@ void setup() {
 }
 ```
 
-### Use with `LEDBrightnessConfig`
+### Using with `LEDBrightnessConfig`
 
-`LEDBrightnessControl` does not persist brightness changes.  `LEDBrightnessConfig` will reset the brightness on each restart to the configured default.
+`LEDBrightnessControl` does not persist brightness changes.
+`LEDBrightnessConfig` will reset the brightness on each restart to the
+configured default.
 
 ## Dependencies
 
