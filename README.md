@@ -28,19 +28,18 @@ $ cd ${HOME}/git
 $ git clone https://github.com/keyboardio/Kaleidoscope
 ```
 
-3.  Ask Kaleidoscope to install the compiler toolchain, arduino-cli and platform support
-
-```sh
-$ cd ${HOME}/git/Kaleidoscope
-$ make setup
-```
-
-4.  Tell your shell where to find your Kaleidoscope installation. This example is for bash. If you're using another shell, consult the shell's documentation for instructions about how to set an environment variable
+3.  Tell your shell where to find your Kaleidoscope installation. This example is for bash. If you're using another shell, consult the shell's documentation for instructions about how to set an environment variable
 
 ```sh
 $ export KALEIDOSCOPE_DIR=${HOME}/git/Kaleidoscope
 
 $ echo "export KALEIDOSCOPE_DIR=${HOME}/git/Kaleidoscope" >> ${HOME}/.bash_profile
+```
+4.  Ask Kaleidoscope to install the compiler toolchain, arduino-cli and platform support
+
+```sh
+$ cd ${HOME}/git/Kaleidoscope
+$ make setup
 ```
 
 5.  Build the Kaleidoscope Firmware for your keyboard
