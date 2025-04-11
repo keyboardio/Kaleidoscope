@@ -40,11 +40,18 @@ EventHandlerResult LEDBrightnessControl::onKeyEvent(KeyEvent &event) {
        event.key == Key_LEDBrightnessDown) &&
       keyToggledOn(event.state)) {
     uint8_t brightness = LEDControl::getBrightness();
-    if (event.key == Key_LEDBrightnessUp &&
-        brightness <= 255 - BRIGHTNESS_INCREMENT) {
+    bool increase      = (event.key == Key_LEDBrightnessUp);
+
+    for (Key active_key : live_keys.all()) {
+      if (active_key.isKeyboardShift()) {
+        increase = !increase;
+        break;
+      }
+    }
+
+    if (increase && brightness <= 255 - BRIGHTNESS_INCREMENT) {
       brightness += BRIGHTNESS_INCREMENT;
-    } else if (event.key == Key_LEDBrightnessDown &&
-               brightness >= BRIGHTNESS_INCREMENT) {
+    } else if (!increase && brightness >= BRIGHTNESS_INCREMENT) {
       brightness -= BRIGHTNESS_INCREMENT;
     }
     LEDControl::setBrightness(brightness);
