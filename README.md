@@ -1,6 +1,5 @@
 # Kaleidoscope
 
-
 Flexible firmware for Arduino-powered keyboards.
 
 This package contains the "core" of Kaleidoscope and a number of [example firmware "Sketches"](https://github.com/keyboardio/Kaleidoscope/tree/master/examples).
