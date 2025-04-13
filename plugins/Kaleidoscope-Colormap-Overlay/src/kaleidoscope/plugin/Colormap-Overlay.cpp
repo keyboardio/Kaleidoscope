@@ -164,6 +164,12 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
   return EventHandlerResult::EVENT_CONSUMED;
 }
 
+EventHandlerResult ColormapOverlay::onLayerChange() {
+  // Ensure that any LEDs previously controlled by this plugin get reset
+  ::LEDControl.refreshAll();
+  return EventHandlerResult::OK;
+}
+
 }  // namespace plugin
 }  // namespace kaleidoscope
 

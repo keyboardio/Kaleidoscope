@@ -123,6 +123,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   EventHandlerResult onSetup();
   EventHandlerResult beforeSyncingLeds();
   EventHandlerResult onFocusEvent(const char *input);
+  EventHandlerResult onLayerChange();
 
   ~ColormapOverlay() {
     if (overlays_ != nullptr) {
