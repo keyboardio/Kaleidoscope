@@ -136,9 +136,9 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
   while (!::Focus.isEOL() && (i < (uint16_t)Runtime.device().numKeys() * layer_count)) {
     int8_t color_index_;
 
-    // Ref: plugins/Kaleidoscope-FocusSerial/src/kaleidoscope/plugin/FocusSerial.h:99-115
+    // Ref: plugins/Kaleidoscope-FocusSerial/src/kaleidoscope/plugin/FocusSerial.h
     // -> No overload for signed integers
-    // Ref: src/kaleidoscope/device/Base.h:90-92
+    // Ref: src/kaleidoscope/device/Base.h
     // -> parseInt() seems to support signed values?
     ::Focus.read(color_index_);
     if (color_index_ >= 0) {
@@ -146,7 +146,14 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
       uint8_t layer_     = (i - key_index_) / Runtime.device().numKeys();
 
       overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
-      overlay_count_++;  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
+      overlay_count_++;
+
+      if (overlay_count_ >= max_overlays_) {
+        // TODO(anyone): For now we just break the loop. Once focus implements
+        // support for reporting back errors, this should report why we break
+        // the loop
+        break;
+      }
     }
 
     i++;
