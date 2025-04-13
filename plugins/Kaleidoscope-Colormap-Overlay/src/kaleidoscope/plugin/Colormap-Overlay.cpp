@@ -148,6 +148,8 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
       overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
       overlay_count_++;  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
     }
+
+    i++;
   }
   Runtime.storage().commit();
 
