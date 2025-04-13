@@ -59,8 +59,9 @@ class ColormapOverlay : public kaleidoscope::Plugin {
   // takes as its sole argument an array reference of size `_overlay_count`, so
   // there's no need to use `sizeof` to calculate the correct size, and pass it
   // as a separate parameter.
-  template<uint8_t _overlay_count>  // TODO(EvyBongers): how to make sure that we don't exceed max_overlays_
+  template<uint8_t _overlay_count>
   void configureOverlays(Overlay const (&overlays)[_overlay_count]) {
+    static_assert(_overlay_count <= max_overlays_);
     // Delete old overlays if they exist
     if (overlays_ != nullptr) {
       delete[] overlays_;
@@ -131,7 +132,7 @@ class ColormapOverlay : public kaleidoscope::Plugin {
 
  private:
   static uint16_t overlays_base_;
-  static uint8_t max_overlays_;
+  static const uint8_t max_overlays_ = 64;  // TODO(EvyBongers): figure this out. How determine a good maximum?
   static Overlay *overlays_;
   static uint8_t overlay_count_;
   cRGB selectedColor;
