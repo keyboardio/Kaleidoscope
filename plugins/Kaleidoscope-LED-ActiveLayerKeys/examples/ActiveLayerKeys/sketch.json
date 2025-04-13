@@ -1,6 +1,6 @@
 {
   "cpu": {
-    "fqbn": "keyboardio:avr:keyboardio_atreus",
+    "fqbn": "keyboardio:gd32:keyboardio_model_100",
     "port": ""
   }
 }
