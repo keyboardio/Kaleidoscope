@@ -50,8 +50,8 @@ void ColormapOverlay::setup() {
   ::EEPROMSettings.seal();
 
   if (!::EEPROMSettings.isValid()) {
-    // TODO(EvyBongers): figure this out. What to do when the settings are out of sync...
-
+    // When settings are invalid, better to clean it all up to prevent unwanted things from happening
+    ::EEPROMSettings.invalidate();
     return;
   }
 
