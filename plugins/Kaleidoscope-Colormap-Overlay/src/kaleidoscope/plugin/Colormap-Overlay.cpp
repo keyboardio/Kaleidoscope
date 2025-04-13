@@ -63,7 +63,7 @@ bool ColormapOverlay::hasOverlay(KeyAddr k) {
   uint8_t layer_index = Layer.lookupActiveLayer(k);
 
   bool found_match_on_lower_layer = false;
-  for (uint8_t i{0}; i < overlay_count_; ++i) {
+  for (uint8_t i{0}; i < overlay_count_; i++) {
     Overlay overlay = overlays_[i];
     if (overlay.addr == k) {
       if ((overlay.layer == top_layer) || (overlay.layer == layer_wildcard)) {
@@ -118,7 +118,7 @@ EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
     for (uint8_t layer = 0; layer < layer_count; layer++) {
       for (uint8_t key_index_ = 0; key_index_ < Runtime.device().numKeys(); key_index_++) {
         KeyAddr k = KeyAddr(key_index_);
-        for (uint8_t overlay_index{0}; overlay_index < overlay_count_; ++overlay_index) {
+        for (uint8_t overlay_index{0}; overlay_index < overlay_count_; overlay_index++) {
           Overlay overlay = overlays_[overlay_index];
           if ((overlay.addr == k) && (overlay.layer == layer)) {
             ::Focus.send(overlay.palette_index);
