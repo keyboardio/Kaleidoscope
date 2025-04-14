@@ -73,7 +73,7 @@ KEYMAPS(
 
 KALEIDOSCOPE_INIT_PLUGINS(
   EEPROMSettings,
-  FocusSerial,
+  Focus,
   Keyclick);
 
 void setup() {
