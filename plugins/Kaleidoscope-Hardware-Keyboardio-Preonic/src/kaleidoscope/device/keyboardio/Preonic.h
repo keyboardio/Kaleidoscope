@@ -946,6 +946,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * @brief Trigger battery shutdown sequence
    */
   void triggerBatteryShutdown();
+  void complete_system_shutdown();
   
   /**
    * @brief Put the system into deep sleep or system off state
