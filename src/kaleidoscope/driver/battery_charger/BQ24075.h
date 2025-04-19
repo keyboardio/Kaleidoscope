@@ -74,12 +74,12 @@ struct BQ24075Props : public BaseProps {
   static constexpr uint8_t iset_pin = 0;  // Default value, set to 0 if not used
   
   /**
-   * @brief Resistance of ISET resistor in ohms
+   * @brief Resistance of ISET resistor in milliohms
    * 
    * Used for charge current calculation. The charge current is 400 times
    * the current flowing through this resistor.
    */
-  static constexpr float iset_resistance = 1130.0f;  // Default 1.13kΩ, should be overridden
+  static constexpr uint32_t iset_resistance = 1130000;  // Default 1.13kΩ in milliohms, should be overridden
 };
 
 /** @brief BQ24075 battery charger driver
@@ -374,21 +374,23 @@ class BQ24075 : public Base<_Props> {
    * 
    * @return Charge current in mA, or 0 if not supported
    */
-  float getChargeCurrent() const {
+  uint32_t getChargeCurrent() const {
     if (!initialized_ || !_Props::iset_pin)
-      return 0.0f;
+      return 0;
     
     // Read analog value
-    float adc_value = analogRead(_Props::iset_pin);
+    uint32_t adc_value = analogRead(_Props::iset_pin);
     
-    // Convert to voltage (depends on ADC reference voltage)
-    float voltage = adc_value * (3.3f / 1023.0f);  // Assuming 3.3V reference and 10-bit ADC
+    // Convert to voltage in microvolts (depends on ADC reference voltage)
+    // For 3.3V reference and 10-bit ADC: voltage_uv = adc_value * 3300000 / 1023
+    uint32_t voltage_uv = (adc_value * 3300000) / 1023;
     
-    // Calculate current: I = V/R
-    float iset_current = voltage / _Props::iset_resistance;
+    // Calculate current in microamps: I = V/R
+    // iset_current_ua = voltage_uv / iset_resistance_milliohms * 1000
+    uint32_t iset_current_ua = (voltage_uv * 1000) / _Props::iset_resistance;
     
-    // Charge current is 400x the current through ISET
-    float charge_current = iset_current * 400.0f * 1000.0f;  // Convert to mA
+    // Charge current is 400x the current through ISET (in mA)
+    uint32_t charge_current = (iset_current_ua * 400) / 1000;
     
     return charge_current;
   }
