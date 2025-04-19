@@ -173,23 +173,21 @@ void Preonic::complete_system_shutdown(void)
 {
     systemOff();
     uint32_t err_code;
-        speaker().playTone(2000, 500);  delay(1000);
 
     // --- 1. Stop Application Activity ---
     // *** USER ACTION: Need Kaleidoscope equivalent to stop its timers/event processing ***
+    
+    // Properly shut down speaker peripheral before the rest of shutdown
+    speaker().prepareForSleep();
 
     // --- 2. Stop BLE Activity (CRUCIAL before SoftDevice disable) ---
     ble().stopAdvertising();
     ble().disconnect();
     // ble().end(); // Removed: BLEBluefruit driver does not have .end()
 
-
     // --- 4. Disable SoftDevice --- 
     err_code = sd_softdevice_disable();
     if (err_code!= NRF_SUCCESS) {
-        speaker().playTone(9000, 50);  delay(1000);
-        speaker().playTone(9000, 50);  delay(1000);
-        speaker().playTone(9000, 50);  delay(1000);
         NVIC_SystemReset(); // Critical failure, reset the system
         // return; // Should not be reached
     }
@@ -204,7 +202,6 @@ void Preonic::complete_system_shutdown(void)
     // SAADC
     NRF_SAADC->ENABLE = (SAADC_ENABLE_ENABLE_Disabled << SAADC_ENABLE_ENABLE_Pos);
     NRF_SAADC->INTENCLR = 0xFFFFFFFF;
-        speaker().playTone(2000, 500);  delay(1000);
 
     // UARTE / UART
     NRF_UARTE0->ENABLE = (UARTE_ENABLE_ENABLE_Disabled << UARTE_ENABLE_ENABLE_Pos);
@@ -236,7 +233,6 @@ void Preonic::complete_system_shutdown(void)
     NRF_TWIM1->INTENCLR = 0xFFFFFFFF;
     // Add TWIS/TWI disable if they could be active
 
-         speaker().playTone(2000, 500);  delay(1000);
 
 
     // Disable GPIOTE (GPIO Tasks and Events)
@@ -250,12 +246,10 @@ void Preonic::complete_system_shutdown(void)
     NRF_GPIOTE->CONFIG[6] = 0;
     NRF_GPIOTE->CONFIG[7] = 0;
     // NRF_GPIOTE->ENABLE = 0; // There isn't a global ENABLE register for GPIOTE
-    speaker().playTone(2000, 500);  delay(1000);
 
     // Disable PPI (Programmable Peripheral Interconnect)
     NRF_PPI->CHENCLR = 0xFFFFFFFF; // Disable all channels
     // NRF_PPI->ENABLE = 0; // No PPI Enable register
-    speaker().playTone(2000, 500);  delay(1000);
 
     // Disable EGU (Event Generator Unit)
     #ifdef NRF_EGU0
@@ -276,7 +270,6 @@ void Preonic::complete_system_shutdown(void)
     #ifdef NRF_EGU5
     NRF_EGU5->INTENCLR = 0xFFFFFFFF;
     #endif
-    speaker().playTone(2000, 500);  delay(1000);
 
  // Other Peripherals (Disable just in case)
     #ifdef NRF_COMP
@@ -284,7 +277,7 @@ void Preonic::complete_system_shutdown(void)
     NRF_COMP->ENABLE = (COMP_ENABLE_ENABLE_Disabled << COMP_ENABLE_ENABLE_Pos);
     NRF_COMP->INTENCLR = 0xFFFFFFFF;
     #endif
-        speaker().playTone(2000, 500);  delay(1000);
+    
     // --- 7. Configure GPIOs for System OFF ---
     // Step 1: Explicitly disable sensing on all pins
     for (uint32_t i = 0; i < NUMBER_OF_PINS; ++i) {
@@ -293,13 +286,11 @@ void Preonic::complete_system_shutdown(void)
              NRF_P1->PIN_CNF[i & 0x1F] &= ~GPIO_PIN_CNF_SENSE_Msk;
         }
     }
-    speaker().playTone(2000, 500);  delay(1000);
 
     // Step 1b: Set all pins to default state (input, disconnected buffer, no pull)
     for (uint32_t i = 0; i < NUMBER_OF_PINS; ++i) {
         nrf_gpio_cfg_default(i);
     }
-        speaker().playTone(2000, 500);  delay(1000);
 
     // Step 2: Placeholder for specific pin configs (e.g., matrix rows for wakeup)
     // *** USER ACTION: Configure Preonic matrix pins and any other specific needs ***
@@ -308,8 +299,7 @@ void Preonic::complete_system_shutdown(void)
     uint32_t ram_clr_mask = 0xFFFFFFFF; // Clear all sections possible
     err_code = sd_power_ram_power_clr(0, ram_clr_mask); // Using the version confirmed to compile
     // Ignore errors
-    speaker().playTone(2000, 500);  delay(1000);
-
+    
   // Restore USB Shutdown Logic
     #if HAS_USB_ENABLED
         // Manual disable for TinyUSB / Adafruit Core
@@ -323,7 +313,6 @@ void Preonic::complete_system_shutdown(void)
                               (POWER_INTENCLR_USBREMOVED_Clear << POWER_INTENCLR_USBREMOVED_Pos) |
                               (POWER_INTENCLR_USBPWRRDY_Clear << POWER_INTENCLR_USBPWRRDY_Pos);
     #endif // HAS_USB_ENABLED
-        speaker().playTone(2000, 500);  delay(1000);
 
 
    // PWM
@@ -350,43 +339,6 @@ void Preonic::complete_system_shutdown(void)
     NRF_RTC2->TASKS_STOP = 1; NRF_RTC2->EVTENCLR = 0xFFFFFFFF; NRF_RTC2->INTENCLR = 0xFFFFFFFF;
 
   
-    speaker().playTone(2000, 500);  delay(1000);
-
-   
-
-  
-    #ifdef NRF_QDEC
-    NRF_QDEC->TASKS_STOP = 1;
-    NRF_QDEC->ENABLE = (QDEC_ENABLE_ENABLE_Disabled << QDEC_ENABLE_ENABLE_Pos);
-    NRF_QDEC->INTENCLR = 0xFFFFFFFF;
-    #endif
-        speaker().playTone(2000, 500);  delay(1000);
-
-    #ifdef NRF_I2S
-    NRF_I2S->ENABLE = (I2S_ENABLE_ENABLE_Disabled << I2S_ENABLE_ENABLE_Pos);
-    NRF_I2S->INTENCLR = 0xFFFFFFFF;
-    #endif
-        speaker().playTone(2000, 500);  delay(1000);
-
-    #ifdef NRF_PDM
-    NRF_PDM->ENABLE = (PDM_ENABLE_ENABLE_Disabled << PDM_ENABLE_ENABLE_Pos);
-    NRF_PDM->INTENCLR = 0xFFFFFFFF;
-    #endif
-        speaker().playTone(2000, 500);  delay(1000);
-
-    #ifdef NRF_NFCT
-    NRF_NFCT->TASKS_DISABLE = 1;
-    // NRF_NFCT->ENABLE = ... // Removed: NFCT uses TASKS_DISABLE, not ENABLE register.
-    NRF_NFCT->INTENCLR = 0xFFFFFFFF;
-    #endif
-    speaker().playTone(2000, 500);  delay(1000);
-      #ifdef NRF_LPCOMP
-    NRF_LPCOMP->TASKS_STOP = 1;
-    NRF_LPCOMP->ENABLE = (LPCOMP_ENABLE_ENABLE_Disabled << LPCOMP_ENABLE_ENABLE_Pos);
-    NRF_LPCOMP->INTENCLR = 0xFFFFFFFF;
-    #endif
-        speaker().playTone(2000, 500);  delay(1000);
-
     // --- 9. Prepare for Sleep ---
     // Clear any pending NVIC interrupts
     for (IRQn_Type irq = (IRQn_Type)0; irq < ((IRQn_Type)NVIC_NUM_INTERRUPTS); irq = (IRQn_Type)((int)irq + 1)) {
@@ -395,8 +347,12 @@ void Preonic::complete_system_shutdown(void)
 
     NRF_POWER->RESETREAS = 0xFFFFFFFF;
     delay(5); // Small delay
+    
+    // Disable FPU state preservation to prevent ~3mA power drain
+    disableFPUForSleep();
+    
     __disable_irq(); // Disable interrupts globally AFTER clearing pending
-        speaker().playTone(2000, 500);  delay(1000); 
+    
     // --- 3. Stop Clocks (Do this early) ---
     NRF_CLOCK->TASKS_HFCLKSTOP = 1;
     NRF_CLOCK->TASKS_LFCLKSTOP = 1;
@@ -1119,6 +1075,18 @@ void Preonic::triggerBatteryShutdown() {
 
   // Call the member function
   Preonic::complete_system_shutdown();
+}
+
+void disablePWMForSleep() {
+    // Disable all PWM instances
+    NRF_PWM0->ENABLE = 0;
+    NRF_PWM0->INTENCLR = 0xFFFFFFFF;
+    NRF_PWM1->ENABLE = 0;
+    NRF_PWM1->INTENCLR = 0xFFFFFFFF;
+    NRF_PWM2->ENABLE = 0;
+    NRF_PWM2->INTENCLR = 0xFFFFFFFF;
+    NRF_PWM3->ENABLE = 0;
+    NRF_PWM3->INTENCLR = 0xFFFFFFFF;
 }
 
 }  // namespace keyboardio
