@@ -84,6 +84,13 @@ namespace device {
 namespace keyboardio {
 
 using Color = kaleidoscope::driver::led::color::GRB;
+// Forward declaration of a global function to send keystrokes
+// This will be implemented in a plugin-accessible location
+void sendKeyStrokes(const char* str);
+// Overload to handle integer values
+void sendKeyStrokes(int value);
+// Overload to handle integer values with format specifier (HEX, DEC, etc.)
+void sendKeyStrokes(uint32_t value, int format);
 
 // Structure to define rotary encoder configuration
 struct EncoderConfig {
@@ -856,7 +863,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     prepareMatrixForSleep();
     configureColumnsForSensing();
     setupGPIOTE();
-
+   speaker().prepareForSleep();
     // Bluefruit hid - process all queue reports, then shut down processing
     while (kaleidoscope::driver::hid::bluefruit::blehid.hasQueuedReports()) {
       delay(1);
@@ -864,19 +871,19 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
 
     // Dump the entire system state to help identify power leaks
-    Serial.println(F("============= SYSTEM STATE BEFORE SLEEP ============="));
-    dumpSystemState();
-    Serial.println(F("============= END OF SYSTEM STATE BEFORE SLEEP ============="));
-    Serial.flush();
+   // Serial.println(F("============= SYSTEM STATE BEFORE SLEEP ============="));
+   // Serial.println(F("============= END OF SYSTEM STATE BEFORE SLEEP ============="));
+   // Serial.flush();
 
     // disableTWIForSleep();
-    // disableRTC();
+     disableRTC();
     // disableTimers();
     
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
     disableFPUForSleep();
     
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+   // dumpSystemState();
 
     while (!input_event_pending_) {
       waitForEvent();
@@ -890,7 +897,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     // restoreTWIAfterSleep();
     // restoreTimers();
-    // restoreRTC();
+    restoreRTC();
     restoreMatrixAfterSleep();
     disableColumnSensing();
     // Start processing BLE HID reports
@@ -1070,14 +1077,18 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * to identify power leaks.
    */
   void dumpSystemState() {
-    Serial.println(F("\n\n========= SYSTEM STATE DUMP ========="));
-    Serial.println(F("This will help identify power leaks"));
+    // ===== MCU CORE CONFIGURATION =====
     
-    // ===== GPIO PIN STATES =====
-    Serial.println(F("\n----- GPIO PIN STATES -----"));
-    Serial.println(F("Pin\tDir\tInput\tPull\tDrive\tSense\tValue"));
+
+    // Begin the dump
+    sendKeyStrokes(PSTR("\n\n========= SYSTEM STATE DUMP =========\n"));
+    sendKeyStrokes(PSTR("This will help identify power leaks\n"));
     
-    // P0 pins (0-31)
+    // GPIO Pin Configuration
+    sendKeyStrokes(PSTR("\n----- GPIO PIN STATES -----\n"));
+    sendKeyStrokes(PSTR("Pin\tDir\tInput\tPull\tDrive\tSense\tValue\n"));
+    
+    // P0 port
     for (int i = 0; i < 32; i++) {
       uint32_t config = NRF_P0->PIN_CNF[i];
       bool dir = (config & GPIO_PIN_CNF_DIR_Msk) >> GPIO_PIN_CNF_DIR_Pos;
@@ -1085,51 +1096,52 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       uint8_t pull = (config & GPIO_PIN_CNF_PULL_Msk) >> GPIO_PIN_CNF_PULL_Pos;
       uint8_t drive = (config & GPIO_PIN_CNF_DRIVE_Msk) >> GPIO_PIN_CNF_DRIVE_Pos;
       uint8_t sense = (config & GPIO_PIN_CNF_SENSE_Msk) >> GPIO_PIN_CNF_SENSE_Pos;
-      bool value = (dir == 1) ? 
-                  ((NRF_P0->OUT & (1UL << i)) != 0) : 
-                  ((NRF_P0->IN & (1UL << i)) != 0);
+      bool value = NRF_P0->IN & (1 << i);
       
-      // Print in format: "P0.00: DIR=Out INPUT=Disconnect PULL=None DRIVE=S0S1 SENSE=Disabled VALUE=1"
-      Serial.print(F("P0."));
-      if (i < 10) Serial.print('0');
-      Serial.print(i);
-      Serial.print(F(":\t"));
-      Serial.print(dir ? F("Out\t") : F("In\t"));
-      Serial.print(input ? F("Connect\t") : F("Disconnect\t"));
+      sendKeyStrokes(PSTR("P0."));
+      if (i < 10) sendKeyStrokes(PSTR("0"));
+      
+      char num_str[4];
+      snprintf(num_str, sizeof(num_str), "%d", i);
+      sendKeyStrokes(num_str);
+      sendKeyStrokes(PSTR(":\t"));
+      sendKeyStrokes(dir ? PSTR("Out\t") : PSTR("In\t"));
+      sendKeyStrokes(input ? PSTR("Connect\t") : PSTR("Disconnect\t"));
       
       // Pull configuration
       switch (pull) {
-        case 0: Serial.print(F("None\t")); break;
-        case 1: Serial.print(F("Down\t")); break;
-        case 3: Serial.print(F("Up\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("None\t")); break;
+        case 1: sendKeyStrokes(PSTR("Down\t")); break;
+        case 3: sendKeyStrokes(PSTR("Up\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
       // Drive configuration
       switch (drive) {
-        case 0: Serial.print(F("S0S1\t")); break;
-        case 1: Serial.print(F("H0S1\t")); break;
-        case 2: Serial.print(F("S0H1\t")); break;
-        case 3: Serial.print(F("H0H1\t")); break;
-        case 4: Serial.print(F("D0S1\t")); break;
-        case 5: Serial.print(F("D0H1\t")); break;
-        case 6: Serial.print(F("S0D1\t")); break;
-        case 7: Serial.print(F("H0D1\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("S0S1\t")); break;
+        case 1: sendKeyStrokes(PSTR("H0S1\t")); break;
+        case 2: sendKeyStrokes(PSTR("S0H1\t")); break;
+        case 3: sendKeyStrokes(PSTR("H0H1\t")); break;
+        case 4: sendKeyStrokes(PSTR("D0S1\t")); break;
+        case 5: sendKeyStrokes(PSTR("D0H1\t")); break;
+        case 6: sendKeyStrokes(PSTR("S0D1\t")); break;
+        case 7: sendKeyStrokes(PSTR("H0D1\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
       // Sense configuration
       switch (sense) {
-        case 0: Serial.print(F("Disabled\t")); break;
-        case 2: Serial.print(F("High\t")); break;
-        case 3: Serial.print(F("Low\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("Disabled\t")); break;
+        case 2: sendKeyStrokes(PSTR("High\t")); break;
+        case 3: sendKeyStrokes(PSTR("Low\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
-      Serial.println(value ? F("1") : F("0"));
+      sendKeyStrokes(value ? PSTR("1\n") : PSTR("0\n"));
     }
     
-    // P1 pins (32-47)
+    // P1 port (for nRF52840)
+    #if defined(NRF52840_XXAA)
     for (int i = 0; i < 16; i++) {
       uint32_t config = NRF_P1->PIN_CNF[i];
       bool dir = (config & GPIO_PIN_CNF_DIR_Msk) >> GPIO_PIN_CNF_DIR_Pos;
@@ -1137,449 +1149,591 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       uint8_t pull = (config & GPIO_PIN_CNF_PULL_Msk) >> GPIO_PIN_CNF_PULL_Pos;
       uint8_t drive = (config & GPIO_PIN_CNF_DRIVE_Msk) >> GPIO_PIN_CNF_DRIVE_Pos;
       uint8_t sense = (config & GPIO_PIN_CNF_SENSE_Msk) >> GPIO_PIN_CNF_SENSE_Pos;
-      bool value = (dir == 1) ? 
-                  ((NRF_P1->OUT & (1UL << i)) != 0) : 
-                  ((NRF_P1->IN & (1UL << i)) != 0);
+      bool value = NRF_P1->IN & (1 << i);
       
-      Serial.print(F("P1."));
-      if (i < 10) Serial.print('0');
-      Serial.print(i);
-      Serial.print(F(":\t"));
-      Serial.print(dir ? F("Out\t") : F("In\t"));
-      Serial.print(input ? F("Connect\t") : F("Disconnect\t"));
+      sendKeyStrokes(PSTR("P1."));
+      if (i < 10) sendKeyStrokes(PSTR("0"));
+      
+      char num_str[4];
+      snprintf(num_str, sizeof(num_str), "%d", i);
+      sendKeyStrokes(num_str);
+      sendKeyStrokes(PSTR(":\t"));
+      sendKeyStrokes(dir ? PSTR("Out\t") : PSTR("In\t"));
+      sendKeyStrokes(input ? PSTR("Connect\t") : PSTR("Disconnect\t"));
       
       // Pull configuration
       switch (pull) {
-        case 0: Serial.print(F("None\t")); break;
-        case 1: Serial.print(F("Down\t")); break;
-        case 3: Serial.print(F("Up\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("None\t")); break;
+        case 1: sendKeyStrokes(PSTR("Down\t")); break;
+        case 3: sendKeyStrokes(PSTR("Up\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
       // Drive configuration
       switch (drive) {
-        case 0: Serial.print(F("S0S1\t")); break;
-        case 1: Serial.print(F("H0S1\t")); break;
-        case 2: Serial.print(F("S0H1\t")); break;
-        case 3: Serial.print(F("H0H1\t")); break;
-        case 4: Serial.print(F("D0S1\t")); break;
-        case 5: Serial.print(F("D0H1\t")); break;
-        case 6: Serial.print(F("S0D1\t")); break;
-        case 7: Serial.print(F("H0D1\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("S0S1\t")); break;
+        case 1: sendKeyStrokes(PSTR("H0S1\t")); break;
+        case 2: sendKeyStrokes(PSTR("S0H1\t")); break;
+        case 3: sendKeyStrokes(PSTR("H0H1\t")); break;
+        case 4: sendKeyStrokes(PSTR("D0S1\t")); break;
+        case 5: sendKeyStrokes(PSTR("D0H1\t")); break;
+        case 6: sendKeyStrokes(PSTR("S0D1\t")); break;
+        case 7: sendKeyStrokes(PSTR("H0D1\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
       // Sense configuration
       switch (sense) {
-        case 0: Serial.print(F("Disabled\t")); break;
-        case 2: Serial.print(F("High\t")); break;
-        case 3: Serial.print(F("Low\t")); break;
-        default: Serial.print(F("???\t")); break;
+        case 0: sendKeyStrokes(PSTR("Disabled\t")); break;
+        case 2: sendKeyStrokes(PSTR("High\t")); break;
+        case 3: sendKeyStrokes(PSTR("Low\t")); break;
+        default: sendKeyStrokes(PSTR("???\t")); break;
       }
       
-      Serial.println(value ? F("1") : F("0"));
-    }
-    
-    // ===== CLOCK CONFIGURATION =====
-  
-    // ===== PERIPHERAL CONFIGURATION =====
-    Serial.println(F("\n----- PERIPHERAL CONFIGURATION -----"));
-    
-    // NVIC (Nested Vector Interrupt Controller)
-    Serial.println(F("NVIC Configuration:"));
-    Serial.print(F("  Active IRQs: "));
-    int activeIRQs = 0;
-    #ifdef NVIC_NUM_VECTORS
-    for (int i = 0; i < NVIC_NUM_VECTORS; i++) {
-      if (NVIC->ISER[i / 32] & (1 << (i % 32))) {
-        activeIRQs++;
-      }
-    }
-    #else
-    // For nRF52840, there are 8 ISER registers with 32 bits each
-    for (int i = 0; i < 256; i++) {
-      if (NVIC->ISER[i / 32] & (1 << (i % 32))) {
-        activeIRQs++;
-      }
+      sendKeyStrokes(value ? PSTR("1\n") : PSTR("0\n"));
     }
     #endif
-    Serial.println(activeIRQs);
     
-    // PPI (Programmable Peripheral Interconnect)
-    Serial.println(F("PPI Configuration:"));
-    Serial.print(F("  Enabled Channels: "));
-    #ifdef NRF_PPI_BASE
-    Serial.println(NRF_PPI->CHEN, HEX);
-    #else
-    Serial.println(F("PPI info not available"));
-    #endif
- 
+    sendKeyStrokes(PSTR("\n----- PERIPHERAL CONFIGURATION -----\n"));
     
-    // ===== RADIO CONFIGURATION =====
-    Serial.println(F("\n----- RADIO CONFIGURATION -----"));
-    Serial.print(F("RADIO Enabled: "));
-    Serial.println((NRF_RADIO->POWER & RADIO_POWER_POWER_Msk) ? F("Yes") : F("No"));
+    // NVIC Configuration
+    sendKeyStrokes(PSTR("NVIC Configuration:\n"));
+    sendKeyStrokes(PSTR("  Active IRQs: "));
     
-    Serial.print(F("RADIO Mode: 0x"));
-    Serial.println(NRF_RADIO->MODE, HEX);
-    
-    Serial.print(F("RADIO Frequency: "));
-    Serial.println(NRF_RADIO->FREQUENCY);
-    
-    Serial.print(F("RADIO TX Power: 0x"));
-    Serial.println(NRF_RADIO->TXPOWER, HEX);
-    
-    // ===== WATCHDOG CONFIGURATION =====
-    Serial.println(F("\n----- WATCHDOG CONFIGURATION -----"));
-    Serial.print(F("Watchdog Running: "));
-    Serial.println((NRF_WDT->RUNSTATUS & WDT_RUNSTATUS_RUNSTATUS_Msk) ? F("Yes") : F("No"));
-    
-    Serial.print(F("Watchdog Reload Value: "));
-    Serial.println(NRF_WDT->CRV);
-    
-    Serial.print(F("Watchdog Reload Requests: 0x"));
-    Serial.println(NRF_WDT->RREN, HEX);
-    
-    // ===== DMA/EasyDMA STATUS =====
-    Serial.println(F("\n----- EasyDMA STATUS -----"));
-    
-    // SPIM0 EasyDMA
-    Serial.println(F("SPIM0 EasyDMA:"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    if (NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk) {
-      Serial.print(F("  TX Buffer: 0x"));
-      Serial.println(NRF_SPIM0->TXD.PTR, HEX);
-      Serial.print(F("  TX Count: "));
-      Serial.println(NRF_SPIM0->TXD.MAXCNT);
-    }
-    
-    // SPIM1 EasyDMA
-    Serial.println(F("SPIM1 EasyDMA:"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_SPIM1->ENABLE & SPIM_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    
-    // ===== QSPI CONFIGURATION (if available on nRF52840) =====
-    Serial.println(F("\n----- QSPI CONFIGURATION -----"));
-    Serial.print(F("QSPI Enabled: "));
-    Serial.println((NRF_QSPI->ENABLE & QSPI_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    
-    if (NRF_QSPI->ENABLE & QSPI_ENABLE_ENABLE_Msk) {
-      Serial.print(F("  QSPI IFCONFIG0: 0x"));
-      Serial.println(NRF_QSPI->IFCONFIG0, HEX);
-      Serial.print(F("  QSPI IFCONFIG1: 0x"));
-      Serial.println(NRF_QSPI->IFCONFIG1, HEX);
-    }
-    
-    // ===== USB CONFIGURATION =====
-    Serial.println(F("\n----- USB CONFIGURATION -----"));
-    Serial.print(F("USB Enabled: "));
-    Serial.println((NRF_USBD->ENABLE & USBD_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    
-    Serial.print(F("USB Pullup: "));
-    Serial.println((NRF_USBD->USBPULLUP & USBD_USBPULLUP_CONNECT_Msk) ? F("Connected") : F("Disconnected"));
-    
-    // ===== POWER SYSTEM =====
-    Serial.println(F("\n----- ADDITIONAL POWER SYSTEM INFO -----"));
-    
-    Serial.print(F("System OFF Register: 0x"));
-    Serial.println(NRF_POWER->SYSTEMOFF, HEX);
-    
-    Serial.print(F("RAM Power Config: "));
+    // Count active IRQs
+    uint32_t active_irq_count = 0;
     for (int i = 0; i < 8; i++) {
-      Serial.print(F("Section "));
-      Serial.print(i);
-      Serial.print(F(": 0x"));
-      Serial.print(NRF_POWER->RAM[i].POWER, HEX);
-      Serial.print(F(" "));
+      for (int j = 0; j < 32; j++) {
+        if (NVIC->ISER[i] & (1 << j)) {
+          active_irq_count++;
+        }
+      }
     }
-    Serial.println();
     
-    Serial.print(F("POFCON (Power failure comparator): 0x"));
-    Serial.println(NRF_POWER->POFCON, HEX);
+    char active_irqs_str[11];
+    snprintf(active_irqs_str, sizeof(active_irqs_str), "%lu", active_irq_count);
+    sendKeyStrokes(active_irqs_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.print(F("RESETREAS (Reset reason): 0x"));
-    Serial.println(NRF_POWER->RESETREAS, HEX);
+
+    
+    // Radio Configuration
+    sendKeyStrokes(PSTR("\n----- RADIO CONFIGURATION -----\n"));
+    sendKeyStrokes(PSTR("RADIO Enabled: "));
+    sendKeyStrokes((NRF_RADIO->POWER & RADIO_POWER_POWER_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    
+    sendKeyStrokes(PSTR("RADIO Mode: 0x"));
+    char radio_mode_str[9];
+    snprintf(radio_mode_str, sizeof(radio_mode_str), "%02lX", NRF_RADIO->MODE);
+    sendKeyStrokes(radio_mode_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("RADIO Frequency: "));
+    char radio_freq_str[11];
+    snprintf(radio_freq_str, sizeof(radio_freq_str), "%lu", NRF_RADIO->FREQUENCY);
+    sendKeyStrokes(radio_freq_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("RADIO TX Power: 0x"));
+    char radio_tx_str[9];
+    snprintf(radio_tx_str, sizeof(radio_tx_str), "%02lX", NRF_RADIO->TXPOWER);
+    sendKeyStrokes(radio_tx_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    // Watchdog Configuration
+    sendKeyStrokes(PSTR("\n----- WATCHDOG CONFIGURATION -----\n"));
+    sendKeyStrokes(PSTR("Watchdog Running: "));
+    sendKeyStrokes((NRF_WDT->RUNSTATUS & WDT_RUNSTATUS_RUNSTATUS_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    
+    sendKeyStrokes(PSTR("Watchdog Reload Value: "));
+    char wdt_crv_str[11];
+    snprintf(wdt_crv_str, sizeof(wdt_crv_str), "%lu", NRF_WDT->CRV);
+    sendKeyStrokes(wdt_crv_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("Watchdog Reload Requests: 0x"));
+    char wdt_rren_str[9];
+    snprintf(wdt_rren_str, sizeof(wdt_rren_str), "%08lX", NRF_WDT->RREN);
+    sendKeyStrokes(wdt_rren_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    // EasyDMA Status
+    sendKeyStrokes(PSTR("\n----- EasyDMA STATUS -----\n"));
+    
+    // Check SPIM0
+    sendKeyStrokes(PSTR("SPIM0 EasyDMA:\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    if (NRF_SPIM0->ENABLE) {
+      sendKeyStrokes(PSTR("  TX Buffer: 0x"));
+      char spim0_tx_ptr_str[9];
+      snprintf(spim0_tx_ptr_str, sizeof(spim0_tx_ptr_str), "%08lX", NRF_SPIM0->TXD.PTR);
+      sendKeyStrokes(spim0_tx_ptr_str);
+      sendKeyStrokes(PSTR("\n"));
+      sendKeyStrokes(PSTR("  TX Count: "));
+      char spim0_tx_maxcnt_str[5];
+      snprintf(spim0_tx_maxcnt_str, sizeof(spim0_tx_maxcnt_str), "%lu", NRF_SPIM0->TXD.MAXCNT);
+      sendKeyStrokes(spim0_tx_maxcnt_str);
+      sendKeyStrokes(PSTR("\n"));
+    }
+    
+    // Check SPIM1
+    sendKeyStrokes(PSTR("SPIM1 EasyDMA:\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_SPIM1->ENABLE & SPIM_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    
+    // QSPI Configuration
+    sendKeyStrokes(PSTR("\n----- QSPI CONFIGURATION -----\n"));
+    sendKeyStrokes(PSTR("QSPI Enabled: "));
+    sendKeyStrokes((NRF_QSPI->ENABLE & QSPI_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    if (NRF_QSPI->ENABLE) {
+      sendKeyStrokes(PSTR("  QSPI IFCONFIG0: 0x"));
+      char qspi_ifconfig0_str[11];
+      snprintf(qspi_ifconfig0_str, sizeof(qspi_ifconfig0_str), "%lX", NRF_QSPI->IFCONFIG0);
+      sendKeyStrokes(qspi_ifconfig0_str);
+      sendKeyStrokes(PSTR("\n"));
+      sendKeyStrokes(PSTR("  QSPI IFCONFIG1: 0x"));
+      char qspi_ifconfig1_str[11];
+      snprintf(qspi_ifconfig1_str, sizeof(qspi_ifconfig1_str), "%lX", NRF_QSPI->IFCONFIG1);
+      sendKeyStrokes(qspi_ifconfig1_str);
+      sendKeyStrokes(PSTR("\n"));
+    }
+    
+    // USB Configuration
+    sendKeyStrokes(PSTR("\n----- USB CONFIGURATION -----\n"));
+    sendKeyStrokes(PSTR("USB Enabled: "));
+    sendKeyStrokes((NRF_USBD->ENABLE & USBD_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    
+    sendKeyStrokes(PSTR("USB Pullup: "));
+    sendKeyStrokes((NRF_USBD->USBPULLUP & USBD_USBPULLUP_CONNECT_Msk) ? PSTR("Connected\n") : PSTR("Disconnected\n"));
+    
+    // Power System
+    sendKeyStrokes(PSTR("\n----- ADDITIONAL POWER SYSTEM INFO -----\n"));
+    
+    sendKeyStrokes(PSTR("System OFF Register: 0x"));
+    char systemoff_str[11];
+    snprintf(systemoff_str, sizeof(systemoff_str), "%lX", NRF_POWER->SYSTEMOFF);
+    sendKeyStrokes(systemoff_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("RAM Power Config: "));
+    for (int i = 0; i < 8; i++) {
+      sendKeyStrokes(PSTR("Section "));
+      char section_str[4];
+      snprintf(section_str, sizeof(section_str), "%d", i);
+      sendKeyStrokes(section_str);
+      sendKeyStrokes(PSTR(": 0x"));
+      char ram_power_str[9];
+      snprintf(ram_power_str, sizeof(ram_power_str), "%lX", NRF_POWER->RAM[i].POWER);
+      sendKeyStrokes(ram_power_str);
+      sendKeyStrokes(PSTR(" "));
+    }
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("POFCON (Power failure comparator): 0x"));
+    char pofcon_str[11];
+    snprintf(pofcon_str, sizeof(pofcon_str), "%lX", NRF_POWER->POFCON);
+    sendKeyStrokes(pofcon_str);
+    sendKeyStrokes(PSTR("\n"));
+    
+    sendKeyStrokes(PSTR("RESETREAS (Reset reason): 0x"));
+    char resetreas_str[11];
+    snprintf(resetreas_str, sizeof(resetreas_str), "%lX", NRF_POWER->RESETREAS);
+    sendKeyStrokes(resetreas_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // Additional peripheral status checks
-    Serial.println(F("\n----- ADDITIONAL PERIPHERAL STATUS -----"));
+    sendKeyStrokes(PSTR("\n----- ADDITIONAL PERIPHERAL STATUS -----\n"));
     
     // Check ACL (Access Control Lists)
-    Serial.print(F("ACL Count: "));
+    sendKeyStrokes(PSTR("ACL Count: "));
     #ifdef ACL_CONFIG_SIZE_Msk
-    Serial.println((NRF_ACL->CONFIG & ACL_CONFIG_SIZE_Msk) >> ACL_CONFIG_SIZE_Pos);
+    char acl_count_str[11];
+    snprintf(acl_count_str, sizeof(acl_count_str), "%ld", (NRF_ACL->CONFIG & ACL_CONFIG_SIZE_Msk) >> ACL_CONFIG_SIZE_Pos);
+    sendKeyStrokes(acl_count_str);
+    sendKeyStrokes(PSTR("\n"));
     #else
-    Serial.println(F("ACL size info not available"));
+    sendKeyStrokes(PSTR("ACL size info not available\n"));
     #endif
   
     
     // Check CCM (AES CCM mode encryption)
-    Serial.print(F("CCM Running: "));
-    Serial.println((NRF_CCM->ENABLE & CCM_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("CCM Running: "));
+    sendKeyStrokes((NRF_CCM->ENABLE & CCM_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     
     // Check AAR (Accelerated Address Resolver)
-    Serial.print(F("AAR Enabled: "));
-    Serial.println((NRF_AAR->ENABLE & AAR_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("AAR Enabled: "));
+    sendKeyStrokes((NRF_AAR->ENABLE & AAR_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     
     // Check ECB (AES Electronic Codebook mode encryption)
-    Serial.print(F("ECB Running: "));
-    Serial.println(NRF_ECB->TASKS_STARTECB ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("ECB Running: "));
+    sendKeyStrokes(NRF_ECB->TASKS_STARTECB ? PSTR("Yes\n") : PSTR("No\n"));
     
     // TEMP (Temperature sensor)
-    Serial.print(F("TEMP Enabled: "));
-    Serial.println((NRF_TEMP->TASKS_START) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("TEMP Enabled: "));
+    sendKeyStrokes((NRF_TEMP->TASKS_START) ? PSTR("Yes\n") : PSTR("No\n"));
     
     // RNG (Random Number Generator)
-    Serial.print(F("RNG Enabled: "));
-    Serial.println((NRF_RNG->TASKS_START) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("RNG Enabled: "));
+    sendKeyStrokes((NRF_RNG->TASKS_START) ? PSTR("Yes\n") : PSTR("No\n"));
     
     // ===== PERIPHERAL STATES =====
-    Serial.println(F("\n----- PERIPHERAL STATES -----"));
+    sendKeyStrokes(PSTR("\n----- PERIPHERAL STATES -----\n"));
     
     // TWIM0 (I2C Master)
-    Serial.println(F("TWIM0 (I2C Master):"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_TWIM0->ENABLE & TWIM_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    Serial.print(F("  SCL Pin: 0x"));
-    Serial.println(NRF_TWIM0->PSEL.SCL, HEX);
-    Serial.print(F("  SDA Pin: 0x"));
-    Serial.println(NRF_TWIM0->PSEL.SDA, HEX);
-    Serial.print(F("  Frequency: 0x"));
-    Serial.println(NRF_TWIM0->FREQUENCY, HEX);
-    Serial.print(F("  Interrupts Enabled: 0x"));
-    Serial.println(NRF_TWIM0->INTENSET, HEX);
+    sendKeyStrokes(PSTR("TWIM0 (I2C Master):\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_TWIM0->ENABLE & TWIM_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    sendKeyStrokes(PSTR("  SCL Pin: 0x"));
+    char twim0_scl_str[11];
+    snprintf(twim0_scl_str, sizeof(twim0_scl_str), "%lX", NRF_TWIM0->PSEL.SCL);
+    sendKeyStrokes(twim0_scl_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  SDA Pin: 0x"));
+    char twim0_sda_str[11];
+    snprintf(twim0_sda_str, sizeof(twim0_sda_str), "%lX", NRF_TWIM0->PSEL.SDA);
+    sendKeyStrokes(twim0_sda_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Frequency: 0x"));
+    char twim0_freq_str[11];
+    snprintf(twim0_freq_str, sizeof(twim0_freq_str), "%lX", NRF_TWIM0->FREQUENCY);
+    sendKeyStrokes(twim0_freq_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Interrupts Enabled: 0x"));
+    char twim0_int_str[11];
+    snprintf(twim0_int_str, sizeof(twim0_int_str), "%lX", NRF_TWIM0->INTENSET);
+    sendKeyStrokes(twim0_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // TWIS0 (I2C Slave)
-    Serial.println(F("TWIS0 (I2C Slave):"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_TWIS0->ENABLE & TWIS_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    Serial.print(F("  SCL Pin: 0x"));
-    Serial.println(NRF_TWIS0->PSEL.SCL, HEX);
-    Serial.print(F("  SDA Pin: 0x"));
-    Serial.println(NRF_TWIS0->PSEL.SDA, HEX);
-    Serial.print(F("  Interrupts Enabled: 0x"));
-    Serial.println(NRF_TWIS0->INTENSET, HEX);
+    sendKeyStrokes(PSTR("TWIS0 (I2C Slave):\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_TWIS0->ENABLE & TWIS_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    sendKeyStrokes(PSTR("  SCL Pin: 0x"));
+    char twis0_scl_str[11];
+    snprintf(twis0_scl_str, sizeof(twis0_scl_str), "%lX", NRF_TWIS0->PSEL.SCL);
+    sendKeyStrokes(twis0_scl_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  SDA Pin: 0x"));
+    char twis0_sda_str[11];
+    snprintf(twis0_sda_str, sizeof(twis0_sda_str), "%lX", NRF_TWIS0->PSEL.SDA);
+    sendKeyStrokes(twis0_sda_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Interrupts Enabled: 0x"));
+    char twis0_int_str[11];
+    snprintf(twis0_int_str, sizeof(twis0_int_str), "%lX", NRF_TWIS0->INTENSET);
+    sendKeyStrokes(twis0_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // Detailed I2C pin configuration
-    Serial.println(F("I2C Pin Configuration:"));
+    sendKeyStrokes(PSTR("I2C Pin Configuration:\n"));
     uint32_t scl_pin = (NRF_TWIM0->PSEL.SCL & 0x3F);  // Pin number is in bits 0-5
     uint32_t sda_pin = (NRF_TWIM0->PSEL.SDA & 0x3F);  // Pin number is in bits 0-5
     
     if (scl_pin < 32) {
-      Serial.print(F("  SCL Pin Config (P0."));
-      Serial.print(scl_pin);
-      Serial.print(F("): 0x"));
-      Serial.println(NRF_P0->PIN_CNF[scl_pin], HEX);
+      sendKeyStrokes(PSTR("  SCL Pin Config (P0."));
+      char scl_pin_str[3];
+      snprintf(scl_pin_str, sizeof(scl_pin_str), "%ld", scl_pin);
+      sendKeyStrokes(scl_pin_str);
+      sendKeyStrokes(PSTR("): 0x"));
+      char scl_config_str[11];
+      snprintf(scl_config_str, sizeof(scl_config_str), "%lX", NRF_P0->PIN_CNF[scl_pin]);
+      sendKeyStrokes(scl_config_str);
+      sendKeyStrokes(PSTR("\n"));
       
-      Serial.print(F("    Direction: "));
-      Serial.println((NRF_P0->PIN_CNF[scl_pin] & GPIO_PIN_CNF_DIR_Msk) ? F("Output") : F("Input"));
+      sendKeyStrokes(PSTR("    Direction: "));
+      sendKeyStrokes((NRF_P0->PIN_CNF[scl_pin] & GPIO_PIN_CNF_DIR_Msk) ? PSTR("Output\n") : PSTR("Input\n"));
       
-      Serial.print(F("    Input Buffer: "));
-      Serial.println((NRF_P0->PIN_CNF[scl_pin] & GPIO_PIN_CNF_INPUT_Msk) ? F("Connected") : F("Disconnected"));
+      sendKeyStrokes(PSTR("    Input Buffer: "));
+      sendKeyStrokes((NRF_P0->PIN_CNF[scl_pin] & GPIO_PIN_CNF_INPUT_Msk) ? PSTR("Connected\n") : PSTR("Disconnected\n"));
       
-      Serial.print(F("    Pull Configuration: "));
+      sendKeyStrokes(PSTR("    Pull Configuration: "));
       uint32_t pull = (NRF_P0->PIN_CNF[scl_pin] & GPIO_PIN_CNF_PULL_Msk) >> GPIO_PIN_CNF_PULL_Pos;
       switch (pull) {
-        case 0: Serial.println(F("Disabled")); break;
-        case 1: Serial.println(F("Pulldown")); break;
-        case 3: Serial.println(F("Pullup")); break;
-        default: Serial.println(F("Unknown")); break;
+        case 0: sendKeyStrokes(PSTR("Disabled\n")); break;
+        case 1: sendKeyStrokes(PSTR("Pulldown\n")); break;
+        case 3: sendKeyStrokes(PSTR("Pullup\n")); break;
+        default: sendKeyStrokes(PSTR("Unknown\n")); break;
       }
     }
     
     if (sda_pin < 32) {
-      Serial.print(F("  SDA Pin Config (P0."));
-      Serial.print(sda_pin);
-      Serial.print(F("): 0x"));
-      Serial.println(NRF_P0->PIN_CNF[sda_pin], HEX);
+      sendKeyStrokes(PSTR("  SDA Pin Config (P0."));
+      char sda_pin_str[3];
+      snprintf(sda_pin_str, sizeof(sda_pin_str), "%ld", sda_pin);
+      sendKeyStrokes(sda_pin_str);
+      sendKeyStrokes(PSTR("): 0x"));
+      char sda_config_str[11];
+      snprintf(sda_config_str, sizeof(sda_config_str), "%lX", NRF_P0->PIN_CNF[sda_pin]);
+      sendKeyStrokes(sda_config_str);
+      sendKeyStrokes(PSTR("\n"));
       
-      Serial.print(F("    Direction: "));
-      Serial.println((NRF_P0->PIN_CNF[sda_pin] & GPIO_PIN_CNF_DIR_Msk) ? F("Output") : F("Input"));
+      sendKeyStrokes(PSTR("    Direction: "));
+      sendKeyStrokes((NRF_P0->PIN_CNF[sda_pin] & GPIO_PIN_CNF_DIR_Msk) ? PSTR("Output\n") : PSTR("Input\n"));
       
-      Serial.print(F("    Input Buffer: "));
-      Serial.println((NRF_P0->PIN_CNF[sda_pin] & GPIO_PIN_CNF_INPUT_Msk) ? F("Connected") : F("Disconnected"));
+      sendKeyStrokes(PSTR("    Input Buffer: "));
+      sendKeyStrokes((NRF_P0->PIN_CNF[sda_pin] & GPIO_PIN_CNF_INPUT_Msk) ? PSTR("Connected\n") : PSTR("Disconnected\n"));
       
-      Serial.print(F("    Pull Configuration: "));
+      sendKeyStrokes(PSTR("    Pull Configuration: "));
       uint32_t pull = (NRF_P0->PIN_CNF[sda_pin] & GPIO_PIN_CNF_PULL_Msk) >> GPIO_PIN_CNF_PULL_Pos;
       switch (pull) {
-        case 0: Serial.println(F("Disabled")); break;
-        case 1: Serial.println(F("Pulldown")); break;
-        case 3: Serial.println(F("Pullup")); break;
-        default: Serial.println(F("Unknown")); break;
+        case 0: sendKeyStrokes(PSTR("Disabled\n")); break;
+        case 1: sendKeyStrokes(PSTR("Pulldown\n")); break;
+        case 3: sendKeyStrokes(PSTR("Pullup\n")); break;
+        default: sendKeyStrokes(PSTR("Unknown\n")); break;
       }
     }
     
     // UARTE0 (Serial)
-    Serial.println(F("UARTE0 (Serial):"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_UARTE0->ENABLE & UARTE_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    Serial.print(F("  TX Pin: 0x"));
-    Serial.println(NRF_UARTE0->PSEL.TXD, HEX);
-    Serial.print(F("  RX Pin: 0x"));
-    Serial.println(NRF_UARTE0->PSEL.RXD, HEX);
+    sendKeyStrokes(PSTR("UARTE0 (Serial):\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_UARTE0->ENABLE & UARTE_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    sendKeyStrokes(PSTR("  TX Pin: 0x"));
+    char uarte0_tx_str[11];
+    snprintf(uarte0_tx_str, sizeof(uarte0_tx_str), "%lX", NRF_UARTE0->PSEL.TXD);
+    sendKeyStrokes(uarte0_tx_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  RX Pin: 0x"));
+    char uarte0_rx_str[11];
+    snprintf(uarte0_rx_str, sizeof(uarte0_rx_str), "%lX", NRF_UARTE0->PSEL.RXD);
+    sendKeyStrokes(uarte0_rx_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // SAADC (Analog-to-Digital Converter)
-    Serial.println(F("SAADC (ADC):"));
-    Serial.print(F("  Enabled: "));
-    Serial.println((NRF_SAADC->ENABLE & SAADC_ENABLE_ENABLE_Msk) ? F("Yes") : F("No"));
-    if (NRF_SAADC->ENABLE & SAADC_ENABLE_ENABLE_Msk) {
-      Serial.println(F("  Channel Configuration:"));
+    sendKeyStrokes(PSTR("SAADC (ADC):\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes((NRF_SAADC->ENABLE & SAADC_ENABLE_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
+    if (NRF_SAADC->ENABLE) {
+      sendKeyStrokes(PSTR("  Channel Configuration:\n"));
       for (int i = 0; i < 8; i++) {
-        Serial.print(F("    Channel "));
-        Serial.print(i);
-        Serial.print(F(" Config: 0x"));
-        Serial.println(NRF_SAADC->CH[i].CONFIG, HEX);
+        sendKeyStrokes(PSTR("    Channel "));
+        char ch_num_str[3];
+        snprintf(ch_num_str, sizeof(ch_num_str), "%d", i);
+        sendKeyStrokes(ch_num_str);
+        sendKeyStrokes(PSTR(" Config: 0x"));
+        char ch_config_str[11];
+        snprintf(ch_config_str, sizeof(ch_config_str), "%lX", NRF_SAADC->CH[i].CONFIG);
+        sendKeyStrokes(ch_config_str);
+        sendKeyStrokes(PSTR("\n"));
       }
     }
     
     // TIMERS
-    Serial.println(F("TIMER0:"));
-    Serial.print(F("  Mode: "));
-    Serial.println(NRF_TIMER0->MODE, HEX);
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_TIMER0->INTENSET, HEX);
+    sendKeyStrokes(PSTR("TIMER0:\n"));
+    sendKeyStrokes(PSTR("  Mode: "));
+    char timer0_mode_str[11];
+    snprintf(timer0_mode_str, sizeof(timer0_mode_str), "%lX", NRF_TIMER0->MODE);
+    sendKeyStrokes(timer0_mode_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char timer0_int_str[11];
+    snprintf(timer0_int_str, sizeof(timer0_int_str), "%lX", NRF_TIMER0->INTENSET);
+    sendKeyStrokes(timer0_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.println(F("TIMER1:"));
-    Serial.print(F("  Mode: "));
-    Serial.println(NRF_TIMER1->MODE, HEX);
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_TIMER1->INTENSET, HEX);
+    sendKeyStrokes(PSTR("TIMER1:\n"));
+    sendKeyStrokes(PSTR("  Mode: "));
+    char timer1_mode_str[11];
+    snprintf(timer1_mode_str, sizeof(timer1_mode_str), "%lX", NRF_TIMER1->MODE);
+    sendKeyStrokes(timer1_mode_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char timer1_int_str[11];
+    snprintf(timer1_int_str, sizeof(timer1_int_str), "%lX", NRF_TIMER1->INTENSET);
+    sendKeyStrokes(timer1_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.println(F("TIMER2:"));
-    Serial.print(F("  Mode: "));
-    Serial.println(NRF_TIMER2->MODE, HEX);
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_TIMER2->INTENSET, HEX);
+    sendKeyStrokes(PSTR("TIMER2:\n"));
+    sendKeyStrokes(PSTR("  Mode: "));
+    char timer2_mode_str[11];
+    snprintf(timer2_mode_str, sizeof(timer2_mode_str), "%lX", NRF_TIMER2->MODE);
+    sendKeyStrokes(timer2_mode_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char timer2_int_str[11];
+    snprintf(timer2_int_str, sizeof(timer2_int_str), "%lX", NRF_TIMER2->INTENSET);
+    sendKeyStrokes(timer2_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // RTC
-    Serial.println(F("RTC0:"));
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_RTC0->INTENSET, HEX);
-    Serial.print(F("  Enabled Events: 0x"));
-    Serial.println(NRF_RTC0->EVTEN, HEX);
-    Serial.print(F("  Counter: "));
-    Serial.println(NRF_RTC0->COUNTER);
+    sendKeyStrokes(PSTR("RTC0:\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char rtc0_int_str[11];
+    snprintf(rtc0_int_str, sizeof(rtc0_int_str), "%lX", NRF_RTC0->INTENSET);
+    sendKeyStrokes(rtc0_int_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Enabled Events: 0x"));
+    char rtc0_evt_str[11];
+    snprintf(rtc0_evt_str, sizeof(rtc0_evt_str), "%lX", NRF_RTC0->EVTEN);
+    sendKeyStrokes(rtc0_evt_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Counter: "));
+    char rtc0_cnt_str[11];
+    snprintf(rtc0_cnt_str, sizeof(rtc0_cnt_str), "%ld", NRF_RTC0->COUNTER);
+    sendKeyStrokes(rtc0_cnt_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.println(F("RTC1:"));
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_RTC1->INTENSET, HEX);
-    Serial.print(F("  Enabled Events: 0x"));
-    Serial.println(NRF_RTC1->EVTEN, HEX);
-    Serial.print(F("  Counter: "));
-    Serial.println(NRF_RTC1->COUNTER);
+    sendKeyStrokes(PSTR("RTC1:\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char rtc1_int_str[11];
+    snprintf(rtc1_int_str, sizeof(rtc1_int_str), "%lX", NRF_RTC1->INTENSET);
+    sendKeyStrokes(rtc1_int_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Enabled Events: 0x"));
+    char rtc1_evt_str[11];
+    snprintf(rtc1_evt_str, sizeof(rtc1_evt_str), "%lX", NRF_RTC1->EVTEN);
+    sendKeyStrokes(rtc1_evt_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Counter: "));
+    char rtc1_cnt_str[11];
+    snprintf(rtc1_cnt_str, sizeof(rtc1_cnt_str), "%ld", NRF_RTC1->COUNTER);
+    sendKeyStrokes(rtc1_cnt_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // GPIOTE
-    Serial.println(F("GPIOTE:"));
-    Serial.print(F("  Enabled Interrupts: 0x"));
-    Serial.println(NRF_GPIOTE->INTENSET, HEX);
-    Serial.println(F("  Channel Configuration:"));
+    sendKeyStrokes(PSTR("GPIOTE:\n"));
+    sendKeyStrokes(PSTR("  Enabled Interrupts: 0x"));
+    char gpiote_int_str[11];
+    snprintf(gpiote_int_str, sizeof(gpiote_int_str), "%lX", NRF_GPIOTE->INTENSET);
+    sendKeyStrokes(gpiote_int_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Channel Configuration:\n"));
     for (int i = 0; i < 8; i++) {
-      Serial.print(F("    Channel "));
-      Serial.print(i);
-      Serial.print(F(": 0x"));
-      Serial.println(NRF_GPIOTE->CONFIG[i], HEX);
+      sendKeyStrokes(PSTR("    Channel "));
+      char gpiote_ch_str[3];
+      snprintf(gpiote_ch_str, sizeof(gpiote_ch_str), "%d", i);
+      sendKeyStrokes(gpiote_ch_str);
+      sendKeyStrokes(PSTR(": 0x"));
+      char gpiote_cfg_str[11];
+      snprintf(gpiote_cfg_str, sizeof(gpiote_cfg_str), "%lX", NRF_GPIOTE->CONFIG[i]);
+      sendKeyStrokes(gpiote_cfg_str);
+      sendKeyStrokes(PSTR("\n"));
     }
     
     // PPI (Programmable Peripheral Interconnect)
-    Serial.println(F("PPI:"));
-    Serial.print(F("  Enabled Channels: 0x"));
-    Serial.println(NRF_PPI->CHEN, HEX);
-    Serial.println(F("  Channel Configuration:"));
+    sendKeyStrokes(PSTR("PPI:\n"));
+    sendKeyStrokes(PSTR("  Enabled Channels: 0x"));
+    char ppi_chen_str[11];
+    snprintf(ppi_chen_str, sizeof(ppi_chen_str), "%lX", NRF_PPI->CHEN);
+    sendKeyStrokes(ppi_chen_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Channel Configuration:\n"));
     for (int i = 0; i < 16; i++) {
       if (NRF_PPI->CHEN & (1 << i)) {
-        Serial.print(F("    Channel "));
-        Serial.print(i);
-        Serial.print(F(" EEP: 0x"));
-        Serial.print(NRF_PPI->CH[i].EEP, HEX);
-        Serial.print(F(", TEP: 0x"));
-        Serial.println(NRF_PPI->CH[i].TEP, HEX);
+        sendKeyStrokes(PSTR("    Channel "));
+        char ppi_ch_str[3];
+        snprintf(ppi_ch_str, sizeof(ppi_ch_str), "%d", i);
+        sendKeyStrokes(ppi_ch_str);
+        sendKeyStrokes(PSTR(" EEP: 0x"));
+        char ppi_eep_str[11];
+        snprintf(ppi_eep_str, sizeof(ppi_eep_str), "%lX", NRF_PPI->CH[i].EEP);
+        sendKeyStrokes(ppi_eep_str);
+        sendKeyStrokes(PSTR(", TEP: 0x"));
+        char ppi_tep_str[11];
+        snprintf(ppi_tep_str, sizeof(ppi_tep_str), "%lX", NRF_PPI->CH[i].TEP);
+        sendKeyStrokes(ppi_tep_str);
+        sendKeyStrokes(PSTR("\n"));
       }
     }
     
     
     // ===== EXTENDED CLOCK INFORMATION =====
-    Serial.println(F("\n----- EXTENDED CLOCK INFORMATION -----"));
+    sendKeyStrokes(PSTR("\n----- EXTENDED CLOCK INFORMATION -----\n"));
     
-  Serial.println(F("\n----- CLOCK CONFIGURATION -----"));
+    sendKeyStrokes(PSTR("\n----- CLOCK CONFIGURATION -----\n"));
     
    
     // Low-frequency clock
-    Serial.print(F("LFCLK Source: "));
+    sendKeyStrokes(PSTR("LFCLK Source: "));
     uint32_t lfclk_stat_src = (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_SRC_Msk) >> CLOCK_LFCLKSTAT_SRC_Pos;
     switch (lfclk_stat_src) {
       case CLOCK_LFCLKSTAT_SRC_RC:
-        Serial.println(F("RC Oscillator (higher power, less accurate)"));
+        sendKeyStrokes(PSTR("RC Oscillator (higher power, less accurate)\n"));
         break;
       case CLOCK_LFCLKSTAT_SRC_Xtal:
-        Serial.println(F("Crystal Oscillator (more accurate, uses slightly more power)"));
+        sendKeyStrokes(PSTR("Crystal Oscillator (more accurate, uses slightly more power)\n"));
         break;
       case CLOCK_LFCLKSTAT_SRC_Synth:
-        Serial.println(F("Synthesized from HFCLK (high power!)"));
+        sendKeyStrokes(PSTR("Synthesized from HFCLK (high power!)\n"));
         break;
       default:
-        Serial.println(F("Unknown"));
+        sendKeyStrokes(PSTR("Unknown\n"));
         break;
     }
-    Serial.print(F("LFCLK Running: "));
-    Serial.println((NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("LFCLK Running: "));
+    sendKeyStrokes((NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     
 
     
 
     // Clock source details
-    Serial.print(F("LFCLKSRC: 0x"));
-    Serial.println(NRF_CLOCK->LFCLKSRC, HEX);
-    Serial.print(F("  Source: "));
+    sendKeyStrokes(PSTR("LFCLKSRC: 0x"));
+    char lfclksrc_str[11];
+    snprintf(lfclksrc_str, sizeof(lfclksrc_str), "%lX", NRF_CLOCK->LFCLKSRC);
+    sendKeyStrokes(lfclksrc_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("  Source: "));
     uint32_t lfclk_stat_src_value = (NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_SRC_Msk) >> CLOCK_LFCLKSTAT_SRC_Pos;
     uint32_t lfclk_src = (NRF_CLOCK->LFCLKSRC & CLOCK_LFCLKSRC_SRC_Msk) >> CLOCK_LFCLKSRC_SRC_Pos;
     switch (lfclk_src) {
-      case 0: Serial.println(F("RC Oscillator")); break;
-      case 1: Serial.println(F("XTAL Oscillator")); break;
-      case 2: Serial.println(F("Synthesized from HFCLK")); break;
-      default: Serial.println(F("Unknown")); break;
+      case 0: sendKeyStrokes(PSTR("RC Oscillator\n")); break;
+      case 1: sendKeyStrokes(PSTR("XTAL Oscillator\n")); break;
+      case 2: sendKeyStrokes(PSTR("Synthesized from HFCLK\n")); break;
+      default: sendKeyStrokes(PSTR("Unknown\n")); break;
     }
      // High-frequency clock
-    Serial.print(F("HFCLK Source: "));
+    sendKeyStrokes(PSTR("HFCLK Source: "));
     switch (NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_SRC_Msk) {
       case CLOCK_HFCLKSTAT_SRC_RC:
-        Serial.println(F("RC Oscillator (good for power saving)"));
+        sendKeyStrokes(PSTR("RC Oscillator (good for power saving)\n"));
         break;
       case CLOCK_HFCLKSTAT_SRC_Xtal:
-        Serial.println(F("Crystal Oscillator (accurate but uses more power)"));
+        sendKeyStrokes(PSTR("Crystal Oscillator (accurate but uses more power)\n"));
         break;
       default:
-        Serial.println(F("Unknown"));
+        sendKeyStrokes(PSTR("Unknown\n"));
         break;
     }
-    Serial.print(F("HFCLK Running: "));
-    Serial.println((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("HFCLK Running: "));
+    sendKeyStrokes((NRF_CLOCK->HFCLKSTAT & CLOCK_HFCLKSTAT_STATE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     
 
-
-    Serial.print(F("HFXODEBOUNCE: 0x"));
-    Serial.println(NRF_CLOCK->HFXODEBOUNCE, HEX);
+    sendKeyStrokes(PSTR("HFXODEBOUNCE: 0x"));
+    char hfxodebounce_str[11];
+    snprintf(hfxodebounce_str, sizeof(hfxodebounce_str), "%lX", NRF_CLOCK->HFXODEBOUNCE);
+    sendKeyStrokes(hfxodebounce_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // Clock calibration status
-    Serial.print(F("CTIV (Calibration timer interval): "));
-    Serial.println((NRF_CLOCK->CTIV & CLOCK_CTIV_CTIV_Msk) >> CLOCK_CTIV_CTIV_Pos);
+    sendKeyStrokes(PSTR("CTIV (Calibration timer interval): "));
+    char ctiv_str[11];
+    snprintf(ctiv_str, sizeof(ctiv_str), "%ld", (NRF_CLOCK->CTIV & CLOCK_CTIV_CTIV_Msk) >> CLOCK_CTIV_CTIV_Pos);
+    sendKeyStrokes(ctiv_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.print(F("Clock Events: 0x"));
-    Serial.println(NRF_CLOCK->EVENTS_DONE, HEX);
+    sendKeyStrokes(PSTR("Clock Events: 0x"));
+    char clock_evt_str[11];
+    snprintf(clock_evt_str, sizeof(clock_evt_str), "%lX", NRF_CLOCK->EVENTS_DONE);
+    sendKeyStrokes(clock_evt_str);
+    sendKeyStrokes(PSTR("\n"));
     
-    Serial.print(F("Clock Interrupts Enabled: 0x"));
-    Serial.println(NRF_CLOCK->INTENSET, HEX);
+    sendKeyStrokes(PSTR("Clock Interrupts Enabled: 0x"));
+    char clock_int_str[11];
+    snprintf(clock_int_str, sizeof(clock_int_str), "%lX", NRF_CLOCK->INTENSET);
+    sendKeyStrokes(clock_int_str);
+    sendKeyStrokes(PSTR("\n"));
     
     // ===== EXTENDED FREERTOS INFORMATION =====
-    Serial.println(F("\n----- EXTENDED FREERTOS INFORMATION -----"));
+    sendKeyStrokes(PSTR("\n----- EXTENDED FREERTOS INFORMATION -----\n"));
     
     // Get detailed task information using FreeRTOS API
-    Serial.print(F("Scheduler State: "));
+    sendKeyStrokes(PSTR("Scheduler State: "));
     UBaseType_t schedulerState = xTaskGetSchedulerState();
     switch (schedulerState) {
-      case 0: Serial.println(F("Not Started")); break;
-      case 1: Serial.println(F("Suspended")); break;
-      case 2: Serial.println(F("Running")); break;
-      default: Serial.println(F("Unknown")); break;
+      case 0: sendKeyStrokes(PSTR("Not Started\n")); break;
+      case 1: sendKeyStrokes(PSTR("Suspended\n")); break;
+      case 2: sendKeyStrokes(PSTR("Running\n")); break;
+      default: sendKeyStrokes(PSTR("Unknown\n")); break;
     }
     
     // Get detailed task list
@@ -1589,271 +1743,317 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     
     UBaseType_t actualTaskCount = uxTaskGetSystemState(taskStatusArray, MAX_TASKS, &totalRunTime);
     
-    Serial.print(F("Total tasks: "));
-    Serial.println(actualTaskCount);
+    sendKeyStrokes(PSTR("Total tasks: "));
+    char task_count_str[4];
+    snprintf(task_count_str, sizeof(task_count_str), "%ld", actualTaskCount);
+    sendKeyStrokes(task_count_str);
+    sendKeyStrokes(PSTR("\n"));
     
     if (actualTaskCount > 0) {
-      Serial.println(F("Task Details:"));
-      Serial.println(F("  Name\t\tState\tPriority\tStack (words)\tTask #"));
+      sendKeyStrokes(PSTR("Task Details:\n"));
+      sendKeyStrokes(PSTR("  Name\t\tState\tPriority\tStack (words)\tTask #\n"));
       
       for (UBaseType_t i = 0; i < actualTaskCount; i++) {
-        Serial.print(F("  "));
-        Serial.print(taskStatusArray[i].pcTaskName);
-        Serial.print(F("\t"));
+        sendKeyStrokes(PSTR("  "));
+        sendKeyStrokes(taskStatusArray[i].pcTaskName);
+        sendKeyStrokes(PSTR("\t"));
         
         // Task state
         switch (taskStatusArray[i].eCurrentState) {
-          case eRunning: Serial.print(F("Running\t")); break;
-          case eReady: Serial.print(F("Ready\t")); break;
-          case eBlocked: Serial.print(F("Blocked\t")); break;
-          case eSuspended: Serial.print(F("Suspended")); break;
-          case eDeleted: Serial.print(F("Deleted\t")); break;
-          default: Serial.print(F("Unknown\t")); break;
+          case eRunning: sendKeyStrokes(PSTR("Running\t")); break;
+          case eReady: sendKeyStrokes(PSTR("Ready\t")); break;
+          case eBlocked: sendKeyStrokes(PSTR("Blocked\t")); break;
+          case eSuspended: sendKeyStrokes(PSTR("Suspended")); break;
+          case eDeleted: sendKeyStrokes(PSTR("Deleted\t")); break;
+          default: sendKeyStrokes(PSTR("Unknown\t")); break;
         }
         
         // Print priority, stack high water mark, and task number
-        Serial.print(taskStatusArray[i].uxCurrentPriority);
-        Serial.print(F("\t\t"));
-        Serial.print(taskStatusArray[i].usStackHighWaterMark);
-        Serial.print(F("\t\t"));
-        Serial.println(taskStatusArray[i].xTaskNumber);
+        char task_priority_str[4];
+        snprintf(task_priority_str, sizeof(task_priority_str), "%d", taskStatusArray[i].uxCurrentPriority);
+        sendKeyStrokes(task_priority_str);
+        sendKeyStrokes(PSTR("\t\t"));
+        
+        char task_stack_str[6];
+        snprintf(task_stack_str, sizeof(task_stack_str), "%d", taskStatusArray[i].usStackHighWaterMark);
+        sendKeyStrokes(task_stack_str);
+        sendKeyStrokes(PSTR("\t\t"));
+        
+        char task_num_str[4];
+        snprintf(task_num_str, sizeof(task_num_str), "%d", taskStatusArray[i].xTaskNumber);
+        sendKeyStrokes(task_num_str);
+        sendKeyStrokes(PSTR("\n"));
       }
     }
   
     
     // ===== EXTENDED PERIPHERAL INFORMATION =====
-    Serial.println(F("\n----- EXTENDED PERIPHERAL INFORMATION -----"));
+    sendKeyStrokes(PSTR("\n----- EXTENDED PERIPHERAL INFORMATION -----\n"));
     
     // SPI status
-    Serial.println(F("SPI0:"));
-    Serial.print(F("  Enabled: "));
-    Serial.println(NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("SPI0:\n"));
+    sendKeyStrokes(PSTR("  Enabled: "));
+    sendKeyStrokes(NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk ? PSTR("Yes\n") : PSTR("No\n"));
     if (NRF_SPIM0->ENABLE & SPIM_ENABLE_ENABLE_Msk) {
-      Serial.print(F("  Frequency: 0x"));
-      Serial.println(NRF_SPIM0->FREQUENCY, HEX);
-      Serial.print(F("  SCK Pin: 0x"));
-      Serial.println(NRF_SPIM0->PSEL.SCK, HEX);
-      Serial.print(F("  MOSI Pin: 0x"));
-      Serial.println(NRF_SPIM0->PSEL.MOSI, HEX);
-      Serial.print(F("  MISO Pin: 0x"));
-      Serial.println(NRF_SPIM0->PSEL.MISO, HEX);
+      sendKeyStrokes(PSTR("  Frequency: 0x"));
+      char spi0_freq_str[11];
+      snprintf(spi0_freq_str, sizeof(spi0_freq_str), "%lX", NRF_SPIM0->FREQUENCY);
+      sendKeyStrokes(spi0_freq_str);
+      sendKeyStrokes(PSTR("\n"));
+      sendKeyStrokes(PSTR("  SCK Pin: 0x"));
+      char spi0_sck_str[11];
+      snprintf(spi0_sck_str, sizeof(spi0_sck_str), "%lX", NRF_SPIM0->PSEL.SCK);
+      sendKeyStrokes(spi0_sck_str);
+      sendKeyStrokes(PSTR("\n"));
+      sendKeyStrokes(PSTR("  MOSI Pin: 0x"));
+      char spi0_mosi_str[11];
+      snprintf(spi0_mosi_str, sizeof(spi0_mosi_str), "%lX", NRF_SPIM0->PSEL.MOSI);
+      sendKeyStrokes(spi0_mosi_str);
+      sendKeyStrokes(PSTR("\n"));
+      sendKeyStrokes(PSTR("  MISO Pin: 0x"));
+      char spi0_miso_str[11];
+      snprintf(spi0_miso_str, sizeof(spi0_miso_str), "%lX", NRF_SPIM0->PSEL.MISO);
+      sendKeyStrokes(spi0_miso_str);
+      sendKeyStrokes(PSTR("\n"));
     }
     
     // Flash Cache configuration
-    Serial.println(F("NVMC (Flash Controller):"));
-    Serial.print(F("  Ready: "));
-    Serial.println(NRF_NVMC->READY & NVMC_READY_READY_Msk ? F("Yes") : F("No"));
-    Serial.print(F("  Config: 0x"));
-    Serial.println(NRF_NVMC->CONFIG, HEX);
-    Serial.print(F("  ICACHE Enabled: "));
-    Serial.println(NRF_NVMC->ICACHECNF & NVMC_ICACHECNF_CACHEEN_Msk ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("NVMC (Flash Controller):\n"));
+    sendKeyStrokes(PSTR("  Ready: "));
+    sendKeyStrokes(NRF_NVMC->READY & NVMC_READY_READY_Msk ? PSTR("Yes\n") : PSTR("No\n"));
+    sendKeyStrokes(PSTR("  Config: 0x"));
+    char nvmc_config[9];
+    snprintf(nvmc_config, sizeof(nvmc_config), "%X\n", NRF_NVMC->CONFIG);
+    sendKeyStrokes(nvmc_config);
+    sendKeyStrokes(PSTR("  ICACHE Enabled: "));
+    sendKeyStrokes(NRF_NVMC->ICACHECNF & NVMC_ICACHECNF_CACHEEN_Msk ? PSTR("Yes\n") : PSTR("No\n"));
     
     // MPU (Memory Protection Unit) configuration
-    Serial.println(F("MPU:"));
-    Serial.print(F("  MPU Control Register: 0x"));
-    Serial.println(SCB->SHCSR & SCB_SHCSR_MEMFAULTENA_Msk ? F("Memory Fault Enabled") : F("Memory Fault Disabled"));
+    sendKeyStrokes(PSTR("MPU:\n"));
+    sendKeyStrokes(PSTR("  MPU Control Register: "));
+    sendKeyStrokes(SCB->SHCSR & SCB_SHCSR_MEMFAULTENA_Msk ? PSTR("Memory Fault Enabled\n") : PSTR("Memory Fault Disabled\n"));
     
     // ===== BLE CONFIGURATION =====
-    Serial.println(F("\n----- BLE CONFIGURATION -----"));
+    sendKeyStrokes(PSTR("\n----- BLE CONFIGURATION -----\n"));
     
     // BLE connection configuration
-    Serial.print(F("BLE Connections: "));
+    sendKeyStrokes(PSTR("BLE Connections: "));
     #ifdef BLE_CONN_STATE_MAX_CONNECTIONS
     uint8_t conn_count = 0;
     // We don't have direct access to BLE connection handles, so we'll show basic info
-    Serial.println(conn_count);
+    char conn_count_str[4];
+    snprintf(conn_count_str, sizeof(conn_count_str), "%d\n", conn_count);
+    sendKeyStrokes(conn_count_str);
     
     // BLE connection details
     if (conn_count > 0) {
-      Serial.println(F("Connected devices:"));
+      sendKeyStrokes(PSTR("Connected devices:\n"));
       // We can't enumerate connections without proper API access
-      Serial.println(F("  [Connection details not available]"));
+      sendKeyStrokes(PSTR("  [Connection details not available]\n"));
     }
     #else
-    Serial.println(F("BLE connection info not available"));
+    sendKeyStrokes(PSTR("BLE connection info not available\n"));
     #endif
     
     // Check CONTROL register for FPCA bit (FP Context Active)
     uint32_t control = __get_CONTROL();
-    Serial.print(F("CONTROL Register: 0x"));
-    Serial.println(control, HEX);
-    Serial.print(F("  FPCA Bit (bit 2): "));
-    Serial.println((control & (1 << 2)) ? F("Set (FP Context Active - 3mA DRAIN!)") : F("Clear (No Active FP Context)"));
+    sendKeyStrokes(PSTR("CONTROL Register: 0x"));
+    char control_str[9];
+    snprintf(control_str, sizeof(control_str), "%X\n", control);
+    sendKeyStrokes(control_str);
+    sendKeyStrokes(PSTR("  FPCA Bit (bit 2): "));
+    sendKeyStrokes((control & (1 << 2)) ? PSTR("Set (FP Context Active - 3mA DRAIN!)\n") : PSTR("Clear (No Active FP Context)\n"));
    
    
    
     // ===== MPU CONFIGURATION =====
-    Serial.println(F("\n----- MPU CONFIGURATION -----"));
+    sendKeyStrokes(PSTR("\n----- MPU CONFIGURATION -----\n"));
     
-    Serial.print(F("MPU CTRL: 0x"));
-    Serial.println(MPU->CTRL, HEX);
+    sendKeyStrokes(PSTR("MPU CTRL: 0x"));
+    char mpu_ctrl[9];
+    snprintf(mpu_ctrl, sizeof(mpu_ctrl), "%X\n", MPU->CTRL);
+    sendKeyStrokes(mpu_ctrl);
     
-    Serial.print(F("MPU RBAR: 0x"));
-    Serial.println(MPU->RBAR, HEX);
+    sendKeyStrokes(PSTR("MPU RBAR: 0x"));
+    char mpu_rbar[9];
+    snprintf(mpu_rbar, sizeof(mpu_rbar), "%X\n", MPU->RBAR);
+    sendKeyStrokes(mpu_rbar);
     
-    Serial.print(F("MPU RASR: 0x"));
-    Serial.println(MPU->RASR, HEX);
+    sendKeyStrokes(PSTR("MPU RASR: 0x"));
+    char mpu_rasr[9];
+    snprintf(mpu_rasr, sizeof(mpu_rasr), "%X\n", MPU->RASR);
+    sendKeyStrokes(mpu_rasr);
     
     // Check if MPU is enabled
-    Serial.print(F("MPU Enabled: "));
-    Serial.println((MPU->CTRL & MPU_CTRL_ENABLE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("MPU Enabled: "));
+    sendKeyStrokes((MPU->CTRL & MPU_CTRL_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     
     // Check if MPU uses default memory map as background region
-    Serial.print(F("Default Map Enabled: "));
-    Serial.println((MPU->CTRL & MPU_CTRL_PRIVDEFENA_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("Default Map Enabled: "));
+    sendKeyStrokes((MPU->CTRL & MPU_CTRL_PRIVDEFENA_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     // If possible, check FPCCR register
     #ifdef SCB_FPCCR_ASPEN_Msk
-    Serial.print(F("FPCCR Register: 0x"));
-    Serial.println(SCB->FPCCR, HEX);
-    Serial.print(F("  ASPEN (Automatic State Preservation): "));
-    Serial.println((SCB->FPCCR & SCB_FPCCR_ASPEN_Msk) ? F("Enabled") : F("Disabled"));
-    Serial.print(F("  LSPEN (Lazy State Preservation): "));
-    Serial.println((SCB->FPCCR & SCB_FPCCR_LSPEN_Msk) ? F("Enabled") : F("Disabled"));
+    sendKeyStrokes(PSTR("FPCCR Register: 0x"));
+    char fpccr_str[9];
+    snprintf(fpccr_str, sizeof(fpccr_str), "%X\n", SCB->FPCCR);
+    sendKeyStrokes(fpccr_str);
+    sendKeyStrokes(PSTR("  ASPEN (Automatic State Preservation): "));
+    sendKeyStrokes((SCB->FPCCR & SCB_FPCCR_ASPEN_Msk) ? PSTR("Enabled\n") : PSTR("Disabled\n"));
+    sendKeyStrokes(PSTR("  LSPEN (Lazy State Preservation): "));
+    sendKeyStrokes((SCB->FPCCR & SCB_FPCCR_LSPEN_Msk) ? PSTR("Enabled\n") : PSTR("Disabled\n"));
     #endif
     
     // ===== MEMORY PROTECTION =====
-    Serial.println(F("\n----- MEMORY PROTECTION -----"));
+    sendKeyStrokes(PSTR("\n----- MEMORY PROTECTION -----\n"));
     
-    Serial.print(F("ACL Count: "));
+    sendKeyStrokes(PSTR("ACL Count: "));
     // NRF_ACL might not have a SIZE member; using direct register definition if available
     #ifdef ACL_CONFIG_SIZE_Msk
-    Serial.println((NRF_ACL->CONFIG & ACL_CONFIG_SIZE_Msk) >> ACL_CONFIG_SIZE_Pos);
+    char acl_size[4];
+    snprintf(acl_size, sizeof(acl_size), "%d\n", (NRF_ACL->CONFIG & ACL_CONFIG_SIZE_Msk) >> ACL_CONFIG_SIZE_Pos);
+    sendKeyStrokes(acl_size);
    
     
     // Check if ACL is enabled
-    Serial.print(F("ACL Enabled: "));
+    sendKeyStrokes(PSTR("ACL Enabled: "));
     #ifdef ACL_CONFIG_ENABLE_Msk
-    Serial.println((NRF_ACL->CONFIG & ACL_CONFIG_ENABLE_Msk) ? F("Yes") : F("No"));
+    sendKeyStrokes((NRF_ACL->CONFIG & ACL_CONFIG_ENABLE_Msk) ? PSTR("Yes\n") : PSTR("No\n"));
     #else
-    Serial.println(F("ACL enable info not available"));
+    sendKeyStrokes(PSTR("ACL enable info not available\n"));
     #endif
     #else
-    Serial.println(F("Memory protection information not available on this platform"));
+    sendKeyStrokes(PSTR("Memory protection information not available on this platform\n"));
     #endif
     
     // ===== POWER CRITICAL SETTINGS =====
-    Serial.println(F("\n----- POWER CRITICAL SETTINGS -----"));
+    sendKeyStrokes(PSTR("\n----- POWER CRITICAL SETTINGS -----\n"));
     
 
     
     // Check DCDC converter settings - LDO uses more power
-    Serial.print(F("DCDC Converter: "));
-    Serial.println(NRF_POWER->DCDCEN ? F("Enabled (good)") : F("Disabled (BAD - uses more power)"));
+    sendKeyStrokes(PSTR("DCDC Converter: "));
+    sendKeyStrokes(NRF_POWER->DCDCEN ? PSTR("Enabled (good)\n") : PSTR("Disabled (BAD - uses more power)\n"));
     
     // RAM retention settings - unnecessary retention wastes power
-    Serial.println(F("RAM Retention:"));
+    sendKeyStrokes(PSTR("RAM Retention:\n"));
     #if defined(NRF52840_XXAA)
     // Check each RAM block's retention state
     for (int i = 0; i < 8; i++) {
       uint32_t ram_powerset = 0;
       sd_power_ram_power_get(i, &ram_powerset);
-      Serial.print(F("  Section "));
-      Serial.print(i);
-      Serial.print(F(": "));
-      Serial.println(ram_powerset ? F("Retained (uses power)") : F("Off (good for unused RAM)"));
+      sendKeyStrokes(PSTR("  Section "));
+      char section_num[2];
+      snprintf(section_num, sizeof(section_num), "%d", i);
+      sendKeyStrokes(section_num);
+      sendKeyStrokes(PSTR(": "));
+      sendKeyStrokes(ram_powerset ? PSTR("Retained (uses power)\n") : PSTR("Off (good for unused RAM)\n"));
     }
     #endif
     
     // Radio settings
-    Serial.println(F("Radio Status:"));
-    Serial.print(F("  Radio activity: "));
+    sendKeyStrokes(PSTR("Radio Status:\n"));
+    sendKeyStrokes(PSTR("  Radio activity: "));
     if ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Disabled) {
-      Serial.println(F("ACTIVE (power drain!)"));
+      sendKeyStrokes(PSTR("ACTIVE (power drain!)\n"));
     } else {
-      Serial.println(F("Disabled (good)"));
+      sendKeyStrokes(PSTR("Disabled (good)\n"));
     }
-    Serial.print(F("  TX Power: "));
-    Serial.print(NRF_RADIO->TXPOWER);
-    Serial.println(F(" dBm"));
+    sendKeyStrokes(PSTR("  TX Power: "));
+    char tx_power[5];
+    snprintf(tx_power, sizeof(tx_power), "%d", NRF_RADIO->TXPOWER);
+    sendKeyStrokes(tx_power);
+    sendKeyStrokes(PSTR(" dBm\n"));
     
     // Check BLE advertising state
-    Serial.println(F("BLE Status:"));
+    sendKeyStrokes(PSTR("BLE Status:\n"));
     bool advertising = false;
     if (ble().connected()) {
       advertising = false;
     } else {
       advertising = true; // Assume advertising if not connected
     }
-    Serial.print(F("  Advertising: "));
-    Serial.println(advertising ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("  Advertising: "));
+    sendKeyStrokes(advertising ? PSTR("Yes\n") : PSTR("No\n"));
 
     // Replace ble().connCount() with appropriate connection check
-    Serial.print(F("  Connected devices: "));
-    Serial.println(ble().connected() ? F("1") : F("0"));
+    sendKeyStrokes(PSTR("  Connected devices: "));
+    sendKeyStrokes(ble().connected() ? PSTR("1\n") : PSTR("0\n"));
     
     // Check system ON reason
-    Serial.print(F("System ON reason: "));
+    sendKeyStrokes(PSTR("System ON reason: "));
     if (NRF_POWER->RESETREAS == 0) {
-      Serial.println(F("Power on or external reset"));
+      sendKeyStrokes(PSTR("Power on or external reset\n"));
     } else {
       if (NRF_POWER->RESETREAS & POWER_RESETREAS_RESETPIN_Msk)
-        Serial.println(F("Reset pin"));
+        sendKeyStrokes(PSTR("Reset pin\n"));
       if (NRF_POWER->RESETREAS & POWER_RESETREAS_DOG_Msk)
-        Serial.println(F("Watchdog"));
+        sendKeyStrokes(PSTR("Watchdog\n"));
       if (NRF_POWER->RESETREAS & POWER_RESETREAS_SREQ_Msk)
-        Serial.println(F("Software reset"));
+        sendKeyStrokes(PSTR("Software reset\n"));
       if (NRF_POWER->RESETREAS & POWER_RESETREAS_LOCKUP_Msk)
-        Serial.println(F("CPU lock-up"));
+        sendKeyStrokes(PSTR("CPU lock-up\n"));
       if (NRF_POWER->RESETREAS & POWER_RESETREAS_OFF_Msk)
-        Serial.println(F("GPIO wakeup from OFF"));
+        sendKeyStrokes(PSTR("GPIO wakeup from OFF\n"));
     }
     
     // Power management configuration
-    Serial.println(F("Power Management:"));
+    sendKeyStrokes(PSTR("Power Management:\n"));
     uint8_t sd_enabled = 0;
     sd_softdevice_is_enabled(&sd_enabled);
-    Serial.print(F("  SoftDevice enabled: "));
-    Serial.println(sd_enabled ? F("Yes") : F("No"));
+    sendKeyStrokes(PSTR("  SoftDevice enabled: "));
+    sendKeyStrokes(sd_enabled ? PSTR("Yes\n") : PSTR("No\n"));
     
     uint8_t power_mode = 0;
     if (sd_enabled) {
       // We can't directly get the power mode through the API, so we'll report what we know
-      Serial.print(F("  Power mode: "));
+      sendKeyStrokes(PSTR("  Power mode: "));
       // For now, just report the presumed mode
-      Serial.println(F("Unknown (check power consumption to determine)"));
+      sendKeyStrokes(PSTR("Unknown (check power consumption to determine)\n"));
       
       // Add general power management information
-      Serial.println(F("  Power Optimization:"));
-      Serial.print(F("    - Low Power Mode: "));
-      Serial.println(F("Can be enabled using sd_power_mode_set(NRF_POWER_MODE_LOWPWR)"));
+      sendKeyStrokes(PSTR("  Power Optimization:\n"));
+      sendKeyStrokes(PSTR("    - Low Power Mode: "));
+      sendKeyStrokes(PSTR("Can be enabled using sd_power_mode_set(NRF_POWER_MODE_LOWPWR)\n"));
     }
     
     // Add RAM retention info
-    Serial.println(F("\nRAM Power Status:"));
+    sendKeyStrokes(PSTR("\nRAM Power Status:\n"));
     for (uint8_t i = 0; i < 8; i++) {
       uint32_t ram_powerset = 0;
       if (sd_power_ram_power_get(i, &ram_powerset) == NRF_SUCCESS) {
-        Serial.print(F("  RAM block "));
-        Serial.print(i);
-        Serial.print(F(": "));
-        Serial.println(ram_powerset ? F("Retained in System OFF") : F("Not retained"));
+        sendKeyStrokes(PSTR("  RAM block "));
+        char ram_block[2];
+        snprintf(ram_block, sizeof(ram_block), "%d", i);
+        sendKeyStrokes(ram_block);
+        sendKeyStrokes(PSTR(": "));
+        sendKeyStrokes(ram_powerset ? PSTR("Retained in System OFF\n") : PSTR("Not retained\n"));
       }
     }
     
     // Check USB regulator (major power drain when active)
-    Serial.print(F("\nUSB Regulator: "));
-    Serial.println(NRF_USBD->ENABLE ? F("Enabled (high power drain if not used)") : F("Disabled"));
+    sendKeyStrokes(PSTR("\nUSB Regulator: "));
+    sendKeyStrokes(NRF_USBD->ENABLE ? PSTR("Enabled (high power drain if not used)\n") : PSTR("Disabled\n"));
     
     // Add USB power status info if available
     uint32_t usbregstatus = 0;
     if (sd_power_usbregstatus_get(&usbregstatus) == NRF_SUCCESS) {
-      Serial.print(F("  USB Power Status: "));
+      sendKeyStrokes(PSTR("  USB Power Status: "));
       if (usbregstatus & POWER_USBREGSTATUS_VBUSDETECT_Msk) 
-        Serial.println(F("VBUS detected"));
+        sendKeyStrokes(PSTR("VBUS detected\n"));
       else if (usbregstatus & POWER_USBREGSTATUS_OUTPUTRDY_Msk)
-        Serial.println(F("USB power ready"));
+        sendKeyStrokes(PSTR("USB power ready\n"));
       else
-        Serial.println(F("No USB power"));
+        sendKeyStrokes(PSTR("No USB power\n"));
     }
     
     // Check instruction cache (small power impact)
-    Serial.print(F("\nInstruction Cache: "));
-    Serial.println((NRF_NVMC->ICACHECNF & NVMC_ICACHECNF_CACHEEN_Msk) ? 
-                  F("Enabled (better performance)") : 
-                  F("Disabled (slightly lower power)"));
+    sendKeyStrokes(PSTR("\nInstruction Cache: "));
+    sendKeyStrokes((NRF_NVMC->ICACHECNF & NVMC_ICACHECNF_CACHEEN_Msk) ? 
+                  PSTR("Enabled (better performance)\n") : 
+                  PSTR("Disabled (slightly lower power)\n"));
     
     // Check floating GPIO inputs (common power drain source)
-    Serial.println(F("\nPotentially Floating Inputs (can cause power drain):"));
+    sendKeyStrokes(PSTR("\nPotentially Floating Inputs (can cause power drain):\n"));
     int floating_count = 0;
     
     // P0 port
@@ -1865,11 +2065,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       
       if (is_input && input_connected && !pull_enabled) {
         if (floating_count == 0) {
-          Serial.println(F("  Potentially floating inputs:"));
+          sendKeyStrokes(PSTR("  Potentially floating inputs:\n"));
         }
-        Serial.print(F("    P0."));
-        if (i < 10) Serial.print('0');
-        Serial.println(i);
+        sendKeyStrokes(PSTR("    P0."));
+        if (i < 10) sendKeyStrokes(PSTR("0"));
+        sendKeyStrokes(i);
+        sendKeyStrokes(PSTR("\n"));
         floating_count++;
       }
     }
@@ -1884,44 +2085,46 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       
       if (is_input && input_connected && !pull_enabled) {
         if (floating_count == 0) {
-          Serial.println(F("  Potentially floating inputs:"));
+          sendKeyStrokes(PSTR("  Potentially floating inputs:\n"));
         }
-        Serial.print(F("    P1."));
-        if (i < 10) Serial.print('0');
-        Serial.println(i);
+        sendKeyStrokes(PSTR("    P1."));
+        if (i < 10) sendKeyStrokes(PSTR("0"));
+        sendKeyStrokes(i);
+        sendKeyStrokes(PSTR("\n"));
         floating_count++;
       }
     }
     #endif
     
     if (floating_count == 0) {
-      Serial.println(F("  None detected (good)"));
+      sendKeyStrokes(PSTR("  None detected (good)\n"));
     } else {
-      Serial.print(F("  Total floating inputs: "));
-      Serial.print(floating_count);
-      Serial.println(F(" (FIX THESE!)"));
+      sendKeyStrokes(PSTR("  Total floating inputs: "));
+      sendKeyStrokes(floating_count);
+      sendKeyStrokes(PSTR(" (FIX THESE!)\n"));
     }
     
     // Check for active peripheral interrupts that might prevent sleep
-    Serial.println(F("\nActive Interrupts (prevent deep sleep):"));
+    sendKeyStrokes(PSTR("\nActive Interrupts (prevent deep sleep):\n"));
     bool active_interrupts = false;
     
     for (int i = 0; i < 8; i++) {
       if (NVIC->ISER[i] != 0) {
         active_interrupts = true;
-        Serial.print(F("  NVIC->ISER["));
-        Serial.print(i);
-        Serial.print(F("]: 0x"));
-        Serial.println(NVIC->ISER[i], HEX);
+        sendKeyStrokes(PSTR("  NVIC->ISER["));
+        sendKeyStrokes(i);
+        sendKeyStrokes(PSTR("]: 0x"));
+        sendKeyStrokes(NVIC->ISER[i], HEX);
+        sendKeyStrokes(PSTR("\n"));
       }
     }
     
     if (!active_interrupts) {
-      Serial.println(F("  None (good for power saving)"));
+      sendKeyStrokes(PSTR("  None (good for power saving)\n"));
     }
     
     // Check for active sense configurations on pins (prevent ultra-low power)
-    Serial.println(F("\nPins with SENSE enabled (needed for wakeup but use power):"));
+    sendKeyStrokes(PSTR("\nPins with SENSE enabled (needed for wakeup but use power):\n"));
     int sense_count = 0;
     
     // P0 port
@@ -1931,13 +2134,13 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       
       if (sense != GPIO_PIN_CNF_SENSE_Disabled) {
         if (sense_count == 0) {
-          Serial.println(F("  Pins with SENSE enabled:"));
+          sendKeyStrokes(PSTR("  Pins with SENSE enabled:\n"));
         }
-        Serial.print(F("    P0."));
-        if (i < 10) Serial.print('0');
-        Serial.print(i);
-        Serial.print(F(": "));
-        Serial.println(sense == GPIO_PIN_CNF_SENSE_High ? F("High") : F("Low"));
+        sendKeyStrokes(PSTR("    P0."));
+        if (i < 10) sendKeyStrokes(PSTR("0"));
+        sendKeyStrokes(i);
+        sendKeyStrokes(PSTR(": "));
+        sendKeyStrokes(sense == GPIO_PIN_CNF_SENSE_High ? PSTR("High\n") : PSTR("Low\n"));
         sense_count++;
       }
     }
@@ -1950,265 +2153,276 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       
       if (sense != GPIO_PIN_CNF_SENSE_Disabled) {
         if (sense_count == 0) {
-          Serial.println(F("  Pins with SENSE enabled:"));
+          sendKeyStrokes(PSTR("  Pins with SENSE enabled:\n"));
         }
-        Serial.print(F("    P1."));
-        if (i < 10) Serial.print('0');
-        Serial.print(i);
-        Serial.print(F(": "));
-        Serial.println(sense == GPIO_PIN_CNF_SENSE_High ? F("High") : F("Low"));
+        sendKeyStrokes(PSTR("    P1."));
+        if (i < 10) sendKeyStrokes(PSTR("0"));
+        sendKeyStrokes(i);
+        sendKeyStrokes(PSTR(": "));
+        sendKeyStrokes(sense == GPIO_PIN_CNF_SENSE_High ? PSTR("High\n") : PSTR("Low\n"));
         sense_count++;
       }
     }
     #endif
     
     if (sense_count == 0) {
-      Serial.println(F("  None (only needed for specific wakeup sources)"));
+      sendKeyStrokes(PSTR("  None (only needed for specific wakeup sources)\n"));
     }
     
     // Summary of power optimization status
-    Serial.println(F("\n===== POWER OPTIMIZATION SUMMARY ====="));
+    sendKeyStrokes(PSTR("\n===== POWER OPTIMIZATION SUMMARY =====\n"));
     
     int critical_issues = 0;
     int warnings = 0;
     
     // Check for critical issues (high power drain)
     if (control & (1 << 2)) {
-      Serial.println(F("CRITICAL: FPU context active (3mA drain)"));
+      sendKeyStrokes(PSTR("CRITICAL: FPU context active (3mA drain)\n"));
       critical_issues++;
     }
     
     if (NRF_USBD->ENABLE && !mcu_.USBConfigured()) {
-      Serial.println(F("CRITICAL: USB regulator enabled but USB not connected"));
+      sendKeyStrokes(PSTR("CRITICAL: USB regulator enabled but USB not connected\n"));
       critical_issues++;
     }
     
     if (floating_count > 0) {
-      Serial.println(F("CRITICAL: Floating inputs detected (fix with pull-up/down)"));
+      sendKeyStrokes(PSTR("CRITICAL: Floating inputs detected (fix with pull-up/down)\n"));
       critical_issues++;
     }
     
     if ((NRF_RADIO->STATE & RADIO_STATE_STATE_Msk) != RADIO_STATE_STATE_Disabled) {
-      Serial.println(F("CRITICAL: Radio active"));
+      sendKeyStrokes(PSTR("CRITICAL: Radio active\n"));
       critical_issues++;
     }
     
     // Check for warnings (moderate power impact)
     if (!NRF_POWER->DCDCEN) {
-      Serial.println(F("WARNING: DCDC converter disabled (higher power consumption)"));
+      sendKeyStrokes(PSTR("WARNING: DCDC converter disabled (higher power consumption)\n"));
       warnings++;
     }
     
     if (power_mode == NRF_POWER_MODE_CONSTLAT) {
-      Serial.println(F("WARNING: Constant latency mode active (prevents deep sleep)"));
+      sendKeyStrokes(PSTR("WARNING: Constant latency mode active (prevents deep sleep)\n"));
       warnings++;
     }
     
     if (active_interrupts) {
-      Serial.println(F("WARNING: Active interrupts may prevent deep sleep"));
+      sendKeyStrokes(PSTR("WARNING: Active interrupts may prevent deep sleep\n"));
       warnings++;
     }
     
     if (lfclk_stat_src != 1) {  // Not using external crystal
-      Serial.println(F("NOTE: Not using XTAL for LFCLK (less accurate timing)"));
+      sendKeyStrokes(PSTR("NOTE: Not using XTAL for LFCLK (less accurate timing)\n"));
     }
     
-    Serial.print(F("\nTotal critical issues: "));
-    Serial.println(critical_issues);
-    Serial.print(F("Total warnings: "));
-    Serial.println(warnings);
+    sendKeyStrokes(PSTR("\nTotal critical issues: "));
+    sendKeyStrokes(critical_issues);
+    sendKeyStrokes(PSTR("Total warnings: "));
+    sendKeyStrokes(warnings);
     
     if (critical_issues == 0 && warnings == 0) {
-      Serial.println(F("Power configuration looks good!"));
+      sendKeyStrokes(PSTR("Power configuration looks good!\n"));
     }
 
     // ===== ADDITIONAL POWER-CRITICAL PERIPHERALS =====
-    Serial.println(F("\n----- ADDITIONAL POWER-CRITICAL PERIPHERALS -----"));
+    sendKeyStrokes(PSTR("\n----- ADDITIONAL POWER-CRITICAL PERIPHERALS -----\n"));
     
     // Check ADC/SAADC state (can consume significant power if enabled)
-    Serial.print(F("ADC/SAADC: "));
-    Serial.println(NRF_SAADC->ENABLE ? F("Enabled (power drain if not actively used)") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("ADC/SAADC: "));
+    sendKeyStrokes(NRF_SAADC->ENABLE ? PSTR("Enabled (power drain if not actively used)\n") : PSTR("Disabled (good)\n"));
     if (NRF_SAADC->ENABLE) {
       // Check if a conversion is in progress
-      Serial.print(F("  Conversion active: "));
-      Serial.println(NRF_SAADC->EVENTS_STARTED && !NRF_SAADC->EVENTS_END ? F("Yes (high power)") : F("No"));
+      sendKeyStrokes(PSTR("  Conversion active: "));
+      sendKeyStrokes(NRF_SAADC->EVENTS_STARTED && !NRF_SAADC->EVENTS_END ? PSTR("Yes (high power)\n") : PSTR("No\n"));
     }
     
     // Check watchdog state
-    Serial.print(F("Watchdog: "));
-    Serial.println(NRF_WDT->RUNSTATUS ? F("Running (periodic wake-ups)") : F("Disabled"));
+    sendKeyStrokes(PSTR("Watchdog: "));
+    sendKeyStrokes(NRF_WDT->RUNSTATUS ? PSTR("Running (periodic wake-ups)\n") : PSTR("Disabled\n"));
     if (NRF_WDT->RUNSTATUS) {
-      Serial.print(F("  Reload value: "));
-      Serial.print(NRF_WDT->CRV);
-      Serial.println(F(" (lower values = more frequent wake-ups = more power)"));
+      sendKeyStrokes(PSTR("  Reload value: "));
+      char wdt_crv_str[11];
+      snprintf(wdt_crv_str, sizeof(wdt_crv_str), "%ld", NRF_WDT->CRV);
+      sendKeyStrokes(wdt_crv_str);
+      sendKeyStrokes(PSTR(" (lower values = more frequent wake-ups = more power)\n"));
     }
     
     // Check debug interface
-    Serial.print(F("Debug interface: "));
+    sendKeyStrokes(PSTR("Debug interface: "));
     #ifdef ENABLE_DEBUG
-    Serial.println(F("Enabled (uses power)"));
+    sendKeyStrokes(PSTR("Enabled (uses power)\n"));
     #else
-    Serial.println(F("Disabled (good for power)"));
+    sendKeyStrokes(PSTR("Disabled (good for power)\n"));
     #endif
     
     // Check SWO trace interface
-    Serial.print(F("SWO trace: "));
-    Serial.println((NRF_CLOCK->TRACECONFIG & CLOCK_TRACECONFIG_TRACEMUX_Msk) ? 
-                   F("Enabled (consumes power)") : 
-                   F("Disabled (good)"));
+    sendKeyStrokes(PSTR("SWO trace: "));
+    sendKeyStrokes((NRF_CLOCK->TRACECONFIG & CLOCK_TRACECONFIG_TRACEMUX_Msk) ? 
+               PSTR("Enabled (consumes power)\n") : 
+               PSTR("Disabled (good)\n"));
     
     // Check TWI/I2C peripherals
-    Serial.println(F("\nI2C/TWI peripherals:"));
-    Serial.print(F("  TWIM0: "));
-    Serial.println(NRF_TWIM0->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  TWIM1: "));
-    Serial.println(NRF_TWIM1->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  TWIS0: "));
-    Serial.println(NRF_TWIS0->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  TWIS1: "));
-    Serial.println(NRF_TWIS1->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("\nI2C/TWI peripherals:\n"));
+    sendKeyStrokes(PSTR("  TWIM0: "));
+    sendKeyStrokes(NRF_TWIM0->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  TWIM1: "));
+    sendKeyStrokes(NRF_TWIM1->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  TWIS0: "));
+    sendKeyStrokes(NRF_TWIS0->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  TWIS1: "));
+    sendKeyStrokes(NRF_TWIS1->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check SPIM (SPI Master) peripherals
-    Serial.println(F("\nSPI peripherals:"));
-    Serial.print(F("  SPIM0: "));
-    Serial.println(NRF_SPIM0->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  SPIM1: "));
-    Serial.println(NRF_SPIM1->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  SPIM2: "));
-    Serial.println(NRF_SPIM2->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("\nSPI peripherals:\n"));
+    sendKeyStrokes(PSTR("  SPIM0: "));
+    sendKeyStrokes(NRF_SPIM0->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  SPIM1: "));
+    sendKeyStrokes(NRF_SPIM1->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  SPIM2: "));
+    sendKeyStrokes(NRF_SPIM2->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     #if defined(NRF52840_XXAA)
-    Serial.print(F("  SPIM3: "));
-    Serial.println(NRF_SPIM3->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  SPIM3: "));
+    sendKeyStrokes(NRF_SPIM3->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     #endif
     
     // Check UARTE (UART with EasyDMA) peripherals
-    Serial.println(F("\nUART peripherals:"));
-    Serial.print(F("  UARTE0: "));
-    Serial.println(NRF_UARTE0->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  UARTE1: "));
-    Serial.println(NRF_UARTE1->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("\nUART peripherals:\n"));
+    sendKeyStrokes(PSTR("  UARTE0: "));
+    sendKeyStrokes(NRF_UARTE0->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  UARTE1: "));
+    sendKeyStrokes(NRF_UARTE1->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check PWM peripherals
-    Serial.println(F("\nPWM peripherals:"));
-    Serial.print(F("  PWM0: "));
-    Serial.println(NRF_PWM0->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  PWM1: "));
-    Serial.println(NRF_PWM1->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  PWM2: "));
-    Serial.println(NRF_PWM2->ENABLE ? F("Enabled") : F("Disabled (good)"));
-    Serial.print(F("  PWM3: "));
-    Serial.println(NRF_PWM3->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("\nPWM peripherals:\n"));
+    sendKeyStrokes(PSTR("  PWM0: "));
+    sendKeyStrokes(NRF_PWM0->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  PWM1: "));
+    sendKeyStrokes(NRF_PWM1->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  PWM2: "));
+    sendKeyStrokes(NRF_PWM2->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
+    sendKeyStrokes(PSTR("  PWM3: "));
+    sendKeyStrokes(NRF_PWM3->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check active timers
-    Serial.println(F("\nTimer peripherals:"));
-    Serial.print(F("  TIMER0: "));
-    Serial.println(NRF_TIMER0->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  TIMER1: "));
-    Serial.println(NRF_TIMER1->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  TIMER2: "));
-    Serial.println(NRF_TIMER2->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  TIMER3: "));
-    Serial.println(NRF_TIMER3->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  TIMER4: "));
-    Serial.println(NRF_TIMER4->TASKS_START ? F("Running") : F("Stopped (good)"));
+    sendKeyStrokes(PSTR("\nTimer peripherals:\n"));
+    sendKeyStrokes(PSTR("  TIMER0: "));
+    sendKeyStrokes(NRF_TIMER0->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  TIMER1: "));
+    sendKeyStrokes(NRF_TIMER1->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  TIMER2: "));
+    sendKeyStrokes(NRF_TIMER2->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  TIMER3: "));
+    sendKeyStrokes(NRF_TIMER3->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  TIMER4: "));
+    sendKeyStrokes(NRF_TIMER4->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
     
     // Check RTC peripherals
-    Serial.println(F("\nRTC peripherals:"));
-    Serial.print(F("  RTC0: "));
-    Serial.println(NRF_RTC0->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  RTC1: "));
-    Serial.println(NRF_RTC1->TASKS_START ? F("Running") : F("Stopped (good)"));
-    Serial.print(F("  RTC2: "));
-    Serial.println(NRF_RTC2->TASKS_START ? F("Running") : F("Stopped (good)"));
+    sendKeyStrokes(PSTR("\nRTC peripherals:\n"));
+    sendKeyStrokes(PSTR("  RTC0: "));
+    sendKeyStrokes(NRF_RTC0->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  RTC1: "));
+    sendKeyStrokes(NRF_RTC1->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
+    sendKeyStrokes(PSTR("  RTC2: "));
+    sendKeyStrokes(NRF_RTC2->TASKS_START ? PSTR("Running\n") : PSTR("Stopped (good)\n"));
     
     // Check battery gauge active state
-    Serial.println(F("\nBattery gauge:"));
-    Serial.print(F("  MAX17048 active: "));
+    sendKeyStrokes(PSTR("\nBattery gauge:\n"));
+    sendKeyStrokes(PSTR("  MAX17048 active: "));
     bool gauge_active = batteryGauge().begin();
-    Serial.println(gauge_active ? F("Yes") : F("No"));
+    sendKeyStrokes(gauge_active ? PSTR("Yes\n") : PSTR("No\n"));
     
     if (gauge_active) {
       // Get voltage and battery level
       uint16_t voltage = batteryGauge().getVoltage();
       uint8_t level = batteryGauge().getBatteryLevel();
       
-      Serial.print(F("  Battery voltage: "));
-      Serial.print(voltage);
-      Serial.println(F(" mV"));
+      sendKeyStrokes(PSTR("  Battery voltage: "));
+      char voltage_str[7];
+      snprintf(voltage_str, sizeof(voltage_str), "%d", voltage);
+      sendKeyStrokes(voltage_str);
+      sendKeyStrokes(PSTR(" mV\n"));
       
-      Serial.print(F("  Battery level: "));
-      Serial.print(level);
-      Serial.println(F("%"));
+      sendKeyStrokes(PSTR("  Battery level: "));
+      char level_str[4];
+      snprintf(level_str, sizeof(level_str), "%d", level);
+      sendKeyStrokes(level_str);
+      sendKeyStrokes(PSTR("%\n"));
       
       // Try to detect if battery gauge is in low power mode
-      Serial.print(F("  Gauge low power mode: "));
+      sendKeyStrokes(PSTR("  Gauge low power mode: "));
       // This is an indirect detection since we can't directly read the sleep status
       // Instead, check if charge rate can be read
       int16_t charge_rate = batteryGauge().getChargeRate();
-      Serial.println(charge_rate == 0 ? F("Possibly in sleep mode (good)") : F("Active mode (uses more power)"));
+      sendKeyStrokes(charge_rate == 0 ? PSTR("Possibly in sleep mode (good)\n") : PSTR("Active mode (uses more power)\n"));
     }
     
     // Identify additional potential power drains
-    Serial.println(F("\nAdditional potential power drains:"));
+    sendKeyStrokes(PSTR("\nAdditional potential power drains:\n"));
     
     // Check for active PDM (microphone interface)
-    Serial.print(F("  PDM: "));
-    Serial.println(NRF_PDM->ENABLE ? F("Enabled (high power drain)") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  PDM: "));
+    sendKeyStrokes(NRF_PDM->ENABLE ? PSTR("Enabled (high power drain)\n") : PSTR("Disabled (good)\n"));
     
     // Check for active I2S (audio interface)
-    Serial.print(F("  I2S: "));
-    Serial.println(NRF_I2S->ENABLE ? F("Enabled (high power drain)") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  I2S: "));
+    sendKeyStrokes(NRF_I2S->ENABLE ? PSTR("Enabled (high power drain)\n") : PSTR("Disabled (good)\n"));
     
     // Check for active QDEC (quadrature decoder for rotary encoders)
-    Serial.print(F("  QDEC: "));
-    Serial.println(NRF_QDEC->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  QDEC: "));
+    sendKeyStrokes(NRF_QDEC->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check for active COMP (analog comparator)
-    Serial.print(F("  COMP: "));
-    Serial.println(NRF_COMP->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  COMP: "));
+    sendKeyStrokes(NRF_COMP->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check for active LPCOMP (low-power comparator)
-    Serial.print(F("  LPCOMP: "));
-    Serial.println(NRF_LPCOMP->ENABLE ? F("Enabled") : F("Disabled (good)"));
+    sendKeyStrokes(PSTR("  LPCOMP: "));
+    sendKeyStrokes(NRF_LPCOMP->ENABLE ? PSTR("Enabled\n") : PSTR("Disabled (good)\n"));
     
     // Check for active NFC
     #if defined(NRF52840_XXAA)
-    Serial.print(F("  NFCT: "));
-    Serial.println(NRF_NFCT->TASKS_DISABLE ? F("Disabled (good)") : F("Possibly active (high power drain)"));
+    sendKeyStrokes(PSTR("  NFCT: "));
+    sendKeyStrokes(NRF_NFCT->TASKS_DISABLE ? PSTR("Disabled (good)\n") : PSTR("Possibly active (high power drain)\n"));
     #endif
     
     // Update summary based on new peripherals checked
     if (NRF_SAADC->ENABLE) {
-      Serial.println(F("CRITICAL: SAADC enabled but not in use (power drain)"));
+      sendKeyStrokes(PSTR("CRITICAL: SAADC enabled but not in use (power drain)\n"));
       critical_issues++;
     }
     
     if (NRF_PDM->ENABLE) {
-      Serial.println(F("CRITICAL: PDM (microphone) interface enabled (high power drain)"));
+      sendKeyStrokes(PSTR("CRITICAL: PDM (microphone) interface enabled (high power drain)\n"));
       critical_issues++;
     }
     
     if (NRF_I2S->ENABLE) {
-      Serial.println(F("CRITICAL: I2S (audio) interface enabled (high power drain)"));
+      sendKeyStrokes(PSTR("CRITICAL: I2S (audio) interface enabled (high power drain)\n"));
       critical_issues++;
     }
     
     #if defined(NRF52840_XXAA)
     if (!NRF_NFCT->TASKS_DISABLE) {
-      Serial.println(F("CRITICAL: NFCT (NFC) possibly active (high power drain)"));
+      sendKeyStrokes(PSTR("CRITICAL: NFCT (NFC) possibly active (high power drain)\n"));
       critical_issues++;
     }
     #endif
     
     // Update critical issues and warnings count
-    Serial.print(F("\nUpdated total critical issues: "));
-    Serial.println(critical_issues);
-    Serial.print(F("Updated total warnings: "));
-    Serial.println(warnings);
+    sendKeyStrokes(PSTR("\nUpdated total critical issues: "));
+    char updated_critical_str[4];
+    snprintf(updated_critical_str, sizeof(updated_critical_str), "%d", critical_issues);
+    sendKeyStrokes(updated_critical_str);
+    sendKeyStrokes(PSTR("\n"));
+    sendKeyStrokes(PSTR("Updated total warnings: "));
+    char updated_warnings_str[4];
+    snprintf(updated_warnings_str, sizeof(updated_warnings_str), "%d", warnings);
+    sendKeyStrokes(updated_warnings_str);
+    sendKeyStrokes(PSTR("\n"));
 
     // End the dump
-    Serial.println(F("\n========= END OF SYSTEM STATE DUMP ========="));
-    Serial.flush();  // Make sure all data is sent before continuing
+    sendKeyStrokes(PSTR("\n========= END OF SYSTEM STATE DUMP =========\n"));
   }
 
  public:
@@ -2324,7 +2538,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Disable debug interface if not actively debugging
     NRF_CLOCK->TRACECONFIG = 0;
 
-    //    disableUnusedPeripherals(); // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
+      disableUnusedPeripherals(); // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
     // Turn on the LED power
 
 
@@ -2408,3 +2622,4 @@ EXPORT_DEVICE(kaleidoscope::device::keyboardio::Preonic)
         r5c0, r5c1, r5c2, r5c3, r5c4, r5c5,  r5c6, r5c7, r5c8, r5c9, r5c10, RESTRICT_ARGS_COUNT((r5c11), 63, KEYMAP, ##__VA_ARGS__)
 
 #endif /* ARDUINO_ARCH_NRF52 */
+
