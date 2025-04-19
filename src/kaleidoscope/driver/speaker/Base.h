@@ -48,6 +48,9 @@ class Base {
   void stopTune();
   void update();
 
+  // Prepare speaker for sleep - noop in base implementation
+  void prepareForSleep() {}
+
  protected:
   uint16_t current_notes_[_SpeakerProps::kMaxTuneLength];
   uint16_t current_durations_[_SpeakerProps::kMaxTuneLength];

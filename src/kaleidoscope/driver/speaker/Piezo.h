@@ -70,6 +70,13 @@ class Piezo : public Base<_SpeakerProps> {
     // In a real implementation, we'd need to track the playing state
     return false;
   }
+
+  void prepareForSleep() {
+    // Make sure to stop any active tones and shut down the speaker peripheral
+    if (_SpeakerProps::pin != -1) {
+      ::noTone(_SpeakerProps::pin);
+    }
+  }
 };
 
 }  // namespace speaker
