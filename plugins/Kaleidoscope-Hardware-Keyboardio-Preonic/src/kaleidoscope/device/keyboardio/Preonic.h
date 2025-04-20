@@ -921,7 +921,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     uint32_t now = millis();
     // Never sleep if USB is connected
     if (mcu_.USBConfigured()) {
-      // return false;
+      return false;
     }
     if (keyScanner().pressedKeyswitchCount()) {
       last_activity_time_ = now;
