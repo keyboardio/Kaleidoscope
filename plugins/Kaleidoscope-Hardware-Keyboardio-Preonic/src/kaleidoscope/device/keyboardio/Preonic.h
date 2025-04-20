@@ -1059,22 +1059,14 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     }
   }
 
-  /**
-   * @brief Dumps the state of all peripherals, pins, and registers over serial to debug power consumption issues
-   * 
-   * This function outputs a comprehensive report of the current system state including:
-   * - GPIO pin configurations and states
-   * - All peripheral enable states
-   * - Clock configurations
-   * - Power management settings
-   * - Interrupt states
-   * - Timer and RTC configurations
-   * - I2C/TWI settings
-   * - FPU state information
-   * 
-   * The output is intended to be compared between different system configurations 
-   * to identify power leaks.
-   */
+ void prepareBLEForSleep() {
+    Bluefruit.Advertising.restartOnDisconnect(false);
+
+ }
+ void restoreBLEAfterSleep() {
+    Bluefruit.Advertising.restartOnDisconnect(true);
+ }
+
 
  public:
   Preonic() {
