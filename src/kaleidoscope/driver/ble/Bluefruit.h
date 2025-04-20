@@ -140,6 +140,9 @@ class BLEBluefruit : public Base {
   static constexpr uint8_t HVN_QUEUE_SIZE       = 15;
   static constexpr uint8_t WRITE_CMD_QUEUE_SIZE = 2;  // Default write command queue
 
+  // Advertising config
+  static constexpr uint8_t ADVERTISING_TIMEOUT = 60;
+  
  private:
   static constexpr uint8_t SECURITY_MODE_ENCRYPTED = 1;
   static constexpr uint8_t SECURITY_LEVEL_MIN      = 1;
