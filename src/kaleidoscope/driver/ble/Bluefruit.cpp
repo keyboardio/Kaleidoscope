@@ -135,7 +135,7 @@ void BLEBluefruit::startDiscoverableAdvertising() {
   Hooks::onHostConnectionStatusChanged(current_device_id, kaleidoscope::HostConnectionStatus::Advertising);
 
   // Start advertising
-  if (!Bluefruit.Advertising.start(0)) {
+  if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
 
     DEBUG_BLE_MSG("Failed to start advertising");
   }
@@ -405,7 +405,7 @@ void BLEBluefruit::startConnectableAdvertising() {
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_LIMITED_DISC_MODE);
 
   DEBUG_BLE_MSG("Attempting to start advertising...");
-  if (!Bluefruit.Advertising.start(0)) {
+  if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
     DEBUG_BLE_MSG("Failed to start advertising");
   }
   DEBUG_BLE_MSG("Started connectable advertising");
