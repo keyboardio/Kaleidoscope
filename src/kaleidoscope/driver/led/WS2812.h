@@ -50,6 +50,9 @@ class WS2812 : public Base<_LEDDriverProps> {
 
   void setup() {
     pixels.begin();
+    // On nRF52840, leaving the pin low as initialized in the neopixel library will cause a 500uA current leak
+    // Driving the pin high with digitalWrite() fixes this.
+    digitalWrite(_LEDDriverProps::pin, HIGH); 
     pixels.show();             // Initialize all pixels to 'off'
     pixels.setBrightness(50);  // Set initial brightness
 
