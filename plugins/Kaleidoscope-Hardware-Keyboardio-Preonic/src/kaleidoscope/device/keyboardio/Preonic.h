@@ -1086,18 +1086,19 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       disableLEDPower();
     }
 
-    // Update battery monitoring - this handles both warning and shutdown thresholds
-    // Use the MAX17048 battery gauge to provide the voltage reading
-    uint16_t battery_voltage = 4200; //batteryGauge().getVoltage();
-    updateBatteryStatus(battery_voltage);
+
 
     // Check if we should update battery level for BLE (every 5m or on alert)
     // In theory, we shouldn't need to do this every 5m. But I don't totally trust the alert updates yet.
-    if (0) { // batteryGauge().hasAlert() || (now - last_battery_update_ >= BATTERY_UPDATE_INTERVAL)) {
+    if (batteryGauge().hasAlert() || (now - last_battery_update_ >= BATTERY_UPDATE_INTERVAL)) {
       updateBatteryLevel();
       if (batteryGauge().hasAlert()) {
         batteryGauge().clearAlert();
       }
+          // Update battery monitoring - this handles both warning and shutdown thresholds
+    // Use the MAX17048 battery gauge to provide the voltage reading
+    uint16_t battery_voltage = batteryGauge().getVoltage();
+    updateBatteryStatus(battery_voltage);
       last_battery_update_ = now;
     }
 
