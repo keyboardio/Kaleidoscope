@@ -467,14 +467,6 @@ static void batteryLevelMacro(uint8_t key_state) {
     Macros.type(version);
     Macros.type(PSTR("\n"));
     
-    // Check for charging faults using the new waitForChgFlashing method
-    Macros.type(PSTR("Checking for charging faults...\n"));
-    if (kaleidoscope::Runtime.device().batteryCharger().waitForChgFlashing(3000, 5)) {
-      Macros.type(PSTR("WARNING: Charging fault detected! The CHG pin is flashing at ~2Hz.\n"));
-      Macros.type(PSTR("This indicates a timer fault or other charging issue.\n"));
-    } else {
-      Macros.type(PSTR("No charging faults detected.\n"));
-    }
   }
 }
 
