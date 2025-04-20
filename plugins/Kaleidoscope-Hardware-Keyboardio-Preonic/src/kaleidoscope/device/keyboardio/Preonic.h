@@ -1120,6 +1120,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
 
   void enableLEDPower() {
+  pinMode(PIN_LED_ENABLE, OUTPUT_S0S1);
+
     digitalWrite(PIN_LED_ENABLE, HIGH);
   }
 
@@ -1164,7 +1166,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
 
   void setup() {
-        pinMode(PIN_LED_ENABLE, OUTPUT);
+  
     enableLEDPower();
     // Check for recovery mode before full initialization
     if (checkRecoveryMode()) {
