@@ -887,8 +887,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     while (!input_event_pending_) {
       waitForEvent();
     }
-      speaker().playTone(1500, 100);
-    // Resume all freertos tasks
 
     // Wake up sequence:
     // 1. Switch back to constant latency mode
