@@ -882,7 +882,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     disableFPUForSleep();
     
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-   // dumpSystemState();
 
     while (!input_event_pending_) {
       waitForEvent();
