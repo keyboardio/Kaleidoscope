@@ -953,10 +953,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
   // Battery monitoring methods
   void updateBatteryLevel() {
-    uint8_t new_level = 100; 
-   new_level= batteryGauge().getBatteryLevel();
+  uint8_t  new_level= batteryGauge().getBatteryLevel();
     if (new_level != ble().getBatteryLevel()) {
-    //  ble().setBatteryLevel(new_level);
+     ble().setBatteryLevel(new_level);
     }
   }
   
