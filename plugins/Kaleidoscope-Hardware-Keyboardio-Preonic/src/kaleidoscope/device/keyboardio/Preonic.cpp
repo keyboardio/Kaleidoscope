@@ -156,8 +156,8 @@ void Preonic::complete_system_shutdown(void)
     // *** USER ACTION: Need Kaleidoscope equivalent to stop its timers/event processing ***
 
     // --- 2. Stop BLE Activity (CRUCIAL before SoftDevice disable) ---
-    ble().stopAdvertising();
-    ble().disconnect();
+   // ble().stopAdvertising();
+    //ble().disconnect();
     // ble().end(); // Removed: BLEBluefruit driver does not have .end()
 
     // --- 4. Disable SoftDevice --- 
@@ -246,10 +246,7 @@ void Preonic::complete_system_shutdown(void)
         }
     }
 
-    // Step 1b: Set all pins to default state (input, disconnected buffer, no pull)
-    for (uint32_t i = 0; i < NUMBER_OF_PINS; ++i) {
-        nrf_gpio_cfg_default(i);
-    }
+
 
     // Step 2: Placeholder for specific pin configs (e.g., matrix rows for wakeup)
     // *** USER ACTION: Configure Preonic matrix pins and any other specific needs ***
@@ -562,7 +559,6 @@ NRF_RNG->INTENCLR = 0xFFFFFFFF; // Disable all interrupts
     NRF_POWER->DCDCEN = 1;
 
 
-  // Initialize serial for debugging but immediately disable
 
   // Disable all peripherals to achieve lowest power consumption
   
@@ -954,7 +950,9 @@ NRF_RNG->INTENCLR = 0xFFFFFFFF; // Disable all interrupts
     NRF_QSPI->ENABLE = 0;
   
   // Configure all GPIO pins to input with no pull to minimize power consumption
-  for (int i = 0; i < 32; i++) {
+  // Skip pins 0 and 1 and 18. 
+  for (int i = 2; i < 32; i++) {
+    if (i == 18) continue; 
     NRF_P0->PIN_CNF[i] = (GPIO_PIN_CNF_DIR_Input << GPIO_PIN_CNF_DIR_Pos) |
                          (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos) |
                          (GPIO_PIN_CNF_PULL_Disabled << GPIO_PIN_CNF_PULL_Pos) |
@@ -971,14 +969,7 @@ NRF_RNG->INTENCLR = 0xFFFFFFFF; // Disable all interrupts
                          (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
   }
   
-  pinMode(PIN_LED_ENABLE, OUTPUT);
-  digitalWrite(PIN_LED_ENABLE, LOW);
-  // Disable FreeRTOS tasks if necessary
-    // Just suspend task scheduling - a complete shutdown follows anyway
-    vTaskSuspendAll();
-  
-  // Disable all interrupts globally
-//  __disable_irq(); // this breaks our ability to shutdown. we end up stuck drawing 5ma
+  disableLEDPower();
   
   // Clear all pending interrupts in all NVIC banks
   for (int i = 0; i < 8; i++) {
@@ -986,8 +977,6 @@ NRF_RNG->INTENCLR = 0xFFFFFFFF; // Disable all interrupts
     NVIC->ICPR[i] = 0xFFFFFFFF; // Clear all pending interrupts
   }
   
-    // Suspend FreeRTOS tasks if running
-    vTaskSuspendAll();
   // Stop the clocks
   // First stop LFCLK needed by RTC1 (FreeRTOS tick)
   NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
