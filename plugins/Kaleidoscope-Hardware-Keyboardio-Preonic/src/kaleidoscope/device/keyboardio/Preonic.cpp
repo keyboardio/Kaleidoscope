@@ -40,29 +40,7 @@
 // #include "nrf_log.h" // Using Kaleidoscope logging instead
 #include "nrf_nvmc.h" // For UICR access if needed for NFC
 
-// Define for peripherals present on the board (adjust as needed)
-#define HAS_QSPI_FLASH 0 // Preonic likely has QSPI flash for storage -> Updated to 0 based on user feedback
-#define HAS_NFC_ENABLED 0 // NFC not typically used on Preonic
-#define HAS_USB_ENABLED 1 // Preonic uses USB
-#define HAS_LPCOMP_ENABLED 0 // LPCOMP not typically used
-
-#if HAS_QSPI_FLASH
-// This block will now be excluded by the preprocessor
-#include "nrfx_qspi.h" // Use nrfx driver for QSPI
-// *** USER MUST DEFINE THESE - Check Preonic schematics ***
-#define QSPI_SCK_PIN    NRF_GPIO_PIN_MAP(0,19) // Example - VERIFY PREONIC PIN
-#define QSPI_CSN_PIN    NRF_GPIO_PIN_MAP(0,17) // Example - VERIFY PREONIC PIN
-#define QSPI_IO0_PIN    NRF_GPIO_PIN_MAP(0,20) // Example - VERIFY PREONIC PIN
-#define QSPI_IO1_PIN    NRF_GPIO_PIN_MAP(0,21) // Example - VERIFY PREONIC PIN
-#define QSPI_IO2_PIN    NRF_GPIO_PIN_MAP(0,22) // Example - VERIFY PREONIC PIN
-#define QSPI_IO3_PIN    NRF_GPIO_PIN_MAP(0,23) // Example - VERIFY PREONIC PIN
-#define QSPI_DEEP_POWER_DOWN_CMD 0xB9 // *** USER MUST VERIFY for specific flash chip on Preonic ***
-#endif
-
-#if HAS_USB_ENABLED
 //#include "nrf_drv_power.h" // For USB power events (optional)
-//#include "app_usbd.h"      // If using USBD library (Adafruit core likely does)
-#endif
 
 // Pin number definition (Should be provided by BSP)
 // #define NUMBER_OF_PINS (P1_PIN_NUM + P0_PIN_NUM) // Or just 48 for nRF52840 - Assuming BSP defines it
@@ -176,9 +154,6 @@ void Preonic::complete_system_shutdown(void)
 
     // --- 1. Stop Application Activity ---
     // *** USER ACTION: Need Kaleidoscope equivalent to stop its timers/event processing ***
-    
-    // Properly shut down speaker peripheral before the rest of shutdown
-    speaker().prepareForSleep();
 
     // --- 2. Stop BLE Activity (CRUCIAL before SoftDevice disable) ---
     ble().stopAdvertising();
@@ -206,10 +181,8 @@ void Preonic::complete_system_shutdown(void)
     // UARTE / UART
     NRF_UARTE0->ENABLE = (UARTE_ENABLE_ENABLE_Disabled << UARTE_ENABLE_ENABLE_Pos);
     NRF_UARTE0->INTENCLR = 0xFFFFFFFF;
-    #ifdef NRF_UARTE1
     NRF_UARTE1->ENABLE = (UARTE_ENABLE_ENABLE_Disabled << UARTE_ENABLE_ENABLE_Pos);
     NRF_UARTE1->INTENCLR = 0xFFFFFFFF;
-    #endif
     NRF_UART0->ENABLE = (UART_ENABLE_ENABLE_Disabled << UART_ENABLE_ENABLE_Pos); // Also disable legacy UART just in case
     NRF_UART0->INTENCLR = 0xFFFFFFFF;
 
@@ -220,10 +193,8 @@ void Preonic::complete_system_shutdown(void)
     NRF_SPIM1->INTENCLR = 0xFFFFFFFF;
     NRF_SPIM2->ENABLE = (SPIM_ENABLE_ENABLE_Disabled << SPIM_ENABLE_ENABLE_Pos);
     NRF_SPIM2->INTENCLR = 0xFFFFFFFF;
-    #ifdef NRF_SPIM3 // nRF52840 has SPIM3
     NRF_SPIM3->ENABLE = (SPIM_ENABLE_ENABLE_Disabled << SPIM_ENABLE_ENABLE_Pos);
     NRF_SPIM3->INTENCLR = 0xFFFFFFFF;
-    #endif
     // Add SPIS/SPI disable if they could be active
 
     // TWIM / TWI / TWIS
@@ -252,31 +223,19 @@ void Preonic::complete_system_shutdown(void)
     // NRF_PPI->ENABLE = 0; // No PPI Enable register
 
     // Disable EGU (Event Generator Unit)
-    #ifdef NRF_EGU0
+  
     NRF_EGU0->INTENCLR = 0xFFFFFFFF;
-    #endif
-    #ifdef NRF_EGU1
     NRF_EGU1->INTENCLR = 0xFFFFFFFF;
-    #endif
-    #ifdef NRF_EGU2
     NRF_EGU2->INTENCLR = 0xFFFFFFFF;
-    #endif
-    #ifdef NRF_EGU3
     NRF_EGU3->INTENCLR = 0xFFFFFFFF;
-    #endif
-    #ifdef NRF_EGU4
     NRF_EGU4->INTENCLR = 0xFFFFFFFF;
-    #endif
-    #ifdef NRF_EGU5
     NRF_EGU5->INTENCLR = 0xFFFFFFFF;
-    #endif
+
 
  // Other Peripherals (Disable just in case)
-    #ifdef NRF_COMP
     NRF_COMP->TASKS_STOP = 1;
     NRF_COMP->ENABLE = (COMP_ENABLE_ENABLE_Disabled << COMP_ENABLE_ENABLE_Pos);
     NRF_COMP->INTENCLR = 0xFFFFFFFF;
-    #endif
     
     // --- 7. Configure GPIOs for System OFF ---
     // Step 1: Explicitly disable sensing on all pins
@@ -300,8 +259,7 @@ void Preonic::complete_system_shutdown(void)
     err_code = sd_power_ram_power_clr(0, ram_clr_mask); // Using the version confirmed to compile
     // Ignore errors
     
-  // Restore USB Shutdown Logic
-    #if HAS_USB_ENABLED
+
         // Manual disable for TinyUSB / Adafruit Core
         NRF_USBD->USBPULLUP = (USBD_USBPULLUP_CONNECT_Disabled << USBD_USBPULLUP_CONNECT_Pos);
         NRF_USBD->ENABLE = (USBD_ENABLE_ENABLE_Disabled << USBD_ENABLE_ENABLE_Pos);
@@ -312,7 +270,6 @@ void Preonic::complete_system_shutdown(void)
         NRF_POWER->INTENCLR = (POWER_INTENCLR_USBDETECTED_Clear << POWER_INTENCLR_USBDETECTED_Pos) |
                               (POWER_INTENCLR_USBREMOVED_Clear << POWER_INTENCLR_USBREMOVED_Pos) |
                               (POWER_INTENCLR_USBPWRRDY_Clear << POWER_INTENCLR_USBPWRRDY_Pos);
-    #endif // HAS_USB_ENABLED
 
 
    // PWM
@@ -339,6 +296,31 @@ void Preonic::complete_system_shutdown(void)
     NRF_RTC2->TASKS_STOP = 1; NRF_RTC2->EVTENCLR = 0xFFFFFFFF; NRF_RTC2->INTENCLR = 0xFFFFFFFF;
 
   
+    speaker().playTone(2000, 500);  delay(1000);
+
+   
+ NRF_QDEC->TASKS_STOP = 1;
+    NRF_QDEC->ENABLE = (QDEC_ENABLE_ENABLE_Disabled << QDEC_ENABLE_ENABLE_Pos);
+    NRF_QDEC->INTENCLR = 0xFFFFFFFF;
+        speaker().playTone(2000, 500);  delay(1000);
+
+    NRF_I2S->ENABLE = (I2S_ENABLE_ENABLE_Disabled << I2S_ENABLE_ENABLE_Pos);
+    NRF_I2S->INTENCLR = 0xFFFFFFFF;
+        speaker().playTone(2000, 500);  delay(1000);
+
+    NRF_PDM->ENABLE = (PDM_ENABLE_ENABLE_Disabled << PDM_ENABLE_ENABLE_Pos);
+    NRF_PDM->INTENCLR = 0xFFFFFFFF;
+        speaker().playTone(2000, 500);  delay(1000);
+
+    NRF_NFCT->TASKS_DISABLE = 1;
+    // NRF_NFCT->ENABLE = ... // Removed: NFCT uses TASKS_DISABLE, not ENABLE register.
+    NRF_NFCT->INTENCLR = 0xFFFFFFFF;
+    speaker().playTone(2000, 500);  delay(1000);
+    NRF_LPCOMP->TASKS_STOP = 1;
+    NRF_LPCOMP->ENABLE = (LPCOMP_ENABLE_ENABLE_Disabled << LPCOMP_ENABLE_ENABLE_Pos);
+    NRF_LPCOMP->INTENCLR = 0xFFFFFFFF;
+        speaker().playTone(2000, 500);  delay(1000);
+
     // --- 9. Prepare for Sleep ---
     // Clear any pending NVIC interrupts
     for (IRQn_Type irq = (IRQn_Type)0; irq < ((IRQn_Type)NVIC_NUM_INTERRUPTS); irq = (IRQn_Type)((int)irq + 1)) {
@@ -964,16 +946,12 @@ NRF_RNG->INTENCLR = 0xFFFFFFFF; // Disable all interrupts
     NRF_PPI->CH[i].EEP = 0;
     NRF_PPI->CH[i].TEP = 0;
   }
-
-  // Disable QSPI if available (nRF52840)
-  #if defined(NRF52840_XXAA)
     NRF_QSPI->TASKS_DEACTIVATE = 1;
     NRF_QSPI->EVENTS_READY = 0;
     NRF_QSPI->INTENCLR = 0xFFFFFFFF;
     NVIC_DisableIRQ(QSPI_IRQn);
     NVIC_ClearPendingIRQ(QSPI_IRQn);
     NRF_QSPI->ENABLE = 0;
-  #endif
   
   // Configure all GPIO pins to input with no pull to minimize power consumption
   for (int i = 0; i < 32; i++) {
