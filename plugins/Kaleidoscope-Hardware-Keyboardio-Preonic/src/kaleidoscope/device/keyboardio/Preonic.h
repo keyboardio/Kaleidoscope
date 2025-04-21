@@ -869,19 +869,13 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     }
     kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
 
-    // Dump the entire system state to help identify power leaks
-   // Serial.println(F("============= SYSTEM STATE BEFORE SLEEP ============="));
-   // Serial.println(F("============= END OF SYSTEM STATE BEFORE SLEEP ============="));
-   // Serial.flush();
-
-
-  disableTWIForSleep();
-  disableRTC();
+    disableTWIForSleep();
+    disableRTC();
   //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
 
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
     disableFPUForSleep();
-    
+
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
 
     while (!input_event_pending_) {
@@ -1039,12 +1033,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
         warning_active_ = false;
       }
     }
-    
+
     // Handle warning indication timing
     if (battery_status_ == BatteryStatus::Warning) {
       if (!warning_active_ && (now - last_warning_time_ >= WARNING_INTERVAL_MS)) {
         // Start a new warning period
-        warning_active_ = true;
+        warning_active_    = true;
         last_warning_time_ = now;
         triggerBatteryWarning(true);
       } else if (warning_active_ && (now - last_warning_time_ >= WARNING_DURATION_MS)) {
