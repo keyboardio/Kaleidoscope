@@ -1125,6 +1125,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
   void disableLEDPower() {
+    pinMode(PIN_LED_ENABLE, OUTPUT_D0S1);
+
     digitalWrite(PIN_LED_ENABLE, LOW);
   }
 
