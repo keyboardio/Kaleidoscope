@@ -149,7 +149,7 @@ void Preonic::triggerBatteryWarning(bool active) {
 #define NVIC_NUM_INTERRUPTS 69
 void Preonic::complete_system_shutdown(void)
 {
-    systemOff();
+    //systemOff();
     uint32_t err_code;
 
     // --- 1. Stop Application Activity ---
