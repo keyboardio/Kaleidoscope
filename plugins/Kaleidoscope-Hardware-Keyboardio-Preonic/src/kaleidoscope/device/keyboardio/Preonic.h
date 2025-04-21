@@ -241,25 +241,7 @@ struct PreonicBatteryGaugeProps : public kaleidoscope::driver::battery_gauge::MA
 struct PreonicBatteryChargerProps : public kaleidoscope::driver::battery_charger::BQ24075Props {
   static constexpr uint8_t power_good_pin = PIN_POWER_GOOD;       // Pin connected to BQ24075 PGOOD output
   static constexpr uint8_t charge_status_pin = PIN_CHARGE_STATUS; // Pin connected to BQ24075 CHG output
-  
-  // SYSOFF is connected to a physical switch, not controlled by MCU
-  static constexpr uint8_t sysoff_pin = 0;  // Not MCU controlled
-  
-  // Configuration details (for reference):
-  // - ISET resistor: 1.6kΩ (sets charge current to 556mA) 
-  // - ILIM resistor: 1.6kΩ (sets input current limit to 968mA)
-  // - CE: Connected to ground (charge enabled)
-  // - TMR: Floating (safety timer enabled, 5hr)
-  // - EN1: Connected to VCC unregulated (High)
-  // - EN2: Connected to GND (Low)
-  // - EN1 High + EN2 Low = USB500 Mode (500mA max)
-  // - OUT: Connected to VCC unregulated
-  // - BAT: Connected to battery with 10μF capacitor to GND
-  // - TS: Connected to battery NTC
-  
-  // If ISET monitoring is needed, uncomment and define:
-  // static constexpr uint8_t iset_pin = PIN_ISET_MONITOR;
-  static constexpr float iset_resistance = 1600.0f; // 1.6kΩ ISET resistor
+
 };
 
 struct PreonicProps : public kaleidoscope::device::BaseProps {
