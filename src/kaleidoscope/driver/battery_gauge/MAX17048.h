@@ -125,7 +125,7 @@ class MAX17048 : public Base<_Props> {
    */
   uint16_t getVoltage() const override {
     if (!initialized_) return 0;
-    return static_cast<uint16_t>(lipo_.getVoltage() * 1000);
+    return lipo_.getVoltage(); // No conversion needed - now returns mV directly
   }
 
   /**
@@ -139,10 +139,8 @@ class MAX17048 : public Base<_Props> {
    */
   uint8_t getRawBatteryLevel() const {
     if (!initialized_) return 0;
-    float soc = lipo_.getSOC();
-    // Convert to integer with rounding by adding 0.5 before truncation
-    uint8_t level = static_cast<uint8_t>(soc + 0.5f);
-    return (level > 100) ? 100 : level;
+    uint8_t soc = lipo_.getSOC();
+    return (soc > 100) ? 100 : soc;
   }
 
   /**
@@ -224,8 +222,8 @@ class MAX17048 : public Base<_Props> {
   int16_t getChargeRate() const {
     if (!initialized_) return 0;
     // The CRATE register LSB is 0.208%/hr
-    // We want raw units, so no conversion needed
-    return static_cast<int16_t>(lipo_.getChangeRate() / 0.208f); 
+    // getChangeRate now returns the raw value directly
+    return lipo_.getChangeRate();
   }
 
   /**
@@ -301,11 +299,9 @@ class MAX17048 : public Base<_Props> {
    */
   void setVoltageAlertThresholds(uint16_t min_mv, uint16_t max_mv) {
     if (!initialized_) return;
-    // VALRT register uses 20mV per LSB
-    uint8_t min_bits = min_mv / 20;
-    uint8_t max_bits = max_mv / 20;
-    lipo_.setVALRTMin(min_bits);
-    lipo_.setVALRTMax(max_bits);
+    // library now accepts millivolts directly
+    lipo_.setVALRTMin(min_mv);
+    lipo_.setVALRTMax(max_mv);
   }
 
   /**
@@ -454,13 +450,13 @@ class MAX17048 : public Base<_Props> {
    * Configures the activity thresholds for entering and exiting
    * hibernate mode. Has no effect if device is uninitialized.
    *
-   * @param active_rate Activity threshold to exit hibernate (0.208%/hr units)
-   * @param hibernate_rate Inactivity threshold to enter hibernate (0.208%/hr units)
+   * @param active_rate Activity threshold to exit hibernate (in microvolts)
+   * @param hibernate_rate Inactivity threshold to enter hibernate (in hundredths of %/hr)
    */
-  void setHibernateThresholds(uint8_t active_rate, uint8_t hibernate_rate) {
+  void setHibernateThresholds(uint16_t active_uv, uint16_t hibernate_rate_scaled) {
     if (!initialized_) return;
-    lipo_.setHIBRTActThr(active_rate);
-    lipo_.setHIBRTHibThr(hibernate_rate);
+    lipo_.setHIBRTActThr(active_uv);
+    lipo_.setHIBRTHibThr(hibernate_rate_scaled);
   }
 
   /**
@@ -473,9 +469,8 @@ class MAX17048 : public Base<_Props> {
    */
   void setResetVoltage(uint16_t mv) {
     if (!initialized_) return;
-    // Reset voltage register uses 40mV per LSB
-    uint8_t bits = mv / 40;
-    lipo_.setResetVoltage(bits);  // TODO(jesse): Replace with direct register write
+    // Library now accepts millivolts directly
+    lipo_.setResetVoltage(mv);  // Updated to use millivolts
   }
 
   /**
