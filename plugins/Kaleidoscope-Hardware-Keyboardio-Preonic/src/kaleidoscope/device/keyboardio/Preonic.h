@@ -862,7 +862,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     prepareMatrixForSleep();
     configureColumnsForSensing();
     setupGPIOTE();
-   speaker().prepareForSleep();
+    speaker().prepareForSleep();
     // Bluefruit hid - process all queue reports, then shut down processing
     while (kaleidoscope::driver::hid::bluefruit::blehid.hasQueuedReports()) {
       delay(1);
@@ -874,10 +874,11 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    // Serial.println(F("============= END OF SYSTEM STATE BEFORE SLEEP ============="));
    // Serial.flush();
 
-    // disableTWIForSleep();
-     disableRTC();
-    // disableTimers();
-    
+
+  disableTWIForSleep();
+  disableRTC();
+  //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
+
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
     disableFPUForSleep();
     
@@ -890,12 +891,15 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Wake up sequence:
     // 1. Switch back to constant latency mode
     sd_power_mode_set(NRF_POWER_MODE_CONSTLAT);
-
-    // restoreTWIAfterSleep();
-    // restoreTimers();
-    restoreRTC();
-    restoreMatrixAfterSleep();
+        restoreMatrixAfterSleep();
     disableColumnSensing();
+    //restoreTimers();
+    restoreRTC();
+    restoreTWIAfterSleep();
+    
+
+    
+
     // Start processing BLE HID reports
     kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
 
@@ -1222,9 +1226,8 @@ void complete_system_shutdown(void);
    * explicitly disabled, causing a power drain of approximately 3mA.
    */
   static void disableFPUForSleep() {
-    // Only needed if FPU is present and used
-    #ifdef __FPU_PRESENT
-      #ifdef __FPU_USED
+    
+
         // Clear FPCA bit in CONTROL register to indicate no active FP context
         // This is the most reliable way to prevent FPU power drain
         __set_CONTROL(__get_CONTROL() & ~(1U << 2));
@@ -1232,8 +1235,7 @@ void complete_system_shutdown(void);
         // Memory barriers to ensure completion
         __DSB();
         __ISB();
-      #endif
-    #endif
+   
   }
 };
 
