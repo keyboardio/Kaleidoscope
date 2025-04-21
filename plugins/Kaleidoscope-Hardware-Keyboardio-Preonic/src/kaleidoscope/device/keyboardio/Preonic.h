@@ -1000,19 +1000,46 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   void updateBatteryStatus(uint16_t voltage_mv) {
     // Get current time
     uint32_t now = millis();
-    
+
     // Check if it's time to check the battery
     if (now - last_battery_check_time_ >= BATTERY_CHECK_INTERVAL_MS) {
       // Update the battery voltage
       last_battery_voltage_mv_ = voltage_mv;
       last_battery_check_time_ = now;
-      
+
       // Only check thresholds if running on battery
       if (!mcu_.USBConfigured()) {
         // Check for shutdown threshold
         if (isBatteryBelowShutdownThreshold(voltage_mv)) {
           battery_status_ = BatteryStatus::Shutdown;
-          triggerBatteryShutdown();
+          // Right now, the best thing we can do is to turn off Bluetooth and the LED and the keyscanner.
+
+          prepareBLEForSleep();
+          disableLEDPower();
+          keyScanner().suspendTimer();
+          prepareMatrixForSleep();
+          configureColumnsForSensing();
+          setupGPIOTE();
+          speaker().prepareForSleep();
+
+          kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
+
+          Bluefruit.Advertising.stop();
+
+          disableTWIForSleep();
+          disableRTC();
+          // disableTimers();  // Disabling timers seems to make the keyscanner a little sad
+
+          // Disable FPU state preservation to prevent ~3mA power drain in sleep
+          disableFPUForSleep();
+
+          sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+         // vTaskSuspendAll();
+          while (1) {
+            waitForEvent();
+          }
+
+
         }
         // Check for warning threshold
         else if (isBatteryBelowWarningThreshold(voltage_mv)) {
