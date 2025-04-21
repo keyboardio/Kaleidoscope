@@ -363,6 +363,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
       enablePinSensing(KeyScannerProps::matrix_col_pins[i]);
     }
+    // Let's see if we can wake up from the battery alert pin
+    enablePinSensing(BatteryGaugeProps::alert_pin);
   }
 
   // Configure all column pins to stop sensing
@@ -370,6 +372,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
       disablePinSensing(KeyScannerProps::matrix_col_pins[i]);
     }
+    disablePinSensing(BatteryGaugeProps::alert_pin);
   }
 
 
