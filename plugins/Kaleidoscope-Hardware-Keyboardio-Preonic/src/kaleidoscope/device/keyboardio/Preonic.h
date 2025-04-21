@@ -888,18 +888,13 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       waitForEvent();
     }
 
-    // Wake up sequence:
-    // 1. Switch back to constant latency mode
     sd_power_mode_set(NRF_POWER_MODE_CONSTLAT);
-        restoreMatrixAfterSleep();
+    restoreMatrixAfterSleep();
     disableColumnSensing();
     //restoreTimers();
     restoreRTC();
     restoreTWIAfterSleep();
-    
-
-    
-
+  
     // Start processing BLE HID reports
     kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
 
