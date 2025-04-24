@@ -841,7 +841,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
   bool enterDeepSleep() {
-   // prepareBLEForSleep();
+    ble().prepareForSleep();
     disableLEDPower();
     keyScanner().suspendTimer();
     prepareMatrixForSleep();
@@ -881,7 +881,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     keyScanner().resumeTimer();
 
     enableLEDPower();
-   // restoreBLEAfterSleep();
+    ble().restoreAfterSleep();
 
     last_activity_time_ = millis();
 
@@ -999,7 +999,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
           battery_status_ = BatteryStatus::Shutdown;
           // Right now, the best thing we can do is to turn off Bluetooth and the LED and the keyscanner.
 
-          prepareBLEForSleep();
+          ble().prepareForSleep();
           disableLEDPower();
           keyScanner().suspendTimer();
           prepareMatrixForSleep();
@@ -1009,7 +1009,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
           kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
 
-          Bluefruit.Advertising.stop();
+          ble().stopAdvertising();
 
           disableTWIForSleep();
           disableRTC();
@@ -1060,15 +1060,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       }
     }
   }
-
- void prepareBLEForSleep() {
-    Bluefruit.Advertising.restartOnDisconnect(false);
-
- }
- void restoreBLEAfterSleep() {
-    Bluefruit.Advertising.restartOnDisconnect(true);
- }
-
 
  public:
   Preonic() {
