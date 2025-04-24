@@ -841,7 +841,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
   bool enterDeepSleep() {
-    prepareBLEForSleep();
+   // prepareBLEForSleep();
     disableLEDPower();
     keyScanner().suspendTimer();
     prepareMatrixForSleep();
@@ -881,7 +881,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     keyScanner().resumeTimer();
 
     enableLEDPower();
-    restoreBLEAfterSleep();
+   // restoreBLEAfterSleep();
 
     last_activity_time_ = millis();
 
