@@ -117,7 +117,11 @@ class BLEBluefruit : public Base {
 
   // Handle BLE-specific key events
   kaleidoscope::EventHandlerResult onKeyEvent(kaleidoscope::KeyEvent &event);
-
+  
+  // Power management methods
+  static void prepareForSleep();
+  static void restoreAfterSleep();
+  
  private:
   // Helper method to handle BLE operation keys
   kaleidoscope::EventHandlerResult handleBLEOperationKey(uint8_t keyCode);
@@ -128,6 +132,7 @@ class BLEBluefruit : public Base {
   static constexpr uint16_t SLAVE_LATENCY          = 4;
   static constexpr uint16_t SUPERVISION_TIMEOUT_MS = 400;
   static constexpr int8_t CONN_TX_POWER            = -4;
+  static constexpr int8_t SLEEP_TX_POWER           = -40;  // Minimum TX power for sleep
 
   // MTU and queue size configuration
   static constexpr uint16_t MTU_SIZE            = 23;
@@ -139,6 +144,7 @@ class BLEBluefruit : public Base {
   static constexpr uint8_t SECURITY_MODE_ENCRYPTED = 1;
   static constexpr uint8_t SECURITY_LEVEL_MIN      = 1;
   static uint8_t battery_level;
+  static int8_t pre_sleep_tx_power;  // Store TX power level before sleep
 
   static bool getConnectionSecurity(uint16_t conn_handle, ble_gap_conn_sec_t &sec);
 

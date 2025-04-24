@@ -37,12 +37,65 @@ namespace ble {
 
 uint8_t BLEBluefruit::current_device_id = 0;
 uint8_t BLEBluefruit::battery_level = 0;
+int8_t BLEBluefruit::pre_sleep_tx_power = CONN_TX_POWER;
 
 ble_gap_addr_t BLEBluefruit::base_addr;
 
 BLEDis BLEBluefruit::bledis;
 BLEBas BLEBluefruit::blebas;
 BLEUartWrapper BLEBluefruit::bleuart;
+
+/**
+ * @brief Prepare BLE for sleep mode to conserve power
+ * 
+ * This method:
+ * 1. Disables advertising auto restart on disconnect
+ * 2. If not currently connected, reduces TX power to minimum level
+ * 
+ * These changes help reduce power consumption during deep sleep.
+ */
+void BLEBluefruit::prepareForSleep() {
+  DEBUG_BLE_MSG("Preparing BLE for sleep");
+  
+  // Disable advertising auto restart
+  Bluefruit.Advertising.restartOnDisconnect(false);
+  
+  // If not connected, reduce TX power to minimum
+  if (!Bluefruit.Periph.connected()) {
+    // Store current TX power before changing it
+    pre_sleep_tx_power = Bluefruit.getTxPower();
+    
+    // Set to lowest power level
+    Bluefruit.setTxPower(SLEEP_TX_POWER);
+    DEBUG_BLE_MSG("Reduced TX power to minimum for sleep: ", SLEEP_TX_POWER, "dBm");
+  }
+}
+
+/**
+ * @brief Restore BLE after waking from sleep
+ * 
+ * This method:
+ * 1. Re-enables advertising auto restart on disconnect
+ * 2. Restores previous TX power level
+ * 3. If not connected, restarts connectable advertising
+ */
+void BLEBluefruit::restoreAfterSleep() {
+  DEBUG_BLE_MSG("Restoring BLE after sleep");
+  
+  // Re-enable advertising auto restart
+  Bluefruit.Advertising.restartOnDisconnect(true);
+  
+  // Restore previous TX power
+  if (Bluefruit.getTxPower() != pre_sleep_tx_power) {
+    Bluefruit.setTxPower(pre_sleep_tx_power);
+    DEBUG_BLE_MSG("Restored TX power to: ", pre_sleep_tx_power, "dBm");
+  }
+  
+  // If not connected, start advertising again
+  if (!Bluefruit.Periph.connected() && current_device_id > 0) {
+    startConnectableAdvertising();
+  }
+}
 
 void BLEBluefruit::setup() {
 
