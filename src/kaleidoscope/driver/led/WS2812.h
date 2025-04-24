@@ -70,7 +70,6 @@ class WS2812 : public Base<_LEDDriverProps> {
       // Setting the output mode as output and unconnected when not in use appears to be a better fix. 
       pinMode(_LEDDriverProps::pin, OUTPUT);
       pixels.show();
-      pinMode(_LEDDriverProps::pin, OUTPUT_D0S1);
 
       modified_ = false;
     }

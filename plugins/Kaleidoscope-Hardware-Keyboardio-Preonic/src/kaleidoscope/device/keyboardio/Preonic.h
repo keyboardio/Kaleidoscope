@@ -1086,6 +1086,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       enableLEDPower();
     } else {
       disableLEDPower();
+      // Set the LED pin to disconnected to prevent current leakage
+      pinMode(PreonicProps::LEDDriverProps::pin, OUTPUT_D0S1);
+
     }
 
 
