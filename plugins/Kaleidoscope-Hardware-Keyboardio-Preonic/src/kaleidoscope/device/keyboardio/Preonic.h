@@ -1162,9 +1162,19 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     NRF_NFCT->EVENTS_READY         = 0;
   }
 
+  void initializeSerialForDebugging() {
+    Serial.begin(9600);
+    while (!Serial) {
+      delay(100);
+    }
+  }
 
   void setup() {
   
+  // Uncomment this to enable serial to start up before ~anything else is initialized, so you can see debug 
+  // output during startup
+  //initializeSerialForDebugging();
+
     enableLEDPower();
     // Check for recovery mode before full initialization
     if (checkRecoveryMode()) {
