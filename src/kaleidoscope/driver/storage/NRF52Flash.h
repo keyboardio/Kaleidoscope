@@ -171,86 +171,42 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
       file.close();
     }
 
-    // First check if the file exists with the right size
-    bool needToCreateFile = true;
+    // Delete existing file if present
     if (InternalFS.exists(EEPROM_PATH)) {
-      if (file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-        size_t size = file.size();
-        file.close();
-        if (size == _StorageProps::length) {
-          needToCreateFile = false;
-        } else {
-          DEBUG_MSG("[NRF52Flash] File exists but with wrong size, recreating");
-          InternalFS.remove(EEPROM_PATH);
-        }
-      }
+      DEBUG_MSG("[NRF52Flash] Removing existing file");
+      InternalFS.remove(EEPROM_PATH);
+      delay(10); // Small delay after removing
     }
 
-    // Create a properly sized file if needed
-    if (needToCreateFile) {
-      DEBUG_MSG("[NRF52Flash] Creating new file");
-      if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
-        DEBUG_MSG("[NRF52Flash] Failed to create file");
-        return false;
-      }
-      
-      // Write in chunks to avoid buffer overflows
-      const uint16_t CHUNK_SIZE = 64;
-      uint8_t buffer[CHUNK_SIZE];
-      memset(buffer, _StorageProps::uninitialized_byte, CHUNK_SIZE);
-      
-      size_t remaining = _StorageProps::length;
-      size_t total_written = 0;
-      
-      while (remaining > 0) {
-        size_t to_write = (remaining < CHUNK_SIZE) ? remaining : CHUNK_SIZE;
-        size_t written = file.write(buffer, to_write);
-        
-        if (written != to_write) {
-          DEBUG_MSG("[NRF52Flash] Failed to initialize file");
-          file.close();
-          return false;
-        }
-        
-        remaining -= written;
-        total_written += written;
-      }
-      
-      file.flush();
-      file.close();
-      delay(10);
-      
-      DEBUG_MSG("[NRF52Flash] File created and initialized");
-    }
-
-    // Open file with FILE_O_UPDATE to update it in-place
-    if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_UPDATE)) {
-      DEBUG_MSG("[NRF52Flash] Failed to open file for updating");
+    // Create new file
+    DEBUG_MSG("[NRF52Flash] Creating new file");
+    if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
+      DEBUG_MSG("[NRF52Flash] Failed to create file");
       return false;
     }
-
-    // Write data in chunks like sketchy.ino does
+    
+    // Write data in chunks without any seeking (like MODE_WRITE_NO_SEEK in sketchy.ino)
     DEBUG_MSG("[NRF52Flash] Writing data in chunks");
     const uint16_t CHUNK_SIZE = 64;
     bool success = true;
+    size_t total_written = 0;
     
     for (uint16_t offset = 0; offset < _StorageProps::length; offset += CHUNK_SIZE) {
       uint16_t size = (offset + CHUNK_SIZE <= _StorageProps::length) ? CHUNK_SIZE : (_StorageProps::length - offset);
       
-      if (!file.seek(offset)) {
-        DEBUG_MSG("[NRF52Flash] Failed to seek to position");
-        success = false;
-        break;
-      }
+      char buffer[50];
+      snprintf(buffer, sizeof(buffer), "[NRF52Flash] Writing chunk at offset %d", offset);
+      DEBUG_MSG(buffer);
       
       size_t written = file.write(contents + offset, size);
       if (written != size) {
-        char buffer[50];
-        snprintf(buffer, sizeof(buffer), "[NRF52Flash] Chunk write failed: %d of %d", written, size);
+        snprintf(buffer, sizeof(buffer), "[NRF52Flash] Chunk write failed: %d of %d at offset %d", written, size, offset);
         DEBUG_MSG(buffer);
         success = false;
         break;
       }
+      
+      total_written += written;
       
       // Flush after each chunk
       file.flush();
@@ -259,6 +215,11 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     file.close();
     delay(10); // Small delay after closing
 
+    if (success) {
+      char buffer[50];
+      snprintf(buffer, sizeof(buffer), "[NRF52Flash] Write successful, %d bytes written", total_written);
+      DEBUG_MSG(buffer);
+    }
     return success;
   }
 
