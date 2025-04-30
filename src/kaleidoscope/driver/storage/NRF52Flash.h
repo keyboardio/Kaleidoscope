@@ -153,69 +153,10 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
         DEBUG_MSG("[NRF52Flash] File size is correct");
         return true;
       }
-
-      DEBUG_MSG("[NRF52Flash] File exists but has wrong size, recreating it");
-      
-      // Close the file before removing it
-      if (file.isOpen()) {
-        file.close();
-      }
-      
-      // Remove the file and create a new one with the correct size
-      if (!InternalFS.remove(EEPROM_PATH)) {
-        DEBUG_MSG("[NRF52Flash] Failed to remove existing file");
-      }
-    } else {
-      DEBUG_MSG("[NRF52Flash] File doesn't exist, creating it");
-    }
-
-    // Create new file
-    if (file.isOpen()) {
-      file.close();
     }
     
-    if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
-      DEBUG_MSG("[NRF52Flash] Failed to create file");
-      return false;
-    }
-
-    DEBUG_MSG("[NRF52Flash] Writing initial data");
-    
-    // Initialize with uninitialized_byte
-    uint8_t buffer[64];
-    memset(buffer, _StorageProps::uninitialized_byte, sizeof(buffer));
-
-    size_t remaining = _StorageProps::length;
-    size_t total_written = 0;
-    
-    while (remaining > 0) {
-      size_t to_write = (remaining < sizeof(buffer)) ? remaining : sizeof(buffer);
-      size_t written = file.write(buffer, to_write);
-      
-      if (written != to_write) {
-        DEBUG_MSG("[NRF52Flash] Failed to write to file");
-        char numstr[10];
-        itoa(written, numstr, 10);
-        DEBUG_MSG(numstr);
-        DEBUG_MSG(" bytes written out of ");
-        itoa(to_write, numstr, 10);
-        DEBUG_MSG(numstr);
-        file.close();
-        return false;
-      }
-      
-      remaining -= written;
-      total_written += written;
-    }
-
-    file.close();
-    
-    DEBUG_MSG("[NRF52Flash] File created successfully");
-    char numstr[10];
-    itoa(total_written, numstr, 10);
-    DEBUG_MSG(numstr);
-    DEBUG_MSG(" bytes written");
-    
+    // File doesn't exist or has wrong size - handle file creation in writeToFile
+    DEBUG_MSG("[NRF52Flash] File needs to be created on next commit");
     return true;
   }
 
@@ -230,31 +171,56 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
       file.close();
     }
 
-    // First check if the file exists and has the correct size
+    // First check if the file exists with the right size
+    bool needToCreateFile = true;
     if (InternalFS.exists(EEPROM_PATH)) {
-      if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-        DEBUG_MSG("[NRF52Flash] Failed to open file for size check");
-        return false;
-      }
-      
-      size_t size = file.size();
-      file.close();
-      
-      if (size != _StorageProps::length) {
-        DEBUG_MSG("[NRF52Flash] File size is incorrect, recreating");
-        InternalFS.remove(EEPROM_PATH);
-        
-        if (!verifyAndFixFile()) {
-          DEBUG_MSG("[NRF52Flash] Failed to recreate file");
-          return false;
+      if (file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
+        size_t size = file.size();
+        file.close();
+        if (size == _StorageProps::length) {
+          needToCreateFile = false;
+        } else {
+          DEBUG_MSG("[NRF52Flash] File exists but with wrong size, recreating");
+          InternalFS.remove(EEPROM_PATH);
         }
       }
-    } else {
-      DEBUG_MSG("[NRF52Flash] File doesn't exist for writing, creating it");
-      if (!verifyAndFixFile()) {
+    }
+
+    // Create a properly sized file if needed
+    if (needToCreateFile) {
+      DEBUG_MSG("[NRF52Flash] Creating new file");
+      if (!file.open(EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
         DEBUG_MSG("[NRF52Flash] Failed to create file");
         return false;
       }
+      
+      // Write in chunks to avoid buffer overflows
+      const uint16_t CHUNK_SIZE = 64;
+      uint8_t buffer[CHUNK_SIZE];
+      memset(buffer, _StorageProps::uninitialized_byte, CHUNK_SIZE);
+      
+      size_t remaining = _StorageProps::length;
+      size_t total_written = 0;
+      
+      while (remaining > 0) {
+        size_t to_write = (remaining < CHUNK_SIZE) ? remaining : CHUNK_SIZE;
+        size_t written = file.write(buffer, to_write);
+        
+        if (written != to_write) {
+          DEBUG_MSG("[NRF52Flash] Failed to initialize file");
+          file.close();
+          return false;
+        }
+        
+        remaining -= written;
+        total_written += written;
+      }
+      
+      file.flush();
+      file.close();
+      delay(10);
+      
+      DEBUG_MSG("[NRF52Flash] File created and initialized");
     }
 
     // Open file with FILE_O_UPDATE to update it in-place
@@ -263,33 +229,37 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
       return false;
     }
 
-    // Reset position to beginning
-    if (!file.seek(0)) {
-      DEBUG_MSG("[NRF52Flash] Failed to seek to beginning of file");
-      file.close();
-      return false;
+    // Write data in chunks like sketchy.ino does
+    DEBUG_MSG("[NRF52Flash] Writing data in chunks");
+    const uint16_t CHUNK_SIZE = 64;
+    bool success = true;
+    
+    for (uint16_t offset = 0; offset < _StorageProps::length; offset += CHUNK_SIZE) {
+      uint16_t size = (offset + CHUNK_SIZE <= _StorageProps::length) ? CHUNK_SIZE : (_StorageProps::length - offset);
+      
+      if (!file.seek(offset)) {
+        DEBUG_MSG("[NRF52Flash] Failed to seek to position");
+        success = false;
+        break;
+      }
+      
+      size_t written = file.write(contents + offset, size);
+      if (written != size) {
+        char buffer[50];
+        snprintf(buffer, sizeof(buffer), "[NRF52Flash] Chunk write failed: %d of %d", written, size);
+        DEBUG_MSG(buffer);
+        success = false;
+        break;
+      }
+      
+      // Flush after each chunk
+      file.flush();
     }
     
-    DEBUG_MSG("[NRF52Flash] Writing data");
-    size_t written = file.write(contents, _StorageProps::length);
     file.close();
-    
-    if (written != _StorageProps::length) {
-      DEBUG_MSG("[NRF52Flash] Write failed");
-      DEBUG_MSG("[NRF52Flash] Written ");
-      // this only takes character arrays, so we need to convert the size_t to a character array
-      char buffer[10];
-      itoa(written, buffer, 10);
-      DEBUG_MSG(buffer);
-      DEBUG_MSG(", expected ");
-      itoa(_StorageProps::length, buffer, 10);
-      DEBUG_MSG(buffer);
-      DEBUG_MSG(" bytes");
-      return false;
-    }
+    delay(10); // Small delay after closing
 
-    DEBUG_MSG("[NRF52Flash] Write successful");
-    return true;
+    return success;
   }
 
  public:
