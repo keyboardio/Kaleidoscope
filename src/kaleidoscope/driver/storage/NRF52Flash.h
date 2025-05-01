@@ -45,483 +45,397 @@ struct NRF52FlashProps : kaleidoscope::driver::storage::BaseProps {
   static constexpr uint16_t length = 16384;
 };
 
+/**
+ * Helper class to manage file operations for NRF52 storage
+ * Handles chunking of storage data across multiple files
+ * to work around LittleFS limitations
+ */
 template<typename _StorageProps>
-class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
+class StorageFileManager {
  private:
-  // Split storage into four 4KB files to work around LittleFS 8KB limit
-  static constexpr const char *LEGACY_EEPROM_PATH = "/eeprom.dat";
-  static constexpr const char *EEPROM_PATH_PART1 = "/eeprom1.dat";
-  static constexpr const char *EEPROM_PATH_PART2 = "/eeprom2.dat";
-  static constexpr const char *EEPROM_PATH_PART3 = "/eeprom3.dat";
-  static constexpr const char *EEPROM_PATH_PART4 = "/eeprom4.dat";
-  static constexpr uint16_t MAX_FILE_SIZE = 4096;  // 4KB per file maximum
-  static bool data_loss_reported;  // Track if we've already reported data loss
-  static uint8_t chunk_dirty_flags[4];  // Bitmap to track which chunks have been modified
+  // File paths and constants
+  static constexpr const char* V1_STORAGE_FILE_PATH = "/eeprom.dat";
+  static constexpr const char* PAGE_FILE_PREFIX = "/eeprom";
+  static constexpr const char* PAGE_FILE_SUFFIX = ".dat";
+  static constexpr uint16_t PAGE_FILE_SIZE = 1024;  // 4KB per file maximum, but we use a smaller size to reduce the number of files a given write needs to touch, which improves perf.
+  static constexpr uint16_t PAGE_COUNT = (_StorageProps::length + PAGE_FILE_SIZE - 1) / PAGE_FILE_SIZE;
   
-  static Adafruit_LittleFS_Namespace::File file;
-  static bool is_initialized;
-  static uint8_t *contents;  // Add buffer to store file contents
-  static bool dirty_;        // Add flag to track if contents have changed
-
-  static bool init() {
-    if (is_initialized) return true;
-
-    DEBUG_MSG("[NRF52Flash] Initializing");
-
-    
-    // Allocate memory for contents
-    if (contents == nullptr) {
-      contents = new uint8_t[_StorageProps::length];
-      // Initialize with uninitialized_byte as default
-      memset(contents, _StorageProps::uninitialized_byte, _StorageProps::length);
-      
-      // Clear dirty flags
-      memset(chunk_dirty_flags, 0, sizeof(chunk_dirty_flags));
-    }
-
-    // Initialize the filesystem
+  // Storage for data and state tracking
+  static uint8_t buffer_[_StorageProps::length];
+  static uint8_t dirty_flags_[PAGE_COUNT];
+  static bool is_initialized_;
+  static bool any_data_loaded_;
+  
+  static Adafruit_LittleFS_Namespace::File file_;
+  
+  // Get the path for a specific page
+  static void getPagePath(char* path_buffer, size_t buffer_size, uint16_t page_index) {
+    snprintf(path_buffer, buffer_size, "%s%d%s", PAGE_FILE_PREFIX, page_index + 1, PAGE_FILE_SUFFIX);
+  }
+  
+  // Initialize the filesystem
+  static bool initFilesystem() {
+    // Try to shut down filesystem first in case it's in a bad state
     InternalFS.end();
+    
+    // Reinitialize the filesystem
     if (!InternalFS.begin()) {
-      DEBUG_MSG("[NRF52Flash] Failed to initialize filesystem");
+      DEBUG_MSG("[StorageManager] Failed to initialize filesystem");
       return false;
     }
-    DEBUG_MSG("[NRF52Flash] Filesystem initialized");
-
-    // Check for migration case - legacy file exists
-    if (InternalFS.exists(LEGACY_EEPROM_PATH)) {
-      DEBUG_MSG("[NRF52Flash] Legacy file exists, migrating data");
-      if (!migrateFromLegacyFile()) {
-        DEBUG_MSG("[NRF52Flash] Migration failed, using default values");
-      }
-    } else {
-      // Try to load split files if they exist
-      loadFileContent();
-    }
-
-    is_initialized = true;
-    DEBUG_MSG("[NRF52Flash] Initialization complete");
+    
+    DEBUG_MSG("[StorageManager] Filesystem initialized");
     return true;
   }
-
-  static bool loadPartFile(const char* path, uint16_t offset) {
+  
+  // Check if V1 storage file exists and migrate if needed
+  static bool checkAndMigrateV1StorageFile() {
+    if (InternalFS.exists(V1_STORAGE_FILE_PATH)) {
+      DEBUG_MSG("[StorageManager] V1 storage file exists");
+      
+      if (file_.isOpen()) file_.close();
+      
+      if (!file_.open(V1_STORAGE_FILE_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
+        DEBUG_MSG("[StorageManager] Failed to open V1 storage file");
+        return false;
+      }
+      
+      size_t v1_size = file_.size();
+      file_.close();
+      
+      // Check if the V1 file size matches our current configuration
+      if (v1_size != _StorageProps::length) {
+        DEBUG_MSG("[StorageManager] V1 storage file size mismatch - cannot migrate");
+        DEBUG_MSG("[StorageManager] Deleting incompatible V1 storage file");
+        
+        // Delete the V1 file without migration
+        if (InternalFS.remove(V1_STORAGE_FILE_PATH)) {
+          DEBUG_MSG("[StorageManager] Deleted incompatible V1 storage file");
+        } else {
+          DEBUG_MSG("[StorageManager] Failed to delete V1 storage file");
+        }
+        
+        return true;
+      }
+      
+      // Size matches, proceed with migration
+      DEBUG_MSG("[StorageManager] Migrating V1 storage file");
+      
+      if (!file_.open(V1_STORAGE_FILE_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
+        DEBUG_MSG("[StorageManager] Failed to reopen V1 storage file");
+        return false;
+      }
+      
+      size_t bytes_read = file_.read(buffer_, v1_size);
+      file_.close();
+      
+      if (bytes_read != v1_size) {
+        DEBUG_MSG("[StorageManager] Failed to read V1 storage file");
+        return false;
+      }
+      
+      // Mark all pages as dirty to ensure they're all written
+      memset(dirty_flags_, 1, PAGE_COUNT);
+      
+      // Write to new pages
+      bool success = commitChanges();
+      
+      // Delete v1 file if successful
+      if (success && InternalFS.remove(V1_STORAGE_FILE_PATH)) {
+        DEBUG_MSG("[StorageManager] Migration completed successfully");
+      }
+      
+      return success;
+    }
+    
+    return true; // No v1 storage file to migrate
+  }
+  
+  // Load data from a specific page
+  static bool loadPage(uint16_t page_index) {
+    char path[32]; // Buffer for path
+    getPagePath(path, sizeof(path), page_index);
+    uint16_t offset = page_index * PAGE_FILE_SIZE;
+    
     if (!InternalFS.exists(path)) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Part file %s does not exist", path);
-      DEBUG_MSG(buffer);
+      // Fill with uninitialized bytes if page file doesn't exist
+      memset(buffer_ + offset, _StorageProps::uninitialized_byte, 
+             min(PAGE_FILE_SIZE, _StorageProps::length - offset));
       return false;
     }
     
-    if (file.isOpen()) {
-      file.close();
-    }
+    if (file_.isOpen()) file_.close();
     
-    if (!file.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer),
-               "[NRF52Flash] Failed to open part file %s for reading", path);
-      DEBUG_MSG(buffer);
+    if (!file_.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
+      DEBUG_MSG("[StorageManager] Failed to open page file for reading");
       return false;
     }
     
-    // Check file size is correct (should be MAX_FILE_SIZE or less for last part)
-    size_t file_size = file.size();
-    uint16_t expected_size = min(MAX_FILE_SIZE, _StorageProps::length - offset);
+    uint16_t expected_size = min(PAGE_FILE_SIZE, _StorageProps::length - offset);
+    size_t read_size = file_.read(buffer_ + offset, expected_size);
+    file_.close();
     
-    if (file_size != expected_size) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Part file %s has incorrect size: %u, expected: %u", 
-               path, (unsigned int)file_size, (unsigned int)expected_size);
-      DEBUG_MSG(buffer);
-      file.close();
-      return false;
-    }
-    
-    // Read file contents into memory at the correct offset
-    size_t read_size = file.read(contents + offset, expected_size);
-    file.close();
-
     if (read_size != expected_size) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer),
-               "[NRF52Flash] Failed to read entire part file %s", path);
-      DEBUG_MSG(buffer);
+      DEBUG_MSG("[StorageManager] Failed to read entire page file");
       return false;
     }
     
-    char buffer[80];
-    snprintf(buffer, sizeof(buffer), 
-             "[NRF52Flash] Part file %s loaded successfully (%u bytes)", 
-             path, (unsigned int)read_size);
-    DEBUG_MSG(buffer);
     return true;
   }
-
-  static bool migrateFromLegacyFile() {
-    DEBUG_MSG("[NRF52Flash] Starting migration from legacy file");
-    
-    // Try to open the legacy file
-    if (file.isOpen()) {
-      file.close();
-    }
-    
-    if (!file.open(LEGACY_EEPROM_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-      DEBUG_MSG("[NRF52Flash] Failed to open legacy file for reading");
-      return false;
-    }
-    
-    // Check how much data we can actually read
-    size_t legacy_size = file.size();
-    size_t bytes_to_read = min((size_t)_StorageProps::length, legacy_size);
-    
-    char buffer[80];
-    snprintf(buffer, sizeof(buffer), 
-             "[NRF52Flash] Legacy file size: %u bytes, reading %u bytes", 
-             (unsigned int)legacy_size, (unsigned int)bytes_to_read);
-    DEBUG_MSG(buffer);
-    
-    // Read legacy file data into memory
-    size_t bytes_read = file.read(contents, bytes_to_read);
-    file.close();
-    
-    if (bytes_read != bytes_to_read) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Failed to read legacy file: read %u of %u bytes", 
-               (unsigned int)bytes_read, (unsigned int)bytes_to_read);
-      DEBUG_MSG(buffer);
-      return false;
-    }
-    
-    // If legacy file was smaller than our total length, fill the rest with uninitialized bytes
-    if (bytes_read < _StorageProps::length) {
-      DEBUG_MSG("[NRF52Flash] Legacy file smaller than required, padding with uninitialized bytes");
-      memset(contents + bytes_read, _StorageProps::uninitialized_byte, _StorageProps::length - bytes_read);
-    }
-    
-    // Write to new split files
-    bool success = writeToFile();
-    
-    if (success) {
-      // Delete the legacy file only after successful migration
-      if (InternalFS.remove(LEGACY_EEPROM_PATH)) {
-        DEBUG_MSG("[NRF52Flash] Legacy file deleted after successful migration");
-      } else {
-        DEBUG_MSG("[NRF52Flash] Warning: Could not delete legacy file");
-      }
-      DEBUG_MSG("[NRF52Flash] Migration completed successfully");
-    } else {
-      DEBUG_MSG("[NRF52Flash] Migration failed");
-    }
-    
-    return success;
-  }
-
-  static void markChunkDirty(uint16_t offset, uint16_t size) {
-    uint16_t start_chunk = offset / MAX_FILE_SIZE;
-    uint16_t end_chunk = (offset + size - 1) / MAX_FILE_SIZE;
-    
-    // Mark each affected chunk as dirty
-    for (uint16_t chunk = start_chunk; chunk <= end_chunk && chunk < sizeof(chunk_dirty_flags); chunk++) {
-      chunk_dirty_flags[chunk] = 1;
-    }
-    
-    dirty_ = true;
-  }
-
-  static bool isChunkDirty(uint16_t chunk_index) {
-    if (chunk_index < sizeof(chunk_dirty_flags)) {
-      return chunk_dirty_flags[chunk_index] != 0;
-    }
-    return false;
-  }
-
-  static bool writePartFile(const char* path, uint16_t offset) {
-    // Check if this chunk is dirty
-    uint16_t chunk_index = offset / MAX_FILE_SIZE;
-    if (!isChunkDirty(chunk_index)) {
-      DEBUG_MSG("[NRF52Flash] Chunk not modified, skipping write");
+  
+  // Save a specific page if it's dirty
+  static bool savePage(uint16_t page_index) {
+    // Skip if not dirty
+    if (!dirty_flags_[page_index]) {
       return true;
     }
     
-    // Make sure the file is closed before we open it
-    if (file.isOpen()) {
-      file.close();
+    char path[32]; // Buffer for path
+    getPagePath(path, sizeof(path), page_index);
+    uint16_t offset = page_index * PAGE_FILE_SIZE;
+    uint16_t page_size = min(PAGE_FILE_SIZE, _StorageProps::length - offset);
+    
+    if (file_.isOpen()) file_.close();
+    
+    // Use appropriate open mode based on file existence
+    bool file_exists = InternalFS.exists(path);
+    if (!file_.open(path, 
+                   file_exists ? Adafruit_LittleFS_Namespace::FILE_O_OVERWRITE : 
+                                 Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
+      DEBUG_MSG("[StorageManager] Failed to open page file for writing");
+      return false;
     }
     
-    // Calculate the size to write for this part
-    uint16_t bytes_to_write = min(MAX_FILE_SIZE, _StorageProps::length - offset);
+    // If file exists, seek to beginning
+    if (file_exists && !file_.seek(0)) {
+      DEBUG_MSG("[StorageManager] Failed to seek to start of file");
+      file_.close();
+      return false;
+    }
     
-    // Create or update the part file
-    char buffer[80];
-    snprintf(buffer, sizeof(buffer), 
-             "[NRF52Flash] Updating part file %s (%u bytes)", 
-             path, (unsigned int)bytes_to_write);
-    DEBUG_MSG(buffer);
+    const uint16_t WRITE_CHUNK_SIZE = 1024;
+    size_t total_written = 0;
     
-    // Use FILE_O_OVERWRITE for existing files, FILE_O_WRITE for new files
-    bool use_update_mode = InternalFS.exists(path);
-    
-    if (use_update_mode) {
-      if (!file.open(path, Adafruit_LittleFS_Namespace::FILE_O_OVERWRITE)) {
-        DEBUG_MSG("[NRF52Flash] Failed to open part file for updating");
+    for (uint16_t write_offset = 0; write_offset < page_size; write_offset += WRITE_CHUNK_SIZE) {
+      uint16_t bytes_to_write = min(WRITE_CHUNK_SIZE, page_size - write_offset);
+      size_t bytes_written = file_.write(buffer_ + offset + write_offset, bytes_to_write);
+      
+      if (bytes_written != bytes_to_write) {
+        DEBUG_MSG("[StorageManager] Partial write failure");
+        file_.close();
         return false;
       }
       
-      // Make sure we start at the beginning of the file
-      if (!file.seek(0)) {
-        DEBUG_MSG("[NRF52Flash] Failed to seek to start of file");
-        file.close();
-        return false;
-      }
-    } else {
-      if (!file.open(path, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
-        DEBUG_MSG("[NRF52Flash] Failed to create part file");
-        return false;
-      }
+      total_written += bytes_written;
+      delay(1); // Small delay between writes
     }
     
-    // LittleFS seems to have a limit of 4k per write for overwrite/update mode.
-    // I wish I understood what was really going on there --jesse
-    const uint16_t CHUNK_SIZE = 4096; 
-    size_t written = 0;
+    file_.flush();
+    file_.close();
     
-    for (uint16_t chunk_offset = 0; chunk_offset < bytes_to_write; chunk_offset += CHUNK_SIZE) {
-      uint16_t chunk_size = min(CHUNK_SIZE, bytes_to_write - chunk_offset);
-      size_t bytes_written = file.write(contents + offset + chunk_offset, chunk_size);
-      
-      if (bytes_written != chunk_size) {
-        // Check for specific error code
-        char err_buffer[80];
-        if (bytes_written == -28) { // LFS_ERR_NOSPC
-          snprintf(err_buffer, sizeof(err_buffer), 
-                  "[NRF52Flash] No space left on device (offset: %u, trying to write: %u bytes)",
-                  (unsigned int)(offset + chunk_offset), (unsigned int)chunk_size);
-        } else {
-          snprintf(err_buffer, sizeof(err_buffer), 
-                  "[NRF52Flash] Failed to write part file: %d of %u bytes written (offset: %u)",
-                  (int)bytes_written, (unsigned int)chunk_size, (unsigned int)(offset + chunk_offset));
-        }
-        DEBUG_MSG(err_buffer);
-        file.close();
-        return false;
-      }
-      
-      written += bytes_written;
-      
-      // Add small delay between chunks
-      delay(5);
+    if (total_written != page_size) {
+      DEBUG_MSG("[StorageManager] Failed to write page file");
+      return false;
     }
     
-    file.flush();
-    file.close();
-    
-    // Clear the dirty flag for this chunk after successful write
-    if (chunk_index < sizeof(chunk_dirty_flags)) {
-      chunk_dirty_flags[chunk_index] = 0;
-    }
-    
-    char success_buffer[80];
-    snprintf(success_buffer, sizeof(success_buffer), 
-             "[NRF52Flash] Part file %s written successfully (%u bytes)", 
-             path, (unsigned int)written);
-    DEBUG_MSG(success_buffer);
+    // Clear dirty flag
+    dirty_flags_[page_index] = 0;
     return true;
   }
 
-  static bool loadFileContent() {
-    bool any_file_loaded = false;
+ public:
+  // Initialize the storage manager
+  static bool init() {
+    if (is_initialized_) return true;
     
-    // Try to load part 1
-    bool part1_loaded = loadPartFile(EEPROM_PATH_PART1, 0);
-    if (part1_loaded) {
-      any_file_loaded = true;
+    // Initialize with defaults
+    memset(buffer_, _StorageProps::uninitialized_byte, _StorageProps::length);
+    memset(dirty_flags_, 0, PAGE_COUNT);
+    
+    // Initialize filesystem
+    if (!initFilesystem()) {
+      return false;
     }
     
-    // Try to load part 2 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE) {
-      bool part2_loaded = loadPartFile(EEPROM_PATH_PART2, MAX_FILE_SIZE);
-      if (part2_loaded) {
-        any_file_loaded = true;
+    // Check for v1 storage file
+    if (!checkAndMigrateV1StorageFile()) {
+      // Continue even if migration fails
+    }
+    
+    // Load data from pages
+    any_data_loaded_ = false;
+    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
+      if (loadPage(i)) {
+        any_data_loaded_ = true;
       }
     }
     
-    // Try to load part 3 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE * 2) {
-      bool part3_loaded = loadPartFile(EEPROM_PATH_PART3, MAX_FILE_SIZE * 2);
-      if (part3_loaded) {
-        any_file_loaded = true;
-      }
-    }
-    
-    // Try to load part 4 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE * 3) {
-      bool part4_loaded = loadPartFile(EEPROM_PATH_PART4, MAX_FILE_SIZE * 3);
-      if (part4_loaded) {
-        any_file_loaded = true;
-      }
-    }
-    
-    if (any_file_loaded) {
-      DEBUG_MSG("[NRF52Flash] EEPROM data loaded successfully");
-    } else {
-      DEBUG_MSG("[NRF52Flash] No EEPROM files found, using defaults");
-    }
-    
-    return any_file_loaded;
-  }
-
-  static bool checkBounds(uint16_t offset, uint16_t size) {
-    bool result = (offset + size <= _StorageProps::length);
-    return result;
+    is_initialized_ = true;
+    return true;
   }
   
+  // Mark a region as dirty
+  static void markDirty(uint16_t offset, uint16_t size) {
+    if (!is_initialized_) return;
+    
+    uint16_t start_page = offset / PAGE_FILE_SIZE;
+    uint16_t end_page = (offset + size - 1) / PAGE_FILE_SIZE;
+    
+    for (uint16_t page = start_page; page <= end_page && page < PAGE_COUNT; page++) {
+      dirty_flags_[page] = 1;
+    }
+  }
+  
+  // Get a pointer to the buffer
+  static uint8_t* getBuffer() {
+    return buffer_;
+  }
+  
+  // Check if any pages are dirty
+  static bool isDirty() {
+    if (!is_initialized_) return false;
+    
+    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
+      if (dirty_flags_[i]) return true;
+    }
+    
+    return false;
+  }
+  
+  // Commit changes to all dirty pages
+  static bool commitChanges() {
+    if (!is_initialized_ || !isDirty()) return true;
+    
+    bool all_success = true;
+    DEBUG_MSG("[StorageManager] Committing changes");
+    
+    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
+      if (dirty_flags_[i]) {
+        bool success = savePage(i);
+        if (!success) {
+          all_success = false;
+          DEBUG_MSG("[StorageManager] WARNING: Failed to save page");
+        }
+      }
+    }
+    
+    return all_success;
+  }
+  
+  // Check if the manager has been successfully initialized
+  static bool isInitialized() {
+    return is_initialized_;
+  }
+  
+  // Check if any data was loaded from storage
+  static bool anyDataLoaded() {
+    return any_data_loaded_;
+  }
+  
+  // Verify and fix files if needed
   static bool verifyAndFixFiles() {
     if (!init()) return false;
-
-    bool files_ok = true;
+    
     bool needs_fixing = false;
     
-    // Check if part files exist and have correct sizes
-    if (!verifyPartFile(EEPROM_PATH_PART1, 0)) {
-      files_ok = false;
-      needs_fixing = true;
-      DEBUG_MSG("[NRF52Flash] First part file needs to be fixed");
-    }
-    
-    if (_StorageProps::length > MAX_FILE_SIZE) {
-      if (!verifyPartFile(EEPROM_PATH_PART2, MAX_FILE_SIZE)) {
-        files_ok = false;
+    // Check if any page files are missing or wrong size
+    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
+      char path[32]; // Buffer for path
+      getPagePath(path, sizeof(path), i);
+      
+      if (!InternalFS.exists(path)) {
+        DEBUG_MSG("[StorageManager] Page file missing");
         needs_fixing = true;
-        DEBUG_MSG("[NRF52Flash] Second part file needs to be fixed");
+        break;
+      }
+      
+      // Check file size
+      if (file_.isOpen()) file_.close();
+      
+      if (!file_.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
+        DEBUG_MSG("[StorageManager] Failed to open page file for verification");
+        needs_fixing = true;
+        break;
+      }
+      
+      uint16_t expected_size = min(PAGE_FILE_SIZE, _StorageProps::length - (i * PAGE_FILE_SIZE));
+      size_t actual_size = file_.size();
+      file_.close();
+      
+      if (actual_size != expected_size) {
+        DEBUG_MSG("[StorageManager] Page file has wrong size");
+        needs_fixing = true;
+        break;
       }
     }
     
-    if (_StorageProps::length > MAX_FILE_SIZE * 2) {
-      if (!verifyPartFile(EEPROM_PATH_PART3, MAX_FILE_SIZE * 2)) {
-        files_ok = false;
-        needs_fixing = true;
-        DEBUG_MSG("[NRF52Flash] Third part file needs to be fixed");
-      }
-    }
-    
-    if (_StorageProps::length > MAX_FILE_SIZE * 3) {
-      if (!verifyPartFile(EEPROM_PATH_PART4, MAX_FILE_SIZE * 3)) {
-        files_ok = false;
-        needs_fixing = true;
-        DEBUG_MSG("[NRF52Flash] Fourth part file needs to be fixed");
-      }
-    }
-    
-    // Proactively fix the files if needed
     if (needs_fixing) {
-      DEBUG_MSG("[NRF52Flash] Fixing files now");
-      if (writeToFile()) {
-        DEBUG_MSG("[NRF52Flash] Files fixed successfully");
-        files_ok = true;
-      } else {
-        DEBUG_MSG("[NRF52Flash] Failed to fix files");
-      }
-    }
-    
-    return files_ok;
-  }
-  
-  static bool verifyPartFile(const char* path, uint16_t offset) {
-    if (!InternalFS.exists(path)) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Part file %s doesn't exist, will be created on commit", 
-               path);
-      DEBUG_MSG(buffer);
-      return false;
-    }
-    
-    if (file.isOpen()) {
-      file.close();
-    }
-    
-    if (!file.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Failed to open part file %s for verification",
-               path);
-      DEBUG_MSG(buffer);
-      return false;
-    }
-    
-    size_t size = file.size();
-    file.close();
-    
-    uint16_t expected_size = min(MAX_FILE_SIZE, _StorageProps::length - offset);
-    
-    if (size != expected_size) {
-      char buffer[80];
-      snprintf(buffer, sizeof(buffer), 
-               "[NRF52Flash] Part file %s has wrong size: %u, expected: %u", 
-               path, (unsigned int)size, (unsigned int)expected_size);
-      DEBUG_MSG(buffer);
-      return false;
+      DEBUG_MSG("[StorageManager] Storage corruption detected, erasing all page files");
+      // Delete all page files and start fresh instead of trying to fix them
+      deleteAllPageFiles();
+      // Mark everything as dirty for next commit
+      markDirty(0, _StorageProps::length);
+      // Commit changes to save the default values to files
+      return commitChanges();
     }
     
     return true;
   }
-
-  static bool writeToFile() {
-    bool success = true;
-    DEBUG_MSG("[NRF52Flash] Starting to write files");
+  
+  // Delete all storage page files from the filesystem
+  static void deleteAllPageFiles() {
+    DEBUG_MSG("[StorageManager] Deleting all page files");
     
-    // Try writing part 1
-    bool part1_success = writePartFile(EEPROM_PATH_PART1, 0);
-    if (!part1_success) {
-      DEBUG_MSG("[NRF52Flash] Failed to write first part file");
-      success = false;
-    }
-    
-    // Try writing part 2 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE) {
-      bool part2_success = writePartFile(EEPROM_PATH_PART2, MAX_FILE_SIZE);
-      if (!part2_success) {
-        DEBUG_MSG("[NRF52Flash] Failed to write second part file");
-        success = false;
+    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
+      char path[32]; // Buffer for path
+      getPagePath(path, sizeof(path), i);
+      
+      if (InternalFS.exists(path)) {
+        if (InternalFS.remove(path)) {
+          DEBUG_MSG("[StorageManager] Deleted page file");
+        } else {
+          DEBUG_MSG("[StorageManager] Failed to delete page file");
+        }
       }
     }
     
-    // Try writing part 3 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE * 2) {
-      bool part3_success = writePartFile(EEPROM_PATH_PART3, MAX_FILE_SIZE * 2);
-      if (!part3_success) {
-        DEBUG_MSG("[NRF52Flash] Failed to write third part file");
-        success = false;
-      }
-    }
-    
-    // Try writing part 4 if needed
-    if (_StorageProps::length > MAX_FILE_SIZE * 3) {
-      bool part4_success = writePartFile(EEPROM_PATH_PART4, MAX_FILE_SIZE * 3);
-      if (!part4_success) {
-        DEBUG_MSG("[NRF52Flash] Failed to write fourth part file");
-        success = false;
-      }
-    }
-    
-    if (success) {
-      DEBUG_MSG("[NRF52Flash] All files written successfully");
-    } else if (!data_loss_reported) {
-      DEBUG_MSG("[NRF52Flash] WARNING: Failed to save all EEPROM data");
-      data_loss_reported = true;
-    }
-    
-    return success;
+    // Reset our state
+    memset(buffer_, _StorageProps::uninitialized_byte, _StorageProps::length);
+    memset(dirty_flags_, 1, PAGE_COUNT);
   }
+};
 
-  static void format() {
-    DEBUG_MSG("[NRF52Flash] Performing filesystem cleanup");
-    InternalFS.end();
-    InternalFS.erase();
-    InternalFS.format();
-    InternalFS.begin();
+// Static member initialization
+template<typename _StorageProps>
+uint8_t StorageFileManager<_StorageProps>::buffer_[_StorageProps::length];
+
+template<typename _StorageProps>
+uint8_t StorageFileManager<_StorageProps>::dirty_flags_[StorageFileManager<_StorageProps>::PAGE_COUNT];
+
+template<typename _StorageProps>
+bool StorageFileManager<_StorageProps>::is_initialized_ = false;
+
+template<typename _StorageProps>
+bool StorageFileManager<_StorageProps>::any_data_loaded_ = false;
+
+template<typename _StorageProps>
+Adafruit_LittleFS_Namespace::File StorageFileManager<_StorageProps>::file_(InternalFS);
+
+/**
+ * NRF52Flash storage driver implementation
+ * Uses StorageFileManager to handle underlying storage
+ */
+template<typename _StorageProps>
+class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
+ private:
+  static bool dirty_;
+  
+  static bool init() {
+    return StorageFileManager<_StorageProps>::init();
+  }
+  
+  static bool checkBounds(uint16_t offset, uint16_t size) {
+    return (offset + size <= _StorageProps::length);
   }
 
  public:
@@ -530,8 +444,9 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     if (!init() || !checkBounds(offset, sizeof(T))) {
       return t;
     }
-
-    memcpy(&t, contents + offset, sizeof(T));
+    
+    uint8_t* buffer = StorageFileManager<_StorageProps>::getBuffer();
+    memcpy(&t, buffer + offset, sizeof(T));
     return t;
   }
 
@@ -540,15 +455,14 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     if (!init() || !checkBounds(offset, sizeof(T))) {
       return t;
     }
-
-    // Check if data is actually changing
-    if (memcmp(contents + offset, &t, sizeof(T)) != 0) {
-      // Update in-memory contents
-      memcpy(contents + offset, &t, sizeof(T));
-      // Mark the affected chunks as dirty
-      markChunkDirty(offset, sizeof(T));
+    
+    uint8_t* buffer = StorageFileManager<_StorageProps>::getBuffer();
+    if (memcmp(buffer + offset, &t, sizeof(T)) != 0) {
+      memcpy(buffer + offset, &t, sizeof(T));
+      StorageFileManager<_StorageProps>::markDirty(offset, sizeof(T));
+      dirty_ = true;
     }
-
+    
     return t;
   }
 
@@ -556,7 +470,7 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     if (!init() || !checkBounds(idx, 1)) {
       return 0;
     }
-    return contents[idx];
+    return StorageFileManager<_StorageProps>::getBuffer()[idx];
   }
 
   void write(int idx, uint8_t val) {
@@ -564,10 +478,11 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
       return;
     }
     
-    // Only update if value is changing
-    if (contents[idx] != val) {
-      contents[idx] = val;
-      markChunkDirty(idx, 1);
+    uint8_t* buffer = StorageFileManager<_StorageProps>::getBuffer();
+    if (buffer[idx] != val) {
+      buffer[idx] = val;
+      StorageFileManager<_StorageProps>::markDirty(idx, 1);
+      dirty_ = true;
     }
   }
 
@@ -582,15 +497,14 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
       return true;
     }
     
-    bool uninitialized = true;
+    uint8_t* buffer = StorageFileManager<_StorageProps>::getBuffer();
     for (uint16_t i = 0; i < size; i++) {
-      if (contents[offset + i] != _StorageProps::uninitialized_byte) {
-        uninitialized = false;
-        break;
+      if (buffer[offset + i] != _StorageProps::uninitialized_byte) {
+        return false;
       }
     }
     
-    return uninitialized;
+    return true;
   }
 
   const uint16_t length() {
@@ -598,71 +512,32 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
   }
 
   void setup() {
-    if (!is_initialized) {
-      verifyAndFixFiles();
-      is_initialized = true;
-    }
+    StorageFileManager<_StorageProps>::verifyAndFixFiles();
   }
 
   void commit() {
-    if (dirty_) {
-      DEBUG_MSG("[NRF52Flash] Committing changes to files");
-      
-      // Only attempt to write if there are dirty chunks
-      bool any_dirty = false;
-      for (uint8_t i = 0; i < sizeof(chunk_dirty_flags); i++) {
-        if (chunk_dirty_flags[i]) {
-          any_dirty = true;
-          break;
-        }
-      }
-      
-      if (!any_dirty) {
-        DEBUG_MSG("[NRF52Flash] No chunks marked dirty, skipping commit");
-        dirty_ = false;
-        return;
-      }
-      
-      if (writeToFile()) {
-        DEBUG_MSG("[NRF52Flash] Commit successful");
-        dirty_ = false;
-      } else {
-        DEBUG_MSG("[NRF52Flash] Commit partially failed, some data may not be saved");
-        // We still consider the commit "successful" to avoid constant retry loops
-        dirty_ = false;
-      }
-    } else {
-      DEBUG_MSG("[NRF52Flash] No changes to commit");
+    if (dirty_ && StorageFileManager<_StorageProps>::isDirty()) {
+      DEBUG_MSG("[NRF52Flash] Committing changes");
+      StorageFileManager<_StorageProps>::commitChanges();
+      dirty_ = false;
     }
   }
 
   void erase() {
-    // Initialize in-memory contents with uninitialized bytes
-    memset(contents, _StorageProps::uninitialized_byte, _StorageProps::length);
-    // Mark all chunks as dirty
-    memset(chunk_dirty_flags, 1, sizeof(chunk_dirty_flags));
-    dirty_ = true;     // Mark as dirty so it will be written on next commit
-    commit();    // Write immediately to keep behavior consistent with previous implementation
+    if (!init()) return;
+    
+    // Have the storage manager delete all page files
+    StorageFileManager<_StorageProps>::deleteAllPageFiles();
+    
+    // Mark everything as dirty for next commit
+    StorageFileManager<_StorageProps>::markDirty(0, _StorageProps::length);
+    dirty_ = true;
+    commit();
   }
 };
 
 template<typename _StorageProps>
-bool NRF52Flash<_StorageProps>::is_initialized = false;
-
-template<typename _StorageProps>
-Adafruit_LittleFS_Namespace::File NRF52Flash<_StorageProps>::file(InternalFS);
-
-template<typename _StorageProps>
-uint8_t *NRF52Flash<_StorageProps>::contents = nullptr;
-
-template<typename _StorageProps>
 bool NRF52Flash<_StorageProps>::dirty_ = false;
-
-template<typename _StorageProps>
-bool NRF52Flash<_StorageProps>::data_loss_reported = false;
-
-template<typename _StorageProps>
-uint8_t NRF52Flash<_StorageProps>::chunk_dirty_flags[4] = {0};
 
 }  // namespace storage
 }  // namespace driver
