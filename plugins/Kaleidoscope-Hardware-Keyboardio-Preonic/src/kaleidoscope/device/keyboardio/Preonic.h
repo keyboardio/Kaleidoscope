@@ -64,20 +64,7 @@ struct cRGB {
 #include "kaleidoscope/driver/battery_gauge/MAX17048.h"
 #include "kaleidoscope/driver/battery_charger/BQ24075.h"
 #include "kaleidoscope/power_event.h"
-#include "nrf_power.h"
-#include "nrf_gpio.h"
-#include "nrf_clock.h"
-#include "nrf_twim.h"
-#include "nrf_twis.h"
-#include "nrf_uarte.h"
-#include "nrf_saadc.h"
-#include "nrf_timer.h"
-#include "nrf_rtc.h"
-#include "nrf_pwm.h"
-#include "nrf_nfct.h"
-#include "nrf_usbd.h"
-#include "nrf_ppi.h"
-#include "nrf_gpiote.h"
+
 
 namespace kaleidoscope {
 namespace device {
@@ -1117,13 +1104,11 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
   void enableLEDPower() {
     pinMode(PIN_LED_ENABLE, OUTPUT);
-
     digitalWrite(PIN_LED_ENABLE, HIGH);
   }
 
   void disableLEDPower() {
     pinMode(PIN_LED_ENABLE, OUTPUT);
-
     digitalWrite(PIN_LED_ENABLE, LOW);
   }
 
