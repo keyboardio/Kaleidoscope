@@ -228,6 +228,13 @@ class Base {
   }
 
   /**
+   * Returns the MCU driver
+   */
+  MCU &mcu() {
+    return mcu_;
+  }
+
+  /**
    * Returns the short name of the device.
    */
   static const uint8_t getShortName(char *name) {
