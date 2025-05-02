@@ -56,7 +56,7 @@ struct BQ24075Props : public BaseProps {
    * Note: CHG is an open-drain output that requires a pull-up resistor.
    */
   static constexpr uint8_t charge_status_pin = 0;  // Default value, should be overridden
-  
+
   /**
    * @brief Pin connected to the BQ24075 SYSOFF input
    * 
@@ -65,14 +65,14 @@ struct BQ24075Props : public BaseProps {
    * Optional - set to 0 if not used.
    */
   static constexpr uint8_t sysoff_pin = 0;  // Default value, set to 0 if not used
-  
+
   /**
    * @brief Analog pin to monitor charge current via ISET
    * 
    * Optional - set to 0 if not used.
    */
   static constexpr uint8_t iset_pin = 0;  // Default value, set to 0 if not used
-  
+
   /**
    * @brief Resistance of ISET resistor in milliohms
    * 
@@ -95,13 +95,13 @@ template<typename _Props>
 class BQ24075 : public Base<_Props> {
  private:
   bool initialized_{false};  // Track initialization state
-  
+
   // Variables for charge fault detection
   unsigned long last_chg_toggle_time_{0};
   bool last_chg_state_{false};
   uint8_t chg_toggle_count_{0};
   bool fault_detected_{false};
-  
+
   /** @brief Check if the CHG pin is flashing (indicating a fault)
    * 
    * The BQ24075 flashes the CHG pin at ~2Hz when a timer fault occurs.
@@ -112,25 +112,25 @@ class BQ24075 : public Base<_Props> {
   bool detectChgFlashing() {
     if (!initialized_ || !_Props::charge_status_pin)
       return false;
-    
-    bool current_state = digitalRead(_Props::charge_status_pin) == LOW;
+
+    bool current_state         = digitalRead(_Props::charge_status_pin) == LOW;
     unsigned long current_time = millis();
-    
+
     // Reset detection if no toggles for 2 seconds
     if (current_time - last_chg_toggle_time_ > 2000) {
       chg_toggle_count_ = 0;
-      fault_detected_ = false;
+      fault_detected_   = false;
     }
-    
+
     // Detect state change
     if (current_state != last_chg_state_) {
       // Calculate time between toggles
       unsigned long toggle_interval = current_time - last_chg_toggle_time_;
-      
+
       // If toggle interval is around 500ms (2Hz), increment counter
       if (toggle_interval > 300 && toggle_interval < 700) {
         chg_toggle_count_++;
-        
+
         // If we see 4 toggles with the right timing, it's a fault
         if (chg_toggle_count_ >= 4) {
           fault_detected_ = true;
@@ -139,11 +139,11 @@ class BQ24075 : public Base<_Props> {
         // Reset count if timing is wrong
         chg_toggle_count_ = 0;
       }
-      
+
       last_chg_toggle_time_ = current_time;
-      last_chg_state_ = current_state;
+      last_chg_state_       = current_state;
     }
-    
+
     return fault_detected_;
   }
 
@@ -160,33 +160,33 @@ class BQ24075 : public Base<_Props> {
   bool waitForChgFlashing(uint32_t timeout_ms = 5000, uint32_t check_interval_ms = 5) {
     if (!initialized_ || !_Props::charge_status_pin)
       return false;
-    
+
     // Reset detection state
-    chg_toggle_count_ = 0;
-    fault_detected_ = false;
-    last_chg_state_ = digitalRead(_Props::charge_status_pin) == LOW;
+    chg_toggle_count_     = 0;
+    fault_detected_       = false;
+    last_chg_state_       = digitalRead(_Props::charge_status_pin) == LOW;
     last_chg_toggle_time_ = millis();
-    
-    uint32_t start_time = millis();
+
+    uint32_t start_time      = millis();
     uint32_t last_check_time = start_time;
-    
+
     // Monitor until timeout or fault detected
     while (millis() - start_time < timeout_ms) {
       uint32_t current_time = millis();
-      
+
       // Only check at the specified interval to avoid busy-waiting
       if (current_time - last_check_time >= check_interval_ms) {
         bool current_state = digitalRead(_Props::charge_status_pin) == LOW;
-        
+
         // Detect state change
         if (current_state != last_chg_state_) {
           // Calculate time between toggles
           unsigned long toggle_interval = current_time - last_chg_toggle_time_;
-          
+
           // If toggle interval is around 500ms (2Hz), increment counter
           if (toggle_interval > 300 && toggle_interval < 700) {
             chg_toggle_count_++;
-            
+
             // If we see 4 toggles with the right timing, it's a fault
             if (chg_toggle_count_ >= 4) {
               fault_detected_ = true;
@@ -196,18 +196,18 @@ class BQ24075 : public Base<_Props> {
             // Reset count if timing is wrong
             chg_toggle_count_ = 0;
           }
-          
+
           last_chg_toggle_time_ = current_time;
-          last_chg_state_ = current_state;
+          last_chg_state_       = current_state;
         }
-        
+
         last_check_time = current_time;
       }
-      
+
       // Small delay to prevent busy-waiting
       delay(1);
     }
-    
+
     return false;
   }
 
@@ -216,12 +216,12 @@ class BQ24075 : public Base<_Props> {
    * Detailed states of the battery charger
    */
   enum ChargeState {
-    NOT_CHARGING = 0,      // No power source or charge complete
-    CHARGING = 1,          // Actively charging
-    CHARGE_COMPLETE = 2,   // Charging completed
-    CHARGE_FAULT = 3,      // Timer or other fault detected
-    NO_BATTERY = 4,        // No battery detected
-    BATTERY_DISCONNECTED = 5 // Battery manually disconnected via SYSOFF
+    NOT_CHARGING         = 0,  // No power source or charge complete
+    CHARGING             = 1,  // Actively charging
+    CHARGE_COMPLETE      = 2,  // Charging completed
+    CHARGE_FAULT         = 3,  // Timer or other fault detected
+    NO_BATTERY           = 4,  // No battery detected
+    BATTERY_DISCONNECTED = 5   // Battery manually disconnected via SYSOFF
   };
 
   /** @brief Constructor
@@ -238,25 +238,25 @@ class BQ24075 : public Base<_Props> {
       pinMode(_Props::power_good_pin, INPUT_PULLUP);
       DEBUG_TRACE("BQ24075", "PGOOD pin configured: %d", _Props::power_good_pin);
     }
-    
+
     if (_Props::charge_status_pin) {
       pinMode(_Props::charge_status_pin, INPUT_PULLUP);
       DEBUG_TRACE("BQ24075", "CHG pin configured: %d", _Props::charge_status_pin);
     }
-    
+
     // Configure SYSOFF pin as output if used
     if (_Props::sysoff_pin) {
       pinMode(_Props::sysoff_pin, OUTPUT);
       digitalWrite(_Props::sysoff_pin, LOW);  // Normal operation by default
       DEBUG_TRACE("BQ24075", "SYSOFF pin configured: %d", _Props::sysoff_pin);
     }
-    
+
     // Configure ISET pin as analog input if used
     if (_Props::iset_pin) {
       pinMode(_Props::iset_pin, INPUT);
       DEBUG_TRACE("BQ24075", "ISET pin configured: %d", _Props::iset_pin);
     }
-    
+
     initialized_ = true;
     DEBUG_TRACE("BQ24075", "Initialization complete");
   }
@@ -280,7 +280,7 @@ class BQ24075 : public Base<_Props> {
   bool hasPower() const {
     if (!initialized_ || !_Props::power_good_pin)
       return false;
-    
+
     return digitalRead(_Props::power_good_pin) == LOW;
   }
 
@@ -295,7 +295,7 @@ class BQ24075 : public Base<_Props> {
   bool isCharging() const {
     if (!initialized_ || !_Props::charge_status_pin)
       return false;
-    
+
     return digitalRead(_Props::charge_status_pin) == LOW;
   }
 
@@ -314,24 +314,24 @@ class BQ24075 : public Base<_Props> {
   uint8_t getChargingState() const {
     if (!initialized_)
       return NOT_CHARGING;
-    
+
     // Check if battery is manually disconnected
     if (_Props::sysoff_pin && digitalRead(_Props::sysoff_pin) == HIGH) {
       return BATTERY_DISCONNECTED;
     }
-    
-    bool has_power = hasPower();
+
+    bool has_power   = hasPower();
     bool is_charging = isCharging();
-    
+
     if (!has_power) {
       return NOT_CHARGING;  // Not charging, no power source
     }
-    
+
     // Check for timer fault (requires non-const method)
-    if (const_cast<BQ24075*>(this)->detectChgFlashing()) {
+    if (const_cast<BQ24075 *>(this)->detectChgFlashing()) {
       return CHARGE_FAULT;
     }
-    
+
     if (is_charging) {
       return CHARGING;  // Charging
     } else {
@@ -340,7 +340,7 @@ class BQ24075 : public Base<_Props> {
       return CHARGE_COMPLETE;
     }
   }
-  
+
   /** @brief Disconnect or reconnect the battery from the system
    * 
    * Controls the SYSOFF pin to disconnect/reconnect the battery.
@@ -351,11 +351,11 @@ class BQ24075 : public Base<_Props> {
   bool disconnectBattery(bool disconnect) {
     if (!initialized_ || !_Props::sysoff_pin)
       return false;
-    
+
     digitalWrite(_Props::sysoff_pin, disconnect ? HIGH : LOW);
     return true;
   }
-  
+
   /** @brief Check if battery is disconnected from the system
    * 
    * @return true if disconnected, false if connected or feature not supported
@@ -363,10 +363,10 @@ class BQ24075 : public Base<_Props> {
   bool isBatteryDisconnected() const {
     if (!initialized_ || !_Props::sysoff_pin)
       return false;
-    
+
     return digitalRead(_Props::sysoff_pin) == HIGH;
   }
-  
+
   /** @brief Get the current charge current in mA
    * 
    * Uses the ISET pin to calculate current charge current.
@@ -377,24 +377,24 @@ class BQ24075 : public Base<_Props> {
   uint32_t getChargeCurrent() const {
     if (!initialized_ || !_Props::iset_pin)
       return 0;
-    
+
     // Read analog value
     uint32_t adc_value = analogRead(_Props::iset_pin);
-    
+
     // Convert to voltage in microvolts (depends on ADC reference voltage)
     // For 3.3V reference and 10-bit ADC: voltage_uv = adc_value * 3300000 / 1023
     uint32_t voltage_uv = (adc_value * 3300000) / 1023;
-    
+
     // Calculate current in microamps: I = V/R
     // iset_current_ua = voltage_uv / iset_resistance_milliohms * 1000
     uint32_t iset_current_ua = (voltage_uv * 1000) / _Props::iset_resistance;
-    
+
     // Charge current is 400x the current through ISET (in mA)
     uint32_t charge_current = (iset_current_ua * 400) / 1000;
-    
+
     return charge_current;
   }
-  
+
   /** @brief Check if a charge fault has been detected
    * 
    * @return true if a fault is detected, false otherwise
@@ -402,11 +402,11 @@ class BQ24075 : public Base<_Props> {
   bool hasFault() const {
     return fault_detected_;
   }
-  
+
   /** @brief Clear any fault detection state
    */
   void clearFault() {
-    fault_detected_ = false;
+    fault_detected_   = false;
     chg_toggle_count_ = 0;
   }
 };

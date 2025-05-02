@@ -125,7 +125,7 @@ class MAX17048 : public Base<_Props> {
    */
   uint16_t getVoltage() const override {
     if (!initialized_) return 0;
-    return lipo_.getVoltage(); // No conversion needed - now returns mV directly
+    return lipo_.getVoltage();  // No conversion needed - now returns mV directly
   }
 
   /**
@@ -154,10 +154,10 @@ class MAX17048 : public Base<_Props> {
    */
   uint8_t getBatteryLevel() const override {
     if (!initialized_) return 0;
-    
+
     // Get the raw battery level
     uint8_t raw_level = getRawBatteryLevel();
-    
+
     // Apply compensation only at higher charge levels
     if (raw_level >= 95) {
       // At 95% or higher, report as 100%
@@ -172,7 +172,7 @@ class MAX17048 : public Base<_Props> {
       // Between 80-84%, add 2% to the reading
       return raw_level + 2;
     }
-    
+
     // Below 80%, return the raw level without compensation
     return raw_level;
   }
@@ -188,10 +188,10 @@ class MAX17048 : public Base<_Props> {
    */
   uint8_t getCompensatedBatteryLevel() const {
     if (!initialized_) return 0;
-    
+
     // Get the raw battery level
     uint8_t raw_level = getBatteryLevel();
-    
+
     // Apply compensation only at higher charge levels
     if (raw_level >= 95) {
       // At 95% or higher, report as 100%
@@ -206,7 +206,7 @@ class MAX17048 : public Base<_Props> {
       // Between 80-84%, add 2% to the reading
       return raw_level + 2;
     }
-    
+
     // Below 80%, return the raw level without compensation
     return raw_level;
   }

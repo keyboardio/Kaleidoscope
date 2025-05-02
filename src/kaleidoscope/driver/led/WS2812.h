@@ -67,7 +67,7 @@ class WS2812 : public Base<_LEDDriverProps> {
       // On nRF52840, leaving the pin low as initialized in the neopixel library will cause a 500uA current leak
       // Driving the pin high with digitalWrite() fixes this, but results in the Preonic's 4th led (top right)
       // glowing a dull blue when other LEDs are lit and that one isn't
-      // Setting the output mode as output and unconnected when not in use appears to be a better fix. 
+      // Setting the output mode as output and unconnected when not in use appears to be a better fix.
       pinMode(_LEDDriverProps::pin, OUTPUT);
       pixels.show();
 
