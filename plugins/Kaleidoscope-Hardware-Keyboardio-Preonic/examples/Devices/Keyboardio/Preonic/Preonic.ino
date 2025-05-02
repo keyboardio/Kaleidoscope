@@ -83,7 +83,7 @@ enum {
   MACRO_BT_SELECT_4,  // Select slot 4
   MACRO_BT_PAIR,      // Start pairing for selected slot
   MACRO_BT_OFF,
-  MACRO_BATTERY_LEVEL // Report current battery level
+  MACRO_BATTERY_LEVEL  // Report current battery level
 };
 
 // Define our magic combo
@@ -361,10 +361,10 @@ static void batteryLevelMacro(uint8_t key_state) {
   if (keyToggledOn(key_state)) {
     // Get the battery level
     uint8_t battery_level = kaleidoscope::Runtime.device().batteryGauge().getBatteryLevel();
-    
+
     // Report battery level with a message
     Macros.type(PSTR("Battery Status:\n"));
-    
+
     // Battery percentage
     char percentage[5];
     snprintf(percentage, sizeof(percentage), "%d%%", battery_level);
@@ -398,34 +398,34 @@ static void batteryLevelMacro(uint8_t key_state) {
     Macros.type(PSTR("Power Source: "));
     if (kaleidoscope::Runtime.device().batteryCharger().hasPower()) {
       Macros.type(PSTR("Connected\n"));
-      
+
       Macros.type(PSTR("Charging Status: "));
       uint8_t charging_state = kaleidoscope::Runtime.device().batteryCharger().getChargingState();
-      
+
       // Using defined enum values from BQ24075
       typedef kaleidoscope::driver::battery_charger::BQ24075<kaleidoscope::device::keyboardio::PreonicBatteryChargerProps> BQ24075;
-      
+
       switch (charging_state) {
-        case BQ24075::CHARGING:
-          Macros.type(PSTR("Charging\n"));
-          break;
-        case BQ24075::CHARGE_COMPLETE:
-          Macros.type(PSTR("Charge Complete\n"));
-          break;
-        case BQ24075::CHARGE_FAULT:
-          Macros.type(PSTR("Fault Detected\n"));
-          break;
-        case BQ24075::NO_BATTERY:
-          Macros.type(PSTR("No Battery\n"));
-          break;
-        case BQ24075::BATTERY_DISCONNECTED:
-          Macros.type(PSTR("Battery Disconnected\n"));
-          break;
-        default:
-          Macros.type(PSTR("Not Charging\n"));
-          break;
+      case BQ24075::CHARGING:
+        Macros.type(PSTR("Charging\n"));
+        break;
+      case BQ24075::CHARGE_COMPLETE:
+        Macros.type(PSTR("Charge Complete\n"));
+        break;
+      case BQ24075::CHARGE_FAULT:
+        Macros.type(PSTR("Fault Detected\n"));
+        break;
+      case BQ24075::NO_BATTERY:
+        Macros.type(PSTR("No Battery\n"));
+        break;
+      case BQ24075::BATTERY_DISCONNECTED:
+        Macros.type(PSTR("Battery Disconnected\n"));
+        break;
+      default:
+        Macros.type(PSTR("Not Charging\n"));
+        break;
       }
-      
+
       // No need to print static configuration values in the status report
     } else {
       Macros.type(PSTR("Battery\n"));
@@ -466,7 +466,6 @@ static void batteryLevelMacro(uint8_t key_state) {
     Macros.type(PSTR("Gauge IC: "));
     Macros.type(version);
     Macros.type(PSTR("\n"));
-    
   }
 }
 

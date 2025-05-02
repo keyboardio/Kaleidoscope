@@ -73,7 +73,7 @@ namespace keyboardio {
 using Color = kaleidoscope::driver::led::color::GRB;
 // Forward declaration of a global function to send keystrokes
 // This will be implemented in a plugin-accessible location
-void sendKeyStrokes(const char* str);
+void sendKeyStrokes(const char *str);
 // Overload to handle integer values
 void sendKeyStrokes(int value);
 // Overload to handle integer values with format specifier (HEX, DEC, etc.)
@@ -226,9 +226,8 @@ struct PreonicBatteryGaugeProps : public kaleidoscope::driver::battery_gauge::MA
 };
 
 struct PreonicBatteryChargerProps : public kaleidoscope::driver::battery_charger::BQ24075Props {
-  static constexpr uint8_t power_good_pin = PIN_POWER_GOOD;       // Pin connected to BQ24075 PGOOD output
-  static constexpr uint8_t charge_status_pin = PIN_CHARGE_STATUS; // Pin connected to BQ24075 CHG output
-
+  static constexpr uint8_t power_good_pin    = PIN_POWER_GOOD;     // Pin connected to BQ24075 PGOOD output
+  static constexpr uint8_t charge_status_pin = PIN_CHARGE_STATUS;  // Pin connected to BQ24075 CHG output
 };
 
 struct PreonicProps : public kaleidoscope::device::BaseProps {
@@ -259,7 +258,7 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
 
   typedef PreonicBatteryGaugeProps BatteryGaugeProps;
   typedef kaleidoscope::driver::battery_gauge::MAX17048<BatteryGaugeProps> BatteryGauge;
-  
+
   typedef PreonicBatteryChargerProps BatteryChargerProps;
   typedef kaleidoscope::driver::battery_charger::BQ24075<BatteryChargerProps> BatteryCharger;
 };
@@ -267,10 +266,10 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
 class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  private:
   // Deep sleep timers
-  static uint32_t last_activity_time_;                      // Used for deep sleep
+  static uint32_t last_activity_time_;                     // Used for deep sleep
   static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 2000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
-  static uint32_t last_battery_update_;                     // Last battery level update time
+  static uint32_t last_battery_update_;                        // Last battery level update time
   static constexpr uint32_t BATTERY_UPDATE_INTERVAL = 300000;  // 5 minutes in milliseconds
 
   // Battery monitoring variables and thresholds
@@ -279,19 +278,19 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static uint32_t last_warning_time_;
   static bool warning_active_;
   static bool shutdown_active_;
-  static constexpr uint32_t BATTERY_CHECK_INTERVAL_MS = 10000;    // Check battery every 10 seconds
-  static constexpr uint32_t WARNING_INTERVAL_MS = 10000;          // Warning flash interval (10 seconds)
-  static constexpr uint32_t WARNING_DURATION_MS = 1000;           // Warning flash duration (1 second)
-  static constexpr uint32_t SHUTDOWN_DURATION_MS = 10000;         // Shutdown indication duration (10 seconds)
-  static constexpr uint16_t BATTERY_WARNING_THRESHOLD_MV = 3300;  // 3.3V
-  static constexpr uint16_t BATTERY_SHUTDOWN_THRESHOLD_MV = 3100; // 3.1V
-  
+  static constexpr uint32_t BATTERY_CHECK_INTERVAL_MS     = 10000;  // Check battery every 10 seconds
+  static constexpr uint32_t WARNING_INTERVAL_MS           = 10000;  // Warning flash interval (10 seconds)
+  static constexpr uint32_t WARNING_DURATION_MS           = 1000;   // Warning flash duration (1 second)
+  static constexpr uint32_t SHUTDOWN_DURATION_MS          = 10000;  // Shutdown indication duration (10 seconds)
+  static constexpr uint16_t BATTERY_WARNING_THRESHOLD_MV  = 3300;   // 3.3V
+  static constexpr uint16_t BATTERY_SHUTDOWN_THRESHOLD_MV = 3100;   // 3.1V
+
   // Battery status enum
   enum class BatteryStatus {
-    Normal,     // Battery level is good
-    Warning,    // Battery is low (warning threshold)
-    Critical,   // Battery is critically low (shutdown threshold)
-    Shutdown    // Battery is too low, system will shut down
+    Normal,    // Battery level is good
+    Warning,   // Battery is low (warning threshold)
+    Critical,  // Battery is critically low (shutdown threshold)
+    Shutdown   // Battery is too low, system will shut down
   };
   static BatteryStatus battery_status_;
 
@@ -703,7 +702,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static void disableTWIForSleep() {
     // End the Wire library connection
     Wire.end();
-    
+
     // Save TWIM0 state for restoration
     twi_state_.frequency = NRF_TWIM0->FREQUENCY;
     twi_state_.pin_scl   = NRF_TWIM0->PSEL.SCL;
@@ -717,12 +716,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    */
   static void restoreTWIAfterSleep() {
     if (!twi_state_.enabled) return;
-    
+
     // Restore TWIM0 configuration
     NRF_TWIM0->FREQUENCY = twi_state_.frequency;
     NRF_TWIM0->PSEL.SCL  = twi_state_.pin_scl;
     NRF_TWIM0->PSEL.SDA  = twi_state_.pin_sda;
-    
+
     // Re-enable IRQ
     NVIC_ClearPendingIRQ(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn);
     NVIC_EnableIRQ(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn);
@@ -731,7 +730,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     NRF_TWIM0->ENABLE = TWIM_ENABLE_ENABLE_Enabled << TWIM_ENABLE_ENABLE_Pos;
 
     twi_state_.enabled = false;
-    
+
     // Reinitialize Wire library
     Wire.begin();
   }
@@ -750,26 +749,26 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
       pinMode(KeyScannerProps::matrix_col_pins[i], INPUT_PULLUP);
     }
-    
-    uint32_t start_time = millis();
+
+    uint32_t start_time     = millis();
     bool recovery_keys_held = false;
-    
+
     while (millis() - start_time < 5000) {
 
       // Simple matrix scan without debouncing
       uint8_t pressed_count = 0;
-      bool r1c0_pressed = false;
-      bool r1c11_pressed = false;
-      bool r5c11_pressed = false;
-      
+      bool r1c0_pressed     = false;
+      bool r1c11_pressed    = false;
+      bool r5c11_pressed    = false;
+
       for (uint8_t row = 0; row < KeyScannerProps::matrix_rows; row++) {
         digitalWrite(KeyScannerProps::matrix_row_pins[row], LOW);
         delayMicroseconds(10);
-        
+
         for (uint8_t col = 0; col < KeyScannerProps::matrix_columns; col++) {
           if (!digitalRead(KeyScannerProps::matrix_col_pins[col])) {
             pressed_count++;
-            
+
             // Check for recovery mode keys
             if (row == 1 && col == 0) r1c0_pressed = true;
             if (row == 1 && col == 11) r1c11_pressed = true;
@@ -783,23 +782,23 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       if (pressed_count > 3) {
         return false;
       }
-      
+
       // Check if required keys are held
       if (!r1c0_pressed || !r1c11_pressed || !r5c11_pressed) {
         return false;
       }
 
-    if (recovery_keys_held == false) {
-          ledDriver().setup();
-      ledDriver().setBrightness(100);
-      // Set all the LEDs to yellow
-      for (uint8_t i = 0; i < PreonicProps::LEDDriverProps::led_count; i++) {
-        setCrgbAt(i, CRGB(255, 255, 0));
+      if (recovery_keys_held == false) {
+        ledDriver().setup();
+        ledDriver().setBrightness(100);
+        // Set all the LEDs to yellow
+        for (uint8_t i = 0; i < PreonicProps::LEDDriverProps::led_count; i++) {
+          setCrgbAt(i, CRGB(255, 255, 0));
+        }
+        syncLeds();
       }
-      syncLeds();
-    }
       recovery_keys_held = true;
-      delay(10); // Small delay to prevent busy-waiting
+      delay(10);  // Small delay to prevent busy-waiting
     }
     return recovery_keys_held;
   }
@@ -823,7 +822,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     }
     syncLeds();
     delay(2000);
-    
+
     NVIC_SystemReset();
   }
 
@@ -835,13 +834,13 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     configureColumnsForSensing();
     setupGPIOTE();
     speaker().prepareForSleep();
-    
+
     // Bluefruit hid - process all queue reports, then shut down processing
     kaleidoscope::driver::hid::bluefruit::blehid.prepareForSleep();
 
     disableTWIForSleep();
     disableRTC();
-  //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
+    //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
 
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
     disableFPUForSleep();
@@ -858,7 +857,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     //restoreTimers();
     restoreRTC();
     restoreTWIAfterSleep();
-  
+
     // Start processing BLE HID reports
     kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
 
@@ -913,12 +912,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
   // Battery monitoring methods
   void updateBatteryLevel() {
-  uint8_t  new_level= batteryGauge().getBatteryLevel();
+    uint8_t new_level = batteryGauge().getBatteryLevel();
     if (new_level != ble().getBatteryLevel()) {
-     ble().setBatteryLevel(new_level);
+      ble().setBatteryLevel(new_level);
     }
   }
-  
+
   /**
    * @brief Check if battery voltage is below warning threshold
    * @return true if battery is below warning threshold
@@ -926,7 +925,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   bool isBatteryBelowWarningThreshold(uint16_t voltage_mv) {
     return voltage_mv <= BATTERY_WARNING_THRESHOLD_MV;
   }
-  
+
   /**
    * @brief Check if battery voltage is below shutdown threshold
    * @return true if battery is below shutdown threshold
@@ -934,35 +933,35 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   bool isBatteryBelowShutdownThreshold(uint16_t voltage_mv) {
     return voltage_mv <= BATTERY_SHUTDOWN_THRESHOLD_MV;
   }
-  
+
   /**
    * @brief Trigger low battery warning
    * @param active true to activate warning, false to deactivate
    */
   void triggerBatteryWarning(bool active);
-  
+
   /**
    * @brief Trigger battery shutdown sequence
    */
   void triggerBatteryShutdown();
-  
+
   /**
    * @brief Put the system into deep sleep or system off state
    */
   void systemOff() {
     // Disable interrupts during shutdown
     noInterrupts();
-    
+
     // Disable all peripherals
     NRF_SAADC->ENABLE = 0;
-    
+
     // Disable FPU state preservation to prevent power drain
     disableFPUForSleep();
-    
+
     // Use system off functionality to fully power down
     sd_power_system_off();
   }
-  
+
   /**
    * @brief Update battery status based on current voltage
    * @param voltage_mv Current battery voltage in millivolts
@@ -1004,7 +1003,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
           disableFPUForSleep();
 
           sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-         // vTaskSuspendAll();
+          // vTaskSuspendAll();
           while (1) {
             waitForEvent();
           }
@@ -1064,7 +1063,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       disableLEDPower();
       // Set the LED pin to disconnected to prevent current leakage
       pinMode(PreonicProps::LEDDriverProps::pin, OUTPUT_D0S1);
-
     }
 
 
@@ -1173,17 +1171,17 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Disable debug interface if not actively debugging
     NRF_CLOCK->TRACECONFIG = 0;
 
-      disableUnusedPeripherals(); // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
+    disableUnusedPeripherals();  // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
     // Turn on the LED power
 
 
     device::Base<PreonicProps>::setup();
-    last_activity_time_ = millis();
+    last_activity_time_      = millis();
     last_battery_check_time_ = millis();
-    last_warning_time_ = millis();
-    warning_active_ = false;
-    shutdown_active_ = false;
-    battery_status_ = BatteryStatus::Normal;
+    last_warning_time_       = millis();
+    warning_active_          = false;
+    shutdown_active_         = false;
+    battery_status_          = BatteryStatus::Normal;
     updateBatteryLevel();
   }
 
@@ -1199,7 +1197,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   void initSerial() {
     Serial.begin(9600);
   }
-void complete_system_shutdown(void);
+  void complete_system_shutdown(void);
+
  public:
   static void setInputEventPending() {
     input_event_pending_ = true;
@@ -1214,16 +1213,15 @@ void complete_system_shutdown(void);
    * explicitly disabled, causing a power drain of approximately 3mA.
    */
   static void disableFPUForSleep() {
-    
 
-        // Clear FPCA bit in CONTROL register to indicate no active FP context
-        // This is the most reliable way to prevent FPU power drain
-        __set_CONTROL(__get_CONTROL() & ~(1U << 2));
-        
-        // Memory barriers to ensure completion
-        __DSB();
-        __ISB();
-   
+
+    // Clear FPCA bit in CONTROL register to indicate no active FP context
+    // This is the most reliable way to prevent FPU power drain
+    __set_CONTROL(__get_CONTROL() & ~(1U << 2));
+
+    // Memory barriers to ensure completion
+    __DSB();
+    __ISB();
   }
 };
 
