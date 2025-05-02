@@ -835,11 +835,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     configureColumnsForSensing();
     setupGPIOTE();
     speaker().prepareForSleep();
+    
     // Bluefruit hid - process all queue reports, then shut down processing
-    while (kaleidoscope::driver::hid::bluefruit::blehid.hasQueuedReports()) {
-      delay(1);
-    }
-    kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
+    kaleidoscope::driver::hid::bluefruit::blehid.prepareForSleep();
 
     disableTWIForSleep();
     disableRTC();
@@ -1155,10 +1153,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
   void setup() {
-  
-  // Uncomment this to enable serial to start up before ~anything else is initialized, so you can see debug 
-  // output during startup
-  //initializeSerialForDebugging();
+    // Uncomment this to enable serial to start up before ~anything else is initialized, so you can see debug
+    // output during startup
+    // initializeSerialForDebugging();
 
     enableLEDPower();
     // Check for recovery mode before full initialization
