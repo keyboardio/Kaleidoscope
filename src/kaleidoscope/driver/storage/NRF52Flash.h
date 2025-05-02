@@ -28,18 +28,21 @@
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 #include "kaleidoscope/driver/storage/Base.h"
+#include "kaleidoscope/trace.h"
+
+// Module-specific debug toggle
+#define NRF52FLASH_DEBUG 1  // Set to 0 to disable storage debug messages
+
+// Helper macro that respects module-level debug toggle
+#if NRF52FLASH_DEBUG
+#define STORAGE_DEBUG_TRACE(fmt, ...) DEBUG_TRACE("Storage", fmt, ##__VA_ARGS__)
+#else
+#define STORAGE_DEBUG_TRACE(fmt, ...)
+#endif
 
 namespace kaleidoscope {
 namespace driver {
 namespace storage {
-
-#define NRF52FLASH_DEBUG 1  // Set to 0 to disable debug messages
-
-#if NRF52FLASH_DEBUG
-#define DEBUG_MSG(...) Serial.println(F(__VA_ARGS__))
-#else
-#define DEBUG_MSG(...)
-#endif
 
 struct NRF52FlashProps : kaleidoscope::driver::storage::BaseProps {
   static constexpr uint16_t length = 16384;
@@ -60,9 +63,12 @@ class StorageFileManager {
   static constexpr uint16_t PAGE_FILE_SIZE = 1024;  // 4KB per file maximum, but we use a smaller size to reduce the number of files a given write needs to touch, which improves perf.
   static constexpr uint16_t PAGE_COUNT = (_StorageProps::length + PAGE_FILE_SIZE - 1) / PAGE_FILE_SIZE;
   
+  // Ensure we don't exceed 16 pages (for our bit vector)
+  static_assert(PAGE_COUNT <= 16, "Storage page count must not exceed 16");
+  
   // Storage for data and state tracking
   static uint8_t buffer_[_StorageProps::length];
-  static uint8_t dirty_flags_[PAGE_COUNT];
+  static uint16_t dirty_flags_; // Bit vector for dirty flags, one bit per page
   static bool is_initialized_;
   static bool any_data_loaded_;
   
@@ -80,23 +86,23 @@ class StorageFileManager {
     
     // Reinitialize the filesystem
     if (!InternalFS.begin()) {
-      DEBUG_MSG("[StorageManager] Failed to initialize filesystem");
+      STORAGE_DEBUG_TRACE("Failed to initialize filesystem");
       return false;
     }
     
-    DEBUG_MSG("[StorageManager] Filesystem initialized");
+    STORAGE_DEBUG_TRACE("Filesystem initialized");
     return true;
   }
   
   // Check if V1 storage file exists and migrate if needed
   static bool checkAndMigrateV1StorageFile() {
     if (InternalFS.exists(V1_STORAGE_FILE_PATH)) {
-      DEBUG_MSG("[StorageManager] V1 storage file exists");
+      STORAGE_DEBUG_TRACE("V1 storage file exists");
       
       if (file_.isOpen()) file_.close();
       
       if (!file_.open(V1_STORAGE_FILE_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-        DEBUG_MSG("[StorageManager] Failed to open V1 storage file");
+        STORAGE_DEBUG_TRACE("Failed to open V1 storage file");
         return false;
       }
       
@@ -105,24 +111,24 @@ class StorageFileManager {
       
       // Check if the V1 file size matches our current configuration
       if (v1_size != _StorageProps::length) {
-        DEBUG_MSG("[StorageManager] V1 storage file size mismatch - cannot migrate");
-        DEBUG_MSG("[StorageManager] Deleting incompatible V1 storage file");
+        STORAGE_DEBUG_TRACE("V1 storage file size mismatch - cannot migrate");
+        STORAGE_DEBUG_TRACE("Deleting incompatible V1 storage file");
         
         // Delete the V1 file without migration
         if (InternalFS.remove(V1_STORAGE_FILE_PATH)) {
-          DEBUG_MSG("[StorageManager] Deleted incompatible V1 storage file");
+          STORAGE_DEBUG_TRACE("Deleted incompatible V1 storage file");
         } else {
-          DEBUG_MSG("[StorageManager] Failed to delete V1 storage file");
+          STORAGE_DEBUG_TRACE("Failed to delete V1 storage file");
         }
         
         return true;
       }
       
       // Size matches, proceed with migration
-      DEBUG_MSG("[StorageManager] Migrating V1 storage file");
+      STORAGE_DEBUG_TRACE("Migrating V1 storage file");
       
       if (!file_.open(V1_STORAGE_FILE_PATH, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-        DEBUG_MSG("[StorageManager] Failed to reopen V1 storage file");
+        STORAGE_DEBUG_TRACE("Failed to reopen V1 storage file");
         return false;
       }
       
@@ -130,19 +136,19 @@ class StorageFileManager {
       file_.close();
       
       if (bytes_read != v1_size) {
-        DEBUG_MSG("[StorageManager] Failed to read V1 storage file");
+        STORAGE_DEBUG_TRACE("Failed to read V1 storage file");
         return false;
       }
       
       // Mark all pages as dirty to ensure they're all written
-      memset(dirty_flags_, 1, PAGE_COUNT);
+      markAllPagesDirty();
       
       // Write to new pages
       bool success = commitChanges();
       
       // Delete v1 file if successful
       if (success && InternalFS.remove(V1_STORAGE_FILE_PATH)) {
-        DEBUG_MSG("[StorageManager] Migration completed successfully");
+        STORAGE_DEBUG_TRACE("Migration completed successfully");
       }
       
       return success;
@@ -167,7 +173,7 @@ class StorageFileManager {
     if (file_.isOpen()) file_.close();
     
     if (!file_.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-      DEBUG_MSG("[StorageManager] Failed to open page file for reading");
+      STORAGE_DEBUG_TRACE("Failed to open page file for reading");
       return false;
     }
     
@@ -176,7 +182,7 @@ class StorageFileManager {
     file_.close();
     
     if (read_size != expected_size) {
-      DEBUG_MSG("[StorageManager] Failed to read entire page file");
+      STORAGE_DEBUG_TRACE("Failed to read entire page file");
       return false;
     }
     
@@ -186,7 +192,7 @@ class StorageFileManager {
   // Save a specific page if it's dirty
   static bool savePage(uint16_t page_index) {
     // Skip if not dirty
-    if (!dirty_flags_[page_index]) {
+    if (!isPageDirty(page_index)) {
       return true;
     }
     
@@ -202,13 +208,13 @@ class StorageFileManager {
     if (!file_.open(path, 
                    file_exists ? Adafruit_LittleFS_Namespace::FILE_O_OVERWRITE : 
                                  Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
-      DEBUG_MSG("[StorageManager] Failed to open page file for writing");
+      STORAGE_DEBUG_TRACE("Failed to open page file for writing");
       return false;
     }
     
     // If file exists, seek to beginning
     if (file_exists && !file_.seek(0)) {
-      DEBUG_MSG("[StorageManager] Failed to seek to start of file");
+      STORAGE_DEBUG_TRACE("Failed to seek to start of file");
       file_.close();
       return false;
     }
@@ -221,7 +227,7 @@ class StorageFileManager {
       size_t bytes_written = file_.write(buffer_ + offset + write_offset, bytes_to_write);
       
       if (bytes_written != bytes_to_write) {
-        DEBUG_MSG("[StorageManager] Partial write failure");
+        STORAGE_DEBUG_TRACE("Partial write failure");
         file_.close();
         return false;
       }
@@ -234,23 +240,48 @@ class StorageFileManager {
     file_.close();
     
     if (total_written != page_size) {
-      DEBUG_MSG("[StorageManager] Failed to write page file");
+      STORAGE_DEBUG_TRACE("Failed to write page file");
       return false;
     }
     
     // Clear dirty flag
-    dirty_flags_[page_index] = 0;
+    clearPageDirty(page_index);
     return true;
   }
 
  public:
+  // Helper functions for bit manipulation
+  static void setPageDirty(uint8_t page_index) {
+    dirty_flags_ |= (1 << page_index);
+  }
+  
+  static void clearPageDirty(uint8_t page_index) {
+    dirty_flags_ &= ~(1 << page_index);
+  }
+  
+  static bool isPageDirty(uint8_t page_index) {
+    return (dirty_flags_ & (1 << page_index)) != 0;
+  }
+  
+  static void markAllPagesDirty() {
+    dirty_flags_ = 0xFFFF; // Set all bits (limited by our 16-bit size)
+  }
+  
+  static void clearAllPagesDirty() {
+    dirty_flags_ = 0; // Clear all bits
+  }
+  
+  static bool anyPageDirty() {
+    return dirty_flags_ != 0;
+  }
+
   // Initialize the storage manager
   static bool init() {
     if (is_initialized_) return true;
     
     // Initialize with defaults
     memset(buffer_, _StorageProps::uninitialized_byte, _StorageProps::length);
-    memset(dirty_flags_, 0, PAGE_COUNT);
+    clearAllPagesDirty();
     
     // Initialize filesystem
     if (!initFilesystem()) {
@@ -282,7 +313,7 @@ class StorageFileManager {
     uint16_t end_page = (offset + size - 1) / PAGE_FILE_SIZE;
     
     for (uint16_t page = start_page; page <= end_page && page < PAGE_COUNT; page++) {
-      dirty_flags_[page] = 1;
+      setPageDirty(page);
     }
   }
   
@@ -295,11 +326,7 @@ class StorageFileManager {
   static bool isDirty() {
     if (!is_initialized_) return false;
     
-    for (uint16_t i = 0; i < PAGE_COUNT; i++) {
-      if (dirty_flags_[i]) return true;
-    }
-    
-    return false;
+    return anyPageDirty();
   }
   
   // Commit changes to all dirty pages
@@ -307,14 +334,14 @@ class StorageFileManager {
     if (!is_initialized_ || !isDirty()) return true;
     
     bool all_success = true;
-    DEBUG_MSG("[StorageManager] Committing changes");
+    STORAGE_DEBUG_TRACE("Committing changes");
     
     for (uint16_t i = 0; i < PAGE_COUNT; i++) {
-      if (dirty_flags_[i]) {
+      if (isPageDirty(i)) {
         bool success = savePage(i);
         if (!success) {
           all_success = false;
-          DEBUG_MSG("[StorageManager] WARNING: Failed to save page");
+          STORAGE_DEBUG_TRACE("WARNING: Failed to save page");
         }
       }
     }
@@ -344,7 +371,7 @@ class StorageFileManager {
       getPagePath(path, sizeof(path), i);
       
       if (!InternalFS.exists(path)) {
-        DEBUG_MSG("[StorageManager] Page file missing");
+        STORAGE_DEBUG_TRACE("Page file missing");
         needs_fixing = true;
         break;
       }
@@ -353,7 +380,7 @@ class StorageFileManager {
       if (file_.isOpen()) file_.close();
       
       if (!file_.open(path, Adafruit_LittleFS_Namespace::FILE_O_READ)) {
-        DEBUG_MSG("[StorageManager] Failed to open page file for verification");
+        STORAGE_DEBUG_TRACE("Failed to open page file for verification");
         needs_fixing = true;
         break;
       }
@@ -363,18 +390,18 @@ class StorageFileManager {
       file_.close();
       
       if (actual_size != expected_size) {
-        DEBUG_MSG("[StorageManager] Page file has wrong size");
+        STORAGE_DEBUG_TRACE("Page file has wrong size");
         needs_fixing = true;
         break;
       }
     }
     
     if (needs_fixing) {
-      DEBUG_MSG("[StorageManager] Storage corruption detected, erasing all page files");
+      STORAGE_DEBUG_TRACE("Storage corruption detected, erasing all page files");
       // Delete all page files and start fresh instead of trying to fix them
       deleteAllPageFiles();
       // Mark everything as dirty for next commit
-      markDirty(0, _StorageProps::length);
+      markAllPagesDirty();
       // Commit changes to save the default values to files
       return commitChanges();
     }
@@ -384,7 +411,7 @@ class StorageFileManager {
   
   // Delete all storage page files from the filesystem
   static void deleteAllPageFiles() {
-    DEBUG_MSG("[StorageManager] Deleting all page files");
+    STORAGE_DEBUG_TRACE("Deleting all page files");
     
     for (uint16_t i = 0; i < PAGE_COUNT; i++) {
       char path[32]; // Buffer for path
@@ -392,16 +419,16 @@ class StorageFileManager {
       
       if (InternalFS.exists(path)) {
         if (InternalFS.remove(path)) {
-          DEBUG_MSG("[StorageManager] Deleted page file");
+          STORAGE_DEBUG_TRACE("Deleted page file");
         } else {
-          DEBUG_MSG("[StorageManager] Failed to delete page file");
+          STORAGE_DEBUG_TRACE("Failed to delete page file");
         }
       }
     }
     
     // Reset our state
     memset(buffer_, _StorageProps::uninitialized_byte, _StorageProps::length);
-    memset(dirty_flags_, 1, PAGE_COUNT);
+    clearAllPagesDirty();
   }
 };
 
@@ -410,7 +437,7 @@ template<typename _StorageProps>
 uint8_t StorageFileManager<_StorageProps>::buffer_[_StorageProps::length];
 
 template<typename _StorageProps>
-uint8_t StorageFileManager<_StorageProps>::dirty_flags_[StorageFileManager<_StorageProps>::PAGE_COUNT];
+uint16_t StorageFileManager<_StorageProps>::dirty_flags_ = 0;
 
 template<typename _StorageProps>
 bool StorageFileManager<_StorageProps>::is_initialized_ = false;
@@ -428,8 +455,6 @@ Adafruit_LittleFS_Namespace::File StorageFileManager<_StorageProps>::file_(Inter
 template<typename _StorageProps>
 class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
  private:
-  static bool dirty_;
-  
   static bool init() {
     return StorageFileManager<_StorageProps>::init();
   }
@@ -460,7 +485,6 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     if (memcmp(buffer + offset, &t, sizeof(T)) != 0) {
       memcpy(buffer + offset, &t, sizeof(T));
       StorageFileManager<_StorageProps>::markDirty(offset, sizeof(T));
-      dirty_ = true;
     }
     
     return t;
@@ -482,7 +506,6 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     if (buffer[idx] != val) {
       buffer[idx] = val;
       StorageFileManager<_StorageProps>::markDirty(idx, 1);
-      dirty_ = true;
     }
   }
 
@@ -516,10 +539,8 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
   }
 
   void commit() {
-    if (dirty_ && StorageFileManager<_StorageProps>::isDirty()) {
-      DEBUG_MSG("[NRF52Flash] Committing changes");
+    if (StorageFileManager<_StorageProps>::isDirty()) {
       StorageFileManager<_StorageProps>::commitChanges();
-      dirty_ = false;
     }
   }
 
@@ -530,14 +551,11 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
     StorageFileManager<_StorageProps>::deleteAllPageFiles();
     
     // Mark everything as dirty for next commit
-    StorageFileManager<_StorageProps>::markDirty(0, _StorageProps::length);
-    dirty_ = true;
+    StorageFileManager<_StorageProps>::markAllPagesDirty();
     commit();
   }
 };
 
-template<typename _StorageProps>
-bool NRF52Flash<_StorageProps>::dirty_ = false;
 
 }  // namespace storage
 }  // namespace driver
