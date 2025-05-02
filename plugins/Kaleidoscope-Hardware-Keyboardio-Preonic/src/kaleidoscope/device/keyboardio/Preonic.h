@@ -294,30 +294,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   };
   static BatteryStatus battery_status_;
 
-  /**
-   * @brief Structure to track timer and RTC states for sleep/wake
-   */
-  struct TimerState {
-    bool timer0_enabled;
-    bool timer1_enabled;
-    bool timer2_enabled;
-    bool timer3_enabled;
-    bool timer4_enabled;
 
-    // RTC state
-    bool rtc0_enabled;
-    bool rtc1_enabled;
-    bool rtc2_enabled;
-
-    // RTC register backups
-    uint32_t rtc0_intenset;
-    uint32_t rtc0_evten;
-    uint32_t rtc1_intenset;
-    uint32_t rtc1_evten;
-    uint32_t rtc2_intenset;
-    uint32_t rtc2_evten;
-  };
-  static TimerState timer_state_;
 
   // Battery state tracking
   static uint8_t last_battery_level_;
@@ -469,86 +446,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * 
    * @returns true if woken by GPIO activity
    */
-  /**
-   * @brief Safely disable non-critical timers
-   * @details Only disables timers that are safe to stop, preserving system-critical ones
-   */
-  static void disableTimers() {
-    // Save current timer states
-    timer_state_.timer2_enabled = (NRF_TIMER2->INTENSET != 0);
-    timer_state_.timer3_enabled = (NRF_TIMER3->INTENSET != 0);
-    timer_state_.timer4_enabled = (NRF_TIMER4->INTENSET != 0);
-
-    // TIMER0: System timer - don't touch
-    // TIMER1: Keyscanner - managed by NRF52KeyScanner
-
-    // TIMER2: Application timer
-    if (timer_state_.timer2_enabled) {
-      // Stop the timer
-      NRF_TIMER2->TASKS_STOP = 1;
-      // Disable timer interrupt
-      NVIC_DisableIRQ(TIMER2_IRQn);
-      // Clear any pending interrupts
-      NVIC_ClearPendingIRQ(TIMER2_IRQn);
-    }
-
-    // TIMER3: Application timer
-    if (timer_state_.timer3_enabled) {
-      NRF_TIMER3->TASKS_STOP = 1;
-      NVIC_DisableIRQ(TIMER3_IRQn);
-      NVIC_ClearPendingIRQ(TIMER3_IRQn);
-    }
-
-    // TIMER4: Application timer
-    if (timer_state_.timer4_enabled) {
-      NRF_TIMER4->TASKS_STOP = 1;
-      NVIC_DisableIRQ(TIMER4_IRQn);
-      NVIC_ClearPendingIRQ(TIMER4_IRQn);
-    }
-  }
-
-
-
-
-  /**
-   * @brief Restore previously enabled timers and RTCs
-   * @details Restores timer states saved by disableTimersAndRTC()
-   */
-  /** 
-   * @brief Restore previously disabled timers
-   * @details Only restores TIMER3 and TIMER4 that we explicitly disabled
-   */
-  static void restoreTimers() {
-    // TIMER0: System timer - don't touch
-    // TIMER1: Keyscanner - managed by NRF52KeyScanner
-
-    // TIMER2: Application timer
-    if (timer_state_.timer2_enabled) {
-      // Clear any pending interrupts
-      NVIC_ClearPendingIRQ(TIMER2_IRQn);
-      // Re-enable timer interrupt
-      NVIC_EnableIRQ(TIMER2_IRQn);
-      // Start the timer
-      NRF_TIMER2->TASKS_START = 1;
-    }
-
-    // TIMER3: Application timer
-    if (timer_state_.timer3_enabled) {
-      NVIC_ClearPendingIRQ(TIMER3_IRQn);
-      NVIC_EnableIRQ(TIMER3_IRQn);
-      NRF_TIMER3->TASKS_START = 1;
-    }
-
-    // TIMER4: Application timer
-    if (timer_state_.timer4_enabled) {
-      NVIC_ClearPendingIRQ(TIMER4_IRQn);
-      NVIC_EnableIRQ(TIMER4_IRQn);
-      NRF_TIMER4->TASKS_START = 1;
-    }
-  }
-
-
-
   
 
   /**
@@ -656,7 +553,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     mcu().disableTWIForSleep();
     mcu().disableRTC();
-    //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
+    //mcu().disableTimers(); // Disabling timers seems to make the keyscanner a little sad
 
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
     mcu().disableFPUForSleep();
@@ -670,7 +567,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     sd_power_mode_set(NRF_POWER_MODE_CONSTLAT);
     restoreMatrixAfterSleep();
     disableColumnSensing();
-    //restoreTimers();
+    //mcu().restoreTimers();
     mcu().restoreRTC();
     mcu().restoreTWIAfterSleep();
 
@@ -813,7 +710,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
           mcu().disableTWIForSleep();
           mcu().disableRTC();
-          // disableTimers();  // Disabling timers seems to make the keyscanner a little sad
+          // mcu().disableTimers();  // Disabling timers seems to make the keyscanner a little sad
 
           // Disable FPU state preservation to prevent ~3mA power drain in sleep
           mcu().disableFPUForSleep();
