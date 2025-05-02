@@ -56,7 +56,7 @@ struct cRGB {
 #include "kaleidoscope/driver/keyscanner/Base.h"
 #include "kaleidoscope/driver/keyscanner/NRF52KeyScanner.h"
 #include "kaleidoscope/driver/led/WS2812.h"
-#include "kaleidoscope/driver/mcu/TinyUSB.h"
+#include "kaleidoscope/driver/mcu/nRF52840.h"
 #include "kaleidoscope/driver/storage/NRF52Flash.h"
 #include "kaleidoscope/driver/ble/Bluefruit.h"
 #include "kaleidoscope/driver/speaker/Piezo.h"
@@ -260,8 +260,8 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
   typedef kaleidoscope::driver::bootloader::nrf52::UF2 Bootloader;
   static constexpr const char *short_name = "preonic";
 
-  typedef kaleidoscope::driver::mcu::TinyUSBProps MCUProps;
-  typedef kaleidoscope::driver::mcu::TinyUSB<MCUProps> MCU;
+  typedef kaleidoscope::driver::mcu::nRF52840Props MCUProps;
+  typedef kaleidoscope::driver::mcu::nRF52840<MCUProps> MCU;
 
   typedef kaleidoscope::driver::ble::BLEBluefruit BLE;
 
