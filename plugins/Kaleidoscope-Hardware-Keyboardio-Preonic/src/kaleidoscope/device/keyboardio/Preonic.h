@@ -110,38 +110,40 @@ class PreonicKeyScanner : public kaleidoscope::driver::keyscanner::NRF52KeyScann
   SwRotaryEncoder encoders_[NUM_ENCODERS];
   static PreonicKeyScanner *active_scanner_;  // Static pointer to active scanner instance
 
-  // Static callbacks for each encoder
-  static void handleEncoder0(int step) {
+  /**
+   * @brief Common handler for all encoders
+   * @param encoder_index The index of the encoder (0-2)
+   * @param step The step value: negative for CCW, positive for CW
+   */
+  static void encoderEventCallback(uint8_t encoder_index, int step) {
     if (!active_scanner_) return;
+    
     if (step < 0) {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[0].ccw.row, ENCODER_CONFIGS[0].ccw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[0].ccw.row, ENCODER_CONFIGS[0].ccw.col, false);
+      // Counter-clockwise movement
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row, 
+                                     ENCODER_CONFIGS[encoder_index].ccw.col, true);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row, 
+                                     ENCODER_CONFIGS[encoder_index].ccw.col, false);
     } else {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[0].cw.row, ENCODER_CONFIGS[0].cw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[0].cw.row, ENCODER_CONFIGS[0].cw.col, false);
+      // Clockwise movement
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row, 
+                                     ENCODER_CONFIGS[encoder_index].cw.col, true);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row, 
+                                     ENCODER_CONFIGS[encoder_index].cw.col, false);
     }
   }
 
-  static void handleEncoder1(int step) {
-    if (!active_scanner_) return;
-    if (step < 0) {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[1].ccw.row, ENCODER_CONFIGS[1].ccw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[1].ccw.row, ENCODER_CONFIGS[1].ccw.col, false);
-    } else {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[1].cw.row, ENCODER_CONFIGS[1].cw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[1].cw.row, ENCODER_CONFIGS[1].cw.col, false);
-    }
+  // Wrapper callbacks for each encoder
+  static void encoder0Callback(int step) {
+    encoderEventCallback(0, step);
   }
 
-  static void handleEncoder2(int step) {
-    if (!active_scanner_) return;
-    if (step < 0) {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[2].ccw.row, ENCODER_CONFIGS[2].ccw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[2].ccw.row, ENCODER_CONFIGS[2].ccw.col, false);
-    } else {
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[2].cw.row, ENCODER_CONFIGS[2].cw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[2].cw.row, ENCODER_CONFIGS[2].cw.col, false);
-    }
+  static void encoder1Callback(int step) {
+    encoderEventCallback(1, step);
+  }
+
+  static void encoder2Callback(int step) {
+    encoderEventCallback(2, step);
   }
 
   static const SwRotaryEncoder::callback_t encoder_callbacks_[NUM_ENCODERS];
@@ -181,9 +183,9 @@ PreonicKeyScanner<_KeyScannerProps> *PreonicKeyScanner<_KeyScannerProps>::active
 
 template<typename _KeyScannerProps>
 const SwRotaryEncoder::callback_t PreonicKeyScanner<_KeyScannerProps>::encoder_callbacks_[NUM_ENCODERS] = {
-  PreonicKeyScanner::handleEncoder0,
-  PreonicKeyScanner::handleEncoder1,
-  PreonicKeyScanner::handleEncoder2};
+  PreonicKeyScanner::encoder0Callback,
+  PreonicKeyScanner::encoder1Callback,
+  PreonicKeyScanner::encoder2Callback};
 
 struct PreonicStorageProps : public kaleidoscope::driver::storage::NRF52FlashProps {
   static constexpr uint16_t length = 16384;
